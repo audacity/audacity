@@ -9,6 +9,8 @@
 #ifndef __AUDACITY_OVERLAY__
 #define __AUDACITY_OVERLAY__
 
+#include "../Audacity.h"
+
 #include <utility>
 
 class OverlayPanel;
@@ -91,6 +93,9 @@ AdornedRulerPanel.
 class Overlay
 {
 public:
+   Overlay() = default;
+   Overlay( const Overlay & ) PROHIBITED;
+   Overlay &operator=( const Overlay & ) PROHIBITED;
    virtual ~Overlay() = 0;
 
    ///\brief This number determines an ordering of overlays, so that those

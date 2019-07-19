@@ -111,8 +111,9 @@ LV2EffectMeter::~LV2EffectMeter()
 {
 }
 
-void LV2EffectMeter::OnIdle(wxIdleEvent & WXUNUSED(evt))
+void LV2EffectMeter::OnIdle(wxIdleEvent &evt)
 {
+   evt.Skip();
    if (mLastValue != mCtrl.mVal)
    {
       Refresh(false);
@@ -1986,8 +1987,9 @@ void LV2Effect::OnSlider(wxCommandEvent & evt)
    mParent->FindWindow(ID_Texts + p)->GetValidator()->TransferToWindow();
 }
 
-void LV2Effect::OnIdle(wxIdleEvent & WXUNUSED(evt))
+void LV2Effect::OnIdle(wxIdleEvent &evt)
 {
+   evt.Skip();
    if (mIdleFeature)
    {
       mIdleFeature->idle(suil_instance_get_handle(mSuilInstance));

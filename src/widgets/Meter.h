@@ -173,7 +173,7 @@ class MeterPanel final : public MeterPanelBase, private PrefsListener
 
    float GetMaxPeak() const override;
 
-   bool IsClipping() const;
+   bool IsClipping() const override;
 
    void StartMonitoring();
    void StopMonitoring();
@@ -183,7 +183,7 @@ class MeterPanel final : public MeterPanelBase, private PrefsListener
    State SaveState();
    void RestoreState(const State &state);
 
-   int GetDBRange() const { return mDB ? mDBRange : -1; }
+   int GetDBRange() const override { return mDB ? mDBRange : -1; }
 
  private:
    void UpdatePrefs() override;

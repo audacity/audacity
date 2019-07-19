@@ -14,6 +14,7 @@
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "Track.h"
+#include "TrackPanelAx.h"
 #include "TrackPanel.h"
 
 namespace TrackUtilities {
@@ -56,14 +57,12 @@ void DoRemoveTracks( AudacityProject &project )
       .PushState(_("Removed audio track(s)"), _("Remove Track"));
 
    trackPanel.UpdateViewIfNoTracks();
-   trackPanel.Refresh(false);
 }
 
 void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
 {
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
 
    // Whatever t is, replace with lead channel
    t = *tracks.FindLeader(t);
@@ -105,15 +104,13 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
    }
    ProjectHistory::Get( project ).ModifyState(true);
 
-   trackPanel.UpdateAccessibility();
-   trackPanel.Refresh(false);
+   TrackFocus::Get( project ).UpdateAccessibility();
 }
 
 void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
 {
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    
    // Whatever t is, replace with lead channel
    t = *tracks.FindLeader(t);
@@ -158,20 +155,19 @@ void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
    }
    ProjectHistory::Get( project ).ModifyState(true);
 
-   trackPanel.UpdateAccessibility();
-   trackPanel.Refresh(false);
+   TrackFocus::Get( project ).UpdateAccessibility();
 }
 
 void DoRemoveTrack(AudacityProject &project, Track * toRemove)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackFocus = TrackFocus::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    // If it was focused, then NEW focus is the next or, if
    // unavailable, the previous track. (The NEW focus is set
    // after the track has been removed.)
-   bool toRemoveWasFocused = trackPanel.GetFocusedTrack() == toRemove;
+   bool toRemoveWasFocused = trackFocus.Get() == toRemove;
    Track* newFocus{};
    if (toRemoveWasFocused) {
       auto iterNext = tracks.FindLeader(toRemove), iterPrev = iterNext;
@@ -190,21 +186,17 @@ void DoRemoveTrack(AudacityProject &project, Track * toRemove)
       tracks.Remove( * iter++ );
 
    if (toRemoveWasFocused)
-      trackPanel.SetFocusedTrack(newFocus);
+      trackFocus.Set( newFocus );
 
    ProjectHistory::Get( project ).PushState(
       wxString::Format(_("Removed track '%s.'"),
       name),
       _("Track Remove"));
-
-   window.HandleResize();
-   trackPanel.Refresh(false);
 }
 
 void DoMoveTrack
 (AudacityProject &project, Track* target, MoveChoice choice)
 {
-   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
 
    wxString longDesc, shortDesc;
@@ -251,7 +243,6 @@ void DoMoveTrack
    longDesc = longDesc.Format(target->GetName());
 
    ProjectHistory::Get( project ).PushState(longDesc, shortDesc);
-   trackPanel.Refresh(false);
 }
 
 }

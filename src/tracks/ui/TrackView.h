@@ -29,8 +29,7 @@ public:
    enum : unsigned { DefaultHeight = 150 };
 
    explicit
-   TrackView( const std::shared_ptr<Track> &pTrack )
-      : CommonTrackCell{ pTrack } {}
+   TrackView( const std::shared_ptr<Track> &pTrack );
    virtual ~TrackView() = 0;
 
    // some static conveniences, useful for summation over track iterator
@@ -64,28 +63,33 @@ public:
    std::shared_ptr<const TrackVRulerControls> GetVRulerControls() const;
 
 
-   // Return another, associated TrackPanelCell object that implements the
-   // click and drag to resize
-   std::shared_ptr<TrackPanelCell> GetResizer();
-   std::shared_ptr<const TrackPanelCell> GetResizer() const;
-
    void WriteXMLAttributes( XMLWriter & ) const override;
    bool HandleXMLAttribute( const wxChar *attr, const wxChar *value ) override;
 
-protected:
+   // New virtual function.  The default just returns a one-element array
+   // containing this.  Overrides might refine the Y axis.
+   using Refinement = std::vector< std::pair<
+      wxCoord, std::shared_ptr< TrackView >
+   > >;
+   virtual Refinement GetSubViews( const wxRect &rect );
+
+   // default is false
+   virtual bool IsSpectral() const;
+
    virtual void DoSetMinimized( bool isMinimized );
+
+protected:
 
    // No need yet to make this virtual
    void DoSetY(int y);
 
-   virtual void DoSetHeight(int h);
+   void DoSetHeight(int h);
 
    // Private factory to make appropriate object; class TrackView handles
    // memory management thereafter
    virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
 
    std::shared_ptr<TrackVRulerControls> mpVRulerControls;
-   std::shared_ptr<TrackPanelResizerCell> mpResizer;
 
 private:
    bool           mMinimized{ false };
@@ -101,6 +105,15 @@ using DoGetView =
 AttachedVirtualFunction<
    DoGetViewTag,
    std::shared_ptr< TrackView >,
+   Track
+>;
+
+struct GetDefaultTrackHeightTag;
+
+using GetDefaultTrackHeight =
+AttachedVirtualFunction<
+   GetDefaultTrackHeightTag,
+   int,
    Track
 >;
 

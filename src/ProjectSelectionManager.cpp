@@ -58,7 +58,7 @@ bool ProjectSelectionManager::SnapSelection()
    auto snapTo = settings.GetSnapTo();
    if (snapTo != SNAP_OFF) {
       auto &viewInfo = ViewInfo::Get( project );
-      SelectedRegion &selectedRegion = viewInfo.selectedRegion;
+      auto &selectedRegion = viewInfo.selectedRegion;
       NumericConverter nc(NumericConverter::TIME,
          settings.GetSelectionFormat(), 0, settings.GetRate());
       const bool nearest = (snapTo == SNAP_NEAREST);
@@ -76,7 +76,6 @@ bool ProjectSelectionManager::SnapSelection()
 
       if (t0 != oldt0 || t1 != oldt1) {
          selectedRegion.setTimes(t0, t1);
-         window.TP_DisplaySelection();
          return true;
       }
    }

@@ -18,7 +18,6 @@
 #include <wx/display.h>
 #include <wx/frame.h>
 
-wxDEFINE_EVENT(EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
 wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 size_t AllProjects::size() const
@@ -133,6 +132,11 @@ void AudacityProject::SetFrame( wxFrame *pFrame )
    mFrame = pFrame;
 }
 
+void AudacityProject::SetPanel( wxWindow *pPanel )
+{
+   mPanel = pPanel;
+}
+
 wxString AudacityProject::GetProjectName() const
 {
    wxString name = wxFileNameFromPath(mFileName);
@@ -143,17 +147,6 @@ wxString AudacityProject::GetProjectName() const
       name = name.Mid(0, len - 4);
 
    return name;
-}
-
-// TrackPanel callback method
-void AudacityProject::SetStatus(const wxString &msg)
-{
-   auto &project = *this;
-   if ( msg != mLastMainStatusMessage ) {
-      mLastMainStatusMessage = msg;
-      wxCommandEvent evt{ EVT_PROJECT_STATUS_UPDATE };
-      project.ProcessEvent( evt );
-   }
 }
 
 AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )
@@ -167,6 +160,23 @@ AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )
 AUDACITY_DLL_API const wxFrame &GetProjectFrame( const AudacityProject &project )
 {
    auto ptr = project.GetFrame();
+   if ( !ptr )
+      THROW_INCONSISTENCY_EXCEPTION;
+   return *ptr;
+}
+
+AUDACITY_DLL_API wxWindow &GetProjectPanel( AudacityProject &project )
+{
+   auto ptr = project.GetPanel();
+   if ( !ptr )
+      THROW_INCONSISTENCY_EXCEPTION;
+   return *ptr;
+}
+
+AUDACITY_DLL_API const wxWindow &GetProjectPanel(
+   const AudacityProject &project )
+{
+   auto ptr = project.GetPanel();
    if ( !ptr )
       THROW_INCONSISTENCY_EXCEPTION;
    return *ptr;

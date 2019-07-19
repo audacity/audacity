@@ -62,7 +62,10 @@ public:
    static MenuManager &Get( AudacityProject &project );
    static const MenuManager &Get( const AudacityProject &project );
 
+   explicit
    MenuManager( AudacityProject &project );
+   MenuManager( const MenuManager & ) PROHIBITED;
+   MenuManager &operator=( const MenuManager & ) PROHIBITED;
    ~MenuManager();
 
    static void ModifyUndoMenuItems(AudacityProject &project);
@@ -76,7 +79,7 @@ public:
 
    // If checkActive, do not do complete flags testing on an
    // inactive project as it is needlessly expensive.
-   CommandFlag GetUpdateFlags( bool checkActive = false );
+   CommandFlag GetUpdateFlags( bool checkActive = false ) const;
    void UpdatePrefs() override;
 
    // Command Handling

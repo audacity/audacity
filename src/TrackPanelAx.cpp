@@ -726,3 +726,76 @@ wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
 }
 
 #endif // wxUSE_ACCESSIBILITY
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   []( AudacityProject &parent ){
+      return std::make_shared< TrackFocus >( parent );
+   }
+};
+
+TrackFocus &TrackFocus::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< TrackFocus >( key );
+}
+
+const TrackFocus &TrackFocus::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+TrackFocus::TrackFocus( AudacityProject &project )
+   : mProject{ project }
+{
+}
+
+TrackFocus::~TrackFocus()
+{
+}
+
+Track *TrackFocus::Get()
+{
+   if (mAx)
+      return mAx->GetFocus().get();
+   return nullptr;
+}
+
+void TrackFocus::Set( Track *pTrack )
+{
+   if (mAx) {
+      pTrack = *TrackList::Get( mProject ).FindLeader( pTrack );
+      mAx->SetFocus( Track::SharedPointer( pTrack ) );
+   }
+}
+
+bool TrackFocus::IsFocused( const Track *pTrack )
+{
+   if (mAx)
+      return mAx->IsFocused( pTrack );
+   return false;
+}
+
+void TrackFocus::SetAccessible(
+   wxWindow &owner,
+   std::unique_ptr< TrackPanelAx > pAx
+)
+{
+#if wxUSE_ACCESSIBILITY
+   // wxWidgets owns the accessible object
+   owner.SetAccessible(mAx = pAx.release());
+#else
+   // wxWidgets does not own the object, but we need to retain it
+   mAx = std::move(pAx);
+#endif
+}
+
+void TrackFocus::MessageForScreenReader(const wxString& message)
+{
+   if (mAx)
+      mAx->MessageForScreenReader( message );
+}
+
+void TrackFocus::UpdateAccessibility()
+{
+   if (mAx)
+      mAx->Updated();
+}

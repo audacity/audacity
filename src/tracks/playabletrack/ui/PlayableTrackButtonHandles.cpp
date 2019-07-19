@@ -17,8 +17,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ProjectSettings.h"
 #include "../../../RefreshCode.h"
 #include "../../../Track.h"
+#include "../../../TrackPanelAx.h"
 #include "../../../TrackInfo.h"
-#include "../../../TrackPanel.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../TrackUtilities.h"
 
@@ -46,7 +46,7 @@ wxString MuteButtonHandle::Tip(const wxMouseState &) const
    auto name = _("Mute");
    auto project = ::GetActiveProject();
    auto focused =
-      TrackPanel::Get( *project ).GetFocusedTrack() == GetTrack().get();
+      TrackFocus::Get( *project ).Get() == GetTrack().get();
    if (!focused)
       return name;
 
@@ -102,7 +102,7 @@ wxString SoloButtonHandle::Tip(const wxMouseState &) const
    auto name = _("Solo");
    auto project = ::GetActiveProject();
    auto focused =
-      TrackPanel::Get( *project ).GetFocusedTrack() == GetTrack().get();
+      TrackFocus::Get( *project ).Get() == GetTrack().get();
    if (!focused)
       return name;
 

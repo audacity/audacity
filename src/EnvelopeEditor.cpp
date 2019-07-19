@@ -8,7 +8,10 @@
 
 **********************************************************************/
 
+#include "Audacity.h"
 #include "EnvelopeEditor.h"
+
+#include "Experimental.h"
 
 #include <wx/dc.h>
 #include <wx/event.h>

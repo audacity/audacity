@@ -33,7 +33,6 @@
 
 #include "../Envelope.h"
 
-#include "ControlToolBar.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
@@ -479,6 +478,8 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       return;
    }
 
+   auto &projectAudioManager = ProjectAudioManager::Get( mProject );
+
    // Fixed speed play is the old method, that uses a time track.
    // VariSpeed play reuses Scrubbing.
    bool bFixedSpeedPlay = !gPrefs->ReadBool(wxT("/AudioIO/VariSpeedPlay"), true);
@@ -496,6 +497,9 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
          mEnvelope =
             std::make_unique<BoundedEnvelope>(
                true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
+         // values as in the constructor for TimeTrack
+         mEnvelope->SetRangeLower( 0.9 );
+         mEnvelope->SetRangeUpper( 1.1 );
       }
       // Set the speed range
       //mTimeTrack->SetRangeUpper((double)mPlaySpeed / 100.0);
@@ -508,10 +512,8 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 
    // If IO is busy, abort immediately
    auto gAudioIO = AudioIOBase::Get();
-   if (gAudioIO->IsBusy()) {
-      auto &bar = ControlToolBar::Get( *p );
-      bar.StopPlaying();
-   }
+   if (gAudioIO->IsBusy())
+      projectAudioManager.Stop();
 
    // Get the current play region
    const auto &viewInfo = ViewInfo::Get( *p );
@@ -530,8 +532,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
          cutPreview ? PlayMode::cutPreviewPlay
          : options.playLooped ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
-      auto &bar = ControlToolBar::Get( *p );
-      bar.PlayPlayRegion(
+      projectAudioManager.PlayPlayRegion(
          SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),
             options,
             mode);

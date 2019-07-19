@@ -44,6 +44,7 @@ class AudacityCommand;
 
 class AudacityProject;
 class LabelTrack;
+class NotifyingSelectedRegion;
 class ProgressDialog;
 class SelectedRegion;
 class EffectUIHost;
@@ -258,7 +259,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // have the "selected" flag set to true, which is consistent with
    // Audacity's standard UI.
    /* not virtual */ bool DoEffect(wxWindow *parent, double projectRate, TrackList *list,
-                 TrackFactory *factory, SelectedRegion *selectedRegion,
+                 TrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
                  bool shouldPrompt = true);
 
    bool Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt);
@@ -460,7 +461,7 @@ protected:
    double         mProjectRate; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
    double         mSampleRate;
-   SelectedRegion *mpSelectedRegion{};
+   wxWeakRef<NotifyingSelectedRegion> mpSelectedRegion{};
    TrackFactory   *mFactory;
    const TrackList *inputTracks() const { return mTracks; }
    std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.

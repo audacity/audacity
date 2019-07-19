@@ -38,6 +38,8 @@ public:
    static const ProjectFileManager &Get( const AudacityProject &project );
 
    explicit ProjectFileManager( AudacityProject &project );
+   ProjectFileManager( const ProjectFileManager & ) PROHIBITED;
+   ProjectFileManager &operator=( const ProjectFileManager & ) PROHIBITED;
    ~ProjectFileManager();
 
    struct ReadProjectResults

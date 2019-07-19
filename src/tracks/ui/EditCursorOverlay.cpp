@@ -110,7 +110,7 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
             return;
          const auto pTrack = pTrackView->FindTrack();
          if (pTrack->GetSelected() ||
-             trackPanel.GetAx().IsFocused(pTrack.get()))
+             TrackFocus::Get( *mProject ).IsFocused( pTrack.get() ))
          {
             // AColor::Line includes both endpoints so use GetBottom()
             AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());

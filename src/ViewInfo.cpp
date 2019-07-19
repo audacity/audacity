@@ -21,6 +21,119 @@ Paul Licameli
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "xml/XMLWriter.h"
 
+wxDEFINE_EVENT( EVT_SELECTED_REGION_CHANGE, SelectedRegionEvent );
+
+SelectedRegionEvent::SelectedRegionEvent(
+   wxEventType commandType, NotifyingSelectedRegion *pReg )
+: wxEvent{ 0, commandType }
+, pRegion{ pReg }
+{}
+
+wxEvent *SelectedRegionEvent::Clone() const
+{
+   return safenew SelectedRegionEvent{ *this };
+}
+
+NotifyingSelectedRegion& NotifyingSelectedRegion::operator =
+( const SelectedRegion &other )
+{
+   if ( mRegion != other ) {
+      mRegion = other;
+      Notify();
+   }
+   return *this;
+}
+
+bool NotifyingSelectedRegion::setTimes(double t0, double t1)
+{
+   bool result = false;
+   if ( mRegion.t0() != t0 || mRegion.t1() != t1 ) {
+      result = mRegion.setTimes( t0, t1 );
+      Notify();
+   }
+   return result;
+}
+
+bool NotifyingSelectedRegion::setT0(double t, bool maySwap)
+{
+   bool result = false;
+   if ( mRegion.t0() != t ) {
+      result = mRegion.setT0( t, maySwap );
+      Notify();
+   }
+   return result;
+}
+
+bool NotifyingSelectedRegion::setT1(double t, bool maySwap)
+{
+   bool result = false;
+   if ( mRegion.t1() != t ) {
+      result = mRegion.setT1( t, maySwap );
+      Notify();
+   }
+   return result;
+}
+
+void NotifyingSelectedRegion::collapseToT0()
+{
+   if ( mRegion.t0() !=  mRegion.t1() ) {
+      mRegion.collapseToT0();
+      Notify();
+   }
+}
+
+void NotifyingSelectedRegion::collapseToT1()
+{
+   if ( mRegion.t0() !=  mRegion.t1() ) {
+      mRegion.collapseToT1();
+      Notify();
+   }
+}
+
+void NotifyingSelectedRegion::move(double delta)
+{
+   if (delta != 0) {
+      mRegion.move( delta );
+      Notify();
+   }
+}
+
+bool NotifyingSelectedRegion::setFrequencies(double f0, double f1)
+{
+   bool result = false;
+   if ( mRegion.f0() != f0 || mRegion.f1() != f1 ) {
+      result = mRegion.setFrequencies( f0, f1 );
+      Notify();
+   }
+   return result;
+}
+
+bool NotifyingSelectedRegion::setF0(double f, bool maySwap)
+{
+   bool result = false;
+   if ( mRegion.f0() != f ) {
+      result = mRegion.setF0( f, maySwap );
+      Notify();
+   }
+   return result;
+}
+
+bool NotifyingSelectedRegion::setF1(double f, bool maySwap)
+{
+   bool result = false;
+   if ( mRegion.f1() != f ) {
+      result = mRegion.setF1( f, maySwap );
+      Notify();
+   }
+   return result;
+}
+
+void NotifyingSelectedRegion::Notify()
+{
+   SelectedRegionEvent evt{ EVT_SELECTED_REGION_CHANGE, this };
+   ProcessEvent( evt );
+}
+
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
    []( AudacityProject &project ) {
       auto result =

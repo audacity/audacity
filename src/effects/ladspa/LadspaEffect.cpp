@@ -516,8 +516,9 @@ LadspaEffectMeter::~LadspaEffectMeter()
 {
 }
 
-void LadspaEffectMeter::OnIdle(wxIdleEvent & WXUNUSED(evt))
+void LadspaEffectMeter::OnIdle(wxIdleEvent &evt)
 {
+   evt.Skip();
    if (mLastValue != mVal)
    {
       Refresh(false);

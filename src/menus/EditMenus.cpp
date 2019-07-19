@@ -41,7 +41,6 @@ void FinishCopy
 bool DoPasteText(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
@@ -61,11 +60,9 @@ bool DoPasteText(AudacityProject &project)
             // Make sure caret is in view
             int x;
             if (view.CalcCursorX( project, &x )) {
-               trackPanel.ScrollIntoView(x);
+               window.ScrollIntoView(x);
             }
 
-            // Redraw everyting (is that necessary???) and bail
-            window.RedrawProject();
             return true;
          }
       }
@@ -156,8 +153,6 @@ bool DoPasteNothingSelected(AudacityProject &project)
 
       ProjectHistory::Get( project )
          .PushState(_("Pasted from the clipboard"), _("Paste"));
-
-      window.RedrawProject();
 
       if (pFirstNewTrack)
          pFirstNewTrack->EnsureVisible();
@@ -315,8 +310,6 @@ void OnCut(const CommandContext &context)
    // Bug 1663
    //mRuler->ClearPlayRegion();
    ruler.DrawOverlays( true );
-
-   window.RedrawProject();
 }
 
 void OnDelete(const CommandContext &context)
@@ -340,8 +333,6 @@ void OnDelete(const CommandContext &context)
                               seconds,
                               selectedRegion.t0()),
              _("Delete"));
-
-   window.RedrawProject();
 }
 
 
@@ -639,8 +630,6 @@ void OnPaste(const CommandContext &context)
       ProjectHistory::Get( project )
          .PushState(_("Pasted from the clipboard"), _("Paste"));
 
-      window.RedrawProject();
-
       if (ff)
          ff->EnsureVisible();
    }
@@ -670,8 +659,6 @@ void OnDuplicate(const CommandContext &context)
    }
 
    ProjectHistory::Get( project ).PushState(_("Duplicated"), _("Duplicate"));
-
-   window.RedrawProject();
 }
 
 void OnSplitCut(const CommandContext &context)
@@ -712,8 +699,6 @@ void OnSplitCut(const CommandContext &context)
       selectedRegion.t0(), selectedRegion.t1(), &project );
 
    ProjectHistory::Get( project ).PushState(_("Split-cut to the clipboard"), _("Split Cut"));
-
-   window.RedrawProject();
 }
 
 void OnSplitDelete(const CommandContext &context)
@@ -739,15 +724,12 @@ void OnSplitDelete(const CommandContext &context)
          selectedRegion.duration(),
          selectedRegion.t0()),
       _("Split Delete"));
-
-   window.RedrawProject();
 }
 
 void OnSilence(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    for ( auto n : tracks.Selected< WaveTrack >() )
@@ -758,8 +740,6 @@ void OnSilence(const CommandContext &context)
          selectedRegion.duration(),
          selectedRegion.t0()),
       _("Silence"));
-
-   trackPanel.Refresh(false);
 }
 
 void OnTrim(const CommandContext &context)
@@ -785,15 +765,12 @@ void OnTrim(const CommandContext &context)
          _("Trim selected audio tracks from %.2f seconds to %.2f seconds"),
          selectedRegion.t0(), selectedRegion.t1()),
          _("Trim Audio"));
-
-   window.RedrawProject();
 }
 
 void OnSplit(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    double sel0 = selectedRegion.t0();
@@ -803,7 +780,6 @@ void OnSplit(const CommandContext &context)
       wt->Split( sel0, sel1 );
 
    ProjectHistory::Get( project ).PushState(_("Split"), _("Split"));
-   trackPanel.Refresh(false);
 #if 0
 //ANSWER-ME: Do we need to keep this commented out OnSplit() code?
 // This whole section no longer used...
@@ -848,9 +824,6 @@ void OnSplit(const CommandContext &context)
    }
 
    PushState(_("Split"), _("Split"));
-
-   FixScrollbars();
-   trackPanel.Refresh(false);
    */
 #endif
 }
@@ -904,8 +877,6 @@ void OnSplitNew(const CommandContext &context)
 
    ProjectHistory::Get( project )
       .PushState(_("Split to new track"), _("Split New"));
-
-   window.RedrawProject();
 }
 
 void OnJoin(const CommandContext &context)
@@ -924,8 +895,6 @@ void OnJoin(const CommandContext &context)
          selectedRegion.duration(),
          selectedRegion.t0()),
       _("Join"));
-
-   window.RedrawProject();
 }
 
 void OnDisjoin(const CommandContext &context)
@@ -944,8 +913,6 @@ void OnDisjoin(const CommandContext &context)
          selectedRegion.duration(),
          selectedRegion.t0()),
       _("Detach"));
-
-   window.RedrawProject();
 }
 
 void OnEditMetadata(const CommandContext &context)

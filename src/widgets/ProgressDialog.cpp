@@ -50,7 +50,6 @@
 #include <wx/window.h>
 #include <wx/stattext.h>
 
-#include "ErrorDialog.h"
 #include "../Prefs.h"
 
 // This really should be a Preferences setting

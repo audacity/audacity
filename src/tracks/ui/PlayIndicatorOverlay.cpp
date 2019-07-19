@@ -16,12 +16,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AudioIO.h"
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
+#include "../../ProjectAudioManager.h"
 #include "../../ProjectWindow.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
 #include "../../ViewInfo.h"
 #include "Scrubbing.h"
-#include "../../toolbars/ControlToolBar.h"
 #include "TrackView.h"
 
 #include <wx/dc.h>
@@ -181,9 +181,6 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          playPos,
          viewInfo.GetScreenEndTime() + tolerance);
 
-      // This displays the audio time, too...
-      window.TP_DisplaySelection();
-
       auto gAudioIO = AudioIO::Get();
 
       // BG: Scroll screen if option is set
@@ -191,7 +188,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
           playPos >= 0 && !onScreen ) {
          // msmeyer: But only if not playing looped or in one-second mode
          // PRL: and not scrolling with play/record head fixed
-         auto mode = ControlToolBar::Get( *mProject ).GetLastPlayMode();
+         auto mode = ProjectAudioManager::Get( *mProject ).GetLastPlayMode();
          if (!pinned &&
              mode != PlayMode::loopedPlay &&
              mode != PlayMode::oneSecondPlay &&

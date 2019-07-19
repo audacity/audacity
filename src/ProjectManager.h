@@ -34,6 +34,8 @@ public:
    static const ProjectManager &Get( const AudacityProject &project );
 
    explicit ProjectManager( AudacityProject &project );
+   ProjectManager( const ProjectManager & ) PROHIBITED;
+   ProjectManager &operator=( const ProjectManager & ) PROHIBITED;
    ~ProjectManager() override;
 
    // This is the factory for projects:
@@ -71,9 +73,6 @@ private:
    AudacityProject &mProject;
 
    std::unique_ptr<wxTimer> mTimer;
-
-   // See explanation in OnCloseWindow
-   bool mIsBeingDeleted{ false };
 
    DECLARE_EVENT_TABLE()
 

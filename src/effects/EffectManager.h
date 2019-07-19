@@ -41,6 +41,8 @@ class EffectRack;
 class AudacityCommand;
 
 
+class NotifyingSelectedRegion;
+
 class AUDACITY_DLL_API EffectManager
 {
 public:
@@ -88,7 +90,7 @@ public:
                  double projectRate,
                  TrackList *list,
                  TrackFactory *factory,
-                 SelectedRegion *selectedRegion,
+                 NotifyingSelectedRegion &selectedRegion,
                  bool shouldPrompt = true);
 
    wxString GetEffectFamilyName(const PluginID & ID);

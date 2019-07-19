@@ -235,6 +235,7 @@
     <ClCompile Include="..\..\..\src\ProjectManager.cpp" />
     <ClCompile Include="..\..\..\src\ProjectSelectionManager.cpp" />
     <ClCompile Include="..\..\..\src\ProjectSettings.cpp" />
+    <ClCompile Include="..\..\..\src\ProjectStatus.cpp" />
     <ClCompile Include="..\..\..\src\ProjectWindow.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf.cpp" />
     <ClCompile Include="..\..\..\src\RealFFTf48x.cpp" />
@@ -292,6 +293,12 @@
     <ClCompile Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackControls.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\CutlineHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SampleHandle.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumView.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVRulerControls.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVZoomHandle.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformView.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVRulerControls.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVZoomHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackControls.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackSliderHandles.cpp" />
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.cpp" />
@@ -310,6 +317,7 @@
     <ClCompile Include="..\..\..\src\tracks\ui\EnvelopeHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp" />
+    <ClCompile Include="..\..\..\src\tracks\ui\ScrubUI.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\SelectHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\SliderHandle.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\TimeShiftHandle.cpp" />
@@ -432,7 +440,6 @@
     <ClCompile Include="..\..\..\src\widgets\HtmlWindow.cpp" />
     <ClCompile Include="..\..\..\src\widgets\ImageRoll.cpp" />
     <ClCompile Include="..\..\..\src\widgets\KeyView.cpp" />
-    <ClCompile Include="..\..\..\src\widgets\LinkingHtmlWindow.cpp" />
     <ClCompile Include="..\..\..\src\widgets\Meter.cpp" />
     <ClCompile Include="..\..\..\src\widgets\MeterPanelBase.cpp" />
     <ClCompile Include="..\..\..\src\widgets\MultiDialog.cpp" />
@@ -599,6 +606,12 @@
     <ClInclude Include="..\..\..\src\tracks\playabletrack\ui\PlayableTrackControls.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\CutlineHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SampleHandle.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumView.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVRulerControls.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVZoomHandle.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformView.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVRulerControls.h" />
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVZoomHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackControls.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackSliderHandles.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveTrackView.h" />
@@ -624,6 +637,7 @@
     <ClInclude Include="..\..\..\src\tracks\ui\EnvelopeHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h" />
+    <ClInclude Include="..\..\..\src\tracks\ui\ScrubUI.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\TrackView.h" />
     <ClInclude Include="..\..\..\src\TranslatableStringArray.h" />
     <ClInclude Include="..\..\..\src\UserException.h" />
@@ -697,6 +711,7 @@
     <ClInclude Include="..\..\..\src\ProjectManager.h" />
     <ClInclude Include="..\..\..\src\ProjectSelectionManager.h" />
     <ClInclude Include="..\..\..\src\ProjectSettings.h" />
+    <ClInclude Include="..\..\..\src\ProjectStatus.h" />
     <ClInclude Include="..\..\..\src\ProjectWindow.h" />
     <ClInclude Include="..\..\..\src\RealFFTf.h" />
     <ClInclude Include="..\..\..\src\Resample.h" />
@@ -821,7 +836,6 @@
     <ClInclude Include="..\..\..\src\widgets\HtmlWindow.h" />
     <ClInclude Include="..\..\..\src\widgets\ImageRoll.h" />
     <ClInclude Include="..\..\..\src\widgets\KeyView.h" />
-    <ClInclude Include="..\..\..\src\widgets\LinkingHtmlWindow.h" />
     <ClInclude Include="..\..\..\src\widgets\Meter.h" />
     <ClInclude Include="..\..\..\src\widgets\MeterPanelBase.h" />
     <ClInclude Include="..\..\..\src\widgets\MultiDialog.h" />
@@ -926,7 +940,6 @@
     <copy Include="..\..\..\plug-ins\StudioFadeOut.ny" />
     <copy Include="..\..\..\plug-ins\tremolo.ny" />
     <copy Include="..\..\..\plug-ins\vocalrediso.ny" />
-    <copy Include="..\..\..\plug-ins\vocalremover.ny" />
     <copy Include="..\..\..\plug-ins\vocoder.ny" />
   </ItemGroup>
   <ItemGroup>

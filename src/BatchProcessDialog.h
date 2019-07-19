@@ -58,6 +58,7 @@ class ApplyMacroDialog : public wxDialogWrapper {
    bool mAbort;
    bool mbExpanded;
    wxString mActiveMacro;
+   wxString mMacroBeingRenamed;
 
 protected:
    const MacroCommandsCatalog mCatalog;
@@ -95,6 +96,7 @@ private:
    void OnAdd(wxCommandEvent &event);
    void OnRemove(wxCommandEvent &event);
    void OnRename(wxCommandEvent &event);
+   void OnRestore(wxCommandEvent &event);
    void OnExpand(wxCommandEvent &event);
    void OnShrink(wxCommandEvent &event);
    void OnSize(wxSizeEvent &event);
@@ -106,7 +108,6 @@ private:
    void OnDelete(wxCommandEvent &event);
    void OnUp(wxCommandEvent &event);
    void OnDown(wxCommandEvent &event);
-   void OnDefaults(wxCommandEvent &event);
 
    void OnOK(wxCommandEvent &event);
 
@@ -117,7 +118,7 @@ private:
 
    wxButton *mRemove;
    wxButton *mRename;
-   wxButton *mDefaults;
+   wxButton *mRestore;
 
    int mSelectedCommand;
    bool mChanged;

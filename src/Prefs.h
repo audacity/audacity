@@ -37,9 +37,11 @@
 #include <wx/fileconf.h>  // to inherit wxFileConfig
 #include <wx/event.h> // to declare custom event types
 
-void InitPreferences();
+class wxFileName;
+
+void InitPreferences( const wxFileName &configFileName );
 bool CheckWritablePreferences();
-wxString UnwritablePreferencesErrorMessage();
+wxString UnwritablePreferencesErrorMessage( const wxFileName &configFileName );
 void FinishPreferences();
 
 class AudacityPrefs;
@@ -188,5 +190,10 @@ private:
    struct Impl;
    std::unique_ptr<Impl> mpImpl;
 };
+
+/// Return the config file key associated with a warning dialog identified
+/// by internalDialogName.  When the box is checked, the value at the key
+/// becomes false.
+wxString WarningDialogKey(const wxString &internalDialogName);
 
 #endif

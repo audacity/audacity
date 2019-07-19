@@ -238,6 +238,8 @@ audacity_SOURCES = \
 	ProjectSelectionManager.h \
 	ProjectSettings.cpp \
 	ProjectSettings.h \
+	ProjectStatus.cpp \
+	ProjectStatus.h \
 	ProjectWindow.cpp \
 	ProjectWindow.h \
 	RealFFTf.cpp \
@@ -670,6 +672,18 @@ audacity_SOURCES = \
 	tracks/playabletrack/wavetrack/ui/CutlineHandle.h \
 	tracks/playabletrack/wavetrack/ui/SampleHandle.cpp \
 	tracks/playabletrack/wavetrack/ui/SampleHandle.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumView.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumView.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.h \
+	tracks/playabletrack/wavetrack/ui/WaveformView.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformView.h \
+	tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackControls.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp \
@@ -706,6 +720,8 @@ audacity_SOURCES = \
 	tracks/ui/PlayIndicatorOverlay.h \
 	tracks/ui/Scrubbing.cpp \
 	tracks/ui/Scrubbing.h \
+	tracks/ui/ScrubUI.cpp \
+	tracks/ui/ScrubUI.h \
 	tracks/ui/SelectHandle.cpp \
 	tracks/ui/SelectHandle.h \
 	tracks/ui/SliderHandle.cpp \
@@ -752,8 +768,6 @@ audacity_SOURCES = \
 	widgets/ImageRoll.h \
 	widgets/KeyView.cpp \
 	widgets/KeyView.h \
-	widgets/LinkingHtmlWindow.cpp \
-	widgets/LinkingHtmlWindow.h \
 	widgets/Meter.cpp \
 	widgets/Meter.h \
 	widgets/MeterPanelBase.cpp \

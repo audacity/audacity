@@ -130,7 +130,7 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
    // for batch commands
    if (flags & EffectManager::kConfigured)
    {
-      TransportActions::DoStop(project);
+      ProjectAudioManager::Get( project ).Stop();
       SelectUtilities::SelectAllIfNone( project );
    }
 
@@ -166,7 +166,7 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
    EffectManager & em = EffectManager::Get();
 
    success = em.DoEffect(ID, &window, rate,
-      &tracks, &trackFactory, &selectedRegion,
+      &tracks, &trackFactory, selectedRegion,
       (flags & EffectManager::kConfigured) == 0);
 
    if (!success)
@@ -207,7 +207,10 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
          window.DoZoomFit();
          //  trackPanel->Refresh(false);
    }
+
+   // PRL:  RedrawProject explicitly because sometimes history push is skipped
    window.RedrawProject();
+
    if (focus != nullptr && focus->GetParent()==parent) {
       focus->SetFocus();
    }
@@ -236,7 +239,7 @@ bool EffectManager::DoEffect(const PluginID & ID,
                              double projectRate,
                              TrackList *list,
                              TrackFactory *factory,
-                             SelectedRegion *selectedRegion,
+                             NotifyingSelectedRegion &selectedRegion,
                              bool shouldPrompt /* = true */)
 
 {

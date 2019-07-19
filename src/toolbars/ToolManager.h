@@ -58,6 +58,8 @@ class ToolManager final
    static const ToolManager &Get( const AudacityProject &project );
 
    ToolManager( AudacityProject *parent, wxWindow *topDockParent );
+   ToolManager( const ToolManager & ) PROHIBITED;
+   ToolManager &operator=( const ToolManager & ) PROHIBITED;
    ~ToolManager();
 
    void LayoutToolBars();

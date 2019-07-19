@@ -719,7 +719,7 @@ bool MacroCommands::DoAudacityCommand(
 
    if (flags & EffectManager::kConfigured)
    {
-      TransportActions::DoStop(project);
+      ProjectAudioManager::Get( project ).Stop();
 //    SelectAllIfNone();
    }
 

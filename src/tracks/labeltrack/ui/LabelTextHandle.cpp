@@ -78,7 +78,7 @@ void LabelTextHandle::HandleTextClick(AudacityProject &
                                                               ,
    const wxMouseEvent & evt,
    const wxRect & r, const ZoomInfo &zoomInfo,
-   SelectedRegion *newSel)
+   NotifyingSelectedRegion &newSel)
 {
    auto pTrack = mpLT.lock();
    if (!pTrack)
@@ -94,7 +94,7 @@ void LabelTextHandle::HandleTextClick(AudacityProject &
       if ( selIndex != -1 ) {
          const auto &mLabels = pTrack->GetLabels();
          const auto &labelStruct = mLabels[ selIndex ];
-         *newSel = labelStruct.selectedRegion;
+         newSel = labelStruct.selectedRegion;
 
          if (evt.LeftDown()) {
             // Find the NEW drag end
@@ -135,7 +135,7 @@ void LabelTextHandle::HandleTextClick(AudacityProject &
             if (!LabelTrackView::OverTextBox(&labelStruct, evt.m_x, evt.m_y))
                view.SetSelectedIndex( -1 );
             double t = zoomInfo.PositionToTime(evt.m_x, r.x);
-            *newSel = SelectedRegion(t, t);
+            newSel = SelectedRegion(t, t);
          }
 #endif
       }
@@ -143,7 +143,7 @@ void LabelTextHandle::HandleTextClick(AudacityProject &
       if (evt.MiddleDown()) {
          // Paste text, making a NEW label if none is selected.
          wxTheClipboard->UsePrimarySelection(true);
-         view.PasteSelectedText(project, newSel->t0(), newSel->t1());
+         view.PasteSelectedText(project, newSel.t0(), newSel.t1());
          wxTheClipboard->UsePrimarySelection(false);
       }
 #endif
@@ -169,7 +169,7 @@ UIHandle::Result LabelTextHandle::Click
 
    mSelectedRegion = viewInfo.selectedRegion;
    HandleTextClick( *pProject,
-      event, evt.rect, viewInfo, &viewInfo.selectedRegion );
+      event, evt.rect, viewInfo, viewInfo.selectedRegion );
 
    {
       // IF the user clicked a label, THEN select all other tracks by Label
@@ -195,7 +195,7 @@ UIHandle::Result LabelTextHandle::Click
    if (!unsafe)
       ProjectHistory::Get( *pProject ).ModifyState(false);
 
-   return result | RefreshCode::RefreshCell | RefreshCode::UpdateSelection;
+   return result | RefreshCode::RefreshCell;
 }
 
 void LabelTextHandle::HandleTextDragRelease(

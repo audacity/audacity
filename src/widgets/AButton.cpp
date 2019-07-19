@@ -38,6 +38,7 @@
 
 //This is needed for tooltips
 #include "../Project.h"
+#include "../ProjectStatus.h"
 #include <wx/tooltip.h>
 
 #if wxUSE_ACCESSIBILITY
@@ -491,7 +492,7 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
       if (mCursorIsInWindow)
          UpdateStatus();
       else {
-         GetActiveProject()->SetStatus(wxT(""));
+         ProjectStatus::Get( *GetActiveProject() ).Set(wxT(""));
       }
    }
    else
@@ -508,7 +509,7 @@ void AButton::UpdateStatus()
          wxString tipText = pTip->GetTip();
          if (!mEnabled)
             tipText += _(" (disabled)");
-         GetActiveProject()->SetStatus(tipText);
+         ProjectStatus::Get( *GetActiveProject() ).Set(tipText);
       }
 #endif
    }
@@ -574,9 +575,11 @@ bool AButton::WasControlDown()
 
 void AButton::Enable()
 {
-   wxWindow::Enable(true);
-   mEnabled = true;
-   Refresh(false);
+   bool changed = wxWindow::Enable(true);
+   if ( !mEnabled ) {
+      mEnabled = true;
+      Refresh(false);
+   }
 }
 
 void AButton::Disable()
@@ -588,10 +591,12 @@ void AButton::Disable()
 #ifndef __WXMSW__
    wxWindow::Enable(false);
 #endif
-   mEnabled = false;
    if (GetCapture()==this)
       ReleaseMouse();
-   Refresh(false);
+   if ( mEnabled ) {
+      mEnabled = false;
+      Refresh(false);
+   }
 }
 
 void AButton::PushDown()

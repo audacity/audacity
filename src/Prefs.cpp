@@ -60,10 +60,8 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 
-#include "FileNames.h"
 #include "Internat.h"
 #include "MemoryX.h"
-#include "Languages.h"
 
 std::unique_ptr<AudacityPrefs> ugPrefs {};
 
@@ -206,11 +204,9 @@ bool AudacityPrefs::GetEditClipsCanMove()
    return editClipsCanMove;
 }
 
-void InitPreferences()
+void InitPreferences( const wxFileName &configFileName )
 {
    wxString appName = wxTheApp->GetAppName();
-
-   wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
 
    ugPrefs = std::make_unique<AudacityPrefs>
       (appName, wxEmptyString,
@@ -226,9 +222,8 @@ bool CheckWritablePreferences()
    return gPrefs->Write("/TEST", true) && gPrefs->Flush();
 }
 
-wxString UnwritablePreferencesErrorMessage()
+wxString UnwritablePreferencesErrorMessage( const wxFileName &configFileName )
 {
-   wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
    return wxString::Format(
      _("Audacity cannot start because the settings file at %s is not writable."),
      configFileName.GetFullPath()
@@ -330,4 +325,9 @@ bool EnumSetting::WriteInt( int code ) // you flush gPrefs afterward
    if ( index >= mnSymbols )
       return false;
    return Write( mSymbols[index].Internal() );
+}
+
+wxString WarningDialogKey(const wxString &internalDialogName)
+{
+   return wxT("/Warnings/") + internalDialogName;
 }

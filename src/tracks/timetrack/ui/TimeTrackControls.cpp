@@ -178,3 +178,14 @@ template<> template<> auto DoGetTimeTrackControls::Implementation() -> Function 
    };
 }
 static DoGetTimeTrackControls registerDoGetTimeTrackControls;
+
+#include "../../ui/TrackView.h"
+
+using GetDefaultTimeTrackHeight = GetDefaultTrackHeight::Override< TimeTrack >;
+template<> template<>
+auto GetDefaultTimeTrackHeight::Implementation() -> Function {
+   return [](TimeTrack &) {
+      return 100;
+   };
+}
+static GetDefaultTimeTrackHeight registerGetDefaultTimeTrackHeight;

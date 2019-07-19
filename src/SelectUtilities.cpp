@@ -18,6 +18,7 @@
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "SelectionState.h"
+#include "TrackPanelAx.h"
 #include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
@@ -30,7 +31,6 @@ void DoSelectTimeAndAudioTracks
 (AudacityProject &project, bool bAllTime, bool bAllTracks)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( bAllTime )
@@ -45,7 +45,6 @@ void DoSelectTimeAndAudioTracks
          t->SetSelected(true);
 
       ProjectHistory::Get( project ).ModifyState(false);
-      trackPanel.Refresh(false);
    }
 }
 
@@ -56,7 +55,6 @@ void DoSelectTimeAndTracks
 (AudacityProject &project, bool bAllTime, bool bAllTracks)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( bAllTime )
@@ -68,7 +66,6 @@ void DoSelectTimeAndTracks
          t->SetSelected(true);
 
       ProjectHistory::Get( project ).ModifyState(false);
-      trackPanel.Refresh(false);
    }
 }
 
@@ -97,7 +94,6 @@ void DoListSelection
 (AudacityProject &project, Track *t, bool shift, bool ctrl, bool modifyState)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &selectionState = SelectionState::Get( project );
    const auto &settings = ProjectSettings::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
@@ -110,7 +106,7 @@ void DoListSelection
       shift, ctrl, isSyncLocked );
 
    if (! ctrl )
-      trackPanel.SetFocusedTrack(t);
+      TrackFocus::Get( project ).Set( t );
    window.Refresh(false);
    if (modifyState)
       ProjectHistory::Get( project ).ModifyState(true);

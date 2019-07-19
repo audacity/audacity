@@ -27,12 +27,12 @@ extern AUDACITY_DLL_API const ReservedCommandFlag
    WaveTracksSelectedFlag,
    TracksExistFlag,
    TracksSelectedFlag,
+   AnyTracksSelectedFlag,
    TrackPanelHasFocus;  //lll
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
    AudioIOBusyFlag, // lll
-   CaptureNotBusyFlag,
-   HasWaveDataFlag; // jkc
+   CaptureNotBusyFlag;
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
    LabelTracksExistFlag,

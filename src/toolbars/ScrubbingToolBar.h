@@ -72,10 +72,19 @@ private:
    wxImage *downImage;
    wxImage *hiliteImage;
 
+   void OnIdle( wxIdleEvent &evt );
+
 public:
 
    DECLARE_CLASS(ScrubbingToolBar)
    DECLARE_EVENT_TABLE()
+
+private:
+   void DoRegenerateTooltips( bool force );
+
+   bool mLastScrub{ false };
+   bool mLastSeek{ false };
+   bool mLastRuler{ false };
 };
 
 #endif

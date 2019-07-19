@@ -73,7 +73,7 @@ std::vector<UIHandlePtr> CommonTrackView::HitTest
    // Finally, default of all is adjustment of the selection box.
    if ( isMultiTool || currentTool == selectTool ) {
       result = SelectHandle::HitTest(
-         mSelectHandle, st, pProject, FindTrack() );
+         mSelectHandle, st, pProject, shared_from_this() );
       if (result)
          results.push_back(result);
    }
@@ -85,6 +85,8 @@ std::vector<UIHandlePtr> CommonTrackView::HitTest
 static void DrawTrackName(
    TrackPanelDrawingContext &context, const Track * t, const wxRect & rect )
 {
+   if( !TrackArtist::Get( context )->mbShowTrackNameInTrack )
+      return;
    auto name = t->GetName();
    if( name.IsEmpty())
       return;
@@ -104,7 +106,7 @@ static void DrawTrackName(
    const int kTranslucentHeight = 124;
    int h = rect.GetHeight();
    // f codes the opacity as a number between 0.0 and 1.0
-   float f= wxClip((h -kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
+   float f = wxClip((h-kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
    // kOpaque is the shield's alpha for tracks that are not tall
    // kTranslucent is the shield's alpha for tracks that are tall.
    const int kOpaque = 255;
@@ -144,9 +146,9 @@ static void DrawTrackName(
 void CommonTrackView::Draw(
    TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
 {
-   // This overpaints only the track area, so any pass after tracks is late
-   // enough.
-   if ( iPass == TrackArtist::PassMargins )
+   // This overpaints the track area, but sometimes too the stereo channel
+   // separator, so draw at least later than that
+   if ( iPass == TrackArtist::PassBorders )
       DrawTrackName(
          context, FindTrack()->SubstitutePendingChangedTrack().get(), rect );
 }

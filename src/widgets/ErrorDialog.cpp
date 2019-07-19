@@ -29,7 +29,6 @@
 #include <wx/settings.h>
 #include <wx/statusbr.h>
 
-#include "LinkingHtmlWindow.h"
 #include "../AllThemeResources.h"
 #include "../ShuttleGui.h"
 #include "../HelpText.h"

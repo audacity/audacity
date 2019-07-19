@@ -195,13 +195,14 @@ void PlayableTrackControls::GetMuteSoloRect
 }
 
 
+#include <mutex>
 const TCPLines& PlayableTrackControls::StaticTCPLines()
 {
-   static const struct PlayableTrackTCPLines
-      : TCPLines { PlayableTrackTCPLines() {
-      (TCPLines&)*this =
-         CommonTrackControls::StaticTCPLines();
-      insert( end(), {
+   static TCPLines playableTrackTCPLines;
+   static std::once_flag flag;
+   std::call_once( flag, []{
+      playableTrackTCPLines = CommonTrackControls::StaticTCPLines();
+      playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
    #ifdef EXPERIMENTAL_DA
          // DA: Has Mute and Solo on separate lines.
          { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
@@ -214,6 +215,6 @@ const TCPLines& PlayableTrackControls::StaticTCPLines()
    #endif
 
       } );
-   } } playableTrackTCPLines;
+   } );
    return playableTrackTCPLines;
 }

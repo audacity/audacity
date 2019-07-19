@@ -1286,7 +1286,10 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
          playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration/1000.0;
       }
 
-      mOutputMeter = options.playbackMeter;
+      if ( options.playbackMeter )
+         mOutputMeter = options.playbackMeter;
+      else
+         mOutputMeter.Release();
    }
 
    if( numCaptureChannels > 0)
@@ -2217,22 +2220,6 @@ void AudioIO::StopStream()
       mPortStreamV19 = NULL;
    }
 
-   if (mNumPlaybackChannels > 0)
-   {
-      wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
-      e.SetEventObject(mOwningProject);
-      e.SetInt(false);
-      wxTheApp->ProcessEvent(e);
-   }
-
-   if (mNumCaptureChannels > 0)
-   {
-      wxCommandEvent e(mStreamToken == 0 ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
-      e.SetEventObject(mOwningProject);
-      e.SetInt(false);
-      wxTheApp->ProcessEvent(e);
-   }
-
 #ifdef EXPERIMENTAL_MIDI_OUT
    /* Stop Midi playback */
    if ( mMidiStream ) {
@@ -2380,6 +2367,22 @@ void AudioIO::StopStream()
    // Only set token to 0 after we're totally finished with everything
    //
    mStreamToken = 0;
+
+   if (mNumPlaybackChannels > 0)
+   {
+      wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
+      e.SetEventObject(mOwningProject);
+      e.SetInt(false);
+      wxTheApp->ProcessEvent(e);
+   }
+   
+   if (mNumCaptureChannels > 0)
+   {
+      wxCommandEvent e(mStreamToken == 0 ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
+      e.SetEventObject(mOwningProject);
+      e.SetInt(false);
+      wxTheApp->ProcessEvent(e);
+   }
 
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;
@@ -3390,6 +3393,9 @@ void AudioIO::AllNotesOff(bool looping)
 
 // Automated Input Level Adjustment - Automatically tries to find an acceptable input volume
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+
+#include "ProjectStatus.h"
+
 void AudioIO::AILAInitialize() {
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mAILAActive,         false);
    gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mAILAGoalPoint,      AILA_DEF_TARGET_PEAK);
@@ -3463,7 +3469,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                //we can't improve it more now
                if (mAILATotalAnalysis != 0) {
                   mAILAActive = false;
-                  proj->SetStatus(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."));
+                  ProjectStatus::Get( *proj ).Set(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."));
                }
                wxPrintf("\talready min vol:%f\n", iv);
             }
@@ -3472,7 +3478,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                Px_SetInputVolume(mPortMixer, vol);
                wxString msg;
                msg.Printf(_("Automated Recording Level Adjustment decreased the volume to %f."), vol);
-               proj->SetStatus(msg);
+               ProjectStatus::Get( *proj ).Set(msg);
                changetype = 1;
                wxPrintf("\tnew vol:%f\n", vol);
                float check = Px_GetInputVolume(mPortMixer);
@@ -3486,7 +3492,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                //we can't improve it more
                if (mAILATotalAnalysis != 0) {
                   mAILAActive = false;
-                  proj->SetStatus(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."));
+                  ProjectStatus::Get( *proj ).Set(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."));
                }
                wxPrintf("\talready max vol:%f\n", iv);
             }
@@ -3499,7 +3505,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                Px_SetInputVolume(mPortMixer, vol);
                wxString msg;
                msg.Printf(_("Automated Recording Level Adjustment increased the volume to %.2f."), vol);
-               proj->SetStatus(msg);
+               ProjectStatus::Get( *proj ).Set(msg);
                changetype = 2;
                wxPrintf("\tnew vol:%f\n", vol);
                float check = Px_GetInputVolume(mPortMixer);
@@ -3532,13 +3538,13 @@ void AudioIO::AILAProcess(double maxPeak) {
       if (mAILAActive && mAILATotalAnalysis != 0 && mAILAAnalysisCounter >= mAILATotalAnalysis) {
          mAILAActive = false;
          if (mAILAMax > mAILAGoalPoint + mAILAGoalDelta)
-            proj->SetStatus(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."));
+            ProjectStatus::Get( *proj ).Set(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."));
          else if (mAILAMax < mAILAGoalPoint - mAILAGoalDelta)
-            proj->SetStatus(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."));
+            ProjectStatus::Get( *proj ).Set(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."));
          else {
             wxString msg;
             msg.Printf(_("Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."), Px_GetInputVolume(mPortMixer));
-            proj->SetStatus(msg);
+            ProjectStatus::Get( *proj ).Set(msg);
          }
       }
    }
@@ -3741,7 +3747,7 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
 // Limit values to -1.0..+1.0
 void ClampBuffer(float * pBuffer, unsigned long len){
    for(unsigned i = 0; i < len; i++)
-      pBuffer[i] = wxClip( -1.0f, pBuffer[i], 1.0f);
+      pBuffer[i] = wxClip( pBuffer[i], -1.0f, 1.0f);
 };
 
 

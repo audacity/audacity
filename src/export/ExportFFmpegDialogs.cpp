@@ -61,6 +61,7 @@
 #include "../Tags.h"
 #include "../TranslatableStringArray.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/HelpSystem.h"
 
 #include "Export.h"
 
@@ -231,7 +232,7 @@ void ExportFFmpegAACOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.SetStretchyCol(1);
-            S.Prop(1).TieSlider(_("Quality:"),wxT("/FileFormats/AACQuality"),100,500,10);
+            S.Prop(1).TieSlider(_("Quality (kbps):"),wxT("/FileFormats/AACQuality"),160,320,98);
          }
          S.EndMultiColumn();
       }
@@ -560,17 +561,25 @@ FFmpegPreset *FFmpegPresets::FindPreset(wxString &name)
    return NULL;
 }
 
-void FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
+// return false if overwrite was not allowed.
+bool FFmpegPresets::OverwriteIsOk( wxString &name )
 {
-   wxString format;
-   wxString codec;
    FFmpegPreset *preset = FindPreset(name);
    if (preset)
    {
       wxString query = wxString::Format(_("Overwrite preset '%s'?"),name);
       int action = AudacityMessageBox(query,_("Confirm Overwrite"),wxYES_NO | wxCENTRE);
-      if (action == wxNO) return;
+      if (action == wxNO) return false;
    }
+   return true;
+}
+
+
+bool FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
+{
+   wxString format;
+   wxString codec;
+   FFmpegPreset *preset;
 
    {
       wxWindow *wnd;
@@ -581,7 +590,7 @@ void FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
       if (lb->GetSelection() < 0)
       {
          AudacityMessageBox(_("Please select format before saving a profile"));
-         return;
+         return false;
       }
       format = lb->GetStringSelection();
 
@@ -590,7 +599,7 @@ void FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
       if (lb->GetSelection() < 0)
       {
          AudacityMessageBox(_("Please select codec before saving a profile"));
-         return;
+         return false;
       }
       codec = lb->GetStringSelection();
    }
@@ -656,6 +665,7 @@ void FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
          }
       }
    }
+   return true;
 }
 
 void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, wxString &name)
@@ -884,6 +894,7 @@ void FFmpegPresets::WriteXML(XMLWriter &xmlFile) const
 
 BEGIN_EVENT_TABLE(ExportFFmpegOptions, wxDialogWrapper)
    EVT_BUTTON(wxID_OK,ExportFFmpegOptions::OnOK)
+   EVT_BUTTON(wxID_HELP,ExportFFmpegOptions::OnGetURL)
    EVT_LISTBOX(FEFormatID,ExportFFmpegOptions::OnFormatList)
    EVT_LISTBOX(FECodecID,ExportFFmpegOptions::OnCodecList)
    EVT_BUTTON(FEAllFormatsID,ExportFFmpegOptions::OnAllFormats)
@@ -1595,7 +1606,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
             S.EndStatic();
             //S.EndScroller();
             S.SetBorder( 5 );
-            S.AddStandardButtons();
+            S.AddStandardButtons(eOkButton | eCancelButton | eHelpButton );
          }
          S.EndVerticalLay();
       }
@@ -1829,15 +1840,24 @@ void ExportFFmpegOptions::OnDeletePreset(wxCommandEvent& WXUNUSED(event))
 ///
 ///
 void ExportFFmpegOptions::OnSavePreset(wxCommandEvent& WXUNUSED(event))
+{  const bool kCheckForOverwrite = true;
+   SavePreset(kCheckForOverwrite);
+}
+
+// Return false if failed to save.
+bool ExportFFmpegOptions::SavePreset(bool bCheckForOverwrite)
 {
    wxComboBox *preset = dynamic_cast<wxComboBox*>(FindWindowById(FEPresetID,this));
    wxString name = preset->GetValue();
    if (name.empty())
    {
-      AudacityMessageBox(_("You can't save a preset without name"));
-      return;
+      AudacityMessageBox(_("You can't save a preset without a name"));
+      return false;
    }
-   mPresets->SavePreset(this,name);
+   if( bCheckForOverwrite && !mPresets->OverwriteIsOk(name))
+      return false;
+   if( !mPresets->SavePreset(this,name) )
+      return false;
    int index = mPresetNames.Index(name,false);
    if (index == -1)
    {
@@ -1846,6 +1866,7 @@ void ExportFFmpegOptions::OnSavePreset(wxCommandEvent& WXUNUSED(event))
       mPresetCombo->Append(mPresetNames);
       mPresetCombo->Select(mPresetNames.Index(name,false));
    }
+   return true;
 }
 
 ///
@@ -1894,6 +1915,20 @@ void ExportFFmpegOptions::OnImportPresets(wxCommandEvent& WXUNUSED(event))
 ///
 void ExportFFmpegOptions::OnExportPresets(wxCommandEvent& WXUNUSED(event))
 {
+   const bool kCheckForOverwrite = true;
+   // Bug 1180 save any pending preset before exporting the lot.
+   // If saving fails, don't try to export.
+   if( !SavePreset(!kCheckForOverwrite) )
+      return;
+
+   wxArrayString presets;
+   mPresets->GetPresetList( presets);
+   if( presets.Count() < 1)
+   {
+      AudacityMessageBox(_("No presets to export"));
+      return;
+   }
+
    wxString path;
    FileDialogWrapper dlg(this,
                   _("Select xml file to export presets into"),
@@ -2050,6 +2085,7 @@ void ExportFFmpegOptions::OnCodecList(wxCommandEvent& WXUNUSED(event))
    DoOnCodecList();
 }
 
+
 ///
 ///
 void ExportFFmpegOptions::OnOK(wxCommandEvent& WXUNUSED(event))
@@ -2069,5 +2105,11 @@ void ExportFFmpegOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 
    return;
 }
+
+void ExportFFmpegOptions::OnGetURL(wxCommandEvent & WXUNUSED(event))
+{
+   HelpSystem::ShowHelp(this, wxT("Custom_FFmpeg_Export_Options#Presets"));
+}
+
 
 #endif

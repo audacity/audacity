@@ -12,12 +12,22 @@
 #ifndef __AUDACITY_RECORDING_PREFS__
 #define __AUDACITY_RECORDING_PREFS__
 
+#include "../Audacity.h"
+#include "../Experimental.h"
+
 #include <wx/defs.h>
 
 #include "PrefsPanel.h"
 
 class wxTextCtrl;
 class ShuttleGui;
+
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   #define AILA_DEF_TARGET_PEAK 92
+   #define AILA_DEF_DELTA_PEAK 2
+   #define AILA_DEF_ANALYSIS_TIME 1000
+   #define AILA_DEF_NUMBER_ANALYSIS 5
+#endif
 
 #define RECORDING_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Recording") }
 

@@ -202,6 +202,29 @@ bool sf_subtype_is_integer(unsigned int format)
            subtype == SF_FORMAT_PCM_32);
 }
 
+int sf_subtype_bytes_per_sample(unsigned int format){
+   unsigned int subtype = format & SF_FORMAT_SUBMASK;
+   if( subtype == SF_FORMAT_PCM_S8 )
+      return 1;
+   if( subtype == SF_FORMAT_PCM_U8 )
+      return 1;
+   if( subtype == SF_FORMAT_PCM_16 )
+      return 2;
+   if( subtype == SF_FORMAT_PCM_24 )
+      return 3;
+   if( subtype == SF_FORMAT_PCM_32 )
+      return 4;
+   if( subtype == SF_FORMAT_FLOAT )
+      return 4;
+   if( subtype == SF_FORMAT_DOUBLE )
+      return 8;
+
+   // might be different to 2, but this is good enough for 
+   // WAV and AIFF file size error trapping.
+   return 2;
+}
+
+
 FileExtensions sf_get_all_extensions()
 {
    FileExtensions exts;

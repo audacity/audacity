@@ -54,8 +54,10 @@ is time to refresh some aspect of the screen.
 #include "KeyboardCapture.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
+#include "ProjectStatus.h"
 #include "ProjectWindow.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
@@ -71,6 +73,7 @@ is time to refresh some aspect of the screen.
 #include "RefreshCode.h"
 #include "TrackArtist.h"
 #include "TrackPanelAx.h"
+#include "TrackPanelResizerCell.h"
 #include "WaveTrack.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
 #include "NoteTrack.h"
@@ -78,8 +81,6 @@ is time to refresh some aspect of the screen.
 
 #include "ondemand/ODManager.h"
 #include "ondemand/ODTask.h"
-
-#include "toolbars/ControlToolBar.h"
 
 #include "tracks/ui/TrackControls.h"
 #include "tracks/ui/TrackView.h"
@@ -204,7 +205,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sKey{
       wxASSERT( mainPage ); // to justify safenew
 
       auto &tracks = TrackList::Get( project );
-      return safenew TrackPanel(mainPage,
+      auto result = safenew TrackPanel(mainPage,
          window.NextWindowID(),
          wxDefaultPosition,
          wxDefaultSize,
@@ -212,6 +213,8 @@ AudacityProject::AttachedWindows::RegisteredFactory sKey{
          &viewInfo,
          &project,
          &ruler);
+      project.SetPanel( result );
+      return result;
    }
 };
 
@@ -274,13 +277,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
             return {};
          }
       );
-#if wxUSE_ACCESSIBILITY
-      // wxWidgets owns the accessible object
-      SetAccessible(mAx = pAx.release());
-#else
-      // wxWidgets does not own the object, but we need to retain it
-      mAx = std::move(pAx);
-#endif
+      TrackFocus::Get( *GetProject() ).SetAccessible(
+         *this, std::move( pAx ) );
    }
 
    mRedrawAfterStop = false;
@@ -317,6 +315,12 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    theProject->Bind(EVT_UNDO_RESET, &TrackPanel::OnUndoReset, this);
 
+   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
+                     &TrackPanel::OnAudioIO,
+                     this);
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                     &TrackPanel::OnAudioIO,
+                     this);
    UpdatePrefs();
 }
 
@@ -419,8 +423,8 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    {
       //the stream may have been started up after this one finished (by some other project)
       //in that case reset the buttons don't stop the stream
-      auto &bar = ControlToolBar::Get( *p );
-      bar.StopPlaying(!gAudioIO->IsStreamActive());
+      auto &projectAudioManager = ProjectAudioManager::Get( *p );
+      projectAudioManager.Stop(!gAudioIO->IsStreamActive());
    }
 
    // Next, check to see if we were playing or recording
@@ -428,14 +432,10 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    if (projectAudioIO.GetAudioIOToken()>0 &&
          !gAudioIO->IsAudioTokenActive(projectAudioIO.GetAudioIOToken()))
    {
-      window.FixScrollbars();
       projectAudioIO.SetAudioIOToken(0);
       window.RedrawProject();
 
       mRedrawAfterStop = false;
-
-      //ANSWER-ME: Was DisplaySelection added to solve a repaint problem?
-      DisplaySelection();
    }
    if (mLastDrawnSelectedRegion != mViewInfo->selectedRegion) {
       UpdateSelectionDisplay();
@@ -496,7 +496,7 @@ void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
 void TrackPanel::OnUndoReset( wxCommandEvent &event )
 {
    event.Skip();
-   SetFocusedTrack( nullptr );
+   TrackFocus::Get( *GetProject() ).Set( nullptr );
    Refresh( false );
 }
 
@@ -631,23 +631,6 @@ void TrackPanel::ProcessUIHandleResult
    if (refreshResult & Resize)
       panel->GetListener()->TP_HandleResize();
 
-   // This flag is superfluous if you do full refresh,
-   // because TrackPanel::Refresh() does this too
-   if (refreshResult & UpdateSelection) {
-      panel->DisplaySelection();
-
-      {
-         // Formerly in TrackPanel::UpdateSelectionDisplay():
-
-         // Make sure the ruler follows suit.
-         // mRuler->DrawSelection();
-
-         // ... but that too is superfluous it does nothing but refresh
-         // the ruler, while DisplaySelection calls TP_DisplaySelection which
-         // also always refreshes the ruler.
-      }
-   }
-
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack)
       pClickedTrack->EnsureVisible();
 }
@@ -674,7 +657,7 @@ void TrackPanel::UpdateStatusMessage( const wxString &st )
    if (HasEscape())
    /* i18n-hint Esc is a key on the keyboard */
       status += wxT(" "), status += _("(Esc to cancel)");
-   GetProject()->SetStatus(status);
+   ProjectStatus::Get( *GetProject() ).Set( status );
 }
 
 void TrackPanel::UpdateSelectionDisplay()
@@ -685,27 +668,12 @@ void TrackPanel::UpdateSelectionDisplay()
 
    // Make sure the ruler follows suit.
    mRuler->DrawSelection();
-
-   // As well as the SelectionBar.
-   DisplaySelection();
-}
-
-void TrackPanel::UpdateAccessibility()
-{
-   if (mAx)
-      mAx->Updated();
 }
 
 // Counts selected tracks, counting stereo tracks as one track.
 size_t TrackPanel::GetSelectedTrackCount() const
 {
    return GetTracks()->SelectedLeaders().size();
-}
-
-void TrackPanel::MessageForScreenReader(const wxString& message)
-{
-   if (mAx)
-      mAx->MessageForScreenReader(message);
 }
 
 void TrackPanel::UpdateViewIfNoTracks()
@@ -724,9 +692,9 @@ void TrackPanel::UpdateViewIfNoTracks()
       // Bug 972
       mViewInfo->h = 0;
 
-      mListener->TP_RedrawScrollbars();
       mListener->TP_HandleResize();
-      GetProject()->SetStatus(wxT("")); //STM: Clear message if all tracks are removed
+      //STM: Clear message if all tracks are removed
+      ProjectStatus::Get( *GetProject() ).Set(wxT(""));
    }
 }
 
@@ -753,7 +721,7 @@ void TrackPanel::OnTrackListDeletion(wxEvent & e)
 
    // If the focused track disappeared but there are still other tracks,
    // this reassigns focus.
-   GetFocusedTrack();
+   TrackFocus( *GetProject() ).Get();
 
    UpdateVRulerSize();
 
@@ -861,7 +829,15 @@ void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
       mRefreshBacking = true;
    }
    wxWindow::Refresh(eraseBackground, rect);
-   DisplaySelection();
+
+   CallAfter([this]{ CellularPanel::HandleCursorForPresentMouseState(); } );
+}
+
+void TrackPanel::OnAudioIO(wxCommandEvent & evt)
+{
+   evt.Skip();
+   // Some hit tests want to change their cursor to and from the ban symbol
+   CallAfter( [this]{ CellularPanel::HandleCursorForPresentMouseState(); } );
 }
 
 #include "TrackPanelDrawingContext.h"
@@ -875,7 +851,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    const wxRect clip = GetRect();
 
-   mTrackArtist->pSelectedRegion = &mViewInfo->selectedRegion;
+   const SelectedRegion &sr = mViewInfo->selectedRegion;
+   mTrackArtist->pSelectedRegion = &sr;
    mTrackArtist->pZoomInfo = mViewInfo;
    TrackPanelDrawingContext context {
       *dc, Target(), mLastMouseState, mTrackArtist.get()
@@ -941,15 +918,34 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
       return;
 
    wxRect rect(mViewInfo->GetVRulerOffset(),
-            kTopMargin,
+            0,
             mViewInfo->GetVRulerWidth(),
             0);
 
 
    for (auto channel : TrackList::Channels(t)) {
       auto &view = TrackView::Get( *channel );
-      rect.height = view.GetHeight() - (kTopMargin + kBottomMargin);
-      TrackVRulerControls::Get( *channel ).UpdateRuler( rect );
+      const auto height = view.GetHeight() - (kTopMargin + kBottomMargin);
+      const auto subViews = view.GetSubViews( rect );
+      if (subViews.empty())
+         continue;
+   
+      auto iter = subViews.begin(), end = subViews.end(), next = iter;
+      auto yy = iter->first;
+      wxSize vRulerSize{ 0, 0 };
+      for ( ; iter != end; iter = next ) {
+         ++next;
+         auto nextY = ( next == end )
+            ? height
+            : next->first;
+         rect.SetHeight( nextY - yy );
+         // This causes ruler size in the track to be reassigned:
+         TrackVRulerControls::Get( *iter->second ).UpdateRuler( rect );
+         // But we want to know the maximum width and height over all sub-views:
+         vRulerSize.IncTo( t->vrulerSize );
+         yy = nextY;
+      }
+      t->vrulerSize = vRulerSize;
    }
 }
 
@@ -971,25 +967,6 @@ void TrackPanel::UpdateVRulerSize()
    Refresh(false);
 }
 
-// Make sure selection edge is in view
-void TrackPanel::ScrollIntoView(double pos)
-{
-   auto w = mViewInfo->GetTracksUsableWidth();
-
-   int pixel = mViewInfo->TimeToPosition(pos);
-   if (pixel < 0 || pixel >= w)
-   {
-      mListener->TP_ScrollWindow
-         (mViewInfo->OffsetTimeByPixels(pos, -(w / 2)));
-      Refresh(false);
-   }
-}
-
-void TrackPanel::ScrollIntoView(int x)
-{
-   ScrollIntoView(mViewInfo->PositionToTime(x, mViewInfo->GetLeftOffset()));
-}
-
 void TrackPanel::OnTrackMenu(Track *t)
 {
    CellularPanel::DoContextMenu( t ? &TrackView::Get( *t ) : nullptr );
@@ -1004,7 +981,7 @@ void TrackPanel::OnEnsureVisible(TrackListEvent & e)
    auto pTrack = e.mpTrack.lock();
    auto t = pTrack.get();
 
-   SetFocusedTrack(t);
+   TrackFocus::Get( *GetProject() ).Set( t );
 
    int trackTop = 0;
    int trackHeight =0;
@@ -1137,42 +1114,51 @@ struct EmptyCell final : CommonTrackPanelCell {
 // A vertical ruler left of a channel
 struct VRulerAndChannel final : TrackPanelGroup {
    VRulerAndChannel(
-      const std::shared_ptr< Track > &pChannel, wxCoord leftOffset )
-         : mpChannel{ pChannel }, mLeftOffset{ leftOffset } {}
+      const std::shared_ptr< TrackView > &pView, wxCoord leftOffset )
+         : mpView{ pView }, mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect ) override
    {
       return { Axis::X, Refinement{
          { rect.GetLeft(),
-           TrackVRulerControls::Get( *mpChannel ).shared_from_this() },
-         { mLeftOffset,
-           TrackView::Get( *mpChannel ).shared_from_this() }
+           TrackVRulerControls::Get( *mpView ).shared_from_this() },
+         { mLeftOffset, mpView }
       } };
    }
-   std::shared_ptr< Track > mpChannel;
+   std::shared_ptr< TrackView > mpView;
    wxCoord mLeftOffset;
 };
 
-// n channels with vertical rulers, alternating with n - 1 resizers
+// n channels with vertical rulers, alternating with n - 1 resizers;
+// each channel-ruler pair might be divided into multiple views
 struct ChannelGroup final : TrackPanelGroup {
    ChannelGroup( const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
       : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
-   Subdivision Children( const wxRect &rect ) override
+   Subdivision Children( const wxRect &rect_ ) override
    {
+      auto rect = rect_;
       Refinement refinement;
 
       const auto channels = TrackList::Channels( mpTrack.get() );
       const auto pLast = *channels.rbegin();
       wxCoord yy = rect.GetTop();
       for ( auto channel : channels ) {
-         refinement.emplace_back( yy,
-            std::make_shared< VRulerAndChannel >(
-               channel->SharedPointer(), mLeftOffset ) );
+         auto &view = TrackView::Get( *channel );
+         auto height = view.GetHeight();
+         rect.SetTop( yy );
+         rect.SetHeight( height );
+         const auto subViews = TrackView::Get( *channel ).GetSubViews( rect );
+         auto y1 = yy;
+         for ( const auto &subView : subViews ) {
+            y1 = std::max( y1, subView.first );
+            refinement.emplace_back( y1,
+               std::make_shared< VRulerAndChannel >(
+                  subView.second, mLeftOffset ) );
+         }
          if ( channel != pLast ) {
-            auto &view = TrackView::Get( *channel );
-            yy += view.GetHeight();
+            yy += height;
             refinement.emplace_back(
                yy - kSeparatorThickness,
-               TrackView::Get( *channel ).GetResizer() );
+               TrackPanelResizerCell::Get( *channel ).shared_from_this() );
          }
       }
 
@@ -1231,7 +1217,8 @@ struct LabeledChannelGroup final : TrackPanelGroup {
          // was the focus and no highlight should be drawn. -RBD
          const auto artist = TrackArtist::Get( context );
          auto &trackPanel = *artist->parent;
-         if (trackPanel.GetFocusedTrack() == mpTrack.get() &&
+         auto &trackFocus = TrackFocus::Get( *trackPanel.GetProject() );
+         if (trackFocus.Get() == mpTrack.get() &&
              wxWindow::FindFocus() == &trackPanel ) {
             /// Draw a three-level highlight gradient around the focused track.
             wxRect theRect = rect;
@@ -1290,8 +1277,9 @@ struct ResizingChannelGroup final : TrackPanelGroup {
       { rect.GetTop(),
          std::make_shared< LabeledChannelGroup >( mpTrack, mLeftOffset ) },
       { rect.GetTop() + rect.GetHeight() - kSeparatorThickness,
-         TrackView::Get( **TrackList::Channels( mpTrack.get() ).rbegin() )
-            .GetResizer() }
+         TrackPanelResizerCell::Get(
+            **TrackList::Channels( mpTrack.get() ).rbegin() ).shared_from_this()
+      }
    } }; }
    std::shared_ptr< Track > mpTrack;
    wxCoord mLeftOffset;
@@ -1371,54 +1359,25 @@ wxRect TrackPanel::FindTrackRect( const Track * target )
    } );
 }
 
-/// Displays the bounds of the selection in the status bar.
-void TrackPanel::DisplaySelection()
-{
-   if (!mListener)
-      return;
-
-   // DM: Note that the Selection Bar can actually MODIFY the selection
-   // if snap-to mode is on!!!
-   mListener->TP_DisplaySelection();
-}
-
 TrackPanelCell *TrackPanel::GetFocusedCell()
 {
-   auto pTrack = mAx->GetFocus().get();
-   if (pTrack)
-      return &TrackView::Get( *pTrack );
-   return nullptr;
-}
-
-Track *TrackPanel::GetFocusedTrack()
-{
-   auto pView = dynamic_cast<TrackView *>( GetFocusedCell() );
-   if (pView)
-      return pView->FindTrack().get();
-   return nullptr;
+   auto pTrack = TrackFocus::Get( *GetProject() ).Get();
+   return pTrack ? &TrackView::Get( *pTrack ) : nullptr;
 }
 
 void TrackPanel::SetFocusedCell()
 {
-   SetFocusedTrack( GetFocusedTrack() );
-}
-
-void TrackPanel::SetFocusedTrack( Track *t )
-{
-   // Make sure we always have the first linked track of a stereo track
-   t = *GetTracks()->FindLeader(t);
-
-   // This will cause callback to the handler function, defined next
-   mAx->SetFocus( Track::SharedPointer( t ) );
+   // This may have a side-effet of assigning a focus if there was none
+   TrackFocus::Get( *GetProject() ).Get();
+   KeyboardCapture::Capture(this);
 }
 
 void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
 {
    event.Skip();
-   auto cell = mAx->GetFocus().get();
+   auto cell = GetFocusedCell();
 
    if (cell) {
-      KeyboardCapture::Capture(this);
       Refresh( false );
    }
 }

@@ -217,6 +217,8 @@ public:
    Site& operator =( Site && other )
       { mData = std::move(other.mData); return *this; }
 
+   size_t size() const { return mData.size(); }
+
    /// \brief a type meant to be stored by client code in a static variable,
    /// and used as a retrieval key to get the manufactured client object back
    /// from the host object.
@@ -416,7 +418,12 @@ private:
    {
       return Locked< DataContainer >{ mData };
    }
-
+   
+   Locked<const DataContainer> GetData() const
+   {
+      return Locked< const DataContainer >{ mData };
+   }
+   
    static void EnsureIndex( Locked<DataContainer> &data, size_t index )
    {
       if (data.mObject.size() <= index)

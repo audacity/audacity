@@ -543,7 +543,7 @@ int TimerRecordDialog::RunWaitDialog()
       return POST_TIMER_RECORD_CANCEL_WAIT;
    } else {
       // Record for specified time.
-      TransportActions::DoRecord(*pProject);
+      ProjectAudioManager::Get( *pProject ).OnRecord(false);
       bool bIsRecording = true;
 
       wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
@@ -591,7 +591,7 @@ int TimerRecordDialog::RunWaitDialog()
 
    // Must do this AFTER the timer project dialog has been deleted to ensure the application
    // responds to the AUDIOIO events...see not about bug #334 in the ProgressDialog constructor.
-   TransportActions::DoStop(*pProject);
+   ProjectAudioManager::Get( *pProject ).Stop();
 
    // Let the caller handle cancellation or failure from recording progress.
    if (updateResult == ProgressResult::Cancelled || updateResult == ProgressResult::Failed)

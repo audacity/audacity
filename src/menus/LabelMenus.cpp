@@ -7,6 +7,7 @@
 #include "../ProjectAudioIO.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindow.h"
+#include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
@@ -23,6 +24,7 @@ int DoAddLabel(
    bool preserveFocus = false)
 {
    auto &tracks = TrackList::Get( project );
+   auto &trackFocus = TrackFocus::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -38,7 +40,7 @@ int DoAddLabel(
    }
 
    // If the focused track is a label track, use that
-   Track *const pFocusedTrack = trackPanel.GetFocusedTrack();
+   const auto pFocusedTrack = trackFocus.Get();
 
    // Look for a label track at or after the focused track
    auto iter = pFocusedTrack
@@ -76,7 +78,6 @@ int DoAddLabel(
 
    ProjectHistory::Get( project ).PushState(_("Added label"), _("Label"));
 
-   window.RedrawProject();
    if (!useDialog) {
       lt->EnsureVisible();
    }
@@ -343,9 +344,6 @@ void OnPasteNewLabel(const CommandContext &context)
    if (bPastedSomething) {
       ProjectHistory::Get( project ).PushState(
          _("Pasted from the clipboard"), _("Paste Text to New Label"));
-
-      // Is this necessary? (carried over from former logic in OnPaste())
-      window.RedrawProject();
    }
 }
 
@@ -387,8 +385,6 @@ void OnCutLabels(const CommandContext &context)
       _( "Cut labeled audio regions to clipboard" ),
    /* i18n-hint: (verb)*/
       _( "Cut Labeled Audio" ) );
-
-   window.RedrawProject();
 }
 
 void OnDeleteLabels(const CommandContext &context)
@@ -410,8 +406,6 @@ void OnDeleteLabels(const CommandContext &context)
       _( "Deleted labeled audio regions" ),
       /* i18n-hint: (verb)*/
       _( "Delete Labeled Audio" ) );
-
-   window.RedrawProject();
 }
 
 void OnSplitCutLabels(const CommandContext &context)
@@ -433,8 +427,6 @@ void OnSplitCutLabels(const CommandContext &context)
       _( "Split Cut labeled audio regions to clipboard" ),
       /* i18n-hint: (verb) Do a special kind of cut on the labels*/
       _( "Split Cut Labeled Audio" ) );
-
-   window.RedrawProject();
 }
 
 void OnSplitDeleteLabels(const CommandContext &context)
@@ -456,14 +448,11 @@ void OnSplitDeleteLabels(const CommandContext &context)
       /* i18n-hint: (verb) Do a special kind of DELETE on labeled audio
          regions */
       _( "Split Delete Labeled Audio" ) );
-
-   window.RedrawProject();
 }
 
 void OnSilenceLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
@@ -477,14 +466,11 @@ void OnSilenceLabels(const CommandContext &context)
       _( "Silenced labeled audio regions" ),
       /* i18n-hint: (verb)*/
       _( "Silence Labeled Audio" ) );
-
-   trackPanel.Refresh( false );
 }
 
 void OnCopyLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
@@ -497,8 +483,6 @@ void OnCopyLabels(const CommandContext &context)
    ProjectHistory::Get( project ).PushState( _( "Copied labeled audio regions to clipboard" ),
    /* i18n-hint: (verb)*/
       _( "Copy Labeled Audio" ) );
-
-   trackPanel.Refresh( false );
 }
 
 void OnSplitLabels(const CommandContext &context)
@@ -516,8 +500,6 @@ void OnSplitLabels(const CommandContext &context)
       _( "Split labeled audio (points or regions)" ),
       /* i18n-hint: (verb)*/
       _( "Split Labeled Audio" ) );
-
-   window.RedrawProject();
 }
 
 void OnJoinLabels(const CommandContext &context)
@@ -538,8 +520,6 @@ void OnJoinLabels(const CommandContext &context)
       _( "Joined labeled audio (points or regions)" ),
       /* i18n-hint: (verb) */
       _( "Join Labeled Audio" ) );
-
-   window.RedrawProject();
 }
 
 void OnDisjoinLabels(const CommandContext &context)
@@ -561,8 +541,6 @@ void OnDisjoinLabels(const CommandContext &context)
       _( "Detached labeled audio regions" ),
       /* i18n-hint: (verb)*/
       _( "Detach Labeled Audio" ) );
-
-   window.RedrawProject();
 }
 
 }; // struct Handler

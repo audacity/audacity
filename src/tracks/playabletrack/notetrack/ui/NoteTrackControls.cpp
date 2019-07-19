@@ -318,3 +318,14 @@ template<> template<> auto DoGetNoteTrackControls::Implementation() -> Function 
    };
 }
 static DoGetNoteTrackControls registerDoGetNoteTrackControls;
+
+#include "../../../ui/TrackView.h"
+
+using GetDefaultNoteTrackHeight = GetDefaultTrackHeight::Override< NoteTrack >;
+template<> template<>
+auto GetDefaultNoteTrackHeight::Implementation() -> Function {
+   return [](NoteTrack &) {
+      return NoteTrackControls::DefaultNoteTrackHeight();
+   };
+}
+static GetDefaultNoteTrackHeight registerGetDefaultNoteTrackHeight;

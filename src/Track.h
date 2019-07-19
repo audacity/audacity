@@ -182,8 +182,13 @@ private:
    long mValue;
 };
 
+using AttachedTrackObjects = ClientData::Site<
+   Track, ClientData::Base, ClientData::SkipCopying, std::shared_ptr
+>;
+
 class AUDACITY_DLL_API Track /* not final */
    : public XMLTagHandler
+   , public AttachedTrackObjects
    , public std::enable_shared_from_this<Track> // see SharedPointer()
 {
    friend class TrackList;
@@ -207,6 +212,7 @@ class AUDACITY_DLL_API Track /* not final */
 
  public:
 
+   using AttachedObjects = ::AttachedTrackObjects;
    using ChannelType = XMLValueChecker::ChannelType;
 
    static const auto LeftChannel = XMLValueChecker::LeftChannel;
@@ -1579,6 +1585,8 @@ class AUDACITY_DLL_API TrackFactory final
       , mZoomInfo(zoomInfo)
    {
    }
+   TrackFactory( const TrackFactory & ) PROHIBITED;
+   TrackFactory &operator=( const TrackFactory & ) PROHIBITED;
 
  private:
    const std::shared_ptr<DirManager> mDirManager;

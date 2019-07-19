@@ -20,6 +20,7 @@ class LabelStruct;
 class LabelTrack;
 struct LabelTrackEvent;
 struct LabelTrackHit;
+class NotifyingSelectedRegion;
 class SelectedRegion;
 struct TrackPanelDrawingContext;
 class ZoomInfo;
@@ -54,9 +55,9 @@ public:
 
    bool DoCaptureKey( AudacityProject &project, wxKeyEvent &event );
    bool DoKeyDown(
-      AudacityProject &project, SelectedRegion &sel, wxKeyEvent & event);
+      AudacityProject &project, NotifyingSelectedRegion &sel, wxKeyEvent & event);
    bool DoChar(
-      AudacityProject &project, SelectedRegion &sel, wxKeyEvent & event);
+      AudacityProject &project, NotifyingSelectedRegion &sel, wxKeyEvent & event);
 
    //This returns the index of the label we just added.
    int AddLabel(const SelectedRegion &region,

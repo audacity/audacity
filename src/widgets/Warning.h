@@ -30,9 +30,4 @@ int ShowWarningDialog(wxWindow *parent,
                       // This message appears by the checkbox:
                       const wxString &footer = DefaultWarningFooter());
 
-/// Return the config file key associated with a warning dialog identified
-/// by internalDialogName.  When the box is checked, the value at the key
-/// becomes false.
-wxString WarningDialogKey(const wxString &internalDialogName);
-
 #endif // __AUDACITY_WARNING__

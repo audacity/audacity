@@ -96,6 +96,7 @@ SF_FORMAT_INFO *sf_simple_format(int i);
 
 bool sf_subtype_more_than_16_bits(unsigned int format);
 bool sf_subtype_is_integer(unsigned int format);
+int sf_subtype_bytes_per_sample(unsigned int format);
 
 extern FileExtensions sf_get_all_extensions();
 

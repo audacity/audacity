@@ -22,6 +22,10 @@ class SelectionState final
    : public ClientData::Base
 {
 public:
+   SelectionState() = default;
+   SelectionState( const SelectionState & ) PROHIBITED;
+   SelectionState &operator=( const SelectionState & ) PROHIBITED;
+
    static SelectionState &Get( AudacityProject &project );
    static const SelectionState &Get( const AudacityProject &project );
 

@@ -85,7 +85,6 @@ and in the spectrogram spectral selection.
 
 #include "WaveTrack.h"
 
-#include "./widgets/LinkingHtmlWindow.h"
 #include "./widgets/HelpSystem.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/Ruler.h"

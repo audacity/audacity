@@ -28,9 +28,6 @@ public:
 
    virtual ~TrackVRulerControls() = 0;
 
-   static TrackVRulerControls &Get( Track& );
-   static const TrackVRulerControls &Get( const Track& );
-
    static TrackVRulerControls &Get( TrackView& );
    static const TrackVRulerControls &Get( const TrackView& );
 

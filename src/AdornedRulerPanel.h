@@ -17,6 +17,7 @@
 #include "ViewInfo.h" // for PlayRegion
 
 class AudacityProject;
+class SelectedRegionEvent;
 class SnapManager;
 class TrackList;
 
@@ -39,12 +40,16 @@ public:
 
    ~AdornedRulerPanel();
 
+   void Refresh
+      (bool eraseBackground = true, const wxRect *rect = (const wxRect *) NULL)
+      override;
+
    bool AcceptsFocus() const override { return s_AcceptsFocus; }
    bool AcceptsFocusFromKeyboard() const override { return true; }
    void SetFocusFromKbd() override;
 
 public:
-   int GetRulerHeight() { return GetRulerHeight(mShowScrubbing); }
+   int GetRulerHeight() { return GetRulerHeight( ShowingScrubRuler() ); }
    static int GetRulerHeight(bool showScrubBar);
    wxRect GetInnerRect() const { return mInner; }
 
@@ -54,6 +59,9 @@ public:
 
    void SetPlayRegion(double playRegionStart, double playRegionEnd);
    void ClearPlayRegion();
+   void LockPlayRegion();
+   void UnlockPlayRegion();
+   void TogglePinnedHead();
 
    void GetMaxSize(wxCoord *width, wxCoord *height);
 
@@ -64,19 +72,23 @@ public:
 
    void UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown);
 
-   bool ShowingScrubRuler() const { return mShowScrubbing; }
-   void OnToggleScrubRuler(/*wxCommandEvent& */);
+   bool ShowingScrubRuler() const;
    void OnToggleScrubRulerFromMenu(wxCommandEvent& );
-   void SetPanelSize();
+   bool SetPanelSize();
    
    void DrawBothOverlays();
 
 
 private:
-   void OnRecordStartStop(wxCommandEvent & evt);
+   void DoIdle();
+   void OnIdle( wxIdleEvent &evt );
+   void OnAudioStartStop(wxCommandEvent & evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
-   void UpdateRects();
+   void OnThemeChange(wxCommandEvent& evt);
+   void OnSelectionChange(SelectedRegionEvent& evt);
+   void DoSelectionChange( const SelectedRegion &selectedRegion );
+   bool UpdateRects();
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPRelease(wxMouseEvent &event);
@@ -165,8 +177,6 @@ private:
    double mLeftDownClick;  // click position in seconds
    bool mIsDragging;
 
-   bool mShowScrubbing { false };
-
    DECLARE_EVENT_TABLE()
 
    wxWindow *mButtons[3];
@@ -214,6 +224,11 @@ private:
    // classes implementing subdivision for CellularPanel
    struct Subgroup;
    struct MainGroup;
+
+   SelectedRegion mLastDrawnSelectedRegion;
+   double mLastDrawnH{};
+   double mLastDrawnZoom{};
+   bool mDirtySelectedRegion{};
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__

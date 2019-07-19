@@ -33,16 +33,6 @@ TrackVRulerControls::~TrackVRulerControls()
 {
 }
 
-TrackVRulerControls &TrackVRulerControls::Get( Track &track )
-{
-   return *TrackView::Get( track ).GetVRulerControls();
-}
-
-const TrackVRulerControls &TrackVRulerControls::Get( const Track &track )
-{
-   return *TrackView::Get( track ).GetVRulerControls();
-}
-
 TrackVRulerControls &TrackVRulerControls::Get( TrackView &trackView )
 {
    return *trackView.GetVRulerControls();

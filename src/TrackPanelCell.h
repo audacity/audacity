@@ -73,6 +73,10 @@ public:
 class AUDACITY_DLL_API TrackPanelCell /* not final */ : public TrackPanelNode
 {
 public:
+   TrackPanelCell() = default;
+   TrackPanelCell( const TrackPanelCell & ) PROHIBITED;
+   TrackPanelCell &operator=( const TrackPanelCell & ) PROHIBITED;
+
    virtual ~TrackPanelCell () = 0;
 
    // May supply default cursor, status message, and tooltip, when there is no

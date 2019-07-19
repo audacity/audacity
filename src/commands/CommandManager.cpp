@@ -96,7 +96,6 @@ CommandManager.  It holds the callback for one command.
 #include "../Menus.h"
 
 #include "../Project.h"
-#include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 
@@ -221,7 +220,7 @@ const std::vector<NormalizedKeyString> &CommandManager::ExcludedList()
          "Alt+J",
          "Shift+Alt+J",
          "Ctrl+Shift+A",
-         "Q",
+         //"Q",
          //"Shift+J",
          //"Shift+K",
          //"Shift+Home",

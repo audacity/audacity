@@ -21,6 +21,7 @@ class SelectionStateChanger;
 class SnapManager;
 class SpectrumAnalyst;
 class Track;
+class TrackView;
 class TrackList;
 class ViewInfo;
 class WaveTrack;
@@ -32,7 +33,7 @@ class SelectHandle : public UIHandle
 
 public:
    explicit SelectHandle
-      (const std::shared_ptr<Track> &pTrack, bool useSnap,
+      (const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
        const TrackList &trackList,
        const TrackPanelMouseState &st, const ViewInfo &viewInfo);
 
@@ -41,7 +42,7 @@ public:
    static UIHandlePtr HitTest
       (std::weak_ptr<SelectHandle> &holder,
        const TrackPanelMouseState &state, const AudacityProject *pProject,
-       const std::shared_ptr<Track> &pTrack);
+       const std::shared_ptr<TrackView> &pTrackView);
 
    SelectHandle &operator=(const SelectHandle&) = default;
    
@@ -78,6 +79,8 @@ public:
        const SelectHandle &newState);
 
 private:
+   std::weak_ptr<Track> FindTrack();
+
    void Connect(AudacityProject *pProject);
 
    void StartSelection(AudacityProject *pProject);
@@ -89,7 +92,7 @@ private:
 
    void StartFreqSelection
       (ViewInfo &viewInfo, int mouseYCoordinate, int trackTopEdge,
-      int trackHeight, Track *pTrack);
+      int trackHeight, TrackView *pTrackView);
    void AdjustFreqSelection
       (const WaveTrack *wt,
        ViewInfo &viewInfo, int mouseYCoordinate, int trackTopEdge,
@@ -104,7 +107,7 @@ private:
    void MoveSnappingFreqSelection
       (AudacityProject *pProject, ViewInfo &viewInfo, int mouseYCoordinate,
        int trackTopEdge,
-       int trackHeight, Track *pTrack);
+       int trackHeight, TrackView *pTrackView);
 public:
    // This is needed to implement a command assignable to keystrokes
    static void SnapCenterOnce
@@ -124,7 +127,7 @@ private:
    //   (const ViewInfo &viewInfo, double hintFrequency, bool logF);
 
 
-   std::weak_ptr<Track> mpTrack;
+   std::weak_ptr<TrackView> mpView;
    wxRect mRect{};
    SelectedRegion mInitialSelection{};
 

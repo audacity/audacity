@@ -11,13 +11,16 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackView.h"
 #include "../../Track.h"
 
-#include "TrackControls.h"
-#include "../../TrackPanelResizerCell.h"
-
 #include "../../ClientData.h"
 #include "../../Project.h"
 #include "../../xml/XMLTagHandler.h"
 #include "../../xml/XMLWriter.h"
+
+TrackView::TrackView( const std::shared_ptr<Track> &pTrack )
+   : CommonTrackCell{ pTrack }
+{
+   DoSetHeight( GetDefaultTrackHeight::Call( *pTrack ) );
+}
 
 TrackView::~TrackView()
 {
@@ -106,6 +109,16 @@ bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
       return false;
 }
 
+auto TrackView::GetSubViews( const wxRect &rect ) -> Refinement
+{
+   return { { rect.GetTop(), shared_from_this() } };
+}
+
+bool TrackView::IsSpectral() const
+{
+   return false;
+}
+
 void TrackView::DoSetMinimized(bool isMinimized)
 {
    mMinimized = isMinimized;
@@ -122,20 +135,6 @@ std::shared_ptr<TrackVRulerControls> TrackView::GetVRulerControls()
 std::shared_ptr<const TrackVRulerControls> TrackView::GetVRulerControls() const
 {
    return const_cast< TrackView* >( this )->GetVRulerControls();
-}
-
-#include "../../TrackPanelResizeHandle.h"
-std::shared_ptr<TrackPanelCell> TrackView::GetResizer()
-{
-   if (!mpResizer)
-      // create on demand
-      mpResizer = std::make_shared<TrackPanelResizerCell>( shared_from_this() );
-   return mpResizer;
-}
-
-std::shared_ptr<const TrackPanelCell> TrackView::GetResizer() const
-{
-   return const_cast<TrackView*>(this)->GetResizer();
 }
 
 void TrackView::DoSetY(int y)
@@ -166,7 +165,7 @@ namespace {
 
 // Attach an object to each project.  It receives track list events and updates
 // track Y coordinates
-struct TrackPositioner : ClientData::Base, wxEvtHandler
+struct TrackPositioner final : ClientData::Base, wxEvtHandler
 {
    AudacityProject &mProject;
 
@@ -182,6 +181,8 @@ struct TrackPositioner : ClientData::Base, wxEvtHandler
       TrackList::Get( project ).Bind(
          EVT_TRACKLIST_RESIZING, &TrackPositioner::OnUpdate, this );
    }
+   TrackPositioner( const TrackPositioner & ) PROHIBITED;
+   TrackPositioner &operator=( const TrackPositioner & ) PROHIBITED;
 
    void OnUpdate( TrackListEvent & e )
    {
@@ -216,3 +217,8 @@ template<> auto DoGetView::Implementation() -> Function {
    return nullptr;
 }
 static DoGetView registerDoGetView;
+
+template<> auto GetDefaultTrackHeight::Implementation() -> Function {
+   return nullptr;
+}
+static GetDefaultTrackHeight registerGetDefaultTrackHeight;

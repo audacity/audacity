@@ -96,20 +96,19 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
 
          S.StartMultiColumn(3, wxCENTRE);
          {
-            // FIXME: Textbox labels have inconsistent capitalization
             mTotal = S.Id(ID_TOTAL).AddTextBox(_("&Total space used"), wxT("0"), 10);
             mTotal->Bind(wxEVT_KEY_DOWN,
                             // ignore it
                             [](wxEvent&){});
             S.AddVariableText( {} )->Hide();
 
-            mAvail = S.Id(ID_AVAIL).AddTextBox(_("&Undo Levels Available"), wxT("0"), 10);
+            mAvail = S.Id(ID_AVAIL).AddTextBox(_("&Undo levels available"), wxT("0"), 10);
             mAvail->Bind(wxEVT_KEY_DOWN,
                             // ignore it
                             [](wxEvent&){});
             S.AddVariableText( {} )->Hide();
 
-            S.AddPrompt(_("&Levels To Discard"));
+            S.AddPrompt(_("&Levels to discard"));
             mLevels = safenew wxSpinCtrl(S.GetParent(),
                                      ID_LEVELS,
                                      wxT("1"),

@@ -31,7 +31,6 @@ code out of ModuleManager.
 // Declare static class members
 CommandHandler *ScriptCommandRelay::sCmdHandler;
 tpRegScriptServerFunc ScriptCommandRelay::sScriptFn;
-ResponseQueue ScriptCommandRelay::sResponseQueue;
 
 void ScriptCommandRelay::SetRegScriptServerFunc(tpRegScriptServerFunc scriptFn)
 {
@@ -162,22 +161,8 @@ void * ExecForLisp( char * pIn ){
 };
 
 
-/// Adds a response to the queue to be sent back to the script
-void ScriptCommandRelay::SendResponse(const wxString &response)
-{
-   sResponseQueue.AddResponse(response);
-}
-
 /// Gets a response from the queue (may block)
 Response ScriptCommandRelay::ReceiveResponse()
 {
-   return ScriptCommandRelay::sResponseQueue.WaitAndGetResponse();
-}
-
-/// Get a pointer to a message target which allows commands to send responses
-/// back to a script.
-std::shared_ptr<ResponseQueueTarget> ScriptCommandRelay::GetResponseTarget()
-{
-   // This should be deleted by a Command destructor
-   return std::make_shared<ResponseQueueTarget>(sResponseQueue);
+   return ResponseQueueTarget::sResponseQueue().WaitAndGetResponse();
 }

@@ -299,6 +299,9 @@
     <ClCompile Include="..\..\..\src\ProjectSettings.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ProjectStatus.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\ProjectWindow.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -677,9 +680,6 @@
     <ClCompile Include="..\..\..\src\widgets\KeyView.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\widgets\LinkingHtmlWindow.cpp">
-      <Filter>src\widgets</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\widgets\Meter.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
@@ -926,6 +926,9 @@
     <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp">
       <Filter>src\tracks\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\ScrubUI.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\TrackPanel.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1032,6 +1035,24 @@
       <Filter>src\widgets</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SampleHandle.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumView.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVRulerControls.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVZoomHandle.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformView.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVRulerControls.cpp">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVZoomHandle.cpp">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\CutlineHandle.cpp">
@@ -1429,6 +1450,9 @@
     <ClInclude Include="..\..\..\src\ProjectSettings.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ProjectStatus.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\ProjectWindow.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1801,9 +1825,6 @@
     <ClInclude Include="..\..\..\src\widgets\KeyView.h">
       <Filter>src\widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\widgets\LinkingHtmlWindow.h">
-      <Filter>src\widgets</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\Meter.h">
       <Filter>src\widgets</Filter>
     </ClInclude>
@@ -2119,6 +2140,9 @@
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h">
       <Filter>src\tracks\ui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\ScrubUI.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h">
       <Filter>src\commands</Filter>
     </ClInclude>
@@ -2234,6 +2258,24 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SampleHandle.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumView.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVRulerControls.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\SpectrumVZoomHandle.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformView.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVRulerControls.h">
+      <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\playabletrack\wavetrack\ui\WaveformVZoomHandle.h">
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\ui\TimeShiftHandle.h">
@@ -2600,9 +2642,6 @@
       <Filter>plug-ins</Filter>
     </copy>
     <copy Include="..\..\..\plug-ins\tremolo.ny">
-      <Filter>plug-ins</Filter>
-    </copy>
-    <copy Include="..\..\..\plug-ins\vocalremover.ny">
       <Filter>plug-ins</Filter>
     </copy>
     <copy Include="..\..\..\plug-ins\vocoder.ny">

@@ -50,4 +50,30 @@ private:
    friend class GetInfoCommand;
 };
 
+/// Used to restore pen, brush and logical-op in a DC back to what they were.
+struct DCUnchanger {
+public:
+   DCUnchanger() {}
+
+   DCUnchanger(const wxBrush &brush_, const wxPen &pen_, long logicalOperation_)
+   : brush(brush_), pen(pen_), logicalOperation(logicalOperation_)
+   {}
+
+   void operator () (wxDC *pDC) const;
+
+   wxBrush brush {};
+   wxPen pen {};
+   long logicalOperation {};
+};
+
+/// Makes temporary drawing context changes that you back out of, RAII style
+//  It's like wxDCPenChanger, etc., but simple and general
+class ADCChanger : public std::unique_ptr<wxDC, ::DCUnchanger>
+{
+   using Base = std::unique_ptr<wxDC, ::DCUnchanger>;
+public:
+   ADCChanger() : Base{} {}
+   ADCChanger(wxDC *pDC);
+};
+
 #endif

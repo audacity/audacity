@@ -187,6 +187,8 @@ src/ProjectSelectionManager.cpp
 src/ProjectSelectionManager.h
 src/ProjectSettings.cpp
 src/ProjectSettings.h
+src/ProjectStatus.cpp
+src/ProjectStatus.h
 src/ProjectWindow.cpp
 src/ProjectWindow.h
 src/RealFFTf.cpp
@@ -688,6 +690,18 @@ src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 src/tracks/playabletrack/wavetrack/ui/CutlineHandle.h
 src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 src/tracks/playabletrack/wavetrack/ui/SampleHandle.h
+src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+src/tracks/playabletrack/wavetrack/ui/SpectrumView.h
+src/tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
+src/tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.h
+src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.h
+src/tracks/playabletrack/wavetrack/ui/WaveformView.cpp
+src/tracks/playabletrack/wavetrack/ui/WaveformView.h
+src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
+src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h
+src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h
 src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.h
 src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -724,6 +738,8 @@ src/tracks/ui/PlayIndicatorOverlay.cpp
 src/tracks/ui/PlayIndicatorOverlay.h
 src/tracks/ui/Scrubbing.cpp
 src/tracks/ui/Scrubbing.h
+src/tracks/ui/ScrubUI.cpp
+src/tracks/ui/ScrubUI.h
 src/tracks/ui/SelectHandle.cpp
 src/tracks/ui/SelectHandle.h
 src/tracks/ui/SliderHandle.cpp
@@ -770,8 +786,6 @@ src/widgets/ImageRoll.cpp
 src/widgets/ImageRoll.h
 src/widgets/KeyView.cpp
 src/widgets/KeyView.h
-src/widgets/LinkingHtmlWindow.cpp
-src/widgets/LinkingHtmlWindow.h
 src/widgets/Meter.cpp
 src/widgets/Meter.h
 src/widgets/MeterPanelBase.cpp

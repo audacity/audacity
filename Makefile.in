@@ -602,7 +602,6 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/SpectralEditShelves.ny \
    plug-ins/StudioFadeOut.ny \
    plug-ins/tremolo.ny \
-   plug-ins/vocalremover.ny \
    plug-ins/vocalrediso.ny \
    plug-ins/vocoder.ny \
    $(NULL)

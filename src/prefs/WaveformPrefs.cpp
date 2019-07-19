@@ -27,6 +27,8 @@ Paul Licameli
 #include "../TrackPanel.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
 /* i18n-hint: A waveform is a visual representation of vibration */
@@ -184,7 +186,8 @@ bool WaveformPrefs::Commit()
 
    if (mWt && isOpenPage) {
       for (auto channel : TrackList::Channels(mWt))
-         channel->SetDisplay(WaveTrackViewConstants::Waveform);
+         WaveTrackView::Get( *channel )
+            .SetDisplay( WaveTrackViewConstants::Waveform );
    }
 
    if (isOpenPage) {

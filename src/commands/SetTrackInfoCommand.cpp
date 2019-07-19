@@ -37,13 +37,15 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "SetTrackInfoCommand.h"
 
 #include "../Project.h"
+#include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
 #include "../prefs/WaveformSettings.h"
 #include "../prefs/SpectrogramSettings.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
-#include "../tracks/ui/TrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "CommandContext.h"
 
 SetTrackBase::SetTrackBase(){
@@ -164,11 +166,11 @@ bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t
    if( !bIsSecondChannel ){
       if( bHasFocused )
       {
-         auto &panel = TrackPanel::Get( context.project );
+         auto &trackFocus = TrackFocus::Get( context.project );
          if( bFocused)
-            panel.SetFocusedTrack( t );
-         else if( t== panel.GetFocusedTrack() )
-            panel.SetFocusedTrack( nullptr );
+            trackFocus.Set( t );
+         else if( t == trackFocus.Get() )
+            trackFocus.Set( nullptr );
       }
    }
    return true;
@@ -352,7 +354,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
       TrackView::Get( *t ).SetHeight( mHeight );
 
    if( wt && bHasDisplayType  )
-      wt->SetDisplay(
+      WaveTrackView::Get( *wt ).SetDisplay(
          (mDisplayType == kWaveform) ?
             WaveTrackViewConstants::Waveform
             : WaveTrackViewConstants::Spectrum

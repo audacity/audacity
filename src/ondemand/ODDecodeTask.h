@@ -95,48 +95,6 @@ protected:
 
 };
 
-///class to decode a particular file (one per file).  Saves info such as filename and length (after the header is read.)
-class ODFileDecoder /* not final */
-{
-public:
-   ///This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows
-   ODFileDecoder(const wxString& fName);
-   virtual ~ODFileDecoder();
-
-   ///Read header.  Subclasses must override.  Probably should save the info somewhere.
-   ///Ideally called once per decoding of a file.  This complicates the task because
-   virtual bool ReadHeader()=0;
-   virtual bool Init(){return ReadHeader();}
-
-   virtual bool SeekingAllowed(){return true;}
-
-   ///Decodes the samples for this blockfile from the real file into a float buffer.
-   ///This is file specific, so subclasses must implement this only.
-   ///the buffer should be created by the ODFileDecoder implementing this method.
-   ///It should set the format parameter so that the client code can deal with it.
-   ///This class should call ReadHeader() first, so it knows the length, and can prepare
-   ///the file object if it needs to.
-   ///returns negative value for failure, 0 or positive value for success.
-   virtual int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, size_t len, unsigned int channel) = 0;
-
-   const wxString &GetFileName(){return mFName;}
-
-   bool IsInitialized();
-
-protected:
-   ///Derived classes should call this after they have parsed the header.
-   void MarkInitialized();
-
-   bool     mInited;
-   ODLock   mInitedLock;
-
-   const wxString  mFName;
-
-   unsigned int mSampleRate;
-   unsigned int mNumSamples;//this may depend on the channel - so TODO: we should probably let the decoder create/modify the track info directly.
-   unsigned int mNumChannels;
-};
-
 #endif
 
 

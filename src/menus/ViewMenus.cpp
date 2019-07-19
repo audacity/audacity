@@ -258,7 +258,6 @@ void OnZoomFitV(const CommandContext &context)
    DoZoomFitV(project);
 
    window.GetVerticalScrollBar().SetThumbPosition(0);
-   window.RedrawProject();
    ProjectHistory::Get( project ).ModifyState(true);
 }
 
@@ -284,7 +283,6 @@ void OnCollapseAllTracks(const CommandContext &context)
       TrackView::Get( *t ).SetMinimized(true);
 
    ProjectHistory::Get( project ).ModifyState(true);
-   window.RedrawProject();
 }
 
 void OnExpandAllTracks(const CommandContext &context)
@@ -297,7 +295,6 @@ void OnExpandAllTracks(const CommandContext &context)
       TrackView::Get( *t ).SetMinimized(false);
 
    ProjectHistory::Get( project ).ModifyState(true);
-   window.RedrawProject();
 }
 
 void OnGoSelStart(const CommandContext &context)
@@ -411,6 +408,8 @@ Handler( AudacityProject &project )
 {
    mProject.Unbind( EVT_UNDO_PUSHED, &Handler::OnUndoPushed, this );
 }
+Handler( const Handler & ) PROHIBITED;
+Handler &operator=( const Handler & ) PROHIBITED;
 
 AudacityProject &mProject;
 

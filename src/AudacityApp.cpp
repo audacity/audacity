@@ -77,7 +77,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "commands/AppCommandEvent.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
-#include "LangChoice.h"
+//#include "LangChoice.h"
 #include "Languages.h"
 #include "Menus.h"
 #include "MissingAliasFileDialog.h"
@@ -1358,13 +1358,15 @@ bool AudacityApp::OnInit()
 #endif
 
    // Initialize preferences and language
-   InitPreferences();
+   wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
+   InitPreferences( configFileName );
    PopulatePreferences();
    // This test must follow PopulatePreferences, because if an error message
    // must be shown, we need internationalization to have been initialized
    // first, which was done in PopulatePreferences
    if ( !CheckWritablePreferences() ) {
-      ::AudacityMessageBox( UnwritablePreferencesErrorMessage() );
+      ::AudacityMessageBox(
+         UnwritablePreferencesErrorMessage( configFileName ) );
       return false;
    }
 
@@ -1654,7 +1656,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
                gAudioIO->GetNumCaptureChannels() == 0) ||
          scrubbing)
          // ESC out of other play (but not record)
-         TransportActions::DoStop(*project);
+         ProjectAudioManager::Get( *project ).Stop();
       else
          event.Skip();
    }

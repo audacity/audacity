@@ -39,10 +39,12 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include <wx/window.h>
 
 #include "Project.h"
+#include "ProjectStatus.h"
 #include "ProjectWindow.h"
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
 #include "tracks/ui/TrackView.h"
+#include "widgets/HelpSystem.h"
 
 #include "ViewInfo.h"
 #include "WaveTrack.h"
@@ -67,6 +69,9 @@ class ScreenFrame final : public wxFrame
    void OnCloseWindow(wxCloseEvent & event);
    void OnUIUpdate(wxUpdateUIEvent & event);
    void OnDirChoose(wxCommandEvent & event);
+   void OnGetURL(wxCommandEvent & event);
+   void OnClose(wxCommandEvent & event );
+
 
    void SizeMainWindow(int w, int h);
    void OnMainWindowSmall(wxCommandEvent & event);
@@ -221,6 +226,8 @@ enum
 
 BEGIN_EVENT_TABLE(ScreenFrame, wxFrame)
    EVT_CLOSE(ScreenFrame::OnCloseWindow)
+   EVT_BUTTON(wxID_HELP, ScreenFrame::OnGetURL)
+   EVT_BUTTON(wxID_CANCEL, ScreenFrame::OnClose)
 
    EVT_UPDATE_UI(IdCaptureFullScreen,   ScreenFrame::OnUIUpdate)
 
@@ -447,6 +454,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
          S.EndHorizontalLay();
       }
       S.EndStatic();
+      S.AddStandardButtons(eCloseButton |eHelpButton);
    }
    S.EndPanel();
 
@@ -504,6 +512,16 @@ bool ScreenFrame::ProcessEvent(wxEvent & e)
 void ScreenFrame::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
 {
    Destroy();
+}
+
+void ScreenFrame::OnClose(wxCommandEvent &  WXUNUSED(event))
+{
+   Destroy();
+}
+
+void ScreenFrame::OnGetURL(wxCommandEvent & WXUNUSED(event))
+{
+   HelpSystem::ShowHelp(this, wxT("Screenshot"));
 }
 
 void ScreenFrame::OnUIUpdate(wxUpdateUIEvent &  WXUNUSED(event))

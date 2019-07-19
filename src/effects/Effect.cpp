@@ -64,13 +64,13 @@ greater use in future.
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/Command.h"
-#include "../toolbars/ControlToolBar.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ProgressDialog.h"
 #include "../ondemand/ODManager.h"
 #include "TimeWarper.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../widgets/HelpSystem.h"
-#include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
@@ -1171,14 +1171,14 @@ bool Effect::DoEffect(wxWindow *parent,
                       double projectRate,
                       TrackList *list,
                       TrackFactory *factory,
-                      SelectedRegion *selectedRegion,
+                      NotifyingSelectedRegion &selectedRegion,
                       bool shouldPrompt /* = true */)
 {
-   wxASSERT(selectedRegion->duration() >= 0.0);
+   wxASSERT(selectedRegion.duration() >= 0.0);
 
    mOutputTracks.reset();
 
-   mpSelectedRegion = selectedRegion;
+   mpSelectedRegion = &selectedRegion;
    mFactory = factory;
    mProjectRate = projectRate;
    mTracks = list;
@@ -1218,8 +1218,8 @@ bool Effect::DoEffect(wxWindow *parent,
       newTrack->SetSelected(true);
    }
 
-   mT0 = selectedRegion->t0();
-   mT1 = selectedRegion->t1();
+   mT0 = selectedRegion.t0();
+   mT1 = selectedRegion.t1();
    if (mT1 > mT0)
    {
       // there is a selection: let's fit in there...
@@ -1237,8 +1237,8 @@ bool Effect::DoEffect(wxWindow *parent,
       : NumericConverter::DefaultSelectionFormat();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   mF0 = selectedRegion->f0();
-   mF1 = selectedRegion->f1();
+   mF0 = selectedRegion.f0();
+   mF1 = selectedRegion.f1();
    wxArrayString Names;
    if( mF0 != SelectedRegion::UndefinedFrequency )
       Names.push_back(wxT("control-f0"));
@@ -1280,7 +1280,7 @@ bool Effect::DoEffect(wxWindow *parent,
 
    if (returnVal && (mT1 >= mT0 ))
    {
-      selectedRegion->setTimes(mT0, mT1);
+      selectedRegion.setTimes(mT0, mT1);
    }
 
    success = returnVal;
@@ -1289,10 +1289,11 @@ bool Effect::DoEffect(wxWindow *parent,
 
 bool Effect::Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt)
 {
-   SelectedRegion region{ mT0, mT1 };
+   NotifyingSelectedRegion region;
+   region.setTimes( mT0, mT1 );
 
    return delegate.DoEffect( parent, mProjectRate, mTracks, mFactory,
-      &region, shouldPrompt );
+      region, shouldPrompt );
 }
 
 // All legacy effects should have this overridden
@@ -2362,7 +2363,8 @@ void Effect::Preview(bool dryOnly)
 
       mixLeft->Offset(-mixLeft->GetStartTime());
       mixLeft->SetSelected(true);
-      mixLeft->SetDisplay(WaveTrackViewConstants::NoDisplay);
+      WaveTrackView::Get( *mixLeft )
+         .SetDisplay(WaveTrackViewConstants::NoDisplay);
       auto pLeft = mTracks->Add( mixLeft );
       Track *pRight{};
       if (mixRight) {
@@ -2377,8 +2379,8 @@ void Effect::Preview(bool dryOnly)
          if (src->GetSelected() || mPreviewWithNotSelected) {
             auto dest = src->Copy(mT0, t1);
             dest->SetSelected(src->GetSelected());
-            static_cast<WaveTrack*>(dest.get())
-               ->SetDisplay(WaveTrackViewConstants::NoDisplay);
+            WaveTrackView::Get( *static_cast<WaveTrack*>(dest.get()) )
+               .SetDisplay(WaveTrackViewConstants::NoDisplay);
             mTracks->Add( dest );
          }
       }
@@ -2409,7 +2411,7 @@ void Effect::Preview(bool dryOnly)
 
    if (success)
    {
-      auto tracks = GetAllPlaybackTracks(*mTracks, true);
+      auto tracks = ProjectAudioManager::GetAllPlaybackTracks(*mTracks, true);
 
       // Some effects (Paulstretch) may need to generate more
       // than previewLen, so take the min.
@@ -3296,8 +3298,8 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
    {
       auto gAudioIO = AudioIO::Get();
       mPlayPos = gAudioIO->GetStreamTime();
-      auto &bar = ControlToolBar::Get( *mProject );
-      bar.StopPlaying();
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.Stop();
    }
    else
    {
@@ -3321,8 +3323,8 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
          mPlayPos = mRegion.t1();
       }
 
-      auto &bar = ControlToolBar::Get( *mProject );
-      bar.PlayPlayRegion(
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.PlayPlayRegion(
          SelectedRegion(mPlayPos, mRegion.t1()),
          DefaultPlayOptions( *mProject ),
          PlayMode::normalPlay );
