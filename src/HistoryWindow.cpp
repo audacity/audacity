@@ -96,7 +96,6 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
 
          S.StartMultiColumn(3, wxCENTRE);
          {
-            // FIXME: Textbox labels have inconsistent capitalization
             mTotal = S.Id(ID_TOTAL).AddTextBox(_("&Total space used"), wxT("0"), 10);
             mTotal->Bind(wxEVT_KEY_DOWN,
                             // ignore it
