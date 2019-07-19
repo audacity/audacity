@@ -74,6 +74,23 @@ const TrackView &TrackView::Get( const Track &track )
    return Get( const_cast< Track& >( track ) );
 }
 
+TrackView *TrackView::Find( Track *pTrack )
+{
+   if (!pTrack)
+      return nullptr;
+   auto &track = *pTrack;
+
+   auto pView = std::static_pointer_cast<TrackView>( track.GetTrackView() );
+   // do not create on demand if it is null
+
+   return pView.get();
+}
+
+const TrackView *TrackView::Find( const Track *pTrack )
+{
+   return Find( const_cast< Track* >( pTrack ) );
+}
+
 void TrackView::SetMinimized(bool isMinimized)
 {
    // Do special changes appropriate to subclass
