@@ -103,13 +103,13 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
                             [](wxEvent&){});
             S.AddVariableText( {} )->Hide();
 
-            mAvail = S.Id(ID_AVAIL).AddTextBox(_("&Undo Levels Available"), wxT("0"), 10);
+            mAvail = S.Id(ID_AVAIL).AddTextBox(_("&Undo levels available"), wxT("0"), 10);
             mAvail->Bind(wxEVT_KEY_DOWN,
                             // ignore it
                             [](wxEvent&){});
             S.AddVariableText( {} )->Hide();
 
-            S.AddPrompt(_("&Levels To Discard"));
+            S.AddPrompt(_("&Levels to discard"));
             mLevels = safenew wxSpinCtrl(S.GetParent(),
                                      ID_LEVELS,
                                      wxT("1"),
