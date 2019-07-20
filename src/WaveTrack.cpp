@@ -54,6 +54,7 @@ Track classes.
 #include "Prefs.h"
 
 #include "effects/TimeWarper.h"
+#include "prefs/QualityPrefs.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
 #include "prefs/WaveformSettings.h"
@@ -80,7 +81,7 @@ WaveTrack::Holder TrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 {
    if (format == (sampleFormat)0)
-      format = mSettings.GetDefaultFormat();
+      QualityPrefs::SampleFormatChoice();
    if (rate == 0)
       rate = mSettings.GetRate();
    return std::make_shared<WaveTrack> ( mDirManager, format, rate );
