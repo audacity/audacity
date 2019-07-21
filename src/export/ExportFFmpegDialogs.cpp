@@ -2108,7 +2108,7 @@ void ExportFFmpegOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 
 void ExportFFmpegOptions::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Custom_FFmpeg_Export_Options#Presets"));
+   HelpSystem::ShowHelp(this, wxT("Custom_FFmpeg_Export_Options"));
 }
 
 
