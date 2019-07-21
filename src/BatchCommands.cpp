@@ -796,7 +796,7 @@ bool MacroCommands::ApplyEffectCommand(
             EffectManager::kDontRepeatLast);
       else
          // and apply the effect...
-         res = EffectManager::DoEffect(ID,
+         res = EffectUI::DoEffect(ID,
             Context,
             EffectManager::kConfigured |
             EffectManager::kSkipState |
@@ -831,7 +831,7 @@ bool MacroCommands::HandleTextualCommand( CommandManager &commandManager,
    {
       if (em.GetCommandIdentifier(plug->GetID()) == Str)
       {
-         return EffectManager::DoEffect(
+         return EffectUI::DoEffect(
             plug->GetID(), context,
             EffectManager::kConfigured);
       }

@@ -71,9 +71,6 @@ public:
 // them by index number, usually when the user selects one from a menu.
 //
 public:
-   static bool DoEffect(
-      const PluginID & ID, const CommandContext &context, unsigned flags );
-
    EffectManager();
    virtual ~EffectManager();
 
@@ -82,19 +79,6 @@ public:
    // a better solution is devised.
    const PluginID & RegisterEffect(Effect *f);
    void UnregisterEffect(const PluginID & ID);
-
-   /** Run an effect given the plugin ID */
-   // Returns true on success.  Will only operate on tracks that
-   // have the "selected" flag set to true, which is consistent with
-   // Audacity's standard UI.
-   bool DoEffect(const PluginID & ID,
-                 wxWindow *parent,
-                 AudacityProject &project,
-                 double projectRate,
-                 TrackList *list,
-                 TrackFactory *factory,
-                 NotifyingSelectedRegion &selectedRegion,
-                 bool shouldPrompt = true);
 
    TranslatableString GetEffectFamilyName(const PluginID & ID);
    TranslatableString GetVendorName(const PluginID & ID);
@@ -150,12 +134,12 @@ public:
 
    const PluginID & GetEffectByIdentifier(const CommandID & strTarget);
 
-private:
    /** Return an effect by its ID. */
    Effect *GetEffect(const PluginID & ID);
-   AudacityCommand *GetAudacityCommand(const PluginID & ID);
 
 private:
+   AudacityCommand *GetAudacityCommand(const PluginID & ID);
+
    EffectMap mEffects;
    AudacityCommandMap mCommands;
    EffectOwnerMap mHostEffects;

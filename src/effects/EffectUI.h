@@ -212,9 +212,20 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
+struct CommandContext;
+
 namespace  EffectUI {
+
    wxDialog *DialogFactory( wxWindow *parent, EffectHostInterface *pHost,
       EffectUIClientInterface *client);
+
+   /** Run an effect given the plugin ID */
+   // Returns true on success.  Will only operate on tracks that
+   // have the "selected" flag set to true, which is consistent with
+   // Audacity's standard UI.
+   bool DoEffect(
+      const PluginID & ID, const CommandContext &context, unsigned flags );
+
 }
 
 #endif // __AUDACITY_EFFECTUI_H__

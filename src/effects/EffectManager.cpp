@@ -91,14 +91,13 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
    mEffects.erase(id);
 }
 
-/// DoEffect() takes a PluginID and has the EffectManager execute the associated
-/// effect.
+/// DoEffect() takes a PluginID and executes the associated effect.
 ///
 /// At the moment flags are used only to indicate whether to prompt for
 //  parameters, whether to save the state to history and whether to allow
 /// 'Repeat Last Effect'.
 
-/* static */ bool EffectManager::DoEffect(
+/* static */ bool EffectUI::DoEffect(
    const PluginID & ID, const CommandContext &context, unsigned flags )
 {
    AudacityProject &project = context.project;
@@ -157,9 +156,26 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
 
    EffectManager & em = EffectManager::Get();
 
-   success = em.DoEffect(ID, &window, context.project, rate,
-      &tracks, &trackFactory, selectedRegion,
-      (flags & EffectManager::kConfigured) == 0);
+   em.SetSkipStateFlag( false );
+   if (auto effect = em.GetEffect(ID)) {
+#if defined(EXPERIMENTAL_EFFECTS_RACK)
+      if (effect->SupportsRealtime())
+      {
+         EffectRack::Get( context.project ).Add(effect);
+      }
+#endif
+      success = effect->DoEffect(&window,
+         rate,
+         &tracks,
+         &trackFactory,
+         selectedRegion,
+         (flags & EffectManager::kConfigured) == 0
+            ? DialogFactory
+            : nullptr
+      );
+   }
+   else
+      success = false;
 
    if (!success)
       return false;
@@ -225,43 +241,6 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
    }
 
    return true;
-}
-
-bool EffectManager::DoEffect(const PluginID & ID,
-                             wxWindow *parent,
-                             AudacityProject &project,
-                             double projectRate,
-                             TrackList *list,
-                             TrackFactory *trackFactory,
-                             NotifyingSelectedRegion &selectedRegion,
-                             bool shouldPrompt /* = true */)
-
-{
-   this->SetSkipStateFlag(false);
-   Effect *effect = GetEffect(ID);
-   
-   if (!effect)
-   {
-      return false;
-   }
-
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-   if (effect->SupportsRealtime())
-   {
-      EffectRack::Get( project ).Add(effect);
-   }
-#else
-   (void)project;
-#endif
-
-   bool res = effect->DoEffect( parent,
-      projectRate,
-      list,
-      trackFactory,
-      selectedRegion,
-      shouldPrompt ?  EffectUI::DialogFactory : nullptr );
-
-   return res;
 }
 
 bool EffectManager::DoAudacityCommand(const PluginID & ID,

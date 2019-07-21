@@ -310,7 +310,7 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    {
       if (mPowerState[i])
       {
-         if (!EffectManager::DoEffect(mEffects[i]->GetID(),
+         if (!EffectUI::DoEffect(mEffects[i]->GetID(),
                            *project,
                            EffectManager::kConfigured))
             // If any effect fails (or throws), then stop.
@@ -1195,7 +1195,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       // This is absolute hackage...but easy and I can't think of another way just now.
       //
       // It should callback to the EffectManager to kick off the processing
-      EffectManager::DoEffect(mEffect->GetID(), context,
+      EffectUI::DoEffect(mEffect->GetID(), context,
          EffectManager::kConfigured);
    }
 

@@ -31,6 +31,7 @@
 #include "Project.h"
 #include "ShuttleGui.h"
 #include "effects/EffectManager.h"
+#include "effects/EffectUI.h"
 #include "effects/nyquist/Nyquist.h"
 #include "../images/AudacityLogo.xpm"
 #include "../../src/commands/CommandContext.h"
@@ -1403,7 +1404,7 @@ void NyqBench::OnGo(wxCommandEvent & e)
       mRunning = true;
       UpdateWindowUI();
 
-      EffectManager::DoEffect(ID, CommandContext(*p), 0);
+      EffectUI::DoEffect(ID, CommandContext(*p), 0);
 
       mRunning = false;
       UpdateWindowUI();
