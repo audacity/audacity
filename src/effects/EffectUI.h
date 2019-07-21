@@ -102,4 +102,114 @@ private:
 
 #endif
 
+#include "audacity/EffectInterface.h"
+#include "../widgets/wxPanelWrapper.h" // to inherit
+
+#include "../SelectedRegion.h"
+
+class AudacityCommand;
+class AudacityProject;
+class Effect;
+
+class wxCheckBox;
+
+//
+class EffectUIHost final : public wxDialogWrapper,
+                     public EffectUIHostInterface
+{
+public:
+   // constructors and destructors
+   EffectUIHost(wxWindow *parent,
+                Effect *effect,
+                EffectUIClientInterface *client);
+   EffectUIHost(wxWindow *parent,
+                AudacityCommand *command,
+                EffectUIClientInterface *client);
+   virtual ~EffectUIHost();
+
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
+
+   int ShowModal() override;
+
+   bool Initialize();
+
+private:
+   void OnInitDialog(wxInitDialogEvent & evt);
+   void OnErase(wxEraseEvent & evt);
+   void OnPaint(wxPaintEvent & evt);
+   void OnClose(wxCloseEvent & evt);
+   void OnApply(wxCommandEvent & evt);
+   void DoCancel();
+   void OnCancel(wxCommandEvent & evt);
+   void OnHelp(wxCommandEvent & evt);
+   void OnDebug(wxCommandEvent & evt);
+   void OnMenu(wxCommandEvent & evt);
+   void OnEnable(wxCommandEvent & evt);
+   void OnPlay(wxCommandEvent & evt);
+   void OnRewind(wxCommandEvent & evt);
+   void OnFFwd(wxCommandEvent & evt);
+   void OnPlayback(wxCommandEvent & evt);
+   void OnCapture(wxCommandEvent & evt);
+   void OnUserPreset(wxCommandEvent & evt);
+   void OnFactoryPreset(wxCommandEvent & evt);
+   void OnDeletePreset(wxCommandEvent & evt);
+   void OnSaveAs(wxCommandEvent & evt);
+   void OnImport(wxCommandEvent & evt);
+   void OnExport(wxCommandEvent & evt);
+   void OnOptions(wxCommandEvent & evt);
+   void OnDefaults(wxCommandEvent & evt);
+
+   void UpdateControls();
+   wxBitmap CreateBitmap(const char * const xpm[], bool up, bool pusher);
+   void LoadUserPresets();
+
+   void InitializeRealtime();
+   void CleanupRealtime();
+   void Resume();
+
+private:
+   AudacityProject *mProject;
+   wxWindow *mParent;
+   Effect *mEffect;
+   AudacityCommand * mCommand;
+   EffectUIClientInterface *mClient;
+
+   RegistryPaths mUserPresets;
+   bool mInitialized;
+   bool mSupportsRealtime;
+   bool mIsGUI;
+   bool mIsBatch;
+
+   wxButton *mApplyBtn;
+   wxButton *mCloseBtn;
+   wxButton *mMenuBtn;
+   wxButton *mPlayBtn;
+   wxButton *mRewindBtn;
+   wxButton *mFFwdBtn;
+   wxCheckBox *mEnableCb;
+
+   wxButton *mEnableToggleBtn;
+   wxButton *mPlayToggleBtn;
+
+   wxBitmap mPlayBM;
+   wxBitmap mPlayDisabledBM;
+   wxBitmap mStopBM;
+   wxBitmap mStopDisabledBM;
+
+   bool mEnabled;
+
+   bool mDisableTransport;
+   bool mPlaying;
+   bool mCapturing;
+
+   SelectedRegion mRegion;
+   double mPlayPos;
+
+   bool mDismissed{};
+   bool mNeedsResume{};
+
+   DECLARE_EVENT_TABLE()
+};
+
 #endif // __AUDACITY_EFFECTUI_H__
