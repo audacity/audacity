@@ -177,7 +177,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
    void SetDuration(double duration) override;
 
-   bool Apply() override;
    void Preview() override;
 
    wxDialog *CreateUI(wxWindow *parent, EffectUIClientInterface *client) override;

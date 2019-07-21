@@ -33,7 +33,6 @@ greater use in future.
 #include <wx/listbox.h>
 #include <wx/sizer.h>
 
-#include "EffectManager.h"
 #include "../AudioIO.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"
@@ -52,7 +51,6 @@ greater use in future.
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
-#include "../commands/CommandContext.h"
 
 #include <unordered_map>
 
@@ -726,17 +724,6 @@ void Effect::SetDuration(double seconds)
    mIsSelection = false;
 
    return;
-}
-
-bool Effect::Apply()
-{
-   auto &project = *GetActiveProject();
-   CommandContext context( project );
-   // This is absolute hackage...but easy and I can't think of another way just now.
-   //
-   // It should callback to the EffectManager to kick off the processing
-   return EffectManager::DoEffect(GetID(), context,
-      EffectManager::kConfigured);
 }
 
 void Effect::Preview()

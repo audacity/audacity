@@ -1186,9 +1186,17 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    // for sure), but it is a nice visual cue that something is going on.
    mApplyBtn->Disable();
    auto cleanup = finally( [&] { mApplyBtn->Enable(); } );
-   
-   if( mEffect )
-      mEffect->Apply();
+
+   if( mEffect ) {
+      auto &project = *GetActiveProject();
+      CommandContext context( project );
+      // This is absolute hackage...but easy and I can't think of another way just now.
+      //
+      // It should callback to the EffectManager to kick off the processing
+      EffectManager::DoEffect(mEffect->GetID(), context,
+         EffectManager::kConfigured);
+   }
+
    if( mCommand )
       // PRL:  I don't like the global and would rather pass *mProject!
       // But I am preserving old behavior
