@@ -123,8 +123,6 @@ public:
    virtual NumericFormatSymbol GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;
 
-   virtual void Preview() = 0;
-
    // Preset handling
    virtual RegistryPath GetUserPresetsGroup(const RegistryPath & name) = 0;
    virtual RegistryPath GetCurrentSettingsGroup() = 0;

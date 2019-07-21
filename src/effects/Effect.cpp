@@ -728,11 +728,6 @@ void Effect::SetDuration(double seconds)
    return;
 }
 
-void Effect::Preview()
-{
-   Preview(false);
-}
-
 RegistryPath Effect::GetUserPresetsGroup(const RegistryPath & name)
 {
    RegistryPath group = wxT("UserPresets");

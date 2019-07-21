@@ -689,7 +689,7 @@ void NoiseRemovalDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
       m_pEffect->mDoProfile = oldDoProfile;
    } );
 
-   m_pEffect->Preview();
+   m_pEffect->Preview( false );
 }
 
 void NoiseRemovalDialog::OnRemoveNoise( wxCommandEvent & WXUNUSED(event))
