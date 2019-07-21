@@ -21,34 +21,17 @@ effects.
 #include "../Audacity.h"
 #include "EffectManager.h"
 
-#include "../Experimental.h"
-
 #include "Effect.h"
 
 #include <algorithm>
-#include <wx/stopwatch.h>
 #include <wx/tokenzr.h>
 
 #include "../widgets/AudacityMessageBox.h"
 
-#include "EffectUI.h"
-
 #include "../ShuttleGetDefinition.h"
 #include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
 #include "../commands/Command.h"
-#include "../Menus.h"
-#include "../MissingAliasFileDialog.h"
 #include "../PluginManager.h"
-#include "../ProjectHistory.h"
-#include "../ProjectAudioManager.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "../SelectUtilities.h"
-#include "../TrackPanel.h"
-#include "../TrackPanelAx.h"
-#include "../ViewInfo.h"
-#include "../WaveTrack.h"
 
 
 /*******************************************************************************
@@ -89,158 +72,6 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
    PluginID id = ID;
    PluginManager::Get().UnregisterPlugin(id);
    mEffects.erase(id);
-}
-
-/// DoEffect() takes a PluginID and executes the associated effect.
-///
-/// At the moment flags are used only to indicate whether to prompt for
-//  parameters, whether to save the state to history and whether to allow
-/// 'Repeat Last Effect'.
-
-/* static */ bool EffectUI::DoEffect(
-   const PluginID & ID, const CommandContext &context, unsigned flags )
-{
-   AudacityProject &project = context.project;
-   const auto &settings = ProjectSettings::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
-   auto rate = settings.GetRate();
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &commandManager = CommandManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
-   if (!plug)
-      return false;
-
-   EffectType type = plug->GetEffectType();
-
-   // Make sure there's no activity since the effect is about to be applied
-   // to the project's tracks.  Mainly for Apply during RTP, but also used
-   // for batch commands
-   if (flags & EffectManager::kConfigured)
-   {
-      ProjectAudioManager::Get( project ).Stop();
-      SelectUtilities::SelectAllIfNone( project );
-   }
-
-   MissingAliasFilesDialog::SetShouldShow(true);
-
-   auto nTracksOriginally = tracks.size();
-   wxWindow *focus = wxWindow::FindFocus();
-   wxWindow *parent = nullptr;
-   if (focus != nullptr) {
-      parent = focus->GetParent();
-   }
-
-   bool success = false;
-   auto cleanup = finally( [&] {
-
-      if (!success) {
-         // For now, we're limiting realtime preview to a single effect, so
-         // make sure the menus reflect that fact that one may have just been
-         // opened.
-         MenuManager::Get(project).UpdateMenus( false );
-      }
-
-   } );
-
-   int count = 0;
-   bool clean = true;
-   for (auto t : tracks.Selected< const WaveTrack >()) {
-      if (t->GetEndTime() != 0.0)
-         clean = false;
-      count++;
-   }
-
-   EffectManager & em = EffectManager::Get();
-
-   em.SetSkipStateFlag( false );
-   if (auto effect = em.GetEffect(ID)) {
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-      if (effect->SupportsRealtime())
-      {
-         EffectRack::Get( context.project ).Add(effect);
-      }
-#endif
-      success = effect->DoEffect(&window,
-         rate,
-         &tracks,
-         &trackFactory,
-         selectedRegion,
-         (flags & EffectManager::kConfigured) == 0
-            ? DialogFactory
-            : nullptr
-      );
-   }
-   else
-      success = false;
-
-   if (!success)
-      return false;
-
-   if (em.GetSkipStateFlag())
-      flags = flags | EffectManager::kSkipState;
-
-   if (!(flags & EffectManager::kSkipState))
-   {
-      auto shortDesc = em.GetCommandName(ID);
-      auto longDesc = em.GetCommandDescription(ID);
-      ProjectHistory::Get( project ).PushState(longDesc, shortDesc);
-   }
-
-   if (!(flags & EffectManager::kDontRepeatLast))
-   {
-      // Only remember a successful effect, don't remember insert,
-      // or analyze effects.
-      if (type == EffectTypeProcess) {
-         auto shortDesc = em.GetCommandName(ID);
-         MenuManager::Get(project).mLastEffect = ID;
-         /* i18n-hint: %s will be the name of the effect which will be
-          * repeated if this menu item is chosen */
-         auto lastEffectDesc = XO("Repeat %s").Format( shortDesc );
-         commandManager.Modify(wxT("RepeatLastEffect"), lastEffectDesc);
-      }
-   }
-
-   //STM:
-   //The following automatically re-zooms after sound was generated.
-   // IMO, it was disorienting, removing to try out without re-fitting
-   //mchinen:12/14/08 reapplying for generate effects
-   if (type == EffectTypeGenerate)
-   {
-      if (count == 0 || (clean && selectedRegion.t0() == 0.0))
-         window.DoZoomFit();
-         //  trackPanel->Refresh(false);
-   }
-
-   // PRL:  RedrawProject explicitly because sometimes history push is skipped
-   window.RedrawProject();
-
-   if (focus != nullptr && focus->GetParent()==parent) {
-      focus->SetFocus();
-   }
-
-   // A fix for Bug 63
-   // New tracks added?  Scroll them into view so that user sees them.
-   // Don't care what track type.  An analyser might just have added a
-   // Label track and we want to see it.
-   if( tracks.size() > nTracksOriginally ){
-      // 0.0 is min scroll position, 1.0 is max scroll position.
-      trackPanel.VerticalScroll( 1.0 );
-   }
-   else {
-      auto pTrack = *tracks.Selected().begin();
-      if (!pTrack)
-         pTrack = *tracks.Any().begin();
-      if (pTrack) {
-         TrackFocus::Get(project).Set(pTrack);
-         pTrack->EnsureVisible();
-      }
-   }
-
-   return true;
 }
 
 bool EffectManager::DoAudacityCommand(const PluginID & ID,
