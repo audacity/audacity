@@ -884,7 +884,7 @@
     <ClCompile Include="..\..\..\src\ModuleManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\effects\EffectRack.cpp">
+    <ClCompile Include="..\..\..\src\effects\EffectUI.cpp">
       <Filter>src\effects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\toolbars\SpectralSelectionBar.cpp">
@@ -2053,7 +2053,7 @@
     <ClInclude Include="..\..\..\src\ModuleManager.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\effects\EffectRack.h">
+    <ClInclude Include="..\..\..\src\effects\EffectUI.h">
       <Filter>src\effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBar.h">

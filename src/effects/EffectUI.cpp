@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  EffectRack.cpp
+  EffectUI.cpp
 
   Leland Lucius
 
@@ -12,7 +12,7 @@
 **********************************************************************/
 
 #include "../Audacity.h"
-#include "EffectRack.h"
+#include "EffectUI.h"
 
 #include "../Experimental.h"
 

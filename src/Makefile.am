@@ -437,8 +437,8 @@ audacity_SOURCES = \
 	effects/Effect.h \
 	effects/EffectManager.cpp \
 	effects/EffectManager.h \
-	effects/EffectRack.cpp \
-	effects/EffectRack.h \
+	effects/EffectUI.cpp \
+	effects/EffectUI.h \
 	effects/Equalization.cpp \
 	effects/Equalization.h \
 	effects/Equalization48x.cpp \

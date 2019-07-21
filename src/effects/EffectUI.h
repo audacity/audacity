@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  EffectRack.h
+  EffectUI.h
 
   Leland Lucius
 
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECTRACK_H__
-#define __AUDACITY_EFFECTRACK_H__
+#ifndef __AUDACITY_EFFECTUI_H__
+#define __AUDACITY_EFFECTUI_H__
 
 #include "../Experimental.h"
 
@@ -102,4 +102,4 @@ private:
 
 #endif
 
-#endif // __AUDACITY_EFFECTRACK_H__
+#endif // __AUDACITY_EFFECTUI_H__

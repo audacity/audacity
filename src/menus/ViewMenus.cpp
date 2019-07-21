@@ -23,7 +23,7 @@
 #include "../tracks/ui/TrackView.h"
 
 #ifdef EXPERIMENTAL_EFFECTS_RACK
-#include "../effects/EffectRack.h"
+#include "../effects/EffectUI.h"
 #endif
 
 #include <wx/scrolbar.h>

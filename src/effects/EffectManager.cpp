@@ -32,7 +32,7 @@ effects.
 #include "../widgets/AudacityMessageBox.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-#include "EffectRack.h"
+#include "EffectUI.h"
 #endif
 
 #include "../ShuttleGetDefinition.h"
