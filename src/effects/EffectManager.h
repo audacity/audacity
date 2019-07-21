@@ -18,6 +18,7 @@
 #include <vector>
 
 #include <unordered_map>
+#include "audacity/EffectInterface.h"
 #include "audacity/Types.h"
 
 class AudacityCommand;
@@ -120,7 +121,9 @@ public:
    bool SupportsAutomation(const PluginID & ID);
    wxString GetEffectParameters(const PluginID & ID);
    bool SetEffectParameters(const PluginID & ID, const wxString & params);
-   bool PromptUser(const PluginID & ID, wxWindow *parent);
+   bool PromptUser( const PluginID & ID,
+      const EffectClientInterface::EffectDialogFactory &factory,
+      wxWindow *parent );
    bool HasPresets(const PluginID & ID);
    wxString GetPreset(const PluginID & ID, const wxString & params, wxWindow * parent);
    wxString GetDefaultPreset(const PluginID & ID);

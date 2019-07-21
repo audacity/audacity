@@ -1601,7 +1601,8 @@ bool VSTEffect::RealtimeProcessEnd()
 /// provided by the effect, so it will not work with all effects since they don't
 /// all provide the information (kn0ck0ut is one).
 ///
-bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
+bool VSTEffect::ShowInterface(
+   wxWindow *parent, const EffectDialogFactory &factory, bool forceModal)
 {
    if (mDialog)
    {
@@ -1624,7 +1625,8 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
       ProcessInitialize(0, NULL);
    }
 
-   mDialog = mHost->CreateUI(parent, this);
+   if ( factory )
+      mDialog = factory(parent, mHost, this);
    if (!mDialog)
    {
       return false;

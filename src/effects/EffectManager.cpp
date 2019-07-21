@@ -31,9 +31,7 @@ effects.
 
 #include "../widgets/AudacityMessageBox.h"
 
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
 #include "EffectUI.h"
-#endif
 
 #include "../ShuttleGetDefinition.h"
 #include "../commands/CommandContext.h"
@@ -234,7 +232,7 @@ bool EffectManager::DoEffect(const PluginID & ID,
                              AudacityProject &project,
                              double projectRate,
                              TrackList *list,
-                             TrackFactory *factory,
+                             TrackFactory *trackFactory,
                              NotifyingSelectedRegion &selectedRegion,
                              bool shouldPrompt /* = true */)
 
@@ -256,12 +254,12 @@ bool EffectManager::DoEffect(const PluginID & ID,
    (void)project;
 #endif
 
-   bool res = effect->DoEffect(parent,
-                               projectRate,
-                               list,
-                               factory,
-                               selectedRegion,
-                               shouldPrompt);
+   bool res = effect->DoEffect( parent,
+      projectRate,
+      list,
+      trackFactory,
+      selectedRegion,
+      shouldPrompt ?  EffectUI::DialogFactory : nullptr );
 
    return res;
 }
@@ -516,14 +514,17 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
    return false;
 }
 
-bool EffectManager::PromptUser(const PluginID & ID, wxWindow *parent)
+bool EffectManager::PromptUser(
+   const PluginID & ID,
+   const EffectClientInterface::EffectDialogFactory &factory, wxWindow *parent)
 {
    bool result = false;
    Effect *effect = GetEffect(ID);
 
    if (effect)
    {
-      result = effect->ShowInterface( parent, effect->IsBatchProcessing() );
+      result = effect->ShowInterface(
+         parent, factory, effect->IsBatchProcessing() );
       return result;
    }
 

@@ -31,6 +31,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "ProjectWindow.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
+#include "effects/EffectUI.h"
 #include "FileNames.h"
 #include "Menus.h"
 #include "PluginManager.h"
@@ -452,7 +453,7 @@ wxString MacroCommands::PromptForParamsFor(const CommandID & command, const wxSt
 
    if (EffectManager::Get().SetEffectParameters(ID, params))
    {
-      if (EffectManager::Get().PromptUser(ID, parent))
+      if (EffectManager::Get().PromptUser(ID, EffectUI::DialogFactory, parent))
       {
          res = EffectManager::Get().GetEffectParameters(ID);
       }

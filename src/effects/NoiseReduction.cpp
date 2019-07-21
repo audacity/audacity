@@ -459,9 +459,12 @@ bool EffectNoiseReduction::CheckWhetherSkipEffect()
    return false;
 }
 
-bool EffectNoiseReduction::ShowInterface( wxWindow *parent, bool )
+bool EffectNoiseReduction::ShowInterface(
+   wxWindow *parent, const EffectDialogFactory &, bool forceModal)
 {
    // to do: use forceModal correctly
+
+   // Doesn't use the factory but substitutes its own dialog
 
    // We may want to twiddle the levels if we are setting
    // from an automation dialog, the only case in which we can

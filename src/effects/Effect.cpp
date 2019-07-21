@@ -478,7 +478,8 @@ bool Effect::RealtimeProcessEnd()
    return true;
 }
 
-bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
+bool Effect::ShowInterface(wxWindow *parent,
+   const EffectDialogFactory &factory, bool forceModal)
 {
    if (!IsInteractive())
    {
@@ -494,13 +495,14 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
 
    if (mClient)
    {
-      return mClient->ShowInterface(parent, forceModal);
+      return mClient->ShowInterface(parent, factory, forceModal);
    }
 
    // mUIDialog is null
    auto cleanup = valueRestorer( mUIDialog );
-
-   mUIDialog = CreateUI(parent, this);
+   
+   if ( factory )
+      mUIDialog = factory(parent, this, this);
    if (!mUIDialog)
    {
       return false;
@@ -729,21 +731,6 @@ void Effect::SetDuration(double seconds)
 void Effect::Preview()
 {
    Preview(false);
-}
-
-#include "EffectUI.h"
-wxDialog *Effect::CreateUI(wxWindow *parent, EffectUIClientInterface *client)
-{
-   Destroy_ptr<EffectUIHost> dlg
-      { safenew EffectUIHost{ parent, this, client} };
-
-   if (dlg->Initialize())
-   {
-      // release() is safe because parent will own it
-      return dlg.release();
-   }
-
-   return NULL;
 }
 
 RegistryPath Effect::GetUserPresetsGroup(const RegistryPath & name)
@@ -1114,7 +1101,7 @@ bool Effect::DoEffect(wxWindow *parent,
                       TrackList *list,
                       TrackFactory *factory,
                       NotifyingSelectedRegion &selectedRegion,
-                      bool shouldPrompt /* = true */)
+                      const EffectDialogFactory &dialogFactory)
 {
    wxASSERT(selectedRegion.duration() >= 0.0);
 
@@ -1200,9 +1187,9 @@ bool Effect::DoEffect(wxWindow *parent,
    // Prompting will be bypassed when applying an effect that has already
    // been configured, e.g. repeating the last effect on a different selection.
    // Prompting may call Effect::Preview
-   if ( shouldPrompt &&
+   if ( dialogFactory &&
       IsInteractive() &&
-      !ShowInterface(parent, IsBatchProcessing()) )
+      !ShowInterface(parent, dialogFactory, IsBatchProcessing()) )
    {
       return false;
    }
@@ -1231,13 +1218,14 @@ bool Effect::DoEffect(wxWindow *parent,
    return returnVal;
 }
 
-bool Effect::Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt)
+bool Effect::Delegate(
+   Effect &delegate, wxWindow *parent, const EffectDialogFactory &factory )
 {
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
    return delegate.DoEffect( parent, mProjectRate, mTracks, mFactory,
-      region, shouldPrompt );
+      region, factory );
 }
 
 // All legacy effects should have this overridden

@@ -16,6 +16,7 @@
 
 #include "../Experimental.h"
 
+#include <functional>
 #include <set>
 
 #include <wx/defs.h>
@@ -141,7 +142,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
+   bool ShowInterface( wxWindow *parent,
+      const EffectDialogFactory &factory, bool forceModal = false) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -178,8 +180,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    void SetDuration(double duration) override;
 
    void Preview() override;
-
-   wxDialog *CreateUI(wxWindow *parent, EffectUIClientInterface *client) override;
 
    RegistryPath GetUserPresetsGroup(const RegistryPath & name) override;
    RegistryPath GetCurrentSettingsGroup() override;
@@ -256,11 +256,13 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // Returns true on success.  Will only operate on tracks that
    // have the "selected" flag set to true, which is consistent with
    // Audacity's standard UI.
+   // Create a user interface only if the supplied function is not null.
    /* not virtual */ bool DoEffect(wxWindow *parent, double projectRate, TrackList *list,
-                 TrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
-                 bool shouldPrompt = true);
+      TrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
+      const EffectDialogFactory &dialogFactory );
 
-   bool Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt);
+   bool Delegate( Effect &delegate,
+      wxWindow *parent, const EffectDialogFactory &factory );
 
    virtual bool IsHidden();
 

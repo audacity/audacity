@@ -212,4 +212,9 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
+namespace  EffectUI {
+   wxDialog *DialogFactory( wxWindow *parent, EffectHostInterface *pHost,
+      EffectUIClientInterface *client);
+}
+
 #endif // __AUDACITY_EFFECTUI_H__

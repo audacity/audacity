@@ -149,7 +149,8 @@ bool EffectNoiseRemoval::CheckWhetherSkipEffect()
    return (mLevel == 0);
 }
 
-bool EffectNoiseRemoval::ShowInterface( wxWindow *parent, bool /* forceModal */ )
+bool EffectNoiseRemoval::ShowInterface(
+   wxWindow *parent, const EffectDialogFactory &, bool forceModal  /* forceModal */ )
 {
    // to do: use forceModal correctly
    NoiseRemovalDialog dlog(this, parent);

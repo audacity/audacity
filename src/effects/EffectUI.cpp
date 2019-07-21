@@ -376,7 +376,8 @@ void EffectRack::OnEditor(wxCommandEvent & evt)
    }
 
    auto pEffect = mEffects[index];
-   pEffect->ShowInterface( GetParent(), pEffect->IsBatchProcessing() );
+   pEffect->ShowInterface( GetParent(), EffectUI::DialogFactory,
+      pEffect->IsBatchProcessing() );
 }
 
 void EffectRack::OnUp(wxCommandEvent & evt)
@@ -1809,3 +1810,22 @@ void EffectUIHost::CleanupRealtime()
       mInitialized = false;
    }
 }
+
+wxDialog *EffectUI::DialogFactory( wxWindow *parent, EffectHostInterface *pHost,
+   EffectUIClientInterface *client)
+{
+   auto pEffect = dynamic_cast< Effect* >( pHost );
+   if ( ! pEffect )
+      return nullptr;
+
+   Destroy_ptr<EffectUIHost> dlg{
+      safenew EffectUIHost{ parent, pEffect, client} };
+   
+   if (dlg->Initialize())
+   {
+      // release() is safe because parent will own it
+      return dlg.release();
+   }
+   
+   return nullptr;
+};

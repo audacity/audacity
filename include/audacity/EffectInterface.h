@@ -42,6 +42,8 @@
 #ifndef __AUDACITY_EFFECTINTERFACE_H__
 #define __AUDACITY_EFFECTINTERFACE_H__
 
+#include <functional>
+
 #include "audacity/Types.h"
 #include "audacity/ComponentInterface.h"
 #include "audacity/ConfigInterface.h"
@@ -123,9 +125,6 @@ public:
 
    virtual void Preview() = 0;
 
-   //
-   virtual wxDialog *CreateUI(wxWindow *parent, EffectUIClientInterface *client) = 0;
-
    // Preset handling
    virtual RegistryPath GetUserPresetsGroup(const RegistryPath & name) = 0;
    virtual RegistryPath GetCurrentSettingsGroup() = 0;
@@ -144,6 +143,10 @@ AudacityCommand.
 class AUDACITY_DLL_API EffectClientInterface  /* not final */ : public EffectDefinitionInterface
 {
 public:
+   using EffectDialogFactory = std::function<
+      wxDialog* ( wxWindow*, EffectHostInterface*, EffectUIClientInterface* )
+   >;
+
    virtual ~EffectClientInterface() {};
 
    virtual bool SetHost(EffectHostInterface *host) = 0;
@@ -177,7 +180,10 @@ public:
    virtual size_t RealtimeProcess(int group, float **inBuf, float **outBuf, size_t numSamples) = 0;
    virtual bool RealtimeProcessEnd() = 0;
 
-   virtual bool ShowInterface(wxWindow *parent, bool forceModal = false) = 0;
+   virtual bool ShowInterface(
+      wxWindow *parent, const EffectDialogFactory &factory,
+      bool forceModal = false
+   ) = 0;
    // Some effects will use define params to define what parameters they take.
    // If they do, they won't need to implement Get or SetAutomation parameters.
    // since the Effect class can do it.  Or at least that is how things happen
