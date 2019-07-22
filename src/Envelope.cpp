@@ -420,7 +420,12 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
       // We will keep the last (or only) point that was at t1.
       --end;
 
-   mEnv.erase( mEnv.begin() + begin, mEnv.begin() + end );
+   if ( end < begin ) {
+      if ( leftPoint )
+         rightPoint = false;
+   }
+   else
+      mEnv.erase( mEnv.begin() + begin, mEnv.begin() + end );
 
    // Shift points left after deleted region.
    auto len = mEnv.size();
