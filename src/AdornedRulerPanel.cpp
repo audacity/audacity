@@ -1223,6 +1223,7 @@ void AdornedRulerPanel::OnSize(wxSizeEvent &evt)
 
 void AdornedRulerPanel::OnThemeChange(wxCommandEvent& evt)
 {
+   evt.Skip();
    ReCreateButtons();
 }
 
