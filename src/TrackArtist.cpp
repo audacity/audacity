@@ -53,6 +53,8 @@ audio tracks.
 #include "prefs/GUISettings.h"
 #include "prefs/TracksPrefs.h"
 
+#include <wx/dc.h>
+
 TrackArtist::TrackArtist( TrackPanel *parent_ )
    : parent( parent_ )
 {
