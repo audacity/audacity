@@ -636,16 +636,14 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    {
       //vvv Need to apply envelope, too? See Mixer::MixSameRate.
       float gain = pTrack->GetChannelGain(0);
-      if (gain < 1.0)
-         for (unsigned int index = 0; index < nFrames; index++)
-            meterFloatsArray[2 * index] *= gain;
+      for (unsigned int index = 0; index < nFrames; index++)
+         meterFloatsArray[2 * index] *= gain;
       if (GetRight())
          gain = GetRight()->GetChannelGain(1);
       else
          gain = pTrack->GetChannelGain(1);
-      if (gain < 1.0)
-         for (unsigned int index = 0; index < nFrames; index++)
-            meterFloatsArray[(2 * index) + 1] *= gain;
+      for (unsigned int index = 0; index < nFrames; index++)
+         meterFloatsArray[(2 * index) + 1] *= gain;
       // Clip to [-1.0, 1.0] range.
       for (unsigned int index = 0; index < 2 * nFrames; index++)
          if (meterFloatsArray[index] < -1.0)
