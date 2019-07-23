@@ -133,7 +133,7 @@ const ReservedCommandFlag
       { []( const wxString& ) { return
          // This reason will not be shown, because the stereo-to-mono is greyed out if not allowed.
          _("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
-      } ,"FAQ:Errors:Select Stereo"}
+      } ,"Audacity_Selection"}
    },  //lda
    TimeSelectedFlag{
       TimeSelectedPred,
@@ -145,7 +145,7 @@ const ReservedCommandFlag
       },
       { []( const wxString& ) { return
          _("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
-      } ,"FAQ:Errors:Select Audio"}
+      } ,"Audacity_Selection"}
    },
    TracksExistFlag{
       [](const AudacityProject &project){
@@ -159,7 +159,7 @@ const ReservedCommandFlag
          // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
          _("\"%s\" requires one or more tracks to be selected."),
          Name
-      ); },"FAQ:Errors:Select Tracks" }
+      ); },"Audacity_Selection" }
    },
    AnyTracksSelectedFlag{
       AnyTracksSelectedPred, // Allow TimeTracks
@@ -167,7 +167,7 @@ const ReservedCommandFlag
          // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
          _("\"%s\" requires one or more tracks to be selected."),
          Name
-      ); },"FAQ:Errors:Select Tracks" }
+      ); },"Audacity_Selection" }
    },
    TrackPanelHasFocus{
       [](const AudacityProject &project){
