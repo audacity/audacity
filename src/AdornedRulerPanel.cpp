@@ -991,6 +991,7 @@ void AdornedRulerPanel::ReCreateButtons()
    // Get rid of any children we may have
    // DestroyChildren();
 
+   ToolBar::MakeButtonBackgroundsSmall();
    SetBackgroundColour(theTheme.Colour( clrMedium ));
 
    for (auto & button : mButtons) {
