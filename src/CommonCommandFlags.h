@@ -43,7 +43,6 @@ extern AUDACITY_DLL_API const ReservedCommandFlag
    &RedoAvailableFlag(),
    &ZoomInAvailableFlag(),
    &ZoomOutAvailableFlag(),
-   &LabelsSelectedFlag(),
    &PlayRegionLockedFlag(),  //msmeyer
    &PlayRegionNotLockedFlag(),  //msmeyer
    &WaveTracksExistFlag(),

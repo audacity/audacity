@@ -16,7 +16,6 @@ Paul Licameli split from Menus.cpp
 #include <wx/frame.h>
 
 #include "AudioIO.h"
-#include "LabelTrack.h"
 #include "Menus.h"
 #include "NoteTrack.h"
 #include "Project.h"
@@ -274,29 +273,6 @@ const ReservedCommandFlag&
          &&
             !TrackList::Get( project ).Any().empty()
          ;
-      }
-   }; return flag; }
-const ReservedCommandFlag&
-   LabelsSelectedFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project){
-         // At least one label track selected, having at least one label
-         // completely within the time selection.
-         const auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-         const auto &test = [&]( const LabelTrack *pTrack ){
-            const auto &labels = pTrack->GetLabels();
-            return std::any_of( labels.begin(), labels.end(),
-               [&](const LabelStruct &label){
-                  return
-                     label.getT0() >= selectedRegion.t0()
-                  &&
-                     label.getT1() <= selectedRegion.t1()
-                  ;
-               }
-            );
-         };
-         auto range = TrackList::Get( project ).Selected<const LabelTrack>()
-            + test;
-         return !range.empty();
       }
    }; return flag; }
 const ReservedCommandFlag&
