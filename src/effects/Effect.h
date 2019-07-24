@@ -287,12 +287,6 @@ protected:
    // return false otherwise
    virtual bool Init();
 
-   // If necessary, open a dialog to get parameters from the user.
-   // This method will not always be called (for example if a user
-   // repeats an effect) but if it is called, it will be called
-   // after Init.
-   virtual bool PromptUser(wxWindow *parent);
-
    // Check whether effect should be skipped
    // Typically this is only useful in automation, for example
    // detecting that zero noise reduction is to be done,

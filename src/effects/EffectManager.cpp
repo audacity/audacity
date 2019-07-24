@@ -523,7 +523,7 @@ bool EffectManager::PromptUser(const PluginID & ID, wxWindow *parent)
 
    if (effect)
    {
-      result = effect->PromptUser(parent);
+      result = effect->ShowInterface( parent, effect->IsBatchProcessing() );
       return result;
    }
 

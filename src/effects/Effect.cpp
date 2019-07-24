@@ -1200,7 +1200,9 @@ bool Effect::DoEffect(wxWindow *parent,
    // Prompting will be bypassed when applying an effect that has already
    // been configured, e.g. repeating the last effect on a different selection.
    // Prompting may call Effect::Preview
-   if (shouldPrompt && IsInteractive() && !PromptUser(parent))
+   if ( shouldPrompt &&
+      IsInteractive() &&
+      !ShowInterface(parent, IsBatchProcessing()) )
    {
       return false;
    }
@@ -1242,12 +1244,6 @@ bool Effect::Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt)
 bool Effect::Init()
 {
    return true;
-}
-
-// Remove this method once NoiseReduction gets migrated
-bool Effect::PromptUser(wxWindow *parent)
-{
-   return ShowInterface(parent, IsBatchProcessing());
 }
 
 int Effect::GetPass()

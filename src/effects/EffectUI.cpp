@@ -375,7 +375,8 @@ void EffectRack::OnEditor(wxCommandEvent & evt)
       return;
    }
 
-   mEffects[index]->PromptUser(GetParent());
+   auto pEffect = mEffects[index];
+   pEffect->ShowInterface( GetParent(), pEffect->IsBatchProcessing() );
 }
 
 void EffectRack::OnUp(wxCommandEvent & evt)

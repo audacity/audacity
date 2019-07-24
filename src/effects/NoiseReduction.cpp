@@ -459,8 +459,10 @@ bool EffectNoiseReduction::CheckWhetherSkipEffect()
    return false;
 }
 
-bool EffectNoiseReduction::PromptUser(wxWindow *parent)
+bool EffectNoiseReduction::ShowInterface( wxWindow *parent, bool )
 {
+   // to do: use forceModal correctly
+
    // We may want to twiddle the levels if we are setting
    // from an automation dialog, the only case in which we can
    // get here without any wavetracks.

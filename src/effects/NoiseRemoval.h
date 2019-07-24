@@ -53,7 +53,7 @@ public:
 
    // Effect implementation
 
-   bool PromptUser(wxWindow *parent) override;
+   bool ShowInterface( wxWindow *parent, bool forceModal ) override;
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
    bool Process() override;
