@@ -55,10 +55,19 @@ unsigned PlayIndicatorOverlayBase::SequenceNumber() const
 
 std::pair<wxRect, bool> PlayIndicatorOverlayBase::DoGetRectangle(wxSize size)
 {
-   auto width = mIsMaster ? 1 : IndicatorMediumWidth;
+   wxCoord width = 1, xx = mLastIndicatorX;
+
+   if ( !mIsMaster ) {
+      auto &ruler = AdornedRulerPanel::Get( *mProject );
+      auto gAudioIO = AudioIO::Get();
+      bool rec = gAudioIO->IsCapturing();
+      auto pair = ruler.GetIndicatorBitmap( xx, !rec );
+      xx = pair.first.x;
+      width = pair.second.GetWidth();
+   }
 
    // May be excessive height, but little matter
-   wxRect rect(mLastIndicatorX - width / 2, 0, width, size.GetHeight());
+   wxRect rect( xx, 0, width, size.GetHeight());
    return {
       rect,
       (mLastIndicatorX != mNewIndicatorX
@@ -113,7 +122,8 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
    else if(auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);
 
-      ruler->DoDrawIndicator(&dc, mLastIndicatorX, !rec, IndicatorMediumWidth, false, false);
+      auto pair = ruler->GetIndicatorBitmap( mLastIndicatorX, !rec );
+      dc.DrawBitmap( pair.second, pair.first.x, pair.first.y );
    }
    else
       wxASSERT(false);
