@@ -33,7 +33,7 @@ class wxWindow;
 std::unique_ptr<ExportPlugin> New_ExportMP3();
 
 //----------------------------------------------------------------------------
-// Get MP3 library versioqn
+// Get MP3 library version
 //----------------------------------------------------------------------------
 wxString GetMP3Version(wxWindow *parent, bool prompt);
 
