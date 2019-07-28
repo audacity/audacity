@@ -369,15 +369,7 @@ void SpectralSelectionBar::OnChoice(wxCommandEvent &)
    GetSizer()->Layout();   // Required so that the layout does not mess up on Windows when changing the format.
    wxWindowBase::GetSizer()->SetMinSize(wxSize(0, mHeight));   // so that height of toolbar does not change
    wxWindowBase::GetSizer()->SetSizeHints(this);
-   if( IsDocked() )
-      Updated();
-   else {
-      // Bug 2120.  Changing the choice also changes the size of the toolbar so
-      // we need to update the client size, even if undocked.
-      // If attempting to make this code nicer, remember to test both changing the choice,
-      // and the choice remaining the same.
-      GetParent()->SetClientSize( GetSize() + wxSize( 2,2));
-   }
+   Updated();
 }
 
 void SpectralSelectionBar::OnIdle( wxIdleEvent &evt )
