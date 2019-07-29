@@ -67,6 +67,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("When importing audio files"));
    {
+#ifdef EXPERIMENTAL_OD_DATA
       S.StartRadioButtonGroup(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
       {
          S.TieRadioButton(_("&Copy uncompressed files into the project (safer)"),
@@ -75,6 +76,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
                           wxT("edit"));
       }
       S.EndRadioButtonGroup();
+#endif
 
       S.TieCheckBox(_("&Normalize all tracks in project"),
                     wxT("/AudioFiles/NormalizeOnLoad"),

@@ -87,9 +87,11 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Mixing down on export (&Custom FFmpeg or external program)"),
                     wxT("/Warnings/MixUnknownChannels"),
                     true);
+#ifdef EXPERIMENTAL_OD_DATA
       S.TieCheckBox(_("&Importing uncompressed audio files"),
                     wxT("/Warnings/CopyOrEditUncompressedDataAsk"),
                     true);
+#endif
    }
    S.EndStatic();
    S.EndScroller();

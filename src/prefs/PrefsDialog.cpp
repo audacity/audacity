@@ -505,7 +505,10 @@ PrefsDialog::Factories
       PrefsNode(ImportExportPrefsFactory, 1),
       ExtImportPrefsFactory,
 
+#ifdef EXPERIMENTAL_OD_DATA
       ProjectsPrefsFactory,
+#endif
+
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
       LibraryPrefsFactory,
 #endif

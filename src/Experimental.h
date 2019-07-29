@@ -254,4 +254,9 @@
 // mmm-1 22 Aug 2018
 //#define EXPERIMENTAL_R128_NORM
 
+// JKC 29 July 2019
+// OD_DATA made experimental.  It is on the way out because
+// it is dangerous and has too many bugs.  See bug 536 for example. 
+//#do not define EXPERIMENTAL_OD_DATA
+
 #endif

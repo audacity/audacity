@@ -120,12 +120,14 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
 
    XMLFileReader xmlFile;
 
+#ifdef EXPERIMENTAL_OD_DATA
    // 'Lossless copy' projects have dependencies. We need to always copy-in
    // these dependencies when converting to a normal project.
    wxString oldAction =
       gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
    bool oldAsk =
       gPrefs->ReadBool(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true);
+
    if (oldAction != wxT("copy"))
       gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
    if (oldAsk)
@@ -140,6 +142,7 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
          gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) true);
       gPrefs->Flush();
    } );
+#endif
 
    bool bParseSuccess = xmlFile.Parse(&projectFileIO, fileName);
    

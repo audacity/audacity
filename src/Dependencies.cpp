@@ -609,10 +609,17 @@ bool ShowDependencyDialogIfNeeded(AudacityProject *project,
       if (!isSaving)
       {
          wxString msg =
+#ifdef EXPERIMENTAL_OD_DATA
 _("Your project is currently self-contained; it does not depend on any external audio files. \
 \n\nIf you change the project to a state that has external dependencies on imported \
 files, it will no longer be self-contained. If you then Save without copying those files in, \
 you may lose data.");
+#else
+_("Your project is self-contained; it does not depend on any external audio files. \
+\n\nSome older Audacity projects may not be self-contained, and care \n\
+is needed to keep their external dependencies in the right place.\n\
+New projects will be self-contained and are less risky.");
+#endif
          AudacityMessageBox(msg,
                       _("Dependency Check"),
                       wxOK | wxICON_INFORMATION,
@@ -623,6 +630,7 @@ you may lose data.");
 
    if (isSaving)
    {
+#ifdef EXPERIMENTAL_OD_DATA
       wxString action =
          gPrefs->Read(
             wxT("/FileFormats/SaveProjectWithDependencies"),
@@ -636,6 +644,10 @@ you may lose data.");
       if (action == wxT("never"))
          // User never wants to remove dependencies
          return true;
+#else 
+      RemoveDependencies(project, aliasedFiles);
+      return true;
+#endif
    }
 
    DependencyDialog dlog(pWindow, -1, project, aliasedFiles, isSaving);
