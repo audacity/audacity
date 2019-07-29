@@ -101,7 +101,6 @@ bin_PROGRAMS = audacity$(EXEEXT)
 @USE_FFMPEG_TRUE@am__append_5 = $(FFMPEG_LIBS)
 @USE_FFMPEG_TRUE@am__append_6 = \
 @USE_FFMPEG_TRUE@	export/ExportFFmpeg.cpp \
-@USE_FFMPEG_TRUE@	export/ExportFFmpeg.h \
 @USE_FFMPEG_TRUE@	export/ExportFFmpegDialogs.cpp \
 @USE_FFMPEG_TRUE@	export/ExportFFmpegDialogs.h \
 @USE_FFMPEG_TRUE@	import/ImportFFmpeg.cpp \
@@ -430,13 +429,11 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/TruncSilence.h effects/TwoPassSimpleMono.cpp \
 	effects/TwoPassSimpleMono.h effects/Wahwah.cpp \
 	effects/Wahwah.h export/Export.cpp export/Export.h \
-	export/ExportCL.cpp export/ExportCL.h export/ExportFLAC.cpp \
-	export/ExportFLAC.h export/ExportMP2.cpp export/ExportMP2.h \
+	export/ExportCL.cpp export/ExportFLAC.cpp export/ExportMP2.cpp \
 	export/ExportMP3.cpp export/ExportMP3.h \
 	export/ExportMultiple.cpp export/ExportMultiple.h \
-	export/ExportOGG.cpp export/ExportOGG.h export/ExportPCM.cpp \
-	export/ExportPCM.h import/Import.cpp import/Import.h \
-	import/ImportFLAC.cpp import/ImportForwards.h \
+	export/ExportOGG.cpp export/ExportPCM.cpp import/Import.cpp \
+	import/Import.h import/ImportFLAC.cpp import/ImportForwards.h \
 	import/ImportLOF.cpp import/ImportMP3.cpp import/ImportOGG.cpp \
 	import/ImportPCM.cpp import/ImportPlugin.h \
 	import/ImportRaw.cpp import/ImportRaw.h \
@@ -608,17 +605,16 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	xml/XMLFileReader.h xml/XMLWriter.cpp xml/XMLWriter.h \
 	effects/audiounits/AudioUnitEffect.cpp \
 	effects/audiounits/AudioUnitEffect.h export/ExportFFmpeg.cpp \
-	export/ExportFFmpeg.h export/ExportFFmpegDialogs.cpp \
-	export/ExportFFmpegDialogs.h import/ImportFFmpeg.cpp \
-	import/ImportGStreamer.cpp effects/ladspa/ladspa.h \
-	effects/ladspa/LadspaEffect.cpp effects/ladspa/LadspaEffect.h \
-	ondemand/ODDecodeFlacTask.cpp ondemand/ODDecodeFlacTask.h \
-	effects/nyquist/LoadNyquist.cpp effects/nyquist/LoadNyquist.h \
-	effects/nyquist/Nyquist.cpp effects/nyquist/Nyquist.h \
-	effects/lv2/LoadLV2.cpp effects/lv2/LoadLV2.h \
-	effects/lv2/LV2Effect.cpp effects/lv2/LV2Effect.h \
-	NoteTrack.cpp NoteTrack.h import/ImportMIDI.cpp \
-	import/ImportMIDI.h import/ImportQT.cpp \
+	export/ExportFFmpegDialogs.cpp export/ExportFFmpegDialogs.h \
+	import/ImportFFmpeg.cpp import/ImportGStreamer.cpp \
+	effects/ladspa/ladspa.h effects/ladspa/LadspaEffect.cpp \
+	effects/ladspa/LadspaEffect.h ondemand/ODDecodeFlacTask.cpp \
+	ondemand/ODDecodeFlacTask.h effects/nyquist/LoadNyquist.cpp \
+	effects/nyquist/LoadNyquist.h effects/nyquist/Nyquist.cpp \
+	effects/nyquist/Nyquist.h effects/lv2/LoadLV2.cpp \
+	effects/lv2/LoadLV2.h effects/lv2/LV2Effect.cpp \
+	effects/lv2/LV2Effect.h NoteTrack.cpp NoteTrack.h \
+	import/ImportMIDI.cpp import/ImportMIDI.h import/ImportQT.cpp \
 	effects/vamp/LoadVamp.cpp effects/vamp/LoadVamp.h \
 	effects/vamp/VampEffect.cpp effects/vamp/VampEffect.h \
 	effects/VST/aeffectx.h effects/VST/VSTEffect.cpp \
@@ -1554,13 +1550,11 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	effects/TruncSilence.h effects/TwoPassSimpleMono.cpp \
 	effects/TwoPassSimpleMono.h effects/Wahwah.cpp \
 	effects/Wahwah.h export/Export.cpp export/Export.h \
-	export/ExportCL.cpp export/ExportCL.h export/ExportFLAC.cpp \
-	export/ExportFLAC.h export/ExportMP2.cpp export/ExportMP2.h \
+	export/ExportCL.cpp export/ExportFLAC.cpp export/ExportMP2.cpp \
 	export/ExportMP3.cpp export/ExportMP3.h \
 	export/ExportMultiple.cpp export/ExportMultiple.h \
-	export/ExportOGG.cpp export/ExportOGG.h export/ExportPCM.cpp \
-	export/ExportPCM.h import/Import.cpp import/Import.h \
-	import/ImportFLAC.cpp import/ImportForwards.h \
+	export/ExportOGG.cpp export/ExportPCM.cpp import/Import.cpp \
+	import/Import.h import/ImportFLAC.cpp import/ImportForwards.h \
 	import/ImportLOF.cpp import/ImportMP3.cpp import/ImportOGG.cpp \
 	import/ImportPCM.cpp import/ImportPlugin.h \
 	import/ImportRaw.cpp import/ImportRaw.h \

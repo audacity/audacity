@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_EXPORT__
 #define __AUDACITY_EXPORT__
 
+#include <functional>
 #include <vector>
 #include <wx/filename.h> // member variable
 #include "../SampleFormat.h"
@@ -128,6 +129,8 @@ public:
                        const Tags *metadata = NULL,
                        int subformat = 0) = 0;
 
+   virtual unsigned SequenceNumber() const = 0;
+
 protected:
    std::unique_ptr<Mixer> CreateMixer(const TrackList &tracks,
          bool selectionOnly,
@@ -157,6 +160,18 @@ class  AUDACITY_DLL_API Exporter final : public wxEvtHandler
 {
 public:
 
+   using ExportPluginFactory =
+      std::function< std::unique_ptr< ExportPlugin >() >;
+
+   // Objects of this type are statically constructed in files implementing
+   // subclasses of ExportPlugin
+   // Register factories, not plugin objects themselves, which allows them
+   // to have some fresh state variables each time export begins again
+   // and to compute translated strings for the current locale
+   struct RegisteredExportPlugin{
+      RegisteredExportPlugin( const ExportPluginFactory& );
+   };
+
    static bool DoEditMetadata(AudacityProject &project,
       const wxString &title, const wxString &shortUndoDescription, bool force);
 
@@ -165,7 +180,6 @@ public:
 
    void SetFileDialogTitle( const wxString & DialogTitle );
    void SetDefaultFormat( const wxString & Format ){ mFormatName = Format;};
-   void RegisterPlugin(std::unique_ptr<ExportPlugin> &&plugin);
 
    bool Process(AudacityProject *project, bool selectedOnly,
                 double t0, double t1);

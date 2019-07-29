@@ -24,13 +24,8 @@
 #define MP3_EXPORT_BUILT_IN 1
 #endif
 
-class ExportPlugin;
 class wxString;
 class wxWindow;
-/** Factory method New_ExportMP3() which creates a NEW ExportMP3 object and
- * returns a pointer to it. The rest of the class declaration is in ExportMP3.cpp
- */
-std::unique_ptr<ExportPlugin> New_ExportMP3();
 
 //----------------------------------------------------------------------------
 // Get MP3 library version
