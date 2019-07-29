@@ -1185,5 +1185,13 @@ RegisteredMenuItemEnabler selectWaveTracks{{
    selectAll
 }};
 
+// Also enable select for the noise reduction case.
+RegisteredMenuItemEnabler selectWaveTracks2{{
+   WaveTracksExistFlag,
+   NoiseReductionTimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag,
+   canSelectAll,
+   selectAll
+}};
+
 #undef XXO
 #undef FN

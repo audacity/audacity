@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-CommonCommandFlags.cpp
+CommonCommandFlags.h
 
 Paul Licameli split from Menus.cpp
 
@@ -23,6 +23,7 @@ extern const CommandFlagOptions cutCopyOptions;
 extern AUDACITY_DLL_API const ReservedCommandFlag
    AudioIONotBusyFlag,
    StereoRequiredFlag,  //lda
+   NoiseReductionTimeSelectedFlag,
    TimeSelectedFlag, // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
    WaveTracksSelectedFlag,
    TracksExistFlag,

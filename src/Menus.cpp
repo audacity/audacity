@@ -38,6 +38,7 @@
 #include "ProjectSettings.h"
 #include "UndoManager.h"
 #include "commands/CommandManager.h"
+#include "CommonCommandFlags.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ToolManager.h"
 #include "widgets/ErrorDialog.h"
@@ -305,7 +306,10 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
    wxASSERT(menubar);
 
    VisitItem( project, menuTree.get() );
-
+   commandManager.SetCommandFlags(
+      wxT("Noise Reduction..."),
+      AudioIONotBusyFlag | NoiseReductionTimeSelectedFlag | WaveTracksSelectedFlag
+      );
    GetProjectFrame( project ).SetMenuBar(menubar.release());
 
    mLastFlags = AlwaysEnabledFlag;

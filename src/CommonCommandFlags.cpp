@@ -102,6 +102,19 @@ const CommandFlagOptions cutCopyOptions{
    XO("No Audio Selected")
 };
 
+// Noise Reduction has a custom error message, when nothing selected.
+const CommandFlagOptions noiseReductionOptions{
+   []( const wxString &Name ) {
+      wxString format;
+      // i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.
+      format = _("Select the audio for %s to use.\n\n1. Select audio that represents noise and use %s to get your 'noise profile'.\n\n2. When you have got your noise profile, select the audio you want to change\nand use %s to change that audio.");
+      return wxString::Format( format, Name, Name, Name );
+   },
+   "Noise_Reduction",
+   XO("No Audio Selected")
+};
+
+
 const ReservedCommandFlag
    // The sequence of these definitions has a minor significance in determining
    // which user error message has precedence if more than one might apply, so
@@ -135,6 +148,10 @@ const ReservedCommandFlag
          _("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
       } ,"Audacity_Selection"}
    },  //lda
+   NoiseReductionTimeSelectedFlag{
+      TimeSelectedPred,
+      noiseReductionOptions
+   },
    TimeSelectedFlag{
       TimeSelectedPred,
       cutCopyOptions
