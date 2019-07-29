@@ -12,6 +12,7 @@
 **********************************************************************/
 
 #include "../Audacity.h"
+#include "ExportCL.h"
 
 #include "../ProjectSettings.h"
 
@@ -300,8 +301,6 @@ public:
                MixerSpec *mixerSpec = NULL,
                const Tags *metadata = NULL,
                int subformat = 0) override;
-
-   virtual unsigned SequenceNumber() const override { return 60; }
 };
 
 ExportCL::ExportCL()
@@ -555,5 +554,8 @@ wxWindow *ExportCL::OptionsCreate(wxWindow *parent, int format)
    return safenew ExportCLOptions(parent, format);
 }
 
-static Exporter::RegisteredExportPlugin
-sRegisteredPlugin{ []{ return std::make_unique< ExportCL >(); } };
+std::unique_ptr<ExportPlugin> New_ExportCL()
+{
+   return std::make_unique<ExportCL>();
+}
+

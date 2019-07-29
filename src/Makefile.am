@@ -499,14 +499,19 @@ audacity_SOURCES = \
 	export/Export.cpp \
 	export/Export.h \
 	export/ExportCL.cpp \
+	export/ExportCL.h \
 	export/ExportFLAC.cpp \
+	export/ExportFLAC.h \
 	export/ExportMP2.cpp \
+	export/ExportMP2.h \
 	export/ExportMP3.cpp \
 	export/ExportMP3.h \
 	export/ExportMultiple.cpp \
 	export/ExportMultiple.h \
 	export/ExportOGG.cpp \
+	export/ExportOGG.h \
 	export/ExportPCM.cpp \
+	export/ExportPCM.h \
 	import/Import.cpp \
 	import/Import.h \
 	import/ImportFLAC.cpp \
@@ -809,6 +814,7 @@ audacity_CPPFLAGS += $(FFMPEG_CFLAGS)
 audacity_LDADD += $(FFMPEG_LIBS)
 audacity_SOURCES += \
 	export/ExportFFmpeg.cpp \
+	export/ExportFFmpeg.h \
 	export/ExportFFmpegDialogs.cpp \
 	export/ExportFFmpegDialogs.h \
 	import/ImportFFmpeg.cpp \

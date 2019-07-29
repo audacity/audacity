@@ -18,6 +18,7 @@
 #include "../Audacity.h" // for USE_* macros
 
 #ifdef USE_LIBVORBIS
+#include "ExportOGG.h"
 
 #include "Export.h"
 
@@ -141,8 +142,6 @@ public:
                MixerSpec *mixerSpec = NULL,
                const Tags *metadata = NULL,
                int subformat = 0) override;
-
-   virtual unsigned SequenceNumber() const override { return 30; }
 
 private:
 
@@ -398,8 +397,10 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, c
    return true;
 }
 
-static Exporter::RegisteredExportPlugin
-sRegisteredPlugin{ []{ return std::make_unique< ExportOGG >(); } };
+std::unique_ptr<ExportPlugin> New_ExportOGG()
+{
+   return std::make_unique<ExportOGG>();
+}
 
 #endif // USE_LIBVORBIS
 

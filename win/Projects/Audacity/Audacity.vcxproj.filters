@@ -1681,13 +1681,31 @@
     <ClInclude Include="..\..\..\src\export\Export.h">
       <Filter>src\export</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportCL.h">
+      <Filter>src\export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportFFmpeg.h">
+      <Filter>src\export</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\export\ExportFFmpegDialogs.h">
+      <Filter>src\export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportFLAC.h">
+      <Filter>src\export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportMP2.h">
       <Filter>src\export</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\export\ExportMP3.h">
       <Filter>src\export</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\export\ExportMultiple.h">
+      <Filter>src\export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportOGG.h">
+      <Filter>src\export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportPCM.h">
       <Filter>src\export</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\import\Import.h">

@@ -20,6 +20,7 @@ function.
 
 
 #include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
+#include "ExportFFmpeg.h"
 
 #include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
@@ -149,8 +150,6 @@ public:
       MixerSpec *mixerSpec = NULL,
       const Tags *metadata = NULL,
       int subformat = 0) override;
-
-   virtual unsigned SequenceNumber() const override { return 70; }
 
 private:
 
@@ -1096,8 +1095,10 @@ wxWindow *ExportFFmpeg::OptionsCreate(wxWindow *parent, int format)
    return ExportPlugin::OptionsCreate(parent, format);
 }
 
-static Exporter::RegisteredExportPlugin
-sRegisteredPlugin{ []{ return std::make_unique< ExportFFmpeg >(); } };
+std::unique_ptr<ExportPlugin> New_ExportFFmpeg()
+{
+   return std::make_unique<ExportFFmpeg>();
+}
 
 #endif
 
