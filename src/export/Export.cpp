@@ -316,7 +316,6 @@ Exporter::Exporter()
    RegisterPlugin(New_ExportMP2());
 #endif
 
-   // Command line export not available on Windows and Mac platforms
    RegisterPlugin(New_ExportCL());
 
 #if defined(USE_FFMPEG)
