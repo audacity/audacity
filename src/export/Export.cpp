@@ -47,14 +47,6 @@
 #include <wx/dcmemory.h>
 #include <wx/window.h>
 
-#include "ExportPCM.h"
-#include "ExportMP3.h"
-#include "ExportOGG.h"
-#include "ExportFLAC.h"
-#include "ExportCL.h"
-#include "ExportMP2.h"
-#include "ExportFFmpeg.h"
-
 #include "sndfile.h"
 
 #include "FileDialog.h"
@@ -294,33 +286,42 @@ BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
    EVT_COMMAND( wxID_ANY, AUDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
 END_EVENT_TABLE()
 
+namespace {
+   using ExportPluginFactories = std::vector< Exporter::ExportPluginFactory >;
+   ExportPluginFactories &sFactories()
+   {
+      static ExportPluginFactories theList;
+      return theList;
+   }
+}
+
+Exporter::RegisteredExportPlugin::RegisteredExportPlugin(
+   const ExportPluginFactory &factory )
+{
+   if ( factory )
+      sFactories().emplace_back( factory );
+}
+
 Exporter::Exporter()
 {
    mMixerSpec = NULL;
    mBook = NULL;
 
+   // build the list of export plugins.
+   for ( const auto &factory : sFactories() )
+      mPlugins.emplace_back( factory() );
+
+   // The factories were pushed on the array at static initialization time in an
+   // unspecified sequence.  Sort according to the sequence numbers the plugins
+   // report to make the order determinate.
+   std::sort( mPlugins.begin(), mPlugins.end(),
+      []( const ExportPluginArray::value_type &a,
+          const ExportPluginArray::value_type &b ){
+         return a->SequenceNumber() < b->SequenceNumber();
+      }
+   );
+
    SetFileDialogTitle( _("Export Audio") );
-
-   RegisterPlugin(New_ExportPCM());
-   RegisterPlugin(New_ExportMP3());
-
-#ifdef USE_LIBVORBIS
-   RegisterPlugin(New_ExportOGG());
-#endif
-
-#ifdef USE_LIBFLAC
-   RegisterPlugin(New_ExportFLAC());
-#endif
-
-#if USE_LIBTWOLAME
-   RegisterPlugin(New_ExportMP2());
-#endif
-
-   RegisterPlugin(New_ExportCL());
-
-#if defined(USE_FFMPEG)
-   RegisterPlugin(New_ExportFFmpeg());
-#endif
 }
 
 Exporter::~Exporter()
@@ -368,11 +369,6 @@ int Exporter::FindFormatIndex(int exportindex)
       }
    }
    return 0;
-}
-
-void Exporter::RegisterPlugin(std::unique_ptr<ExportPlugin> &&ExportPlugin)
-{
-   mPlugins.push_back(std::move(ExportPlugin));
 }
 
 const ExportPluginArray &Exporter::GetPlugins()

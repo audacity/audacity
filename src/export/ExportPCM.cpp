@@ -9,7 +9,6 @@
 **********************************************************************/
 
 #include "../Audacity.h" // for USE_* macros
-#include "ExportPCM.h"
 
 #include <wx/defs.h>
 
@@ -341,6 +340,8 @@ public:
    // optional
    FileExtension GetExtension(int index) override;
    bool CheckFileName(wxFileName &filename, int format) override;
+
+   virtual unsigned SequenceNumber() const override { return 10; }
 
 private:
    void ReportTooBigError(wxWindow * pParent);
@@ -945,7 +946,5 @@ bool ExportPCM::CheckFileName(wxFileName &filename, int format)
    return ExportPlugin::CheckFileName(filename, format);
 }
 
-std::unique_ptr<ExportPlugin> New_ExportPCM()
-{
-   return std::make_unique<ExportPCM>();
-}
+static Exporter::RegisteredExportPlugin
+sRegisteredPlugin{ []{ return std::make_unique< ExportPCM >(); } };

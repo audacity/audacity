@@ -33,7 +33,6 @@
 */
 
 #include "../Audacity.h"// for USE_* macros
-#include "ExportMP2.h"
 
 #ifdef USE_LIBTWOLAME
 
@@ -183,6 +182,8 @@ public:
                MixerSpec *mixerSpec = NULL,
                const Tags *metadata = NULL,
                int subformat = 0) override;
+
+   virtual unsigned SequenceNumber() const override { return 50; }
 
 private:
 
@@ -462,10 +463,8 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-std::unique_ptr<ExportPlugin> New_ExportMP2()
-{
-   return std::make_unique<ExportMP2>();
-}
+static Exporter::RegisteredExportPlugin
+sRegisteredPlugin{ []{ return std::make_unique< ExportMP2 >(); } };
 
 #endif // #ifdef USE_LIBTWOLAME
 

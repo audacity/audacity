@@ -2050,15 +2050,12 @@
 		1790B06409883BFD008A330A /* Export.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Export.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B06509883BFD008A330A /* Export.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Export.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B06609883BFD008A330A /* ExportCL.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportCL.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B06709883BFD008A330A /* ExportCL.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportCL.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B06809883BFD008A330A /* ExportMP3.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportMP3.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B06909883BFD008A330A /* ExportMP3.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportMP3.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B06A09883BFD008A330A /* ExportMultiple.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportMultiple.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B06B09883BFD008A330A /* ExportMultiple.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportMultiple.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B06C09883BFD008A330A /* ExportOGG.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportOGG.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B06D09883BFD008A330A /* ExportOGG.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportOGG.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B06E09883BFD008A330A /* ExportPCM.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportPCM.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B06F09883BFD008A330A /* ExportPCM.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportPCM.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B07009883BFD008A330A /* FFT.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FFT.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B07109883BFD008A330A /* FFT.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FFT.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B07209883BFD008A330A /* FileFormats.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FileFormats.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -2374,7 +2371,6 @@
 		2840CF4B0AEB807E00F49FC3 /* util.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; name = util.c; path = twolame/libtwolame/util.c; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF4C0AEB807E00F49FC3 /* util.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = util.h; path = twolame/libtwolame/util.h; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF840AEB83DB00F49FC3 /* ExportMP2.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportMP2.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		2840CF850AEB83DB00F49FC3 /* ExportMP2.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportMP2.h; sourceTree = "<group>"; tabWidth = 3; };
 		284416391B82D6BC0000574D /* TranslatableStringArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TranslatableStringArray.h; sourceTree = "<group>"; };
 		2844163A1B82D6BC0000574D /* WaveTrackLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackLocation.h; sourceTree = "<group>"; };
 		28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ThemePrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -2645,7 +2641,6 @@
 		2860BA220E0F0D8600A13878 /* TimerRecordDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = TimerRecordDialog.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2860BA230E0F0D8600A13878 /* TimerRecordDialog.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = TimerRecordDialog.h; sourceTree = "<group>"; tabWidth = 3; };
 		2860BA260E0F0DD800A13878 /* ExportFFmpeg.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportFFmpeg.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		2860BA270E0F0DD800A13878 /* ExportFFmpeg.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportFFmpeg.h; sourceTree = "<group>"; tabWidth = 3; };
 		286229B0181CE4B600E1AD1A /* liblv2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblv2.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		286229B1181CE51800E1AD1A /* lilv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lilv.h; path = lv2/lilv/lilv/lilv.h; sourceTree = "<group>"; };
 		286229B2181CE51800E1AD1A /* collections.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = collections.c; path = lv2/lilv/src/collections.c; sourceTree = "<group>"; };
@@ -2891,7 +2886,6 @@
 		28DE72B0103885AA007E18EC /* TimeWarper.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = TimeWarper.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28DE72B1103885AA007E18EC /* TimeWarper.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = TimeWarper.h; sourceTree = "<group>"; tabWidth = 3; };
 		28E237080E515D1D00281398 /* libscorealign.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libscorealign.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		28E3E6E60A7C14CA00AB1361 /* ExportFLAC.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportFLAC.h; sourceTree = "<group>"; tabWidth = 3; };
 		28E3E6E70A7C14CA00AB1361 /* ExportFLAC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportFLAC.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28E67F5F0A3A160D0021D89F /* libportaudio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libportaudio.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E67FC10A3A29AE0021D89F /* pa_asio.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_asio.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -4839,23 +4833,17 @@
 				1790B06409883BFD008A330A /* Export.cpp */,
 				1790B06509883BFD008A330A /* Export.h */,
 				1790B06609883BFD008A330A /* ExportCL.cpp */,
-				1790B06709883BFD008A330A /* ExportCL.h */,
 				2860BA260E0F0DD800A13878 /* ExportFFmpeg.cpp */,
-				2860BA270E0F0DD800A13878 /* ExportFFmpeg.h */,
 				28DA07380E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp */,
 				28DA07370E4F5CEC003933C5 /* ExportFFmpegDialogs.h */,
 				28E3E6E70A7C14CA00AB1361 /* ExportFLAC.cpp */,
-				28E3E6E60A7C14CA00AB1361 /* ExportFLAC.h */,
 				2840CF840AEB83DB00F49FC3 /* ExportMP2.cpp */,
-				2840CF850AEB83DB00F49FC3 /* ExportMP2.h */,
 				1790B06809883BFD008A330A /* ExportMP3.cpp */,
 				1790B06909883BFD008A330A /* ExportMP3.h */,
 				1790B06A09883BFD008A330A /* ExportMultiple.cpp */,
 				1790B06B09883BFD008A330A /* ExportMultiple.h */,
 				1790B06C09883BFD008A330A /* ExportOGG.cpp */,
-				1790B06D09883BFD008A330A /* ExportOGG.h */,
 				1790B06E09883BFD008A330A /* ExportPCM.cpp */,
-				1790B06F09883BFD008A330A /* ExportPCM.h */,
 			);
 			path = export;
 			sourceTree = "<group>";

@@ -21,7 +21,6 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "../Audacity.h" // for USE_* macros
 
 #ifdef USE_LIBFLAC
-#include "ExportFLAC.h"
 
 #include "Export.h"
 
@@ -219,6 +218,8 @@ public:
                MixerSpec *mixerSpec = NULL,
                const Tags *metadata = NULL,
                int subformat = 0) override;
+
+   virtual unsigned SequenceNumber() const override { return 40; }
 
 private:
 
@@ -467,10 +468,8 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
    return true;
 }
 
-std::unique_ptr<ExportPlugin> New_ExportFLAC()
-{
-   return std::make_unique<ExportFLAC>();
-}
+static Exporter::RegisteredExportPlugin
+sRegisteredPlugin{ []{ return std::make_unique< ExportFLAC >(); } };
 
 #endif // USE_LIBFLAC
 
