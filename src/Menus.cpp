@@ -34,11 +34,9 @@
 
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "ProjectSettings.h"
 #include "ProjectWindows.h"
 #include "UndoManager.h"
 #include "commands/CommandManager.h"
-#include "toolbars/ToolManager.h"
 #include "widgets/AudacityMessageBox.h"
 #include "BasicUI.h"
 
@@ -596,38 +594,6 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive ) const
    return flags;
 }
 
-void MenuManager::ModifyAllProjectToolbarMenus()
-{
-   for (auto pProject : AllProjects{}) {
-      auto &project = *pProject;
-      MenuManager::Get(project).ModifyToolbarMenus(project);
-   }
-}
-
-void MenuManager::ModifyToolbarMenus(AudacityProject &project)
-{
-   // Refreshes can occur during shutdown and the toolmanager may already
-   // be deleted, so protect against it.
-   auto &toolManager = ToolManager::Get( project );
-
-   auto &settings = ProjectSettings::Get( project );
-
-   // Now, go through each toolbar, and call EnableDisableButtons()
-   toolManager.ForEach([](auto bar){
-      if (bar)
-         bar->EnableDisableButtons();
-   });
-
-   // These don't really belong here, but it's easier and especially so for
-   // the Edit toolbar and the sync-lock menu item.
-   bool active;
-
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &active, false);
-   settings.SetSyncLock(active);
-
-   CommandManager::Get( project ).UpdateCheckmarks( project );
-}
-
 namespace
 {
    using MenuItemEnablers = std::vector<MenuItemEnabler>;
@@ -683,7 +649,7 @@ void MenuManager::UpdateMenus( bool checkActive )
       (mWhatIfNoSelection == 0 ? flags2 : flags) // the "strict" flags
    );
 
-   MenuManager::ModifyToolbarMenus(project);
+   Publish({});
 }
 
 /// The following method moves to the previous track
