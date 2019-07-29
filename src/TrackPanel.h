@@ -211,12 +211,7 @@ protected:
 
    bool mRedrawAfterStop;
 
-   friend class TrackPanelAx;
-
 protected:
-
-   // The screenshot class needs to access internals
-   friend class ScreenshotCommand;
 
    SelectedRegion mLastDrawnSelectedRegion {};
 
@@ -231,10 +226,6 @@ protected:
        unsigned refreshResult) override;
 
    void UpdateStatusMessage( const wxString &status ) override;
-
-   // friending GetInfoCommand allow automation to get sizes of the
-   // tracks, track control panel and such.
-   friend class GetInfoCommand;
 };
 
 // A predicate class
