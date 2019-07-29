@@ -203,6 +203,15 @@ void AddEffectMenuItems(
       grouped = true;
    }
 
+   // Some weird special case stuff just for Noise Reduction so that there is
+   // more informative help
+   const auto getBatchFlags = [&]( const PluginDescriptor *plug ){
+      if ( plug->GetSymbol().Msgid() == wxT( "Noise Reduction" ) )
+         return
+            ( batchflags | NoiseReductionTimeSelectedFlag ) & ~TimeSelectedFlag;
+      return batchflags;
+   };
+
    std::vector<bool> vHasDialog;
    wxArrayString groupNames;
    PluginIDs groupPlugs;
@@ -266,7 +275,7 @@ void AddEffectMenuItems(
          vHasDialog.push_back(hasDialog);
          groupPlugs.push_back(plug->GetID());
          groupFlags.push_back(
-            plug->IsEffectRealtime() ? realflags : batchflags);
+            plug->IsEffectRealtime() ? realflags : getBatchFlags( plug ) );
       }
 
       if (groupNames.size() > 0)
@@ -320,7 +329,8 @@ void AddEffectMenuItems(
          groupNames.push_back(group + name);
          vHasDialog.push_back(hasDialog);
          groupPlugs.push_back(plug->GetID());
-         groupFlags.push_back(plug->IsEffectRealtime() ? realflags : batchflags);
+         groupFlags.push_back(
+            plug->IsEffectRealtime() ? realflags : getBatchFlags( plug ) );
       }
 
       if (groupNames.size() > 0)
