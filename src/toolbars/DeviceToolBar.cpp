@@ -386,8 +386,8 @@ void DeviceToolBar::RegenerateTooltips()
 bool DeviceToolBar::Layout()
 {
    bool ret;
-   RepositionCombos();
    ret = ToolBar::Layout();
+   RepositionCombos();
    return ret;
 }
 
@@ -444,7 +444,7 @@ void DeviceToolBar::RepositionCombos()
    wxSize desiredInput, desiredOutput, desiredHost, desiredChannels;
    float hostRatio, outputRatio, inputRatio, channelsRatio;
    // if the toolbar is docked then the width we should use is the project width.
-   // as the toolbar's with can extend past this.
+   // as the toolbar's width can extend past this.
    GetClientSize(&w, &h);
 
    // FIXME: Note that there's some bug in here, in that even if the prefs show the toolbar
