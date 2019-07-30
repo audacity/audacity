@@ -1656,6 +1656,14 @@ KeyView::OnLeftDown(wxMouseEvent & event)
 
          // And make sure current line is still selected
          SelectNode(LineToIndex(line));
+
+         // If a node is closed near the bottom of the tree,
+         // the node may move down, and no longer be at the
+         // mouse pointer position. So don't allow further processing as this
+         // selects the line at the mouse position. Bug 1723.
+         // So we need to set the focus.
+         SetFocus();
+         return;
       }
    }
 
