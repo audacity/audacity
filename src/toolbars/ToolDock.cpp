@@ -704,11 +704,11 @@ void ToolDock::LayoutToolBars()
          auto ct = place.pTree->pBar;
          if( lt ){
             ct->MoveAfterInTabOrder( lt );
-            // Bug 1371.
-            // After a dock size change, the toolbars may need relaying inside.
-            lt->Layout();
          }
          lt = ct;
+         // Bug 1371.
+         // After a dock size change, the toolbars may need relaying inside.
+         lt->Layout();
       }
    }
 
