@@ -676,12 +676,15 @@ void SelectionBar::ValuesToControls()
 // A time has been set.  Update the control values.
 void SelectionBar::SetTimes(double start, double end, double audio)
 {
-   if ( start != mStart || end != mEnd || audio != mAudio) {
+   if ( start != mStart || end != mEnd || audio != mAudio
+      || mLastSelectionMode != mSelectionMode
+   ) {
       mStart = start;
       mEnd = end;
       mLength = end-start;
       mCenter = (end+start)/2.0;
       mAudio = audio;
+      mLastSelectionMode = mSelectionMode;
 
       ValuesToControls();
    }
