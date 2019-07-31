@@ -341,7 +341,7 @@ private:
 
    bool GetSelected() const { return mSelected; }
 
-   void SetSelected(bool s);
+   virtual void SetSelected(bool s);
 
    // The argument tells whether the last undo history state should be
    // updated for the appearance change

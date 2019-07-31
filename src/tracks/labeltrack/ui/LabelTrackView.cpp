@@ -78,6 +78,8 @@ void LabelTrackView::BindTo( LabelTrack *pParent )
       EVT_LABELTRACK_DELETION, &LabelTrackView::OnLabelDeleted, this );
    pParent->Bind(
       EVT_LABELTRACK_PERMUTED, &LabelTrackView::OnLabelPermuted, this );
+   pParent->Bind(
+      EVT_LABELTRACK_SELECTION, &LabelTrackView::OnSelectionChange, this );
 }
 
 void LabelTrackView::UnbindFrom( LabelTrack *pParent )
@@ -1910,6 +1912,16 @@ void LabelTrackView::OnLabelPermuted( LabelTrackEvent &e )
       -- mSelIndex;
    else if ( former > mSelIndex && mSelIndex >= present )
       ++ mSelIndex;
+}
+
+void LabelTrackView::OnSelectionChange( LabelTrackEvent &e )
+{
+   e.Skip();
+   if ( e.mpTrack.lock() != FindTrack() )
+      return;
+
+   if ( !FindTrack()->GetSelected() )
+      mSelIndex = -1;
 }
 
 wxBitmap & LabelTrackView::GetGlyph( int i)

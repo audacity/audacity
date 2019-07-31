@@ -49,6 +49,7 @@ for drawing different aspects of the label and its text box.
 wxDEFINE_EVENT(EVT_LABELTRACK_ADDITION, LabelTrackEvent);
 wxDEFINE_EVENT(EVT_LABELTRACK_DELETION, LabelTrackEvent);
 wxDEFINE_EVENT(EVT_LABELTRACK_PERMUTED, LabelTrackEvent);
+wxDEFINE_EVENT(EVT_LABELTRACK_SELECTION, LabelTrackEvent);
 
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "labeltrack" ),
@@ -247,6 +248,18 @@ LabelStruct::LabelStruct(const SelectedRegion &region,
    x1 = 0;
    xText = 0;
    y = 0;
+}
+
+void LabelTrack::SetSelected( bool s )
+{
+   bool selected = GetSelected();
+   Track::SetSelected( s );
+   if ( selected != GetSelected() ) {
+      LabelTrackEvent evt{
+         EVT_LABELTRACK_SELECTION, SharedPointer<LabelTrack>(), {}, -1, -1
+      };
+      ProcessEvent( evt );
+   }
 }
 
 double LabelTrack::GetOffset() const
