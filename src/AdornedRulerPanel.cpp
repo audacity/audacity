@@ -1686,11 +1686,6 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       // Looping a tiny selection may freeze, so just play it once.
       loopEnabled = ((end - start) > 0.001)? true : false;
 
-      // Stop only after deciding where to start again, because an event
-      // callback may change the play region back to the selection
-      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
-      projectAudioManager.Stop();
-
       auto options = DefaultPlayOptions( *mProject );
       options.playLooped = (loopEnabled && looped);
 
@@ -1704,6 +1699,11 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
          cutPreview ? PlayMode::cutPreviewPlay
          : options.playLooped ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
+
+      // Stop only after deciding where to start again, because an event
+      // callback may change the play region back to the selection
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.Stop();
 
       // Change play region display while playing
       playRegion.SetTimes( start, end );
