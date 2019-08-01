@@ -1356,6 +1356,14 @@ void ProjectWindow::OnScroll(wxScrollEvent & WXUNUSED(event))
    viewInfo.sbarH =
       (wxInt64)(mHsbar->GetThumbPosition() / viewInfo.sbarScale) - offset;
    DoScroll();
+
+#ifndef __WXMAC__
+   // Bug2179
+   // This keeps the time ruler in sync with horizontal scrolling, without
+   // making an undesirable compilation dependency of this source file on
+   // the ruler
+   wxTheApp->ProcessIdle();
+#endif
 }
 
 void ProjectWindow::DoScroll()
