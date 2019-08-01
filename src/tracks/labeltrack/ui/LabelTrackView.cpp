@@ -90,6 +90,8 @@ void LabelTrackView::UnbindFrom( LabelTrack *pParent )
       EVT_LABELTRACK_DELETION, &LabelTrackView::OnLabelDeleted, this );
    pParent->Unbind(
       EVT_LABELTRACK_PERMUTED, &LabelTrackView::OnLabelPermuted, this );
+   pParent->Unbind(
+      EVT_LABELTRACK_SELECTION, &LabelTrackView::OnSelectionChange, this );
 }
 
 void LabelTrackView::CopyTo( Track &track ) const
