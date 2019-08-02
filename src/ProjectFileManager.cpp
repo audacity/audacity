@@ -1711,18 +1711,6 @@ bool ProjectFileManager::Import(
       }
    }
 
-   int mode = gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"), 0L);
-   if (mode == 1) {
-      //TODO: All we want is a SelectAll()
-      SelectUtilities::SelectNone( project );
-      SelectUtilities::SelectAllIfNone( project );
-      const CommandContext context( project );
-      EffectManager::DoEffect(
-         EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
-         context,
-         EffectManager::kConfigured);
-   }
-
    // This is a no-fail:
    dirManager.FillBlockfilesCache();
    return true;
