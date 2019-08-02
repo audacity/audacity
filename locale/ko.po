@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.3.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-04-24 19:44+0100\n"
-"PO-Revision-Date: 2018-11-16 14:44+0900\n"
+"PO-Revision-Date: 2019-08-02 15:18+0900\n"
 "Last-Translator: Seong-ho Cho <darkcircle.0426@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/klyok/audacity/language/"
 "ko/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -446,15 +446,15 @@ msgstr "나이키스트 플러그인"
 
 #: src/AboutDialog.cpp
 msgid "web developer"
-msgstr ""
+msgstr "웹 개발자"
 
 #: src/AboutDialog.cpp
 msgid "graphics"
-msgstr ""
+msgstr "그래픽"
 
 #: src/AboutDialog.cpp
 msgid "incorporating"
-msgstr "포함:"
+msgstr "협력"
 
 #: src/AboutDialog.cpp
 msgid "About Audacity"
@@ -537,7 +537,7 @@ msgstr "공헌한 분들"
 
 #: src/AboutDialog.cpp
 msgid "Website and Graphics"
-msgstr ""
+msgstr "웹사이트와 그래픽"
 
 #: src/AboutDialog.cpp
 msgid "Translators"
@@ -649,11 +649,11 @@ msgstr "크로스 플랫폼 GUI 라이브러리"
 
 #: src/AboutDialog.cpp
 msgid "Features"
-msgstr "특징"
+msgstr "기능"
 
 #: src/AboutDialog.cpp
 msgid "Dark Theme Extras"
-msgstr "검은색 테마 추가"
+msgstr "어두우 테마 추가"
 
 #: src/AboutDialog.cpp
 msgid "Plug-in support"
@@ -17999,9 +17999,8 @@ msgid "Sample Data Export"
 msgstr "내보낼 수 없습니다"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Analyzing..."
-msgstr "적용 중..."
+msgstr "분석 중..."
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -18184,38 +18183,32 @@ msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "sample data"
-msgstr "샘플 편집"
+msgstr "샘플 데이터"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Sample #"
-msgstr "샘플"
+msgstr "샘플 #"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Value (linear)"
-msgstr "Linear (선형)"
+msgstr "값 (선형)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Value (dB)"
-msgstr "볼륨 (dB)(&V):"
+msgstr "값 (dB)(&V):"
 
 #: plug-ins/sample-data-export.ny
 msgid "audio sample value analysis"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Left (linear)"
-msgstr "Linear (선형)"
+msgstr "왼쪽 (선형)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Right (linear)"
-msgstr "Linear (선형)"
+msgstr "오른쪽 (선형)"
 
 #: plug-ins/sample-data-export.ny
 #, fuzzy
@@ -18234,6 +18227,9 @@ msgid ""
 "<a href=\"~a\">Audacity</a> by Steve\n"
 "Daulton"
 msgstr ""
+"<span>샘플 데이터 내보니기</span>로 만들어짐 for\n"
+"<a href=\"~a\">Audacity</a> by 스티브\n"
+"덜튼"
 
 #: plug-ins/sample-data-export.ny
 #, fuzzy
