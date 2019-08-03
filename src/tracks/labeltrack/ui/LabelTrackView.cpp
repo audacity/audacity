@@ -1378,6 +1378,7 @@ bool LabelTrackView::DoKeyDown(
                   if (mCurrentCursorPos > 0) {
                      title.erase(mCurrentCursorPos-1, 1);
                      mCurrentCursorPos--;
+                     pTrack->SetLabel(mSelIndex, labelStruct);
                   }
                }
             }
@@ -1407,6 +1408,7 @@ bool LabelTrackView::DoKeyDown(
                   // DELETE one letter
                   if (mCurrentCursorPos < len) {
                      title.erase(mCurrentCursorPos, 1);
+                     pTrack->SetLabel(mSelIndex, labelStruct);
                   }
                }
             }
