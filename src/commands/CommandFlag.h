@@ -101,12 +101,17 @@ public:
 // then the enabler will be invoked (unless the menu item is constructed with
 // the useStrictFlags option, or the applicability test first returns false).
 // The item's full set of required flags is passed to the function.
+
+// Computation of the flags is delayed inside a function -- because often you
+// need to name a statically allocated CommandFlag, or a bitwise OR of some,
+// while they may not have been initialized yet, during static initialization.
 struct MenuItemEnabler {
+   using Flags = std::function< CommandFlag() >;
    using Test = std::function< bool( const AudacityProject& ) >;
    using Action = std::function< void( AudacityProject&, CommandFlag ) >;
 
-   const CommandFlag &actualFlags;
-   const CommandFlag &possibleFlags;
+   const Flags actualFlags;
+   const Flags possibleFlags;
    Test applicable;
    Action tryEnable;
 };
