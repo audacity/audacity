@@ -85,7 +85,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.TieRadioButton(_("&Mix down to Stereo or Mono"),
                           true);
-         S.TieRadioButton(_("&Use custom mix"),
+         S.TieRadioButton(_("&Use Advanced Mixing Options"),
                           false);
       }
       S.EndRadioButtonGroup();
@@ -93,9 +93,6 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("S&how Metadata Tags editor before export"),
                     wxT("/AudioFiles/ShowId3Dialog"),
                     true);
-      // This documentation is unlikely to help somebody who cannot figure it out by discovering the Options button in the dialog.
-      // It's only clutter in this Prefs tab, so removed.
-      //    S.AddFixedText(_("Note: Export quality options can be chosen by clicking the Options\nbutton in the Export dialog."));
    }
    S.EndStatic();
 #ifdef USE_MIDI
