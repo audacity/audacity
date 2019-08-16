@@ -93,6 +93,10 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("S&how Metadata Tags editor before export"),
                     wxT("/AudioFiles/ShowId3Dialog"),
                     true);
+
+      S.TieCheckBox(_("Export with silence at the beginning"),
+                    wxT("/AudioFiles/SilenceAtBeginning"),
+                    false);
    }
    S.EndStatic();
 #ifdef USE_MIDI

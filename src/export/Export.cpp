@@ -499,6 +499,14 @@ bool Exporter::ExamineTracks()
    // least one track is selected (if selectedOnly==true)
 
    double earliestBegin = mT1;
+
+   bool silenceAtBeginning = gPrefs->Read(wxT("/AudioFiles/SilenceAtBeginning"),
+                                      false);
+
+   if (silenceAtBeginning) {
+     earliestBegin = 0.0;
+   }
+
    double latestEnd = mT0;
 
    auto &tracks = TrackList::Get( *mProject );
