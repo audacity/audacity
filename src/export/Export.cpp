@@ -554,9 +554,23 @@ bool Exporter::ExamineTracks()
       return false;
    }
 
-   if (mT0 < earliestBegin)
-      mT0 = earliestBegin;
+   // The skipping of silent space could be cleverer and take 
+   // into account clips.
+   // As implemented now, it can only skip initial silent space that 
+   // has no clip before it, and terminal silent space that has no clip 
+   // after it.
+   if (mT0 < earliestBegin){
+      // Bug 1904 
+      // Previously we always skipped initial silent space.
+      // Now skipping it is an opt-in option.
+      bool skipSilenceAtBeginning;
+      gPrefs->Read(wxT("/AudioFiles/SkipSilenceAtBeginning"),
+                                      &skipSilenceAtBeginning, false);
+      if (skipSilenceAtBeginning)
+         mT0 = earliestBegin;
+   }
 
+   // We still skip silent space at the end
    if (mT1 > latestEnd)
       mT1 = latestEnd;
 
