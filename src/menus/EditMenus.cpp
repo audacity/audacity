@@ -1178,6 +1178,14 @@ RegisteredMenuItemEnabler selectTracks{{
    selectAll
 }};
 
+// Including time tracks.
+RegisteredMenuItemEnabler selectAnyTracks{{
+   []{ return TracksExistFlag; },
+   []{ return AnyTracksSelectedFlag; },
+   canSelectAll,
+   selectAll
+}};
+
 RegisteredMenuItemEnabler selectWaveTracks{{
    []{ return WaveTracksExistFlag; },
    []{ return TimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag; },
