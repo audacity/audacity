@@ -150,7 +150,9 @@ HitTestPreview TrackSelectHandle::Preview
    if (mClicked) {
       static auto disabledCursor =
          ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
-      static wxCursor rearrangeCursor{ wxCURSOR_HAND };
+      //static wxCursor rearrangeCursor{ wxCURSOR_HAND };
+      static auto rearrangeCursor =
+         ::MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
 
       const bool unsafe =
          ProjectAudioIO::Get( *GetActiveProject() ).IsAudioActive();
@@ -158,7 +160,7 @@ HitTestPreview TrackSelectHandle::Preview
          message,
          (unsafe
           ? &*disabledCursor
-          : &rearrangeCursor)
+          : &*rearrangeCursor)
          // , message // Stop showing the tooltip after the click
       };
    }
