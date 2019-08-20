@@ -17,7 +17,9 @@
 #include <gtk/gtk.h>
 #endif
 
+#include <wx/button.h>
 #include <wx/eventfilter.h>
+#include <wx/toplevel.h>
 #include <wx/weakref.h>
 #include <wx/window.h>
 
