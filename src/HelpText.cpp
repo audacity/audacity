@@ -210,9 +210,8 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 
       if (Key == wxT("welcome"))
    {
-      /// TO-DO: Make the links to help here use the widgets/HelpSystem mechanism
-      /// so that they are consistent
-      /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
+      /* i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.*/
+      /* i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.*/
       wxString result = 
          wxString(wxT("")) + 
 #if defined(IS_ALPHA) || defined(IS_BETA)
@@ -244,8 +243,8 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
          _("How to get help") + wxT("</h3></center>") + 
          _("These are our support methods:") + wxT("<p><ul><li>") +
-         _(" [[file:quick_help.html|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]") + wxT("</li><li>") +
-         _(" [[file:index.html|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]") + wxT("</li><li>") +
+         _("[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]") + wxT("</li><li>") +
+         _(" [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]") + wxT("</li><li>") +
          _(" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online.") + wxT("</li></ul></p><p>") + wxT("<b>") +
          _("More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>");
 #endif

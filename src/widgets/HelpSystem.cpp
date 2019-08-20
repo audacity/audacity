@@ -524,7 +524,13 @@ LinkingHtmlWindow::LinkingHtmlWindow(wxWindow *parent, wxWindowID id /*= -1*/,
 void LinkingHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
 {
    wxString href = link.GetHref();
-   if( href.StartsWith(wxT("innerlink:")) )
+
+   if( href.StartsWith( wxT("innerlink:help:")))
+   {
+      HelpSystem::ShowHelp(this, href.Mid( 15 ), true );
+      return;
+   }
+   else if( href.StartsWith(wxT("innerlink:")) )
    {
       wxString FileName =
          wxFileName( FileNames::HtmlHelpDir(), href.Mid( 10 ) + wxT(".htm") ).GetFullPath();
@@ -553,10 +559,14 @@ void LinkingHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
       OpenInDefaultBrowser(link);
       return;
    }
-   BrowserDialog * pDlg = wxDynamicCast(
-      GetRelatedFrame()->FindWindow(BrowserDialog::ID), BrowserDialog );
-   if( pDlg )
-   {
-      pDlg->UpdateButtons();
-   };
+   wxFrame * pFrame = GetRelatedFrame();
+   if( !pFrame )
+      return;
+   wxWindow * pWnd = pFrame->FindWindow(BrowserDialog::ID);
+   if( !pWnd )
+      return;
+   BrowserDialog * pDlg = wxDynamicCast( pWnd , BrowserDialog );
+   if( !pDlg )
+      return;
+   pDlg->UpdateButtons();
 }
