@@ -1344,10 +1344,12 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       // BuildFromXML failed, or we didn't find a valid blockfile tag.
       return false;
 
-   if (!pBlockFile->GetFileName().name.IsOk())
+   if (!pBlockFile->GetFileName().name.IsOk()) {
      // Silent blocks don't actually have a file associated, so
      // we don't need to worry about the hash table at all
+     target = pBlockFile;
      return true;
+   }
 
    // Check the length here so we don't have to do it in each BuildFromXML method.
    if ((mMaxSamples != ~size_t(0)) && // is initialized
