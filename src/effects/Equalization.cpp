@@ -329,9 +329,42 @@ EffectType EffectEqualization::GetType()
 // EffectClientInterface implementation
 bool EffectEqualization::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mM, FilterLength );
-   S.SHUTTLE_PARAM( mCurveName, CurveName);
+   //S.SHUTTLE_PARAM( mCurveName, CurveName);
    S.SHUTTLE_PARAM( mLin, InterpLin);
    S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, kInterpStrings, nInterpolations );
+
+   // if saving the preferences...
+   if( dynamic_cast<ShuttleGetAutomation*>(&S))
+   {
+      int numPoints = mCurves[ 0 ].points.size();
+      S.Define( numPoints, wxString("nPoints"), 0, 0,200,1);
+      int point;
+      for( point = 0; point < numPoints; point++ )
+      {
+         const wxString nameFreq = wxString::Format("f%i",point);
+         const wxString nameVal = wxString::Format("v%i",point);
+         S.Define( mCurves[ 0 ].points[ point ].Freq,  nameFreq, 0.0,  0.0, 0.0, 0.0 );
+         S.Define( mCurves[ 0 ].points[ point ].dB,    nameVal,  0.0, 0.0, 0.0, 0.0 );
+      }
+
+   }
+   else
+   {
+      int numPoints;// = mLogEnvelope->GetNumberOfPoints();
+      S.Define( numPoints, wxString("nPoints"), 0, 0,200,1);
+      mCurves[0].points.clear();
+   
+      for (int i = 0; i < numPoints; i++)
+      {
+         const wxString nameFreq = wxString::Format("f%i",i);
+         const wxString nameVal = wxString::Format("v%i",i);
+         double f,d;
+         S.Define( f,  nameFreq, 0.0,  -10000.0, 10000.0, 0.0 );
+         S.Define( d, nameVal,  0.0, -10000.0, 10000.0, 0.0 );
+         mCurves[0].points.push_back( EQPoint( f,d ));
+      }
+      setCurve( 0 );
+   }
 
    return true;
 }
