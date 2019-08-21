@@ -372,7 +372,7 @@ bool EffectEqualization::DefineParams( ShuttleParams & S ){
 bool EffectEqualization::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_FilterLength, (unsigned long)mM);
-   parms.Write(KEY_CurveName, mCurveName);
+   //parms.Write(KEY_CurveName, mCurveName);
    parms.Write(KEY_InterpLin, mLin);
    parms.WriteEnum(KEY_InterpMeth, mInterp, kInterpStrings, nInterpolations);
 
@@ -385,12 +385,12 @@ bool EffectEqualization::SetAutomationParameters(CommandParameters & parms)
    // specified in chains, but must keep it that way for compatibility.
 
    ReadAndVerifyInt(FilterLength);
-   ReadAndVerifyString(CurveName);
+   //ReadAndVerifyString(CurveName);
    ReadAndVerifyBool(InterpLin);
    ReadAndVerifyEnum(InterpMeth, kInterpStrings, nInterpolations);
 
    mM = FilterLength;
-   mCurveName = CurveName;
+   //mCurveName = CurveName;
    mLin = InterpLin;
    mInterp = InterpMeth;
 
@@ -1000,7 +1000,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 #endif
 
    mUIParent->SetAutoLayout(false);
-   mUIParent->Layout();
+   if( mOptions != kEqOptionGraphic)
+      mUIParent->Layout();
 
    // "show" settings for graphics mode before setting the size of the dialog
    // as this needs more space than draw mode
@@ -1008,7 +1009,18 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    szrH->Show(szrI,true);  // interpolation choice
    szrH->Show(szrL,false); // linear freq checkbox
 
-   mUIParent->SetSizeHints(mUIParent->GetBestSize());
+   if( mOptions == kEqOptionGraphic){
+      mPanel->Show( false );
+      szrV->Show(szr1,false);
+      //szrG->Show( true );
+      //mUIParent->Layout();
+      //S.GetParent()->Layout();
+      wxSize sz = szrV->GetMinSize();
+      sz += wxSize( 30, 0);
+      mUIParent->SetSizeHints(sz);
+   }
+   else
+      mUIParent->SetSizeHints(mUIParent->GetBestSize());
 
 //   szrL->SetMinSize( szrI->GetSize() );
 
@@ -1061,6 +1073,8 @@ bool EffectEqualization::TransferDataToWindow()
    {
       if( mGraphic) 
          mGraphic->SetValue(true);
+      szrV->Show(szr1,false);
+      mGridOnOff->Show( false );
       UpdateGraphic();
    }
 
@@ -2173,12 +2187,18 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
 void EffectEqualization::LayoutEQSliders()
 {
    // layout the Graphic EQ sliders here
-   wxRect rulerR = mFreqRuler->GetRect();
    int sliderW = mSliders[0]->GetSize().GetWidth();
    int sliderH = mGraphicPanel->GetRect().GetHeight();
 
+#ifdef BEFORE_EQ_WAS_SPLIT
+   wxRect rulerR = mFreqRuler->GetRect();
    int start = rulerR.GetLeft() - (sliderW / 2);
    float range = rulerR.GetWidth();
+#else
+   wxRect rulerR = mGraphicPanel->GetRect();
+   int start = rulerR.GetLeft() + (sliderW / 2);
+   float range = rulerR.GetWidth() - sliderW *1.5;
+#endif
 
    double loLog = log10(mLoFreq);
    double hiLog = log10(mHiFreq);
