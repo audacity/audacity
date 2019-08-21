@@ -350,7 +350,7 @@ bool EffectEqualization::DefineParams( ShuttleParams & S ){
    }
    else
    {
-      int numPoints;// = mLogEnvelope->GetNumberOfPoints();
+      int numPoints=0;// = mLogEnvelope->GetNumberOfPoints();
       S.Define( numPoints, wxString("nPoints"), 0, 0,200,1);
       mCurves[0].points.clear();
    
