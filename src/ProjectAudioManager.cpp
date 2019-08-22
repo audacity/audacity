@@ -685,10 +685,10 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             }
 
             transportTracks.captureTracks.push_back(newTrack);
-            // Bug 1548.  New track needs the focus.
-            TrackFocus::Get( *p ).Set( newTrack.get() );
          }
          TrackList::Get( *p ).GroupChannels(*first, recordingChannels);
+         // Bug 1548.  First of new tracks needs the focus.
+         TrackFocus::Get(*p).Set(first);
       }
       
       //Automated Input Level Adjustment Initialization
