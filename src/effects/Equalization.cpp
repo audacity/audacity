@@ -668,28 +668,30 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(0);
 
    S.SetSizerProportion(1);
-   S.StartMultiColumn(1, wxEXPAND);
+   S.Prop(1).StartMultiColumn(1, wxEXPAND);
    {
       S.SetStretchyCol(0);
-      S.SetStretchyRow(1);
+      //S.SetStretchyRow(0); // The 5px Top border
+      S.SetStretchyRow(1);   // The Graph
+      S.SetStretchyRow(2);   // The EQ sliders
       szrV = S.GetSizer();
 
       // -------------------------------------------------------------------
-      // ROW 1: Top border
+      // ROW 0: Top border
       // -------------------------------------------------------------------
       S.AddSpace(5);
 
+      // -------------------------------------------------------------------
+      // ROW 1: Equalization panel and sliders for vertical scale
+      // -------------------------------------------------------------------
       S.SetSizerProportion(1);
-      S.StartMultiColumn(3, wxEXPAND);
+      S.Prop(1).StartMultiColumn(3, wxEXPAND);
       {
          S.SetStretchyCol(1);
          S.SetStretchyRow(0);
          szr1 = S.GetSizer();
 
-         // -------------------------------------------------------------------
-         // ROW 2: Equalization panel and sliders for vertical scale
-         // -------------------------------------------------------------------
-         S.StartVerticalLay();
+         S.StartVerticalLay(wxEXPAND, 1);
          {
             mdBRuler = safenew RulerPanel(
                parent, wxID_ANY, wxVERTICAL,
@@ -703,7 +705,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                   .TickColour( { 0, 0, 0 } )
             );
 
-            S.AddSpace(0, 1);
+            S.Prop(0).AddSpace(0, 1);
             S.Prop(1).AddWindow(mdBRuler, wxEXPAND );
             S.AddSpace(0, 1);
          }
@@ -737,7 +739,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          S.SetBorder(0);
 
          // -------------------------------------------------------------------
-         // ROW 3: Frequency ruler
+         // Frequency ruler below graph
          // -------------------------------------------------------------------
 
          // Column 1 is empty
@@ -767,19 +769,21 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
 
       // -------------------------------------------------------------------
-      // ROW 3: Graphic EQ - this gets laid out horizontally in onSize
+      // ROW 2: Graphic EQ
       // -------------------------------------------------------------------
-      S.StartHorizontalLay(wxEXPAND, 0);
+      S.SetSizerProportion(1);
+      S.StartHorizontalLay(wxEXPAND, 1);
       {
          szrG = S.GetSizer();
 
          // Panel used to host the sliders since they will be positioned manually.
-         mGraphicPanel = safenew wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
-         S.Prop(1).AddWindow(mGraphicPanel, wxEXPAND);
-
+         //mGraphicPanel = safenew wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
+         //S.Prop(1).AddWindow(mGraphicPanel, wxEXPAND);
+         wxWindow *pParent = S.GetParent();
+         S.AddSpace(15,0);
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
          {
-            mSliders[i] = safenew wxSliderWrapper(mGraphicPanel, ID_Slider + i, 0, -20, +20,
+            mSliders[i] = safenew wxSlider(pParent, ID_Slider + i, 0, -20, +20,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL | wxSL_INVERSE);
 
             mSliders[i]->Bind(wxEVT_ERASE_BACKGROUND,
@@ -796,17 +800,21 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 #endif
             mSlidersOld[i] = 0;
             mEQVals[i] = 0.;
+            //S.SetSizerProportion(1);
+            S.Prop(1).AddWindow( mSliders[i], wxEXPAND );
          }
+         S.AddSpace(15,0);
       }
       S.EndHorizontalLay();
 
-      S.StartMultiColumn(7, wxALIGN_CENTER_HORIZONTAL);
+      // -------------------------------------------------------------------
+      // ROW 4: Various controls
+      // -------------------------------------------------------------------
+      S.SetSizerProportion(1);
+      S.Prop(1).StartMultiColumn(7, wxALIGN_CENTER_HORIZONTAL);
       {
          S.SetBorder(5);
 
-         // -------------------------------------------------------------------
-         // ROWS 4:
-         // -------------------------------------------------------------------
          S.AddSpace(5, 5);
 
          if( mOptions == kEqLegacy )
@@ -832,7 +840,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.EndHorizontalLay();
          }
 
-         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
+         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
          {
             szrH = S.GetSizer();
 
@@ -862,7 +870,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // Filter length grouping
          // -------------------------------------------------------------------
 
-         S.StartHorizontalLay(wxEXPAND, 1);
+         S.StartHorizontalLay(wxEXPAND, 0);
          {
             S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
             {
@@ -893,9 +901,6 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
          S.AddSpace(5, 5);
 
-         // -------------------------------------------------------------------
-         // ROW 5:
-         // -------------------------------------------------------------------
          if( mOptions == kEqLegacy ){
             S.AddSpace(5, 5);
             S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -1019,11 +1024,11 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       sz += wxSize( 30, 0);
       mUIParent->SetSizeHints(sz);
    }
-   else
+   else{
+      mPanel->Show( true );
+      szrV->Show(szr1, true);
       mUIParent->SetSizeHints(mUIParent->GetBestSize());
-
-//   szrL->SetMinSize( szrI->GetSize() );
-
+   }
    return;
 }
 
@@ -1060,23 +1065,19 @@ bool EffectEqualization::TransferDataToWindow()
    if( mOptions == kEqOptionGraphic)
       mDrawMode = false;
 
+   if( mDraw )
+      mDraw->SetValue(mDrawMode);
+   szrV->Show(szr1,mOptions != kEqOptionGraphic); // Graph
+   szrV->Show(szrG,!mDrawMode);    // eq sliders
+   szrH->Show(szrI,!mDrawMode);    // interpolation choice
+   szrH->Show(szrL, mDrawMode);    // linear freq checkbox
+   if( mGraphic) 
+      mGraphic->SetValue(!mDrawMode);
+   mGridOnOff->Show( mDrawMode );
+
    // Set Graphic (Fader) or Draw mode
-   if (mDrawMode)
-   {
-      if( mDraw )
-         mDraw->SetValue(true);
-      szrV->Show(szrG,false);    // eq sliders
-      szrH->Show(szrI,false);    // interpolation choice
-      szrH->Show(szrL,true);     // linear freq checkbox
-   }
-   else
-   {
-      if( mGraphic) 
-         mGraphic->SetValue(true);
-      szrV->Show(szr1,false);
-      mGridOnOff->Show( false );
+   if (!mDrawMode)
       UpdateGraphic();
-   }
 
    TransferDataFromWindow();
 
@@ -1119,7 +1120,6 @@ bool EffectEqualization::TransferDataFromWindow()
       if( w1 != w2 )   // Reduces flicker
       {
          mdBRuler->SetSize(wxSize(w2,h));
-         LayoutEQSliders();
          mFreqRuler->Refresh(false);
       }
       mdBRuler->Refresh(false);
@@ -2184,37 +2184,6 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void EffectEqualization::LayoutEQSliders()
-{
-   // layout the Graphic EQ sliders here
-   int sliderW = mSliders[0]->GetSize().GetWidth();
-   int sliderH = mGraphicPanel->GetRect().GetHeight();
-
-#ifdef BEFORE_EQ_WAS_SPLIT
-   wxRect rulerR = mFreqRuler->GetRect();
-   int start = rulerR.GetLeft() - (sliderW / 2);
-   float range = rulerR.GetWidth();
-#else
-   wxRect rulerR = mGraphicPanel->GetRect();
-   int start = rulerR.GetLeft() + (sliderW / 2);
-   float range = rulerR.GetWidth() - sliderW *1.5;
-#endif
-
-   double loLog = log10(mLoFreq);
-   double hiLog = log10(mHiFreq);
-   double denom = hiLog - loLog;
-
-   for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
-   {
-      // centre of this slider, from start
-      float posn = range * (log10(kThirdOct[i]) - loLog) / denom;
-
-      mSliders[i]->SetSize(start + (posn + 0.5), 0, sliderW, sliderH);
-   }
-
-   mGraphicPanel->Refresh();
-}
-
 void EffectEqualization::UpdateCurves()
 {
 
@@ -2350,20 +2319,9 @@ void EffectEqualization::UpdateGraphic()
 
    mUIParent->Layout();
    wxGetTopLevelParent(mUIParent)->Layout();
-//   mUIParent->Layout();    // Make all sizers get resized first
-   LayoutEQSliders();      // Then layout sliders
    mUIParent->Layout();
    wxGetTopLevelParent(mUIParent)->Layout();
-//   mUIParent->Layout();    // And layout again to resize dialog
 
-#if 0
-   wxSize wsz = mUIParent->GetSize();
-   wxSize ssz = szrV->GetSize();
-   if (ssz.x > wsz.x || ssz.y > wsz.y)
-   {
-      mUIParent->Fit();
-   }
-#endif
    GraphicEQ(mLogEnvelope.get());
    mDrawMode = false;
 }
@@ -2694,12 +2652,6 @@ double EffectEqualization::splint(double x[], double y[], size_t n, double y2[],
 void EffectEqualization::OnSize(wxSizeEvent & event)
 {
    mUIParent->Layout();
-
-   if (!mDrawMode)
-   {
-      LayoutEQSliders();
-   }
-
    event.Skip();
 }
 

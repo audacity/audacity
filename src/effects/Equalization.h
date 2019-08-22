@@ -178,7 +178,7 @@ private:
    void UpdateCurves();
    void UpdateDraw();
 
-   void LayoutEQSliders();
+   //void LayoutEQSliders();
    void UpdateGraphic(void);
    void EnvLogToLin(void);
    void EnvLinToLog(void);
