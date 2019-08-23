@@ -851,6 +851,10 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                auto interpolations =
                   LocalizedStrings(kInterpStrings, nInterpolations);
                mInterpChoice = S.Id(ID_Interp).AddChoice( {}, interpolations, 0 );
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               mInterpChoice->SetAccessible(safenew WindowAccessible(mInterpChoice));
+#endif
                mInterpChoice->SetName(_("Interpolation type"));
             }
             S.EndHorizontalLay();
