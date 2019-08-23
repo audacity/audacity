@@ -337,7 +337,6 @@ bool EffectEqualization::DefineParams( ShuttleParams & S ){
    if( dynamic_cast<ShuttleGetAutomation*>(&S))
    {
       int numPoints = mCurves[ 0 ].points.size();
-      S.Define( numPoints, wxString("nPoints"), 0, 0,200,1);
       int point;
       for( point = 0; point < numPoints; point++ )
       {
@@ -350,17 +349,18 @@ bool EffectEqualization::DefineParams( ShuttleParams & S ){
    }
    else
    {
-      int numPoints=0;// = mLogEnvelope->GetNumberOfPoints();
-      S.Define( numPoints, wxString("nPoints"), 0, 0,200,1);
       mCurves[0].points.clear();
    
-      for (int i = 0; i < numPoints; i++)
+      for (int i = 0; i < 200; i++)
       {
          const wxString nameFreq = wxString::Format("f%i",i);
          const wxString nameVal = wxString::Format("v%i",i);
-         double f,d;
+         double f = -1000.0;
+         double d = 0.0;
          S.Define( f,  nameFreq, 0.0,  -10000.0, 10000.0, 0.0 );
          S.Define( d, nameVal,  0.0, -10000.0, 10000.0, 0.0 );
+         if( f <= 0.0 )
+            break;
          mCurves[0].points.push_back( EQPoint( f,d ));
       }
       setCurve( 0 );
@@ -1439,6 +1439,14 @@ void EffectEqualization::Filter(size_t len, float *buffer)
 //
 void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 {
+// We've disabled the XML management of curves.
+// Just going via .cfg files now.
+#if 1
+   (void)fileName;
+   (void)append;
+   mCurves.clear();
+   mCurves.push_back( _("unnamed") );   // we still need a default curve to use
+#else
    // Construct normal curve filename
    //
    // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
@@ -1518,7 +1526,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    {
       mCurves.back().points = tempCustom.points;
    }
-
+#endif
    return;
 }
 
