@@ -199,6 +199,10 @@ public:
    /** \brief insert a point */
    void Insert(int point, const EnvPoint &p);
 
+   // Insert a point (without replacement)
+   // for now assumed sequential.
+   void Insert(double when, double value);
+
    /** \brief Return number of points */
    size_t GetNumberOfPoints() const;
 

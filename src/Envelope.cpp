@@ -366,6 +366,11 @@ void Envelope::Insert(int point, const EnvPoint &p)
    mEnv.insert(mEnv.begin() + point, p);
 }
 
+void Envelope::Insert(double when, double value)
+{
+   mEnv.push_back( EnvPoint{ when, value });
+}
+
 void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
 // NOFAIL-GUARANTEE
 {
