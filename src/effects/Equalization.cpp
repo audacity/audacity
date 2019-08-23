@@ -357,7 +357,7 @@ bool EffectEqualization::DefineParams( ShuttleParams & S ){
          const wxString nameVal = wxString::Format("v%i",i);
          double f = -1000.0;
          double d = 0.0;
-         S.Define( f,  nameFreq, 0.0,  -10000.0, 10000.0, 0.0 );
+         S.Define( f,  nameFreq, 0.0,  -10000.0, 1000000.0, 0.0 );
          S.Define( d, nameVal,  0.0, -10000.0, 10000.0, 0.0 );
          if( f <= 0.0 )
             break;
