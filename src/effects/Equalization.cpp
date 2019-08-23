@@ -303,9 +303,9 @@ EffectEqualization::~EffectEqualization()
 ComponentInterfaceSymbol EffectEqualization::GetSymbol()
 {
    if( mOptions == kEqOptionGraphic )
-      return GRAPHICEQ_PLUGIN_SYMBOL;
+      return EQ_GRAPHIC_PLUGIN_SYMBOL;
    if( mOptions == kEqOptionCurve )
-      return FILTERCURVE_PLUGIN_SYMBOL;
+      return EQ_CURVES_PLUGIN_SYMBOL;
    return EQUALIZATION_PLUGIN_SYMBOL;
 }
 
@@ -316,6 +316,11 @@ wxString EffectEqualization::GetDescription()
 
 wxString EffectEqualization::ManualPage()
 {
+
+   if( mOptions == kEqOptionGraphic )
+      return wxT("EQ Graphic");
+   if( mOptions == kEqOptionCurve )
+      return wxT("EQ Curves");
    return wxT("Equalization");
 }
 
@@ -651,7 +656,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 {
    wxWindow *const parent = S.GetParent();
 
-   LoadCurves();
+   //LoadCurves();
 
    auto trackList = inputTracks();
    const auto t = trackList
@@ -1033,6 +1038,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       szrV->Show(szr1, true);
       mUIParent->SetSizeHints(mUIParent->GetBestSize());
    }
+   ForceRecalc();
    return;
 }
 
