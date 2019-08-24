@@ -122,6 +122,9 @@ public:
    bool SetAutomationParameters(CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
+   RegistryPaths GetFactoryPresets() override;
+   bool LoadFactoryPreset(int id) override;
+
    // EffectUIClientInterface implementation
 
    bool ValidateUI() override;
