@@ -121,7 +121,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
          wxButton *download_button = S.Id(ID_MP3_DOWN_BUTTON).AddButton(_("&Download"),
                                             wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
 
-#ifdef DISABLE_DYNAMIC_LOADING_LAME
+#if !defined(USE_LAME) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
          locate_button->Enable(FALSE);
          download_button->Enable(FALSE);
 #else

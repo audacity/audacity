@@ -302,7 +302,10 @@ Exporter::Exporter()
    SetFileDialogTitle( _("Export Audio") );
 
    RegisterPlugin(New_ExportPCM());
+
+#ifdef USE_LAME
    RegisterPlugin(New_ExportMP3());
+#endif
 
 #ifdef USE_LIBVORBIS
    RegisterPlugin(New_ExportOGG());

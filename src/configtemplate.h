@@ -137,6 +137,9 @@
 /* Define if LADSPA plug-ins are enabled */
 #undef USE_LADSPA
 
+/* Define if LAME support should be enabled */
+#undef USE_LAME
+
 /* Define if the FLAC library is present */
 #undef USE_LIBFLAC
 

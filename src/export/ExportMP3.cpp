@@ -93,6 +93,8 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
+#ifdef USE_LAME
+
 #include "Export.h"
 
 #include <lame/lame.h>
@@ -2265,4 +2267,15 @@ wxString GetMP3Version(wxWindow *parent, bool prompt)
 
    return versionString;
 }
+
+#else // USE_LAME
+
+/// MP3 support may or may not be compiled in,
+/// but Preferences dialog requires this function nevertheless
+wxString GetMP3Version(wxWindow *parent, bool prompt)
+{
+   return wxString(_("MP3 support not compiled in"));
+}
+
+#endif // USE_LAME
 

@@ -23085,6 +23085,12 @@ else
 fi
 
 
+   if test "$LAME_USE_LOCAL" = yes -o "$LAME_USE_SYSTEM" = yes; then
+
+$as_echo "#define USE_LAME 1" >>confdefs.h
+
+   fi
+
 
    if test "$LIBFLAC_USE_LOCAL" = yes; then
       FLAC_CFLAGS='-I$(top_srcdir)/lib-src/libflac/include'

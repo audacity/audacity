@@ -65,4 +65,9 @@ AC_DEFUN([AUDACITY_CONFIG_LAME], [
 
    AM_CONDITIONAL([USE_LAME], [test "$LAME_USE_LOCAL" = yes -o "$LAME_USE_SYSTEM" = yes])
    AM_CONDITIONAL([USE_LOCAL_LAME], [test "$LAME_USE_LOCAL" = yes])
+
+   if test "$LAME_USE_LOCAL" = yes -o "$LAME_USE_SYSTEM" = yes; then
+      AC_DEFINE(USE_LAME, 1,
+                [Define if LAME support should be enabled])
+   fi
 ])
