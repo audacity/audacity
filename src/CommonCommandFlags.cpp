@@ -299,6 +299,7 @@ const ReservedCommandFlag
          return !TrackList::Get( project ).Any<const WaveTrack>().empty();
       }
    },
+#ifdef USE_MIDI
    NoteTracksExistFlag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any<const NoteTrack>().empty();
@@ -309,6 +310,7 @@ const ReservedCommandFlag
          return !TrackList::Get( project ).Selected<const NoteTrack>().empty();
       }
    },  //gsw
+#endif
    IsNotSyncLockedFlag{
       [](const AudacityProject &project){
          return !ProjectSettings::Get( project ).IsSyncLocked();
@@ -354,9 +356,11 @@ const ReservedCommandFlag
       [](const AudacityProject &project){
          auto &tracks = TrackList::Get( project );
          return
+#ifdef USE_MIDI
             !tracks.Selected<const NoteTrack>().empty()
             // even if not EXPERIMENTAL_MIDI_OUT
          ||
+#endif
             !tracks.Selected<const WaveTrack>().empty()
          ;
       }

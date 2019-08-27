@@ -396,12 +396,12 @@ UIHandle::Result TimeShiftHandle::Click
                ok = false;
             else
                captureClips = true;
-         },
 #ifdef USE_MIDI
+         },
          [&](NoteTrack *) {
             captureClips = true;
-         }
 #endif
+         }
       );
 
    if ( ! ok )

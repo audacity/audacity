@@ -49,10 +49,6 @@ using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
-#if defined(USE_MIDI)
-class NoteTrack;
-#endif
-
 class TrackList;
 
 using ListOfTracks = std::list< std::shared_ptr< Track > >;
@@ -70,9 +66,7 @@ enum class TrackKind
 {
    None,
    Wave,
-#if defined(USE_MIDI)
    Note,
-#endif
    Label,
    Time,
    Audio,
