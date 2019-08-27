@@ -179,7 +179,7 @@ static const double kThirdOct[] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name          Type        Key                     Def      Min      Max      Scale
-Param( FilterLength, int,     wxT("FilterLength"),        4001,    21,      8191,    0      );
+Param( FilterLength, int,     wxT("FilterLength"),        8191,    21,      8191,    0      );
 Param( CurveName,    wxChar*, wxT("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
 Param( InterpLin,    bool,    wxT("InterpolateLin"),      false,   false,   true,    false  );
 Param( InterpMeth,   int,     wxT("InterpolationMethod"), 0,       0,       0,       0      );
@@ -234,6 +234,7 @@ EffectEqualization::EffectEqualization(int Options)
    mDraw = NULL;
    mCurve = NULL;
    mPanel = NULL;
+   mMSlider = NULL;
 
    hFFT = GetFFT(windowSize);
 
@@ -303,9 +304,9 @@ EffectEqualization::~EffectEqualization()
 ComponentInterfaceSymbol EffectEqualization::GetSymbol()
 {
    if( mOptions == kEqOptionGraphic )
-      return EQ_GRAPHIC_PLUGIN_SYMBOL;
+      return GRAPHIC_EQ_PLUGIN_SYMBOL;
    if( mOptions == kEqOptionCurve )
-      return EQ_CURVES_PLUGIN_SYMBOL;
+      return FILTER_CURVE_PLUGIN_SYMBOL;
    return EQUALIZATION_PLUGIN_SYMBOL;
 }
 
@@ -318,9 +319,9 @@ wxString EffectEqualization::ManualPage()
 {
 
    if( mOptions == kEqOptionGraphic )
-      return wxT("EQ Graphic");
+      return wxT("Graphic EQ");
    if( mOptions == kEqOptionCurve )
-      return wxT("EQ Curves");
+      return wxT("Filter Curve");
    return wxT("Equalization");
 }
 
@@ -504,9 +505,9 @@ bool EffectEqualization::ValidateUI()
    {
       // PRL:  This is unreachable.  mDisallowCustom is always false.
 
-      Effect::MessageBox(_("To use this EQ curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
+      Effect::MessageBox(_("To use this filter curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
          wxOK | wxCENTRE,
-         _("EQ Curve needs a different name"));
+         _("Filter Curve needs a different name"));
       return false;
    }
 
@@ -948,34 +949,36 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // Filter length grouping
          // -------------------------------------------------------------------
 
-         S.StartHorizontalLay(wxEXPAND, 0);
-         {
-            S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
+         if( mOptions == kEqLegacy ){
+            S.StartHorizontalLay(wxEXPAND, 0);
             {
-               S.AddPrompt(_("Length of &Filter:"));
+               S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
+               {
+                  S.AddPrompt(_("Length of &Filter:"));
+               }
+               S.EndHorizontalLay();
+
+               S.StartHorizontalLay(wxEXPAND, 1);
+               {
+                  S.SetStyle(wxSL_HORIZONTAL);
+                  mMSlider = S.Id(ID_Length).AddSlider( {}, (mM - 1) / 2, 4095, 10);
+                  mMSlider->SetName(_("Length of Filter"));
+               }
+               S.EndHorizontalLay();
+
+               S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
+               {
+                  wxString label;
+                  label.Printf(wxT("%ld"), mM);
+                  mMText = S.AddVariableText(label);
+                  mMText->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+               }
+               S.EndHorizontalLay();
             }
             S.EndHorizontalLay();
 
-            S.StartHorizontalLay(wxEXPAND, 1);
-            {
-               S.SetStyle(wxSL_HORIZONTAL);
-               mMSlider = S.Id(ID_Length).AddSlider( {}, (mM - 1) / 2, 4095, 10);
-               mMSlider->SetName(_("Length of Filter"));
-            }
-            S.EndHorizontalLay();
-
-            S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
-            {
-               wxString label;
-               label.Printf(wxT("%ld"), mM);
-               mMText = S.AddVariableText(label);
-               mMText->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-            }
-            S.EndHorizontalLay();
+            S.AddSpace(1, 1);
          }
-         S.EndHorizontalLay();
-
-         S.AddSpace(1, 1);
 
          S.AddSpace(5, 5);
 
@@ -1123,7 +1126,8 @@ bool EffectEqualization::TransferDataToWindow()
 
    mGridOnOff->SetValue( mDrawGrid ); // checks/unchecks the box on the interface
 
-   mMSlider->SetValue((mM - 1) / 2);
+   if( mMSlider )
+      mMSlider->SetValue((mM - 1) / 2);
    mM = 0;                        // force refresh in TransferDataFromWindow()
 
    mdBMinSlider->SetValue((int)mdBMin);
@@ -1148,7 +1152,7 @@ bool EffectEqualization::TransferDataToWindow()
       mDraw->SetValue(mDrawMode);
    szrV->Show(szr1,mOptions != kEqOptionGraphic); // Graph
    szrV->Show(szrG,!mDrawMode);    // eq sliders
-   szrH->Show(szrI,!mDrawMode);    // interpolation choice
+   szrH->Show(szrI,mOptions == kEqLegacy );    // interpolation choice
    szrH->Show(szrL, mDrawMode);    // linear freq checkbox
    if( mGraphic) 
       mGraphic->SetValue(!mDrawMode);
@@ -1206,15 +1210,21 @@ bool EffectEqualization::TransferDataFromWindow()
       mPanel->Refresh(false);
    }
 
-   size_t m = 2 * mMSlider->GetValue() + 1;   // odd numbers only
+   size_t m = DEF_FilterLength; // m must be odd.
+   if (mMSlider )
+      m = 2* mMSlider->GetValue()+1;
+   wxASSERT( (m & 1) ==1 );
    if (m != mM) {
       mM = m;
       ForceRecalc();
 
-      tip.Printf(wxT("%d"), (int)mM);
-      mMText->SetLabel(tip);
-      mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-      mMSlider->SetToolTip(tip);
+      if( mMSlider)
+      {
+         tip.Printf(wxT("%d"), (int)mM);
+         mMText->SetLabel(tip);
+         mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+         mMSlider->SetToolTip(tip);
+      }
    }
 
    return true;
@@ -2401,7 +2411,7 @@ void EffectEqualization::UpdateGraphic()
    }
 
    szrV->Show(szrG,true);  // eq sliders
-   szrH->Show(szrI,true);  // interpolation choice
+   szrH->Show(szrI,mOptions == kEqLegacy );  // interpolation choice
    szrH->Show(szrL,false); // linear freq checkbox
 
    mUIParent->Layout();

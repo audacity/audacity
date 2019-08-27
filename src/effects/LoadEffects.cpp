@@ -117,11 +117,10 @@
    EFFECT( COMPRESSOR,        EffectCompressor, () )                   \
    EFFECT( DISTORTION,        EffectDistortion, () )                   \
    EFFECT( ECHO,              EffectEcho, () )                         \
-   EFFECT( EQUALIZATION,      EffectEqualization, (kEqLegacy) )        \
    EFFECT( FADEIN,            EffectFade, (true) )                     \
    EFFECT( FADEOUT,           EffectFade, (false) )                    \
-   EFFECT( EQ_CURVES,         EffectEqualization, (kEqOptionCurve) )   \
-   EFFECT( EQ_GRAPHIC,        EffectEqualization, (kEqOptionGraphic) ) \
+   EFFECT( FILTER_CURVE,         EffectEqualization, (kEqOptionCurve) )   \
+   EFFECT( GRAPHIC_EQ,        EffectEqualization, (kEqOptionGraphic) ) \
    EFFECT( INVERT,            EffectInvert, () )                       \
    EFFECT( NORMALIZE,         EffectNormalize, () )                    \
    EFFECT( PHASER,            EffectPhaser, () )                       \
@@ -138,6 +137,9 @@
    EFFECT( AUTODUCK,          EffectAutoDuck, () )                     \
    EFFECT( PAULSTRETCH,       EffectPaulstretch, () )                  \
    SBSMS_EFFECTS
+
+//EFFECT( EQUALIZATION,      EffectEqualization, (kEqLegacy) )      \ 
+
 
 //
 // Define the list of effects that do not get autoregistered

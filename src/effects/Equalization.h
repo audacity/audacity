@@ -24,10 +24,10 @@
 
 #define EQUALIZATION_PLUGIN_SYMBOL \
 ComponentInterfaceSymbol{ XO("Equalization") }
-#define EQ_GRAPHIC_PLUGIN_SYMBOL \
-ComponentInterfaceSymbol{ wxT("EQ Graphic"), XO("EQ Graphic") }
-#define EQ_CURVES_PLUGIN_SYMBOL \
-ComponentInterfaceSymbol{ wxT("EQ Curves"), XO("EQ Curves") }
+#define GRAPHIC_EQ_PLUGIN_SYMBOL \
+ComponentInterfaceSymbol{ wxT("Graphic EQ"), XO("Graphic EQ") }
+#define FILTER_CURVE_PLUGIN_SYMBOL \
+ComponentInterfaceSymbol{ wxT("Filter Curve"), XO("Filter Curve") }
 
 // Flags to specialise the UI
 const int kEqOptionGraphic =1;
