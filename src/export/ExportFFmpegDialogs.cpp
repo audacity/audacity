@@ -942,7 +942,7 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("asf"), AV_CODEC_ID_TRUESPEECH },
    { wxT("asf"), AV_CODEC_ID_GSM_MS },
    { wxT("asf"), AV_CODEC_ID_ADPCM_G726 },
-   { wxT("asf"), AV_CODEC_ID_MP2 },
+   //{ wxT("asf"), AV_CODEC_ID_MP2 }, Bug 59
    { wxT("asf"), AV_CODEC_ID_MP3 },
 #if LIBAVCODEC_VERSION_MAJOR < 58
    { wxT("asf"), AV_CODEC_ID_VOXWARE },
@@ -978,7 +978,7 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("avi"), AV_CODEC_ID_TRUESPEECH },
    { wxT("avi"), AV_CODEC_ID_GSM_MS },
    { wxT("avi"), AV_CODEC_ID_ADPCM_G726 },
-   { wxT("avi"), AV_CODEC_ID_MP2 },
+   // { wxT("avi"), AV_CODEC_ID_MP2 }, //Bug 59
    { wxT("avi"), AV_CODEC_ID_MP3 },
 #if LIBAVCODEC_VERSION_MAJOR < 58
    { wxT("avi"), AV_CODEC_ID_VOXWARE },
@@ -1027,7 +1027,7 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("matroska"), AV_CODEC_ID_TRUESPEECH },
    { wxT("matroska"), AV_CODEC_ID_GSM_MS },
    { wxT("matroska"), AV_CODEC_ID_ADPCM_G726 },
-   { wxT("matroska"), AV_CODEC_ID_MP2 },
+   // { wxT("matroska"), AV_CODEC_ID_MP2 }, // Bug 59
    { wxT("matroska"), AV_CODEC_ID_MP3 },
 #if LIBAVCODEC_VERSION_MAJOR < 58
    { wxT("matroska"), AV_CODEC_ID_VOXWARE },
@@ -1100,27 +1100,27 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("mpeg"), AV_CODEC_ID_AC3 },
    { wxT("mpeg"), AV_CODEC_ID_DTS },
    { wxT("mpeg"), AV_CODEC_ID_PCM_S16BE },
-   { wxT("mpeg"), AV_CODEC_ID_MP2 },
+   //{ wxT("mpeg"), AV_CODEC_ID_MP2 },// Bug 59
 
    { wxT("vcd"), AV_CODEC_ID_AC3 },
    { wxT("vcd"), AV_CODEC_ID_DTS },
    { wxT("vcd"), AV_CODEC_ID_PCM_S16BE },
-   { wxT("vcd"), AV_CODEC_ID_MP2 },
+   //{ wxT("vcd"), AV_CODEC_ID_MP2 },// Bug 59
 
    { wxT("vob"), AV_CODEC_ID_AC3 },
    { wxT("vob"), AV_CODEC_ID_DTS },
    { wxT("vob"), AV_CODEC_ID_PCM_S16BE },
-   { wxT("vob"), AV_CODEC_ID_MP2 },
+   //{ wxT("vob"), AV_CODEC_ID_MP2 },// Bug 59
 
    { wxT("svcd"), AV_CODEC_ID_AC3 },
    { wxT("svcd"), AV_CODEC_ID_DTS },
    { wxT("svcd"), AV_CODEC_ID_PCM_S16BE },
-   { wxT("svcd"), AV_CODEC_ID_MP2 },
+   //{ wxT("svcd"), AV_CODEC_ID_MP2 },// Bug 59
 
    { wxT("dvd"), AV_CODEC_ID_AC3 },
    { wxT("dvd"), AV_CODEC_ID_DTS },
    { wxT("dvd"), AV_CODEC_ID_PCM_S16BE },
-   { wxT("dvd"), AV_CODEC_ID_MP2 },
+   //{ wxT("dvd"), AV_CODEC_ID_MP2 },// Bug 59
 
    { wxT("nut"), AV_CODEC_ID_PCM_S16LE },
    { wxT("nut"), AV_CODEC_ID_PCM_U8 },
@@ -1135,7 +1135,7 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("nut"), AV_CODEC_ID_TRUESPEECH },
    { wxT("nut"), AV_CODEC_ID_GSM_MS },
    { wxT("nut"), AV_CODEC_ID_ADPCM_G726 },
-   { wxT("nut"), AV_CODEC_ID_MP2 },
+   //{ wxT("nut"), AV_CODEC_ID_MP2 },// Bug 59
    { wxT("nut"), AV_CODEC_ID_MP3 },
  #if LIBAVCODEC_VERSION_MAJOR < 58
    { wxT("nut"), AV_CODEC_ID_VOXWARE },
@@ -1185,20 +1185,20 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("wav"), AV_CODEC_ID_TRUESPEECH },
    { wxT("wav"), AV_CODEC_ID_GSM_MS },
    { wxT("wav"), AV_CODEC_ID_ADPCM_G726 },
-   { wxT("wav"), AV_CODEC_ID_MP2 },
+   //{ wxT("wav"), AV_CODEC_ID_MP2 }, Bug 59 - It crashes.
    { wxT("wav"), AV_CODEC_ID_MP3 },
 #if LIBAVCODEC_VERSION_MAJOR < 58
    { wxT("wav"), AV_CODEC_ID_VOXWARE },
 #endif
    { wxT("wav"), AV_CODEC_ID_AAC },
-   { wxT("wav"), AV_CODEC_ID_WMAV1 },
-   { wxT("wav"), AV_CODEC_ID_WMAV2 },
+   // { wxT("wav"), AV_CODEC_ID_WMAV1 },
+   // { wxT("wav"), AV_CODEC_ID_WMAV2 },
    { wxT("wav"), AV_CODEC_ID_WMAPRO },
    { wxT("wav"), AV_CODEC_ID_ADPCM_CT },
    { wxT("wav"), AV_CODEC_ID_ATRAC3 },
    { wxT("wav"), AV_CODEC_ID_IMC },
    { wxT("wav"), AV_CODEC_ID_AC3 },
-   { wxT("wav"), AV_CODEC_ID_DTS },
+   //{ wxT("wav"), AV_CODEC_ID_DTS },
    { wxT("wav"), AV_CODEC_ID_FLAC },
    { wxT("wav"), AV_CODEC_ID_ADPCM_SWF },
    { wxT("wav"), AV_CODEC_ID_VORBIS },
@@ -1758,7 +1758,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(AVCodecID id, wxString *selfm
    // Find all formats compatible to this codec in compatibility list
    for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
    {
-      if (CompatibilityList[i].codec == id || CompatibilityList[i].codec == AV_CODEC_ID_NONE)
+      if (CompatibilityList[i].codec == id || (CompatibilityList[i].codec == AV_CODEC_ID_NONE) )
       {
          if ((selfmt != NULL) && (*selfmt == CompatibilityList[i].fmt)) index = mShownFormatNames.size();
          FromList.push_back(CompatibilityList[i].fmt);
