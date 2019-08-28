@@ -468,7 +468,7 @@ void ExportFFmpegCustomOptions::OnOpen(wxCommandEvent & WXUNUSED(evt))
       }
    }
    DropFFmpegLibs();
-   auto pWin = wxTheApp->GetTopWindow();
+   auto pWin = wxGetTopLevelParent( this );
    ExportFFmpegOptions od(pWin);
    od.ShowModal();
 }
