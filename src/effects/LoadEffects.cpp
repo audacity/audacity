@@ -138,7 +138,7 @@
    EFFECT( PAULSTRETCH,       EffectPaulstretch, () )                  \
    SBSMS_EFFECTS
 
-//EFFECT( EQUALIZATION,      EffectEqualization, (kEqLegacy) )      \ 
+//EFFECT( EQUALIZATION,      EffectEqualization, (kEqLegacy) )      \
 
 
 //
