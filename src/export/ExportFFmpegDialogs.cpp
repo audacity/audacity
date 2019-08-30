@@ -468,7 +468,15 @@ void ExportFFmpegCustomOptions::OnOpen(wxCommandEvent & WXUNUSED(evt))
       }
    }
    DropFFmpegLibs();
+
+#ifdef __WXMAC__
+   // Bug 2077 Must be a parent window on OSX or we will appear behind.
    auto pWin = wxGetTopLevelParent( this );
+#else
+   // Use GetTopWindow on windows as there is no hWnd with top level parent.
+   auto pWin = wxTheApp->GetTopWindow();
+#endif
+
    ExportFFmpegOptions od(pWin);
    od.ShowModal();
 }
