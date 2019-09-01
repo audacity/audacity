@@ -90,10 +90,6 @@ public:
       const CommandFlagOptions &options = {} );
 };
 
-// Widely used command flags, but this list need not be exhaustive.  It may be
-// extended, with special purpose flags of limited use, by constucting static
-// ReservedCommandFlag values
-
 // To describe auto-selection, stop-if-paused, etc.:
 // A structure describing a set of conditions, another set that might be
 // made true given the first, and the function that may make them true.
