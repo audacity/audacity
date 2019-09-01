@@ -352,14 +352,15 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
       safetyFileName = fileName + wxT(".bak");
 #endif
 
+      bool bOK=true;
       if (wxFileExists(safetyFileName))
-         wxRemoveFile(safetyFileName);
+         bOK = wxRemoveFile(safetyFileName);
 
       if ( !wxRenameFile(fileName, safetyFileName) ) {
          AudacityMessageBox(
             wxString::Format(
-               _("Could not create safety file: %s"), safetyFileName ),
-            _("Error"), wxICON_STOP, &window);
+               _("Audacity failed to write file %s.\nPerhaps disk is full or not writable."), safetyFileName ),
+            _("Error Writing to File"), wxICON_STOP, &window);
          return false;
       }
    }
