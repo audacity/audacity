@@ -470,6 +470,18 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       info.sections = 1;
       info.seekable = 0;
 
+      // Bug 46.  Trap here, as sndfile.c does not trap it properly.
+      if( (numChannels != 1) && ((sf_format & SF_FORMAT_SUBMASK) == SF_FORMAT_GSM610) )
+      {
+         AudacityMessageBox(_("GSM 6.10 requires mono"));
+         return ProgressResult::Cancelled;
+      }
+
+      if( sf_format == SF_FORMAT_WAVEX + SF_FORMAT_GSM610){
+         AudacityMessageBox( _("WAVEX and GSM 6.10 formats are not compatible") );
+         return ProgressResult::Cancelled;
+      }
+
       // If we can't export exactly the format they requested,
       // try the default format for that header type...
       if (!sf_format_check(&info))
