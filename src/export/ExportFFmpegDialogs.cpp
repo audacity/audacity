@@ -1457,6 +1457,9 @@ void ExportFFmpegOptions::FetchCodecList()
       // We're only interested in audio and only in encoders
       if (codec->type == AVMEDIA_TYPE_AUDIO && av_codec_is_encoder(codec))
       {
+         // MP2 Codec is broken.  Don't allow it.
+         if( codec->id == AV_CODEC_ID_MP2)
+            continue;
          mCodecNames.push_back(wxString::FromUTF8(codec->name));
          mCodecLongNames.push_back(wxString::Format(wxT("%s - %s"),mCodecNames.back(),wxString::FromUTF8(codec->long_name)));
       }
@@ -1719,6 +1722,9 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
       {
          if (codec->type == AVMEDIA_TYPE_AUDIO && av_codec_is_encoder(codec))
          {
+            // MP2 is broken.
+            if( codec->id == AV_CODEC_ID_MP2)
+               continue;
             if (! make_iterator_range( mShownCodecNames )
                .contains( wxString::FromUTF8(codec->name) ) )
             {
@@ -1969,6 +1975,67 @@ void ExportFFmpegOptions::OnAllCodecs(wxCommandEvent& WXUNUSED(event))
    mCodecList->Append(mCodecNames);
 }
 
+/// ReportIfBadCombination will trap 
+/// bad combinations of format and codec and report
+/// using a message box.
+/// We may later extend it to catch bad parameters too.
+/// @return true iff a bad combination was reported
+/// At the moment we don't trap unrecognised format
+/// or codec.  (We do not expect them to happen ever).
+bool ExportFFmpegOptions::ReportIfBadCombination()
+{
+   wxString *selcdc = NULL;
+   wxString *selcdclong = NULL;
+   FindSelectedCodec(&selcdc, &selcdclong);
+   if (selcdc == NULL)
+      return false; // unrecognised codec. Treated as OK
+   AVCodec *cdc = avcodec_find_encoder_by_name(selcdc->ToUTF8());
+   if (cdc == NULL)
+      return false; // unrecognised codec. Treated as OK
+
+   wxString *selfmt = NULL;
+   wxString *selfmtlong = NULL;
+   FindSelectedFormat(&selfmt, &selfmtlong);
+   if( selfmt == NULL )
+      return false; // unrecognised format; Treated as OK
+   
+   // This is intended to test for illegal combinations.
+   // However, the list updating now seems to be working correctly
+   // making it impossible to select illegal combinations
+   bool bFound = false;
+   for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
+   {
+      if (*selfmt == CompatibilityList[i].fmt) 
+      {
+         if (CompatibilityList[i].codec == cdc->id || (CompatibilityList[i].codec == AV_CODEC_ID_NONE) ){
+            bFound = true;
+            break;
+         }
+      }
+   }
+
+   // We can put extra code in here, to disallow combinations
+   // We could also test for illegal parameters, and deliver
+   // custom error messages in that case.
+   // The below would make AAC codec disallowed.
+   //if( cdc->id == AV_CODEC_ID_AAC)
+   //   bFound = false;
+
+   // Valid combination was found, so no reporting.
+   if( bFound )
+      return false;
+
+   AudacityMessageBox( 
+      wxString::Format(_("Format %s is not compatible with codec %s."),
+         *selfmt,
+         *selcdc ),
+      _("Incompatible format and codec"));
+
+   return true;
+}
+
+
+
 void ExportFFmpegOptions::EnableDisableControls(AVCodec *cdc, wxString *selfmt)
 {
    int handled = -1;
@@ -2098,6 +2165,9 @@ void ExportFFmpegOptions::OnCodecList(wxCommandEvent& WXUNUSED(event))
 ///
 void ExportFFmpegOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
+   if( ReportIfBadCombination() )
+      return;
+
    int selcdc = mCodecList->GetSelection();
    int selfmt = mFormatList->GetSelection();
    if (selcdc > -1) gPrefs->Write(wxT("/FileFormats/FFmpegCodec"),mCodecList->GetString(selcdc));
