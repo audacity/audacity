@@ -266,7 +266,7 @@ bool Effect::IsDefault()
    return true;
 }
 
-bool Effect::IsLegacy() 
+bool Effect::IsLegacy()
 {
    if (mClient)
    {
@@ -543,7 +543,7 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
 
    // mUIDialog is null
    auto cleanup = valueRestorer( mUIDialog );
-   
+
    mUIDialog = CreateUI(parent, this);
    if (!mUIDialog)
    {
@@ -1103,7 +1103,7 @@ bool Effect::SetAutomationParameters(const wxString & parms)
 RegistryPaths Effect::GetUserPresets()
 {
    RegistryPaths presets;
-   
+
    GetPrivateConfigSubgroups(GetUserPresetsGroup(wxEmptyString), presets);
 
    std::sort( presets.begin(), presets.end() );
@@ -1255,7 +1255,7 @@ bool Effect::DoEffect(wxWindow *parent,
       return false;
    }
 
-   // Prompting will be bypassed when applying an effect that has already 
+   // Prompting will be bypassed when applying an effect that has already
    // been configured, e.g. repeating the last effect on a different selection.
    // Prompting may call Effect::Preview
    if (shouldPrompt && IsInteractive() && !PromptUser(parent))
@@ -1344,7 +1344,7 @@ bool Effect::Process()
       }
    }
 
-   ReplaceProcessedTracks(bGoodResult); 
+   ReplaceProcessedTracks(bGoodResult);
 
    return bGoodResult;
 }
@@ -1546,7 +1546,7 @@ bool Effect::ProcessTrack(int count,
    //
    // At the same time the total number of delayed samples are gathered and when
    // there is no further input data to process, the loop continues to call the
-   // effect with an empty input buffer until the effect has had a chance to 
+   // effect with an empty input buffer until the effect has had a chance to
    // return all of the remaining delayed samples.
    auto inLeftPos = leftStart;
    auto inRightPos = rightStart;
@@ -1621,7 +1621,7 @@ bool Effect::ProcessTrack(int count,
          curBlockSize = mBlockSize;
          if (curBlockSize > inputRemaining)
          {
-            // We've reached the last block...set current block size to what's left 
+            // We've reached the last block...set current block size to what's left
             // inputRemaining is positive and bounded by a size_t
             curBlockSize = inputRemaining.as_size_t();
             inputRemaining = 0;
@@ -2310,7 +2310,7 @@ void Effect::Preview(bool dryOnly)
 
    double t1 = mT0 + previewDuration;
 
-   if ((t1 > mT1) && !(isNyquist && isGenerator)) {
+   if ((t1 > mT1) && !isGenerator) {
       t1 = mT1;
    }
 
@@ -2713,7 +2713,7 @@ EffectUIHost::~EffectUIHost()
    {
       if (mNeedsResume)
          Resume();
-      
+
       mClient->CloseUI();
       mClient = NULL;
    }
@@ -2734,9 +2734,9 @@ bool EffectUIHost::TransferDataToWindow()
 
 bool EffectUIHost::TransferDataFromWindow()
 {
-   if( mEffect) 
+   if( mEffect)
       return mEffect->TransferDataFromWindow();
-   if( mCommand) 
+   if( mCommand)
       return mCommand->TransferDataFromWindow();
    return false;
 }
@@ -2822,7 +2822,7 @@ bool EffectUIHost::Initialize()
 
 #if defined(__WXMAC__)
          margin = 3; // I'm sure it's needed because of the order things are created...
-#endif   
+#endif
 
          if (!mIsGUI)
          {
@@ -2857,10 +2857,10 @@ bool EffectUIHost::Initialize()
                   mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
                   bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
                }
-               else if (mEffect && 
-                  (mEffect->GetType() != EffectTypeAnalyze) && 
+               else if (mEffect &&
+                  (mEffect->GetType() != EffectTypeAnalyze) &&
                   (mEffect->GetType() != EffectTypeTool)
-                  ) 
+                  )
                {
                   wxASSERT(bar); // To justify safenew
                   mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("&Preview"));
@@ -2987,7 +2987,7 @@ bool EffectUIHost::Initialize()
 
    w->SetAccept(!mIsGUI);
    (!mIsGUI ? w : FindWindow(wxID_APPLY))->SetFocus();
- 
+
    LoadUserPresets();
 
    InitializeRealtime();
@@ -3060,10 +3060,10 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    }
 
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
-   if (!mIsBatch && 
-      mEffect && 
-      mEffect->GetType() != EffectTypeGenerate && 
-      mEffect->GetType() != EffectTypeTool && 
+   if (!mIsBatch &&
+      mEffect &&
+      mEffect->GetType() != EffectTypeGenerate &&
+      mEffect->GetType() != EffectTypeTool &&
       ViewInfo::Get( *mProject ).selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
