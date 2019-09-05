@@ -1360,9 +1360,11 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
 
    unsigned numTracks = 0;
 
+   bool anySolo = !(( tracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+
    for (auto t :
          tracks->Any< const WaveTrack >()
-            + ( selectedOnly ? &Track::IsSelected : &Track::Any )
+            + (anySolo ? &WaveTrack::GetSolo : ( selectedOnly ? &Track::IsSelected : &Track::Any ) )
             - &WaveTrack::GetMute
    ) {
       numTracks++;
