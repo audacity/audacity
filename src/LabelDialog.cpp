@@ -674,8 +674,10 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    // Extract the actual name.
-   wxString fName = mTrackNames[mTrackNames.size() - 1].AfterFirst(wxT('-')).Mid(1);
-
+   wxString fName = GetActiveProject()->GetProjectName()
+      + wxT(" - ")
+      + mTrackNames[mTrackNames.size() - 1].AfterFirst(wxT('-')).Mid(1);
+      
    fName = FileNames::SelectFile(FileNames::Operation::Export,
       _("Export Labels As:"),
       wxEmptyString,

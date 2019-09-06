@@ -226,7 +226,9 @@ void OnExportLabels(const CommandContext &context)
       return;
    }
    else
-      fName = (*trackRange.rbegin())->GetName();
+      fName = project.GetProjectName()
+         + wxT(" - ")
+         + (*trackRange.rbegin())->GetName();
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
                         _("Export Labels As:"),
