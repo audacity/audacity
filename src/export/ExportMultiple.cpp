@@ -168,8 +168,11 @@ ExportMultiple::~ExportMultiple()
 
 void ExportMultiple::CountTracksAndLabels()
 {
+   bool anySolo = !(( mTracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+
    mNumWaveTracks =
-      (mTracks->Leaders< const WaveTrack >() - &WaveTrack::GetMute).size();
+      (mTracks->Leaders< const WaveTrack >() - 
+      (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)).size();
 
    // only the first label track
    mLabels = *mTracks->Any< const LabelTrack >().begin();
@@ -654,9 +657,12 @@ static unsigned GetNumExportChannels( const TrackList &tracks )
    //int numMono = 0;
    /* track iteration kit */
 
+   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+
    // Want only unmuted wave tracks.
    for (auto tr :
-         tracks.Any< const WaveTrack >() - &WaveTrack::GetMute
+         tracks.Any< const WaveTrack >() - 
+      (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)
    ) {
       // Found a left channel
       if (tr->GetChannel() == Track::LeftChannel) {
@@ -860,8 +866,11 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    for (auto tr : mTracks->Selected<WaveTrack>())
       tr->SetSelected(false);
 
+   bool anySolo = !(( mTracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+
    /* Examine all tracks in turn, collecting export information */
-   for (auto tr : mTracks->Leaders<WaveTrack>() - &WaveTrack::GetMute) {
+   for (auto tr : mTracks->Leaders<WaveTrack>() - 
+      (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)) {
 
       // Get the times for the track
       auto channels = TrackList::Channels(tr);
@@ -940,7 +949,10 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    int count = 0; // count the number of sucessful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
    std::unique_ptr<ProgressDialog> pDialog;
-   for (auto tr : mTracks->Leaders<WaveTrack>() - &WaveTrack::GetMute) {
+
+   for (auto tr : mTracks->Leaders<WaveTrack>() - 
+      (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)) {
+
       wxLogDebug( "Get setting %i", count );
       /* get the settings to use for the export from the array */
       activeSetting = exportSettings[count];

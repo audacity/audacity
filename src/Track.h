@@ -737,6 +737,8 @@ public:
 
    bool GetMute    () const { return mMute;     }
    bool GetSolo    () const { return mSolo;     }
+   bool GetNotMute () const { return !mMute;     }
+   bool GetNotSolo () const { return !mSolo;     }
    void SetMute    (bool m);
    void SetSolo    (bool s);
 

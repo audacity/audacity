@@ -250,9 +250,12 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
          bool highQuality, MixerSpec *mixerSpec)
 {
    WaveTrackConstArray inputTracks;
+
+   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+
    auto range = tracks.Any< const WaveTrack >()
       + (selectionOnly ? &Track::IsSelected : &Track::Any )
-      - &WaveTrack::GetMute;
+      - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    for (auto pTrack: range)
       inputTracks.push_back(
          pTrack->SharedPointer< const WaveTrack >() );
@@ -503,10 +506,12 @@ bool Exporter::ExamineTracks()
 
    auto &tracks = TrackList::Get( *mProject );
 
+   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+
    for (auto tr :
          tracks.Any< const WaveTrack >()
             + ( mSelectedOnly ? &Track::IsSelected : &Track::Any )
-            - &WaveTrack::GetMute
+            - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)
    ) {
       mNumSelected++;
 
@@ -1364,8 +1369,8 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
 
    for (auto t :
          tracks->Any< const WaveTrack >()
-            + (anySolo ? &WaveTrack::GetSolo : ( selectedOnly ? &Track::IsSelected : &Track::Any ) )
-            - &WaveTrack::GetMute
+            + ( selectedOnly ? &Track::IsSelected : &Track::Any  )
+            - ( anySolo ? &WaveTrack::GetNotSolo :  &WaveTrack::GetMute)
    ) {
       numTracks++;
       const wxString sTrackName = (t->GetName()).Left(20);
