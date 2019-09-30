@@ -655,14 +655,13 @@ bool MenuManager::TryToMakeActionAllowed(
    while ((flags & flagsRqd) != flagsRqd && iter != end) {
       const auto &enabler = *iter;
       auto actual = enabler.actualFlags();
-      auto possible = enabler.possibleFlags();
       auto MissingFlags = (~flags & flagsRqd);
       if (
          // Do we have the right precondition?
          (flags & actual) == actual
       &&
          // Can we get the condition we need?
-         (MissingFlags & possible) == possible
+         (MissingFlags & enabler.possibleFlags()) == MissingFlags
       ) {
          // Then try the function
          enabler.tryEnable( project, flagsRqd );
