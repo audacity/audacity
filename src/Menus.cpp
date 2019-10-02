@@ -661,7 +661,7 @@ bool MenuManager::TryToMakeActionAllowed(
          (flags & actual) == actual
       &&
          // Can we get the condition we need?
-         (MissingFlags & enabler.possibleFlags()) == MissingFlags
+         (MissingFlags & enabler.possibleFlags()).any()
       ) {
          // Then try the function
          enabler.tryEnable( project, flagsRqd );

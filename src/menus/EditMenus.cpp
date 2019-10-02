@@ -1011,8 +1011,6 @@ const ReservedCommandFlag
             return true;
 
          if (
-            !AudioIOBusyPred( project )
-         &&
             TimeSelectedPred( project )
          &&
             TracksSelectedPred( project )
