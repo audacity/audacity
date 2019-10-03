@@ -1897,8 +1897,25 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
       AudacityMessageBox(prompt, _("Audacity is already running"),
             wxOK | wxICON_ERROR);
+
+#ifdef __WXMAC__
+      // Bug 2052
+      // On mac, the lock file may persist and stop Audacity starting properly.
+      wxString lockFileName = dir + "/" + name;
+      int action = AudacityMessageBox(wxString::Format( _("If you're sure another copy of Audacity isn't running, Audacity\ncan skip the test for 'Audacity already running' next time\nby removing the lock file:\n\n%s\n\nDo you want to do that?"),
+            lockFileName
+         ),
+         _("Possible Lock File Problem"),
+         wxYES_NO | wxICON_EXCLAMATION,
+         NULL);
+      if (action == wxYES){
+         ::wxRemoveFile( lockFileName );
+      }
+#endif
       return false;
    }
+
+
 
 #if defined(__WXMSW__)
    // Create the DDE IPC server
