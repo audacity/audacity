@@ -11,14 +11,14 @@ msgstr ""
 "Project-Id-Version: audacity 2.3.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-09-07 14:02+0100\n"
-"PO-Revision-Date: 2017-12-01 18:06+0800\n"
+"PO-Revision-Date: 2019-09-29 20:41+0800\n"
 "Last-Translator: mkpoli <snowwolf1001@gmail.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -538,7 +538,7 @@ msgstr "其他貢獻者"
 
 #: src/AboutDialog.cpp
 msgid "Website and Graphics"
-msgstr ""
+msgstr "網站和圖形"
 
 #: src/AboutDialog.cpp
 msgid "Translators"
@@ -1442,7 +1442,7 @@ msgstr "參數(&P)"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Details"
-msgstr ""
+msgstr "詳細資訊  (&D)"
 
 #: src/BatchCommandDialog.cpp
 #, fuzzy
@@ -3239,9 +3239,8 @@ msgstr "音符軌道"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
-#, fuzzy
 msgid "C"
-msgstr "低複雜度規格"
+msgstr ""
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -3275,9 +3274,8 @@ msgstr ""
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
-#, fuzzy
 msgid "G"
-msgstr "GB"
+msgstr ""
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -3296,9 +3294,8 @@ msgstr ""
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
-#, fuzzy
 msgid "B"
-msgstr "分貝"
+msgstr ""
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -3351,9 +3348,8 @@ msgid "A♯/B♭"
 msgstr ""
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "Manage Plug-ins"
-msgstr "無法載入外掛程式 %s"
+msgstr "外掛管理"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
@@ -5830,24 +5826,20 @@ msgid "Selects Audio."
 msgstr "選擇音訊主機"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 0"
-msgstr "色彩"
+msgstr "色彩0"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 1"
-msgstr "色彩"
+msgstr "色彩1"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 2"
-msgstr "色彩"
+msgstr "色彩2"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 3"
-msgstr "色彩"
+msgstr "色彩3"
 
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
@@ -7403,7 +7395,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "AM Radio"
-msgstr ""
+msgstr "調幅廣播"
 
 #: src/effects/Equalization.cpp
 #, fuzzy
@@ -7425,7 +7417,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "Telephone"
-msgstr ""
+msgstr "電話"
 
 #: src/effects/Equalization.cpp
 #, fuzzy
@@ -11790,8 +11782,9 @@ msgid "Delete Key&2"
 msgstr "刪除鍵 &2"
 
 #: src/menus/ExtraMenus.cpp
+#, fuzzy
 msgid "Ext&ra"
-msgstr ""
+msgstr "其他(&R)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Mi&xer"
@@ -13530,9 +13523,8 @@ msgstr "請選擇一個音符軌道。"
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Tra&nsport"
-msgstr "播錄"
+msgstr "播錄(&N)"
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
@@ -13572,7 +13564,7 @@ msgstr "附加錄製(&A)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Record &New Track"
-msgstr "移除軌道(&N)"
+msgstr "錄製新軌(&N)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Timer Record..."
@@ -14556,9 +14548,8 @@ msgid "Preferences for Library"
 msgstr "偏好設定："
 
 #: src/prefs/LibraryPrefs.cpp
-#, fuzzy
 msgid "LAME MP3 Export Library"
-msgstr "MP3 匯出程式庫"
+msgstr "LAME MP3 匯出程式庫"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "MP3 Library Version:"
