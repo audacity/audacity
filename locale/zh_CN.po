@@ -10,10 +10,10 @@
 # mkpoli <snowwolf1001@gmail.com>, 2017-2018
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.3.3\n"
+"Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-09-07 14:02+0100\n"
-"PO-Revision-Date: 2019-04-19 21:31+0900\n"
+"PO-Revision-Date: 2019-09-10 22:44+0900\n"
 "Last-Translator: mkpoli <snowwolf1001@gmail.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
 "zh/)\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -1349,6 +1349,8 @@ msgid ""
 "This recovery file was saved by Audacity 2.3.0 or before.\n"
 "You need to run that version of Audacity to recover the project."
 msgstr ""
+"此恢复文件由 Audacity 2.3.0 或以前的版本保存，\n"
+"您需要使用该版本的 Audacity 来恢复该项目。"
 
 #: src/AutoRecovery.cpp
 msgid "Error Decoding File"
@@ -1666,9 +1668,8 @@ msgid "&Rename..."
 msgstr "重命名(&R)..."
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Re&store"
-msgstr "恢复选区(&N)"
+msgstr "恢复(&S)"
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
 msgid "I&mport..."
@@ -1982,6 +1983,12 @@ msgid ""
 "change\n"
 "and use %s to change that audio."
 msgstr ""
+"选择 %s 的音频以使用。\n"
+"\n"
+"1. 选择代表噪音的音频并使用 %s 以得到您的“噪音资料”。\n"
+"\n"
+"2. 当您得到了噪音资料，选择您希望变更的音频\n"
+"并使用 %s 以变更音频。"
 
 #: src/CommonCommandFlags.cpp
 msgid ""
@@ -2133,7 +2140,6 @@ msgstr ""
 "没有将外部依赖的文件复制进项目中，将可能丢失数据。"
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid ""
 "Your project is self-contained; it does not depend on any external audio "
 "files. \n"
@@ -2144,8 +2150,9 @@ msgid ""
 msgstr ""
 "您的项目现在是自包含的；它不依赖于任何外部音频文件。\n"
 "\n"
-"如果您修改了项目、使之依赖于外部导入的文件，它将不再是自包含的。若之后保存时"
-"没有将外部依赖的文件复制进项目中，将可能丢失数据。"
+"一些旧的 Audacity 项目也许是非自包含的，\n"
+"并且需要您关注以使其外部依赖保持在正确位置。\n"
+"新项目将是自包含的并且风险更低。"
 
 #: src/Dependencies.cpp
 msgid "Dependency Check"
@@ -2367,7 +2374,6 @@ msgid "FFmpeg not found"
 msgstr "FFmpeg没有找到"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2378,7 +2384,7 @@ msgstr ""
 "Audacity 尝试使用 FFmpeg 库来导入音频文件，\n"
 "但未找到库。 \n"
 "\n"
-"要使用 FFmpeg 导入，请到 偏好设置 > 库\n"
+"要使用 FFmpeg 导入，请到 编缉 > 偏好设置 > 库\n"
 "以下载或定位 FFmpeg 库。"
 
 #: src/FFmpeg.cpp
@@ -2709,21 +2715,19 @@ msgid "These are our support methods:"
 msgstr "以下是我们的支持方式："
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
 "audacityteam.org/quick_help.html|view online]]"
 msgstr ""
-" [[file:quick_help.html|快速帮助]] - 如果没有被安装到本地，请参阅[[https://"
-"manual.audacityteam.org/quick_help.html|在线版]]"
+" [[help:Quick_Help|快速帮助]] - 如果没有被安装到本地，请参阅[[https://manual."
+"audacityteam.org/quick_help.html|在线版]]"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
 "audacityteam.org/|view online]]"
 msgstr ""
-" [[file:index.html|使用手册]] - 如果没有被安装到本地，请参阅[[https://manual."
+" [[help:Main_Page|使用手册]] - 如果没有被安装到本地，请参阅[[https://manual."
 "audacityteam.org/|在线手册]]"
 
 #: src/HelpText.cpp
@@ -2811,12 +2815,10 @@ msgid "&Total space used"
 msgstr "总使用空间(&T)"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&Undo levels available"
 msgstr "可撤销层级(&U)"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&Levels to discard"
 msgstr "要放弃层级(&L)"
 
@@ -3432,7 +3434,7 @@ msgstr "启用新插件"
 #: src/Prefs.cpp
 #, c-format
 msgid "Audacity cannot start because the settings file at %s is not writable."
-msgstr ""
+msgstr "Audacity 无法启动，因为在 %s 的设置文件不可写入。"
 
 #: src/Printing.cpp
 msgid "There was a problem printing."
@@ -3681,7 +3683,6 @@ msgid ""
 msgstr "项目检查在检查加载的项目数据时发现文件不一致。"
 
 #: src/ProjectFSCK.cpp
-#, fuzzy
 msgid ""
 "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
@@ -3689,7 +3690,7 @@ msgid ""
 msgstr ""
 "在自动恢复时，项目检查发现有文件不一致。\n"
 "\n"
-"选择帮助菜单的“显示日志...”以查看详情。"
+"选择 帮助 > 诊断 > 显示日志... 以查看详情。"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning: Problems in Automatic Recovery"
@@ -3801,13 +3802,13 @@ msgid "Warning - Empty Project"
 msgstr "警告 - 空的项目"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write file %s.\n"
 "Perhaps disk is full or not writable."
 msgstr ""
-"Audacity 写入文件失败。\n"
-"可能 %s 不可写或者磁盘已满。"
+"Audacity 写入文件 %s 失败。\n"
+"磁盘可能不可写入或者已满。"
 
 #: src/ProjectFileManager.cpp
 msgid "Error Writing to File"
@@ -7079,7 +7080,7 @@ msgid "Applied command: %s"
 msgstr "已应用命令：%s"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Attempting to initialize the following effect failed:\n"
 "\n"
@@ -7091,14 +7092,14 @@ msgstr ""
 "\n"
 "%s\n"
 "\n"
-"更多信息有可能可在 帮助 > 显示日志 中获取到"
+"更多信息有可能可在 帮助 > 诊断 > 显示日志 中获取到"
 
 #: src/effects/EffectManager.cpp
 msgid "Effect failed to initialize"
 msgstr "效果器初始化失败"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Attempting to initialize the following command failed:\n"
 "\n"
@@ -7110,7 +7111,7 @@ msgstr ""
 "\n"
 "%s\n"
 "\n"
-"更多信息有可能可在 帮助 > 显示日志 中获取到"
+"更多信息有可能可在 帮助 > 诊断 > 显示日志 中获取到"
 
 #: src/effects/EffectManager.cpp
 msgid "Command failed to initialize"
@@ -7205,56 +7206,50 @@ msgstr "调整特定频率的音量"
 
 #: src/effects/Equalization.cpp
 msgid "100Hz Rumble"
-msgstr ""
+msgstr "100Hz 轰响"
 
 #: src/effects/Equalization.cpp
 msgid "AM Radio"
-msgstr ""
+msgstr "AM 广播"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Bass Boost"
-msgstr "低音(dB)："
+msgstr "低音增幅"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Bass Cut"
-msgstr "低音"
+msgstr "低音切除"
 
 #: src/effects/Equalization.cpp
 msgid "Low rolloff for speech"
-msgstr ""
+msgstr "语音低滚降"
 
 #: src/effects/Equalization.cpp
 msgid "RIAA"
-msgstr ""
+msgstr "RIAA"
 
 #: src/effects/Equalization.cpp
 msgid "Telephone"
-msgstr ""
+msgstr "电话"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Treble Boost"
-msgstr "高音"
+msgstr "高音增幅"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Treble Cut"
-msgstr "高音"
+msgstr "高音切除"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
 "then use that one."
 msgstr ""
-"为了在宏中使用均衡曲线，请为其选择一个新名称。\n"
+"为了在宏中使用这个过滤曲线，请为其选择一个新名称。\n"
 "点击“保存/管理曲线...”按钮并重命名“未命名”曲线，再使用它。"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Filter Curve needs a different name"
 msgstr "均衡曲线需要一个不同的名字"
 
@@ -9646,9 +9641,8 @@ msgid "Bit Rate:"
 msgstr "比特率："
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Quality (kbps):"
-msgstr "质量："
+msgstr "质量（kbps）："
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
@@ -10085,7 +10079,6 @@ msgid "Delete preset '%s'?"
 msgstr "删除预设“%s”？"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "You can't save a preset without a name"
 msgstr "您不能保存一个没有名字的预设"
 
@@ -10098,9 +10091,8 @@ msgid "XML files (*.xml)|*.xml|All files|*"
 msgstr "XML 文件(*.xml)|*.xml| 所有文件|*"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "No presets to export"
-msgstr "没有标签可导出。"
+msgstr "没有可导出的预设。"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Select xml file to export presets into"
@@ -10109,11 +10101,11 @@ msgstr "选择将预设导出的xml文件"
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
 msgid "Format %s is not compatible with codec %s."
-msgstr ""
+msgstr "格式 %s 不兼容解码器 %s。"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Incompatible format and codec"
-msgstr ""
+msgstr "不兼容的格式和解码器"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to guess format"
@@ -10610,30 +10602,28 @@ msgid "Ogg Vorbis Files"
 msgstr "Ogg Vorbis文件"
 
 #: src/export/ExportOGG.cpp
-#, fuzzy
 msgid "Unable to export - rate or quality problem"
-msgstr "不能设置QuickTime渲染质量"
+msgstr "无法导出 - 码率等问题"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem with metadata"
-msgstr ""
+msgstr "无法导出 - 元数据问题"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem initialising"
-msgstr ""
+msgstr "无法导出 - 初始化问题"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem creating stream"
-msgstr ""
+msgstr "无法导出 - 流创建问题"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem with packets"
-msgstr ""
+msgstr "无法导出 - 数据包问题"
 
 #: src/export/ExportOGG.cpp
-#, fuzzy
 msgid "Unable to export - problem with file"
-msgstr "无法加载预设文件。"
+msgstr "无法导出 - 文件的问题"
 
 #: src/export/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
@@ -10672,13 +10662,12 @@ msgid "Other uncompressed files"
 msgstr "其它未压缩音频文件"
 
 #: src/export/ExportPCM.cpp
-#, fuzzy
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than "
 "4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
-"您尝试导出一个大于 4 GB 的 WAV 文件。\n"
+"您尝试导出一个大于 4 GB 的 WAV 或 AIFF 文件。\n"
 "Audacity 无法做到，导出将被抛弃。"
 
 #: src/export/ExportPCM.cpp
@@ -10694,11 +10683,11 @@ msgstr ""
 
 #: src/export/ExportPCM.cpp
 msgid "GSM 6.10 requires mono"
-msgstr ""
+msgstr "GSM 6.10 需要单声道"
 
 #: src/export/ExportPCM.cpp
 msgid "WAVEX and GSM 6.10 formats are not compatible"
-msgstr ""
+msgstr "WAVEX 和 GSM 6.10 格式不兼容"
 
 #: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
@@ -10904,9 +10893,9 @@ msgstr ""
 "使用 文件 > 打开 命令可以打开 Audacity 项目。"
 
 #: src/import/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "File \"%s\" not found."
-msgstr "找到模块“%s”。"
+msgstr "未找到文件“%s”。"
 
 #: src/import/Import.cpp
 #, c-format
@@ -13996,9 +13985,8 @@ msgid "&Mix down to Stereo or Mono"
 msgstr "导出时混合到立体声(&S)"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "&Use Advanced Mixing Options"
-msgstr "高级混音选项"
+msgstr "使用高级混音选项(&U)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&how Metadata Tags editor before export"
@@ -14006,9 +13994,8 @@ msgstr "导出时显示元信息编辑器(&H)"
 
 #. i18n-hint 'blank space' is space on the tracks with no audio in it
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "&Ignore blank space at the beginning"
-msgstr "忽略开始和结束位置的静音"
+msgstr "忽略开始和结束位置的静音(&I)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -18321,9 +18308,8 @@ msgid "Robert Haenggi"
 msgstr "Robert Haenggi"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Vocals: to mono"
-msgstr "移除人声"
+msgstr "移除人声：至单声道"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals"
@@ -18338,9 +18324,8 @@ msgid "Isolate Vocals and Invert"
 msgstr "隔离人声并反转"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Center: to mono"
-msgstr "移除中心"
+msgstr "移除中心：至单声道"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center"
