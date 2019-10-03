@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.3.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-09-07 14:02+0100\n"
-"PO-Revision-Date: 2019-04-28 09:02+0100\n"
+"PO-Revision-Date: 2019-09-18 17:28+0100\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist en gmail.com>\n"
 "Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
 "Language: es\n"
@@ -1366,6 +1366,9 @@ msgid ""
 "This recovery file was saved by Audacity 2.3.0 or before.\n"
 "You need to run that version of Audacity to recover the project."
 msgstr ""
+"El archivo de recuperación se creó con Audacity 2.3.0 o anterior.\n"
+"Es necesario ejecutar esa versión de Audacity para poder recuperar el"
+" proyecto."
 
 #: src/AutoRecovery.cpp
 msgid "Error Decoding File"
@@ -1687,9 +1690,8 @@ msgid "&Rename..."
 msgstr "&Renombrar..."
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Re&store"
-msgstr "Restaurar selecció&n"
+msgstr "Re&staurar"
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
 msgid "I&mport..."
@@ -2007,6 +2009,14 @@ msgid ""
 "change\n"
 "and use %s to change that audio."
 msgstr ""
+"Seleccione el audio que %s debe utilizar.\n"
+"\n"
+"1. Seleccione el audio que represente el ruido y que %s utilice para obtener"
+" el \"perfil de ruido\".\n"
+"\n"
+"2. Cuando se haya generado el perfil de ruido seleccione el audio que quiere"
+" cambiar\n"
+" y utilice %s para modificar el  audio."
 
 #: src/CommonCommandFlags.cpp
 msgid ""
@@ -2162,7 +2172,6 @@ msgstr ""
 "guarda sin copiar los archivos en su interior, puede que pierda información."
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid ""
 "Your project is self-contained; it does not depend on any external audio "
 "files. \n"
@@ -2174,9 +2183,10 @@ msgstr ""
 "Ahora el proyecto es independiente; no depende de ningún archivo de audio "
 "externo.\n"
 "\n"
-"Si cambia el proyecto a un estado que tenga dependencias externas de "
-"archivos importado no seguirá siendo independiente. Si en ese punto lo "
-"guarda sin copiar los archivos en su interior, puede que pierda información."
+"Algunos proyectos antiguos de Audacity pueden no ser independientes por que \n"
+"se debe tener precaución para mantener las dependencias externas en el lugar "
+"adecuado.\n"
+"Los nuevos proyectos serán independientes por lo que se corren menos riegos."
 
 #: src/Dependencies.cpp
 msgid "Dependency Check"
@@ -2402,7 +2412,6 @@ msgid "FFmpeg not found"
 msgstr "FFmpeg no encontrada"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2414,7 +2423,7 @@ msgstr ""
 "pero no se encontraron las bibliotecas necesarias.\n"
 "\n"
 "Para usar las características de importación de FFmpeg, acceda a "
-"Preferencias > Bibliotecas\n"
+"Editar > Preferencias > Bibliotecas\n"
 "y descargue o localice las bibliotecas FFmpeg."
 
 #: src/FFmpeg.cpp
@@ -2762,22 +2771,21 @@ msgid "These are our support methods:"
 msgstr "Estos son nuestros métodos de ayuda:"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
 "audacityteam.org/quick_help.html|view online]]"
 msgstr ""
-" [[file:quick_help.html|Ayuda rápida]] (debe instalarse localmente o  "
-"[[https://manual.audacityteam.org/quick_help.html|usar la versión de "
-"Internet]])"
+"[[help:Quick_Help|Ayuda rápida]] Si no se encuentra instalada localmente  "
+"[[https://manual.audacityteam.org/quick_help.html|usar la versión de"
+" Internet]])"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
 "audacityteam.org/|view online]]"
 msgstr ""
-" [[file:index.html|Manual]] (debe instalarse localmente o  [[https://manual."
+" [[help:Main_Page|Manual]] Si no se encuentra instalada localmente "
+" [[https://manual."
 "audacityteam.org/|usar la versión de Internet]]"
 
 #: src/HelpText.cpp
@@ -2785,8 +2793,8 @@ msgid ""
 " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
 msgstr ""
-" [[https://forum.audacityteam.org/|Foro]]  (realice su consulta "
-"directamente, en internet)"
+" [[https://forum.audacityteam.org/|Foro]]  Realice su consulta directamente, "
+"en internet"
 
 #: src/HelpText.cpp
 msgid ""
@@ -2872,12 +2880,10 @@ msgid "&Total space used"
 msgstr "Espacio &total usado"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&Undo levels available"
-msgstr "&Niveles disponibles para deshacer"
+msgstr "&Niveles de deshacer disponibles"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&Levels to discard"
 msgstr "Nive&les a descartar"
 
@@ -3500,6 +3506,8 @@ msgstr "Habilitar nuevos complementos"
 #, c-format
 msgid "Audacity cannot start because the settings file at %s is not writable."
 msgstr ""
+"Audacity no se puede iniciar porque no se puede escribir en el archivo de"
+" configuración %s."
 
 #: src/Printing.cpp
 msgid "There was a problem printing."
@@ -3764,17 +3772,16 @@ msgstr ""
 "del proyecto. "
 
 #: src/ProjectFSCK.cpp
-#, fuzzy
 msgid ""
 "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
 "Select 'Help > Diagnostics > Show Log...' to see details."
 msgstr ""
-"La comprobación del proyecto encontró inconsistencias al realizar la "
-"recuperación automática.\n"
+"La comprobación del proyecto encontró inconsistencias al realizar la"
+" recuperación automática.\n"
 "\n"
-"Seleccione 'Diagnosticos' > 'Mostrar registro...' en el menú Ayuda para ver "
-"más detalles."
+"Seleccione 'Ayuda > Diagnosticos > Mostrar registro...' para obtener más"
+" información."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning: Problems in Automatic Recovery"
@@ -3887,13 +3894,13 @@ msgid "Warning - Empty Project"
 msgstr "Advertencia: Proyecto vacío"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write file %s.\n"
 "Perhaps disk is full or not writable."
 msgstr ""
-"Audacity no ha podido escribir en un archivo.\n"
-"Tal vez %s no se pueda escribir o el disco esté lleno."
+"Audacity no ha podido escribir en el archivo %s.\n"
+"Tal vez el disco esté lleno o no esté protegido contra escritura."
 
 #: src/ProjectFileManager.cpp
 msgid "Error Writing to File"
@@ -7213,7 +7220,7 @@ msgid "Applied command: %s"
 msgstr "Comando aplicado: %s"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Attempting to initialize the following effect failed:\n"
 "\n"
@@ -7225,14 +7232,14 @@ msgstr ""
 "\n"
 "%s\n"
 "\n"
-"Puede encontrar más información en Ayuda-> Mostrar registro"
+"Más información en 'Ayuda > Diagnósticos > Mostrar registro'"
 
 #: src/effects/EffectManager.cpp
 msgid "Effect failed to initialize"
 msgstr "Fallo al inicializar el efecto"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Attempting to initialize the following command failed:\n"
 "\n"
@@ -7244,7 +7251,7 @@ msgstr ""
 "\n"
 "%s\n"
 "\n"
-"Puede encontrar más información en Ayuda-> Mostrar registro"
+"Más información en 'Ayuda > Diagnósticos > Mostrar registro'"
 
 #: src/effects/EffectManager.cpp
 msgid "Command failed to initialize"
@@ -7338,56 +7345,52 @@ msgstr "Ajusta el nivel de volumen de una frecuencia concreta"
 
 #: src/effects/Equalization.cpp
 msgid "100Hz Rumble"
-msgstr ""
+msgstr "100Hz Rumble"
 
 #: src/effects/Equalization.cpp
 msgid "AM Radio"
-msgstr ""
+msgstr "Radio AM"
 
 #: src/effects/Equalization.cpp
 msgid "Bass Boost"
 msgstr "Realce de graves"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Bass Cut"
-msgstr "Realce de graves"
+msgstr "Recorte de graves"
 
 #: src/effects/Equalization.cpp
 msgid "Low rolloff for speech"
-msgstr ""
+msgstr "Atenuación progresiva para locuciones"
 
 #: src/effects/Equalization.cpp
 msgid "RIAA"
-msgstr ""
+msgstr "RIAA"
 
 #: src/effects/Equalization.cpp
 msgid "Telephone"
-msgstr ""
+msgstr "Teléfono"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Treble Boost"
-msgstr "Agudos"
+msgstr "Realce de agudos"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Treble Cut"
-msgstr "Agudos"
+msgstr "Recorte de agudos"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
 "then use that one."
 msgstr ""
-"Para utilizar esta curva de ecualización en una macro, indique un nombre. \n"
-"Haga clic en el botón 'Guardar/Administrar curvas...', renombre la curva "
-"denominada 'sin nombre' y utilice esa."
+"Para utilizar esta curva de ecualización en una macro, indique un nombre.\n"
+"Haga clic en el botón 'Guardar/Administrar curvas...' y renombre la curva"
+" denominada "
+"'sin nombre' y utilice esa."
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Filter Curve needs a different name"
 msgstr "La curva de ecualización necesita un nombre diferente"
 
@@ -7395,8 +7398,8 @@ msgstr "La curva de ecualización necesita un nombre diferente"
 msgid ""
 "To apply Equalization, all selected tracks must have the same sample rate."
 msgstr ""
-"Para analizar Ecualización, todas las pistas seleccionadas deberán tener la "
-"misma frecuencia de muestreo."
+"Para aplicar Ecualización, todas las pistas seleccionadas deben tener la"
+" misma frecuencia de muestreo."
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
@@ -9858,9 +9861,8 @@ msgid "Bit Rate:"
 msgstr "Velocidad de transferencia:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Quality (kbps):"
-msgstr "Calidad:"
+msgstr "Calidad (kbps):"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
@@ -10306,9 +10308,8 @@ msgid "Delete preset '%s'?"
 msgstr "¿Eliminar valor predefinido '%s'?"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "You can't save a preset without a name"
-msgstr "No puede guardar un valor predefinido con ese nombre"
+msgstr "No puede guardar un valor predefinido sin un nombre"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Select xml file with presets to import"
@@ -10319,9 +10320,8 @@ msgid "XML files (*.xml)|*.xml|All files|*"
 msgstr "Archivos Xml (*.xml)|*.xml|Todos los archivos|*"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "No presets to export"
-msgstr "No hay etiquetas que exportar."
+msgstr "No hay valores predefinidos que exportar"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Select xml file to export presets into"
@@ -10330,11 +10330,11 @@ msgstr "Seleccione un archivo xml para exportar los valores predefinidos"
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
 msgid "Format %s is not compatible with codec %s."
-msgstr ""
+msgstr "El formato %s no es compatible con el codec %s."
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Incompatible format and codec"
-msgstr ""
+msgstr "Formato y codec incompatibles"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to guess format"
@@ -10838,30 +10838,28 @@ msgid "Ogg Vorbis Files"
 msgstr "Archivos Ogg Vorbis"
 
 #: src/export/ExportOGG.cpp
-#, fuzzy
 msgid "Unable to export - rate or quality problem"
-msgstr "No se puede establecer la calidad de renderizado de QuickTime"
+msgstr "No se puede exportar - problema de frecuencia o de calidad"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem with metadata"
-msgstr ""
+msgstr "No se puede exportar - problema con metadatos"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem initialising"
-msgstr ""
+msgstr "No se puede exportar - problema inicializando"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem creating stream"
-msgstr ""
+msgstr "No se puede exportar - problema creando el flujo de datos"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem with packets"
-msgstr ""
+msgstr "No se puede exportar - problema con los paquetes"
 
 #: src/export/ExportOGG.cpp
-#, fuzzy
 msgid "Unable to export - problem with file"
-msgstr "No se puede cargar el archivo de valores predefinidos."
+msgstr "No se puede exportar - problema con el archivo"
 
 #: src/export/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
@@ -10900,14 +10898,14 @@ msgid "Other uncompressed files"
 msgstr "Otros archivos sin comprimir"
 
 #: src/export/ExportPCM.cpp
-#, fuzzy
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than "
 "4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
-"Se ha intentado exportar un archivo WAV de un tamaño mayor de 4GB.\n"
-"Audacity no puede hacerlo y la Exportación se ha abandonado."
+"Se ha intentado exportar un archivo WAV o AIFF de un tamaño mayor de "
+"4GB.\n"
+"Audacity no puede hacerlo y la exportación se ha abandonado."
 
 #: src/export/ExportPCM.cpp
 msgid "Error Exporting"
@@ -10923,11 +10921,11 @@ msgstr ""
 
 #: src/export/ExportPCM.cpp
 msgid "GSM 6.10 requires mono"
-msgstr ""
+msgstr "El formato GSM 6.10 requiere mono"
 
 #: src/export/ExportPCM.cpp
 msgid "WAVEX and GSM 6.10 formats are not compatible"
-msgstr ""
+msgstr "Los formatos WAVEX y GSM 6.10 no son compatibles"
 
 #: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
@@ -11137,9 +11135,9 @@ msgstr ""
 "Use la opción 'Archivo > Abrir' para abrir los proyectos de Audacity."
 
 #: src/import/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "File \"%s\" not found."
-msgstr "No se ha encontrado el módulo \"%s\"."
+msgstr "No se ha encontrado el archivo \"%s\"."
 
 #: src/import/Import.cpp
 #, c-format
@@ -14265,9 +14263,8 @@ msgid "&Mix down to Stereo or Mono"
 msgstr "&Mezclar las pistas a estéreo o mono"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "&Use Advanced Mixing Options"
-msgstr "Opciones avanzadas de mezclado"
+msgstr "&Utlizar opciones de mezcla avanzadas"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&how Metadata Tags editor before export"
@@ -14275,9 +14272,8 @@ msgstr "M&ostrar el Editor de metadatos antes de realizar la exportación"
 
 #. i18n-hint 'blank space' is space on the tracks with no audio in it
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "&Ignore blank space at the beginning"
-msgstr "Ignorar silencio en los inicios y finales"
+msgstr "&Ignorar espacio vacío en el inicio"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -18650,9 +18646,8 @@ msgid "Robert Haenggi"
 msgstr "Robert Haenggi"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Vocals: to mono"
-msgstr "Eliminar vocales"
+msgstr "Eliminar vocales: a mono"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals"
@@ -18667,9 +18662,8 @@ msgid "Isolate Vocals and Invert"
 msgstr "Aislar vocales e invertir"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Center: to mono"
-msgstr "Eliminar centro"
+msgstr "Eliminar centro: a mono"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center"
