@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.3.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-09-07 14:02+0100\n"
-"PO-Revision-Date: 2019-04-19 09:59+0300\n"
+"PO-Revision-Date: 2019-09-10 08:43+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -1369,6 +1369,9 @@ msgid ""
 "This recovery file was saved by Audacity 2.3.0 or before.\n"
 "You need to run that version of Audacity to recover the project."
 msgstr ""
+"Αυτό το αρχείο ανάκτησης αποθηκεύτηκε από το Audacity 2.3.0 ή πριν.\n"
+"Θα χρειαστεί να εκτελέσετε αυτήν την έκδοση του Audacity για να ανακτήσετε "
+"το έργο."
 
 #: src/AutoRecovery.cpp
 msgid "Error Decoding File"
@@ -1689,9 +1692,8 @@ msgid "&Rename..."
 msgstr "&Μετονομασία..."
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Re&store"
-msgstr "Επαναφορά θέσ&ης"
+msgstr "Επανα&φορά"
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
 msgid "I&mport..."
@@ -2010,6 +2012,13 @@ msgid ""
 "change\n"
 "and use %s to change that audio."
 msgstr ""
+"Επιλέξτε τον ήχο για χρήση του %s.\n"
+"\n"
+"1. Επιλέξτε τον ήχο που αναπαριστά τον θόρυβο και χρησιμοποιήστε το %s για "
+"να πάρετε την 'κατατομή (προφίλ) θορύβου'.\n"
+"2. Όταν έχετε πάρει την κατατομή θορύβου σας, επιλέξτε τον ήχο που θέλετε να "
+"αλλάξετε\n"
+"και χρησιμοποιήστε το %s για να αλλάξετε αυτόν τον ήχο."
 
 #: src/CommonCommandFlags.cpp
 msgid ""
@@ -2167,7 +2176,6 @@ msgstr ""
 "να αντιγράψετε τα αρχεία, μπορείτε να χάσετε δεδομένα."
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid ""
 "Your project is self-contained; it does not depend on any external audio "
 "files. \n"
@@ -2176,12 +2184,13 @@ msgid ""
 "is needed to keep their external dependencies in the right place.\n"
 "New projects will be self-contained and are less risky."
 msgstr ""
-"Το έργο σας είναι προς το παρόν αυτόνομο· δεν εξαρτάται από οποιαδήποτε "
-"εξωτερικά αρχεία ήχου. \n"
+"Το έργο σας είναι αυτόνομο· δεν εξαρτάται από οποιαδήποτε εξωτερικά αρχεία "
+"ήχου. \n"
 "\n"
-"Αν αλλάξετε το έργο σε μια κατάσταση που έχει εξωτερικές εξαρτήσεις σε "
-"εισαγόμενα αρχεία, δεν θα είναι πια αυτόνομο. Αν αποθηκεύσετε έπειτα χωρίς "
-"να αντιγράψετε τα αρχεία, μπορείτε να χάσετε δεδομένα."
+"Κάποια παλιότερα έργα του Audacity μπορεί να μην είναι αυτόνομα και "
+"χρειάζεται \n"
+"προσοχή για να διατηρηθούν οι εξωτερικές τους εξαρτήσεις στη σωστή θέση.\n"
+"Τα νέα έργα θα είναι αυτόνομα και είναι λιγότερο επισφαλή."
 
 #: src/Dependencies.cpp
 msgid "Dependency Check"
@@ -2411,7 +2420,6 @@ msgid "FFmpeg not found"
 msgstr "To FFmpeg δεν βρέθηκε"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -2422,7 +2430,8 @@ msgstr ""
 "Το Audacity προσπάθησε να χρησιμοποιήσει το FFmpeg για να εισάγει\n"
 "ένα αρχείο ήχου, αλλά δεν βρέθηκαν οι βιβλιοθήκες.\n"
 "\n"
-"Για να χρησιμοποιήσετε την εισαγωγή FFmpeg, πηγαίνετε στις Προτιμήσεις\n"
+"Για να χρησιμοποιήσετε την εισαγωγή FFmpeg, πηγαίνετε στο Επεξεργασία > "
+"Προτιμήσεις\n"
 "> Βιβλιοθήκες για να μεταφορτώσετε ή να εντοπίσετε τις βιβλιοθήκες FFmpeg."
 
 #: src/FFmpeg.cpp
@@ -2777,23 +2786,21 @@ msgid "These are our support methods:"
 msgstr "Οι μέθοδοι υποστήριξης που παρέχουμε:"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
 "audacityteam.org/quick_help.html|view online]]"
 msgstr ""
-" [[file:quick_help.html|Γρήγορη Βοήθεια]] - εάν δεν είναι εγκατεστημένη "
-"τοπικά, [[http://manual.audacityteam.org/quick_help.html|Διαδικτυακή "
-"προβολή]]"
+" [[help:Quick_Help|Quick Help (Γρήγορη Βοήθεια)]] - εάν δεν είναι "
+"εγκατεστημένη τοπικά, [[http://manual.audacityteam.org/quick_help.html|view "
+"online (Διαδικτυακή προβολή)]]"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
 "audacityteam.org/|view online]]"
 msgstr ""
-" [[file:index.html|Εγχειρίδιο]] εάν δεν είναι εγκατεστημένο τοπικά, [[http://"
-"manual.audacityteam.org/|Διαδικτυακή προβολή]]"
+" [[help:Main_Page|Manual]] - εάν δεν είναι εγκατεστημένο τοπικά, [[http://"
+"manual.audacityteam.org/|view online (Διαδικτυακή προβολή)]]"
 
 #: src/HelpText.cpp
 msgid ""
@@ -2886,12 +2893,10 @@ msgid "&Total space used"
 msgstr "&Συνολικός χρησιμοποιούμενος χώρος"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&Undo levels available"
-msgstr "&Διαθέσιμα επίπεδα αναίρεσης"
+msgstr "Διαθέσιμα επίπεδα α&ναίρεσης"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&Levels to discard"
 msgstr "&Επίπεδα προς απόρριψη"
 
@@ -3517,6 +3522,8 @@ msgstr "Ενεργοποίηση νέων προσθέτων"
 #, c-format
 msgid "Audacity cannot start because the settings file at %s is not writable."
 msgstr ""
+"Το Audacity δεν μπορεί να ξεκινήσει, επειδή το αρχείο ρυθμίσεων στο %s δεν "
+"είναι εγγράψιμο."
 
 #: src/Printing.cpp
 msgid "There was a problem printing."
@@ -3779,7 +3786,6 @@ msgstr ""
 "έργου."
 
 #: src/ProjectFSCK.cpp
-#, fuzzy
 msgid ""
 "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
@@ -3788,7 +3794,7 @@ msgstr ""
 "Ο έλεγχος έργου βρήκε αντιφάσεις στο αρχείο κατά τη διάρκεια της αυτόματης "
 "ανάκτησης.\n"
 "\n"
-"Επιλέξτε 'Εμφάνιση ημερολογίου...' στο μενού βοήθειας για να δείτε "
+"Επιλέξτε 'Βοήθεια > Διαγνωστικά > Εμφάνιση ημερολογίου...' για να δείτε "
 "λεπτομέρειες."
 
 #: src/ProjectFSCK.cpp
@@ -3905,13 +3911,13 @@ msgid "Warning - Empty Project"
 msgstr "Προειδοποίηση - Κενό έργο"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write file %s.\n"
 "Perhaps disk is full or not writable."
 msgstr ""
-"Το Audacity απέτυχε να γράψει σε αρχείο.\n"
-"Ίσως το %s δεν είναι εγγράψιμο ή ο δίσκος είναι γεμάτος.."
+"Το Audacity απέτυχε να γράψει το αρχείο %s.\n"
+"Ίσως ο δίσκος είναι γεμάτος ή μη εγγράψιμος."
 
 #: src/ProjectFileManager.cpp
 msgid "Error Writing to File"
@@ -7239,7 +7245,7 @@ msgid "Applied command: %s"
 msgstr "Εφαρμοσμένη εντολή: %s"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Attempting to initialize the following effect failed:\n"
 "\n"
@@ -7251,15 +7257,15 @@ msgstr ""
 "\n"
 "%s\n"
 "\n"
-"Περισσότερες πληροφορίες μπορεί να είναι διαθέσιμες στο Βοήθεια-> Εμφάνιση "
-"ημερολογίου"
+"Περισσότερες πληροφορίες μπορεί να είναι διαθέσιμες στο 'Βοήθεια > "
+"Διαγνωστικά > Εμφάνιση ημερολογίου'"
 
 #: src/effects/EffectManager.cpp
 msgid "Effect failed to initialize"
 msgstr "Αποτυχία αρχικοποίησης εφέ"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Attempting to initialize the following command failed:\n"
 "\n"
@@ -7271,8 +7277,8 @@ msgstr ""
 "\n"
 "%s\n"
 "\n"
-"Περισσότερες πληροφορίες μπορεί να είναι διαθέσιμες στο Βοήθεια-> Εμφάνιση "
-"ημερολογίου"
+"Περισσότερες πληροφορίες μπορεί να είναι διαθέσιμες στο 'Βοήθεια > "
+"Διαγνωστικά > Εμφάνιση ημερολογίου'"
 
 #: src/effects/EffectManager.cpp
 msgid "Command failed to initialize"
@@ -7366,60 +7372,54 @@ msgstr "Ρυθμίζει τα επίπεδα έντασης των συγκεκ�
 
 #: src/effects/Equalization.cpp
 msgid "100Hz Rumble"
-msgstr ""
+msgstr "Βοή 100Hz"
 
 #: src/effects/Equalization.cpp
 msgid "AM Radio"
-msgstr ""
+msgstr "Ράδιο AM"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Bass Boost"
-msgstr "Ενίσχυση Χαμηλών Συχνοτήτων"
+msgstr "Ενίσχυση χαμηλών συχνοτήτων"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Bass Cut"
-msgstr "Ενίσχυση Χαμηλών Συχνοτήτων"
+msgstr "Αποκοπή χαμηλών συχνοτήτων"
 
 #: src/effects/Equalization.cpp
 msgid "Low rolloff for speech"
-msgstr ""
+msgstr "Χαμηλή εξασθένιση ομιλίας"
 
 #: src/effects/Equalization.cpp
 msgid "RIAA"
-msgstr ""
+msgstr "RIAA"
 
 #: src/effects/Equalization.cpp
 msgid "Telephone"
-msgstr ""
+msgstr "Τηλέφωνο"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Treble Boost"
-msgstr "Πρίμα"
+msgstr "Ενίσχυση πρίμων"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Treble Cut"
-msgstr "Πρίμα"
+msgstr "Αποκοπή πρίμων"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
 "then use that one."
 msgstr ""
-"Για να χρησιμοποιήσετε αυτήν την καμπύλη ισοστάθμισης σε μακροεντολή, "
-"παρακαλούμε επιλέξτε ένα νέο όνομα για αυτήν.\n"
+"Για να χρησιμοποιήσετε αυτήν την καμπύλη φίλτρου σε μακροεντολή, παρακαλούμε "
+"επιλέξτε ένα νέο όνομα για αυτήν.\n"
 "Επιλέξτε το πλήκτρο 'Αποθήκευση/Διαχείριση καμπυλών...' και μετονομάστε την "
 "'ανώνυμη' καμπύλη, έπειτα χρησιμοποιήστε την."
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Filter Curve needs a different name"
-msgstr "Η καμπύλη ισοστάθμισης χρειάζεται ένα διαφορετικό όνομα"
+msgstr "Η καμπύλη φίλτρου χρειάζεται ένα διαφορετικό όνομα"
 
 #: src/effects/Equalization.cpp
 msgid ""
@@ -9901,9 +9901,8 @@ msgid "Bit Rate:"
 msgstr "Ρυθμός μεταφοράς δυαδικών ψηφίων:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Quality (kbps):"
-msgstr "Ποιότητα:"
+msgstr "Ποιότητα (kbps):"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
@@ -10350,7 +10349,6 @@ msgid "Delete preset '%s'?"
 msgstr "Να διαγραφεί η προεπιλογή '%s';"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "You can't save a preset without a name"
 msgstr "Δεν μπορείτε να αποθηκεύσετε μια προεπιλογή χωρίς όνομα"
 
@@ -10363,9 +10361,8 @@ msgid "XML files (*.xml)|*.xml|All files|*"
 msgstr "Αρχεία XML (*.xml)|*.xml|Όλα τα αρχεία|*"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "No presets to export"
-msgstr "Δεν υπάρχουν ετικέτες για εξαγωγή."
+msgstr "Χωρίς προεπιλογές για εξαγωγή"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Select xml file to export presets into"
@@ -10374,11 +10371,11 @@ msgstr "Επιλέξτε το αρχείο xml για να εξάγετε τις
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
 msgid "Format %s is not compatible with codec %s."
-msgstr ""
+msgstr "Η μορφή %s δεν είναι συμβατή με τον κωδικοποιητή %s."
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Incompatible format and codec"
-msgstr ""
+msgstr "Ασύμβατη μορφή και κωδικοποιητής"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to guess format"
@@ -10890,30 +10887,28 @@ msgid "Ogg Vorbis Files"
 msgstr "Αρχεία Ogg Vorbis"
 
 #: src/export/ExportOGG.cpp
-#, fuzzy
 msgid "Unable to export - rate or quality problem"
-msgstr "Αδύνατος ο ορισμός ποιότητας απόδοσης QuickTime"
+msgstr "Αδυναμία εξαγωγής - πρόβλημα ρυθμού ή ποιότητας "
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem with metadata"
-msgstr ""
+msgstr "Αδυναμία εξαγωγής - πρόβλημα με τα μεταδεδομένα"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem initialising"
-msgstr ""
+msgstr "Αδυναμία εξαγωγής - πρόβλημα αρχικοποίησης"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem creating stream"
-msgstr ""
+msgstr "Αδυναμία εξαγωγής - πρόβλημα δημιουργίας ροής"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem with packets"
-msgstr ""
+msgstr "Αδυναμία εξαγωγής - πρόβλημα με τα πακέτα"
 
 #: src/export/ExportOGG.cpp
-#, fuzzy
 msgid "Unable to export - problem with file"
-msgstr "Αδύνατη η φόρτωση του αρχείου προεπιλογών."
+msgstr "Αδυναμία εξαγωγής - πρόβλημα με το αρχείο"
 
 #: src/export/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
@@ -10952,14 +10947,13 @@ msgid "Other uncompressed files"
 msgstr "Άλλα μη συμπιεσμένα αρχεία"
 
 #: src/export/ExportPCM.cpp
-#, fuzzy
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than "
 "4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
-"Προσπαθήσατε να εξάγετε ένα αρχείο WAV που μπορεί να είναι μεγαλύτερο από "
-"4GB.\n"
+"Προσπαθήσατε να εξάγετε ένα αρχείο WAV ή AIFF που μπορεί να είναι μεγαλύτερο "
+"από 4GB.\n"
 "Το Audacity δεν μπορεί να το κάνει αυτό, η εξαγωγή εγκαταλείφθηκε."
 
 #: src/export/ExportPCM.cpp
@@ -10976,11 +10970,11 @@ msgstr ""
 
 #: src/export/ExportPCM.cpp
 msgid "GSM 6.10 requires mono"
-msgstr ""
+msgstr "Το GSM 6.10 απαιτεί μονοφωνικό"
 
 #: src/export/ExportPCM.cpp
 msgid "WAVEX and GSM 6.10 formats are not compatible"
-msgstr ""
+msgstr "Οι μορφές WAVEX και GSM 6.10 δεν είναι συμβατές"
 
 #: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
@@ -11196,9 +11190,9 @@ msgstr ""
 "Audacity."
 
 #: src/import/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "File \"%s\" not found."
-msgstr "Βρέθηκε το άρθρωμα \"%s\"."
+msgstr "Δεν βρέθηκε το αρχείο \"%s\"."
 
 #: src/import/Import.cpp
 #, c-format
@@ -14343,9 +14337,8 @@ msgid "&Mix down to Stereo or Mono"
 msgstr "&Μείξη σε ένα στερεοφωνικό ή μονοφωνικό"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "&Use Advanced Mixing Options"
-msgstr "Προχωρημένες επιλογές μίξης"
+msgstr "&Χρησιμοποιήστε προχωρημένες επιλογές μίξης"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&how Metadata Tags editor before export"
@@ -14353,9 +14346,8 @@ msgstr "Να εμ&φανίζεται ο επεξεργαστής ετικετώ�
 
 #. i18n-hint 'blank space' is space on the tracks with no audio in it
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "&Ignore blank space at the beginning"
-msgstr "Παράβλεψη σιγής στις αρχές και τις λήξεις"
+msgstr "Παράβλε&ψη κενού διαστήματος στην αρχή"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -18731,9 +18723,8 @@ msgid "Robert Haenggi"
 msgstr "Robert Haenggi"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Vocals: to mono"
-msgstr "Αφαίρεση φωνητικών"
+msgstr "Αφαίρεση φωνητικών: σε μονοφωνικό"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals"
@@ -18748,9 +18739,8 @@ msgid "Isolate Vocals and Invert"
 msgstr "Απομόνωση φωνητικών και αντιστροφή"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Center: to mono"
-msgstr "Αφαίρεση κέντρου"
+msgstr "Αφαίρεση κέντρου: σε μονοφωνικό"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center"
