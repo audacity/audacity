@@ -4166,7 +4166,7 @@ msgstr "24-бит PCM"
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
 #: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
 msgid "32-bit float"
-msgstr "32-бит float"
+msgstr "32-бит с плавающей запятой"
 
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
@@ -10666,19 +10666,19 @@ msgstr "Экспорт аудиоданных в Ogg Vorbis"
 
 #: src/export/ExportPCM.cpp
 msgid "AIFF (Apple) signed 16-bit PCM"
-msgstr "AIFF (Apple) с подписью 16-бит PCM"
+msgstr "AIFF (Apple) со знаком 16-бит PCM"
 
 #: src/export/ExportPCM.cpp
 msgid "WAV (Microsoft) signed 16-bit PCM"
-msgstr "WAV (Microsoft) с подписью 16-бит PCM"
+msgstr "WAV (Microsoft) со знаком 16-бит PCM"
 
 #: src/export/ExportPCM.cpp
 msgid "WAV (Microsoft) signed 24-bit PCM"
-msgstr "WAV (Microsoft) с подписью 24-бит PCM"
+msgstr "WAV (Microsoft) со знаком 24-бит PCM"
 
 #: src/export/ExportPCM.cpp
 msgid "WAV (Microsoft) 32-bit float PCM"
-msgstr "WAV (Microsoft) 32-бит float PCM"
+msgstr "WAV (Microsoft) 32-бит с плавающей запятой PCM"
 
 #: src/export/ExportPCM.cpp
 msgid "Header:"
