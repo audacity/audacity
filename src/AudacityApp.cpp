@@ -1902,21 +1902,24 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 #ifdef __WXMAC__
       // Bug 2052
       // On mac, the lock file may persist and stop Audacity starting properly.
-      wxString lockFileName = dir + "/" + name;
-      int action = AudacityMessageBox(wxString::Format( _("If you're sure another copy of Audacity isn't running, Audacity\ncan skip the test for 'Audacity already running' next time\nby removing the lock file:\n\n%s\n\nDo you want to do that?"),
-            lockFileName
-         ),
-         _("Possible Lock File Problem"),
-         wxYES_NO | wxICON_EXCLAMATION,
-         NULL);
-      if (action == wxYES){
-         ::wxRemoveFile( lockFileName );
+      auto lockFileName = wxFileName(dir,name);
+      bool bIsLocked = lockFileName.IsOk() && lockFileName.FileExists();
+      if( bIsLocked ){
+         int action = AudacityMessageBox(wxString::Format( _("If you're sure another copy of Audacity isn't\nrunning, Audacity can skip the test for\n'Audacity already running' next time\nby removing the lock file:\n\n%s\n\nDo you want to do that?"),
+               lockFileName.GetFullName()
+            ),
+            _("Possible Lock File Problem"),
+            wxYES_NO | wxICON_EXCLAMATION,
+            NULL);
+         if (action == wxYES){
+            // If locked, unlock.
+            lockFileName.SetPermissions( wxS_DEFAULT );
+            ::wxRemoveFile( lockFileName.GetFullName() );
+         }
       }
 #endif
       return false;
    }
-
-
 
 #if defined(__WXMSW__)
    // Create the DDE IPC server
