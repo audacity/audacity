@@ -793,7 +793,15 @@ wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
    wxStaticBox * pBox = safenew wxStaticBoxWrapper(GetParent(), miId,
       Str );
    pBox->SetLabel( Str );
-   pBox->SetName(wxStripMenuCodes(Str));
+   if (Str.empty()) {
+      // NVDA 2018.3 or later does not read the controls in a group box which has
+      // an accessibility name which is empty. Bug 2169.
+#if wxUSE_ACCESSIBILITY
+      // so that name can be set on a standard control
+      pBox->SetAccessible(safenew WindowAccessible(pBox));
+#endif
+      pBox->SetName(wxT("\a"));      // non-empty string which screen readers do not read
+   }
    mpSubSizer = std::make_unique<wxStaticBoxSizer>(
       pBox,
       wxVERTICAL );

@@ -17,7 +17,9 @@
 #include <gtk/gtk.h>
 #endif
 
+#include <wx/button.h>
 #include <wx/eventfilter.h>
+#include <wx/toplevel.h>
 #include <wx/weakref.h>
 #include <wx/window.h>
 
@@ -189,6 +191,26 @@ public:
 
          if ( !( sPreFilter() && sPreFilter()( key ) ) )
             return Event_Skip;
+
+#ifdef __WXMAC__
+         // Bug 2107 (Mac only)
+         // wxButton::SetDefault() alone doesn't cause correct event routing
+         // of key-down to the button when a text entry or combo has focus,
+         // but we can intercept wxEVT_CHAR_HOOK here and do it
+         if ( type == wxEVT_CHAR_HOOK &&
+            key.GetKeyCode() == WXK_RETURN ) {
+            if (auto top =
+               dynamic_cast< wxTopLevelWindow* >(
+                  wxGetTopLevelParent( wxWindow::FindFocus() ) ) ) {
+               if ( auto button =
+                  dynamic_cast<wxButton*>( top->GetDefaultItem() ) ) {
+                  wxCommandEvent newEvent{ wxEVT_BUTTON, button->GetId() };
+                  button->GetEventHandler()->AddPendingEvent( newEvent );
+                  return Event_Processed;
+               }
+            }
+         }
+#endif
 
          // Make a copy of the event and (possibly) make it look like a key down
          // event.

@@ -502,7 +502,9 @@ void ScreenshotCommand::CaptureEffects(
       "Compressor...",
       "Distortion...",
       "Echo...",
-      "Equalization...",
+      //"Equalization...",
+      "Filter Curve...",
+      "Graphic EQ...",
       //"Fade In",
       //"Fade Out",
       //"Invert",
@@ -720,7 +722,7 @@ wxRect ScreenshotCommand::GetScreenRect(){
 wxRect ScreenshotCommand::GetPanelRect(TrackPanel * panel){
    //AdornedRulerPanel *ruler = panel->mRuler;
 
-   int h = panel->mRuler->GetRulerHeight();
+   int h = panel->GetRuler()->GetRulerHeight();
    int x = 0, y = -h;
    int width, height;
 
@@ -819,7 +821,7 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
       return false;
 
    TrackPanel *panel = &TrackPanel::Get( context.project );
-   AdornedRulerPanel *ruler = panel->mRuler;
+   AdornedRulerPanel *ruler = panel->GetRuler();
 
    int nTracks = TrackList::Get( context.project ).size();
 

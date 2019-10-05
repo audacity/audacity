@@ -38,10 +38,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "SelectUtilities.h"
 #include "Shuttle.h"
 #include "Track.h"
-#include "export/ExportFLAC.h"
 #include "export/ExportMP3.h"
-#include "export/ExportOGG.h"
-#include "export/ExportPCM.h"
 
 #include "AllThemeResources.h"
 

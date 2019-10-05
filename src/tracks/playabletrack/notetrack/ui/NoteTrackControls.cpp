@@ -248,8 +248,6 @@ const TCPLines &NoteTrackControls::GetTCPLines() const
    return noteTrackTCPLines;
 };
 
-#endif
-
 namespace {
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -329,3 +327,5 @@ auto GetDefaultNoteTrackHeight::Implementation() -> Function {
    };
 }
 static GetDefaultNoteTrackHeight registerGetDefaultNoteTrackHeight;
+
+#endif

@@ -75,9 +75,6 @@ is time to refresh some aspect of the screen.
 #include "TrackPanelAx.h"
 #include "TrackPanelResizerCell.h"
 #include "WaveTrack.h"
-#ifdef EXPERIMENTAL_MIDI_OUT
-#include "NoteTrack.h"
-#endif
 
 #include "ondemand/ODManager.h"
 #include "ondemand/ODTask.h"

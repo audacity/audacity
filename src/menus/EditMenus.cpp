@@ -1011,8 +1011,6 @@ const ReservedCommandFlag
             return true;
 
          if (
-            !AudioIOBusyPred( project )
-         &&
             TimeSelectedPred( project )
          &&
             TracksSelectedPred( project )
@@ -1071,7 +1069,7 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
          AudioIONotBusyFlag | CutCopyAvailableFlag | NoAutoSelect,
          wxT("Ctrl+X") ),
       Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
-         AudioIONotBusyFlag | NoAutoSelect,
+         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
          wxT("Ctrl+K") ),
       /* i18n-hint: (verb)*/
       Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
@@ -1172,15 +1170,31 @@ auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
 };
 
 RegisteredMenuItemEnabler selectTracks{{
-   TracksExistFlag,
-   TracksSelectedFlag,
+   []{ return TracksExistFlag; },
+   []{ return TracksSelectedFlag; },
+   canSelectAll,
+   selectAll
+}};
+
+// Including time tracks.
+RegisteredMenuItemEnabler selectAnyTracks{{
+   []{ return TracksExistFlag; },
+   []{ return AnyTracksSelectedFlag; },
    canSelectAll,
    selectAll
 }};
 
 RegisteredMenuItemEnabler selectWaveTracks{{
-   WaveTracksExistFlag,
-   TimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag,
+   []{ return WaveTracksExistFlag; },
+   []{ return TimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag; },
+   canSelectAll,
+   selectAll
+}};
+
+// Also enable select for the noise reduction case.
+RegisteredMenuItemEnabler selectWaveTracks2{{
+   []{ return WaveTracksExistFlag; },
+   []{ return NoiseReductionTimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag; },
    canSelectAll,
    selectAll
 }};

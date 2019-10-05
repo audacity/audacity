@@ -269,8 +269,8 @@ void TimeShiftHandle::CreateListOfCapturedClips
       // because AddClipsToCaptured doesn't add duplicate clips); to remove
       // this behavior just store the array size beforehand.
       for (unsigned int i = 0; i < state.capturedClipArray.size(); ++i) {
-        {
-            auto &trackClip = state.capturedClipArray[i];
+         auto trackClip = state.capturedClipArray[i];
+         {
             // Capture based on tracks that have clips -- that means we
             // don't capture based on links to label tracks for now (until
             // we can treat individual labels as clips)
@@ -284,8 +284,6 @@ void TimeShiftHandle::CreateListOfCapturedClips
          }
 #ifdef USE_MIDI
          {
-            // Beware relocation of array contents!  Bind trackClip again.
-            auto &trackClip = state.capturedClipArray[i];
             // Capture additional clips from NoteTracks
             trackClip.track->TypeSwitch( [&](NoteTrack *nt) {
                // Iterate over sync-lock group tracks.
@@ -398,12 +396,12 @@ UIHandle::Result TimeShiftHandle::Click
                ok = false;
             else
                captureClips = true;
-         },
 #ifdef USE_MIDI
+         },
          [&](NoteTrack *) {
             captureClips = true;
-         }
 #endif
+         }
       );
 
    if ( ! ok )

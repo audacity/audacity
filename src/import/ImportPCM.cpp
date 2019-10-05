@@ -230,11 +230,14 @@ auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return mInfo.frames * mInfo.channels * SAMPLE_SIZE(mFormat);
 }
 
+#ifdef EXPERIMENTAL_OD_DATA
 // returns "copy" or "edit" (aliased) as the user selects.
 // if the cancel button is hit then "cancel" is returned.
 static wxString AskCopyOrEdit()
 {
+
    wxString oldCopyPref = gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+
    bool firstTimeAsk    = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataFirstAsk"), true)?true:false;
    bool oldAskPref      = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true)?true:false;
 
@@ -342,6 +345,7 @@ static wxString AskCopyOrEdit()
    }
    return oldCopyPref;
 }
+#endif
 
 #ifdef USE_LIBID3TAG
 struct id3_tag_deleter {
@@ -358,6 +362,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
    wxASSERT(mFile.get());
 
+#ifdef EXPERIMENTAL_OD_DATA
    // Get the preference / warn the user about aliased files.
    wxString copyEdit = AskCopyOrEdit();
 
@@ -368,6 +373,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
    bool doEdit = false;
    if (copyEdit.IsSameAs(wxT("edit"), false))
       doEdit = true;
+#endif
 
 
    CreateProgress();
@@ -386,6 +392,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
    auto maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
    auto updateResult = ProgressResult::Cancelled;
 
+#ifdef EXPERIMENTAL_OD_DATA
    // If the format is not seekable, we must use 'copy' mode,
    // because 'edit' mode depends on the ability to seek to an
    // arbitrary location in the file.
@@ -458,7 +465,10 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
             ODManager::Instance()->AddNewTask(std::move(computeTask));
       }
    }
-   else {
+   else 
+#endif
+
+   {
       // Otherwise, we're in the "copy" mode, where we read in the actual
       // samples from the file and store our own local copy of the
       // samples in the tracks.

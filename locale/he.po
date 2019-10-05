@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.3.2\n"
+"Project-Id-Version: audacity 2.3.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2019-04-24 19:44+0100\n"
+"POT-Creation-Date: 2019-09-07 14:02+0100\n"
 "PO-Revision-Date: 2013-01-30 13:38-0000\n"
 "Last-Translator: gale <gale@audacityteam.org>\n"
 "Language-Team: Heb\n"
@@ -31,13 +31,14 @@ msgstr "אשר"
 msgid "Please choose an existing file."
 msgstr "אנא  בחר מקטע"
 
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
-#: src/AutoRecovery.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AdornedRulerPanel.cpp
+#: src/AudioIO.cpp src/AutoRecoveryDialog.cpp src/ProjectAudioManager.cpp
+#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
 #: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
 #: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp src/toolbars/ControlToolBar.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Error"
 msgstr "שגיאה"
@@ -429,10 +430,6 @@ msgstr "עצור"
 #, fuzzy
 msgid "Stop script"
 msgstr "...Nyquist פקודת"
-
-#: src/AboutDialog.cpp
-msgid "Check Online"
-msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "system administration"
@@ -884,6 +881,37 @@ msgstr "בטל כלי מדידה"
 msgid "Enable Scrub Ruler"
 msgstr "אפשר כלי מדידה"
 
+#: src/AdornedRulerPanel.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+
+#: src/AudacityApp.cpp
+#, fuzzy, c-format
+msgid "Failed to remove %s"
+msgstr ".'%s' לא ניתן למחוק את"
+
+#: src/AudacityApp.cpp
+msgid "Failed!"
+msgstr "Fallo"
+
+#: src/AudacityApp.cpp
+msgid ""
+"Reset Preferences?\n"
+"\n"
+"This is a one-time question, after an 'install' where you asked to have the "
+"Preferences reset."
+msgstr ""
+"?אתה רוצה לשחזר העדפות\n"
+"\n"
+"שאלה זו יופיע רק פעם אחת, לאחר התקנה עם אפשרות איפוס ההעדפות."
+
+#: src/AudacityApp.cpp
+#, fuzzy
+msgid "Reset Audacity Preferences"
+msgstr "Audacity העדפות של"
+
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -921,35 +949,12 @@ msgid "Files Missing"
 msgstr "קבצים חסרים"
 
 #: src/AudacityApp.cpp
-#, c-format
-msgid "Language \"%s\" is unknown"
-msgstr ""
-
-#: src/AudacityApp.cpp
-msgid "Master Gain Control"
-msgstr "בקרת שער ראשי"
-
-#: src/AudacityApp.cpp
-msgid "Report generated to:"
-msgstr ""
-
-#: src/AudacityApp.cpp
-#, fuzzy
-msgid "Audacity Support Data"
-msgstr "Audacity %s של התמיכה צוות"
-
-#: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "File decoded successfully\n"
 msgstr ""
-
-#: src/AudacityApp.cpp
-#, fuzzy
-msgid "Decoding failed\n"
-msgstr "סוף ההקלטה"
 
 #: src/AudacityApp.cpp
 #, fuzzy
@@ -1104,7 +1109,7 @@ msgid "Audacity Project Files"
 msgstr "Audacity קבצי פרוייקט של"
 
 #: src/AudacityException.h src/commands/MessageCommand.h
-#: src/widgets/ErrorDialog.cpp
+#: src/widgets/AudacityMessageBox.cpp
 msgid "Message"
 msgstr ""
 
@@ -1175,7 +1180,7 @@ msgstr ""
 msgid "Error Initializing Midi"
 msgstr "Midi שגיאה באתחול אודיו"
 
-#: src/AudioIO.cpp src/toolbars/ControlToolBar.cpp
+#: src/AudioIO.cpp src/ProjectAudioManager.cpp
 #, fuzzy, c-format
 msgid ""
 "Error opening recording device.\n"
@@ -1185,189 +1190,6 @@ msgstr ".שגיאה בפתיחת התקן שמע"
 #: src/AudioIO.cpp
 msgid "Out of memory!"
 msgstr "!אין זיכרון פנוי"
-
-#: src/AudioIO.cpp
-msgid "Stream is active ... unable to gather information.\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Default recording device number: %d\n"
-msgstr "בחר התקן כניסה"
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "Default playback device number: %d\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-msgid "No devices found\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Device info unavailable for: %d\n"
-msgstr ".מידע על ההתקן אינו זמין"
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Device ID: %d\n"
-msgstr "התקן"
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Device name: %s\n"
-msgstr "התקנים"
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Host name: %s\n"
-msgstr "שם"
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Recording channels: %d\n"
-msgstr "סוף ההקלטה"
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Playback channels: %d\n"
-msgstr "ניגון"
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Low Recording Latency: %g\n"
-msgstr "סוף ההקלטה"
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "Low Playback Latency: %g\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "High Recording Latency: %g\n"
-msgstr "סוף ההקלטה"
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "High Playback Latency: %g\n"
-msgstr ""
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Supported Rates:\n"
-msgstr "קצבי דגימה"
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Selected recording device: %d - %s\n"
-msgstr "בחר התקן כניסה"
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "No recording device found for '%s'.\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Selected playback device: %d - %s\n"
-msgstr "בחר התקן כניסה"
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "No playback device found for '%s'.\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "Received %d while opening devices\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Unable to open Portmixer\n"
-msgstr ".לא יכול לפתןח קובץ סגנון"
-
-#: src/AudioIO.cpp
-msgid "Available mixers:\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "%d - %s\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Available recording sources:\n"
-msgstr "מקליט"
-
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Available playback volumes:\n"
-msgstr "ניגון"
-
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Recording volume is emulated\n"
-msgstr "סוף ההקלטה"
-
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Recording volume is native\n"
-msgstr "סוף ההקלטה"
-
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Playback volume is emulated\n"
-msgstr "ניגון"
-
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Playback volume is native\n"
-msgstr "ניגון"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/AudioIO.cpp
-#, c-format
-msgid "Supports output: %d\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "Supports input: %d\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "Opened: %d\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "בחר התקן כניסה"
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "No MIDI recording device found for '%s'.\n"
-msgstr ""
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "בחר התקן כניסה"
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "No MIDI playback device found for '%s'.\n"
-msgstr ""
 
 #: src/AudioIO.cpp
 #, fuzzy
@@ -1420,11 +1242,205 @@ msgid ""
 "volume."
 msgstr "היא רמת שמע תקינה %.2f כוונון עוצמת כניסה אוטומטית הופסקה. כנראה."
 
+#: src/AudioIOBase.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Default recording device number: %d\n"
+msgstr "בחר התקן כניסה"
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+msgid "No devices found\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr ".מידע על ההתקן אינו זמין"
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Device ID: %d\n"
+msgstr "התקן"
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Device name: %s\n"
+msgstr "התקנים"
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Host name: %s\n"
+msgstr "שם"
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Recording channels: %d\n"
+msgstr "סוף ההקלטה"
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Playback channels: %d\n"
+msgstr "ניגון"
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "סוף ההקלטה"
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "סוף ההקלטה"
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIOBase.cpp
+#, fuzzy
+msgid "Supported Rates:\n"
+msgstr "קצבי דגימה"
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "בחר התקן כניסה"
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "בחר התקן כניסה"
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, fuzzy
+msgid "Unable to open Portmixer\n"
+msgstr ".לא יכול לפתןח קובץ סגנון"
+
+#: src/AudioIOBase.cpp
+msgid "Available mixers:\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "%d - %s\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, fuzzy
+msgid "Available recording sources:\n"
+msgstr "מקליט"
+
+#: src/AudioIOBase.cpp
+#, fuzzy
+msgid "Available playback volumes:\n"
+msgstr "ניגון"
+
+#: src/AudioIOBase.cpp
+#, fuzzy
+msgid "Recording volume is emulated\n"
+msgstr "סוף ההקלטה"
+
+#: src/AudioIOBase.cpp
+#, fuzzy
+msgid "Recording volume is native\n"
+msgstr "סוף ההקלטה"
+
+#: src/AudioIOBase.cpp
+#, fuzzy
+msgid "Playback volume is emulated\n"
+msgstr "ניגון"
+
+#: src/AudioIOBase.cpp
+#, fuzzy
+msgid "Playback volume is native\n"
+msgstr "ניגון"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "בחר התקן כניסה"
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr ""
+
+#: src/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "בחר התקן כניסה"
+
+#: src/AudioIOBase.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr ""
+
 #: src/AutoRecovery.cpp
+msgid ""
+"This recovery file was saved by Audacity 2.3.0 or before.\n"
+"You need to run that version of Audacity to recover the project."
+msgstr ""
+
+#: src/AutoRecovery.cpp
+#, fuzzy
+msgid "Error Decoding File"
+msgstr "שגיאה בפתיחת קובץ"
+
+#: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "התאוששות שגיאה אוטומטית "
 
-#: src/AutoRecovery.cpp
+#: src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid ""
 "Some projects were not saved properly the last time Audacity was run.\n"
@@ -1433,33 +1449,33 @@ msgstr ""
 ".האחרונה כמה פרוייקטים לא נשמרו כראוי Audaciy בהפעלת\n"
 "למזלך, הפרוייקט/ים הבא/ים ניתנים לשחזור:"
 
-#: src/AutoRecovery.cpp
+#: src/AutoRecoveryDialog.cpp
 msgid "Recoverable projects"
 msgstr "פרויקטים ברי שחזור"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
-#: src/AutoRecovery.cpp src/PluginManager.cpp src/TrackPanel.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginManager.cpp src/TrackInfo.cpp
 msgid "Name"
 msgstr "שם"
 
-#: src/AutoRecovery.cpp
+#: src/AutoRecoveryDialog.cpp
 msgid "After recovery, save the project to save the changes to disk."
 msgstr ""
 
-#: src/AutoRecovery.cpp
+#: src/AutoRecoveryDialog.cpp
 msgid "Quit Audacity"
 msgstr "Audacity - צא מ"
 
-#: src/AutoRecovery.cpp
+#: src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid "Discard Projects"
 msgstr "שחזר פרוייקטים"
 
-#: src/AutoRecovery.cpp
+#: src/AutoRecoveryDialog.cpp
 msgid "Recover Projects"
 msgstr "שחזר פרוייקטים"
 
-#: src/AutoRecovery.cpp
+#: src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid ""
 "Are you sure you want to discard all recoverable projects?\n"
@@ -1469,18 +1485,13 @@ msgstr ""
 "?אתה באמת לא רוצה לשחזר שום פרוייקט\n"
 "לא תוכל לשחזר אח''כ."
 
-#: src/AutoRecovery.cpp
+#: src/AutoRecoveryDialog.cpp
 msgid "Confirm Discard Projects"
 msgstr ""
 
-#: src/AutoRecovery.cpp src/TimerRecordDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/TimerRecordDialog.cpp
 msgid "Could not enumerate files in auto save directory."
 msgstr "לא הצליח למספר קבצים מספריית השמירה אוטומטית"
-
-#: src/AutoRecovery.cpp
-#, fuzzy
-msgid "Error Decoding File"
-msgstr "שגיאה בפתיחת קובץ"
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
@@ -1730,7 +1741,7 @@ msgid "Select file(s) for batch processing..."
 msgstr "...בחר קובץ (קבצים) לעיבוד אצווה "
 
 #. i18n-hint: The vertical bars and * are essential here.
-#: src/BatchProcessDialog.cpp src/Project.cpp
+#: src/BatchProcessDialog.cpp src/ProjectFileManager.cpp
 msgid "All files|*|All supported files|"
 msgstr "כל הקבצים|*|כל הקבצים הנתמכים|"
 
@@ -1757,6 +1768,10 @@ msgstr "&הסר"
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "&Rename..."
+msgstr ""
+
+#: src/BatchProcessDialog.cpp
+msgid "Re&store"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
@@ -1791,7 +1806,7 @@ msgstr "פרמטרים"
 msgid "&Insert"
 msgstr "&הכנס"
 
-#: src/BatchProcessDialog.cpp src/LabelTrack.cpp
+#: src/BatchProcessDialog.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 #, fuzzy
 msgid "&Edit..."
 msgstr "&עריכה"
@@ -1807,10 +1822,6 @@ msgstr "הזז ל&מעלה"
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "Move &Down"
 msgstr "הזז &למטה"
-
-#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
-msgid "De&faults"
-msgstr "ער&כי ברירת מחדל"
 
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
@@ -2037,6 +2048,85 @@ msgstr ""
 msgid "Benchmark completed successfully.\n"
 msgstr ""
 
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#: src/CommonCommandFlags.cpp
+#, fuzzy, c-format
+msgid ""
+"You must first select some audio for '%s' to act on.\n"
+"\n"
+"Ctrl + A selects all audio."
+msgstr ".ראשית צריך לבחור רצועת שמע לשימוש "
+
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#: src/CommonCommandFlags.cpp
+#, c-format
+msgid ""
+"Select the audio for %s to use (for example, Cmd + A to Select All) then try "
+"again."
+msgstr ""
+
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#: src/CommonCommandFlags.cpp
+#, c-format
+msgid ""
+"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
+"try again."
+msgstr ""
+
+#: src/CommonCommandFlags.cpp
+#, fuzzy
+msgid "No Audio Selected"
+msgstr "לא נבחר שרשור פקודות"
+
+#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.
+#: src/CommonCommandFlags.cpp
+#, c-format
+msgid ""
+"Select the audio for %s to use.\n"
+"\n"
+"1. Select audio that represents noise and use %s to get your 'noise "
+"profile'.\n"
+"\n"
+"2. When you have got your noise profile, select the audio you want to "
+"change\n"
+"and use %s to change that audio."
+msgstr ""
+
+#: src/CommonCommandFlags.cpp
+msgid ""
+"You can only do this when playing and recording are\n"
+"stopped. (Pausing is not sufficient.)"
+msgstr ""
+
+#: src/CommonCommandFlags.cpp
+#, fuzzy
+msgid ""
+"You must first select some stereo audio to perform this\n"
+"action. (You cannot use this with mono.)"
+msgstr ".ראשית צריך לבחור רצועת שמע לשימוש "
+
+#: src/CommonCommandFlags.cpp
+#, fuzzy
+msgid ""
+"You must first select some audio to perform this action.\n"
+"(Selecting other kinds of track won't work.)"
+msgstr ".ראשית צריך לבחור רצועת שמע לשימוש "
+
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#: src/CommonCommandFlags.cpp
+#, c-format
+msgid "\"%s\" requires one or more tracks to be selected."
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr ""
+
+#: src/CrashReport.cpp
+#, fuzzy
+msgid "Audacity Support Data"
+msgstr "Audacity %s של התמיכה צוות"
+
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
 msgstr "מוחק תלויות"
@@ -2151,12 +2241,27 @@ msgstr ""
 "עצמאי, ושמירתו ללא העתקת הקבצים יגרום לאיבוד מידע."
 
 #: src/Dependencies.cpp
+#, fuzzy
+msgid ""
+"Your project is self-contained; it does not depend on any external audio "
+"files. \n"
+"\n"
+"Some older Audacity projects may not be self-contained, and care \n"
+"is needed to keep their external dependencies in the right place.\n"
+"New projects will be self-contained and are less risky."
+msgstr ""
+"כעת הפרוייקט הוא עצמאי, ואינו תלוי באף קובץ אודיו חיצוני.\n"
+"\n"
+"אם תשנה את הפרוייקט למצב תלות חיצוני או שתייבא קבצים, יפסיק להיות פרוייקט "
+"עצמאי, ושמירתו ללא העתקת הקבצים יגרום לאיבוד מידע."
+
+#: src/Dependencies.cpp
 msgid "Dependency Check"
 msgstr "בדיקת תלויות"
 
 #. i18n-hint: This title appears on a dialog that indicates the progress
 #. in doing something.
-#: src/DirManager.cpp
+#: src/DirManager.cpp src/ProjectFSCK.cpp
 msgid "Progress"
 msgstr "התקדמות"
 
@@ -2238,180 +2343,6 @@ msgstr ".'%s' ל- '%s' -לא מצליח לשנות שם מ"
 msgid "Changed block %s to new alias name\n"
 msgstr "שונה לשם כינוי החדש %s בלוק\n"
 
-#. i18n-hint: The audacity project file is XML and has 'tags' in it,
-#. rather like html tags <something>some stuff</something>.
-#. This error message is about the tags that hold the sequence information.
-#. The error message is confusing to users in English, and could just say
-#. "Found problems with <sequence> when checking project file."
-#: src/DirManager.cpp
-msgid "Project check read faulty Sequence tags."
-msgstr "אבחון הפרוייקטים בודק תוויות מאזורים פגומים."
-
-#: src/DirManager.cpp
-msgid "Close project immediately with no changes"
-msgstr "סגור פרוייקט מיידי ללא שמירת שינויים"
-
-#: src/DirManager.cpp
-msgid ""
-"Continue with repairs noted in log, and check for more errors. This will "
-"save the project in its current state, unless you \"Close project immediately"
-"\" on further error alerts."
-msgstr ""
-"המשך בתיקונים הרשומים בדוח, ובדוק שגיאות נוספות. זה ישמור את הפרוייקט במצבו "
-"בנוכחי\n"
-"אלא אם תבחר ב- \"סגור פרוייקט מיידי\" בתיבת הודעת שגיאות."
-
-#: src/DirManager.cpp
-msgid "Warning - Problems Reading Sequence Tags"
-msgstr "אזהרה: שגיאה בקריאת תוויות רצף"
-
-#: src/DirManager.cpp
-msgid "Inspecting project file data"
-msgstr "מאבחן נתוני קובץ הפרוייקט"
-
-#: src/DirManager.cpp
-#, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
-"detected %lld missing external audio file(s) \n"
-"('aliased files'). There is no way for Audacity \n"
-"to recover these files automatically. \n"
-"\n"
-"If you choose the first or second option below, \n"
-"you can try to find and restore the missing files \n"
-"to their previous location. \n"
-"\n"
-"Note that for the second option, the waveform \n"
-"may not show silence. \n"
-"\n"
-"If you choose the third option, this will save the \n"
-"project in its current state, unless you \"Close \n"
-"project immediately\" on further error alerts."
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "Treat missing audio as silence (this session only)"
-msgstr "טפל בקטעים חסרים ע''י מילוי שקט (הפעלה זו בלבד)"
-
-#: src/DirManager.cpp
-msgid "Replace missing audio with silence (permanent immediately)."
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "Warning - Missing Aliased File(s)"
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "   Project check replaced missing aliased file(s) with silence."
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
-"detected %lld missing alias (.auf) blockfile(s). \n"
-"Audacity can fully regenerate these files \n"
-"from the current audio in the project."
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "Regenerate alias summary files (safe and recommended)"
-msgstr ""
-
-#: src/DirManager.cpp
-#, fuzzy
-msgid "Fill in silence for missing display data (this session only)"
-msgstr "[מלא בשקט מקומות בהן חסר מידע להצגה [בפעילות זו בלבד"
-
-#: src/DirManager.cpp
-msgid "Close project immediately with no further changes"
-msgstr "סגור את הפרויקט מיידית ללא שינויים נוספים"
-
-#: src/DirManager.cpp
-msgid "Warning - Missing Alias Summary File(s)"
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "   Project check regenerated missing alias summary file(s)."
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
-"detected %lld missing audio data (.au) blockfile(s), \n"
-"probably due to a bug, system crash, or accidental \n"
-"deletion. There is no way for Audacity to recover \n"
-"these missing files automatically. \n"
-"\n"
-"If you choose the first or second option below, \n"
-"you can try to find and restore the missing files \n"
-"to their previous location. \n"
-"\n"
-"Note that for the second option, the waveform \n"
-"may not show silence."
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "Replace missing audio with silence (permanent immediately)"
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "Warning - Missing Audio Data Block File(s)"
-msgstr ""
-
-#: src/DirManager.cpp
-msgid ""
-"   Project check replaced missing audio data block file(s) with silence."
-msgstr ""
-
-#: src/DirManager.cpp
-msgid ""
-"   Project check ignored orphan block file(s). They will be deleted when "
-"project is saved."
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
-"found %d orphan block file(s). These files are \n"
-"unused by this project, but might belong to other projects. \n"
-"They are doing no harm and are small."
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "Continue without deleting; ignore the extra files this session"
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "Delete orphan files (permanent immediately)"
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "Warning - Orphan Block File(s)"
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "Cleaning up unused directories in project data"
-msgstr ""
-
-#: src/DirManager.cpp
-msgid ""
-"Project check found file inconsistencies inspecting the loaded project data."
-msgstr ""
-
-#: src/DirManager.cpp
-msgid ""
-"Project check found file inconsistencies during automatic recovery.\n"
-"\n"
-"Select 'Show Log...' in the Help menu to see details."
-msgstr ""
-
-#: src/DirManager.cpp
-msgid "Warning: Problems in Automatic Recovery"
-msgstr ""
-
 #: src/DirManager.cpp
 #, c-format
 msgid "Missing aliased audio file: '%s'"
@@ -2432,6 +2363,10 @@ msgstr ""
 msgid "Orphan block file: '%s'"
 msgstr ""
 
+#: src/DirManager.cpp src/ProjectFSCK.cpp
+msgid "Inspecting project file data"
+msgstr "מאבחן נתוני קובץ הפרוייקט"
+
 #: src/DirManager.cpp
 msgid "Caching audio"
 msgstr "שרשור שמע"
@@ -2447,6 +2382,24 @@ msgstr "שומר אודיו מוקלט"
 #: src/DirManager.cpp
 msgid "Saving recorded audio to disk"
 msgstr ""
+
+#: src/Dither.cpp src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp plug-ins/equalabel.ny
+#: plug-ins/sample-data-export.ny
+msgid "None"
+msgstr "כלום"
+
+#: src/Dither.cpp
+msgid "Rectangle"
+msgstr "מרובע"
+
+#: src/Dither.cpp plug-ins/tremolo.ny
+msgid "Triangle"
+msgstr "בצורת משולש"
+
+#: src/Dither.cpp
+msgid "Shaped"
+msgstr "מעוצב"
 
 #: src/FFT.cpp
 msgid "Rectangular"
@@ -2524,7 +2477,7 @@ msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
 "\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
+"To use FFmpeg import, go to Edit > Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
 msgstr ""
 
@@ -2597,6 +2550,15 @@ msgstr "LOF שגיאת"
 #, c-format
 msgid "Error (file may not have been written): %s"
 msgstr "%s :(שגיאה (ייתכן והקובץ לא נשמר"
+
+#: src/FileNames.cpp
+msgid ""
+"The specified filename could not be converted due to Unicode character use."
+msgstr ""
+
+#: src/FileNames.cpp
+msgid "Specify New Filename:"
+msgstr ":פרט שם קובץ חדש"
 
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
@@ -2754,6 +2716,12 @@ msgstr ":יצא מידע ספקטרלי"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Text files (*.txt)|*.txt|All files|*"
+msgstr "קבי טקסט (*.txt)|*.txt|כל הקבצים (*.*)|*.*"
+
+#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Couldn't write to file: %s"
 msgstr ":לא יכול לכתוב קובץ"
@@ -2865,13 +2833,13 @@ msgstr ""
 
 #: src/HelpText.cpp
 msgid ""
-" [[file:quick_help.html|Quick Help]] - if not installed locally, [[https://"
-"manual.audacityteam.org/quick_help.html|view online]]"
+"[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
+"audacityteam.org/quick_help.html|view online]]"
 msgstr ""
 
 #: src/HelpText.cpp
 msgid ""
-" [[file:index.html|Manual]] - if not installed locally, [[https://manual."
+" [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
 "audacityteam.org/|view online]]"
 msgstr ""
 
@@ -2919,6 +2887,10 @@ msgid ""
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
 
+#: src/HelpText.cpp
+msgid "Check Online"
+msgstr ""
+
 #: src/HistoryWindow.cpp
 #, fuzzy
 msgid "History"
@@ -2943,12 +2915,13 @@ msgid "&Total space used"
 msgstr ""
 
 #: src/HistoryWindow.cpp
-msgid "&Undo Levels Available"
+#, fuzzy
+msgid "&Undo levels available"
 msgstr "&מספר רמות ביטול-ביצוע זמינות"
 
 #: src/HistoryWindow.cpp
 #, fuzzy
-msgid "&Levels To Discard"
+msgid "&Levels to discard"
 msgstr "רמה למחיקה"
 
 #. i18n-hint: (verb)
@@ -3011,15 +2984,6 @@ msgstr "MB"
 msgid "GB"
 msgstr "GB"
 
-#: src/Internat.cpp
-msgid ""
-"The specified filename could not be converted due to Unicode character use."
-msgstr ""
-
-#: src/Internat.cpp
-msgid "Specify New Filename:"
-msgstr ":פרט שם קובץ חדש"
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "ערוך תוויות"
@@ -3030,8 +2994,8 @@ msgid "Track"
 msgstr "ערוץ"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/menus/LabelMenus.cpp
-#: plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "תווית"
 
@@ -3071,12 +3035,7 @@ msgstr ".או לחיצה כפולה בעכבר בכדי לערוך תוכן תא
 msgid "Select a text file containing labels"
 msgstr "...בחר את קובץ הטקסט המכיל את התויות"
 
-#: src/LabelDialog.cpp src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Text files (*.txt)|*.txt|All files|*"
-msgstr "קבי טקסט (*.txt)|*.txt|כל הקבצים (*.*)|*.*"
-
-#: src/LabelDialog.cpp src/Project.cpp src/menus/FileMenus.cpp
+#: src/LabelDialog.cpp src/ProjectFileManager.cpp src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Could not open file: %s"
 msgstr "\"%s\" :לא יכול לפתוח קובץ"
@@ -3105,62 +3064,9 @@ msgstr "הכנס שם רצועה "
 msgid "Label Track"
 msgstr ""
 
-#: src/LabelTrack.cpp src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
-msgid "Modified Label"
-msgstr "תווית ששונתה"
-
-#: src/LabelTrack.cpp src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
-msgid "Label Edit"
-msgstr "ערוך תווית"
-
-#: src/LabelTrack.cpp src/menus/LabelMenus.cpp
-msgid "Added label"
-msgstr "תווית הוספה"
-
-#. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/menus/EditMenus.cpp
-msgid "Cu&t"
-msgstr "גז&ור"
-
-#. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/menus/EditMenus.cpp
-msgid "&Copy"
-msgstr "&העתק"
-
-#. i18n-hint: (verb)
-#: src/LabelTrack.cpp src/menus/EditMenus.cpp
-msgid "&Paste"
-msgstr "&הדבק"
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "&Delete Label"
-msgstr "מחק תווית"
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "Deleted Label"
-msgstr "מחק תווית"
-
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr ""
-
-#: src/LabelTrack.cpp
-msgid "Edited labels"
-msgstr "ערוך תווית"
-
-#: src/LabelTrack.cpp src/commands/PreferenceCommands.cpp
-#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Name:"
-msgstr "שם"
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "New label"
-msgstr "תווית הוספה"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -3222,6 +3128,16 @@ msgstr "&בצע שוב %s"
 msgid "&Redo"
 msgstr "&בצע שוב"
 
+#: src/Menus.cpp
+msgid ""
+"There was a problem with your last action. If you think\n"
+"this is a bug, please tell us exactly where it occurred."
+msgstr ""
+
+#: src/Menus.cpp
+msgid "Disallowed"
+msgstr ""
+
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "עירבול"
@@ -3237,14 +3153,16 @@ msgstr "Mixing and rendering tracks"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
+#: src/MixerBoard.cpp src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Gain"
 msgstr "הגבר"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
-#: src/MixerBoard.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 msgid "Velocity"
 msgstr ""
@@ -3254,20 +3172,23 @@ msgid "Musical Instrument"
 msgstr ""
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: src/MixerBoard.cpp src/TrackPanel.cpp src/menus/TrackMenus.cpp
+#: src/MixerBoard.cpp src/menus/TrackMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Pan"
 msgstr "Pan"
 
 #. i18n-hint: This is on a button that will silence this track.
-#: src/MixerBoard.cpp src/TrackPanel.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/MixerBoard.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
 msgid "Mute"
 msgstr "השתק"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
-#: src/MixerBoard.cpp src/TrackPanel.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/MixerBoard.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
 msgid "Solo"
 msgstr "יחיד"
 
@@ -3613,29 +3534,9 @@ msgid "Enable new plug-ins"
 msgstr "Vamp מצטער, כישלון בטעינת תוסף"
 
 #: src/Prefs.cpp
-#, fuzzy, c-format
-msgid "Failed to remove %s"
-msgstr ".'%s' לא ניתן למחוק את"
-
-#: src/Prefs.cpp
-msgid "Failed!"
-msgstr "Fallo"
-
-#: src/Prefs.cpp
-msgid ""
-"Reset Preferences?\n"
-"\n"
-"This is a one-time question, after an 'install' where you asked to have the "
-"Preferences reset."
+#, c-format
+msgid "Audacity cannot start because the settings file at %s is not writable."
 msgstr ""
-"?אתה רוצה לשחזר העדפות\n"
-"\n"
-"שאלה זו יופיע רק פעם אחת, לאחר התקנה עם אפשרות איפוס ההעדפות."
-
-#: src/Prefs.cpp
-#, fuzzy
-msgid "Reset Audacity Preferences"
-msgstr "Audacity העדפות של"
 
 #: src/Printing.cpp
 msgid "There was a problem printing."
@@ -3645,81 +3546,230 @@ msgstr "יש בעיה בהדפסה."
 msgid "Print"
 msgstr "הדפס"
 
-#. i18n-hint: This is an experimental feature where the main panel in
-#. Audacity is put on a notebook tab, and this is the name on that tab.
-#. Other tabs in that notebook may have instruments, patch panels etc.
-#: src/Project.cpp
-msgid "Main Mix"
-msgstr "מערבל ראשי"
-
-#: src/Project.cpp
-#, fuzzy
-msgid "Horizontal Scrollbar"
-msgstr "סטריאו אופקי"
-
-#: src/Project.cpp
-#, fuzzy
-msgid "Vertical Scrollbar"
-msgstr "סטריאו אנכי"
-
-#: src/Project.cpp
+#: src/ProjectAudioManager.cpp
 #, c-format
-msgid "Welcome to Audacity version %s"
-msgstr "%s גרסה  Audacity - ברוכים הבאים ל"
+msgid "Actual Rate: %d"
+msgstr "%d :קצב בפועל"
 
-#. i18n-hint: E.g this is recovered audio that had been lost.
-#: src/Project.cpp
-msgid "(Recovered)"
-msgstr "(הוקלט)"
+#: src/ProjectAudioManager.cpp src/effects/Effect.cpp
+#, fuzzy
+msgid ""
+"Error opening sound device.\n"
+"Try changing the audio host, playback device and the project sample rate."
+msgstr ""
+"Error while opening sound device. Please check the output device settings "
+"and the project sample rate."
 
-#: src/Project.cpp
+#. i18n-hint:  A name given to a track, appearing as its menu button.
+#. The translation should be short or else it will not display well.
+#. At most, about 11 Latin characters.
+#. Dropout is a loss of a short sequence of audio sample data from the
+#. recording
+#: src/ProjectAudioManager.cpp
+msgid "Dropouts"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Recorded audio was lost at the labeled locations. Possible causes:\n"
+"\n"
+"Other applications are competing with Audacity for processor time\n"
+"\n"
+"You are saving directly to a slow external storage device\n"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Turn off dropout detection"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Recorded Audio"
+msgstr "שמע מוקלט"
+
+#: src/ProjectAudioManager.cpp src/toolbars/ControlToolBar.cpp
+msgid "Record"
+msgstr "הקלטה"
+
+#. i18n-hint: The audacity project file is XML and has 'tags' in it,
+#. rather like html tags <something>some stuff</something>.
+#. This error message is about the tags that hold the sequence information.
+#. The error message is confusing to users in English, and could just say
+#. "Found problems with <sequence> when checking project file."
+#: src/ProjectFSCK.cpp
+msgid "Project check read faulty Sequence tags."
+msgstr "אבחון הפרוייקטים בודק תוויות מאזורים פגומים."
+
+#: src/ProjectFSCK.cpp
+msgid "Close project immediately with no changes"
+msgstr "סגור פרוייקט מיידי ללא שמירת שינויים"
+
+#: src/ProjectFSCK.cpp
+msgid ""
+"Continue with repairs noted in log, and check for more errors. This will "
+"save the project in its current state, unless you \"Close project immediately"
+"\" on further error alerts."
+msgstr ""
+"המשך בתיקונים הרשומים בדוח, ובדוק שגיאות נוספות. זה ישמור את הפרוייקט במצבו "
+"בנוכחי\n"
+"אלא אם תבחר ב- \"סגור פרוייקט מיידי\" בתיבת הודעת שגיאות."
+
+#: src/ProjectFSCK.cpp
+msgid "Warning - Problems Reading Sequence Tags"
+msgstr "אזהרה: שגיאה בקריאת תוויות רצף"
+
+#: src/ProjectFSCK.cpp
+#, c-format
+msgid ""
+"Project check of \"%s\" folder \n"
+"detected %lld missing external audio file(s) \n"
+"('aliased files'). There is no way for Audacity \n"
+"to recover these files automatically. \n"
+"\n"
+"If you choose the first or second option below, \n"
+"you can try to find and restore the missing files \n"
+"to their previous location. \n"
+"\n"
+"Note that for the second option, the waveform \n"
+"may not show silence. \n"
+"\n"
+"If you choose the third option, this will save the \n"
+"project in its current state, unless you \"Close \n"
+"project immediately\" on further error alerts."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "Treat missing audio as silence (this session only)"
+msgstr "טפל בקטעים חסרים ע''י מילוי שקט (הפעלה זו בלבד)"
+
+#: src/ProjectFSCK.cpp
+msgid "Replace missing audio with silence (permanent immediately)."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "Warning - Missing Aliased File(s)"
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "   Project check replaced missing aliased file(s) with silence."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+#, c-format
+msgid ""
+"Project check of \"%s\" folder \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
+"Audacity can fully regenerate these files \n"
+"from the current audio in the project."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "Regenerate alias summary files (safe and recommended)"
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+#, fuzzy
+msgid "Fill in silence for missing display data (this session only)"
+msgstr "[מלא בשקט מקומות בהן חסר מידע להצגה [בפעילות זו בלבד"
+
+#: src/ProjectFSCK.cpp
+msgid "Close project immediately with no further changes"
+msgstr "סגור את הפרויקט מיידית ללא שינויים נוספים"
+
+#: src/ProjectFSCK.cpp
+msgid "Warning - Missing Alias Summary File(s)"
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "   Project check regenerated missing alias summary file(s)."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+#, c-format
+msgid ""
+"Project check of \"%s\" folder \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
+"probably due to a bug, system crash, or accidental \n"
+"deletion. There is no way for Audacity to recover \n"
+"these missing files automatically. \n"
+"\n"
+"If you choose the first or second option below, \n"
+"you can try to find and restore the missing files \n"
+"to their previous location. \n"
+"\n"
+"Note that for the second option, the waveform \n"
+"may not show silence."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "Replace missing audio with silence (permanent immediately)"
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "Warning - Missing Audio Data Block File(s)"
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid ""
+"   Project check replaced missing audio data block file(s) with silence."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid ""
+"   Project check ignored orphan block file(s). They will be deleted when "
+"project is saved."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+#, c-format
+msgid ""
+"Project check of \"%s\" folder \n"
+"found %d orphan block file(s). These files are \n"
+"unused by this project, but might belong to other projects. \n"
+"They are doing no harm and are small."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "Continue without deleting; ignore the extra files this session"
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "Delete orphan files (permanent immediately)"
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "Warning - Orphan Block File(s)"
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "Cleaning up unused directories in project data"
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid ""
+"Project check found file inconsistencies inspecting the loaded project data."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid ""
+"Project check found file inconsistencies during automatic recovery.\n"
+"\n"
+"Select 'Help > Diagnostics > Show Log...' to see details."
+msgstr ""
+
+#: src/ProjectFSCK.cpp
+msgid "Warning: Problems in Automatic Recovery"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
 msgid "<untitled>"
 msgstr "<ללא שם>"
 
-#. i18n-hint: The first %s numbers the project, the second %s is the project name.
-#: src/Project.cpp
-#, fuzzy, c-format
-msgid "%sSave changes to %s?"
-msgstr "לשמור שינויים?"
+#. i18n-hint: E.g this is recovered audio that had been lost.
+#: src/ProjectFileIO.cpp
+msgid "(Recovered)"
+msgstr "(הוקלט)"
 
-#: src/Project.cpp
-#, fuzzy
-msgid "Save project before closing?"
-msgstr "לשמור שינויים לפני סגירה?"
-
-#: src/Project.cpp
-msgid ""
-"\n"
-"If saved, the project will have no tracks.\n"
-"\n"
-"To save any previously open tracks:\n"
-"Cancel, Edit > Undo until all tracks\n"
-"are open, then File > Save Project."
-msgstr ""
-
-#: src/Project.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Select one or more files"
-msgstr "...בחר קובץ שמע אחד או יותר"
-
-#: src/Project.cpp
-#, c-format
-msgid "%s is already open in another window."
-msgstr ".כבר פתוח בחלון אחר %s"
-
-#: src/Project.cpp
-msgid "Error Opening Project"
-msgstr ""
-
-#. i18n-hint: This string is a label in the file type filter in the open
-#. * and save dialogues, for the option that only shows project files created
-#. * with Audacity. Do not include pipe symbols or .aup (this extension will
-#. * now be added automatically for the Save Projects dialogues).
-#: src/Project.cpp src/TimerRecordDialog.cpp
-msgid "Audacity projects"
-msgstr "Audacity פרוייקטים של"
-
-#: src/Project.cpp
+#: src/ProjectFileIO.cpp
 #, c-format
 msgid ""
 "This file was saved by Audacity version %s. The format has changed. \n"
@@ -3733,84 +3783,29 @@ msgid ""
 "Open this file now?"
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileIO.cpp
 msgid "1.0 or earlier"
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileIO.cpp
 msgid "Warning - Opening Old Project File"
 msgstr ""
 
-#: src/Project.cpp
-msgid ""
-"You are trying to open an automatically created backup file.\n"
-"Doing this may result in severe data loss.\n"
-"\n"
-"Please open the actual Audacity project file instead."
-msgstr ""
-
-#: src/Project.cpp
-msgid "Warning - Backup File Detected"
-msgstr ""
-
-#: src/Project.cpp
-msgid "Error opening file"
-msgstr "שגיאה בפתיחת קובץ"
-
-#: src/Project.cpp
-#, c-format
-msgid ""
-"File may be invalid or corrupted: \n"
-"%s"
-msgstr ""
-":הקובץ אינו מתאים או אינו תקין\n"
-"%s"
-
-#: src/Project.cpp
-msgid "Error Opening File or Project"
-msgstr ""
-
-#: src/Project.cpp
-msgid ""
-"Audacity was unable to convert an Audacity 1.0 project to the new project "
-"format."
-msgstr ""
-"Audacity was unable to convert an Audacity 1.0 project to the new project "
-"format."
-
-#: src/Project.cpp
-#, fuzzy, c-format
-msgid "Could not decode file: %s"
-msgstr ":לא יכול לפתוח קובץ"
-
-#: src/Project.cpp
-#, fuzzy
-msgid "Error decoding file"
-msgstr "שגיאה בפתיחת קובץ"
-
-#: src/Project.cpp
-msgid "Project was recovered"
-msgstr "הפרויקט שוחזר"
-
-#: src/Project.cpp
-msgid "Recover"
-msgstr "התאושש"
-
-#: src/Project.cpp
-msgid "Could not remove old auto save file"
-msgstr "Could not remove old auto save file"
-
-#: src/Project.cpp
+#: src/ProjectFileIO.cpp
 msgid "<unrecognized version -- possibly corrupt project file>"
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileIO.cpp
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "\"%s\" :לא יכול למצוא את ספריית הפרויקט"
 
+#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
+msgid "Error Opening Project"
+msgstr ""
+
 #. i18n-hint: %s will be replaced by the version number.
-#: src/Project.cpp
+#: src/ProjectFileIO.cpp
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
@@ -3818,11 +3813,26 @@ msgid ""
 "open this file."
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileIO.cpp
 msgid "Can't open project file"
 msgstr "לא יכול לפתוח קובץ פרויקט"
 
-#: src/Project.cpp
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "Could not create autosave file: %s"
+msgstr ":שמירה אוטומטית לא יכול לכתוב קובץ"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "Could not remove old autosave file: %s"
+msgstr ":לא יכול למחוק קובץ שמירה אוטומטית"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error decoding file"
+msgstr "שגיאה בפתיחת קובץ"
+
+#: src/ProjectFileManager.cpp
 msgid ""
 "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
@@ -3834,65 +3844,60 @@ msgid ""
 "Save anyway?"
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 msgid "Warning - Empty Project"
 msgstr "אזהרה - פרוייקט ריק"
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 #, fuzzy, c-format
-msgid "Could not create safety file: %s"
-msgstr ":שמירה אוטומטית לא יכול לכתוב קובץ"
+msgid ""
+"Audacity failed to write file %s.\n"
+"Perhaps disk is full or not writable."
+msgstr ""
+"לא יכול לכתוב קובץ:\n"
+"  %s."
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error Writing to File"
+msgstr "שגיאה בכתיבה לקובץ"
+
+#: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
 "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 msgid "Error Saving Project"
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
 "Could not save project. Path not found. Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 
-#: src/Project.cpp src/commands/ScreenshotCommand.cpp
+#: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "%s נשמר"
 
-#: src/Project.cpp
-#, c-format
-msgid "Imported '%s'"
-msgstr "'%s' ייובאו"
-
-#: src/Project.cpp
-msgid "Import"
-msgstr "ייבא"
-
-#: src/Project.cpp
-#, fuzzy
-msgid "Error Importing"
-msgstr "שגיאה ביבוא"
-
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 msgid ""
 "The project was not saved because the file name provided would overwrite "
 "another project.\n"
 "Please try again and select an original name."
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 #, fuzzy, c-format
 msgid "%sSave Lossless Copy of Project \"%s\" As..."
 msgstr "...שמור העתק דחוס מהפרוייקט"
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 msgid ""
 "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
 "file.\n"
@@ -3902,12 +3907,12 @@ msgid ""
 "with no loss of quality, but the projects are large.\n"
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 #, fuzzy, c-format
 msgid "%sSave Compressed Copy of Project \"%s\" As..."
 msgstr "...שמור העתק דחוס מהפרוייקט"
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 msgid ""
 "'Save Compressed Copy of Project' is for an Audacity project, not an audio "
 "file.\n"
@@ -3917,31 +3922,35 @@ msgid ""
 "but they have some loss of fidelity.\n"
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 #, fuzzy, c-format
 msgid "%sSave Project \"%s\" As..."
 msgstr "...שמור פרויקט &בתור"
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 msgid ""
 "'Save Project' is for an Audacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp src/ProjectManager.cpp src/TimerRecordDialog.cpp
+msgid "Audacity projects"
+msgstr "Audacity פרוייקטים של"
+
+#: src/ProjectFileManager.cpp
 msgid ""
 "Saving a copy must not overwrite an existing saved project.\n"
 "Please try again and select an original name."
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 #, fuzzy
 msgid "Error Saving Copy of Project"
 msgstr "שגיאה בטעינת עקמומי האקולייזר"
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
 "Do you want to overwrite the project:\n"
@@ -3953,101 +3962,155 @@ msgid ""
 msgstr ""
 
 #. i18n-hint: Heading: A warning that a project is about to be overwritten.
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 #, fuzzy
 msgid "Overwrite Project Warning"
 msgstr ".דרוך על קבצים קיימים"
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp
 msgid ""
 "The project will not saved because the selected project is open in another "
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Select one or more files"
+msgstr "...בחר קובץ שמע אחד או יותר"
+
+#: src/ProjectFileManager.cpp
+#, c-format
+msgid "%s is already open in another window."
+msgstr ".כבר פתוח בחלון אחר %s"
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"You are trying to open an automatically created backup file.\n"
+"Doing this may result in severe data loss.\n"
+"\n"
+"Please open the actual Audacity project file instead."
+msgstr ""
+
+#: src/ProjectFileManager.cpp
+msgid "Warning - Backup File Detected"
+msgstr ""
+
+#: src/ProjectFileManager.cpp
+msgid "Error opening file"
+msgstr "שגיאה בפתיחת קובץ"
+
+#: src/ProjectFileManager.cpp
+#, c-format
+msgid ""
+"File may be invalid or corrupted: \n"
+"%s"
+msgstr ""
+":הקובץ אינו מתאים או אינו תקין\n"
+"%s"
+
+#: src/ProjectFileManager.cpp
+msgid "Error Opening File or Project"
+msgstr ""
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"Audacity was unable to convert an Audacity 1.0 project to the new project "
+"format."
+msgstr ""
+"Audacity was unable to convert an Audacity 1.0 project to the new project "
+"format."
+
+#: src/ProjectFileManager.cpp
+msgid "Project was recovered"
+msgstr "הפרויקט שוחזר"
+
+#: src/ProjectFileManager.cpp
+msgid "Recover"
+msgstr "התאושש"
+
+#: src/ProjectFileManager.cpp
+msgid "Could not remove old auto save file"
+msgstr "Could not remove old auto save file"
+
+#: src/ProjectFileManager.cpp
+#, c-format
+msgid "Imported '%s'"
+msgstr "'%s' ייובאו"
+
+#: src/ProjectFileManager.cpp
+msgid "Import"
+msgstr "ייבא"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error Importing"
+msgstr "שגיאה ביבוא"
+
+#: src/ProjectHistory.cpp
 msgid "Created new project"
 msgstr "פרויקט חדש נוצר"
 
-#: src/Project.cpp
+#: src/ProjectManager.cpp
+#, c-format
+msgid "Welcome to Audacity version %s"
+msgstr "%s גרסה  Audacity - ברוכים הבאים ל"
+
+#. i18n-hint: The first %s numbers the project, the second %s is the project name.
+#: src/ProjectManager.cpp
+#, fuzzy, c-format
+msgid "%sSave changes to %s?"
+msgstr "לשמור שינויים?"
+
+#: src/ProjectManager.cpp
+#, fuzzy
+msgid "Save project before closing?"
+msgstr "לשמור שינויים לפני סגירה?"
+
+#: src/ProjectManager.cpp
+msgid ""
+"\n"
+"If saved, the project will have no tracks.\n"
+"\n"
+"To save any previously open tracks:\n"
+"Cancel, Edit > Undo until all tracks\n"
+"are open, then File > Save Project."
+msgstr ""
+
+#: src/ProjectManager.cpp
 #, fuzzy, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "דקות %d נפח דיסק נותר מספיק להקלטה של  "
 
-#: src/Project.cpp
+#: src/ProjectManager.cpp
 msgid "On-demand import and waveform calculation complete."
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectManager.cpp
 #, c-format
 msgid ""
 "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f"
 "%% complete."
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectManager.cpp
 #, c-format
 msgid ""
 "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr ""
 
-#: src/Project.cpp
-#, fuzzy, c-format
-msgid "Could not create autosave file: %s"
-msgstr ":שמירה אוטומטית לא יכול לכתוב קובץ"
-
-#: src/Project.cpp
-#, fuzzy, c-format
-msgid "Could not remove old autosave file: %s"
-msgstr ":לא יכול למחוק קובץ שמירה אוטומטית"
-
-#: src/Project.cpp
-#, c-format
-msgid "Actual Rate: %d"
-msgstr "%d :קצב בפועל"
-
-#. i18n-hint:  A name given to a track, appearing as its menu button.
-#. The translation should be short or else it will not display well.
-#. At most, about 11 Latin characters.
-#. Dropout is a loss of a short sequence of audio sample data from the
-#. recording
-#: src/Project.cpp
-msgid "Dropouts"
-msgstr ""
-
-#: src/Project.cpp
-msgid ""
-"Recorded audio was lost at the labeled locations. Possible causes:\n"
-"\n"
-"Other applications are competing with Audacity for processor time\n"
-"\n"
-"You are saving directly to a slow external storage device\n"
-msgstr ""
-
-#: src/Project.cpp
-msgid "Turn off dropout detection"
-msgstr ""
-
-#: src/Project.cpp
-msgid "Recorded Audio"
-msgstr "שמע מוקלט"
-
-#: src/Project.cpp src/toolbars/ControlToolBar.cpp
-msgid "Record"
-msgstr "הקלטה"
-
-#: src/Project.cpp
+#: src/ProjectManager.cpp
 msgid "Less than 1 minute"
 msgstr ""
 
-#: src/Project.cpp
+#: src/ProjectManager.cpp
 #, c-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Project.cpp
+#: src/ProjectManager.cpp
 #, c-format
 msgid "%d minute"
 msgid_plural "%d minutes"
@@ -4055,18 +4118,27 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
-#: src/Project.cpp
+#: src/ProjectManager.cpp
 #, c-format
 msgid "%s and %s."
 msgstr ""
 
-#: src/Project.cpp
-msgid "Frequency Analysis"
-msgstr "ניתוח תדר"
+#. i18n-hint: This is an experimental feature where the main panel in
+#. Audacity is put on a notebook tab, and this is the name on that tab.
+#. Other tabs in that notebook may have instruments, patch panels etc.
+#: src/ProjectWindow.cpp
+msgid "Main Mix"
+msgstr "מערבל ראשי"
 
-#: src/Project.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr ""
+#: src/ProjectWindow.cpp
+#, fuzzy
+msgid "Horizontal Scrollbar"
+msgstr "סטריאו אופקי"
+
+#: src/ProjectWindow.cpp
+#, fuzzy
+msgid "Vertical Scrollbar"
+msgstr "סטריאו אנכי"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -4327,7 +4399,7 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr ""
 
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
-#: src/widgets/ErrorDialog.cpp src/widgets/HelpSystem.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Help"
 msgstr "עזרה"
 
@@ -4924,37 +4996,17 @@ msgstr "סוף ההקלטה"
 msgid "Audacity Timer Record - Waiting"
 msgstr "Audacity הקלטה מתוזמנת ע\"י"
 
-#. i18n-hint Esc is a key on the keyboard
-#: src/TrackPanel.cpp
-msgid "(Esc to cancel)"
+#: src/TrackInfo.cpp
+msgid "Stereo, 999999Hz"
 msgstr ""
 
-#: src/TrackPanel.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+#: src/TrackInfo.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
 msgid "Select"
 msgstr "בחר"
 
+#. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
-#, fuzzy, c-format
-msgid "Stereo, %dHz"
-msgstr ",סטריאו"
-
-#: src/TrackPanel.cpp
-#, fuzzy, c-format
-msgid "Mono, %dHz"
-msgstr ",מונו"
-
-#: src/TrackPanel.cpp
-#, fuzzy, c-format
-msgid "Left, %dHz"
-msgstr ",שמאל"
-
-#: src/TrackPanel.cpp
-#, fuzzy, c-format
-msgid "Right, %dHz"
-msgstr ",ימינה"
-
-#: src/TrackPanel.cpp
-msgid "Stereo, 999999Hz"
+msgid "(Esc to cancel)"
 msgstr ""
 
 #: src/TrackPanelAx.cpp
@@ -5017,6 +5069,67 @@ msgstr ".בחר וגרור בכדי לכוון גודל יחסי של רצועו
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
 msgstr ".בחר וגרור בכדי לשנות את גודל הרצועה"
+
+#: src/TrackUtilities.cpp
+msgid "Removed audio track(s)"
+msgstr "הסר רצועות שמע "
+
+#: src/TrackUtilities.cpp
+msgid "Remove Track"
+msgstr "הסר רצועה"
+
+#: src/TrackUtilities.cpp
+#, c-format
+msgid "Removed track '%s.'"
+msgstr "'.%s' הסר רצועה"
+
+#: src/TrackUtilities.cpp
+msgid "Track Remove"
+msgstr "הסרת רצועה"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/TrackUtilities.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Top"
+msgstr "'%s' %s הוזז"
+
+#: src/TrackUtilities.cpp
+#, fuzzy
+msgid "Move Track to Top"
+msgstr "הזז רצועה למעלה"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/TrackUtilities.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "הזז רצועה למטה"
+
+#: src/TrackUtilities.cpp
+#, fuzzy
+msgid "Move Track to Bottom"
+msgstr "הזז רצועה למטה"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/TrackUtilities.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Up"
+msgstr "'%s' %s הוזז"
+
+#: src/TrackUtilities.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' Down"
+msgstr "'%s' %s הוזז"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/TrackUtilities.cpp
+#, fuzzy
+msgid "Move Track Up"
+msgstr "הזז רצועה למעלה"
+
+#: src/TrackUtilities.cpp
+#, fuzzy
+msgid "Move Track Down"
+msgstr "הזז רצועה למטה"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -5108,72 +5221,6 @@ msgstr ""
 #: src/widgets/KeyView.cpp
 msgid "Command"
 msgstr "פקודה"
-
-#: src/commands/CommandManager.cpp
-msgid ""
-"There was a problem with your last action. If you think\n"
-"this is a bug, please tell us exactly where it occurred."
-msgstr ""
-
-#: src/commands/CommandManager.cpp
-msgid "Disallowed"
-msgstr ""
-
-#: src/commands/CommandManager.cpp
-msgid ""
-"You can only do this when playing and recording are\n"
-"stopped. (Pausing is not sufficient.)"
-msgstr ""
-
-#: src/commands/CommandManager.cpp
-#, fuzzy
-msgid ""
-"You must first select some stereo audio to perform this\n"
-"action. (You cannot use this with mono.)"
-msgstr ".ראשית צריך לבחור רצועת שמע לשימוש "
-
-#: src/commands/CommandManager.cpp
-#, fuzzy
-msgid "No Audio Selected"
-msgstr "לא נבחר שרשור פקודות"
-
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-#: src/commands/CommandManager.cpp
-#, fuzzy, c-format
-msgid ""
-"You must first select some audio for '%s' to act on.\n"
-"\n"
-"Ctrl + A selects all audio."
-msgstr ".ראשית צריך לבחור רצועת שמע לשימוש "
-
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-#: src/commands/CommandManager.cpp
-#, c-format
-msgid ""
-"Select the audio for %s to use (for example, Cmd + A to Select All) then try "
-"again."
-msgstr ""
-
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-#: src/commands/CommandManager.cpp
-#, c-format
-msgid ""
-"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
-"try again."
-msgstr ""
-
-#: src/commands/CommandManager.cpp
-#, fuzzy
-msgid ""
-"You must first select some audio to perform this action.\n"
-"(Selecting other kinds of track won't work.)"
-msgstr ".ראשית צריך לבחור רצועת שמע לשימוש "
-
-#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
-#: src/commands/CommandManager.cpp
-#, c-format
-msgid "\"%s\" requires one or more tracks to be selected."
-msgstr ""
 
 #: src/commands/CommandManager.cpp
 #, c-format
@@ -5459,6 +5506,14 @@ msgstr "&שמור פרויקט"
 msgid "Saves a project."
 msgstr "&שמור פרויקט"
 
+#: src/commands/PreferenceCommands.cpp src/commands/SetProjectCommand.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
+#: src/tracks/ui/CommonTrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "שם"
+
 #: src/commands/PreferenceCommands.cpp src/commands/SetEnvelopeCommand.cpp
 #, fuzzy
 msgid "Value:"
@@ -5572,12 +5627,6 @@ msgstr ""
 #: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
 msgid "White"
 msgstr "לבן"
-
-#: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
-#: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
-#: plug-ins/equalabel.ny plug-ins/sample-data-export.ny
-msgid "None"
-msgstr "כלום"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Path:"
@@ -6743,7 +6792,7 @@ msgstr ""
 msgid "Fuzz Box"
 msgstr ""
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/Equalization.cpp
 msgid "Walkie-talkie"
 msgstr ""
 
@@ -7015,15 +7064,6 @@ msgstr "מכין תצוגה מקדימה"
 msgid "Previewing"
 msgstr "תצוגה מקדימה"
 
-#: src/effects/Effect.cpp src/toolbars/ControlToolBar.cpp
-#, fuzzy
-msgid ""
-"Error opening sound device.\n"
-"Try changing the audio host, playback device and the project sample rate."
-msgstr ""
-"Error while opening sound device. Please check the output device settings "
-"and the project sample rate."
-
 #: src/effects/Effect.cpp
 #, fuzzy
 msgid "Some Command"
@@ -7205,6 +7245,21 @@ msgstr "ערכי האפקטים"
 msgid "Factory Defaults"
 msgstr "&ערכי ברירת המחדל"
 
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/effects/Effect.h
+msgid "Nyquist"
+msgstr "Nyquist"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/effects/EffectManager.cpp src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "%s חזור שוב"
+
 #: src/effects/EffectManager.cpp
 #, c-format
 msgid "Applied effect: %s"
@@ -7222,7 +7277,7 @@ msgid ""
 "\n"
 "%s\n"
 "\n"
-"More information may be available in Help->Show Log"
+"More information may be available in 'Help > Diagnostics > Show Log'"
 msgstr ""
 
 #: src/effects/EffectManager.cpp
@@ -7237,7 +7292,7 @@ msgid ""
 "\n"
 "%s\n"
 "\n"
-"More information may be available in Help->Show Log"
+"More information may be available in 'Help > Diagnostics > Show Log'"
 msgstr ""
 
 #: src/effects/EffectManager.cpp
@@ -7339,14 +7394,53 @@ msgid "Adjusts the volume levels of particular frequencies"
 msgstr ""
 
 #: src/effects/Equalization.cpp
+msgid "100Hz Rumble"
+msgstr ""
+
+#: src/effects/Equalization.cpp
+msgid "AM Radio"
+msgstr ""
+
+#: src/effects/Equalization.cpp
+msgid "Bass Boost"
+msgstr "הגברת הבס"
+
+#: src/effects/Equalization.cpp
+#, fuzzy
+msgid "Bass Cut"
+msgstr "הגברת הבס"
+
+#: src/effects/Equalization.cpp
+msgid "Low rolloff for speech"
+msgstr ""
+
+#: src/effects/Equalization.cpp
+msgid "RIAA"
+msgstr ""
+
+#: src/effects/Equalization.cpp
+msgid "Telephone"
+msgstr ""
+
+#: src/effects/Equalization.cpp
+#, fuzzy
+msgid "Treble Boost"
+msgstr "(dB) טרבל"
+
+#: src/effects/Equalization.cpp
+#, fuzzy
+msgid "Treble Cut"
+msgstr "(dB) טרבל"
+
+#: src/effects/Equalization.cpp
 msgid ""
-"To use this EQ curve in a macro, please choose a new name for it.\n"
+"To use this filter curve in a macro, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
 "then use that one."
 msgstr ""
 
 #: src/effects/Equalization.cpp
-msgid "EQ Curve needs a different name"
+msgid "Filter Curve needs a different name"
 msgstr ""
 
 #: src/effects/Equalization.cpp
@@ -7557,6 +7651,10 @@ msgstr ""
 #: src/effects/Equalization.cpp
 msgid "&Get More..."
 msgstr ""
+
+#: src/effects/Equalization.cpp
+msgid "De&faults"
+msgstr "ער&כי ברירת מחדל"
 
 #: src/effects/Equalization.cpp
 msgid ""
@@ -9451,14 +9549,6 @@ msgstr "שמור קובץ"
 msgid "untitled"
 msgstr ""
 
-#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
-#. In the translations of this and other strings, you may transliterate the
-#. name into another alphabet.
-#: src/effects/nyquist/Nyquist.h
-msgid "Nyquist"
-msgstr "Nyquist"
-
 #: src/effects/vamp/LoadVamp.cpp
 #, fuzzy
 msgid "Vamp Effects"
@@ -9813,8 +9903,9 @@ msgstr ""
 msgid "Bit Rate:"
 msgstr ":קצב הביטים"
 
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportOGG.cpp
-msgid "Quality:"
+#: src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
+msgid "Quality (kbps):"
 msgstr ":איכות"
 
 #: src/export/ExportFFmpegDialogs.cpp
@@ -9993,6 +10084,10 @@ msgid ""
 "0 - automatic\n"
 "Recommended - 192000"
 msgstr ""
+
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportOGG.cpp
+msgid "Quality:"
+msgstr ":איכות"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -10188,7 +10283,7 @@ msgid "Delete preset '%s'?"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
-msgid "You can't save a preset without name"
+msgid "You can't save a preset without a name"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
@@ -10201,7 +10296,21 @@ msgid "XML files (*.xml)|*.xml|All files|*"
 msgstr "XML קבצי (*.xml)|*.xml|כל הקבצים (*.*)|*.*"
 
 #: src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
+msgid "No presets to export"
+msgstr ".אין תוויות לייצא"
+
+#: src/export/ExportFFmpegDialogs.cpp
 msgid "Select xml file to export presets into"
+msgstr ""
+
+#: src/export/ExportFFmpegDialogs.cpp
+#, c-format
+msgid "Format %s is not compatible with codec %s."
+msgstr ""
+
+#: src/export/ExportFFmpegDialogs.cpp
+msgid "Incompatible format and codec"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
@@ -10698,6 +10807,31 @@ msgid "Ogg Vorbis Files"
 msgstr "Ogg Vorbis קבצי "
 
 #: src/export/ExportOGG.cpp
+msgid "Unable to export - rate or quality problem"
+msgstr ""
+
+#: src/export/ExportOGG.cpp
+msgid "Unable to export - problem with metadata"
+msgstr ""
+
+#: src/export/ExportOGG.cpp
+msgid "Unable to export - problem initialising"
+msgstr ""
+
+#: src/export/ExportOGG.cpp
+msgid "Unable to export - problem creating stream"
+msgstr ""
+
+#: src/export/ExportOGG.cpp
+msgid "Unable to export - problem with packets"
+msgstr ""
+
+#: src/export/ExportOGG.cpp
+#, fuzzy
+msgid "Unable to export - problem with file"
+msgstr ".לא ניתן לפתוח או ליצור קובץ נסיון"
+
+#: src/export/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "מייצא את חלק השמע הנבחר בתור Ogg Vorbis"
 
@@ -10735,20 +10869,29 @@ msgid "Other uncompressed files"
 msgstr ""
 
 #: src/export/ExportPCM.cpp
+msgid ""
+"You have attempted to Export a WAV or AIFF file which would be greater than "
+"4GB.\n"
+"Audacity cannot do this, the Export was abandoned."
+msgstr ""
+
+#: src/export/ExportPCM.cpp
 #, fuzzy
 msgid "Error Exporting"
 msgstr "שגיאה ביבוא"
 
 #: src/export/ExportPCM.cpp
 msgid ""
-"You have attempted to Export a WAV file which would be greater than 4GB.\n"
-"Audacity cannot do this, the Export was abandoned."
+"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"files bigger than 4GB."
 msgstr ""
 
 #: src/export/ExportPCM.cpp
-msgid ""
-"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
-"files bigger than 4GB."
+msgid "GSM 6.10 requires mono"
+msgstr ""
+
+#: src/export/ExportPCM.cpp
+msgid "WAVEX and GSM 6.10 formats are not compatible"
 msgstr ""
 
 #: src/export/ExportPCM.cpp
@@ -10917,6 +11060,11 @@ msgid ""
 msgstr ""
 
 #: src/import/Import.cpp
+#, fuzzy, c-format
+msgid "File \"%s\" not found."
+msgstr "לא נמצא עיקום"
+
+#: src/import/Import.cpp
 #, c-format
 msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
@@ -11017,6 +11165,15 @@ msgstr ".באופן עצמאי, אלא רק קבצי שמע MIDI לא ניתן �
 #: src/import/ImportLOF.cpp
 msgid "Invalid track offset in LOF file."
 msgstr ".LOF הזז רצועה לא חוקית בקובץ"
+
+#: src/import/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr " '%s' מ MIDI  יבא"
+
+#: src/import/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "MIDI ייבא "
 
 #: src/import/ImportMIDI.cpp
 #, fuzzy, c-format
@@ -11497,9 +11654,24 @@ msgstr "ערוך תגי מטא-מידע"
 msgid "&Edit"
 msgstr "&עריכה"
 
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
+msgid "Cu&t"
+msgstr "גז&ור"
+
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
 msgid "&Delete"
 msgstr "&מחק"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
+msgid "&Copy"
+msgstr "&העתק"
+
+#. i18n-hint: (verb)
+#: src/menus/EditMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
+msgid "&Paste"
+msgstr "&הדבק"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -11636,15 +11808,6 @@ msgstr "שנה גובה צליל"
 #, fuzzy
 msgid "&Full Screen (on/off)"
 msgstr "הקלט על (מופעל/מושבת)"
-
-#: src/menus/FileMenus.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr " '%s' מ MIDI  יבא"
-
-#: src/menus/FileMenus.cpp
-msgid "Import MIDI"
-msgstr "MIDI ייבא "
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
@@ -11835,6 +11998,49 @@ msgid "Unable to save %s"
 msgstr ".'%s' לא ניתן למחוק את"
 
 #: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Do you have these problems?"
+msgstr "?האם אתה רוצה לשמור שינויים"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Fix"
+msgstr "עירבול"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Quick Fixes"
+msgstr "QuickTime קבצי "
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Nothing to do"
+msgstr "שום דבר לביטול ביצוע"
+
+#: src/menus/HelpMenus.cpp
+msgid "No quick, easily fixed problems were found"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Clocks on the Tracks"
+msgstr "סגור רצועה ממוקדת"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Can't select precisely"
+msgstr "לא יכול לפתוח קובץ פרויקט"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Recording stops and starts"
+msgstr "תחילת ההקלטה"
+
+#: src/menus/HelpMenus.cpp
+msgid "Fixed"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr ""
 
@@ -11897,6 +12103,10 @@ msgstr "...בדו&ק קישוריות"
 #, fuzzy
 msgid "&Check for Updates..."
 msgstr "...בדו&ק קישוריות"
+
+#: src/menus/LabelMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
+msgid "Added label"
+msgstr "תווית הוספה"
 
 #: src/menus/LabelMenus.cpp
 msgid "Paste Text to New Label"
@@ -12181,19 +12391,20 @@ msgid "Toggle Focuse&d Track"
 msgstr "שנה רצועה ממוקדת"
 
 #: src/menus/PluginMenus.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
+msgstr ""
+
+#: src/menus/PluginMenus.cpp
+msgid "Frequency Analysis"
+msgstr "ניתוח תדר"
+
+#: src/menus/PluginMenus.cpp
 msgid "Uncategorized"
 msgstr ""
 
 #: src/menus/PluginMenus.cpp
 msgid "Unknown"
 msgstr ""
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "%s חזור שוב"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy, c-format
@@ -12852,7 +13063,6 @@ msgstr "רצועות לערוץ סטריאו יחיד %d ערבב והפוך"
 msgid "Mixed and rendered %d tracks into one new mono track"
 msgstr "רצועות לערוץ מונו יחיד %d ערבב והפוך"
 
-#. i18n-hint: One or more audio tracks have been panned
 #: src/menus/TrackMenus.cpp
 #, fuzzy
 msgid "Panned audio track(s)"
@@ -13018,67 +13228,6 @@ msgstr "Adjusted gain"
 #: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
 msgstr "Adjusted Pan"
-
-#: src/menus/TrackMenus.cpp
-msgid "Removed audio track(s)"
-msgstr "הסר רצועות שמע "
-
-#: src/menus/TrackMenus.cpp
-msgid "Remove Track"
-msgstr "הסר רצועה"
-
-#: src/menus/TrackMenus.cpp
-#, c-format
-msgid "Removed track '%s.'"
-msgstr "'.%s' הסר רצועה"
-
-#: src/menus/TrackMenus.cpp
-msgid "Track Remove"
-msgstr "הסרת רצועה"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/menus/TrackMenus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Top"
-msgstr "'%s' %s הוזז"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "Move Track to Top"
-msgstr "הזז רצועה למעלה"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/menus/TrackMenus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' to Bottom"
-msgstr "הזז רצועה למטה"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "Move Track to Bottom"
-msgstr "הזז רצועה למטה"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/menus/TrackMenus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Up"
-msgstr "'%s' %s הוזז"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy, c-format
-msgid "Moved '%s' Down"
-msgstr "'%s' %s הוזז"
-
-#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "Move Track Up"
-msgstr "הזז רצועה למעלה"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "Move Track Down"
-msgstr "הזז רצועה למטה"
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new audio track"
@@ -13404,12 +13553,6 @@ msgstr "העבר תצוגה לשמאל ברצועה הפעילה"
 #, fuzzy
 msgid "no labels in label track"
 msgstr "תוית רצועה חדשה נוצרה"
-
-#: src/menus/TransportMenus.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
 
 #: src/menus/TransportMenus.cpp
 msgid ""
@@ -14286,6 +14429,15 @@ msgstr ""
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
+#: src/prefs/GUIPrefs.cpp
+#, c-format
+msgid "Language \"%s\" is unknown"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
+msgid "Master Gain Control"
+msgstr "בקרת שער ראשי"
+
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr ""
@@ -14311,10 +14463,6 @@ msgid "&Read uncompressed files from original location (faster)"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "&Normalize all tracks in project"
-msgstr ""
-
-#: src/prefs/ImportExportPrefs.cpp
 msgid "When exporting tracks to an audio file"
 msgstr ""
 
@@ -14324,13 +14472,19 @@ msgid "&Mix down to Stereo or Mono"
 msgstr " מיישם &סטריאו למונו"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "&Use custom mix"
-msgstr ""
+#, fuzzy
+msgid "&Use Advanced Mixing Options"
+msgstr "תכונות ערבול מתקדמות"
 
 #: src/prefs/ImportExportPrefs.cpp
 #, fuzzy
 msgid "S&how Metadata Tags editor before export"
 msgstr "ה&צג עורך מטא-מידע לפני פעולת ייצוא"
+
+#. i18n-hint 'blank space' is space on the tracks with no audio in it
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Ignore blank space at the beginning"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -14960,18 +15114,6 @@ msgid "24-bit"
 msgstr "24-bit PCM"
 
 #: src/prefs/QualityPrefs.cpp
-msgid "Rectangle"
-msgstr "מרובע"
-
-#: src/prefs/QualityPrefs.cpp plug-ins/tremolo.ny
-msgid "Triangle"
-msgstr "בצורת משולש"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "Shaped"
-msgstr "מעוצב"
-
-#: src/prefs/QualityPrefs.cpp
 #, fuzzy
 msgid "Preferences for Quality"
 msgstr ":העדפות"
@@ -15442,7 +15584,7 @@ msgstr "שמור קובץ"
 msgid "Load Files"
 msgstr "טען קבצים"
 
-#. i18n-hint: two nouns
+#. i18n-hint: i.e. the behaviors of tracks
 #: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 #, fuzzy
 msgid "Tracks Behaviors"
@@ -15711,8 +15853,6 @@ msgstr ":העדפות"
 msgid "Waveform dB &range"
 msgstr "(dB) צורת הגל"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp
 #, fuzzy
 msgid "Playing"
@@ -15723,7 +15863,7 @@ msgstr "נגן "
 msgid "Stopped"
 msgstr "עצור"
 
-#: src/toolbars/ControlToolBar.cpp
+#: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, fuzzy
 msgid "Paused"
 msgstr "הפסקה"
@@ -16140,6 +16280,16 @@ msgstr "גרור תוית גבולות אחת או יותר"
 msgid "Drag label boundary."
 msgstr "גרור תוית גבולות"
 
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
+msgid "Modified Label"
+msgstr "תווית ששונתה"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
+msgid "Label Edit"
+msgstr "ערוך תווית"
+
 #: src/tracks/labeltrack/ui/LabelTextHandle.cpp
 #, fuzzy
 msgid "Click to edit label text"
@@ -16165,6 +16315,25 @@ msgstr "ש&נה שם"
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
 msgid "Face size"
 msgstr ""
+
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
+#, fuzzy
+msgid "&Delete Label"
+msgstr "מחק תווית"
+
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
+#, fuzzy
+msgid "Deleted Label"
+msgstr "מחק תווית"
+
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
+msgid "Edited labels"
+msgstr "ערוך תווית"
+
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
+#, fuzzy
+msgid "New label"
+msgstr "תווית הוספה"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
@@ -16193,19 +16362,21 @@ msgid "Right-click for menu."
 msgstr "קליק-ימני"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
 msgid "Zoom Reset\tShift-Right-Click"
 msgstr "Shift-קליק שמאלי"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
 msgid "Zoom In\tLeft-Click/Left-Drag"
 msgstr "Shift-קליק שמאלי"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
 msgid "Zoom Out\tShift-Left-Click"
 msgstr "Shift-קליק שמאלי"
@@ -16266,11 +16437,6 @@ msgid "Click and drag to edit the samples"
 msgstr "בחר וגרור בכדי לערוך את הדגימות"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
-msgid ""
-"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
-msgstr ""
-
-#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
 msgstr ""
 
@@ -16283,13 +16449,21 @@ msgstr "דגימה שהועברה"
 msgid "Sample Edit"
 msgstr "עריכת דגימה"
 
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#, fuzzy
+msgid "Zoom Reset"
+msgstr "זום החוצה"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#, fuzzy
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "Shift-קליק שמאלי"
+
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Instrument %i"
 msgstr ""
 
-#. i18n-hint: The strings name a track and a format
-#. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s"
@@ -16357,7 +16531,6 @@ msgstr ""
 msgid "&Other..."
 msgstr "...אחר"
 
-#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s Hz"
@@ -16452,7 +16625,6 @@ msgstr "ערוץ ימני"
 msgid "Channel"
 msgstr "ערוץ"
 
-#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Made '%s' a stereo track"
@@ -16462,7 +16634,6 @@ msgstr "Made '%s' a stereo track"
 msgid "Make Stereo"
 msgstr "ייצר סטריאו"
 
-#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, fuzzy, c-format
 msgid "Swapped Channels in '%s'"
@@ -16473,13 +16644,11 @@ msgstr "%d ערוצים"
 msgid "Swap Channels"
 msgstr "%d ערוצים"
 
-#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "פצל ערוצי סטריאו '%s'"
 
-#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, fuzzy, c-format
 msgid "Split Stereo to Mono '%s'"
@@ -16490,29 +16659,39 @@ msgstr " מיישם &סטריאו למונו"
 msgid "Split to Mono"
 msgstr " מיישם &סטריאו למונו"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#, fuzzy, c-format
+msgid "Stereo, %dHz"
+msgstr ",סטריאו"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#, fuzzy, c-format
+msgid "Mono, %dHz"
+msgstr ",מונו"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#, fuzzy, c-format
+msgid "Left, %dHz"
+msgstr ",שמאל"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#, fuzzy, c-format
+msgid "Right, %dHz"
+msgstr ",ימינה"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
 msgid "Zoom x1/2"
 msgstr "זום פנימה"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
 msgid "Zoom x2"
 msgstr "(הגדל (זום"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Half Wave"
 msgstr ""
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-#, fuzzy
-msgid "Zoom Reset"
-msgstr "זום החוצה"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-#, fuzzy
-msgid "Zoom to Fit\tShift-Right-Click"
-msgstr "Shift-קליק שמאלי"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change lower speed limit (%) to:"
@@ -16584,6 +16763,45 @@ msgstr "...קבע תחום"
 #, fuzzy
 msgid "Logarithmic &Interpolation"
 msgstr "מהירה Sinc אינטרפולציית"
+
+#: src/tracks/ui/CommonTrackControls.cpp
+#, fuzzy
+msgid "&Name..."
+msgstr "...שם"
+
+#: src/tracks/ui/CommonTrackControls.cpp
+#, fuzzy
+msgid "Move Track &Up"
+msgstr "הזז רצועה למעלה"
+
+#: src/tracks/ui/CommonTrackControls.cpp
+#, fuzzy
+msgid "Move Track &Down"
+msgstr "הזז רצועה למטה"
+
+#: src/tracks/ui/CommonTrackControls.cpp
+#, fuzzy
+msgid "Move Track to &Top"
+msgstr "הזז רצועה למעלה"
+
+#: src/tracks/ui/CommonTrackControls.cpp
+#, fuzzy
+msgid "Move Track to &Bottom"
+msgstr "הזז רצועה למטה"
+
+#: src/tracks/ui/CommonTrackControls.cpp
+#, fuzzy
+msgid "Set Track Name"
+msgstr "רצועה מספר"
+
+#: src/tracks/ui/CommonTrackControls.cpp
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "'%s' במקום '%s'  משנה לשם"
+
+#: src/tracks/ui/CommonTrackControls.cpp
+msgid "Name Change"
+msgstr "שונו השמות"
 
 #: src/tracks/ui/EnvelopeHandle.cpp
 #, fuzzy
@@ -16739,45 +16957,6 @@ msgstr ""
 msgid "Open menu..."
 msgstr "...פתח &אחרונים"
 
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "&Name..."
-msgstr "...שם"
-
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Move Track &Up"
-msgstr "הזז רצועה למעלה"
-
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Move Track &Down"
-msgstr "הזז רצועה למטה"
-
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Move Track to &Top"
-msgstr "הזז רצועה למעלה"
-
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Move Track to &Bottom"
-msgstr "הזז רצועה למטה"
-
-#: src/tracks/ui/TrackControls.cpp
-#, fuzzy
-msgid "Set Track Name"
-msgstr "רצועה מספר"
-
-#: src/tracks/ui/TrackControls.cpp
-#, c-format
-msgid "Renamed '%s' to '%s'"
-msgstr "'%s' במקום '%s'  משנה לשם"
-
-#: src/tracks/ui/TrackControls.cpp
-msgid "Name Change"
-msgstr "שונו השמות"
-
 #. i18n-hint: Command names a modifier key on Macintosh keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, fuzzy
@@ -16898,49 +17077,6 @@ msgstr ""
 #: src/widgets/HelpSystem.cpp
 msgid "Help on the Internet"
 msgstr "עזרה באינטרנט"
-
-#: src/widgets/HelpSystem.cpp
-#, fuzzy
-msgid "Do you have these problems?"
-msgstr "?האם אתה רוצה לשמור שינויים"
-
-#: src/widgets/HelpSystem.cpp
-#, fuzzy
-msgid "Fix"
-msgstr "עירבול"
-
-#: src/widgets/HelpSystem.cpp
-#, fuzzy
-msgid "Quick Fixes"
-msgstr "QuickTime קבצי "
-
-#: src/widgets/HelpSystem.cpp
-#, fuzzy
-msgid "Nothing to do"
-msgstr "שום דבר לביטול ביצוע"
-
-#: src/widgets/HelpSystem.cpp
-msgid "No quick, easily fixed problems were found"
-msgstr ""
-
-#: src/widgets/HelpSystem.cpp
-#, fuzzy
-msgid "Clocks on the Tracks"
-msgstr "סגור רצועה ממוקדת"
-
-#: src/widgets/HelpSystem.cpp
-#, fuzzy
-msgid "Can't select precisely"
-msgstr "לא יכול לפתוח קובץ פרויקט"
-
-#: src/widgets/HelpSystem.cpp
-#, fuzzy
-msgid "Recording stops and starts"
-msgstr "תחילת ההקלטה"
-
-#: src/widgets/HelpSystem.cpp
-msgid "Fixed"
-msgstr ""
 
 #: src/widgets/KeyView.cpp
 msgid "Menu"
@@ -17530,8 +17666,7 @@ msgstr ""
 #: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
 #: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/tremolo.ny plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
-#: plug-ins/vocoder.ny
+#: plug-ins/tremolo.ny plug-ins/vocalrediso.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 
@@ -17699,7 +17834,7 @@ msgstr "...מיישם"
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
 #: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalremover.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny
 #, fuzzy
 msgid "Steve Daulton"
 msgstr "Steve Daulton ע\"י"
@@ -18963,7 +19098,12 @@ msgstr "...מיישם"
 msgid "Robert Haenggi"
 msgstr ""
 
-#: plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Remove Vocals: to mono"
+msgstr "הס&ר רצועה"
+
+#: plug-ins/vocalrediso.ny
 #, fuzzy
 msgid "Remove Vocals"
 msgstr "הס&ר רצועה"
@@ -18977,6 +19117,11 @@ msgstr "הס&ר רצועה"
 #, fuzzy
 msgid "Isolate Vocals and Invert"
 msgstr "מרכז"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Remove Center: to mono"
+msgstr "הסר שורה שנגזרה"
 
 #: plug-ins/vocalrediso.ny
 #, fuzzy
@@ -19088,109 +19233,6 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr ""
 
-#: plug-ins/vocalremover.ny
-#, fuzzy
-msgid "Vocal Remover"
-msgstr "הסרת רצועה"
-
-#: plug-ins/vocalremover.ny
-#, fuzzy
-msgid "Removing center-panned audio..."
-msgstr "...מסיר קליקים ופופים"
-
-#: plug-ins/vocalremover.ny
-#, fuzzy
-msgid "Remove vocals or view Help"
-msgstr "הס&ר רצועה"
-
-#: plug-ins/vocalremover.ny
-#, fuzzy
-msgid "View Help"
-msgstr "עזרה"
-
-#: plug-ins/vocalremover.ny
-#, fuzzy
-msgid "Removal choice"
-msgstr "מסיר רעש"
-
-#: plug-ins/vocalremover.ny
-msgid "Simple (Entire Spectrum)"
-msgstr ""
-
-#: plug-ins/vocalremover.ny
-#, fuzzy
-msgid "Remove Frequency Band"
-msgstr "תדירות לינארית"
-
-#: plug-ins/vocalremover.ny
-#, fuzzy
-msgid "Retain Frequency Band"
-msgstr "תדירות לינארית"
-
-#: plug-ins/vocalremover.ny
-#, fuzzy
-msgid "Frequency band from (Hz)"
-msgstr "(Hz) תדר"
-
-#: plug-ins/vocalremover.ny
-#, fuzzy
-msgid "Frequency band to (Hz)"
-msgstr "(Hz) תדר"
-
-#: plug-ins/vocalremover.ny
-#, lisp-format
-msgid ""
-"Vocal Remover requires a stereo track. It works best with\n"
-"lossless files like WAV or AIFF, rather than MP3 or\n"
-"other compressed formats. It only removes vocals or other\n"
-"audio that is panned to center (sounds equally loud in left\n"
-"and right). Vocals may be mixed this way. Inverting one\n"
-"channel then panning both to center cancels out any audio\n"
-"which was originally center-panned, making it inaudible.\n"
-"This can remove some parts of the audio you may want to\n"
-"keep, such as drums, which are also often mixed to center.\n"
-"If the vocals and other centered parts differ in pitch,\n"
-"this can be solved by removing only selected frequencies.~%\n"
-"Vocal Remover thus has three choices of removal method.\n"
-"'Simple' inverts the entire frequency spectrum of one\n"
-"channel. This may remove too much music if other parts of\n"
-"the audio are centered as well as the vocals. In that case,\n"
-"try the other choices. If the vocals are at a different\n"
-"pitch than the other audio (such as a high female voice),\n"
-"try 'Remove frequency band'. This only removes frequencies\n"
-"between a lower and upper limit which you can enter in the\n"
-"'Frequency band...' boxes. Experiment by entering what\n"
-"sounds like the most significant frequency range of the\n"
-"original vocals. If the other choices remove too much\n"
-"audio in a particular frequency range (such as low drums\n"
-"or bass), try 'Retain frequency band'. This only removes\n"
-"frequencies outside the limits, retaining the others."
-msgstr ""
-
-#: plug-ins/vocalremover.ny
-#, lisp-format
-msgid ""
-"~%Vocal Remover requires an unsplit, stereo track.~%~\n"
-"If you have a stereo track split into left and right~%~\n"
-"channels, use 'Make Stereo Track' on the Track~%~\n"
-"Drop-Down Menu, then run Vocal Remover again.~%"
-msgstr ""
-
-#: plug-ins/vocalremover.ny
-#, lisp-format
-msgid ""
-"Warning:~%~\n"
-"              Selected band-stop filter is~%~\n"
-"              ~a Hz to ~a Hz.~%~\n"
-"              A very narrow stop-band filter may have~%~\n"
-"              unexpected results.~%~%"
-msgstr ""
-
-#: plug-ins/vocalremover.ny
-#, fuzzy
-msgid "Current settings returned the original audio."
-msgstr "לא החזיר שמע Nyquist\n"
-
 #: plug-ins/vocoder.ny
 msgid "Vocoder"
 msgstr ""
@@ -19252,6 +19294,58 @@ msgstr "(Hz) תדר"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Decoding failed\n"
+#~ msgstr "סוף ההקלטה"
+
+#, fuzzy
+#~ msgid "Could not decode file: %s"
+#~ msgstr ":לא יכול לפתוח קובץ"
+
+#, fuzzy
+#~ msgid "Could not create safety file: %s"
+#~ msgstr ":שמירה אוטומטית לא יכול לכתוב קובץ"
+
+#, fuzzy
+#~ msgid "Vocal Remover"
+#~ msgstr "הסרת רצועה"
+
+#, fuzzy
+#~ msgid "Removing center-panned audio..."
+#~ msgstr "...מסיר קליקים ופופים"
+
+#, fuzzy
+#~ msgid "Remove vocals or view Help"
+#~ msgstr "הס&ר רצועה"
+
+#, fuzzy
+#~ msgid "View Help"
+#~ msgstr "עזרה"
+
+#, fuzzy
+#~ msgid "Removal choice"
+#~ msgstr "מסיר רעש"
+
+#, fuzzy
+#~ msgid "Remove Frequency Band"
+#~ msgstr "תדירות לינארית"
+
+#, fuzzy
+#~ msgid "Retain Frequency Band"
+#~ msgstr "תדירות לינארית"
+
+#, fuzzy
+#~ msgid "Frequency band from (Hz)"
+#~ msgstr "(Hz) תדר"
+
+#, fuzzy
+#~ msgid "Frequency band to (Hz)"
+#~ msgstr "(Hz) תדר"
+
+#, fuzzy
+#~ msgid "Current settings returned the original audio."
+#~ msgstr "לא החזיר שמע Nyquist\n"
 
 #~ msgid "false"
 #~ msgstr "שקר"
@@ -20554,9 +20648,6 @@ msgstr ""
 
 #~ msgid "Silence Labels"
 #~ msgstr "תוויות שקט"
-
-#~ msgid "Bass Boost"
-#~ msgstr "הגברת הבס"
 
 #~ msgid "BassBoost..."
 #~ msgstr "הגברת הבס..."

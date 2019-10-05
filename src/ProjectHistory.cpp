@@ -10,7 +10,6 @@ Paul Licameli split from ProjectManager.cpp
 
 #include "ProjectHistory.h"
 
-#include "DirManager.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "Tags.h"

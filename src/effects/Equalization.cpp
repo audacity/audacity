@@ -179,7 +179,7 @@ static const double kThirdOct[] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name          Type        Key                     Def      Min      Max      Scale
-Param( FilterLength, int,     wxT("FilterLength"),        4001,    21,      8191,    0      );
+Param( FilterLength, int,     wxT("FilterLength"),        8191,    21,      8191,    0      );
 Param( CurveName,    wxChar*, wxT("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
 Param( InterpLin,    bool,    wxT("InterpolateLin"),      false,   false,   true,    false  );
 Param( InterpMeth,   int,     wxT("InterpolationMethod"), 0,       0,       0,       0      );
@@ -234,6 +234,7 @@ EffectEqualization::EffectEqualization(int Options)
    mDraw = NULL;
    mCurve = NULL;
    mPanel = NULL;
+   mMSlider = NULL;
 
    hFFT = GetFFT(windowSize);
 
@@ -303,9 +304,9 @@ EffectEqualization::~EffectEqualization()
 ComponentInterfaceSymbol EffectEqualization::GetSymbol()
 {
    if( mOptions == kEqOptionGraphic )
-      return GRAPHICEQ_PLUGIN_SYMBOL;
+      return GRAPHIC_EQ_PLUGIN_SYMBOL;
    if( mOptions == kEqOptionCurve )
-      return FILTERCURVE_PLUGIN_SYMBOL;
+      return FILTER_CURVE_PLUGIN_SYMBOL;
    return EQUALIZATION_PLUGIN_SYMBOL;
 }
 
@@ -316,6 +317,11 @@ wxString EffectEqualization::GetDescription()
 
 wxString EffectEqualization::ManualPage()
 {
+
+   if( mOptions == kEqOptionGraphic )
+      return wxT("Graphic EQ");
+   if( mOptions == kEqOptionCurve )
+      return wxT("Filter Curve");
    return wxT("Equalization");
 }
 
@@ -329,9 +335,42 @@ EffectType EffectEqualization::GetType()
 // EffectClientInterface implementation
 bool EffectEqualization::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mM, FilterLength );
-   S.SHUTTLE_PARAM( mCurveName, CurveName);
+   //S.SHUTTLE_PARAM( mCurveName, CurveName);
    S.SHUTTLE_PARAM( mLin, InterpLin);
    S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, kInterpStrings, nInterpolations );
+
+   // if saving the preferences...
+   if( dynamic_cast<ShuttleGetAutomation*>(&S))
+   {
+      int numPoints = mCurves[ 0 ].points.size();
+      int point;
+      for( point = 0; point < numPoints; point++ )
+      {
+         const wxString nameFreq = wxString::Format("f%i",point);
+         const wxString nameVal = wxString::Format("v%i",point);
+         S.Define( mCurves[ 0 ].points[ point ].Freq,  nameFreq, 0.0,  0.0, 0.0, 0.0 );
+         S.Define( mCurves[ 0 ].points[ point ].dB,    nameVal,  0.0, 0.0, 0.0, 0.0 );
+      }
+
+   }
+   else
+   {
+      mCurves[0].points.clear();
+   
+      for (int i = 0; i < 200; i++)
+      {
+         const wxString nameFreq = wxString::Format("f%i",i);
+         const wxString nameVal = wxString::Format("v%i",i);
+         double f = -1000.0;
+         double d = 0.0;
+         S.Define( f,  nameFreq, 0.0,  -10000.0, 1000000.0, 0.0 );
+         S.Define( d, nameVal,  0.0, -10000.0, 10000.0, 0.0 );
+         if( f <= 0.0 )
+            break;
+         mCurves[0].points.push_back( EQPoint( f,d ));
+      }
+      setCurve( 0 );
+   }
 
    return true;
 }
@@ -339,7 +378,7 @@ bool EffectEqualization::DefineParams( ShuttleParams & S ){
 bool EffectEqualization::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_FilterLength, (unsigned long)mM);
-   parms.Write(KEY_CurveName, mCurveName);
+   //parms.Write(KEY_CurveName, mCurveName);
    parms.Write(KEY_InterpLin, mLin);
    parms.WriteEnum(KEY_InterpMeth, mInterp, kInterpStrings, nInterpolations);
 
@@ -352,12 +391,12 @@ bool EffectEqualization::SetAutomationParameters(CommandParameters & parms)
    // specified in chains, but must keep it that way for compatibility.
 
    ReadAndVerifyInt(FilterLength);
-   ReadAndVerifyString(CurveName);
+   //ReadAndVerifyString(CurveName);
    ReadAndVerifyBool(InterpLin);
    ReadAndVerifyEnum(InterpMeth, kInterpStrings, nInterpolations);
 
    mM = FilterLength;
-   mCurveName = CurveName;
+   //mCurveName = CurveName;
    mLin = InterpLin;
    mInterp = InterpMeth;
 
@@ -371,6 +410,7 @@ bool EffectEqualization::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
+// This function Apparently not used anymore.
 bool EffectEqualization::LoadFactoryDefaults()
 {
    mdBMin = DEF_dBMin;
@@ -386,6 +426,74 @@ bool EffectEqualization::LoadFactoryDefaults()
    return Effect::LoadFactoryDefaults();
 }
 
+static const struct
+{
+   const wxChar *name;
+   const wxChar *values;
+}
+FactoryPresets[] =
+{
+	{ XO("100Hz Rumble"),           wxT("f0=\"20.0\" v0=\"-80.0\" f1=\"49.237316986327\" v1=\"-33.107692718506\" f2=\"54.196034330446\" v2=\"-29.553844451904\" f3=\"88.033573501041\" v3=\"-6.923076629639\" f4=\"95.871851182279\" v4=\"-4.523078918457\" f5=\"108.957037410504\" v5=\"-1.938461303711\" f6=\"123.828171198057\" v6=\"-0.73846244812\" f7=\"149.228077614658\" v7=\"-0.092308044434\"") },
+
+	{ XO("AM Radio"),               wxT("f0=\"20.0\" v0=\"-63.67\" f1=\"31.0\" v1=\"-33.219\" f2=\"50.0\" v2=\"-3.01\" f3=\"63.0\" v3=\"-0.106\" f4=\"100.0\" v4=\"0.0\" f5=\"2500.0\" v5=\"0.0\" f6=\"4000.0\" v6=\"-0.614\" f7=\"5000.0\" v7=\"-8.059\" f8=\"8000.0\" v8=\"-39.981\" f9=\"20000.0\" v9=\"-103.651\" f10=\"48000.0\" v10=\"-164.485\"") },
+
+	{ XO("Bass Boost"),             wxT("f0=\"100.0\" v0=\"9.0\" f1=\"500.0\" v1=\"0.0\"") },
+
+	{ XO("Bass Cut"),               wxT("f0=\"150.0\" v0=\"-50.0\" f1=\"300.0\" v1=\"0.0\"") },
+
+	{ XO("Low rolloff for speech"), wxT("f0=\"50.0\" v0=\"-120.0\" f1=\"60.0\" v1=\"-50.0\" f2=\"65.0\" v2=\"-24.0\" f3=\"70.0\" v3=\"-12.0\" f4=\"80.0\" v4=\"-4.0\" f5=\"90.0\" v5=\"-1.0\" f6=\"100.0\" v6=\"0.0\"") },
+
+	{ XO("RIAA"),                   wxT("f0=\"20.0\" v0=\"19.274\" f1=\"25.0\" v1=\"18.954\" f2=\"31.0\" v2=\"18.516\" f3=\"40.0\" v3=\"17.792\" f4=\"50.0\" v4=\"16.946\" f5=\"63.0\" v5=\"15.852\" f6=\"80.0\" v6=\"14.506\" f7=\"100.0\" v7=\"13.088\" f8=\"125.0\" v8=\"11.563\" f9=\"160.0\" v9=\"9.809\" f10=\"200.0\" v10=\"8.219\" f11=\"250.0\" v11=\"6.677\" f12=\"315.0\" v12=\"5.179\" f13=\"400.0\" v13=\"3.784\" f14=\"500.0\" v14=\"2.648\" f15=\"630.0\" v15=\"1.642\" f16=\"800.0\" v16=\"0.751\" f17=\"1000.0\" v17=\"0.0\" f18=\"1250.0\" v18=\"-0.744\" f19=\"1600.0\" v19=\"-1.643\" f20=\"2000.0\" v20=\"-2.589\" f21=\"2500.0\" v21=\"-3.7\" f22=\"3150.0\" v22=\"-5.038\" f23=\"4000.0\" v23=\"-6.605\" f24=\"5000.0\" v24=\"-8.21\" f25=\"6300.0\" v25=\"-9.98\" f26=\"8000.0\" v26=\"-11.894\" f27=\"10000.0\" v27=\"-13.734\" f28=\"12500.0\" v28=\"-15.609\" f29=\"16000.0\" v29=\"-17.708\" f30=\"20000.0\" v30=\"-19.62\" f31=\"25000.0\" v31=\"-21.542\" f32=\"48000.0\" v32=\"-27.187\"") },
+
+	{ XO("Telephone"),              wxT("f0=\"20.0\" v0=\"-94.087\" f1=\"200.0\" v1=\"-14.254\" f2=\"250.0\" v2=\"-7.243\" f3=\"315.0\" v3=\"-2.245\" f4=\"400.0\" v4=\"-0.414\" f5=\"500.0\" v5=\"0.0\" f6=\"2500.0\" v6=\"0.0\" f7=\"3150.0\" v7=\"-0.874\" f8=\"4000.0\" v8=\"-3.992\" f9=\"5000.0\" v9=\"-9.993\" f10=\"48000.0\" v10=\"-88.117\"") },
+
+	{ XO("Treble Boost"),           wxT("f0=\"4000.0\" v0=\"0.0\" f1=\"5000.0\" v1=\"9.0\"") },
+
+	{ XO("Treble Cut"),             wxT("f0=\"6000.0\" v0=\"0.0\" f1=\"10000.0\" v1=\"-110.0\"") },
+
+	{ XO("Walkie-talkie"),          wxT("f0=\"100.0\" v0=\"-120.0\" f1=\"101.0\" v1=\"0.0\" f2=\"2000.0\" v2=\"0.0\" f3=\"2001.0\" v3=\"-120.0\"") },
+};
+
+
+
+
+RegistryPaths EffectEqualization::GetFactoryPresets()
+{
+   RegistryPaths names;
+
+   for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
+   {
+      names.push_back(wxGetTranslation(FactoryPresets[i].name));
+   }
+
+   return names;
+}
+
+bool EffectEqualization::LoadFactoryPreset(int id)
+{
+   if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
+   {
+      return false;
+   }
+
+   // mParams = 
+   wxString params = FactoryPresets[id].values;
+
+   CommandParameters eap(params);
+   ShuttleSetAutomation S;
+   S.SetForWriting( &eap );
+   DefineParams( S );
+
+   if (mUIDialog)
+   {
+      TransferDataToWindow();
+   }
+
+   return true;
+}
+
+
+
 // EffectUIClientInterface implementation
 
 bool EffectEqualization::ValidateUI()
@@ -397,9 +505,9 @@ bool EffectEqualization::ValidateUI()
    {
       // PRL:  This is unreachable.  mDisallowCustom is always false.
 
-      Effect::MessageBox(_("To use this EQ curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
+      Effect::MessageBox(_("To use this filter curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
          wxOK | wxCENTRE,
-         _("EQ Curve needs a different name"));
+         _("Filter Curve needs a different name"));
       return false;
    }
 
@@ -618,7 +726,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 {
    wxWindow *const parent = S.GetParent();
 
-   LoadCurves();
+   //LoadCurves();
 
    auto trackList = inputTracks();
    const auto t = trackList
@@ -635,28 +743,30 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(0);
 
    S.SetSizerProportion(1);
-   S.StartMultiColumn(1, wxEXPAND);
+   S.Prop(1).StartMultiColumn(1, wxEXPAND);
    {
       S.SetStretchyCol(0);
-      S.SetStretchyRow(1);
+      //S.SetStretchyRow(0); // The 5px Top border
+      S.SetStretchyRow(1);   // The Graph
+      S.SetStretchyRow(2);   // The EQ sliders
       szrV = S.GetSizer();
 
       // -------------------------------------------------------------------
-      // ROW 1: Top border
+      // ROW 0: Top border
       // -------------------------------------------------------------------
       S.AddSpace(5);
 
+      // -------------------------------------------------------------------
+      // ROW 1: Equalization panel and sliders for vertical scale
+      // -------------------------------------------------------------------
       S.SetSizerProportion(1);
-      S.StartMultiColumn(3, wxEXPAND);
+      S.Prop(1).StartMultiColumn(3, wxEXPAND);
       {
          S.SetStretchyCol(1);
          S.SetStretchyRow(0);
          szr1 = S.GetSizer();
 
-         // -------------------------------------------------------------------
-         // ROW 2: Equalization panel and sliders for vertical scale
-         // -------------------------------------------------------------------
-         S.StartVerticalLay();
+         S.StartVerticalLay(wxEXPAND, 1);
          {
             mdBRuler = safenew RulerPanel(
                parent, wxID_ANY, wxVERTICAL,
@@ -670,7 +780,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                   .TickColour( { 0, 0, 0 } )
             );
 
-            S.AddSpace(0, 1);
+            S.Prop(0).AddSpace(0, 1);
             S.Prop(1).AddWindow(mdBRuler, wxEXPAND );
             S.AddSpace(0, 1);
          }
@@ -704,7 +814,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          S.SetBorder(0);
 
          // -------------------------------------------------------------------
-         // ROW 3: Frequency ruler
+         // Frequency ruler below graph
          // -------------------------------------------------------------------
 
          // Column 1 is empty
@@ -734,20 +844,22 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
 
       // -------------------------------------------------------------------
-      // ROW 3: Graphic EQ - this gets laid out horizontally in onSize
+      // ROW 2: Graphic EQ
       // -------------------------------------------------------------------
-      S.StartHorizontalLay(wxEXPAND, 0);
+      S.SetSizerProportion(1);
+      S.StartHorizontalLay(wxEXPAND, 1);
       {
          szrG = S.GetSizer();
 
          // Panel used to host the sliders since they will be positioned manually.
-         mGraphicPanel = safenew wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
-         S.Prop(1).AddWindow(mGraphicPanel, wxEXPAND);
-
+         //mGraphicPanel = safenew wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
+         //S.Prop(1).AddWindow(mGraphicPanel, wxEXPAND);
+         wxWindow *pParent = S.GetParent();
+         S.AddSpace(15,0);
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
          {
-            mSliders[i] = safenew wxSliderWrapper(mGraphicPanel, ID_Slider + i, 0, -20, +20,
-               wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL | wxSL_INVERSE);
+            mSliders[i] = safenew wxSlider(pParent, ID_Slider + i, 0, -20, +20,
+               wxDefaultPosition, wxSize(-1,150), wxSL_VERTICAL | wxSL_INVERSE);
 
             mSliders[i]->Bind(wxEVT_ERASE_BACKGROUND,
                               // ignore it
@@ -763,17 +875,21 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 #endif
             mSlidersOld[i] = 0;
             mEQVals[i] = 0.;
+            //S.SetSizerProportion(1);
+            S.Prop(1).AddWindow( mSliders[i], wxEXPAND );
          }
+         S.AddSpace(15,0);
       }
       S.EndHorizontalLay();
 
-      S.StartMultiColumn(7, wxALIGN_CENTER_HORIZONTAL);
+      // -------------------------------------------------------------------
+      // ROW 4: Various controls
+      // -------------------------------------------------------------------
+      S.SetSizerProportion(1);
+      S.Prop(1).StartMultiColumn(7, wxALIGN_CENTER_HORIZONTAL);
       {
          S.SetBorder(5);
 
-         // -------------------------------------------------------------------
-         // ROWS 4:
-         // -------------------------------------------------------------------
          S.AddSpace(5, 5);
 
          if( mOptions == kEqLegacy )
@@ -799,7 +915,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.EndHorizontalLay();
          }
 
-         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
+         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
          {
             szrH = S.GetSizer();
 
@@ -810,6 +926,10 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                auto interpolations =
                   LocalizedStrings(kInterpStrings, nInterpolations);
                mInterpChoice = S.Id(ID_Interp).AddChoice( {}, interpolations, 0 );
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               mInterpChoice->SetAccessible(safenew WindowAccessible(mInterpChoice));
+#endif
                mInterpChoice->SetName(_("Interpolation type"));
             }
             S.EndHorizontalLay();
@@ -829,40 +949,39 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // Filter length grouping
          // -------------------------------------------------------------------
 
-         S.StartHorizontalLay(wxEXPAND, 1);
-         {
-            S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
+         if( mOptions == kEqLegacy ){
+            S.StartHorizontalLay(wxEXPAND, 0);
             {
-               S.AddPrompt(_("Length of &Filter:"));
+               S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
+               {
+                  S.AddPrompt(_("Length of &Filter:"));
+               }
+               S.EndHorizontalLay();
+
+               S.StartHorizontalLay(wxEXPAND, 1);
+               {
+                  S.SetStyle(wxSL_HORIZONTAL);
+                  mMSlider = S.Id(ID_Length).AddSlider( {}, (mM - 1) / 2, 4095, 10);
+                  mMSlider->SetName(_("Length of Filter"));
+               }
+               S.EndHorizontalLay();
+
+               S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
+               {
+                  wxString label;
+                  label.Printf(wxT("%ld"), mM);
+                  mMText = S.AddVariableText(label);
+                  mMText->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+               }
+               S.EndHorizontalLay();
             }
             S.EndHorizontalLay();
 
-            S.StartHorizontalLay(wxEXPAND, 1);
-            {
-               S.SetStyle(wxSL_HORIZONTAL);
-               mMSlider = S.Id(ID_Length).AddSlider( {}, (mM - 1) / 2, 4095, 10);
-               mMSlider->SetName(_("Length of Filter"));
-            }
-            S.EndHorizontalLay();
-
-            S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
-            {
-               wxString label;
-               label.Printf(wxT("%ld"), mM);
-               mMText = S.AddVariableText(label);
-               mMText->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-            }
-            S.EndHorizontalLay();
+            S.AddSpace(1, 1);
          }
-         S.EndHorizontalLay();
-
-         S.AddSpace(1, 1);
 
          S.AddSpace(5, 5);
 
-         // -------------------------------------------------------------------
-         // ROW 5:
-         // -------------------------------------------------------------------
          if( mOptions == kEqLegacy ){
             S.AddSpace(5, 5);
             S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -967,7 +1086,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 #endif
 
    mUIParent->SetAutoLayout(false);
-   mUIParent->Layout();
+   if( mOptions != kEqOptionGraphic)
+      mUIParent->Layout();
 
    // "show" settings for graphics mode before setting the size of the dialog
    // as this needs more space than draw mode
@@ -975,10 +1095,22 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    szrH->Show(szrI,true);  // interpolation choice
    szrH->Show(szrL,false); // linear freq checkbox
 
-   mUIParent->SetSizeHints(mUIParent->GetBestSize());
-
-//   szrL->SetMinSize( szrI->GetSize() );
-
+   if( mOptions == kEqOptionGraphic){
+      mPanel->Show( false );
+      szrV->Show(szr1,false);
+      //szrG->Show( true );
+      //mUIParent->Layout();
+      //S.GetParent()->Layout();
+      wxSize sz = szrV->GetMinSize();
+      sz += wxSize( 30, 0);
+      mUIParent->SetSizeHints(sz);
+   }
+   else{
+      mPanel->Show( true );
+      szrV->Show(szr1, true);
+      mUIParent->SetSizeHints(mUIParent->GetBestSize());
+   }
+   ForceRecalc();
    return;
 }
 
@@ -994,7 +1126,8 @@ bool EffectEqualization::TransferDataToWindow()
 
    mGridOnOff->SetValue( mDrawGrid ); // checks/unchecks the box on the interface
 
-   mMSlider->SetValue((mM - 1) / 2);
+   if( mMSlider )
+      mMSlider->SetValue((mM - 1) / 2);
    mM = 0;                        // force refresh in TransferDataFromWindow()
 
    mdBMinSlider->SetValue((int)mdBMin);
@@ -1015,21 +1148,19 @@ bool EffectEqualization::TransferDataToWindow()
    if( mOptions == kEqOptionGraphic)
       mDrawMode = false;
 
+   if( mDraw )
+      mDraw->SetValue(mDrawMode);
+   szrV->Show(szr1,mOptions != kEqOptionGraphic); // Graph
+   szrV->Show(szrG,!mDrawMode);    // eq sliders
+   szrH->Show(szrI,mOptions == kEqLegacy );    // interpolation choice
+   szrH->Show(szrL, mDrawMode);    // linear freq checkbox
+   if( mGraphic) 
+      mGraphic->SetValue(!mDrawMode);
+   mGridOnOff->Show( mDrawMode );
+
    // Set Graphic (Fader) or Draw mode
-   if (mDrawMode)
-   {
-      if( mDraw )
-         mDraw->SetValue(true);
-      szrV->Show(szrG,false);    // eq sliders
-      szrH->Show(szrI,false);    // interpolation choice
-      szrH->Show(szrL,true);     // linear freq checkbox
-   }
-   else
-   {
-      if( mGraphic) 
-         mGraphic->SetValue(true);
+   if (!mDrawMode)
       UpdateGraphic();
-   }
 
    TransferDataFromWindow();
 
@@ -1072,7 +1203,6 @@ bool EffectEqualization::TransferDataFromWindow()
       if( w1 != w2 )   // Reduces flicker
       {
          mdBRuler->SetSize(wxSize(w2,h));
-         LayoutEQSliders();
          mFreqRuler->Refresh(false);
       }
       mdBRuler->Refresh(false);
@@ -1080,15 +1210,21 @@ bool EffectEqualization::TransferDataFromWindow()
       mPanel->Refresh(false);
    }
 
-   size_t m = 2 * mMSlider->GetValue() + 1;   // odd numbers only
+   size_t m = DEF_FilterLength; // m must be odd.
+   if (mMSlider )
+      m = 2* mMSlider->GetValue()+1;
+   wxASSERT( (m & 1) ==1 );
    if (m != mM) {
       mM = m;
       ForceRecalc();
 
-      tip.Printf(wxT("%d"), (int)mM);
-      mMText->SetLabel(tip);
-      mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-      mMSlider->SetToolTip(tip);
+      if( mMSlider)
+      {
+         tip.Printf(wxT("%d"), (int)mM);
+         mMText->SetLabel(tip);
+         mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+         mMSlider->SetToolTip(tip);
+      }
    }
 
    return true;
@@ -1388,6 +1524,14 @@ void EffectEqualization::Filter(size_t len, float *buffer)
 //
 void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 {
+// We've disabled the XML management of curves.
+// Just going via .cfg files now.
+#if 1
+   (void)fileName;
+   (void)append;
+   mCurves.clear();
+   mCurves.push_back( _("unnamed") );   // we still need a default curve to use
+#else
    // Construct normal curve filename
    //
    // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
@@ -1467,7 +1611,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    {
       mCurves.back().points = tempCustom.points;
    }
-
+#endif
    return;
 }
 
@@ -1703,7 +1847,7 @@ void EffectEqualization::setCurve(int currentCurve)
          when = (log10(std::max((double) loFreqI, when)) - loLog)/denom;
       }
       value = mCurves[currentCurve].points[0].dB;
-      env->InsertOrReplace(std::min(1.0, std::max(0.0, when)), value);
+      env->Insert(std::min(1.0, std::max(0.0, when)), value);
       ForceRecalc();
       return;
    }
@@ -1723,7 +1867,7 @@ void EffectEqualization::setCurve(int currentCurve)
          when = mCurves[currentCurve].points[pointCount].Freq / mHiFreq;
          value = mCurves[currentCurve].points[pointCount].dB;
          if(when <= 1) {
-            env->InsertOrReplace(when, value);
+            env->Insert(when, value);
             if (when == 1)
                break;
          }
@@ -1742,7 +1886,7 @@ void EffectEqualization::setCurve(int currentCurve)
             }
             else
                value = nextDB;
-            env->InsertOrReplace(when, value);
+            env->Insert(when, value);
             break;
          }
       }
@@ -1764,7 +1908,7 @@ void EffectEqualization::setCurve(int currentCurve)
          // All points below 20 Hz, so just use final point.
          when = 0.0;
          value = mCurves[currentCurve].points[numPoints-1].dB;
-         env->InsertOrReplace(when, value);
+         env->Insert(when, value);
          ForceRecalc();
          return;
       }
@@ -1779,7 +1923,7 @@ void EffectEqualization::setCurve(int currentCurve)
          double nextDB = mCurves[currentCurve].points[firstAbove20Hz].dB;
          when = 0.0;
          value = nextDB - ((nextDB - prevDB) * ((nextF - loLog) / (nextF - prevF)));
-         env->InsertOrReplace(when, value);
+         env->Insert(when, value);
       }
 
       // Now get the rest.
@@ -1791,7 +1935,7 @@ void EffectEqualization::setCurve(int currentCurve)
          when = (flog - loLog)/denom;
          value = mCurves[currentCurve].points[pointCount].dB;
          if(when <= 1.0) {
-            env->InsertOrReplace(when, value);
+            env->Insert(when, value);
          }
          else {
             // This looks weird when adjusting curve in Draw mode if
@@ -1815,7 +1959,7 @@ void EffectEqualization::setCurve(int currentCurve)
                   ((value - lastDB) *
                      ((log10(mHiFreq) - logLastF) / (flog - logLastF)));
             }
-            env->InsertOrReplace(when, value);
+            env->Insert(when, value);
             break;
          }
       }
@@ -2137,31 +2281,6 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void EffectEqualization::LayoutEQSliders()
-{
-   // layout the Graphic EQ sliders here
-   wxRect rulerR = mFreqRuler->GetRect();
-   int sliderW = mSliders[0]->GetSize().GetWidth();
-   int sliderH = mGraphicPanel->GetRect().GetHeight();
-
-   int start = rulerR.GetLeft() - (sliderW / 2);
-   float range = rulerR.GetWidth();
-
-   double loLog = log10(mLoFreq);
-   double hiLog = log10(mHiFreq);
-   double denom = hiLog - loLog;
-
-   for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
-   {
-      // centre of this slider, from start
-      float posn = range * (log10(kThirdOct[i]) - loLog) / denom;
-
-      mSliders[i]->SetSize(start + (posn + 0.5), 0, sliderW, sliderH);
-   }
-
-   mGraphicPanel->Refresh();
-}
-
 void EffectEqualization::UpdateCurves()
 {
 
@@ -2257,7 +2376,7 @@ void EffectEqualization::UpdateGraphic()
       {
          when = freq/mHiFreq;
          value = mLinEnvelope->GetValue(when);
-         mLinEnvelope->InsertOrReplace(when, value);
+         mLinEnvelope->Insert(when, value);
       }
 
       EnvLinToLog();
@@ -2292,25 +2411,14 @@ void EffectEqualization::UpdateGraphic()
    }
 
    szrV->Show(szrG,true);  // eq sliders
-   szrH->Show(szrI,true);  // interpolation choice
+   szrH->Show(szrI,mOptions == kEqLegacy );  // interpolation choice
    szrH->Show(szrL,false); // linear freq checkbox
 
    mUIParent->Layout();
    wxGetTopLevelParent(mUIParent)->Layout();
-//   mUIParent->Layout();    // Make all sizers get resized first
-   LayoutEQSliders();      // Then layout sliders
    mUIParent->Layout();
    wxGetTopLevelParent(mUIParent)->Layout();
-//   mUIParent->Layout();    // And layout again to resize dialog
 
-#if 0
-   wxSize wsz = mUIParent->GetSize();
-   wxSize ssz = szrV->GetSize();
-   if (ssz.x > wsz.x || ssz.y > wsz.y)
-   {
-      mUIParent->Fit();
-   }
-#endif
    GraphicEQ(mLogEnvelope.get());
    mDrawMode = false;
 }
@@ -2335,7 +2443,7 @@ void EffectEqualization::EnvLogToLin(void)
    double denom = hiLog - loLog;
 
    for (size_t i = 0; i < numPoints; i++)
-      mLinEnvelope->InsertOrReplace(pow( 10., ((when[i] * denom) + loLog))/mHiFreq , value[i]);
+      mLinEnvelope->Insert(pow( 10., ((when[i] * denom) + loLog))/mHiFreq , value[i]);
    mLinEnvelope->Reassign(1., value[numPoints-1]);
 }
 
@@ -2366,13 +2474,13 @@ void EffectEqualization::EnvLinToLog(void)
          // Caution: on Linux, when when == 20, the log calulation rounds
          // to just under zero, which causes an assert error.
          double flog = (log10(when[i]*mHiFreq)-loLog)/denom;
-         mLogEnvelope->InsertOrReplace(std::max(0.0, flog) , value[i]);
+         mLogEnvelope->Insert(std::max(0.0, flog) , value[i]);
       }
       else
       {  //get the first point as close as we can to the last point requested
          changed = true;
          double v = value[i];
-         mLogEnvelope->InsertOrReplace(0., v);
+         mLogEnvelope->Insert(0., v);
       }
    }
    mLogEnvelope->Reassign(1., value[numPoints - 1]);
@@ -2529,7 +2637,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
             }
             if(mWhens[i]<=0.)
                env->Reassign(0., value);
-            env->InsertOrReplace( mWhens[i], value );
+            env->Insert( mWhens[i], value );
          }
          env->Reassign( 1., value );
          break;
@@ -2573,7 +2681,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
             }
             if(mWhens[i]<=0.)
                env->Reassign(0., value);
-            env->InsertOrReplace( mWhens[i], value );
+            env->Insert( mWhens[i], value );
          }
          env->Reassign( 1., value );
          break;
@@ -2586,7 +2694,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
          spline(mWhenSliders, mEQVals, mBandsInUse+1, y2);
          for(double xf=0; xf<1.; xf+=1./NUM_PTS)
          {
-            env->InsertOrReplace(xf, splint(mWhenSliders, mEQVals, mBandsInUse+1, y2, xf));
+            env->Insert(xf, splint(mWhenSliders, mEQVals, mBandsInUse+1, y2, xf));
          }
          break;
       }
@@ -2641,12 +2749,6 @@ double EffectEqualization::splint(double x[], double y[], size_t n, double y2[],
 void EffectEqualization::OnSize(wxSizeEvent & event)
 {
    mUIParent->Layout();
-
-   if (!mDrawMode)
-   {
-      LayoutEQSliders();
-   }
-
    event.Skip();
 }
 

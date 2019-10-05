@@ -222,6 +222,7 @@ private:
    void OnLabelAdded( LabelTrackEvent& );
    void OnLabelDeleted( LabelTrackEvent& );
    void OnLabelPermuted( LabelTrackEvent& );
+   void OnSelectionChange( LabelTrackEvent& );
 
    std::shared_ptr<LabelTrack> FindLabelTrack();
    std::shared_ptr<const LabelTrack> FindLabelTrack() const;

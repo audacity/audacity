@@ -27,6 +27,14 @@ effects from this one class.
 
 #include <float.h>
 
+#if !defined(__WXMSW__)
+#include <dlfcn.h>
+
+#ifndef RTLD_DEEPBIND
+#define RTLD_DEEPBIND 0
+#endif
+#endif
+
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wxprec.h>
 #include <wx/button.h>
@@ -260,11 +268,18 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
    int index = 0;
    int nLoaded = 0;
    LADSPA_Descriptor_Function mainFn = NULL;
+#if defined(__WXMSW__)
    wxDynamicLibrary lib;
    if (lib.Load(path, wxDL_NOW)) {
       wxLogNull logNo;
 
       mainFn = (LADSPA_Descriptor_Function) lib.GetSymbol(wxT("ladspa_descriptor"));
+#else
+   void *lib = dlopen((const char *)path.ToUTF8(), RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
+   if (lib) {
+      mainFn = (LADSPA_Descriptor_Function) dlsym(lib, "ladspa_descriptor");
+#endif
+
       if (mainFn) {
          const LADSPA_Descriptor *data;
 
@@ -283,6 +298,7 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
    else
       errMsg = _("Could not load the library");
 
+#if defined(__WXMSW__)
    if (lib.IsLoaded()) {
       // PRL:  I suspect Bug1257 -- Crash when enabling Amplio2 -- is the fault of a timing-
       // dependent multi-threading bug in the Amplio2 library itself, in case the unload of the .dll
@@ -291,6 +307,11 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
       ::wxMilliSleep(10);
       lib.Unload();
    }
+#else
+   if (lib) {
+      dlclose(lib);
+   }
+#endif
 
    wxSetWorkingDirectory(saveOldCWD);
    hadpath ? wxSetEnv(wxT("PATH"), envpath) : wxUnsetEnv(wxT("PATH"));
@@ -355,8 +376,12 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
    // No special paths...probably should look in %CommonProgramFiles%\LADSPA
 
 #else
-   
+
    pathList.push_back(wxGetHomeDir() + wxFILE_SEP_PATH + wxT(".ladspa"));
+#if defined(__LP64__)
+   pathList.push_back(wxT("/usr/local/lib64/ladspa"));
+   pathList.push_back(wxT("/usr/lib64/ladspa"));
+#endif
    pathList.push_back(wxT("/usr/local/lib/ladspa"));
    pathList.push_back(wxT("/usr/lib/ladspa"));
    pathList.push_back(wxT(LIBDIR) wxT("/ladspa"));

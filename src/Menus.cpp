@@ -305,7 +305,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
    wxASSERT(menubar);
 
    VisitItem( project, menuTree.get() );
-
    GetProjectFrame( project ).SetMenuBar(menubar.release());
 
    mLastFlags = AlwaysEnabledFlag;
@@ -584,11 +583,11 @@ void MenuManager::UpdateMenus( bool checkActive )
    //to actually do the 'select all' to make the command valid.
 
    for ( const auto &enabler : Enablers() ) {
+      auto actual = enabler.actualFlags();
       if (
-         enabler.applicable( project ) &&
-         (flags & enabler.actualFlags) == enabler.actualFlags
+         enabler.applicable( project ) && (flags & actual) == actual
       )
-         flags2 |= enabler.possibleFlags;
+         flags2 |= enabler.possibleFlags();
    }
 
    auto &commandManager = CommandManager::Get( project );
@@ -655,13 +654,14 @@ bool MenuManager::TryToMakeActionAllowed(
    auto iter = enablers.begin(), end = enablers.end();
    while ((flags & flagsRqd) != flagsRqd && iter != end) {
       const auto &enabler = *iter;
+      auto actual = enabler.actualFlags();
       auto MissingFlags = (~flags & flagsRqd);
       if (
          // Do we have the right precondition?
-         (flags & enabler.actualFlags) == enabler.actualFlags
+         (flags & actual) == actual
       &&
          // Can we get the condition we need?
-         (MissingFlags & enabler.possibleFlags) == MissingFlags
+         (MissingFlags & enabler.possibleFlags()).any()
       ) {
          // Then try the function
          enabler.tryEnable( project, flagsRqd );

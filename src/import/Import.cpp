@@ -669,6 +669,11 @@ bool Importer::Import(const FilePath &fName,
          return false;
       }
 
+      if( !wxFileExists(fName)){
+         errorMessage.Printf(_("File \"%s\" not found."), fName);
+         return false;
+      }
+
       // we were not able to recognize the file type
       errorMessage.Printf(_("Audacity did not recognize the type of the file '%s'.\nTry installing FFmpeg. For uncompressed files, also try File > Import > Raw Data."),fName);
    }

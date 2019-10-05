@@ -366,6 +366,11 @@ void Envelope::Insert(int point, const EnvPoint &p)
    mEnv.insert(mEnv.begin() + point, p);
 }
 
+void Envelope::Insert(double when, double value)
+{
+   mEnv.push_back( EnvPoint{ when, value });
+}
+
 void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
 // NOFAIL-GUARANTEE
 {
@@ -420,7 +425,12 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
       // We will keep the last (or only) point that was at t1.
       --end;
 
-   mEnv.erase( mEnv.begin() + begin, mEnv.begin() + end );
+   if ( end < begin ) {
+      if ( leftPoint )
+         rightPoint = false;
+   }
+   else
+      mEnv.erase( mEnv.begin() + begin, mEnv.begin() + end );
 
    // Shift points left after deleted region.
    auto len = mEnv.size();

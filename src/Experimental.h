@@ -143,7 +143,9 @@
 // RBD, 1 Sep 2008
 // Enables MIDI Output of NoteTrack (MIDI) data during playback
 // USE_MIDI must be defined in order for EXPERIMENTAL_MIDI_OUT to work
+#ifdef USE_MIDI
 #define EXPERIMENTAL_MIDI_OUT
+#endif
 // JKC, 17 Aug 2017
 // Enables the MIDI note stretching feature, which currently
 // a) Is broken on Linux (Bug 1646)
@@ -253,5 +255,10 @@
 
 // mmm-1 22 Aug 2018
 //#define EXPERIMENTAL_R128_NORM
+
+// JKC 29 July 2019
+// OD_DATA made experimental.  It is on the way out because
+// it is dangerous and has too many bugs.  See bug 536 for example. 
+//#do not define EXPERIMENTAL_OD_DATA
 
 #endif

@@ -44,7 +44,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
-#include "effects/EffectManager.h"
 #include "blockfile/ODDecodeBlockFile.h"
 #include "export/Export.h"
 #include "import/Import.h"
@@ -120,12 +119,14 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
 
    XMLFileReader xmlFile;
 
+#ifdef EXPERIMENTAL_OD_DATA
    // 'Lossless copy' projects have dependencies. We need to always copy-in
    // these dependencies when converting to a normal project.
    wxString oldAction =
       gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
    bool oldAsk =
       gPrefs->ReadBool(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true);
+
    if (oldAction != wxT("copy"))
       gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
    if (oldAsk)
@@ -140,6 +141,7 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
          gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) true);
       gPrefs->Flush();
    } );
+#endif
 
    bool bParseSuccess = xmlFile.Parse(&projectFileIO, fileName);
    
@@ -350,14 +352,15 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
       safetyFileName = fileName + wxT(".bak");
 #endif
 
+      bool bOK=true;
       if (wxFileExists(safetyFileName))
-         wxRemoveFile(safetyFileName);
+         bOK = wxRemoveFile(safetyFileName);
 
       if ( !wxRenameFile(fileName, safetyFileName) ) {
          AudacityMessageBox(
             wxString::Format(
-               _("Could not create safety file: %s"), safetyFileName ),
-            _("Error"), wxICON_STOP, &window);
+               _("Audacity failed to write file %s.\nPerhaps disk is full or not writable."), safetyFileName ),
+            _("Error Writing to File"), wxICON_STOP, &window);
          return false;
       }
    }
@@ -1706,18 +1709,6 @@ bool ProjectFileManager::Import(
             pTrackArray->push_back( wt->SharedPointer< WaveTrack >() );
          });
       }
-   }
-
-   int mode = gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"), 0L);
-   if (mode == 1) {
-      //TODO: All we want is a SelectAll()
-      SelectUtilities::SelectNone( project );
-      SelectUtilities::SelectAllIfNone( project );
-      const CommandContext context( project );
-      EffectManager::DoEffect(
-         EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
-         context,
-         EffectManager::kConfigured);
    }
 
    // This is a no-fail:

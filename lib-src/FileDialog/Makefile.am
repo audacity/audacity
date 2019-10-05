@@ -1,3 +1,4 @@
+AM_LIBTOOLFLAGS = --tag CC
 ACLOCAL_AMFLAGS = -I m4
 
 lib_LTLIBRARIES = libFileDialog.la

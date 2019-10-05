@@ -97,6 +97,8 @@ class AUDACITY_DLL_API LabelTrack final
 
    void SetOffset(double dOffset) override;
 
+   void SetSelected(bool s) override;
+
    double GetOffset() const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
@@ -192,12 +194,13 @@ struct LabelTrackEvent : TrackListEvent
       // wxWidgets will own the event object
       return safenew LabelTrackEvent(*this); }
 
+   // invalid for selection events
    wxString mTitle;
 
-   // invalid for addition event
+   // invalid for addition and selection events
    int mFormerPosition{ -1 };
 
-   // invalid for deletion event
+   // invalid for deletion and selection events
    int mPresentPosition{ -1 };
 };
 
@@ -212,4 +215,8 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 // Posted when a label is repositioned in the sequence of labels.
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_LABELTRACK_PERMUTED, LabelTrackEvent);
+
+// Posted when the track is selected or unselected.
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_LABELTRACK_SELECTION, LabelTrackEvent);
 #endif

@@ -991,6 +991,7 @@ void AdornedRulerPanel::ReCreateButtons()
    // Get rid of any children we may have
    // DestroyChildren();
 
+   ToolBar::MakeButtonBackgroundsSmall();
    SetBackgroundColour(theTheme.Colour( clrMedium ));
 
    for (auto & button : mButtons) {
@@ -1223,6 +1224,7 @@ void AdornedRulerPanel::OnSize(wxSizeEvent &evt)
 
 void AdornedRulerPanel::OnThemeChange(wxCommandEvent& evt)
 {
+   evt.Skip();
    ReCreateButtons();
 }
 
@@ -1662,9 +1664,6 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
    bool startPlaying = (playRegion.GetStart() >= 0);
 
    if (startPlaying) {
-      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
-      projectAudioManager.Stop();
-
       bool loopEnabled = true;
       double start, end;
 
@@ -1701,6 +1700,12 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
          : options.playLooped ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
 
+      // Stop only after deciding where to start again, because an event
+      // callback may change the play region back to the selection
+      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      projectAudioManager.Stop();
+
+      // Change play region display while playing
       playRegion.SetTimes( start, end );
       Refresh();
 
@@ -2148,13 +2153,8 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
    }
    else {
-      bool pinned = Scrubber::Get( *mProject ).IsTransportingPinned();
-      wxBitmap & bmp = theTheme.Bitmap( pinned ? 
-         (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
-         (playing ? bmpPlayPointer : bmpRecordPointer) 
-      );
-      const int IndicatorHalfWidth = bmp.GetWidth() / 2;
-      dc->DrawBitmap( bmp, xx - IndicatorHalfWidth -1, mInner.y );
+      auto pair = GetIndicatorBitmap( xx, playing );
+      dc->DrawBitmap( pair.second, pair.first.x, pair.first.y );
 #if 0
 
       // Down pointing triangle
@@ -2169,6 +2169,23 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
 #endif
    }
+}
+
+// Returns the appropriate bitmap, and panel-relative coordinates for its
+// upper left corner.
+std::pair< wxPoint, wxBitmap >
+AdornedRulerPanel::GetIndicatorBitmap(wxCoord xx, bool playing) const
+{
+   bool pinned = Scrubber::Get( *mProject ).IsTransportingPinned();
+   wxBitmap & bmp = theTheme.Bitmap( pinned ?
+      (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
+      (playing ? bmpPlayPointer : bmpRecordPointer)
+   );
+   const int IndicatorHalfWidth = bmp.GetWidth() / 2;
+   return {
+      { xx - IndicatorHalfWidth - 1, mInner.y },
+      bmp
+   };
 }
 
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,

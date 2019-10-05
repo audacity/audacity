@@ -381,7 +381,7 @@ other projects. \
       // In auto-recover mode, we didn't do any ShowMultiDialog calls above, so put up an alert.
       if (bAutoRecoverMode)
          ::AudacityMessageBox(
-            _("Project check found file inconsistencies during automatic recovery.\n\nSelect 'Show Log...' in the Help menu to see details."),
+            _("Project check found file inconsistencies during automatic recovery.\n\nSelect 'Help > Diagnostics > Show Log...' to see details."),
             _("Warning: Problems in Automatic Recovery"),
             wxOK  | wxICON_EXCLAMATION);
    }

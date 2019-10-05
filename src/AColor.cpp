@@ -232,10 +232,10 @@ void AColor::Bevel2
    int h = wxMin( r.height, Bmp.GetHeight() );
 
 
-   dc.Blit( r.x,r.y,r.width/2, h, &memDC, 0, 0 );
+   dc.Blit( r.x,r.y,r.width/2, h, &memDC, 0, 0, wxCOPY, true );
    int r2 = r.width - r.width/2;
    dc.Blit( r.x+r.width/2,r.y,r2, h, &memDC, 
-      Bmp.GetWidth() - r2, 0 );
+      Bmp.GetWidth() - r2, 0, wxCOPY, true );
 }
 
 wxColour AColor::Blend( const wxColour & c1, const wxColour & c2 )

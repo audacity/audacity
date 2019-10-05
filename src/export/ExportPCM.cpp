@@ -32,7 +32,6 @@
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
-#include "../ondemand/ODManager.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
@@ -445,6 +444,9 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       sf_format = kFormats[subformat].format;
    }
 
+
+   int fileFormat = sf_format & SF_FORMAT_TYPEMASK;
+   
    auto updateResult = ProgressResult::Success;
    {
       wxFile f;   // will be closed when it goes out of scope
@@ -457,7 +459,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       //This whole operation should not occur while a file is being loaded on OD,
       //(we are worried about reading from a file being written to,) so we block.
       //Furthermore, we need to do this because libsndfile is not threadsafe.
-      formatStr = SFCall<wxString>(sf_header_name, sf_format & SF_FORMAT_TYPEMASK);
+      formatStr = SFCall<wxString>(sf_header_name, fileFormat);
 
       // Use libsndfile to export file
 
@@ -467,6 +469,18 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       info.format = sf_format;
       info.sections = 1;
       info.seekable = 0;
+
+      // Bug 46.  Trap here, as sndfile.c does not trap it properly.
+      if( (numChannels != 1) && ((sf_format & SF_FORMAT_SUBMASK) == SF_FORMAT_GSM610) )
+      {
+         AudacityMessageBox(_("GSM 6.10 requires mono"));
+         return ProgressResult::Cancelled;
+      }
+
+      if( sf_format == SF_FORMAT_WAVEX + SF_FORMAT_GSM610){
+         AudacityMessageBox( _("WAVEX and GSM 6.10 formats are not compatible") );
+         return ProgressResult::Cancelled;
+      }
 
       // If we can't export exactly the format they requested,
       // try the default format for that header type...
@@ -495,10 +509,10 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       if (metadata == NULL)
          metadata = &Tags::Get( *project );
 
-      // Install the metata at the beginning of the file (except for
+      // Install the meta data at the beginning of the file (except for
       // WAV and WAVEX formats)
-      if ((sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAV &&
-          (sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAVEX) {
+      if (fileFormat != SF_FORMAT_WAV &&
+          fileFormat != SF_FORMAT_WAVEX) {
          if (!AddStrings(project, sf.get(), metadata, sf_format)) {
             return ProgressResult::Cancelled;
          }
@@ -510,15 +524,22 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       else
          format = int16Sample;
 
-      float sampleCount = (float)(t1-t0)*rate*info.channels;
-      float byteCount = sampleCount * sf_subtype_bytes_per_sample( info.format);
-      // Test for 4 Gibibytes, rather than 4 Gigabytes
-      if( byteCount > 4.295e9)
+      // Bug 2200
+      // Only trap size limit for file types we know have an upper size limit.
+      // The error message mentions aiff and wav.
+      if( (fileFormat == SF_FORMAT_WAV) ||
+          (fileFormat == SF_FORMAT_WAVEX) ||
+          (fileFormat == SF_FORMAT_AIFF ))
       {
-         ReportTooBigError( wxTheApp->GetTopWindow() );
-         return ProgressResult::Failed;
+         float sampleCount = (float)(t1-t0)*rate*info.channels;
+         float byteCount = sampleCount * sf_subtype_bytes_per_sample( info.format);
+         // Test for 4 Gibibytes, rather than 4 Gigabytes
+         if( byteCount > 4.295e9)
+         {
+            ReportTooBigError( wxTheApp->GetTopWindow() );
+            return ProgressResult::Failed;
+         }
       }
-
       size_t maxBlockLen = 44100 * 5;
 
       {
@@ -571,8 +592,8 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       // Install the WAV metata in a "LIST" chunk at the end of the file
       if (updateResult == ProgressResult::Success ||
           updateResult == ProgressResult::Stopped) {
-         if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
-             (sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAVEX) {
+         if (fileFormat == SF_FORMAT_WAV ||
+             fileFormat == SF_FORMAT_WAVEX) {
             if (!AddStrings(project, sf.get(), metadata, sf_format)) {
                // TODO: more precise message
                AudacityMessageBox(_("Unable to export"));
@@ -589,8 +610,8 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
    if (updateResult == ProgressResult::Success ||
        updateResult == ProgressResult::Stopped)
-      if (((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||
-          ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV))
+      if ((fileFormat == SF_FORMAT_AIFF) ||
+          (fileFormat == SF_FORMAT_WAV))
          // Note: file has closed, and gets reopened and closed again here:
          if (!AddID3Chunk(fName, metadata, sf_format) ) {
             // TODO: more precise message

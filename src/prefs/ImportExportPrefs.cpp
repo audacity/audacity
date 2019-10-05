@@ -65,6 +65,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
+#ifdef EXPERIMENTAL_OD_DATA
    S.StartStatic(_("When importing audio files"));
    {
       S.StartRadioButtonGroup(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
@@ -75,20 +76,16 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
                           wxT("edit"));
       }
       S.EndRadioButtonGroup();
-
-      S.TieCheckBox(_("&Normalize all tracks in project"),
-                    wxT("/AudioFiles/NormalizeOnLoad"),
-                    false);
    }
    S.EndStatic();
-
+#endif
    S.StartStatic(_("When exporting tracks to an audio file"));
    {
       S.StartRadioButtonGroup(wxT("/FileFormats/ExportDownMix"), true);
       {
          S.TieRadioButton(_("&Mix down to Stereo or Mono"),
                           true);
-         S.TieRadioButton(_("&Use custom mix"),
+         S.TieRadioButton(_("&Use Advanced Mixing Options"),
                           false);
       }
       S.EndRadioButtonGroup();
@@ -96,9 +93,10 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("S&how Metadata Tags editor before export"),
                     wxT("/AudioFiles/ShowId3Dialog"),
                     true);
-      // This documentation is unlikely to help somebody who cannot figure it out by discovering the Options button in the dialog.
-      // It's only clutter in this Prefs tab, so removed.
-      //    S.AddFixedText(_("Note: Export quality options can be chosen by clicking the Options\nbutton in the Export dialog."));
+      /* i18n-hint 'blank space' is space on the tracks with no audio in it*/
+      S.TieCheckBox(_("&Ignore blank space at the beginning"),
+                    wxT("/AudioFiles/SkipSilenceAtBeginning"),
+                    false);
    }
    S.EndStatic();
 #ifdef USE_MIDI

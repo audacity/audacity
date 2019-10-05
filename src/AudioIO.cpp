@@ -2366,6 +2366,7 @@ void AudioIO::StopStream()
    //
    // Only set token to 0 after we're totally finished with everything
    //
+   bool wasMonitoring = mStreamToken == 0;
    mStreamToken = 0;
 
    if (mNumPlaybackChannels > 0)
@@ -2378,7 +2379,7 @@ void AudioIO::StopStream()
    
    if (mNumCaptureChannels > 0)
    {
-      wxCommandEvent e(mStreamToken == 0 ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
+      wxCommandEvent e(wasMonitoring ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
       e.SetEventObject(mOwningProject);
       e.SetInt(false);
       wxTheApp->ProcessEvent(e);

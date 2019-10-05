@@ -890,50 +890,9 @@ void ToolManager::ReadConfig()
       d->LoadConfig();
 
       // Add all unordered toolbars
-      bool deviceWasPositioned = false;
       for( int ord = 0; ord < (int) unordered[ dock ].size(); ord++ )
       {
          ToolBar *t = mBars[ unordered[ dock ][ ord ] ].get();
-
-         if (deviceWasPositioned &&
-             t->GetType() == DeviceBarID)
-            continue;
-
-         if (someFound &&
-             t->GetType() == ScrubbingBarID) {
-            // Special case code to put the NEW scrubbing toolbar where we
-            // want it, when audacity.cfg is present from an older version
-            ToolBar *lastRoot {};
-
-            // Change from the ideal configuration to the constrained one,
-            // just as when dragging and dropping
-            ToolBarConfiguration dummy;
-            mTopDock->WrapConfiguration(dummy);
-
-            // Start a NEW row with just the scrubbing toolbar
-            auto &configuration = mTopDock->GetConfiguration();
-            for (const auto place : configuration)
-               if (place.position.rightOf == nullptr)
-                  lastRoot = place.pTree->pBar;
-            ToolBarConfiguration::Position position {
-               nullptr, lastRoot, false
-            };
-            mTopDock->Dock(t, false, position);
-
-            // Reposition the device toolbar, if it was docked above,
-            // right of scrubbing
-            const auto deviceToolBar = mBars[ DeviceBarID ].get();
-            if (deviceToolBar->GetDock() == mTopDock) {
-               deviceToolBar->GetDock()->Undock(deviceToolBar);
-               position = ToolBarConfiguration::Position{ t, nullptr };
-               mTopDock->Dock(deviceToolBar, false, position);
-
-               // Remember not to place the device toolbar again
-               deviceWasPositioned = true;
-            }
-            Expose( t->GetId(), show[ t->GetId() ] );
-            continue;
-         }
 
          // Dock it
          d->Dock( t, false );

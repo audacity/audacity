@@ -263,8 +263,6 @@ class PROFILE_DLL_API DirManager final
    FilePath projPath;
    FilePath projFull;
 
-   wxString lastProject;
-
    FilePaths aliasList;
 
    LoadingTarget mLoadingTarget;

@@ -171,13 +171,14 @@ class ToolBar /* not final */
        // parenthesized, after the translated name.
        const TranslatedInternalString commands[], size_t nCommands);
 
+   static void MakeButtonBackgroundsSmall();
+   static void MakeButtonBackgroundsLarge();
+
  protected:
    void SetButton(bool down, AButton *button);
 
-   void MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);
-   void MakeRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);
-   void MakeButtonBackgroundsLarge();
-   void MakeButtonBackgroundsSmall();
+   static void MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);
+   static void MakeRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);
 
    wxBoxSizer *GetSizer();
 

@@ -718,7 +718,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
 {
    AudacityProject * pProj = &context.project;
    auto &tp = TrackPanel::Get( *pProj );
-   auto &viewInfo = *tp.mViewInfo;
+   auto &viewInfo = ViewInfo::Get( *pProj );
 
    wxRect trackRect = pWin->GetRect();
 

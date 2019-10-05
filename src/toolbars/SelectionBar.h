@@ -94,7 +94,8 @@ class SelectionBar final : public ToolBar {
    int mDrive1;
    int mDrive2;
 
-   int mSelectionMode;
+   int mSelectionMode{ 0 };
+   int mLastSelectionMode{ 0 };
 
    NumericTextCtrl   *mStartTime;
    NumericTextCtrl   *mCenterTime;

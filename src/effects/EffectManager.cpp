@@ -697,7 +697,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
 
       auto command = dynamic_cast<AudacityCommand *>(PluginManager::Get().GetInstance(ID));
       if( !command )
-         AudacityMessageBox(wxString::Format(_("Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in Help->Show Log"),
+         AudacityMessageBox(wxString::Format(_("Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in 'Help > Diagnostics > Show Log'"),
                                     GetCommandName(ID)),
                    _("Effect failed to initialize"));
 
@@ -753,7 +753,7 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
          }
       }
 */
-      AudacityMessageBox(wxString::Format(_("Attempting to initialize the following command failed:\n\n%s\n\nMore information may be available in Help->Show Log"),
+      AudacityMessageBox(wxString::Format(_("Attempting to initialize the following command failed:\n\n%s\n\nMore information may be available in 'Help > Diagnostics > Show Log'"),
                                     GetCommandName(ID)),
                    _("Command failed to initialize"));
 

@@ -588,7 +588,7 @@ WaveTrackMenuTable &WaveTrackMenuTable::Instance( Track * pTrack )
    wxCommandEvent evt;
    // Clear it out so we force a repopulate
    instance.Invalidate( evt );
-   // Ensure we know how to poulate.
+   // Ensure we know how to populate.
    // Messy, but the design does not seem to offer an alternative.
    // We won't use pTrack after populate.
    instance.mpTrack = pTrack;

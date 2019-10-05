@@ -49,6 +49,7 @@ for drawing different aspects of the label and its text box.
 wxDEFINE_EVENT(EVT_LABELTRACK_ADDITION, LabelTrackEvent);
 wxDEFINE_EVENT(EVT_LABELTRACK_DELETION, LabelTrackEvent);
 wxDEFINE_EVENT(EVT_LABELTRACK_PERMUTED, LabelTrackEvent);
+wxDEFINE_EVENT(EVT_LABELTRACK_SELECTION, LabelTrackEvent);
 
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "labeltrack" ),
@@ -247,6 +248,18 @@ LabelStruct::LabelStruct(const SelectedRegion &region,
    x1 = 0;
    xText = 0;
    y = 0;
+}
+
+void LabelTrack::SetSelected( bool s )
+{
+   bool selected = GetSelected();
+   Track::SetSelected( s );
+   if ( selected != GetSelected() ) {
+      LabelTrackEvent evt{
+         EVT_LABELTRACK_SELECTION, SharedPointer<LabelTrack>(), {}, -1, -1
+      };
+      ProcessEvent( evt );
+   }
 }
 
 double LabelTrack::GetOffset() const
@@ -910,7 +923,6 @@ int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
 
    mLabels.insert(mLabels.begin() + pos, l);
 
-   // wxWidgets will own the event object
    LabelTrackEvent evt{
       EVT_LABELTRACK_ADDITION, SharedPointer<LabelTrack>(), title, -1, pos
    };
@@ -926,7 +938,6 @@ void LabelTrack::DeleteLabel(int index)
    const auto title = iter->title;
    mLabels.erase(iter);
 
-   // wxWidgets will own the event object
    LabelTrackEvent evt{
       EVT_LABELTRACK_DELETION, SharedPointer<LabelTrack>(), title, index, -1
    };
@@ -964,7 +975,6 @@ void LabelTrack::SortLabels()
       );
 
       // Let listeners update their stored indices
-      // wxWidgets will own the event object
       LabelTrackEvent evt{
          EVT_LABELTRACK_PERMUTED, SharedPointer<LabelTrack>(),
          mLabels[j].title, i, j

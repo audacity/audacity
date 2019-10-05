@@ -305,6 +305,9 @@ private:
    /// Retreives list of presets from configuration file
    void FetchPresetList();
 
+   bool ReportIfBadCombination();
+
+
    // Enables/disables controls based on format/codec combination,
    // leaving only relevant controls enabled.
    // Hiding the controls may have been a better idea,

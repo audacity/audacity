@@ -250,9 +250,12 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
          bool highQuality, MixerSpec *mixerSpec)
 {
    WaveTrackConstArray inputTracks;
+
+   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+
    auto range = tracks.Any< const WaveTrack >()
       + (selectionOnly ? &Track::IsSelected : &Track::Any )
-      - &WaveTrack::GetMute;
+      - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    for (auto pTrack: range)
       inputTracks.push_back(
          pTrack->SharedPointer< const WaveTrack >() );
@@ -316,7 +319,6 @@ Exporter::Exporter()
    RegisterPlugin(New_ExportMP2());
 #endif
 
-   // Command line export not available on Windows and Mac platforms
    RegisterPlugin(New_ExportCL());
 
 #if defined(USE_FFMPEG)
@@ -504,10 +506,12 @@ bool Exporter::ExamineTracks()
 
    auto &tracks = TrackList::Get( *mProject );
 
+   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+
    for (auto tr :
          tracks.Any< const WaveTrack >()
             + ( mSelectedOnly ? &Track::IsSelected : &Track::Any )
-            - &WaveTrack::GetMute
+            - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)
    ) {
       mNumSelected++;
 
@@ -555,9 +559,23 @@ bool Exporter::ExamineTracks()
       return false;
    }
 
-   if (mT0 < earliestBegin)
-      mT0 = earliestBegin;
+   // The skipping of silent space could be cleverer and take 
+   // into account clips.
+   // As implemented now, it can only skip initial silent space that 
+   // has no clip before it, and terminal silent space that has no clip 
+   // after it.
+   if (mT0 < earliestBegin){
+      // Bug 1904 
+      // Previously we always skipped initial silent space.
+      // Now skipping it is an opt-in option.
+      bool skipSilenceAtBeginning;
+      gPrefs->Read(wxT("/AudioFiles/SkipSilenceAtBeginning"),
+                                      &skipSilenceAtBeginning, false);
+      if (skipSilenceAtBeginning)
+         mT0 = earliestBegin;
+   }
 
+   // We still skip silent space at the end
    if (mT1 > latestEnd)
       mT1 = latestEnd;
 
@@ -1347,10 +1365,12 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
 
    unsigned numTracks = 0;
 
+   bool anySolo = !(( tracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+
    for (auto t :
          tracks->Any< const WaveTrack >()
-            + ( selectedOnly ? &Track::IsSelected : &Track::Any )
-            - &WaveTrack::GetMute
+            + ( selectedOnly ? &Track::IsSelected : &Track::Any  )
+            - ( anySolo ? &WaveTrack::GetNotSolo :  &WaveTrack::GetMute)
    ) {
       numTracks++;
       const wxString sTrackName = (t->GetName()).Left(20);

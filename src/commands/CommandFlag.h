@@ -90,10 +90,6 @@ public:
       const CommandFlagOptions &options = {} );
 };
 
-// Widely used command flags, but this list need not be exhaustive.  It may be
-// extended, with special purpose flags of limited use, by constucting static
-// ReservedCommandFlag values
-
 // To describe auto-selection, stop-if-paused, etc.:
 // A structure describing a set of conditions, another set that might be
 // made true given the first, and the function that may make them true.
@@ -101,12 +97,17 @@ public:
 // then the enabler will be invoked (unless the menu item is constructed with
 // the useStrictFlags option, or the applicability test first returns false).
 // The item's full set of required flags is passed to the function.
+
+// Computation of the flags is delayed inside a function -- because often you
+// need to name a statically allocated CommandFlag, or a bitwise OR of some,
+// while they may not have been initialized yet, during static initialization.
 struct MenuItemEnabler {
+   using Flags = std::function< CommandFlag() >;
    using Test = std::function< bool( const AudacityProject& ) >;
    using Action = std::function< void( AudacityProject&, CommandFlag ) >;
 
-   const CommandFlag &actualFlags;
-   const CommandFlag &possibleFlags;
+   const Flags actualFlags;
+   const Flags possibleFlags;
    Test applicable;
    Action tryEnable;
 };

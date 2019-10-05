@@ -45,11 +45,10 @@ audio tracks.
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "Prefs.h"
 #include "prefs/GUIPrefs.h"
+#include "Track.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
-#include "WaveTrack.h"
 
 #include "prefs/GUISettings.h"
 #include "prefs/TracksPrefs.h"
@@ -236,12 +235,6 @@ void TrackArt::DrawNegativeOffsetTrackArrows(
                 rect.x + 6, rect.y + rect.height - 12);
 }
 
-
-// Headers needed only for experimental drawing below
-//#include "tracks/ui/TimeShiftHandle.h"
-//#include "tracks/playabletrack/wavetrack/ui/CutlineHandle.h"
-namespace {
-}
 
 #ifdef __GNUC__
 #define CONST

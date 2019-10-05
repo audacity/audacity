@@ -1482,6 +1482,7 @@ bool AudacityApp::OnInit()
       temporarywindow.Center();
       temporarywindow.SetTitle(_("Audacity is starting up..."));
       SetTopWindow(&temporarywindow);
+      temporarywindow.Raise();
 
       // ANSWER-ME: Why is YieldFor needed at all?
       //wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT|wxEVT_CATEGORY_UNKNOWN);
@@ -1897,6 +1898,26 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
       AudacityMessageBox(prompt, _("Audacity is already running"),
             wxOK | wxICON_ERROR);
+
+#ifdef __WXMAC__
+      // Bug 2052
+      // On mac, the lock file may persist and stop Audacity starting properly.
+      auto lockFileName = wxFileName(dir,name);
+      bool bIsLocked = lockFileName.IsOk() && lockFileName.FileExists();
+      if( bIsLocked ){
+         int action = AudacityMessageBox(wxString::Format( _("If you're sure another copy of Audacity isn't\nrunning, Audacity can skip the test for\n'Audacity already running' next time\nby removing the lock file:\n\n%s\n\nDo you want to do that?"),
+               lockFileName.GetFullName()
+            ),
+            _("Possible Lock File Problem"),
+            wxYES_NO | wxICON_EXCLAMATION,
+            NULL);
+         if (action == wxYES){
+            // If locked, unlock.
+            lockFileName.SetPermissions( wxS_DEFAULT );
+            ::wxRemoveFile( lockFileName.GetFullName() );
+         }
+      }
+#endif
       return false;
    }
 

@@ -107,6 +107,7 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
    wxString cmd;
 
    for (size_t i = 0; i < mHistory.GetCount(); i++) {
+      cmd = mHistory.GetHistoryFile(i);
       cmds.push_back(mHistory.GetHistoryFile(i));
    }
    cmd = cmds[0];
@@ -332,6 +333,11 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    // Retrieve settings
    gPrefs->Read(wxT("/FileFormats/ExternalProgramShowOutput"), &show, false);
    cmd = gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"), wxT("lame - \"%f.mp3\""));
+   // Bug 2178 - users who don't know what they are doing will 
+   // now get a file extension of .wav appended to their ffmpeg filename
+   // and therefore ffmpeg will be able to choose a file type.
+   if( cmd == wxT("ffmpeg -i - \"%f\"") && fName.Index( '.' )==wxNOT_FOUND)
+      cmd.Replace( "%f", "%f.wav" );
    cmd.Replace(wxT("%f"), fName);
 
 #if defined(__WXMSW__)

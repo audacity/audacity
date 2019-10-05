@@ -53,7 +53,6 @@
 // For using std::unordered_map on wxString
 namespace std
 {
-   template<typename T> struct hash;
    template<> struct hash< wxString > {
       size_t operator () (const wxString &str) const // noexcept
       {

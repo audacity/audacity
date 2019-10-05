@@ -276,6 +276,7 @@ static Importer::RegisteredImportPlugin registered{
    std::make_unique< LOFImportPlugin >()
 };
 
+#ifdef USE_MIDI
 // return null on failure; if success, return the given project, or a NEW
 // one, if the given was null; create no NEW project if failure
 static AudacityProject *DoImportMIDIProject(
@@ -294,6 +295,7 @@ static AudacityProject *DoImportMIDIProject(
    else
       return nullptr;
 }
+#endif
 
 /** @brief Processes a single line from a LOF text file, doing whatever is
  * indicated on the line.

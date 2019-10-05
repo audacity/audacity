@@ -23,7 +23,7 @@
 #include "../ShuttleGui.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
-/* i18n-hint: two nouns */
+/* i18n-hint: i.e. the behaviors of tracks */
 :  PrefsPanel(parent, winid, _("Tracks Behaviors"))
 {
    Populate();

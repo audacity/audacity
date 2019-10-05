@@ -78,6 +78,8 @@ void LabelTrackView::BindTo( LabelTrack *pParent )
       EVT_LABELTRACK_DELETION, &LabelTrackView::OnLabelDeleted, this );
    pParent->Bind(
       EVT_LABELTRACK_PERMUTED, &LabelTrackView::OnLabelPermuted, this );
+   pParent->Bind(
+      EVT_LABELTRACK_SELECTION, &LabelTrackView::OnSelectionChange, this );
 }
 
 void LabelTrackView::UnbindFrom( LabelTrack *pParent )
@@ -88,6 +90,8 @@ void LabelTrackView::UnbindFrom( LabelTrack *pParent )
       EVT_LABELTRACK_DELETION, &LabelTrackView::OnLabelDeleted, this );
    pParent->Unbind(
       EVT_LABELTRACK_PERMUTED, &LabelTrackView::OnLabelPermuted, this );
+   pParent->Unbind(
+      EVT_LABELTRACK_SELECTION, &LabelTrackView::OnSelectionChange, this );
 }
 
 void LabelTrackView::CopyTo( Track &track ) const
@@ -1374,6 +1378,7 @@ bool LabelTrackView::DoKeyDown(
                   if (mCurrentCursorPos > 0) {
                      title.erase(mCurrentCursorPos-1, 1);
                      mCurrentCursorPos--;
+                     pTrack->SetLabel(mSelIndex, labelStruct);
                   }
                }
             }
@@ -1403,6 +1408,7 @@ bool LabelTrackView::DoKeyDown(
                   // DELETE one letter
                   if (mCurrentCursorPos < len) {
                      title.erase(mCurrentCursorPos, 1);
+                     pTrack->SetLabel(mSelIndex, labelStruct);
                   }
                }
             }
@@ -1910,6 +1916,16 @@ void LabelTrackView::OnLabelPermuted( LabelTrackEvent &e )
       -- mSelIndex;
    else if ( former > mSelIndex && mSelIndex >= present )
       ++ mSelIndex;
+}
+
+void LabelTrackView::OnSelectionChange( LabelTrackEvent &e )
+{
+   e.Skip();
+   if ( e.mpTrack.lock() != FindTrack() )
+      return;
+
+   if ( !FindTrack()->GetSelected() )
+      mSelIndex = -1;
 }
 
 wxBitmap & LabelTrackView::GetGlyph( int i)

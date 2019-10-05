@@ -34,6 +34,7 @@
 #include <wx/listbook.h>
 
 #include <wx/treebook.h>
+#include <wx/treectrl.h>
 
 #include "../AudioIOBase.h"
 #include "../Prefs.h"
@@ -505,7 +506,10 @@ PrefsDialog::Factories
       PrefsNode(ImportExportPrefsFactory, 1),
       ExtImportPrefsFactory,
 
+#ifdef EXPERIMENTAL_OD_DATA
       ProjectsPrefsFactory,
+#endif
+
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
       LibraryPrefsFactory,
 #endif

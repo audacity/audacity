@@ -25,7 +25,7 @@ typedef struct symb_descr {
     } ptr;
 } symb_descr_node;
 
-int lookup(char *s);
+int hash_lookup(char *s);
 void defvar(char *name, int *addr);
 void defvec(char *name, int *addr, int size);
 typedef int (*defun_type)();

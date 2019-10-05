@@ -100,6 +100,8 @@ private:
    void DoDrawSelection(wxDC * dc);
 
 public:
+   std::pair< wxPoint, wxBitmap >
+      GetIndicatorBitmap(wxCoord xx, bool playing) const;
    void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub, bool seek);
    void UpdateButtonStates();
 
