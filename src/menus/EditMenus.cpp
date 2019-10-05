@@ -1069,7 +1069,7 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
          AudioIONotBusyFlag | CutCopyAvailableFlag | NoAutoSelect,
          wxT("Ctrl+X") ),
       Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
-         AudioIONotBusyFlag | NoAutoSelect,
+         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
          wxT("Ctrl+K") ),
       /* i18n-hint: (verb)*/
       Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
