@@ -50,19 +50,15 @@ AM_GNU_GETTEXT([external])
 dnl -------------------------------------------------------
 dnl Checks for programs.
 dnl -------------------------------------------------------
-dnl save $CFLAGS etc. since AC_PROG_CC likes to insert "-g -O2"
-dnl if $CFLAGS is blank and it finds GCC
-cflags_save="$CFLAGS"
-cppflags_save="$CPPFLAGS"
-cxxflags_save="$CXXFLAGS"
+dnl Supply reasonable defaults
+CFLAGS=${CFLAGS:="-O2"}
+CXXFLAGS=${CXXFLAGS:="-O2"}
+
 AX_COMPILER_VENDOR
 AC_PROG_CC
 AC_LANG([C++])
 AC_PROG_CXX
 AC_PROG_CXXCPP
-CFLAGS="$cflags_save"
-CPPFLAGS="$cppflags_save"
-CXXFLAGS="$cxxflags_save"
 
 AM_PROG_AR
 
@@ -227,9 +223,9 @@ fi
 
 if test x"$debug_preference" = "xyes" ; then
    dnl we want debuging on
-   AC_MSG_NOTICE([Adding -g for debugging to CFLAGS and CXXFLAGS ...])
-   CFLAGS="${CFLAGS} -g -DwxDEBUG_LEVEL=1"
-   CXXFLAGS="${CXXFLAGS} -g -DwxDEBUG_LEVEL=1"
+   AC_MSG_NOTICE([Adding -O0 -g for debugging to CFLAGS and CXXFLAGS ...])
+   CFLAGS="${CFLAGS} -O0 -g -DwxDEBUG_LEVEL=1"
+   CXXFLAGS="${CXXFLAGS} -O0 -g -DwxDEBUG_LEVEL=1"
 else
    CFLAGS="${CFLAGS} -DwxDEBUG_LEVEL=0"
    CXXFLAGS="${CXXFLAGS} -DwxDEBUG_LEVEL=0"

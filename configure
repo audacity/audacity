@@ -7044,9 +7044,9 @@ $as_echo "#define HAVE_DCGETTEXT 1" >>confdefs.h
 
 
 
-cflags_save="$CFLAGS"
-cppflags_save="$CPPFLAGS"
-cxxflags_save="$CXXFLAGS"
+CFLAGS=${CFLAGS:="-O2"}
+CXXFLAGS=${CXXFLAGS:="-O2"}
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler vendor" >&5
 $as_echo_n "checking for C compiler vendor... " >&6; }
@@ -8332,9 +8332,6 @@ ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
-CFLAGS="$cflags_save"
-CPPFLAGS="$cppflags_save"
-CXXFLAGS="$cxxflags_save"
 
 if test -n "$ac_tool_prefix"; then
   for ac_prog in ar lib "link -lib"
@@ -19280,10 +19277,10 @@ $as_echo "#define ENABLE_SSE 1" >>confdefs.h
 fi
 
 if test x"$debug_preference" = "xyes" ; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: Adding -g for debugging to CFLAGS and CXXFLAGS ..." >&5
-$as_echo "$as_me: Adding -g for debugging to CFLAGS and CXXFLAGS ..." >&6;}
-   CFLAGS="${CFLAGS} -g -DwxDEBUG_LEVEL=1"
-   CXXFLAGS="${CXXFLAGS} -g -DwxDEBUG_LEVEL=1"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Adding -O0 -g for debugging to CFLAGS and CXXFLAGS ..." >&5
+$as_echo "$as_me: Adding -O0 -g for debugging to CFLAGS and CXXFLAGS ..." >&6;}
+   CFLAGS="${CFLAGS} -O0 -g -DwxDEBUG_LEVEL=1"
+   CXXFLAGS="${CXXFLAGS} -O0 -g -DwxDEBUG_LEVEL=1"
 else
    CFLAGS="${CFLAGS} -DwxDEBUG_LEVEL=0"
    CXXFLAGS="${CXXFLAGS} -DwxDEBUG_LEVEL=0"
