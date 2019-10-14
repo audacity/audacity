@@ -233,12 +233,19 @@ void OnExportLabels(const CommandContext &context)
                         wxEmptyString,
                         fName,
                         wxT("txt"),
-                        wxT("*.txt"),
+                        _("Text files (*.txt)|*.txt|SubRip text file (*.srt)|*.srt|WebVTT file (*.vtt)|*.vtt"),
                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
                         &window);
 
    if (fName.empty())
       return;
+
+   LabelFormat format = LabelFormat::TEXT;
+   if (fName.Right(4).CmpNoCase(wxT(".srt")) == 0) {
+      format = LabelFormat::SUBRIP;
+   } else if (fName.Right(4).CmpNoCase(wxT(".vtt")) == 0) {
+      format = LabelFormat::WEBVVT;
+   }
 
    // Move existing files out of the way.  Otherwise wxTextFile will
    // append to (rather than replace) the current file.
@@ -266,7 +273,7 @@ void OnExportLabels(const CommandContext &context)
    }
 
    for (auto lt : trackRange)
-      lt->Export(f);
+      lt->Export(f, format);
 
    f.Write();
    f.Close();
@@ -423,11 +430,17 @@ void OnImportLabels(const CommandContext &context)
                     wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
-                    _("Text files (*.txt)|*.txt|All files|*"),
+                    _("Text files (*.txt)|*.txt|SubRip text file (*.srt)|*.srt|All files|*"),
                     wxRESIZE_BORDER,        // Flags
                     &window);    // Parent
 
    if (!fileName.empty()) {
+      LabelFormat format = LabelFormat::TEXT;
+      if (fileName.Right(4).CmpNoCase(wxT(".srt")) == 0) {
+         format = LabelFormat::SUBRIP;
+      } else if (fileName.Right(4).CmpNoCase(wxT(".vtt")) == 0) {
+         format = LabelFormat::WEBVVT;
+      }
       wxTextFile f;
 
       f.Open(fileName);
@@ -442,7 +455,7 @@ void OnImportLabels(const CommandContext &context)
       wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
       newTrack->SetName(sTrackName);
 
-      newTrack->Import(f);
+      newTrack->Import(f, format);
 
       SelectUtilities::SelectNone( project );
       newTrack->SetSelected(true);

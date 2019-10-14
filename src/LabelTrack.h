@@ -27,6 +27,13 @@ class TimeWarper;
 struct LabelTrackHit;
 struct TrackPanelDrawingContext;
 
+enum class LabelFormat
+{
+   TEXT,
+   SUBRIP,
+   WEBVVT
+};
+
 class LabelStruct
 {
 public:
@@ -45,9 +52,9 @@ public:
    void MoveLabel( int iEdge, double fNewTime);
 
    struct BadFormatException {};
-   static LabelStruct Import(wxTextFile &file, int &index);
+   static LabelStruct Import(wxTextFile &file, int &index, LabelFormat format);
 
-   void Export(wxTextFile &file) const;
+   void Export(wxTextFile &file, LabelFormat format, int index) const;
 
    /// Relationships between selection region and labels
    enum TimeRelations
@@ -127,8 +134,8 @@ public:
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
 
-   void Import(wxTextFile & f);
-   void Export(wxTextFile & f) const;
+   void Import(wxTextFile & f, LabelFormat format);
+   void Export(wxTextFile & f, LabelFormat format) const;
 
    int GetNumLabels() const;
    const LabelStruct *GetLabel(int index) const;

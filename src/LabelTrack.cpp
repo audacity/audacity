@@ -323,101 +323,199 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
    updated = true;
 }
 
-LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
+LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format)
 {
    SelectedRegion sr;
    wxString title;
-   static const wxString continuation{ wxT("\\") };
 
    wxString firstLine = file.GetLine(index++);
 
+   switch (format) {
+   case LabelFormat::TEXT:
    {
-      // Assume tab is an impossible character within the exported text
-      // of the label, so can be only a delimiter.  But other white space may
-      // be part of the label text.
-      wxStringTokenizer toker { firstLine, wxT("\t") };
+      static const wxString continuation{ wxT("\\") };
 
-      //get the timepoint of the left edge of the label.
-      auto token = toker.GetNextToken();
+      {
+         // Assume tab is an impossible character within the exported text
+         // of the label, so can be only a delimiter.  But other white space may
+         // be part of the label text.
+         wxStringTokenizer toker { firstLine, wxT("\t") };
 
-      double t0;
-      if (!Internat::CompatibleToDouble(token, &t0))
-         throw BadFormatException{};
+         //get the timepoint of the left edge of the label.
+         auto token = toker.GetNextToken();
 
-      token = toker.GetNextToken();
+         double t0;
+         if (!Internat::CompatibleToDouble(token, &t0))
+            throw BadFormatException{};
 
-      double t1;
-      if (!Internat::CompatibleToDouble(token, &t1))
-         //s1 is not a number.
-         t1 = t0;  //This is a one-sided label; t1 == t0.
-      else
          token = toker.GetNextToken();
 
-      sr.setTimes( t0, t1 );
-      
-      title = token;
+         double t1;
+         if (!Internat::CompatibleToDouble(token, &t1))
+            //s1 is not a number.
+            t1 = t0;  //This is a one-sided label; t1 == t0.
+         else
+            token = toker.GetNextToken();
+
+         sr.setTimes( t0, t1 );
+
+         title = token;
+      }
+
+      // Newer selection fields are written on additional lines beginning with
+      // '\' which is an impossible numerical character that older versions of
+      // audacity will ignore.  Test for the presence of such a line and then
+      // parse it if we can.
+
+      // There may also be additional continuation lines from future formats that
+      // we ignore.
+
+      // Advance index over all continuation lines first, before we might throw
+      // any exceptions.
+      int index2 = index;
+      while (index < (int)file.GetLineCount() &&
+             file.GetLine(index).StartsWith(continuation))
+         ++index;
+
+      if (index2 < index) {
+         wxStringTokenizer toker { file.GetLine(index2++), wxT("\t") };
+         auto token = toker.GetNextToken();
+         if (token != continuation)
+            throw BadFormatException{};
+
+         token = toker.GetNextToken();
+         double f0;
+         if (!Internat::CompatibleToDouble(token, &f0))
+            throw BadFormatException{};
+
+         token = toker.GetNextToken();
+         double f1;
+         if (!Internat::CompatibleToDouble(token, &f1))
+            throw BadFormatException{};
+
+         sr.setFrequencies(f0, f1);
+      }
+      break;
    }
-
-   // Newer selection fields are written on additional lines beginning with
-   // '\' which is an impossible numerical character that older versions of
-   // audacity will ignore.  Test for the presence of such a line and then
-   // parse it if we can.
-
-   // There may also be additional continuation lines from future formats that
-   // we ignore.
-
-   // Advance index over all continuation lines first, before we might throw
-   // any exceptions.
-   int index2 = index;
-   while (index < (int)file.GetLineCount() &&
-          file.GetLine(index).StartsWith(continuation))
-      ++index;
-
-   if (index2 < index) {
-      wxStringTokenizer toker { file.GetLine(index2++), wxT("\t") };
-      auto token = toker.GetNextToken();
-      if (token != continuation)
+   case LabelFormat::SUBRIP:
+   {
+      if ((int)file.GetLineCount() < index + 2)
          throw BadFormatException{};
 
-      token = toker.GetNextToken();
-      double f0;
-      if (!Internat::CompatibleToDouble(token, &f0))
+      long identifier;
+      // The first line should be a numeric counter; we can ignore it otherwise
+      if (!firstLine.ToLong(&identifier))
          throw BadFormatException{};
 
-      token = toker.GetNextToken();
-      double f1;
-      if (!Internat::CompatibleToDouble(token, &f1))
+      wxString timestamp = file.GetLine(index++);
+      // HH:MM:SS,sss --> HH:MM:SS,sss
+      // Assume that the line is in exactly that format, with no extra whitespace
+      // and no 3-digit hour.
+      if (timestamp.length() != 29)
+         throw BadFormatException{};
+      if (!timestamp.substr(12, 5).IsSameAs(" --> "))
+         throw BadFormatException{};
+      if (timestamp[2] != ':' || timestamp[5] != ':' || timestamp[19] != ':' || timestamp[22] != ':')
+         throw BadFormatException{};
+      if (timestamp[8] != ',' || timestamp[25] != ',')
          throw BadFormatException{};
 
-      sr.setFrequencies(f0, f1);
+      long startHour, startMinute, startSec, startMsec;
+      if (!timestamp.substr(0, 2).ToLong(&startHour) ||
+            !timestamp.substr(3, 2).ToLong(&startMinute) ||
+            !timestamp.substr(6, 2).ToLong(&startSec) ||
+            !timestamp.substr(9, 3).ToLong(&startMsec))
+         throw BadFormatException{};
+      double t0 = startHour * 60 * 60 + startMinute * 60 + startSec + startMsec / 1000.;
+
+      long endHour, endMinute, endSec, endMsec;
+      if (!timestamp.substr(17, 2).ToLong(&endHour) ||
+            !timestamp.substr(20, 2).ToLong(&endMinute) ||
+            !timestamp.substr(23, 2).ToLong(&endSec) ||
+            !timestamp.substr(26, 3).ToLong(&endMsec))
+         throw BadFormatException{};
+      double t1 = endHour * 60 * 60 + endMinute * 60 + endSec + endMsec / 1000.;
+
+      sr.setTimes(t0, t1);
+
+      // Assume that if there is an empty subtitle, there still is a second blank line after it
+      title = file[index++];
+
+      // Labels in audacity should be only one line, so join multiple lines with spaces.
+      while (index < (int)file.GetLineCount() &&
+             !file.GetLine(index).IsEmpty())
+         title += " " + file.GetLine(index);
+
+      index++; // Skip over empty line
+
+      break;
+   }
+   default:
+      throw BadFormatException{};
    }
 
    return LabelStruct{ sr, title };
 }
 
-void LabelStruct::Export(wxTextFile &file) const
+void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index) const
 {
-   file.AddLine(wxString::Format(wxT("%s\t%s\t%s"),
-      Internat::ToString(getT0(), FLT_DIG),
-      Internat::ToString(getT1(), FLT_DIG),
-      title
-   ));
+   switch (format) {
+   case LabelFormat::TEXT:
+   default:
+   {
+      file.AddLine(wxString::Format(wxT("%s\t%s\t%s"),
+         Internat::ToString(getT0(), FLT_DIG),
+         Internat::ToString(getT1(), FLT_DIG),
+         title
+      ));
 
-   // Do we need more lines?
-   auto f0 = selectedRegion.f0();
-   auto f1 = selectedRegion.f1();
-   if (f0 == SelectedRegion::UndefinedFrequency &&
-       f1 == SelectedRegion::UndefinedFrequency)
-      return;
+      // Do we need more lines?
+      auto f0 = selectedRegion.f0();
+      auto f1 = selectedRegion.f1();
+      if (f0 == SelectedRegion::UndefinedFrequency &&
+          f1 == SelectedRegion::UndefinedFrequency)
+         return;
 
-   // Write a \ character at the start of a second line,
-   // so that earlier versions of Audacity ignore it.
-   file.AddLine(wxString::Format(wxT("\\\t%s\t%s"),
-      Internat::ToString(f0, FLT_DIG),
-      Internat::ToString(f1, FLT_DIG)
-   ));
+      // Write a \ character at the start of a second line,
+      // so that earlier versions of Audacity ignore it.
+      file.AddLine(wxString::Format(wxT("\\\t%s\t%s"),
+         Internat::ToString(f0, FLT_DIG),
+         Internat::ToString(f1, FLT_DIG)
+      ));
 
-   // Additional lines in future formats should also start with '\'.
+      // Additional lines in future formats should also start with '\'.
+      break;
+   }
+   case LabelFormat::SUBRIP:
+   case LabelFormat::WEBVVT:
+   {
+      // Note that the SubRip format always uses the comma as its separator...
+      static constexpr auto subripTimeFormat = wxT("%02d:%02d:%02d,%03d --> %02d:%02d:%02d,%03d");
+      // ... while WebVTT always used the period.
+      // WebVVT also allows skipping the hour part, but that is not required.
+      static constexpr auto webvvtTimeFormat = wxT("%02d:%02d:%02d.%03d --> %02d:%02d:%02d.%03d");
+
+      // Note that the identifier is optional in WebVVT, but required in SubRip.
+      file.AddLine(wxString::Format(wxT("%d"), index + 1));
+
+      int startHour = (int)(getT0() / (60 * 60));
+      int startMinute = (int)(getT0() / 60) % 60;
+      int startSec = (int)(getT0()) % 60;
+      int startMsec = (int)(getT0() * 1000) % 1000;
+      int endHour = (int)(getT1() / (60 * 60));
+      int endMinute = (int)(getT1() / 60) % 60;
+      int endSec = (int)(getT1()) % 60;
+      int endMsec = (int)(getT1() * 1000) % 1000;
+      file.AddLine(wxString::Format(format == LabelFormat::SUBRIP ? subripTimeFormat : webvvtTimeFormat,
+         startHour, startMinute, startSec, startMsec,
+         endHour, endMinute, endSec, endMsec));
+
+      file.AddLine(title);
+      file.AddLine(wxT(""));
+
+      break;
+   }
+   }
 }
 
 auto LabelStruct::RegionRelation(
@@ -487,15 +585,21 @@ auto LabelStruct::RegionRelation(
 }
 
 /// Export labels including label start and end-times.
-void LabelTrack::Export(wxTextFile & f) const
+void LabelTrack::Export(wxTextFile & f, LabelFormat format) const
 {
+   if (format == LabelFormat::WEBVVT) {
+      f.AddLine(wxT("WEBVVT"));
+      f.AddLine(wxT(""));
+   }
+
    // PRL: to do: export other selection fields
+   int index = 0;
    for (auto &labelStruct: mLabels)
-      labelStruct.Export(f);
+      labelStruct.Export(f, format, index++);
 }
 
 /// Import labels, handling files with or without end-times.
-void LabelTrack::Import(wxTextFile & in)
+void LabelTrack::Import(wxTextFile & in, LabelFormat format)
 {
    int lines = in.GetLineCount();
 
@@ -509,7 +613,7 @@ void LabelTrack::Import(wxTextFile & in)
    for (int index = 0; index < lines;) {
       try {
          // Let LabelStruct::Import advance index
-         LabelStruct l { LabelStruct::Import(in, index) };
+         LabelStruct l { LabelStruct::Import(in, index, format) };
          mLabels.push_back(l);
       }
       catch(const LabelStruct::BadFormatException&) { error = true; }

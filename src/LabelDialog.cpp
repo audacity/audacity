@@ -632,12 +632,19 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
                     wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
-                    _("Text files (*.txt)|*.txt|All files|*"),
+                    _("Text files (*.txt)|*.txt|SubRip text file (*.srt)|*.srt|All files|*"),
                     wxRESIZE_BORDER, // Flags
                     this);    // Parent
 
    // They gave us one...
    if (!fileName.empty()) {
+      LabelFormat format = LabelFormat::TEXT;
+      if (fileName.Right(4).CmpNoCase(wxT(".srt")) == 0) {
+         format = LabelFormat::SUBRIP;
+      } else if (fileName.Right(4).CmpNoCase(wxT(".vtt")) == 0) {
+         format = LabelFormat::WEBVVT;
+      }
+
       wxTextFile f;
 
       // Get at the data
@@ -650,7 +657,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
          // Create a temporary label track and load the labels
          // into it
          auto lt = mFactory.NewLabelTrack();
-         lt->Import(f);
+         lt->Import(f, format);
 
          // Add the labels to our collection
          AddLabels(lt.get());
@@ -681,12 +688,19 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
       wxEmptyString,
       fName,
       wxT("txt"),
-      wxT("*.txt"),
+      _("Text files (*.txt)|*.txt|SubRip text file (*.srt)|*.srt|WebVTT file (*.vtt)|*.vtt"),
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
       this);
 
    if (fName.empty())
       return;
+
+   LabelFormat format = LabelFormat::TEXT;
+   if (fName.Right(4).CmpNoCase(wxT(".srt")) == 0) {
+      format = LabelFormat::SUBRIP;
+   } else if (fName.Right(4).CmpNoCase(wxT(".vtt")) == 0) {
+      format = LabelFormat::WEBVVT;
+   }
 
    // Move existing files out of the way.  Otherwise wxTextFile will
    // append to (rather than replace) the current file.
@@ -728,7 +742,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    // Export them and clean
-   lt->Export(f);
+   lt->Export(f, format);
 
 #ifdef __WXMAC__
    f.Write(wxTextFileType_Mac);
