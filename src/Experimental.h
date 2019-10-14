@@ -258,4 +258,7 @@
 // it is dangerous and has too many bugs.  See bug 536 for example. 
 //#do not define EXPERIMENTAL_OD_DATA
 
+// Jonatã Bolzan Loss 31 Dec 2019
+#define EXPERIMENTAL_TIMER_TOOLBAR
+
 #endif

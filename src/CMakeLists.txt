@@ -3,7 +3,7 @@ project (Audacity)
 find_package(wxWidgets REQUIRED COMPONENTS net core base html qa adv)
 include(${wxWidgets_USE_FILE})
 
-set_property(GLOBAL PROPERTY USE_FOLDERS On) 
+set_property(GLOBAL PROPERTY USE_FOLDERS On)
 
 
 # Needed for configwin.h included by Audacity.h
@@ -24,7 +24,7 @@ include_directories(${top_dir}/lib-src/libmad)
 include_directories(${top_dir}/lib-src/libnyquist)
 include_directories(${top_dir}/lib-src/libogg/include)
 include_directories(${top_dir}/lib-src/libscorealign)
-include_directories(${top_dir}/win/Projects/libsndfile) 
+include_directories(${top_dir}/win/Projects/libsndfile)
 include_directories(${top_dir}/lib-src/libsoxr/src) #really?  Src?
 include_directories(${top_dir}/lib-src/libvamp)
 include_directories(${top_dir}/lib-src/libvorbis/include)
@@ -76,7 +76,7 @@ add_compile_options(/wd4996)
 
 
 
-set( SOURCE 
+set( SOURCE
    ${CMAKE_SOURCE_DIRECTORY}AudacityHeaders.cpp  #first so cotire can precompile
    ${CMAKE_SOURCE_DIRECTORY}AboutDialog.cpp
    ${CMAKE_SOURCE_DIRECTORY}AColor.cpp
@@ -184,7 +184,7 @@ set( BLOCKFILE_SOURCE
    ${CMAKE_SOURCE_DIRECTORY}blockfile/PCMAliasBlockFile.cpp
    ${CMAKE_SOURCE_DIRECTORY}blockfile/SilentBlockFile.cpp
    ${CMAKE_SOURCE_DIRECTORY}blockfile/SimpleBlockFile.cpp
-)   
+)
 source_group( blockfile FILES ${BLOCKFILE_SOURCE} )
 
 
@@ -379,6 +379,7 @@ set( TOOLBARS_SOURCE
    ${CMAKE_SOURCE_DIRECTORY}toolbars/ScrubbingToolBar.cpp
    ${CMAKE_SOURCE_DIRECTORY}toolbars/SelectionBar.cpp
    ${CMAKE_SOURCE_DIRECTORY}toolbars/SpectralSelectionBar.cpp
+   ${CMAKE_SOURCE_DIRECTORY}toolbars/TimerToolBar.cpp
    ${CMAKE_SOURCE_DIRECTORY}toolbars/ToolBar.cpp
    ${CMAKE_SOURCE_DIRECTORY}toolbars/ToolDock.cpp
    ${CMAKE_SOURCE_DIRECTORY}toolbars/ToolManager.cpp
@@ -471,7 +472,7 @@ set( XML_SOURCE
 )
 source_group( xml FILES ${XML_SOURCE} )
 
-set( SOURCE 
+set( SOURCE
    ${SOURCE}
    ${BLOCKFILE_SOURCE}
    ${COMMANDS_SOURCE}
@@ -507,8 +508,8 @@ if(MSVC)
 endif()
 
 #Use cotire to get precompiled headers, and a unity build.
-set_target_properties(Audacity 
-PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT 
+set_target_properties(Audacity
+PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT
 "AudacityHeaders.h")
 cotire(Audacity)
 

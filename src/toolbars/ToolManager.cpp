@@ -178,7 +178,7 @@ void ToolFrame::OnPaint( wxPaintEvent & WXUNUSED(event) )
    dc.SetPen( theTheme.Colour( clrTrackPanelText) );
 #if !defined(__WXMAC__)
    wxBrush clearer( theTheme.Colour( clrMedium ));
-   dc.SetBackground( clearer ); 
+   dc.SetBackground( clearer );
    dc.Clear();
    dc.SetBrush( *wxTRANSPARENT_BRUSH );
    dc.DrawRectangle( 0, 0, sz.GetWidth(), sz.GetHeight() );
@@ -563,7 +563,7 @@ void ToolManager::Reset()
       }
 
       // Decide which dock.
-      if (ndx == SelectionBarID 
+      if (ndx == SelectionBarID
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
          || ndx == SpectralSelectionBarID
 #endif
@@ -631,7 +631,7 @@ void ToolManager::Reset()
          // This bar is undocked and invisible.
          // We are doing a reset toolbars, so even the invisible undocked bars should
          // be moved somewhere sensible. Put bar near center of window.
-         // If there were multiple hidden toobars the ndx * 10 adjustment means 
+         // If there were multiple hidden toobars the ndx * 10 adjustment means
          // they won't overlap too much.
          floater->CentreOnParent( );
          floater->Move( floater->GetPosition() + wxSize( ndx * 10 - 200, ndx * 10 ));
@@ -721,7 +721,7 @@ void ToolManager::ReadConfig()
    {
       ToolBar *bar = mBars[ ndx ].get();
       //wxPoint Center = mParent->GetPosition() + (mParent->GetSize() * 0.33);
-      //wxPoint Center( 
+      //wxPoint Center(
       //   wxSystemSettings::GetMetric( wxSYS_SCREEN_X ) /2 ,
       //   wxSystemSettings::GetMetric( wxSYS_SCREEN_Y ) /2 );
 
@@ -730,18 +730,20 @@ void ToolManager::ReadConfig()
 
       bool bShownByDefault = true;
       int defaultDock = TopDockID;
-      
+
       if( ndx == SelectionBarID )
          defaultDock = BotDockID;
       if( ndx == MeterBarID )
          bShownByDefault = false;
       if( ndx == ScrubbingBarID )
          bShownByDefault = false;
+      if( ndx == TimerBarID )
+         bShownByDefault = false;
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       if( ndx == SpectralSelectionBarID ){
          defaultDock = BotDockID;
-         bShownByDefault = false; // Only show if asked for.  
+         bShownByDefault = false; // Only show if asked for.
       }
 #endif
 
@@ -751,13 +753,13 @@ void ToolManager::ReadConfig()
          gPrefs->Read( wxT("Dock"), &dock, -1);       // legacy version of DockV2
       else
          gPrefs->Read( wxT("DockV2"), &dock, -1);
-        
+
       const bool found = (dock != -1);
       if (found)
          someFound = true;
       if (!found)
          dock = defaultDock;
-      
+
       ToolDock *d;
       ToolBarConfiguration::Legacy *pLegacy;
       switch(dock)
@@ -833,7 +835,7 @@ void ToolManager::ReadConfig()
 #endif
          // make a note of docked and hidden toolbars
          if (!show[ndx])
-            dockedAndHidden.push_back(bar);         
+            dockedAndHidden.push_back(bar);
 
          if (!ordered)
          {
@@ -955,7 +957,7 @@ void ToolManager::WriteConfig()
       // its value is compatible with versions 2.1.3 to 2.2.1 which have this bug.
       ToolDock* dock = bar->GetDock();       // dock for both shown and hidden toolbars
       gPrefs->Write( wxT("DockV2"), static_cast<int>(dock == mTopDock ? TopDockID : dock == mBotDock ? BotDockID : NoDockID ));
-      
+
       gPrefs->Write( wxT("Dock"), static_cast<int>( to ? TopDockID : bo ? BotDockID : NoDockID));
 
       dock = to ? mTopDock : bo ? mBotDock : nullptr;    // dock for shown toolbars
@@ -1184,11 +1186,11 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       br.SetPosition( mBotDock->GetParent()->ClientToScreen( br.GetPosition() ) );
 
 
-      // Add half the bar height.  We could use the actual bar height, but that would be confusing as a 
+      // Add half the bar height.  We could use the actual bar height, but that would be confusing as a
       // bar removed at a place might not dock back there if just let go.
-      // Also add 5 pixels in horizontal direction, so that a click without a move (or a very small move) 
+      // Also add 5 pixels in horizontal direction, so that a click without a move (or a very small move)
       // lands back where we started.
-      pos +=  wxPoint( 5, 20 ); 
+      pos +=  wxPoint( 5, 20 );
 
 
       // To find which dock, rather than test against pos, test against the whole dragger rect.

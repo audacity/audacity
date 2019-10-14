@@ -52,6 +52,15 @@ void OnShowTransportToolBar(const CommandContext &context)
    MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
+void OnShowTimerToolBar(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &toolManager = ToolManager::Get( project );
+
+   toolManager.ShowHide( TimerBarID );
+   MenuManager::Get(project).ModifyToolbarMenus(project);
+}
+
 void OnShowToolsToolBar(const CommandContext &context)
 {
    auto &project = context.project;
@@ -249,7 +258,7 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
-   
+
    static const auto checkOff = Options{}.CheckState( false );
 
    return Menu( XO("&Toolbars"),
@@ -306,6 +315,13 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
          for selecting a time range of audio*/
       Command( wxT("ShowSelectionTB"), XXO("&Selection Toolbar"),
          FN(OnShowSelectionToolBar), AlwaysEnabledFlag, checkOff )
+#ifdef EXPERIMENTAL_TIMER_TOOLBAR
+      ,
+      /* i18n-hint: Clicking this menu item shows the toolbar
+         for viewing actual time of the cursor*/
+      Command( wxT("ShowTImerToolBarTB"), XXO("&Timer Toolbar"),
+         FN(OnShowTimerToolBar), AlwaysEnabledFlag, checkOff )
+#endif
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       ,
       Command( wxT("ShowSpectralSelectionTB"),

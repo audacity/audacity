@@ -197,9 +197,10 @@ enum
    IdCaptureFullWindow,
    IdCaptureWindowPlus,
    IdCaptureFullScreen,
-  
+
    IdCaptureSelectionBar,
    IdCaptureSpectralSelection,
+   IdCaptureTimer,
    IdCaptureTools,
    IdCaptureTransport,
    IdCaptureMixer,
@@ -399,6 +400,7 @@ void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.Id(IdCaptureSelectionBar).AddButton(XO("SelectionBar"));
             S.Id(IdCaptureSpectralSelection).AddButton(XO("Spectral Selection"));
+            S.Id(IdCaptureTimer).AddButton(XO("Timer"));
             S.Id(IdCaptureTools).AddButton(XO("Tools"));
             S.Id(IdCaptureTransport).AddButton(XO("Transport"));
          }
@@ -635,7 +637,7 @@ void ScreenshotBigDialog::OnCaptureSomething(wxCommandEvent &  event)
    IdCaptureFullWindow,
    IdCaptureWindowPlus,
    IdCaptureFullScreen,
-  
+
    IdCaptureSelectionBar,
    IdCaptureSpectralSelection,
    IdCaptureTools,

@@ -204,6 +204,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
    void SetFieldFocus(int /* digit */);
 
+   void SetDigitSize(int width, int height);
    void SetReadOnly(bool readOnly = true);
    void EnableMenu(bool enable = true);
 

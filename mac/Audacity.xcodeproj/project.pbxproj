@@ -1334,6 +1334,7 @@
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
 		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
 		5ED8FF8A239AB9960065BC5B /* noisegate.ny in Resources */ = {isa = PBXBuildFile; fileRef = 5ED8FF89239AB9960065BC5B /* noisegate.ny */; };
+		5EE2698323BBD4E800C58E4D /* TimerToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EE2698123BBD4E800C58E4D /* TimerToolBar.cpp */; };
 		5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */; };
 		5EF3E64D203FBAFB006C6882 /* AudacityCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E643203FBAFB006C6882 /* AudacityCommand.cpp */; };
 		5EF3E64E203FBAFB006C6882 /* CommandContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E645203FBAFB006C6882 /* CommandContext.cpp */; };
@@ -3434,6 +3435,8 @@
 		5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackedPanel.cpp; sourceTree = "<group>"; };
 		5ED1D0B01CDE560C00471E3C /* BackedPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackedPanel.h; sourceTree = "<group>"; };
 		5ED8FF89239AB9960065BC5B /* noisegate.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = noisegate.ny; path = "../plug-ins/noisegate.ny"; sourceTree = "<group>"; };
+		5EE2698123BBD4E800C58E4D /* TimerToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimerToolBar.cpp; sourceTree = "<group>"; };
+		5EE2698223BBD4E800C58E4D /* TimerToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerToolBar.h; sourceTree = "<group>"; };
 		5EE8984821D68D88006DE939 /* CommandManagerWindowClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandManagerWindowClasses.h; sourceTree = "<group>"; };
 		5EEE942021F397C00038E68E /* AttachedVirtualFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachedVirtualFunction.h; sourceTree = "<group>"; };
 		5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrubbingToolBar.cpp; sourceTree = "<group>"; };
@@ -5961,6 +5964,8 @@
 				28001B481A0F0EB6007DD161 /* SpectralSelectionBar.cpp */,
 				28001B491A0F0EB6007DD161 /* SpectralSelectionBar.h */,
 				28001B4A1A0F0EB6007DD161 /* SpectralSelectionBarListener.h */,
+				5EE2698123BBD4E800C58E4D /* TimerToolBar.cpp */,
+				5EE2698223BBD4E800C58E4D /* TimerToolBar.h */,
 				2897F6E60AB3DB5A003C20C5 /* ToolBar.cpp */,
 				2897F6E70AB3DB5A003C20C5 /* ToolBar.h */,
 				2897F6E80AB3DB5A003C20C5 /* ToolDock.cpp */,
@@ -8968,6 +8973,7 @@
 				28884952131B6CF600B59735 /* fa.po in Sources */,
 				28884953131B6CF600B59735 /* fi.po in Sources */,
 				28884954131B6CF600B59735 /* fr.po in Sources */,
+				5EE2698323BBD4E800C58E4D /* TimerToolBar.cpp in Sources */,
 				5EBD1C9522D11DAF00299FD4 /* WaveformVZoomHandle.cpp in Sources */,
 				28884955131B6CF600B59735 /* ga.po in Sources */,
 				28884956131B6CF600B59735 /* gl.po in Sources */,

@@ -1415,6 +1415,14 @@ void NumericTextCtrl::SetValue(double newValue)
    ControlsToValue();
 }
 
+void NumericTextCtrl::SetDigitSize(int width, int height)
+{
+   mDigitBoxW = width;
+   mDigitBoxH = height;
+   Layout();
+   Fit();
+}
+
 void NumericTextCtrl::SetReadOnly(bool readOnly)
 {
    mReadOnly = readOnly;

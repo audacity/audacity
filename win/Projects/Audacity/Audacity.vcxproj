@@ -491,6 +491,7 @@
     <ClCompile Include="..\..\..\src\toolbars\MeterToolBar.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\MixerToolBar.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\SelectionBar.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\TimerToolBar.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\ToolBar.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\ToolDock.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\ToolManager.cpp" />

@@ -494,7 +494,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	toolbars/SelectionBar.cpp toolbars/SelectionBar.h \
 	toolbars/SpectralSelectionBar.cpp \
 	toolbars/SpectralSelectionBar.h \
-	toolbars/SpectralSelectionBarListener.h toolbars/ToolBar.cpp \
+	toolbars/SpectralSelectionBarListener.h \
+	toolbars/TimerToolBar.cpp toolbars/ToolBar.cpp \
 	toolbars/ToolBar.h toolbars/ToolDock.cpp toolbars/ToolDock.h \
 	toolbars/ToolManager.cpp toolbars/ToolManager.h \
 	toolbars/ToolsToolBar.cpp toolbars/ToolsToolBar.h \
@@ -892,6 +893,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	toolbars/audacity-ScrubbingToolBar.$(OBJEXT) \
 	toolbars/audacity-SelectionBar.$(OBJEXT) \
 	toolbars/audacity-SpectralSelectionBar.$(OBJEXT) \
+	toolbars/audacity-TimerToolBar.$(OBJEXT) \
 	toolbars/audacity-ToolBar.$(OBJEXT) \
 	toolbars/audacity-ToolDock.$(OBJEXT) \
 	toolbars/audacity-ToolManager.$(OBJEXT) \
@@ -1334,6 +1336,7 @@ am__depfiles_remade = ./$(DEPDIR)/audacity-AColor.Po \
 	toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Po \
 	toolbars/$(DEPDIR)/audacity-SelectionBar.Po \
 	toolbars/$(DEPDIR)/audacity-SpectralSelectionBar.Po \
+	toolbars/$(DEPDIR)/audacity-TimerToolBar.Po \
 	toolbars/$(DEPDIR)/audacity-ToolBar.Po \
 	toolbars/$(DEPDIR)/audacity-ToolDock.Po \
 	toolbars/$(DEPDIR)/audacity-ToolManager.Po \
@@ -2013,7 +2016,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	toolbars/SelectionBar.cpp toolbars/SelectionBar.h \
 	toolbars/SpectralSelectionBar.cpp \
 	toolbars/SpectralSelectionBar.h \
-	toolbars/SpectralSelectionBarListener.h toolbars/ToolBar.cpp \
+	toolbars/SpectralSelectionBarListener.h \
+	toolbars/TimerToolBar.cpp toolbars/ToolBar.cpp \
 	toolbars/ToolBar.h toolbars/ToolDock.cpp toolbars/ToolDock.h \
 	toolbars/ToolManager.cpp toolbars/ToolManager.h \
 	toolbars/ToolsToolBar.cpp toolbars/ToolsToolBar.h \
@@ -2669,6 +2673,8 @@ toolbars/audacity-SelectionBar.$(OBJEXT): toolbars/$(am__dirstamp) \
 	toolbars/$(DEPDIR)/$(am__dirstamp)
 toolbars/audacity-SpectralSelectionBar.$(OBJEXT):  \
 	toolbars/$(am__dirstamp) toolbars/$(DEPDIR)/$(am__dirstamp)
+toolbars/audacity-TimerToolBar.$(OBJEXT): toolbars/$(am__dirstamp) \
+	toolbars/$(DEPDIR)/$(am__dirstamp)
 toolbars/audacity-ToolBar.$(OBJEXT): toolbars/$(am__dirstamp) \
 	toolbars/$(DEPDIR)/$(am__dirstamp)
 toolbars/audacity-ToolDock.$(OBJEXT): toolbars/$(am__dirstamp) \
@@ -3347,6 +3353,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-SelectionBar.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-SpectralSelectionBar.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-TimerToolBar.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-ToolBar.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-ToolDock.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-ToolManager.Po@am__quote@ # am--include-marker
@@ -7462,6 +7469,20 @@ toolbars/audacity-SpectralSelectionBar.obj: toolbars/SpectralSelectionBar.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o toolbars/audacity-SpectralSelectionBar.obj `if test -f 'toolbars/SpectralSelectionBar.cpp'; then $(CYGPATH_W) 'toolbars/SpectralSelectionBar.cpp'; else $(CYGPATH_W) '$(srcdir)/toolbars/SpectralSelectionBar.cpp'; fi`
 
+toolbars/audacity-TimerToolBar.o: toolbars/TimerToolBar.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT toolbars/audacity-TimerToolBar.o -MD -MP -MF toolbars/$(DEPDIR)/audacity-TimerToolBar.Tpo -c -o toolbars/audacity-TimerToolBar.o `test -f 'toolbars/TimerToolBar.cpp' || echo '$(srcdir)/'`toolbars/TimerToolBar.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) toolbars/$(DEPDIR)/audacity-TimerToolBar.Tpo toolbars/$(DEPDIR)/audacity-TimerToolBar.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='toolbars/TimerToolBar.cpp' object='toolbars/audacity-TimerToolBar.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o toolbars/audacity-TimerToolBar.o `test -f 'toolbars/TimerToolBar.cpp' || echo '$(srcdir)/'`toolbars/TimerToolBar.cpp
+
+toolbars/audacity-TimerToolBar.obj: toolbars/TimerToolBar.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT toolbars/audacity-TimerToolBar.obj -MD -MP -MF toolbars/$(DEPDIR)/audacity-TimerToolBar.Tpo -c -o toolbars/audacity-TimerToolBar.obj `if test -f 'toolbars/TimerToolBar.cpp'; then $(CYGPATH_W) 'toolbars/TimerToolBar.cpp'; else $(CYGPATH_W) '$(srcdir)/toolbars/TimerToolBar.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) toolbars/$(DEPDIR)/audacity-TimerToolBar.Tpo toolbars/$(DEPDIR)/audacity-TimerToolBar.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='toolbars/TimerToolBar.cpp' object='toolbars/audacity-TimerToolBar.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o toolbars/audacity-TimerToolBar.obj `if test -f 'toolbars/TimerToolBar.cpp'; then $(CYGPATH_W) 'toolbars/TimerToolBar.cpp'; else $(CYGPATH_W) '$(srcdir)/toolbars/TimerToolBar.cpp'; fi`
+
 toolbars/audacity-ToolBar.o: toolbars/ToolBar.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT toolbars/audacity-ToolBar.o -MD -MP -MF toolbars/$(DEPDIR)/audacity-ToolBar.Tpo -c -o toolbars/audacity-ToolBar.o `test -f 'toolbars/ToolBar.cpp' || echo '$(srcdir)/'`toolbars/ToolBar.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) toolbars/$(DEPDIR)/audacity-ToolBar.Tpo toolbars/$(DEPDIR)/audacity-ToolBar.Po
@@ -9456,6 +9477,7 @@ distclean: distclean-am
 	-rm -f toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Po
 	-rm -f toolbars/$(DEPDIR)/audacity-SelectionBar.Po
 	-rm -f toolbars/$(DEPDIR)/audacity-SpectralSelectionBar.Po
+	-rm -f toolbars/$(DEPDIR)/audacity-TimerToolBar.Po
 	-rm -f toolbars/$(DEPDIR)/audacity-ToolBar.Po
 	-rm -f toolbars/$(DEPDIR)/audacity-ToolDock.Po
 	-rm -f toolbars/$(DEPDIR)/audacity-ToolManager.Po
@@ -9899,6 +9921,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f toolbars/$(DEPDIR)/audacity-ScrubbingToolBar.Po
 	-rm -f toolbars/$(DEPDIR)/audacity-SelectionBar.Po
 	-rm -f toolbars/$(DEPDIR)/audacity-SpectralSelectionBar.Po
+	-rm -f toolbars/$(DEPDIR)/audacity-TimerToolBar.Po
 	-rm -f toolbars/$(DEPDIR)/audacity-ToolBar.Po
 	-rm -f toolbars/$(DEPDIR)/audacity-ToolDock.Po
 	-rm -f toolbars/$(DEPDIR)/audacity-ToolManager.Po

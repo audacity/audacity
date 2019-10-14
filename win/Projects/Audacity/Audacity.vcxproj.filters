@@ -806,6 +806,9 @@
     <ClCompile Include="..\..\..\src\toolbars\SelectionBar.cpp">
       <Filter>src\toolbars</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\TimerToolBar.cpp">
+      <Filter>src\toolbars</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\toolbars\ToolBar.cpp">
       <Filter>src\toolbars</Filter>
     </ClCompile>

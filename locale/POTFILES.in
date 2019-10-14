@@ -640,6 +640,8 @@ src/toolbars/SelectionBarListener.h
 src/toolbars/SpectralSelectionBar.cpp
 src/toolbars/SpectralSelectionBar.h
 src/toolbars/SpectralSelectionBarListener.h
+src/toolbars/TimerToolBar.cpp
+src/toolbars/TimerToolBar.h
 src/toolbars/ToolBar.cpp
 src/toolbars/ToolBar.h
 src/toolbars/ToolDock.cpp
