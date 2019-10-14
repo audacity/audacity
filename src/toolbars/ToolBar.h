@@ -68,6 +68,7 @@ enum
 {
    NoBarID = -1,
    TransportBarID,
+   TimerBarID,
    ToolsBarID,
    MeterBarID,
    RecordMeterBarID,
