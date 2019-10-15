@@ -32,6 +32,9 @@ struct AUDACITY_DLL_API Base
 // (unique_ptr has two, the second is defaulted)
 template< typename Object > using UniquePtr = std::unique_ptr< Object >;
 
+// Risk of dangling pointers, so be careful
+template< typename Object > using BarePtr = Object*;
+
 // A convenient base class defining abstract virtual Clone() for a given kind
 // of pointer
 template<

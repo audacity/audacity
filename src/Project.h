@@ -87,7 +87,7 @@ using AttachedObjects = ClientData::Site<
 // Container of pointers to various windows associated with the project, which
 // is not responsible for destroying them -- wxWidgets handles that instead
 using AttachedWindows = ClientData::Site<
-   AudacityProject, wxWindow, ClientData::SkipCopying, wxWeakRef
+   AudacityProject, wxWindow, ClientData::SkipCopying, ClientData::BarePtr
 >;
 
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
