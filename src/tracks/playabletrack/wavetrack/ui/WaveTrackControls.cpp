@@ -135,6 +135,26 @@ enum {
    OnInstrument2ID,
    OnInstrument3ID,
    OnInstrument4ID,
+   OnInstrument5ID,
+   OnInstrument6ID,
+   OnInstrument7ID,
+   OnInstrument8ID,
+   OnInstrument9ID,
+   OnInstrument10ID,
+   OnInstrument11ID,
+   OnInstrument12ID,
+   OnInstrument13ID,
+   OnInstrument14ID,
+   OnInstrument15ID,
+   OnInstrument16ID,
+   OnInstrument17ID,
+   OnInstrument18ID,
+   OnInstrument19ID,
+   OnInstrument20ID,
+   OnInstrument21ID,
+   OnInstrument22ID,
+   OnInstrument23ID,
+   OnInstrument24ID,
 
    OnSwapChannelsID,
    OnSplitStereoID,
@@ -183,14 +203,42 @@ void WaveColorMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    AudacityProject *const project = ::GetActiveProject();
    bool unsafe = ProjectAudioIO::Get( *project ).IsAudioActive();
-   for (int i = OnInstrument1ID; i <= OnInstrument4ID; i++) {
+   for (int i = OnInstrument1ID; i <= OnInstrument24ID; i++) {
       pMenu->Enable(i, !unsafe);
    }
 }
 
 const wxString GetWaveColorStr(int colorIndex)
 {
-   return wxString::Format( _("Instrument %i"), colorIndex+1 );
+	wxArrayStringEx colors{
+	   wxT("Default") ,
+	   wxT("Blue - violet") ,
+	   wxT("Violet") ,
+	   wxT("Red - violet") ,
+	   wxT("Purple") ,
+	   wxT("Fuschia") ,
+	   wxT("Magenta") ,
+	   wxT("Blue - red") ,
+	   wxT("Red") ,
+	   wxT("Orange - red") ,
+	   wxT("Orange") ,
+	   wxT("Orange - yellow") ,
+	   wxT("Yellow") ,
+	   wxT("Chartreuse") ,
+	   wxT("Yellow - green") ,
+	   wxT("Spring - green") ,
+	   wxT("Green") ,
+	   wxT("Blue - green") ,
+	   wxT("Agua Green") ,
+	   wxT("Aqua Blue") ,
+	   wxT("Cyan") ,
+	   wxT("Turquoise") ,
+	   wxT("Cerulean Blue") ,
+	   wxT("Deep Sky Blue") ,
+	   wxT("Blue") ,
+	};
+
+	return colors[colorIndex];
 }
 
 
@@ -203,6 +251,47 @@ BEGIN_POPUP_MENU(WaveColorMenuTable)
       GetWaveColorStr(2), OnWaveColorChange)
    POPUP_MENU_RADIO_ITEM(OnInstrument4ID,
       GetWaveColorStr(3), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument5ID,
+  		  GetWaveColorStr(4), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument6ID,
+  		  GetWaveColorStr(5), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument7ID,
+  		  GetWaveColorStr(6), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument8ID,
+  		  GetWaveColorStr(7), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument9ID,
+  		  GetWaveColorStr(8), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument10ID,
+  		  GetWaveColorStr(9), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument11ID,
+  		  GetWaveColorStr(10), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument12ID,
+  		  GetWaveColorStr(11), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument13ID,
+  		  GetWaveColorStr(12), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument14ID,
+  		  GetWaveColorStr(13), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument15ID,
+  		  GetWaveColorStr(14), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument16ID,
+  		  GetWaveColorStr(15), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument17ID,
+  		  GetWaveColorStr(16), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument18ID,
+  		  GetWaveColorStr(17), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument19ID,
+  		  GetWaveColorStr(18), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument20ID,
+  		  GetWaveColorStr(19), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument21ID,
+  		  GetWaveColorStr(20), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument22ID,
+  		  GetWaveColorStr(21), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument23ID,
+  		  GetWaveColorStr(22), OnWaveColorChange)
+  	POPUP_MENU_RADIO_ITEM(OnInstrument24ID,
+  		  GetWaveColorStr(23), OnWaveColorChange)
+
 END_POPUP_MENU()
 
 /// Converts a WaveColor enumeration to a wxWidgets menu item Id.
@@ -214,7 +303,7 @@ int WaveColorMenuTable::IdOfWaveColor(int WaveColor)
 void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 {
    int id = event.GetId();
-   wxASSERT(id >= OnInstrument1ID && id <= OnInstrument4ID);
+   wxASSERT(id >= OnInstrument1ID && id <= OnInstrument23ID);
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    int newWaveColor = id - OnInstrument1ID;

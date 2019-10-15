@@ -100,26 +100,109 @@ void TrackArtist::SetColours( int iColorIndex)
    theTheme.SetPenColour(   selsamplePen,    clrSelSample);
    theTheme.SetPenColour(   muteRmsPen,      clrMuteRms);
 
-   switch( iColorIndex %4 )
+   switch( iColorIndex %25 ) // InstrumentIDs
    {
       default:
       case 0:
          theTheme.SetPenColour(   samplePen,       clrSample);
          theTheme.SetPenColour(   rmsPen,          clrRms);
          break;
-      case 1: // RED
-         samplePen.SetColour( wxColor( 160,10,10 ) );
-         rmsPen.SetColour( wxColor( 230,80,80 ) );
+      case 1: // Blue-violet
+         theTheme.SetPenColour(    rmsPen,       clrInstrument1);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument1 ), wxColour(0,0,0))));
          break;
-      case 2: // GREEN
-         samplePen.SetColour( wxColor( 35,110,35 ) );
-         rmsPen.SetColour( wxColor( 75,200,75 ) );
+      case 2: // Violet
+         theTheme.SetPenColour(    rmsPen,       clrInstrument2);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument2 ), wxColour(0,0,0))));
          break;
-      case 3: //BLACK
-         samplePen.SetColour( wxColor( 0,0,0 ) );
-         rmsPen.SetColour( wxColor( 100,100,100 ) );
+      case 3: // Red-violet
+         theTheme.SetPenColour(    rmsPen,       clrInstrument3);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument3 ), wxColour(0,0,0))));
          break;
-
+     case 4: // Purple
+        theTheme.SetPenColour(    rmsPen,       clrInstrument4);
+		samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument4 ), wxColour(0,0,0))));
+        break;
+     case 5: // Fuschia
+        theTheme.SetPenColour(    rmsPen,       clrInstrument5);
+		samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument5 ), wxColour(0,0,0))));
+        break;
+     case 6: // Magenta
+        theTheme.SetPenColour(    rmsPen,       clrInstrument6);
+		samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument6 ), wxColour(0,0,0))));
+        break;
+     case 7: // Blue-red
+        theTheme.SetPenColour(    rmsPen,       clrInstrument7);
+		samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument7 ), wxColour(0,0,0))));
+        break;
+     case 8: // Red
+        theTheme.SetPenColour(    rmsPen,       clrInstrument8);
+		samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument8 ), wxColour(0,0,0))));
+        break;
+     case 9: // Orange-red
+        theTheme.SetPenColour(    rmsPen,       clrInstrument9);
+		samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument9 ), wxColour(0,0,0))));
+        break;
+     case 10: // Orange
+        theTheme.SetPenColour(    rmsPen,       clrInstrument10);
+		samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument10 ), wxColour(0,0,0))));
+        break;
+      case 11: // Orange-yellow
+         theTheme.SetPenColour(    rmsPen,       clrInstrument11);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument11 ), wxColour(0,0,0))));
+         break;
+      case 12: // Yellow
+         theTheme.SetPenColour(    rmsPen,       clrInstrument12);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument12 ), wxColour(0,0,0))));
+         break;
+      case 13: // Chartreuse
+         theTheme.SetPenColour(    rmsPen,       clrInstrument13);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument13 ), wxColour(0,0,0))));
+         break;
+      case 14: // Yellow-green
+         theTheme.SetPenColour(    rmsPen,       clrInstrument14);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument14 ), wxColour(0,0,0))));
+         break;
+      case 15: // Spring-green
+         theTheme.SetPenColour(    rmsPen,       clrInstrument15);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument15 ), wxColour(0,0,0))));
+         break;
+      case 16: // Green
+         theTheme.SetPenColour(    rmsPen,       clrInstrument16);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument16 ), wxColour(0,0,0))));
+         break;
+      case 17: // Blue-green
+         theTheme.SetPenColour(    rmsPen,       clrInstrument17);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument17 ), wxColour(0,0,0))));
+         break;
+      case 18: // Agua Green
+         theTheme.SetPenColour(    rmsPen,       clrInstrument18);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument18 ), wxColour(0,0,0))));
+         break;
+      case 19: // Aqua Blue
+         theTheme.SetPenColour(    rmsPen,       clrInstrument19);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument19 ), wxColour(0,0,0))));
+         break;
+      case 20: // Cyan
+         theTheme.SetPenColour(    rmsPen,       clrInstrument20);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument20 ), wxColour(0,0,0))));
+         break;
+      case 21: // Turquoise
+         theTheme.SetPenColour(    rmsPen,       clrInstrument21);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument21 ), wxColour(0,0,0))));
+         break;
+      case 22: // Cerulean Blue
+         theTheme.SetPenColour(    rmsPen,       clrInstrument22);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument22 ), wxColour(0,0,0))));
+         break;
+      case 23: // Deep Sky Blue
+         theTheme.SetPenColour(    rmsPen,       clrInstrument23);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument23 ), wxColour(0,0,0))));
+         break;
+      case 24: // Blue
+         theTheme.SetPenColour(    rmsPen,       clrInstrument24);
+		 samplePen.SetColour(wxColor(AColor::Blend( theTheme.Colour( clrInstrument24 ), wxColour(0,0,0))));
+         break;
    }
 }
 
@@ -460,4 +543,3 @@ void TrackArt::DrawBackgroundWithSelection(
       dc->DrawRectangle(rect);
    }
 }
-

@@ -228,7 +228,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpBottomFrequencyCursor, wxImage( 32, 32 ), wxT("BottomFrequencyCursor"));
    DEFINE_IMAGE( bmpTopFrequencyCursor, wxImage( 32, 32 ), wxT("TopFrequencyCursor"));
    DEFINE_IMAGE( bmpBandWidthCursor, wxImage(32, 32), wxT("BandWidthCursor"));
-   
+
    //SET_THEME_FLAGS(  resFlagNewLine  );
 
 // DA: The logo with name xpm has a different width.
@@ -369,3 +369,27 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrSpectro4Sel,         wxColour(  191,    0,    0),  wxT("Spectro4Sel") );
    DEFINE_COLOUR( clrSpectro5Sel,         wxColour(  191,  191,  191),  wxT("Spectro5Sel") );
 
+   DEFINE_COLOUR( clrInstrument1,         wxColour(    64,    0,  255),  wxT("Blue-violet") );
+   DEFINE_COLOUR( clrInstrument2,         wxColour(   128,    0,  255),  wxT("Violet") );
+   DEFINE_COLOUR( clrInstrument3,         wxColour(   191,    0,  255),  wxT("Red-violet") );
+   DEFINE_COLOUR( clrInstrument4,         wxColour(   255,    0,  255),  wxT("Purple") );
+   DEFINE_COLOUR( clrInstrument5,         wxColour(   255,    0,  191),  wxT("Fuschia") );
+   DEFINE_COLOUR( clrInstrument6,         wxColour(   255,    0,  128),  wxT("Magenta") );
+   DEFINE_COLOUR( clrInstrument7,         wxColour(   255,    0,   64),  wxT("Blue-red") );
+   DEFINE_COLOUR( clrInstrument8,         wxColour(   255,    0,    0),  wxT("Red") );
+   DEFINE_COLOUR( clrInstrument9,         wxColour(   255,   64,    0),  wxT("Orange-red") );
+   DEFINE_COLOUR( clrInstrument10,        wxColour(   255,  128,    0),  wxT("Orange") );
+   DEFINE_COLOUR( clrInstrument11,        wxColour(   255,  191,    0),  wxT("Orange-yellow") );
+   DEFINE_COLOUR( clrInstrument12,        wxColour(   255,  255,    0),  wxT("Yellow") );
+   DEFINE_COLOUR( clrInstrument13,        wxColour(   191,  255,    0),  wxT("Chartreuse") );
+   DEFINE_COLOUR( clrInstrument14,        wxColour(   128,  255,    0),  wxT("Yellow-green") );
+   DEFINE_COLOUR( clrInstrument15,        wxColour(    64,  255,    0),  wxT("Spring-green") );
+   DEFINE_COLOUR( clrInstrument16,        wxColour(     0,  255,    0),  wxT("Green") );
+   DEFINE_COLOUR( clrInstrument17,        wxColour(     0,  255,   64),  wxT("Blue-green") );
+   DEFINE_COLOUR( clrInstrument18,        wxColour(     0,  255,  128),  wxT("Agua Green") );
+   DEFINE_COLOUR( clrInstrument19,        wxColour(     0,  255,  191),  wxT("Aqua Blue") );
+   DEFINE_COLOUR( clrInstrument20,        wxColour(     0,  255,  255),  wxT("Cyan") );
+   DEFINE_COLOUR( clrInstrument21,        wxColour(     0,  191,  255),  wxT("Turquoise") );
+   DEFINE_COLOUR( clrInstrument22,        wxColour(     0,  128,  255),  wxT("Cerulean Blue") );
+   DEFINE_COLOUR( clrInstrument23,        wxColour(     0,   64,  255),  wxT("Deep Sky Blue") );
+   DEFINE_COLOUR( clrInstrument24,        wxColour(     0,    0,  255),  wxT("Blue") );
