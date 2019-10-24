@@ -694,7 +694,6 @@ void OnResample(const CommandContext &context)
    while (true)
    {
       wxDialogWrapper dlg(&window, wxID_ANY, wxString(_("Resample")));
-      dlg.SetName(dlg.GetTitle());
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
       wxComboBox *cb;
@@ -782,7 +781,7 @@ void OnResample(const CommandContext &context)
    }
 
    undoManager.StopConsolidating();
- 
+
    // Need to reset
    window.FinishAutoScroll();
 }
@@ -1251,7 +1250,7 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
    // Tracks Menu (formerly Project Menu)
    using namespace MenuTable;
    using Options = CommandManager::Options;
-   
+
    return Menu( _("&Tracks"),
       Menu( _("Add &New"),
          Command( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
