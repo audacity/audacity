@@ -190,17 +190,20 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
 
    wxArrayString tempNames;
    wxArrayString tempCodes;
-   LangHash localLanguageName;
    LangHash reverseHash;
    LangHash tempHash;
 
-   for ( auto utf8Name : utf8Names )
-   {
-      auto str = wxString::FromUTF8(utf8Name);
-      auto code = str.BeforeFirst(' ');
-      auto name = str.AfterFirst(' ');
-      localLanguageName[code] = name;
-   }
+   const LangHash localLanguageName = []{
+      LangHash localLanguageName;
+      for ( auto utf8Name : utf8Names )
+      {
+         auto str = wxString::FromUTF8(utf8Name);
+         auto code = str.BeforeFirst(' ');
+         auto name = str.AfterFirst(' ');
+         localLanguageName[code] = name;
+      }
+      return localLanguageName;
+   }();
 
    auto audacityPathList = FileNames::AudacityPathList();
 
@@ -213,9 +216,8 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
 
    // For each language in our list we look for a corresponding entry in
    // wxLocale.  
-   for (LangHash::iterator i = localLanguageName.begin();
-        i != localLanguageName.end();
-        i++)
+   for ( auto end = localLanguageName.end(), i = localLanguageName.begin();
+      i != end; ++i )
    {
       const wxLanguageInfo *info = wxLocale::FindLanguageInfo(i->first);
 
@@ -242,11 +244,13 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
       if (fullCode.length() < 2)
          continue;
 
-      if (!localLanguageName[code].empty()) {
-         name = localLanguageName[code];
+      auto found = localLanguageName.find( code );
+      if ( found != end ) {
+         name = found->second;
       }
-      if (!localLanguageName[fullCode].empty()) {
-         name = localLanguageName[fullCode];
+      found = localLanguageName.find( fullCode );
+      if ( found != end ) {
+         name = found->second;
       }
 
       if (TranslationExists(audacityPathList, fullCode)) {
