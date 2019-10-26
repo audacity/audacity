@@ -5,7 +5,8 @@ User support is provided on Audacity Forum:
 https://forum.audacityteam.org/ .
 
 We welcome feedback on Audacity, suggestions for new or improved features, 
-and bug reports. Please visit https://forum.audacityteam.org/viewforum.php?f=25 .
+and bug reports. Please visit 
+https://forum.audacityteam.org/viewforum.php?f=25 .
 
 Audacity is copyright (c) 1999-2019 by Audacity Team. This copyright 
 notice applies to all documents in the Audacity source code archive, 
@@ -28,12 +29,12 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 2.3.2
+Version 2.3.3
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.3.1
+2.  Changes since version 2.3.2
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -61,42 +62,51 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
   Boston, MA 02111-1307 USA
 
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
-2. Changes since version 2.3.1: 
+2. Changes since version 2.3.2: 
 
 Improvements
 
- * Audacity now includes the LAME mp3 encoder. Previously, due to now expired
-   patents, you had to download it separately.
- * There is a new 'Select' button in the track panel to select the whole 
-   track.
- * Audacity mod-script-pipe for driving Audacity from Python now comes with
-   Audacity and can be enabled via preferences.
- * Options and preferences:
-   * Type to Create a Label is now off by default.
- * A plug-in installer for Nyquist now provides a file browser for 
-   selecting '.NY' files to install.
+ * Equalization effect now split into two effects, Filter Curve and Graphic EQ.
+   * Presets (using manage button) now active/working.
+   * Can now have two points at same frequency for steep steps.
+ * 'What you hear is what you get' for exports.  Formerly the solo button 
+   preferences could lead to differences in which tracks were exported.
+ * Leading silence (blank space) not skipped over in exports.
+ * Quality setting on AAC/M4A exports.
+ * Some confusing functionality removed (better achieved in other ways)
+   * Removed Nyquist Workbench (use built-in nyquist features)
+   * Removed Vocal Remover (use Vocal Reduction)
+   * Removed On-Demand aliased files (copy files instead)
+   * Removed 'Normalize on Load' (Normalize as needed on export, instead)
 
-
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.3.1
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.3.3
 
 
 Bug Fixes
 
- Over 20 bugs in 2.3.1 fixed, including:
+ Over 150 bugs in 2.3.2 fixed, including:
 
- * Audacity 2.3.1 would crash if append-recording to a collapsed track.
- * Many accessibility bugs on macOS fixed
+ * 2112 - Crash when opening Equalization settings in a Macro
+ * 2127 - Crash deleting a track while in Record/Pause state
+ * 2176 - Crash when attempting to time shift multiple tracks
+ * 2141 - Tabbing between labels stopped working
+ * 2200 - Refusal to export some large (4GB) files on size grounds
 
-See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.3.2
+See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.3.3
 
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.3.2:
+3. Known Issues in 2.3.3:
 
-For known issues in 2.3.2 please see:
+Audacity 2.3.3 does not properly support macOS Catalina.  There are new
+security restrictions in Catalina on using the microphone. For example, 
+Audacity may run, but fail to record.  Catalina was released towards the end 
+of 2.3.2 development.
+
+For best workarounds and other known issues in 2.3.2, please see:
   https://wiki.audacityteam.org/wiki/Release_Notes_2.3.2/Issues 
 
 
