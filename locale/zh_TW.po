@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.3.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2019-09-07 14:02+0100\n"
+"POT-Creation-Date: 2019-11-04 20:46+0800\n"
 "PO-Revision-Date: 2019-09-29 20:41+0800\n"
 "Last-Translator: mkpoli <snowwolf1001@gmail.com>\n"
 "Language-Team: \n"
@@ -996,6 +996,23 @@ msgstr ""
 #: src/AudacityApp.cpp
 msgid "Audacity is already running"
 msgstr "Audacity 已在執行"
+
+#: src/AudacityApp.cpp
+#, c-format
+msgid ""
+"If you're sure another copy of Audacity isn't\n"
+"running, Audacity can skip the test for\n"
+"'Audacity already running' next time\n"
+"by removing the lock file:\n"
+"\n"
+"%s\n"
+"\n"
+"Do you want to do that?"
+msgstr ""
+
+#: src/AudacityApp.cpp
+msgid "Possible Lock File Problem"
+msgstr ""
 
 #. i18n-hint: This controls the number of bytes that Audacity will
 #. *           use when writing files to the disk
