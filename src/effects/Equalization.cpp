@@ -673,6 +673,7 @@ bool EffectEqualization::Process()
    }
 #endif
    this->CopyInputTracks(); // Set up mOutputTracks.
+   CalcFilter();
    bool bGoodResult = true;
 
    int count = 0;
