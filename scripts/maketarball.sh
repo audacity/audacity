@@ -114,7 +114,7 @@ function slimtree {
    printf "Done\n"
 
    printf "removing libraries that should be installed locally ... "
-   myrmrvf $1 lib-src/expat lib-src/libflac lib-src/libid3tag
+   myrmrvf $1 lib-src/expat lib-src/libid3tag
    myrmrvf $1 lib-src/libmad lib-src/libogg
    myrmrvf $1 lib-src/libvorbis lib-src/soundtouch
    # these bindings aren't built by default, we don't need them
