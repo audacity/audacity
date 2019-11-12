@@ -709,8 +709,8 @@ void AddEffectMenuItemGroup(
             ) );
             items = max;
             pTable = &table;
+            groupNdx += max;
          }
-         groupNdx++;
       }
    }
 
@@ -909,7 +909,7 @@ MenuTable::BaseItemPtr ExtraScriptablesIMenu( AudacityProject & )
    // These are the more useful to VI user Scriptables.
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    return Menu( _("Script&ables I"),
-      // Note that the PLUGIN_SYMBOL must have a space between words, 
+      // Note that the PLUGIN_SYMBOL must have a space between words,
       // whereas the short-form used here must not.
       // (So if you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
       // you would have to use "Compareaudio" here.)
