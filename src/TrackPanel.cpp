@@ -1364,8 +1364,9 @@ TrackPanelCell *TrackPanel::GetFocusedCell()
 
 void TrackPanel::SetFocusedCell()
 {
-   // This may have a side-effet of assigning a focus if there was none
-   TrackFocus::Get( *GetProject() ).Get();
+   // This may have a side-effect of assigning a focus if there was none
+   auto& trackFocus = TrackFocus::Get(*GetProject());
+   trackFocus.Set(trackFocus.Get());
    KeyboardCapture::Capture(this);
 }
 
