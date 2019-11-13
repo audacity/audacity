@@ -116,7 +116,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
    auto &ruler = AdornedRulerPanel::Get( *mProject );
    auto position = ::wxGetMousePosition();
 
-   if (scrubber.IsSpeedPlaying())
+   if (scrubber.IsSpeedPlaying() || scrubber.IsKeyboardScrubbing())
       return;
 
    {

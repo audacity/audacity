@@ -740,7 +740,8 @@ void ProjectAudioManager::OnPause()
    // it is confusing to be in a paused scrub state.
    bool bStopInstead = paused &&
       gAudioIO->IsScrubbing() && 
-      !scrubber.IsSpeedPlaying();
+      !scrubber.IsSpeedPlaying() &&
+      !scrubber.IsKeyboardScrubbing();
 
    if (bStopInstead) {
       Stop();
@@ -1033,8 +1034,8 @@ bool ProjectAudioManager::DoPlayStopSelect( bool click, bool shift )
       // change the selection
       auto time = gAudioIO->GetStreamTime();
       // Test WasSpeedPlaying(), not IsSpeedPlaying()
-      // as we could be stopped now.
-      if (click && scrubber.WasSpeedPlaying())
+      // as we could be stopped now. Similarly WasKeyboardScrubbing().
+      if (click && (scrubber.WasSpeedPlaying() || scrubber.WasKeyboardScrubbing()))
       {
          ;// don't change the selection.
       }

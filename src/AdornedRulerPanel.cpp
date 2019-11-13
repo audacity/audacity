@@ -210,7 +210,8 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
 
    // Hide during transport, or if mouse is not in the ruler, unless scrubbing
    if ((!ruler->LastCell() || ProjectAudioIO::Get( *project ).IsAudioActive())
-       && (!scrubber.IsScrubbing() || scrubber.IsSpeedPlaying()))
+       && (!scrubber.IsScrubbing() || scrubber.IsSpeedPlaying()
+          || scrubber.IsKeyboardScrubbing()))
       mNewQPIndicatorPos = -1;
    else {
       const auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;

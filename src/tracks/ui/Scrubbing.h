@@ -63,6 +63,8 @@ public:
    // Assume xx is relative to the left edge of TrackPanel!
    bool MaybeStartScrubbing(wxCoord xx);
    bool StartSpeedPlay(double speed, double time0, double time1);
+   bool StartKeyboardScrubbing(double time0, bool backwards);
+   double GetKeyboardScrubbingSpeed();
 
    void ContinueScrubbingUI();
    void ContinueScrubbingPoll();
@@ -77,6 +79,10 @@ public:
    { return mSpeedPlaying;}
    bool IsSpeedPlaying() const
    { return IsScrubbing() && mSpeedPlaying; }
+   bool WasKeyboardScrubbing() const
+   { return mKeyboardScrubbing; }
+   bool IsKeyboardScrubbing() const
+   { return IsScrubbing() && mKeyboardScrubbing; }
    // True iff the user has clicked to start scrub and not yet stopped,
    // but IsScrubbing() may yet be false
    bool HasMark() const
@@ -155,6 +161,8 @@ private:
    bool mPaused{};
    bool mSeeking {};
    bool mSpeedPlaying{true};
+   bool mKeyboardScrubbing{};
+   bool mBackwards{};
    bool mDragging {};
 
    bool mCancelled {};
