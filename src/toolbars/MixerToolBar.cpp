@@ -282,9 +282,26 @@ void MixerToolBar::AdjustInputGain(int adj)
    if (adj < 0) {
       mInputSlider->Decrease(-adj);
    }
+   else if (adj == 0){
+      mInputSlider->Set(0);
+   }
    else {
       mInputSlider->Increase(adj);
    }
+   wxCommandEvent e;
+   SetMixer(e);
+   UpdateControls();
+}
+
+float MixerToolBar::GetInputGain()
+{
+   return mInputSlider->Get();
+}
+
+void MixerToolBar::SetInputGain(float vol)
+{
+   mInputSlider->Set(vol);
+
    wxCommandEvent e;
    SetMixer(e);
    UpdateControls();

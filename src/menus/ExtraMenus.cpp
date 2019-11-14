@@ -62,6 +62,22 @@ void OnInputGain(const CommandContext &context)
    }
 }
 
+void OnInputGainMute(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto tb = &MixerToolBar::Get( project );
+
+   if (tb) {
+      if (tb->GetInputGain() == 0.0f) {
+         tb->SetInputGain(tb->beforeMutedInputVolume);
+      }
+      else {
+         tb->beforeMutedInputVolume = tb->GetInputGain();
+         tb->AdjustInputGain(0);
+      }
+   }
+}
+
 void OnInputGainInc(const CommandContext &context)
 {
    auto &project = context.project;
@@ -203,6 +219,8 @@ MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & )
          FN(OnOutputGainDec), AlwaysEnabledFlag ),
       Command( wxT("InputGain"), XXO("Adj&ust Recording Volume..."),
          FN(OnInputGain), AlwaysEnabledFlag ),
+      Command( wxT("InputGainMute"), XXO("T&oggle Mute Recording Volume"),
+           FN(OnInputGainMute), AlwaysEnabledFlag ),
       Command( wxT("InputGainInc"), XXO("I&ncrease Recording Volume"),
          FN(OnInputGainInc), AlwaysEnabledFlag ),
       Command( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),

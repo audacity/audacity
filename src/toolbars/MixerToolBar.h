@@ -52,7 +52,12 @@ class MixerToolBar final : public ToolBar {
    void AdjustOutputGain(int adj);
    void AdjustInputGain(int adj);
 
+   float GetInputGain();
+   void SetInputGain(float vol);
+
    void RegenerateTooltips() override {};
+
+   float beforeMutedInputVolume;
 
  protected:
    float mInputSliderVolume;
