@@ -181,7 +181,16 @@ void WaveformVRulerControls::DoUpdateVRuler(
    // All waves have a ruler in the info panel
    // The ruler needs a bevelled surround.
    const float dBRange =
-      wt->GetWaveformSettings().dBRange;
+      //Code was initially: wt->GetWaveformSettings().dBRange;
+      WaveformSettings().dBRange; //Code changed to fix bug #1734
+      /* 
+       * Initially dB values were being updated in preferences
+       * but after update, vRuler was refreshing its values from 
+       * its previous values. To fix this isuue, we have created 
+       * take the dBRange value of a new object. This change still
+       * allows changing individual dBRange values since scrolling
+       * of mouse does not call the update function. 
+      */
 
    WaveformSettings::ScaleType scaleType =
    wt->GetWaveformSettings().scaleType;
