@@ -859,7 +859,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          S.AddSpace(15,0);
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
          {
-            mSliders[i] = safenew wxSlider(pParent, ID_Slider + i, 0, -20, +20,
+            mSliders[i] = safenew wxSliderWrapper(pParent, ID_Slider + i, 0, -20, +20,
                wxDefaultPosition, wxSize(-1,150), wxSL_VERTICAL | wxSL_INVERSE);
 
             mSliders[i]->Bind(wxEVT_ERASE_BACKGROUND,
