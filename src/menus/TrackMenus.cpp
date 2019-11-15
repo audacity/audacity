@@ -28,10 +28,13 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
+
 
 #include <wx/combobox.h>
 
@@ -1151,6 +1154,26 @@ void OnTrackSolo(const CommandContext &context)
    });
 }
 
+void OnTrackView(const CommandContext &context)
+{
+   auto &project = context.project;
+
+   const auto track = TrackFocus::Get( project ).Get();
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      const auto displays = WaveTrackView::Get( *wt ).GetDisplays();
+      
+      bool isWaveform =
+         make_iterator_range( displays.begin(), displays.end() )
+            .contains( WaveTrackViewConstants::Waveform );
+
+      for (auto channel : TrackList::Channels(wt))
+         WaveTrackView::Get( *channel )
+            .SetDisplay(isWaveform ? WaveTrackViewConstants::Spectrum : WaveTrackViewConstants::Waveform );
+   });
+
+   TrackPanel::Get( project ).RefreshTrack(track);
+}
+
 void OnTrackClose(const CommandContext &context)
 {
    auto &project = context.project;
@@ -1430,6 +1453,9 @@ MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & )
       Command( wxT("TrackSolo"), XXO("&Solo/Unsolo Focused Track"),
          FN(OnTrackSolo),
          TracksExistFlag | TrackPanelHasFocus, wxT("Shift+S") ),
+      Command( wxT("TrackView"), XXO("&Toggle Focused Track View"),
+         FN(OnTrackView),
+         TracksExistFlag | TrackPanelHasFocus ),
       Command( wxT("TrackClose"), XXO("&Close Focused Track"),
          FN(OnTrackClose),
          AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
