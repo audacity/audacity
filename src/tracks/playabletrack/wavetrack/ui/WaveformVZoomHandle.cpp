@@ -173,6 +173,18 @@ void WaveformVZoomHandle::DoZoom(
          max = half;
       }
       break;
+   case kZoomIncrease:
+       {
+          min *= 0.5;
+          max *= 0.5;
+       }
+       break;
+    case kZoomDecrease:
+       {
+          min *= 1.5;
+          max *= 1.5;
+       }
+       break;
    case kZoomHalfWave:
       {
          // Zoom to show fractionally more than the top half of the wave.

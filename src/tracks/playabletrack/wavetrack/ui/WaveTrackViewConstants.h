@@ -72,7 +72,9 @@ namespace WaveTrackViewConstants
       kZoomInByDrag,
       kZoomIn,
       kZoomOut,
-      kZoomReset
+      kZoomReset,
+      kZoomIncrease,
+      kZoomDecrease
    };
 
    // Handle remapping of enum values from 2.1.0 and earlier
