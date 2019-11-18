@@ -223,7 +223,7 @@ public:
    wxTextCtrl * AddTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddNumericTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddTextWindow(const wxString &Value);
-   wxListBox * AddListBox(const wxArrayStringEx &choices, long style = 0);
+   wxListBox * AddListBox(const wxArrayStringEx &choices);
 
    struct ListControlColumn{
       ListControlColumn(
@@ -247,7 +247,7 @@ public:
    wxGrid * AddGrid();
    wxCheckBox * AddCheckBox( const wxString &Prompt, bool Selected);
    wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, bool Selected);
-   wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices, long style = 0 );
+   wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices );
    wxChoice   * AddChoice( const wxString &Prompt,
       const wxArrayStringEx &choices, int Selected = -1 );
    wxChoice   * AddChoice( const wxString &Prompt,

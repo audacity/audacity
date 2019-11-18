@@ -3753,7 +3753,9 @@ EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
          mType = S.Id(ID_Type).AddChoice( {}, {}, 0 );
 
          S.AddPrompt(_("&Preset:"));
-         mPresets = S.AddListBox( {}, wxLB_SINGLE | wxLB_NEEDED_SB );
+         mPresets = S
+            .Style( wxLB_SINGLE | wxLB_NEEDED_SB )
+            .AddListBox( {} );
       }
       S.EndTwoColumn();
 

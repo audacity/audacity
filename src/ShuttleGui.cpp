@@ -466,7 +466,7 @@ wxStaticText * ShuttleGuiBase::AddVariableText(const wxString &Str, bool bCenter
    return pStatic;
 }
 
-wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices, long style )
+wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices )
 {
    HandleOptionality( Prompt );
    AddPrompt( Prompt );
@@ -486,7 +486,7 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
    }
 
    mpWind = pCombo = safenew wxComboBox(GetParent(), miId, Selected, wxDefaultPosition, wxDefaultSize,
-      n, Choices, GetStyle( style ));
+      n, Choices, GetStyle( 0 ));
    mpWind->SetName(wxStripMenuCodes(Prompt));
 
    UpdateSizers();
@@ -683,7 +683,7 @@ void ShuttleGuiBase::AddConstTextBox(const wxString &Prompt, const wxString &Val
    UpdateSizers();
 }
 
-wxListBox * ShuttleGuiBase::AddListBox(const wxArrayStringEx &choices, long style)
+wxListBox * ShuttleGuiBase::AddListBox(const wxArrayStringEx &choices)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -691,7 +691,7 @@ wxListBox * ShuttleGuiBase::AddListBox(const wxArrayStringEx &choices, long styl
    wxListBox * pListBox;
    SetProportions( 1 );
    mpWind = pListBox = safenew wxListBox(GetParent(), miId,
-      wxDefaultPosition, wxDefaultSize, choices, style);
+      wxDefaultPosition, wxDefaultSize, choices, GetStyle(0));
    pListBox->SetMinSize( wxSize( 120,150 ));
    UpdateSizers();
    return pListBox;
