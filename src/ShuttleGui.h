@@ -221,6 +221,12 @@ struct Item {
       return std::move( *this );
    }
 
+   Item&& Size( wxSize size ) &&
+   {
+      mWindowSize = size;
+      return std::move( *this );
+   }
+
    std::function< void(wxWindow*) > mValidatorSetter;
    TranslatableString mToolTip;
    TranslatableString mName;
@@ -232,6 +238,8 @@ struct Item {
 
    // Applies to windows, not to subsizers
    int mWindowPositionFlags{ 0 };
+
+   wxSize mWindowSize{};
 
    wxSize mMinSize{ -1, -1 };
    bool mHasMinSize{ false };
@@ -660,6 +668,12 @@ public:
    ShuttleGui & Position( int flags )
    {
       std::move( mItem ).Position( flags );
+      return *this;
+   }
+
+   ShuttleGui & Size( wxSize size )
+   {
+      std::move( mItem ).Size( size );
       return *this;
    }
 

@@ -2089,6 +2089,9 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
          else if( mItem.mHasMinSize )
             mpWind->SetMinSize( mItem.mMinSize );
 
+         if ( mItem.mWindowSize != wxSize{} )
+            mpWind->SetSize( mItem.mWindowSize );
+
          // Reset to defaults
          mItem = {};
       }

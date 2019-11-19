@@ -871,7 +871,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
          {
             mSliders[i] = safenew wxSliderWrapper(pParent, ID_Slider + i, 0, -20, +20,
-               wxDefaultPosition, wxSize(-1,150), wxSL_VERTICAL | wxSL_INVERSE);
+               wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL | wxSL_INVERSE);
 
 #if wxUSE_ACCESSIBILITY
             mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], _("%d dB")));
@@ -889,6 +889,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                .ConnectRoot(
                   wxEVT_ERASE_BACKGROUND, &EffectEqualization::OnErase)
                .Position(wxEXPAND)
+               .Size( { -1, 150 } )
                .AddWindow( mSliders[i] );
          }
          S.AddSpace(15,0);
