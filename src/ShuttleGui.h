@@ -169,7 +169,10 @@ public:
    wxCheckBox * AddCheckBox( const wxString &Prompt, bool Selected);
    wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, bool Selected);
    wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices, long style = 0 );
-   wxChoice   * AddChoice( const wxString &Prompt, const wxArrayStringEx &choices, int Selected = -1 );
+   wxChoice   * AddChoice( const wxString &Prompt,
+      const wxArrayStringEx &choices, int Selected = -1 );
+   wxChoice   * AddChoice( const wxString &Prompt,
+      const wxArrayStringEx &choices, const wxString &selected );
    wxMenuBar  * AddMenuBar( );
    wxMenu     * AddMenu( const wxString & Title );
    void AddIcon( wxBitmap * pBmp);

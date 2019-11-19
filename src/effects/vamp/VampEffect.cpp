@@ -572,7 +572,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                mProgram = S.AddChoice(
                   {},
                   choices,
-                  choices.Index( currentProgram )
+                  currentProgram
                );
                mProgram->SetName(_("Program"));
                mProgram->SetSizeHints(-1, -1);

@@ -418,6 +418,12 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
    return pChoice;
 }
 
+wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
+   const wxArrayStringEx &choices, const wxString &Selected )
+{
+   return AddChoice( Prompt, choices, choices.Index( Selected ) );
+}
+
 void ShuttleGuiBase::AddFixedText(const wxString &Str, bool bCenter)
 {
    UseUpId();
