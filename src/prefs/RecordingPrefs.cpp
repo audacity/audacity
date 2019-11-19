@@ -159,12 +159,11 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
             mToggleCustomName = S
                .Name(XO("Custom name text"))
+               .Disable(!mUseCustomTrackName)
                .TieTextBox( {},
                   {wxT("/GUI/TrackNames/RecodingTrackName"),
                    _("Recorded_Audio")},
-               30);
-            if ( mToggleCustomName )
-               mToggleCustomName->Enable(mUseCustomTrackName);
+                  30);
          }
          S.EndMultiColumn();
 

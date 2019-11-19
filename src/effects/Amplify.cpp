@@ -271,12 +271,8 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       // Clipping
       S.StartHorizontalLay(wxCENTER);
       {
-         mClip = S.Id(ID_Clip).AddCheckBox(_("Allow clipping"), false);
-         if (IsBatchProcessing())
-         {
-            mClip->Enable(false);
-            mCanClip = true;
-         }
+         mClip = S.Id(ID_Clip).Disable( mCanClip = IsBatchProcessing() )
+            .AddCheckBox(_("Allow clipping"), false);
       }
       S.EndHorizontalLay();
    }

@@ -1069,29 +1069,23 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             .AddRadioButton(_("D&efault"),
                             0, value);
          mMathProcessingType[1] = S.Id(ID_SSE)
+            .Disable(!EffectEqualization48x::GetMathCaps()->SSE)
             .AddRadioButtonToGroup(_("&SSE"),
                                    1, value);
          mMathProcessingType[2] = S.Id(ID_SSEThreaded)
+            .Disable(!EffectEqualization48x::GetMathCaps()->SSE)
             .AddRadioButtonToGroup(_("SSE &Threaded"),
                                    2, value);
          mMathProcessingType[3] = S.Id(ID_AVX)
+            // not implemented
+            .Disable(true /* !EffectEqualization48x::GetMathCaps()->AVX */)
             .AddRadioButtonToGroup(_("A&VX"),
                                    3, value);
          mMathProcessingType[4] = S.Id(ID_AVXThreaded)
+            // not implemented
+            .Disable(true /* !EffectEqualization48x::GetMathCaps()->AVX */)
             .AddRadioButtonToGroup(_("AV&X Threaded"),
                                    4, value);
-
-         if (!EffectEqualization48x::GetMathCaps()->SSE)
-         {
-            mMathProcessingType[1]->Disable();
-            mMathProcessingType[2]->Disable();
-         }
-         if (true)  //!EffectEqualization48x::GetMathCaps()->AVX) { not implemented
-         {
-            mMathProcessingType[3]->Disable();
-            mMathProcessingType[4]->Disable();
-         }
-
          S.Id(ID_Bench).AddButton(_("&Bench"));
       }
       S.EndHorizontalLay();

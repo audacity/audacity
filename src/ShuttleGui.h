@@ -174,6 +174,12 @@ struct Item {
       return std::move( *this );
    }
 
+   Item&& Disable( bool disabled = true ) &&
+   {
+      mDisabled = disabled;
+      return std::move( *this );
+   }
+
    std::function< void(wxWindow*) > mValidatorSetter;
    TranslatableString mToolTip;
    TranslatableString mName;
@@ -182,6 +188,7 @@ struct Item {
    long miStyle{};
 
    bool mFocused { false };
+   bool mDisabled { false };
 };
 
 }
@@ -387,7 +394,6 @@ public:
       const int max,
       const int min);
 //-- End of variants.
-   void EnableCtrl( bool bEnable );
    void SetSizeHints( int minX, int minY );
    void SetBorder( int Border ) {miBorder = Border;};
    void SetSizerProportion( int iProp ) {miSizerProp = iProp;};
@@ -542,6 +548,12 @@ public:
    ShuttleGui & Focus( bool focused = true )
    {
       std::move( mItem ).Focus( focused );
+      return *this;
+   }
+
+   ShuttleGui &Disable( bool disabled = true )
+   {
+      std::move( mItem ).Disable( disabled );
       return *this;
    }
 

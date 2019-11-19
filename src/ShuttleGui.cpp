@@ -184,13 +184,6 @@ void ShuttleGuiBase::ResetId()
    miIdNext = 3000;
 }
 
-void ShuttleGuiBase::EnableCtrl( bool bEnable )
-{
-   if( mShuttleMode != eIsCreating )
-      return;
-   mpLastWind->Enable( bEnable );
-}
-
 /// Used to modify an already placed Window.
 void ShuttleGuiBase::SetSizeHints( int minX, int minY )
 {
@@ -2086,6 +2079,9 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
 
          if (mItem.mFocused)
             mpWind->SetFocus();
+
+         if (mItem.mDisabled)
+            mpWind->Enable( false );
 
          // Reset to defaults
          mItem = {};

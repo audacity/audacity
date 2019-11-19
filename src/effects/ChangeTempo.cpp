@@ -285,13 +285,13 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
             m_pTextCtrl_FromLength = S.Id(ID_FromLength)
+               .Disable() // Disable because the value comes from the
+                       // user selection.
                .Validator<FloatingPointValidator<double>>(
                   precision, &m_FromLength,
                   NumValidatorStyle::TWO_TRAILING_ZEROES)
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .AddTextBox(_("from"), wxT(""), 12);
-            m_pTextCtrl_FromLength->Enable(false); // Disable because the value comes from the user selection.
-
             m_pTextCtrl_ToLength = S.Id(ID_ToLength)
                .Validator<FloatingPointValidator<double>>(
                   2, &m_ToLength, NumValidatorStyle::TWO_TRAILING_ZEROES,

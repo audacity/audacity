@@ -632,8 +632,12 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                mRestore = S.Id(RestoreButtonID).AddButton(_("Re&store"));
 // Not yet ready for prime time.
 #if 0
-               S.Id(ImportButtonID).AddButton(_("I&mport..."))->Enable( false);
-               S.Id(ExportButtonID).AddButton(_("E&xport..."))->Enable( false);
+               S.Id(ImportButtonID)
+                  .Disable()
+                  .AddButton(_("I&mport..."));
+               S.Id(ExportButtonID)
+                  .Disable()
+                  .AddButton(_("E&xport..."));
 #endif
             }
             S.EndVerticalLay();
