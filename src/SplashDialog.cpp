@@ -140,10 +140,11 @@ void SplashDialog::Populate( ShuttleGui & S )
    {
       S.SetBorder( 5 );
       S.Id( DontShowID).AddCheckBox( _("Don't show this again at start up"), !bShow );
-      wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK);
-      ok->SetDefault();
       S.SetBorder( 5 );
-      S.Prop(0).AddWindow( ok, wxALIGN_RIGHT| wxALL );
+
+      S.Id(wxID_OK)
+         .Prop(0)
+         .AddButton(_("OK"), wxALIGN_RIGHT| wxALL, true);
    }
    S.EndVerticalLay();
 }

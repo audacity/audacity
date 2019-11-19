@@ -189,7 +189,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
 
       S.Prop(1).AddWindow( html, wxEXPAND );
 
-      S.Id( wxID_CANCEL ).AddButton( _("Close") )->SetDefault();
+      S.Id( wxID_CANCEL ).AddButton( _("Close"), wxALIGN_CENTER, true );
    }
    S.EndPanel();
 

@@ -348,7 +348,8 @@ wxCheckBox * ShuttleGuiBase::AddCheckBoxOnRight( const wxString &Prompt, bool Se
    return pCheckBox;
 }
 
-wxButton * ShuttleGuiBase::AddButton(const wxString &Text, int PositionFlags)
+wxButton * ShuttleGuiBase::AddButton(
+   const wxString &Text, int PositionFlags, bool setDefault)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -359,10 +360,13 @@ wxButton * ShuttleGuiBase::AddButton(const wxString &Text, int PositionFlags)
    mpWind->SetName(wxStripMenuCodes(Text));
    miProp=0;
    UpdateSizersCore(false, PositionFlags | wxALL);
+   if (setDefault)
+      pBtn->SetDefault();
    return pBtn;
 }
 
-wxBitmapButton * ShuttleGuiBase::AddBitmapButton(const wxBitmap &Bitmap, int PositionFlags)
+wxBitmapButton * ShuttleGuiBase::AddBitmapButton(
+   const wxBitmap &Bitmap, int PositionFlags, bool setDefault)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -375,6 +379,8 @@ wxBitmapButton * ShuttleGuiBase::AddBitmapButton(const wxBitmap &Bitmap, int Pos
 //      wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
    miProp=0;
    UpdateSizersCore(false, PositionFlags | wxALL);
+   if (setDefault)
+      pBtn->SetDefault();
    return pBtn;
 }
 

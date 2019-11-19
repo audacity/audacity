@@ -533,7 +533,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       S.AddTextWindow(cmd + wxT("\n\n") + output);
       S.StartHorizontalLay(wxALIGN_CENTER, false);
       {
-         S.Id(wxID_OK).AddButton(_("&OK"))->SetDefault();
+         S.Id(wxID_OK).AddButton(_("&OK"), wxALIGN_CENTER, true);
       }
       dlg.GetSizer()->AddSpacer(5);
       dlg.Layout();

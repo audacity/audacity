@@ -139,10 +139,16 @@ public:
    wxTreeCtrl * AddTree();
    wxRadioButton * AddRadioButton( const wxString & Prompt );
    wxRadioButton * AddRadioButtonToGroup( const wxString & Prompt);
+   // Only the last button specified as default (if more than one) will be
    // Always ORs the flags with wxALL (which affects borders):
-   wxButton * AddButton( const wxString & Text, int PositionFlags = wxALIGN_CENTRE );
+   wxButton * AddButton(
+      const wxString & Text, int PositionFlags = wxALIGN_CENTRE,
+      bool setDefault = false );
+   // Only the last button specified as default (if more than one) will be
    // Always ORs the flags with wxALL (which affects borders):
-   wxBitmapButton * AddBitmapButton(const wxBitmap &Bitmap, int PositionFlags = wxALIGN_CENTRE);
+   wxBitmapButton * AddBitmapButton(
+      const wxBitmap &Bitmap, int PositionFlags = wxALIGN_CENTRE,
+      bool setDefault = false );
    // When PositionFlags is 0, applies wxALL (which affects borders),
    // and either wxALIGN_CENTER (if bCenter) or else wxEXPAND
    wxStaticText * AddVariableText(const wxString &Str, bool bCenter = false, int PositionFlags = 0);
