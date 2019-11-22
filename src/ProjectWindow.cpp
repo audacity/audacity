@@ -1189,7 +1189,15 @@ void ProjectWindow::HandleResize()
       return;
    }
 
-   CallAfter( [this]{ FixScrollbars(), UpdateLayout(); } );
+   CallAfter( [this]{
+
+   if (mIsDeleting)
+      return;
+
+   FixScrollbars();
+   UpdateLayout();
+
+   });
 }
 
 
