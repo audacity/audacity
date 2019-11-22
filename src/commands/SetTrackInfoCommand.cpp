@@ -282,6 +282,8 @@ enum kZoomTypes
    kReset,
    kTimes2,
    kHalfWave,
+   kIncrease,
+   kDecrease,
    nZoomTypes
 };
 
@@ -290,6 +292,8 @@ static const EnumValueSymbol kZoomTypeStrings[nZoomTypes] =
    { XO("Reset") },
    { wxT("Times2"), XO("Times 2") },
    { XO("HalfWave") },
+   { XO("Increase") },
+   { XO("Decrease") },
 };
 
 bool SetTrackVisualsCommand::DefineParams( ShuttleParams & S ){ 
@@ -366,11 +370,16 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
             : WaveformSettings::stLogarithmic;
 
    if( wt && bHasVZoom ){
+      float vzmin, vzmax;
+      wt->GetDisplayBounds(&vzmin, &vzmax);
+
       switch( mVZoom ){
          default:
          case kReset: wt->SetDisplayBounds(-1,1); break;
          case kTimes2: wt->SetDisplayBounds(-2,2); break;
          case kHalfWave: wt->SetDisplayBounds(0,1); break;
+         case kIncrease: wt->SetDisplayBounds( vzmin * 0.5 , vzmax * 0.5); break;
+         case kDecrease: wt->SetDisplayBounds( vzmin * 1.5 , vzmax * 1.5); break;
       }
    }
 
