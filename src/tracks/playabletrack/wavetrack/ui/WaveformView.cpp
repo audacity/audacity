@@ -1084,6 +1084,6 @@ void WaveformView::Draw(
 
 static const WaveTrackSubViews::RegisteredFactory key{
    []( WaveTrackView &view ){
-      return std::make_shared< WaveformView >( view.FindTrack() );
+      return std::make_shared< WaveformView >( view );
    }
 };

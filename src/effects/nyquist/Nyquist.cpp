@@ -1073,19 +1073,26 @@ bool NyquistEffect::ProcessOne()
             type = wxT("wave");
             spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
             // To do: accommodate split views
-            auto viewType = WaveTrackViewConstants::NoDisplay;
             auto displays = WaveTrackView::Get( *wt ).GetDisplays();
-            if (!displays.empty())
-               viewType = displays[0];
-            switch ( viewType )
-            {
-            case Waveform:
-               view = (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
-               break;
-            case Spectrum:
-               view = wxT("\"Spectrogram\"");
-               break;
-            default: view = wxT("NIL"); break;
+            auto format = [&]( decltype(displays[0]) display ){
+               switch ( display )
+               {
+               case Waveform:
+                  return (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
+               case Spectrum:
+                  return wxT("\"Spectrogram\"");
+               default: return wxT("NIL");
+               }
+            };
+            if (displays.empty())
+               view = wxT("NIL");
+            else if (displays.size() == 1)
+               view = format( displays[0] );
+            else {
+               view = wxT("(list");
+               for ( auto display : displays )
+                  view += wxString(wxT(" ")) + format( display );
+               view += wxT(")");
             }
          },
 #if defined(USE_MIDI)

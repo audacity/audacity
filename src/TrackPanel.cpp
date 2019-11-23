@@ -923,6 +923,7 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
    for (auto channel : TrackList::Channels(t)) {
       auto &view = TrackView::Get( *channel );
       const auto height = view.GetHeight() - (kTopMargin + kBottomMargin);
+      rect.SetHeight( height );
       const auto subViews = view.GetSubViews( rect );
       if (subViews.empty())
          continue;
@@ -1142,7 +1143,7 @@ struct ChannelGroup final : TrackPanelGroup {
          auto &view = TrackView::Get( *channel );
          auto height = view.GetHeight();
          rect.SetTop( yy );
-         rect.SetHeight( height );
+         rect.SetHeight( height - kSeparatorThickness );
          const auto subViews = TrackView::Get( *channel ).GetSubViews( rect );
          auto y1 = yy;
          for ( const auto &subView : subViews ) {
