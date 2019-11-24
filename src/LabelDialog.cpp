@@ -691,7 +691,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
       fName,
       wxT("txt"),
 #ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
-      { FileNames::TextFiles, LabelTrack::SubripFiles },
+      { FileNames::TextFiles, LabelTrack::SubripFiles, LabelTrack::WebVTTFiles },
 #else
       { FileNames::TextFiles },
 #endif

@@ -339,7 +339,7 @@ void OnExportLabels(const CommandContext &context)
       fName,
       wxT("txt"),
 #ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
-      { FileNames::TextFiles, LabelTrack::SubripFiles },
+      { FileNames::TextFiles, LabelTrack::SubripFiles, LabelTrack::WebVTTFiles },
 #else
       { FileNames::TextFiles },
 #endif

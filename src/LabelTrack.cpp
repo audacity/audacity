@@ -53,6 +53,7 @@ for drawing different aspects of the label and its text box.
 
 #ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
 const FileNames::FileType LabelTrack::SubripFiles{ XO("SubRip text file"), { wxT("srt") }, true };
+const FileNames::FileType LabelTrack::WebVTTFiles{ XO("WebVTT file"), { wxT("vtt") }, true };
 #endif
 
 wxDEFINE_EVENT(EVT_LABELTRACK_ADDITION, LabelTrackEvent);
@@ -502,10 +503,13 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format
 }
 
 #ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
-static wxString SubRipTimestampFromDouble(double timestamp)
+static wxString SubRipTimestampFromDouble(double timestamp, bool webvtt)
 {
    // Note that the SubRip format always uses the comma as its separator...
    static constexpr auto subripFormat = wxT("%H:%M:%S,%l");
+   // ... while WebVTT always used the period.
+   // WebVTT also allows skipping the hour part, but doesn't require doing so.
+   static constexpr auto webvttFormat = wxT("%H:%M:%S.%l");
 
    // dt is the datetime that is timestamp seconds after Jan 1, 1970 UTC.
    wxDateTime dt { (time_t) timestamp };
@@ -513,7 +517,7 @@ static wxString SubRipTimestampFromDouble(double timestamp)
 
    // As such, we need to use UTC when formatting it, or else the time will
    // be shifted (assuming the user is not in the UTC timezone).
-   return dt.Format(subripFormat, wxDateTime::UTC);
+   return dt.Format(webvtt ? webvttFormat : subripFormat, wxDateTime::UTC);
 }
 #endif
 
@@ -549,12 +553,15 @@ void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index) const
    }
 #ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    case LabelFormat::SUBRIP:
+   case LabelFormat::WEBVTT:
    {
+      // Note that the identifier is optional in WebVTT, but required in SubRip.
+      // We include it for both.
       file.AddLine(wxString::Format(wxT("%d"), index + 1));
 
       file.AddLine(wxString::Format(wxT("%s --> %s"),
-         SubRipTimestampFromDouble(getT0()),
-         SubRipTimestampFromDouble(getT1())));
+         SubRipTimestampFromDouble(getT0(), format == LabelFormat::WEBVTT),
+         SubRipTimestampFromDouble(getT1(), format == LabelFormat::WEBVTT)));
 
       file.AddLine(title);
       file.AddLine(wxT(""));
@@ -634,6 +641,13 @@ auto LabelStruct::RegionRelation(
 /// Export labels including label start and end-times.
 void LabelTrack::Export(wxTextFile & f, LabelFormat format) const
 {
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   if (format == LabelFormat::WEBVTT) {
+      f.AddLine(wxT("WEBVTT"));
+      f.AddLine(wxT(""));
+   }
+#endif
+
    // PRL: to do: export other selection fields
    int index = 0;
    for (auto &labelStruct: mLabels)
@@ -646,6 +660,8 @@ LabelFormat LabelTrack::FormatForFileName(const wxString & fileName)
 #ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    if (fileName.Right(4).CmpNoCase(wxT(".srt")) == 0) {
       format = LabelFormat::SUBRIP;
+   } else if (fileName.Right(4).CmpNoCase(wxT(".vtt")) == 0) {
+      format = LabelFormat::WEBVTT;
    }
 #endif
    return format;
@@ -654,6 +670,13 @@ LabelFormat LabelTrack::FormatForFileName(const wxString & fileName)
 /// Import labels, handling files with or without end-times.
 void LabelTrack::Import(wxTextFile & in, LabelFormat format)
 {
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   if (format == LabelFormat::WEBVTT) {
+      ::AudacityMessageBox( XO("Importing WebVTT files is not currently supported.") );
+      return;
+   }
+#endif
+
    int lines = in.GetLineCount();
 
    mLabels.clear();
