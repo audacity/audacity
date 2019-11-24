@@ -51,6 +51,10 @@ for drawing different aspects of the label and its text box.
 #include "effects/TimeWarper.h"
 #include "widgets/AudacityMessageBox.h"
 
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+const FileNames::FileType LabelTrack::SubripFiles{ XO("SubRip text file"), { wxT("srt") }, true };
+#endif
+
 wxDEFINE_EVENT(EVT_LABELTRACK_ADDITION, LabelTrackEvent);
 wxDEFINE_EVENT(EVT_LABELTRACK_DELETION, LabelTrackEvent);
 wxDEFINE_EVENT(EVT_LABELTRACK_PERMUTED, LabelTrackEvent);
@@ -362,6 +366,20 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
    updated = true;
 }
 
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+static double SubRipTimestampToDouble(const wxString &ts)
+{
+   wxString::const_iterator end;
+   wxDateTime dt;
+
+   if (!dt.ParseFormat(ts, wxT("%H:%M:%S,%l"), &end) || end != ts.end())
+      throw LabelStruct::BadFormatException{};
+
+   return dt.GetHour() * 3600 + dt.GetMinute() * 60 + dt.GetSecond()
+      + dt.GetMillisecond() / 1000.0;
+}
+#endif
+
 LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format)
 {
    SelectedRegion sr;
@@ -436,6 +454,46 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format
       }
       break;
    }
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   case LabelFormat::SUBRIP:
+   {
+      if ((int)file.GetLineCount() < index + 2)
+         throw BadFormatException{};
+
+      long identifier;
+      // The first line should be a numeric counter; we can ignore it otherwise
+      if (!firstLine.ToLong(&identifier))
+         throw BadFormatException{};
+
+      wxString timestamp = file.GetLine(index++);
+      // Parsing data of the form 'HH:MM:SS,sss --> HH:MM:SS,sss'
+      // Assume that the line is in exactly that format, with no extra whitespace
+      // and less than 24 hours.
+      if (timestamp.length() != 29)
+         throw BadFormatException{};
+      if (!timestamp.substr(12, 5).IsSameAs(" --> "))
+         throw BadFormatException{};
+
+      double t0 = SubRipTimestampToDouble(timestamp.substr(0, 12));
+      double t1 = SubRipTimestampToDouble(timestamp.substr(17, 12));
+
+      sr.setTimes(t0, t1);
+
+      // Assume that if there is an empty subtitle, there still is a second
+      // blank line after it
+      title = file[index++];
+
+      // Labels in audacity should be only one line, so join multiple lines
+      // with spaces.  This is not reversed on export.
+      while (index < (int)file.GetLineCount() &&
+             !file.GetLine(index).IsEmpty())
+         title += " " + file.GetLine(index);
+
+      index++; // Skip over empty line
+
+      break;
+   }
+#endif
    default:
       throw BadFormatException{};
    }
@@ -443,7 +501,23 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format
    return LabelStruct{ sr, title };
 }
 
-void LabelStruct::Export(wxTextFile &file, LabelFormat format) const
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+static wxString SubRipTimestampFromDouble(double timestamp)
+{
+   // Note that the SubRip format always uses the comma as its separator...
+   static constexpr auto subripFormat = wxT("%H:%M:%S,%l");
+
+   // dt is the datetime that is timestamp seconds after Jan 1, 1970 UTC.
+   wxDateTime dt { (time_t) timestamp };
+   dt.SetMillisecond(wxRound(timestamp * 1000) % 1000);
+
+   // As such, we need to use UTC when formatting it, or else the time will
+   // be shifted (assuming the user is not in the UTC timezone).
+   return dt.Format(subripFormat, wxDateTime::UTC);
+}
+#endif
+
+void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index) const
 {
    switch (format) {
    case LabelFormat::TEXT:
@@ -473,6 +547,21 @@ void LabelStruct::Export(wxTextFile &file, LabelFormat format) const
       // Additional lines in future formats should also start with '\'.
       break;
    }
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   case LabelFormat::SUBRIP:
+   {
+      file.AddLine(wxString::Format(wxT("%d"), index + 1));
+
+      file.AddLine(wxString::Format(wxT("%s --> %s"),
+         SubRipTimestampFromDouble(getT0()),
+         SubRipTimestampFromDouble(getT1())));
+
+      file.AddLine(title);
+      file.AddLine(wxT(""));
+
+      break;
+   }
+#endif
    }
 }
 
@@ -546,13 +635,19 @@ auto LabelStruct::RegionRelation(
 void LabelTrack::Export(wxTextFile & f, LabelFormat format) const
 {
    // PRL: to do: export other selection fields
+   int index = 0;
    for (auto &labelStruct: mLabels)
-      labelStruct.Export(f, format);
+      labelStruct.Export(f, format, index++);
 }
 
 LabelFormat LabelTrack::FormatForFileName(const wxString & fileName)
 {
    LabelFormat format = LabelFormat::TEXT;
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   if (fileName.Right(4).CmpNoCase(wxT(".srt")) == 0) {
+      format = LabelFormat::SUBRIP;
+   }
+#endif
    return format;
 }
 
