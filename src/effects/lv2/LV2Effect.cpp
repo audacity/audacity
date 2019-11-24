@@ -432,7 +432,22 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
       if (!lilv_port_is_a(mPlug, port, gAudio) &&
           !lilv_port_is_a(mPlug, port, gControl))
       {
-         return false;
+         // There is no event port support in liblilv
+         // The workaround below tests for an event port, used
+         // for example in Calf plug-ins.
+         // We'll allow an event port, even though we won't use it.
+         // Otherwise we return false and reject the plug in.
+
+         LilvNode* name = lilv_port_get_name(mPlug, port);
+         if (!name)
+            return false;
+
+         if (strcmp(lilv_node_as_string(name), "Events") != 0)
+         {
+            lilv_node_free(name);
+            return false;
+         }
+         lilv_node_free(name);
       }
    }
 
