@@ -33,6 +33,7 @@ enum class LabelFormat
    TEXT,
 #ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    SUBRIP,
+   WEBVTT,
 #endif
 };
 
@@ -129,6 +130,7 @@ class AUDACITY_DLL_API LabelTrack final
 
 #ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    static const FileNames::FileType SubripFiles;
+   static const FileNames::FileType WebVTTFiles;
 #endif
 
 private:
