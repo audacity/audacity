@@ -13,9 +13,11 @@
 #ifndef _LABELTRACK_
 #define _LABELTRACK_
 
-#include "Experimental.h"
 #include "SelectedRegion.h"
 #include "Track.h"
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+#include "FileNames.h"
+#endif
 
 class wxTextFile;
 
@@ -29,6 +31,9 @@ struct TrackPanelDrawingContext;
 enum class LabelFormat
 {
    TEXT,
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   SUBRIP,
+#endif
 };
 
 class AUDACITY_DLL_API LabelStruct
@@ -51,7 +56,7 @@ public:
    struct BadFormatException {};
    static LabelStruct Import(wxTextFile &file, int &index, LabelFormat format);
 
-   void Export(wxTextFile &file, LabelFormat format) const;
+   void Export(wxTextFile &file, LabelFormat format, int index) const;
 
    /// Relationships between selection region and labels
    enum TimeRelations
@@ -121,6 +126,10 @@ class AUDACITY_DLL_API LabelTrack final
    void SetSelected(bool s) override;
 
    using Holder = std::shared_ptr<LabelTrack>;
+
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   static const FileNames::FileType SubripFiles;
+#endif
 
 private:
    TrackListHolder Clone(bool backup) const override;

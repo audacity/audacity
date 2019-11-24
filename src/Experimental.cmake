@@ -167,6 +167,9 @@ set( EXPERIMENTAL_OPTIONS_LIST
 
    # PRL 31 July 2018
    DRAGGABLE_PLAY_HEAD
+
+   # Poke 13 Nov 2019
+   SUBRIP_LABEL_FORMATS
 )
 
 # Some more flags that depend on other configuration options
