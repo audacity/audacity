@@ -22,7 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../SelectionState.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../ViewInfo.h"
-#include "../../../images/Cursors.h"
+#include "../../../../images/Cursors.h"
 
 #include <wx/clipbrd.h>
 
