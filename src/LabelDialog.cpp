@@ -641,6 +641,8 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
 
    // They gave us one...
    if (!fileName.empty()) {
+      LabelFormat format = LabelTrack::FormatForFileName(fileName);
+
       wxTextFile f;
 
       // Get at the data
@@ -653,7 +655,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
          // Create a temporary label track and load the labels
          // into it
          auto lt = std::make_shared<LabelTrack>();
-         lt->Import(f);
+         lt->Import(f, format);
 
          // Add the labels to our collection
          AddLabels(lt.get());
@@ -690,6 +692,8 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    if (fName.empty())
       return;
+
+   LabelFormat format = LabelTrack::FormatForFileName(fName);
 
    // Move existing files out of the way.  Otherwise wxTextFile will
    // append to (rather than replace) the current file.
@@ -731,7 +735,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    // Export them and clean
-   lt->Export(f);
+   lt->Export(f, format);
 
 #ifdef __WXMAC__
    f.Write(wxTextFileType_Mac);

@@ -13,6 +13,7 @@
 #ifndef _LABELTRACK_
 #define _LABELTRACK_
 
+#include "Experimental.h"
 #include "SelectedRegion.h"
 #include "Track.h"
 
@@ -25,6 +26,11 @@ class TimeWarper;
 
 struct LabelTrackHit;
 struct TrackPanelDrawingContext;
+
+enum class LabelFormat
+{
+   TEXT,
+};
 
 class LabelStruct
 {
@@ -44,9 +50,9 @@ public:
    void MoveLabel( int iEdge, double fNewTime);
 
    struct BadFormatException {};
-   static LabelStruct Import(wxTextFile &file, int &index);
+   static LabelStruct Import(wxTextFile &file, int &index, LabelFormat format);
 
-   void Export(wxTextFile &file) const;
+   void Export(wxTextFile &file, LabelFormat format) const;
 
    /// Relationships between selection region and labels
    enum TimeRelations
@@ -103,7 +109,7 @@ class AUDACITY_DLL_API LabelTrack final
    double GetEndTime() const override;
 
    using Holder = std::shared_ptr<LabelTrack>;
-   
+
 private:
    Track::Holder Clone() const override;
 
@@ -122,8 +128,9 @@ public:
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
 
-   void Import(wxTextFile & f);
-   void Export(wxTextFile & f) const;
+   static LabelFormat FormatForFileName(const wxString & fileName);
+   void Import(wxTextFile & f, LabelFormat format);
+   void Export(wxTextFile & f, LabelFormat format) const;
 
    int GetNumLabels() const;
    const LabelStruct *GetLabel(int index) const;

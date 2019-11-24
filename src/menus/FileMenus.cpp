@@ -345,6 +345,8 @@ void OnExportLabels(const CommandContext &context)
    if (fName.empty())
       return;
 
+   LabelFormat format = LabelTrack::FormatForFileName(fName);
+
    // Move existing files out of the way.  Otherwise wxTextFile will
    // append to (rather than replace) the current file.
 
@@ -371,7 +373,7 @@ void OnExportLabels(const CommandContext &context)
    }
 
    for (auto lt : trackRange)
-      lt->Export(f);
+      lt->Export(f, format);
 
    f.Write();
    f.Close();
@@ -525,6 +527,7 @@ void OnImportLabels(const CommandContext &context)
          &window);    // Parent
 
    if (!fileName.empty()) {
+      LabelFormat format = LabelTrack::FormatForFileName(fileName);
       wxTextFile f;
 
       f.Open(fileName);
@@ -539,7 +542,7 @@ void OnImportLabels(const CommandContext &context)
       wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
       newTrack->SetName(sTrackName);
 
-      newTrack->Import(f);
+      newTrack->Import(f, format);
 
       SelectUtilities::SelectNone( project );
       newTrack->SetSelected(true);
