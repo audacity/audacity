@@ -13,6 +13,7 @@
 #include "../SelectUtilities.h"
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
+#include "../TrackPanelAx.h"
 #include "../UndoManager.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
@@ -154,8 +155,10 @@ bool DoPasteNothingSelected(AudacityProject &project)
       ProjectHistory::Get( project )
          .PushState(_("Pasted from the clipboard"), _("Paste"));
 
-      if (pFirstNewTrack)
+      if (pFirstNewTrack) {
+         TrackFocus::Get(project).Set(pFirstNewTrack);
          pFirstNewTrack->EnsureVisible();
+      }
 
       return true;
    }
@@ -194,8 +197,10 @@ void OnUndo(const CommandContext &context)
    auto t = *tracks.Selected().begin();
    if (!t)
       t = *tracks.Any().begin();
-   if (t)
+   if (t) {
+      TrackFocus::Get(project).Set(t);
       t->EnsureVisible();
+   }
 }
 
 void OnRedo(const CommandContext &context)
@@ -222,8 +227,10 @@ void OnRedo(const CommandContext &context)
    auto t = *tracks.Selected().begin();
    if (!t)
       t = *tracks.Any().begin();
-   if (t)
+   if (t) {
+      TrackFocus::Get(project).Set(t);
       t->EnsureVisible();
+   }
 }
 
 void OnCut(const CommandContext &context)
@@ -630,8 +637,10 @@ void OnPaste(const CommandContext &context)
       ProjectHistory::Get( project )
          .PushState(_("Pasted from the clipboard"), _("Paste"));
 
-      if (ff)
+      if (ff) {
+         TrackFocus::Get(project).Set(ff);
          ff->EnsureVisible();
+      }
    }
 }
 

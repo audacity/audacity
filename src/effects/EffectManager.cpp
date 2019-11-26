@@ -48,6 +48,7 @@ effects.
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
+#include "../TrackPanelAx.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 
@@ -227,8 +228,10 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
       auto pTrack = *tracks.Selected().begin();
       if (!pTrack)
          pTrack = *tracks.Any().begin();
-      if (pTrack)
+      if (pTrack) {
+         TrackFocus::Get(project).Set(pTrack);
          pTrack->EnsureVisible();
+      }
    }
 
    return true;

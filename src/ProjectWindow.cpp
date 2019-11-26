@@ -19,6 +19,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectStatus.h"
 #include "RefreshCode.h"
 #include "TrackPanelMouseEvent.h"
+#include "TrackPanelAx.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
@@ -1527,8 +1528,10 @@ void ProjectWindow::ZoomAfterImport(Track *pTrack)
       pTrack = *tracks.Selected().begin();
    if (!pTrack)
       pTrack = *tracks.Any().begin();
-   if (pTrack)
+   if (pTrack) {
+      TrackFocus::Get(project).Set(pTrack);
       pTrack->EnsureVisible();
+   }
 }
 
 // Utility function called by other zoom methods

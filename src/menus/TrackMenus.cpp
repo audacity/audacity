@@ -587,6 +587,7 @@ void OnNewWaveTrack(const CommandContext &context)
    ProjectHistory::Get( project )
       .PushState(_("Created new audio track"), _("New Track"));
 
+   TrackFocus::Get(project).Set(t);
    t->EnsureVisible();
 }
 
@@ -614,6 +615,7 @@ void OnNewStereoTrack(const CommandContext &context)
    ProjectHistory::Get( project )
       .PushState(_("Created new stereo audio track"), _("New Track"));
 
+   TrackFocus::Get(project).Set(left);
    left->EnsureVisible();
 }
 
@@ -633,6 +635,7 @@ void OnNewLabelTrack(const CommandContext &context)
    ProjectHistory::Get( project )
       .PushState(_("Created new label track"), _("New Track"));
 
+   TrackFocus::Get(project).Set(t);
    t->EnsureVisible();
 }
 
@@ -657,6 +660,7 @@ void OnNewTimeTrack(const CommandContext &context)
    ProjectHistory::Get( project )
       .PushState(_("Created new time track"), _("New Track"));
 
+   TrackFocus::Get(project).Set(t);
    t->EnsureVisible();
 }
 

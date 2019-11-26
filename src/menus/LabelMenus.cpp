@@ -79,6 +79,7 @@ int DoAddLabel(
    ProjectHistory::Get( project ).PushState(_("Added label"), _("Label"));
 
    if (!useDialog) {
+      TrackFocus::Get(project).Set(lt);
       lt->EnsureVisible();
    }
    trackPanel.SetFocus();
@@ -337,6 +338,7 @@ void OnPasteNewLabel(const CommandContext &context)
    // plt should point to the last label track pasted to -- ensure it's visible
    // and set focus
    if (plt) {
+      TrackFocus::Get(project).Set(plt);
       plt->EnsureVisible();
       trackPanel.SetFocus();
    }

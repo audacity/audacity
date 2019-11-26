@@ -628,8 +628,10 @@ void TrackPanel::ProcessUIHandleResult
    if (refreshResult & Resize)
       panel->GetListener()->TP_HandleResize();
 
-   if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack)
+   if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack) {
+      TrackFocus::Get(*GetProject()).Set(pClickedTrack);
       pClickedTrack->EnsureVisible();
+   }
 }
 
 void TrackPanel::HandlePageUpKey()
@@ -763,8 +765,10 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       this->CallAfter( [this, event]{
          const auto foundCell = FindCell(event.m_x, event.m_y);
          const auto t = FindTrack( foundCell.pCell.get() );
-         if ( t )
+         if ( t ) {
+            TrackFocus::Get(*GetProject()).Set(t.get());
             t->EnsureVisible();
+         }
       } );
    }
 
@@ -978,8 +982,6 @@ void TrackPanel::OnEnsureVisible(TrackListEvent & e)
 
    auto pTrack = e.mpTrack.lock();
    auto t = pTrack.get();
-
-   TrackFocus::Get( *GetProject() ).Set( t );
 
    int trackTop = 0;
    int trackHeight =0;
