@@ -791,25 +791,28 @@ void WaveTrackView::BuildSubViews() const
       // On-demand steps that can't happen in the constructor
       auto pThis = const_cast<WaveTrackView*>( this );
       pThis->BuildAll();
-      pThis->mPlacements.resize( WaveTrackSubViews::size() );
       bool minimized = GetMinimized();
       pThis->WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
          subView.DoSetMinimized( minimized );
       } );
 
-      auto pTrack = pThis->FindTrack();
-      auto display = TracksPrefs::ViewModeChoice();
-
-      // Force creation always:
-      WaveformSettings &settings = static_cast< WaveTrack* >( pTrack.get() )
+      if ( pThis->mPlacements.empty() ) {
+         pThis->mPlacements.resize( WaveTrackSubViews::size() );
+         
+         auto pTrack = pThis->FindTrack();
+         auto display = TracksPrefs::ViewModeChoice();
+         
+         // Force creation always:
+         WaveformSettings &settings = static_cast< WaveTrack* >( pTrack.get() )
          ->GetIndependentWaveformSettings();
-
-      if (display == WaveTrackViewConstants::obsoleteWaveformDBDisplay) {
-         display = WaveTrackViewConstants::Waveform;
-         settings.scaleType = WaveformSettings::stLogarithmic;
+         
+         if (display == WaveTrackViewConstants::obsoleteWaveformDBDisplay) {
+            display = WaveTrackViewConstants::Waveform;
+            settings.scaleType = WaveformSettings::stLogarithmic;
+         }
+         
+         pThis->DoSetDisplay( display );
       }
-
-      pThis->DoSetDisplay( display );
    }
 }
 
