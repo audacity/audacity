@@ -153,6 +153,15 @@ void AudioUnitEffectsModule::Terminate()
    return;
 }
 
+EffectFamilySymbol AudioUnitEffectsModule::GetOptionalFamilySymbol()
+{
+#if USE_AUDIO_UNITS
+   return AUDIOUNITEFFECTS_FAMILY;
+#else
+   return {};
+#endif
+}
+
 bool AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Nothing to be done here

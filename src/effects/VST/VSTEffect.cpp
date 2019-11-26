@@ -366,6 +366,15 @@ void VSTEffectsModule::Terminate()
    return;
 }
 
+EffectFamilySymbol VSTEffectsModule::GetOptionalFamilySymbol()
+{
+#if USE_VST
+   return VSTPLUGINTYPE;
+#else
+   return {};
+#endif
+}
+
 const FileExtensions &VSTEffectsModule::GetFileExtensions()
 {
    static FileExtensions result{{ _T("vst") }};

@@ -173,6 +173,9 @@ class PluginManager final : public PluginManagerInterface
 {
 public:
 
+   RegistryPath GetPluginEnabledSetting( const PluginID &ID );
+   RegistryPath GetPluginEnabledSetting( const PluginDescriptor &desc );
+
    // PluginManagerInterface implementation
 
    bool IsPluginRegistered(const PluginPath &path) override;

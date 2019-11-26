@@ -224,6 +224,12 @@ void BuiltinCommandsModule::Terminate()
    return;
 }
 
+EffectFamilySymbol BuiltinCommandsModule::GetOptionalFamilySymbol()
+{
+   // Commands are not enabled and disabled in EffectsPrefs
+   return {};
+}
+
 const FileExtensions &BuiltinCommandsModule::GetFileExtensions()
 {
    static FileExtensions empty;

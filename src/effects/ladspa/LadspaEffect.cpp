@@ -162,6 +162,15 @@ void LadspaEffectsModule::Terminate()
    return;
 }
 
+EffectFamilySymbol LadspaEffectsModule::GetOptionalFamilySymbol()
+{
+#if USE_LADSPA
+   return LADSPAEFFECTS_FAMILY;
+#else
+   return {};
+#endif
+}
+
 const FileExtensions &LadspaEffectsModule::GetFileExtensions()
 {
    static FileExtensions result{{
