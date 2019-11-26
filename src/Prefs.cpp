@@ -240,9 +240,58 @@ void FinishPreferences()
 }
 
 //////////
+EnumValueSymbols::EnumValueSymbols(
+   ByColumns_t,
+   const wxArrayStringEx &msgids,
+   wxArrayStringEx internals
+)
+   : mInternals( std::move( internals ) )
+{
+   auto size = mInternals.size(), size2 = msgids.size();
+   if ( size != size2 ) {
+      wxASSERT( false );
+      size = std::min( size, size2 );
+   }
+   reserve( size );
+   auto iter1 = mInternals.begin();
+   auto iter2 = msgids.begin();
+   while( size-- )
+      emplace_back( *iter1++, *iter2++ );
+}
+
+const wxArrayStringEx &EnumValueSymbols::GetTranslations() const
+{
+   if ( mTranslations.empty() )
+      mTranslations = transform_container<wxArrayStringEx>( *this,
+         std::mem_fn( &EnumValueSymbol::Translation ) );
+   return mTranslations;
+}
+
+const wxArrayStringEx &EnumValueSymbols::GetInternals() const
+{
+   if ( mInternals.empty() )
+      mInternals = transform_container<wxArrayStringEx>( *this,
+         std::mem_fn( &EnumValueSymbol::Internal ) );
+   return mInternals;
+}
+
+//////////
+const EnumValueSymbol &ChoiceSetting::Default() const
+{
+   if ( mDefaultSymbol >= 0 && mDefaultSymbol < mSymbols.size() )
+      return mSymbols[ mDefaultSymbol ];
+   static EnumValueSymbol empty;
+   return empty;
+}
+
 wxString ChoiceSetting::Read() const
 {
    const auto &defaultValue = Default().Internal();
+   return ReadWithDefault( defaultValue );
+}
+
+wxString ChoiceSetting::ReadWithDefault( const wxString &defaultValue ) const
+{
    wxString value;
    if ( !gPrefs->Read(mKey, &value, defaultValue) )
       if (!mMigrated) {
@@ -253,16 +302,17 @@ wxString ChoiceSetting::Read() const
    // Remap to default if the string is not known -- this avoids surprises
    // in case we try to interpret config files from future versions
    auto index = Find( value );
-   if ( index >= mnSymbols )
+   if ( index >= mSymbols.size() )
       value = defaultValue;
    return value;
 }
 
 size_t ChoiceSetting::Find( const wxString &value ) const
 {
+   auto start = GetSymbols().begin();
    return size_t(
-      std::find( begin(), end(), EnumValueSymbol{ value, {} } )
-         - mSymbols );
+      std::find( start, GetSymbols().end(), EnumValueSymbol{ value, {} } )
+         - start );
 }
 
 void ChoiceSetting::Migrate( wxString &value )
@@ -273,7 +323,7 @@ void ChoiceSetting::Migrate( wxString &value )
 bool ChoiceSetting::Write( const wxString &value )
 {
    auto index = Find( value );
-   if (index >= mnSymbols)
+   if (index >= mSymbols.size())
       return false;
 
    auto result = gPrefs->Write( mKey, value );
@@ -281,27 +331,65 @@ bool ChoiceSetting::Write( const wxString &value )
    return result;
 }
 
-int EnumSetting::ReadInt() const
-{
-   if (!mIntValues)
-      return 0;
+EnumSettingBase::EnumSettingBase(
+   const wxString &key,
+   EnumValueSymbols symbols,
+   long defaultSymbol,
 
+   std::vector<int> intValues, // must have same size as symbols
+   const wxString &oldKey
+)
+   : ChoiceSetting{ key, std::move( symbols ), defaultSymbol }
+   , mIntValues{ std::move( intValues ) }
+   , mOldKey{ oldKey }
+{
+   auto size = mSymbols.size();
+   if( mIntValues.size() != size ) {
+      wxASSERT( false );
+      mIntValues.resize( size );
+   }
+}
+
+void ChoiceSetting::SetDefault( long value )
+{
+   if ( value < (long)mSymbols.size() )
+      mDefaultSymbol = value;
+   else
+      wxASSERT( false );
+}
+
+int EnumSettingBase::ReadInt() const
+{
    auto index = Find( Read() );
-   wxASSERT( index < mnSymbols );
+
+   wxASSERT( index < mIntValues.size() );
    return mIntValues[ index ];
 }
 
-size_t EnumSetting::FindInt( int code ) const
+int EnumSettingBase::ReadIntWithDefault( int defaultValue ) const
 {
-   if (!mIntValues)
-      return mnSymbols;
+   wxString defaultString;
+   auto index0 = FindInt( defaultValue );
+   if ( index0 < mSymbols.size() )
+      defaultString = mSymbols[ index0 ].Internal();
+   else
+      wxASSERT( false );
 
-   return size_t(
-      std::find( mIntValues, mIntValues + mnSymbols, code )
-         - mIntValues );
+   auto index = Find( ReadWithDefault( defaultString ) );
+
+   wxASSERT( index < mSymbols.size() );
+   return mIntValues[ index ];
 }
 
-void EnumSetting::Migrate( wxString &value )
+size_t EnumSettingBase::FindInt( int code ) const
+{
+   const auto start = mIntValues.begin();
+   return size_t(
+      std::find( start, mIntValues.end(), code )
+         - start );
+}
+
+void EnumSettingBase::Migrate( wxString &value )
 {
    int intValue = 0;
    if ( !mOldKey.empty() &&
@@ -310,19 +398,21 @@ void EnumSetting::Migrate( wxString &value )
       // Do not DELETE the old key -- let that be read if user downgrades
       // Audacity.  But further changes will be stored only to the NEW key
       // and won't be seen then.
-      auto index = FindInt( intValue );
-      if ( index >= mnSymbols )
+      auto index = (long) FindInt( intValue );
+      if ( index >= mSymbols.size() )
          index = mDefaultSymbol;
-      value = mSymbols[index].Internal();
-      Write(value);
-      gPrefs->Flush();
+      if ( index >= 0 && index < mSymbols.size() ) {
+         value = mSymbols[index].Internal();
+         Write(value);
+         gPrefs->Flush();
+      }
    }
 }
 
-bool EnumSetting::WriteInt( int code ) // you flush gPrefs afterward
+bool EnumSettingBase::WriteInt( int code ) // you flush gPrefs afterward
 {
    auto index = FindInt( code );
-   if ( index >= mnSymbols )
+   if ( index >= mSymbols.size() )
       return false;
    return Write( mSymbols[index].Internal() );
 }
@@ -331,3 +421,5 @@ wxString WarningDialogKey(const wxString &internalDialogName)
 {
    return wxT("/Warnings/") + internalDialogName;
 }
+
+ByColumns_t ByColumns{};

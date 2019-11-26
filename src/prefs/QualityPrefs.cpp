@@ -32,26 +32,21 @@
 
 //////////
 
-static const EnumValueSymbol choicesFormat[] = {
-   { wxT("Format16Bit"), XO("16-bit") },
-   { wxT("Format24Bit"), XO("24-bit") },
-   { wxT("Format32BitFloat"), XO("32-bit float") }
-};
-static const size_t nChoicesFormat = WXSIZEOF( choicesFormat );
-static const int intChoicesFormat[] = {
-   int16Sample,
-   int24Sample,
-   floatSample
-};
-static_assert( nChoicesFormat == WXSIZEOF(intChoicesFormat), "size mismatch" );
-
-static const size_t defaultChoiceFormat = 2; // floatSample
-
-static EnumSetting formatSetting{
+static EnumSetting< sampleFormat > formatSetting{
    wxT("/SamplingRate/DefaultProjectSampleFormatChoice"),
-   choicesFormat, nChoicesFormat, defaultChoiceFormat,
-   
-   intChoicesFormat,
+   {
+      { wxT("Format16Bit"), XO("16-bit") },
+      { wxT("Format24Bit"), XO("24-bit") },
+      { wxT("Format32BitFloat"), XO("32-bit float") }
+   },
+   2, // floatSample
+
+   // for migrating old preferences:
+   {
+      int16Sample,
+      int24Sample,
+      floatSample
+   },
    wxT("/SamplingRate/DefaultProjectSampleFormat"),
 };
 
@@ -132,7 +127,7 @@ void QualityPrefs::GetNamesAndLabels()
       mSampleRateNames.push_back(wxString::Format(wxT("%i Hz"), iRate));
    }
 
-   mSampleRateNames.push_back(_("Other..."));
+   mSampleRateNames.push_back(XO("Other..."));
 
    // The label for the 'Other...' case can be any value at all.
    mSampleRateLabels.push_back(44100); // If chosen, this value will be overwritten
@@ -162,7 +157,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                                        wxT("/SamplingRate/DefaultProjectSampleRate"),
                                        AudioIOBase::GetOptimalSupportedSampleRate(),
                                        mSampleRateNames,
-                                       mSampleRateLabels);
+                                       &mSampleRateLabels);
 
             // Now do the edit box...
             mOtherSampleRate = S.TieNumericTextBox( {},
@@ -246,6 +241,6 @@ QualityPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 
 sampleFormat QualityPrefs::SampleFormatChoice()
 {
-   return (sampleFormat)formatSetting.ReadInt();
+   return formatSetting.ReadEnum();
 }
 

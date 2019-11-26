@@ -79,7 +79,7 @@ enum {
 void WaveformPrefs::Populate()
 {
    // Reuse the same choices and codes as for Interface prefs
-   GUIPrefs::GetRangeChoices(&mRangeChoices, &mRangeCodes);
+   GUIPrefs::GetRangeChoices(nullptr, &mRangeChoices, &mRangeCodes);
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.

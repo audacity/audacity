@@ -66,6 +66,28 @@ void EffectsPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
+ChoiceSetting EffectsGroupBy{
+   wxT("/Effects/GroupBy"),
+   {
+      ByColumns,
+      {
+         XO("Sorted by Effect Name") ,
+         XO("Sorted by Publisher and Effect Name") ,
+         XO("Sorted by Type and Effect Name") ,
+         XO("Grouped by Publisher") ,
+         XO("Grouped by Type") ,
+      },
+      {
+         wxT("sortby:name") ,
+         wxT("sortby:publisher:name") ,
+         wxT("sortby:type:name") ,
+         wxT("groupby:publisher") ,
+         wxT("groupby:type") ,
+      }
+   },
+   0 // "sortby:name"
+};
+
 namespace {
 
 // Rather than hard-code an exhaustive list of effect families in this file,
@@ -177,27 +199,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         wxArrayStringEx visualgroups{
-            _("Sorted by Effect Name") ,
-            _("Sorted by Publisher and Effect Name") ,
-            _("Sorted by Type and Effect Name") ,
-            _("Grouped by Publisher") ,
-            _("Grouped by Type") ,
-         };
-
-         wxArrayStringEx prefsgroups{
-            wxT("sortby:name") ,
-            wxT("sortby:publisher:name") ,
-            wxT("sortby:type:name") ,
-            wxT("groupby:publisher") ,
-            wxT("groupby:type") ,
-         };
-
-         wxChoice *c = S.TieChoice(_("S&ort or Group:"),
-                                   wxT("/Effects/GroupBy"),
-                                   wxT("sortby:name"),
-                                   visualgroups,
-                                   prefsgroups);
+         wxChoice *c = S.TieChoice( _("S&ort or Group:"), EffectsGroupBy);
          if( c ) c->SetMinSize(c->GetBestSize());
 
          S.TieNumericTextBox(_("&Maximum effects per group (0 to disable):"),

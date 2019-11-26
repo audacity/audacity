@@ -312,7 +312,7 @@ ExportCL::ExportCL()
    AddExtension(wxT(""),0);
    SetMaxChannels(255,0);
    SetCanMetaData(false,0);
-   SetDescription(_("(external program)"),0);
+   SetDescription(XO("(external program)"),0);
 }
 
 ProgressResult ExportCL::Export(AudacityProject *project,

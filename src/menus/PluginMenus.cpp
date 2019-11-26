@@ -18,6 +18,7 @@
 #include "../effects/Contrast.h"
 #include "../effects/EffectManager.h"
 #include "../effects/RealtimeEffectManager.h"
+#include "../prefs/EffectsPrefs.h"
 
 // private helper classes and functions
 namespace {
@@ -195,7 +196,7 @@ void AddEffectMenuItems(
 {
    size_t pluginCnt = plugs.size();
 
-   wxString groupBy = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("sortby:name"));
+   auto groupBy = EffectsGroupBy.Read();
 
    bool grouped = false;
    if (groupBy.StartsWith(wxT("groupby")))
@@ -382,7 +383,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
       plug = pm.GetNextPluginForEffectType(type);
    }
 
-   wxString groupby = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("sortby:name"));
+   wxString groupby = EffectsGroupBy.Read();
 
    using Comparator = bool(*)(const PluginDescriptor*, const PluginDescriptor*);
    Comparator comp1, comp2;

@@ -55,6 +55,7 @@
 #include "../FileFormats.h"
 #include "../Mix.h"
 #include "../Prefs.h"
+#include "../prefs/ImportExportPrefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
@@ -152,9 +153,14 @@ wxString ExportPlugin::GetFormat(int index)
    return mFormatInfos[index].mFormat;
 }
 
-wxString ExportPlugin::GetDescription(int index)
+wxString ExportPlugin::GetUntranslatedDescription(int index)
 {
    return mFormatInfos[index].mDescription;
+}
+
+wxString ExportPlugin::GetTranslatedDescription(int index)
+{
+   return GetCustomTranslation( GetUntranslatedDescription( index ) );
 }
 
 FileExtension ExportPlugin::GetExtension(int index)
@@ -173,7 +179,7 @@ wxString ExportPlugin::GetMask(int index)
       return mFormatInfos[index].mMask;
    }
 
-   wxString mask = GetDescription(index) + wxT("|");
+   wxString mask = GetTranslatedDescription(index) + wxT("|");
 
    // Build the mask
    // const auto &ext = GetExtension(index);
@@ -847,7 +853,7 @@ bool Exporter::CheckMix()
    // Detemine if exported file will be stereo or mono or multichannel,
    // and if mixing will occur.
 
-   int downMix = gPrefs->Read(wxT("/FileFormats/ExportDownMix"), true);
+   auto downMix = ImportExportPrefs::ExportDownMixSetting.ReadEnum();
    int exportedChannels = mPlugins[mFormat]->SetNumExportChannels();
 
    if (downMix) {

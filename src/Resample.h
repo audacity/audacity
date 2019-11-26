@@ -16,7 +16,7 @@
 
 #include "SampleFormat.h"
 
-class EnumSetting;
+template< typename Enum > class EnumSetting;
 
 struct soxr;
 extern "C" void soxr_delete(soxr*);
@@ -41,8 +41,8 @@ class Resample final
    Resample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor);
    ~Resample();
 
-   static EnumSetting FastMethodSetting;
-   static EnumSetting BestMethodSetting;
+   static EnumSetting< int > FastMethodSetting;
+   static EnumSetting< int > BestMethodSetting;
 
    /** @brief Main processing function. Resamples from the input buffer to the
     * output buffer.

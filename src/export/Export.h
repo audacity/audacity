@@ -45,7 +45,7 @@ class AUDACITY_DLL_API FormatInfo
       ~FormatInfo() {}
 
       wxString mFormat;
-      wxString mDescription;
+      wxString mDescription; // untranslated
       // wxString mExtension;
       FileExtensions mExtensions;
       wxString mMask;
@@ -65,7 +65,7 @@ public:
 
    int AddFormat();
    void SetFormat(const wxString & format, int index);
-   void SetDescription(const wxString & description, int index);
+   void SetDescription(const wxString & description /* untranslated */, int index);
    void AddExtension(const wxString &extension,int index);
    void SetExtensions(FileExtensions extensions, int index);
    void SetMask(const wxString & mask, int index);
@@ -74,7 +74,8 @@ public:
 
    virtual int GetFormatCount();
    virtual wxString GetFormat(int index);
-   virtual wxString GetDescription(int index);
+   wxString GetUntranslatedDescription(int index);
+   wxString GetTranslatedDescription(int index);
    /** @brief Return the (first) file name extension for the sub-format.
     * @param index The sub-format for which the extension is wanted */
    virtual FileExtension GetExtension(int index = 0);

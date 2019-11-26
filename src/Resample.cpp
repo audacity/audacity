@@ -52,53 +52,36 @@ Resample::~Resample()
 }
 
 //////////
-static const EnumValueSymbol methodNames[] = {
+static const std::initializer_list<EnumValueSymbol> methodNames{
    { wxT("LowQuality"), XO("Low Quality (Fastest)") },
    { wxT("MediumQuality"), XO("Medium Quality") },
    { wxT("HighQuality"), XO("High Quality") },
    { wxT("BestQuality"), XO("Best Quality (Slowest)") }
 };
 
-static const size_t numMethods = WXSIZEOF(methodNames);
-
-static const wxString fastMethodKey =
-   wxT("/Quality/LibsoxrSampleRateConverterChoice");
-
-static const wxString bestMethodKey =
-   wxT("/Quality/LibsoxrHQSampleRateConverterChoice");
-
-static const wxString oldFastMethodKey =
-   wxT("/Quality/LibsoxrSampleRateConverter");
-
-static const wxString oldBestMethodKey =
-   wxT("/Quality/LibsoxrHQSampleRateConverter");
-
-static const size_t fastMethodDefault = 1; // Medium Quality
-static const size_t bestMethodDefault = 3; // Best Quality
-
-static const int intChoicesMethod[] = {
+static auto intChoicesMethod = {
    0, 1, 2, 3
 };
 
-static_assert( WXSIZEOF(intChoicesMethod) == numMethods, "size mismatch" );
+EnumSetting< int > Resample::FastMethodSetting{
+   wxT("/Quality/LibsoxrSampleRateConverterChoice"),
+   methodNames,
+   1,  // Medium Quality
 
-EnumSetting Resample::FastMethodSetting{
-   fastMethodKey,
-   methodNames, numMethods,
-   fastMethodDefault,
-
+   // for migrating old preferences:
    intChoicesMethod,
-   oldFastMethodKey
+   wxT("/Quality/LibsoxrSampleRateConverter")
 };
 
-EnumSetting Resample::BestMethodSetting
+EnumSetting< int > Resample::BestMethodSetting
 {
-   bestMethodKey,
-   methodNames, numMethods,
-   bestMethodDefault,
+   wxT("/Quality/LibsoxrHQSampleRateConverterChoice"),
+   methodNames,
+   3, // Best Quality,
 
+   // for migrating old preferences:
    intChoicesMethod,
-   oldBestMethodKey
+   wxT("/Quality/LibsoxrHQSampleRateConverter")
 };
 
 //////////
@@ -132,7 +115,7 @@ std::pair<size_t, size_t>
 void Resample::SetMethod(const bool useBestMethod)
 {
    if (useBestMethod)
-      mMethod = BestMethodSetting.ReadInt();
+      mMethod = BestMethodSetting.ReadEnum();
    else
-      mMethod = FastMethodSetting.ReadInt();
+      mMethod = FastMethodSetting.ReadEnum();
 }

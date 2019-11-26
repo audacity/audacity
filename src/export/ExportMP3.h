@@ -15,10 +15,15 @@
 
 #include "../MemoryX.h"
 
-#define MODE_SET           0
-#define MODE_VBR           1
-#define MODE_ABR           2
-#define MODE_CBR           3
+enum MP3RateMode : unsigned {
+   MODE_SET = 0,
+   MODE_VBR,
+   MODE_ABR,
+   MODE_CBR,
+};
+
+template< typename Enum > class EnumSetting;
+extern EnumSetting< MP3RateMode > MP3RateModeSetting;
 
 #if defined(__WXMSW__) || defined(__WXMAC__)
 #define MP3_EXPORT_BUILT_IN 1

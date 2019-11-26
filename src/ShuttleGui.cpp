@@ -140,7 +140,7 @@ void ShuttleGuiBase::Init()
    mpWind = NULL;
    mpSubSizer = NULL;
 
-   mSettingName = wxT("");
+   mRadioSettingName = wxT("");
    mRadioCount = -1;
 
    miBorder = 5;
@@ -483,33 +483,32 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
 }
 
 
-wxRadioButton * ShuttleGuiBase::AddRadioButton(const wxString &Prompt)
+wxRadioButton * ShuttleGuiBase::DoAddRadioButton(
+   const wxString &Prompt, int style)
 {
-   /// \todo This function and the next one, suitably adapted, could be
+   /// \todo This function and the next two, suitably adapted, could be
    /// used by TieRadioButton.
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxRadioButton);
    wxRadioButton * pRad;
    mpWind = pRad = safenew wxRadioButton(GetParent(), miId, Prompt,
-      wxDefaultPosition, wxDefaultSize, Style( wxRB_GROUP ) );
+      wxDefaultPosition, wxDefaultSize, Style( style ) );
    mpWind->SetName(wxStripMenuCodes(Prompt));
-   pRad->SetValue(true );
+   if ( style )
+      pRad->SetValue( true );
    UpdateSizers();
    return pRad;
 }
 
+wxRadioButton * ShuttleGuiBase::AddRadioButton(const wxString &Prompt)
+{
+   return DoAddRadioButton( Prompt, wxRB_GROUP );
+}
+
 wxRadioButton * ShuttleGuiBase::AddRadioButtonToGroup(const wxString &Prompt)
 {
-   UseUpId();
-   if( mShuttleMode != eIsCreating )
-      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxRadioButton);
-   wxRadioButton * pRad;
-   mpWind = pRad = safenew wxRadioButton(GetParent(), miId, Prompt,
-      wxDefaultPosition, wxDefaultSize, Style( 0 ) );
-   mpWind->SetName(wxStripMenuCodes(Prompt));
-   UpdateSizers();
-   return pRad;
+   return DoAddRadioButton( Prompt, 0 );
 }
 
 #ifdef __WXMAC__
@@ -1449,10 +1448,27 @@ wxChoice * ShuttleGuiBase::TieChoice(
    return pChoice;
 }
 
-wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedType & WrappedRef)
+/// This function must be within a StartRadioButtonGroup - EndRadioButtonGroup pair.
+wxRadioButton * ShuttleGuiBase::TieRadioButton()
 {
    wxASSERT( mRadioCount >= 0); // Did you remember to use StartRadioButtonGroup() ?
+
+   EnumValueSymbol symbol;
+   if (mpRadioSetting && mRadioCount >= 0) {
+      const auto &symbols = mpRadioSetting->GetSymbols();
+      if ( mRadioCount < symbols.size() )
+         symbol = symbols[ mRadioCount ];
+   }
+
+   // In what follows, WrappedRef is used in read only mode, but we
+   // don't have a 'read-only' version, so we copy to deal with the constness.
+   auto Temp = symbol.Internal();
+   wxASSERT( !Temp.empty() ); // More buttons than values?
+
+   WrappedType WrappedRef( Temp );
+
    mRadioCount++;
+
    UseUpId();
    wxRadioButton * pRadioButton = NULL;
 
@@ -1460,10 +1476,18 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
    {
    case eIsCreating:
       {
+         const auto &Prompt = symbol.Translation();
+
          mpWind = pRadioButton = safenew wxRadioButton(GetParent(), miId, Prompt,
             wxDefaultPosition, wxDefaultSize,
             (mRadioCount==1)?wxRB_GROUP:0);
-         pRadioButton->SetValue(WrappedRef.ValuesMatch( *mRadioValue ));
+
+         wxASSERT( WrappedRef.IsString() );
+         wxASSERT( mRadioValue->IsString() );
+         const bool value =
+            (WrappedRef.ReadAsString() == mRadioValue->ReadAsString() );
+         pRadioButton->SetValue( value );
+
          pRadioButton->SetName(wxStripMenuCodes(Prompt));
          UpdateSizers();
       }
@@ -1476,9 +1500,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
          pRadioButton = wxDynamicCast(pWnd, wxRadioButton);
          wxASSERT( pRadioButton );
          if( pRadioButton->GetValue() )
-         {
-            mRadioValue->WriteToAsWrappedType( WrappedRef );
-         }
+            mRadioValue->WriteToAsString( WrappedRef.ReadAsString() );
       }
       break;
    default:
@@ -1489,25 +1511,34 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
 }
 
 /// Call this before any TieRadioButton calls.
-/// This is the generic version and requires mRadioValue already initialised.
-/// Versions for specific types must do that initialisation.
-void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName )
+void ShuttleGuiBase::StartRadioButtonGroup( const ChoiceSetting &Setting )
 {
-   wxASSERT( mRadioValue && mRadioValue->eWrappedType != eWrappedNotSet );
-   mSettingName = SettingName;
+   mpRadioSetting = &Setting;
+
+   // Configure the generic type mechanism to use OUR string.
+   mRadioValueString = Setting.Default().Internal();
+   mRadioValue.create( mRadioValueString );
+
+   // Now actually start the radio button group.
+   mRadioSettingName = Setting.Key();
    mRadioCount = 0;
    if( mShuttleMode == eIsCreating )
-      DoDataShuttle( SettingName, *mRadioValue );
+      DoDataShuttle( Setting.Key(), *mRadioValue );
 }
 
 /// Call this after any TieRadioButton calls.
 /// It's generic too.  We don't need type-specific ones.
 void ShuttleGuiBase::EndRadioButtonGroup()
 {
+   // too few buttons?
+   wxASSERT( mRadioCount == mpRadioSetting->GetSymbols().size() );
+
    if( mShuttleMode == eIsGettingFromDialog )
-      DoDataShuttle( mSettingName, *mRadioValue );
+      DoDataShuttle( mRadioSettingName, *mRadioValue );
    mRadioValue.reset();// Clear it out...
+   mRadioSettingName = wxT("");
    mRadioCount = -1; // So we detect a problem.
+   mpRadioSetting = nullptr;
 }
 
 //-----------------------------------------------------------------------//
@@ -1646,30 +1677,6 @@ wxString ShuttleGuiBase::TranslateFromIndex( const int nIn, const wxArrayStringE
       return Choices[n];
    }
    return wxT("");
-}
-
-/// Int-to-Index (choices can be items like e.g 0x400120 )
-int ShuttleGuiBase::TranslateToIndex( const int Value, const std::vector<int> &Choices )
-{
-   int n = make_iterator_range(Choices).index( Value );
-   if( n == wxNOT_FOUND )
-      n=miNoMatchSelector;
-   miNoMatchSelector = 0;
-   return n;
-}
-
-/// Index-to-int (choices can be items like e.g 0x400120 )
-int ShuttleGuiBase::TranslateFromIndex( const int nIn, const std::vector<int> &Choices )
-{
-   int n = nIn;
-   if( n== wxNOT_FOUND )
-      n=miNoMatchSelector;
-   miNoMatchSelector = 0;
-   if( n < (int)Choices.size() )
-   {
-      return Choices[n];
-   }
-   return 0;
 }
 
 //-----------------------------------------------------------------------//
@@ -1861,35 +1868,17 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
 ///                             those as default.
 wxChoice *ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
-   ChoiceSetting &choiceSetting )
+   const ChoiceSetting &choiceSetting )
 {
    // Do this to force any needed migrations first
    choiceSetting.Read();
 
-   wxArrayStringEx visibleChoices, internalChoices;
-   for (const auto &ident : choiceSetting) {
-      visibleChoices.push_back( ident.Translation() );
-      internalChoices.push_back( ident.Internal() );
-   }
-   return TieChoice(
-      Prompt, choiceSetting.Key(), choiceSetting.Default().Internal(),
-         visibleChoices, internalChoices );
-}
+   const auto &symbols = choiceSetting.GetSymbols();
+   const auto &SettingName = choiceSetting.Key();
+   const auto &Default = choiceSetting.Default().Internal();
+   const auto &Choices = symbols.GetTranslations();
+   const auto &InternalChoices = symbols.GetInternals();
 
-/// Variant of the standard TieChoice which does the two step exchange
-/// between gui and stack variable and stack variable and shuttle.
-///   @param Prompt             The prompt shown beside the control.
-///   @param SettingName        The setting name as stored in gPrefs
-///   @param Default            The default value for this control (translated)
-///   @param Choices            An array of choices that appear on screen.
-///   @param InternalChoices    The corresponding values (as a string array)
-wxChoice * ShuttleGuiBase::TieChoice(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const wxString &Default,
-   const wxArrayStringEx & Choices,
-   const wxArrayStringEx & InternalChoices)
-{
    wxChoice * pChoice=(wxChoice*)NULL;
 
    int TempIndex=0;
@@ -1900,39 +1889,10 @@ wxChoice * ShuttleGuiBase::TieChoice(
    // Put to prefs does 2 and 3.
    if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef ); // Get Index from Prefs.
    if( DoStep(1) ) TempIndex = TranslateToIndex( TempStr, InternalChoices ); // To an index
-   if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, Choices ); // Get/Put index from GUI.
+   if( DoStep(2) )
+      pChoice = TieChoice( Prompt, TempIndex,
+         transform_container<wxArrayStringEx>(Choices, GetCustomTranslation) );
    if( DoStep(3) ) TempStr = TranslateFromIndex( TempIndex, InternalChoices ); // To a string
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
-   return pChoice;
-}
-
-/// Variant of the standard TieChoice which does the two step exchange
-/// between gui and stack variable and stack variable and shuttle.
-/// Difference to previous one is that the Translated choices and default
-/// are integers, not Strings.
-///   @param Prompt             The prompt shown beside the control.
-///   @param SettingName        The setting name as stored in gPrefs
-///   @param Default            The default value for this control (translated)
-///   @param Choices            An array of choices that appear on screen.
-///   @param InternalChoices    The corresponding values (as an integer array)
-wxChoice * ShuttleGuiBase::TieChoice(
-   const wxString &Prompt,
-   const wxString &SettingName,
-   const int Default,
-   const wxArrayStringEx & Choices,
-   const std::vector<int> & InternalChoices)
-{
-   wxChoice * pChoice=(wxChoice*)NULL;
-
-   int TempIndex=0;
-   int TranslatedInt = Default;
-   WrappedType WrappedRef( TranslatedInt );
-   // Get from prefs does 1 and 2.
-   // Put to prefs does 2 and 3.
-   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef ); // Get Int from Prefs.
-   if( DoStep(1) ) TempIndex = TranslateToIndex( TranslatedInt, InternalChoices ); // Int to an index.
-   if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, Choices ); // Get/Put index from GUI.
-   if( DoStep(3) ) TranslatedInt = TranslateFromIndex( TempIndex, InternalChoices ); // Index to int
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
    return pChoice;
 }
@@ -1944,63 +1904,46 @@ wxChoice * ShuttleGuiBase::TieChoice(
 /// are non-exhaustive and there is a companion control for abitrary entry.
 ///   @param Prompt             The prompt shown beside the control.
 ///   @param SettingName        The setting name as stored in gPrefs
-///   @param Default            The default value for this control (translated)
+///   @param Default            The default integer value for this control
 ///   @param Choices            An array of choices that appear on screen.
-///   @param InternalChoices    The corresponding values (as an integer array)
+///   @param pInternalChoices   The corresponding values (as an integer array)
+///                             if null, then use 0, 1, 2, ...
 wxChoice * ShuttleGuiBase::TieNumberAsChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const int Default,
    const wxArrayStringEx & Choices,
-   const std::vector<int> & InternalChoices)
+   const std::vector<int> * pInternalChoices)
 {
-   return ShuttleGuiBase::TieChoice(
-      Prompt, SettingName, Default, Choices, InternalChoices );
-}
+   auto fn = [](int arg){ return wxString::Format( "%d", arg ); };
 
-/// Integer specific version of StartRadioButtonGroup.
-/// All 'TieRadioButton()' enclosed must be ints.
-void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const int iDefaultValue )
-{
-   // Configure the generic type mechanism to use OUR integer.
-   mRadioValueInt = iDefaultValue;
-   mRadioValue.create( mRadioValueInt );
-   // Now actually start the radio button group.
-   StartRadioButtonGroup( SettingName );
-}
+   wxArrayStringEx InternalChoices;
+   if ( pInternalChoices )
+      InternalChoices =
+         transform_container<wxArrayStringEx>(*pInternalChoices, fn);
+   else
+      for ( int ii = 0; ii < Choices.size(); ++ii )
+         InternalChoices.push_back( fn( ii ) );
 
-/// String specific version of StartRadioButtonGroup.
-/// All 'TieRadioButton()' enclosed must be strings.
-void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const wxString & DefaultValue )
-{
-   // Configure the generic type mechanism to use OUR string.
-   mRadioValueString = DefaultValue;
-   mRadioValue.create( mRadioValueString );
-   // Now actually start the radio button group.
-   StartRadioButtonGroup( SettingName );
-}
+   long defaultIndex;
+   if ( pInternalChoices )
+      defaultIndex =  make_iterator_range( *pInternalChoices ).index( Default );
+   else
+      defaultIndex = Default;
+   if ( defaultIndex < 0 || defaultIndex >= Choices.size() )
+      defaultIndex = -1;
 
+   ChoiceSetting Setting{
+      SettingName,
+      {
+         ByColumns,
+         Choices,
+         InternalChoices,
+      },
+      defaultIndex
+   };
 
-/// This function must be within a StartRadioButtonGroup - EndRadioButtonGroup pair.
-wxRadioButton * ShuttleGuiBase::TieRadioButton(
-   const wxString &Prompt,
-   const int iValue)
-{
-   int iTemp = iValue;
-   WrappedType WrappedRef( iTemp );
-   return TieRadioButton( Prompt, WrappedRef );
-}
-
-/// This function must be within a StartRadioButtonGroup - EndRadioButtonGroup pair.
-wxRadioButton * ShuttleGuiBase::TieRadioButton(
-   const wxString &Prompt,
-   const wxString &Value)
-{
-   // In what follows, WrappedRef is used in read only mode, but we
-   // don't have a 'read-only' version, so we copy to deal with the constness.
-   wxString Temp = Value;
-   WrappedType WrappedRef( Temp );
-   return TieRadioButton( Prompt, WrappedRef );
+   return ShuttleGuiBase::TieChoice( Prompt, Setting );
 }
 
 //------------------------------------------------------------------//

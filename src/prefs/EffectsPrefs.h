@@ -17,6 +17,7 @@
 
 #include "PrefsPanel.h"
 
+class ChoiceSetting;
 class ShuttleGui;
 
 #define EFFECTS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Effects") }
@@ -39,4 +40,7 @@ class EffectsPrefs final : public PrefsPanel
 
 /// A PrefsPanel::Factory that creates one EffectsPrefs panel.
 extern PrefsPanel::Factory EffectsPrefsFactory;
+
+extern ChoiceSetting EffectsGroupBy;
+
 #endif

@@ -234,7 +234,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
          ++i;
          for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
-            formats.push_back(mPlugins[i]->GetDescription(j));
+            formats.push_back(mPlugins[i]->GetUntranslatedDescription(j));
             if (mPlugins[i]->GetFormat(j) == defaultFormat) {
                mPluginIndex = i;
                mSubFormatIndex = j;
@@ -273,11 +273,13 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             S.Id(CreateID).AddButton(_("Create"));
 
             mFormat = S.Id(FormatID)
-               .TieChoice(_("Format:"),
-                          wxT("/Export/MultipleFormat"),
-                          formats[mFilterIndex],
-                          formats,
-                          formats);
+               .TieChoice( _("Format:"),
+               {
+                  wxT("/Export/MultipleFormat"),
+                  { ByColumns, formats, formats },
+                  mFilterIndex
+               }
+            );
             S.AddVariableText( {}, false);
             S.AddVariableText( {}, false);
 
@@ -353,16 +355,21 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
       S.StartStatic(_("Name files:"), 1);
       {
          S.SetBorder(2);
-         S.StartRadioButtonGroup(wxT("/Export/TrackNameWithOrWithoutNumbers"), wxT("labelTrack"));
+         S.StartRadioButtonGroup({
+            wxT("/Export/TrackNameWithOrWithoutNumbers"),
+            {
+               { wxT("labelTrack"), XO("Using Label/Track Name") },
+               { wxT("numberBefore"), XO("Numbering before Label/Track Name") },
+               { wxT("numberAfter"), XO("Numbering after File name prefix") },
+            },
+            0 // labelTrack
+         });
          {
-            mByName = S.Id(ByNameID)
-               .TieRadioButton(_("Using Label/Track Name"), wxT("labelTrack"));
+            mByName = S.Id(ByNameID).TieRadioButton();
 
-            mByNumberAndName = S.Id(ByNameAndNumberID)
-               .TieRadioButton(_("Numbering before Label/Track Name"), wxT("numberBefore"));
+            mByNumberAndName = S.Id(ByNameAndNumberID).TieRadioButton();
 
-            mByNumber = S.Id(ByNumberID)
-               .TieRadioButton(_("Numbering after File name prefix"), wxT("numberAfter"));
+            mByNumber = S.Id(ByNumberID).TieRadioButton();
          }
          S.EndRadioButtonGroup();
 

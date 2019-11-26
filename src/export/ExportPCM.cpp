@@ -53,7 +53,7 @@ struct
 {
    int format;
    const wxChar *name;
-   const wxChar *desc;
+   const wxChar *desc; // untranslated
 }
 static const kFormats[] =
 {
@@ -374,7 +374,7 @@ ExportPCM::ExportPCM()
 
       SetFormat(kFormats[i].name, format);
       SetCanMetaData(true, format);
-      SetDescription(wxGetTranslation(kFormats[i].desc), format);
+      SetDescription(kFormats[i].desc, format);
       AddExtension(ext, format);
       SetMaxChannels(si.channels - 1, format);
    }
@@ -383,7 +383,7 @@ ExportPCM::ExportPCM()
    format = AddFormat() - 1;  // store the index = 1 less than the count
    SetFormat(wxT("LIBSNDFILE"), format);
    SetCanMetaData(true, format);
-   SetDescription(_("Other uncompressed files"), format);
+   SetDescription(XO("Other uncompressed files"), format);
    auto allext = sf_get_all_extensions();
    wxString wavext = sf_header_extension(SF_FORMAT_WAV);   // get WAV ext.
 #if defined(wxMSW)

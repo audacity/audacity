@@ -17,6 +17,7 @@
 
 #include "sndfile.h"
 
+class ChoiceSetting;
 class wxString;
 
 //
@@ -129,5 +130,8 @@ struct SFFile : public std::unique_ptr<SNDFILE, ::SFFileCloser>
       return result;
    }
 };
+
+extern ChoiceSetting FileFormatsCopyOrEditSetting;
+extern ChoiceSetting FileFormatsSaveWithDependenciesSetting;
 
 #endif

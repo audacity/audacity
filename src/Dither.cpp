@@ -397,49 +397,45 @@ inline float Dither::ShapedDither(float sample)
     return result;
 }
 
-static const EnumValueSymbol choicesDither[] = {
+static const std::initializer_list<EnumValueSymbol> choicesDither{
    { XO("None") },
    { XO("Rectangle") },
    { XO("Triangle") },
    { XO("Shaped") },
 };
-static const size_t nChoicesDither = WXSIZEOF( choicesDither );
-static const int intChoicesDither[] = {
-   (int) DitherType::none,
-   (int) DitherType::rectangle,
-   (int) DitherType::triangle,
-   (int) DitherType::shaped,
+static auto intChoicesDither = {
+   DitherType::none,
+   DitherType::rectangle,
+   DitherType::triangle,
+   DitherType::shaped,
 };
-static_assert(
-   nChoicesDither == WXSIZEOF( intChoicesDither ),
-   "size mismatch"
-);
 
-static const size_t defaultFastDither = 0; // none
-
-EnumSetting Dither::FastSetting{
+EnumSetting< DitherType > Dither::FastSetting{
    wxT("Quality/DitherAlgorithmChoice"),
-   choicesDither, nChoicesDither, defaultFastDither,
+   choicesDither,
+   0, // none
+
+   // for migrating old preferences:
    intChoicesDither,
    wxT("Quality/DitherAlgorithm")
 };
 
-static const size_t defaultBestDither = 3; // shaped
-
-EnumSetting Dither::BestSetting{
+EnumSetting< DitherType > Dither::BestSetting{
    wxT("Quality/HQDitherAlgorithmChoice"),
-   choicesDither, nChoicesDither, defaultBestDither,
+   choicesDither,
+   3, // shaped
 
+   // for migrating old preferences:
    intChoicesDither,
    wxT("Quality/HQDitherAlgorithm")
 };
 
 DitherType Dither::FastDitherChoice()
 {
-   return (DitherType) FastSetting.ReadInt();
+   return (DitherType) FastSetting.ReadEnum();
 }
 
 DitherType Dither::BestDitherChoice()
 {
-   return (DitherType) BestSetting.ReadInt();
+   return (DitherType) BestSetting.ReadEnum();
 }

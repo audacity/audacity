@@ -16,6 +16,7 @@
 
 #include "PrefsPanel.h"
 
+class ChoiceSetting;
 class ShuttleGui;
 class wxArrayStringEx;
 
@@ -38,11 +39,11 @@ class TracksBehaviorsPrefs final : public PrefsPanel
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S) override;
-
-   wxArrayStringEx mSoloCodes;
-   wxArrayStringEx mSoloChoices;
 };
 
 /// A PrefsPanel::Factory that creates one TracksBehaviorsPrefs panel.
 extern PrefsPanel::Factory TracksBehaviorsPrefsFactory;
+
+extern ChoiceSetting TracksBehaviorsSolo;
+
 #endif

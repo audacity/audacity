@@ -138,20 +138,61 @@ static const wxChar *FFmpegExportCtrlIDNames[] = {
 // ExportFFmpegAC3Options Class
 //----------------------------------------------------------------------------
 
-// This initialises content for the static const member variables defined in
-// ExportFFmpegDialogs.h (note no static keyword - important!)
-const int ExportFFmpegAC3Options::iAC3BitRates[] = { 32000, 40000, 48000, 56000, 64000, 80000, 96000, 112000, 128000, 160000, 192000, 224000, 256000, 320000, 384000, 448000, 512000, 576000, 640000 };
+namespace
+{
+
+const wxArrayStringEx AC3BitRateNames{
+   // i18n-hint kbps abbreviates "thousands of bits per second"
+   XO("32 kbps"),
+   XO("40 kbps"),
+   XO("48 kbps"),
+   XO("56 kbps"),
+   XO("64 kbps"),
+   XO("80 kbps"),
+   XO("96 kbps"),
+   XO("112 kbps"),
+   XO("128 kbps"),
+   XO("160 kbps"),
+   XO("192 kbps"),
+   XO("224 kbps"),
+   XO("256 kbps"),
+   XO("320 kbps"),
+   XO("384 kbps"),
+   XO("448 kbps"),
+   XO("512 kbps"),
+   XO("576 kbps"),
+   XO("640 kbps"),
+};
+
+const std::vector< int > AC3BitRateValues{
+   32000,
+   40000,
+   48000,
+   56000,
+   64000,
+   80000,
+   96000,
+   112000,
+   128000,
+   160000,
+   192000,
+   224000,
+   256000,
+   320000,
+   384000,
+   448000,
+   512000,
+   576000,
+   640000,
+};
+
+}
+
 const int ExportFFmpegAC3Options::iAC3SampleRates[] = { 32000, 44100, 48000, 0 };
 
 ExportFFmpegAC3Options::ExportFFmpegAC3Options(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY)
 {
-   for (unsigned int i=0; i < (sizeof(iAC3BitRates)/sizeof(int)); i++)
-   {
-      mBitRateNames.push_back(wxString::Format(_("%i kbps"),iAC3BitRates[i]/1000));
-      mBitRateLabels.push_back(iAC3BitRates[i]);
-   }
-
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
 
@@ -173,8 +214,13 @@ void ExportFFmpegAC3Options::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(2, wxCENTER);
          {
-            S.TieChoice(_("Bit Rate:"), wxT("/FileFormats/AC3BitRate"),
-               160000, mBitRateNames, mBitRateLabels);
+            S.TieNumberAsChoice(
+               _("Bit Rate:"),
+               wxT("/FileFormats/AC3BitRate"),
+               160000,
+               AC3BitRateNames,
+               &AC3BitRateValues
+            );
          }
          S.EndMultiColumn();
       }
@@ -264,20 +310,40 @@ bool ExportFFmpegAACOptions::TransferDataFromWindow()
 // ExportFFmpegAMRNBOptions Class
 //----------------------------------------------------------------------------
 
+namespace {
+
 /// Bit Rates supported by libAMR-NB encoder
 /// Sample Rate is always 8 kHz
-int ExportFFmpegAMRNBOptions::iAMRNBBitRate[] =
-{ 4750, 5150, 5900, 6700, 7400, 7950, 10200, 12200 };
+const wxArrayStringEx AMRNBBitRateNames
+{
+   // i18n-hint kbps abbreviates "thousands of bits per second"
+   XO("4.75 kbps"),
+   XO("5.15 kbps"),
+   XO("5.90 kbps"),
+   XO("6.70 kbps"),
+   XO("7.40 kbps"),
+   XO("7.95 kbps"),
+   XO("10.20 kbps"),
+   XO("12.20 kbps"),
+};
+
+const std::vector< int > AMRNBBitRateValues
+{
+   4750,
+   5150,
+   5900,
+   6700,
+   7400,
+   7950,
+   10200,
+   12200,
+};
+
+}
 
 ExportFFmpegAMRNBOptions::ExportFFmpegAMRNBOptions(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY)
 {
-   for (unsigned int i=0; i < (sizeof(iAMRNBBitRate)/sizeof(int)); i++)
-   {
-      mBitRateNames.push_back(wxString::Format(_("%.2f kbps"),(float)iAMRNBBitRate[i]/1000));
-      mBitRateLabels.push_back(iAMRNBBitRate[i]);
-   }
-
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
 
@@ -299,8 +365,13 @@ void ExportFFmpegAMRNBOptions::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(2, wxCENTER);
          {
-            S.TieChoice(_("Bit Rate:"), wxT("/FileFormats/AMRNBBitRate"),
-               12200, mBitRateNames, mBitRateLabels);
+            S.TieNumberAsChoice(
+               _("Bit Rate:"),
+               wxT("/FileFormats/AMRNBBitRate"),
+               12200,
+               AMRNBBitRateNames,
+               &AMRNBBitRateValues
+            );
          }
          S.EndMultiColumn();
       }
@@ -335,20 +406,46 @@ bool ExportFFmpegAMRNBOptions::TransferDataFromWindow()
 const int ExportFFmpegWMAOptions::iWMASampleRates[] =
 { 8000, 11025, 16000, 22050, 44100, 0};
 
+namespace {
+
 /// Bit Rates supported by WMA encoder. Setting bit rate to other values will not result in different file size.
-const int ExportFFmpegWMAOptions::iWMABitRate[] =
-{ 24000, 32000, 40000, 48000, 64000, 80000, 96000, 128000, 160000, 192000, 256000, 320000 };
+const wxArrayStringEx WMABitRateNames
+{
+   // i18n-hint kbps abbreviates "thousands of bits per second"
+   XO("24 kbps"),
+   XO("32 kbps"),
+   XO("40 kbps"),
+   XO("48 kbps"),
+   XO("64 kbps"),
+   XO("80 kbps"),
+   XO("96 kbps"),
+   XO("128 kbps"),
+   XO("160 kbps"),
+   XO("192 kbps"),
+   XO("256 kbps"),
+   XO("320 kbps"),
+};
+
+const std::vector< int > WMABitRateValues{
+   24000,
+   32000,
+   40000,
+   48000,
+   64000,
+   80000,
+   96000,
+   128000,
+   160000,
+   192000,
+   256000,
+   320000,
+};
+
+}
 
 ExportFFmpegWMAOptions::ExportFFmpegWMAOptions(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY)
 {
-   for (unsigned int i=0; i < (sizeof(iWMABitRate)/sizeof(int)); i++)
-   {
-      /* i18n-hint: abbreviates thousands of bits per second */
-      mBitRateNames.push_back(wxString::Format(_("%i kbps"),iWMABitRate[i]/1000));
-      mBitRateLabels.push_back(iWMABitRate[i]);
-   }
-
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
 
@@ -370,8 +467,13 @@ void ExportFFmpegWMAOptions::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(2, wxCENTER);
          {
-            S.TieChoice(_("Bit Rate:"), wxT("/FileFormats/WMABitRate"),
-               128000, mBitRateNames, mBitRateLabels);
+            S.TieNumberAsChoice(
+               _("Bit Rate:"),
+               wxT("/FileFormats/WMABitRate"),
+               128000,
+               WMABitRateNames,
+               &WMABitRateValues
+            );
          }
          S.EndMultiColumn();
       }
@@ -1215,36 +1317,17 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
 };
 
 /// AAC profiles
-int ExportFFmpegOptions::iAACProfileValues[] = {
-   FF_PROFILE_AAC_LOW,
-   FF_PROFILE_AAC_MAIN,
-   /*FF_PROFILE_AAC_SSR,*/
-   FF_PROFILE_AAC_LTP
-};
-
-/// Names of AAC profiles to be displayed
-static wxString iAACProfileNames(int index)
-{
-   static const wxString names[] = {
-       XO("LC"),
-       XO("Main"),
-       /*_("SSR"),*/ //SSR is not supported
-       XO("LTP")
-   };
-
-   class NamesArray final : public TranslatableStringArray
+// The FF_PROFILE_* enumeration is defined in the ffmpeg library
+// PRL:  I cant find where this preference is used!
+ChoiceSetting AACProfiles { wxT("/FileFormats/FFmpegAACProfile"),
    {
-      void Populate() override
-      {
-         for (auto &name : names)
-            mContents.push_back( wxGetTranslation( name ) );
-      }
-   };
-
-   static NamesArray theArray;
-
-   return theArray.Get()[ index ];
-}
+      {wxT("1") /*FF_PROFILE_AAC_LOW*/, XO("LC")},
+      {wxT("0") /*FF_PROFILE_AAC_MAIN*/, XO("Main")},
+      // {wxT("2") /*FF_PROFILE_AAC_SSR*/, XO("SSR")}, //SSR is not supported
+      {wxT("3") /*FF_PROFILE_AAC_LTP*/, XO("LTP")},
+   },
+   0, // "1"
+};
 
 /// List of export types
 ExposedFormat ExportFFmpegOptions::fmts[] =
@@ -1349,30 +1432,18 @@ ApplicableFor ExportFFmpegOptions::apptable[] =
    {FALSE,FFmpegExportCtrlID(0),AV_CODEC_ID_NONE,NULL}
 };
 
-/// Prediction order method - names. Labels are indices of this array.
-static wxString PredictionOrderMethodNames(int index)
-{
-   static const wxString names[] = {
-      XO("Estimate"),
-      XO("2-level"),
-      XO("4-level"),
-      XO("8-level"),
-      XO("Full search"),
-      XO("Log search")
-   };
+namespace {
 
-   class NamesArray final : public TranslatableStringArray
-   {
-      void Populate() override
-      {
-         for (auto &name : names)
-            mContents.push_back( wxGetTranslation( name ) );
-      }
-   };
+/// Prediction order method - names.
+const wxArrayStringEx PredictionOrderMethodNames {
+   XO("Estimate"),
+   XO("2-level"),
+   XO("4-level"),
+   XO("8-level"),
+   XO("Full search"),
+   XO("Log search"),
+};
 
-   static NamesArray theArray;
-
-   return theArray.Get()[ index ];
 }
 
 
@@ -1398,18 +1469,6 @@ ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
    {
       FetchFormatList();
       FetchCodecList();
-
-      for (unsigned int i = 0; i < 6; i++)
-      {
-         mPredictionOrderMethodLabels.push_back(i);
-         mPredictionOrderMethodNames.push_back(wxString::Format(wxT("%s"),PredictionOrderMethodNames(i)));
-      }
-
-      for (unsigned int i=0; i < (sizeof(iAACProfileValues)/sizeof(int)); i++)
-      {
-         mProfileNames.push_back(wxString::Format(wxT("%s"),iAACProfileNames(i)));
-         mProfileLabels.push_back(iAACProfileValues[i]);
-      }
 
       PopulateOrExchange(S);
 
@@ -1549,8 +1608,8 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                   mCutoffSpin = S.Id(FECutoffID).TieSpinCtrl(_("Cutoff:"), wxT("/FileFormats/FFmpegCutOff"), 0, 10000000, 0);
                   mCutoffSpin->SetToolTip(_("Audio cutoff bandwidth (Hz)\nOptional\n0 - automatic"));
 
-                  mProfileChoice = S.Id(FEProfileID).TieChoice(_("Profile:"), wxT("/FileFormats/FFmpegAACProfile"),
-                     mProfileLabels[0], mProfileNames, mProfileLabels);
+                  mProfileChoice = S.Id(FEProfileID)
+                     .TieChoice(_("Profile:"), AACProfiles);
                   mProfileChoice->SetSizeHints( 100,-1);
                   mProfileChoice->SetToolTip(_("AAC Profile\nLow Complexity - default\nMost players won't play anything other than LC"));
 
@@ -1571,8 +1630,13 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                   mLPCCoeffsPrecisionSpin = S.Id(FELPCCoeffsID).TieSpinCtrl(_("LPC"), wxT("/FileFormats/FFmpegLPCCoefPrec"), 0, 15, 0);
                   mLPCCoeffsPrecisionSpin->SetToolTip(_("LPC coefficients precision\nOptional\n0 - default\nmin - 1\nmax - 15"));
 
-                  mPredictionOrderMethodChoice = S.Id(FEPredOrderID).TieChoice(_("PdO Method:"), wxT("/FileFormats/FFmpegPredOrderMethod"),
-                     mPredictionOrderMethodLabels[4], mPredictionOrderMethodNames, mPredictionOrderMethodLabels);
+                  mPredictionOrderMethodChoice = S.Id(FEPredOrderID)
+                     .TieNumberAsChoice(
+                        _("PdO Method:"),
+                        wxT("/FileFormats/FFmpegPredOrderMethod"),
+                        4, // Full search
+                        PredictionOrderMethodNames
+                     );
                   mPredictionOrderMethodChoice->SetSizeHints( 100,-1);
                   mPredictionOrderMethodChoice->SetToolTip(_("Prediction Order Method\nEstimate - fastest, lower compression\nLog search - slowest, best compression\nFull search - default"));
 

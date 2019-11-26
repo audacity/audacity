@@ -175,19 +175,14 @@ public:
    wxPanel * StartInvisiblePanel();
    void EndInvisiblePanel();
 
-   void StartRadioButtonGroup( const wxString & SettingName );
+   void StartRadioButtonGroup( const ChoiceSetting &Setting );
    void EndRadioButtonGroup();
-
-   void StartRadioButtonGroup( const wxString & SettingName, const int iDefaultValue );
-   void StartRadioButtonGroup( const wxString & SettingName, const wxString &DefaultValue );
 
    void DoDataShuttle( const wxString &Name, WrappedType & WrappedRef );
 
    bool DoStep( int iStep );
    int TranslateToIndex( const wxString &Value, const wxArrayStringEx &Choices );
    wxString TranslateFromIndex( const int nIn, const wxArrayStringEx &Choices );
-   int TranslateToIndex( const int Value, const std::vector<int> &Choices );
-   int TranslateFromIndex( const int nIn, const std::vector<int> &Choices );
 
 //-- Tie functions both add controls and also read/write to them.
 // The ones taking a 'WrappedType' are type-generic and are used by the type specific ones.
@@ -216,9 +211,9 @@ public:
    wxSlider * TieSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
    wxSlider * TieVSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
 
-   wxRadioButton * TieRadioButton( const wxString & Prompt, WrappedType &WrappedRef);
-   wxRadioButton * TieRadioButton( const wxString &Prompt, const int iValue);
-   wxRadioButton * TieRadioButton( const wxString &Prompt, const wxString &Value);
+   // Must be called between a StartRadioButtonGroup / EndRadioButtonGroup pair,
+   // and as many times as there are values in the enumeration.
+   wxRadioButton * TieRadioButton();
 
    wxSpinCtrl * TieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
    wxSpinCtrl * TieSpinCtrl( const wxString &Prompt, int &Value, const int max, const int min = 0 );
@@ -237,31 +232,12 @@ public:
       const wxString &SettingName,
       const bool bDefault);
 
-   // This one is defined in terms of the next and not virtual
    virtual wxChoice *TieChoice(
       const wxString &Prompt,
-      ChoiceSetting &choiceSetting );
-
-   virtual wxChoice * TieChoice(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
-      const wxArrayStringEx &Choices,
-      const wxArrayStringEx & InternalChoices );
-
-   // This overload of TieChoice should no longer be used in Preferences!
-   // Some uses do remain in export settings dialogs.
-   virtual wxChoice * TieChoice(
-      const wxString &Prompt,
-      const wxString &SettingName,
-      const int Default,
-      const wxArrayStringEx & Choices,
-      const std::vector<int> & InternalChoices );
+      const ChoiceSetting &choiceSetting );
 
    // This overload presents what is really a numerical setting as a choice among
-   // commonly used values, but the choice is not exhaustive because there is
-   // also an associated control that allows entry of a user-specified value
-   // that is arbitrary (within some bounds).
+   // commonly used values, but the choice is not necessarily exhaustive.
    // This behaves just like the previous for building dialogs, but the
    // behavior is different when the call is intercepted for purposes of
    // emitting scripting information about Preferences.
@@ -270,7 +246,7 @@ public:
       const wxString &SettingName,
       const int Default,
       const wxArrayStringEx & Choices,
-      const std::vector<int> & InternalChoices );
+      const std::vector<int> * pInternalChoices = nullptr );
 
    virtual wxTextCtrl * TieTextBox(
       const wxString &Prompt,
@@ -345,14 +321,6 @@ protected:
 
    teShuttleMode mShuttleMode;
 
-   // These five are needed to handle radio button groups.
-   wxString mSettingName; /// The setting controlled by a group.
-   int mRadioCount;       /// The index of this radio item.  -1 for none.
-
-   Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
-   wxString mRadioValueString; /// Unwrapped string value.
-   int mRadioValueInt;         /// Unwrapped integer value.
-
    int miSizerProp;
    int mSizerDepth;
    int miBorder;
@@ -374,6 +342,14 @@ protected:
    wxWindow * mpWind;
    wxMenuBar * mpMenuBar;
    wxMenu * mpMenu;
+
+private:
+   const ChoiceSetting *mpRadioSetting = nullptr;
+   wxString mRadioSettingName; /// The setting controlled by a group.
+   Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
+   int mRadioCount;       /// The index of this radio item.  -1 for none.
+   wxString mRadioValueString; /// Unwrapped string value.
+   wxRadioButton * DoAddRadioButton(const wxString &Prompt, int style);
 };
 
 // A rarely used helper function that sets a pointer

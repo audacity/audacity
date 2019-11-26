@@ -236,7 +236,7 @@ auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 static wxString AskCopyOrEdit()
 {
 
-   wxString oldCopyPref = gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+   auto oldCopyPref = FileFormatsCopyOrEditSetting.Read();
 
    bool firstTimeAsk    = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataFirstAsk"), true)?true:false;
    bool oldAskPref      = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true)?true:false;
@@ -245,7 +245,7 @@ static wxString AskCopyOrEdit()
    // This effectively does a one-time change to the preferences.
    if (firstTimeAsk) {
       if (oldCopyPref != wxT("copy")) {
-         gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+         FileFormatsCopyOrEditSetting.Write( wxT("copy") );
          oldCopyPref = wxT("copy");
       }
       gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataFirstAsk"), (long) false);
@@ -338,7 +338,7 @@ static wxString AskCopyOrEdit()
 
       // if the preference changed, save it.
       if (newCopyPref != oldCopyPref) {
-         gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), newCopyPref);
+         FileFormatsCopyOrEditSetting.Write( newCopyPref );
          gPrefs->Flush();
       }
       oldCopyPref = newCopyPref;

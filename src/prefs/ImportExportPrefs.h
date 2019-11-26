@@ -21,9 +21,14 @@ class ShuttleGui;
 
 #define IMPORT_EXPORT_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("IMPORT EXPORT") }
 
+template< typename Enum > class EnumSetting;
+
 class ImportExportPrefs final : public PrefsPanel
 {
  public:
+   static EnumSetting< bool > ExportDownMixSetting;
+   static EnumSetting< bool > AllegroStyleSetting;
+
    ImportExportPrefs(wxWindow * parent, wxWindowID winid);
    ~ImportExportPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
@@ -39,4 +44,5 @@ class ImportExportPrefs final : public PrefsPanel
 
 /// A PrefsPanel::Factory that creates one ImportExportPrefs panel.
 extern PrefsPanel::Factory ImportExportPrefsFactory;
+
 #endif

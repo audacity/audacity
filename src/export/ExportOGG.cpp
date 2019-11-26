@@ -157,7 +157,7 @@ ExportOGG::ExportOGG()
    AddExtension(wxT("ogg"),0);
    SetMaxChannels(255,0);
    SetCanMetaData(true,0);
-   SetDescription(_("Ogg Vorbis Files"),0);
+   SetDescription(XO("Ogg Vorbis Files"),0);
 }
 
 ProgressResult ExportOGG::Export(AudacityProject *project,
