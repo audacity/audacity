@@ -240,6 +240,7 @@ set( EFFECTS_SOURCE
    ${CMAKE_SOURCE_DIRECTORY}effects/Contrast.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/Distortion.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/DtmfGen.cpp
+   ${CMAKE_SOURCE_DIRECTORY}effects/EBUR128.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/Echo.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/Effect.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/EffectManager.cpp
@@ -252,6 +253,7 @@ set( EFFECTS_SOURCE
    ${CMAKE_SOURCE_DIRECTORY}effects/Invert.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/Leveller.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/LoadEffects.cpp
+   ${CMAKE_SOURCE_DIRECTORY}effects/Loudness.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/Noise.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/NoiseReduction.cpp
    ${CMAKE_SOURCE_DIRECTORY}effects/NoiseRemoval.cpp

@@ -355,6 +355,7 @@
     <ClCompile Include="..\..\..\src\effects\Compressor.cpp" />
     <ClCompile Include="..\..\..\src\effects\Contrast.cpp" />
     <ClCompile Include="..\..\..\src\effects\DtmfGen.cpp" />
+    <ClCompile Include="..\..\..\src\effects\EBUR128.cpp" />
     <ClCompile Include="..\..\..\src\effects\Echo.cpp" />
     <ClCompile Include="..\..\..\src\effects\Effect.cpp" />
     <ClCompile Include="..\..\..\src\effects\EffectManager.cpp" />
@@ -364,6 +365,7 @@
     <ClCompile Include="..\..\..\src\effects\Generator.cpp" />
     <ClCompile Include="..\..\..\src\effects\Invert.cpp" />
     <ClCompile Include="..\..\..\src\effects\LoadEffects.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Loudness.cpp" />
     <ClCompile Include="..\..\..\src\effects\Noise.cpp" />
     <ClCompile Include="..\..\..\src\effects\NoiseRemoval.cpp" />
     <ClCompile Include="..\..\..\src\effects\Normalize.cpp" />
@@ -755,6 +757,7 @@
     <ClInclude Include="..\..\..\src\effects\Compressor.h" />
     <ClInclude Include="..\..\..\src\effects\Contrast.h" />
     <ClInclude Include="..\..\..\src\effects\DtmfGen.h" />
+    <ClInclude Include="..\..\..\src\effects\EBUR128.h" />
     <ClInclude Include="..\..\..\src\effects\Echo.h" />
     <ClInclude Include="..\..\..\src\effects\Effect.h" />
     <ClInclude Include="..\..\..\src\effects\EffectManager.h" />
@@ -764,6 +767,7 @@
     <ClInclude Include="..\..\..\src\effects\Generator.h" />
     <ClInclude Include="..\..\..\src\effects\Invert.h" />
     <ClInclude Include="..\..\..\src\effects\LoadEffects.h" />
+    <ClInclude Include="..\..\..\src\effects\Loudness.h" />
     <ClInclude Include="..\..\..\src\effects\Noise.h" />
     <ClInclude Include="..\..\..\src\effects\NoiseRemoval.h" />
     <ClInclude Include="..\..\..\src\effects\Normalize.h" />

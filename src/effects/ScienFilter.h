@@ -69,12 +69,8 @@ private:
    // EffectScienFilter implementation
 
    bool TransferGraphLimitsFromWindow();
-   bool CalcFilter();
-   double ChebyPoly (int Order, double NormFreq);
+   void CalcFilter();
    float FilterMagnAtFreq(float Freq);
-
-   bool CalcFilterCoeffs (void);
-
    void EnableDisableRippleCtl (int FilterType);
 
    void OnSize( wxSizeEvent & evt );

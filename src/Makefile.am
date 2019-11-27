@@ -427,6 +427,8 @@ audacity_SOURCES = \
 	effects/Distortion.h \
 	effects/DtmfGen.cpp \
 	effects/DtmfGen.h \
+	effects/EBUR128.cpp \
+	effects/EBUR128.h \
 	effects/Echo.cpp \
 	effects/Echo.h \
 	effects/Effect.cpp \
@@ -449,6 +451,8 @@ audacity_SOURCES = \
 	effects/Invert.h \
 	effects/LoadEffects.cpp \
 	effects/LoadEffects.h \
+	effects/Loudness.cpp \
+	effects/Loudness.h \
 	effects/Noise.cpp \
 	effects/Noise.h \
 	effects/NoiseReduction.cpp \
