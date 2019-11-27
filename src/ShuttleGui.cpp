@@ -1892,7 +1892,7 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
 ///                             those as default.
 wxChoice *ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
-   ChoiceSetting &choiceSetting )
+   const ChoiceSetting &choiceSetting )
 {
    // Do this to force any needed migrations first
    choiceSetting.Read();

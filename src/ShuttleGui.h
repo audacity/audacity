@@ -237,7 +237,7 @@ public:
    // This one is defined in terms of the next and not virtual
    virtual wxChoice *TieChoice(
       const wxString &Prompt,
-      ChoiceSetting &choiceSetting );
+      const ChoiceSetting &choiceSetting );
 
    virtual wxChoice * TieChoice(
       const wxString &Prompt,
