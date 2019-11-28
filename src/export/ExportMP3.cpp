@@ -1882,13 +1882,13 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
          title.Printf(selectionOnly ?
             _("Exporting selected audio with %s preset") :
             _("Exporting the audio with %s preset"),
-            setRateNamesShort[brate]);
+            GetCustomTranslation( setRateNamesShort[brate] ) );
       }
       else if (rmode == MODE_VBR) {
          title.Printf(selectionOnly ?
             _("Exporting selected audio with VBR quality %s") :
             _("Exporting the audio with VBR quality %s"),
-            varRateNames[brate]);
+            GetCustomTranslation( varRateNames[brate] ) );
       }
       else {
          title.Printf(selectionOnly ?
