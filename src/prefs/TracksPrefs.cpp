@@ -268,24 +268,24 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(_("Display"));
    {
       S.TieCheckBox(_("Auto-&fit track height"),
-                    wxT("/GUI/TracksFitVerticallyZoomed"),
-                    false);
+                    {wxT("/GUI/TracksFitVerticallyZoomed"),
+                     false});
       S.TieCheckBox(_("Sho&w audio track name as overlay"),
-                  wxT("/GUI/ShowTrackNameInWaveform"),
-                  false);
+                  {wxT("/GUI/ShowTrackNameInWaveform"),
+                   false});
 #ifdef EXPERIMENTAL_HALF_WAVE
       S.TieCheckBox(_("Use &half-wave display when collapsed"),
-                  wxT("/GUI/CollapseToHalfWave"),
-                  false);
+                  {wxT("/GUI/CollapseToHalfWave"),
+                   false});
 #endif
 #ifdef SHOW_PINNED_UNPINNED_IN_PREFS
       S.TieCheckBox(_("&Pinned Recording/Playback head"),
-         PinnedHeadPreferenceKey(),
-         PinnedHeadPreferenceDefault());
+         {PinnedHeadPreferenceKey(),
+          PinnedHeadPreferenceDefault()});
 #endif
       S.TieCheckBox(_("A&uto-scroll if head unpinned"),
-         wxT("/GUI/AutoScroll"),
-         true);
+         {wxT("/GUI/AutoScroll"),
+          true});
 
       S.AddSpace(10);
 
@@ -306,8 +306,8 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                      sampleDisplaySetting );
 
          S.TieTextBox(_("Default audio track &name:"),
-                      wxT("/GUI/TrackNames/DefaultTrackName"),
-                      _("Audio Track"),
+                      {wxT("/GUI/TrackNames/DefaultTrackName"),
+                       _("Audio Track")},
                       30);
       }
       S.EndMultiColumn();

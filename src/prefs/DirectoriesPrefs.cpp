@@ -104,8 +104,8 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.Id(TempDirID);
          mTempDir = S.TieTextBox(_("&Location:"),
-                                 wxT("/Directories/TempDir"),
-                                 wxT(""),
+                                 {wxT("/Directories/TempDir"),
+                                  wxT("")},
                                  30);
       }
       S.EndMultiColumn();
@@ -130,7 +130,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartTwoColumn();
       {
-         S.TieNumericTextBox(_("Mi&nimum Free Memory (MB):"),
+         S.TieIntegerTextBox(_("Mi&nimum Free Memory (MB):"),
                              wxT("/Directories/CacheLowMem"),
                              16,
                              9);

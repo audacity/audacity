@@ -200,40 +200,37 @@ public:
 
    wxCheckBox * TieCheckBox(
       const wxString &Prompt,
-      const wxString &SettingName,
-      const bool bDefault) override;
+      const SettingSpec< bool > &Setting) override;
    wxCheckBox * TieCheckBoxOnRight(
       const wxString &Prompt,
-      const wxString &SettingName,
-      const bool bDefault) override;
+      const SettingSpec< bool > &Setting) override;
 
    wxChoice * TieNumberAsChoice(
       const wxString &Prompt,
-      const wxString &SettingName,
-      const int Default,
+      const SettingSpec< int > &Setting,
       const wxArrayStringEx & Choices,
       const std::vector<int> * pInternalChoices) override;
 
    wxTextCtrl * TieTextBox(
       const wxString &Prompt,
-      const wxString &SettingName,
-      const wxString &Default,
+      const SettingSpec< wxString > &Setting,
+      const int nChars) override;
+   wxTextCtrl * TieIntegerTextBox(
+      const wxString & Prompt,
+      const SettingSpec< int > &Setting,
       const int nChars) override;
    wxTextCtrl * TieNumericTextBox(
       const wxString & Prompt,
-      const wxString & SettingName,
-      const double & Default,
+      const SettingSpec< double > &Setting,
       const int nChars) override;
    wxSlider * TieSlider(
       const wxString & Prompt,
-      const wxString & SettingName,
-      const int iDefault,
+      const SettingSpec< int > &Setting,
       const int max,
       const int min = 0) override;
    wxSpinCtrl * TieSpinCtrl(
       const wxString &Prompt,
-      const wxString &SettingName,
-      const int Value,
+      const SettingSpec< int > &Setting,
       const int max,
       const int min) override;
 };
@@ -251,34 +248,31 @@ ShuttleGuiGetDefinition::~ShuttleGuiGetDefinition(void)
 
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
    const wxString &Prompt,
-   const wxString &SettingName,
-   const bool bDefault) 
-{ 
+   const SettingSpec< bool > &Setting)
+{
    StartStruct();
-   AddItem( SettingName, "id" );
+   AddItem( Setting.GetPath(), "id" );
    AddItem( Prompt, "prompt" );
    AddItem( "bool", "type" );
-   AddBool( bDefault, "default"  );
+   AddBool( Setting.GetDefault(), "default"  );
    EndStruct();
-   return ShuttleGui::TieCheckBox( Prompt, SettingName, bDefault );
+   return ShuttleGui::TieCheckBox( Prompt, Setting );
 }
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
    const wxString &Prompt,
-   const wxString &SettingName,
-   const bool bDefault) 
+   const SettingSpec< bool > &Setting)
 {
    StartStruct();
-   AddItem( SettingName, "id" );
+   AddItem( Setting.GetPath(), "id" );
    AddItem( Prompt, "prompt" );
    AddItem( "bool", "type" );
-   AddBool( bDefault, "default"  );
+   AddBool( Setting.GetDefault(), "default"  );
    EndStruct();
-   return ShuttleGui::TieCheckBoxOnRight( Prompt, SettingName, bDefault );
+   return ShuttleGui::TieCheckBoxOnRight( Prompt, Setting );
 }
 wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    const wxString &Prompt,
-   const wxString &SettingName,
-   const int Default,
+   const SettingSpec< int > &Setting,
    const wxArrayStringEx & Choices,
    const std::vector<int> * pInternalChoices)
 {
@@ -286,71 +280,80 @@ wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    //  numbers, with an associated control that allows arbitrary entry of an
    // "Other..."
    StartStruct();
-   AddItem( SettingName, "id" );
+   AddItem( Setting.GetPath(), "id" );
    AddItem( Prompt, "prompt" );
    AddItem( "number", "type" ); // not "enum" !
-   AddItem( Default, "default"  );
+   AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
    return ShuttleGui::TieNumberAsChoice(
-      Prompt, SettingName, Default, Choices, pInternalChoices );
+      Prompt, Setting, Choices, pInternalChoices );
 }
 wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    const wxString &Prompt,
-   const wxString &SettingName,
-   const wxString &Default,
-   const int nChars) 
+   const SettingSpec< wxString > &Setting,
+   const int nChars)
 {
    StartStruct();
-   AddItem( SettingName, "id" );
+   AddItem( Setting.GetPath(), "id" );
    AddItem( Prompt, "prompt" );
    AddItem( "string", "type" );
-   AddItem( Default, "default"  );
+   AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
-   return ShuttleGui::TieTextBox( Prompt, SettingName, Default, nChars );
+   return ShuttleGui::TieTextBox( Prompt, Setting, nChars );
+}
+wxTextCtrl * ShuttleGuiGetDefinition::TieIntegerTextBox(
+   const wxString & Prompt,
+   const SettingSpec< int > &Setting,
+   const int nChars)
+{
+   StartStruct();
+   AddItem( Setting.GetPath(), "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "number", "type" );
+   AddItem( Setting.GetDefault(), "default"  );
+   EndStruct();
+   return ShuttleGui::TieIntegerTextBox( Prompt, Setting, nChars );
 }
 wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
    const wxString & Prompt,
-   const wxString & SettingName,
-   const double & Default,
-   const int nChars) 
+   const SettingSpec< double > &Setting,
+   const int nChars)
 {
    StartStruct();
-   AddItem( SettingName, "id" );
+   AddItem( Setting.GetPath(), "id" );
    AddItem( Prompt, "prompt" );
    AddItem( "number", "type" );
-   AddItem( Default, "default"  );
+   AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
-   return ShuttleGui::TieNumericTextBox( Prompt, SettingName, Default, nChars );
+   return ShuttleGui::TieNumericTextBox( Prompt, Setting, nChars );
 }
 wxSlider * ShuttleGuiGetDefinition::TieSlider(
    const wxString & Prompt,
-   const wxString & SettingName,
-   const int iDefault,
+   const SettingSpec< int > &Setting,
    const int max,
    const int min) 
 {
    StartStruct();
-   AddItem( SettingName, "id" );
+   AddItem( Setting.GetPath(), "id" );
    AddItem( Prompt, "prompt" );
    AddItem( "number", "type" );
-   AddItem( iDefault, "default"  );
+   AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
-   return ShuttleGui::TieSlider( Prompt, SettingName, iDefault, max, min );
+   return ShuttleGui::TieSlider( Prompt, Setting, max, min );
 }
 wxSpinCtrl * ShuttleGuiGetDefinition::TieSpinCtrl(
    const wxString &Prompt,
-   const wxString &SettingName,
-   const int Value,
+   const SettingSpec< int > &Setting,
    const int max,
    const int min) 
 {
    StartStruct();
-   AddItem( SettingName, "id" );
+   AddItem( Setting.GetPath(), "id" );
    AddItem( Prompt, "prompt" );
    AddItem( "number", "type" );
-   AddItem( Value, "default"  );
+   AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
-   return ShuttleGui::TieSpinCtrl( Prompt, SettingName, Value, max, min );
+   return ShuttleGui::TieSpinCtrl( Prompt, Setting, max, min );
 }
 
 }

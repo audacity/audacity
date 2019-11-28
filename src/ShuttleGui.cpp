@@ -1125,7 +1125,7 @@ void ShuttleGuiBase::DoDataShuttle( const wxString &Name, WrappedType & WrappedR
 // they bind to (i.e. WrappedType).
 // The type specific versions are much shorter and are later
 // in this file.
-wxCheckBox * ShuttleGuiBase::TieCheckBox(const wxString &Prompt, WrappedType & WrappedRef)
+wxCheckBox * ShuttleGuiBase::DoTieCheckBox(const wxString &Prompt, WrappedType & WrappedRef)
 {
    HandleOptionality( Prompt );
    // The Add function does a UseUpId(), so don't do it here in that case.
@@ -1167,7 +1167,7 @@ wxCheckBox * ShuttleGuiBase::TieCheckBox(const wxString &Prompt, WrappedType & W
    return pCheckBox;
 }
 
-wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(const wxString &Prompt, WrappedType & WrappedRef)
+wxCheckBox * ShuttleGuiBase::DoTieCheckBoxOnRight(const wxString &Prompt, WrappedType & WrappedRef)
 {
    HandleOptionality( Prompt );
    // The Add function does a UseUpId(), so don't do it here in that case.
@@ -1209,7 +1209,7 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(const wxString &Prompt, WrappedT
    return pCheckBox;
 }
 
-wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min )
+wxSpinCtrl * ShuttleGuiBase::DoTieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min )
 {
    HandleOptionality( Prompt );
    // The Add function does a UseUpId(), so don't do it here in that case.
@@ -1252,7 +1252,7 @@ wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl( const wxString &Prompt, WrappedType & 
    return pSpinCtrl;
 }
 
-wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, WrappedType & WrappedRef, const int nChars)
+wxTextCtrl * ShuttleGuiBase::DoTieTextBox( const wxString &Prompt, WrappedType & WrappedRef, const int nChars)
 {
    HandleOptionality( Prompt );
    // The Add function does a UseUpId(), so don't do it here in that case.
@@ -1295,7 +1295,7 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, WrappedType & W
    return pTextBox;
 }
 
-wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, WrappedType & WrappedRef, const int nChars)
+wxTextCtrl * ShuttleGuiBase::DoTieNumericTextBox( const wxString &Prompt, WrappedType & WrappedRef, const int nChars)
 {
    HandleOptionality( Prompt );
    // The Add function does a UseUpId(), so don't do it here in that case.
@@ -1338,7 +1338,7 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, WrappedT
    return pTextBox;
 }
 
-wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, int min )
+wxSlider * ShuttleGuiBase::DoTieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, int min )
 {
    HandleOptionality( Prompt );
    // The Add function does a UseUpId(), so don't do it here in that case.
@@ -1385,7 +1385,7 @@ wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, WrappedType & Wrap
 }
 
 
-wxChoice * ShuttleGuiBase::TieChoice(
+wxChoice * ShuttleGuiBase::DoTieChoice(
    const wxString &Prompt,
    WrappedType &WrappedRef,
    const wxArrayStringEx &choices )
@@ -1548,7 +1548,7 @@ void ShuttleGuiBase::EndRadioButtonGroup()
 wxCheckBox * ShuttleGuiBase::TieCheckBox(const wxString &Prompt, bool &Var)
 {
    WrappedType WrappedRef( Var );
-   return TieCheckBox( Prompt, WrappedRef );
+   return DoTieCheckBox( Prompt, WrappedRef );
 }
 
 // See comment in AddCheckBoxOnRight() for why we have this variant.
@@ -1558,55 +1558,55 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(const wxString &Prompt, bool &Va
    WrappedType WrappedRef( Var );
    if( mShuttleMode == eIsCreating )
       return AddCheckBoxOnRight( Prompt, WrappedRef.ReadAsString() == wxT("true") );
-   return TieCheckBox( Prompt, WrappedRef );
+   return DoTieCheckBox( Prompt, WrappedRef );
 }
 
 wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl( const wxString &Prompt, int &Value, const int max, const int min )
 {
    WrappedType WrappedRef(Value);
-   return TieSpinCtrl( Prompt, WrappedRef, max, min );
+   return DoTieSpinCtrl( Prompt, WrappedRef, max, min );
 }
 
 wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, wxString &Selected, const int nChars)
 {
    WrappedType WrappedRef(Selected);
-   return TieTextBox( Prompt, WrappedRef, nChars );
+   return DoTieTextBox( Prompt, WrappedRef, nChars );
 }
 
 wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, int &Selected, const int nChars)
 {
    WrappedType WrappedRef( Selected );
-   return TieTextBox( Prompt, WrappedRef, nChars );
+   return DoTieTextBox( Prompt, WrappedRef, nChars );
 }
 
 wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, double &Value, const int nChars)
 {
    WrappedType WrappedRef( Value );
-   return TieTextBox( Prompt, WrappedRef, nChars );
+   return DoTieTextBox( Prompt, WrappedRef, nChars );
 }
 
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, int &Value, const int nChars)
 {
    WrappedType WrappedRef( Value );
-   return TieNumericTextBox( Prompt, WrappedRef, nChars );
+   return DoTieNumericTextBox( Prompt, WrappedRef, nChars );
 }
 
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, double &Value, const int nChars)
 {
    WrappedType WrappedRef( Value );
-   return TieNumericTextBox( Prompt, WrappedRef, nChars );
+   return DoTieNumericTextBox( Prompt, WrappedRef, nChars );
 }
 
 wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, int &pos, const int max, const int min )
 {
    WrappedType WrappedRef( pos );
-   return TieSlider( Prompt, WrappedRef, max, min );
+   return DoTieSlider( Prompt, WrappedRef, max, min );
 }
 
 wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, double &pos, const double max, const double min )
 {
    WrappedType WrappedRef( pos );
-   return TieSlider( Prompt, WrappedRef, max, min );
+   return DoTieSlider( Prompt, WrappedRef, max, min );
 }
 
 wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax)
@@ -1636,7 +1636,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
    const wxArrayStringEx &choices )
 {
    WrappedType WrappedRef( Selected );
-   return TieChoice( Prompt, WrappedRef, choices );
+   return DoTieChoice( Prompt, WrappedRef, choices );
 }
 
 wxChoice * ShuttleGuiBase::TieChoice(
@@ -1645,7 +1645,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
    const wxArrayStringEx &choices )
 {
    WrappedType WrappedRef( Selected );
-   return TieChoice( Prompt, WrappedRef, choices );
+   return DoTieChoice( Prompt, WrappedRef, choices );
 }
 
 //-----------------------------------------------------------------------//
@@ -1751,16 +1751,15 @@ bool ShuttleGuiBase::DoStep( int iStep )
 /// between gui and stack variable and stack variable and shuttle.
 wxCheckBox * ShuttleGuiBase::TieCheckBox(
    const wxString &Prompt,
-   const wxString &SettingName,
-   const bool bDefault)
+   const SettingSpec< bool > &Setting)
 {
    wxCheckBox * pCheck=NULL;
 
-   bool bValue=bDefault;
-   WrappedType WrappedRef( bValue );
-   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
-   if( DoStep(2) ) pCheck = TieCheckBox( Prompt, WrappedRef );
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
+   auto Value = Setting.GetDefault();
+   WrappedType WrappedRef( Value );
+   if( DoStep(1) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
+   if( DoStep(2) ) pCheck = DoTieCheckBox( Prompt, WrappedRef );
+   if( DoStep(3) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
 
    return pCheck;
 }
@@ -1769,16 +1768,15 @@ wxCheckBox * ShuttleGuiBase::TieCheckBox(
 /// between gui and stack variable and stack variable and shuttle.
 wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(
    const wxString &Prompt,
-   const wxString &SettingName,
-   const bool bDefault)
+   const SettingSpec< bool > &Setting)
 {
    wxCheckBox * pCheck=NULL;
 
-   bool bValue=bDefault;
-   WrappedType WrappedRef( bValue );
-   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
-   if( DoStep(2) ) pCheck = TieCheckBoxOnRight( Prompt, WrappedRef );
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
+   auto Value = Setting.GetDefault();
+   WrappedType WrappedRef( Value );
+   if( DoStep(1) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
+   if( DoStep(2) ) pCheck = DoTieCheckBoxOnRight( Prompt, WrappedRef );
+   if( DoStep(3) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
 
    return pCheck;
 }
@@ -1787,18 +1785,17 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(
 /// between gui and stack variable and stack variable and shuttle.
 wxSlider * ShuttleGuiBase::TieSlider(
    const wxString &Prompt,
-   const wxString &SettingName,
-   const int iDefault,
+   const SettingSpec< int > &Setting,
    const int max,
    const int min)
 {
    wxSlider * pSlider=NULL;
 
-   int iValue=iDefault;
-   WrappedType WrappedRef( iValue );
-   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
-   if( DoStep(2) ) pSlider = TieSlider( Prompt, WrappedRef, max, min );
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
+   auto Value = Setting.GetDefault();
+   WrappedType WrappedRef( Value );
+   if( DoStep(1) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
+   if( DoStep(2) ) pSlider = DoTieSlider( Prompt, WrappedRef, max, min );
+   if( DoStep(3) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
 
    return pSlider;
 }
@@ -1807,18 +1804,17 @@ wxSlider * ShuttleGuiBase::TieSlider(
 /// between gui and stack variable and stack variable and shuttle.
 wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
                                      const wxString &Prompt,
-                                     const wxString &SettingName,
-                                     const int Value,
+                                     const SettingSpec< int > &Setting,
                                      const int max,
                                      const int min)
 {
    wxSpinCtrl * pSpinCtrl=NULL;
 
-   int iValue = Value;
-   WrappedType WrappedRef( iValue );
-   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
-   if( DoStep(2) ) pSpinCtrl = TieSpinCtrl( Prompt, WrappedRef, max, min );
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
+   auto Value = Setting.GetDefault();
+   WrappedType WrappedRef( Value );
+   if( DoStep(1) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
+   if( DoStep(2) ) pSpinCtrl = DoTieSpinCtrl( Prompt, WrappedRef, max, min );
+   if( DoStep(3) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
 
    return pSpinCtrl;
 }
@@ -1827,17 +1823,34 @@ wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
 /// between gui and stack variable and stack variable and shuttle.
 wxTextCtrl * ShuttleGuiBase::TieTextBox(
    const wxString & Prompt,
-   const wxString & SettingName,
-   const wxString & Default,
+   const SettingSpec< wxString > &Setting,
    const int nChars)
 {
    wxTextCtrl * pText=(wxTextCtrl*)NULL;
 
-   wxString Temp = Default;
-   WrappedType WrappedRef( Temp );
-   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
-   if( DoStep(2) ) pText = TieTextBox( Prompt, WrappedRef, nChars );
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
+   auto Value = Setting.GetDefault();
+   WrappedType WrappedRef( Value );
+   if( DoStep(1) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
+   if( DoStep(2) ) pText = DoTieTextBox( Prompt, WrappedRef, nChars );
+   if( DoStep(3) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
+   return pText;
+}
+
+/// Variant of the standard TieTextBox which does the two step exchange
+/// between gui and stack variable and stack variable and shuttle.
+/// This one does it for double values...
+wxTextCtrl * ShuttleGuiBase::TieIntegerTextBox(
+   const wxString & Prompt,
+   const SettingSpec< int > &Setting,
+   const int nChars)
+{
+   wxTextCtrl * pText=(wxTextCtrl*)NULL;
+
+   auto Value = Setting.GetDefault();
+   WrappedType WrappedRef( Value );
+   if( DoStep(1) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
+   if( DoStep(2) ) pText = DoTieNumericTextBox( Prompt, WrappedRef, nChars );
+   if( DoStep(3) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
    return pText;
 }
 
@@ -1846,17 +1859,16 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
 /// This one does it for double values...
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
    const wxString & Prompt,
-   const wxString & SettingName,
-   const double & Default,
+   const SettingSpec< double > &Setting,
    const int nChars)
 {
    wxTextCtrl * pText=(wxTextCtrl*)NULL;
 
-   double Temp = Default;
-   WrappedType WrappedRef( Temp );
-   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
-   if( DoStep(2) ) pText = TieNumericTextBox( Prompt, WrappedRef, nChars );
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
+   auto Value = Setting.GetDefault();
+   WrappedType WrappedRef( Value );
+   if( DoStep(1) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
+   if( DoStep(2) ) pText = DoTieNumericTextBox( Prompt, WrappedRef, nChars );
+   if( DoStep(3) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
    return pText;
 }
 
@@ -1910,8 +1922,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
 ///                             if null, then use 0, 1, 2, ...
 wxChoice * ShuttleGuiBase::TieNumberAsChoice(
    const wxString &Prompt,
-   const wxString &SettingName,
-   const int Default,
+   const SettingSpec< int > &Setting,
    const wxArrayStringEx & Choices,
    const std::vector<int> * pInternalChoices)
 {
@@ -1925,6 +1936,7 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
       for ( int ii = 0; ii < Choices.size(); ++ii )
          InternalChoices.push_back( fn( ii ) );
 
+   const auto Default = Setting.GetDefault();
    long defaultIndex;
    if ( pInternalChoices )
       defaultIndex =  make_iterator_range( *pInternalChoices ).index( Default );
@@ -1933,8 +1945,8 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
    if ( defaultIndex < 0 || defaultIndex >= Choices.size() )
       defaultIndex = -1;
 
-   ChoiceSetting Setting{
-      SettingName,
+   ChoiceSetting choiceSetting{
+      Setting.GetPath(),
       {
          ByColumns,
          Choices,
@@ -1943,7 +1955,7 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
       defaultIndex
    };
 
-   return ShuttleGuiBase::TieChoice( Prompt, Setting );
+   return ShuttleGuiBase::TieChoice( Prompt, choiceSetting );
 }
 
 //------------------------------------------------------------------//

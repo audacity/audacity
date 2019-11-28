@@ -81,35 +81,35 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(_("Behaviors"));
    {
       S.TieCheckBox(_("&Select all audio, if selection required"),
-                    wxT("/GUI/SelectAllOnNone"),
-                    false);
+                    {wxT("/GUI/SelectAllOnNone"),
+                     false});
       /* i18n-hint: Cut-lines are lines that can expand to show the cut audio.*/
       S.TieCheckBox(_("Enable cut &lines"),
-                    wxT("/GUI/EnableCutLines"),
-                    false);
+                    {wxT("/GUI/EnableCutLines"),
+                     false});
       S.TieCheckBox(_("Enable &dragging selection edges"),
-                    wxT("/GUI/AdjustSelectionEdges"),
-                    true);
+                    {wxT("/GUI/AdjustSelectionEdges"),
+                     true});
       S.TieCheckBox(_("Editing a clip can &move other clips"),
-                    wxT("/GUI/EditClipCanMove"),
-                    true);
+                    {wxT("/GUI/EditClipCanMove"),
+                     true});
       S.TieCheckBox(_("\"Move track focus\" c&ycles repeatedly through tracks"),
-                    wxT("/GUI/CircularTrackNavigation"),
-                    false);
+                    {wxT("/GUI/CircularTrackNavigation"),
+                     false});
       S.TieCheckBox(_("&Type to create a label"),
-                    wxT("/GUI/TypeToCreateLabel"),
-                    false);
+                    {wxT("/GUI/TypeToCreateLabel"),
+                     false});
       S.TieCheckBox(_("Use dialog for the &name of a new label"),
-                    wxT("/GUI/DialogForNameNewLabel"),
-                    false);
+                    {wxT("/GUI/DialogForNameNewLabel"),
+                     false});
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
       S.TieCheckBox(_("Enable scrolling left of &zero"),
-                    ScrollingPreferenceKey(),
-                    ScrollingPreferenceDefault());
+                    {ScrollingPreferenceKey(),
+                     ScrollingPreferenceDefault()});
 #endif
       S.TieCheckBox(_("Advanced &vertical zooming"),
-                    wxT("/GUI/VerticalZooming"),
-                    false);
+                    {wxT("/GUI/VerticalZooming"),
+                     false});
 
       S.AddSpace(10);
 

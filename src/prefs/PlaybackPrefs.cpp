@@ -87,8 +87,8 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          w = S.TieNumericTextBox(_("&Length:"),
-                                 wxT("/AudioIO/EffectsPreviewLen"),
-                                 6.0,
+                                 {wxT("/AudioIO/EffectsPreviewLen"),
+                                  6.0},
                                  9);
          S.AddUnits(_("seconds"));
          if( w ) w->SetName(w->GetName() + wxT(" ") + _("seconds"));
@@ -103,15 +103,15 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          w = S.TieNumericTextBox(_("&Before cut region:"),
-                                 wxT("/AudioIO/CutPreviewBeforeLen"),
-                                 2.0,
+                                 {wxT("/AudioIO/CutPreviewBeforeLen"),
+                                  2.0},
                                  9);
          S.AddUnits(_("seconds"));
          if( w ) w->SetName(w->GetName() + wxT(" ") + _("seconds"));
 
          w = S.TieNumericTextBox(_("&After cut region:"),
-                                 wxT("/AudioIO/CutPreviewAfterLen"),
-                                 1.0,
+                                 {wxT("/AudioIO/CutPreviewAfterLen"),
+                                  1.0},
                                  9);
          S.AddUnits(_("seconds"));
          if( w ) w->SetName(w->GetName() + wxT(" ") + _("seconds"));
@@ -125,15 +125,15 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          w = S.TieNumericTextBox(_("&Short period:"),
-                                 wxT("/AudioIO/SeekShortPeriod"),
-                                 1.0,
+                                 {wxT("/AudioIO/SeekShortPeriod"),
+                                  1.0},
                                  9);
          S.AddUnits(_("seconds"));
          if( w ) w->SetName(w->GetName() + wxT(" ") + _("seconds"));
 
          w = S.TieNumericTextBox(_("Lo&ng period:"),
-                                 wxT("/AudioIO/SeekLongPeriod"),
-                                 15.0,
+                                 {wxT("/AudioIO/SeekLongPeriod"),
+                                  15.0},
                                  9);
          S.AddUnits(_("seconds"));
          if( w ) w->SetName(w->GetName() + wxT(" ") + _("seconds"));
@@ -146,11 +146,11 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay();
       {
-         S.TieCheckBox(_("&Vari-Speed Play"), "/AudioIO/VariSpeedPlay", true);
-         S.TieCheckBox(_("&Micro-fades"), "/AudioIO/Microfades", false);
+         S.TieCheckBox(_("&Vari-Speed Play"), {"/AudioIO/VariSpeedPlay", true});
+         S.TieCheckBox(_("&Micro-fades"), {"/AudioIO/Microfades", false});
          S.TieCheckBox(_("Always scrub un&pinned"),
-            UnpinnedScrubbingPreferenceKey(),
-            UnpinnedScrubbingPreferenceDefault());
+            {UnpinnedScrubbingPreferenceKey(),
+             UnpinnedScrubbingPreferenceDefault()});
       }
       S.EndVerticalLay();
    }
