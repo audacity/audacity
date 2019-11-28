@@ -132,7 +132,8 @@ void EBUR128::NextSample()
 
          // idx is within ]-inf, HIST_BIN_COUNT-1], discard indices below 0
          // as they are below the EBU R128 absolute threshold anyway.
-         if(idx >= 0 && idx < HIST_BIN_COUNT)
+         if(// idx >= 0 &&
+            idx < HIST_BIN_COUNT)
             ++mLoudnessHist[idx];
       }
    }
