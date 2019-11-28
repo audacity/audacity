@@ -38,7 +38,7 @@ enum kNormalizeTargets
    nAlgos
 };
 
-static const ComponentInterfaceSymbol kNormalizeTargetStrings[nAlgos] =
+static const EnumValueSymbol kNormalizeTargetStrings[nAlgos] =
 {
    { XO("perceived loudness") },
    { XO("RMS") }
