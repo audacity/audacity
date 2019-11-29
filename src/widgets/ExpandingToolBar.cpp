@@ -380,7 +380,8 @@ void ExpandingToolBar::Fit()
       mCurrentDrawerSize = wxSize(mExtraSize.x, 0);
       mCurrentTotalSize = baseWindowSize;
 
-      SetSizeHints(mCurrentTotalSize, mCurrentTotalSize);
+      SetMinSize(mCurrentTotalSize);
+      SetMaxSize(mCurrentTotalSize);
       SetSize(mCurrentTotalSize);
    }
 
@@ -434,7 +435,8 @@ void ExpandingToolBar::MoveDrawer(wxSize prevSize)
    if (mFrameParent) {
       // If we're in a tool window
 
-      SetSizeHints(mCurrentTotalSize, mCurrentTotalSize);
+      SetMinSize(mCurrentTotalSize);
+      SetMaxSize(mCurrentTotalSize);
       SetSize(mCurrentTotalSize);
 
       GetParent()->Fit();
@@ -443,7 +445,8 @@ void ExpandingToolBar::MoveDrawer(wxSize prevSize)
    if (mDialogParent) {
       // If we're in a dialog
 
-      SetSizeHints(mCurrentTotalSize, mCurrentTotalSize);
+      SetMinSize(mCurrentTotalSize);
+      SetMaxSize(mCurrentTotalSize);
       SetSize(mCurrentTotalSize);
 
       GetParent()->Fit();
@@ -457,7 +460,8 @@ void ExpandingToolBar::MoveDrawer(wxSize prevSize)
          mExtraPanel->Show();
       }
 
-      mExtraPanel->SetSizeHints(mCurrentDrawerSize, mCurrentDrawerSize);
+      mExtraPanel->SetMinSize(mCurrentDrawerSize);
+      mExtraPanel->SetMaxSize(mCurrentDrawerSize);
       mExtraPanel->SetSize(mCurrentDrawerSize);
 
       if (mCurrentDrawerSize.y == 0)
@@ -680,8 +684,8 @@ ToolBarGrabber::ToolBarGrabber(wxWindow *parent,
                              images[1],
                              magicColor);
 
-   SetSizeHints(mImageRoll[0].GetMinSize(),
-                mImageRoll[1].GetMaxSize());
+   SetMinSize(mImageRoll[0].GetMinSize());
+   SetMaxSize(mImageRoll[1].GetMaxSize());
 #endif
    mState = 0;
 }
@@ -1094,7 +1098,8 @@ void ToolBarArea::Fit(bool horizontal, bool vertical)
        maxSize != mMaxSize) {
       mMinSize = minSize;
       mMaxSize = maxSize;
-      SetSizeHints(mMinSize, mMaxSize);
+      SetMinSize(mMinSize);
+      SetMaxSize(mMaxSize);
    }
    if (actualSize != mActualSize) {
       mActualSize = actualSize;

@@ -20,6 +20,7 @@
 #include <vector>
 #include <wx/slider.h> // to inherit
 #include "MemoryX.h"
+#include <wx/listbase.h> // for wxLIST_FORMAT_LEFT
 
 #include "WrappedType.h"
 
@@ -131,27 +132,66 @@ public:
    void AddPrompt(const wxString &Prompt);
    void AddUnits(const wxString &Prompt);
    void AddTitle(const wxString &Prompt);
+   // Applies wxALL (which affects borders) only when in Flags:
    wxWindow * AddWindow(wxWindow * pWindow, int Flags = wxALIGN_CENTRE | wxALL );
    wxSlider * AddSlider(const wxString &Prompt, int pos, int Max, int Min = 0);
    wxSlider * AddVSlider(const wxString &Prompt, int pos, int Max);
    wxSpinCtrl * AddSpinCtrl(const wxString &Prompt, int Value, int Max, int Min);
    wxTreeCtrl * AddTree();
-   wxRadioButton * AddRadioButton( const wxString & Prompt );
-   wxRadioButton * AddRadioButtonToGroup( const wxString & Prompt);
-   wxButton * AddButton( const wxString & Text, int PositionFlags = wxALIGN_CENTRE );
-   wxBitmapButton * AddBitmapButton(const wxBitmap &Bitmap, int PositionFlags = wxALIGN_CENTRE);
+
+   // Pass the same initValue to the sequence of calls to AddRadioButton and
+   // AddRadioButtonToGroup.
+   // The radio button is filled if selector == initValue
+   wxRadioButton * AddRadioButton(
+      const wxString & Prompt, int selector = 0, int initValue = 0 );
+   wxRadioButton * AddRadioButtonToGroup(
+      const wxString & Prompt, int selector = 1, int initValue = 0 );
+
+   // Only the last button specified as default (if more than one) will be
+   // Always ORs the flags with wxALL (which affects borders):
+   wxButton * AddButton(
+      const wxString & Text, int PositionFlags = wxALIGN_CENTRE,
+      bool setDefault = false );
+   // Only the last button specified as default (if more than one) will be
+   // Always ORs the flags with wxALL (which affects borders):
+   wxBitmapButton * AddBitmapButton(
+      const wxBitmap &Bitmap, int PositionFlags = wxALIGN_CENTRE,
+      bool setDefault = false );
+   // When PositionFlags is 0, applies wxALL (which affects borders),
+   // and either wxALIGN_CENTER (if bCenter) or else wxEXPAND
    wxStaticText * AddVariableText(const wxString &Str, bool bCenter = false, int PositionFlags = 0);
    wxTextCtrl * AddTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddNumericTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddTextWindow(const wxString &Value);
    wxListBox * AddListBox(const wxArrayStringEx &choices, long style = 0);
-   wxListCtrl * AddListControl();
-   wxListCtrl * AddListControlReportMode();
+
+   struct ListControlColumn{
+      ListControlColumn(
+         wxString h, int f = wxLIST_FORMAT_LEFT, int w = wxLIST_AUTOSIZE)
+         : heading(h), format(f), width(w)
+      {}
+
+      wxString heading;
+      int format;
+      int width;
+   };
+   wxListCtrl * AddListControl(
+      std::initializer_list<const ListControlColumn> columns = {},
+      long listControlStyles = 0
+   );
+   wxListCtrl * AddListControlReportMode(
+      std::initializer_list<const ListControlColumn> columns = {},
+      long listControlStyles = 0
+   );
+
    wxGrid * AddGrid();
    wxCheckBox * AddCheckBox( const wxString &Prompt, bool Selected);
    wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, bool Selected);
    wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices, long style = 0 );
-   wxChoice   * AddChoice( const wxString &Prompt, const wxArrayStringEx &choices, int Selected = -1 );
+   wxChoice   * AddChoice( const wxString &Prompt,
+      const wxArrayStringEx &choices, int Selected = -1 );
+   wxChoice   * AddChoice( const wxString &Prompt,
+      const wxArrayStringEx &choices, const wxString &selected );
    wxMenuBar  * AddMenuBar( );
    wxMenu     * AddMenu( const wxString & Title );
    void AddIcon( wxBitmap * pBmp);
@@ -184,12 +224,16 @@ public:
 
    wxNotebook * StartNotebook();
    void EndNotebook();
+
+   // IDs of notebook pages cannot be chosen by the caller
    wxNotebookPage * StartNotebookPage( const wxString & Name );
    void StartNotebookPage( const wxString & Name, wxNotebookPage * pPage );
+
    void EndNotebookPage();
    wxPanel * StartInvisiblePanel();
    void EndInvisiblePanel();
 
+   // SettingName is a key in Preferences.
    void StartRadioButtonGroup( const ChoiceSetting &Setting );
    void EndRadioButtonGroup();
 
@@ -248,7 +292,8 @@ public:
       const wxString &Prompt,
       const SettingSpec< int > &Setting,
       const wxArrayStringEx & Choices,
-      const std::vector<int> * pInternalChoices = nullptr );
+      const std::vector<int> * pInternalChoices = nullptr,
+      int iNoMatchSelector = 0 );
 
    virtual wxTextCtrl * TieTextBox(
       const wxString &Prompt,
@@ -277,7 +322,6 @@ public:
    void SetSizeHints( int minX, int minY );
    void SetBorder( int Border ) {miBorder = Border;};
    void SetStyle( int Style ) {miStyle = Style;};
-   void SetNoMatchSelector( int iSelector ) {miNoMatchSelector = iSelector;};
    void SetSizerProportion( int iProp ) {miSizerProp = iProp;};
    void SetStretchyCol( int i );
    void SetStretchyRow( int i );
@@ -309,12 +353,18 @@ protected:
 
 private:
    void SetSizeHints( const wxArrayStringEx & items );
+
+   void DoInsertListColumns(
+      wxListCtrl *pListCtrl,
+      long listControlStyles,
+      std::initializer_list<const ListControlColumn> columns );
+
 public:
    static void SetSizeHints( wxWindow *window, const wxArrayStringEx & items );
 
 protected:
    wxWindow * mpLastWind;
-   wxWindow * mpDlg;
+   wxWindow *const mpDlg;
    wxSizer * pSizerStack[ nMaxNestedSizers ];
 
    std::unique_ptr<Shuttle> mpShuttle; /*! Controls source/destination of shuttled data.  You can
@@ -360,7 +410,8 @@ private:
    Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
    int mRadioCount;       /// The index of this radio item.  -1 for none.
    wxString mRadioValueString; /// Unwrapped string value.
-   wxRadioButton * DoAddRadioButton(const wxString &Prompt, int style);
+   wxRadioButton * DoAddRadioButton(
+      const wxString &Prompt, int style, int selector, int initValue);
 };
 
 // A rarely used helper function that sets a pointer
@@ -420,7 +471,12 @@ public:
    ShuttleGui & Prop( int iProp ){ ShuttleGuiBase::Prop(iProp); return *this;}; // Has to be here too, to return a ShuttleGui and not a ShuttleGuiBase.
    GuiWaveTrack * AddGuiWaveTrack( const wxString & Name);
    AttachableScrollBar * AddAttachableScrollBar( long style = wxSB_HORIZONTAL );
-   void AddStandardButtons( long buttons = eOkButton | eCancelButton, wxButton *extra = NULL );
+
+   // The first of these buttons, if any, that is included will be default:
+   // Apply, Yes, OK
+   void AddStandardButtons(
+      long buttons = eOkButton | eCancelButton, wxButton *extra = NULL );
+
    wxSizerItem * AddSpace( int width, int height );
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };
 

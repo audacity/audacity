@@ -2479,22 +2479,22 @@ EffectDialog::EffectDialog(wxWindow * parent,
 
 void EffectDialog::Init()
 {
+   long buttons = eOkButton;
+   if ((mType != EffectTypeAnalyze) && (mType != EffectTypeTool))
+   {
+      buttons |= eCancelButton;
+      if (mType == EffectTypeProcess)
+      {
+         buttons |= ePreviewButton;
+      }
+   }
+
    ShuttleGui S(this, eIsCreating);
 
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {
       PopulateOrExchange(S);
-
-      long buttons = eOkButton;
-      if ((mType != EffectTypeAnalyze) && (mType != EffectTypeTool))
-      {
-         buttons |= eCancelButton;
-         if (mType == EffectTypeProcess)
-         {
-            buttons |= ePreviewButton;
-         }
-      }
       S.AddStandardButtons(buttons|mAdditionalButtons);
    }
    S.EndVerticalLay();

@@ -238,9 +238,10 @@ AboutDialog::AboutDialog(wxWindow * parent)
       PopulateLicensePage( S );
    }
    S.EndNotebook();
-   wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK, _("OK"));
-   ok->SetDefault();
-   S.Prop(0).AddWindow( ok );
+
+   S.Id(wxID_OK)
+      .Prop(0)
+      .AddButton(_("OK"), wxALIGN_CENTER, true);
 
    Fit();
    this->Centre();

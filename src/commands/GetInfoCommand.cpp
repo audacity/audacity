@@ -209,7 +209,7 @@ public:
       const wxString &Prompt,
       const SettingSpec< int > &Setting,
       const wxArrayStringEx & Choices,
-      const std::vector<int> * pInternalChoices) override;
+      const std::vector<int> * pInternalChoices, int iNoMatchSelector ) override;
 
    wxTextCtrl * TieTextBox(
       const wxString &Prompt,
@@ -274,7 +274,7 @@ wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    const wxString &Prompt,
    const SettingSpec< int > &Setting,
    const wxArrayStringEx & Choices,
-   const std::vector<int> * pInternalChoices)
+   const std::vector<int> * pInternalChoices, int iNoMatchSelector)
 {
    // Come here for controls that present non-exhaustive choices among some
    //  numbers, with an associated control that allows arbitrary entry of an
@@ -286,7 +286,7 @@ wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
    return ShuttleGui::TieNumberAsChoice(
-      Prompt, Setting, Choices, pInternalChoices );
+      Prompt, Setting, Choices, pInternalChoices, iNoMatchSelector );
 }
 wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    const wxString &Prompt,

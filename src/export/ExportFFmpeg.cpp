@@ -1001,7 +1001,8 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
    d.SetName(d.GetTitle());
    wxChoice *choice;
    ShuttleGui S(&d, eIsCreating);
-   wxString text;
+
+   int selected = -1;
 
    S.StartVerticalLay();
    {
@@ -1010,42 +1011,39 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
       {
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
-            if (bitrate == 0) {
-               text.Printf(_("The project sample rate (%d) is not supported by the current output\nfile format. "), rate);
-            }
-            else {
-               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. "), rate, bitrate/1024);
-            }
-
-            text += _("You may resample to one of the rates below.");
-            S.AddTitle(text);
+            S.AddTitle(
+               (bitrate == 0
+                  ? wxString::Format(
+                     _("The project sample rate (%d) is not supported by the current output\nfile format. "),
+                     rate)
+                  : wxString::Format(
+                     _("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. "),
+                     rate, bitrate/1024))
+               + _("You may resample to one of the rates below.")
+            );
          }
          S.EndHorizontalLay();
-
-         wxArrayStringEx choices;
-         int selected = -1;
-         for (int i = 0; sampRates[i] > 0; i++)
-         {
-            int label = sampRates[i];
-            if (label >= lowrate && label <= highrate)
-            {
-               wxString name = wxString::Format(wxT("%d"),label);
-               choices.push_back(name);
-               if (label <= rate)
-               {
-                  selected = i;
-               }
-            }
-         }
-
-         if (selected == -1)
-            selected = 0;
 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             choice = S.AddChoice(_("Sample Rates"),
-                                 choices,
-                                 selected);
+               [&]{
+                  wxArrayStringEx choices;
+                  for (int i = 0; sampRates[i] > 0; i++)
+                  {
+                     int label = sampRates[i];
+                     if (label >= lowrate && label <= highrate)
+                     {
+                        wxString name = wxString::Format(wxT("%d"),label);
+                        choices.push_back(name);
+                        if (label <= rate)
+                           selected = i;
+                     }
+                  }
+                  return choices;
+               }(),
+               std::max( 0, selected )
+            );
          }
          S.EndHorizontalLay();
       }

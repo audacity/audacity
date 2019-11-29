@@ -146,9 +146,6 @@ private:
    int m_iAutoExportFilterIndex;
    bool m_bProjectAlreadySaved;
 
-   // Variables for After Timer Recording Option
-   wxArrayStringEx m_sTimerAfterCompleteOptionsArray;
-
    DECLARE_EVENT_TABLE()
 };
 

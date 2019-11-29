@@ -146,9 +146,6 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.StartMultiColumn(2);
          {
-            // If the value in Prefs isn't in the list, then we want
-            // the last item, 'Other...' to be shown.
-            S.SetNoMatchSelector(mSampleRateNames.size() - 1);
             // First the choice...
             // We make sure it uses the ID we want, so that we get changes
             S.Id(ID_SAMPLE_RATE_CHOICE);
@@ -157,7 +154,11 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                                        {wxT("/SamplingRate/DefaultProjectSampleRate"),
                                         AudioIOBase::GetOptimalSupportedSampleRate()},
                                        mSampleRateNames,
-                                       &mSampleRateLabels);
+                                       &mSampleRateLabels,
+                                       // If the value in Prefs isn't in the list, then we want
+                                       // the last item, 'Other...' to be shown.
+                                       mSampleRateNames.GetCount() - 1
+                                       );
 
             // Now do the edit box...
             mOtherSampleRate = S.TieNumericTextBox( {},

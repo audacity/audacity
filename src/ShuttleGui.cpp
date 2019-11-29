@@ -120,12 +120,12 @@ for registering for changes.
 #endif
 
 ShuttleGuiBase::ShuttleGuiBase(wxWindow * pParent, teShuttleMode ShuttleMode )
+   : mpDlg{ pParent }
 {
    wxASSERT( (pParent != NULL ) || ( ShuttleMode != eIsCreating));
    mpbOptionalFlag = nullptr;
    mpParent = pParent;
    mShuttleMode = ShuttleMode;
-   mpDlg = pParent;
    Init();
 }
 
@@ -348,7 +348,8 @@ wxCheckBox * ShuttleGuiBase::AddCheckBoxOnRight( const wxString &Prompt, bool Se
    return pCheckBox;
 }
 
-wxButton * ShuttleGuiBase::AddButton(const wxString &Text, int PositionFlags)
+wxButton * ShuttleGuiBase::AddButton(
+   const wxString &Text, int PositionFlags, bool setDefault)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -359,10 +360,13 @@ wxButton * ShuttleGuiBase::AddButton(const wxString &Text, int PositionFlags)
    mpWind->SetName(wxStripMenuCodes(Text));
    miProp=0;
    UpdateSizersCore(false, PositionFlags | wxALL);
+   if (setDefault)
+      pBtn->SetDefault();
    return pBtn;
 }
 
-wxBitmapButton * ShuttleGuiBase::AddBitmapButton(const wxBitmap &Bitmap, int PositionFlags)
+wxBitmapButton * ShuttleGuiBase::AddBitmapButton(
+   const wxBitmap &Bitmap, int PositionFlags, bool setDefault)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -375,6 +379,8 @@ wxBitmapButton * ShuttleGuiBase::AddBitmapButton(const wxBitmap &Bitmap, int Pos
 //      wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
    miProp=0;
    UpdateSizersCore(false, PositionFlags | wxALL);
+   if (setDefault)
+      pBtn->SetDefault();
    return pBtn;
 }
 
@@ -397,7 +403,7 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
       choices,
       Style( 0 ) );
 
-   pChoice->SetSizeHints( 180,-1);// Use -1 for 'default size' - Platform specific.
+   pChoice->SetMinSize( { 180, -1 } );// Use -1 for 'default size' - Platform specific.
 #ifdef __WXMAC__
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
@@ -410,6 +416,12 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
 
    UpdateSizers();
    return pChoice;
+}
+
+wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
+   const wxArrayStringEx &choices, const wxString &Selected )
+{
+   return AddChoice( Prompt, choices, choices.Index( Selected ) );
 }
 
 void ShuttleGuiBase::AddFixedText(const wxString &Str, bool bCenter)
@@ -484,7 +496,7 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
 
 
 wxRadioButton * ShuttleGuiBase::DoAddRadioButton(
-   const wxString &Prompt, int style)
+   const wxString &Prompt, int style, int selector, int initValue)
 {
    /// \todo This function and the next two, suitably adapted, could be
    /// used by TieRadioButton.
@@ -498,17 +510,20 @@ wxRadioButton * ShuttleGuiBase::DoAddRadioButton(
    if ( style )
       pRad->SetValue( true );
    UpdateSizers();
+   pRad->SetValue( selector == initValue );
    return pRad;
 }
 
-wxRadioButton * ShuttleGuiBase::AddRadioButton(const wxString &Prompt)
+wxRadioButton * ShuttleGuiBase::AddRadioButton(
+   const wxString &Prompt, int selector, int initValue)
 {
-   return DoAddRadioButton( Prompt, wxRB_GROUP );
+   return DoAddRadioButton( Prompt, wxRB_GROUP, selector, initValue );
 }
 
-wxRadioButton * ShuttleGuiBase::AddRadioButtonToGroup(const wxString &Prompt)
+wxRadioButton * ShuttleGuiBase::AddRadioButtonToGroup(
+   const wxString &Prompt, int selector, int initValue)
 {
-   return DoAddRadioButton( Prompt, 0 );
+   return DoAddRadioButton( Prompt, 0, selector, initValue );
 }
 
 #ifdef __WXMAC__
@@ -684,20 +699,6 @@ wxListBox * ShuttleGuiBase::AddListBox(const wxArrayStringEx &choices, long styl
 }
 
 
-wxListCtrl * ShuttleGuiBase::AddListControl()
-{
-   UseUpId();
-   if( mShuttleMode != eIsCreating )
-      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxListCtrl);
-   wxListCtrl * pListCtrl;
-   SetProportions( 1 );
-   mpWind = pListCtrl = safenew wxListCtrl(GetParent(), miId,
-      wxDefaultPosition, wxDefaultSize, Style( wxLC_ICON ));
-   pListCtrl->SetMinSize( wxSize( 120,150 ));
-   UpdateSizers();
-   return pListCtrl;
-}
-
 wxGrid * ShuttleGuiBase::AddGrid()
 {
    UseUpId();
@@ -712,7 +713,30 @@ wxGrid * ShuttleGuiBase::AddGrid()
    return pGrid;
 }
 
-wxListCtrl * ShuttleGuiBase::AddListControlReportMode()
+wxListCtrl * ShuttleGuiBase::AddListControl(
+   std::initializer_list<const ListControlColumn> columns,
+   long listControlStyles
+)
+{
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxListCtrl);
+   wxListCtrl * pListCtrl;
+   SetProportions( 1 );
+   mpWind = pListCtrl = safenew wxListCtrl(GetParent(), miId,
+      wxDefaultPosition, wxDefaultSize, Style( wxLC_ICON ));
+   pListCtrl->SetMinSize( wxSize( 120,150 ));
+   UpdateSizers();
+
+   DoInsertListColumns( pListCtrl, listControlStyles, columns );
+
+   return pListCtrl;
+}
+
+wxListCtrl * ShuttleGuiBase::AddListControlReportMode(
+   std::initializer_list<const ListControlColumn> columns,
+   long listControlStyles
+)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -724,7 +748,41 @@ wxListCtrl * ShuttleGuiBase::AddListControlReportMode()
       Style( wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxSUNKEN_BORDER ));
 //   pListCtrl->SetMinSize( wxSize( 120,150 ));
    UpdateSizers();
+
+   DoInsertListColumns( pListCtrl, listControlStyles, columns );
+
    return pListCtrl;
+}
+
+void ShuttleGuiBase::DoInsertListColumns(
+   wxListCtrl *pListCtrl,
+   long listControlStyles,
+   std::initializer_list<const ListControlColumn> columns )
+{
+   // Old comment from HistoryWindow.cpp follows
+   // -- is it still correct for wxWidgets 3?
+
+   // Do this BEFORE inserting the columns.  On the Mac at least, the
+   // columns are deleted and later InsertItem()s will cause Audacity to crash.
+   for ( auto style = 1l; style <= listControlStyles; style <<= 1 )
+      if ( (style & listControlStyles) )
+         pListCtrl->SetSingleStyle(style, true);
+
+   long iCol = 0;
+   bool dummyColumn =
+      columns.size() > 0 && begin(columns)->format == wxLIST_FORMAT_RIGHT;
+
+   //A dummy first column, which is then deleted, is a workaround -
+   // under Windows the first column can't be right aligned.
+   if (dummyColumn)
+      pListCtrl->InsertColumn( iCol++, wxString{} );
+
+   for (auto &column : columns)
+      pListCtrl->InsertColumn(
+         iCol++, column.heading, column.format, column.width );
+
+   if (dummyColumn)
+      pListCtrl->DeleteColumn( 0 );
 }
 
 wxTreeCtrl * ShuttleGuiBase::AddTree()
@@ -947,11 +1005,11 @@ wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
    pNotebook->AddPage(
       pPage,
       Name);
-   PushSizer();
 
    SetProportions( 1 );
    mpParent = pPage;
    pPage->SetSizer(mpSizer = safenew wxBoxSizer(wxVERTICAL));
+   PushSizer();
    mpSizer->SetMinSize(250, 500);
    //   UpdateSizers();
    return pPage;
@@ -970,11 +1028,11 @@ void ShuttleGuiBase::StartNotebookPage( const wxString & Name, wxNotebookPage * 
    pNotebook->AddPage(
       pPage,
       Name);
-   PushSizer();
 
    SetProportions( 1 );
    mpParent = pPage;
    pPage->SetSizer(mpSizer = safenew wxBoxSizer(wxVERTICAL));
+   PushSizer();
    mpSizer->SetMinSize(250, 500);
    //   UpdateSizers();
 }
@@ -1061,6 +1119,7 @@ void ShuttleGuiBase::StartHorizontalLay( int PositionFlags, int iProp)
       return;
    miSizerProp=iProp;
    mpSubSizer = std::make_unique<wxBoxSizer>( wxHORIZONTAL );
+   // PRL:  wxALL has no effect because UpdateSizersCore ignores border
    UpdateSizersCore( false, PositionFlags | wxALL );
 }
 
@@ -1086,6 +1145,7 @@ void ShuttleGuiBase::StartVerticalLay(int PositionFlags, int iProp)
       return;
    miSizerProp=iProp;
    mpSubSizer = std::make_unique<wxBoxSizer>( wxVERTICAL );
+   // PRL:  wxALL has no effect because UpdateSizersCore ignores border
    UpdateSizersCore( false, PositionFlags | wxALL );
 }
 
@@ -1101,6 +1161,7 @@ void ShuttleGuiBase::StartMultiColumn(int nCols, int PositionFlags)
    if( mShuttleMode != eIsCreating )
       return;
    mpSubSizer = std::make_unique<wxFlexGridSizer>( nCols );
+   // PRL:  wxALL has no effect because UpdateSizersCore ignores border
    UpdateSizersCore( false, PositionFlags | wxALL );
 }
 
@@ -1924,7 +1985,8 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
    const wxString &Prompt,
    const SettingSpec< int > &Setting,
    const wxArrayStringEx & Choices,
-   const std::vector<int> * pInternalChoices)
+   const std::vector<int> * pInternalChoices,
+   int iNoMatchSelector)
 {
    auto fn = [](int arg){ return wxString::Format( "%d", arg ); };
 
@@ -1936,7 +1998,11 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
       for ( int ii = 0; ii < Choices.size(); ++ii )
          InternalChoices.push_back( fn( ii ) );
 
+
    const auto Default = Setting.GetDefault();
+
+   miNoMatchSelector = iNoMatchSelector;
+
    long defaultIndex;
    if ( pInternalChoices )
       defaultIndex =  make_iterator_range( *pInternalChoices ).index( Default );
@@ -2342,7 +2408,7 @@ void ShuttleGuiBase::SetSizeHints( wxWindow *window, const wxArrayStringEx & ite
    maxw += 50;
 #endif
 
-   window->SetSizeHints( maxw, -1 );
+   window->SetMinSize( { maxw, -1 } );
 }
 
 void ShuttleGuiBase::SetSizeHints( const wxArrayStringEx & items )

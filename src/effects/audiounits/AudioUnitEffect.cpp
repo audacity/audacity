@@ -511,8 +511,8 @@ void AudioUnitEffectExportDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStyle(wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                        wxLC_NO_SORT_HEADER);
-            mList = S.AddListControlReportMode();
-            mList->InsertColumn(0, _("Preset"), wxLIST_FORMAT_LEFT);
+            mList = S
+               .AddListControlReportMode( { _("Preset") } );
          }
          S.EndStatic();
       }
@@ -684,9 +684,8 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStyle(wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                        wxLC_NO_SORT_HEADER);
-            mList = S.AddListControlReportMode();
-            mList->InsertColumn(0, _("Preset"), wxLIST_FORMAT_LEFT);
-            mList->InsertColumn(1, _("Location"), wxLIST_FORMAT_LEFT);
+            mList = S
+               .AddListControlReportMode( { _("Preset"), _("Location") } );
          }
          S.EndStatic();
       }

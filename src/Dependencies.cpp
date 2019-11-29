@@ -356,20 +356,19 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
 
       S.StartStatic(_("Project Dependencies"),1);
       {
-         mFileListCtrl = S.Id(FileListID).AddListControlReportMode();
-         mFileListCtrl->InsertColumn(0, _("Audio File"));
-         mFileListCtrl->SetColumnWidth(0, 220);
-         mFileListCtrl->InsertColumn(1, _("Disk Space"));
-         mFileListCtrl->SetColumnWidth(1, 120);
+         mFileListCtrl = S.Id(FileListID).AddListControlReportMode({
+            { _("Audio File"), wxLIST_FORMAT_LEFT, 220 },
+            { _("Disk Space"), wxLIST_FORMAT_LEFT, 120 }
+         });
          PopulateList();
 
          mCopySelectedFilesButton =
-            S.Id(CopySelectedFilesButtonID).AddButton(
-               _("Copy Selected Files"),
-               wxALIGN_LEFT);
+            S.Id(CopySelectedFilesButtonID)
+               .AddButton(
+                  _("Copy Selected Files"),
+                  wxALIGN_LEFT, true);
          mCopySelectedFilesButton->Enable(
             mFileListCtrl->GetSelectedItemCount() > 0);
-         mCopySelectedFilesButton->SetDefault();
          mCopySelectedFilesButton->SetFocus();
       }
       S.EndStatic();
@@ -396,22 +395,22 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
       {
          S.StartHorizontalLay(wxALIGN_LEFT,0);
          {
-            wxArrayStringEx choices{
-               /*i18n-hint: One of the choices of what you want Audacity to do when
-               * Audacity finds a project depends on another file.*/
-               _("Ask me") ,
-               _("Always copy all files (safest)") ,
-               _("Never copy any files") ,
-            };
             mFutureActionChoice =
                S.Id(FutureActionChoiceID).AddChoice(
                   _("Whenever a project depends on other files:"),
-                  choices,
+                  {
+                     /*i18n-hint: One of the choices of what you want Audacity to do when
+                     * Audacity finds a project depends on another file.*/
+                     _("Ask me") ,
+                     _("Always copy all files (safest)") ,
+                     _("Never copy any files") ,
+                  },
                   0 // "Ask me"
                );
          }
          S.EndHorizontalLay();
-      } else
+      }
+      else
       {
          mFutureActionChoice = NULL;
       }

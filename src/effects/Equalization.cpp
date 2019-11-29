@@ -924,9 +924,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                szrI = S.GetSizer();
 
-               auto interpolations =
-                  LocalizedStrings(kInterpStrings, nInterpolations);
-               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, interpolations, 0 );
+               mInterpChoice = S.Id(ID_Interp)
+                  .AddChoice( {},
+                     LocalizedStrings(kInterpStrings, nInterpolations), 0 );
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                mInterpChoice->SetAccessible(safenew WindowAccessible(mInterpChoice));
@@ -995,13 +995,15 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
                {
-                  wxArrayStringEx curves;
-                  for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
-                  {
-                     curves.push_back(mCurves[ i ].Name);
-                  }
-
-                  mCurve = S.Id(ID_Curve).AddChoice( {}, curves );
+                  mCurve = S.Id(ID_Curve)
+                     .AddChoice( {},
+                        [this]{
+                           wxArrayStringEx curves;
+                           for (const auto &curve : mCurves)
+                              curves.push_back(curve.Name);
+                           return curves;
+                        }()
+                     );
                   mCurve->SetName(_("Select Curve"));
                }
                S.EndHorizontalLay();
@@ -1041,16 +1043,34 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       {
          S.AddUnits(_("&Processing: "));
 
-         mMathProcessingType[0] = S.Id(ID_DefaultMath).
-            AddRadioButton(_("D&efault"));
-         mMathProcessingType[1] = S.Id(ID_SSE).
-            AddRadioButtonToGroup(_("&SSE"));
-         mMathProcessingType[2] = S.Id(ID_SSEThreaded).
-            AddRadioButtonToGroup(_("SSE &Threaded"));
-         mMathProcessingType[3] = S.Id(ID_AVX).
-            AddRadioButtonToGroup(_("A&VX"));
-         mMathProcessingType[4] = S.Id(ID_AVXThreaded).
-            AddRadioButtonToGroup(_("AV&X Threaded"));
+         // update the control state
+         int mathPath = EffectEqualization48x::GetMathPath();
+         int value =
+            (mathPath & MATH_FUNCTION_SSE)
+            ? (mathPath & MATH_FUNCTION_THREADED)
+               ? 2
+               : 1
+            : false // (mathPath & MATH_FUNCTION_AVX) // not implemented
+               ? (mathPath & MATH_FUNCTION_THREADED)
+                  ? 4
+                  : 3
+               : 0;
+
+         mMathProcessingType[0] = S.Id(ID_DefaultMath)
+            .AddRadioButton(_("D&efault"),
+                            0, value);
+         mMathProcessingType[1] = S.Id(ID_SSE)
+            .AddRadioButtonToGroup(_("&SSE"),
+                                   1, value);
+         mMathProcessingType[2] = S.Id(ID_SSEThreaded)
+            .AddRadioButtonToGroup(_("SSE &Threaded"),
+                                   2, value);
+         mMathProcessingType[3] = S.Id(ID_AVX)
+            .AddRadioButtonToGroup(_("A&VX"),
+                                   3, value);
+         mMathProcessingType[4] = S.Id(ID_AVXThreaded)
+            .AddRadioButtonToGroup(_("AV&X Threaded"),
+                                   4, value);
 
          if (!EffectEqualization48x::GetMathCaps()->SSE)
          {
@@ -1062,21 +1082,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             mMathProcessingType[3]->Disable();
             mMathProcessingType[4]->Disable();
          }
-         // update the control state
-         mMathProcessingType[0]->SetValue(true);
-         int mathPath=EffectEqualization48x::GetMathPath();
-         if (mathPath&MATH_FUNCTION_SSE)
-         {
-            mMathProcessingType[1]->SetValue(true);
-            if (mathPath&MATH_FUNCTION_THREADED)
-               mMathProcessingType[2]->SetValue(true);
-         }
-         if (false) //mathPath&MATH_FUNCTION_AVX) { not implemented
-         {
-            mMathProcessingType[3]->SetValue(true);
-            if (mathPath&MATH_FUNCTION_THREADED)
-               mMathProcessingType[4]->SetValue(true);
-         }
+
          S.Id(ID_Bench).AddButton(_("&Bench"));
       }
       S.EndHorizontalLay();
@@ -1104,14 +1110,15 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       //S.GetParent()->Layout();
       wxSize sz = szrV->GetMinSize();
       sz += wxSize( 30, 0);
-      mUIParent->SetSizeHints(sz);
+      mUIParent->SetMinSize(sz);
    }
    else{
       mPanel->Show( true );
       szrV->Show(szr1, true);
-      mUIParent->SetSizeHints(mUIParent->GetBestSize());
+      mUIParent->SetMinSize(mUIParent->GetBestSize());
    }
    ForceRecalc();
+
    return;
 }
 
@@ -2304,7 +2311,7 @@ void EffectEqualization::UpdateCurves()
    
    // Allow the control to resize
    if( mCurve ) 
-      mCurve->SetSizeHints(-1, -1);
+      mCurve->SetMinSize({-1, -1});
 
    // Set initial curve
    setCurve( mCurveName );
@@ -3329,8 +3336,10 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartStatic(_("&Curves"), 1);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
-         mList = S.Id(CurvesListID).AddListControlReportMode();
-         mList->InsertColumn(0, _("Curve Name"), wxLIST_FORMAT_RIGHT);
+         mList = S.Id(CurvesListID)
+            .AddListControlReportMode({
+               { _("Curve Name"), wxLIST_FORMAT_RIGHT }
+            });
       }
       S.EndStatic();
       S.StartVerticalLay(0);

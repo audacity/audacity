@@ -617,7 +617,6 @@ PrefsDialog::PrefsDialog
    S.EndVerticalLay();
 
    S.AddStandardButtons(eOkButton | eCancelButton | ePreviewButton | eHelpButton);
-   static_cast<wxButton*>(wxWindow::FindWindowById(wxID_OK, this))->SetDefault();
 
    if (mUniquePage && !mUniquePage->ShowsPreviewButton()) {
       wxWindow *const previewButton =
@@ -630,7 +629,7 @@ PrefsDialog::PrefsDialog
       mCategories->GetTreeCtrl()->EnsureVisible(mCategories->GetTreeCtrl()->GetRootItem());
 #endif
 
-//   mCategories->SetSizeHints(-1, -1, 790, 600);  // 790 = 800 - (border * 2)
+//   mCategories->SetMaxSize({ 790, 600 });  // 790 = 800 - (border * 2)
    Layout();
    Fit();
    wxSize sz = GetSize();

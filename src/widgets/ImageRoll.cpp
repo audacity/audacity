@@ -435,8 +435,8 @@ ImageRollPanel::ImageRollPanel(wxWindow *parent,
    //mImageRoll(imgRoll),
    mLogicalFunction(wxCOPY)
 {
-//   SetSizeHints(mImageRoll.GetMinSize(),
-//                mImageRoll.GetMaxSize());
+//   SetMinSize(mImageRoll.GetMinSize());
+//   SetMaxSize(mImageRoll.GetMaxSize());
 }
 
 void ImageRollPanel::SetLogicalFunction(int /*wxRasterOperationMode*/ func)

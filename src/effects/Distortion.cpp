@@ -372,8 +372,9 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(4, wxCENTER);
       {
-         auto tableTypes = LocalizedStrings(kTableTypeStrings, nTableTypes);
-         mTypeChoiceCtrl = S.Id(ID_Type).AddChoice(_("Distortion type:"), tableTypes);
+         mTypeChoiceCtrl = S.Id(ID_Type)
+            .AddChoice(_("Distortion type:"),
+               LocalizedStrings(kTableTypeStrings, nTableTypes));
          mTypeChoiceCtrl->SetValidator(wxGenericValidator(&mParams.mTableChoiceIndx));
          S.SetSizeHints(-1, -1);
 
@@ -401,9 +402,10 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             mThresholdT->SetValidator(vldThreshold);
 
             S.SetStyle(wxSL_HORIZONTAL);
-            double maxLin = DB_TO_LINEAR(MAX_Threshold_dB) * SCL_Threshold_dB;
-            double minLin = DB_TO_LINEAR(MIN_Threshold_dB) * SCL_Threshold_dB;
-            mThresholdS = S.Id(ID_Threshold).AddSlider( {}, 0, maxLin, minLin);
+            mThresholdS = S.Id(ID_Threshold)
+               .AddSlider( {}, 0,
+                  DB_TO_LINEAR(MAX_Threshold_dB) * SCL_Threshold_dB,
+                  DB_TO_LINEAR(MIN_Threshold_dB) * SCL_Threshold_dB);
             mThresholdS->SetName(defaultLabel(0));
             S.AddSpace(20, 0);
 

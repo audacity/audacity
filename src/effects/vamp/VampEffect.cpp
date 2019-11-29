@@ -558,22 +558,19 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
             if (!programs.empty())
             {
-               wxString currentProgram =  wxString::FromUTF8(mPlugin->getCurrentProgram().c_str());
-
-               wxArrayStringEx choices;
-               for (size_t i = 0, cnt = programs.size(); i < cnt; i++)
-               {
-                  choices.push_back(wxString::FromUTF8(programs[i].c_str()));
-               }
-
                S.AddPrompt(_("Program"));
 
                S.Id(ID_Program);
-               mProgram = S.AddChoice(
-                  {},
-                  choices,
-                  choices.Index( currentProgram )
-               );
+               mProgram = S
+                  .AddChoice( {},
+                     [&]{
+                        wxArrayStringEx choices;
+                        for (const auto &program : programs)
+                           choices.push_back(wxString::FromUTF8(program.c_str()));
+                        return choices;
+                     }(),
+                     wxString::FromUTF8(mPlugin->getCurrentProgram().c_str())
+                  );
                mProgram->SetName(_("Program"));
                mProgram->SetSizeHints(-1, -1);
                wxSizer *s = mProgram->GetContainingSizer();

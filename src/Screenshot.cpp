@@ -326,12 +326,12 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStretchyCol(1);
 
-            wxString dir =
-               gPrefs->Read(wxT("/ScreenshotPath"),
-                            wxFileName::GetHomeDir());
             mDirectoryTextBox =
-               S.Id(IdDirectory).AddTextBox(_("Save images to:"),
-                                            dir, 30);
+            S.Id(IdDirectory).AddTextBox(
+               _("Save images to:"),
+               gPrefs->Read(wxT("/ScreenshotPath"), wxFileName::GetHomeDir()),
+               30
+            );
             S.Id(IdDirChoose).AddButton(_("Choose..."));
          }
          S.EndMultiColumn();

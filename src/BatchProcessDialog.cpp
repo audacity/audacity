@@ -137,8 +137,8 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
    {
       S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                   wxLC_SINGLE_SEL);
-      mMacros = S.Id(MacrosListID).Prop(1).AddListControlReportMode();
-      mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
+      mMacros = S.Id(MacrosListID).Prop(1)
+         .AddListControlReportMode( { _("Macro") } );
    }
    S.EndStatic();
 
@@ -410,10 +410,10 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                     wxLC_SINGLE_SEL);
-         fileList = S.Id(CommandsListID).AddListControlReportMode();
+         fileList = S.Id(CommandsListID)
+            .AddListControlReportMode( { _("File") } );
          // AssignImageList takes ownership
          fileList->AssignImageList(imageList.release(), wxIMAGE_LIST_SMALL);
-         fileList->InsertColumn(0, _("File"), wxLIST_FORMAT_LEFT);
       }
       S.EndStatic();
 
@@ -618,9 +618,9 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_SINGLE_SEL |
                         wxLC_EDIT_LABELS);
-            mMacros = S.Id(MacrosListID).Prop(1).AddListControlReportMode();
-            // i18n-hint: This is the heading for a column in the edit macros dialog
-            mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
+            mMacros = S.Id(MacrosListID).Prop(1)
+               // i18n-hint: This is the heading for a column in the edit macros dialog
+               .AddListControlReportMode( { _("Macro") } );
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {
                S.Id(AddButtonID).AddButton(_("&New"));
@@ -646,16 +646,13 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
             
             S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                         wxLC_SINGLE_SEL);
-            mList = S.Id(CommandsListID).AddListControlReportMode();
-
-            //A dummy first column, which is then deleted, is a workaround - under Windows the first column
-            //can't be right aligned.
-            mList->InsertColumn(0, wxT(""), wxLIST_FORMAT_LEFT);
-            /* i18n-hint: This is the number of the command in the list */
-            mList->InsertColumn(ItemNumberColumn + 1, _("Num"), wxLIST_FORMAT_RIGHT);
-            mList->InsertColumn(ActionColumn + 1, _("Command  "), wxLIST_FORMAT_RIGHT);
-            mList->InsertColumn(ParamsColumn + 1, _("Parameters"), wxLIST_FORMAT_LEFT);
-            mList->DeleteColumn(0);
+            mList = S.Id(CommandsListID)
+               .AddListControlReportMode({
+                  /* i18n-hint: This is the number of the command in the list */
+                  { _("Num"), wxLIST_FORMAT_RIGHT },
+                  { _("Command  "), wxLIST_FORMAT_RIGHT },
+                  { _("Parameters"), wxLIST_FORMAT_LEFT }
+                });
 
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {

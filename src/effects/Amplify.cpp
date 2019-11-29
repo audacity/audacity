@@ -207,6 +207,8 @@ void EffectAmplify::Preview(bool dryOnly)
 
 void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
 {
+   enum{ precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
+
    if (IsBatchProcessing())
    {
       mPeak = 1.0;
@@ -228,11 +230,10 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
 
    S.StartVerticalLay(0);
    {
-      int precission = 3; // allow (a generous) 3 decimal  places for Amplification (dB)
       // Amplitude
       S.StartMultiColumn(2, wxCENTER);
       {
-         FloatingPointValidator<double> vldAmp(precission, &mAmp, NumValidatorStyle::ONE_TRAILING_ZERO);
+         FloatingPointValidator<double> vldAmp(precision, &mAmp, NumValidatorStyle::ONE_TRAILING_ZERO);
          vldAmp.SetRange(MIN_Amp, MAX_Amp);
          mAmpT = S.Id(ID_Amp).AddTextBox(_("Amplification (dB):"), wxT(""), 12);
          mAmpT->SetValidator(vldAmp);
@@ -252,13 +253,13 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2, wxCENTER);
       {
          // One extra decimal place so that rounding is visible to user (see: bug 958)
-         FloatingPointValidator<double> vldNewPeak(precission + 1, &mNewPeak, NumValidatorStyle::ONE_TRAILING_ZERO);
+         FloatingPointValidator<double> vldNewPeak(precision + 1, &mNewPeak, NumValidatorStyle::ONE_TRAILING_ZERO);
          double minAmp = MIN_Amp + LINEAR_TO_DB(mPeak);
          double maxAmp = MAX_Amp + LINEAR_TO_DB(mPeak);
 
          // min and max need same precision as what we're validating (bug 963)
-         minAmp = Internat::CompatibleToDouble(Internat::ToString(minAmp, precission +1));
-         maxAmp = Internat::CompatibleToDouble(Internat::ToString(maxAmp, precission +1));
+         minAmp = Internat::CompatibleToDouble(Internat::ToString(minAmp, precision +1));
+         maxAmp = Internat::CompatibleToDouble(Internat::ToString(maxAmp, precision +1));
 
          vldNewPeak.SetRange(minAmp, maxAmp);
          mNewPeakT = S.Id(ID_Peak).AddTextBox(_("New Peak Amplitude (dB):"), wxT(""), 12);

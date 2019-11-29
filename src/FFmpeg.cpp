@@ -465,19 +465,17 @@ public:
 
    void PopulateOrExchange(ShuttleGui & S)
    {
-      wxString text;
-
       S.SetBorder(10);
       S.StartVerticalLay(true);
       {
-         text.Printf(_("Audacity needs the file '%s' to import and export audio via FFmpeg."), mName);
-         S.AddTitle(text);
+         S.AddTitle( wxString::Format(
+            _("Audacity needs the file '%s' to import and export audio via FFmpeg."),
+               mName));
 
          S.SetBorder(3);
          S.StartHorizontalLay(wxALIGN_LEFT, true);
          {
-            text.Printf(_("Location of '%s':"), mName);
-            S.AddTitle(text);
+            S.AddTitle( wxString::Format(_("Location of '%s':"), mName) );
          }
          S.EndHorizontalLay();
 
@@ -485,8 +483,8 @@ public:
          S.SetStretchyCol(0);
          {
             if (mLibPath.GetFullPath().empty()) {
-               text.Printf(_("To find '%s', click here -->"), mName);
-               mPathText = S.AddTextBox( {}, text, 0);
+               mPathText = S.AddTextBox( {},
+                  wxString::Format(_("To find '%s', click here -->"), mName), 0);
             }
             else {
                mPathText = S.AddTextBox( {}, mLibPath.GetFullPath(), 0);
@@ -586,9 +584,9 @@ To use FFmpeg import, go to Edit > Preferences > Libraries\n\
 to download or locate the FFmpeg libraries."
       ));
 
-      int dontShowDlg = 0;
-      gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
-      mDontShow = S.AddCheckBox(_("Do not show this warning again"),dontShowDlg);
+      mDontShow = S
+         .AddCheckBox(_("Do not show this warning again"),
+            gPrefs->ReadBool(wxT("/FFmpeg/NotFoundDontShow"), false) );
 
       S.AddStandardButtons(eOkButton);
    }

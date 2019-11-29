@@ -83,12 +83,12 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    {
       S.StartStatic(_("&Manage History"), 1);
       {
-         mList = S.AddListControlReportMode();
-         // Do this BEFORE inserting the columns.  On the Mac at least, the
-         // columns are deleted and later InsertItem()s will cause Audacity to crash.
-         mList->SetSingleStyle(wxLC_SINGLE_SEL);
-         mList->InsertColumn(0, _("Action"), wxLIST_FORMAT_LEFT, 260);
-         mList->InsertColumn(1, _("Reclaimable Space"), wxLIST_FORMAT_LEFT, 125);
+         mList = S
+            .AddListControlReportMode(
+               { { _("Action"), wxLIST_FORMAT_LEFT, 260 },
+                 { _("Reclaimable Space"), wxLIST_FORMAT_LEFT, 125 } },
+               wxLC_SINGLE_SEL
+            );
 
          //Assign rather than set the image list, so that it is deleted later.
          // AssignImageList takes ownership
@@ -135,7 +135,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
       S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
          S.SetBorder(10);
-         S.Id(wxID_OK).AddButton(_("&OK"))->SetDefault();
+         S.Id(wxID_OK).AddButton(_("&OK"), wxALIGN_CENTER, true);
       }
       S.EndHorizontalLay();
    }

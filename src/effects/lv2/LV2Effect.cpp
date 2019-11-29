@@ -1829,10 +1829,10 @@ bool LV2Effect::BuildPlain()
    // Try to give the window a sensible default/minimum size
    wxSize sz1 = innerSizer->GetMinSize();
    wxSize sz2 = mParent->GetMinSize();
-   w->SetSizeHints(wxSize(-1, wxMin(sz1.y, sz2.y)));
+   w->SetMinSize( { -1, std::min(sz1.y, sz2.y) } );
 
    // And let the parent reduce to the NEW minimum if possible
-   mParent->SetSizeHints(w->GetMinSize());
+   mParent->SetMinSize(w->GetMinSize());
 
    TransferDataToWindow();
 

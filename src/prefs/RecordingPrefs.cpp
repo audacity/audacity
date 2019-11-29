@@ -133,12 +133,11 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.SetStretchyCol(1);
 
-         int dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
          S.TieSlider(_("Le&vel (dB):"),
                      {wxT("/AudioIO/SilenceLevel"),
                       -50},
                      0,
-                     -dBRange);
+                     -gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE));
       }
       S.EndMultiColumn();
    }
