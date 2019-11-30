@@ -291,7 +291,7 @@ public:
    virtual wxChoice * TieNumberAsChoice(
       const wxString &Prompt,
       const SettingSpec< int > &Setting,
-      const wxArrayStringEx & Choices,
+      const TranslatableStrings & Choices,
       const std::vector<int> * pInternalChoices = nullptr,
       int iNoMatchSelector = 0 );
 

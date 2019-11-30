@@ -242,7 +242,7 @@ void FinishPreferences()
 //////////
 EnumValueSymbols::EnumValueSymbols(
    ByColumns_t,
-   const wxArrayStringEx &msgids,
+   const TranslatableStrings &msgids,
    wxArrayStringEx internals
 )
    : mInternals( std::move( internals ) )

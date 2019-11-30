@@ -46,7 +46,7 @@ class QualityPrefs final : public PrefsPanel
    void GetNamesAndLabels();
    void OnSampleRateChoice(wxCommandEvent & e);
 
-   wxArrayStringEx mSampleRateNames;
+   TranslatableStrings mSampleRateNames;
    std::vector<int> mSampleRateLabels;
 
    wxChoice *mSampleRates;

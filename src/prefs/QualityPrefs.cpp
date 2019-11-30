@@ -124,7 +124,13 @@ void QualityPrefs::GetNamesAndLabels()
    for (int i = 0; i < AudioIOBase::NumStandardRates; i++) {
       int iRate = AudioIOBase::StandardRates[i];
       mSampleRateLabels.push_back(iRate);
-      mSampleRateNames.push_back(wxString::Format(wxT("%i Hz"), iRate));
+      mSampleRateNames.push_back(
+         // Composing strings for the choice control
+         // Note: the format string is localized, then substituted,
+         // and then the result is treated as if it were a msgid
+         // but really isn't in the translation catalog
+         /* i18n-hint Hertz, a unit of frequency */
+         TranslatableString{ wxString::Format(_("%i Hz"), iRate) } );
    }
 
    mSampleRateNames.push_back(XO("Other..."));
@@ -157,7 +163,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                                        &mSampleRateLabels,
                                        // If the value in Prefs isn't in the list, then we want
                                        // the last item, 'Other...' to be shown.
-                                       mSampleRateNames.GetCount() - 1
+                                       mSampleRateNames.size() - 1
                                        );
 
             // Now do the edit box...

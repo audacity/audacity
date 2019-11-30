@@ -120,7 +120,7 @@ void MidiIOPrefs::GetNamesAndLabels() {
       if (info->output || info->input) { //should always happen
          wxString name = wxSafeConvertMB2WX(info->interf);
          if ( ! make_iterator_range( mHostNames ).contains( name ) ) {
-            mHostNames.push_back(name);
+            mHostNames.push_back( TranslatableString{ name } );
             mHostLabels.push_back(name);
          }
       }

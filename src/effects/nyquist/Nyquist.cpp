@@ -1573,7 +1573,7 @@ std::vector<EnumValueSymbol> NyquistEffect::ParseChoice(const wxString & text)
          if (extra.empty())
             results.push_back( { label } );
          else
-            results.push_back( { extra, label } );
+            results.push_back( { extra, TranslatableString{ label } } );
       }
    }
    else {

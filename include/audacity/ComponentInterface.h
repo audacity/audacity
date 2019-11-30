@@ -73,14 +73,15 @@ public:
 
    // Two-argument version distinguishes internal from translatable string
    // such as when the first squeezes spaces out
-   ComponentInterfaceSymbol( const wxString &internal, const wxString &msgid )
+   ComponentInterfaceSymbol( const wxString &internal,
+                         const TranslatableString &msgid )
       : mInternal{ internal }
       // Do not permit non-empty msgid with empty internal
-      , mMsgid{ internal.empty() ? wxString{} : msgid }
+      , mMsgid{ internal.empty() ? TranslatableString{} : msgid }
    {}
 
    const wxString &Internal() const { return mInternal; }
-   const wxString &Msgid() const { return mMsgid; }
+   const TranslatableString &Msgid() const { return mMsgid; }
    const wxString &Translation() const
       { return GetCustomTranslation( mMsgid ); }
 
@@ -96,7 +97,7 @@ public:
 
 private:
    wxString mInternal;
-   wxString mMsgid;
+   TranslatableString mMsgid;
 };
 
 

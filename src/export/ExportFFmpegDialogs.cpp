@@ -141,7 +141,7 @@ static const wxChar *FFmpegExportCtrlIDNames[] = {
 namespace
 {
 
-const wxArrayStringEx AC3BitRateNames{
+const TranslatableStrings AC3BitRateNames{
    // i18n-hint kbps abbreviates "thousands of bits per second"
    XO("32 kbps"),
    XO("40 kbps"),
@@ -314,7 +314,7 @@ namespace {
 
 /// Bit Rates supported by libAMR-NB encoder
 /// Sample Rate is always 8 kHz
-const wxArrayStringEx AMRNBBitRateNames
+const TranslatableStrings AMRNBBitRateNames
 {
    // i18n-hint kbps abbreviates "thousands of bits per second"
    XO("4.75 kbps"),
@@ -409,7 +409,7 @@ const int ExportFFmpegWMAOptions::iWMASampleRates[] =
 namespace {
 
 /// Bit Rates supported by WMA encoder. Setting bit rate to other values will not result in different file size.
-const wxArrayStringEx WMABitRateNames
+const TranslatableStrings WMABitRateNames
 {
    // i18n-hint kbps abbreviates "thousands of bits per second"
    XO("24 kbps"),
@@ -1430,7 +1430,7 @@ ApplicableFor ExportFFmpegOptions::apptable[] =
 namespace {
 
 /// Prediction order method - names.
-const wxArrayStringEx PredictionOrderMethodNames {
+const TranslatableStrings PredictionOrderMethodNames {
    XO("Estimate"),
    XO("2-level"),
    XO("4-level"),

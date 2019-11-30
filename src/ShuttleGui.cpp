@@ -1981,7 +1981,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
 wxChoice * ShuttleGuiBase::TieNumberAsChoice(
    const wxString &Prompt,
    const SettingSpec< int > &Setting,
-   const wxArrayStringEx & Choices,
+   const TranslatableStrings & Choices,
    const std::vector<int> * pInternalChoices,
    int iNoMatchSelector)
 {
