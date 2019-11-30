@@ -186,7 +186,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    }
 
    mFileName = fName;
-   mName = mFileName.GetName();
+   mName = TranslatableString{ mFileName.GetName() };
    mFileModified = mFileName.GetModificationTime();
    ParseFile();
 
@@ -228,12 +228,15 @@ VendorSymbol NyquistEffect::GetVendor()
 
 wxString NyquistEffect::GetVersion()
 {
-   return mReleaseVersion;
+   // Are Nyquist version strings really supposed to be translatable?
+   // See commit a06e561 which used XO for at least one of them
+   return mReleaseVersion.Translation();
 }
 
 wxString NyquistEffect::GetDescription()
 {
-   return mCopyright;
+   // This should be a translated string, consistent with other effects
+   return mCopyright.Translation();
 }
 
 wxString NyquistEffect::ManualPage()
@@ -924,7 +927,7 @@ finish:
 
    if (mDebug && !mRedirectOutput) {
       NyquistOutputDialog dlog(mUIParent, -1,
-                               mName,
+                               mName.Translation(),
                                _("Debug Output: "),
                                mDebugOutput);
       dlog.CentreOnParent();
@@ -1333,7 +1336,7 @@ bool NyquistEffect::ProcessOne()
    // If we're not showing debug window, log errors and warnings:
    if (!mDebugOutput.empty() && !mDebug && !mTrace) {
       /* i18n-hint: An effect "returned" a message.*/
-      wxLogMessage(_("\'%s\' returned:\n%s"), mName, mDebugOutput);
+      wxLogMessage(_("\'%s\' returned:\n%s"), mName.Translation(), mDebugOutput);
    }
 
    // Audacity has no idea how long Nyquist processing will take, but
@@ -1368,8 +1371,10 @@ bool NyquistEffect::ProcessOne()
       // Show error in debug window if trace enabled, otherwise log.
       if (mTrace) {
          /* i18n-hint: "%s" is replaced by name of plug-in.*/
-         mDebugOutput = wxString::Format(_("nyx_error returned from %s.\n"),
-                                         mName.empty()? _("plug-in") : mName) + mDebugOutput;
+         mDebugOutput = wxString::Format(
+            _("nyx_error returned from %s.\n"),
+            mName.empty()? _("plug-in") : mName.Translation()
+         ) + mDebugOutput;
          mDebug = true;
       }
       else {
@@ -1878,14 +1883,15 @@ bool NyquistEffect::Parse(
    }
 
    if (len >= 2 && tokens[0] == wxT("name")) {
-      mName = UnQuote(tokens[1]);
+      auto name = UnQuote(tokens[1]);
       // Strip ... from name if it's present, perhaps in third party plug-ins
       // Menu system puts ... back if there are any controls
       // This redundant naming convention must NOT be followed for
       // shipped Nyquist effects with internationalization.  Else the msgid
       // later looked up will lack the ... and will not be found.
-      if (mName.EndsWith(wxT("...")))
-         mName = mName.RemoveLast(3);
+      if (name.EndsWith(wxT("...")))
+         name = name.RemoveLast(3);
+      mName = TranslatableString{ name };
       return true;
    }
 

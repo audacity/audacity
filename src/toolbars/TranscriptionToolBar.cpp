@@ -347,8 +347,8 @@ void TranscriptionToolBar::RegenerateTooltips()
 
    for (const auto &entry : table) {
       TranslatedInternalString commands[] = {
-         { entry.commandName,  wxGetTranslation(entry.untranslatedLabel)  },
-         { entry.commandName2, wxGetTranslation(entry.untranslatedLabel2) },
+         { entry.commandName,  entry.untranslatedLabel.Translation()  },
+         { entry.commandName2, entry.untranslatedLabel2.Translation() },
       };
       ToolBar::SetButtonToolTip( mProject,
          *mButtons[entry.tool], commands, 2u );

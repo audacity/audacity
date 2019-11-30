@@ -119,7 +119,7 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
       }
    }
    else {
-      sname = mLangNames[sndx];
+      sname = mLangNames[sndx].Translation();
    }
 
    if (mLang.Left(2) != slang.Left(2)) {

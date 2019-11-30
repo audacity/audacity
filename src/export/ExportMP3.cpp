@@ -536,7 +536,7 @@ void ExportMP3Options::LoadNames(const TranslatableStrings &names)
 {
    mRate->Clear();
    for (const auto &name : names)
-      mRate->Append( GetCustomTranslation( name ) );
+      mRate->Append( name.Translation() );
 }
 
 //----------------------------------------------------------------------------

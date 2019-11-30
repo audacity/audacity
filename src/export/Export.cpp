@@ -160,7 +160,7 @@ TranslatableString ExportPlugin::GetUntranslatedDescription(int index)
 
 wxString ExportPlugin::GetTranslatedDescription(int index)
 {
-   return GetCustomTranslation( GetUntranslatedDescription( index ) );
+   return GetUntranslatedDescription( index ).Translation();
 }
 
 FileExtension ExportPlugin::GetExtension(int index)

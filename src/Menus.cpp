@@ -738,7 +738,7 @@ void MenuManager::TellUserWhyDisallowed(
       return;
 
    // Message is already translated but title is not yet
-   auto title = ::GetCustomTranslation( untranslatedTitle );
+   auto title = untranslatedTitle.Translation();
 
    // Does not have the warning icon...
    ShowErrorDialog(

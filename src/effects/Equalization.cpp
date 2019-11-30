@@ -428,7 +428,7 @@ bool EffectEqualization::LoadFactoryDefaults()
 
 static const struct
 {
-   const wxChar *name;
+   const TranslatableString name;
    const wxChar *values;
 }
 FactoryPresets[] =
@@ -463,7 +463,7 @@ RegistryPaths EffectEqualization::GetFactoryPresets()
 
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {
-      names.push_back(wxGetTranslation(FactoryPresets[i].name));
+      names.push_back(FactoryPresets[i].name.Translation());
    }
 
    return names;

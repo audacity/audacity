@@ -213,8 +213,8 @@ private:
    wxString          mInitError;
    wxString          mInputCmd; // history: exactly what the user typed
    wxString          mCmd;      // the command to be processed
-   wxString          mName;   ///< Name of the Effect (untranslated)
-   wxString          mPromptName; // If a prompt, we need to remember original name.
+   TranslatableString mName;   ///< Name of the Effect (untranslated)
+   TranslatableString mPromptName; // If a prompt, we need to remember original name.
    TranslatableString mAction;
    TranslatableString mInfo;
    TranslatableString mAuthor;

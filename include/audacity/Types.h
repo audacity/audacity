@@ -299,7 +299,8 @@ using CommandIDs = std::vector<CommandID>;
 // the user-visible translation.  The msgid should be used only in unusual cases
 // and the translation more often
 //
-class TranslatableString : public wxString {
+// Implicit conversions to and from wxString are intentionally disabled
+class TranslatableString : private wxString {
 public:
    TranslatableString() {}
 

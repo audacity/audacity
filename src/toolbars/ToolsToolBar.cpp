@@ -154,7 +154,7 @@ void ToolsToolBar::RegenerateTooltips()
 
    for (const auto &entry : table) {
       TranslatedInternalString command{
-         entry.commandName, wxGetTranslation(entry.untranslatedLabel) };
+         entry.commandName, entry.untranslatedLabel.Translation() };
       ToolBar::SetButtonToolTip( mProject,
          *mTool[entry.tool], &command, 1u );
    }

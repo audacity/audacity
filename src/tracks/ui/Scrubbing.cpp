@@ -267,7 +267,7 @@ namespace {
       bool seek;
       bool (Scrubber::*StatusTest)() const;
 
-      const wxString &GetStatus() const { return status; }
+      const TranslatableString &GetStatus() const { return status; }
    } menuItems[] = {
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
          "Scrubbing" is variable-speed playback, ...
@@ -1000,11 +1000,11 @@ registeredStatusWidthFunction{
          std::vector< wxString > strings;
          // Note that Scrubbing + Paused is not allowed.
          for (const auto &item : menuItems)
-            strings.push_back( GetCustomTranslation( item.GetStatus() ) );
+            strings.push_back( item.GetStatus().Translation() );
          strings.push_back(
-            GetCustomTranslation( sPlayAtSpeedStatus ) +
+            sPlayAtSpeedStatus.Translation() +
             wxT(" ") +
-            GetCustomTranslation( XO("Paused") ) +
+            XO("Paused").Translation() +
             wxT(".")
          );
          // added constant needed because xMax isn't large enough for some reason, plus some space.
@@ -1032,7 +1032,8 @@ MenuTable::BaseItemPtr Scrubber::Menu()
 
    MenuTable::BaseItemPtrs ptrs;
    for (const auto &item : menuItems) {
-      ptrs.push_back( MenuTable::Command( item.name, wxGetTranslation(item.label),
+      ptrs.push_back( MenuTable::Command(
+          item.name, item.label.Translation(),
           // No menu items yet have dialogs
           false,
           findme, static_cast<CommandFunctorPointer>(item.memFn),
@@ -1055,7 +1056,7 @@ void Scrubber::PopulatePopupMenu(wxMenu &menu)
    for (const auto &item : menuItems) {
       if (cm.GetEnabled(item.name)) {
          auto test = item.StatusTest;
-         menu.Append(id, wxGetTranslation(item.label), wxString{},
+         menu.Append(id, item.label.Translation(), wxString{},
                      test ? wxITEM_CHECK : wxITEM_NORMAL);
          if(test && (this->*test)())
             menu.FindItem(id)->Check();

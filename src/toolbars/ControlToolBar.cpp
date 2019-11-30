@@ -687,14 +687,14 @@ registeredStatusWidthFunction{
       -> ProjectStatus::StatusWidthResult
    {
       if ( field == stateStatusBarField ) {
-         const auto pauseString = wxT(" ") + GetCustomTranslation(sStatePause);
+         const auto pauseString = wxT(" ") + sStatePause.Translation();
 
          std::vector<wxString> strings;
          for ( auto pString :
             { &sStatePlay, &sStateStop, &sStateRecord } )
          {
             strings.push_back(
-               GetCustomTranslation(*pString) + pauseString + wxT(".") );
+               pString->Translation() + pauseString + wxT(".") );
          }
 
          // added constant needed because xMax isn't large enough for some reason, plus some space.
@@ -716,16 +716,16 @@ wxString ControlToolBar::StateForStatusBar()
    if (!scrubState.empty())
       state = scrubState.Translation();
    else if (mPlay->IsDown())
-      state = wxGetTranslation(sStatePlay);
+      state = sStatePlay.Translation();
    else if (projectAudioManager.Recording())
-      state = wxGetTranslation(sStateRecord);
+      state = sStateRecord.Translation();
    else
-      state = wxGetTranslation(sStateStop);
+      state = sStateStop.Translation();
 
    if (mPause->IsDown())
    {
       state.Append(wxT(" "));
-      state.Append(wxGetTranslation(sStatePause));
+      state.Append(sStatePause.Translation());
    }
 
    state.Append(wxT("."));

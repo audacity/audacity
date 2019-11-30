@@ -293,7 +293,10 @@ void GetLanguages(
       reverseHash[tempNames[j]] = tempCodes[j];
    }
 
-   std::sort( tempNames.begin(), tempNames.end() );
+   std::sort( tempNames.begin(), tempNames.end(),
+      []( const TranslatableString &a, const TranslatableString &b ){
+         return a.Translation() < b.Translation();
+      } );
 
    // Add system language
    langNames.push_back(XO("System"));

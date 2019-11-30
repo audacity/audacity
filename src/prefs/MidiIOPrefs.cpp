@@ -119,7 +119,7 @@ void MidiIOPrefs::GetNamesAndLabels() {
       const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
       if (info->output || info->input) { //should always happen
          wxString name = wxSafeConvertMB2WX(info->interf);
-         if ( ! make_iterator_range( mHostNames ).contains( name ) ) {
+         if (!make_iterator_range(mHostNames).contains(TranslatableString{name})) {
             mHostNames.push_back( TranslatableString{ name } );
             mHostLabels.push_back(name);
          }
@@ -194,7 +194,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
    wxString itemAtIndex;
    int index = mHost->GetCurrentSelection();
    if (index >= 0 && index < (int)mHostNames.size())
-      itemAtIndex = mHostNames[index];
+      itemAtIndex = mHostLabels[index];
    int nDevices = Pm_CountDevices();
 
    if (nDevices == 0) {

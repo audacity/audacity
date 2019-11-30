@@ -300,16 +300,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 
    wxArrayStringEx vinylChoices;
    for (int i = 0; i < nVinyl; i++)
-   {
-      if (i == kVinyl_NA)
-      {
-         vinylChoices.push_back(wxGetTranslation(kVinylStrings[i]));
-      }
-      else
-      {
-         vinylChoices.push_back(kVinylStrings[i]);
-      }
-   }
+      vinylChoices.push_back(kVinylStrings[i].Translation());
 
    S.SetBorder(5);
 

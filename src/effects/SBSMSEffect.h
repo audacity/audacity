@@ -37,7 +37,7 @@ public:
    static double getRate(double rateStart, double rateEnd, SlideType slideType, double t);
 
 protected:
-   wxString mProxyEffectName { XO("SBSMS Time / Pitch Stretch") };
+   TranslatableString mProxyEffectName { XO("SBSMS Time / Pitch Stretch") };
    // This supplies the abstract virtual function, but in fact this symbol
    // does not get used:  this class is either a temporary helper, or else
    // GetSymbol() is overridden further in derived classes.

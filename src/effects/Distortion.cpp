@@ -144,7 +144,7 @@ wxString defaultLabel(int index)
       void Populate() override
       {
          for (auto &name : names)
-            mContents.push_back( wxGetTranslation( name ) );
+            mContents.push_back( name.Translation() );
       }
    };
 
@@ -338,7 +338,7 @@ RegistryPaths EffectDistortion::GetFactoryPresets()
 
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {
-      names.push_back(wxGetTranslation(FactoryPresets[i].name));
+      names.push_back( FactoryPresets[i].name.Translation() );
    }
 
    return names;

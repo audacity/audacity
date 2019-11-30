@@ -102,7 +102,8 @@ void GUIPrefs::GetRangeChoices(
 
    if (pChoicesTranslated)
       *pChoicesTranslated =
-         transform_container<wxArrayStringEx>( sChoices, GetCustomTranslation );
+         transform_container<wxArrayStringEx>( sChoices,
+            std::mem_fn( &TranslatableString::Translation ) );
 
    if (pDefaultRangeIndex)
       *pDefaultRangeIndex = 2; // 60 == ENV_DB_RANGE
