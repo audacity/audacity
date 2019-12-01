@@ -148,7 +148,7 @@ wxString PitchName(const double dMIDInote, const PitchNameChoice choice)
       default: wxASSERT(false); break;
    }
 
-   return table[PitchIndex(dMIDInote)];
+   return GetCustomTranslation( table[PitchIndex(dMIDInote)] );
 }
 
 wxString PitchName_Absolute(const double dMIDInote, const PitchNameChoice choice)
