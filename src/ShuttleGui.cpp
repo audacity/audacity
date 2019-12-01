@@ -1515,11 +1515,8 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton()
    wxASSERT( mRadioCount >= 0); // Did you remember to use StartRadioButtonGroup() ?
 
    EnumValueSymbol symbol;
-   if (mpRadioSetting && mRadioCount >= 0) {
-      const auto &symbols = mpRadioSetting->GetSymbols();
-      if ( mRadioCount < symbols.size() )
-         symbol = symbols[ mRadioCount ];
-   }
+   if (mRadioCount >= 0 && mRadioCount < mRadioSymbols.size() )
+      symbol = mRadioSymbols[ mRadioCount ];
 
    // In what follows, WrappedRef is used in read only mode, but we
    // don't have a 'read-only' version, so we copy to deal with the constness.
@@ -1574,7 +1571,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton()
 /// Call this before any TieRadioButton calls.
 void ShuttleGuiBase::StartRadioButtonGroup( const ChoiceSetting &Setting )
 {
-   mpRadioSetting = &Setting;
+   mRadioSymbols = Setting.GetSymbols();
 
    // Configure the generic type mechanism to use OUR string.
    mRadioValueString = Setting.Default().Internal();
@@ -1592,14 +1589,14 @@ void ShuttleGuiBase::StartRadioButtonGroup( const ChoiceSetting &Setting )
 void ShuttleGuiBase::EndRadioButtonGroup()
 {
    // too few buttons?
-   wxASSERT( mRadioCount == mpRadioSetting->GetSymbols().size() );
+   wxASSERT( mRadioCount == mRadioSymbols.size() );
 
    if( mShuttleMode == eIsGettingFromDialog )
       DoDataShuttle( mRadioSettingName, *mRadioValue );
    mRadioValue.reset();// Clear it out...
    mRadioSettingName = wxT("");
    mRadioCount = -1; // So we detect a problem.
-   mpRadioSetting = nullptr;
+   mRadioSymbols = {};
 }
 
 //-----------------------------------------------------------------------//
