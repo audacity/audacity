@@ -296,7 +296,7 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
 
    // Add system language
    langNames.push_back(wxT("System"));
-   langCodes.push_back(wxT(""));
+   langCodes.push_back(wxT("System"));
 
    for(j=0; j<tempNames.size(); j++) {
       langNames.push_back(tempNames[j]);
