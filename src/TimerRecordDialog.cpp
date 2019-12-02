@@ -811,9 +811,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    using Options = NumericTextCtrl::Options;
    /* i18n-hint a format string for hours, minutes, and seconds */
-   auto strFormat = _("099 h 060 m 060 s");
+   auto strFormat = XO("099 h 060 m 060 s");
    /* i18n-hint a format string for days, hours, minutes, and seconds */
-   auto strFormat1 = _("099 days 024 h 060 m 060 s");
+   auto strFormat1 = XO("099 days 024 h 060 m 060 s");
 
    S.StartMultiColumn(2, wxCENTER);
    {

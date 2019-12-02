@@ -336,9 +336,9 @@ void TranscriptionToolBar::RegenerateTooltips()
    static const struct Entry {
       int tool;
       CommandID commandName;
-      wxString untranslatedLabel;
+      TranslatableString untranslatedLabel;
       CommandID commandName2;
-      wxString untranslatedLabel2;
+      TranslatableString untranslatedLabel2;
    } table[] = {
       { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-Speed"),
       wxT("PlayAtSpeedLooped"),    XO("Looped-Play-at-Speed")
@@ -347,8 +347,8 @@ void TranscriptionToolBar::RegenerateTooltips()
 
    for (const auto &entry : table) {
       TranslatedInternalString commands[] = {
-         { entry.commandName,  wxGetTranslation(entry.untranslatedLabel)  },
-         { entry.commandName2, wxGetTranslation(entry.untranslatedLabel2) },
+         { entry.commandName,  entry.untranslatedLabel.Translation()  },
+         { entry.commandName2, entry.untranslatedLabel2.Translation() },
       };
       ToolBar::SetButtonToolTip( mProject,
          *mButtons[entry.tool], commands, 2u );

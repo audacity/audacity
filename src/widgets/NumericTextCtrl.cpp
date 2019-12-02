@@ -285,7 +285,7 @@ private:
 struct BuiltinFormatString
 {
    NumericFormatSymbol name;
-   wxString formatStr;
+   TranslatableString formatStr;
 
    friend inline bool operator ==
       (const BuiltinFormatString &a, const BuiltinFormatString &b)
@@ -706,9 +706,10 @@ NumericConverter::NumericConverter(Type type,
    SetValue(value); // mValue got overridden to -1 in ControlsToValue(), reassign
 }
 
-void NumericConverter::ParseFormatString( const wxString & untranslatedFormat)
+void NumericConverter::ParseFormatString(
+   const TranslatableString & untranslatedFormat)
 {
-   auto &format = ::wxGetTranslation( untranslatedFormat );
+   auto &format = untranslatedFormat.Translation();
 
    mPrefix = wxT("");
    mFields.clear();
@@ -1057,7 +1058,7 @@ bool NumericConverter::SetFormatName(const NumericFormatSymbol & formatName)
       SetFormatString(GetBuiltinFormat(formatName));
 }
 
-bool NumericConverter::SetFormatString(const wxString & formatString)
+bool NumericConverter::SetFormatString(const TranslatableString & formatString)
 {
    if (mFormatString != formatString) {
       mFormatString = formatString;
@@ -1149,7 +1150,7 @@ NumericFormatSymbol NumericConverter::GetBuiltinName(const int index)
    return {};
 }
 
-wxString NumericConverter::GetBuiltinFormat(const int index)
+TranslatableString NumericConverter::GetBuiltinFormat(const int index)
 {
    if (index >= 0 && index < GetNumBuiltins())
       return mBuiltinFormatStrings[index].formatStr;
@@ -1157,7 +1158,8 @@ wxString NumericConverter::GetBuiltinFormat(const int index)
    return {};
 }
 
-wxString NumericConverter::GetBuiltinFormat(const NumericFormatSymbol &name)
+TranslatableString NumericConverter::GetBuiltinFormat(
+   const NumericFormatSymbol &name)
 {
    int ndx =
       std::find( mBuiltinFormatStrings, mBuiltinFormatStrings + mNBuiltins,
@@ -1378,7 +1380,7 @@ bool NumericTextCtrl::SetFormatName(const NumericFormatSymbol & formatName)
       SetFormatString(GetBuiltinFormat(formatName));
 }
 
-bool NumericTextCtrl::SetFormatString(const wxString & formatString)
+bool NumericTextCtrl::SetFormatString(const TranslatableString & formatString)
 {
    auto result =
       NumericConverter::SetFormatString(formatString);

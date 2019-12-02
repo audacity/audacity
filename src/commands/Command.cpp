@@ -270,6 +270,7 @@ bool CommandImplementation::SetParameter(const wxString &paramName, const wxVari
       context.Error( wxString::Format(
          _("%s is not a parameter accepted by %s"),
             paramName, GetSymbol().Internal() ) );
+                    // neglect translation for scripting ??
       return false;
    }
 

@@ -115,8 +115,8 @@ void DevicePrefs::GetNamesAndLabels()
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if ((info!=NULL)&&(info->maxOutputChannels > 0 || info->maxInputChannels > 0)) {
          wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(info->hostApi)->name);
-         if ( ! make_iterator_range( mHostNames ).contains( name ) ) {
-            mHostNames.push_back(name);
+         if (!make_iterator_range(mHostNames).contains(TranslatableString{name})) {
+            mHostNames.push_back( TranslatableString{ name } );
             mHostLabels.push_back(name);
          }
       }
@@ -214,7 +214,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
 
    // Find the index for the host API selected
    int index = -1;
-   wxString apiName = mHostNames[mHost->GetCurrentSelection()];
+   auto apiName = mHostLabels[mHost->GetCurrentSelection()];
    int nHosts = Pa_GetHostApiCount();
    for (int i = 0; i < nHosts; ++i) {
       wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(i)->name);

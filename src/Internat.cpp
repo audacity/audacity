@@ -290,3 +290,8 @@ std::vector< Identifier > Identifier::split( wxChar separator ) const
    auto strings = ::wxSplit( value, separator );
    return { strings.begin(), strings.end() };
 }
+
+const wxString &TranslatableString::Translation() const
+{
+   return wxGetTranslation(*this);
+}

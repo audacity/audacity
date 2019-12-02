@@ -187,6 +187,18 @@ void AddEffectMenuItemGroup(
    const std::vector<CommandFlag> & flags,
    bool isDefault);
 
+namespace
+{
+
+inline bool HasDialog( const PluginDescriptor *plug )
+{
+   // Un-translated string is expected to follow a certain convention
+   // Translation, perhaps, uses some other punctuation
+   return plug->GetSymbol().Msgid().MSGID().GET().Contains("...");
+}
+
+}
+
 void AddEffectMenuItems(
    MenuTable::BaseItemPtrs &table,
    std::vector<const PluginDescriptor*> & plugs,
@@ -207,7 +219,7 @@ void AddEffectMenuItems(
    // Some weird special case stuff just for Noise Reduction so that there is
    // more informative help
    const auto getBatchFlags = [&]( const PluginDescriptor *plug ){
-      if ( plug->GetSymbol().Msgid() == wxT( "Noise Reduction" ) )
+      if ( plug->GetSymbol().Msgid() == XO( "Noise Reduction" ) )
          return
             ( batchflags | NoiseReductionTimeSelectedFlag ) & ~TimeSelectedFlag;
       return batchflags;
@@ -226,7 +238,7 @@ void AddEffectMenuItems(
       {
          const PluginDescriptor *plug = plugs[i];
 
-         bool hasDialog = plug->GetSymbol().Msgid().Contains("...");
+         bool hasDialog = HasDialog( plug );
          auto name = plug->GetSymbol().Translation();
 
          if (plug->IsEffectInteractive())
@@ -299,7 +311,7 @@ void AddEffectMenuItems(
       {
          const PluginDescriptor *plug = plugs[i];
 
-         bool hasDialog = plug->GetSymbol().Msgid().Contains("...");
+         bool hasDialog = HasDialog( plug );
          auto name = plug->GetSymbol().Translation();
 
          if (plug->IsEffectInteractive())

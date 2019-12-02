@@ -2307,7 +2307,7 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
 
       // PRL:  Writing KEY_NAME which is no longer read, but older Audacity
       // versions expect to find it.
-      pRegistry->Write(KEY_NAME, plug.GetSymbol().Msgid());
+      pRegistry->Write(KEY_NAME, plug.GetSymbol().Msgid().MSGID());
 
       pRegistry->Write(KEY_VERSION, plug.GetUntranslatedVersion());
       pRegistry->Write(KEY_VENDOR, plug.GetVendor());

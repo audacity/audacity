@@ -77,7 +77,7 @@
 
 namespace {
 
-const wxArrayStringEx BitRateNames {
+const TranslatableStrings BitRateNames {
    // i18n-hint kbps abbreviates "thousands of bits per second"
    XO("16 kbps"),
    XO("24 kbps"),

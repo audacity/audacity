@@ -59,7 +59,7 @@ int PitchOctave(const double dMIDInote)
 
 wxString PitchName(const double dMIDInote, const PitchNameChoice choice)
 {
-   static const wxString sharpnames[12] = {
+   static const TranslatableString sharpnames[12] = {
       /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
       XO("C"),
       /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
@@ -86,7 +86,7 @@ wxString PitchName(const double dMIDInote, const PitchNameChoice choice)
       XO("B"),
    };
 
-   static const wxString flatnames[12] = {
+   static const TranslatableString flatnames[12] = {
       /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
       XO("C"),
       /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
@@ -113,7 +113,7 @@ wxString PitchName(const double dMIDInote, const PitchNameChoice choice)
       XO("B"),
    };
 
-   static const wxString bothnames[12] = {
+   static const TranslatableString bothnames[12] = {
       /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
       XO("C"),
      /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
@@ -140,7 +140,7 @@ wxString PitchName(const double dMIDInote, const PitchNameChoice choice)
       XO("B"),
    };
 
-   const wxString *table = nullptr;
+   const TranslatableString *table = nullptr;
    switch ( choice ) {
       case PitchNameChoice::Sharps: table = sharpnames; break;
       case PitchNameChoice::Flats: table = flatnames; break;
@@ -148,7 +148,7 @@ wxString PitchName(const double dMIDInote, const PitchNameChoice choice)
       default: wxASSERT(false); break;
    }
 
-   return GetCustomTranslation( table[PitchIndex(dMIDInote)] );
+   return table[PitchIndex(dMIDInote)].Translation();
 }
 
 wxString PitchName_Absolute(const double dMIDInote, const PitchNameChoice choice)

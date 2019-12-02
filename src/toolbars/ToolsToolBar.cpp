@@ -142,7 +142,7 @@ void ToolsToolBar::RegenerateTooltips()
    static const struct Entry {
       int tool;
       CommandID commandName;
-      wxString untranslatedLabel;
+      TranslatableString untranslatedLabel;
    } table[] = {
       { selectTool,   wxT("SelectTool"),    XO("Selection Tool")  },
       { envelopeTool, wxT("EnvelopeTool"),  XO("Envelope Tool")   },
@@ -154,7 +154,7 @@ void ToolsToolBar::RegenerateTooltips()
 
    for (const auto &entry : table) {
       TranslatedInternalString command{
-         entry.commandName, wxGetTranslation(entry.untranslatedLabel) };
+         entry.commandName, entry.untranslatedLabel.Translation() };
       ToolBar::SetButtonToolTip( mProject,
          *mTool[entry.tool], &command, 1u );
    }

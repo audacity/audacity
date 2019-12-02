@@ -123,7 +123,7 @@ enum : int {
    PRESET_MEDIUM = 3,
 };
 
-static const wxArrayStringEx fixRateNames {
+static const TranslatableStrings fixRateNames {
    /* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
    XO("320 kbps"),
    XO("256 kbps"),
@@ -166,7 +166,7 @@ static const std::vector<int> fixRateValues {
    8,
 };
 
-static const wxArrayStringEx varRateNames {
+static const TranslatableStrings varRateNames {
    XO("220-260 kbps (Best Quality)"),
    XO("200-250 kbps"),
    XO("170-210 kbps"),
@@ -179,12 +179,12 @@ static const wxArrayStringEx varRateNames {
    XO("45-85 kbps (Smaller files)"),
 };
 
-static const wxArrayStringEx varModeNames {
+static const TranslatableStrings varModeNames {
    XO("Fast"),
    XO("Standard"),
 };
 
-static const wxArrayStringEx setRateNames {
+static const TranslatableStrings setRateNames {
    /* i18n-hint: Slightly humorous - as in use an insane precision with MP3.*/
    XO("Insane, 320 kbps"),
    XO("Extreme, 220-260 kbps"),
@@ -192,7 +192,7 @@ static const wxArrayStringEx setRateNames {
    XO("Medium, 145-185 kbps"),
 };
 
-static const wxArrayStringEx setRateNamesShort {
+static const TranslatableStrings setRateNamesShort {
    /* i18n-hint: Slightly humorous - as in use an insane precision with MP3.*/
    XO("Insane"),
    XO("Extreme"),
@@ -237,7 +237,7 @@ public:
    void OnQuality(wxCommandEvent& evt);
    void OnMono(wxCommandEvent& evt);
 
-   void LoadNames(const wxArrayStringEx &choices);
+   void LoadNames(const TranslatableStrings &choices);
 
 private:
 
@@ -328,7 +328,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
    bool mono = false;
    gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
 
-   const wxArrayStringEx *choices = nullptr;
+   const TranslatableStrings *choices = nullptr;
    const std::vector< int > *codes = nullptr;
    bool enable;
    int defrate;
@@ -532,11 +532,11 @@ void ExportMP3Options::OnMono(wxCommandEvent& /*evt*/)
    gPrefs->Flush();
 }
 
-void ExportMP3Options::LoadNames(const wxArrayStringEx &names)
+void ExportMP3Options::LoadNames(const TranslatableStrings &names)
 {
    mRate->Clear();
    for (const auto &name : names)
-      mRate->Append( GetCustomTranslation( name ) );
+      mRate->Append( name.Translation() );
 }
 
 //----------------------------------------------------------------------------
@@ -1883,13 +1883,13 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
          title.Printf(selectionOnly ?
             _("Exporting selected audio with %s preset") :
             _("Exporting the audio with %s preset"),
-            GetCustomTranslation( setRateNamesShort[brate] ) );
+            setRateNamesShort[brate].Translation());
       }
       else if (rmode == MODE_VBR) {
          title.Printf(selectionOnly ?
             _("Exporting selected audio with VBR quality %s") :
             _("Exporting the audio with VBR quality %s"),
-            GetCustomTranslation( varRateNames[brate] ) );
+            varRateNames[brate].Translation());
       }
       else {
          title.Printf(selectionOnly ?

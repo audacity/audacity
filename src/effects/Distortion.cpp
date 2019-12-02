@@ -97,7 +97,7 @@ const double MIN_Threshold_Linear DB_TO_LINEAR(MIN_Threshold_dB);
 
 static const struct
 {
-   const wxChar *name;
+   const TranslatableString name;
    EffectDistortion::Params params;
 }
 FactoryPresets[] =
@@ -131,7 +131,7 @@ FactoryPresets[] =
 
 wxString defaultLabel(int index)
 {
-   static const wxString names[] = {
+   static const TranslatableString names[] = {
       XO("Upper Threshold"),
       XO("Noise Floor"),
       XO("Parameter 1"),
@@ -144,7 +144,7 @@ wxString defaultLabel(int index)
       void Populate() override
       {
          for (auto &name : names)
-            mContents.push_back( wxGetTranslation( name ) );
+            mContents.push_back( name.Translation() );
       }
    };
 
@@ -338,7 +338,7 @@ RegistryPaths EffectDistortion::GetFactoryPresets()
 
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {
-      names.push_back(wxGetTranslation(FactoryPresets[i].name));
+      names.push_back( FactoryPresets[i].name.Translation() );
    }
 
    return names;

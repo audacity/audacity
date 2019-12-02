@@ -208,7 +208,7 @@ public:
    wxChoice * TieNumberAsChoice(
       const wxString &Prompt,
       const SettingSpec< int > &Setting,
-      const wxArrayStringEx & Choices,
+      const TranslatableStrings & Choices,
       const std::vector<int> * pInternalChoices, int iNoMatchSelector ) override;
 
    wxTextCtrl * TieTextBox(
@@ -273,7 +273,7 @@ wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
 wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    const wxString &Prompt,
    const SettingSpec< int > &Setting,
-   const wxArrayStringEx & Choices,
+   const TranslatableStrings & Choices,
    const std::vector<int> * pInternalChoices, int iNoMatchSelector)
 {
    // Come here for controls that present non-exhaustive choices among some

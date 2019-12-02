@@ -27,6 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 
 class AudacityProject;
 extern AudacityProject *GetActiveProject();
+class TranslatableString;
 
 // Conditionally compile either a separate thead, or else use a timer in the main
 // thread, to poll the mouse and update scrubbing speed and direction.  The advantage of
@@ -124,7 +125,7 @@ public:
 
    // A string to put in the leftmost part of the status bar
    // when scrub or seek is in progress, or else empty.
-   const wxString &GetUntranslatedStateString() const;
+   const TranslatableString &GetUntranslatedStateString() const;
    wxString StatusMessageForWave() const;
 
    void Pause(bool paused);

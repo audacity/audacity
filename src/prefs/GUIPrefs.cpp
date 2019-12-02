@@ -67,7 +67,7 @@ wxString GUIPrefs::HelpPageName()
 }
 
 void GUIPrefs::GetRangeChoices(
-   wxArrayStringEx *pChoicesUntranslated,
+   TranslatableStrings *pChoicesUntranslated,
    wxArrayStringEx *pChoicesTranslated,
    wxArrayStringEx *pCodes,
    int *pDefaultRangeIndex
@@ -86,7 +86,7 @@ void GUIPrefs::GetRangeChoices(
    if (pCodes)
       *pCodes = sCodes;
 
-   static const auto sChoices = {
+   static const std::initializer_list<TranslatableString> sChoices = {
       XO("-36 dB (shallow range for high-amplitude editing)") ,
       XO("-48 dB (PCM range of 8 bit samples)") ,
       XO("-60 dB (PCM range of 10 bit samples)") ,
@@ -102,7 +102,8 @@ void GUIPrefs::GetRangeChoices(
 
    if (pChoicesTranslated)
       *pChoicesTranslated =
-         transform_container<wxArrayStringEx>( sChoices, GetCustomTranslation );
+         transform_container<wxArrayStringEx>( sChoices,
+            std::mem_fn( &TranslatableString::Translation ) );
 
    if (pDefaultRangeIndex)
       *pDefaultRangeIndex = 2; // 60 == ENV_DB_RANGE

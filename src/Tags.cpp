@@ -737,7 +737,7 @@ private:
 
 static wxArrayString names()
 {
-   static wxString theNames[] =
+   static TranslatableString theNames[] =
    {
       LABEL_ARTIST,
       LABEL_TITLE,
@@ -753,7 +753,7 @@ static wxArrayString names()
       void Populate() override
       {
          for (auto &name : theNames)
-            mContents.push_back( wxGetTranslation( name ) );
+            mContents.push_back( name.Translation() );
       }
    };
 
@@ -765,7 +765,7 @@ static wxArrayString names()
 
 static const struct
 {
-   wxString label;
+   TranslatableString label;
    wxString name;
 }
 labelmap[] =
@@ -999,7 +999,7 @@ bool TagsEditor::TransferDataFromWindow()
    for (i = 0; i < cnt; i++) {
       // Get tag name from the grid
 
-      wxString n = mGrid->GetCellValue(i, 0);
+      auto n = mGrid->GetCellValue(i, 0);
       wxString v = mGrid->GetCellValue(i, 1);
 
       if (n.empty()) {
@@ -1009,25 +1009,25 @@ bool TagsEditor::TransferDataFromWindow()
       bool bSpecialTag = true;
 
       // Map special tag names back to internal keys
-      if (n.CmpNoCase(wxGetTranslation(LABEL_ARTIST)) == 0) {
+      if (n.CmpNoCase(LABEL_ARTIST.Translation()) == 0) {
          n = TAG_ARTIST;
       }
-      else if (n.CmpNoCase(wxGetTranslation(LABEL_TITLE)) == 0) {
+      else if (n.CmpNoCase(LABEL_TITLE.Translation()) == 0) {
          n = TAG_TITLE;
       }
-      else if (n.CmpNoCase(wxGetTranslation(LABEL_ALBUM)) == 0) {
+      else if (n.CmpNoCase(LABEL_ALBUM.Translation()) == 0) {
          n = TAG_ALBUM;
       }
-      else if (n.CmpNoCase(wxGetTranslation(LABEL_TRACK)) == 0) {
+      else if (n.CmpNoCase(LABEL_TRACK.Translation()) == 0) {
          n = TAG_TRACK;
       }
-      else if (n.CmpNoCase(wxGetTranslation(LABEL_YEAR)) == 0) {
+      else if (n.CmpNoCase(LABEL_YEAR.Translation()) == 0) {
          n = TAG_YEAR;
       }
-      else if (n.CmpNoCase(wxGetTranslation(LABEL_GENRE)) == 0) {
+      else if (n.CmpNoCase(LABEL_GENRE.Translation()) == 0) {
          n = TAG_GENRE;
       }
-      else if (n.CmpNoCase(wxGetTranslation(LABEL_COMMENTS)) == 0) {
+      else if (n.CmpNoCase(LABEL_COMMENTS.Translation()) == 0) {
          n = TAG_COMMENTS;
       }
       else {
@@ -1060,16 +1060,16 @@ bool TagsEditor::TransferDataToWindow()
       mGrid->SetReadOnly(i, 0);
       // The special tag name that's displayed and translated may not match
       // the key string used for internal lookup.
-      mGrid->SetCellValue(i, 0, wxGetTranslation( labelmap[i].label ) );
+      mGrid->SetCellValue(i, 0, labelmap[i].label.Translation() );
       mGrid->SetCellValue(i, 1, mLocal.GetTag(labelmap[i].name));
 
       if (!mEditTitle &&
-          mGrid->GetCellValue(i, 0).CmpNoCase(wxGetTranslation(LABEL_TITLE)) == 0) {
+          mGrid->GetCellValue(i, 0).CmpNoCase(LABEL_TITLE.Translation()) == 0) {
          mGrid->SetReadOnly(i, 1);
       }
 
       if (!mEditTrack &&
-          mGrid->GetCellValue(i, 0).CmpNoCase(wxGetTranslation(LABEL_TRACK)) == 0) {
+          mGrid->GetCellValue(i, 0).CmpNoCase(LABEL_TRACK.Translation()) == 0) {
          mGrid->SetReadOnly(i, 1);
       }
 
@@ -1399,12 +1399,12 @@ void TagsEditor::OnRemove(wxCommandEvent & WXUNUSED(event))
    size_t row = mGrid->GetGridCursorRow();
 
    if (!mEditTitle &&
-       mGrid->GetCellValue(row, 0).CmpNoCase(wxGetTranslation(LABEL_TITLE)) == 0) {
+       mGrid->GetCellValue(row, 0).CmpNoCase(LABEL_TITLE.Translation()) == 0) {
       return;
    }
    else if (!mEditTrack &&
             mGrid->GetCellValue(row, 0)
-               .CmpNoCase(wxGetTranslation(LABEL_TRACK)) == 0) {
+               .CmpNoCase(LABEL_TRACK.Translation()) == 0) {
       return;
    }
    else if (row < STATICCNT) {
@@ -1478,7 +1478,7 @@ void TagsEditor::SetEditors()
 
    for (int i = 0; i < cnt; i++) {
       wxString label = mGrid->GetCellValue(i, 0);
-      if (label.CmpNoCase(wxGetTranslation(LABEL_GENRE)) == 0) {
+      if (label.CmpNoCase(LABEL_GENRE.Translation()) == 0) {
          // This use of GetDefaultEditorForType does not require DecRef.
          mGrid->SetCellEditor(i, 1, mGrid->GetDefaultEditorForType(wxT("Combo")));
       }

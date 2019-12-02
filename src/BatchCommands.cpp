@@ -56,7 +56,7 @@ enum eCommandType { CtEffect, CtMenu, CtSpecial };
 // TIDY-ME: Not currently translated,
 // but there are issues to address if we do.
 // CLEANSPEECH remnant
-static const std::pair<const wxChar*, CommandID> SpecialCommands[] = {
+static const std::pair<TranslatableString, CommandID> SpecialCommands[] = {
    // Use translations of the first members, some other day.
    // For 2.2.2 we'll get them into the catalog at least.
 
@@ -103,16 +103,16 @@ MacroCommands::MacroCommands()
    }
 }
 
-static const wxString MP3Conversion = XO("MP3 Conversion");
-static const wxString FadeEnds      = XO("Fade Ends");
-static const wxString SelectToEnds  = XO("Select to Ends");
+static const auto MP3Conversion = XO("MP3 Conversion");
+static const auto FadeEnds      = XO("Fade Ends");
+static const auto SelectToEnds  = XO("Select to Ends");
 
 
 wxArrayStringEx MacroCommands::GetNamesOfDefaultMacros()
 {
    return {
-      GetCustomTranslation( MP3Conversion ) ,
-      GetCustomTranslation( FadeEnds ) ,
+      MP3Conversion.Translation() ,
+      FadeEnds.Translation() ,
       //Don't add this one anymore, as there is a new menu command for it.
       //GetCustomTranslation( SelectToEnds ) ,
    };
@@ -123,16 +123,16 @@ void MacroCommands::RestoreMacro(const wxString & name)
 // TIDY-ME: Effects change their name with localisation.
 // Commands (at least currently) don't.  Messy.
    ResetMacro();
-   if (name == GetCustomTranslation( MP3Conversion ) ){
+   if (name == MP3Conversion.Translation() ){
         AddToMacro( wxT("Normalize") );
         AddToMacro( wxT("ExportMP3") );
-   } else if (name == GetCustomTranslation( FadeEnds ) ){
+   } else if (name == FadeEnds.Translation() ){
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\"") );
         AddToMacro( wxT("FadeIn") );
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\" RelativeTo=\"ProjectEnd\"") );
         AddToMacro( wxT("FadeOut") );
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"0\"") );
-   } else if (name == GetCustomTranslation( SelectToEnds ) ){
+   } else if (name == SelectToEnds.Translation() ){
         AddToMacro( wxT("SelCursorEnd") );
         AddToMacro( wxT("SelStartCursor") );
    } 
@@ -294,7 +294,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    Entries commands;
    for( const auto &command : SpecialCommands )
       commands.push_back( {
-         { command.second, GetCustomTranslation( command.first ) },
+         { command.second, command.first.Translation() },
          _("Special Command")
       } );
 

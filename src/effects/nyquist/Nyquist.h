@@ -213,16 +213,16 @@ private:
    wxString          mInitError;
    wxString          mInputCmd; // history: exactly what the user typed
    wxString          mCmd;      // the command to be processed
-   wxString          mName;   ///< Name of the Effect (untranslated)
-   wxString          mPromptName; // If a prompt, we need to remember original name.
-   wxString          mAction; // translatable
-   wxString          mInfo;   // translatable
-   wxString          mAuthor;
+   TranslatableString mName;   ///< Name of the Effect (untranslated)
+   TranslatableString mPromptName; // If a prompt, we need to remember original name.
+   TranslatableString mAction;
+   TranslatableString mInfo;
+   TranslatableString mAuthor;
    // Version number of the specific plug-in (not to be confused with mVersion)
    // For shipped plug-ins this will be the same as the Audacity release version
    // when the plug-in was last modified.
-   wxString          mReleaseVersion;
-   wxString          mCopyright;
+   TranslatableString mReleaseVersion;
+   TranslatableString mCopyright;
    wxString          mManPage;   // ONLY use if a help page exists in the manual.
    wxString          mHelpFile;
    bool              mHelpFileExists;

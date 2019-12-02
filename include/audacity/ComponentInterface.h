@@ -62,27 +62,32 @@ public:
    ComponentInterfaceSymbol() = default;
    
    // Allows implicit construction from a msgid re-used as an internal string
-   ComponentInterfaceSymbol( const wxString &msgid )
-      : mInternal{ msgid }, mMsgid{ msgid }
+   ComponentInterfaceSymbol( const TranslatableString &msgid )
+      : mInternal{ msgid.MSGID().GET(), }, mMsgid{ msgid }
    {}
 
-   // Allows implicit construction from a msgid re-used as an internal string
+   // Allows implicit construction from an internal string re-used as a msgid
+   ComponentInterfaceSymbol( const wxString &internal )
+      : mInternal{ internal }, mMsgid{ internal }
+   {}
+
+   // Allows implicit construction from an internal string re-used as a msgid
    ComponentInterfaceSymbol( const wxChar *msgid )
       : mInternal{ msgid }, mMsgid{ msgid }
    {}
 
    // Two-argument version distinguishes internal from translatable string
    // such as when the first squeezes spaces out
-   ComponentInterfaceSymbol( const wxString &internal, const wxString &msgid )
+   ComponentInterfaceSymbol( const wxString &internal,
+                         const TranslatableString &msgid )
       : mInternal{ internal }
       // Do not permit non-empty msgid with empty internal
-      , mMsgid{ internal.empty() ? wxString{} : msgid }
+      , mMsgid{ internal.empty() ? TranslatableString{} : msgid }
    {}
 
    const wxString &Internal() const { return mInternal; }
-   const wxString &Msgid() const { return mMsgid; }
-   const wxString &Translation() const
-      { return GetCustomTranslation( mMsgid ); }
+   const TranslatableString &Msgid() const { return mMsgid; }
+   const wxString &Translation() const { return mMsgid.Translation(); }
 
    bool empty() const { return mInternal.empty(); }
 
@@ -96,7 +101,7 @@ public:
 
 private:
    wxString mInternal;
-   wxString mMsgid;
+   TranslatableString mMsgid;
 };
 
 

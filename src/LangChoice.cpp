@@ -46,7 +46,7 @@ private:
 
    int mNumLangs;
    wxArrayString mLangCodes;
-   wxArrayStringEx mLangNames;
+   TranslatableStrings mLangNames;
 
    DECLARE_EVENT_TABLE()
 };
@@ -87,8 +87,11 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
       {
          S.SetBorder(15);
          mChoice = S.AddChoice(_("Choose Language for Audacity to use:"),
-                              mLangNames,
-                              lang);
+            transform_container<wxArrayStringEx>(mLangNames,
+               // Using MSGID until AddChoice is rewritten to take
+               // TranslatableStrings directly
+               [](const TranslatableString &str){ return str.MSGID().GET(); }),
+            lang);
       }
       S.EndVerticalLay();
 
@@ -116,7 +119,7 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
       }
    }
    else {
-      sname = mLangNames[sndx];
+      sname = mLangNames[sndx].Translation();
    }
 
    if (mLang.Left(2) != slang.Left(2)) {
@@ -124,7 +127,7 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
       /* i18n-hint: The %s's are replaced by translated and untranslated
        * versions of language names. */
       msg.Printf(_("The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."),
-                 mLangNames[ndx],
+                 mLangNames[ndx].Translation(),
                  mLang,
                  sname,
                  slang);

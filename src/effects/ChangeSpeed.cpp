@@ -53,11 +53,11 @@ enum kVinyl
    nVinyl
 };
 
-static const wxChar *kVinylStrings[nVinyl] =
+static const TranslatableString kVinylStrings[nVinyl] =
 {
-   wxT("33\u2153"),
-   wxT("45"),
-   wxT("78"),
+   XO("33\u2153"),
+   XO("45"),
+   XO("78"),
    /* i18n-hint: n/a is an English abbreviation meaning "not applicable". */
    XO("n/a"),
 };
@@ -300,16 +300,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 
    wxArrayStringEx vinylChoices;
    for (int i = 0; i < nVinyl; i++)
-   {
-      if (i == kVinyl_NA)
-      {
-         vinylChoices.push_back(wxGetTranslation(kVinylStrings[i]));
-      }
-      else
-      {
-         vinylChoices.push_back(kVinylStrings[i]);
-      }
-   }
+      vinylChoices.push_back(kVinylStrings[i].Translation());
 
    S.SetBorder(5);
 

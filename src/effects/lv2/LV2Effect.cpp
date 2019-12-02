@@ -344,7 +344,7 @@ VendorSymbol LV2Effect::GetVendor()
 
    if (vendor.empty())
    {
-      vendor = XO("n/a");
+      return XO("n/a");
    }
 
    return { vendor };

@@ -223,6 +223,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
    wxString name = mProject->GetProjectName();
    wxString defaultFormat = gPrefs->Read(wxT("/Export/Format"), wxT("WAV"));
 
+   TranslatableStrings visibleFormats;
    wxArrayStringEx formats;
    mPluginIndex = -1;
    mFilterIndex = 0;
@@ -234,7 +235,12 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
          ++i;
          for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
-            formats.push_back(mPlugins[i]->GetUntranslatedDescription(j));
+            auto format = mPlugins[i]->GetUntranslatedDescription(j);
+            visibleFormats.push_back( format );
+            // use MSGID of description as a value too, written into config file
+            // This is questionable.  A change in the msgid can make the
+            // preference stored in old config files inapplicable
+            formats.push_back( format.MSGID().GET() );
             if (mPlugins[i]->GetFormat(j) == defaultFormat) {
                mPluginIndex = i;
                mSubFormatIndex = j;
@@ -276,7 +282,11 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
                .TieChoice( _("Format:"),
                {
                   wxT("/Export/MultipleFormat"),
-                  { ByColumns, formats, formats },
+                  {
+                     ByColumns,
+                     visibleFormats,
+                     formats
+                  },
                   mFilterIndex
                }
             );

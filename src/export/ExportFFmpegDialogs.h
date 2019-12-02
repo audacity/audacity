@@ -53,11 +53,9 @@ struct ExposedFormat
    unsigned maxchannels;      //!< how many channels this format could handle
    const int canmetadata;           //!< !=0 if format supports metadata, AV_CANMETA any avformat version, otherwise version support added
    bool canutf8;              //!< true if format supports metadata in UTF-8, false otherwise
-   const wxChar *description_; //!< format description (will be shown in export dialog) (untranslated!)
+   const TranslatableString description; //!< format description (will be shown in export dialog)
    AVCodecID codecid;         //!< codec ID (see libavcodec/avcodec.h)
    bool compiledIn;           //!< support for this codec/format is compiled in (checked at runtime)
-
-   wxString Description() const; // get translation
 };
 
 

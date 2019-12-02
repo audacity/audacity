@@ -14,6 +14,7 @@
 #include <functional>
 #include <vector>
 #include <wx/filename.h> // member variable
+#include "audacity/Types.h"
 #include "../SampleFormat.h"
 #include "../widgets/wxPanelWrapper.h" // to inherit
 
@@ -45,7 +46,7 @@ class AUDACITY_DLL_API FormatInfo
       ~FormatInfo() {}
 
       wxString mFormat;
-      wxString mDescription; // untranslated
+      TranslatableString mDescription;
       // wxString mExtension;
       FileExtensions mExtensions;
       wxString mMask;
@@ -65,7 +66,7 @@ public:
 
    int AddFormat();
    void SetFormat(const wxString & format, int index);
-   void SetDescription(const wxString & description /* untranslated */, int index);
+   void SetDescription(const TranslatableString & description, int index);
    void AddExtension(const wxString &extension,int index);
    void SetExtensions(FileExtensions extensions, int index);
    void SetMask(const wxString & mask, int index);
@@ -74,7 +75,7 @@ public:
 
    virtual int GetFormatCount();
    virtual wxString GetFormat(int index);
-   wxString GetUntranslatedDescription(int index);
+   TranslatableString GetUntranslatedDescription(int index);
    wxString GetTranslatedDescription(int index);
    /** @brief Return the (first) file name extension for the sub-format.
     * @param index The sub-format for which the extension is wanted */

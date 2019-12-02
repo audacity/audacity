@@ -107,7 +107,7 @@ public:
    // initializer_list, in the case that each column has exactly two strings)
    EnumValueSymbols(
       ByColumns_t,
-      const wxArrayStringEx &msgids, // untranslated!
+      const TranslatableStrings &msgids,
       wxArrayStringEx internals
    );
 

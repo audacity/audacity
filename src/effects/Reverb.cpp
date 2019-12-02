@@ -60,7 +60,7 @@ Param( WetOnly,      bool,    wxT("WetOnly"),       false,   false,   true, 1  )
 
 static const struct
 {
-   const wxChar *name;
+   const TranslatableString name;
    EffectReverb::Params params;
 }
 FactoryPresets[] =
@@ -335,7 +335,7 @@ RegistryPaths EffectReverb::GetFactoryPresets()
 
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
    {
-      names.push_back(wxGetTranslation(FactoryPresets[i].name));
+      names.push_back( FactoryPresets[i].name.Translation() );
    }
 
    return names;

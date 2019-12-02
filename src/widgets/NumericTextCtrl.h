@@ -79,7 +79,7 @@ public:
    virtual void ControlsToValue();
 
 private:
-   void ParseFormatString(const wxString & untranslatedFormat);
+   void ParseFormatString(const TranslatableString & untranslatedFormat);
 
 public:
    void PrintDebugInfo();
@@ -88,7 +88,7 @@ public:
    bool SetFormatName(const NumericFormatSymbol & formatName);
 
    // returns true iff the format string really changed:
-   bool SetFormatString(const wxString & formatString);
+   bool SetFormatString(const TranslatableString & formatString);
 
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
@@ -105,8 +105,8 @@ public:
 
    int GetNumBuiltins();
    NumericFormatSymbol GetBuiltinName(const int index);
-   wxString GetBuiltinFormat(const int index);
-   wxString GetBuiltinFormat(const NumericFormatSymbol & name);
+   TranslatableString GetBuiltinFormat(const int index);
+   TranslatableString GetBuiltinFormat(const NumericFormatSymbol & name);
 
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
@@ -124,7 +124,7 @@ protected:
    double         mMaxValue;
    double         mInvalidValue;
 
-   wxString       mFormatString;
+   TranslatableString mFormatString;
 
    std::vector<NumericField> mFields;
    wxString       mPrefix;
@@ -158,7 +158,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
       bool menuEnabled { true };
       bool hasInvalidValue { false };
       double invalidValue { -1.0 };
-      wxString format {};
+      TranslatableString format {};
       bool hasValue { false };
       double value{ -1.0 };
 
@@ -170,7 +170,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
       Options &InvalidValue (bool has, double v = -1.0)
          { hasInvalidValue = has, invalidValue = v; return *this; }
       // use a custom format not in the tables:
-      Options &Format (const wxString &f)
+      Options &Format (const TranslatableString &f)
          { format = f; return *this; }
       Options &Value (bool has, double v)
          { hasValue = has, value = v; return *this; }
@@ -194,7 +194,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    void SetValue(double newValue);
 
    // returns true iff the format string really changed:
-   bool SetFormatString(const wxString & formatString);
+   bool SetFormatString(const TranslatableString & formatString);
 
    // returns true iff the format name really changed:
    bool SetFormatName(const NumericFormatSymbol & formatName);
