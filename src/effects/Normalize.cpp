@@ -293,34 +293,39 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartVerticalLay(false);
          {
-            mDCCheckBox = S.AddCheckBox(_("Remove DC offset (center on 0.0 vertically)"),
+            mDCCheckBox = S.Validator<wxGenericValidator>(&mDC)
+               .AddCheckBox(_("Remove DC offset (center on 0.0 vertically)"),
                                         mDC);
-            mDCCheckBox->SetValidator(wxGenericValidator(&mDC));
 
             S.StartHorizontalLay(wxALIGN_LEFT, false);
             {
                mGainCheckBox = S
+                  .MinSize()
+                  .Validator<wxGenericValidator>(&mGain)
                   .AddCheckBox(_("Normalize peak amplitude to   "),
                      mGain);
-               mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
-               mGainCheckBox->SetMinSize( mGainCheckBox->GetSize());
 
-               FloatingPointValidator<double> vldLevel(2, &mPeakLevel,
-                                                       NumValidatorStyle::ONE_TRAILING_ZERO);
-               vldLevel.SetRange( MIN_PeakLevel, MAX_PeakLevel);
-
-               mLevelTextCtrl = S.AddTextBox( {}, wxT(""), 10);
-               mLevelTextCtrl->SetName( _("Peak amplitude dB"));
-               mLevelTextCtrl->SetValidator(vldLevel);
+               mLevelTextCtrl = S
+                  .Name(XO("Peak amplitude dB"))
+                  .Validator<FloatingPointValidator<double>>(
+                     2,
+                     &mPeakLevel,
+                     NumValidatorStyle::ONE_TRAILING_ZERO,
+                     MIN_PeakLevel,
+                     MAX_PeakLevel
+                  )
+                  .AddTextBox( {}, wxT(""), 10);
                mLeveldB = S.AddVariableText(_("dB"), false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             }
             S.EndHorizontalLay();
-            mStereoIndCheckBox = S.AddCheckBox(_("Normalize stereo channels independently"),
+
+            mStereoIndCheckBox = S
+               .Validator<wxGenericValidator>(&mStereoInd)
+               .AddCheckBox(_("Normalize stereo channels independently"),
                                                mStereoInd);
-            mStereoIndCheckBox->SetValidator(wxGenericValidator(&mStereoInd));
          }
          S.EndVerticalLay();
       }

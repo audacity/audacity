@@ -986,7 +986,8 @@ void Exporter::CreateUserPane(wxWindow *parent)
          S.StartStatic(_("Format Options"), 1);
          {
             mBook = safenew wxSimplebook(S.GetParent());
-            S.AddWindow(mBook, wxEXPAND);
+            S.Position(wxEXPAND)
+               .AddWindow(mBook);
 
             for (const auto &pPlugin : mPlugins)
             {

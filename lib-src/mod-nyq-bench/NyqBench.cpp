@@ -993,7 +993,7 @@ void NyqBench::PopulateOrExchange(ShuttleGui & S)
 
       S.AddSpace(5, 1);
       S.Prop(true);
-      S.AddWindow(mSplitter, wxEXPAND);
+      S.Position(wxEXPAND).AddWindow(mSplitter);
       S.AddSpace(5, 1);
 
       mSplitter->SetMinSize(wxSize(600, 400));

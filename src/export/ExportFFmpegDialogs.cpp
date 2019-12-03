@@ -1574,8 +1574,9 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
             {
                S.StartMultiColumn(8, wxEXPAND);
                {
-                  mLanguageText = S.Id(FELanguageID).TieTextBox(_("Language:"), {wxT("/FileFormats/FFmpegLanguage"), wxEmptyString}, 9);
-                  mLanguageText->SetToolTip(_("ISO 639 3-letter language code\nOptional\nempty - automatic"));
+                  mLanguageText = S.Id(FELanguageID)
+                     .ToolTip(XO("ISO 639 3-letter language code\nOptional\nempty - automatic"))
+                     .TieTextBox(_("Language:"), {wxT("/FileFormats/FFmpegLanguage"), wxEmptyString}, 9);
 
                   S.AddSpace( 20,0 );
                   S.AddVariableText(_("Bit Reservoir"));
@@ -1588,26 +1589,30 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                S.EndMultiColumn();
                S.StartMultiColumn(4, wxALIGN_LEFT);
                {
-                  mTag = S.Id(FETagID).TieTextBox(_("Tag:"), {wxT("/FileFormats/FFmpegTag"), wxEmptyString}, 4);
-                  mTag->SetToolTip(_("Codec tag (FOURCC)\nOptional\nempty - automatic"));
+                  mTag = S.Id(FETagID)
+                     .ToolTip(XO("Codec tag (FOURCC)\nOptional\nempty - automatic"))
+                     .TieTextBox(_("Tag:"), {wxT("/FileFormats/FFmpegTag"), wxEmptyString}, 4);
 
-                  mBitrateSpin = S.Id(FEBitrateID).TieSpinCtrl(_("Bit Rate:"), {wxT("/FileFormats/FFmpegBitRate"), 0}, 1000000, 0);
-                  mBitrateSpin->SetToolTip(_("Bit Rate (bits/second) - influences the resulting file size and quality\nSome codecs may only accept specific values (128k, 192k, 256k etc)\n0 - automatic\nRecommended - 192000"));
+                  mBitrateSpin = S.Id(FEBitrateID)
+                     .ToolTip(XO("Bit Rate (bits/second) - influences the resulting file size and quality\nSome codecs may only accept specific values (128k, 192k, 256k etc)\n0 - automatic\nRecommended - 192000"))
+                     .TieSpinCtrl(_("Bit Rate:"), {wxT("/FileFormats/FFmpegBitRate"), 0}, 1000000, 0);
 
-                  mQualitySpin = S.Id(FEQualityID).TieSpinCtrl(_("Quality:"), {wxT("/FileFormats/FFmpegQuality"), 0}, 500, -1);
-                  mQualitySpin->SetToolTip(_("Overall quality, used differently by different codecs\nRequired for vorbis\n0 - automatic\n-1 - off (use bitrate instead)"));
+                  mQualitySpin = S.Id(FEQualityID)
+                     .ToolTip(XO("Overall quality, used differently by different codecs\nRequired for vorbis\n0 - automatic\n-1 - off (use bitrate instead)"))
+                     .TieSpinCtrl(_("Quality:"), {wxT("/FileFormats/FFmpegQuality"), 0}, 500, -1);
 
-                  mSampleRateSpin = S.Id(FESampleRateID).TieSpinCtrl(_("Sample Rate:"), {wxT("/FileFormats/FFmpegSampleRate"), 0}, 200000, 0);
-                  mSampleRateSpin->SetToolTip(_("Sample rate (Hz)\n0 - don't change sample rate"));
+                  mSampleRateSpin = S.Id(FESampleRateID)
+                     .ToolTip(XO("Sample rate (Hz)\n0 - don't change sample rate"))
+                     .TieSpinCtrl(_("Sample Rate:"), {wxT("/FileFormats/FFmpegSampleRate"), 0}, 200000, 0);
 
-                  mCutoffSpin = S.Id(FECutoffID).TieSpinCtrl(_("Cutoff:"), {wxT("/FileFormats/FFmpegCutOff"), 0}, 10000000, 0);
-                  mCutoffSpin->SetToolTip(_("Audio cutoff bandwidth (Hz)\nOptional\n0 - automatic"));
+                  mCutoffSpin = S.Id(FECutoffID)
+                     .ToolTip(XO("Audio cutoff bandwidth (Hz)\nOptional\n0 - automatic"))
+                     .TieSpinCtrl(_("Cutoff:"), {wxT("/FileFormats/FFmpegCutOff"), 0}, 10000000, 0);
 
                   mProfileChoice = S.Id(FEProfileID)
+                     .ToolTip(XO("AAC Profile\nLow Complexity - default\nMost players won't play anything other than LC"))
+                     .MinSize( { 100, -1 } )
                      .TieChoice(_("Profile:"), AACProfiles);
-                  mProfileChoice->SetSizeHints( 100,-1);
-                  mProfileChoice->SetToolTip(_("AAC Profile\nLow Complexity - default\nMost players won't play anything other than LC"));
-
                }
                S.EndMultiColumn();
             }
@@ -1616,36 +1621,43 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
             {
                S.StartMultiColumn(4, wxALIGN_LEFT);
                {
-                  mCompressionLevelSpin = S.Id(FECompLevelID).TieSpinCtrl(_("Compression:"), {wxT("/FileFormats/FFmpegCompLevel"), 0}, 10, -1);
-                  mCompressionLevelSpin->SetToolTip(_("Compression level\nRequired for FLAC\n-1 - automatic\nmin - 0 (fast encoding, large output file)\nmax - 10 (slow encoding, small output file)"));
+                  mCompressionLevelSpin = S
+                     .ToolTip(XO("Compression level\nRequired for FLAC\n-1 - automatic\nmin - 0 (fast encoding, large output file)\nmax - 10 (slow encoding, small output file)"))
+                     .Id(FECompLevelID).TieSpinCtrl(_("Compression:"), {wxT("/FileFormats/FFmpegCompLevel"), 0}, 10, -1);
 
-                  mFrameSizeSpin =  S.Id(FEFrameSizeID).TieSpinCtrl(_("Frame:"), {wxT("/FileFormats/FFmpegFrameSize"), 0}, 65535, 0);
-                  mFrameSizeSpin->SetToolTip(_("Frame size\nOptional\n0 - default\nmin - 16\nmax - 65535"));
+                  mFrameSizeSpin =  S.Id(FEFrameSizeID)
+                     .ToolTip(XO("Frame size\nOptional\n0 - default\nmin - 16\nmax - 65535"))
+                     .TieSpinCtrl(_("Frame:"), {wxT("/FileFormats/FFmpegFrameSize"), 0}, 65535, 0);
 
-                  mLPCCoeffsPrecisionSpin = S.Id(FELPCCoeffsID).TieSpinCtrl(_("LPC"), {wxT("/FileFormats/FFmpegLPCCoefPrec"), 0}, 15, 0);
-                  mLPCCoeffsPrecisionSpin->SetToolTip(_("LPC coefficients precision\nOptional\n0 - default\nmin - 1\nmax - 15"));
+                  mLPCCoeffsPrecisionSpin = S.Id(FELPCCoeffsID)
+                     .ToolTip(XO("LPC coefficients precision\nOptional\n0 - default\nmin - 1\nmax - 15"))
+                     .TieSpinCtrl(_("LPC"), {wxT("/FileFormats/FFmpegLPCCoefPrec"), 0}, 15, 0);
 
                   mPredictionOrderMethodChoice = S.Id(FEPredOrderID)
+                     .ToolTip(XO("Prediction Order Method\nEstimate - fastest, lower compression\nLog search - slowest, best compression\nFull search - default"))
+                     .MinSize( { 100, -1 } )
                      .TieNumberAsChoice(
                         _("PdO Method:"),
                         {wxT("/FileFormats/FFmpegPredOrderMethod"),
                          4}, // Full search
                         PredictionOrderMethodNames
                      );
-                  mPredictionOrderMethodChoice->SetSizeHints( 100,-1);
-                  mPredictionOrderMethodChoice->SetToolTip(_("Prediction Order Method\nEstimate - fastest, lower compression\nLog search - slowest, best compression\nFull search - default"));
 
-                  mMinPredictionOrderSpin = S.Id(FEMinPredID).TieSpinCtrl(_("Min. PdO"), {wxT("/FileFormats/FFmpegMinPredOrder"), -1}, 32, -1);
-                  mMinPredictionOrderSpin->SetToolTip(_("Minimal prediction order\nOptional\n-1 - default\nmin - 0\nmax - 32 (with LPC) or 4 (without LPC)"));
+                  mMinPredictionOrderSpin = S.Id(FEMinPredID)
+                     .ToolTip(XO("Minimal prediction order\nOptional\n-1 - default\nmin - 0\nmax - 32 (with LPC) or 4 (without LPC)"))
+                     .TieSpinCtrl(_("Min. PdO"), {wxT("/FileFormats/FFmpegMinPredOrder"), -1}, 32, -1);
 
-                  mMaxPredictionOrderSpin = S.Id(FEMaxPredID).TieSpinCtrl(_("Max. PdO"), {wxT("/FileFormats/FFmpegMaxPredOrder"), -1}, 32, -1);
-                  mMaxPredictionOrderSpin->SetToolTip(_("Maximal prediction order\nOptional\n-1 - default\nmin - 0\nmax - 32 (with LPC) or 4 (without LPC)"));
+                  mMaxPredictionOrderSpin = S.Id(FEMaxPredID)
+                     .ToolTip(XO("Maximal prediction order\nOptional\n-1 - default\nmin - 0\nmax - 32 (with LPC) or 4 (without LPC)"))
+                     .TieSpinCtrl(_("Max. PdO"), {wxT("/FileFormats/FFmpegMaxPredOrder"), -1}, 32, -1);
 
-                  mMinPartitionOrderSpin = S.Id(FEMinPartOrderID).TieSpinCtrl(_("Min. PtO"), {wxT("/FileFormats/FFmpegMinPartOrder"), -1}, 8, -1);
-                  mMinPartitionOrderSpin->SetToolTip(_("Minimal partition order\nOptional\n-1 - default\nmin - 0\nmax - 8"));
+                  mMinPartitionOrderSpin = S.Id(FEMinPartOrderID)
+                     .ToolTip(XO("Minimal partition order\nOptional\n-1 - default\nmin - 0\nmax - 8"))
+                     .TieSpinCtrl(_("Min. PtO"), {wxT("/FileFormats/FFmpegMinPartOrder"), -1}, 8, -1);
 
-                  mMaxPartitionOrderSpin = S.Id(FEMaxPartOrderID).TieSpinCtrl(_("Max. PtO"), {wxT("/FileFormats/FFmpegMaxPartOrder"), -1}, 8, -1);
-                  mMaxPartitionOrderSpin->SetToolTip(_("Maximal partition order\nOptional\n-1 - default\nmin - 0\nmax - 8"));
+                  mMaxPartitionOrderSpin = S.Id(FEMaxPartOrderID)
+                     .ToolTip(XO("Maximal partition order\nOptional\n-1 - default\nmin - 0\nmax - 8"))
+                     .TieSpinCtrl(_("Max. PtO"), {wxT("/FileFormats/FFmpegMaxPartOrder"), -1}, 8, -1);
 
                   /* i18n-hint:  Abbreviates "Linear Predictive Coding",
                      but this text needs to be kept very short */
@@ -1663,13 +1675,15 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                   /* i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
                     'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
                     it has a hard to predict effect on the degree of compression */
-                  mMuxRate = S.Id(FEMuxRateID).TieSpinCtrl(_("Mux Rate:"), {wxT("/FileFormats/FFmpegMuxRate"), 0}, 10000000, 0);
-                  mMuxRate->SetToolTip(_("Maximum bit rate of the multiplexed stream\nOptional\n0 - default"));
+                  mMuxRate = S.Id(FEMuxRateID)
+                     .ToolTip(XO("Maximum bit rate of the multiplexed stream\nOptional\n0 - default"))
+                     .TieSpinCtrl(_("Mux Rate:"), {wxT("/FileFormats/FFmpegMuxRate"), 0}, 10000000, 0);
 
                   /* i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
                     compression.  It measures how big a chunk of audio is compressed in one piece. */
-                  mPacketSize = S.Id(FEPacketSizeID).TieSpinCtrl(_("Packet Size:"), {wxT("/FileFormats/FFmpegPacketSize"), 0}, 10000000, 0);
-                  mPacketSize->SetToolTip(_("Packet size\nOptional\n0 - default"));
+                  mPacketSize = S.Id(FEPacketSizeID)
+                     .ToolTip(XO("Packet size\nOptional\n0 - default"))
+                     .TieSpinCtrl(_("Packet Size:"), {wxT("/FileFormats/FFmpegPacketSize"), 0}, 10000000, 0);
                }
                S.EndMultiColumn();
             }

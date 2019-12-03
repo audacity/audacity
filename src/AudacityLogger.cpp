@@ -156,13 +156,12 @@ void AudacityLogger::Show(bool show)
    // Log text
    ShuttleGui S(frame.get(), eIsCreating);
 
-   S.SetStyle(wxNO_BORDER | wxTAB_TRAVERSAL);
-   S.Prop(true).StartPanel();
+   S.Style(wxNO_BORDER | wxTAB_TRAVERSAL).Prop(true).StartPanel();
    {
       S.StartVerticalLay(true);
       {
-         S.SetStyle(wxTE_MULTILINE | wxHSCROLL | wxTE_READONLY);
-         mText = S.AddTextWindow(mBuffer);
+         mText = S.Style(wxTE_MULTILINE | wxHSCROLL | wxTE_READONLY)
+            .AddTextWindow(mBuffer);
 
          S.AddSpace(0, 5);
          S.StartHorizontalLay(wxALIGN_CENTER, 0);

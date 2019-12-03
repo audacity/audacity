@@ -194,18 +194,17 @@ void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      FloatingPointValidator<float> vldAmount(1, &mAmount);
-      vldAmount.SetMin(MIN_Amount);
+      S.Validator<FloatingPointValidator<float>>(
+            1, &mAmount, NumValidatorStyle::DEFAULT, MIN_Amount)
+         /* i18n-hint: This is how many times longer the sound will be, e.g. applying
+          * the effect to a 1-second sample, with the default Stretch Factor of 10.0
+          * will give an (approximately) 10 second sound
+          */
+         .AddTextBox(_("Stretch Factor:"), wxT(""), 10);
 
-      /* i18n-hint: This is how many times longer the sound will be, e.g. applying
-       * the effect to a 1-second sample, with the default Stretch Factor of 10.0
-       * will give an (approximately) 10 second sound
-       */
-      S.AddTextBox(_("Stretch Factor:"), wxT(""), 10)->SetValidator(vldAmount);
-
-      FloatingPointValidator<float> vldTime(3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO);
-      vldTime.SetMin(MIN_Time);
-      S.AddTextBox(_("Time Resolution (seconds):"), wxT(""), 10)->SetValidator(vldTime);
+      S.Validator<FloatingPointValidator<float>>(
+            3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Time)
+         .AddTextBox(_("Time Resolution (seconds):"), wxT(""), 10);
    }
    S.EndMultiColumn();
 };

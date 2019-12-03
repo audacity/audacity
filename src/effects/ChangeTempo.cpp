@@ -232,21 +232,22 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       //
       S.StartMultiColumn(2, wxCENTER);
       {
-         FloatingPointValidator<double> vldPercentage(3, &m_PercentChange, NumValidatorStyle::THREE_TRAILING_ZEROES);
-         vldPercentage.SetRange(MIN_Percentage, MAX_Percentage);
          m_pTextCtrl_PercentChange = S.Id(ID_PercentChange)
+            .Validator<FloatingPointValidator<double>>(
+               3, &m_PercentChange, NumValidatorStyle::THREE_TRAILING_ZEROES,
+               MIN_Percentage, MAX_Percentage
+            )
             .AddTextBox(_("Percent Change:"), wxT(""), 12);
-         m_pTextCtrl_PercentChange->SetValidator(vldPercentage);
       }
       S.EndMultiColumn();
 
       //
       S.StartHorizontalLay(wxEXPAND);
       {
-         S.SetStyle(wxSL_HORIZONTAL);
          m_pSlider_PercentChange = S.Id(ID_PercentChange)
+            .Name(XO("Percent Change"))
+            .Style(wxSL_HORIZONTAL)
             .AddSlider( {}, 0, (int)kSliderMax, (int)MIN_Percentage);
-         m_pSlider_PercentChange->SetName(_("Percent Change"));
       }
       S.EndHorizontalLay();
 
@@ -254,17 +255,25 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
-            FloatingPointValidator<double> vldFromBPM(3, &m_FromBPM, NumValidatorStyle::THREE_TRAILING_ZEROES | NumValidatorStyle::ZERO_AS_BLANK);
             m_pTextCtrl_FromBPM = S.Id(ID_FromBPM)
+               /* i18n-hint: changing a quantity "from" one value "to" another */
+               .Name(XO("Beats per minute, from"))
+               .Validator<FloatingPointValidator<double>>(
+                  3, &m_FromBPM,
+                  NumValidatorStyle::THREE_TRAILING_ZEROES
+                     | NumValidatorStyle::ZERO_AS_BLANK)
+               /* i18n-hint: changing a quantity "from" one value "to" another */
                .AddTextBox(_("from"), wxT(""), 12);
-            m_pTextCtrl_FromBPM->SetName(_("Beats per minute, from"));
-            m_pTextCtrl_FromBPM->SetValidator(vldFromBPM);
 
-            FloatingPointValidator<double> vldToBPM(3, &m_ToBPM, NumValidatorStyle::THREE_TRAILING_ZEROES | NumValidatorStyle::ZERO_AS_BLANK);
             m_pTextCtrl_ToBPM = S.Id(ID_ToBPM)
+               /* i18n-hint: changing a quantity "from" one value "to" another */
+               .Name(XO("Beats per minute, to"))
+               .Validator<FloatingPointValidator<double>>(
+                  3, &m_ToBPM,
+                  NumValidatorStyle::THREE_TRAILING_ZEROES
+                     | NumValidatorStyle::ZERO_AS_BLANK)
+               /* i18n-hint: changing a quantity "from" one value "to" another */
                .AddTextBox(_("to"), wxT(""), 12);
-            m_pTextCtrl_ToBPM->SetName(_("Beats per minute, to"));
-            m_pTextCtrl_ToBPM->SetValidator(vldToBPM);
          }
          S.EndHorizontalLay();
       }
@@ -275,24 +284,25 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
-            FloatingPointValidator<double> vldFromLength(precision, &m_FromLength, NumValidatorStyle::TWO_TRAILING_ZEROES);
             m_pTextCtrl_FromLength = S.Id(ID_FromLength)
+               .Disable() // Disable because the value comes from the
+                       // user selection.
+               .Validator<FloatingPointValidator<double>>(
+                  precision, &m_FromLength,
+                  NumValidatorStyle::TWO_TRAILING_ZEROES)
+               /* i18n-hint: changing a quantity "from" one value "to" another */
                .AddTextBox(_("from"), wxT(""), 12);
-            m_pTextCtrl_FromLength->SetValidator(vldFromLength);
-            m_pTextCtrl_FromLength->Enable(false); // Disable because the value comes from the user selection.
-
-            FloatingPointValidator<double> vldToLength(2, &m_ToLength, NumValidatorStyle::TWO_TRAILING_ZEROES);
-
-            // min and max need same precision as what we're validating (bug 963)
-            double minLength = (m_FromLength * 100.0) / (100.0 + MAX_Percentage);
-            double maxLength = (m_FromLength * 100.0) / (100.0 + MIN_Percentage);
-            minLength = Internat::CompatibleToDouble(Internat::ToString(minLength, precision));
-            maxLength = Internat::CompatibleToDouble(Internat::ToString(maxLength, precision));
-
-            vldToLength.SetRange(minLength, maxLength);
             m_pTextCtrl_ToLength = S.Id(ID_ToLength)
+               .Validator<FloatingPointValidator<double>>(
+                  2, &m_ToLength, NumValidatorStyle::TWO_TRAILING_ZEROES,
+                  // min and max need same precision as what we're validating (bug 963)
+                  RoundValue( precision,
+                     (m_FromLength * 100.0) / (100.0 + MIN_Percentage) ),
+                  RoundValue( precision,
+                     (m_FromLength * 100.0) / (100.0 + MAX_Percentage) )
+               )
+               /* i18n-hint: changing a quantity "from" one value "to" another */
                .AddTextBox(_("to"), wxT(""), 12);
-            m_pTextCtrl_ToLength->SetValidator(vldToLength);
          }
          S.EndHorizontalLay();
       }
@@ -301,9 +311,9 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
 #if USE_SBSMS
       S.StartMultiColumn(2);
       {
-         mUseSBSMSCheckBox = S.AddCheckBox(_("Use high quality stretching (slow)"),
+         mUseSBSMSCheckBox = S.Validator<wxGenericValidator>(&mUseSBSMS)
+            .AddCheckBox(_("Use high quality stretching (slow)"),
                                              mUseSBSMS);
-         mUseSBSMSCheckBox->SetValidator(wxGenericValidator(&mUseSBSMS));
       }
       S.EndMultiColumn();
 #endif

@@ -199,8 +199,9 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         wxChoice *c = S.TieChoice( _("S&ort or Group:"), EffectsGroupBy);
-         if( c ) c->SetMinSize(c->GetBestSize());
+         wxChoice *c = S
+            .MinSize()
+            .TieChoice( _("S&ort or Group:"), EffectsGroupBy);
 
          S.TieIntegerTextBox(_("&Maximum effects per group (0 to disable):"),
                              {wxT("/Effects/MaxPerGroup"),

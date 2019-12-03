@@ -528,48 +528,59 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
             S.StartHorizontalLay(wxALIGN_NOT | wxALIGN_LEFT, 0);
             {
-               wxRadioButton* rb;
+               wxRadioButton *rb;
+
                /* i18n-hint: This is before radio buttons selecting which effects to show */
                S.AddPrompt(_("Show:"));
-               /* i18n-hint: Radio button to show all effects */
-               rb = S.Id(ID_ShowAll).AddRadioButton(_("&All"));
+               rb = S.Id(ID_ShowAll)
+                  /* i18n-hint: Radio button to show all effects */
+                  .Name(XO("Show all"))
+                  /* i18n-hint: Radio button to show all effects */
+                  .AddRadioButton(_("&All"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
 #endif
-               rb->SetName(_("Show all"));
-               /* i18n-hint: Radio button to show just the currently disabled effects */
-               rb = S.Id(ID_ShowDisabled).AddRadioButtonToGroup(_("D&isabled"));
+
+               rb = S.Id(ID_ShowDisabled)
+                  /* i18n-hint: Radio button to show just the currently disabled effects */
+                  .Name(XO("Show disabled"))
+                  /* i18n-hint: Radio button to show just the currently disabled effects */
+                  .AddRadioButtonToGroup(_("D&isabled"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
 #endif
-               rb->SetName(_("Show disabled"));
-               /* i18n-hint: Radio button to show just the currently enabled effects */
-               rb = S.Id(ID_ShowEnabled).AddRadioButtonToGroup(_("E&nabled"));
+
+               rb = S.Id(ID_ShowEnabled)
+                  /* i18n-hint: Radio button to show just the currently enabled effects */
+                  .Name(XO("Show enabled"))
+                  /* i18n-hint: Radio button to show just the currently enabled effects */
+                  .AddRadioButtonToGroup(_("E&nabled"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
 #endif
-               rb->SetName(_("Show enabled"));
-               /* i18n-hint: Radio button to show just the newly discovered effects */
-               rb = S.Id(ID_ShowNew).AddRadioButtonToGroup(_("Ne&w"));
+
+               rb = S.Id(ID_ShowNew)
+                  /* i18n-hint: Radio button to show just the newly discovered effects */
+                  .Name(XO("Show new"))
+                  /* i18n-hint: Radio button to show just the newly discovered effects */
+                  .AddRadioButtonToGroup(_("Ne&w"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
 #endif
-               rb->SetName(_("Show new"));
             }
             S.EndHorizontalLay();
          }
          S.EndHorizontalLay();
 
-         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
          mEffects = S.Id(ID_List)
+            .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES )
+            .ConnectRoot(wxEVT_KEY_DOWN,
+                      &PluginRegistrationDialog::OnListChar)
             .AddListControlReportMode({ _("Name"), _("State"), _("Path") });
-         mEffects->Bind(wxEVT_KEY_DOWN,
-                           &PluginRegistrationDialog::OnListChar,
-                           this);
 #if wxUSE_ACCESSIBILITY
          mEffects->SetAccessible(mAx = safenew CheckListAx(mEffects));
 #endif

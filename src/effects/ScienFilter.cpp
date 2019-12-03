@@ -386,8 +386,9 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
          S.SetBorder(1);
          S.AddSpace(1, 1);
-         S.Prop(1);
-         S.AddWindow(mdBRuler, wxALIGN_RIGHT | wxTOP);
+         S.Prop(1)
+            .Position(wxALIGN_RIGHT | wxTOP)
+            .AddWindow(mdBRuler);
          S.AddSpace(1, 1);
       }
       S.EndVerticalLay();
@@ -398,27 +399,30 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       );
 
       S.SetBorder(5);
-      S.Prop(1);
-      S.AddWindow(mPanel, wxEXPAND | wxRIGHT);
-      S.SetSizeHints(-1, -1);
+      S.Prop(1)
+         .Position(wxEXPAND | wxRIGHT)
+         .MinSize( { -1, -1 } )
+         .AddWindow(mPanel);
 
       S.StartVerticalLay();
       {
          S.AddVariableText(_("+ dB"), false, wxCENTER);
-         S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-         mdBMaxSlider = S.Id(ID_dBMax).AddSlider( {}, 10, 20, 0);
+         mdBMaxSlider = S.Id(ID_dBMax)
+            .Name(XO("Max dB"))
+            .Style(wxSL_VERTICAL | wxSL_INVERSE)
+            .AddSlider( {}, 10, 20, 0);
 #if wxUSE_ACCESSIBILITY
-         mdBMaxSlider->SetName(_("Max dB"));
          mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, _("%d dB")));
 #endif
-
-         S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-         mdBMinSlider = S.Id(ID_dBMin).AddSlider( {}, -10, -10, -120);
-         S.AddVariableText(_("- dB"), false, wxCENTER);
+         mdBMinSlider = S.Id(ID_dBMin)
+            .Name(XO("Min dB"))
+            .Style(wxSL_VERTICAL | wxSL_INVERSE)
+            .AddSlider( {}, -10, -10, -120);
 #if wxUSE_ACCESSIBILITY
-         mdBMinSlider->SetName(_("Min dB"));
          mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, _("%d dB")));
 #endif
+
+         S.AddVariableText(_("- dB"), false, wxCENTER);
       }
       S.EndVerticalLay();
 
@@ -440,8 +444,9 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .LabelEdges(true)
       );
 
-      S.Prop(1);
-      S.AddWindow(mfreqRuler, wxEXPAND | wxALIGN_LEFT | wxRIGHT);
+      S.Prop(1)
+         .Position(wxEXPAND | wxALIGN_LEFT | wxRIGHT)
+         .AddWindow(mfreqRuler);
 
       S.AddSpace(1, 1);
 
@@ -456,14 +461,17 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
          mFilterTypeCtl = S.Id(ID_Type)
+            .Focus()
+            .Validator<wxGenericValidator>(&mFilterType)
+            .MinSize( { -1, -1 } )
             .AddChoice(_("&Filter Type:"),
                LocalizedStrings(kTypeStrings, nTypes)
             );
-         mFilterTypeCtl->SetValidator(wxGenericValidator(&mFilterType));
-         S.SetSizeHints(-1, -1);
 
          mFilterOrderCtl = S.Id(ID_Order)
+            .Validator<wxGenericValidator>(&mOrderIndex)
             /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
+            .MinSize( { -1, -1 } )
             .AddChoice(_("O&rder:"),
                []{
                   wxArrayStringEx orders;
@@ -472,49 +480,45 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
                   return orders;
                }()
             );
-         mFilterOrderCtl->SetValidator(wxGenericValidator(&mOrderIndex));
-         S.SetSizeHints(-1, -1);
          S.AddSpace(1, 1);
 
-         FloatingPointValidator<float> vldRipple(1, &mRipple);
-         vldRipple.SetRange(MIN_Passband, MAX_Passband);
-         
          mRippleCtlP = S.AddVariableText(_("&Passband Ripple:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         mRippleCtl = S.Id(ID_Ripple).AddTextBox( {}, wxT(""), 10);
-         mRippleCtl->SetName(_("Passband Ripple (dB)"));
-         mRippleCtl->SetValidator(vldRipple);
+         mRippleCtl = S.Id(ID_Ripple)
+            .Name(XO("Passband Ripple (dB)"))
+            .Validator<FloatingPointValidator<float>>(
+               1, &mRipple, NumValidatorStyle::DEFAULT,
+               MIN_Passband, MAX_Passband)
+            .AddTextBox( {}, wxT(""), 10);
          mRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
          mFilterSubTypeCtl = S.Id(ID_SubType)
+            .Validator<wxGenericValidator>(&mFilterSubtype)
+            .MinSize( { -1, -1 } )
             .AddChoice(_("&Subtype:"),
                LocalizedStrings(kSubTypeStrings, nSubTypes)
             );
-         mFilterSubTypeCtl->SetValidator(wxGenericValidator(&mFilterSubtype));
-         S.SetSizeHints(-1, -1);
-      
-         FloatingPointValidator<float> vldCutoff(1, &mCutoff);
-         vldCutoff.SetRange(MIN_Cutoff, mNyquist - 1);
-         
-         mCutoffCtl = S.Id(ID_Cutoff).AddTextBox(_("C&utoff:"), wxT(""), 10);
-         mCutoffCtl->SetName(_("Cutoff (Hz)"));
-         mCutoffCtl->SetValidator(vldCutoff);
+
+         mCutoffCtl = S.Id(ID_Cutoff)
+            .Name(XO("Cutoff (Hz)"))
+            .Validator<FloatingPointValidator<float>>(
+               1, &mCutoff, NumValidatorStyle::DEFAULT,
+               MIN_Cutoff, mNyquist - 1)
+            .AddTextBox(_("C&utoff:"), wxT(""), 10);
          S.AddUnits(_("Hz"));
 
-         FloatingPointValidator<float> vldStopbandRipple(1, &mStopbandRipple);
-         vldStopbandRipple.SetRange(MIN_Stopband, MAX_Stopband);
-         
          mStopbandRippleCtlP = S.AddVariableText(_("Minimum S&topband Attenuation:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         mStopbandRippleCtl = S.Id(ID_StopbandRipple).AddTextBox( {}, wxT(""), 10);
-         mStopbandRippleCtl->SetName(_("Minimum S&topband Attenuation (dB)"));
-         mStopbandRippleCtl->SetValidator(vldStopbandRipple);
+         mStopbandRippleCtl = S.Id(ID_StopbandRipple)
+            .Name(XO("Minimum S&topband Attenuation (dB)"))
+            .Validator<FloatingPointValidator<float>>(
+               1, &mStopbandRipple, NumValidatorStyle::DEFAULT,
+               MIN_Stopband, MAX_Stopband)
+            .AddTextBox( {}, wxT(""), 10);
          mStopbandRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
       }
       S.EndMultiColumn();
       S.AddSpace(1, 1);
    }
    S.EndMultiColumn();
-
-   mFilterTypeCtl->SetFocus();
 
    return;
 }

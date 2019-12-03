@@ -439,9 +439,10 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S)
 #define SpinSlider(n, p) \
       m ## n ## T = S.Id(ID_ ## n). \
          AddSpinCtrl( p, DEF_ ## n, MAX_ ## n, MIN_ ## n); \
-      S.SetStyle(wxSL_HORIZONTAL); \
-      m ## n ## S = S.Id(ID_ ## n). \
-         AddSlider( {}, DEF_ ## n, MAX_ ## n, MIN_ ## n);
+      S; \
+      m ## n ## S = S.Id(ID_ ## n) \
+         .Style(wxSL_HORIZONTAL) \
+         .AddSlider( {}, DEF_ ## n, MAX_ ## n, MIN_ ## n);
 
       SpinSlider(RoomSize,       _("&Room Size (%):"))
       SpinSlider(PreDelay,       _("&Pre-delay (ms):"))

@@ -172,10 +172,11 @@ void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxCENTER, false);
    {
-      IntegerValidator<int> vldRepeatCount(&repeatCount);
-      vldRepeatCount.SetRange(MIN_Count, 2147483647 / mProjectRate);
-      mRepeatCount = S.AddTextBox(_("Number of repeats to add:"), wxT(""), 12);
-      mRepeatCount->SetValidator(vldRepeatCount);
+      mRepeatCount = S.Validator<IntegerValidator<int>>(
+            &repeatCount, NumValidatorStyle::DEFAULT,
+            MIN_Count, 2147483647 / mProjectRate
+         )
+         .AddTextBox(_("Number of repeats to add:"), wxT(""), 12);
    }
    S.EndHorizontalLay();
 

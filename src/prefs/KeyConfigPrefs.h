@@ -58,12 +58,12 @@ private:
    void OnSelected(wxCommandEvent & e);
 
    void OnHotkeyKeyDown(wxKeyEvent & e);
-   void OnHotkeyChar(wxKeyEvent & e);
-   void OnHotkeyKillFocus(wxFocusEvent & e);
+   void OnHotkeyChar(wxEvent & e);
+   void OnHotkeyKillFocus(wxEvent & e);
 
    void OnFilterTimer(wxTimerEvent & e);
    void OnFilterKeyDown(wxKeyEvent & e);
-   void OnFilterChar(wxKeyEvent & e);
+   void OnFilterChar(wxEvent & e);
 
    KeyView *mView;
    wxTextCtrl *mKey;

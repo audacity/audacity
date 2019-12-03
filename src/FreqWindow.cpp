@@ -303,16 +303,18 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          );
 
          S.AddSpace(wxDefaultCoord, 1);
-         S.Prop(1);
-         S.AddWindow(vRuler, wxALIGN_RIGHT | wxALIGN_TOP);
+         S.Prop(1)
+            .Position(wxALIGN_RIGHT | wxALIGN_TOP)
+            .AddWindow(vRuler);
          S.AddSpace(wxDefaultCoord, 1);
       }
       S.EndVerticalLay();
 
       mFreqPlot = safenew FreqPlot(this, wxID_ANY);
-      mFreqPlot->SetMinSize(wxSize(wxDefaultCoord, FREQ_WINDOW_HEIGHT));
-      S.Prop(1);
-      S.AddWindow(mFreqPlot, wxEXPAND);
+      S.Prop(1)
+         .Position(wxEXPAND)
+         .MinSize( { wxDefaultCoord, FREQ_WINDOW_HEIGHT } )
+         .AddWindow(mFreqPlot);
 
       S.StartHorizontalLay(wxEXPAND, 0);
       {
@@ -324,33 +326,39 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
             // so that name can be set on a standard control
             mPanScroller->SetAccessible(safenew WindowAccessible(mPanScroller));
 #endif
-            mPanScroller->SetName(_("Scroll"));
             S.Prop(1);
-            S.AddWindow(mPanScroller, wxALIGN_LEFT | wxTOP);
+            S
+               .Name(XO("Scroll"))
+               .Position( wxALIGN_LEFT | wxTOP)
+               .AddWindow(mPanScroller);
          }
          S.EndVerticalLay();
 
          S.StartVerticalLay();
          {
             wxStaticBitmap *zi = safenew wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomIn));
-            S.AddWindow((wxWindow *) zi, wxALIGN_CENTER);
+            S.Position(wxALIGN_CENTER)
+               .AddWindow(zi);
 
             S.AddSpace(5);
 
             mZoomSlider = safenew wxSliderWrapper(this, FreqZoomSliderID, 100, 1, 100,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL);
             S.Prop(1);
-            S.AddWindow(mZoomSlider, wxALIGN_CENTER_HORIZONTAL);
+            S
+               .Name(XO("Zoom"))
+               .Position(wxALIGN_CENTER_HORIZONTAL)
+               .AddWindow(mZoomSlider);
 #if wxUSE_ACCESSIBILITY
             // so that name can be set on a standard control
             mZoomSlider->SetAccessible(safenew WindowAccessible(mZoomSlider));
 #endif
-            mZoomSlider->SetName(_("Zoom"));
 
             S.AddSpace(5);
 
             wxStaticBitmap *zo = safenew wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomOut));
-            S.AddWindow((wxWindow *) zo, wxALIGN_CENTER);
+            S.Position(wxALIGN_CENTER)
+               .AddWindow(zo);
          }
          S.EndVerticalLay();
 
@@ -380,8 +388,9 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          );
 
          S.AddSpace(1, wxDefaultCoord);
-         S.Prop(1);
-         S.AddWindow(hRuler, wxALIGN_LEFT | wxALIGN_TOP);
+         S.Prop(1)
+            .Position(wxALIGN_LEFT | wxALIGN_TOP)
+            .AddWindow(hRuler);
          S.AddSpace(1, wxDefaultCoord);
       }
       S.EndHorizontalLay();
@@ -410,13 +419,13 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          {
             S.AddPrompt(_("Cursor:"));
 
-            S.SetStyle(wxTE_READONLY);
-            mCursorText = S.AddTextBox( {}, wxT(""), 10);
+            mCursorText = S.Style(wxTE_READONLY)
+               .AddTextBox( {}, wxT(""), 10);
 
             S.AddPrompt(_("Peak:"));
 
-            S.SetStyle(wxTE_READONLY);
-            mPeakText = S.AddTextBox( {}, wxT(""), 10);
+            mPeakText = S.Style(wxTE_READONLY)
+               .AddTextBox( {}, wxT(""), 10);
             S.AddSpace(5);
 
             mGridOnOff = S.Id(GridOnOffID).AddCheckBox(_("&Grids"), mDrawGrid);
@@ -445,15 +454,15 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
       S.AddSpace(5);
 
-      mAlgChoice = S.Id(FreqAlgChoiceID)
+      mAlgChoice = S.Id(FreqAlgChoiceID).Focus()
+         .MinSize( { wxDefaultCoord, wxDefaultCoord } )
          .AddChoice(_("&Algorithm:"), algChoices, mAlg);
-      S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
       S.AddSpace(5);
 
       mSizeChoice = S.Id(FreqSizeChoiceID)
+         .MinSize( { wxDefaultCoord, wxDefaultCoord } )
          .AddChoice(_("&Size:"), sizeChoices, mSize);
-      S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
       S.AddSpace(5);
 
@@ -469,15 +478,15 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       S.AddSpace(5);
 
       mFuncChoice = S.Id(FreqFuncChoiceID)
+         .MinSize( { wxDefaultCoord, wxDefaultCoord } )
          .AddChoice(_("&Function:"), funcChoices, mFunc);
-      S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
       mFuncChoice->MoveAfterInTabOrder(mSizeChoice);
 
       S.AddSpace(5);
 
       mAxisChoice = S.Id(FreqAxisChoiceID)
+         .MinSize( { wxDefaultCoord, wxDefaultCoord } )
          .AddChoice(_("&Axis:"), axisChoices, mAxis);
-      S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
       mAxisChoice->MoveAfterInTabOrder(mFuncChoice);
 
       S.AddSpace(5);
@@ -500,7 +509,8 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    S.AddSpace(5);
 
    mProgress = safenew FreqGauge(this, wxID_ANY); //, wxST_SIZEGRIP);
-   S.AddWindow(mProgress, wxEXPAND);
+   S.Position(wxEXPAND)
+      .AddWindow(mProgress);
 
    // Log-frequency axis works for spectrum plots only.
    if (mAlg != SpectrumAnalyst::Spectrum)
@@ -512,7 +522,6 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
    mCloseButton = static_cast<wxButton*>(FindWindowById( wxID_CANCEL ));
    mCloseButton->SetDefault();
-   mCloseButton->SetFocus();
 
    Layout();
    Fit();
@@ -520,7 +529,6 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    Center();
 
    SetMinSize(GetSize());
-   mAlgChoice->SetFocus();
 
 #if defined(__WXGTK__)
    // This should be rechecked with wx3.

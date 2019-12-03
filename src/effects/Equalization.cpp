@@ -782,32 +782,37 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             );
 
             S.Prop(0).AddSpace(0, 1);
-            S.Prop(1).AddWindow(mdBRuler, wxEXPAND );
+            S.Prop(1)
+               .Position(wxEXPAND)
+               .AddWindow(mdBRuler);
             S.AddSpace(0, 1);
          }
          S.EndVerticalLay();
 
          mPanel = safenew EqualizationPanel(parent, wxID_ANY, this);
-         S.Prop(1);
-         S.AddWindow(mPanel, wxEXPAND );
-         S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
+         S.Prop(1)
+            .Position(wxEXPAND)
+            .MinSize( { wxDefaultCoord, wxDefaultCoord } )
+            .AddWindow(mPanel);
 
          S.SetBorder(5);
          S.StartVerticalLay();
          {
             S.AddVariableText(_("+ dB"), false, wxCENTER);
-            S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-            mdBMaxSlider = S.Id(ID_dBMax).AddSlider( {}, 30, 60, 0);
+            mdBMaxSlider = S.Id(ID_dBMax)
+               .Name(XO("Max dB"))
+               .Style(wxSL_VERTICAL | wxSL_INVERSE)
+               .AddSlider( {}, 30, 60, 0);
 #if wxUSE_ACCESSIBILITY
-            mdBMaxSlider->SetName(_("Max dB"));
             mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, _("%d dB")));
 #endif
 
-            S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-            mdBMinSlider = S.Id(ID_dBMin).AddSlider( {}, -30, -10, -120);
+            mdBMinSlider = S.Id(ID_dBMin)
+               .Name(XO("Min dB"))
+               .Style(wxSL_VERTICAL | wxSL_INVERSE)
+               .AddSlider( {}, -30, -10, -120);
             S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
-            mdBMinSlider->SetName(_("Min dB"));
             mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, _("%d dB")));
 #endif
          }
@@ -836,7 +841,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          );
 
          S.SetBorder(1);
-         S.Prop(1).AddWindow(mFreqRuler, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxLEFT);
+         S.Prop(1)
+            .Position(wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxLEFT)
+            .AddWindow(mFreqRuler);
          S.SetBorder(0);
 
          // Column 3 is empty
@@ -853,33 +860,41 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          szrG = S.GetSizer();
 
          // Panel used to host the sliders since they will be positioned manually.
-         //mGraphicPanel = safenew wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
-         //S.Prop(1).AddWindow(mGraphicPanel, wxEXPAND);
+         //mGraphicPanel = S.Prop(1)
+            //.Position(wxEXPAND)
+            //.Size( { -1, 150 } )
+            //.StartPanel();
          wxWindow *pParent = S.GetParent();
          S.AddSpace(15,0);
+         {
+
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
          {
             mSliders[i] = safenew wxSliderWrapper(pParent, ID_Slider + i, 0, -20, +20,
-               wxDefaultPosition, wxSize(-1,150), wxSL_VERTICAL | wxSL_INVERSE);
+               wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL | wxSL_INVERSE);
 
-            mSliders[i]->Bind(wxEVT_ERASE_BACKGROUND,
-                              // ignore it
-                              [](wxEvent&){});
 #if wxUSE_ACCESSIBILITY
-            wxString name;
-            if( kThirdOct[i] < 1000.)
-               name.Printf(_("%d Hz"), (int)kThirdOct[i]);
-            else
-               name.Printf(_("%g kHz"), kThirdOct[i]/1000.);
-            mSliders[i]->SetName(name);
             mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], _("%d dB")));
 #endif
+
             mSlidersOld[i] = 0;
             mEQVals[i] = 0.;
             //S.SetSizerProportion(1);
-            S.Prop(1).AddWindow( mSliders[i], wxEXPAND );
+            S.Prop(1)
+               .Name( TranslatableString{
+                  kThirdOct[i] < 1000.
+                     ? wxString::Format(_("%d Hz"), (int)kThirdOct[i])
+                     : wxString::Format(_("%g kHz"), kThirdOct[i]/1000.)
+               } )
+               .ConnectRoot(
+                  wxEVT_ERASE_BACKGROUND, &EffectEqualization::OnErase)
+               .Position(wxEXPAND)
+               .Size( { -1, 150 } )
+               .AddWindow( mSliders[i] );
          }
          S.AddSpace(15,0);
+
+         } //S.EndPanel();
       }
       S.EndHorizontalLay();
 
@@ -905,11 +920,13 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
                {
-                  mDraw = S.Id(ID_Draw).AddRadioButton(_("&Draw"));
-                  mDraw->SetName(_("Draw Curves"));
+                  mDraw = S.Id(ID_Draw)
+                     .Name(XO("Draw Curves"))
+                     .AddRadioButton(_("&Draw"));
 
-                  mGraphic = S.Id(ID_Graphic).AddRadioButtonToGroup(_("&Graphic"));
-                  mGraphic->SetName(_("Graphic EQ"));
+                  mGraphic = S.Id(ID_Graphic)
+                     .Name(XO("Graphic EQ"))
+                     .AddRadioButtonToGroup(_("&Graphic"));
                }
                S.EndHorizontalLay();
             }
@@ -925,13 +942,13 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                szrI = S.GetSizer();
 
                mInterpChoice = S.Id(ID_Interp)
+                  .Name(XO("Interpolation type"))
                   .AddChoice( {},
                      LocalizedStrings(kInterpStrings, nInterpolations), 0 );
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                mInterpChoice->SetAccessible(safenew WindowAccessible(mInterpChoice));
 #endif
-               mInterpChoice->SetName(_("Interpolation type"));
             }
             S.EndHorizontalLay();
 
@@ -939,8 +956,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                szrL = S.GetSizer();
 
-               mLinFreq = S.Id(ID_Linear).AddCheckBox(_("Li&near Frequency Scale"), false);
-               mLinFreq->SetName(_("Linear Frequency Scale"));
+               mLinFreq = S.Id(ID_Linear)
+                  .Name(XO("Linear Frequency Scale"))
+                  .AddCheckBox(_("Li&near Frequency Scale"), false);
             }
             S.EndHorizontalLay();
          }
@@ -961,9 +979,10 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
                S.StartHorizontalLay(wxEXPAND, 1);
                {
-                  S.SetStyle(wxSL_HORIZONTAL);
-                  mMSlider = S.Id(ID_Length).AddSlider( {}, (mM - 1) / 2, 4095, 10);
-                  mMSlider->SetName(_("Length of Filter"));
+                  mMSlider = S.Id(ID_Length)
+                     .Name(XO("Length of Filter"))
+                     .Style(wxSL_HORIZONTAL)
+                     .AddSlider( {}, (mM - 1) / 2, 4095, 10);
                }
                S.EndHorizontalLay();
 
@@ -971,8 +990,10 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                {
                   wxString label;
                   label.Printf(wxT("%ld"), mM);
-                  mMText = S.AddVariableText(label);
-                  mMText->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+                  mMText = S.Name( TranslatableString{ label } )
+                  // fix for bug 577 (NVDA/Narrator screen readers do not
+                  // read static text in dialogs)
+                     .AddVariableText(label);
                }
                S.EndHorizontalLay();
             }
@@ -996,6 +1017,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
                {
                   mCurve = S.Id(ID_Curve)
+                     .Name(XO("Select Curve"))
                      .AddChoice( {},
                         [this]{
                            wxArrayStringEx curves;
@@ -1004,7 +1026,6 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                            return curves;
                         }()
                      );
-                  mCurve->SetName(_("Select Curve"));
                }
                S.EndHorizontalLay();
             }
@@ -1018,8 +1039,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.Id(ID_Clear).AddButton(_("Fla&tten"));
             S.Id(ID_Invert).AddButton(_("&Invert"));
 
-            mGridOnOff = S.Id(ID_Grid).AddCheckBox(_("Show g&rid lines"), false);
-            mGridOnOff->SetName(_("Show grid lines"));
+            mGridOnOff = S.Id(ID_Grid)
+               .Name(XO("Show grid lines"))
+               .AddCheckBox(_("Show g&rid lines"), false);
          }
          S.EndHorizontalLay();
 
@@ -1060,29 +1082,23 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             .AddRadioButton(_("D&efault"),
                             0, value);
          mMathProcessingType[1] = S.Id(ID_SSE)
+            .Disable(!EffectEqualization48x::GetMathCaps()->SSE)
             .AddRadioButtonToGroup(_("&SSE"),
                                    1, value);
          mMathProcessingType[2] = S.Id(ID_SSEThreaded)
+            .Disable(!EffectEqualization48x::GetMathCaps()->SSE)
             .AddRadioButtonToGroup(_("SSE &Threaded"),
                                    2, value);
          mMathProcessingType[3] = S.Id(ID_AVX)
+            // not implemented
+            .Disable(true /* !EffectEqualization48x::GetMathCaps()->AVX */)
             .AddRadioButtonToGroup(_("A&VX"),
                                    3, value);
          mMathProcessingType[4] = S.Id(ID_AVXThreaded)
+            // not implemented
+            .Disable(true /* !EffectEqualization48x::GetMathCaps()->AVX */)
             .AddRadioButtonToGroup(_("AV&X Threaded"),
                                    4, value);
-
-         if (!EffectEqualization48x::GetMathCaps()->SSE)
-         {
-            mMathProcessingType[1]->Disable();
-            mMathProcessingType[2]->Disable();
-         }
-         if (true)  //!EffectEqualization48x::GetMathCaps()->AVX) { not implemented
-         {
-            mMathProcessingType[3]->Disable();
-            mMathProcessingType[4]->Disable();
-         }
-
          S.Id(ID_Bench).AddButton(_("&Bench"));
       }
       S.EndHorizontalLay();
@@ -2754,6 +2770,10 @@ double EffectEqualization::splint(double x[], double y[], size_t n, double y2[],
    return( a*y[k]+b*y[k+1]+((a*a*a-a)*y2[k]+(b*b*b-b)*y2[k+1])*h*h/6.);
 }
 
+void EffectEqualization::OnErase( wxEvent& )
+{
+}
+
 void EffectEqualization::OnSize(wxSizeEvent & event)
 {
    mUIParent->Layout();
@@ -3335,8 +3355,8 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartStatic(_("&Curves"), 1);
       {
-         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
          mList = S.Id(CurvesListID)
+            .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES )
             .AddListControlReportMode({
                { _("Curve Name"), wxLIST_FORMAT_RIGHT }
             });

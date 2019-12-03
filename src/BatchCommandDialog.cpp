@@ -89,10 +89,12 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
          S.SetStretchyCol(1);
          mCommand = S.AddTextBox(_("&Command"), wxT(""), 20);
          mCommand->SetEditable(false);
-         mEditParams = S.Id(EditParamsButtonID).AddButton(_("&Edit Parameters"));
-         mEditParams->Enable(false); // disable button as box is empty
-         mUsePreset = S.Id(UsePresetButtonID).AddButton(_("&Use Preset"));
-         mUsePreset->Enable(false); // disable button as box is empty
+         mEditParams = S.Id(EditParamsButtonID)
+            .Disable() // disable button as box is empty
+            .AddButton(_("&Edit Parameters"));
+         mUsePreset = S.Id(UsePresetButtonID)
+            .Disable() // disable button as box is empty
+            .AddButton(_("&Use Preset"));
       }
       S.EndMultiColumn();
 
@@ -101,18 +103,20 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
          S.SetStretchyCol(1);
          mParameters = S.AddTextBox(_("&Parameters"), wxT(""), 0);
          mParameters->SetEditable(false);
-         wxString prompt{_("&Details")};
-         S.Prop(0).AddPrompt(prompt);
-         mDetails = S.AddTextWindow( wxT(""));
+         auto prompt = XO("&Details");
+         S.Prop(0).AddPrompt(prompt.Translation());
+         mDetails = S
+            .Name( prompt )
+            .AddTextWindow( wxT(""));
          mDetails->SetEditable(false);
-         mDetails->SetName(wxStripMenuCodes(prompt));
       }
       S.EndMultiColumn();
 
       S.Prop(10).StartStatic(_("Choose command"), true);
       {
-         S.SetStyle(wxSUNKEN_BORDER | wxLC_LIST | wxLC_SINGLE_SEL);
-         mChoices = S.Id(CommandsListID).AddListControl();
+         mChoices = S.Id(CommandsListID)
+            .Style(wxSUNKEN_BORDER | wxLC_LIST | wxLC_SINGLE_SEL)
+            .AddListControl();
       }
       S.EndStatic();
    }

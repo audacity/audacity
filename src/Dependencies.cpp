@@ -364,12 +364,11 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
 
          mCopySelectedFilesButton =
             S.Id(CopySelectedFilesButtonID)
+               .Focus()
+               .Disable(mFileListCtrl->GetSelectedItemCount() <= 0)
                .AddButton(
                   _("Copy Selected Files"),
                   wxALIGN_LEFT, true);
-         mCopySelectedFilesButton->Enable(
-            mFileListCtrl->GetSelectedItemCount() > 0);
-         mCopySelectedFilesButton->SetFocus();
       }
       S.EndStatic();
 
@@ -383,11 +382,12 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
             S.Id(wxID_NO).AddButton(_("Do Not Copy"));
 
          mCopyAllFilesButton =
-            S.Id(wxID_YES).AddButton(_("Copy All Files (Safer)"));
+            S.Id(wxID_YES)
+               // Enabling mCopyAllFilesButton is also done in PopulateList,
+               // but at its call above, mCopyAllFilesButton does not yet exist.
+               .Disable(mHasMissingFiles)
+               .AddButton(_("Copy All Files (Safer)"));
 
-         // Enabling mCopyAllFilesButton is also done in PopulateList,
-         // but at its call above, mCopyAllFilesButton does not yet exist.
-         mCopyAllFilesButton->Enable(!mHasMissingFiles);
       }
       S.EndHorizontalLay();
 

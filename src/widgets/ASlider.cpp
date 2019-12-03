@@ -280,10 +280,8 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
 
    S.StartVerticalLay();
    {
-      mTextCtrl = S.AddTextBox( {},
-                               wxEmptyString,
-                               15);
-      mTextCtrl->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
+      mTextCtrl = S.Validator<wxTextValidator>(wxFILTER_NUMERIC)
+         .AddTextBox( {}, wxEmptyString, 15);
 
       mSlider = safenew ASlider(this,
                             wxID_ANY,
@@ -292,7 +290,8 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                             size,
                             ASlider::Options{}
                                .Style( style ).Line( line ).Page( page ) );
-      S.AddWindow(mSlider, wxEXPAND);
+      S.Position(wxEXPAND)
+         .AddWindow(mSlider);
    }
    S.EndVerticalLay();
 

@@ -87,6 +87,12 @@ SplashDialog::SplashDialog(wxWindow * parent)
    Move( x, 60 );
 }
 
+void SplashDialog::OnChar(wxMouseEvent &event)
+{
+   if ( event.ShiftDown() && event.ControlDown() )
+      wxLaunchDefaultBrowser("https://www.audacityteam.org");
+}
+
 void SplashDialog::Populate( ShuttleGui & S )
 {
    bool bShow;
@@ -118,23 +124,20 @@ void SplashDialog::Populate( ShuttleGui & S )
                           wxDefaultPosition,
                           wxSize((int)(LOGOWITHNAME_WIDTH*fScale), (int)(LOGOWITHNAME_HEIGHT*fScale)));
 
-   S.Prop(0).AddWindow( icon );
-
+   S.Prop(0)
 #if  (0)
-   icon->Bind(wxEVT_LEFT_DOWN,
-              [this]( wxMouseEvent const & event ) ->void {
-                 if ( event.ShiftDown() && event.ControlDown())
-                    wxLaunchDefaultBrowser("https://www.audacityteam.org");
-              }
-         );
+      .ConnectRoot( wxEVT_LEFT_DOWN, &SplashDialog::OnChar)
 #endif
+      .AddWindow( icon );
 
    mpHtml = safenew LinkingHtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,
                                          wxSize(506, 280),
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER );
    mpHtml->SetPage(HelpText( wxT("welcome") ));
-   S.Prop(1).AddWindow( mpHtml, wxEXPAND );
+   S.Prop(1)
+      .Position( wxEXPAND )
+      .AddWindow( mpHtml );
    S.Prop(0).StartMultiColumn(2, wxEXPAND);
    S.SetStretchyCol( 1 );// Column 1 is stretchy...
    {

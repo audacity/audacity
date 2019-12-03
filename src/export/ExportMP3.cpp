@@ -392,21 +392,21 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   codes
                );
 
-               mMode = S.TieNumberAsChoice(
-                  _("Variable Speed:"),
-                  { wxT("/FileFormats/MP3VarMode"), ROUTINE_FAST },
-                  varModeNames );
-               mMode->Enable(enable);
+               mMode = S.Disable(!enable)
+                  .TieNumberAsChoice(
+                     _("Variable Speed:"),
+                     { wxT("/FileFormats/MP3VarMode"), ROUTINE_FAST },
+                     varModeNames );
    
                S.AddPrompt(_("Channel Mode:"));
                S.StartMultiColumn(3, wxEXPAND);
                {
                   S.StartRadioButtonGroup(MP3ChannelModeSetting);
                   {
-                     mJoint = S.TieRadioButton();
-                     mStereo = S.TieRadioButton();
-                     mJoint->Enable(!mono);
-                     mStereo->Enable(!mono);
+                     mJoint = S.Disable(mono)
+                        .TieRadioButton();
+                     mStereo = S.Disable(mono)
+                        .TieRadioButton();
                   }
                   S.EndRadioButtonGroup();
 

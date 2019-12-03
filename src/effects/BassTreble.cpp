@@ -227,25 +227,27 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
          S.SetStretchyCol(2);
 
          // Bass control
-         FloatingPointValidator<double> vldBass(1, &mBass);
-         vldBass.SetRange(MIN_Bass, MAX_Bass);
-         mBassT = S.Id(ID_Bass).AddTextBox(_("Ba&ss (dB):"), wxT(""), 10);
-         mBassT->SetName(_("Bass (dB):"));
-         mBassT->SetValidator(vldBass);
+         mBassT = S.Id(ID_Bass)
+            .Name(XO("Bass (dB):"))
+            .Validator<FloatingPointValidator<double>>(
+               1, &mBass, NumValidatorStyle::DEFAULT, MIN_Bass, MAX_Bass)
+            .AddTextBox(_("Ba&ss (dB):"), wxT(""), 10);
 
-         S.SetStyle(wxSL_HORIZONTAL);
-         mBassS = S.Id(ID_Bass).AddSlider( {}, 0, MAX_Bass * SCL_Bass, MIN_Bass * SCL_Bass);
-         mBassS->SetName(_("Bass"));
+         mBassS = S.Id(ID_Bass)
+            .Name(XO("Bass"))
+            .Style(wxSL_HORIZONTAL)
+            .AddSlider( {}, 0, MAX_Bass * SCL_Bass, MIN_Bass * SCL_Bass);
 
          // Treble control
-         FloatingPointValidator<double> vldTreble(1, &mTreble);
-         vldTreble.SetRange(MIN_Treble, MAX_Treble);
-         mTrebleT = S.Id(ID_Treble).AddTextBox(_("&Treble (dB):"), wxT(""), 10);
-         mTrebleT->SetValidator(vldTreble);
+         mTrebleT = S.Id(ID_Treble)
+            .Validator<FloatingPointValidator<double>>(
+               1, &mTreble, NumValidatorStyle::DEFAULT, MIN_Treble, MAX_Treble)
+            .AddTextBox(_("&Treble (dB):"), wxT(""), 10);
 
-         S.SetStyle(wxSL_HORIZONTAL);
-         mTrebleS = S.Id(ID_Treble).AddSlider( {}, 0, MAX_Treble * SCL_Treble, MIN_Treble * SCL_Treble);
-         mTrebleS->SetName(_("Treble"));
+         mTrebleS = S.Id(ID_Treble)
+            .Name(XO("Treble"))
+            .Style(wxSL_HORIZONTAL)
+            .AddSlider( {}, 0, MAX_Treble * SCL_Treble, MIN_Treble * SCL_Treble);
       }
       S.EndMultiColumn();
    }
@@ -258,14 +260,15 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
          S.SetStretchyCol(2);
 
          // Gain control
-         FloatingPointValidator<double> vldGain(1, &mGain);
-         vldGain.SetRange(MIN_Gain, MAX_Gain);
-         mGainT = S.Id(ID_Gain).AddTextBox(_("&Volume (dB):"), wxT(""), 10);
-         mGainT->SetValidator(vldGain);
+         mGainT = S.Id(ID_Gain)
+            .Validator<FloatingPointValidator<double>>(
+               1, &mGain, NumValidatorStyle::DEFAULT, MIN_Gain, MAX_Gain)
+            .AddTextBox(_("&Volume (dB):"), wxT(""), 10);
 
-         S.SetStyle(wxSL_HORIZONTAL);
-         mGainS = S.Id(ID_Gain).AddSlider( {}, 0, MAX_Gain * SCL_Gain, MIN_Gain * SCL_Gain);
-         mGainS->SetName(_("Level"));
+         mGainS = S.Id(ID_Gain)
+            .Name(XO("Level"))
+            .Style(wxSL_HORIZONTAL)
+            .AddSlider( {}, 0, MAX_Gain * SCL_Gain, MIN_Gain * SCL_Gain);
       }
       S.EndMultiColumn();
 

@@ -190,6 +190,7 @@ private:
    void spline(double x[], double y[], size_t n, double y2[]);
    double splint(double x[], double y[], size_t n, double y2[], double xr);
 
+   void OnErase( wxEvent &event );
    void OnSize( wxSizeEvent & event );
    void OnSlider( wxCommandEvent & event );
    void OnInterp( wxCommandEvent & event );

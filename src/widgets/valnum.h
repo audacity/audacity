@@ -505,6 +505,10 @@ MakeFloatingPointValidator(int precision, T *value, NumValidatorStyle style = Nu
     return FloatingPointValidator<T>(precision, value, style);
 }
 
+// Sometimes useful for specifying max and min values for validators, when they
+// must have the same precision as the validated value
+double RoundValue(int precision, double value);
+
 #endif // wxUSE_VALIDATORS
 
 #endif // _WIDGETS_VALNUM_H_

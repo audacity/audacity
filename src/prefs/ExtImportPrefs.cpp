@@ -146,7 +146,8 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
             RuleTable->EnableDragCell (true);
             fillRuleTable = true;
          }
-         S.AddWindow(RuleTable, wxEXPAND | wxALL);
+         S.Position(wxEXPAND | wxALL)
+            .AddWindow(RuleTable);
 
          PluginList = S.Id(EIPPluginList).AddListControl(
             { { _("Importer order"), wxLIST_FORMAT_LEFT,

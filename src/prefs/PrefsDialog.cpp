@@ -561,8 +561,9 @@ PrefsDialog::PrefsDialog
          mCategories->GetTreeCtrl()->SetName(_("Category"));
          S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, true);
          {
-            S.Prop(1);
-            S.AddWindow(mCategories, wxEXPAND);
+            S.Prop(1)
+               .Position(wxEXPAND)
+               .AddWindow(mCategories);
 
             {
                typedef std::pair<int, int> IntPair;
@@ -602,7 +603,9 @@ PrefsDialog::PrefsDialog
          const PrefsNode &node = factories[0];
          const PrefsPanel::Factory &factory = node.factory;
          mUniquePage = factory(this, wxID_ANY);
-         wxWindow * uniquePageWindow = S.Prop(1).AddWindow(mUniquePage, wxEXPAND);
+         wxWindow * uniquePageWindow = S.Prop(1)
+            .Position(wxEXPAND)
+            .AddWindow(mUniquePage);
          // We're not in the wxTreebook, so add the accelerator here
          wxAcceleratorEntry entries[1];
 #if defined(__WXMAC__)

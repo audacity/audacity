@@ -233,49 +233,46 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       // Amplitude
       S.StartMultiColumn(2, wxCENTER);
       {
-         FloatingPointValidator<double> vldAmp(precision, &mAmp, NumValidatorStyle::ONE_TRAILING_ZERO);
-         vldAmp.SetRange(MIN_Amp, MAX_Amp);
-         mAmpT = S.Id(ID_Amp).AddTextBox(_("Amplification (dB):"), wxT(""), 12);
-         mAmpT->SetValidator(vldAmp);
+         mAmpT = S.Id(ID_Amp)
+            .Validator<FloatingPointValidator<double>>(
+               precision, &mAmp, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Amp, MAX_Amp
+            )
+            .AddTextBox(_("Amplification (dB):"), wxT(""), 12);
       }
       S.EndMultiColumn();
 
       // Amplitude
       S.StartHorizontalLay(wxEXPAND);
       {
-         S.SetStyle(wxSL_HORIZONTAL);
-         mAmpS = S.Id(ID_Amp).AddSlider( {}, 0, MAX_Amp * SCL_Amp, MIN_Amp * SCL_Amp);
-         mAmpS->SetName(_("Amplification dB"));
+         mAmpS = S.Id(ID_Amp)
+            .Style(wxSL_HORIZONTAL)
+            .Name(XO("Amplification dB"))
+            .AddSlider( {}, 0, MAX_Amp * SCL_Amp, MIN_Amp * SCL_Amp);
       }
       S.EndHorizontalLay();
 
       // Peak
       S.StartMultiColumn(2, wxCENTER);
       {
-         // One extra decimal place so that rounding is visible to user (see: bug 958)
-         FloatingPointValidator<double> vldNewPeak(precision + 1, &mNewPeak, NumValidatorStyle::ONE_TRAILING_ZERO);
-         double minAmp = MIN_Amp + LINEAR_TO_DB(mPeak);
-         double maxAmp = MAX_Amp + LINEAR_TO_DB(mPeak);
-
-         // min and max need same precision as what we're validating (bug 963)
-         minAmp = Internat::CompatibleToDouble(Internat::ToString(minAmp, precision +1));
-         maxAmp = Internat::CompatibleToDouble(Internat::ToString(maxAmp, precision +1));
-
-         vldNewPeak.SetRange(minAmp, maxAmp);
-         mNewPeakT = S.Id(ID_Peak).AddTextBox(_("New Peak Amplitude (dB):"), wxT(""), 12);
-         mNewPeakT->SetValidator(vldNewPeak);
+         mNewPeakT = S.Id(ID_Peak)
+            .Validator<FloatingPointValidator<double>>(
+               // One extra decimal place so that rounding is visible to user
+               // (see: bug 958)
+               precision + 1,
+               &mNewPeak, NumValidatorStyle::ONE_TRAILING_ZERO,
+               // min and max need same precision as what we're validating (bug 963)
+               RoundValue( precision + 1, MIN_Amp + LINEAR_TO_DB(mPeak) ),
+               RoundValue( precision + 1, MAX_Amp + LINEAR_TO_DB(mPeak) )
+            )
+            .AddTextBox(_("New Peak Amplitude (dB):"), wxT(""), 12);
       }
       S.EndMultiColumn();
 
       // Clipping
       S.StartHorizontalLay(wxCENTER);
       {
-         mClip = S.Id(ID_Clip).AddCheckBox(_("Allow clipping"), false);
-         if (IsBatchProcessing())
-         {
-            mClip->Enable(false);
-            mCanClip = true;
-         }
+         mClip = S.Id(ID_Clip).Disable( mCanClip = IsBatchProcessing() )
+            .AddCheckBox(_("Allow clipping"), false);
       }
       S.EndHorizontalLay();
    }

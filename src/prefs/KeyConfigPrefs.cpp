@@ -184,12 +184,15 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                0 // tree
             });
             {
-               mViewByTree = S.Id(ViewByTreeID).TieRadioButton();
-               if( mViewByTree ) mViewByTree->SetName(_("View by tree"));
-               mViewByName = S.Id(ViewByNameID).TieRadioButton();
-               if( mViewByName ) mViewByName->SetName(_("View by name"));
-               mViewByKey = S.Id(ViewByKeyID).TieRadioButton();
-               if( mViewByKey ) mViewByKey->SetName(_("View by key"));
+               mViewByTree = S.Id(ViewByTreeID)
+                  .Name(XO("View by tree"))
+                  .TieRadioButton();
+               mViewByName = S.Id(ViewByNameID)
+                  .Name(XO("View by name"))
+                  .TieRadioButton();
+               mViewByKey = S.Id(ViewByKeyID)
+                  .Name(XO("View by key"))
+                  .TieRadioButton();
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                if (mViewByTree) mViewByTree->SetAccessible(safenew WindowAccessible(mViewByTree));
@@ -223,14 +226,13 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
                                         wxTE_PROCESS_ENTER);
                mFilter->SetName(wxStripMenuCodes(mFilterLabel->GetLabel()));
-               mFilter->Bind(wxEVT_KEY_DOWN,
-                                &KeyConfigPrefs::OnFilterKeyDown,
-                                this);
-               mFilter->Bind(wxEVT_CHAR,
-                                &KeyConfigPrefs::OnFilterChar,
-                                this);
             }
-            S.AddWindow(mFilter, wxALIGN_NOT | wxALIGN_LEFT);
+            S.Position(wxALIGN_NOT | wxALIGN_LEFT)
+               .ConnectRoot(wxEVT_KEY_DOWN,
+                            &KeyConfigPrefs::OnFilterKeyDown)
+               .ConnectRoot(wxEVT_CHAR,
+                            &KeyConfigPrefs::OnFilterChar)
+               .AddWindow(mFilter);
          }
          S.EndHorizontalLay();
       }
@@ -243,8 +245,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             mView = safenew KeyView(S.GetParent(), CommandsListID);
             mView->SetName(_("Bindings"));
          }
-         S.Prop(true);
-         S.AddWindow(mView, wxEXPAND);
+         S.Prop(true)
+            .Position(wxEXPAND)
+            .AddWindow(mView);
       }
       S.EndHorizontalLay();
 
@@ -266,17 +269,15 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             mKey->SetAccessible(safenew WindowAccessible(mKey));
 #endif
             mKey->SetName(_("Short cut"));
-            mKey->Bind(wxEVT_KEY_DOWN,
-                          &KeyConfigPrefs::OnHotkeyKeyDown,
-                          this);
-            mKey->Bind(wxEVT_CHAR,
-                          &KeyConfigPrefs::OnHotkeyChar,
-                          this);
-            mKey->Bind(wxEVT_KILL_FOCUS,
-                          &KeyConfigPrefs::OnHotkeyKillFocus,
-                          this);
          }
-         S.AddWindow(mKey);
+         S
+            .ConnectRoot(wxEVT_KEY_DOWN,
+                      &KeyConfigPrefs::OnHotkeyKeyDown)
+            .ConnectRoot(wxEVT_CHAR,
+                      &KeyConfigPrefs::OnHotkeyChar)
+            .ConnectRoot(wxEVT_KILL_FOCUS,
+                      &KeyConfigPrefs::OnHotkeyKillFocus)
+            .AddWindow(mKey);
 
          /* i18n-hint: (verb)*/
          mSet = S.Id(SetButtonID).AddButton(_("&Set"));
@@ -452,12 +453,12 @@ void KeyConfigPrefs::OnHotkeyKeyDown(wxKeyEvent & e)
    t->SetValue(KeyEventToKeyString(e).Display());
 }
 
-void KeyConfigPrefs::OnHotkeyChar(wxKeyEvent & WXUNUSED(e))
+void KeyConfigPrefs::OnHotkeyChar(wxEvent & WXUNUSED(e))
 {
    // event.Skip() not performed, so event will not be processed further.
 }
 
-void KeyConfigPrefs::OnHotkeyKillFocus(wxFocusEvent & e)
+void KeyConfigPrefs::OnHotkeyKillFocus(wxEvent & e)
 {
    if (mKey->GetValue().empty() && mCommandSelected != wxNOT_FOUND) {
       mKey->AppendText(mView->GetKey(mCommandSelected).Display());
@@ -518,7 +519,7 @@ void KeyConfigPrefs::OnFilterKeyDown(wxKeyEvent & e)
    }
 }
 
-void KeyConfigPrefs::OnFilterChar(wxKeyEvent & e)
+void KeyConfigPrefs::OnFilterChar(wxEvent & e)
 {
    if (mViewType != ViewByKey)
    {

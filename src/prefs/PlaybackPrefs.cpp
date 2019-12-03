@@ -77,7 +77,7 @@ namespace {
 
 void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
 {
-   wxTextCtrl *w;
+   const auto suffix = XO("seconds");
 
    S.StartScroller();
    S.SetBorder(2);
@@ -86,12 +86,12 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartThreeColumn();
       {
-         w = S.TieNumericTextBox(_("&Length:"),
+         S.NameSuffix(suffix)
+            .TieNumericTextBox(_("&Length:"),
                                  {wxT("/AudioIO/EffectsPreviewLen"),
                                   6.0},
                                  9);
          S.AddUnits(_("seconds"));
-         if( w ) w->SetName(w->GetName() + wxT(" ") + _("seconds"));
       }
       S.EndThreeColumn();
    }
@@ -102,19 +102,19 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartThreeColumn();
       {
-         w = S.TieNumericTextBox(_("&Before cut region:"),
+         S.NameSuffix(suffix)
+            .TieNumericTextBox(_("&Before cut region:"),
                                  {wxT("/AudioIO/CutPreviewBeforeLen"),
                                   2.0},
                                  9);
          S.AddUnits(_("seconds"));
-         if( w ) w->SetName(w->GetName() + wxT(" ") + _("seconds"));
 
-         w = S.TieNumericTextBox(_("&After cut region:"),
+         S.NameSuffix(suffix)
+            .TieNumericTextBox(_("&After cut region:"),
                                  {wxT("/AudioIO/CutPreviewAfterLen"),
                                   1.0},
                                  9);
          S.AddUnits(_("seconds"));
-         if( w ) w->SetName(w->GetName() + wxT(" ") + _("seconds"));
       }
       S.EndThreeColumn();
    }
@@ -124,19 +124,19 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartThreeColumn();
       {
-         w = S.TieNumericTextBox(_("&Short period:"),
+         S.NameSuffix(suffix)
+            .TieNumericTextBox(_("&Short period:"),
                                  {wxT("/AudioIO/SeekShortPeriod"),
                                   1.0},
                                  9);
          S.AddUnits(_("seconds"));
-         if( w ) w->SetName(w->GetName() + wxT(" ") + _("seconds"));
 
-         w = S.TieNumericTextBox(_("Lo&ng period:"),
+         S.NameSuffix(suffix)
+            .TieNumericTextBox(_("Lo&ng period:"),
                                  {wxT("/AudioIO/SeekLongPeriod"),
                                   15.0},
                                  9);
          S.AddUnits(_("seconds"));
-         if( w ) w->SetName(w->GetName() + wxT(" ") + _("seconds"));
       }
       S.EndThreeColumn();
    }

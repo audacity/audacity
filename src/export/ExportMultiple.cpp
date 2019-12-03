@@ -325,12 +325,11 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
          S.SetBorder(1);
          mTrack = S.Id(TrackID)
             .AddRadioButton(_("Tracks"));
-         mTrack->SetName(_("Tracks"));
 
          // Row 2
          S.SetBorder(1);
-         mLabel = S.Id(LabelID).AddRadioButtonToGroup(_("Labels"));
-         mLabel->SetName(_("Labels"));
+         mLabel = S.Id(LabelID)
+            .AddRadioButtonToGroup(_("Labels"));
          S.SetBorder(3);
 
          S.StartMultiColumn(2, wxEXPAND);
@@ -348,10 +347,11 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             {
                mFirstFileLabel = S.AddVariableText(_("First file name:"), false);
                mFirstFileName = S.Id(FirstFileNameID)
-                  .Prop(1).TieTextBox( {},
+                  .Prop(1)
+                  .Name(XO("First file name"))
+                  .TieTextBox( {},
                               name,
                               30);
-               mFirstFileName->SetName(_("First file name"));
             }
             S.EndMultiColumn();
          }
@@ -390,10 +390,10 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             S.AddVariableText(wxT("   "), false);
             mPrefixLabel = S.AddVariableText(_("File name prefix:"), false);
             mPrefix = S.Id(PrefixID)
+               .Name(XO("File name prefix"))
                .TieTextBox( {},
                            name,
                            30);
-            mPrefix->SetName(_("File name prefix"));
          }
          S.EndMultiColumn();
       }

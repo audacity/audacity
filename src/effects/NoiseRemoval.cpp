@@ -717,44 +717,42 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
-         wxTextValidator vld(wxFILTER_NUMERIC);
-         mGainT = S.Id(ID_GAIN_TEXT).AddTextBox(_("Noise re&duction (dB):"), wxT(""), 0);
-         S.SetStyle(wxSL_HORIZONTAL);
-         mGainT->SetValidator(vld);
+         mGainT = S.Id(ID_GAIN_TEXT)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC)
+            .AddTextBox(_("Noise re&duction (dB):"), wxT(""), 0);
+
          mGainS = S.Id(ID_GAIN_SLIDER)
+            .Name(XO("Noise reduction"))
+            .Style(wxSL_HORIZONTAL)
+            .MinSize( { 150, -1 } )
             .AddSlider(wxT(""), 0, GAIN_MAX, GAIN_MIN);
-         mGainS->SetName(_("Noise reduction"));
-         mGainS->SetSizeHints(150, -1);
 
-         mSensitivityT = S.Id(ID_SENSITIVITY_TEXT).AddTextBox(_("&Sensitivity (dB):"),
-                                                wxT(""),
-                                                0);
-         S.SetStyle(wxSL_HORIZONTAL);
-         mSensitivityT->SetValidator(vld);
+         mSensitivityT = S.Id(ID_SENSITIVITY_TEXT)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC)
+            .AddTextBox(_("&Sensitivity (dB):"), wxT(""), 0);
          mSensitivityS = S.Id(ID_SENSITIVITY_SLIDER)
+            .Name(XO("Sensitivity"))
+            .Style(wxSL_HORIZONTAL)
+            .MinSize( { 150, -1 } )
             .AddSlider(wxT(""), 0, SENSITIVITY_MAX, SENSITIVITY_MIN);
-         mSensitivityS->SetName(_("Sensitivity"));
-         mSensitivityS->SetSizeHints(150, -1);
 
-         mFreqT = S.Id(ID_FREQ_TEXT).AddTextBox(_("Fr&equency smoothing (Hz):"),
-                                                wxT(""),
-                                                0);
-         S.SetStyle(wxSL_HORIZONTAL);
-         mFreqT->SetValidator(vld);
+         mFreqT = S.Id(ID_FREQ_TEXT)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC)
+            .AddTextBox(_("Fr&equency smoothing (Hz):"), wxT(""), 0);
          mFreqS = S.Id(ID_FREQ_SLIDER)
+            .Name(XO("Frequency smoothing"))
+            .Style(wxSL_HORIZONTAL)
+            .MinSize( { 150, -1 } )
             .AddSlider(wxT(""), 0, FREQ_MAX, FREQ_MIN);
-         mFreqS->SetName(_("Frequency smoothing"));
-         mFreqS->SetSizeHints(150, -1);
 
-         mTimeT = S.Id(ID_TIME_TEXT).AddTextBox(_("Attac&k/decay time (secs):"),
-                                                wxT(""),
-                                                0);
-         S.SetStyle(wxSL_HORIZONTAL);
-         mTimeT->SetValidator(vld);
+         mTimeT = S.Id(ID_TIME_TEXT)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC)
+            .AddTextBox(_("Attac&k/decay time (secs):"), wxT(""), 0);
          mTimeS = S.Id(ID_TIME_SLIDER)
+            .Name(XO("Attack/decay time"))
+            .Style(wxSL_HORIZONTAL)
+            .MinSize( { 150, -1 } )
             .AddSlider(wxT(""), 0, TIME_MAX, TIME_MIN);
-         mTimeS->SetName(_("Attack/decay time"));
-         mTimeS->SetSizeHints(150, -1);
 
          S.AddPrompt(_("Noise:"));
          mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)

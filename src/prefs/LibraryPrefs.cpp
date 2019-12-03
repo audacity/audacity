@@ -113,23 +113,23 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
          S.AddVariableText(_("LAME MP3 Library:"),
                            true,
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         wxButton *locate_button = S.Id(ID_MP3_FIND_BUTTON).AddButton(_("&Locate..."),
-                                            wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+         S.Id(ID_MP3_FIND_BUTTON)
+#ifdef DISABLE_DYNAMIC_LOADING_LAME
+             .Disable()
+#endif
+            .AddButton(_("&Locate..."),
+                       wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
          S.AddVariableText(_("LAME MP3 Library:"),
                            true,
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         wxButton *download_button = S.Id(ID_MP3_DOWN_BUTTON).AddButton(_("&Download"),
-                                            wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-
+         S.Id(ID_MP3_DOWN_BUTTON)
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
-         locate_button->Enable(FALSE);
-         download_button->Enable(FALSE);
-#else
-        (void)locate_button;
-        (void)download_button;
-#endif // DISABLE_DYNAMIC_LOADING_LAME
+             .Disable()
 #endif
+            .AddButton(_("&Download"),
+                       wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
 
+#endif
       }
       S.EndTwoColumn();
    }
@@ -155,31 +155,32 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
                            true,
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          S.Id(ID_FFMPEG_FIND_BUTTON);
-         wxButton *bfnd = S.AddButton(_("Loca&te..."),
-                                      wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+         S
+#if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
+            .Disable()
+#endif
+            .AddButton(_("Loca&te..."),
+                       wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
          S.AddVariableText(_("FFmpeg Library:"),
                            true,
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          S.Id(ID_FFMPEG_DOWN_BUTTON);
-         wxButton *bdwn = S.AddButton(_("Dow&nload"),
-                                      wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+         S
 #if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
-         bdwn->Enable(FALSE);
-         bfnd->Enable(FALSE);
-#else
-         // fix compilation warnings about unused variables
-         wxUnusedVar(bfnd);
-         wxUnusedVar(bdwn);
+            .Disable()
 #endif
+            .AddButton(_("Dow&nload"),
+                       wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
       }
       S.EndTwoColumn();
 #ifdef EXPERIMENTAL_OD_FFMPEG
-      wxCheckBox* checkbox = S.TieCheckBox(_("Allow &background on-demand loading"),
+      S
+#if !defined(USE_FFMPEG)
+         .Disable()
+#endif
+         .TieCheckBox(_("Allow &background on-demand loading"),
                     wxT("/Library/FFmpegOnDemand"),
                     false);
-#if !defined(USE_FFMPEG)
-      if( checkbox ) checkbox->Enable(FALSE);
-#endif
 #endif
    }
    S.EndStatic();
