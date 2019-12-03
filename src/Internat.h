@@ -29,7 +29,7 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 #define _TS( s ) GetCustomSubstitution( s )
 
 // Marks strings for extraction only... use .Translate() to translate.
-#define XO(s)  (TranslatableString{ wxT(s) })
+#define XO(s)  (TranslatableString{ wxT(s), {} })
 
 #ifdef _
    #undef _

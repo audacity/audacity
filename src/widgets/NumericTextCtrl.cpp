@@ -709,7 +709,7 @@ NumericConverter::NumericConverter(Type type,
 void NumericConverter::ParseFormatString(
    const TranslatableString & untranslatedFormat)
 {
-   auto &format = untranslatedFormat.Translation();
+   auto format = untranslatedFormat.Translation();
 
    mPrefix = wxT("");
    mFields.clear();

@@ -881,11 +881,11 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             mEQVals[i] = 0.;
             //S.SetSizerProportion(1);
             S.Prop(1)
-               .Name( TranslatableString{
+               .Name(
                   kThirdOct[i] < 1000.
-                     ? wxString::Format(_("%d Hz"), (int)kThirdOct[i])
-                     : wxString::Format(_("%g kHz"), kThirdOct[i]/1000.)
-               } )
+                     ? XO("%d Hz").Format( (int)kThirdOct[i] )
+                     : XO("%g kHz").Format( kThirdOct[i]/1000. )
+               )
                .ConnectRoot(
                   wxEVT_ERASE_BACKGROUND, &EffectEqualization::OnErase)
                .Position(wxEXPAND)

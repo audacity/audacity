@@ -43,6 +43,7 @@
 #define __AUDACITY_TYPES_H__
 
 #include <algorithm>
+#include <functional>
 #include <type_traits>
 #include <vector>
 #include <wx/debug.h> // for wxASSERT
@@ -292,8 +293,8 @@ using CommandID = TaggedIdentifier< CommandIdTag, false >;
 using CommandIDs = std::vector<CommandID>;
 
 
-// Holds a msgid for the translation catalog (and in future, might also hold a
-// second, disambiguating context string)
+// Holds a msgid for the translation catalog and may also hold a context string
+// and a formatter closure that captures formatting arguments
 //
 // Two different wxString accessors -- one for the msgid itself, another for
 // the user-visible translation.  The msgid should be used only in unusual cases
@@ -302,10 +303,28 @@ using CommandIDs = std::vector<CommandID>;
 // Implicit conversions to and from wxString are intentionally disabled
 class TranslatableString : private wxString {
 public:
+   // A dual-purpose function
+   // Given the empty string, return a context string
+   // Given the translation of the msgid into the current locale, substitute
+   // format arguments into it
+   using Formatter = std::function< wxString(const wxString &) >;
+
+   // This special formatter causes msgids to be used verbatim, not looked up
+   // in any catalog
+   static const Formatter NullContextFormatter;
+
    TranslatableString() {}
 
-   explicit TranslatableString(const wxString &str) : wxString{ str } {}
-   explicit TranslatableString(const wxChar *str) : wxString{ str } {}
+   // Supply {} for the second argument to cause lookup of the msgid with
+   // empty context string
+   explicit TranslatableString(
+      const wxString &str, Formatter formatter = NullContextFormatter)
+      : wxString{ str }, mFormatter{ std::move(formatter) } {}
+   // Supply {} for the second argument to cause lookup of the msgid with
+   // empty context string
+   explicit TranslatableString(
+      const wxChar *str, Formatter formatter = NullContextFormatter)
+      : wxString{ str }, mFormatter{ std::move(formatter) } {}
 
    using wxString::empty;
 
@@ -316,7 +335,7 @@ public:
    // This is a deliberately ugly-looking function name.  Use with caution.
    Identifier MSGID() const { return Identifier{ *this }; }
 
-   const wxString &Translation() const;
+   wxString Translation() const;
 
    friend bool operator == (
       const TranslatableString &x, const TranslatableString &y)
@@ -326,8 +345,31 @@ public:
       const TranslatableString &x, const TranslatableString &y)
    { return !(x == y); }
 
-   // Future: may also store a domain and context, as if for dpgettext()
+   // Returns true if context is NullContextFormatter
+   bool IsVerbatim() const;
+
+   // Capture variadic format arguments (by copy).  The subsitution is
+   // computed later in a call to Translate() after msgid is looked up in the
+   // translation catalog.
+   template <typename... Args>
+   TranslatableString&& Format( Args&&... args ) &&
+   {
+      wxString context;
+      if ( this->mFormatter )
+         context = this->mFormatter({});
+      this->mFormatter = [context, args...](const wxString &str){
+         if (str.empty())
+            return context;
+         else
+            return wxString::Format( str, args... );
+      };
+      return std::move( *this );
+   }
+
    friend std::hash< TranslatableString >;
+private:
+
+   Formatter mFormatter;
 };
 
 using TranslatableStrings = std::vector<TranslatableString>;

@@ -68,12 +68,12 @@ public:
 
    // Allows implicit construction from an internal string re-used as a msgid
    ComponentInterfaceSymbol( const wxString &internal )
-      : mInternal{ internal }, mMsgid{ internal }
+      : mInternal{ internal }, mMsgid{ internal, {} }
    {}
 
    // Allows implicit construction from an internal string re-used as a msgid
    ComponentInterfaceSymbol( const wxChar *msgid )
-      : mInternal{ msgid }, mMsgid{ msgid }
+      : mInternal{ msgid }, mMsgid{ msgid, {} }
    {}
 
    // Two-argument version distinguishes internal from translatable string
@@ -87,7 +87,7 @@ public:
 
    const wxString &Internal() const { return mInternal; }
    const TranslatableString &Msgid() const { return mMsgid; }
-   const wxString &Translation() const { return mMsgid.Translation(); }
+   const wxString Translation() const { return mMsgid.Translation(); }
 
    bool empty() const { return mInternal.empty(); }
 
@@ -135,7 +135,7 @@ public:
    virtual wxString GetDescription() = 0;
 
    // non-virtual convenience function
-   const wxString& GetTranslatedName();
+   const wxString GetTranslatedName();
 
    // Parameters, if defined.  false means no defined parameters.
    virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ){ return false;};   

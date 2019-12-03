@@ -186,6 +186,8 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    }
 
    mFileName = fName;
+   // Use the file name verbatim as effect name.
+   // This is only a default name, overridden if we find a $name line:
    mName = TranslatableString{ mFileName.GetName() };
    mFileModified = mFileName.GetModificationTime();
    ParseFile();
@@ -223,7 +225,7 @@ VendorSymbol NyquistEffect::GetVendor()
       return XO("Audacity");
    }
 
-   return TranslatableString{ mAuthor };
+   return mAuthor;
 }
 
 wxString NyquistEffect::GetVersion()
@@ -1576,9 +1578,10 @@ std::vector<EnumValueSymbol> NyquistEffect::ParseChoice(const wxString & text)
       for (auto &choice : choices) {
          auto label = UnQuote(choice, true, &extra);
          if (extra.empty())
-            results.push_back( { label } );
+            results.push_back( TranslatableString{ label, {} } );
          else
-            results.push_back( { extra, TranslatableString{ label } } );
+            results.push_back(
+               { extra, TranslatableString{ label, {} } } );
       }
    }
    else {
@@ -1891,17 +1894,17 @@ bool NyquistEffect::Parse(
       // later looked up will lack the ... and will not be found.
       if (name.EndsWith(wxT("...")))
          name = name.RemoveLast(3);
-      mName = TranslatableString{ name };
+      mName = TranslatableString{ name, {} };
       return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("action")) {
-      mAction = TranslatableString{ UnQuote(tokens[1]) };
+      mAction = TranslatableString{ UnQuote(tokens[1]), {} };
       return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("info")) {
-      mInfo = TranslatableString{ UnQuote(tokens[1]) };
+      mInfo = TranslatableString{ UnQuote(tokens[1]), {} };
       return true;
    }
 
@@ -1951,18 +1954,19 @@ bool NyquistEffect::Parse(
 #endif
 
    if (len >= 2 && tokens[0] == wxT("author")) {
-      mAuthor = TranslatableString{ UnQuote(tokens[1]) };
+      mAuthor = TranslatableString{ UnQuote(tokens[1]), {} };
       return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("release")) {
       // Value must be quoted if the release version string contains spaces.
-      mReleaseVersion = TranslatableString{ UnQuote(tokens[1]) };
+      mReleaseVersion =
+         TranslatableString{ UnQuote(tokens[1]), {} };
       return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("copyright")) {
-      mCopyright = TranslatableString{ UnQuote(tokens[1]) };
+      mCopyright = TranslatableString{ UnQuote(tokens[1]), {} };
       return true;
    }
 

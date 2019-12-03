@@ -291,7 +291,35 @@ std::vector< Identifier > Identifier::split( wxChar separator ) const
    return { strings.begin(), strings.end() };
 }
 
-const wxString &TranslatableString::Translation() const
+static const wxChar *const NullContextName = wxT("*");
+
+const TranslatableString::Formatter
+TranslatableString::NullContextFormatter {
+   [](const wxString & str) -> wxString {
+      if (str.empty())
+         return NullContextName;
+      else
+         return str;
+   }
+};
+
+bool TranslatableString::IsVerbatim() const
 {
-   return wxGetTranslation(*this);
+   return mFormatter && mFormatter({}) == NullContextName;
+}
+
+wxString TranslatableString::Translation() const
+{
+   wxString context;
+   if ( mFormatter )
+      context = mFormatter({});
+
+   wxString result = (context == NullContextName)
+      ? *this
+      : wxGetTranslation( *this, {}, context );
+
+   if ( mFormatter )
+      result = mFormatter( result );
+
+   return result;
 }

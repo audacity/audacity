@@ -3229,7 +3229,7 @@ int PluginManager::b64decode(const wxString &in, void *out)
 
 // These are defined out-of-line here, to keep ComponentInterface free of other
 // #include directives.
-const wxString& ComponentInterface::GetTranslatedName()
+const wxString ComponentInterface::GetTranslatedName()
 {
    return GetSymbol().Translation();
 }

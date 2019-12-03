@@ -124,13 +124,7 @@ void QualityPrefs::GetNamesAndLabels()
    for (int i = 0; i < AudioIOBase::NumStandardRates; i++) {
       int iRate = AudioIOBase::StandardRates[i];
       mSampleRateLabels.push_back(iRate);
-      mSampleRateNames.push_back(
-         // Composing strings for the choice control
-         // Note: the format string is localized, then substituted,
-         // and then the result is treated as if it were a msgid
-         // but really isn't in the translation catalog
-         /* i18n-hint Hertz, a unit of frequency */
-         TranslatableString{ wxString::Format(_("%i Hz"), iRate) } );
+      mSampleRateNames.push_back( XO("%i Hz").Format( iRate ) );
    }
 
    mSampleRateNames.push_back(XO("Other..."));
