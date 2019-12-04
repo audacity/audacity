@@ -587,6 +587,7 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/highpass.ny \
    plug-ins/limiter.ny \
    plug-ins/lowpass.ny \
+   plug-ins/noisegate.ny \
    plug-ins/notch.ny \
    plug-ins/nyquist-plug-in-installer.ny \
    plug-ins/pluck.ny \
