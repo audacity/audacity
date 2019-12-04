@@ -199,10 +199,10 @@ public:
    virtual ~ShuttleGuiGetDefinition();
 
    wxCheckBox * TieCheckBox(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< bool > &Setting) override;
    wxCheckBox * TieCheckBoxOnRight(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< bool > &Setting) override;
 
    wxChoice * TieNumberAsChoice(
@@ -247,24 +247,24 @@ ShuttleGuiGetDefinition::~ShuttleGuiGetDefinition(void)
 }
 
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< bool > &Setting)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "bool", "type" );
    AddBool( Setting.GetDefault(), "default"  );
    EndStruct();
    return ShuttleGui::TieCheckBox( Prompt, Setting );
 }
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< bool > &Setting)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "bool", "type" );
    AddBool( Setting.GetDefault(), "default"  );
    EndStruct();

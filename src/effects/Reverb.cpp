@@ -462,7 +462,7 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxCENTER, false);
    {
       mWetOnlyC = S.Id(ID_WetOnly).
-         AddCheckBox(_("Wet O&nly"), DEF_WetOnly);
+         AddCheckBox(XO("Wet O&nly"), DEF_WetOnly);
    }
    S.EndHorizontalLay();
 

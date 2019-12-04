@@ -126,7 +126,7 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
             S.Id(ID_BROWSE).AddButton(XO("Browse..."),
                                       wxALIGN_CENTER_VERTICAL);
             S.AddFixedText( {} );
-            S.TieCheckBox(_("Show output"),
+            S.TieCheckBox(XO("Show output"),
                           {wxT("/FileFormats/ExternalProgramShowOutput"),
                            false});
          }

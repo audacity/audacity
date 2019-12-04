@@ -204,12 +204,12 @@ void BenchmarkDialog::MakeBenchmarkDialog()
 
       //
       S.Validator<wxGenericValidator>(&mBlockDetail)
-         .AddCheckBox(_("Show detailed info about each block file"),
+         .AddCheckBox(XO("Show detailed info about each block file"),
                            false);
 
       //
       S.Validator<wxGenericValidator>(&mEditDetail)
-         .AddCheckBox(_("Show detailed info about each editing operation"),
+         .AddCheckBox(XO("Show detailed info about each editing operation"),
                            false);
 
       //

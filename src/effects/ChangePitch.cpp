@@ -366,7 +366,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          mUseSBSMSCheckBox = S.Validator<wxGenericValidator>(&mUseSBSMS)
-            .AddCheckBox(_("Use high quality stretching (slow)"),
+            .AddCheckBox(XO("Use high quality stretching (slow)"),
                                              mUseSBSMS);
       }
       S.EndMultiColumn();

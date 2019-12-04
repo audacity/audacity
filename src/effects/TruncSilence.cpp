@@ -812,7 +812,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(2, wxALIGN_CENTER_HORIZONTAL);
       {
-         mIndependent = S.AddCheckBox(_("Truncate tracks independently"),
+         mIndependent = S.AddCheckBox(XO("Truncate tracks independently"),
             mbIndependent);
       }
    S.EndMultiColumn();

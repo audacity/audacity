@@ -372,7 +372,7 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             .AddChoice(XO("Distortion type:"),
                Msgids(kTableTypeStrings, nTableTypes));
 
-         mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(_("DC blocking filter"),
+         mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(XO("DC blocking filter"),
                                        DEF_DCBlock);
       }
       S.EndMultiColumn();

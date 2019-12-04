@@ -187,7 +187,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
       for ( const auto &entry : GetModuleData() )
       {
          S.TieCheckBox(
-            entry.prompt.Translation(),
+            entry.prompt,
             {entry.setting,
              true}
          );

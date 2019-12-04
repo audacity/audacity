@@ -175,7 +175,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    mDefaultsCheckbox = 0;
    if (mWt) {
       /* i18n-hint: use is a verb */
-      mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("&Use Preferences"), mDefaulted);
+      mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(XO("&Use Preferences"), mDefaulted);
    }
 
    S.StartMultiColumn(2,wxEXPAND);
@@ -226,7 +226,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndMultiColumn();
 
-         S.Id(ID_GRAYSCALE).TieCheckBox(_("Gra&yscale"),
+         S.Id(ID_GRAYSCALE).TieCheckBox(XO("Gra&yscale"),
             mTempSettings.isGrayscale);
       }
       S.EndStatic();
@@ -277,7 +277,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-   S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(_("Ena&ble Spectral Selection"),
+   S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(XO("Ena&ble Spectral Selection"),
       mTempSettings.spectralSelection);
 #endif
 
@@ -304,10 +304,10 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndTwoColumn();
 
-         S.TieCheckBox(_("&Find Notes"),
+         S.TieCheckBox(XO("&Find Notes"),
             mTempSettings.fftFindNotes);
 
-         S.TieCheckBox(_("&Quantize Notes"),
+         S.TieCheckBox(XO("&Quantize Notes"),
             mTempSettings.findNotesQuantize);
       }
       S.EndStatic();
@@ -317,7 +317,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
    S.StartStatic(XO("Global settings"));
    {
-      S.TieCheckBox(_("Ena&ble spectral selection"),
+      S.TieCheckBox(XO("Ena&ble spectral selection"),
          SpectrogramSettings::Globals::Get().spectralSelection);
    }
    S.EndStatic();

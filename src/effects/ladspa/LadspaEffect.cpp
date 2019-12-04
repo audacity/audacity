@@ -461,7 +461,7 @@ void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(_("Enable &compensation"),
+               S.TieCheckBox(XO("Enable &compensation"),
                              mUseLatency);
             }
             S.EndHorizontalLay();

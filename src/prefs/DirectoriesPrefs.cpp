@@ -124,7 +124,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
    // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
    S.StartStatic(XO("Audio cache"));
    {
-      S.TieCheckBox(_("Play and/or record using &RAM (useful for slow drives)"),
+      S.TieCheckBox(XO("Play and/or record using &RAM (useful for slow drives)"),
                     wxT("/Directories/CacheBlockFiles"),
                     false);
 

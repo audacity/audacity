@@ -55,7 +55,7 @@ void SetLabelCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasText      ).TieTextBox(         XO("Text:"),     mText );
       S.Optional( bHasT0        ).TieNumericTextBox(  XO("Start:"),    mT0 );
       S.Optional( bHasT1        ).TieNumericTextBox(  XO("End:"),      mT1 );
-      S.Optional( bHasSelected  ).TieCheckBox(        _("Selected:"), mbSelected );
+      S.Optional( bHasSelected  ).TieCheckBox(        XO("Selected:"), mbSelected );
    }
    S.EndMultiColumn();
 }

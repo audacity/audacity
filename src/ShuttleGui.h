@@ -265,7 +265,7 @@ public:
    void ResetId();
 
 //-- Add functions.  These only add a widget or 2.
-   void HandleOptionality(const wxString &Prompt);
+   void HandleOptionality(const TranslatableString &Prompt);
    void AddPrompt(const wxString &Prompt, int wrapWidth = 0);
    void AddUnits(const wxString &Prompt, int wrapWidth = 0);
    void AddTitle(const TranslatableString &Prompt, int wrapWidth = 0);
@@ -332,8 +332,8 @@ public:
    );
 
    wxGrid * AddGrid();
-   wxCheckBox * AddCheckBox( const wxString &Prompt, bool Selected);
-   wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, bool Selected);
+   wxCheckBox * AddCheckBox( const TranslatableString &Prompt, bool Selected);
+   wxCheckBox * AddCheckBoxOnRight( const TranslatableString &Prompt, bool Selected);
    wxComboBox * AddCombo( const TranslatableString &Prompt,
       const wxString &Selected, const wxArrayStringEx & choices );
    wxChoice   * AddChoice( const TranslatableString &Prompt,
@@ -408,8 +408,8 @@ public:
    wxTextCtrl * TieNumericTextBox( const TranslatableString &Prompt, int &Value, const int nChars=0);
    wxTextCtrl * TieNumericTextBox( const TranslatableString &Prompt, double &Value, const int nChars=0);
 
-   wxCheckBox * TieCheckBox( const wxString &Prompt, bool & Var );
-   wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, bool & Var );
+   wxCheckBox * TieCheckBox( const TranslatableString &Prompt, bool & Var );
+   wxCheckBox * TieCheckBoxOnRight( const TranslatableString & Prompt, bool & Var );
 
    wxChoice * TieChoice(
       const TranslatableString &Prompt, wxString &Selected, const TranslatableStrings &choices );
@@ -442,10 +442,10 @@ public:
 // That's because the data is being exchanged between the dialog and mpShuttle
 // so it doesn't need an argument that is writeable.
    virtual wxCheckBox * TieCheckBox(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< bool > &Setting);
    virtual wxCheckBox * TieCheckBoxOnRight(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< bool > &Setting);
 
    virtual wxChoice *TieChoice(
@@ -556,13 +556,13 @@ protected:
 
 private:
    void DoDataShuttle( const wxString &Name, WrappedType & WrappedRef );
-   wxCheckBox * DoTieCheckBoxOnRight( const wxString & Prompt, WrappedType & WrappedRef );
+   wxCheckBox * DoTieCheckBoxOnRight( const TranslatableString & Prompt, WrappedType & WrappedRef );
    wxTextCtrl * DoTieTextBox(
       const TranslatableString &Prompt,
       WrappedType &  WrappedRef, const int nChars);
    wxTextCtrl * DoTieNumericTextBox(
       const TranslatableString &Prompt, WrappedType &  WrappedRef, const int nChars);
-   wxCheckBox * DoTieCheckBox( const wxString &Prompt, WrappedType & WrappedRef );
+   wxCheckBox * DoTieCheckBox( const TranslatableString &Prompt, WrappedType & WrappedRef );
    wxChoice * DoTieChoice(
       const TranslatableString &Prompt, WrappedType & WrappedRef,
       const TranslatableStrings & choices );

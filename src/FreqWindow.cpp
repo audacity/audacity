@@ -430,7 +430,7 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
                .AddTextBox( {}, wxT(""), 10);
             S.AddSpace(5);
 
-            mGridOnOff = S.Id(GridOnOffID).AddCheckBox(_("&Grids"), mDrawGrid);
+            mGridOnOff = S.Id(GridOnOffID).AddCheckBox(XO("&Grids"), mDrawGrid);
          }
          S.EndMultiColumn();
       }

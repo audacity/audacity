@@ -348,7 +348,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
             // Row 3 (indented)
             S.AddVariableText(Verbatim("   "), false);
             mFirst = S.Id(FirstID)
-               .AddCheckBox(_("Include audio before first label"), false);
+               .AddCheckBox(XO("Include audio before first label"), false);
 
             // Row 4
             S.AddVariableText( {}, false);
@@ -415,7 +415,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartHorizontalLay(wxEXPAND, false);
    {
-      mOverwrite = S.Id(OverwriteID).TieCheckBox(_("Overwrite existing files"),
+      mOverwrite = S.Id(OverwriteID).TieCheckBox(XO("Overwrite existing files"),
                                                  {wxT("/Export/OverwriteExisting"),
                                                   false});
    }

@@ -80,34 +80,34 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Behaviors"));
    {
-      S.TieCheckBox(_("&Select all audio, if selection required"),
+      S.TieCheckBox(XO("&Select all audio, if selection required"),
                     {wxT("/GUI/SelectAllOnNone"),
                      false});
       /* i18n-hint: Cut-lines are lines that can expand to show the cut audio.*/
-      S.TieCheckBox(_("Enable cut &lines"),
+      S.TieCheckBox(XO("Enable cut &lines"),
                     {wxT("/GUI/EnableCutLines"),
                      false});
-      S.TieCheckBox(_("Enable &dragging selection edges"),
+      S.TieCheckBox(XO("Enable &dragging selection edges"),
                     {wxT("/GUI/AdjustSelectionEdges"),
                      true});
-      S.TieCheckBox(_("Editing a clip can &move other clips"),
+      S.TieCheckBox(XO("Editing a clip can &move other clips"),
                     {wxT("/GUI/EditClipCanMove"),
                      true});
-      S.TieCheckBox(_("\"Move track focus\" c&ycles repeatedly through tracks"),
+      S.TieCheckBox(XO("\"Move track focus\" c&ycles repeatedly through tracks"),
                     {wxT("/GUI/CircularTrackNavigation"),
                      false});
-      S.TieCheckBox(_("&Type to create a label"),
+      S.TieCheckBox(XO("&Type to create a label"),
                     {wxT("/GUI/TypeToCreateLabel"),
                      false});
-      S.TieCheckBox(_("Use dialog for the &name of a new label"),
+      S.TieCheckBox(XO("Use dialog for the &name of a new label"),
                     {wxT("/GUI/DialogForNameNewLabel"),
                      false});
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
-      S.TieCheckBox(_("Enable scrolling left of &zero"),
+      S.TieCheckBox(XO("Enable scrolling left of &zero"),
                     {ScrollingPreferenceKey(),
                      ScrollingPreferenceDefault()});
 #endif
-      S.TieCheckBox(_("Advanced &vertical zooming"),
+      S.TieCheckBox(XO("Advanced &vertical zooming"),
                     {wxT("/GUI/VerticalZooming"),
                      false});
 

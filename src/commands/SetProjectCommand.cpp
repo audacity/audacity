@@ -51,7 +51,7 @@ void SetProjectCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.Optional( bHasName      ).TieTextBox(         XO("Name:"),     mName );
       S.Optional( bHasRate      ).TieTextBox(         XO("Rate:"),     mRate );
-      S.TieCheckBox( _("Resize:"), bHasSizing    );
+      S.TieCheckBox( XO("Resize:"), bHasSizing    );
       S.AddSpace(0,0);
    }
    S.EndMultiColumn();

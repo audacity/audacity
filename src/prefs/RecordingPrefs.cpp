@@ -87,7 +87,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(XO("Options"));
    {
       // Start wording of options with a verb, if possible.
-      S.TieCheckBox(_("Play &other tracks while recording (overdub)"),
+      S.TieCheckBox(XO("Play &other tracks while recording (overdub)"),
                      {wxT("/AudioIO/Duplex"),
 #ifdef EXPERIMENTAL_DA
                       false
@@ -103,19 +103,19 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                     {wxT("/AudioIO/Playthrough"),
                      false});
 #endif
-      S.TieCheckBox(_("&Software playthrough of input"),
+      S.TieCheckBox(XO("&Software playthrough of input"),
                     {wxT("/AudioIO/SWPlaythrough"),
                      false});
 #if !defined(__WXMAC__)
       //S.AddUnits(wxString(wxT("     ")) + _("(uncheck when recording computer playback)"));
 #endif
 
-       S.TieCheckBox(_("Record on a new track"),
+       S.TieCheckBox(XO("Record on a new track"),
                     {wxT("/GUI/PreferNewTrackRecord"),
                      false});
 
 /* i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording */
-       S.TieCheckBox(_("Detect dropouts"),
+       S.TieCheckBox(XO("Detect dropouts"),
                      {WarningDialogKey(wxT("DropoutDetected")),
                       true});
 
@@ -125,7 +125,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Sound Activated Recording"));
    {
-      S.TieCheckBox(_("&Enable"),
+      S.TieCheckBox(XO("&Enable"),
                     {wxT("/AudioIO/SoundActivatedRecord"),
                      false});
 
@@ -155,7 +155,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
          S.AddFixedText(XO("With:")) ;
          S.StartMultiColumn(3);
          {
-            S.Id(UseCustomTrackNameID).TieCheckBox(_("Custom Track &Name"),
+            S.Id(UseCustomTrackNameID).TieCheckBox(XO("Custom Track &Name"),
                                             {wxT("/GUI/TrackNames/RecordingNameCustom"),
                                              mUseCustomTrackName});
 
@@ -167,21 +167,21 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                    _("Recorded_Audio")},
                   30);
          }
-         
+
          S.EndMultiColumn();
 
          S.AddFixedText(  {} );
          S.StartMultiColumn(3);
          {
-            S.TieCheckBox(_("&Track Number"),
+            S.TieCheckBox(XO("&Track Number"),
                           {wxT("/GUI/TrackNames/TrackNumber"),
                            false});
 
-            S.TieCheckBox(_("System &Date"),
+            S.TieCheckBox(XO("System &Date"),
                           {wxT("/GUI/TrackNames/DateStamp"),
                            false});
 
-            S.TieCheckBox(_("System T&ime"),
+            S.TieCheckBox(XO("System T&ime"),
                           {wxT("/GUI/TrackNames/TimeStamp"),
                            false});
          }
@@ -194,7 +194,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       S.StartStatic(XO("Automated Recording Level Adjustment"));
       {
-         S.TieCheckBox(_("Enable Automated Recording Level Adjustment."),
+         S.TieCheckBox(XO("Enable Automated Recording Level Adjustment."),
                        {wxT("/AudioIO/AutomatedInputLevelAdjustment"),
                         false});
 

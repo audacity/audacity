@@ -949,7 +949,7 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
       S.StartHorizontalLay(wxALIGN_LEFT, 0);
       {
-         S.Id( DontShowID ).AddCheckBox( _("Don't show this when exporting audio"), !bShow );
+         S.Id( DontShowID ).AddCheckBox( XO("Don't show this when exporting audio"), !bShow );
       }
       S.EndHorizontalLay();
    }

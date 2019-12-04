@@ -267,14 +267,14 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Display"));
    {
-      S.TieCheckBox(_("Auto-&fit track height"),
+      S.TieCheckBox(XO("Auto-&fit track height"),
                     {wxT("/GUI/TracksFitVerticallyZoomed"),
                      false});
-      S.TieCheckBox(_("Sho&w audio track name as overlay"),
+      S.TieCheckBox(XO("Sho&w audio track name as overlay"),
                   {wxT("/GUI/ShowTrackNameInWaveform"),
                    false});
 #ifdef EXPERIMENTAL_HALF_WAVE
-      S.TieCheckBox(_("Use &half-wave display when collapsed"),
+      S.TieCheckBox(XO("Use &half-wave display when collapsed"),
                   {wxT("/GUI/CollapseToHalfWave"),
                    false});
 #endif
@@ -283,7 +283,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
          {PinnedHeadPreferenceKey(),
           PinnedHeadPreferenceDefault()});
 #endif
-      S.TieCheckBox(_("A&uto-scroll if head unpinned"),
+      S.TieCheckBox(XO("A&uto-scroll if head unpinned"),
          {wxT("/GUI/AutoScroll"),
           true});
 

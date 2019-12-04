@@ -377,7 +377,7 @@ void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay();
          {
             mDelayCheckBox = S.Id(IdDelayCheckBox).AddCheckBox
-               (_("Wait 5 seconds and capture frontmost window/dialog"),
+               (XO("Wait 5 seconds and capture frontmost window/dialog"),
                 false);
          }
          S.EndHorizontalLay();

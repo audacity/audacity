@@ -142,8 +142,8 @@ void SetTrackStatusCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxEXPAND);
    {
       S.SetStretchyCol( 1 );
-      S.Optional( bHasSelected       ).TieCheckBox( _("Selected"),           bSelected );
-      S.Optional( bHasFocused        ).TieCheckBox( _("Focused"),            bFocused);
+      S.Optional( bHasSelected       ).TieCheckBox( XO("Selected"),           bSelected );
+      S.Optional( bHasFocused        ).TieCheckBox( XO("Focused"),            bFocused);
    }
    S.EndMultiColumn();
 }
@@ -194,8 +194,8 @@ void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxEXPAND);
    {
       S.SetStretchyCol( 1 );
-      S.Optional( bHasMute           ).TieCheckBox( _("Mute"),               bMute);
-      S.Optional( bHasSolo           ).TieCheckBox( _("Solo"),               bSolo);
+      S.Optional( bHasMute           ).TieCheckBox( XO("Mute"),               bMute);
+      S.Optional( bHasSolo           ).TieCheckBox( XO("Solo"),               bSolo);
    }
    S.EndMultiColumn();
    S.StartMultiColumn(3, wxEXPAND);
@@ -331,9 +331,9 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxEXPAND);
    {
       S.SetStretchyCol( 1 );
-      S.Optional( bHasUseSpecPrefs   ).TieCheckBox( _("Use Spectral Prefs"), bUseSpecPrefs );
-      S.Optional( bHasSpectralSelect ).TieCheckBox( _("Spectral Select"),    bSpectralSelect);
-      S.Optional( bHasGrayScale      ).TieCheckBox( _("Gray Scale"),         bGrayScale );
+      S.Optional( bHasUseSpecPrefs   ).TieCheckBox( XO("Use Spectral Prefs"), bUseSpecPrefs );
+      S.Optional( bHasSpectralSelect ).TieCheckBox( XO("Spectral Select"),    bSpectralSelect);
+      S.Optional( bHasGrayScale      ).TieCheckBox( XO("Gray Scale"),         bGrayScale );
    }
    S.EndMultiColumn();
 }

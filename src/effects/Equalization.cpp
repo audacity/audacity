@@ -960,7 +960,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
                mLinFreq = S.Id(ID_Linear)
                   .Name(XO("Linear Frequency Scale"))
-                  .AddCheckBox(_("Li&near Frequency Scale"), false);
+                  .AddCheckBox(XO("Li&near Frequency Scale"), false);
             }
             S.EndHorizontalLay();
          }
@@ -1043,7 +1043,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
             mGridOnOff = S.Id(ID_Grid)
                .Name(XO("Show grid lines"))
-               .AddCheckBox(_("Show g&rid lines"), false);
+               .AddCheckBox(XO("Show g&rid lines"), false);
          }
          S.EndHorizontalLay();
 

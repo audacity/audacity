@@ -283,7 +283,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(_("Enable &compensation"),
+               S.TieCheckBox(XO("Enable &compensation"),
                              mUseLatency);
             }
             S.EndHorizontalLay();
@@ -297,7 +297,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
 " A basic text-only method is also available. "
 " Reopen the effect for this to take effect."),
                false, 0, 650);
-            S.TieCheckBox(_("Enable &graphical interface"),
+            S.TieCheckBox(XO("Enable &graphical interface"),
                           mUseGUI);
          }
          S.EndStatic();

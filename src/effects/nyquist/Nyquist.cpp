@@ -2611,7 +2611,7 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
 
          S.AddSpace(1, 1);
 
-         mVersionCheckBox = S.AddCheckBox(_("&Use legacy (version 3) syntax."),
+         mVersionCheckBox = S.AddCheckBox(XO("&Use legacy (version 3) syntax."),
                                           (mVersion == 3));
       }
       S.EndMultiColumn();
