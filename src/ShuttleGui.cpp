@@ -2073,7 +2073,7 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
 
          if ( !mItem.mNameSuffix.empty() )
             mpWind->SetName(
-               mpWind->GetName() + mItem.mNameSuffix.Translation() );
+               mpWind->GetName() + " " + mItem.mNameSuffix.Translation() );
 
          if (mItem.mFocused)
             mpWind->SetFocus();
