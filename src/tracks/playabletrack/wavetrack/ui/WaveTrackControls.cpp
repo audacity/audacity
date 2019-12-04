@@ -819,7 +819,8 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
       // (pTrack->GetDisplay() == WaveTrack::Spectrum) ? 1 :
       0;
 
-   wxString title(pTrack->GetName() + wxT(": "));
+   /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
+   auto title = wxString::Format(_("%s: %s"), pTrack->GetName(), wxT(""));
    ViewSettingsDialog dialog(mpData->pParent, title, factories, page);
 
    if (0 != dialog.ShowModal()) {

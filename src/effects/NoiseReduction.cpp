@@ -1752,7 +1752,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         S.TieChoice(_("&Window types") + wxString(wxT(":")),
+         S.TieChoice(_("&Window types:"),
             mTempSettings.mWindowTypes,
             []{
                wxArrayStringEx windowTypeChoices;
@@ -1762,7 +1762,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
             }()
          );
 
-         S.TieChoice(_("Window si&ze") + wxString(wxT(":")),
+         S.TieChoice(_("Window si&ze:")),
             mTempSettings.mWindowSizeChoice,
             {
                _("8") ,
@@ -1780,7 +1780,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
             }
          );
 
-         S.TieChoice(_("S&teps per window") + wxString(wxT(":")),
+         S.TieChoice(_("S&teps per window:"),
             mTempSettings.mStepsPerWindowChoice,
             {
                _("2") ,
@@ -1793,7 +1793,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          );
 
          S.Id(ID_CHOICE_METHOD)
-         .TieChoice(_("Discrimination &method") + wxString(wxT(":")),
+         .TieChoice(_("Discrimination &method:"),
             mTempSettings.mMethod,
             []{
                wxArrayStringEx methodChoices;

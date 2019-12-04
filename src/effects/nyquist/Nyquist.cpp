@@ -2627,7 +2627,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             }
             else
             {
-               wxString prompt = ctrl.name + wxT(":");
+               auto prompt = wxString::Format(_("%s:"), ctrl.name);
                S.AddPrompt(prompt);
 
                if (ctrl.type == NYQ_CTRL_STRING)

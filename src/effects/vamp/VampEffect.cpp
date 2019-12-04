@@ -597,7 +597,9 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                {
                   labelText += wxT(" (") + unit + wxT(")");
                }
-               S.AddPrompt(labelText + wxT(":"));
+               /* i18n-hint: An item name introducing a value, which is not part of the string but
+               appears in a following text box window; translate with appropriate punctuation */
+               S.AddPrompt(wxString::Format(_("%s:"), labelText));
 
                if (mParameters[p].isQuantized &&
                    mParameters[p].quantizeStep == 1.0 &&

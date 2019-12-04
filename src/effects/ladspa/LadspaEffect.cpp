@@ -1266,7 +1266,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             }
 
             wxString labelText = LAT1CTOWX(mData->PortNames[p]);
-            item = safenew wxStaticText(w, 0, labelText + wxT(":"));
+            item = safenew wxStaticText(w, 0, wxString::Format(_("%s:"), labelText));
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
             wxString fieldText;
@@ -1442,7 +1442,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             }
 
             wxString labelText = LAT1CTOWX(mData->PortNames[p]);
-            item = safenew wxStaticText(w, 0, labelText + wxT(":"));
+            item = safenew wxStaticText(w, 0, wxString::Format(_("%s:"), labelText));
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
             //LADSPA_PortRangeHint hint = mData->PortRangeHints[p];

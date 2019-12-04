@@ -1632,7 +1632,7 @@ bool LV2Effect::BuildPlain()
                   continue;
                }
 
-               wxWindow *item = safenew wxStaticText(w, wxID_ANY, labelText + wxT(":"),
+               wxWindow *item = safenew wxStaticText(w, wxID_ANY, wxString::Format(_("%s:"), labelText),
                   wxDefaultPosition, wxDefaultSize,
                   wxALIGN_RIGHT);
                gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);

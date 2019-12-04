@@ -108,12 +108,12 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
          S.StartTwoColumn();
          {
             mScaleChoice =
-               S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
+               S.Id(ID_SCALE).TieChoice(_("S&cale:"),
                   mTempSettings.scaleType,
                   WaveformSettings::GetScaleNames());
 
             mRangeChoice =
-               S.Id(ID_RANGE).TieChoice(_("Waveform dB &range") + wxString(wxT(":")),
+               S.Id(ID_RANGE).TieChoice(_("Waveform dB &range:"),
                mTempSettings.dBRange,
                mRangeChoices);
          }

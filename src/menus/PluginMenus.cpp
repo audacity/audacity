@@ -334,12 +334,11 @@ void AddEffectMenuItems(
             group = wxEmptyString;
          }
 
-         if (!group.empty())
-         {
-            group += wxT(": ");
-         }
-
-         groupNames.push_back(group + name);
+         groupNames.push_back(
+            group.empty()
+               ? name
+               : wxString::Format(_("%s: %s"), group, name)
+         );
          vHasDialog.push_back(hasDialog);
          groupPlugs.push_back(plug->GetID());
          groupFlags.push_back(

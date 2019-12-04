@@ -188,7 +188,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStretchyCol( 0 );
             S.SetStretchyCol( 1 );
-            S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
+            S.Id(ID_SCALE).TieChoice(_("S&cale:"),
                mTempSettings.scaleType,
                SpectrogramSettings::GetScaleNames());
             mMinFreq =
@@ -238,7 +238,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          mAlgorithmChoice =
-            S.Id(ID_ALGORITHM).TieChoice(_("A&lgorithm") + wxString(wxT(":")),
+            S.Id(ID_ALGORITHM).TieChoice(_("A&lgorithm:"),
             mTempSettings.algorithm,
             SpectrogramSettings::GetAlgorithmNames());
 
@@ -267,7 +267,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
          mZeroPaddingChoiceCtrl =
-            S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
+            S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor:"),
             mTempSettings.zeroPaddingFactor,
             mZeroPaddingChoices);
 #endif

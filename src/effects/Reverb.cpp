@@ -543,12 +543,9 @@ SpinSliderHandlers(StereoWidth)
 
 void EffectReverb::SetTitle(const wxString & name)
 {
-   wxString title(_("Reverb"));
-
-   if (!name.empty())
-   {
-      title += wxT(": ") + name;
-   }
-
-   mUIDialog->SetTitle(title);
+   mUIDialog->SetTitle(
+      name.empty()
+         ? _("Reverb")
+         : wxString::Format( _("Reverb: %s"), name )
+   );
 }
