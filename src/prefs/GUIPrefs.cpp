@@ -319,7 +319,7 @@ wxString GUIPrefs::SetLang( const wxString & lang )
 #endif
 
    const wxLanguageInfo *info = NULL;
-   if (!lang.empty()) {
+   if (!lang.empty() && lang != wxT("System")) {
       info = wxLocale::FindLanguageInfo(lang);
       if (!info)
          ::AudacityMessageBox(wxString::Format(_("Language \"%s\" is unknown"), lang));
