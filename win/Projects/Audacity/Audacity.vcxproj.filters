@@ -2671,6 +2671,9 @@
     <copy Include="..\..\..\plug-ins\nyquist-plug-in-installer.ny">
       <Filter>plug-ins</Filter>
     </copy>
+    <copy Include="..\..\..\plug-ins\noisegate.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="..\..\Audacity.exe.manifest">
