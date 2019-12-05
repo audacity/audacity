@@ -316,7 +316,9 @@ wxString TranslatableString::Translation() const
 
    wxString result = (context == NullContextName)
       ? *this
-      : wxGetTranslation( *this, wxString{}, context );
+      : wxGetTranslation( *this
+         // , wxString{}, context
+      );
 
    if ( mFormatter )
       result = mFormatter( result );
