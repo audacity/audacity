@@ -15,9 +15,7 @@
 
 #include <wx/wx.h>
 #include "ScripterCallback.h"
-//#include "../lib_widget_extra/ShuttleGuiBase.h"
 #include "../../src/Audacity.h"
-#include "../../src/ShuttleGui.h"
 
 #if defined(__WXMSW__)
 #include <wx/init.h>
