@@ -737,6 +737,6 @@ void MenuManager::TellUserWhyDisallowed(
    ShowErrorDialog(
       NULL,
       untranslatedTitle,
-      reason.Translation(),
+      reason,
       helpPage);
 }

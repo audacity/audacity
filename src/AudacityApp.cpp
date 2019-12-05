@@ -1056,7 +1056,7 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
          window.Iconize(false);
          window.Raise();
 
-         wxString errorMessage = wxString::Format(_(
+         auto errorMessage = XO(
 "One or more external audio files could not be found.\n\
 It is possible they were moved, deleted, or the drive they \
 were on was unmounted.\n\
@@ -1065,7 +1065,7 @@ The first detected missing file is:\n\
 %s\n\
 There may be additional missing files.\n\
 Choose Help > Diagnostics > Check Dependencies to view a list of \
-locations of the missing files."), missingFileName);
+locations of the missing files.").Format( missingFileName ) ;
 
          // if an old dialog exists, raise it if it is
          if ( auto dialog = MissingAliasFilesDialog::Find( *offendingProject ) )

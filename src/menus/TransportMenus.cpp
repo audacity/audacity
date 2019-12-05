@@ -364,11 +364,10 @@ void OnPunchAndRoll(const CommandContext &context)
          std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
       auto message =
          (recordingChannels == 1)
-         ? _("Please select in a mono track.")
+         ? XO("Please select in a mono track.")
          : (recordingChannels == 2)
-         ? _("Please select in a stereo track.")
-         : wxString::Format(
-            _("Please select at least %d channels."), recordingChannels);
+         ? XO("Please select in a stereo track.")
+         : XO("Please select at least %d channels.").Format( recordingChannels );
       ShowErrorDialog(&window, XO("Error"), message, url);
       return;
    }
@@ -410,7 +409,7 @@ void OnPunchAndRoll(const CommandContext &context)
    }
 
    if (error) {
-      auto message = _("Please select a time within a clip.");
+      auto message = XO("Please select a time within a clip.");
       ShowErrorDialog( &window, XO("Error"), message, url);
       return;
    }

@@ -91,7 +91,7 @@ public:
 /// handled by having the code in one place.
 void HelpSystem::ShowInfoDialog( wxWindow *parent,
                      const TranslatableString &dlogTitle,
-                     const wxString &shortMsg,
+                     const TranslatableString &shortMsg,
                      const wxString &message,
                      const int xSize, const int ySize)
 {
@@ -105,7 +105,7 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
 
    S.StartVerticalLay(1);
    {
-      S.AddTitle( shortMsg);
+      S.AddTitle( shortMsg.Translation() );
       S.Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 |
               wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL )
          .AddTextWindow(message);

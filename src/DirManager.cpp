@@ -432,7 +432,7 @@ DirManager::DirManager()
    if (wxGetDiskSpace(globaltemp, NULL, &freeSpace)) {
       if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
          ShowWarningDialog(NULL, wxT("DiskSpaceWarning"),
-                           _("There is very little free disk space left on this volume.\nPlease select another temporary directory in Preferences."));
+                           XO("There is very little free disk space left on this volume.\nPlease select another temporary directory in Preferences."));
       }
    }
 }

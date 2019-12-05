@@ -35,8 +35,8 @@ class WarningDialog final : public wxDialogWrapper
  public:
    // constructors and destructors
    WarningDialog(wxWindow *parent,
-                 const wxString &message,
-                 const wxString &footer,
+                 const TranslatableString &message,
+                 const TranslatableString &footer,
                  bool showCancelButton);
 
  private:
@@ -51,13 +51,14 @@ BEGIN_EVENT_TABLE(WarningDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, WarningDialog::OnOK)
 END_EVENT_TABLE()
 
-const wxString &DefaultWarningFooter()
+const TranslatableString &DefaultWarningFooter()
 {
-   return _("Don't show this warning again");
+   static auto result = XO("Don't show this warning again");
+   return result;
 }
 
-WarningDialog::WarningDialog(wxWindow *parent, const wxString &message,
-                             const wxString &footer,
+WarningDialog::WarningDialog(wxWindow *parent, const TranslatableString &message,
+                             const TranslatableString &footer,
                              bool showCancelButton)
 :  wxDialogWrapper(parent, wxID_ANY, XO("Warning"),
             wxDefaultPosition, wxDefaultSize,
@@ -71,8 +72,8 @@ WarningDialog::WarningDialog(wxWindow *parent, const wxString &message,
    S.SetBorder(10);
    S.StartVerticalLay(false);
    {
-      S.AddFixedText(message);
-      mCheckBox = S.AddCheckBox(footer, false);
+      S.AddFixedText(message.Translation());
+      mCheckBox = S.AddCheckBox(footer.Translation(), false);
    }
    S.EndVerticalLay();
 
@@ -90,9 +91,9 @@ void WarningDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
 int ShowWarningDialog(wxWindow *parent,
                       const wxString &internalDialogName,
-                      const wxString &message,
+                      const TranslatableString &message,
                       bool showCancelButton,
-                      const wxString &footer)
+                      const TranslatableString &footer)
 {
    auto key = WarningDialogKey(internalDialogName);
    if (!gPrefs->Read(key, (long) true)) {

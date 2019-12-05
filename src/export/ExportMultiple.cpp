@@ -606,16 +606,16 @@ void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))
    // Give 'em the result
    auto cleanup = finally( [&]
    {
-      wxString msg;
-      msg.Printf(
-         ok == ProgressResult::Success ? _("Successfully exported the following %lld file(s).")
-           : (ok == ProgressResult::Failed ? _("Something went wrong after exporting the following %lld file(s).")
-             : (ok == ProgressResult::Cancelled ? _("Export canceled after exporting the following %lld file(s).")
-               : (ok == ProgressResult::Stopped ? _("Export stopped after exporting the following %lld file(s).")
-                 : _("Something went really wrong after exporting the following %lld file(s).")
-                 )
-               )
-             ), (long long) mExported.size());
+      auto msg = (ok == ProgressResult::Success
+         ? XO("Successfully exported the following %lld file(s).")
+         : ok == ProgressResult::Failed
+            ? XO("Something went wrong after exporting the following %lld file(s).")
+            : ok == ProgressResult::Cancelled
+               ? XO("Export canceled after exporting the following %lld file(s).")
+               : ok == ProgressResult::Stopped
+                  ? XO("Export stopped after exporting the following %lld file(s).")
+                  : XO("Something went really wrong after exporting the following %lld file(s).")
+         ).Format((long long) mExported.size());
 
       wxString FileList;
       for (size_t i = 0; i < mExported.size(); i++) {

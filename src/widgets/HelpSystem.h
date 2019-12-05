@@ -38,10 +38,10 @@ class AudacityProject;
 class HelpSystem
 {
 public:
-   /// Displays cutable information in a text ctrl, with an OK button.
+   /// Displays cuttable information in a text ctrl, with an OK button.
    static void ShowInfoDialog( wxWindow *parent,
                      const TranslatableString &dlogTitle,
-                     const wxString &shortMsg,
+                     const TranslatableString &shortMsg,
                      const wxString &message, 
                      const int xSize, const int ySize);
 

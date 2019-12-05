@@ -798,14 +798,14 @@ bool ProjectFileManager::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /
    }
 
    TranslatableString title;
-   wxString message;
+   TranslatableString message;
    if (bWantSaveCopy)
    {
       if (bLossless)
       {
          title = XO("%sSave Lossless Copy of Project \"%s\" As...")
             .Format( Restorer.sProjNumber,Restorer.sProjName );
-         message = _("\
+         message = XO("\
 'Save Lossless Copy of Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n\n\
 \
@@ -816,7 +816,7 @@ with no loss of quality, but the projects are large.\n");
       {
          title = XO("%sSave Compressed Copy of Project \"%s\" As...")
             .Format( Restorer.sProjNumber, Restorer.sProjName );
-         message = _("\
+         message = XO("\
 'Save Compressed Copy of Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n\n\
 \
@@ -828,7 +828,7 @@ but they have some loss of fidelity.\n");
    {
       title = XO("%sSave Project \"%s\" As...")
          .Format( Restorer.sProjNumber, Restorer.sProjName );
-      message = _("\
+      message = XO("\
 'Save Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n");
    }
@@ -1561,7 +1561,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       ShowErrorDialog(
          &window,
          XO("Error Opening Project"),
-         errorStr.Translation(),
+         errorStr,
          results.helpUrl);
    }
 }
@@ -1703,7 +1703,7 @@ bool ProjectFileManager::Import(
          // Error message derived from Importer::Import
          // Additional help via a Help button links to the manual.
          ShowErrorDialog(&GetProjectFrame( project ), XO("Error Importing"),
-                         errorMessage.Translation(), wxT("Importing_Audio"));
+                         errorMessage, wxT("Importing_Audio"));
       }
       if (!success)
          return false;

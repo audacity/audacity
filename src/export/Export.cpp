@@ -883,21 +883,21 @@ bool Exporter::CheckMix()
          if (exportedChannels == 1) {
             if (ShowWarningDialog(pWindow,
                                   wxT("MixMono"),
-                                  _("Your tracks will be mixed down and exported as one mono file."),
+                                  XO("Your tracks will be mixed down and exported as one mono file."),
                                   true) == wxID_CANCEL)
                return false;
          }
          else if (exportedChannels == 2) {
             if (ShowWarningDialog(pWindow,
                                   wxT("MixStereo"),
-                                  _("Your tracks will be mixed down and exported as one stereo file."),
+                                  XO("Your tracks will be mixed down and exported as one stereo file."),
                                   true) == wxID_CANCEL)
                return false;
          }
          else {
             if (ShowWarningDialog(pWindow,
                                   wxT("MixUnknownChannels"),
-                                  _("Your tracks will be mixed down to one exported file according to the encoder settings."),
+                                  XO("Your tracks will be mixed down to one exported file according to the encoder settings."),
                                   true) == wxID_CANCEL)
                return false;
          }

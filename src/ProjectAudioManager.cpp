@@ -259,7 +259,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          window.CallAfter( [&]{
          // Show error message if stream could not be opened
          ShowErrorDialog(&window, XO("Error"),
-                         _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+                         XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
                          wxT("Error_opening_sound_device"));
          });
       }
@@ -711,7 +711,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          CancelRecording();
 
          // Show error message if stream could not be opened
-         wxString msg = wxString::Format(_("Error opening recording device.\nError code: %s"), gAudioIO->LastPaErrorString());
+         auto msg = XO("Error opening recording device.\nError code: %s")
+            .Format( gAudioIO->LastPaErrorString() );
          ShowErrorDialog(&GetProjectFrame( mProject ),
             XO("Error"), msg, wxT("Error_opening_sound_device"));
       }
@@ -858,7 +859,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
                SelectedRegion{ interval.first,
                   interval.first + interval.second },
                wxString::Format(wxT("%ld"), counter++));
-         ShowWarningDialog(&window, wxT("DropoutDetected"), _("\
+         ShowWarningDialog(&window, wxT("DropoutDetected"), XO("\
 Recorded audio was lost at the labeled locations. Possible causes:\n\
 \n\
 Other applications are competing with Audacity for processor time\n\
@@ -867,7 +868,7 @@ You are saving directly to a slow external storage device\n\
 "
          ),
          false,
-         _("Turn off dropout detection"));
+         XO("Turn off dropout detection"));
       }
 
       auto &history = ProjectHistory::Get( project );
