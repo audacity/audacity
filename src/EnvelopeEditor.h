@@ -14,7 +14,7 @@
 class wxMouseEvent;
 class wxRect;
 class Envelope;
-class TrackPanelDrawingContext;
+struct TrackPanelDrawingContext;
 class ZoomInfo;
 
 // A class that holds state for the duration of dragging

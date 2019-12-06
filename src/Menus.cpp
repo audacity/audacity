@@ -644,7 +644,6 @@ bool MenuManager::TryToMakeActionAllowed(
    CommandFlag & flags, CommandFlag flagsRqd )
 {
    auto &project = mProject;
-   bool bAllowed;
 
    if( flags.none() )
       flags = GetUpdateFlags();

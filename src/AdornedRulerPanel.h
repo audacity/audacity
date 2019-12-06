@@ -17,7 +17,7 @@
 #include "ViewInfo.h" // for PlayRegion
 
 class AudacityProject;
-class SelectedRegionEvent;
+struct SelectedRegionEvent;
 class SnapManager;
 class TrackList;
 
