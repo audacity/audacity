@@ -1312,6 +1312,7 @@
 		5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */; };
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
 		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
+		5ED8FF8A239AB9960065BC5B /* noisegate.ny in Resources */ = {isa = PBXBuildFile; fileRef = 5ED8FF89239AB9960065BC5B /* noisegate.ny */; };
 		5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */; };
 		5EF3E64D203FBAFB006C6882 /* AudacityCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E643203FBAFB006C6882 /* AudacityCommand.cpp */; };
 		5EF3E64E203FBAFB006C6882 /* CommandContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E645203FBAFB006C6882 /* CommandContext.cpp */; };
@@ -2830,7 +2831,6 @@
 		28AA281D0F267A2D008AED9E /* rissetdrum.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = rissetdrum.ny; path = "../plug-ins/rissetdrum.ny"; sourceTree = SOURCE_ROOT; };
 		28AA281E0F267A2D008AED9E /* SilenceMarker.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = SilenceMarker.ny; path = "../plug-ins/SilenceMarker.ny"; sourceTree = SOURCE_ROOT; };
 		28AA281F0F267A2D008AED9E /* tremolo.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = tremolo.ny; path = "../plug-ins/tremolo.ny"; sourceTree = SOURCE_ROOT; };
-		28AA28200F267A2D008AED9E /* vocalremover.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = vocalremover.ny; path = "../plug-ins/vocalremover.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28210F267A2D008AED9E /* vocoder.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = vocoder.ny; path = "../plug-ins/vocoder.ny"; sourceTree = SOURCE_ROOT; };
 		28B97B850FBF771A0076CF28 /* VSTEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = VSTEffect.cpp; path = VST/VSTEffect.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28B97B860FBF771A0076CF28 /* VSTEffect.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = VSTEffect.h; path = VST/VSTEffect.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -3397,6 +3397,7 @@
 		5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayPanel.h; sourceTree = "<group>"; };
 		5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackedPanel.cpp; sourceTree = "<group>"; };
 		5ED1D0B01CDE560C00471E3C /* BackedPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackedPanel.h; sourceTree = "<group>"; };
+		5ED8FF89239AB9960065BC5B /* noisegate.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = noisegate.ny; path = "../plug-ins/noisegate.ny"; sourceTree = "<group>"; };
 		5EE8984821D68D88006DE939 /* CommandManagerWindowClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandManagerWindowClasses.h; sourceTree = "<group>"; };
 		5EEE942021F397C00038E68E /* AttachedVirtualFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachedVirtualFunction.h; sourceTree = "<group>"; };
 		5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrubbingToolBar.cpp; sourceTree = "<group>"; };
@@ -5945,6 +5946,7 @@
 				28AA281A0F267A2D008AED9E /* highpass.ny */,
 				2860736B1B1ED77100850872 /* limiter.ny */,
 				28AA281B0F267A2D008AED9E /* lowpass.ny */,
+				5ED8FF89239AB9960065BC5B /* noisegate.ny */,
 				28ED7B701A1C77B0008A01D9 /* notch.ny */,
 				AAA677842243BA4400D42A28 /* nyquist-plug-in-installer.ny */,
 				28AA281C0F267A2D008AED9E /* pluck.ny */,
@@ -5960,7 +5962,6 @@
 				28ED7B781A1C77BF008A01D9 /* SpectralEditShelves.ny */,
 				28ED7B791A1C77BF008A01D9 /* StudioFadeOut.ny */,
 				28AA281F0F267A2D008AED9E /* tremolo.ny */,
-				28AA28200F267A2D008AED9E /* vocalremover.ny */,
 				28D34C801D9F52E200D4FB61 /* vocalrediso.ny */,
 				28AA28210F267A2D008AED9E /* vocoder.ny */,
 			);
@@ -7837,6 +7838,7 @@
 				AAA677852243BA4400D42A28 /* nyquist-plug-in-installer.ny in Resources */,
 				AAB5D42F216A9764006136B4 /* rms.ny in Resources */,
 				174F73D4098D516D009CD6E0 /* AudacityOGG.icns in Resources */,
+				5ED8FF8A239AB9960065BC5B /* noisegate.ny in Resources */,
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
 				8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */,
