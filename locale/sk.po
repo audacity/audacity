@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.3.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-09-07 14:02+0100\n"
-"PO-Revision-Date: 2019-04-22 23:51+0200\n"
+"PO-Revision-Date: 2019-12-03 07:35+0100\n"
 "Last-Translator: Milos Sramek\n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -56,11 +56,11 @@ msgstr "&Nyquist Pracovný nástroj..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
-msgstr "&Vrátiť\tCtrl+Z"
+msgstr "&Späť\tCtrl+Z"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Redo\tCtrl+Y"
-msgstr "&Obnoviť\tCtrl+Y"
+msgstr "&Znovu\tCtrl+Y"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Cu&t\tCtrl+X"
@@ -310,7 +310,7 @@ msgstr "Vybrať všetok text"
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Undo"
-msgstr "Vrátiť"
+msgstr "Späť"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Undo last change"
@@ -319,7 +319,7 @@ msgstr "Vrátiť poslednú zmenu"
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Redo"
-msgstr "Obnoviť"
+msgstr "Znovu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Redo previous change"
@@ -891,7 +891,7 @@ msgstr "Súbor dekódovaný úspešne\n"
 
 #: src/AudacityApp.cpp
 msgid "Audacity is starting up..."
-msgstr "Audacity štartuje..."
+msgstr "Spúšťa sa Audacity..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -1355,6 +1355,9 @@ msgid ""
 "This recovery file was saved by Audacity 2.3.0 or before.\n"
 "You need to run that version of Audacity to recover the project."
 msgstr ""
+"Tento obnovený súbor bol uložený verziou Audacity 2.3.0 alebo staršou "
+"verziou.\n"
+"Potrebujete túto verziu na obnovenie projektu."
 
 #: src/AutoRecovery.cpp
 msgid "Error Decoding File"
@@ -1554,7 +1557,7 @@ msgstr "Aplikované Makro"
 
 #: src/BatchCommands.cpp
 msgid "Apply Macro"
-msgstr "Aplikovať Makro"
+msgstr "Použiť Makro"
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
@@ -1604,7 +1607,7 @@ msgstr "Makro"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply Macro to:"
-msgstr "Aplikovať Makro do:"
+msgstr "Použiť Makro na:"
 
 #: src/BatchProcessDialog.cpp
 msgid "&Project"
@@ -1612,7 +1615,7 @@ msgstr "&Projekt"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to project"
-msgstr "Použiť makro do projektu"
+msgstr "Použiť makro na projekt"
 
 #: src/BatchProcessDialog.cpp
 msgid "&Files..."
@@ -1620,7 +1623,7 @@ msgstr "&Súbory..."
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to files..."
-msgstr "Aplikovať makro do súborov..."
+msgstr "Použiť makro na súbory..."
 
 #. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
@@ -1674,7 +1677,6 @@ msgid "&Rename..."
 msgstr "&Premenovať..."
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Re&store"
 msgstr "Obnoviť výbe&r"
 
@@ -1996,6 +1998,13 @@ msgid ""
 "change\n"
 "and use %s to change that audio."
 msgstr ""
+"Vyberte zvuk pre %s na použitie.\n"
+"\n"
+"1. Vyberte zvuk, kto je predstavuje šum a použite %s na 'získanie profilu "
+"vášho šumu'.\n"
+"\n"
+"2. Ak ste získali profil vášho šumu, vyberte zvuk, ktorý chcete zmeniť\n"
+"a použite %s na zmenu zvuku."
 
 #: src/CommonCommandFlags.cpp
 msgid ""
@@ -2152,7 +2161,6 @@ msgstr ""
 "súborov, môžete stratiť dáta."
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid ""
 "Your project is self-contained; it does not depend on any external audio "
 "files. \n"
@@ -2162,7 +2170,7 @@ msgid ""
 "New projects will be self-contained and are less risky."
 msgstr ""
 "Váš projekt je aktuálne sebestačný; nezávisí na žiadnych externých audio "
-"súborov.\n"
+"súboroch.\n"
 "\n"
 "Ak zmeníte projekt do stavu, že bude mať externé závislosti na importovaných "
 "súboroch, už sebestačný nebude. Ak ho potom Uložíte bez kopírovania týchto "
@@ -2746,12 +2754,11 @@ msgid "These are our support methods:"
 msgstr "Tu sú naše možnosti na získanie pomoci:"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
 "audacityteam.org/quick_help.html|view online]]"
 msgstr ""
-" [[súbor:quick_help.html|Rýchla pomoc]] - ak nie je nainštalovaná lokálne, "
+"[[súbor:quick_help.html|Rýchla pomoc]] - ak nie je nainštalovaná lokálne, "
 "[[https://manual.audacityteam.org/quick_help.html|pozrieť online]]"
 
 #: src/HelpText.cpp
@@ -5066,8 +5073,9 @@ msgid "(Esc to cancel)"
 msgstr "(Esc pre zrušenie)"
 
 #: src/TrackPanelAx.cpp
+#, fuzzy
 msgid "TrackView"
-msgstr "NáhľadStopy"
+msgstr "Zobrazenie stôp"
 
 #. i18n-hint: The %d is replaced by the number of the track.
 #. i18n-hint: compose a name identifying an unnamed track by number
@@ -5092,7 +5100,7 @@ msgstr " Sólované"
 #. this track is selected.
 #: src/TrackPanelAx.cpp
 msgid " Selected"
-msgstr " Označené"
+msgstr " vybraté"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
@@ -5112,7 +5120,7 @@ msgstr " Sólo Zapnuté"
 
 #: src/TrackPanelAx.cpp
 msgid " Select On"
-msgstr " Vybrať Zapnuté"
+msgstr " výber zapnutý"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -6047,7 +6055,7 @@ msgstr "Ukážka nie je dostupná"
 
 #: src/effects/AutoDuck.h
 msgid "Auto Duck"
-msgstr "Automatické Skrčenie"
+msgstr "Automatické zoslabenie"
 
 #: src/effects/BassTreble.cpp
 msgid "Simple tone control effect"
@@ -6147,11 +6155,11 @@ msgstr "Frekvencia"
 
 #: src/effects/ChangePitch.cpp
 msgid "from (Hz)"
-msgstr "od (Hz)"
+msgstr "z (Hz)"
 
 #: src/effects/ChangePitch.cpp
 msgid "to (Hz)"
-msgstr "do (Hz)"
+msgstr "na (Hz)"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
@@ -6165,7 +6173,7 @@ msgstr "Percento Zmeny"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
 msgid "Use high quality stretching (slow)"
-msgstr "Použiť vysoko kvalitné natiahnutie (pomalé)"
+msgstr "Použiť vysoko kvalitné predĺženie (pomalé)"
 
 #: src/effects/ChangePitch.h
 msgid "Change Pitch"
@@ -6185,7 +6193,7 @@ msgstr "Zmení rýchlosť stopy, taktiež zmení jej výšky"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Change Speed, affecting both Tempo and Pitch"
-msgstr "Zmena rýchlosti, ovplyvňujúca tempo aj výšku"
+msgstr "Zmena rýchlosti, ovplyvní tempo aj výšku"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Speed Multiplier:"
@@ -6198,11 +6206,11 @@ msgstr "Štandardný Vinyl rpm:"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
-msgstr "Od rpm"
+msgstr "Z rpm"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
-msgstr "Do rpm"
+msgstr "Na rpm"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Selection Length"
@@ -6234,7 +6242,7 @@ msgstr "Vysoko kvalitná Zmena Tempa"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo without Changing Pitch"
-msgstr "Zmeniť Tempo bez zmeny Výšok"
+msgstr "Zmeniť Tempo bez zmeny Výšky"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
@@ -6973,7 +6981,7 @@ msgstr "Pripravujem ukážku"
 
 #: src/effects/Effect.cpp
 msgid "Previewing"
-msgstr "Vyskúšavam"
+msgstr "Skúšam"
 
 #: src/effects/Effect.cpp
 msgid "Some Command"
@@ -7693,7 +7701,7 @@ msgstr "Postupný nábeh"
 
 #: src/effects/Fade.h
 msgid "Fade Out"
-msgstr "Vyblednutie"
+msgstr "Do stratena"
 
 #: src/effects/FindClipping.cpp
 msgid "Creates labels where clipping is detected"
@@ -7745,7 +7753,7 @@ msgstr "Ružový"
 
 #: src/effects/Noise.cpp
 msgid "Brownian"
-msgstr "Hnedastý"
+msgstr "Hnedý"
 
 #: src/effects/Noise.cpp
 msgid "Generates one of three different types of noise"
@@ -7766,7 +7774,7 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp
 msgid "Steps per block are too few for the window types."
-msgstr "Kroky za blok sú príliš málo pre typy okien."
+msgstr "Kroky za blok sú príliš malé pre typy okien."
 
 #: src/effects/NoiseReduction.cpp
 msgid "Steps per block cannot exceed the window size."
@@ -8125,7 +8133,8 @@ msgstr "Normalizovať"
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
-"Paulstretch je iba pre extrémne časové-natiahnutie alebo \"hromadiaci\" efekt"
+"Paulstretch je iba pre extrémne časové-predĺženie alebo, ako \"hromadiaci\" "
+"efekt"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -8147,7 +8156,7 @@ msgid ""
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
-"Audio výber príliš krátky na ukážku.\n"
+"Audio výber je príliš krátky na ukážku.\n"
 "\n"
 "Skúste zvýšiť audio výber na aspoň %.1f sekúnd,\n"
 "alebo skrátením 'Časového Rozlíšenia' na menej než %.1f sekúnd."
@@ -8161,7 +8170,7 @@ msgid ""
 "For the current audio selection, the maximum\n"
 "'Time Resolution' is %.1f seconds."
 msgstr ""
-"Nemožno Predviesť.\n"
+"Nie je možné spustiť ukážku.\n"
 "\n"
 "Pre aktuálne vybraté audio, maximálne\n"
 "'Časové Rozlíšenie' je %.1f sekúnd."
@@ -8398,7 +8407,7 @@ msgstr "I&ba Mokrý"
 
 #: src/effects/Reverb.cpp src/effects/Reverb.h
 msgid "Reverb"
-msgstr "Obrátiť"
+msgstr "Dozvuk"
 
 #: src/effects/Reverse.cpp
 msgid "Reverses the selected audio"
@@ -8406,7 +8415,7 @@ msgstr "Obráti vybrané audio"
 
 #: src/effects/Reverse.h
 msgid "Reverse"
-msgstr "Spiatočka"
+msgstr "Obrátiť"
 
 #: src/effects/SBSMSEffect.h
 msgid "SBSMS Time / Pitch Stretch"
@@ -8634,11 +8643,11 @@ msgstr "Štvorec"
 
 #: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sawtooth"
-msgstr "Píla"
+msgstr "Pílový zub"
 
 #: src/effects/ToneGen.cpp
 msgid "Square, no alias"
-msgstr "Obdĺžnik, bez aliasingu"
+msgstr "Štvorec, bez aliasingu"
 
 #: src/effects/ToneGen.cpp
 msgid "Generates an ascending or descending tone of one of four types"
@@ -8650,7 +8659,7 @@ msgstr "Generuje konštantný frekvenčný tón jedného zo štyroch typov"
 
 #: src/effects/ToneGen.cpp
 msgid "Waveform:"
-msgstr "Časová vlna:"
+msgstr "Krivka:"
 
 #: src/effects/ToneGen.cpp
 msgid "Frequency (Hz):"
@@ -8678,7 +8687,7 @@ msgstr "Interpolácia:"
 
 #: src/effects/ToneGen.h
 msgid "Chirp"
-msgstr "Štebot"
+msgstr "Štebotanie"
 
 #: src/effects/ToneGen.h
 msgid "Tone"
@@ -8686,7 +8695,7 @@ msgstr "Tón"
 
 #: src/effects/TruncSilence.cpp
 msgid "Truncate Detected Silence"
-msgstr "Osekať Detekované Ticho"
+msgstr "Orezať rozpoznané ticho"
 
 #: src/effects/TruncSilence.cpp
 msgid "Compress Excess Silence"
@@ -10239,9 +10248,8 @@ msgid "XML files (*.xml)|*.xml|All files|*"
 msgstr "XML súbory (*.xml)|*.xml|Všetky súbory|*"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "No presets to export"
-msgstr "Žiadne štítky na export."
+msgstr "Žiadne predvoľby na export"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Select xml file to export presets into"
@@ -10780,9 +10788,8 @@ msgid "Unable to export - problem with packets"
 msgstr ""
 
 #: src/export/ExportOGG.cpp
-#, fuzzy
 msgid "Unable to export - problem with file"
-msgstr "Nemožno načítať súbor predvolieb."
+msgstr "Nie je možné načítať problém"
 
 #: src/export/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
@@ -12368,7 +12375,7 @@ msgstr "&Makrá..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Apply Macro"
-msgstr "&Aplikovať Makro"
+msgstr "&Použiť Makro"
 
 #: src/menus/PluginMenus.cpp
 msgid "Palette..."
@@ -12547,7 +12554,7 @@ msgstr "Nastaviť Výber v Pravo pri Prehrávacej Pozícií"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track &Start to Cursor"
-msgstr "&Štart Stopy po Kurzor"
+msgstr "&Začiatok Stopy na Kurzor"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Track Start to Cursor"
@@ -12895,16 +12902,17 @@ msgid "Pan Track"
 msgstr "Vyvážiť Stopu"
 
 #: src/menus/TrackMenus.cpp
+#, fuzzy
 msgid "Start to &Zero"
-msgstr "Začať do &Nuly"
+msgstr "Začiatok na &Nulu"
 
 #: src/menus/TrackMenus.cpp
 msgid "Start to &Cursor/Selection Start"
-msgstr "Začať na &Kurzor/Začiatok Výberu"
+msgstr "Začiatok na &Kurzor/Začiatok Výberu"
 
 #: src/menus/TrackMenus.cpp
 msgid "Start to Selection &End"
-msgstr "Štart na &Koniec Výberu"
+msgstr "Začiatok na &Koniec Výberu"
 
 #: src/menus/TrackMenus.cpp
 msgid "End to Cu&rsor/Selection Start"
@@ -12921,35 +12929,36 @@ msgstr "Koniec na Ko&niec Výberu"
 #. an implied preposition "from").
 #: src/menus/TrackMenus.cpp
 msgid "Aligned/Moved start to zero"
-msgstr "Zarovnaný/Presunutý štart na nulu"
+msgstr "Zarovnaný/Presunutý začiatok na nulu"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned start to zero"
-msgstr "Zarovnaný štart na nulu"
+msgstr "Zarovnaný začiatok na nulu"
 
 #: src/menus/TrackMenus.cpp
+#, fuzzy
 msgid "Align/Move Start"
-msgstr "Zarovnať/Presunúť Štart"
+msgstr "Zarovnať/Presunúť Začiatok"
 
 #: src/menus/TrackMenus.cpp
 msgid "Align Start"
-msgstr "Zarovnať Štart"
+msgstr "Zarovnať Začiatok"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned/Moved start to cursor/selection start"
-msgstr "Zarovnaný/Presunutý štart na kurzor/začiatok výberu"
+msgstr "Zarovnaný/Presunutý začiatok na kurzor/začiatok výberu"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned start to cursor/selection start"
-msgstr "Zarovnaný štart na kurzor/začiatok výberu"
+msgstr "Zarovnaný začiatok na kurzor/začiatok výberu"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned/Moved start to selection end"
-msgstr "Zarovnaný/Presunutý štart na koniec výberu"
+msgstr "Zarovnaný/Presunutý začiatok na koniec výberu"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned start to selection end"
-msgstr "Zarovnaný štart na koniec výberu"
+msgstr "Zarovnaný začiatok na koniec výberu"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned/Moved end to cursor/selection start"
@@ -12985,7 +12994,7 @@ msgstr "Zarovnaný koniec na koniec"
 
 #: src/menus/TrackMenus.cpp
 msgid "Align/Move End to End"
-msgstr "Zarovnaný/Presunutý Koniec na Koniec"
+msgstr "Zarovnať/Presunúť Koniec na Koniec"
 
 #: src/menus/TrackMenus.cpp
 msgid "Align End to End"
@@ -13148,7 +13157,7 @@ msgstr "Zmieša&ť"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix Stereo Down to &Mono"
-msgstr "Zmiešať Stereo Dole na &Mono"
+msgstr "Zmiešať Stereo do &Mono"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x and Render"
@@ -17975,12 +17984,13 @@ msgid "This plug-in requires Audacity 2.3.1 or later."
 msgstr "Tento plug-in vyžaduje Audacity 2.3.1 alebo vyšší."
 
 #: plug-ins/pluck.ny
+#, fuzzy
 msgid "Pluck"
-msgstr "Trhanie"
+msgstr "Brnknutie"
 
 #: plug-ins/pluck.ny
 msgid "Generating pluck sound..."
-msgstr "Generujem trhací zvuk..."
+msgstr "Vygenerujem zvuk brnknutia..."
 
 #: plug-ins/pluck.ny
 msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
@@ -17992,7 +18002,7 @@ msgstr "David R.Sky"
 
 #: plug-ins/pluck.ny
 msgid "Pluck MIDI pitch"
-msgstr "Trhať MIDI Výšky"
+msgstr "Midi výška zvuku brnknutia"
 
 #: plug-ins/pluck.ny
 msgid "Fade-out type"
@@ -18056,7 +18066,7 @@ msgstr "1 - 1000 pásov"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm track duration"
-msgstr "Dĺžka rytmu stopy"
+msgstr "Dĺžka rytmickej stopy"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Used if 'Number of bars' = 0"
@@ -18128,7 +18138,7 @@ msgstr ""
 
 #: plug-ins/rissetdrum.ny
 msgid "Risset Drum"
-msgstr "Risset bubny"
+msgstr "Rissetov bubon"
 
 #: plug-ins/rissetdrum.ny
 msgid "Generating Risset Drum..."
@@ -18516,7 +18526,7 @@ msgstr "Typ Zvukovej vlny"
 
 #: plug-ins/tremolo.ny
 msgid "Inverse Sawtooth"
-msgstr "Prevrátená Píla"
+msgstr "Prevrátený pílový zub"
 
 #: plug-ins/tremolo.ny
 msgid "Starting phase (degrees)"
@@ -18696,11 +18706,11 @@ msgstr "Tento plug-in funguje iba so stereo stopami."
 
 #: plug-ins/vocoder.ny
 msgid "Vocoder"
-msgstr "Vokóder"
+msgstr "Vokodér"
 
 #: plug-ins/vocoder.ny
 msgid "Processing Vocoder..."
-msgstr "Spracúvam Vokóder..."
+msgstr "Spracúvam Vokodér..."
 
 #: plug-ins/vocoder.ny
 msgid "Edgar-RFT"
