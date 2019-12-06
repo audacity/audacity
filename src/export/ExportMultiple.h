@@ -29,12 +29,12 @@ class SelectionState;
 class ShuttleGui;
 class Track;
 
-class ExportMultiple final : public wxDialogWrapper
+class ExportMultipleDialog final : public wxDialogWrapper
 {
 public:
 
-   ExportMultiple(AudacityProject *parent);
-   virtual ~ExportMultiple();
+   ExportMultipleDialog(AudacityProject *parent);
+   virtual ~ExportMultipleDialog();
 
    int ShowModal();
 

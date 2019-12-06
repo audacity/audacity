@@ -22,10 +22,10 @@ class AudacityProject;
 class ShuttleGui;
 class UndoManager;
 
-class HistoryWindow final : public wxDialogWrapper {
+class HistoryDialog final : public wxDialogWrapper {
 
  public:
-   HistoryWindow(AudacityProject * parent, UndoManager *manager);
+   HistoryDialog(AudacityProject * parent, UndoManager *manager);
 
    void UpdateDisplay(wxEvent &e);
    

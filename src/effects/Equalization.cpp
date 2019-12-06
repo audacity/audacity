@@ -37,7 +37,7 @@
    \class EqualizationPanel
    \brief EqualizationPanel is used with EqualizationDialog and controls
    a graph for EffectEqualization.  We should look at amalgamating the
-   various graphing code, such as provided by FreqWindow and FilterPanel.
+   various graphing code, such as provided by FrequencyPlotDialog and FilterPanel.
 
 *//****************************************************************//**
 

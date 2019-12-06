@@ -9,7 +9,7 @@
 
 *******************************************************************//*!
 
-\class HistoryWindow
+\class HistoryDialog
 \brief Works with UndoManager to allow user to see descriptions of
 and undo previous commands.  Also allows you to selectively clear the
 undo memory so as to free up space.
@@ -50,15 +50,15 @@ enum {
    ID_DISCARD_CLIPBOARD
 };
 
-BEGIN_EVENT_TABLE(HistoryWindow, wxDialogWrapper)
-   EVT_SIZE(HistoryWindow::OnSize)
-   EVT_CLOSE(HistoryWindow::OnCloseWindow)
-   EVT_LIST_ITEM_SELECTED(wxID_ANY, HistoryWindow::OnItemSelected)
-   EVT_BUTTON(ID_DISCARD, HistoryWindow::OnDiscard)
-   EVT_BUTTON(ID_DISCARD_CLIPBOARD, HistoryWindow::OnDiscardClipboard)
+BEGIN_EVENT_TABLE(HistoryDialog, wxDialogWrapper)
+   EVT_SIZE(HistoryDialog::OnSize)
+   EVT_CLOSE(HistoryDialog::OnCloseWindow)
+   EVT_LIST_ITEM_SELECTED(wxID_ANY, HistoryDialog::OnItemSelected)
+   EVT_BUTTON(ID_DISCARD, HistoryDialog::OnDiscard)
+   EVT_BUTTON(ID_DISCARD_CLIPBOARD, HistoryDialog::OnDiscardClipboard)
 END_EVENT_TABLE()
 
-HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
+HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
    wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, wxString(_("History")),
       wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
@@ -98,12 +98,12 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
          S.StartMultiColumn(3, wxCENTRE);
          {
             mTotal = S.Id(ID_TOTAL)
-               .ConnectRoot(wxEVT_KEY_DOWN, &HistoryWindow::OnChar)
+               .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
                .AddTextBox(_("&Total space used"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
             mAvail = S.Id(ID_AVAIL)
-               .ConnectRoot(wxEVT_KEY_DOWN, &HistoryWindow::OnChar)
+               .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
                .AddTextBox(_("&Undo levels available"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
@@ -122,7 +122,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
             mDiscard = S.Id(ID_DISCARD).AddButton(_("&Discard"));
 
             mClipboard = S
-               .ConnectRoot(wxEVT_KEY_DOWN, &HistoryWindow::OnChar)
+               .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
                .AddTextBox(_("Clipboard space used"), wxT("0"), 10);
             S.Id(ID_DISCARD_CLIPBOARD).AddButton(_("Discard"));
          }
@@ -146,27 +146,27 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    mList->SetTextColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
 
    wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
-                     &HistoryWindow::OnAudioIO,
+                     &HistoryDialog::OnAudioIO,
                      this);
 
    wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                     &HistoryWindow::OnAudioIO,
+                     &HistoryDialog::OnAudioIO,
                      this);
 
    Clipboard::Get().Bind(
-      EVT_CLIPBOARD_CHANGE, &HistoryWindow::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_PUSHED, &HistoryWindow::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_MODIFIED, &HistoryWindow::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_OR_REDO, &HistoryWindow::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_RESET, &HistoryWindow::UpdateDisplay, this);
+      EVT_CLIPBOARD_CHANGE, &HistoryDialog::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_PUSHED, &HistoryDialog::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_MODIFIED, &HistoryDialog::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_OR_REDO, &HistoryDialog::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_RESET, &HistoryDialog::UpdateDisplay, this);
 }
 
-void HistoryWindow::OnChar( wxEvent& )
+void HistoryDialog::OnChar( wxEvent& )
 {
    // ignore it
 }
 
-void HistoryWindow::OnAudioIO(wxCommandEvent& evt)
+void HistoryDialog::OnAudioIO(wxCommandEvent& evt)
 {
    evt.Skip();
 
@@ -178,21 +178,21 @@ void HistoryWindow::OnAudioIO(wxCommandEvent& evt)
    mDiscard->Enable(!mAudioIOBusy);
 }
 
-void HistoryWindow::UpdateDisplay(wxEvent& e)
+void HistoryDialog::UpdateDisplay(wxEvent& e)
 {
    e.Skip();
    if(IsShown())
       DoUpdate();
 }
 
-bool HistoryWindow::Show( bool show )
+bool HistoryDialog::Show( bool show )
 {
    if ( show && !IsShown())
       DoUpdate();
    return wxDialogWrapper::Show( show );
 }
 
-void HistoryWindow::DoUpdate()
+void HistoryDialog::DoUpdate()
 {
    int i;
 
@@ -225,7 +225,7 @@ void HistoryWindow::DoUpdate()
    UpdateLevels();
 }
 
-void HistoryWindow::UpdateLevels()
+void HistoryDialog::UpdateLevels()
 {
    wxWindow *focus;
    int value = mLevels->GetValue();
@@ -252,7 +252,7 @@ void HistoryWindow::UpdateLevels()
    mDiscard->Enable(!mAudioIOBusy && mSelected > 0);
 }
 
-void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
+void HistoryDialog::OnDiscard(wxCommandEvent & WXUNUSED(event))
 {
    int i = mLevels->GetValue();
 
@@ -266,12 +266,12 @@ void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
    DoUpdate();
 }
 
-void HistoryWindow::OnDiscardClipboard(wxCommandEvent & WXUNUSED(event))
+void HistoryDialog::OnDiscardClipboard(wxCommandEvent & WXUNUSED(event))
 {
    Clipboard::Get().Clear();
 }
 
-void HistoryWindow::OnItemSelected(wxListEvent &event)
+void HistoryDialog::OnItemSelected(wxListEvent &event)
 {
    if (mAudioIOBusy) {
       mList->SetItemState(mSelected,
@@ -303,12 +303,12 @@ void HistoryWindow::OnItemSelected(wxListEvent &event)
    UpdateLevels();
 }
 
-void HistoryWindow::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
+void HistoryDialog::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
 {
   this->Show(false);
 }
 
-void HistoryWindow::OnSize(wxSizeEvent & WXUNUSED(event))
+void HistoryDialog::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    Layout();
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));

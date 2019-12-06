@@ -109,7 +109,7 @@ wxString FileNames::TempDir()
    return FileNames::MkDir(gPrefs->Read(wxT("/Directories/TempDir"), wxT("")));
 }
 
-// originally an ExportMultiple method. Append suffix if newName appears in otherNames.
+// originally an ExportMultipleDialog method. Append suffix if newName appears in otherNames.
 void FileNames::MakeNameUnique(FilePaths &otherNames,
    wxFileName &newName)
 {

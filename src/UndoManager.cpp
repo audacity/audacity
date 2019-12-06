@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class UndoManager
-\brief Works with HistoryWindow to provide the Undo functionality.
+\brief Works with HistoryDialog to provide the Undo functionality.
 
 *//****************************************************************//**
 

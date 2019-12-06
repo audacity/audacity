@@ -25,7 +25,7 @@ class wxPoint;
 class wxTextCtrl;
 
 class Ruler;
-class TipPanel;
+class TipWindow;
 
 //
 // Predefined slider types (mStyle)
@@ -217,7 +217,7 @@ class LWSlider
 
    wxWindowID mID;
 
-   std::unique_ptr<TipPanel> mTipPanel;
+   std::unique_ptr<TipWindow> mTipPanel;
    wxString mTipTemplate;
 
    bool mIsDragging;

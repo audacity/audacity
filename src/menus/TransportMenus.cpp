@@ -487,7 +487,7 @@ void OnSoundActivated(const CommandContext &context)
 {
    AudacityProject &project = context.project;
 
-   SoundActivatedRecord dialog( &GetProjectFrame( project ) /* parent */ );
+   SoundActivatedRecordDialog dialog( &GetProjectFrame( project ) /* parent */ );
    dialog.ShowModal();
 }
 

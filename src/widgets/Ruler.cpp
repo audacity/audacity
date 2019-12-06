@@ -1659,7 +1659,7 @@ void RulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 
 // LL:  We're overloading DoSetSize so that we can update the ruler bounds immediately
 //      instead of waiting for a wxEVT_SIZE to come through.  This is needed by (at least)
-//      FreqWindow since it needs to have an updated ruler before RulerPanel gets the
+//      FrequencyPlotDialog since it needs to have an updated ruler before RulerPanel gets the
 //      size event.
 void RulerPanel::DoSetSize(int x, int y,
                            int width, int height,

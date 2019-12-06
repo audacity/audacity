@@ -22,7 +22,7 @@ have a window permanently associated with it.
 \class SliderDialog
 \brief Pop up dialog used with an LWSlider.
 
-\class TipPanel
+\class TipWindow
 \brief A wxPopupWindow used to give the numerical value of an LWSlider
 or ASlider.
 
@@ -150,14 +150,14 @@ const int sliderFontSize = 12;
 class wxArrayString;
 
 //
-// TipPanel
+// TipWindow
 //
 
-class TipPanel final : public wxFrame
+class TipWindow final : public wxFrame
 {
  public:
-   TipPanel(wxWindow *parent, const wxArrayString & labels);
-   virtual ~TipPanel() {}
+   TipWindow(wxWindow *parent, const wxArrayString & labels);
+   virtual ~TipWindow() {}
 
    wxSize GetSize() const;
    void SetPos(const wxPoint & pos);
@@ -177,14 +177,14 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(TipPanel, wxFrame)
-   EVT_PAINT(TipPanel::OnPaint)
+BEGIN_EVENT_TABLE(TipWindow, wxFrame)
+   EVT_PAINT(TipWindow::OnPaint)
 #if defined(__WXGTK__)
-   EVT_WINDOW_CREATE(TipPanel::OnCreate)
+   EVT_WINDOW_CREATE(TipWindow::OnCreate)
 #endif
 END_EVENT_TABLE()
 
-TipPanel::TipPanel(wxWindow *parent, const wxArrayString & labels)
+TipWindow::TipWindow(wxWindow *parent, const wxArrayString & labels)
 :  wxFrame(parent, wxID_ANY, wxString{}, wxDefaultPosition, wxDefaultSize,
            wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT)
 {
@@ -209,12 +209,12 @@ TipPanel::TipPanel(wxWindow *parent, const wxArrayString & labels)
 #endif
 }
 
-wxSize TipPanel::GetSize() const
+wxSize TipWindow::GetSize() const
 {
    return wxSize(mWidth, mHeight);
 }
 
-void TipPanel::SetPos(const wxPoint & pos)
+void TipWindow::SetPos(const wxPoint & pos)
 {
 #if defined(__WXGTK__)
    SetSize(pos.x, pos.y, wxDefaultCoord, wxDefaultCoord);
@@ -223,12 +223,12 @@ void TipPanel::SetPos(const wxPoint & pos)
 #endif
 }
 
-void TipPanel::SetLabel(const wxString & label)
+void TipWindow::SetLabel(const wxString & label)
 {
    mLabel = label;
 }
 
-void TipPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
+void TipWindow::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxAutoBufferedPaintDC dc(this);
 
@@ -245,7 +245,7 @@ void TipPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 }
 
 #if defined(__WXGTK__)
-void TipPanel::OnCreate(wxWindowCreateEvent & WXUNUSED(event))
+void TipWindow::OnCreate(wxWindowCreateEvent & WXUNUSED(event))
 {
    wxGraphicsPath path = wxGraphicsRenderer::GetDefaultRenderer()->CreatePath();
    path.AddRoundedRectangle(0, 0, mWidth, mHeight, 5);
@@ -894,7 +894,7 @@ void LWSlider::ShowTip(bool show)
 
 void LWSlider::CreatePopWin()
 {
-   mTipPanel = std::make_unique<TipPanel>(mParent, GetWidestTips());
+   mTipPanel = std::make_unique<TipWindow>(mParent, GetWidestTips());
 }
 
 void LWSlider::SetPopWinPosition()

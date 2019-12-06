@@ -95,7 +95,7 @@ private:
    bool mbBringToTop;
    bool bHasBackground;
    bool bHasBringToTop;
-   friend class ScreenFrame;
+   friend class ScreenshotBigDialog;
 
 public:
    bool Apply(const CommandContext & context) override;

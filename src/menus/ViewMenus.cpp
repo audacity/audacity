@@ -40,7 +40,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sMixerBoardKey{
 AudacityProject::AttachedWindows::RegisteredFactory sHistoryWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &undoManager = UndoManager::Get( parent );
-      return safenew HistoryWindow( &parent, &undoManager );
+      return safenew HistoryDialog( &parent, &undoManager );
    }
 };
 

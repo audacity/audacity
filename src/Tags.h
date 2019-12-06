@@ -52,7 +52,7 @@ class wxTextCtrl;
 class AudacityProject;
 class Grid;
 class ShuttleGui;
-class TagsEditor;
+class TagsEditorDialog;
 class ComboEditor;
 
 using TagMap = std::unordered_map< wxString, wxString >;
@@ -137,17 +137,17 @@ class AUDACITY_DLL_API Tags final
 inline bool operator != (const Tags &lhs, const Tags &rhs)
 { return !(lhs == rhs); }
 
-class TagsEditor final : public wxDialogWrapper
+class TagsEditorDialog final : public wxDialogWrapper
 {
  public:
    // constructors and destructors
-   TagsEditor(wxWindow * parent,
+   TagsEditorDialog(wxWindow * parent,
               const wxString &title,
               Tags * tags,
               bool editTitle,
               bool editTrackNumber);
 
-   virtual ~TagsEditor();
+   virtual ~TagsEditorDialog();
 
 #if !defined(__WXMSW__)
    bool IsEscapeKey(const wxKeyEvent& /*event*/) override { return false; }

@@ -36,7 +36,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
 AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
-      return safenew FreqWindow(
+      return safenew FrequencyPlotDialog(
          &window, -1, _("Frequency Analysis"),
          wxPoint{ 150, 150 }
       );
@@ -486,7 +486,7 @@ void OnPlotSpectrum(const CommandContext &context)
 {
    auto &project = context.project;
    auto freqWindow =
-      &project.AttachedWindows::Get< FreqWindow >( sFrequencyWindowKey );
+      &project.AttachedWindows::Get< FrequencyPlotDialog >( sFrequencyWindowKey );
 
    if( ScreenshotCommand::MayCapture( freqWindow ) )
       return;

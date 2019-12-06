@@ -8,8 +8,8 @@
 
 *******************************************************************//**
 
-\class ScreenFrame
-\brief ScreenFrame provides an alternative Gui for ScreenshotCommand.
+\class ScreenshotBigDialog
+\brief ScreenshotBigDialog provides an alternative Gui for ScreenshotCommand.
 It adds a timer that allows a delay before taking a screenshot,
 provides lots of one-click buttons, options to resize the screen.
 It forwards the actual work of doing the commands to the ScreenshotCommand.
@@ -53,12 +53,13 @@ class OldStyleCommandType;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ScreenFrame final : public wxFrame
+// ANSWER-ME: Should this derive from wxDialogWrapper instead?
+class ScreenshotBigDialog final : public wxFrame
 {
  public:
    // constructors and destructors
-   ScreenFrame(wxWindow *parent, wxWindowID id);
-   virtual ~ScreenFrame();
+   ScreenshotBigDialog(wxWindow *parent, wxWindowID id);
+   virtual ~ScreenshotBigDialog();
 
    bool ProcessEvent(wxEvent & event) override;
 
@@ -108,12 +109,12 @@ class ScreenFrame final : public wxFrame
    DECLARE_EVENT_TABLE()
 };
 
-// Static pointer to the unique ScreenFrame window.
-// Formerly it was parentless, therefore this was a Destroy_ptr<ScreenFrame>
+// Static pointer to the unique ScreenshotBigDialog window.
+// Formerly it was parentless, therefore this was a Destroy_ptr<ScreenshotBigDialog>
 // But now the window is owned, so just use a bare pointer, and null it when
 // the unique window is destroyed.
-using ScreenFramePtr = ScreenFrame*;
-ScreenFramePtr mFrame;
+using ScreenshotBigDialogPtr = ScreenshotBigDialog*;
+ScreenshotBigDialogPtr mFrame;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -125,7 +126,7 @@ void OpenScreenshotTools()
          wxASSERT(false);
          return;
       }
-      mFrame = ScreenFramePtr{ safenew ScreenFrame(parent, -1) };
+      mFrame = ScreenshotBigDialogPtr{ safenew ScreenshotBigDialog(parent, -1) };
    }
    mFrame->Show();
    mFrame->Raise();
@@ -141,7 +142,7 @@ void CloseScreenshotTools()
 class ScreenFrameTimer final : public wxTimer
 {
  public:
-   ScreenFrameTimer(ScreenFrame *frame,
+   ScreenFrameTimer(ScreenshotBigDialog *frame,
                     wxEvent & event)
    {
       screenFrame = frame;
@@ -157,7 +158,7 @@ class ScreenFrameTimer final : public wxTimer
    }
 
  private:
-   ScreenFrame *screenFrame;
+   ScreenshotBigDialog *screenFrame;
    std::unique_ptr<wxEvent> evt;
 };
 
@@ -224,34 +225,34 @@ enum
 
 };
 
-BEGIN_EVENT_TABLE(ScreenFrame, wxFrame)
-   EVT_CLOSE(ScreenFrame::OnCloseWindow)
-   EVT_BUTTON(wxID_HELP, ScreenFrame::OnGetURL)
-   EVT_BUTTON(wxID_CANCEL, ScreenFrame::OnClose)
+BEGIN_EVENT_TABLE(ScreenshotBigDialog, wxFrame)
+   EVT_CLOSE(ScreenshotBigDialog::OnCloseWindow)
+   EVT_BUTTON(wxID_HELP, ScreenshotBigDialog::OnGetURL)
+   EVT_BUTTON(wxID_CANCEL, ScreenshotBigDialog::OnClose)
 
-   EVT_UPDATE_UI(IdCaptureFullScreen,   ScreenFrame::OnUIUpdate)
+   EVT_UPDATE_UI(IdCaptureFullScreen,   ScreenshotBigDialog::OnUIUpdate)
 
-   EVT_BUTTON(IdMainWindowSmall,        ScreenFrame::OnMainWindowSmall)
-   EVT_BUTTON(IdMainWindowLarge,        ScreenFrame::OnMainWindowLarge)
-   EVT_TOGGLEBUTTON(IdToggleBackgroundBlue,   ScreenFrame::OnToggleBackgroundBlue)
-   EVT_TOGGLEBUTTON(IdToggleBackgroundWhite,  ScreenFrame::OnToggleBackgroundWhite)
-   EVT_COMMAND_RANGE(IdCaptureFirst, IdCaptureLast, wxEVT_COMMAND_BUTTON_CLICKED, ScreenFrame::OnCaptureSomething)
+   EVT_BUTTON(IdMainWindowSmall,        ScreenshotBigDialog::OnMainWindowSmall)
+   EVT_BUTTON(IdMainWindowLarge,        ScreenshotBigDialog::OnMainWindowLarge)
+   EVT_TOGGLEBUTTON(IdToggleBackgroundBlue,   ScreenshotBigDialog::OnToggleBackgroundBlue)
+   EVT_TOGGLEBUTTON(IdToggleBackgroundWhite,  ScreenshotBigDialog::OnToggleBackgroundWhite)
+   EVT_COMMAND_RANGE(IdCaptureFirst, IdCaptureLast, wxEVT_COMMAND_BUTTON_CLICKED, ScreenshotBigDialog::OnCaptureSomething)
 
-   EVT_BUTTON(IdOneSec,                 ScreenFrame::OnOneSec)
-   EVT_BUTTON(IdTenSec,                 ScreenFrame::OnTenSec)
-   EVT_BUTTON(IdOneMin,                 ScreenFrame::OnOneMin)
-   EVT_BUTTON(IdFiveMin,                ScreenFrame::OnFiveMin)
-   EVT_BUTTON(IdOneHour,                ScreenFrame::OnOneHour)
+   EVT_BUTTON(IdOneSec,                 ScreenshotBigDialog::OnOneSec)
+   EVT_BUTTON(IdTenSec,                 ScreenshotBigDialog::OnTenSec)
+   EVT_BUTTON(IdOneMin,                 ScreenshotBigDialog::OnOneMin)
+   EVT_BUTTON(IdFiveMin,                ScreenshotBigDialog::OnFiveMin)
+   EVT_BUTTON(IdOneHour,                ScreenshotBigDialog::OnOneHour)
 
-   EVT_BUTTON(IdShortTracks,            ScreenFrame::OnShortTracks)
-   EVT_BUTTON(IdMedTracks,              ScreenFrame::OnMedTracks)
-   EVT_BUTTON(IdTallTracks,             ScreenFrame::OnTallTracks)
+   EVT_BUTTON(IdShortTracks,            ScreenshotBigDialog::OnShortTracks)
+   EVT_BUTTON(IdMedTracks,              ScreenshotBigDialog::OnMedTracks)
+   EVT_BUTTON(IdTallTracks,             ScreenshotBigDialog::OnTallTracks)
 
-   EVT_BUTTON(IdDirChoose,              ScreenFrame::OnDirChoose)
+   EVT_BUTTON(IdDirChoose,              ScreenshotBigDialog::OnDirChoose)
 END_EVENT_TABLE();
 
 // Must not be called before CreateStatusBar!
-std::unique_ptr<ScreenshotCommand> ScreenFrame::CreateCommand()
+std::unique_ptr<ScreenshotCommand> ScreenshotBigDialog::CreateCommand()
 {
    wxASSERT(mStatus != NULL);
    auto output =
@@ -261,7 +262,7 @@ std::unique_ptr<ScreenshotCommand> ScreenFrame::CreateCommand()
    return std::make_unique<ScreenshotCommand>();//*type, std::move(output), this);
 }
 
-ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
+ScreenshotBigDialog::ScreenshotBigDialog(wxWindow * parent, wxWindowID id)
 :  wxFrame(parent, id, _("Screen Capture Frame"),
            wxDefaultPosition, wxDefaultSize,
 
@@ -298,7 +299,7 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
    Center();
 }
 
-ScreenFrame::~ScreenFrame()
+ScreenshotBigDialog::~ScreenshotBigDialog()
 {
    if (this == mFrame)
       mFrame = nullptr;
@@ -307,13 +308,13 @@ ScreenFrame::~ScreenFrame()
       wxASSERT(false);
 }
 
-void ScreenFrame::Populate()
+void ScreenshotBigDialog::Populate()
 {
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }
 
-void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
+void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
 {
    wxPanel *p = S.StartPanel();
    RTL_WORKAROUND(p);
@@ -483,7 +484,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
    SetIcon( GetProjectFrame( mContext.project ).GetIcon() );
 }
 
-bool ScreenFrame::ProcessEvent(wxEvent & e)
+bool ScreenshotBigDialog::ProcessEvent(wxEvent & e)
 {
    int id = e.GetId();
 
@@ -509,22 +510,22 @@ bool ScreenFrame::ProcessEvent(wxEvent & e)
    return wxFrame::ProcessEvent(e);
 }
 
-void ScreenFrame::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
+void ScreenshotBigDialog::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
 {
    Destroy();
 }
 
-void ScreenFrame::OnClose(wxCommandEvent &  WXUNUSED(event))
+void ScreenshotBigDialog::OnClose(wxCommandEvent &  WXUNUSED(event))
 {
    Destroy();
 }
 
-void ScreenFrame::OnGetURL(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
    HelpSystem::ShowHelp(this, wxT("Screenshot"));
 }
 
-void ScreenFrame::OnUIUpdate(wxUpdateUIEvent &  WXUNUSED(event))
+void ScreenshotBigDialog::OnUIUpdate(wxUpdateUIEvent &  WXUNUSED(event))
 {
 #ifdef __WXMAC__
    wxTopLevelWindow *top = mCommand->GetFrontWindow(GetActiveProject());
@@ -551,7 +552,7 @@ void ScreenFrame::OnUIUpdate(wxUpdateUIEvent &  WXUNUSED(event))
 #endif
 }
 
-void ScreenFrame::OnDirChoose(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnDirChoose(wxCommandEvent & WXUNUSED(event))
 {
    wxString current = mDirectoryTextBox->GetValue();
 
@@ -571,17 +572,17 @@ void ScreenFrame::OnDirChoose(wxCommandEvent & WXUNUSED(event))
    }
 }
 
-void ScreenFrame::OnToggleBackgroundBlue(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnToggleBackgroundBlue(wxCommandEvent & WXUNUSED(event))
 {
    mWhite->SetValue(false);
 }
 
-void ScreenFrame::OnToggleBackgroundWhite(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnToggleBackgroundWhite(wxCommandEvent & WXUNUSED(event))
 {
    mBlue->SetValue(false);
 }
 
-void ScreenFrame::SizeMainWindow(int w, int h)
+void ScreenshotBigDialog::SizeMainWindow(int w, int h)
 {
    int top = 20;
 
@@ -592,17 +593,17 @@ void ScreenFrame::SizeMainWindow(int w, int h)
    //ToolManager::Get( mContext.project ).Reset();
 }
 
-void ScreenFrame::OnMainWindowSmall(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnMainWindowSmall(wxCommandEvent & WXUNUSED(event))
 {
    SizeMainWindow(680, 450);
 }
 
-void ScreenFrame::OnMainWindowLarge(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnMainWindowLarge(wxCommandEvent & WXUNUSED(event))
 {
    SizeMainWindow(900, 600);
 }
 
-void ScreenFrame::DoCapture(int captureMode)
+void ScreenshotBigDialog::DoCapture(int captureMode)
 {
    Hide();
    //mCommand->SetParameter(wxT("FilePath"), mDirectoryTextBox->GetValue());
@@ -618,7 +619,7 @@ void ScreenFrame::DoCapture(int captureMode)
    Show();
 }
 
-void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
+void ScreenshotBigDialog::OnCaptureSomething(wxCommandEvent &  event)
 {
    int i = event.GetId() - IdCaptureFirst;
 
@@ -688,7 +689,7 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
    DoCapture(codes[i]);
 }
 
-void ScreenFrame::TimeZoom(double seconds)
+void ScreenshotBigDialog::TimeZoom(double seconds)
 {
    auto &viewInfo = ViewInfo::Get( mContext.project );
    auto &window = ProjectWindow::Get( mContext.project );
@@ -698,32 +699,32 @@ void ScreenFrame::TimeZoom(double seconds)
    window.RedrawProject();
 }
 
-void ScreenFrame::OnOneSec(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnOneSec(wxCommandEvent & WXUNUSED(event))
 {
    TimeZoom(1.0);
 }
 
-void ScreenFrame::OnTenSec(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnTenSec(wxCommandEvent & WXUNUSED(event))
 {
    TimeZoom(10.0);
 }
 
-void ScreenFrame::OnOneMin(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnOneMin(wxCommandEvent & WXUNUSED(event))
 {
    TimeZoom(60.0);
 }
 
-void ScreenFrame::OnFiveMin(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnFiveMin(wxCommandEvent & WXUNUSED(event))
 {
    TimeZoom(300.0);
 }
 
-void ScreenFrame::OnOneHour(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnOneHour(wxCommandEvent & WXUNUSED(event))
 {
    TimeZoom(3600.0);
 }
 
-void ScreenFrame::SizeTracks(int h)
+void ScreenshotBigDialog::SizeTracks(int h)
 {
    // h is the height for a channel
    // Set the height of a mono track twice as high
@@ -743,7 +744,7 @@ void ScreenFrame::SizeTracks(int h)
    ProjectWindow::Get( mContext.project ).RedrawProject();
 }
 
-void ScreenFrame::OnShortTracks(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
    for (auto t : TrackList::Get( mContext.project ).Any<WaveTrack>()) {
       auto &view = TrackView::Get( *t );
@@ -753,12 +754,12 @@ void ScreenFrame::OnShortTracks(wxCommandEvent & WXUNUSED(event))
    ProjectWindow::Get( mContext.project ).RedrawProject();
 }
 
-void ScreenFrame::OnMedTracks(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnMedTracks(wxCommandEvent & WXUNUSED(event))
 {
    SizeTracks(60);
 }
 
-void ScreenFrame::OnTallTracks(wxCommandEvent & WXUNUSED(event))
+void ScreenshotBigDialog::OnTallTracks(wxCommandEvent & WXUNUSED(event))
 {
    SizeTracks(85);
 }

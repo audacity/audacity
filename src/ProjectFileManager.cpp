@@ -574,7 +574,7 @@ bool ProjectFileManager::SaveCopyWaveTracks(const FilePath & strProjectPathName,
    extension = wxT("wav");
    fileFormat = wxT("WAVFLT");
 #endif
-   // Some of this is similar to code in ExportMultiple::ExportMultipleByTrack
+   // Some of this is similar to code in ExportMultipleDialog::ExportMultipleByTrack
    // but that code is really tied into the dialogs.
 
       // Copy the tracks because we're going to do some state changes before exporting.

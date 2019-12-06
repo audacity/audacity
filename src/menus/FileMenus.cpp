@@ -275,7 +275,7 @@ void OnExportLabels(const CommandContext &context)
 void OnExportMultiple(const CommandContext &context)
 {
    auto &project = context.project;
-   ExportMultiple em(&project);
+   ExportMultipleDialog em(&project);
 
    MissingAliasFilesDialog::SetShouldShow(true);
    em.ShowModal();

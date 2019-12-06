@@ -26,7 +26,7 @@ class wxCheckBox;
 class wxChoice;
 
 class AudacityProject;
-class FreqWindow;
+class FrequencyPlotDialog;
 class FreqGauge;
 class RulerPanel;
 
@@ -108,17 +108,17 @@ private:
    void OnMouseEvent(wxMouseEvent & event);
 
 private:
-    FreqWindow *freqWindow;
+    FrequencyPlotDialog *freqWindow;
 
     DECLARE_EVENT_TABLE()
 };
 
-class FreqWindow final : public wxDialogWrapper
+class FrequencyPlotDialog final : public wxDialogWrapper
 {
 public:
-   FreqWindow(wxWindow *parent, wxWindowID id,
+   FrequencyPlotDialog(wxWindow *parent, wxWindowID id,
               const wxString & title, const wxPoint & pos);
-   virtual ~ FreqWindow();
+   virtual ~ FrequencyPlotDialog();
 
    bool Show( bool show = true ) override;
 

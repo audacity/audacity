@@ -25,7 +25,7 @@
 
 *//****************************************************************//**
 
-\class TagsEditor
+\class TagsEditorDialog
 \brief Derived from ExpandingToolBar, this dialog allows editing of Tags.
 
 *//*******************************************************************/
@@ -611,7 +611,7 @@ void Tags::WriteXML(XMLWriter &xmlFile) const
 bool Tags::ShowEditDialog(wxWindow *parent, const wxString &title, bool force)
 {
    if (force) {
-      TagsEditor dlg(parent, title, this, mEditTitle, mEditTrackNumber);
+      TagsEditorDialog dlg(parent, title, this, mEditTitle, mEditTrackNumber);
 
       return dlg.ShowModal() == wxID_OK;
    }
@@ -793,24 +793,24 @@ enum {
    DontShowID
 };
 
-BEGIN_EVENT_TABLE(TagsEditor, wxDialogWrapper)
-   EVT_GRID_CELL_CHANGED(TagsEditor::OnChange)
-   EVT_BUTTON(EditID, TagsEditor::OnEdit)
-   EVT_BUTTON(ResetID, TagsEditor::OnReset)
-   EVT_BUTTON(ClearID, TagsEditor::OnClear)
-   EVT_BUTTON(LoadID, TagsEditor::OnLoad)
-   EVT_BUTTON(SaveID, TagsEditor::OnSave)
-   EVT_BUTTON(SaveDefaultsID, TagsEditor::OnSaveDefaults)
-   EVT_BUTTON(AddID, TagsEditor::OnAdd)
-   EVT_BUTTON(RemoveID, TagsEditor::OnRemove)
-   EVT_BUTTON(wxID_HELP, TagsEditor::OnHelp)
-   EVT_BUTTON(wxID_CANCEL, TagsEditor::OnCancel)
-   EVT_BUTTON(wxID_OK, TagsEditor::OnOk)
-   EVT_CHECKBOX( DontShowID, TagsEditor::OnDontShow )
-   EVT_KEY_DOWN(TagsEditor::OnKeyDown)
+BEGIN_EVENT_TABLE(TagsEditorDialog, wxDialogWrapper)
+   EVT_GRID_CELL_CHANGED(TagsEditorDialog::OnChange)
+   EVT_BUTTON(EditID, TagsEditorDialog::OnEdit)
+   EVT_BUTTON(ResetID, TagsEditorDialog::OnReset)
+   EVT_BUTTON(ClearID, TagsEditorDialog::OnClear)
+   EVT_BUTTON(LoadID, TagsEditorDialog::OnLoad)
+   EVT_BUTTON(SaveID, TagsEditorDialog::OnSave)
+   EVT_BUTTON(SaveDefaultsID, TagsEditorDialog::OnSaveDefaults)
+   EVT_BUTTON(AddID, TagsEditorDialog::OnAdd)
+   EVT_BUTTON(RemoveID, TagsEditorDialog::OnRemove)
+   EVT_BUTTON(wxID_HELP, TagsEditorDialog::OnHelp)
+   EVT_BUTTON(wxID_CANCEL, TagsEditorDialog::OnCancel)
+   EVT_BUTTON(wxID_OK, TagsEditorDialog::OnOk)
+   EVT_CHECKBOX( DontShowID, TagsEditorDialog::OnDontShow )
+   EVT_KEY_DOWN(TagsEditorDialog::OnKeyDown)
 END_EVENT_TABLE()
 
-TagsEditor::TagsEditor(wxWindow * parent,
+TagsEditorDialog::TagsEditorDialog(wxWindow * parent,
                        const wxString &title,
                        Tags * tags,
                        bool editTitle,
@@ -845,10 +845,10 @@ TagsEditor::TagsEditor(wxWindow * parent,
 
    // Override size and position with last saved
    wxRect r = GetRect();
-   gPrefs->Read(wxT("/TagsEditor/x"), &r.x, r.x);
-   gPrefs->Read(wxT("/TagsEditor/y"), &r.y, r.y);
-   gPrefs->Read(wxT("/TagsEditor/width"), &r.width, r.width);
-   gPrefs->Read(wxT("/TagsEditor/height"), &r.height, r.height);
+   gPrefs->Read(wxT("/TagsEditorDialog/x"), &r.x, r.x);
+   gPrefs->Read(wxT("/TagsEditorDialog/y"), &r.y, r.y);
+   gPrefs->Read(wxT("/TagsEditorDialog/width"), &r.width, r.width);
+   gPrefs->Read(wxT("/TagsEditorDialog/height"), &r.height, r.height);
    //On multi-monitor systems, there's a chance the last saved window position is
    //on a monitor that has been removed or is unavailable.
    if (IsWindowRectValid(&r))
@@ -872,7 +872,7 @@ TagsEditor::TagsEditor(wxWindow * parent,
    PopulateGenres();
 }
 
-TagsEditor::~TagsEditor()
+TagsEditorDialog::~TagsEditorDialog()
 {
    // This DELETE is not needed because wxWidgets owns the grid.
 // DELETE mGrid;
@@ -885,7 +885,7 @@ TagsEditor::~TagsEditor()
 //   DELETE mComboEditor;
 }
 
-void TagsEditor::PopulateOrExchange(ShuttleGui & S)
+void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
 {
    bool bShow;
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShow, true );
@@ -975,19 +975,19 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
    S.AddStandardButtons(eOkButton | eCancelButton | eHelpButton);
 }
 
-void TagsEditor::OnDontShow( wxCommandEvent & Evt )
+void TagsEditorDialog::OnDontShow( wxCommandEvent & Evt )
 {
    bool bShow = !Evt.IsChecked();
    gPrefs->Write(wxT("/AudioFiles/ShowId3Dialog"), bShow );
    gPrefs->Flush();
 }
 
-void TagsEditor::OnHelp(wxCommandEvent& WXUNUSED(event))
+void TagsEditorDialog::OnHelp(wxCommandEvent& WXUNUSED(event))
 {
    HelpSystem::ShowHelp(this, wxT("Metadata_Editor"), true);
 }
 
-bool TagsEditor::TransferDataFromWindow()
+bool TagsEditorDialog::TransferDataFromWindow()
 {
    int i, cnt = mGrid->GetNumberRows();
 
@@ -1041,7 +1041,7 @@ bool TagsEditor::TransferDataFromWindow()
    return true;
 }
 
-bool TagsEditor::TransferDataToWindow()
+bool TagsEditorDialog::TransferDataToWindow()
 {
    size_t i;
    TagMap popTagMap;
@@ -1103,7 +1103,7 @@ bool TagsEditor::TransferDataToWindow()
    return true;
 }
 
-void TagsEditor::OnChange(wxGridEvent & event)
+void TagsEditorDialog::OnChange(wxGridEvent & event)
 {
    static bool ischanging = false;
 
@@ -1140,7 +1140,7 @@ void TagsEditor::OnChange(wxGridEvent & event)
    return;
 }
 
-void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
+void TagsEditorDialog::OnEdit(wxCommandEvent & WXUNUSED(event))
 {
    if (mGrid->IsCellEditControlShown()) {
       mGrid->SaveEditControlValue();
@@ -1191,7 +1191,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
    PopulateGenres();
 }
 
-void TagsEditor::OnReset(wxCommandEvent & WXUNUSED(event))
+void TagsEditorDialog::OnReset(wxCommandEvent & WXUNUSED(event))
 {
    int id = AudacityMessageBox(_("Are you sure you want to reset the genre list to defaults?"),
                          _("Reset Genres"),
@@ -1231,14 +1231,14 @@ void TagsEditor::OnReset(wxCommandEvent & WXUNUSED(event))
    PopulateGenres();
 }
 
-void TagsEditor::OnClear(wxCommandEvent & WXUNUSED(event))
+void TagsEditorDialog::OnClear(wxCommandEvent & WXUNUSED(event))
 {
    mLocal.Clear();
 
    TransferDataToWindow();
 }
 
-void TagsEditor::OnLoad(wxCommandEvent & WXUNUSED(event))
+void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
 {
    wxString fn;
 
@@ -1290,7 +1290,7 @@ void TagsEditor::OnLoad(wxCommandEvent & WXUNUSED(event))
    return;
 }
 
-void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
+void TagsEditorDialog::OnSave(wxCommandEvent & WXUNUSED(event))
 {
    wxString fn;
 
@@ -1349,7 +1349,7 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
    } );
 }
 
-void TagsEditor::OnSaveDefaults(wxCommandEvent & WXUNUSED(event))
+void TagsEditorDialog::OnSaveDefaults(wxCommandEvent & WXUNUSED(event))
 {
    // Refresh tags
    TransferDataFromWindow();
@@ -1390,12 +1390,12 @@ void TagsEditor::OnSaveDefaults(wxCommandEvent & WXUNUSED(event))
    }
 }
 
-void TagsEditor::OnAdd(wxCommandEvent & WXUNUSED(event))
+void TagsEditorDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
 {
    mGrid->AppendRows();
 }
 
-void TagsEditor::OnRemove(wxCommandEvent & WXUNUSED(event))
+void TagsEditorDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
 {
    size_t row = mGrid->GetGridCursorRow();
 
@@ -1416,7 +1416,7 @@ void TagsEditor::OnRemove(wxCommandEvent & WXUNUSED(event))
    }
 }
 
-void TagsEditor::OnOk(wxCommandEvent & WXUNUSED(event))
+void TagsEditorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
    if (mGrid->IsCellEditControlShown()) {
       mGrid->SaveEditControlValue();
@@ -1430,21 +1430,21 @@ void TagsEditor::OnOk(wxCommandEvent & WXUNUSED(event))
    *mTags = mLocal;
 
    wxRect r = GetRect();
-   gPrefs->Write(wxT("/TagsEditor/x"), r.x);
-   gPrefs->Write(wxT("/TagsEditor/y"), r.y);
-   gPrefs->Write(wxT("/TagsEditor/width"), r.width);
-   gPrefs->Write(wxT("/TagsEditor/height"), r.height);
+   gPrefs->Write(wxT("/TagsEditorDialog/x"), r.x);
+   gPrefs->Write(wxT("/TagsEditorDialog/y"), r.y);
+   gPrefs->Write(wxT("/TagsEditorDialog/width"), r.width);
+   gPrefs->Write(wxT("/TagsEditorDialog/height"), r.height);
    gPrefs->Flush();
 
    EndModal(wxID_OK);
 }
 
-void TagsEditor::OnCancel(wxCommandEvent & WXUNUSED(event))
+void TagsEditorDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    DoCancel(false);
 }
 
-void TagsEditor::DoCancel(bool escKey)
+void TagsEditorDialog::DoCancel(bool escKey)
 {
    if (mGrid->IsCellEditControlShown()) {
       auto editor = mGrid->GetCellEditor(mGrid->GetGridCursorRow(),
@@ -1465,7 +1465,7 @@ void TagsEditor::DoCancel(bool escKey)
    EndModal(wxID_CANCEL);
 }
 
-void TagsEditor::OnKeyDown(wxKeyEvent &event)
+void TagsEditorDialog::OnKeyDown(wxKeyEvent &event)
 {
    if (event.GetKeyCode() == WXK_ESCAPE)
       DoCancel(true);
@@ -1473,7 +1473,7 @@ void TagsEditor::OnKeyDown(wxKeyEvent &event)
       event.Skip();
 }
 
-void TagsEditor::SetEditors()
+void TagsEditorDialog::SetEditors()
 {
    int cnt = mGrid->GetNumberRows();
 
@@ -1489,7 +1489,7 @@ void TagsEditor::SetEditors()
    }
 }
 
-void TagsEditor::PopulateGenres()
+void TagsEditorDialog::PopulateGenres()
 {
    int cnt = mLocal.GetNumUserGenres();
    int i;
@@ -1512,7 +1512,7 @@ void TagsEditor::PopulateGenres()
    editor->DecRef();
 }
 
-bool TagsEditor::IsWindowRectValid(const wxRect *windowRect) const
+bool TagsEditorDialog::IsWindowRectValid(const wxRect *windowRect) const
 {
    wxDisplay display;
    wxPoint topLeft(windowRect->GetTopLeft().x, windowRect->GetTopLeft().y);

@@ -54,7 +54,7 @@ public:
    static const FilePaths &AudacityPathList();
    static void SetAudacityPathList( FilePaths list );
 
-   // originally an ExportMultiple method. Append suffix if newName appears in otherNames.
+   // originally an ExportMultipleDialog method. Append suffix if newName appears in otherNames.
    static void MakeNameUnique(
       FilePaths &otherNames, wxFileName &newName);
 
