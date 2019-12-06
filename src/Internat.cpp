@@ -240,7 +240,7 @@ bool Internat::SanitiseFilename(wxString &name, const wxString &sub)
    // Special Mac stuff
    // '/' is permitted in file names as seen in dialogs, even though it is
    // the path separator.  The "real" filename as seen in the terminal has ':'.
-   // Do NOT return true if this is the only subsitution.
+   // Do NOT return true if this is the only substitution.
    name.Replace(wxT("/"), wxT(":"));
 #endif
 
@@ -324,4 +324,18 @@ wxString TranslatableString::Translation() const
       result = mFormatter( result );
 
    return result;
+}
+
+TranslatableString &TranslatableString::operator +=(
+   const TranslatableString &arg )
+{
+   auto prevFormatter = mFormatter;
+   mFormatter = [prevFormatter, arg](const wxString &str){
+      if (str.empty())
+         return prevFormatter ? prevFormatter({}) : wxString{};
+      else
+         return (prevFormatter ? prevFormatter(str) : str)
+            + arg.Translation();
+   };
+   return *this;
 }

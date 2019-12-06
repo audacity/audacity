@@ -348,9 +348,11 @@ public:
    // Returns true if context is NullContextFormatter
    bool IsVerbatim() const;
 
-   // Capture variadic format arguments (by copy).  The subsitution is
+   // Capture variadic format arguments (by copy).  The substitution is
    // computed later in a call to Translate() after msgid is looked up in the
    // translation catalog.
+   // Any format arguments that are also of type TranslatableString will be
+   // translated too at substitution time
    template <typename... Args>
    TranslatableString&& Format( Args&&... args ) &&
    {
@@ -361,16 +363,33 @@ public:
          if (str.empty())
             return context;
          else
-            return wxString::Format( str, args... );
+            return wxString::Format(
+               str, TranslatableString::TranslateArgument(args)... );
       };
       return std::move( *this );
    }
 
+   // Append another translatable string; lookup of msgids for
+   // this and for the argument are both delayed until Translate() is invoked
+   // on this, and then the formatter concatenates the translations
+   TranslatableString &operator +=( const TranslatableString &arg );
+
    friend std::hash< TranslatableString >;
 private:
 
+   template< typename T > static const T &TranslateArgument( const T &arg )
+   { return arg; }
+   static wxString TranslateArgument ( const TranslatableString &arg )
+   { return arg.Translation(); }
+
    Formatter mFormatter;
 };
+
+inline TranslatableString operator +(
+   const TranslatableString &x, const TranslatableString &y  )
+{
+   return TranslatableString{ x } += y;
+}
 
 using TranslatableStrings = std::vector<TranslatableString>;
 
