@@ -76,7 +76,7 @@ bool SetLabelCommand::Apply(const CommandContext & context)
       for (auto lt : tracks.Any<LabelTrack>()) {
          const auto &labels = lt->GetLabels();
          const auto nLabels = labels.size();
-         if( ii >= nLabels )
+         if( ii >= (int)nLabels )
             ii -= nLabels;
          else {
             labelTrack = lt;

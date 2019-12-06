@@ -395,7 +395,7 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
 #endif
 #endif
    pChoice->SetName(wxStripMenuCodes(Prompt));
-   if ( Selected >= 0 && Selected < choices.size() )
+   if ( Selected >= 0 && Selected < (int)choices.size() )
       pChoice->SetSelection( Selected );
 
    UpdateSizers();
@@ -1499,7 +1499,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton()
    wxASSERT( mRadioCount >= 0); // Did you remember to use StartRadioButtonGroup() ?
 
    EnumValueSymbol symbol;
-   if (mRadioCount >= 0 && mRadioCount < mRadioSymbols.size() )
+   if (mRadioCount >= 0 && mRadioCount < (int)mRadioSymbols.size() )
       symbol = mRadioSymbols[ mRadioCount ];
 
    // In what follows, WrappedRef is used in read only mode, but we
@@ -1976,7 +1976,7 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
       InternalChoices =
          transform_container<wxArrayStringEx>(*pInternalChoices, fn);
    else
-      for ( int ii = 0; ii < Choices.size(); ++ii )
+      for ( int ii = 0; ii < (int)Choices.size(); ++ii )
          InternalChoices.push_back( fn( ii ) );
 
 
@@ -1989,7 +1989,7 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
       defaultIndex =  make_iterator_range( *pInternalChoices ).index( Default );
    else
       defaultIndex = Default;
-   if ( defaultIndex < 0 || defaultIndex >= Choices.size() )
+   if ( defaultIndex < 0 || defaultIndex >= (int)Choices.size() )
       defaultIndex = -1;
 
    ChoiceSetting choiceSetting{

@@ -1242,8 +1242,6 @@ void ProjectWindow::OnIconize(wxIconizeEvent &event)
    // void return?  I don't know.
    mIconized = event.IsIconized();
 
-   unsigned int i;
-
    // VisibileProjectCount seems to be just a counter for debugging.
    // It's not used outside this function.
    auto VisibleProjectCount = std::count_if(

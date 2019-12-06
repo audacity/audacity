@@ -133,14 +133,14 @@ struct SubViewAdjuster
       } );
       auto index = iter - begin;
       auto size = mPermutation.size();
-      if ( index < size ) {
+      if ( index < (int)size ) {
          yy -= top;
          if ( yy >= 0 && yy < HotZoneSize && index > 0 )
             return { index, true }; // top hit
          if ( yy < height && yy >= height - HotZoneSize &&
             // Have not yet called ModifyPermutation; dragging bottom of
             // bottommost view allowed only if at least one view is invisible
-            ( index < size - 1 || mFirstSubView > 0 ) )
+            ( index < (int)size - 1 || mFirstSubView > 0 ) )
             return { index, false }; // bottom hit
       }
       return { size, false }; // not hit

@@ -48,7 +48,6 @@ SoundActivatedRecordDialog::~SoundActivatedRecordDialog()
 void SoundActivatedRecordDialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(5);
-   int dBRange;
 
    S.StartVerticalLay();
    {

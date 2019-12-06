@@ -844,7 +844,7 @@ void LabelTrackView::Draw(
 
 void LabelTrackView::SetSelectedIndex( int index )
 {
-   if ( index >= 0 && index < FindLabelTrack()->GetLabels().size() )
+   if ( index >= 0 && index < (int)FindLabelTrack()->GetLabels().size() )
       mSelIndex = index;
    else
       mSelIndex = -1;

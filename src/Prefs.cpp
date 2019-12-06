@@ -278,7 +278,7 @@ const wxArrayStringEx &EnumValueSymbols::GetInternals() const
 //////////
 const EnumValueSymbol &ChoiceSetting::Default() const
 {
-   if ( mDefaultSymbol >= 0 && mDefaultSymbol < mSymbols.size() )
+   if ( mDefaultSymbol >= 0 && mDefaultSymbol < (long)mSymbols.size() )
       return mSymbols[ mDefaultSymbol ];
    static EnumValueSymbol empty;
    return empty;
@@ -399,9 +399,9 @@ void EnumSettingBase::Migrate( wxString &value )
       // Audacity.  But further changes will be stored only to the NEW key
       // and won't be seen then.
       auto index = (long) FindInt( intValue );
-      if ( index >= mSymbols.size() )
+      if ( index >= (long)mSymbols.size() )
          index = mDefaultSymbol;
-      if ( index >= 0 && index < mSymbols.size() ) {
+      if ( index >= 0 && index < (long)mSymbols.size() ) {
          value = mSymbols[index].Internal();
          Write(value);
          gPrefs->Flush();
