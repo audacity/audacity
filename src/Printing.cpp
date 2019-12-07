@@ -156,8 +156,10 @@ void HandlePrint(
    AudacityPrintout printout(name, tracks, panel);
    if (!printer.Print(parent, &printout, true)) {
       if (wxPrinter::GetLastError() == wxPRINTER_ERROR) {
-         AudacityMessageBox(_("There was a problem printing."),
-                      _("Print"), wxOK);
+         AudacityMessageBox(
+            XO("There was a problem printing."),
+            XO("Print"),
+            wxOK);
       }
       else {
          // Do nothing, the user cancelled...

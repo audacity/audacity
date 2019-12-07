@@ -2453,8 +2453,7 @@ int Effect::MessageBox( const TranslatableString& message,
    auto title = titleStr.empty()
       ? GetName()
       : XO("%s: %s").Format( GetName(), titleStr );
-   return AudacityMessageBox(
-      message.Translation(), title.Translation(), style, mUIParent );
+   return AudacityMessageBox( message, title, style, mUIParent );
 }
 
 BEGIN_EVENT_TABLE(EffectDialog, wxDialogWrapper)
@@ -3445,9 +3444,10 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
 {
    auto preset = mUserPresets[evt.GetId() - kDeletePresetID];
 
-   int res = AudacityMessageBox(wxString::Format(_("Are you sure you want to delete \"%s\"?"), preset),
-                          _("Delete Preset"),
-                          wxICON_QUESTION | wxYES_NO);
+   int res = AudacityMessageBox(
+      XO("Are you sure you want to delete \"%s\"?").Format( preset ),
+      XO("Delete Preset"),
+      wxICON_QUESTION | wxYES_NO);
    if (res == wxYES)
    {
       mEffect->RemovePrivateConfigSubgroup(mEffect->GetUserPresetsGroup(preset));

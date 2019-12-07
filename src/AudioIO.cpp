@@ -986,14 +986,17 @@ AudioIO::AudioIO()
    PaError err = Pa_Initialize();
 
    if (err != paNoError) {
-      wxString errStr = _("Could not find any audio devices.\n");
-      errStr += _("You will not be able to play or record audio.\n\n");
+      auto errStr = XO("Could not find any audio devices.\n");
+      errStr += XO("You will not be able to play or record audio.\n\n");
       wxString paErrStr = LAT1CTOWX(Pa_GetErrorText(err));
       if (!paErrStr.empty())
-         errStr += _("Error: ")+paErrStr;
+         errStr += XO("Error: %s").Format( paErrStr );
       // XXX: we are in libaudacity, popping up dialogs not allowed!  A
       // long-term solution will probably involve exceptions
-      AudacityMessageBox(errStr, _("Error Initializing Audio"), wxICON_ERROR|wxOK);
+      AudacityMessageBox(
+         errStr,
+         XO("Error Initializing Audio"),
+         wxICON_ERROR|wxOK);
 
       // Since PortAudio is not initialized, all calls to PortAudio
       // functions will fail.  This will give reasonable behavior, since
@@ -1005,15 +1008,18 @@ AudioIO::AudioIO()
    PmError pmErr = Pm_Initialize();
 
    if (pmErr != pmNoError) {
-      wxString errStr =
-              _("There was an error initializing the midi i/o layer.\n");
-      errStr += _("You will not be able to play midi.\n\n");
+      auto errStr =
+              XO("There was an error initializing the midi i/o layer.\n");
+      errStr += XO("You will not be able to play midi.\n\n");
       wxString pmErrStr = LAT1CTOWX(Pm_GetErrorText(pmErr));
       if (!pmErrStr.empty())
-         errStr += _("Error: ") + pmErrStr;
+         errStr += XO("Error: %s").Format( pmErrStr );
       // XXX: we are in libaudacity, popping up dialogs not allowed!  A
       // long-term solution will probably involve exceptions
-      AudacityMessageBox(errStr, _("Error Initializing Midi"), wxICON_ERROR|wxOK);
+      AudacityMessageBox(
+         errStr,
+         XO("Error Initializing Midi"),
+         wxICON_ERROR|wxOK);
 
       // Same logic for PortMidi as described above for PortAudio
    }
@@ -1759,7 +1765,9 @@ int AudioIO::StartStream(const TransportTracks &tracks,
          if (pListener && mNumCaptureChannels > 0)
             pListener->OnAudioIOStopRecording();
          StartStreamCleanup();
-         AudacityMessageBox(LAT1CTOWX(Pa_GetErrorText(err)));
+         // PRL: PortAudio error messages are sadly not internationalized
+         AudacityMessageBox(
+            Verbatim( LAT1CTOWX(Pa_GetErrorText(err)) ) );
          return 0;
       }
    }
@@ -1934,7 +1942,7 @@ bool AudioIO::AllocateBuffers(
             // 100 samples, just give up.
             if(captureBufferSize < 100)
             {
-               AudacityMessageBox(_("Out of memory!"));
+               AudacityMessageBox( XO("Out of memory!") );
                return false;
             }
 
@@ -1969,7 +1977,7 @@ bool AudioIO::AllocateBuffers(
             (size_t)lrint(mRate * mPlaybackRingBufferSecs);
          if(playbackBufferSize < 100 || mPlaybackSamplesToCopy < 100)
          {
-            AudacityMessageBox(_("Out of memory!"));
+            AudacityMessageBox( XO("Out of memory!") );
             return false;
          }
       }

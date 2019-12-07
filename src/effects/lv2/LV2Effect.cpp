@@ -1557,7 +1557,7 @@ bool LV2Effect::PopulateUI(wxWindow *parent)
    mMaster = InitInstance(mSampleRate);
    if (mMaster == NULL)
    {
-      AudacityMessageBox(_("Couldn't instantiate effect"));
+      AudacityMessageBox( XO("Couldn't instantiate effect") );
       return false;
    }
 

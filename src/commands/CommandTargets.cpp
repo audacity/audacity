@@ -253,7 +253,8 @@ void BriefCommandMessageTarget::EndField(){
 
 void MessageBoxTarget::Update(const wxString &message)
 {
-   AudacityMessageBox(message);
+   // Should these messages be localized?
+   AudacityMessageBox( Verbatim( message ) );
 }
 
 

@@ -224,7 +224,7 @@ void ApplyMacroDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
                                     wxLIST_STATE_SELECTED);
 
    if (item == -1) {
-      AudacityMessageBox(_("No macro selected"));
+      AudacityMessageBox(XO("No macro selected"));
       return;
    }
    ApplyMacroToProject( item );
@@ -322,7 +322,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
                                     wxLIST_NEXT_ALL,
                                     wxLIST_STATE_SELECTED);
    if (item == -1) {
-      AudacityMessageBox(_("No macro selected"));
+      AudacityMessageBox( XO("No macro selected") );
       return;
    }
 
@@ -332,7 +332,8 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    AudacityProject *project = GetActiveProject();
    if (!TrackList::Get( *project ).empty()) {
-      AudacityMessageBox(_("Please save and close the current project first."));
+      AudacityMessageBox(
+         XO("Please save and close the current project first.") );
       return;
    }
 
@@ -558,7 +559,7 @@ MacrosWindow::MacrosWindow(wxWindow * parent, bool bExpanded):
    ApplyMacroDialog(parent, true)
 {
    mbExpanded = bExpanded;
-   auto Title = mbExpanded ? XO("Manage Macros") : XO("Macros Palette");
+   auto Title = WindowTitle();
    SetLabel( Title );   // Provide visual label
    SetName(  Title );   // Provide audible label
    SetTitle( Title );
@@ -794,7 +795,7 @@ void MacrosWindow::UpdateDisplay( bool bExpanded )
    SetPosition( p );
    mResize->SetFocus();
 
-   auto Title = mbExpanded ? XO("Manage Macros") : XO("Macros Palette");
+   auto Title = WindowTitle();
    SetLabel( Title );         // Provide visual label
    SetName( Title );          // Provide audible label
    SetTitle( Title );
@@ -810,14 +811,15 @@ void MacrosWindow::OnShrink(wxCommandEvent &WXUNUSED(event))
 bool MacrosWindow::ChangeOK()
 {
    if (mChanged) {
-      wxString title;
-      wxString msg;
       int id;
 
-      title.Printf(_("%s changed"), mActiveMacro);
-      msg = _("Do you want to save the changes?");
+      auto title = XO("%s changed").Format( mActiveMacro );
+      auto msg = XO("Do you want to save the changes?");
 
-      id = AudacityMessageBox(msg, title, wxYES_NO | wxCANCEL);
+      id = AudacityMessageBox(
+         msg,
+         title,
+         wxYES_NO | wxCANCEL);
       if (id == wxCANCEL) {
          return false;
       }
@@ -977,21 +979,23 @@ void MacrosWindow::OnAdd(wxCommandEvent & WXUNUSED(event))
       name = d.GetValue().Strip(wxString::both);
 
       if (name.length() == 0) {
-         AudacityMessageBox(_("Name must not be blank"),
-                      GetTitle(),
-                      wxOK | wxICON_ERROR,
-                      this);
+         AudacityMessageBox(
+            XO("Name must not be blank"),
+            WindowTitle(),
+            wxOK | wxICON_ERROR,
+            this);
          continue;
       }
 
       if (name.Contains(wxFILE_SEP_PATH) ||
           name.Contains(wxFILE_SEP_PATH_UNIX)) {
          /*i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.*/
-         AudacityMessageBox(wxString::Format(_("Names may not contain '%c' and '%c'"),
-                      wxFILE_SEP_PATH, wxFILE_SEP_PATH_UNIX),
-                      GetTitle(),
-                      wxOK | wxICON_ERROR,
-                      this);
+         AudacityMessageBox(
+            XO("Names may not contain '%c' and '%c'")
+               .Format(wxFILE_SEP_PATH, wxFILE_SEP_PATH_UNIX),
+            WindowTitle(),
+            wxOK | wxICON_ERROR,
+            this);
          continue;
       }
 
@@ -1255,4 +1259,9 @@ void MacrosWindow::OnKeyDown(wxKeyEvent &event)
    }
 
    event.Skip();
+}
+
+TranslatableString MacrosWindow::WindowTitle() const
+{
+   return mbExpanded ? XO("Manage Macros") : XO("Macros Palette");
 }

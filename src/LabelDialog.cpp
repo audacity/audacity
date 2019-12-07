@@ -644,7 +644,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
       f.Open(fileName);
       if (!f.IsOpened()) {
          AudacityMessageBox(
-            wxString::Format( _("Could not open file: %s"), fileName ));
+            XO("Could not open file: %s").Format( fileName ) );
       }
       else {
          // Create a temporary label track and load the labels
@@ -669,7 +669,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    // Silly user (could just disable the button, but that's a hassle ;-))
    if (cnt == 0) {
-      AudacityMessageBox(_("No labels to export."));
+      AudacityMessageBox( XO("No labels to export.") );
       return;
    }
 
@@ -713,7 +713,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.Open();
    if (!f.IsOpened()) {
       AudacityMessageBox(
-         wxString::Format( _("Couldn't write to file: %s"), fName ) );
+         XO("Couldn't write to file: %s").Format( fName ) );
       return;
    }
 

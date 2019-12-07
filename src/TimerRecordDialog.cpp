@@ -389,8 +389,10 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    this->TransferDataFromWindow();
    if (!m_TimeSpan_Duration.IsPositive())
    {
-      AudacityMessageBox(_("Duration is zero. Nothing will be recorded."),
-                     _("Error in Duration"), wxICON_EXCLAMATION | wxOK);
+      AudacityMessageBox(
+         XO("Duration is zero. Nothing will be recorded."),
+         XO("Error in Duration"),
+         wxICON_EXCLAMATION | wxOK);
       return;
    }
 
@@ -398,15 +400,19 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    wxString sTemp = m_fnAutoSaveFile.GetFullPath();
    if (m_pTimerAutoSaveCheckBoxCtrl->IsChecked()) {
       if (!m_fnAutoSaveFile.IsOk() || m_fnAutoSaveFile.IsDir()) {
-         AudacityMessageBox(_("Automatic Save path is invalid."),
-            _("Error in Automatic Save"), wxICON_EXCLAMATION | wxOK);
+         AudacityMessageBox(
+            XO("Automatic Save path is invalid."),
+            XO("Error in Automatic Save"),
+            wxICON_EXCLAMATION | wxOK);
          return;
       }
    }
    if (m_pTimerAutoExportCheckBoxCtrl->IsChecked()) {
       if (!m_fnAutoExportFile.IsOk() || m_fnAutoExportFile.IsDir()) {
-         AudacityMessageBox(_("Automatic Export path is invalid."),
-            _("Error in Automatic Export"), wxICON_EXCLAMATION | wxOK);
+         AudacityMessageBox(
+            XO("Automatic Export path is invalid."),
+            XO("Error in Automatic Export"),
+            wxICON_EXCLAMATION | wxOK);
          return;
       }
    }
@@ -495,8 +501,10 @@ bool TimerRecordDialog::HaveFilesToRecover()
 {
    wxDir dir(FileNames::AutoSaveDir());
    if (!dir.IsOpened()) {
-      AudacityMessageBox(_("Could not enumerate files in auto save directory."),
-         _("Error"), wxICON_STOP);
+      AudacityMessageBox(
+         XO("Could not enumerate files in auto save directory."),
+         XO("Error"),
+         wxICON_STOP);
       return false;
    }
 
@@ -518,8 +526,10 @@ bool TimerRecordDialog::RemoveAllAutoSaveFiles()
       {
          // I don't think this error message is actually useful.
          // -dmazzoni
-         //AudacityMessageBox(_("Could not remove auto save file: " + files[i]),
-         //             _("Error"), wxICON_STOP);
+         //AudacityMessageBox(
+         //   XO("Could not remove auto save file: %s)".Format( files[i] ),
+         //   XO("Error"),
+         //   wxICON_STOP);
          return false;
       }
    }
@@ -651,23 +661,23 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    if (iPostRecordAction == POST_TIMER_RECORD_NOTHING) {
       // If there is no post-record action then we can show a message indicating what has been done
 
-      wxString sMessage = (bWasStopped ? _("Timer Recording stopped.") :
-                                         _("Timer Recording completed."));
+      auto sMessage = (bWasStopped ? XO("Timer Recording stopped.") :
+                                         XO("Timer Recording completed."));
 
       if (m_bAutoSaveEnabled) {
          if (bSaveOK) {
-            sMessage.Printf(_("%s\n\nRecording saved: %s"),
+            sMessage = XO("%s\n\nRecording saved: %s").Format(
                             sMessage, m_fnAutoSaveFile.GetFullPath());
          } else {
-            sMessage.Printf(_("%s\n\nError saving recording."), sMessage);
+            sMessage = XO("%s\n\nError saving recording.").Format( sMessage );
          }
       }
       if (m_bAutoExportEnabled) {
          if (bExportOK) {
-            sMessage.Printf(_("%s\n\nRecording exported: %s"),
+            sMessage = XO("%s\n\nRecording exported: %s").Format(
                             sMessage, m_fnAutoExportFile.GetFullPath());
          } else {
-            sMessage.Printf(_("%s\n\nError exporting recording."), sMessage);
+            sMessage = XO("%s\n\nError exporting recording.").Format( sMessage );
          }
       }
 
@@ -676,22 +686,28 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          if ((iOverriddenAction != iPostRecordAction) &&
              (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
             // Inform the user that we have overridden the selected action
-            sMessage.Printf(_("%s\n\n'%s' has been canceled due to the error(s) noted above."),
+            sMessage = XO("%s\n\n'%s' has been canceled due to the error(s) noted above.").Format(
                             sMessage,
                             m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
          }
 
          // Show Error Message Box
-         AudacityMessageBox(sMessage, _("Error"), wxICON_EXCLAMATION | wxOK);
+         AudacityMessageBox(
+            sMessage,
+            XO("Error"),
+            wxICON_EXCLAMATION | wxOK);
       } else {
 
          if (bWasStopped && (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
-            sMessage.Printf(_("%s\n\n'%s' has been canceled as the recording was stopped."),
+            sMessage = XO("%s\n\n'%s' has been canceled as the recording was stopped.").Format(
                             sMessage,
                             m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
          }
 
-         AudacityMessageBox(sMessage, _("Timer Recording"), wxICON_INFORMATION | wxOK);
+         AudacityMessageBox(
+            sMessage,
+            XO("Timer Recording"),
+            wxICON_INFORMATION | wxOK);
       }
    }
 

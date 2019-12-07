@@ -123,15 +123,14 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
    }
 
    if (mLang.Left(2) != slang.Left(2)) {
-      wxString msg;
       /* i18n-hint: The %s's are replaced by translated and untranslated
        * versions of language names. */
-      msg.Printf(_("The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."),
-                 mLangNames[ndx].Translation(),
+      auto msg = XO("The language you have chosen, %s (%s), is not the same as the system language, %s (%s).")
+         .Format(mLangNames[ndx].Translation(),
                  mLang,
                  sname,
                  slang);
-      if (AudacityMessageBox(msg, _("Confirm"), wxYES_NO) == wxNO) {
+      if ( wxNO == AudacityMessageBox( msg, XO("Confirm"), wxYES_NO ) ) {
          return;
       }
    }

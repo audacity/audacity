@@ -17,13 +17,14 @@
 extern TranslatableString AudacityMessageBoxCaptionStr();
 
 // Do not use wxMessageBox!!  Its default window title does not translate!
-inline int AudacityMessageBox(const wxString& message,
-                              const wxString& caption = AudacityMessageBoxCaptionStr().Translation(),
-                              long style = wxOK | wxCENTRE,
-                              wxWindow *parent = NULL,
-                              int x = wxDefaultCoord, int y = wxDefaultCoord)
+inline int AudacityMessageBox(const TranslatableString& message,
+   const TranslatableString& caption = AudacityMessageBoxCaptionStr(),
+   long style = wxOK | wxCENTRE,
+   wxWindow *parent = NULL,
+   int x = wxDefaultCoord, int y = wxDefaultCoord)
 {
-   return ::wxMessageBox(message, caption, style, parent, x, y);
+   return ::wxMessageBox(message.Translation(), caption.Translation(),
+      style, parent, x, y);
 }
 
 #endif

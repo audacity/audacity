@@ -87,10 +87,10 @@ void RunBenchmark(wxWindow *parent)
 {
    /*
    int action = AudacityMessageBox(
-_("This will close all project windows (without saving)\nand open the Audacity Benchmark dialog.\n\nAre you sure you want to do this?"),
-                             _("Benchmark"),
-                             wxYES_NO | wxICON_EXCLAMATION,
-                             NULL);
+XO("This will close all project windows (without saving)\nand open the Audacity Benchmark dialog.\n\nAre you sure you want to do this?"),
+      XO("Benchmark"),
+      wxYES_NO | wxICON_EXCLAMATION,
+      NULL);
 
    if (action != wxYES)
       return;
@@ -328,17 +328,20 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    mRandSeedStr.ToLong(&randSeed);
 
    if (blockSize < 1 || blockSize > 1024) {
-      AudacityMessageBox(_("Block size should be in the range 1 - 1024 KB."));
+      AudacityMessageBox(
+         XO("Block size should be in the range 1 - 1024 KB.") );
       return;
    }
 
    if (numEdits < 1 || numEdits > 10000) {
-      AudacityMessageBox(_("Number of edits should be in the range 1 - 10000."));
+      AudacityMessageBox(
+         XO("Number of edits should be in the range 1 - 10000.") );
       return;
    }
 
    if (dataSize < 1 || dataSize > 2000) {
-      AudacityMessageBox(_("Test data size should be in the range 1 - 2000 MB."));
+      AudacityMessageBox(
+         XO("Test data size should be in the range 1 - 2000 MB.") );
       return;
    }
 

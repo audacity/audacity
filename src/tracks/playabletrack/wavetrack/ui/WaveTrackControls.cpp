@@ -533,8 +533,11 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
          break;
       }
 
-      AudacityMessageBox(_("The entered value is invalid"), _("Error"),
-         wxICON_ERROR, mpData->pParent);
+      AudacityMessageBox(
+         XO("The entered value is invalid"),
+         XO("Error"),
+         wxICON_ERROR,
+         mpData->pParent);
    }
 
    SetRate(pTrack, newRate);
@@ -802,9 +805,11 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
 
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
-      AudacityMessageBox(_("To change Spectrogram Settings, stop any\n"
-                     "playing or recording first."),
-                   _("Stop the Audio First"), wxOK | wxICON_EXCLAMATION | wxCENTRE);
+      AudacityMessageBox(
+         XO(
+"To change Spectrogram Settings, stop any\n playing or recording first."),
+         XO("Stop the Audio First"),
+         wxOK | wxICON_EXCLAMATION | wxCENTRE);
       return;
    }
 

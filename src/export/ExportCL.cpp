@@ -386,8 +386,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    }
 
    if (!rc) {
-      AudacityMessageBox(wxString::Format(_("Cannot export audio to %s"),
-                                    path));
+      AudacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
       process.Detach();
       process.CloseOutput();
 

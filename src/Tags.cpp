@@ -1182,7 +1182,9 @@ void TagsEditorDialog::OnEdit(wxCommandEvent & WXUNUSED(event))
    wxFileName fn(FileNames::DataDir(), wxT("genres.txt"));
    wxFile f(fn.GetFullPath(), wxFile::write);
    if (!f.IsOpened() || !f.Write(tc->GetValue())) {
-      AudacityMessageBox(_("Unable to save genre file."), _("Reset Genres"));
+      AudacityMessageBox(
+         XO("Unable to save genre file."),
+         XO("Reset Genres") );
       return;
    }
 
@@ -1193,9 +1195,10 @@ void TagsEditorDialog::OnEdit(wxCommandEvent & WXUNUSED(event))
 
 void TagsEditorDialog::OnReset(wxCommandEvent & WXUNUSED(event))
 {
-   int id = AudacityMessageBox(_("Are you sure you want to reset the genre list to defaults?"),
-                         _("Reset Genres"),
-                         wxYES_NO);
+   int id = AudacityMessageBox(
+      XO("Are you sure you want to reset the genre list to defaults?"),
+      XO("Reset Genres"),
+      wxYES_NO);
 
    if (id == wxNO) {
       return;
@@ -1209,7 +1212,9 @@ void TagsEditorDialog::OnReset(wxCommandEvent & WXUNUSED(event))
                (!tf.Exists() && tf.Create());
 
    if (!open) {
-      AudacityMessageBox(_("Unable to open genre file."), _("Reset Genres"));
+      AudacityMessageBox(
+         XO("Unable to open genre file."),
+         XO("Reset Genres") );
       mLocal.LoadGenres();
       return;
    }
@@ -1221,7 +1226,9 @@ void TagsEditorDialog::OnReset(wxCommandEvent & WXUNUSED(event))
    }
 
    if (!tf.Write()) {
-      AudacityMessageBox(_("Unable to save genre file."), _("Reset Genres"));
+      AudacityMessageBox(
+         XO("Unable to save genre file."),
+         XO("Reset Genres") );
       mLocal.LoadGenres();
       return;
    }
@@ -1268,10 +1275,11 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
    XMLFileReader reader;
    if (!reader.Parse(&mLocal, fn)) {
       // Inform user of load failure
-      AudacityMessageBox(reader.GetErrorStr().Translation(),
-                   _("Error Loading Metadata"),
-                   wxOK | wxCENTRE,
-                   this);
+      AudacityMessageBox(
+         reader.GetErrorStr(),
+         XO("Error Loading Metadata"),
+         wxOK | wxCENTRE,
+         this);
    }
 
    // Restore title

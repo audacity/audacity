@@ -245,8 +245,7 @@ int AudacityCommand::MessageBox(
    auto title = titleStr.empty()
       ? GetName()
       : XO("%s: %s").Format( GetName(), titleStr );
-   return AudacityMessageBox(
-      message.Translation(), title.Translation(), style, mUIParent);
+   return AudacityMessageBox(message, title, style, mUIParent);
 }
 
 BEGIN_EVENT_TABLE(AudacityCommandDialog, wxDialogWrapper)

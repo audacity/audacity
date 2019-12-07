@@ -568,8 +568,10 @@ void DependencyDialog::OnCancel(wxCommandEvent& WXUNUSED(event))
    if (mIsSaving)
    {
       int ret = AudacityMessageBox(
-         _("If you proceed, your project will not be saved to disk. Is this what you want?"),
-         _("Cancel Save"), wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
+         XO(
+"If you proceed, your project will not be saved to disk. Is this what you want?"),
+         XO("Cancel Save"),
+         wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
       if (ret != wxYES)
          return;
    }
@@ -607,22 +609,23 @@ bool ShowDependencyDialogIfNeeded(AudacityProject *project,
    if (aliasedFiles.empty()) {
       if (!isSaving)
       {
-         wxString msg =
+         auto msg =
 #ifdef EXPERIMENTAL_OD_DATA
-_("Your project is currently self-contained; it does not depend on any external audio files. \
+XO("Your project is currently self-contained; it does not depend on any external audio files. \
 \n\nIf you change the project to a state that has external dependencies on imported \
 files, it will no longer be self-contained. If you then Save without copying those files in, \
 you may lose data.");
 #else
-_("Your project is self-contained; it does not depend on any external audio files. \
+XO("Your project is self-contained; it does not depend on any external audio files. \
 \n\nSome older Audacity projects may not be self-contained, and care \n\
 is needed to keep their external dependencies in the right place.\n\
 New projects will be self-contained and are less risky.");
 #endif
-         AudacityMessageBox(msg,
-                      _("Dependency Check"),
-                      wxOK | wxICON_INFORMATION,
-                      pWindow);
+         AudacityMessageBox(
+            msg,
+            XO("Dependency Check"),
+            wxOK | wxICON_INFORMATION,
+            pWindow);
       }
       return true; // Nothing to do.
    }

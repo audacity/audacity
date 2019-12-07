@@ -265,8 +265,8 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
 
    if (!mText->SaveFile(fName)) {
       AudacityMessageBox(
-         wxString::Format( _("Couldn't save log to file: %s"), fName ),
-         _("Warning"),
+         XO("Couldn't save log to file: %s").Format( fName ),
+         XO("Warning"),
          wxICON_EXCLAMATION,
          mFrame.get());
       return;

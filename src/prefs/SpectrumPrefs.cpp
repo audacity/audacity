@@ -342,48 +342,49 @@ bool SpectrumPrefs::Validate()
 
    long maxFreq;
    if (!mMaxFreq->GetValue().ToLong(&maxFreq)) {
-      AudacityMessageBox(_("The maximum frequency must be an integer"));
+      AudacityMessageBox( XO("The maximum frequency must be an integer") );
       return false;
    }
 
    long minFreq;
    if (!mMinFreq->GetValue().ToLong(&minFreq)) {
-      AudacityMessageBox(_("The minimum frequency must be an integer"));
+      AudacityMessageBox( XO("The minimum frequency must be an integer") );
       return false;
    }
 
    long gain;
    if (!mGain->GetValue().ToLong(&gain)) {
-      AudacityMessageBox(_("The gain must be an integer"));
+      AudacityMessageBox( XO("The gain must be an integer") );
       return false;
    }
 
    long range;
    if (!mRange->GetValue().ToLong(&range)) {
-      AudacityMessageBox(_("The range must be a positive integer"));
+      AudacityMessageBox( XO("The range must be a positive integer") );
       return false;
    }
 
    long frequencygain;
    if (!mFrequencyGain->GetValue().ToLong(&frequencygain)) {
-      AudacityMessageBox(_("The frequency gain must be an integer"));
+      AudacityMessageBox( XO("The frequency gain must be an integer") );
       return false;
    }
 
 #ifdef EXPERIMENTAL_FIND_NOTES
    long findNotesMinA;
    if (!mFindNotesMinA->GetValue().ToLong(&findNotesMinA)) {
-      AudacityMessageBox(_("The minimum amplitude (dB) must be an integer"));
+      AudacityMessageBox( XO("The minimum amplitude (dB) must be an integer") );
       return false;
    }
 
    long findNotesN;
    if (!mFindNotesN->GetValue().ToLong(&findNotesN)) {
-      AudacityMessageBox(_("The maximum number of notes must be an integer"));
+      AudacityMessageBox( XO("The maximum number of notes must be an integer") );
       return false;
    }
    if (findNotesN < 1 || findNotesN > 128) {
-      AudacityMessageBox(_("The maximum number of notes must be in the range 1..128"));
+      AudacityMessageBox( XO(
+"The maximum number of notes must be in the range 1..128") );
       return false;
    }
 #endif //EXPERIMENTAL_FIND_NOTES

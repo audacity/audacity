@@ -178,9 +178,10 @@ namespace {
       const double time = adjustTime(wt, viewInfo.PositionToTime(event.m_x, rect.x));
       if (!SampleResolutionTest(viewInfo, wt, time, width))
       {
-         AudacityMessageBox(_(
+         AudacityMessageBox(
+            XO(
 "To use Draw, zoom in further until you can see the individual samples."),
-                      _("Draw Tool"));
+            XO("Draw Tool"));
          return false;
       }
       return true;

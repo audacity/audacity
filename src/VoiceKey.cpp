@@ -96,7 +96,7 @@ sampleCount VoiceKey::OnForward (
          backwards by words.  So 'key' is being used in the sense of an index.
          This error message means that you've selected too short
          a region of audio to be able to use this feature.*/
-      AudacityMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox( XO("Selection is too small to use voice key.") );
       return start;
    }
    else {
@@ -244,7 +244,7 @@ sampleCount VoiceKey::OnBackward (
 
    if((mWindowSize) >= (len + 10).as_double() ){
 
-      AudacityMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox( XO("Selection is too small to use voice key.") );
       return end;
    }
    else {
@@ -388,7 +388,7 @@ sampleCount VoiceKey::OffForward (
 {
 
    if((mWindowSize) >= (len + 10).as_double() ){
-      AudacityMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox( XO("Selection is too small to use voice key.") );
 
       return start;
    }
@@ -526,7 +526,7 @@ sampleCount VoiceKey::OffBackward (
 
    if((mWindowSize) >= (len + 10).as_double() ){
 
-      AudacityMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox( XO("Selection is too small to use voice key.") );
       return end;
    }
    else {

@@ -250,9 +250,11 @@ void OnTimerRecord(const CommandContext &context)
    // it is now safer to disable Timer Recording when there is more than
    // one open project.
    if (AllProjects{}.size() > 1) {
-      AudacityMessageBox(_("Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."),
-                   _("Timer Recording"),
-                   wxICON_INFORMATION | wxOK);
+      AudacityMessageBox(
+         XO(
+"Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."),
+         XO("Timer Recording"),
+         wxICON_INFORMATION | wxOK);
       return;
    }
 
@@ -262,9 +264,11 @@ void OnTimerRecord(const CommandContext &context)
    // is used in Timer Recording.
    if ((undoManager.UnsavedChanges()) &&
        (TrackList::Get( project ).Any() || settings.EmptyCanBeDirty())) {
-      AudacityMessageBox(_("Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
-                   _("Timer Recording"),
-                   wxICON_INFORMATION | wxOK);
+      AudacityMessageBox(
+         XO(
+"Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
+         XO("Timer Recording"),
+         wxICON_INFORMATION | wxOK);
       return;
    }
    // We use this variable to display "Current Project" in the Timer Recording

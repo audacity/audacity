@@ -22,6 +22,8 @@
 
 #include <limits>
 
+class TranslatableString;
+
 // Bit masks used for numeric validator styles.
 enum class NumValidatorStyle : int
 {
@@ -116,7 +118,7 @@ private:
     // Do all checks to ensure this is a valid value.
     // Returns 'true' if the control has valid value.
     // Otherwise the cause is indicated in 'errMsg'.
-    virtual bool DoValidateNumber(wxString * errMsg) const = 0;
+    virtual bool DoValidateNumber(TranslatableString * errMsg) const = 0;
 
     // Event handlers.
     void OnChar(wxKeyEvent& event);
@@ -321,7 +323,7 @@ protected:
 
     // Implement NumValidatorBase pure virtual method.
     bool IsCharOk(const wxString& val, int pos, wxChar ch) const override;
-    bool DoValidateNumber(wxString * errMsg) const override;
+    bool DoValidateNumber(TranslatableString * errMsg) const override;
 
 private:
     // Minimal and maximal values accepted (inclusive).
@@ -421,7 +423,7 @@ protected:
 
     // Implement NumValidatorBase pure virtual method.
     bool IsCharOk(const wxString& val, int pos, wxChar ch) const override;
-    bool DoValidateNumber(wxString * errMsg) const override;
+    bool DoValidateNumber(TranslatableString * errMsg) const override;
 
     //Checks that it doesn't have too many decimal digits.
     bool ValidatePrecision(const wxString& s) const;

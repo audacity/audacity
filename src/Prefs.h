@@ -42,7 +42,7 @@ class wxFileName;
 
 void InitPreferences( const wxFileName &configFileName );
 bool CheckWritablePreferences();
-wxString UnwritablePreferencesErrorMessage( const wxFileName &configFileName );
+TranslatableString UnwritablePreferencesErrorMessage( const wxFileName &configFileName );
 void FinishPreferences();
 
 class AudacityPrefs;

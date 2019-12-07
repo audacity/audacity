@@ -547,8 +547,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 #endif
    f.Open();
    if (!f.IsOpened()) {
-      AudacityMessageBox(
-         wxString::Format( _("Couldn't write to file: %s"), fName) );
+      AudacityMessageBox( XO("Couldn't write to file: %s").Format( fName ) );
       return;
    }
 

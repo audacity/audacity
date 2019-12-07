@@ -1034,10 +1034,9 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                }
             }
             if (!errMsgs.empty())
-               AudacityMessageBox( wxString::Format(
-                  _("Effect or Command at %s failed to register:\n%s"),
-                  path, errMsgs
-               ) );
+               AudacityMessageBox(
+                  XO("Effect or Command at %s failed to register:\n%s")
+                     .Format( path, errMsgs ) );
          }
          else if (item.state == STATE_New)
          {
@@ -1836,11 +1835,10 @@ bool PluginManager::DropFile(const wxString &fileName)
             if ( dst.Exists() ) {
                // Query whether to overwrite
                bool overwrite = (wxYES == ::AudacityMessageBox(
-                  wxString::Format(_("Overwrite the plug-in file %s?"),
-                                   dst.GetFullPath() ),
-                  _("Plug-in already exists"),
-                  wxYES_NO
-               ) );
+                  XO("Overwrite the plug-in file %s?")
+                     .Format( dst.GetFullPath() ),
+                  XO("Plug-in already exists"),
+                  wxYES_NO ) );
                if ( !overwrite )
                   return true;
             }
@@ -1861,7 +1859,7 @@ bool PluginManager::DropFile(const wxString &fileName)
 
             if (!copied) {
                ::AudacityMessageBox(
-                  _("Plug-in file is in use. Failed to overwrite"));
+                  XO("Plug-in file is in use. Failed to overwrite") );
                return true;
             }
 
@@ -1881,26 +1879,24 @@ bool PluginManager::DropFile(const wxString &fileName)
                });
             if ( ! nPlugIns ) {
                // Unlikely after the dry run succeeded
-               ::AudacityMessageBox( wxString::Format(
-                  _("Failed to register:\n%s"), errMsg ) );
+               ::AudacityMessageBox(
+                  XO("Failed to register:\n%s").Format( errMsg ) );
                return true;
             }
 
             // Ask whether to enable the plug-ins
             if (auto nIds = ids.size()) {
                auto message = wxPLURAL(
-                  "Enable this plug-in?",
-                  "Enable these plug-ins?",
+                  "Enable this plug-in?\n",
+                  "Enable these plug-ins?\n",
                   0
-               )( nIds ).Translation();
-               message += wxT("\n");
+               )( nIds );
                for (const auto &name : names)
-                  message += name + wxT("\n");
+                  message.Join( Verbatim( name ), wxT("\n") );
                bool enable = (wxYES == ::AudacityMessageBox(
                   message,
-                  _("Enable new plug-ins"),
-                  wxYES_NO
-               ) );
+                  XO("Enable new plug-ins"),
+                  wxYES_NO ) );
                for (const auto &id : ids)
                   mPlugins[id].SetEnabled(enable);
                // Make changes to enabled status persist:

@@ -381,9 +381,10 @@ other projects. \
       // In auto-recover mode, we didn't do any ShowMultiDialog calls above, so put up an alert.
       if (bAutoRecoverMode)
          ::AudacityMessageBox(
-            _("Project check found file inconsistencies during automatic recovery.\n\nSelect 'Help > Diagnostics > Show Log...' to see details."),
-            _("Warning: Problems in Automatic Recovery"),
-            wxOK  | wxICON_EXCLAMATION);
+            XO(
+"Project check found file inconsistencies during automatic recovery.\n\nSelect 'Help > Diagnostics > Show Log...' to see details."),
+            XO("Warning: Problems in Automatic Recovery"),
+            wxOK | wxICON_EXCLAMATION);
    }
 
    MissingAliasFilesDialog::SetShouldShow(true);

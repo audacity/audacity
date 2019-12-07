@@ -485,7 +485,7 @@ double MacroCommands::GetEndTime()
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
-      //AudacityMessageBox( _("No project to process!") );
+      //AudacityMessageBox( XO("No project to process!") );
       return -1.0;
    }
    auto &tracks = TrackList::Get( *project );
@@ -499,7 +499,7 @@ bool MacroCommands::IsMono()
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
-      //AudacityMessageBox( _("No project and no Audio to process!") );
+      //AudacityMessageBox( XO("No project and no Audio to process!") );
       return false;
    }
 
@@ -515,6 +515,7 @@ wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
    wxString justName = newFileName.GetName();
    wxString pathName = newFileName.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
 
+   // PRL:  should this translate?
    const wxString cleanedString( "macro-output" );
 
    if (justName.empty()) {
@@ -535,9 +536,10 @@ wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
 //      double startTime = 0.0;
       //OnSelectAll();
       pathName = FileNames::FindDefaultPath(FileNames::Operation::Export);
-      ::AudacityMessageBox(wxString::Format(_("Export recording to %s\n/%s/%s%s"),
-            pathName, cleanedString, justName, extension),
-         _("Export recording"),
+      ::AudacityMessageBox(
+         XO("Export recording to %s\n/%s/%s%s")
+            .Format(pathName, cleanedString, justName, extension),
+         XO("Export recording"),
          wxOK | wxCENTRE);
       pathName += wxFileName::GetPathSeparator();
    }
@@ -545,9 +547,10 @@ wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
    cleanedName += cleanedString;
    bool flag  = ::wxFileName::FileExists(cleanedName);
    if (flag == true) {
-      ::AudacityMessageBox(_("Cannot create directory '%s'. \nFile already exists that is not a directory"),
-         cleanedName
-      );
+      ::AudacityMessageBox(
+         XO(
+"Cannot create directory '%s'. \nFile already exists that is not a directory"),
+         Verbatim( cleanedName ) );
       return wxString{};
    }
    ::wxFileName::Mkdir(cleanedName, 0777, wxPATH_MKDIR_FULL); // make sure it exists
@@ -685,7 +688,8 @@ bool MacroCommands::ApplySpecialCommand(
       }
       return mExporter.Process(project, numChannels, wxT("OGG"), filename, false, 0.0, endTime);
 #else
-      AudacityMessageBox(_("Ogg Vorbis support is not included in this build of Audacity"));
+      AudacityMessageBox( XO(
+"Ogg Vorbis support is not included in this build of Audacity"));
       return false;
 #endif
    } else if (command == wxT("ExportFLAC")) {
@@ -697,12 +701,13 @@ bool MacroCommands::ApplySpecialCommand(
       }
       return mExporter.Process(project, numChannels, wxT("FLAC"), filename, false, 0.0, endTime);
 #else
-      AudacityMessageBox(_("FLAC support is not included in this build of Audacity"));
+      AudacityMessageBox(XO(
+"FLAC support is not included in this build of Audacity"));
       return false;
 #endif
    }
    AudacityMessageBox(
-      wxString::Format(_("Command %s not implemented yet"), friendlyCommand));
+      XO("Command %s not implemented yet").Format( friendlyCommand ) );
    return false;
 }
 // end CLEANSPEECH remnant
@@ -879,8 +884,8 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
    }
 
    AudacityMessageBox(
-      wxString::Format(
-      _("Your batch command of %s was not recognized."), friendlyCommand ));
+      XO("Your batch command of %s was not recognized.")
+         .Format( friendlyCommand ) );
 
    return false;
 }
@@ -1030,13 +1035,16 @@ bool MacroCommands::ReportAndSkip(
    //TODO: Add a cancel button to these, and add the logic so that we can abort.
    if( !params.empty() )
    {
-      AudacityMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),friendlyCommand, params),
-         _("Test Mode"));
+      AudacityMessageBox(
+         XO("Apply %s with parameter(s)\n\n%s")
+            .Format( friendlyCommand, params ),
+         XO("Test Mode"));
    }
    else
    {
-      AudacityMessageBox( wxString::Format(_("Apply %s"), friendlyCommand),
-         _("Test Mode"));
+      AudacityMessageBox(
+         XO("Apply %s").Format( friendlyCommand ),
+         XO("Test Mode"));
    }
    return true;
 }

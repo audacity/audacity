@@ -270,7 +270,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
    {
       err = MovieAudioExtractionBegin(mMovie, 0, &maer);
       if (err != noErr) {
-         AudacityMessageBox(_("Unable to start QuickTime extraction"));
+         AudacityMessageBox( XO("Unable to start QuickTime extraction") );
          break;
       }
    
@@ -280,7 +280,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             sizeof(quality),
                                             &quality);
       if (err != noErr) {
-         AudacityMessageBox(_("Unable to set QuickTime render quality"));
+         AudacityMessageBox( XO("Unable to set QuickTime render quality") );
          break;
       }
    
@@ -290,7 +290,8 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             sizeof(discrete),
                                             &discrete);
       if (err != noErr) {
-         AudacityMessageBox(_("Unable to set QuickTime discrete channels property"));
+         AudacityMessageBox( XO(
+"Unable to set QuickTime discrete channels property") );
          break;
       }
    
@@ -301,7 +302,8 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             &maxSampleSize,
                                             NULL);
       if (err != noErr) {
-         AudacityMessageBox(_("Unable to get QuickTime sample size property"));
+         AudacityMessageBox( XO(
+"Unable to get QuickTime sample size property") );
          break;
       }
    
@@ -312,7 +314,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             &desc,
                                             NULL);
       if (err != noErr) {
-         AudacityMessageBox(_("Unable to retrieve stream description"));
+         AudacityMessageBox( XO("Unable to retrieve stream description") );
          break;
       }
    
@@ -371,7 +373,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                               abl.get(),
                                               &flags);
          if (err != noErr) {
-            AudacityMessageBox(_("Unable to get fill buffer"));
+            AudacityMessageBox( XO("Unable to get fill buffer") );
             break;
          }
    

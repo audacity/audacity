@@ -294,7 +294,8 @@ bool MidiIOPrefs::Validate()
 {
    long latency;
    if (!mLatency->GetValue().ToLong(&latency)) {
-      AudacityMessageBox(_("The MIDI Synthesizer Latency must be an integer"));
+      AudacityMessageBox( XO(
+"The MIDI Synthesizer Latency must be an integer") );
       return false;
    }
    return true;

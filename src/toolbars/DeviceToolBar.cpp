@@ -829,7 +829,7 @@ void DeviceToolBar::ShowChannelsDialog()
 void DeviceToolBar::ShowComboDialog(wxChoice *combo, const TranslatableString &title)
 {
    if (!combo || combo->GetCount() == 0) {
-      AudacityMessageBox(_("Device information is not available."));
+      AudacityMessageBox( XO("Device information is not available.") );
       return;
    }
 

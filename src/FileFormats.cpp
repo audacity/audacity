@@ -328,10 +328,12 @@ int SFFileCloser::operator() (SNDFILE *sf) const
    if (err) {
       char buffer[1000];
       sf_error_str(sf, buffer, 1000);
-      AudacityMessageBox(wxString::Format
+      AudacityMessageBox(
          /* i18n-hint: %s will be the error message from libsndfile */
-         (_("Error (file may not have been written): %s"),
-         buffer));
+         XO( "Error (file may not have been written): %s" )
+            // Not attempting to localize error messages
+            // from the library
+            .Format( buffer ));
    }
    return err;
 }

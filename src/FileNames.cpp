@@ -614,7 +614,9 @@ char *FileNames::VerifyFilename(const wxString &s, bool input)
       wxFileName ff(name);
       wxString ext;
       while ((char *) (const char *)name.mb_str() == NULL) {
-         AudacityMessageBox(_("The specified filename could not be converted due to Unicode character use."));
+         AudacityMessageBox(
+            XO(
+"The specified filename could not be converted due to Unicode character use."));
 
          ext = ff.GetExt();
          name = FileNames::SelectFile(FileNames::Operation::_None,

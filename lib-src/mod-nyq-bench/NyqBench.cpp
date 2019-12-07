@@ -1091,8 +1091,8 @@ void NyqBench::OnSave(wxCommandEvent & e)
 
    if (!mScript->SaveFile(mPath.GetFullPath()))
    {
-      AudacityMessageBox(_("Script was not saved."),
-                   _("Warning"),
+      AudacityMessageBox(XO("Script was not saved."),
+                   XO("Warning"),
                    wxICON_EXCLAMATION,
                    this);
       return;
@@ -1121,8 +1121,8 @@ void NyqBench::OnSaveAs(wxCommandEvent & e)
 
    if (!mScript->SaveFile(mPath.GetFullPath()))
    {
-      AudacityMessageBox(_("Script was not saved."),
-                   _("Warning"),
+      AudacityMessageBox(XO("Script was not saved."),
+                   XO("Warning"),
                    wxICON_EXCLAMATION,
                    this);
       return;
@@ -1496,8 +1496,8 @@ void NyqBench::OnFindDialog(wxFindDialogEvent & e)
    }
 
    if (pos == wxString::npos) {
-      AudacityMessageBox(_("No matches found"),
-                   _("Nyquist Effect Workbench"),
+      AudacityMessageBox(XO("No matches found"),
+                   XO("Nyquist Effect Workbench"),
                    wxOK | wxCENTER,
                    e.GetDialog());
 
@@ -1634,8 +1634,8 @@ bool NyqBench::Validate()
 {
    if (mScript->GetLastPosition() > 0 && mScript->IsModified()) {
       int ans;
-      ans = AudacityMessageBox(_("Code has been modified. Are you sure?"),
-                         _("Warning"),
+      ans = AudacityMessageBox(XO("Code has been modified. Are you sure?"),
+                         XO("Warning"),
                          wxYES_NO | wxICON_QUESTION,
                          this);
       if (ans == wxNO) {

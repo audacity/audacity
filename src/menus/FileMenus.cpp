@@ -222,7 +222,7 @@ void OnExportLabels(const CommandContext &context)
    auto numLabelTracks = trackRange.size();
 
    if (numLabelTracks == 0) {
-      AudacityMessageBox(_("There are no label tracks to export."));
+      AudacityMessageBox( XO("There are no label tracks to export.") );
       return;
    }
    else
@@ -260,8 +260,8 @@ void OnExportLabels(const CommandContext &context)
    f.Create();
    f.Open();
    if (!f.IsOpened()) {
-      AudacityMessageBox( wxString::Format(
-         _("Couldn't write to file: %s"), fName ) );
+      AudacityMessageBox(
+         XO( "Couldn't write to file: %s" ).Format( fName ) );
       return;
    }
 
@@ -294,13 +294,13 @@ void OnExportMIDI(const CommandContext &context)
    const auto numNoteTracksSelected = range.size();
 
    if(numNoteTracksSelected > 1) {
-      AudacityMessageBox(_(
-         "Please select only one Note Track at a time."));
+      AudacityMessageBox(
+         XO("Please select only one Note Track at a time.") );
       return;
    }
    else if(numNoteTracksSelected < 1) {
-      AudacityMessageBox(_(
-         "Please select a Note Track."));
+      AudacityMessageBox(
+         XO("Please select a Note Track.") );
       return;
    }
 
@@ -351,9 +351,10 @@ void OnExportMIDI(const CommandContext &context)
       } else if(fName.EndsWith(wxT(".gro"))) {
          nt->ExportAllegro(fName);
       } else {
-         wxString msg = _("You have selected a filename with an unrecognized file extension.\nDo you want to continue?");
-         wxString title = _("Export MIDI");
-         int id = AudacityMessageBox(msg, title, wxYES_NO);
+         auto msg = XO(
+"You have selected a filename with an unrecognized file extension.\nDo you want to continue?");
+         auto title = XO("Export MIDI");
+         int id = AudacityMessageBox( msg, title, wxYES_NO );
          if (id == wxNO) {
             continue;
          } else if (id == wxYES) {
@@ -433,7 +434,7 @@ void OnImportLabels(const CommandContext &context)
       f.Open(fileName);
       if (!f.IsOpened()) {
          AudacityMessageBox(
-            wxString::Format( _("Could not open file: %s"), fileName ) );
+            XO("Could not open file: %s").Format( fileName ) );
          return;
       }
 

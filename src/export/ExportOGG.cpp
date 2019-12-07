@@ -182,7 +182,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    FileIO outFile(fName, FileIO::Output);
 
    if (!outFile.IsOpened()) {
-      AudacityMessageBox(_("Unable to open target file for writing"));
+      AudacityMessageBox( XO("Unable to open target file for writing") );
       return ProgressResult::Cancelled;
    }
 
@@ -209,7 +209,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    vorbis_info_init(&info);
    if (vorbis_encode_init_vbr(&info, numChannels, (int)(rate + 0.5), quality)) {
       // TODO: more precise message
-      AudacityMessageBox(_("Unable to export - rate or quality problem"));
+      AudacityMessageBox( XO("Unable to export - rate or quality problem") );
       return ProgressResult::Cancelled;
    }
 
@@ -223,14 +223,14 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
 
    // Retrieve tags
    if (!FillComment(project, &comment, metadata)) {
-      AudacityMessageBox(_("Unable to export - problem with metadata"));
+      AudacityMessageBox( XO("Unable to export - problem with metadata") );
       return ProgressResult::Cancelled;
    }
 
    // Set up analysis state and auxiliary encoding storage
    if (vorbis_analysis_init(&dsp, &info) ||
        vorbis_block_init(&dsp, &block)) {
-      AudacityMessageBox(_("Unable to export - problem initialising"));
+      AudacityMessageBox( XO("Unable to export - problem initialising") );
       return ProgressResult::Cancelled;
    }
 
@@ -239,7 +239,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    // chained streams with concatenation.
    srand(time(NULL));
    if (ogg_stream_init(&stream, rand())) {
-      AudacityMessageBox(_("Unable to export - problem creating stream"));
+      AudacityMessageBox( XO("Unable to export - problem creating stream") );
       return ProgressResult::Cancelled;
    }
 
@@ -261,7 +261,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
       ogg_stream_packetin(&stream, &bitstream_header) ||
       ogg_stream_packetin(&stream, &comment_header) ||
       ogg_stream_packetin(&stream, &codebook_header)) {
-      AudacityMessageBox(_("Unable to export - problem with packets"));
+      AudacityMessageBox( XO("Unable to export - problem with packets") );
       return ProgressResult::Cancelled;
    }
 
@@ -270,7 +270,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    while (ogg_stream_flush(&stream, &page)) {
       if ( outFile.Write(page.header, page.header_len).GetLastError() ||
            outFile.Write(page.body, page.body_len).GetLastError()) {
-         AudacityMessageBox(_("Unable to export - problem with file"));
+         AudacityMessageBox( XO("Unable to export - problem with file") );
          return ProgressResult::Cancelled;
       }
    }
@@ -338,7 +338,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
                   if ( outFile.Write(page.header, page.header_len).GetLastError() ||
                        outFile.Write(page.body, page.body_len).GetLastError()) {
                      // TODO: more precise message
-                     AudacityMessageBox(_("Unable to export"));
+                     AudacityMessageBox( XO("Unable to export") );
                      return ProgressResult::Cancelled;
                   }
 
@@ -352,7 +352,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
          if (err) {
             updateResult = ProgressResult::Cancelled;
             // TODO: more precise message
-            AudacityMessageBox(_("Unable to export"));
+            AudacityMessageBox( XO("Unable to export") );
             break;
          }
 
@@ -363,7 +363,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    if ( !outFile.Close() ) {
       updateResult = ProgressResult::Cancelled;
       // TODO: more precise message
-      AudacityMessageBox(_("Unable to export"));
+      AudacityMessageBox( XO("Unable to export") );
    }
 
    return updateResult;

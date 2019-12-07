@@ -264,8 +264,10 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    if (twolame_init_params(encodeOptions) != 0)
    {
-      AudacityMessageBox(_("Cannot export MP2 with this sample rate and bit rate"),
-         _("Error"), wxICON_STOP);
+      AudacityMessageBox(
+         XO("Cannot export MP2 with this sample rate and bit rate"),
+         XO("Error"),
+         wxICON_STOP);
       return ProgressResult::Cancelled;
    }
 
@@ -275,7 +277,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    FileIO outFile(fName, FileIO::Output);
    if (!outFile.IsOpened()) {
-      AudacityMessageBox(_("Unable to open target file for writing"));
+      AudacityMessageBox( XO("Unable to open target file for writing") );
       return ProgressResult::Cancelled;
    }
 
@@ -286,7 +288,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    if (id3len && !endOfFile) {
       if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
          // TODO: more precise message
-         AudacityMessageBox(_("Unable to export"));
+         AudacityMessageBox( XO("Unable to export") );
          return ProgressResult::Cancelled;
       }
    }
@@ -332,14 +334,14 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
          if (mp2BufferNumBytes < 0) {
             // TODO: more precise message
-            AudacityMessageBox(_("Unable to export"));
+            AudacityMessageBox( XO("Unable to export") );
             updateResult = ProgressResult::Cancelled;
             break;
          }
 
          if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
             // TODO: more precise message
-            AudacityMessageBox(_("Unable to export"));
+            AudacityMessageBox( XO("Unable to export") );
             return ProgressResult::Cancelled;
          }
 
@@ -355,7 +357,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    if (mp2BufferNumBytes > 0)
       if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
          // TODO: more precise message
-         AudacityMessageBox(_("Unable to export"));
+         AudacityMessageBox( XO("Unable to export") );
          return ProgressResult::Cancelled;
       }
 
@@ -364,13 +366,13 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    if (id3len && endOfFile)
       if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
          // TODO: more precise message
-         AudacityMessageBox(_("Unable to export"));
+         AudacityMessageBox( XO("Unable to export") );
          return ProgressResult::Cancelled;
       }
 
    if ( !outFile.Close() ) {
       // TODO: more precise message
-      AudacityMessageBox(_("Unable to export"));
+      AudacityMessageBox( XO("Unable to export") );
       return ProgressResult::Cancelled;
    }
 

@@ -476,12 +476,13 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       // Bug 46.  Trap here, as sndfile.c does not trap it properly.
       if( (numChannels != 1) && ((sf_format & SF_FORMAT_SUBMASK) == SF_FORMAT_GSM610) )
       {
-         AudacityMessageBox(_("GSM 6.10 requires mono"));
+         AudacityMessageBox( XO("GSM 6.10 requires mono") );
          return ProgressResult::Cancelled;
       }
 
       if( sf_format == SF_FORMAT_WAVEX + SF_FORMAT_GSM610){
-         AudacityMessageBox( _("WAVEX and GSM 6.10 formats are not compatible") );
+         AudacityMessageBox(
+            XO("WAVEX and GSM 6.10 formats are not compatible") );
          return ProgressResult::Cancelled;
       }
 
@@ -490,7 +491,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       if (!sf_format_check(&info))
          info.format = (info.format & SF_FORMAT_TYPEMASK);
       if (!sf_format_check(&info)) {
-         AudacityMessageBox(_("Cannot export audio in this format."));
+         AudacityMessageBox( XO("Cannot export audio in this format.") );
          return ProgressResult::Cancelled;
       }
 
@@ -505,8 +506,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       }
 
       if (!sf) {
-         AudacityMessageBox(wxString::Format(_("Cannot export audio to %s"),
-                                       path));
+         AudacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
          return ProgressResult::Cancelled;
       }
       // Retrieve tags if not given a set
@@ -577,13 +577,13 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
             if (static_cast<size_t>(samplesWritten) != numSamples) {
                char buffer2[1000];
                sf_error_str(sf.get(), buffer2, 1000);
-               AudacityMessageBox(wxString::Format(
-                                             /* i18n-hint: %s will be the error message from libsndfile, which
-                                              * is usually something unhelpful (and untranslated) like "system
-                                              * error" */
-                                             _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
-                                             formatStr,
-                                             wxString::FromAscii(buffer2)));
+               AudacityMessageBox(
+                  XO(
+                  /* i18n-hint: %s will be the error message from libsndfile, which
+                   * is usually something unhelpful (and untranslated) like "system
+                   * error" */
+"Error while writing %s file (disk full?).\nLibsndfile says \"%s\"")
+                     .Format( formatStr, wxString::FromAscii(buffer2) ));
                updateResult = ProgressResult::Cancelled;
                break;
             }
@@ -599,13 +599,13 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
              fileFormat == SF_FORMAT_WAVEX) {
             if (!AddStrings(project, sf.get(), metadata, sf_format)) {
                // TODO: more precise message
-               AudacityMessageBox(_("Unable to export"));
+               AudacityMessageBox( XO("Unable to export") );
                return ProgressResult::Cancelled;
             }
          }
          if (0 != sf.close()) {
             // TODO: more precise message
-            AudacityMessageBox(_("Unable to export"));
+            AudacityMessageBox( XO("Unable to export") );
             return ProgressResult::Cancelled;
          }
       }
@@ -618,7 +618,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
          // Note: file has closed, and gets reopened and closed again here:
          if (!AddID3Chunk(fName, metadata, sf_format) ) {
             // TODO: more precise message
-            AudacityMessageBox(_("Unable to export"));
+            AudacityMessageBox( XO("Unable to export") );
             return ProgressResult::Cancelled;
          }
 

@@ -102,11 +102,11 @@ void FFmpegStartup()
    {
       if (enabled)
       {
-         AudacityMessageBox(_(
+         AudacityMessageBox(XO(
 "FFmpeg was configured in Preferences and successfully loaded before, \
 \nbut this time Audacity failed to load it at startup. \
 \n\nYou may want to go back to Preferences > Libraries and re-configure it."),
-            _("FFmpeg startup failed"));
+            XO("FFmpeg startup failed"));
       }
    }
 }
@@ -745,10 +745,10 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
    */
    // Oh well, just give up
    if (!ValidLibsLoaded()) {
-      wxString msg = _("Failed to find compatible FFmpeg libraries.");
+      auto msg = XO("Failed to find compatible FFmpeg libraries.");
       if (showerr)
-         AudacityMessageBox(msg);
-      wxLogError(msg);
+         AudacityMessageBox( msg );
+      wxLogError(msg.Debug());
       return false;
    }
 

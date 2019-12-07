@@ -677,8 +677,11 @@ bool FFmpegPresets::OverwriteIsOk( wxString &name )
    FFmpegPreset *preset = FindPreset(name);
    if (preset)
    {
-      wxString query = wxString::Format(_("Overwrite preset '%s'?"),name);
-      int action = AudacityMessageBox(query,_("Confirm Overwrite"),wxYES_NO | wxCENTRE);
+      auto query = XO("Overwrite preset '%s'?").Format(name);
+      int action = AudacityMessageBox(
+         query,
+         XO("Confirm Overwrite"),
+         wxYES_NO | wxCENTRE);
       if (action == wxNO) return false;
    }
    return true;
@@ -699,7 +702,7 @@ bool FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
       lb = dynamic_cast<wxListBox*>(wnd);
       if (lb->GetSelection() < 0)
       {
-         AudacityMessageBox(_("Please select format before saving a profile"));
+         AudacityMessageBox( XO("Please select format before saving a profile") );
          return false;
       }
       format = lb->GetStringSelection();
@@ -709,7 +712,7 @@ bool FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
       if (lb->GetSelection() < 0)
       {
          /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-         AudacityMessageBox(_("Please select codec before saving a profile"));
+         AudacityMessageBox( XO("Please select codec before saving a profile") );
          return false;
       }
       codec = lb->GetStringSelection();
@@ -784,7 +787,7 @@ void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, wxString &name)
    FFmpegPreset *preset = FindPreset(name);
    if (!preset)
    {
-      AudacityMessageBox(wxString::Format(_("Preset '%s' does not exist."),name));
+      AudacityMessageBox( XO("Preset '%s' does not exist." ).Format(name));
       return;
    }
 
@@ -885,8 +888,11 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             mPreset = FindPreset(value);
             if (mPreset)
             {
-               wxString query = wxString::Format(_("Replace preset '%s'?"), value);
-               int action = AudacityMessageBox(query, _("Confirm Overwrite"), wxYES_NO | wxCANCEL | wxCENTRE);
+               auto query = XO("Replace preset '%s'?").Format( value );
+               int action = AudacityMessageBox(
+                  query,
+                  XO("Confirm Overwrite"),
+                  wxYES_NO | wxCANCEL | wxCENTRE);
                if (action == wxCANCEL)
                {
                   mAbortImport = true;
@@ -1910,12 +1916,15 @@ void ExportFFmpegOptions::OnDeletePreset(wxCommandEvent& WXUNUSED(event))
    wxString presetname = preset->GetValue();
    if (presetname.empty())
    {
-      AudacityMessageBox(_("You can't delete a preset without name"));
+      AudacityMessageBox( XO("You can't delete a preset without name") );
       return;
    }
 
-   wxString query = wxString::Format(_("Delete preset '%s'?"),presetname);
-   int action = AudacityMessageBox(query,_("Confirm Deletion"),wxYES_NO | wxCENTRE);
+   auto query = XO("Delete preset '%s'?").Format( presetname );
+   int action = AudacityMessageBox(
+      query,
+      XO("Confirm Deletion"),
+      wxYES_NO | wxCENTRE);
    if (action == wxNO) return;
 
    mPresets->DeletePreset(presetname);
@@ -1941,7 +1950,7 @@ bool ExportFFmpegOptions::SavePreset(bool bCheckForOverwrite)
    wxString name = preset->GetValue();
    if (name.empty())
    {
-      AudacityMessageBox(_("You can't save a preset without a name"));
+      AudacityMessageBox( XO("You can't save a preset without a name") );
       return false;
    }
    if( bCheckForOverwrite && !mPresets->OverwriteIsOk(name))
@@ -2015,7 +2024,7 @@ void ExportFFmpegOptions::OnExportPresets(wxCommandEvent& WXUNUSED(event))
    mPresets->GetPresetList( presets);
    if( presets.Count() < 1)
    {
-      AudacityMessageBox(_("No presets to export"));
+      AudacityMessageBox( XO("No presets to export") );
       return;
    }
 
@@ -2103,11 +2112,10 @@ bool ExportFFmpegOptions::ReportIfBadCombination()
 
    AudacityMessageBox(
       /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-      wxString::Format(_("Format %s is not compatible with codec %s."),
-         *selfmt,
-         *selcdc ),
+      XO("Format %s is not compatible with codec %s.")
+         .Format( *selfmt, *selcdc ),
       /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-      _("Incompatible format and codec"));
+      XO("Incompatible format and codec"));
 
    return true;
 }

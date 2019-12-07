@@ -71,8 +71,8 @@ void ShowDiagnostics(
          if (!text->SaveFile(fName))
          {
             AudacityMessageBox(
-               XO("Unable to save %s").Format( description ).Translation(),
-               fileDialogTitle.Translation());
+               XO("Unable to save %s").Format( description ),
+               fileDialogTitle);
          }
       }
    }

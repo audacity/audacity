@@ -2336,8 +2336,9 @@ void AdornedRulerPanel::LockPlayRegion()
    auto &viewInfo = ViewInfo::Get( project );
    auto &playRegion = viewInfo.playRegion;
    if (playRegion.GetStart() >= tracks.GetEndTime()) {
-       AudacityMessageBox(_("Cannot lock region beyond\nend of project."),
-                    _("Error"));
+      AudacityMessageBox(
+         XO("Cannot lock region beyond\nend of project."),
+         XO("Error"));
    }
    else {
       playRegion.SetLocked( true );
