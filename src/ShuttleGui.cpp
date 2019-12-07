@@ -1239,12 +1239,6 @@ wxCheckBox * ShuttleGuiBase::DoTieCheckBox(const wxString &Prompt, WrappedType &
          pCheckBox->SetValue( WrappedRef.ReadAsBool() );
       }
       break;
-   // IF Saving settings to external storage...
-   // or IF Getting settings from external storage.
-   case eIsSavingViaShuttle:
-   case eIsGettingViaShuttle:
-      DoDataShuttle( Prompt, WrappedRef );
-      break;
    default:
       wxASSERT( false );
       break;
@@ -1280,12 +1274,6 @@ wxCheckBox * ShuttleGuiBase::DoTieCheckBoxOnRight(const wxString &Prompt, Wrappe
          wxASSERT( pCheckBox );
          pCheckBox->SetValue( WrappedRef.ReadAsBool() );
       }
-      break;
-   // IF Saving settings to external storage...
-   // or IF Getting settings from external storage.
-   case eIsSavingViaShuttle:
-   case eIsGettingViaShuttle:
-      DoDataShuttle( Prompt, WrappedRef );
       break;
    default:
       wxASSERT( false );
@@ -1324,12 +1312,6 @@ wxSpinCtrl * ShuttleGuiBase::DoTieSpinCtrl( const wxString &Prompt, WrappedType 
          pSpinCtrl->SetValue( WrappedRef.ReadAsInt() );
       }
       break;
-      // IF Saving settings to external storage...
-      // or IF Getting settings from external storage.
-   case eIsGettingViaShuttle:
-   case eIsSavingViaShuttle:
-      DoDataShuttle( Prompt, WrappedRef );
-      break;
    default:
       wxASSERT( false );
       break;
@@ -1367,12 +1349,6 @@ wxTextCtrl * ShuttleGuiBase::DoTieTextBox( const wxString &Prompt, WrappedType &
          pTextBox->SetValue( WrappedRef.ReadAsString() );
       }
       break;
-   // IF Saving settings to external storage...
-   // or IF Getting settings from external storage.
-   case eIsGettingViaShuttle:
-   case eIsSavingViaShuttle:
-      DoDataShuttle( Prompt, WrappedRef );
-      break;
    default:
       wxASSERT( false );
       break;
@@ -1409,12 +1385,6 @@ wxTextCtrl * ShuttleGuiBase::DoTieNumericTextBox( const wxString &Prompt, Wrappe
          wxASSERT( pTextBox );
          pTextBox->SetValue( WrappedRef.ReadAsString() );
       }
-      break;
-   // IF Saving settings to external storage...
-   // or IF Getting settings from external storage.
-   case eIsGettingViaShuttle:
-   case eIsSavingViaShuttle:
-      DoDataShuttle( Prompt, WrappedRef );
       break;
    default:
       wxASSERT( false );
@@ -1455,12 +1425,6 @@ wxSlider * ShuttleGuiBase::DoTieSlider( const wxString &Prompt, WrappedType & Wr
             wxASSERT( pSlider );
             pSlider->SetValue( WrappedRef.ReadAsInt() );
          }
-         break;
-      // IF Saving settings to external storage...
-      // or IF Getting settings from external storage.
-      case eIsSavingViaShuttle:
-      case eIsGettingViaShuttle:
-         DoDataShuttle( Prompt, WrappedRef );
          break;
       default:
          wxASSERT( false );
@@ -1519,12 +1483,6 @@ wxChoice * ShuttleGuiBase::DoTieChoice(
          else
             pChoice->SetSelection( WrappedRef.ReadAsInt() );
       }
-      break;
-   // IF Saving settings to external storage...
-   // or IF Getting settings from external storage.
-   case eIsSavingViaShuttle:
-   case eIsGettingViaShuttle:
-      DoDataShuttle( Prompt, WrappedRef );
       break;
    default:
       wxASSERT( false );

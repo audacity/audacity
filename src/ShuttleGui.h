@@ -36,8 +36,6 @@ enum teShuttleMode
    eIsCreating,
    eIsGettingFromDialog,
    eIsSettingToDialog,
-   eIsSavingViaShuttle,
-   eIsGettingViaShuttle,
    eIsGettingMetadata,
 
    // Next two are only ever seen in constructor.
