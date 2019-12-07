@@ -11,7 +11,7 @@
 #include "AudacityMessageBox.h"
 #include "../Internat.h"
 
-wxString AudacityMessageBoxCaptionStr()
+TranslatableString AudacityMessageBoxCaptionStr()
 {
-   return _("Message");
+   return XO("Message");
 }

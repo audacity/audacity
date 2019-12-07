@@ -32,7 +32,7 @@ AudacityException::~AudacityException()
 
 wxAtomicInt sOutstandingMessages {};
 
-MessageBoxException::MessageBoxException( const wxString &caption_ )
+MessageBoxException::MessageBoxException( const TranslatableString &caption_ )
    : caption{ caption_ }
 {
    if (!caption.empty())
@@ -80,7 +80,7 @@ SimpleMessageBoxException::~SimpleMessageBoxException()
 {
 }
 
-wxString SimpleMessageBoxException::ErrorMessage() const
+TranslatableString SimpleMessageBoxException::ErrorMessage() const
 {
    return message;
 }
@@ -96,8 +96,8 @@ void MessageBoxException::DelayedHandlerAction()
       // give the user no useful added information.
       if ( wxAtomicDec( sOutstandingMessages ) == 0 )
          ::AudacityMessageBox(
-            ErrorMessage(),
-            caption.empty() ? AudacityMessageBoxCaptionStr() : caption,
+            ErrorMessage().Translation(),
+            (caption.empty() ? AudacityMessageBoxCaptionStr() : caption).Translation(),
             wxICON_ERROR
          );
       moved = true;

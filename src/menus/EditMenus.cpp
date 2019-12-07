@@ -468,7 +468,7 @@ void OnPaste(const CommandContext &context)
             // Throw, so that any previous changes to the project in this loop
             // are discarded.
             throw SimpleMessageBoxException{
-               _("Pasting one type of track into another is not allowed.")
+               XO("Pasting one type of track into another is not allowed.")
             };
 
          // We should need this check only each time we visit the leading
@@ -496,7 +496,7 @@ void OnPaste(const CommandContext &context)
                // Throw, so that any previous changes to the project in this
                // loop are discarded.
                throw SimpleMessageBoxException{
-                  _("Copying stereo audio into a mono track is not allowed.")
+                  XO("Copying stereo audio into a mono track is not allowed.")
                };
             }
          }

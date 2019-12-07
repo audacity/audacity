@@ -19,7 +19,7 @@ public:
 
    explicit FileException
       ( Cause cause_, const wxFileName &fileName_,
-        const wxString &caption = _("File Error"),
+        const TranslatableString &caption = XO("File Error"),
         const wxFileName &renameTarget_ = {})
    : MessageBoxException{ caption }
    , cause{ cause_ }, fileName{ fileName_ }, renameTarget{ renameTarget_ }
@@ -38,7 +38,7 @@ public:
 
 protected:
    // Format a default, internationalized error message for this exception.
-   wxString ErrorMessage() const override;
+   TranslatableString ErrorMessage() const override;
 
 public:
    Cause cause;

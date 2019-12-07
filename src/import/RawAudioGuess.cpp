@@ -209,7 +209,7 @@ static void Extract(bool bits16,
    }
 
    if( dataSizeIn < 1 )
-      throw SimpleMessageBoxException{_("Bad data size")};
+      throw SimpleMessageBoxException{XO("Bad data size")};
 
    size_t dataSize = (size_t)dataSizeIn;
 

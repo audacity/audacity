@@ -13,7 +13,7 @@ InconsistencyException::~InconsistencyException()
 {
 }
 
-wxString InconsistencyException::ErrorMessage() const
+TranslatableString InconsistencyException::ErrorMessage() const
 {
    // Shorten the path
    wxString path { file };
@@ -23,14 +23,12 @@ wxString InconsistencyException::ErrorMessage() const
       path = path.Mid(index + sub.size());
 
 #ifdef __func__
-   return wxString::Format(
-_("Internal error in %s at %s line %d.\nPlease inform the Audacity team at https://forum.audacityteam.org/."),
-      func, path, line
-   );
+   return
+XO("Internal error in %s at %s line %d.\nPlease inform the Audacity team at https://forum.audacityteam.org/.")
+      .Format( func, path, line );
 #else
-   return wxString::Format(
-_("Internal error at %s line %d.\nPlease inform the Audacity team at https://forum.audacityteam.org/."),
-      path, line
-   );
+   return
+XO("Internal error at %s line %d.\nPlease inform the Audacity team at https://forum.audacityteam.org/.")
+      .Format( path, line );
 #endif
 }

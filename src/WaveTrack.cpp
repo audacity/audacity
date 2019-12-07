@@ -1228,7 +1228,7 @@ void WaveTrack::Paste(double t0, const Track *src)
                      // STRONG-GUARANTEE in case of this path
                      // not that it matters.
                      throw SimpleMessageBoxException{
-                        _("There is not enough room available to paste the selection")
+                        XO("There is not enough room available to paste the selection")
                      };
                }
             }
@@ -1248,7 +1248,7 @@ void WaveTrack::Paste(double t0, const Track *src)
          // STRONG-GUARANTEE in case of this path
          // not that it matters.
          throw SimpleMessageBoxException{
-            _("There is not enough room available to paste the selection")
+            XO("There is not enough room available to paste the selection")
          };
 
       for (const auto &clip : other->mClips)
@@ -2381,7 +2381,7 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                 clip->GetEndTime() + end - start > clip2->GetStartTime())
                // STRONG-GUARANTEE in case of this path
                throw SimpleMessageBoxException{
-                  _("There is not enough room available to expand the cut line")
+                  XO("There is not enough room available to expand the cut line")
                };
           }
       }

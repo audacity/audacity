@@ -111,7 +111,7 @@ class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
  private:
 
    void ThrowException(
-      const wxFileName &fileName, const wxString &caption)
+      const wxFileName &fileName, const TranslatableString &caption)
    {
       throw FileException{ FileException::Cause::Write, fileName, caption };
    }
@@ -121,7 +121,7 @@ class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
    void CloseWithoutEndingTags(); // for auto-save files
 
    const FilePath mOutputPath;
-   const wxString mCaption;
+   const TranslatableString mCaption;
    FilePath mBackupName;
    const bool mKeepBackup;
 
