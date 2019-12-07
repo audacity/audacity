@@ -1041,10 +1041,9 @@ wxString ProjectManager::GetHoursMinsString(int iMinutes)
    int iHours = iMinutes / 60;
    int iMins = iMinutes % 60;
 
-   auto sHours =
-      wxString::Format( wxPLURAL("%d hour", "%d hours", iHours), iHours );
-   auto sMins =
-      wxString::Format( wxPLURAL("%d minute", "%d minutes", iMins), iMins );
+   auto sHours = wxPLURAL( "%d hour", "%d hours", 0 )( iHours ).Translation();
+
+   auto sMins = wxPLURAL( "%d minute", "%d minutes", 0 )( iMins ).Translation();
 
    /* i18n-hint: A time in hours and minutes. Only translate the "and". */
    sFormatted.Printf( _("%s and %s."), sHours, sMins);

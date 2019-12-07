@@ -327,17 +327,16 @@ wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results)
                clips.
              */
          _("dummyStringClipBoundaryMessage");
-         auto format = wxPLURAL(
+         auto str = wxPLURAL(
             "%s %d of %d clip %s",
             "%s %d of %d clips %s",
-            nClips
-         );
-         str = wxString::Format(format,
+            2
+         )(
             result.clipStart1 ? _("start") : _("end"),
             result.index1 + 1,
             nClips,
             longName
-         );
+         ).Translation();
       }
       else {
             /* i18n-hint: in the string after this one,
@@ -350,19 +349,18 @@ wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results)
                clips.
              */
          _("dummyStringClipBoundaryMessageLong");
-         auto format = wxPLURAL(
+         auto str = wxPLURAL(
             "%s %d and %s %d of %d clip %s",
             "%s %d and %s %d of %d clips %s",
-            nClips
-         );
-         str = wxString::Format(format,
+            4
+         )(
             result.clipStart1 ? _("start") : _("end"),
             result.index1 + 1,
             result.clipStart2 ? _("start") : _("end"),
             result.index2 + 1,
             nClips,
             longName
-         );
+         ).Translation();
       }
 
       if (message.empty())
@@ -587,13 +585,15 @@ void DoSelectClip(AudacityProject &project, bool next)
                last number counts the clips,
                string names a track */
          _("dummyStringOnSelectClip");
-         auto format = wxPLURAL(
+         auto str = wxPLURAL(
             "%d of %d clip %s",
             "%d of %d clips %s",
-            nClips
-         );
-         auto str =
-            wxString::Format( format, result.index + 1, nClips, longName );
+            1
+         )(
+            result.index + 1,
+            nClips,
+            longName
+         ).Translation();
 
          if (message.empty())
             message = str;

@@ -78,7 +78,12 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 //
 // Your i18n-comment should therefore say something like,
 // "In the string after this one, ..."
-#define wxPLURAL(sing, plur, n)  wxGetTranslation( wxT(sing), wxT(plur), n)
+//
+// The macro call is then followed by a sequence of format arguments in
+// parentheses.  The third argument of the macro call is the zero-based index
+// of the format argument that selects singular or plural
+#define wxPLURAL(sing, plur, n) \
+   TranslatableString{ wxT(sing), {} }.Plural<(n)>( wxT(plur) )
 
 #endif
 

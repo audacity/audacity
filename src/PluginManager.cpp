@@ -1899,7 +1899,11 @@ bool PluginManager::DropFile(const wxString &fileName)
 
             // Ask whether to enable the plug-ins
             if (auto nIds = ids.size()) {
-               auto message = wxPLURAL( "Enable this plug-in?", "Enable these plug-ins?", nIds );
+               auto message = wxPLURAL(
+                  "Enable this plug-in?",
+                  "Enable these plug-ins?",
+                  0
+               )( nIds ).Translation();
                message += wxT("\n");
                for (const auto &name : names)
                   message += name + wxT("\n");

@@ -291,51 +291,80 @@ std::vector< Identifier > Identifier::split( wxChar separator ) const
    return { strings.begin(), strings.end() };
 }
 
-static const wxChar *const NullContextName = wxT("*");
+const wxChar *const TranslatableString::NullContextName = wxT("*");
 
 const TranslatableString::Formatter
 TranslatableString::NullContextFormatter {
-   [](const wxString & str) -> wxString {
-      if (str.empty())
-         return NullContextName;
-      else
-         return str;
+   [](const wxString & str, TranslatableString::Request request) -> wxString {
+      switch ( request ) {
+         case Request::Context:
+            return NullContextName;
+         case Request::Format:
+         case Request::DebugFormat:
+         default:
+            return str;
+      }
    }
 };
 
 bool TranslatableString::IsVerbatim() const
 {
-   return mFormatter && mFormatter({}) == NullContextName;
+   return DoGetContext( mFormatter ) == NullContextName;
 }
 
-wxString TranslatableString::Translation() const
+wxString TranslatableString::DoGetContext( const Formatter &formatter )
 {
-   wxString context;
-   if ( mFormatter )
-      context = mFormatter({});
-
-   wxString result = (context == NullContextName)
-      ? *this
-      : wxGetTranslation( *this
-         // , wxString{}, context
-      );
-
-   if ( mFormatter )
-      result = mFormatter( result );
-
-   return result;
+   return formatter ? formatter( {}, Request::Context ) : wxString{};
 }
 
-TranslatableString &TranslatableString::operator +=(
-   const TranslatableString &arg )
+wxString TranslatableString::DoFormat(
+   const Formatter &formatter, const wxString &format, bool debug )
+{
+   return formatter
+      ? formatter( format, debug ? Request::DebugFormat : Request::Format )
+      : // come here for most translatable strings, which have no formatting
+         ( debug ? format : wxGetTranslation( format ) );
+}
+
+wxString TranslatableString::DoChooseFormat(
+   const Formatter &formatter,
+   const wxString &singular, const wxString &plural, unsigned nn, bool debug )
+{
+   // come here for translatable strings that choose among forms by number;
+   // if not debugging, then two keys are passed to an overload of
+   // wxGetTranslation, and also a number.
+   // Some languages might choose among more or fewer than two forms
+   // (e.g. Arabic has duals and Russian has complicated declension rules)
+   wxString context;
+   return ( debug || NullContextName == (context = DoGetContext(formatter)) )
+      ? ( nn == 1 ? singular : plural )
+      : wxGetTranslation(
+            singular, plural, nn
+            // , wxString{}
+            // , context
+         );
+}
+
+TranslatableString &&TranslatableString::Join(
+   const TranslatableString &arg, const wxString &separator ) &&
 {
    auto prevFormatter = mFormatter;
-   mFormatter = [prevFormatter, arg](const wxString &str){
-      if (str.empty())
-         return prevFormatter ? prevFormatter({}) : wxString{};
-      else
-         return (prevFormatter ? prevFormatter(str) : str)
-            + arg.Translation();
+   mFormatter =
+   [prevFormatter, arg, separator](const wxString &str, Request request)
+      -> wxString {
+      switch ( request ) {
+         case Request::Context:
+            return DoGetContext( prevFormatter );
+         case Request::Format:
+         case Request::DebugFormat:
+         default: {
+            bool debug = request == Request::DebugFormat;
+            return
+               DoFormat( prevFormatter, str, debug )
+                  + separator
+                  + arg.DoFormat( debug );
+         }
+      }
    };
-   return *this;
+   return std::move( *this );
 }
