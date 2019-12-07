@@ -41,7 +41,7 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
 {
    wxFFile theXMLFile(fname, wxT("rb"));
    if (!theXMLFile.IsOpened()) {
-      mErrorStr.Printf(_("Could not open file: \"%s\""), fname);
+      mErrorStr = XO("Could not open file: \"%s\"").Format( fname );
       return false;
    }
 
@@ -54,11 +54,66 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
       size_t len = fread(buffer, 1, bufferSize, theXMLFile.fp());
       done = (len < bufferSize);
       if (!XML_Parse(mParser, buffer, len, done)) {
-         mErrorStr.Printf(_("Error: %hs at line %lu"),
-                          XML_ErrorString(XML_GetErrorCode(mParser)),
-                          (long unsigned int)XML_GetCurrentLineNumber(mParser));
+
+         // Embedded error string from expat doesn't translate (yet)
+         // We could make a table of XOs if we wanted so that it could
+         // If we do, uncomment the second constructor argument so it's not
+         // a verbatim string
+         mLibraryErrorStr = TranslatableString{
+            XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
+         };
+
+         mErrorStr = XO("Error: %s at line %lu").Format(
+            mLibraryErrorStr,
+            (long unsigned int)XML_GetCurrentLineNumber(mParser)
+         );
+
          theXMLFile.Close();
          return false;
+
+// If we did want to handle every single parse error, these are they....
+/*
+    XML_L("out of memory"),
+    XML_L("syntax error"),
+    XML_L("no element found"),
+    XML_L("not well-formed (invalid token)"),
+    XML_L("unclosed token"),
+    XML_L("partial character"),
+    XML_L("mismatched tag"),
+    XML_L("duplicate attribute"),
+    XML_L("junk after document element"),
+    XML_L("illegal parameter entity reference"),
+    XML_L("undefined entity"),
+    XML_L("recursive entity reference"),
+    XML_L("asynchronous entity"),
+    XML_L("reference to invalid character number"),
+    XML_L("reference to binary entity"),
+    XML_L("reference to external entity in attribute"),
+    XML_L("XML or text declaration not at start of entity"),
+    XML_L("unknown encoding"),
+    XML_L("encoding specified in XML declaration is incorrect"),
+    XML_L("unclosed CDATA section"),
+    XML_L("error in processing external entity reference"),
+    XML_L("document is not standalone"),
+    XML_L("unexpected parser state - please send a bug report"),
+    XML_L("entity declared in parameter entity"),
+    XML_L("requested feature requires XML_DTD support in Expat"),
+    XML_L("cannot change setting once parsing has begun"),
+    XML_L("unbound prefix"),
+    XML_L("must not undeclare prefix"),
+    XML_L("incomplete markup in parameter entity"),
+    XML_L("XML declaration not well-formed"),
+    XML_L("text declaration not well-formed"),
+    XML_L("illegal character(s) in public id"),
+    XML_L("parser suspended"),
+    XML_L("parser not suspended"),
+    XML_L("parsing aborted"),
+    XML_L("parsing finished"),
+    XML_L("cannot suspend in external parameter entity"),
+    XML_L("reserved prefix (xml) must not be undeclared or bound to another namespace name"),
+    XML_L("reserved prefix (xmlns) must not be declared or undeclared"),
+    XML_L("prefix must not be bound to one of the reserved namespace names")
+*/
       }
    } while (!done);
 
@@ -70,14 +125,19 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
    if (mBaseHandler)
       return true;
    else {
-      mErrorStr.Printf(_("Could not load file: \"%s\""), fname);
+      mErrorStr = XO("Could not load file: \"%s\"").Format( fname );
       return false;
    }
 }
 
-wxString XMLFileReader::GetErrorStr()
+const TranslatableString &XMLFileReader::GetErrorStr() const
 {
    return mErrorStr;
+}
+
+const TranslatableString &XMLFileReader::GetLibraryErrorStr() const
+{
+   return mLibraryErrorStr;
 }
 
 // static

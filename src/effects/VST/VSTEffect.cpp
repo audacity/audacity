@@ -3437,7 +3437,7 @@ bool VSTEffect::LoadXML(const wxFileName & fn)
    if (!ok)
    {
       // Inform user of load failure
-      AudacityMessageBox(reader.GetErrorStr(),
+      AudacityMessageBox(reader.GetErrorStr().Translation(),
                    _("Error Loading VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);

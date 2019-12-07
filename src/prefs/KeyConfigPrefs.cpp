@@ -358,7 +358,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
 
    XMLFileReader reader;
    if (!reader.Parse(mManager, file)) {
-      AudacityMessageBox(reader.GetErrorStr(),
+      AudacityMessageBox(reader.GetErrorStr().Translation(),
                    _("Error Importing Keyboard Shortcuts"),
                    wxOK | wxCENTRE, this);
    }

@@ -1268,7 +1268,7 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
    XMLFileReader reader;
    if (!reader.Parse(&mLocal, fn)) {
       // Inform user of load failure
-      AudacityMessageBox(reader.GetErrorStr(),
+      AudacityMessageBox(reader.GetErrorStr().Translation(),
                    _("Error Loading Metadata"),
                    wxOK | wxCENTRE,
                    this);
