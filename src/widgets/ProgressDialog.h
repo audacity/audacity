@@ -58,12 +58,12 @@ public:
    ProgressDialog();
 
    // Display a simple message.
-   ProgressDialog(const wxString & title,
-                  const wxString & message = {},
+   ProgressDialog(const TranslatableString & title,
+                  const TranslatableString & message = {},
                   int flags = pdlgDefaultFlags,
-                  const wxString & sRemainingLabelText = {});
+                  const TranslatableString & sRemainingLabelText = {});
 
-   using MessageColumn = std::vector< wxString >;
+   using MessageColumn = std::vector< TranslatableString >;
    using MessageTable = std::vector< MessageColumn >;
 
 protected:
@@ -72,36 +72,39 @@ protected:
    // Each member of a column is a string that should have no newlines,
    // and each column should have the same number of elements, to make
    // proper correspondences, but this is not checked.
-   ProgressDialog(const wxString & title,
+   ProgressDialog(const TranslatableString & title,
                   const MessageTable & columns,
                   int flags = pdlgDefaultFlags,
-                  const wxString & sRemainingLabelText = {});
+                  const TranslatableString & sRemainingLabelText = {});
 
 public:
    virtual ~ProgressDialog();
 
-   bool Create(const wxString & title,
-               const wxString & message = {},
+   bool Create(const TranslatableString & title,
+               const TranslatableString & message = {},
                int flags = pdlgDefaultFlags,
-               const wxString & sRemainingLabelText = {});
+               const TranslatableString & sRemainingLabelText = {});
 
    void Reinit();
 
 protected:
-   bool Create(const wxString & title,
+   bool Create(const TranslatableString & title,
                const MessageTable & columns,
                int flags = pdlgDefaultFlags,
-               const wxString & sRemainingLabelText = {});
+               const TranslatableString & sRemainingLabelText = {});
 
 public:
-   ProgressResult Update(int value, const wxString & message = {});
-   ProgressResult Update(double current, const wxString & message = {});
-   ProgressResult Update(double current, double total, const wxString & message = {});
-   ProgressResult Update(wxULongLong_t current, wxULongLong_t total, const wxString & message = {});
-   ProgressResult Update(wxLongLong current, wxLongLong total, const wxString & message = {});
-   ProgressResult Update(wxLongLong_t current, wxLongLong_t total, const wxString & message = {});
-   ProgressResult Update(int current, int total, const wxString & message = {});
-   void SetMessage(const wxString & message);
+   ProgressResult Update(int value, const TranslatableString & message = {});
+   ProgressResult Update(double current, const TranslatableString & message = {});
+   ProgressResult Update(double current, double total, const TranslatableString & message = {});
+   ProgressResult Update(wxULongLong_t current, wxULongLong_t total, const TranslatableString & message = {});
+   ProgressResult Update(wxLongLong current, wxLongLong total, const TranslatableString & message = {});
+   ProgressResult Update(wxLongLong_t current, wxLongLong_t total, const TranslatableString & message = {});
+   ProgressResult Update(int current, int total, const TranslatableString & message = {});
+
+   void SetMessage(const TranslatableString & message);
+   // overloads and hides the inherited function that takes naked wxString:
+   void SetTitle(const TranslatableString & title);
 
 protected:
    wxWindowRef mHadFocus;
@@ -156,10 +159,10 @@ class AUDACITY_DLL_API TimerProgressDialog final : public ProgressDialog
 {
 public:
    TimerProgressDialog(const wxLongLong_t duration,
-                       const wxString &title,
+                       const TranslatableString &title,
                        const MessageTable & columns,
                        int flags = pdlgDefaultFlags,
-                       const wxString & sRemainingLabelText = {});
+                       const TranslatableString & sRemainingLabelText = {});
 
    // Oh no, there is an inherited nullary "Update" in wxDialog!
    // Choose another name then...

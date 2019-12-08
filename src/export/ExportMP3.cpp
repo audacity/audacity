@@ -1879,24 +1879,24 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
          channels, inSamples, true,
          rate, int16Sample, true, mixerSpec);
 
-      wxString title;
+      TranslatableString title;
       if (rmode == MODE_SET) {
-         title.Printf(selectionOnly ?
-            _("Exporting selected audio with %s preset") :
-            _("Exporting the audio with %s preset"),
-            setRateNamesShort[brate].Translation());
+         title = (selectionOnly ?
+            XO("Exporting selected audio with %s preset") :
+            XO("Exporting the audio with %s preset"))
+               .Format( setRateNamesShort[brate] );
       }
       else if (rmode == MODE_VBR) {
-         title.Printf(selectionOnly ?
-            _("Exporting selected audio with VBR quality %s") :
-            _("Exporting the audio with VBR quality %s"),
-            varRateNames[brate].Translation());
+         title = (selectionOnly ?
+            XO("Exporting selected audio with VBR quality %s") :
+            XO("Exporting the audio with VBR quality %s"))
+               .Format( varRateNames[brate] );
       }
       else {
-         title.Printf(selectionOnly ?
-            _("Exporting selected audio at %d Kbps") :
-            _("Exporting the audio at %d Kbps"),
-            brate);
+         title = (selectionOnly ?
+            XO("Exporting selected audio at %d Kbps") :
+            XO("Exporting the audio at %d Kbps"))
+               .Format( brate );
       }
 
       InitProgress( pDialog, fName, title );

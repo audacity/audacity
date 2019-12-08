@@ -156,8 +156,8 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
 
    auto updateResult = ProgressResult::Success;
    {
-      ProgressDialog progress(_("Mix and Render"),
-         _("Mixing and rendering tracks"));
+      ProgressDialog progress(XO("Mix and Render"),
+         XO("Mixing and rendering tracks"));
 
       while (updateResult == ProgressResult::Success) {
          auto blockLen = mixer.Process(maxBlockLen);

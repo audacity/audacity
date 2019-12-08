@@ -1347,10 +1347,10 @@ bool NyquistEffect::ProcessOne()
    // so notify the user that process has completed (bug 558)
    if ((rval != nyx_audio) && ((mCount + mCurNumChannels) == mNumSelectedChannels)) {
       if (mCurNumChannels == 1) {
-         TrackProgress(mCount, 1.0, _("Processing complete."));
+         TrackProgress(mCount, 1.0, XO("Processing complete."));
       }
       else {
-         TrackGroupProgress(mCount, 1.0, _("Processing complete."));
+         TrackGroupProgress(mCount, 1.0, XO("Processing complete."));
       }
    }
 

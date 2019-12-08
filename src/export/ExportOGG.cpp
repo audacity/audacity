@@ -283,8 +283,8 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
 
       InitProgress( pDialog, fName,
          selectionOnly
-            ? _("Exporting the selected audio as Ogg Vorbis")
-            : _("Exporting the audio as Ogg Vorbis") );
+            ? XO("Exporting the selected audio as Ogg Vorbis")
+            : XO("Exporting the audio as Ogg Vorbis") );
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success && !eos) {

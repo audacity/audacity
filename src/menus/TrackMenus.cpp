@@ -762,11 +762,9 @@ void OnResample(const CommandContext &context)
    auto flags = UndoPush::AUTOSAVE;
    for (auto wt : tracks.Selected< WaveTrack >())
    {
-      wxString msg;
+      auto msg = XO("Resampling track %d").Format( ++ndx );
 
-      msg.Printf(_("Resampling track %d"), ++ndx);
-
-      ProgressDialog progress(_("Resample"), msg);
+      ProgressDialog progress(XO("Resample"), msg);
 
       // The resampling of a track may be stopped by the user.  This might
       // leave a track with multiple clips in a partially resampled state.

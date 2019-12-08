@@ -806,7 +806,8 @@ void ImportFileHandle::CreateProgress()
 {
    wxFileName ff( mFilename );
 
-   auto title = XO("Importing %s").Format( GetFileDescription() ).Translation();
-   mProgress = std::make_unique< ProgressDialog >( title, ff.GetFullName() );
+   auto title = XO("Importing %s").Format( GetFileDescription() );
+   mProgress = std::make_unique< ProgressDialog >(
+      title, TranslatableString{ ff.GetFullName() } );
 }
 

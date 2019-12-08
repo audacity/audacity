@@ -181,15 +181,15 @@ bool EffectNormalize::Process()
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
    double progress = 0;
-   wxString topMsg;
+   TranslatableString topMsg;
    if(mDC && mGain)
-      topMsg = _("Removing DC offset and Normalizing...\n");
+      topMsg = XO("Removing DC offset and Normalizing...\n");
    else if(mDC && !mGain)
-      topMsg = _("Removing DC offset...\n");
+      topMsg = XO("Removing DC offset...\n");
    else if(!mDC && mGain)
-      topMsg = _("Normalizing without removing DC offset...\n");
+      topMsg = XO("Normalizing without removing DC offset...\n");
    else if(!mDC && !mGain)
-      topMsg = _("Not doing anything...\n");   // shouldn't get here
+      topMsg = XO("Not doing anything...\n");   // shouldn't get here
 
    for ( auto track : mOutputTracks->Selected< WaveTrack >()
             + ( mStereoInd ? &Track::Any : &Track::IsLeader ) ) {
@@ -216,15 +216,13 @@ bool EffectNormalize::Process()
          extent = std::numeric_limits<float>::lowest();
          std::vector<float> offsets;
 
-         wxString msg;
-         if (range.size() == 1)
+         auto msg = (range.size() == 1)
             // mono or 'stereo tracks independently'
-            msg = topMsg +
-               wxString::Format( _("Analyzing: %s"), trackName );
-         else
-            msg = topMsg +
+            ? topMsg +
+               XO("Analyzing: %s").Format( trackName )
+            : topMsg +
                // TODO: more-than-two-channels-message
-               wxString::Format( _("Analyzing first track of stereo pair: %s"), trackName);
+               XO("Analyzing first track of stereo pair: %s").Format( trackName );
          
          // Analysis loop over channels collects offsets and extent
          for (auto channel : range) {
@@ -238,7 +236,7 @@ bool EffectNormalize::Process()
             offsets.push_back(offset);
             // TODO: more-than-two-channels-message
             msg = topMsg +
-               wxString::Format( _("Analyzing second track of stereo pair: %s"), trackName );
+               XO("Analyzing second track of stereo pair: %s").Format( trackName );
          }
 
          // Compute the multiplier using extent
@@ -252,17 +250,17 @@ bool EffectNormalize::Process()
             if (TrackList::Channels(track).size() == 1)
                // really mono
                msg = topMsg +
-                  wxString::Format( _("Processing: %s"), trackName );
+                  XO("Processing: %s").Format( trackName );
             else
                //'stereo tracks independently'
                // TODO: more-than-two-channels-message
                msg = topMsg +
-                  wxString::Format( _("Processing stereo channels independently: %s"), trackName);
+                  XO("Processing stereo channels independently: %s").Format( trackName );
          }
          else
             msg = topMsg +
                // TODO: more-than-two-channels-message
-               wxString::Format( _("Processing first track of stereo pair: %s"), trackName);
+               XO("Processing first track of stereo pair: %s").Format( trackName );
 
          // Use multiplier in the second, processing loop over channels
          auto pOffset = offsets.begin();
@@ -272,7 +270,7 @@ bool EffectNormalize::Process()
                goto break2;
             // TODO: more-than-two-channels-message
             msg = topMsg +
-               wxString::Format( _("Processing second track of stereo pair: %s"), trackName);
+               XO("Processing second track of stereo pair: %s").Format( trackName );
          }
       }
    }
@@ -359,7 +357,7 @@ bool EffectNormalize::TransferDataFromWindow()
 
 // EffectNormalize implementation
 
-bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
+bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableString &msg,
                                    double &progress, float &offset, float &extent)
 {
    bool result = true;
@@ -373,7 +371,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
       while (ProjectFileManager::GetODFlags( *track )) {
          // update the gui
          if (ProgressResult::Cancelled == mProgress->Update(
-            0, _("Waiting for waveform to finish computing...")) )
+            0, XO("Waiting for waveform to finish computing...")) )
             return false;
          wxMilliSleep(100);
       }
@@ -409,7 +407,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
 
 //AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 //and executes selected AnalyseOperation on it...
-bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const wxString &msg,
+bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const TranslatableString &msg,
                                 double &progress, AnalyseOperation op, float &offset)
 {
    bool rc = true;
@@ -477,7 +475,7 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const wxString &
 // uses mMult and offset to normalize a track.
 // mMult must be set before this is called
 bool EffectNormalize::ProcessOne(
-   WaveTrack * track, const wxString &msg, double &progress, float offset)
+   WaveTrack * track, const TranslatableString &msg, double &progress, float offset)
 {
    bool rc = true;
 

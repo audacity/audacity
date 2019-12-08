@@ -144,9 +144,9 @@ protected:
 
    // Create or recycle a dialog.
    static void InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
-         const wxString &title, const wxString &message);
+         const TranslatableString &title, const TranslatableString &message);
    static void InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
-         const wxFileNameWrapper &title, const wxString &message);
+         const wxFileNameWrapper &title, const TranslatableString &message);
 
 private:
    std::vector<FormatInfo> mFormatInfos;

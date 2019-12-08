@@ -174,7 +174,7 @@ bool EffectLoudness::Process()
    // Iterate over each track
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
-   wxString topMsg = _("Normalizing Loudness...\n");
+   auto topMsg = XO("Normalizing Loudness...\n");
 
    AllocBuffers();
    mProgressVal = 0;
@@ -200,7 +200,7 @@ bool EffectLoudness::Process()
       mSteps = 2;
 
       mProgressMsg =
-         topMsg + wxString::Format(_("Analyzing: %s"), trackName);
+         topMsg + XO("Analyzing: %s").Format( trackName );
 
       auto range = mStereoInd
          ? TrackList::SingletonRange(track)
@@ -258,7 +258,7 @@ bool EffectLoudness::Process()
          mMult = sqrt(mMult);
       }
 
-      mProgressMsg = topMsg + wxString::Format(_("Processing: %s"), trackName);
+      mProgressMsg = topMsg + XO("Processing: %s").Format( trackName );
       if(!ProcessOne(range, false))
       {
          // Processing failed -> abort
@@ -394,7 +394,7 @@ bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
    while (ProjectFileManager::GetODFlags(*track)) {
       // update the gui
       if (ProgressResult::Cancelled == mProgress->Update(
-         0, _("Waiting for waveform to finish computing...")) )
+         0, XO("Waiting for waveform to finish computing...")) )
          return false;
       wxMilliSleep(100);
    }

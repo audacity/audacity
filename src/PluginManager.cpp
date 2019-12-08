@@ -982,15 +982,14 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                     mLongestPath + wxT("\n") +
                     mLongestPath + wxT("\n");
 
-   wxString msg;
-
-   msg.Printf(_("Enabling effects or commands:\n\n%s"), last3);
+   auto msg = XO("Enabling effects or commands:\n\n%s").Format( last3 );
 
    // Make sure the progress dialog is deleted before we call EndModal() or
    // we will leave the project window in an unusable state on OSX.
    // See bug #1192.
    {
-      ProgressDialog progress(GetTitle(), msg, pdlgHideStopButton);
+      ProgressDialog progress(
+         TranslatableString{ GetTitle() }, msg, pdlgHideStopButton);
       progress.CenterOnParent();
 
       int i = 0;
@@ -1002,7 +1001,8 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
          if (item.state == STATE_Enabled && item.plugs[0]->GetPluginType() == PluginTypeStub)
          {
             last3 = last3.AfterFirst(wxT('\n')) + item.path + wxT("\n");
-            auto status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect or command:\n\n%s"), last3));
+            auto status = progress.Update(++i, enableCount,
+               XO("Enabling effect or command:\n\n%s").Format( last3 ));
             if (status == ProgressResult::Cancelled)
             {
                break;

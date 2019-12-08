@@ -208,10 +208,10 @@ bool AudacityCommand::DoAudacityCommand(wxWindow *parent,
    bool skipFlag = CheckWhetherSkipAudacityCommand();
    if (skipFlag == false)
    {
-      auto name = GetTranslatedName();
+      auto name = GetUntranslatedName();
       ProgressDialog progress{
          name,
-         wxString::Format(_("Applying %s..."), name),
+         XO("Applying %s...").Format( name ),
          pdlgHideStopButton
       };
       auto vr = valueRestorer( mProgress, &progress );

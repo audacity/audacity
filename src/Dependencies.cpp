@@ -170,9 +170,9 @@ static void RemoveDependencies(AudacityProject *project,
    auto &dirManager = DirManager::Get( *project );
    const auto &settings = ProjectSettings::Get( *project );
 
-   ProgressDialog progress
-      (_("Removing Dependencies"),
-      _("Copying audio data into project..."));
+   ProgressDialog progress(
+      XO("Removing Dependencies"),
+      XO("Copying audio data into project..."));
    auto updateResult = ProgressResult::Success;
 
    // Hash aliasedFiles based on their full paths and

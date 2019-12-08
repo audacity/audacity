@@ -271,7 +271,7 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
 }
 
 void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
-   const wxString &title, const wxString &message)
+   const TranslatableString &title, const TranslatableString &message)
 {
    if (!pDialog)
       pDialog = std::make_unique<ProgressDialog>( title, message );
@@ -283,9 +283,10 @@ void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
 }
 
 void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
-   const wxFileNameWrapper &title, const wxString &message)
+   const wxFileNameWrapper &title, const TranslatableString &message)
 {
-   return InitProgress( pDialog, title.GetName(), message );
+   return InitProgress(
+      pDialog, TranslatableString{ title.GetName() }, message );
 }
 
 //----------------------------------------------------------------------------
