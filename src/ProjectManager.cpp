@@ -1020,7 +1020,7 @@ void ProjectManager::OnStatusChange( wxCommandEvent &evt )
 
    auto field = static_cast<StatusBarField>( evt.GetInt() );
    const auto &msg = ProjectStatus::Get( project ).Get( field );
-   window.GetStatusBar()->SetStatusText(msg, field);
+   window.GetStatusBar()->SetStatusText(msg.Translation(), field);
    
    if ( field == mainStatusBarField )
       // When recording, let the NEW status message stay at least as long as

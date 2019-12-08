@@ -65,7 +65,7 @@ bool SelectHandle::IsClicked() const
 namespace
 {
    // If we're in OnDemand mode, we may change the tip.
-   void MaySetOnDemandTip(const Track * t, wxString &tip)
+   void MaySetOnDemandTip(const Track * t, TranslatableString &tip)
    {
       wxASSERT(t);
       //For OD regions, we need to override and display the percent complete for this task.
@@ -312,7 +312,7 @@ namespace
 
    void SetTipAndCursorForBoundary
       (SelectionBoundary boundary, bool frequencySnapping,
-       wxString &tip, wxCursor *&pCursor)
+       TranslatableString &tip, wxCursor *&pCursor)
    {
       static wxCursor adjustLeftSelectionCursor{ wxCURSOR_POINT_LEFT };
       static wxCursor adjustRightSelectionCursor{ wxCURSOR_POINT_RIGHT };
@@ -329,20 +329,20 @@ namespace
          pCursor = SelectCursor();
          break;
       case SBLeft:
-         tip = _("Click and drag to move left selection boundary.");
+         tip = XO("Click and drag to move left selection boundary.");
          pCursor = &adjustLeftSelectionCursor;
          break;
       case SBRight:
-         tip = _("Click and drag to move right selection boundary.");
+         tip = XO("Click and drag to move right selection boundary.");
          pCursor = &adjustRightSelectionCursor;
          break;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       case SBBottom:
-         tip = _("Click and drag to move bottom selection frequency.");
+         tip = XO("Click and drag to move bottom selection frequency.");
          pCursor = &*bottomFrequencyCursor;
          break;
       case SBTop:
-         tip = _("Click and drag to move top selection frequency.");
+         tip = XO("Click and drag to move top selection frequency.");
          pCursor = &*topFrequencyCursor;
          break;
       case SBCenter:
@@ -350,8 +350,8 @@ namespace
 #ifndef SPECTRAL_EDITING_ESC_KEY
          tip =
             frequencySnapping ?
-            _("Click and drag to move center selection frequency to a spectral peak.") :
-            _("Click and drag to move center selection frequency.");
+            XO("Click and drag to move center selection frequency to a spectral peak.") :
+            XO("Click and drag to move center selection frequency.");
 
 #else
          shiftDown;
@@ -365,7 +365,7 @@ namespace
       }
       break;
       case SBWidth:
-         tip = _("Click and drag to adjust frequency bandwidth.");
+         tip = XO("Click and drag to adjust frequency bandwidth.");
          pCursor = &*bandWidthCursor;
          break;
 #endif
@@ -909,7 +909,7 @@ HitTestPreview SelectHandle::Preview
    if (!pTrack)
       return {};
 
-   wxString tip;
+   TranslatableString tip;
    wxCursor *pCursor = SelectCursor();
    if ( IsClicked() )
       // Use same cursor as at the clck
@@ -942,9 +942,8 @@ HitTestPreview SelectHandle::Preview
             keyStr = _("Edit, Preferences...");
          
          /* i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac */
-         tip = wxString::Format(
-            _("Multi-Tool Mode: %s for Mouse and Keyboard Preferences."),
-            keyStr);
+         tip = XO("Multi-Tool Mode: %s for Mouse and Keyboard Preferences.")
+            .Format( keyStr );
          // Later in this function we may point to some other string instead.
          if (!pTrack->GetSelected() ||
              !viewInfo.bAdjustSelectionEdges)
@@ -974,7 +973,7 @@ HitTestPreview SelectHandle::Preview
       if ((mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
          isSpectralSelectionView(pView)) {
          // Not shift-down, but center frequency snapping toggle is on
-         tip = _("Click and drag to set frequency bandwidth.");
+         tip = XO("Click and drag to set frequency bandwidth.");
          pCursor = &*envelopeCursor;
          return {};
       }
@@ -997,12 +996,13 @@ HitTestPreview SelectHandle::Preview
       MaySetOnDemandTip(pTrack.get(), tip);
    }
    if (tip.empty()) {
-      tip = _("Click and drag to select audio");
+      tip = XO("Click and drag to select audio");
    }
    if (HasEscape() && mUseSnap) {
-      tip += wxT(" ") +
+      tip.Join(
 /* i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries */
-        _("(snapping)");
+        XO("(snapping)"), wxT(" ")
+      );
    }
    return { tip, pCursor };
 }

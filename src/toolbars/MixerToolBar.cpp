@@ -293,25 +293,21 @@ void MixerToolBar::AdjustInputGain(int adj)
 void MixerToolBar::SetToolTips()
 {
    if (mInputSlider->IsEnabled()) {
-      mInputSlider->SetToolTipTemplate(_("Recording Volume: %.2f"));
+      mInputSlider->SetToolTipTemplate(XO("Recording Volume: %.2f"));
    }
    else {
-      mInputSlider->SetToolTipTemplate(_("Recording Volume (Unavailable; use system mixer.)"));
+      mInputSlider->SetToolTipTemplate(XO("Recording Volume (Unavailable; use system mixer.)"));
    }
 
    if (mOutputSlider->IsEnabled()) {
-      wxString format;
-      auto gAudioIO = AudioIO::Get();
-      if (gAudioIO->OutputMixerEmulated())
-         format = _("Playback Volume: %s (emulated)");
-      else
-         format = _("Playback Volume: %s");
+      auto format = (AudioIO::Get()->OutputMixerEmulated()
+         ? XO("Playback Volume: %.2f (emulated)")
+         : XO("Playback Volume: %.2f"));
 
-      mOutputSlider->SetToolTipTemplate(
-         wxString::Format( format, "%.2f" ) );
+      mOutputSlider->SetToolTipTemplate( format );
    }
    else {
-      mOutputSlider->SetToolTipTemplate(_("Playback Volume (Unavailable; use system mixer.)"));
+      mOutputSlider->SetToolTipTemplate(XO("Playback Volume (Unavailable; use system mixer.)"));
    }
 }
 

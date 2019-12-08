@@ -153,7 +153,7 @@ private:
    bool mStopping{ false };
 
    int mDisplayedRate{ 0 };
-   static std::pair< std::vector< wxString >, unsigned >
+   static std::pair< TranslatableStrings, unsigned >
       StatusWidthFunction(
          const AudacityProject &project, StatusBarField field);
 };

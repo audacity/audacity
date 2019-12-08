@@ -45,8 +45,8 @@ HitTestPreview CutlineHandle::HitPreview(bool cutline, bool unsafe)
    static wxCursor arrowCursor{ wxCURSOR_ARROW };
    return {
       (cutline
-       ? _("Left-Click to expand, Right-Click to remove")
-       : _("Left-Click to merge clips")),
+       ? XO("Left-Click to expand, Right-Click to remove")
+       : XO("Left-Click to merge clips")),
       (unsafe
        ? &*disabledCursor
        : &arrowCursor)

@@ -626,7 +626,7 @@ protected:
 
       static wxCursor cursor{ wxCURSOR_SIZEWE };
       return {
-         _( "Click and drag to adjust, double-click to reset" ),
+         XO( "Click and drag to adjust, double-click to reset" ),
          &cursor,
          XO( "Record/Play head" )
       };
@@ -1501,7 +1501,7 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview
    auto message = ScrubbingMessage(scrubber, mClicked == Button::Left);
 
    return {
-      message.Translation(),
+      message,
       {},
       // Tooltip is same as status message, or blank
       ((mParent && mParent->mTimelineToolTip) ? message : TranslatableString{}),
@@ -1543,7 +1543,7 @@ auto AdornedRulerPanel::QPHandle::Preview
                state.state.m_x, mParent->mOldPlayRegion.GetEnd());
    
    return {
-      message.Translation(),
+      message,
       showArrows ? &cursorSizeWE : &cursorHand,
       tooltip,
    };
@@ -2307,7 +2307,7 @@ void AdornedRulerPanel::ProcessUIHandleResult
       DrawBothOverlays();
 }
 
-void AdornedRulerPanel::UpdateStatusMessage( const wxString &message )
+void AdornedRulerPanel::UpdateStatusMessage( const TranslatableString &message )
 {
    ProjectStatus::Get( *GetProject() ).Set(message);
 }

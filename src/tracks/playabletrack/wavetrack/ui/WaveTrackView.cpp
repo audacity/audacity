@@ -323,7 +323,7 @@ public:
    {
       static wxCursor resizeCursor{ wxCURSOR_SIZENS };
       return {
-         _("Click and drag to adjust sizes of sub-views."),
+         XO("Click and drag to adjust sizes of sub-views."),
          &resizeCursor
       };
    }

@@ -22,6 +22,7 @@ class TrackPanelGroup;
 class TrackPanelNode;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
+class TranslatableString;
 
 class UIHandle;
 using UIHandlePtr = std::shared_ptr<UIHandle>;
@@ -55,7 +56,7 @@ public:
    (TrackPanelCell *pClickedCell, TrackPanelCell *pLatestCell,
     unsigned refreshResult) = 0;
    
-   virtual void UpdateStatusMessage( const wxString & )  = 0;
+   virtual void UpdateStatusMessage( const TranslatableString & )  = 0;
    
 public:
    // Structure and functions for generalized visitation of the subdivision

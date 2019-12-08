@@ -35,13 +35,13 @@ HitTestPreview TrackPanelResizeHandle::HitPreview(bool bLinked)
       // is shorter when it is between stereo tracks).
 
       return {
-         _("Click and drag to adjust relative size of stereo tracks."),
+         XO("Click and drag to adjust relative size of stereo tracks."),
          &resizeCursor
       };
    }
    else {
       return {
-         _("Click and drag to resize the track."),
+         XO("Click and drag to resize the track."),
          &resizeCursor
       };
    }

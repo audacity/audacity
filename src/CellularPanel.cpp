@@ -271,8 +271,7 @@ void CellularPanel::HandleMotion
    auto oldCell = state.mLastCell.lock();
    auto oldHandle = Target();
 
-   wxString status{};
-   TranslatableString tooltip{};
+   TranslatableString status, tooltip;
    wxCursor *pCursor{};
    unsigned refreshCode = 0;
 
@@ -386,7 +385,7 @@ void CellularPanel::HandleMotion
    }
    else if ( oldCell || oldHandle )
       // Leaving a cell or hit test target with no replacement
-      UpdateStatusMessage( wxString{} );
+      UpdateStatusMessage( {} );
 
    if (newCell)
       ProcessUIHandleResult(newCell.get(), newCell.get(), refreshCode);

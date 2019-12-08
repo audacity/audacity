@@ -59,7 +59,7 @@ HitTestPreview SampleHandle::HitPreview
 
    // TODO:  message should also mention the brush.  Describing the modifier key
    // (alt, or other) varies with operating system.
-   auto message = _("Click and drag to edit the samples");
+   auto message = XO("Click and drag to edit the samples");
 
    return {
       message,

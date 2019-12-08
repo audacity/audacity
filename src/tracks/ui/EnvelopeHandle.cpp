@@ -256,11 +256,9 @@ HitTestPreview EnvelopeHandle::Preview
    static auto envelopeCursor =
       ::MakeCursor(wxCURSOR_ARROW, EnvCursorXpm, 16, 16);
 
-   wxString message;
-   if (mTimeTrack)
-      message = _("Click and drag to warp playback time");
-   else
-      message = _("Click and drag to edit the amplitude envelope");
+   auto message = mTimeTrack
+      ? XO("Click and drag to warp playback time")
+      : XO("Click and drag to edit the amplitude envelope");
 
    return {
       message,

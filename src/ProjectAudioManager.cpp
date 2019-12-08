@@ -73,10 +73,10 @@ ProjectAudioManager::ProjectAudioManager( AudacityProject &project )
 
 ProjectAudioManager::~ProjectAudioManager() = default;
 
-static wxString FormatRate( int rate )
+static TranslatableString FormatRate( int rate )
 {
    if (rate > 0) {
-      return wxString::Format(_("Actual Rate: %d"), rate);
+      return XO("Actual Rate: %d").Format( rate );
    }
    else
       // clear the status field
@@ -804,7 +804,7 @@ void ProjectAudioManager::OnAudioIORate(int rate)
 
    mDisplayedRate = rate;
 
-   wxString display = FormatRate( rate );
+   auto display = FormatRate( rate );
 
    ProjectStatus::Get( project ).Set( display, rateStatusBarField );
 }

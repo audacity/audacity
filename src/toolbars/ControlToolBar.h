@@ -97,7 +97,7 @@ class ControlToolBar final : public ToolBar {
                             teBmps eDisabled);
 
    void ArrangeButtons();
-   wxString StateForStatusBar();
+   TranslatableString StateForStatusBar();
 
    enum
    {

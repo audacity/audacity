@@ -46,10 +46,10 @@ public:
    ProjectStatus &operator= ( const ProjectStatus & ) = delete;
    ~ProjectStatus() override;
 
-   // Type of a function to report translated strings, and also report an extra
+   // Type of a function to report translatable strings, and also report an extra
    // margin, to request that the corresponding field of the status bar should
    // be wide enough to contain any of those strings plus the margin.
-   using StatusWidthResult = std::pair< std::vector<wxString>, unsigned >;
+   using StatusWidthResult = std::pair< std::vector<TranslatableString>, unsigned >;
    using StatusWidthFunction = std::function<
       StatusWidthResult( const AudacityProject &, StatusBarField )
    >;
@@ -64,11 +64,11 @@ public:
 
    static const StatusWidthFunctions &GetStatusWidthFunctions();
 
-   const wxString &Get( StatusBarField field = mainStatusBarField ) const;
-   void Set(const wxString &msg,
+   const TranslatableString &Get( StatusBarField field = mainStatusBarField ) const;
+   void Set(const TranslatableString &msg,
       StatusBarField field = mainStatusBarField);
 
 private:
    AudacityProject &mProject;
-   wxString mLastStatusMessages[ nStatusBarFields ];
+   TranslatableString mLastStatusMessages[ nStatusBarFields ];
 };

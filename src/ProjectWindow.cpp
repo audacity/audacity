@@ -1224,7 +1224,7 @@ void ProjectWindow::UpdateStatusWidths()
             function( mProject, static_cast< StatusBarField >( ii ) );
          for ( const auto &string : results.first ) {
             int w;
-            statusBar->GetTextExtent(string, &w, nullptr);
+            statusBar->GetTextExtent(string.Translation(), &w, nullptr);
             width = std::max<int>( width, w + results.second );
          }
       }

@@ -65,8 +65,8 @@ HitTestPreview WaveTrackVZoomHandle::HitPreview(const wxMouseState &state)
    gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
    bVZoom &= !state.RightIsDown();
    const auto message = bVZoom ? 
-      _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.") :
-      _("Right-click for menu.");
+      XO("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.") :
+      XO("Right-click for menu.");
 
    return {
       message,

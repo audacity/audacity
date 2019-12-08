@@ -96,7 +96,6 @@ static const TranslatableString
      sStatePlay = XO("Playing")
    , sStateStop = XO("Stopped")
    , sStateRecord = XO("Recording")
-   , sStatePause = XO("Paused")
 ;
 
 //Standard constructor
@@ -687,14 +686,12 @@ registeredStatusWidthFunction{
       -> ProjectStatus::StatusWidthResult
    {
       if ( field == stateStatusBarField ) {
-         const auto pauseString = wxT(" ") + sStatePause.Translation();
-
-         std::vector<wxString> strings;
+         TranslatableStrings strings;
          for ( auto pString :
             { &sStatePlay, &sStateStop, &sStateRecord } )
          {
             strings.push_back(
-               pString->Translation() + pauseString + wxT(".") );
+               XO("%s Paused.").Format(*pString) );
          }
 
          // added constant needed because xMax isn't large enough for some reason, plus some space.
@@ -704,9 +701,9 @@ registeredStatusWidthFunction{
    }
 };
 
-wxString ControlToolBar::StateForStatusBar()
+TranslatableString ControlToolBar::StateForStatusBar()
 {
-   wxString state;
+   TranslatableString state;
    auto &projectAudioManager = ProjectAudioManager::Get( mProject );
 
    auto pProject = &mProject;
@@ -714,23 +711,16 @@ wxString ControlToolBar::StateForStatusBar()
       ? Scrubber::Get( *pProject ).GetUntranslatedStateString()
       : TranslatableString{};
    if (!scrubState.empty())
-      state = scrubState.Translation();
+      state = scrubState;
    else if (mPlay->IsDown())
-      state = sStatePlay.Translation();
+      state = sStatePlay;
    else if (projectAudioManager.Recording())
-      state = sStateRecord.Translation();
+      state = sStateRecord;
    else
-      state = sStateStop.Translation();
+      state = sStateStop;
 
-   if (mPause->IsDown())
-   {
-      state.Append(wxT(" "));
-      state.Append(sStatePause.Translation());
-   }
-
-   state.Append(wxT("."));
-
-   return state;
+   return ((mPause->IsDown()) ? XO("%s Paused.") : XO("%s."))
+      .Format( state );
 }
 
 void ControlToolBar::UpdateStatusBar()

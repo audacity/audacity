@@ -46,14 +46,14 @@ HitTestPreview ZoomHandle::HitPreview
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomInCursorXpm, 19, 15);
    static auto zoomOutCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
-   wxString message;
+   TranslatableString message;
    // TODO:  Why not mention middle click to zoom normal on Windows too?
 #if defined( __WXMAC__ )
-   message = _("Click to Zoom In, Shift-Click to Zoom Out");
+   message = XO("Click to Zoom In, Shift-Click to Zoom Out");
 #elif defined( __WXMSW__ )
-   message = _("Drag to Zoom Into Region, Right-Click to Zoom Out");
+   message = XO("Drag to Zoom Into Region, Right-Click to Zoom Out");
 #elif defined( __WXGTK__ )
-   message = _("Left=Zoom In, Right=Zoom Out, Middle=Normal");
+   message = XO("Left=Zoom In, Right=Zoom Out, Middle=Normal");
 #endif
    return {
       message,

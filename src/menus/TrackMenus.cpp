@@ -1169,7 +1169,7 @@ void OnTrackClose(const CommandContext &context)
    if (isAudioActive)
    {
       ProjectStatus::Get( project ).Set(
-         _("Can't delete track with active audio"));
+         XO("Can't delete track with active audio"));
       wxBell();
       return;
    }

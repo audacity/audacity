@@ -87,8 +87,8 @@ HitTestPreview LabelGlyphHandle::HitPreview(bool hitCenter)
    static wxCursor arrowCursor{ wxCURSOR_ARROW };
    return {
       (hitCenter
-         ? _("Drag one or more label boundaries.")
-         : _("Drag label boundary.")),
+         ? XO("Drag one or more label boundaries.")
+         : XO("Drag label boundary.")),
       &arrowCursor
    };
 }

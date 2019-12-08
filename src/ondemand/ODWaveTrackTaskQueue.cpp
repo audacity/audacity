@@ -304,15 +304,20 @@ ODTask* ODWaveTrackTaskQueue::GetFrontTask()
 }
 
 ///fills in the status bar message for a given track
-void ODWaveTrackTaskQueue::FillTipForWaveTrack( const WaveTrack * t, wxString &tip )
+void ODWaveTrackTaskQueue::FillTipForWaveTrack(
+   const WaveTrack * t, TranslatableString &tip )
 {
    if(ContainsWaveTrack(t) && GetNumTasks())
    {
 
     //  if(GetNumTasks()==1)
-      mTipMsg.Printf(_("%s %2.0f%% complete. Click to change task focal point."), GetFrontTask()->GetTip(), GetFrontTask()->PercentComplete()*100.0 );
+      mTipMsg = XO("%s %2.0f%% complete. Click to change task focal point.")
+         .Format(
+            GetFrontTask()->GetTip(),
+            GetFrontTask()->PercentComplete()*100.0 );
      // else
-       //  msg.Printf(_("%s %d additional tasks remaining."), GetFrontTask()->GetTip(), GetNumTasks());
+       //  msg = XO("%s %d additional tasks remaining.")
+       //     .Format( GetFrontTask()->GetTip(), GetNumTasks());
 
       tip = mTipMsg;
 
