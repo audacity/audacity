@@ -63,9 +63,9 @@ ComponentInterfaceSymbol EffectRepeat::GetSymbol()
    return REPEAT_PLUGIN_SYMBOL;
 }
 
-wxString EffectRepeat::GetDescription()
+TranslatableString EffectRepeat::GetDescription()
 {
-   return _("Repeats the selection the specified number of times");
+   return XO("Repeats the selection the specified number of times");
 }
 
 wxString EffectRepeat::ManualPage()

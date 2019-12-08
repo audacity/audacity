@@ -80,9 +80,9 @@ ComponentInterfaceSymbol EffectLoudness::GetSymbol()
    return LOUDNESS_PLUGIN_SYMBOL;
 }
 
-wxString EffectLoudness::GetDescription()
+TranslatableString EffectLoudness::GetDescription()
 {
-   return _("Sets the loudness of one or more tracks");
+   return XO("Sets the loudness of one or more tracks");
 }
 
 wxString EffectLoudness::ManualPage()

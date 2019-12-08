@@ -97,9 +97,9 @@ ComponentInterfaceSymbol EffectWahwah::GetSymbol()
    return WAHWAH_PLUGIN_SYMBOL;
 }
 
-wxString EffectWahwah::GetDescription()
+TranslatableString EffectWahwah::GetDescription()
 {
-   return _("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
+   return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
 }
 
 wxString EffectWahwah::ManualPage()

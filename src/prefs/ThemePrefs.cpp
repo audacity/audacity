@@ -77,9 +77,9 @@ ComponentInterfaceSymbol ThemePrefs::GetSymbol()
    return THEME_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString ThemePrefs::GetDescription()
+TranslatableString ThemePrefs::GetDescription()
 {
-   return _("Preferences for Theme");
+   return XO("Preferences for Theme");
 }
 
 wxString ThemePrefs::HelpPageName()

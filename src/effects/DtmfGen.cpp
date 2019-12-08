@@ -101,9 +101,9 @@ ComponentInterfaceSymbol EffectDtmf::GetSymbol()
    return DTMFTONES_PLUGIN_SYMBOL;
 }
 
-wxString EffectDtmf::GetDescription()
+TranslatableString EffectDtmf::GetDescription()
 {
-   return _("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
+   return XO("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
 }
 
 wxString EffectDtmf::ManualPage()

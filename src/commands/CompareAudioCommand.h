@@ -30,7 +30,7 @@ class CompareAudioCommand final : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return XO("Compare Audio");}
-   wxString GetDescription() override {return _("Compares a range on two tracks.");};
+   TranslatableString GetDescription() override {return XO("Compares a range on two tracks.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

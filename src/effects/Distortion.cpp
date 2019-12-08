@@ -195,9 +195,9 @@ ComponentInterfaceSymbol EffectDistortion::GetSymbol()
    return DISTORTION_PLUGIN_SYMBOL;
 }
 
-wxString EffectDistortion::GetDescription()
+TranslatableString EffectDistortion::GetDescription()
 {
-   return _("Waveshaping distortion effect");
+   return XO("Waveshaping distortion effect");
 }
 
 wxString EffectDistortion::ManualPage()

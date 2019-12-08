@@ -310,9 +310,9 @@ ComponentInterfaceSymbol EffectEqualization::GetSymbol()
    return EQUALIZATION_PLUGIN_SYMBOL;
 }
 
-wxString EffectEqualization::GetDescription()
+TranslatableString EffectEqualization::GetDescription()
 {
-   return _("Adjusts the volume levels of particular frequencies");
+   return XO("Adjusts the volume levels of particular frequencies");
 }
 
 wxString EffectEqualization::ManualPage()

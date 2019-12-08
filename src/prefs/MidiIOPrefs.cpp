@@ -72,9 +72,9 @@ ComponentInterfaceSymbol MidiIOPrefs::GetSymbol()
    return MIDI_IO_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString MidiIOPrefs::GetDescription()
+TranslatableString MidiIOPrefs::GetDescription()
 {
-   return _("Preferences for MidiIO");
+   return XO("Preferences for MidiIO");
 }
 
 wxString MidiIOPrefs::HelpPageName()

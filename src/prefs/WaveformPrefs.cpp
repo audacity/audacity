@@ -59,9 +59,9 @@ ComponentInterfaceSymbol WaveformPrefs::GetSymbol()
    return WAVEFORM_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString WaveformPrefs::GetDescription()
+TranslatableString WaveformPrefs::GetDescription()
 {
-   return _("Preferences for Waveforms");
+   return XO("Preferences for Waveforms");
 }
 
 wxString WaveformPrefs::HelpPageName()

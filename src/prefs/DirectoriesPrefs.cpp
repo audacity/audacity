@@ -66,9 +66,9 @@ ComponentInterfaceSymbol DirectoriesPrefs::GetSymbol()
    return DIRECTORIES_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString DirectoriesPrefs::GetDescription()
+TranslatableString DirectoriesPrefs::GetDescription()
 {
-   return _("Preferences for Directories");
+   return XO("Preferences for Directories");
 }
 
 wxString DirectoriesPrefs::HelpPageName()

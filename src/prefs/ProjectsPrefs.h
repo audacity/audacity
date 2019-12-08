@@ -27,7 +27,7 @@ class ProjectsPrefs final : public PrefsPanel
    ProjectsPrefs(wxWindow * parent, wxWindowID winid);
    ~ProjectsPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
-   wxString GetDescription() override;
+   TranslatableString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

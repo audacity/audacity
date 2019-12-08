@@ -29,7 +29,7 @@ class GUIPrefs final : public PrefsPanel
    GUIPrefs(wxWindow * parent, wxWindowID winid);
    ~GUIPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
-   wxString GetDescription() override;
+   TranslatableString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

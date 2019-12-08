@@ -57,9 +57,9 @@ ComponentInterfaceSymbol EffectFindClipping::GetSymbol()
    return FINDCLIPPING_PLUGIN_SYMBOL;
 }
 
-wxString EffectFindClipping::GetDescription()
+TranslatableString EffectFindClipping::GetDescription()
 {
-   return _("Creates labels where clipping is detected");
+   return XO("Creates labels where clipping is detected");
 }
 
 wxString EffectFindClipping::ManualPage()

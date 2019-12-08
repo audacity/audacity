@@ -44,9 +44,9 @@ ComponentInterfaceSymbol EffectReverse::GetSymbol()
    return REVERSE_PLUGIN_SYMBOL;
 }
 
-wxString EffectReverse::GetDescription()
+TranslatableString EffectReverse::GetDescription()
 {
-   return _("Reverses the selected audio");
+   return XO("Reverses the selected audio");
 }
 
 // EffectDefinitionInterface implementation

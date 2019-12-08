@@ -113,9 +113,9 @@ ComponentInterfaceSymbol EffectChangeSpeed::GetSymbol()
    return CHANGESPEED_PLUGIN_SYMBOL;
 }
 
-wxString EffectChangeSpeed::GetDescription()
+TranslatableString EffectChangeSpeed::GetDescription()
 {
-   return _("Changes the speed of a track, also changing its pitch");
+   return XO("Changes the speed of a track, also changing its pitch");
 }
 
 wxString EffectChangeSpeed::ManualPage()

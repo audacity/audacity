@@ -89,9 +89,9 @@ ComponentInterfaceSymbol EffectBassTreble::GetSymbol()
    return BASSTREBLE_PLUGIN_SYMBOL;
 }
 
-wxString EffectBassTreble::GetDescription()
+TranslatableString EffectBassTreble::GetDescription()
 {
-   return _("Simple tone control effect");
+   return XO("Simple tone control effect");
 }
 
 wxString EffectBassTreble::ManualPage()

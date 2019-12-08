@@ -28,7 +28,7 @@ public:
    SetProjectCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SET_PROJECT_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Sets various values for a project.");};
+   TranslatableString GetDescription() override {return XO("Sets various values for a project.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

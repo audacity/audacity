@@ -235,10 +235,9 @@ wxString NyquistEffect::GetVersion()
    return mReleaseVersion.Translation();
 }
 
-wxString NyquistEffect::GetDescription()
+TranslatableString NyquistEffect::GetDescription()
 {
-   // This should be a translated string, consistent with other effects
-   return mCopyright.Translation();
+   return mCopyright;
 }
 
 wxString NyquistEffect::ManualPage()

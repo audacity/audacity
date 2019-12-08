@@ -28,7 +28,7 @@ class OpenProjectCommand : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return OPEN_PROJECT_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Opens a project.");};
+   TranslatableString GetDescription() override {return XO("Opens a project.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -48,7 +48,7 @@ class SaveProjectCommand : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SAVE_PROJECT_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Saves a project.");};
+   TranslatableString GetDescription() override {return XO("Saves a project.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;

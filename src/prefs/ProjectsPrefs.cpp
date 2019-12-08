@@ -45,9 +45,9 @@ ComponentInterfaceSymbol ProjectsPrefs::GetSymbol()
    return PROJECTS_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString ProjectsPrefs::GetDescription()
+TranslatableString ProjectsPrefs::GetDescription()
 {
-   return _("Preferences for Projects");
+   return XO("Preferences for Projects");
 }
 
 wxString ProjectsPrefs::HelpPageName()

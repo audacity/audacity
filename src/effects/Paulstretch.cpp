@@ -106,9 +106,9 @@ ComponentInterfaceSymbol EffectPaulstretch::GetSymbol()
    return PAULSTRETCH_PLUGIN_SYMBOL;
 }
 
-wxString EffectPaulstretch::GetDescription()
+TranslatableString EffectPaulstretch::GetDescription()
 {
-   return _("Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
+   return XO("Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }
 
 wxString EffectPaulstretch::ManualPage()

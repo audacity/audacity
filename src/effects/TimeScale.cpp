@@ -90,9 +90,9 @@ ComponentInterfaceSymbol EffectTimeScale::GetSymbol()
    return TIMESCALE_PLUGIN_SYMBOL;
 }
 
-wxString EffectTimeScale::GetDescription()
+TranslatableString EffectTimeScale::GetDescription()
 {
-   return _("Allows continuous changes to the tempo and/or pitch");
+   return XO("Allows continuous changes to the tempo and/or pitch");
 }
 
 wxString EffectTimeScale::ManualPage()

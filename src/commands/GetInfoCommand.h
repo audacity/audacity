@@ -33,7 +33,7 @@ class GetInfoCommand : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return GET_INFO_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Gets information in JSON format.");};
+   TranslatableString GetDescription() override {return XO("Gets information in JSON format.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

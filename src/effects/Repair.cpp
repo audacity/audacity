@@ -47,9 +47,9 @@ ComponentInterfaceSymbol EffectRepair::GetSymbol()
    return REPAIR_PLUGIN_SYMBOL;
 }
 
-wxString EffectRepair::GetDescription()
+TranslatableString EffectRepair::GetDescription()
 {
-   return _("Sets the peak amplitude of a one or more tracks");
+   return XO("Sets the peak amplitude of a one or more tracks");
 }
 
 // EffectDefinitionInterface implementation

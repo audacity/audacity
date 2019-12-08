@@ -134,7 +134,7 @@ public:
 
    // This returns a translated string
    // Any verb should be present tense indicative, not imperative
-   virtual wxString GetDescription() = 0;
+   virtual TranslatableString GetDescription() = 0;
 
    // non-virtual convenience function
    const wxString GetTranslatedName();

@@ -43,9 +43,9 @@ ComponentInterfaceSymbol ModulePrefs::GetSymbol()
    return MODULE_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString ModulePrefs::GetDescription()
+TranslatableString ModulePrefs::GetDescription()
 {
-   return _("Preferences for Module");
+   return XO("Preferences for Module");
 }
 
 wxString ModulePrefs::HelpPageName()

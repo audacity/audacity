@@ -71,9 +71,9 @@ ComponentInterfaceSymbol QualityPrefs::GetSymbol()
    return QUALITY_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString QualityPrefs::GetDescription()
+TranslatableString QualityPrefs::GetDescription()
 {
-   return _("Preferences for Quality");
+   return XO("Preferences for Quality");
 }
 
 wxString QualityPrefs::HelpPageName()

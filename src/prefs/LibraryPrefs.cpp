@@ -61,9 +61,9 @@ ComponentInterfaceSymbol LibraryPrefs::GetSymbol()
    return LIBRARY_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString LibraryPrefs::GetDescription()
+TranslatableString LibraryPrefs::GetDescription()
 {
-   return _("Preferences for Library");
+   return XO("Preferences for Library");
 }
 
 wxString LibraryPrefs::HelpPageName()

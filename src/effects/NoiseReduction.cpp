@@ -437,9 +437,9 @@ ComponentInterfaceSymbol EffectNoiseReduction::GetSymbol()
    return NOISEREDUCTION_PLUGIN_SYMBOL;
 }
 
-wxString EffectNoiseReduction::GetDescription()
+TranslatableString EffectNoiseReduction::GetDescription()
 {
-   return _("Removes background noise such as fans, tape noise, or hums");
+   return XO("Removes background noise such as fans, tape noise, or hums");
 }
 
 // EffectDefinitionInterface implementation

@@ -27,7 +27,7 @@ public:
    DragCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return DRAG_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Drags mouse from one place to another.");};
+   TranslatableString GetDescription() override {return XO("Drags mouse from one place to another.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

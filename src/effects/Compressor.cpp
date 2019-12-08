@@ -104,9 +104,9 @@ ComponentInterfaceSymbol EffectCompressor::GetSymbol()
    return COMPRESSOR_PLUGIN_SYMBOL;
 }
 
-wxString EffectCompressor::GetDescription()
+TranslatableString EffectCompressor::GetDescription()
 {
-   return _("Compresses the dynamic range of audio");
+   return XO("Compresses the dynamic range of audio");
 }
 
 wxString EffectCompressor::ManualPage()

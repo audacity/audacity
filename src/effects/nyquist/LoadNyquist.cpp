@@ -117,9 +117,9 @@ wxString NyquistEffectsModule::GetVersion()
    return NYQUISTEFFECTS_VERSION;
 }
 
-wxString NyquistEffectsModule::GetDescription()
+TranslatableString NyquistEffectsModule::GetDescription()
 {
-   return _("Provides Nyquist Effects support to Audacity");
+   return XO("Provides Nyquist Effects support to Audacity");
 }
 
 // ============================================================================

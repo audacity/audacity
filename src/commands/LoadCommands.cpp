@@ -190,9 +190,9 @@ wxString BuiltinCommandsModule::GetVersion()
    return AUDACITY_VERSION_STRING;
 }
 
-wxString BuiltinCommandsModule::GetDescription()
+TranslatableString BuiltinCommandsModule::GetDescription()
 {
-   return _("Provides builtin commands to Audacity");
+   return XO("Provides builtin commands to Audacity");
 }
 
 // ============================================================================

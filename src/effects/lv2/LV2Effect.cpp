@@ -355,9 +355,9 @@ wxString LV2Effect::GetVersion()
    return wxT("1.0");
 }
 
-wxString LV2Effect::GetDescription()
+TranslatableString LV2Effect::GetDescription()
 {
-   return _("n/a");
+   return XO("n/a");
 }
 
 // ============================================================================

@@ -26,7 +26,7 @@ public:
    SetEnvelopeCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SET_ENVELOPE_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Sets an envelope point position.");};
+   TranslatableString GetDescription() override {return XO("Sets an envelope point position.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

@@ -45,9 +45,9 @@ ComponentInterfaceSymbol EffectsPrefs::GetSymbol()
    return EFFECTS_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString EffectsPrefs::GetDescription()
+TranslatableString EffectsPrefs::GetDescription()
 {
-   return _("Preferences for Effects");
+   return XO("Preferences for Effects");
 }
 
 wxString EffectsPrefs::HelpPageName()

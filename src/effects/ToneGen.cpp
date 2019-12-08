@@ -121,11 +121,11 @@ ComponentInterfaceSymbol EffectToneGen::GetSymbol()
       : TONE_PLUGIN_SYMBOL;
 }
 
-wxString EffectToneGen::GetDescription()
+TranslatableString EffectToneGen::GetDescription()
 {
    return mChirp
-      ? _("Generates an ascending or descending tone of one of four types")
-      : _("Generates a constant frequency tone of one of four types");
+      ? XO("Generates an ascending or descending tone of one of four types")
+      : XO("Generates a constant frequency tone of one of four types");
 }
 
 wxString EffectToneGen::ManualPage()

@@ -39,9 +39,9 @@ ComponentInterfaceSymbol ImportExportPrefs::GetSymbol()
    return IMPORT_EXPORT_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString ImportExportPrefs::GetDescription()
+TranslatableString ImportExportPrefs::GetDescription()
 {
-   return _("Preferences for ImportExport");
+   return XO("Preferences for ImportExport");
 }
 
 wxString ImportExportPrefs::HelpPageName()

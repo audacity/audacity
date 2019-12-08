@@ -141,9 +141,9 @@ wxString LadspaEffectsModule::GetVersion()
    return LADSPAEFFECTS_VERSION;
 }
 
-wxString LadspaEffectsModule::GetDescription()
+TranslatableString LadspaEffectsModule::GetDescription()
 {
-   return _("Provides LADSPA Effects");
+   return XO("Provides LADSPA Effects");
 }
 
 // ============================================================================
@@ -667,9 +667,9 @@ wxString LadspaEffect::GetVersion()
    return _("n/a");
 }
 
-wxString LadspaEffect::GetDescription()
+TranslatableString LadspaEffect::GetDescription()
 {
-   return LAT1CTOWX(mData->Copyright);
+   return TranslatableString{ LAT1CTOWX(mData->Copyright) };
 }
 
 // ============================================================================

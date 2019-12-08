@@ -52,7 +52,7 @@ class ExtImportPrefs final : public PrefsPanel
    ExtImportPrefs(wxWindow * parent, wxWindowID winid);
    ~ExtImportPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
-   wxString GetDescription() override;
+   TranslatableString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

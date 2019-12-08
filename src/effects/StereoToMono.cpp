@@ -36,9 +36,9 @@ ComponentInterfaceSymbol EffectStereoToMono::GetSymbol()
    return STEREOTOMONO_PLUGIN_SYMBOL;
 }
 
-wxString EffectStereoToMono::GetDescription()
+TranslatableString EffectStereoToMono::GetDescription()
 {
-   return _("Converts stereo tracks to mono");
+   return XO("Converts stereo tracks to mono");
 }
 
 // EffectDefinitionInterface implementation

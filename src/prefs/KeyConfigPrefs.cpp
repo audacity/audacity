@@ -102,9 +102,9 @@ ComponentInterfaceSymbol KeyConfigPrefs::GetSymbol()
    return KEY_CONFIG_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString KeyConfigPrefs::GetDescription()
+TranslatableString KeyConfigPrefs::GetDescription()
 {
-   return _("Preferences for KeyConfig");
+   return XO("Preferences for KeyConfig");
 }
 
 wxString KeyConfigPrefs::HelpPageName()

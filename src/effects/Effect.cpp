@@ -224,14 +224,14 @@ wxString Effect::GetVersion()
    return AUDACITY_VERSION_STRING;
 }
 
-wxString Effect::GetDescription()
+TranslatableString Effect::GetDescription()
 {
    if (mClient)
    {
       return mClient->GetDescription();
    }
 
-   return wxEmptyString;
+   return {};
 }
 
 EffectFamilySymbol Effect::GetFamily()
@@ -3238,7 +3238,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().Translation()));
-      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription()));
+      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().Translation()));
 
       menu.Append(0, _("About"), sub.release());
    }

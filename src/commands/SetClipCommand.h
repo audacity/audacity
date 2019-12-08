@@ -26,7 +26,7 @@ public:
    SetClipCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SET_CLIP_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Sets various values for a clip.");};
+   TranslatableString GetDescription() override {return XO("Sets various values for a clip.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

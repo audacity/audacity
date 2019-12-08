@@ -72,9 +72,9 @@ ComponentInterfaceSymbol SpectrumPrefs::GetSymbol()
    return SPECTRUM_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString SpectrumPrefs::GetDescription()
+TranslatableString SpectrumPrefs::GetDescription()
 {
-   return _("Preferences for Spectrum");
+   return XO("Preferences for Spectrum");
 }
 
 wxString SpectrumPrefs::HelpPageName()

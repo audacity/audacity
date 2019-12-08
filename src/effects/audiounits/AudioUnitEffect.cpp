@@ -126,9 +126,9 @@ wxString AudioUnitEffectsModule::GetVersion()
    return AUDIOUNITEFFECTS_VERSION;
 }
 
-wxString AudioUnitEffectsModule::GetDescription()
+TranslatableString AudioUnitEffectsModule::GetDescription()
 {
-   return _("Provides Audio Unit Effects support to Audacity");
+   return XO("Provides Audio Unit Effects support to Audacity");
 }
 
 // ============================================================================
@@ -899,10 +899,10 @@ wxString AudioUnitEffect::GetVersion()
                            version & 0xff);
 }
 
-wxString AudioUnitEffect::GetDescription()
+TranslatableString AudioUnitEffect::GetDescription()
 {
    /* i18n-hint: Can mean "not available," "not applicable," "no answer" */
-   return _("n/a");
+   return XO("n/a");
 }
 
 // ============================================================================

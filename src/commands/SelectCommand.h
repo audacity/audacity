@@ -35,7 +35,7 @@ class SelectTimeCommand : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SELECT_TIME_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Selects a time range.");};
+   TranslatableString GetDescription() override {return XO("Selects a time range.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -59,7 +59,7 @@ class SelectFrequenciesCommand : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SELECT_FREQUENCIES_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Selects a frequency range.");};
+   TranslatableString GetDescription() override {return XO("Selects a frequency range.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -80,7 +80,7 @@ class SelectTracksCommand : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SELECT_TRACKS_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Selects a range of tracks.");};
+   TranslatableString GetDescription() override {return XO("Selects a range of tracks.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -102,7 +102,7 @@ class SelectCommand : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SELECT_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Selects Audio.");};
+   TranslatableString GetDescription() override {return XO("Selects Audio.");};
    bool DefineParams( ShuttleParams & S ) override { 
       return 
          mSelTime.DefineParams(S) &&  

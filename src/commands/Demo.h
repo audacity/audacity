@@ -23,7 +23,7 @@ class DemoCommand final : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return DEMO_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Does the demo action.");};
+   TranslatableString GetDescription() override {return XO("Does the demo action.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;

@@ -76,9 +76,9 @@ ComponentInterfaceSymbol ExtImportPrefs::GetSymbol()
    return EXT_IMPORT_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString ExtImportPrefs::GetDescription()
+TranslatableString ExtImportPrefs::GetDescription()
 {
-   return _("Preferences for ExtImport");
+   return XO("Preferences for ExtImport");
 }
 
 wxString ExtImportPrefs::HelpPageName()

@@ -106,9 +106,9 @@ ComponentInterfaceSymbol EffectAutoDuck::GetSymbol()
    return AUTODUCK_PLUGIN_SYMBOL;
 }
 
-wxString EffectAutoDuck::GetDescription()
+TranslatableString EffectAutoDuck::GetDescription()
 {
-   return _("Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
+   return XO("Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
 }
 
 wxString EffectAutoDuck::ManualPage()

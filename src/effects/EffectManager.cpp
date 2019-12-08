@@ -367,10 +367,10 @@ wxString EffectManager::GetCommandTip(const PluginID & ID)
 {
    Effect* pEff = GetEffect(ID);
    if( pEff )
-      return pEff->GetDescription();
+      return pEff->GetDescription().Translation();
    AudacityCommand * pCom = GetAudacityCommand(ID);
    if( pCom )
-      return pCom->GetDescription();
+      return pCom->GetDescription().Translation();
 
    return wxEmptyString;
 }

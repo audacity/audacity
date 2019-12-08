@@ -34,9 +34,9 @@ ComponentInterfaceSymbol EffectInvert::GetSymbol()
    return INVERT_PLUGIN_SYMBOL;
 }
 
-wxString EffectInvert::GetDescription()
+TranslatableString EffectInvert::GetDescription()
 {
-   return _("Flips the audio samples upside-down, reversing their polarity");
+   return XO("Flips the audio samples upside-down, reversing their polarity");
 }
 
 // EffectDefinitionInterface implementation

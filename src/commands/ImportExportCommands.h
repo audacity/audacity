@@ -30,7 +30,7 @@ class ImportCommand : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return IMPORT_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Imports from a file.");};
+   TranslatableString GetDescription() override {return XO("Imports from a file.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -48,7 +48,7 @@ class ExportCommand : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return EXPORT_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Exports to a file.");};
+   TranslatableString GetDescription() override {return XO("Exports to a file.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;

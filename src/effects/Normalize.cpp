@@ -69,9 +69,9 @@ ComponentInterfaceSymbol EffectNormalize::GetSymbol()
    return NORMALIZE_PLUGIN_SYMBOL;
 }
 
-wxString EffectNormalize::GetDescription()
+TranslatableString EffectNormalize::GetDescription()
 {
-   return _("Sets the peak amplitude of one or more tracks");
+   return XO("Sets the peak amplitude of one or more tracks");
 }
 
 wxString EffectNormalize::ManualPage()

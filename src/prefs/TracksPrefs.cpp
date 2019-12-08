@@ -232,9 +232,9 @@ ComponentInterfaceSymbol TracksPrefs::GetSymbol()
    return TRACKS_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString TracksPrefs::GetDescription()
+TranslatableString TracksPrefs::GetDescription()
 {
-   return _("Preferences for Tracks");
+   return XO("Preferences for Tracks");
 }
 
 wxString TracksPrefs::HelpPageName()

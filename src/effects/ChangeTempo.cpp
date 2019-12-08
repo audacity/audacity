@@ -113,9 +113,9 @@ ComponentInterfaceSymbol EffectChangeTempo::GetSymbol()
    return CHANGETEMPO_PLUGIN_SYMBOL;
 }
 
-wxString EffectChangeTempo::GetDescription()
+TranslatableString EffectChangeTempo::GetDescription()
 {
-   return _("Changes the tempo of a selection without changing its pitch");
+   return XO("Changes the tempo of a selection without changing its pitch");
 }
 
 wxString EffectChangeTempo::ManualPage()

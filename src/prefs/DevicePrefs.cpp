@@ -68,9 +68,9 @@ ComponentInterfaceSymbol DevicePrefs::GetSymbol()
    return DEVICE_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString DevicePrefs::GetDescription()
+TranslatableString DevicePrefs::GetDescription()
 {
-   return _("Preferences for Device");
+   return XO("Preferences for Device");
 }
 
 wxString DevicePrefs::HelpPageName()

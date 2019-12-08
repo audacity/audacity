@@ -157,9 +157,9 @@ ComponentInterfaceSymbol EffectTruncSilence::GetSymbol()
    return TRUNCATESILENCE_PLUGIN_SYMBOL;
 }
 
-wxString EffectTruncSilence::GetDescription()
+TranslatableString EffectTruncSilence::GetDescription()
 {
-   return _("Automatically reduces the length of passages where the volume is below a specified level");
+   return XO("Automatically reduces the length of passages where the volume is below a specified level");
 }
 
 wxString EffectTruncSilence::ManualPage()

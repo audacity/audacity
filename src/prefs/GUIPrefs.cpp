@@ -56,9 +56,9 @@ ComponentInterfaceSymbol GUIPrefs::GetSymbol()
    return GUI_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString GUIPrefs::GetDescription()
+TranslatableString GUIPrefs::GetDescription()
 {
-   return _("Preferences for GUI");
+   return XO("Preferences for GUI");
 }
 
 wxString GUIPrefs::HelpPageName()
