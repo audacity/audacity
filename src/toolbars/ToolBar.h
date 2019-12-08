@@ -99,7 +99,7 @@ class ToolBar /* not final */
    using Holder = wxWindowPtr<ToolBar>;
 
    ToolBar( AudacityProject &project,
-      int type, const wxString & label, const wxString & section,
+      int type, const TranslatableString & label, const wxString & section,
       bool resizable = false);
    virtual ~ToolBar();
 
@@ -114,12 +114,15 @@ class ToolBar /* not final */
    virtual void RegenerateTooltips() = 0;
 
    int GetType();
-   wxString GetTitle();
-   wxString GetLabel();
+   TranslatableString GetTitle();
+   TranslatableString GetLabel();
    wxString GetSection();
    ToolDock *GetDock();
 
+private:
    void SetLabel(const wxString & label) override;
+public:
+   void SetLabel(const TranslatableString & label);
    virtual void SetDocked(ToolDock *dock, bool pushed);
 
    // NEW virtual:
@@ -222,7 +225,7 @@ class ToolBar /* not final */
 
  protected:
    AudacityProject &mProject;
-   wxString mLabel;
+   TranslatableString mLabel;
    wxString mSection;
    int mType;
  private:

@@ -63,7 +63,7 @@ ThemePrefs::ThemePrefs(wxWindow * parent, wxWindowID winid)
  graphical user interface, including choices of colors, and similarity of images
  such as those on button controls.  Audacity can load and save alternative
  themes. */
-:  PrefsPanel(parent, winid, _("Theme"))
+:  PrefsPanel(parent, winid, XO("Theme"))
 {
    Populate();
 }

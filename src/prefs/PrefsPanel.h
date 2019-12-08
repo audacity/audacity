@@ -52,7 +52,8 @@ class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
    using Factory =
       std::function< PrefsPanel * (wxWindow *parent, wxWindowID winid) >;
 
-   PrefsPanel(wxWindow * parent, wxWindowID winid, const wxString &title)
+   PrefsPanel(
+      wxWindow * parent, wxWindowID winid, const TranslatableString &title)
    :  wxPanelWrapper(parent, winid)
    {
       SetLabel(title);     // Provide visual label

@@ -35,17 +35,16 @@ Paul Licameli split from TrackPanel.cpp
 #endif
 
 namespace {
-   wxString Message(unsigned trackCount) {
+   TranslatableString Message(unsigned trackCount) {
       if (trackCount > 1)
          // i18n-hint: %s is replaced by (translation of) 'Ctrl-Click' on windows, 'Command-Click' on Mac
-         return wxString::Format(
-            _("%s to select or deselect track. Drag up or down to change track order."),
-            CTRL_CLICK );
+         return XO(
+"%s to select or deselect track. Drag up or down to change track order.")
+            .Format( CTRL_CLICK );
       else
          // i18n-hint: %s is replaced by (translation of) 'Ctrl-Click' on windows, 'Command-Click' on Mac
-         return wxString::Format(
-            _("%s to select or deselect track."),
-            CTRL_CLICK );
+         return XO("%s to select or deselect track.")
+            .Format( CTRL_CLICK );
    }
 }
 
@@ -157,7 +156,7 @@ HitTestPreview TrackSelectHandle::Preview
       const bool unsafe =
          ProjectAudioIO::Get( *GetActiveProject() ).IsAudioActive();
       return {
-         message,
+         message.Translation(),
          (unsafe
           ? &*disabledCursor
           : &*rearrangeCursor)
@@ -169,7 +168,7 @@ HitTestPreview TrackSelectHandle::Preview
       // Don't test safety, because the click to change selection is allowed
       static wxCursor arrowCursor{ wxCURSOR_ARROW };
       return {
-         message,
+         message.Translation(),
          &arrowCursor,
          message
       };

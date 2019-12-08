@@ -17,6 +17,7 @@ class wxMouseEvent;
 class wxMouseState;
 
 class Track;
+class TranslatableString;
 
 
 /// \brief A UIHandle for a TrackPanel button, such as the Mute and Solo 
@@ -45,7 +46,7 @@ protected:
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent) = 0;
 
    // Define a message for the status bar and tooltip.
-   virtual wxString Tip(const wxMouseState &state) const = 0;
+   virtual TranslatableString Tip(const wxMouseState &state) const = 0;
 
    void Enter(bool forward) final override;
 

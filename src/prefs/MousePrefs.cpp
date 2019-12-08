@@ -61,7 +61,7 @@ enum
 
 /// Constructor
 MousePrefs::MousePrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Mouse"))
+:  PrefsPanel(parent, winid, XO("Mouse"))
 {
    Populate();
 }

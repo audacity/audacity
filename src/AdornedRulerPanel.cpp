@@ -415,9 +415,9 @@ public:
       (void)state;// Compiler food
       // May come here when recording is in progress, so hit tests are turned
       // off.
-      wxString tooltip;
+      TranslatableString tooltip;
       if (mParent->mTimelineToolTip)
-         tooltip = _("Timeline actions disabled during recording");
+         tooltip = XO("Timeline actions disabled during recording");
 
       static wxCursor cursor{ wxCURSOR_DEFAULT };
       return {
@@ -628,7 +628,7 @@ protected:
       return {
          _( "Click and drag to adjust, double-click to reset" ),
          &cursor,
-         _( "Record/Play head" )
+         XO( "Record/Play head" )
       };
    }
 
@@ -903,8 +903,8 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    for (auto &button : mButtons)
       button = nullptr;
 
-   SetLabel( _("Timeline") );
-   SetName(GetLabel());
+   SetLabel( XO("Timeline") );
+   SetName();
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
    mLeftOffset = 0;
@@ -1066,7 +1066,7 @@ void AdornedRulerPanel::InvalidateRuler()
 }
 
 namespace {
-   const wxString StartScrubbingMessage(const Scrubber &/*scrubber*/)
+   const TranslatableString StartScrubbingMessage(const Scrubber &/*scrubber*/)
    {
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
        "Scrubbing" is variable-speed playback, ...
@@ -1074,15 +1074,15 @@ namespace {
        */
 #if 0
       if(scrubber.Seeks())
-         return _("Click or drag to begin Seek");
+         return XO("Click or drag to begin Seek");
       else
-         return _("Click or drag to begin Scrub");
+         return XO("Click or drag to begin Scrub");
 #else
-      return _("Click & move to Scrub. Click & drag to Seek.");
+      return XO("Click & move to Scrub. Click & drag to Seek.");
 #endif
    }
 
-   const wxString ContinueScrubbingMessage(
+   const TranslatableString ContinueScrubbingMessage(
       const Scrubber &scrubber, bool clicked)
    {
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
@@ -1091,26 +1091,26 @@ namespace {
        */
 #if 0
       if(scrubber.Seeks())
-         return _("Move to Seek");
+         return XO("Move to Seek");
       else
-         return _("Move to Scrub");
+         return XO("Move to Scrub");
 #else
       if( clicked ) {
          // Since mouse is down, mention dragging first.
          // IsScrubbing is true if Scrubbing OR seeking.
          if( scrubber.IsScrubbing() )
             // User is dragging already, explain.
-            return _("Drag to Seek. Release to stop seeking.");
+            return XO("Drag to Seek. Release to stop seeking.");
          else
             // User has clicked but not yet moved or released.
-            return _("Drag to Seek. Release and move to Scrub.");
+            return XO("Drag to Seek. Release and move to Scrub.");
       }
       // Since mouse is up, mention moving first.
-      return _("Move to Scrub. Drag to Seek.");
+      return XO("Move to Scrub. Drag to Seek.");
 #endif
    }
 
-   const wxString ScrubbingMessage(const Scrubber &scrubber, bool clicked)
+   const TranslatableString ScrubbingMessage(const Scrubber &scrubber, bool clicked)
    {
       if (scrubber.HasMark())
          return ContinueScrubbingMessage(scrubber, clicked);
@@ -1501,10 +1501,10 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview
    auto message = ScrubbingMessage(scrubber, mClicked == Button::Left);
 
    return {
-      message,
+      message.Translation(),
       {},
       // Tooltip is same as status message, or blank
-      ((mParent && mParent->mTimelineToolTip) ? message : wxString{}),
+      ((mParent && mParent->mTimelineToolTip) ? message : TranslatableString{}),
    };
 }
 
@@ -1512,15 +1512,15 @@ auto AdornedRulerPanel::QPHandle::Preview
 (const TrackPanelMouseState &state, const AudacityProject *pProject)
 -> HitTestPreview
 {
-   wxString tooltip;
+   TranslatableString tooltip;
    if (mParent && mParent->mTimelineToolTip) {
       if (!mParent->mQuickPlayEnabled)
-         tooltip = _("Quick-Play disabled");
+         tooltip = XO("Quick-Play disabled");
       else
-         tooltip = _("Quick-Play enabled");
+         tooltip = XO("Quick-Play enabled");
    }
 
-   wxString message;
+   TranslatableString message;
    auto &scrubber = Scrubber::Get( *pProject );
    const bool scrubbing = scrubber.HasMark();
    if (scrubbing)
@@ -1543,7 +1543,7 @@ auto AdornedRulerPanel::QPHandle::Preview
                state.state.m_x, mParent->mOldPlayRegion.GetEnd());
    
    return {
-      message,
+      message.Translation(),
       showArrows ? &cursorSizeWE : &cursorHand,
       tooltip,
    };

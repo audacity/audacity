@@ -24,7 +24,7 @@
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: i.e. the behaviors of tracks */
-:  PrefsPanel(parent, winid, _("Tracks Behaviors"))
+:  PrefsPanel(parent, winid, XO("Tracks Behaviors"))
 {
    Populate();
 }

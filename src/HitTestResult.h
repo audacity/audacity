@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_HIT_TEST_RESULT__
 
 #include "MemoryX.h"
+#include "Internat.h" // for TranslatableString
 
 class wxCursor;
 
@@ -21,13 +22,13 @@ struct HitTestPreview
    {}
 
    HitTestPreview(const wxString &message_, wxCursor *cursor_,
-      const wxString &tooltip_ = wxString{})
-      : message(message_), cursor(cursor_), tooltip(tooltip_)
+      const TranslatableString &tooltip_ = {})
+      : message(message_), cursor(cursor_), tooltip{ tooltip_ }
    {}
 
    wxString message {};
    wxCursor *cursor {};
-   wxString tooltip{};
+   TranslatableString tooltip{};
 };
 
 #endif

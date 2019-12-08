@@ -259,8 +259,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #endif
 {
    SetLayoutDirection(wxLayout_LeftToRight);
-   SetLabel(_("Track Panel"));
-   SetName(_("Track Panel"));
+   SetLabel(XO("Track Panel"));
+   SetName(XO("Track Panel"));
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
    {

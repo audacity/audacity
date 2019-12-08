@@ -105,7 +105,7 @@ static const TranslatableString
 // gets written to prefs and cannot be changed in prefs to maintain backwards
 // compatibility
 ControlToolBar::ControlToolBar( AudacityProject &project )
-: ToolBar(project, TransportBarID, _("Transport"), wxT("Control"))
+: ToolBar(project, TransportBarID, XO("Transport"), wxT("Control"))
 {
    gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
    mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
@@ -343,7 +343,7 @@ void ControlToolBar::UpdatePrefs()
 
 
    // Set label to pull in language change
-   SetLabel(_("Transport"));
+   SetLabel(XO("Transport"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();

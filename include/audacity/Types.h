@@ -540,6 +540,9 @@ inline TranslatableString operator +(
 
 using TranslatableStrings = std::vector<TranslatableString>;
 
+// A special string value that will have no screen reader pronunciation
+extern const TranslatableString InaudibleString;
+
 // For using std::unordered_map on TranslatableString
 // Note:  hashing on msgids only, which is not all of the information
 namespace std

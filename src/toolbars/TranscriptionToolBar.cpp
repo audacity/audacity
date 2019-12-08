@@ -96,7 +96,7 @@ END_EVENT_TABLE()
 ////Standard Constructor
 TranscriptionToolBar::TranscriptionToolBar( AudacityProject &project )
 : ToolBar( project,
-   TranscriptionBarID, _("Play-at-Speed"), wxT("Transcription"), true )
+   TranscriptionBarID, XO("Play-at-Speed"), wxT("Transcription"), true )
 {
    SetPlaySpeed( 1.0 * 100.0 );
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -322,7 +322,7 @@ void TranscriptionToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Play-at-Speed"));
+   SetLabel(XO("Play-at-Speed"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();

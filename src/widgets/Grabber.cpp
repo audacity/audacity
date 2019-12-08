@@ -106,6 +106,10 @@ void Grabber::SetAsSpacer( bool bIsSpacer ) {
    mAsSpacer = bIsSpacer;
 };
 
+void Grabber::SetToolTip(TranslatableString toolTip)
+{
+   wxWindow::SetToolTip( toolTip.Strip().Translation() );
+}
 
 //
 // Draw the grabber
@@ -215,7 +219,7 @@ void Grabber::OnEnter(wxMouseEvent & WXUNUSED(event))
    // to make it pop up when we want it.
    const auto text = GetToolTipText();
    UnsetToolTip();
-   SetToolTip(text);
+   wxWindow::SetToolTip(text);
 
    if( mAsSpacer )
       return;

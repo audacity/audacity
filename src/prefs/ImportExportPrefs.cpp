@@ -25,7 +25,7 @@
 #include "../ShuttleGui.h"
 
 ImportExportPrefs::ImportExportPrefs(wxWindow * parent, wxWindowID winid)
-:   PrefsPanel(parent, winid, _("Import / Export"))
+:   PrefsPanel(parent, winid, XO("Import / Export"))
 {
    Populate();
 }

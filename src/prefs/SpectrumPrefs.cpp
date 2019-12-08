@@ -38,7 +38,7 @@
 #include "../widgets/AudacityMessageBox.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
-:  PrefsPanel(parent, winid, wt ? _("Spectrogram Settings") : _("Spectrograms"))
+:  PrefsPanel(parent, winid, wt ? XO("Spectrogram Settings") : XO("Spectrograms"))
 , mWt(wt)
 , mPopulating(false)
 {

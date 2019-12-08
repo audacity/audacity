@@ -49,7 +49,7 @@ END_EVENT_TABLE()
 
 DirectoriesPrefs::DirectoriesPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint:  Directories, also called folders, in computer file systems */
-:  PrefsPanel(parent, winid, _("Directories")),
+:  PrefsPanel(parent, winid, XO("Directories")),
    mFreeSpace(NULL),
    mTempDir(NULL)
 {

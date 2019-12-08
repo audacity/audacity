@@ -175,7 +175,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    mProject = project;
    wxASSERT( pTrack );
 
-   SetName(mTrack->GetName());
+   SetName( TranslatableString{ mTrack->GetName() } );
 
    //this->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
    this->SetBackgroundColour( theTheme.Colour( clrMedium ) );
@@ -308,7 +308,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                    false, // bool isInput
                    ctrlPos, ctrlSize, // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
                    MeterPanel::MixerTrackCluster); // Style style = HorizontalStereo,
-      mMeter->SetName(_("Signal Level Meter"));
+      mMeter->SetName(XO("Signal Level Meter"));
    }
 
    #if wxUSE_TOOLTIPS
@@ -316,7 +316,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       mToggleButton_Mute->SetToolTip(_("Mute"));
       mToggleButton_Solo->SetToolTip(_("Solo"));
       if (GetWave())
-         mMeter->SetToolTip(_("Signal Level Meter"));
+         mMeter->SetToolTip(XO("Signal Level Meter"));
    #endif // wxUSE_TOOLTIPS
 
    UpdateForStateChange();
@@ -463,7 +463,7 @@ void MixerTrackCluster::UpdateForStateChange()
 {
    const wxString newName = mTrack->GetName();
    if (newName != GetName()) {
-      SetName(newName);
+      SetName( TranslatableString{ newName } );
       mStaticText_TrackName->SetLabel(newName);
       mStaticText_TrackName->SetName(newName);
 #if wxUSE_TOOLTIPS

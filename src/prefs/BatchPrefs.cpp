@@ -30,7 +30,7 @@ END_EVENT_TABLE()
 
 /// Constructor
 BatchPrefs::BatchPrefs(wxWindow * parent, wxWindowID winid):
-   PrefsPanel(parent, winid, _("Batch"))
+   PrefsPanel(parent, winid, XO("Batch"))
 {
    Populate();
 }

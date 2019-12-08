@@ -218,7 +218,7 @@ TracksPrefs::TracksPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: "Tracks" include audio recordings but also other collections of
  * data associated with a time line, such as sequences of labels, and musical
  * notes */
-:  PrefsPanel(parent, winid, _("Tracks"))
+:  PrefsPanel(parent, winid, XO("Tracks"))
 {
    Populate();
 }

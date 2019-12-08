@@ -27,7 +27,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 WarningsPrefs::WarningsPrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Warnings"))
+:  PrefsPanel(parent, winid, XO("Warnings"))
 {
    Populate();
 }

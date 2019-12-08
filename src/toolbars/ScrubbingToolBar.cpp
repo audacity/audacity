@@ -57,7 +57,7 @@ END_EVENT_TABLE()
 
 //Standard contructor
 ScrubbingToolBar::ScrubbingToolBar( AudacityProject &project )
-: ToolBar(project, ScrubbingBarID, _("Scrub"), wxT("Scrub"))
+: ToolBar(project, ScrubbingBarID, XO("Scrub"), wxT("Scrub"))
 {
 }
 
@@ -135,7 +135,7 @@ void ScrubbingToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Scrubbing"));
+   SetLabel(XO("Scrubbing"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();

@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 
 //Standard contructor
 MixerToolBar::MixerToolBar( AudacityProject &project )
-: ToolBar(project, MixerBarID, _("Mixer"), wxT("Mixer"), true)
+: ToolBar(project, MixerBarID, XO("Mixer"), wxT("Mixer"), true)
 {
    mInputSliderVolume = 0.0;
    mOutputSliderVolume = 0.0;
@@ -196,7 +196,7 @@ void MixerToolBar::UpdatePrefs()
 #endif
 
    // Set label to pull in language change
-   SetLabel(_("Mixer"));
+   SetLabel(XO("Mixer"));
 
    RegenerateTooltips();
 

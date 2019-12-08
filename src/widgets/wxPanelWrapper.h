@@ -50,8 +50,9 @@ public:
          const wxSize& size = wxDefaultSize,
          long style = wxTAB_TRAVERSAL | wxNO_BORDER,
          // Important:  default window name localizes!
-         const wxString& name = _("Panel"))
-   : wxTabTraversalWrapper<wxPanel> ( parent, winid, pos, size, style, name )
+         const TranslatableString& name = XO("Panel"))
+   : wxTabTraversalWrapper<wxPanel> (
+      parent, winid, pos, size, style, name.Translation() )
    {}
 
     // Pseudo ctor
@@ -62,12 +63,18 @@ public:
          const wxSize& size = wxDefaultSize,
          long style = wxTAB_TRAVERSAL | wxNO_BORDER,
          // Important:  default window name localizes!
-         const wxString& name = _("Panel"))
+         const TranslatableString& name = XO("Panel"))
    {
       return wxTabTraversalWrapper<wxPanel>::Create(
-         parent, winid, pos, size, style, name
+         parent, winid, pos, size, style, name.Translation()
       );
    }
+   // overload and hide the inherited functions that take naked wxString:
+   void SetLabel(const TranslatableString & label);
+   void SetName(const TranslatableString & name);
+   void SetToolTip(TranslatableString toolTip);
+   // Set the name to equal the label:
+   void SetName();
 };
 
 class AUDACITY_DLL_API wxDialogWrapper : public wxTabTraversalWrapper<wxDialog>

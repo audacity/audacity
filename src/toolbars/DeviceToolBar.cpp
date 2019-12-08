@@ -73,7 +73,7 @@ static int DeviceToolbarPrefsID()
 
 //Standard contructor
 DeviceToolBar::DeviceToolBar( AudacityProject &project )
-: ToolBar( project, DeviceBarID, _("Device"), wxT("Device"), true )
+: ToolBar( project, DeviceBarID, XO("Device"), wxT("Device"), true )
 {
    wxTheApp->Bind( EVT_RESCANNED_DEVICES,
       &DeviceToolBar::OnRescannedDevices, this );
@@ -324,7 +324,7 @@ void DeviceToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Device"));
+   SetLabel(XO("Device"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();

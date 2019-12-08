@@ -78,7 +78,7 @@ END_EVENT_TABLE()
 
 //Standard contructor
 EditToolBar::EditToolBar( AudacityProject &project )
-: ToolBar(project, EditBarID, _("Edit"), wxT("Edit"))
+: ToolBar(project, EditBarID, XO("Edit"), wxT("Edit"))
 {
 }
 
@@ -206,7 +206,7 @@ void EditToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Edit"));
+   SetLabel(XO("Edit"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();

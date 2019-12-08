@@ -31,7 +31,7 @@ handling.
 ProjectsPrefs::ProjectsPrefs(wxWindow * parent, wxWindowID winid)
 :   PrefsPanel(parent, winid,
    /* i18n-hint: (noun) i.e Audacity projects. */
-               _("Projects"))
+               XO("Projects"))
 {
    Populate();
 }

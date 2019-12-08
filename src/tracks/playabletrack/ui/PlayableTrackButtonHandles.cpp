@@ -41,9 +41,9 @@ UIHandle::Result MuteButtonHandle::CommitChanges
    return RefreshCode::RefreshNone;
 }
 
-wxString MuteButtonHandle::Tip(const wxMouseState &) const
+TranslatableString MuteButtonHandle::Tip(const wxMouseState &) const
 {
-   auto name = _("Mute");
+   auto name = XO("Mute");
    auto project = ::GetActiveProject();
    auto focused =
       TrackFocus::Get( *project ).Get() == GetTrack().get();
@@ -51,8 +51,10 @@ wxString MuteButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto &commandManager = CommandManager::Get( *project );
-   TranslatedInternalString command{ wxT("TrackMute"), name };
-   return commandManager.DescribeCommandsAndShortcuts(&command, 1u);
+   TranslatedInternalString command{ wxT("TrackMute"), name.Translation() };
+   return TranslatableString{
+      commandManager.DescribeCommandsAndShortcuts(&command, 1u)
+   };
 }
 
 UIHandlePtr MuteButtonHandle::HitTest
@@ -97,9 +99,9 @@ UIHandle::Result SoloButtonHandle::CommitChanges
    return RefreshCode::RefreshNone;
 }
 
-wxString SoloButtonHandle::Tip(const wxMouseState &) const
+TranslatableString SoloButtonHandle::Tip(const wxMouseState &) const
 {
-   auto name = _("Solo");
+   auto name = XO("Solo");
    auto project = ::GetActiveProject();
    auto focused =
       TrackFocus::Get( *project ).Get() == GetTrack().get();
@@ -107,8 +109,10 @@ wxString SoloButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto &commandManager = CommandManager::Get( *project );
-   TranslatedInternalString command{ wxT("TrackSolo"), name };
-   return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
+   TranslatedInternalString command{ wxT("TrackSolo"), name.Translation() };
+   return TranslatableString{
+      commandManager.DescribeCommandsAndShortcuts( &command, 1u )
+   };
 }
 
 UIHandlePtr SoloButtonHandle::HitTest

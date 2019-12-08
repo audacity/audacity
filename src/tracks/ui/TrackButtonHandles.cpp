@@ -57,11 +57,11 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
    return RefreshNone;
 }
 
-wxString MinimizeButtonHandle::Tip(const wxMouseState &) const
+TranslatableString MinimizeButtonHandle::Tip(const wxMouseState &) const
 {
    auto pTrack = GetTrack();
    return TrackView::Get( *pTrack ).GetMinimized()
-      ? _("Expand") : _("Collapse");
+      ? XO("Expand") : XO("Collapse");
 }
 
 UIHandlePtr MinimizeButtonHandle::HitTest
@@ -108,13 +108,13 @@ UIHandle::Result SelectButtonHandle::CommitChanges
    return RefreshNone;
 }
 
-wxString SelectButtonHandle::Tip(const wxMouseState &) const
+TranslatableString SelectButtonHandle::Tip(const wxMouseState &) const
 {
    auto pTrack = GetTrack();
 #if defined(__WXMAC__)
-   return pTrack->GetSelected() ? _("Command+Click to Unselect") : _("Select track");
+   return pTrack->GetSelected() ? XO("Command+Click to Unselect") : XO("Select track");
 #else
-   return pTrack->GetSelected() ? _("Ctrl+Click to Unselect") : _("Select track");
+   return pTrack->GetSelected() ? XO("Ctrl+Click to Unselect") : XO("Select track");
 #endif
 }
 
@@ -170,9 +170,9 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    return result;
 }
 
-wxString CloseButtonHandle::Tip(const wxMouseState &) const
+TranslatableString CloseButtonHandle::Tip(const wxMouseState &) const
 {
-   auto name = _("Close");
+   auto name = XO("Close");
    auto project = ::GetActiveProject();
    auto focused =
       TrackFocus::Get( *project ).Get() == GetTrack().get();
@@ -180,8 +180,10 @@ wxString CloseButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto &commandManager = CommandManager::Get( *project );
-   TranslatedInternalString command{ wxT("TrackClose"), name };
-   return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
+   TranslatedInternalString command{ wxT("TrackClose"), name.Translation() };
+   return TranslatableString{
+      commandManager.DescribeCommandsAndShortcuts( &command, 1u )
+   };
 }
 
 UIHandlePtr CloseButtonHandle::HitTest
@@ -230,9 +232,9 @@ UIHandle::Result MenuButtonHandle::CommitChanges
    return RefreshCode::RefreshNone;
 }
 
-wxString MenuButtonHandle::Tip(const wxMouseState &) const
+TranslatableString MenuButtonHandle::Tip(const wxMouseState &) const
 {
-   auto name = _("Open menu...");
+   auto name = XO("Open menu...");
    auto project = ::GetActiveProject();
    auto focused =
       TrackFocus::Get( *project ).Get() == GetTrack().get();
@@ -240,8 +242,10 @@ wxString MenuButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto &commandManager = CommandManager::Get( *project );
-   TranslatedInternalString command{ wxT("TrackMenu"), name };
-   return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
+   TranslatedInternalString command{ wxT("TrackMenu"), name.Translation() };
+   return TranslatableString{
+      commandManager.DescribeCommandsAndShortcuts( &command, 1u )
+   };
 }
 
 UIHandlePtr MenuButtonHandle::HitTest

@@ -47,7 +47,7 @@ END_EVENT_TABLE()
 
 LibraryPrefs::LibraryPrefs(wxWindow * parent, wxWindowID winid)
 /* i18-hint: refers to optional plug-in software libraries */
-:   PrefsPanel(parent, winid, _("Libraries"))
+:   PrefsPanel(parent, winid, XO("Libraries"))
 {
    Populate();
 }

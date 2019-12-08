@@ -32,7 +32,7 @@ Paul Licameli
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
 /* i18n-hint: A waveform is a visual representation of vibration */
-: PrefsPanel(parent, winid, _("Waveforms"))
+: PrefsPanel(parent, winid, XO("Waveforms"))
 , mWt(wt)
 , mPopulating(false)
 {

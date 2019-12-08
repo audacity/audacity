@@ -53,7 +53,7 @@ BEGIN_EVENT_TABLE(DevicePrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 DevicePrefs::DevicePrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Devices"))
+:  PrefsPanel(parent, winid, XO("Devices"))
 {
    Populate();
 }

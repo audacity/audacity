@@ -73,7 +73,7 @@ END_EVENT_TABLE()
 
 //Standard constructor
 ToolsToolBar::ToolsToolBar( AudacityProject &project )
-: ToolBar(project, ToolsBarID, _("Tools"), wxT("Tools"))
+: ToolBar(project, ToolsBarID, XO("Tools"), wxT("Tools"))
 {
    using namespace ToolCodes;
 

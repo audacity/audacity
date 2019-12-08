@@ -83,7 +83,7 @@ END_EVENT_TABLE()
 KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
                                const CommandID &name)
 /* i18n-hint: as in computer keyboard (not musical!) */
-:  PrefsPanel(parent, winid, _("Keyboard")),
+:  PrefsPanel(parent, winid, XO("Keyboard")),
    mView(NULL),
    mKey(NULL),
    mFilter(NULL),

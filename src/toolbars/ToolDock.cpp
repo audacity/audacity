@@ -381,8 +381,8 @@ END_EVENT_TABLE()
 ToolDock::ToolDock( ToolManager *manager, wxWindow *parent, int dockid ):
    wxPanelWrapper( parent, dockid, wxDefaultPosition, parent->GetSize() )
 {
-   SetLabel( _( "ToolDock" ) );
-   SetName( _( "ToolDock" ) );
+   SetLabel( XO( "ToolDock" ) );
+   SetName( XO( "ToolDock" ) );
 
    // Init
    mManager = manager;

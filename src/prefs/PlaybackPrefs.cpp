@@ -28,7 +28,7 @@
 #include "../Prefs.h"
 
 PlaybackPrefs::PlaybackPrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Playback"))
+:  PrefsPanel(parent, winid, XO("Playback"))
 {
    Populate();
 }

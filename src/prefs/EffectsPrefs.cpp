@@ -31,7 +31,7 @@
 #include "../ShuttleGui.h"
 
 EffectsPrefs::EffectsPrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Effects"))
+:  PrefsPanel(parent, winid, XO("Effects"))
 {
    Populate();
 }
