@@ -183,12 +183,10 @@ UIHandle::Result TrackSelectHandle::Release
    if (mRearrangeCount != 0) {
       AudacityProject *const project = ::GetActiveProject();
       ProjectHistory::Get( *project ).PushState(
-         wxString::Format(
-            /* i18n-hint: will substitute name of track for %s */
-            ( mRearrangeCount < 0 ? _("Moved '%s' up") : _("Moved '%s' down") ),
-            mpTrack->GetName()
-         ),
-         _("Move Track"));
+         /* i18n-hint: will substitute name of track for %s */
+         ( mRearrangeCount < 0 ? XO("Moved '%s' up") : XO("Moved '%s' down") )
+            .Format( mpTrack->GetName() ),
+         XO("Move Track"));
    }
    // Bug 1677
    // Holding on to the reference to the track was causing it to be released far later

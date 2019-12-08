@@ -188,21 +188,21 @@ void WaveColorMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    }
 }
 
-const wxString GetWaveColorStr(int colorIndex)
+const TranslatableString GetWaveColorStr(int colorIndex)
 {
-   return wxString::Format( _("Instrument %i"), colorIndex+1 );
+   return XO("Instrument %i").Format( colorIndex+1 );
 }
 
 
 BEGIN_POPUP_MENU(WaveColorMenuTable)
    POPUP_MENU_RADIO_ITEM(OnInstrument1ID,
-      GetWaveColorStr(0), OnWaveColorChange)
+      GetWaveColorStr(0).Translation(), OnWaveColorChange)
    POPUP_MENU_RADIO_ITEM(OnInstrument2ID,
-      GetWaveColorStr(1), OnWaveColorChange)
+      GetWaveColorStr(1).Translation(), OnWaveColorChange)
    POPUP_MENU_RADIO_ITEM(OnInstrument3ID,
-      GetWaveColorStr(2), OnWaveColorChange)
+      GetWaveColorStr(2).Translation(), OnWaveColorChange)
    POPUP_MENU_RADIO_ITEM(OnInstrument4ID,
-      GetWaveColorStr(3), OnWaveColorChange)
+      GetWaveColorStr(3).Translation(), OnWaveColorChange)
 END_POPUP_MENU()
 
 /// Converts a WaveColor enumeration to a wxWidgets menu item Id.
@@ -225,10 +225,9 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
       channel->SetWaveColorIndex(newWaveColor);
 
    ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Changed '%s' to %s"),
-      pTrack->GetName(),
-      GetWaveColorStr(newWaveColor)),
-      _("WaveColor Change"));
+      .PushState(XO("Changed '%s' to %s")
+         .Format( pTrack->GetName(), GetWaveColorStr(newWaveColor) ),
+      XO("WaveColor Change"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -284,11 +283,11 @@ void FormatMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
 BEGIN_POPUP_MENU(FormatMenuTable)
    POPUP_MENU_RADIO_ITEM(On16BitID,
-      GetSampleFormatStr(int16Sample), OnFormatChange)
+      GetSampleFormatStr(int16Sample).Translation(), OnFormatChange)
    POPUP_MENU_RADIO_ITEM(On24BitID,
-      GetSampleFormatStr(int24Sample), OnFormatChange)
+      GetSampleFormatStr(int24Sample).Translation(), OnFormatChange)
    POPUP_MENU_RADIO_ITEM(OnFloatID,
-      GetSampleFormatStr(floatSample), OnFormatChange)
+      GetSampleFormatStr(floatSample).Translation(), OnFormatChange)
 END_POPUP_MENU()
 
 /// Converts a format enumeration to a wxWidgets menu item Id.
@@ -344,10 +343,9 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 
    /* i18n-hint: The strings name a track and a format */
    ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Changed '%s' to %s"),
-      pTrack->GetName(),
-      GetSampleFormatStr(newFormat)),
-      _("Format Change"));
+      .PushState(XO("Changed '%s' to %s")
+         .Format( pTrack->GetName(), GetSampleFormatStr(newFormat) ),
+      XO("Format Change"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -449,9 +447,9 @@ void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
    wxString rateString = wxString::Format(wxT("%.3f"), rate);
    /* i18n-hint: The string names a track */
    ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Changed '%s' to %s Hz"),
-      pTrack->GetName(), rateString),
-      _("Rate Change"));
+      .PushState(XO("Changed '%s' to %s Hz")
+         .Format( pTrack->GetName(), rateString),
+      XO("Rate Change"));
 }
 
 /// This method handles the selection from the Rate
@@ -922,10 +920,9 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
       }
 
    /* i18n-hint: The string names a track */
-   ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Made '%s' a stereo track"),
-      pTrack->GetName()),
-      _("Make Stereo"));
+   ProjectHistory::Get( *project ).PushState(
+      XO("Made '%s' a stereo track").Format( pTrack->GetName() ),
+      XO("Make Stereo"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -993,10 +990,9 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
       trackFocus.Set(partner);
 
    /* i18n-hint: The string names a track  */
-   ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Swapped Channels in '%s'"),
-      pTrack->GetName()),
-      _("Swap Channels"));
+   ProjectHistory::Get( *project ).PushState(
+      XO("Swapped Channels in '%s'").Format( pTrack->GetName() ),
+      XO("Swap Channels"));
 
    mpData->result = RefreshCode::RefreshAll;
 }
@@ -1008,10 +1004,9 @@ void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    AudacityProject *const project = ::GetActiveProject();
    /* i18n-hint: The string names a track  */
-   ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Split stereo track '%s'"),
-      pTrack->GetName()),
-      _("Split"));
+   ProjectHistory::Get( *project ).PushState(
+      XO("Split stereo track '%s'").Format( pTrack->GetName() ),
+      XO("Split"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -1024,10 +1019,9 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    AudacityProject *const project = ::GetActiveProject();
    /* i18n-hint: The string names a track  */
-   ProjectHistory::Get( *project ).
-      PushState(wxString::Format(_("Split Stereo to Mono '%s'"),
-      pTrack->GetName()),
-      _("Split to Mono"));
+   ProjectHistory::Get( *project ).PushState(
+      XO("Split Stereo to Mono '%s'").Format( pTrack->GetName() ),
+      XO("Split to Mono"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -1088,10 +1082,10 @@ void GainSliderDrawFunction
 }
 
 void StatusDrawFunction
-   ( const wxString &string, wxDC *dc, const wxRect &rect )
+   ( const TranslatableString &string, wxDC *dc, const wxRect &rect )
 {
    static const int offset = 3;
-   dc->DrawText(string, rect.x + offset, rect.y);
+   dc->DrawText(string.Translation(), rect.x + offset, rect.y);
 }
 
 void Status1DrawFunction
@@ -1105,20 +1099,20 @@ void Status1DrawFunction
    /// indicating whether the track is mono, left, right, or
    /// stereo and what sample rate it's using.
    auto rate = wt ? wt->GetRate() : 44100.0;
-   wxString s;
+   TranslatableString s;
    if (!pTrack || TrackList::Channels(pTrack).size() > 1)
       // TODO: more-than-two-channels-message
       // more appropriate strings
-      s = _("Stereo, %dHz");
+      s = XO("Stereo, %dHz");
    else {
       if (wt->GetChannel() == Track::MonoChannel)
-         s = _("Mono, %dHz");
+         s = XO("Mono, %dHz");
       else if (wt->GetChannel() == Track::LeftChannel)
-         s = _("Left, %dHz");
+         s = XO("Left, %dHz");
       else if (wt->GetChannel() == Track::RightChannel)
-         s = _("Right, %dHz");
+         s = XO("Right, %dHz");
    }
-   s = wxString::Format( s, (int) (rate + 0.5) );
+   s.Format( (int) (rate + 0.5) );
 
    StatusDrawFunction( s, dc, rect );
 }

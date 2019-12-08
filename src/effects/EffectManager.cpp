@@ -180,7 +180,7 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
    {
       auto shortDesc = em.GetCommandName(ID);
       auto longDesc = em.GetCommandDescription(ID);
-      ProjectHistory::Get( project ).PushState(longDesc.Translation(), shortDesc.Translation());
+      ProjectHistory::Get( project ).PushState(longDesc, shortDesc);
    }
 
    if (!(flags & EffectManager::kDontRepeatLast))

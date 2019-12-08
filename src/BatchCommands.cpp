@@ -958,19 +958,19 @@ bool MacroCommands::ApplyMacro(
    mFileName.Empty();
 
    // Macro was successfully applied; save the NEW project state
-   wxString longDesc, shortDesc;
+   TranslatableString longDesc, shortDesc;
    wxString name = gPrefs->Read(wxT("/Batch/ActiveMacro"), wxEmptyString);
    if (name.empty())
    {
       /* i18n-hint: active verb in past tense */
-      longDesc = _("Applied Macro");
-      shortDesc = _("Apply Macro");
+      longDesc = XO("Applied Macro");
+      shortDesc = XO("Apply Macro");
    }
    else
    {
       /* i18n-hint: active verb in past tense */
-      longDesc = wxString::Format(_("Applied Macro '%s'"), name);
-      shortDesc = wxString::Format(_("Apply '%s'"), name);
+      longDesc = XO("Applied Macro '%s'").Format( name );
+      shortDesc = XO("Apply '%s'").Format( name );
    }
 
    if (!proj)

@@ -95,23 +95,18 @@ void DoMixAndRender
 
       // Smart history/undo message
       if (selectedCount==1) {
-         wxString msg;
-         msg.Printf(_("Rendered all audio in track '%s'"), firstName);
+         auto msg = XO("Rendered all audio in track '%s'").Format( firstName );
          /* i18n-hint: Convert the audio into a more usable form, so apply
           * panning and amplification and write to some external file.*/
-         ProjectHistory::Get( project ).PushState(msg, _("Render"));
+         ProjectHistory::Get( project ).PushState(msg, XO("Render"));
       }
       else {
-         wxString msg;
-         if (pNewRight)
-            msg.Printf(
-               _("Mixed and rendered %d tracks into one new stereo track"),
-               (int)selectedCount);
-         else
-            msg.Printf(
-               _("Mixed and rendered %d tracks into one new mono track"),
-               (int)selectedCount);
-         ProjectHistory::Get( project ).PushState(msg, _("Mix and Render"));
+         auto msg = (pNewRight
+            ? XO("Mixed and rendered %d tracks into one new stereo track")
+            : XO("Mixed and rendered %d tracks into one new mono track")
+         )
+            .Format( (int)selectedCount );
+         ProjectHistory::Get( project ).PushState(msg, XO("Mix and Render"));
       }
 
       trackPanel.SetFocus();
@@ -137,7 +132,7 @@ void DoPanTracks(AudacityProject &project, float PanValue)
    auto flags = UndoPush::AUTOSAVE;
    /*i18n-hint: One or more audio tracks have been panned*/
    ProjectHistory::Get( project )
-      .PushState(_("Panned audio track(s)"), _("Pan Track"), flags);
+      .PushState(XO("Panned audio track(s)"), XO("Pan Track"), flags);
          flags = flags | UndoPush::CONSOLIDATE;
 }
 
@@ -169,8 +164,7 @@ void DoAlign
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
-   wxString action;
-   wxString shortAction;
+   TranslatableString action, shortAction;
    double delta = 0.0;
    double newPos = -1.0;
 
@@ -198,72 +192,72 @@ void DoAlign
             times, and the time selection may be "moved" too.  The first
             noun -- "start" in this example -- is the object of a verb (not of
             an implied preposition "from"). */
-         ? _("Aligned/Moved start to zero")
-         : _("Aligned start to zero");
+         ? XO("Aligned/Moved start to zero")
+         : XO("Aligned start to zero");
          /* i18n-hint: This and similar messages give shorter descriptions of
             the aligning and moving editing actions */
       shortAction = moveSel
-         ? _("Align/Move Start")
-         : _("Align Start");
+         ? XO("Align/Move Start")
+         : XO("Align Start");
       break;
    case kAlignStartSelStart:
       delta = selectedRegion.t0() - minOffset();
       action = moveSel
-         ? _("Aligned/Moved start to cursor/selection start")
-         : _("Aligned start to cursor/selection start");
+         ? XO("Aligned/Moved start to cursor/selection start")
+         : XO("Aligned start to cursor/selection start");
       shortAction = moveSel
-         ? _("Align/Move Start")
-         : _("Align Start");
+         ? XO("Align/Move Start")
+         : XO("Align Start");
       break;
    case kAlignStartSelEnd:
       delta = selectedRegion.t1() - minOffset();
       action = moveSel
-         ? _("Aligned/Moved start to selection end")
-         : _("Aligned start to selection end");
+         ? XO("Aligned/Moved start to selection end")
+         : XO("Aligned start to selection end");
       shortAction = moveSel
-         ? _("Align/Move Start")
-         : _("Align Start");
+         ? XO("Align/Move Start")
+         : XO("Align Start");
       break;
    case kAlignEndSelStart:
       delta = selectedRegion.t0() - maxEndOffset();
       action = moveSel
-         ? _("Aligned/Moved end to cursor/selection start")
-         : _("Aligned end to cursor/selection start");
+         ? XO("Aligned/Moved end to cursor/selection start")
+         : XO("Aligned end to cursor/selection start");
       shortAction =
          moveSel
-         ? _("Align/Move End")
-         : _("Align End");
+         ? XO("Align/Move End")
+         : XO("Align End");
       break;
    case kAlignEndSelEnd:
       delta = selectedRegion.t1() - maxEndOffset();
       action = moveSel
-         ? _("Aligned/Moved end to selection end")
-         : _("Aligned end to selection end");
+         ? XO("Aligned/Moved end to selection end")
+         : XO("Aligned end to selection end");
       shortAction =
          moveSel
-         ? _("Align/Move End")
-         : _("Align End");
+         ? XO("Align/Move End")
+         : XO("Align End");
       break;
    // index set in alignLabelsNoSync
    case kAlignEndToEnd:
       newPos = firstTrackOffset();
       action = moveSel
-         ? _("Aligned/Moved end to end")
-         : _("Aligned end to end");
+         ? XO("Aligned/Moved end to end")
+         : XO("Aligned end to end");
       shortAction =
          moveSel
-         ? _("Align/Move End to End")
-         : _("Align End to End");
+         ? XO("Align/Move End to End")
+         : XO("Align End to End");
       break;
    case kAlignTogether:
       newPos = avgOffset();
       action = moveSel
-         ? _("Aligned/Moved together")
-         : _("Aligned together");
+         ? XO("Aligned/Moved together")
+         : XO("Aligned together");
       shortAction =
          moveSel
-         ? _("Align/Move Together")
-         : _("Align Together");
+         ? XO("Align/Move Together")
+         : XO("Align Together");
    }
 
    if ((unsigned)index >= kAlignLabelsCount) {
@@ -541,7 +535,7 @@ void SetTrackGain(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
       channel->SetGain(newValue);
 
    ProjectHistory::Get( project )
-      .PushState(_("Adjusted gain"), _("Gain"), UndoPush::CONSOLIDATE);
+      .PushState(XO("Adjusted gain"), XO("Gain"), UndoPush::CONSOLIDATE);
 
    TrackPanel::Get( project ).RefreshTrack(wt);
 }
@@ -555,7 +549,7 @@ void SetTrackPan(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
       channel->SetPan(newValue);
 
    ProjectHistory::Get( project )
-      .PushState(_("Adjusted Pan"), _("Pan"), UndoPush::CONSOLIDATE);
+      .PushState(XO("Adjusted Pan"), XO("Pan"), UndoPush::CONSOLIDATE);
 
    TrackPanel::Get( project ).RefreshTrack(wt);
 }
@@ -585,7 +579,7 @@ void OnNewWaveTrack(const CommandContext &context)
    t->SetSelected(true);
 
    ProjectHistory::Get( project )
-      .PushState(_("Created new audio track"), _("New Track"));
+      .PushState(XO("Created new audio track"), XO("New Track"));
 
    TrackFocus::Get(project).Set(t);
    t->EnsureVisible();
@@ -613,7 +607,7 @@ void OnNewStereoTrack(const CommandContext &context)
    tracks.GroupChannels(*left, 2);
 
    ProjectHistory::Get( project )
-      .PushState(_("Created new stereo audio track"), _("New Track"));
+      .PushState(XO("Created new stereo audio track"), XO("New Track"));
 
    TrackFocus::Get(project).Set(left);
    left->EnsureVisible();
@@ -633,7 +627,7 @@ void OnNewLabelTrack(const CommandContext &context)
    t->SetSelected(true);
 
    ProjectHistory::Get( project )
-      .PushState(_("Created new label track"), _("New Track"));
+      .PushState(XO("Created new label track"), XO("New Track"));
 
    TrackFocus::Get(project).Set(t);
    t->EnsureVisible();
@@ -658,7 +652,7 @@ void OnNewTimeTrack(const CommandContext &context)
    t->SetSelected(true);
 
    ProjectHistory::Get( project )
-      .PushState(_("Created new time track"), _("New Track"));
+      .PushState(XO("Created new time track"), XO("New Track"));
 
    TrackFocus::Get(project).Set(t);
    t->EnsureVisible();
@@ -778,7 +772,7 @@ void OnResample(const CommandContext &context)
       // consolidate.
 
       ProjectHistory::Get( project ).PushState(
-         _("Resampled audio track(s)"), _("Resample Track"), flags);
+         XO("Resampled audio track(s)"), XO("Resample Track"), flags);
       flags = flags | UndoPush::CONSOLIDATE;
    }
 
@@ -1016,7 +1010,7 @@ void OnSortTime(const CommandContext &context)
    DoSortTracks(project, kAudacitySortByTime);
 
    ProjectHistory::Get( project )
-      .PushState(_("Tracks sorted by time"), _("Sort by Time"));
+      .PushState(XO("Tracks sorted by time"), XO("Sort by Time"));
 }
 
 void OnSortName(const CommandContext &context)
@@ -1025,7 +1019,7 @@ void OnSortName(const CommandContext &context)
    DoSortTracks(project, kAudacitySortByName);
 
    ProjectHistory::Get( project )
-      .PushState(_("Tracks sorted by name"), _("Sort by Name"));
+      .PushState(XO("Tracks sorted by name"), XO("Sort by Name"));
 }
 
 void OnSyncLock(const CommandContext &context)

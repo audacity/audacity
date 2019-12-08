@@ -393,7 +393,8 @@ const ExportPluginArray &Exporter::GetPlugins()
 }
 
 bool Exporter::DoEditMetadata(AudacityProject &project,
-   const TranslatableString &title, const wxString &shortUndoDescription, bool force)
+   const TranslatableString &title,
+   const TranslatableString &shortUndoDescription, bool force)
 {
    auto &settings = ProjectSettings::Get( project );
    auto &tags = Tags::Get( project );
@@ -409,7 +410,7 @@ bool Exporter::DoEditMetadata(AudacityProject &project,
       if (tags != *newTags) {
          // Commit the change to project state only now.
          Tags::Set( project, newTags );
-         ProjectHistory::Get( project ).PushState(title.Translation(), shortUndoDescription);
+         ProjectHistory::Get( project ).PushState( title, shortUndoDescription);
       }
       bool bShowInFuture;
       gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
@@ -446,7 +447,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
       if (!DoEditMetadata( *project,
-         XO("Edit Metadata Tags"), _("Exported Tags"),
+         XO("Edit Metadata Tags"), XO("Exported Tags"),
          ProjectSettings::Get( *mProject ).GetShowId3Dialog())) {
          return false;
       }
@@ -1103,7 +1104,7 @@ bool Exporter::SetAutoExportOptions(AudacityProject *project) {
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
       if (!DoEditMetadata( *project,
          XO("Edit Metadata Tags"),
-         _("Exported Tags"),
+         XO("Exported Tags"),
          ProjectSettings::Get(*mProject).GetShowId3Dialog())) {
          return false;
       }

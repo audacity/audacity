@@ -76,7 +76,8 @@ int DoAddLabel(
          LabelTrackView::Get( *lt ).AddLabel(region, title, focusTrackNumber);
    }
 
-   ProjectHistory::Get( project ).PushState(_("Added label"), _("Label"));
+   ProjectHistory::Get( project )
+      .PushState(XO("Added label"), XO("Label"));
 
    if (!useDialog) {
       TrackFocus::Get(project).Set(lt);
@@ -345,7 +346,7 @@ void OnPasteNewLabel(const CommandContext &context)
 
    if (bPastedSomething) {
       ProjectHistory::Get( project ).PushState(
-         _("Pasted from the clipboard"), _("Paste Text to New Label"));
+         XO("Pasted from the clipboard"), XO("Paste Text to New Label"));
    }
 }
 
@@ -384,9 +385,9 @@ void OnCutLabels(const CommandContext &context)
    ProjectHistory::Get( project ).PushState(
    /* i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
       regions.*/
-      _( "Cut labeled audio regions to clipboard" ),
+      XO( "Cut labeled audio regions to clipboard" ),
    /* i18n-hint: (verb)*/
-      _( "Cut Labeled Audio" ) );
+      XO( "Cut Labeled Audio" ) );
 }
 
 void OnDeleteLabels(const CommandContext &context)
@@ -405,9 +406,9 @@ void OnDeleteLabels(const CommandContext &context)
 
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just deleted the labeled audio regions*/
-      _( "Deleted labeled audio regions" ),
+      XO( "Deleted labeled audio regions" ),
       /* i18n-hint: (verb)*/
-      _( "Delete Labeled Audio" ) );
+      XO( "Delete Labeled Audio" ) );
 }
 
 void OnSplitCutLabels(const CommandContext &context)
@@ -426,9 +427,9 @@ void OnSplitCutLabels(const CommandContext &context)
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just split cut the labeled audio
          regions*/
-      _( "Split Cut labeled audio regions to clipboard" ),
+      XO( "Split Cut labeled audio regions to clipboard" ),
       /* i18n-hint: (verb) Do a special kind of cut on the labels*/
-      _( "Split Cut Labeled Audio" ) );
+      XO( "Split Cut Labeled Audio" ) );
 }
 
 void OnSplitDeleteLabels(const CommandContext &context)
@@ -446,10 +447,10 @@ void OnSplitDeleteLabels(const CommandContext &context)
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just done a special kind of DELETE on
          the labeled audio regions */
-      _( "Split Deleted labeled audio regions" ),
+      XO( "Split Deleted labeled audio regions" ),
       /* i18n-hint: (verb) Do a special kind of DELETE on labeled audio
          regions */
-      _( "Split Delete Labeled Audio" ) );
+      XO( "Split Delete Labeled Audio" ) );
 }
 
 void OnSilenceLabels(const CommandContext &context)
@@ -465,9 +466,9 @@ void OnSilenceLabels(const CommandContext &context)
 
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb)*/
-      _( "Silenced labeled audio regions" ),
+      XO( "Silenced labeled audio regions" ),
       /* i18n-hint: (verb)*/
-      _( "Silence Labeled Audio" ) );
+      XO( "Silence Labeled Audio" ) );
 }
 
 void OnCopyLabels(const CommandContext &context)
@@ -482,9 +483,9 @@ void OnCopyLabels(const CommandContext &context)
    EditClipboardByLabel( project,
       tracks, selectedRegion, &WaveTrack::CopyNonconst );
 
-   ProjectHistory::Get( project ).PushState( _( "Copied labeled audio regions to clipboard" ),
+   ProjectHistory::Get( project ).PushState( XO( "Copied labeled audio regions to clipboard" ),
    /* i18n-hint: (verb)*/
-      _( "Copy Labeled Audio" ) );
+      XO( "Copy Labeled Audio" ) );
 }
 
 void OnSplitLabels(const CommandContext &context)
@@ -499,9 +500,9 @@ void OnSplitLabels(const CommandContext &context)
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) past tense.  Audacity has just split the labeled
          audio (a point or a region)*/
-      _( "Split labeled audio (points or regions)" ),
+      XO( "Split labeled audio (points or regions)" ),
       /* i18n-hint: (verb)*/
-      _( "Split Labeled Audio" ) );
+      XO( "Split Labeled Audio" ) );
 }
 
 void OnJoinLabels(const CommandContext &context)
@@ -519,9 +520,9 @@ void OnJoinLabels(const CommandContext &context)
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just joined the labeled audio (points or
          regions) */
-      _( "Joined labeled audio (points or regions)" ),
+      XO( "Joined labeled audio (points or regions)" ),
       /* i18n-hint: (verb) */
-      _( "Join Labeled Audio" ) );
+      XO( "Join Labeled Audio" ) );
 }
 
 void OnDisjoinLabels(const CommandContext &context)
@@ -540,9 +541,9 @@ void OnDisjoinLabels(const CommandContext &context)
       /* i18n-hint: (verb) Audacity has just detached the labeled audio regions.
       This message appears in history and tells you about something
       Audacity has done.*/
-      _( "Detached labeled audio regions" ),
+      XO( "Detached labeled audio regions" ),
       /* i18n-hint: (verb)*/
-      _( "Detach Labeled Audio" ) );
+      XO( "Detach Labeled Audio" ) );
 }
 
 }; // struct Handler

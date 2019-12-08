@@ -56,7 +56,7 @@ void DoRemoveTracks( AudacityProject &project )
    }
 
    ProjectHistory::Get( project )
-      .PushState(_("Removed audio track(s)"), _("Remove Track"));
+      .PushState(XO("Removed audio track(s)"), XO("Remove Track"));
 
    trackPanel.UpdateViewIfNoTracks();
 }
@@ -191,9 +191,8 @@ void DoRemoveTrack(AudacityProject &project, Track * toRemove)
       trackFocus.Set( newFocus );
 
    ProjectHistory::Get( project ).PushState(
-      wxString::Format(_("Removed track '%s.'"),
-      name),
-      _("Track Remove"));
+      XO("Removed track '%s.'").Format( name ),
+      XO("Track Remove"));
 }
 
 void DoMoveTrack
@@ -201,14 +200,14 @@ void DoMoveTrack
 {
    auto &tracks = TrackList::Get( project );
 
-   wxString longDesc, shortDesc;
+   TranslatableString longDesc, shortDesc;
 
    switch (choice)
    {
    case OnMoveTopID:
       /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
-      longDesc = _("Moved '%s' to Top");
-      shortDesc = _("Move Track to Top");
+      longDesc = XO("Moved '%s' to Top");
+      shortDesc = XO("Move Track to Top");
 
       // TODO: write TrackList::Rotate to do this in one step and avoid emitting
       // an event for each swap
@@ -218,8 +217,8 @@ void DoMoveTrack
       break;
    case OnMoveBottomID:
       /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
-      longDesc = _("Moved '%s' to Bottom");
-      shortDesc = _("Move Track to Bottom");
+      longDesc = XO("Moved '%s' to Bottom");
+      shortDesc = XO("Move Track to Bottom");
 
       // TODO: write TrackList::Rotate to do this in one step and avoid emitting
       // an event for each swap
@@ -233,16 +232,16 @@ void DoMoveTrack
       tracks.Move(target, bUp);
       longDesc =
          /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
-         bUp? _("Moved '%s' Up")
-         : _("Moved '%s' Down");
+         bUp? XO("Moved '%s' Up")
+         : XO("Moved '%s' Down");
       shortDesc =
          /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
-         bUp? _("Move Track Up")
-         : _("Move Track Down");
+         bUp? XO("Move Track Up")
+         : XO("Move Track Down");
 
    }
 
-   longDesc = longDesc.Format(target->GetName());
+   longDesc.Format(target->GetName());
 
    ProjectHistory::Get( project ).PushState(longDesc, shortDesc);
 }

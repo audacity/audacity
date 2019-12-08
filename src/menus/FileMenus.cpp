@@ -449,8 +449,8 @@ void OnImportLabels(const CommandContext &context)
       tracks.Add( newTrack );
 
       ProjectHistory::Get( project ).PushState(
-         wxString::Format(_("Imported labels from '%s'"), fileName),
-            _("Import Labels"));
+         XO("Imported labels from '%s'").Format( fileName ),
+            XO("Import Labels"));
 
       window.ZoomAfterImport(nullptr);
    }

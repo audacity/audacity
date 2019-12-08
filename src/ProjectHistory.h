@@ -35,8 +35,12 @@ public:
    void SetStateTo(unsigned int n);
    bool UndoAvailable() const;
    bool RedoAvailable() const;
-   void PushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
-   void PushState(const wxString &desc, const wxString &shortDesc, UndoPush flags);
+   void PushState(
+      const TranslatableString &desc,
+      const TranslatableString &shortDesc); // use UndoPush::AUTOSAVE
+   void PushState(
+      const TranslatableString &desc,
+      const TranslatableString &shortDesc, UndoPush flags);
    void RollbackState();
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file.
       // Should set only if you really want the state change restored after

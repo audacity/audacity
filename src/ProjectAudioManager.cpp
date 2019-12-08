@@ -880,7 +880,7 @@ You are saving directly to a slow external storage device\n\
       }
       else
          // Add to history
-         history.PushState(_("Recorded Audio"), _("Record"));
+         history.PushState(XO("Recorded Audio"), XO("Record"));
    }
 
    // Write all cached files to disk, if any

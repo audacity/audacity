@@ -178,7 +178,8 @@ public:
    };
 
    static bool DoEditMetadata(AudacityProject &project,
-      const TranslatableString &title, const wxString &shortUndoDescription, bool force);
+      const TranslatableString &title,
+      const TranslatableString &shortUndoDescription, bool force);
 
    Exporter();
    virtual ~Exporter();

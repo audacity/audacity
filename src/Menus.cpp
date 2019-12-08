@@ -316,7 +316,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 // TODO: This surely belongs in CommandManager?
 void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
 {
-   wxString desc;
+   TranslatableString desc;
    auto &undoManager = UndoManager::Get( project );
    auto &commandManager = CommandManager::Get( project );
    int cur = undoManager.GetCurrentState();

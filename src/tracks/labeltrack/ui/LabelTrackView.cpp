@@ -1292,8 +1292,8 @@ unsigned LabelTrackView::KeyDown(
    // Pass keystroke to labeltrack's handler and add to history if any
    // updates were done
    if (DoKeyDown( *project, viewInfo.selectedRegion, event )) {
-      ProjectHistory::Get( *project ).PushState(_("Modified Label"),
-         _("Label Edit"),
+      ProjectHistory::Get( *project ).PushState(XO("Modified Label"),
+         XO("Label Edit"),
          UndoPush::CONSOLIDATE);
    }
 
@@ -1322,8 +1322,8 @@ unsigned LabelTrackView::Char(
    // updates were done
 
    if (DoChar( *project, viewInfo.selectedRegion, event ))
-      ProjectHistory::Get( *project ).PushState(_("Modified Label"),
-      _("Label Edit"),
+      ProjectHistory::Get( *project ).PushState(XO("Modified Label"),
+         XO("Label Edit"),
       UndoPush::CONSOLIDATE);
 
    // If selection modified, refresh
@@ -1614,13 +1614,15 @@ bool LabelTrackView::DoChar(
          }
          pTrack->SetSelected(true);
          pTrack->AddLabel(selectedRegion, title);
-         ProjectHistory::Get( project ).PushState(_("Added label"), _("Label"));
+         ProjectHistory::Get( project )
+            .PushState(XO("Added label"), XO("Label"));
          return false;
       }
       else {
          pTrack->SetSelected(true);
          AddLabel( selectedRegion );
-         ProjectHistory::Get( project ).PushState(_("Added label"), _("Label"));
+         ProjectHistory::Get( project )
+            .PushState(XO("Added label"), XO("Label"));
       }
    }
 
@@ -1734,8 +1736,8 @@ void LabelTrackView::OnContextMenu(
    case OnCutSelectedTextID:
       if (CutSelectedText( project ))
       {
-         ProjectHistory::Get( project ).PushState(_("Modified Label"),
-                      _("Label Edit"),
+         ProjectHistory::Get( project ).PushState(XO("Modified Label"),
+                      XO("Label Edit"),
                       UndoPush::CONSOLIDATE);
       }
       break;
@@ -1750,8 +1752,8 @@ void LabelTrackView::OnContextMenu(
       if (PasteSelectedText(
          project, selectedRegion.t0(), selectedRegion.t1() ))
       {
-         ProjectHistory::Get( project ).PushState(_("Modified Label"),
-                      _("Label Edit"),
+         ProjectHistory::Get( project ).PushState(XO("Modified Label"),
+                      XO("Label Edit"),
                       UndoPush::CONSOLIDATE);
       }
       break;
@@ -1763,8 +1765,8 @@ void LabelTrackView::OnContextMenu(
       {
          const auto pTrack = FindLabelTrack();
          pTrack->DeleteLabel(ndx);
-         ProjectHistory::Get( project ).PushState(_("Deleted Label"),
-                      _("Label Edit"),
+         ProjectHistory::Get( project ).PushState(XO("Deleted Label"),
+                      XO("Label Edit"),
                       UndoPush::CONSOLIDATE);
       }
    }
@@ -2060,7 +2062,7 @@ void LabelTrackView::DoEditLabels
 
    if (dlg.ShowModal() == wxID_OK) {
       ProjectHistory::Get( project )
-         .PushState(_("Edited labels"), _("Label"));
+         .PushState(XO("Edited labels"), XO("Label"));
    }
 }
 

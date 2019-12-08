@@ -211,10 +211,9 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
             channel->SetName(newName);
 
          ProjectHistory::Get( *proj )
-            .PushState(wxString::Format(_("Renamed '%s' to '%s'"),
-            oldName,
-            newName),
-            _("Name Change"));
+            .PushState(
+               XO("Renamed '%s' to '%s'").Format( oldName, newName ),
+               XO("Name Change"));
 
          mpData->result = RefreshCode::RefreshAll;
       }

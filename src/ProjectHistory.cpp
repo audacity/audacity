@@ -54,7 +54,7 @@ void ProjectHistory::InitialState()
 
    undoManager.PushState(
       &tracks, viewInfo.selectedRegion, tags.shared_from_this(),
-      _("Created new project"), wxT(""));
+      XO("Created new project"), {});
 
    undoManager.StateSaved();
 }
@@ -77,13 +77,14 @@ bool ProjectHistory::RedoAvailable() const
       !tracks.HasPendingTracks();
 }
 
-void ProjectHistory::PushState(const wxString &desc, const wxString &shortDesc)
+void ProjectHistory::PushState(
+   const TranslatableString &desc, const TranslatableString &shortDesc)
 {
    PushState(desc, shortDesc, UndoPush::AUTOSAVE);
 }
 
-void ProjectHistory::PushState(const wxString &desc,
-                                const wxString &shortDesc,
+void ProjectHistory::PushState(const TranslatableString &desc,
+                                const TranslatableString &shortDesc,
                                 UndoPush flags )
 {
    auto &project = mProject;

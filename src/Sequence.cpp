@@ -498,7 +498,8 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
    {
       wxLogError(
          wxT("Sequence::Paste: Sample format to be pasted, %s, does not match destination format, %s."),
-         GetSampleFormatStr(src->mSampleFormat), GetSampleFormatStr(src->mSampleFormat));
+         GetSampleFormatStr(src->mSampleFormat).Debug(),
+         GetSampleFormatStr(mSampleFormat).Debug());
       THROW_INCONSISTENCY_EXCEPTION;
    }
 

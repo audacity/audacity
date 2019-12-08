@@ -1452,7 +1452,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
          ::ProjectFSCK(dirManager, err, true); // Correct problems in auto-recover mode.
 
          // PushState calls AutoSave(), so no longer need to do so here.
-         history.PushState(_("Project was recovered"), _("Recover"));
+         history.PushState(XO("Project was recovered"), XO("Recover"));
 
          if (!wxRemoveFile(fileName))
             AudacityMessageBox(_("Could not remove old auto save file"),
@@ -1619,8 +1619,8 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       SelectionBar::Get( project ).SetRate( newRate );
    }
 
-   history.PushState(wxString::Format(_("Imported '%s'"), fileName),
-       _("Import"));
+   history.PushState(XO("Imported '%s'").Format( fileName ),
+       XO("Import"));
 
 #if defined(__WXGTK__)
    // See bug #1224
