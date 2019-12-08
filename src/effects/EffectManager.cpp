@@ -178,9 +178,9 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
 
    if (!(flags & EffectManager::kSkipState))
    {
-      wxString shortDesc = em.GetCommandName(ID);
-      wxString longDesc = em.GetCommandDescription(ID);
-      ProjectHistory::Get( project ).PushState(longDesc, shortDesc);
+      auto shortDesc = em.GetCommandName(ID);
+      auto longDesc = em.GetCommandDescription(ID);
+      ProjectHistory::Get( project ).PushState(longDesc.Translation(), shortDesc.Translation());
    }
 
    if (!(flags & EffectManager::kDontRepeatLast))
@@ -188,7 +188,7 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
       // Only remember a successful effect, don't remember insert,
       // or analyze effects.
       if (type == EffectTypeProcess) {
-         wxString shortDesc = em.GetCommandName(ID);
+         auto shortDesc = em.GetCommandName(ID);
          MenuManager::Get(project).mLastEffect = ID;
          /* i18n-hint: %s will be the name of the effect which will be
           * repeated if this menu item is chosen */
@@ -294,9 +294,9 @@ ComponentInterfaceSymbol EffectManager::GetCommandSymbol(const PluginID & ID)
    return PluginManager::Get().GetSymbol(ID);
 }
 
-wxString EffectManager::GetCommandName(const PluginID & ID)
+TranslatableString EffectManager::GetCommandName(const PluginID & ID)
 {
-   return GetCommandSymbol(ID).Translation();
+   return GetCommandSymbol(ID).Msgid();
 }
 
 TranslatableString EffectManager::GetEffectFamilyName(const PluginID & ID)
@@ -341,14 +341,14 @@ CommandID EffectManager::GetCommandIdentifier(const PluginID & ID)
    return id;
 }
 
-wxString EffectManager::GetCommandDescription(const PluginID & ID)
+TranslatableString EffectManager::GetCommandDescription(const PluginID & ID)
 {
    if (GetEffect(ID))
-      return wxString::Format(_("Applied effect: %s"), GetCommandName(ID));
+      return XO("Applied effect: %s").Format( GetCommandName(ID) );
    if (GetAudacityCommand(ID))
-      return wxString::Format(_("Applied command: %s"), GetCommandName(ID));
+      return XO("Applied command: %s").Format( GetCommandName(ID) );
 
-   return wxEmptyString;
+   return {};
 }
 
 wxString EffectManager::GetCommandUrl(const PluginID & ID)
@@ -398,7 +398,7 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
    // Macro command details are one place that we do expose Identifier
    // to (more sophisticated) users
    S.AddItem( GetCommandIdentifier( ID ).GET(), "id" );
-   S.AddItem( GetCommandName( ID ), "name" );
+   S.AddItem( GetCommandName( ID ).Translation(), "name" );
    if( bHasParams ){
       S.StartField( "params" );
       S.StartArray();
@@ -700,7 +700,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
       auto command = dynamic_cast<AudacityCommand *>(PluginManager::Get().GetInstance(ID));
       if( !command )
          AudacityMessageBox(wxString::Format(_("Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in 'Help > Diagnostics > Show Log'"),
-                                    GetCommandName(ID)),
+                                    GetCommandName(ID).Translation()),
                    _("Effect failed to initialize"));
 
       return NULL;
@@ -756,7 +756,7 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
       }
 */
       AudacityMessageBox(wxString::Format(_("Attempting to initialize the following command failed:\n\n%s\n\nMore information may be available in 'Help > Diagnostics > Show Log'"),
-                                    GetCommandName(ID)),
+                                    GetCommandName(ID).Translation()),
                    _("Command failed to initialize"));
 
       return NULL;
