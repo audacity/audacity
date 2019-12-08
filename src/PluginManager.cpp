@@ -3218,3 +3218,8 @@ const wxString ComponentInterface::GetTranslatedName()
 {
    return GetSymbol().Translation();
 }
+
+const TranslatableString &ComponentInterface::GetUntranslatedName()
+{
+   return GetSymbol().Msgid();
+}

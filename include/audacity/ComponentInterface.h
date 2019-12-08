@@ -137,6 +137,9 @@ public:
    // non-virtual convenience function
    const wxString GetTranslatedName();
 
+   // non-virtual convenience function
+   const TranslatableString &GetUntranslatedName();
+
    // Parameters, if defined.  false means no defined parameters.
    virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ){ return false;};   
 };
