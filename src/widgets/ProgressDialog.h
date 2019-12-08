@@ -103,8 +103,6 @@ public:
    ProgressResult Update(int current, int total, const TranslatableString & message = {});
 
    void SetMessage(const TranslatableString & message);
-   // overloads and hides the inherited function that takes naked wxString:
-   void SetTitle(const TranslatableString & title);
 
 protected:
    wxWindowRef mHadFocus;

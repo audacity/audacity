@@ -130,10 +130,10 @@ END_EVENT_TABLE()
 
 ExportMultipleDialog::ExportMultipleDialog(AudacityProject *project)
 : wxDialogWrapper( &GetProjectFrame( *project ),
-   wxID_ANY, wxString(_("Export Multiple")) )
+   wxID_ANY, XO("Export Multiple") )
 , mSelectionState{ SelectionState::Get( *project ) }
 {
-   SetName(GetTitle());
+   SetName();
 
    mProject = project;
    mTracks = &TrackList::Get( *project );
@@ -618,7 +618,7 @@ void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))
       GuardedCall( [&] {
          // This results dialog is a child of this dialog.
          HelpSystem::ShowInfoDialog( this,
-                                    _("Export Multiple"),
+                                    XO("Export Multiple"),
                                     msg,
                                     FileList,
                                     450,400);
@@ -823,7 +823,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
          if( bShowTagsDialog ){
             bool bCancelled = !setting.filetags.ShowEditDialog(
                ProjectWindow::Find( mProject ),
-               _("Edit Metadata Tags"), bShowTagsDialog);
+               XO("Edit Metadata Tags"), bShowTagsDialog);
             gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowTagsDialog, true);
             settings.SetShowId3Dialog( bShowTagsDialog );
             if( bCancelled )
@@ -949,7 +949,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
          if( bShowTagsDialog ){
             bool bCancelled = !setting.filetags.ShowEditDialog(
                ProjectWindow::Find( mProject ),
-               _("Edit Metadata Tags"), bShowTagsDialog);
+               XO("Edit Metadata Tags"), bShowTagsDialog);
             gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowTagsDialog, true);
             settings.SetShowId3Dialog( bShowTagsDialog );
             if( bCancelled )

@@ -117,7 +117,7 @@ class FrequencyPlotDialog final : public wxDialogWrapper
 {
 public:
    FrequencyPlotDialog(wxWindow *parent, wxWindowID id,
-              const wxString & title, const wxPoint & pos);
+              const TranslatableString & title, const wxPoint & pos);
    virtual ~ FrequencyPlotDialog();
 
    bool Show( bool show = true ) override;

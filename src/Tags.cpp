@@ -608,7 +608,7 @@ void Tags::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("tags"));
 }
 
-bool Tags::ShowEditDialog(wxWindow *parent, const wxString &title, bool force)
+bool Tags::ShowEditDialog(wxWindow *parent, const TranslatableString &title, bool force)
 {
    if (force) {
       TagsEditorDialog dlg(parent, title, this, mEditTitle, mEditTrackNumber);
@@ -811,7 +811,7 @@ BEGIN_EVENT_TABLE(TagsEditorDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 TagsEditorDialog::TagsEditorDialog(wxWindow * parent,
-                       const wxString &title,
+                       const TranslatableString &title,
                        Tags * tags,
                        bool editTitle,
                        bool editTrack)
@@ -821,7 +821,7 @@ TagsEditorDialog::TagsEditorDialog(wxWindow * parent,
    mEditTitle(editTitle),
    mEditTrack(editTrack)
 {
-   SetName(GetTitle());
+   SetName();
 
    mGrid = NULL;
 
@@ -1147,10 +1147,10 @@ void TagsEditorDialog::OnEdit(wxCommandEvent & WXUNUSED(event))
       mGrid->HideCellEditControl();
    }
 
-   wxDialogWrapper dlg(this, wxID_ANY, _("Edit Genres"),
+   wxDialogWrapper dlg(this, wxID_ANY, XO("Edit Genres"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
-   dlg.SetName(dlg.GetTitle());
+   dlg.SetName();
    wxTextCtrl *tc;
 
    ShuttleGui S(&dlg, eIsCreating);

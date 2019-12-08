@@ -169,7 +169,7 @@ private:
 class SuccessDialog final : public wxDialogWrapper
 {
 public:
-   SuccessDialog(wxWindow *parent, wxWindowID id, const wxString &title) :
+   SuccessDialog(wxWindow *parent, wxWindowID id, const TranslatableString &title) :
       wxDialogWrapper(parent, id, title, wxDefaultPosition,
          wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER) {};
    void OnKeyDown(wxListEvent& event); // dismisses dialog when <enter> is pressed with list control having focus

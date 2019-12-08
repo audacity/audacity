@@ -294,12 +294,12 @@ void NoteTrackControls::ReCreateVelocitySlider( wxEvent &evt )
    GetVelocityRect(point, sliderRect);
 
    /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
-   gVelocity = std::make_unique<LWSlider>(nullptr, _("Velocity"),
+   gVelocity = std::make_unique<LWSlider>(nullptr, XO("Velocity"),
       wxPoint(sliderRect.x, sliderRect.y),
       wxSize(sliderRect.width, sliderRect.height),
       VEL_SLIDER);
    gVelocity->SetDefaultValue(0.0);
-   gVelocityCaptured = std::make_unique<LWSlider>(nullptr, _("Velocity"),
+   gVelocityCaptured = std::make_unique<LWSlider>(nullptr, XO("Velocity"),
       wxPoint(sliderRect.x, sliderRect.y),
       wxSize(sliderRect.width, sliderRect.height),
       VEL_SLIDER);

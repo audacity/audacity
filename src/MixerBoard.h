@@ -40,7 +40,7 @@ class MixerTrackSlider final : public ASlider
 public:
    MixerTrackSlider(wxWindow * parent,
                      wxWindowID id,
-                     const wxString &name,
+                     const TranslatableString &name,
                      const wxPoint & pos,
                      const wxSize & size,
                      const ASlider::Options &options = ASlider::Options{});

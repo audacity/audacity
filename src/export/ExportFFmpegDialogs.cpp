@@ -1450,9 +1450,9 @@ ExportFFmpegOptions::~ExportFFmpegOptions()
 
 ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
 :  wxDialogWrapper(parent, wxID_ANY,
-            wxString(_("Configure custom FFmpeg options")))
+            XO("Configure custom FFmpeg options"))
 {
-   SetName(GetTitle());
+   SetName();
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PickFFmpegLibs();
    //FFmpegLibsInst()->LoadLibs(NULL,true); //Loaded at startup or from Prefs now

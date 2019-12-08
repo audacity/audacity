@@ -428,7 +428,7 @@ BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialogWrapper(parent, wxID_ANY, wxString(_("LADSPA Effect Options")))
+:  wxDialogWrapper(parent, wxID_ANY, XO("LADSPA Effect Options"))
 {
    mHost = host;
 

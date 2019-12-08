@@ -556,9 +556,9 @@ public:
    FindDialog(wxWindow *parent, wxString path, wxString name, wxString type)
    :  wxDialogWrapper(parent, wxID_ANY,
    /* i18n-hint: LAME is the name of an MP3 converter and should not be translated*/
-   wxString(_("Locate LAME")))
+   XO("Locate LAME"))
    {
-      SetName(GetTitle());
+      SetName();
       ShuttleGui S(this, eIsCreating);
 
       mPath = path;
@@ -2000,8 +2000,8 @@ wxWindow *ExportMP3::OptionsCreate(wxWindow *parent, int format)
 
 int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
 {
-   wxDialogWrapper d(nullptr, wxID_ANY, wxString(_("Invalid sample rate")));
-   d.SetName(d.GetTitle());
+   wxDialogWrapper d(nullptr, wxID_ANY, XO("Invalid sample rate"));
+   d.SetName();
    wxChoice *choice;
    ShuttleGui S(&d, eIsCreating);
 

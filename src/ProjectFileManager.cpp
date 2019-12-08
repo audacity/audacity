@@ -1540,7 +1540,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
 
       ShowErrorDialog(
          &window,
-         _("Error Opening Project"),
+         XO("Error Opening Project"),
          errorStr,
          url);
    }
@@ -1682,7 +1682,7 @@ bool ProjectFileManager::Import(
       if (!errorMessage.empty()) {
          // Error message derived from Importer::Import
          // Additional help via a Help button links to the manual.
-         ShowErrorDialog(&GetProjectFrame( project ), _("Error Importing"),
+         ShowErrorDialog(&GetProjectFrame( project ), XO("Error Importing"),
                          errorMessage.Translation(), wxT("Importing_Audio"));
       }
       if (!success)

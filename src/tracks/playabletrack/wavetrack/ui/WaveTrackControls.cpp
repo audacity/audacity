@@ -478,8 +478,8 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
    /// \todo Make a real dialog box out of this!!
    while (true)
    {
-      wxDialogWrapper dlg(mpData->pParent, wxID_ANY, wxString(_("Set Rate")));
-      dlg.SetName(dlg.GetTitle());
+      wxDialogWrapper dlg(mpData->pParent, wxID_ANY, XO("Set Rate"));
+      dlg.SetName();
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
       wxComboBox *cb;
@@ -1239,13 +1239,13 @@ void WaveTrackControls::ReCreateGainSlider( wxEvent &event )
 
    float defPos = 1.0;
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   gGain = std::make_unique<LWSlider>(nullptr, _("Gain"),
+   gGain = std::make_unique<LWSlider>(nullptr, XO("Gain"),
                         wxPoint(sliderRect.x, sliderRect.y),
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
    gGain->SetDefaultValue(defPos);
 
-   gGainCaptured = std::make_unique<LWSlider>(nullptr, _("Gain"),
+   gGainCaptured = std::make_unique<LWSlider>(nullptr, XO("Gain"),
                                 wxPoint(sliderRect.x, sliderRect.y),
                                 wxSize(sliderRect.width, sliderRect.height),
                                 DB_SLIDER);
@@ -1296,13 +1296,13 @@ void WaveTrackControls::ReCreatePanSlider( wxEvent &event )
 
    float defPos = 0.0;
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-   gPan = std::make_unique<LWSlider>(nullptr, _("Pan"),
+   gPan = std::make_unique<LWSlider>(nullptr, XO("Pan"),
                        wxPoint(sliderRect.x, sliderRect.y),
                        wxSize(sliderRect.width, sliderRect.height),
                        PAN_SLIDER);
    gPan->SetDefaultValue(defPos);
 
-   gPanCaptured = std::make_unique<LWSlider>(nullptr, _("Pan"),
+   gPanCaptured = std::make_unique<LWSlider>(nullptr, XO("Pan"),
                                wxPoint(sliderRect.x, sliderRect.y),
                                wxSize(sliderRect.width, sliderRect.height),
                                PAN_SLIDER);

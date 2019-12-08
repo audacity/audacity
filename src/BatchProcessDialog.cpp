@@ -81,7 +81,7 @@ BEGIN_EVENT_TABLE(ApplyMacroDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 ApplyMacroDialog::ApplyMacroDialog(wxWindow * parent, bool bInherited):
-   wxDialogWrapper(parent, wxID_ANY, _("Macros Palette"),
+   wxDialogWrapper(parent, wxID_ANY, XO("Macros Palette"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
    , mCatalog( GetActiveProject() )
@@ -91,8 +91,8 @@ ApplyMacroDialog::ApplyMacroDialog(wxWindow * parent, bool bInherited):
    mbExpanded = false;
    if( bInherited )
       return;
-   SetLabel(_("Macros Palette"));         // Provide visual label
-   SetName(_("Macros Palette"));          // Provide audible label
+   SetLabel(XO("Macros Palette"));         // Provide visual label
+   SetName(XO("Macros Palette"));          // Provide audible label
    Populate();
 
 }
@@ -260,7 +260,7 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
 
 #ifdef OPTIONAL_ACTIVITY_WINDOW
    wxDialogWrapper activityWin( this, wxID_ANY, GetTitle());
-   activityWin.SetName(activityWin.GetTitle());
+   activityWin.SetName();
    ShuttleGui S(&activityWin, eIsCreating);
 
    S.StartHorizontalLay(wxCENTER, false);
@@ -397,8 +397,8 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialogWrapper activityWin(this, wxID_ANY, GetTitle());
-   activityWin.SetName(activityWin.GetTitle());
+   wxDialogWrapper activityWin(this, wxID_ANY, TranslatableString{ GetTitle() });
+   activityWin.SetName();
    ShuttleGui S(&activityWin, eIsCreating);
 
    wxListCtrl * fileList = NULL;
@@ -558,7 +558,7 @@ MacrosWindow::MacrosWindow(wxWindow * parent, bool bExpanded):
    ApplyMacroDialog(parent, true)
 {
    mbExpanded = bExpanded;
-   wxString Title = mbExpanded ? _("Manage Macros") : _("Macros Palette");
+   auto Title = mbExpanded ? XO("Manage Macros") : XO("Macros Palette");
    SetLabel( Title );   // Provide visual label
    SetName(  Title );   // Provide audible label
    SetTitle( Title );
@@ -794,7 +794,7 @@ void MacrosWindow::UpdateDisplay( bool bExpanded )
    SetPosition( p );
    mResize->SetFocus();
 
-   wxString Title = mbExpanded ? _("Manage Macros") : _("Macros Palette");
+   auto Title = mbExpanded ? XO("Manage Macros") : XO("Macros Palette");
    SetLabel( Title );         // Provide visual label
    SetName( Title );          // Provide audible label
    SetTitle( Title );

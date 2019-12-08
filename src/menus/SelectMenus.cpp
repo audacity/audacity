@@ -514,7 +514,7 @@ void OnSetLeftSelection(const CommandContext &context)
       auto fmt = settings.GetSelectionFormat();
       auto rate = settings.GetRate();
 
-      TimeDialog dlg(&window, _("Set Left Selection Boundary"),
+      TimeDialog dlg(&window, XO("Set Left Selection Boundary"),
          fmt, rate, selectedRegion.t0(), _("Position"));
 
       if (wxID_OK == dlg.ShowModal())
@@ -553,7 +553,7 @@ void OnSetRightSelection(const CommandContext &context)
       auto fmt = settings.GetSelectionFormat();
       auto rate = settings.GetRate();
 
-      TimeDialog dlg(&window, _("Set Right Selection Boundary"),
+      TimeDialog dlg(&window, XO("Set Right Selection Boundary"),
          fmt, rate, selectedRegion.t1(), _("Position"));
 
       if (wxID_OK == dlg.ShowModal())

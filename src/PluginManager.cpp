@@ -475,13 +475,13 @@ END_EVENT_TABLE()
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType type)
 :  wxDialogWrapper(parent,
             wxID_ANY,
-            _("Manage Plug-ins"),
+            XO("Manage Plug-ins"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    mType = type;
    mEffects = NULL;
-   SetName(GetTitle());
+   SetName();
 
    mStates.resize(STATE_COUNT);
    mStates[STATE_Enabled] = _("Enabled");

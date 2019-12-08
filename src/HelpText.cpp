@@ -138,68 +138,69 @@ static wxString LinkExpand( const wxString & Text )
    return Temp;
 }
 
-wxString TitleText( const wxString & Key )
+TranslatableString TitleText( const wxString & Key )
 {
    if(Key==wxT("welcome"))
    {
-      return _("Welcome!");
+      return XO("Welcome!");
    }
 
    if(Key ==wxT("play") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Playing Audio");
+      return XO("Playing Audio");
    }
    if((Key ==wxT("record") ) || (Key ==wxT("norecord") ))
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Recording Audio");
+      return XO("Recording Audio");
    }
    if(Key ==wxT("inputdevice") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Recording - Choosing the Recording Device");
+      return XO("Recording - Choosing the Recording Device");
    }
    if(Key ==wxT("inputsource") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Recording - Choosing the Recording Source");
+      return XO("Recording - Choosing the Recording Source");
    }
    if(Key ==wxT("inputlevel") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Recording - Setting the Recording Level");
+      return XO("Recording - Setting the Recording Level");
    }
    if((Key ==wxT("edit") ) || (Key==wxT("grey")))
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Editing and greyed out Menus");
+      return XO("Editing and greyed out Menus");
    }
    if(Key ==wxT("export") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Exporting an Audio File");
+      return XO("Exporting an Audio File");
    }
    if(Key ==wxT("save") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Saving an Audacity Project");
+      return XO("Saving an Audacity Project");
    }
    if(Key ==wxT("wma-proprietary") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Support for Other Formats");
+      return XO("Support for Other Formats");
    }
    if(Key ==wxT("burncd") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Burn to CD" );
+      return XO("Burn to CD" );
    }
    if(Key ==  wxT("remotehelp") )
    {
-      return _("No Local Help");
+      return XO("No Local Help");
    }
-   return Key;
+   // Uh oh, no translation...
+   return TranslatableString{ Key };
 }
 
 static wxString HelpTextBuiltIn( const wxString & Key )

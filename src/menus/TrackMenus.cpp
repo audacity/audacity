@@ -697,7 +697,7 @@ void OnResample(const CommandContext &context)
 
    while (true)
    {
-      wxDialogWrapper dlg(&window, wxID_ANY, wxString(_("Resample")));
+      wxDialogWrapper dlg(&window, wxID_ANY, XO("Resample"));
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
       wxComboBox *cb;

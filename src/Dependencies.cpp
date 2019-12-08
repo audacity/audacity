@@ -311,7 +311,7 @@ DependencyDialog::DependencyDialog(wxWindow *parent,
                                    AudacityProject *project,
                                    AliasedFileArray &aliasedFiles,
                                    bool isSaving)
-: wxDialogWrapper(parent, id, _("Project Depends on Other Audio Files"),
+: wxDialogWrapper(parent, id, XO("Project Depends on Other Audio Files"),
             wxDefaultPosition, wxDefaultSize,
             (isSaving ?
                   (wxDEFAULT_DIALOG_STYLE & ~wxCLOSE_BOX) : // no close box when saving
@@ -328,7 +328,7 @@ DependencyDialog::DependencyDialog(wxWindow *parent,
    mCopyAllFilesButton(NULL),
    mFutureActionChoice(NULL)
 {
-   SetName(GetTitle());
+   SetName();
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }

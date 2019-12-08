@@ -354,7 +354,7 @@ BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialogWrapper(parent, wxID_ANY, wxString(_("Audio Unit Effect Options")))
+:  wxDialogWrapper(parent, wxID_ANY, XO("Audio Unit Effect Options"))
 {
    mHost = host;
 
@@ -488,7 +488,7 @@ BEGIN_EVENT_TABLE(AudioUnitEffectExportDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 AudioUnitEffectExportDialog::AudioUnitEffectExportDialog(wxWindow * parent, AudioUnitEffect *effect)
-:  wxDialogWrapper(parent, wxID_ANY, wxString(_("Export Audio Unit Presets")))
+:  wxDialogWrapper(parent, wxID_ANY, XO("Export Audio Unit Presets"))
 {
    mEffect = effect;
 
@@ -660,7 +660,7 @@ BEGIN_EVENT_TABLE(AudioUnitEffectImportDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 AudioUnitEffectImportDialog::AudioUnitEffectImportDialog(wxWindow * parent, AudioUnitEffect *effect)
-:  wxDialogWrapper(parent, wxID_ANY, wxString(_("Import Audio Unit Presets")))
+:  wxDialogWrapper(parent, wxID_ANY, XO("Import Audio Unit Presets"))
 {
    mEffect = effect;
 

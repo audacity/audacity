@@ -48,11 +48,11 @@ public:
 };
 
 AutoRecoveryDialog::AutoRecoveryDialog(wxWindow *parent) :
-   wxDialogWrapper(parent, -1, _("Automatic Crash Recovery"),
+   wxDialogWrapper(parent, -1, XO("Automatic Crash Recovery"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)) // no close box
 {
-   SetName(GetTitle());
+   SetName();
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }

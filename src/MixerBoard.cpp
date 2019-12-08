@@ -73,7 +73,7 @@ END_EVENT_TABLE()
 
 MixerTrackSlider::MixerTrackSlider(wxWindow * parent,
                                     wxWindowID id,
-                                    const wxString &name,
+                                    const TranslatableString &name,
                                     const wxPoint & pos,
                                     const wxSize & size,
                                     const ASlider::Options &options)
@@ -208,7 +208,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       safenew MixerTrackSlider(
             this, ID_SLIDER_GAIN,
             /* i18n-hint: title of the Gain slider, used to adjust the volume */
-            _("Gain"),
+            XO("Gain"),
             ctrlPos, ctrlSize,
             ASlider::Options{}
                .Style( DB_SLIDER )
@@ -220,7 +220,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       safenew MixerTrackSlider(
             this, ID_SLIDER_VELOCITY,
             /* i18n-hint: title of the MIDI Velocity slider */
-            _("Velocity"),
+            XO("Velocity"),
             ctrlPos, ctrlSize,
             ASlider::Options{}
                .Style( VEL_SLIDER )
@@ -256,7 +256,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       safenew MixerTrackSlider(
             this, ID_SLIDER_PAN,
             /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-            _("Pan"),
+            XO("Pan"),
             ctrlPos, ctrlSize,
             ASlider::Options{}.Style( PAN_SLIDER ));
    mSlider_Pan->SetName(_("Pan"));

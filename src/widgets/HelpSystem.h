@@ -40,7 +40,7 @@ class HelpSystem
 public:
    /// Displays cutable information in a text ctrl, with an OK button.
    static void ShowInfoDialog( wxWindow *parent,
-                     const wxString &dlogTitle,
+                     const TranslatableString &dlogTitle,
                      const wxString &shortMsg,
                      const wxString &message, 
                      const int xSize, const int ySize);
@@ -53,7 +53,7 @@ public:
    /// @param bModal Whether the resulting window should be modal or not.
    /// Default is modeless dialogue
    static void ShowHtmlText( wxWindow * pParent, 
-                   const wxString &Title,
+                   const TranslatableString &Title,
                    const wxString &HtmlText,
                    bool bIsFile = false,
                    bool bModal = false);
@@ -139,7 +139,7 @@ class BrowserDialog /* not final */ : public wxDialogWrapper
 {
 public:
    enum { ID = 0 };
-   BrowserDialog(wxWindow *pParent, const wxString &title);
+   BrowserDialog(wxWindow *pParent, const TranslatableString &title);
 
    void OnForward(wxCommandEvent & event);
    void OnBackward(wxCommandEvent & event);

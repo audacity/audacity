@@ -786,7 +786,7 @@ BEGIN_EVENT_TABLE(VSTEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 VSTEffectOptionsDialog::VSTEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialogWrapper(parent, wxID_ANY, wxString(_("VST Effect Options")))
+:  wxDialogWrapper(parent, wxID_ANY, XO("VST Effect Options"))
 {
    mHost = host;
 

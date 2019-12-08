@@ -130,12 +130,12 @@ END_EVENT_TABLE()
 
 BenchmarkDialog::BenchmarkDialog(wxWindow *parent):
 /* i18n-hint: Benchmark means a software speed test */
-      wxDialogWrapper( parent, 0, _("Benchmark"),
+      wxDialogWrapper( parent, 0, XO("Benchmark"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE |
                 wxRESIZE_BORDER)
 {
-   SetName(GetTitle());
+   SetName();
 
    mBlockSizeStr = wxT("64");
    mNumEditsStr = wxT("100");

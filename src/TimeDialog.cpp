@@ -29,7 +29,7 @@ BEGIN_EVENT_TABLE(TimeDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 TimeDialog::TimeDialog(wxWindow *parent,
-                       const wxString &title,
+                       const TranslatableString &title,
                        const NumericFormatSymbol &format,
                        double rate,
                        double time,
@@ -41,7 +41,7 @@ TimeDialog::TimeDialog(wxWindow *parent,
    mTime(time),
    mTimeCtrl(NULL)
 {
-   SetName(GetTitle());
+   SetName();
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }

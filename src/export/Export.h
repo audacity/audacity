@@ -178,7 +178,7 @@ public:
    };
 
    static bool DoEditMetadata(AudacityProject &project,
-      const wxString &title, const wxString &shortUndoDescription, bool force);
+      const TranslatableString &title, const wxString &shortUndoDescription, bool force);
 
    Exporter();
    virtual ~Exporter();
@@ -296,7 +296,7 @@ class ExportMixerDialog final : public wxDialogWrapper
 public:
    // constructors and destructors
    ExportMixerDialog( const TrackList * tracks, bool selectedOnly, unsigned maxNumChannels,
-         wxWindow *parent, wxWindowID id, const wxString &title,
+         wxWindow *parent, wxWindowID id, const TranslatableString &title,
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize,
          long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );

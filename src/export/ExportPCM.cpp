@@ -405,13 +405,13 @@ void ExportPCM::ReportTooBigError(wxWindow * pParent)
       _("You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
       "Audacity cannot do this, the Export was abandoned.");
 
-   ShowErrorDialog(pParent, _("Error Exporting"), message,
+   ShowErrorDialog(pParent, XO("Error Exporting"), message,
                   wxT("Size_limits_for_WAV_and_AIFF_files"));
 
 // This alternative error dialog was to cover the possibility we could not 
 // compute the size in advance.
 #if 0
-   ShowErrorDialog(pParent, _("Error Exporting"),
+   ShowErrorDialog(pParent, XO("Error Exporting"),
                   _("Your exported WAV file has been truncated as Audacity cannot export WAV\n"
                     "files bigger than 4GB."),
                   wxT("Size_limits_for_WAV_files"));

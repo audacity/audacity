@@ -11,10 +11,11 @@
 #ifndef __AUDACITY_HELP_TEXT__
 #define __AUDACITY_HELP_TEXT__
 
+class TranslatableString;
 class wxString;
 
 wxString HelpText( const wxString & Key );
-wxString TitleText( const wxString & Key );
+TranslatableString TitleText( const wxString & Key );
 
 extern const wxString VerCheckArgs();
 extern const wxString VerCheckUrl();

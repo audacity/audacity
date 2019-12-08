@@ -559,7 +559,7 @@ class AUDACITY_DLL_API EffectDialog /* not final */ : public wxDialogWrapper
 public:
    // constructors and destructors
    EffectDialog(wxWindow * parent,
-                const wxString & title,
+                const TranslatableString & title,
                 int type = 0,
                 int flags = wxDEFAULT_DIALOG_STYLE,
                 int additionalButtons = 0);

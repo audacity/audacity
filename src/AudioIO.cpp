@@ -1431,7 +1431,7 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
    if (!success) {
       wxString msg = wxString::Format(_("Error opening recording device.\nError code: %s"), Get()->LastPaErrorString());
       ShowErrorDialog( FindProjectFrame( mOwningProject ),
-         _("Error"), msg, wxT("Error_opening_sound_device"));
+         XO("Error"), msg, wxT("Error_opening_sound_device"));
       return;
    }
 

@@ -17,6 +17,7 @@
 #include <wx/defs.h>
 
 #include <wx/chartype.h> // for typedef wxChar
+class TranslatableString;
 class wxString;
 
 const wxString &DefaultMultiDialogMessage();
@@ -24,7 +25,7 @@ const wxString &DefaultMultiDialogMessage();
 // Display a dialog with radio buttons.
 // Return the zero-based index of the chosen button.
 int ShowMultiDialog(const wxString &message,
-                    const wxString &title,
+                    const TranslatableString &title,
                     const wxChar **buttons,
                     const wxString &boxMsg = DefaultMultiDialogMessage(),
                     bool log = true);

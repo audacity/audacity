@@ -59,11 +59,11 @@ BEGIN_EVENT_TABLE(HistoryDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
-   wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, wxString(_("History")),
+   wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, XO("History"),
       wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 {
-   SetName(GetTitle());
+   SetName();
 
    mManager = manager;
    mProject = parent;

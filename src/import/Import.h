@@ -174,7 +174,7 @@ class ImportStreamDialog final : public wxDialogWrapper
 public:
    // constructors and destructors
    ImportStreamDialog( ImportFileHandle *_mFile,
-      wxWindow *parent, wxWindowID id, const wxString &title,
+      wxWindow *parent, wxWindowID id, const TranslatableString &title,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize,
       long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );

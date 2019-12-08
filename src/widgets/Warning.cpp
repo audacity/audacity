@@ -59,11 +59,11 @@ const wxString &DefaultWarningFooter()
 WarningDialog::WarningDialog(wxWindow *parent, const wxString &message,
                              const wxString &footer,
                              bool showCancelButton)
-:  wxDialogWrapper(parent, wxID_ANY, (wxString)_("Warning"),
+:  wxDialogWrapper(parent, wxID_ANY, XO("Warning"),
             wxDefaultPosition, wxDefaultSize,
             (showCancelButton ? wxDEFAULT_DIALOG_STYLE : wxCAPTION | wxSYSTEM_MENU)) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
 {
-   SetName(GetTitle());
+   SetName();
 
    SetIcon(wxArtProvider::GetIcon(wxART_WARNING, wxART_MESSAGE_BOX));
    ShuttleGui S(this, eIsCreating);

@@ -1064,7 +1064,7 @@ locations of the missing files."), missingFileName);
          if ( auto dialog = MissingAliasFilesDialog::Find( *offendingProject ) )
             dialog->Raise();
          else {
-            MissingAliasFilesDialog::Show(offendingProject.get(), _("Files Missing"),
+            MissingAliasFilesDialog::Show(offendingProject.get(), XO("Files Missing"),
                                    errorMessage, wxT(""), true);
          }
       }

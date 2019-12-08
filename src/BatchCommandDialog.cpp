@@ -62,13 +62,13 @@ BEGIN_EVENT_TABLE(MacroCommandDialog, wxDialogWrapper)
 END_EVENT_TABLE();
 
 MacroCommandDialog::MacroCommandDialog(wxWindow * parent, wxWindowID id):
-   wxDialogWrapper(parent, id, _("Select Command"),
+   wxDialogWrapper(parent, id, XO("Select Command"),
             wxDefaultPosition, wxDefaultSize,
             wxCAPTION | wxRESIZE_BORDER)
    , mCatalog( GetActiveProject() )
 {
-   SetLabel(_("Select Command"));         // Provide visual label
-   SetName(_("Select Command"));          // Provide audible label
+   SetLabel(XO("Select Command"));         // Provide visual label
+   SetName(XO("Select Command"));          // Provide audible label
    Populate();
 }
 

@@ -79,20 +79,20 @@ public:
    // Constructor with no modal flag - the new convention.
    wxDialogWrapper(
       wxWindow *parent, wxWindowID id,
-      const wxString& title,
+      const TranslatableString& title,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize,
       long style = wxDEFAULT_DIALOG_STYLE,
       // Important:  default window name localizes!
       const wxString& name = _("Dialog"))
    : wxTabTraversalWrapper<wxDialog>
-      ( parent, id, title, pos, size, style, name )
+      ( parent, id, title.Translation(), pos, size, style, name )
    {}
 
    // Pseudo ctor
    bool Create(
       wxWindow *parent, wxWindowID id,
-      const wxString& title,
+      const TranslatableString& title,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize,
       long style = wxDEFAULT_DIALOG_STYLE,
@@ -100,9 +100,16 @@ public:
       const wxString& name = _("Dialog"))
    {
       return wxTabTraversalWrapper<wxDialog>::Create(
-         parent, id, title, pos, size, style, name
+         parent, id, title.Translation(), pos, size, style, name
       );
    }
+
+   // overload and hide the inherited functions that take naked wxString:
+   void SetTitle(const TranslatableString & title);
+   void SetLabel(const TranslatableString & title);
+   void SetName(const TranslatableString & title);
+   // Set the name to equal the title:
+   void SetName();
 };
 
 #include <wx/dirdlg.h> // to inherit

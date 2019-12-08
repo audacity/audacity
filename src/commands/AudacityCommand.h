@@ -145,7 +145,7 @@ class AUDACITY_DLL_API AudacityCommandDialog /* not final */ : public wxDialogWr
 public:
    // constructors and destructors
    AudacityCommandDialog(wxWindow * parent,
-                const wxString & title,
+                const TranslatableString & title,
                 AudacityCommand * pCommand,
                 int type = 0,
                 int flags = wxDEFAULT_DIALOG_STYLE,

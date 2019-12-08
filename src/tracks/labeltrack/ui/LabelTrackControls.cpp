@@ -110,8 +110,8 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
                                 LabelTrackView::DefaultFontSize);
 
    /* i18n-hint: (noun) This is the font for the label track.*/
-   wxDialogWrapper dlg(mpData->pParent, wxID_ANY, wxString(_("Label Track Font")));
-   dlg.SetName(dlg.GetTitle());
+   wxDialogWrapper dlg(mpData->pParent, wxID_ANY, XO("Label Track Font"));
+   dlg.SetName();
    ShuttleGui S(&dlg, eIsCreating);
    wxListBox *lb;
    wxSpinCtrl *sc;

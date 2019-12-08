@@ -1543,7 +1543,7 @@ EffectNoiseReduction::Dialog::Dialog
 (EffectNoiseReduction *effect,
  EffectNoiseReduction::Settings *settings,
  wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings)
-   : EffectDialog( parent, _("Noise Reduction"), EffectTypeProcess,wxDEFAULT_DIALOG_STYLE, eHelpButton )
+   : EffectDialog( parent, XO("Noise Reduction"), EffectTypeProcess,wxDEFAULT_DIALOG_STYLE, eHelpButton )
    , m_pEffect(effect)
    , m_pSettings(settings) // point to
    , mTempSettings(*settings)  // copy

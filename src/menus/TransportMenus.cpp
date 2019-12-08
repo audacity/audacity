@@ -365,7 +365,7 @@ void OnPunchAndRoll(const CommandContext &context)
          ? _("Please select in a stereo track.")
          : wxString::Format(
             _("Please select at least %d channels."), recordingChannels);
-      ShowErrorDialog(&window, _("Error"), message, url);
+      ShowErrorDialog(&window, XO("Error"), message, url);
       return;
    }
 
@@ -407,7 +407,7 @@ void OnPunchAndRoll(const CommandContext &context)
 
    if (error) {
       auto message = _("Please select a time within a clip.");
-      ShowErrorDialog( &window, _("Error"), message, url);
+      ShowErrorDialog( &window, XO("Error"), message, url);
       return;
    }
 

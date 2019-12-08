@@ -61,7 +61,7 @@ int ProjectFSCK(
             _("Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."),
             NULL};
       wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
-      action = ShowMultiDialog(msg, _("Warning - Problems Reading Sequence Tags"), buttons);
+      action = ShowMultiDialog(msg, XO("Warning - Problems Reading Sequence Tags"), buttons);
       if (action == 0)
          nResult = FSCKstatus_CLOSE_REQ;
       else
@@ -116,7 +116,7 @@ _("Project check of \"%s\" folder \
                _("Replace missing audio with silence (permanent immediately)."),
                NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
-         action = ShowMultiDialog(msg, _("Warning - Missing Aliased File(s)"), buttons);
+         action = ShowMultiDialog(msg, XO("Warning - Missing Aliased File(s)"), buttons);
       }
 
       if (action == 0)
@@ -193,7 +193,7 @@ _("Project check of \"%s\" folder \
                                     _("Close project immediately with no further changes"),
                                     NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
-         action = ShowMultiDialog(msg, _("Warning - Missing Alias Summary File(s)"), buttons);
+         action = ShowMultiDialog(msg, XO("Warning - Missing Alias Summary File(s)"), buttons);
       }
 
       if (action == 2)
@@ -266,7 +266,7 @@ _("Project check of \"%s\" folder \
                _("Replace missing audio with silence (permanent immediately)"),
                NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
-         action = ShowMultiDialog(msg, _("Warning - Missing Audio Data Block File(s)"), buttons);
+         action = ShowMultiDialog(msg, XO("Warning - Missing Audio Data Block File(s)"), buttons);
       }
 
       if (action == 0)
@@ -339,7 +339,7 @@ other projects. \
             _("Delete orphan files (permanent immediately)"),
             NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
-         action = ShowMultiDialog(msg, _("Warning - Orphan Block File(s)"), buttons);
+         action = ShowMultiDialog(msg, XO("Warning - Orphan Block File(s)"), buttons);
       }
 
       if (action == 1)

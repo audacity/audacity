@@ -27,7 +27,7 @@ class ErrorDialog /* not final */ : public wxDialogWrapper
 public:
    // constructors and destructors
    ErrorDialog(wxWindow *parent,
-      const wxString & dlogTitle,
+      const TranslatableString & dlogTitle,
       const wxString & message,
       const wxString & helpPage,
       const bool Close = true, const bool modal = true);
@@ -46,14 +46,14 @@ private:
 
 /// Displays an error dialog with a button that offers help
 void ShowErrorDialog(wxWindow *parent,
-                     const wxString &dlogTitle,
+                     const TranslatableString &dlogTitle,
                      const wxString &message,
                      const wxString &helpPage,
                      bool Close = true);
 
 /// Displays a modeless error dialog with a button that offers help
 void ShowModelessErrorDialog(wxWindow *parent,
-                     const wxString &dlogTitle,
+                     const TranslatableString &dlogTitle,
                      const wxString &message,
                      const wxString &helpPage,
                      bool Close = true);

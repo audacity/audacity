@@ -215,7 +215,7 @@ void TranscriptionToolBar::Populate()
    const int SliderWidth=100;
    mPlaySpeedSlider = safenew ASlider(this,
       TTB_PlaySpeedSlider,
-      _("Playback Speed"),
+      XO("Playback Speed"),
       wxDefaultPosition,
       wxSize(SliderWidth,25),
       ASlider::Options{}

@@ -928,7 +928,7 @@ void OnEditMetadata(const CommandContext &context)
 {
    auto &project = context.project;
    (void)Exporter::DoEditMetadata( project,
-      _("Edit Metadata Tags"), _("Metadata Tags"), true);
+      XO("Edit Metadata Tags"), _("Metadata Tags"), true);
 }
 
 void OnPreferences(const CommandContext &context)

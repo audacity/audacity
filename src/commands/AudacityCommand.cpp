@@ -126,7 +126,7 @@ bool AudacityCommand::ShowInterface(wxWindow *parent, bool WXUNUSED(forceModal))
 wxDialog *AudacityCommand::CreateUI(wxWindow *parent, AudacityCommand * WXUNUSED(client))
 {
    Destroy_ptr<AudacityCommandDialog> dlg { safenew AudacityCommandDialog{
-      parent, GetTranslatedName(), this}};
+      parent, GetUntranslatedName(), this}};
 
    if (dlg->Init())
    {
@@ -258,7 +258,7 @@ BEGIN_EVENT_TABLE(AudacityCommandDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 AudacityCommandDialog::AudacityCommandDialog(wxWindow * parent,
-                           const wxString & title,
+                           const TranslatableString & title,
                            AudacityCommand * pCommand,
                            int type,
                            int flags,

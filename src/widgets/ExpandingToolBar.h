@@ -151,7 +151,7 @@ class ToolBarDialog final : public wxDialogWrapper
 
    ToolBarDialog(wxWindow* parent,
                  wxWindowID id,
-                 const wxString& name = {},
+                 const TranslatableString& name = {},
                  const wxPoint& pos = wxDefaultPosition);
 
    ~ToolBarDialog();
