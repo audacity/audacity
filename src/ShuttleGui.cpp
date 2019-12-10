@@ -120,21 +120,22 @@ for registering for changes.
 #include "widgets/WindowAccessible.h"
 #endif
 
-ShuttleGuiBase::ShuttleGuiBase(wxWindow * pParent, teShuttleMode ShuttleMode )
+ShuttleGuiBase::ShuttleGuiBase(
+   wxWindow * pParent, teShuttleMode ShuttleMode, bool vertical, wxSize minSize )
    : mpDlg{ pParent }
 {
    wxASSERT( (pParent != NULL ) || ( ShuttleMode != eIsCreating));
    mpbOptionalFlag = nullptr;
    mpParent = pParent;
    mShuttleMode = ShuttleMode;
-   Init();
+   Init( vertical, minSize );
 }
 
 ShuttleGuiBase::~ShuttleGuiBase()
 {
 }
 
-void ShuttleGuiBase::Init()
+void ShuttleGuiBase::Init(bool vertical, wxSize minSize)
 {
    mpShuttle = NULL;
    mpSizer = NULL;
@@ -172,10 +173,11 @@ void ShuttleGuiBase::Init()
 
    if( !mpSizer )
    {
-      mpParent->SetSizer(mpSizer = safenew wxBoxSizer(wxVERTICAL));
+      mpParent->SetSizer(
+         mpSizer = safenew wxBoxSizer(vertical ? wxVERTICAL : wxHORIZONTAL));
    }
    PushSizer();
-   mpSizer->SetMinSize(250,100);
+   mpSizer->SetMinSize(minSize);
 }
 
 void ShuttleGuiBase::ResetId()
@@ -2198,13 +2200,14 @@ void SetIfCreated( wxStaticText *&Var, wxStaticText * Val )
 #include "../extnpanel-src/GuiWaveTrack.h"
 #endif
 
-ShuttleGui::ShuttleGui(wxWindow * pParent, teShuttleMode ShuttleMode) :
-   ShuttleGuiBase( pParent, ShuttleMode )
+ShuttleGui::ShuttleGui(
+   wxWindow * pParent, teShuttleMode ShuttleMode, bool vertical, wxSize minSize)
+   : ShuttleGuiBase( pParent, ShuttleMode, vertical, minSize )
 {
    if( ShuttleMode == eIsCreatingFromPrefs )
    {
       mShuttleMode = eIsCreating;
-      Init(); // Wasn't fully done in base constructor because it is only done when eIsCreating is set.
+      Init( vertical, minSize ); // Wasn't fully done in base constructor because it is only done when eIsCreating is set.
    }
    else if( ShuttleMode == eIsSavingToPrefs )
    {

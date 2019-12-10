@@ -256,9 +256,14 @@ struct Item {
 class AUDACITY_DLL_API ShuttleGuiBase /* not final */
 {
 public:
-   ShuttleGuiBase(wxWindow * pParent,teShuttleMode ShuttleMode);
+   ShuttleGuiBase(
+      wxWindow * pParent,
+      teShuttleMode ShuttleMode,
+      bool vertical, // Choose layout direction of topmost level sizer
+      wxSize minSize
+   );
    virtual ~ShuttleGuiBase();
-   void Init();
+   void Init( bool vertical, wxSize minSize );
    void ResetId();
 
 //-- Add functions.  These only add a widget or 2.
@@ -596,7 +601,11 @@ AUDACITY_DLL_API std::unique_ptr<wxSizer> CreateStdButtonSizer( wxWindow *parent
 class AUDACITY_DLL_API ShuttleGui /* not final */ : public ShuttleGuiBase
 {
 public:
-   ShuttleGui(wxWindow * pParent,teShuttleMode ShuttleMode);
+   ShuttleGui(
+      wxWindow * pParent, teShuttleMode ShuttleMode,
+      bool vertical = true, // Choose layout direction of topmost level sizer
+      wxSize minSize = { 250, 100 }
+   );
    ~ShuttleGui(void);
 public:
    ShuttleGui & Optional( bool & bVar );
