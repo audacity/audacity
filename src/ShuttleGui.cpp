@@ -107,6 +107,7 @@ for registering for changes.
 #include <wx/grid.h>
 #include <wx/listctrl.h>
 #include <wx/notebook.h>
+#include <wx/simplebook.h>
 #include <wx/treectrl.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
@@ -119,21 +120,22 @@ for registering for changes.
 #include "widgets/WindowAccessible.h"
 #endif
 
-ShuttleGuiBase::ShuttleGuiBase(wxWindow * pParent, teShuttleMode ShuttleMode )
+ShuttleGuiBase::ShuttleGuiBase(
+   wxWindow * pParent, teShuttleMode ShuttleMode, bool vertical, wxSize minSize )
    : mpDlg{ pParent }
 {
    wxASSERT( (pParent != NULL ) || ( ShuttleMode != eIsCreating));
    mpbOptionalFlag = nullptr;
    mpParent = pParent;
    mShuttleMode = ShuttleMode;
-   Init();
+   Init( vertical, minSize );
 }
 
 ShuttleGuiBase::~ShuttleGuiBase()
 {
 }
 
-void ShuttleGuiBase::Init()
+void ShuttleGuiBase::Init(bool vertical, wxSize minSize)
 {
    mpShuttle = NULL;
    mpSizer = NULL;
@@ -171,10 +173,11 @@ void ShuttleGuiBase::Init()
 
    if( !mpSizer )
    {
-      mpParent->SetSizer(mpSizer = safenew wxBoxSizer(wxVERTICAL));
+      mpParent->SetSizer(
+         mpSizer = safenew wxBoxSizer(vertical ? wxVERTICAL : wxHORIZONTAL));
    }
    PushSizer();
-   mpSizer->SetMinSize(250,100);
+   mpSizer->SetMinSize(minSize);
 }
 
 void ShuttleGuiBase::ResetId()
@@ -977,12 +980,33 @@ void ShuttleGuiBase::EndNotebook()
 }
 
 
+wxSimplebook * ShuttleGuiBase::StartSimplebook()
+{
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxSimplebook);
+   wxSimplebook * pNotebook;
+   mpWind = pNotebook = safenew wxSimplebook(GetParent(),
+      miId, wxDefaultPosition, wxDefaultSize, GetStyle( 0 ));
+   SetProportions( 1 );
+   UpdateSizers();
+   mpParent = pNotebook;
+   return pNotebook;
+}
+
+void ShuttleGuiBase::EndSimplebook()
+{
+   //PopSizer();
+   mpParent = mpParent->GetParent();
+}
+
+
 wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
 {
    if( mShuttleMode != eIsCreating )
       return NULL;
 //      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wx);
-   wxNotebook * pNotebook = (wxNotebook*)mpParent;
+   auto pNotebook = static_cast< wxBookCtrlBase* >( mpParent );
    wxNotebookPage * pPage = safenew wxPanelWrapper(GetParent());
    pPage->SetName(Name);
 
@@ -994,7 +1018,6 @@ wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
    mpParent = pPage;
    pPage->SetSizer(mpSizer = safenew wxBoxSizer(wxVERTICAL));
    PushSizer();
-   mpSizer->SetMinSize(250, 500);
    //   UpdateSizers();
    return pPage;
 }
@@ -1004,7 +1027,7 @@ void ShuttleGuiBase::StartNotebookPage( const wxString & Name, wxNotebookPage * 
    if( mShuttleMode != eIsCreating )
       return;
 //      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wx);
-   wxNotebook * pNotebook = (wxNotebook*)mpParent;
+   auto pNotebook = static_cast< wxBookCtrlBase* >( mpParent );
 //   wxNotebookPage * pPage = safenew wxPanelWrapper(GetParent());
    pPage->Create( mpParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("panel"));
    pPage->SetName(Name);
@@ -1017,7 +1040,6 @@ void ShuttleGuiBase::StartNotebookPage( const wxString & Name, wxNotebookPage * 
    mpParent = pPage;
    pPage->SetSizer(mpSizer = safenew wxBoxSizer(wxVERTICAL));
    PushSizer();
-   mpSizer->SetMinSize(250, 500);
    //   UpdateSizers();
 }
 
@@ -2178,13 +2200,14 @@ void SetIfCreated( wxStaticText *&Var, wxStaticText * Val )
 #include "../extnpanel-src/GuiWaveTrack.h"
 #endif
 
-ShuttleGui::ShuttleGui(wxWindow * pParent, teShuttleMode ShuttleMode) :
-   ShuttleGuiBase( pParent, ShuttleMode )
+ShuttleGui::ShuttleGui(
+   wxWindow * pParent, teShuttleMode ShuttleMode, bool vertical, wxSize minSize)
+   : ShuttleGuiBase( pParent, ShuttleMode, vertical, minSize )
 {
    if( ShuttleMode == eIsCreatingFromPrefs )
    {
       mShuttleMode = eIsCreating;
-      Init(); // Wasn't fully done in base constructor because it is only done when eIsCreating is set.
+      Init( vertical, minSize ); // Wasn't fully done in base constructor because it is only done when eIsCreating is set.
    }
    else if( ShuttleMode == eIsSavingToPrefs )
    {
@@ -2381,7 +2404,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
    return std::unique_ptr<wxSizer>{ s.release() };
 }
 
-void ShuttleGui::AddStandardButtons(long buttons, wxButton *extra)
+void ShuttleGui::AddStandardButtons(long buttons, wxWindow *extra)
 {
    if( mShuttleMode != eIsCreating )
       return;
@@ -2396,12 +2419,15 @@ void ShuttleGui::AddStandardButtons(long buttons, wxButton *extra)
    EndVerticalLay();
 }
 
-wxSizerItem * ShuttleGui::AddSpace( int width, int height )
+wxSizerItem * ShuttleGui::AddSpace( int width, int height, int prop )
 {
    if( mShuttleMode != eIsCreating )
       return NULL;
-   SetProportions(0);
-   return mpSizer->Add( width, height, miProp);
+
+//   SetProportions(0);
+  // return mpSizer->Add( width, height, miProp);
+
+   return mpSizer->Add( width, height, prop );
 }
 
 void ShuttleGui::SetMinSize( wxWindow *window, const wxArrayStringEx & items )

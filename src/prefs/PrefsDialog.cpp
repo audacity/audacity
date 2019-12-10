@@ -551,7 +551,7 @@ PrefsDialog::PrefsDialog
    {
       wxASSERT(factories.size() > 0);
       if (!uniquePage) {
-         mCategories = safenew wxTreebookExt(this, wxID_ANY, mTitlePrefix);
+         mCategories = safenew wxTreebookExt(S.GetParent(), wxID_ANY, mTitlePrefix);
 #if wxUSE_ACCESSIBILITY
          // so that name can be set on a standard control
          mCategories->GetTreeCtrl()->SetAccessible(
@@ -602,7 +602,7 @@ PrefsDialog::PrefsDialog
          // Unique page, don't show the factory
          const PrefsNode &node = factories[0];
          const PrefsPanel::Factory &factory = node.factory;
-         mUniquePage = factory(this, wxID_ANY);
+         mUniquePage = factory(S.GetParent(), wxID_ANY);
          wxWindow * uniquePageWindow = S.Prop(1)
             .Position(wxEXPAND)
             .AddWindow(mUniquePage);

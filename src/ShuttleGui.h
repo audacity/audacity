@@ -58,6 +58,7 @@ class wxTreeCtrl;
 class wxTextCtrl;
 class wxSlider;
 class wxNotebook;
+class wxSimplebook;
 typedef wxWindow wxNotebookPage;  // so far, any window can be a page
 class wxButton;
 class wxBitmapButton;
@@ -255,9 +256,14 @@ struct Item {
 class AUDACITY_DLL_API ShuttleGuiBase /* not final */
 {
 public:
-   ShuttleGuiBase(wxWindow * pParent,teShuttleMode ShuttleMode);
+   ShuttleGuiBase(
+      wxWindow * pParent,
+      teShuttleMode ShuttleMode,
+      bool vertical, // Choose layout direction of topmost level sizer
+      wxSize minSize
+   );
    virtual ~ShuttleGuiBase();
-   void Init();
+   void Init( bool vertical, wxSize minSize );
    void ResetId();
 
 //-- Add functions.  These only add a widget or 2.
@@ -360,11 +366,16 @@ public:
    wxNotebook * StartNotebook();
    void EndNotebook();
 
+   wxSimplebook * StartSimplebook();
+   void EndSimplebook();
+
+   // Use within any kind of book control:
    // IDs of notebook pages cannot be chosen by the caller
    wxNotebookPage * StartNotebookPage( const wxString & Name );
    void StartNotebookPage( const wxString & Name, wxNotebookPage * pPage );
 
    void EndNotebookPage();
+
    wxPanel * StartInvisiblePanel();
    void EndInvisiblePanel();
 
@@ -590,7 +601,11 @@ AUDACITY_DLL_API std::unique_ptr<wxSizer> CreateStdButtonSizer( wxWindow *parent
 class AUDACITY_DLL_API ShuttleGui /* not final */ : public ShuttleGuiBase
 {
 public:
-   ShuttleGui(wxWindow * pParent,teShuttleMode ShuttleMode);
+   ShuttleGui(
+      wxWindow * pParent, teShuttleMode ShuttleMode,
+      bool vertical = true, // Choose layout direction of topmost level sizer
+      wxSize minSize = { 250, 100 }
+   );
    ~ShuttleGui(void);
 public:
    ShuttleGui & Optional( bool & bVar );
@@ -697,9 +712,9 @@ public:
    // The first of these buttons, if any, that is included will be default:
    // Apply, Yes, OK
    void AddStandardButtons(
-      long buttons = eOkButton | eCancelButton, wxButton *extra = NULL );
+      long buttons = eOkButton | eCancelButton, wxWindow *extra = NULL );
 
-   wxSizerItem * AddSpace( int width, int height );
+   wxSizerItem * AddSpace( int width, int height, int prop = 0 );
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };
 
    // Calculate width of a choice control adequate for the items, maybe after

@@ -359,8 +359,6 @@ bool EffectScienFilter::Init()
 
 void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 {
-   wxWindow *const parent = S.GetParent();
-
    S.AddSpace(5);
    S.SetSizerProportion(1);
    S.StartMultiColumn(3, wxEXPAND);
@@ -375,7 +373,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       S.StartVerticalLay();
       {
          mdBRuler = safenew RulerPanel(
-            parent, wxID_ANY, wxVERTICAL,
+            S.GetParent(), wxID_ANY, wxVERTICAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 30.0, -120.0 },
             Ruler::LinearDBFormat,
@@ -394,7 +392,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       S.EndVerticalLay();
 
       mPanel = safenew EffectScienFilterPanel(
-         parent, wxID_ANY,
+         S.GetParent(), wxID_ANY,
          this, mLoFreq, mNyquist
       );
 
@@ -432,8 +430,8 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
       S.AddSpace(1, 1);
 
-      mfreqRuler  = safenew RulerPanel(
-         parent, wxID_ANY, wxHORIZONTAL,
+      mfreqRuler = safenew RulerPanel(
+         S.GetParent(), wxID_ANY, wxHORIZONTAL,
          wxSize{ 100, 100 }, // Ruler can't handle small sizes
          RulerPanel::Range{ mLoFreq, mNyquist },
          Ruler::IntFormat,

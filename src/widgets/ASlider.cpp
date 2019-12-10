@@ -283,7 +283,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
       mTextCtrl = S.Validator<wxTextValidator>(wxFILTER_NUMERIC)
          .AddTextBox( {}, wxEmptyString, 15);
 
-      mSlider = safenew ASlider(this,
+      mSlider = safenew ASlider(S.GetParent(),
                             wxID_ANY,
                             title,
                             wxDefaultPosition,
