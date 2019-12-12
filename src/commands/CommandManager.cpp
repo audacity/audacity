@@ -561,12 +561,9 @@ void CommandManager::AddItemList(const CommandID & name,
                                  bool bIsEffect)
 {
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
-      auto translated = items[i].Translation();
-      auto stripped = translated.BeforeFirst(wxT('\t'));
-      auto accel = translated.AfterFirst(wxT('\t'));
       CommandListEntry *entry =
          NewIdentifier(name,
-            stripped,
+            items[i].Translation(),
             // No means yet to specify hasDialog !
             false,
             CurrentMenu(),
@@ -576,7 +573,6 @@ void CommandManager::AddItemList(const CommandID & name,
             i,
             cnt,
             Options{}
-               .Accel(accel)
                .IsEffect(bIsEffect));
       entry->flags = flags;
       CurrentMenu()->Append(entry->id, GetLabel(entry));
