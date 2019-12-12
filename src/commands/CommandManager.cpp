@@ -505,7 +505,7 @@ void CommandManager::ClearCurrentMenu()
 
 void CommandManager::AddItem(const CommandID &name,
                              const wxChar *label_in,
-                             bool hasDialog,
+                             bool excludeFromMacros,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
                              CommandFlag flags,
@@ -514,7 +514,7 @@ void CommandManager::AddItem(const CommandID &name,
    if (options.global) {
       wxASSERT( flags == AlwaysEnabledFlag );
       AddGlobalCommand(
-         name, label_in, hasDialog, finder, callback, options );
+         name, label_in, excludeFromMacros, finder, callback, options );
       return;
    }
 
@@ -523,7 +523,7 @@ void CommandManager::AddItem(const CommandID &name,
    CommandListEntry *entry =
       NewIdentifier(name,
          label_in,
-         hasDialog,
+         excludeFromMacros,
          CurrentMenu(), finder, callback,
          {}, 0, 0,
          options);
@@ -564,7 +564,7 @@ void CommandManager::AddItemList(const CommandID & name,
       CommandListEntry *entry =
          NewIdentifier(name,
             items[i].Translation(),
-            // No means yet to specify hasDialog !
+            // No means yet to specify excludeFromMacros !
             false,
             CurrentMenu(),
             finder,
@@ -582,13 +582,13 @@ void CommandManager::AddItemList(const CommandID & name,
 
 void CommandManager::AddGlobalCommand(const CommandID &name,
                                       const wxChar *label_in,
-                                      bool hasDialog,
+                                      bool excludeFromMacros,
                                       CommandHandlerFinder finder,
                                       CommandFunctorPointer callback,
                                       const Options &options)
 {
    CommandListEntry *entry =
-      NewIdentifier(name, label_in, hasDialog, NULL, finder, callback,
+      NewIdentifier(name, label_in, excludeFromMacros, NULL, finder, callback,
                     {}, 0, 0, options);
 
    entry->enabled = false;
@@ -621,7 +621,7 @@ int CommandManager::NextIdentifier(int ID)
 ///and keep menus above wxID_HIGHEST
 CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    const wxString & label,
-   bool hasDialog,
+   bool excludeFromMacros,
    wxMenu *menu,
    CommandHandlerFinder finder,
    CommandFunctorPointer callback,
@@ -695,7 +695,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       // long label is the same as label unless options specified otherwise:
       entry->longLabel = longLabel.empty() ? label : longLabel;
 
-      entry->hasDialog = hasDialog;
+      entry->excludeFromMacros = excludeFromMacros;
       entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
       entry->labelPrefix = labelPrefix;
@@ -1267,10 +1267,10 @@ void CommandManager::GetAllCommandNames(CommandIDs &names,
 }
 
 void CommandManager::GetAllCommandLabels(wxArrayString &names,
-                                         std::vector<bool> &vHasDialog,
+                                         std::vector<bool> &vExcludeFromMacros,
                                         bool includeMultis) const
 {
-   vHasDialog.clear();
+   vExcludeFromMacros.clear();
    for(const auto &entry : mCommandList) {
       // This is fetching commands from the menus, for use as batch commands.
       // Until we have properly merged EffectManager and CommandManager
@@ -1279,9 +1279,9 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
       if ( entry->isEffect )
          continue;
       if (!entry->multi)
-         names.push_back(entry->longLabel), vHasDialog.push_back(entry->hasDialog);
+         names.push_back(entry->longLabel), vExcludeFromMacros.push_back(entry->excludeFromMacros);
       else if( includeMultis )
-         names.push_back(entry->longLabel), vHasDialog.push_back(entry->hasDialog);
+         names.push_back(entry->longLabel), vExcludeFromMacros.push_back(entry->excludeFromMacros);
    }
 }
 

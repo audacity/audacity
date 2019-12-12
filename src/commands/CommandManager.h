@@ -79,7 +79,7 @@ struct CommandListEntry
    bool isGlobal;
    bool isOccult;
    bool isEffect;
-   bool hasDialog;
+   bool excludeFromMacros;
    CommandFlag flags;
    bool useStrictFlags{ false };
 };
@@ -184,7 +184,7 @@ class AUDACITY_DLL_API CommandManager final
 
    void AddItem(const CommandID &name,
                 const wxChar *label_in,
-                bool hasDialog,
+                bool excludeFromMacros,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
                 CommandFlag flags,
@@ -247,7 +247,7 @@ class AUDACITY_DLL_API CommandManager final
    void GetCategories(wxArrayString &cats);
    void GetAllCommandNames(CommandIDs &names, bool includeMultis) const;
    void GetAllCommandLabels(
-      wxArrayString &labels, std::vector<bool> &vHasDialog,
+      wxArrayString &labels, std::vector<bool> &vExcludeFromMacros,
       bool includeMultis) const;
    void GetAllCommandData(
       CommandIDs &names,
@@ -302,7 +302,7 @@ private:
    int NextIdentifier(int ID);
    CommandListEntry *NewIdentifier(const CommandID & name,
                                    const wxString & label,
-                                   bool hasDialog,
+                                   bool excludeFromMacros,
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,
                                    CommandFunctorPointer callback,
@@ -313,7 +313,7 @@ private:
    
    void AddGlobalCommand(const CommandID &name,
                          const wxChar *label,
-                         bool hasDialog,
+                         bool excludeFromMacros,
                          CommandHandlerFinder finder,
                          CommandFunctorPointer callback,
                          const Options &options = {});
@@ -490,7 +490,7 @@ namespace MenuTable {
    struct CommandItem final : BaseItem {
       CommandItem(const CommandID &name_,
                const wxString &label_in_,
-               bool hasDialog_,
+               bool excludeFromMacros_,
                CommandHandlerFinder finder_,
                CommandFunctorPointer callback_,
                CommandFlag flags_,
@@ -499,7 +499,7 @@ namespace MenuTable {
 
       const CommandID name;
       const wxString label_in;
-      bool hasDialog;
+      bool excludeFromMacros;
       CommandHandlerFinder finder;
       CommandFunctorPointer callback;
       CommandFlag flags;
@@ -588,12 +588,12 @@ namespace MenuTable {
       { return std::make_unique<SeparatorItem>(); }
 
    inline std::unique_ptr<CommandItem> Command(
-      const CommandID &name, const wxString &label_in, bool hasDialog,
+      const CommandID &name, const wxString &label_in, bool excludeFromMacros,
       CommandHandlerFinder finder, CommandFunctorPointer callback,
       CommandFlag flags, const CommandManager::Options &options = {})
    {
       return std::make_unique<CommandItem>(
-         name, label_in, hasDialog, finder, callback, flags, options
+         name, label_in, excludeFromMacros, finder, callback, flags, options
       );
    }
 

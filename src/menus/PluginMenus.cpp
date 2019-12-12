@@ -182,22 +182,9 @@ bool CompareEffectsByType(const PluginDescriptor *a, const PluginDescriptor *b)
 void AddEffectMenuItemGroup(
    MenuTable::BaseItemPtrs &table,
    const wxArrayString & names,
-   const std::vector<bool> &vHasDialog,
    const PluginIDs & plugs,
    const std::vector<CommandFlag> & flags,
    bool isDefault);
-
-namespace
-{
-
-inline bool HasDialog( const PluginDescriptor *plug )
-{
-   // Un-translated string is expected to follow a certain convention
-   // Translation, perhaps, uses some other punctuation
-   return plug->GetSymbol().Msgid().MSGID().GET().Contains("...");
-}
-
-}
 
 void AddEffectMenuItems(
    MenuTable::BaseItemPtrs &table,
@@ -225,7 +212,6 @@ void AddEffectMenuItems(
       return batchflags;
    };
 
-   std::vector<bool> vHasDialog;
    wxArrayString groupNames;
    PluginIDs groupPlugs;
    std::vector<CommandFlag> groupFlags;
@@ -238,7 +224,6 @@ void AddEffectMenuItems(
       {
          const PluginDescriptor *plug = plugs[i];
 
-         bool hasDialog = HasDialog( plug );
          auto name = plug->GetSymbol().Translation();
 
          if (plug->IsEffectInteractive())
@@ -270,7 +255,7 @@ void AddEffectMenuItems(
             bool bInSubmenu = !last.empty() && (groupNames.size() > 1);
 
             AddEffectMenuItemGroup(temp,
-               groupNames, vHasDialog,
+               groupNames,
                groupPlugs, groupFlags, isDefault);
 
             table.push_back( MenuOrItems(
@@ -278,14 +263,12 @@ void AddEffectMenuItems(
             ) );
 
             groupNames.clear();
-            vHasDialog.clear();
             groupPlugs.clear();
             groupFlags.clear();
             last = current;
          }
 
          groupNames.push_back(name);
-         vHasDialog.push_back(hasDialog);
          groupPlugs.push_back(plug->GetID());
          groupFlags.push_back(
             plug->IsEffectRealtime() ? realflags : getBatchFlags( plug ) );
@@ -298,7 +281,7 @@ void AddEffectMenuItems(
          bool bInSubmenu = groupNames.size() > 1;
 
          AddEffectMenuItemGroup(temp,
-            groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
+            groupNames, groupPlugs, groupFlags, isDefault);
 
          table.push_back( MenuOrItems(
             ( bInSubmenu ? current : wxString{} ), std::move( temp )
@@ -311,7 +294,6 @@ void AddEffectMenuItems(
       {
          const PluginDescriptor *plug = plugs[i];
 
-         bool hasDialog = HasDialog( plug );
          auto name = plug->GetSymbol().Translation();
 
          if (plug->IsEffectInteractive())
@@ -339,7 +321,6 @@ void AddEffectMenuItems(
                ? name
                : wxString::Format(_("%s: %s"), group, name)
          );
-         vHasDialog.push_back(hasDialog);
          groupPlugs.push_back(plug->GetID());
          groupFlags.push_back(
             plug->IsEffectRealtime() ? realflags : getBatchFlags( plug ) );
@@ -348,7 +329,7 @@ void AddEffectMenuItems(
       if (groupNames.size() > 0)
       {
          AddEffectMenuItemGroup(
-            table, groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
+            table, groupNames, groupPlugs, groupFlags, isDefault);
       }
 
    }
@@ -614,7 +595,6 @@ namespace {
 void AddEffectMenuItemGroup(
    MenuTable::BaseItemPtrs &table,
    const wxArrayString & names,
-   const std::vector<bool> &vHasDialog,
    const PluginIDs & plugs,
    const std::vector<CommandFlag> & flags,
    bool isDefault)
@@ -678,7 +658,7 @@ void AddEffectMenuItemGroup(
             if( plug->GetPluginType() == PluginTypeEffect )
                temp2.push_back( Command( item,
                   item,
-                  item.Contains("..."),
+                  false,
                   FN(OnEffect),
                   flags[i],
                   CommandManager::Options{}
@@ -697,7 +677,7 @@ void AddEffectMenuItemGroup(
          if( plug->GetPluginType() == PluginTypeEffect )
             pTable->push_back( Command( names[i],
                names[i],
-               vHasDialog[i],
+               false,
                FN(OnEffect),
                flags[i],
                CommandManager::Options{}
