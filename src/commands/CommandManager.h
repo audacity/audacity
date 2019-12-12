@@ -192,21 +192,6 @@ class AUDACITY_DLL_API CommandManager final
 
    void AddSeparator();
 
-   // A command doesn't actually appear in a menu but might have a
-   // keyboard shortcut.
-   void AddCommand(const CommandID &name,
-                   const wxChar *label,
-                   CommandHandlerFinder finder,
-                   CommandFunctorPointer callback,
-                   CommandFlag flags);
-
-   void AddCommand(const CommandID &name,
-                   const wxChar *label,
-                   CommandHandlerFinder finder,
-                   CommandFunctorPointer callback,
-                   const wxChar *accel,
-                   CommandFlag flags);
-
    void PopMenuBar();
    void BeginOccultCommands();
    void EndOccultCommands();

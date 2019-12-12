@@ -591,32 +591,6 @@ void CommandManager::AddItemList(const CommandID & name,
    }
 }
 
-///
-/// Add a command that doesn't appear in a menu.  When the key is pressed, the
-/// given function pointer will be called (via the CommandManagerListener)
-void CommandManager::AddCommand(const CommandID &name,
-                                const wxChar *label,
-                                CommandHandlerFinder finder,
-                                CommandFunctorPointer callback,
-                                CommandFlag flags)
-{
-   AddCommand(name, label, finder, callback, wxT(""), flags);
-}
-
-void CommandManager::AddCommand(const CommandID &name,
-                                const wxChar *label_in,
-                                CommandHandlerFinder finder,
-                                CommandFunctorPointer callback,
-                                const wxChar *accel,
-                                CommandFlag flags)
-{
-   wxASSERT( flags != NoFlagsSpecified );
-
-   NewIdentifier(name, label_in, label_in, false, accel, NULL, finder, callback, {}, 0, 0, false, {});
-
-   SetCommandFlags(name, flags);
-}
-
 void CommandManager::AddGlobalCommand(const CommandID &name,
                                       const wxChar *label_in,
                                       bool hasDialog,
