@@ -74,8 +74,8 @@ bool CompareEffectsByPublisher(
    const PluginDescriptor *a, const PluginDescriptor *b)
 {
    auto &em = EffectManager::Get();
-   auto akey = em.GetVendorName(a->GetID());
-   auto bkey = em.GetVendorName(b->GetID());
+   auto akey = em.GetVendorName(a->GetID()).Translation();
+   auto bkey = em.GetVendorName(b->GetID()).Translation();
 
    if (akey.empty())
    {
@@ -99,8 +99,8 @@ bool CompareEffectsByPublisherAndName(
    const PluginDescriptor *a, const PluginDescriptor *b)
 {
    auto &em = EffectManager::Get();
-   auto akey = em.GetVendorName(a->GetID());
-   auto bkey = em.GetVendorName(b->GetID());
+   auto akey = em.GetVendorName(a->GetID()).Translation();
+   auto bkey = em.GetVendorName(b->GetID()).Translation();
 
    if (a->IsEffectDefault())
    {
@@ -124,8 +124,8 @@ bool CompareEffectsByTypeAndName(
    const PluginDescriptor *a, const PluginDescriptor *b)
 {
    auto &em = EffectManager::Get();
-   auto akey = em.GetEffectFamilyName(a->GetID());
-   auto bkey = em.GetEffectFamilyName(b->GetID());
+   auto akey = em.GetEffectFamilyName(a->GetID()).Translation();
+   auto bkey = em.GetEffectFamilyName(b->GetID()).Translation();
 
    if (akey.empty())
    {
@@ -157,8 +157,8 @@ bool CompareEffectsByTypeAndName(
 bool CompareEffectsByType(const PluginDescriptor *a, const PluginDescriptor *b)
 {
    auto &em = EffectManager::Get();
-   auto akey = em.GetEffectFamilyName(a->GetID());
-   auto bkey = em.GetEffectFamilyName(b->GetID());
+   auto akey = em.GetEffectFamilyName(a->GetID()).Translation();
+   auto bkey = em.GetEffectFamilyName(b->GetID()).Translation();
 
    if (akey.empty())
    {
@@ -231,7 +231,7 @@ void AddEffectMenuItems(
 
          if (groupBy == wxT("groupby:publisher"))
          {
-            current = EffectManager::Get().GetVendorName(plug->GetID());
+            current = EffectManager::Get().GetVendorName(plug->GetID()).Translation();
             if (current.empty())
             {
                current = _("Unknown");
@@ -239,7 +239,7 @@ void AddEffectMenuItems(
          }
          else if (groupBy == wxT("groupby:type"))
          {
-            current = EffectManager::Get().GetEffectFamilyName(plug->GetID());
+            current = EffectManager::Get().GetEffectFamilyName(plug->GetID()).Translation();
             if (current.empty())
             {
                current = _("Unknown");
@@ -300,11 +300,11 @@ void AddEffectMenuItems(
          wxString group;
          if (groupBy == wxT("sortby:publisher:name"))
          {
-            group = EffectManager::Get().GetVendorName(plug->GetID());
+            group = EffectManager::Get().GetVendorName(plug->GetID()).Translation();
          }
          else if (groupBy == wxT("sortby:type:name"))
          {
-            group = EffectManager::Get().GetEffectFamilyName(plug->GetID());
+            group = EffectManager::Get().GetEffectFamilyName(plug->GetID()).Translation();
          }
 
          if (plug->IsEffectDefault())

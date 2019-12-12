@@ -300,19 +300,19 @@ wxString EffectManager::GetCommandName(const PluginID & ID)
    return GetCommandSymbol(ID).Translation();
 }
 
-wxString EffectManager::GetEffectFamilyName(const PluginID & ID)
+TranslatableString EffectManager::GetEffectFamilyName(const PluginID & ID)
 {
    auto effect = GetEffect(ID);
    if (effect)
-      return effect->GetFamily().Translation();
+      return effect->GetFamily().Msgid();
    return {};
 }
 
-wxString EffectManager::GetVendorName(const PluginID & ID)
+TranslatableString EffectManager::GetVendorName(const PluginID & ID)
 {
    auto effect = GetEffect(ID);
    if (effect)
-      return effect->GetVendor().Translation();
+      return effect->GetVendor().Msgid();
    return {};
 }
 
