@@ -15,6 +15,7 @@
 
 class wxListCtrl;
 class ShuttleGui;
+class TranslatableString;
 
 #define MOUSE_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Mouse") }
 
@@ -33,10 +34,10 @@ class MousePrefs final : public PrefsPanel
  private:
    void Populate();
    void CreateList();
-   void AddItem(wxString const & buttons,
-                wxString const & tool,
-                wxString const & action,
-                wxString const & comment = {});
+   void AddItem(TranslatableString const & buttons,
+                TranslatableString const & tool,
+                TranslatableString const & action,
+                TranslatableString const & comment = {});
 
    wxListCtrl * mList;
 };

@@ -54,9 +54,9 @@ enum
 };
 
 #if defined(__WXMAC__)
-#define CTRL _("Command")
+#define CTRL XO("Command")
 #else
-#define CTRL _("Ctrl")
+#define CTRL XO("Ctrl")
 #endif
 
 /// Constructor
@@ -128,58 +128,58 @@ void MousePrefs::CreateList()
    mList->InsertColumn(CommentColumn + 1, _("Comments"),        wxLIST_FORMAT_LEFT);
    mList->DeleteColumn(0);
 
-   AddItem(_("Left-Click"),        _("Select"),   _("Set Selection Point"));
-   AddItem(_("Left-Drag"),         _("Select"),   _("Set Selection Range"));
-   AddItem(_("Shift-Left-Click"),  _("Select"),   _("Extend Selection Range"));
-   AddItem(_("Left-Double-Click"), _("Select"),   _("Select Clip or Entire Track"));
+   AddItem(XO("Left-Click"),        XO("Select"),   XO("Set Selection Point"));
+   AddItem(XO("Left-Drag"),         XO("Select"),   XO("Set Selection Range"));
+   AddItem(XO("Shift-Left-Click"),  XO("Select"),   XO("Extend Selection Range"));
+   AddItem(XO("Left-Double-Click"), XO("Select"),   XO("Select Clip or Entire Track"));
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
-   AddItem(_("Wheel-Rotate"),      _("Select"),   _("Change scrub speed"));
+   AddItem(XO("Wheel-Rotate"),      XO("Select"),   XO("Change scrub speed"));
 #endif
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    // JKC: Prompt is disabled for now.  It's a toggle rather than a drag modifier.
    // more like Snap-to than anything else.
    // Spectral selection
-   // AddItem(_("ESC"),              _("Select"),    _("Toggle center snapping in spectrogram"));
+   // AddItem(XO("ESC"),              XO("Select"),    XO("Toggle center snapping in spectrogram"));
 #endif
 
-   AddItem(_("Left-Click"),       _("Zoom"),      _("Zoom in on Point"));
-   AddItem(_("Left-Drag"),        _("Zoom"),      _("Zoom in on a Range"), _("same as right-drag"));
-   AddItem(_("Right-Click"),      _("Zoom"),      _("Zoom out one step"));
-   AddItem(_("Right-Drag"),       _("Zoom"),      _("Zoom in on a Range"), _("same as left-drag"));
-   AddItem(_("Shift-Drag"),       _("Zoom"),      _("Zoom out on a Range"));
-   AddItem(_("Middle-Click"),     _("Zoom"),      _("Zoom default"));
+   AddItem(XO("Left-Click"),       XO("Zoom"),      XO("Zoom in on Point"));
+   AddItem(XO("Left-Drag"),        XO("Zoom"),      XO("Zoom in on a Range"), XO("same as right-drag"));
+   AddItem(XO("Right-Click"),      XO("Zoom"),      XO("Zoom out one step"));
+   AddItem(XO("Right-Drag"),       XO("Zoom"),      XO("Zoom in on a Range"), XO("same as left-drag"));
+   AddItem(XO("Shift-Drag"),       XO("Zoom"),      XO("Zoom out on a Range"));
+   AddItem(XO("Middle-Click"),     XO("Zoom"),      XO("Zoom default"));
 
-   AddItem(_("Left-Drag"),        _("Time-Shift"),_("Move clip left/right or between tracks"));
-   AddItem(_("Shift-Left-Drag"),  _("Time-Shift"),_("Move all clips in track left/right"));
-   AddItem(CTRL + _("-Left-Drag"),_("Time-Shift"),_("Move clip up/down between tracks"));
+   AddItem(XO("Left-Drag"),        XO("Time-Shift"),XO("Move clip left/right or between tracks"));
+   AddItem(XO("Shift-Left-Drag"),  XO("Time-Shift"),XO("Move all clips in track left/right"));
+   AddItem(CTRL + XO("-Left-Drag"),XO("Time-Shift"),XO("Move clip up/down between tracks"));
 
-   AddItem(_("Left-Drag"),
+   AddItem(XO("Left-Drag"),
    /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
-      _("Envelope"),
-      _("Change Amplification Envelope"));
+      XO("Envelope"),
+      XO("Change Amplification Envelope"));
 
-   AddItem(_("Left-Click"),       _("Pencil"),    _("Change Sample"));
-   AddItem(_("Alt-Left-Click"),   _("Pencil"),    _("Smooth at Sample"));
-   AddItem(_("Left-Drag"),        _("Pencil"),    _("Change Several Samples"));
-   AddItem(CTRL + _("-Left-Drag"),_("Pencil"),    _("Change ONE Sample only"));
+   AddItem(XO("Left-Click"),       XO("Pencil"),    XO("Change Sample"));
+   AddItem(XO("Alt-Left-Click"),   XO("Pencil"),    XO("Smooth at Sample"));
+   AddItem(XO("Left-Drag"),        XO("Pencil"),    XO("Change Several Samples"));
+   AddItem(CTRL + XO("-Left-Drag"),XO("Pencil"),    XO("Change ONE Sample only"));
 
-   AddItem(_("Left-Click"),       _("Multi"),     _("Set Selection Point"), _("same as select tool"));
-   AddItem(_("Left-Drag"),        _("Multi"),     _("Set Selection Range"), _("same as select tool"));
-   AddItem(_("Right-Click"),      _("Multi"),     _("Zoom out one step"),   _("same as zoom tool"));
-   AddItem(_("Right-Drag"),       _("Multi"),     _("Zoom in on a Range"),  _("same as zoom tool"));
+   AddItem(XO("Left-Click"),       XO("Multi"),     XO("Set Selection Point"), XO("same as select tool"));
+   AddItem(XO("Left-Drag"),        XO("Multi"),     XO("Set Selection Range"), XO("same as select tool"));
+   AddItem(XO("Right-Click"),      XO("Multi"),     XO("Zoom out one step"),   XO("same as zoom tool"));
+   AddItem(XO("Right-Drag"),       XO("Multi"),     XO("Zoom in on a Range"),  XO("same as zoom tool"));
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    // JKC: Prompt is disabled for now.  It's a toggle rather than a drag modifier.
    // more like Snap-to than anything else.
    // Spectral selection
-   // AddItem(_("ESC"),              _("Select"),    _("Toggle center snapping in spectrogram"), _("same as select tool"));
+   // AddItem(XO("ESC"),              XO("Select"),    XO("Toggle center snapping in spectrogram"), XO("same as select tool"));
 #endif
 
-   AddItem(_("Wheel-Rotate"),                _("Any"),   _("Scroll tracks up or down"));
-   AddItem(_("Shift-Wheel-Rotate"),          _("Any"),   _("Scroll waveform"));
-   AddItem(CTRL + _("-Wheel-Rotate"),        _("Any"),   _("Zoom waveform in or out"));
-   AddItem(CTRL + _("-Shift-Wheel-Rotate"),  _("Any"),   _("Vertical Scale Waveform (dB) range"));
+   AddItem(XO("Wheel-Rotate"),                XO("Any"),   XO("Scroll tracks up or down"));
+   AddItem(XO("Shift-Wheel-Rotate"),          XO("Any"),   XO("Scroll waveform"));
+   AddItem(CTRL + XO("-Wheel-Rotate"),        XO("Any"),   XO("Zoom waveform in or out"));
+   AddItem(CTRL + XO("-Shift-Wheel-Rotate"),  XO("Any"),   XO("Vertical Scale Waveform (dB) range"));
 
    mList->SetColumnWidth(ToolColumn, wxLIST_AUTOSIZE);
    mList->SetColumnWidth(ActionColumn, wxLIST_AUTOSIZE);
@@ -193,17 +193,18 @@ void MousePrefs::CreateList()
 }
 
 /// Adds an item to mList
-void MousePrefs::AddItem(wxString const & buttons, wxString const & tool,
-                         wxString const & action, wxString const & comment)
+void MousePrefs::AddItem(
+   TranslatableString const & buttons, TranslatableString const & tool,
+   TranslatableString const & action, TranslatableString const & comment)
 {
    int i = mList->GetItemCount();
-   mList->InsertItem(i, tool);
-   mList->SetItem(i, ActionColumn, action);
-   mList->SetItem(i, ButtonsColumn, buttons);
+   mList->InsertItem(i, tool.Translation());
+   mList->SetItem(i, ActionColumn, action.Translation());
+   mList->SetItem(i, ButtonsColumn, buttons.Translation());
 
    // Add a space before the text to work around a minor bug in the
    // list control when showing narrow columns.
-   mList->SetItem(i, CommentColumn, wxT(" ") + comment);
+   mList->SetItem(i, CommentColumn, wxT(" ") + comment.Translation());
 }
 
 
