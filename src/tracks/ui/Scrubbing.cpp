@@ -1032,10 +1032,7 @@ MenuTable::BaseItemPtr Scrubber::Menu()
 
    MenuTable::BaseItemPtrs ptrs;
    for (const auto &item : menuItems) {
-      ptrs.push_back( MenuTable::Command(
-          item.name, item.label.Translation(),
-          // No menu items yet have dialogs
-          false,
+      ptrs.push_back( MenuTable::Command( item.name, item.label,
           findme, static_cast<CommandFunctorPointer>(item.memFn),
           item.flags,
           item.StatusTest
@@ -1046,7 +1043,7 @@ MenuTable::BaseItemPtr Scrubber::Menu()
       ) );
    }
 
-   return MenuTable::Menu( _("Scru&bbing"), std::move( ptrs ) );
+   return MenuTable::Menu( XO("Scru&bbing"), std::move( ptrs ) );
 }
 
 void Scrubber::PopulatePopupMenu(wxMenu &menu)

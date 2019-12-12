@@ -320,17 +320,17 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    auto &manager = CommandManager::Get( *project );
    wxArrayString mLabels;
    CommandIDs mNames;
-   std::vector<bool> vHasDialog;
+   std::vector<bool> vExcludeFromMacros;
    mLabels.clear();
    mNames.clear();
-   manager.GetAllCommandLabels(mLabels, vHasDialog, true);
+   manager.GetAllCommandLabels(mLabels, vExcludeFromMacros, true);
    manager.GetAllCommandNames(mNames, true);
 
    const bool english = wxGetLocale()->GetCanonicalName().StartsWith(wxT("en"));
 
    for(size_t i=0; i<mNames.size(); i++) {
-      wxString label = mLabels[i];
-      if( !vHasDialog[i] ){
+      if( !vExcludeFromMacros[i] ){
+         wxString label = mLabels[i];
          label.Replace( "&", "" );
          bool suffix;
          if (!english)

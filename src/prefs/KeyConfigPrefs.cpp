@@ -309,7 +309,7 @@ void KeyConfigPrefs::RefreshBindings(bool bSort)
 {
    wxArrayString Labels;
    wxArrayString Categories;
-   wxArrayString Prefixes;
+   TranslatableStrings Prefixes;
 
    mNames.clear();
    mKeys.clear();

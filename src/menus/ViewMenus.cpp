@@ -431,7 +431,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 #define FN(X) findCommandHandler, \
    static_cast<CommandFunctorPointer>(& ViewActions::Handler :: X)
-#define XXO(X) _(X), wxString{X}.Contains("...")
 
 MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& );
 
@@ -442,8 +441,8 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
 
    static const auto checkOff = Options{}.CheckState( false );
 
-   return Menu( _("&View"),
-      Menu( _("&Zoom"),
+   return Menu( XO("&View"),
+      Menu( XO("&Zoom"),
          Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
             ZoomInAvailableFlag, wxT("Ctrl+1") ),
          Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), FN(OnZoomNormal),
@@ -460,7 +459,7 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
             Options{}.CheckState( gPrefs->Read(wxT("/GUI/VerticalZooming"), 0L) ) )
       ),
 
-      Menu( _("T&rack Size"),
+      Menu( XO("T&rack Size"),
          Command( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
             TracksExistFlag, wxT("Ctrl+F") ),
          Command( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
@@ -471,13 +470,13 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
             FN(OnExpandAllTracks), TracksExistFlag, wxT("Ctrl+Shift+X") )
       ),
 
-      Menu( _("Sk&ip to"),
+      Menu( XO("Sk&ip to"),
          Command( wxT("SkipSelStart"), XXO("Selection Sta&rt"),
             FN(OnGoSelStart), TimeSelectedFlag,
-            Options{ wxT("Ctrl+["), _("Skip to Selection Start") } ),
+            Options{ wxT("Ctrl+["), XO("Skip to Selection Start") } ),
          Command( wxT("SkipSelEnd"), XXO("Selection En&d"), FN(OnGoSelEnd),
             TimeSelectedFlag,
-            Options{ wxT("Ctrl+]"), _("Skip to Selection End") } )
+            Options{ wxT("Ctrl+]"), XO("Skip to Selection End") } )
       ),
 
       Separator(),
@@ -550,5 +549,4 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
    );
 }
 
-#undef XXO
 #undef FN

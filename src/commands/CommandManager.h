@@ -48,11 +48,11 @@ struct MenuBarListEntry
 
 struct SubMenuListEntry
 {
-   SubMenuListEntry(const wxString &name_, std::unique_ptr<wxMenu> &&menu_);
-   SubMenuListEntry(SubMenuListEntry &&that);
+   SubMenuListEntry(const TranslatableString &name_, std::unique_ptr<wxMenu> menu_);
+   SubMenuListEntry( SubMenuListEntry&& ) = default;
    ~SubMenuListEntry();
 
-   wxString name;
+   TranslatableString name;
    std::unique_ptr<wxMenu> menu;
 };
 
@@ -64,7 +64,7 @@ struct CommandListEntry
    NormalizedKeyString key;
    NormalizedKeyString defaultKey;
    wxString label;
-   wxString labelPrefix;
+   TranslatableString labelPrefix;
    wxString labelTop;
    wxMenu *menu;
    CommandHandlerFinder finder;
@@ -79,7 +79,7 @@ struct CommandListEntry
    bool isGlobal;
    bool isOccult;
    bool isEffect;
-   bool hasDialog;
+   bool excludeFromMacros;
    CommandFlag flags;
    bool useStrictFlags{ false };
 };
@@ -136,7 +136,7 @@ class AUDACITY_DLL_API CommandManager final
 
    // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
    // or else BeginMenu followed by EndMenu.  Don't mix them.
-   wxMenu *BeginMenu(const wxString & tName);
+   wxMenu *BeginMenu(const TranslatableString & tName);
    void EndMenu();
 
    // For specifying unusual arguments in AddItem
@@ -147,31 +147,36 @@ class AUDACITY_DLL_API CommandManager final
       // a very common case
       Options( const wxChar *accel_ ) : accel{ accel_ } {}
       // A two-argument constructor for another common case
-      Options( const wxChar *accel_, const wxString &longName_ )
+      Options(
+         const wxChar *accel_,
+         const TranslatableString &longName_ )
       : accel{ accel_ }, longName{ longName_ } {}
 
       Options &&Accel (const wxChar *value) &&
          { accel = value; return std::move(*this); }
       Options &&CheckState (bool value) &&
          { check = value ? 1 : 0; return std::move(*this); }
-      Options &&IsEffect () &&
-         { bIsEffect = true; return std::move(*this); }
+      Options &&IsEffect (bool value = true) &&
+         { bIsEffect = value; return std::move(*this); }
       Options &&Parameter (const CommandParameter &value) &&
          { parameter = value; return std::move(*this); }
-      Options &&LongName (const wxString &value) &&
+      Options &&LongName (const TranslatableString &value ) &&
          { longName = value; return std::move(*this); }
       Options &&IsGlobal () &&
          { global = true; return std::move(*this); }
       Options &&UseStrictFlags () &&
          { useStrictFlags = true; return std::move(*this); }
+      Options &&AllowInMacros ( int value = 1 ) &&
+         { allowInMacros = value; return std::move(*this); }
 
       const wxChar *accel{ wxT("") };
       int check{ -1 }; // default value means it's not a check item
       bool bIsEffect{ false };
       CommandParameter parameter{};
-      wxString longName{}; // translated
+      TranslatableString longName{};
       bool global{ false };
       bool useStrictFlags{ false };
+      int allowInMacros{ -1 }; // 0 = never, 1 = always, -1 = deduce from label
    };
 
    void AddItemList(const CommandID & name,
@@ -182,30 +187,14 @@ class AUDACITY_DLL_API CommandManager final
                     CommandFlag flags,
                     bool bIsEffect = false);
 
-   void AddItem(const CommandID &name,
-                const wxChar *label_in,
-                bool hasDialog,
+   void AddItem(const CommandID & name,
+                const TranslatableString &label_in,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
                 CommandFlag flags,
                 const Options &options = {});
 
    void AddSeparator();
-
-   // A command doesn't actually appear in a menu but might have a
-   // keyboard shortcut.
-   void AddCommand(const CommandID &name,
-                   const wxChar *label,
-                   CommandHandlerFinder finder,
-                   CommandFunctorPointer callback,
-                   CommandFlag flags);
-
-   void AddCommand(const CommandID &name,
-                   const wxChar *label,
-                   CommandHandlerFinder finder,
-                   CommandFunctorPointer callback,
-                   const wxChar *accel,
-                   CommandFlag flags);
 
    void PopMenuBar();
    void BeginOccultCommands();
@@ -262,7 +251,7 @@ class AUDACITY_DLL_API CommandManager final
    void GetCategories(wxArrayString &cats);
    void GetAllCommandNames(CommandIDs &names, bool includeMultis) const;
    void GetAllCommandLabels(
-      wxArrayString &labels, std::vector<bool> &vHasDialog,
+      wxArrayString &labels, std::vector<bool> &vExcludeFromMacros,
       bool includeMultis) const;
    void GetAllCommandData(
       CommandIDs &names,
@@ -270,7 +259,7 @@ class AUDACITY_DLL_API CommandManager final
       std::vector<NormalizedKeyString> &default_keys,
       wxArrayString &labels, wxArrayString &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
-      wxArrayString &prefixes,
+      TranslatableStrings &prefixes,
 #endif
       bool includeMultis);
 
@@ -316,36 +305,20 @@ private:
 
    int NextIdentifier(int ID);
    CommandListEntry *NewIdentifier(const CommandID & name,
-                                   const wxString & label,
-                                   const wxString & longLabel,
-                                   bool hasDialog,
+                                   const TranslatableString & label,
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,
                                    CommandFunctorPointer callback,
                                    const CommandID &nameSuffix,
                                    int index,
                                    int count,
-                                   bool bIsEffect);
-   CommandListEntry *NewIdentifier(const CommandID & name,
-                                   const wxString & label,
-                                   const wxString & longLabel,
-                                   bool hasDialog,
-                                   const wxString & accel,
-                                   wxMenu *menu,
-                                   CommandHandlerFinder finder,
-                                   CommandFunctorPointer callback,
-                                   const CommandID &nameSuffix,
-                                   int index,
-                                   int count,
-                                   bool bIsEffect,
-                                   const CommandParameter &parameter);
+                                   const Options &options);
    
    void AddGlobalCommand(const CommandID &name,
-                         const wxChar *label,
-                         bool hasDialog,
+                         const TranslatableString &label,
                          CommandHandlerFinder finder,
                          CommandFunctorPointer callback,
-                         const wxChar *accel);
+                         const Options &options = {});
 
    //
    // Executing commands
@@ -359,9 +332,9 @@ private:
    //
 
    void Enable(CommandListEntry *entry, bool enabled);
-   wxMenu *BeginMainMenu(const wxString & tName);
+   wxMenu *BeginMainMenu(const TranslatableString & tName);
    void EndMainMenu();
-   wxMenu* BeginSubMenu(const wxString & tName);
+   wxMenu* BeginSubMenu(const TranslatableString & tName);
    void EndSubMenu();
 
    //
@@ -401,7 +374,7 @@ private:
 
    bool mbSeparatorAllowed; // false at the start of a menu and immediately after a separator.
 
-   wxString mCurrentMenuName;
+   TranslatableString mCurrentMenuName;
    std::unique_ptr<wxMenu> uCurrentMenu;
    wxMenu *mCurrentMenu {};
 
@@ -483,16 +456,17 @@ namespace MenuTable {
 
    struct MenuItem final : GroupItem {
       // Construction from a previously built-up vector of pointers
-      MenuItem( const wxString &title_, BaseItemPtrs &&items_ );
+      MenuItem( const TranslatableString &title_, BaseItemPtrs &&items_ );
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         MenuItem( const wxString &title_, Args&&... args )
+         MenuItem(
+            const TranslatableString &title_, Args&&... args )
             : GroupItem{ std::forward<Args>(args)... }
             , title{ title_ }
          {}
       ~MenuItem() override;
 
-      wxString title; // translated
+      TranslatableString title;
    };
 
    struct ConditionalGroupItem final : GroupItem {
@@ -518,8 +492,7 @@ namespace MenuTable {
 
    struct CommandItem final : BaseItem {
       CommandItem(const CommandID &name_,
-               const wxString &label_in_,
-               bool hasDialog_,
+               const TranslatableString &label_in_,
                CommandHandlerFinder finder_,
                CommandFunctorPointer callback_,
                CommandFlag flags_,
@@ -527,8 +500,7 @@ namespace MenuTable {
       ~CommandItem() override;
 
       const CommandID name;
-      const wxString label_in;
-      bool hasDialog;
+      const TranslatableString label_in;
       CommandHandlerFinder finder;
       CommandFunctorPointer callback;
       CommandFlag flags;
@@ -581,11 +553,11 @@ namespace MenuTable {
    // Items will appear in a main toolbar menu or in a sub-menu
    template< typename... Args >
    inline BaseItemPtr Menu(
-      const wxString &title, Args&&... args )
+      const TranslatableString &title, Args&&... args )
          { return std::make_unique<MenuItem>(
             title, std::forward<Args>(args)... ); }
    inline BaseItemPtr Menu(
-      const wxString &title, BaseItemPtrs &&items )
+      const TranslatableString &title, BaseItemPtrs &&items )
          { return std::make_unique<MenuItem>( title, std::move( items ) ); }
 
    // Conditional group items can be constructed two ways, as for group items
@@ -604,12 +576,12 @@ namespace MenuTable {
    // of the title
    template< typename... Args >
    inline BaseItemPtr MenuOrItems(
-      const wxString &title, Args&&... args )
+      const TranslatableString &title, Args&&... args )
          {  if ( title.empty() ) return Items( std::forward<Args>(args)... );
             else return std::make_unique<MenuItem>(
                title, std::forward<Args>(args)... ); }
    inline BaseItemPtr MenuOrItems(
-      const wxString &title, BaseItemPtrs &&items )
+      const TranslatableString &title, BaseItemPtrs &&items )
          {  if ( title.empty() ) return Items( std::move( items ) );
             else return std::make_unique<MenuItem>( title, std::move( items ) ); }
 
@@ -617,12 +589,13 @@ namespace MenuTable {
       { return std::make_unique<SeparatorItem>(); }
 
    inline std::unique_ptr<CommandItem> Command(
-      const CommandID &name, const wxString &label_in, bool hasDialog,
+      const CommandID &name,
+      const TranslatableString &label_in,
       CommandHandlerFinder finder, CommandFunctorPointer callback,
       CommandFlag flags, const CommandManager::Options &options = {})
    {
       return std::make_unique<CommandItem>(
-         name, label_in, hasDialog, finder, callback, flags, options
+         name, label_in, finder, callback, flags, options
       );
    }
 

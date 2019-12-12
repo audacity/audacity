@@ -889,7 +889,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) findCommandHandler, \
    static_cast<CommandFunctorPointer>(& TransportActions::Handler :: X)
-#define XXO(X) _(X), wxString{X}.Contains("...")
 
 MenuTable::BaseItemPtr CursorMenu( AudacityProject& );
 
@@ -905,8 +904,8 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
 
    /* i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */
-   return Menu( _("Tra&nsport"),
-      Menu( _("Pl&aying"),
+   return Menu( XO("Tra&nsport"),
+      Menu( XO("Pl&aying"),
          /* i18n-hint: (verb) Start or Stop audio playback*/
          Command( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
             CanStopAudioStreamFlag, wxT("Space") ),
@@ -918,7 +917,7 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
             CanStopAudioStreamFlag, wxT("P") )
       ),
 
-      Menu( _("&Recording"),
+      Menu( XO("&Recording"),
          /* i18n-hint: (verb)*/
          Command( wxT("Record1stChoice"), XXO("&Record"), FN(OnRecord),
             CanStopFlags, wxT("R") ),
@@ -931,8 +930,8 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
             // We supply the name for the 'other one' here.
             // It should be bound to Shift+R
             (gPrefs->ReadBool("/GUI/PreferNewTrackRecord", false)
-             ? _("&Append Record") : _("Record &New Track")),
-            false, FN(OnRecord2ndChoice), CanStopFlags,
+             ? XO("&Append Record") : XO("Record &New Track")),
+            FN(OnRecord2ndChoice), CanStopFlags,
             wxT("Shift+R")
          ),
 
@@ -962,7 +961,7 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( _("Pla&y Region"),
+      Menu( XO("Pla&y Region"),
          Command( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
             PlayRegionNotLockedFlag ),
          Command( wxT("UnlockPlayRegion"), XXO("&Unlock"),
@@ -974,7 +973,7 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
       Command( wxT("RescanDevices"), XXO("R&escan Audio Devices"),
          FN(OnRescanDevices), AudioIONotBusyFlag | CanStopAudioStreamFlag ),
 
-      Menu( _("Transport &Options"),
+      Menu( XO("Transport &Options"),
          // Sound Activated recording options
          Command( wxT("SoundActivationLevel"),
             XXO("Sound Activation Le&vel..."), FN(OnSoundActivated),
@@ -1013,7 +1012,7 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
 MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( _("T&ransport"),
+   return Menu( XO("T&ransport"),
       // PlayStop is already in the menus.
       /* i18n-hint: (verb) Start playing audio*/
       Command( wxT("Play"), XXO("Pl&ay"), FN(OnPlayStop),
@@ -1055,7 +1054,7 @@ MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & )
 MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( _("&Play-at-Speed"),
+   return Menu( XO("&Play-at-Speed"),
       /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
       Command( wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"),
          FN(OnPlayAtSpeed), CaptureNotBusyFlag ),
@@ -1082,5 +1081,4 @@ MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & )
    );
 }
 
-#undef XXO
 #undef FN

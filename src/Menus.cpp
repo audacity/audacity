@@ -116,7 +116,7 @@ void GroupItem::AppendOne( BaseItemPtr&& ptr )
 }
 GroupItem::~GroupItem() {}
 
-MenuItem::MenuItem( const wxString &title_, BaseItemPtrs &&items_ )
+MenuItem::MenuItem( const TranslatableString &title_, BaseItemPtrs &&items_ )
 : GroupItem{ std::move( items_ ) }, title{ title_ }
 {
    wxASSERT( !title.empty() );
@@ -133,13 +133,12 @@ ConditionalGroupItem::~ConditionalGroupItem() {}
 SeparatorItem::~SeparatorItem() {}
 
 CommandItem::CommandItem(const CommandID &name_,
-         const wxString &label_in_,
-         bool hasDialog_,
+         const TranslatableString &label_in_,
          CommandHandlerFinder finder_,
          CommandFunctorPointer callback_,
          CommandFlag flags_,
          const CommandManager::Options &options_)
-: name{ name_ }, label_in{ label_in_ }, hasDialog{ hasDialog_ }
+: name{ name_ }, label_in{ label_in_ }
 , finder{ finder_ }, callback{ callback_ }
 , flags{ flags_ }, options{ options_ }
 {}
@@ -193,7 +192,7 @@ void VisitItem( AudacityProject &project, MenuTable::BaseItem *pItem )
    if (const auto pCommand =
        dynamic_cast<CommandItem*>( pItem )) {
       manager.AddItem(
-         pCommand->name, pCommand->label_in, pCommand->hasDialog,
+         pCommand->name, pCommand->label_in,
          pCommand->finder, pCommand->callback,
          pCommand->flags, pCommand->options
       );

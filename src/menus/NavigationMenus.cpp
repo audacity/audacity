@@ -555,7 +555,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 #define FN(X) findCommandHandler, \
    static_cast<CommandFunctorPointer>(& NavigationActions::Handler :: X)
-#define XXO(X) _(X), wxString{X}.Contains("...")
 
 MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & )
 {
@@ -577,7 +576,7 @@ MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
    using namespace MenuTable;
    static const auto FocusedTracksFlags = TracksExistFlag | TrackPanelHasFocus;
 
-   return Menu( _("F&ocus"),
+   return Menu( XO("F&ocus"),
       Command( wxT("PrevFrame"),
          XXO("Move &Backward from Toolbars to Tracks"), FN(OnPrevFrame),
          AlwaysEnabledFlag, wxT("Ctrl+Shift+F6") ),
@@ -603,5 +602,4 @@ MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
    );
 }
 
-#undef XXO
 #undef FN

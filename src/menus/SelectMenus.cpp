@@ -1025,7 +1025,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 #define FN(X) findCommandHandler, \
    static_cast<CommandFunctorPointer>(& SelectActions::Handler :: X)
-#define XXO(X) _(X), wxString{X}.Contains("...")
 
 MenuTable::BaseItemPtr ClipSelectMenu( AudacityProject& );
 
@@ -1035,17 +1034,17 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
    using Options = CommandManager::Options;
    
    /* i18n-hint: (verb) It's an item on a menu. */
-   return Menu( _("&Select"),
+   return Menu( XO("&Select"),
       Command( wxT("SelectAll"), XXO("&All"), FN(OnSelectAll),
          TracksExistFlag,
-         Options{ wxT("Ctrl+A"), _("Select All") } ),
+         Options{ wxT("Ctrl+A"), XO("Select All") } ),
       Command( wxT("SelectNone"), XXO("&None"), FN(OnSelectNone),
          TracksExistFlag,
-         Options{ wxT("Ctrl+Shift+A"), _("Select None") } ),
+         Options{ wxT("Ctrl+Shift+A"), XO("Select None") } ),
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( _("&Tracks"),
+      Menu( XO("&Tracks"),
          Command( wxT("SelAllTracks"), XXO("In All &Tracks"),
             FN(OnSelectAllTracks),
             TracksExistFlag,
@@ -1056,28 +1055,28 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
          Command( wxT("SelSyncLockTracks"), XXO("In All &Sync-Locked Tracks"),
             FN(OnSelectSyncLockSel),
             TracksSelectedFlag | IsSyncLockedFlag,
-            Options{ wxT("Ctrl+Shift+Y"), _("Select Sync-Locked") } )
+            Options{ wxT("Ctrl+Shift+Y"), XO("Select Sync-Locked") } )
 #endif
       ),
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( _("R&egion"),
+      Menu( XO("R&egion"),
          Command( wxT("SetLeftSelection"), XXO("&Left at Playback Position"),
             FN(OnSetLeftSelection), TracksExistFlag,
-            Options{ wxT("["), _("Set Selection Left at Play Position") } ),
+            Options{ wxT("["), XO("Set Selection Left at Play Position") } ),
          Command( wxT("SetRightSelection"), XXO("&Right at Playback Position"),
             FN(OnSetRightSelection), TracksExistFlag,
-            Options{ wxT("]"), _("Set Selection Right at Play Position") } ),
+            Options{ wxT("]"), XO("Set Selection Right at Play Position") } ),
          Command( wxT("SelTrackStartToCursor"), XXO("Track &Start to Cursor"),
             FN(OnSelectStartCursor), AlwaysEnabledFlag,
-            Options{ wxT("Shift+J"), _("Select Track Start to Cursor") } ),
+            Options{ wxT("Shift+J"), XO("Select Track Start to Cursor") } ),
          Command( wxT("SelCursorToTrackEnd"), XXO("Cursor to Track &End"),
             FN(OnSelectCursorEnd), AlwaysEnabledFlag,
-            Options{ wxT("Shift+K"), _("Select Cursor to Track End") } ),
+            Options{ wxT("Shift+K"), XO("Select Cursor to Track End") } ),
          Command( wxT("SelTrackStartToEnd"), XXO("Track Start to En&d"),
             FN(OnSelectTrackStartToEnd), AlwaysEnabledFlag,
-            Options{}.LongName( _("Select Track Start to End") ) ),
+            Options{}.LongName( XO("Select Track Start to End") ) ),
 
          Separator(),
 
@@ -1096,7 +1095,7 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
       //////////////////////////////////////////////////////////////////////////
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      Menu( _("S&pectral"),
+      Menu( XO("S&pectral"),
          Command( wxT("ToggleSpectralSelection"),
             XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection),
             TracksExistFlag, wxT("Q") ),
@@ -1120,7 +1119,7 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
       Command( wxT("SelCursorStoredCursor"),
          XXO("Cursor to Stored &Cursor Position"),
          FN(OnSelectCursorStoredCursor), TracksExistFlag,
-         Options{}.LongName( _("Select Cursor to Stored") ) ),
+         Options{}.LongName( XO("Select Cursor to Stored") ) ),
 
       Command( wxT("StoreCursorPosition"), XXO("Store Cursor Pos&ition"),
          FN(OnCursorPositionStore),
@@ -1132,14 +1131,14 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
 
       Command( wxT("ZeroCross"), XXO("At &Zero Crossings"),
          FN(OnZeroCrossing), TracksSelectedFlag,
-         Options{ wxT("Z"), _("Select Zero Crossing") } )
+         Options{ wxT("Z"), XO("Select Zero Crossing") } )
    );
 }
 
 MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( _("&Selection"),
+   return Menu( XO("&Selection"),
       Command( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
          AlwaysEnabledFlag ),
       Command( wxT("SnapToNearest"), XXO("Snap-To &Nearest"),
@@ -1188,34 +1187,34 @@ MenuTable::BaseItemPtr CursorMenu( AudacityProject & )
    // GA: 'Skip to' moves the viewpoint to center of the track and preserves the
    // selection. 'Cursor to' does neither. 'Center at' might describe it better
    // than 'Skip'.
-   return Menu( _("&Cursor to"),
+   return Menu( XO("&Cursor to"),
       Command( wxT("CursSelStart"), XXO("Selection Star&t"),
          FN(OnCursorSelStart),
          TimeSelectedFlag,
-         Options{}.LongName( _("Cursor to Selection Start") ) ),
+         Options{}.LongName( XO("Cursor to Selection Start") ) ),
       Command( wxT("CursSelEnd"), XXO("Selection En&d"),
          FN(OnCursorSelEnd),
          TimeSelectedFlag,
-         Options{}.LongName( _("Cursor to Selection End") ) ),
+         Options{}.LongName( XO("Cursor to Selection End") ) ),
 
       Command( wxT("CursTrackStart"), XXO("Track &Start"),
          FN(OnCursorTrackStart),
          TracksSelectedFlag,
-         Options{ wxT("J"), _("Cursor to Track Start") } ),
+         Options{ wxT("J"), XO("Cursor to Track Start") } ),
       Command( wxT("CursTrackEnd"), XXO("Track &End"),
          FN(OnCursorTrackEnd),
          TracksSelectedFlag,
-         Options{ wxT("K"), _("Cursor to Track End") } ),
+         Options{ wxT("K"), XO("Cursor to Track End") } ),
 
       ClipCursorItems,
 
       Command( wxT("CursProjectStart"), XXO("&Project Start"),
          FN(OnSkipStart),
          CanStopFlags,
-         Options{ wxT("Home"), _("Cursor to Project Start") } ),
+         Options{ wxT("Home"), XO("Cursor to Project Start") } ),
       Command( wxT("CursProjectEnd"), XXO("Project E&nd"), FN(OnSkipEnd),
          CanStopFlags,
-         Options{ wxT("End"), _("Cursor to Project End") } )
+         Options{ wxT("End"), XO("Cursor to Project End") } )
    );
 }
 
@@ -1225,7 +1224,7 @@ MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & )
 {
    using namespace MenuTable;
 
-   return Menu( _("&Cursor"),
+   return Menu( XO("&Cursor"),
       Command( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
          TracksExistFlag | TrackPanelHasFocus,
          wxT("Left\twantKeyup\tallowDup") ),
@@ -1252,7 +1251,7 @@ MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & )
 MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & )
 {
    using namespace MenuTable;
-   return Menu( _("See&k"),
+   return Menu( XO("See&k"),
       Command( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
          FN(OnSeekLeftShort), AudioIOBusyFlag, wxT("Left\tallowDup") ),
       Command( wxT("SeekRightShort"),
@@ -1265,5 +1264,4 @@ MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & )
    );
 }
 
-#undef XXO
 #undef FN

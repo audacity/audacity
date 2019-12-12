@@ -93,8 +93,8 @@ public:
                  NotifyingSelectedRegion &selectedRegion,
                  bool shouldPrompt = true);
 
-   wxString GetEffectFamilyName(const PluginID & ID);
-   wxString GetVendorName(const PluginID & ID);
+   TranslatableString GetEffectFamilyName(const PluginID & ID);
+   TranslatableString GetVendorName(const PluginID & ID);
 
    /** Run a command given the plugin ID */
    // Returns true on success. 

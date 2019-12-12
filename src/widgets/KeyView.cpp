@@ -635,7 +635,7 @@ KeyView::UpdateHScroll()
 void
 KeyView::RefreshBindings(const CommandIDs & names,
                          const wxArrayString & categories,
-                         const wxArrayString & prefixes,
+                         const TranslatableStrings & prefixes,
                          const wxArrayString & labels,
                          const std::vector<NormalizedKeyString> & keys,
                          bool bSort
@@ -665,7 +665,7 @@ KeyView::RefreshBindings(const CommandIDs & names,
 
       // Remove any menu code from the category and prefix
       wxString cat = wxMenuItem::GetLabelText(categories[i]);
-      wxString pfx = wxMenuItem::GetLabelText(prefixes[i]);
+      wxString pfx = wxMenuItem::GetLabelText(prefixes[i].Translation());
 
       // Append "Menu" this node is for a menu title
       if (cat != wxT("Command"))
