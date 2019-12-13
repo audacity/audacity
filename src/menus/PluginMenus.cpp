@@ -672,7 +672,12 @@ void AddEffectMenuItemGroup(
          const PluginDescriptor *plug =
             PluginManager::Get().GetPlugin(plugs[i]);
          if( plug->GetPluginType() == PluginTypeEffect )
-            pTable->push_back( Command( names[i].MSGID(),
+            pTable->push_back( Command(
+               // Call Debug() not MSGID() so that any concatenated "..." is
+               // included in the identifier, preserving old behavior, and
+               // avoiding the collision of the "Silence" command and the
+               // "Silence..." generator
+               names[i].Debug(), // names[i].MSGID(),
                names[i],
                FN(OnEffect),
                flags[i],
