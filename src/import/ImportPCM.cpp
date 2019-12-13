@@ -71,7 +71,7 @@
    }
 #endif
 
-#define DESC _("WAV, AIFF, and other uncompressed types")
+#define DESC XO("WAV, AIFF, and other uncompressed types")
 
 class PCMImportPlugin final : public ImportPlugin
 {
@@ -84,7 +84,7 @@ public:
    ~PCMImportPlugin() { }
 
    wxString GetPluginStringID() override { return wxT("libsndfile"); }
-   wxString GetPluginFormatDescription() override;
+   TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
 
    unsigned SequenceNumber() const override;
@@ -97,7 +97,7 @@ public:
    PCMImportFileHandle(const FilePath &name, SFFile &&file, SF_INFO info);
    ~PCMImportFileHandle();
 
-   wxString GetFileDescription() override;
+   TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
    ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
@@ -119,7 +119,7 @@ private:
    sampleFormat          mFormat;
 };
 
-wxString PCMImportPlugin::GetPluginFormatDescription()
+TranslatableString PCMImportPlugin::GetPluginFormatDescription()
 {
     return DESC;
 }
@@ -220,9 +220,69 @@ PCMImportFileHandle::PCMImportFileHandle(const FilePath &name,
       mFormat = floatSample;
 }
 
-wxString PCMImportFileHandle::GetFileDescription()
+TranslatableString PCMImportFileHandle::GetFileDescription()
 {
-   return SFCall<wxString>(sf_header_name, mInfo.format);
+   // Library strings
+   // See the major_formats and subtype_formats tables in command.c in
+   // libsndfile for this list of possibilities
+
+using Unevaluated = decltype(
+   /* major_formats */
+     XO("AIFF (Apple/SGI)")
+   , XO("AU (Sun/NeXT)")
+   , XO("AVR (Audio Visual Research)")
+   , XO("CAF (Apple Core Audio File)")
+   , XO("FLAC (FLAC Lossless Audio Codec)")
+   , XO("HTK (HMM Tool Kit)")
+   , XO("IFF (Amiga IFF/SVX8/SV16)")
+   , XO("MAT4 (GNU Octave 2.0 / Matlab 4.2)")
+   , XO("MAT5 (GNU Octave 2.1 / Matlab 5.0)")
+   , XO("MPC (Akai MPC 2k)")
+   , XO("OGG (OGG Container format)")
+   , XO("PAF (Ensoniq PARIS)")
+   , XO("PVF (Portable Voice Format)")
+   , XO("RAW (header-less)")
+   , XO("RF64 (RIFF 64)")
+   , XO("SD2 (Sound Designer II)")
+   , XO("SDS (Midi Sample Dump Standard)")
+   , XO("SF (Berkeley/IRCAM/CARL)")
+   , XO("VOC (Creative Labs)")
+   , XO("W64 (SoundFoundry WAVE 64)")
+   , XO("WAV (Microsoft)")
+   , XO("WAV (NIST Sphere)")
+   , XO("WAVEX (Microsoft)")
+   , XO("WVE (Psion Series 3)")
+   , XO("XI (FastTracker 2)")
+);
+
+using Unevaluated2 = decltype(
+   /* subtype_formats */
+     XO("Signed 8 bit PCM")
+   , XO("Signed 16 bit PCM")
+   , XO("Signed 24 bit PCM")
+   , XO("Signed 32 bit PCM")
+   , XO("Unsigned 8 bit PCM")
+   , XO("32 bit float")
+   , XO("64 bit float")
+   , XO("U-Law")
+   , XO("A-Law")
+   , XO("IMA ADPCM")
+   , XO("Microsoft ADPCM")
+   , XO("GSM 6.10")
+   , XO("32kbs G721 ADPCM")
+   , XO("24kbs G723 ADPCM")
+   , XO("12 bit DWVW")
+   , XO("16 bit DWVW")
+   , XO("24 bit DWVW")
+   , XO("VOX ADPCM")
+   , XO("16 bit DPCM")
+   , XO("8 bit DPCM")
+   , XO("Vorbis")
+);
+
+   auto untranslated = SFCall<wxString>(sf_header_name, mInfo.format);
+   return TranslatableString{
+      untranslated, {} };
 }
 
 auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount

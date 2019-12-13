@@ -73,7 +73,7 @@ public:
 
    // Get a description of the file type this importer can import.
    // Examples: "Ogg Vorbis", "MP3", "Uncompressed PCM"
-   virtual wxString GetPluginFormatDescription() = 0;
+   virtual TranslatableString GetPluginFormatDescription() = 0;
 
    // Get a list of extensions this plugin expects to be able to
    // import.  If a filename matches any of these extensions,
@@ -120,10 +120,10 @@ public:
    // identify the filename being imported.
    void CreateProgress();
 
-   // This is similar to GetImporterDescription, but if possible the
+   // This is similar to GetPluginFormatDescription, but if possible the
    // importer will return a more specific description of the
    // specific file that is open.
-   virtual wxString GetFileDescription() = 0;
+   virtual TranslatableString GetFileDescription() = 0;
 
    // Return an estimate of how many bytes the file will occupy once
    // imported.  In principle this may exceed main memory, so don't use
@@ -162,13 +162,13 @@ class UnusableImportPlugin
 {
 public:
    UnusableImportPlugin(
-      const wxString &formatName, FileExtensions extensions):
+      const TranslatableString &formatName, FileExtensions extensions):
       mFormatName(formatName),
       mExtensions( std::move( extensions ) )
    {
    }
 
-   wxString GetPluginFormatDescription()
+   TranslatableString GetPluginFormatDescription()
    {
       return mFormatName;
    }
@@ -179,7 +179,7 @@ public:
    }
 
 private:
-   wxString mFormatName;
+   TranslatableString mFormatName;
    const FileExtensions mExtensions;
 };
 

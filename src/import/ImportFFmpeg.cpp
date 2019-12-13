@@ -39,7 +39,7 @@ Licensed under the GNU General Public License v2 or later
 #include "../widgets/ProgressDialog.h"
 
 
-#define DESC _("FFmpeg-compatible files")
+#define DESC XO("FFmpeg-compatible files")
 
 //TODO: remove non-audio extensions
 #if defined(USE_FFMPEG)
@@ -180,7 +180,7 @@ public:
    ~FFmpegImportPlugin() { }
 
    wxString GetPluginStringID() override { return wxT("libav"); }
-   wxString GetPluginFormatDescription() override;
+   TranslatableString GetPluginFormatDescription() override;
 
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
@@ -204,7 +204,7 @@ public:
    bool InitCodecs();
 
 
-   wxString GetFileDescription() override;
+   TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
    ///! Imports audio
@@ -286,7 +286,7 @@ private:
 };
 
 
-wxString FFmpegImportPlugin::GetPluginFormatDescription()
+TranslatableString FFmpegImportPlugin::GetPluginFormatDescription()
 {
    return DESC;
 }
@@ -465,7 +465,7 @@ bool FFmpegImportFileHandle::InitCodecs()
    return true;
 }
 
-wxString FFmpegImportFileHandle::GetFileDescription()
+TranslatableString FFmpegImportFileHandle::GetFileDescription()
 {
    return DESC;
 }

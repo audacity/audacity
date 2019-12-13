@@ -111,11 +111,11 @@ public:
    // Importer plugins only
 
    const wxString & GetImporterIdentifier() const;
-   const wxString & GetImporterFilterDescription() const;
+   const TranslatableString & GetImporterFilterDescription() const;
    const FileExtensions & GetImporterExtensions() const;
 
    void SetImporterIdentifier(const wxString & identifier);
-   void SetImporterFilterDescription(const wxString & filterDesc);
+   void SetImporterFilterDescription(const TranslatableString & filterDesc);
    void SetImporterExtensions(FileExtensions extensions);
 
 private:

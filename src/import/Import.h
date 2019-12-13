@@ -31,10 +31,10 @@ typedef bool (*progress_callback_t)( void *userData, float percent );
 
 class Format {
 public:
-   wxString formatName;
+   TranslatableString formatName;
    FileExtensions formatExtensions;
 
-   Format(const wxString &_formatName,
+   Format(const TranslatableString &_formatName,
       FileExtensions _formatExtensions):
       formatName(_formatName),
       formatExtensions( std::move( _formatExtensions ) )
@@ -155,7 +155,7 @@ public:
               TrackFactory *trackFactory,
               TrackHolders &tracks,
               Tags *tags,
-              wxString &errorMessage);
+              TranslatableString &errorMessage);
 
 private:
    static Importer mInstance;

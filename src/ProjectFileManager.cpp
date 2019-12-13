@@ -986,7 +986,7 @@ wxArrayString ProjectFileManager::ShowOpenDialog(const wxString &extraformat, co
       /* this loop runs once per supported _format_ */
       const Format *f = &format;
 
-      wxString newfilter = f->formatName + wxT("|");
+      wxString newfilter = f->formatName.Translation() + wxT("|");
       // bung format name into string plus | separator
       for (size_t i = 0; i < f->formatExtensions.size(); i++) {
          /* this loop runs once per valid _file extension_ for file containing
@@ -1661,7 +1661,7 @@ bool ProjectFileManager::Import(
    auto &dirManager = DirManager::Get( project );
    auto oldTags = Tags::Get( project ).shared_from_this();
    TrackHolders newTracks;
-   wxString errorMessage;
+   TranslatableString errorMessage;
 
    {
       // Backup Tags, before the import.  Be prepared to roll back changes.
@@ -1683,7 +1683,7 @@ bool ProjectFileManager::Import(
          // Error message derived from Importer::Import
          // Additional help via a Help button links to the manual.
          ShowErrorDialog(&GetProjectFrame( project ), _("Error Importing"),
-                         errorMessage, wxT("Importing_Audio"));
+                         errorMessage.Translation(), wxT("Importing_Audio"));
       }
       if (!success)
          return false;
