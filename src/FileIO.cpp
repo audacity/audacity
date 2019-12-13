@@ -15,25 +15,26 @@
 #include <wx/crt.h>
 #include <wx/filename.h>
 #include <wx/wfstream.h>
+#include "wxFileNameWrapper.h"
 
-FileIO::FileIO(const wxString & name, FileIOMode mode)
-: mName(name),
-  mMode(mode),
+FileIO::FileIO(const wxFileNameWrapper & name, FileIOMode mode)
+: mMode(mode),
   mOpen(false)
 {
    wxString scheme;
 
+      auto path = name.GetFullPath();
       if (mMode == FileIO::Input) {
-         mInputStream = std::make_unique<wxFFileInputStream>(mName);
+         mInputStream = std::make_unique<wxFFileInputStream>(path);
          if (mInputStream == NULL || !mInputStream->IsOk()) {
-            wxPrintf(wxT("Couldn't get input stream: %s\n"), name);
+            wxPrintf(wxT("Couldn't get input stream: %s\n"), path);
             return;
          }
       }
       else {
-         mOutputStream = std::make_unique<wxFFileOutputStream>(mName);
+         mOutputStream = std::make_unique<wxFFileOutputStream>(path);
          if (mOutputStream == NULL || !mOutputStream->IsOk()) {
-            wxPrintf(wxT("Couldn't get output stream: %s\n"), name);
+            wxPrintf(wxT("Couldn't get output stream: %s\n"), path);
             return;
          }
       }

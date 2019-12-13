@@ -34,6 +34,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
+#include "../wxFileNameWrapper.h"
 
 #include "Export.h"
 
@@ -330,7 +331,7 @@ public:
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
-               const wxString &fName,
+               const wxFileNameWrapper &fName,
                bool selectedOnly,
                double t0,
                double t1,
@@ -347,7 +348,8 @@ private:
    void ReportTooBigError(wxWindow * pParent);
    ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
    bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
-   bool AddID3Chunk(wxString fName, const Tags *tags, int sf_format);
+   bool AddID3Chunk(
+      const wxFileNameWrapper &fName, const Tags *tags, int sf_format);
 
 };
 
@@ -424,7 +426,7 @@ void ExportPCM::ReportTooBigError(wxWindow * pParent)
 ProgressResult ExportPCM::Export(AudacityProject *project,
                        std::unique_ptr<ProgressDialog> &pDialog,
                        unsigned numChannels,
-                       const wxString &fName,
+                       const wxFileNameWrapper &fName,
                        bool selectionOnly,
                        double t0,
                        double t1,
@@ -492,7 +494,8 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
          return ProgressResult::Cancelled;
       }
 
-      if (f.Open(fName, wxFile::write)) {
+      const auto path = fName.GetFullPath();
+      if (f.Open(path, wxFile::write)) {
          // Even though there is an sf_open() that takes a filename, use the one that
          // takes a file descriptor since wxWidgets can open a file with a Unicode name and
          // libsndfile can't (under Windows).
@@ -503,7 +506,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
       if (!sf) {
          AudacityMessageBox(wxString::Format(_("Cannot export audio to %s"),
-                                       fName));
+                                       path));
          return ProgressResult::Cancelled;
       }
       // Retrieve tags if not given a set
@@ -550,7 +553,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                                   info.channels, maxBlockLen, true,
                                   rate, format, true, mixerSpec);
 
-         InitProgress( pDialog, wxFileName(fName).GetName(),
+         InitProgress( pDialog, fName,
             selectionOnly
                ? wxString::Format(_("Exporting the selected audio as %s"),
                   formatStr)
@@ -785,7 +788,8 @@ struct id3_tag_deleter {
 using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 #endif
 
-bool ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
+bool ExportPCM::AddID3Chunk(
+   const wxFileNameWrapper &fName, const Tags *tags, int sf_format)
 {
 #ifdef USE_LIBID3TAG
    id3_tag_holder tp { id3_tag_new() };
@@ -882,7 +886,7 @@ bool ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
 
    id3_tag_render(tp.get(), buffer.get());
 
-   wxFFile f(fName, wxT("r+b"));
+   wxFFile f(fName.GetFullPath(), wxT("r+b"));
    if (f.IsOpened()) {
       wxUint32 sz;
 

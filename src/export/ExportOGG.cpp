@@ -134,7 +134,7 @@ public:
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
-               const wxString &fName,
+               const wxFileNameWrapper &fName,
                bool selectedOnly,
                double t0,
                double t1,
@@ -163,7 +163,7 @@ ExportOGG::ExportOGG()
 ProgressResult ExportOGG::Export(AudacityProject *project,
                        std::unique_ptr<ProgressDialog> &pDialog,
                        unsigned numChannels,
-                       const wxString &fName,
+                       const wxFileNameWrapper &fName,
                        bool selectionOnly,
                        double t0,
                        double t1,
@@ -281,7 +281,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
          numChannels, SAMPLES_PER_RUN, false,
          rate, floatSample, true, mixerSpec);
 
-      InitProgress( pDialog, wxFileName(fName).GetName(),
+      InitProgress( pDialog, fName,
          selectionOnly
             ? _("Exporting the selected audio as Ogg Vorbis")
             : _("Exporting the audio as Ogg Vorbis") );

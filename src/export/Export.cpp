@@ -282,6 +282,12 @@ void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
    }
 }
 
+void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
+   const wxFileNameWrapper &title, const wxString &message)
+{
+   return InitProgress( pDialog, title.GetName(), message );
+}
+
 //----------------------------------------------------------------------------
 // Export
 //----------------------------------------------------------------------------

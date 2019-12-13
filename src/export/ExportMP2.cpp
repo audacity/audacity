@@ -209,7 +209,7 @@ public:
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
-               const wxString &fName,
+               const wxFileNameWrapper &fName,
                bool selectedOnly,
                double t0,
                double t1,
@@ -241,7 +241,7 @@ ExportMP2::ExportMP2()
 
 ProgressResult ExportMP2::Export(AudacityProject *project,
    std::unique_ptr<ProgressDialog> &pDialog,
-   unsigned channels, const wxString &fName,
+   unsigned channels, const wxFileNameWrapper &fName,
    bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
    int WXUNUSED(subformat))
 {
@@ -307,7 +307,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
          stereo ? 2 : 1, pcmBufferSize, true,
          rate, int16Sample, true, mixerSpec);
 
-      InitProgress( pDialog, wxFileName(fName).GetName(),
+      InitProgress( pDialog, fName,
          selectionOnly
             ? wxString::Format(_("Exporting selected audio at %ld kbps"),
                bitrate)

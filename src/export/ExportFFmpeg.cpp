@@ -41,6 +41,7 @@ function.
 #include "../Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
+#include "../wxFileNameWrapper.h"
 
 #include "Export.h"
 
@@ -142,7 +143,7 @@ public:
    ProgressResult Export(AudacityProject *project,
       std::unique_ptr<ProgressDialog> &pDialog,
       unsigned channels,
-      const wxString &fName,
+      const wxFileNameWrapper &fName,
       bool selectedOnly,
       double t0,
       double t1,
@@ -159,7 +160,7 @@ private:
    AVStream        *   mEncAudioStream{};      // the output audio stream (may remain NULL)
    int               mEncAudioFifoOutBufSiz{};
 
-   wxString          mName;
+   wxFileNameWrapper mName;
 
    int               mSubFormat{};
    int               mBitRate{};
@@ -279,9 +280,10 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // See if libavformat has modules that can write our output format. If so, mEncFormatDesc
    // will describe the functions used to write the format (used internally by libavformat)
    // and the default video/audio codecs that the format uses.
-   if ((mEncFormatDesc = av_guess_format(shortname, OSINPUT(mName), NULL)) == NULL)
+   const auto path = mName.GetFullPath();
+   if ((mEncFormatDesc = av_guess_format(shortname, OSINPUT(path), NULL)) == NULL)
    {
-      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't determine format description for file \"%s\"."), mName),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't determine format description for file \"%s\"."), path),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -298,12 +300,12 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // Initialise the output format context.
    mEncFormatCtx->oformat = mEncFormatDesc;
 
-   memcpy(mEncFormatCtx->filename, OSINPUT(mName), strlen(OSINPUT(mName))+1);
+   memcpy(mEncFormatCtx->filename, OSINPUT(path), strlen(OSINPUT(path))+1);
 
    // At the moment Audacity can export only one audio stream
    if ((mEncAudioStream = avformat_new_stream(mEncFormatCtx.get(), NULL)) == NULL)
    {
-      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."), mName),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."), path),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -326,9 +328,9 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // Open the output file.
    if (!(mEncFormatDesc->flags & AVFMT_NOFILE))
    {
-      if ((err = ufile_fopen(&mEncFormatCtx->pb, mName, AVIO_FLAG_WRITE)) < 0)
+      if ((err = ufile_fopen(&mEncFormatCtx->pb, path, AVIO_FLAG_WRITE)) < 0)
       {
-         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."), mName, err),
+         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."), path, err),
                       _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
          return false;
       }
@@ -354,7 +356,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // Write headers to the output file.
    if ((err = avformat_write_header(mEncFormatCtx.get(), NULL)) < 0)
    {
-      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."), mName,err),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."), path, err),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -858,7 +860,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 
 ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    std::unique_ptr<ProgressDialog> &pDialog,
-   unsigned channels, const wxString &fName,
+   unsigned channels, const wxFileNameWrapper &fName,
    bool selectionOnly, double t0, double t1,
    MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {
@@ -908,7 +910,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
    auto updateResult = ProgressResult::Success;
    {
-      InitProgress( pDialog, wxFileName(fName).GetName(),
+      InitProgress( pDialog, fName,
          selectionOnly
             ? wxString::Format(_("Exporting selected audio as %s"),
                ExportFFmpegOptions::fmts[mSubFormat].description.Translation())

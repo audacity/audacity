@@ -41,6 +41,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
+#include "../wxFileNameWrapper.h"
 
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
@@ -215,7 +216,7 @@ public:
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
-               const wxString &fName,
+               const wxFileNameWrapper &fName,
                bool selectedOnly,
                double t0,
                double t1,
@@ -249,7 +250,7 @@ ExportFLAC::ExportFLAC()
 ProgressResult ExportFLAC::Export(AudacityProject *project,
                         std::unique_ptr<ProgressDialog> &pDialog,
                         unsigned numChannels,
-                        const wxString &fName,
+                        const wxFileNameWrapper &fName,
                         bool selectionOnly,
                         double t0,
                         double t1,
@@ -343,8 +344,9 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    encoder.init();
 #else
    wxFFile f;     // will be closed when it goes out of scope
-   if (!f.Open(fName, wxT("w+b"))) {
-      AudacityMessageBox(wxString::Format(_("FLAC export couldn't open %s"), fName));
+   const auto path = fName.GetFullPath();
+   if (!f.Open(path, wxT("w+b"))) {
+      AudacityMessageBox(wxString::Format(_("FLAC export couldn't open %s"), path));
       return ProgressResult::Cancelled;
    }
 
@@ -377,7 +379,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    ArraysOf<FLAC__int32> tmpsmplbuf{ numChannels, SAMPLES_PER_RUN, true };
 
-   InitProgress( pDialog, wxFileName(fName).GetName(),
+   InitProgress( pDialog, fName,
       selectionOnly
          ? _("Exporting the selected audio as FLAC")
          : _("Exporting the audio as FLAC") );

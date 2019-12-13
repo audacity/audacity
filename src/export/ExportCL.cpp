@@ -38,6 +38,7 @@
 #include "../widgets/FileHistory.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
+#include "../wxFileNameWrapper.h"
 
 
 //----------------------------------------------------------------------------
@@ -293,7 +294,7 @@ public:
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
-               const wxString &fName,
+               const wxFileNameWrapper &fName,
                bool selectedOnly,
                double t0,
                double t1,
@@ -318,7 +319,7 @@ ExportCL::ExportCL()
 ProgressResult ExportCL::Export(AudacityProject *project,
                       std::unique_ptr<ProgressDialog> &pDialog,
                       unsigned channels,
-                      const wxString &fName,
+                      const wxFileNameWrapper &fName,
                       bool selectionOnly,
                       double t0,
                       double t1,
@@ -331,15 +332,17 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    bool show;
    long rc;
 
+   const auto path = fName.GetFullPath();
+
    // Retrieve settings
    gPrefs->Read(wxT("/FileFormats/ExternalProgramShowOutput"), &show, false);
    cmd = gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"), wxT("lame - \"%f.mp3\""));
    // Bug 2178 - users who don't know what they are doing will 
    // now get a file extension of .wav appended to their ffmpeg filename
    // and therefore ffmpeg will be able to choose a file type.
-   if( cmd == wxT("ffmpeg -i - \"%f\"") && fName.Index( '.' )==wxNOT_FOUND)
+   if( cmd == wxT("ffmpeg -i - \"%f\"") && !fName.HasExt())
       cmd.Replace( "%f", "%f.wav" );
-   cmd.Replace(wxT("%f"), fName);
+   cmd.Replace(wxT("%f"), path);
 
 #if defined(__WXMSW__)
    // Give Windows a chance at finding lame command in the default location.
@@ -384,7 +387,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
    if (!rc) {
       AudacityMessageBox(wxString::Format(_("Cannot export audio to %s"),
-                                    fName));
+                                    path));
       process.Detach();
       process.CloseOutput();
 

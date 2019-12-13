@@ -92,6 +92,7 @@
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
+#include "../wxFileNameWrapper.h"
 
 #include "Export.h"
 
@@ -1657,7 +1658,7 @@ public:
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
-               const wxString &fName,
+               const wxFileNameWrapper &fName,
                bool selectedOnly,
                double t0,
                double t1,
@@ -1717,7 +1718,7 @@ int ExportMP3::SetNumExportChannels()
 ProgressResult ExportMP3::Export(AudacityProject *project,
                        std::unique_ptr<ProgressDialog> &pDialog,
                        unsigned channels,
-                       const wxString &fName,
+                       const wxFileNameWrapper &fName,
                        bool selectionOnly,
                        double t0,
                        double t1,
@@ -1841,7 +1842,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       metadata = &Tags::Get( *project );
 
    // Open file for writing
-   wxFFile outFile(fName, wxT("w+b"));
+   wxFFile outFile(fName.GetFullPath(), wxT("w+b"));
    if (!outFile.IsOpened()) {
       AudacityMessageBox(_("Unable to open target file for writing"));
       return ProgressResult::Cancelled;
@@ -1898,7 +1899,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
             brate);
       }
 
-      InitProgress( pDialog, wxFileName(fName).GetName(), title );
+      InitProgress( pDialog, fName, title );
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {

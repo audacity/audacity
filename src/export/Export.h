@@ -34,6 +34,7 @@ class ProgressDialog;
 class Mixer;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 enum class ProgressResult : unsigned;
+class wxFileNameWrapper;
 
 class AUDACITY_DLL_API FormatInfo
 {
@@ -123,7 +124,7 @@ public:
    virtual ProgressResult Export(AudacityProject *project,
                        std::unique_ptr<ProgressDialog> &pDialog,
                        unsigned channels,
-                       const wxString &fName,
+                       const wxFileNameWrapper &fName,
                        bool selectedOnly,
                        double t0,
                        double t1,
@@ -144,6 +145,8 @@ protected:
    // Create or recycle a dialog.
    static void InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
          const wxString &title, const wxString &message);
+   static void InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
+         const wxFileNameWrapper &title, const wxString &message);
 
 private:
    std::vector<FormatInfo> mFormatInfos;
