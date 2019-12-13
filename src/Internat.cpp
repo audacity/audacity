@@ -345,12 +345,14 @@ wxString TranslatableString::DoChooseFormat(
          );
 }
 
-TranslatableString &&TranslatableString::Join(
-   const TranslatableString &arg, const wxString &separator ) &&
+TranslatableString &TranslatableString::Join(
+   const TranslatableString arg, const wxString &separator ) &
 {
    auto prevFormatter = mFormatter;
    mFormatter =
-   [prevFormatter, arg, separator](const wxString &str, Request request)
+   [prevFormatter,
+    arg /* = std::move( arg ) */,
+    separator](const wxString &str, Request request)
       -> wxString {
       switch ( request ) {
          case Request::Context:
@@ -366,5 +368,5 @@ TranslatableString &&TranslatableString::Join(
          }
       }
    };
-   return std::move( *this );
+   return *this;
 }

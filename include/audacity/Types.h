@@ -380,7 +380,7 @@ public:
    // Any format arguments that are also of type TranslatableString will be
    // translated too at substitution time, for non-debug formatting
    template< typename... Args >
-   TranslatableString &&Format( Args &&...args ) &&
+   TranslatableString &Format( Args &&...args ) &
    {
       auto prevFormatter = mFormatter;
       this->mFormatter = [prevFormatter, args...]
@@ -399,7 +399,12 @@ public:
             }
          }
       };
-      return std::move( *this );
+      return *this;
+   }
+   template< typename... Args >
+   TranslatableString &&Format( Args &&...args ) &&
+   {
+      return std::move( Format( std::forward<Args>(args)... ) );
    }
 
    // Choose a non-default and non-null disambiguating context for lookups
@@ -407,7 +412,7 @@ public:
    // This is meant to be the first of chain-call modifications of the
    // TranslatableString object; it will destroy any previously captured
    // information
-   TranslatableString &&Context( const wxString &context ) &&
+   TranslatableString &Context( const wxString &context ) &
    {
       this->mFormatter = [context]
       (const wxString &str, Request request) -> wxString {
@@ -418,17 +423,25 @@ public:
                return str;
          }
       };
-      return std::move( *this );
+      return *this;
+   }
+   TranslatableString &&Context( const wxString &context ) &&
+   {
+      return std::move( Context( context ) );
    }
 
    // Append another translatable string; lookup of msgids for
    // this and for the argument are both delayed until Translate() is invoked
    // on this, and then the formatter concatenates the translations
+   TranslatableString &Join(
+      TranslatableString arg, const wxString &separator = {} ) &;
    TranslatableString &&Join(
-      const TranslatableString &arg, const wxString &separator = {} ) &&;
-   TranslatableString &operator +=( const TranslatableString &arg )
+      TranslatableString arg, const wxString &separator = {} ) &&
+   { return std::move( Join( std::move(arg), separator ) ); }
+
+   TranslatableString &operator +=( TranslatableString arg )
    {
-      std::move(*this).Join( arg );
+      Join( std::move( arg ) );
       return *this;
    }
 
@@ -507,9 +520,9 @@ private:
 };
 
 inline TranslatableString operator +(
-   const TranslatableString &x, const TranslatableString &y  )
+   TranslatableString x, TranslatableString y  )
 {
-   return TranslatableString{ x } += y;
+   return std::move(x += std::move(y));
 }
 
 using TranslatableStrings = std::vector<TranslatableString>;
