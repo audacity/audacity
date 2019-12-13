@@ -184,12 +184,16 @@ void MousePrefs::CreateList()
    mList->SetColumnWidth(ToolColumn, wxLIST_AUTOSIZE);
    mList->SetColumnWidth(ActionColumn, wxLIST_AUTOSIZE);
    mList->SetColumnWidth(ButtonsColumn, wxLIST_AUTOSIZE);
+   mList->SetColumnWidth(CommentColumn, wxLIST_AUTOSIZE);
 
+// PRL commented out, didn't look good to me on Mac at least
+/*
    // Not sure if this extra column is a good idea or not.
    // Anyway, 5 pixels wide is wide enough that some people who are curious will drag it
    // wider to see what's there (the comments show that the duplication of functions
    // is for a reason, and not just random).
    mList->SetColumnWidth(CommentColumn, 5);
+   */
 }
 
 /// Adds an item to mList
