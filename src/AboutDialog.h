@@ -64,8 +64,10 @@ class AboutDialog final : public wxDialogWrapper {
    void AddCredit( const wxString &name, TranslatableString format, Role role );
    wxString GetCreditsByRole(AboutDialog::Role role);
 
-   void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc, const wxString &status);
-   void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc);
+   void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname,
+      const TranslatableString &libdesc, const wxString &status);
+   void AddBuildinfoRow( wxString* htmlstring, const TranslatableString &description,
+      const wxChar *spec);
 };
 
 #endif

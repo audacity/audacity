@@ -65,7 +65,7 @@ hold information about one contributor to Audacity.
 #ifdef REV_LONG
 #define REV_IDENT wxString( "[[https://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
 #else
-#define REV_IDENT wxT("No revision identifier was provided")
+#define REV_IDENT (XO("No revision identifier was provided").Translation())
 #endif
 
 extern wxString FormatHtmlText( const wxString & Text );
@@ -492,65 +492,65 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
    #ifdef USE_LIBMAD
    /* i18n-hint: This is what the library (libmad) does - imports MP3 files */
-   AddBuildinfoRow(&informationStr, wxT("libmad"), _("MP3 Importing"), enabled);
+   AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), enabled);
    #else
-   AddBuildinfoRow(&informationStr, wxT("libmad"), _("MP3 Importing"), disabled);
+   AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), disabled);
    #endif
 
    /* i18n-hint: Ogg is the container format. Vorbis is the compression codec.
     * Both are proper nouns and shouldn't be translated */
    #ifdef USE_LIBVORBIS
    AddBuildinfoRow(&informationStr, wxT("libvorbis"),
-         _("Ogg Vorbis Import and Export"), enabled);
+         XO("Ogg Vorbis Import and Export"), enabled);
    #else
    AddBuildinfoRow(&informationStr, wxT("libvorbis"),
-         _("Ogg Vorbis Import and Export"), disabled);
+         XO("Ogg Vorbis Import and Export"), disabled);
    #endif
 
    #ifdef USE_LIBID3TAG
-   AddBuildinfoRow(&informationStr, wxT("libid3tag"), _("ID3 tag support"),
+   AddBuildinfoRow(&informationStr, wxT("libid3tag"), XO("ID3 tag support"),
          enabled);
    #else
-   AddBuildinfoRow(&informationStr, wxT("libid3tag"), _("ID3 tag support"),
+   AddBuildinfoRow(&informationStr, wxT("libid3tag"), XO("ID3 tag support"),
          disabled);
    #endif
 
    /* i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
     * a proper noun and so shouldn't be translated */
    # if USE_LIBFLAC
-   AddBuildinfoRow(&informationStr, wxT("libflac"), _("FLAC import and export"),
+   AddBuildinfoRow(&informationStr, wxT("libflac"), XO("FLAC import and export"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("libflac"), _("FLAC import and export"),
+   AddBuildinfoRow(&informationStr, wxT("libflac"), XO("FLAC import and export"),
          disabled);
    # endif
 
    # if USE_LIBTWOLAME
-   AddBuildinfoRow(&informationStr, wxT("libtwolame"), _("MP2 export"),
+   AddBuildinfoRow(&informationStr, wxT("libtwolame"), XO("MP2 export"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("libtwolame"), _("MP2 export"),
+   AddBuildinfoRow(&informationStr, wxT("libtwolame"), XO("MP2 export"),
          disabled);
    # endif
 
    # if USE_QUICKTIME
-   AddBuildinfoRow(&informationStr, wxT("QuickTime"), _("Import via QuickTime"),
+   AddBuildinfoRow(&informationStr, wxT("QuickTime"), XO("Import via QuickTime"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("QuickTime"), _("Import via QuickTime"),
+   AddBuildinfoRow(&informationStr, wxT("QuickTime"), XO("Import via QuickTime"),
          disabled);
    # endif
 
    #ifdef USE_FFMPEG
-   AddBuildinfoRow(&informationStr, wxT("ffmpeg"), _("FFmpeg Import/Export"), enabled);
+   AddBuildinfoRow(&informationStr, wxT("ffmpeg"), XO("FFmpeg Import/Export"), enabled);
    #else
-   AddBuildinfoRow(&informationStr, wxT("ffmpeg"), _("FFmpeg Import/Export"), disabled);
+   AddBuildinfoRow(&informationStr, wxT("ffmpeg"), XO("FFmpeg Import/Export"), disabled);
    #endif
 
    #ifdef USE_GSTREAMER
-   AddBuildinfoRow(&informationStr, wxT("gstreamer"), _("Import via GStreamer"), enabled);
+   AddBuildinfoRow(&informationStr, wxT("gstreamer"), XO("Import via GStreamer"), enabled);
    #else
-   AddBuildinfoRow(&informationStr, wxT("gstreamer"), _("Import via GStreamer"), disabled);
+   AddBuildinfoRow(&informationStr, wxT("gstreamer"), XO("Import via GStreamer"), disabled);
    #endif
 
    informationStr += wxT("</table>\n");  //end table of file format libraries
@@ -560,13 +560,13 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += wxT("</h3>\n<table>");  // start table of features
 
    AddBuildinfoRow(&informationStr, wxT("libsoxr"),
-         _("Sample rate conversion"), enabled);
+         XO("Sample rate conversion"), enabled);
 
    AddBuildinfoRow(&informationStr, wxT("PortAudio"),
-         _("Audio playback and recording"), wxString(wxT("v19")));
+         XO("Audio playback and recording"), wxString(wxT("v19")));
 
    AddBuildinfoRow(&informationStr, wxT("wxWidgets"),
-         _("Cross-platform GUI library"), wxVERSION_NUM_DOT_STRING_T);
+         XO("Cross-platform GUI library"), wxVERSION_NUM_DOT_STRING_T);
 
    informationStr += wxT("</table>\n");  //end table of libraries
    informationStr += wxT("<h3>");
@@ -574,80 +574,80 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += wxT("</h3>\n<table>");  // start table of features
 
 #ifdef EXPERIMENTAL_DA
-   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Theme Extras"), enabled);
+   AddBuildinfoRow(&informationStr, wxT("Theme"), XO("Dark Theme Extras"), enabled);
 #else
-   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Theme Extras"), disabled);
+   AddBuildinfoRow(&informationStr, wxT("Theme"), XO("Dark Theme Extras"), disabled);
 #endif
 
    # if USE_NYQUIST
-   AddBuildinfoRow(&informationStr, wxT("Nyquist"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Nyquist"), XO("Plug-in support"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("Nyquist"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Nyquist"), XO("Plug-in support"),
          disabled);
    # endif
 
    # if USE_LADSPA
-   AddBuildinfoRow(&informationStr, wxT("LADSPA"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("LADSPA"), XO("Plug-in support"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("LADSPA"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("LADSPA"), XO("Plug-in support"),
          disabled);
    # endif
 
    # if USE_VAMP
-   AddBuildinfoRow(&informationStr, wxT("Vamp"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Vamp"), XO("Plug-in support"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("Vamp"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Vamp"), XO("Plug-in support"),
          disabled);
    # endif
 
    # if USE_AUDIO_UNITS
-   AddBuildinfoRow(&informationStr, wxT("Audio Units"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Audio Units"), XO("Plug-in support"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("Audio Units"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("Audio Units"), XO("Plug-in support"),
          disabled);
    # endif
 
    # if USE_VST
-   AddBuildinfoRow(&informationStr, wxT("VST"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("VST"), XO("Plug-in support"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("VST"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("VST"), XO("Plug-in support"),
          disabled);
    # endif
 
    # if USE_LV2
-   AddBuildinfoRow(&informationStr, wxT("LV2"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("LV2"), XO("Plug-in support"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("LV2"), _("Plug-in support"),
+   AddBuildinfoRow(&informationStr, wxT("LV2"), XO("Plug-in support"),
          disabled);
    # endif
 
    # if USE_PORTMIXER
-   AddBuildinfoRow(&informationStr, wxT("PortMixer"), _("Sound card mixer support"),
+   AddBuildinfoRow(&informationStr, wxT("PortMixer"), XO("Sound card mixer support"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("PortMixer"), _("Sound card mixer support"),
+   AddBuildinfoRow(&informationStr, wxT("PortMixer"), XO("Sound card mixer support"),
          disabled);
    # endif
 
    # if USE_SOUNDTOUCH
-   AddBuildinfoRow(&informationStr, wxT("SoundTouch"), _("Pitch and Tempo Change support"),
+   AddBuildinfoRow(&informationStr, wxT("SoundTouch"), XO("Pitch and Tempo Change support"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("SoundTouch"), _("Pitch and Tempo Change support"),
+   AddBuildinfoRow(&informationStr, wxT("SoundTouch"), XO("Pitch and Tempo Change support"),
          disabled);
    # endif
 
    # if USE_SBSMS
-   AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme Pitch and Tempo Change support"),
+   AddBuildinfoRow(&informationStr, wxT("SBSMS"), XO("Extreme Pitch and Tempo Change support"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme Pitch and Tempo Change support"),
+   AddBuildinfoRow(&informationStr, wxT("SBSMS"), XO("Extreme Pitch and Tempo Change support"),
          disabled);
    # endif
 
@@ -659,44 +659,47 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += wxT("</h3>\n<table>");
 
    // Current date
-   AddBuildinfoRow(&informationStr, _("Program build date: "), __TDATE__);
-   AddBuildinfoRow(&informationStr, _("Commit Id:"), REV_IDENT );
+   AddBuildinfoRow(&informationStr, XO("Program build date:"), __TDATE__);
+   AddBuildinfoRow(&informationStr, XO("Commit Id:"), REV_IDENT );
 
-   // Not translated in 2.3.1.
-   wxString bits = (sizeof(void*) == 8) ? ", 64 bits" : "";
-
+   auto buildType =
 #ifdef __WXDEBUG__
-   AddBuildinfoRow(&informationStr, _("Build type:"), wxString(_("Debug build"))+bits );
+      XO("Debug build")
 #else
-   AddBuildinfoRow(&informationStr, _("Build type:"), wxString(_("Release build"))+bits);
+      XO("Release build")
 #endif
+   ;
+   if( (sizeof(void*) == 8) )
+      buildType = XO("%s, 64 bits").Format( buildType );
+
+   AddBuildinfoRow(&informationStr, XO("Build type:"), buildType.Translation());
 
 #ifdef _MSC_FULL_VER
-   AddBuildinfoRow(&informationStr, _("Compiler:"),
+   AddBuildinfoRow(&informationStr, XO("Compiler:"),
 	   wxString::Format(wxT("MSVC %02d.%02d.%05d.%02d"), _MSC_VER / 100, _MSC_VER % 100, _MSC_FULL_VER % 100000, _MSC_BUILD));
 #endif
 
 #ifdef __GNUC_PATCHLEVEL__
 #ifdef __MINGW32__
-   AddBuildinfoRow(&informationStr, _("Compiler:"), wxT("MinGW ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
+   AddBuildinfoRow(&informationStr, XO("Compiler:"), wxT("MinGW ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
 #else
-   AddBuildinfoRow(&informationStr, _("Compiler:"), wxT("GCC ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
+   AddBuildinfoRow(&informationStr, XO("Compiler:"), wxT("GCC ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
 #endif
 #endif
 
 #ifdef __clang_version__
-   AddBuildinfoRow(&informationStr, _("Compiler:"), wxT("clang ") __clang_version__);
+   AddBuildinfoRow(&informationStr, XO("Compiler:"), wxT("clang ") __clang_version__);
 #endif
 
    // Install prefix
    /* i18n-hint: The directory audacity is installed into (on *nix systems) */
 #ifdef __WXGTK__
-   AddBuildinfoRow(&informationStr, _("Installation Prefix: "), \
+   AddBuildinfoRow(&informationStr, XO("Installation Prefix:"), \
          wxT(INSTALL_PREFIX));
 #endif
 
    // Location of settings
-   AddBuildinfoRow(&informationStr,_("Settings folder: "), \
+   AddBuildinfoRow(&informationStr, XO("Settings folder:"), \
       FileNames::DataDir());
    // end of table
    informationStr += wxT("</table>\n");
@@ -1060,12 +1063,14 @@ wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
  *
  * Used when creating the build information tab to show if each optional
  * library is enabled or not, and what it does */
-void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc, const wxString &status)
+void AboutDialog::AddBuildinfoRow(
+   wxString* htmlstring, const wxChar * libname,
+   const TranslatableString &libdesc, const wxString &status)
 {
    *htmlstring += wxT("<tr><td>");
    *htmlstring += libname;
    *htmlstring += wxT("</td><td>(");
-   *htmlstring += libdesc;
+   *htmlstring += libdesc.Translation();
    *htmlstring += wxT(")</td><td>");
    *htmlstring += status;
    *htmlstring += wxT("</td></tr>");
@@ -1075,12 +1080,13 @@ void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname,
  *
  * Used when creating the build information tab to show build dates and
  * file paths */
-void AboutDialog::AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc)
+void AboutDialog::AddBuildinfoRow(
+   wxString* htmlstring, const TranslatableString &description, const wxChar *spec)
 {
    *htmlstring += wxT("<tr><td>");
-   *htmlstring += libname;
+   *htmlstring += description.Translation();
    *htmlstring += wxT("</td><td>");
-   *htmlstring += libdesc;
+   *htmlstring += spec;
    *htmlstring += wxT("</td></tr>");
 }
 
