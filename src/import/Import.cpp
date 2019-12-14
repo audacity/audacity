@@ -369,10 +369,6 @@ bool Importer::Import(const FilePath &fName,
    // This list is used to remember plugins that should have been compatible with the file.
    ImportPluginPtrs compatiblePlugins;
 
-   // If user explicitly selected a filter,
-   // then we should try importing via corresponding plugin first
-   wxString type = gPrefs->Read(wxT("/LastOpenType"),wxT(""));
-
    // Not implemented (yet?)
    wxString mime_type = wxT("*");
 
@@ -380,13 +376,21 @@ bool Importer::Import(const FilePath &fName,
    bool usersSelectionOverrides;
    gPrefs->Read(wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"), &usersSelectionOverrides, false);
 
-   wxLogDebug(wxT("LastOpenType is %s"),type);
-   wxLogDebug(wxT("OverrideExtendedImportByOpenFileDialogChoice is %i"),usersSelectionOverrides);
-
    if (usersSelectionOverrides)
    {
+      // If user explicitly selected a filter,
+      // then we should try importing via corresponding plugin first
+      wxString type = gPrefs->Read(wxT("/LastOpenType"),wxT(""));
+
+      wxLogDebug(wxT("LastOpenType is %s"),type);
+      wxLogDebug(wxT("OverrideExtendedImportByOpenFileDialogChoice is %i"),usersSelectionOverrides);
+
       for (const auto &plugin : sImportPluginList())
       {
+         // PRL:  Preference keys /DefaultOpenType and /LastOpenType, unusually,
+         // store localized strings!
+         // The bad consequences of a change of locale are not severe -- only that
+         // a default choice of file type for an open dialog is not remembered
          if (plugin->GetPluginFormatDescription().CompareTo(type) == 0)
          {
             // This plugin corresponds to user-selected filter, try it first.

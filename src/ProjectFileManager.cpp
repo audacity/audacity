@@ -1057,6 +1057,11 @@ wxArrayString ProjectFileManager::ShowOpenDialog(const wxString &extraformat, co
    for (int i = 0; i < index; i++) {
       mask = mask.AfterFirst(wxT('|')).AfterFirst(wxT('|'));
    }
+
+   // PRL:  Preference keys /DefaultOpenType and /LastOpenType, unusually,
+   // store localized strings!
+   // The bad consequences of a change of locale are not severe -- only that
+   // a default choice of file type for an open dialog is not remembered
    gPrefs->Write(wxT("/DefaultOpenType"), mask.BeforeFirst(wxT('|')));
    gPrefs->Write(wxT("/LastOpenType"), mask.BeforeFirst(wxT('|')));
    gPrefs->Flush();
