@@ -72,89 +72,132 @@ extern wxString FormatHtmlText( const wxString & Text );
 
 void AboutDialog::CreateCreditsList()
 {
+   const auto sysAdminFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, system administration");
+   const auto coFounderFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, co-founder and developer");
+   const auto developerFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, developer");
+   const auto documentationAndSupportFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, documentation and support");
+   const auto documentationAndSupportFrenchFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, documentation and support, French");
+   const auto qualityAssuranceFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, quality assurance");
+   const auto accessibilityAdvisorFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, accessibility advisor");
+   const auto graphicArtistFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, graphic artist");
+   const auto composerFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, composer");
+   const auto testerFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, tester");
+   const auto NyquistPluginsFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, Nyquist plug-ins");
+   const auto webDeveloperFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, web developer");
+   const auto graphicsFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, graphics");
+
    // The Audacity Team: developers and support
-   AddCredit(wxString(wxT("Arturo \"Buanzo\" Busleiman, ")) + _("system administration"), roleTeamMember);
-   AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
-   AddCredit(wxString(wxT("Roger Dannenberg, ")) + _("co-founder and developer"), roleTeamMember);
-   AddCredit(wxString(wxT("Steve Daulton")), roleTeamMember);
-   AddCredit(wxString(wxT("Greg Kozikowski, ")) + _("documentation and support"), roleTeamMember);
-   AddCredit(wxString(wxT("Paul Licameli, ")) + _("developer"), roleTeamMember);
-   AddCredit(wxString(wxT("Peter Sampson")), roleTeamMember);
-   AddCredit(wxString(wxT("Bill Wharrie, ")) + _("documentation and support"), roleTeamMember);
+   AddCredit(wxT("Arturo \"Buanzo\" Busleiman"), sysAdminFormat, roleTeamMember);
+   AddCredit(wxT("James Crook"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Roger Dannenberg"), coFounderFormat, roleTeamMember);
+   AddCredit(wxT("Steve Daulton"), roleTeamMember);
+   AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleTeamMember);
+   AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Peter Sampson"), roleTeamMember);
+   AddCredit(wxT("Bill Wharrie"), documentationAndSupportFormat, roleTeamMember);
 
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
-   AddCredit(wxString(wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]], ")) + _("quality assurance"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Richard Ash, ")) + _("developer"), roleEmeritusTeam); 
-   AddCredit(wxString(wxT("Christian Brochec, ")) + _("documentation and support, French"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Matt Brubeck, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Michael Chinen, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Al Dimond, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Benjamin Drung, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Joshua Haberman, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Ruslan Ijbulatov, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Vaughan Johnson, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Leland Lucius, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Dominic Mazzoni, "))+_("co-founder and developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Markus Meyer, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Monty Montgomery, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Shane Mueller, ")) + _("developer"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Tony Oetzmann, ")) + _("documentation and support"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Alexandre Prokoudine, ")) + _("documentation and support"), roleEmeritusTeam);
-   AddCredit(wxString(wxT("Martyn Shaw, ")) + _("developer"), roleEmeritusTeam);
+   AddCredit(
+      wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]]"),
+      qualityAssuranceFormat, roleEmeritusTeam);
+   AddCredit(wxT("Richard Ash"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Christian Brochec"),
+      documentationAndSupportFrenchFormat, roleEmeritusTeam);
+   AddCredit(wxT("Matt Brubeck"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Michael Chinen"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Al Dimond"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Benjamin Drung"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Joshua Haberman"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Ruslan Ijbulatov"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Vaughan Johnson"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Leland Lucius"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Dominic Mazzoni"), coFounderFormat, roleEmeritusTeam);
+   AddCredit(wxT("Markus Meyer"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Monty Montgomery"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Shane Mueller"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Tony Oetzmann"), documentationAndSupportFormat, roleEmeritusTeam);
+   AddCredit(wxT("Alexandre Prokoudine"), documentationAndSupportFormat, roleEmeritusTeam);
+   AddCredit(wxT("Martyn Shaw"), developerFormat, roleEmeritusTeam);
 
    // Contributors
-   AddCredit(wxString(wxT("Lynn Allan, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Brian Armstrong, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("David Avery, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("David Bailes, ")) + _("accessibility advisor"), roleContributor);
-   AddCredit(wxString(wxT("William Bland, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Sami Boukortt, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Jeremy R. Brown, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Alex S. Brown, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Chris Cannam, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Cory Cook, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Craig DeForest, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Edgar Franke (Edgar-RFT), ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Mitch Golden, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Brian Gunlogson, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Andrew Hallendorff, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Robert H\u00E4nggi, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Daniel Horgan, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("David Hostetler, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Steve Jolly, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Steven Jones, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Henric Jungheim, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Arun Kishore, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Paul Livesey, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Harvey Lubin, ")) + _("graphic artist"), roleContributor);
-   AddCredit(wxString(wxT("Max Maisel, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Greg Mekkes, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Abe Milde, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Paul Nasca, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Clayton Otey, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Mark Phillips, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Andr\u00E9 Pinto, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Jean Claude Risset, ")) + _("composer"), roleContributor);
-   AddCredit(wxString(wxT("Augustus Saunders, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Benjamin Schwartz, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Cliff Scott, ")) + _("tester"), roleContributor);
-   AddCredit(wxString(wxT("David R. Sky, ")) + _("Nyquist plug-ins"), roleContributor);
-   AddCredit(wxString(wxT("Rob Sykes, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Mike Underwood, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Philip Van Baren, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Salvo Ventura, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Darrell Walisser, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Jun Wan, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Daniel Winzen, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Tom Woodhams, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Mark Young, ")) + _("developer"), roleContributor);
-   AddCredit(wxString(wxT("Wing Yu, ")) + _("developer"), roleContributor);
+   AddCredit(wxT("Lynn Allan"), developerFormat, roleContributor);
+   AddCredit(wxT("Brian Armstrong"), developerFormat, roleContributor);
+   AddCredit(wxT("David Avery"), developerFormat, roleContributor);
+   AddCredit(wxT("David Bailes"), accessibilityAdvisorFormat, roleContributor);
+   AddCredit(wxT("William Bland"), developerFormat, roleContributor);
+   AddCredit(wxT("Sami Boukortt"), developerFormat, roleContributor);
+   AddCredit(wxT("Jeremy R. Brown"), developerFormat, roleContributor);
+   AddCredit(wxT("Alex S. Brown"), developerFormat, roleContributor);
+   AddCredit(wxT("Chris Cannam"), developerFormat, roleContributor);
+   AddCredit(wxT("Cory Cook"), developerFormat, roleContributor);
+   AddCredit(wxT("Craig DeForest"), developerFormat, roleContributor);
+   AddCredit(wxT("Edgar Franke (Edgar-RFT)"), developerFormat, roleContributor);
+   AddCredit(wxT("Mitch Golden"), developerFormat, roleContributor);
+   AddCredit(wxT("Brian Gunlogson"), developerFormat, roleContributor);
+   AddCredit(wxT("Andrew Hallendorff"), developerFormat, roleContributor);
+   AddCredit(wxT("Robert H\u00E4nggi"), developerFormat, roleContributor);
+   AddCredit(wxT("Daniel Horgan"), developerFormat, roleContributor);
+   AddCredit(wxT("David Hostetler"), developerFormat, roleContributor);
+   AddCredit(wxT("Steve Jolly"), developerFormat, roleContributor);
+   AddCredit(wxT("Steven Jones"), developerFormat, roleContributor);
+   AddCredit(wxT("Henric Jungheim"), developerFormat, roleContributor);
+   AddCredit(wxT("Arun Kishore"), developerFormat, roleContributor);
+   AddCredit(wxT("Paul Livesey"), developerFormat, roleContributor);
+   AddCredit(wxT("Harvey Lubin"), graphicArtistFormat, roleContributor);
+   AddCredit(wxT("Max Maisel"), developerFormat, roleContributor);
+   AddCredit(wxT("Greg Mekkes"), developerFormat, roleContributor);
+   AddCredit(wxT("Abe Milde"), developerFormat, roleContributor);
+   AddCredit(wxT("Paul Nasca"), developerFormat, roleContributor);
+   AddCredit(wxT("Clayton Otey"), developerFormat, roleContributor);
+   AddCredit(wxT("Mark Phillips"), developerFormat, roleContributor);
+   AddCredit(wxT("Andr\u00E9 Pinto"), developerFormat, roleContributor);
+   AddCredit(wxT("Jean Claude Risset"), composerFormat, roleContributor);
+   AddCredit(wxT("Augustus Saunders"), developerFormat, roleContributor);
+   AddCredit(wxT("Benjamin Schwartz"), developerFormat, roleContributor);
+   AddCredit(wxT("Cliff Scott"), testerFormat, roleContributor);
+   AddCredit(wxT("David R. Sky"), NyquistPluginsFormat, roleContributor);
+   AddCredit(wxT("Rob Sykes"), developerFormat, roleContributor);
+   AddCredit(wxT("Mike Underwood"), developerFormat, roleContributor);
+   AddCredit(wxT("Philip Van Baren"), developerFormat, roleContributor);
+   AddCredit(wxT("Salvo Ventura"), developerFormat, roleContributor);
+   AddCredit(wxT("Darrell Walisser"), developerFormat, roleContributor);
+   AddCredit(wxT("Jun Wan"), developerFormat, roleContributor);
+   AddCredit(wxT("Daniel Winzen"), developerFormat, roleContributor);
+   AddCredit(wxT("Tom Woodhams"), developerFormat, roleContributor);
+   AddCredit(wxT("Mark Young"), developerFormat, roleContributor);
+   AddCredit(wxT("Wing Yu"), developerFormat, roleContributor);
 
    // Website and Graphics
-   AddCredit(wxString(wxT("Shinta Carolinasari, ")) + _("web developer"), roleGraphics);
-   AddCredit(wxString(wxT("Bayu Rizaldhan Rayes, ")) + _("graphics"), roleGraphics);
+   AddCredit(wxT("Shinta Carolinasari"), webDeveloperFormat, roleGraphics);
+   AddCredit(wxT("Bayu Rizaldhan Rayes"), graphicsFormat, roleGraphics);
 
    // Libraries
 
@@ -164,7 +207,17 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("[[https://www.underbit.com/products/mad/|libmad]]"), roleLibrary);
    AddCredit(wxT("[[http://www.mega-nerd.com/libsndfile/|libsndfile]]"), roleLibrary);
    AddCredit(wxT("[[https://sourceforge.net/p/soxr/wiki/Home/|libsoxr]]"), roleLibrary);
-   AddCredit(wxT("[[http://lv2plug.in/|lv2]] (") + _("incorporating") + wxT(" lilv, msinttypes, serd, sord and sratom)"), roleLibrary);
+   AddCredit(
+      XO("%s (incorporating %s, %s, %s, %s and %s)")
+         .Format(
+            "[[http://lv2plug.in/|lv2]]",
+            "lilv",
+            "msinttypes",
+            "serd",
+            "sord",
+            "sratom"
+         ).Translation(),
+      roleLibrary);
    AddCredit(wxT("[[https://www.cs.cmu.edu/~music/nyquist/|Nyquist]]"), roleLibrary);
    AddCredit(wxT("[[https://xiph.org/vorbis/|Ogg Vorbis]]"), roleLibrary);
    AddCredit(wxT("[[http://www.portaudio.com/|PortAudio]]"), roleLibrary);
@@ -969,9 +1022,18 @@ wxT("POSSIBILITY OF SUCH DAMAGES.\n"));
    S.EndNotebookPage();
 }
 
-void AboutDialog::AddCredit(wxString &&description, Role role)
+void AboutDialog::AddCredit( const wxString &name, Role role )
 {
-   creditItems.emplace_back(std::move(description), role);
+   AddCredit( name, {}, role );
+}
+
+void AboutDialog::AddCredit(
+   const wxString &name, TranslatableString format, Role role )
+{
+   auto str = format.empty()
+      ? TranslatableString{ name }
+      : TranslatableString{ format }.Format( name );
+   creditItems.emplace_back(std::move(str), role);
 }
 
 wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
@@ -982,7 +1044,7 @@ wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
    {
       if (item.role == role)
       {
-         s += item.description;
+         s += item.description.Translation();
          s += wxT("<br>");
       }
    }

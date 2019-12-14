@@ -19,25 +19,11 @@ class wxStaticBitmap;
 class ShuttleGui;
 
 struct AboutDialogCreditItem {
-   wxString description;
-   int role;
-
-   AboutDialogCreditItem(wxString &&description_, int role_)
-      : description(description_), role(role_)
+   AboutDialogCreditItem( TranslatableString str, int r )
+      : description{ std::move( str ) }, role{ r }
    {}
-
-   // No copy, use the move
-   AboutDialogCreditItem(const AboutDialogCreditItem&) PROHIBITED;
-   AboutDialogCreditItem& operator= (const AboutDialogCreditItem&) PROHIBITED;
-
-   // Move constructor, because wxString lacks one
-   AboutDialogCreditItem(AboutDialogCreditItem &&moveMe)
-      : role(moveMe.role)
-   {
-      description.swap(moveMe.description);
-   }
-
-   ~AboutDialogCreditItem() {}
+   TranslatableString description;
+   int role;
 };
 
 using AboutDialogCreditItemsList = std::vector<AboutDialogCreditItem>;
@@ -74,7 +60,8 @@ class AboutDialog final : public wxDialogWrapper {
    void PopulateInformationPage (ShuttleGui & S );
 
    void CreateCreditsList();
-   void AddCredit(wxString &&description, Role role);
+   void AddCredit( const wxString &name, Role role );
+   void AddCredit( const wxString &name, TranslatableString format, Role role );
    wxString GetCreditsByRole(AboutDialog::Role role);
 
    void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname, const wxChar * libdesc, const wxString &status);
