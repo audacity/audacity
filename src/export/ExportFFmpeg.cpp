@@ -912,10 +912,10 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    {
       InitProgress( pDialog, fName,
          selectionOnly
-            ? wxString::Format(_("Exporting selected audio as %s"),
-               ExportFFmpegOptions::fmts[mSubFormat].description.Translation())
-            : wxString::Format(_("Exporting the audio as %s"),
-               ExportFFmpegOptions::fmts[mSubFormat].description.Translation()) );
+            ? XO("Exporting selected audio as %s")
+                 .Format( ExportFFmpegOptions::fmts[mSubFormat].description )
+            : XO("Exporting the audio as %s")
+                 .Format( ExportFFmpegOptions::fmts[mSubFormat].description ) );
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {

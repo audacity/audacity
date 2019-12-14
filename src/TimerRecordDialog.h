@@ -78,7 +78,7 @@ private:
    void OnOK(wxCommandEvent& event);
    void OnHelpButtonClick(wxCommandEvent& event);
 
-   wxString GetDisplayDate(wxDateTime & dt);
+   TranslatableString GetDisplayDate(wxDateTime & dt);
    void PopulateOrExchange(ShuttleGui& S);
 
    bool TransferDataFromWindow() override;

@@ -1267,10 +1267,10 @@ bool Effect::DoEffect(wxWindow *parent,
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false)
    {
-      auto name = GetTranslatedName();
+      auto name = GetUntranslatedName();
       ProgressDialog progress{
          name,
-         wxString::Format(_("Applying %s..."), name),
+         XO("Applying %s...").Format( name ),
          pdlgHideStopButton
       };
       auto vr = valueRestorer( mProgress, &progress );
@@ -1996,7 +1996,7 @@ void Effect::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
    mPreviewWithNotSelected = includeNotSelected;
 }
 
-bool Effect::TotalProgress(double frac, const wxString &msg)
+bool Effect::TotalProgress(double frac, const TranslatableString &msg)
 {
    auto updateResult = (mProgress ?
       mProgress->Update(frac, msg) :
@@ -2004,7 +2004,7 @@ bool Effect::TotalProgress(double frac, const wxString &msg)
    return (updateResult != ProgressResult::Success);
 }
 
-bool Effect::TrackProgress(int whichTrack, double frac, const wxString &msg)
+bool Effect::TrackProgress(int whichTrack, double frac, const TranslatableString &msg)
 {
    auto updateResult = (mProgress ?
       mProgress->Update(whichTrack + frac, (double) mNumTracks, msg) :
@@ -2012,7 +2012,7 @@ bool Effect::TrackProgress(int whichTrack, double frac, const wxString &msg)
    return (updateResult != ProgressResult::Success);
 }
 
-bool Effect::TrackGroupProgress(int whichGroup, double frac, const wxString &msg)
+bool Effect::TrackGroupProgress(int whichGroup, double frac, const TranslatableString &msg)
 {
    auto updateResult = (mProgress ?
       mProgress->Update(whichGroup + frac, (double) mNumGroups, msg) :
@@ -2398,8 +2398,8 @@ void Effect::Preview(bool dryOnly)
    // Apply effect
    if (!dryOnly) {
       ProgressDialog progress{
-         GetTranslatedName(),
-         _("Preparing preview"),
+         GetUntranslatedName(),
+         XO("Preparing preview"),
          pdlgHideCancelButton
       }; // Have only "Stop" button.
       auto vr = valueRestorer( mProgress, &progress );
@@ -2429,7 +2429,7 @@ void Effect::Preview(bool dryOnly)
          // The progress dialog blocks these events.
          {
             ProgressDialog progress
-            (GetTranslatedName(), _("Previewing"), pdlgHideCancelButton);
+            (GetUntranslatedName(), XO("Previewing"), pdlgHideCancelButton);
 
             while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
                ::wxMilliSleep(100);

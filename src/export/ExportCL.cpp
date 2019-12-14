@@ -462,10 +462,10 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       } );
 
       // Prepare the progress display
-      InitProgress( pDialog, _("Export"),
+      InitProgress( pDialog, XO("Export"),
          selectionOnly
-            ? _("Exporting the selected audio using command-line encoder")
-            : _("Exporting the audio using command-line encoder") );
+            ? XO("Exporting the selected audio using command-line encoder")
+            : XO("Exporting the audio using command-line encoder") );
       auto &progress = *pDialog;
 
       // Start piping the mixed data to the command

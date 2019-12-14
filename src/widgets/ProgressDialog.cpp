@@ -998,19 +998,19 @@ ProgressDialog::ProgressDialog()
 {
 }
 
-ProgressDialog::ProgressDialog(const wxString & title,
-                               const wxString & message /* = {}*/,
+ProgressDialog::ProgressDialog(const TranslatableString & title,
+                               const TranslatableString & message /* = {}*/,
                                int flags /* = pdlgDefaultFlags */,
-                               const wxString & sRemainingLabelText /* = {} */)
+                               const TranslatableString & sRemainingLabelText /* = {} */)
 :  wxDialogWrapper()
 {
    Create(title, message, flags, sRemainingLabelText);
 }
 
-ProgressDialog::ProgressDialog(const wxString & title,
+ProgressDialog::ProgressDialog(const TranslatableString & title,
                                const MessageTable &columns,
                                int flags /* = pdlgDefaultFlags */,
-                               const wxString & sRemainingLabelText /* = {} */)
+                               const TranslatableString & sRemainingLabelText /* = {} */)
 :  wxDialogWrapper()
 {
    Create(title, columns, flags, sRemainingLabelText);
@@ -1110,16 +1110,17 @@ void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer,
    // Join strings
    auto sText = column[0];
    std::for_each( column.begin() + 1, column.end(),
-      [&](const wxString &text) { sText += wxT("\n") + text; });
+      [&](const TranslatableString &text)
+         { sText.Join( text, wxT("\n") ); });
 
    // Create a statictext object and add to the sizer
    wxStaticText* oText = safenew wxStaticText(this,
                                               wxID_ANY,
-                                              sText,
+                                              sText.Translation(),
                                               wxDefaultPosition,
                                               wxDefaultSize,
                                               wxALIGN_LEFT);
-   oText->SetName(sText); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   oText->SetName(sText.Translation()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    // If this is the first column then set the mMessage pointer so non-TimerRecord usages
    // will still work correctly in SetMessage()
@@ -1130,10 +1131,10 @@ void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer,
    pSizer->Add(oText, 1, wxEXPAND | wxALL, 5);
 }
 
-bool ProgressDialog::Create(const wxString & title,
-                            const wxString & message /* = {} */,
+bool ProgressDialog::Create(const TranslatableString & title,
+                            const TranslatableString & message /* = {} */,
                             int flags /* = pdlgDefaultFlags */,
-                            const wxString & sRemainingLabelText /* = {} */)
+                            const TranslatableString & sRemainingLabelText /* = {} */)
 {
    MessageTable columns(1);
    columns.back().push_back(message);
@@ -1143,16 +1144,16 @@ bool ProgressDialog::Create(const wxString & title,
       // Record some values used in case of change of message
       // TODO: make the following work in case of message tables
       wxClientDC dc(this);
-      dc.GetMultiLineTextExtent(message, &mLastW, &mLastH);
+      dc.GetMultiLineTextExtent(message.Translation(), &mLastW, &mLastH);
    }
 
    return result;
 }
 
-bool ProgressDialog::Create(const wxString & title,
+bool ProgressDialog::Create(const TranslatableString & title,
                             const MessageTable & columns,
                             int flags /* = pdlgDefaultFlags */,
-                            const wxString & sRemainingLabelText /* = {} */)
+                            const TranslatableString & sRemainingLabelText /* = {} */)
 {
    Init();
 
@@ -1165,7 +1166,7 @@ bool ProgressDialog::Create(const wxString & title,
 
    bool success = wxDialogWrapper::Create(parent,
                                    wxID_ANY,
-                                   title,
+                                   title.Translation(),
                                    wxDefaultPosition,
                                    wxDefaultSize,
                                    wxDEFAULT_DIALOG_STYLE |
@@ -1238,14 +1239,14 @@ bool ProgressDialog::Create(const wxString & title,
          }
 
          // Customised "Remaining" label text
-         wxString sRemainingText = sRemainingLabelText;
+         auto sRemainingText = sRemainingLabelText;
          if (sRemainingText.empty()) {
-            sRemainingText = _("Remaining Time:");
+            sRemainingText = XO("Remaining Time:");
          }
 
          window = safenew wxStaticText(this,
                                        wxID_ANY,
-                                       sRemainingText,
+                                       sRemainingText.Translation(),
                                        wxDefaultPosition,
                                        wxDefaultSize,
                                        wxALIGN_RIGHT);
@@ -1313,7 +1314,8 @@ bool ProgressDialog::Create(const wxString & title,
 //
 // Update the time and, optionally, the message
 //
-ProgressResult ProgressDialog::Update(int value, const wxString & message)
+ProgressResult ProgressDialog::Update(
+   int value, const TranslatableString & message)
 {
    if (mCancel)
    {
@@ -1406,7 +1408,8 @@ ProgressResult ProgressDialog::Update(int value, const wxString & message)
 //
 // Update the time and, optionally, the message
 //
-ProgressResult ProgressDialog::Update(double current, const wxString & message)
+ProgressResult ProgressDialog::Update(
+   double current, const TranslatableString & message)
 {
    return Update((int)(current * 1000), message);
 }
@@ -1414,7 +1417,8 @@ ProgressResult ProgressDialog::Update(double current, const wxString & message)
 //
 // Update the time and, optionally, the message
 //
-ProgressResult ProgressDialog::Update(wxULongLong_t current, wxULongLong_t total, const wxString & message)
+ProgressResult ProgressDialog::Update(
+   wxULongLong_t current, wxULongLong_t total, const TranslatableString & message)
 {
    if (total != 0)
    {
@@ -1429,7 +1433,8 @@ ProgressResult ProgressDialog::Update(wxULongLong_t current, wxULongLong_t total
 //
 // Update the time and, optionally, the message
 //
-ProgressResult ProgressDialog::Update(wxLongLong current, wxLongLong total, const wxString & message)
+ProgressResult ProgressDialog::Update(
+   wxLongLong current, wxLongLong total, const TranslatableString & message)
 {
    if (total.GetValue() != 0)
    {
@@ -1444,7 +1449,8 @@ ProgressResult ProgressDialog::Update(wxLongLong current, wxLongLong total, cons
 //
 // Update the time and, optionally, the message
 //
-ProgressResult ProgressDialog::Update(wxLongLong_t current, wxLongLong_t total, const wxString & message)
+ProgressResult ProgressDialog::Update(
+   wxLongLong_t current, wxLongLong_t total, const TranslatableString & message)
 {
    if (total != 0)
    {
@@ -1459,7 +1465,8 @@ ProgressResult ProgressDialog::Update(wxLongLong_t current, wxLongLong_t total, 
 //
 // Update the time and, optionally, the message
 //
-ProgressResult ProgressDialog::Update(int current, int total, const wxString & message)
+ProgressResult ProgressDialog::Update(
+   int current, int total, const TranslatableString & message)
 {
    if (total != 0)
    {
@@ -1474,7 +1481,8 @@ ProgressResult ProgressDialog::Update(int current, int total, const wxString & m
 //
 // Update the time and, optionally, the message
 //
-ProgressResult ProgressDialog::Update(double current, double total, const wxString & message)
+ProgressResult ProgressDialog::Update(
+   double current, double total, const TranslatableString & message)
 {
    if (total != 0)
    {
@@ -1489,15 +1497,15 @@ ProgressResult ProgressDialog::Update(double current, double total, const wxStri
 //
 // Update the message text
 //
-void ProgressDialog::SetMessage(const wxString & message)
+void ProgressDialog::SetMessage(const TranslatableString & message)
 {
    if (!message.empty())
    {
-      mMessage->SetLabel(message);
+      mMessage->SetLabel(message.Translation());
 
       int w, h;
       wxClientDC dc(mMessage);
-      dc.GetMultiLineTextExtent(message, &w, &h);
+      dc.GetMultiLineTextExtent(message.Translation(), &w, &h);
 
       bool sizeUpdated = false;
       wxSize ds = GetClientSize();
@@ -1530,6 +1538,11 @@ void ProgressDialog::SetMessage(const wxString & message)
          wxDialogWrapper::Update();
       }
    }
+}
+
+void ProgressDialog::SetTitle(const TranslatableString & message)
+{
+   wxDialogWrapper::SetTitle( message.Translation() );
 }
 
 //
@@ -1634,10 +1647,10 @@ bool ProgressDialog::ConfirmAction(const wxString & sPrompt,
 }
 
 TimerProgressDialog::TimerProgressDialog(const wxLongLong_t duration,
-                                         const wxString & title,
+                                         const TranslatableString & title,
                                          const MessageTable & columns,
                                          int flags /* = pdlgDefaultFlags */,
-                                         const wxString & sRemainingLabelText /* = {} */)
+                                         const TranslatableString & sRemainingLabelText /* = {} */)
 : ProgressDialog(title, columns, flags, sRemainingLabelText)
 {
    mDuration = duration;

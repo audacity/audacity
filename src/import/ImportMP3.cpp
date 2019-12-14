@@ -45,7 +45,7 @@
 #include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 
-#define DESC _("MP3 files")
+#define DESC XO("MP3 files")
 
 static const auto exts = {
    wxT("mp3"),
@@ -114,7 +114,7 @@ public:
    ~MP3ImportPlugin() { }
 
    wxString GetPluginStringID() override { return wxT("libmad"); }
-   wxString GetPluginFormatDescription() override;
+   TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
 
    unsigned SequenceNumber() const override;
@@ -131,7 +131,7 @@ public:
 
    ~MP3ImportFileHandle();
 
-   wxString GetFileDescription() override;
+   TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
    ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
@@ -172,7 +172,7 @@ inline float scale(mad_fixed_t sample)
 }
 
 
-wxString MP3ImportPlugin::GetPluginFormatDescription()
+TranslatableString MP3ImportPlugin::GetPluginFormatDescription()
 {
    return DESC;
 }
@@ -190,7 +190,7 @@ std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(const FilePath &Filename
    return std::make_unique<MP3ImportFileHandle>(std::move(file), Filename);
 }
 
-wxString MP3ImportFileHandle::GetFileDescription()
+TranslatableString MP3ImportFileHandle::GetFileDescription()
 {
    return DESC;
 }

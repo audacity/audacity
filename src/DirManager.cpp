@@ -202,12 +202,12 @@ int DirManager::RecursivelyEnumerateWithProgress(const FilePath &dirPath,
                                              wxString filespec,
                                              bool bFiles, bool bDirs,
                                              int progress_count,
-                                             const wxChar* message)
+                                             const TranslatableString &message)
 {
    Maybe<ProgressDialog> progress{};
 
-   if (message)
-      progress.create( _("Progress"), message );
+   if (!message.empty())
+      progress.create( XO("Progress"), message );
 
    int count = RecursivelyEnumerate(
                   dirPath, filePathArray, dirspec,filespec,
@@ -284,7 +284,7 @@ int DirManager::RecursivelyRemoveEmptyDirs(const FilePath &dirPath,
 }
 
 void DirManager::RecursivelyRemove(const FilePaths& filePathArray, int count, int bias,
-                              int flags, const wxChar* message)
+                              int flags, const TranslatableString &message)
 {
    bool bFiles= (flags & kCleanFiles) != 0;
    bool bDirs = (flags & kCleanDirs) != 0;
@@ -292,8 +292,8 @@ void DirManager::RecursivelyRemove(const FilePaths& filePathArray, int count, in
    Maybe<ProgressDialog> progress{};
 
 
-   if (message)
-      progress.create( _("Progress"), message );
+   if (!message.empty())
+      progress.create( XO("Progress"), message );
 
    auto nn = filePathArray.size();
    for ( size_t ii = 0; ii < nn; ++ii ) {
@@ -451,7 +451,7 @@ DirManager::~DirManager()
       CleanTempDir();
       //::wxRmdir(temp);
    } else if( projFull.empty() && !mytemp.empty()) {
-      CleanDir(mytemp, wxEmptyString, ".DS_Store", _("Cleaning project temporary files"), kCleanTopDirToo | kCleanDirsOnlyIfEmpty );
+      CleanDir(mytemp, wxEmptyString, ".DS_Store", XO("Cleaning project temporary files"), kCleanTopDirToo | kCleanDirsOnlyIfEmpty );
    }
 }
 
@@ -464,7 +464,7 @@ void DirManager::CleanTempDir()
 {
    // with default flags (none) this does not clean the top directory, and may remove non-empty 
    // directories.
-   CleanDir(globaltemp, wxT("project*"), wxEmptyString, _("Cleaning up temporary files"));
+   CleanDir(globaltemp, wxT("project*"), wxEmptyString, XO("Cleaning up temporary files"));
 }
 
 // static
@@ -472,7 +472,7 @@ void DirManager::CleanDir(
    const FilePath &path,
    const wxString &dirSpec, 
    const wxString &fileSpec, 
-   const wxString &msg,
+   const TranslatableString &msg,
    int flags)
 {
    if (dontDeleteTempFiles)
@@ -539,7 +539,7 @@ namespace {
                fullPath,
                wxEmptyString,
                wxEmptyString,
-               _("Cleaning up after failed save"),
+               XO("Cleaning up after failed save"),
                kCleanTopDirToo);
       }
 
@@ -687,8 +687,8 @@ DirManager::ProjectSetter::Impl::Impl(
    {
       /* i18n-hint: This title appears on a dialog that indicates the progress
          in doing something.*/
-      ProgressDialog progress(_("Progress"),
-         _("Saving project data files"));
+      ProgressDialog progress(XO("Progress"),
+         XO("Saving project data files"));
 
       int total = dirManager.mBlockFileHash.size();
 
@@ -790,7 +790,7 @@ void DirManager::ProjectSetter::Impl::Commit()
          wxEmptyString, // EmptyString => ALL directories.
          // If the next line were wxEmptyString, ALL files would be removed.
          ".DS_Store",   // Other project files should already have been removed.
-         _("Cleaning up cache directories"), 
+         XO("Cleaning up cache directories"), 
          kCleanTopDirToo);
 
       //This destroys the empty dirs of the OD block files, which are yet to come.
@@ -1732,7 +1732,7 @@ void DirManager::RemoveOrphanBlockfiles()
       wxEmptyString,          // All files
       true, false,
       mBlockFileHash.size(),  // rough guess of how many BlockFiles will be found/processed, for progress
-      _("Inspecting project file data"));
+      XO("Inspecting project file data"));
 
    FilePaths orphanFilePathArray;
    this->FindOrphanBlockFiles(
@@ -1818,8 +1818,8 @@ void DirManager::WriteCacheToDisk()
    if (numNeed == 0)
       return;
 
-   ProgressDialog progress(_("Saving recorded audio"),
-                           _("Saving recorded audio to disk"));
+   ProgressDialog progress(XO("Saving recorded audio"),
+                           XO("Saving recorded audio to disk"));
 
    iter = mBlockFileHash.begin();
    int current = 0;

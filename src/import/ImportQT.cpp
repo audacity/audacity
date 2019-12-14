@@ -121,7 +121,7 @@ class QTImportPlugin final : public ImportPlugin
 
    wxString GetPluginStringID() { return wxT("quicktime"); }
 
-   wxString GetPluginFormatDescription();
+   TranslatableString GetPluginFormatDescription();
    std::unique_ptr<ImportFileHandle> Open(const wxString & Filename) override;
 
    unsigned SequenceNumber() const override;
@@ -147,7 +147,7 @@ class QTImportFileHandle final : public ImportFileHandle
       }
    }
 
-   wxString GetFileDescription() override;
+   TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
    wxInt32 GetStreamCount() override
@@ -175,7 +175,7 @@ class QTImportFileHandle final : public ImportFileHandle
    Movie mMovie;
 };
 
-wxString QTImportPlugin::GetPluginFormatDescription()
+TranslatableString QTImportPlugin::GetPluginFormatDescription()
 {
    return DESC;
 }
@@ -230,7 +230,7 @@ static Importer::RegisteredImportPlugin registered{
 };
 
 
-wxString QTImportFileHandle::GetFileDescription()
+TranslatableString QTImportFileHandle::GetFileDescription()
 {
    return DESC;
 }

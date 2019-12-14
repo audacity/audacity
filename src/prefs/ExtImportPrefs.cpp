@@ -467,7 +467,7 @@ void ExtImportPrefs::DoOnRuleTableSelect (int toprow)
       if (item->filter_objects[i] != NULL)
       {
          PluginList->InsertItem (i + shift,
-               item->filter_objects[i]->GetPluginFormatDescription());
+               item->filter_objects[i]->GetPluginFormatDescription().Translation());
       }
       else
       {

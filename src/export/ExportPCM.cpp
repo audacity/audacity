@@ -554,11 +554,10 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                                   rate, format, true, mixerSpec);
 
          InitProgress( pDialog, fName,
-            selectionOnly
-               ? wxString::Format(_("Exporting the selected audio as %s"),
-                  formatStr)
-               : wxString::Format(_("Exporting the audio as %s"),
-                  formatStr) );
+            (selectionOnly
+               ? XO("Exporting the selected audio as %s")
+               : XO("Exporting the audio as %s"))
+               .Format( formatStr ) );
          auto &progress = *pDialog;
 
          while (updateResult == ProgressResult::Success) {

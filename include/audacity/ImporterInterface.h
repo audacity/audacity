@@ -67,7 +67,7 @@ public:
 
    // Get a description of the file type this importer can import.
    // Examples: "Ogg Vorbis", "MP3", "Uncompressed PCM"
-   virtual wxString GetPluginFormatDescription() = 0;
+   virtual TranslatableString GetPluginFormatDescription() = 0;
 
    // Get a list of extensions this plugin expects to be able to
    // import.  If a filename matches any of these extensions,
@@ -134,7 +134,7 @@ public:
    // This is similar to GetImporterDescription, but if possible the
    // importer will return a more specific description of the
    // specific file that is open.
-   virtual wxString GetFileDescription() = 0;
+   virtual TranslatableString GetFileDescription() = 0;
 
    // Return stream descriptions list
    virtual void GetStreamInfo(wxArrayString & streamInfo) = 0;

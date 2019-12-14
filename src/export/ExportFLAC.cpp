@@ -381,8 +381,8 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    InitProgress( pDialog, fName,
       selectionOnly
-         ? _("Exporting the selected audio as FLAC")
-         : _("Exporting the audio as FLAC") );
+         ? XO("Exporting the selected audio as FLAC")
+         : XO("Exporting the audio as FLAC") );
    auto &progress = *pDialog;
 
    while (updateResult == ProgressResult::Success) {

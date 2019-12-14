@@ -346,7 +346,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    for (const auto &format : l) {
       const Format *f = &format;
 
-      wxString newfilter = f->formatName + wxT("|");
+      wxString newfilter = f->formatName.Translation() + wxT("|");
       for (size_t i = 0; i < f->formatExtensions.size(); i++) {
          if (!newfilter.Contains(wxT("*.") + f->formatExtensions[i] + wxT(";")))
             newfilter += wxT("*.") + f->formatExtensions[i] + wxT(";");

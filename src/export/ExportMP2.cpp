@@ -309,10 +309,10 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
       InitProgress( pDialog, fName,
          selectionOnly
-            ? wxString::Format(_("Exporting selected audio at %ld kbps"),
-               bitrate)
-            : wxString::Format(_("Exporting the audio at %ld kbps"),
-               bitrate) );
+            ? XO("Exporting selected audio at %ld kbps")
+                 .Format( bitrate )
+            : XO("Exporting the audio at %ld kbps")
+                 .Format( bitrate ) );
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {

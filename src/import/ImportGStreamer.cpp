@@ -31,7 +31,7 @@ Licensed under the GNU General Public License v2 or later
 #include <wx/window.h>
 #include <wx/log.h>
 
-#define DESC _("GStreamer-compatible files")
+#define DESC XO("GStreamer-compatible files")
 
 
 // On Windows we don't have configure script to turn this on or off,
@@ -165,7 +165,7 @@ public:
    ///\return true if successful, false otherwise
    bool Init();
 
-   wxString GetFileDescription() override;
+   TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
    ///! Called by Import.cpp
@@ -240,7 +240,7 @@ public:
    ///! Destructor
    virtual ~GStreamerImportPlugin();
 
-   wxString GetPluginFormatDescription() override;
+   TranslatableString GetPluginFormatDescription() override;
 
    wxString GetPluginStringID() override;
 
@@ -323,7 +323,7 @@ GStreamerImportPlugin::~GStreamerImportPlugin()
 
 // ----------------------------------------------------------------------------
 // Return the plugin description
-wxString
+TranslatableString
 GStreamerImportPlugin::GetPluginFormatDescription()
 {
    return DESC;
@@ -994,7 +994,7 @@ GStreamerImportFileHandle::Init()
 
 // ----------------------------------------------------------------------------
 // Return file dialog filter description
-wxString
+TranslatableString
 GStreamerImportFileHandle::GetFileDescription()
 {
    return DESC;

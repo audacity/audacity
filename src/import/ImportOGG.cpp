@@ -45,7 +45,7 @@
 #include "../widgets/ProgressDialog.h"
 
 
-#define DESC _("Ogg Vorbis files")
+#define DESC XO("Ogg Vorbis files")
 
 static const auto exts = {
    wxT("ogg")
@@ -88,7 +88,7 @@ public:
    ~OggImportPlugin() { }
 
    wxString GetPluginStringID() override { return wxT("liboggvorbis"); }
-   wxString GetPluginFormatDescription() override;
+   TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
 
    unsigned SequenceNumber() const override;
@@ -119,7 +119,7 @@ public:
    }
    ~OggImportFileHandle();
 
-   wxString GetFileDescription() override;
+   TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
    ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
@@ -158,7 +158,7 @@ private:
 };
 
 
-wxString OggImportPlugin::GetPluginFormatDescription()
+TranslatableString OggImportPlugin::GetPluginFormatDescription()
 {
     return DESC;
 }
@@ -218,7 +218,7 @@ static Importer::RegisteredImportPlugin registered{
    std::make_unique< OggImportPlugin >()
 };
 
-wxString OggImportFileHandle::GetFileDescription()
+TranslatableString OggImportFileHandle::GetFileDescription()
 {
    return DESC;
 }

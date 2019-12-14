@@ -87,7 +87,7 @@ private:
    double mCurT1;
    double mProgressVal;
    int    mSteps;
-   wxString mProgressMsg;
+   TranslatableString mProgressMsg;
    double mTrackLen;
    double mCurRate;
 

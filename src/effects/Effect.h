@@ -335,15 +335,15 @@ protected:
    // is okay, but don't try to undo).
 
    // Pass a fraction between 0.0 and 1.0
-   bool TotalProgress(double frac, const wxString & = {});
+   bool TotalProgress(double frac, const TranslatableString & = {});
 
    // Pass a fraction between 0.0 and 1.0, for the current track
    // (when doing one track at a time)
-   bool TrackProgress(int whichTrack, double frac, const wxString & = {});
+   bool TrackProgress(int whichTrack, double frac, const TranslatableString & = {});
 
    // Pass a fraction between 0.0 and 1.0, for the current track group
    // (when doing stereo groups at a time)
-   bool TrackGroupProgress(int whichGroup, double frac, const wxString & = {});
+   bool TrackGroupProgress(int whichGroup, double frac, const TranslatableString & = {});
 
    int GetNumWaveTracks() { return mNumTracks; }
    int GetNumWaveGroups() { return mNumGroups; }

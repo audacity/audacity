@@ -49,7 +49,7 @@
 
 #define FLAC_HEADER "fLaC"
 
-#define DESC _("FLAC files")
+#define DESC XO("FLAC files")
 
 static const auto exts = {
    wxT("flac"),
@@ -134,7 +134,7 @@ class FLACImportPlugin final : public ImportPlugin
    ~FLACImportPlugin() { }
 
    wxString GetPluginStringID() override { return wxT("libflac"); }
-   wxString GetPluginFormatDescription() override;
+   TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename)  override;
 
    unsigned SequenceNumber() const override;
@@ -150,7 +150,7 @@ public:
 
    bool Init();
 
-   wxString GetFileDescription() override;
+   TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
    ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
@@ -285,7 +285,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
    }, MakeSimpleGuard(FLAC__STREAM_DECODER_WRITE_STATUS_ABORT) );
 }
 
-wxString FLACImportPlugin::GetPluginFormatDescription()
+TranslatableString FLACImportPlugin::GetPluginFormatDescription()
 {
     return DESC;
 }
@@ -425,7 +425,7 @@ bool FLACImportFileHandle::Init()
    return true;
 }
 
-wxString FLACImportFileHandle::GetFileDescription()
+TranslatableString FLACImportFileHandle::GetFileDescription()
 {
    return DESC;
 }
