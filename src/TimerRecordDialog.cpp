@@ -783,7 +783,7 @@ TranslatableString TimerRecordDialog::GetDisplayDate( wxDateTime & dt )
                             len);
       if (len > 0) {
          s += wxT(" ") + dt.FormatTime();
-         return s;
+         return TranslatableString{ s };
       }
    }
 #endif
