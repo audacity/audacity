@@ -1313,16 +1313,6 @@ void PluginDescriptor::SetImporterIdentifier(const wxString & identifier)
    mImporterIdentifier = identifier;
 }
 
-const wxString & PluginDescriptor::GetImporterFilterDescription() const
-{
-   return mImporterFilterDesc;
-}
-
-void PluginDescriptor::SetImporterFilterDescription(const wxString & filterDesc)
-{
-   mImporterFilterDesc = filterDesc;
-}
-
 const FileExtensions & PluginDescriptor::GetImporterExtensions()
    const
 {
@@ -1374,7 +1364,7 @@ void PluginDescriptor::SetImporterExtensions( FileExtensions extensions )
 #define KEY_EFFECTTYPE_TOOL            wxT("Tool")
 #define KEY_EFFECTTYPE_HIDDEN          wxT("Hidden")
 #define KEY_IMPORTERIDENT              wxT("ImporterIdent")
-#define KEY_IMPORTERFILTER             wxT("ImporterFilter")
+//#define KEY_IMPORTERFILTER             wxT("ImporterFilter")
 #define KEY_IMPORTEREXTENSIONS         wxT("ImporterExtensions")
 
 // ============================================================================
@@ -1499,7 +1489,6 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Import
    plug.SetProviderID(PluginManager::GetID(provider));
 
    plug.SetImporterIdentifier(importer->GetPluginStringID());
-   plug.SetImporterFilterDescription(importer->GetPluginFormatDescription());
    plug.SetImporterExtensions(importer->GetSupportedExtensions());
 
    return plug.GetID();
@@ -2226,13 +2215,6 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
             }
             plug.SetImporterIdentifier(strVal);
 
-            // Get the importer filter description and bypass group if not found
-            if (!pRegistry->Read(KEY_IMPORTERFILTER, &strVal))
-            {
-               continue;
-            }
-            plug.SetImporterFilterDescription(strVal);
-
             // Get the importer extensions and bypass group if not found
             if (!pRegistry->Read(KEY_IMPORTEREXTENSIONS, &strVal))
             {
@@ -2366,7 +2348,6 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
          case PluginTypeImporter:
          {
             pRegistry->Write(KEY_IMPORTERIDENT, plug.GetImporterIdentifier());
-            pRegistry->Write(KEY_IMPORTERFILTER, plug.GetImporterFilterDescription());
             const auto & extensions = plug.GetImporterExtensions();
             wxString strExt;
             for (size_t i = 0, cnt = extensions.size(); i < cnt; i++)

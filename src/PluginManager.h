@@ -153,7 +153,6 @@ private:
    // Importers
 
    wxString mImporterIdentifier;
-   wxString mImporterFilterDesc;
    FileExtensions mImporterExtensions;
 };
 
