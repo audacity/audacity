@@ -16,6 +16,10 @@ Paul Licameli split from ProjectManager.cpp
 #include <wx/frame.h>
 #include <wx/statusbr.h>
 
+#if defined(__WXMAC__) || defined(__WXMSW__)
+#include <wx/power.h>
+#endif
+
 #include "AudioIO.h"
 #include "AutoRecovery.h"
 #include "CommonCommandFlags.h"
@@ -806,6 +810,11 @@ void ProjectAudioManager::OnAudioIORate(int rate)
 
 void ProjectAudioManager::OnAudioIOStartRecording()
 {
+#if defined(__WXMAC__) || defined(__WXMSW__)
+   // Don't want the system to sleep while recording
+   wxPowerResource::Acquire(wxPOWER_RESOURCE_SCREEN, _("Audacity recording"));
+#endif
+
    auto &projectFileIO = ProjectFileIO::Get( mProject );
    // Before recording is started, auto-save the file. The file will have
    // empty tracks at the bottom where the recording will be put into
@@ -815,6 +824,11 @@ void ProjectAudioManager::OnAudioIOStartRecording()
 // This is called after recording has stopped and all tracks have flushed.
 void ProjectAudioManager::OnAudioIOStopRecording()
 {
+#if defined(__WXMAC__) || defined(__WXMSW__)
+   // Done recording, so allow sleeping again
+   wxPowerResource::Release(wxPOWER_RESOURCE_SCREEN);
+#endif
+
    auto &project = mProject;
    auto &dirManager = DirManager::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );

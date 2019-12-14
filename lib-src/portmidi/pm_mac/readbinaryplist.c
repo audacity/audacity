@@ -84,7 +84,9 @@ memory requested or calls longjmp, so callers don't have to check.
 #define YES 1
 #define BOOL int
 
+#if !defined(MAXPATHLEN)
 #define MAXPATHLEN 256
+#endif
 
 /* there are 2 levels of error logging/printing:
  *   BPLIST_LOG and BPLIST_LOG_VERBOSE

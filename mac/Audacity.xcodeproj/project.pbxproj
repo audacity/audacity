@@ -887,7 +887,6 @@
 		28BD8AB1101DF4C700686679 /* BatchEvalCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AA9101DF4C600686679 /* BatchEvalCommand.cpp */; };
 		28BD8AB2101DF4C700686679 /* CommandDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAA101DF4C600686679 /* CommandDirectory.cpp */; };
 		28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */; };
-		28C816BA131255790035BB10 /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
 		28C8211D1B5C661E00B53328 /* ViewInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C8211C1B5C661E00B53328 /* ViewInfo.cpp */; };
 		28CA9E6B1AE60C53005C0BFE /* dBTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184D13CF01A600C1B664 /* dBTable.cpp */; };
 		28CA9E6C1AE60C53005C0BFE /* dBTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 82FF184E13CF01A600C1B664 /* dBTable.h */; };
@@ -1477,7 +1476,7 @@
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).mo",
 			);
-			script = "# Always make sure there's an empty English folder.  Otherwise, some menu items will be translated to the next language listed\n# in System Preferences/Language & Text\n\nOD=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/en.lproj\"\nif [ ! -d \"${OD}\" ]\nthen\n   mkdir -p \"${OD}\"\n   chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n   chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\nfi\n\nif [ -n \"`which msgfmt`\" ]\nthen\n   msgfmt -c -v -o \"${SCRIPT_OUTPUT_FILE_0}\" \"${SCRIPT_INPUT_FILE}\"\n\n   OD=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/${INPUT_FILE_BASE}.lproj\"\n   if [ ! -d \"${OD}\" ]\n   then\n      mkdir -p \"${OD}\"\n      chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n      chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\n   fi\n\n   cp \"${SCRIPT_OUTPUT_FILE_0}\" \"${OD}/audacity.mo\"\n   chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/audacity.mo\"\n   chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/audacity.mo\"\n\n   case \"${INPUT_FILE_BASE}\" in\n      gl)\n\t\tINPUT_FILE_BASE=gl_ES\n      ;;\n      ko)\n        INPUT_FILE_BASE=ko_KR\n      ;;\n      pt_PT)\n        INPUT_FILE_BASE=pt\n      ;;\n      eu_ES)\n        INPUT_FILE_BASE=eu\n      ;;\n   esac\n\n   if [ -e \"${WX_PREFIX}/share/locale/${INPUT_FILE_BASE}/LC_MESSAGES/wxstd.mo\" ]\n   then\n      cp \"${WX_PREFIX}/share/locale/${INPUT_FILE_BASE}/LC_MESSAGES/wxstd.mo\" \"${OD}/wxstd.mo\"\n      chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/wxstd.mo\"\n      chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/wxstd.mo\"\n   fi\n   \nelse\n   echo \"msgfmt not available\"\n   touch \"${SCRIPT_OUTPUT_FILE_0}\"\nfi";
+			script = "# Always make sure there's an empty English folder.  Otherwise, some menu items will be translated to the next language listed\n# in System Preferences/Language & Text\n\nOD=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/en.lproj\"\nif [ ! -d \"${OD}\" ]\nthen\n   mkdir -p \"${OD}\"\n   chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n   chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\nfi\n\nif [ -n \"`which msgfmt`\" ]\nthen\n   msgfmt -c -v -o \"${SCRIPT_OUTPUT_FILE_0}\" \"${SCRIPT_INPUT_FILE}\"\n\n   OD=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/${INPUT_FILE_BASE}.lproj\"\n   if [ ! -d \"${OD}\" ]\n   then\n      mkdir -p \"${OD}\"\n      chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n      chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\n   fi\n\n   cp \"${SCRIPT_OUTPUT_FILE_0}\" \"${OD}/audacity.mo\"\n   chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/audacity.mo\"\n   chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/audacity.mo\"\n\n   case \"${INPUT_FILE_BASE}\" in\n      gl)\n\t\tINPUT_FILE_BASE=gl_ES\n      ;;\n      ko)\n        INPUT_FILE_BASE=ko_KR\n      ;;\n      pt_PT)\n        INPUT_FILE_BASE=pt\n      ;;\n      eu_ES)\n        INPUT_FILE_BASE=eu\n      ;;\n   esac\n\n   if [ -e \"${WX_PREFIX}/share/locale/${INPUT_FILE_BASE}/LC_MESSAGES/wxstd.mo\" ]\n   then\n      cp \"${WX_PREFIX}/share/locale/${INPUT_FILE_BASE}/LC_MESSAGES/wxstd.mo\" \"${OD}/wxstd.mo\"\n      chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/wxstd.mo\"\n      chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/wxstd.mo\"\n   fi\n   \nelse\n   echo \"msgfmt not available\"\n   touch \"${SCRIPT_OUTPUT_FILE_0}\"\nfi\n";
 		};
 /* End PBXBuildRule section */
 
@@ -1658,17 +1657,6 @@
 			);
 			name = "Install miscellany";
 			runOnlyForDeploymentPostprocessing = 1;
-		};
-		28C816B7131255550035BB10 /* Install wrapper */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "";
-			dstSubfolderSpec = 6;
-			files = (
-				28C816BA131255790035BB10 /* Audacity.sh in Install wrapper */,
-			);
-			name = "Install wrapper";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		ED95519E195D956F0027176E /* Install background image */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -2845,7 +2833,6 @@
 		28BD8AB0101DF4C600686679 /* Validators.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Validators.h; sourceTree = "<group>"; tabWidth = 3; };
 		28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityLogger.cpp; sourceTree = "<group>"; };
 		28C3946C1818356800FDDAC9 /* AudacityLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityLogger.h; sourceTree = "<group>"; };
-		28C816B81312555B0035BB10 /* Audacity.sh */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text.script.sh; name = Audacity.sh; path = mac/Audacity.sh; sourceTree = "<group>"; };
 		28C8211C1B5C661E00B53328 /* ViewInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ViewInfo.cpp; sourceTree = "<group>"; };
 		28CC03A01AD386CF00826380 /* phasevocoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = phasevocoder.c; sourceTree = "<group>"; };
 		28CC03A11AD386CF00826380 /* phasevocoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = phasevocoder.h; sourceTree = "<group>"; };
@@ -3620,7 +3607,6 @@
 		ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ScoreAlignDialog.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED64C822124567ED007CF2FC /* ScoreAlignDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ScoreAlignDialog.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED85B3CF16A46DDA006DA21D /* hr.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = hr.po; path = ../locale/hr.po; sourceTree = SOURCE_ROOT; };
-		ED85B5BA16A47353006DA21D /* Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info copy.plist"; path = "mac/Info copy.plist"; sourceTree = "<group>"; };
 		ED87F4F619863DF500AC520B /* ta.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = ta.po; path = ../locale/ta.po; sourceTree = SOURCE_ROOT; };
 		ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExtImportPrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED90976C116CAD49002F7479 /* ExtImportPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExtImportPrefs.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -4329,11 +4315,9 @@
 			isa = PBXGroup;
 			children = (
 				174F73C8098D516D009CD6E0 /* Resources */,
-				28C816B81312555B0035BB10 /* Audacity.sh */,
 				28006FFA132C167600BD34D7 /* Install.txt */,
 				178CF4FF0989541C0056CE58 /* configmac.h */,
 				174F73D7098D51AA009CD6E0 /* Info.plist */,
-				ED85B5BA16A47353006DA21D /* Info copy.plist */,
 			);
 			name = mac;
 			path = ..;
@@ -7525,7 +7509,6 @@
 				28708D631B17C3C400496FEB /* Copy wxWidgets libs */,
 				288F0980131A400F0008E860 /* Install manual */,
 				282413DA131D52CE009FD931 /* Install plugins */,
-				28C816B7131255550035BB10 /* Install wrapper */,
 				2892CE28131AFB1900E1E17D /* Install miscellany */,
 				ED95519E195D956F0027176E /* Install background image */,
 				282413D8131D51FC009FD931 /* Create dist */,
@@ -7783,24 +7766,100 @@
 			attributes = {
 				LastUpgradeCheck = 0630;
 				TargetAttributes = {
+					17073EE70988DBDD008541CC = {
+						ProvisioningStyle = Manual;
+					};
+					17073F610988E121008541CC = {
+						ProvisioningStyle = Manual;
+					};
+					17073FC30988E561008541CC = {
+						ProvisioningStyle = Manual;
+					};
+					17073FFD0988EA60008541CC = {
+						ProvisioningStyle = Manual;
+					};
+					1707401D0988EEAA008541CC = {
+						ProvisioningStyle = Manual;
+					};
+					170740790988F1BB008541CC = {
+						ProvisioningStyle = Manual;
+					};
+					170740950988F2F7008541CC = {
+						ProvisioningStyle = Manual;
+					};
+					170740D30988F820008541CC = {
+						ProvisioningStyle = Manual;
+					};
+					176A1A5A098B7B8D00DC73B4 = {
+						ProvisioningStyle = Manual;
+					};
+					176EEBE909A2F16200188F3B = {
+						ProvisioningStyle = Manual;
+					};
+					176EEC1D09A2F2DD00188F3B = {
+						ProvisioningStyle = Manual;
+					};
 					1790AFAF09883B6D008A330A = {
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.HardenedRuntime = {
 								enabled = 1;
 							};
 						};
 					};
+					2800FE060FF322D4005CA9E5 = {
+						ProvisioningStyle = Manual;
+					};
+					2840CECB0AEB803C00F49FC3 = {
+						ProvisioningStyle = Manual;
+					};
+					28501EAF0CEED1F00029ABAA = {
+						ProvisioningStyle = Manual;
+					};
+					2862299E181CE4B600E1AD1A = {
+						ProvisioningStyle = Manual;
+					};
+					2880527D0DEA694100671EA4 = {
+						ProvisioningStyle = Manual;
+					};
+					28D489241B5F052C00A2E4DF = {
+						ProvisioningStyle = Manual;
+					};
+					28E236F40E515D1D00281398 = {
+						ProvisioningStyle = Manual;
+					};
+					28E67F510A3A160D0021D89F = {
+						ProvisioningStyle = Manual;
+					};
+					28FADDCA1833C3C500BA4141 = {
+						ProvisioningStyle = Manual;
+					};
+					65326E6C2253D2BE00844F28 = {
+						ProvisioningStyle = Manual;
+					};
+					65326E9F2253D68900844F28 = {
+						ProvisioningStyle = Manual;
+					};
+					ED15212F163C227C00451B5F = {
+						ProvisioningStyle = Manual;
+					};
+					ED2706F30EF9C3C6007D4FFD = {
+						ProvisioningStyle = Manual;
+					};
+					EDBFAD07177E5399004CC1C1 = {
+						ProvisioningStyle = Manual;
+					};
 				};
 			};
 			buildConfigurationList = 1790ABE409883346008A330A /* Build configuration list for PBXProject "Audacity" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
+				ja,
+				fr,
+				de,
+				en,
 			);
 			mainGroup = 1790ABE109883346008A330A;
 			productRefGroup = 1790AFB109883B6D008A330A /* Products */;
@@ -7905,7 +7964,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/scripts/build_dist.sh\"";
+			shellScript = "\"${PROJECT_DIR}/scripts/build_dist.sh\"\n";
 		};
 		282413DA131D52CE009FD931 /* Install plugins */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9299,11 +9358,14 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_CXX_LIBRARY = "libc++";
+				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
+				CODE_SIGN_STYLE = Manual;
 				CONFIG_DEBUG = yes;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
 				CONFIG_UNICODE = yes;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -9314,17 +9376,18 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx10.9;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = "";
+				WARNING_CFLAGS = "-Wno-nonnull";
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=1 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
@@ -9340,7 +9403,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -9632,11 +9694,14 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_CXX_LIBRARY = "libc++";
+				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
+				CODE_SIGN_STYLE = Manual;
 				CONFIG_DEBUG = no;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
 				CONFIG_UNICODE = yes;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -9647,17 +9712,18 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx10.9;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = "";
+				WARNING_CFLAGS = "-Wno-nonnull";
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=0 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
@@ -9673,7 +9739,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -10025,12 +10090,15 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
+				CODE_SIGN_STYLE = Manual;
 				CONFIG_DEBUG = yes;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
 				CONFIG_UNICODE = yes;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -10041,17 +10109,18 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx10.9;
 				SSE_CPPFLAGS = "";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = "";
+				WARNING_CFLAGS = "-Wno-nonnull";
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=1 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
@@ -10067,7 +10136,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -10100,8 +10168,6 @@
 					"-headerpad_max_install_names",
 					"-framework",
 					OpenGL,
-					"-framework",
-					QuickTime,
 					"-framework",
 					IOKit,
 					"-framework",
@@ -10485,12 +10551,15 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
+				CODE_SIGN_STYLE = Manual;
 				CONFIG_DEBUG = no;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
 				CONFIG_UNICODE = yes;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -10501,17 +10570,18 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx10.9;
 				SSE_CPPFLAGS = "";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = "";
+				WARNING_CFLAGS = "-Wno-nonnull";
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=0 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
@@ -10527,7 +10597,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -10562,8 +10631,6 @@
 					"-headerpad_max_install_names",
 					"-framework",
 					OpenGL,
-					"-framework",
-					QuickTime,
 					"-framework",
 					IOKit,
 					"-framework",
@@ -11186,7 +11253,7 @@
 				5EC18ACD219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		17073F890988E15A008541CC /* Build configuration list for PBXNativeTarget "libid3tag" */ = {
 			isa = XCConfigurationList;
@@ -11197,7 +11264,7 @@
 				5EC18ABF219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		17073FDD0988E584008541CC /* Build configuration list for PBXNativeTarget "libmad" */ = {
 			isa = XCConfigurationList;
@@ -11208,7 +11275,7 @@
 				5EC18AC0219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		170740050988EA90008541CC /* Build configuration list for PBXNativeTarget "libogg" */ = {
 			isa = XCConfigurationList;
@@ -11219,7 +11286,7 @@
 				5EC18AC3219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		1707406B0988EEC0008541CC /* Build configuration list for PBXNativeTarget "libsndfile" */ = {
 			isa = XCConfigurationList;
@@ -11230,7 +11297,7 @@
 				5EC18AC4219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		1707408D0988F1FC008541CC /* Build configuration list for PBXNativeTarget "soundtouch" */ = {
 			isa = XCConfigurationList;
@@ -11241,7 +11308,7 @@
 				5EC18ACE219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		1707409A0988F30D008541CC /* Build configuration list for PBXNativeTarget "portmixer" */ = {
 			isa = XCConfigurationList;
@@ -11252,7 +11319,7 @@
 				5EC18ACC219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		170741160988F83B008541CC /* Build configuration list for PBXNativeTarget "libvorbis" */ = {
 			isa = XCConfigurationList;
@@ -11263,7 +11330,7 @@
 				5EC18AC2219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		176A1B65098B7BDC00DC73B4 /* Build configuration list for PBXNativeTarget "libnyquist" */ = {
 			isa = XCConfigurationList;
@@ -11274,7 +11341,7 @@
 				5EC18AC1219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		176EEBEB09A2F1D600188F3B /* Build configuration list for PBXNativeTarget "libFLAC" */ = {
 			isa = XCConfigurationList;
@@ -11285,7 +11352,7 @@
 				5EC18ABD219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		176EEC3E09A2F33100188F3B /* Build configuration list for PBXNativeTarget "libFLAC++" */ = {
 			isa = XCConfigurationList;
@@ -11296,7 +11363,7 @@
 				5EC18ABE219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		1790ABE409883346008A330A /* Build configuration list for PBXProject "Audacity" */ = {
 			isa = XCConfigurationList;
@@ -11307,7 +11374,7 @@
 				5EC18AB9219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		1790AFB409883B6E008A330A /* Build configuration list for PBXNativeTarget "Audacity" */ = {
 			isa = XCConfigurationList;
@@ -11318,7 +11385,7 @@
 				5EC18ABA219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		2800FE1D0FF32326005CA9E5 /* Build configuration list for PBXNativeTarget "portmidi" */ = {
 			isa = XCConfigurationList;
@@ -11329,7 +11396,7 @@
 				5EC18ACB219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		2840CF1D0AEB803C00F49FC3 /* Build configuration list for PBXNativeTarget "twolame" */ = {
 			isa = XCConfigurationList;
@@ -11340,7 +11407,7 @@
 				5EC18ACF219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		28501F010CEED1F00029ABAA /* Build configuration list for PBXNativeTarget "libvamp" */ = {
 			isa = XCConfigurationList;
@@ -11351,7 +11418,7 @@
 				5EC18AC6219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		286229AB181CE4B600E1AD1A /* Build configuration list for PBXNativeTarget "lv2" */ = {
 			isa = XCConfigurationList;
@@ -11362,7 +11429,7 @@
 				5EC18AC7219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		288052830DEA698A00671EA4 /* Build configuration list for PBXNativeTarget "mod-script-pipe" */ = {
 			isa = XCConfigurationList;
@@ -11373,7 +11440,7 @@
 				5EC18AC9219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		28D489251B5F052C00A2E4DF /* Build configuration list for PBXLegacyTarget "Create Info Header" */ = {
 			isa = XCConfigurationList;
@@ -11384,7 +11451,7 @@
 				5EC18ABB219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		28E237030E515D1D00281398 /* Build configuration list for PBXNativeTarget "libscorealign" */ = {
 			isa = XCConfigurationList;
@@ -11395,7 +11462,7 @@
 				5EC18AD0219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		28E67F5B0A3A160D0021D89F /* Build configuration list for PBXNativeTarget "portaudio-v19" */ = {
 			isa = XCConfigurationList;
@@ -11406,7 +11473,7 @@
 				5EC18ACA219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		28FADDEA1833C3C500BA4141 /* Build configuration list for PBXNativeTarget "expat" */ = {
 			isa = XCConfigurationList;
@@ -11417,7 +11484,7 @@
 				5EC18ABC219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		65326E992253D2BE00844F28 /* Build configuration list for PBXNativeTarget "libmp3lame" */ = {
 			isa = XCConfigurationList;
@@ -11428,7 +11495,7 @@
 				65326E9D2253D2BE00844F28 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		65326EA22253D68900844F28 /* Build configuration list for PBXNativeTarget "libmpg123" */ = {
 			isa = XCConfigurationList;
@@ -11439,7 +11506,7 @@
 				65326EA62253D68900844F28 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		ED152148163C22A700451B5F /* Build configuration list for PBXNativeTarget "libsoxr" */ = {
 			isa = XCConfigurationList;
@@ -11450,7 +11517,7 @@
 				5EC18AC5219B5B01000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		ED2706F90EF9C3E4007D4FFD /* Build configuration list for PBXNativeTarget "sbsms" */ = {
 			isa = XCConfigurationList;
@@ -11461,7 +11528,7 @@
 				5EC18AD1219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 		EDBFAD0E177E5399004CC1C1 /* Build configuration list for PBXNativeTarget "mod-nyq-bench" */ = {
 			isa = XCConfigurationList;
@@ -11472,7 +11539,7 @@
 				5EC18AC8219B5B02000EFBF9 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Debug64;
 		};
 /* End XCConfigurationList section */
 	};

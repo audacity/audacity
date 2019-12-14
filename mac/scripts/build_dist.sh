@@ -1,21 +1,124 @@
+#!/bin/bash
+
 set -x
+
+# Function to retrieve a value from a plist
+function plist
+{
+   /usr/libexec/PlistBuddy -c "Print ${2}" "${1}"
+}
+
+# Function to notarize a file (APP or DMG)
+function notarize
+{
+   # Bail if not signing
+   if [ -z "${SIGNING}" ]
+   then
+      return
+   fi
+
+   # Create temporary output file
+   OUTPUT=$(mktemp /tmp/notarization-XXXX)
+   trap "cat '${OUTPUT}' ; rm '${OUTPUT}'" EXIT
+
+   # Send the app off for notarization
+   xcrun altool --notarize-app \
+                --primary-bundle-id "${IDENT}" \
+                --file "${1}" \
+                --username "${NOTARIZE_USERNAME}" \
+                --password "${NOTARIZE_PASSWORD}" \
+                --output-format xml \
+                >"${OUTPUT}"
+
+   # Bail if notarization failed
+   if [ ${?} -ne 0 ]
+   then
+      exit 1
+   fi
+
+   # Extract the request UUID from the output plist
+   REQ=$(plist "${OUTPUT}" "notarization-upload:RequestUUID")
+
+   # Poll until the request is complete
+   for ((;;))
+   do
+      # Sleep a bit
+      sleep 15s
+
+      # Ask for request status
+      xcrun altool --notarization-info "${REQ}" \
+                   --username "${NOTARIZE_USERNAME}" \
+                   --password "${NOTARIZE_PASSWORD}" \
+                   --output-format xml \
+                   >"${OUTPUT}"
+      if [ ${?} -ne 0 ]
+      then
+         exit 1
+      fi
+
+      # Extract the current status and stop polling if it's no longer in progress
+      STATUS=$(plist "${OUTPUT}" "notarization-info:Status")
+      if [ "${STATUS}" != "in progress" ]
+      then
+         break
+      fi
+   done
+
+   # Bail if the notarization wasn't successful
+   if [ "${STATUS}" != "success" ]
+   then
+      exit 1
+   fi
+
+   # Cleanup
+   trap EXIT
+   rm "${OUTPUT}"
+}
 
 # Setup
 VERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' build/Info.plist.h`
 RELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' build/Info.plist.h`
 REVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' build/Info.plist.h`
 VERSION=$VERSION.$RELEASE.$REVISION
+IDENT=$(plist "${INSTALL_ROOT}/Audacity.app/Contents/Info.plist" "CFBundleIdentifier")
 
-cd "${DSTROOT}"
-chmod -RH "${INSTALL_MODE_FLAG}" "${TARGET_BUILD_DIR}"
-chown -RH "${INSTALL_OWNER}:${INSTALL_GROUP}" "${TARGET_BUILD_DIR}"
-
-echo "Audacity has been installed to: ${DSTROOT}"
-
-cd ..
+#
+# This depends on a file in the builders HOME directory called ".audacity_signing" that
+# contains the following four lines with the appropriate values specified.  If the file
+# doesn't exist or one of the values is missing the distribution will be built unsigned
+# and unnotarized.
+#
+# CODESIGN_APP_IDENTITY="Developer ID Application:"
+# CODESIGN_DMG_IDENTITY="Developer ID Installer:"
+# NOTARIZE_USERNAME="specify your Apple developer email address"
+# NOTARIZE_PASSWORD="@keychain:APP_PASSWORD"
+#
+# For information on how to create that APP_PASSWORD in your keychain, refer to:
+#
+#   https://support.apple.com/guide/keychain-access/add-a-password-to-a-keychain-kyca1120/mac
+#
+# You generate the app-specific password in your Apple developer account and you must specify
+# "org.audacityteam.audacity" as the application identifier.
+#
+SIGNING=
+if [ -r ~/.audacity_signing ]
+then
+   source ~/.audacity_signing
+   if [ -n "${CODESIGN_APP_IDENTITY}" -a -n "${CODESIGN_DMG_IDENTITY}" -a -n "${NOTARIZE_USERNAME}" -a -n "${NOTARIZE_PASSWORD}" ]
+   then
+      SIGNING="y"
+   fi
+fi
 
 VOL="Audacity $VERSION"
 DMG="audacity-macos-$VERSION"
+
+echo "Audacity has been installed to: ${DSTROOT}"
+cd "${DSTROOT}/.."
+
+# Make sure we have consistent ownership and permissions
+chmod -RH "${INSTALL_MODE_FLAG}" "${TARGET_BUILD_DIR}"
+chown -RH "${INSTALL_OWNER}:${INSTALL_GROUP}" "${TARGET_BUILD_DIR}"
 
 # Preclean
 rm -rf "$DMG" "$DMG.dmg" TMP.dmg
@@ -23,6 +126,34 @@ rm -rf "$DMG" "$DMG.dmg" TMP.dmg
 # Create structure
 mkdir "$DMG"
 cp -pR "${DSTROOT}/" "${DMG}"
+
+# Sign and notarize the app
+if [ -n "${SIGNING}" ]
+then
+   xcrun codesign --force \
+                  --deep \
+                  --verbose \
+                  --timestamp \
+                  --identifier "${IDENT}" \
+                  --options runtime \
+                  --entitlements "${SRCROOT}/${CODE_SIGN_ENTITLEMENTS}" \
+                  --sign "${CODESIGN_APP_IDENTITY}" \
+                  "${DMG}/Audacity.app"
+
+   # Create the ZIP archive for notarization
+   xcrun ditto -c -k --keepParent "${DMG}" "${DMG}.zip" 
+
+   # Send it off for notarization
+   notarize "${DMG}.zip"
+
+   # Remove the zip file
+   rm "${DMG}.zip"
+
+   # Staple the app
+   stapler staple "${DMG}/Audacity.app"
+fi
+
+
 
 #Add a custom icon for the DMG
 #cp -p mac/Resources/Audacity.icns "${DMG}"/.VolumeIcon.icns
@@ -60,10 +191,7 @@ osascript <<EOF
    end tell
 EOF
 
-#Set the custom icon flag
-#SetFile -a C /Volumes/"$TITLE"
-
-#Make our DMG look pretty and install the custom background image
+# Make our DMG look pretty and install the custom background image
 echo '
    tell application "Finder"
      tell disk "'$TITLE'"
@@ -91,6 +219,18 @@ echo '
 # Compress and prepare for Internet delivery
 hdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o "$DMG.dmg"
 
+# Sign, notarize and staple the DMG
+if [ -n "${SIGNING}" ]
+then
+   xcrun codesign --verbose \
+                  --timestamp \
+                  --identifier "${IDENT}" \
+                  --sign "${CODESIGN_DMG_IDENTITY}" \
+                  "${DMG}.dmg"
+   notarize "${DMG}.dmg"
+   stapler staple "${DMG}.dmg"
+fi
+
 # Create zip version
 rm -rf "${DMG}/.background"
 rm -rf "${DMG}/Audacity.app/help/"
@@ -98,3 +238,6 @@ zip -r9 "${DMG}.zip" "${DMG}"
 
 # Cleanup
 rm -rf ${DMG} TMP.dmg
+
+exit 0
+

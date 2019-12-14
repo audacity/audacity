@@ -25,7 +25,7 @@ case $CONFIGURATION in
 Debug|Debug64)
     AUDACITY_EXECUTABLE=Audacity;;
 *)
-    AUDACITY_EXECUTABLE=Audacity.sh;;
+    AUDACITY_EXECUTABLE=Audacity;;
 esac
 cat >mac/build/Info.plist.h <<EOF
 #define AUDACITY_EXECUTABLE ${AUDACITY_EXECUTABLE}

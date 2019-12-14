@@ -224,10 +224,14 @@
 	<string>auDy</string>
 	<key>CFBundleVersion</key>
 	<string>AUDACITY_INFO_VERSION</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.music</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Audacity version AUDACITY_INFO_VERSION</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Audacity requires access to the microphone only if you intend to record from it.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
