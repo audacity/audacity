@@ -387,13 +387,13 @@ public:
       (const wxString &str, Request request) -> wxString {
          switch ( request ) {
             case Request::Context:
-               return DoGetContext( prevFormatter );
+               return TranslatableString::DoGetContext( prevFormatter );
             case Request::Format:
             case Request::DebugFormat:
             default: {
                bool debug = request == Request::DebugFormat;
                return wxString::Format(
-                  DoFormat( prevFormatter, str, debug ),
+                  TranslatableString::DoFormat( prevFormatter, str, debug ),
                   TranslatableString::TranslateArgument( args, debug )...
                );
             }
@@ -499,14 +499,15 @@ private:
          (const wxString &str, Request request) -> wxString {
             switch ( request ) {
                case Request::Context:
-                  return DoGetContext( prevFormatter );
+                  return TranslatableString::DoGetContext( prevFormatter );
                case Request::Format:
                case Request::DebugFormat:
                default:
                {
                   bool debug = request == Request::DebugFormat;
                   return wxString::Format(
-                     DoChooseFormat( prevFormatter, str, plural, nn, debug ),
+                     TranslatableString::DoChooseFormat(
+                        prevFormatter, str, plural, nn, debug ),
                      TranslatableString::TranslateArgument( args, debug )...
                   );
                }

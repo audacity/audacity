@@ -356,13 +356,13 @@ TranslatableString &TranslatableString::Join(
       -> wxString {
       switch ( request ) {
          case Request::Context:
-            return DoGetContext( prevFormatter );
+            return TranslatableString::DoGetContext( prevFormatter );
          case Request::Format:
          case Request::DebugFormat:
          default: {
             bool debug = request == Request::DebugFormat;
             return
-               DoFormat( prevFormatter, str, debug )
+               TranslatableString::DoFormat( prevFormatter, str, debug )
                   + separator
                   + arg.DoFormat( debug );
          }
