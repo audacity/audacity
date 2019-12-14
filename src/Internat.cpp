@@ -317,7 +317,7 @@ wxString TranslatableString::DoGetContext( const Formatter &formatter )
    return formatter ? formatter( {}, Request::Context ) : wxString{};
 }
 
-wxString TranslatableString::DoFormat(
+wxString TranslatableString::DoSubstitute(
    const Formatter &formatter, const wxString &format, bool debug )
 {
    return formatter
@@ -362,7 +362,7 @@ TranslatableString &TranslatableString::Join(
          default: {
             bool debug = request == Request::DebugFormat;
             return
-               TranslatableString::DoFormat( prevFormatter, str, debug )
+               TranslatableString::DoSubstitute( prevFormatter, str, debug )
                   + separator
                   + arg.DoFormat( debug );
          }

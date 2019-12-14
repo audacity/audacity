@@ -393,7 +393,7 @@ public:
             default: {
                bool debug = request == Request::DebugFormat;
                return wxString::Format(
-                  TranslatableString::DoFormat( prevFormatter, str, debug ),
+                  TranslatableString::DoSubstitute( prevFormatter, str, debug ),
                   TranslatableString::TranslateArgument( args, debug )...
                );
             }
@@ -466,10 +466,10 @@ private:
    friend std::hash< TranslatableString >;
 
    static wxString DoGetContext( const Formatter &formatter );
-   static wxString DoFormat(
+   static wxString DoSubstitute(
       const Formatter &formatter, const wxString &format, bool debug );
    wxString DoFormat( bool debug ) const
-   {  return DoFormat( mFormatter, *this, debug ); }
+   {  return DoSubstitute( mFormatter, *this, debug ); }
 
    static wxString DoChooseFormat(
       const Formatter &formatter,
