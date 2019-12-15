@@ -154,6 +154,10 @@ void PaUtil_InitializeClock( void )
 }
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 PaTime PaUtil_GetTime( void )
 {
 #ifdef HAVE_MACH_ABSOLUTE_TIME
@@ -168,6 +172,10 @@ PaTime PaUtil_GetTime( void )
     return (PaTime) tv.tv_usec * 1e-6 + tv.tv_sec;
 #endif
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 PaError PaUtil_InitializeThreading( PaUtilThreading *threading )
 {
