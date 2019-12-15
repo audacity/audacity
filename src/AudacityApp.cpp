@@ -1662,6 +1662,22 @@ bool AudacityApp::OnInit()
    } );
 #endif
 
+#if defined(__WXMAC__)
+   // The first time this version of Audacity is run or when the preferences
+   // are reset, execute the "tccutil" command to reset the microphone permissions
+   // currently assigned to Audacity.  The end result is that the user will be
+   // prompted to approve/deny Audacity access (again).
+   //
+   // This should resolve confusion of why Audacity appears to record, but only
+   // gets silence due to Audacity being denied microphone access previously.
+   bool permsReset = false;
+   gPrefs->Read(wxT("/MicrophonePermissionsReset"), &permsReset, false);
+   if (!permsReset) {
+      system("tccutil reset Microphone org.audacityteam.audacity");
+      gPrefs->Write(wxT("/MicrophonePermissionsReset"), true);
+   }
+#endif
+
    return TRUE;
 }
 
