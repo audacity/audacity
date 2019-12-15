@@ -2049,8 +2049,17 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     if( inputParameters )
     {
         /* IMPLEMENT ME - establish which  host formats are available */
+        /* JKC: CAN'T IMPLEMENT.  DirectSound does not have a way */
+        /* to interrogate for formats */
         PaSampleFormat nativeInputFormats = paInt16;
         /* PaSampleFormat nativeFormats = paUInt8 | paInt16 | paInt24 | paInt32 | paFloat32; */
+
+        /* July 2016 (Carsten and Uwe)
+         * http://bugzilla.audacityteam.org/show_bug.cgi?id=193
+         * Now we may over ride the paInt16.  
+         */
+        if (userData && *((int*)userData) == 24)
+            nativeInputFormats = paInt24;
 
         hostInputSampleFormat =
             PaUtil_SelectClosestAvailableFormat( nativeInputFormats, inputParameters->sampleFormat );
