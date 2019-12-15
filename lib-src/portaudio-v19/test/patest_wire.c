@@ -13,7 +13,7 @@
 
 */
 /*
- * $Id: patest_wire.c 1843 2012-06-22 21:58:10Z philburk $
+ * $Id$
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com

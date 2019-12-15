@@ -4,7 +4,7 @@
 	@author Phil Burk  http://www.softsynth.com
 */
 /*
- * $Id: patest_multi_sine.c 1368 2008-03-01 00:38:27Z rossb $
+ * $Id$
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -47,7 +47,7 @@
 #include "portaudio.h"
 
 #define SAMPLE_RATE       (44100)
-#define FRAMES_PER_BUFFER (256)
+#define FRAMES_PER_BUFFER (128)
 #define FREQ_INCR         (300.0 / SAMPLE_RATE)
 #define MAX_CHANNELS      (64)
 

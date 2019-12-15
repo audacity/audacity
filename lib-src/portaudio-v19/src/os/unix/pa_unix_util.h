@@ -1,5 +1,5 @@
 /*
- * $Id: pa_unix_util.h 1241 2007-07-23 20:08:31Z aknudsen $
+ * $Id$
  * Portable Audio I/O Library
  * UNIX platform-specific support functions
  *

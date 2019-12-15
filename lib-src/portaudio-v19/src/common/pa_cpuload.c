@@ -1,5 +1,5 @@
 /*
- * $Id: pa_cpuload.c 1577 2011-02-01 13:03:45Z rossb $
+ * $Id$
  * Portable Audio I/O Library CPU Load measurement functions
  * Portable CPU load measurement facility.
  *

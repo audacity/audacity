@@ -52,7 +52,7 @@
 #include "pa_win_coinitialize.h"
 
 
-#if (defined(WIN32) && (defined(_MSC_VER) && (_MSC_VER >= 1200))) && !defined(_WIN32_WCE) /* MSC version 6 and above */
+#if (defined(WIN32) && (defined(_MSC_VER) && (_MSC_VER >= 1200))) && !defined(_WIN32_WCE) && !(defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)) /* MSC version 6 and above */
 #pragma comment( lib, "ole32.lib" )
 #endif
 
@@ -76,7 +76,11 @@ PaError PaWinUtil_CoInitialize( PaHostApiTypeId hostApiType, PaWinUtilComInitial
         RPC_E_CHANGED_MODE was returned.
     */
 
+#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
     hr = CoInitialize(0); /* use legacy-safe equivalent to CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) */
+#else
+	hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+#endif
     if( FAILED(hr) && hr != RPC_E_CHANGED_MODE )
     {
         PA_DEBUG(("CoInitialize(0) failed. hr=%d\n", hr));

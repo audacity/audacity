@@ -1,5 +1,5 @@
 /*
- * $Id: pablio.c 1151 2006-11-29 02:11:16Z leland_lucius $
+ * $Id$
  * pablio.c
  * Portable Audio Blocking Input/Output utility.
  *

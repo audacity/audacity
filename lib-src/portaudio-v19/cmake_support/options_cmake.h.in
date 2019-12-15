@@ -26,7 +26,6 @@
 #cmakedefine01 PA_USE_WMME
 #cmakedefine01 PA_USE_WASAPI
 #cmakedefine01 PA_USE_WDMKS
-#cmakedefine01 PA_USE_JACK
 #else
 #error "Platform currently not supported by CMake script"
 #endif

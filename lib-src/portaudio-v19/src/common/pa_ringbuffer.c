@@ -1,5 +1,5 @@
 /*
- * $Id: pa_ringbuffer.c 1738 2011-08-18 11:47:28Z rossb $
+ * $Id$
  * Portable Audio I/O Library
  * Ring Buffer utility.
  *

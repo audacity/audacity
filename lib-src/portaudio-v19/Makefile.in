@@ -52,11 +52,9 @@ COMMON_OBJS = \
 	src/common/pa_converters.o \
 	src/common/pa_cpuload.o \
 	src/common/pa_dither.o \
-	src/common/pa_dynload.o \
 	src/common/pa_debugprint.o \
 	src/common/pa_front.o \
 	src/common/pa_process.o \
-	src/common/pa_ringbuffer.o \
 	src/common/pa_stream.o \
 	src/common/pa_trace.o \
 	src/hostapi/skeleton/pa_hostapi_skeleton.o
@@ -157,10 +155,7 @@ SRC_DIRS = \
 SUBDIRS =
 @ENABLE_CXX_TRUE@SUBDIRS += bindings/cpp
 
-prep:
-	mkdir -p qa/loopback/src/ src/hostapi/skeleton/ $(SRC_DIRS)
-
-all: prep lib/$(PALIB) all-recursive tests examples selftests
+all: lib/$(PALIB) all-recursive tests examples selftests
 
 tests: bin-stamp $(TESTS)
 

@@ -5,7 +5,7 @@
     @author Phil Burk <philburk@softsynth.com>
 */
 /*
- * $Id: paex_write_sine.c 1865 2012-09-01 21:16:25Z philburk $
+ * $Id$
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com/

@@ -3,7 +3,7 @@
 
 @section comp_mingw1 Portaudio for Windows With MinGW
 
-<i>The following document is still being reviewed</i>
+<strong>This document contains old or out-of-date information. Please see a draft of new MinGW information on our Wiki: <a href="https://app.assembla.com/spaces/portaudio/wiki/Notes_about_building_PortAudio_with_MinGW">PortAudio Wiki: Notes about building PortAudio with MinGW</a></strong>
 
 = MinGW/MSYS =
 

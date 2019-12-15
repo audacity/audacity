@@ -1,7 +1,7 @@
 #ifndef PA_UTIL_H
 #define PA_UTIL_H
 /*
- * $Id: pa_util.h 1584 2011-02-02 18:58:17Z rossb $
+ * $Id$
  * Portable Audio I/O Library implementation utilities header
  * common implementation utilities and interfaces
  *

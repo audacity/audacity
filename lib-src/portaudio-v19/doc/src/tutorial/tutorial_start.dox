@@ -15,11 +15,12 @@ Once you've downloaded PortAudio you'll need to compile it, which of course, dep
    - \ref compile_windows
    - \ref compile_windows_mingw
    - \ref compile_windows_asio_msvc
-   - \ref compile_cmake
  - Mac OS X
    - \ref compile_mac_coreaudio
  - POSIX
    - \ref compile_linux
+
+You can also use CMake to generate project files for PortAudio on Windows, OS X or Linux or include PortAudio easily in your own CMake project. See \ref compile_cmake.
 
 Many platforms with GCC/make can use the simple ./configure && make combination and simply use the resulting libraries in their code.
 

@@ -1,5 +1,5 @@
 /*
- * $Id: pa_hostapi_skeleton.c 1668 2011-05-02 17:07:11Z rossb $
+ * $Id$
  * Portable Audio I/O Library skeleton implementation
  * demonstrates how to use the common functions to implement support
  * for a host API

@@ -1,9 +1,9 @@
 This is used to test the SVN versioning system.
 
-    $Revision: 1951 $
-    $Author: philburk $
-    $Date: 2015-03-12 11:21:04 -0500 (Thu, 12 Mar 2015) $
-    $Id: file1.txt 1951 2015-03-12 16:21:04Z philburk $
+    $Revision$
+    $Author$
+    $Date$
+    $Id$
 
 After propset svn:keywords
 

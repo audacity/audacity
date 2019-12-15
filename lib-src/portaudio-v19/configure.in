@@ -258,8 +258,11 @@ case "${host_os}" in
               elif xcodebuild -version -sdk macosx10.12 Path >/dev/null 2>&1 ; then
                  mac_version_min="-mmacosx-version-min=10.4"
                  mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.12 Path`"
+              elif xcodebuild -version -sdk macosx10.13 Path >/dev/null 2>&1 ; then
+                 mac_version_min="-mmacosx-version-min=10.4"
+                 mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.13 Path`"
               else
-                 AC_MSG_ERROR([Could not find 10.5 to 10.12 SDK.])
+                 AC_MSG_ERROR([Could not find 10.5 to 10.13 SDK.])
               fi
            esac
 
@@ -346,7 +349,7 @@ case "${host_os}" in
             add_objects src/hostapi/wasapi/pa_win_wasapi.o src/common/pa_ringbuffer.o src/os/win/pa_win_hostapis.o src/os/win/pa_win_util.o src/os/win/pa_win_coinitialize.o src/os/win/pa_win_waveformat.o
             LIBS="${LIBS} -lwinmm -lm -lole32 -luuid"
             DLL_LIBS="${DLL_LIBS} -lwinmm -lole32"
-            CFLAGS="$CFLAGS -I\$(top_srcdir)/src/hostapi/wasapi/mingw-include -UPA_USE_WASAPI -DPA_USE_WASAPI=1"
+            CFLAGS="$CFLAGS -UPA_USE_WASAPI -DPA_USE_WASAPI=1"
         fi
         ;;
 
@@ -409,7 +412,7 @@ case "${host_os}" in
         if [[ "$have_jack" = "yes" ] && [ "$with_jack" != "no" ]] ; then
            DLL_LIBS="$DLL_LIBS $JACK_LIBS"
            CFLAGS="$CFLAGS $JACK_CFLAGS"
-           OTHER_OBJS="$OTHER_OBJS src/hostapi/jack/pa_jack.o src/hostapi/jack/pa_jack_dynload.o src/common/pa_ringbuffer.o"
+           OTHER_OBJS="$OTHER_OBJS src/hostapi/jack/pa_jack.o src/common/pa_ringbuffer.o"
            INCLUDES="$INCLUDES pa_jack.h"
            AC_DEFINE(PA_USE_JACK,1)
         fi

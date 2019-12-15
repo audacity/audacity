@@ -1,4 +1,4 @@
-This is just a dopy little file used to test the CVS repository.
+This is just a dopy little file used to test the source code repository.
 Feel free to trash this file.
 Minor change.
 Another tweak.
@@ -16,4 +16,6 @@ testing
 
 PLB changing it to see if SVN broken
 Testing from Ubuntu with SVN on Assembla.
+
+5/2/2016 - Now using Git!
 

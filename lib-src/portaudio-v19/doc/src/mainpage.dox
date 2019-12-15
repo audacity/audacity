@@ -8,16 +8,16 @@ The library provides functions that allow your software to acquire and output re
 
 @section start_here Start here
 
-- @ref api_overview<br>
+- @ref api_overview <br>
 A top-down view of the PortAudio API, its capabilities, functions and data structures
 
-- @ref tutorial_start<br> 
+- @ref tutorial_start <br> 
 Get started writing code with PortAudio tutorials
 
 - @ref examples_src "Examples"<br>
 Simple example programs demonstrating PortAudio usage
 
-- @ref License<br>
+- @ref License <br>
 PortAudio is licenced under the MIT Expat open source licence. We make a non-binding request for you to contribute your changes back to the project.
 
 
@@ -34,12 +34,9 @@ Documentation for non-portable platform-specific host API extensions
 
 - <a href="http://www.portaudio.com">The PortAudio website</a>
 
-- <a href="http://music.columbia.edu/mailman/listinfo/portaudio/">Our mailing list for users and developers</a><br>
+- <a href="http://lists.columbia.edu/mailman/listinfo/portaudio/">Our mailing list for users and developers</a><br>
 
 - <a href="http://www.assembla.com/spaces/portaudio/wiki">The PortAudio wiki</a>
-
-- @ref java_binding<br>
-Documentation for the Java JNI interface to PortAudio
 
 @section developer_resources Developer Resources
 

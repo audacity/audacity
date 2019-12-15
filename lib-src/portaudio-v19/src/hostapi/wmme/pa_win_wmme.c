@@ -1,5 +1,5 @@
 /*
- * $Id: pa_win_wmme.c 1948 2015-01-21 06:52:11Z rbencina $
+ * $Id$
  * pa_win_wmme.c
  * Implementation of PortAudio for Windows MultiMedia Extensions (WMME)       
  *                                                                                         
@@ -1751,11 +1751,7 @@ static PaError CalculateBufferSettings(
 
                 if( *hostFramesPerOutputBuffer != *hostFramesPerInputBuffer )
                 {
-// JKC: Patched By Audacity.  Our Bug 1969
-// Previously this line incorrectly read:
-// if( hostFramesPerInputBuffer < hostFramesPerOutputBuffer )
-// So it was comparing pointers, rather than the values pointed to.
-                    if( *hostFramesPerInputBuffer < *hostFramesPerOutputBuffer )
+                    if( hostFramesPerInputBuffer < hostFramesPerOutputBuffer )
                     {
                         *hostFramesPerOutputBuffer = *hostFramesPerInputBuffer;
 

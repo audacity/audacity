@@ -4,7 +4,7 @@
 	@author Phil Burk  http://www.softsynth.com
 */
 /*
- * $Id: patest_mono.c 1915 2014-01-16 17:51:26Z philburk $
+ * $Id$
  *
  * Authors:
  *    Ross Bencina <rossb@audiomulch.com>

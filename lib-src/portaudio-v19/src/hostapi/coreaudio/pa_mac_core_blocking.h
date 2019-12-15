@@ -64,7 +64,7 @@
 #include "pa_mac_core_utilities.h"
 
 /*
- * Number of miliseconds to busy wait whil waiting for data in blocking calls.
+ * Number of milliseconds to busy wait while waiting for data in blocking calls.
  */
 #define PA_MAC_BLIO_BUSY_WAIT_SLEEP_INTERVAL (5)
 /*
@@ -79,15 +79,13 @@
 typedef struct {
     PaUtilRingBuffer inputRingBuffer;
     PaUtilRingBuffer outputRingBuffer;
-    size_t ringBufferFrames;
+    ring_buffer_size_t ringBufferFrames;
     PaSampleFormat inputSampleFormat;
     size_t inputSampleSizeActual;
     size_t inputSampleSizePow2;
     PaSampleFormat outputSampleFormat;
     size_t outputSampleSizeActual;
     size_t outputSampleSizePow2;
-
-    size_t framesPerBuffer;
 
     int inChan;
     int outChan;
@@ -117,8 +115,7 @@ PaError initializeBlioRingBuffers(
                                        PaMacBlio *blio,
                                        PaSampleFormat inputSampleFormat,
                                        PaSampleFormat outputSampleFormat,
-                                       size_t framesPerBuffer,
-                                       long ringBufferSize,
+                                       long ringBufferSizeInFrames,
                                        int inChan,
                                        int outChan );
 PaError destroyBlioRingBuffers( PaMacBlio *blio );
@@ -131,6 +128,7 @@ int BlioCallback(
         PaStreamCallbackFlags statusFlags,
         void *userData );
 
-void waitUntilBlioWriteBufferIsFlushed( PaMacBlio *blio );
+PaError waitUntilBlioWriteBufferIsEmpty( PaMacBlio *blio, double sampleRate,
+                                        size_t framesPerBuffer );
 
 #endif /*PA_MAC_CORE_BLOCKING_H_*/

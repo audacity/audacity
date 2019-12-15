@@ -5,7 +5,7 @@
 	@author Phil Burk
 */
 /*
- * $Id: patest_write_stop.c 1083 2006-08-23 07:30:49Z rossb $
+ * $Id$
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com/

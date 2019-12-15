@@ -1,7 +1,7 @@
 #ifndef PORTAUDIO_H
 #define PORTAUDIO_H
 /*
- * $Id: portaudio.h 1953 2015-04-10 04:00:09Z philburk $
+ * $Id$
  * PortAudio Portable Real-Time Audio Library
  * PortAudio API Header File
  * Latest version available at: http://www.portaudio.com/
@@ -51,51 +51,68 @@ extern "C"
 #endif /* __cplusplus */
 
 /** Retrieve the release number of the currently running PortAudio build.
- * For example, for version "19.5.1" this will return 0x00130501.
- */
+ For example, for version "19.5.1" this will return 0x00130501.
+
+ @see paMakeVersionNumber
+*/
 int Pa_GetVersion( void );
 
 /** Retrieve a textual description of the current PortAudio build,
- * eg "PortAudio V19.5.0-devel, revision 1952M".
- * The format of the text may change so do not try to parse the returned string.
- * @deprecated use PaVersionInfo() instead
- */
+ e.g. "PortAudio V19.5.0-devel, revision 1952M".
+ The format of the text may change in the future. Do not try to parse the
+ returned string.
+
+ @deprecated As of 19.5.0, use Pa_GetVersionInfo()->versionText instead.
+*/
 const char* Pa_GetVersionText( void );
 
 /**
- * Generate a packed integer version number in the same format used
- * by Pa_GetVersion(). Use this to compare a specified version number with 
- * the currently running version. For example:
- *
- * if (Pa_GetVersion() < paMakeVersionNumber(19,5,1)) {}
- */
+ Generate a packed integer version number in the same format used
+ by Pa_GetVersion(). Use this to compare a specified version number with
+ the currently running version. For example:
+
+ @code
+     if( Pa_GetVersion() < paMakeVersionNumber(19,5,1) ) {}
+ @endcode
+
+ @see Pa_GetVersion, Pa_GetVersionInfo
+ @version Available as of 19.5.0.
+*/
 #define paMakeVersionNumber(major, minor, subminor) \
     (((major)&0xFF)<<16 | ((minor)&0xFF)<<8 | ((subminor)&0xFF))
 
 
 /**
- * A structure containing the components of the version numbers.
- */
+ A structure containing PortAudio API version information.
+ @see Pa_GetVersionInfo, paMakeVersionNumber
+ @version Available as of 19.5.0.
+*/
 typedef struct PaVersionInfo {
     int versionMajor;
     int versionMinor;
     int versionSubMinor;
     /**
-     * This is currently the SVN revision but may change in the future.
-     * The versionControlRevision is updated by running a script before compiling code.
-     * If the update does not occur then this value may be less 
-     * than the actual SVN revision number.
-     */
+     This is currently the Git revision hash but may change in the future.
+     The versionControlRevision is updated by running a script before compiling the library.
+     If the update does not occur, this value may refer to an earlier revision.
+    */
     const char *versionControlRevision;
     /** Version as a string, for example "PortAudio V19.5.0-devel, revision 1952M" */
     const char *versionText;
 } PaVersionInfo;
     
-/**
- * The structure that this points to is statically allocated.
- * Do not attempt to free it or modify it.
- */
-const PaVersionInfo* Pa_GetVersionInfo();
+/** Retrieve version information for the currently running PortAudio build.
+ @return A pointer to an immutable PaVersionInfo structure.
+
+ @note This function can be called at any time. It does not require PortAudio
+ to be initialized. The structure pointed to is statically allocated. Do not
+ attempt to free it or modify it.
+
+ @see PaVersionInfo, paMakeVersionNumber
+ @version Available as of 19.5.0.
+*/
+const PaVersionInfo* Pa_GetVersionInfo( void );
+
 
 /** Error codes returned by PortAudio functions.
  Note that with the exception of paNoError, all PaErrorCodes are negative.
@@ -934,7 +951,7 @@ PaError Pa_CloseStream( PaStream *stream );
  (ie once a call to Pa_StopStream() will not block).
  A stream will become inactive after the stream callback returns non-zero,
  or when Pa_StopStream or Pa_AbortStream is called. For a stream providing audio
- output, if the stream callback returns paComplete, or Pa_StopStream is called,
+ output, if the stream callback returns paComplete, or Pa_StopStream() is called,
  the stream finished callback will not be called until all generated sample data
  has been played.
  
@@ -1132,7 +1149,7 @@ PaError Pa_ReadStream( PaStream* stream,
 
 
 /** Write samples to an output stream. This function doesn't return until the
- entire buffer has been consumed - this may involve waiting for the operating
+ entire buffer has been written - this may involve waiting for the operating
  system to consume the data.
 
  @param stream A pointer to an open stream previously created with Pa_OpenStream.
@@ -1178,15 +1195,6 @@ signed long Pa_GetStreamReadAvailable( PaStream* stream );
  error is encountered.
 */
 signed long Pa_GetStreamWriteAvailable( PaStream* stream );
-
-
-/** Retrieve the host type handling an open stream.
-
- @return Returns a non-negative value representing the host API type
- handling an open stream or, a PaErrorCode (which are always negative)
- if PortAudio is not initialized or an error is encountered.
-*/
-PaHostApiTypeId Pa_GetStreamHostApiType( PaStream* stream );
 
 
 /* Miscellaneous utilities */

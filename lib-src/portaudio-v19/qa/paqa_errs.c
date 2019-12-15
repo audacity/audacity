@@ -6,7 +6,7 @@
     Pieter Suurmond adapted to V19 API.
 */
 /*
- * $Id: paqa_errs.c 1756 2011-09-08 06:09:29Z philburk $
+ * $Id$
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com

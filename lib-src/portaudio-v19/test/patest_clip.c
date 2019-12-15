@@ -6,7 +6,7 @@
 	@author Phil Burk  http://www.softsynth.com
 */
 /*
- * $Id: patest_clip.c 1368 2008-03-01 00:38:27Z rossb $
+ * $Id$
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com

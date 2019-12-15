@@ -1,7 +1,7 @@
 #ifndef PA_STREAM_H
 #define PA_STREAM_H
 /*
- * $Id: pa_stream.h 1339 2008-02-15 07:50:33Z rossb $
+ * $Id$
  * Portable Audio I/O Library
  * stream interface
  *
@@ -152,7 +152,6 @@ typedef struct PaUtilStreamRepresentation {
     PaStreamFinishedCallback *streamFinishedCallback;
     void *userData;
     PaStreamInfo streamInfo;
-    PaHostApiTypeId hostApiType;
 } PaUtilStreamRepresentation;
 
 

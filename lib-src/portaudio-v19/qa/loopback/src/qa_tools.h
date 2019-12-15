@@ -70,5 +70,14 @@ extern int g_testsFailed;
 	} \
 	else g_testsPassed++;
 
+#define QA_ASSERT_CLOSE_INT( message, expected, actual, tolerance ) \
+    if (abs((expected)-(actual))>(tolerance)) \
+    { \
+        printf( "%s:%d - ERROR - %s, expected %d, got %d, tol=%d\n", __FILE__, __LINE__, message, ((int)(expected)), ((int)(actual)), ((int)(tolerance)) ); \
+        g_testsFailed++; \
+        goto error; \
+    } \
+    else g_testsPassed++;
+
 
 #endif

@@ -1,5 +1,5 @@
 /*
- * $Id: pa_trace.c 1916 2014-01-17 03:45:15Z philburk $
+ * $Id$
  * Portable Audio I/O Library Trace Facility
  * Store trace information in real-time for later printing.
  *
