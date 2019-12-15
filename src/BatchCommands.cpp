@@ -318,7 +318,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    }
 
    auto &manager = CommandManager::Get( *project );
-   wxArrayString mLabels;
+   TranslatableStrings mLabels;
    CommandIDs mNames;
    std::vector<bool> vExcludeFromMacros;
    mLabels.clear();
@@ -330,8 +330,8 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
 
    for(size_t i=0; i<mNames.size(); i++) {
       if( !vExcludeFromMacros[i] ){
-         wxString label = mLabels[i];
-         label.Replace( "&", "" );
+         auto label = mLabels[i];
+         label.Strip();
          bool suffix;
          if (!english)
             suffix = false;
@@ -343,7 +343,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
             // Disambiguation is no longer essential as the details box will show it.
             // PRL:  I think this reasoning applies only when locale is English.
             // For other locales, show the (CamelCaseCodeName) always.  Or, never?
-            wxString squashed = label;
+            wxString squashed = label.Translation();
             squashed.Replace( " ", "" );
 
             // uh oh, using GET for dubious comparison of (lengths of)
@@ -356,13 +356,16 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
             // uh oh, using GET to expose CommandID to the user, as a
             // disambiguating suffix on a name, but this is only ever done if
             // the locale is English!
-            label = label + " (" + mNames[i].GET() + ")";
+            // PRL:  In case this logic does get fixed for other locales,
+            // localize even this punctuation format.  I'm told Chinese actually
+            // prefers slightly different parenthesis characters
+            label.Join( XO("(%s)").Format( mNames[i].GET() ), wxT(" ") );
 
          commands.push_back(
             {
                {
                   mNames[i], // Internal name.
-                  label // User readable name
+                  label.Translation() // User readable name
                },
                _("Menu Command (No Parameters)")
             }

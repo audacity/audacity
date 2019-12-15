@@ -3069,7 +3069,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       auto flags = AlwaysEnabledFlag;
       bool allowed =
          MenuManager::Get(*mProject).ReportIfActionNotAllowed(
-         mEffect->GetTranslatedName(),
+         mEffect->GetUntranslatedName(),
          flags,
          WaveTracksSelectedFlag | TimeSelectedFlag);
       if (!allowed)

@@ -190,10 +190,9 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
       if (type == EffectTypeProcess) {
          wxString shortDesc = em.GetCommandName(ID);
          MenuManager::Get(project).mLastEffect = ID;
-         wxString lastEffectDesc;
          /* i18n-hint: %s will be the name of the effect which will be
           * repeated if this menu item is chosen */
-         lastEffectDesc.Printf(_("Repeat %s"), shortDesc);
+         auto lastEffectDesc = XO("Repeat %s").Format( shortDesc );
          commandManager.Modify(wxT("RepeatLastEffect"), lastEffectDesc);
       }
    }

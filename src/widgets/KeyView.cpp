@@ -636,7 +636,7 @@ void
 KeyView::RefreshBindings(const CommandIDs & names,
                          const wxArrayString & categories,
                          const TranslatableStrings & prefixes,
-                         const wxArrayString & labels,
+                         const TranslatableStrings & labels,
                          const std::vector<NormalizedKeyString> & keys,
                          bool bSort
                          )
@@ -776,7 +776,7 @@ KeyView::RefreshBindings(const CommandIDs & names,
       }
       else
       {
-         node.label = labels[i];
+         node.label = labels[i].Translation();
       }
 
       // Fill in remaining info

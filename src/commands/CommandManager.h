@@ -60,10 +60,10 @@ struct CommandListEntry
 {
    int id;
    CommandID name;
-   wxString longLabel;
+   TranslatableString longLabel;
    NormalizedKeyString key;
    NormalizedKeyString defaultKey;
-   wxString label;
+   TranslatableString label;
    TranslatableString labelPrefix;
    wxString labelTop;
    wxMenu *menu;
@@ -211,7 +211,7 @@ class AUDACITY_DLL_API CommandManager final
       CommandFlag flags, CommandFlag strictFlags);
    void Enable(const wxString &name, bool enabled);
    void Check(const CommandID &name, bool checked);
-   void Modify(const wxString &name, const wxString &newLabel);
+   void Modify(const wxString &name, const TranslatableString &newLabel);
 
    // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
    // or else BeginMenu followed by EndMenu.  Don't mix them.
@@ -251,13 +251,13 @@ class AUDACITY_DLL_API CommandManager final
    void GetCategories(wxArrayString &cats);
    void GetAllCommandNames(CommandIDs &names, bool includeMultis) const;
    void GetAllCommandLabels(
-      wxArrayString &labels, std::vector<bool> &vExcludeFromMacros,
+      TranslatableStrings &labels, std::vector<bool> &vExcludeFromMacros,
       bool includeMultis) const;
    void GetAllCommandData(
       CommandIDs &names,
       std::vector<NormalizedKeyString> &keys,
       std::vector<NormalizedKeyString> &default_keys,
-      wxArrayString &labels, wxArrayString &categories,
+      TranslatableStrings &labels, wxArrayString &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
       TranslatableStrings &prefixes,
 #endif
@@ -267,8 +267,8 @@ class AUDACITY_DLL_API CommandManager final
    // which need not be the same across platforms or sessions
    CommandID GetNameFromNumericID( int id );
 
-   wxString GetLabelFromName(const CommandID &name);
-   wxString GetPrefixedLabelFromName(const CommandID &name);
+   TranslatableString GetLabelFromName(const CommandID &name);
+   TranslatableString GetPrefixedLabelFromName(const CommandID &name);
    wxString GetCategoryFromName(const CommandID &name);
    NormalizedKeyString GetKeyFromName(const CommandID &name) const;
    NormalizedKeyString GetDefaultKeyFromName(const CommandID &name);

@@ -84,13 +84,13 @@ public:
 
    // Command Handling
    bool ReportIfActionNotAllowed(
-      const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd );
+      const TranslatableString & Name, CommandFlag & flags, CommandFlag flagsRqd );
    bool TryToMakeActionAllowed(
       CommandFlag & flags, CommandFlag flagsRqd );
 
 
 private:
-   void TellUserWhyDisallowed(const wxString & Name, CommandFlag flagsGot,
+   void TellUserWhyDisallowed(const TranslatableString & Name, CommandFlag flagsGot,
       CommandFlag flagsRequired);
 
    void OnUndoRedo( wxCommandEvent &evt );

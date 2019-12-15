@@ -307,7 +307,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
 void KeyConfigPrefs::RefreshBindings(bool bSort)
 {
-   wxArrayString Labels;
+   TranslatableStrings Labels;
    wxArrayString Categories;
    TranslatableStrings Prefixes;
 
@@ -572,18 +572,23 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
 
    // Prevent same hotkey combination being used twice.
    if (!oldname.empty()) {
-      auto oldlabel = wxString::Format( _("%s - %s"),
-         mManager->GetCategoryFromName(oldname),
-         mManager->GetPrefixedLabelFromName(oldname) );
-      auto newlabel = wxString::Format( _("%s - %s"),
-         mManager->GetCategoryFromName(newname),
-         mManager->GetPrefixedLabelFromName(newname) );
+      auto oldlabel = TranslatableString{wxT("%s - %s")}
+         .Format(
+            mManager->GetCategoryFromName(oldname),
+            mManager->GetPrefixedLabelFromName(oldname) );
+      auto newlabel = TranslatableString{wxT("%s - %s")}
+         .Format(
+            mManager->GetCategoryFromName(newname),
+            mManager->GetPrefixedLabelFromName(newname) );
       if (AudacityMessageBox(
-            wxString::Format(
-            _("The keyboard shortcut '%s' is already assigned to:\n\n\t'%s'\n\nClick OK to assign the shortcut to\n\n\t'%s'\n\ninstead. Otherwise, click Cancel."),
-            mKey->GetValue(),
-            oldlabel,
-            newlabel),
+            XO(
+"The keyboard shortcut '%s' is already assigned to:\n\n\t'%s'\n\nClick OK to assign the shortcut to\n\n\t'%s'\n\ninstead. Otherwise, click Cancel.")
+               .Format(
+                  mKey->GetValue(),
+                  oldlabel,
+                  newlabel
+               )
+                  .Translation(),
             _("Error"), wxOK | wxCANCEL | wxICON_STOP | wxCENTRE, this) == wxCANCEL)
       {
          return;

@@ -324,27 +324,25 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
    if (undoManager.UndoAvailable()) {
       undoManager.GetShortDescription(cur, &desc);
       commandManager.Modify(wxT("Undo"),
-                             wxString::Format(_("&Undo %s"),
-                                              desc));
+                             XO("&Undo %s").Format( desc ));
       commandManager.Enable(wxT("Undo"),
          ProjectHistory::Get( project ).UndoAvailable());
    }
    else {
       commandManager.Modify(wxT("Undo"),
-                            _("&Undo"));
+                            XO("&Undo"));
    }
 
    if (undoManager.RedoAvailable()) {
       undoManager.GetShortDescription(cur+1, &desc);
       commandManager.Modify(wxT("Redo"),
-                             wxString::Format(_("&Redo %s"),
-                                              desc));
+                             XO("&Redo %s").Format( desc));
       commandManager.Enable(wxT("Redo"),
          ProjectHistory::Get( project ).RedoAvailable());
    }
    else {
       commandManager.Modify(wxT("Redo"),
-                            _("&Redo"));
+                            XO("&Redo"));
       commandManager.Enable(wxT("Redo"), false);
    }
 }
@@ -625,7 +623,7 @@ void MenuCreator::RebuildAllMenuBars()
 }
 
 bool MenuManager::ReportIfActionNotAllowed(
-   const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd )
+   const TranslatableString & Name, CommandFlag & flags, CommandFlag flagsRqd )
 {
    auto &project = mProject;
    bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd );
@@ -671,7 +669,7 @@ bool MenuManager::TryToMakeActionAllowed(
 }
 
 void MenuManager::TellUserWhyDisallowed(
-   const wxString & Name, CommandFlag flagsGot, CommandFlag flagsRequired )
+   const TranslatableString & Name, CommandFlag flagsGot, CommandFlag flagsRequired )
 {
    // The default string for 'reason' is a catch all.  I hope it won't ever be seen
    // and that we will get something more specific.
@@ -685,7 +683,7 @@ void MenuManager::TellUserWhyDisallowed(
 
    auto doOption = [&](const CommandFlagOptions &options) {
       if ( options.message ) {
-         reason = options.message( Name );
+         reason = options.message( Name.Translation() );
          defaultMessage = false;
          if ( !options.title.empty() )
             untranslatedTitle = options.title;
