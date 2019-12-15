@@ -963,8 +963,8 @@ void CommandManager::SetKeyFromIndex(int i, const NormalizedKeyString &key)
    entry->key = key;
 }
 
-wxString CommandManager::DescribeCommandsAndShortcuts
-(const TranslatedInternalString commands[], size_t nCommands) const
+TranslatableString CommandManager::DescribeCommandsAndShortcuts(
+   const ComponentInterfaceSymbol commands[], size_t nCommands) const
 {
    wxString mark;
    // This depends on the language setting and may change in-session after
@@ -974,7 +974,7 @@ wxString CommandManager::DescribeCommandsAndShortcuts
       mark = wxT("\u200f");
 
    static const wxString &separatorFormat = wxT("%s / %s");
-   wxString result;
+   TranslatableString result;
    for (size_t ii = 0; ii < nCommands; ++ii) {
       const auto &pair = commands[ii];
       // If RTL, then the control character forces right-to-left sequencing of
@@ -982,7 +982,11 @@ wxString CommandManager::DescribeCommandsAndShortcuts
       // left, consistently with accelerators in menus (assuming matching
       // operating system prefernces for language), even if the command name
       // was missing from the translation file and defaulted to the English.
-      auto piece = wxString::Format(wxT("%s%s"), mark, pair.Translated());
+
+      // Note: not putting this and other short format strings in the
+      // translation catalogs
+      auto piece = TranslatableString{wxT("%s%s")}
+         .Format( mark, TranslatableString{pair.Msgid()}.Strip() );
 
       auto name = pair.Internal();
       if (!name.empty()) {
@@ -1000,14 +1004,14 @@ wxString CommandManager::DescribeCommandsAndShortcuts
 #endif
             // The mark makes correctly placed parentheses for RTL, even
             // in the case that the piece is untranslated.
-            piece = wxString::Format(format, piece, mark, keyString);
+            piece = TranslatableString{format}.Format( piece, mark, keyString );
          }
       }
 
       if (result.empty())
          result = piece;
       else
-         result = wxString::Format(separatorFormat, result, piece);
+         result = TranslatableString{ separatorFormat }.Format( result, piece );
    }
    return result;
 }

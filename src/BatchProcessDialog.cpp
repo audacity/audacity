@@ -745,7 +745,7 @@ void MacrosWindow::AddItem(const CommandID &Action, const wxString &Params)
 {
    auto entry = mCatalog.ByCommandId(Action);
    auto friendlyName = entry != mCatalog.end()
-      ? entry->name.Translated()
+      ? entry->name.StrippedTranslation()
       :
          // uh oh, using GET to expose an internal name to the user!
          // in default of any better friendly name

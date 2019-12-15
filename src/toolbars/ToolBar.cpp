@@ -860,16 +860,16 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
 
 void ToolBar::SetButtonToolTip
 (AudacityProject &theProject,
- AButton &button, const TranslatedInternalString commands[], size_t nCommands)
+ AButton &button, const ComponentInterfaceSymbol commands[], size_t nCommands)
 {
-   wxString result;
+   TranslatableString result;
    const auto project = &theProject;
    const auto commandManager =
       project ? &CommandManager::Get( *project ) : nullptr;
    if (commandManager)
       result =
          commandManager->DescribeCommandsAndShortcuts(commands, nCommands);
-   button.SetToolTip( TranslatableString{ result } );
+   button.SetToolTip( result );
 }
 
 //

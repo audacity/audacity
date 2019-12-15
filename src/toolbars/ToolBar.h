@@ -172,7 +172,7 @@ public:
       (AudacityProject &project, AButton &button,
        // If a shortcut key is defined for the command, then it is appended,
        // parenthesized, after the translated name.
-       const TranslatedInternalString commands[], size_t nCommands);
+       const ComponentInterfaceSymbol commands[], size_t nCommands);
 
    static void MakeButtonBackgroundsSmall();
    static void MakeButtonBackgroundsLarge();

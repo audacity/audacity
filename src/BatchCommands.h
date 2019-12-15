@@ -16,6 +16,7 @@
 
 #include "export/Export.h"
 #include "commands/CommandFlag.h"
+#include "audacity/ComponentInterface.h" // for ComponentInterfaceSymbol
 
 class wxArrayString;
 class Effect;
@@ -28,7 +29,7 @@ class MacroCommandsCatalog {
 public:
    // A triple of user-visible name, internal string identifier and type/help string.
    struct Entry {
-      TranslatedInternalString name;
+      ComponentInterfaceSymbol name;
       wxString category;
    };
    using Entries = std::vector<Entry>;
@@ -36,7 +37,7 @@ public:
    MacroCommandsCatalog( const AudacityProject *project );
 
    // binary search
-   Entries::const_iterator ByFriendlyName( const wxString &friendlyName ) const;
+   Entries::const_iterator ByFriendlyName( const TranslatableString &friendlyName ) const;
    // linear search
    Entries::const_iterator ByCommandId( const CommandID &commandId ) const;
 

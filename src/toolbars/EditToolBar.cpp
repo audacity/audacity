@@ -277,8 +277,8 @@ void EditToolBar::ForAllButtons(int Action)
    for (const auto &entry : EditToolbarButtonList) {
 #if wxUSE_TOOLTIPS
       if( Action & ETBActTooltips ){
-         TranslatedInternalString command{
-            entry.commandName, entry.untranslatedLabel.Translation() };
+         ComponentInterfaceSymbol command{
+            entry.commandName, entry.untranslatedLabel };
          ToolBar::SetButtonToolTip( mProject,
             *mButtons[entry.tool], &command, 1u );
       }

@@ -1754,9 +1754,9 @@ void AdornedRulerPanel::DrawBothOverlays()
 
 void AdornedRulerPanel::UpdateButtonStates()
 {
-   auto common = [this]
-   (AButton &button, const CommandID &commandName, const wxString &label) {
-      TranslatedInternalString command{ commandName, label };
+   auto common = [this](
+      AButton &button, const CommandID &commandName, const TranslatableString &label) {
+      ComponentInterfaceSymbol command{ commandName, label };
       ToolBar::SetButtonToolTip( *mProject, button, &command, 1u );
       button.SetLabel(button.GetToolTipText());
 
@@ -1777,8 +1777,8 @@ void AdornedRulerPanel::UpdateButtonStates()
          (gAudioIO->IsCapturing() ? 2 : 0) + (state ? 0 : 1));
       // Bug 1584: Toltip now shows what clicking will do.
       const auto label = state
-      ? _("Click to unpin")
-      : _("Click to pin");
+      ? XO("Click to unpin")
+      : XO("Click to pin");
       common(*pinButton, wxT("PinnedHead"), label);
    }
 }

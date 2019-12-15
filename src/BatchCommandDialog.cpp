@@ -143,7 +143,7 @@ void MacroCommandDialog::PopulateCommandList()
    long ii = 0;
    for ( const auto &entry : mCatalog )
       // insert the user-facing string
-      mChoices->InsertItem( ii++, entry.name.Translated() );
+      mChoices->InsertItem( ii++, entry.name.StrippedTranslation() );
 }
 
 void MacroCommandDialog::ValidateChoices()
@@ -188,11 +188,12 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
    mEditParams->Enable(!ID.empty());
    mUsePreset->Enable(em.HasPresets(ID));
 
-   if ( command.name.Translated() == mCommand->GetValue() )
+   auto value = command.name.StrippedTranslation();
+   if ( value == mCommand->GetValue() )
       // This uses the assumption of uniqueness of translated names!
       return;
 
-   mCommand->SetValue(command.name.Translated());
+   mCommand->SetValue(value);
    mInternalCommandName = command.name.Internal();
 
    wxString params = MacroCommands::GetCurrentParamsFor(mInternalCommandName);
@@ -244,11 +245,11 @@ void MacroCommandDialog::SetCommandAndParams(const CommandID &Command, const wxS
       // in default of any better friendly name
       mCommand->SetValue( Command.GET() );
    else {
-      mCommand->SetValue( iter->name.Translated() );
+      mCommand->SetValue( iter->name.StrippedTranslation() );
       // using GET to expose a CommandID to the user!
       // Macro command details are one place that we do expose Identifier
       // to (more sophisticated) users
-      mDetails->SetValue( iter->name.Internal().GET() + "\r\n" + iter->category  );
+      mDetails->SetValue( iter->name.Internal() + "\r\n" + iter->category  );
       mChoices->SetItemState(iter - mCatalog.begin(),
                              wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 

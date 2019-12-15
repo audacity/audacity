@@ -268,15 +268,15 @@ void ControlToolBar::RegenerateTooltips()
             name = wxT("CursProjectStart");
             break;
       }
-      std::vector<TranslatedInternalString> commands(
-         1u, { name, pCtrl->GetLabel() } );
+      std::vector<ComponentInterfaceSymbol> commands(
+         1u, { name, TranslatableString{ pCtrl->GetLabel() } } );
 
       // Some have a second
       switch (iWinID)
       {
          case ID_PLAY_BUTTON:
             // With shift
-            commands.push_back( { wxT("PlayLooped"), _("Loop Play") } );
+            commands.push_back( { wxT("PlayLooped"), XO("Loop Play") } );
             break;
          case ID_RECORD_BUTTON:
             // With shift
@@ -286,8 +286,8 @@ void ControlToolBar::RegenerateTooltips()
                commands.push_back( {
                   wxT("Record2ndChoice"),
                   !bPreferNewTrack
-                     ? _("Record New Track")
-                     : _("Append Record")
+                     ? XO("Record New Track")
+                     : XO("Append Record")
                } );
             }
             break;
@@ -298,12 +298,12 @@ void ControlToolBar::RegenerateTooltips()
          case ID_FF_BUTTON:
             // With shift
             commands.push_back( {
-               wxT("SelEnd"), _("Select to End") } );
+               wxT("SelEnd"), XO("Select to End") } );
             break;
          case ID_REW_BUTTON:
             // With shift
             commands.push_back( {
-               wxT("SelStart"), _("Select to Start") } );
+               wxT("SelStart"), XO("Select to Start") } );
             break;
       }
       ToolBar::SetButtonToolTip(

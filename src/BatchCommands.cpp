@@ -294,7 +294,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    Entries commands;
    for( const auto &command : SpecialCommands )
       commands.push_back( {
-         { command.second, command.first.Translation() },
+         { command.second, command.first },
          _("Special Command")
       } );
 
@@ -309,7 +309,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.empty())
             commands.push_back( {
-               { command, plug->GetSymbol().Translation() },
+               { command, plug->GetSymbol().Msgid() },
                plug->GetPluginType() == PluginTypeEffect ?
                   _("Effect") : _("Menu Command (With Parameters)")
             } );
@@ -365,7 +365,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
             {
                {
                   mNames[i], // Internal name.
-                  label.Translation() // User readable name
+                  label // User readable name
                },
                _("Menu Command (No Parameters)")
             }
@@ -379,23 +379,26 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    // keeping specials before effects and menu items, and lastly commands.
    auto less =
       [](const Entry &a, const Entry &b)
-         { return a.name.Translated() < b.name.Translated(); };
+         { return a.name.StrippedTranslation() <
+            b.name.StrippedTranslation(); };
    std::stable_sort(commands.begin(), commands.end(), less);
 
    // Now uniquify by friendly name
    auto equal =
       [](const Entry &a, const Entry &b)
-         { return a.name.Translated() == b.name.Translated(); };
+         { return a.name.StrippedTranslation() ==
+            b.name.StrippedTranslation(); };
    std::unique_copy(
       commands.begin(), commands.end(), std::back_inserter(mCommands), equal);
 }
 
 // binary search
-auto MacroCommandsCatalog::ByFriendlyName( const wxString &friendlyName ) const
+auto MacroCommandsCatalog::ByFriendlyName( const TranslatableString &friendlyName ) const
    -> Entries::const_iterator
 {
    const auto less = [](const Entry &entryA, const Entry &entryB)
-      { return entryA.name.Translated() < entryB.name.Translated(); };
+      { return entryA.name.StrippedTranslation() <
+         entryB.name.StrippedTranslation(); };
    auto range = std::equal_range(
       begin(), end(), Entry{ { {}, friendlyName }, {} }, less
    );
@@ -943,7 +946,7 @@ bool MacroCommands::ApplyMacro(
            // uh oh, using GET to expose an internal name to the user!
            // in default of any better friendly name
            command.GET()
-         : iter->name.Translated();
+         : iter->name.StrippedTranslation();
       if (!ApplyCommandInBatchMode(friendly, command, mParamsMacro[i]) || mAbort)
          break;
    }

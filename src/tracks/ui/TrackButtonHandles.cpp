@@ -180,10 +180,8 @@ TranslatableString CloseButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto &commandManager = CommandManager::Get( *project );
-   TranslatedInternalString command{ wxT("TrackClose"), name.Translation() };
-   return TranslatableString{
-      commandManager.DescribeCommandsAndShortcuts( &command, 1u )
-   };
+   ComponentInterfaceSymbol command{ wxT("TrackClose"), name };
+   return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr CloseButtonHandle::HitTest
@@ -242,10 +240,8 @@ TranslatableString MenuButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto &commandManager = CommandManager::Get( *project );
-   TranslatedInternalString command{ wxT("TrackMenu"), name.Translation() };
-   return TranslatableString{
-      commandManager.DescribeCommandsAndShortcuts( &command, 1u )
-   };
+   ComponentInterfaceSymbol command{ wxT("TrackMenu"), name };
+   return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr MenuButtonHandle::HitTest

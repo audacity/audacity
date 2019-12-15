@@ -51,10 +51,8 @@ TranslatableString MuteButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto &commandManager = CommandManager::Get( *project );
-   TranslatedInternalString command{ wxT("TrackMute"), name.Translation() };
-   return TranslatableString{
-      commandManager.DescribeCommandsAndShortcuts(&command, 1u)
-   };
+   ComponentInterfaceSymbol command{ wxT("TrackMute"), name };
+   return commandManager.DescribeCommandsAndShortcuts(&command, 1u);
 }
 
 UIHandlePtr MuteButtonHandle::HitTest
@@ -109,10 +107,8 @@ TranslatableString SoloButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto &commandManager = CommandManager::Get( *project );
-   TranslatedInternalString command{ wxT("TrackSolo"), name.Translation() };
-   return TranslatableString{
-      commandManager.DescribeCommandsAndShortcuts( &command, 1u )
-   };
+   ComponentInterfaceSymbol command{ wxT("TrackSolo"), name };
+   return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr SoloButtonHandle::HitTest

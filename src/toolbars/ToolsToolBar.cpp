@@ -153,8 +153,8 @@ void ToolsToolBar::RegenerateTooltips()
    };
 
    for (const auto &entry : table) {
-      TranslatedInternalString command{
-         entry.commandName, entry.untranslatedLabel.Translation() };
+      ComponentInterfaceSymbol command{
+         entry.commandName, entry.untranslatedLabel };
       ToolBar::SetButtonToolTip( mProject,
          *mTool[entry.tool], &command, 1u );
    }
