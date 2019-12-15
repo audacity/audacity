@@ -1,7 +1,49 @@
-Index: portaudio-v19/src/common/pa_dynload.c
-===================================================================
---- portaudio-v19/src/common/pa_dynload.c	(revision 0)
-+++ portaudio-v19/src/common/pa_dynload.c	(working copy)
+diff --git a/lib-src/portaudio-v19/CMakeLists.txt b/lib-src/portaudio-v19/CMakeLists.txt
+index 102401674..06c23bf47 100644
+--- a/lib-src/portaudio-v19/CMakeLists.txt
++++ b/lib-src/portaudio-v19/CMakeLists.txt
+@@ -281,9 +281,9 @@ ELSE()
+     ENDIF()
+     IF(PA_USE_JACK)
+       SET(PA_PRIVATE_INCLUDE_PATHS ${PA_PRIVATE_INCLUDE_PATHS} ${JACK_INCLUDE_DIRS})
+-      SET(PA_JACK_SOURCES src/hostapi/jack/pa_jack.c)
++      SET(PA_JACK_SOURCES src/hostapi/jack/pa_jack.c src/hostapi/jack/pa_jack_dynload.c)
+       SOURCE_GROUP("hostapi\\JACK" FILES ${PA_JACK_SOURCES})
+-      SET(PA_PUBLIC_INCLUDES ${PA_PUBLIC_INCLUDES} include/pa_jack.h)
++      SET(PA_PUBLIC_INCLUDES ${PA_PUBLIC_INCLUDES} include/pa_jack.h src/hostapi/jack/pa_jack_dynload.h)
+       SET(PA_SOURCES ${PA_SOURCES} ${PA_JACK_SOURCES})
+       SET(PA_PRIVATE_COMPILE_DEFINITIONS ${PA_PRIVATE_COMPILE_DEFINITIONS} PA_USE_JACK)
+       SET(PA_LIBRARY_DEPENDENCIES ${PA_LIBRARY_DEPENDENCIES} ${JACK_LIBRARIES})
+diff --git a/lib-src/portaudio-v19/Makefile.in b/lib-src/portaudio-v19/Makefile.in
+index 918bbad42..22ed79ad3 100644
+--- a/lib-src/portaudio-v19/Makefile.in
++++ b/lib-src/portaudio-v19/Makefile.in
+@@ -53,6 +53,7 @@ COMMON_OBJS = \
+ 	src/common/pa_cpuload.o \
+ 	src/common/pa_dither.o \
+ 	src/common/pa_debugprint.o \
++	src/common/pa_dynload.o \
+ 	src/common/pa_front.o \
+ 	src/common/pa_process.o \
+ 	src/common/pa_stream.o \
+diff --git a/lib-src/portaudio-v19/configure.in b/lib-src/portaudio-v19/configure.in
+index b2129ba68..a3628bd09 100644
+--- a/lib-src/portaudio-v19/configure.in
++++ b/lib-src/portaudio-v19/configure.in
+@@ -412,7 +412,7 @@ case "${host_os}" in
+         if [[ "$have_jack" = "yes" ] && [ "$with_jack" != "no" ]] ; then
+            DLL_LIBS="$DLL_LIBS $JACK_LIBS"
+            CFLAGS="$CFLAGS $JACK_CFLAGS"
+-           OTHER_OBJS="$OTHER_OBJS src/hostapi/jack/pa_jack.o src/common/pa_ringbuffer.o"
++           OTHER_OBJS="$OTHER_OBJS src/hostapi/jack/pa_jack.o src/common/pa_ringbuffer.o src/hostapi/jack/pa_jack_dynload.o"
+            INCLUDES="$INCLUDES pa_jack.h"
+            AC_DEFINE(PA_USE_JACK,1)
+         fi
+diff --git a/lib-src/portaudio-v19/src/common/pa_dynload.c b/lib-src/portaudio-v19/src/common/pa_dynload.c
+new file mode 100644
+index 000000000..337266515
+--- /dev/null
++++ b/lib-src/portaudio-v19/src/common/pa_dynload.c
 @@ -0,0 +1,108 @@
 +/*
 + * $Id: pa_dynlink.c 1339 2008-02-15 07:50:33Z rossb $
@@ -111,10 +153,11 @@ Index: portaudio-v19/src/common/pa_dynload.c
 +        
 +    return addr;
 +}
-Index: portaudio-v19/src/common/pa_dynload.h
-===================================================================
---- portaudio-v19/src/common/pa_dynload.h	(revision 0)
-+++ portaudio-v19/src/common/pa_dynload.h	(working copy)
+diff --git a/lib-src/portaudio-v19/src/common/pa_dynload.h b/lib-src/portaudio-v19/src/common/pa_dynload.h
+new file mode 100644
+index 000000000..f586c138f
+--- /dev/null
++++ b/lib-src/portaudio-v19/src/common/pa_dynload.h
 @@ -0,0 +1,136 @@
 +#ifndef PA_DYNLINK_H
 +#define PA_DYNLINK_H
@@ -252,10 +295,10 @@ Index: portaudio-v19/src/common/pa_dynload.h
 +}
 +#endif /* __cplusplus */
 +#endif /* PA_DYNLINK_H */
-Index: portaudio-v19/src/hostapi/jack/pa_jack.c
-===================================================================
---- portaudio-v19/src/hostapi/jack/pa_jack.c	(revision 12233)
-+++ portaudio-v19/src/hostapi/jack/pa_jack.c	(working copy)
+diff --git a/lib-src/portaudio-v19/src/hostapi/jack/pa_jack.c b/lib-src/portaudio-v19/src/hostapi/jack/pa_jack.c
+index a800f8e1d..887128c3b 100644
+--- a/lib-src/portaudio-v19/src/hostapi/jack/pa_jack.c
++++ b/lib-src/portaudio-v19/src/hostapi/jack/pa_jack.c
 @@ -48,16 +48,22 @@
  */
  
@@ -294,7 +337,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  static char *jackErr_ = NULL;
  static const char* clientName_ = "PortAudio";
  
-@@ -84,7 +96,7 @@
+@@ -84,7 +96,7 @@ static const char* clientName_ = "PortAudio";
          PaError paErr; \
          if( (paErr = (expr)) < paNoError ) \
          { \
@@ -303,7 +346,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
              { \
                  const char *err = jackErr_; \
                  if (! err ) err = "unknown error"; \
-@@ -100,7 +112,7 @@
+@@ -100,7 +112,7 @@ static const char* clientName_ = "PortAudio";
      do { \
          if( (expr) == 0 ) \
          { \
@@ -312,7 +355,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
              { \
                  const char *err = jackErr_; \
                  if (!err) err = "unknown error"; \
-@@ -166,8 +178,13 @@
+@@ -166,8 +178,13 @@ typedef struct
      int jack_buffer_size;
      PaHostApiIndex hostApiIndex;
  
@@ -326,7 +369,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      unsigned long inputBase, outputBase;
  
      /* For dealing with the process thread */
-@@ -224,7 +241,11 @@
+@@ -224,7 +241,11 @@ typedef struct PaJackStream
      PaUtilRingBuffer        inFIFO;
      PaUtilRingBuffer        outFIFO;
      volatile sig_atomic_t   data_available;
@@ -338,7 +381,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      int                     bytesPerFrame;
      int                     samplesPerFrame;
  
-@@ -248,6 +269,178 @@
+@@ -252,6 +273,178 @@ static int JackCallback( jack_nframes_t frames, void *userData );
   *
   */
  
@@ -517,7 +560,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  /* ---- blocking emulation layer ---- */
  
  /* Allocate buffer. */
-@@ -294,7 +487,7 @@
+@@ -298,7 +491,7 @@ BlockingCallback( const void                      *inputBuffer,
      if( !stream->data_available )
      {
          stream->data_available = 1;
@@ -526,7 +569,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      }
      return paContinue;
  }
-@@ -333,7 +526,7 @@
+@@ -337,7 +530,7 @@ BlockingBegin( PaJackStream *stream, int minimum_buffer_size )
      }
  
      stream->data_available = 0;
@@ -535,7 +578,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  
  error:
      return result;
-@@ -345,7 +538,7 @@
+@@ -349,7 +542,7 @@ BlockingEnd( PaJackStream *stream )
      BlockingTermFIFO( &stream->inFIFO );
      BlockingTermFIFO( &stream->outFIFO );
  
@@ -544,7 +587,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  }
  
  static PaError BlockingReadStream( PaStream* s, void *data, unsigned long numFrames )
-@@ -367,7 +560,7 @@
+@@ -371,7 +564,7 @@ static PaError BlockingReadStream( PaStream* s, void *data, unsigned long numFra
              if( stream->data_available )
                  stream->data_available = 0;
              else
@@ -553,7 +596,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
          }
      }
  
-@@ -405,7 +598,7 @@
+@@ -409,7 +602,7 @@ static PaError BlockingWriteStream( PaStream* s, const void *data, unsigned long
              if( stream->data_available )
                  stream->data_available = 0;
              else
@@ -562,7 +605,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
          }
      }
  
-@@ -438,7 +631,7 @@
+@@ -442,7 +635,7 @@ BlockingWaitEmpty( PaStream *s )
      while( PaUtil_GetRingBufferReadAvailable( &stream->outFIFO ) > 0 )
      {
          stream->data_available = 0;
@@ -571,7 +614,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      }
      return 0;
  }
-@@ -469,7 +662,6 @@
+@@ -473,7 +666,6 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
      char *regex_pattern = NULL;
      int port_index, client_index, i;
      double globalSampleRate;
@@ -579,7 +622,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      unsigned long numClients = 0, numPorts = 0;
      char *tmp_client_name = NULL;
  
-@@ -477,9 +669,6 @@
+@@ -481,9 +673,6 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
      commonApi->info.defaultOutputDevice = paNoDevice;
      commonApi->info.deviceCount = 0;
  
@@ -589,16 +632,16 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      /* since we are rebuilding the list of devices, free all memory
       * associated with the previous list */
      PaUtil_FreeAllAllocations( jackApi->deviceInfoMemory );
-@@ -492,7 +681,7 @@
+@@ -496,7 +685,7 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
       * according to the client_name:port_name convention (which is
       * enforced by jackd)
       * A: If jack_get_ports returns NULL, there's nothing for us to do */
--    UNLESS( (jack_ports = jack_get_ports( jackApi->jack_client, "", "", 0 )) && jack_ports[0], paNoError );
-+    UNLESS( (jack_ports = jack_get_ports( jackApi->jack_client, "^[^:]*", "", 0 )) && jack_ports[0], paNoError );
+-    UNLESS( (jack_ports = jack_get_ports( jackApi->jack_client, "", JACK_PORT_TYPE_FILTER, 0 )) && jack_ports[0], paNoError );
++    UNLESS( (jack_ports = jack_get_ports( jackApi->jack_client, "^[^:]*", JACK_PORT_TYPE_FILTER, 0 )) && jack_ports[0], paNoError );
      /* Find number of ports */
      while( jack_ports[numPorts] )
          ++numPorts;
-@@ -504,16 +693,15 @@
+@@ -508,16 +697,15 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
      for( numClients = 0, port_index = 0; jack_ports[port_index] != NULL; port_index++ )
      {
          int client_seen = FALSE;
@@ -620,7 +663,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  
          /* do we know about this port's client yet? */
          for( i = 0; i < numClients; i++ )
-@@ -599,7 +787,7 @@
+@@ -603,7 +791,7 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
                   * We don't care what they are, we just care how many */
                  curDevInfo->maxInputChannels++;
              }
@@ -629,7 +672,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
          }
  
          /* ... what are your input ports (that we could output to)? */
-@@ -620,7 +808,7 @@
+@@ -624,7 +812,7 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
                   * We don't care what they are, we just care how many */
                  curDevInfo->maxOutputChannels++;
              }
@@ -638,7 +681,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
          }
  
          /* Add this client to the list of devices */
-@@ -633,8 +821,7 @@
+@@ -637,8 +825,7 @@ static PaError BuildDeviceList( PaJackHostApiRepresentation *jackApi )
      }
  
  error:
@@ -648,7 +691,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      return result;
  }
  
-@@ -647,7 +834,7 @@
+@@ -651,7 +838,7 @@ static void UpdateSampleRate( PaJackStream *stream, double sampleRate )
  
  static void JackErrorCallback( const char *msg )
  {
@@ -657,7 +700,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      {
          assert( msg );
          jackErr_ = realloc( jackErr_, strlen( msg ) + 1 );
-@@ -667,11 +854,10 @@
+@@ -671,11 +858,10 @@ static void JackOnShutdown( void *arg )
      }
  
      /* Make sure that the main thread doesn't get stuck waiting on the condition */
@@ -672,7 +715,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  }
  
  static int JackSrCb( jack_nframes_t nframes, void *arg )
-@@ -706,18 +892,20 @@
+@@ -710,18 +896,20 @@ PaError PaJack_Initialize( PaUtilHostApiRepresentation **hostApi,
                             PaHostApiIndex hostApiIndex )
  {
      PaError result = paNoError;
@@ -697,7 +740,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  
      /* Try to become a client of the JACK server.  If we cannot do
       * this, then this API cannot be used.
-@@ -803,6 +991,9 @@
+@@ -807,6 +995,9 @@ error:
  
          PaUtil_FreeMemory( jackHostApi );
      }
@@ -707,7 +750,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      return result;
  }
  
-@@ -815,8 +1006,8 @@
+@@ -819,8 +1010,8 @@ static void Terminate( struct PaUtilHostApiRepresentation *hostApi )
       * client is not allowed to have any ports connected */
      ASSERT_CALL( jack_deactivate( jackHostApi->jack_client ), 0 );
  
@@ -718,7 +761,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  
      ASSERT_CALL( jack_client_close( jackHostApi->jack_client ), 0 );
  
-@@ -830,6 +1021,8 @@
+@@ -834,6 +1025,8 @@ static void Terminate( struct PaUtilHostApiRepresentation *hostApi )
  
      free( jackErr_ );
      jackErr_ = NULL;
@@ -727,7 +770,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  }
  
  static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
-@@ -997,39 +1190,19 @@
+@@ -1001,39 +1194,19 @@ static void CleanUpStream( PaJackStream *stream, int terminateStreamRepresentati
      PaUtil_FreeMemory( stream );
  }
  
@@ -770,7 +813,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      ENSURE_PA( result );
  
      UNLESS( !hostApi->jackIsDown, paDeviceUnavailable );
-@@ -1045,14 +1218,14 @@
+@@ -1049,14 +1222,14 @@ static PaError RemoveStream( PaJackStream *stream )
      PaJackHostApiRepresentation *hostApi = stream->hostApi;
  
      /* Add to queue over streams that should be processed */
@@ -788,7 +831,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      ENSURE_PA( result );
  
  error:
-@@ -1165,7 +1338,7 @@
+@@ -1169,7 +1342,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
      stream->isBlockingStream = !streamCallback;
      if( stream->isBlockingStream )
      {
@@ -797,7 +840,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
          int   minimum_buffer_frames = 0;
  
          if( inputParameters && inputParameters->suggestedLatency > latency )
-@@ -1245,7 +1418,7 @@
+@@ -1249,7 +1422,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                  break;
              }
          }
@@ -806,7 +849,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
          UNLESS( !err, paInsufficientMemory );
  
          /* Fewer ports than expected? */
-@@ -1269,7 +1442,7 @@
+@@ -1273,7 +1446,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                  break;
              }
          }
@@ -815,7 +858,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
          UNLESS( !err , paInsufficientMemory );
  
          /* Fewer ports than expected? */
-@@ -1423,9 +1596,9 @@
+@@ -1427,9 +1600,9 @@ static PaError UpdateQueue( PaJackHostApiRepresentation *hostApi )
      const double jackSr = jack_get_sample_rate( hostApi->jack_client );
      int err;
  
@@ -827,7 +870,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
          return paNoError;
      }
  
-@@ -1484,11 +1657,11 @@
+@@ -1488,11 +1661,11 @@ static PaError UpdateQueue( PaJackHostApiRepresentation *hostApi )
      if( queueModified )
      {
          /* Signal that we've done what was asked of us */
@@ -841,7 +884,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  
      return result;
  }
-@@ -1517,7 +1690,7 @@
+@@ -1521,7 +1694,7 @@ static int JackCallback( jack_nframes_t frames, void *userData )
          if( stream->doStart )
          {
              /* If we can't obtain a lock, we'll try next time */
@@ -850,7 +893,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
              if( !err )
              {
                  if( stream->doStart )   /* Could potentially change before obtaining the lock */
-@@ -1525,12 +1698,12 @@
+@@ -1529,12 +1702,12 @@ static int JackCallback( jack_nframes_t frames, void *userData )
                      stream->is_active = 1;
                      stream->doStart = 0;
                      PA_DEBUG(( "%s: Starting stream\n", __FUNCTION__ ));
@@ -865,7 +908,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
              }
              else
                  assert( err == EBUSY );
-@@ -1568,15 +1741,15 @@
+@@ -1572,15 +1745,15 @@ static int JackCallback( jack_nframes_t frames, void *userData )
              if( !stream->is_active )   /* Ok, signal to the main thread that we've carried out the operation */
              {
                  /* If we can't obtain a lock, we'll try next time */
@@ -885,7 +928,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
              }
          }
      }
-@@ -1622,11 +1795,11 @@
+@@ -1626,11 +1799,11 @@ static PaError StartStream( PaStream *s )
  
      /* Enable processing */
  
@@ -899,7 +942,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      /*
      do
      {
-@@ -1638,7 +1811,7 @@
+@@ -1642,7 +1815,7 @@ static PaError StartStream( PaStream *s )
          stream->doStart = 0;
          stream->is_active = 0;  /* Cancel any processing */
      }
@@ -908,7 +951,7 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
  
      ENSURE_PA( result );
  
-@@ -1657,15 +1830,15 @@
+@@ -1661,15 +1834,15 @@ static PaError RealStop( PaJackStream *stream, int abort )
      if( stream->isBlockingStream )
          BlockingWaitEmpty ( stream );
  
@@ -927,10 +970,11 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack.c
      ENSURE_PA( result );
  
      UNLESS( !stream->is_active, paInternalError );
-Index: portaudio-v19/src/hostapi/jack/pa_jack_dynload.c
-===================================================================
---- portaudio-v19/src/hostapi/jack/pa_jack_dynload.c	(revision 0)
-+++ portaudio-v19/src/hostapi/jack/pa_jack_dynload.c	(working copy)
+diff --git a/lib-src/portaudio-v19/src/hostapi/jack/pa_jack_dynload.c b/lib-src/portaudio-v19/src/hostapi/jack/pa_jack_dynload.c
+new file mode 100644
+index 000000000..172b00334
+--- /dev/null
++++ b/lib-src/portaudio-v19/src/hostapi/jack/pa_jack_dynload.c
 @@ -0,0 +1,162 @@
 +/*
 + * $Id: pa_jack.c 1668 2011-05-02 17:07:11Z rossb $
@@ -1094,10 +1138,11 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack_dynload.c
 +    }
 +#endif
 +}
-Index: portaudio-v19/src/hostapi/jack/pa_jack_dynload.h
-===================================================================
---- portaudio-v19/src/hostapi/jack/pa_jack_dynload.h	(revision 0)
-+++ portaudio-v19/src/hostapi/jack/pa_jack_dynload.h	(working copy)
+diff --git a/lib-src/portaudio-v19/src/hostapi/jack/pa_jack_dynload.h b/lib-src/portaudio-v19/src/hostapi/jack/pa_jack_dynload.h
+new file mode 100644
+index 000000000..88bdfc715
+--- /dev/null
++++ b/lib-src/portaudio-v19/src/hostapi/jack/pa_jack_dynload.h
 @@ -0,0 +1,224 @@
 +/*
 + * $Id: pa_jack.c 1668 2011-05-02 17:07:11Z rossb $
@@ -1323,11 +1368,11 @@ Index: portaudio-v19/src/hostapi/jack/pa_jack_dynload.h
 +}
 +#endif /* __cplusplus */
 +#endif /* INCLUDED_PA_JACK_DYNLINK_H */
-Index: portaudio-v19/src/os/win/pa_win_hostapis.c
-===================================================================
---- portaudio-v19/src/os/win/pa_win_hostapis.c	(revision 12233)
-+++ portaudio-v19/src/os/win/pa_win_hostapis.c	(working copy)
-@@ -63,6 +63,7 @@
+diff --git a/lib-src/portaudio-v19/src/os/win/pa_win_hostapis.c b/lib-src/portaudio-v19/src/os/win/pa_win_hostapis.c
+index 9c9927ab7..42af409fa 100644
+--- a/lib-src/portaudio-v19/src/os/win/pa_win_hostapis.c
++++ b/lib-src/portaudio-v19/src/os/win/pa_win_hostapis.c
+@@ -63,6 +63,7 @@ PaError PaWinDs_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInde
  PaError PaAsio_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
  PaError PaWinWdm_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
  PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
@@ -1335,7 +1380,7 @@ Index: portaudio-v19/src/os/win/pa_win_hostapis.c
  
  #ifdef __cplusplus
  }
-@@ -92,6 +93,10 @@
+@@ -92,6 +93,10 @@ PaUtilHostApiInitializer *paHostApiInitializers[] =
          PaWinWdm_Initialize,
  #endif
  
