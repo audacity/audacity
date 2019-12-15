@@ -455,6 +455,18 @@ public:
      return PluralTemp< N >{ *this, pluralStr };
    }
 
+   // Translated strings may still contain menu hot-key codes (indicated by &)
+   // that wxWidgets interprets, and also trailing ellipses, that should be
+   // removed for other uses.
+   enum StripOptions : unsigned {
+      // Values to be combined with bitwise OR
+      MenuCodes = 0x1,
+      Ellipses = 0x2,
+   };
+   TranslatableString &Strip( unsigned options = MenuCodes ) &;
+   TranslatableString &&Strip( unsigned options = MenuCodes ) &&
+   { return std::move( Strip( options ) ); }
+
 private:
    enum class Request {
       Context,     // return a disambiguating context string

@@ -312,6 +312,37 @@ bool TranslatableString::IsVerbatim() const
    return DoGetContext( mFormatter ) == NullContextName;
 }
 
+TranslatableString &TranslatableString::Strip( unsigned codes ) &
+{
+   auto prevFormatter = mFormatter;
+   mFormatter = [prevFormatter, codes]
+   ( const wxString & str, TranslatableString::Request request ) -> wxString {
+      switch ( request ) {
+         case Request::Context:
+            return TranslatableString::DoGetContext( prevFormatter );
+         case Request::Format:
+         case Request::DebugFormat:
+         default: {
+            bool debug = request == Request::DebugFormat;
+            auto result =
+               TranslatableString::DoSubstitute( prevFormatter, str, debug );
+            if ( codes & MenuCodes )
+               result = wxStripMenuCodes( result );
+            if ( codes & Ellipses ) {
+               if (result.EndsWith(wxT("...")))
+                  result = result.Left( result.length() - 3 );
+               // Also check for the single-character Unicode ellipsis
+               else if (result.EndsWith(wxT("\u2026")))
+                  result = result.Left( result.length() - 1 );
+            }
+            return result;
+         }
+      }
+   };
+   
+   return *this;
+}
+
 wxString TranslatableString::DoGetContext( const Formatter &formatter )
 {
    return formatter ? formatter( {}, Request::Context ) : wxString{};
