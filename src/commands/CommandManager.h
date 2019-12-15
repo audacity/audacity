@@ -347,8 +347,8 @@ private:
 public:
    wxMenu * CurrentMenu() const;
 private:
-   wxString GetLabel(const CommandListEntry *entry) const;
-   wxString GetLabelWithDisabledAccel(const CommandListEntry *entry) const;
+   wxString FormatLabelForMenu(const CommandListEntry *entry) const;
+   wxString FormatLabelWithDisabledAccel(const CommandListEntry *entry) const;
 
    //
    // Loading/Saving

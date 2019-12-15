@@ -523,7 +523,7 @@ void CommandManager::AddItem(const CommandID &name,
          options);
    entry->useStrictFlags = options.useStrictFlags;
    int ID = entry->id;
-   wxString label = GetLabelWithDisabledAccel(entry);
+   wxString label = FormatLabelWithDisabledAccel(entry);
 
    SetCommandFlags(name, flags);
 
@@ -567,7 +567,7 @@ void CommandManager::AddItemList(const CommandID & name,
             Options{}
                .IsEffect(bIsEffect));
       entry->flags = flags;
-      CurrentMenu()->Append(entry->id, GetLabel(entry));
+      CurrentMenu()->Append(entry->id, FormatLabelForMenu(entry));
       mbSeparatorAllowed = true;
    }
 }
@@ -747,14 +747,14 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
          wxLogDebug(wxT("Command '%s' defined by '%s' and '%s'"),
                     // using GET in a log message for devs' eyes only
                     entry->name.GET(),
-                    prev->label.BeforeFirst(wxT('\t')),
-                    entry->label.BeforeFirst(wxT('\t')));
+                    prev->label,
+                    entry->label);
          wxFAIL_MSG(wxString::Format(wxT("Command '%s' defined by '%s' and '%s'"),
                     // using GET in an assertion violation message for devs'
                     // eyes only
                     entry->name.GET(),
-                    prev->label.BeforeFirst(wxT('\t')),
-                    entry->label.BeforeFirst(wxT('\t'))));
+                    prev->label,
+                    entry->label));
       }
    }
 #endif
@@ -767,7 +767,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    return entry;
 }
 
-wxString CommandManager::GetLabel(const CommandListEntry *entry) const
+wxString CommandManager::FormatLabelForMenu(const CommandListEntry *entry) const
 {
    wxString label = entry->label;
    if (!entry->key.empty())
@@ -784,7 +784,7 @@ wxString CommandManager::GetLabel(const CommandListEntry *entry) const
 // catch them in normal wxWidgets processing, rather than passing the key presses on
 // to the controls that had the focus.  We would like all the menu accelerators to be
 // disabled, in fact.
-wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry) const
+wxString CommandManager::FormatLabelWithDisabledAccel(const CommandListEntry *entry) const
 {
    wxString label = entry->label;
 #if 1
@@ -946,7 +946,7 @@ void CommandManager::Modify(const wxString &name, const wxString &newLabel)
    CommandListEntry *entry = mCommandNameHash[name];
    if (entry && entry->menu) {
       entry->label = newLabel;
-      entry->menu->SetLabel(entry->id, GetLabel(entry));
+      entry->menu->SetLabel(entry->id, FormatLabelForMenu(entry));
    }
 }
 
@@ -1439,12 +1439,9 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
 
    for(const auto &entry : mCommandList) {
-      wxString label = entry->label;
-      label = wxMenuItem::GetLabelText(label.BeforeFirst(wxT('\t')));
 
       xmlFile.StartTag(wxT("command"));
       xmlFile.WriteAttr(wxT("name"), entry->name);
-      xmlFile.WriteAttr(wxT("label"), label);
       xmlFile.WriteAttr(wxT("key"), entry->key);
       xmlFile.EndTag(wxT("command"));
    }
@@ -1489,10 +1486,6 @@ void CommandManager::CheckDups()
          continue;
       }
 
-      if (mCommandList[j]->label.AfterLast(wxT('\t')) == wxT("allowDup")) {
-         continue;
-      }
-
       for (size_t i = 0; (int)i < cnt; i++) {
          if (i == j) {
             continue;
@@ -1503,8 +1496,8 @@ void CommandManager::CheckDups()
             msg.Printf(wxT("key combo '%s' assigned to '%s' and '%s'"),
                        // using GET to form debug message
                        mCommandList[i]->key.GET(),
-                       mCommandList[i]->label.BeforeFirst(wxT('\t')),
-                       mCommandList[j]->label.BeforeFirst(wxT('\t')));
+                       mCommandList[i]->label,
+                       mCommandList[j]->label);
             wxASSERT_MSG(mCommandList[i]->key != mCommandList[j]->key, msg);
          }
       }
