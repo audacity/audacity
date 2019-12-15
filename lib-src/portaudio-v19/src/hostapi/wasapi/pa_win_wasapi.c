@@ -5284,6 +5284,32 @@ PaError PaWasapi_SetStreamStateHandler( PaStream *pStream, PaWasapiStreamStateCa
 }
 
 // ------------------------------------------------------------------------------------------
+const wchar_t *PaWasapi_GetInputDeviceID( PaStream *s )
+{
+    PaWasapiStream *stream = (PaWasapiStream *)s;
+    if (stream == NULL)
+        return NULL;
+	
+    if (stream->in.params.device_info)
+        return stream->in.params.device_info->szDeviceID;
+
+    return NULL;
+}
+
+// ------------------------------------------------------------------------------------------
+const wchar_t *PaWasapi_GetOutputDeviceID( PaStream *s )
+{
+    PaWasapiStream *stream = (PaWasapiStream *)s;
+    if (stream == NULL)
+        return NULL;
+
+    if (stream->out.params.device_info)
+        return stream->out.params.device_info->szDeviceID;
+
+    return NULL;
+}
+
+// ------------------------------------------------------------------------------------------
 HRESULT _PollGetOutputFramesAvailable(PaWasapiStream *stream, UINT32 *available)
 {
 	HRESULT hr;

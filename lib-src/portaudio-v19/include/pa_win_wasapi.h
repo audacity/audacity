@@ -548,6 +548,22 @@ PaError PaWasapi_SetDefaultInterfaceId( unsigned short *pId, int bOutput );
 */
 PaError PaWasapi_SetStreamStateHandler( PaStream *pStream, PaWasapiStreamStateCallback fnStateHandler, void *pUserData );
 
+/** Returns Windows device ID for input stream
+
+ @param  pStream Pointer to PaStream to query.
+
+ @return non-null value pointing to static device ID
+*/
+const wchar_t *PaWasapi_GetInputDeviceID( PaStream *s );
+
+/** Returns Windows device ID for output stream
+
+ @param  pStream Pointer to PaStream to query.
+
+ @return non-null value pointing to static device ID
+*/
+const wchar_t *PaWasapi_GetOutputDeviceID( PaStream *s );
+
 
 /*
     IMPORTANT:
