@@ -564,6 +564,15 @@ const wchar_t *PaWasapi_GetInputDeviceID( PaStream *s );
 */
 const wchar_t *PaWasapi_GetOutputDeviceID( PaStream *s );
 
+/** Returns device loopback indicator.
+
+ @param nDevice device index.
+
+ @return 0 = Not loopback, 1 = loopback, < 0 = PaErrorCode
+         if PortAudio is not initialized or an error is encountered.
+*/
+int PaWasapi_IsLoopback( PaDeviceIndex nDevice );
+
 
 /*
     IMPORTANT:
