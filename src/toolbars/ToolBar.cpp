@@ -869,7 +869,7 @@ void ToolBar::SetButtonToolTip
    if (commandManager)
       result =
          commandManager->DescribeCommandsAndShortcuts(commands, nCommands);
-   button.SetToolTip(result);
+   button.SetToolTip( TranslatableString{ result } );
 }
 
 //

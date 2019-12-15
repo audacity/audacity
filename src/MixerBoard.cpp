@@ -313,8 +313,8 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 
    #if wxUSE_TOOLTIPS
       mStaticText_TrackName->SetToolTip(mTrack->GetName());
-      mToggleButton_Mute->SetToolTip(_("Mute"));
-      mToggleButton_Solo->SetToolTip(_("Solo"));
+      mToggleButton_Mute->SetToolTip(XO("Mute"));
+      mToggleButton_Solo->SetToolTip(XO("Solo"));
       if (GetWave())
          mMeter->SetToolTip(XO("Signal Level Meter"));
    #endif // wxUSE_TOOLTIPS

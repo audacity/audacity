@@ -20,6 +20,7 @@
 #include "ImageRoll.h" // member variable
 
 class wxImage;
+class TranslatableString;
 
 class AButton final : public wxWindow {
    friend class AButtonAx;
@@ -55,6 +56,9 @@ class AButton final : public wxWindow {
 
    virtual ~ AButton();
 
+   // overload and hide the inherited function that takes naked wxString:
+   void SetToolTip(TranslatableString toolTip);
+   
    bool AcceptsFocus() const override { return s_AcceptsFocus; }
    bool AcceptsFocusFromKeyboard() const override { return mEnabled; }
 
