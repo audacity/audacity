@@ -1,8 +1,8 @@
 diff --git a/lib-src/portaudio-v19/Makefile.in b/lib-src/portaudio-v19/Makefile.in
-index f5fc258..18c2de6 100644
+index 5e1a76485..918bbad42 100644
 --- a/lib-src/portaudio-v19/Makefile.in
 +++ b/lib-src/portaudio-v19/Makefile.in
-@@ -156,7 +156,10 @@ SRC_DIRS = \
+@@ -155,7 +155,10 @@ SRC_DIRS = \
  SUBDIRS =
  @ENABLE_CXX_TRUE@SUBDIRS += bindings/cpp
  
