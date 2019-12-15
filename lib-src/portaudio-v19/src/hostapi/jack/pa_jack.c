@@ -441,7 +441,7 @@ static void PaJack_WaitForStreamDataToBecomeAvailable( PaJackStream *stream )
 #endif
 }
 
-#if defined(WIN32)
+#if defined(WIN32) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
 
