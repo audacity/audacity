@@ -72,12 +72,15 @@ void Delay :: setMaximumDelay(unsigned long delay)
 {
   if ( delay < inputs_.size() ) return;
 
+/*
   if ( delay < 0 ) {
     errorString_ << "Delay::setMaximumDelay: argument (" << delay << ") less than zero!\n";
     handleError( StkError::WARNING );
     return;
   }
-  else if (delay < delay_ ) {
+  else
+*/
+  if (delay < delay_ ) {
     errorString_ << "Delay::setMaximumDelay: argument (" << delay << ") less than current delay setting (" << delay_ << ")!\n";
     handleError( StkError::WARNING );
     return;
@@ -97,6 +100,7 @@ void Delay :: setDelay(unsigned long delay)
     if ( outPoint_ == inputs_.size() ) outPoint_ = 0;
     delay_ = inputs_.size() - 1;
   }
+  /*
   else if ( delay < 0 ) {
     errorString_ << "Delay::setDelay: argument (" << delay << ") less than zero ... setting to zero!\n";
     handleError( StkError::WARNING );
@@ -104,6 +108,7 @@ void Delay :: setDelay(unsigned long delay)
     outPoint_ = inPoint_;
     delay_ = 0;
   }
+  */
   else { // read chases write
     if ( inPoint_ >= delay ) outPoint_ = inPoint_ - delay;
     else outPoint_ = inputs_.size() + inPoint_ - delay;
