@@ -71,7 +71,7 @@ enum
 
 BEGIN_POPUP_MENU(LabelTrackMenuTable)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnSetFontID, _("&Font..."), OnSetFont)
+   POPUP_MENU_ITEM(OnSetFontID, XO("&Font..."), OnSetFont)
 END_POPUP_MENU()
 
 void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)

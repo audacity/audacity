@@ -140,30 +140,22 @@ SpectrogramSettings& SpectrogramSettings::defaults()
 }
 
 //static
-const wxArrayStringEx &SpectrogramSettings::GetScaleNames()
+const TranslatableStrings &SpectrogramSettings::GetScaleNames()
 {
-   class ScaleNamesArray final : public TranslatableStringArray
-   {
-      void Populate() override
-      {
-         mContents.insert( mContents.end(), {
-            // Keep in correspondence with enum SpectrogramSettings::ScaleType:
-            _("Linear") ,
-            _("Logarithmic") ,
-            /* i18n-hint: The name of a frequency scale in psychoacoustics */
-            _("Mel") ,
-            /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
-            _("Bark") ,
-            /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
-            _("ERB") ,
-            /* i18n-hint: Time units, that is Period = 1 / Frequency */
-            _("Period") ,
-         } );
-      }
+   static const TranslatableStrings result{
+      // Keep in correspondence with enum SpectrogramSettings::ScaleType:
+      XO("Linear") ,
+      XO("Logarithmic") ,
+      /* i18n-hint: The name of a frequency scale in psychoacoustics */
+      XO("Mel") ,
+      /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
+      XO("Bark") ,
+      /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
+      XO("ERB") ,
+      /* i18n-hint: Time units, that is Period = 1 / Frequency */
+      XO("Period") ,
    };
-
-   static ScaleNamesArray theArray;
-   return theArray.Get();
+   return result;
 }
 
 //static

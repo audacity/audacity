@@ -196,13 +196,13 @@ const TranslatableString GetWaveColorStr(int colorIndex)
 
 BEGIN_POPUP_MENU(WaveColorMenuTable)
    POPUP_MENU_RADIO_ITEM(OnInstrument1ID,
-      GetWaveColorStr(0).Translation(), OnWaveColorChange)
+      GetWaveColorStr(0), OnWaveColorChange)
    POPUP_MENU_RADIO_ITEM(OnInstrument2ID,
-      GetWaveColorStr(1).Translation(), OnWaveColorChange)
+      GetWaveColorStr(1), OnWaveColorChange)
    POPUP_MENU_RADIO_ITEM(OnInstrument3ID,
-      GetWaveColorStr(2).Translation(), OnWaveColorChange)
+      GetWaveColorStr(2), OnWaveColorChange)
    POPUP_MENU_RADIO_ITEM(OnInstrument4ID,
-      GetWaveColorStr(3).Translation(), OnWaveColorChange)
+      GetWaveColorStr(3), OnWaveColorChange)
 END_POPUP_MENU()
 
 /// Converts a WaveColor enumeration to a wxWidgets menu item Id.
@@ -283,11 +283,11 @@ void FormatMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
 BEGIN_POPUP_MENU(FormatMenuTable)
    POPUP_MENU_RADIO_ITEM(On16BitID,
-      GetSampleFormatStr(int16Sample).Translation(), OnFormatChange)
+      GetSampleFormatStr(int16Sample), OnFormatChange)
    POPUP_MENU_RADIO_ITEM(On24BitID,
-      GetSampleFormatStr(int24Sample).Translation(), OnFormatChange)
+      GetSampleFormatStr(int24Sample), OnFormatChange)
    POPUP_MENU_RADIO_ITEM(OnFloatID,
-      GetSampleFormatStr(floatSample).Translation(), OnFormatChange)
+      GetSampleFormatStr(floatSample), OnFormatChange)
 END_POPUP_MENU()
 
 /// Converts a format enumeration to a wxWidgets menu item Id.
@@ -403,19 +403,19 @@ void RateMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 // If we did, we'd get no message when clicking on Other...
 // when it is already selected.
 BEGIN_POPUP_MENU(RateMenuTable)
-   POPUP_MENU_CHECK_ITEM(OnRate8ID, _("8000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate11ID, _("11025 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate16ID, _("16000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate22ID, _("22050 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate44ID, _("44100 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate48ID, _("48000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate88ID, _("88200 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate96ID, _("96000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate176ID, _("176400 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate192ID, _("192000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate352ID, _("352800 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate384ID, _("384000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRateOtherID, _("&Other..."), OnRateOther)
+   POPUP_MENU_CHECK_ITEM(OnRate8ID, XO("8000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate11ID, XO("11025 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate16ID, XO("16000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate22ID, XO("22050 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate44ID, XO("44100 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate48ID, XO("48000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate88ID, XO("88200 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate96ID, XO("96000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate176ID, XO("176400 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate192ID, XO("192000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate352ID, XO("352800 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate384ID, XO("384000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRateOtherID, XO("&Other..."), OnRateOther)
 END_POPUP_MENU()
 
 const int nRates = 12;
@@ -692,23 +692,23 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    // exclusive, but the view may be in a state with either of those, and also
    // spectrogram, after a mouse drag.  Clicking any of these three makes that
    // view take up all the height.
-   POPUP_MENU_CHECK_ITEM(OnWaveformID, _("Wa&veform"), OnSetDisplay)
-   POPUP_MENU_CHECK_ITEM(OnWaveformDBID, _("&Waveform (dB)"), OnSetDisplay)
-   POPUP_MENU_CHECK_ITEM(OnSpectrumID, _("&Spectrogram"), OnSetDisplay)
+   POPUP_MENU_CHECK_ITEM(OnWaveformID, XO("Wa&veform"), OnSetDisplay)
+   POPUP_MENU_CHECK_ITEM(OnWaveformDBID, XO("&Waveform (dB)"), OnSetDisplay)
+   POPUP_MENU_CHECK_ITEM(OnSpectrumID, XO("&Spectrogram"), OnSetDisplay)
 
-   POPUP_MENU_ITEM(OnSpectrogramSettingsID, _("S&pectrogram Settings..."), OnSpectrogramSettings)
+   POPUP_MENU_ITEM(OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
    POPUP_MENU_SEPARATOR()
 
-//   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, _("&Mono"), OnChannelChange)
-//   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, _("&Left Channel"), OnChannelChange)
-//   POPUP_MENU_RADIO_ITEM(OnChannelRightID, _("R&ight Channel"), OnChannelChange)
-   POPUP_MENU_ITEM(OnMergeStereoID, _("Ma&ke Stereo Track"), OnMergeStereo)
+//   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, XO("&Mono"), OnChannelChange)
+//   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, XO("&Left Channel"), OnChannelChange)
+//   POPUP_MENU_RADIO_ITEM(OnChannelRightID, XO("R&ight Channel"), OnChannelChange)
+   POPUP_MENU_ITEM(OnMergeStereoID, XO("Ma&ke Stereo Track"), OnMergeStereo)
 
-   POPUP_MENU_ITEM(OnSwapChannelsID, _("Swap Stereo &Channels"), OnSwapChannels)
-   POPUP_MENU_ITEM(OnSplitStereoID, _("Spl&it Stereo Track"), OnSplitStereo)
+   POPUP_MENU_ITEM(OnSwapChannelsID, XO("Swap Stereo &Channels"), OnSwapChannels)
+   POPUP_MENU_ITEM(OnSplitStereoID, XO("Spl&it Stereo Track"), OnSplitStereo)
 // DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
 #ifndef EXPERIMENTAL_DA
-   POPUP_MENU_ITEM(OnSplitStereoMonoID, _("Split Stereo to Mo&no"), OnSplitStereoMono)
+   POPUP_MENU_ITEM(OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), OnSplitStereoMono)
 #endif
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
@@ -719,14 +719,14 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
             .contains( WaveTrackViewConstants::Waveform );
       if( hasWaveform ){
          POPUP_MENU_SEPARATOR()
-         POPUP_MENU_SUB_MENU(OnWaveColorID, _("&Wave Color"), WaveColorMenuTable)
+         POPUP_MENU_SUB_MENU(OnWaveColorID, XO("&Wave Color"), WaveColorMenuTable)
       }
    }
 
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(0, _("&Format"), FormatMenuTable)
+   POPUP_MENU_SUB_MENU(0, XO("&Format"), FormatMenuTable)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(0, _("Rat&e"), RateMenuTable)
+   POPUP_MENU_SUB_MENU(0, XO("Rat&e"), RateMenuTable)
 END_POPUP_MENU()
 
 

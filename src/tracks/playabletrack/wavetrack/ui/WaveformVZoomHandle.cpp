@@ -280,17 +280,17 @@ void WaveformVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 
-   POPUP_MENU_ITEM(OnZoomFitVerticalID, _("Zoom Reset\tShift-Right-Click"), OnZoomReset)
-   POPUP_MENU_ITEM(OnZoomDiv2ID,        _("Zoom x1/2"),                     OnZoomDiv2Vertical)
-   POPUP_MENU_ITEM(OnZoomTimes2ID,      _("Zoom x2"),                       OnZoomTimes2Vertical)
+   POPUP_MENU_ITEM(OnZoomFitVerticalID, XO("Zoom Reset\tShift-Right-Click"), OnZoomReset)
+   POPUP_MENU_ITEM(OnZoomDiv2ID,        XO("Zoom x1/2"),                     OnZoomDiv2Vertical)
+   POPUP_MENU_ITEM(OnZoomTimes2ID,      XO("Zoom x2"),                       OnZoomTimes2Vertical)
 
 #ifdef EXPERIMENTAL_HALF_WAVE
-   POPUP_MENU_ITEM(OnZoomHalfWaveID,    _("Half Wave"),                     OnZoomHalfWave)
+   POPUP_MENU_ITEM(OnZoomHalfWaveID,    XO("Half Wave"),                     OnZoomHalfWave)
 #endif
 
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnZoomInVerticalID,  _("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-   POPUP_MENU_ITEM(OnZoomOutVerticalID, _("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
+   POPUP_MENU_ITEM(OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
+   POPUP_MENU_ITEM(OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
 // The log and linear options are already available as waveform db.
 // So don't repeat them here.
 #if 0

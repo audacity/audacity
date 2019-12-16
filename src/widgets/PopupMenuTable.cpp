@@ -31,19 +31,19 @@ void PopupMenuTable::Menu::Extend(PopupMenuTable *pTable)
       switch (pEntry->type) {
       case PopupMenuTable::Entry::Item:
       {
-         this->Append(pEntry->id, pEntry->caption);
+         this->Append(pEntry->id, pEntry->caption.Translation());
          connect( pEntry );
          break;
       }
       case PopupMenuTable::Entry::RadioItem:
       {
-         this->AppendRadioItem(pEntry->id, pEntry->caption);
+         this->AppendRadioItem(pEntry->id, pEntry->caption.Translation());
          connect( pEntry );
          break;
       }
       case PopupMenuTable::Entry::CheckItem:
       {
-         this->AppendCheckItem(pEntry->id, pEntry->caption);
+         this->AppendCheckItem(pEntry->id, pEntry->caption.Translation());
          connect( pEntry );
          break;
       }
@@ -54,7 +54,7 @@ void PopupMenuTable::Menu::Extend(PopupMenuTable *pTable)
       {
          const auto subTable = pEntry->subTable;
          auto subMenu = BuildMenu( this->pParent, subTable, pUserData );
-         this->AppendSubMenu( subMenu.release(), pEntry->caption );
+         this->AppendSubMenu( subMenu.release(), pEntry->caption.Translation());
       }
       default:
          break;

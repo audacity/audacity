@@ -190,7 +190,9 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol( 1 );
             S.Id(ID_SCALE).TieChoice(_("S&cale:"),
                mTempSettings.scaleType,
-               SpectrogramSettings::GetScaleNames());
+               transform_container<wxArrayStringEx>(
+                  SpectrogramSettings::GetScaleNames(),
+                  std::mem_fn( &TranslatableString::Translation ) ) );
             mMinFreq =
                S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&n Frequency (Hz):"),
                mTempSettings.minFreq,

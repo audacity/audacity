@@ -285,10 +285,10 @@ BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
    }
 
 POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnZoomResetID,         _("Zoom Reset"),                     OnZoomReset)
-   POPUP_MENU_ITEM(OnZoomFitVerticalID,   _("Zoom to Fit\tShift-Right-Click"), OnZoomFitVertical)
-   POPUP_MENU_ITEM(OnZoomInVerticalID,    _("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-   POPUP_MENU_ITEM(OnZoomOutVerticalID,   _("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
+   POPUP_MENU_ITEM(OnZoomResetID,         XO("Zoom Reset"),                     OnZoomReset)
+   POPUP_MENU_ITEM(OnZoomFitVerticalID,   XO("Zoom to Fit\tShift-Right-Click"), OnZoomFitVertical)
+   POPUP_MENU_ITEM(OnZoomInVerticalID,    XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
+   POPUP_MENU_ITEM(OnZoomOutVerticalID,   XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
 END_POPUP_MENU()
 
 #include "../../../../Project.h" // for GetActiveProject

@@ -128,8 +128,8 @@ void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
 
 BEGIN_POPUP_MENU(NoteTrackMenuTable)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnUpOctaveID, _("Up &Octave"), OnChangeOctave)
-   POPUP_MENU_ITEM(OnDownOctaveID, _("Down Octa&ve"), OnChangeOctave)
+   POPUP_MENU_ITEM(OnUpOctaveID, XO("Up &Octave"), OnChangeOctave)
+   POPUP_MENU_ITEM(OnDownOctaveID, XO("Down Octa&ve"), OnChangeOctave)
 END_POPUP_MENU()
 
 PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
