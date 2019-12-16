@@ -55,11 +55,8 @@ Upstream version: 0.15.1 (beta)
 libnyquist
 ----------
 Digital Audio scripting language, with our own library interface added to it
-Version in Audacity SVN: 3.09
-nyquist.patch  Fix for a couple of memory leaks
-xlisp.patch    Fix build in Windows
-sound.patch    Fix build when using VS2013 (log2 is included in VS2013)
-revert-convolve.patch  Replaces broken convolve with previous version
+Version in Audacity SVN: r288 (r3.15+)
+NOTE: Patch files no longer being created. Use git history instead.
 
 libogg
 ------
