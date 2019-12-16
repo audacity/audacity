@@ -776,8 +776,7 @@ KeyView::RefreshBindings(const CommandIDs & names,
       }
       else
       {
-         // Strip any menu codes from label
-         node.label = wxMenuItem::GetLabelText(labels[i].BeforeFirst(wxT('\t')));
+         node.label = labels[i];
       }
 
       // Fill in remaining info
