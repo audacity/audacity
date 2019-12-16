@@ -134,6 +134,6 @@ float best_f0(float *samples, int n, int m, float threshold, int Tmax)
       best_f0=f0;
     }
   }
-  delete(results);
+  delete[] results;
   return best_f0;
 }
