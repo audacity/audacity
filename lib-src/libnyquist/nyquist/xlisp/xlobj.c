@@ -88,7 +88,7 @@ void xladdivar(LVAL cls, const char *var)
 /* xladdmsg - add a message to a class */
 void xladdmsg(LVAL cls, const char *msg, int offset)
 {
-    extern FUNDEF funtab[];
+    extern FUNDEF *funtab;
     LVAL mptr;
 
     /* enter the message selector */

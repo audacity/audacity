@@ -12,6 +12,7 @@ HISTORY
 
 */
 
+#include <string.h> /* for memcpy */
 #include "switches.h"
 #include "xlisp.h"
 
@@ -33,7 +34,7 @@ LVAL xstoprecordio(void);
 #endif
 
 /* the function table */
-FUNDEF funtab[] = {
+FUNDEF init_funtab[] = {
 
     /* read macro functions */
 {	NULL,				S, rmhash		}, /*   0 */
@@ -418,7 +419,32 @@ FUNDEF funtab[] = {
 
 {0,0,0} /* end of table marker */
 
-};			
+};
+
+FUNDEF *funtab = init_funtab;
+static size_t szfuntab = sizeof(init_funtab) / sizeof(*init_funtab);
+
+int xlbindfunctions(FUNDEF *functions, size_t nfunctions)
+{
+   /* This is written very generally, imposing no fixed upper limit on the
+    growth of the table.  But perhaps a lightweight alternative with such a
+    limit could be conditionally compiled.
+    */
+
+   /* malloc, not realloc, to leave old table unchanged in case of failure */
+   FUNDEF *newfuntab = malloc((szfuntab + nfunctions) * sizeof(FUNDEF));
+   if (!newfuntab)
+      return FALSE;
+   memcpy(newfuntab, funtab, (szfuntab - 1) * sizeof(FUNDEF));
+   memcpy(newfuntab + szfuntab - 1, functions, nfunctions * sizeof(FUNDEF));
+   FUNDEF sentinel = { 0, 0, 0 };
+   newfuntab[szfuntab + nfunctions - 1] = sentinel;
+   funtab = newfuntab;
+   szfuntab += nfunctions;
+   return TRUE;
+
+   /* To do: deallocate funtab when XLisp runtime shuts down */
+}
 
 /* xnotimp does not return anything on purpose, so disable
  * "no return value" warning
