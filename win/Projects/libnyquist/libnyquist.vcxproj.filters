@@ -34,6 +34,9 @@
     <Filter Include="nyquist\nyqstk\src">
       <UniqueIdentifier>{8aef0bda-5dca-454d-9a0f-02cb77eeff56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="nyquist\cmupv">
+      <UniqueIdentifier>{0edf01f9-ac21-4ce7-9567-393ac04462a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\cext.c">
@@ -647,6 +650,18 @@
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\pvshell.c">
       <Filter>nyquist\nyqsrc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmupv\src\cmupv.c">
+      <Filter>nyquist\cmupv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmupv\src\cmupvdbg.c">
+      <Filter>nyquist\cmupv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmupv\src\internal.c">
+      <Filter>nyquist\cmupv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\stoponzero.c">
+      <Filter>nyquist\nyqsrc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\fftext.h">
@@ -669,6 +684,18 @@
       <Filter>nyquist\nyqsrc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\pvshell.h">
+      <Filter>nyquist\nyqsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\cmupv\src\cmupv.h">
+      <Filter>nyquist\cmupv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\cmupv\src\cmupvdbg.h">
+      <Filter>nyquist\cmupv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\cmupv\src\internal.h">
+      <Filter>nyquist\cmupv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\stoponzero.h">
       <Filter>nyquist\nyqsrc</Filter>
     </ClInclude>
   </ItemGroup>

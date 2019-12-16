@@ -418,6 +418,16 @@
 		2800FE370FF32566005CA9E5 /* MidiIOPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2800FE350FF32566005CA9E5 /* MidiIOPrefs.cpp */; };
 		2801127B1943EE0E00D98A16 /* HelpSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280112791943EE0E00D98A16 /* HelpSystem.cpp */; };
 		2801A6460BF9268700648258 /* ImportQT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2801A6430BF9268700648258 /* ImportQT.cpp */; };
+		2801E2B523A7503A00FA38FA /* internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2801E2AF23A7503900FA38FA /* internal.h */; };
+		2801E2B623A7503A00FA38FA /* cmupv.c in Sources */ = {isa = PBXBuildFile; fileRef = 2801E2B023A7503900FA38FA /* cmupv.c */; };
+		2801E2B723A7503A00FA38FA /* cmupvdbg.h in Headers */ = {isa = PBXBuildFile; fileRef = 2801E2B123A7503900FA38FA /* cmupvdbg.h */; };
+		2801E2B823A7503A00FA38FA /* internal.c in Sources */ = {isa = PBXBuildFile; fileRef = 2801E2B223A7503900FA38FA /* internal.c */; };
+		2801E2B923A7503A00FA38FA /* cmupv.h in Headers */ = {isa = PBXBuildFile; fileRef = 2801E2B323A7503900FA38FA /* cmupv.h */; };
+		2801E2BA23A7503A00FA38FA /* cmupvdbg.c in Sources */ = {isa = PBXBuildFile; fileRef = 2801E2B423A7503900FA38FA /* cmupvdbg.c */; };
+		2801E2BD23A75F8300FA38FA /* alpassvc.h in Headers */ = {isa = PBXBuildFile; fileRef = 2801E2BB23A75F8300FA38FA /* alpassvc.h */; };
+		2801E2BE23A75F8300FA38FA /* alpassvc.c in Sources */ = {isa = PBXBuildFile; fileRef = 2801E2BC23A75F8300FA38FA /* alpassvc.c */; };
+		2801E2C123A75FB300FA38FA /* stoponzero.c in Sources */ = {isa = PBXBuildFile; fileRef = 2801E2BF23A75FB300FA38FA /* stoponzero.c */; };
+		2801E2C223A75FB300FA38FA /* stoponzero.h in Headers */ = {isa = PBXBuildFile; fileRef = 2801E2C023A75FB300FA38FA /* stoponzero.h */; };
 		2806EF7A1B32532A00D1AB9A /* FileDialogPrivate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2806EF791B32532A00D1AB9A /* FileDialogPrivate.mm */; };
 		280828550A75E0D0000002EF /* LabelDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828530A75E0D0000002EF /* LabelDialog.cpp */; };
 		2808285A0A75E0EA000002EF /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828580A75E0EA000002EF /* Grid.cpp */; };
@@ -2230,6 +2240,16 @@
 		280112791943EE0E00D98A16 /* HelpSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelpSystem.cpp; sourceTree = "<group>"; };
 		2801127A1943EE0E00D98A16 /* HelpSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpSystem.h; sourceTree = "<group>"; };
 		2801A6430BF9268700648258 /* ImportQT.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportQT.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		2801E2AF23A7503900FA38FA /* internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = internal.h; sourceTree = "<group>"; };
+		2801E2B023A7503900FA38FA /* cmupv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cmupv.c; sourceTree = "<group>"; };
+		2801E2B123A7503900FA38FA /* cmupvdbg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmupvdbg.h; sourceTree = "<group>"; };
+		2801E2B223A7503900FA38FA /* internal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = internal.c; sourceTree = "<group>"; };
+		2801E2B323A7503900FA38FA /* cmupv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmupv.h; sourceTree = "<group>"; };
+		2801E2B423A7503900FA38FA /* cmupvdbg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cmupvdbg.c; sourceTree = "<group>"; };
+		2801E2BB23A75F8300FA38FA /* alpassvc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = alpassvc.h; sourceTree = "<group>"; };
+		2801E2BC23A75F8300FA38FA /* alpassvc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = alpassvc.c; sourceTree = "<group>"; };
+		2801E2BF23A75FB300FA38FA /* stoponzero.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stoponzero.c; sourceTree = "<group>"; };
+		2801E2C023A75FB300FA38FA /* stoponzero.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stoponzero.h; sourceTree = "<group>"; };
 		2803810018313B070078452A /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lame.h; path = lame/lame/lame.h; sourceTree = "<group>"; };
 		2803C8B519F35AA000278526 /* PluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginManager.h; sourceTree = "<group>"; };
 		2803C8B619F35AA000278526 /* TrackPanelListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelListener.h; sourceTree = "<group>"; };
@@ -5092,6 +5112,27 @@
 			name = porttime;
 			sourceTree = "<group>";
 		};
+		2801E2AD23A7503900FA38FA /* cmupv */ = {
+			isa = PBXGroup;
+			children = (
+				2801E2AE23A7503900FA38FA /* src */,
+			);
+			path = cmupv;
+			sourceTree = "<group>";
+		};
+		2801E2AE23A7503900FA38FA /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2801E2AF23A7503900FA38FA /* internal.h */,
+				2801E2B023A7503900FA38FA /* cmupv.c */,
+				2801E2B123A7503900FA38FA /* cmupvdbg.h */,
+				2801E2B223A7503900FA38FA /* internal.c */,
+				2801E2B323A7503900FA38FA /* cmupv.h */,
+				2801E2B423A7503900FA38FA /* cmupvdbg.c */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		280380FC18313AE40078452A /* lame */ = {
 			isa = PBXGroup;
 			children = (
@@ -5288,6 +5329,7 @@
 			isa = PBXGroup;
 			children = (
 				284A80370F3158A1001D7A67 /* cmt */,
+				2801E2AD23A7503900FA38FA /* cmupv */,
 				28A4E29B0F6030F200E9E7F2 /* ffts */,
 				284A806B0F3158A1001D7A67 /* nyqsrc */,
 				284A80C80F3158A1001D7A67 /* nyqstk */,
@@ -5408,6 +5450,8 @@
 				284A80C00F3158A1001D7A67 /* sound.c */,
 				28EB74DC0FDC2EDE0046D78E /* sound.h */,
 				284A80C20F3158A1001D7A67 /* stats.c */,
+				2801E2BF23A75FB300FA38FA /* stoponzero.c */,
+				2801E2C023A75FB300FA38FA /* stoponzero.h */,
 				284A80C40F3158A1001D7A67 /* trigger.c */,
 				28EB74DD0FDC2EDE0046D78E /* trigger.h */,
 				284A80C60F3158A1001D7A67 /* yin.c */,
@@ -5488,6 +5532,8 @@
 				28EB755B0FDC300C0046D78E /* alpass.h */,
 				284A81870F3158A2001D7A67 /* alpasscv.c */,
 				28EB755C0FDC300C0046D78E /* alpasscv.h */,
+				2801E2BC23A75F8300FA38FA /* alpassvc.c */,
+				2801E2BB23A75F8300FA38FA /* alpassvc.h */,
 				284A818D0F3158A2001D7A67 /* alpassvv.c */,
 				28EB755D0FDC300C0046D78E /* alpassvv.h */,
 				284A81900F3158A2001D7A67 /* amosc.c */,
@@ -6857,6 +6903,7 @@
 				28EB74AD0FDC2DF60046D78E /* userio.h in Headers */,
 				28EB74AE0FDC2DF60046D78E /* timebase.h in Headers */,
 				28EB74AF0FDC2DF60046D78E /* tempomap.h in Headers */,
+				2801E2B523A7503A00FA38FA /* internal.h in Headers */,
 				28EB74B00FDC2DF60046D78E /* seqwrite.h in Headers */,
 				28EB74B10FDC2DF60046D78E /* seqread.h in Headers */,
 				28EB74B20FDC2DF60046D78E /* seqmwrite.h in Headers */,
@@ -6865,6 +6912,7 @@
 				28EB74B50FDC2DF60046D78E /* record.h in Headers */,
 				28EB74B60FDC2DF60046D78E /* moxc.h in Headers */,
 				28EB74B70FDC2DF60046D78E /* midifns.h in Headers */,
+				2801E2C223A75FB300FA38FA /* stoponzero.h in Headers */,
 				28EB74B80FDC2DF60046D78E /* midifile.h in Headers */,
 				28EB74B90FDC2DF60046D78E /* mem.h in Headers */,
 				28EB74BA0FDC2DF60046D78E /* cmtcmd.h in Headers */,
@@ -6903,6 +6951,7 @@
 				28EB74FD0FDC2EDF0046D78E /* sound.h in Headers */,
 				28EB74FE0FDC2EDF0046D78E /* trigger.h in Headers */,
 				28EB74FF0FDC2EDF0046D78E /* yin.h in Headers */,
+				2801E2B723A7503A00FA38FA /* cmupvdbg.h in Headers */,
 				28EB752F0FDC2FB20046D78E /* ADSR.h in Headers */,
 				28EB75300FDC2FB20046D78E /* BandedWG.h in Headers */,
 				28EB75310FDC2FB20046D78E /* BiQuad.h in Headers */,
@@ -6925,7 +6974,9 @@
 				28EB75420FDC2FB20046D78E /* JCRev.h in Headers */,
 				28EB75430FDC2FB20046D78E /* JetTable.h in Headers */,
 				28EB75440FDC2FB20046D78E /* Mandolin.h in Headers */,
+				2801E2BD23A75F8300FA38FA /* alpassvc.h in Headers */,
 				28EB75450FDC2FB20046D78E /* Modal.h in Headers */,
+				2801E2B923A7503A00FA38FA /* cmupv.h in Headers */,
 				28EB75460FDC2FB20046D78E /* ModalBar.h in Headers */,
 				28EB75470FDC2FB20046D78E /* Noise.h in Headers */,
 				28EB75480FDC2FB20046D78E /* NRev.h in Headers */,
@@ -8271,6 +8322,7 @@
 				284A834D0F3158A2001D7A67 /* BiQuad.cpp in Sources */,
 				284A834E0F3158A2001D7A67 /* Bowed.cpp in Sources */,
 				284A834F0F3158A2001D7A67 /* BowTable.cpp in Sources */,
+				2801E2B823A7503A00FA38FA /* internal.c in Sources */,
 				284A83500F3158A2001D7A67 /* Chorus.cpp in Sources */,
 				284A83510F3158A2001D7A67 /* Clarinet.cpp in Sources */,
 				284A83520F3158A2001D7A67 /* Delay.cpp in Sources */,
@@ -8312,14 +8364,17 @@
 				284A83B20F3158A2001D7A67 /* alpass.c in Sources */,
 				284A83B40F3158A2001D7A67 /* alpasscv.c in Sources */,
 				284A83B80F3158A2001D7A67 /* alpassvv.c in Sources */,
+				2801E2C123A75FB300FA38FA /* stoponzero.c in Sources */,
 				284A83BA0F3158A2001D7A67 /* amosc.c in Sources */,
 				284A83BC0F3158A2001D7A67 /* areson.c in Sources */,
 				284A83BE0F3158A2001D7A67 /* aresoncv.c in Sources */,
 				284A83C00F3158A2001D7A67 /* aresonvc.c in Sources */,
 				284A83C20F3158A2001D7A67 /* aresonvv.c in Sources */,
 				284A83C40F3158A2001D7A67 /* atone.c in Sources */,
+				2801E2BE23A75F8300FA38FA /* alpassvc.c in Sources */,
 				284A83C60F3158A2001D7A67 /* atonev.c in Sources */,
 				284A83C80F3158A2001D7A67 /* biquadfilt.c in Sources */,
+				2801E2B623A7503A00FA38FA /* cmupv.c in Sources */,
 				284A83CA0F3158A2001D7A67 /* buzz.c in Sources */,
 				284A83CC0F3158A2001D7A67 /* chase.c in Sources */,
 				284A83CE0F3158A2001D7A67 /* clip.c in Sources */,
@@ -8391,6 +8446,7 @@
 				284A84530F3158A2001D7A67 /* xlbfun.c in Sources */,
 				284A84540F3158A2001D7A67 /* xlcont.c in Sources */,
 				284A84550F3158A2001D7A67 /* xldbug.c in Sources */,
+				2801E2BA23A7503A00FA38FA /* cmupvdbg.c in Sources */,
 				284A84560F3158A2001D7A67 /* xldmem.c in Sources */,
 				284A84580F3158A2001D7A67 /* xleval.c in Sources */,
 				284A84590F3158A2001D7A67 /* xlfio.c in Sources */,
@@ -9543,7 +9599,7 @@
 				);
 				PRODUCT_NAME = nyquist;
 				SKIP_INSTALL = YES;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmupv/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
 			};
 			name = Debug;
 		};
@@ -9881,7 +9937,7 @@
 				);
 				PRODUCT_NAME = nyquist;
 				SKIP_INSTALL = YES;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmupv/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
 			};
 			name = Release;
 		};
@@ -10285,7 +10341,7 @@
 				);
 				PRODUCT_NAME = nyquist;
 				SKIP_INSTALL = YES;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmupv/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
 			};
 			name = Debug64;
 		};
@@ -10748,7 +10804,7 @@
 				);
 				PRODUCT_NAME = nyquist;
 				SKIP_INSTALL = YES;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmupv/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
 			};
 			name = Release64;
 		};

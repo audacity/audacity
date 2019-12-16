@@ -18,7 +18,8 @@ INC = \
    -I${srcdir}/nyquist/cmt \
    -I${srcdir}/nyquist/ffts/src \
    -I${srcdir}/nyquist/nyqstk/include \
-   -I${srcdir}/nyquist/nyqstk
+   -I${srcdir}/nyquist/nyqstk \
+   -I${srcdir}/nyquist/cmupv/src 
 
 AM_CFLAGS = $(INC) $(PORTAUDIO_CFLAGS) $(SNDFILE_CFLAGS) \
    -DCMTSTUFF -DEXT
@@ -75,6 +76,12 @@ libnyquist_a_SOURCES = \
    nyquist/cmt/timebase.h \
    nyquist/cmt/userio.c \
    nyquist/cmt/userio.h \
+   nyquist/cmupv/src/cmupv.c \
+   nyquist/cmupv/src/cmupv.h \
+   nyquist/cmupv/src/cmupvdbg.c \
+   nyquist/cmupv/src/cmupvdbg.h \
+   nyquist/cmupv/src/internal.c \
+   nyquist/cmupv/src/internal.h \
    nyquist/ffts/src/fftext.c \
    nyquist/ffts/src/fftext.h \
    nyquist/ffts/src/fftlib.c \
@@ -152,6 +159,8 @@ libnyquist_a_SOURCES = \
    nyquist/nyqsrc/sound.c \
    nyquist/nyqsrc/sound.h \
    nyquist/nyqsrc/stats.c \
+   nyquist/nyqsrc/stoponzero.c \
+   nyquist/nyqsrc/stoponzero.h \
    nyquist/nyqsrc/stdefs.h \
    nyquist/nyqsrc/trigger.c \
    nyquist/nyqsrc/trigger.h \
@@ -249,6 +258,8 @@ libnyquist_a_SOURCES = \
    nyquist/tran/alpasscv.c \
    nyquist/tran/alpasscv.h \
    nyquist/tran/alpass.h \
+   nyquist/tran/alpassvc.c \
+   nyquist/tran/alpassvc.h \
    nyquist/tran/alpassvv.c \
    nyquist/tran/alpassvv.h \
    nyquist/tran/amosc.c \
