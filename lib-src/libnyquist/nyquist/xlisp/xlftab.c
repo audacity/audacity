@@ -505,7 +505,7 @@ FUNDEF init_funtab[] = {
 FUNDEF *funtab = init_funtab;
 static size_t szfuntab = sizeof(init_funtab) / sizeof(*init_funtab);
 
-int xlbindfunctions(FUNDEF *functions, size_t nfunctions)
+int xlbindfunctions(const FUNDEF *functions, size_t nfunctions)
 {
    /* This is written very generally, imposing no fixed upper limit on the
     growth of the table.  But perhaps a lightweight alternative with such a
