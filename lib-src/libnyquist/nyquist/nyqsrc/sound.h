@@ -274,12 +274,19 @@ typedef struct {
 /* forward declaration for circular type dependencies */
 typedef struct snd_list_struct *snd_list_type;
 
+struct snd_susp_struct;
+
+typedef void  (*snd_fetch_fn)(struct snd_susp_struct *, snd_list_type snd_list);
+typedef void  (*snd_free_fn)(struct snd_susp_struct *);
+typedef void  (*snd_mark_fn)(struct snd_susp_struct *);  /* marks LVAL nodes for GC */
+typedef void  (*snd_print_tree_fn)(struct snd_susp_struct *, int);
+
 typedef struct snd_susp_struct {
-    void  (*fetch)(struct snd_susp_struct *, snd_list_type snd_list);
+    snd_fetch_fn fetch;
     void  (*keep_fetch)(struct snd_susp_struct *, snd_list_type snd_list);
-    void  (*free)(struct snd_susp_struct *);
-    void  (*mark)(struct snd_susp_struct *);  /* marks LVAL nodes for GC */
-    void  (*print_tree)(struct snd_susp_struct *, int);    /* debugging */
+    snd_free_fn free;
+    snd_mark_fn mark;
+    snd_print_tree_fn print_tree; /* debugging */
     char *name;        /* string name for debugging */
     long  toss_cnt;    /* return this many zeros, then compute */
     long  current;     /* current sample number */
