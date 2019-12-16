@@ -18,7 +18,7 @@
 #define HASHELEM(p) ((p).symbol_name)
 #define HASHVAL 50
 #define HASHENTRIES 50
-#define HASHENTER lookup
+#define HASHENTER hash_lookup
 #define HASHNOCOPY
 
 #include "hashrout.h"
@@ -26,7 +26,7 @@
 void defvar(char *name, int *addr)
 
 {
-    intptr_t i = lookup(name);
+    intptr_t i = hash_lookup(name);
     HASHENTRY(i).symb_type = var_symb_type;
     HASHENTRY(i).ptr.intptr = addr;
 }
@@ -34,7 +34,7 @@ void defvar(char *name, int *addr)
 
 void defun(char *name, seq_cmd_fn addr)
 {
-    intptr_t i = lookup(name);
+    intptr_t i = hash_lookup(name);
     HASHENTRY(i).symb_type = fn_symb_type;
     HASHENTRY(i).ptr.routine = addr;
 }
@@ -42,7 +42,7 @@ void defun(char *name, seq_cmd_fn addr)
 
 void defvec(char *name, int *addr, int size)
 {
-    intptr_t i = lookup(name);
+    intptr_t i = hash_lookup(name);
     HASHENTRY(i).symb_type = vec_symb_type;
     HASHENTRY(i).size = size;
     HASHENTRY(i).ptr.intptr = addr;

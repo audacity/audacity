@@ -464,7 +464,7 @@ private void docall(void)
         if (fieldx == 1) fferror("Routine name expected");
         else if (token[fieldx] != '(') fferror("Open paren expected");
         else {
-            desc = &HASHENTRY(lookup(symbol));
+            desc = &HASHENTRY(hash_lookup(symbol));
             if (!desc->symb_type) {
                 fieldx = 0;
                 fferror("Function not defined");
@@ -1030,7 +1030,7 @@ private void doset(boolean vec_flag)
     linex += scan();
     if (!token[0]) fferror("Variable name expected");
     else {
-        struct symb_descr *desc = &HASHENTRY(lookup(token));
+        struct symb_descr *desc = &HASHENTRY(hash_lookup(token));
         if (!desc->symb_type) fferror("Called function not defined");
         else if (vec_flag && (desc->symb_type != vec_symb_type)) {
                 fferror("This is not an array");
