@@ -462,7 +462,7 @@ double sound_save(
                                       buf, &ntotal);
         *duration = ntotal / *sr;
         if (sndfile) sf_close(sndfile);
-        if (play != NIL) finish_audio(audio_stream);
+        if (play != NIL) finish_audio();
     } else {
         xlerror("sound_save: expression did not return a sound",
                  result);

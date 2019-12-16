@@ -10,6 +10,7 @@
 #include "moxc.h"
 #include "seq.h"
 #include "seqinterf.h"
+#include "seqmwrite.h"
 
 /* seq_next -- advance to the next event, return TRUE if found */
 /**/
