@@ -545,6 +545,7 @@ void snd_list_unref(snd_list_type list)
             break; // the rest of the list is shared, nothing more to free
         }
 
+        next = NULL;
         // list nodes either point to a block of samples or this is the 
         // last list node (list->block == NULL) which points to a suspension
         // lists can also terminate at the zero_block, which is an infinite
