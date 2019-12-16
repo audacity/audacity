@@ -1,22 +1,39 @@
 README.txt -- information on Nyquist for Mac OS X 
 
+IMPORTANT
+---------
+You may get the message 
+    "NyquistIDE is damaged and can't be opened. 
+    You should move it to the Trash from the Finder."
+This appears to be a deliberately incorrect statement from Apple.
+Here is what to do:
+
+1) Go to Preferences, Security & Privacy
+2) Unlock (requires password)
+3) Allow apps downloaded from: Anywhere
+4) Control-click on the NyquistIDE icon and select open
+5) Tell the Finder yes, you really want to open this application
+6) Nyquist should run
+7) Close Nyquist (maybe not necessary)
+8) Now, you can go back to Security & Privacy and revert back 
+    to the original policy, e.g. "Mac App Store and identified
+    developers" if you wish (a reasonable precaution)
+9) Lock the settings in Security & Privacy (click the lock icon)
+10) Test: You should now be able to click to start Nyquist; it 
+    should start without any false claims about file damage or 
+    even warning messages.
+
 Installation
 ------------
 The simplest way to install and run Nyquist is to get the pre-compiled
 NyquistIDE application, which includes executables, documentation, and
-libraries all in one package.
-
-When the pre-compiled package is uncompressed, it produces two directories:
+libraries all in one package and one directory:
+     NyquistIDE.app, and
      nyquist
-     NyquistIDE.app
-You should always keep these together. The nyquist directory initially 
-contains documentation, but when NyquistIDE.app is run, the nyquist
-folder is also populated with links to the lib and demos folders,
-which contain example code and more documentation. The symbolic links
-allow you to easily find these files.
-
-You can copy both nyquist and NyquistIDE.app to the /Applications folder
-if you wish, and you can add NyquistIDE.app to the Dock.
+Typically, put NyquistIDE.app in /Applications and nyquist in your
+home directory, but anywhere is fine. If nyquist is not copied to your
+home directory, NyquistIDE.app will prompt you to find it when you 
+run NyquistIDE.app for the first time.
 
 You will probably run Nyquist using the NyquistIDE application, but
 you can also run nyquist from the command line. The executable is
@@ -43,9 +60,7 @@ automatically in every instance of your command line shell.
 
 On the topic of the XLISPPATH, note that this variable is set by
 NyquistIDE when running with that application, overriding any other
-value. You can extend the search path by creating the file xlisppath
-in the same directory as the nyquist executable ny. The xlisppath file
-should have colon-separated paths on a single line of text.
+value. 
 
 You can also build Nyquist from sources, as described below.
 
@@ -53,17 +68,6 @@ You can also build Nyquist from sources, as described below.
 How To Build Nyquist on Mac OS X
 --------------------------------
 You need to install Xcode, Apple's free software development system
-for OS X.
-
-Xcode 4.3.2 and later
--------
-The nyquist project for Xcode v4 is in nyquist/macosxproject/nyquist.xcodeproj
-
-To build Nyquist or NyquistIDE:
- - Open nyquist.wxworkspace in Xcode
- - Set the active target to "Nyquist" or "NyquistIDE"
- - Click on "build active target"
- - ny or NyquistIDE will be produced in a temporary folder managed by Xcode.
-   To find the files Right click on the Products/NyquistIDE.app of the project 
-   navigator, and select "reveal in finder". 
-
+for OS X, and CMake for OS X. Use CMake to build the xcode project.
+Get the sources from SourceForge, and run CMake on
+nyquist/CMakeLists.txt.

@@ -193,11 +193,11 @@ void compose_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
     if (final_count == susp->susp.toss_cnt) {
-        n = ROUND((final_time - susp->f->t0) * susp->f->sr -
+        n = ROUNDBIG((final_time - susp->f->t0) * susp->f->sr -
                   (susp->f->current - susp->f_cnt));
         susp->f_ptr += n;
         susp_took(f_cnt, n);
-        n = ROUND((final_time - susp->g->t0) * susp->g->sr -
+        n = ROUNDBIG((final_time - susp->g->t0) * susp->g->sr -
                   (susp->g->current - susp->g_cnt));
         susp->g_ptr += n;
         susp_took(g_cnt, n);
@@ -269,7 +269,7 @@ sound_type snd_make_compose(sound_type f, sound_type g)
     /* minimum start time over all inputs: */
     t0_min = MIN(g->t0, t0);
     /* how many samples to toss before t0: */
-    susp->susp.toss_cnt = ROUND((t0 - t0_min) * sr);
+    susp->susp.toss_cnt = ROUNDBIG((t0 - t0_min) * sr);
     if (susp->susp.toss_cnt > 0) {
         susp->susp.keep_fetch = susp->susp.fetch;
         susp->susp.fetch = compose_toss_fetch;

@@ -86,7 +86,7 @@ void compute_start_rise(gate_susp_type susp)
        ("long" "start_fall" "0")
        ("long" "start_rise" "0")
        ("long" "stop_count" "0")
-       ("long" "delay_len" "max(1, round(signal->sr * lookahead))")
+       ("long" "delay_len" "max(1, ROUND32(signal->sr * lookahead))")
        ("int" "state" "ST_OFF")
        ("double" "value" "susp->floor"))
 

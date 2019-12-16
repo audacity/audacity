@@ -15,6 +15,7 @@
 
 #include "stdlib.h"
 #include "string.h"
+#include "limits.h"
 #include "xlisp.h"
 
 #ifdef WIN32
@@ -50,6 +51,8 @@ FORWARD LOCAL unsigned char *stralloc(int size);
 FORWARD LOCAL int addseg(void);
 FORWARD void mark(LVAL ptr);
 FORWARD LOCAL void sweep(void);
+
+extern void freeimage(void);
 
 #ifdef DEBUG_GC
 static long dbg_gc_n = 0;	/* counts save operations */
@@ -241,6 +244,9 @@ LVAL newvector(int size)
     xlsave1(vect);
     vect = newnode(VECTOR);
     vect->n_vsize = 0;
+    if (size < 0) xlfail("negative vector size requested");
+    if (size > INT_MAX / sizeof(LVAL))
+        xlfail("too large vector size requested");
     if ((bsize = size * sizeof(LVAL))) {
         if ((vect->n_vdata = (LVAL *)calloc(1,bsize)) == NULL) {
             findmem();
@@ -705,6 +711,9 @@ LVAL xrestore(void)
 }
 #endif
 
+static unsigned char registered_xlmshutdown = 0;
+static void xlmshutdown(void);
+
 /* xlminit - initialize the dynamic memory module */
 void xlminit(void)
 {
@@ -758,5 +767,26 @@ void xlminit(void)
     xlargstktop = xlargstkbase + ADEPTH;
     xlfp = xlsp = xlargstkbase;
     *xlsp++ = NIL;
+
+    /* Guarantee graceful cleanup of memory */
+    if (!registered_xlmshutdown) {
+        atexit(xlmshutdown);
+        registered_xlmshutdown = 1;
+    }
 }
 
+static void xlmshutdown(void)
+{
+    /* This function deallocates all memory used by xlisp.  Should it 
+       become non-static, allowing the client to shut down and init 
+       again for a "hard" restart? */
+ 
+    /* Free all lisp objects, and free the free-store */
+    freeimage();
+
+    /* Free the stacks */
+    free(xlstkbase);
+    xlstkbase = NULL;
+    free(xlargstkbase);
+    xlargstkbase = NULL;
+}

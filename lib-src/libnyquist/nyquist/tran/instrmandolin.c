@@ -94,13 +94,13 @@ sound_type snd_make_mandolin(time_type t0, double freq, time_type d, double body
     /* t0 specified as input parameter */
     sample_type scale_factor = 1.0F;
     falloc_generic(susp, mandolin_susp_node, "snd_make_mandolin");
-    susp->mymand = initInstrument(MANDOLIN, round(sr));
+    susp->mymand = initInstrument(MANDOLIN, ROUND32(sr));
       controlChange(susp->mymand, 1, detune);
       controlChange(susp->mymand, 2, MAND_CONTROL_CHANGE_CONST * body_size);;
     susp->temp_ret_value = noteOn(susp->mymand, freq, 1.0);
     susp->susp.fetch = mandolin__fetch;
 
-    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
+    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((d) * sr));
     /* initialize susp state */
     susp->susp.free = mandolin_free;
     susp->susp.sr = sr;

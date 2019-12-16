@@ -129,7 +129,7 @@ void callshow(call)
     gprintf(TRANS,"routine:  %lx\n", (ulong)call->u.e.routine);
     gprintf(TRANS,"parameters:");
     for (i = 0; i < MAX_CALL_ARGS; i++) {
-        gprintf(TRANS, " %d", call->u.e.p.arg[i]);
+        gprintf(TRANS, " %p", call->u.e.p.arg[i]);
     }
     gprintf(TRANS, "\n");
 }

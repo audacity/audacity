@@ -1,41 +1,42 @@
-/* nyqsrc/sndfnint.c -- interface to  nyqsrc/sndfmt.h, 
- * nylsf/sndfile.h, nyqsrc/sound.h, nyqsrc/add.h, 
- * nyqsrc/avg.h, nyqsrc/compose.h, nyqsrc/convolve.h, 
+/* nyqsrc/sndfnint.c -- interface to  nylsf/sndfile.h, 
+ * nyqsrc/sound.h, nyqsrc/add.h, nyqsrc/avg.h, 
+ * nyqsrc/compose.h, nyqsrc/convolve.h, 
  * nyqsrc/downsample.h, nyqsrc/fft.h, nyqsrc/inverse.h, 
- * nyqsrc/multiseq.h, nyqsrc/resamp.h, nyqsrc/resampv.h, 
- * nyqsrc/samples.h, nyqsrc/sndmax.h, nyqsrc/sndread.h, 
+ * nyqsrc/lpanal.h, nyqsrc/multiseq.h, 
+ * nyqsrc/nyq-osc-server.h, nyqsrc/phasevocoder.h, 
+ * nyqsrc/resamp.h, nyqsrc/resampv.h, nyqsrc/samples.h, 
+ * nyqsrc/sliderdata.h, nyqsrc/sndmax.h, nyqsrc/sndread.h, 
  * nyqsrc/sndseq.h, nyqsrc/sndsliders.h, 
- * nyqsrc/sliderdata.h, nyqsrc/sndwritepa.h, nyqsrc/yin.h, 
- * nyqsrc/nyq-osc-server.h, nyqsrc/trigger.h, 
- * nyqsrc/lpanal.h, nyqsrc/phasevocoder.h, 
- * nyqsrc/pvshell.h, tran/abs.h, tran/allpoles.h, 
- * tran/alpass.h, tran/alpasscv.h, tran/alpassvv.h, 
- * tran/amosc.h, tran/areson.h, tran/aresonvc.h, 
- * tran/aresoncv.h, tran/aresonvv.h, tran/atone.h, 
+ * nyqsrc/stoponzero.h, nyqsrc/trigger.h, nyqsrc/yin.h, 
+ * tran/abs.h, tran/allpoles.h, tran/alpass.h, 
+ * tran/alpasscv.h, tran/alpassvc.h, tran/alpassvv.h, 
+ * tran/amosc.h, tran/areson.h, tran/aresoncv.h, 
+ * tran/aresonvc.h, tran/aresonvv.h, tran/atone.h, 
  * tran/atonev.h, tran/biquadfilt.h, tran/buzz.h, 
  * tran/chase.h, tran/clip.h, tran/congen.h, 
  * tran/const.h, tran/coterm.h, tran/delaycc.h, 
  * tran/delaycv.h, tran/eqbandvvv.h, tran/exp.h, 
- * tran/follow.h, tran/fmosc.h, tran/fromobject.h, 
- * tran/fromarraystream.h, tran/gate.h, tran/ifft.h, 
- * tran/instrclar.h, tran/instrclarall.h, 
- * tran/instrclarfreq.h, tran/instrsax.h, 
+ * tran/fmfb.h, tran/fmfbv.h, tran/fmosc.h, 
+ * tran/follow.h, tran/fromarraystream.h, 
+ * tran/fromobject.h, tran/gate.h, tran/ifft.h, 
+ * tran/instrbanded.h, tran/instrbow.h, 
+ * tran/instrbowedfreq.h, tran/instrclar.h, 
+ * tran/instrclarall.h, tran/instrclarfreq.h, 
+ * tran/instrflute.h, tran/instrfluteall.h, 
+ * tran/instrflutefreq.h, tran/instrmandolin.h, 
+ * tran/instrmodalbar.h, tran/instrsax.h, 
  * tran/instrsaxall.h, tran/instrsaxfreq.h, 
- * tran/integrate.h, tran/log.h, tran/lpreson.h, 
- * tran/maxv.h, tran/offset.h, tran/oneshot.h, 
- * tran/osc.h, tran/partial.h, tran/pluck.h, tran/prod.h, 
- * tran/pwl.h, tran/quantize.h, tran/recip.h, 
- * tran/reson.h, tran/resonvc.h, tran/resoncv.h, 
- * tran/resonvv.h, tran/sampler.h, tran/scale.h, 
- * tran/shape.h, tran/sine.h, tran/siosc.h, tran/slope.h, 
- * tran/sqrt.h, tran/tapf.h, tran/tapv.h, tran/tone.h, 
- * tran/tonev.h, tran/upsample.h, tran/white.h, 
- * tran/stkrev.h, tran/stkpitshift.h, tran/stkchorus.h, 
- * tran/instrbow.h, tran/instrbowedfreq.h, 
- * tran/instrbanded.h, tran/instrmandolin.h, 
- * tran/instrsitar.h, tran/instrmodalbar.h, 
- * tran/instrflute.h, tran/instrflutefreq.h, 
- * tran/instrfluteall.h, tran/fmfb.h, tran/fmfbv.h, 
+ * tran/instrsitar.h, tran/integrate.h, tran/log.h, 
+ * tran/lpreson.h, tran/maxv.h, tran/offset.h, 
+ * tran/oneshot.h, tran/osc.h, tran/partial.h, 
+ * tran/pluck.h, tran/prod.h, tran/pwl.h, 
+ * tran/quantize.h, tran/recip.h, tran/reson.h, 
+ * tran/resoncv.h, tran/resonvc.h, tran/resonvv.h, 
+ * tran/sampler.h, tran/scale.h, tran/shape.h, 
+ * tran/sine.h, tran/siosc.h, tran/slope.h, tran/sqrt.h, 
+ * tran/tapf.h, tran/tapv.h, tran/tone.h, tran/tonev.h, 
+ * tran/upsample.h, tran/white.h, tran/stkpitshift.h, 
+ * tran/stkrev.h, tran/stkchorus.h, nyqsrc/sndfmt.h, 
  * nyqsrc/sndwrite.h */
 
 #ifndef mips
@@ -54,11 +55,22 @@ extern LVAL s_true;
 extern LVAL RSLT_sym;
 
 
-#include "sndfmt.h"
-
 #include "sndfile.h"
 
 #include "sound.h"
+
+/* xlc_snd_set_max_audio_mem -- interface to C routine snd_set_max_audio_mem */
+/**/
+LVAL xlc_snd_set_max_audio_mem(void)
+{
+    long arg1 = getfixnum(xlgafixnum());
+    long result;
+
+    xllastarg();
+    result = snd_set_max_audio_mem(arg1);
+    return cvfixnum(result);
+}
+
 
 /* xlc_snd_set_latency -- interface to C routine snd_set_latency */
 /**/
@@ -468,6 +480,22 @@ LVAL xlc_snd_inverse(void)
 }
 
 
+#include "lpanal.h"
+
+/* xlc_snd_lpanal -- interface to C routine snd_lpanal */
+/**/
+LVAL xlc_snd_lpanal(void)
+{
+    LVAL arg1 = xlgetarg();
+    long arg2 = getfixnum(xlgafixnum());
+    LVAL result;
+
+    xllastarg();
+    result = snd_lpanal(arg1, arg2);
+    return (result);
+}
+
+
 #include "multiseq.h"
 
 /* xlc_snd_multiseq -- interface to C routine snd_make_multiseq */
@@ -481,6 +509,27 @@ LVAL xlc_snd_multiseq(void)
     xllastarg();
     result = snd_make_multiseq(arg1, arg2);
     return (result);
+}
+
+
+#include "nyq-osc-server.h"
+
+#include "phasevocoder.h"
+
+/* xlc_snd_phasevocoder -- interface to C routine snd_phasevocoder */
+/**/
+LVAL xlc_snd_phasevocoder(void)
+{
+    sound_type arg1 = getsound(xlgasound());
+    sound_type arg2 = getsound(xlgasound());
+    long arg3 = getfixnum(xlgafixnum());
+    long arg4 = getfixnum(xlgafixnum());
+    long arg5 = getfixnum(xlgafixnum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_phasevocoder(arg1, arg2, arg3, arg4, arg5);
+    return cvsound(result);
 }
 
 
@@ -603,6 +652,8 @@ LVAL xlc_snd_fetch_array(void)
 }
 
 
+#include "sliderdata.h"
+
 #include "sndmax.h"
 
 /* xlc_snd_max -- interface to C routine sound_max */
@@ -701,9 +752,36 @@ LVAL xlc_snd_slider(void)
 }
 
 
-#include "sliderdata.h"
+#include "stoponzero.h"
 
-#include "sndwritepa.h"
+/* xlc_snd_stoponzero -- interface to C routine snd_stoponzero */
+/**/
+LVAL xlc_snd_stoponzero(void)
+{
+    sound_type arg1 = getsound(xlgasound());
+    sound_type result;
+
+    xllastarg();
+    result = snd_stoponzero(arg1);
+    return cvsound(result);
+}
+
+
+#include "trigger.h"
+
+/* xlc_snd_trigger -- interface to C routine snd_trigger */
+/**/
+LVAL xlc_snd_trigger(void)
+{
+    sound_type arg1 = getsound(xlgasound());
+    LVAL arg2 = xlgetarg();
+    sound_type result;
+
+    xllastarg();
+    result = snd_trigger(arg1, arg2);
+    return cvsound(result);
+}
+
 
 #include "yin.h"
 
@@ -722,59 +800,6 @@ LVAL xlc_snd_yin(void)
     return (result);
 }
 
-
-#include "nyq-osc-server.h"
-
-#include "trigger.h"
-
-/* xlc_snd_trigger -- interface to C routine snd_trigger */
-/**/
-LVAL xlc_snd_trigger(void)
-{
-    sound_type arg1 = getsound(xlgasound());
-    LVAL arg2 = xlgetarg();
-    sound_type result;
-
-    xllastarg();
-    result = snd_trigger(arg1, arg2);
-    return cvsound(result);
-}
-
-
-#include "lpanal.h"
-
-/* xlc_snd_lpanal -- interface to C routine snd_lpanal */
-/**/
-LVAL xlc_snd_lpanal(void)
-{
-    LVAL arg1 = xlgetarg();
-    long arg2 = getfixnum(xlgafixnum());
-    LVAL result;
-
-    xllastarg();
-    result = snd_lpanal(arg1, arg2);
-    return (result);
-}
-
-
-#include "phasevocoder.h"
-
-/* xlc_snd_phasevocoder -- interface to C routine snd_phasevocoder */
-/**/
-LVAL xlc_snd_phasevocoder(void)
-{
-    sound_type arg1 = getsound(xlgasound());
-    sound_type arg2 = getsound(xlgasound());
-    double arg3 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_phasevocoder(arg1, arg2, arg3);
-    return cvsound(result);
-}
-
-
-#include "pvshell.h"
 
 #include "abs.h"
 
@@ -842,6 +867,24 @@ LVAL xlc_snd_alpasscv(void)
 }
 
 
+#include "alpassvc.h"
+
+/* xlc_snd_alpassvc -- interface to C routine snd_alpassvc */
+/**/
+LVAL xlc_snd_alpassvc(void)
+{
+    sound_type arg1 = getsound(xlgasound());
+    sound_type arg2 = getsound(xlgasound());
+    double arg3 = testarg2(xlgaanynum());
+    double arg4 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_alpassvc(arg1, arg2, arg3, arg4);
+    return cvsound(result);
+}
+
+
 #include "alpassvv.h"
 
 /* xlc_snd_alpassvv -- interface to C routine snd_alpassvv */
@@ -899,24 +942,6 @@ LVAL xlc_snd_areson(void)
 }
 
 
-#include "aresonvc.h"
-
-/* xlc_snd_aresonvc -- interface to C routine snd_aresonvc */
-/**/
-LVAL xlc_snd_aresonvc(void)
-{
-    sound_type arg1 = getsound(xlgasound());
-    sound_type arg2 = getsound(xlgasound());
-    double arg3 = testarg2(xlgaanynum());
-    long arg4 = getfixnum(xlgafixnum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_aresonvc(arg1, arg2, arg3, arg4);
-    return cvsound(result);
-}
-
-
 #include "aresoncv.h"
 
 /* xlc_snd_aresoncv -- interface to C routine snd_aresoncv */
@@ -931,6 +956,24 @@ LVAL xlc_snd_aresoncv(void)
 
     xllastarg();
     result = snd_aresoncv(arg1, arg2, arg3, arg4);
+    return cvsound(result);
+}
+
+
+#include "aresonvc.h"
+
+/* xlc_snd_aresonvc -- interface to C routine snd_aresonvc */
+/**/
+LVAL xlc_snd_aresonvc(void)
+{
+    sound_type arg1 = getsound(xlgasound());
+    sound_type arg2 = getsound(xlgasound());
+    double arg3 = testarg2(xlgaanynum());
+    long arg4 = getfixnum(xlgafixnum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_aresonvc(arg1, arg2, arg3, arg4);
     return cvsound(result);
 }
 
@@ -1177,21 +1220,39 @@ LVAL xlc_snd_exp(void)
 }
 
 
-#include "follow.h"
+#include "fmfb.h"
 
-/* xlc_snd_follow -- interface to C routine snd_follow */
+/* xlc_snd_fmfb -- interface to C routine snd_fmfb */
 /**/
-LVAL xlc_snd_follow(void)
+LVAL xlc_snd_fmfb(void)
 {
-    sound_type arg1 = getsound(xlgasound());
+    double arg1 = testarg2(xlgaanynum());
     double arg2 = testarg2(xlgaanynum());
     double arg3 = testarg2(xlgaanynum());
     double arg4 = testarg2(xlgaanynum());
-    long arg5 = getfixnum(xlgafixnum());
+    double arg5 = testarg2(xlgaanynum());
     sound_type result;
 
     xllastarg();
-    result = snd_follow(arg1, arg2, arg3, arg4, arg5);
+    result = snd_fmfb(arg1, arg2, arg3, arg4, arg5);
+    return cvsound(result);
+}
+
+
+#include "fmfbv.h"
+
+/* xlc_snd_fmfbv -- interface to C routine snd_fmfbv */
+/**/
+LVAL xlc_snd_fmfbv(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    double arg2 = testarg2(xlgaanynum());
+    double arg3 = testarg2(xlgaanynum());
+    sound_type arg4 = getsound(xlgasound());
+    sound_type result;
+
+    xllastarg();
+    result = snd_fmfbv(arg1, arg2, arg3, arg4);
     return cvsound(result);
 }
 
@@ -1217,19 +1278,21 @@ LVAL xlc_snd_fmosc(void)
 }
 
 
-#include "fromobject.h"
+#include "follow.h"
 
-/* xlc_snd_fromobject -- interface to C routine snd_fromobject */
+/* xlc_snd_follow -- interface to C routine snd_follow */
 /**/
-LVAL xlc_snd_fromobject(void)
+LVAL xlc_snd_follow(void)
 {
-    double arg1 = testarg2(xlgaanynum());
+    sound_type arg1 = getsound(xlgasound());
     double arg2 = testarg2(xlgaanynum());
-    LVAL arg3 = xlgetarg();
+    double arg3 = testarg2(xlgaanynum());
+    double arg4 = testarg2(xlgaanynum());
+    long arg5 = getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
-    result = snd_fromobject(arg1, arg2, arg3);
+    result = snd_follow(arg1, arg2, arg3, arg4, arg5);
     return cvsound(result);
 }
 
@@ -1247,6 +1310,23 @@ LVAL xlc_snd_fromarraystream(void)
 
     xllastarg();
     result = snd_fromarraystream(arg1, arg2, arg3);
+    return cvsound(result);
+}
+
+
+#include "fromobject.h"
+
+/* xlc_snd_fromobject -- interface to C routine snd_fromobject */
+/**/
+LVAL xlc_snd_fromobject(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    double arg2 = testarg2(xlgaanynum());
+    LVAL arg3 = xlgetarg();
+    sound_type result;
+
+    xllastarg();
+    result = snd_fromobject(arg1, arg2, arg3);
     return cvsound(result);
 }
 
@@ -1286,6 +1366,59 @@ LVAL xlc_snd_ifft(void)
 
     xllastarg();
     result = snd_ifft(arg1, arg2, arg3, arg4, arg5);
+    return cvsound(result);
+}
+
+
+#include "instrbanded.h"
+
+/* xlc_snd_bandedwg -- interface to C routine snd_bandedwg */
+/**/
+LVAL xlc_snd_bandedwg(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    sound_type arg2 = getsound(xlgasound());
+    long arg3 = getfixnum(xlgafixnum());
+    double arg4 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_bandedwg(arg1, arg2, arg3, arg4);
+    return cvsound(result);
+}
+
+
+#include "instrbow.h"
+
+/* xlc_snd_bowed -- interface to C routine snd_bowed */
+/**/
+LVAL xlc_snd_bowed(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    sound_type arg2 = getsound(xlgasound());
+    double arg3 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_bowed(arg1, arg2, arg3);
+    return cvsound(result);
+}
+
+
+#include "instrbowedfreq.h"
+
+/* xlc_snd_bowed_freq -- interface to C routine snd_bowed_freq */
+/**/
+LVAL xlc_snd_bowed_freq(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    sound_type arg2 = getsound(xlgasound());
+    sound_type arg3 = getsound(xlgasound());
+    double arg4 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_bowed_freq(arg1, arg2, arg3, arg4);
     return cvsound(result);
 }
 
@@ -1347,6 +1480,102 @@ LVAL xlc_snd_clarinet_freq(void)
 }
 
 
+#include "instrflute.h"
+
+/* xlc_snd_flute -- interface to C routine snd_flute */
+/**/
+LVAL xlc_snd_flute(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    sound_type arg2 = getsound(xlgasound());
+    double arg3 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_flute(arg1, arg2, arg3);
+    return cvsound(result);
+}
+
+
+#include "instrfluteall.h"
+
+/* xlc_snd_flute_all -- interface to C routine snd_flute_all */
+/**/
+LVAL xlc_snd_flute_all(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    sound_type arg2 = getsound(xlgasound());
+    sound_type arg3 = getsound(xlgasound());
+    double arg4 = testarg2(xlgaanynum());
+    double arg5 = testarg2(xlgaanynum());
+    sound_type arg6 = getsound(xlgasound());
+    sound_type arg7 = getsound(xlgasound());
+    double arg8 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_flute_all(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+    return cvsound(result);
+}
+
+
+#include "instrflutefreq.h"
+
+/* xlc_snd_flute_freq -- interface to C routine snd_flute_freq */
+/**/
+LVAL xlc_snd_flute_freq(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    sound_type arg2 = getsound(xlgasound());
+    sound_type arg3 = getsound(xlgasound());
+    double arg4 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_flute_freq(arg1, arg2, arg3, arg4);
+    return cvsound(result);
+}
+
+
+#include "instrmandolin.h"
+
+/* xlc_snd_mandolin -- interface to C routine snd_mandolin */
+/**/
+LVAL xlc_snd_mandolin(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    double arg2 = testarg2(xlgaanynum());
+    double arg3 = testarg2(xlgaanynum());
+    double arg4 = testarg2(xlgaanynum());
+    double arg5 = testarg2(xlgaanynum());
+    double arg6 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_mandolin(arg1, arg2, arg3, arg4, arg5, arg6);
+    return cvsound(result);
+}
+
+
+#include "instrmodalbar.h"
+
+/* xlc_snd_modalbar -- interface to C routine snd_modalbar */
+/**/
+LVAL xlc_snd_modalbar(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    double arg2 = testarg2(xlgaanynum());
+    long arg3 = getfixnum(xlgafixnum());
+    double arg4 = testarg2(xlgaanynum());
+    double arg5 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_modalbar(arg1, arg2, arg3, arg4, arg5);
+    return cvsound(result);
+}
+
+
 #include "instrsax.h"
 
 /* xlc_snd_sax -- interface to C routine snd_sax */
@@ -1402,6 +1631,24 @@ LVAL xlc_snd_sax_freq(void)
 
     xllastarg();
     result = snd_sax_freq(arg1, arg2, arg3, arg4);
+    return cvsound(result);
+}
+
+
+#include "instrsitar.h"
+
+/* xlc_snd_sitar -- interface to C routine snd_sitar */
+/**/
+LVAL xlc_snd_sitar(void)
+{
+    double arg1 = testarg2(xlgaanynum());
+    double arg2 = testarg2(xlgaanynum());
+    double arg3 = testarg2(xlgaanynum());
+    double arg4 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_sitar(arg1, arg2, arg3, arg4);
     return cvsound(result);
 }
 
@@ -1641,24 +1888,6 @@ LVAL xlc_snd_reson(void)
 }
 
 
-#include "resonvc.h"
-
-/* xlc_snd_resonvc -- interface to C routine snd_resonvc */
-/**/
-LVAL xlc_snd_resonvc(void)
-{
-    sound_type arg1 = getsound(xlgasound());
-    sound_type arg2 = getsound(xlgasound());
-    double arg3 = testarg2(xlgaanynum());
-    long arg4 = getfixnum(xlgafixnum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_resonvc(arg1, arg2, arg3, arg4);
-    return cvsound(result);
-}
-
-
 #include "resoncv.h"
 
 /* xlc_snd_resoncv -- interface to C routine snd_resoncv */
@@ -1673,6 +1902,24 @@ LVAL xlc_snd_resoncv(void)
 
     xllastarg();
     result = snd_resoncv(arg1, arg2, arg3, arg4);
+    return cvsound(result);
+}
+
+
+#include "resonvc.h"
+
+/* xlc_snd_resonvc -- interface to C routine snd_resonvc */
+/**/
+LVAL xlc_snd_resonvc(void)
+{
+    sound_type arg1 = getsound(xlgasound());
+    sound_type arg2 = getsound(xlgasound());
+    double arg3 = testarg2(xlgaanynum());
+    long arg4 = getfixnum(xlgafixnum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_resonvc(arg1, arg2, arg3, arg4);
     return cvsound(result);
 }
 
@@ -1917,6 +2164,23 @@ LVAL xlc_snd_white(void)
 }
 
 
+#include "stkpitshift.h"
+
+/* xlc_snd_stkpitshift -- interface to C routine snd_stkpitshift */
+/**/
+LVAL xlc_snd_stkpitshift(void)
+{
+    sound_type arg1 = getsound(xlgasound());
+    double arg2 = testarg2(xlgaanynum());
+    double arg3 = testarg2(xlgaanynum());
+    sound_type result;
+
+    xllastarg();
+    result = snd_stkpitshift(arg1, arg2, arg3);
+    return cvsound(result);
+}
+
+
 #include "stkrev.h"
 
 /* xlc_snd_stkrev -- interface to C routine snd_stkrev */
@@ -1931,23 +2195,6 @@ LVAL xlc_snd_stkrev(void)
 
     xllastarg();
     result = snd_stkrev(arg1, arg2, arg3, arg4);
-    return cvsound(result);
-}
-
-
-#include "stkpitshift.h"
-
-/* xlc_snd_stkpitshift -- interface to C routine snd_stkpitshift */
-/**/
-LVAL xlc_snd_stkpitshift(void)
-{
-    sound_type arg1 = getsound(xlgasound());
-    double arg2 = testarg2(xlgaanynum());
-    double arg3 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_stkpitshift(arg1, arg2, arg3);
     return cvsound(result);
 }
 
@@ -1971,209 +2218,7 @@ LVAL xlc_snd_stkchorus(void)
 }
 
 
-#include "instrbow.h"
-
-/* xlc_snd_bowed -- interface to C routine snd_bowed */
-/**/
-LVAL xlc_snd_bowed(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    sound_type arg2 = getsound(xlgasound());
-    double arg3 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_bowed(arg1, arg2, arg3);
-    return cvsound(result);
-}
-
-
-#include "instrbowedfreq.h"
-
-/* xlc_snd_bowed_freq -- interface to C routine snd_bowed_freq */
-/**/
-LVAL xlc_snd_bowed_freq(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    sound_type arg2 = getsound(xlgasound());
-    sound_type arg3 = getsound(xlgasound());
-    double arg4 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_bowed_freq(arg1, arg2, arg3, arg4);
-    return cvsound(result);
-}
-
-
-#include "instrbanded.h"
-
-/* xlc_snd_bandedwg -- interface to C routine snd_bandedwg */
-/**/
-LVAL xlc_snd_bandedwg(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    sound_type arg2 = getsound(xlgasound());
-    long arg3 = getfixnum(xlgafixnum());
-    double arg4 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_bandedwg(arg1, arg2, arg3, arg4);
-    return cvsound(result);
-}
-
-
-#include "instrmandolin.h"
-
-/* xlc_snd_mandolin -- interface to C routine snd_mandolin */
-/**/
-LVAL xlc_snd_mandolin(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    double arg2 = testarg2(xlgaanynum());
-    double arg3 = testarg2(xlgaanynum());
-    double arg4 = testarg2(xlgaanynum());
-    double arg5 = testarg2(xlgaanynum());
-    double arg6 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_mandolin(arg1, arg2, arg3, arg4, arg5, arg6);
-    return cvsound(result);
-}
-
-
-#include "instrsitar.h"
-
-/* xlc_snd_sitar -- interface to C routine snd_sitar */
-/**/
-LVAL xlc_snd_sitar(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    double arg2 = testarg2(xlgaanynum());
-    double arg3 = testarg2(xlgaanynum());
-    double arg4 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_sitar(arg1, arg2, arg3, arg4);
-    return cvsound(result);
-}
-
-
-#include "instrmodalbar.h"
-
-/* xlc_snd_modalbar -- interface to C routine snd_modalbar */
-/**/
-LVAL xlc_snd_modalbar(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    double arg2 = testarg2(xlgaanynum());
-    long arg3 = getfixnum(xlgafixnum());
-    double arg4 = testarg2(xlgaanynum());
-    double arg5 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_modalbar(arg1, arg2, arg3, arg4, arg5);
-    return cvsound(result);
-}
-
-
-#include "instrflute.h"
-
-/* xlc_snd_flute -- interface to C routine snd_flute */
-/**/
-LVAL xlc_snd_flute(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    sound_type arg2 = getsound(xlgasound());
-    double arg3 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_flute(arg1, arg2, arg3);
-    return cvsound(result);
-}
-
-
-#include "instrflutefreq.h"
-
-/* xlc_snd_flute_freq -- interface to C routine snd_flute_freq */
-/**/
-LVAL xlc_snd_flute_freq(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    sound_type arg2 = getsound(xlgasound());
-    sound_type arg3 = getsound(xlgasound());
-    double arg4 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_flute_freq(arg1, arg2, arg3, arg4);
-    return cvsound(result);
-}
-
-
-#include "instrfluteall.h"
-
-/* xlc_snd_flute_all -- interface to C routine snd_flute_all */
-/**/
-LVAL xlc_snd_flute_all(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    sound_type arg2 = getsound(xlgasound());
-    sound_type arg3 = getsound(xlgasound());
-    double arg4 = testarg2(xlgaanynum());
-    double arg5 = testarg2(xlgaanynum());
-    sound_type arg6 = getsound(xlgasound());
-    sound_type arg7 = getsound(xlgasound());
-    double arg8 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_flute_all(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-    return cvsound(result);
-}
-
-
-#include "fmfb.h"
-
-/* xlc_snd_fmfb -- interface to C routine snd_fmfb */
-/**/
-LVAL xlc_snd_fmfb(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    double arg2 = testarg2(xlgaanynum());
-    double arg3 = testarg2(xlgaanynum());
-    double arg4 = testarg2(xlgaanynum());
-    double arg5 = testarg2(xlgaanynum());
-    sound_type result;
-
-    xllastarg();
-    result = snd_fmfb(arg1, arg2, arg3, arg4, arg5);
-    return cvsound(result);
-}
-
-
-#include "fmfbv.h"
-
-/* xlc_snd_fmfbv -- interface to C routine snd_fmfbv */
-/**/
-LVAL xlc_snd_fmfbv(void)
-{
-    double arg1 = testarg2(xlgaanynum());
-    double arg2 = testarg2(xlgaanynum());
-    double arg3 = testarg2(xlgaanynum());
-    sound_type arg4 = getsound(xlgasound());
-    sound_type result;
-
-    xllastarg();
-    result = snd_fmfbv(arg1, arg2, arg3, arg4);
-    return cvsound(result);
-}
-
+#include "sndfmt.h"
 
 #include "sndwrite.h"
 

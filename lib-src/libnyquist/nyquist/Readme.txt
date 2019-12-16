@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.09
-28 Dec 2014
+README file for Nyquist Version 3.15
+11 Sep 2018
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -8,9 +8,17 @@ WEB SITE: http://www.cs.cmu.edu/~music/nyquist
 INSTALLING NYQUIST
 ====================
 You can download pre-compiled versions for Windows and OS X.
+After downloading, please see
+      +---------------------------------------+
+      | http://www.cs.cmu.edu/~music/nyquist/ |
+      +---------------------------------------+
+for additional information, or look for one of
+      - nyquist/doc/readme-win.txt
+      - nyquist/doc/readme-mac.txt
+      - nyquist/doc/readme-linux.txt
 
-You can compile Nyquist from sources for Windows, OS X, linux, and
-other versions of Unix. For details, see one of these files:
+You can compile Nyquist from sources for Windows, OS X, linux,
+and other versions of Unix. For details, see one of these files:
  - sys/win/README.txt
  - sys/mac/README.txt
  - sys/unix/README.txt
@@ -19,38 +27,68 @@ other versions of Unix. For details, see one of these files:
 IMPLEMENTATION STATUS
 =====================
 
+Version 3.15 provides:
+    Fix to retain selected nyquist directory
+    Fix for NyquistIDE in paths with spaces
+    Extension list file can be selected in Preferences for testing
+Version 3.14 provides:
+    New runtime configuration: a nyquist directory in user's home
+        directory has all documentation, libraries, extensions,
+        and only executables are "hidden" and read-only.
+Version 3.13 provides:
+    Extension Manager and many examples moved to extensions
+Version 3.12 provides:
+    Fix for Help:Manual and links to docs on OS X 12 (I hope)
+    Fix for reverb function (3.11 broke it)    
+    Better type checking for OSC table parameter
+Version 3.11e provides:
+    Works again as 64-bit executable on Windows 10
+Version 3.11b provides:
+    fix to FFT, apparently only affects only 64-bit Windows
+    improved formatting of reference manual (PDF) and minor
+        documentation changes
+Version 3.11 provides:
+    Significantly more parameter checking and error reporting for
+        Nyquist primitives.
+Version 3.10 provides:
+    phasevocoder -- new phase vocoder function
+    pv-pitch-time -- phase vocoder + resampling for independent pitch
+        and speed control
+    convolve -- new fast convolution
+    interactive control of sounds with make-slider-panel,
+        close-slider-panel, make-slider, make-button, slider,
+        lpslider, get-slider-value, snd-slider, stop-on-zero, trigger,
+        snd-stop-on-zero, and snd-trigger functions
+    bug fix to snd-down (called by force-srate) that could crash Nyquist
+    adjustable upper limit on memory allocated for sounds, see
+        snd-set-max-audio-mem function
 Version 3.09 provides:
     Various bug fixes
     OS X version is significantly faster
     Security features added to limit CPU, memory, file access (default
         is still unrestricted; this feature is to protect servers)
-
 Version 3.08 provides:
     NyquistIDE opens documentation properly on default browser
     NyquistIDE forcefully terminates nyquist process on exit if needed
     bug fix for mixed sample rate signal handling, affects many primitives
     timed-seq and score-play avoid stack overflow on finely spaced events
     sampler() primitive does error checking to avoid infinite loop
-    
 Version 3.07 provides:
     Bug fixes in NyquistIDE Envelope Editor
     NyquistIDE installs symbolic links to lib and demos
       directories from nyquist directory (where documentation
       is kept) so these folders are not hidden in the app bundle.
     Bug fix in quantize and snd-quantize functions. 
-
 Version 3.06 provides:
     64-bit architecture support
     Access to OGG and FLAC file formats
     Updates for MSVC++2010, VS2012, XCode 4.5
     This is a deadline-driven release. Expect an update soon.
-
 Version 3.05 provides:
     New "UPIC Editor" window in NyquistIDE
     Fix to escape backslashes in default windows directory
     Fix to other problems with Preferences
     Arpeggiator example in nyquist/demos
-
 Version 3.04 provides:
     Updates to libraries, including liblo and PortAudio
     Documentation uses both syntax SAL and Lisp syntax
@@ -84,32 +122,32 @@ Version 2.38 provides:
     bug fixes in Equalizer editor
     additional documentation for demos/plight/drums.lsp
     option click or right click on completion list to get help
-    manual can be displayed in an internal window in jNyqIDE
+    manual can be displayed in an internal window in NyquistIDE
 Version 2.37 provides:
     fix for byte order on Mac PPC that prevented pianosyn.lsp from loading
 Version 2.36 provides:
-    cross-platform browser launching in jNyqIDE
-    fix search path set by jNyqIDE (OS X-related bug introduced in 2.35)
+    cross-platform browser launching in NyquistIDE
+    fix search path set by NyquistIDE (OS X-related bug introduced in 2.35)
     fix bug in slider update code on OS X
 Version 2.35 provides:
     fix for Open Sound Control under Windows/jNyqIDE
-    other minor jNyqIDE fixes    
+    other minor NyquistIDE fixes    
 Version 2.34 provides:
-    fix to ^U (send selection to Nyquist) in jNyqIDE
+    fix to ^U (send selection to Nyquist) in NyquistIDE
     default sound file path for Mac OS X is /tmp
     Nyquist exits when EOF detected -- try to make orphans abort
 Version 2.33 provides:
     additional documentation for Open Sound Control
         interface and utility programs
 Version 2.32 provides:
-    envelope editor in jNyqIDE
-    EQ editor in jNyqIDE
-    score editor in jNyqIDE
+    envelope editor in NyquistIDE
+    EQ editor in NyquistIDE
+    score editor in NyquistIDE
     slider support in Nyquist
     OSC (Open Sound Control) interface
     OSC test program and serial-to-OSC program
     drum machine (as separate download)
-    jNyqIDE has pop-up menus and per-file menu bars
+    NyquistIDE has pop-up menus and per-file menu bars
 Version 2.31 provides:
     new compositional algorithm support in xm.lsp
     many bug fixes

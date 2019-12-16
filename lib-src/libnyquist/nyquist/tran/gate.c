@@ -256,12 +256,12 @@ void gate_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from signal up to final_time for this block of zeros */
-    while ((round((final_time - susp->signal->t0) * susp->signal->sr)) >=
+    while ((ROUNDBIG((final_time - susp->signal->t0) * susp->signal->sr)) >=
 	   susp->signal->current)
 	susp_get_samples(signal, signal_ptr, signal_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->signal->t0) * susp->signal->sr -
+    n = ROUNDBIG((final_time - susp->signal->t0) * susp->signal->sr -
          (susp->signal->current - susp->signal_cnt));
     susp->signal_ptr += n;
     susp_took(signal_cnt, n);
@@ -320,7 +320,7 @@ sound_type snd_make_gate(sound_type signal, time_type lookahead, double risetime
     susp->start_fall = 0;
     susp->start_rise = 0;
     susp->stop_count = 0;
-    susp->delay_len = max(1, round(signal->sr * lookahead));
+    susp->delay_len = max(1, ROUND32(signal->sr * lookahead));
     susp->state = ST_OFF;
     susp->value = susp->floor;
     susp->susp.fetch = gate_n_fetch;

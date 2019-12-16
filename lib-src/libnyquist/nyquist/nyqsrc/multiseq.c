@@ -360,7 +360,7 @@ void multiseq_convert(multiseq_type ms)
             susp->s2 = snd_make_normalize(susp->s2);
         }
 
-        sother_start = ROUND((susp->s2->t0 - susp->susp.t0) * susp->s2->sr);
+        sother_start = ROUNDBIG((susp->s2->t0 - susp->susp.t0) * susp->s2->sr);
 D	    nyquist_printf("sother_start computed for %p: %d\n",
                       susp, (int)sother_start);
         if (sother_start > susp->susp.current) {

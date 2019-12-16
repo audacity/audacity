@@ -11,8 +11,8 @@
        ("sample_type *" "table_ptr" "susp->the_table->samples")
        ("double" "phase" "compute_phase(phase, step, (long) susp->table_len,
         s->sr, sr, hz, &susp->ph_incr);
-    s_fm->scale *= hz != 0 ? (sample_type) (susp->ph_incr / hz)
-                                                   : s->sr / (sr * step_to_hz(step))") ) ; cancel 0/0
+    s_fm->scale *= (sample_type) (hz != 0 ? (susp->ph_incr / hz)
+                                          : s->sr / (sr * step_to_hz(step)))") ) ; cancel 0/0
 
 (ALWAYS-SCALE s_fm)
 (STEP-FUNCTION s_fm)

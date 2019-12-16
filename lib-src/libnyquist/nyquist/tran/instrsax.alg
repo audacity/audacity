@@ -1,7 +1,7 @@
 (INSTRSAX-ALG
 (NAME "sax")
 (ARGUMENTS ("double" "freq") ("sound_type" "breath_env") ("rate_type" "sr"))
-(STATE ("struct instr *" "sax" "initInstrument(SAXOFONY, round(sr));
+(STATE ("struct instr *" "sax" "initInstrument(SAXOFONY, ROUND32(sr));
     controlChange(susp->sax, 1, 0.0);")
        ("int" "temp_ret_value" "noteOn(susp->sax, freq, 1.0)")
        ("float" "breath_scale" "breath_env->scale * SAX_CONTROL_CHANGE_CONST"))

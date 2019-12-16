@@ -12,9 +12,10 @@ extern int moxcdone;
 void    catchup(void);
 void    callallcancel(void);
 #ifdef DOTS_FOR_ARGS
-void    cause(delay_type delay, ...);
-void    causepri(delay_type delay, int pri, ...);
+void    cause(delay_type delay, void (*fn)(call_args_type), call_args_type p);
+void    causepri(delay_type delay, int pri, void (*fn)(call_args_type), call_args_type p);
 #else
+THIS CODE IS OBSOLETE
 void    cause();
 void	causepri();
 #endif

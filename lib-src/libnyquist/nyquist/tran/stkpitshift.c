@@ -127,12 +127,12 @@ void stkpitshift_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s1 up to final_time for this block of zeros */
-    while ((round((final_time - susp->s1->t0) * susp->s1->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr)) >=
 	   susp->s1->current)
 	susp_get_samples(s1, s1_ptr, s1_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s1->t0) * susp->s1->sr -
+    n = ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr -
          (susp->s1->current - susp->s1_cnt));
     susp->s1_ptr += n;
     susp_took(s1_cnt, n);
@@ -174,7 +174,7 @@ sound_type snd_make_stkpitshift(sound_type s1, double shift, double mix)
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, stkpitshift_susp_node, "snd_make_stkpitshift");
-    susp->mych = initStkPitShift(shift, round(sr));
+    susp->mych = initStkPitShift(shift, ROUND32(sr));
 stkEffectSetMix(susp->mych, mix);
     susp->susp.fetch = stkpitshift_s_fetch;
     susp->terminate_cnt = UNKNOWN;

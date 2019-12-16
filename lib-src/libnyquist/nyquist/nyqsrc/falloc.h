@@ -98,7 +98,7 @@ void falloc_gc();
 void falloc_init(void);
 void new_pool(void);
 void new_spool(void);
-sample_block_type find_sample_block(void);
+void find_sample_block(sample_block_type *sp);
 
 char *get_from_pool(size_t siz);
 
@@ -121,16 +121,13 @@ char *get_from_pool(size_t siz);
 
 #define BLOCKS_PER_GC 100
 
-#define falloc_sample_block(sp, who) {  \
-    if (!Qempty(sample_block_free)) \
-        Qget(sample_block_free, sample_block_type, sp) \
-    else sp = find_sample_block(); \
-    /* sample_block_test(sp, "falloc_sample_block"); */ \
-    /* printf("[%x] ", sp); */ \
-    DBG_MEM_ALLOCATED(sp, who); \
-    sp->refcnt = 1; \
-    sample_block_used++; \
-}
+/* There used to be a lot of code in this macro. I moved it to
+ * find_sample_block, but kept the macro mainly in order to pass sp
+ * by reference.
+ */
+#define falloc_sample_block(sp, who) { \
+    find_sample_block(&sp); \
+    DBG_MEM_ALLOCATED(sp, who); }
 
 
 #define ffree_sample_block(sp, who) { \

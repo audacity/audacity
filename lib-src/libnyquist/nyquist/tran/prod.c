@@ -380,20 +380,20 @@ void prod_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s1 up to final_time for this block of zeros */
-    while ((round((final_time - susp->s1->t0) * susp->s1->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr)) >=
 	   susp->s1->current)
 	susp_get_samples(s1, s1_ptr, s1_cnt);
     /* fetch samples from s2 up to final_time for this block of zeros */
-    while ((round((final_time - susp->s2->t0) * susp->s2->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s2->t0) * susp->s2->sr)) >=
 	   susp->s2->current)
 	susp_get_samples(s2, s2_ptr, s2_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s1->t0) * susp->s1->sr -
+    n = ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr -
          (susp->s1->current - susp->s1_cnt));
     susp->s1_ptr += n;
     susp_took(s1_cnt, n);
-    n = round((final_time - susp->s2->t0) * susp->s2->sr -
+    n = ROUNDBIG((final_time - susp->s2->t0) * susp->s2->sr -
          (susp->s2->current - susp->s2_cnt));
     susp->s2_ptr += n;
     susp_took(s2_cnt, n);

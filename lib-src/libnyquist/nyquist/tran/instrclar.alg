@@ -1,7 +1,7 @@
 (INSTRCLAR-ALG
 (NAME "clarinet")
 (ARGUMENTS ("double" "freq") ("sound_type" "breath_env") ("rate_type" "sr"))
-(STATE ("struct instr *" "clar" "initInstrument(CLARINET, round(sr));
+(STATE ("struct instr *" "clar" "initInstrument(CLARINET, ROUND32(sr));
     controlChange(susp->clar, 1, 0.0);")
        ("int" "temp_ret_value" "noteOn(susp->clar, freq, 1.0)")
        ("float" "breath_scale" "breath_env->scale * CLAR_CONTROL_CHANGE_CONST"))

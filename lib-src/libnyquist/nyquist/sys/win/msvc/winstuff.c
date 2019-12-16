@@ -45,6 +45,10 @@ continuing to check for Windows process messages.
 #include <signal.h>   /* Added by Dannneberg, Apr 2004 */
 #include "exitpa.h"   /* Added by Dannneberg, Apr 2004 */
 
+#if OSC
+#include "nyq-osc-server.h"
+#endif
+
 
 const char os_pathchar = '\\';
 const char os_sepchar = ',';
@@ -195,7 +199,7 @@ void start_input_thread()
     }
 }
 
-void osinit (char *banner) 
+void osinit(const char *banner) 
 {
     printf("%s\n", banner);
     if (_isatty( _fileno( stdin ) ) ){
@@ -217,29 +221,29 @@ void osinit (char *banner)
     }
 }
 
-FILE *osaopen (char *name, char *mode) {
+FILE *osaopen(const char *name, const char *mode) {
     FILE *fp = NULL;
 #ifdef SAFE_NYQUIST
     if (ok_to_open(name, mode))
 #endif
-      fp = fopen (name, mode);
+      fp = fopen(name, mode);
     return fp;
 }
 
-FILE *osbopen (char *name, char *mode) {
+FILE *osbopen(const char *name, const char *mode) {
     FILE *fp = NULL;
     char nmode[4];
     strcpy (nmode, mode); strcat (nmode, "b");
 #ifdef SAFE_NYQUIST
-    if (ok_to_open(name, mode))
+    if (ok_to_open(name, nmode))
 #endif
-      fp = fopen (name, mode);
+      fp = fopen (name, nmode);
     return fp;
 }
 
-int osclose (FILE *fp) { return (fclose (fp)); }
-int osaputc (int ch, FILE *fp) { return (putc (ch, fp)); }
-int osbputc (int ch, FILE *fp) { return (putc (ch, fp)); }
+int osclose(FILE *fp) { return (fclose (fp)); }
+int osaputc(int ch, FILE *fp) { return (putc (ch, fp)); }
+int osbputc(int ch, FILE *fp) { return (putc (ch, fp)); }
 void osoutflush(FILE *fp) { fflush(fp); }
 
 /* osagetc - get a character from an ascii file */
@@ -251,7 +255,7 @@ int osagetc(fp)
 
 extern int abort_flag;
 extern int redirect_flag;			//Added by Ning Hu	Apr.2001
-int ostgetc (void) 
+int ostgetc(void) 
 {
     int c;
 	NEED_INPUT;
@@ -275,7 +279,7 @@ int ostgetc (void)
 }
 
 
-void ostputc (int ch) {
+void ostputc(int ch) {
 //	macputc (ch);
     putchar(ch);			// console
 
@@ -289,14 +293,14 @@ void ostoutflush()
 }
 
 
-void osflush (void) {
+void osflush(void) {
     lineptr = linebuf;
     numChars = 0;
     lposition = 0;
 }
 
 
-void oscheck (void) {
+void oscheck(void) {
     MSG lpMsg;
 
 #if OSC
@@ -328,7 +332,7 @@ void oscheck (void) {
         osflush();
         xlbreak("BREAK", s_unbound);
     }
-    run_time++;
+
     if (run_time % 30 == 0) {
         // maybe we should call fflush here like in Unix; I'm not sure if this is 
 	// a bug or it is not necessary for Windows - RBD
@@ -344,9 +348,9 @@ void oscheck (void) {
 }
 //Update end
 
-void oserror (char *msg) {
+void oserror(const char *msg) {
     char line[100], *p;
-    sprintf (line,"error: %s\n",msg);
+    sprintf (line, "error: %s\n", msg);
     for (p = line; *p != '\0'; ++p) ostputc (*p);
 }
 
@@ -358,7 +362,7 @@ void osfinish(void) {
 //	ExitToShell ();
 }
 
-int renamebackup (char *filename) { return 0; }
+int renamebackup(char *filename) { return 0; }
 
 
 
@@ -373,7 +377,7 @@ static int osdir_list_status = OSDIR_LIST_READY;
 static char osdir_path[OSDIR_MAX_PATH];
 
 // osdir_list_start -- prepare to list a directory
-int osdir_list_start(char *path)
+int osdir_list_start(const char *path)
 {
     if (!ok_to_open(path, "r")) return FALSE;
     if (strlen(path) >= OSDIR_MAX_PATH - 2) {

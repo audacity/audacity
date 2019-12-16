@@ -2,7 +2,7 @@
 (NAME "sine")
 (ARGUMENTS ("time_type" "t0") ("double" "hz") ("rate_type" "sr") ("time_type" "d"))
 (STATE ("long" "phase" "0")
-       ("long" "ph_incr" "round(((hz * SINE_TABLE_LEN) * (1 << SINE_TABLE_SHIFT) / sr))"))
+       ("long" "ph_incr" "ROUND32(((hz * SINE_TABLE_LEN) * (1 << SINE_TABLE_SHIFT) / sr))"))
 (TERMINATE (AFTER "d"))
 (INNER-LOOP "output = sine_table[phase >> SINE_TABLE_SHIFT];
             phase += ph_incr;

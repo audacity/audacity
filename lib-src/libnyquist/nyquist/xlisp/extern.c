@@ -57,7 +57,7 @@ struct xtype_desc_struct desc_table[NTYPES];
 xtype_desc create_desc(
   char *type_name,	/* the type string name */
   void (*fm)(void*),		/* method to free instances of the type */
-  void (*pm)(void*, void*),		/* method to print instances of the type */
+  void (*pm)(LVAL, void*),		/* method to print instances of the type */
   void (*sm)(FILE*, void*),		/* method to save instances of the type */
   unsigned char * (*rm)(FILE*), /* method to restore instances of the type */
   void (*mm)(void*))		/* method to mark instances of the type for GC */

@@ -1,7 +1,7 @@
 /* pvshell.h -- a generic Nyquist primitive, esp. for phase vocoder */
 
-/* how many doubles to provide for miscellaneous state info */
-#define PVSHELL_STATE_MAX 8
+/* how many bytes to provide for miscellaneous state info */
+#define PVSHELL_STATE_MAX 256
 
 /* define some bits to return conditions */
 #define PVSHELL_FLAG_TERMINATE 4
@@ -27,7 +27,9 @@
 struct pvshell_struct;
 
 typedef long (*h_fn_type)(struct pvshell_struct *susp, 
-                          sample_block_values_type out, long *n);
+                          sample_block_values_type out, long *n,
+                          long sample_count);
+typedef void (*pvs_free_fn_type)(struct pvshell_struct *susp);
 
 typedef struct pvshell_struct {
     sound_type f;
@@ -41,10 +43,11 @@ typedef struct pvshell_struct {
     long flags; /* for terminated and logically stopped flags */
 
     // state is extra storage for whatever you like
-    double state[PVSHELL_STATE_MAX];
+    char state[PVSHELL_STATE_MAX];
     
     // h is a function that computes sound from f, g, x, y, state
     h_fn_type h;
+    pvs_free_fn_type free_fn;
 } pvshell_node, *pvshell_type;    
 
 
@@ -70,10 +73,12 @@ typedef struct pvshell_struct {
 long pvshell_test_f(pvshell_type susp);
 long pvshell_test_g(pvshell_type susp);
 #define PVSHELL_TEST_F(susp) ((susp)->f_cnt == 0 ? pvshell_test_f(susp) : 0)
-#define PVSHELL_FETCH_F(susp) ((susp)->f_cnt--, (*(susp)->f_ptr++))
+#define PVSHELL_FETCH_F(susp) \
+    ((susp)->f->scale * ((susp)->f_cnt--, *((susp)->f_ptr++)))
 
 #define PVSHELL_TEST_G(susp) ((susp)->g_cnt == 0 ? pvshell_test_g(susp) : 0)
-#define PVSHELL_FETCH_G(susp) ((susp)->g_cnt--, (*(susp)->g_ptr++))
+#define PVSHELL_FETCH_G(susp) \
+    ((susp)->g->scale * ((susp)->g_cnt--, *((susp)->g_ptr++)))
 
 /* snd_make_pvshell -- create an instance of pvshell.
    name -- string name of the operation, for debugging & printing
@@ -83,10 +88,13 @@ long pvshell_test_g(pvshell_type susp);
    h -- function that computes samples of output
    f -- first input sound, e.g. sound to be time-stretched
    g -- second input sound, e.g. sound to control varying stretch factor
-   state -- initial state information needed by h
-   n -- number of doubles in state (< PVSHELL_STATE_MAX)
+   state -- initial state information needed by h. Declared as void * so
+        that any struct can be passed in (provided the size is less than
+        PVSHELL_STATE_MAX bytes)
+   n -- number of bytes in state (<= PVSHELL_STATE_MAX)
 */
 sound_type snd_make_pvshell(char *name, rate_type sr, time_type t0,
-                            h_fn_type h, sound_type f, sound_type g, 
-                            double *state, long n);
+                            h_fn_type h, pvs_free_fn_type free_fn,
+                            sound_type f, sound_type g, 
+                            void *state, long n);
 

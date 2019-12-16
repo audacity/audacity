@@ -94,12 +94,12 @@ sound_type snd_make_modalbar(time_type t0, double freq, int preset, time_type du
     /* t0 specified as input parameter */
     sample_type scale_factor = 1.0F;
     falloc_generic(susp, modalbar_susp_node, "snd_make_modalbar");
-    susp->mymbar = initInstrument(MODALBAR, round(sr));
+    susp->mymbar = initInstrument(MODALBAR, ROUND32(sr));
                   controlChange(susp->mymbar, 16, preset);;
     susp->temp_ret_value = noteOn(susp->mymbar, freq, 1.0);;
     susp->susp.fetch = modalbar__fetch;
 
-    susp->terminate_cnt = check_terminate_cnt(round((dur) * sr));
+    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((dur) * sr));
     /* initialize susp state */
     susp->susp.free = modalbar_free;
     susp->susp.sr = sr;

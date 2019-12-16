@@ -2,7 +2,7 @@
 (NAME "bandedwg")
 (ARGUMENTS ("double" "freq") ("sound_type" "bowpress_env") ("int" "preset")
            ("rate_type" "sr"))
-(STATE ("struct instr *" "mybanded" "initInstrument(BANDEDWG, round(sr));
+(STATE ("struct instr *" "mybanded" "initInstrument(BANDEDWG, ROUND32(sr));
     controlChange(susp->mybanded, 16, preset);")
        ("int" "temp_ret_value" "noteOn(susp->mybanded, freq, 1.0)")
        ("float" "bowpress_scale" 

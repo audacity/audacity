@@ -102,12 +102,12 @@ void alpass_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from input up to final_time for this block of zeros */
-    while ((round((final_time - susp->input->t0) * susp->input->sr)) >=
+    while ((ROUNDBIG((final_time - susp->input->t0) * susp->input->sr)) >=
 	   susp->input->current)
 	susp_get_samples(input, input_ptr, input_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->input->t0) * susp->input->sr -
+    n = ROUNDBIG((final_time - susp->input->t0) * susp->input->sr -
          (susp->input->current - susp->input_cnt));
     susp->input_ptr += n;
     susp_took(input_cnt, n);
@@ -156,7 +156,7 @@ sound_type snd_make_alpass(sound_type input, time_type delay, double feedback)
 
     falloc_generic(susp, alpass_susp_node, "snd_make_alpass");
     susp->feedback = feedback;
-    susp->delaylen = max(1, round(input->sr * delay));
+    susp->delaylen = max(1, ROUND32(input->sr * delay));
     susp->delaybuf = (sample_type *) calloc (susp->delaylen, sizeof(sample_type));
     susp->delayptr = susp->delaybuf;
     susp->endptr = susp->delaybuf + susp->delaylen;

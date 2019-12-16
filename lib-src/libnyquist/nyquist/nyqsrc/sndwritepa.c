@@ -1,4 +1,4 @@
- /* sndwrite.c -- write sounds to files */
+/* sndwrite.c -- write sounds to files */
 
 #include "stdlib.h"
 #include "switches.h"
@@ -64,7 +64,7 @@
             threshold = min(1.0, s); \
         } \
         if (s > 1.0) { \
-            s = fmod(s + 1.0, 2.0) - 1.0; \
+            s = (sample_type) (fmod(s + 1.0, 2.0) - 1.0); \
             (x) = s; \
         } \
     } else if (s < -threshold) { \
@@ -73,7 +73,7 @@
             threshold = min(1.0, -s); \
         } \
         if (s < -1.0) { \
-            s = -(fmod(-s + 1.0, 2.0) - 1.0); \
+            s = (sample_type) -(fmod(-s + 1.0, 2.0) - 1.0); \
             (x) = s; \
         } \
     }
@@ -96,6 +96,8 @@
 // should be looking for local portaudio
 #include "portaudio.h"
 
+void finish_audio();
+
 long flush_count = 0; /* how many samples to write to finish */
 
 #define D if (0) 
@@ -112,11 +114,11 @@ void portaudio_exit()
 }
 
 
-sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info, SNDFILE *snd_file,
-                             float *buf, long *ntotal, PaStream *audio_stream);
+sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
+                             SNDFILE *snd_file, float *buf, long *ntotal);
 
-sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info, SNDFILE *snd_file,
-                             float *buf, long *ntotal, PaStream *audio_stream);
+sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info,
+                             SNDFILE *snd_file, float *buf, long *ntotal);
 
 unsigned char st_linear_to_ulaw(int sample);/* jlh not used anywhere */
 
@@ -144,21 +146,29 @@ static int portaudio_error(PaError err, char *problem)
 }
 
 
-LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
+PaStream *audio_stream = NULL;
+
+
+/* whenever we jump to toplevel, make sure audio is closed */
+void local_toplevel(void)
+{
+    if (audio_stream) {
+        finish_audio();
+    }
+}
+
+
+LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
 {
     PaStreamParameters output_parameters;
     int i, j = -1;
     int num_devices;
-
     const PaDeviceInfo *device_info = NULL;
     const PaHostApiInfo *host_info;
-
     // list tells us to list devices
     LVAL list = xlenter("*SND-LIST-DEVICES*");
-
     // pref tells us which device to open
     LVAL pref = xlenter("*SND-DEVICE*");
-
     int pref_num = -1;
     unsigned char *pref_string = NULL;
     list = getvalue(list);
@@ -184,49 +194,53 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
     output_parameters.suggestedLatency = sound_latency;
 
     // Initialize the audio stream for output
+    // If this is Linux, prefer to open ALSA device
     num_devices = Pa_GetDeviceCount();
+    // nyquist_printf("num_devices %d\n", num_devices);
     for (i = 0; i < num_devices; i++) {
         device_info = Pa_GetDeviceInfo(i);
         host_info = Pa_GetHostApiInfo(device_info->hostApi);
-
         if (list) {
-            gprintf(TRANS, "PortAudio %d: %s -- %s\n", i,
-                            device_info->name, host_info->name);
+            nyquist_printf("PortAudio %d: %s -- %s\n", i,
+                           device_info->name, host_info->name);
         }
         if (j == -1) {
             if (pref_num >= 0 && pref_num == i) j = i;
             else if (pref_string &&
-                strstr(device_info->name, (char *) pref_string)) j = i;
+                     strstr(device_info->name, (char *) pref_string)) j = i;
         }
+        // giving preference to first ALSA device seems to be a bad idea
+        // if (j == -1 && host_info->type == paALSA) {
+        //     j = i;
+        // }
     }
-
     if (j != -1) {
         output_parameters.device = j;
     }
     if (list) {
-        gprintf(TRANS, "... Default device is %d\n",
-                        Pa_GetDefaultOutputDevice());
-        gprintf(TRANS, "... Selected device %d for output\n",
-                        output_parameters.device);
+        nyquist_printf("... Default device is %d\n",
+                       Pa_GetDefaultOutputDevice());
+        nyquist_printf("... Selected device %d for output\n",
+                       output_parameters.device);
     }
     if (device_info) {
         if (portaudio_error(
-                Pa_OpenStream(audio_stream, NULL /* input */, &output_parameters,
-                        sf_info->samplerate, max_sample_block_len, 
-                        paClipOff, NULL /* callback */, NULL /* userdata */),
+                Pa_OpenStream(&audio_stream, NULL /* input */, &output_parameters,
+                    sf_info->samplerate, max_sample_block_len, 
+                    paClipOff, NULL /* callback */, NULL /* userdata */),
                 "could not open audio")) {
+            nyquist_printf("audio device name: %s\n", device_info->name);
+            audio_stream = NULL;
             return NIL;
         }
     } else {
-        gprintf(TRANS, "warning: no audio device found\n");
+        nyquist_printf("warning: no audio device found\n");
         return NIL;
     }
     flush_count = (long) (sf_info->samplerate * (sound_latency + 0.2));
 
-    if (portaudio_error(Pa_StartStream(*audio_stream),
+    if (portaudio_error(Pa_StartStream(audio_stream),
                         "could not start audio")) {
-        gprintf(TRANS, "Could not start audio with: %s\n", device_info->name);
-        audio_stream = NULL;
         return NIL;
     }
 
@@ -236,7 +250,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
 
 /* finish_audio -- flush the remaining samples, then close */
 /**/
-void finish_audio(PaStream *audio_stream)
+void finish_audio()
 {
     /* portaudio_error(Pa_StopStream(audio_stream), "could not stop stream"); */
     /* write Latency frames of audio to make sure all samples are played */
@@ -248,7 +262,9 @@ void finish_audio(PaStream *audio_stream)
         flush_count -= 16;
     }
     portaudio_error(Pa_CloseStream(audio_stream), "could not close audio");
+    audio_stream = NULL;
 }
+
 
 long lookup_format(long format, long mode, long bits, long swap)
 {
@@ -283,7 +299,7 @@ long lookup_format(long format, long mode, long bits, long swap)
         sf_format |= (swap ? SF_ENDIAN_LITTLE : SF_ENDIAN_BIG);
 #endif
 #ifdef XL_LITTLE_ENDIAN
-        sf_format |= (swap ? SF_ENDIAN_BIG : SF_ENDIAN_LITTLE);
+        sf_format |= (swap ? SF_ENDIAN_LITTLE : SF_ENDIAN_LITTLE);
 #endif        
         break;
     default: 
@@ -360,12 +376,11 @@ double sound_save(
   LVAL play)
 {
     LVAL result;
-    float *buf;
+    float *buf = NULL;
     long ntotal;
     double max_sample;
     SNDFILE *sndfile = NULL;
     SF_INFO sf_info;
-    PaStream *audio_stream = NULL;
     if (SAFE_NYQUIST) play = FALSE;
     
     gc();
@@ -387,7 +402,7 @@ double sound_save(
             }
         }
         /* assume all are the same: */
-        *sr = sf_info.samplerate = ROUND(getsound(getelement(result, 0))->sr); 
+        *sr = sf_info.samplerate = ROUND32(getsound(getelement(result, 0))->sr); 
 
         /* note: if filename is "", then don't write file; therefore,
          * write the file if (filename[0])
@@ -403,7 +418,7 @@ double sound_save(
         }
         
         if (play) 
-            play = prepare_audio(play, &sf_info, &audio_stream);
+            play = prepare_audio(play, &sf_info);
 
         if ((buf = (float *) malloc(max_sample_block_len * sf_info.channels *
                                     sizeof(float))) == NULL) {
@@ -411,13 +426,13 @@ double sound_save(
         }
 
         max_sample = sound_save_array(result, n, &sf_info, sndfile, 
-                                      buf, &ntotal, audio_stream);
+                                      buf, &ntotal);
         *duration = ntotal / *sr;
         if (sndfile) sf_close(sndfile);
-        if (play != NIL) finish_audio(audio_stream);
+        if (play != NIL) finish_audio();
     } else if (exttypep(result, a_sound)) {
         *nchans = sf_info.channels = 1;
-        sf_info.samplerate = ROUND((getsound(result))->sr);
+        sf_info.samplerate = ROUND32((getsound(result))->sr);
         *sr = sf_info.samplerate;
         if (filename[0]) {
             sndfile = NULL;
@@ -436,7 +451,7 @@ double sound_save(
             }
         }
         if (play)
-            play = prepare_audio(play, &sf_info, &audio_stream);
+            play = prepare_audio(play, &sf_info);
 
         if ((buf = (float *) malloc(max_sample_block_len * 
                                     sizeof(float))) == NULL) {
@@ -444,7 +459,7 @@ double sound_save(
         }
 
         max_sample = sound_save_sound(result, n, &sf_info, sndfile,
-                                      buf, &ntotal, audio_stream);
+                                      buf, &ntotal);
         *duration = ntotal / *sr;
         if (sndfile) sf_close(sndfile);
         if (play != NIL) finish_audio(audio_stream);
@@ -453,7 +468,7 @@ double sound_save(
                  result);
         max_sample = 0.0;
     }
-    free(buf);
+    if (buf) free(buf);
     return max_sample;
 }
 
@@ -491,11 +506,12 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     /* use proper scale factor: 8000 vs 7FFF */
     sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
     
-    frames = round(offset * sf_info->samplerate);
+    frames = ROUNDBIG(offset * sf_info->samplerate);
     rslt = sf_seek(sndfile, frames, SEEK_SET);
     if (rslt < 0) {
-        snprintf(error, sizeof(error), "snd_overwrite: cannot seek to frame %lld of %s",
-                frames, filename);
+        snprintf(error, sizeof(error),
+				 "snd_overwrite: cannot seek to frame %lld of %s",
+                 (long long int) frames, filename);
         xlabort(error);
     }
     if (sf_info->channels != channels) {
@@ -574,11 +590,11 @@ double sound_overwrite(
             }
         }
         sndfile = open_for_write(filename, SFM_RDWR, format, &sf_info, channels,
-                                 ROUND(getsound(getelement(result, 0))->sr),
+                                 ROUND32(getsound(getelement(result, 0))->sr),
                                  offset_secs, &buf);
 
         max_sample = sound_save_array(result, n, &sf_info, sndfile, 
-                                      buf, &ntotal, NULL);
+                                      buf, &ntotal);
         *duration = ntotal / (double) sf_info.samplerate;
         free(buf);
         sf_close(sndfile);
@@ -586,10 +602,10 @@ double sound_overwrite(
         SNDFILE *sndfile;  // opened sound file 
         float *buf; // buffer for samples read in from sound file
         sndfile = open_for_write(filename, SFM_RDWR, format, &sf_info, 1, 
-                                 ROUND(getsound(result)->sr), 
+                                 ROUND32(getsound(result)->sr), 
                                  offset_secs, &buf);
         max_sample = sound_save_sound(result, n, &sf_info, sndfile, buf, 
-                                      &ntotal, NULL);
+                                      &ntotal);
         *duration = ntotal / (double) sf_info.samplerate;
         free(buf);
         sf_close(sndfile);
@@ -610,7 +626,7 @@ int is_pcm(SF_INFO *sf_info)
 
 
 sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info, 
-        SNDFILE *sndfile, float *buf, long *ntotal, PaStream *audio_stream)
+        SNDFILE *sndfile, float *buf, long *ntotal)
 {
     long blocklen;
     sound_type s;
@@ -620,7 +636,8 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
     long debug_count;   /* next point at which to print a message */
     sample_type max_sample = 0.0F;
     sample_type threshold = 0.0F;
-    /* jlh    cvtfn_type cvtfn; */
+    double sound_srate;
+
     *ntotal = 0;
     /* if snd_expr was simply a symbol, then s now points to
         a shared sound_node.  If we read samples from it, then
@@ -688,7 +705,8 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
             sf_writef_float(sndfile, samps, togo);
         }
         if (audio_stream) {
-            Pa_WriteStream(audio_stream, samps, togo);
+            PaError err = Pa_WriteStream(audio_stream, samps, togo);
+			if (err != paNoError) gprintf(TRANS, "Pa_WriteStream %d\n", err);
             sound_frames += togo;
         }
 
@@ -700,14 +718,15 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
             debug_count += debug_unit;
         }
     }
-    gprintf(TRANS, "\ntotal samples: %ld\n", *ntotal);
+    gprintf(TRANS, "\ntotal samples: %ld (%g seconds)\n", 
+            *ntotal, *ntotal / sound_srate);
     xlpop();
     return max_sample;
 }
 
 
 sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info, 
-        SNDFILE *sndfile, float *buf, long *ntotal, PaStream *audio_stream)
+        SNDFILE *sndfile, float *buf, long *ntotal)
 {
     long i, chans;
     float *float_bufp;
@@ -718,7 +737,7 @@ sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info,
     long debug_count;   /* next point at which to print a message */
     sample_type max_sample = 0.0F;
     sample_type threshold = 0.0F;
-    /*    cvtfn_type cvtfn; jlh */
+    double sound_srate;
 
     *ntotal = 0;
 
@@ -798,8 +817,8 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
         for (i = 0; i < chans; i++) {
             if (state[i].cnt == 0) {
                 if (sndwrite_trace) {
-                    nyquist_printf("CALLING SOUND_GET_NEXT ON CHANNEL %ld (%lx)\n",
-				   i, (unsigned long) state[i].sound); /* jlh 64 bit issue */
+                    nyquist_printf("CALLING SOUND_GET_NEXT ON CHANNEL %ld (%p)\n",
+				   i, state[i].sound); /* jlh 64 bit issue */
                     sound_print_tree(state[i].sound);
                 }
                 state[i].ptr = sound_get_next(state[i].sound,
@@ -857,8 +876,8 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
             debug_count += debug_unit;
         }
     }
-    gprintf(TRANS, "total samples: %ld x %ld channels\n",
-           *ntotal, chans);
+    gprintf(TRANS, "\ntotal samples: %ld x %ld channels (%g seconds)\n",
+            *ntotal, chans, *ntotal / sound_srate);
 
     /* references to sounds are shared by sa_copy and state[].
      * here, we dispose of state[], allowing GC to do the

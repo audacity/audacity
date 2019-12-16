@@ -92,7 +92,7 @@ sound_type snd_make_const(double c, time_type t0, rate_type sr, time_type d)
     susp->c = (sample_type) c;
     susp->susp.fetch = const__fetch;
 
-    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
+    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((d) * sr));
     /* initialize susp state */
     susp->susp.free = const_free;
     susp->susp.sr = sr;

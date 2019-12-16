@@ -98,12 +98,12 @@ void flute_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from breath_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->breath_env->t0) * susp->breath_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr)) >=
 	   susp->breath_env->current)
 	susp_get_samples(breath_env, breath_env_ptr, breath_env_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->breath_env->t0) * susp->breath_env->sr -
+    n = ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr -
          (susp->breath_env->current - susp->breath_env_cnt));
     susp->breath_env_ptr += n;
     susp_took(breath_env_cnt, n);
@@ -145,7 +145,7 @@ sound_type snd_make_flute(double freq, sound_type breath_env, rate_type sr)
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, flute_susp_node, "snd_make_flute");
-    susp->myflute = initInstrument(FLUTE, round(sr));
+    susp->myflute = initInstrument(FLUTE, ROUND32(sr));
     controlChange(susp->myflute, 1, 0.0);;
     susp->temp_ret_value = noteOn(susp->myflute, freq, 1.0);
     susp->breath_scale = breath_env->scale * FLUTE_CONTROL_CHANGE_CONST;

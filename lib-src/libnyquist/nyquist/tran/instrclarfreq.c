@@ -115,20 +115,20 @@ void clarinet_freq_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from breath_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->breath_env->t0) * susp->breath_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr)) >=
 	   susp->breath_env->current)
 	susp_get_samples(breath_env, breath_env_ptr, breath_env_cnt);
     /* fetch samples from freq_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->freq_env->t0) * susp->freq_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr)) >=
 	   susp->freq_env->current)
 	susp_get_samples(freq_env, freq_env_ptr, freq_env_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->breath_env->t0) * susp->breath_env->sr -
+    n = ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr -
          (susp->breath_env->current - susp->breath_env_cnt));
     susp->breath_env_ptr += n;
     susp_took(breath_env_cnt, n);
-    n = round((final_time - susp->freq_env->t0) * susp->freq_env->sr -
+    n = ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr -
          (susp->freq_env->current - susp->freq_env_cnt));
     susp->freq_env_ptr += n;
     susp_took(freq_env_cnt, n);
@@ -176,7 +176,7 @@ sound_type snd_make_clarinet_freq(double freq1, sound_type breath_env, sound_typ
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, clarinet_freq_susp_node, "snd_make_clarinet_freq");
-    susp->clar = initInstrument(CLARINET, round(sr));
+    susp->clar = initInstrument(CLARINET, ROUND32(sr));
     controlChange(susp->clar, 1, 0.0);;
     susp->temp_ret_value = noteOn(susp->clar, freq1, 1.0);
     susp->frequency = freq1;

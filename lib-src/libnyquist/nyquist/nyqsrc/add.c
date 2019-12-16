@@ -343,7 +343,7 @@ D	nyquist_printf("add_s1_nn_fetch: to_stop %d togo %d\n", to_stop, togo);
 
     /* consider other signal? don't run past its start time... */
     if (susp->s2) {
-        s2_start = ROUND((susp->s2->t0 - susp->susp.t0) *
+        s2_start = ROUND32((susp->s2->t0 - susp->susp.t0) *
             susp->s2->sr);
         if (s2_start < susp->susp.current + togo)
             togo = MIN(togo, s2_start - susp->susp.current);
@@ -515,7 +515,7 @@ D   nyquist_printf("add_s2_nn_fetch(susp %p, snd_list %p)\n",
     /* if (susp->s2_ptr == zero_block->samples) { -sep21 RBD*/
     if (susp->terminate_bits & 2) {
         if (susp->s1) {
-            s1_start = ROUND((susp->s1->t0 - susp->susp.t0) *
+            s1_start = ROUND32((susp->s1->t0 - susp->susp.t0) *
                 susp->s1->sr);
              if (0) nyquist_printf("add_s_nn_fetch: s1_start %d\n", s1_start);
         }
@@ -586,7 +586,7 @@ D	nyquist_printf("add_s2_nn_fetch: to_stop %d togo %d\n", to_stop, togo);
 
     /* consider other signal? don't run past its start time... */
     if (susp->s1) {
-        s1_start = ROUND((susp->s1->t0 - susp->susp.t0) *
+        s1_start = ROUND32((susp->s1->t0 - susp->susp.t0) *
             susp->s1->sr);
         if (s1_start < susp->susp.current + togo)
             togo = MIN(togo, s1_start - susp->susp.current);
@@ -752,12 +752,12 @@ void add_zero_fill_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                    (int)susp->susp.current);
     /* don't run past start time ... */
     if (susp->s1) {
-        s_start = ROUND((susp->s1->t0 - susp->susp.t0) * susp->s1->sr);
+        s_start = ROUND32((susp->s1->t0 - susp->susp.t0) * susp->s1->sr);
         if (s_start < susp->susp.current + togo) {
             togo = s_start - susp->susp.current;
         }
     } else if (susp->s2) {
-        s_start = ROUND((susp->s2->t0 - susp->susp.t0) * susp->s2->sr);
+        s_start = ROUND32((susp->s2->t0 - susp->susp.t0) * susp->s2->sr);
         if (s_start < susp->susp.current + togo) {
             togo = s_start - susp->susp.current;
         }

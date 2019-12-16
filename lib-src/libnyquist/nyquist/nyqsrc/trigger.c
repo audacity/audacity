@@ -48,7 +48,7 @@ the previous value so re-reading will not re-trigger.)
 #include "cext.h"
 #include "assert.h"
 
-#define TRIGGERDBG 0
+#define TRIGGERDBG 1
 #define D if (TRIGGERDBG) 
 
 /* Note: this structure is identical to an add_susp structure up
@@ -198,7 +198,7 @@ D               nyquist_printf("in trigger: after evaluation; "
                 }
 
                 /* figure out which add fetch routine to use */
-                delay = ROUND((susp->s2->t0 - now) * susp->s1->sr);
+                delay = ROUNDBIG((susp->s2->t0 - now) * susp->s1->sr);
                 if (delay > 0) {    /* fill hole between s1 and s2 */
                     D stdputstr("using add_s1_nn_fetch\n");
                     susp->susp.fetch = add_s1_nn_fetch;

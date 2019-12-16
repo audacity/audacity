@@ -94,11 +94,11 @@ sound_type snd_make_sitar(time_type t0, double freq, time_type dur, rate_type sr
     /* t0 specified as input parameter */
     sample_type scale_factor = 1.0F;
     falloc_generic(susp, sitar_susp_node, "snd_make_sitar");
-    susp->mysitar = initInstrument(SITAR, round(sr));
+    susp->mysitar = initInstrument(SITAR, ROUND32(sr));
     susp->temp_ret_value = noteOn(susp->mysitar, freq, 1.0);
     susp->susp.fetch = sitar__fetch;
 
-    susp->terminate_cnt = check_terminate_cnt(round((dur) * sr));
+    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((dur) * sr));
     /* initialize susp state */
     susp->susp.free = sitar_free;
     susp->susp.sr = sr;

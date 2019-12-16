@@ -2,7 +2,7 @@
 (NAME "bowed_freq")
 (ARGUMENTS ("double" "freq") ("sound_type" "bowpress_env")
            ("sound_type" "freq_env") ("rate_type" "sr"))
-(STATE ("struct instr *" "mybow" "initInstrument(BOWED, round(sr));
+(STATE ("struct instr *" "mybow" "initInstrument(BOWED, ROUND32(sr));
     controlChange(susp->mybow, 1, 0.0);")
        ("int" "temp_ret_value" "noteOn(susp->mybow, freq, 1.0)")
        ("float" "bow_scale" "bowpress_env->scale * BOW_CONTROL_CHANGE_CONST")

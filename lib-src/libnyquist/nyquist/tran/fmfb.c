@@ -122,7 +122,7 @@ sound_type snd_make_fmfb(time_type t0, double hz, rate_type sr, double index, ti
     susp->index = index * SINE_TABLE_LEN / PI2;
     susp->susp.fetch = fmfb__fetch;
 
-    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
+    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((d) * sr));
     /* initialize susp state */
     susp->susp.free = fmfb_free;
     susp->susp.sr = sr;

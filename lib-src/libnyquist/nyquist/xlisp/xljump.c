@@ -100,6 +100,7 @@ void xlsignal(const char *emsg, LVAL arg)
 void xltoplevel(void)
 {
     close_loadingfiles();
+    local_toplevel();
     stdputstr("[ back to top level ]\n");
     findandjump(CF_TOPLEVEL,"no top level");
 }

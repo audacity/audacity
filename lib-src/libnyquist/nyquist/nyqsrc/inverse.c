@@ -144,7 +144,7 @@ void inverse_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
     if (final_count == susp->susp.toss_cnt) {
-        n = ROUND((final_time - susp->s->t0) * susp->s->sr -
+        n = ROUNDBIG((final_time - susp->s->t0) * susp->s->sr -
                        (susp->s->current - susp->s_cnt));
         susp->s_ptr += n;
         susp_took(s_cnt, n);

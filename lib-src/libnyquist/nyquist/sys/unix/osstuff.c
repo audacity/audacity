@@ -70,7 +70,9 @@ static int lposition;
 static int line_edit = TRUE;
 
 #ifndef READ_LINE
-#define typeahead_max 128
+// typeahead is high for humans but allows NyquistIDE to 
+// send envelope data and preferences
+#define typeahead_max 1024
 static char typeahead[typeahead_max];
 static int typeahead_tail = 0;
 static int typeahead_head = 0;
@@ -115,10 +117,24 @@ void osinit(const char *banner)
        pseudo randomness than does rand().
     */
 #if USE_RAND
-    srand(1);
+    // srand(1);
+#if __APPLE__
+    sranddev(); // initialize to a random seed
+#else
+    srand(time(NULL));
+#endif
 #endif
 
 #if USE_RANDOM
+#define USE_RANDOM something // see if compiler will tell us who
+    // set this first
+// USE_RANDOM is not supported, or at least the code should
+// be inspected carefully if USE_RANDOM is set. Things to look
+// for are: Is USE_RAND undefined to avoid conflicts? Should
+// the seed be initialized (as in sranddev() above under USE_RAND)?
+// Who uses random()? Nyquist uses random numbers in XLISP, in the
+// noise() function, in STK's Noise class, and probably other places.
+you must die here
     srandom(1);
 #endif
 
@@ -532,7 +548,7 @@ int ostgetc()
 
 /* ostputc - put a character to the terminal */
 void ostputc(int ch)
- {     
+{     
     oscheck();		/* check for control characters */
 
     /* output the character */
@@ -542,7 +558,7 @@ void ostputc(int ch)
     /* output the character to the transcript file */
     if (tfp) osaputc(ch,tfp);
     putchar(((char) ch));
- }
+}
  
 /* ostoutflush - flush output buffer */
 void ostoutflush()
@@ -651,7 +667,6 @@ void oscheck(void)
         }
     }
 
-    run_time++;
     // when compute-bound, run_time is incremented by 10000 in about 15s, so
     // that's about 700 Hz. We want to flush any output at about 2Hz, so 
     // we'll pick 400 as a round number.
@@ -743,10 +758,10 @@ LVAL xget_user()
 /* xechoenabled -- set/clear echo_enabled flag (unix only) */
 LVAL xechoenabled()
 {
-	int flag = (xlgetarg() != NULL);
+    int flag = (xlgetarg() != NULL);
     xllastarg();
-	echo_enabled = flag;
-	return NULL;
+    echo_enabled = flag;
+    return NULL;
 }
 
 

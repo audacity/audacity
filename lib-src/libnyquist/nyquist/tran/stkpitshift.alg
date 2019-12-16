@@ -1,7 +1,7 @@
 (STKPITSHIFT-ALG
 (NAME "stkpitshift")
 (ARGUMENTS ("sound_type" "s1") ("double" "shift") ("double" "mix"))
-(STATE 	("struct stkEffect *" "mych"  "initStkPitShift(shift, round(sr));
+(STATE 	("struct stkEffect *" "mych"  "initStkPitShift(shift, ROUND32(sr));
 stkEffectSetMix(susp->mych, mix)"))
 (ALWAYS-SCALE s1)
 (START (MIN s1))

@@ -459,7 +459,8 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, snd_type snd,
             debug_count += debug_unit;
         }
     }
-    gprintf(TRANS, "\ntotal samples: %d\n", *ntotal);
+    gprintf(TRANS, "\ntotal samples: %d (%g seconds)\n",
+                   *ntotal, *ntotal / snd->format.srate);
     xlpop();
     return max_sample;
 }
@@ -624,8 +625,8 @@ D       nyquist_printf("save scale factor %d = %g\n", (int)i, state[i].scale);
             debug_count += debug_unit;
         }
     }
-    gprintf(TRANS, "total samples: %d x %d channels\n",
-           *ntotal, chans);
+    gprintf(TRANS, "total samples: %d x %d channels (%g seconds)\n",
+            *ntotal, chans, *ntotal / snd->format.srate);
 
     /* references to sounds are shared by sa_copy and state[].
      * here, we dispose of state[], allowing GC to do the

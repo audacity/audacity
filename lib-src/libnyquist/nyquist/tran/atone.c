@@ -233,12 +233,12 @@ void atone_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s up to final_time for this block of zeros */
-    while ((round((final_time - susp->s->t0) * susp->s->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s->t0) * susp->s->sr)) >=
 	   susp->s->current)
 	susp_get_samples(s, s_ptr, s_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s->t0) * susp->s->sr -
+    n = ROUNDBIG((final_time - susp->s->t0) * susp->s->sr -
          (susp->s->current - susp->s_cnt));
     susp->s_ptr += n;
     susp_took(s_cnt, n);

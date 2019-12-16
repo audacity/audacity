@@ -35,3 +35,6 @@ void seq_get(seq_type seq, long *eventtype, long *time, long *line, long *chan,
 #define SEQ_BEND 6
 /* LISP-SRC: (setf seq-bend-tag 6) */
 
+void seq_xlwrite_smf(seq_type seq, LVAL outfile);
+/* LISP: (SEQ-WRITE-SMF SEQ ANY) */
+ 

@@ -146,36 +146,36 @@ void clarinet_all_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from breath_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->breath_env->t0) * susp->breath_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr)) >=
 	   susp->breath_env->current)
 	susp_get_samples(breath_env, breath_env_ptr, breath_env_cnt);
     /* fetch samples from freq_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->freq_env->t0) * susp->freq_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr)) >=
 	   susp->freq_env->current)
 	susp_get_samples(freq_env, freq_env_ptr, freq_env_cnt);
     /* fetch samples from reed_stiffness up to final_time for this block of zeros */
-    while ((round((final_time - susp->reed_stiffness->t0) * susp->reed_stiffness->sr)) >=
+    while ((ROUNDBIG((final_time - susp->reed_stiffness->t0) * susp->reed_stiffness->sr)) >=
 	   susp->reed_stiffness->current)
 	susp_get_samples(reed_stiffness, reed_stiffness_ptr, reed_stiffness_cnt);
     /* fetch samples from noise_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->noise_env->t0) * susp->noise_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->noise_env->t0) * susp->noise_env->sr)) >=
 	   susp->noise_env->current)
 	susp_get_samples(noise_env, noise_env_ptr, noise_env_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->breath_env->t0) * susp->breath_env->sr -
+    n = ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr -
          (susp->breath_env->current - susp->breath_env_cnt));
     susp->breath_env_ptr += n;
     susp_took(breath_env_cnt, n);
-    n = round((final_time - susp->freq_env->t0) * susp->freq_env->sr -
+    n = ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr -
          (susp->freq_env->current - susp->freq_env_cnt));
     susp->freq_env_ptr += n;
     susp_took(freq_env_cnt, n);
-    n = round((final_time - susp->reed_stiffness->t0) * susp->reed_stiffness->sr -
+    n = ROUNDBIG((final_time - susp->reed_stiffness->t0) * susp->reed_stiffness->sr -
          (susp->reed_stiffness->current - susp->reed_stiffness_cnt));
     susp->reed_stiffness_ptr += n;
     susp_took(reed_stiffness_cnt, n);
-    n = round((final_time - susp->noise_env->t0) * susp->noise_env->sr -
+    n = ROUNDBIG((final_time - susp->noise_env->t0) * susp->noise_env->sr -
          (susp->noise_env->current - susp->noise_env_cnt));
     susp->noise_env_ptr += n;
     susp_took(noise_env_cnt, n);
@@ -235,7 +235,7 @@ sound_type snd_make_clarinet_all(double freq, sound_type breath_env, sound_type 
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, clarinet_all_susp_node, "snd_make_clarinet_all");
-    susp->clar = initInstrument(CLARINET, round(sr));
+    susp->clar = initInstrument(CLARINET, ROUND32(sr));
     noteOn(susp->clar, freq, 1.0);
     controlChange(susp->clar, 11, CLAR_CONTROL_CHANGE_CONST * vibrato_freq);
     controlChange(susp->clar, 1, CLAR_CONTROL_CHANGE_CONST * vibrato_gain);;

@@ -73,7 +73,7 @@ void new_pool(void)
     poolend = poolp + MAXPOOLSIZE;
     npools++;
     /* stick to double word boundaries */
-    poolp = (char *) round_size(((long) poolp));
+    poolp = (char *) round_size(((intptr_t) poolp));
 }
 
 /* new_spool -- allocate a new spool from which sample blocks are allocated */
@@ -99,7 +99,7 @@ void new_spool(void)
     spoolend = spoolp + MAXSPOOLSIZE;
     npools++;
     /* stick to double word boundaries */
-    spoolp = (char *) round_size(((long) spoolp));
+    spoolp = (char *) round_size(((intptr_t) spoolp));
 }
 
 
@@ -113,39 +113,45 @@ void new_spool(void)
    4) try pool again
    5) allocate new pool and use it
  */
-sample_block_type find_sample_block(void)
-{	
-    sample_block_type sp;
-    if (sample_block_total < sample_block_low_water + BLOCKS_PER_GC &&
-        check_spool(round_size(sizeof(sample_block_node)))) {
+void find_sample_block(sample_block_type *sp)
+{
+    if (!Qempty(sample_block_free)) {
+        Qget(sample_block_free, sample_block_type, *sp);
+    } else if (sample_block_total < sample_block_low_water + BLOCKS_PER_GC &&
+               sample_block_total < max_sample_blocks &&
+               check_spool(round_size(sizeof(sample_block_node)))) {
         if (DEBUG_MEM) spoolp += DEBUG_MEM_INFO_SIZE;
-        sp = (sample_block_type) spoolp;
+        *sp = (sample_block_type) spoolp;
         spoolp += round_size(sizeof(sample_block_node));
         sample_block_total++;
-/*	printf("fp%d ", sample_block_total - sample_block_low_water); */
     } else {
-/*	printf("falloc calling gc\n"); */
         gc();
         sample_block_low_water = sample_block_used;
         if (!Qempty(sample_block_free)) {
-            Qget(sample_block_free, sample_block_type, sp);
-/*	    printf("gc, then from freelist\n"); */
+            Qget(sample_block_free, sample_block_type, *sp);
+        } else if (sample_block_used >= max_sample_blocks) {
+            /* we are not allowed to allocate more */
+            stdputstr("The maximum number of sample blocks has been\n");
+            stdputstr("reached, so audio computation must be terminated.\n");
+            stdputstr("Probably, your program should not be retaining\n");
+            stdputstr("so many samples in memory. You can get and set\n");
+            stdputstr("the maximum using SND-SET-MAX-AUDIO-MEM.\n");
+            xlfail("audio memory exhausted");
         } else if (check_spool(round_size(sizeof(sample_block_node)))) {
             if (DEBUG_MEM) spoolp += DEBUG_MEM_INFO_SIZE;
-            sp = (sample_block_type) spoolp;
+            *sp = (sample_block_type) spoolp;
             spoolp += round_size(sizeof(sample_block_node));
             sample_block_total++;
-/*	    printf("gc, then from spool\n"); */
-        } else {
+        } else if (sample_block_used < max_sample_blocks) {
             new_spool();
             if (DEBUG_MEM) spoolp += DEBUG_MEM_INFO_SIZE;
-            sp = (sample_block_type) spoolp;
+            *sp = (sample_block_type) spoolp;
             spoolp += round_size(sizeof(sample_block_node));
             sample_block_total++;
-/*	    printf("gc, then new spool\n"); */
         }
     }
-    return sp;
+    (*sp)->refcnt = 1;   \
+    sample_block_used++; \
 }
 
 
@@ -183,7 +189,7 @@ void falloc_gc()
    for (cp = pools; cp; lp = cp, cp = np) {
       char *str = ((char *)cp) + POOL_HEAD_SIZE;
       char *end = str + MAXSPOOLSIZE;
-      long tsiz = end - str;
+      intptr_t tsiz = end - str;
       long csiz = 0;
       CQUE *tsave = NULL;
       CQUE *ln = NULL;

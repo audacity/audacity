@@ -3,7 +3,7 @@
 (ARGUMENTS ("sound_type" "s1") ("double" "baseDelay") ("double" "depth") 
            ("double" "freq") ("double" "mix"))
 (STATE ("struct stkEffect *" "mych" 
-        "initStkChorus(baseDelay, depth, freq,  round(sr));
+        "initStkChorus(baseDelay, depth, freq,  ROUND32(sr));
 stkEffectSetMix(susp->mych, mix)"))
 (LINEAR s1)
 (START (MIN s1))

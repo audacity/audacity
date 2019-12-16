@@ -474,12 +474,12 @@ void partial_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from env up to final_time for this block of zeros */
-    while ((round((final_time - susp->env->t0) * susp->env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->env->t0) * susp->env->sr)) >=
 	   susp->env->current)
 	susp_get_samples(env, env_ptr, env_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->env->t0) * susp->env->sr -
+    n = ROUNDBIG((final_time - susp->env->t0) * susp->env->sr -
          (susp->env->current - susp->env_cnt));
     susp->env_ptr += n;
     susp_took(env_cnt, n);
@@ -522,7 +522,7 @@ sound_type snd_make_partial(rate_type sr, double hz, sound_type env)
     time_type t0_min = t0;
     falloc_generic(susp, partial_susp_node, "snd_make_partial");
     susp->phase = 0;
-    susp->ph_incr = round((hz * SINE_TABLE_LEN) * (1 << SINE_TABLE_SHIFT) / sr);
+    susp->ph_incr = ROUND32((hz * SINE_TABLE_LEN) * (1 << SINE_TABLE_SHIFT) / sr);
 
     /* make sure no sample rate is too high */
     if (env->sr > sr) {

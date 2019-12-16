@@ -2,7 +2,7 @@
 (NAME "mandolin")
 (ARGUMENTS ("time_type" "t0") ("double" "freq") ("time_type" "d") 
            ("double" "body_size") ("double" "detune") ("rate_type" "sr"))
-(STATE ("struct instr *" "mymand" "initInstrument(MANDOLIN, round(sr));
+(STATE ("struct instr *" "mymand" "initInstrument(MANDOLIN, ROUND32(sr));
       controlChange(susp->mymand, 1, detune);
       controlChange(susp->mymand, 2, MAND_CONTROL_CHANGE_CONST * body_size);")
        ("int" "temp_ret_value" "noteOn(susp->mymand, freq, 1.0)"))

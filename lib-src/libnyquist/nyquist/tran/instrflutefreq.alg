@@ -2,7 +2,7 @@
 (NAME "flute_freq")
 (ARGUMENTS ("double" "freq") ("sound_type" "breath_env")
         	("sound_type" "freq_env") ("rate_type" "sr"))
-(STATE ("struct instr *" "myflute" "initInstrument(FLUTE, round(sr));
+(STATE ("struct instr *" "myflute" "initInstrument(FLUTE, ROUND32(sr));
     controlChange(susp->myflute, 1, 0.0);")
        ("int" "temp_ret_value" "noteOn(susp->myflute, freq, 1.0)")
        ("float" "breath_scale" "breath_env->scale * FLUTE_CONTROL_CHANGE_CONST")

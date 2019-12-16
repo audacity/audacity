@@ -397,12 +397,12 @@ void fmosc_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s_fm up to final_time for this block of zeros */
-    while ((round((final_time - susp->s_fm->t0) * susp->s_fm->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s_fm->t0) * susp->s_fm->sr)) >=
 	   susp->s_fm->current)
 	susp_get_samples(s_fm, s_fm_ptr, s_fm_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s_fm->t0) * susp->s_fm->sr -
+    n = ROUNDBIG((final_time - susp->s_fm->t0) * susp->s_fm->sr -
          (susp->s_fm->current - susp->s_fm_cnt));
     susp->s_fm_ptr += n;
     susp_took(s_fm_cnt, n);
@@ -451,8 +451,8 @@ sound_type snd_make_fmosc(sound_type s, double step, rate_type sr, double hz, ti
     susp->table_ptr = susp->the_table->samples;
     susp->phase = compute_phase(phase, step, (long) susp->table_len,
         s->sr, sr, hz, &susp->ph_incr);
-    s_fm->scale *= hz != 0 ? (sample_type) (susp->ph_incr / hz)
-                                                   : s->sr / (sr * step_to_hz(step));
+    s_fm->scale *= (sample_type) (hz != 0 ? (susp->ph_incr / hz)
+                                          : s->sr / (sr * step_to_hz(step)));
 
     /* make sure no sample rate is too high */
     if (s_fm->sr > sr) {

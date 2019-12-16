@@ -20,7 +20,9 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#ifndef __APPLE__ // OS X does not have strings.h
 #include <strings.h>
+#endif
 #include <unistd.h>
 #include <stdio.h>
 #endif
@@ -29,6 +31,7 @@
 #include "lo/lo.h"
 #include "nyq-osc-server.h"
 #include "sndsliders.h"
+#include "sliderdata.h"
 
 static lo_server the_server = NULL;
 static int lo_fd;
@@ -36,7 +39,7 @@ static int lo_fd;
 static void error(int num, const char *msg, const char *path)
 {
     char s[256];
-    sprintf(s, "liblo server error %d in path %s: %s\n", num, path, msg);
+    snprintf(s, 255, "liblo server error %d in path %s: %s\n", num, path, msg);
     stdputstr(s);
 }
 
@@ -56,8 +59,8 @@ static int wii_orientation_handler(const char *path, const char *types,
                                    lo_arg **argv, int argc, void *data, 
                                    void *user_data)
 {
-    set_slider(0, min(1.0F, max(0.0F, (argv[0]->f / 180) + 0.5)));
-    set_slider(1, min(1.0F, max(0.0F, (argv[1]->f / 180) + 0.5)));
+    set_slider(0, min(1.0F, max(0.0F, (argv[0]->f / 180.0F) + 0.5F)));
+    set_slider(1, min(1.0F, max(0.0F, (argv[1]->f / 180.0F) + 0.5F)));
     return 0;
 }
 

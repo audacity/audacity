@@ -45,6 +45,7 @@ LVAL xleval(LVAL expr)
     /* check for control codes */
     if (--xlsample <= 0) {
         xlsample = SAMPLE;
+        run_time++;
         oscheck();
     }
 
@@ -818,7 +819,7 @@ LOCAL void doenter(LVAL sym, int argc, LVAL *argv)
     ++xltrcindent;
 
     /* display the function call */
-    sprintf(buf,"Entering: %s, Argument list: (",getstring(getpname(sym)));
+    snprintf(buf, STRMAX, "Entering: %s, Argument list: (", getstring(getpname(sym)));
     trcputstr(buf);
     while (--argc >= 0) {
         trcprin1(*argv++);
@@ -839,7 +840,7 @@ LOCAL void doexit(LVAL sym, LVAL val)
         trcputstr(" ");
     
     /* display the function value */
-    sprintf(buf,"Exiting: %s, Value: ",getstring(getpname(sym)));
+    snprintf(buf, STRMAX, "Exiting: %s, Value: ", getstring(getpname(sym)));
     trcputstr(buf);
     trcprin1(val);
     trcputstr("\n");

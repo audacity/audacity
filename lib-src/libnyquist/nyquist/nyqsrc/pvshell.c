@@ -8,7 +8,7 @@
 //   from input sounds. 
 //     This code is designed for a time-stretching phase vocoder,
 //   but could be used for other purposes. It is derived from
-//   compose.c, which might have been implmented with this 
+//   compose.c, which might have been implemented with this 
 //   skeleton had we started out with this abstraction.
 
 #include "stdio.h"
@@ -33,7 +33,6 @@ void pvshell_free();
 
 typedef struct pvshell_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
     boolean logically_stopped;
     boolean started;
 
@@ -93,34 +92,15 @@ void pvshell_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     out_ptr = out->samples;
     snd_list->block = out;
 
-    /* don't run past the f input sample block: */
-    /* most fetch routines call susp_check_term_log_samples() here
-     * but we can't becasue susp_check_term_log_samples() assumes
-     * that output time progresses at the same rate as input time.
-     * Here, some time warping might be going on, so this doesn't work.
-     * It is up to the user to tell us when it is the logical stop
-     * time and the terminate time.
-     */
-    /* don't run past terminate time */
-    //        if (susp->terminate_cnt != UNKNOWN &&
-    //            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-    //            togo = susp->terminate_cnt - (susp->susp.current + cnt);
-    //            if (togo == 0) break;
-    //        }
-    /* don't run past logical stop time */
-    //        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-    //            int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-    //            if (to_stop < togo && ((togo = to_stop) == 0)) break;
-    //        }
     n = max_sample_block_len; // ideally, compute a whole block of samples
 
-    flags = (susp->pvshell.h)(&(susp->pvshell), out_ptr, &n);
+    flags = (susp->pvshell.h)(&(susp->pvshell), out_ptr, &n, susp->susp.current);
 
     /* test for termination */
     if (flags & PVSHELL_FLAG_TERMINATE) {
         snd_list_terminate(snd_list);
     } else {
-        snd_list->block_len = n;
+        snd_list->block_len = (short) n;
         susp->susp.current += n;
     }
     /* test for logical stop */
@@ -163,15 +143,14 @@ void pvshell_print_tree(snd_susp_type a_susp, int n)
 
 
 sound_type snd_make_pvshell(char *name, rate_type sr, time_type t0,
-                            h_fn_type h, sound_type f, sound_type g, 
-                            double *state, long n)
+                            h_fn_type h, pvs_free_fn_type free_fn,
+                            sound_type f, sound_type g, 
+                            void *state, long n)
 {
     register pvshell_susp_type susp;
-    int i;
 
     falloc_generic(susp, pvshell_susp_node, "snd_make_pvshell");
     susp->susp.fetch = pvshell_fetch;
-    susp->terminate_cnt = UNKNOWN;
 
     /* initialize susp state */
     susp->susp.free = pvshell_free;
@@ -192,14 +171,12 @@ sound_type snd_make_pvshell(char *name, rate_type sr, time_type t0,
     susp->pvshell.g_cnt = 0;
     
     susp->pvshell.h = h;
-
+    susp->pvshell.free_fn = free_fn;
     susp->pvshell.flags = 0; /* terminated and logically stopped flags -- these
                                 are for the client of pvshell to use */
 
     assert(n <= PVSHELL_STATE_MAX);
-    for (i = 0; i < n; i++) {
-        susp->pvshell.state[i] = state[i];
-    }
+    memcpy(susp->pvshell.state, state, n);
 
     susp->started = false;
     return sound_create((snd_susp_type)susp, t0, sr, 1.0);

@@ -9,6 +9,8 @@
 Error: switches.h included more than once.
 #endif
 
+#define __func__ __FUNCTION__
+
 #define HAS_STDLIB_H 1
 #define HAS_SYS_TYPES_H 1
 #define HAS_SYS_STAT_H 1
@@ -78,7 +80,7 @@ void nyquist_printf(char *format, ...);
 #undef HAVE_GMTIME_R
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-#define HAVE_INTTYPES_H 1
+#define HAVE_INTTYPES_H 0
 
 /* Define if you have C99's lrint function. */
 #define HAVE_LRINT 0
@@ -87,9 +89,7 @@ void nyquist_printf(char *format, ...);
 #define HAVE_LRINTF 0
 
 /* Define to 1 if you have the `snprintf' function. */
-#if _MSC_VER < 1900
-#define snprintf _snprintf
-#endif
+// #define snprintf _snprintf -- snprintf is a Standard Library function
 #define HAVE_SNPRINTF 1
 
 /* Define to 1 if the system has the type `ssize_t'. */

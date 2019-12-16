@@ -8,7 +8,7 @@
   (INNER-LOOP "{
 \t\tfloat x = s1 * factor;
 \t\tlong xx;
-\t\tx = (x > 0.0F ? x + 0.5 : x - 0.5);
+\t\tx = (x > 0.0F ? x + 0.5F : x - 0.5F);
 \t\txx = (long) x;
 \t\toutput = (float) xx;
 \t    }")

@@ -15,7 +15,7 @@
     ("sound_type" "jet_delay") ("sound_type" "noise_env") ("rate_type" "sr"))
 ;; use a constant rate of 1.0 because it will actually be conrolled
 ;; by breath_env
-(STATE ("struct instr *" "myflute" "initInstrument(FLUTE, round(sr));
+(STATE ("struct instr *" "myflute" "initInstrument(FLUTE, ROUND32(sr));
     noteOn(susp->myflute, freq, 1.0);
     controlChange(susp->myflute, 11, FLUTE_CONTROL_CHANGE_CONST * vibrato_freq);
     controlChange(susp->myflute, 1, FLUTE_CONTROL_CHANGE_CONST * vibrato_gain);")

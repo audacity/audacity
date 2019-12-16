@@ -40,9 +40,10 @@
 
 #include \"samples.h\"
 #include \"fftext.h\"
+#include \"fft.h\"
 
 #define MUST_BE_FLONUM(e) \\
-    if (!(e) || ntype(e) != FLONUM) { xlerror(\"flonum expected\", (e)); }
+    if (!(e) || ntype(e) != FLONUM) { xlerror(\"in IFFT: flonum expected\", (e)); }
 
 table_type get_window_samples(LVAL window, sample_type **samples, long *len)
 {
@@ -89,7 +90,7 @@ out:        togo = 0;   /* indicate termination */
                 susp->src = NULL;
                 goto out;
             } else if (!vectorp(susp->array)) {
-                xlerror(\"array expected\", susp->array);
+                xlerror(\"in IFFT: array expected\", susp->array);
             } else if (susp->samples == NULL) {
                 /* assume arrays are all the same size as first one;
                    now that we know the size, we just have to do this
@@ -97,9 +98,9 @@ out:        togo = 0;   /* indicate termination */
                  */
                 susp->length = getsize(susp->array);
                 if (susp->length < 1) 
-                    xlerror(\"array has no elements\", susp->array);
+                    xlerror(\"in IFFT: array has no elements\", susp->array);
                 if (susp->window && (susp->window_len != susp->length))
-                    xlerror(\"window size and spectrum size differ\", 
+                    xlerror(\"in IFFT: window size and spectrum size differ\", 
                             susp->array);
                 /* tricky non-power of 2 detector: only if this is a
                  * power of 2 will the highest 1 bit be cleared when
@@ -107,12 +108,17 @@ out:        togo = 0;   /* indicate termination */
                  */
                 if (susp->length & (susp->length - 1))
                     xlfail(\"spectrum size must be a power of 2\");
+                if (susp->stepsize < 1) 
+                    xlfail(\"in IFFT: step size must be greater than zero\");
+                if (susp->length < susp->stepsize) 
+                    xlerror(\"in IFFT: step size must be smaller than spectrum size\", 
+                            susp->array);
                 susp->samples = (sample_type *) calloc(susp->length,
                                                        sizeof(sample_type));
                 susp->outbuf = (sample_type *) calloc(susp->length, 
                                                       sizeof(sample_type));
             } else if (getsize(susp->array) != susp->length) {
-                xlerror(\"arrays must all be the same length\", susp->array);
+                xlerror(\"in IFFT: arrays must all be the same length\", susp->array);
             }
 
             /* at this point, we have a new array to put samples */
@@ -141,9 +147,10 @@ out:        togo = 0;   /* indicate termination */
 
             /* here is where the IFFT and windowing should take place */
             //fftnf(1, &n, susp->samples, susp->samples + n, -1, 1.0);
-            m = round(log2(n));
+            m = ROUND32(log2(n));
             if (!fftInit(m)) riffts(susp->samples, m, 1);
             else xlfail(\"FFT initialization error\");
+            fft_shift(susp->samples, n);
             if (susp->window) {
                 n = susp->length;
                 for (i = 0; i < n; i++) {

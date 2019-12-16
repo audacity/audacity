@@ -125,12 +125,12 @@ void stkrev_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s1 up to final_time for this block of zeros */
-    while ((round((final_time - susp->s1->t0) * susp->s1->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr)) >=
 	   susp->s1->current)
 	susp_get_samples(s1, s1_ptr, s1_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s1->t0) * susp->s1->sr -
+    n = ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr -
          (susp->s1->current - susp->s1_cnt));
     susp->s1_ptr += n;
     susp_took(s1_cnt, n);
@@ -179,7 +179,7 @@ sound_type snd_make_stkrev(int rev_type, sound_type s1, time_type trev, double m
     if (s1->sr < sr) { s1->scale = scale_factor; scale_factor = 1.0F; }
 
     falloc_generic(susp, stkrev_susp_node, "snd_make_stkrev");
-    susp->myrv = initStkEffect(rev_type, trev, round(sr));
+    susp->myrv = initStkEffect(rev_type, trev, ROUND32(sr));
     stkEffectSetMix(susp->myrv, mix);
     susp->susp.fetch = stkrev_n_fetch;
     susp->terminate_cnt = UNKNOWN;

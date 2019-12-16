@@ -248,6 +248,7 @@ LVAL xsqrt(void)   { return (unary('R')); } /* sqrt */
 LVAL xfix(void)    { return (unary('I')); } /* truncate */
 LVAL xfloat(void)  { return (unary('F')); } /* float */
 LVAL xrand(void)   { return (unary('?')); } /* random */
+LVAL xsrand(void)  { return (unary('@')); } /* random seed */
 
 /* unary - handle unary operations */
 LOCAL LVAL unary(int fcn)
@@ -271,6 +272,7 @@ LOCAL LVAL unary(int fcn)
         case 'I':	break;
         case 'F':	return (cvflonum((FLOTYPE)ival));
         case '?':	ival = (FIXTYPE)xlrand((int)ival); break;
+        case '@':       ival = (FIXTYPE)xlsrand((int)ival); break;
         default:	badiop();
         }
         return (cvfixnum(ival));

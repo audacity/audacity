@@ -47,9 +47,9 @@ void print_local_gc_info(void)
 {
     char buf[50];
     /* print sample blocks */
-    sprintf(buf, "; samples %dKB, %dKB free",
-            (sample_block_total * max_sample_block_len) / 1024,
+    sprintf(buf, "; samples %zdKB, %zdKB free",
+            (sample_block_total * max_sample_block_len * sizeof(sample_type)) / 1024,
             ((sample_block_total - sample_block_used) *
-             max_sample_block_len) / 1024);
+             max_sample_block_len * sizeof(sample_type)) / 1024);
     stdputstr(buf);
 }

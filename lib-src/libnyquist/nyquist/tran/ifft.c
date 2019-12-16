@@ -64,6 +64,7 @@ typedef struct ifft_susp_struct {
 
 #include "samples.h"
 #include "fftext.h"
+#include "fft.h"
 
 #define MUST_BE_FLONUM(e) \
     if (!(e) || ntype(e) != FLONUM) { xlerror("flonum expected", (e)); }
@@ -173,9 +174,10 @@ out:        togo = 0;   /* indicate termination */
 
             /* here is where the IFFT and windowing should take place */
             //fftnf(1, &n, susp->samples, susp->samples + n, -1, 1.0);
-            m = round(log2(n));
+            m = ROUND32(log2(n));
             if (!fftInit(m)) riffts(susp->samples, m, 1);
             else xlfail("FFT initialization error");
+            fft_shift(susp->samples, n);
             if (susp->window) {
                 n = susp->length;
                 for (i = 0; i < n; i++) {

@@ -782,20 +782,20 @@ void delaycv_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s up to final_time for this block of zeros */
-    while ((round((final_time - susp->s->t0) * susp->s->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s->t0) * susp->s->sr)) >=
 	   susp->s->current)
 	susp_get_samples(s, s_ptr, s_cnt);
     /* fetch samples from feedback up to final_time for this block of zeros */
-    while ((round((final_time - susp->feedback->t0) * susp->feedback->sr)) >=
+    while ((ROUNDBIG((final_time - susp->feedback->t0) * susp->feedback->sr)) >=
 	   susp->feedback->current)
 	susp_get_samples(feedback, feedback_ptr, feedback_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s->t0) * susp->s->sr -
+    n = ROUNDBIG((final_time - susp->s->t0) * susp->s->sr -
          (susp->s->current - susp->s_cnt));
     susp->s_ptr += n;
     susp_took(s_cnt, n);
-    n = round((final_time - susp->feedback->t0) * susp->feedback->sr -
+    n = ROUNDBIG((final_time - susp->feedback->t0) * susp->feedback->sr -
          (susp->feedback->current - susp->feedback_cnt));
     susp->feedback_ptr += n;
     susp_took(feedback_cnt, n);
@@ -851,7 +851,7 @@ sound_type snd_make_delaycv(sound_type s, time_type delay, sound_type feedback)
     if (s->sr < sr) { s->scale = scale_factor; scale_factor = 1.0F; }
 
     falloc_generic(susp, delaycv_susp_node, "snd_make_delaycv");
-    susp->delaylen = round(s->sr * delay);
+    susp->delaylen = ROUND32(s->sr * delay);
     susp->delaybuf = (sample_type *) calloc (sizeof(double), susp->delaylen);
     susp->delayptr = susp->delaybuf;
     susp->endptr = susp->delaybuf + susp->delaylen;

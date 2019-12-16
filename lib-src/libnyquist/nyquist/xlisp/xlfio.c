@@ -242,7 +242,8 @@ LVAL xrdint(void)
     xllastarg();
     for (i = 0; i < n; i++) {
         int ch = xlgetc(fptr);
-        if (ch == EOF) return NIL;
+        if (ch == EOF) 
+            return NIL;
         b[index] = ch;
         index += incr;
     }

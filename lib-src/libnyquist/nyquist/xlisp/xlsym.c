@@ -101,8 +101,8 @@ LOCAL void test_one_env(LVAL environment, int i, char *s)
     for (fp = environment; fp; fp = cdr(fp)) {
             /* check that xlenv is good */
             if (!consp(fp)) {
-                sprintf(buf,"%s: xlenv 0x%lx, frame 0x%lx, type(frame) %d\n",
-                        s, xlenv, fp, ntype(fp));
+                snprintf(buf, STRMAX, "%s: xlenv 0x%lx, frame 0x%lx, type(frame) %d\n",
+                         s, xlenv, fp, ntype(fp));
             errputstr(buf);
             report_exit("xlenv points to a bad list", i);
         }
@@ -117,31 +117,31 @@ LOCAL void test_one_env(LVAL environment, int i, char *s)
             for (; ep; ep = cdr(ep)) {
                     /* check that ep is good */
                     if (!consp(ep)) {
-                         sprintf(buf,"%s: fp 0x%lx, ep 0x%lx, type(ep) %d\n",
-                                s, fp, ep, ntype(ep));
+                         snprintf(buf, STRMAX, "%s: fp 0x%lx, ep 0x%lx, type(ep) %d\n",
+                                 s, fp, ep, ntype(ep));
                     errputstr(buf);
                     report_exit("car(fp) points to a bad list", i);
                 }
                 
                     /* check that car(ep) is nonnull */
                     if (!car(ep)) {
-                         sprintf(buf,"%s: ep 0x%lx, car(ep) 0x%lx\n",
-                                s, ep, car(ep));
+                         snprintf(buf, STRMAX, "%s: ep 0x%lx, car(ep) 0x%lx\n",
+                                  s, ep, car(ep));
                     errputstr(buf);
                     report_exit("car(ep) (an association) is NULL", i);
                 }
                     /* check that car(ep) is a cons */
                     if (!consp(car(ep))) {
-                         sprintf(buf,"%s: ep 0x%lx, car(ep) 0x%lx, type(car(ep)) %d\n",
-                                s, ep, car(ep), ntype(car(ep)));
+                         snprintf(buf, STRMAX, "%s: ep 0x%lx, car(ep) 0x%lx, type(car(ep)) %d\n",
+                                  s, ep, car(ep), ntype(car(ep)));
                     errputstr(buf);
                     report_exit("car(ep) (an association) is not a cons", i);
                 }
 
                     /* check that car(car(ep)) is a symbol */
                     if (!symbolp(car(car(ep)))) {
-                         sprintf(buf,"%s: ep 0x%lx, car(ep) 0x%lx, car(car(ep)) 0x%lx, type(car(car(ep))) %d\n",
-                                s, ep, car(ep), car(car(ep)), ntype(car(car(ep))));
+                         snprintf(buf, STRMAX, "%s: ep 0x%lx, car(ep) 0x%lx, car(car(ep)) 0x%lx, type(car(car(ep))) %d\n",
+                                  s, ep, car(ep), car(car(ep)), ntype(car(car(ep))));
                     errputstr(buf);
                     report_exit("car(car(ep)) is not a symbol", i);
                 }

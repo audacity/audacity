@@ -466,20 +466,20 @@ void resonvc_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s1 up to final_time for this block of zeros */
-    while ((round((final_time - susp->s1->t0) * susp->s1->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr)) >=
 	   susp->s1->current)
 	susp_get_samples(s1, s1_ptr, s1_cnt);
     /* fetch samples from hz up to final_time for this block of zeros */
-    while ((round((final_time - susp->hz->t0) * susp->hz->sr)) >=
+    while ((ROUNDBIG((final_time - susp->hz->t0) * susp->hz->sr)) >=
 	   susp->hz->current)
 	susp_get_samples(hz, hz_ptr, hz_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s1->t0) * susp->s1->sr -
+    n = ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr -
          (susp->s1->current - susp->s1_cnt));
     susp->s1_ptr += n;
     susp_took(s1_cnt, n);
-    n = round((final_time - susp->hz->t0) * susp->hz->sr -
+    n = ROUNDBIG((final_time - susp->hz->t0) * susp->hz->sr -
          (susp->hz->current - susp->hz_cnt));
     susp->hz_ptr += n;
     susp_took(hz_cnt, n);

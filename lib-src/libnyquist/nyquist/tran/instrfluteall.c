@@ -146,36 +146,36 @@ void flute_all_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from breath_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->breath_env->t0) * susp->breath_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr)) >=
 	   susp->breath_env->current)
 	susp_get_samples(breath_env, breath_env_ptr, breath_env_cnt);
     /* fetch samples from freq_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->freq_env->t0) * susp->freq_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr)) >=
 	   susp->freq_env->current)
 	susp_get_samples(freq_env, freq_env_ptr, freq_env_cnt);
     /* fetch samples from jet_delay up to final_time for this block of zeros */
-    while ((round((final_time - susp->jet_delay->t0) * susp->jet_delay->sr)) >=
+    while ((ROUNDBIG((final_time - susp->jet_delay->t0) * susp->jet_delay->sr)) >=
 	   susp->jet_delay->current)
 	susp_get_samples(jet_delay, jet_delay_ptr, jet_delay_cnt);
     /* fetch samples from noise_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->noise_env->t0) * susp->noise_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->noise_env->t0) * susp->noise_env->sr)) >=
 	   susp->noise_env->current)
 	susp_get_samples(noise_env, noise_env_ptr, noise_env_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->breath_env->t0) * susp->breath_env->sr -
+    n = ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr -
          (susp->breath_env->current - susp->breath_env_cnt));
     susp->breath_env_ptr += n;
     susp_took(breath_env_cnt, n);
-    n = round((final_time - susp->freq_env->t0) * susp->freq_env->sr -
+    n = ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr -
          (susp->freq_env->current - susp->freq_env_cnt));
     susp->freq_env_ptr += n;
     susp_took(freq_env_cnt, n);
-    n = round((final_time - susp->jet_delay->t0) * susp->jet_delay->sr -
+    n = ROUNDBIG((final_time - susp->jet_delay->t0) * susp->jet_delay->sr -
          (susp->jet_delay->current - susp->jet_delay_cnt));
     susp->jet_delay_ptr += n;
     susp_took(jet_delay_cnt, n);
-    n = round((final_time - susp->noise_env->t0) * susp->noise_env->sr -
+    n = ROUNDBIG((final_time - susp->noise_env->t0) * susp->noise_env->sr -
          (susp->noise_env->current - susp->noise_env_cnt));
     susp->noise_env_ptr += n;
     susp_took(noise_env_cnt, n);
@@ -235,7 +235,7 @@ sound_type snd_make_flute_all(double freq, sound_type breath_env, sound_type fre
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, flute_all_susp_node, "snd_make_flute_all");
-    susp->myflute = initInstrument(FLUTE, round(sr));
+    susp->myflute = initInstrument(FLUTE, ROUND32(sr));
     noteOn(susp->myflute, freq, 1.0);
     controlChange(susp->myflute, 11, FLUTE_CONTROL_CHANGE_CONST * vibrato_freq);
     controlChange(susp->myflute, 1, FLUTE_CONTROL_CHANGE_CONST * vibrato_gain);;

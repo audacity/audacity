@@ -152,12 +152,14 @@
 #define n_desc		n_info.n_xextern.xe_desc
 #define n_inst		n_info.n_xextern.xe_inst
 
+struct node;
+
 /* xtype_desc structure */
 typedef struct xtype_desc_struct {
     char *type_name;
     struct node *type_symbol;
     void (*free_meth)(void*);
-    void (*print_meth)(void*, void*);
+    void (*print_meth)(struct node *, void*);
     void (*save_meth)(FILE*, void*);
     unsigned char * (*restore_meth)(FILE*);
     void (*mark_meth)(void*);
@@ -211,9 +213,3 @@ typedef struct segment {
     struct node sg_nodes[1];
 } SEGMENT;
 
-/* initialize a type descriptor */
-extern xtype_desc create_desc(char *type_name, void (*fm)(void*), 
-                              void (*pm)(void*, void*),
-                              void (*sm)(FILE*, void*), 
-                              unsigned char * (*rm)(FILE*), 
-                              void (*mm)(void*));

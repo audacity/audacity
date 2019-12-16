@@ -33,6 +33,7 @@ typedef struct pwl_susp_struct {
  * the caller (users should not call this directly).
  */
 
+char *pwl_bad_breakpoint_list = "bad breakpoint list";
 
 /* compute_lvl -- setup the susp with level, advance bpt_ptr */
 /*
@@ -47,8 +48,14 @@ typedef struct pwl_susp_struct {
  */
 boolean compute_lvl(pwl_susp_type susp)
 {
-    if (!cdr(susp->bpt_ptr)) return true;
-    susp->lvl = getflonum(car(cdr(susp->bpt_ptr)));
+    LVAL lval = susp->bpt_ptr;
+    if (!consp(lval)) xlfail(pwl_bad_breakpoint_list);
+    lval = cdr(lval);
+    if (!lval) return true;
+    if (!consp(lval)) xlfail(pwl_bad_breakpoint_list);
+    lval = car(lval);
+    if (!floatp(lval)) xlfail(pwl_bad_breakpoint_list);
+    susp->lvl = getflonum(lval);
     susp->bpt_ptr = cdr(cdr(susp->bpt_ptr));
     return !susp->bpt_ptr;
 }
@@ -62,11 +69,19 @@ boolean compute_incr(pwl_susp_type susp, long *n, long cur)
 {
     double target;
     while (*n == 0) {
-        *n = getfixnum(car(susp->bpt_ptr)) - cur;
+        LVAL lval = susp->bpt_ptr;
+        if (!consp(lval)) xlfail(pwl_bad_breakpoint_list);
+        lval = car(lval);
+        if (!fixp(lval)) xlfail(pwl_bad_breakpoint_list);
+        *n = getfixnum(lval) - cur;
         /* if there is a 2nd element of the pair, get the target */
-        if (cdr(susp->bpt_ptr))
-            target = getflonum(car(cdr(susp->bpt_ptr)));
-        else target = 0.0;
+        lval = cdr(susp->bpt_ptr);
+        if (lval) {
+            if (!consp(lval)) xlfail(pwl_bad_breakpoint_list);
+            lval = car(lval);
+            if (!floatp(lval)) xlfail(pwl_bad_breakpoint_list);
+            target = getflonum(lval);
+        } else target = 0.0;
         if (*n > 0) susp->incr = (target - susp->lvl) / *n;
         else if (compute_lvl(susp)) return true;
     }

@@ -92,7 +92,7 @@ void quantize_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
 		float x = *s1_ptr_reg++ * factor_reg;
 		long xx;
-		x = (x > 0.0F ? x + 0.5 : x - 0.5);
+		x = (x > 0.0F ? x + 0.5F : x - 0.5F);
 		xx = (long) x;
 		*out_ptr_reg++ = (float) xx;
 	    };
@@ -128,12 +128,12 @@ void quantize_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s1 up to final_time for this block of zeros */
-    while ((round((final_time - susp->s1->t0) * susp->s1->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr)) >=
 	   susp->s1->current)
 	susp_get_samples(s1, s1_ptr, s1_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s1->t0) * susp->s1->sr -
+    n = ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr -
          (susp->s1->current - susp->s1_cnt));
     susp->s1_ptr += n;
     susp_took(s1_cnt, n);

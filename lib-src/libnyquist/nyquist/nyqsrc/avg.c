@@ -180,7 +180,7 @@ void avg_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
     if (final_count == susp->susp.toss_cnt) {
-    n = ROUND((final_time - susp->s->t0) * susp->s->sr -
+    n = ROUNDBIG((final_time - susp->s->t0) * susp->s->sr -
          (susp->s->current - susp->s_cnt));
     susp->s_ptr += n;
     susp_took(s_cnt, n);
@@ -233,7 +233,7 @@ sound_type snd_make_avg(sound_type s, long blocksize, long stepsize, long op)
        this could be very big and cause integer overflow, so here, we
        prevent the overflow by limiting stepsize */
     if (stepsize > (0x7FFFFFFF / max_sample_block_len)) {
-        xlerror("In SND-AVG, stepsize is too big", s_unbound);
+        xlfail("In SND-AVG, stepsize is too big");
     }
 
     falloc_generic(susp, avg_susp_node, "snd_make_avg");
@@ -244,7 +244,7 @@ sound_type snd_make_avg(sound_type s, long blocksize, long stepsize, long op)
     /* minimum start time over all inputs: */
     t0_min = MIN(s->t0, t0);
     /* how many samples to toss before t0: */
-    susp->susp.toss_cnt = ROUND((t0 - t0_min) * sr);
+    susp->susp.toss_cnt = ROUNDBIG((t0 - t0_min) * sr);
     if (susp->susp.toss_cnt > 0) {
         susp->susp.keep_fetch = susp->susp.fetch;
         susp->susp.fetch = avg_toss_fetch;
@@ -274,7 +274,7 @@ sound_type snd_make_avg(sound_type s, long blocksize, long stepsize, long op)
     if (!susp->buffer) {
         sound_unref(susp->s);
         ffree_generic(susp, sizeof(avg_susp_node), "avg_free");
-        xlerror("memory allocation failed in SND-AVG", s_unbound);
+        xlfail("memory allocation failed in SND-AVG");
     }
     susp->fillptr = susp->buffer;
     susp->endptr = susp->buffer + buffersize;

@@ -671,36 +671,36 @@ void eqbandvvv_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from input up to final_time for this block of zeros */
-    while ((round((final_time - susp->input->t0) * susp->input->sr)) >=
+    while ((ROUNDBIG((final_time - susp->input->t0) * susp->input->sr)) >=
 	   susp->input->current)
 	susp_get_samples(input, input_ptr, input_cnt);
     /* fetch samples from hz up to final_time for this block of zeros */
-    while ((round((final_time - susp->hz->t0) * susp->hz->sr)) >=
+    while ((ROUNDBIG((final_time - susp->hz->t0) * susp->hz->sr)) >=
 	   susp->hz->current)
 	susp_get_samples(hz, hz_ptr, hz_cnt);
     /* fetch samples from gain up to final_time for this block of zeros */
-    while ((round((final_time - susp->gain->t0) * susp->gain->sr)) >=
+    while ((ROUNDBIG((final_time - susp->gain->t0) * susp->gain->sr)) >=
 	   susp->gain->current)
 	susp_get_samples(gain, gain_ptr, gain_cnt);
     /* fetch samples from width up to final_time for this block of zeros */
-    while ((round((final_time - susp->width->t0) * susp->width->sr)) >=
+    while ((ROUNDBIG((final_time - susp->width->t0) * susp->width->sr)) >=
 	   susp->width->current)
 	susp_get_samples(width, width_ptr, width_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->input->t0) * susp->input->sr -
+    n = ROUNDBIG((final_time - susp->input->t0) * susp->input->sr -
          (susp->input->current - susp->input_cnt));
     susp->input_ptr += n;
     susp_took(input_cnt, n);
-    n = round((final_time - susp->hz->t0) * susp->hz->sr -
+    n = ROUNDBIG((final_time - susp->hz->t0) * susp->hz->sr -
          (susp->hz->current - susp->hz_cnt));
     susp->hz_ptr += n;
     susp_took(hz_cnt, n);
-    n = round((final_time - susp->gain->t0) * susp->gain->sr -
+    n = ROUNDBIG((final_time - susp->gain->t0) * susp->gain->sr -
          (susp->gain->current - susp->gain_cnt));
     susp->gain_ptr += n;
     susp_took(gain_cnt, n);
-    n = round((final_time - susp->width->t0) * susp->width->sr -
+    n = ROUNDBIG((final_time - susp->width->t0) * susp->width->sr -
          (susp->width->current - susp->width_cnt));
     susp->width_ptr += n;
     susp_took(width_cnt, n);

@@ -24,7 +24,7 @@
        if (susp->the_table->length <= 1) { 
              xlfail(\"sampler table length <= 1\");
        }
-      if (index > round(susp->table_len) - 2 ||
+      if (index > ROUND32(susp->table_len) - 2 ||
           index < 0) {
           xlfail(\"sampler loop start not within samples\");
       }
@@ -35,7 +35,7 @@
           xlfail(\"sampler sample rate <= 0\");
       }
       /* copy interpolated start to last entry */
-      susp->table_ptr[round(susp->table_len)] =
+      susp->table_ptr[ROUND32(susp->table_len)] =
           (sample_type) (susp->table_ptr[index] * (1.0 - frac) + 
                          susp->table_ptr[index + 1] * frac);}")
  )

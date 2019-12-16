@@ -114,7 +114,7 @@ sound_type snd_make_osc(sound_type input, double step, rate_type sr, double hz, 
     input->sr, sr, hz, &susp->ph_incr);
     susp->susp.fetch = osc__fetch;
 
-    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
+    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((d) * sr));
     /* initialize susp state */
     susp->susp.free = osc_free;
     susp->susp.sr = sr;

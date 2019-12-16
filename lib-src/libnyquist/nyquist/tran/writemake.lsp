@@ -642,18 +642,18 @@
            (cond ((eq (car terminate) 'AT)
                   (let ((time-expr (cadr terminate)))
         ;----------------
-        ; susp->terminate_cnt = check_terminate_cnt(round(((TIME-EXPR) - t0) * sr));
+        ; susp->terminate_cnt = check_terminate_cnt(ROUNDBIG(((TIME-EXPR) - t0) * sr));
         ;----------------
                     (format stream 
-                     "    susp->terminate_cnt = check_terminate_cnt(round(((~A) - t0) * sr));~%"
+                     "    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG(((~A) - t0) * sr));~%"
                             time-expr)))
                  ((eq (car terminate) 'AFTER)
                   (let ((dur-expr (cadr terminate)))
                     ;----------------
-                    ; susp->terminate_cnt = check_terminate_cnt(round((DUR-EXPR) * sr));
+                    ; susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((DUR-EXPR) * sr));
                     ;----------------
                     (format stream 
-                            "    susp->terminate_cnt = check_terminate_cnt(round((~A) * sr));~%"
+                            "    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((~A) * sr));~%"
                             dur-expr)))
                  (t
                   ;----------------

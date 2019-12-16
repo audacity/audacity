@@ -45,39 +45,33 @@ boolean seqp(s)
 /* xlseq_free gets called by xlisp when the GC frees a seq object.
  * seq_free is a macro, so here we make it into a function pointer.
  */
-static void xlseq_free(sequence)
-seq_type sequence;
+static void xlseq_free(void *sequence)
 {
-   seq_free(sequence);
+    seq_free((seq_type)sequence);
 }
 
 
-static void xlseq_print(fptr, sequence)
-  LVAL fptr;
-  seq_type sequence;
+static void xlseq_print(LVAL fptr, void *sequence)
 {
     char s[32];
     sprintf(s, "#<SEQ:0x%p>", sequence);
     xlputstr(fptr, s);
 }
 
-static void xlseq_save(fp, sequence)
-  FILE *fp;
-  seq_type sequence;
+static void xlseq_save(FILE *fp, void *sequence)
 {
     errputstr("xlseq_save called\n");
 }
 
 
-static unsigned char *xlseq_restore(fp)
-  FILE *fp;
+static unsigned char *xlseq_restore(FILE *fp)
 {
    errputstr("xlseq_restore called\n");
    return 0;
 }
 
 
-void seqext_init()
+void seqext_init(void)
 {
 /*    printf("localinit called\n"); */
     seq_desc = create_desc("SEQ", xlseq_free, xlseq_print, xlseq_save, 
@@ -86,7 +80,7 @@ void seqext_init()
 }
 
 
-void seqext_symbols()
+void seqext_symbols(void)
 {
         s_seq = xlenter("SEQ");
 }

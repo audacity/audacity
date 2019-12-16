@@ -16,7 +16,7 @@
            ("rate_type" "sr"))
 ;; use a constant rate of 1.0 because it will actually be conrolled
 ;; by breath_env
-(STATE ("struct instr *" "clar" "initInstrument(CLARINET, round(sr));
+(STATE ("struct instr *" "clar" "initInstrument(CLARINET, ROUND32(sr));
     noteOn(susp->clar, freq, 1.0);
     controlChange(susp->clar, 11, CLAR_CONTROL_CHANGE_CONST * vibrato_freq);
     controlChange(susp->clar, 1, CLAR_CONTROL_CHANGE_CONST * vibrato_gain);")

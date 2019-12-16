@@ -6,41 +6,23 @@
 * call structure
 ****************************************************************************/
 
-/* ---NOTE!!! if you change MAX_CALL_ARGS, change CALLARGS macro below--- */
 #define MAX_CALL_ARGS 8
 typedef struct call_args_struct {
-  long arg[MAX_CALL_ARGS];
-} call_args_node;
+  void *arg[MAX_CALL_ARGS];
+} call_args_node, *call_args_type;
 
 typedef struct call {
     union {
         struct {
             time_type time;     /* virtual time of this call */
             int priority;       /* an 8-bit the priority, low priority first */
-            int (*routine)();   /* who to call */
+            void (*routine)();   /* who to call */
             call_args_node p; /* what to pass */
         } e;
         struct call *p; /* used to link free calls */
     } u;
 } *call_type, call_node;
 
-/* CALLARGS - given a call_type, this macro generates an argument list */
-/*
- * NOTE: originally, I thought call->u.e.p (a structure), would do it, but
- * Lattice C for the Amiga has a compiler bug, and even in places where the
- * bug doesn't show up, the code generated for the structure passing is 
- * a sequence of two loops: one to copy data to a local area on the stack,
- * and one to push this data (a byte at a time!) to the top of the stack.
- * With Lattice (and perhaps others, I haven't checked), it's better to 
- * push the data in-line.
- */
-#ifdef LATTICE
-#define CARG(n) call->u.e.p.arg[n]
-#define CALLARGS(call) CARG(0), CARG(1), CARG(2), CARG(3), \
-                CARG(4), CARG(5), CARG(6), CARG(7)
-#else
-#define CALLARGS(call) call->u.e.p
-#endif
 
 /***************************************************************************
 * timebase structure

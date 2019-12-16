@@ -4,8 +4,11 @@
  */
 
 #include <stdlib.h>
-#ifndef WIN32
+#if defined(UNIX) || defined(__APPLE__)
 #include <unistd.h>
+#endif
+#ifdef WIN32
+#include <direct.h>
 #endif
 #include <string.h>
 #include <xlisp.h>

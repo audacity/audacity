@@ -16,21 +16,13 @@ message.)
 
 A source version is also available (the same source download is for
 Win32, Mac OS X, and Linux). The source version is intended for
-developers who want to recompile Nyquist.  The contents of the source
-archive are extracted to the C:\nyquist directory, but you can put it
-anywhere you like. You can then open the workspace file, nyquist.sln,
-using Microsoft Visual C++. You can build and run the command line
-version of Nyquist from within Visual C++. There is a batch file,
-comp-ide.bat, for bulding the Nyquist IDE. This requires the Java SDK
-from Sun Microsystems. 
+developers who want to recompile Nyquist.  See Win32 Installation
+in the reference manual for more instructions.
 
 64-bit Windows
 --------------
-Nyquist runs on 64-bit Windows. Although you can compile a 64-bit
-native version, Nyquist is currently released for 32-bit Windows.
-When running on 64-bit Windows, note that the Registry entries will
-be under HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\CMU\Nyquist. The
-"Wow6432Node" creates a special namespace for 32-bit programs.
+Nyquist runs on 64-bit Windows and is no longer tested on 32-bit
+Windows.
 
 Optional
 --------
@@ -85,28 +77,9 @@ installer may fail to set up the Registry entry that Nyquist uses to
 find initialization files. In this case, Nyquist will run a lisp
 interpreter, but many Nyquist functions will not be defined. If you
 can log in as administrator, do it and reinstall Nyquist. If you do
-not have permission, you can still run Nyquist as follows: 
+not have permission, you'll have to find an administrator to run
+the installer.
 
-Create a file named init.lsp in the same directory as Nyquist.exe
-(the default location is C:\Program Files\Nyquist, but you may
-have installed it in some other location.) Put the following text
-in init.lsp: 
-
-    (setf *search-path* 
-          "C:/Program Files/Nyquist/runtime,C:/Program Files/Nyquist/lib")
-    (load "C:/Program Files/Nyquist/runtime/init.lsp")
-
-Note: in the three places where you see C:/Program Files/Nyquist,
-insert the full path where Nyquist is actually installed. Use forward
-slashes (/) rather than back slashes (\) to separate directories. For
-example, if Nyquist is installed at D:\rbd\nyquist, then init.lsp
-should contain: 
-
-    (setf *search-path* "D:/rbd/nyquist/runtime,D:/rbd/nyquist/lib")
-    (load "d:/rbd/nyquist/runtime/init.lsp")
-
-The variable *search-path*, if defined, is used in place of the
-registry to determine search paths for files.
 
 SystemRoot
 ----------
@@ -151,41 +124,35 @@ Files\Java\jdk1.7.0\bin."
 Another possible problem is that your Java version is not compatible
 with Nyquist. In that case, you should see an error message 
 complaining about "Unsupported major.minor version...". The current
-major.minor version is 51 and you need to have Java version 1.7 
+major.minor version is 51 and you need to have Java version 10
 installed. (Use the command: java -version to find out your java
 version number.)
 
 You might have to reboot for these changes to take effect.
 
-Compile Nyquist for using Visual Studio
+Compile Nyquist using Visual Studio
 ---------------------------------------
-Nyquist can be compiled using Visual Studio 2010 or 2012. You can
-download Visual C++ Express 2010 and Visual Studio 2012 Express for
-free from Mircosoft website.
+Nyquist can be compiled using Visual Studio.
 
-If you use Visual C++ 2010 Express, you MUST install SP1 (service pack
-1).
-
-Open nyquist-vc2010.sln; If you are using Visual Studio 2012 or later
-versions, open nyquist.sln instead. 
+To make a VS solution file, get CMake and run it on CMakeLists.txt in
+the nyquist directory.
 
 In Visual Studio,
-	Set solution configuration to "Release" and solution platforms
-	to "Win32".
-	Click Debug->Build Solution (or press F7)
-	
-	Click Debug->Start Debugging (or press F5)
+    Set solution configuration to "Release" and solution platforms
+    to "Win64".
+        Build Solution
+        Start Debugging
 
 To build jnyqide, 
-	Check if you have installed JDK and have the directory to
-	javac.exe added to your system PATH. 
-	Run comp-ide.bat under the project root. It will compile .java
-	files under jnyqide.
-	For debugging, you can run the IDE immediately. 
-	    First copy nyquist\WinRel\nyquist.exe to nyquist\ (only do
-            	this each time you recompile nyquist.)
-	    Then, run jnyqide.bat.
+    Check if you have installed JDK and have the directory to
+    javac.exe added to your system PATH. 
+    Run comp-ide.bat under the project root. It will compile .java
+    files under jnyqide.
+    For debugging, you can run the IDE immediately. 
+        First copy nyquist\WinRel\nyquist.exe to nyquist\ (only do
+                this each time you recompile nyquist.)
+        Then, run jnyqide.bat.
         To generate a release:
-	    Run releasenyqide.bat under the project root. It will copy
+        Run releasenyqide.bat under the project root. It will copy
                 all the necessary files to .\nyqrelide\. You can run
                 jnyqide.bat from there. 

@@ -125,12 +125,12 @@ void stkchorus_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s1 up to final_time for this block of zeros */
-    while ((round((final_time - susp->s1->t0) * susp->s1->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr)) >=
 	   susp->s1->current)
 	susp_get_samples(s1, s1_ptr, s1_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s1->t0) * susp->s1->sr -
+    n = ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr -
          (susp->s1->current - susp->s1_cnt));
     susp->s1_ptr += n;
     susp_took(s1_cnt, n);
@@ -179,7 +179,7 @@ sound_type snd_make_stkchorus(sound_type s1, double baseDelay, double depth, dou
     if (s1->sr < sr) { s1->scale = scale_factor; scale_factor = 1.0F; }
 
     falloc_generic(susp, stkchorus_susp_node, "snd_make_stkchorus");
-    susp->mych = initStkChorus(baseDelay, depth, freq,  round(sr));
+    susp->mych = initStkChorus(baseDelay, depth, freq,  ROUND32(sr));
 stkEffectSetMix(susp->mych, mix);
     susp->susp.fetch = stkchorus_n_fetch;
     susp->terminate_cnt = UNKNOWN;

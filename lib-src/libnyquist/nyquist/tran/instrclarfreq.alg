@@ -2,7 +2,7 @@
 (NAME "clarinet_freq")
 (ARGUMENTS ("double" "freq1") ("sound_type" "breath_env") 
            ("sound_type" "freq_env") ("rate_type" "sr"))
-(STATE ("struct instr *" "clar" "initInstrument(CLARINET, round(sr));
+(STATE ("struct instr *" "clar" "initInstrument(CLARINET, ROUND32(sr));
     controlChange(susp->clar, 1, 0.0);")
        ("int" "temp_ret_value" "noteOn(susp->clar, freq1, 1.0)")
        ("double" "frequency" "freq1")

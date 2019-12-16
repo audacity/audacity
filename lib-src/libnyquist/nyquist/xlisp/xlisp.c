@@ -85,6 +85,11 @@ long xlrand (long range) {
 #endif
 }
 
+long xlsrand(long seed) {
+    srand(seed);
+    return seed;
+}
+
 /* xlrealrand - return random number in [0, 1] */
 double xlrealrand() {
     /* always use the random generator from the C library,
@@ -121,8 +126,8 @@ void xlisp_main_init(int argc, char *argv[])
                 secure_read_path = &argv[i][2];
                 break;
             case 'w':
-	    case 'W':
-	        safe_write_path = &argv[i][2];
+            case 'W':
+                safe_write_path = &argv[i][2];
                 break;
             case 'l':
             case 'L':
@@ -159,7 +164,7 @@ void xlisp_main_init(int argc, char *argv[])
 
     /* open the transcript file */
     if (transcript && (tfp = osaopen(transcript,"w")) == NULL) {
-        sprintf(buf,"error: can't open transcript file: %s",transcript);
+        snprintf(buf, STRMAX, "error: can't open transcript file: %s", transcript);
         stdputstr(buf);
     }
 

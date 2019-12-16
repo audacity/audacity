@@ -65,7 +65,8 @@ void xcorr(double *s, double *rxx, long N)
 
 // PITCH DETECTION ALGORITHM: Implemented separately
 
-
+char *lpanal_expected_flonum_vector = "expected flonum vector";
+char *lpanal_insufficient_space = "insufficient space";
 
 LVAL snd_lpanal(LVAL w, long P)
 {
@@ -79,34 +80,34 @@ LVAL snd_lpanal(LVAL w, long P)
 	double unv;
 	double suma, alphatemp; // help variables
 	
-
 	long i,j;
 	LVAL result;
 
 	xlsave1(result);
-
-
-
 	//// end vars /////////////
 
-
-
 	//// allocate memory ///////
+    if (!vectorp(w)) xlfail(lpanal_expected_flonum_vector);
     N = getsize(w);
-	s   = calloc(sizeof(double),N); //signal
-    rxx = calloc(sizeof(double),N); //autocorrelation
+	s = calloc(sizeof(double), N); //signal
+    if (!s) xlfail(lpanal_insufficient_space);
+    rxx = calloc(sizeof(double), N); //autocorrelation
+    if (!rxx) xlfail(lpanal_insufficient_space);
 	alpha = calloc(sizeof(double), P); // filter coefs
+    if (!alpha) xlfail(lpanal_insufficient_space);
 	//k = calloc(sizeof(double), P); // reflection coefs
 	//E = calloc(sizeof(double), P); // residual energy
-    
 
 	//////   copy Lisp array sound data to array of double ///////
-	for(i=0; i<N; i++)
-		s[i] = getflonum(getelement(w,i));
-
+	for (i = 0; i < N; i++) {
+        LVAL elem = getelement(w, i);
+        if (!floatp(elem))
+            xlfail(lpanal_expected_flonum_vector);
+        s[i] = getflonum(elem);
+    }
     /////   autocorrelation  ////////////////
 
-	xcorr(s,rxx,N); // this may be optimized as only P autocorr factors are needed (not N)
+	xcorr(s, rxx, N); // this may be optimized as only P autocorr factors are needed (not N)
 
 
 	////////     LPC   analysis    //////////////////////////////////

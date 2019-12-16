@@ -404,12 +404,12 @@ void sampler_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s_fm up to final_time for this block of zeros */
-    while ((round((final_time - susp->s_fm->t0) * susp->s_fm->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s_fm->t0) * susp->s_fm->sr)) >=
 	   susp->s_fm->current)
 	susp_get_samples(s_fm, s_fm_ptr, s_fm_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s_fm->t0) * susp->s_fm->sr -
+    n = ROUNDBIG((final_time - susp->s_fm->t0) * susp->s_fm->sr -
          (susp->s_fm->current - susp->s_fm_cnt));
     susp->s_fm_ptr += n;
     susp_took(s_fm_cnt, n);
@@ -470,7 +470,7 @@ sound_type snd_make_sampler(sound_type s, double step, double loop_start, rate_t
        if (susp->the_table->length <= 1) { 
              xlfail("sampler table length <= 1");
        }
-      if (index > round(susp->table_len) - 2 ||
+      if (index > ROUND32(susp->table_len) - 2 ||
           index < 0) {
           xlfail("sampler loop start not within samples");
       }
@@ -481,7 +481,7 @@ sound_type snd_make_sampler(sound_type s, double step, double loop_start, rate_t
           xlfail("sampler sample rate <= 0");
       }
       /* copy interpolated start to last entry */
-      susp->table_ptr[round(susp->table_len)] =
+      susp->table_ptr[ROUND32(susp->table_len)] =
           (sample_type) (susp->table_ptr[index] * (1.0 - frac) + 
                          susp->table_ptr[index + 1] * frac);};
 

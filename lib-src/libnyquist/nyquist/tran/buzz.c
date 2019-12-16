@@ -438,12 +438,12 @@ void buzz_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from s_fm up to final_time for this block of zeros */
-    while ((round((final_time - susp->s_fm->t0) * susp->s_fm->sr)) >=
+    while ((ROUNDBIG((final_time - susp->s_fm->t0) * susp->s_fm->sr)) >=
 	   susp->s_fm->current)
 	susp_get_samples(s_fm, s_fm_ptr, s_fm_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->s_fm->t0) * susp->s_fm->sr -
+    n = ROUNDBIG((final_time - susp->s_fm->t0) * susp->s_fm->sr -
          (susp->s_fm->current - susp->s_fm_cnt));
     susp->s_fm_ptr += n;
     susp_took(s_fm_cnt, n);

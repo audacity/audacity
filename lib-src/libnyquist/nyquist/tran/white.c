@@ -87,7 +87,7 @@ sound_type snd_make_white(time_type t0, rate_type sr, time_type d)
     falloc_generic(susp, white_susp_node, "snd_make_white");
     susp->susp.fetch = white__fetch;
 
-    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
+    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((d) * sr));
     /* initialize susp state */
     susp->susp.free = white_free;
     susp->susp.sr = sr;

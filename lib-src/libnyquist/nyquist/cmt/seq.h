@@ -173,7 +173,7 @@ typedef struct seq_struct {
     void (*midi_ctrl_fn)(struct seq_struct * seq, int voice, int ctrl, int value);
     void (*midi_program_fn)(struct seq_struct * seq, int voice, int prog);
     void (*midi_touch_fn)(struct seq_struct * seq, int voice, int value);
-    void (*noteoff_fn)(struct seq_struct * seq, int voice, int pitch);
+    void (*noteoff_fn)(call_args_type args);
     void (*noteon_fn)(struct seq_struct * seq, int chan, int pitch, int vel);
     void (*free_fn)(struct seq_struct * seq);
     void (*reset_fn)(struct seq_struct * seq);
@@ -215,8 +215,8 @@ chunk_type chunk_create(boolean first_flag);
         (*(((seq_type) seq)->midi_program_fn))(seq, voice, prog)
 #define seq_midi_touch(seq, voice, value) \
         (*(((seq_type) seq)->midi_touch_fn))(seq, voice, value)
-#define seq_noteoff(seq, voice, pitch) \
-        (*(((seq_type) seq)->noteoff_fn))(seq, voice, pitch)
+#define seq_noteoff(seq, args) \
+        (*(((seq_type) seq)->noteoff_fn))(args)
 #define seq_noteon(seq, voice, pitch, vel) \
         (*(((seq_type) seq)->noteon_fn))(seq, voice, pitch, vel)
 #define seq_free(seq) (*(((seq_type) seq)->free_fn))(seq)
@@ -262,7 +262,7 @@ seq_type seq_copy(seq_type from_seq); /* LISP: (SEQ-COPY SEQ) */
 seq_type seq_create(void); /* LISP: (SEQ-CREATE) */
 void seq_cycle(seq_type seq, boolean flag, time_type dur);
 #define seq_duration(seq) (((seq_type) seq)->chunklist->u.info.duration)
-void seq_end_event(seq_type seq);
+void seq_end_event(call_args_type args);
 #define seq_events(seq) (((seq_type) seq)->chunklist ? \
     (((seq_type) seq)->chunklist->u.info.eventlist) : NULL) 
 #define seq_dictionary(seq) (seq)->chunklist->u.info.dictionary
@@ -278,7 +278,7 @@ void seq_midi_ctrl_meth(seq_type seq, int voice, int ctrl, int value);
 void seq_midi_program_meth(seq_type seq, int voice, int prog);
 void seq_midi_touch_meth(seq_type seq, int voice, int value);
 void seq_noteon_meth(seq_type seq, int voice, int pitch, int vel);
-void seq_noteoff_meth(seq_type seq, int chan, int pitch);
+void seq_noteoff_meth(call_args_type args);
 time_type seq_pause(seq_type seq, boolean flag);
 void seq_play(seq_type seq);
 #define seq_rate(seq) ((seq_type) seq)->rate

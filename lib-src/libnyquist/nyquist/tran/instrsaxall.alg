@@ -5,7 +5,7 @@
 	("sound_type" "reed_stiffness") ("sound_type" "noise_env") 
         ("sound_type" "blow_pos") ("sound_type" "reed_table_offset")
         ("rate_type" "sr"))
-(STATE ("struct instr *" "sax" "initInstrument(SAXOFONY, round(sr));
+(STATE ("struct instr *" "sax" "initInstrument(SAXOFONY, ROUND32(sr));
     noteOn(susp->sax, freq, 1.0);
     controlChange(susp->sax, 29, SAX_CONTROL_CHANGE_CONST * vibrato_freq);
     controlChange(susp->sax, 1, SAX_CONTROL_CHANGE_CONST * vibrato_gain);")

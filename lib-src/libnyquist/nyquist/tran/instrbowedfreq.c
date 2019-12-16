@@ -115,20 +115,20 @@ void bowed_freq_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from bowpress_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->bowpress_env->t0) * susp->bowpress_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->bowpress_env->t0) * susp->bowpress_env->sr)) >=
 	   susp->bowpress_env->current)
 	susp_get_samples(bowpress_env, bowpress_env_ptr, bowpress_env_cnt);
     /* fetch samples from freq_env up to final_time for this block of zeros */
-    while ((round((final_time - susp->freq_env->t0) * susp->freq_env->sr)) >=
+    while ((ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr)) >=
 	   susp->freq_env->current)
 	susp_get_samples(freq_env, freq_env_ptr, freq_env_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->bowpress_env->t0) * susp->bowpress_env->sr -
+    n = ROUNDBIG((final_time - susp->bowpress_env->t0) * susp->bowpress_env->sr -
          (susp->bowpress_env->current - susp->bowpress_env_cnt));
     susp->bowpress_env_ptr += n;
     susp_took(bowpress_env_cnt, n);
-    n = round((final_time - susp->freq_env->t0) * susp->freq_env->sr -
+    n = ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr -
          (susp->freq_env->current - susp->freq_env_cnt));
     susp->freq_env_ptr += n;
     susp_took(freq_env_cnt, n);
@@ -176,7 +176,7 @@ sound_type snd_make_bowed_freq(double freq, sound_type bowpress_env, sound_type 
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, bowed_freq_susp_node, "snd_make_bowed_freq");
-    susp->mybow = initInstrument(BOWED, round(sr));
+    susp->mybow = initInstrument(BOWED, ROUND32(sr));
     controlChange(susp->mybow, 1, 0.0);;
     susp->temp_ret_value = noteOn(susp->mybow, freq, 1.0);
     susp->bow_scale = bowpress_env->scale * BOW_CONTROL_CHANGE_CONST;

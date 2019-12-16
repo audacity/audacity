@@ -515,12 +515,12 @@ void fmfbv_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     long n;
 
     /* fetch samples from index up to final_time for this block of zeros */
-    while ((round((final_time - susp->index->t0) * susp->index->sr)) >=
+    while ((ROUNDBIG((final_time - susp->index->t0) * susp->index->sr)) >=
 	   susp->index->current)
 	susp_get_samples(index, index_ptr, index_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->index->t0) * susp->index->sr -
+    n = ROUNDBIG((final_time - susp->index->t0) * susp->index->sr -
          (susp->index->current - susp->index_cnt));
     susp->index_ptr += n;
     susp_took(index_cnt, n);

@@ -47,7 +47,7 @@
     ;; for each sound argument:
     ;;
     ;;    /* fetch samples from NAME up to final_time for this block of zeros */
-    ;;    while ((round((final_time - susp->NAME->t0) * susp->NAME->sr)) >=
+    ;;    while ((ROUNDBIG((final_time - susp->NAME->t0) * susp->NAME->sr)) >=
     ;;	   susp->NAME->current)
     ;;	susp_get_samples(NAME, NAME_ptr, NAME_cnt);
     ;;------------------------------
@@ -56,7 +56,7 @@
   "    /* fetch samples from ~A up to final_time for this block of zeros */~%"
        name)
       (format stream
-  "    while ((round((final_time - susp->~A->t0) * susp->~A->sr)) >=~%" 
+  "    while ((ROUNDBIG((final_time - susp->~A->t0) * susp->~A->sr)) >=~%" 
        name name)
       (format stream "\t   susp->~A->current)~%" name)
       (format stream "\tsusp_get_samples(~A, ~A_ptr, ~A_cnt);~%" 
@@ -73,13 +73,13 @@
     ;;----------------
     ;; for each sound argument:
     ;;
-    ;;	n = round((final_time - susp->NAME->t0) * susp->NAME->sr -
+    ;;	n = ROUNDBIG((final_time - susp->NAME->t0) * susp->NAME->sr -
     ;;	     (susp->NAME->current - susp->NAME_cnt));
     ;;	susp->NAME_ptr += n;
     ;;	susp_took(NAME_cnt, n);
     ;;----------------
     (dolist (name sound-names)
-      (format stream "    n = round((final_time - susp->~A->t0) * susp->~A->sr -~%"
+      (format stream "    n = ROUNDBIG((final_time - susp->~A->t0) * susp->~A->sr -~%"
               name name)
       (format stream "         (susp->~A->current - susp->~A_cnt));~%"
               name name)

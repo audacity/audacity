@@ -2,7 +2,7 @@
 (NAME "sitar")
 (ARGUMENTS ("time_type" "t0") ("double" "freq") ("time_type" "dur") 
            ("rate_type" "sr"))
-(STATE ("struct instr *" "mysitar" "initInstrument(SITAR, round(sr))")
+(STATE ("struct instr *" "mysitar" "initInstrument(SITAR, ROUND32(sr))")
        ("int" "temp_ret_value" "noteOn(susp->mysitar, freq, 1.0)"))
 (NOT-IN-INNER-LOOP "freq" "temp_ret_value")
 (SAMPLE-RATE "sr")

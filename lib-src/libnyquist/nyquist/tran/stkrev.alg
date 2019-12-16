@@ -2,7 +2,7 @@
 (NAME "stkrev")
 (ARGUMENTS ("int" "rev_type") ("sound_type" "s1") ("time_type" "trev")
            ("double" "mix"))
-(STATE 	("struct stkEffect *" "myrv"  "initStkEffect(rev_type, trev, round(sr));
+(STATE 	("struct stkEffect *" "myrv"  "initStkEffect(rev_type, trev, ROUND32(sr));
     stkEffectSetMix(susp->myrv, mix)"))
 (LINEAR s1)
 (START (MIN s1))

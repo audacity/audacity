@@ -21,7 +21,7 @@ LVAL xsetdir() {
         verbose = (xlgetarg() != NIL);
     }
     xllastarg();
-    if (ok_to_open(ssCurDir, "r"))
+    if (ok_to_open(ssCurDir, "r")) {
         if (SetCurrentDirectory(ssCurDir)) {
             if (GetCurrentDirectory(
                 sizeof(szCurDir)/sizeof(TCHAR), szCurDir)) {
@@ -30,7 +30,7 @@ LVAL xsetdir() {
                 stdputstr("Current Directory: ");
                 stdputstr(szCurDir);
                 stdputstr("\n"); */
-	    }
+			}
         }	
     }
     if (verbose) stdputstr("Directory Setting Error\n");

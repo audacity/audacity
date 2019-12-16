@@ -147,7 +147,7 @@ D        nyquist_printf("in sndseq: logically stopped; "
         }
 
         /* figure out which add fetch routine to use */
-        delay = ROUND((susp->s2->t0 - now) * susp->s1->sr);
+        delay = ROUNDBIG((susp->s2->t0 - now) * susp->s1->sr);
         if (susp->terminate_bits) {     /* s1 is done, just get s2 now */
             sound_unref(susp->s1);
             susp->s1 = NULL;

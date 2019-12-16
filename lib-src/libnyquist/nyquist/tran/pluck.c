@@ -238,7 +238,7 @@ sound_type snd_make_pluck(rate_type sr, double hz, time_type t0, time_type d, do
                                     susp->len, susp->cons);
     susp->susp.fetch = pluck__fetch;
 
-    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
+    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((d) * sr));
     /* initialize susp state */
     susp->susp.free = pluck_free;
     susp->susp.sr = sr;

@@ -110,7 +110,7 @@
 #define BREAKTEST
 #endif
 
-#ifdef __APPLE__
+#ifdef UNIX_MACH
 #include <sys/types.h>
 #include <sys/time.h>
 #include <errno.h>
@@ -131,7 +131,7 @@
 #endif /* UNIX_IRIX_MIDIFNS */
 #endif  /* UNIX_IRIX */
 #endif /* UNIX */
-#endif /* __APPLE__ */
+#endif /* UNIX_MACH */
 
 #ifdef ITC
 static int ignore_realtime = 0;
@@ -395,7 +395,7 @@ void eventwait(timeout)
 }
 #else /* !UNIX_ITC */
 #ifdef UNIX
-/* see machmidi.c for UNIX_MACH implementation */
+/* see machmidi.c for UNIX_MACH (OS X) implementation */
 #ifndef UNIX_MACH
 #ifdef UNIX_IRIX_MIDIFNS
 void eventwait(timeout)
@@ -1614,6 +1614,8 @@ private void musicterm()
 *    random number (lo <= result <= hi)
 ****************************************************************************/
 
+/* to avoid confusion and dead code, take this out */
+#ifdef ALL_CMT
 long randseed = 1534781L;
 
 short cmtrand(short lo, short hi)
@@ -1659,6 +1661,8 @@ void settime(newtime)
 #endif
 #endif  
 }
+#endif //ALL_CMT
+
 
 /****************************************************************************
 *                  timereset
@@ -1745,7 +1749,7 @@ void tracemidi(boolean flag)
 ***********************************************************************/
 
 #ifdef  DOS
-
+#include <ctype.h>
 /* binary value of hex char */
 
 private int xval(int c)
@@ -1754,7 +1758,7 @@ private int xval(int c)
     static char t[]="0123456789abcdef";
 
     for (i=0; i<16; i++)
-        if(tolower(c)==t[i]) return(i);
+        if (tolower(c)==t[i]) return(i);
     return (-1);
 }
 
@@ -1814,7 +1818,7 @@ private void midi_init()
         gprintf(TRANS,"MPUBASE %s\n",t);
     base=atox(t);
     }
-    if(err = mOpen(base, irq)) {
+    if (err = mOpen(base, irq)) {
     mClose(err);
     EXIT(1);
     }

@@ -6,7 +6,7 @@
 ")
 (START (MIN env))
 (STATE ("long" "phase" "0")
-       ("long" "ph_incr" "round((hz * SINE_TABLE_LEN) * (1 << SINE_TABLE_SHIFT) / sr)"))
+       ("long" "ph_incr" "ROUND32((hz * SINE_TABLE_LEN) * (1 << SINE_TABLE_SHIFT) / sr)"))
 (TERMINATE (MIN env))
 (LOGICAL-STOP (MIN env))
 (INNER-LOOP "output = sine_table[phase >> SINE_TABLE_SHIFT] * env;

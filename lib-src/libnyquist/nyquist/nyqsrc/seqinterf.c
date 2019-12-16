@@ -96,3 +96,16 @@ void seq_get(seq_type seq, long *eventtype, long *ntime, long *line, long *chan,
     }
 }
 
+/* seq_xlwrite_smf -- invoke seq_write_smf and mark file as closed */
+void seq_xlwrite_smf(seq_type seq, LVAL outfile)
+{
+    if (streamp(outfile)) {
+        if (getfile(outfile) == NULL) {
+            xlfail("file for seq_write_smf not open");
+        }
+        seq_write_smf(seq, getfile(outfile));
+        setfile(outfile, NULL); /* mark file as closed */
+    } else {
+        xlerror("seq_write_smf 2nd arg must be a STREAM", outfile);
+    }
+}

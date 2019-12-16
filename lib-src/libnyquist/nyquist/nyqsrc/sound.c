@@ -23,6 +23,10 @@
 #include "cext.h"
 #include "userio.h"
 
+/* default maximum sample blocks: 
+ * 1GB / (sample_block_len samples/block * 4 bytes/sample) */
+long max_sample_blocks = 1000000000 / (max_sample_block_len * sizeof(float));
+
 /* #define GC_DEBUG */
 #ifdef GC_DEBUG
 extern sound_type sound_to_watch;
@@ -43,10 +47,10 @@ xtype_desc sound_desc;
 LVAL a_sound;
 LVAL s_audio_markers;
 
-static void sound_xlfree();
-static void sound_xlprint();
-static void sound_xlsave();
-static unsigned char *sound_xlrestore();
+static void sound_xlfree(void *);
+static void sound_xlprint(LVAL, void *);
+static void sound_xlsave(FILE *fp, void *s);
+static unsigned char *sound_xlrestore(FILE *);
 
 void sound_print_array(LVAL sa, long n);
 void sound_print_sound(sound_type s, long n);
@@ -60,6 +64,15 @@ boolean sound_created_flag = false;
 int nosc_enabled = false;
 #endif
 
+/* m is in bytes */
+long snd_set_max_audio_mem(long m)
+{
+    long r = max_sample_blocks;
+    max_sample_blocks = m / (max_sample_block_len * sizeof(float));
+    return r * max_sample_block_len * sizeof(float);
+}
+
+
 double sound_latency = 0.3; /* default value */
 /* these are used so get times for *AUDIO-MARKERS* */
 double sound_srate = 44100.0;
@@ -68,8 +81,8 @@ long sound_frames = 0;
 double snd_set_latency(double latency)
 {
     double r = sound_latency;
-	sound_latency = latency;
-	return r;
+    sound_latency = latency;
+    return r;
 }
 
 
@@ -268,7 +281,7 @@ sound_type sound_create(
     falloc_sound(sound, "sound_create");
     if (((long) sound) & 3) errputstr("sound not word aligned\n");
     last_sound = sound; /* debug */
-    if (t0 < 0) xlerror("attempt to create a sound with negative starting time", s_unbound); 
+    if (t0 < 0) xlfail("attempt to create a sound with negative starting time");
     /* nyquist_printf("sound_create %p gets %g\n", sound, t0); */
     sound->t0 = sound->true_t0 = sound->time = t0;
     sound->stop = MAX_STOP;
@@ -408,7 +421,7 @@ table_type sound_to_table(sound_type s)
 
     if (len >= max_table_len) {
         char emsg[100];
-        sprintf(emsg, "maximum table size (%d) exceeded", max_table_len - 1);
+        sprintf(emsg, "maximum table size (%d) exceeded", max_table_len);
         xlcerror("use truncated sound for table", emsg, NIL);
     } else if (len == 0) {
         xlabort("table size must be greater than 0");
@@ -515,38 +528,37 @@ void snd_list_terminate(snd_list)
 
 void snd_list_unref(snd_list_type list)
 {
-   if (list == NULL) {
-      nyquist_printf("why did snd_list_unref get %p?\n", list);
-      return;
-   }
+    if (list == NULL) {
+        nyquist_printf("why did snd_list_unref get %p?\n", list);
+        return;
+    }
 
-   while (list && (list != zero_snd_list)) {
-      snd_list_type next;
+    while (list && (list != zero_snd_list)) {
+        snd_list_type next = NULL;
 
-      list->refcnt--;
-      if (list->refcnt != 0) {
-         break; // the rest of the list is shared, nothing more to free
-      }
+        list->refcnt--;
+        if (list->refcnt != 0) {
+            break; // the rest of the list is shared, nothing more to free
+        }
 
-      next = NULL;
-      // list nodes either point to a block of samples or this is the
-      // last list node (list->block == NULL) which points to a suspension
-      // lists can also terminate at the zero_block, which is an infinite
-      //     shared list (zero_block->block == zero_block) of zero samples
-      if (list->block && list->block != zero_block) {
-         /* there is a next snd_list */
-         next = list->u.next;
-         sample_block_unref(list->block);
-      } else if (list->block == NULL) { /* the next thing is the susp */
-         /* free suspension structure */
-         /* nyquist_printf("freeing susp@%p\n", list->u.susp); */
-         (*(list->u.susp->free))(list->u.susp);
-      }
-      /* if (list == list_watch)
-       printf("freeing watched snd_list %p\n", list); */
-      ffree_snd_list(list, "snd_list_unref");
-      list = next;
-   }
+        // list nodes either point to a block of samples or this is the 
+        // last list node (list->block == NULL) which points to a suspension
+        // lists can also terminate at the zero_block, which is an infinite
+        //     shared list (zero_block->block == zero_block) of zero samples
+        if (list->block && list->block != zero_block) {
+            /* there is a next snd_list */
+            next = list->u.next;
+            sample_block_unref(list->block);
+        } else if (list->block == NULL) { /* the next thing is the susp */
+            /* free suspension structure */
+            /* nyquist_printf("freeing susp@%p\n", list->u.susp); */
+            (*(list->u.susp->free))(list->u.susp);
+        }
+        /* if (list == list_watch) 
+               printf("freeing watched snd_list %p\n", list); */
+        ffree_snd_list(list, "snd_list_unref");
+        list = next;
+    }
 }
 
 
@@ -1444,6 +1456,7 @@ void sound_play(snd_expr)
 
     ntotal = 0;
     s = getsound(result);
+    xlpop();
     /* if snd_expr was simply a symbol, then s now points to
         a shared sound_node.  If we read samples from it, then
         the sound bound to the symbol will be destroyed, so
@@ -1454,6 +1467,7 @@ void sound_play(snd_expr)
         it.
     */
     s = sound_copy(s);
+    gc();
     while (1) {
 #ifdef OSC
         if (nosc_enabled) nosc_poll();
@@ -1467,7 +1481,6 @@ void sound_play(snd_expr)
     }
     nyquist_printf("total samples: %d\n", ntotal);
     sound_unref(s);
-    xlpop();
 }
 
 
@@ -1590,30 +1603,18 @@ double step_to_hz(double steps)
     return exp(steps * p1 + p2);
 }
 
-#ifdef WIN32
-#if _MSC_VER < 1800
-#define RECIP_LOG_2 1.44269504088895364453
-
-double log2(double x)
-{
-  return log(x) * RECIP_LOG_2;
-}
-#endif
-#endif
 
 /*
  * from old stuff...
  */
 
-static void sound_xlfree(s)
-sound_type s;
+static void sound_xlfree(void *s)
 {
-/*    nyquist_printf("sound_xlfree(%p)\n", s);*/
-    sound_unref(s);
+    sound_unref((sound_type)s);
 }
 
 
-static void sound_xlprint(LVAL fptr, sound_type s)
+static void sound_xlprint(LVAL fptr, void *s)
 {
         /* the type cast from s to LVAL is OK because
          * putatm does not dereference the 3rd parameter */
@@ -1621,9 +1622,7 @@ static void sound_xlprint(LVAL fptr, sound_type s)
 }
 
 
-static void sound_xlsave(fp, s)
-FILE *fp;
-sound_type s;
+static void sound_xlsave(FILE *fp, void *s)
 {
     stdputstr("sound_save called\n");
 }
@@ -1654,17 +1653,20 @@ void sound_xlmark(void *a_sound)
             stdputstr(" terminates at zero_snd_list\n");
 #endif
             return;
+        } else if (counter > max_sample_blocks) {
+            /* exceded maximum length of sound in memory */
         } else if (counter > 1000000) {
-            stdputstr("You created a recursive sound! This is a Nyquist bug.\n");
-            stdputstr("The only known way to do this is by a SETF on a\n");
-            stdputstr("local variable or parameter that is being passed to SEQ\n");
-            stdputstr("or SEQREP. The garbage collector assumes that sounds are\n");
-            stdputstr("not recursive or circular, and follows sounds to their\n");
-            stdputstr("end. After following a million nodes, I'm pretty sure\n");
-            stdputstr("that there is a cycle here, but since this is a bug,\n");
-            stdputstr("I cannot promise to recover. Prepare to crash. If you\n");
-            stdputstr("cannot locate the cause of this, contact the author -RBD.\n");
-        } 
+           stdputstr("You created a recursive sound! This is a Nyquist bug.\n");
+           stdputstr("The only known way to do this is by a SETF on a\n");
+           stdputstr("local variable or parameter that is being passed to\n");
+           stdputstr("SEQ or SEQREP. The garbage collector assumes that\n");
+           stdputstr("sounds are not recursive or circular, and follows\n");
+           stdputstr("sounds to their end. After following a more nodes,\n");
+           stdputstr("than can exist, I'm pretty sure that there is a\n");
+           stdputstr("cycle here, but since this is a bug, I cannot promise\n");
+           stdputstr("to recover. Prepare to crash. If you cannot locate\n");
+           stdputstr("the cause of this, contact the author -RBD.\n");
+        }
         snd_list = snd_list->u.next;
         counter++;
     }

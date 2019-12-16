@@ -7,13 +7,62 @@
 #include "string.h"
 #include "xlisp.h"
 
+extern struct segment *segs, *lastseg;
+
+void freeimage(void);
+
+/* freeimage - free the current memory image */
+void freeimage(void)
+{
+    SEGMENT *seg,*next;
+    FILE *fp;
+    LVAL p;
+    int n;
+
+    /* free the data portion of SYMBOL/VECTOR/OBJECT/STRING nodes */
+    for (seg = segs; seg != NULL; seg = next) {
+        p = &seg->sg_nodes[0];
+        for (n = seg->sg_size; --n >= 0; ++p)
+            switch (ntype(p)) {
+            case SYMBOL:
+            case OBJECT:
+            case VECTOR:
+            case CLOSURE:
+                if (p->n_vsize)
+                    free(p->n_vdata);
+                break;
+            case STRING:
+                if (getslength(p))
+                    free((void *) getstring(p));
+                break;
+            case STREAM:
+                if ((fp = getfile(p)) && (fp != stdin && fp != stdout && fp != STDERR))
+                    osclose(getfile(p));
+                break;
+            case EXTERN:
+                /* note: currently, there are 2 EXTERN types: SEQ and SOUND */
+                if (getdesc(p)) {
+                    (*(getdesc(p)->free_meth))(getinst(p));
+                }
+                break;
+            default:   /* note: SUBR, FSUBR, CONS, SYMBOL, FIXNUM, FLONUM,   */
+                break; /* CHAR, USTREAM are ignored here because they do not */
+                       /* point outside of the segments that are being freed */
+            }
+        next = seg->sg_next;
+        free((void *) seg);
+    }
+    segs = lastseg = NULL;
+}
+
+
 #ifdef SAVERESTORE
 
 /* external variables */
 extern LVAL obarray,s_gchook,s_gcflag;
 extern long nnodes,nfree;
 extern int anodes,nsegs,gccalls;
-extern struct segment *segs,*lastseg,*fixseg,*charseg;
+extern struct segment *fixseg,*charseg;
 extern XLCONTEXT *xlcontext;
 extern LVAL fnodes;
 extern struct xtype_desc_struct desc_table[NTYPES];
@@ -29,7 +78,6 @@ LOCAL LVAL cviptr(OFFTYPE o);
 LOCAL void writeptr(OFFTYPE off);
 LOCAL void setoffset(void);
 LOCAL void writenode(LVAL node);
-LOCAL void freeimage(void);
 LOCAL void readnode(int type, LVAL node);
 
 
@@ -134,7 +182,7 @@ int xlisave(const char *fname)
 /* xlirestore - restore a saved memory image */
 int xlirestore(const char *fname)
 {
-    extern FUNDEF *funtab;
+    extern FUNDEF funtab[];
     char fullname[STRMAX+1];
     unsigned char *cp;
     int n,i,max,type;
@@ -258,40 +306,6 @@ done:
 
     /* return successfully */
     return (TRUE);
-}
-
-/* freeimage - free the current memory image */
-LOCAL void freeimage(void)
-{
-    SEGMENT *seg,*next;
-    FILE *fp;
-    LVAL p;
-    int n;
-
-    /* free the data portion of SYMBOL/VECTOR/OBJECT/STRING nodes */
-    for (seg = segs; seg != NULL; seg = next) {
-        p = &seg->sg_nodes[0];
-        for (n = seg->sg_size; --n >= 0; ++p)
-            switch (ntype(p)) {
-            case SYMBOL:
-            case OBJECT:
-            case VECTOR:
-            case CLOSURE:
-                if (p->n_vsize)
-                    free(p->n_vdata);
-                break;
-            case STRING:
-                if (getslength(p))
-                    free((void *) getstring(p));
-                break;
-            case STREAM:
-                if ((fp = getfile(p)) && (fp != stdin && fp != stdout && fp != STDERR))
-                    osclose(getfile(p));
-                break;
-            }
-        next = seg->sg_next;
-        free((void *) seg);
-    }
 }
 
 /* setoffset - output a positioning command if nodes have been skipped */

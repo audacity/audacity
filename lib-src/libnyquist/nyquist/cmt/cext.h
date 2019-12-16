@@ -19,7 +19,8 @@ Pointer -- pointer to char, a generic pointer
 ABS()     -- absolute value of any type of number
 MAX()     -- maximum of two numbers
 MIN()     -- minimum of two numbers
-ROUND()	  -- round a double to long		     
+ROUND32() -- round a double to int
+ROUNDBIG() -- round a double to intptr_t
 
 NULL     -- pointer to nothing, a constant
 EOS      -- end of string, a constant '\0'
@@ -45,6 +46,8 @@ EXIT(n)  -- calls exit(n) after shutting down/deallocating resources
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <stdint.h>
+#include <inttypes.h>
 
 #if HAS_STDLIB_H
 #include <stdlib.h>
@@ -178,11 +181,21 @@ public void EXIT(int);
 MALLOC is not defined!
 #endif
 
-#define ROUND(x) ((long) ((x) + 0.5))
-
+#define ROUND32(x) ((int) ((x) + 0.5))
+// on 32-bit machines, ROUNDBIG rounds to int32_t
+// on 64-bit architectures, ROUNDBIG rounds to int64_t
+#define ROUNDBIG(x) ((intptr_t) ((x) + 0.5))
+/* obsolete: ROUND is needed for both ints, e.g. sample rates,
+   and big ints, e.g. sample counts, so we have two ROUND
+   functions. We use intptr_t for ROUNDBIG because long on
+   Windows is only 32 bits, while intptr_t is 64 bits.
+   With the addition of these 2 functions, we never
+   "NEED_ROUND" and trying to use round will cause an error.
+  */
 /* for compatibility */
 #ifdef NEED_ROUND
-#define round ROUND
+// #define round ROUND
+#define round you should not use round
 #endif
 
 #ifndef min

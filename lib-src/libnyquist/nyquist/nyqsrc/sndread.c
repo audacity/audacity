@@ -42,10 +42,9 @@
 
 static int sndread_file_open_count = 0;
 
-void read__fetch(susp, snd_list)
-  register read_susp_type susp;
-  snd_list_type snd_list;
+void read__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    read_susp_type susp = (read_susp_type) a_susp;
     long n; /* jlh Changed type to long, trying to make move_samples_... work */
     sample_block_type out;
     register sample_block_values_type out_ptr;
@@ -70,7 +69,7 @@ void read__fetch(susp, snd_list)
         n = susp->cnt - susp->susp.current;
     }
 
-    snd_list->block_len = n;
+    snd_list->block_len = (short) n;
     susp->susp.current += n;
 
     if (n == 0) {
@@ -123,7 +122,7 @@ LVAL snd_make_read(
     falloc_generic(susp, read_susp_node, "snd_make_read");
     memset(&(susp->sf_info), 0, sizeof(SF_INFO));
 
-    susp->sf_info.samplerate = ROUND(*srate);
+    susp->sf_info.samplerate = ROUND32(*srate);
     susp->sf_info.channels = *channels;
 
     switch (*mode) {
@@ -177,7 +176,7 @@ LVAL snd_make_read(
 
     if (!susp->sndfile) {
         char error[240];
-        sprintf(error, "SND-READ: Cannot open file '%s' because of %s", filename,
+        snprintf(error, 240, "SND-READ: Cannot open file '%s' because of %s", filename,
                 sf_strerror(susp->sndfile));
         xlfail(error);
     }
@@ -219,7 +218,7 @@ LVAL snd_make_read(
     if (*dur * *srate + 0.5 > (unsigned long) 0xFFFFFFFF) {
         susp->cnt = 0x7FFFFFFF;
     } else {
-        susp->cnt = ROUND((*dur) * *srate);
+        susp->cnt = ROUNDBIG((*dur) * *srate);
     }
 
     switch (susp->sf_info.format & SF_FORMAT_TYPEMASK) {

@@ -106,10 +106,10 @@ sound_type snd_make_sine(time_type t0, double hz, rate_type sr, time_type d)
     sample_type scale_factor = 1.0F;
     falloc_generic(susp, sine_susp_node, "snd_make_sine");
     susp->phase = 0;
-    susp->ph_incr = round(((hz * SINE_TABLE_LEN) * (1 << SINE_TABLE_SHIFT) / sr));
+    susp->ph_incr = ROUND32(((hz * SINE_TABLE_LEN) * (1 << SINE_TABLE_SHIFT) / sr));
     susp->susp.fetch = sine__fetch;
 
-    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
+    susp->terminate_cnt = check_terminate_cnt(ROUNDBIG((d) * sr));
     /* initialize susp state */
     susp->susp.free = sine_free;
     susp->susp.sr = sr;

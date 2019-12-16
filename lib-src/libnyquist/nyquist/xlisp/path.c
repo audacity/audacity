@@ -19,6 +19,9 @@
  *
  *  9-jan-08  RBD
  *    Added find-in-xlisp-path as XLISP primitive
+ *
+ * 22-jun-16  RBD & Paul Licameli
+ *    Added cleanup code to free allocated memory
  */
 
 #include <string.h>
@@ -26,10 +29,42 @@
 #include "switches.h"
 #include "xlisp.h"
 
+// boolean flag to support one-shot atexit() registration:
+static unsigned char registered_path_cleanup = 0;
+
+// save a copy of xlisp search path for return_xlisp_path():
 static char *g_xlisp_path = NULL;
 
+// return value for find_in_xlisp_path():
+static char *g_xlptemp = NULL;
+
+
+// clean up any allocated memory for this module (path.c)
+static void path_cleanup(void)
+{
+    if (g_xlisp_path) {
+        free(g_xlisp_path);
+        g_xlisp_path = NULL;
+    }
+
+    if (g_xlptemp) {
+        free(g_xlptemp);
+        g_xlptemp = NULL;
+    }
+}
+
+
+// set_xlisp_path - set the search path
+//     the caller owns the parameter string, a copy is made
+//     and freed at program exit
 void set_xlisp_path(const char *p)
 {
+    // one-time register to free any allocated memory at cleanup
+    if (!registered_path_cleanup) {
+        atexit(path_cleanup);
+        registered_path_cleanup = 1;
+    }
+
     if (g_xlisp_path) {
         free(g_xlisp_path);
         g_xlisp_path = NULL;
@@ -37,9 +72,12 @@ void set_xlisp_path(const char *p)
 
     if (p) {
         g_xlisp_path = malloc(strlen(p)+1);
+        // if malloc fails, program will crash here -- maybe that's better
+        //    than setting g_xlisp_path to NULL, masking a critical problem
         strcpy(g_xlisp_path, p);
     }
 }
+
 
 #ifdef UNIX
 const char *unix_return_xlisp_path()
@@ -67,7 +105,7 @@ const char *unix_return_xlisp_path()
 const char *windows_return_xlisp_path()
 {
     #define paths_max 1024
-    static char paths[paths_max];
+    char paths[paths_max];
     get_xlisp_path(paths, paths_max);
     /* make sure we got paths, and the list is not empty */
     if (!paths[0]) {
@@ -77,8 +115,12 @@ const char *windows_return_xlisp_path()
            "empty string if you really want no search path.");
         errputstr(paths);
     }
-
-    return paths;
+    set_xlisp_path(paths);
+    /* for debugging: 
+      errputstr("windows_return_xlisp_path() returns ");
+      errputstr(paths);
+      errputstr("\n"); */
+    return g_xlisp_path;
 }
 
 #endif
@@ -87,7 +129,7 @@ const char *windows_return_xlisp_path()
 const char *mac_return_xlisp_path()
 {
     #define paths_max 1024
-    static char paths[paths_max];
+    char paths[paths_max];
     int prefs_found = false;
     get_xlisp_path(paths, paths_max, &prefs_found);
     if (!paths[0]) {
@@ -107,9 +149,10 @@ const char *mac_return_xlisp_path()
         }
         errputstr(paths);
     }
-
-    return paths;
+    set_xlisp_path(paths);
+    return g_xlisp_path;
 }
+
 
 const char *get_user_id()
 {
@@ -118,11 +161,14 @@ const char *get_user_id()
 }
 #endif
 
+
 const char *return_xlisp_path()
 {
     if (g_xlisp_path)
         return g_xlisp_path;
 
+    // if g_xlisp_path has not been set, use one of the following
+    // to get the value, cache it in g_xlisp_path, and return it
 #ifdef WINDOWS
     return windows_return_xlisp_path();
 #endif
@@ -135,8 +181,6 @@ const char *return_xlisp_path()
 }
 
 
-char *g_xlptemp = NULL;
-
 // find_in_xlisp_path -- find fname or fname.lsp by searching XLISP_PATH
 //
 // NOTE: this module owns the string. The string is valid
@@ -147,6 +191,12 @@ const char *find_in_xlisp_path(const char *fname)
     const char *paths = return_xlisp_path();
     if (!paths)
         return NULL;
+
+    // one-time register to free any allocated memory at cleanup
+    if (!registered_path_cleanup) {
+        atexit(path_cleanup);
+        registered_path_cleanup = 1;
+    }
 
     while (paths && *paths) {
         FILE *fp;

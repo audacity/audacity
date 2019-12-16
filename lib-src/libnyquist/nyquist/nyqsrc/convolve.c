@@ -6,15 +6,81 @@
  * of the first parameter.
  */
 
+/* Original convolve.c modified to do fast convolution. Here are some
+ * notes:
+ *    The first arg is arbitrary length. The second arg is the impulse
+ * response, which is converted into a table. The FFT size will be
+ * limited to 64K, which allows convolution with up to 32K samples.
+ * For longer impulse responses, we'll have to do convolutions one
+ * 32K block at a time. I considered just limiting the convolution
+ * size and handling longer impulse responses in Nyquist XLISP code,
+ * but that would require taking FFT's of each input block multiple
+ * times. Here, we save the FFT's and reuse them, which should gain
+ * a factor of 2 in speed (we still have to inverse FFT each block
+ * after multiplication, which should take 1/2 the time of doing
+ * FFT/inverse-FFT on each block).
+ *
+ * The fast convolution works like this: 
+ *   inputs are x_snd and h_snd. 
+ *   Compute the length of h_snd in samples.
+ *   Set fft_size = MAX_FFT_SIZE
+ *   If length <= MAX_FFT_SIZE / 4 then
+ *      set fft_size = (round length to power of 2) * 2
+ *   set N = fft_size/2
+ *   Set h_len = (length rounded up to multiple of fft_size/2) * 2
+ *   Let L = h_len/ fft_size
+ *   Allocate H of h_len floats
+ *   Iterate over i from 0 to L-1:
+ *       Copy ht with zero fill into H[i] of size fft_size,
+ *         where each H[i] of size fft_size is filled with
+ *         fft_size/2 samples (except for the last H[i])
+ *       Compute FFT of H[i] in place (FFT size is fft_size)
+ *   Allocate X of h_len floats. This represents the history
+ *       of x_snd, which is initially all zero, so the FFT, X is all zero
+ *   Allocate output buffers Y and R, each of size fft_size
+ *   Iterate over j (i.e. run this to generate MAX_CONVOLVE_LEN
+ *           samples; then j = (j + 1) mod L.
+ *       Copy 2nd half of R to first half and zero the 2nd half.
+ *         Note: the first time does nothing because R is initially 
+ *               filled with zeros
+ *       Copy fft_size/2 samples of x_snd into X[j],
+ *         where X[j] is of size fft_size and filled with
+ *         N samples (except when x_snd terminates)
+ *       Zero fill X[j]
+ *       Compute FFT of X[j] in place.
+ *       Iterate k = 0 to L-1
+ *           Multiply X[(j-k) mod L] by H[k] (result goes into Y).
+ *           Compute IFFT of Y in place. Y is now time domain convolution
+ *               of two blocks of samples.
+ *           Add Y to R.
+ *       Now N samples of R can be output.
+ * For simplicity, we'll keep processing x_snd input even after x_snd
+ * terminates. This will avoid special cases where we do not need all
+ * of X[j] at the end of the convolution.
+ *
+ * Length of output is length of x input + length of h
+ */
+
+// You can turn on debugging output with: #define D if (1)
+#define D if (0) 
+
+#define MAX_IR_LEN 4000000 /* maximum impulse response length */
+#define MAX_LOG_FFT_SIZE 16 /* maximum fft size for convolution */
+//#define MAX_LOG_FFT_SIZE 4 /* maximum fft size for convolution */
+#define _USE_MATH_DEFINES 1 /* for Visual C++ to get M_LN2 */
+#include <math.h>
 #include "stdio.h"
 #ifndef mips
 #include "stdlib.h"
 #endif
 #include "xlisp.h"
 #include "sound.h"
+#include "samples.h"
 
 #include "falloc.h"
 #include "cext.h"
+#include "fftlib.h"
+#include "fftext.h"
 #include "convolve.h"
 
 void convolve_free();
@@ -23,21 +89,25 @@ void convolve_free();
 typedef struct convolve_susp_struct {
     snd_susp_node susp;
     long terminate_cnt;
+    boolean know_end_of_x;
     boolean logically_stopped;
     sound_type x_snd;
     long x_snd_cnt;
     sample_block_values_type x_snd_ptr;
 
-    table_type table;
-    sample_type *h_buf;
-    double length_of_h;
-    long h_len;
-    long x_buf_len;
-    sample_type *x_buffer_pointer;
-    sample_type *x_buffer_current;
+    sample_type *X; // the FFTs of x_snd
+    int j; // which block are we processing? 0 <= j < L
+    sample_type *H; // the FFTs of h_snd
+    sample_type *Y; // product of X*H where we inverse FFT
+    int h_snd_len; // true length of h_snd in samples
+    int N; // length of convolution, FFTs are of size 2*N
+    int M; // log2 of 2*N, the FFT size
+    int L; // number of blocks: h_len / (2*N)
+    sample_type *R; // result buffer where output is summed
+    sample_type *R_current; // pointer to next sample to output
 } convolve_susp_node, *convolve_susp_type;
 
-
+/*
 void h_reverse(sample_type *h, long len)
 {
     sample_type temp;
@@ -50,10 +120,11 @@ void h_reverse(sample_type *h, long len)
         len--;
     }
 }
+*/
 
-
-void convolve_s_fetch(register convolve_susp_type susp, snd_list_type snd_list)
+void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    convolve_susp_type susp = (convolve_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -62,189 +133,216 @@ void convolve_s_fetch(register convolve_susp_type susp, snd_list_type snd_list)
 
     register sample_block_values_type out_ptr_reg;
 
-    register sample_type * h_buf_reg;
-    register long h_len_reg;
-    register long x_buf_len_reg;
-    register sample_type * x_buffer_pointer_reg;
-    register sample_type * x_buffer_current_reg;
-    register sample_type x_snd_scale_reg = susp->x_snd->scale;
-    register sample_block_values_type x_snd_ptr_reg;
+    sample_type *R = susp->R;
+    sample_type *R_current;
+    int N = susp->N;
     falloc_sample_block(out, "convolve_s_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	    /* first compute how many samples to generate in inner loop: */
-	    /* don't overflow the output sample block: */
-	    togo = max_sample_block_len - cnt;
-
-	    /* don't run past the x_snd input sample block: */
-	    /* based on susp_check_term_log_samples, but offset by h_len */
-
-	    /* THIS IS EXPANDED BELOW
-	     * susp_check_term_log_samples(x_snd, x_snd_ptr, x_snd_cnt);
-	     */
-	    if (susp->x_snd_cnt == 0) {
-	        susp_get_samples(x_snd, x_snd_ptr, x_snd_cnt);
-	      
-	        /* THIS IS EXPANDED BELOW
-	         *logical_stop_test(x_snd, susp->x_snd_cnt);
-	         */
-                if (susp->x_snd->logical_stop_cnt == 
-		            susp->x_snd->current - susp->x_snd_cnt) {
-	            min_cnt(&susp->susp.log_stop_cnt, susp->x_snd, 
-			    (snd_susp_type) susp, susp->x_snd_cnt);
-	        }
-
-	        /* THIS IS EXPANDED BELOW
-	         * terminate_test(x_snd_ptr, x_snd, susp->x_snd_cnt);
-	         */
-	        if (susp->x_snd_ptr == zero_block->samples) {
-	            /* ### modify this to terminate at an offset of (susp->h_len) */
-                /* Note: in the min_cnt function, susp->x_snd_cnt is *subtracted*
-                 *   from susp->x_snd->current to form the terminate time, so to
-                 *   increase the time, we need to *subtract* susp->h_len, which
-                 *   due to the double negative, *adds* susp->h_len to the ultimate
-                 *   terminate time calculation.
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
+        /* if we need output samples, generate them here */
+        D printf("test R_current at offset %td\n", susp->R_current - R);
+        if (susp->R_current >= R + N) { // true when we output half of R
+            int i = 0;
+            int k;
+            sample_type *Xj = susp->X + susp->j * N * 2;
+            sample_type *H = susp->H;
+            sample_type *Y = susp->Y;
+            int to_copy;
+            /* Shift R, zero fill: */
+            memcpy(R, R + N, N * sizeof(*R));
+            memset(R + N, 0, N * sizeof(*R));
+            /* Copy N samples of x_snd into Xj and zero fill to size 2N */
+            D printf("Copying N samples of x_snd into Xj at offset %td\n", Xj - susp->X);
+            while (i < N) {
+                if (susp->x_snd_cnt == 0) {
+                    susp_get_samples(x_snd, x_snd_ptr, x_snd_cnt);
+                    if (susp->x_snd->logical_stop_cnt == 
+                        susp->x_snd->current - susp->x_snd_cnt) {
+                        min_cnt(&susp->susp.log_stop_cnt, susp->x_snd, 
+                                (snd_susp_type) susp, susp->x_snd_cnt);
+                    }
+                }
+                /* This code is not standard. Since we extend the terminate
+                 * count by susp->h_snd_len, the "standard" call to min_cnt()
+                 * results in extending the terminate time forever. Instead,
+                 * we make this code run once only by setting know_end_of_x.
+                 */                   
+                if (!susp->know_end_of_x && 
+                    susp->x_snd_ptr == zero_block->samples) {
+                    susp->terminate_cnt = susp->x_snd->current - susp->x_snd_cnt;
+                    /* extend the output to include impulse response */
+                    susp->terminate_cnt += susp->h_snd_len;
+                    susp->know_end_of_x = TRUE;
+                }
+                /* copy no more than the remaining space and no more than
+                 * the amount remaining in the block
                  */
-	            min_cnt(&susp->terminate_cnt, susp->x_snd, 
-			            (snd_susp_type) susp, susp->x_snd_cnt - susp->h_len);
-	        }
-	    }
-
-
-	    togo = min(togo, susp->x_snd_cnt);
-
-	    /* don't run past terminate time */
-	    if (susp->terminate_cnt != UNKNOWN &&
-	        susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	        togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	        if (togo == 0) break;
-	    }
-
-
-	    /* don't run past logical stop time */
-	    if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	        int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	        /* break if to_stop == 0 (we're at the logical stop)
-	         * AND cnt > 0 (we're not at the beginning of the
-	         * output block).
-	         */
-	        if (to_stop < togo) {
-		    if (to_stop == 0) {
-		        if (cnt) {
-			    togo = 0;
-			    break;
-		        } else /* keep togo as is: since cnt == 0, we
-		                * can set the logical stop flag on this
-		                * output block
-		                */
-			    susp->logically_stopped = true;
-		    } else /* limit togo so we can start a new
-		            * block at the LST
-		            */
-		        togo = to_stop;
-	        }
-	    }
-
-	    n = togo;
-	    h_buf_reg = susp->h_buf;
-	    h_len_reg = susp->h_len;
-	    x_buf_len_reg = susp->x_buf_len;
-	    x_buffer_pointer_reg = susp->x_buffer_pointer;
-	    x_buffer_current_reg = susp->x_buffer_current;
-	    x_snd_ptr_reg = susp->x_snd_ptr;
-	    out_ptr_reg = out_ptr;
-	    if (n) do { /* the inner sample computation loop */
-            long i; double sum;
-            /* see if we've reached end of x_buffer */
-            if ((x_buffer_pointer_reg + x_buf_len_reg) <= (x_buffer_current_reg + h_len_reg)) {
-                /* shift x_buffer from current back to base */
-                for (i = 1; i < h_len_reg; i++) {
-                    x_buffer_pointer_reg[i-1] = x_buffer_current_reg[i];
-                }    
-                /* this will be incremented back to x_buffer_pointer_reg below */
-                x_buffer_current_reg = x_buffer_pointer_reg - 1;
+                to_copy = min(N - i, susp->x_snd_cnt);
+                memcpy(Xj + i, susp->x_snd_ptr, 
+                       to_copy * sizeof(*susp->x_snd_ptr));
+                susp->x_snd_ptr += to_copy;
+                susp->x_snd_cnt -= to_copy;
+                i += to_copy;
             }
-
-            x_buffer_current_reg++;
-
-            x_buffer_current_reg[h_len_reg - 1] = (x_snd_scale_reg * *x_snd_ptr_reg++);
-
-            sum = 0.0;
-            for (i = 0; i < h_len_reg; i++) {
-                sum += x_buffer_current_reg[i] * h_buf_reg[i];
+            /* zero fill to size 2N */
+            memset(Xj + N, 0, N * sizeof(Xj[0]));
+            D printf("Xj at offset %td: ", Xj - susp->X);
+            D for (i = 0; i < susp->N * 2; i++) {
+                printf("%g ", Xj[i]);
             }
+            D printf("\n");
+            /* Compute FFT of Xj in place */
+            fftInit(susp->M);
+            rffts(Xj, susp->M, 1);
+            /* convolve pairs of blocks and sum into Y */
+            memset(Y, 0, N * sizeof(*Y)); /* initialize sum to zero */
+            for (k = 0; k < susp->L; k++) {
+                /* Multiply Xj by H (result goes into X) */
+                sample_type *X = susp->X + ((susp->L + susp->j - k) % susp->L) * N * 2;
+                rspectprod(X, H + k * N * 2, Y, N * 2);
+                /* Compute IFFT of Y in place */
+                riffts(Y, susp->M, 1);
+                /* R += Y */
+                D printf("Output block %d, X offset %td: ", k, X - susp->X);
+                for (i = 0; i < 2 * N; i++) {
+                    R[i] += Y[i];
+                    D printf("%g ", Y[i]);
+                }
+                D printf("\n");
+            }
+            /* now N samples of R can be output */
+            susp->R_current = R;
+            D printf("R: ");
+            D for (i = 0; i < susp->N; i++) {
+                printf("%g ", R[i]);
+            }
+            D printf("\n");
+            susp->j = (susp->j + 1) % susp->L;
+        }
+        /* compute togo, the number of samples to "compute" */
+        /* can't use more than what's left in R. R_current is
+           the next sample of R, so what's left is N - (R - R_current) */
+        R_current = susp->R_current;
+        togo = min(togo, N - (R_current - R));
+        
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = susp->terminate_cnt - (susp->susp.current + cnt);
+            if (togo == 0) break;
+        }
 
-            *out_ptr_reg++ = (sample_type) sum;
-	    } while (--n); /* inner loop */
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped &&
+            susp->susp.log_stop_cnt !=  UNKNOWN &&
+            susp->susp.log_stop_cnt <= susp->susp.current + cnt + togo) {
+            togo = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            D printf("susp->susp.log_stop_cnt is set to %ld\n",
+                   susp->susp.log_stop_cnt);
+            if (togo == 0) break;
+        }       
 
-	    susp->x_buffer_pointer = x_buffer_pointer_reg;
-	    susp->x_buffer_current = x_buffer_current_reg;
-	    /* using x_snd_ptr_reg is a bad idea on RS/6000: */
-	    susp->x_snd_ptr += togo;
-	    out_ptr += togo;
-	    susp_took(x_snd_cnt, togo);
-	    cnt += togo;
+        n = togo;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
+            *out_ptr_reg++ = (sample_type) *R_current++;
+        } while (--n); /* inner loop */
+
+        /* using R_current is a bad idea on RS/6000: */
+        susp->R_current += togo;
+        out_ptr += togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	    snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	    snd_list->block_len = cnt;
-	    susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	    snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	    susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* convolve_s_fetch */
 
 
-void convolve_toss_fetch(susp, snd_list)
-  register convolve_susp_type susp;
-  snd_list_type snd_list;
+void convolve_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    convolve_susp_type susp = (convolve_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
     /* fetch samples from x_snd up to final_time for this block of zeros */
-    while ((round((final_time - susp->x_snd->t0) * susp->x_snd->sr)) >=
+    while ((ROUNDBIG((final_time - susp->x_snd->t0) * susp->x_snd->sr)) >=
 	   susp->x_snd->current)
 	susp_get_samples(x_snd, x_snd_ptr, x_snd_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = round((final_time - susp->x_snd->t0) * susp->x_snd->sr -
-         (susp->x_snd->current - susp->x_snd_cnt));
+    n = ROUNDBIG((final_time - susp->x_snd->t0) * susp->x_snd->sr -
+              (susp->x_snd->current - susp->x_snd_cnt));
     susp->x_snd_ptr += n;
     susp_took(x_snd_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))((snd_susp_type)susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void convolve_mark(convolve_susp_type susp)
+void convolve_mark(snd_susp_type a_susp)
 {
+    convolve_susp_type susp = (convolve_susp_type) a_susp;
     sound_xlmark(susp->x_snd);
 }
 
 
-void convolve_free(convolve_susp_type susp)
+void convolve_free(snd_susp_type a_susp)
 {
-    table_unref(susp->table); 
-    free(susp->x_buffer_pointer);    sound_unref(susp->x_snd);
+    convolve_susp_type susp = (convolve_susp_type) a_susp;
+    free(susp->R);
+    free(susp->X);
+    free(susp->Y);
+    free(susp->H);
+    sound_unref(susp->x_snd);
     ffree_generic(susp, sizeof(convolve_susp_node), "convolve_free");
 }
 
 
-void convolve_print_tree(convolve_susp_type susp, int n)
+void convolve_print_tree(snd_susp_type a_susp, int n)
 {
+    convolve_susp_type susp = (convolve_susp_type) a_susp;
     indent(n);
     stdputstr("x_snd:");
     sound_print_tree_1(susp->x_snd, n);
+}
+
+void fill_with_samples(sample_type *x, sound_type s, long n)
+{
+/* this is based on snd_fetch in samples.c */
+#define CNT extra[1]
+#define INDEX extra[2]
+#define FIELDS 3
+#define SAMPLES list->block->samples
+    int i;
+    for (i = 0; i < n; i++) {
+        if (!s->extra) { /* this is the first call, so fix up s */
+            s->extra = (long *) malloc(sizeof(long) * FIELDS);
+            s->extra[0] = sizeof(long) * FIELDS;
+            s->CNT = s->INDEX = 0;
+        }
+        if (s->CNT == s->INDEX) {
+            sound_get_next(s, &(s->CNT));
+            s->INDEX = 0;
+        }
+        x[i] = s->SAMPLES[s->INDEX++] * s->scale;
+    }
 }
 
 
@@ -255,17 +353,80 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     time_type t0 = x_snd->t0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
+    long h_len;
+    int i;
+    // assume fft_size is maximal. We fix this later if it is wrong
+    long fft_size = 1 << MAX_LOG_FFT_SIZE;
+    if (sr != h_snd->sr) {
+        xlfail("convolve requires both inputs to have the same sample rates");
+    }
     falloc_generic(susp, convolve_susp_node, "snd_make_convolve");
-    susp->table = sound_to_table(h_snd);
-    susp->h_buf = susp->table->samples;
-    susp->length_of_h = susp->table->length;
-    susp->h_len = (long) susp->length_of_h;
-         h_reverse(susp->h_buf, susp->h_len);
-    susp->x_buf_len = 2 * susp->h_len;
-    susp->x_buffer_pointer = calloc((2 * (susp->h_len)), sizeof(float));
-    susp->x_buffer_current = susp->x_buffer_pointer;
-    susp->susp.fetch = (snd_fetch_fn)convolve_s_fetch;
+    /* compute the length of h_snd in samples */
+    h_len = snd_length(h_snd, MAX_IR_LEN + 1);
+    if (h_len > MAX_IR_LEN) {
+        char emsg[100];
+        sprintf(emsg, "convolve maximum impulse length is %d", MAX_IR_LEN);
+        xlfail(emsg);
+    }
+    /* len is the impulse response length; 
+     * the FFT size is at least double that */
+    if (h_len <= fft_size / 4) {
+        /* compute log-base-2(h_len): */;
+        double log_len = log(h_len) / M_LN2;
+        int log_len_int = log_len;
+        if (log_len_int != log_len) log_len_int++; /* round up to power of 2 */
+        susp->M = log_len_int + 1;
+    } else {
+        susp->M = MAX_LOG_FFT_SIZE;
+    }
+    fft_size = (1 << susp->M);
+    D printf("fft_size %ld\n", fft_size);
+    susp->N = fft_size / 2;
+    // round h_len up to multiple of susp->N and multiply by 2
+    susp->h_snd_len = h_len;
+    h_len = ((h_len + susp->N - 1) / susp->N) * susp->N * 2;
+    susp->L = h_len / fft_size;
+    // allocate memory
+    susp->H = (sample_type *) calloc(h_len, sizeof(susp->H[0]));
+    if (!susp->H) {
+        xlfail("memory allocation failure in convolve");
+    }
+    for (i = 0; i < susp->L; i++) {
+        /* copy fft_size/2 samples into each H[i] */
+        fill_with_samples(susp->H + i * susp->N * 2, h_snd, susp->N);
+    }
+    for (i = 0; i < susp->L; i++) {
+        int j;
+        float *H = susp->H + i * susp->N * 2;
+        D printf("H_%d at %td: ", i, H - susp->H);
+        D for (j = 0; j < susp->N * 2; j++) printf("%g ", H[j]);
+        D printf("\n");
+    }
+    sound_unref(h_snd);
+    h_snd = NULL;
+    /* remaining N samples are already zero-filled */
+    if (fftInit(susp->M)) {
+        free(susp->H);
+        xlfail("fft initialization error in convolve");
+    }
+    /* take the FFT of each block of the impulse response */
+    for (i = 0; i < susp->L; i++) {
+        rffts(susp->H + i * susp->N * 2, susp->M, 1);
+    }
+    susp->X = (sample_type *) calloc(h_len, sizeof(susp->X[0]));
+    susp->R = (sample_type *) calloc(fft_size, sizeof(susp->R[0]));
+    susp->Y = (sample_type *) calloc(fft_size, sizeof(susp->Y[0]));
+    if (!susp->X || !susp->R || !susp->Y) {
+        free(susp->H);
+        if (susp->X) free(susp->X);
+        if (susp->R) free(susp->R);
+        if (susp->Y) free(susp->Y);
+        xlfail("memory allocation failed in convolve");
+    }
+    susp->R_current = susp->R + susp->N;
+    susp->susp.fetch = &convolve_s_fetch;
     susp->terminate_cnt = UNKNOWN;
+    susp->know_end_of_x = FALSE;
     /* handle unequal start times, if any */
     if (t0 < x_snd->t0) sound_prepend_zeros(x_snd, t0);
     /* minimum start time over all inputs: */
@@ -273,22 +434,23 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = (snd_fetch_fn)susp->susp.fetch;
+	susp->susp.keep_fetch = susp->susp.fetch;
 	susp->susp.fetch = convolve_toss_fetch;
     }
 
     /* initialize susp state */
-    susp->susp.free = (snd_free_fn)convolve_free;
+    susp->susp.free = convolve_free;
     susp->susp.sr = sr;
     susp->susp.t0 = t0;
-    susp->susp.mark = (snd_mark_fn)convolve_mark;
-    susp->susp.print_tree = (snd_print_tree_fn)convolve_print_tree;
+    susp->susp.mark = convolve_mark;
+    susp->susp.print_tree = convolve_print_tree;
     susp->susp.name = "convolve";
     susp->logically_stopped = false;
     susp->susp.log_stop_cnt = logical_stop_cnt_cvt(x_snd);
     susp->susp.current = 0;
     susp->x_snd = x_snd;
     susp->x_snd_cnt = 0;
+    susp->j = 0;
     return sound_create((snd_susp_type)susp, t0, sr, scale_factor);
 }
 
@@ -296,5 +458,6 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
 sound_type snd_convolve(sound_type x_snd, sound_type h_snd)
 {
     sound_type x_snd_copy = sound_copy(x_snd);
-    return snd_make_convolve(x_snd_copy, h_snd);
+    sound_type h_snd_copy = sound_copy(h_snd);
+    return snd_make_convolve(x_snd_copy, h_snd_copy);
 }
