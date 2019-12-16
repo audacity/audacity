@@ -185,6 +185,8 @@ LVAL xlc_seq_get(void)
 }
 
 
+#include "seqmwrite.h"
+
 /* xlc_seq_write_smf -- interface to C routine seq_xlwrite_smf */
 /**/
 LVAL xlc_seq_write_smf(void)
@@ -212,8 +214,6 @@ LVAL xlc_seq_read_smf(void)
     return NIL;
 }
 
-
-#include "seqmwrite.h"
 
 #include "seqread.h"
 

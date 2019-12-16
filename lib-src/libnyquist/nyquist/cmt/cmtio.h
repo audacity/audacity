@@ -1,7 +1,7 @@
 #define NOCHAR -2
 
-int IOinputfd;
-int IOnochar;
+extern int IOinputfd;
+extern int IOnochar;
 
 int IOsetup(int inputfd);
 int IOcleanup(void);

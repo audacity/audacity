@@ -153,6 +153,10 @@ extern int debug;
 #include "xlisp.h"
 #endif
 
+int     IOinputfd;      /* input file descriptor (usually 0) */
+
+int     IOnochar;       /* Value to be returned by IOgetchar()
+                           where there is no input to be had */
 
 /****************************************************************************
 *
