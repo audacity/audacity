@@ -673,7 +673,7 @@ void MenuManager::TellUserWhyDisallowed(
 {
    // The default string for 'reason' is a catch all.  I hope it won't ever be seen
    // and that we will get something more specific.
-   auto reason = _("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
+   auto reason = XO("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
    // The default title string is 'Disallowed'.
    auto untranslatedTitle = XO("Disallowed");
    wxString helpPage;
@@ -683,7 +683,7 @@ void MenuManager::TellUserWhyDisallowed(
 
    auto doOption = [&](const CommandFlagOptions &options) {
       if ( options.message ) {
-         reason = options.message( Name.Translation() );
+         reason = options.message( Name );
          defaultMessage = false;
          if ( !options.title.empty() )
             untranslatedTitle = options.title;
@@ -740,6 +740,6 @@ void MenuManager::TellUserWhyDisallowed(
    ShowErrorDialog(
       NULL,
       title,
-      reason,
+      reason.Translation(),
       helpPage);
 }

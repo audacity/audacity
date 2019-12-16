@@ -73,29 +73,29 @@ bool TimeSelectedPred( const AudacityProject &project )
 
 const CommandFlagOptions cutCopyOptions{
 // In reporting the issue with cut or copy, we don't tell the user they could also select some text in a label.
-   []( const wxString &Name ) {
+   []( const TranslatableString &Name ) {
       // PRL:  These strings have hard-coded mention of a certain shortcut key,
       // thus assuming the default shortcuts.  That is questionable.
-      wxString format;
+      TranslatableString format;
 #ifdef EXPERIMENTAL_DA
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      format = _("You must first select some audio for '%s' to act on.\n\nCtrl + A selects all audio.");
+      format = XO("You must first select some audio for '%s' to act on.\n\nCtrl + A selects all audio.");
 #else
 #ifdef __WXMAC__
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      format = _("Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
+      format = XO("Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
       // No need to explain what a help button is for.
       // "\n\nClick the Help button to learn more about selection methods."
       );
 
 #else
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      format = _("Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
+      format = XO("Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
       // No need to explain what a help button is for.
       // "\n\nClick the Help button to learn more about selection methods."
       );
 #endif
-      return wxString::Format( format, Name );
+      return format.Format( Name );
 #endif
    },
    "Selecting_Audio_-_the_basics",
@@ -104,11 +104,10 @@ const CommandFlagOptions cutCopyOptions{
 
 // Noise Reduction has a custom error message, when nothing selected.
 const CommandFlagOptions noiseReductionOptions{
-   []( const wxString &Name ) {
-      wxString format;
+   []( const TranslatableString &Name ) {
       // i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.
-      format = _("Select the audio for %s to use.\n\n1. Select audio that represents noise and use %s to get your 'noise profile'.\n\n2. When you have got your noise profile, select the audio you want to change\nand use %s to change that audio.");
-      return wxString::Format( format, Name, Name, Name );
+      auto format = XO("Select the audio for %s to use.\n\n1. Select audio that represents noise and use %s to get your 'noise profile'.\n\n2. When you have got your noise profile, select the audio you want to change\nand use %s to change that audio.");
+      return format.Format( Name, Name, Name );
    },
    "Noise_Reduction",
    XO("No Audio Selected")
@@ -127,9 +126,9 @@ const ReservedCommandFlag
       [](const AudacityProject &project ){
          return !AudioIOBusyPred( project );
       },
-      CommandFlagOptions{ []( const wxString& ) { return
+      CommandFlagOptions{ []( const TranslatableString& ) { return
          // This reason will not be shown, because options that require it will be greyed out.
-         _("You can only do this when playing and recording are\nstopped. (Pausing is not sufficient.)");
+         XO("You can only do this when playing and recording are\nstopped. (Pausing is not sufficient.)");
       } ,"FAQ:Errors:Audio Must Be Stopped"}
       .QuickTest()
       .Priority( 1 )
@@ -143,9 +142,9 @@ const ReservedCommandFlag
             - &Track::IsLeader;
          return !range.empty();
       },
-      { []( const wxString& ) { return
+      { []( const TranslatableString& ) { return
          // This reason will not be shown, because the stereo-to-mono is greyed out if not allowed.
-         _("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
+         XO("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
       } ,"Audacity_Selection"}
    },  //lda
    NoiseReductionTimeSelectedFlag{
@@ -160,8 +159,8 @@ const ReservedCommandFlag
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Selected<const WaveTrack>().empty();
       },
-      { []( const wxString& ) { return
-         _("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
+      { []( const TranslatableString& ) { return
+         XO("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
       } ,"Audacity_Selection"}
    },
    TracksExistFlag{
@@ -172,19 +171,17 @@ const ReservedCommandFlag
    },
    TracksSelectedFlag{
       TracksSelectedPred, // exclude TimeTracks
-      { []( const wxString &Name ){ return wxString::Format(
+      { []( const TranslatableString &Name ){ return
          // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
-         _("\"%s\" requires one or more tracks to be selected."),
-         Name
-      ); },"Audacity_Selection" }
+         XO("\"%s\" requires one or more tracks to be selected.").Format( Name );
+      },"Audacity_Selection" }
    },
    AnyTracksSelectedFlag{
       AnyTracksSelectedPred, // Allow TimeTracks
-      { []( const wxString &Name ){ return wxString::Format(
+      { []( const TranslatableString &Name ){ return
          // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
-         _("\"%s\" requires one or more tracks to be selected."),
-         Name
-      ); },"Audacity_Selection" }
+         XO("\"%s\" requires one or more tracks to be selected.").Format( Name );
+      },"Audacity_Selection" }
    },
    TrackPanelHasFocus{
       [](const AudacityProject &project){

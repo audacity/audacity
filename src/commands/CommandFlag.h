@@ -38,7 +38,8 @@ constexpr CommandFlag
 struct CommandFlagOptions{
    // Supplied the translated name of the command, returns a translated
    // error message
-   using MessageFormatter = std::function< wxString( const wxString& ) >;
+   using MessageFormatter =
+      std::function< TranslatableString( const TranslatableString& ) >;
 
    CommandFlagOptions() = default;
    CommandFlagOptions(
