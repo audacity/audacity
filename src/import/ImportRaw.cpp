@@ -301,7 +301,7 @@ END_EVENT_TABLE()
 ImportRawDialog::ImportRawDialog(wxWindow * parent,
                                  int encoding, unsigned channels,
                                  int offset, double rate)
-:  wxDialogWrapper(parent, wxID_ANY, _("Import Raw Data"),
+:  wxDialogWrapper(parent, wxID_ANY, XO("Import Raw Data"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
     mEncoding(encoding),
@@ -311,7 +311,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 {
    wxASSERT(channels >= 1);
 
-   SetName(GetTitle());
+   SetName();
 
    ShuttleGui S(this, eIsCreating);
    wxArrayStringEx encodings;

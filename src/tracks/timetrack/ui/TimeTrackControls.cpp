@@ -106,11 +106,9 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
          pTrack->SetRangeLower((double)lower / 100.0);
          pTrack->SetRangeUpper((double)upper / 100.0);
          ProjectHistory::Get( *project )
-            .PushState(wxString::Format(_("Set range to '%ld' - '%ld'"),
-            lower,
-            upper),
-            /* i18n-hint: (verb)*/
-            _("Set Range"));
+            .PushState(XO("Set range to '%ld' - '%ld'").Format( lower, upper ),
+               /* i18n-hint: (verb)*/
+               XO("Set Range"));
          mpData->result = RefreshCode::RefreshAll;
       }
    }
@@ -122,7 +120,7 @@ void TimeTrackMenuTable::OnTimeTrackLin(wxCommandEvent & /*event*/)
    pTrack->SetDisplayLog(false);
    AudacityProject *const project = ::GetActiveProject();
    ProjectHistory::Get( *project )
-      .PushState(_("Set time track display to linear"), _("Set Display"));
+      .PushState(XO("Set time track display to linear"), XO("Set Display"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | UpdateVRuler;
@@ -134,7 +132,7 @@ void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
    pTrack->SetDisplayLog(true);
    AudacityProject *const project = ::GetActiveProject();
    ProjectHistory::Get( *project )
-      .PushState(_("Set time track display to logarithmic"), _("Set Display"));
+      .PushState(XO("Set time track display to logarithmic"), XO("Set Display"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | UpdateVRuler;
@@ -147,23 +145,23 @@ void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
    if (pTrack->GetInterpolateLog()) {
       pTrack->SetInterpolateLog(false);
       ProjectHistory::Get( *project )
-         .PushState(_("Set time track interpolation to linear"), _("Set Interpolation"));
+         .PushState(XO("Set time track interpolation to linear"), XO("Set Interpolation"));
    }
    else {
       pTrack->SetInterpolateLog(true);
       ProjectHistory::Get( *project ).
-         PushState(_("Set time track interpolation to logarithmic"), _("Set Interpolation"));
+         PushState(XO("Set time track interpolation to logarithmic"), XO("Set Interpolation"));
    }
    mpData->result = RefreshCode::RefreshAll;
 }
 
 BEGIN_POPUP_MENU(TimeTrackMenuTable)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_RADIO_ITEM(OnTimeTrackLinID, _("&Linear scale"), OnTimeTrackLin)
-   POPUP_MENU_RADIO_ITEM(OnTimeTrackLogID, _("L&ogarithmic scale"), OnTimeTrackLog)
+   POPUP_MENU_RADIO_ITEM(OnTimeTrackLinID, XO("&Linear scale"), OnTimeTrackLin)
+   POPUP_MENU_RADIO_ITEM(OnTimeTrackLogID, XO("L&ogarithmic scale"), OnTimeTrackLog)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnSetTimeTrackRangeID, _("&Range..."), OnSetTimeTrackRange)
-   POPUP_MENU_CHECK_ITEM(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"), OnTimeTrackLogInt)
+   POPUP_MENU_ITEM(OnSetTimeTrackRangeID, XO("&Range..."), OnSetTimeTrackRange)
+   POPUP_MENU_CHECK_ITEM(OnTimeTrackLogIntID, XO("Logarithmic &Interpolation"), OnTimeTrackLogInt)
 END_POPUP_MENU()
 
 PopupMenuTable *TimeTrackControls::GetMenuExtension(Track *)

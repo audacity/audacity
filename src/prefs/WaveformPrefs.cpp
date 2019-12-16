@@ -32,7 +32,7 @@ Paul Licameli
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
 /* i18n-hint: A waveform is a visual representation of vibration */
-: PrefsPanel(parent, winid, _("Waveforms"))
+: PrefsPanel(parent, winid, XO("Waveforms"))
 , mWt(wt)
 , mPopulating(false)
 {
@@ -59,9 +59,9 @@ ComponentInterfaceSymbol WaveformPrefs::GetSymbol()
    return WAVEFORM_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString WaveformPrefs::GetDescription()
+TranslatableString WaveformPrefs::GetDescription()
 {
-   return _("Preferences for Waveforms");
+   return XO("Preferences for Waveforms");
 }
 
 wxString WaveformPrefs::HelpPageName()

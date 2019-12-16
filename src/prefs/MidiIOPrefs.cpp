@@ -58,7 +58,7 @@ END_EVENT_TABLE()
 
 MidiIOPrefs::MidiIOPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: untranslatable acronym for "Musical Instrument Device Interface" */
-:  PrefsPanel(parent, winid, _("MIDI Devices"))
+:  PrefsPanel(parent, winid, XO("MIDI Devices"))
 {
    Populate();
 }
@@ -72,9 +72,9 @@ ComponentInterfaceSymbol MidiIOPrefs::GetSymbol()
    return MIDI_IO_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString MidiIOPrefs::GetDescription()
+TranslatableString MidiIOPrefs::GetDescription()
 {
-   return _("Preferences for MidiIO");
+   return XO("Preferences for MidiIO");
 }
 
 wxString MidiIOPrefs::HelpPageName()

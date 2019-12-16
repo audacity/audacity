@@ -73,7 +73,7 @@ static int DeviceToolbarPrefsID()
 
 //Standard contructor
 DeviceToolBar::DeviceToolBar( AudacityProject &project )
-: ToolBar( project, DeviceBarID, _("Device"), wxT("Device"), true )
+: ToolBar( project, DeviceBarID, XO("Device"), wxT("Device"), true )
 {
    wxTheApp->Bind( EVT_RESCANNED_DEVICES,
       &DeviceToolBar::OnRescannedDevices, this );
@@ -324,7 +324,7 @@ void DeviceToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Device"));
+   SetLabel(XO("Device"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
@@ -811,22 +811,22 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
 
 void DeviceToolBar::ShowInputDialog()
 {
-   ShowComboDialog(mInput, wxString(_("Select Recording Device")));
+   ShowComboDialog(mInput, XO("Select Recording Device"));
 }
 void DeviceToolBar::ShowOutputDialog()
 {
-   ShowComboDialog(mOutput, wxString(_("Select Playback Device")));
+   ShowComboDialog(mOutput, XO("Select Playback Device"));
 }
 void DeviceToolBar::ShowHostDialog()
 {
-   ShowComboDialog(mHost, wxString(_("Select Audio Host")));
+   ShowComboDialog(mHost, XO("Select Audio Host"));
 }
 void DeviceToolBar::ShowChannelsDialog()
 {
-   ShowComboDialog(mInputChannels, wxString(_("Select Recording Channels")));
+   ShowComboDialog(mInputChannels, XO("Select Recording Channels"));
 }
 
-void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
+void DeviceToolBar::ShowComboDialog(wxChoice *combo, const TranslatableString &title)
 {
    if (!combo || combo->GetCount() == 0) {
       AudacityMessageBox(_("Device information is not available."));
@@ -837,7 +837,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
    wxArrayStringEx inputSources = combo->GetStrings();
 
    wxDialogWrapper dlg(nullptr, wxID_ANY, title);
-   dlg.SetName(dlg.GetTitle());
+   dlg.SetName();
    ShuttleGui S(&dlg, eIsCreating);
    wxChoice *c;
 

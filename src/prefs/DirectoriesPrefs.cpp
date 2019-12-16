@@ -49,7 +49,7 @@ END_EVENT_TABLE()
 
 DirectoriesPrefs::DirectoriesPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint:  Directories, also called folders, in computer file systems */
-:  PrefsPanel(parent, winid, _("Directories")),
+:  PrefsPanel(parent, winid, XO("Directories")),
    mFreeSpace(NULL),
    mTempDir(NULL)
 {
@@ -66,9 +66,9 @@ ComponentInterfaceSymbol DirectoriesPrefs::GetSymbol()
    return DIRECTORIES_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString DirectoriesPrefs::GetDescription()
+TranslatableString DirectoriesPrefs::GetDescription()
 {
-   return _("Preferences for Directories");
+   return XO("Preferences for Directories");
 }
 
 wxString DirectoriesPrefs::HelpPageName()

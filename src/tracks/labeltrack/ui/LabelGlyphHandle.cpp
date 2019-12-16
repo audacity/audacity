@@ -378,8 +378,8 @@ UIHandle::Result LabelGlyphHandle::Release
    auto &viewInfo = ViewInfo::Get( *pProject );
    if (HandleGlyphDragRelease(
          *pProject, *mpHit, event, mRect, viewInfo, viewInfo.selectedRegion)) {
-      ProjectHistory::Get( *pProject ).PushState(_("Modified Label"),
-         _("Label Edit"),
+      ProjectHistory::Get( *pProject ).PushState(XO("Modified Label"),
+         XO("Label Edit"),
          UndoPush::CONSOLIDATE);
    }
 

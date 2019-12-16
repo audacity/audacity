@@ -76,9 +76,9 @@ ComponentInterfaceSymbol EffectNoise::GetSymbol()
    return NOISE_PLUGIN_SYMBOL;
 }
 
-wxString EffectNoise::GetDescription()
+TranslatableString EffectNoise::GetDescription()
 {
-   return _("Generates one of three different types of noise");
+   return XO("Generates one of three different types of noise");
 }
 
 wxString EffectNoise::ManualPage()

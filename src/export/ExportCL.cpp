@@ -526,11 +526,11 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       // TODO use ShowInfoDialog() instead.
       wxDialogWrapper dlg(nullptr,
                    wxID_ANY,
-                   wxString(_("Command Output")),
+                   XO("Command Output"),
                    wxDefaultPosition,
                    wxSize(600, 400),
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
-      dlg.SetName(dlg.GetTitle());
+      dlg.SetName();
 
       ShuttleGui S(&dlg, eIsCreating);
       S.AddTextWindow(cmd + wxT("\n\n") + output);

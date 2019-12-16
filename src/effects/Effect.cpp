@@ -224,14 +224,14 @@ wxString Effect::GetVersion()
    return AUDACITY_VERSION_STRING;
 }
 
-wxString Effect::GetDescription()
+TranslatableString Effect::GetDescription()
 {
    if (mClient)
    {
       return mClient->GetDescription();
    }
 
-   return wxEmptyString;
+   return {};
 }
 
 EffectFamilySymbol Effect::GetFamily()
@@ -2444,7 +2444,7 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         ShowErrorDialog(FocusDialog, _("Error"),
+         ShowErrorDialog(FocusDialog, XO("Error"),
                          _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
                          wxT("Error_opening_sound_device"));
       }
@@ -2467,7 +2467,7 @@ BEGIN_EVENT_TABLE(EffectDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 EffectDialog::EffectDialog(wxWindow * parent,
-                           const wxString & title,
+                           const TranslatableString & title,
                            int type,
                            int flags,
                            int additionalButtons)
@@ -2567,8 +2567,8 @@ public:
    :  wxPanelWrapper(parent)
    {
       // This fools NVDA into not saying "Panel" when the dialog gets focus
-      SetName(wxT("\a"));
-      SetLabel(wxT("\a"));
+      SetName(InaudibleString);
+      SetLabel(InaudibleString);
 
       mAcceptsFocus = true;
    }
@@ -2639,7 +2639,7 @@ END_EVENT_TABLE()
 EffectUIHost::EffectUIHost(wxWindow *parent,
                            Effect *effect,
                            EffectUIClientInterface *client)
-:  wxDialogWrapper(parent, wxID_ANY, effect->GetTranslatedName(),
+:  wxDialogWrapper(parent, wxID_ANY, effect->GetUntranslatedName(),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 {
@@ -2648,7 +2648,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
 #endif
 
-   SetName( effect->GetTranslatedName() );
+   SetName( effect->GetUntranslatedName() );
    SetExtraStyle(GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
 
    mParent = parent;
@@ -2672,7 +2672,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 EffectUIHost::EffectUIHost(wxWindow *parent,
                            AudacityCommand *command,
                            EffectUIClientInterface *client)
-:  wxDialogWrapper(parent, wxID_ANY, _("Some Command") /*command->GetTranslatedName()*/,
+:  wxDialogWrapper(parent, wxID_ANY, XO("Some Command") /*command->GetUntranslatedName()*/,
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 {
@@ -3069,7 +3069,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       auto flags = AlwaysEnabledFlag;
       bool allowed =
          MenuManager::Get(*mProject).ReportIfActionNotAllowed(
-         mEffect->GetTranslatedName(),
+         mEffect->GetUntranslatedName(),
          flags,
          WaveTracksSelectedFlag | TimeSelectedFlag);
       if (!allowed)
@@ -3238,7 +3238,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().Translation()));
-      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription()));
+      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().Translation()));
 
       menu.Append(0, _("About"), sub.release());
    }
@@ -3467,7 +3467,7 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 {
    wxTextCtrl *text;
    wxString name;
-   wxDialogWrapper dlg(this, wxID_ANY, wxString(_("Save Preset")));
+   wxDialogWrapper dlg(this, wxID_ANY, XO("Save Preset"));
 
    ShuttleGui S(&dlg, eIsCreating);
 
@@ -3741,7 +3741,7 @@ BEGIN_EVENT_TABLE(EffectPresetsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
-:  wxDialogWrapper(parent, wxID_ANY, wxString(_("Select Preset")))
+:  wxDialogWrapper(parent, wxID_ANY, XO("Select Preset"))
 {
    ShuttleGui S(this, eIsCreating);
    S.StartVerticalLay();

@@ -138,9 +138,9 @@ ComponentInterfaceSymbol EffectReverb::GetSymbol()
    return REVERB_PLUGIN_SYMBOL;
 }
 
-wxString EffectReverb::GetDescription()
+TranslatableString EffectReverb::GetDescription()
 {
-   return _("Adds ambience or a \"hall effect\"");
+   return XO("Adds ambience or a \"hall effect\"");
 }
 
 wxString EffectReverb::ManualPage()

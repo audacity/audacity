@@ -96,7 +96,7 @@ static const wxString preferencePath
 
 SpectralSelectionBar::SpectralSelectionBar( AudacityProject &project )
 : ToolBar( project,
-   SpectralSelectionBarID, _("Spectral Selection"), wxT("SpectralSelection") )
+   SpectralSelectionBarID, XO("Spectral Selection"), wxT("SpectralSelection") )
 , mListener(NULL), mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
@@ -258,7 +258,7 @@ void SpectralSelectionBar::UpdatePrefs()
    }
 
    // Set label to pull in language change
-   SetLabel(_("Spectral Selection"));
+   SetLabel(XO("Spectral Selection"));
 
    RegenerateTooltips();
 

@@ -90,9 +90,9 @@ wxString VampEffectsModule::GetVersion()
    return VAMPEFFECTS_VERSION;
 }
 
-wxString VampEffectsModule::GetDescription()
+TranslatableString VampEffectsModule::GetDescription()
 {
-   return _("Provides Vamp Effects support to Audacity");
+   return XO("Provides Vamp Effects support to Audacity");
 }
 
 // ============================================================================

@@ -740,7 +740,7 @@ IMPLEMENT_CLASS(ToolBarDialog, wxDialogWrapper)
 
 ToolBarDialog::ToolBarDialog(wxWindow* parent,
                            wxWindowID id,
-                           const wxString& name,
+                           const TranslatableString& name,
                            const wxPoint& pos):
    wxDialogWrapper(parent, id, name, pos, wxSize(1, 1),
 // Workaround for bug in __WXMSW__.  No close box on a wxDialog unless wxSYSTEM_MENU is used.

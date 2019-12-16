@@ -449,9 +449,9 @@ class FindFFmpegDialog final : public wxDialogWrapper
 public:
 
    FindFFmpegDialog(wxWindow *parent, const wxString &path, const wxString &name, const wxString &type)
-      :  wxDialogWrapper(parent, wxID_ANY, wxString(_("Locate FFmpeg")))
+      :  wxDialogWrapper(parent, wxID_ANY, XO("Locate FFmpeg"))
    {
-      SetName(GetTitle());
+      SetName();
       ShuttleGui S(this, eIsCreating);
 
       mPath = path;
@@ -563,9 +563,9 @@ END_EVENT_TABLE()
 //----------------------------------------------------------------------------
 
 FFmpegNotFoundDialog::FFmpegNotFoundDialog(wxWindow *parent)
-   :  wxDialogWrapper(parent, wxID_ANY, wxString(_("FFmpeg not found")))
+   :  wxDialogWrapper(parent, wxID_ANY, XO("FFmpeg not found"))
 {
-   SetName(GetTitle());
+   SetName();
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }

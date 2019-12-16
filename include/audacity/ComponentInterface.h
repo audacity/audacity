@@ -78,9 +78,9 @@ public:
 
    // Two-argument version distinguishes internal from translatable string
    // such as when the first squeezes spaces out
-   ComponentInterfaceSymbol( const wxString &internal,
+   ComponentInterfaceSymbol( const Identifier &internal,
                          const TranslatableString &msgid )
-      : mInternal{ internal }
+      : mInternal{ internal.GET() }
       // Do not permit non-empty msgid with empty internal
       , mMsgid{ internal.empty() ? TranslatableString{} : msgid }
    {}
@@ -88,6 +88,8 @@ public:
    const wxString &Internal() const { return mInternal; }
    const TranslatableString &Msgid() const { return mMsgid; }
    const wxString Translation() const { return mMsgid.Translation(); }
+   const wxString StrippedTranslation() const
+      { return TranslatableString{mMsgid}.Strip().Translation(); }
 
    bool empty() const { return mInternal.empty(); }
 
@@ -132,7 +134,7 @@ public:
 
    // This returns a translated string
    // Any verb should be present tense indicative, not imperative
-   virtual wxString GetDescription() = 0;
+   virtual TranslatableString GetDescription() = 0;
 
    // non-virtual convenience function
    const wxString GetTranslatedName();

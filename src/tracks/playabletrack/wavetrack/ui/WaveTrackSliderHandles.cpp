@@ -60,7 +60,7 @@ UIHandle::Result GainSliderHandle::CommitChanges
 (const wxMouseEvent &, AudacityProject *pProject)
 {
    ProjectHistory::Get( *pProject )
-      .PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE);
+      .PushState(XO("Moved gain slider"), XO("Gain"), UndoPush::CONSOLIDATE);
    return RefreshCode::RefreshCell;
 }
 
@@ -139,7 +139,7 @@ UIHandle::Result PanSliderHandle::CommitChanges
 (const wxMouseEvent &, AudacityProject *pProject)
 {
    ProjectHistory::Get( *pProject )
-      .PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE);
+      .PushState(XO("Moved pan slider"), XO("Pan"), UndoPush::CONSOLIDATE);
    return RefreshCode::RefreshCell;
 }
 

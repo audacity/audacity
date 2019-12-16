@@ -71,7 +71,7 @@ enum
 
 BEGIN_POPUP_MENU(LabelTrackMenuTable)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnSetFontID, _("&Font..."), OnSetFont)
+   POPUP_MENU_ITEM(OnSetFontID, XO("&Font..."), OnSetFont)
 END_POPUP_MENU()
 
 void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
@@ -110,8 +110,8 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
                                 LabelTrackView::DefaultFontSize);
 
    /* i18n-hint: (noun) This is the font for the label track.*/
-   wxDialogWrapper dlg(mpData->pParent, wxID_ANY, wxString(_("Label Track Font")));
-   dlg.SetName(dlg.GetTitle());
+   wxDialogWrapper dlg(mpData->pParent, wxID_ANY, XO("Label Track Font"));
+   dlg.SetName();
    ShuttleGui S(&dlg, eIsCreating);
    wxListBox *lb;
    wxSpinCtrl *sc;

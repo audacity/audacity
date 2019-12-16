@@ -108,7 +108,7 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
 END_EVENT_TABLE()
 
 SelectionBar::SelectionBar( AudacityProject &project )
-: ToolBar(project, SelectionBarID, _("Selection"), wxT("Selection")),
+: ToolBar(project, SelectionBarID, XO("Selection"), wxT("Selection")),
   mListener(NULL), mRate(0.0),
   mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0), mAudio(0.0),
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
@@ -373,7 +373,7 @@ void SelectionBar::UpdatePrefs()
    OnUpdate(e);
 
    // Set label to pull in language change
-   SetLabel(_("Selection"));
+   SetLabel(XO("Selection"));
 
    RegenerateTooltips();
    // Give base class a chance

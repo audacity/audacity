@@ -35,11 +35,11 @@ namespace {
 
 void ShowDiagnostics(
    AudacityProject &project, const wxString &info,
-   const wxString &description, const wxString &defaultPath)
+   const TranslatableString &description, const wxString &defaultPath)
 {
    auto &window = GetProjectFrame( project );
    wxDialogWrapper dlg( &window, wxID_ANY, description);
-   dlg.SetName(dlg.GetTitle());
+   dlg.SetName();
    ShuttleGui S(&dlg, eIsCreating);
 
    wxTextCtrl *text;
@@ -57,8 +57,7 @@ void ShowDiagnostics(
 
    if (dlg.ShowModal() == wxID_OK)
    {
-      const auto fileDialogTitle =
-         wxString::Format( _("Save %s"), description );
+      const auto fileDialogTitle = XO("Save %s").Format( description ).Translation();
       wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
          fileDialogTitle,
          wxEmptyString,
@@ -72,7 +71,7 @@ void ShowDiagnostics(
          if (!text->SaveFile(fName))
          {
             AudacityMessageBox(
-               wxString::Format( _("Unable to save %s"), description ),
+               XO("Unable to save %s").Format( description ).Translation(),
                fileDialogTitle);
          }
       }
@@ -121,7 +120,7 @@ BEGIN_EVENT_TABLE(QuickFixDialog, wxDialogWrapper)
 END_EVENT_TABLE();
 
 QuickFixDialog::QuickFixDialog(wxWindow * pParent) :
-      wxDialogWrapper(pParent, wxID_ANY, _("Do you have these problems?"),
+      wxDialogWrapper(pParent, wxID_ANY, XO("Do you have these problems?"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE )
 {
@@ -176,7 +175,7 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
    bool bStuckInMode = mbSyncLocked || mbInSnapTo || mbSoundActivated;
 
    if( !bStuckInMode ){
-      SetLabel(_("Nothing to do"));
+      SetLabel(XO("Nothing to do"));
       S.AddFixedText(_("No quick, easily fixed problems were found"));
    }
    else {
@@ -315,7 +314,7 @@ void OnAudioDeviceInfo(const CommandContext &context)
    auto gAudioIO = AudioIOBase::Get();
    wxString info = gAudioIO->GetDeviceInfo();
    ShowDiagnostics( project, info,
-      _("Audio Device Info"), wxT("deviceinfo.txt") );
+      XO("Audio Device Info"), wxT("deviceinfo.txt") );
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -325,7 +324,7 @@ void OnMidiDeviceInfo(const CommandContext &context)
    auto gAudioIO = AudioIOBase::Get();
    wxString info = gAudioIO->GetMidiDeviceInfo();
    ShowDiagnostics( project, info,
-      _("MIDI Device Info"), wxT("midideviceinfo.txt") );
+      XO("MIDI Device Info"), wxT("midideviceinfo.txt") );
 }
 #endif
 

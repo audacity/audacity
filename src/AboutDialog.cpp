@@ -272,14 +272,14 @@ AboutDialog *AboutDialog::ActiveIntance()
 }
 
 AboutDialog::AboutDialog(wxWindow * parent)
-   :  wxDialogWrapper(parent, -1, _("About Audacity"),
+   :  wxDialogWrapper(parent, -1, XO("About Audacity"),
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    wxASSERT(!sActiveInstance);
    sActiveInstance = this;
 
-   SetName(GetTitle());
+   SetName();
    this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    //this->SetBackgroundColour(theTheme.Colour( clrMedium ));
    icon = NULL;

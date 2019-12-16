@@ -56,7 +56,7 @@ bool DoPasteText(AudacityProject &project)
                                             selectedRegion.t1() ))
          {
             ProjectHistory::Get( project )
-               .PushState(_("Pasted text from the clipboard"), _("Paste"));
+               .PushState(XO("Pasted text from the clipboard"), XO("Paste"));
 
             // Make sure caret is in view
             int x;
@@ -153,7 +153,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
          quantT1 - quantT0);
 
       ProjectHistory::Get( project )
-         .PushState(_("Pasted from the clipboard"), _("Paste"));
+         .PushState(XO("Pasted from the clipboard"), XO("Paste"));
 
       if (pFirstNewTrack) {
          TrackFocus::Get(project).Set(pFirstNewTrack);
@@ -312,7 +312,8 @@ void OnCut(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   ProjectHistory::Get( project ).PushState(_("Cut to the clipboard"), _("Cut"));
+   ProjectHistory::Get( project )
+      .PushState(XO("Cut to the clipboard"), XO("Cut"));
 
    // Bug 1663
    //mRuler->ClearPlayRegion();
@@ -336,10 +337,10 @@ void OnDelete(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   ProjectHistory::Get( project ).PushState(wxString::Format(_("Deleted %.2f seconds at t=%.2f"),
-                              seconds,
-                              selectedRegion.t0()),
-             _("Delete"));
+   ProjectHistory::Get( project ).PushState(
+      XO("Deleted %.2f seconds at t=%.2f")
+         .Format( seconds, selectedRegion.t0()),
+      XO("Delete"));
 }
 
 
@@ -468,7 +469,7 @@ void OnPaste(const CommandContext &context)
             // Throw, so that any previous changes to the project in this loop
             // are discarded.
             throw SimpleMessageBoxException{
-               _("Pasting one type of track into another is not allowed.")
+               XO("Pasting one type of track into another is not allowed.")
             };
 
          // We should need this check only each time we visit the leading
@@ -496,7 +497,7 @@ void OnPaste(const CommandContext &context)
                // Throw, so that any previous changes to the project in this
                // loop are discarded.
                throw SimpleMessageBoxException{
-                  _("Copying stereo audio into a mono track is not allowed.")
+                  XO("Copying stereo audio into a mono track is not allowed.")
                };
             }
          }
@@ -635,7 +636,7 @@ void OnPaste(const CommandContext &context)
       selectedRegion.setT1( t0 + clipboard.Duration() );
 
       ProjectHistory::Get( project )
-         .PushState(_("Pasted from the clipboard"), _("Paste"));
+         .PushState(XO("Pasted from the clipboard"), XO("Paste"));
 
       if (ff) {
          TrackFocus::Get(project).Set(ff);
@@ -667,7 +668,8 @@ void OnDuplicate(const CommandContext &context)
          break;
    }
 
-   ProjectHistory::Get( project ).PushState(_("Duplicated"), _("Duplicate"));
+   ProjectHistory::Get( project )
+      .PushState(XO("Duplicated"), XO("Duplicate"));
 }
 
 void OnSplitCut(const CommandContext &context)
@@ -707,7 +709,8 @@ void OnSplitCut(const CommandContext &context)
    clipboard.Assign( std::move( newClipboard ),
       selectedRegion.t0(), selectedRegion.t1(), &project );
 
-   ProjectHistory::Get( project ).PushState(_("Split-cut to the clipboard"), _("Split Cut"));
+   ProjectHistory::Get( project )
+      .PushState(XO("Split-cut to the clipboard"), XO("Split Cut"));
 }
 
 void OnSplitDelete(const CommandContext &context)
@@ -729,10 +732,9 @@ void OnSplitDelete(const CommandContext &context)
    );
 
    ProjectHistory::Get( project ).PushState(
-      wxString::Format(_("Split-deleted %.2f seconds at t=%.2f"),
-         selectedRegion.duration(),
-         selectedRegion.t0()),
-      _("Split Delete"));
+      XO("Split-deleted %.2f seconds at t=%.2f")
+         .Format( selectedRegion.duration(), selectedRegion.t0() ),
+      XO("Split Delete"));
 }
 
 void OnSilence(const CommandContext &context)
@@ -745,10 +747,9 @@ void OnSilence(const CommandContext &context)
       n->Silence(selectedRegion.t0(), selectedRegion.t1());
 
    ProjectHistory::Get( project ).PushState(
-      wxString::Format(_("Silenced selected tracks for %.2f seconds at %.2f"),
-         selectedRegion.duration(),
-         selectedRegion.t0()),
-      _("Silence"));
+      XO("Silenced selected tracks for %.2f seconds at %.2f")
+         .Format( selectedRegion.duration(), selectedRegion.t0() ),
+      XO("Silence"));
 }
 
 void OnTrim(const CommandContext &context)
@@ -770,10 +771,9 @@ void OnTrim(const CommandContext &context)
    );
 
    ProjectHistory::Get( project ).PushState(
-      wxString::Format(
-         _("Trim selected audio tracks from %.2f seconds to %.2f seconds"),
-         selectedRegion.t0(), selectedRegion.t1()),
-         _("Trim Audio"));
+      XO("Trim selected audio tracks from %.2f seconds to %.2f seconds")
+         .Format( selectedRegion.t0(), selectedRegion.t1() ),
+      XO("Trim Audio"));
 }
 
 void OnSplit(const CommandContext &context)
@@ -788,7 +788,7 @@ void OnSplit(const CommandContext &context)
    for (auto wt : tracks.Selected< WaveTrack >())
       wt->Split( sel0, sel1 );
 
-   ProjectHistory::Get( project ).PushState(_("Split"), _("Split"));
+   ProjectHistory::Get( project ).PushState(XO("Split"), XO("Split"));
 #if 0
 //ANSWER-ME: Do we need to keep this commented out OnSplit() code?
 // This whole section no longer used...
@@ -885,7 +885,7 @@ void OnSplitNew(const CommandContext &context)
    }
 
    ProjectHistory::Get( project )
-      .PushState(_("Split to new track"), _("Split New"));
+      .PushState(XO("Split to new track"), XO("Split New"));
 }
 
 void OnJoin(const CommandContext &context)
@@ -900,10 +900,9 @@ void OnJoin(const CommandContext &context)
                selectedRegion.t1());
 
    ProjectHistory::Get( project ).PushState(
-      wxString::Format(_("Joined %.2f seconds at t=%.2f"),
-         selectedRegion.duration(),
-         selectedRegion.t0()),
-      _("Join"));
+      XO("Joined %.2f seconds at t=%.2f")
+         .Format( selectedRegion.duration(), selectedRegion.t0() ),
+      XO("Join"));
 }
 
 void OnDisjoin(const CommandContext &context)
@@ -918,17 +917,16 @@ void OnDisjoin(const CommandContext &context)
                   selectedRegion.t1());
 
    ProjectHistory::Get( project ).PushState(
-      wxString::Format(_("Detached %.2f seconds at t=%.2f"),
-         selectedRegion.duration(),
-         selectedRegion.t0()),
-      _("Detach"));
+      XO("Detached %.2f seconds at t=%.2f")
+         .Format( selectedRegion.duration(), selectedRegion.t0() ),
+      XO("Detach"));
 }
 
 void OnEditMetadata(const CommandContext &context)
 {
    auto &project = context.project;
    (void)Exporter::DoEditMetadata( project,
-      _("Edit Metadata Tags"), _("Metadata Tags"), true);
+      XO("Edit Metadata Tags"), XO("Metadata Tags"), true);
 }
 
 void OnPreferences(const CommandContext &context)

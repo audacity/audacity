@@ -310,9 +310,9 @@ ComponentInterfaceSymbol EffectEqualization::GetSymbol()
    return EQUALIZATION_PLUGIN_SYMBOL;
 }
 
-wxString EffectEqualization::GetDescription()
+TranslatableString EffectEqualization::GetDescription()
 {
-   return _("Adjusts the volume levels of particular frequencies");
+   return XO("Adjusts the volume levels of particular frequencies");
 }
 
 wxString EffectEqualization::ManualPage()
@@ -3312,12 +3312,12 @@ BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 EditCurvesDialog::EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position):
-wxDialogWrapper(parent, wxID_ANY, _("Manage Curves List"),
+wxDialogWrapper(parent, wxID_ANY, XO("Manage Curves List"),
          wxDefaultPosition, wxDefaultSize,
          wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-   SetLabel(_("Manage Curves"));         // Provide visual label
-   SetName(_("Manage Curves List"));     // Provide audible label
+   SetLabel(XO("Manage Curves"));         // Provide visual label
+   SetName(XO("Manage Curves List"));     // Provide audible label
    mParent = parent;
    mEffect = effect;
    mPosition = position;

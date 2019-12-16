@@ -12,12 +12,13 @@
 #define __AUDACITY_MESSAGE_BOX__
 
 #include <wx/msgdlg.h>
+#include "../Internat.h"
 
-extern wxString AudacityMessageBoxCaptionStr();
+extern TranslatableString AudacityMessageBoxCaptionStr();
 
 // Do not use wxMessageBox!!  Its default window title does not translate!
 inline int AudacityMessageBox(const wxString& message,
-                              const wxString& caption = AudacityMessageBoxCaptionStr(),
+                              const wxString& caption = AudacityMessageBoxCaptionStr().Translation(),
                               long style = wxOK | wxCENTRE,
                               wxWindow *parent = NULL,
                               int x = wxDefaultCoord, int y = wxDefaultCoord)

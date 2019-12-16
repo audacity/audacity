@@ -25,7 +25,7 @@ class TimeDialog final : public wxDialogWrapper
  public:
 
    TimeDialog(wxWindow *parent,
-              const wxString &title,
+              const TranslatableString &title,
               const NumericFormatSymbol &format,
               double rate,
               double time,

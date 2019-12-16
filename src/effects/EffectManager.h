@@ -105,9 +105,9 @@ public:
 
    // Renamed from 'Effect' to 'Command' prior to moving out of this class.
    ComponentInterfaceSymbol GetCommandSymbol(const PluginID & ID);
-   wxString GetCommandName(const PluginID & ID); // translated
+   TranslatableString GetCommandName(const PluginID & ID);
    CommandID GetCommandIdentifier(const PluginID & ID);
-   wxString GetCommandDescription(const PluginID & ID);
+   TranslatableString GetCommandDescription(const PluginID & ID);
    wxString GetCommandUrl(const PluginID & ID);
    wxString GetCommandTip(const PluginID & ID);
    // flags control which commands are included.

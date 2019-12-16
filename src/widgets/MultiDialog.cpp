@@ -40,7 +40,7 @@ class MultiDialog final : public wxDialogWrapper
 public:
    MultiDialog(wxWindow * pParent, 
                wxString message,
-               wxString title,
+               const TranslatableString &title,
                const wxChar **buttons, wxString boxMsg, bool log);
    ~MultiDialog() {};
 
@@ -62,13 +62,13 @@ END_EVENT_TABLE()
 
 MultiDialog::MultiDialog(wxWindow * pParent,
                          wxString message,
-                         wxString title,
+                         const TranslatableString &title,
                          const wxChar **buttons, wxString boxMsg, bool log)
    : wxDialogWrapper(pParent, wxID_ANY, title,
                wxDefaultPosition, wxDefaultSize,
                wxCAPTION) // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU
 {
-   SetName(GetTitle());
+   SetName();
 
    wxBoxSizer *mainSizer;
    {
@@ -159,7 +159,7 @@ void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
 
 
 int ShowMultiDialog(const wxString &message,
-   const wxString &title,
+   const TranslatableString &title,
    const wxChar **buttons, const wxString &boxMsg, bool log)
 {
    wxWindow * pParent = wxTheApp->GetTopWindow();

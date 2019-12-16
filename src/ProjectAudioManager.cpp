@@ -258,7 +258,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          auto &window = GetProjectFrame( mProject );
          window.CallAfter( [&]{
          // Show error message if stream could not be opened
-         ShowErrorDialog(&window, _("Error"),
+         ShowErrorDialog(&window, XO("Error"),
                          _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
                          wxT("Error_opening_sound_device"));
          });
@@ -713,7 +713,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          // Show error message if stream could not be opened
          wxString msg = wxString::Format(_("Error opening recording device.\nError code: %s"), gAudioIO->LastPaErrorString());
          ShowErrorDialog(&GetProjectFrame( mProject ),
-            _("Error"), msg, wxT("Error_opening_sound_device"));
+            XO("Error"), msg, wxT("Error_opening_sound_device"));
       }
    }
 
@@ -880,7 +880,7 @@ You are saving directly to a slow external storage device\n\
       }
       else
          // Add to history
-         history.PushState(_("Recorded Audio"), _("Record"));
+         history.PushState(XO("Recorded Audio"), XO("Record"));
    }
 
    // Write all cached files to disk, if any

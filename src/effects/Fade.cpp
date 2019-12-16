@@ -36,11 +36,11 @@ ComponentInterfaceSymbol EffectFade::GetSymbol()
       : FADEOUT_PLUGIN_SYMBOL;
 }
 
-wxString EffectFade::GetDescription()
+TranslatableString EffectFade::GetDescription()
 {
    return mFadeIn
-      ? _("Applies a linear fade-in to the selected audio")
-      : _("Applies a linear fade-out to the selected audio");
+      ? XO("Applies a linear fade-in to the selected audio")
+      : XO("Applies a linear fade-out to the selected audio");
 }
 
 // EffectDefinitionInterface implementation

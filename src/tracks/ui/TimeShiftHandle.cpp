@@ -822,21 +822,21 @@ UIHandle::Result TimeShiftHandle::Release
       }
    }
 
-   wxString msg;
+   TranslatableString msg;
    bool consolidate;
    if (mDidSlideVertically) {
-      msg = _("Moved clips to another track");
+      msg = XO("Moved clips to another track");
       consolidate = false;
    }
    else {
-      msg.Printf(
-         ( mClipMoveState.hSlideAmount > 0
-           ? _("Time shifted tracks/clips right %.02f seconds")
-           : _("Time shifted tracks/clips left %.02f seconds") ),
-         fabs( mClipMoveState.hSlideAmount ) );
+      msg = ( mClipMoveState.hSlideAmount > 0
+         ? XO("Time shifted tracks/clips right %.02f seconds")
+         : XO("Time shifted tracks/clips left %.02f seconds")
+      )
+         .Format( fabs( mClipMoveState.hSlideAmount ) );
       consolidate = true;
    }
-   ProjectHistory::Get( *pProject ).PushState(msg, _("Time-Shift"),
+   ProjectHistory::Get( *pProject ).PushState(msg, XO("Time-Shift"),
       consolidate ? (UndoPush::CONSOLIDATE) : (UndoPush::AUTOSAVE));
 
    return result | FixScrollbars;

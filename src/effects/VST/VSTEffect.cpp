@@ -249,7 +249,7 @@ public:
       return mVersion;
    }
 
-   wxString GetDescription() override
+   TranslatableString GetDescription() override
    {
       return mDescription;
    }
@@ -294,7 +294,7 @@ public:
    wxString mName;
    wxString mVendor;
    wxString mVersion;
-   wxString mDescription;
+   TranslatableString mDescription;
    EffectType mType;
    bool mInteractive;
    bool mAutomatable;
@@ -345,9 +345,9 @@ wxString VSTEffectsModule::GetVersion()
    return AUDACITY_VERSION_STRING;
 }
 
-wxString VSTEffectsModule::GetDescription()
+TranslatableString VSTEffectsModule::GetDescription()
 {
-   return _("Adds the ability to use VST effects in Audacity.");
+   return XO("Adds the ability to use VST effects in Audacity.");
 }
 
 // ============================================================================
@@ -618,7 +618,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
             break;
 
             case kKeyDescription:
-               proc.mDescription = val;
+               proc.mDescription = TranslatableString{ val };
                keycount++;
             break;
 
@@ -741,7 +741,7 @@ void VSTEffectsModule::Check(const wxChar *path)
          out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor,
                                  effect.GetVendor().Internal());
          out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVersion, effect.GetVersion());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect.GetDescription());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect.GetDescription().Translation());
          out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyEffectType, effect.GetType());
          out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyInteractive, effect.IsInteractive());
          out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyAutomatable, effect.SupportsAutomation());
@@ -786,7 +786,7 @@ BEGIN_EVENT_TABLE(VSTEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 VSTEffectOptionsDialog::VSTEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialogWrapper(parent, wxID_ANY, wxString(_("VST Effect Options")))
+:  wxDialogWrapper(parent, wxID_ANY, XO("VST Effect Options"))
 {
    mHost = host;
 
@@ -1228,13 +1228,12 @@ wxString VSTEffect::GetVersion()
    return version;
 }
 
-wxString VSTEffect::GetDescription()
+TranslatableString VSTEffect::GetDescription()
 {
    // VST does have a product string opcode and some effects return a short
    // description, but most do not or they just return the name again.  So,
    // try to provide some sort of useful information.
-   return wxString::Format( _("Audio In: %d, Audio Out: %d"),
-                            mAudioIns, mAudioOuts);
+   return XO("Audio In: %d, Audio Out: %d").Format( mAudioIns, mAudioOuts );
 }
 
 // ============================================================================
@@ -3437,7 +3436,7 @@ bool VSTEffect::LoadXML(const wxFileName & fn)
    if (!ok)
    {
       // Inform user of load failure
-      AudacityMessageBox(reader.GetErrorStr(),
+      AudacityMessageBox(reader.GetErrorStr().Translation(),
                    _("Error Loading VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);

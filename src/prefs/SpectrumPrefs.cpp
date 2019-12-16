@@ -38,7 +38,7 @@
 #include "../widgets/AudacityMessageBox.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
-:  PrefsPanel(parent, winid, wt ? _("Spectrogram Settings") : _("Spectrograms"))
+:  PrefsPanel(parent, winid, wt ? XO("Spectrogram Settings") : XO("Spectrograms"))
 , mWt(wt)
 , mPopulating(false)
 {
@@ -72,9 +72,9 @@ ComponentInterfaceSymbol SpectrumPrefs::GetSymbol()
    return SPECTRUM_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString SpectrumPrefs::GetDescription()
+TranslatableString SpectrumPrefs::GetDescription()
 {
-   return _("Preferences for Spectrum");
+   return XO("Preferences for Spectrum");
 }
 
 wxString SpectrumPrefs::HelpPageName()
@@ -190,7 +190,9 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol( 1 );
             S.Id(ID_SCALE).TieChoice(_("S&cale:"),
                mTempSettings.scaleType,
-               SpectrogramSettings::GetScaleNames());
+               transform_container<wxArrayStringEx>(
+                  SpectrogramSettings::GetScaleNames(),
+                  std::mem_fn( &TranslatableString::Translation ) ) );
             mMinFreq =
                S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&n Frequency (Hz):"),
                mTempSettings.minFreq,

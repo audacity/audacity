@@ -24,7 +24,7 @@ public:
    ~NotYetAvailableException();
 
 protected:
-   wxString ErrorMessage() const override;
+   TranslatableString ErrorMessage() const override;
 };
 
 #endif

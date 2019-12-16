@@ -75,7 +75,7 @@ public:
    ComponentInterfaceSymbol GetSymbol() override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
-   wxString GetDescription() override;
+   TranslatableString GetDescription() override;
    
    wxString ManualPage() override;
    wxString HelpPage() override;
@@ -283,7 +283,7 @@ class NyquistOutputDialog final : public wxDialogWrapper
 {
 public:
    NyquistOutputDialog(wxWindow * parent, wxWindowID id,
-                       const wxString & title,
+                       const TranslatableString & title,
                        const wxString & prompt,
                        const wxString &message);
 

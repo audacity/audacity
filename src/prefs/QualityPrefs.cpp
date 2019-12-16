@@ -57,7 +57,7 @@ END_EVENT_TABLE()
 
 QualityPrefs::QualityPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: meaning accuracy in reproduction of sounds */
-:  PrefsPanel(parent, winid, _("Quality"))
+:  PrefsPanel(parent, winid, XO("Quality"))
 {
    Populate();
 }
@@ -71,9 +71,9 @@ ComponentInterfaceSymbol QualityPrefs::GetSymbol()
    return QUALITY_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString QualityPrefs::GetDescription()
+TranslatableString QualityPrefs::GetDescription()
 {
-   return _("Preferences for Quality");
+   return XO("Preferences for Quality");
 }
 
 wxString QualityPrefs::HelpPageName()

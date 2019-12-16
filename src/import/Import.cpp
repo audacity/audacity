@@ -532,7 +532,7 @@ bool Importer::Import(const FilePath &fName,
          // File has more than one stream - display stream selector
          if (inFile->GetStreamCount() > 1)
          {
-            ImportStreamDialog ImportDlg(inFile.get(), NULL, -1, _("Select stream(s) to import"));
+            ImportStreamDialog ImportDlg(inFile.get(), NULL, -1, XO("Select stream(s) to import"));
 
             if (ImportDlg.ShowModal() == wxID_CANCEL)
             {
@@ -741,11 +741,11 @@ BEGIN_EVENT_TABLE( ImportStreamDialog, wxDialogWrapper )
    EVT_BUTTON( wxID_CANCEL, ImportStreamDialog::OnCancel )
 END_EVENT_TABLE()
 
-ImportStreamDialog::ImportStreamDialog( ImportFileHandle *_mFile, wxWindow *parent, wxWindowID id, const wxString &title,
+ImportStreamDialog::ImportStreamDialog( ImportFileHandle *_mFile, wxWindow *parent, wxWindowID id, const TranslatableString &title,
                                        const wxPoint &position, const wxSize& size, long style ):
 wxDialogWrapper( parent, id, title, position, size, style | wxRESIZE_BORDER )
 {
-   SetName(GetTitle());
+   SetName();
 
    mFile = _mFile;
    scount = mFile->GetStreamCount();

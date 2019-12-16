@@ -85,6 +85,55 @@ ProjectFileManager::ProjectFileManager( AudacityProject &project )
 
 ProjectFileManager::~ProjectFileManager() = default;
 
+namespace {
+
+const char *const defaultHelpUrl =
+   "FAQ:Errors_on_opening_or_recovering_an_Audacity_project";
+
+using Pair = std::pair< const char *, const char * >;
+const Pair helpURLTable[] = {
+   {
+      "not well-formed (invalid token)",
+      "Error:_not_well-formed_(invalid_token)_at_line_x"
+   },
+   {
+      "reference to invalid character number",
+      "Error_Opening_Project:_Reference_to_invalid_character_number_at_line_x"
+   },
+   {
+      "mismatched tag",
+      "#mismatched"
+   },
+// These two errors with FAQ entries are reported elsewhere, not here....
+//#[[#import-error|Error Importing: Aup is an Audacity Project file. Use the File > Open command]]
+//#[[#corrupt|Error Opening File or Project: File may be invalid or corrupted]]
+};
+
+wxString FindHelpUrl( const TranslatableString &libraryError )
+{
+   wxString helpUrl;
+   if ( !libraryError.empty() ) {
+      helpUrl = defaultHelpUrl;
+
+      auto msgid = libraryError.MSGID().GET();
+      auto found = std::find_if( begin(helpURLTable), end(helpURLTable),
+         [&]( const Pair &pair ) {
+            return msgid.Contains( pair.first ); }
+      );
+      if (found != end(helpURLTable)) {
+         auto url = found->second;
+         if (url[0] == '#')
+            helpUrl += url;
+         else
+            helpUrl = url;
+      }
+   }
+
+   return helpUrl;
+}
+
+}
+
 auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
   -> ReadProjectResults
 {
@@ -172,7 +221,10 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
       }
    }
 
-   return { false, bParseSuccess, err, xmlFile.GetErrorStr() };
+   return {
+      false, bParseSuccess, err, xmlFile.GetErrorStr(),
+      FindHelpUrl( xmlFile.GetLibraryErrorStr() )
+   };
 }
 
 ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
@@ -1337,7 +1389,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       return;
 
    const bool bParseSuccess = results.parseSuccess;
-   const wxString &errorStr = results.errorString;
+   const auto &errorStr = results.errorString;
    const bool err = results.trackError;
 
    if (bParseSuccess) {
@@ -1400,7 +1452,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
          ::ProjectFSCK(dirManager, err, true); // Correct problems in auto-recover mode.
 
          // PushState calls AutoSave(), so no longer need to do so here.
-         history.PushState(_("Project was recovered"), _("Recover"));
+         history.PushState(XO("Project was recovered"), XO("Recover"));
 
          if (!wxRemoveFile(fileName))
             AudacityMessageBox(_("Could not remove old auto save file"),
@@ -1476,73 +1528,13 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       project.SetFileName( wxT("") );
       projectFileIO.SetProjectTitle();
 
-      wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName, errorStr);
-
-      wxString url = wxT("FAQ:Errors_on_opening_or_recovering_an_Audacity_project");
-
-      // Certain errors have dedicated help.
-      // On April-4th-2018, we did not request translation of the XML errors.
-      // If/when we do, we will need _() around the comparison strings.
-      if( errorStr.Contains( ("not well-formed (invalid token)") ) )
-         url = "Error:_not_well-formed_(invalid_token)_at_line_x";
-      else if( errorStr.Contains(("reference to invalid character number") ))
-         url = "Error_Opening_Project:_Reference_to_invalid_character_number_at_line_x";
-      else if( errorStr.Contains(("mismatched tag") ))
-         url += "#mismatched";
-
-// These two errors with FAQ entries are reported elsewhere, not here....
-//#[[#import-error|Error Importing: Aup is an Audacity Project file. Use the File > Open command]]
-//#[[#corrupt|Error Opening File or Project: File may be invalid or corrupted]]
-
-// If we did want to handle every single parse error, these are they....
-/*
-    XML_L("out of memory"),
-    XML_L("syntax error"),
-    XML_L("no element found"),
-    XML_L("not well-formed (invalid token)"),
-    XML_L("unclosed token"),
-    XML_L("partial character"),
-    XML_L("mismatched tag"),
-    XML_L("duplicate attribute"),
-    XML_L("junk after document element"),
-    XML_L("illegal parameter entity reference"),
-    XML_L("undefined entity"),
-    XML_L("recursive entity reference"),
-    XML_L("asynchronous entity"),
-    XML_L("reference to invalid character number"),
-    XML_L("reference to binary entity"),
-    XML_L("reference to external entity in attribute"),
-    XML_L("XML or text declaration not at start of entity"),
-    XML_L("unknown encoding"),
-    XML_L("encoding specified in XML declaration is incorrect"),
-    XML_L("unclosed CDATA section"),
-    XML_L("error in processing external entity reference"),
-    XML_L("document is not standalone"),
-    XML_L("unexpected parser state - please send a bug report"),
-    XML_L("entity declared in parameter entity"),
-    XML_L("requested feature requires XML_DTD support in Expat"),
-    XML_L("cannot change setting once parsing has begun"),
-    XML_L("unbound prefix"),
-    XML_L("must not undeclare prefix"),
-    XML_L("incomplete markup in parameter entity"),
-    XML_L("XML declaration not well-formed"),
-    XML_L("text declaration not well-formed"),
-    XML_L("illegal character(s) in public id"),
-    XML_L("parser suspended"),
-    XML_L("parser not suspended"),
-    XML_L("parsing aborted"),
-    XML_L("parsing finished"),
-    XML_L("cannot suspend in external parameter entity"),
-    XML_L("reserved prefix (xml) must not be undeclared or bound to another namespace name"),
-    XML_L("reserved prefix (xmlns) must not be declared or undeclared"),
-    XML_L("prefix must not be bound to one of the reserved namespace names")
-*/
+      wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName, errorStr.Debug());
 
       ShowErrorDialog(
          &window,
-         _("Error Opening Project"),
-         errorStr,
-         url);
+         XO("Error Opening Project"),
+         errorStr.Translation(),
+         results.helpUrl);
    }
 }
 
@@ -1627,8 +1619,8 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       SelectionBar::Get( project ).SetRate( newRate );
    }
 
-   history.PushState(wxString::Format(_("Imported '%s'"), fileName),
-       _("Import"));
+   history.PushState(XO("Imported '%s'").Format( fileName ),
+       XO("Import"));
 
 #if defined(__WXGTK__)
    // See bug #1224
@@ -1682,7 +1674,7 @@ bool ProjectFileManager::Import(
       if (!errorMessage.empty()) {
          // Error message derived from Importer::Import
          // Additional help via a Help button links to the manual.
-         ShowErrorDialog(&GetProjectFrame( project ), _("Error Importing"),
+         ShowErrorDialog(&GetProjectFrame( project ), XO("Error Importing"),
                          errorMessage.Translation(), wxT("Importing_Audio"));
       }
       if (!success)

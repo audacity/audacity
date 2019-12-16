@@ -72,11 +72,11 @@ void SplashDialog::DoHelpWelcome( AudacityProject &project )
 }
 
 SplashDialog::SplashDialog(wxWindow * parent)
-   :  wxDialogWrapper(parent, -1, _("Welcome to Audacity!"),
+   :  wxDialogWrapper(parent, -1, XO("Welcome to Audacity!"),
       wxPoint( -1, 60 ), // default x position, y position 60 pixels from top of screen.
       wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-   SetName(GetTitle());
+   SetName();
    m_pLogo = NULL; //v
    ShuttleGui S( this, eIsCreating );
    Populate( S );

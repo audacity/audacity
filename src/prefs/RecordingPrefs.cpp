@@ -42,7 +42,7 @@ BEGIN_EVENT_TABLE(RecordingPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 RecordingPrefs::RecordingPrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Recording"))
+:  PrefsPanel(parent, winid, XO("Recording"))
 {
    gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &mUseCustomTrackName, false);
    mOldNameChoice = mUseCustomTrackName;
@@ -58,9 +58,9 @@ ComponentInterfaceSymbol RecordingPrefs::GetSymbol()
    return RECORDING_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString RecordingPrefs::GetDescription()
+TranslatableString RecordingPrefs::GetDescription()
 {
-   return _("Preferences for Recording");
+   return XO("Preferences for Recording");
 }
 
 wxString RecordingPrefs::HelpPageName()

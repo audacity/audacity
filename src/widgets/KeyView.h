@@ -84,7 +84,7 @@ public:
    void RefreshBindings(const CommandIDs & names,
                         const wxArrayString & categories,
                         const TranslatableStrings & prefixes,
-                        const wxArrayString & labels,
+                        const TranslatableStrings & labels,
                         const std::vector<NormalizedKeyString> & keys,
                         bool bSort);
 

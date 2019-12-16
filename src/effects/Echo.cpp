@@ -56,9 +56,9 @@ ComponentInterfaceSymbol EffectEcho::GetSymbol()
    return ECHO_PLUGIN_SYMBOL;
 }
 
-wxString EffectEcho::GetDescription()
+TranslatableString EffectEcho::GetDescription()
 {
-   return _("Repeats the selected audio again and again");
+   return XO("Repeats the selected audio again and again");
 }
 
 wxString EffectEcho::ManualPage()

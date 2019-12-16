@@ -224,15 +224,15 @@ UIHandle::Result CutlineHandle::Release
       wxASSERT(false);
    case Merge:
       ProjectHistory::Get( *pProject )
-         .PushState(_("Merged Clips"), _("Merge"), UndoPush::CONSOLIDATE);
+         .PushState(XO("Merged Clips"), XO("Merge"), UndoPush::CONSOLIDATE);
       break;
    case Expand:
       ProjectHistory::Get( *pProject )
-         .PushState(_("Expanded Cut Line"), _("Expand"));
+         .PushState(XO("Expanded Cut Line"), XO("Expand"));
       break;
    case Remove:
       ProjectHistory::Get( *pProject )
-         .PushState(_("Removed Cut Line"), _("Remove"));
+         .PushState(XO("Removed Cut Line"), XO("Remove"));
       break;
    }
 

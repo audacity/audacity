@@ -27,7 +27,7 @@ public:
    SetLabelCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SET_LABEL_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Sets various values for a label.");};
+   TranslatableString GetDescription() override {return XO("Sets various values for a label.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

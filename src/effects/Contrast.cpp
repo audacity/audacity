@@ -171,12 +171,12 @@ void ContrastDialog::OnChar(wxKeyEvent &event)
 
 /* i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/ */
 ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
-                           const wxString & title,
+                           const TranslatableString & title,
                            const wxPoint & pos):
   wxDialogWrapper(parent, id, title, pos, wxDefaultSize,
      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX )
 {
-   SetName(GetTitle());
+   SetName();
 
    mT0 = 0.0;
    mT1 = 0.0;

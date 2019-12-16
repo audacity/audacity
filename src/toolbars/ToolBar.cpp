@@ -316,7 +316,7 @@ END_EVENT_TABLE()
 //
 ToolBar::ToolBar( AudacityProject &project,
                   int type,
-                  const wxString &label,
+                  const TranslatableString &label,
                   const wxString &section,
                   bool resizable )
 : wxPanelWrapper()
@@ -349,16 +349,16 @@ ToolBar::~ToolBar()
 //
 // Returns the toolbar title
 //
-wxString ToolBar::GetTitle()
+TranslatableString ToolBar::GetTitle()
 {
    /* i18n-hint: %s will be replaced by the name of the kind of toolbar.*/
-   return wxString::Format( _("Audacity %s Toolbar"), GetLabel() );
+   return XO("Audacity %s Toolbar").Format( GetLabel() );
 }
 
 //
 // Returns the toolbar label
 //
-wxString ToolBar::GetLabel()
+TranslatableString ToolBar::GetLabel()
 {
    return mLabel;
 }
@@ -384,6 +384,15 @@ int ToolBar::GetType()
 //
 void ToolBar::SetLabel(const wxString & label)
 {
+   // Probably shouldn't reach this overload, but perhaps virtual function
+   // dispatch will take us here from a pointer to the wxPanel base class
+   mLabel = TranslatableString{ label };
+}
+
+void ToolBar::SetLabel(const TranslatableString & label)
+{
+   // Only this overload is publicly accessible when you have a pointer to
+   // Toolbar or a subclass of it
    mLabel = label;
 }
 
@@ -851,16 +860,16 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
 
 void ToolBar::SetButtonToolTip
 (AudacityProject &theProject,
- AButton &button, const TranslatedInternalString commands[], size_t nCommands)
+ AButton &button, const ComponentInterfaceSymbol commands[], size_t nCommands)
 {
-   wxString result;
+   TranslatableString result;
    const auto project = &theProject;
    const auto commandManager =
       project ? &CommandManager::Get( *project ) : nullptr;
    if (commandManager)
       result =
          commandManager->DescribeCommandsAndShortcuts(commands, nCommands);
-   button.SetToolTip(result);
+   button.SetToolTip( result );
 }
 
 //

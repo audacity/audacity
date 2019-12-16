@@ -105,7 +105,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
                          const NumericFormatSymbol &freqFormat)
 : wxDialogWrapper(parent,
            wxID_ANY,
-           _("Edit Labels"),
+           XO("Edit Labels"),
            wxDefaultPosition,
            wxSize(800, 600),
            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
@@ -118,7 +118,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
   mFormat(format)
   , mFreqFormat(freqFormat)
 {
-   SetName(GetTitle());
+   SetName();
    Populate();
 }
 

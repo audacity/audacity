@@ -28,7 +28,7 @@
 #include "../Prefs.h"
 
 PlaybackPrefs::PlaybackPrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Playback"))
+:  PrefsPanel(parent, winid, XO("Playback"))
 {
    Populate();
 }
@@ -42,9 +42,9 @@ ComponentInterfaceSymbol PlaybackPrefs::GetSymbol()
    return PLAYBACK_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString PlaybackPrefs::GetDescription()
+TranslatableString PlaybackPrefs::GetDescription()
 {
-   return _("Preferences for Playback");
+   return XO("Preferences for Playback");
 }
 
 wxString PlaybackPrefs::HelpPageName()

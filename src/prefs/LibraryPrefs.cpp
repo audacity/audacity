@@ -47,7 +47,7 @@ END_EVENT_TABLE()
 
 LibraryPrefs::LibraryPrefs(wxWindow * parent, wxWindowID winid)
 /* i18-hint: refers to optional plug-in software libraries */
-:   PrefsPanel(parent, winid, _("Libraries"))
+:   PrefsPanel(parent, winid, XO("Libraries"))
 {
    Populate();
 }
@@ -61,9 +61,9 @@ ComponentInterfaceSymbol LibraryPrefs::GetSymbol()
    return LIBRARY_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString LibraryPrefs::GetDescription()
+TranslatableString LibraryPrefs::GetDescription()
 {
-   return _("Preferences for Library");
+   return XO("Preferences for Library");
 }
 
 wxString LibraryPrefs::HelpPageName()

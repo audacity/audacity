@@ -59,11 +59,11 @@ BEGIN_EVENT_TABLE(HistoryDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
-   wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, wxString(_("History")),
+   wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, XO("History"),
       wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 {
-   SetName(GetTitle());
+   SetName();
 
    mManager = manager;
    mProject = parent;
@@ -203,10 +203,11 @@ void HistoryDialog::DoUpdate()
    wxLongLong_t total = 0;
    mSelected = mManager->GetCurrentState() - 1;
    for (i = 0; i < (int)mManager->GetNumStates(); i++) {
-      wxString desc, size;
+      TranslatableString desc;
+      wxString size;
 
       total += mManager->GetLongDescription(i + 1, &desc, &size);
-      mList->InsertItem(i, desc, i == mSelected ? 1 : 0);
+      mList->InsertItem(i, desc.Translation(), i == mSelected ? 1 : 0);
       mList->SetItem(i, 1, size);
    }
 

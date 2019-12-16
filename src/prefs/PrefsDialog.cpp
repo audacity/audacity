@@ -534,7 +534,7 @@ PrefsDialog::Factories
 
 PrefsDialog::PrefsDialog
   (wxWindow * parent, const wxString &titlePrefix, Factories &factories)
-:  wxDialogWrapper(parent, wxID_ANY, wxString(_("Audacity Preferences")),
+:  wxDialogWrapper(parent, wxID_ANY, XO("Audacity Preferences"),
             wxDefaultPosition,
             wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
@@ -694,7 +694,7 @@ int PrefsDialog::ShowModal()
       mCategories->SetSelection(selected);
    }
    else {
-      wxString Temp = mTitlePrefix + mUniquePage->GetLabel();
+      auto Temp = TranslatableString{ mTitlePrefix + mUniquePage->GetLabel() };
       SetTitle(Temp);
       SetName(Temp);
    }

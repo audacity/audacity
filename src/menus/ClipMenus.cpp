@@ -714,15 +714,15 @@ void DoClipLeftOrRight
    window.ScrollIntoView(selectedRegion.t0());
 
    if (amount != 0.0) {
-      wxString message = right? _("Time shifted clips to the right") :
-         _("Time shifted clips to the left");
+      auto message = right? XO("Time shifted clips to the right") :
+         XO("Time shifted clips to the left");
 
       // The following use of the UndoPush flags is so that both a single
       // keypress (keydown, then keyup), and holding down a key
       // (multiple keydowns followed by a keyup) result in a single
       // entry in Audacity's history dialog.
       ProjectHistory::Get( project )
-         .PushState(message, _("Time-Shift"), UndoPush::CONSOLIDATE);
+         .PushState(message, XO("Time-Shift"), UndoPush::CONSOLIDATE);
    }
 
    if ( amount == 0.0 )

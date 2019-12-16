@@ -31,7 +31,7 @@ class MessageCommand : public AudacityCommand
 public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return MESSAGE_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Echos a message.");};
+   TranslatableString GetDescription() override {return XO("Echos a message.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;

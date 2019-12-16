@@ -28,7 +28,7 @@ class LibraryPrefs final : public PrefsPanel
    LibraryPrefs(wxWindow * parent, wxWindowID winid);
    ~LibraryPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
-   wxString GetDescription() override;
+   TranslatableString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

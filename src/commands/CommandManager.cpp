@@ -611,7 +611,7 @@ int CommandManager::NextIdentifier(int ID)
 ///If it does, a workaround may be to keep controls below wxID_LOWEST
 ///and keep menus above wxID_HIGHEST
 CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
-   const TranslatableString & labelIn,
+   const TranslatableString & label,
    wxMenu *menu,
    CommandHandlerFinder finder,
    CommandFunctorPointer callback,
@@ -622,7 +622,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
 {
    bool excludeFromMacros =
       (options.allowInMacros == 0) ||
-      ((options.allowInMacros == -1) && labelIn.MSGID().GET().Contains("..."));
+      ((options.allowInMacros == -1) && label.MSGID().GET().Contains("..."));
 
    const wxString & accel = options.accel;
    bool bIsEffect = options.bIsEffect;
@@ -633,10 +633,8 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    else
       cookedParameter = parameter;
 
-   auto label = labelIn.Translation();
-
    // if empty, new identifier's long label will be same as label, below:
-   const auto &longLabel = options.longName.Translation();
+   const auto &longLabel = options.longName;
 
    const bool multi = !nameSuffix.empty();
    auto name = nameIn;
@@ -747,14 +745,14 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
          wxLogDebug(wxT("Command '%s' defined by '%s' and '%s'"),
                     // using GET in a log message for devs' eyes only
                     entry->name.GET(),
-                    prev->label,
-                    entry->label);
+                    prev->label.Debug(),
+                    entry->label.Debug());
          wxFAIL_MSG(wxString::Format(wxT("Command '%s' defined by '%s' and '%s'"),
                     // using GET in an assertion violation message for devs'
                     // eyes only
                     entry->name.GET(),
-                    prev->label,
-                    entry->label));
+                    prev->label.Debug(),
+                    entry->label.Debug()));
       }
    }
 #endif
@@ -769,7 +767,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
 
 wxString CommandManager::FormatLabelForMenu(const CommandListEntry *entry) const
 {
-   wxString label = entry->label;
+   auto label = entry->label.Translation();
    if (!entry->key.empty())
    {
       // using GET to compose menu item name for wxWidgets
@@ -786,7 +784,7 @@ wxString CommandManager::FormatLabelForMenu(const CommandListEntry *entry) const
 // disabled, in fact.
 wxString CommandManager::FormatLabelWithDisabledAccel(const CommandListEntry *entry) const
 {
-   wxString label = entry->label;
+   auto label = entry->label.Translation();
 #if 1
    wxString Accel;
    do{
@@ -941,7 +939,7 @@ void CommandManager::Check(const CommandID &name, bool checked)
 }
 
 ///Changes the label text of a menu item
-void CommandManager::Modify(const wxString &name, const wxString &newLabel)
+void CommandManager::Modify(const wxString &name, const TranslatableString &newLabel)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (entry && entry->menu) {
@@ -965,8 +963,8 @@ void CommandManager::SetKeyFromIndex(int i, const NormalizedKeyString &key)
    entry->key = key;
 }
 
-wxString CommandManager::DescribeCommandsAndShortcuts
-(const TranslatedInternalString commands[], size_t nCommands) const
+TranslatableString CommandManager::DescribeCommandsAndShortcuts(
+   const ComponentInterfaceSymbol commands[], size_t nCommands) const
 {
    wxString mark;
    // This depends on the language setting and may change in-session after
@@ -976,7 +974,7 @@ wxString CommandManager::DescribeCommandsAndShortcuts
       mark = wxT("\u200f");
 
    static const wxString &separatorFormat = wxT("%s / %s");
-   wxString result;
+   TranslatableString result;
    for (size_t ii = 0; ii < nCommands; ++ii) {
       const auto &pair = commands[ii];
       // If RTL, then the control character forces right-to-left sequencing of
@@ -984,7 +982,11 @@ wxString CommandManager::DescribeCommandsAndShortcuts
       // left, consistently with accelerators in menus (assuming matching
       // operating system prefernces for language), even if the command name
       // was missing from the translation file and defaulted to the English.
-      auto piece = wxString::Format(wxT("%s%s"), mark, pair.Translated());
+
+      // Note: not putting this and other short format strings in the
+      // translation catalogs
+      auto piece = TranslatableString{wxT("%s%s")}
+         .Format( mark, TranslatableString{pair.Msgid()}.Strip() );
 
       auto name = pair.Internal();
       if (!name.empty()) {
@@ -1002,14 +1004,14 @@ wxString CommandManager::DescribeCommandsAndShortcuts
 #endif
             // The mark makes correctly placed parentheses for RTL, even
             // in the case that the piece is untranslated.
-            piece = wxString::Format(format, piece, mark, keyString);
+            piece = TranslatableString{format}.Format( piece, mark, keyString );
          }
       }
 
       if (result.empty())
          result = piece;
       else
-         result = wxString::Format(separatorFormat, result, piece);
+         result = TranslatableString{ separatorFormat }.Format( result, piece );
    }
    return result;
 }
@@ -1143,9 +1145,9 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       if( !proj )
          return false;
 
-      wxString NiceName = entry->label;
-      NiceName.Replace("&", "");// remove &
-      NiceName.Replace(".","");// remove ...
+      auto NiceName = entry->label;
+      NiceName.Strip(
+         TranslatableString::Ellipses | TranslatableString::MenuCodes );
       // NB: The call may have the side effect of changing flags.
       bool allowed =
          MenuManager::Get(*proj).ReportIfActionNotAllowed(
@@ -1262,7 +1264,7 @@ void CommandManager::GetAllCommandNames(CommandIDs &names,
    }
 }
 
-void CommandManager::GetAllCommandLabels(wxArrayString &names,
+void CommandManager::GetAllCommandLabels(TranslatableStrings &names,
                                          std::vector<bool> &vExcludeFromMacros,
                                         bool includeMultis) const
 {
@@ -1285,7 +1287,7 @@ void CommandManager::GetAllCommandData(
    CommandIDs &names,
    std::vector<NormalizedKeyString> &keys,
    std::vector<NormalizedKeyString> &default_keys,
-   wxArrayString &labels,
+   TranslatableStrings &labels,
    wxArrayString &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
    TranslatableStrings &prefixes,
@@ -1330,30 +1332,26 @@ CommandID CommandManager::GetNameFromNumericID(int id)
    return entry->name;
 }
 
-wxString CommandManager::GetLabelFromName(const CommandID &name)
+TranslatableString CommandManager::GetLabelFromName(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
-      return wxT("");
+      return {};
 
    return entry->longLabel;
 }
 
-wxString CommandManager::GetPrefixedLabelFromName(const CommandID &name)
+TranslatableString CommandManager::GetPrefixedLabelFromName(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
-      return wxT("");
+      return {};
 
-#if defined(EXPERIMENTAL_KEY_VIEW)
-   wxString prefix;
-   if (!entry->labelPrefix.empty()) {
-      prefix = entry->labelPrefix.Translation() + wxT(" - ");
-   }
-   return wxMenuItem::GetLabelText(prefix + entry->label);
-#else
-   return wxString(entry->labelPrefix.Translation() + wxT(" ") + entry->label).Trim(false).Trim(true);
-#endif
+   if (!entry->labelPrefix.empty())
+      return TranslatableString{wxT("%s - %s")}
+         .Format(entry->labelPrefix, entry->label);
+   else
+      return entry->label;
 }
 
 wxString CommandManager::GetCategoryFromName(const CommandID &name)
@@ -1496,8 +1494,8 @@ void CommandManager::CheckDups()
             msg.Printf(wxT("key combo '%s' assigned to '%s' and '%s'"),
                        // using GET to form debug message
                        mCommandList[i]->key.GET(),
-                       mCommandList[i]->label,
-                       mCommandList[j]->label);
+                       mCommandList[i]->label.Debug(),
+                       mCommandList[j]->label.Debug());
             wxASSERT_MSG(mCommandList[i]->key != mCommandList[j]->key, msg);
          }
       }

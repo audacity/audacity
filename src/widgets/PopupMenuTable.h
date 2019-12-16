@@ -24,6 +24,7 @@ class wxString;
 #include <wx/menu.h> // to inherit wxMenu
 #include "../MemoryX.h"
 
+#include "../Internat.h"
 #include "../TranslatableStringArray.h"
 
 class PopupMenuTable;
@@ -34,11 +35,11 @@ struct PopupMenuTableEntry
 
    Type type;
    int id;
-   wxString caption;
+   TranslatableString caption;
    wxCommandEventFunction func;
    PopupMenuTable *subTable;
 
-   PopupMenuTableEntry(Type type_, int id_, wxString caption_,
+   PopupMenuTableEntry(Type type_, int id_, TranslatableString caption_,
       wxCommandEventFunction func_, PopupMenuTable *subTable_)
       : type(type_)
       , id(id_)
@@ -183,12 +184,12 @@ void HandlerClass::Populate() { \
 
 #define POPUP_MENU_SEPARATOR() \
    POPUP_MENU_APPEND( \
-      Entry::Separator, -1, wxT(""), nullptr, nullptr );
+      Entry::Separator, -1, {}, nullptr, nullptr );
 
 // ends function
 #define END_POPUP_MENU() \
    POPUP_MENU_APPEND( \
-      Entry::Invalid, -1, wxT(""), nullptr, nullptr ) \
+      Entry::Invalid, -1, {}, nullptr, nullptr ) \
    }
 
 #endif

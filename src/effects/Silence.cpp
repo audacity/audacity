@@ -38,9 +38,9 @@ ComponentInterfaceSymbol EffectSilence::GetSymbol()
    return SILENCE_PLUGIN_SYMBOL;
 }
 
-wxString EffectSilence::GetDescription()
+TranslatableString EffectSilence::GetDescription()
 {
-   return _("Creates audio of zero amplitude");
+   return XO("Creates audio of zero amplitude");
 }
 
 wxString EffectSilence::ManualPage()

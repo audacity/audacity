@@ -192,7 +192,7 @@ BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 LV2EffectSettingsDialog::LV2EffectSettingsDialog(wxWindow *parent, LV2Effect *effect)
-:  wxDialogWrapper(parent, wxID_ANY, wxString(_("LV2 Effect Settings")))
+:  wxDialogWrapper(parent, wxID_ANY, XO("LV2 Effect Settings"))
 {
    mEffect = effect;
 
@@ -355,9 +355,9 @@ wxString LV2Effect::GetVersion()
    return wxT("1.0");
 }
 
-wxString LV2Effect::GetDescription()
+TranslatableString LV2Effect::GetDescription()
 {
-   return _("n/a");
+   return XO("n/a");
 }
 
 // ============================================================================

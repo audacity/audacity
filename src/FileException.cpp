@@ -15,24 +15,24 @@ FileException::~FileException()
 {
 }
 
-wxString FileException::ErrorMessage() const
+TranslatableString FileException::ErrorMessage() const
 {
-   wxString format;
+   TranslatableString format;
    switch (cause) {
       case Cause::Open:
-         format = _("Audacity failed to open a file in %s.");
+         format = XO("Audacity failed to open a file in %s.");
          break;
       case Cause::Read:
-         format = _("Audacity failed to read from a file in %s.");
+         format = XO("Audacity failed to read from a file in %s.");
          break;
       case Cause::Write:
          format =
-_("Audacity failed to write to a file.\n"
+XO("Audacity failed to write to a file.\n"
   "Perhaps %s is not writable or the disk is full.");
          break;
       case Cause::Rename:
          format =
-_("Audacity successfully wrote a file in %s but failed to rename it as %s.");
+XO("Audacity successfully wrote a file in %s but failed to rename it as %s.");
       default:
          break;
    }
@@ -54,7 +54,6 @@ _("Audacity successfully wrote a file in %s but failed to rename it as %s.");
 
 #endif
 
-   return wxString::Format(
-      format, target, renameTarget.GetFullName() );
+   return format.Format( target, renameTarget.GetFullName() );
 }
 

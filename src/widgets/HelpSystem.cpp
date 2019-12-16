@@ -66,7 +66,7 @@ namespace {
 class HtmlTextHelpDialog final : public BrowserDialog
 {
 public:
-   HtmlTextHelpDialog(wxWindow *pParent, const wxString &title)
+   HtmlTextHelpDialog(wxWindow *pParent, const TranslatableString &title)
       : BrowserDialog{ pParent, title }
    {
 #if !wxCHECK_VERSION(3, 0, 0)
@@ -90,7 +90,7 @@ public:
 /// in one place.  Other considerations like screen readers are also
 /// handled by having the code in one place.
 void HelpSystem::ShowInfoDialog( wxWindow *parent,
-                     const wxString &dlogTitle,
+                     const TranslatableString &dlogTitle,
                      const wxString &shortMsg,
                      const wxString &message,
                      const int xSize, const int ySize)
@@ -100,7 +100,7 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX /*| wxDEFAULT_FRAME_STYLE */);
 
-   dlog.SetName(dlog.GetTitle());
+   dlog.SetName();
    ShuttleGui S(&dlog, eIsCreating);
 
    S.StartVerticalLay(1);
@@ -125,7 +125,7 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
 }
 
 void HelpSystem::ShowHtmlText(wxWindow *pParent,
-                  const wxString &Title,
+                  const TranslatableString &Title,
                   const wxString &HtmlText,
                   bool bIsFile,
                   bool bModal)
@@ -138,7 +138,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    // frame??
    // Bug 1412 seems to be related to the extra frame.
    auto pFrame = safenew wxFrame {
-      pParent, wxID_ANY, Title, wxDefaultPosition, wxDefaultSize,
+      pParent, wxID_ANY, Title.Translation(), wxDefaultPosition, wxDefaultSize,
 #if defined(__WXMAC__)
       // On OSX, the html frame can go behind the help dialog and if the help
       // html frame is modal, you can't get back to it.  Pressing escape gets
@@ -220,7 +220,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    pFrame->Layout();
    pFrame->SetSizeHints(pWnd->GetSize());
 
-   pFrame->SetName(Title);
+   pFrame->SetName(Title.Translation());
    if (bModal)
       pWnd->ShowModal();
    else {
@@ -291,7 +291,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
       Text.Replace( wxT("*URL*"), remoteURL );
       // Always make the 'help on the internet' dialog modal.
       // Fixes Bug 1411.
-      ShowHtmlText( parent, _("Help on the Internet"), Text, false, true );
+      ShowHtmlText( parent, XO("Help on the Internet"), Text, false, true );
    }
    else if( HelpMode == wxT("Local") || alwaysDefaultBrowser)
    {
@@ -301,7 +301,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
    else
    {
       // Local file, Built-in browser
-      ShowHtmlText( parent, wxT(""), localFileName, true, bModal );
+      ShowHtmlText( parent, {}, localFileName, true, bModal );
    }
 }
 
@@ -431,7 +431,7 @@ BEGIN_EVENT_TABLE(BrowserDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 
-BrowserDialog::BrowserDialog(wxWindow *pParent, const wxString &title)
+BrowserDialog::BrowserDialog(wxWindow *pParent, const TranslatableString &title)
    : wxDialogWrapper{ pParent, ID, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER /*| wxMAXIMIZE_BOX */  }
 {
    int width, height;
@@ -548,7 +548,7 @@ void LinkingHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
       else
       {
          SetPage( HelpText( href.Mid( 10 )));
-         wxGetTopLevelParent(this)->SetLabel( TitleText( href.Mid( 10 )));
+         wxGetTopLevelParent(this)->SetLabel( TitleText( href.Mid( 10 )).Translation() );
       }
    }
    else if( href.StartsWith(wxT("mailto:")) || href.StartsWith(wxT("file:")) )

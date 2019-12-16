@@ -188,9 +188,9 @@ void WaveColorMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    }
 }
 
-const wxString GetWaveColorStr(int colorIndex)
+const TranslatableString GetWaveColorStr(int colorIndex)
 {
-   return wxString::Format( _("Instrument %i"), colorIndex+1 );
+   return XO("Instrument %i").Format( colorIndex+1 );
 }
 
 
@@ -225,10 +225,9 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
       channel->SetWaveColorIndex(newWaveColor);
 
    ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Changed '%s' to %s"),
-      pTrack->GetName(),
-      GetWaveColorStr(newWaveColor)),
-      _("WaveColor Change"));
+      .PushState(XO("Changed '%s' to %s")
+         .Format( pTrack->GetName(), GetWaveColorStr(newWaveColor) ),
+      XO("WaveColor Change"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -344,10 +343,9 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 
    /* i18n-hint: The strings name a track and a format */
    ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Changed '%s' to %s"),
-      pTrack->GetName(),
-      GetSampleFormatStr(newFormat)),
-      _("Format Change"));
+      .PushState(XO("Changed '%s' to %s")
+         .Format( pTrack->GetName(), GetSampleFormatStr(newFormat) ),
+      XO("Format Change"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -405,19 +403,19 @@ void RateMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 // If we did, we'd get no message when clicking on Other...
 // when it is already selected.
 BEGIN_POPUP_MENU(RateMenuTable)
-   POPUP_MENU_CHECK_ITEM(OnRate8ID, _("8000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate11ID, _("11025 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate16ID, _("16000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate22ID, _("22050 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate44ID, _("44100 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate48ID, _("48000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate88ID, _("88200 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate96ID, _("96000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate176ID, _("176400 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate192ID, _("192000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate352ID, _("352800 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate384ID, _("384000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRateOtherID, _("&Other..."), OnRateOther)
+   POPUP_MENU_CHECK_ITEM(OnRate8ID, XO("8000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate11ID, XO("11025 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate16ID, XO("16000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate22ID, XO("22050 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate44ID, XO("44100 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate48ID, XO("48000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate88ID, XO("88200 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate96ID, XO("96000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate176ID, XO("176400 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate192ID, XO("192000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate352ID, XO("352800 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRate384ID, XO("384000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM(OnRateOtherID, XO("&Other..."), OnRateOther)
 END_POPUP_MENU()
 
 const int nRates = 12;
@@ -449,9 +447,9 @@ void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
    wxString rateString = wxString::Format(wxT("%.3f"), rate);
    /* i18n-hint: The string names a track */
    ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Changed '%s' to %s Hz"),
-      pTrack->GetName(), rateString),
-      _("Rate Change"));
+      .PushState(XO("Changed '%s' to %s Hz")
+         .Format( pTrack->GetName(), rateString),
+      XO("Rate Change"));
 }
 
 /// This method handles the selection from the Rate
@@ -478,8 +476,8 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
    /// \todo Make a real dialog box out of this!!
    while (true)
    {
-      wxDialogWrapper dlg(mpData->pParent, wxID_ANY, wxString(_("Set Rate")));
-      dlg.SetName(dlg.GetTitle());
+      wxDialogWrapper dlg(mpData->pParent, wxID_ANY, XO("Set Rate"));
+      dlg.SetName();
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
       wxComboBox *cb;
@@ -694,23 +692,23 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    // exclusive, but the view may be in a state with either of those, and also
    // spectrogram, after a mouse drag.  Clicking any of these three makes that
    // view take up all the height.
-   POPUP_MENU_CHECK_ITEM(OnWaveformID, _("Wa&veform"), OnSetDisplay)
-   POPUP_MENU_CHECK_ITEM(OnWaveformDBID, _("&Waveform (dB)"), OnSetDisplay)
-   POPUP_MENU_CHECK_ITEM(OnSpectrumID, _("&Spectrogram"), OnSetDisplay)
+   POPUP_MENU_CHECK_ITEM(OnWaveformID, XO("Wa&veform"), OnSetDisplay)
+   POPUP_MENU_CHECK_ITEM(OnWaveformDBID, XO("&Waveform (dB)"), OnSetDisplay)
+   POPUP_MENU_CHECK_ITEM(OnSpectrumID, XO("&Spectrogram"), OnSetDisplay)
 
-   POPUP_MENU_ITEM(OnSpectrogramSettingsID, _("S&pectrogram Settings..."), OnSpectrogramSettings)
+   POPUP_MENU_ITEM(OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
    POPUP_MENU_SEPARATOR()
 
-//   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, _("&Mono"), OnChannelChange)
-//   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, _("&Left Channel"), OnChannelChange)
-//   POPUP_MENU_RADIO_ITEM(OnChannelRightID, _("R&ight Channel"), OnChannelChange)
-   POPUP_MENU_ITEM(OnMergeStereoID, _("Ma&ke Stereo Track"), OnMergeStereo)
+//   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, XO("&Mono"), OnChannelChange)
+//   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, XO("&Left Channel"), OnChannelChange)
+//   POPUP_MENU_RADIO_ITEM(OnChannelRightID, XO("R&ight Channel"), OnChannelChange)
+   POPUP_MENU_ITEM(OnMergeStereoID, XO("Ma&ke Stereo Track"), OnMergeStereo)
 
-   POPUP_MENU_ITEM(OnSwapChannelsID, _("Swap Stereo &Channels"), OnSwapChannels)
-   POPUP_MENU_ITEM(OnSplitStereoID, _("Spl&it Stereo Track"), OnSplitStereo)
+   POPUP_MENU_ITEM(OnSwapChannelsID, XO("Swap Stereo &Channels"), OnSwapChannels)
+   POPUP_MENU_ITEM(OnSplitStereoID, XO("Spl&it Stereo Track"), OnSplitStereo)
 // DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
 #ifndef EXPERIMENTAL_DA
-   POPUP_MENU_ITEM(OnSplitStereoMonoID, _("Split Stereo to Mo&no"), OnSplitStereoMono)
+   POPUP_MENU_ITEM(OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), OnSplitStereoMono)
 #endif
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
@@ -721,14 +719,14 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
             .contains( WaveTrackViewConstants::Waveform );
       if( hasWaveform ){
          POPUP_MENU_SEPARATOR()
-         POPUP_MENU_SUB_MENU(OnWaveColorID, _("&Wave Color"), WaveColorMenuTable)
+         POPUP_MENU_SUB_MENU(OnWaveColorID, XO("&Wave Color"), WaveColorMenuTable)
       }
    }
 
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(0, _("&Format"), FormatMenuTable)
+   POPUP_MENU_SUB_MENU(0, XO("&Format"), FormatMenuTable)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(0, _("Rat&e"), RateMenuTable)
+   POPUP_MENU_SUB_MENU(0, XO("Rat&e"), RateMenuTable)
 END_POPUP_MENU()
 
 
@@ -922,10 +920,9 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
       }
 
    /* i18n-hint: The string names a track */
-   ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Made '%s' a stereo track"),
-      pTrack->GetName()),
-      _("Make Stereo"));
+   ProjectHistory::Get( *project ).PushState(
+      XO("Made '%s' a stereo track").Format( pTrack->GetName() ),
+      XO("Make Stereo"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -993,10 +990,9 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
       trackFocus.Set(partner);
 
    /* i18n-hint: The string names a track  */
-   ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Swapped Channels in '%s'"),
-      pTrack->GetName()),
-      _("Swap Channels"));
+   ProjectHistory::Get( *project ).PushState(
+      XO("Swapped Channels in '%s'").Format( pTrack->GetName() ),
+      XO("Swap Channels"));
 
    mpData->result = RefreshCode::RefreshAll;
 }
@@ -1008,10 +1004,9 @@ void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    AudacityProject *const project = ::GetActiveProject();
    /* i18n-hint: The string names a track  */
-   ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Split stereo track '%s'"),
-      pTrack->GetName()),
-      _("Split"));
+   ProjectHistory::Get( *project ).PushState(
+      XO("Split stereo track '%s'").Format( pTrack->GetName() ),
+      XO("Split"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -1024,10 +1019,9 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    AudacityProject *const project = ::GetActiveProject();
    /* i18n-hint: The string names a track  */
-   ProjectHistory::Get( *project ).
-      PushState(wxString::Format(_("Split Stereo to Mono '%s'"),
-      pTrack->GetName()),
-      _("Split to Mono"));
+   ProjectHistory::Get( *project ).PushState(
+      XO("Split Stereo to Mono '%s'").Format( pTrack->GetName() ),
+      XO("Split to Mono"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -1088,10 +1082,10 @@ void GainSliderDrawFunction
 }
 
 void StatusDrawFunction
-   ( const wxString &string, wxDC *dc, const wxRect &rect )
+   ( const TranslatableString &string, wxDC *dc, const wxRect &rect )
 {
    static const int offset = 3;
-   dc->DrawText(string, rect.x + offset, rect.y);
+   dc->DrawText(string.Translation(), rect.x + offset, rect.y);
 }
 
 void Status1DrawFunction
@@ -1105,20 +1099,20 @@ void Status1DrawFunction
    /// indicating whether the track is mono, left, right, or
    /// stereo and what sample rate it's using.
    auto rate = wt ? wt->GetRate() : 44100.0;
-   wxString s;
+   TranslatableString s;
    if (!pTrack || TrackList::Channels(pTrack).size() > 1)
       // TODO: more-than-two-channels-message
       // more appropriate strings
-      s = _("Stereo, %dHz");
+      s = XO("Stereo, %dHz");
    else {
       if (wt->GetChannel() == Track::MonoChannel)
-         s = _("Mono, %dHz");
+         s = XO("Mono, %dHz");
       else if (wt->GetChannel() == Track::LeftChannel)
-         s = _("Left, %dHz");
+         s = XO("Left, %dHz");
       else if (wt->GetChannel() == Track::RightChannel)
-         s = _("Right, %dHz");
+         s = XO("Right, %dHz");
    }
-   s = wxString::Format( s, (int) (rate + 0.5) );
+   s.Format( (int) (rate + 0.5) );
 
    StatusDrawFunction( s, dc, rect );
 }
@@ -1239,13 +1233,13 @@ void WaveTrackControls::ReCreateGainSlider( wxEvent &event )
 
    float defPos = 1.0;
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   gGain = std::make_unique<LWSlider>(nullptr, _("Gain"),
+   gGain = std::make_unique<LWSlider>(nullptr, XO("Gain"),
                         wxPoint(sliderRect.x, sliderRect.y),
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
    gGain->SetDefaultValue(defPos);
 
-   gGainCaptured = std::make_unique<LWSlider>(nullptr, _("Gain"),
+   gGainCaptured = std::make_unique<LWSlider>(nullptr, XO("Gain"),
                                 wxPoint(sliderRect.x, sliderRect.y),
                                 wxSize(sliderRect.width, sliderRect.height),
                                 DB_SLIDER);
@@ -1296,13 +1290,13 @@ void WaveTrackControls::ReCreatePanSlider( wxEvent &event )
 
    float defPos = 0.0;
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-   gPan = std::make_unique<LWSlider>(nullptr, _("Pan"),
+   gPan = std::make_unique<LWSlider>(nullptr, XO("Pan"),
                        wxPoint(sliderRect.x, sliderRect.y),
                        wxSize(sliderRect.width, sliderRect.height),
                        PAN_SLIDER);
    gPan->SetDefaultValue(defPos);
 
-   gPanCaptured = std::make_unique<LWSlider>(nullptr, _("Pan"),
+   gPanCaptured = std::make_unique<LWSlider>(nullptr, XO("Pan"),
                                wxPoint(sliderRect.x, sliderRect.y),
                                wxSize(sliderRect.width, sliderRect.height),
                                PAN_SLIDER);

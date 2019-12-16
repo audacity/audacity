@@ -42,13 +42,13 @@ END_EVENT_TABLE()
 
 ErrorDialog::ErrorDialog(
    wxWindow *parent,
-   const wxString & dlogTitle,
+   const TranslatableString & dlogTitle,
    const wxString & message,
    const wxString & helpPage,
    const bool Close, const bool modal):
    wxDialogWrapper(parent, (wxWindowID)-1, dlogTitle)
 {
-   SetName(GetTitle());
+   SetName();
 
    long buttonMask;
 
@@ -103,7 +103,7 @@ void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 }
 
 void ShowErrorDialog(wxWindow *parent,
-                     const wxString &dlogTitle,
+                     const TranslatableString &dlogTitle,
                      const wxString &message,
                      const wxString &helpPage,
                      const bool Close)
@@ -116,7 +116,7 @@ void ShowErrorDialog(wxWindow *parent,
 
 // unused.
 void ShowModelessErrorDialog(wxWindow *parent,
-                             const wxString &dlogTitle,
+                             const TranslatableString &dlogTitle,
                              const wxString &message,
                              const wxString &helpPage,
                              const bool Close)

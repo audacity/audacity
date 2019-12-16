@@ -34,7 +34,7 @@ class LangChoiceDialog final : public wxDialogWrapper {
 public:
    LangChoiceDialog(wxWindow * parent,
                     wxWindowID id,
-                    const wxString & title);
+                    const TranslatableString & title);
 
    wxString GetLang() { return mLang; }
 
@@ -57,7 +57,7 @@ wxString ChooseLanguage(wxWindow *parent)
 
    /* i18n-hint: Title on a dialog indicating that this is the first
     * time Audacity has been run. */
-   LangChoiceDialog dlog(parent, -1, _("Audacity First Run"));
+   LangChoiceDialog dlog(parent, -1, XO("Audacity First Run"));
    dlog.CentreOnParent();
    dlog.ShowModal();
    returnVal = dlog.GetLang();
@@ -71,10 +71,10 @@ END_EVENT_TABLE()
 
 LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
                                    wxWindowID id,
-                                   const wxString & title):
+                                   const TranslatableString & title):
    wxDialogWrapper(parent, id, title)
 {
-   SetName(GetTitle());
+   SetName();
    GetLanguages(mLangCodes, mLangNames);
    int lang =
       make_iterator_range( mLangCodes ).index( GetSystemLanguageCode() );

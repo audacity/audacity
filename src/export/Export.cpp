@@ -393,7 +393,8 @@ const ExportPluginArray &Exporter::GetPlugins()
 }
 
 bool Exporter::DoEditMetadata(AudacityProject &project,
-   const wxString &title, const wxString &shortUndoDescription, bool force)
+   const TranslatableString &title,
+   const TranslatableString &shortUndoDescription, bool force)
 {
    auto &settings = ProjectSettings::Get( project );
    auto &tags = Tags::Get( project );
@@ -409,7 +410,7 @@ bool Exporter::DoEditMetadata(AudacityProject &project,
       if (tags != *newTags) {
          // Commit the change to project state only now.
          Tags::Set( project, newTags );
-         ProjectHistory::Get( project ).PushState(title, shortUndoDescription);
+         ProjectHistory::Get( project ).PushState( title, shortUndoDescription);
       }
       bool bShowInFuture;
       gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
@@ -446,7 +447,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
       if (!DoEditMetadata( *project,
-         _("Edit Metadata Tags"), _("Exported Tags"),
+         XO("Edit Metadata Tags"), XO("Exported Tags"),
          ProjectSettings::Get( *mProject ).GetShowId3Dialog())) {
          return false;
       }
@@ -915,7 +916,7 @@ bool Exporter::CheckMix()
                            exportedChannels,
                            NULL,
                            1,
-                           _("Advanced Mixing Options"));
+                           XO("Advanced Mixing Options"));
 
       if (md.ShowModal() != wxID_OK) {
          return false;
@@ -1102,8 +1103,8 @@ bool Exporter::SetAutoExportOptions(AudacityProject *project) {
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
       if (!DoEditMetadata( *project,
-         _("Edit Metadata Tags"),
-         _("Exported Tags"),
+         XO("Edit Metadata Tags"),
+         XO("Exported Tags"),
          ProjectSettings::Get(*mProject).GetShowId3Dialog())) {
          return false;
       }
@@ -1367,11 +1368,11 @@ BEGIN_EVENT_TABLE( ExportMixerDialog, wxDialogWrapper )
 END_EVENT_TABLE()
 
 ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly,
-      unsigned maxNumChannels, wxWindow *parent, wxWindowID id, const wxString &title,
+      unsigned maxNumChannels, wxWindow *parent, wxWindowID id, const TranslatableString &title,
       const wxPoint &position, const wxSize& size, long style ) :
    wxDialogWrapper( parent, id, title, position, size, style | wxRESIZE_BORDER )
 {
-   SetName(GetTitle());
+   SetName();
 
    unsigned numTracks = 0;
 

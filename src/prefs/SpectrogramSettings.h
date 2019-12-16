@@ -66,7 +66,7 @@ public:
       stNumScaleTypes,
    };
 
-   static const wxArrayStringEx &GetScaleNames();
+   static const TranslatableStrings &GetScaleNames();
    static const wxArrayStringEx &GetAlgorithmNames();
 
    static SpectrogramSettings &defaults();

@@ -139,9 +139,9 @@ ComponentInterfaceSymbol EffectChangePitch::GetSymbol()
    return CHANGEPITCH_PLUGIN_SYMBOL;
 }
 
-wxString EffectChangePitch::GetDescription()
+TranslatableString EffectChangePitch::GetDescription()
 {
-   return _("Changes the pitch of a track without changing its tempo");
+   return XO("Changes the pitch of a track without changing its tempo");
 }
 
 wxString EffectChangePitch::ManualPage()

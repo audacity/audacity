@@ -24,7 +24,7 @@
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: i.e. the behaviors of tracks */
-:  PrefsPanel(parent, winid, _("Tracks Behaviors"))
+:  PrefsPanel(parent, winid, XO("Tracks Behaviors"))
 {
    Populate();
 }
@@ -38,9 +38,9 @@ ComponentInterfaceSymbol TracksBehaviorsPrefs::GetSymbol()
    return TRACKS_BEHAVIORS_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString TracksBehaviorsPrefs::GetDescription()
+TranslatableString TracksBehaviorsPrefs::GetDescription()
 {
-   return _("Preferences for TracksBehaviors");
+   return XO("Preferences for TracksBehaviors");
 }
 
 wxString TracksBehaviorsPrefs::HelpPageName()

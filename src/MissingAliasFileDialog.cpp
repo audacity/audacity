@@ -25,7 +25,7 @@ class MissingAliasFileDialog final : public ErrorDialog
 {
    public:
    MissingAliasFileDialog(wxWindow *parent,
-      const wxString & dlogTitle,
+      const TranslatableString & dlogTitle,
       const wxString & message,
       const wxString & helpURL,
       const bool Close = true, const bool modal = true);
@@ -34,7 +34,7 @@ class MissingAliasFileDialog final : public ErrorDialog
 
 
 MissingAliasFileDialog::MissingAliasFileDialog(wxWindow *parent,
-      const wxString & dlogTitle,
+      const TranslatableString & dlogTitle,
       const wxString & message,
       const wxString & helpURL,
       const bool Close, const bool modal)
@@ -65,7 +65,7 @@ namespace MissingAliasFilesDialog {
    using Lock = std::unique_lock< std::mutex >;
    
    void Show(AudacityProject *project,
-             const wxString &dlogTitle,
+             const TranslatableString &dlogTitle,
              const wxString &message,
              const wxString &helpPage,
              const bool Close)

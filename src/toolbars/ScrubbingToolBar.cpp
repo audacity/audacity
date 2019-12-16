@@ -57,7 +57,7 @@ END_EVENT_TABLE()
 
 //Standard contructor
 ScrubbingToolBar::ScrubbingToolBar( AudacityProject &project )
-: ToolBar(project, ScrubbingBarID, _("Scrub"), wxT("Scrub"))
+: ToolBar(project, ScrubbingBarID, XO("Scrub"), wxT("Scrub"))
 {
 }
 
@@ -135,7 +135,7 @@ void ScrubbingToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Scrubbing"));
+   SetLabel(XO("Scrubbing"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
@@ -149,10 +149,10 @@ void ScrubbingToolBar::RegenerateTooltips()
 void ScrubbingToolBar::DoRegenerateTooltips( bool force )
 {
 #if wxUSE_TOOLTIPS
-   auto fn = [&]
-   (AButton &button, const wxString &label, const CommandID &cmd)
+   auto fn = [&](
+      AButton &button, const TranslatableString &label, const CommandID &cmd)
    {
-      TranslatedInternalString command{ cmd, label };
+      ComponentInterfaceSymbol command{ cmd, label };
       ToolBar::SetButtonToolTip( mProject, button, &command, 1u );
    };
 
@@ -163,7 +163,7 @@ void ScrubbingToolBar::DoRegenerateTooltips( bool force )
       const auto scrubButton = mButtons[STBScrubID];
       const auto seekButton = mButtons[STBSeekID];
 
-      wxString label;
+      TranslatableString label;
       bool scrubs = scrubber.Scrubs();
       if (force || mLastScrub != scrubs) {
          label = (
@@ -172,8 +172,8 @@ void ScrubbingToolBar::DoRegenerateTooltips( bool force )
                    "Scrubbing" is variable-speed playback, ...
                    "Seeking" is normal speed playback but with skips
                    */
-                  ? _("Stop Scrubbing")
-                  : _("Start Scrubbing")
+                  ? XO("Stop Scrubbing")
+                  : XO("Start Scrubbing")
                   );
          fn(*scrubButton, label, wxT("Scrub"));
       }
@@ -187,8 +187,8 @@ void ScrubbingToolBar::DoRegenerateTooltips( bool force )
                    "Scrubbing" is variable-speed playback, ...
                    "Seeking" is normal speed playback but with skips
                    */
-                  ? _("Stop Seeking")
-                  : _("Start Seeking")
+                  ? XO("Stop Seeking")
+                  : XO("Start Seeking")
                   );
          fn(*seekButton, label, wxT("Seek"));
       }
@@ -198,8 +198,8 @@ void ScrubbingToolBar::DoRegenerateTooltips( bool force )
       if (force || mLastRuler != showingRuler) {
          label = (
                   showingRuler
-                  ? _("Hide Scrub Ruler")
-                  : _("Show Scrub Ruler")
+                  ? XO("Hide Scrub Ruler")
+                  : XO("Show Scrub Ruler")
                   );
          fn(*mButtons[STBRulerID], label, wxT("ToggleScrubRuler"));
       }

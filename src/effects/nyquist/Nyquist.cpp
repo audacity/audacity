@@ -235,10 +235,9 @@ wxString NyquistEffect::GetVersion()
    return mReleaseVersion.Translation();
 }
 
-wxString NyquistEffect::GetDescription()
+TranslatableString NyquistEffect::GetDescription()
 {
-   // This should be a translated string, consistent with other effects
-   return mCopyright.Translation();
+   return mCopyright;
 }
 
 wxString NyquistEffect::ManualPage()
@@ -929,7 +928,7 @@ finish:
 
    if (mDebug && !mRedirectOutput) {
       NyquistOutputDialog dlog(mUIParent, -1,
-                               mName.Translation(),
+                               mName,
                                _("Debug Output: "),
                                mDebugOutput);
       dlog.CentreOnParent();
@@ -3122,12 +3121,12 @@ BEGIN_EVENT_TABLE(NyquistOutputDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
-                                       const wxString & title,
+                                       const TranslatableString & title,
                                        const wxString & prompt,
                                        const wxString &message)
 : wxDialogWrapper{ parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER }
 {
-   SetName(GetTitle());
+   SetName();
 
    wxBoxSizer *mainSizer;
    {

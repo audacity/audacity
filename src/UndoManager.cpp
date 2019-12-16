@@ -50,8 +50,8 @@ using Set = std::unordered_set<ConstBlockFilePtr>;
 struct UndoStackElem {
 
    UndoStackElem(std::shared_ptr<TrackList> &&tracks_,
-      const wxString &description_,
-      const wxString &shortDescription_,
+      const TranslatableString &description_,
+      const TranslatableString &shortDescription_,
       const SelectedRegion &selectedRegion_,
       const std::shared_ptr<Tags> &tags_)
       : state(std::move(tracks_), tags_, selectedRegion_)
@@ -61,8 +61,8 @@ struct UndoStackElem {
    }
 
    UndoState state;
-   wxString description;
-   wxString shortDescription;
+   TranslatableString description;
+   TranslatableString shortDescription;
 };
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
@@ -164,8 +164,8 @@ void UndoManager::CalculateSpaceUsage()
    //TIMER_STOP( space_calc );
 }
 
-wxLongLong_t UndoManager::GetLongDescription(unsigned int n, wxString *desc,
-                                             wxString *size)
+wxLongLong_t UndoManager::GetLongDescription(
+   unsigned int n, TranslatableString *desc, wxString *size)
 {
    n -= 1; // 1 based to zero based
 
@@ -179,7 +179,7 @@ wxLongLong_t UndoManager::GetLongDescription(unsigned int n, wxString *desc,
    return space[n];
 }
 
-void UndoManager::GetShortDescription(unsigned int n, wxString *desc)
+void UndoManager::GetShortDescription(unsigned int n, TranslatableString *desc)
 {
    n -= 1; // 1 based to zero based
 
@@ -188,7 +188,8 @@ void UndoManager::GetShortDescription(unsigned int n, wxString *desc)
    *desc = stack[n]->shortDescription;
 }
 
-void UndoManager::SetLongDescription(unsigned int n, const wxString &desc)
+void UndoManager::SetLongDescription(
+  unsigned int n, const TranslatableString &desc)
 {
    n -= 1;
 
@@ -275,14 +276,14 @@ void UndoManager::ModifyState(const TrackList * l,
 void UndoManager::PushState(const TrackList * l,
                             const SelectedRegion &selectedRegion,
                             const std::shared_ptr<Tags> &tags,
-                            const wxString &longDescription,
-                            const wxString &shortDescription,
+                            const TranslatableString &longDescription,
+                            const TranslatableString &shortDescription,
                             UndoPush flags)
 {
    unsigned int i;
 
    if ( ((flags & UndoPush::CONSOLIDATE) != UndoPush::MINIMAL) &&
-       lastAction == longDescription &&
+       lastAction.Translation() == longDescription.Translation() &&
        mayConsolidate ) {
       ModifyState(l, selectedRegion, tags);
       // MB: If the "saved" state was modified by ModifyState, reset
@@ -336,7 +337,7 @@ void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
 
    current = n;
 
-   lastAction = wxT("");
+   lastAction = {};
    mayConsolidate = false;
 
    consumer( stack[current]->state );
@@ -351,7 +352,7 @@ void UndoManager::Undo(const Consumer &consumer)
 
    current--;
 
-   lastAction = wxT("");
+   lastAction = {};
    mayConsolidate = false;
 
    consumer( stack[current]->state );
@@ -379,7 +380,7 @@ void UndoManager::Redo(const Consumer &consumer)
    }
    */
 
-   lastAction = wxT("");
+   lastAction = {};
    mayConsolidate = false;
 
    consumer( stack[current]->state );

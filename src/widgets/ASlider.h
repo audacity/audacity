@@ -68,7 +68,7 @@ class LWSlider
 
    // MM: Construct customizable slider
    LWSlider(wxWindow * parent,
-            const wxString &name,
+            const TranslatableString &name,
             const wxPoint &pos,
             const wxSize &size,
             float minValue,
@@ -82,7 +82,7 @@ class LWSlider
 
    // Construct predefined slider
    LWSlider(wxWindow * parent,
-            const wxString &name,
+            const TranslatableString &name,
             const wxPoint &pos,
             const wxSize &size,
             int style,
@@ -91,7 +91,7 @@ class LWSlider
             int orientation = wxHORIZONTAL); // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
 
    void Init(wxWindow * parent,
-             const wxString &name,
+             const TranslatableString &name,
              const wxPoint &pos,
              const wxSize &size,
              float minValue,
@@ -224,7 +224,7 @@ class LWSlider
 
    std::unique_ptr<wxBitmap> mBitmap, mThumbBitmap, mThumbBitmapHilited;
 
-   wxString mName;
+   TranslatableString mName;
 
    bool mEnabled;
 };
@@ -259,7 +259,7 @@ class ASlider /* not final */ : public wxPanel
 
    ASlider( wxWindow * parent,
             wxWindowID id,
-            const wxString &name,
+            const TranslatableString &name,
             const wxPoint & pos,
             const wxSize & size,
             const Options &options = Options{});
@@ -331,7 +331,7 @@ class SliderDialog final : public wxDialogWrapper
 {
  public:
    SliderDialog(wxWindow * parent, wxWindowID id,
-                const wxString & title,
+                const TranslatableString & title,
                 wxPoint position,
                 wxSize size,
                 int style,

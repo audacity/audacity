@@ -34,7 +34,7 @@ class KeyConfigPrefs final : public PrefsPanel
 public:
    KeyConfigPrefs(wxWindow * parent, wxWindowID winid, const CommandID &name);
    ComponentInterfaceSymbol GetSymbol() override;
-   wxString GetDescription() override;
+   TranslatableString GetDescription() override;
 
    bool Commit() override;
    void Cancel() override;

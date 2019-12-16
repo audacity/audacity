@@ -53,7 +53,7 @@ BEGIN_EVENT_TABLE(DevicePrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 DevicePrefs::DevicePrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Devices"))
+:  PrefsPanel(parent, winid, XO("Devices"))
 {
    Populate();
 }
@@ -68,9 +68,9 @@ ComponentInterfaceSymbol DevicePrefs::GetSymbol()
    return DEVICE_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString DevicePrefs::GetDescription()
+TranslatableString DevicePrefs::GetDescription()
 {
-   return _("Preferences for Device");
+   return XO("Preferences for Device");
 }
 
 wxString DevicePrefs::HelpPageName()

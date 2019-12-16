@@ -27,7 +27,7 @@ class WarningsPrefs final : public PrefsPanel
    WarningsPrefs(wxWindow * parent, wxWindowID winid);
    ~WarningsPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
-   wxString GetDescription() override;
+   TranslatableString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

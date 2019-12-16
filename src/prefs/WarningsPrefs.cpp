@@ -27,7 +27,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 WarningsPrefs::WarningsPrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Warnings"))
+:  PrefsPanel(parent, winid, XO("Warnings"))
 {
    Populate();
 }
@@ -41,9 +41,9 @@ ComponentInterfaceSymbol WarningsPrefs::GetSymbol()
    return WARNINGS_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString WarningsPrefs::GetDescription()
+TranslatableString WarningsPrefs::GetDescription()
 {
-   return _("Preferences for Warnings");
+   return XO("Preferences for Warnings");
 }
 
 wxString WarningsPrefs::HelpPageName()

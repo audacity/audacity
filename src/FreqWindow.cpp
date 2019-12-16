@@ -197,13 +197,13 @@ SpectrumAnalyst::~SpectrumAnalyst()
 }
 
 FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
-                           const wxString & title,
+                           const TranslatableString & title,
                            const wxPoint & pos)
 :  wxDialogWrapper(parent, id, title, pos, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX),
    mAnalyst(std::make_unique<SpectrumAnalyst>())
 {
-   SetName(GetTitle());
+   SetName();
 
    mMouseX = 0;
    mMouseY = 0;

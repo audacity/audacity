@@ -44,9 +44,8 @@ bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
       
       ProjectHistory::Get( project )
          .PushState(
-            wxString::Format(_("Imported MIDI from '%s'"),
-                         fileName),
-            _("Import MIDI")
+            XO("Imported MIDI from '%s'").Format( fileName ),
+            XO("Import MIDI")
          );
       
       ProjectWindow::Get( project ).ZoomAfterImport(pTrack);

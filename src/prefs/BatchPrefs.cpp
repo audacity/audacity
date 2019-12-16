@@ -30,7 +30,7 @@ END_EVENT_TABLE()
 
 /// Constructor
 BatchPrefs::BatchPrefs(wxWindow * parent, wxWindowID winid):
-   PrefsPanel(parent, winid, _("Batch"))
+   PrefsPanel(parent, winid, XO("Batch"))
 {
    Populate();
 }
@@ -40,9 +40,9 @@ ComponentInterfaceSymbol BatchPrefs::GetSymbol()
    return BATCH_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString BatchPrefs::GetDescription()
+TranslatableString BatchPrefs::GetDescription()
 {
-   return _("Preferences for Batch");
+   return XO("Preferences for Batch");
 }
 
 wxString BatchPrefs::HelpPageName()

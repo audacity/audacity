@@ -78,7 +78,7 @@ END_EVENT_TABLE()
 
 //Standard contructor
 EditToolBar::EditToolBar( AudacityProject &project )
-: ToolBar(project, EditBarID, _("Edit"), wxT("Edit"))
+: ToolBar(project, EditBarID, XO("Edit"), wxT("Edit"))
 {
 }
 
@@ -206,7 +206,7 @@ void EditToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Edit"));
+   SetLabel(XO("Edit"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
@@ -277,8 +277,8 @@ void EditToolBar::ForAllButtons(int Action)
    for (const auto &entry : EditToolbarButtonList) {
 #if wxUSE_TOOLTIPS
       if( Action & ETBActTooltips ){
-         TranslatedInternalString command{
-            entry.commandName, entry.untranslatedLabel.Translation() };
+         ComponentInterfaceSymbol command{
+            entry.commandName, entry.untranslatedLabel };
          ToolBar::SetButtonToolTip( mProject,
             *mButtons[entry.tool], &command, 1u );
       }

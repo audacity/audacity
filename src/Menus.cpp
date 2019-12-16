@@ -316,7 +316,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 // TODO: This surely belongs in CommandManager?
 void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
 {
-   wxString desc;
+   TranslatableString desc;
    auto &undoManager = UndoManager::Get( project );
    auto &commandManager = CommandManager::Get( project );
    int cur = undoManager.GetCurrentState();
@@ -324,27 +324,25 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
    if (undoManager.UndoAvailable()) {
       undoManager.GetShortDescription(cur, &desc);
       commandManager.Modify(wxT("Undo"),
-                             wxString::Format(_("&Undo %s"),
-                                              desc));
+                             XO("&Undo %s").Format( desc ));
       commandManager.Enable(wxT("Undo"),
          ProjectHistory::Get( project ).UndoAvailable());
    }
    else {
       commandManager.Modify(wxT("Undo"),
-                            _("&Undo"));
+                            XO("&Undo"));
    }
 
    if (undoManager.RedoAvailable()) {
       undoManager.GetShortDescription(cur+1, &desc);
       commandManager.Modify(wxT("Redo"),
-                             wxString::Format(_("&Redo %s"),
-                                              desc));
+                             XO("&Redo %s").Format( desc));
       commandManager.Enable(wxT("Redo"),
          ProjectHistory::Get( project ).RedoAvailable());
    }
    else {
       commandManager.Modify(wxT("Redo"),
-                            _("&Redo"));
+                            XO("&Redo"));
       commandManager.Enable(wxT("Redo"), false);
    }
 }
@@ -625,7 +623,7 @@ void MenuCreator::RebuildAllMenuBars()
 }
 
 bool MenuManager::ReportIfActionNotAllowed(
-   const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd )
+   const TranslatableString & Name, CommandFlag & flags, CommandFlag flagsRqd )
 {
    auto &project = mProject;
    bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd );
@@ -671,11 +669,11 @@ bool MenuManager::TryToMakeActionAllowed(
 }
 
 void MenuManager::TellUserWhyDisallowed(
-   const wxString & Name, CommandFlag flagsGot, CommandFlag flagsRequired )
+   const TranslatableString & Name, CommandFlag flagsGot, CommandFlag flagsRequired )
 {
    // The default string for 'reason' is a catch all.  I hope it won't ever be seen
    // and that we will get something more specific.
-   auto reason = _("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
+   auto reason = XO("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
    // The default title string is 'Disallowed'.
    auto untranslatedTitle = XO("Disallowed");
    wxString helpPage;
@@ -735,13 +733,10 @@ void MenuManager::TellUserWhyDisallowed(
    )
       return;
 
-   // Message is already translated but title is not yet
-   auto title = untranslatedTitle.Translation();
-
    // Does not have the warning icon...
    ShowErrorDialog(
       NULL,
-      title,
-      reason,
+      untranslatedTitle,
+      reason.Translation(),
       helpPage);
 }

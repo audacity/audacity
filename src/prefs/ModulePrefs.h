@@ -38,7 +38,7 @@ class ModulePrefs final : public PrefsPanel
    ModulePrefs(wxWindow * parent, wxWindowID winid);
    ~ModulePrefs();
    ComponentInterfaceSymbol GetSymbol() override;
-   wxString GetDescription() override;
+   TranslatableString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

@@ -306,7 +306,7 @@ class AUDACITY_DLL_API LongMessageDialog /* not final */ : public wxDialogWrappe
 public:
    // constructors and destructors
    LongMessageDialog(wxWindow * parent,
-                const wxString & title,
+                const TranslatableString & title,
                 int type = 0,
                 int flags = wxDEFAULT_DIALOG_STYLE,
                 int additionalButtons = 0);
@@ -339,7 +339,7 @@ BEGIN_EVENT_TABLE(LongMessageDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 LongMessageDialog::LongMessageDialog(wxWindow * parent,
-                           const wxString & title,
+                           const TranslatableString & title,
                            int type,
                            int flags,
                            int additionalButtons)
@@ -347,7 +347,7 @@ LongMessageDialog::LongMessageDialog(wxWindow * parent,
 {
    mType = type;
    mAdditionalButtons = additionalButtons;
-   SetName( "Long Message" );
+   SetName(XO("Long Message"));
 }
 
 LongMessageDialog::~LongMessageDialog(){
@@ -389,7 +389,7 @@ void LongMessageDialog::AcceptText( const wxString & Text )
 {
    if( pDlg == NULL ){
       pDlg = new LongMessageDialog(
-         wxTheApp->GetTopWindow(), _( "Long Message" ) );
+         wxTheApp->GetTopWindow(), XO( "Long Message" ) );
       pDlg->Init();
       pDlg->Show();
    }

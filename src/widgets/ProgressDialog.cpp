@@ -1166,7 +1166,7 @@ bool ProgressDialog::Create(const TranslatableString & title,
 
    bool success = wxDialogWrapper::Create(parent,
                                    wxID_ANY,
-                                   title.Translation(),
+                                   title,
                                    wxDefaultPosition,
                                    wxDefaultSize,
                                    wxDEFAULT_DIALOG_STYLE |
@@ -1176,7 +1176,7 @@ bool ProgressDialog::Create(const TranslatableString & title,
       return false;
    }
 
-   SetName(GetTitle()); // This was added for NVDA screen reader and may now be redundant.
+   SetName(); // This was added for NVDA screen reader and may now be redundant.
    SetExtraStyle(GetExtraStyle() | wxWS_EX_TRANSIENT);   // Ancient code. Is it still required?
 
    {
@@ -1538,11 +1538,6 @@ void ProgressDialog::SetMessage(const TranslatableString & message)
          wxDialogWrapper::Update();
       }
    }
-}
-
-void ProgressDialog::SetTitle(const TranslatableString & message)
-{
-   wxDialogWrapper::SetTitle( message.Translation() );
 }
 
 //

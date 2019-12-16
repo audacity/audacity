@@ -52,7 +52,7 @@ public:
    //SetTrackStatusCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SET_TRACK_STATUS_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Sets various values for a track.");};
+   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
@@ -77,7 +77,7 @@ public:
    //SetTrackAudioCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SET_TRACK_AUDIO_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Sets various values for a track.");};
+   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
@@ -104,7 +104,7 @@ public:
    //SetTrackVisualsCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SET_TRACK_VISUALS_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Sets various values for a track.");};
+   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
@@ -145,7 +145,7 @@ public:
    SetTrackCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SET_TRACK_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Sets various values for a track.");};
+   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
    // AudacityCommand overrides
    wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#set_track");};
 

@@ -166,10 +166,10 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 TimerRecordDialog::TimerRecordDialog(wxWindow* parent, bool bAlreadySaved)
-: wxDialogWrapper(parent, -1, _("Audacity Timer Record"), wxDefaultPosition,
+: wxDialogWrapper(parent, -1, XO("Audacity Timer Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION)
 {
-   SetName(GetTitle());
+   SetName();
 
    m_DateTime_Start = wxDateTime::UNow();
    long seconds; // default duration is 1 hour = 3600 seconds

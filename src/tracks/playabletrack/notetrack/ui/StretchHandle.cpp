@@ -252,12 +252,12 @@ UIHandle::Result StretchHandle::Release
 
    /* i18n-hint: (noun) The track that is used for MIDI notes which can be
    dragged to change their duration.*/
-   ProjectHistory::Get( *pProject ).PushState(_("Stretch Note Track"),
+   ProjectHistory::Get( *pProject ).PushState(XO("Stretch Note Track"),
       /* i18n-hint: In the history list, indicates a MIDI note has
       been dragged to change its duration (stretch it). Using either past
       or present tense is fine here.  If unsure, go for whichever is
       shorter.*/
-      _("Stretch"),
+      XO("Stretch"),
       UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
    return RefreshAll;
 }

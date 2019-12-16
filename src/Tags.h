@@ -90,7 +90,8 @@ class AUDACITY_DLL_API Tags final
 
    Tags & operator= (const Tags & src );
 
-   bool ShowEditDialog(wxWindow *parent, const wxString &title, bool force = false);
+   bool ShowEditDialog(
+      wxWindow *parent, const TranslatableString &title, bool force = false);
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
@@ -142,7 +143,7 @@ class TagsEditorDialog final : public wxDialogWrapper
  public:
    // constructors and destructors
    TagsEditorDialog(wxWindow * parent,
-              const wxString &title,
+              const TranslatableString &title,
               Tags * tags,
               bool editTitle,
               bool editTrackNumber);

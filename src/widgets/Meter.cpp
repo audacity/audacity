@@ -319,7 +319,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mAccSilent(false)
 {
    // i18n-hint: Noun (the meter is used for playback or record level monitoring)
-   SetName( _("Meter") );
+   SetName( XO("Meter") );
    // Suppress warnings about the header file
    wxUnusedVar(SpeakerMenu_xpm);
    wxUnusedVar(MicMenu_xpm);
@@ -1989,14 +1989,14 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
    wxRadioButton *vertical;
    int meterRefreshRate = mMeterRefreshRate;
 
-   wxString title(mIsInput ? _("Recording Meter Options") : _("Playback Meter Options"));
+   auto title = mIsInput ? XO("Recording Meter Options") : XO("Playback Meter Options");
 
    // Dialog is a child of the project, rather than of the toolbar.
    // This determines where it pops up.
 
    wxDialogWrapper dlg( FindProjectFrame( GetActiveProject() ),
       wxID_ANY, title );
-   dlg.SetName(dlg.GetTitle());
+   dlg.SetName();
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();
    {

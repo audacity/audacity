@@ -30,7 +30,7 @@ class ContrastDialog final : public wxDialogWrapper
 public:
    // constructors and destructors
    ContrastDialog(wxWindow * parent, wxWindowID id,
-              const wxString & title, const wxPoint & pos);
+              const TranslatableString & title, const wxPoint & pos);
 
    wxButton * m_pButton_UseCurrentF;
    wxButton * m_pButton_UseCurrentB;

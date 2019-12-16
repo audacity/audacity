@@ -82,9 +82,9 @@ ComponentInterfaceSymbol EffectClickRemoval::GetSymbol()
    return CLICKREMOVAL_PLUGIN_SYMBOL;
 }
 
-wxString EffectClickRemoval::GetDescription()
+TranslatableString EffectClickRemoval::GetDescription()
 {
-   return _("Click Removal is designed to remove clicks on audio tracks");
+   return XO("Click Removal is designed to remove clicks on audio tracks");
 }
 
 wxString EffectClickRemoval::ManualPage()

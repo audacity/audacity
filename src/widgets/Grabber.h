@@ -34,6 +34,8 @@ flicker-free use.
 #include <wx/defs.h>
 #include <wx/statbmp.h> // to inherit
 
+class TranslatableString;
+
 ////////////////////////////////////////////////////////////
 /// Grabber Class
 ////////////////////////////////////////////////////////////
@@ -115,6 +117,9 @@ class Grabber final : public wxWindow
 
    void PushButton(bool state);
    void SetAsSpacer( bool bIsSpacer );
+
+   // overload and hide the inherited function that takes naked wxString:
+   void SetToolTip(TranslatableString toolTip);
 
  protected:
 

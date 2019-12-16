@@ -27,7 +27,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
       return safenew ContrastDialog(
-         &window, -1, _("Contrast Analysis (WCAG 2 compliance)"),
+         &window, -1, XO("Contrast Analysis (WCAG 2 compliance)"),
          wxPoint{ 150, 150 }
       );
    }
@@ -37,7 +37,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
       return safenew FrequencyPlotDialog(
-         &window, -1, _("Frequency Analysis"),
+         &window, -1, XO("Frequency Analysis"),
          wxPoint{ 150, 150 }
       );
    }

@@ -54,17 +54,17 @@ class MessageBoxException /* not final */ : public AudacityException
 
 protected:
    // If default-constructed with empty caption, it makes no message box.
-   explicit MessageBoxException( const wxString &caption = wxString{} );
+   explicit MessageBoxException( const TranslatableString &caption = {} );
    ~MessageBoxException() override;
 
    MessageBoxException( const MessageBoxException& );
    MessageBoxException &operator = ( MessageBoxException && );
 
-   // Format a default, internationalized error message for this exception.
-   virtual wxString ErrorMessage() const = 0;
+   // Format a default error message for this exception.
+   virtual TranslatableString ErrorMessage() const = 0;
 
 private:
-   wxString caption;
+   TranslatableString caption;
    mutable bool moved { false };
 };
 
@@ -72,8 +72,8 @@ private:
 class SimpleMessageBoxException /* not final */ : public MessageBoxException
 {
 public:
-   explicit SimpleMessageBoxException( const wxString &message_,
-      const wxString &caption = _("Message") )
+   explicit SimpleMessageBoxException( const TranslatableString &message_,
+      const TranslatableString &caption = XO("Message") )
       : MessageBoxException{ caption }
       , message{ message_ }
    {}
@@ -84,10 +84,10 @@ public:
       SimpleMessageBoxException && ) PROHIBITED;
 
    // Format a default, internationalized error message for this exception.
-   virtual wxString ErrorMessage() const override;
+   virtual TranslatableString ErrorMessage() const override;
 
 private:
-   wxString message;
+   TranslatableString message;
 };
 
 

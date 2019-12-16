@@ -31,7 +31,7 @@
 #include "../ShuttleGui.h"
 
 EffectsPrefs::EffectsPrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Effects"))
+:  PrefsPanel(parent, winid, XO("Effects"))
 {
    Populate();
 }
@@ -45,9 +45,9 @@ ComponentInterfaceSymbol EffectsPrefs::GetSymbol()
    return EFFECTS_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString EffectsPrefs::GetDescription()
+TranslatableString EffectsPrefs::GetDescription()
 {
-   return _("Preferences for Effects");
+   return XO("Preferences for Effects");
 }
 
 wxString EffectsPrefs::HelpPageName()

@@ -33,7 +33,7 @@ class ThemePrefs final : public PrefsPanel
    ThemePrefs(wxWindow * parent, wxWindowID winid);
    ~ThemePrefs(void);
    ComponentInterfaceSymbol GetSymbol() override;
-   wxString GetDescription() override;
+   TranslatableString GetDescription() override;
 
    bool Commit() override;
    wxString HelpPageName() override;

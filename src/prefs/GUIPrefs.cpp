@@ -42,7 +42,7 @@ wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 
 GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: refers to Audacity's user interface settings */
-:  PrefsPanel(parent, winid, _("Interface"))
+:  PrefsPanel(parent, winid, XO("Interface"))
 {
    Populate();
 }
@@ -56,9 +56,9 @@ ComponentInterfaceSymbol GUIPrefs::GetSymbol()
    return GUI_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString GUIPrefs::GetDescription()
+TranslatableString GUIPrefs::GetDescription()
 {
-   return _("Preferences for GUI");
+   return XO("Preferences for GUI");
 }
 
 wxString GUIPrefs::HelpPageName()

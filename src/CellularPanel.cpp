@@ -271,7 +271,8 @@ void CellularPanel::HandleMotion
    auto oldCell = state.mLastCell.lock();
    auto oldHandle = Target();
 
-   wxString status{}, tooltip{};
+   wxString status{};
+   TranslatableString tooltip{};
    wxCursor *pCursor{};
    unsigned refreshCode = 0;
 
@@ -373,7 +374,7 @@ void CellularPanel::HandleMotion
       UpdateStatusMessage(status);
 
 #if wxUSE_TOOLTIPS
-      if (tooltip != GetToolTipText()) {
+      if (tooltip.Translation() != GetToolTipText()) {
          // Unset first, by analogy with AButton
          UnsetToolTip();
          SetToolTip(tooltip);

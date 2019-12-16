@@ -73,7 +73,7 @@ END_EVENT_TABLE()
 
 MixerTrackSlider::MixerTrackSlider(wxWindow * parent,
                                     wxWindowID id,
-                                    const wxString &name,
+                                    const TranslatableString &name,
                                     const wxPoint & pos,
                                     const wxSize & size,
                                     const ASlider::Options &options)
@@ -175,7 +175,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    mProject = project;
    wxASSERT( pTrack );
 
-   SetName(mTrack->GetName());
+   SetName( TranslatableString{ mTrack->GetName() } );
 
    //this->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
    this->SetBackgroundColour( theTheme.Colour( clrMedium ) );
@@ -208,7 +208,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       safenew MixerTrackSlider(
             this, ID_SLIDER_GAIN,
             /* i18n-hint: title of the Gain slider, used to adjust the volume */
-            _("Gain"),
+            XO("Gain"),
             ctrlPos, ctrlSize,
             ASlider::Options{}
                .Style( DB_SLIDER )
@@ -220,7 +220,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       safenew MixerTrackSlider(
             this, ID_SLIDER_VELOCITY,
             /* i18n-hint: title of the MIDI Velocity slider */
-            _("Velocity"),
+            XO("Velocity"),
             ctrlPos, ctrlSize,
             ASlider::Options{}
                .Style( VEL_SLIDER )
@@ -256,7 +256,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       safenew MixerTrackSlider(
             this, ID_SLIDER_PAN,
             /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-            _("Pan"),
+            XO("Pan"),
             ctrlPos, ctrlSize,
             ASlider::Options{}.Style( PAN_SLIDER ));
    mSlider_Pan->SetName(_("Pan"));
@@ -308,15 +308,15 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                    false, // bool isInput
                    ctrlPos, ctrlSize, // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
                    MeterPanel::MixerTrackCluster); // Style style = HorizontalStereo,
-      mMeter->SetName(_("Signal Level Meter"));
+      mMeter->SetName(XO("Signal Level Meter"));
    }
 
    #if wxUSE_TOOLTIPS
       mStaticText_TrackName->SetToolTip(mTrack->GetName());
-      mToggleButton_Mute->SetToolTip(_("Mute"));
-      mToggleButton_Solo->SetToolTip(_("Solo"));
+      mToggleButton_Mute->SetToolTip(XO("Mute"));
+      mToggleButton_Solo->SetToolTip(XO("Solo"));
       if (GetWave())
-         mMeter->SetToolTip(_("Signal Level Meter"));
+         mMeter->SetToolTip(XO("Signal Level Meter"));
    #endif // wxUSE_TOOLTIPS
 
    UpdateForStateChange();
@@ -415,7 +415,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
       ProjectHistory::Get( *mProject )
-         .PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
+         .PushState(XO("Moved gain slider"), XO("Gain"), UndoPush::CONSOLIDATE );
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -429,7 +429,7 @@ void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
       ProjectHistory::Get( *mProject )
-         .PushState(_("Moved velocity slider"), _("Velocity"),
+         .PushState(XO("Moved velocity slider"), XO("Velocity"),
             UndoPush::CONSOLIDATE);
 }
 #endif
@@ -447,7 +447,7 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
 
    if (bWantPushState)
       ProjectHistory::Get( *mProject )
-         .PushState(_("Moved pan slider"), _("Pan"),
+         .PushState(XO("Moved pan slider"), XO("Pan"),
             UndoPush::CONSOLIDATE );
 }
 
@@ -463,7 +463,7 @@ void MixerTrackCluster::UpdateForStateChange()
 {
    const wxString newName = mTrack->GetName();
    if (newName != GetName()) {
-      SetName(newName);
+      SetName( TranslatableString{ newName } );
       mStaticText_TrackName->SetLabel(newName);
       mStaticText_TrackName->SetName(newName);
 #if wxUSE_TOOLTIPS

@@ -96,7 +96,7 @@ END_EVENT_TABLE()
 ////Standard Constructor
 TranscriptionToolBar::TranscriptionToolBar( AudacityProject &project )
 : ToolBar( project,
-   TranscriptionBarID, _("Play-at-Speed"), wxT("Transcription"), true )
+   TranscriptionBarID, XO("Play-at-Speed"), wxT("Transcription"), true )
 {
    SetPlaySpeed( 1.0 * 100.0 );
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -215,7 +215,7 @@ void TranscriptionToolBar::Populate()
    const int SliderWidth=100;
    mPlaySpeedSlider = safenew ASlider(this,
       TTB_PlaySpeedSlider,
-      _("Playback Speed"),
+      XO("Playback Speed"),
       wxDefaultPosition,
       wxSize(SliderWidth,25),
       ASlider::Options{}
@@ -322,7 +322,7 @@ void TranscriptionToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Play-at-Speed"));
+   SetLabel(XO("Play-at-Speed"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
@@ -346,9 +346,9 @@ void TranscriptionToolBar::RegenerateTooltips()
    };
 
    for (const auto &entry : table) {
-      TranslatedInternalString commands[] = {
-         { entry.commandName,  entry.untranslatedLabel.Translation()  },
-         { entry.commandName2, entry.untranslatedLabel2.Translation() },
+      ComponentInterfaceSymbol commands[] = {
+         { entry.commandName,  entry.untranslatedLabel  },
+         { entry.commandName2, entry.untranslatedLabel2 },
       };
       ToolBar::SetButtonToolTip( mProject,
          *mButtons[entry.tool], commands, 2u );

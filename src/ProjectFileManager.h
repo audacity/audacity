@@ -47,7 +47,8 @@ public:
       bool decodeError;
       bool parseSuccess;
       bool trackError;
-      wxString errorString;
+      TranslatableString errorString;
+      wxString helpUrl;
    };
    ReadProjectResults ReadProjectFile( const FilePath &fileName );
 

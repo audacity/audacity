@@ -177,9 +177,10 @@ ComponentInterfaceSymbol EffectScienFilter::GetSymbol()
    return CLASSICFILTERS_PLUGIN_SYMBOL;
 }
 
-wxString EffectScienFilter::GetDescription()
+TranslatableString EffectScienFilter::GetDescription()
 {
-   return _("Performs IIR filtering that emulates analog filters");
+   /* i18n-hint: "infinite impulse response" */
+   return XO("Performs IIR filtering that emulates analog filters");
 }
 
 wxString EffectScienFilter::ManualPage()

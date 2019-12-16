@@ -22,7 +22,7 @@ public:
 
    explicit InconsistencyException
       ( const char *fn, const char *f, unsigned l )
-         : MessageBoxException{ _("Internal Error") }
+         : MessageBoxException{ XO("Internal Error") }
          , func { fn }, file { f }, line { l }
    {}
 
@@ -49,7 +49,7 @@ public:
 
 private:
    // Format a default, internationalized error message for this exception.
-   wxString ErrorMessage() const override;
+   TranslatableString ErrorMessage() const override;
 
    const char *func {};
    const char *file {};

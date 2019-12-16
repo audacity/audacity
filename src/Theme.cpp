@@ -1159,7 +1159,7 @@ void ThemeBase::SaveComponents()
             wxString::Format(
                _("Some required files in:\n  %s\nwere already present. Overwrite?"),
                FileNames::ThemeComponentsDir()),
-               AudacityMessageBoxCaptionStr(),
+               AudacityMessageBoxCaptionStr().Translation(),
                wxYES_NO | wxNO_DEFAULT);
       if(result == wxNO)
          return;

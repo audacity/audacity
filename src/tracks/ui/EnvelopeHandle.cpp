@@ -284,9 +284,9 @@ UIHandle::Result EnvelopeHandle::Release
 
    ProjectHistory::Get( *pProject ).PushState(
       /* i18n-hint: (verb) Audacity has just adjusted the envelope .*/
-      _("Adjusted envelope."),
+      XO("Adjusted envelope."),
       /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
-      _("Envelope")
+      XO("Envelope")
    );
 
    mEnvelopeEditors.clear();

@@ -294,7 +294,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    Entries commands;
    for( const auto &command : SpecialCommands )
       commands.push_back( {
-         { command.second, command.first.Translation() },
+         { command.second, command.first },
          _("Special Command")
       } );
 
@@ -309,7 +309,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.empty())
             commands.push_back( {
-               { command, plug->GetSymbol().Translation() },
+               { command, plug->GetSymbol().Msgid() },
                plug->GetPluginType() == PluginTypeEffect ?
                   _("Effect") : _("Menu Command (With Parameters)")
             } );
@@ -318,7 +318,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    }
 
    auto &manager = CommandManager::Get( *project );
-   wxArrayString mLabels;
+   TranslatableStrings mLabels;
    CommandIDs mNames;
    std::vector<bool> vExcludeFromMacros;
    mLabels.clear();
@@ -330,8 +330,8 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
 
    for(size_t i=0; i<mNames.size(); i++) {
       if( !vExcludeFromMacros[i] ){
-         wxString label = mLabels[i];
-         label.Replace( "&", "" );
+         auto label = mLabels[i];
+         label.Strip();
          bool suffix;
          if (!english)
             suffix = false;
@@ -343,7 +343,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
             // Disambiguation is no longer essential as the details box will show it.
             // PRL:  I think this reasoning applies only when locale is English.
             // For other locales, show the (CamelCaseCodeName) always.  Or, never?
-            wxString squashed = label;
+            wxString squashed = label.Translation();
             squashed.Replace( " ", "" );
 
             // uh oh, using GET for dubious comparison of (lengths of)
@@ -356,7 +356,10 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
             // uh oh, using GET to expose CommandID to the user, as a
             // disambiguating suffix on a name, but this is only ever done if
             // the locale is English!
-            label = label + " (" + mNames[i].GET() + ")";
+            // PRL:  In case this logic does get fixed for other locales,
+            // localize even this punctuation format.  I'm told Chinese actually
+            // prefers slightly different parenthesis characters
+            label.Join( XO("(%s)").Format( mNames[i].GET() ), wxT(" ") );
 
          commands.push_back(
             {
@@ -376,23 +379,26 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    // keeping specials before effects and menu items, and lastly commands.
    auto less =
       [](const Entry &a, const Entry &b)
-         { return a.name.Translated() < b.name.Translated(); };
+         { return a.name.StrippedTranslation() <
+            b.name.StrippedTranslation(); };
    std::stable_sort(commands.begin(), commands.end(), less);
 
    // Now uniquify by friendly name
    auto equal =
       [](const Entry &a, const Entry &b)
-         { return a.name.Translated() == b.name.Translated(); };
+         { return a.name.StrippedTranslation() ==
+            b.name.StrippedTranslation(); };
    std::unique_copy(
       commands.begin(), commands.end(), std::back_inserter(mCommands), equal);
 }
 
 // binary search
-auto MacroCommandsCatalog::ByFriendlyName( const wxString &friendlyName ) const
+auto MacroCommandsCatalog::ByFriendlyName( const TranslatableString &friendlyName ) const
    -> Entries::const_iterator
 {
    const auto less = [](const Entry &entryA, const Entry &entryB)
-      { return entryA.name.Translated() < entryB.name.Translated(); };
+      { return entryA.name.StrippedTranslation() <
+         entryB.name.StrippedTranslation(); };
    auto range = std::equal_range(
       begin(), end(), Entry{ { {}, friendlyName }, {} }, less
    );
@@ -940,7 +946,7 @@ bool MacroCommands::ApplyMacro(
            // uh oh, using GET to expose an internal name to the user!
            // in default of any better friendly name
            command.GET()
-         : iter->name.Translated();
+         : iter->name.StrippedTranslation();
       if (!ApplyCommandInBatchMode(friendly, command, mParamsMacro[i]) || mAbort)
          break;
    }
@@ -952,19 +958,19 @@ bool MacroCommands::ApplyMacro(
    mFileName.Empty();
 
    // Macro was successfully applied; save the NEW project state
-   wxString longDesc, shortDesc;
+   TranslatableString longDesc, shortDesc;
    wxString name = gPrefs->Read(wxT("/Batch/ActiveMacro"), wxEmptyString);
    if (name.empty())
    {
       /* i18n-hint: active verb in past tense */
-      longDesc = _("Applied Macro");
-      shortDesc = _("Apply Macro");
+      longDesc = XO("Applied Macro");
+      shortDesc = XO("Apply Macro");
    }
    else
    {
       /* i18n-hint: active verb in past tense */
-      longDesc = wxString::Format(_("Applied Macro '%s'"), name);
-      shortDesc = wxString::Format(_("Apply '%s'"), name);
+      longDesc = XO("Applied Macro '%s'").Format( name );
+      shortDesc = XO("Apply '%s'").Format( name );
    }
 
    if (!proj)

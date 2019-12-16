@@ -3,6 +3,7 @@
 
 class AliasBlockFile;
 class AudacityProject;
+class TranslatableString;
 class wxDialog;
 
 #include <memory>
@@ -32,7 +33,7 @@ bool ShouldShow();
 
 /// Displays a custom modeless error dialog for aliased file errors
 void Show(AudacityProject *parent,
-                     const wxString &dlogTitle,
+                     const TranslatableString &dlogTitle,
                      const wxString &message,
                      const wxString &helpPage,
                      const bool Close = true);

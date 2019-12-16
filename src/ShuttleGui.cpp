@@ -2091,7 +2091,7 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
             mpWind->SetToolTip( mItem.mToolTip.Translation() );
 
          if ( !mItem.mName.empty() )
-            mpWind->SetName( wxStripMenuCodes( mItem.mName.Translation() ) );
+            mpWind->SetName( mItem.mName.Strip().Translation() );
 
          if ( !mItem.mNameSuffix.empty() )
             mpWind->SetName(

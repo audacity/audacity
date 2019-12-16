@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 
 //Standard contructor
 MixerToolBar::MixerToolBar( AudacityProject &project )
-: ToolBar(project, MixerBarID, _("Mixer"), wxT("Mixer"), true)
+: ToolBar(project, MixerBarID, XO("Mixer"), wxT("Mixer"), true)
 {
    mInputSliderVolume = 0.0;
    mOutputSliderVolume = 0.0;
@@ -90,7 +90,7 @@ void MixerToolBar::Populate()
    Add(safenew AStaticBitmap(this,
                           wxID_ANY,
                           theTheme.Bitmap(bmpMic)), 0, wxALIGN_CENTER);
-   mInputSlider = safenew ASlider(this, wxID_ANY, _("Recording Volume"),
+   mInputSlider = safenew ASlider(this, wxID_ANY, XO("Recording Volume"),
                               wxDefaultPosition, wxSize(130, 25),
                               ASlider::Options{}.Line( 0.1f ).Page( 2.0f ));
    Add(mInputSlider, 1, wxALIGN_CENTER);
@@ -100,7 +100,7 @@ void MixerToolBar::Populate()
    Add(safenew AStaticBitmap(this,
                           wxID_ANY,
                           theTheme.Bitmap(bmpSpeaker)), 0, wxALIGN_CENTER);
-   mOutputSlider = safenew ASlider(this, wxID_ANY, _("Playback Volume"),
+   mOutputSlider = safenew ASlider(this, wxID_ANY, XO("Playback Volume"),
                                wxDefaultPosition, wxSize(130, 25),
                                ASlider::Options{}.Line( 0.1f ).Page( 2.0f ));
    Add(mOutputSlider, 1, wxALIGN_CENTER);
@@ -196,7 +196,7 @@ void MixerToolBar::UpdatePrefs()
 #endif
 
    // Set label to pull in language change
-   SetLabel(_("Mixer"));
+   SetLabel(XO("Mixer"));
 
    RegenerateTooltips();
 

@@ -50,8 +50,9 @@ public:
          const wxSize& size = wxDefaultSize,
          long style = wxTAB_TRAVERSAL | wxNO_BORDER,
          // Important:  default window name localizes!
-         const wxString& name = _("Panel"))
-   : wxTabTraversalWrapper<wxPanel> ( parent, winid, pos, size, style, name )
+         const TranslatableString& name = XO("Panel"))
+   : wxTabTraversalWrapper<wxPanel> (
+      parent, winid, pos, size, style, name.Translation() )
    {}
 
     // Pseudo ctor
@@ -62,12 +63,18 @@ public:
          const wxSize& size = wxDefaultSize,
          long style = wxTAB_TRAVERSAL | wxNO_BORDER,
          // Important:  default window name localizes!
-         const wxString& name = _("Panel"))
+         const TranslatableString& name = XO("Panel"))
    {
       return wxTabTraversalWrapper<wxPanel>::Create(
-         parent, winid, pos, size, style, name
+         parent, winid, pos, size, style, name.Translation()
       );
    }
+   // overload and hide the inherited functions that take naked wxString:
+   void SetLabel(const TranslatableString & label);
+   void SetName(const TranslatableString & name);
+   void SetToolTip(TranslatableString toolTip);
+   // Set the name to equal the label:
+   void SetName();
 };
 
 class AUDACITY_DLL_API wxDialogWrapper : public wxTabTraversalWrapper<wxDialog>
@@ -79,20 +86,20 @@ public:
    // Constructor with no modal flag - the new convention.
    wxDialogWrapper(
       wxWindow *parent, wxWindowID id,
-      const wxString& title,
+      const TranslatableString& title,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize,
       long style = wxDEFAULT_DIALOG_STYLE,
       // Important:  default window name localizes!
       const wxString& name = _("Dialog"))
    : wxTabTraversalWrapper<wxDialog>
-      ( parent, id, title, pos, size, style, name )
+      ( parent, id, title.Translation(), pos, size, style, name )
    {}
 
    // Pseudo ctor
    bool Create(
       wxWindow *parent, wxWindowID id,
-      const wxString& title,
+      const TranslatableString& title,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize,
       long style = wxDEFAULT_DIALOG_STYLE,
@@ -100,9 +107,16 @@ public:
       const wxString& name = _("Dialog"))
    {
       return wxTabTraversalWrapper<wxDialog>::Create(
-         parent, id, title, pos, size, style, name
+         parent, id, title.Translation(), pos, size, style, name
       );
    }
+
+   // overload and hide the inherited functions that take naked wxString:
+   void SetTitle(const TranslatableString & title);
+   void SetLabel(const TranslatableString & title);
+   void SetName(const TranslatableString & title);
+   // Set the name to equal the title:
+   void SetName();
 };
 
 #include <wx/dirdlg.h> // to inherit

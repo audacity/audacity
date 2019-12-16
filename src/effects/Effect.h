@@ -95,7 +95,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
-   wxString GetDescription() override;
+   TranslatableString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
@@ -559,7 +559,7 @@ class AUDACITY_DLL_API EffectDialog /* not final */ : public wxDialogWrapper
 public:
    // constructors and destructors
    EffectDialog(wxWindow * parent,
-                const wxString & title,
+                const TranslatableString & title,
                 int type = 0,
                 int flags = wxDEFAULT_DIALOG_STYLE,
                 int additionalButtons = 0);

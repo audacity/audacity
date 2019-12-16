@@ -64,7 +64,7 @@ UIHandle::Result VelocitySliderHandle::CommitChanges
 (const wxMouseEvent &, AudacityProject *pProject)
 {
    ProjectHistory::Get( *pProject )
-      .PushState(_("Moved velocity slider"), _("Velocity"),
+      .PushState(XO("Moved velocity slider"), XO("Velocity"),
          UndoPush::CONSOLIDATE);
    return RefreshCode::RefreshCell;
 }

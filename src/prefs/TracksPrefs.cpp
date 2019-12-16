@@ -218,7 +218,7 @@ TracksPrefs::TracksPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: "Tracks" include audio recordings but also other collections of
  * data associated with a time line, such as sequences of labels, and musical
  * notes */
-:  PrefsPanel(parent, winid, _("Tracks"))
+:  PrefsPanel(parent, winid, XO("Tracks"))
 {
    Populate();
 }
@@ -232,9 +232,9 @@ ComponentInterfaceSymbol TracksPrefs::GetSymbol()
    return TRACKS_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString TracksPrefs::GetDescription()
+TranslatableString TracksPrefs::GetDescription()
 {
-   return _("Preferences for Tracks");
+   return XO("Preferences for Tracks");
 }
 
 wxString TracksPrefs::HelpPageName()

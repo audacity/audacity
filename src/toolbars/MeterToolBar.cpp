@@ -49,15 +49,15 @@ END_EVENT_TABLE()
 
 //Standard contructor
 MeterToolBar::MeterToolBar(AudacityProject &project, int type)
-: ToolBar(project, type, _("Combined Meter"), wxT("CombinedMeter"), true)
+: ToolBar(project, type, XO("Combined Meter"), wxT("CombinedMeter"), true)
 {
    if( mType == RecordMeterBarID ){
       mWhichMeters = kWithRecordMeter;
-      mLabel = _("Recording Meter");
+      mLabel = XO("Recording Meter");
       mSection = wxT("RecordMeter");
    } else if( mType == PlayMeterBarID ){
       mWhichMeters = kWithPlayMeter;
-      mLabel = _("Playback Meter");
+      mLabel = XO("Playback Meter");
       mSection = wxT("PlayMeter");
    } else {
       mWhichMeters = kWithPlayMeter | kWithRecordMeter;
@@ -126,11 +126,11 @@ void MeterToolBar::Populate()
                                 wxDefaultPosition,
                                 wxSize( 260, 28 ) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.*/
-      mRecordMeter->SetName( _("Record Meter"));
+      mRecordMeter->SetName( XO("Record Meter"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
        This is the name used in screen reader software, where having 'Meter' first
        apparently is helpful to partially sighted people.  */
-      mRecordMeter->SetLabel( _("Meter-Record") );
+      mRecordMeter->SetLabel( XO("Meter-Record") );
       mSizer->Add( mRecordMeter, wxGBPosition( 0, 0 ), wxDefaultSpan, wxEXPAND );
    }
 
@@ -142,11 +142,11 @@ void MeterToolBar::Populate()
                               wxDefaultPosition,
                               wxSize( 260, 28 ) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.*/
-      mPlayMeter->SetName( _("Play Meter"));
+      mPlayMeter->SetName( XO("Play Meter"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.
        This is the name used in screen reader software, where having 'Meter' first
        apparently is helpful to partially sighted people.  */
-      mPlayMeter->SetLabel( _("Meter-Play"));
+      mPlayMeter->SetLabel( XO("Meter-Play"));
       mSizer->Add( mPlayMeter, wxGBPosition( (mWhichMeters & kWithRecordMeter)?1:0, 0 ), wxDefaultSpan, wxEXPAND );
    }
 
@@ -158,7 +158,7 @@ void MeterToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Meter"));
+   SetLabel(XO("Meter"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
@@ -168,9 +168,9 @@ void MeterToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
    if( mPlayMeter )
-      mPlayMeter->SetToolTip( _("Playback Level") );
+      mPlayMeter->SetToolTip( XO("Playback Level") );
    if( mRecordMeter )
-      mRecordMeter->SetToolTip( _("Recording Level") );
+      mRecordMeter->SetToolTip( XO("Recording Level") );
 #endif
 }
 

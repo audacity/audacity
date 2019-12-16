@@ -263,7 +263,7 @@ BEGIN_EVENT_TABLE(SliderDialog, wxDialogWrapper)
 END_EVENT_TABLE();
 
 SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
-                           const wxString & title,
+                           const TranslatableString & title,
                            wxPoint position,
                            wxSize size,
                            int style,
@@ -274,7 +274,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
    wxDialogWrapper(parent,id,title,position),
    mStyle(style)
 {
-   SetName(GetTitle());
+   SetName();
    mpOrigin = pSource;
    ShuttleGui S(this, eIsCreating);
 
@@ -436,7 +436,7 @@ static const wxPoint2DDouble disabledRightEnd[] =
 
 // Construct customizable slider
 LWSlider::LWSlider(wxWindow * parent,
-                     const wxString &name,
+                     const TranslatableString &name,
                      const wxPoint &pos,
                      const wxSize &size,
                      float minValue,
@@ -454,7 +454,7 @@ LWSlider::LWSlider(wxWindow * parent,
 
 // Construct predefined slider
 LWSlider::LWSlider(wxWindow *parent,
-                   const wxString &name,
+                   const TranslatableString &name,
                    const wxPoint &pos,
                    const wxSize &size,
                    int style,
@@ -514,7 +514,7 @@ LWSlider::LWSlider(wxWindow *parent,
 }
 
 void LWSlider::Init(wxWindow * parent,
-                    const wxString &name,
+                    const TranslatableString &name,
                     const wxPoint &pos,
                     const wxSize &size,
                     float minValue,
@@ -982,7 +982,7 @@ wxString LWSlider::GetTip(float value) const
 #endif
       }
 
-      label.Printf(_("%s: %s"), mName, val);
+      label = XO("%s: %s").Format( mName, val ).Translation();
    }
    else
    {
@@ -1524,7 +1524,7 @@ END_EVENT_TABLE()
 
 ASlider::ASlider( wxWindow * parent,
                   wxWindowID id,
-                  const wxString &name,
+                  const TranslatableString &name,
                   const wxPoint & pos,
                   const wxSize & size,
                   const Options &options)
@@ -1543,7 +1543,7 @@ ASlider::ASlider( wxWindow * parent,
                              options.orientation);
    mLWSlider->mStepValue = options.stepValue;
    mLWSlider->SetId( id );
-   SetName( name );
+   SetName( name.Translation() );
 
    mSliderIsFocused = false;
    mStyle = options.style;

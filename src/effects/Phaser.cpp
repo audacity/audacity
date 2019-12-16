@@ -106,9 +106,9 @@ ComponentInterfaceSymbol EffectPhaser::GetSymbol()
    return PHASER_PLUGIN_SYMBOL;
 }
 
-wxString EffectPhaser::GetDescription()
+TranslatableString EffectPhaser::GetDescription()
 {
-   return _("Combines phase-shifted signals with the original signal");
+   return XO("Combines phase-shifted signals with the original signal");
 }
 
 wxString EffectPhaser::ManualPage()

@@ -125,7 +125,8 @@ class AUDACITY_DLL_API UndoManager final
    void PushState(const TrackList * l,
                   const SelectedRegion &selectedRegion,
                   const std::shared_ptr<Tags> &tags,
-                  const wxString &longDescription, const wxString &shortDescription,
+                  const TranslatableString &longDescription,
+                  const TranslatableString &shortDescription,
                   UndoPush flags = UndoPush::AUTOSAVE);
    void ModifyState(const TrackList * l,
                     const SelectedRegion &selectedRegion, const std::shared_ptr<Tags> &tags);
@@ -137,10 +138,11 @@ class AUDACITY_DLL_API UndoManager final
 
    void StopConsolidating() { mayConsolidate = false; }
 
-   void GetShortDescription(unsigned int n, wxString *desc);
+   void GetShortDescription(unsigned int n, TranslatableString *desc);
    // Return value must first be calculated by CalculateSpaceUsage():
-   wxLongLong_t GetLongDescription(unsigned int n, wxString *desc, wxString *size);
-   void SetLongDescription(unsigned int n, const wxString &desc);
+   wxLongLong_t GetLongDescription(
+      unsigned int n, TranslatableString *desc, wxString *size);
+   void SetLongDescription(unsigned int n, const TranslatableString &desc);
 
    // These functions accept a callback that uses the state,
    // and then they send to the project EVT_UNDO_RESET or EVT_UNDO_OR_REDO when
@@ -178,7 +180,7 @@ class AUDACITY_DLL_API UndoManager final
    int saved;
    UndoStack stack;
 
-   wxString lastAction;
+   TranslatableString lastAction;
    bool mayConsolidate { false };
 
    SpaceArray space;

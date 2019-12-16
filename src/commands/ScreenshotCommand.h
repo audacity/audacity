@@ -81,7 +81,7 @@ public:
    ScreenshotCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override {return SCREENSHOT_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Takes screenshots.");};
+   TranslatableString GetDescription() override {return XO("Takes screenshots.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

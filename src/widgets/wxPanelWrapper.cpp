@@ -37,3 +37,43 @@ void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
 
    event.Skip();
 }
+
+void wxPanelWrapper::SetLabel(const TranslatableString & label)
+{
+   wxPanel::SetLabel( label.Translation() );
+}
+
+void wxPanelWrapper::SetName(const TranslatableString & name)
+{
+   wxPanel::SetName( name.Translation() );
+}
+
+void wxPanelWrapper::SetToolTip(TranslatableString toolTip)
+{
+   wxPanel::SetToolTip( toolTip.Strip().Translation() );
+}
+
+void wxPanelWrapper::SetName()
+{
+   wxPanel::SetName( GetLabel() );
+}
+
+void wxDialogWrapper::SetTitle(const TranslatableString & title)
+{
+   wxDialog::SetTitle( title.Translation() );
+}
+
+void wxDialogWrapper::SetLabel(const TranslatableString & label)
+{
+   wxDialog::SetLabel( label.Translation() );
+}
+
+void wxDialogWrapper::SetName(const TranslatableString & name)
+{
+   wxDialog::SetName( name.Translation() );
+}
+
+void wxDialogWrapper::SetName()
+{
+   wxDialog::SetName( wxDialog::GetTitle() );
+}

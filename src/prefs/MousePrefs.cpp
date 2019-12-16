@@ -61,7 +61,7 @@ enum
 
 /// Constructor
 MousePrefs::MousePrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, _("Mouse"))
+:  PrefsPanel(parent, winid, XO("Mouse"))
 {
    Populate();
 }
@@ -75,9 +75,9 @@ ComponentInterfaceSymbol MousePrefs::GetSymbol()
    return MOUSE_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString MousePrefs::GetDescription()
+TranslatableString MousePrefs::GetDescription()
 {
-   return _("Preferences for Mouse");
+   return XO("Preferences for Mouse");
 }
 
 wxString MousePrefs::HelpPageName()

@@ -437,9 +437,9 @@ ComponentInterfaceSymbol EffectNoiseReduction::GetSymbol()
    return NOISEREDUCTION_PLUGIN_SYMBOL;
 }
 
-wxString EffectNoiseReduction::GetDescription()
+TranslatableString EffectNoiseReduction::GetDescription()
 {
-   return _("Removes background noise such as fans, tape noise, or hums");
+   return XO("Removes background noise such as fans, tape noise, or hums");
 }
 
 // EffectDefinitionInterface implementation
@@ -1543,7 +1543,7 @@ EffectNoiseReduction::Dialog::Dialog
 (EffectNoiseReduction *effect,
  EffectNoiseReduction::Settings *settings,
  wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings)
-   : EffectDialog( parent, _("Noise Reduction"), EffectTypeProcess,wxDEFAULT_DIALOG_STYLE, eHelpButton )
+   : EffectDialog( parent, XO("Noise Reduction"), EffectTypeProcess,wxDEFAULT_DIALOG_STYLE, eHelpButton )
    , m_pEffect(effect)
    , m_pSettings(settings) // point to
    , mTempSettings(*settings)  // copy

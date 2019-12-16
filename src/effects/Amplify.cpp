@@ -87,10 +87,10 @@ ComponentInterfaceSymbol EffectAmplify::GetSymbol()
    return AMPLIFY_PLUGIN_SYMBOL;
 }
 
-wxString EffectAmplify::GetDescription()
+TranslatableString EffectAmplify::GetDescription()
 {
    // Note: This is useful only after ratio has been set.
-   return _("Increases or decreases the volume of the audio you have selected");
+   return XO("Increases or decreases the volume of the audio you have selected");
 }
 
 wxString EffectAmplify::ManualPage()

@@ -30,11 +30,11 @@ BEGIN_EVENT_TABLE(SoundActivatedRecordDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 SoundActivatedRecordDialog::SoundActivatedRecordDialog(wxWindow* parent)
-: wxDialogWrapper(parent, -1, _("Sound Activated Record"), wxDefaultPosition,
+: wxDialogWrapper(parent, -1, XO("Sound Activated Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION )
 //           wxDefaultSize, wxCAPTION | wxTHICK_FRAME)
 {
-   SetName(GetTitle());
+   SetName();
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
    Fit();

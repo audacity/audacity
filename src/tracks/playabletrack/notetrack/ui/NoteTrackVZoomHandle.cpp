@@ -252,16 +252,16 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
 
 BEGIN_POPUP_MENU(NoteTrackVRulerMenuTable)
 
-   POPUP_MENU_ITEM(OnZoomResetID,      _("Zoom Reset\tShift-Right-Click"), OnZoomReset)
-   POPUP_MENU_ITEM(OnZoomMaxID,        _("Max Zoom"), OnZoomMax)
+   POPUP_MENU_ITEM(OnZoomResetID,      XO("Zoom Reset\tShift-Right-Click"), OnZoomReset)
+   POPUP_MENU_ITEM(OnZoomMaxID,        XO("Max Zoom"), OnZoomMax)
 
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnZoomInVerticalID,  _("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-   POPUP_MENU_ITEM(OnZoomOutVerticalID, _("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
+   POPUP_MENU_ITEM(OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
+   POPUP_MENU_ITEM(OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
 
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnUpOctaveID,   _("Up &Octave"),   OnUpOctave)
-   POPUP_MENU_ITEM(OnDownOctaveID, _("Down Octa&ve"), OnDownOctave)
+   POPUP_MENU_ITEM(OnUpOctaveID,   XO("Up &Octave"),   OnUpOctave)
+   POPUP_MENU_ITEM(OnDownOctaveID, XO("Down Octa&ve"), OnDownOctave)
 
 END_POPUP_MENU()
 

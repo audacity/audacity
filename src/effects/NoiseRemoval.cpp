@@ -114,9 +114,9 @@ ComponentInterfaceSymbol EffectNoiseRemoval::GetSymbol()
    return XO("Noise Removal");
 }
 
-wxString EffectNoiseRemoval::GetDescription()
+TranslatableString EffectNoiseRemoval::GetDescription()
 {
-   return _("Removes constant background noise such as fans, tape noise, or hums");
+   return XO("Removes constant background noise such as fans, tape noise, or hums");
 }
 
 // EffectDefinitionInterface implementation

@@ -285,6 +285,11 @@ void AButton::UseDisabledAsDownHiliteImage(bool flag)
    mUseDisabledAsDownHiliteImage = flag;
 }
 
+void AButton::SetToolTip( TranslatableString toolTip )
+{
+   wxWindow::SetToolTip( toolTip.Strip().Translation() );
+}
+
 // This compensates for a but in wxWidgets 3.0.2 for mac:
 // Couldn't set focus from keyboard when AcceptsFocus returns false;
 // this bypasses that limitation
@@ -445,7 +450,7 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
       // to make it pop up when we want it.
       auto text = GetToolTipText();
       UnsetToolTip();
-      SetToolTip(text);
+      wxWindow::SetToolTip(text);
       mCursorIsInWindow = true;
    }
    else if (event.Leaving())

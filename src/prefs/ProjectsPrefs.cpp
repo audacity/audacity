@@ -31,7 +31,7 @@ handling.
 ProjectsPrefs::ProjectsPrefs(wxWindow * parent, wxWindowID winid)
 :   PrefsPanel(parent, winid,
    /* i18n-hint: (noun) i.e Audacity projects. */
-               _("Projects"))
+               XO("Projects"))
 {
    Populate();
 }
@@ -45,9 +45,9 @@ ComponentInterfaceSymbol ProjectsPrefs::GetSymbol()
    return PROJECTS_PREFS_PLUGIN_SYMBOL;
 }
 
-wxString ProjectsPrefs::GetDescription()
+TranslatableString ProjectsPrefs::GetDescription()
 {
-   return _("Preferences for Projects");
+   return XO("Preferences for Projects");
 }
 
 wxString ProjectsPrefs::HelpPageName()
