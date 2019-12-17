@@ -108,6 +108,9 @@
     <Filter Include="src\menus">
       <UniqueIdentifier>{86457c18-e1ec-4e2a-9790-f4ceaf6380a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\effects\lv2\zix">
+      <UniqueIdentifier>{fa7108aa-5bf5-4e48-b33a-6af62340e5a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AboutDialog.cpp">
@@ -1252,6 +1255,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\ui\TrackView.cpp">
       <Filter>src\tracks\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\lv2\zix\ring.cpp">
+      <Filter>src\effects\lv2\zix</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2442,6 +2448,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\TrackPanelDrawable.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\lv2\zix\common.h">
+      <Filter>src\effects\lv2\zix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\lv2\zix\ring.h">
+      <Filter>src\effects\lv2\zix</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

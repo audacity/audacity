@@ -17,6 +17,11 @@ Functions that find and load all LV2 plugins on the system.
 #include "../../Audacity.h" // for USE_* macros
 
 #if defined(USE_LV2)
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wparentheses"
+#endif
+
 #include "LoadLV2.h"
 
 #include <cstdio>
@@ -33,12 +38,12 @@ Functions that find and load all LV2 plugins on the system.
 #include "../../Internat.h"
 
 #include "LV2Effect.h"
-#include "lv2/lv2plug.in/ns/ext/event/event.h"
-#include "lv2/lv2plug.in/ns/ext/instance-access/instance-access.h"
-#include "lv2/lv2plug.in/ns/ext/port-groups/port-groups.h"
-#include "lv2/lv2plug.in/ns/ext/port-props/port-props.h"
-#include "lv2/lv2plug.in/ns/ext/uri-map/uri-map.h"
-#include "lv2/lv2plug.in/ns/ext/presets/presets.h"
+#include "lv2/event/event.h"
+#include "lv2/instance-access/instance-access.h"
+#include "lv2/port-groups/port-groups.h"
+#include "lv2/port-props/port-props.h"
+#include "lv2/uri-map/uri-map.h"
+#include "lv2/presets/presets.h"
 
 #include <unordered_map>
 
@@ -130,9 +135,14 @@ bool LV2EffectsModule::Initialize()
    }
 
    // Create LilvNodes for each of the URIs we need
-   #undef URI
-   #define URI(n, u) LV2Effect::n = lilv_new_uri(gWorld, u);
-   URILIST
+   #undef NODE
+   #define NODE(n, u) LV2Effect::node_##n = lilv_new_uri(gWorld, u);
+   NODELIST
+
+   // Generatre URIDs
+   #undef URID
+   #define URID(n, u) LV2Effect::urid_##n = LV2Effect::Lookup_URI(LV2Effect::gURIDMap, u);
+      URIDLIST
 
    wxString newVar;
 
@@ -166,12 +176,13 @@ bool LV2EffectsModule::Initialize()
    libdir.AppendDir(wxT("lv2"));
 
    newVar += wxT(":$HOME/.lv2");
-   newVar += wxT(":/usr/local/lib/lv2");
-   newVar += wxT(":/usr/lib/lv2");
+#if defined(__LP64__)
    newVar += wxT(":/usr/local/lib64/lv2");
    newVar += wxT(":/usr/lib64/lv2");
+#endif
+   newVar += wxT(":/usr/local/lib/lv2");
+   newVar += wxT(":/usr/lib/lv2");
    newVar += wxT(":") + libdir.GetPath();
-
 #endif
 
    // Start with the LV2_PATH environment variable (if any)
@@ -188,7 +199,6 @@ bool LV2EffectsModule::Initialize()
    }
 
    wxSetEnv(wxT("LV2_PATH"), pathVar);
-
    lilv_world_load_all(gWorld);
 
    return true;
@@ -197,9 +207,10 @@ bool LV2EffectsModule::Initialize()
 void LV2EffectsModule::Terminate()
 {
    // Free the LilvNodes for each of the URIs we need
-   #undef URI
-   #define URI(n, u) lilv_node_free(LV2Effect::n);
-   URILIST
+   #undef NODE
+   #define NODE(n, u) \
+      lilv_node_free(LV2Effect::node_##n);
+   NODELIST
 
    lilv_world_free(gWorld);
    gWorld = NULL;
@@ -237,11 +248,25 @@ PluginPaths LV2EffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(
    LILV_FOREACH(plugins, i, plugs)
    {
       const LilvPlugin *plug = lilv_plugins_get(plugs, i);
+      const LilvNode *cls = lilv_plugin_class_get_uri(lilv_plugin_get_class(plug));
+      const LilvNode *name = lilv_plugin_get_name(plug);
 
-      // Bypass Instrument (MIDI) plugins for now
-      const LilvPluginClass *cls = lilv_plugin_get_class(plug);
-      if (lilv_node_equals(lilv_plugin_class_get_uri(cls), LV2Effect::gInstrument))
+      // Bypass unsupported plugin types
+      if (lilv_node_equals(cls, LV2Effect::node_InstrumentPlugin) ||
+          lilv_node_equals(cls, LV2Effect::node_MIDIPlugin) ||
+          lilv_node_equals(cls, LV2Effect::node_MathConstants) ||
+          lilv_node_equals(cls, LV2Effect::node_MathFunctions))
       {
+         wxLogInfo(wxT("LV2 plugin '%s' has unsupported type '%s'"), lilv_node_as_string(lilv_plugin_get_uri(plug)), lilv_node_as_string(cls));
+         printf("LV2 plugin '%s' has unsupported type '%s'\n", lilv_node_as_string(lilv_plugin_get_uri(plug)), lilv_node_as_string(cls));
+         continue;
+      }
+
+      // If it doesn't have a name or has no ports, then it's not valid
+      if (!name || !lilv_plugin_get_port_by_index(plug, 0))
+      {
+         wxLogInfo(wxT("LV2 plugin '%s' is invalid"), lilv_node_as_string(lilv_plugin_get_uri(plug)));
+         printf("LV2 plugin '%s' is invalid\n", lilv_node_as_string(lilv_plugin_get_uri(plug)));
          continue;
       }
 

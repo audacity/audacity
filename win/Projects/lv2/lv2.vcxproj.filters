@@ -64,8 +64,89 @@
     <Filter Include="sord\Header Files\zix">
       <UniqueIdentifier>{aff2e7d6-f42d-4c74-8fcc-afc61eb173e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lv2">
+      <UniqueIdentifier>{71ea567f-2ee0-48e8-9fd2-0bbeb3ad5793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers">
+      <UniqueIdentifier>{71dc7ddf-2c35-4c85-a240-fc1727bc2972}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\atom">
+      <UniqueIdentifier>{b50c6bd7-f653-4f29-9cdb-51bffa4ec599}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\buf-size">
+      <UniqueIdentifier>{4ad29d4d-bc79-4024-865d-9628aa9a4a90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\core">
+      <UniqueIdentifier>{9bfa79df-8c29-4906-9074-68e4d05020ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\data-access">
+      <UniqueIdentifier>{77249059-9994-4c8d-94cf-7009fb706698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\dynmanifest">
+      <UniqueIdentifier>{cbaf795c-ff65-4836-a7b0-ee3edee1cf0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\event">
+      <UniqueIdentifier>{3e45f6b0-a278-4e32-9fc5-0e41e07c94c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\instance-access">
+      <UniqueIdentifier>{62b5e770-a1cf-4f94-ae04-efaf851c3228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\log">
+      <UniqueIdentifier>{e2a699da-e36d-49db-acde-b14ed23134b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\midi">
+      <UniqueIdentifier>{92bfcd2c-9d6e-4ac4-90f6-f49196b43b04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\morph">
+      <UniqueIdentifier>{ff62d40e-6042-41bd-9180-e7ade240c11d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\options">
+      <UniqueIdentifier>{d658a88d-f3d6-42a3-a0a2-8aada0e62787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\parameters">
+      <UniqueIdentifier>{f2b769e1-6536-4be2-892a-c4dfc43a74c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\patch">
+      <UniqueIdentifier>{8ffcf542-361f-4d88-9e10-e489b8a34a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\port-groups">
+      <UniqueIdentifier>{48107c6a-a9f7-4f53-a838-e56b09ce010f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\port-props">
+      <UniqueIdentifier>{4421b238-9f7b-45ad-9a96-c6963c4d81af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\presets">
+      <UniqueIdentifier>{b376e2bb-4a92-47d9-85af-bf02aa327854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\resize-port">
+      <UniqueIdentifier>{98b89324-dd5b-4e96-9ba1-82abb48b1ae4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\state">
+      <UniqueIdentifier>{c39f617d-2530-4143-940f-2152a5869d62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\time">
+      <UniqueIdentifier>{d63d6499-2cfc-47c8-8f39-778e92dfb738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\ui">
+      <UniqueIdentifier>{ec7611c0-ecd5-4b1c-83c9-fc14edf76c77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\units">
+      <UniqueIdentifier>{aba9e39f-7c42-4937-b295-a21d4d075067}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\uri-map">
+      <UniqueIdentifier>{5099e59f-7172-43bf-a8b0-e1d4317d927f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\worker">
+      <UniqueIdentifier>{8622d246-048d-453b-9cd5-ffbd14bc044c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lv2\Headers\urid">
+      <UniqueIdentifier>{57ac3edf-02f0-429e-89c3-26578f0fc119}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.c">
+      <Filter>lilv\Source Files\zix</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\collections.c">
       <Filter>lilv\Source Files</Filter>
     </ClCompile>
@@ -105,13 +186,19 @@
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\world.c">
       <Filter>lilv\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\byte_source.c">
+      <Filter>serd\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\env.c">
+      <Filter>serd\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\n3.c">
       <Filter>serd\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\reader.c">
       <Filter>serd\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\serdnode.c">
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\serdi.c">
       <Filter>serd\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\string.c">
@@ -123,7 +210,22 @@
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\writer.c">
       <Filter>serd\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\btree.c">
+      <Filter>sord\Source Files\zix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\digest.c">
+      <Filter>sord\Source Files\zix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\hash.c">
+      <Filter>sord\Source Files\zix</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\sord\src\sord.c">
+      <Filter>sord\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\sord_validate.c">
+      <Filter>sord\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\sordi.c">
       <Filter>sord\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\sord\src\syntax.c">
@@ -135,17 +237,11 @@
     <ClCompile Include="..\..\..\lib-src\lv2\suil\src\host.c">
       <Filter>suil\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\lv2\suil\src\suil_instance.c">
+    <ClCompile Include="..\..\..\lib-src\lv2\suil\src\instance.c">
       <Filter>suil\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\digest.c">
-      <Filter>sord\Source Files\zix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\hash.c">
-      <Filter>sord\Source Files\zix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\tree.c">
-      <Filter>sord\Source Files\zix</Filter>
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\node.c">
+      <Filter>serd\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,24 +250,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\lilv_internal.h">
       <Filter>lilv\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\lv2\serd\serd\serd.h">
-      <Filter>serd\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\lv2\serd\src\serd_internal.h">
-      <Filter>serd\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\lv2\sord\sord\sord.h">
-      <Filter>sord\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\sord_internal.h">
-      <Filter>sord\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\lv2\sratom\sratom\sratom.h">
-      <Filter>sratom\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\lv2\suil\suil\suil.h">
-      <Filter>suil\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\lib-src\lv2\windows\lilv_config.h">
       <Filter>windows\Header Fiels</Filter>
@@ -188,6 +266,21 @@
     <ClInclude Include="..\..\..\lib-src\lv2\windows\suil_config.h">
       <Filter>windows\Header Fiels</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\common.h">
+      <Filter>lilv\Header Files\zix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.h">
+      <Filter>lilv\Header Files\zix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\serd\src\reader.h">
+      <Filter>serd\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\serd\src\serd_internal.h">
+      <Filter>serd\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\btree.h">
+      <Filter>sord\Header Files\zix</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\common.h">
       <Filter>sord\Header Files\zix</Filter>
     </ClInclude>
@@ -197,8 +290,110 @@
     <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\hash.h">
       <Filter>sord\Header Files\zix</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\tree.h">
-      <Filter>sord\Header Files\zix</Filter>
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\sord_internal.h">
+      <Filter>sord\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\sratom\sratom\sratom.h">
+      <Filter>sratom\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\sord\sord.h">
+      <Filter>sord\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\serd\serd\serd.h">
+      <Filter>serd\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\suil\suil\suil.h">
+      <Filter>suil\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\suil\src\suil_internal.h">
+      <Filter>suil\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\atom\atom.h">
+      <Filter>lv2\Headers\atom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\atom\forge.h">
+      <Filter>lv2\Headers\atom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\atom\util.h">
+      <Filter>lv2\Headers\atom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\buf-size\buf-size.h">
+      <Filter>lv2\Headers\buf-size</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\core\attributes.h">
+      <Filter>lv2\Headers\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\core\lv2.h">
+      <Filter>lv2\Headers\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\core\lv2_util.h">
+      <Filter>lv2\Headers\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\data-access\data-access.h">
+      <Filter>lv2\Headers\data-access</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\dynmanifest\dynmanifest.h">
+      <Filter>lv2\Headers\dynmanifest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\event\event.h">
+      <Filter>lv2\Headers\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\event\event-helpers.h">
+      <Filter>lv2\Headers\event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\instance-access\instance-access.h">
+      <Filter>lv2\Headers\instance-access</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\log\log.h">
+      <Filter>lv2\Headers\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\midi\midi.h">
+      <Filter>lv2\Headers\midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\morph\morph.h">
+      <Filter>lv2\Headers\morph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\state\state.h">
+      <Filter>lv2\Headers\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\time\time.h">
+      <Filter>lv2\Headers\time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\ui\ui.h">
+      <Filter>lv2\Headers\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\units\units.h">
+      <Filter>lv2\Headers\units</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\uri-map\uri-map.h">
+      <Filter>lv2\Headers\uri-map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\urid\urid.h">
+      <Filter>lv2\Headers\urid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\worker\worker.h">
+      <Filter>lv2\Headers\worker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\options\options.h">
+      <Filter>lv2\Headers\options</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\parameters\parameters.h">
+      <Filter>lv2\Headers\parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\patch\patch.h">
+      <Filter>lv2\Headers\patch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\port-groups\port-groups.h">
+      <Filter>lv2\Headers\port-groups</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\port-props\port-props.h">
+      <Filter>lv2\Headers\port-props</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\presets\presets.h">
+      <Filter>lv2\Headers\presets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\resize-port\resize-port.h">
+      <Filter>lv2\Headers\resize-port</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

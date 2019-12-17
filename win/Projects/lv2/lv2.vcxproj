@@ -47,11 +47,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\sord\src;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\suil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\include;..\..\..\lib-src\lv2\sord\src;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lilv\src;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\suil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;$(AudacityConditionalSnprintf);HAVE_FMAX;LILV_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -61,11 +62,27 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
+    <PreBuildEvent>
+      <Command>echo "$(OutDir)\include\lv2"
+ECHO ON
+IF EXIST "$(OutDir)\include\lv2" GOTO done
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\ext"
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\extensions"
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\lv2core"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2" "$(OutDir)\include\lv2"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\lv2.h" "$(OutDir)\include\lv2"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2" "$(OutDir)\include\lv2\lv2plug.in\ns\ext"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\ui\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\extensions\ui"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\units\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\extensions\units"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\lv2core"
+:done
+</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\sord\src;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\suil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)\include;..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\sord\src;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lilv\src;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\suil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;$(AudacityConditionalSnprintf);HAVE_FMAX;LILV_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -83,16 +100,37 @@
     <Lib>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
     </Lib>
+    <PreBuildEvent>
+      <Command>IF EXIST "$(OutDir)\include\lv2" GOTO done
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\ext"
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\extensions"
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\lv2core"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2" "$(OutDir)\include\lv2"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\lv2.h" "$(OutDir)\include"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2" "$(OutDir)\include\lv2\lv2plug.in\ns\ext"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\ui\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\extensions\ui"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\units\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\extensions\units"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\lv2core"
+:done
+</Command>
+      <Message>Performing Custom Build Step</Message>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>RD /S /Q "$(OutDir)/include"</Command>
+      <Outputs>dummy</Outputs>
+      <Message>Performing Custom Clean Step</Message>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\collections.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCpp</CompileAs>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\collections.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\instance.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\lilv_instance.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\lilv_instance.obj</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\instance.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\lib.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\node.c">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)lilv-node.obj</ObjectFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)lilv-node.obj</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\lilv_node.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\lilv_node.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\plugin.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\pluginclass.c" />
@@ -103,33 +141,78 @@
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\ui.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\util.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\world.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\byte_source.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\env.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\n3.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\node.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\serd_node.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\serd_node.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\reader.c" />
-    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\serdnode.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\serdi.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\string.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\uri.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\writer.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\sord\src\sord.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\sordi.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\sord_validate.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\sord\src\syntax.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\btree.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\digest.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\hash.c" />
-    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\tree.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\sratom\src\sratom.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\suil\src\host.c" />
-    <ClCompile Include="..\..\..\lib-src\lv2\suil\src\suil_instance.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\suil\src\instance.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\suil_instance.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\suil_instance.obj</ObjectFileName>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib-src\lv2\lilv\lilv\lilv.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\lilv_internal.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\common.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\atom\atom.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\atom\forge.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\atom\util.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\buf-size\buf-size.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\core\attributes.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\core\lv2.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\core\lv2_util.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\data-access\data-access.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\dynmanifest\dynmanifest.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\event\event-helpers.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\event\event.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\instance-access\instance-access.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\log\log.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\midi\midi.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\morph\morph.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\options\options.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\parameters\parameters.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\patch\patch.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\port-groups\port-groups.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\port-props\port-props.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\presets\presets.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\resize-port\resize-port.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\state\state.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\time\time.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\ui\ui.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\units\units.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\uri-map\uri-map.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\urid\urid.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lv2\lv2\worker\worker.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\serd\serd\serd.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\serd\src\reader.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\serd\src\serd_internal.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sord\sord\sord.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sord\src\sord_internal.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\btree.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\common.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\digest.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\hash.h" />
-    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\tree.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sratom\sratom\sratom.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\suil\src\suil_internal.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\suil\suil\suil.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\windows\lilv_config.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\windows\serd_config.h" />

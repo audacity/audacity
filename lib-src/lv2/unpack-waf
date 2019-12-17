@@ -1,15 +1,20 @@
 #!/bin/sh
 set -e
 
-for dir in $(find . -type f -name waf); do
-   pushd "${dir%/*}"
-   ./waf --help > /dev/null
-   mv .waf-*/* .
-   sed -i '/^#==>$/,$d' waf
-   rmdir .waf-*
-   find waflib -name "*.pyc" -delete
-   popd
+for waf in $(find . -type f -name waf); do
+   if grep -q '^#==>$' "${waf}"
+   then
+      pushd "${waf%/*}"
+      python3 ./waf --help > /dev/null
+      if [ -e .waf* ]
+      then
+         mv .waf*/* .
+         sed -i '/^#==>$/,$d' waf
+         rmdir .waf*
+      fi
+      find waflib -name "*.pyc" -o -name "__pycache__" | xargs rm -rf
+      popd
+   fi
 done
-#find . -name waf | xargs svn propset svn:mime-type "text/x-python"
 
 echo "All waf scripts extracted successfully."

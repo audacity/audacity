@@ -1,7 +1,6 @@
 dnl Please increment the serial number below whenever you alter this macro
 dnl for the benefit of automatic macro update systems
-# audacity_checklib_lv2.m4 serial 2
-
+# audacity_checklib_lv2.m4 serial 3
 
 AC_DEFUN([AUDACITY_CHECKLIB_LV2], [
    AC_ARG_WITH(lv2,
@@ -12,10 +11,9 @@ AC_DEFUN([AUDACITY_CHECKLIB_LV2], [
 
    dnl see if lv2 is installed on the system
 
-   PKG_CHECK_MODULES(LV2, [lv2 lilv-0 >= 0.16 suil-0 >= 0.8.2],
+   PKG_CHECK_MODULES(LV2, [lv2 >= 1.16 lilv-0 >= 0.24.4 suil-0 >= 0.10.4],
                      LV2_SYSTEM_AVAILABLE="yes",
                      LV2_SYSTEM_AVAILABLE="no")
-
 
    if test "$LV2_SYSTEM_AVAILABLE" = "yes"; then
       AC_MSG_NOTICE([LV2 libraries are available as system libraries])
@@ -39,8 +37,10 @@ AC_DEFUN([AUDACITY_CHECKLIB_LV2], [
 
 AC_DEFUN([AUDACITY_CONFIG_LV2], [
    if test "$LV2_USE_LOCAL" = yes; then
-      LV2_CFLAGS='-I$(top_srcdir)/lib-src/lv2/include -I$(top_builddir)/lib-src/lv2/include'
-      LV2_LIBS='$(top_builddir)/lib-src/lv2/liblv2.a'
+      LV2_CFLAGS+=' -I$(top_builddir)/lib-src/lv2/build/include'
+      LV2_CFLAGS+=' -I$(top_builddir)/lib-src/lv2/build/include/lilv-0'
+      LV2_CFLAGS+=' -I$(top_builddir)/lib-src/lv2/build/include/suil-0'
+      LV2_LIBS='$(top_builddir)/lib-src/lv2/build/lib/lib*.a'
       AC_CONFIG_SUBDIRS([lib-src/lv2])
    fi
 

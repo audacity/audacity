@@ -895,6 +895,11 @@ audacity_SOURCES += \
 	effects/lv2/LoadLV2.h \
 	effects/lv2/LV2Effect.cpp \
 	effects/lv2/LV2Effect.h \
+	effects/lv2/NativeWindow.h \
+	effects/lv2/lv2_external_ui.h \
+	effects/lv2/zix/common.h \
+	effects/lv2/zix/ring.cpp \
+	effects/lv2/zix/ring.h \
 	$(NULL)
 endif
 
