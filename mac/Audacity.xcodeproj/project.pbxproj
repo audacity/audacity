@@ -1301,6 +1301,7 @@
 		5E73966B1DAFDB5600BA0A4D /* LabelTextHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396671DAFDB5600BA0A4D /* LabelTextHandle.cpp */; };
 		5E73966E1DAFDB8500BA0A4D /* StretchHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73966C1DAFDB8500BA0A4D /* StretchHandle.cpp */; };
 		5E7396711DAFDB9D00BA0A4D /* SelectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73966F1DAFDB9D00BA0A4D /* SelectHandle.cpp */; };
+		5E74BE6623A9642100F9A1B8 /* ring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74BE6423A9642100F9A1B8 /* ring.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
@@ -1491,8 +1492,6 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.po";
 			fileType = pattern.proxy;
-			inputFiles = (
-			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).mo",
@@ -3365,6 +3364,11 @@
 		5E73966D1DAFDB8500BA0A4D /* StretchHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StretchHandle.h; sourceTree = "<group>"; };
 		5E73966F1DAFDB9D00BA0A4D /* SelectHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectHandle.cpp; sourceTree = "<group>"; };
 		5E7396701DAFDB9D00BA0A4D /* SelectHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectHandle.h; sourceTree = "<group>"; };
+		5E74BE6023A963FA00F9A1B8 /* lv2_external_ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lv2_external_ui.h; path = lv2/lv2_external_ui.h; sourceTree = "<group>"; };
+		5E74BE6123A963FA00F9A1B8 /* NativeWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NativeWindow.h; path = lv2/NativeWindow.h; sourceTree = "<group>"; };
+		5E74BE6323A9642100F9A1B8 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = lv2/zix/common.h; sourceTree = "<group>"; };
+		5E74BE6423A9642100F9A1B8 /* ring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ring.cpp; path = lv2/zix/ring.cpp; sourceTree = "<group>"; };
+		5E74BE6523A9642100F9A1B8 /* ring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ring.h; path = lv2/zix/ring.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
 		5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditCursorOverlay.cpp; sourceTree = "<group>"; };
 		5E74D2DE1CC4429700D88B0B /* EditCursorOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditCursorOverlay.h; sourceTree = "<group>"; };
@@ -6098,10 +6102,13 @@
 		28D587C50E264CBB009C7DEA /* lv2 */ = {
 			isa = PBXGroup;
 			children = (
+				5E74BE6223A9641100F9A1B8 /* zix */,
 				28D587C70E264CF3009C7DEA /* LoadLV2.cpp */,
 				28D587C80E264CF3009C7DEA /* LoadLV2.h */,
+				5E74BE6023A963FA00F9A1B8 /* lv2_external_ui.h */,
 				28D587C90E264CF4009C7DEA /* LV2Effect.cpp */,
 				28D587CA0E264CF4009C7DEA /* LV2Effect.h */,
+				5E74BE6123A963FA00F9A1B8 /* NativeWindow.h */,
 			);
 			name = lv2;
 			sourceTree = "<group>";
@@ -6378,6 +6385,16 @@
 				5E36A0A7217FA2430068E082 /* WindowMenus.cpp */,
 			);
 			name = menus;
+			sourceTree = "<group>";
+		};
+		5E74BE6223A9641100F9A1B8 /* zix */ = {
+			isa = PBXGroup;
+			children = (
+				5E74BE6323A9642100F9A1B8 /* common.h */,
+				5E74BE6423A9642100F9A1B8 /* ring.cpp */,
+				5E74BE6523A9642100F9A1B8 /* ring.h */,
+			);
+			name = zix;
 			sourceTree = "<group>";
 		};
 		5E74D2DB1CC4429700D88B0B /* tracks */ = {
@@ -8112,14 +8129,10 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"$(SRCROOT)/newInputFile",
 			);
 			name = "Run Script";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8606,6 +8619,7 @@
 				5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */,
 				1790B11F09883BFD008A330A /* BatchProcessDialog.cpp in Sources */,
 				5E0A1CDD20E95FF7001AAF8D /* CellularPanel.cpp in Sources */,
+				5E74BE6623A9642100F9A1B8 /* ring.cpp in Sources */,
 				5EC4257222B92383005E8AB5 /* CommonTrackControls.cpp in Sources */,
 				1790B12009883BFD008A330A /* Benchmark.cpp in Sources */,
 				1790B12109883BFD008A330A /* LegacyAliasBlockFile.cpp in Sources */,

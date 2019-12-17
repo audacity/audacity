@@ -68,7 +68,7 @@ public:
    virtual ~NativeWindow()
    {
       GetPeer()->RemoveFromParent();
-      m_peer = NULL;
+      SetPeer( nullptr );
    }
 
    bool Create(wxWindow* parent, WXWidget view)
