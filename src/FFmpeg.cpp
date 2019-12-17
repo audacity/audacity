@@ -102,10 +102,11 @@ void FFmpegStartup()
    {
       if (enabled)
       {
-         AudacityMessageBox(_("FFmpeg was configured in Preferences and successfully loaded before, \
-                        \nbut this time Audacity failed to load it at startup. \
-                        \n\nYou may want to go back to Preferences > Libraries and re-configure it."),
-                      _("FFmpeg startup failed"));
+         AudacityMessageBox(_(
+"FFmpeg was configured in Preferences and successfully loaded before, \
+\nbut this time Audacity failed to load it at startup. \
+\n\nYou may want to go back to Preferences > Libraries and re-configure it."),
+            _("FFmpeg startup failed"));
       }
    }
 }
