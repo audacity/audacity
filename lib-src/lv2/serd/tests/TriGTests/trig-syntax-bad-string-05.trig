@@ -1,0 +1,6 @@
+# Long literal with missing end
+@prefix : <http://example/> .
+{
+:s :p """abc
+def
+}

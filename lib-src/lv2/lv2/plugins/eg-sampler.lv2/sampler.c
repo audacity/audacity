@@ -1,6 +1,6 @@
 /*
   LV2 Sampler Example Plugin
-  Copyright 2011-2012 David Robillard <d@drobilla.net>
+  Copyright 2011-2016 David Robillard <d@drobilla.net>
   Copyright 2011 Gabriel M. Beddingfield <gabriel@teuton.org>
   Copyright 2011 James Morris <jwm.art.net@gmail.com>
 
@@ -17,35 +17,36 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
-#ifndef __cplusplus
-#    include <stdbool.h>
-#endif
+#include "atom_sink.h"
+#include "peaks.h"
+#include "uris.h"
+
+#include "lv2/atom/atom.h"
+#include "lv2/atom/forge.h"
+#include "lv2/atom/util.h"
+#include "lv2/core/lv2.h"
+#include "lv2/core/lv2_util.h"
+#include "lv2/log/log.h"
+#include "lv2/log/logger.h"
+#include "lv2/midi/midi.h"
+#include "lv2/state/state.h"
+#include "lv2/urid/urid.h"
+#include "lv2/worker/worker.h"
 
 #include <sndfile.h>
 
-#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
-#include "lv2/lv2plug.in/ns/ext/atom/util.h"
-#include "lv2/lv2plug.in/ns/ext/log/log.h"
-#include "lv2/lv2plug.in/ns/ext/log/logger.h"
-#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
-#include "lv2/lv2plug.in/ns/ext/patch/patch.h"
-#include "lv2/lv2plug.in/ns/ext/state/state.h"
-#include "lv2/lv2plug.in/ns/ext/urid/urid.h"
-#include "lv2/lv2plug.in/ns/ext/worker/worker.h"
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
-
-#include "./uris.h"
+#include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 enum {
 	SAMPLER_CONTROL = 0,
 	SAMPLER_NOTIFY  = 1,
 	SAMPLER_OUT     = 2
 };
-
-static const char* default_sample_file = "click.wav";
 
 typedef struct {
 	SF_INFO  info;      // Info about sample from sndfile
@@ -58,34 +59,29 @@ typedef struct {
 	// Features
 	LV2_URID_Map*        map;
 	LV2_Worker_Schedule* schedule;
-	LV2_Log_Log*         log;
-
-	// Forge for creating atoms
-	LV2_Atom_Forge forge;
-
-	// Logger convenience API
-	LV2_Log_Logger logger;
-
-	// Sample
-	Sample* sample;
+	LV2_Log_Logger       logger;
 
 	// Ports
 	const LV2_Atom_Sequence* control_port;
 	LV2_Atom_Sequence*       notify_port;
 	float*                   output_port;
 
-	// Forge frame for notify port (for writing worker replies)
-	LV2_Atom_Forge_Frame notify_frame;
+	// Communication utilities
+	LV2_Atom_Forge_Frame notify_frame;  ///< Cached for worker replies
+	LV2_Atom_Forge       forge;         ///< Forge for writing atoms in run thread
+	PeaksSender          psend;         ///< Audio peaks sender
 
 	// URIs
 	SamplerURIs uris;
 
-	// Current position in run()
-	uint32_t frame_offset;
-
 	// Playback state
+	Sample*    sample;
+	uint32_t   frame_offset;
+	float      gain;
 	sf_count_t frame;
 	bool       play;
+	bool       activated;
+	bool       sample_changed;
 } Sampler;
 
 /**
@@ -109,28 +105,33 @@ typedef struct {
    not modified.
 */
 static Sample*
-load_sample(Sampler* self, const char* path)
+load_sample(LV2_Log_Logger* logger, const char* path)
 {
-	const size_t path_len = strlen(path);
+	lv2_log_trace(logger, "Loading %s\n", path);
 
-	lv2_log_trace(&self->logger, "Loading sample %s\n", path);
+	const size_t   path_len = strlen(path);
+	Sample* const  sample   = (Sample*)calloc(1, sizeof(Sample));
+	SF_INFO* const info     = &sample->info;
+	SNDFILE* const sndfile  = sf_open(path, SFM_READ, info);
+	float*         data     = NULL;
+	bool           error    = true;
+	if (!sndfile || !info->frames) {
+		lv2_log_error(logger, "Failed to open %s\n", path);
+	} else if (info->channels != 1) {
+		lv2_log_error(logger, "%s has %d channels\n", path, info->channels);
+	} else if (!(data = (float*)malloc(sizeof(float) * info->frames))) {
+		lv2_log_error(logger, "Failed to allocate memory for sample\n");
+	} else {
+		error = false;
+	}
 
-	Sample* const  sample  = (Sample*)malloc(sizeof(Sample));
-	SF_INFO* const info    = &sample->info;
-	SNDFILE* const sndfile = sf_open(path, SFM_READ, info);
-
-	if (!sndfile || !info->frames || (info->channels != 1)) {
-		lv2_log_error(&self->logger, "Failed to open sample '%s'\n", path);
+	if (error) {
 		free(sample);
+		free(data);
+		sf_close(sndfile);
 		return NULL;
 	}
 
-	// Read data
-	float* const data = malloc(sizeof(float) * info->frames);
-	if (!data) {
-		lv2_log_error(&self->logger, "Failed to allocate memory for sample\n");
-		return NULL;
-	}
 	sf_seek(sndfile, 0ul, SEEK_SET);
 	sf_read_float(sndfile, data, info->frames);
 	sf_close(sndfile);
@@ -160,7 +161,7 @@ free_sample(Sampler* self, Sample* sample)
 
    This is called for every piece of work scheduled in the audio thread using
    self->schedule->schedule_work().  A reply can be sent back to the audio
-   thread using the provided respond function.
+   thread using the provided `respond` function.
 */
 static LV2_Worker_Status
 work(LV2_Handle                  instance,
@@ -175,20 +176,19 @@ work(LV2_Handle                  instance,
 		// Free old sample
 		const SampleMessage* msg = (const SampleMessage*)data;
 		free_sample(self, msg->sample);
-	} else {
+	} else if (atom->type == self->forge.Object) {
 		// Handle set message (load sample).
-		const LV2_Atom_Object* obj = (const LV2_Atom_Object*)data;
-
-		// Get file path from message
-		const LV2_Atom* file_path = read_set_file(&self->uris, obj);
-		if (!file_path) {
+		const LV2_Atom_Object* obj  = (const LV2_Atom_Object*)data;
+		const char*            path = read_set_file(&self->uris, obj);
+		if (!path) {
+			lv2_log_error(&self->logger, "Malformed set file request\n");
 			return LV2_WORKER_ERR_UNKNOWN;
 		}
 
 		// Load sample.
-		Sample* sample = load_sample(self, LV2_ATOM_BODY_CONST(file_path));
+		Sample* sample = load_sample(&self->logger, path);
 		if (sample) {
-			// Loaded sample, send it to run() to be applied.
+			// Send new sample to run() to be applied
 			respond(handle, sizeof(sample), &sample);
 		}
 	}
@@ -208,22 +208,23 @@ work_response(LV2_Handle  instance,
               uint32_t    size,
               const void* data)
 {
-	Sampler* self = (Sampler*)instance;
-
-	SampleMessage msg = { { sizeof(Sample*), self->uris.eg_freeSample },
-	                      self->sample };
-
-	// Send a message to the worker to free the current sample
-	self->schedule->schedule_work(self->schedule->handle, sizeof(msg), &msg);
+	Sampler* self       = (Sampler*)instance;
+	Sample*  old_sample = self->sample;
+	Sample*  new_sample = *(Sample*const*)data;
 
 	// Install the new sample
 	self->sample = *(Sample*const*)data;
 
-	// Send a notification that we're using a new sample.
+	// Schedule work to free the old sample
+	SampleMessage msg = { { sizeof(Sample*), self->uris.eg_freeSample },
+	                      old_sample };
+	self->schedule->schedule_work(self->schedule->handle, sizeof(msg), &msg);
+
+	// Send a notification that we're using a new sample
 	lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
 	write_set_file(&self->forge, &self->uris,
-	               self->sample->path,
-	               self->sample->path_len);
+		       new_sample->path,
+		       new_sample->path_len);
 
 	return LV2_WORKER_SUCCESS;
 }
@@ -256,49 +257,33 @@ instantiate(const LV2_Descriptor*     descriptor,
             const LV2_Feature* const* features)
 {
 	// Allocate and initialise instance structure.
-	Sampler* self = (Sampler*)malloc(sizeof(Sampler));
+	Sampler* self = (Sampler*)calloc(1, sizeof(Sampler));
 	if (!self) {
 		return NULL;
 	}
-	memset(self, 0, sizeof(Sampler));
 
 	// Get host features
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID__map)) {
-			self->map = (LV2_URID_Map*)features[i]->data;
-		} else if (!strcmp(features[i]->URI, LV2_WORKER__schedule)) {
-			self->schedule = (LV2_Worker_Schedule*)features[i]->data;
-		} else if (!strcmp(features[i]->URI, LV2_LOG__log)) {
-			self->log = (LV2_Log_Log*)features[i]->data;
-		}
-	}
-	if (!self->map) {
-		lv2_log_error(&self->logger, "Missing feature urid:map\n");
-		goto fail;
-	} else if (!self->schedule) {
-		lv2_log_error(&self->logger, "Missing feature work:schedule\n");
-		goto fail;
+	const char* missing = lv2_features_query(
+		features,
+		LV2_LOG__log,         &self->logger.log, false,
+		LV2_URID__map,        &self->map,        true,
+		LV2_WORKER__schedule, &self->schedule,   true,
+		NULL);
+	lv2_log_logger_set_map(&self->logger, self->map);
+	if (missing) {
+		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
+		free(self);
+		return NULL;
 	}
 
-	// Map URIs and initialise forge/logger
+	// Map URIs and initialise forge
 	map_sampler_uris(self->map, &self->uris);
 	lv2_atom_forge_init(&self->forge, self->map);
-	lv2_log_logger_init(&self->logger, self->map, self->log);
+	peaks_sender_init(&self->psend, self->map);
 
-	// Load the default sample file
-	const size_t path_len    = strlen(path);
-	const size_t file_len    = strlen(default_sample_file);
-	const size_t len         = path_len + file_len;
-	char*        sample_path = (char*)malloc(len + 1);
-	snprintf(sample_path, len + 1, "%s%s", path, default_sample_file);
-	self->sample = load_sample(self, sample_path);
-	free(sample_path);
+	self->gain = 1.0;
 
 	return (LV2_Handle)self;
-
-fail:
-	free(self);
-	return 0;
 }
 
 static void
@@ -310,14 +295,133 @@ cleanup(LV2_Handle instance)
 }
 
 static void
-run(LV2_Handle instance,
-    uint32_t   sample_count)
+activate(LV2_Handle instance)
 {
-	Sampler*     self        = (Sampler*)instance;
-	SamplerURIs* uris        = &self->uris;
-	sf_count_t   start_frame = 0;
-	sf_count_t   pos         = 0;
-	float*       output      = self->output_port;
+	((Sampler*)instance)->activated = true;
+}
+
+static void
+deactivate(LV2_Handle instance)
+{
+	((Sampler*)instance)->activated = false;
+}
+
+/** Define a macro for converting a gain in dB to a coefficient. */
+#define DB_CO(g) ((g) > -90.0f ? powf(10.0f, (g) * 0.05f) : 0.0f)
+
+/**
+   Handle an incoming event in the audio thread.
+
+   This performs any actions triggered by an event, such as the start of sample
+   playback, a sample change, or responding to requests from the UI.
+*/
+static void
+handle_event(Sampler* self, LV2_Atom_Event* ev)
+{
+	SamplerURIs* uris       = &self->uris;
+	PeaksURIs*   peaks_uris = &self->psend.uris;
+
+	if (ev->body.type == uris->midi_Event) {
+		const uint8_t* const msg = (const uint8_t*)(ev + 1);
+		switch (lv2_midi_message_type(msg)) {
+		case LV2_MIDI_MSG_NOTE_ON:
+			self->frame = 0;
+			self->play  = true;
+			break;
+		default:
+			break;
+		}
+	} else if (lv2_atom_forge_is_object_type(&self->forge, ev->body.type)) {
+		const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
+		if (obj->body.otype == uris->patch_Set) {
+			// Get the property and value of the set message
+			const LV2_Atom* property = NULL;
+			const LV2_Atom* value    = NULL;
+			lv2_atom_object_get(obj,
+			                    uris->patch_property, &property,
+			                    uris->patch_value,    &value,
+			                    0);
+			if (!property) {
+				lv2_log_error(&self->logger, "Set message with no property\n");
+				return;
+			} else if (property->type != uris->atom_URID) {
+				lv2_log_error(&self->logger, "Set property is not a URID\n");
+				return;
+			}
+
+			const uint32_t key = ((const LV2_Atom_URID*)property)->body;
+			if (key == uris->eg_sample) {
+				// Sample change, send it to the worker.
+				lv2_log_trace(&self->logger, "Scheduling sample change\n");
+				self->schedule->schedule_work(self->schedule->handle,
+				                              lv2_atom_total_size(&ev->body),
+				                              &ev->body);
+			} else if (key == uris->param_gain) {
+				// Gain change
+				if (value->type == uris->atom_Float) {
+					self->gain = DB_CO(((LV2_Atom_Float*)value)->body);
+				}
+			}
+		} else if (obj->body.otype == uris->patch_Get && self->sample) {
+			const LV2_Atom_URID* accept  = NULL;
+			const LV2_Atom_Int*  n_peaks = NULL;
+			lv2_atom_object_get_typed(
+				obj,
+				uris->patch_accept,      &accept,  uris->atom_URID,
+				peaks_uris->peaks_total, &n_peaks, peaks_uris->atom_Int, 0);
+			if (accept && accept->body == peaks_uris->peaks_PeakUpdate) {
+				// Received a request for peaks, prepare for transmission
+				peaks_sender_start(&self->psend,
+				                   self->sample->data,
+				                   self->sample->info.frames,
+				                   n_peaks->body);
+			} else {
+				// Received a get message, emit our state (probably to UI)
+				lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
+				write_set_file(&self->forge, &self->uris,
+				               self->sample->path,
+				               self->sample->path_len);
+			}
+		} else {
+			lv2_log_trace(&self->logger,
+			              "Unknown object type %d\n", obj->body.otype);
+		}
+	} else {
+		lv2_log_trace(&self->logger,
+		              "Unknown event type %d\n", ev->body.type);
+	}
+
+}
+
+/**
+   Output audio for a slice of the current cycle.
+*/
+static void
+render(Sampler* self, uint32_t start, uint32_t end)
+{
+	float* output = self->output_port;
+
+	if (self->play && self->sample) {
+		// Start/continue writing sample to output
+		for (; start < end; ++start) {
+			output[start] = self->sample->data[self->frame] * self->gain;
+			if (++self->frame == self->sample->info.frames) {
+				self->play = false;  // Reached end of sample
+				break;
+			}
+		}
+	}
+
+	// Write silence to remaining buffer
+	for (; start < end; ++start) {
+		output[start] = 0.0f;
+	}
+}
+
+static void
+run(LV2_Handle instance, uint32_t sample_count)
+{
+	Sampler* self = (Sampler*)instance;
 
 	// Set up forge to write directly to notify output port.
 	const uint32_t notify_capacity = self->notify_port->atom.size;
@@ -328,62 +432,37 @@ run(LV2_Handle instance,
 	// Start a sequence in the notify output port.
 	lv2_atom_forge_sequence_head(&self->forge, &self->notify_frame, 0);
 
-	// Read incoming events
+	// Send update to UI if sample has changed due to state restore
+	if (self->sample_changed) {
+		lv2_atom_forge_frame_time(&self->forge, 0);
+		write_set_file(&self->forge, &self->uris,
+		               self->sample->path,
+		               self->sample->path_len);
+		self->sample_changed = false;
+	}
+
+	// Iterate over incoming events, emitting audio along the way
+	self->frame_offset = 0;
 	LV2_ATOM_SEQUENCE_FOREACH(self->control_port, ev) {
+		// Render output up to the time of this event
+		render(self, self->frame_offset, ev->time.frames);
+
+		/* Update current frame offset to this event's time.  This is stored in
+		   the instance because it is used for sychronous worker event
+		   execution.  This allows a sample load event to be executed with
+		   sample accuracy when running in a non-realtime context (such as
+		   exporting a session). */
 		self->frame_offset = ev->time.frames;
-		if (ev->body.type == uris->midi_Event) {
-			const uint8_t* const msg = (const uint8_t*)(ev + 1);
-			switch (lv2_midi_message_type(msg)) {
-			case LV2_MIDI_MSG_NOTE_ON:
-				start_frame = ev->time.frames;
-				self->frame = 0;
-				self->play  = true;
-				break;
-			default:
-				break;
-			}
-		} else if (lv2_atom_forge_is_object_type(&self->forge, ev->body.type)) {
-			const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
-			if (obj->body.otype == uris->patch_Set) {
-				// Received a set message, send it to the worker.
-				lv2_log_trace(&self->logger, "Queueing set message\n");
-				self->schedule->schedule_work(self->schedule->handle,
-				                              lv2_atom_total_size(&ev->body),
-				                              &ev->body);
-			} else {
-				lv2_log_trace(&self->logger,
-				              "Unknown object type %d\n", obj->body.otype);
-			}
-		} else {
-			lv2_log_trace(&self->logger,
-			              "Unknown event type %d\n", ev->body.type);
-		}
+
+		// Process this event
+		handle_event(self, ev);
 	}
 
-	// Render the sample (possibly already in progress)
-	if (self->play) {
-		uint32_t       f  = self->frame;
-		const uint32_t lf = self->sample->info.frames;
+	// Use available space after any emitted events to send peaks
+	peaks_sender_send(&self->psend, &self->forge, sample_count, self->frame_offset);
 
-		for (pos = 0; pos < start_frame; ++pos) {
-			output[pos] = 0;
-		}
-
-		for (; pos < sample_count && f < lf; ++pos, ++f) {
-			output[pos] = self->sample->data[f];
-		}
-
-		self->frame = f;
-
-		if (f == lf) {
-			self->play = false;
-		}
-	}
-
-	// Add zeros to end if sample not long enough (or not playing)
-	for (; pos < sample_count; ++pos) {
-		output[pos] = 0.0f;
-	}
+	// Render output for the rest of the cycle past the last event
+	render(self, self->frame_offset, sample_count);
 }
 
 static LV2_State_Status
@@ -398,24 +477,24 @@ save(LV2_Handle                instance,
 		return LV2_STATE_SUCCESS;
 	}
 
-	LV2_State_Map_Path* map_path = NULL;
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_STATE__mapPath)) {
-			map_path = (LV2_State_Map_Path*)features[i]->data;
-		}
+	LV2_State_Map_Path* map_path = (LV2_State_Map_Path*)lv2_features_data(
+		features, LV2_STATE__mapPath);
+	if (!map_path) {
+		return LV2_STATE_ERR_NO_FEATURE;
 	}
 
+	// Map absolute sample path to an abstract state path
 	char* apath = map_path->abstract_path(map_path->handle, self->sample->path);
 
+	// Store eg:sample = abstract path
 	store(handle,
 	      self->uris.eg_sample,
 	      apath,
-	      strlen(self->sample->path) + 1,
+	      strlen(apath) + 1,
 	      self->uris.atom_Path,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 
 	free(apath);
-
 	return LV2_STATE_SUCCESS;
 }
 
@@ -428,21 +507,62 @@ restore(LV2_Handle                  instance,
 {
 	Sampler* self = (Sampler*)instance;
 
-	size_t   size;
-	uint32_t type;
-	uint32_t valflags;
-
-	const void* value = retrieve(
-		handle,
-		self->uris.eg_sample,
-		&size, &type, &valflags);
-
-	if (value) {
-		const char* path = (const char*)value;
-		lv2_log_trace(&self->logger, "Restoring file %s\n", path);
-		free_sample(self, self->sample);
-		self->sample = load_sample(self, path);
+	// Get host features
+	LV2_Worker_Schedule* schedule = NULL;
+	LV2_State_Map_Path*  paths    = NULL;
+	const char*          missing  = lv2_features_query(
+		features,
+		LV2_STATE__mapPath,   &paths,    true,
+		LV2_WORKER__schedule, &schedule, false,
+		NULL);
+	if (missing) {
+		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
+		return LV2_STATE_ERR_NO_FEATURE;
 	}
+
+	// Get eg:sample from state
+	size_t      size;
+	uint32_t    type;
+	uint32_t    valflags;
+	const void* value = retrieve(handle, self->uris.eg_sample,
+	                             &size, &type, &valflags);
+	if (!value) {
+		lv2_log_error(&self->logger, "Missing eg:sample\n");
+		return LV2_STATE_ERR_NO_PROPERTY;
+	} else if (type != self->uris.atom_Path) {
+		lv2_log_error(&self->logger, "Non-path eg:sample\n");
+		return LV2_STATE_ERR_BAD_TYPE;
+	}
+
+	// Map abstract state path to absolute path
+	const char* apath = (const char*)value;
+	char*       path  = paths->absolute_path(paths->handle, apath);
+
+	// Replace current sample with the new one
+	if (!self->activated || !schedule) {
+		// No scheduling available, load sample immediately
+		lv2_log_trace(&self->logger, "Synchronous restore\n");
+		Sample* sample = load_sample(&self->logger, path);
+		if (sample) {
+			free_sample(self, self->sample);
+			self->sample         = sample;
+			self->sample_changed = true;
+		}
+	} else {
+		// Schedule sample to be loaded by the provided worker
+		lv2_log_trace(&self->logger, "Scheduling restore\n");
+		LV2_Atom_Forge forge;
+		LV2_Atom*      buf = (LV2_Atom*)calloc(1, strlen(path) + 128);
+		lv2_atom_forge_init(&forge, self->map);
+		lv2_atom_forge_set_sink(&forge, atom_sink, atom_sink_deref, buf);
+		write_set_file(&forge, &self->uris, path, strlen(path));
+
+		const uint32_t msg_size = lv2_atom_pad_size(buf->size);
+		schedule->schedule_work(self->schedule->handle, msg_size, buf + 1);
+		free(buf);
+	}
+
+	free(path);
 
 	return LV2_STATE_SUCCESS;
 }
@@ -464,9 +584,9 @@ static const LV2_Descriptor descriptor = {
 	EG_SAMPLER_URI,
 	instantiate,
 	connect_port,
-	NULL,  // activate,
+	activate,
 	run,
-	NULL,  // deactivate,
+	deactivate,
 	cleanup,
 	extension_data
 };

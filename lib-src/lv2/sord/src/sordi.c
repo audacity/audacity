@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2013 David Robillard <http://drobilla.net>
+  Copyright 2011-2016 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -14,8 +14,6 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#define _BSD_SOURCE  // for realpath
-
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,6 +25,9 @@
 #include "serd/serd.h"
 #include "sord/sord.h"
 #include "sord_config.h"
+
+#define SORDI_ERROR(msg)       fprintf(stderr, "sordi: " msg);
+#define SORDI_ERRORF(fmt, ...) fprintf(stderr, "sordi: " fmt, __VA_ARGS__);
 
 typedef struct {
 	SerdWriter* writer;
@@ -40,7 +41,7 @@ static int
 print_version(void)
 {
 	printf("sordi " SORD_VERSION " <http://drobilla.net/software/sord>\n");
-	printf("Copyright 2011-2013 David Robillard <http://drobilla.net>.\n"
+	printf("Copyright 2011-2016 David Robillard <http://drobilla.net>.\n"
 	       "License: <http://www.opensource.org/licenses/isc>\n"
 	       "This is free software; you are free to change and redistribute it."
 	       "\nThere is NO WARRANTY, to the extent permitted by law.\n");
@@ -51,6 +52,7 @@ static int
 print_usage(const char* name, bool error)
 {
 	FILE* const os = error ? stderr : stdout;
+	fprintf(os, "%s", error ? "\n" : "");
 	fprintf(os, "Usage: %s [OPTION]... INPUT [BASE_URI]\n", name);
 	fprintf(os, "Load and re-serialise RDF data.\n");
 	fprintf(os, "Use - for INPUT to read from standard input.\n\n");
@@ -70,22 +72,10 @@ set_syntax(SerdSyntax* syntax, const char* name)
 	} else if (!strcmp(name, "ntriples")) {
 		*syntax = SERD_NTRIPLES;
 	} else {
-		fprintf(stderr, "Unknown input format `%s'\n", name);
+		SORDI_ERRORF("unknown syntax `%s'\n", name);
 		return false;
 	}
 	return true;
-}
-
-static uint8_t*
-absolute_path(const uint8_t* path)
-{
-#ifdef _WIN32
-	char* out = (char*)malloc(MAX_PATH);
-	GetFullPathName((const char*)path, MAX_PATH, out, NULL);
-	return (uint8_t*)out;
-#else
-	return (uint8_t*)realpath((const char*)path, NULL);
-#endif
 }
 
 int
@@ -117,69 +107,64 @@ main(int argc, char** argv)
 			break;
 		} else if (argv[a][1] == 'i') {
 			if (++a == argc) {
-				fprintf(stderr, "Missing value for -i\n");
-				return 1;
+				SORDI_ERROR("option requires an argument -- 'i'\n\n");
+				return print_usage(argv[0], true);
 			}
 			if (!set_syntax(&input_syntax, argv[a])) {
-				return 1;
+				return print_usage(argv[0], true);
 			}
 		} else if (argv[a][1] == 'o') {
 			if (++a == argc) {
-				fprintf(stderr, "Missing value for -o\n");
-				return 1;
+				SORDI_ERROR("option requires an argument -- 'o'\n\n");
+				return print_usage(argv[0], true);
 			}
 			if (!set_syntax(&output_syntax, argv[a])) {
-				return 1;
+				return print_usage(argv[0], true);
 			}
 		} else {
-			fprintf(stderr, "Unknown option `%s'\n", argv[a]);
+			SORDI_ERRORF("invalid option -- '%s'\n", argv[a] + 1);
 			return print_usage(argv[0], true);
 		}
 	}
 
 	if (a == argc) {
-		fprintf(stderr, "Missing input\n");
-		return 1;
+		SORDI_ERROR("missing input\n");
+		return print_usage(argv[0], true);
 	}
 
-	const uint8_t* input   = (const uint8_t*)argv[a++];
-	uint8_t*       in_path = NULL;
+	const uint8_t* input = (const uint8_t*)argv[a++];
 	if (from_file) {
 		in_name = in_name ? in_name : input;
 		if (!in_fd) {
-			in_path = absolute_path(serd_uri_to_path(in_name));
-			if (!in_path || !(in_fd = fopen((const char*)in_path, "rb"))) {
+			input = serd_uri_to_path(in_name);
+			if (!input || !(in_fd = fopen((const char*)input, "rb"))) {
 				return 1;
 			}
 		}
 	}
 
-	SerdURI  base_uri      = SERD_URI_NULL;
-	SerdNode base_uri_node = SERD_NODE_NULL;
+	SerdURI  base_uri = SERD_URI_NULL;
+	SerdNode base     = SERD_NODE_NULL;
 	if (a < argc) {  // Base URI given on command line
-		base_uri_node = serd_node_new_uri_from_string(
+		base = serd_node_new_uri_from_string(
 			(const uint8_t*)argv[a], NULL, &base_uri);
-	} else if (from_file) {  // Use input file URI
-		base_uri_node = serd_node_new_file_uri(in_path, NULL, &base_uri, false);
-	}
-
-	if (!base_uri_node.buf) {
-		fprintf(stderr, "Missing base URI\n");
-		return 1;
+	} else if (from_file && in_fd != stdin) {  // Use input file URI
+		base = serd_node_new_file_uri(input, NULL, &base_uri, true);
 	}
 
 	SordWorld*  world  = sord_world_new();
 	SordModel*  sord   = sord_new(world, SORD_SPO|SORD_OPS, false);
-	SerdEnv*    env    = serd_env_new(&base_uri_node);
+	SerdEnv*    env    = serd_env_new(&base);
 	SerdReader* reader = sord_new_reader(sord, env, input_syntax, NULL);
 
-	const SerdStatus status = (from_file)
+	SerdStatus status = (from_file)
 		? serd_reader_read_file_handle(reader, in_fd, in_name)
 		: serd_reader_read_string(reader, input);
 
 	serd_reader_free(reader);
 
-	SerdEnv* write_env = serd_env_new(&base_uri_node);
+	FILE*    out_fd    = stdout;
+	SerdEnv* write_env = serd_env_new(&base);
 
 	int output_style = SERD_STYLE_RESOLVED;
 	if (output_syntax == SERD_NTRIPLES) {
@@ -206,10 +191,19 @@ main(int argc, char** argv)
 
 	serd_env_free(env);
 	serd_env_free(write_env);
-	serd_node_free(&base_uri_node);
+	serd_node_free(&base);
 
 	sord_free(sord);
 	sord_world_free(world);
+
+	if (from_file) {
+		fclose(in_fd);
+	}
+
+	if (fclose(out_fd)) {
+		perror("sordi: write error");
+		status = SERD_ERR_UNKNOWN;
+	}
 
 	return (status > SERD_FAILURE) ? 1 : 0;
 }

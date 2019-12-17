@@ -1,23 +1,27 @@
-.TH SERDI 1 "08 May 2012"
+.TH SERDI 1 "05 Jan 2017"
 
 .SH NAME
 .B serdi \- Read and write RDF syntax
 
 .SH SYNOPSIS
-serdi [OPTION]... INPUT BASE_URI
+serdi [\fIOPTION\fR]... \fIINPUT\fR \fIBASE_URI\fR
 
 .SH OPTIONS
 
 .TP
-\fB\-b\fR
+.BR \-a
+Write ASCII output if possible.
+
+.TP
+.BR \-b
 Fast bulk output for large serialisations.
 
 .TP
-\fB\-c PREFIX\fR
-Chop PREFIX from matching blank node IDs.
+.BR \-c " " \fIPREFIX\fR
+Chop \fIPREFIX\fR from matching blank node IDs.
 
 .TP
-\fB\-e\fR
+.BR \-e
 Eat input one character at a time, rather than a page at a time which is the
 default.  This is useful when reading from a pipe since output will be
 generated immediately as input arrives, rather than waiting until an entire
@@ -25,42 +29,52 @@ page of input has arrived.  With this option serdi uses one page less memory,
 but will likely be significantly slower.
 
 .TP
-\fB\-f\fR
+.BR \-f
 Keep full URIs in input (don't qualify).
 
 .TP
-\fB\-h\fR
+.BR \-h
 Print the command line options.
 
 .TP
-\fB\-i SYNTAX\fR
-Read input in SYNTAX (`turtle' or `ntriples').
+.BR \-i " " \fISYNTAX\fR
+Read input as \fISYNTAX\fR.
+Valid values (case-insensitive): \*(lqturtle\*(rq, \*(lqntriples\*(rq, \*(lqtrig\*(rq, \*(lqnquads\*(rq.
 
 .TP
-\fB\-o SYNTAX\fR
-Write output in SYNTAX (`turtle' or `ntriples').
+.BR \-l
+Lax (non-strict) parsing.
 
 .TP
-\fB\-p PREFIX\fR
-Add PREFIX to blank node IDs.
+.BR \-o " " \fISYNTAX\fR
+Write output as \fISYNTAX\fR.
+Valid values (case-insensitive): \*(lqturtle\*(rq, \*(lqntriples\*(rq, \*(lqtrig\*(rq, \*(lqnquads\*(rq
 
 .TP
-\fB\-r ROOT_URI\fR
-Keep relative URIs within ROOT_URI.
+.BR \-p " " \fIPREFIX\fR
+Add \fIPREFIX\fR to blank node IDs.
 
 .TP
-\fB\-s INPUT\fR
-Parse INPUT as a string (terminates options).
+.BR \-q
+Suppress all output except data.
 
 .TP
-\fB\-v\fR
+.BR \-r " " \fIROOT_URI\fR
+Keep relative URIs within \fIROOT_URI\fR.
+
+.TP
+.BR \-s " " \fIINPUT\fR
+Parse \fIINPUT\fR as a string (terminates options).
+
+.TP
+.BR \-v
 Display version information and exit.
 
 .SH AUTHOR
 Serdi was written by David Robillard <d@drobilla.net>
 
 .SH COPYRIGHT
-Copyright \(co 2011-2012 David Robillard.
+Copyright \(co 2011-2017 David Robillard.
 .br
 License: <http://www.opensource.org/licenses/isc>
 .br

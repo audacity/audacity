@@ -1,5 +1,5 @@
 /*
-  Copyright 2012 David Robillard <http://drobilla.net>
+  Copyright 2012-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -14,18 +14,24 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#define _POSIX_C_SOURCE 199309L
+#define _POSIX_C_SOURCE 200809L
 
+#include "lilv/lilv.h"
+#include "lv2/atom/atom.h"
+#include "lv2/core/lv2.h"
+#include "lv2/urid/urid.h"
+
+#include "bench.h"
+#include "lilv_config.h"
+#include "uri_table.h"
+
+#include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "lilv/lilv.h"
-#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
-
-#include "lilv_config.h"
-#include "bench.h"
-#include "uri_table.h"
+#include <time.h>
 
 static LilvNode* atom_AtomPort   = NULL;
 static LilvNode* atom_Sequence   = NULL;
@@ -43,7 +49,7 @@ print_version(void)
 {
 	printf(
 		"lv2bench (lilv) " LILV_VERSION "\n"
-		"Copyright 2012 David Robillard <http://drobilla.net>\n"
+		"Copyright 2012-2019 David Robillard <http://drobilla.net>\n"
 		"License: <http://www.opensource.org/licenses/isc-license>\n"
 		"This is free software: you are free to change and redistribute it.\n"
 		"There is NO WARRANTY, to the extent permitted by law.\n");
@@ -53,7 +59,7 @@ static void
 print_usage(void)
 {
 	printf("lv2bench - Benchmark all installed and supported LV2 plugins.\n");
-	printf("Usage: lv2bench [OPTIONS]\n");
+	printf("Usage: lv2bench [OPTIONS] [PLUGIN_URI]\n");
 	printf("\n");
 	printf("  -b BLOCK_SIZE  Specify block size, in audio frames.\n");
 	printf("  -f, --full     Full plottable output.\n");
@@ -82,10 +88,15 @@ bench(const LilvPlugin* p, uint32_t sample_count, uint32_t block_size)
 		return 0.0;
 	}
 
-	LV2_Atom_Sequence seq = {
+	const size_t atom_capacity = 1024;
+
+	LV2_Atom_Sequence seq_in = {
 		{ sizeof(LV2_Atom_Sequence_Body),
 		  uri_table_map(&uri_table, LV2_ATOM__Sequence) },
 		{ 0, 0 } };
+
+	LV2_Atom_Sequence* seq_out = (LV2_Atom_Sequence*)malloc(
+		sizeof(LV2_Atom_Sequence) + atom_capacity);
 
 	const char* uri      = lilv_node_as_string(lilv_plugin_get_uri(p));
 	LilvNodes*  required = lilv_plugin_get_required_features(p);
@@ -95,6 +106,7 @@ bench(const LilvPlugin* p, uint32_t sample_count, uint32_t block_size)
 			fprintf(stderr, "<%s> requires feature <%s>, skipping\n",
 			        uri, lilv_node_as_uri(feature));
 			free(buf);
+			uri_table_destroy(&uri_table);
 			return 0.0;
 		}
 	}
@@ -104,17 +116,28 @@ bench(const LilvPlugin* p, uint32_t sample_count, uint32_t block_size)
 		fprintf(stderr, "Failed to instantiate <%s>\n",
 		        lilv_node_as_uri(lilv_plugin_get_uri(p)));
 		free(buf);
+		uri_table_destroy(&uri_table);
 		return 0.0;
 	}
 
-	float* controls = (float*)calloc(
-		lilv_plugin_get_num_ports(p), sizeof(float));
-	lilv_plugin_get_port_ranges_float(p, NULL, NULL, controls);
+	const uint32_t n_ports  = lilv_plugin_get_num_ports(p);
+	float* const   mins     = (float*)calloc(n_ports, sizeof(float));
+	float* const   maxes    = (float*)calloc(n_ports, sizeof(float));
+	float* const   controls = (float*)calloc(n_ports, sizeof(float));
+	lilv_plugin_get_port_ranges_float(p, mins, maxes, controls);
 
-	const uint32_t n_ports = lilv_plugin_get_num_ports(p);
 	for (uint32_t index = 0; index < n_ports; ++index) {
 		const LilvPort* port = lilv_plugin_get_port_by_index(p, index);
 		if (lilv_port_is_a(p, port, lv2_ControlPort)) {
+ 			if (isnan(controls[index])) {
+				if (!isnan(mins[index])) {
+					controls[index] = mins[index];
+				} else if (!isnan(maxes[index])) {
+					controls[index] = maxes[index];
+				} else {
+					controls[index] = 0.0;
+				}
+			}
 			lilv_instance_connect_port(instance, index, &controls[index]);
 		} else if (lilv_port_is_a(p, port, lv2_AudioPort) ||
 		           lilv_port_is_a(p, port, lv2_CVPort)) {
@@ -126,18 +149,26 @@ bench(const LilvPlugin* p, uint32_t sample_count, uint32_t block_size)
 				fprintf(stderr, "<%s> port %d neither input nor output, skipping\n",
 				        uri, index);
 				lilv_instance_free(instance);
+				free(seq_out);
 				free(buf);
 				free(controls);
+				uri_table_destroy(&uri_table);
 				return 0.0;
 			}
 		} else if (lilv_port_is_a(p, port, atom_AtomPort)) {
-			lilv_instance_connect_port(instance, index, &seq);
+			if (lilv_port_is_a(p, port, lv2_InputPort)) {
+				lilv_instance_connect_port(instance, index, &seq_in);
+			} else {
+				lilv_instance_connect_port(instance, index, seq_out);
+			}
 		} else {
 			fprintf(stderr, "<%s> port %d has unknown type, skipping\n",
 			        uri, index);
 			lilv_instance_free(instance);
+			free(seq_out);
 			free(buf);
 			free(controls);
+			uri_table_destroy(&uri_table);
 			return 0.0;
 		}
 	}
@@ -146,12 +177,18 @@ bench(const LilvPlugin* p, uint32_t sample_count, uint32_t block_size)
 
 	struct timespec ts = bench_start();
 	for (uint32_t i = 0; i < (sample_count / block_size); ++i) {
+		seq_in.atom.size   = sizeof(LV2_Atom_Sequence_Body);
+		seq_in.atom.type   = uri_table_map(&uri_table, LV2_ATOM__Sequence);
+		seq_out->atom.size = atom_capacity;
+		seq_out->atom.type = uri_table_map(&uri_table, LV2_ATOM__Chunk);
+
 		lilv_instance_run(instance, block_size);
 	}
 	const double elapsed = bench_end(&ts);
 
 	lilv_instance_deactivate(instance);
 	lilv_instance_free(instance);
+	free(seq_out);
 
 	uri_table_destroy(&uri_table);
 
@@ -171,24 +208,29 @@ main(int argc, char** argv)
 	uint32_t block_size   = 512;
 	uint32_t sample_count = (1 << 19);
 
-	for (int i = 1; i < argc; ++i) {
-		if (!strcmp(argv[i], "--version")) {
+	int a = 1;
+	for (; a < argc; ++a) {
+		if (!strcmp(argv[a], "--version")) {
 			print_version();
 			return 0;
-		} else if (!strcmp(argv[i], "--help")) {
+		} else if (!strcmp(argv[a], "--help")) {
 			print_usage();
 			return 0;
-		} else if (!strcmp(argv[i], "-f")) {
+		} else if (!strcmp(argv[a], "-f")) {
 			full_output = true;
-		} else if (!strcmp(argv[i], "-n") && (i + 1 < argc)) {
-			sample_count = atoi(argv[++i]);
-		} else if (!strcmp(argv[i], "-b") && (i + 1 < argc)) {
-			block_size = atoi(argv[++i]);
+		} else if (!strcmp(argv[a], "-n") && (a + 1 < argc)) {
+			sample_count = atoi(argv[++a]);
+		} else if (!strcmp(argv[a], "-b") && (a + 1 < argc)) {
+			block_size = atoi(argv[++a]);
+		} else if (argv[a][0] != '-') {
+			break;
 		} else {
 			print_usage();
 			return 1;
 		}
 	}
+
+	const char* const plugin_uri_str = (a < argc ? argv[a++] : NULL);
 
 	LilvWorld* world = lilv_world_new();
 	lilv_world_load_all(world);
@@ -207,8 +249,13 @@ main(int argc, char** argv)
 	}
 
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
-	LILV_FOREACH(plugins, i, plugins) {
-		bench(lilv_plugins_get(plugins, i), sample_count, block_size);
+	if (plugin_uri_str) {
+		LilvNode* uri = lilv_new_uri(world, plugin_uri_str);
+		bench(lilv_plugins_get_by_uri(plugins, uri), sample_count, block_size);
+	} else {
+		LILV_FOREACH(plugins, i, plugins) {
+			bench(lilv_plugins_get(plugins, i), sample_count, block_size);
+		}
 	}
 
 	lilv_node_free(urid_map);

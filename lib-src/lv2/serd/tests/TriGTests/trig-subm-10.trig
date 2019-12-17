@@ -1,0 +1,20 @@
+# Test integer datatyped literals using an OWL cardinality constraint
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+# based on examples in the OWL Reference
+
+{
+_:hasParent a owl:ObjectProperty .
+
+[] a owl:Restriction ;
+  owl:onProperty _:hasParent ;
+  owl:maxCardinality 2 .
+}
+
+<http://example/graph> {
+_:hasParent a owl:ObjectProperty .
+
+[] a owl:Restriction ;
+  owl:onProperty _:hasParent ;
+  owl:maxCardinality 2 .
+}

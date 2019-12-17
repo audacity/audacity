@@ -1,0 +1,3 @@
+BASE <http://a.example/>
+{<s> <http://a.example/p> <http://a.example/o> .}
+<http://example/graph> {<s> <http://a.example/p> <http://a.example/o> .}

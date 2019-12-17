@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2014 David Robillard <http://drobilla.net>
+  Copyright 2011-2017 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -22,6 +22,7 @@
 #define SERD_SERD_H
 
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -45,8 +46,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#else
-#    include <stdbool.h>
 #endif
 
 /**
@@ -110,11 +109,23 @@ typedef enum {
 	   NTriples - Line-based RDF triples (ASCII).
 	   @see <a href="http://www.w3.org/TR/rdf-testcases#ntriples">NTriples</a>
 	*/
-	SERD_NTRIPLES = 2
+	SERD_NTRIPLES = 2,
+
+	/**
+	   NQuads - Line-based RDF quads (UTF-8).
+	   @see <a href="https://www.w3.org/TR/n-quads/">NQuads</a>
+	*/
+	SERD_NQUADS = 3,
+
+	/**
+	   TriG - Terse RDF quads (UTF-8).
+	   @see <a href="https://www.w3.org/TR/trig/">Trig</a>
+	*/
+	SERD_TRIG = 4
 } SerdSyntax;
 
 /**
-   Flags indication inline abbreviation information for a statement.
+   Flags indicating inline abbreviation information for a statement.
 */
 typedef enum {
 	SERD_EMPTY_S      = 1 << 1,  /**< Empty blank node subject */
@@ -128,7 +139,7 @@ typedef enum {
 } SerdStatementFlag;
 
 /**
-   Bitwise OR of SerdNodeFlag values.
+   Bitwise OR of SerdStatementFlag values.
 */
 typedef uint32_t SerdStatementFlags;
 
@@ -183,8 +194,7 @@ typedef enum {
 	   @see <a href="http://www.w3.org/TeamSubmission/turtle#nodeID">Turtle
 	   <tt>nodeID</tt></a>
 	*/
-	SERD_BLANK = 4,
-
+	SERD_BLANK = 4
 } SerdType;
 
 /**
@@ -264,6 +274,17 @@ typedef enum {
 } SerdStyle;
 
 /**
+   Free memory allocated by Serd.
+
+   This function exists because some systems require memory allocated by a
+   library to be freed by code in the same library.  It is otherwise equivalent
+   to the standard C free() function.
+*/
+SERD_API
+void
+serd_free(void* ptr);
+
+/**
    @name String Utilities
    @{
 */
@@ -305,7 +326,7 @@ serd_strtod(const char* str, char** endptr);
    @param str Base64 string to decode.
    @param len The length of `str`.
    @param size Set to the size of the returned blob in bytes.
-   @return A newly allocated blob which must be freed with free().
+   @return A newly allocated blob which must be freed with serd_free().
 */
 SERD_API
 void*
@@ -313,11 +334,50 @@ serd_base64_decode(const uint8_t* str, size_t len, size_t* size);
 
 /**
    @}
+   @name Byte Streams
+   @{
+*/
+
+/**
+   Function to detect I/O stream errors.
+
+   Identical semantics to `ferror`.
+
+   @return Non-zero if `stream` has encountered an error.
+*/
+typedef int (*SerdStreamErrorFunc)(void* stream);
+
+/**
+   Source function for raw string input.
+
+   Identical semantics to `fread`, but may set errno for more informative error
+   reporting than supported by SerdStreamErrorFunc.
+
+   @param buf Output buffer.
+   @param size Size of a single element of data in bytes (always 1).
+   @param nmemb Number of elements to read.
+   @param stream Stream to read from (FILE* for fread).
+   @return Number of elements (bytes) read.
+*/
+typedef size_t (*SerdSource)(void*  buf,
+                             size_t size,
+                             size_t nmemb,
+                             void*  stream);
+
+/**
+   Sink function for raw string output.
+*/
+typedef size_t (*SerdSink)(const void* buf, size_t len, void* stream);
+
+/**
+   @}
    @name URI
    @{
 */
 
-static const SerdURI SERD_URI_NULL = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
+static const SerdURI SERD_URI_NULL = {
+	{NULL, 0}, {NULL, 0}, {NULL, 0}, {NULL, 0}, {NULL, 0}, {NULL, 0}
+};
 
 /**
    Return the local path for `uri`, or NULL if `uri` is not a file URI.
@@ -336,8 +396,7 @@ serd_uri_to_path(const uint8_t* uri);
    @param hostname If non-NULL, set to the hostname, if present.
    @return The path component of the URI.
 
-   Both the returned path and `hostname` (if applicable) are owned by the
-   caller and must be freed with free().
+   The returned path and `*hostname` must be freed with serd_free().
 */
 SERD_API
 uint8_t*
@@ -358,16 +417,13 @@ SerdStatus
 serd_uri_parse(const uint8_t* utf8, SerdURI* out);
 
 /**
-   Set `out` to `uri` resolved against `base`.
+   Set target `t` to reference `r` resolved against `base`.
+
+   @see http://tools.ietf.org/html/rfc3986#section-5.2.2
 */
 SERD_API
 void
-serd_uri_resolve(const SerdURI* uri, const SerdURI* base, SerdURI* out);
-
-/**
-   Sink function for raw string output.
-*/
-typedef size_t (*SerdSink)(const void* buf, size_t len, void* stream);
+serd_uri_resolve(const SerdURI* r, const SerdURI* base, SerdURI* t);
 
 /**
    Serialise `uri` with a series of calls to `sink`.
@@ -397,7 +453,7 @@ serd_uri_serialise_relative(const SerdURI* uri,
    @{
 */
 
-static const SerdNode SERD_NODE_NULL = { 0, 0, 0, 0, SERD_NOTHING };
+static const SerdNode SERD_NODE_NULL = { NULL, 0, 0, 0, SERD_NOTHING };
 
 /**
    Make a (shallow) node from `str`.
@@ -407,6 +463,16 @@ static const SerdNode SERD_NODE_NULL = { 0, 0, 0, 0, SERD_NOTHING };
 SERD_API
 SerdNode
 serd_node_from_string(SerdType type, const uint8_t* str);
+
+/**
+   Make a (shallow) node from a prefix of `str`.
+
+   This measures, but does not copy, `str`.  No memory is allocated.
+   Note that the returned node may not be null terminated.
+*/
+SERD_API
+SerdNode
+serd_node_from_substring(SerdType type, const uint8_t* str, size_t len);
 
 /**
    Make a deep copy of `node`.
@@ -425,7 +491,7 @@ bool
 serd_node_equals(const SerdNode* a, const SerdNode* b);
 
 /**
-   Simple wrapper for serd_node_new_uri to resolve a URI node.
+   Simple wrapper for serd_node_new_uri() to resolve a URI node.
 */
 SERD_API
 SerdNode
@@ -434,7 +500,7 @@ serd_node_new_uri_from_node(const SerdNode* uri_node,
                             SerdURI*        out);
 
 /**
-   Simple wrapper for serd_node_new_uri to resolve a URI string.
+   Simple wrapper for serd_node_new_uri() to resolve a URI string.
 */
 SERD_API
 SerdNode
@@ -462,7 +528,7 @@ serd_node_new_file_uri(const uint8_t* path,
 /**
    Create a new node by serialising `uri` into a new string.
 
-   @param uri The URI to parse and serialise.
+   @param uri The URI to serialise.
 
    @param base Base URI to resolve `uri` against (or NULL for no resolution).
 
@@ -472,6 +538,25 @@ serd_node_new_file_uri(const uint8_t* path,
 SERD_API
 SerdNode
 serd_node_new_uri(const SerdURI* uri, const SerdURI* base, SerdURI* out);
+
+/**
+   Create a new node by serialising `uri` into a new relative URI.
+
+   @param uri The URI to serialise.
+
+   @param base Base URI to make `uri` relative to, if possible.
+
+   @param root Root URI for resolution (see serd_uri_serialise_relative()).
+
+   @param out Set to the parsing of the new URI (i.e. points only to
+   memory owned by the new returned node).
+*/
+SERD_API
+SerdNode
+serd_node_new_relative_uri(const SerdURI* uri,
+                           const SerdURI* base,
+                           const SerdURI* root,
+                           SerdURI*       out);
 
 /**
    Create a new node by serialising `d` into an xsd:decimal string.
@@ -644,6 +729,9 @@ serd_env_qualify(const SerdEnv*  env,
 
 /**
    Expand `curie`.
+
+   Errors: SERD_ERR_BAD_ARG if `curie` is not valid, or SERD_ERR_BAD_CURIE if
+   prefix is not defined in `env`.
 */
 SERD_API
 SerdStatus
@@ -654,6 +742,8 @@ serd_env_expand(const SerdEnv*  env,
 
 /**
    Expand `node`, which must be a CURIE or URI, to a full URI.
+
+   Returns null if `node` can not be expanded.
 */
 SERD_API
 SerdNode
@@ -689,6 +779,17 @@ serd_reader_new(SerdSyntax        syntax,
                 SerdEndSink       end_sink);
 
 /**
+   Enable or disable strict parsing.
+
+   The reader is non-strict (lax) by default, which will tolerate URIs with
+   invalid characters.  Setting strict will fail when parsing such files.  An
+   error is printed for invalid input in either case.
+*/
+SERD_API
+void
+serd_reader_set_strict(SerdReader* reader, bool strict);
+
+/**
    Set a function to be called when errors occur during reading.
 
    The `error_sink` will be called with `handle` as its first argument.  If
@@ -698,7 +799,7 @@ SERD_API
 void
 serd_reader_set_error_sink(SerdReader*   reader,
                            SerdErrorSink error_sink,
-                           void*         handle);
+                           void*         error_handle);
 
 /**
    Return the `handle` passed to serd_reader_new().
@@ -751,10 +852,25 @@ serd_reader_read_file(SerdReader*    reader,
 */
 SERD_API
 SerdStatus
-serd_reader_start_stream(SerdReader*    me,
+serd_reader_start_stream(SerdReader*    reader,
                          FILE*          file,
                          const uint8_t* name,
                          bool           bulk);
+
+/**
+   Start an incremental read from a user-specified source.
+
+   The `read_func` is guaranteed to only be called for `page_size` elements
+   with size 1 (i.e. `page_size` bytes).
+*/
+SERD_API
+SerdStatus
+serd_reader_start_source_stream(SerdReader*         reader,
+                                SerdSource          read_func,
+                                SerdStreamErrorFunc error_func,
+                                void*               stream,
+                                const uint8_t*      name,
+                                size_t              page_size);
 
 /**
    Read a single "chunk" of data during an incremental read.
@@ -766,14 +882,14 @@ serd_reader_start_stream(SerdReader*    me,
 */
 SERD_API
 SerdStatus
-serd_reader_read_chunk(SerdReader* me);
+serd_reader_read_chunk(SerdReader* reader);
 
 /**
    Finish an incremental read from a file handle.
 */
 SERD_API
 SerdStatus
-serd_reader_end_stream(SerdReader* me);
+serd_reader_end_stream(SerdReader* reader);
 
 /**
    Read `file`.
@@ -785,11 +901,23 @@ serd_reader_read_file_handle(SerdReader*    reader,
                              const uint8_t* name);
 
 /**
+   Read a user-specified byte source.
+*/
+SERD_API
+SerdStatus
+serd_reader_read_source(SerdReader*         reader,
+                        SerdSource          source,
+                        SerdStreamErrorFunc error,
+                        void*               stream,
+                        const uint8_t*      name,
+                        size_t              page_size);
+
+/**
    Read `utf8`.
 */
 SERD_API
 SerdStatus
-serd_reader_read_string(SerdReader* me, const uint8_t* utf8);
+serd_reader_read_string(SerdReader* reader, const uint8_t* utf8);
 
 /**
    Free `reader`.
@@ -813,7 +941,7 @@ serd_writer_new(SerdSyntax     syntax,
                 SerdStyle      style,
                 SerdEnv*       env,
                 const SerdURI* base_uri,
-                SerdSink       sink,
+                SerdSink       ssink,
                 void*          stream);
 
 /**
@@ -872,7 +1000,7 @@ SERD_API
 void
 serd_writer_set_error_sink(SerdWriter*   writer,
                            SerdErrorSink error_sink,
-                           void*         handle);
+                           void*         error_handle);
 
 /**
    Set a prefix to be removed from matching blank node identifiers.
@@ -931,8 +1059,8 @@ serd_writer_write_statement(SerdWriter*        writer,
                             const SerdNode*    subject,
                             const SerdNode*    predicate,
                             const SerdNode*    object,
-                            const SerdNode*    object_datatype,
-                            const SerdNode*    object_lang);
+                            const SerdNode*    datatype,
+                            const SerdNode*    lang);
 
 /**
    Mark the end of an anonymous node's description.

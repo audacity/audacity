@@ -1,0 +1,3 @@
+# @forAll is not Turtle
+@prefix : <http://example/> .
+@forAll :x .

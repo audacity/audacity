@@ -16,15 +16,15 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+import errno
+import os
+import sys
+
 __date__    = '2012-03-27'
 __version__ = '0.0.0'
 __authors__ = 'David Robillard'
 __license__ = 'ISC License <http://www.opensource.org/licenses/isc>'
 __contact__ = 'devel@lists.lv2plug.in'
-
-import errno
-import os
-import sys
 
 try:
     import rdflib
@@ -47,7 +47,7 @@ def get_doc(model, subject):
     if comment:
         return '<p class="content">%s</p>' % comment
     return ''
-    
+
 def port_doc(model, port):
     name = model.value(port, lv2.name, None)
     comment = model.value(port, rdfs.comment, None)
@@ -131,11 +131,8 @@ if __name__ == '__main__':
                 pass
             else:
                 raise
-            
-            print 'Writing <%s> documentation to %s' % (plugin, outpath)
+
+            print('Writing <%s> documentation to %s' % (plugin, outpath))
             out = open(outpath, 'w')
             out.write(html)
             out.close()
-
-    
-

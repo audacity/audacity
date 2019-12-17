@@ -1,5 +1,0 @@
-<http://example.org/res1> <http://example.org/prop1> 000000 .
-<http://example.org/res2> <http://example.org/prop2> 0 .
-<http://example.org/res3> <http://example.org/prop3> 000001 .
-<http://example.org/res4> <http://example.org/prop4> 2 .
-<http://example.org/res5> <http://example.org/prop5> 4 .

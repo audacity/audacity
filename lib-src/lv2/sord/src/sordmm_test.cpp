@@ -17,7 +17,7 @@
 #include "sord/sordmm.hpp"
 
 int
-main(int argc, char** argv)
+main()
 {
 	Sord::World world;
 	Sord::Model model(world, "http://example.org/");

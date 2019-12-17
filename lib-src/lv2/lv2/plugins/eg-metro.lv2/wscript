@@ -12,16 +12,19 @@ out = 'build'
 
 def options(opt):
     opt.load('compiler_c')
+    opt.load('lv2')
     autowaf.set_options(opt)
 
 def configure(conf):
-    conf.load('compiler_c')
-    autowaf.configure(conf)
-    autowaf.set_c99_mode(conf)
     autowaf.display_header('Metro Configuration')
+    conf.load('compiler_c', cache=True)
+    conf.load('lv2', cache=True)
+    conf.load('autowaf', cache=True)
 
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2', atleast_version='0.2.0', uselib_store='LV2')
+
+    conf.check(features='c cshlib', lib='m', uselib_store='M', mandatory=False)
 
     autowaf.display_msg(conf, 'LV2 bundle directory', conf.env.LV2DIR)
     print('')
@@ -39,7 +42,7 @@ def build(bld):
         target       = '%s/%s' % (bundle, 'manifest.ttl'),
         install_path = '${LV2DIR}/%s' % bundle,
         LIB_EXT      = module_ext)
-    
+
     # Copy other data files to build bundle (build/eg-metro.lv2)
     bld(features     = 'subst',
         is_copy      = True,
@@ -58,7 +61,6 @@ def build(bld):
               name         = 'metro',
               target       = '%s/metro' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              use          = 'LV2',
+              use          = ['M', 'LV2'],
               includes     = includes)
     obj.env.cshlib_PATTERN = module_pat
-

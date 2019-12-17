@@ -1,0 +1,4 @@
+# PREFIX inside graph
+{
+  PREFIX ex: <http://example/>
+}

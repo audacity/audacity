@@ -12,13 +12,14 @@ out = 'build'
 
 def options(opt):
     opt.load('compiler_c')
+    opt.load('lv2')
     autowaf.set_options(opt)
 
 def configure(conf):
-    conf.load('compiler_c')
-    autowaf.configure(conf)
-    autowaf.set_c99_mode(conf)
     autowaf.display_header('Scope Configuration')
+    conf.load('compiler_c', cache=True)
+    conf.load('lv2', cache=True)
+    conf.load('autowaf', cache=True)
 
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2', atleast_version='1.2.1', uselib_store='LV2')
@@ -62,7 +63,7 @@ def build(bld):
     obj.env.cshlib_PATTERN = module_pat
 
     # Build UI library
-    if bld.is_defined('HAVE_GTK2'):
+    if bld.env.HAVE_GTK2:
         obj = bld(features     = 'c cshlib',
                   source       = 'examploscope_ui.c',
                   name         = 'examploscope_ui',

@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2014 David Robillard <http://drobilla.net>
+  Copyright 2007-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -14,44 +14,75 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#define _POSIX_C_SOURCE 1  /* for fileno */
-#define _BSD_SOURCE     1  /* for realpath, symlink */
+#define _POSIX_C_SOURCE 200809L  /* for fileno */
+#define _BSD_SOURCE     1        /* for realpath, symlink */
+#define _DEFAULT_SOURCE 1        /* for realpath, symlink */
 
 #ifdef __APPLE__
 #    define _DARWIN_C_SOURCE 1  /* for flock */
 #endif
 
-#include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
+#include "lilv_config.h"
+#include "lilv_internal.h"
+
+#include "lilv/lilv.h"
+#include "serd/serd.h"
 
 #ifdef _WIN32
+#ifndef _WIN32_WINNT
 #    define _WIN32_WINNT 0x0600  /* for CreateSymbolicLink */
+#endif
 #    include <windows.h>
 #    include <direct.h>
 #    include <io.h>
 #    define F_OK 0
 #    define mkdir(path, flags) _mkdir(path)
+#    if (defined(_MSC_VER) && _MSC_VER <= 1400) || defined(__MINGW64__) || defined(__MINGW32__)
+/** Implement 'CreateSymbolicLink()' for MSVC 8 or earlier */
+#ifdef __cplusplus
+extern "C"
+#endif
+static BOOLEAN WINAPI
+CreateSymbolicLink(LPCTSTR linkpath, LPCTSTR targetpath, DWORD flags)
+{
+	typedef BOOLEAN (WINAPI* PFUNC)(LPCTSTR, LPCTSTR, DWORD);
+
+	PFUNC pfn = (PFUNC)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")),
+	                                  "CreateSymbolicLinkA");
+	return pfn ? pfn(linkpath, targetpath, flags) : 0;
+}
+#    endif
 #else
 #    include <dirent.h>
 #    include <unistd.h>
 #endif
 
-#include <sys/stat.h>
-#include <sys/types.h>
-
-#include "lilv_internal.h"
-
 #if defined(HAVE_FLOCK) && defined(HAVE_FILENO)
 #    include <sys/file.h>
 #endif
 
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#include <ctype.h>
+#include <errno.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #ifndef PAGE_SIZE
-#   define PAGE_SIZE 4096
+#    define PAGE_SIZE 4096
 #endif
+
+void
+lilv_free(void* ptr)
+{
+	free(ptr);
+}
 
 char*
 lilv_strjoin(const char* first, ...)
@@ -65,16 +96,18 @@ lilv_strjoin(const char* first, ...)
 	va_start(args, first);
 	while (1) {
 		const char* const s = va_arg(args, const char *);
-		if (s == NULL)
+		if (s == NULL) {
 			break;
+		}
 
-		const size_t this_len = strlen(s);
-		if (!(result = (char*)realloc(result, len + this_len + 1))) {
+		const size_t this_len   = strlen(s);
+		char*        new_result = (char*)realloc(result, len + this_len + 1);
+		if (!new_result) {
 			free(result);
-			LILV_ERROR("realloc() failed\n");
 			return NULL;
 		}
 
+		result = new_result;
 		memcpy(result + len, s, this_len);
 		len += this_len;
 	}
@@ -102,6 +135,12 @@ const char*
 lilv_uri_to_path(const char* uri)
 {
 	return (const char*)serd_uri_to_path((const uint8_t*)uri);
+}
+
+char*
+lilv_file_uri_parse(const char* uri, char** hostname)
+{
+	return (char*)serd_file_uri_parse((const uint8_t*)uri, (uint8_t**)hostname);
 }
 
 /** Return the current LANG converted to Turtle (i.e. RFC3066) style.
@@ -141,6 +180,8 @@ lilv_get_lang(void)
 	return lang;
 }
 
+#ifndef _WIN32
+
 /** Append suffix to dst, update dst_len, and return the realloc'd result. */
 static char*
 strappend(char* dst, size_t* dst_len, const char* suffix, size_t suffix_len)
@@ -164,6 +205,8 @@ append_var(char* dst, size_t* dst_len, const char* var)
 		                 dst_len, var, strlen(var));
 	}
 }
+
+#endif
 
 /** Expand variables (e.g. POSIX ~ or $FOO, Windows %FOO%) in `path`. */
 char*
@@ -239,14 +282,20 @@ lilv_dirname(const char* path)
 }
 
 bool
-lilv_path_exists(const char* path, void* ignored)
+lilv_path_exists(const char* path, const void* ignored)
 {
+#ifdef HAVE_LSTAT
+	struct stat st;
+	return !lstat(path, &st);
+#else
 	return !access(path, F_OK);
+#endif
 }
 
 char*
 lilv_find_free_path(const char* in_path,
-                    bool (*exists)(const char*, void*), void* user_data)
+                    bool (*exists)(const char*, const void*),
+                    const void* user_data)
 {
 	const size_t in_path_len = strlen(in_path);
 	char*        path        = (char*)malloc(in_path_len + 7);
@@ -267,36 +316,41 @@ lilv_copy_file(const char* src, const char* dst)
 {
 	FILE* in = fopen(src, "r");
 	if (!in) {
-		LILV_ERRORF("error opening %s (%s)\n", src, strerror(errno));
-		return 1;
+		return errno;
 	}
 
 	FILE* out = fopen(dst, "w");
 	if (!out) {
-		LILV_ERRORF("error opening %s (%s)\n", dst, strerror(errno));
 		fclose(in);
-		return 2;
+		return errno;
 	}
 
 	char*  page   = (char*)malloc(PAGE_SIZE);
 	size_t n_read = 0;
+	int    st     = 0;
 	while ((n_read = fread(page, 1, PAGE_SIZE, in)) > 0) {
 		if (fwrite(page, 1, n_read, out) != n_read) {
-			LILV_ERRORF("write to %s failed (%s)\n", dst, strerror(errno));
+			st = errno;
 			break;
 		}
 	}
 
-	const int ret = ferror(in) || ferror(out);
-	if (ferror(in)) {
-		LILV_ERRORF("read from %s failed (%s)\n", src, strerror(errno));
+	if (!st && (ferror(in) || ferror(out))) {
+		st = EBADF;
 	}
 
 	free(page);
 	fclose(in);
 	fclose(out);
 
-	return ret;
+	return st;
+}
+
+static inline bool
+is_windows_path(const char* path)
+{
+	return (isalpha(path[0]) && (path[1] == ':' || path[1] == '|') &&
+	        (path[2] == '/' || path[2] == '\\'));
 }
 
 bool
@@ -307,7 +361,7 @@ lilv_path_is_absolute(const char* path)
 	}
 
 #ifdef _WIN32
-	if (isalpha(path[0]) && path[1] == ':' && lilv_is_dir_sep(path[2])) {
+	if (is_windows_path(path)) {
 		return true;
 	}
 #endif
@@ -349,25 +403,8 @@ lilv_path_join(const char* a, const char* b)
 	return path;
 }
 
-static void
-lilv_size_mtime(const char* path, off_t* size, time_t* time)
-{
-	struct stat buf;
-	if (stat(path, &buf)) {
-		LILV_ERRORF("stat(%s) (%s)\n", path, strerror(errno));
-	}
-
-	if (size) {
-		*size = buf.st_size;
-	}
-	if (time) {
-		*time = buf.st_mtime;
-	}
-}
-
 typedef struct {
 	char*  pattern;
-	off_t  orig_size;
 	time_t time;
 	char*  latest;
 } Latest;
@@ -375,16 +412,18 @@ typedef struct {
 static void
 update_latest(const char* path, const char* name, void* data)
 {
-	Latest* latest     = (Latest*)data;
-	char*   entry_path = lilv_path_join(path, name);
+	Latest*  latest     = (Latest*)data;
+	char*    entry_path = lilv_path_join(path, name);
 	unsigned num;
 	if (sscanf(entry_path, latest->pattern, &num) == 1) {
-		off_t  entry_size = 0;
-		time_t entry_time = 0;
-		lilv_size_mtime(entry_path, &entry_size, &entry_time);
-		if (entry_size == latest->orig_size && entry_time >= latest->time) {
-			free(latest->latest);
-			latest->latest = entry_path;
+		struct stat st;
+		if (!stat(entry_path, &st)) {
+			if (st.st_mtime >= latest->time) {
+				free(latest->latest);
+				latest->latest = entry_path;
+			}
+		} else {
+			LILV_ERRORF("stat(%s) (%s)\n", path, strerror(errno));
 		}
 	}
 	if (entry_path != latest->latest) {
@@ -397,8 +436,14 @@ char*
 lilv_get_latest_copy(const char* path, const char* copy_path)
 {
 	char*  copy_dir = lilv_dirname(copy_path);
-	Latest latest   = { lilv_strjoin(copy_path, "%u", NULL), 0, 0, NULL };
-	lilv_size_mtime(path, &latest.orig_size, &latest.time);
+	Latest latest   = { lilv_strjoin(copy_path, ".%u", NULL), 0, NULL };
+
+	struct stat st;
+	if (!stat(path, &st)) {
+		latest.time = st.st_mtime;
+	} else {
+		LILV_ERRORF("stat(%s) (%s)\n", path, strerror(errno));
+	}
 
 	lilv_dir_for_each(copy_dir, &latest, update_latest);
 
@@ -410,7 +455,11 @@ lilv_get_latest_copy(const char* path, const char* copy_path)
 char*
 lilv_realpath(const char* path)
 {
-#ifdef _WIN32
+	if (!path) {
+		return NULL;
+	}
+
+#if defined(_WIN32)
 	char* out = (char*)malloc(MAX_PATH);
 	GetFullPathName(path, MAX_PATH, out, NULL);
 	return out;
@@ -427,6 +476,9 @@ lilv_symlink(const char* oldpath, const char* newpath)
 	if (strcmp(oldpath, newpath)) {
 #ifdef _WIN32
 		ret = !CreateSymbolicLink(newpath, oldpath, 0);
+		if (ret) {
+			ret = !CreateHardLink(newpath, oldpath, 0);
+		}
 #else
 		ret = symlink(oldpath, newpath);
 #endif
@@ -517,10 +569,8 @@ lilv_dir_for_each(const char* path,
 #else
 	DIR* dir = opendir(path);
 	if (dir) {
-		struct dirent  entry;
-		struct dirent* result;
-		while (!readdir_r(dir, &entry, &result) && result) {
-			f(path, entry.d_name, data);
+		for (struct dirent* entry; (entry = readdir(dir));) {
+			f(path, entry->d_name, data);
 		}
 		closedir(dir);
 	}
@@ -532,16 +582,23 @@ lilv_mkdir_p(const char* dir_path)
 {
 	char*        path     = lilv_strdup(dir_path);
 	const size_t path_len = strlen(path);
-	for (size_t i = 1; i <= path_len; ++i) {
-		if (path[i] == LILV_DIR_SEP[0] || path[i] == '\0') {
+	size_t       i        = 1;
+
+#ifdef _WIN32
+	if (is_windows_path(dir_path)) {
+		i = 3;
+	}
+#endif
+
+	for (; i <= path_len; ++i) {
+		const char c = path[i];
+		if (c == LILV_DIR_SEP[0] || c == '/' || c == '\0') {
 			path[i] = '\0';
 			if (mkdir(path, 0755) && errno != EEXIST) {
-				LILV_ERRORF("Failed to create %s (%s)\n",
-				            path, strerror(errno));
 				free(path);
-				return 1;
+				return errno;
 			}
-			path[i] = LILV_DIR_SEP[0];
+			path[i] = c;
 		}
 	}
 
@@ -572,19 +629,16 @@ lilv_file_equals(const char* a_path, const char* b_path)
 	FILE*       b_file = NULL;
 	char* const a_real = lilv_realpath(a_path);
 	char* const b_real = lilv_realpath(b_path);
-	if (!a_real || !b_real) {
-		match = false;  // Missing file matches nothing
-	} else if (!strcmp(a_real, b_real)) {
+	if (!strcmp(a_real, b_real)) {
 		match = true;  // Real paths match
 	} else if (lilv_file_size(a_path) != lilv_file_size(b_path)) {
 		match = false;  // Sizes differ
-	} else if (!(a_file = fopen(a_real, "rb"))) {
-		match = false;  // Missing file matches nothing
-	} else if (!(b_file = fopen(b_real, "rb"))) {
+	} else if (!(a_file = fopen(a_real, "rb")) ||
+	           !(b_file = fopen(b_real, "rb"))) {
 		match = false;  // Missing file matches nothing
 	} else {
-		match = true;
 		// TODO: Improve performance by reading chunks
+		match = true;
 		while (!feof(a_file) && !feof(b_file)) {
 			if (fgetc(a_file) != fgetc(b_file)) {
 				match = false;

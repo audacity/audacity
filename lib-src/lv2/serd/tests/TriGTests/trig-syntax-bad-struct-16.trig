@@ -1,0 +1,2 @@
+# BNode as predicate
+{<http://example/s> [] <http://example/p>  .}

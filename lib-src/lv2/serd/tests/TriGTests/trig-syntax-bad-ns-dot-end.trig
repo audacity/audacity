@@ -1,0 +1,2 @@
+@prefix eg. : <http://example/> .
+{eg.:s eg.:p eg.:o .}

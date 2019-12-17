@@ -66,21 +66,22 @@
 /* Specgen style */
 
 html, body {
-	font-family: sans-serif;
-	font-size: 100%;
-	background-color: #fff;
+	background: #FFF;
 	color: #000;
 	margin: 0;
 	padding: 0;
+	max-width: 60em;
+	margin-left: auto;
+	margin-right: auto;
 }
 a:link, a:visited {
 	text-decoration: none;
 }
 a:link {
-	color: #3D8C57;
+	color: #546E00;
 }
 a:visited {
-	color: #50755E;
+	color: #354500;
 }
 a:hover {
 	text-decoration: underline;
@@ -101,28 +102,20 @@ h2 {
 	font-weight: 700;
 }
 h3 {
-	font-size: 130%;
-	font-weight: 700;
-}
-h4 {
 	font-size: 120%;
 	font-weight: 700;
 }
-h5 {
+h4 {
 	font-size: 110%;
+	font-weight: 700;
+}
+h5 {
+	font-size: 100%;
 	font-weight: 700;
 }
 h6 {
 	font-size: 100%;
-	font-weight: 700;
-}
-#header {
-	background-color: #F0F0F0;
-	border: 0;
-	border-bottom: 1px solid #D8D8D8;
-	margin: 0;
-	padding: 1ex;
-	vertical-align: top;
+	font-weight: 600;
 }
 #titlebox, #meta {
 	display: inline-block;
@@ -133,19 +126,20 @@ h6 {
 	left: 0;
 	top: 0;
 }
-#meta{
+#meta {
 	display: inline-block;
 	position: absolute;
 	right: 0;
 	top: 0;
-	padding: 1ex;
-	margin: 0.5ex 0.25ex 0 0.5ex;
+	padding: 0.125em;
 	font-size: x-small;
 	border-style: hidden;
 }
 #meta tr, #meta th, #meta td {
 	border: 0;
 	font-weight: normal;
+	padding: 0.125em 0.25em 0.125em 0.25em;
+	background-color: transparent;
 }
 #meta th {
 	text-align: right;
@@ -153,19 +147,12 @@ h6 {
 #meta th:after {
 	content: ": ";
 }
-#title {
-	font-size: 200%;
-	font-weight: 700;
-	margin: 0 0 0.25ex 0;
-	padding: 0 0 0 0;
-}
 #subtitle {
 	font-size: small;
 }
 #shortdesc {
 	font-size: small;
-	font-style: italic;
-	margin-top: 1em;
+	margin-top: 0.25em;
 }
 #logo {
 	height: 63px;
@@ -368,7 +355,7 @@ input.formbutton {
 	font-weight: 400;
 	vertical-align: top;
 }
-div#content table {
+#content table {
 	clear: right;
 }
 #body-main h1.pageheading {
@@ -402,7 +389,6 @@ blockquote {
 #utility-menu dd {
 	display: inline;
 	font-weight: 400;
-	margin: 0;
 	padding: 0 0 0 8px;
 }
 #utility-menu dd a {
@@ -420,11 +406,7 @@ blockquote {
 	margin: 2em 0 0;
 	padding: 0 1em 1em 1em;
 	vertical-align: top;
-	background-color: #F3F3F3;
-	border-top: 1px solid #DDD;
-}
-#footer div {
-	padding-top: 1em;
+	color: #888;
 }
 
 #searchbox a.reference, #searchbox span.reference {
@@ -452,14 +434,9 @@ body {
 	background: transparent;
 	color: #609;
 }
-a:active {
-	background: transparent;
-	color: #C00;
-}
 .sec {
-	border-bottom: 1px dashed #CCC;
 	color: #000;
-	margin: 1em 1em 0.5em 1em;
+	margin: 0.5em 0 0.5em 0;
 	padding: 1ex 0 0.5ex 0;
 }
 ul, ol {
@@ -467,47 +444,161 @@ ul, ol {
 	padding-top: 0;
 	margin: 0 0 0.5ex 0;
 }
-#contents {
-	background-color: #F3F3F3;
-	border: 0;
-	border-bottom: 1px solid #D8D8D8;
-	padding: 0.25ex 0 0.25ex 1ex;
-	vertical-align: middle;
-	font-size: small;
+@media print {
+	#topbar {
+		color: #000;
+		margin: 0;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 0.25em 0.5em 0.5em 0.5em;
+		max-width: 60em;
+		position: relative;
+		border-bottom: solid 1px #DDD;
+	}
+	#topbar a, #topbar a:visited {
+		color: #000
+	}
+	#title a, #title a:visited {
+		color: #000;
+	}
+	#contents {
+		display: none;
+	}
 }
-#contents li {
-	display: inline;
-	list-style-type: none;
-	margin-right: 1.25em;
-	padding: 0.25ex;
+@media screen {
+	#topbar {
+		background-color: #222;
+		background: linear-gradient(to bottom, #333 0%, #111 100%);
+		border-bottom: solid 2px #333;
+		border-left: solid 2px #333;
+		border-right: solid 2px #333;
+		border-radius: 0 0 6px 6px;
+		color: #EEE;
+		margin: 0;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 0.25em 0.5em 0 0.5em;
+		max-width: 60em;
+		position: relative;
+	}
+	#topbar a, #topbar a:visited {
+		color: #9DB359;
+	}
+	#title a, #title a:visited {
+		color: #FFF;
+	}
+	#contents {
+		margin-top: 0.25em;
+		padding: 0.25ex 0 0 0;
+		vertical-align: middle;
+		font-size: small;
+	}
+	#contents li {
+		display: inline;
+		list-style-type: none;
+		margin-right: 1.25em;
+		padding: 0.25ex;
+	}
+}
+#title {
+	font-size: 200%;
+	font-weight: 700;
+	margin: 0;
+	padding: 0;
 }
 .content {
-	margin: 0 2em 0 2em;
+	padding: 0 0.5em 0 0.5em;
+	margin: 0;
+	max-width: 60em;
+	margin-left: auto;
+	margin-right: auto;
 }
 .label {
 	font-style: italic;
-	margin: 1ex 0;
 }
-.index {
-	margin-left: 1em;
+.index, table {
+	border-collapse: initial;
+	border-spacing: 0;
+	border-radius: 6px;
+}
+table th {
+	border: 0;
+	border-right: 1px solid #BBB;
+}
+table thead th {
+	border-bottom: 1px solid #BBB;
+}
+table thead tr:first-child th {
+	border-top: 1px solid #BBB;
+}
+table td {
+	vertical-align: top;
+	border: 0;
+	border-right: 1px solid #BBB;
+	border-bottom: 1px solid #BBB;
+}
+table td:first-child {
+	border-left: 1px solid #BBB;
+}
+.index ul {
+	padding-left: 1em;
+	border-collapse: initial;
+}
+table thead tr                         th:first-child,
+table tbody:first-child tr:first-child th:first-child {
+	border-top-left-radius: 6px;
+	border-left: 1px solid #BBB;
+}
+table thead tr                         th,
+table tbody:first-child tr:first-child th {
+	border-top: 1px solid #BBB;
+	border-bottom: 1px solid #BBB;
+}
+table thead tr                         th:last-child,
+table tbody:first-child tr:first-child th:last-child,
+table tbody:first-child tr:first-child td:last-child {
+	border-top: 1px solid #BBB;
+	border-top-right-radius: 6px;
+}
+table tbody tr:last-child td:first-child,
+table tbody tr:last-child th:first-child {
+	border-bottom-left-radius: 6px;
+	border-left: 1px solid #BBB;
+}
+table tbody tr th:first-child {
+	border-left: 1px solid #BBB;
+}
+table tbody tr:last-child td:last-child,
+table       tr:last-child td:last-child {
+	border-bottom-right-radius: 6px;
 }
 .prop {
 	margin: 0;
 	padding: 0;
 }
 .description {
+	margin-top: 0.25em;
 	margin-bottom: 0.75em;
 }
 .blankdesc {
-	margin: 0;
-	padding: 0;
+	margin: 0 0 0.5em 0;
+	padding: 0 0 0.5em 0;
 }
-.blankterm {
-	padding-right: .5em;
+.blankdesc tbody tr td, .blankdef {
+	border: 0!important;
 }
 .terminfo, .restriction {
 	border-collapse: collapse;
 	border-style: hidden;
+}
+.terminfo tbody tr td {
+	margin-bottom: 1em;
+}
+.terminfo th, .terminfo td, .description th, .description td {
+	border-top: 0!important;
+	border-right: 0!important;
+	border-bottom: 0!important;
+	border-left: 0!important;
 }
 .restriction {
 	margin: 0 0 0.5ex 0;
@@ -518,24 +609,25 @@ ul, ol {
 	vertical-align: text-top;
 }
 .terminfo th {
-	padding: 0 1ex 0 0;
+	padding: 0 0.75em 0.125em 0;
+	vertical-align: top;
+}
+.terminfo td, .terminfo td:first-child {
+	padding: 0 1em 0 0;
 }
 .specterm {
-	background-color: #FBFBFB;
 	border: 0;
-	border: 1px solid #CCC;
 	margin: 0;
 	padding: 0;
 	margin-bottom: 1em;
 }
 .specterm h3 {
-	padding: 0.5ex;
+	font-size: large;
+	font-weight: bold;
 	margin: 0;
-	border-bottom: 1px solid #DDD;
-	background-color: #F3F3F3;
 }
 .spectermbody {
-	padding: 0 1em 1ex 1em;
+	padding: 0 1em 1em 2em;
 }
 dl {
 	margin: 0;
@@ -546,7 +638,7 @@ dt {
 	margin-top: .75ex;
 }
 hr {
-	background-color: silver;
+	background-color: #DDD;
 	border: 0;
 	color: gray;
 	height: 1px;
@@ -565,28 +657,30 @@ div.head table {
 	margin-top: 2em;
 }
 table {
-	border-collapse: collapse;
-	border-style: hidden;
+	border-collapse: initial;
+	border-spacing: 0;
 	margin: 0;
 	border: 0;
 }
-th {
-	vertical-align: text-top;
-}
 td, th {
-	border: 1px dashed #ccc;
-	padding: 0.3ex 0.5em 0.3ex 0.5em;
+	border: 1px solid #BBB;
+	padding: 0.25em 0.5em 0.25em 0.5em;
+}
+th {
+	font-weight: bold;
+	text-align: left;
 }
 pre {
 	margin: 1em 1em 1em 4em;
 	padding: 0;
+	color: #444;
+	font-family: fixed,monospace;
 }
 code {
-	color: #373;
+	color: #444;
 	font-family: fixed,monospace;
-	font-weight: 500;
 }
-#menu li, #searchbox form, ul#iconbar li, #body-main .success p a {
+#menu li, #searchbox form, #iconbar li, #body-main .success p a {
 	display: inline;
 }
 #menu ul.level-one a:hover, #menu ul.level-two a:hover, #menu ul.level-three a:hover, #left-hand-navigation h4 a:hover {
@@ -597,14 +691,14 @@ h1, h2, h3, h4, h5, h6, th {
 	text-align: left;
 }
 .error {
-	color: red;
+	color: #DC322F;
 	font-weight: bold;
 }
 .warning {
-	color: orange;
+	color: #B58900;
 	font-weight: bold;
 }
 .success {
-	color: green;
+	color: #859900;
 	font-weight: bold;
 }

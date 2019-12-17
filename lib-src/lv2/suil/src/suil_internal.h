@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2012 David Robillard <http://drobilla.net>
+  Copyright 2007-2017 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -18,6 +18,7 @@
 #define SUIL_INTERNAL_H
 
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -27,14 +28,15 @@
 #define dlclose(lib) FreeLibrary((HMODULE)lib)
 #define inline __inline
 #define snprintf _snprintf
-static inline char* dlerror(void) { return "Unknown error"; }
+static inline const char* dlerror(void) { return "Unknown error"; }
 #else
 #include <dlfcn.h>
 #endif
 
-#include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
+#include "lv2/ui/ui.h"
 
 #include "suil/suil.h"
+#include "./suil_config.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,6 +51,8 @@ struct SuilHostImpl {
 	SuilPortUnsubscribeFunc unsubscribe_func;
 	SuilTouchFunc           touch_func;
 	void*                   gtk_lib;
+	int                     argc;
+	char**                  argv;
 };
 
 struct _SuilWrapper;
@@ -92,7 +96,7 @@ typedef SuilWrapper* (*SuilWrapperNewFunc)(SuilHost*      host,
                                            LV2_Feature*** features,
                                            unsigned       n_features);
 
-/** Prototype for suil_wrapper_new in each module. */
+/** Prototype for suil_wrapper_new in each wrapper module. */
 SUIL_LIB_EXPORT
 SuilWrapper*
 suil_wrapper_new(SuilHost*      host,
@@ -100,6 +104,37 @@ suil_wrapper_new(SuilHost*      host,
                  const char*    ui_type_uri,
                  LV2_Feature*** features,
                  unsigned       n_features);
+
+/** Prototype for suil_host_init in each init module. */
+SUIL_LIB_EXPORT
+void
+suil_host_init(void);
+
+/** Dynamically load the suil module with the given name. */
+static inline void*
+suil_open_module(const char* module_name)
+{
+	const char* const env_dir  = getenv("SUIL_MODULE_DIR");
+	const char* const mod_dir  = env_dir ? env_dir : SUIL_MODULE_DIR;
+	const size_t      path_len = strlen(mod_dir)
+		+ strlen(SUIL_DIR_SEP SUIL_MODULE_PREFIX SUIL_MODULE_EXT)
+		+ strlen(module_name)
+		+ 2;
+
+	char* const path = (char*)calloc(path_len, 1);
+	snprintf(path, path_len, "%s%s%s%s%s",
+	         mod_dir, SUIL_DIR_SEP,
+	         SUIL_MODULE_PREFIX, module_name, SUIL_MODULE_EXT);
+
+	dlerror();
+	void* lib = dlopen(path, RTLD_NOW);
+	if (!lib) {
+		SUIL_ERRORF("Failed to open module %s (%s)\n", path, dlerror());
+	}
+
+	free(path);
+	return lib;
+}
 
 typedef void (*SuilVoidFunc)(void);
 
@@ -139,6 +174,9 @@ suil_add_feature(LV2_Feature*** features,
 	(*features)[*n + 1]   = NULL;
 	*n += 1;
 }
+
+extern int    suil_argc;
+extern char** suil_argv;
 
 #ifdef __cplusplus
 } /* extern "C" */

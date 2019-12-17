@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2014 David Robillard <http://drobilla.net>
+  Copyright 2007-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -15,6 +15,10 @@
 */
 
 #include "lilv_internal.h"
+
+#include "lilv/lilv.h"
+
+#include <stdlib.h>
 
 /** Ownership of value and label is taken */
 LilvScalePoint*
@@ -37,13 +41,13 @@ lilv_scale_point_free(LilvScalePoint* point)
 }
 
 LILV_API const LilvNode*
-lilv_scale_point_get_value(const LilvScalePoint* p)
+lilv_scale_point_get_value(const LilvScalePoint* point)
 {
-	return p->value;
+	return point->value;
 }
 
 LILV_API const LilvNode*
-lilv_scale_point_get_label(const LilvScalePoint* p)
+lilv_scale_point_get_label(const LilvScalePoint* point)
 {
-	return p->label;
+	return point->label;
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright 2012-2014 David Robillard <http://drobilla.net>
+  Copyright 2012-2016 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -14,17 +14,15 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#define __STDC_LIMIT_MACROS 1
-
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
-#include "lv2/lv2plug.in/ns/ext/atom/util.h"
-#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
+#include "lv2/atom/forge.h"
+#include "lv2/atom/util.h"
+#include "lv2/midi/midi.h"
 
 #include "sratom/sratom.h"
 
@@ -33,33 +31,43 @@
 
 #define USTR(str) ((const uint8_t*)(str))
 
+static const SerdStyle style = (SerdStyle)(
+	SERD_STYLE_ABBREVIATED|SERD_STYLE_RESOLVED|SERD_STYLE_CURIED);
+
 typedef enum {
 	MODE_SUBJECT,
 	MODE_BODY,
-	MODE_SEQUENCE,
+	MODE_SEQUENCE
 } ReadMode;
 
 struct SratomImpl {
 	LV2_URID_Map*     map;
 	LV2_Atom_Forge    forge;
-	LV2_URID          atom_Event;
-	LV2_URID          midi_MidiEvent;
-	unsigned          next_id;
+	SerdEnv*          env;
 	SerdNode          base_uri;
+	SerdURI           base;
 	SerdStatementSink write_statement;
 	SerdEndSink       end_anon;
 	void*             handle;
+	LV2_URID          atom_Event;
+	LV2_URID          atom_frameTime;
+	LV2_URID          atom_beatTime;
+	LV2_URID          midi_MidiEvent;
+	unsigned          next_id;
 	SratomObjectMode  object_mode;
-	bool              pretty_numbers;
+	uint32_t          seq_unit;
 	struct {
 		SordNode* atom_childType;
 		SordNode* atom_frameTime;
+		SordNode* atom_beatTime;
 		SordNode* rdf_first;
 		SordNode* rdf_rest;
 		SordNode* rdf_type;
 		SordNode* rdf_value;
 		SordNode* xsd_base64Binary;
 	} nodes;
+
+	bool pretty_numbers;
 };
 
 static void
@@ -70,50 +78,55 @@ read_node(Sratom*         sratom,
           const SordNode* node,
           ReadMode        mode);
 
-SRATOM_API
 Sratom*
 sratom_new(LV2_URID_Map* map)
 {
-	Sratom* sratom = (Sratom*)malloc(sizeof(Sratom));
-	sratom->map            = map;
-	sratom->atom_Event     = map->map(map->handle, LV2_ATOM__Event);
-	sratom->midi_MidiEvent = map->map(map->handle, LV2_MIDI__MidiEvent);
-	sratom->next_id        = 0;
-	sratom->base_uri       = SERD_NODE_NULL;
-	sratom->object_mode    = SRATOM_OBJECT_MODE_BLANK;
-	sratom->pretty_numbers = false;
-	memset(&sratom->nodes, 0, sizeof(sratom->nodes));
-	lv2_atom_forge_init(&sratom->forge, map);
+	Sratom* sratom = (Sratom*)calloc(1, sizeof(Sratom));
+	if (sratom) {
+		sratom->map            = map;
+		sratom->atom_Event     = map->map(map->handle, LV2_ATOM__Event);
+		sratom->atom_frameTime = map->map(map->handle, LV2_ATOM__frameTime);
+		sratom->atom_beatTime  = map->map(map->handle, LV2_ATOM__beatTime);
+		sratom->midi_MidiEvent = map->map(map->handle, LV2_MIDI__MidiEvent);
+		sratom->object_mode    = SRATOM_OBJECT_MODE_BLANK;
+		lv2_atom_forge_init(&sratom->forge, map);
+	}
 	return sratom;
 }
 
-SRATOM_API
 void
 sratom_free(Sratom* sratom)
 {
-	serd_node_free(&sratom->base_uri);
-	free(sratom);
+	if (sratom) {
+		serd_node_free(&sratom->base_uri);
+		free(sratom);
+	}
 }
 
-SRATOM_API
+void
+sratom_set_env(Sratom* sratom, SerdEnv* env)
+{
+	sratom->env = env;
+}
+
 void
 sratom_set_sink(Sratom*           sratom,
                 const char*       base_uri,
-                SerdStatementSink write_statement,
-                SerdEndSink       end_anon,
+                SerdStatementSink sink,
+                SerdEndSink       end_sink,
                 void*             handle)
 {
 	if (base_uri) {
 		serd_node_free(&sratom->base_uri);
 		sratom->base_uri = serd_node_new_uri_from_string(
 			USTR(base_uri), NULL, NULL);
+		serd_uri_parse(sratom->base_uri.buf, &sratom->base);
 	}
-	sratom->write_statement = write_statement;
-	sratom->end_anon        = end_anon;
+	sratom->write_statement = sink;
+	sratom->end_anon        = end_sink;
 	sratom->handle          = handle;
 }
 
-SRATOM_API
 void
 sratom_set_pretty_numbers(Sratom* sratom,
                           bool    pretty_numbers)
@@ -121,7 +134,6 @@ sratom_set_pretty_numbers(Sratom* sratom,
 	sratom->pretty_numbers = pretty_numbers;
 }
 
-SRATOM_API
 void
 sratom_set_object_mode(Sratom*          sratom,
                        SratomObjectMode object_mode)
@@ -166,13 +178,13 @@ list_append(Sratom*           sratom,
 static void
 list_end(SerdStatementSink sink,
          void*             handle,
-         unsigned*         flags,
+         const unsigned    flags,
          SerdNode*         s,
          SerdNode*         p)
 {
 	// _:node rdf:rest rdf:nil
 	const SerdNode nil = serd_node_from_string(SERD_URI, NS_RDF "nil");
-	sink(handle, *flags, NULL, s, p, &nil, NULL, NULL);
+	sink(handle, flags, NULL, s, p, &nil, NULL, NULL);
 }
 
 static void
@@ -208,7 +220,22 @@ path_is_absolute(const char* path)
 	            && (path[2] == '/' || path[2] == '\\')));
 }
 
-SRATOM_API
+static SerdNode
+number_type(const Sratom* sratom, const uint8_t* type)
+{
+	if (sratom->pretty_numbers &&
+	    (!strcmp((const char*)type, (const char*)NS_XSD "int") ||
+	     !strcmp((const char*)type, (const char*)NS_XSD "long"))) {
+		return serd_node_from_string(SERD_URI, NS_XSD "integer");
+	} else if (sratom->pretty_numbers &&
+	           (!strcmp((const char*)type, (const char*)NS_XSD "float") ||
+	            !strcmp((const char*)type, (const char*)NS_XSD "double"))) {
+		return serd_node_from_string(SERD_URI, NS_XSD "decimal");
+	} else {
+		return serd_node_from_string(SERD_URI, type);
+	}
+}
+
 int
 sratom_write(Sratom*         sratom,
              LV2_URID_Unmap* unmap,
@@ -264,7 +291,6 @@ sratom_write(Sratom*         sratom,
 			new_node = true;
 			object   = serd_node_new_file_uri(str, NULL, NULL, true);
 		} else {
-			SerdURI base_uri = SERD_URI_NULL;
 			if (!sratom->base_uri.buf ||
 			    strncmp((const char*)sratom->base_uri.buf, "file://", 7)) {
 				fprintf(stderr, "warning: Relative path but base is not a file URI.\n");
@@ -272,12 +298,9 @@ sratom_write(Sratom*         sratom,
 				object   = serd_node_from_string(SERD_LITERAL, str);
 				datatype = serd_node_from_string(SERD_URI, USTR(LV2_ATOM__Path));
 			} else {
-				if (sratom->base_uri.buf) {
-					serd_uri_parse(sratom->base_uri.buf, &base_uri);
-				}
 				new_node = true;
 				SerdNode rel = serd_node_new_file_uri(str, NULL, NULL, true);
-				object = serd_node_new_uri_from_node(&rel, &base_uri, NULL);
+				object = serd_node_new_uri_from_node(&rel, &sratom->base, NULL);
 				serd_node_free(&rel);
 			}
 		}
@@ -287,23 +310,19 @@ sratom_write(Sratom*         sratom,
 	} else if (type_urid == sratom->forge.Int) {
 		new_node = true;
 		object   = serd_node_new_integer(*(const int32_t*)body);
-		datatype = serd_node_from_string(SERD_URI, (sratom->pretty_numbers)
-		                                 ? NS_XSD "integer" : NS_XSD "int");
+		datatype = number_type(sratom, NS_XSD "int");
 	} else if (type_urid == sratom->forge.Long) {
 		new_node = true;
 		object   = serd_node_new_integer(*(const int64_t*)body);
-		datatype = serd_node_from_string(SERD_URI, (sratom->pretty_numbers)
-		                                 ? NS_XSD "integer" : NS_XSD "long");
+		datatype = number_type(sratom, NS_XSD "long");
 	} else if (type_urid == sratom->forge.Float) {
 		new_node = true;
 		object   = serd_node_new_decimal(*(const float*)body, 8);
-		datatype = serd_node_from_string(SERD_URI, (sratom->pretty_numbers)
-		                                 ? NS_XSD "decimal" : NS_XSD "float");
+		datatype = number_type(sratom, NS_XSD "float");
 	} else if (type_urid == sratom->forge.Double) {
 		new_node = true;
 		object   = serd_node_new_decimal(*(const double*)body, 16);
-		datatype = serd_node_from_string(SERD_URI, (sratom->pretty_numbers)
-		                                 ? NS_XSD "decimal" : NS_XSD "double");
+		datatype = number_type(sratom, NS_XSD "double");
 	} else if (type_urid == sratom->forge.Bool) {
 		const int32_t val = *(const int32_t*)body;
 		datatype = serd_node_from_string(SERD_URI, NS_XSD "boolean");
@@ -315,18 +334,24 @@ sratom_write(Sratom*         sratom,
 		uint8_t* str = (uint8_t*)calloc(size * 2 + 1, 1);
 		for (uint32_t i = 0; i < size; ++i) {
 			snprintf((char*)str + (2 * i), size * 2 + 1, "%02X",
-			         (unsigned)(uint8_t)*((const uint8_t*)body + i));
+			         (unsigned)*((const uint8_t*)body + i));
 		}
 		object = serd_node_from_string(SERD_LITERAL, USTR(str));
 	} else if (type_urid == sratom->atom_Event) {
 		const LV2_Atom_Event* ev = (const LV2_Atom_Event*)body;
 		gensym(&id, 'e', sratom->next_id++);
 		start_object(sratom, &flags, subject, predicate, &id, NULL);
-		// TODO: beat time
-		SerdNode time = serd_node_new_integer(ev->time.frames);
-		SerdNode p    = serd_node_from_string(SERD_URI,
-		                                      USTR(LV2_ATOM__frameTime));
-		datatype = serd_node_from_string(SERD_URI, NS_XSD "decimal");
+		SerdNode time;
+		SerdNode p;
+		if (sratom->seq_unit == sratom->atom_beatTime) {
+			time     = serd_node_new_decimal(ev->time.beats, 16);
+			p        = serd_node_from_string(SERD_URI, USTR(LV2_ATOM__beatTime));
+			datatype = number_type(sratom, NS_XSD "double");
+		} else {
+			time     = serd_node_new_integer(ev->time.frames);
+			p        = serd_node_from_string(SERD_URI, USTR(LV2_ATOM__frameTime));
+			datatype = number_type(sratom, NS_XSD "long");
+		}
 		sratom->write_statement(sratom->handle, SERD_ANON_CONT, NULL,
 		                        &id, &p, &time, &datatype, &language);
 		serd_node_free(&time);
@@ -346,7 +371,7 @@ sratom_write(Sratom*         sratom,
 			list_append(sratom, unmap, &flags, &id, &p, &node,
 			            i->size, i->type, LV2_ATOM_BODY(i));
 		}
-		list_end(sratom->write_statement, sratom->handle, &flags, &id, &p);
+		list_end(sratom->write_statement, sratom->handle, flags, &id, &p);
 		if (sratom->end_anon) {
 			sratom->end_anon(sratom->handle, &id);
 		}
@@ -366,7 +391,7 @@ sratom_write(Sratom*         sratom,
 			list_append(sratom, unmap, &flags, &id, &p, &node,
 			            vec->child_size, vec->child_type, i);
 		}
-		list_end(sratom->write_statement, sratom->handle, &flags, &id, &p);
+		list_end(sratom->write_statement, sratom->handle, flags, &id, &p);
 		if (sratom->end_anon) {
 			sratom->end_anon(sratom->handle, &id);
 		}
@@ -401,12 +426,13 @@ sratom_write(Sratom*         sratom,
 		SerdNode p = serd_node_from_string(SERD_URI, NS_RDF "value");
 		flags |= SERD_LIST_O_BEGIN;
 		LV2_ATOM_SEQUENCE_BODY_FOREACH(seq, size, ev) {
+			sratom->seq_unit = seq->unit;
 			list_append(sratom, unmap, &flags, &id, &p, &node,
 			            sizeof(LV2_Atom_Event) + ev->body.size,
 			            sratom->atom_Event,
 			            ev);
 		}
-		list_end(sratom->write_statement, sratom->handle, &flags, &id, &p);
+		list_end(sratom->write_statement, sratom->handle, flags, &id, &p);
 		if (sratom->end_anon && subject && predicate) {
 			sratom->end_anon(sratom->handle, &id);
 		}
@@ -443,7 +469,6 @@ sratom_write(Sratom*         sratom,
 	return 0;
 }
 
-SRATOM_API
 char*
 sratom_to_turtle(Sratom*         sratom,
                  LV2_URID_Unmap* unmap,
@@ -454,30 +479,14 @@ sratom_to_turtle(Sratom*         sratom,
                  uint32_t        size,
                  const void*     body)
 {
-	SerdURI   buri = SERD_URI_NULL;
-	SerdNode  base = serd_node_new_uri_from_string(USTR(base_uri), NULL, &buri);
-	SerdEnv*  env  = serd_env_new(&base);
-	SerdChunk str  = { NULL, 0 };
-
-	serd_env_set_prefix_from_strings(env, USTR("midi"),
-	                                 USTR(LV2_MIDI_PREFIX));
-	serd_env_set_prefix_from_strings(env, USTR("atom"),
-	                                 USTR(LV2_ATOM_URI "#"));
-	serd_env_set_prefix_from_strings(env, USTR("rdf"), NS_RDF);
-	serd_env_set_prefix_from_strings(env, USTR("xsd"), NS_XSD);
-
+	SerdURI     buri   = SERD_URI_NULL;
+	SerdNode    base   = serd_node_new_uri_from_string(USTR(base_uri), &sratom->base, &buri);
+	SerdEnv*    env    = sratom->env ? sratom->env : serd_env_new(NULL);
+	SerdChunk   str    = { NULL, 0 };
 	SerdWriter* writer = serd_writer_new(
-		SERD_TURTLE,
-		(SerdStyle)(SERD_STYLE_ABBREVIATED |
-		            SERD_STYLE_RESOLVED |
-		            SERD_STYLE_CURIED),
-		env, &buri, serd_chunk_sink, &str);
+		SERD_TURTLE, style, env, &buri, serd_chunk_sink, &str);
 
-	// Write @prefix directives
-	serd_env_foreach(env,
-	                 (SerdPrefixSink)serd_writer_set_prefix,
-	                 writer);
-
+	serd_env_set_base_uri(env, &base);
 	sratom_set_sink(sratom, base_uri,
 	                (SerdStatementSink)serd_writer_write_statement,
 	                (SerdEndSink)serd_writer_end_anon,
@@ -487,7 +496,9 @@ sratom_to_turtle(Sratom*         sratom,
 	serd_writer_finish(writer);
 
 	serd_writer_free(writer);
-	serd_env_free(env);
+	if (!sratom->env) {
+		serd_env_free(env);
+	}
 	serd_node_free(&base);
 	return (char*)serd_chunk_sink_finish(&str);
 }
@@ -553,9 +564,162 @@ atom_size(Sratom* sratom, uint32_t type_urid)
 		return sizeof(int32_t);
 	} else if (type_urid == sratom->forge.URID) {
 		return sizeof(uint32_t);
-	} else {
-		return 0;
 	}
+	return 0;
+}
+
+static void
+read_literal(Sratom* sratom, LV2_Atom_Forge* forge, const SordNode* node)
+{
+	assert(sord_node_get_type(node) == SORD_LITERAL);
+
+	size_t        len = 0;
+	const char*   str = (const char*)sord_node_get_string_counted(node, &len);
+	SordNode*   datatype = sord_node_get_datatype(node);
+	const char* language = sord_node_get_language(node);
+	if (datatype) {
+		const char* type_uri = (const char*)sord_node_get_string(datatype);
+		if (!strcmp(type_uri, (const char*)NS_XSD "int") ||
+		    !strcmp(type_uri, (const char*)NS_XSD "integer")) {
+			lv2_atom_forge_int(forge, strtol(str, NULL, 10));
+		} else if (!strcmp(type_uri, (const char*)NS_XSD "long")) {
+			lv2_atom_forge_long(forge, strtol(str, NULL, 10));
+		} else if (!strcmp(type_uri, (const char*)NS_XSD "float") ||
+		           !strcmp(type_uri, (const char*)NS_XSD "decimal")) {
+			lv2_atom_forge_float(forge, serd_strtod(str, NULL));
+		} else if (!strcmp(type_uri, (const char*)NS_XSD "double")) {
+			lv2_atom_forge_double(forge, serd_strtod(str, NULL));
+		} else if (!strcmp(type_uri, (const char*)NS_XSD "boolean")) {
+			lv2_atom_forge_bool(forge, !strcmp(str, "true"));
+		} else if (!strcmp(type_uri, (const char*)NS_XSD "base64Binary")) {
+			size_t size = 0;
+			void*  body = serd_base64_decode(USTR(str), len, &size);
+			lv2_atom_forge_atom(forge, size, forge->Chunk);
+			lv2_atom_forge_write(forge, body, size);
+			free(body);
+		} else if (!strcmp(type_uri, LV2_ATOM__Path)) {
+			lv2_atom_forge_path(forge, str, len);
+		} else if (!strcmp(type_uri, LV2_MIDI__MidiEvent)) {
+			lv2_atom_forge_atom(forge, len / 2, sratom->midi_MidiEvent);
+			for (const char* s = str; s < str + len; s += 2) {
+				unsigned num;
+				sscanf(s, "%2X", &num);
+				const uint8_t c = num;
+				lv2_atom_forge_raw(forge, &c, 1);
+			}
+			lv2_atom_forge_pad(forge, len / 2);
+		} else {
+			lv2_atom_forge_literal(
+				forge, str, len,
+				sratom->map->map(sratom->map->handle, type_uri),
+				0);
+		}
+	} else if (language) {
+		const char*  prefix   = "http://lexvo.org/id/iso639-3/";
+		const size_t lang_len = strlen(prefix) + strlen(language);
+		char*        lang_uri = (char*)calloc(lang_len + 1, 1);
+		snprintf(lang_uri, lang_len + 1, "%s%s", prefix, language);
+		lv2_atom_forge_literal(
+			forge, str, len, 0,
+			sratom->map->map(sratom->map->handle, lang_uri));
+		free(lang_uri);
+	} else {
+		lv2_atom_forge_string(forge, str, len);
+	}
+}
+
+static void
+read_object(Sratom*         sratom,
+            LV2_Atom_Forge* forge,
+            SordWorld*      world,
+            SordModel*      model,
+            const SordNode* node,
+            ReadMode        mode)
+{
+	LV2_URID_Map* map = sratom->map;
+	size_t        len = 0;
+	const char*   str = (const char*)sord_node_get_string_counted(node, &len);
+
+	SordNode* type = sord_get(
+		model, node, sratom->nodes.rdf_type, NULL, NULL);
+	SordNode* value = sord_get(
+		model, node, sratom->nodes.rdf_value, NULL, NULL);
+
+	const uint8_t* type_uri  = NULL;
+	uint32_t       type_urid = 0;
+	if (type) {
+		type_uri  = sord_node_get_string(type);
+		type_urid = map->map(map->handle, (const char*)type_uri);
+	}
+
+	LV2_Atom_Forge_Frame frame = { 0, 0 };
+	if (mode == MODE_SEQUENCE) {
+		SordNode* time = sord_get(
+			model, node, sratom->nodes.atom_beatTime, NULL, NULL);
+		uint32_t seq_unit;
+		if (time) {
+			const char* time_str = (const char*)sord_node_get_string(time);
+			lv2_atom_forge_beat_time(forge, serd_strtod(time_str, NULL));
+			seq_unit = sratom->atom_beatTime;
+		} else {
+			time = sord_get(model, node, sratom->nodes.atom_frameTime, NULL, NULL);
+			const char* time_str = time
+				? (const char*)sord_node_get_string(time)
+				: "";
+			lv2_atom_forge_frame_time(forge, serd_strtod(time_str, NULL));
+			seq_unit = sratom->atom_frameTime;
+		}
+		read_node(sratom, forge, world, model, value, MODE_BODY);
+		sord_node_free(world, time);
+		sratom->seq_unit = seq_unit;
+	} else if (type_urid == sratom->forge.Tuple) {
+		lv2_atom_forge_tuple(forge, &frame);
+		read_list_value(sratom, forge, world, model, value, MODE_BODY);
+	} else if (type_urid == sratom->forge.Sequence) {
+		const LV2_Atom_Forge_Ref ref = lv2_atom_forge_sequence_head(forge, &frame, 0);
+		sratom->seq_unit = 0;
+		read_list_value(sratom, forge, world, model, value, MODE_SEQUENCE);
+
+		LV2_Atom_Sequence* seq = (LV2_Atom_Sequence*)lv2_atom_forge_deref(forge, ref);
+		seq->body.unit = (sratom->seq_unit == sratom->atom_frameTime) ? 0 : sratom->seq_unit;
+	} else if (type_urid == sratom->forge.Vector) {
+		SordNode* child_type_node = sord_get(
+			model, node, sratom->nodes.atom_childType, NULL, NULL);
+		uint32_t child_type = map->map(
+			map->handle, (const char*)sord_node_get_string(child_type_node));
+		uint32_t child_size = atom_size(sratom, child_type);
+		if (child_size > 0) {
+			LV2_Atom_Forge_Ref ref = lv2_atom_forge_vector_head(
+				forge, &frame, child_size, child_type);
+			read_list_value(sratom, forge, world, model, value, MODE_BODY);
+			lv2_atom_forge_pop(forge, &frame);
+			frame.ref = 0;
+			lv2_atom_forge_pad(forge, lv2_atom_forge_deref(forge, ref)->size);
+		}
+		sord_node_free(world, child_type_node);
+	} else if (value && sord_node_equals(sord_node_get_datatype(value),
+	                                     sratom->nodes.xsd_base64Binary)) {
+		size_t         vlen = 0;
+		const uint8_t* vstr = sord_node_get_string_counted(value, &vlen);
+		size_t         size = 0;
+		void*          body = serd_base64_decode(vstr, vlen, &size);
+		lv2_atom_forge_atom(forge, size, type_urid);
+		lv2_atom_forge_write(forge, body, size);
+		free(body);
+	} else if (sord_node_get_type(node) == SORD_URI) {
+		lv2_atom_forge_object(
+			forge, &frame, map->map(map->handle, str), type_urid);
+		read_resource(sratom, forge, world, model, node, type_urid);
+	} else {
+		lv2_atom_forge_object(forge, &frame, 0, type_urid);
+		read_resource(sratom, forge, world, model, node, type_urid);
+	}
+
+	if (frame.ref) {
+		lv2_atom_forge_pop(forge, &frame);
+	}
+	sord_node_free(world, value);
+	sord_node_free(world, type);
 }
 
 static void
@@ -570,137 +734,29 @@ read_node(Sratom*         sratom,
 	size_t        len = 0;
 	const char*   str = (const char*)sord_node_get_string_counted(node, &len);
 	if (sord_node_get_type(node) == SORD_LITERAL) {
-		char*       endptr;
-		SordNode*   datatype = sord_node_get_datatype(node);
-		const char* language = sord_node_get_language(node);
-		if (datatype) {
-			const char* type_uri = (const char*)sord_node_get_string(datatype);
-			if (!strcmp(type_uri, (const char*)NS_XSD "int") ||
-			    !strcmp(type_uri, (const char*)NS_XSD "integer")) {
-				lv2_atom_forge_int(forge, strtol(str, &endptr, 10));
-			} else if (!strcmp(type_uri, (const char*)NS_XSD "long")) {
-				lv2_atom_forge_long(forge, strtol(str, &endptr, 10));
-			} else if (!strcmp(type_uri, (const char*)NS_XSD "float") ||
-			           !strcmp(type_uri, (const char*)NS_XSD "decimal")) {
-				lv2_atom_forge_float(forge, serd_strtod(str, &endptr));
-			} else if (!strcmp(type_uri, (const char*)NS_XSD "double")) {
-				lv2_atom_forge_double(forge, serd_strtod(str, &endptr));
-			} else if (!strcmp(type_uri, (const char*)NS_XSD "boolean")) {
-				lv2_atom_forge_bool(forge, !strcmp(str, "true"));
-			} else if (!strcmp(type_uri, (const char*)NS_XSD "base64Binary")) {
-				size_t size = 0;
-				void*  body = serd_base64_decode(USTR(str), len, &size);
-				lv2_atom_forge_atom(forge, size, forge->Chunk);
-				lv2_atom_forge_write(forge, body, size);
-				free(body);
-			} else if (!strcmp(type_uri, LV2_ATOM__Path)) {
-				lv2_atom_forge_path(forge, str, len);
-			} else if (!strcmp(type_uri, LV2_MIDI__MidiEvent)) {
-				lv2_atom_forge_atom(forge, len / 2, sratom->midi_MidiEvent);
-				for (const char* s = str; s < str + len; s += 2) {
-					unsigned num;
-					sscanf(s, "%2X", &num);
-					assert(num < UINT8_MAX);
-					const uint8_t c = num;
-					lv2_atom_forge_raw(forge, &c, 1);
-				}
-				lv2_atom_forge_pad(forge, len / 2);
-			} else {
-				lv2_atom_forge_literal(
-					forge, str, len,
-					sratom->map->map(sratom->map->handle, type_uri),
-					0);
-			}
-		} else if (language) {
-			const char*  prefix   = "http://lexvo.org/id/iso639-3/";
-			const size_t lang_len = strlen(prefix) + strlen(language);
-			char*        lang_uri = (char*)calloc(lang_len + 1, 1);
-			snprintf(lang_uri, lang_len + 1, "%s%s", prefix, language);
-			lv2_atom_forge_literal(
-				forge, str, len, 0,
-				sratom->map->map(sratom->map->handle, lang_uri));
-			free(lang_uri);
-		} else {
-			lv2_atom_forge_string(forge, str, len);
-		}
+		read_literal(sratom, forge, node);
 	} else if (sord_node_get_type(node) == SORD_URI &&
 	           !(sratom->object_mode == SRATOM_OBJECT_MODE_BLANK_SUBJECT
 	             && mode == MODE_SUBJECT)) {
 		if (!strcmp(str, (const char*)NS_RDF "nil")) {
 			lv2_atom_forge_atom(forge, 0, 0);
 		} else if (!strncmp(str, "file://", 7)) {
-			uint8_t* path = serd_file_uri_parse((const uint8_t*)str, NULL);
+			SerdURI uri;
+			serd_uri_parse((const uint8_t*)str, &uri);
+
+			SerdNode rel  = serd_node_new_relative_uri(&uri, &sratom->base, NULL, NULL);
+			uint8_t* path = serd_file_uri_parse(rel.buf, NULL);
 			lv2_atom_forge_path(forge, (const char*)path, strlen((const char*)path));
-			free(path);
+			serd_free(path);
+			serd_node_free(&rel);
 		} else {
 			lv2_atom_forge_urid(forge, map->map(map->handle, str));
 		}
 	} else {
-		SordNode* type = sord_get(
-			model, node, sratom->nodes.rdf_type, NULL, NULL);
-		SordNode* value = sord_get(
-			model, node, sratom->nodes.rdf_value, NULL, NULL);
-
-		const uint8_t* type_uri  = NULL;
-		uint32_t       type_urid = 0;
-		if (type) {
-			type_uri  = sord_node_get_string(type);
-			type_urid = map->map(map->handle, (const char*)type_uri);
-		}
-
-		LV2_Atom_Forge_Frame frame = { 0, 0 };
-		if (mode == MODE_SEQUENCE) {
-			SordNode* frame_time = sord_get(
-				model, node, sratom->nodes.atom_frameTime, NULL, NULL);
-			const char* frame_time_str = frame_time
-				? (const char*)sord_node_get_string(frame_time)
-				: "";
-			lv2_atom_forge_frame_time(forge, serd_strtod(frame_time_str, NULL));
-			read_node(sratom, forge, world, model, value, MODE_BODY);
-			sord_node_free(world, frame_time);
-		} else if (type_urid == sratom->forge.Tuple) {
-			lv2_atom_forge_tuple(forge, &frame);
-			read_list_value(sratom, forge, world, model, value, MODE_BODY);
-		} else if (type_urid == sratom->forge.Sequence) {
-			lv2_atom_forge_sequence_head(forge, &frame, 0);
-			read_list_value(sratom, forge, world, model, value, MODE_SEQUENCE);
-		} else if (type_urid == sratom->forge.Vector) {
-			SordNode* child_type_node = sord_get(
-				model, node, sratom->nodes.atom_childType, NULL, NULL);
-			uint32_t child_type = map->map(
-				map->handle, (const char*)sord_node_get_string(child_type_node));
-			uint32_t child_size = atom_size(sratom, child_type);
-			if (child_size > 0) {
-				lv2_atom_forge_vector_head(forge, &frame, child_size, child_type);
-				read_list_value(sratom, forge, world, model, value, MODE_BODY);
-			}
-			sord_node_free(world, child_type_node);
-		} else if (value && sord_node_equals(sord_node_get_datatype(value),
-		                                     sratom->nodes.xsd_base64Binary)) {
-			size_t         vlen = 0;
-			const uint8_t* vstr = sord_node_get_string_counted(value, &vlen);
-			size_t         size = 0;
-			void*          body = serd_base64_decode(vstr, vlen, &size);
-			lv2_atom_forge_atom(forge, size, type_urid);
-			lv2_atom_forge_write(forge, body, size);
-			free(body);
-		} else if (sord_node_get_type(node) == SORD_URI) {
-			lv2_atom_forge_object(
-				forge, &frame, map->map(map->handle, str), type_urid);
-			read_resource(sratom, forge, world, model, node, type_urid);
-		} else {
-			lv2_atom_forge_object(forge, &frame, 0, type_urid);
-			read_resource(sratom, forge, world, model, node, type_urid);
-		}
-		if (frame.ref) {
-			lv2_atom_forge_pop(forge, &frame);
-		}
-		sord_node_free(world, value);
-		sord_node_free(world, type);
+		read_object(sratom, forge, world, model, node, mode);
 	}
 }
 
-SRATOM_API
 void
 sratom_read(Sratom*         sratom,
             LV2_Atom_Forge* forge,
@@ -710,6 +766,7 @@ sratom_read(Sratom*         sratom,
 {
 	sratom->nodes.atom_childType   = sord_new_uri(world, USTR(LV2_ATOM__childType));
 	sratom->nodes.atom_frameTime   = sord_new_uri(world, USTR(LV2_ATOM__frameTime));
+	sratom->nodes.atom_beatTime    = sord_new_uri(world, USTR(LV2_ATOM__beatTime));
 	sratom->nodes.rdf_first        = sord_new_uri(world, NS_RDF "first");
 	sratom->nodes.rdf_rest         = sord_new_uri(world, NS_RDF "rest");
 	sratom->nodes.rdf_type         = sord_new_uri(world, NS_RDF "type");
@@ -725,11 +782,11 @@ sratom_read(Sratom*         sratom,
 	sord_node_free(world, sratom->nodes.rdf_rest);
 	sord_node_free(world, sratom->nodes.rdf_first);
 	sord_node_free(world, sratom->nodes.atom_frameTime);
+	sord_node_free(world, sratom->nodes.atom_beatTime);
 	sord_node_free(world, sratom->nodes.atom_childType);
 	memset(&sratom->nodes, 0, sizeof(sratom->nodes));
 }
 
-SRATOM_API
 LV2_Atom_Forge_Ref
 sratom_forge_sink(LV2_Atom_Forge_Sink_Handle handle,
                   const void*                buf,
@@ -741,7 +798,6 @@ sratom_forge_sink(LV2_Atom_Forge_Sink_Handle handle,
 	return ref;
 }
 
-SRATOM_API
 LV2_Atom*
 sratom_forge_deref(LV2_Atom_Forge_Sink_Handle handle, LV2_Atom_Forge_Ref ref)
 {
@@ -749,7 +805,6 @@ sratom_forge_deref(LV2_Atom_Forge_Sink_Handle handle, LV2_Atom_Forge_Ref ref)
 	return (LV2_Atom*)(chunk->buf + ref - 1);
 }
 
-SRATOM_API
 LV2_Atom*
 sratom_from_turtle(Sratom*         sratom,
                    const char*     base_uri,
@@ -758,10 +813,10 @@ sratom_from_turtle(Sratom*         sratom,
                    const char*     str)
 {
 	SerdChunk   out    = { NULL, 0 };
-	SerdNode    base   = serd_node_new_uri_from_string(USTR(base_uri), NULL, NULL);
+	SerdNode    base   = serd_node_new_uri_from_string(USTR(base_uri), &sratom->base, NULL);
 	SordWorld*  world  = sord_world_new();
 	SordModel*  model  = sord_new(world, SORD_SPO, false);
-	SerdEnv*    env    = serd_env_new(&base);
+	SerdEnv*    env    = sratom->env ? sratom->env : serd_env_new(&base);
 	SerdReader* reader = sord_new_reader(model, env, SERD_TURTLE, NULL);
 
 	if (!serd_reader_read_string(reader, (const uint8_t*)str)) {
@@ -785,7 +840,9 @@ sratom_from_turtle(Sratom*         sratom,
 	}
 
 	serd_reader_free(reader);
-	serd_env_free(env);
+	if (!sratom->env) {
+		serd_env_free(env);
+	}
 	sord_free(model);
 	sord_world_free(world);
 	serd_node_free(&base);

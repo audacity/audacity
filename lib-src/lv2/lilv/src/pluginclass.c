@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2014 David Robillard <http://drobilla.net>
+  Copyright 2007-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -14,11 +14,14 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "lilv_internal.h"
+
+#include "lilv/lilv.h"
+#include "sord/sord.h"
+#include "zix/tree.h"
+
+#include <stdbool.h>
+#include <stdlib.h>
 
 LilvPluginClass*
 lilv_plugin_class_new(LilvWorld*      world,
@@ -26,9 +29,6 @@ lilv_plugin_class_new(LilvWorld*      world,
                       const SordNode* uri,
                       const char*     label)
 {
-	if (parent_node && sord_node_get_type(parent_node) != SORD_URI) {
-		return NULL;  // Not an LV2 plugin superclass (FIXME: discover properly)
-	}
 	LilvPluginClass* pc = (LilvPluginClass*)malloc(sizeof(LilvPluginClass));
 	pc->world      = world;
 	pc->uri        = lilv_node_new_from_node(world, uri);
@@ -42,7 +42,10 @@ lilv_plugin_class_new(LilvWorld*      world,
 void
 lilv_plugin_class_free(LilvPluginClass* plugin_class)
 {
-	assert(plugin_class->uri);
+	if (!plugin_class) {
+		return;
+	}
+
 	lilv_node_free(plugin_class->uri);
 	lilv_node_free(plugin_class->parent_uri);
 	lilv_node_free(plugin_class->label);
@@ -80,8 +83,9 @@ lilv_plugin_class_get_children(const LilvPluginClass* plugin_class)
 		const LilvPluginClass* c      = (LilvPluginClass*)zix_tree_get(i);
 		const LilvNode*        parent = lilv_plugin_class_get_parent_uri(c);
 		if (parent && lilv_node_equals(lilv_plugin_class_get_uri(plugin_class),
-		                               parent))
+		                               parent)) {
 			zix_tree_insert((ZixTree*)result, (LilvPluginClass*)c, NULL);
+		}
 	}
 
 	return result;

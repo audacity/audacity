@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2015 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -21,6 +21,12 @@
 #include <stdint.h>
 
 #include "sord/sord.h"
+
+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
+#    define SORD_UNREACHABLE() __builtin_unreachable()
+#else
+#    define SORD_UNREACHABLE() assert(false)
+#endif
 
 /** Resource node metadata */
 typedef struct {

@@ -1,0 +1,2 @@
+# Bad IRI : character escapes not allowed.
+{<http://example/\/> <http://example/p> <http://example/o> .}

@@ -1,0 +1,2 @@
+# No relative IRIs in N-Triples
+<s> <http://example/p> <http://example/o> .

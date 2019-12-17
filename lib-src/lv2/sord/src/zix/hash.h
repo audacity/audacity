@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2015 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -81,7 +81,7 @@ zix_hash_size(const ZixHash* hash);
 
    If no matching value is found, ZIX_STATUS_SUCCESS will be returned, and @p
    inserted will be pointed to the copy of `value` made in the new hash node.
-   
+
    If a matching value already exists, ZIX_STATUS_EXISTS will be returned, and
    `inserted` will be pointed to the existing value.
 

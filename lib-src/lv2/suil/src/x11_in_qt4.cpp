@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2013 David Robillard <http://drobilla.net>
+  Copyright 2011-2015 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -21,10 +21,6 @@
 #include "./suil_config.h"
 #include "./suil_internal.h"
 
-#ifndef HAVE_LV2_1_6_0
-typedef struct _LV2UI_Idle_Interface LV2UI_Idle_Interface;
-#endif
-
 extern "C" {
 
 typedef struct {
@@ -45,7 +41,7 @@ public:
 		, _ui_timer(0)
 	{}
 
-#ifdef HAVE_LV2_1_6_0
+protected:
 	void showEvent(QShowEvent* event) {
 		if (_idle_iface && _ui_timer == 0) {
 			_ui_timer = this->startTimer(30);
@@ -61,8 +57,16 @@ public:
 		}
 		QX11EmbedContainer::timerEvent(event);
 	}
-#endif
 
+	void closeEvent(QCloseEvent* event) {
+		if (_ui_timer && _idle_iface) {
+			this->killTimer(_ui_timer);
+			_ui_timer = 0;
+		}
+		QX11EmbedContainer::closeEvent(event);
+	}
+
+private:
 	SuilInstance* const               _instance;
 	const LV2UI_Idle_Interface* const _idle_iface;
 	QX11EmbedWidget* const            _widget;
@@ -90,12 +94,10 @@ wrapper_wrap(SuilWrapper*  wrapper,
              SuilInstance* instance)
 {
 	const LV2UI_Idle_Interface* idle_iface = NULL;
-#ifdef HAVE_LV2_1_6_0
 	if (instance->descriptor->extension_data) {
 		idle_iface = (const LV2UI_Idle_Interface*)
 			instance->descriptor->extension_data(LV2_UI__idleInterface);
 	}
-#endif
 
 	SuilX11InQt4Wrapper* const impl = (SuilX11InQt4Wrapper*)wrapper->impl;
 	QX11EmbedWidget* const     ew   = impl->parent;
@@ -124,11 +126,9 @@ suil_wrapper_new(SuilHost*      host,
                  unsigned       n_features)
 {
 	SuilX11InQt4Wrapper* const impl = (SuilX11InQt4Wrapper*)
-		malloc(sizeof(SuilX11InQt4Wrapper));
-	impl->host_widget = NULL;
-	impl->parent      = NULL;
+		calloc(1, sizeof(SuilX11InQt4Wrapper));
 
-	SuilWrapper* wrapper = (SuilWrapper*)malloc(sizeof(SuilWrapper));
+	SuilWrapper* wrapper = (SuilWrapper*)calloc(1, sizeof(SuilWrapper));
 	wrapper->wrap = wrapper_wrap;
 	wrapper->free = wrapper_free;
 
@@ -140,15 +140,10 @@ suil_wrapper_new(SuilHost*      host,
 	wrapper->resize.handle    = ew;
 	wrapper->resize.ui_resize = wrapper_resize;
 
-	suil_add_feature(features, &n_features, LV2_UI__parent,
-	                 (void*)(intptr_t)ew->winId());
-
-	suil_add_feature(features, &n_features, LV2_UI__resize,
-	                 &wrapper->resize);
-
-#ifdef HAVE_LV2_1_6_0
+	const intptr_t parent_id = (intptr_t)ew->winId();
+	suil_add_feature(features, &n_features, LV2_UI__parent, (void*)parent_id);
+	suil_add_feature(features, &n_features, LV2_UI__resize, &wrapper->resize);
 	suil_add_feature(features, &n_features, LV2_UI__idleInterface, NULL);
-#endif
 
 	return wrapper;
 }

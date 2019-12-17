@@ -19,9 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// #define URI_DEBUG 1
-
-SERD_API
 const uint8_t*
 serd_uri_to_path(const uint8_t* uri)
 {
@@ -45,7 +42,6 @@ serd_uri_to_path(const uint8_t* uri)
 	return path;
 }
 
-SERD_API
 uint8_t*
 serd_file_uri_parse(const uint8_t* uri, uint8_t** hostname)
 {
@@ -62,7 +58,7 @@ serd_file_uri_parse(const uint8_t* uri, uint8_t** hostname)
 				return NULL;
 			}
 			if (hostname) {
-				*hostname = (uint8_t*)calloc(1, path - auth + 1);
+				*hostname = (uint8_t*)calloc(path - auth + 1, 1);
 				memcpy(*hostname, auth, path - auth);
 			}
 		}
@@ -78,11 +74,9 @@ serd_file_uri_parse(const uint8_t* uri, uint8_t** hostname)
 			if (*(s + 1) == '%') {
 				serd_chunk_sink("%", 1, &chunk);
 				++s;
-			} else if (is_digit(*(s + 1)) && is_digit(*(s + 2))) {
-				const uint8_t code[3] = { *(s + 1), *(s + 2), 0 };
-				uint32_t num;
-				sscanf((const char*)code, "%X", &num);
-				const uint8_t c = num;
+			} else if (is_hexdig(*(s + 1)) && is_hexdig(*(s + 2))) {
+				const uint8_t code[3] = {*(s + 1), *(s + 2), 0};
+				const uint8_t c = (uint8_t)strtoul((const char*)code, NULL, 16);
 				serd_chunk_sink(&c, 1, &chunk);
 				s += 2;
 			} else {
@@ -95,7 +89,6 @@ serd_file_uri_parse(const uint8_t* uri, uint8_t** hostname)
 	return serd_chunk_sink_finish(&chunk);
 }
 
-SERD_API
 bool
 serd_uri_string_has_scheme(const uint8_t* utf8)
 {
@@ -103,47 +96,22 @@ serd_uri_string_has_scheme(const uint8_t* utf8)
 	if (!utf8 || !is_alpha(utf8[0])) {
 		return false;  // Invalid scheme initial character, URI is relative
 	}
+
 	for (uint8_t c; (c = *++utf8) != '\0';) {
-		switch (c) {
-		case ':':
+		if (!is_uri_scheme_char(c)) {
+			return false;
+		} else if (c == ':') {
 			return true;  // End of scheme
-		case '+': case '-': case '.':
-			break;  // Valid scheme character, continue
-		default:
-			if (!is_alpha(c) && !is_digit(c)) {
-				return false;  // Invalid scheme character
-			}
 		}
 	}
 
 	return false;
 }
 
-#ifdef URI_DEBUG
-static void
-serd_uri_dump(const SerdURI* uri, FILE* file)
-{
-#define PRINT_PART(range, name) \
-	if (range.buf) { \
-		fprintf(stderr, "  " name " = "); \
-		fwrite((range).buf, 1, (range).len, stderr); \
-		fprintf(stderr, "\n"); \
-	}
-
-	PRINT_PART(uri->scheme,    "scheme   ");
-	PRINT_PART(uri->authority, "authority");
-	PRINT_PART(uri->path_base, "path_base");
-	PRINT_PART(uri->path,      "path     ");
-	PRINT_PART(uri->query,     "query    ");
-	PRINT_PART(uri->fragment,  "fragment ");
-}
-#endif
-
-SERD_API
 SerdStatus
-serd_uri_parse(const uint8_t* utf8, SerdURI* uri)
+serd_uri_parse(const uint8_t* utf8, SerdURI* out)
 {
-	*uri = SERD_URI_NULL;
+	*out = SERD_URI_NULL;
 
 	const uint8_t* ptr = utf8;
 
@@ -159,8 +127,8 @@ serd_uri_parse(const uint8_t* utf8, SerdURI* uri)
 				ptr = utf8;
 				goto path;  // Relative URI (starts with path by definition)
 			case ':':
-				uri->scheme.buf = utf8;
-				uri->scheme.len = (ptr++) - utf8;
+				out->scheme.buf = utf8;
+				out->scheme.len = (ptr++) - utf8;
 				goto maybe_authority;  // URI with scheme
 			case '+': case '-': case '.':
 				continue;
@@ -179,14 +147,14 @@ serd_uri_parse(const uint8_t* utf8, SerdURI* uri)
 maybe_authority:
 	if (*ptr == '/' && *(ptr + 1) == '/') {
 		ptr += 2;
-		uri->authority.buf = ptr;
+		out->authority.buf = ptr;
 		for (uint8_t c; (c = *ptr) != '\0'; ++ptr) {
 			switch (c) {
 			case '/': goto path;
 			case '?': goto query;
 			case '#': goto fragment;
 			default:
-				++uri->authority.len;
+				++out->authority.len;
 			}
 		}
 	}
@@ -201,14 +169,14 @@ path:
 	case '\0': goto end;
 	default:  break;
 	}
-	uri->path.buf = ptr;
-	uri->path.len = 0;
+	out->path.buf = ptr;
+	out->path.len = 0;
 	for (uint8_t c; (c = *ptr) != '\0'; ++ptr) {
 		switch (c) {
 		case '?': goto query;
 		case '#': goto fragment;
 		default:
-			++uri->path.len;
+			++out->path.len;
 		}
 	}
 
@@ -218,14 +186,12 @@ path:
 	*/
 query:
 	if (*ptr == '?') {
-		uri->query.buf = ++ptr;
+		out->query.buf = ++ptr;
 		for (uint8_t c; (c = *ptr) != '\0'; ++ptr) {
-			switch (c) {
-			case '#':
+			if (c == '#') {
 				goto fragment;
-			default:
-				++uri->query.len;
 			}
+			++out->query.len;
 		}
 	}
 
@@ -235,19 +201,13 @@ query:
 	*/
 fragment:
 	if (*ptr == '#') {
-		uri->fragment.buf = ptr;
+		out->fragment.buf = ptr;
 		while (*ptr++ != '\0') {
-			++uri->fragment.len;
+			++out->fragment.len;
 		}
 	}
 
 end:
-	#ifdef URI_DEBUG
-	fprintf(stderr, "PARSE URI <%s>\n", utf8);
-	serd_uri_dump(uri, stderr);
-	fprintf(stderr, "\n");
-	#endif
-
 	return SERD_SUCCESS;
 }
 
@@ -255,7 +215,7 @@ end:
    Remove leading dot components from `path`.
    See http://tools.ietf.org/html/rfc3986#section-5.2.3
    @param up Set to the number of up-references (e.g. "../") trimmed
-   @return A pointer to the new start of @path
+   @return A pointer to the new start of `path`
 */
 static const uint8_t*
 remove_dot_segments(const uint8_t* path, size_t len, size_t* up)
@@ -286,7 +246,8 @@ remove_dot_segments(const uint8_t* path, size_t len, size_t* up)
 				}
 				break;
 			case '\0':
-				++begin;  // Chop input "." (and fall-through)
+				++begin;  // Chop input "."
+                // fallthru
 			default:
 				return begin;
 			}
@@ -345,7 +306,6 @@ merge(SerdChunk* base, SerdChunk* path)
 }
 
 /// See http://tools.ietf.org/html/rfc3986#section-5.2.2
-SERD_API
 void
 serd_uri_resolve(const SerdURI* r, const SerdURI* base, SerdURI* t)
 {
@@ -384,16 +344,6 @@ serd_uri_resolve(const SerdURI* r, const SerdURI* base, SerdURI* t)
 		t->scheme   = base->scheme;
 		t->fragment = r->fragment;
 	}
-
-	#ifdef URI_DEBUG
-	fprintf(stderr, "## RESOLVE URI\n# BASE\n");
-	serd_uri_dump(base, stderr);
-	fprintf(stderr, "# URI\n");
-	serd_uri_dump(r, stderr);
-	fprintf(stderr, "# RESULT\n");
-	serd_uri_dump(t, stderr);
-	fprintf(stderr, "\n");
-	#endif
 }
 
 /** Write the path of `uri` starting at index `i` */
@@ -437,8 +387,6 @@ write_rel_path(SerdSink       sink,
 
 	if (i == path_len && i == base_len) {  // Paths are identical
 		return 0;
-	} else if (last_shared_sep == 0) {  // No common components
-		return write_path_tail(sink, stream, uri, 0);
 	}
 
 	// Find the number of up references ("..") required
@@ -455,12 +403,23 @@ write_rel_path(SerdSink       sink,
 		len += sink("../", 3, stream);
 	}
 
+	if (last_shared_sep == 0 && up == 0) {
+		len += sink("/", 1, stream);
+	}
+
 	// Write suffix
 	return len += write_path_tail(sink, stream, uri, last_shared_sep + 1);
 }
 
+static uint8_t
+serd_uri_path_starts_without_slash(const SerdURI* uri)
+{
+	return ((uri->path_base.len || uri->path.len) &&
+	        ((!uri->path_base.len || uri->path_base.buf[0] != '/') &&
+	         (!uri->path.len || uri->path.buf[0] != '/')));
+}
+
 /// See http://tools.ietf.org/html/rfc3986#section-5.3
-SERD_API
 size_t
 serd_uri_serialise_relative(const SerdURI* uri,
                             const SerdURI* base,
@@ -468,8 +427,10 @@ serd_uri_serialise_relative(const SerdURI* uri,
                             SerdSink       sink,
                             void*          stream)
 {
-	size_t     len      = 0;
-	const bool relative = uri_is_under(uri, root ? root : base);
+	size_t     len = 0;
+	const bool relative =
+		root ? uri_is_under(uri, root) : uri_is_related(uri, base);
+
 	if (relative) {
 		len = write_rel_path(sink, stream, uri, base);
 	}
@@ -481,6 +442,12 @@ serd_uri_serialise_relative(const SerdURI* uri,
 		if (uri->authority.buf) {
 			len += sink("//", 2, stream);
 			len += sink(uri->authority.buf, uri->authority.len, stream);
+			if (uri->authority.buf[uri->authority.len - 1] != '/' &&
+			    serd_uri_path_starts_without_slash(uri)) {
+				// Special case: ensure path begins with a slash
+				// https://tools.ietf.org/html/rfc3986#section-3.2
+				len += sink("/", 1, stream);
+			}
 		}
 		len += write_path_tail(sink, stream, uri, 0);
 	}
@@ -496,7 +463,6 @@ serd_uri_serialise_relative(const SerdURI* uri,
 }
 
 /// See http://tools.ietf.org/html/rfc3986#section-5.3
-SERD_API
 size_t
 serd_uri_serialise(const SerdURI* uri, SerdSink sink, void* stream)
 {

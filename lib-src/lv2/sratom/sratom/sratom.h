@@ -1,5 +1,5 @@
 /*
-  Copyright 2012 David Robillard <http://drobilla.net>
+  Copyright 2012-2016 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -21,13 +21,14 @@
 #ifndef SRATOM_SRATOM_H
 #define SRATOM_SRATOM_H
 
-#include <stdint.h>
-
-#include "lv2/lv2plug.in/ns/ext/urid/urid.h"
-#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
-#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
+#include "lv2/atom/atom.h"
+#include "lv2/atom/forge.h"
+#include "lv2/urid/urid.h"
 #include "serd/serd.h"
 #include "sord/sord.h"
+
+#include <stdbool.h>
+#include <stdint.h>
 
 #ifdef SRATOM_SHARED
 #    ifdef _WIN32
@@ -83,7 +84,7 @@ typedef enum {
 	   to sratom_read(); if this is a resource it will be read as an Object,
 	   but all other named resources encountered will be read as URIs.
 	*/
-	SRATOM_OBJECT_MODE_BLANK_SUBJECT,
+	SRATOM_OBJECT_MODE_BLANK_SUBJECT
 } SratomObjectMode;
 
 /**
@@ -99,6 +100,17 @@ sratom_new(LV2_URID_Map* map);
 SRATOM_API
 void
 sratom_free(Sratom* sratom);
+
+/**
+   Set the environment for reading or writing Turtle.
+
+   This can be used to set namespace prefixes and a base URI for
+   sratom_to_turtle() and sratom_from_turtle().
+*/
+SRATOM_API
+void
+sratom_set_env(Sratom*  sratom,
+               SerdEnv* env);
 
 /**
    Set the sink(s) where sratom will write its output.
@@ -145,7 +157,7 @@ sratom_write(Sratom*         sratom,
              uint32_t        flags,
              const SerdNode* subject,
              const SerdNode* predicate,
-             uint32_t        type,
+             uint32_t        type_urid,
              uint32_t        size,
              const void*     body);
 
@@ -159,7 +171,7 @@ sratom_read(Sratom*         sratom,
             LV2_Atom_Forge* forge,
             SordWorld*      world,
             SordModel*      model,
-            const SordNode* subject);
+            const SordNode* node);
 
 /**
    Serialise an Atom to a Turtle string.

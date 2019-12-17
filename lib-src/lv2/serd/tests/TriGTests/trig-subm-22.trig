@@ -1,0 +1,11 @@
+@prefix : <http://example.org#> .
+
+{
+:a :b true .
+:c :d false .
+}
+
+<http://example/graph> {
+:a :b true .
+:c :d false .
+}

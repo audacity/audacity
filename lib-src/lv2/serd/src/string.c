@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2016 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -18,11 +18,16 @@
 
 #include <math.h>
 
-SERD_API
-const uint8_t*
-serd_strerror(SerdStatus st)
+void
+serd_free(void* ptr)
 {
-	switch (st) {
+	free(ptr);
+}
+
+const uint8_t*
+serd_strerror(SerdStatus status)
+{
+	switch (status) {
 	case SERD_SUCCESS:        return (const uint8_t*)"Success";
 	case SERD_FAILURE:        return (const uint8_t*)"Non-fatal failure";
 	case SERD_ERR_UNKNOWN:    return (const uint8_t*)"Unknown error";
@@ -36,28 +41,59 @@ serd_strerror(SerdStatus st)
 	return (const uint8_t*)"Unknown error";  // never reached
 }
 
-SERD_API
-size_t
-serd_strlen(const uint8_t* str, size_t* n_bytes, SerdNodeFlags* flags)
+static inline void
+serd_update_flags(const uint8_t c, SerdNodeFlags* const flags)
 {
-	size_t n_chars = 0;
-	size_t i       = 0;
-	*flags         = 0;
-	for (; str[i]; ++i) {
-		if ((str[i] & 0xC0) != 0x80) {
-			// Does not start with `10', start of a new character
+	switch (c) {
+	case '\r': case '\n':
+		*flags |= SERD_HAS_NEWLINE;
+		break;
+	case '"':
+		*flags |= SERD_HAS_QUOTE;
+	}
+}
+
+size_t
+serd_substrlen(const uint8_t* const str,
+               const size_t         len,
+               size_t* const        n_bytes,
+               SerdNodeFlags* const flags)
+{
+	size_t        n_chars = 0;
+	size_t        i       = 0;
+	SerdNodeFlags f       = 0;
+	for (; i < len && str[i]; ++i) {
+		if ((str[i] & 0xC0) != 0x80) {  // Start of new character
 			++n_chars;
-			switch (str[i]) {
-			case '\r': case '\n':
-				*flags |= SERD_HAS_NEWLINE;
-				break;
-			case '"':
-				*flags |= SERD_HAS_QUOTE;
-			}
+			serd_update_flags(str[i], &f);
 		}
 	}
 	if (n_bytes) {
 		*n_bytes = i;
+	}
+	if (flags) {
+		*flags = f;
+	}
+	return n_chars;
+}
+
+size_t
+serd_strlen(const uint8_t* str, size_t* n_bytes, SerdNodeFlags* flags)
+{
+	size_t        n_chars = 0;
+	size_t        i       = 0;
+	SerdNodeFlags f       = 0;
+	for (; str[i]; ++i) {
+		if ((str[i] & 0xC0) != 0x80) {  // Start of new character
+			++n_chars;
+			serd_update_flags(str[i], &f);
+		}
+	}
+	if (n_bytes) {
+		*n_bytes = i;
+	}
+	if (flags) {
+		*flags = f;
 	}
 	return n_chars;
 }
@@ -67,13 +103,17 @@ read_sign(const char** sptr)
 {
 	double sign = 1.0;
 	switch (**sptr) {
-	case '-': sign = -1.0;
-	case '+': ++(*sptr);
-	default:  return sign;
+	case '-':
+		sign = -1.0;
+		// fallthru
+	case '+':
+		++(*sptr);
+		// fallthru
+	default:
+		return sign;
 	}
 }
 
-SERD_API
 double
 serd_strtod(const char* str, char** endptr)
 {
@@ -144,7 +184,6 @@ decode_chunk(const uint8_t in[4], uint8_t out[3])
 	return 1 + (in[2] != '=') + ((in[2] != '=') && (in[3] != '='));
 }
 
-SERD_API
 void*
 serd_base64_decode(const uint8_t* str, size_t len, size_t* size)
 {

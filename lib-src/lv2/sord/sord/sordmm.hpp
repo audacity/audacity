@@ -161,7 +161,7 @@ public:
 	inline const SordNode* get_node() const { return _c_obj; }
 	inline SordNode*       get_node()       { return _c_obj; }
 
-	const SerdNode* to_serd_node() {
+	const SerdNode* to_serd_node() const {
 		return sord_node_to_serd_node(_c_obj);
 	}
 
@@ -246,7 +246,7 @@ public:
 		: Node(world, Node::LITERAL, s) {}
 
 	static inline Node decimal(World& world, double d, unsigned frac_digits) {
-		const SerdNode val  = serd_node_new_decimal(d, 7);
+		const SerdNode val  = serd_node_new_decimal(d, frac_digits);
 		const SerdNode type = serd_node_from_string(
 			SERD_URI, (const uint8_t*)SORD_NS_XSD "decimal");
 
@@ -378,8 +378,7 @@ inline float
 Node::to_float() const
 {
 	assert(is_float());
-	char* endptr;
-	return serd_strtod((const char*)sord_node_get_string(_c_obj), &endptr);
+	return serd_strtod((const char*)sord_node_get_string(_c_obj), NULL);
 }
 
 inline bool
@@ -494,8 +493,8 @@ inline void
 Model::load_string(SerdEnv*           env,
                    SerdSyntax         syntax,
                    const char*        str,
-                   size_t             len,
-                   const std::string& base_uri)
+                   size_t             /*len*/,
+                   const std::string& /*base_uri*/)
 {
 	SerdReader* reader = sord_new_reader(_c_obj, env, syntax, NULL);
 	serd_reader_read_string(reader, (const uint8_t*)str);
@@ -511,7 +510,7 @@ inline void
 Model::load_file(SerdEnv*           env,
                  SerdSyntax         syntax,
                  const std::string& data_uri,
-                 const std::string& base_uri)
+                 const std::string& /*base_uri*/)
 {
 	uint8_t* path = serd_file_uri_parse((const uint8_t*)data_uri.c_str(), NULL);
 	if (!path) {
@@ -523,7 +522,7 @@ Model::load_file(SerdEnv*           env,
 	SerdReader* reader = sord_new_reader(_c_obj, env, syntax, NULL);
 	serd_reader_read_file(reader, path);
 	serd_reader_free(reader);
-	free(path);
+	serd_free(path);
 }
 
 inline SerdStatus
@@ -538,10 +537,10 @@ Model::write_to_file(const std::string& uri, SerdSyntax syntax, SerdStyle style)
 	FILE* const fd = fopen((const char*)path, "w");
 	if (!fd) {
 		fprintf(stderr, "Failed to open file %s\n", path);
-		free(path);
+		serd_free(path);
 		return SERD_ERR_UNKNOWN;
 	}
-	free(path);
+	serd_free(path);
 
 	SerdURI base_uri = SERD_URI_NULL;
 	if (serd_uri_parse((const uint8_t*)uri.c_str(), &base_uri)) {
@@ -596,6 +595,10 @@ Model::write_to_string(const std::string& base_uri_str,
 	                                     string_sink,
 	                                     &ret);
 
+	const SerdNode base_uri_node = serd_node_from_string(
+		SERD_URI, (const uint8_t*)base_uri_str.c_str());
+	serd_writer_set_base_uri(writer, &base_uri_node);
+
 	serd_env_foreach(_world.prefixes().c_obj(),
 	                 (SerdPrefixSink)serd_writer_set_prefix,
 	                 writer);
@@ -639,12 +642,9 @@ Model::get(const Node& subject,
 {
 	SordNode* c_node = sord_get(
 		_c_obj, subject.c_obj(), predicate.c_obj(), object.c_obj(), NULL);
-	Node node(_world, c_node);
-	sord_node_free(_world.c_obj(), c_node);
-	return node;
+	return Node(_world, c_node, false);
 }
 
 }  // namespace Sord
 
 #endif  // SORD_SORDMM_HPP
-

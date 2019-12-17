@@ -1,0 +1,2 @@
+<http://example.org/ex#a> <http://example.org/ex#b> "first long literal" .
+<http://example.org/ex#c> <http://example.org/ex#d> "second long literal" .

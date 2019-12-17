@@ -1,0 +1,9 @@
+# Turtle is TriG
+PREFIX : <http://example/>
+
+:s :p :o ;
+   :q 123 , 456 .
+
+PREFIX : <http://example/ns#>
+
+:s :p :o .

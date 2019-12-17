@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2014 David Robillard <http://drobilla.net>
+  Copyright 2007-2019 David Robillard <http://drobilla.net>
   Copyright 2008 Krzysztof Foltman
 
   Permission to use, copy, modify, and/or distribute this software for any
@@ -15,35 +15,40 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#define _POSIX_C_SOURCE 200112L /* for setenv */
+#define _POSIX_C_SOURCE 200809L /* for setenv */
+#define _XOPEN_SOURCE   600     /* for mkstemp */
 
-#include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <float.h>
-#include <limits.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
+#include "../src/lilv_internal.h"
 
 #ifdef _WIN32
 #    include <direct.h>
+#    include <io.h>
 #    define mkdir(path, flags) _mkdir(path)
 #    define setenv(n, v, r) SetEnvironmentVariable((n), (v))
 #    define unsetenv(n) SetEnvironmentVariable((n), NULL)
+#    define mkstemp(pat) _mktemp(pat)
 #else
-#    include <dirent.h>
 #    include <unistd.h>
 #endif
 
 #include "lilv/lilv.h"
-#include "../src/lilv_internal.h"
+#include "lv2/core/lv2.h"
+#include "lv2/presets/presets.h"
+#include "lv2/state/state.h"
+#include "lv2/urid/urid.h"
+#include "serd/serd.h"
 
-#include "lv2/lv2plug.in/ns/ext/presets/presets.h"
-#include "lv2/lv2plug.in/ns/ext/state/state.h"
-#include "lv2/lv2plug.in/ns/ext/urid/urid.h"
+#include <assert.h>
+#include <errno.h>
+#include <float.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
 
 #define TEST_PATH_MAX 1024
 
@@ -55,10 +60,10 @@
 #    define SHLIB_EXT ".so"
 #endif
 
-static char bundle_dir_name[TEST_PATH_MAX];
-static char bundle_dir_uri[TEST_PATH_MAX];
-static char manifest_name[TEST_PATH_MAX];
-static char content_name[TEST_PATH_MAX];
+static char test_bundle_path[TEST_PATH_MAX + sizeof("/.lv2/lilv-test.lv2")];
+static char test_bundle_uri[sizeof(test_bundle_path) + sizeof("file:///")];
+static char test_manifest_path[sizeof(test_bundle_path) + sizeof("/manifest.ttl")];
+static char test_content_path[sizeof(test_bundle_path) + sizeof("plugin.ttl")];
 
 static LilvWorld* world;
 
@@ -68,32 +73,44 @@ int error_count = 0;
 static void
 delete_bundle(void)
 {
-	unlink(content_name);
-	unlink(manifest_name);
-	remove(bundle_dir_name);
+	unlink(test_content_path);
+	unlink(test_manifest_path);
+	remove(test_bundle_path);
 }
 
 static void
 init_tests(void)
 {
-	strncpy(bundle_dir_name, getenv("HOME"), 900);
-	strcat(bundle_dir_name, "/.lv2");
-	mkdir(bundle_dir_name, 0700);
-	strcat(bundle_dir_name, "/lilv-test.lv2");
-	sprintf(bundle_dir_uri, "file://%s/", bundle_dir_name);
-	sprintf(manifest_name, "%s/manifest.ttl", bundle_dir_name);
-	sprintf(content_name, "%s/plugin.ttl", bundle_dir_name);
+	char* test_path = lilv_realpath(LILV_TEST_DIR);
+
+	snprintf(test_bundle_path, sizeof(test_bundle_path),
+	         "%s/test_lv2_path/lilv-test.lv2", test_path);
+	lilv_mkdir_p(test_bundle_path);
+
+	SerdNode s = serd_node_new_file_uri(
+		(const uint8_t*)test_bundle_path, NULL, NULL, true);
+
+	snprintf(test_bundle_uri, sizeof(test_bundle_uri), "%s/",
+	         (const char*)s.buf);
+	snprintf(test_manifest_path, sizeof(test_manifest_path), "%s/manifest.ttl",
+	         test_bundle_path);
+	snprintf(test_content_path, sizeof(test_content_path), "%s/plugin.ttl",
+	         test_bundle_path);
+
+	serd_node_free(&s);
+	lilv_free(test_path);
 
 	delete_bundle();
 }
 
 static void
-fatal_error(const char* err, const char* arg)
+fatal_error(const char* fmt, ...)
 {
-	/* TODO: possibly change to vfprintf later */
-	fprintf(stderr, err, arg);
-	/* IMHO, the bundle should be left in place after an error, for possible investigation */
-	/* delete_bundle(); */
+	va_list args;
+	va_start(args, fmt);
+	fprintf(stderr, "error: ");
+	vfprintf(stderr, fmt, args);
+	va_end(args);
 	exit(1);
 }
 
@@ -102,8 +119,10 @@ write_file(const char* name, const char* content)
 {
 	FILE* f = fopen(name, "w");
 	size_t len = strlen(content);
-	if (fwrite(content, 1, len, f) != len)
-		fatal_error("Cannot write file %s\n", name);
+	if (fwrite(content, 1, len, f) != len) {
+		fatal_error("Failed to write to file '%s' (%s)\n",
+		            name, strerror(errno));
+	}
 	fclose(f);
 }
 
@@ -111,14 +130,25 @@ static int
 init_world(void)
 {
 	world = lilv_world_new();
+
+	// Set custom LV2_PATH in build directory to only use test data
+	char*     test_path = lilv_realpath(LILV_TEST_DIR);
+	char*     lv2_path  = lilv_strjoin(test_path, "/test_lv2_path", NULL);
+	LilvNode* path      = lilv_new_string(world, lv2_path);
+	lilv_world_set_option(world, LILV_OPTION_LV2_PATH, path);
+	free(lv2_path);
+	free(test_path);
+	lilv_node_free(path);
+
 	return world != NULL;
 }
 
 static int
 load_all_bundles(void)
 {
-	if (!init_world())
+	if (!init_world()) {
 		return 0;
+	}
 	lilv_world_load_all(world);
 	return 1;
 }
@@ -126,10 +156,12 @@ load_all_bundles(void)
 static void
 create_bundle(const char* manifest, const char* content)
 {
-	if (mkdir(bundle_dir_name, 0700) && errno != EEXIST)
-		fatal_error("Cannot create directory %s\n", bundle_dir_name);
-	write_file(manifest_name, manifest);
-	write_file(content_name, content);
+	if (mkdir(test_bundle_path, 0700) && errno != EEXIST) {
+		fatal_error("Failed to create directory '%s' (%s)\n",
+		            test_bundle_path, strerror(errno));
+	}
+	write_file(test_manifest_path, manifest);
+	write_file(test_content_path, content);
 }
 
 static int
@@ -142,8 +174,9 @@ start_bundle(const char* manifest, const char* content)
 static void
 unload_bundle(void)
 {
-	if (world)
+	if (world) {
 		lilv_world_free(world);
+	}
 	world = NULL;
 }
 
@@ -153,6 +186,21 @@ cleanup(void)
 	delete_bundle();
 }
 
+static void
+set_env(const char* name, const char* value)
+{
+#ifdef _WIN32
+	// setenv on Windows does not modify the current process' environment
+	const size_t len = strlen(name) + 1 + strlen(value) + 1;
+	char*        str = (char*)calloc(1, len);
+	snprintf(str, len, "%s=%s", name, value);
+	putenv(str);
+	free(str);
+#else
+	setenv(name, value, 1);
+#endif
+}
+
 /*****************************************************************************/
 
 #define TEST_CASE(name) { #name, test_##name }
@@ -160,7 +208,8 @@ cleanup(void)
 	test_count++;\
 	if (!(check)) {\
 		error_count++;\
-		fprintf(stderr, "lilv_test.c:%d: error: %s\n", __LINE__, #check);\
+		fprintf(stderr, "lilv_test.c:%d: error: test `%s' failed\n", __LINE__, #check);\
+		abort();\
 	}\
 } while (0)
 
@@ -214,17 +263,6 @@ cleanup_uris(void)
 /*****************************************************************************/
 
 static int
-test_utils(void)
-{
-	TEST_ASSERT(!strcmp(lilv_uri_to_path("file:///tmp/blah"), "/tmp/blah"));
-	TEST_ASSERT(!lilv_uri_to_path("file:/example.org/blah"));
-	TEST_ASSERT(!lilv_uri_to_path("http://example.org/blah"));
-	return 1;
-}
-
-/*****************************************************************************/
-
-static int
 test_value(void)
 {
 	if (!start_bundle(MANIFEST_PREFIXES
@@ -236,8 +274,9 @@ test_value(void)
 			"lv2:port [ "
 			"  a lv2:ControlPort ; a lv2:InputPort ; "
 			"  lv2:index 0 ; lv2:symbol \"foo\" ; lv2:name \"Foo\" ; "
-			"] ."))
+			"] .")) {
 		return 0;
+	}
 
 	init_uris();
 
@@ -251,15 +290,34 @@ test_value(void)
 	TEST_ASSERT(lilv_node_is_int(ival));
 	TEST_ASSERT(lilv_node_is_float(fval));
 
+	TEST_ASSERT(!lilv_node_is_literal(NULL));
 	TEST_ASSERT(!lilv_node_is_literal(uval));
 	TEST_ASSERT(lilv_node_is_literal(sval));
 	TEST_ASSERT(lilv_node_is_literal(ival));
 	TEST_ASSERT(lilv_node_is_literal(fval));
+	TEST_ASSERT(!lilv_node_get_path(fval, NULL));
 
 	TEST_ASSERT(!strcmp(lilv_node_as_uri(uval), "http://example.org"));
 	TEST_ASSERT(!strcmp(lilv_node_as_string(sval), "Foo"));
 	TEST_ASSERT(lilv_node_as_int(ival) == 42);
 	TEST_ASSERT(fabs(lilv_node_as_float(fval) - 1.6180) < FLT_EPSILON);
+	TEST_ASSERT(isnan(lilv_node_as_float(sval)));
+
+#if defined(__clang__)
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#elif __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+
+	TEST_ASSERT(!strcmp(lilv_uri_to_path("file:///foo"), "/foo"));
+
+#if defined(__clang__)
+#    pragma clang diagnostic pop
+#elif __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#    pragma GCC diagnostic pop
+#endif
 
 	LilvNode* loc_abs  = lilv_new_file_uri(world, NULL, "/foo/bar");
 	LilvNode* loc_rel  = lilv_new_file_uri(world, NULL, "foo");
@@ -278,16 +336,16 @@ test_value(void)
 
 	char* tok = lilv_node_get_turtle_token(uval);
 	TEST_ASSERT(!strcmp(tok, "<http://example.org>"));
-	free(tok);
+	lilv_free(tok);
 	tok = lilv_node_get_turtle_token(sval);
 	TEST_ASSERT(!strcmp(tok, "Foo"));
-	free(tok);
+	lilv_free(tok);
 	tok = lilv_node_get_turtle_token(ival);
 	TEST_ASSERT(!strcmp(tok, "42"));
-	free(tok);
+	lilv_free(tok);
 	tok = lilv_node_get_turtle_token(fval);
 	TEST_ASSERT(!strncmp(tok, "1.6180", 6));
-	free(tok);
+	lilv_free(tok);
 
 	LilvNode* uval_e = lilv_new_uri(world, "http://example.org");
 	LilvNode* sval_e = lilv_new_string(world, "Foo");
@@ -348,6 +406,39 @@ test_value(void)
 
 /*****************************************************************************/
 
+static int
+test_util(void)
+{
+	TEST_ASSERT(!lilv_realpath(NULL));
+
+	char a_path[16];
+	char b_path[16];
+	strncpy(a_path, "copy_a_XXXXXX", sizeof(a_path));
+	strncpy(b_path, "copy_b_XXXXXX",  sizeof(b_path));
+	mkstemp(a_path);
+	mkstemp(b_path);
+
+	FILE* fa = fopen(a_path, "w");
+	FILE* fb = fopen(b_path, "w");
+	fprintf(fa, "AA\n");
+	fprintf(fb, "AB\n");
+	fclose(fa);
+	fclose(fb);
+
+	TEST_ASSERT(lilv_copy_file("does/not/exist", "copy"));
+	TEST_ASSERT(lilv_copy_file(a_path, "not/a/dir/copy"));
+	TEST_ASSERT(!lilv_copy_file(a_path, "copy_c"));
+	TEST_ASSERT(!lilv_file_equals(a_path, b_path));
+	TEST_ASSERT(lilv_file_equals(a_path, a_path));
+	TEST_ASSERT(lilv_file_equals(a_path, "copy_c"));
+	TEST_ASSERT(!lilv_file_equals("does/not/exist", b_path));
+	TEST_ASSERT(!lilv_file_equals(a_path, "does/not/exist"));
+	TEST_ASSERT(!lilv_file_equals("does/not/exist", "/does/not/either"));
+	return 1;
+}
+
+/*****************************************************************************/
+
 static int discovery_plugin_found = 0;
 
 static void
@@ -377,8 +468,9 @@ test_discovery(void)
 			PLUGIN_NAME("Test plugin") " ; "
 			LICENSE_GPL " ; "
 			"lv2:port [ a lv2:ControlPort ; a lv2:InputPort ;"
-			" lv2:index 0 ; lv2:symbol \"foo\" ; lv2:name \"bar\" ; ] ."))
+			" lv2:index 0 ; lv2:symbol \"foo\" ; lv2:name \"bar\" ; ] .")) {
 		return 0;
+	}
 
 	init_uris();
 
@@ -411,42 +503,6 @@ test_discovery(void)
 /*****************************************************************************/
 
 static int
-test_lv2_path(void)
-{
-#ifndef _WIN32
-	char* orig_lv2_path = lilv_strdup(getenv("LV2_PATH"));
-
-	setenv("LV2_PATH", "~/.lv2:/usr/local/lib/lv2:/usr/lib/lv2", 1);
-
-	world = lilv_world_new();
-	lilv_world_load_all(world);
-
-	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
-	const size_t n_plugins     = lilv_plugins_size(plugins);
-
-	lilv_world_free(world);
-
-	setenv("LV2_PATH", "$HOME/.lv2:/usr/local/lib/lv2:/usr/lib/lv2", 1);
-	world = lilv_world_new();
-	lilv_world_load_all(world);
-	plugins = lilv_world_get_all_plugins(world);
-	TEST_ASSERT(lilv_plugins_size(plugins) == n_plugins);
-	lilv_world_free(world);
-	world = NULL;
-
-	if (orig_lv2_path) {
-		setenv("LV2_PATH", orig_lv2_path, 1);
-	} else {
-		unsetenv("LV2_PATH");
-	}
-	free(orig_lv2_path);
-#endif
-	return 1;
-}
-
-/*****************************************************************************/
-
-static int
 test_verify(void)
 {
 	if (!start_bundle(MANIFEST_PREFIXES
@@ -456,8 +512,9 @@ test_verify(void)
 			PLUGIN_NAME("Test plugin") " ; "
 			LICENSE_GPL " ; "
 			"lv2:port [ a lv2:ControlPort ; a lv2:InputPort ;"
-			" lv2:index 0 ; lv2:symbol \"foo\" ; lv2:name \"bar\" ] ."))
+			" lv2:index 0 ; lv2:symbol \"foo\" ; lv2:name \"bar\" ] .")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
@@ -476,8 +533,9 @@ test_no_verify(void)
 	if (!start_bundle(MANIFEST_PREFIXES
 			":plug a lv2:Plugin ; lv2:binary <foo" SHLIB_EXT "> ; rdfs:seeAlso <plugin.ttl> .\n",
 			BUNDLE_PREFIXES
-			":plug a lv2:Plugin . "))
+			":plug a lv2:Plugin . ")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
@@ -502,8 +560,9 @@ test_classes(void)
 			"lv2:port [ "
 			"  a lv2:ControlPort ; a lv2:InputPort ; "
 			"  lv2:index 0 ; lv2:symbol \"foo\" ; lv2:name \"Foo\" ; "
-			"] ."))
+			"] .")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPluginClass*   plugin   = lilv_world_get_plugin_class(world);
@@ -527,6 +586,8 @@ test_classes(void)
 	lilv_node_free(some_uri);
 
 	lilv_plugin_classes_free(children);
+
+	lilv_plugin_class_free(NULL);
 
 	cleanup_uris();
 	return 1;
@@ -566,8 +627,9 @@ test_plugin(void)
 			"  lv2:portProperty lv2:reportsLatency ; "
 			"  lv2:designation lv2:latency "
 			"] . \n"
-			":thing doap:name \"Something else\" .\n"))
+			":thing doap:name \"Something else\" .\n")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
@@ -591,7 +653,7 @@ test_plugin(void)
 	TEST_ASSERT(!lilv_plugin_get_related(plug, NULL));
 
 	const LilvNode* plug_bundle_uri = lilv_plugin_get_bundle_uri(plug);
-	TEST_ASSERT(!strcmp(lilv_node_as_string(plug_bundle_uri), bundle_dir_uri));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(plug_bundle_uri), test_bundle_uri));
 
 	const LilvNodes* data_uris = lilv_plugin_get_data_uris(plug);
 	TEST_ASSERT(lilv_nodes_size(data_uris) == 2);
@@ -613,6 +675,10 @@ test_plugin(void)
 	LilvNode* data_uri_val = lilv_new_uri(world, data_uri);
 	TEST_ASSERT(lilv_nodes_contains(data_uris, data_uri_val));
 	lilv_node_free(data_uri_val);
+
+	LilvNode* unknown_uri_val = lilv_new_uri(world, "http://example.org/unknown");
+	TEST_ASSERT(!lilv_nodes_contains(data_uris, unknown_uri_val));
+	lilv_node_free(unknown_uri_val);
 
 	free(manifest_uri);
 	free(data_uri);
@@ -654,6 +720,7 @@ test_plugin(void)
 
 	TEST_ASSERT(latency_port);
 	TEST_ASSERT(lilv_port_get_index(plug, latency_port) == 2);
+	TEST_ASSERT(lilv_node_is_blank(lilv_port_get_node(plug, latency_port)));
 
 	LilvNode* rt_feature = lilv_new_uri(world,
 			"http://lv2plug.in/ns/lv2core#hardRTCapable");
@@ -710,7 +777,7 @@ test_plugin(void)
 	char*       blank_tok = lilv_node_get_turtle_token(blank);
 	TEST_ASSERT(!strncmp(blank_tok, "_:", 2));
 	TEST_ASSERT(!strcmp(blank_tok + 2, blank_str));
-	free(blank_tok);
+	lilv_free(blank_tok);
 	lilv_node_free(blank_p);
 	lilv_nodes_free(blanks);
 
@@ -794,8 +861,9 @@ test_project(void)
 			"  lv2:portProperty lv2:reportsLatency ; "
 			"  lv2:designation lv2:latency "
 			"] . \n"
-			":thing doap:name \"Something else\" .\n"))
+			":thing doap:name \"Something else\" .\n")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
@@ -843,8 +911,9 @@ test_no_author(void)
 			"  lv2:portProperty lv2:reportsLatency ; "
 			"  lv2:designation lv2:latency "
 			"] . \n"
-			":thing doap:name \"Something else\" .\n"))
+			":thing doap:name \"Something else\" .\n")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
@@ -892,8 +961,9 @@ test_project_no_author(void)
 			"  lv2:portProperty lv2:reportsLatency ; "
 			"  lv2:designation lv2:latency "
 			"] . \n"
-			":thing doap:name \"Something else\" .\n"))
+			":thing doap:name \"Something else\" .\n")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
@@ -943,8 +1013,9 @@ test_preset(void)
 			"] . \n"
 			"<http://example.org/preset> a pset:Preset ;"
 			"  lv2:appliesTo :plug ;"
-	                  "  rdfs:label \"some preset\" .\n"))
+	                  "  rdfs:label \"some preset\" .\n")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
@@ -990,8 +1061,9 @@ test_prototype(void)
 			"  lv2:portProperty lv2:reportsLatency ; "
 			"  lv2:designation lv2:latency "
 			"] . \n"
-			":plug doap:name \"Instance\" .\n"))
+			":plug doap:name \"Instance\" .\n")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
@@ -1027,7 +1099,7 @@ test_port(void)
 			"  a lv2:ControlPort ; a lv2:InputPort ; "
 			"  lv2:index 0 ; lv2:symbol \"foo\" ; "
 			"  lv2:name \"store\" ; "
-			"  lv2:name \"dépanneur\"@fr-ca ; lv2:name \"épicerie\"@fr-fr ; "
+			"  lv2:name \"Laden\"@de-de ; lv2:name \"Geschaeft\"@de-at ; "
 			"  lv2:name \"tienda\"@es ; "
 			"  rdfs:comment \"comment\"@en , \"commentaires\"@fr ; "
      		"  lv2:portProperty lv2:integer ; "
@@ -1048,8 +1120,9 @@ test_port(void)
 			"  a lv2:AudioPort ; a lv2:OutputPort ; "
 			"  lv2:index 3 ; lv2:symbol \"audio_out\" ; "
 			"  lv2:name \"Audio Output\" ; "
-			"] ."))
+			"] .")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
@@ -1068,6 +1141,12 @@ test_port(void)
 	const LilvPort* p3     = lilv_plugin_get_port_by_symbol(plug, nopsym);
 	TEST_ASSERT(p3 == NULL);
 	lilv_node_free(nopsym);
+
+	// Try getting an invalid property
+	LilvNode*  num     = lilv_new_int(world, 1);
+	LilvNodes* nothing = lilv_port_get_value(plug, p, num);
+	TEST_ASSERT(!nothing);
+	lilv_node_free(num);
 
 	LilvNode* audio_class = lilv_new_uri(world,
 			"http://lv2plug.in/ns/lv2core#AudioPort");
@@ -1095,37 +1174,43 @@ test_port(void)
 	lilv_node_free(name);
 
 	// Exact language match
-	setenv("LANG", "fr_FR", 1);
+	set_env("LANG", "de_DE");
 	name = lilv_port_get_name(plug, p);
-	TEST_ASSERT(!strcmp(lilv_node_as_string(name), "épicerie"));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(name), "Laden"));
 	lilv_node_free(name);
 
 	// Exact language match (with charset suffix)
-	setenv("LANG", "fr_CA.utf8", 1);
+	set_env("LANG", "de_AT.utf8");
 	name = lilv_port_get_name(plug, p);
-	TEST_ASSERT(!strcmp(lilv_node_as_string(name), "dépanneur"));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(name), "Geschaeft"));
 	lilv_node_free(name);
 
 	// Partial language match (choose value translated for different country)
-	setenv("LANG", "fr_BE", 1);
+	set_env("LANG", "de_CH");
 	name = lilv_port_get_name(plug, p);
-	TEST_ASSERT((!strcmp(lilv_node_as_string(name), "dépanneur"))
-	            ||(!strcmp(lilv_node_as_string(name), "épicerie")));
+	TEST_ASSERT((!strcmp(lilv_node_as_string(name), "Laden"))
+	            ||(!strcmp(lilv_node_as_string(name), "Geschaeft")));
 	lilv_node_free(name);
 
 	// Partial language match (choose country-less language tagged value)
-	setenv("LANG", "es_MX", 1);
+	set_env("LANG", "es_MX");
 	name = lilv_port_get_name(plug, p);
 	TEST_ASSERT(!strcmp(lilv_node_as_string(name), "tienda"));
 	lilv_node_free(name);
 
 	// No language match (choose untranslated value)
-	setenv("LANG", "cn", 1);
+	set_env("LANG", "cn");
 	name = lilv_port_get_name(plug, p);
 	TEST_ASSERT(!strcmp(lilv_node_as_string(name), "store"));
 	lilv_node_free(name);
 
-	setenv("LANG", "en_CA.utf-8", 1);
+	// Invalid language
+	set_env("LANG", "1!");
+	name = lilv_port_get_name(plug, p);
+	TEST_ASSERT(!strcmp(lilv_node_as_string(name), "store"));
+	lilv_node_free(name);
+
+	set_env("LANG", "en_CA.utf-8");
 
 	// Language tagged value with no untranslated values
 	LilvNode*  rdfs_comment = lilv_new_uri(world, LILV_NS_RDFS "comment");
@@ -1137,14 +1222,14 @@ test_port(void)
 	lilv_node_free(comment);
 	lilv_nodes_free(comments);
 
-	setenv("LANG", "fr", 1);
+	set_env("LANG", "fr");
 
 	comments = lilv_port_get_value(plug, p, rdfs_comment);
 	TEST_ASSERT(!strcmp(lilv_node_as_string(lilv_nodes_get_first(comments)),
 	                    "commentaires"));
 	lilv_nodes_free(comments);
 
-	setenv("LANG", "cn", 1);
+	set_env("LANG", "cn");
 
 	comments = lilv_port_get_value(plug, p, rdfs_comment);
 	TEST_ASSERT(!comments);
@@ -1152,7 +1237,7 @@ test_port(void)
 
 	lilv_node_free(rdfs_comment);
 
-	setenv("LANG", "C", 1);  // Reset locale
+	set_env("LANG", "C");  // Reset locale
 
 	LilvScalePoints* points = lilv_port_get_scale_points(plug, p);
 	TEST_ASSERT(lilv_scale_points_size(points) == 2);
@@ -1318,8 +1403,9 @@ test_ui(void)
 			"  lv2ui:optionalFeature lv2ui:ext_presets . "
 			":ui2 a lv2ui:GtkUI ; lv2ui:binary <ui2" SHLIB_EXT "> . "
 			":ui3 a lv2ui:GtkUI ; lv2ui:binary <ui3" SHLIB_EXT "> . "
-			":ui4 a lv2ui:GtkUI ; lv2ui:binary <ui4" SHLIB_EXT "> . "))
+			":ui4 a lv2ui:GtkUI ; lv2ui:binary <ui4" SHLIB_EXT "> . ")) {
 		return 0;
+	}
 
 	init_uris();
 	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
@@ -1356,11 +1442,15 @@ test_ui(void)
 	LilvNode* ui_class_uri = lilv_new_uri(world,
 			"http://lv2plug.in/ns/extensions/ui#GtkUI");
 
+	LilvNode* unknown_ui_class_uri = lilv_new_uri(world,
+			"http://example.org/mysteryUI");
+
 	TEST_ASSERT(lilv_node_equals(lilv_nodes_get_first(classes), ui_class_uri));
 	TEST_ASSERT(lilv_ui_is_a(ui0, ui_class_uri));
 
 	const LilvNode* ui_type = NULL;
 	TEST_ASSERT(lilv_ui_is_supported(ui0, ui_supported, ui_class_uri, &ui_type));
+	TEST_ASSERT(!lilv_ui_is_supported(ui0, ui_supported, unknown_ui_class_uri, &ui_type));
 	TEST_ASSERT(lilv_node_equals(ui_type, ui_class_uri));
 
 	const LilvNode* plug_bundle_uri = lilv_plugin_get_bundle_uri(plug);
@@ -1377,6 +1467,7 @@ test_ui(void)
 	TEST_ASSERT(lilv_node_equals(expected_uri, ui_binary_uri));
 
 	free(ui_binary_uri_str);
+	lilv_node_free(unknown_ui_class_uri);
 	lilv_node_free(ui_class_uri);
 	lilv_node_free(ui_uri);
 	lilv_node_free(ui2_uri);
@@ -1391,9 +1482,12 @@ test_ui(void)
 
 /*****************************************************************************/
 
+#ifndef _WIN32
+
 uint32_t atom_Float = 0;
 float    in         = 1.0;
 float    out        = 42.0;
+float    control    = 1234.0;
 
 static const void*
 get_port_value(const char* port_symbol,
@@ -1409,6 +1503,10 @@ get_port_value(const char* port_symbol,
 		*size = sizeof(float);
 		*type = atom_Float;
 		return &out;
+	} else if (!strcmp(port_symbol, "control")) {
+		*size = sizeof(float);
+		*type = atom_Float;
+		return &control;
 	} else {
 		fprintf(stderr, "error: get_port_value for nonexistent port `%s'\n",
 		        port_symbol);
@@ -1428,6 +1526,8 @@ set_port_value(const char*     port_symbol,
 		in = *(const float*)value;
 	} else if (!strcmp(port_symbol, "output")) {
 		out = *(const float*)value;
+	} else if (!strcmp(port_symbol, "control")) {
+		control = *(const float*)value;
 	} else {
 		fprintf(stderr, "error: set_port_value for nonexistent port `%s'\n",
 		        port_symbol);
@@ -1513,25 +1613,31 @@ test_state(void)
 
 	temp_dir = lilv_realpath("temp");
 
-	const char* file_dir = NULL;
-	char*       copy_dir = NULL;
-	char*       link_dir = NULL;
-	char*       save_dir = NULL;
+	const char* scratch_dir = NULL;
+	char*       copy_dir    = NULL;
+	char*       link_dir    = NULL;
+	char*       save_dir    = NULL;
 
 	// Get instance state state
 	LilvState* state = lilv_state_new_from_instance(
 		plugin, instance, &map,
-		file_dir, copy_dir, link_dir, save_dir,
+		scratch_dir, copy_dir, link_dir, save_dir,
 		get_port_value, world, 0, NULL);
 
 	// Get another instance state
 	LilvState* state2 = lilv_state_new_from_instance(
 		plugin, instance, &map,
-		file_dir, copy_dir, link_dir, save_dir,
+		scratch_dir, copy_dir, link_dir, save_dir,
 		get_port_value, world, 0, NULL);
 
 	// Ensure they are equal
 	TEST_ASSERT(lilv_state_equals(state, state2));
+
+	// Check that we can't delete unsaved state
+	TEST_ASSERT(lilv_state_delete(world, state));
+
+	// Check that state has no URI
+	TEST_ASSERT(!lilv_state_get_uri(state));
 
 	// Check that we can't save a state with no URI
 	char* bad_state_str = lilv_state_to_string(
@@ -1551,7 +1657,7 @@ test_state(void)
 
 	// Ensure they are equal
 	TEST_ASSERT(lilv_state_equals(state, from_str));
-	free(state1_str);
+	lilv_free(state1_str);
 
 	const LilvNode* state_plugin_uri = lilv_state_get_plugin_uri(state);
 	TEST_ASSERT(lilv_node_equals(state_plugin_uri, plugin_uri));
@@ -1569,7 +1675,7 @@ test_state(void)
 	lilv_instance_run(instance, 1);
 	LilvState* state3 = lilv_state_new_from_instance(
 		plugin, instance, &map,
-		file_dir, copy_dir, link_dir, save_dir,
+		scratch_dir, copy_dir, link_dir, save_dir,
 		get_port_value, world, 0, NULL);
 	TEST_ASSERT(!lilv_state_equals(state2, state3));  // num_runs changed
 
@@ -1579,9 +1685,21 @@ test_state(void)
 	// Take a new snapshot and ensure it matches the set state
 	LilvState* state4 = lilv_state_new_from_instance(
 		plugin, instance, &map,
-		file_dir, copy_dir, link_dir, save_dir,
+		scratch_dir, copy_dir, link_dir, save_dir,
 		get_port_value, world, 0, NULL);
 	TEST_ASSERT(lilv_state_equals(state2, state4));
+
+	// Set some metadata properties
+	lilv_state_set_metadata(state, map.map(map.handle, LILV_NS_RDFS "comment"),
+	                        "This is a comment",
+	                        strlen("This is a comment") + 1,
+	                        map.map(map.handle, "http://lv2plug.in/ns/ext/atom#Literal"),
+	                        LV2_STATE_IS_POD);
+	lilv_state_set_metadata(state, map.map(map.handle, "http://example.org/metablob"),
+	                        "LIVEBEEF",
+	                        strlen("LIVEBEEF") + 1,
+	                        map.map(map.handle, "http://example.org/MetaBlob"),
+	                        0);
 
 	// Save state to a directory
 	int ret = lilv_state_save(world, &map, &unmap, state, NULL,
@@ -1593,6 +1711,16 @@ test_state(void)
 	                                             "state/state.lv2/state.ttl");
 
 	TEST_ASSERT(lilv_state_equals(state, state5));  // Round trip accuracy
+	TEST_ASSERT(lilv_state_get_num_properties(state) == 8);
+
+	// Attempt to save state to nowhere (error)
+	ret = lilv_state_save(world, &map, &unmap, state, NULL, NULL, NULL);
+	TEST_ASSERT(ret);
+
+	// Save another state to the same directory (update manifest)
+	ret = lilv_state_save(world, &map, &unmap, state, NULL,
+	                      "state/state.lv2", "state2.ttl");
+	TEST_ASSERT(!ret);
 
 	// Save state with URI to a directory
 	const char* state_uri = "http://example.org/state";
@@ -1608,10 +1736,15 @@ test_state(void)
 	lilv_world_load_bundle(world, test_state_bundle);
 	lilv_world_load_resource(world, test_state_node);
 	serd_node_free(&state6_uri);
-	free(state6_path);
+	lilv_free(state6_path);
 
 	LilvState* state6 = lilv_state_new_from_world(world, &map, test_state_node);
 	TEST_ASSERT(lilv_state_equals(state, state6));  // Round trip accuracy
+
+	// Check that loaded state has correct URI
+	TEST_ASSERT(lilv_state_get_uri(state6));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(lilv_state_get_uri(state6)),
+	                    state_uri));
 
 	lilv_world_unload_resource(world, test_state_node);
 	lilv_world_unload_bundle(world, test_state_bundle);
@@ -1627,7 +1760,7 @@ test_state(void)
 
 	// Make directories and test files support
 	mkdir("temp", 0700);
-	file_dir = temp_dir;
+	scratch_dir = temp_dir;
 	mkdir("files", 0700);
 	copy_dir = lilv_realpath("files");
 	mkdir("links", 0700);
@@ -1645,16 +1778,25 @@ test_state(void)
 	lilv_instance_connect_port(instance, 1, &out);
 	lilv_instance_run(instance, 1);
 
+	// Test instantiating twice
+	LilvInstance* instance2 = lilv_plugin_instantiate(plugin, 48000.0, ffeatures);
+	if (!instance2) {
+		fatal_error("Failed to create multiple instances of <%s>\n",
+		            lilv_node_as_uri(state_plugin_uri));
+		return 0;
+	}
+	lilv_instance_free(instance2);
+
 	// Get instance state state
 	LilvState* fstate = lilv_state_new_from_instance(
 		plugin, instance, &map,
-		file_dir, copy_dir, link_dir, "state/fstate.lv2",
+		scratch_dir, copy_dir, link_dir, "state/fstate.lv2",
 		get_port_value, world, 0, ffeatures);
 
 	// Get another instance state
 	LilvState* fstate2 = lilv_state_new_from_instance(
 		plugin, instance, &map,
-		file_dir, copy_dir, link_dir, "state/fstate2.lv2",
+		scratch_dir, copy_dir, link_dir, "state/fstate2.lv2",
 		get_port_value, world, 0, ffeatures);
 
 	// Should be identical
@@ -1665,7 +1807,8 @@ test_state(void)
 
 	// Get yet another instance state
 	LilvState* fstate3 = lilv_state_new_from_instance(
-		plugin, instance, &map, file_dir, copy_dir, link_dir, "state/fstate3.lv2",
+		plugin, instance, &map,
+		scratch_dir, copy_dir, link_dir, "state/fstate3.lv2",
 		get_port_value, world, 0, ffeatures);
 
 	// Should be different
@@ -1677,8 +1820,8 @@ test_state(void)
 	TEST_ASSERT(!ret);
 
 	// Load state from directory
-	LilvState* fstate4 = lilv_state_new_from_file(world, &map, NULL,
-	                                              "state/fstate.lv2/fstate.ttl");
+	LilvState* fstate4 = lilv_state_new_from_file(
+		world, &map, NULL, "state/fstate.lv2/fstate.ttl");
 	TEST_ASSERT(lilv_state_equals(fstate, fstate4));  // Round trip accuracy
 
 	// Restore instance state to loaded state
@@ -1687,7 +1830,7 @@ test_state(void)
 	// Take a new snapshot and ensure it matches
 	LilvState* fstate5 = lilv_state_new_from_instance(
 		plugin, instance, &map,
-		file_dir, copy_dir, link_dir, "state/fstate5.lv2",
+		scratch_dir, copy_dir, link_dir, "state/fstate5.lv2",
 		get_port_value, world, 0, ffeatures);
 	TEST_ASSERT(lilv_state_equals(fstate3, fstate5));
 
@@ -1697,8 +1840,8 @@ test_state(void)
 	TEST_ASSERT(!ret);
 
 	// Reload it and ensure it's identical to the other loaded version
-	LilvState* fstate6 = lilv_state_new_from_file(world, &map, NULL,
-	                                              "state/fstate6.lv2/fstate6.ttl");
+	LilvState* fstate6 = lilv_state_new_from_file(
+		world, &map, NULL, "state/fstate6.lv2/fstate6.ttl");
 	TEST_ASSERT(lilv_state_equals(fstate4, fstate6));
 
 	// Run, changing rec file (without changing size)
@@ -1707,7 +1850,7 @@ test_state(void)
 	// Take a new snapshot
 	LilvState* fstate7 = lilv_state_new_from_instance(
 		plugin, instance, &map,
-		file_dir, copy_dir, link_dir, "state/fstate7.lv2",
+		scratch_dir, copy_dir, link_dir, "state/fstate7.lv2",
 		get_port_value, world, 0, ffeatures);
 	TEST_ASSERT(!lilv_state_equals(fstate6, fstate7));
 
@@ -1717,10 +1860,13 @@ test_state(void)
 	TEST_ASSERT(!ret);
 
 	// Reload it and ensure it's changed
-	LilvState* fstate72 = lilv_state_new_from_file(world, &map, NULL,
-	                                              "state/fstate7.lv2/fstate7.ttl");
+	LilvState* fstate72 = lilv_state_new_from_file(
+		world, &map, NULL, "state/fstate7.lv2/fstate7.ttl");
 	TEST_ASSERT(lilv_state_equals(fstate72, fstate7));
 	TEST_ASSERT(!lilv_state_equals(fstate6, fstate72));
+
+	// Delete saved state
+	lilv_state_delete(world, fstate7);
 
 	lilv_instance_deactivate(instance);
 	lilv_instance_free(instance);
@@ -1759,6 +1905,7 @@ test_state(void)
 	cleanup_uris();
 	return 1;
 }
+#endif
 
 /*****************************************************************************/
 
@@ -1776,8 +1923,9 @@ test_bad_port_symbol(void)
 			"  a lv2:ControlPort ; a lv2:InputPort ; "
 			"  lv2:index 0 ; lv2:symbol \"0invalid\" ;"
 			"  lv2:name \"Invalid\" ; "
-			"] ."))
+			"] .")) {
 		return 0;
+	}
 
 	init_uris();
 
@@ -1807,8 +1955,9 @@ test_bad_port_index(void)
 			"  a lv2:ControlPort ; a lv2:InputPort ; "
 			"  lv2:index \"notaninteger\" ; lv2:symbol \"invalid\" ;"
 			"  lv2:name \"Invalid\" ; "
-			"] ."))
+			"] .")) {
 		return 0;
+	}
 
 	init_uris();
 
@@ -1846,6 +1995,7 @@ test_string(void)
 	TEST_ASSERT(!strcmp((s = lilv_path_join("/a/", "/b")), "/a/b")); free(s);
 	TEST_ASSERT(!strcmp((s = lilv_path_join("/a/", "b")), "/a/b")); free(s);
 	TEST_ASSERT(!strcmp((s = lilv_path_join("/a", NULL)), "/a/")); free(s);
+	TEST_ASSERT(!strcmp((s = lilv_path_join(NULL, "/b")), "/b")); free(s);
 
 #ifndef _WIN32
 	setenv("LILV_TEST_1", "test", 1);
@@ -1864,14 +2014,241 @@ test_string(void)
 
 /*****************************************************************************/
 
+static int
+test_world(void)
+{
+	if (!init_world()) {
+		return 0;
+	}
+
+	LilvNode* num = lilv_new_int(world, 4);
+	LilvNode* uri = lilv_new_uri(world, "http://example.org/object");
+
+	LilvNodes* matches = lilv_world_find_nodes(world, num, NULL, NULL);
+	TEST_ASSERT(!matches);
+
+	matches = lilv_world_find_nodes(world, NULL, num, NULL);
+	TEST_ASSERT(!matches);
+
+	matches = lilv_world_find_nodes(world, NULL, uri, NULL);
+	TEST_ASSERT(!matches);
+
+	lilv_node_free(uri);
+	lilv_node_free(num);
+
+	lilv_world_unload_bundle(world, NULL);
+
+	return 1;
+}
+
+/*****************************************************************************/
+
+static int
+test_reload_bundle(void)
+{
+	// Create a simple plugin bundle
+	create_bundle(MANIFEST_PREFIXES
+	              ":plug a lv2:Plugin ; lv2:binary <foo" SHLIB_EXT "> ; rdfs:seeAlso <plugin.ttl> .\n",
+	              BUNDLE_PREFIXES
+	              ":plug a lv2:Plugin ; "
+	              PLUGIN_NAME("First name") " .");
+
+	if (!init_world()) {
+		return 0;
+	}
+
+	init_uris();
+	lilv_world_load_specifications(world);
+
+	// Load bundle
+	LilvNode* bundle_uri = lilv_new_uri(world, test_bundle_uri);
+	lilv_world_load_bundle(world, bundle_uri);
+
+	// Check that plugin is present
+	const LilvPlugins* plugins = lilv_world_get_all_plugins(world);
+	const LilvPlugin*  plug    = lilv_plugins_get_by_uri(plugins, plugin_uri_value);
+	TEST_ASSERT(plug);
+
+	// Check that plugin name is correct
+	LilvNode* name = lilv_plugin_get_name(plug);
+	TEST_ASSERT(!strcmp(lilv_node_as_string(name), "First name"));
+	lilv_node_free(name);
+
+	// Unload bundle from world and delete it
+	lilv_world_unload_bundle(world, bundle_uri);
+	delete_bundle();
+
+	// Create a new version of the same bundle, but with a different name
+	create_bundle(MANIFEST_PREFIXES
+	              ":plug a lv2:Plugin ; lv2:binary <foo" SHLIB_EXT "> ; rdfs:seeAlso <plugin.ttl> .\n",
+	              BUNDLE_PREFIXES
+	              ":plug a lv2:Plugin ; "
+	              PLUGIN_NAME("Second name") " .");
+
+	// Check that plugin is no longer in the world's plugin list
+	TEST_ASSERT(lilv_plugins_size(plugins) == 0);
+
+	// Load new bundle
+	lilv_world_load_bundle(world, bundle_uri);
+
+	// Check that plugin is present again and is the same LilvPlugin
+	const LilvPlugin* plug2 = lilv_plugins_get_by_uri(plugins, plugin_uri_value);
+	TEST_ASSERT(plug2);
+	TEST_ASSERT(plug2 == plug);
+
+	// Check that plugin now has new name
+	LilvNode* name2 = lilv_plugin_get_name(plug2);
+	TEST_ASSERT(name2);
+	TEST_ASSERT(!strcmp(lilv_node_as_string(name2), "Second name"));
+	lilv_node_free(name2);
+
+	// Load new bundle again (noop)
+	lilv_world_load_bundle(world, bundle_uri);
+
+	cleanup_uris();
+	lilv_node_free(bundle_uri);
+	lilv_world_free(world);
+	world = NULL;
+
+	return 1;
+}
+
+/*****************************************************************************/
+
+static int
+test_replace_version(void)
+{
+	if (!init_world()) {
+		return 0;
+	}
+
+	LilvNode* plug_uri         = lilv_new_uri(world, "http://example.org/versioned");
+	LilvNode* lv2_minorVersion = lilv_new_uri(world, LV2_CORE__minorVersion);
+	LilvNode* lv2_microVersion = lilv_new_uri(world, LV2_CORE__microVersion);
+	LilvNode* minor            = NULL;
+	LilvNode* micro            = NULL;
+
+	char* old_bundle_path = lilv_strjoin(LILV_TEST_DIR, "old_version.lv2/", 0);
+
+	// Load plugin from old bundle
+	LilvNode* old_bundle = lilv_new_file_uri(world, NULL, old_bundle_path);
+	lilv_world_load_bundle(world, old_bundle);
+	lilv_world_load_resource(world, plug_uri);
+
+	// Check version
+	const LilvPlugins* plugins  = lilv_world_get_all_plugins(world);
+	const LilvPlugin*  old_plug = lilv_plugins_get_by_uri(plugins, plug_uri);
+	TEST_ASSERT(old_plug);
+	minor = lilv_world_get(world, plug_uri, lv2_minorVersion, 0);
+	micro = lilv_world_get(world, plug_uri, lv2_microVersion, 0);
+	TEST_ASSERT(!strcmp(lilv_node_as_string(minor), "1"));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(micro), "0"));
+	lilv_node_free(micro);
+	lilv_node_free(minor);
+
+	char* new_bundle_path = lilv_strjoin(LILV_TEST_DIR, "new_version.lv2/", 0);
+
+	// Load plugin from new bundle
+	LilvNode* new_bundle = lilv_new_file_uri(world, NULL, new_bundle_path);
+	lilv_world_load_bundle(world, new_bundle);
+	lilv_world_load_resource(world, plug_uri);
+
+	// Check that version in the world model has changed
+	plugins = lilv_world_get_all_plugins(world);
+	const LilvPlugin* new_plug = lilv_plugins_get_by_uri(plugins, plug_uri);
+	TEST_ASSERT(new_plug);
+	TEST_ASSERT(lilv_node_equals(lilv_plugin_get_bundle_uri(new_plug), new_bundle));
+	minor = lilv_world_get(world, plug_uri, lv2_minorVersion, 0);
+	micro = lilv_world_get(world, plug_uri, lv2_microVersion, 0);
+	TEST_ASSERT(!strcmp(lilv_node_as_string(minor), "2"));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(micro), "1"));
+	lilv_node_free(micro);
+	lilv_node_free(minor);
+
+	// Try to load the old version again
+	lilv_world_load_bundle(world, old_bundle);
+	lilv_world_load_resource(world, plug_uri);
+
+	// Check that version in the world model has not changed
+	plugins = lilv_world_get_all_plugins(world);
+	new_plug = lilv_plugins_get_by_uri(plugins, plug_uri);
+	TEST_ASSERT(new_plug);
+	minor = lilv_world_get(world, plug_uri, lv2_minorVersion, 0);
+	micro = lilv_world_get(world, plug_uri, lv2_microVersion, 0);
+	TEST_ASSERT(!strcmp(lilv_node_as_string(minor), "2"));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(micro), "1"));
+	lilv_node_free(micro);
+	lilv_node_free(minor);
+
+	lilv_node_free(new_bundle);
+	lilv_node_free(old_bundle);
+	free(new_bundle_path);
+	free(old_bundle_path);
+	lilv_node_free(plug_uri);
+	lilv_node_free(lv2_minorVersion);
+	lilv_node_free(lv2_microVersion);
+	return 1;
+}
+
+/*****************************************************************************/
+
+static int
+test_get_symbol(void)
+{
+	if (!start_bundle(
+		    MANIFEST_PREFIXES
+		    ":plug a lv2:Plugin ; lv2:symbol \"plugsym\" ; lv2:binary <foo" SHLIB_EXT "> ; rdfs:seeAlso <plugin.ttl> .\n",
+		    BUNDLE_PREFIXES PREFIX_LV2EV
+		    ":plug a lv2:Plugin ; "
+		    PLUGIN_NAME("Test plugin") " ; "
+		    "lv2:symbol \"plugsym\" .")) {
+		return 0;
+	}
+
+	init_uris();
+
+	LilvNode* plug_sym      = lilv_world_get_symbol(world, plugin_uri_value);
+	LilvNode* path          = lilv_new_uri(world, "http://example.org/foo");
+	LilvNode* path_sym      = lilv_world_get_symbol(world, path);
+	LilvNode* query         = lilv_new_uri(world, "http://example.org/foo?bar=baz");
+	LilvNode* query_sym     = lilv_world_get_symbol(world, query);
+	LilvNode* frag          = lilv_new_uri(world, "http://example.org/foo#bar");
+	LilvNode* frag_sym      = lilv_world_get_symbol(world, frag);
+	LilvNode* queryfrag     = lilv_new_uri(world, "http://example.org/foo?bar=baz#quux");
+	LilvNode* queryfrag_sym = lilv_world_get_symbol(world, queryfrag);
+	LilvNode* nonuri        = lilv_new_int(world, 42);
+
+	TEST_ASSERT(lilv_world_get_symbol(world, nonuri) == NULL);
+	TEST_ASSERT(!strcmp(lilv_node_as_string(plug_sym), "plugsym"));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(path_sym), "foo"));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(query_sym), "bar_baz"));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(frag_sym), "bar"));
+	TEST_ASSERT(!strcmp(lilv_node_as_string(queryfrag_sym), "quux"));
+
+	lilv_node_free(nonuri);
+	lilv_node_free(queryfrag_sym);
+	lilv_node_free(queryfrag);
+	lilv_node_free(frag_sym);
+	lilv_node_free(frag);
+	lilv_node_free(query_sym);
+	lilv_node_free(query);
+	lilv_node_free(path_sym);
+	lilv_node_free(path);
+	lilv_node_free(plug_sym);
+	cleanup_uris();
+
+	return 1;
+}
+
+/*****************************************************************************/
+
 /* add tests here */
 static struct TestCase tests[] = {
-	TEST_CASE(utils),
+	TEST_CASE(util),
 	TEST_CASE(value),
 	TEST_CASE(verify),
 	TEST_CASE(no_verify),
 	TEST_CASE(discovery),
-	TEST_CASE(lv2_path),
 	TEST_CASE(classes),
 	TEST_CASE(plugin),
 	TEST_CASE(project),
@@ -1885,7 +2262,14 @@ static struct TestCase tests[] = {
 	TEST_CASE(bad_port_index),
 	TEST_CASE(bad_port_index),
 	TEST_CASE(string),
+	TEST_CASE(world),
+	// FIXME: State is not currently working on Windows
+#ifndef _WIN32
 	TEST_CASE(state),
+#endif
+	TEST_CASE(reload_bundle),
+	TEST_CASE(replace_version),
+	TEST_CASE(get_symbol),
 	{ NULL, NULL }
 };
 
@@ -1913,7 +2297,7 @@ main(int argc, char* argv[])
 		printf("Syntax: %s\n", argv[0]);
 		return 0;
 	}
-	setenv("LANG", "C", 1);
+	set_env("LANG", "C");
 	init_tests();
 	run_tests();
 	cleanup();

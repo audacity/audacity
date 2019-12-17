@@ -1,5 +1,6 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2017 David Robillard <http://drobilla.net>
+  Copyright 2017 Stefan Westerfeld <stefan@space.twc.de>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +17,9 @@
 
 #include "./suil_internal.h"
 
+int    suil_argc = 0;
+char** suil_argv = NULL;
+
 SUIL_API
 SuilHost*
 suil_host_new(SuilPortWriteFunc       write_func,
@@ -23,13 +27,13 @@ suil_host_new(SuilPortWriteFunc       write_func,
               SuilPortSubscribeFunc   subscribe_func,
               SuilPortUnsubscribeFunc unsubscribe_func)
 {
-	SuilHost* host = (SuilHost*)malloc(sizeof(struct SuilHostImpl));
+	SuilHost* host = (SuilHost*)calloc(1, sizeof(struct SuilHostImpl));
 	host->write_func       = write_func;
 	host->index_func       = index_func;
 	host->subscribe_func   = subscribe_func;
 	host->unsubscribe_func = unsubscribe_func;
-	host->touch_func       = NULL;
-	host->gtk_lib          = NULL;
+	host->argc             = suil_argc;
+	host->argv             = suil_argv;
 	return host;
 }
 
@@ -51,4 +55,36 @@ suil_host_free(SuilHost* host)
 		}
 		free(host);
 	}
+}
+
+#ifdef SUIL_WITH_X11
+static void
+suil_load_init_module(const char* module_name)
+{
+	void* const lib = suil_open_module(module_name);
+	if (!lib) {
+		return;
+	}
+
+	SuilVoidFunc init_func = suil_dlfunc(lib, "suil_host_init");
+	if (init_func) {
+		(*init_func)();
+	} else {
+		SUIL_ERRORF("Corrupt init module %s\n", module_name);
+	}
+
+	dlclose(lib);
+}
+#endif
+
+SUIL_API
+void
+suil_init(int* argc, char*** argv, SuilArg key, ...)
+{
+	suil_argc = argc ? *argc : 0;
+	suil_argv = argv ? *argv : NULL;
+
+#ifdef SUIL_WITH_X11
+	suil_load_init_module("suil_x11");
+#endif
 }

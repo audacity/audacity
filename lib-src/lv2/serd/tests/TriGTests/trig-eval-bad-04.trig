@@ -1,0 +1,2 @@
+# Bad IRI
+{<http://example/{abc}> <http://example/p> <http://example/o> .}

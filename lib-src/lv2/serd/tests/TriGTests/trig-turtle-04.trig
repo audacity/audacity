@@ -1,0 +1,5 @@
+# Turtle is TriG
+prefix : <http://example/> 
+
+[] :p :o .
+

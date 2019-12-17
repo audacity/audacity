@@ -1,0 +1,2 @@
+# Bad IRI : hex 3E is >
+{<http://example/\u003E> <http://example/p> <http://example/o> .}

@@ -41,8 +41,8 @@ class WavFile(object):
             data = [(i - float(range/2)) / float(range/2) for i in data]
 
         channels = []
-        for i in xrange(self.nchannels):
-            channels.append([data[j] for j in xrange(0, len(data), self.nchannels) ])
+        for i in range(self.nchannels):
+            channels.append([data[j] for j in range(0, len(data), self.nchannels) ])
 
         return channels
 
@@ -57,6 +57,7 @@ def main():
 
     # Initialise Lilv
     world = lilv.World()
+    ns    = world.ns
     world.load_all()
 
     plugin_uri   = sys.argv[1]
@@ -65,19 +66,14 @@ def main():
 
     # Find plugin
     plugin_uri_node = world.new_uri(plugin_uri)
-    plugin          = world.get_all_plugins().get_by_uri(plugin_uri_node)
-    if not plugin:
-        print("Unknown plugin `%s'\n" % plugin_uri)
+    plugins         = world.get_all_plugins()
+    if plugin_uri_node not in plugins:
+        print("Unknown plugin `%s'" % plugin_uri)
         sys.exit(1)
 
-    lv2_InputPort   = world.new_uri(lilv.LILV_URI_INPUT_PORT)
-    lv2_OutputPort  = world.new_uri(lilv.LILV_URI_OUTPUT_PORT)
-    lv2_AudioPort   = world.new_uri(lilv.LILV_URI_AUDIO_PORT)
-    lv2_ControlPort = world.new_uri(lilv.LILV_URI_CONTROL_PORT)
-    lv2_default     = world.new_uri("http://lv2plug.in/ns/lv2core#default")
-
-    n_audio_in  = plugin.get_num_ports_of_class(lv2_InputPort,  lv2_AudioPort)
-    n_audio_out = plugin.get_num_ports_of_class(lv2_OutputPort, lv2_AudioPort)
+    plugin      = plugins[plugin_uri_node]
+    n_audio_in  = plugin.get_num_ports_of_class(ns.lv2.InputPort,  ns.lv2.AudioPort)
+    n_audio_out = plugin.get_num_ports_of_class(ns.lv2.OutputPort, ns.lv2.AudioPort)
     if n_audio_out == 0:
         print("Plugin has no audio outputs\n")
         sys.exit(1)
@@ -120,22 +116,21 @@ def main():
     control_output_buffers = []
     for index in range(plugin.get_num_ports()):
         port = plugin.get_port_by_index(index)
-        if port.is_a(lv2_InputPort):
-            if port.is_a(lv2_AudioPort):
+        if port.is_a(ns.lv2.InputPort):
+            if port.is_a(ns.lv2.AudioPort):
                 audio_input_buffers.append(numpy.array(channels[len(audio_input_buffers)], numpy.float32))
                 instance.connect_port(index, audio_input_buffers[-1])
-            elif port.is_a(lv2_ControlPort):
-                #if port.has_property(lv2_default):  # Doesn't seem to work
-                default = lilv.lilv_node_as_float(lilv.lilv_nodes_get_first(port.get_value(lv2_default)))
+            elif port.is_a(ns.lv2.ControlPort):
+                default = float(port.get(ns.lv2.default))
                 control_input_buffers.append(numpy.array([default], numpy.float32))
                 instance.connect_port(index, control_input_buffers[-1])
             else:
                 raise ValueError("Unhandled port type")
-        elif port.is_a(lv2_OutputPort):
-            if port.is_a(lv2_AudioPort):
+        elif port.is_a(ns.lv2.OutputPort):
+            if port.is_a(ns.lv2.AudioPort):
                 audio_output_buffers.append(numpy.array([0] * wav_in.nframes, numpy.float32))
                 instance.connect_port(index, audio_output_buffers[-1])
-            elif port.is_a(lv2_ControlPort):
+            elif port.is_a(ns.lv2.ControlPort):
                 control_output_buffers.append(numpy.array([0], numpy.float32))
                 instance.connect_port(index, control_output_buffers[-1])
             else:
@@ -156,7 +151,7 @@ def main():
     # Write output file in chunks to stop memory usage getting out of hand:
     CHUNK_SIZE = 8192
     for chunk in numpy.array_split(data, CHUNK_SIZE):
-        wav_out.writeframes(wave.struct.pack("%u%s" % (len(chunk), wav_in.struct_fmt_code), *chunk))
+        wav_out.writeframes(wave.struct.pack("%u%s" % (len(chunk), wav_in.struct_fmt_code), *chunk.astype(int)))
     wav_out.close()
 
 

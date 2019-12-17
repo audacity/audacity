@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2014 David Robillard <http://drobilla.net>
+  Copyright 2007-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -14,12 +14,14 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <assert.h>
-#include <limits.h>
+#include "lilv_internal.h"
+
+#include "lilv/lilv.h"
+#include "sord/sord.h"
+#include "zix/tree.h"
+
 #include <stdlib.h>
 #include <string.h>
-
-#include "lilv_internal.h"
 
 typedef enum {
 	LILV_LANG_MATCH_NONE,     ///< Language does not match at all

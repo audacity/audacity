@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -22,6 +22,9 @@
 
 #ifndef URI_TABLE_H
 #define URI_TABLE_H
+
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct {
 	char** uris;
@@ -54,7 +57,7 @@ uri_table_map(LV2_URID_Map_Handle handle,
 
 	const size_t len = strlen(uri);
 	table->uris = (char**)realloc(table->uris, ++table->n_uris * sizeof(char*));
-	table->uris[table->n_uris - 1] = malloc(len + 1);
+	table->uris[table->n_uris - 1] = (char*)malloc(len + 1);
 	memcpy(table->uris[table->n_uris - 1], uri, len + 1);
 	return table->n_uris;
 }

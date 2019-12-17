@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2013 David Robillard <http://drobilla.net>
+  Copyright 2011-2016 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -108,9 +108,9 @@ typedef const SordNode* SordQuad[4];
 */
 typedef enum {
 	SORD_SUBJECT   = 0,  /**< Subject */
-	SORD_PREDICATE = 1,  /**< Predicate (a.k.a. "key") */
-	SORD_OBJECT    = 2,  /**< Object    (a.k.a. "value") */
-	SORD_GRAPH     = 3   /**< Graph     (a.k.a. "context") */
+	SORD_PREDICATE = 1,  /**< Predicate ("key") */
+	SORD_OBJECT    = 2,  /**< Object    ("value") */
+	SORD_GRAPH     = 3   /**< Graph     ("context") */
 } SordQuadIndex;
 
 /**
@@ -178,7 +178,7 @@ sord_world_set_error_sink(SordWorld*    world,
    Get a URI node from a string.
 
    Note this function measures `str`, which is a common bottleneck.
-   Use sord_node_from_serd_node instead if `str` is already measured.
+   Use sord_node_from_serd_node() instead if `str` is already measured.
 */
 SORD_API
 SordNode*
@@ -190,14 +190,14 @@ sord_new_uri(SordWorld* world, const uint8_t* uri);
 SORD_API
 SordNode*
 sord_new_relative_uri(SordWorld*     world,
-                      const uint8_t* str,
+                      const uint8_t* uri,
                       const uint8_t* base_uri);
 
 /**
    Get a blank node from a string.
 
    Note this function measures `str`, which is a common bottleneck.
-   Use sord_node_from_serd_node instead if `str` is already measured.
+   Use sord_node_from_serd_node() instead if `str` is already measured.
 */
 SORD_API
 SordNode*
@@ -207,7 +207,7 @@ sord_new_blank(SordWorld* world, const uint8_t* str);
    Get a literal node from a string.
 
    Note this function measures `str`, which is a common bottleneck.
-   Use sord_node_from_serd_node instead if `str` is already measured.
+   Use sord_node_from_serd_node() instead if `str` is already measured.
 */
 SORD_API
 SordNode*
@@ -248,11 +248,21 @@ const uint8_t*
 sord_node_get_string(const SordNode* node);
 
 /**
-   Return the string value of a node, and set `len` to its length.
+   Return the string value of a node, and set `bytes` to its length in bytes.
 */
 SORD_API
 const uint8_t*
-sord_node_get_string_counted(const SordNode* node, size_t* len);
+sord_node_get_string_counted(const SordNode* node, size_t* bytes);
+
+/**
+   Return the string value of a node, and set `bytes` to its length in bytes,
+   and `count` to its length in characters.
+*/
+SORD_API
+const uint8_t*
+sord_node_get_string_measured(const SordNode* node,
+                              size_t*         bytes,
+                              size_t*         chars);
 
 /**
    Return the language of a literal node (or NULL).
@@ -308,7 +318,7 @@ sord_node_to_serd_node(const SordNode* node);
 /**
    Create a new SordNode from a SerdNode.
 
-   The returned node must be freed using sord_node_free.
+   The returned node must be freed using sord_node_free().
 */
 SORD_API
 SordNode*
@@ -401,7 +411,7 @@ sord_search(SordModel*      model,
    Search for a single node that matches a pattern.
    Exactly one of `s`, `p`, `o` must be NULL.
    This function is mainly useful for predicates that only have one value.
-   The returned node must be freed using sord_node_free.
+   The returned node must be freed using sord_node_free().
    @return the first matching node, or NULL if no matches are found.
 */
 SORD_API
@@ -436,6 +446,8 @@ sord_count(SordModel*      model,
 
 /**
    Check if `model` contains a triple pattern.
+
+   @return true if `model` contains a match for `pat`, otherwise false.
 */
 SORD_API
 bool
@@ -443,19 +455,37 @@ sord_contains(SordModel* model, const SordQuad pat);
 
 /**
    Add a quad to a model.
+
+   Calling this function invalidates all iterators on `model`.
+
+   @return true on success, false, on error.
 */
 SORD_API
 bool
-sord_add(SordModel* model, const SordQuad quad);
+sord_add(SordModel* model, const SordQuad tup);
 
 /**
    Remove a quad from a model.
 
-   Note that is it illegal to remove while iterating over `model`.
+   Calling this function invalidates all iterators on `model`.  To remove quads
+   while iterating, use sord_erase() instead.
 */
 SORD_API
 void
-sord_remove(SordModel* model, const SordQuad quad);
+sord_remove(SordModel* model, const SordQuad tup);
+
+/**
+   Remove a quad from a model via an iterator.
+
+   Calling this function invalidates all iterators on `model` except `iter`.
+
+   @param model The model which `iter` points to.
+   @param iter Iterator to the element to erase, which is incremented to the
+   next value on return.
+*/
+SORD_API
+SerdStatus
+sord_erase(SordModel* model, SordIter* iter);
 
 /**
    @}
@@ -526,10 +556,12 @@ sord_inserter_write_statement(SordInserter*      inserter,
 */
 SORD_API
 void
-sord_iter_get(const SordIter* iter, SordQuad quad);
+sord_iter_get(const SordIter* iter, SordQuad tup);
 
 /**
    Return a field of the quad pointed to by `iter`.
+
+   Returns NULL if `iter` is NULL or is at the end.
 */
 SORD_API
 const SordNode*

@@ -9,3 +9,6 @@ Dynamic manifest support:
 
 Plugin execution via Python bindings:
     Kaspar Emanuel <kaspar.emanuel@gmail.com>
+
+Python preset script:
+    Christopher Arndt <chris@chrisarndt.de>

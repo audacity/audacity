@@ -1,0 +1,32 @@
+# comment test
+@prefix : <http://example.org/#> .
+
+{
+:a :b :c . # end of line comment
+:d # ignore me
+  :e # and me
+      :f # and me
+        .
+:g :h #ignore me
+     :i,  # and me
+     :j . # and me
+
+:k :l :m ; #ignore me
+   :n :o ; # and me
+   :p :q . # and me
+}
+
+<http://example/graph> {
+:a :b :c . # end of line comment
+:d # ignore me
+  :e # and me
+      :f # and me
+        .
+:g :h #ignore me
+     :i,  # and me
+     :j . # and me
+
+:k :l :m ; #ignore me
+   :n :o ; # and me
+   :p :q . # and me
+}

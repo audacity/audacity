@@ -1,0 +1,5 @@
+@prefix : <http://example.org/#> .
+
+{:a :b  1.0 .}
+<http://example/graph> {:a :b  1.0 .}
+

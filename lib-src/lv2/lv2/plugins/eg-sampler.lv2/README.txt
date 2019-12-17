@@ -11,3 +11,4 @@ This plugin illustrates:
 - Use of the log extension to print log messages via the host
 - Saving plugin state via the state extension
 - Dynamic plugin control via the same properties saved to state
+- Network-transparent waveform display with incremental peak transmission

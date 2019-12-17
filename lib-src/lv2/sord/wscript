@@ -1,16 +1,17 @@
 #!/usr/bin/env python
+
 import glob
 import os
-import subprocess
-import waflib.Logs as Logs
-import waflib.Options as Options
-import waflib.extras.autowaf as autowaf
+import sys
+
+from waflib import Logs, Options
+from waflib.extras import autowaf
 
 # Library and package version (UNIX style major, minor, micro)
 # major increment <=> incompatible changes
 # minor increment <=> compatible changes (additions)
 # micro increment <=> no interface changes
-SORD_VERSION       = '0.12.2'
+SORD_VERSION       = '0.16.4'
 SORD_MAJOR_VERSION = '0'
 
 # Mandatory waf variables
@@ -19,70 +20,79 @@ VERSION = SORD_VERSION  # Package version for waf dist
 top     = '.'           # Source directory
 out     = 'build'       # Build directory
 
-def options(opt):
-    opt.load('compiler_c')
-    opt.load('compiler_cxx')
-    autowaf.set_options(opt)
-    opt.add_option('--no-utils', action='store_true', dest='no_utils',
-                   help='Do not build command line utilities')
-    opt.add_option('--test', action='store_true', dest='build_tests',
-                   help='Build unit tests')
-    opt.add_option('--static', action='store_true', dest='static',
-                   help='Build static library')
-    opt.add_option('--no-shared', action='store_true', dest='no_shared',
-                   help='Do not build shared library')
-    opt.add_option('--static-progs', action='store_true', dest='static_progs',
-                   help='Build programs as static binaries')
+# Release variables
+uri          = 'http://drobilla.net/sw/sord'
+dist_pattern = 'http://download.drobilla.net/sord-%d.%d.%d.tar.bz2'
+post_tags    = ['Hacking', 'RDF', 'Sord']
+
+def options(ctx):
+    ctx.load('compiler_c')
+    ctx.load('compiler_cxx')
+    opt = ctx.configuration_options()
+
+    ctx.add_flags(
+        opt,
+        {'no-utils':     'do not build command line utilities',
+         'static':       'build static library',
+         'no-shared':    'do not build shared library',
+         'static-progs': 'build programs as static binaries'})
+
     opt.add_option('--dump', type='string', default='', dest='dump',
-                   help='Dump debugging output (iter, search, write, all)')
+                   help='dump debugging output (iter, search, write, all)')
 
 def configure(conf):
-    conf.load('compiler_c')
+    conf.load('compiler_c', cache=True)
     if Options.options.build_tests:
         try:
-            conf.load('compiler_cxx')
+            conf.load('compiler_cxx', cache=True)
         except:
             Logs.warn("No C++ compiler, sordmm.hpp compile test skipped")
             pass
-        
-    autowaf.configure(conf)
-    autowaf.set_c99_mode(conf)
-    autowaf.display_header('Sord configuration')
 
-    conf.env.BUILD_TESTS  = Options.options.build_tests
+    conf.load('autowaf', cache=True)
+    autowaf.set_c_lang(conf, 'c99')
+
     conf.env.BUILD_UTILS  = not Options.options.no_utils
     conf.env.BUILD_SHARED = not Options.options.no_shared
     conf.env.STATIC_PROGS = Options.options.static_progs
     conf.env.BUILD_STATIC = (Options.options.static or
                              Options.options.static_progs)
 
-    if conf.env.BUILD_TESTS:
-        conf.check(lib         = 'gcov',
-                   define_name = 'HAVE_GCOV',
-                   mandatory   = False)
+    conf.check_pkg('serd-0 >= 0.30.0', uselib_store='SERD')
+    conf.check_pkg('libpcre', uselib_store='PCRE', mandatory=False)
 
-    autowaf.check_pkg(conf, 'serd-0', uselib_store='SERD',
-                      atleast_version='0.18.0', mandatory=True)
-    autowaf.check_pkg(conf, 'libpcre', uselib_store='PCRE', mandatory=False)
+    if conf.env.HAVE_PCRE:
+        if conf.check(cflags=['-pthread'], mandatory=False):
+            conf.env.PTHREAD_CFLAGS    = ['-pthread']
+            if conf.env.CC_NAME != 'clang':
+                conf.env.PTHREAD_LINKFLAGS = ['-pthread']
+        elif conf.check(linkflags=['-lpthread'], mandatory=False):
+            conf.env.PTHREAD_CFLAGS    = []
+            conf.env.PTHREAD_LINKFLAGS = ['-lpthread']
+        else:
+            conf.env.PTHREAD_CFLAGS    = []
+            conf.env.PTHREAD_LINKFLAGS = []
 
     # Parse dump options and define things accordingly
     dump = Options.options.dump.split(',')
     all = 'all' in dump
     if all or 'iter' in dump:
-        autowaf.define(conf, 'SORD_DEBUG_ITER', 1)
+        conf.define('SORD_DEBUG_ITER', 1)
     if all or 'search' in dump:
-        autowaf.define(conf, 'SORD_DEBUG_SEARCH', 1)
+        conf.define('SORD_DEBUG_SEARCH', 1)
     if all or 'write' in dump:
-        autowaf.define(conf, 'SORD_DEBUG_WRITE', 1)
+        conf.define('SORD_DEBUG_WRITE', 1)
 
-    autowaf.define(conf, 'SORD_VERSION', SORD_VERSION)
     autowaf.set_lib_env(conf, 'sord', SORD_VERSION)
     conf.write_config_header('sord_config.h', remove=False)
 
-    autowaf.display_msg(conf, 'Utilities', bool(conf.env.BUILD_UTILS))
-    autowaf.display_msg(conf, 'Unit tests', bool(conf.env.BUILD_TESTS))
-    autowaf.display_msg(conf, 'Debug dumping', dump)
-    print('')
+    autowaf.display_summary(
+        conf,
+        {'Static library': bool(conf.env.BUILD_STATIC),
+         'Shared library': bool(conf.env.BUILD_SHARED),
+         'Utilities':      bool(conf.env.BUILD_UTILS),
+         'Unit tests':     bool(conf.env.BUILD_TESTS),
+         'Debug dumping':  dump})
 
 def build(bld):
     # C/C++ Headers
@@ -91,8 +101,9 @@ def build(bld):
     bld.install_files(includedir, bld.path.ant_glob('sord/*.hpp'))
 
     # Pkgconfig file
-    autowaf.build_pc(bld, 'SORD', SORD_VERSION, SORD_MAJOR_VERSION, 'SERD',
-                     {'SORD_MAJOR_VERSION' : SORD_MAJOR_VERSION})
+    autowaf.build_pc(bld, 'SORD', SORD_VERSION, SORD_MAJOR_VERSION, [],
+                     {'SORD_MAJOR_VERSION' : SORD_MAJOR_VERSION,
+                      'SORD_PKG_DEPS'      : 'serd-0'})
 
     source = 'src/sord.c src/syntax.c'
 
@@ -102,7 +113,7 @@ def build(bld):
     if bld.env.MSVC_COMPILER:
         libflags = []
         libs     = []
-        defines  = ['snprintf=_snprintf']
+        defines  = []
 
     # Shared Library
     if bld.env.BUILD_SHARED:
@@ -115,10 +126,10 @@ def build(bld):
                   vnum            = SORD_VERSION,
                   install_path    = '${LIBDIR}',
                   libs            = libs,
+                  uselib          = 'SERD',
                   defines         = defines + ['SORD_SHARED', 'SORD_INTERNAL'],
                   cflags          = libflags)
-        autowaf.use_lib(bld, obj, 'SERD')
-    
+
     # Static Library
     if bld.env.BUILD_STATIC:
         obj = bld(features        = 'c cstlib',
@@ -130,15 +141,16 @@ def build(bld):
                   vnum            = SORD_VERSION,
                   install_path    = '${LIBDIR}',
                   libs            = libs,
+                  uselib          = 'SERD',
                   defines         = ['SORD_INTERNAL'])
-        autowaf.use_lib(bld, obj, 'SERD')
 
     if bld.env.BUILD_TESTS:
-        test_libs   = libs
-        test_cflags = ['']
-        if bld.is_defined('HAVE_GCOV'):
-            test_libs   += ['gcov']
-            test_cflags += ['-fprofile-arcs', '-ftest-coverage']
+        test_libs      = libs
+        test_cflags    = ['']
+        test_linkflags = ['']
+        if not bld.env.NO_COVERAGE:
+            test_cflags    += ['--coverage']
+            test_linkflags += ['--coverage']
 
         # Profiled static library for test coverage
         obj = bld(features     = 'c cstlib',
@@ -149,8 +161,9 @@ def build(bld):
                   install_path = '',
                   defines      = defines,
                   cflags       = test_cflags,
-                  lib          = test_libs)
-        autowaf.use_lib(bld, obj, 'SERD')
+                  linkflags    = test_linkflags,
+                  lib          = test_libs,
+                  uselib       = 'SERD')
 
         # Unit test program
         obj = bld(features     = 'c cprogram',
@@ -161,8 +174,9 @@ def build(bld):
                   target       = 'sord_test',
                   install_path = '',
                   defines      = defines,
-                  cflags       = test_cflags)
-        autowaf.use_lib(bld, obj, 'SERD')
+                  cflags       = test_cflags,
+                  linkflags    = test_linkflags,
+                  uselib       = 'SERD')
 
         # Static profiled sordi for tests
         obj = bld(features     = 'c cprogram',
@@ -173,8 +187,9 @@ def build(bld):
                   target       = 'sordi_static',
                   install_path = '',
                   defines      = defines,
-                  cflags       = test_cflags)
-        autowaf.use_lib(bld, obj, 'SERD')
+                  cflags       = test_cflags,
+                  linkflags    = test_linkflags,
+                  uselib       = 'SERD')
 
         # C++ build test
         if bld.env.COMPILER_CXX:
@@ -185,17 +200,23 @@ def build(bld):
                       lib          = test_libs,
                       target       = 'sordmm_test',
                       install_path = '',
-                      defines      = defines)
-            autowaf.use_lib(bld, obj, 'SERD')
+                      defines      = defines,
+                      cxxflags     = test_cflags,
+                      linkflags    = test_linkflags,
+                      uselib       = 'SERD')
 
     # Utilities
     if bld.env.BUILD_UTILS:
-        for i in ['sordi', 'sord_validate']:
+        utils = ['sordi']
+        if bld.env.HAVE_PCRE:
+            utils += ['sord_validate']
+        for i in utils:
             obj = bld(features     = 'c cprogram',
                       source       = 'src/%s.c' % i,
                       includes     = ['.', './src'],
                       use          = 'libsord',
-                      lib          = libs, 
+                      lib          = libs,
+                      uselib       = 'SERD',
                       target       = i,
                       install_path = '${BINDIR}',
                       defines      = defines)
@@ -204,10 +225,10 @@ def build(bld):
             if bld.env.STATIC_PROGS:
                 obj.env.SHLIB_MARKER = obj.env.STLIB_MARKER
                 obj.linkflags        = ['-static', '-Wl,--start-group']
-            autowaf.use_lib(bld, obj, 'SERD')
             if i == 'sord_validate':
-                autowaf.use_lib(bld, obj, 'PCRE')
-                obj.cflags = '-pthread'
+                obj.uselib    += ' PCRE'
+                obj.cflags    = bld.env.PTHREAD_CFLAGS
+                obj.linkflags = bld.env.PTHREAD_LINKFLAGS
 
     # Documentation
     autowaf.build_dox(bld, 'SORD', SORD_VERSION, top, out)
@@ -220,7 +241,19 @@ def build(bld):
         bld.add_post_fun(fix_docs)
 
 def lint(ctx):
-    subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-build/header_guard,-readability/casting,-readability/todo,-build/include src/*.* sord/* src/zix/*.*', shell=True)
+    "checks code for style issues"
+    import subprocess
+    cmd = ("clang-tidy -p=. -header-filter=.* -checks=\"*," +
+           "-cert-dcl03-c," +
+           "-clang-analyzer-alpha.*," +
+           "-google-readability-todo," +
+           "-llvm-header-guard," +
+           "-llvm-include-order," +
+           "-misc-static-assert," +
+           "-misc-unused-parameters," +
+           "-readability-else-after-return\" " +
+           "../src/*.c")
+    subprocess.call(cmd, cwd='build', shell=True)
 
 def fix_docs(ctx):
     if ctx.cmd == 'build':
@@ -232,77 +265,84 @@ def upload_docs(ctx):
         os.system('soelim %s | pre-grohtml troff -man -wall -Thtml | post-grohtml > build/%s.html' % (page, page))
         os.system('rsync -avz --delete -e ssh build/%s.html drobilla@drobilla.net:~/drobilla.net/man/' % page)
 
-def test(ctx):
-    blddir = autowaf.build_dir(APPNAME, 'tests')
+def test(tst):
+    import tempfile
     try:
-        os.makedirs(blddir)
+        test_dir = os.path.join
+        os.mkdir('tests')
+        for i in glob.glob('tests/*.*'):
+            os.remove(i)
     except:
         pass
 
-    for i in glob.glob(blddir + '/*.*'):
-        os.remove(i)
+    if sys.platform == 'win32' and '/DNDEBUG' not in tst.env.CFLAGS:
+        # FIXME: Sort out DLL memory freeing situation in next major version
+        Logs.warn("Skipping tests for Windows debug build")
+        return
 
-    srcdir   = ctx.path.abspath()
-    orig_dir = os.path.abspath(os.curdir)
+    srcdir = tst.path.abspath()
+    sordi = './sordi_static'
+    base = 'http://example.org/'
+    snippet = '<{0}s> <{0}p> <{0}o> .\n'.format(base)
+    manifest = 'file://%s/tests/manifest.ttl' % srcdir
 
-    os.chdir(srcdir)
+    with tst.group('Unit') as check:
+        check(['./sord_test'])
 
-    good_tests = glob.glob('tests/test-*.ttl')
-    good_tests.sort()
+    with tst.group('GoodCommands') as check:
+        check([sordi, manifest])
+        check([sordi, '%s/tests/UTF-8.ttl' % srcdir])
+        check([sordi, '-v'])
+        check([sordi, '-h'])
+        check([sordi, '-s', '<foo> a <#Thingie> .', 'file:///test'])
+        check([sordi, os.devnull], stdout=os.devnull)
+        with tempfile.TemporaryFile(mode='r+') as stdin:
+            stdin.write(snippet + '\n')
+            check([sordi, '-', 'http://example.org/'], stdin=stdin)
+            check([sordi, '-o', 'turtle', '-', 'http://example.org/'], stdin=stdin)
 
-    os.chdir(orig_dir)
+    with tst.group('BadCommands', expected=1) as check:
+        check([sordi])
+        check([sordi, 'ftp://example.org/unsupported.ttl'])
+        check([sordi, '-i'])
+        check([sordi, '-o'])
+        check([sordi, '-z'])
+        check([sordi, '-p'])
+        check([sordi, '-c'])
+        check([sordi, '-i illegal'])
+        check([sordi, '-o illegal'])
+        check([sordi, '-i turtle'])
+        check([sordi, '-i ntriples'])
+        check([sordi, '/no/such/file'])
 
-    autowaf.pre_test(ctx, APPNAME)
+    with tst.group('IoErrors', expected=1) as check:
+        check([sordi, 'file://%s/' % srcdir], name='Read directory')
+        if os.path.exists('/dev/full'):
+            check([sordi, manifest], stdout='/dev/full', name='Write error')
 
-    os.environ['PATH'] = '.' + os.pathsep + os.getenv('PATH')
+    with tst.group('good', verbosity=0) as check:
+        suite_base = 'http://www.w3.org/2001/sw/DataAccess/df1/'
+        good_tests = glob.glob(os.path.join(srcdir, 'tests', 'test-*.ttl'))
+        for test in good_tests:
+            path = os.path.relpath(test, srcdir)
+            base_uri = suite_base + path.replace('\\', '/')
 
-    nul = os.devnull
+            out_path = path + '.out'
+            check([sordi, test, base_uri], stdout=out_path)
 
-    autowaf.run_tests(ctx, APPNAME, [
-            'sordi_static file://%s/tests/manifest.ttl > %s' % (srcdir, nul),
-            'sordi_static %s/tests/UTF-8.ttl > %s' % (srcdir, nul),
-            'sordi_static -v > %s' % nul,
-            'sordi_static -h > %s' % nul,
-            'sordi_static -s "<foo> a <#Thingie> ." file:///test > %s' % nul,
-            'sordi_static %s > %s' % (nul, nul)],
-                      0, name='sordi-cmd-good')
+            check_path = test.replace('.ttl', '.out')
+            out_lines = sorted(open(out_path).readlines())
+            cmp_lines = sorted(open(check_path).readlines())
+            check(lambda: out_lines == cmp_lines,
+                  name='%s check' % path)
 
-    autowaf.run_tests(ctx, APPNAME, [
-            'sordi_static > %s' % nul,
-            'sordi_static ftp://example.org/unsupported.ttl > %s' % nul,
-            'sordi_static -i > %s' % nul,
-            'sordi_static -o > %s' % nul,
-            'sordi_static -z > %s' % nul,
-            'sordi_static -p > %s' % nul,
-            'sordi_static -c > %s' % nul,
-            'sordi_static -i illegal > %s' % nul,
-            'sordi_static -o illegal > %s' % nul,
-            'sordi_static -i turtle > %s' % nul,
-            'sordi_static /no/such/file > %s' % nul],
-                      1, name='sordi-cmd-bad')
-
-    autowaf.run_tests(ctx, APPNAME, ['sord_test'])
-
-    commands = []
-    for test in good_tests:
-        base_uri = 'http://www.w3.org/2001/sw/DataAccess/df1/' + test.replace('\\', '/')
-        commands += [ 'sordi_static "%s" "%s" > %s.out' % (
-                os.path.join(srcdir, test), base_uri, test) ]
-
-    autowaf.run_tests(ctx, APPNAME, commands, 0, name='good')
-
-    Logs.pprint('BOLD', '\nVerifying turtle => ntriples')
-    for test in good_tests:
-        out_filename = test + '.out'
-        cmp_filename = srcdir + '/' + test.replace('.ttl', '.out')
-        if not os.access(out_filename, os.F_OK):
-            Logs.pprint('RED', 'FAIL: %s output is missing' % test)
-        else:
-            out_lines = sorted(open(out_filename).readlines())
-            cmp_lines = sorted(open(cmp_filename).readlines())
-            if out_lines != cmp_lines:
-                Logs.pprint('RED', 'FAIL: %s is incorrect' % out_filename)
-            else:
-                Logs.pprint('GREEN', 'Pass: %s' % test)
-
-    autowaf.post_test(ctx, APPNAME)
+def posts(ctx):
+    path = str(ctx.path.abspath())
+    autowaf.news_to_posts(
+        os.path.join(path, 'NEWS'),
+        {'title'        : 'Sord',
+         'description'  : autowaf.get_blurb(os.path.join(path, 'README')),
+         'dist_pattern' : 'http://download.drobilla.net/sord-%s.tar.bz2'},
+        { 'Author' : 'drobilla',
+          'Tags'   : 'Hacking, RDF, Sord' },
+        os.path.join(out, 'posts'))

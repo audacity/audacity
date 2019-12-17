@@ -1,0 +1,3 @@
+# underscore is a legal pname character
+@prefix x: <http://example/> .
+{x:_  x:p_1 x:o .}

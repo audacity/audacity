@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2013 David Robillard <http://drobilla.net>
+  Copyright 2011-2016 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -22,8 +22,9 @@
 #include "sord/sord.h"
 
 static const int      DIGITS        = 3;
-static const int      MAX_NUM       = 999;
 static const unsigned n_objects_per = 2;
+
+static int n_expected_errors = 0;
 
 typedef struct {
 	SordQuad query;
@@ -35,8 +36,9 @@ typedef struct {
 static SordNode*
 uri(SordWorld* world, int num)
 {
-	if (num == 0)
+	if (num == 0) {
 		return 0;
+	}
 
 	char  str[]   = "eg:000";
 	char* uri_num = str + 3;  // First `0'
@@ -73,7 +75,7 @@ generate(SordWorld* world,
 		}
 
 		for (unsigned j = 0; j < n_objects_per; ++j) {
-			SordQuad tup = { ids[0], ids[1], ids[2 + j] };
+			SordQuad tup = { ids[0], ids[1], ids[2 + j], graph };
 			if (!sord_add(sord, tup)) {
 				return test_fail("Fail: Failed to add quad\n");
 			}
@@ -87,11 +89,11 @@ generate(SordWorld* world,
 	// Add some literals
 
 	// (98 4 "hello") and (98 4 "hello"^^<5>)
-	SordQuad tup = { 0, 0, 0, 0};
+	SordQuad tup = { 0, 0, 0, 0 };
 	tup[0] = uri(world, 98);
 	tup[1] = uri(world, 4);
 	tup[2] = sord_new_literal(world, 0, USTR("hello"), NULL);
-	tup[3] = 0;
+	tup[3] = graph;
 	sord_add(sord, tup);
 	sord_node_free(world, (SordNode*)tup[2]);
 	tup[2] = sord_new_literal(world, uri(world, 5), USTR("hello"), NULL);
@@ -103,7 +105,7 @@ generate(SordWorld* world,
 	tup[0] = uri(world, 96);
 	tup[1] = uri(world, 4);
 	tup[2] = sord_new_literal(world, uri(world, 4), USTR("hello"), NULL);
-	tup[3] = 0;
+	tup[3] = graph;
 	sord_add(sord, tup);
 	sord_node_free(world, (SordNode*)tup[2]);
 	tup[2] = sord_new_literal(world, uri(world, 5), USTR("hello"), NULL);
@@ -115,7 +117,7 @@ generate(SordWorld* world,
 	tup[0] = uri(world, 94);
 	tup[1] = uri(world, 5);
 	tup[2] = sord_new_literal(world, 0, USTR("hello"), NULL);
-	tup[3] = 0;
+	tup[3] = graph;
 	sord_add(sord, tup);
 	sord_node_free(world, (SordNode*)tup[2]);
 	tup[2] = sord_new_literal(world, NULL, USTR("hello"), "en-gb");
@@ -127,7 +129,7 @@ generate(SordWorld* world,
 	tup[0] = uri(world, 92);
 	tup[1] = uri(world, 6);
 	tup[2] = sord_new_literal(world, 0, USTR("hello"), "en-us");
-	tup[3] = 0;
+	tup[3] = graph;
 	sord_add(sord, tup);
 	sord_node_free(world, (SordNode*)tup[2]);
 	tup[2] = sord_new_literal(world, NULL, USTR("hello"), "en-gb");
@@ -188,8 +190,9 @@ test_read(SordWorld* world, SordModel* sord, SordNode* g,
 		return test_fail("Fail: Iterator has incorrect sord pointer\n");
 	}
 
-	for (; !sord_iter_end(iter); sord_iter_next(iter))
+	for (; !sord_iter_end(iter); sord_iter_next(iter)) {
 		sord_iter_get(iter, id);
+	}
 
 	// Attempt to increment past end
 	if (!sord_iter_next(iter)) {
@@ -205,10 +208,11 @@ test_read(SordWorld* world, SordModel* sord, SordNode* g,
 	SordNode* gb_hello    = sord_new_literal(world, NULL, s, "en-gb");
 	SordNode* us_hello    = sord_new_literal(world, NULL, s, "en-us");
 
-#define NUM_PATTERNS 17
+#define NUM_PATTERNS 18
 
 	QueryTest patterns[NUM_PATTERNS] = {
-		{ { 0, 0, 0 }, (n_quads * n_objects_per) + 12 },
+		{ { 0, 0, 0 }, (int)(n_quads * n_objects_per) + 12 },
+		{ { uri(world, 1), 0, 0 }, 2 },
 		{ { uri(world, 9), uri(world, 9), uri(world, 9) }, 0 },
 		{ { uri(world, 1), uri(world, 2), uri(world, 4) }, 1 },
 		{ { uri(world, 3), uri(world, 4), uri(world, 0) }, 2 },
@@ -310,8 +314,9 @@ test_read(SordWorld* world, SordModel* sord, SordNode* g,
 	iter = sord_search(sord, NULL, NULL, NULL, NULL);
 	for (; !sord_iter_end(iter); sord_iter_next(iter)) {
 		sord_iter_get(iter, id);
-		if (id[0] == last_subject)
+		if (id[0] == last_subject) {
 			continue;
+		}
 
 		SordQuad  subpat          = { id[0], 0, 0 };
 		SordIter* subiter         = sord_find(sord, subpat);
@@ -353,6 +358,31 @@ test_read(SordWorld* world, SordModel* sord, SordNode* g,
 	return ret;
 }
 
+static SerdStatus
+unexpected_error(void* handle, const SerdError* error)
+{
+	fprintf(stderr, "unexpected error: ");
+	vfprintf(stderr, error->fmt, *error->args);
+	return SERD_SUCCESS;
+}
+
+static SerdStatus
+expected_error(void* handle, const SerdError* error)
+{
+	fprintf(stderr, "expected error: ");
+	vfprintf(stderr, error->fmt, *error->args);
+	++n_expected_errors;
+	return SERD_SUCCESS;
+}
+
+static int
+finished(SordWorld* world, SordModel* sord, int status)
+{
+	sord_free(sord);
+	sord_world_free(world);
+	return status;
+}
+
 int
 main(int argc, char** argv)
 {
@@ -361,6 +391,53 @@ main(int argc, char** argv)
 	sord_free(NULL);  // Shouldn't crash
 
 	SordWorld* world = sord_world_new();
+
+
+	// Attempt to create invalid URI
+	fprintf(stderr, "expected ");
+	SordNode* bad_uri = sord_new_uri(world, USTR("noscheme"));
+	if (bad_uri) {
+		return test_fail("Successfully created invalid URI \"noscheme\"\n");
+	}
+	sord_node_free(world, bad_uri);
+
+	sord_world_set_error_sink(world, expected_error, NULL);
+
+	// Attempt to create invalid CURIE
+	SerdNode  base = serd_node_from_string(SERD_URI, USTR("http://example.org/"));
+	SerdEnv*  env  = serd_env_new(&base);
+	SerdNode  sbad = serd_node_from_string(SERD_CURIE, USTR("bad:"));
+	SordNode* bad  = sord_node_from_serd_node(world, env, &sbad, NULL, NULL);
+	if (bad) {
+		return test_fail("Successfully created CURIE with bad namespace\n");
+	}
+	sord_node_free(world, bad);
+	serd_env_free(env);
+
+	// Attempt to create node from garbage
+	SerdNode junk = SERD_NODE_NULL;
+	junk.type = (SerdType)1234;
+	if (sord_node_from_serd_node(world, env, &junk, NULL, NULL)) {
+		return test_fail("Successfully created node from garbage serd node\n");
+	}
+
+	// Attempt to create NULL node
+	SordNode* nil_node = sord_node_from_serd_node(
+		world, NULL, &SERD_NODE_NULL, NULL, NULL);
+	if (nil_node) {
+		return test_fail("Successfully created NULL node\n");
+	}
+	sord_node_free(world, nil_node);
+
+	// Check node flags are set properly
+	SordNode* with_newline = sord_new_literal(world, NULL, USTR("a\nb"), NULL);
+	if (!(sord_node_get_flags(with_newline) & SERD_HAS_NEWLINE)) {
+		return test_fail("Newline flag not set\n");
+	}
+	SordNode* with_quote = sord_new_literal(world, NULL, USTR("a\"b"), NULL);
+	if (!(sord_node_get_flags(with_quote) & SERD_HAS_QUOTE)) {
+		return test_fail("Quote flag not set\n");
+	}
 
 	// Create with minimal indexing
 	SordModel* sord = sord_new(world, SORD_SPO, false);
@@ -373,6 +450,7 @@ main(int argc, char** argv)
 	}
 
 	// Check adding tuples with NULL fields fails
+	sord_world_set_error_sink(world, expected_error, NULL);
 	const size_t initial_num_quads = sord_num_quads(sord);
 	SordQuad tup = { 0, 0, 0, 0};
 	if (sord_add(sord, tup)) {
@@ -391,6 +469,28 @@ main(int argc, char** argv)
 		return test_fail("Num quads %zu != %zu\n",
 		                 sord_num_quads(sord), initial_num_quads);
 	}
+
+	// Check adding tuples with an active iterator fails
+	SordIter* iter = sord_begin(sord);
+	tup[2] = uri(world, 3);
+	if (sord_add(sord, tup)) {
+		return test_fail("Added tuple with active iterator\n");
+	}
+
+	// Check removing tuples with several active iterator fails
+	SordIter* iter2 = sord_begin(sord);
+	if (!sord_erase(sord, iter)) {
+		return test_fail("Erased tuple with several active iterators\n");
+	}
+	n_expected_errors = 0;
+	sord_remove(sord, tup);
+	if (n_expected_errors != 1) {
+		return test_fail("Removed tuple with several active iterators\n");
+	}
+	sord_iter_free(iter);
+	sord_iter_free(iter2);
+
+	sord_world_set_error_sink(world, unexpected_error, NULL);
 
 	// Check interning merges equivalent values
 	SordNode* uri_id   = sord_new_uri(world, USTR("http://example.org"));
@@ -411,27 +511,48 @@ main(int argc, char** argv)
 	SordNode* lit_id2   = sord_new_literal(world, uri_id, USTR("hello"), NULL);
 	if (uri_id2 != uri_id || !sord_node_equals(uri_id2, uri_id)) {
 		fprintf(stderr, "Fail: URI interning failed (duplicates)\n");
-		goto fail;
+		return finished(world, sord, EXIT_FAILURE);
 	} else if (blank_id2 != blank_id
 	           || !sord_node_equals(blank_id2, blank_id)) {
 		fprintf(stderr, "Fail: Blank node interning failed (duplicates)\n");
-		goto fail;
+		return finished(world, sord, EXIT_FAILURE);
 	} else if (lit_id2 != lit_id || !sord_node_equals(lit_id2, lit_id)) {
 		fprintf(stderr, "Fail: Literal interning failed (duplicates)\n");
-		goto fail;
-	}
-
-	size_t len;
-	const uint8_t* str = sord_node_get_string_counted(lit_id2, &len);
-	if (strcmp((const char*)str, "hello")) {
-		return test_fail("Literal node corrupt\n");
-	} else if (len != strlen("hello")) {
-		return test_fail("Literal length incorrect\n");
+		return finished(world, sord, EXIT_FAILURE);
 	}
 
 	if (sord_num_nodes(world) != initial_num_nodes) {
 		return test_fail("Num nodes %zu != %zu\n",
 		                 sord_num_nodes(world), initial_num_nodes);
+	}
+
+	const uint8_t ni_hao[] = { 0xE4, 0xBD, 0xA0, 0xE5, 0xA5, 0xBD, 0 };
+	SordNode*     chello   = sord_new_literal(world, NULL, ni_hao, "cmn");
+
+	// Test literal length
+	size_t         n_bytes;
+	size_t         n_chars;
+	const uint8_t* str = sord_node_get_string_counted(lit_id2, &n_bytes);
+	if (strcmp((const char*)str, "hello")) {
+		return test_fail("Literal node corrupt\n");
+	} else if (n_bytes != strlen("hello")) {
+		return test_fail("ASCII literal byte count incorrect\n");
+	}
+
+	str = sord_node_get_string_measured(lit_id2, &n_bytes, &n_chars);
+	if (n_bytes != strlen("hello") || n_chars != strlen("hello")) {
+		return test_fail("ASCII literal measured length incorrect\n");
+	} else if (strcmp((const char*)str, "hello")) {
+		return test_fail("ASCII literal string incorrect\n");
+	}
+
+	str = sord_node_get_string_measured(chello, &n_bytes, &n_chars);
+	if (n_bytes != 6) {
+		return test_fail("Multi-byte literal byte count incorrect\n");
+	} else if (n_chars != 2) {
+		return test_fail("Multi-byte literal character count incorrect\n");
+	} else if (strcmp((const char*)str, (const char*)ni_hao)) {
+		return test_fail("Multi-byte literal string incorrect\n");
 	}
 
 	// Check interning doesn't clash non-equivalent values
@@ -440,13 +561,13 @@ main(int argc, char** argv)
 	SordNode* lit_id3   = sord_new_literal(world, uri_id, USTR("helloX"), NULL);
 	if (uri_id3 == uri_id || sord_node_equals(uri_id3, uri_id)) {
 		fprintf(stderr, "Fail: URI interning failed (clash)\n");
-		goto fail;
+		return finished(world, sord, EXIT_FAILURE);
 	} else if (blank_id3 == blank_id || sord_node_equals(blank_id3, blank_id)) {
 		fprintf(stderr, "Fail: Blank node interning failed (clash)\n");
-		goto fail;
+		return finished(world, sord, EXIT_FAILURE);
 	} else if (lit_id3 == lit_id || sord_node_equals(lit_id3, lit_id)) {
 		fprintf(stderr, "Fail: Literal interning failed (clash)\n");
-		goto fail;
+		return finished(world, sord, EXIT_FAILURE);
 	}
 
 	// Check literal interning
@@ -457,7 +578,7 @@ main(int argc, char** argv)
 	    || lit4 == lit6 || sord_node_equals(lit4, lit6)
 	    || lit5 == lit6 || sord_node_equals(lit5, lit6)) {
 		fprintf(stderr, "Fail: Literal interning failed (type/lang clash)\n");
-		goto fail;
+		return finished(world, sord, EXIT_FAILURE);
 	}
 
 	// Check relative URI construction
@@ -467,7 +588,7 @@ main(int argc, char** argv)
 	           "http://example.org/a/b")) {
 		fprintf(stderr, "Fail: Bad relative URI constructed: <%s>\n",
 		        sord_node_get_string(reluri));
-		goto fail;
+		return finished(world, sord, EXIT_FAILURE);
 	}
 	SordNode* reluri2 = sord_new_relative_uri(
 		world, USTR("http://drobilla.net/"), USTR("http://example.org/"));
@@ -475,7 +596,7 @@ main(int argc, char** argv)
 	           "http://drobilla.net/")) {
 		fprintf(stderr, "Fail: Bad relative URI constructed: <%s>\n",
 		        sord_node_get_string(reluri));
-		goto fail;
+		return finished(world, sord, EXIT_FAILURE);
 	}
 
 	// Check comparison with NULL
@@ -498,8 +619,9 @@ main(int argc, char** argv)
 		sord = sord_new(world, (1 << i), false);
 		printf("Testing Index `%s'\n", index_names[i]);
 		generate(world, sord, n_quads, 0);
-		if (test_read(world, sord, 0, n_quads))
-			goto fail;
+		if (test_read(world, sord, 0, n_quads)) {
+			return finished(world, sord, EXIT_FAILURE);
+		}
 		sord_free(sord);
 	}
 
@@ -512,13 +634,14 @@ main(int argc, char** argv)
 		printf("Testing Index `%s'\n", graph_index_names[i]);
 		SordNode* graph = uri(world, 42);
 		generate(world, sord, n_quads, graph);
-		if (test_read(world, sord, graph, n_quads))
-			goto fail;
+		if (test_read(world, sord, graph, n_quads)) {
+			return finished(world, sord, EXIT_FAILURE);
+		}
 		sord_free(sord);
 	}
 
 	// Test removing
-	sord = sord_new(world, SORD_SPO, false);
+	sord = sord_new(world, SORD_SPO, true);
 	tup[0] = uri(world, 1);
 	tup[1] = uri(world, 2);
 	tup[2] = sord_new_literal(world, 0, USTR("hello"), NULL);
@@ -526,26 +649,110 @@ main(int argc, char** argv)
 	sord_add(sord, tup);
 	if (!sord_ask(sord, tup[0], tup[1], tup[2], tup[3])) {
 		fprintf(stderr, "Failed to add tuple\n");
-		goto fail;
+		return finished(world, sord, EXIT_FAILURE);
 	}
 	sord_node_free(world, (SordNode*)tup[2]);
 	tup[2] = sord_new_literal(world, 0, USTR("hi"), NULL);
 	sord_add(sord, tup);
 	sord_remove(sord, tup);
 	if (sord_num_quads(sord) != 1) {
-		fprintf(stderr, "Removed failed (%zu quads, expected 1)\n",
+		fprintf(stderr, "Remove failed (%zu quads, expected 1)\n",
 		        sord_num_quads(sord));
-		goto fail;
+		return finished(world, sord, EXIT_FAILURE);
 	}
 
+	iter = sord_find(sord, tup);
+	if (!sord_iter_end(iter)) {
+		fprintf(stderr, "Found removed tuple\n");
+		return finished(world, sord, EXIT_FAILURE);
+	}
+	sord_iter_free(iter);
+
+	// Test double remove (silent success)
+	sord_remove(sord, tup);
+
+	// Load a couple graphs
+	SordNode* graph42 = uri(world, 42);
+	SordNode* graph43 = uri(world, 43);
+	generate(world, sord, 1, graph42);
+	generate(world, sord, 1, graph43);
+
+	// Remove one graph via iterator
+	SerdStatus st;
+	iter = sord_search(sord, NULL, NULL, NULL, graph43);
+	while (!sord_iter_end(iter)) {
+		if ((st = sord_erase(sord, iter))) {
+			fprintf(stderr, "Remove by iterator failed (%s)\n",
+			        serd_strerror(st));
+			return finished(world, sord, EXIT_FAILURE);
+		}
+	}
+	sord_iter_free(iter);
+
+	// Erase the first tuple (an element in the default graph)
+	iter = sord_begin(sord);
+	if (sord_erase(sord, iter)) {
+		return test_fail("Failed to erase begin iterator on non-empty model\n");
+	}
+	sord_iter_free(iter);
+
+	// Ensure only the other graph is left
+	SordQuad quad;
+	SordQuad pat = { 0, 0, 0, graph42 };
+	for (iter = sord_begin(sord); !sord_iter_end(iter); sord_iter_next(iter)) {
+		sord_iter_get(iter, quad);
+		if (!sord_quad_match(quad, pat)) {
+			fprintf(stderr, "Graph removal via iteration failed\n");
+			return finished(world, sord, EXIT_FAILURE);
+		}
+	}
+	sord_iter_free(iter);
+
+	// Load file into two separate graphs
 	sord_free(sord);
+	sord = sord_new(world, SORD_SPO, true);
+	env  = serd_env_new(&base);
+	SordNode*   graph1 = sord_new_uri(world, USTR("http://example.org/graph1"));
+	SordNode*   graph2 = sord_new_uri(world, USTR("http://example.org/graph2"));
+	SerdReader* reader = sord_new_reader(sord, env, SERD_TURTLE, graph1);
+	if ((st = serd_reader_read_string(reader, USTR("<s> <p> <o> .")))) {
+		fprintf(stderr, "Failed to read string (%s)\n", serd_strerror(st));
+		return finished(world, sord, EXIT_FAILURE);
+	}
+	serd_reader_free(reader);
+	reader = sord_new_reader(sord, env, SERD_TURTLE, graph2);
+	if ((st = serd_reader_read_string(reader, USTR("<s> <p> <o> .")))) {
+		fprintf(stderr, "Failed to re-read string (%s)\n", serd_strerror(st));
+		return finished(world, sord, EXIT_FAILURE);
+	}
+	serd_reader_free(reader);
+	serd_env_free(env);
 
-	sord_world_free(world);
+	// Ensure we only see triple once
+	size_t n_triples = 0;
+	for (iter = sord_begin(sord); !sord_iter_end(iter); sord_iter_next(iter)) {
+		fprintf(stderr, "%s %s %s %s\n",
+		        sord_node_get_string(sord_iter_get_node(iter, SORD_SUBJECT)),
+		        sord_node_get_string(sord_iter_get_node(iter, SORD_PREDICATE)),
+		        sord_node_get_string(sord_iter_get_node(iter, SORD_OBJECT)),
+		        sord_node_get_string(sord_iter_get_node(iter, SORD_GRAPH)));
 
-	return EXIT_SUCCESS;
+		++n_triples;
+	}
+	sord_iter_free(iter);
+	if (n_triples != 1) {
+		fprintf(stderr, "Found duplicate triple\n");
+		return finished(world, sord, EXIT_FAILURE);
+	}
 
-fail:
+	// Test SPO iteration on an SOP indexed store
 	sord_free(sord);
-	sord_world_free(world);
-	return EXIT_FAILURE;
+	sord = sord_new(world, SORD_SOP, false);
+	generate(world, sord, 1, graph42);
+	for (iter = sord_begin(sord); !sord_iter_end(iter); sord_iter_next(iter)) {
+		++n_triples;
+	}
+	sord_iter_free(iter);
+
+	return finished(world, sord, EXIT_SUCCESS);
 }

@@ -1,0 +1,8 @@
+<http://example.org/ex1#foo-bar> <http://example.org/ex1#foo_bar> "a" .
+<http://example.org/ex2#foo-bar> <http://example.org/ex2#foo_bar> "b" .
+<http://example.org/ex3#foo-bar> <http://example.org/ex3#foo_bar> "c" .
+<http://example.org/ex4#foo-bar> <http://example.org/ex4#foo_bar> "d" .
+<http://example.org/ex1#foo-bar> <http://example.org/ex1#foo_bar> "a" <http://example/graph> .
+<http://example.org/ex2#foo-bar> <http://example.org/ex2#foo_bar> "b" <http://example/graph> .
+<http://example.org/ex3#foo-bar> <http://example.org/ex3#foo_bar> "c" <http://example/graph> .
+<http://example.org/ex4#foo-bar> <http://example.org/ex4#foo_bar> "d" <http://example/graph> .

@@ -1,0 +1,16 @@
+# Test for : allowed
+@prefix :    <http://example.org/ron> .
+
+{
+[] : [] .
+
+: : : .
+
+}
+
+<http://example/graph> {
+[] : [] .
+
+: : : .
+
+}

@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2014 David Robillard <http://drobilla.net>
+  Copyright 2008-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -15,6 +15,15 @@
 */
 
 #include "lilv_internal.h"
+
+#include "lilv/lilv.h"
+#include "sord/sord.h"
+#include "zix/common.h"
+#include "zix/tree.h"
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 int
 lilv_ptr_cmp(const void* a, const void* b, void* user_data)
@@ -39,16 +48,17 @@ lilv_collection_new(ZixComparator cmp, ZixDestroyFunc destructor)
 }
 
 void
-lilv_collection_free(LilvCollection* coll)
+lilv_collection_free(LilvCollection* collection)
 {
-	if (coll)
-		zix_tree_free((ZixTree*)coll);
+	if (collection) {
+		zix_tree_free((ZixTree*)collection);
+	}
 }
 
 unsigned
-lilv_collection_size(const LilvCollection* coll)
+lilv_collection_size(const LilvCollection* collection)
 {
-	return (coll ? zix_tree_size((const ZixTree*)coll) : 0);
+	return (collection ? zix_tree_size((const ZixTree*)collection) : 0);
 }
 
 LilvIter*
@@ -97,17 +107,17 @@ lilv_plugin_classes_new(void)
 /* URI based accessors (for collections of things with URIs) */
 
 LILV_API const LilvPluginClass*
-lilv_plugin_classes_get_by_uri(const LilvPluginClasses* coll,
+lilv_plugin_classes_get_by_uri(const LilvPluginClasses* classes,
                                const LilvNode*          uri)
 {
 	return (LilvPluginClass*)lilv_collection_get_by_uri(
-		(const ZixTree*)coll, uri);
+		(const ZixTree*)classes, uri);
 }
 
 LILV_API const LilvUI*
-lilv_uis_get_by_uri(const LilvUIs* coll, const LilvNode* uri)
+lilv_uis_get_by_uri(const LilvUIs* uis, const LilvNode* uri)
 {
-	return (LilvUI*)lilv_collection_get_by_uri((const ZixTree*)coll, uri);
+	return (LilvUI*)lilv_collection_get_by_uri((const ZixTree*)uis, uri);
 }
 
 /* Plugins */
@@ -119,19 +129,22 @@ lilv_plugins_new(void)
 }
 
 LILV_API const LilvPlugin*
-lilv_plugins_get_by_uri(const LilvPlugins* list, const LilvNode* uri)
+lilv_plugins_get_by_uri(const LilvPlugins* plugins, const LilvNode* uri)
 {
-	return (LilvPlugin*)lilv_collection_get_by_uri((const ZixTree*)list, uri);
+	return (LilvPlugin*)lilv_collection_get_by_uri(
+		(const ZixTree*)plugins, uri);
 }
 
 /* Nodes */
 
 LILV_API bool
-lilv_nodes_contains(const LilvNodes* list, const LilvNode* value)
+lilv_nodes_contains(const LilvNodes* nodes, const LilvNode* value)
 {
-	LILV_FOREACH(nodes, i, list)
-		if (lilv_node_equals(lilv_nodes_get(list, i), value))
+	LILV_FOREACH(nodes, i, nodes) {
+		if (lilv_node_equals(lilv_nodes_get(nodes, i), value)) {
 			return true;
+		}
+	}
 
 	return false;
 }

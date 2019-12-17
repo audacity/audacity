@@ -1,0 +1,6 @@
+@prefix : <http://example/> .
+{
+:s1 :p :o .
+[ :p1  :o1 ; :p2 :o2 ] .
+:s2 :p :o .
+}

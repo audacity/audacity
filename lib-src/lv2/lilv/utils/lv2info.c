@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2014 David Robillard <http://drobilla.net>
+  Copyright 2007-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -14,23 +14,20 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <float.h>
+#include "lilv_config.h"
+
+#include "lilv/lilv.h"
+#include "lv2/core/lv2.h"
+#include "lv2/event/event.h"
+#include "lv2/port-groups/port-groups.h"
+#include "lv2/presets/presets.h"
+
 #include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "lv2/lv2plug.in/ns/ext/port-groups/port-groups.h"
-#include "lv2/lv2plug.in/ns/ext/presets/presets.h"
-#include "lv2/lv2plug.in/ns/ext/event/event.h"
-
-#include "lilv/lilv.h"
-
-#include "lilv_config.h"
-
-#ifdef _MSC_VER
-#    define isnan _isnan
-#endif
 
 LilvNode* applies_to_pred     = NULL;
 LilvNode* control_class       = NULL;
@@ -84,8 +81,9 @@ print_port(const LilvPlugin* p,
 	}
 
 	LilvScalePoints* points = lilv_port_get_scale_points(p, port);
-	if (points)
+	if (points) {
 		printf("\n\t\tScale Points:\n");
+	}
 	LILV_FOREACH(scale_points, i, points) {
 		const LilvScalePoint* point = lilv_scale_points_get(points, i);
 		printf("\t\t\t%s = \"%s\"\n",
@@ -116,17 +114,21 @@ print_port(const LilvPlugin* p,
 	lilv_nodes_free(designations);
 
 	if (lilv_port_is_a(p, port, control_class)) {
-		if (!isnan(mins[index]))
+		if (!isnan(mins[index])) {
 			printf("\t\tMinimum:     %f\n", mins[index]);
-		if (!isnan(maxes[index]))
+		}
+		if (!isnan(maxes[index])) {
 			printf("\t\tMaximum:     %f\n", maxes[index]);
-		if (!isnan(defaults[index]))
+		}
+		if (!isnan(defaults[index])) {
 			printf("\t\tDefault:     %f\n", defaults[index]);
+		}
 	}
 
 	LilvNodes* properties = lilv_port_get_properties(p, port);
-	if (lilv_nodes_size(properties) > 0)
+	if (lilv_nodes_size(properties) > 0) {
 		printf("\t\tProperties:  ");
+	}
 	first = true;
 	LILV_FOREACH(nodes, i, properties) {
 		if (!first) {
@@ -135,8 +137,9 @@ print_port(const LilvPlugin* p,
 		printf("%s\n", lilv_node_as_uri(lilv_nodes_get(properties, i)));
 		first = false;
 	}
-	if (lilv_nodes_size(properties) > 0)
+	if (lilv_nodes_size(properties) > 0) {
 		printf("\n");
+	}
 	lilv_nodes_free(properties);
 }
 
@@ -209,8 +212,9 @@ print_plugin(LilvWorld*        world,
 				       lilv_node_as_uri(lilv_nodes_get(types, t)));
 			}
 
-			if (binary)
+			if (binary) {
 				printf("\t\t\tBinary: %s\n", binary);
+			}
 
 			printf("\t\t\tBundle: %s\n",
 			       lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)));
@@ -233,8 +237,9 @@ print_plugin(LilvWorld*        world,
 	/* Required Features */
 
 	LilvNodes* features = lilv_plugin_get_required_features(p);
-	if (features)
+	if (features) {
 		printf("\tRequired Features: ");
+	}
 	first = true;
 	LILV_FOREACH(nodes, i, features) {
 		if (!first) {
@@ -243,15 +248,17 @@ print_plugin(LilvWorld*        world,
 		printf("%s", lilv_node_as_uri(lilv_nodes_get(features, i)));
 		first = false;
 	}
-	if (features)
+	if (features) {
 		printf("\n");
+	}
 	lilv_nodes_free(features);
 
 	/* Optional Features */
 
 	features = lilv_plugin_get_optional_features(p);
-	if (features)
+	if (features) {
 		printf("\tOptional Features: ");
+	}
 	first = true;
 	LILV_FOREACH(nodes, i, features) {
 		if (!first) {
@@ -260,15 +267,17 @@ print_plugin(LilvWorld*        world,
 		printf("%s", lilv_node_as_uri(lilv_nodes_get(features, i)));
 		first = false;
 	}
-	if (features)
+	if (features) {
 		printf("\n");
+	}
 	lilv_nodes_free(features);
 
 	/* Extension Data */
 
 	LilvNodes* data = lilv_plugin_get_extension_data(p);
-	if (data)
+	if (data) {
 		printf("\tExtension Data:    ");
+	}
 	first = true;
 	LILV_FOREACH(nodes, i, data) {
 		if (!first) {
@@ -277,15 +286,17 @@ print_plugin(LilvWorld*        world,
 		printf("%s", lilv_node_as_uri(lilv_nodes_get(data, i)));
 		first = false;
 	}
-	if (data)
+	if (data) {
 		printf("\n");
+	}
 	lilv_nodes_free(data);
 
 	/* Presets */
 
 	LilvNodes* presets = lilv_plugin_get_related(p, preset_class);
-	if (presets)
+	if (presets) {
 		printf("\tPresets: \n");
+	}
 	LILV_FOREACH(nodes, i, presets) {
 		const LilvNode* preset = lilv_nodes_get(presets, i);
 		lilv_world_load_resource(world, preset);
@@ -310,8 +321,9 @@ print_plugin(LilvWorld*        world,
 	float* defaults = (float*)calloc(num_ports, sizeof(float));
 	lilv_plugin_get_port_ranges_float(p, mins, maxes, defaults);
 
-	for (uint32_t i = 0; i < num_ports; ++i)
+	for (uint32_t i = 0; i < num_ports; ++i) {
 		print_port(p, i, mins, maxes, defaults);
+	}
 
 	free(mins);
 	free(maxes);
@@ -323,7 +335,7 @@ print_version(void)
 {
 	printf(
 		"lv2info (lilv) " LILV_VERSION "\n"
-		"Copyright 2007-2014 David Robillard <http://drobilla.net>\n"
+		"Copyright 2007-2019 David Robillard <http://drobilla.net>\n"
 		"License: <http://www.opensource.org/licenses/isc-license>\n"
 		"This is free software: you are free to change and redistribute it.\n"
 		"There is NO WARRANTY, to the extent permitted by law.\n");

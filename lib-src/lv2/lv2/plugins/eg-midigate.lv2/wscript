@@ -12,17 +12,18 @@ out = 'build'
 
 def options(opt):
     opt.load('compiler_c')
+    opt.load('lv2')
     autowaf.set_options(opt)
 
 def configure(conf):
-    conf.load('compiler_c')
-    autowaf.configure(conf)
-    autowaf.set_c99_mode(conf)
     autowaf.display_header('Midigate Configuration')
+    conf.load('compiler_c', cache=True)
+    conf.load('lv2', cache=True)
+    conf.load('autowaf', cache=True)
 
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
-        
+
     autowaf.display_msg(conf, 'LV2 bundle directory', conf.env.LV2DIR)
     print('')
 
@@ -62,4 +63,3 @@ def build(bld):
               uselib       = 'LV2',
               includes     = includes)
     obj.env.cshlib_PATTERN = module_pat
-

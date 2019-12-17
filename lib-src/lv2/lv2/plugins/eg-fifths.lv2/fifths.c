@@ -1,6 +1,6 @@
 /*
   LV2 Fifths Example Plugin
-  Copyright 2014 David Robillard <d@drobilla.net>
+  Copyright 2014-2016 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -15,23 +15,21 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
-#ifndef __cplusplus
-#    include <stdbool.h>
-#endif
-
-#include <sndfile.h>
-
-#include "lv2/lv2plug.in/ns/ext/atom/util.h"
-#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
-#include "lv2/lv2plug.in/ns/ext/patch/patch.h"
-#include "lv2/lv2plug.in/ns/ext/state/state.h"
-#include "lv2/lv2plug.in/ns/ext/urid/urid.h"
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
-
 #include "./uris.h"
+
+#include "lv2/atom/atom.h"
+#include "lv2/atom/util.h"
+#include "lv2/core/lv2.h"
+#include "lv2/core/lv2_util.h"
+#include "lv2/log/log.h"
+#include "lv2/log/logger.h"
+#include "lv2/midi/midi.h"
+#include "lv2/urid/urid.h"
+
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 enum {
 	FIFTHS_IN  = 0,
@@ -40,7 +38,8 @@ enum {
 
 typedef struct {
 	// Features
-	LV2_URID_Map* map;
+	LV2_URID_Map*  map;
+	LV2_Log_Logger logger;
 
 	// Ports
 	const LV2_Atom_Sequence* in_port;
@@ -75,27 +74,26 @@ instantiate(const LV2_Descriptor*     descriptor,
             const LV2_Feature* const* features)
 {
 	// Allocate and initialise instance structure.
-	Fifths* self = (Fifths*)malloc(sizeof(Fifths));
+	Fifths* self = (Fifths*)calloc(1, sizeof(Fifths));
 	if (!self) {
 		return NULL;
 	}
-	memset(self, 0, sizeof(Fifths));
 
-	// Get host features
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID__map)) {
-			self->map = (LV2_URID_Map*)features[i]->data;
-		}
-	}
-	if (!self->map) {
-		fprintf(stderr, "Missing feature urid:map\n");
+	// Scan host features for URID map
+	const char*  missing = lv2_features_query(
+		features,
+		LV2_LOG__log,  &self->logger.log, false,
+		LV2_URID__map, &self->map,        true,
+		NULL);
+	lv2_log_logger_set_map(&self->logger, self->map);
+	if (missing) {
+		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
 		free(self);
 		return NULL;
 	}
 
-	// Map URIs and initialise forge/logger
 	map_fifths_uris(self->map, &self->uris);
- 
+
 	return (LV2_Handle)self;
 }
 
@@ -138,16 +136,15 @@ run(LV2_Handle instance,
 				lv2_atom_sequence_append_event(
 					self->out_port, out_capacity, ev);
 
-				const uint8_t note = msg[1];
-				if (note <= 127 - 7) {
+				if (msg[1] <= 127 - 7) {
 					// Make a note one 5th (7 semitones) higher than input
 					MIDINoteEvent fifth;
-					
+
 					// Could simply do fifth.event = *ev here instead...
 					fifth.event.time.frames = ev->time.frames;  // Same time
 					fifth.event.body.type   = ev->body.type;    // Same type
 					fifth.event.body.size   = ev->body.size;    // Same size
-					
+
 					fifth.msg[0] = msg[0];      // Same status
 					fifth.msg[1] = msg[1] + 7;  // Pitch up 7 semitones
 					fifth.msg[2] = msg[2];      // Same velocity

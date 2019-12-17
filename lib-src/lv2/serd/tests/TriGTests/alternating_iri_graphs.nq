@@ -1,0 +1,4 @@
+<http://example/a> <http://example/b> <http://example/c> .
+<http://example/a> <http://example/b> <http://example/d> <http://example/G> .
+<http://example/a> <http://example/b> <http://example/e> .
+<http://example/a> <http://example/b> <http://example/f> <http://example/G> .

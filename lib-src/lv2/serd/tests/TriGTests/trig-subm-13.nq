@@ -1,0 +1,8 @@
+<http://example.org/ex#foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> "1" .
+<http://example.org/ex#foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> "2" .
+<http://example.org/ex#foo> <http://example.org/myprop#_abc> "def" .
+<http://example.org/ex#foo> <http://example.org/myprop#_345> "678" .
+<http://example.org/ex#foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> "1" <http://example/graph> .
+<http://example.org/ex#foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> "2" <http://example/graph> .
+<http://example.org/ex#foo> <http://example.org/myprop#_abc> "def" <http://example/graph> .
+<http://example.org/ex#foo> <http://example.org/myprop#_345> "678" <http://example/graph> .

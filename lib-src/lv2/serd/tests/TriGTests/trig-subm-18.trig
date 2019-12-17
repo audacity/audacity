@@ -1,0 +1,15 @@
+@prefix : <http://example.org/#> .
+
+{
+:a :b "" .
+
+:c :d """""" .
+
+}
+
+<http://example/graph> {
+:a :b "" .
+
+:c :d """""" .
+
+}

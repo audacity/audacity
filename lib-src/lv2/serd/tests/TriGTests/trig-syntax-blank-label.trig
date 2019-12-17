@@ -1,0 +1,6 @@
+@prefix : <http://example/> .
+{
+_:0b :p :o . # Starts with digit
+_:_b :p :o . # Starts with underscore
+_:b.0 :p :o . # Contains dot, ends with digit
+}

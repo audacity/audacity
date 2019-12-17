@@ -1,5 +1,5 @@
 /*
-  Copyright 2006-2011 David Robillard <d@drobilla.net>
+  Copyright 2006-2019 David Robillard <d@drobilla.net>
   Copyright 2006 Steve Harris <steve@plugin.org.uk>
 
   Permission to use, copy, modify, and/or distribute this software for any
@@ -15,10 +15,6 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/** Include standard C headers */
-#include <math.h>
-#include <stdlib.h>
-
 /**
    LV2 headers are based on the URI of the specification they come from, so a
    consistent convention can be used even for unofficial extensions.  The URI
@@ -26,7 +22,11 @@
    replacing `http:/` with `lv2` any header in the specification bundle can be
    included, in this case `lv2.h`.
 */
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include "lv2/core/lv2.h"
+
+/** Include standard C headers */
+#include <math.h>
+#include <stdlib.h>
 
 /**
    The URI is the identifier for a plugin, and how the host associates this
@@ -54,7 +54,7 @@ typedef enum {
    every instance method.  In this simple plugin, only port buffers need to be
    stored, since there is no additional instance data.  */
 typedef struct {
-	// Port buffers
+	float* buf;
 } Test;
 
 /**
@@ -179,7 +179,7 @@ static const LV2_Descriptor descriptor = {
    indices to find all the plugins defined in the library.  The index is not an
    indentifier, the URI of the returned descriptor is used to determine the
    identify of the plugin.
-   
+
    This method is in the ``discovery'' threading class, so no other functions
    or methods in this plugin library will be called concurrently with it.
 */

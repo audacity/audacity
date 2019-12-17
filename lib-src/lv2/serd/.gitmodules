@@ -1,0 +1,3 @@
+[submodule "waflib"]
+	path = waflib
+	url = ../autowaf.git

@@ -1,14 +1,16 @@
 #!/usr/bin/env python
+
 import os
 import subprocess
-import waflib.Options as Options
-import waflib.extras.autowaf as autowaf
+
+from waflib import Logs, Options
+from waflib.extras import autowaf
 
 # Library and package version (UNIX style major, minor, micro)
 # major increment <=> incompatible changes
 # minor increment <=> compatible changes (additions)
 # micro increment <=> no interface changes
-SRATOM_VERSION       = '0.4.6'
+SRATOM_VERSION       = '0.6.4'
 SRATOM_MAJOR_VERSION = '0'
 
 # Mandatory waf variables
@@ -17,48 +19,37 @@ VERSION = SRATOM_VERSION  # Package version for waf dist
 top     = '.'             # Source directory
 out     = 'build'         # Build directory
 
-def options(opt):
-    opt.load('compiler_c')
-    autowaf.set_options(opt)
-    opt.add_option('--test', action='store_true', dest='build_tests',
-                   help="Build unit tests")
-    opt.add_option('--static', action='store_true', dest='static',
-                   help="Build static library")
-    opt.add_option('--no-shared', action='store_true', dest='no_shared',
-                   help='Do not build shared library')
+# Release variables
+uri          = 'http://drobilla.net/sw/sratom'
+dist_pattern = 'http://download.drobilla.net/sratom-%d.%d.%d.tar.bz2'
+post_tags    = ['Hacking', 'LAD', 'LV2', 'RDF', 'Sratom']
+
+def options(ctx):
+    ctx.load('compiler_c')
+    ctx.add_flags(
+        ctx.configuration_options(),
+        {'static':    'build static library',
+         'no-shared': 'do not build shared library'})
 
 def configure(conf):
-    conf.load('compiler_c')
-    autowaf.configure(conf)
-    autowaf.set_c99_mode(conf)
-    autowaf.display_header('Sratom Configuration')
+    conf.load('compiler_c', cache=True)
+    conf.load('autowaf', cache=True)
+    autowaf.set_c_lang(conf, 'c99')
 
-    conf.env.BUILD_TESTS  = Options.options.build_tests
     conf.env.BUILD_SHARED = not Options.options.no_shared
     conf.env.BUILD_STATIC = Options.options.static
 
     if not conf.env.BUILD_SHARED and not conf.env.BUILD_STATIC:
         conf.fatal('Neither a shared nor a static build requested')
 
-    # Check for gcov library (for test coverage)
-    if conf.env.BUILD_TESTS:
-        conf.check_cc(lib='gcov',
-                      define_name='HAVE_GCOV',
-                      mandatory=False)
+    conf.check_pkg('lv2 >= 1.16.0', uselib_store='LV2')
+    conf.check_pkg('serd-0 >= 0.30.0', uselib_store='SERD')
+    conf.check_pkg('sord-0 >= 0.14.0', uselib_store='SORD')
 
-    autowaf.check_pkg(conf, 'lv2', uselib_store='LV2',
-                      atleast_version='1.8.1', mandatory=True)
-    autowaf.check_pkg(conf, 'serd-0', uselib_store='SERD',
-                      atleast_version='0.14.0', mandatory=True)
-    autowaf.check_pkg(conf, 'sord-0', uselib_store='SORD',
-                      atleast_version='0.12.0', mandatory=True)
-
-    autowaf.define(conf, 'SRATOM_VERSION', SRATOM_VERSION)
     autowaf.set_lib_env(conf, 'sratom', SRATOM_VERSION)
     conf.write_config_header('sratom_config.h', remove=False)
 
-    autowaf.display_msg(conf, "Unit tests", str(conf.env.BUILD_TESTS))
-    print('')
+    autowaf.display_summary(conf, {'Unit tests': bool(conf.env.BUILD_TESTS)})
 
 lib_source = ['src/sratom.c']
 
@@ -68,9 +59,9 @@ def build(bld):
     bld.install_files(includedir, bld.path.ant_glob('sratom/*.h'))
 
     # Pkgconfig file
-    autowaf.build_pc(bld, 'SRATOM', SRATOM_VERSION, SRATOM_MAJOR_VERSION,
-                     ['SERD', 'SORD', 'LV2'],
-                     {'SRATOM_MAJOR_VERSION' : SRATOM_MAJOR_VERSION})
+    autowaf.build_pc(bld, 'SRATOM', SRATOM_VERSION, SRATOM_MAJOR_VERSION, [],
+                     {'SRATOM_MAJOR_VERSION' : SRATOM_MAJOR_VERSION,
+                      'SRATOM_PKG_DEPS' : 'lv2 serd-0 sord-0'})
 
     libflags = ['-fvisibility=hidden']
     libs     = ['m']
@@ -78,7 +69,7 @@ def build(bld):
     if bld.env.MSVC_COMPILER:
         libflags = []
         libs     = []
-        defines  = ['snprintf=_snprintf']
+        defines  = []
 
     # Shared Library
     if bld.env.BUILD_SHARED:
@@ -87,13 +78,13 @@ def build(bld):
                   source          = lib_source,
                   includes        = ['.', './src'],
                   lib             = libs,
+                  uselib          = 'SERD SORD LV2',
                   name            = 'libsratom',
                   target          = 'sratom-%s' % SRATOM_MAJOR_VERSION,
                   vnum            = SRATOM_VERSION,
                   install_path    = '${LIBDIR}',
                   defines         = defines + ['SRATOM_SHARED', 'SRATOM_INTERNAL'],
                   cflags          = libflags)
-        autowaf.use_lib(bld, obj, 'SERD SORD LV2')
 
     # Static library
     if bld.env.BUILD_STATIC:
@@ -102,31 +93,33 @@ def build(bld):
                   source          = lib_source,
                   includes        = ['.', './src'],
                   lib             = libs,
+                  uselib          = 'SERD SORD LV2',
                   name            = 'libsratom_static',
                   target          = 'sratom-%s' % SRATOM_MAJOR_VERSION,
                   vnum            = SRATOM_VERSION,
                   install_path    = '${LIBDIR}',
                   defines         = defines + ['SRATOM_INTERNAL'])
-        autowaf.use_lib(bld, obj, 'SERD SORD LV2')
 
     if bld.env.BUILD_TESTS:
         test_libs   = libs
         test_cflags = ['']
-        if bld.is_defined('HAVE_GCOV'):
-            test_libs   += ['gcov']
-            test_cflags += ['-fprofile-arcs', '-ftest-coverage']
+        test_linkflags  = ['']
+        if not bld.env.NO_COVERAGE:
+            test_cflags    += ['--coverage']
+            test_linkflags += ['--coverage']
 
         # Static library (for unit test code coverage)
         obj = bld(features     = 'c cstlib',
                   source       = lib_source,
                   includes     = ['.', './src'],
                   lib          = test_libs,
+                  uselib       = 'SERD SORD LV2',
                   name         = 'libsratom_profiled',
                   target       = 'sratom_profiled',
                   install_path = '',
                   defines      = defines + ['SRATOM_INTERNAL'],
-                  cflags       = test_cflags)
-        autowaf.use_lib(bld, obj, 'SERD SORD LV2')
+                  cflags       = test_cflags,
+                  linkflags    = test_linkflags)
 
         # Unit test program
         obj = bld(features     = 'c cprogram',
@@ -134,31 +127,37 @@ def build(bld):
                   includes     = ['.', './src'],
                   use          = 'libsratom_profiled',
                   lib          = test_libs,
+                  uselib       = 'SERD SORD LV2',
                   target       = 'sratom_test',
                   install_path = '',
                   defines      = defines,
-                  cflags       = test_cflags)
-        autowaf.use_lib(bld, obj, 'SERD SORD LV2')
+                  cflags       = test_cflags,
+                  linkflags    = test_linkflags)
 
     # Documentation
     autowaf.build_dox(bld, 'SRATOM', SRATOM_VERSION, top, out)
 
     bld.add_post_fun(autowaf.run_ldconfig)
-    if bld.env.DOCS:
-        bld.add_post_fun(fix_docs)
 
-def test(ctx):
-    autowaf.pre_test(ctx, APPNAME)
-    os.environ['PATH'] = '.' + os.pathsep + os.getenv('PATH')
-    autowaf.run_tests(ctx, APPNAME, ['sratom_test'], dirs=['./src','./tests'])
-    autowaf.post_test(ctx, APPNAME)
+def test(tst):
+    import sys
+
+    if sys.platform == 'win32' and '/DNDEBUG' not in tst.env.CFLAGS:
+        # FIXME: Sort out DLL memory freeing situation in next major version
+        Logs.warn("Skipping tests for Windows debug build")
+        return
+
+    with tst.group('Integration') as check:
+        check(['./sratom_test'])
 
 def lint(ctx):
-    subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-build/header_guard,-readability/casting,-readability/todo,-build/include src/* sratom/*', shell=True)
-
-def fix_docs(ctx):
-    if ctx.cmd == 'build':
-        autowaf.make_simple_dox(APPNAME)
-
-def upload_docs(ctx):
-    os.system("rsync -ravz --delete -e ssh build/doc/html/ drobilla@drobilla.net:~/drobilla.net/docs/sratom/")
+    "checks code for style issues"
+    import subprocess
+    cmd = ("clang-tidy -p=. -header-filter=.* -checks=\"*," +
+           "-bugprone-suspicious-string-compare," +
+           "-clang-analyzer-alpha.*," +
+           "-hicpp-signed-bitwise," +
+           "-llvm-header-guard," +
+           "-readability-else-after-return\" " +
+           "$(find .. -name '*.c')")
+    subprocess.call(cmd, cwd='build', shell=True)

@@ -12,13 +12,14 @@ out = 'build'
 
 def options(opt):
     opt.load('compiler_c')
+    opt.load('lv2')
     autowaf.set_options(opt)
 
 def configure(conf):
-    conf.load('compiler_c')
-    autowaf.configure(conf)
-    autowaf.set_c99_mode(conf)
     autowaf.display_header('Fifths Configuration')
+    conf.load('compiler_c', cache=True)
+    conf.load('lv2', cache=True)
+    conf.load('autowaf', cache=True)
 
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2', atleast_version='1.2.1', uselib_store='LV2')
@@ -39,7 +40,7 @@ def build(bld):
         target       = '%s/%s' % (bundle, 'manifest.ttl'),
         install_path = '${LV2DIR}/%s' % bundle,
         LIB_EXT      = module_ext)
-    
+
     # Copy other data files to build bundle (build/eg-fifths.lv2)
     for i in ['fifths.ttl']:
         bld(features     = 'subst',
@@ -59,6 +60,6 @@ def build(bld):
               name         = 'fifths',
               target       = '%s/fifths' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              use          = 'SNDFILE LV2',
+              use          = 'LV2',
               includes     = includes)
     obj.env.cshlib_PATTERN = module_pat

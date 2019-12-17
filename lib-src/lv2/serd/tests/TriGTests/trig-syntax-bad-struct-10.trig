@@ -1,0 +1,5 @@
+# Too many DOTs
+{
+<http://example/s> <http://example/p> <http://example/o> . .
+<http://example/s1> <http://example/p1> <http://example/o1> .
+}

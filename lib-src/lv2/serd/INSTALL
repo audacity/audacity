@@ -8,11 +8,7 @@ Building this software requires only Python.  To install with default options:
 
     ./waf configure
     ./waf
-    ./waf install
-
-You may need to become root for the install stage, for example:
-
-    sudo ./waf install
+    ./waf install # or sudo ./waf install
 
 Configuration Options
 ---------------------
@@ -40,12 +36,20 @@ invoked:
  * CPPFLAGS:  C preprocessor options
  * LINKFLAGS: Linker options
 
-Installation Directories
-------------------------
+Library Versioning
+------------------
 
-The --prefix option (or the PREFIX environment variable) can be used to change
-the prefix which all files are installed under.  There are also several options
-allowing for more fine-tuned control, see the --help output for details.
+This library uses semantic versioning <http://semver.org/>.
+
+Several major versions can be installed in parallel.  The shared library name,
+include directory, and pkg-config file are suffixed with the major version
+number.  For example, a library named "foo" at version 1.x.y might install:
+
+    /usr/include/foo-1/foo/foo.h
+    /usr/lib/foo-1.so.1.x.y
+    /usr/lib/pkgconfig/foo-1.pc
+
+Dependencies can check for the package "foo-1" with pkg-config.
 
 Packaging
 ---------
@@ -57,3 +61,6 @@ which adds a prefix to all install paths.  For example:
     ./waf configure --prefix=/usr
     ./waf
     ./waf install --destdir=/tmp/package
+
+Packages should allow parallel installation of several major versions.  For
+example, the above would be packaged as "foo-1".

@@ -1,0 +1,2 @@
+@prefix : <http://example/> .
+{(1 2 (1 2)) :p (( "a") "b" :o) .}

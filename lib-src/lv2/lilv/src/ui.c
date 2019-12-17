@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2014 David Robillard <http://drobilla.net>
+  Copyright 2007-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -14,11 +14,15 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#include "lilv_internal.h"
+
+#include "lilv/lilv.h"
+#include "zix/tree.h"
+
 #include <assert.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "lilv_internal.h"
 
 LilvUI*
 lilv_ui_new(LilvWorld* world,
@@ -93,9 +97,9 @@ lilv_ui_get_classes(const LilvUI* ui)
 }
 
 LILV_API bool
-lilv_ui_is_a(const LilvUI* ui, const LilvNode* ui_class_uri)
+lilv_ui_is_a(const LilvUI* ui, const LilvNode* class_uri)
 {
-	return lilv_nodes_contains(ui->classes, ui_class_uri);
+	return lilv_nodes_contains(ui->classes, class_uri);
 }
 
 LILV_API const LilvNode*

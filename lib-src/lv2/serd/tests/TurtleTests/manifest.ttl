@@ -27,7 +27,7 @@
     <#IRI_with_all_punctuation>
     <#bareword_a_predicate>
     <#old_style_prefix>
-    # <#SPARQL_style_prefix>
+    <#SPARQL_style_prefix>
     <#prefixed_IRI_predicate>
     <#prefixed_IRI_object>
     <#prefix_only_IRI>
@@ -47,7 +47,7 @@
     <#localName_with_leading_digit>
     <#localName_with_non_leading_extras>
     <#old_style_base>
-    # <#SPARQL_style_base>
+    <#SPARQL_style_base>
     <#labeled_blank_node_subject>
     <#labeled_blank_node_object>
     <#labeled_blank_node_with_PN_CHARS_BASE_character_boundaries>
@@ -141,12 +141,12 @@
     <#turtle-syntax-uri-03>
     <#turtle-syntax-uri-04>
     <#turtle-syntax-base-01>
-    # <#turtle-syntax-base-02>
+    <#turtle-syntax-base-02>
     <#turtle-syntax-base-03>
-    # <#turtle-syntax-base-04>
+    <#turtle-syntax-base-04>
     <#turtle-syntax-prefix-01>
-    # <#turtle-syntax-prefix-02>
-    # <#turtle-syntax-prefix-03>
+    <#turtle-syntax-prefix-02>
+    <#turtle-syntax-prefix-03>
     <#turtle-syntax-prefix-04>
     <#turtle-syntax-prefix-05>
     <#turtle-syntax-prefix-06>
@@ -374,13 +374,13 @@
    mf:result    <IRI_spo.nt> ;
    .
 
-# <#SPARQL_style_prefix> rdf:type rdft:TestTurtleEval ;
-#    mf:name      "SPARQL_style_prefix" ;
-#    rdfs:comment "SPARQL-style prefix" ;
-#    rdft:approval rdft:Approved ;
-#    mf:action    <SPARQL_style_prefix.ttl> ;
-#    mf:result    <IRI_spo.nt> ;
-#    .
+<#SPARQL_style_prefix> rdf:type rdft:TestTurtleEval ;
+   mf:name      "SPARQL_style_prefix" ;
+   rdfs:comment "SPARQL-style prefix" ;
+   rdft:approval rdft:Approved ;
+   mf:action    <SPARQL_style_prefix.ttl> ;
+   mf:result    <IRI_spo.nt> ;
+   .
 
 <#prefixed_IRI_predicate> rdf:type rdft:TestTurtleEval ;
    mf:name      "prefixed_IRI_predicate" ;
@@ -534,13 +534,13 @@
    mf:result    <IRI_spo.nt> ;
    .
 
-# <#SPARQL_style_base> rdf:type rdft:TestTurtleEval ;
-#    mf:name      "SPARQL_style_base" ;
-#    rdfs:comment "SPARQL-style base" ;
-#    rdft:approval rdft:Approved ;
-#    mf:action    <SPARQL_style_base.ttl> ;
-#    mf:result    <IRI_spo.nt> ;
-#    .
+<#SPARQL_style_base> rdf:type rdft:TestTurtleEval ;
+   mf:name      "SPARQL_style_base" ;
+   rdfs:comment "SPARQL-style base" ;
+   rdft:approval rdft:Approved ;
+   mf:action    <SPARQL_style_base.ttl> ;
+   mf:result    <IRI_spo.nt> ;
+   .
 
 <#labeled_blank_node_subject> rdf:type rdft:TestTurtleEval ;
    mf:name      "labeled_blank_node_subject" ;
@@ -1151,12 +1151,12 @@
    mf:action    <turtle-syntax-base-01.ttl> ;
    .
 
-# <#turtle-syntax-base-02> rdf:type rdft:TestTurtlePositiveSyntax ;
-#    mf:name    "turtle-syntax-base-02" ;
-#    rdfs:comment "BASE" ;
-#    rdft:approval rdft:Approved ;
-#    mf:action    <turtle-syntax-base-02.ttl> ;
-#    .
+<#turtle-syntax-base-02> rdf:type rdft:TestTurtlePositiveSyntax ;
+   mf:name    "turtle-syntax-base-02" ;
+   rdfs:comment "BASE" ;
+   rdft:approval rdft:Approved ;
+   mf:action    <turtle-syntax-base-02.ttl> ;
+   .
 
 <#turtle-syntax-base-03> rdf:type rdft:TestTurtlePositiveSyntax ;
    mf:name    "turtle-syntax-base-03" ;
@@ -1165,12 +1165,12 @@
    mf:action    <turtle-syntax-base-03.ttl> ;
    .
 
-# <#turtle-syntax-base-04> rdf:type rdft:TestTurtlePositiveSyntax ;
-#    mf:name    "turtle-syntax-base-04" ;
-#    rdfs:comment "base with relative IRIs" ;
-#    rdft:approval rdft:Approved ;
-#    mf:action    <turtle-syntax-base-04.ttl> ;
-#    .
+<#turtle-syntax-base-04> rdf:type rdft:TestTurtlePositiveSyntax ;
+   mf:name    "turtle-syntax-base-04" ;
+   rdfs:comment "base with relative IRIs" ;
+   rdft:approval rdft:Approved ;
+   mf:action    <turtle-syntax-base-04.ttl> ;
+   .
 
 <#turtle-syntax-prefix-01> rdf:type rdft:TestTurtlePositiveSyntax ;
    mf:name    "turtle-syntax-prefix-01" ;
@@ -1179,19 +1179,19 @@
    mf:action    <turtle-syntax-prefix-01.ttl> ;
    .
 
-# <#turtle-syntax-prefix-02> rdf:type rdft:TestTurtlePositiveSyntax ;
-#    mf:name    "turtle-syntax-prefix-02" ;
-#    rdfs:comment "PreFIX" ;
-#    rdft:approval rdft:Approved ;
-#    mf:action    <turtle-syntax-prefix-02.ttl> ;
-#    .
+<#turtle-syntax-prefix-02> rdf:type rdft:TestTurtlePositiveSyntax ;
+   mf:name    "turtle-syntax-prefix-02" ;
+   rdfs:comment "PreFIX" ;
+   rdft:approval rdft:Approved ;
+   mf:action    <turtle-syntax-prefix-02.ttl> ;
+   .
 
-# <#turtle-syntax-prefix-03> rdf:type rdft:TestTurtlePositiveSyntax ;
-#    mf:name    "turtle-syntax-prefix-03" ;
-#    rdfs:comment "Empty PREFIX" ;
-#    rdft:approval rdft:Approved ;
-#    mf:action    <turtle-syntax-prefix-03.ttl> ;
-#    .
+<#turtle-syntax-prefix-03> rdf:type rdft:TestTurtlePositiveSyntax ;
+   mf:name    "turtle-syntax-prefix-03" ;
+   rdfs:comment "Empty PREFIX" ;
+   rdft:approval rdft:Approved ;
+   mf:action    <turtle-syntax-prefix-03.ttl> ;
+   .
 
 <#turtle-syntax-prefix-04> rdf:type rdft:TestTurtlePositiveSyntax ;
    mf:name    "turtle-syntax-prefix-04" ;

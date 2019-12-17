@@ -17,16 +17,15 @@
 #ifndef SCO_URIS_H
 #define SCO_URIS_H
 
-#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
-#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
-#include "lv2/lv2plug.in/ns/ext/parameters/parameters.h"
-#include "lv2/lv2plug.in/ns/ext/urid/urid.h"
+#include "lv2/atom/atom.h"
+#include "lv2/atom/forge.h"
+#include "lv2/parameters/parameters.h"
+#include "lv2/urid/urid.h"
 
 #define SCO_URI "http://lv2plug.in/plugins/eg-scope"
 
 typedef struct {
 	// URIs defined in LV2 specifications
-	LV2_URID atom_Blank;
 	LV2_URID atom_Vector;
 	LV2_URID atom_Float;
 	LV2_URID atom_Int;
@@ -50,7 +49,6 @@ typedef struct {
 static inline void
 map_sco_uris(LV2_URID_Map* map, ScoLV2URIs* uris)
 {
-	uris->atom_Blank         = map->map(map->handle, LV2_ATOM__Blank);
 	uris->atom_Vector        = map->map(map->handle, LV2_ATOM__Vector);
 	uris->atom_Float         = map->map(map->handle, LV2_ATOM__Float);
 	uris->atom_Int           = map->map(map->handle, LV2_ATOM__Int);

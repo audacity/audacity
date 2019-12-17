@@ -7,6 +7,7 @@
 @prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
 @prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
 @prefix work:  <http://lv2plug.in/ns/ext/worker#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
 
 <http://lv2plug.in/plugins/eg-sampler#sample>
 	a lv2:Parameter ;
@@ -15,17 +16,19 @@
 
 <http://lv2plug.in/plugins/eg-sampler>
 	a lv2:Plugin ;
-	doap:name "Example Sampler" ;
+	doap:name "Exampler" ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	lv2:project <http://lv2plug.in/ns/lv2> ;
-	lv2:requiredFeature urid:map ,
+	lv2:requiredFeature state:loadDefaultState ,
+		urid:map ,
 		work:schedule ;
 	lv2:optionalFeature lv2:hardRTCapable ,
-		state:loadDefaultState ;
+		state:threadSafeRestore ;
 	lv2:extensionData state:interface ,
 		work:interface ;
 	ui:ui <http://lv2plug.in/plugins/eg-sampler#ui> ;
-	patch:writable <http://lv2plug.in/plugins/eg-sampler#sample> ;
+	patch:writable <http://lv2plug.in/plugins/eg-sampler#sample> ,
+		param:gain ;
 	lv2:port [
 		a lv2:InputPort ,
 			atom:AtomPort ;
@@ -53,7 +56,8 @@
 		lv2:name "Out"
 	] ;
 	state:state [
-		<http://lv2plug.in/plugins/eg-sampler#sample> <click.wav>
+		<http://lv2plug.in/plugins/eg-sampler#sample> <click.wav> ;
+		param:gain 1.0
 	] .
 
 <http://lv2plug.in/plugins/eg-sampler#ui>

@@ -1,17 +1,18 @@
 #!/usr/bin/env python
+
 import glob
+import io
 import os
-import shutil
-import subprocess
-import waflib.Logs as Logs
-import waflib.Options as Options
-import waflib.extras.autowaf as autowaf
+import sys
+
+from waflib import Logs, Options
+from waflib.extras import autowaf
 
 # Library and package version (UNIX style major, minor, micro)
 # major increment <=> incompatible changes
 # minor increment <=> compatible changes (additions)
 # micro increment <=> no interface changes
-SERD_VERSION       = '0.20.0'
+SERD_VERSION       = '0.30.2'
 SERD_MAJOR_VERSION = '0'
 
 # Mandatory waf variables
@@ -20,94 +21,73 @@ VERSION = SERD_VERSION  # Package version for waf dist
 top     = '.'           # Source directory
 out     = 'build'       # Build directory
 
-def options(opt):
-    opt.load('compiler_c')
-    autowaf.set_options(opt)
-    opt.add_option('--no-utils', action='store_true', dest='no_utils',
-                   help='Do not build command line utilities')
-    opt.add_option('--test', action='store_true', dest='build_tests',
-                   help='Build unit tests')
-    opt.add_option('--stack-check', action='store_true', dest='stack_check',
-                   help='Include runtime stack sanity checks')
-    opt.add_option('--static', action='store_true', dest='static',
-                   help='Build static library')
-    opt.add_option('--no-shared', action='store_true', dest='no_shared',
-                   help='Do not build shared library')
-    opt.add_option('--static-progs', action='store_true', dest='static_progs',
-                   help='Build programs as static binaries')
-    opt.add_option('--largefile', action='store_true', dest='largefile',
-                   help='Build with large file support on 32-bit systems')
-    opt.add_option('--no-posix', action='store_true', dest='no_posix',
-                   help='Do not use posix_memalign, posix_fadvise, and fileno, even if present')
+# Release variables
+uri          = 'http://drobilla.net/sw/serd'
+dist_pattern = 'http://download.drobilla.net/serd-%d.%d.%d.tar.bz2'
+post_tags    = ['Hacking', 'RDF', 'Serd']
+
+def options(ctx):
+    ctx.load('compiler_c')
+    ctx.add_flags(
+        ctx.configuration_options(),
+        {'no-utils':     'do not build command line utilities',
+         'stack-check':  'include runtime stack sanity checks',
+         'static':       'build static library',
+         'no-shared':    'do not build shared library',
+         'static-progs': 'build programs as static binaries',
+         'largefile':    'build with large file support on 32-bit systems',
+         'no-posix':     'do not use POSIX functions, even if present'})
 
 def configure(conf):
-    conf.load('compiler_c')
-    autowaf.configure(conf)
-    autowaf.display_header('Serd Configuration')
-    autowaf.set_c99_mode(conf)
+    conf.load('compiler_c', cache=True)
+    conf.load('autowaf', cache=True)
+    autowaf.set_c_lang(conf, 'c99')
 
-    conf.env.BUILD_TESTS  = Options.options.build_tests
-    conf.env.BUILD_UTILS  = not Options.options.no_utils
-    conf.env.BUILD_SHARED = not Options.options.no_shared
-    conf.env.STATIC_PROGS = Options.options.static_progs
-    conf.env.BUILD_STATIC = (Options.options.static or
-                             Options.options.static_progs)
+    conf.env.update({
+        'BUILD_UTILS':  not Options.options.no_utils,
+        'BUILD_SHARED': not Options.options.no_shared,
+        'STATIC_PROGS': Options.options.static_progs,
+        'BUILD_STATIC': Options.options.static or Options.options.static_progs})
 
     if not conf.env.BUILD_SHARED and not conf.env.BUILD_STATIC:
         conf.fatal('Neither a shared nor a static build requested')
 
     if Options.options.stack_check:
-        autowaf.define(conf, 'SERD_STACK_CHECK', SERD_VERSION)
+        conf.define('SERD_STACK_CHECK', SERD_VERSION)
 
     if Options.options.largefile:
         conf.env.append_unique('DEFINES', ['_FILE_OFFSET_BITS=64'])
 
-    if conf.env.BUILD_TESTS:
-        conf.check(lib         = 'gcov',
-                   define_name = 'HAVE_GCOV',
-                   mandatory   = False)
-
-    conf.check(function_name = 'fmax',
-               header_name   = 'math.h',
-               define_name   = 'HAVE_FMAX',
-               lib           = ['m'],
-               mandatory     = False)
-
     if not Options.options.no_posix:
-        conf.check(function_name = 'posix_memalign',
-                   header_name   = 'stdlib.h',
-                   define_name   = 'HAVE_POSIX_MEMALIGN',
-                   defines       = ['_POSIX_C_SOURCE=201112L'],
-                   mandatory     = False)
+        for name, header in {'posix_memalign': 'stdlib.h',
+                             'posix_fadvise':  'fcntl.h',
+                             'fileno':         'stdio.h'}.items():
+            conf.check_function('c', name,
+                                header_name = header,
+                                define_name = 'HAVE_' + name.upper(),
+                                defines     = ['_POSIX_C_SOURCE=200809L'],
+                                mandatory   = False)
 
-        conf.check(function_name = 'posix_fadvise',
-                   header_name   = 'fcntl.h',
-                   define_name   = 'HAVE_POSIX_FADVISE',
-                   defines       = ['_POSIX_C_SOURCE=201112L'],
-                   mandatory     = False)
-
-        conf.check(function_name = 'fileno',
-                   header_name   = 'stdio.h',
-                   define_name   = 'HAVE_FILENO',
-                   defines       = ['_POSIX_C_SOURCE=201112L'],
-                   mandatory     = False)
-
-    autowaf.define(conf, 'SERD_VERSION', SERD_VERSION)
     autowaf.set_lib_env(conf, 'serd', SERD_VERSION)
     conf.write_config_header('serd_config.h', remove=False)
 
-    autowaf.display_msg(conf, 'Utilities', str(conf.env.BUILD_UTILS))
-    autowaf.display_msg(conf, 'Unit tests', str(conf.env.BUILD_TESTS))
-    print('')
+    autowaf.display_summary(
+        conf,
+        {'Build static library': bool(conf.env['BUILD_STATIC']),
+         'Build shared library': bool(conf.env['BUILD_SHARED']),
+         'Build utilities':      bool(conf.env['BUILD_UTILS']),
+         'Build unit tests':     bool(conf.env['BUILD_TESTS'])})
 
-lib_source = [
-    'src/env.c',
-    'src/node.c',
-    'src/reader.c',
-    'src/string.c',
-    'src/uri.c',
-    'src/writer.c',
-]
+lib_headers = ['src/reader.h']
+
+lib_source = ['src/byte_source.c',
+              'src/env.c',
+              'src/n3.c',
+              'src/node.c',
+              'src/reader.c',
+              'src/string.c',
+              'src/uri.c',
+              'src/writer.c']
 
 def build(bld):
     # C Headers
@@ -118,80 +98,60 @@ def build(bld):
     autowaf.build_pc(bld, 'SERD', SERD_VERSION, SERD_MAJOR_VERSION, [],
                      {'SERD_MAJOR_VERSION' : SERD_MAJOR_VERSION})
 
-    libflags = ['-fvisibility=hidden']
-    libs     = ['m']
-    defines  = []
+    defines = []
+    lib_args = {'export_includes': ['.'],
+                'includes':        ['.', './src'],
+                'cflags':          ['-fvisibility=hidden'],
+                'lib':             ['m'],
+                'vnum':            SERD_VERSION,
+                'install_path':    '${LIBDIR}'}
     if bld.env.MSVC_COMPILER:
-        libflags = []
-        libs     = []
-        defines  = ['snprintf=_snprintf']
+        lib_args['cflags'] = []
+        lib_args['lib']    = []
+        defines            = []
 
     # Shared Library
     if bld.env.BUILD_SHARED:
         bld(features        = 'c cshlib',
-            export_includes = ['.'],
             source          = lib_source,
-            includes        = ['.', './src'],
-            lib             = libs,
             name            = 'libserd',
             target          = 'serd-%s' % SERD_MAJOR_VERSION,
-            vnum            = SERD_VERSION,
-            install_path    = '${LIBDIR}',
             defines         = defines + ['SERD_SHARED', 'SERD_INTERNAL'],
-            cflags          = libflags)
+            **lib_args)
 
     # Static library
     if bld.env.BUILD_STATIC:
         bld(features        = 'c cstlib',
-            export_includes = ['.'],
             source          = lib_source,
-            includes        = ['.', './src'],
-            lib             = libs,
             name            = 'libserd_static',
             target          = 'serd-%s' % SERD_MAJOR_VERSION,
-            vnum            = SERD_VERSION,
-            install_path    = '${LIBDIR}',
-            defines         = defines + ['SERD_INTERNAL'])
+            defines         = defines + ['SERD_INTERNAL'],
+            **lib_args)
 
     if bld.env.BUILD_TESTS:
-        test_libs   = libs
-        test_cflags = ['']
-        if bld.is_defined('HAVE_GCOV'):
-            test_libs   += ['gcov']
-            test_cflags += ['-fprofile-arcs', '-ftest-coverage']
+        test_args = {'includes':     ['.', './src'],
+                     'cflags':       [''] if bld.env.NO_COVERAGE else ['--coverage'],
+                     'linkflags':    [''] if bld.env.NO_COVERAGE else ['--coverage'],
+                     'lib':          lib_args['lib'],
+                     'install_path': ''}
 
         # Profiled static library for test coverage
         bld(features     = 'c cstlib',
             source       = lib_source,
-            includes     = ['.', './src'],
-            lib          = test_libs,
             name         = 'libserd_profiled',
             target       = 'serd_profiled',
-            install_path = '',
             defines      = defines + ['SERD_INTERNAL'],
-            cflags       = test_cflags)
+            **test_args)
 
-        # Static profiled serdi for tests
-        bld(features     = 'c cprogram',
-            source       = 'src/serdi.c',
-            includes     = ['.', './src'],
-            use          = 'libserd_profiled',
-            lib          = test_libs,
-            target       = 'serdi_static',
-            install_path = '',
-            defines      = defines,
-            cflags       = test_cflags)
-
-        # Unit test program
-        bld(features     = 'c cprogram',
-            source       = 'tests/serd_test.c',
-            includes     = ['.', './src'],
-            use          = 'libserd_profiled',
-            lib          = test_libs,
-            target       = 'serd_test',
-            install_path = '',
-            defines      = defines,
-            cflags       = test_cflags)
+        # Test programs
+        for prog in [('serdi_static', 'src/serdi.c'),
+                     ('serd_test', 'tests/serd_test.c')]:
+            bld(features     = 'c cprogram',
+                source       = prog[1],
+                use          = 'libserd_profiled',
+                target       = prog[0],
+                defines      = defines,
+                **test_args)
 
     # Utilities
     if bld.env.BUILD_UTILS:
@@ -200,7 +160,7 @@ def build(bld):
                   target       = 'serdi',
                   includes     = ['.', './src'],
                   use          = 'libserd',
-                  lib          = libs,
+                  lib          = lib_args['lib'],
                   install_path = '${BINDIR}')
         if not bld.env.BUILD_SHARED or bld.env.STATIC_PROGS:
             obj.use = 'libserd_static'
@@ -209,66 +169,58 @@ def build(bld):
             obj.linkflags        = ['-static']
 
     # Documentation
-    autowaf.build_dox(bld, 'SERD', SERD_VERSION, top, out)
+    if bld.env.DOCS:
+        autowaf.build_dox(bld, 'SERD', SERD_VERSION, top, out)
+        bld(features='subst',
+            source='doc/index.html.in',
+            target='doc/index.html',
+            install_path='',
+            name='index',
+            SERD_VERSION=SERD_VERSION)
 
     # Man page
     bld.install_files('${MANDIR}/man1', 'doc/serdi.1')
 
     bld.add_post_fun(autowaf.run_ldconfig)
-    if bld.env.DOCS:
-        bld.add_post_fun(fix_docs)
 
 def lint(ctx):
-    subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-build/header_guard,-readability/casting,-readability/todo,-build/include src/* serd/*', shell=True)
+    "checks code for style issues"
+    import subprocess
+    cmd = ("clang-tidy -p=. -header-filter=.* -checks=\"*," +
+           "-bugprone-suspicious-string-compare," +
+           "-clang-analyzer-alpha.*," +
+           "-google-readability-todo," +
+           "-hicpp-signed-bitwise," +
+           "-llvm-header-guard," +
+           "-misc-unused-parameters," +
+           "-readability-else-after-return\" " +
+           "../src/*.c")
+    subprocess.call(cmd, cwd='build', shell=True)
 
 def amalgamate(ctx):
+    "builds single-file amalgamated source"
+    import shutil
     shutil.copy('serd/serd.h', 'build/serd.h')
-    amalgamation = open('build/serd.c', 'w')
+    with open('build/serd.c', 'w') as amalgamation:
+        with open('src/serd_internal.h') as serd_internal_h:
+            for l in serd_internal_h:
+                amalgamation.write(l.replace('serd/serd.h', 'serd.h'))
 
-    serd_internal_h = open('src/serd_internal.h')
-    for l in serd_internal_h:
-        if l == '#include "serd/serd.h"\n':
-            amalgamation.write('#include "serd.h"\n')
-        else:
-            amalgamation.write(l)
-    serd_internal_h.close()
-
-    for f in lib_source:
-        fd = open(f)
-        amalgamation.write('\n/**\n   @file %s\n*/' % f)
-        header = True
-        for l in fd:
-            if header:
-                if l == '*/\n':
-                    header = False
-            else:
-                if l != '#include "serd_internal.h"\n':
-                    amalgamation.write(l)
-        fd.close()
-    amalgamation.close()
+        for f in lib_headers + lib_source:
+            with open(f) as fd:
+                amalgamation.write('\n/**\n   @file %s\n*/' % f)
+                header = True
+                for l in fd:
+                    if header:
+                        if l == '*/\n':
+                            header = False
+                    else:
+                        if (not l.startswith('#include "') and
+                            l != '#include "serd.h"\n'):
+                            amalgamation.write(l)
 
     for i in ['c', 'h']:
         Logs.info('Wrote build/serd.%s' % i)
-
-def fix_docs(ctx):
-    if ctx.cmd == 'build':
-        autowaf.make_simple_dox(APPNAME)
-
-def upload_docs(ctx):
-    os.system('rsync -ravz --delete -e ssh build/doc/html/ drobilla@drobilla.net:~/drobilla.net/docs/serd/')
-    for page in glob.glob('doc/*.[1-8]'):
-        os.system('soelim %s | pre-grohtml troff -man -wall -Thtml | post-grohtml > build/%s.html' % (page, page))
-        os.system('rsync -avz --delete -e ssh build/%s.html drobilla@drobilla.net:~/drobilla.net/man/' % page)
-
-def file_equals(patha, pathb, subst_from='', subst_to=''):
-    fa = open(patha, 'rU')
-    fb = open(pathb, 'rU')
-    for line in fa:
-        if line.replace(subst_from, subst_to) != fb.readline().replace(subst_from, subst_to):
-            return False
-    fa.close()
-    fb.close()
-    return True
 
 def earl_assertion(test, passed, asserter):
     import datetime
@@ -276,10 +228,6 @@ def earl_assertion(test, passed, asserter):
     asserter_str = ''
     if asserter is not None:
         asserter_str = '\n\tearl:assertedBy <%s> ;' % asserter
-
-    passed_str = 'earl:failed'
-    if passed:
-        passed_str = 'earl:passed'
 
     return '''
 []
@@ -293,251 +241,251 @@ def earl_assertion(test, passed, asserter):
 	] .
 ''' % (asserter_str,
        test,
-       passed_str,
+       'earl:passed' if passed else 'earl:failed',
        datetime.datetime.now().replace(microsecond=0).isoformat())
 
-def test_thru(ctx, base, path, check_filename, flags):
-    in_filename = os.path.join(ctx.path.abspath(), path);
-    out_filename = path + '.thru'
+serdi = './serdi_static'
 
-    command = ('%s %s -i turtle -o turtle -p foo "%s" "%s" | '
-               '%s -i turtle -o ntriples -c foo - "%s" > %s') % (
-        'serdi_static', flags.ljust(5),
-        in_filename, base,
-        'serdi_static', base, out_filename)
+def test_thru(check, base, path, check_path, flags, isyntax, osyntax, opts=[]):
+    out_path = path + '.pass'
+    out_cmd = [serdi] + opts + [f for sublist in flags for f in sublist] + [
+        '-i', isyntax,
+        '-o', isyntax,
+        '-p', 'foo',
+        check.tst.src_path(path), base]
 
-    passed = autowaf.run_test(ctx, APPNAME, command, 0, name=out_filename)
-    if not passed:
-        Logs.pprint('RED', '** Failed command: %s' % command)
-        return False
+    thru_path = path + '.thru'
+    thru_cmd = [serdi] + opts + [
+        '-i', isyntax,
+        '-o', osyntax,
+        '-c', 'foo',
+        out_path,
+        base]
 
-    if not os.access(out_filename, os.F_OK):
-        Logs.pprint('RED', 'FAIL: %s is missing' % out_filename)
-    elif not file_equals(check_filename, out_filename, '_:docid', '_:genid'):
-        Logs.pprint('RED', 'FAIL: %s != %s' % (out_filename, check_filename))
-    else:
-        #Logs.pprint('GREEN', '** Pass %s == %s' % (out_filename, check_filename))
-        return True
+    return (check(out_cmd, stdout=out_path, verbosity=0, name=out_path) and
+            check(thru_cmd, stdout=thru_path, verbosity=0, name=thru_path) and
+            check.file_equals(check_path, thru_path, verbosity=0))
 
-    return False
+def file_uri_to_path(uri):
+    try:
+        from urlparse import urlparse # Python 2
+    except:
+        from urllib.parse import urlparse # Python 3
 
-def test_manifest(ctx, srcdir, testdir, report, base_uri):
-    import rdflib
-    import urlparse
+    path  = urlparse(uri).path
+    drive = os.path.splitdrive(path[1:])[0]
+    return path if not drive else path[1:]
 
-    rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-    rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
-    mf   = rdflib.Namespace('http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#')
-    rdft = rdflib.Namespace('http://www.w3.org/ns/rdftest#')
-    earl = rdflib.Namespace('http://www.w3.org/ns/earl#')
+def _test_output_syntax(test_class):
+    if 'NTriples' in test_class or 'Turtle' in test_class:
+        return 'NTriples'
+    elif 'NQuads' in test_class or 'Trig' in test_class:
+        return 'NQuads'
+    raise Exception('Unknown test class <%s>' % test_class)
 
-    model = rdflib.ConjunctiveGraph()
-    model.parse(os.path.join(srcdir, 'tests', testdir, 'manifest.ttl'),
-                rdflib.URIRef(base_uri + 'manifest.ttl'),
-                format='n3')
+def _load_rdf(filename):
+    "Load an RDF file into python dictionaries via serdi.  Only supports URIs."
+    import subprocess
+    import re
+
+    rdf_type = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
+    model = {}
+    instances = {}
+
+    cmd = ['./serdi_static', filename]
+    if Options.options.test_wrapper:
+        cmd = [Options.options.test_wrapper] + cmd
+
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    for line in proc.communicate()[0].splitlines():
+        matches = re.match('<([^ ]*)> <([^ ]*)> <([^ ]*)> \.', line.decode('utf-8'))
+        if matches:
+            s, p, o = (matches.group(1), matches.group(2), matches.group(3))
+            if s not in model:
+                model[s] = {p: [o]}
+            elif p not in model[s]:
+                model[s][p] = [o]
+            else:
+                model[s][p].append(o)
+
+            if p == rdf_type:
+                if o not in instances:
+                    instances[o] = set([s])
+                else:
+                    instances[o].update([s])
+
+    return model, instances
+
+def test_suite(ctx, base_uri, testdir, report, isyntax, options=[]):
+    import itertools
+
+    srcdir = ctx.path.abspath()
+
+    mf = 'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#'
+    manifest_path = os.path.join(srcdir, 'tests', testdir, 'manifest.ttl')
+    model, instances = _load_rdf(manifest_path)
 
     asserter = ''
     if os.getenv('USER') == 'drobilla':
         asserter = 'http://drobilla.net/drobilla#me'
 
-    def run_test(action_node, expected_return):
-        output  = os.path.join('tests', testdir, action_node + '.out')
-        action  = os.path.join(srcdir, 'tests', testdir, action_node)
-        rel     = os.path.relpath(action, os.path.join(srcdir, 'tests', testdir))
-        command = 'serdi_static -f "%s" "%s" > %s' % (action, base_uri + rel, output)
+    def run_tests(test_class, tests, expected_return):
+        thru_flags   = [['-e'], ['-f'], ['-b'], ['-r', 'http://example.org/']]
+        thru_options = []
+        for n in range(len(thru_flags) + 1):
+            thru_options += list(itertools.combinations(thru_flags, n))
+        thru_options_iter = itertools.cycle(thru_options)
 
-        return autowaf.run_test(ctx, APPNAME, command, expected_return, name=name)
+        osyntax = _test_output_syntax(test_class)
+        tests_name = '%s.%s' % (testdir, test_class[test_class.find('#') + 1:])
+        with ctx.group(tests_name) as check:
+            for test in sorted(tests):
+                action_node = model[test][mf + 'action'][0]
+                action      = os.path.join('tests', testdir, os.path.basename(action_node))
+                rel_action  = os.path.join(os.path.relpath(srcdir), action)
+                uri         = base_uri + os.path.basename(action)
+                command     = [serdi] + options + ['-f', rel_action, uri]
 
-    for i in sorted(model.triples([None, rdf.type, rdft.TestTurtlePositiveSyntax])):
-        test        = i[0]
-        name        = model.value(test, mf.name, None)
-        action_node = model.value(test, mf.action, None)[len(base_uri):]
+                # Run strict test
+                if expected_return == 0:
+                    result = check(command, stdout=action + '.out', name=action)
+                else:
+                    result = check(command,
+                                   stdout=action + '.out',
+                                   stderr=autowaf.NONEMPTY,
+                                   expected=expected_return,
+                                   name=action)
 
-        passed = run_test(action_node, 0)
-        report.write(earl_assertion(test, passed, asserter))
+                if result and ((mf + 'result') in model[test]):
+                    # Check output against test suite
+                    check_uri  = model[test][mf + 'result'][0]
+                    check_path = ctx.src_path(file_uri_to_path(check_uri))
+                    result     = check.file_equals(action + '.out', check_path)
 
-    for i in sorted(model.triples([None, rdf.type, rdft.TestTurtleNegativeSyntax])):
-        test        = i[0]
-        name        = model.value(test, mf.name, None)
-        action_node = model.value(test, mf.action, None)[len(base_uri):]
+                    # Run round-trip tests
+                    if result:
+                        test_thru(check, uri, action, check_path,
+                                  list(next(thru_options_iter)),
+                                  isyntax, osyntax, options)
 
-        passed = run_test(action_node, 1)
-        report.write(earl_assertion(test, passed, asserter))
+                # Write test report entry
+                if report is not None:
+                    report.write(earl_assertion(test, result, asserter))
 
-    for i in sorted(model.triples([None, rdf.type, rdft.TestTurtleNegativeEval])):
-        test        = i[0]
-        name        = model.value(test, mf.name, None)
-        action_node = model.value(test, mf.action, None)[len(base_uri):]
+                # Run lax test
+                check([command[0]] + ['-l'] + command[1:],
+                      expected=None, name=action + ' lax')
 
-        passed = run_test(action_node, 1)
-        report.write(earl_assertion(test, passed, asserter))
+    ns_rdftest = 'http://www.w3.org/ns/rdftest#'
+    for test_class, instances in instances.items():
+        if test_class.startswith(ns_rdftest):
+            expected = 1 if 'Negative' in test_class else 0
+            run_tests(test_class, instances, expected)
 
-    for i in sorted(model.triples([None, rdf.type, rdft.TestTurtleEval])):
-        test        = i[0]
-        name        = model.value(test, mf.name, None)
-        action_node = model.value(test, mf.action, None)[len(base_uri):]
-        result_node = model.value(test, mf.result, None)[len(base_uri):]
+def test(tst):
+    import tempfile
 
-        passed = run_test(action_node, 0)
-
-        if passed:
-            action = os.path.join('tests', testdir, action_node)
-            output = action + '.out'
-            result = os.path.join(srcdir, 'tests', testdir, result_node)
-
-            if not os.access(output, os.F_OK):
-                passed = False
-                Logs.pprint('RED', 'FAIL: %s output %s is missing' % (name, output))
-            elif not file_equals(result, output):
-                passed = False
-                Logs.pprint('RED', 'FAIL: %s != %s' % (os.path.abspath(output), result))
-            else:
-                Logs.pprint('GREEN', '** Pass %s' % output)
-
-            test_thru(ctx, base_uri + action_node, action, result, "")
-
-        report.write(earl_assertion(test, passed, asserter))
-
-def test(ctx):
-    blddir = autowaf.build_dir(APPNAME, 'tests')
-    for i in ['', 'bad', 'good', 'new', 'TurtleTests', 'extra']:
+    # Create test output directories
+    for i in ['bad', 'good', 'TurtleTests', 'NTriplesTests', 'NQuadsTests', 'TriGTests']:
         try:
-            os.makedirs(os.path.join(blddir, i))
+            test_dir = os.path.join('tests', i)
+            os.makedirs(test_dir)
+            for i in glob.glob(test_dir + '/*.*'):
+                os.remove(i)
         except:
             pass
 
-    for i in glob.glob(blddir + '/*.*'):
-        os.remove(i)
+    srcdir = tst.path.abspath()
 
-    srcdir   = ctx.path.abspath()
-    orig_dir = os.path.abspath(os.curdir)
+    with tst.group('Unit') as check:
+        check(['./serd_test'])
 
-    os.chdir(os.path.join(srcdir, 'tests', 'good'))
-    old_good_tests = glob.glob('*.ttl')
-    old_good_tests.sort()
-    old_good_tests.remove('manifest.ttl')
-    good_tests = { 'good': old_good_tests }
-    os.chdir(orig_dir)
+    def test_syntax_io(check, in_name, check_name, lang):
+        in_path = 'tests/good/%s' % in_name
+        out_path = in_path + '.io'
+        check_path = '%s/tests/good/%s' % (srcdir, check_name)
 
-    os.chdir(srcdir)
-    bad_tests = glob.glob('tests/bad/*.ttl')
-    bad_tests.sort()
-    os.chdir(orig_dir)
+        check([serdi, '-o', lang, '%s/%s' % (srcdir, in_path), in_path],
+              stdout=out_path, name=in_name)
 
-    autowaf.pre_test(ctx, APPNAME)
+        check.file_equals(check_path, out_path)
 
-    os.environ['PATH'] = '.' + os.pathsep + os.getenv('PATH')
+    with tst.group('ThroughSyntax') as check:
+        test_syntax_io(check, 'base.ttl',       'base.ttl',        'turtle')
+        test_syntax_io(check, 'qualify-in.ttl', 'qualify-out.ttl', 'turtle')
 
-    autowaf.run_tests(ctx, APPNAME, ['serd_test'], dirs=['.'])
+    with tst.group('GoodCommands') as check:
+        check([serdi, '%s/tests/good/manifest.ttl' % srcdir])
+        check([serdi, '-v'])
+        check([serdi, '-h'])
+        check([serdi, '-s', '<foo> a <#Thingie> .'])
+        check([serdi, os.devnull])
+        with tempfile.TemporaryFile(mode='r') as stdin:
+            check([serdi, '-'], stdin=stdin)
 
-    autowaf.run_tests(ctx, APPNAME, [
-            'serdi_static -q -o turtle %s/tests/good/base.ttl "base.ttl" > tests/good/base.ttl.out' % srcdir],
-                      0, name='base')
+    with tst.group('BadCommands', expected=1, stderr=autowaf.NONEMPTY) as check:
+        check([serdi])
+        check([serdi, '/no/such/file'])
+        check([serdi, 'ftp://example.org/unsupported.ttl'])
+        check([serdi, '-c'])
+        check([serdi, '-i', 'illegal'])
+        check([serdi, '-i', 'turtle'])
+        check([serdi, '-i'])
+        check([serdi, '-o', 'illegal'])
+        check([serdi, '-o'])
+        check([serdi, '-p'])
+        check([serdi, '-q', '%s/tests/bad/bad-base.ttl' % srcdir], stderr=None)
+        check([serdi, '-r'])
+        check([serdi, '-z'])
 
-    if not file_equals('%s/tests/good/base.ttl' % srcdir, 'tests/good/base.ttl.out'):
-        Logs.pprint('RED', 'FAIL: build/tests/base.ttl.out is incorrect')
+    with tst.group('IoErrors', expected=1) as check:
+        check([serdi, '-e', 'file://%s/' % srcdir], name='Read directory')
+        check([serdi, 'file://%s/' % srcdir], name='Bulk read directory')
+        if os.path.exists('/dev/full'):
+            check([serdi, 'file://%s/tests/good/manifest.ttl' % srcdir],
+                  stdout='/dev/full', name='Write error')
 
-    nul = os.devnull
-    autowaf.run_tests(ctx, APPNAME, [
-            'serdi_static file://%s/tests/good/manifest.ttl > %s' % (srcdir, nul),
-#            'serdi_static %s/tests/good/UTF-8.ttl > %s' % (srcdir, nul),
-            'serdi_static -v > %s' % nul,
-            'serdi_static -h > %s' % nul,
-            'serdi_static -s "<foo> a <#Thingie> ." > %s' % nul,
-            'serdi_static %s > %s' % (nul, nul)],
-                      0, name='serdi-cmd-good')
+    if sys.version_info.major >= 3:
+        from waflib.extras import autoship
+        try:
+            import rdflib
+            with tst.group('NEWS') as check:
+                news_path = os.path.join(srcdir, 'NEWS')
+                entries = autoship.read_news(top=srcdir)
+                autoship.write_news(entries, 'NEWS.norm')
+                check.file_equals(news_path, 'NEWS.norm')
 
-    autowaf.run_tests(ctx, APPNAME, [
-            'serdi_static -q file://%s/tests/bad-id-clash.ttl > %s' % (srcdir, nul),
-            'serdi_static > %s' % nul,
-            'serdi_static ftp://example.org/unsupported.ttl > %s' % nul,
-            'serdi_static -i > %s' % nul,
-            'serdi_static -o > %s' % nul,
-            'serdi_static -z > %s' % nul,
-            'serdi_static -p > %s' % nul,
-            'serdi_static -c > %s' % nul,
-            'serdi_static -r > %s' % nul,
-            'serdi_static -i illegal > %s' % nul,
-            'serdi_static -o illegal > %s' % nul,
-            'serdi_static -i turtle > %s' % nul,
-            'serdi_static /no/such/file > %s' % nul],
-                      1, name='serdi-cmd-bad')
+                meta_path = os.path.join(srcdir, 'serd.ttl')
+                autoship.write_news(entries, 'NEWS.ttl',
+                                    format='turtle', template=meta_path)
 
-    def test_base(test):
-        return ('http://www.w3.org/2001/sw/DataAccess/df1/tests/'
-                + test.replace('\\', '/'))
+                ttl_entries = autoship.read_news('NEWS.ttl',
+                                                 top=srcdir, format='turtle')
 
-    # Good tests
-    for tdir, tests in good_tests.items():
-        commands = []
+                autoship.write_news(ttl_entries, 'NEWS.round')
+                check.file_equals(news_path, 'NEWS.round')
+        except ImportError:
+            Logs.warn('Failed to import rdflib, not running NEWS tests')
 
-        for test in tests:
-            path = os.path.join('tests', tdir, test)
-            commands += [ 'serdi_static -f "%s" "%s" > %s.out' % (
-                    os.path.join(srcdir, path), test_base(test), path) ]
+    # Serd-specific test suites
+    serd_base = 'http://drobilla.net/sw/serd/tests/'
+    test_suite(tst, serd_base + 'good/', 'good', None, 'Turtle')
+    test_suite(tst, serd_base + 'bad/', 'bad', None, 'Turtle')
 
-        autowaf.run_tests(ctx, APPNAME, commands, 0, name=tdir)
+    # Standard test suites
+    with open('earl.ttl', 'w') as report:
+        report.write('@prefix earl: <http://www.w3.org/ns/earl#> .\n'
+                     '@prefix dc: <http://purl.org/dc/elements/1.1/> .\n')
 
-        Logs.pprint('BOLD', '\nVerifying turtle => ntriples')
-        for test in tests:
-            check_filename = os.path.join(
-                srcdir, 'tests', tdir, test.replace('.ttl', '.nt'))
-            out_filename = os.path.join('tests', tdir, test + '.out')
-            if not os.access(out_filename, os.F_OK):
-                Logs.pprint('RED', 'FAIL: %s output is missing' % test)
-            elif not file_equals(check_filename, out_filename):
-                Logs.pprint('RED', 'FAIL: %s is incorrect' % out_filename)
-            else:
-                Logs.pprint('GREEN', 'Pass: %s' % test)
+        with open(os.path.join(srcdir, 'serd.ttl')) as serd_ttl:
+            report.writelines(serd_ttl)
 
-    # Bad tests
-    commands = []
-    for test in bad_tests:
-        commands += [ 'serdi_static -q "%s" "%s" > %s.out' % (
-                os.path.join(srcdir, test), test_base(test), test) ]
-
-    autowaf.run_tests(ctx, APPNAME, commands, 1, name='bad')
-
-    # Don't do a round-trip test for test-id.ttl, IDs have changed
-    good_tests['good'].remove('test-id.ttl')
-
-    # Round-trip good tests
-    for tdir, tests in good_tests.items():
-        thru_tests = tests;
-
-        commands = []
-        num = 0
-        for test in thru_tests:
-            num += 1
-            flags = ''
-            if (num % 2 == 0):
-                flags += '-b'
-            if (num % 5 == 0):
-                flags += ' -f'
-            if (num % 3 == 0):
-                flags += ' -r http://www.w3.org/'
-            if (num % 7 == 0):
-                flags += ' -e'
-
-            path  = os.path.join('tests', tdir, test)
-            check = os.path.join(srcdir, path.replace('.ttl', '.nt'))
-            test_thru(ctx, test_base(test), path, check, flags)
-
-    # New manifest-driven tests
-    try:
-        report = open('earl.ttl', 'w')
-        report.write('''@prefix earl: <http://www.w3.org/ns/earl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n''')
-
-        serd_ttl = open(os.path.join(srcdir, 'serd.ttl'))
-        for line in serd_ttl:
-            report.write(line)
-        serd_ttl.close()
-        turtle_tests = 'http://www.w3.org/2013/TurtleTests/'
-        test_manifest(ctx, srcdir, 'TurtleTests', report, turtle_tests)
-        report.close()
-
-    except:
-        pass
-
-    autowaf.post_test(ctx, APPNAME)
+        w3c_base = 'http://www.w3.org/2013/'
+        test_suite(tst, w3c_base + 'TurtleTests/',
+                   'TurtleTests', report, 'Turtle')
+        test_suite(tst, w3c_base + 'NTriplesTests/',
+                   'NTriplesTests', report, 'NTriples')
+        test_suite(tst, w3c_base + 'NQuadsTests/',
+                   'NQuadsTests', report, 'NQuads')
+        test_suite(tst, w3c_base + 'TriGTests/',
+                   'TriGTests', report, 'Trig', ['-a'])

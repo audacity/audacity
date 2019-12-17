@@ -1,5 +1,5 @@
 /*
-  Copyright 2011 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -58,13 +58,18 @@ zix_hash_new(ZixHashFunc  hash_func,
              size_t       value_size)
 {
 	ZixHash* hash = (ZixHash*)malloc(sizeof(ZixHash));
-	hash->hash_func  = hash_func;
-	hash->equal_func = equal_func;
-	hash->n_buckets  = &sizes[0];
-	hash->value_size = value_size;
-	hash->count      = 0;
-	hash->buckets    = (ZixHashEntry**)calloc(*hash->n_buckets,
-	                                          sizeof(ZixHashEntry*));
+	if (hash) {
+		hash->hash_func  = hash_func;
+		hash->equal_func = equal_func;
+		hash->n_buckets  = &sizes[0];
+		hash->value_size = value_size;
+		hash->count      = 0;
+		if (!(hash->buckets = (ZixHashEntry**)calloc(*hash->n_buckets,
+		                                             sizeof(ZixHashEntry*)))) {
+			free(hash);
+			return NULL;
+		}
+	}
 	return hash;
 }
 
@@ -225,4 +230,3 @@ zix_hash_foreach(ZixHash*         hash,
 		}
 	}
 }
-

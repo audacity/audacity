@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2014 David Robillard <http://drobilla.net>
+  Copyright 2007-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -21,38 +21,46 @@
 extern "C" {
 #endif
 
+#include "lilv_config.h"
+
+#include "lilv/lilv.h"
+#include "serd/serd.h"
+#include "sord/sord.h"
+#include "zix/tree.h"
+
+#include <float.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <float.h>
 
 #ifdef _WIN32
 #    include <windows.h>
+#    include <direct.h>
+#    include <stdio.h>
 #    define dlopen(path, flags) LoadLibrary(path)
 #    define dlclose(lib)        FreeLibrary((HMODULE)lib)
+#    define unlink(path)        _unlink(path)
+#    define rmdir(path)         _rmdir(path)
 #    ifdef _MSC_VER
 #        define __func__ __FUNCTION__
-#        if _MSC_VER < 1800
-#            define INFINITY DBL_MAX + DBL_MAX
-#            define NAN      INFINITY - INFINITY
+#        ifndef snprintf
 #            define snprintf _snprintf
 #        endif
 #    endif
-static inline char* dlerror(void) { return "Unknown error"; }
+#ifndef INFINITY
+#    define INFINITY DBL_MAX + DBL_MAX
+#endif
+#ifndef NAN
+#    define NAN INFINITY - INFINITY
+#endif
+static inline const char* dlerror(void) { return "Unknown error"; }
 #else
 #    include <dlfcn.h>
+#    include <unistd.h>
 #endif
 
-#include "serd/serd.h"
-#include "sord/sord.h"
-
-#include "zix/tree.h"
-
-#include "lilv_config.h"
-#include "lilv/lilv.h"
-
 #ifdef LILV_DYN_MANIFEST
-#    include "lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h"
+#    include "lv2/dynmanifest/dynmanifest.h"
 #endif
 
 /*
@@ -104,9 +112,7 @@ typedef struct {
 	char*                     bundle_path;
 	void*                     lib;
 	LV2_Descriptor_Function   lv2_descriptor;
-#ifdef LILV_NEW_LV2
 	const LV2_Lib_Descriptor* desc;
-#endif
 	uint32_t                  refs;
 } LilvLib;
 
@@ -123,6 +129,7 @@ struct LilvPluginImpl {
 	LilvPort**             ports;
 	uint32_t               num_ports;
 	bool                   loaded;
+	bool                   parse_errors;
 	bool                   replaced;
 };
 
@@ -139,8 +146,9 @@ struct LilvInstancePimpl {
 };
 
 typedef struct {
-	bool dyn_manifest;
-	bool filter_language;
+	bool  dyn_manifest;
+	bool  filter_language;
+	char* lv2_path;
 } LilvOptions;
 
 struct LilvWorldImpl {
@@ -152,6 +160,7 @@ struct LilvWorldImpl {
 	LilvPluginClasses* plugin_classes;
 	LilvSpec*          specs;
 	LilvPlugins*       plugins;
+	LilvPlugins*       zombies;
 	LilvNodes*         loaded_files;
 	ZixTree*           libs;
 	struct {
@@ -168,7 +177,9 @@ struct LilvWorldImpl {
 		SordNode* lv2_index;
 		SordNode* lv2_latency;
 		SordNode* lv2_maximum;
+		SordNode* lv2_microVersion;
 		SordNode* lv2_minimum;
+		SordNode* lv2_minorVersion;
 		SordNode* lv2_name;
 		SordNode* lv2_optionalFeature;
 		SordNode* lv2_port;
@@ -177,7 +188,7 @@ struct LilvWorldImpl {
 		SordNode* lv2_requiredFeature;
 		SordNode* lv2_symbol;
 		SordNode* lv2_prototype;
-		SordNode* null_uri;
+		SordNode* owl_Ontology;
 		SordNode* pset_value;
 		SordNode* rdf_a;
 		SordNode* rdf_value;
@@ -190,6 +201,7 @@ struct LilvWorldImpl {
 		SordNode* xsd_decimal;
 		SordNode* xsd_double;
 		SordNode* xsd_integer;
+		SordNode* null_uri;
 	} uris;
 	LilvOptions opt;
 };
@@ -228,6 +240,11 @@ struct LilvUIImpl {
 	LilvNodes* classes;
 };
 
+typedef struct LilvVersion {
+	int minor;
+	int micro;
+} LilvVersion;
+
 /*
  *
  * Functions
@@ -243,9 +260,10 @@ void      lilv_port_free(const LilvPlugin* plugin, LilvPort* port);
 LilvPlugin* lilv_plugin_new(LilvWorld* world,
                             LilvNode*  uri,
                             LilvNode*  bundle_uri);
-void        lilv_plugin_load_if_necessary(const LilvPlugin* p);
+void        lilv_plugin_clear(LilvPlugin* plugin, LilvNode* bundle_uri);
+void        lilv_plugin_load_if_necessary(const LilvPlugin* plugin);
 void        lilv_plugin_free(LilvPlugin* plugin);
-LilvNode*   lilv_plugin_get_unique(const LilvPlugin* p,
+LilvNode*   lilv_plugin_get_unique(const LilvPlugin* plugin,
                                    const SordNode*   subject,
                                    const SordNode*   predicate);
 
@@ -256,7 +274,7 @@ void*     lilv_collection_get(const LilvCollection* collection,
                               const LilvIter*       i);
 
 LilvPluginClass* lilv_plugin_class_new(LilvWorld*      world,
-                                       const SordNode* parent_uri,
+                                       const SordNode* parent_node,
                                        const SordNode* uri,
                                        const char*     label);
 
@@ -277,6 +295,9 @@ LilvScalePoints*   lilv_scale_points_new(void);
 LilvPluginClasses* lilv_plugin_classes_new(void);
 LilvUIs*           lilv_uis_new(void);
 
+LilvNode* lilv_world_get_manifest_uri(LilvWorld*      world,
+                                      const LilvNode* bundle_uri);
+
 const uint8_t* lilv_world_blank_node_prefix(LilvWorld* world);
 
 SerdStatus lilv_world_load_file(LilvWorld*      world,
@@ -295,7 +316,7 @@ LilvUI* lilv_ui_new(LilvWorld* world,
 
 void lilv_ui_free(LilvUI* ui);
 
-LilvNode* lilv_node_new(LilvWorld* world, LilvNodeType type, const char* val);
+LilvNode* lilv_node_new(LilvWorld* world, LilvNodeType type, const char* str);
 LilvNode* lilv_node_new_from_node(LilvWorld* world, const SordNode* node);
 
 int lilv_header_compare_by_uri(const void* a, const void* b, void* user_data);
@@ -303,6 +324,19 @@ int lilv_lib_compare(const void* a, const void* b, void* user_data);
 
 int lilv_ptr_cmp(const void* a, const void* b, void* user_data);
 int lilv_resource_node_cmp(const void* a, const void* b, void* user_data);
+
+static inline int
+lilv_version_cmp(const LilvVersion* a, const LilvVersion* b)
+{
+	if (a->minor == b->minor && a->micro == b->micro) {
+		return 0;
+	} else if ((a->minor < b->minor)
+	           || (a->minor == b->minor && a->micro < b->micro)) {
+		return -1;
+	} else {
+		return 1;
+	}
+}
 
 struct LilvHeader*
 lilv_collection_get_by_uri(const ZixTree* seq, const LilvNode* uri);
@@ -328,10 +362,18 @@ lilv_world_find_nodes_internal(LilvWorld*      world,
                                const SordNode* predicate,
                                const SordNode* object);
 
+SordModel*
+lilv_world_filter_model(LilvWorld*      world,
+                        SordModel*      model,
+                        const SordNode* subject,
+                        const SordNode* predicate,
+                        const SordNode* object,
+                        const SordNode* graph);
+
 #define FOREACH_MATCH(iter) \
 	for (; !sord_iter_end(iter); sord_iter_next(iter))
 
-LilvNodes* lilv_nodes_from_stream_objects(LilvWorld*    w,
+LilvNodes* lilv_nodes_from_stream_objects(LilvWorld*    world,
                                           SordIter*     stream,
                                           SordQuadIndex field);
 
@@ -341,7 +383,7 @@ char*  lilv_get_lang(void);
 char*  lilv_expand(const char* path);
 char*  lilv_dirname(const char* path);
 int    lilv_copy_file(const char* src, const char* dst);
-bool   lilv_path_exists(const char* path, void* ignored);
+bool   lilv_path_exists(const char* path, const void* ignored);
 char*  lilv_path_absolute(const char* path);
 bool   lilv_path_is_absolute(const char* path);
 char*  lilv_get_latest_copy(const char* path, const char* copy_path);
@@ -350,13 +392,14 @@ bool   lilv_path_is_child(const char* path, const char* dir);
 int    lilv_flock(FILE* file, bool lock);
 char*  lilv_realpath(const char* path);
 int    lilv_symlink(const char* oldpath, const char* newpath);
-int    lilv_mkdir_p(const char* path);
+int    lilv_mkdir_p(const char* dir_path);
 char*  lilv_path_join(const char* a, const char* b);
 bool   lilv_file_equals(const char* a_path, const char* b_path);
 
 char*
 lilv_find_free_path(const char* in_path,
-                    bool (*exists)(const char*, void*), void* user_data);
+                    bool (*exists)(const char*, const void*),
+                    const void* user_data);
 
 void
 lilv_dir_for_each(const char* path,
@@ -389,6 +432,10 @@ static const LV2_Feature* const dman_features = { NULL };
 #define LILV_WARN(str)        fprintf(stderr, "%s(): warning: " str, \
                                       __func__)
 #define LILV_WARNF(fmt, ...)  fprintf(stderr, "%s(): warning: " fmt, \
+                                      __func__, __VA_ARGS__)
+#define LILV_NOTE(str)        fprintf(stderr, "%s(): note: " str, \
+                                      __func__)
+#define LILV_NOTEF(fmt, ...)  fprintf(stderr, "%s(): note: " fmt, \
                                       __func__, __VA_ARGS__)
 
 #ifdef __cplusplus

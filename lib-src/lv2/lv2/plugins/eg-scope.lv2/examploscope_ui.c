@@ -14,14 +14,28 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "./uris.h"
+
+#include "lv2/atom/atom.h"
+#include "lv2/atom/forge.h"
+#include "lv2/atom/util.h"
+#include "lv2/core/lv2.h"
+#include "lv2/ui/ui.h"
+#include "lv2/urid/urid.h"
 
 #include <cairo.h>
+#include <gdk/gdk.h>
+#include <glib-object.h>
+#include <glib.h>
+#include <gobject/gclosure.h>
 #include <gtk/gtk.h>
 
-#include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
-#include "./uris.h"
+#include <assert.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // Drawing area size
 #define DAWIDTH  (640)
@@ -71,6 +85,7 @@ typedef struct {
 	uint32_t n_channels;
 	bool     paused;
 	float    rate;
+	bool     updating;
 } EgScopeUI;
 
 
@@ -158,7 +173,11 @@ send_ui_enable(LV2UI_Handle handle)
 static gboolean
 on_cfg_changed(GtkWidget* widget, gpointer data)
 {
-	send_ui_state(data);
+	EgScopeUI* ui = (EgScopeUI*)data;
+	if (!ui->updating) {
+		// Only send UI state if the change is from user interaction
+		send_ui_state(data);
+	}
 	return TRUE;
 }
 
@@ -296,17 +315,17 @@ on_expose_event(GtkWidget* widget, GdkEventExpose* ev, gpointer data)
 
 /**
    Parse raw audio data and prepare for later drawing.
- 
+
    Note this is a toy example, which is really a waveform display, not an
    oscilloscope.  A serious scope would not display samples as is.
- 
+
    Signals above ~ 1/10 of the sampling-rate will not yield a useful visual
    display and result in a rather unintuitive representation of the actual
    waveform.
- 
+
    Ideally the audio-data would be buffered and upsampled here and after that
    written in a display buffer for later use.
- 
+
    For more information, see
    https://wiki.xiph.org/Videos/Digital_Show_and_Tell
    http://lac.linuxaudio.org/2013/papers/36.pdf
@@ -414,7 +433,7 @@ instantiate(const LV2UI_Descriptor*   descriptor,
             LV2UI_Widget*             widget,
             const LV2_Feature* const* features)
 {
-	EgScopeUI* ui = (EgScopeUI*)malloc(sizeof(EgScopeUI));
+	EgScopeUI* ui = (EgScopeUI*)calloc(1, sizeof(EgScopeUI));
 
 	if (!ui) {
 		fprintf(stderr, "EgScope.lv2 UI: out of memory\n");
@@ -587,15 +606,17 @@ recv_ui_state(EgScopeUI* ui, const LV2_Atom_Object* obj)
 		fprintf(stderr, "eg-scope.lv2 UI error: Corrupt state message\n");
 		return 1;
 	}
-	
+
 	// Get the values we need from the body of the property value atoms
 	const int32_t spp  = ((const LV2_Atom_Int*)spp_val)->body;
 	const float   amp  = ((const LV2_Atom_Float*)amp_val)->body;
 	const float   rate = ((const LV2_Atom_Float*)rate_val)->body;
 
-	// Update UI
+	// Disable transmission and update UI
+	ui->updating = true;
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(ui->spb_speed), spp);
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(ui->spb_amp),   amp);
+	ui->updating = false;
 	ui->rate = rate;
 
 	return 0;
@@ -603,7 +624,7 @@ recv_ui_state(EgScopeUI* ui, const LV2_Atom_Object* obj)
 
 /**
    Receive data from the DSP-backend.
- 
+
    This is called by the host, typically at a rate of around 25 FPS.
 
    Ideally this happens regularly and with relatively low latency, but there
@@ -624,7 +645,7 @@ port_event(LV2UI_Handle handle,
 	 *  - format > 0:  Message (atom)
 	 */
 	if (format == ui->uris.atom_eventTransfer &&
-	    atom->type == ui->uris.atom_Blank) {
+	    lv2_atom_forge_is_object_type(&ui->forge, atom->type)) {
 		const LV2_Atom_Object* obj = (const LV2_Atom_Object*)atom;
 		if (obj->body.otype == ui->uris.RawAudio) {
 			recv_raw_audio(ui, obj);

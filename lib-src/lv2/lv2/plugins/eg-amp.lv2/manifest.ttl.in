@@ -1,46 +1,33 @@
-# ==== Bundles ====
+# LV2 plugins are installed in a ``bundle'', a directory with a standard
+# structure.  Each bundle has a Turtle file named `manifest.ttl` which lists
+# the contents of the bundle.
 #
-# LV2 plugins are installed in ``bundles'', a directory with a particular
-# format.  Inside the bundle, the entry point is a file called `manifest.ttl`.
-# The manifest lists the plugins (or other resources) that are in this bundle,
-# and the files that contain further information.
+# Hosts typically read the manifest of every installed bundle to discover
+# plugins on start-up, so it should be as small as possible for performance
+# reasons.  Details that are only useful if the host chooses to load the plugin
+# are stored in other files and linked to from `manifest.ttl`.
 #
-# Hosts typically read the `manifest.ttl` of every bundle when starting up to
-# discover what LV2 plugins and other resources are present.  Accordingly,
-# manifest files should be as small as possible for performance reasons.
+# ==== URIs ====
 #
+# LV2 makes use of URIs as globally-unique identifiers for resources.  For
+# example, the ID of the plugin described here is
+# `<http://lv2plug.in/plugins/eg-amp>`.  Note that URIs are only used as
+# identifiers and don't necessarily imply that something can be accessed at
+# that address on the web (though that may be the case).
 #
 # ==== Namespace Prefixes ====
 #
-# Turtle files contain many URIs.  To make this more readable, prefixes can be
-# defined.  For example, with the `lv2:` prefix below, instead of
-# <http://lv2plug.in/ns/lv2core#Plugin> the shorter form `lv2:Plugin` can be
-# used.  This is just a shorthand for URIs within one file, the prefixes are
-# not significant otherwise.
+# Turtle files contain many URIs, but prefixes can be defined to improve
+# readability.  For example, with the `lv2:` prefix below, `lv2:Plugin` can be
+# written instead of `<http://lv2plug.in/ns/lv2core#Plugin>`.
 
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-# ==== A Plugin Entry ====
+# ==== Describing a Plugin ====
 
-<http://lv2plug.in/plugins/eg-amp>
-	a lv2:Plugin ;
-	lv2:binary <amp@LIB_EXT@>  ;
-	rdfs:seeAlso <amp.ttl> .
-
-# The token `@LIB_EXT@` above is replaced by the build system with the
-# appropriate extension for the current platform (e.g. .so, .dylib, .dll).
-# This file is called called `manifest.ttl.in` rather than `manifest.ttl`
-# to indicate that it is not the final file to be installed.
-# This is not necessary, but is a good idea for portable plugins.
-# For reability, the following text will assume `.so` is the extension used.
-#
-# In short, this declares that the resource with URI
-# `http://lv2plug.in/plugins/eg-amp` is an LV2 plugin, with executable code in
-# the file `amp.so` and a full description in `amp.ttl`.  These paths are
-# relative to the bundle directory.
-#
-# There are 3 statements in this description:
+# Turtle files contain a set of ``statements'' which describe resources.
+# This file contains 3 statements:
 # [options="header"]
 # |================================================================
 # | Subject                             | Predicate    | Object
@@ -48,54 +35,34 @@
 # | <http://lv2plug.in/plugins/eg-amp>  | lv2:binary   | <amp.so>
 # | <http://lv2plug.in/plugins/eg-amp>  | rdfs:seeAlso | <amp.ttl>
 # |================================================================
-#
-# The semicolon is used to continue the previous subject; an equivalent
-# but more verbose syntax for the same data is:
 
-<http://lv2plug.in/plugins/eg-amp> a lv2:Plugin .
-<http://lv2plug.in/plugins/eg-amp> lv2:binary <amp.so> .
-<http://lv2plug.in/plugins/eg-amp> rdfs:seeAlso <amp.ttl> .
-
-# (Since this data is equivalent, it is safe, if pointless, to list it twice)
-#
-# The documentation for a URI can often be found by visiting that URI in a web
-# browser, e.g. the documentation for lv2:binary can be found at
-# <http://lv2plug.in/ns/lv2core#binary>.  All standard LV2 classes and
-# properties are documented in this way, so if you encounter a URI in some data
-# which you do not understand, try this first.
-#
-# The URI of a plugin does not need to be a resolvable web address, it just
-# serves as a global identifier.  However, it is a good idea to use an actual
-# web address if possible for easy access documentation, downloads, and so on,
-# even if no documents are currently hosted there.  There are compatibility
-# rules about when the URI of a plugin must be changed, see the
-# http://lv2plug.in/ns/lv2core[LV2 specification] for details.  Note that this
-# does not require authors to control a top-level domain; for example, URIs in
-# project directories at shared hosting sites are fine.  It is not required to
-# use HTTP URIs, but use of other schemes is strongly discouraged.
-#
-# AUTHORS MUST NOT CREATE URIS AT DOMAINS THEY DO NOT CONTROL WITHOUT
-# PERMISSION, AND *ESPECIALLY* MUST NOT CREATE INVALID URIS, E.G. WHERE THE
-# PORTION FOLLOWING ``http://'' IS NOT A DOMAIN NAME.  If you need an example
-# URI, the domain http://example.org/ is reserved for this purpose.
-#
-# A detailed explanation of each statement follows.
-
+# Firstly, `<http://lv2plug.in/plugins/eg-amp>` is an LV2 plugin:
 <http://lv2plug.in/plugins/eg-amp> a lv2:Plugin .
 
-# The `a`, as in ``is a'', is a Turtle shortcut for `rdf:type`.
-# `lv2:Plugin` expands to <http://lv2plug.in/ns/lv2core#Plugin> (using the
-# `lv2:` prefix above) which is the type of all LV2 plugins.
-# This statement means ``<http://lv2plug.in/plugins/eg-amp> is an LV2 plugin''.
+# The predicate ```a`'' is a Turtle shorthand for `rdf:type`.
 
+# The binary of that plugin can be found at `<amp.ext>`:
 <http://lv2plug.in/plugins/eg-amp> lv2:binary <amp@LIB_EXT@> .
 
-# This says ```eg-amp` has executable code in the file `amp.so`''.
-# Relative URIs in manifest files are relative to the bundle directory, so this
-# refers to the file amp.so in the same directory as this manifest.ttl file.
+# This file is a template; the token `@LIB_EXT@` is replaced by the build
+# system with the appropriate extension for the current platform before
+# installation.  For example, in the output `manifest.ttl`, the binary would be
+# listed as `<amp.so>`.  Relative URIs in manifests are relative to the bundle
+# directory, so this refers to a binary with the given name in the same
+# directory as this manifest.
 
+# Finally, more information about this plugin can be found in `<amp.ttl>`:
 <http://lv2plug.in/plugins/eg-amp> rdfs:seeAlso <amp.ttl> .
 
-# This says ``there is more information about `eg-amp` in the file `amp.ttl`''.
-# The host will look at all such files when it needs to actually use or
-# investigate the plugin.
+# ==== Abbreviation ====
+#
+# This file shows these statements individually for instructive purposes, but
+# the subject `<http://lv2plug.in/plugins/eg-amp>` is repetitive.  Turtle
+# allows the semicolon to be used as a delimiter that repeats the previous
+# subject.  For example, this manifest would more realistically be written like
+# so:
+
+<http://lv2plug.in/plugins/eg-amp>
+	a lv2:Plugin ;
+	lv2:binary <amp@LIB_EXT@>  ;
+	rdfs:seeAlso <amp.ttl> .

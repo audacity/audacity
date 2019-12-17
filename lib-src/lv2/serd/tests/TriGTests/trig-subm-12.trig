@@ -1,0 +1,19 @@
+# Tests for - and _ in names, qnames
+@prefix ex1: <http://example.org/ex1#> .
+@prefix ex-2: <http://example.org/ex2#> .
+@prefix ex3_: <http://example.org/ex3#> .
+@prefix ex4-: <http://example.org/ex4#> .
+
+{
+ex1:foo-bar ex1:foo_bar "a" .
+ex-2:foo-bar ex-2:foo_bar "b" .
+ex3_:foo-bar ex3_:foo_bar "c" .
+ex4-:foo-bar ex4-:foo_bar "d" .
+}
+
+<http://example/graph> {
+ex1:foo-bar ex1:foo_bar "a" .
+ex-2:foo-bar ex-2:foo_bar "b" .
+ex3_:foo-bar ex3_:foo_bar "c" .
+ex4-:foo-bar ex4-:foo_bar "d" .
+}

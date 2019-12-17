@@ -1,0 +1,2 @@
+{[ <http://a.example/p1> (1) ] .}
+<http://example/graph> {[ <http://a.example/p1> (1) ] .}

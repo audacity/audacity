@@ -1,5 +1,5 @@
 /*
-  Copyright 2011 David Robillard <http://drobilla.net>
+  Copyright 2016 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -59,7 +59,7 @@ typedef enum {
 	ZIX_STATUS_NOT_FOUND,
 	ZIX_STATUS_EXISTS,
 	ZIX_STATUS_BAD_ARG,
-	ZIX_STATUS_BAD_PERMS,
+	ZIX_STATUS_BAD_PERMS
 } ZixStatus;
 
 /**

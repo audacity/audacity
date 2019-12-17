@@ -6,5 +6,6 @@ includedir=@INCLUDEDIR@
 Name: Suil
 Version: @SUIL_VERSION@
 Description: LV2 plugin UI hosting library
+Requires: @SUIL_PKG_DEPS@
 Libs: -L${libdir} -l@LIB_SUIL@
 Cflags: -I${includedir}/suil-@SUIL_MAJOR_VERSION@

@@ -1,0 +1,2 @@
+@prefix : <http://example/> .
+{:s :p '''abc' .}

@@ -1,0 +1,4 @@
+# percents
+@prefix : <http://example/> .
+@prefix x: <http://example/> .
+{:a%3E  x:%25 :a%3Eb .}

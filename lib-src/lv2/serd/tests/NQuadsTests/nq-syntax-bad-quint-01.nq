@@ -1,0 +1,2 @@
+# N-Quads rejects a quint
+<http://example/s> <http://example/p> <http://example/o> <http://example/g> <http://example/n> .

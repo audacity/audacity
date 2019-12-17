@@ -1,0 +1,2 @@
+# TriG does not allow literals-as-subjects
+{"hello" <http://example/p> <http://example/o> .}

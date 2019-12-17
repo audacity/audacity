@@ -1,1 +1,1 @@
-<http://www.w3.org/2001/sw/DataAccess/df1/tests/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2001/sw/DataAccess/df1/tests/Bar> .
+<http://drobilla.net/sw/serd/tests/good/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://drobilla.net/sw/serd/tests/good/Bar> .

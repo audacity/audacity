@@ -1,0 +1,2 @@
+# Bad string escape
+{<http://example/s> <http://example/p> "\U0000WXYZ" .}

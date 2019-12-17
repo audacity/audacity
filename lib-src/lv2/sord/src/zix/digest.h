@@ -30,7 +30,7 @@ ZIX_API uint32_t
 zix_digest_start(void);
 
 ZIX_API uint32_t
-zix_digest_add(uint32_t hash, const void* buf, const size_t len);
+zix_digest_add(uint32_t hash, const void* buf, size_t len);
 
 #ifdef __cplusplus
 }  /* extern "C" */

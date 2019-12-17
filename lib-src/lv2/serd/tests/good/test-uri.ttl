@@ -58,6 +58,9 @@
 <?aquery>            owl:sameAs <http://a/b/c/d;p?aquery> .
 <#afragment>         owl:sameAs <http://a/b/c/d;p?q#afragment> .
 <../../../../../../> owl:sameAs <http://a/> .
+<view-source://foo>  owl:sameAs <view-source://foo> .
+<coap+tcp://foo>     owl:sameAs <coap+tcp://foo> .
+<osc.udp://foo>      owl:sameAs <osc.udp://foo> .
 
 @base <http://B?bquery> .
 

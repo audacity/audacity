@@ -1,5 +1,5 @@
 # Lilv Bindings Test Plugin
-# Copyright 2011 David Robillard <d@drobilla.net>
+# Copyright 2011-2016 David Robillard <d@drobilla.net>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -16,18 +16,27 @@
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
 
 <http://example.org/lilv-bindings-test-plugin>
 	a lv2:Plugin ;
 	doap:name "Lilv Bindings Test" ;
 	doap:license <http://opensource.org/licenses/isc> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	ui:ui <http://example.org/lilv-bindings-test-plugin-ui> ;
 	lv2:port [
 		a lv2:InputPort ,
 			lv2:ControlPort ;
 		lv2:index 0 ;
 		lv2:symbol "input" ;
-		lv2:name "Input"
+		lv2:name "Input" ;
+		lv2:default 0.5 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 1.0 ;
+		lv2:scalePoint [ rdfs:label "off" ; rdf:value 0.0 ] ;
+		lv2:scalePoint [ rdfs:label "on" ; rdf:value 1.0 ] ;
 	] , [
 		a lv2:OutputPort ,
 			lv2:ControlPort ;
@@ -47,3 +56,7 @@
 		lv2:symbol "audio_output" ;
 		lv2:name "Audio Output" ; 
 	] .
+
+<http://example.org/lilv-bindings-test-plugin-ui>
+	a ui:GtkUI ;
+	ui:binary <TODO> .

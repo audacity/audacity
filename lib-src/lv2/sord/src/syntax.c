@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2015 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -46,17 +46,17 @@ sord_inserter_free(SordInserter* inserter)
 
 SerdStatus
 sord_inserter_set_base_uri(SordInserter*   inserter,
-                           const SerdNode* uri_node)
+                           const SerdNode* uri)
 {
-	return serd_env_set_base_uri(inserter->env, uri_node);
+	return serd_env_set_base_uri(inserter->env, uri);
 }
 
 SerdStatus
 sord_inserter_set_prefix(SordInserter*   inserter,
                          const SerdNode* name,
-                         const SerdNode* uri_node)
+                         const SerdNode* uri)
 {
-	return serd_env_set_prefix(inserter->env, name, uri_node);
+	return serd_env_set_prefix(inserter->env, name, uri);
 }
 
 SerdStatus
@@ -77,6 +77,10 @@ sord_inserter_write_statement(SordInserter*      inserter,
 	SordNode* p = sord_node_from_serd_node(world, env, predicate, NULL, NULL);
 	SordNode* o = sord_node_from_serd_node(world, env, object,
 	                                       object_datatype, object_lang);
+
+	if (!s || !p || !o) {
+		return SERD_ERR_BAD_ARG;
+	}
 
 	const SordQuad tup = { s, p, o, g };
 	sord_add(inserter->model, tup);
@@ -99,7 +103,7 @@ sord_new_reader(SordModel* model,
 	SordInserter* inserter = sord_inserter_new(model, env);
 
 	SerdReader* reader = serd_reader_new(
-		syntax, inserter, (void (*)(void*))sord_inserter_free,
+		syntax, inserter, (void (*)(void* ptr))sord_inserter_free,
 		(SerdBaseSink)sord_inserter_set_base_uri,
 		(SerdPrefixSink)sord_inserter_set_prefix,
 		(SerdStatementSink)sord_inserter_write_statement,
@@ -112,7 +116,7 @@ sord_new_reader(SordModel* model,
 	return reader;
 }
 
-static void
+static SerdStatus
 write_statement(SordModel*         sord,
                 SerdWriter*        writer,
                 SordQuad           tup,
@@ -140,7 +144,7 @@ write_statement(SordModel*         sord,
 	// TODO: Subject abbreviation
 
 	if (sord_node_is_inline_object(s) && !(flags & SERD_ANON_CONT)) {
-		return;
+		return SERD_SUCCESS;
 	}
 
 	SerdStatus st = SERD_SUCCESS;
@@ -156,10 +160,10 @@ write_statement(SordModel*         sord,
 
 		if (!st && sub_iter) {
 			flags |= SERD_ANON_CONT;
-			for (; !sord_iter_end(sub_iter); sord_iter_next(sub_iter)) {
+			for (; !st && !sord_iter_end(sub_iter); sord_iter_next(sub_iter)) {
 				SordQuad sub_tup;
 				sord_iter_get(sub_iter, sub_tup);
-				write_statement(sord, writer, sub_tup, flags);
+				st = write_statement(sord, writer, sub_tup, flags);
 			}
 			sord_iter_free(sub_iter);
 			serd_writer_end_anon(writer, so);
@@ -169,11 +173,7 @@ write_statement(SordModel*         sord,
 			writer, flags, NULL, ss, sp, so, sd, &language);
 	}
 
-	if (st) {
-		fprintf(stderr, "Failed to write statement (%s)\n",
-		        serd_strerror(st));
-		return;
-	}
+	return st;
 }
 
 bool
@@ -195,11 +195,13 @@ sord_write_iter(SordIter*   iter,
 	}
 
 	SordModel* model = (SordModel*)sord_iter_get_model(iter);
-	for (; !sord_iter_end(iter); sord_iter_next(iter)) {
+	SerdStatus st    = SERD_SUCCESS;
+	for (; !st && !sord_iter_end(iter); sord_iter_next(iter)) {
 		SordQuad tup;
 		sord_iter_get(iter, tup);
-		write_statement(model, writer, tup, 0);
+		st = write_statement(model, writer, tup, 0);
 	}
 	sord_iter_free(iter);
-	return true;
+
+	return !st;
 }

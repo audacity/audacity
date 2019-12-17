@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2014 David Robillard <http://drobilla.net>
+  Copyright 2011-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -21,10 +21,10 @@
 #ifndef BENCH_H
 #define BENCH_H
 
-#define _POSIX_C_SOURCE 199309L
+#define _POSIX_C_SOURCE 200809L
 
-#include <time.h>
 #include <sys/time.h>
+#include <time.h>
 
 static inline double
 bench_elapsed_s(const struct timespec* start, const struct timespec* end)

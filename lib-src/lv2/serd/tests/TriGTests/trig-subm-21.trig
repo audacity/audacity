@@ -1,0 +1,4 @@
+# Test long literal
+@prefix :  <http://example.org/ex#> .
+{:a :b """John said: "Hello World!\"""" .}
+<http://example/graph> {:a :b """John said: "Hello World!\"""" .}

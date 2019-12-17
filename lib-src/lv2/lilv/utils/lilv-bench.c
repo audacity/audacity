@@ -14,11 +14,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <stdio.h>
-
 #include "lilv/lilv.h"
-
-#include "lilv_config.h"
 
 int
 main(int argc, char** argv)

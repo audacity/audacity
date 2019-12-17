@@ -1,0 +1,5 @@
+# GRAPH tests
+PREFIX : <http://example/> 
+
+# GRAPH needs {}
+GRAPH :s :p :o

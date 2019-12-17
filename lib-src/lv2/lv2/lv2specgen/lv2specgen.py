@@ -30,6 +30,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import datetime
+import optparse
+import os
+import re
+import sys
+import time
+import xml.sax.saxutils
+import xml.dom
+import xml.dom.minidom
+
 __date__    = "2011-10-26"
 __version__ = __date__.replace('-', '.')
 __authors__ = """
@@ -39,15 +49,6 @@ Sergio Fernández,
 David Robillard"""
 __license__ = "MIT License <http://www.opensource.org/licenses/mit>"
 __contact__ = "devel@lists.lv2plug.in"
-
-import datetime
-import optparse
-import os
-import re
-import sys
-import xml.sax.saxutils
-import xml.dom
-import xml.dom.minidom
 
 try:
     from lxml import etree
@@ -79,6 +80,7 @@ spec_url = None
 spec_ns_str = None
 spec_ns = None
 spec_pre = None
+spec_bundle = None
 specgendir = None
 ns_list = {
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"   : "rdf",
@@ -95,7 +97,7 @@ ns_list = {
     "http://lv2plug.in/ns/lv2core#"                 : "lv2",
     "http://usefulinc.com/ns/doap#"                 : "doap",
     "http://ontologi.es/doap-changeset#"            : "dcs"
-    }
+}
 
 rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
@@ -113,7 +115,7 @@ def findStatements(model, s, p, o):
 def findOne(m, s, p, o):
     l = findStatements(m, s, p, o)
     try:
-        return l.next()
+        return sorted(l)[0]
     except:
         return None
 
@@ -147,6 +149,10 @@ def isLiteral(n):
 
 
 def niceName(uri):
+    global spec_bundle
+    if uri.startswith(spec_bundle):
+        return uri[len(spec_bundle):]
+
     regexp = re.compile("^(.*[/#])([^/#]+)$")
     rez = regexp.search(uri)
     if not rez:
@@ -304,6 +310,22 @@ def getComment(m, urinode, classlist, proplist, instalist):
                 return text
         markup = rgx.sub(translateLink, markup)
 
+        # Transform names like #foo into links into this spec if possible
+        rgx = re.compile('([ \t\n\r\f\v^]+)\#([a-zA-Z0-9_-]+)')
+        def translateLocalLink(match):
+            text  = match.group(0)
+            space = match.group(1)
+            name  = match.group(2)
+            uri   = rdflib.URIRef(spec_ns + name)
+            if ((classlist and uri in classlist) or
+                (instalist and uri in instalist) or
+                (proplist and uri in proplist)):
+                return '%s<a href="#%s">%s</a>' % (space, name, name)
+            else:
+                print("warning: Link to undefined resource <%s>\n" % name)
+                return text
+        markup = rgx.sub(translateLocalLink, markup)
+
         if have_lxml:
             try:
                 # Parse and validate documentation as XHTML Basic 1.1
@@ -327,6 +349,10 @@ def getComment(m, urinode, classlist, proplist, instalist):
                 os.chdir(oldcwd)
             except Exception as e:
                 print("Invalid lv2:documentation for %s\n%s" % (urinode, e))
+                line_num = 1
+                for line in doc.split('\n'):
+                    print('%3d: %s' % (line_num, line))
+                    line_num += 1
 
         return markup
 
@@ -376,7 +402,7 @@ def rdfsPropertyInfo(term, m):
     domains = findStatements(m, term, rdfs.domain, None)
     domainsdoc = ""
     first = True
-    for d in domains:
+    for d in sorted(domains):
         union = findOne(m, getObject(d), owl.unionOf, None)
         if union:
             uris = parseCollection(m, getObject(union))
@@ -394,7 +420,7 @@ def rdfsPropertyInfo(term, m):
     ranges = findStatements(m, term, rdfs.range, None)
     rangesdoc = ""
     first = True
-    for r in ranges:
+    for r in sorted(ranges):
         union = findOne(m, getObject(r), owl.unionOf, None)
         if union:
             uris = parseCollection(m, getObject(union))
@@ -430,7 +456,7 @@ def parseCollection(model, node):
 def getTermLink(uri, subject=None, predicate=None):
     uri = str(uri)
     extra = ''
-    if subject != None and predicate != None:
+    if subject is not None and predicate is not None:
         extra = 'about="%s" rel="%s" resource="%s"' % (str(subject), niceName(str(predicate)), uri)
     if (uri.startswith(spec_ns_str)):
         return '<a href="#%s" %s>%s</a>' % (uri.replace(spec_ns_str, ""), extra, niceName(uri))
@@ -457,13 +483,14 @@ def rdfsClassInfo(term, m):
             restrictions.append(getSubject(meta_type))
 
     if len(superclasses) > 0:
+        superclasses.sort()
         doc += "\n<tr><th>Sub-class of</th>"
         first = True
         for superclass in superclasses:
             doc += getProperty(getTermLink(superclass), first)
             first = False
 
-    for r in restrictions:
+    for r in sorted(restrictions):
         props = findStatements(m, r, None, None)
         onProp = None
         comment = None
@@ -472,7 +499,7 @@ def rdfsClassInfo(term, m):
                 onProp = getObject(p)
             elif getPredicate(p) == rdfs.comment:
                 comment = getObject(p)
-        if onProp != None:
+        if onProp is not None:
             doc += '<tr><th>Restriction on %s</th><td>' % getTermLink(onProp)
 
             prop_str = ''
@@ -502,13 +529,14 @@ def rdfsClassInfo(term, m):
 
             if prop_str != '':
                 doc += '<table class=\"restriction\">%s</table>\n' % prop_str
-            if comment != None:
+            if comment is not None:
                 doc += "<span>%s</span>\n" % getLiteralString(comment)
             doc += '</td></tr>'
 
     # Find out about properties which have rdfs:domain of t
     d = classdomains.get(str(term), "")
     if d:
+        d.sort()
         dlist = ''
         first = True
         for k in d:
@@ -519,6 +547,7 @@ def rdfsClassInfo(term, m):
     # Find out about properties which have rdfs:range of t
     r = classranges.get(str(term), "")
     if r:
+        r.sort()
         rlist = ''
         first = True
         for k in r:
@@ -538,7 +567,7 @@ def blankNodeDesc(node, m):
     properties = findStatements(m, node, None, None)
     doc = ''
     last_pred = ''
-    for p in properties:
+    for p in sorted(properties):
         if isSpecial(getPredicate(p)):
             continue
         doc += '<tr>'
@@ -562,15 +591,11 @@ def extraInfo(term, m):
     """Generate information about misc. properties of a term"""
     doc = ""
     properties = findStatements(m, term, None, None)
-    last_pred = None
     first = True
-    for p in properties:
+    for p in sorted(properties):
         if isSpecial(getPredicate(p)):
-            last_pred = None
             continue
-        if getPredicate(p) != last_pred:
-            doc += '<tr><th>%s</th>\n' % getTermLink(getPredicate(p))
-            first = True
+        doc += '<tr><th>%s</th>\n' % getTermLink(getPredicate(p))
         if isResource(getObject(p)):
             doc += getProperty(getTermLink(getObject(p), term, getPredicate(p)), first)
         elif isLiteral(getObject(p)):
@@ -579,8 +604,6 @@ def extraInfo(term, m):
             doc += getProperty(str(blankNodeDesc(getObject(p), m)), first)
         else:
             doc += getProperty('?', first)
-        first = False
-        last_pred = getPredicate(p)
 
     #doc += endProperties(first)
 
@@ -592,7 +615,7 @@ def rdfsInstanceInfo(term, m):
     doc = ""
 
     first = True
-    for match in findStatements(m, term, rdf.type, None):
+    for match in sorted(findStatements(m, term, rdf.type, None)):
         doc += getProperty(getTermLink(getObject(match),
                                        term,
                                        rdf.type),
@@ -722,17 +745,12 @@ def getAnchor(uri):
         return getShortName(uri)
 
 
-def buildIndex(m, classlist, proplist, instalist=None):
-    """
-    Builds the A-Z list of terms. Args are a list of classes (strings) and
-    a list of props (strings)
-    """
-
-    if len(classlist) == 0 and len(proplist) == 0 and (
-        not instalist or len(instalist) == 0):
+def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
+    if not (classlist or proplist or instalist or filelist):
         return ''
 
-    azlist = '<dl class="index">'
+    head  = '<tr>'
+    body  = '<tr>'
 
     def termLink(m, t):
         if str(t).startswith(spec_ns_str):
@@ -742,7 +760,8 @@ def buildIndex(m, classlist, proplist, instalist=None):
             return '<a href="%s">%s</a>' % (str(t), str(t))
 
     if (len(classlist) > 0):
-        azlist += "<dt>Classes</dt><dd><ul>"
+        head += '<th>Classes</th>'
+        body += '<td><ul>'
         classlist.sort()
         shown = {}
         for c in classlist:
@@ -759,7 +778,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 continue
 
             shown[c] = True
-            azlist += '<li>' + termLink(m, c)
+            body += '<li>' + termLink(m, c)
             def class_tree(c):
                 tree = ''
                 shown[c] = True
@@ -776,29 +795,41 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 if tree != '':
                     tree = '<ul>' + tree + '</ul>'
                 return tree
-            azlist += class_tree(c)
-            azlist += '</li>'
-        azlist += '</ul></dd>\n'
+            body += class_tree(c)
+            body += '</li>'
+        body += '</ul></td>\n'
 
     if (len(proplist) > 0):
-        azlist += "<dt>Properties</dt><dd>"
+        head += '<th>Properties</th>'
+        body += '<td><ul>'
         proplist.sort()
-        props = []
         for p in proplist:
-            props += [termLink(m, p)]
-        azlist += ', '.join(props) + '</dd>\n'
+            body += '<li>%s</li>' % termLink(m, p)
+        body += '</ul></td>\n'
 
-    if (instalist != None and len(instalist) > 0):
-        azlist += "<dt>Instances</dt><dd>"
-        instas = []
+    if (instalist is not None and len(instalist) > 0):
+        head += '<th>Instances</th>'
+        body += '<td><ul>'
+        instalist.sort()
         for i in instalist:
             p = getShortName(i)
             anchor = getAnchor(i)
-            instas += ['<a href="#%s">%s</a>' % (anchor, p)]
-        azlist += ', '.join(instas) + '</dd>\n'
+            body += '<li><a href="#%s">%s</a></li>' % (anchor, p)
+        body += '</ul></td>\n'
 
-    azlist += '\n</dl>'
-    return azlist
+    if (filelist is not None and len(filelist) > 0):
+        head += '<th>Files</th>'
+        body += '<td><ul>'
+        filelist.sort()
+        for i in filelist:
+            p = getShortName(i)
+            anchor = getAnchor(i)
+            body += '<li><a href="%s">%s</a></li>' % (i, os.path.basename(i))
+        body += '</ul></td>\n'
+
+    head += '</tr>'
+    body += '</tr>'
+    return '<table class="index"><thead>%s</thead>\n<tbody>%s</tbody></table>' % (head, body)
 
 
 def add(where, key, value):
@@ -920,7 +951,7 @@ def releaseChangeset(m, release, prefix=''):
 
     entry = ''
     #entry = '<dd><ul>\n'
-    for i in findStatements(m, getObject(changeset), dcs.item, None):
+    for i in sorted(findStatements(m, getObject(changeset), dcs.item, None)):
         item  = getObject(i)
         label = findOne(m, item, rdfs.label, None)
         if not label:
@@ -937,7 +968,7 @@ def releaseChangeset(m, release, prefix=''):
     return entry
 
 
-def specHistoryEntries(m, subject, entries={}):
+def specHistoryEntries(m, subject, entries):
     for r in findStatements(m, subject, doap.release, None):
         release = getObject(r)
         revNode = findOne(m, release, doap.revision, None)
@@ -981,7 +1012,7 @@ def specHistoryMarkup(entries):
 
 
 def specHistory(m, subject):
-    return specHistoryMarkup(specHistoryEntries(m, subject))
+    return specHistoryMarkup(specHistoryEntries(m, subject, {}))
 
 
 def specVersion(m, subject):
@@ -998,7 +1029,7 @@ def specVersion(m, subject):
                 latest_doap_revision = revision
                 latest_doap_release = getObject(i)
     date = ""
-    if latest_doap_release != None:
+    if latest_doap_release is not None:
         for i in findStatements(m, latest_doap_release, doap.created, None):
             date = getLiteralString(getObject(i))
 
@@ -1049,8 +1080,11 @@ def load_tags(path, docdir):
                 return e.firstChild.nodeValue
         return ''
 
-    def linkTo(sym, url):
-        return '<span><a href="%s/%s">%s</a></span>' % (docdir, url, sym)
+    def linkTo(filename, anchor, sym):
+        if anchor:
+            return '<span><a href="%s/%s#%s">%s</a></span>' % (docdir, filename, anchor, sym)
+        else:
+            return '<span><a href="%s/%s">%s</a></span>' % (docdir, filename, sym)
 
     tagdoc  = xml.dom.minidom.parse(path)
     root    = tagdoc.documentElement
@@ -1062,13 +1096,15 @@ def load_tags(path, docdir):
 
             name     = getChildText(cn, 'name')
             filename = getChildText(cn, 'filename')
+            anchor   = getChildText(cn, 'anchor')
             if not filename.endswith('.html'):
                 filename += '.html'
 
-            linkmap[name] = linkTo(name, filename)
+            if cn.getAttribute('kind') != 'group':
+                linkmap[name] = linkTo(filename, anchor, name)
 
             prefix = ''
-            if cn.getAttribute('kind') != 'file':
+            if cn.getAttribute('kind') == 'struct':
                 prefix = name + '::'
 
             members = cn.getElementsByTagName('member')
@@ -1076,14 +1112,106 @@ def load_tags(path, docdir):
                 mname   = prefix + getChildText(m, 'name')
                 mafile  = getChildText(m, 'anchorfile')
                 manchor = getChildText(m, 'anchor')
-                linkmap[mname] = linkTo(
-                    mname, '%s#%s' % (mafile, manchor))
+                linkmap[mname] = linkTo(mafile, manchor, mname)
 
     return linkmap
 
-def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
+
+def writeIndex(model, specloc, index_path, root_path, root_uri):
+    # Get extension URI
+    ext_node = model.value(None, rdf.type, lv2.Specification)
+    if not ext_node:
+        ext_node = model.value(None, rdf.type, owl.Ontology)
+    if not ext_node:
+        print('no extension found in %s' % bundle)
+        sys.exit(1)
+
+    ext = str(ext_node)
+
+    # Get version
+    minor = 0
+    micro = 0
+    try:
+        minor = int(model.value(ext_node, lv2.minorVersion, None))
+        micro = int(model.value(ext_node, lv2.microVersion, None))
+    except:
+        e = sys.exc_info()[1]
+        print('warning: %s: failed to find version for %s' % (bundle, ext))
+
+    # Get date
+    date = None
+    for r in model.triples([ext_node, doap.release, None]):
+        revision = model.value(r[2], doap.revision, None)
+        if str(revision) == ('%d.%d' % (minor, micro)):
+            date = model.value(r[2], doap.created, None)
+            break
+
+    # Verify that this date is the latest
+    for r in model.triples([ext_node, doap.release, None]):
+        this_date = model.value(r[2], doap.created, None)
+        if this_date > date:
+            print('warning: %s revision %d.%d (%s) is not the latest release' % (
+                ext_node, minor, micro, date))
+            break
+
+    # Get name and short description
+    name      = model.value(ext_node, doap.name, None)
+    shortdesc = model.value(ext_node, doap.shortdesc, None)
+
+    # Chop 'LV2' prefix from name for cleaner index
+    if name.startswith('LV2 '):
+        name = name[4:]
+
+    # Find relative link target
+    if root_uri and ext_node.startswith(root_uri):
+        target = ext_node[len(root_uri):]
+    else:
+        target = os.path.relpath(ext_node, root_path)
+
+    # Specification (comment is to act as a sort key)
+    if not options.online_docs:
+        target += '/' + os.path.basename(target) + '.html'
+    row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
+        b, target, name)
+
+    # API
+    row += '<td><a rel="rdfs:seeAlso" href="../doc/html/group__%s.html">%s</a></td>' % (
+        b, b)
+
+    # Description
+    if shortdesc:
+        row += '<td>' + str(shortdesc) + '</td>'
+    else:
+        row += '<td></td>'
+
+    # Version
+    version_str = '%s.%s' % (minor, micro)
+    if minor == 0 or (micro % 2 != 0):
+        row += '<td><span style="color: red">' + version_str + '</span></td>'
+    else:
+        row += '<td>' + version_str + '</td>'
+
+    # Status
+    deprecated = model.value(ext_node, owl.deprecated, None)
+    if minor == 0:
+        row += '<td><span class="error">Experimental</span></td>'
+    elif deprecated and str(deprecated[2]) != "false":
+        row += '<td><span class="warning">Deprecated</span></td>'
+    elif micro % 2 == 0:
+        row += '<td><span class="success">Stable</span></td>'
+
+    row += '</tr>'
+
+    # index = open(os.path.join(out, 'index_rows', b), 'w')
+    index = open(index_path, 'w')
+    index.write(row)
+    index.close()
+
+
+def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root_link=None, index_path=None, root_path=None, root_uri=None):
     """The meat and potatoes: Everything starts here."""
 
+    global spec_bundle
     global spec_url
     global spec_ns_str
     global spec_ns
@@ -1092,6 +1220,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
     global specgendir
     global linkmap
 
+    spec_bundle = "file://%s/" % os.path.abspath(os.path.dirname(specloc))
     specgendir = os.path.abspath(indir)
 
     # Template
@@ -1099,6 +1228,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
     template = None
     f = open(temploc, "r")
     template = f.read()
+    f.close()
 
     # Load code documentation link map from tags file
     linkmap = load_tags(tags, docdir)
@@ -1136,8 +1266,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
     spec_ns = rdflib.Namespace(spec_ns_str)
 
     namespaces = getNamespaces(m)
-    keys = namespaces.keys()
-    keys.sort()
+    keys = sorted(namespaces.keys())
     prefixes_html = "<span>"
     for i in keys:
         uri = namespaces[i]
@@ -1163,10 +1292,24 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
 
     instalist = None
     if instances:
-        instalist = getInstances(m, classlist, proplist)
-        instalist.sort(lambda x, y: cmp(getShortName(x).lower(), getShortName(y).lower()))
+        instalist = sorted(getInstances(m, classlist, proplist),
+                           key=lambda x: getShortName(x).lower())
 
-    azlist = buildIndex(m, classlist, proplist, instalist)
+    filelist = []
+    see_also_files = specProperties(m, spec, rdfs.seeAlso)
+    see_also_files.sort()
+    for f in see_also_files:
+        uri = str(f)
+        if uri[:7] == 'file://':
+            uri = uri[7:]
+            if uri[:len(abs_bundle_path)] == abs_bundle_path:
+                uri = uri[len(abs_bundle_path) + 1:]
+            else:
+                continue  # Skip seeAlso file outside bundle
+
+        filelist += [uri]
+
+    azlist = buildIndex(m, classlist, proplist, instalist, filelist)
 
     # Generate Term HTML
     termlist = docTerms('Property', proplist, m, classlist, proplist, instalist)
@@ -1174,7 +1317,13 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
     if instances:
         termlist += docTerms('Instance', instalist, m, classlist, proplist, instalist)
 
-    template = template.replace('@NAME@', specProperty(m, spec, doap.name))
+    name = specProperty(m, spec, doap.name)
+    title = name
+    if root_link:
+        name = '<a href="%s">%s</a>' % (root_link, name)
+
+    template = template.replace('@TITLE@', title)
+    template = template.replace('@NAME@', name)
     template = template.replace('@SHORT_DESC@', specProperty(m, spec, doap.shortdesc))
     template = template.replace('@URI@', spec)
     template = template.replace('@PREFIX@', spec_pre)
@@ -1220,28 +1369,11 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
 
     template = template.replace('@VERSION@', version_string)
 
-    file_list = ''
-    see_also_files = specProperties(m, spec, rdfs.seeAlso)
-    see_also_files.sort()
-    for f in see_also_files:
-        uri = str(f)
-        if uri[:7] == 'file://':
-            uri = uri[7:]
-            if uri[:len(abs_bundle_path)] == abs_bundle_path:
-                uri = uri[len(abs_bundle_path) + 1:]
-            else:
-                continue  # Skip seeAlso file outside bundle
+    content_links = ''
+    if docdir is not None:
+        content_links = '<li><a href="%s">API</a></li>' % os.path.join(docdir, 'group__%s.html' % basename)
 
-        entry = '<a href="%s">%s</a>' % (uri, uri)
-        if uri.endswith('.h') or uri.endswith('.hpp'):
-            name = os.path.basename(uri)
-            entry += ' <a href="%s">(docs)</a> ' % (
-                docdir + '/' + name.replace('.', '_8') + '.html')
-            file_list += '<li>%s</li>' % entry
-        elif not uri.endswith('.doap.ttl'):
-            file_list += '<li>%s</li>' % entry
-
-    template = template.replace('@FILES@', file_list)
+    template = template.replace('@CONTENT_LINKS@', content_links)
 
     comment = getComment(m, rdflib.URIRef(spec_url), classlist, proplist, instalist)
     if comment != '':
@@ -1249,8 +1381,14 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
     else:
         template = template.replace('@COMMENT@', '')
 
-    template = template.replace('@DATE@', datetime.datetime.utcnow().strftime('%F'))
-    template = template.replace('@TIME@', datetime.datetime.utcnow().strftime('%F %H:%M UTC'))
+    now = int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
+    build_date = datetime.datetime.utcfromtimestamp(now)
+    template = template.replace('@DATE@', build_date.strftime('%F'))
+    template = template.replace('@TIME@', build_date.strftime('%F %H:%M UTC'))
+
+    # Write index row
+    if index_path is not None:
+        writeIndex(m, specloc, index_path, root_path, root_uri)
 
     return template
 
@@ -1258,7 +1396,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
 def save(path, text):
     try:
         f = open(path, "w")
-        f.write(text.encode("utf-8"))
+        f.write(text)
         f.flush()
         f.close()
     except Exception:
@@ -1293,49 +1431,95 @@ def getOntologyNS(m):
 
 def usage():
     script = os.path.basename(sys.argv[0])
-    return """Usage: %s ONTOLOGY INDIR STYLE OUTPUT [DOCDIR TAGS] [FLAGS]
-
-        ONTOLOGY  : Path to ontology file
-        INDIR     : Input directory containing template.html and style.css
-        STYLE     : Stylesheet URI
-        OUTPUT    : HTML output path
-        DOCDIR    : Doxygen HTML directory
-        TAGS      : Doxygen tags file
-
-        Optional flags:
-                -i        : Document class/property instances (disabled by default)
-                -p PREFIX : Set ontology namespace prefix from command line
-
-Example:
-    %s lv2_foos.ttl template.html style.css lv2_foos.html ../doc -i -p foos
-""" % (script, script)
+    return "Usage: %s ONTOLOGY_TTL OUTPUT_HTML [OPTION]..." % script
 
 if __name__ == "__main__":
     """Ontology specification generator tool"""
 
+    indir = os.path.abspath(os.path.dirname(sys.argv[0]))
+    if not os.path.exists(os.path.join(indir, 'template.html')):
+        indir = os.path.join(os.path.dirname(indir), 'share', 'lv2specgen')
+
     opt = optparse.OptionParser(usage=usage(),
                                 description='Write HTML documentation for an RDF ontology.')
-    opt.add_option('--list-email', type='string', dest='list_email')
-    opt.add_option('--list-page', type='string', dest='list_page')
-    opt.add_option('-i', action='store_true', dest='instances')
-    opt.add_option('-p', type='string', dest='prefix')
+    opt.add_option('--list-email', type='string', dest='list_email',
+                   help='Mailing list email address')
+    opt.add_option('--list-page', type='string', dest='list_page',
+                   help='Mailing list info page address')
+    opt.add_option('--template-dir', type='string', dest='template_dir', default=indir,
+                   help='Template directory')
+    opt.add_option('--style-uri', type='string', dest='style_uri', default='style.css',
+                   help='Stylesheet URI')
+    opt.add_option('--docdir', type='string', dest='docdir', default=None,
+                   help='Doxygen output directory')
+    opt.add_option('--index', type='string', dest='index_path', default=None,
+                   help='Index row output file')
+    opt.add_option('--tags', type='string', dest='tags', default=None,
+                   help='Doxygen tags file')
+    opt.add_option('-r', '--root-path', type='string', dest='root_path', default='',
+                   help='Root path')
+    opt.add_option('-R', '--root-uri', type='string', dest='root_uri', default='',
+                   help='Root URI')
+    opt.add_option('-p', '--prefix', type='string', dest='prefix',
+                   help='Specification Turtle prefix')
+    opt.add_option('-i', '--instances', action='store_true', dest='instances',
+                   help='Document instances')
+    opt.add_option('--copy-style', action='store_true', dest='copy_style',
+                   help='Copy style from template directory to output directory')
+    opt.add_option('--online', action='store_true', dest='online_docs',
+                   help='Generate online documentation')
 
     (options, args) = opt.parse_args()
     opts = vars(options)
 
-    if (len(args) < 3):
-        print(usage())
+    if len(args) < 2:
+        opt.print_help()
         sys.exit(-1)
 
-    spec_pre = options.prefix
-    ontology = "file:" + str(args[0])
-    indir    = args[1]
-    style    = args[2]
-    output   = args[3]
-    docdir   = None
-    tags     = None
-    if len(args) > 5:
-        docdir = args[4]
-        tags   = args[5]
+    spec_pre   = options.prefix
+    ontology   = "file:" + str(args[0])
+    output     = args[1]
+    index_path = options.index_path
+    docdir     = options.docdir
+    tags       = options.tags
 
-    save(output, specgen(ontology, indir, style, docdir, tags, opts, instances=options.instances))
+    out    = '.'
+    spec   = args[0]
+    path   = os.path.dirname(spec)
+    outdir = os.path.abspath(os.path.join(out, path))
+
+    bundle = str(outdir)
+    b = os.path.basename(outdir)
+
+    if not os.access(os.path.abspath(spec), os.R_OK):
+        print('warning: extension %s has no %s.ttl file' % (b, b))
+        sys.exit(1)
+
+    # Root link
+    root_path = opts['root_path']
+    root_uri  = opts['root_uri']
+    root_link = os.path.relpath(root_path, path) if root_path else '.'
+    if not options.online_docs:
+        root_link = os.path.join(root_link, 'index.html')
+
+    # Generate spec documentation
+    specdoc = specgen(
+        spec,
+        indir,
+        opts['style_uri'],
+        docdir,
+        tags,
+        opts,
+        instances=True,
+        root_link=root_link,
+        index_path=index_path,
+        root_path=root_path,
+        root_uri=root_uri)
+
+    # Save to HTML output file
+    save(output, specdoc)
+
+    if opts['copy_style']:
+        import shutil
+        shutil.copyfile(os.path.join(indir, 'style.css'),
+                        os.path.join(os.path.dirname(output), 'style.css'))

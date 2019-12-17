@@ -1,0 +1,4 @@
+# colon is a legal pname character
+@prefix : <http://example/> .
+@prefix x: <http://example/> .
+{:a:b:c  x:d:e:f :::: .}

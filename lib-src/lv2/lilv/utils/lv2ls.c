@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2012 David Robillard <http://drobilla.net>
+  Copyright 2007-2019 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -14,12 +14,13 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <stdio.h>
-#include <string.h>
+#include "lilv_config.h"
 
 #include "lilv/lilv.h"
 
-#include "lilv_config.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
 
 static void
 list_plugins(const LilvPlugins* list, bool show_names)
@@ -41,7 +42,7 @@ print_version(void)
 {
 	printf(
 		"lv2ls (lilv) " LILV_VERSION "\n"
-		"Copyright 2007-2012 David Robillard <http://drobilla.net>\n"
+		"Copyright 2007-2019 David Robillard <http://drobilla.net>\n"
 		"License: <http://www.opensource.org/licenses/isc-license>\n"
 		"This is free software: you are free to change and redistribute it.\n"
 		"There is NO WARRANTY, to the extent permitted by law.\n");

@@ -1,4 +1,5 @@
 /*
+  Copyright 2016 David Robillard <d@drobilla.net>
   Copyright 2013 Robin Gareus <robin@gareus.org>
 
   Permission to use, copy, modify, and/or distribute this software for any
@@ -14,16 +15,23 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#include "./uris.h"
+
+#include "lv2/atom/atom.h"
+#include "lv2/atom/forge.h"
+#include "lv2/atom/util.h"
+#include "lv2/core/lv2.h"
+#include "lv2/core/lv2_util.h"
+#include "lv2/log/log.h"
+#include "lv2/log/logger.h"
+#include "lv2/state/state.h"
+#include "lv2/urid/urid.h"
+
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
-
-#include "lv2/lv2plug.in/ns/ext/log/log.h"
-#include "lv2/lv2plug.in/ns/ext/log/logger.h"
-#include "lv2/lv2plug.in/ns/ext/state/state.h"
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
-
-#include "./uris.h"
+#include <string.h>
 
 /**
    ==== Private Plugin Instance Structure ====
@@ -47,7 +55,6 @@ typedef struct {
 	LV2_Atom_Forge_Frame frame;
 
 	// Log feature and convenience API
-	LV2_Log_Log*   log;
 	LV2_Log_Logger logger;
 
 	// Instantiation settings
@@ -88,16 +95,14 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	// Get host features
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID__map)) {
-			self->map = (LV2_URID_Map*)features[i]->data;
-		} else if (!strcmp(features[i]->URI, LV2_LOG__log)) {
-			self->log = (LV2_Log_Log*)features[i]->data;
-		}
-	}
-
-	if (!self->map) {
-		fprintf(stderr, "EgScope.lv2 error: Host does not support urid:map\n");
+	const char* missing = lv2_features_query(
+		features,
+		LV2_LOG__log,  &self->logger.log, false,
+		LV2_URID__map, &self->map,        true,
+		NULL);
+	lv2_log_logger_set_map(&self->logger, self->map);
+	if (missing) {
+		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
 		free(self);
 		return NULL;
 	}
@@ -124,7 +129,6 @@ instantiate(const LV2_Descriptor*     descriptor,
 	// Map URIs and initialise forge/logger
 	map_sco_uris(self->map, &self->uris);
 	lv2_atom_forge_init(&self->forge, self->map);
-	lv2_log_logger_init(&self->logger, self->map, self->log);
 
 	return (LV2_Handle)self;
 }
@@ -260,7 +264,7 @@ run(LV2_Handle handle, uint32_t n_samples)
 		while (!lv2_atom_sequence_is_end(
 			       &self->control->body, self->control->atom.size, ev)) {
 			// If the event is an atom:Blank object
-			if (ev->body.type == self->uris.atom_Blank) {
+			if (lv2_atom_forge_is_object_type(&self->forge, ev->body.type)) {
 				const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
 				if (obj->body.otype == self->uris.ui_On) {
 					// If the object is a ui-on, the UI was activated

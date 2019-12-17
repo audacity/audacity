@@ -1,0 +1,2 @@
+# @prefix without :
+@prefix x <http://example/> .
