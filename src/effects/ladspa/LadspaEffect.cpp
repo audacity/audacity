@@ -1251,7 +1251,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
                   mSampleRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
-            mDuration->SetName(_("Duration"));
+            mDuration->SetName( XO("Duration") );
             gridSizer->Add(mDuration, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
             gridSizer->Add(1, 1, 0);
             gridSizer->Add(1, 1, 0);

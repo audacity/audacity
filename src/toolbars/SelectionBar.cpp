@@ -162,12 +162,13 @@ auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer 
 }
 
 
-NumericTextCtrl * SelectionBar::AddTime( const wxString Name, int id, wxSizer * pSizer ){
+NumericTextCtrl * SelectionBar::AddTime(
+   const TranslatableString &Name, int id, wxSizer * pSizer ){
    auto formatName = mListener ? mListener->AS_GetSelectionFormat()
       : NumericFormatSymbol{};
    auto pCtrl = safenew NumericTextCtrl(
       this, id, NumericConverter::TIME, formatName, 0.0, mRate);
-   pCtrl->SetName(Name);
+   pCtrl->SetName( Name );
    pSizer->Add(pCtrl, 0, wxALIGN_TOP | wxRIGHT, 5);
    return pCtrl;
 }
@@ -327,7 +328,7 @@ void SelectionBar::Populate()
 
    AddVLine( mainSizer );
 
-   mAudioTime = AddTime(_("Audio Position"), AudioTimeID, mainSizer );
+   mAudioTime = AddTime( XO("Audio Position"), AudioTimeID, mainSizer );
    // This vertical line is NOT just for decoration!
    // It works around a wxWidgets-on-Windows RadioButton bug, where tabbing
    // into the radiobutton group jumps to selecting the first item in the 
@@ -341,10 +342,10 @@ void SelectionBar::Populate()
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-      mStartTime  = AddTime(_("Start"), StartTimeID, hSizer.get() );
-      mLengthTime = AddTime(_("Length"), LengthTimeID, hSizer.get() );
-      mCenterTime = AddTime(_("Center"), CenterTimeID, hSizer.get() );
-      mEndTime    = AddTime(_("End"), EndTimeID, hSizer.get() );
+      mStartTime  = AddTime( XO("Start"), StartTimeID, hSizer.get() );
+      mLengthTime = AddTime( XO("Length"), LengthTimeID, hSizer.get() );
+      mCenterTime = AddTime( XO("Center"), CenterTimeID, hSizer.get() );
+      mEndTime    = AddTime( XO("End"), EndTimeID, hSizer.get() );
       mainSizer->Add(hSizer.release(), 0, wxALIGN_TOP | wxRIGHT, 0);
    }
 
@@ -557,18 +558,30 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
    mDrive2 = driver2;
 
    NumericTextCtrl ** Ctrls[4] = { &mStartTime, &mCenterTime, &mLengthTime, &mEndTime};
-   wxString Text[4] = { _("Start"), _("Center"), _("Length"),  _("End")  };
+   static TranslatableString Text[4] = {
+      /* i18n-hint noun */
+      XO("Start"),
+      XO("Center"),
+      XO("Length"),
+      /* i18n-hint noun */
+      XO("End")
+   };
 
    for(int i=0;i<4;i++){
       int id = i + StartTimeID;
       int fixed = (( id == mDrive2 )?mDrive1:mDrive2)-StartTimeID;
 
-      wxString Temp = Text[i];
-      // i18n-hint: %s is replaced e.g by 'Length', to indicate that it will be calculated from other parameters.
-      wxString Format = ( (id!=mDrive1) && (id!=mDrive2 ) ) ? _("%s - driven") : "%s";
-      wxString Title= wxString::Format( Format, Temp );
-      // i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
-      wxString VoiceOverText = wxString::Format(_("Selection %s. %s won't change."), Temp, Text[fixed]);
+      const auto &Temp = Text[i];
+      auto Title = ( (id!=mDrive1) && (id!=mDrive2 ) )
+         /* i18n-hint: %s is replaced e.g by one of 'Length', 'Center',
+            'Start', or 'End' (translated), to indicate that it will be
+            calculated from other parameters. */
+         ? XO("%s - driven").Format( Temp )
+         : Temp ;
+      auto VoiceOverText =
+         /* i18n-hint: each string is replaced by one of 'Length', 'Center',
+            'Start', or 'End' (translated) */
+         XO("Selection %s. %s won't change.").Format( Temp, Text[fixed] );
       if( *Ctrls[i] ){
          (*Ctrls[i])->SetName( Temp );
       }

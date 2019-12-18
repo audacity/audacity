@@ -1338,7 +1338,7 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
 
 #if wxUSE_ACCESSIBILITY
    SetLabel(wxT(""));
-   SetName(wxT(""));
+   SetName( {} );
    SetAccessible(safenew NumericTextCtrlAx(this));
 #endif
 
@@ -1354,6 +1354,11 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
 
 NumericTextCtrl::~NumericTextCtrl()
 {
+}
+
+void NumericTextCtrl::SetName( const TranslatableString &name )
+{
+   wxControl::SetName( name.Translation() );
 }
 
 // Set the focus to the first (left-most) non-zero digit

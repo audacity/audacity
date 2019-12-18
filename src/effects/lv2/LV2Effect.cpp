@@ -2334,7 +2334,7 @@ bool LV2Effect::BuildPlain()
                                mSampleRate,
                                NumericTextCtrl::Options {}
             .AutoPos(true));
-            mDuration->SetName(_("Duration"));
+            mDuration->SetName( XO("Duration") );
             sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
 
             groupSizer->Add(sizer.release(), 0, wxALIGN_CENTER | wxALL, 5);
