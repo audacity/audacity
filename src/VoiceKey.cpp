@@ -819,16 +819,25 @@ void VoiceKey::CalibrateNoise(const WaveTrack & t, sampleCount start, sampleCoun
    mDirectionChangesMean = sumdc / samples;
    mDirectionChangesSD =sqrt(sumdc2 / samples - mDirectionChangesMean * mDirectionChangesMean) ;
 
-   wxString text = _("Calibration Results\n");
+   auto text = XO("Calibration Results\n");
    /* i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'*/
-   text +=           wxString::Format(_("Energy                  -- mean: %1.4f  sd: (%1.4f)\n"),mEnergyMean,mEnergySD);
-   text+=            wxString::Format(_("Sign Changes        -- mean: %1.4f  sd: (%1.4f)\n"),mSignChangesMean,mSignChangesSD);
-   text += wxString::Format(_("Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"), mDirectionChangesMean, mDirectionChangesSD);
-   AudacityMessageDialog{ NULL, text,
-      _("Calibration Complete"),
+   text +=
+      XO("Energy                  -- mean: %1.4f  sd: (%1.4f)\n")
+         .Format( mEnergyMean, mEnergySD );
+   text +=
+      XO("Sign Changes        -- mean: %1.4f  sd: (%1.4f)\n")
+         .Format( mSignChangesMean, mSignChangesSD );
+   text +=
+      XO("Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n")
+         .Format( mDirectionChangesMean, mDirectionChangesSD );
+   AudacityMessageDialog{
+      nullptr,
+      text,
+      XO("Calibration Complete"),
       wxOK | wxICON_INFORMATION,
-      wxPoint(-1, -1) }
-   .ShowModal();
+      wxPoint(-1, -1)
+   }
+      .ShowModal();
 
    AdjustThreshold(mThresholdAdjustment);
 }

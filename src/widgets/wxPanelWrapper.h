@@ -213,12 +213,12 @@ class AudacityMessageDialog : public wxTabTraversalWrapper< wxMessageDialog >
 public:
     AudacityMessageDialog(
          wxWindow *parent,
-         const wxString& message,
-         const wxString& caption, // don't use = wxMessageBoxCaptionStr,
+         const TranslatableString &message,
+         const TranslatableString &caption, // don't use = wxMessageBoxCaptionStr,
          long style = wxOK|wxCENTRE,
          const wxPoint& pos = wxDefaultPosition)
    : wxTabTraversalWrapper< wxMessageDialog>
-      ( parent, message, caption, style, pos )
+      ( parent, message.Translation(), caption.Translation(), style, pos )
    {}
 };
 

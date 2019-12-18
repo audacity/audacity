@@ -1558,7 +1558,9 @@ bool ProgressDialog::SearchForWindow(const wxWindowList & list, const wxWindow *
 
 void ProgressDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
-   if (!ConfirmAction(_("Are you sure you wish to cancel?"), _("Confirm Cancel"), wxID_CANCEL)) {
+   if (!ConfirmAction(
+         XO("Are you sure you wish to cancel?"),
+         XO("Confirm Cancel"), wxID_CANCEL)) {
       return;
    }
    FindWindowById(wxID_CANCEL, this)->Disable();
@@ -1567,7 +1569,9 @@ void ProgressDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 
 void ProgressDialog::OnStop(wxCommandEvent & WXUNUSED(event))
 {
-   if (!ConfirmAction(_("Are you sure you wish to stop?"), _("Confirm Stop"), wxID_OK)) {
+   if (!ConfirmAction(
+         XO("Are you sure you wish to stop?"),
+         XO("Confirm Stop"), wxID_OK)) {
       return;
    }
    FindWindowById(wxID_OK, this)->Disable();
@@ -1577,7 +1581,8 @@ void ProgressDialog::OnStop(wxCommandEvent & WXUNUSED(event))
 
 void ProgressDialog::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
 {
-   if (!ConfirmAction(_("Are you sure you wish to close?"), _("Confirm Close"))) {
+   if (!ConfirmAction(
+         XO("Are you sure you wish to close?"), XO("Confirm Close"))) {
       return;
    }
    mCancel = true;
@@ -1616,8 +1621,8 @@ void ProgressDialog::Beep() const
 
 // Confirm action taken by user.
 // Returns TRUE if the user confirms Yes
-bool ProgressDialog::ConfirmAction(const wxString & sPrompt,
-                                   const wxString & sTitle,
+bool ProgressDialog::ConfirmAction(const TranslatableString & sPrompt,
+                                   const TranslatableString & sTitle,
                                    int iButtonID /* = -1 */) {
 
    // Check if confirmations are enabled?
@@ -1626,10 +1631,11 @@ bool ProgressDialog::ConfirmAction(const wxString & sPrompt,
       return true;
    }
 
-   AudacityMessageDialog dlgMessage(this,
+   AudacityMessageDialog dlgMessage(
+      this,
       sPrompt,
       sTitle,
-      wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP);
+      wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP );
    int iAction = dlgMessage.ShowModal();
 
    bool bReturn = (iAction == wxID_YES);

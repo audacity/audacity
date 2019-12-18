@@ -55,12 +55,20 @@ bool ContrastDialog::GetDB(float &dB)
       TrackList::Get( *p ).SelectedLeaders< const WaveTrack >();
    auto numberSelectedTracks = range.size();
    if (numberSelectedTracks > 1) {
-      AudacityMessageDialog m(NULL, _("You can only measure one track at a time."), _("Error"), wxOK);
+      AudacityMessageDialog m(
+         nullptr,
+         XO("You can only measure one track at a time."),
+         XO("Error"),
+         wxOK);
       m.ShowModal();
       return false;
    }
    if(numberSelectedTracks == 0) {
-      AudacityMessageDialog m(NULL, _("Please select an audio track."), _("Error"), wxOK);
+      AudacityMessageDialog m(
+         nullptr,
+         XO("Please select an audio track."),
+         XO("Error"),
+         wxOK);
       m.ShowModal();
       return false;
    }
@@ -80,14 +88,22 @@ bool ContrastDialog::GetDB(float &dB)
 
       if(SelT0 > SelT1)
       {
-         AudacityMessageDialog m(NULL, _("Invalid audio selection.\nPlease ensure that audio is selected."), _("Error"), wxOK);
+         AudacityMessageDialog m(
+            nullptr,
+            XO("Invalid audio selection.\nPlease ensure that audio is selected."),
+            XO("Error"),
+            wxOK);
          m.ShowModal();
          return false;
       }
 
       if(SelT0 == SelT1)
       {
-         AudacityMessageDialog m(NULL, _("Nothing to measure.\nPlease select a section of a track."), _("Error"), wxOK);
+         AudacityMessageDialog m(
+            nullptr,
+            XO("Nothing to measure.\nPlease select a section of a track."),
+            XO("Error"),
+            wxOK);
          m.ShowModal();
          return false;
       }

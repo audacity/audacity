@@ -1017,11 +1017,12 @@ void MacrosWindow::OnRemove(wxCommandEvent & WXUNUSED(event))
    }
 
    wxString name = mMacros->GetItemText(item);
-   AudacityMessageDialog m(this,
-   /*i18n-hint: %s will be replaced by the name of a file.*/
-                     wxString::Format(_("Are you sure you want to delete %s?"), name),
-                     GetTitle(),
-                     wxYES_NO | wxICON_QUESTION);
+   AudacityMessageDialog m(
+      this,
+      /*i18n-hint: %s will be replaced by the name of a file.*/
+      XO("Are you sure you want to delete %s?").Format( name ),
+      Verbatim( GetTitle() ),
+      wxYES_NO | wxICON_QUESTION );
    if (m.ShowModal() == wxID_NO) {
       Raise();
       return;

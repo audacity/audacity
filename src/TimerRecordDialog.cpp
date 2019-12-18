@@ -335,11 +335,11 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
    // unless it is the current project.
    if (wxFileExists(fName) && (pProject->GetFileName() != fName)) {
       AudacityMessageDialog m(
-         NULL,
-         _("The selected file name could not be used\nfor Timer Recording because it \
+         nullptr,
+         XO("The selected file name could not be used\nfor Timer Recording because it \
 would overwrite another project.\nPlease try again and select an original name."),
-         _("Error Saving Timer Recording Project"),
-         wxOK|wxICON_ERROR);
+         XO("Error Saving Timer Recording Project"),
+         wxOK|wxICON_ERROR );
       m.ShowModal();
       return;
    }
@@ -437,16 +437,16 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
       sPlannedTime = projectManager.GetHoursMinsString(iMinsRecording);
 
       // Create the message string
-      wxString sMessage;
-      sMessage.Printf(_("You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disk:   %s"),
-         sPlannedTime,
-         sRemainingTime);
+      auto sMessage = XO(
+"You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disk:   %s")
+         .Format( sPlannedTime, sRemainingTime );
 
-      AudacityMessageDialog dlgMessage(NULL,
+      AudacityMessageDialog dlgMessage(
+         nullptr,
          sMessage,
-         _("Timer Recording Disk Space Warning"),
+         XO("Timer Recording Disk Space Warning"),
          wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);
-      if (dlgMessage.ShowModal() != wxID_YES) {
+      if (dlgMessage.ShowModal() != wxID_YES ) {
          // User decided not to continue - bail out!
          return;
       }

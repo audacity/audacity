@@ -729,10 +729,10 @@ bool ProjectFileManager::SaveAs(const wxString & newFileName, bool bWantSaveCopy
    //simply chose to use the save as command although the save command would have the effect.
    if( !bOwnsNewAupName && wxFileExists(newFileName)) {
       AudacityMessageDialog m(
-         NULL,
-         _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
-         _("Error Saving Project"),
-         wxOK|wxICON_ERROR);
+         nullptr,
+         XO("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
+         XO("Error Saving Project"),
+         wxOK|wxICON_ERROR );
       m.ShowModal();
       return false;
    }
@@ -854,10 +854,10 @@ For an audio file that will open in other apps, use 'Export'.\n");
    if ((bWantSaveCopy||!bPrompt) && filename.FileExists()) {
       // Saving a copy of the project should never overwrite an existing project.
       AudacityMessageDialog m(
-         NULL,
-         _("Saving a copy must not overwrite an existing saved project.\nPlease try again and select an original name."),
-         _("Error Saving Copy of Project"),
-         wxOK|wxICON_ERROR);
+         nullptr,
+         XO("Saving a copy must not overwrite an existing saved project.\nPlease try again and select an original name."),
+         XO("Error Saving Copy of Project"),
+         wxOK|wxICON_ERROR );
       m.ShowModal();
       return false;
    }
@@ -905,10 +905,10 @@ will be irreversibly overwritten."), fName, fName);
       {
          // Overwrite disalowed. The destination project is open in another window.
          AudacityMessageDialog m(
-            NULL,
-            _("The project will not be saved because the selected project is open in another window.\nPlease try again and select an original name."),
-            _("Error Saving Project"),
-            wxOK|wxICON_ERROR);
+            nullptr,
+            XO("The project will not saved because the selected project is open in another window.\nPlease try again and select an original name."),
+            XO("Error Saving Project"),
+            wxOK|wxICON_ERROR );
          m.ShowModal();
          return false;
       }

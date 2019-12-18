@@ -3503,9 +3503,10 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
       name = text->GetValue();
       if (name.empty())
       {
-         AudacityMessageDialog md(this,
-                            _("You must specify a name"),
-                            _("Save Preset"));
+         AudacityMessageDialog md(
+            this,
+            XO("You must specify a name"),
+            XO("Save Preset") );
          md.Center();
          md.ShowModal();
          continue;
@@ -3513,10 +3514,11 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 
       if ( make_iterator_range( mUserPresets ).contains( name ) )
       {
-         AudacityMessageDialog md(this,
-                            _("Preset already exists.\n\nReplace?"),
-                            _("Save Preset"),
-                            wxYES_NO | wxCANCEL | wxICON_EXCLAMATION);
+         AudacityMessageDialog md(
+            this,
+            XO("Preset already exists.\n\nReplace?"),
+            XO("Save Preset"),
+            wxYES_NO | wxCANCEL | wxICON_EXCLAMATION );
          md.Center();
          int choice = md.ShowModal();
          if (choice == wxID_CANCEL)
