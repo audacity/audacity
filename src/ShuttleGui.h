@@ -268,11 +268,10 @@ public:
 
 //-- Add functions.  These only add a widget or 2.
    void HandleOptionality(const wxString &Prompt);
-   void AddPrompt(const wxString &Prompt);
-   void AddUnits(const wxString &Prompt);
-   void AddTitle(const wxString &Prompt);
+   void AddPrompt(const wxString &Prompt, int wrapWidth = 0);
+   void AddUnits(const wxString &Prompt, int wrapWidth = 0);
+   void AddTitle(const wxString &Prompt, int wrapWidth = 0);
    wxWindow * AddWindow(wxWindow * pWindow);
-
    wxSlider * AddSlider(const wxString &Prompt, int pos, int Max, int Min = 0);
    wxSlider * AddVSlider(const wxString &Prompt, int pos, int Max);
    wxSpinCtrl * AddSpinCtrl(const wxString &Prompt, int Value, int Max, int Min);
@@ -300,7 +299,9 @@ public:
       bool setDefault = false );
    // When PositionFlags is 0, applies wxALL (which affects borders),
    // and either wxALIGN_CENTER (if bCenter) or else wxEXPAND
-   wxStaticText * AddVariableText(const wxString &Str, bool bCenter = false, int PositionFlags = 0);
+   wxStaticText * AddVariableText(
+      const wxString &Str, bool bCenter = false,
+      int PositionFlags = 0, int wrapWidth = 0);
    wxTextCtrl * AddTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddNumericTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddTextWindow(const wxString &Value);
@@ -337,7 +338,7 @@ public:
    wxMenu     * AddMenu( const wxString & Title );
    void AddIcon( wxBitmap * pBmp);
    void AddIconButton( const wxString & Command, const wxString & Params,wxBitmap * pBmp );
-   void AddFixedText( const wxString & Str, bool bCenter = false );
+   void AddFixedText( const wxString & Str, bool bCenter = false, int wrapWidth = 0 );
    void AddConstTextBox( const wxString &Caption, const wxString & Value );
 
 //-- Start and end functions.  These are used for sizer, or other window containers

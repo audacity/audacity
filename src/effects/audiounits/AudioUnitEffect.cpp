@@ -386,7 +386,8 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
                _("audio to Audacity. When not compensating for this delay, you will ") +
                _("notice that small silences have been inserted into the audio. ") +
                _("Enabling this option will provide that compensation, but it may ") +
-               _("not work for all Audio Unit effects."))->Wrap(650);
+               _("not work for all Audio Unit effects."),
+               false, 0, 650 );
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
@@ -403,7 +404,8 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
                _("Select \"Full\" to use the graphical interface if supplied by the Audio Unit.") +
                _(" Select \"Generic\" to use the system supplied generic interface.") +
                _(" Select \"Basic\" for a basic text-only interface.") +
-               _(" Reopen the effect for this to take effect."))->Wrap(650);
+               _(" Reopen the effect for this to take effect."),
+               false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {

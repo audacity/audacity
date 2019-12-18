@@ -456,7 +456,8 @@ void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
                _("audio to Audacity. When not compensating for this delay, you will ") +
                _("notice that small silences have been inserted into the audio. ") +
                _("Enabling this option will provide that compensation, but it may ") +
-               _("not work for all LADSPA effects."))->Wrap(650);
+               _("not work for all LADSPA effects."),
+               false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {

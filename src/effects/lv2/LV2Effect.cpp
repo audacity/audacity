@@ -253,7 +253,8 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
                               _("on each iteration. Smaller values will cause slower processing and ") +
                               _("some effects require 8192 samples or less to work properly. However ") +
                               _("most effects can accept large buffers and using them will greatly ") +
-                              _("reduce processing time."))->Wrap(650);
+                              _("reduce processing time."),
+               false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
@@ -275,7 +276,8 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
                               _("audio to Audacity. When not compensating for this delay, you will ") +
                               _("notice that small silences have been inserted into the audio. ") +
                               _("Enabling this setting will provide that compensation, but it may ") +
-                              _("not work for all LV2 effects."))->Wrap(650);
+                              _("not work for all LV2 effects."),
+               false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
@@ -291,7 +293,8 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
             S.AddVariableText(wxString() +
                               _("LV2 effects can have a graphical interface for setting parameter values.") +
                               _(" A basic text-only method is also available. ") +
-                              _(" Reopen the effect for this to take effect."))->Wrap(650);
+                              _(" Reopen the effect for this to take effect."),
+               false, 0, 650);
             S.TieCheckBox(_("Enable &graphical interface"),
                           mUseGUI);
          }
