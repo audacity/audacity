@@ -315,8 +315,8 @@ static wxString AskCopyOrEdit()
    // check the current preferences for whether or not we should ask the user about this.
    if (oldAskPref) {
       wxString newCopyPref = wxT("copy");
-      wxDialogWrapper dialog(nullptr, -1, wxString(_("Warning")));
-      dialog.SetName(dialog.GetTitle());
+      wxDialogWrapper dialog( nullptr, -1, XO("Warning") );
+      dialog.SetName();
 
       wxBoxSizer *vbox;
       dialog.SetSizer(vbox = safenew wxBoxSizer(wxVERTICAL));
