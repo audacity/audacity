@@ -314,7 +314,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
    SetName();
 
    ShuttleGui S(this, eIsCreating);
-   wxArrayStringEx encodings;
+   TranslatableStrings encodings;
    int num;
    int selection;
    int endian;
@@ -337,7 +337,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
       if (sf_format_check(&info)) {
          mEncodingSubtype[mNumEncodings] = subtype;
-         encodings.push_back(sf_encoding_index_name(i));
+         encodings.push_back( Verbatim( sf_encoding_index_name(i) ) );
 
          if ((mEncoding & SF_FORMAT_SUBMASK) == subtype)
             selection = mNumEncodings;
@@ -346,19 +346,19 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
       }
    }
 
-   wxArrayStringEx endians{
+   TranslatableStrings endians{
       /* i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
           know the correct technical word. */
-      _("No endianness") ,
+      XO("No endianness") ,
       /* i18n-hint: Refers to byte-order.  Don't translate this if you don't
        know the correct technical word. */
-      _("Little-endian") ,
+      XO("Little-endian") ,
       /* i18n-hint: Refers to byte-order.  Don't translate this if you don't
          know the correct technical word. */
-      _("Big-endian") ,
+      XO("Big-endian") ,
       /* i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
          know the correct technical word. */
-      _("Default endianness") ,
+      XO("Default endianness") ,
    };
 
    switch (mEncoding & (SF_FORMAT_ENDMASK))
@@ -378,12 +378,12 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
          break;
    }
 
-   wxArrayStringEx chans{
-      _("1 Channel (Mono)") ,
-      _("2 Channels (Stereo)") ,
+   TranslatableStrings chans{
+      XO("1 Channel (Mono)") ,
+      XO("2 Channels (Stereo)") ,
    };
    for (i=2; i<16; i++) {
-      chans.push_back(wxString::Format(_("%d Channels"), i + 1));
+      chans.push_back( XO("%d Channels").Format( i + 1 ) );
    }
 
    S.StartVerticalLay(false);

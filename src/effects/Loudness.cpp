@@ -289,7 +289,7 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
                S
                   .Validator<wxGenericValidator>( &mNormalizeTo )
                   .AddChoice( {},
-                     LocalizedStrings(kNormalizeTargetStrings, nAlgos),
+                     Msgids(kNormalizeTargetStrings, nAlgos),
                      mNormalizeTo
                );
                S.AddVariableText(_("to"), false,

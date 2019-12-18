@@ -411,7 +411,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
             {
                S.TieChoice(_("Select &interface"),
                            mUIType,
-                           { _("Full"), _("Generic"), _("Basic") });
+                           { XO("Full"), XO("Generic"), XO("Basic") });
             }
             S.EndHorizontalLay();
          }

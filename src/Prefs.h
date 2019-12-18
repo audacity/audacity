@@ -111,11 +111,11 @@ public:
       wxArrayStringEx internals
    );
 
-   const wxArrayStringEx &GetTranslations() const;
+   const TranslatableStrings &GetMsgids() const;
    const wxArrayStringEx &GetInternals() const;
 
 private:
-   mutable wxArrayStringEx mTranslations;
+   mutable TranslatableStrings mMsgids;
    mutable wxArrayStringEx mInternals;
 };
 

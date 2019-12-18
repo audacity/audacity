@@ -253,9 +253,9 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 
-   wxArrayStringEx pitch;
+   TranslatableStrings pitch;
    for (int ii = 0; ii < 12; ++ii)
-      pitch.push_back( PitchName( ii, PitchNameChoice::Both ).Translation() );
+      pitch.push_back( PitchName( ii, PitchNameChoice::Both ) );
 
    S.SetBorder(5);
 

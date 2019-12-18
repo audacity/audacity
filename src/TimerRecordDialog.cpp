@@ -972,11 +972,11 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                S.SetStretchyCol( 0 );
                m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
                      {
-                        _("Do nothing") ,
-                        _("Exit Audacity") ,
+                        XO("Do nothing") ,
+                        XO("Exit Audacity") ,
                   #ifdef __WINDOWS__
-                        _("Restart system") ,
-                        _("Shutdown system") ,
+                        XO("Restart system") ,
+                        XO("Shutdown system") ,
                   #endif
                      },
                      iPostTimerRecordAction

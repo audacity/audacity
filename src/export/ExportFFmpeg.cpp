@@ -1066,14 +1066,14 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
          {
             choice = S.AddChoice(_("Sample Rates"),
                [&]{
-                  wxArrayStringEx choices;
+                  TranslatableStrings choices;
                   for (int i = 0; sampRates[i] > 0; i++)
                   {
                      int label = sampRates[i];
                      if (label >= lowrate && label <= highrate)
                      {
                         wxString name = wxString::Format(wxT("%d"),label);
-                        choices.push_back(name);
+                        choices.push_back( Verbatim( name ) );
                         if (label <= rate)
                            selected = i;
                      }

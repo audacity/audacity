@@ -83,10 +83,10 @@ class SpectrumPrefs final : public PrefsPanel
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    int mZeroPaddingChoice;
    wxChoice *mZeroPaddingChoiceCtrl;
-   wxArrayStringEx mZeroPaddingChoices;
+   TranslatableStrings mZeroPaddingChoices;
 #endif
 
-   wxArrayStringEx mTypeChoices;
+   TranslatableStrings mTypeChoices;
 
    wxChoice *mAlgorithmChoice;
 

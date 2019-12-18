@@ -67,8 +67,7 @@ wxString GUIPrefs::HelpPageName()
 }
 
 void GUIPrefs::GetRangeChoices(
-   TranslatableStrings *pChoicesUntranslated,
-   wxArrayStringEx *pChoicesTranslated,
+   TranslatableStrings *pChoices,
    wxArrayStringEx *pCodes,
    int *pDefaultRangeIndex
 )
@@ -97,13 +96,8 @@ void GUIPrefs::GetRangeChoices(
       XO("-145 dB (PCM range of 24 bit samples)") ,
    };
 
-   if (pChoicesUntranslated)
-      *pChoicesUntranslated = sChoices;
-
-   if (pChoicesTranslated)
-      *pChoicesTranslated =
-         transform_container<wxArrayStringEx>( sChoices,
-            std::mem_fn( &TranslatableString::Translation ) );
+   if (pChoices)
+      *pChoices = sChoices;
 
    if (pDefaultRangeIndex)
       *pDefaultRangeIndex = 2; // 60 == ENV_DB_RANGE
@@ -114,7 +108,7 @@ void GUIPrefs::Populate()
    // First any pre-processing for constructing the GUI.
    GetLanguages(mLangCodes, mLangNames);
 
-   GetRangeChoices(&mRangeChoices, nullptr, &mRangeCodes, &mDefaultRangeIndex);
+   GetRangeChoices(&mRangeChoices, &mRangeCodes, &mDefaultRangeIndex);
 
 #if 0
    mLangCodes.insert( mLangCodes.end(), {

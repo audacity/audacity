@@ -126,11 +126,11 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
            S.TieChoice( mModules[i],
               mStatuses[i],
               {
-                 _("Disabled" ) ,
-                 _("Enabled" ) ,
-                 _("Ask" ) ,
-                 _("Failed" ) ,
-                 _("New" ) ,
+                 XO("Disabled" ) ,
+                 XO("Enabled" ) ,
+                 XO("Ask" ) ,
+                 XO("Failed" ) ,
+                 XO("New" ) ,
               }
            );
         S.EndMultiColumn();

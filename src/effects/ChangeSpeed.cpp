@@ -49,12 +49,10 @@ enum kVinyl
    kVinyl_33AndAThird = 0,
    kVinyl_45,
    kVinyl_78,
-   kVinyl_NA,
-   nVinyl
+   kVinyl_NA
 };
 
-static const TranslatableString kVinylStrings[nVinyl] =
-{
+static const TranslatableStrings kVinylStrings{
    XO("33\u2153"),
    XO("45"),
    XO("78"),
@@ -296,12 +294,6 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
    }
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, mFromVinyl);
 
-   wxASSERT(nVinyl == WXSIZEOF(kVinylStrings));
-
-   wxArrayStringEx vinylChoices;
-   for (int i = 0; i < nVinyl; i++)
-      vinylChoices.push_back(kVinylStrings[i].Translation());
-
    S.SetBorder(5);
 
    S.StartVerticalLay(0);
@@ -351,13 +343,13 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
             .Name(XO("From rpm"))
             .MinSize( { 100, -1 } )
             /* i18n-hint: changing a quantity "from" one value "to" another */
-            .AddChoice(_("from"), vinylChoices);
+            .AddChoice(_("from"), kVinylStrings);
 
          mpChoice_ToVinyl = S.Id(ID_ToVinyl)
             /* i18n-hint: changing a quantity "from" one value "to" another */
             .Name(XO("To rpm"))
             .MinSize( { 100, -1 } )
-            .AddChoice(_("to"), vinylChoices);
+            .AddChoice(_("to"), kVinylStrings);
       }
       S.EndMultiColumn();
 

@@ -121,9 +121,9 @@ void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.TieTextBox(  _("Path:"), mPath);
       S.TieChoice(   _("Capture What:"),
-         mWhat, LocalizedStrings(kCaptureWhatStrings, nCaptureWhats));
+         mWhat, Msgids(kCaptureWhatStrings, nCaptureWhats));
       S.TieChoice(   _("Background:"),
-         mBack, LocalizedStrings(kBackgroundStrings, nBackgrounds));
+         mBack, Msgids(kBackgroundStrings, nBackgrounds));
       S.TieCheckBox( _("Bring To Top:"), mbBringToTop);
    }
    S.EndMultiColumn();

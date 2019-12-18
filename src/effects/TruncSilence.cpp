@@ -781,7 +781,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay();
       {
          // Action choices
-         auto actionChoices = LocalizedStrings(kActionStrings, nActions);
+         auto actionChoices = Msgids( kActionStrings, nActions );
          mActionChoice = S
             .Validator<wxGenericValidator>(&mActionIndex)
             .MinSize( { -1, -1 } )

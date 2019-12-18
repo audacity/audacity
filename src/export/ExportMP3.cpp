@@ -2031,11 +2031,11 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
          {
             choice = S.AddChoice(_("Sample Rates"),
                [&]{
-                  wxArrayStringEx choices;
+                  TranslatableStrings choices;
                   for (size_t ii = 0, nn = sampRates.size(); ii < nn; ++ii) {
                      int label = sampRates[ii];
                      if (label >= lowrate && label <= highrate) {
-                        choices.push_back( wxString::Format( "%d", label ) );
+                        choices.push_back( Verbatim( "%d" ).Format( label ) );
                         if (label <= rate)
                            selected = ii;
                      }

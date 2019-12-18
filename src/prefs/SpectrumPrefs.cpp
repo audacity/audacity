@@ -112,7 +112,7 @@ void SpectrumPrefs::Populate(size_t windowSize)
    PopulatePaddingChoices(windowSize);
 
    for (int i = 0; i < NumWindowFuncs(); i++) {
-      mTypeChoices.push_back( WindowFuncName(i).Translation() );
+      mTypeChoices.push_back( WindowFuncName(i) );
    }
 
    //------------------------- Main section --------------------
@@ -146,8 +146,8 @@ void SpectrumPrefs::PopulatePaddingChoices(size_t windowSize)
    int numChoices = 0;
    const size_t maxWindowSize = 1 << (SpectrogramSettings::LogMaxWindowSize);
    while (windowSize <= maxWindowSize) {
-      const wxString numeral = wxString::Format(wxT("%d"), padding);
-      mZeroPaddingChoices.push_back(numeral);
+      const auto numeral = wxString::Format(wxT("%d"), padding);
+      mZeroPaddingChoices.push_back( Verbatim( numeral ) );
       if (pPaddingSizeControl)
          pPaddingSizeControl->Append(numeral);
       windowSize <<= 1;
@@ -190,9 +190,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol( 1 );
             S.Id(ID_SCALE).TieChoice(_("S&cale:"),
                mTempSettings.scaleType,
-               transform_container<wxArrayStringEx>(
-                  SpectrogramSettings::GetScaleNames(),
-                  std::mem_fn( &TranslatableString::Translation ) ) );
+               SpectrogramSettings::GetScaleNames() );
             mMinFreq =
                S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&n Frequency (Hz):"),
                mTempSettings.minFreq,
@@ -242,26 +240,24 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          mAlgorithmChoice =
             S.Id(ID_ALGORITHM).TieChoice(_("A&lgorithm:"),
             mTempSettings.algorithm,
-            transform_container<wxArrayStringEx>(
-               SpectrogramSettings::GetAlgorithmNames(),
-               std::mem_fn( &TranslatableString::Translation ) ) );
+            SpectrogramSettings::GetAlgorithmNames() );
 
          S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
             mTempSettings.windowSize,
             {
-               _("8 - most wideband"),
-               _("16"),
-               _("32"),
-               _("64"),
-               _("128"),
-               _("256"),
-               _("512"),
-               _("1024 - default"),
-               _("2048"),
-               _("4096"),
-               _("8192"),
-               _("16384"),
-               _("32768 - most narrowband"),
+               XO("8 - most wideband"),
+               XO("16"),
+               XO("32"),
+               XO("64"),
+               XO("128"),
+               XO("256"),
+               XO("512"),
+               XO("1024 - default"),
+               XO("2048"),
+               XO("4096"),
+               XO("8192"),
+               XO("16384"),
+               XO("32768 - most narrowband"),
             }
          );
 

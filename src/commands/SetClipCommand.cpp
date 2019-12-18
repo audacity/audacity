@@ -63,7 +63,7 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.Optional( bHasContainsTime).TieNumericTextBox(  _("At:"),            mContainsTime );
       S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour,
-         LocalizedStrings( kColourStrings, nColours ) );
+         Msgids( kColourStrings, nColours ) );
       S.Optional( bHasT0          ).TieNumericTextBox(  _("Start:"),         mT0 );
    }
    S.EndMultiColumn();

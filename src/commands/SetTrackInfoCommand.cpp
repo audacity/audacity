@@ -317,13 +317,13 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
       S.SetStretchyCol( 2 );
       S.Optional( bHasHeight      ).TieNumericTextBox(  _("Height:"),        mHeight );
       S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour,
-         LocalizedStrings(  kColourStrings, nColours ) );
+         Msgids(  kColourStrings, nColours ) );
       S.Optional( bHasDisplayType ).TieChoice(          _("Display:"),       mDisplayType,
-         LocalizedStrings( kDisplayTypeStrings, nDisplayTypes ) );
+         Msgids( kDisplayTypeStrings, nDisplayTypes ) );
       S.Optional( bHasScaleType   ).TieChoice(          _("Scale:"),         mScaleType,
-         LocalizedStrings( kScaleTypeStrings, nScaleTypes ) );
+         Msgids( kScaleTypeStrings, nScaleTypes ) );
       S.Optional( bHasVZoom       ).TieChoice(          _("VZoom:"),         mVZoom,
-         LocalizedStrings( kZoomTypeStrings, nZoomTypes ) );
+         Msgids( kZoomTypeStrings, nZoomTypes ) );
       S.Optional( bHasVZoomTop    ).TieTextBox(         _("VZoom Top:"),     mVZoomTop );
       S.Optional( bHasVZoomBottom ).TieTextBox(         _("VZoom Bottom:"),  mVZoomBottom );
    }

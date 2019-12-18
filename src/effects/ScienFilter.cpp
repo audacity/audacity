@@ -466,7 +466,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .Validator<wxGenericValidator>(&mFilterType)
             .MinSize( { -1, -1 } )
             .AddChoice(_("&Filter Type:"),
-               LocalizedStrings(kTypeStrings, nTypes)
+               Msgids(kTypeStrings, nTypes)
             );
 
          mFilterOrderCtl = S.Id(ID_Order)
@@ -475,9 +475,9 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .MinSize( { -1, -1 } )
             .AddChoice(_("O&rder:"),
                []{
-                  wxArrayStringEx orders;
+                  TranslatableStrings orders;
                   for (int i = 1; i <= 10; i++)
-                     orders.push_back(wxString::Format(wxT("%d"), i));
+                     orders.emplace_back( Verbatim("%d").Format( i ) );
                   return orders;
                }()
             );
@@ -496,7 +496,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .Validator<wxGenericValidator>(&mFilterSubtype)
             .MinSize( { -1, -1 } )
             .AddChoice(_("&Subtype:"),
-               LocalizedStrings(kSubTypeStrings, nSubTypes)
+               Msgids(kSubTypeStrings, nSubTypes)
             );
 
          mCutoffCtl = S.Id(ID_Cutoff)

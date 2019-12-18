@@ -381,7 +381,7 @@ wxBitmapButton * ShuttleGuiBase::AddBitmapButton(
 }
 
 wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
-   const wxArrayStringEx &choices, int Selected )
+   const TranslatableStrings &choices, int Selected )
 {
    HandleOptionality( Prompt );
    AddPrompt( Prompt );
@@ -396,7 +396,8 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
       miId,
       wxDefaultPosition,
       wxDefaultSize,
-      choices,
+      transform_container<wxArrayString>(
+         choices, std::mem_fn( &TranslatableString::Translation ) ),
       GetStyle( 0 ) );
 
    pChoice->SetMinSize( { 180, -1 } );// Use -1 for 'default size' - Platform specific.
@@ -415,9 +416,10 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
 }
 
 wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
-   const wxArrayStringEx &choices, const wxString &Selected )
+   const TranslatableStrings &choices, const TranslatableString &Selected )
 {
-   return AddChoice( Prompt, choices, choices.Index( Selected ) );
+   return AddChoice(
+      Prompt, choices, make_iterator_range( choices ).index( Selected ) );
 }
 
 void ShuttleGuiBase::AddFixedText(const wxString &Str, bool bCenter, int wrapWidth)
@@ -1437,7 +1439,7 @@ wxSlider * ShuttleGuiBase::DoTieSlider( const wxString &Prompt, WrappedType & Wr
 wxChoice * ShuttleGuiBase::DoTieChoice(
    const wxString &Prompt,
    WrappedType &WrappedRef,
-   const wxArrayStringEx &choices )
+   const TranslatableStrings &choices )
 {
    HandleOptionality( Prompt );
 
@@ -1451,7 +1453,12 @@ wxChoice * ShuttleGuiBase::DoTieChoice(
    case eIsCreating:
       {
          if( WrappedRef.IsString() ) {
-            auto Selected = choices.Index( WrappedRef.ReadAsString() );
+            auto str = WrappedRef.ReadAsString();
+            auto begin = choices.begin();
+            auto iter = std::find_if( begin, choices.end(),
+               [&str]( const TranslatableString &choice ){
+                  return str == choice.Translation(); } );
+            int Selected = std::distance( begin, iter );
             pChoice = AddChoice( Prompt, choices, Selected );
          }
          else
@@ -1673,7 +1680,7 @@ wxSlider * ShuttleGuiBase::TieVSlider( const wxString &Prompt, float &pos, const
 wxChoice * ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
    wxString &Selected,
-   const wxArrayStringEx &choices )
+   const TranslatableStrings &choices )
 {
    WrappedType WrappedRef( Selected );
    return DoTieChoice( Prompt, WrappedRef, choices );
@@ -1682,7 +1689,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
 wxChoice * ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
    int &Selected,
-   const wxArrayStringEx &choices )
+   const TranslatableStrings &choices )
 {
    WrappedType WrappedRef( Selected );
    return DoTieChoice( Prompt, WrappedRef, choices );
@@ -1928,7 +1935,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
    const auto &symbols = choiceSetting.GetSymbols();
    const auto &SettingName = choiceSetting.Key();
    const auto &Default = choiceSetting.Default().Internal();
-   const auto &Choices = symbols.GetTranslations();
+   const auto &Choices = symbols.GetMsgids();
    const auto &InternalChoices = symbols.GetInternals();
 
    wxChoice * pChoice=(wxChoice*)NULL;
@@ -1941,9 +1948,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
    // Put to prefs does 2 and 3.
    if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef ); // Get Index from Prefs.
    if( DoStep(1) ) TempIndex = TranslateToIndex( TempStr, InternalChoices ); // To an index
-   if( DoStep(2) )
-      pChoice = TieChoice( Prompt, TempIndex,
-         transform_container<wxArrayStringEx>(Choices, GetCustomTranslation) );
+   if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, Choices );
    if( DoStep(3) ) TempStr = TranslateFromIndex( TempIndex, InternalChoices ); // To a string
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
    return pChoice;
@@ -2404,6 +2409,13 @@ wxSizerItem * ShuttleGui::AddSpace( int width, int height, int prop )
   // return mpSizer->Add( width, height, miProp);
 
    return mpSizer->Add( width, height, prop );
+}
+
+void ShuttleGui::SetMinSize( wxWindow *window, const TranslatableStrings & items )
+{
+   SetMinSize( window,
+      transform_container<wxArrayStringEx>(
+         items, std::mem_fn( &TranslatableString::Translation ) ) );
 }
 
 void ShuttleGui::SetMinSize( wxWindow *window, const wxArrayStringEx & items )

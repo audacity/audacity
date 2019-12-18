@@ -946,7 +946,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                mInterpChoice = S.Id(ID_Interp)
                   .Name(XO("Interpolation type"))
                   .AddChoice( {},
-                     LocalizedStrings(kInterpStrings, nInterpolations), 0 );
+                     Msgids(kInterpStrings, nInterpolations), 0 );
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                mInterpChoice->SetAccessible(safenew WindowAccessible(mInterpChoice));
@@ -1022,9 +1022,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                      .Name(XO("Select Curve"))
                      .AddChoice( {},
                         [this]{
-                           wxArrayStringEx curves;
+                           TranslatableStrings curves;
                            for (const auto &curve : mCurves)
-                              curves.push_back(curve.Name);
+                              curves.push_back( Verbatim( curve.Name ) );
                            return curves;
                         }()
                      );

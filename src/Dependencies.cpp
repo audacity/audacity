@@ -401,9 +401,9 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
                   {
                      /*i18n-hint: One of the choices of what you want Audacity to do when
                      * Audacity finds a project depends on another file.*/
-                     _("Ask me") ,
-                     _("Always copy all files (safest)") ,
-                     _("Never copy any files") ,
+                     XO("Ask me") ,
+                     XO("Always copy all files (safest)") ,
+                     XO("Never copy any files") ,
                   },
                   0 // "Ask me"
                );

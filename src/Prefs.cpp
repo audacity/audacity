@@ -258,12 +258,12 @@ EnumValueSymbols::EnumValueSymbols(
       emplace_back( *iter1++, *iter2++ );
 }
 
-const wxArrayStringEx &EnumValueSymbols::GetTranslations() const
+const TranslatableStrings &EnumValueSymbols::GetMsgids() const
 {
-   if ( mTranslations.empty() )
-      mTranslations = transform_container<wxArrayStringEx>( *this,
-         std::mem_fn( &EnumValueSymbol::Translation ) );
-   return mTranslations;
+   if ( mMsgids.empty() )
+      mMsgids = transform_container<TranslatableStrings>( *this,
+         std::mem_fn( &EnumValueSymbol::Msgid ) );
+   return mMsgids;
 }
 
 const wxArrayStringEx &EnumValueSymbols::GetInternals() const

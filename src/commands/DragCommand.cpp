@@ -74,7 +74,7 @@ void DragCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasToX        ).TieNumericTextBox(  _("To X:"),        mToX );
       S.Optional( bHasToY        ).TieNumericTextBox(  _("To Y:"),        mToY );
       S.Optional( bHasRelativeTo ).TieChoice(          _("Relative To:"), mRelativeTo,
-         LocalizedStrings( kCoordTypeStrings, nCoordTypes ) );
+         Msgids( kCoordTypeStrings, nCoordTypes ) );
    }
    S.EndMultiColumn();
 }

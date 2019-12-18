@@ -260,12 +260,12 @@ wxString Internat::StripAccelerators(const wxString &s)
    return result;
 }
 
-wxArrayStringEx LocalizedStrings(
+TranslatableStrings Msgids(
    const EnumValueSymbol strings[], size_t nStrings)
 {
-   return transform_range<wxArrayStringEx>(
+   return transform_range<TranslatableStrings>(
       strings, strings + nStrings,
-      std::mem_fn( &EnumValueSymbol::Translation )
+      std::mem_fn( &EnumValueSymbol::Msgid )
    );
 }
 

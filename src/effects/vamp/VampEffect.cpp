@@ -570,12 +570,13 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   .Position(wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL)
                   .AddChoice( {},
                      [&]{
-                        wxArrayStringEx choices;
+                        TranslatableStrings choices;
                         for (const auto &program : programs)
-                           choices.push_back(wxString::FromUTF8(program.c_str()));
+                           choices.push_back(
+                              Verbatim(wxString::FromUTF8(program.c_str())));
                         return choices;
                      }(),
-                     wxString::FromUTF8(mPlugin->getCurrentProgram().c_str())
+                     Verbatim( wxString::FromUTF8(mPlugin->getCurrentProgram().c_str()) )
                   );
 
                S.AddSpace(1, 1);
@@ -626,7 +627,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                         mParameters[p].quantizeStep == 1.0 &&
                         !mParameters[p].valueNames.empty())
                {
-                  wxArrayStringEx choices;
+                  TranslatableStrings choices;
                   int selected = -1;
 
                   for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
@@ -636,7 +637,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                      {
                         selected = i;
                      }
-                     choices.push_back(choice);
+                     choices.push_back( Verbatim( choice ) );
                   }
 
                   S.Id(ID_Choices + p);

@@ -342,7 +342,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
    {
       S.Validator<wxGenericValidator>(&mWaveform)
          .AddChoice(_("Waveform:"),
-            LocalizedStrings(kWaveStrings, nWaveforms));
+            Msgids( kWaveStrings, nWaveforms ) );
 
       if (mChirp)
       {
@@ -423,7 +423,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
 
          S.Validator<wxGenericValidator>(&mInterpolation)
             .AddChoice(_("Interpolation:"),
-               LocalizedStrings(kInterStrings, nInterpolations));
+               Msgids( kInterStrings, nInterpolations ) );
       }
       else
       {
