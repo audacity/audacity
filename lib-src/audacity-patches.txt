@@ -124,30 +124,12 @@ lv2
 A merging of the lilv, lv2, msinttypes, serd, sord, sratom, and suil libraries to support
 LV2 plug-ins.
 Versions in Audacity SVN:
-    lilv-0.20.0
-    lv2-1.10.0
-    msinttypes-r29
-    serd-0.20.0
-    sord-0.12.2
-    sratom-0.4.6
-    suil-0.8.2
-Patches:
-    usegetprocaddress.patch - ticket #923 opened upstream on 10/23/2013
-                              fix commited (r5164) upstream on 10/30/2013
-    serdnode.patch - Both lilv and serd have a node.c which causes problems during build.
-                     This is just a copy of serd/node.c and is a way to work around the
-                     problem.
-Modifications:
-    Run lib-src/lv2/unpack-waf to unpack the waf scripts.
-    See http://lintian.debian.org/tags/source-contains-waf-binary.html for details.
-Upstream Versions:
-    lilv-0.20.0
-    lv2-1.10.0
-    msinttypes-r29
-    serd-0.20.0
-    sord-0.12.2
-    sratom-0.8.2
-
+   lilv-0.24.6
+   lv2-1.16.0
+   serd-0.30.2
+   sord-0.16.4
+   sratom-0.6.4
+   suil-0.10.6
 
 mod-script-pipe
 ---------------
