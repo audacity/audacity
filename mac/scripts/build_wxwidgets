@@ -6,9 +6,9 @@
 #  sudo <path to this script>/build_wxwidgets
 #
 
-# Currently, Audacity is built using the 10.7 SDK, but you may choose to target
+# Currently, Audacity is built using the 10.9 SDK, but you may choose to target
 # 10.8 or greater by changing this variable.
-min=10.7
+min=10.9
 
 # You shouldn't need to change this, but just in case you put Xcode in a non-standard
 # location, update this appropriately.
