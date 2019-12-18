@@ -757,7 +757,9 @@ wxDialogWrapper( parent, id, title, position, size, style | wxRESIZE_BORDER )
       auto uVertSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
       vertSizer = uVertSizer.get();
 
-      auto choices = mFile->GetStreamInfo();
+      const auto choices = transform_container<wxArrayStringEx>(
+         mFile->GetStreamInfo(),
+         std::mem_fn( &TranslatableString::Translation ) );
       StreamList = safenew wxListBox(this, -1, wxDefaultPosition, wxDefaultSize, choices, wxLB_EXTENDED | wxLB_ALWAYS_SB);
 
       vertSizer->Add(StreamList, 1, wxEXPAND | wxALIGN_LEFT | wxALL, 5);

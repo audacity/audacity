@@ -174,7 +174,7 @@ public:
 
    ///! Called by Import.cpp
    ///\return array of strings - descriptions of the streams
-   const wxArrayString &GetStreamInfo() override;
+   const TranslatableStrings &GetStreamInfo() override;
 
    ///! Called by Import.cpp
    ///\param index - index of the stream in mStreamInfo and mStreams arrays
@@ -215,7 +215,7 @@ public:
    void OnNewSample(GStreamContext *c, GstSample *sample);
 
 private:
-   wxArrayString           mStreamInfo;   //!< Array of stream descriptions. Length is the same as mStreams
+   TranslatableStrings     mStreamInfo;   //!< Array of stream descriptions. Length is the same as mStreams
    Tags                    mTags;         //!< Tags to be passed back to Audacity
    TrackFactory           *mTrackFactory; //!< Factory to create tracks when samples arrive
 
@@ -892,7 +892,7 @@ GStreamerImportFileHandle::GetStreamCount()
 
 // ----------------------------------------------------------------------------
 // Return array of strings - descriptions of the streams
-const wxArrayString &
+const TranslatableStrings &
 GStreamerImportFileHandle::GetStreamInfo()
 {
    return mStreamInfo;
@@ -980,12 +980,12 @@ GStreamerImportFileHandle::Init()
       GStreamContext *c = mStreams[i].get();
 
       // Create stream info string
-      wxString strinfo;
-      strinfo.Printf(wxT("Index[%02d], Type[%s], Channels[%d], Rate[%d]"),
-                     (unsigned int) i,
-                     wxString::FromUTF8(c->mType.get()),
-                     (int) c->mNumChannels,
-                     (int) c->mSampleRate);
+      auto strinfo = XO("Index[%02d], Type[%s], Channels[%d], Rate[%d]")
+         .Format(
+            (unsigned int) i,
+            wxString::FromUTF8(c->mType.get()),
+            (int) c->mNumChannels,
+            (int) c->mSampleRate );
       mStreamInfo.push_back(strinfo);
    }
 

@@ -110,8 +110,12 @@ public:
 
       for (int i = 0; i < mVorbisFile->links; i++)
       {
-         wxString strinfo;
-         strinfo.Printf(wxT("Index[%02x] Version[%d], Channels[%d], Rate[%ld]"), (unsigned int) i,mVorbisFile->vi[i].version,mVorbisFile->vi[i].channels,mVorbisFile->vi[i].rate);
+         auto strinfo = XO("Index[%02x] Version[%d], Channels[%d], Rate[%ld]")
+            .Format(
+               (unsigned int) i,
+               mVorbisFile->vi[i].version,
+               mVorbisFile->vi[i].channels,
+               mVorbisFile->vi[i].rate);
          mStreamInfo.push_back(strinfo);
          mStreamUsage[i] = 0;
       }
@@ -132,7 +136,7 @@ public:
          return 0;
    }
 
-   const wxArrayString &GetStreamInfo() override
+   const TranslatableStrings &GetStreamInfo() override
    {
       return mStreamInfo;
    }
@@ -151,7 +155,7 @@ private:
    std::unique_ptr<OggVorbis_File> mVorbisFile;
 
    ArrayOf<int> mStreamUsage;
-   wxArrayString   mStreamInfo;
+   TranslatableStrings mStreamInfo;
    std::list<NewChannelGroup> mChannels;
 
    sampleFormat   mFormat;

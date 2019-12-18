@@ -104,9 +104,9 @@ public:
 
    wxInt32 GetStreamCount() override { return 1; }
 
-   const wxArrayString &GetStreamInfo() override
+   const TranslatableStrings &GetStreamInfo() override
    {
-      static wxArrayString empty;
+      static TranslatableStrings empty;
       return empty;
    }
 

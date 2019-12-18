@@ -247,7 +247,7 @@ public:
 
    ///! Called by Import.cpp
    ///\return array of strings - descriptions of the streams
-   const wxArrayString &GetStreamInfo() override
+   const TranslatableStrings &GetStreamInfo() override
    {
       return mStreamInfo;
    }
@@ -267,7 +267,7 @@ private:
    AVFormatContext      *mFormatContext; //!< Format description, also contains metadata and some useful info
    int                   mNumStreams;    //!< mNumstreams is less or equal to mFormatContext->nb_streams
    ScsPtr                mScs;           //!< Points to array of pointers to stream contexts, which may be shared with a decoder task.
-   wxArrayString         mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
+   TranslatableStrings   mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
 
    wxInt64               mProgressPos;   //!< Current timestamp, file position or whatever is used as first argument for Update()
    wxInt64               mProgressLen;   //!< Duration, total length or whatever is used as second argument for Update()
@@ -436,7 +436,6 @@ bool FFmpegImportFileHandle::InitCodecs()
          }
 
          // Stream is decodeable and it is audio. Add it and its decription to the arrays
-         wxString strinfo;
          int duration = 0;
          if (sc->m_stream->duration > 0)
             duration = sc->m_stream->duration * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
@@ -454,8 +453,16 @@ bool FFmpegImportFileHandle::InitCodecs()
          {
             lang.FromUTF8(tag->value);
          }
-         strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),
-                        sc->m_stream->id,codec->name,lang,bitrate,(int)sc->m_stream->codec->channels,(int)duration);
+         auto strinfo = XO(
+/* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]")
+            .Format(
+               sc->m_stream->id,
+               codec->name,
+               lang,
+               bitrate,
+               (int)sc->m_stream->codec->channels,
+               (int)duration);
          mStreamInfo.push_back(strinfo);
          mScs->get()[mNumStreams++] = std::move(sc);
       }
