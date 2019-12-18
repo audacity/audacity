@@ -251,7 +251,7 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
    wxString fName = _("log.txt");
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                        _("Save log to:"),
+                        XO("Save log to:"),
                         wxEmptyString,
                         fName,
                         wxT("txt"),

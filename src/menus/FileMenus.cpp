@@ -229,7 +229,7 @@ void OnExportLabels(const CommandContext &context)
       fName = (*trackRange.rbegin())->GetName();
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                        _("Export Labels As:"),
+                        XO("Export Labels As:"),
                         wxEmptyString,
                         fName,
                         wxT("txt"),
@@ -315,7 +315,7 @@ void OnExportMIDI(const CommandContext &context)
       wxString fName;
 
       fName = FileNames::SelectFile(FileNames::Operation::Export,
-         _("Export MIDI As:"),
+         XO("Export MIDI As:"),
          wxEmptyString,
          fName,
          wxT(".mid|.gro"),
@@ -419,7 +419,7 @@ void OnImportLabels(const CommandContext &context)
 
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
-                    _("Select a text file containing labels"),
+                    XO("Select a text file containing labels"),
                     wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
@@ -463,7 +463,7 @@ void OnImportMIDI(const CommandContext &context)
    auto &window = GetProjectFrame( project );
 
    wxString fileName = FileNames::SelectFile(FileNames::Operation::Open,
-      _("Select a MIDI file"),
+      XO("Select a MIDI file"),
       wxEmptyString,     // Path
       wxT(""),       // Name
       wxT(""),       // Extension
@@ -484,7 +484,7 @@ void OnImportRaw(const CommandContext &context)
 
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
-                    _("Select any uncompressed audio file"),
+                    XO("Select any uncompressed audio file"),
                     wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(""),       // Extension

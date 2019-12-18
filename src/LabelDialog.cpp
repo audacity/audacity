@@ -628,7 +628,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
    // Ask user for a filename
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
-                    _("Select a text file containing labels"),
+                    XO("Select a text file containing labels"),
                     wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
@@ -677,7 +677,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = mTrackNames[mTrackNames.size() - 1].AfterFirst(wxT('-')).Mid(1);
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-      _("Export Labels As:"),
+      XO("Export Labels As:"),
       wxEmptyString,
       fName,
       wxT("txt"),

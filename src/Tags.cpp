@@ -1244,7 +1244,7 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
 
    // Ask the user for the real name
    fn = FileNames::SelectFile(FileNames::Operation::_None,
-                     _("Load Metadata As:"),
+                     XO("Load Metadata As:"),
                      FileNames::DataDir(),
                      wxT("Tags.xml"),
                      wxT("xml"),
@@ -1299,7 +1299,7 @@ void TagsEditorDialog::OnSave(wxCommandEvent & WXUNUSED(event))
 
    // Ask the user for the real name
    fn = FileNames::SelectFile(FileNames::Operation::_None,
-                     _("Save Metadata As:"),
+                     XO("Save Metadata As:"),
                      FileNames::DataDir(),
                      wxT("Tags.xml"),
                      wxT("xml"),

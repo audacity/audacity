@@ -127,7 +127,7 @@ public:
 
    static wxString
    SelectFile(Operation op,   // op matters only when default_path is empty
-              const wxString& message,
+              const TranslatableString& message,
                 const FilePath& default_path,
                 const FilePath& default_filename,
                 // empty, or one extension, or multiple extensions joined with

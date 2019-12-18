@@ -176,7 +176,7 @@ void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
 #endif
 
    path = FileNames::SelectFile(FileNames::Operation::Open,
-                       _("Find path to command"),
+                       XO("Find path to command"),
                        wxEmptyString,
                        wxEmptyString,
                        ext,

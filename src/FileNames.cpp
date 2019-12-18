@@ -462,7 +462,7 @@ void FileNames::UpdateDefaultPath(Operation op, const FilePath &path)
 
 wxString
 FileNames::SelectFile(Operation op,
-           const wxString& message,
+           const TranslatableString& message,
            const FilePath& default_path,
            const FilePath& default_filename,
            const wxString& default_extension,
@@ -472,7 +472,7 @@ FileNames::SelectFile(Operation op,
 {
    return WithDefaultPath(op, default_path, [&](const FilePath &path) {
       return FileSelector(
-            message, path, default_filename, default_extension,
+            message.Translation(), path, default_filename, default_extension,
             wildcard, flags, parent, wxDefaultCoord, wxDefaultCoord);
    });
 }
@@ -618,7 +618,7 @@ char *FileNames::VerifyFilename(const wxString &s, bool input)
 
          ext = ff.GetExt();
          name = FileNames::SelectFile(FileNames::Operation::_None,
-                             _("Specify New Filename:"),
+                             XO("Specify New Filename:"),
                              wxEmptyString,
                              name,
                              ext,

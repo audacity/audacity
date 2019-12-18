@@ -260,7 +260,7 @@ void BenchmarkDialog::OnSave( wxCommandEvent & WXUNUSED(event))
    wxString fName = _("benchmark.txt");
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                        _("Export Benchmark Data as:"),
+                        XO("Export Benchmark Data as:"),
                         wxEmptyString,
                         fName,
                         wxT("txt"),

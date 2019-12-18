@@ -57,7 +57,7 @@ void ShowDiagnostics(
 
    if (dlg.ShowModal() == wxID_OK)
    {
-      const auto fileDialogTitle = XO("Save %s").Format( description ).Translation();
+      const auto fileDialogTitle = XO("Save %s").Format( description );
       wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
          fileDialogTitle,
          wxEmptyString,
@@ -72,7 +72,7 @@ void ShowDiagnostics(
          {
             AudacityMessageBox(
                XO("Unable to save %s").Format( description ).Translation(),
-               fileDialogTitle);
+               fileDialogTitle.Translation());
          }
       }
    }

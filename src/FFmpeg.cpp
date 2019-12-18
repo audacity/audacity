@@ -510,11 +510,10 @@ public:
 
    void OnBrowse(wxCommandEvent & WXUNUSED(event))
    {
-      wxString question;
       /* i18n-hint: It's asking for the location of a file, for
       example, "Where is lame_enc.dll?" - you could translate
       "Where would I find the file '%s'?" instead if you want. */
-      question.Printf(_("Where is '%s'?"), mName);
+      auto question = XO("Where is '%s'?").Format( mName );
 
       wxString path = FileNames::SelectFile(FileNames::Operation::_None,
          question,

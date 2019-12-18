@@ -318,7 +318,7 @@ void TimerRecordDialog::OnTimeText_Duration(wxCommandEvent& WXUNUSED(event))
 void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(event))
 {
    wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
-      _("Save Timer Recording As"),
+      XO("Save Timer Recording As"),
       m_fnAutoSaveFile.GetPath(),
       m_fnAutoSaveFile.GetFullName(),
       wxT("aup"),

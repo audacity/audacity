@@ -344,7 +344,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
    wxString file = wxT("Audacity-keys.xml");
 
    file = FileNames::SelectFile(FileNames::Operation::Open,
-                        _("Select an XML file containing Audacity keyboard shortcuts..."),
+                        XO("Select an XML file containing Audacity keyboard shortcuts..."),
                        wxEmptyString,
                        file,
                        wxT(""),
@@ -371,7 +371,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString file = wxT("Audacity-keys.xml");
 
    file = FileNames::SelectFile(FileNames::Operation::Export,
-                       _("Export Keyboard Shortcuts As:"),
+                       XO("Export Keyboard Shortcuts As:"),
                        wxEmptyString,
                        file,
                        wxT("xml"),

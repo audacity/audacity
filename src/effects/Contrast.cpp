@@ -528,7 +528,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = wxT("contrast.txt");
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                        _("Export Contrast Result As:"),
+                        XO("Export Contrast Result As:"),
                         wxEmptyString,
                         fName,
                         wxT("txt"),

@@ -785,14 +785,14 @@ bool ProjectFileManager::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /
       filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
    }
 
-   wxString title;
+   TranslatableString title;
    wxString message;
    if (bWantSaveCopy)
    {
       if (bLossless)
       {
-         title = wxString::Format(_("%sSave Lossless Copy of Project \"%s\" As..."),
-                                           Restorer.sProjNumber,Restorer.sProjName);
+         title = XO("%sSave Lossless Copy of Project \"%s\" As...")
+            .Format( Restorer.sProjNumber,Restorer.sProjName );
          message = _("\
 'Save Lossless Copy of Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n\n\
@@ -802,8 +802,8 @@ with no loss of quality, but the projects are large.\n");
       }
       else
       {
-         title = wxString::Format(_("%sSave Compressed Copy of Project \"%s\" As..."),
-                                           Restorer.sProjNumber,Restorer.sProjName);
+         title = XO("%sSave Compressed Copy of Project \"%s\" As...")
+            .Format( Restorer.sProjNumber, Restorer.sProjName );
          message = _("\
 'Save Compressed Copy of Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n\n\
@@ -814,8 +814,8 @@ but they have some loss of fidelity.\n");
    }
    else
    {
-      title = wxString::Format(_("%sSave Project \"%s\" As..."),
-                               Restorer.sProjNumber, Restorer.sProjName);
+      title = XO("%sSave Project \"%s\" As...")
+         .Format( Restorer.sProjNumber, Restorer.sProjName );
       message = _("\
 'Save Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n");
