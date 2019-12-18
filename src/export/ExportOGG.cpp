@@ -129,7 +129,7 @@ public:
    ExportOGG();
 
    // Required
-   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
+   void OptionsCreate(ShuttleGui &S, int format) override;
 
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
@@ -369,10 +369,9 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    return updateResult;
 }
 
-wxWindow *ExportOGG::OptionsCreate(wxWindow *parent, int format)
+void ExportOGG::OptionsCreate(ShuttleGui &S, int format)
 {
-   wxASSERT(parent); // to justify safenew
-   return safenew ExportOGGOptions(parent, format);
+   S.AddWindow( safenew ExportOGGOptions{ S.GetParent(), format } );
 }
 
 bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata)

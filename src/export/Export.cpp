@@ -220,12 +220,8 @@ bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(form
    return false;
 }
 
-wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
+void ExportPlugin::OptionsCreate(ShuttleGui &S, int WXUNUSED(format))
 {
-   wxASSERT(parent); // To justify safenew
-   wxPanel *p = safenew wxPanelWrapper(parent, wxID_ANY);
-   ShuttleGui S(p, eIsCreatingFromPrefs);
-
    S.StartHorizontalLay(wxCENTER);
    {
       S.StartHorizontalLay(wxCENTER, 0);
@@ -235,8 +231,6 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
       S.EndHorizontalLay();
    }
    S.EndHorizontalLay();
-
-   return p;
 }
 
 //Create a mixer by computing the time warp factor
@@ -994,17 +988,21 @@ void Exporter::CreateUserPane(wxWindow *parent)
       {
          S.StartStatic(_("Format Options"), 1);
          {
-            mBook = safenew wxSimplebook(S.GetParent());
-            S.Position(wxEXPAND)
-               .AddWindow(mBook);
+            mBook = S.Position(wxEXPAND)
+               .StartSimplebook();
 
             for (const auto &pPlugin : mPlugins)
             {
                for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                {
-                  mBook->AddPage(pPlugin->OptionsCreate(mBook, j), wxEmptyString);
+                  // Name of simple book page is not displayed
+                  S.StartNotebookPage( wxEmptyString );
+                  pPlugin->OptionsCreate(S, j);
+                  S.EndNotebookPage();
                }
             }
+
+            S.EndSimplebook();
          }
          S.EndStatic();
       }
@@ -1410,43 +1408,46 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
       maxNumChannels = 32;
 
    mMixerSpec = std::make_unique<MixerSpec>(numTracks, maxNumChannels);
-   
-   wxBoxSizer *vertSizer;
+
+   auto label = XO("Output Channels: %2d")
+      .Format( mMixerSpec->GetNumChannels() );
+
+   ShuttleGui S{ this, eIsCreating };
    {
-      auto uVertSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      vertSizer = uVertSizer.get();
+      S.SetBorder( 5 );
 
-      wxWindow *mixerPanel = safenew ExportMixerPanel(this, ID_MIXERPANEL,
-         mMixerSpec.get(), mTrackNames,
-         wxDefaultPosition, wxSize(400, -1));
-      mixerPanel->SetName(_("Mixer Panel"));
-      vertSizer->Add(mixerPanel, 1, wxEXPAND | wxALL, 5);
+      auto mixerPanel = safenew ExportMixerPanel(
+         S.GetParent(), ID_MIXERPANEL, mMixerSpec.get(),
+         mTrackNames, wxDefaultPosition, wxSize(400, -1));
+      S.Prop(1)
+         .Name(XO("Mixer Panel"))
+         .Position(wxEXPAND | wxALL)
+         .AddWindow(mixerPanel);
 
+      S.StartHorizontalLay(wxALIGN_CENTRE | wxALL, 0);
       {
-         auto horSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+         mChannelsText = S.AddVariableText(
+            label.Translation(),
+            false, wxALIGN_LEFT | wxALL );
 
-         wxString label;
-         label.Printf(_("Output Channels: %2d"), mMixerSpec->GetNumChannels());
-         mChannelsText = safenew wxStaticText(this, -1, label);
-         horSizer->Add(mChannelsText, 0, wxALIGN_LEFT | wxALL, 5);
-
-         wxSlider *channels = safenew wxSliderWrapper(this, ID_SLIDER_CHANNEL,
-            mMixerSpec->GetNumChannels(), 1, mMixerSpec->GetMaxNumChannels(),
-            wxDefaultPosition, wxSize(300, -1));
-         channels->SetName(label);
-         horSizer->Add(channels, 0, wxEXPAND | wxALL, 5);
-
-         vertSizer->Add(horSizer.release(), 0, wxALIGN_CENTRE | wxALL, 5);
+         S
+            .Id(ID_SLIDER_CHANNEL)
+            .Name(label)
+            .Size({300, -1})
+            .Style(wxSL_HORIZONTAL)
+            .Position(wxEXPAND | wxALL)
+            .AddSlider( {},
+               mMixerSpec->GetNumChannels(),
+               mMixerSpec->GetMaxNumChannels(), 1 );
       }
+      S.EndHorizontalLay();
 
-      vertSizer->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton | eHelpButton).release(), 0, wxEXPAND);
-
-      SetAutoLayout(true);
-      SetSizer(uVertSizer.release());
+      S.AddStandardButtons( eCancelButton | eOkButton | eHelpButton );
    }
 
-   vertSizer->Fit( this );
-   vertSizer->SetSizeHints( this );
+   SetAutoLayout(true);
+   GetSizer()->Fit( this );
+   GetSizer()->SetSizeHints( this );
 
    SetSizeHints( 640, 480, 20000, 20000 );
 

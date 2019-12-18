@@ -752,26 +752,25 @@ wxDialogWrapper( parent, id, title, position, size, style | wxRESIZE_BORDER )
    for (wxInt32 i = 0; i < scount; i++)
       mFile->SetStreamUsage(i, FALSE);
 
-   wxBoxSizer *vertSizer;
+   ShuttleGui S{ this, eIsCreating };
    {
-      auto uVertSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      vertSizer = uVertSizer.get();
+      S.SetBorder( 5 );
 
-      const auto choices = transform_container<wxArrayStringEx>(
-         mFile->GetStreamInfo(),
-         std::mem_fn( &TranslatableString::Translation ) );
-      StreamList = safenew wxListBox(this, -1, wxDefaultPosition, wxDefaultSize, choices, wxLB_EXTENDED | wxLB_ALWAYS_SB);
+      StreamList = S
+         .Style(wxLB_EXTENDED | wxLB_ALWAYS_SB)
+         .AddListBox(
+            transform_container<wxArrayStringEx>(
+               mFile->GetStreamInfo(),
+               std::mem_fn( &TranslatableString::Translation ) ) );
 
-      vertSizer->Add(StreamList, 1, wxEXPAND | wxALIGN_LEFT | wxALL, 5);
-
-      vertSizer->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton).release(), 0, wxEXPAND);
-
-      SetAutoLayout(true);
-
-      SetSizer(uVertSizer.release());
+      S.Prop(1)
+         .Position(wxEXPAND | wxALIGN_LEFT | wxALL)
+         .AddWindow(StreamList);
+      S.AddStandardButtons();
    }
 
-   vertSizer->Fit( this );
+   SetAutoLayout(true);
+   GetSizer()->Fit( this );
 
    SetSize( 400, 200 );
 }

@@ -289,7 +289,7 @@ public:
    ExportCL();
 
    // Required
-   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
+   void OptionsCreate(ShuttleGui &S, int format) override;
 
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
@@ -552,10 +552,9 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    return updateResult;
 }
 
-wxWindow *ExportCL::OptionsCreate(wxWindow *parent, int format)
+void ExportCL::OptionsCreate(ShuttleGui &S, int format)
 {
-   wxASSERT(parent); // to justify safenew
-   return safenew ExportCLOptions(parent, format);
+   S.AddWindow( safenew ExportCLOptions{ S.GetParent(), format } );
 }
 
 static Exporter::RegisteredExportPlugin
