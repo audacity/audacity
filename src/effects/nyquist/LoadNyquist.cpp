@@ -181,7 +181,7 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    // Audacity.  A little simplistic, but it should suffice for now.
    auto pathList = NyquistEffect::GetNyquistSearchPath();
    FilePaths files;
-   wxString ignoredErrMsg;
+   TranslatableString ignoredErrMsg;
 
    if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID))
    {
@@ -226,10 +226,10 @@ PluginPaths NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 }
 
 unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, wxString &errMsg,
+   const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
-   errMsg.clear();
+   errMsg = {};
    NyquistEffect effect(path);
    if (effect.IsOk())
    {

@@ -100,7 +100,7 @@ public:
 
    PluginPaths FindPluginsForProvider(const PluginID & provider, const PluginPath & path);
    bool RegisterEffectPlugin(const PluginID & provider, const PluginPath & path,
-                       wxString &errMsg);
+                       TranslatableString &errMsg);
 
    ModuleInterface *CreateProviderInstance(const PluginID & provider, const PluginPath & path);
    ComponentInterface *CreateInstance(const PluginID & provider, const PluginPath & path);

@@ -1008,12 +1008,12 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                break;
             }
 
-            wxString errMsgs;
+            TranslatableString errMsgs;
 
             // Try to register the plugin via each provider until one succeeds
             for (size_t j = 0, cntj = item.plugs.size(); j < cntj; j++)
             {
-               wxString errMsg;
+               TranslatableString errMsg;
                if (mm.RegisterEffectPlugin(item.plugs[j]->GetProviderID(), path,
                                      errMsg))
                {
@@ -1023,14 +1023,15 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                   }
                   // Bug 1893.  We've found a provider that works.
                   // Error messages from any that failed are no longer useful.
-                  errMsgs.clear();
+                  errMsgs = {};
                   break;
                }
                else
                {
-                  if (errMsgs.empty())
-                     errMsgs += '\n';
-                  errMsgs += errMsg;
+                  if (!errMsgs.empty())
+                     errMsgs.Join( errMsg, '\n' );
+                  else
+                     errMsgs = errMsg;
                }
             }
             if (!errMsgs.empty())
@@ -1818,7 +1819,7 @@ bool PluginManager::DropFile(const wxString &fileName)
       const auto &extensions = module->GetFileExtensions();
       if ( !ff.empty() &&
           extensions.Index(src.GetExt(), false) != wxNOT_FOUND ) {
-         wxString errMsg;
+         TranslatableString errMsg;
          // Do dry-run test of the file format
          unsigned nPlugIns =
             module->DiscoverPluginsAtPath(fileName, errMsg, {});

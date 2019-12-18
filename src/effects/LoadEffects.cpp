@@ -307,7 +307,7 @@ const FileExtensions &BuiltinEffectsModule::GetFileExtensions()
 
 bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
-   wxString ignoredErrMsg;
+   TranslatableString ignoredErrMsg;
    const auto &names = kEffectNames();
    for (const auto &name : names)
    {
@@ -331,10 +331,10 @@ PluginPaths BuiltinEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNU
 }
 
 unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, wxString &errMsg,
+   const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
-   errMsg.clear();
+   errMsg = {};
    auto effect = Instantiate(path);
    if (effect)
    {
@@ -343,7 +343,7 @@ unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
       return 1;
    }
 
-   errMsg = _("Unknown built-in effect name");
+   errMsg = XO("Unknown built-in effect name");
    return 0;
 }
 

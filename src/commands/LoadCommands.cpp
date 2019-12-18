@@ -238,7 +238,7 @@ const FileExtensions &BuiltinCommandsModule::GetFileExtensions()
 
 bool BuiltinCommandsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
-   wxString ignoredErrMsg;
+   TranslatableString ignoredErrMsg;
    const auto &names = kCOMMANDNames();
    for (const auto &name : names)
    {
@@ -264,10 +264,10 @@ PluginPaths BuiltinCommandsModule::FindPluginPaths(PluginManagerInterface & WXUN
 }
 
 unsigned BuiltinCommandsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, wxString &errMsg,
+   const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
-   errMsg.clear();
+   errMsg = {};
    auto Command = Instantiate(path);
    if (Command)
    {
@@ -277,7 +277,7 @@ unsigned BuiltinCommandsModule::DiscoverPluginsAtPath(
       return 1;
    }
 
-   errMsg = _("Unknown built-in command name");
+   errMsg = XO("Unknown built-in command name");
    return 0;
 }
 

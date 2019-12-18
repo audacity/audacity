@@ -209,10 +209,10 @@ PluginPaths VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED
 }
 
 unsigned VampEffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, wxString &errMsg,
+   const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
-   errMsg.clear();
+   errMsg = {};
    int output;
    bool hasParameters;
 
@@ -226,7 +226,7 @@ unsigned VampEffectsModule::DiscoverPluginsAtPath(
       return 1;
    }
 
-   errMsg = _("Could not load the library");
+   errMsg = XO("Could not load the library");
    return 0;
 }
 

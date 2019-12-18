@@ -193,7 +193,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    ParseFile();
 
    if (!mOK && mInitError.empty())
-      mInitError = _("Ill-formed Nyquist plug-in header");
+      mInitError = XO("Ill-formed Nyquist plug-in header");
 }
 
 NyquistEffect::~NyquistEffect()
@@ -1887,10 +1887,9 @@ bool NyquistEffect::Parse(
       if (v < 1 || v > 4) {
          // This is an unsupported plug-in version
          mOK = false;
-         mInitError.Format(
-            _("This version of Audacity does not support Nyquist plug-in version %ld"),
-            v
-         );
+         mInitError = XO(
+"This version of Audacity does not support Nyquist plug-in version %ld")
+            .Format( v );
          return true;
       }
       mVersion = (int) v;
@@ -2143,7 +2142,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
 {
    if (!stream.IsOk())
    {
-      mInitError = _("Could not open file");
+      mInitError = XO("Could not open file");
       return false;
    }
 
@@ -2224,7 +2223,7 @@ or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .")
          Effect::DefaultMessageBoxStyle,
          XO("Error in Nyquist code") );
       /* i18n-hint: refers to programming "languages" */
-      mInitError = _("Could not determine language");
+      mInitError = XO("Could not determine language");
       return false;
       // Else just throw it at Nyquist to see what happens
    }

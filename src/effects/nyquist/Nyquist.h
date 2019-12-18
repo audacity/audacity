@@ -128,7 +128,7 @@ private:
    bool TransferDataFromEffectWindow();
 
    bool IsOk();
-   const wxString &InitializationError() const { return mInitError; }
+   const TranslatableString &InitializationError() const { return mInitError; }
 
    static FilePaths GetNyquistSearchPath();
 
@@ -210,7 +210,7 @@ private:
     */
    bool              mIsPrompt;
    bool              mOK;
-   wxString          mInitError;
+   TranslatableString mInitError;
    wxString          mInputCmd; // history: exactly what the user typed
    wxString          mCmd;      // the command to be processed
    TranslatableString mName;   ///< Name of the Effect (untranslated)

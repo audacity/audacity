@@ -277,10 +277,10 @@ PluginPaths LV2EffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(
 }
 
 unsigned LV2EffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, wxString &errMsg,
+   const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
-   errMsg.clear();
+   errMsg = {};
    const LilvPlugin *plug = GetPlugin(path);
    if (plug)
    {
@@ -293,7 +293,7 @@ unsigned LV2EffectsModule::DiscoverPluginsAtPath(
       }
    }
 
-   errMsg = _("Could not load the library");
+   errMsg = XO("Could not load the library");
    return 0;
 }
 

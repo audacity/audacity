@@ -505,12 +505,12 @@ PluginPaths VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 }
 
 unsigned VSTEffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, wxString &errMsg,
+   const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
    bool error = false;
    unsigned nFound = 0;
-   errMsg.clear();
+   errMsg = {};
    // TODO:  Fix this for external usage
    const auto &cmdpath = PlatformCompatibility::GetExecutablePath();
 
@@ -675,7 +675,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    }
 
    if (error)
-      errMsg = _("Could not load the library");
+      errMsg = XO("Could not load the library");
 
    return nFound;
 }

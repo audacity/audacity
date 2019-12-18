@@ -182,15 +182,15 @@ PluginPaths AudioUnitEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 }
 
 unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, wxString &errMsg,
+   const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
-   errMsg.clear();
+   errMsg = {};
    wxString name;
    AudioComponent component = FindAudioUnit(path, name);
    if (component == NULL)
    {
-      errMsg = _("Could not find component");
+      errMsg = XO("Could not find component");
       return 0;
    }
 
@@ -199,7 +199,7 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
    {
       // TODO:  Is it worth it to discriminate all the ways SetHost might
       // return false?
-      errMsg = _("Could not initialize component");
+      errMsg = XO("Could not initialize component");
       return 0;
    }
 

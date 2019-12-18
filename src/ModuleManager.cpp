@@ -545,9 +545,9 @@ PluginPaths ModuleManager::FindPluginsForProvider(const PluginID & providerID,
    return mDynModules[providerID]->FindPluginPaths(PluginManager::Get());
 }
 
-bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const PluginPath & path, wxString &errMsg)
+bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const PluginPath & path, TranslatableString &errMsg)
 {
-   errMsg.clear();
+   errMsg = {};
    if (mDynModules.find(providerID) == mDynModules.end())
    {
       return false;
