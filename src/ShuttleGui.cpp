@@ -862,6 +862,8 @@ wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
 #endif
       pBox->SetName(wxT("\a"));      // non-empty string which screen readers do not read
    }
+   else
+      pBox->SetName( wxStripMenuCodes( Str ) );
    mpSubSizer = std::make_unique<wxStaticBoxSizer>(
       pBox,
       wxVERTICAL );
