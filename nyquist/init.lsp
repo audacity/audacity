@@ -76,10 +76,11 @@
       (eval-string (quote-string sanitized)))))
 
 
-;;; Path to Nyquist .lsp files.
-(setf *NYQ-PATH* (current-path))
+;;; *NYQ-PATH* is not required as path to Nyquist .lsp files
+;;; is already defined (but not previously documented) as *runtime-path*
+;;(setf *NYQ-PATH* (current-path))
 
 ;;; Load wrapper functions for aud-do commands.
 ;;; If commented out, "aud-do-support.lsp" may be loaded by a plug-in.
-;;; Example: (lisp-loader (strcat *NYQ-PATH* "aud-do-support.lsp"))
+;;; Example: (lisp-loader (strcat *runtime-path* "aud-do-support.lsp"))
 (load "aud-do-support.lsp")
