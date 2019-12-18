@@ -906,7 +906,7 @@ will be irreversibly overwritten."), fName, fName);
          // Overwrite disalowed. The destination project is open in another window.
          AudacityMessageDialog m(
             NULL,
-            _("The project will not saved because the selected project is open in another window.\nPlease try again and select an original name."),
+            _("The project will not be saved because the selected project is open in another window.\nPlease try again and select an original name."),
             _("Error Saving Project"),
             wxOK|wxICON_ERROR);
          m.ShowModal();
