@@ -69,13 +69,14 @@ class AudacityTextEntryDialog : public wxTabTraversalWrapper< wxTextEntryDialog 
 public:
     AudacityTextEntryDialog(
          wxWindow *parent,
-         const wxString& message,
-         const wxString& caption, // don't use = wxGetTextFromUserPromptStr,
+         const TranslatableString& message,
+         const TranslatableString& caption, // don't use = wxGetTextFromUserPromptStr,
          const wxString& value = {},
          long style = wxTextEntryDialogStyle,
          const wxPoint& pos = wxDefaultPosition)
-   : wxTabTraversalWrapper< wxTextEntryDialog>
-      ( parent, message, caption, value, style, pos )
+   : wxTabTraversalWrapper< wxTextEntryDialog>(
+      parent,
+      message.Translation(), caption.Translation(), value, style, pos )
    {}
    
    void SetInsertionPointEnd();

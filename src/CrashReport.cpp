@@ -59,11 +59,11 @@ void Generate(wxDebugReport::Context ctx)
    
    if (ok && rpt.Process())
    {
-      AudacityTextEntryDialog dlg(NULL,
-                                  _("Report generated to:"),
-                                  _("Audacity Support Data"),
-                                  rpt.GetCompressedFileName(),
-                                  wxOK | wxCENTER);
+      AudacityTextEntryDialog dlg(nullptr,
+         XO("Report generated to:"),
+         XO("Audacity Support Data"),
+         rpt.GetCompressedFileName(),
+         wxOK | wxCENTER);
       dlg.SetName(dlg.GetTitle());
       dlg.ShowModal();
       

@@ -2085,8 +2085,8 @@ int LabelTrackView::DialogForLabelName(
    position = trackPanel.ClientToScreen(position);
    auto &window = GetProjectFrame( project );
    AudacityTextEntryDialog dialog{ &window,
-      _("Name:"),
-      _("New label"),
+      XO("Name:"),
+      XO("New label"),
       initialValue,
       wxOK | wxCANCEL,
       position };
