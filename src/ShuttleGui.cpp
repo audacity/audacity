@@ -2109,7 +2109,7 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
             mpWind->SetToolTip( mItem.mToolTip.Translation() );
 
          if ( !mItem.mName.empty() )
-            mpWind->SetName( mItem.mName.Strip().Translation() );
+            mpWind->SetName( mItem.mName.Stripped().Translation() );
 
          if ( !mItem.mNameSuffix.empty() )
             mpWind->SetName(

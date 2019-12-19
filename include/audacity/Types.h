@@ -467,6 +467,10 @@ public:
    TranslatableString &&Strip( unsigned options = MenuCodes ) &&
    { return std::move( Strip( options ) ); }
 
+   // non-mutating, constructs another TranslatableString object
+   TranslatableString Stripped( unsigned options = MenuCodes ) const
+   { return TranslatableString{ *this }.Strip( options ); }
+
 private:
    enum class Request {
       Context,     // return a disambiguating context string

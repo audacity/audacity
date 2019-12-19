@@ -106,9 +106,9 @@ void Grabber::SetAsSpacer( bool bIsSpacer ) {
    mAsSpacer = bIsSpacer;
 };
 
-void Grabber::SetToolTip(TranslatableString toolTip)
+void Grabber::SetToolTip(const TranslatableString &toolTip)
 {
-   wxWindow::SetToolTip( toolTip.Strip().Translation() );
+   wxWindow::SetToolTip( toolTip.Stripped().Translation() );
 }
 
 //

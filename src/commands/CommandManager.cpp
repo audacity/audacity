@@ -986,7 +986,7 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
       // Note: not putting this and other short format strings in the
       // translation catalogs
       auto piece = TranslatableString{wxT("%s%s")}
-         .Format( mark, TranslatableString{pair.Msgid()}.Strip() );
+         .Format( mark, pair.Msgid().Stripped() );
 
       auto name = pair.Internal();
       if (!name.empty()) {
@@ -1145,8 +1145,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       if( !proj )
          return false;
 
-      auto NiceName = entry->label;
-      NiceName.Strip(
+      const auto NiceName = entry->label.Stripped(
          TranslatableString::Ellipses | TranslatableString::MenuCodes );
       // NB: The call may have the side effect of changing flags.
       bool allowed =

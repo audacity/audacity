@@ -72,7 +72,7 @@ public:
    // overload and hide the inherited functions that take naked wxString:
    void SetLabel(const TranslatableString & label);
    void SetName(const TranslatableString & name);
-   void SetToolTip(TranslatableString toolTip);
+   void SetToolTip(const TranslatableString &toolTip);
    // Set the name to equal the label:
    void SetName();
 };

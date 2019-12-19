@@ -119,7 +119,7 @@ class Grabber final : public wxWindow
    void SetAsSpacer( bool bIsSpacer );
 
    // overload and hide the inherited function that takes naked wxString:
-   void SetToolTip(TranslatableString toolTip);
+   void SetToolTip(const TranslatableString &toolTip);
 
  protected:
 

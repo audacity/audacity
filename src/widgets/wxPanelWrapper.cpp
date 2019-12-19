@@ -48,9 +48,9 @@ void wxPanelWrapper::SetName(const TranslatableString & name)
    wxPanel::SetName( name.Translation() );
 }
 
-void wxPanelWrapper::SetToolTip(TranslatableString toolTip)
+void wxPanelWrapper::SetToolTip(const TranslatableString &toolTip)
 {
-   wxPanel::SetToolTip( toolTip.Strip().Translation() );
+   wxPanel::SetToolTip( toolTip.Stripped().Translation() );
 }
 
 void wxPanelWrapper::SetName()
