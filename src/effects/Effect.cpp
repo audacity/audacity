@@ -1083,7 +1083,7 @@ bool Effect::SetAutomationParameters(const wxString & parms)
       Effect::MessageBox(
          wxString::Format(
             _("%s: Could not load settings below. Default settings will be used.\n\n%s"),
-            GetTranslatedName(),
+            GetName().Translation(),
             preset
          )
       );
@@ -1267,7 +1267,7 @@ bool Effect::DoEffect(wxWindow *parent,
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false)
    {
-      auto name = GetUntranslatedName();
+      auto name = GetName();
       ProgressDialog progress{
          name,
          XO("Applying %s...").Format( name ),
@@ -2398,7 +2398,7 @@ void Effect::Preview(bool dryOnly)
    // Apply effect
    if (!dryOnly) {
       ProgressDialog progress{
-         GetUntranslatedName(),
+         GetName(),
          XO("Preparing preview"),
          pdlgHideCancelButton
       }; // Have only "Stop" button.
@@ -2429,7 +2429,7 @@ void Effect::Preview(bool dryOnly)
          // The progress dialog blocks these events.
          {
             ProgressDialog progress
-            (GetUntranslatedName(), XO("Previewing"), pdlgHideCancelButton);
+            (GetName(), XO("Previewing"), pdlgHideCancelButton);
 
             while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
                ::wxMilliSleep(100);
@@ -2456,9 +2456,9 @@ int Effect::MessageBox
 {
    wxString title;
    if (titleStr.empty())
-      title = GetTranslatedName();
+      title = GetName().Translation();
    else
-      title = wxString::Format(_("%s: %s"), GetTranslatedName(), titleStr);
+      title = wxString::Format(_("%s: %s"), GetName().Translation(), titleStr);
    return AudacityMessageBox(message, title, style, mUIParent);
 }
 
@@ -2639,7 +2639,7 @@ END_EVENT_TABLE()
 EffectUIHost::EffectUIHost(wxWindow *parent,
                            Effect *effect,
                            EffectUIClientInterface *client)
-:  wxDialogWrapper(parent, wxID_ANY, effect->GetUntranslatedName(),
+:  wxDialogWrapper(parent, wxID_ANY, effect->GetName(),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 {
@@ -2648,7 +2648,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
 #endif
 
-   SetName( effect->GetUntranslatedName() );
+   SetName( effect->GetName() );
    SetExtraStyle(GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
 
    mParent = parent;
@@ -2672,7 +2672,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 EffectUIHost::EffectUIHost(wxWindow *parent,
                            AudacityCommand *command,
                            EffectUIClientInterface *client)
-:  wxDialogWrapper(parent, wxID_ANY, XO("Some Command") /*command->GetUntranslatedName()*/,
+:  wxDialogWrapper(parent, wxID_ANY, XO("Some Command") /*command->GetName()*/,
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 {
@@ -2681,7 +2681,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
 #endif
 
-   //SetName( command->GetTranslatedName() );
+   //SetName( command->GetName() );
    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
 
    mParent = parent;
@@ -3069,7 +3069,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       auto flags = AlwaysEnabledFlag;
       bool allowed =
          MenuManager::Get(*mProject).ReportIfActionNotAllowed(
-         mEffect->GetUntranslatedName(),
+         mEffect->GetName(),
          flags,
          WaveTracksSelectedFlag | TimeSelectedFlag);
       if (!allowed)
@@ -3235,7 +3235,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
       sub->Append(kDummyID, wxString::Format(_("Type: %s"),
                   ::wxGetTranslation( mEffect->GetFamily().Translation() )));
-      sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
+      sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetName().Translation()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().Translation()));
       sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().Translation()));

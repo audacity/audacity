@@ -126,7 +126,7 @@ bool AudacityCommand::ShowInterface(wxWindow *parent, bool WXUNUSED(forceModal))
 wxDialog *AudacityCommand::CreateUI(wxWindow *parent, AudacityCommand * WXUNUSED(client))
 {
    Destroy_ptr<AudacityCommandDialog> dlg { safenew AudacityCommandDialog{
-      parent, GetUntranslatedName(), this}};
+      parent, GetName(), this}};
 
    if (dlg->Init())
    {
@@ -170,7 +170,7 @@ bool AudacityCommand::SetAutomationParameters(const wxString & parms)
       AudacityCommand::MessageBox(
          wxString::Format(
             _("%s: Could not load settings below. Default settings will be used.\n\n%s"),
-            GetTranslatedName(),
+            GetName().Translation(),
             preset
          )
       );
@@ -208,7 +208,7 @@ bool AudacityCommand::DoAudacityCommand(wxWindow *parent,
    bool skipFlag = CheckWhetherSkipAudacityCommand();
    if (skipFlag == false)
    {
-      auto name = GetUntranslatedName();
+      auto name = GetName();
       ProgressDialog progress{
          name,
          XO("Applying %s...").Format( name ),
@@ -245,9 +245,9 @@ int AudacityCommand::MessageBox(const wxString& message, long style, const wxStr
 {
    wxString title;
    if (titleStr.empty())
-      title = GetTranslatedName();
+      title = GetName().Translation();
    else
-      title = wxString::Format(_("%s: %s"), GetTranslatedName(), titleStr);
+      title = wxString::Format(_("%s: %s"), GetName().Translation(), titleStr);
    return AudacityMessageBox(message, title, style, mUIParent);
 }
 
