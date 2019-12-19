@@ -632,7 +632,7 @@ END_EVENT_TABLE()
 
 NoiseRemovalDialog::NoiseRemovalDialog(EffectNoiseRemoval * effect,
                                        wxWindow *parent)
-   : EffectDialog( parent, _("Noise Removal"), EffectTypeProcess)
+   : EffectDialog( parent, XO("Noise Removal"), EffectTypeProcess)
 {
    m_pEffect = effect;
 
