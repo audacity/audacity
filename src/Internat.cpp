@@ -402,4 +402,4 @@ TranslatableString &TranslatableString::Join(
    return *this;
 }
 
-const TranslatableString InaudibleString{ wxT("\a") };
+const TranslatableString TranslatableString::Inaudible{ wxT("\a") };

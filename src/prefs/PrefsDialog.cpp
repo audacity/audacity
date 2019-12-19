@@ -696,7 +696,7 @@ int PrefsDialog::ShowModal()
    }
    else {
       auto Temp = mTitlePrefix;
-      Temp.Join( TranslatableString{ mUniquePage->GetLabel() }, wxT(" ") );
+      Temp.Join( Verbatim( mUniquePage->GetLabel() ), wxT(" ") );
       SetTitle(Temp);
       SetName(Temp);
    }

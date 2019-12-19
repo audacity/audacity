@@ -109,8 +109,8 @@ wxString VampEffect::GetVersion()
 
 TranslatableString VampEffect::GetDescription()
 {
-   return TranslatableString{
-      wxString::FromUTF8(mPlugin->getCopyright().c_str()) };
+   return Verbatim(
+      wxString::FromUTF8(mPlugin->getCopyright().c_str()) );
 }
 
 // ============================================================================
@@ -608,8 +608,8 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                    mParameters[p].maxValue == 1.0)
                {
                   S.Id(ID_Toggles + p);
-                  mToggles[p] = S.ToolTip( TranslatableString{ tip } )
-                     .Name( TranslatableString{ labelText } )
+                  mToggles[p] = S.ToolTip( Verbatim( tip ) )
+                     .Name( Verbatim( labelText ) )
                      .Position(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL)
                      .AddCheckBox( {},
                                   value > 0.5 );
@@ -637,8 +637,8 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   }
 
                   S.Id(ID_Choices + p);
-                  mChoices[p] = S.ToolTip( TranslatableString{ tip } )
-                     .Name( TranslatableString{ labelText } )
+                  mChoices[p] = S.ToolTip( Verbatim( tip ) )
+                     .Name( Verbatim( labelText ) )
                      .Position(wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL)
                      .MinSize( { -1, -1 } )
                      .AddChoice( {}, choices, selected );
@@ -654,8 +654,8 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   float range = mParameters[p].maxValue - mParameters[p].minValue;
 
                   S.Id(ID_Texts + p);
-                  mFields[p] = S.ToolTip( TranslatableString{ tip } )
-                     .Name( TranslatableString{ labelText } )
+                  mFields[p] = S.ToolTip( Verbatim( tip ) )
+                     .Name( Verbatim( labelText ) )
                      .Position(wxALIGN_CENTER_VERTICAL | wxALL)
                      .Validator<FloatingPointValidator<float>>(
                         6, &mValues[p],
@@ -671,8 +671,8 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   S.AddPrompt(str);
 
                   S.Id(ID_Sliders + p);
-                  mSliders[p] = S.ToolTip( TranslatableString{ tip } )
-                     .Name( TranslatableString{ labelText } )
+                  mSliders[p] = S.ToolTip( Verbatim( tip ) )
+                     .Name( Verbatim( labelText ) )
                      .Style(wxSL_HORIZONTAL)
                      .MinSize( { 150, -1 } )
                      .AddSlider( {}, 0, 1000, 0);

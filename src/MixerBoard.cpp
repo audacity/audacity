@@ -175,7 +175,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    mProject = project;
    wxASSERT( pTrack );
 
-   SetName( TranslatableString{ mTrack->GetName() } );
+   SetName( Verbatim( mTrack->GetName() ) );
 
    //this->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
    this->SetBackgroundColour( theTheme.Colour( clrMedium ) );
@@ -463,7 +463,7 @@ void MixerTrackCluster::UpdateForStateChange()
 {
    const wxString newName = mTrack->GetName();
    if (newName != GetName()) {
-      SetName( TranslatableString{ newName } );
+      SetName( Verbatim( newName ) );
       mStaticText_TrackName->SetLabel(newName);
       mStaticText_TrackName->SetName(newName);
 #if wxUSE_TOOLTIPS

@@ -653,7 +653,7 @@ void AddEffectMenuItemGroup(
             wxString item = plug->GetPath();
             if( plug->GetPluginType() == PluginTypeEffect )
                temp2.push_back( Command( item,
-                  TranslatableString{ item },
+                  Verbatim( item ),
                   FN(OnEffect),
                   flags[i],
                   CommandManager::Options{}
@@ -721,7 +721,7 @@ MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
    for (i = 0; i < (int)names.size(); i++) {
       auto MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
       result.push_back( MenuTable::Command( MacroID,
-         TranslatableString{ names[i] }, // file name verbatim
+         Verbatim( names[i] ), // file name verbatim
          FN(OnApplyMacroDirectly),
          flags,
          CommandManager::Options{}.AllowInMacros()

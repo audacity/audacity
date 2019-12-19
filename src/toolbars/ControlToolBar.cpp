@@ -269,7 +269,7 @@ void ControlToolBar::RegenerateTooltips()
             break;
       }
       std::vector<ComponentInterfaceSymbol> commands(
-         1u, { name, TranslatableString{ pCtrl->GetLabel() } } );
+         1u, { name, Verbatim( pCtrl->GetLabel() ) } );
 
       // Some have a second
       switch (iWinID)

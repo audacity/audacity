@@ -985,7 +985,7 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
 
       // Note: not putting this and other short format strings in the
       // translation catalogs
-      auto piece = TranslatableString{wxT("%s%s")}
+      auto piece = Verbatim( wxT("%s%s") )
          .Format( mark, pair.Msgid().Stripped() );
 
       auto name = pair.Internal();
@@ -1004,14 +1004,14 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
 #endif
             // The mark makes correctly placed parentheses for RTL, even
             // in the case that the piece is untranslated.
-            piece = TranslatableString{format}.Format( piece, mark, keyString );
+            piece = Verbatim( format ).Format( piece, mark, keyString );
          }
       }
 
       if (result.empty())
          result = piece;
       else
-         result = TranslatableString{ separatorFormat }.Format( result, piece );
+         result = Verbatim( separatorFormat ).Format( result, piece );
    }
    return result;
 }
@@ -1347,7 +1347,7 @@ TranslatableString CommandManager::GetPrefixedLabelFromName(const CommandID &nam
       return {};
 
    if (!entry->labelPrefix.empty())
-      return TranslatableString{wxT("%s - %s")}
+      return Verbatim( wxT("%s - %s") )
          .Format(entry->labelPrefix, entry->label);
    else
       return entry->label;

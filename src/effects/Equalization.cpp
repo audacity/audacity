@@ -988,7 +988,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                {
                   wxString label;
                   label.Printf(wxT("%ld"), mM);
-                  mMText = S.Name( TranslatableString{ label } )
+                  mMText = S.Name( Verbatim( label ) )
                   // fix for bug 577 (NVDA/Narrator screen readers do not
                   // read static text in dialogs)
                      .AddVariableText(label);

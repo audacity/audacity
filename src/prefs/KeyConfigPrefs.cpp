@@ -572,11 +572,11 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
 
    // Prevent same hotkey combination being used twice.
    if (!oldname.empty()) {
-      auto oldlabel = TranslatableString{wxT("%s - %s")}
+      auto oldlabel = Verbatim( wxT("%s - %s") )
          .Format(
             mManager->GetCategoryFromName(oldname),
             mManager->GetPrefixedLabelFromName(oldname) );
-      auto newlabel = TranslatableString{wxT("%s - %s")}
+      auto newlabel = Verbatim( wxT("%s - %s") )
          .Format(
             mManager->GetCategoryFromName(newname),
             mManager->GetPrefixedLabelFromName(newname) );

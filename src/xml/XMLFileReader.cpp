@@ -59,9 +59,9 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
          // We could make a table of XOs if we wanted so that it could
          // If we do, uncomment the second constructor argument so it's not
          // a verbatim string
-         mLibraryErrorStr = TranslatableString{
+         mLibraryErrorStr = Verbatim(
             XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
-         };
+         );
 
          mErrorStr = XO("Error: %s at line %lu").Format(
             mLibraryErrorStr,

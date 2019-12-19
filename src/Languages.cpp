@@ -202,7 +202,7 @@ void GetLanguages(
          auto str = wxString::FromUTF8(utf8Name);
          auto code = str.BeforeFirst(' ');
          auto name = str.AfterFirst(' ');
-         localLanguageName[code] = TranslatableString{ name };
+         localLanguageName[code] = Verbatim( name );
       }
       return localLanguageName;
    }();
@@ -230,7 +230,7 @@ void GetLanguages(
 
       wxString fullCode = info->CanonicalName;
       wxString code = fullCode.Left(2);
-      TranslatableString name{ info->Description };
+      auto name = Verbatim( info->Description );
 
       // Logic: Languages codes are sometimes hierarchical, with a
       // general language code and then a subheading.  For example,

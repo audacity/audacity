@@ -670,7 +670,7 @@ wxString LadspaEffect::GetVersion()
 
 TranslatableString LadspaEffect::GetDescription()
 {
-   return TranslatableString{ LAT1CTOWX(mData->Copyright) };
+   return Verbatim( LAT1CTOWX(mData->Copyright) );
 }
 
 // ============================================================================

@@ -200,7 +200,7 @@ TranslatableString TitleText( const wxString & Key )
       return XO("No Local Help");
    }
    // Uh oh, no translation...
-   return TranslatableString{ Key };
+   return Verbatim( Key );
 }
 
 static wxString HelpTextBuiltIn( const wxString & Key )

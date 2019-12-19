@@ -188,7 +188,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mFileName = fName;
    // Use the file name verbatim as effect name.
    // This is only a default name, overridden if we find a $name line:
-   mName = TranslatableString{ mFileName.GetName() };
+   mName = Verbatim( mFileName.GetName() );
    mFileModified = mFileName.GetModificationTime();
    ParseFile();
 
@@ -2630,8 +2630,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             }
             else
             {
-               auto prompt = wxString::Format(_("%s:"), ctrl.name);
-               S.AddPrompt(prompt);
+               auto prompt = XO("%s:").Format( ctrl.name );
+               S.AddPrompt( prompt.Translation() );
 
                if (ctrl.type == NYQ_CTRL_STRING)
                {
@@ -2639,7 +2639,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
 
                   auto item = S.Id(ID_Text + i)
                      .Validator<wxGenericValidator>(&ctrl.valStr)
-                     .Name( TranslatableString{ prompt } )
+                     .Name( prompt )
                      .AddTextBox( {}, wxT(""), 12);
                }
                else if (ctrl.type == NYQ_CTRL_CHOICE)
@@ -2666,7 +2666,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                                      mProjectRate,
                                      options);
                   S
-                     .Name( TranslatableString{ prompt } )
+                     .Name( prompt )
                      .Position(wxALIGN_LEFT | wxALL)
                      .AddWindow(time);
                }
@@ -2691,7 +2691,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   resolveFilePath(ctrl.valStr, defaultExtension);
 
                   wxTextCtrl *item = S.Id(ID_Text+i)
-                     .Name( TranslatableString{ prompt } )
+                     .Name( prompt )
                      .AddTextBox( {}, wxT(""), 40);
                   item->SetValidator(wxGenericValidator(&ctrl.valStr));
 
@@ -2731,7 +2731,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                         (int) ctrl.low, (int) ctrl.high);
                   }
                   wxTextCtrl *item = S
-                     .Name( TranslatableString{ prompt } )
+                     .Name( prompt )
                      .AddTextBox( {}, wxT(""),
                         (ctrl.type == NYQ_CTRL_INT_TEXT ||
                          ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);

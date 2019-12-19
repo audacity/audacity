@@ -546,8 +546,8 @@ int TimerRecordDialog::RunWaitDialog()
       ProjectAudioManager::Get( *pProject ).OnRecord(false);
       bool bIsRecording = true;
 
-      auto sPostAction = TranslatableString{
-         m_pTimerAfterCompleteChoiceCtrl->GetStringSelection() };
+      auto sPostAction = Verbatim(
+         m_pTimerAfterCompleteChoiceCtrl->GetStringSelection() );
 
       // Two column layout.
       TimerProgressDialog::MessageTable columns{
@@ -562,7 +562,7 @@ int TimerRecordDialog::RunWaitDialog()
          },
          {
             GetDisplayDate(m_DateTime_Start) ,
-            TranslatableString{ m_TimeSpan_Duration.Format() },
+            Verbatim( m_TimeSpan_Duration.Format() ),
             GetDisplayDate(m_DateTime_End) ,
             {} ,
             (m_bAutoSaveEnabled ? XO("Yes") : XO("No")) ,
@@ -790,7 +790,7 @@ TranslatableString TimerRecordDialog::GetDisplayDate( wxDateTime & dt )
 
    // Use default formatting
 wxPrintf(wxT("%s\n"), dt.Format());
-   return TranslatableString{ dt.FormatDate() + wxT(" ") + dt.FormatTime() };
+   return Verbatim( dt.FormatDate() + wxT(" ") + dt.FormatTime() );
 }
 
 TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(wxWindow *wParent, const int iID,
@@ -1058,8 +1058,8 @@ void TimerRecordDialog::UpdateEnd()
 ProgressResult TimerRecordDialog::WaitForStart()
 {
    // MY: The Waiting For Start dialog now shows what actions will occur after recording has completed
-   auto sPostAction = TranslatableString{
-         m_pTimerAfterCompleteChoiceCtrl->GetStringSelection() };
+   auto sPostAction = Verbatim(
+         m_pTimerAfterCompleteChoiceCtrl->GetStringSelection() );
 
    // Two column layout.
    TimerProgressDialog::MessageTable columns{
@@ -1074,7 +1074,7 @@ ProgressResult TimerRecordDialog::WaitForStart()
       },
       {
          GetDisplayDate(m_DateTime_Start),
-         TranslatableString{ m_TimeSpan_Duration.Format() },
+         Verbatim( m_TimeSpan_Duration.Format() ),
          GetDisplayDate(m_DateTime_End) ,
          {} ,
          (m_bAutoSaveEnabled ? XO("Yes") : XO("No")) ,
@@ -1106,8 +1106,8 @@ ProgressResult TimerRecordDialog::WaitForStart()
 
 ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions)
 {
-   auto sAction = TranslatableString{ m_pTimerAfterCompleteChoiceCtrl
-      ->GetString(iActionIndex) };
+   auto sAction = Verbatim( m_pTimerAfterCompleteChoiceCtrl
+      ->GetString(iActionIndex) );
 
    /* i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
       or "Shutdown system", and

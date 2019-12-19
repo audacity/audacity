@@ -1034,7 +1034,7 @@ void AboutDialog::AddCredit(
    const wxString &name, TranslatableString format, Role role )
 {
    auto str = format.empty()
-      ? TranslatableString{ name }
+      ? Verbatim( name )
       : TranslatableString{ format }.Format( name );
    creditItems.emplace_back(std::move(str), role);
 }

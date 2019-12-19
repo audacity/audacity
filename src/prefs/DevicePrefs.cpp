@@ -115,8 +115,9 @@ void DevicePrefs::GetNamesAndLabels()
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if ((info!=NULL)&&(info->maxOutputChannels > 0 || info->maxInputChannels > 0)) {
          wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(info->hostApi)->name);
-         if (!make_iterator_range(mHostNames).contains(TranslatableString{name})) {
-            mHostNames.push_back( TranslatableString{ name } );
+         if (!make_iterator_range(mHostNames)
+            .contains( Verbatim( name ) )) {
+            mHostNames.push_back( Verbatim( name ) );
             mHostLabels.push_back(name);
          }
       }

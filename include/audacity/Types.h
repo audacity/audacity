@@ -308,23 +308,20 @@ class TranslatableString : private wxString {
    template< size_t N > struct PluralTemp;
 
 public:
+   // A special string value that will have no screen reader pronunciation
+   static const TranslatableString Inaudible;
+
    // A multi-purpose function, depending on the enum argument; the string
    // argument is unused in some cases
    // If there is no function, defaults are empty context string, no plurals,
    // and no substitutions
    using Formatter = std::function< wxString(const wxString &, Request) >;
 
-   // This special formatter causes msgids to be used verbatim, not looked up
-   // in any catalog, so Translation() and Debug() return the same
-   static const Formatter NullContextFormatter;
-
    TranslatableString() {}
 
    // Supply {} for the second argument to cause lookup of the msgid with
    // empty context string (default context) rather than the null context
-   explicit TranslatableString(
-      wxString str, Formatter formatter = NullContextFormatter
-   )
+   explicit TranslatableString( wxString str, Formatter formatter )
       : mFormatter{ std::move(formatter) }
    {
       this->wxString::swap( str );
@@ -472,6 +469,18 @@ public:
    { return TranslatableString{ *this }.Strip( options ); }
 
 private:
+   static const Formatter NullContextFormatter;
+
+   // Construct a TranslatableString that does no translation but passes
+   // str verbatim
+   explicit TranslatableString( wxString str )
+      : mFormatter{ NullContextFormatter }
+   {
+      this->wxString::swap( str );
+   }
+
+   friend TranslatableString Verbatim( wxString str );
+
    enum class Request {
       Context,     // return a disambiguating context string
       Format,      // Given the msgid, format the string for end users
@@ -544,9 +553,6 @@ inline TranslatableString operator +(
 
 using TranslatableStrings = std::vector<TranslatableString>;
 
-// A special string value that will have no screen reader pronunciation
-extern const TranslatableString InaudibleString;
-
 // For using std::unordered_map on TranslatableString
 // Note:  hashing on msgids only, which is not all of the information
 namespace std
@@ -560,6 +566,12 @@ namespace std
       }
    };
 }
+
+// Require calls to the one-argument constructor to go through this
+// distinct global function name.  This makes it easier to locate and
+// review the uses of this function, separately from the uses of the type.
+inline TranslatableString Verbatim( wxString str )
+{ return TranslatableString( std::move( str ) ); }
 
 // ----------------------------------------------------------------------------
 // A native 64-bit integer...used when referring to any number of samples

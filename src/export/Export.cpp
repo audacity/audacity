@@ -280,7 +280,7 @@ void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
    const wxFileNameWrapper &title, const TranslatableString &message)
 {
    return InitProgress(
-      pDialog, TranslatableString{ title.GetName() }, message );
+      pDialog, Verbatim( title.GetName() ), message );
 }
 
 //----------------------------------------------------------------------------

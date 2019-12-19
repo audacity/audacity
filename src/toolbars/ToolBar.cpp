@@ -386,7 +386,7 @@ void ToolBar::SetLabel(const wxString & label)
 {
    // Probably shouldn't reach this overload, but perhaps virtual function
    // dispatch will take us here from a pointer to the wxPanel base class
-   mLabel = TranslatableString{ label };
+   mLabel = Verbatim( label );
 }
 
 void ToolBar::SetLabel(const TranslatableString & label)

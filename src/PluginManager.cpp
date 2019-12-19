@@ -988,8 +988,8 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
    // we will leave the project window in an unusable state on OSX.
    // See bug #1192.
    {
-      ProgressDialog progress(
-         TranslatableString{ GetTitle() }, msg, pdlgHideStopButton);
+      ProgressDialog progress{
+         Verbatim( GetTitle() ), msg, pdlgHideStopButton };
       progress.CenterOnParent();
 
       int i = 0;

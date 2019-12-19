@@ -397,7 +397,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialogWrapper activityWin(this, wxID_ANY, TranslatableString{ GetTitle() });
+   wxDialogWrapper activityWin(this, wxID_ANY, Verbatim( GetTitle() ) );
    activityWin.SetName();
    ShuttleGui S(&activityWin, eIsCreating);
 

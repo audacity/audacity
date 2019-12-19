@@ -809,6 +809,6 @@ void ImportFileHandle::CreateProgress()
 
    auto title = XO("Importing %s").Format( GetFileDescription() );
    mProgress = std::make_unique< ProgressDialog >(
-      title, TranslatableString{ ff.GetFullName() } );
+      title, Verbatim( ff.GetFullName() ) );
 }
 

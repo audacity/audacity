@@ -119,8 +119,9 @@ void MidiIOPrefs::GetNamesAndLabels() {
       const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
       if (info->output || info->input) { //should always happen
          wxString name = wxSafeConvertMB2WX(info->interf);
-         if (!make_iterator_range(mHostNames).contains(TranslatableString{name})) {
-            mHostNames.push_back( TranslatableString{ name } );
+         if (!make_iterator_range(mHostNames)
+            .contains( Verbatim( name ) )) {
+            mHostNames.push_back( Verbatim( name ) );
             mHostLabels.push_back(name);
          }
       }

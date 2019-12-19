@@ -618,7 +618,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
             break;
 
             case kKeyDescription:
-               proc.mDescription = TranslatableString{ val };
+               proc.mDescription = Verbatim( val );
                keycount++;
             break;
 

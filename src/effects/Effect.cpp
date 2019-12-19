@@ -2567,8 +2567,8 @@ public:
    :  wxPanelWrapper(parent)
    {
       // This fools NVDA into not saying "Panel" when the dialog gets focus
-      SetName(InaudibleString);
-      SetLabel(InaudibleString);
+      SetName(TranslatableString::Inaudible);
+      SetLabel(TranslatableString::Inaudible);
 
       mAcceptsFocus = true;
    }
