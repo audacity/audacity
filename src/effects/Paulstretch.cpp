@@ -256,7 +256,8 @@ size_t EffectPaulstretch::GetBufferSize(double rate)
 
 bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int count)
 {
-   auto badAllocMessage = _("Requested value exceeds memory capacity.");
+   const auto badAllocMessage =
+      XO("Requested value exceeds memory capacity.");
 
    const auto stretch_buf_size = GetBufferSize(track->GetRate());
    if (stretch_buf_size == 0) {
@@ -289,30 +290,35 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
          /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
          if ((minDuration / mProjectRate) < defaultPreviewLen) {
-            ::Effect::MessageBox (wxString::Format(_("Audio selection too short to preview.\n\n"
-                                               "Try increasing the audio selection to at least %.1f seconds,\n"
-                                               "or reducing the 'Time Resolution' to less than %.1f seconds."),
-                                             (minDuration / track->GetRate()) + 0.05, // round up to 1/10 s.
-                                             floor(maxTimeRes * 10.0) / 10.0),
-                            wxOK | wxICON_EXCLAMATION);
+            ::Effect::MessageBox(
+               XO("Audio selection too short to preview.\n\n"
+                  "Try increasing the audio selection to at least %.1f seconds,\n"
+                  "or reducing the 'Time Resolution' to less than %.1f seconds.")
+                  .Format(
+                     (minDuration / track->GetRate()) + 0.05, // round up to 1/10 s.
+                     floor(maxTimeRes * 10.0) / 10.0),
+               wxOK | wxICON_EXCLAMATION );
          }
          else {
             /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
-            ::Effect::MessageBox (wxString::Format(_("Unable to Preview.\n\n"
-                                               "For the current audio selection, the maximum\n"
-                                               "'Time Resolution' is %.1f seconds."),
-                                             floor(maxTimeRes * 10.0) / 10.0),
-                            wxOK | wxICON_EXCLAMATION);
+            ::Effect::MessageBox(
+               XO("Unable to Preview.\n\n"
+                  "For the current audio selection, the maximum\n"
+                  "'Time Resolution' is %.1f seconds.")
+                  .Format( floor(maxTimeRes * 10.0) / 10.0 ),
+               wxOK | wxICON_EXCLAMATION );
          }
       }
       else {
          /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
-         ::Effect::MessageBox (wxString::Format(_("The 'Time Resolution' is too long for the selection.\n\n"
-                                            "Try increasing the audio selection to at least %.1f seconds,\n"
-                                            "or reducing the 'Time Resolution' to less than %.1f seconds."),
-                                          (minDuration / track->GetRate()) + 0.05, // round up to 1/10 s.
-                                          floor(maxTimeRes * 10.0) / 10.0),
-                         wxOK | wxICON_EXCLAMATION);
+         ::Effect::MessageBox(
+            XO("The 'Time Resolution' is too long for the selection.\n\n"
+               "Try increasing the audio selection to at least %.1f seconds,\n"
+               "or reducing the 'Time Resolution' to less than %.1f seconds.")
+               .Format(
+                  (minDuration / track->GetRate()) + 0.05, // round up to 1/10 s.
+                  floor(maxTimeRes * 10.0) / 10.0),
+            wxOK | wxICON_EXCLAMATION );
       }
 
       return false;

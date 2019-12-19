@@ -500,8 +500,14 @@ bool EffectEqualization48x::Benchmark(EffectEqualization* effectEqualization)
    wxTimeSpan tsDefault(0, 0, 0, times[4]);
 
    mEffectEqualization->MessageBox(
-      wxString::Format(_("Benchmark times:\nOriginal: %s\nDefault Segmented: %s\nDefault Threaded: %s\nSSE: %s\nSSE Threaded: %s\n"),tsDefault.Format(wxT("%M:%S.%l")),
-      tsDefaultEnhanced.Format(wxT("%M:%S.%l")), tsDefaultThreaded.Format(wxT("%M:%S.%l")),tsSSE.Format(wxT("%M:%S.%l")),tsSSEThreaded.Format(wxT("%M:%S.%l"))));
+      XO(
+"Benchmark times:\nOriginal: %s\nDefault Segmented: %s\nDefault Threaded: %s\nSSE: %s\nSSE Threaded: %s\n")
+         .Format(
+            tsDefault.Format(wxT("%M:%S.%l")),
+            tsDefaultEnhanced.Format(wxT("%M:%S.%l")),
+            tsDefaultThreaded.Format(wxT("%M:%S.%l")),
+            tsSSE.Format(wxT("%M:%S.%l")),
+            tsSSEThreaded.Format(wxT("%M:%S.%l")) ) );
    return bBreakLoop; // return !bBreakLoop ?
 }
 

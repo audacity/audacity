@@ -1081,12 +1081,8 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    if (!success)
    {
       Effect::MessageBox(
-         wxString::Format(
-            _("%s: Could not load settings below. Default settings will be used.\n\n%s"),
-            GetName().Translation(),
-            preset
-         )
-      );
+         XO("%s: Could not load settings below. Default settings will be used.\n\n%s")
+            .Format( GetName(), preset ) );
       // We are using defualt settings and we still wish to continue.
       return true;
       //return false;
@@ -2451,15 +2447,14 @@ void Effect::Preview(bool dryOnly)
    }
 }
 
-int Effect::MessageBox
-(const wxString& message, long style, const wxString &titleStr)
+int Effect::MessageBox( const TranslatableString& message,
+   long style, const TranslatableString &titleStr)
 {
-   wxString title;
-   if (titleStr.empty())
-      title = GetName().Translation();
-   else
-      title = wxString::Format(_("%s: %s"), GetName().Translation(), titleStr);
-   return AudacityMessageBox(message, title, style, mUIParent);
+   auto title = titleStr.empty()
+      ? GetName()
+      : XO("%s: %s").Format( GetName(), titleStr );
+   return AudacityMessageBox(
+      message.Translation(), title.Translation(), style, mUIParent );
 }
 
 BEGIN_EVENT_TABLE(EffectDialog, wxDialogWrapper)

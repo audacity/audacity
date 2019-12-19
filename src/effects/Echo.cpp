@@ -105,7 +105,7 @@ bool EffectEcho::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
       history.reinit(histLen, true);
    }
    catch ( const std::bad_alloc& ) {
-      Effect::MessageBox(_("Requested value exceeds memory capacity."));
+      Effect::MessageBox( XO("Requested value exceeds memory capacity.") );
       return false;
    }
 
