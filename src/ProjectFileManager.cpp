@@ -1298,7 +1298,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    if (!::wxFileExists(fileName)) {
       AudacityMessageBox(
          wxString::Format( _("Could not open file: %s"), fileName ),
-         ("Error Opening File"),
+         _("Error Opening File"),
          wxOK | wxCENTRE, &window);
       return;
    }
