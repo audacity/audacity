@@ -615,7 +615,7 @@ bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
 // ======= IMPORTANT ========
 // CLEANSPEECH remnant
 bool MacroCommands::ApplySpecialCommand(
-   int WXUNUSED(iCommand), const wxString &friendlyCommand,
+   int WXUNUSED(iCommand), const TranslatableString &friendlyCommand,
    const CommandID & command, const wxString & params)
 {
    if (ReportAndSkip(friendlyCommand, params))
@@ -756,7 +756,7 @@ bool MacroCommands::DoAudacityCommand(
 }
 
 bool MacroCommands::ApplyEffectCommand(
-   const PluginID & ID, const wxString &friendlyCommand,
+   const PluginID & ID, const TranslatableString &friendlyCommand,
    const CommandID & command, const wxString & params,
    const CommandContext & Context)
 {
@@ -839,7 +839,7 @@ bool MacroCommands::HandleTextualCommand( CommandManager &commandManager,
    return false;
 }
 
-bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
+bool MacroCommands::ApplyCommand( const TranslatableString &friendlyCommand,
    const CommandID & command, const wxString & params,
    CommandContext const * pContext)
 {
@@ -872,7 +872,7 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
          manager, command, *pContext, AlwaysEnabledFlag, true ) )
          return true;
       pContext->Status( wxString::Format(
-         _("Your batch command of %s was not recognized."), friendlyCommand ));
+         _("Your batch command of %s was not recognized."), friendlyCommand.Translation() ));
       return false;
    }
    else
@@ -890,7 +890,8 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
    return false;
 }
 
-bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
+bool MacroCommands::ApplyCommandInBatchMode(
+   const TranslatableString &friendlyCommand,
    const CommandID & command, const wxString &params,
    CommandContext const * pContext)
 {
@@ -946,12 +947,12 @@ bool MacroCommands::ApplyMacro(
    for (; i < mCommandMacro.size(); i++) {
       const auto &command = mCommandMacro[i];
       auto iter = catalog.ByCommandId(command);
-      auto friendly = (iter == catalog.end())
+      const auto friendly = (iter == catalog.end())
          ?
            // uh oh, using GET to expose an internal name to the user!
            // in default of any better friendly name
-           command.GET()
-         : iter->name.StrippedTranslation();
+           Verbatim( command.GET() )
+         : iter->name.Msgid().Stripped();
       if (!ApplyCommandInBatchMode(friendly, command, mParamsMacro[i]) || mAbort)
          break;
    }
@@ -1025,7 +1026,7 @@ void MacroCommands::ResetMacro()
 // ReportAndSkip() is a diagnostic function that avoids actually
 // applying the requested effect if in batch-debug mode.
 bool MacroCommands::ReportAndSkip(
-   const wxString & friendlyCommand, const wxString & params)
+   const TranslatableString & friendlyCommand, const wxString & params)
 {
    int bDebug;
    gPrefs->Read(wxT("/Batch/Debug"), &bDebug, false);

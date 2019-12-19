@@ -59,12 +59,12 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
       return batch.ApplyMacro(catalog);
    }
 
-   wxString cmdName = GetString(wxT("CommandName"));
+   auto cmdName = GetString(wxT("CommandName"));
    wxString cmdParams = GetString(wxT("ParamString"));
    auto iter = catalog.ByCommandId(cmdName);
-   const wxString &friendly = (iter == catalog.end())
-      ? cmdName // Expose internal name to user, in default of a better one!
-      : iter->name.StrippedTranslation();
+   const auto friendly = (iter == catalog.end())
+      ? Verbatim( cmdName ) // Expose internal name to user, in default of a better one!
+      : iter->name.Msgid().Stripped();
 
    // Create a Batch that will have just one command in it...
    MacroCommands Batch;
