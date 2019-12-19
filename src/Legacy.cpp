@@ -259,7 +259,7 @@ bool ConvertLegacyProjectFile(const wxFileName &filename)
       return false;
 
    return GuardedCall< bool >( [&] {
-      XMLFileWriter xmlFile{ name, _("Error Converting Legacy Project File") };
+      XMLFileWriter xmlFile{ name, XO("Error Converting Legacy Project File") };
 
       xmlFile.Write(wxT("<?xml version=\"1.0\"?>\n"));
 

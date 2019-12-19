@@ -292,8 +292,8 @@ wxString XMLWriter::XMLEsc(const wxString & s)
 ///
 /// XMLFileWriter class
 ///
-XMLFileWriter::XMLFileWriter
-   ( const FilePath &outputPath, const wxString &caption, bool keepBackup )
+XMLFileWriter::XMLFileWriter(
+   const FilePath &outputPath, const TranslatableString &caption, bool keepBackup )
    : mOutputPath{ outputPath }
    , mCaption{ caption }
    , mKeepBackup{ keepBackup }

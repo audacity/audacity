@@ -529,7 +529,7 @@ bool AutoSaveFile::Decode(const FilePath & fileName)
    // PRL: Yes, now we are doing GuardedCall everywhere that XMLFileWriter is
    // used.
    return GuardedCall< bool >( [&] {
-      XMLFileWriter out{ fileName, _("Error Decoding File") };
+      XMLFileWriter out{ fileName, XO("Error Decoding File") };
 
       IdMap mIds;
       std::vector<IdMap> mIdStack;

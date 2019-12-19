@@ -3629,7 +3629,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
 void VSTEffect::SaveXML(const wxFileName & fn)
 // may throw
 {
-   XMLFileWriter xmlFile{ fn.GetFullPath(), _("Error Saving Effect Presets") };
+   XMLFileWriter xmlFile{ fn.GetFullPath(), XO("Error Saving Effect Presets") };
 
    xmlFile.StartTag(wxT("vstprogrampersistence"));
    xmlFile.WriteAttr(wxT("version"), wxT("2"));

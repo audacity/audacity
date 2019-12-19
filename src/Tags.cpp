@@ -1314,7 +1314,7 @@ void TagsEditorDialog::OnSave(wxCommandEvent & WXUNUSED(event))
 
    GuardedCall( [&] {
       // Create/Open the file
-      XMLFileWriter writer{ fn, _("Error Saving Tags File") };
+      XMLFileWriter writer{ fn, XO("Error Saving Tags File") };
 
       // Remember title and track in case they're read only
       wxString title = mLocal.GetTag(TAG_TITLE);

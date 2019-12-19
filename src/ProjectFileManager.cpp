@@ -483,7 +483,7 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
    // And that cleanup is done by the destructor of saveFile, if PostCommit() is
    // not done.
    // (SetProject, when it fails, cleans itself up.)
-   XMLFileWriter saveFile{ fileName, _("Error Saving Project") };
+   XMLFileWriter saveFile{ fileName, XO("Error Saving Project") };
    success = GuardedCall< bool >( [&] {
          projectFileIO.WriteXMLHeader(saveFile);
          projectFileIO.WriteXML(saveFile, bWantSaveCopy ? &strOtherNamesArray : nullptr);

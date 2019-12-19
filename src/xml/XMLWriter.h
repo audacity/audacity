@@ -84,9 +84,9 @@ class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
 
    /// The caption is for message boxes to show in case of errors.
    /// Might throw.
-   XMLFileWriter
-      ( const FilePath &outputPath, const wxString &caption,
-        bool keepBackup = false );
+   XMLFileWriter(
+      const FilePath &outputPath, const TranslatableString &caption,
+      bool keepBackup = false );
 
    virtual ~XMLFileWriter();
 

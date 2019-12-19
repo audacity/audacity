@@ -384,7 +384,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    GuardedCall( [&] {
-      XMLFileWriter prefFile{ file, _("Error Exporting Keyboard Shortcuts") };
+      XMLFileWriter prefFile{ file, XO("Error Exporting Keyboard Shortcuts") };
       mManager->WriteXML(prefFile);
       prefFile.Commit();
    } );
