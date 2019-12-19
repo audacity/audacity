@@ -502,6 +502,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    // Is the required audio codec compiled into libavcodec?
    if (codec == NULL)
    {
+      /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
       AudacityMessageBox(wxString::Format(_("FFmpeg cannot find audio codec 0x%x.\nSupport for this codec is probably not compiled in."), (unsigned int) mEncAudioCodecCtx->codec_id),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
@@ -535,6 +536,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    // Open the codec.
    if (avcodec_open2(mEncAudioCodecCtx.get(), codec, &options) < 0)
    {
+      /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
       AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't open audio codec 0x%x."),mEncAudioCodecCtx->codec_id),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;

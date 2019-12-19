@@ -234,6 +234,7 @@ using Unevaluated = decltype(
    , XO("AU (Sun/NeXT)")
    , XO("AVR (Audio Visual Research)")
    , XO("CAF (Apple Core Audio File)")
+   /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
    , XO("FLAC (FLAC Lossless Audio Codec)")
    , XO("HTK (HMM Tool Kit)")
    , XO("IFF (Amiga IFF/SVX8/SV16)")

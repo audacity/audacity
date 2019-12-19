@@ -708,6 +708,7 @@ bool FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
       lb = dynamic_cast<wxListBox*>(wnd);
       if (lb->GetSelection() < 0)
       {
+         /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
          AudacityMessageBox(_("Please select codec before saving a profile"));
          return false;
       }
@@ -1548,6 +1549,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
          S.SetStretchyCol(3);
          S.Id(FEFormatLabelID).AddFixedText(_("Format:"));
          mFormatName = S.Id(FEFormatNameID).AddVariableText( {} );
+         /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
          S.Id(FECodecLabelID).AddFixedText(_("Codec:"));
          mCodecName = S.Id(FECodecNameID).AddVariableText( {} );
       }
@@ -1590,6 +1592,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                S.StartMultiColumn(4, wxALIGN_LEFT);
                {
                   mTag = S.Id(FETagID)
+                     /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
                      .ToolTip(XO("Codec tag (FOURCC)\nOptional\nempty - automatic"))
                      .TieTextBox(_("Tag:"), {wxT("/FileFormats/FFmpegTag"), wxEmptyString}, 4);
 
@@ -2098,10 +2101,12 @@ bool ExportFFmpegOptions::ReportIfBadCombination()
    if( bFound )
       return false;
 
-   AudacityMessageBox( 
+   AudacityMessageBox(
+      /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
       wxString::Format(_("Format %s is not compatible with codec %s."),
          *selfmt,
          *selcdc ),
+      /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
       _("Incompatible format and codec"));
 
    return true;
@@ -2195,6 +2200,7 @@ void ExportFFmpegOptions::DoOnCodecList()
    if (cdc == NULL)
    {
       //This shouldn't really happen
+      /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
       mCodecName->SetLabel(wxString(_("Failed to find the codec")));
       return;
    }
