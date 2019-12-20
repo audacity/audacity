@@ -184,7 +184,7 @@ public:
    Exporter();
    virtual ~Exporter();
 
-   void SetFileDialogTitle( const wxString & DialogTitle );
+   void SetFileDialogTitle( const TranslatableString & DialogTitle );
    void SetDefaultFormat( const wxString & Format ){ mFormatName = Format;};
 
    bool Process(AudacityProject *project, bool selectedOnly,
@@ -229,7 +229,7 @@ private:
 private:
    wxString mFormatName;
    FileDialogWrapper *mDialog;
-   wxString mFileDialogTitle;
+   TranslatableString mFileDialogTitle;
    AudacityProject *mProject;
    std::unique_ptr<MixerSpec> mMixerSpec;
 

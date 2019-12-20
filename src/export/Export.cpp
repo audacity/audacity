@@ -331,7 +331,7 @@ Exporter::Exporter()
       }
    );
 
-   SetFileDialogTitle( _("Export Audio") );
+   SetFileDialogTitle( XO("Export Audio") );
 }
 
 Exporter::~Exporter()
@@ -361,7 +361,7 @@ void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
    HelpSystem::ShowHelp(pWin, wxT("File_Export_Dialog"), true);
 }
 
-void Exporter::SetFileDialogTitle( const wxString & DialogTitle )
+void Exporter::SetFileDialogTitle( const TranslatableString & DialogTitle )
 {
    // The default title is "Export File"
    mFileDialogTitle = DialogTitle;

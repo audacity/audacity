@@ -205,7 +205,7 @@ void OnExportSelection(const CommandContext &context)
    Exporter e;
 
    MissingAliasFilesDialog::SetShouldShow(true);
-   e.SetFileDialogTitle( _("Export Selected Audio") );
+   e.SetFileDialogTitle( XO("Export Selected Audio") );
    e.Process(&project, true, selectedRegion.t0(),
       selectedRegion.t1());
 }

@@ -557,8 +557,8 @@ void ScreenshotBigDialog::OnDirChoose(wxCommandEvent & WXUNUSED(event))
    wxString current = mDirectoryTextBox->GetValue();
 
    wxDirDialogWrapper dlog(this,
-                    _("Choose a location to save screenshot images"),
-                    current);
+      XO("Choose a location to save screenshot images"),
+      current);
 
    dlog.ShowModal();
    if (!dlog.GetPath().empty()) {

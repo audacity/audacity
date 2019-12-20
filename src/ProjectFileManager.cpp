@@ -1094,11 +1094,11 @@ wxArrayString ProjectFileManager::ShowOpenDialog(const wxString &extraformat, co
    wxArrayString selected;
 
    FileDialogWrapper dlog(NULL,
-                   _("Select one or more files"),
-                   path,
-                   wxT(""),
-                   mask,
-                   wxFD_OPEN | wxFD_MULTIPLE | wxRESIZE_BORDER);
+      XO("Select one or more files"),
+      path,
+      wxT(""),
+      mask,
+      wxFD_OPEN | wxFD_MULTIPLE | wxRESIZE_BORDER);
 
    dlog.SetFilterIndex(index);
 

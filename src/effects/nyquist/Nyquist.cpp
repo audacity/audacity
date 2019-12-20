@@ -2788,12 +2788,13 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
       }
    }
 
-   FileDialogWrapper dlog(mUIParent,
-                   _("Load Nyquist script"),
-                   mFileName.GetPath(),
-                   wxEmptyString,
-                   _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|*.txt|All files|*"),
-                   wxFD_OPEN | wxRESIZE_BORDER);
+   FileDialogWrapper dlog(
+      mUIParent,
+      XO("Load Nyquist script"),
+      mFileName.GetPath(),
+      wxEmptyString,
+      _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|*.txt|All files|*"),
+      wxFD_OPEN | wxRESIZE_BORDER);
 
    if (dlog.ShowModal() != wxID_OK)
    {
@@ -2810,12 +2811,13 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
 
 void NyquistEffect::OnSave(wxCommandEvent & WXUNUSED(evt))
 {
-   FileDialogWrapper dlog(mUIParent,
-                   _("Save Nyquist script"),
-                   mFileName.GetPath(),
-                   mFileName.GetFullName(),
-                   _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"),
-                   wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
+   FileDialogWrapper dlog(
+      mUIParent,
+      XO("Save Nyquist script"),
+      mFileName.GetPath(),
+      mFileName.GetFullName(),
+      _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"),
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
 
    if (dlog.ShowModal() != wxID_OK)
    {

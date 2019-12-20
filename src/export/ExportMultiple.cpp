@@ -509,8 +509,8 @@ void ExportMultipleDialog::OnCreate(wxCommandEvent& WXUNUSED(event))
 void ExportMultipleDialog::OnChoose(wxCommandEvent& WXUNUSED(event))
 {
    wxDirDialogWrapper dlog(this,
-                    _("Choose a location to save the exported files"),
-                    mDir->GetValue());
+      XO("Choose a location to save the exported files"),
+      mDir->GetValue());
    dlog.ShowModal();
    if (!dlog.GetPath().empty())
       mDir->SetValue(dlog.GetPath());

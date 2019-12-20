@@ -159,8 +159,8 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
       oldTempDir = FileNames::DefaultTempDir();
 
    wxDirDialogWrapper dlog(this,
-                    _("Choose a location to place the temporary directory"),
-                    oldTempDir );
+      XO("Choose a location to place the temporary directory"),
+      oldTempDir );
    int retval = dlog.ShowModal();
    if (retval != wxID_CANCEL && !dlog.GetPath().empty()) {
       wxFileName tmpDirPath;

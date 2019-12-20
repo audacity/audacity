@@ -3678,7 +3678,9 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 {
-   FileDialogWrapper filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
+   FileDialogWrapper filePicker(this,
+      XO("Choose an EQ curve file"), FileNames::DataDir(), wxT(""),
+      _("xml files (*.xml;*.XML)|*.xml;*.XML"));
    wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
@@ -3698,7 +3700,9 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {
-   FileDialogWrapper filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
+   FileDialogWrapper filePicker(this, XO("Export EQ curves as..."),
+      FileNames::DataDir(), wxT(""), wxT("*.XML"),
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER); // wxFD_CHANGE_DIR?
    wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
