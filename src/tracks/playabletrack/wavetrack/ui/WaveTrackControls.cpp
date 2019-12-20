@@ -861,10 +861,9 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
    AudacityProject *const project = ::GetActiveProject();
    /* i18n-hint: The strings name a track and a channel choice (mono, left, or right) */
    ProjectHistory::Get( *project )
-      .PushState(wxString::Format(_("Changed '%s' to %s"),
-         pTrack->GetName(),
-         channelmsg),
-         _("Channel"));
+      .PushState(
+         XO("Changed '%s' to %s").Format( pTrack->GetName(), channelmsg ),
+         XO("Channel"));
    mpData->result = RefreshCode::RefreshAll;
 }
 #endif
