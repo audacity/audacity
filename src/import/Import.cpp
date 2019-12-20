@@ -137,15 +137,6 @@ bool Importer::Terminate()
    return true;
 }
 
-void Importer::GetSupportedImportFormats(FormatList *formatList)
-{
-   for(const auto &importPlugin : sImportPluginList())
-   {
-      formatList->emplace_back(importPlugin->GetPluginFormatDescription(),
-                               importPlugin->GetSupportedExtensions());
-   }
-}
-
 FileNames::FileTypes
 Importer::GetFileTypes( const FileNames::FileType &extraType )
 {
@@ -159,8 +150,12 @@ Importer::GetFileTypes( const FileNames::FileType &extraType )
    if ( !extraType.extensions.empty() )
       fileTypes.push_back( extraType );
    
-   FormatList l;
-   GetSupportedImportFormats(&l);
+   FileNames::FileTypes l;
+   for(const auto &importPlugin : sImportPluginList())
+   {
+      l.emplace_back(importPlugin->GetPluginFormatDescription(),
+                               importPlugin->GetSupportedExtensions());
+   }
    
    using ExtensionSet = std::unordered_set< FileExtension >;
    FileExtensions allList = extraType.extensions, newList;
@@ -168,13 +163,13 @@ Importer::GetFileTypes( const FileNames::FileType &extraType )
    for ( const auto &format : l ) {
       newList.clear();
       newSet.clear();
-      for ( const auto &extension : format.formatExtensions ) {
+      for ( const auto &extension : format.extensions ) {
          if ( newSet.insert( extension ).second )
             newList.push_back( extension );
          if ( allSet.insert( extension ).second )
             allList.push_back( extension );
       }
-      fileTypes.push_back( { format.formatName, newList } );
+      fileTypes.push_back( { format.description, newList } );
    }
 
    fileTypes[1].extensions = allList;

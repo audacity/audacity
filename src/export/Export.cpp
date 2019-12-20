@@ -133,9 +133,9 @@ void ExportPlugin::SetExtensions(FileExtensions extensions, int index)
    mFormatInfos[index].mExtensions = std::move(extensions);
 }
 
-void ExportPlugin::SetMask(const wxString & mask, int index)
+void ExportPlugin::SetMask(FileNames::FileTypes mask, int index)
 {
-   mFormatInfos[index].mMask = mask;
+   mFormatInfos[index].mMask = std::move( mask );
 }
 
 void ExportPlugin::SetMaxChannels(unsigned maxchannels, unsigned index)
@@ -173,22 +173,12 @@ FileExtensions ExportPlugin::GetExtensions(int index)
    return mFormatInfos[index].mExtensions;
 }
 
-wxString ExportPlugin::GetMask(int index)
+FileNames::FileTypes ExportPlugin::GetMask(int index)
 {
-   if (!mFormatInfos[index].mMask.empty()) {
+   if (!mFormatInfos[index].mMask.empty())
       return mFormatInfos[index].mMask;
-   }
 
-   wxString mask = GetTranslatedDescription(index) + wxT("|");
-
-   // Build the mask
-   // const auto &ext = GetExtension(index);
-   const auto &exts = GetExtensions(index);
-   for (size_t i = 0; i < exts.size(); i++) {
-      mask += wxT("*.") + exts[i] + wxT(";");
-   }
-
-   return mask;
+   return { { GetUntranslatedDescription(index), GetExtensions(index) } };
 }
 
 unsigned ExportPlugin::GetMaxChannels(int index)
@@ -591,7 +581,7 @@ bool Exporter::GetFilename()
 {
    mFormat = -1;
 
-   wxString maskString;
+   FileNames::FileTypes fileTypes;
    auto defaultFormat = mFormatName;
    if( defaultFormat.empty() )
       defaultFormat = gPrefs->Read(wxT("/Export/Format"),
@@ -605,7 +595,8 @@ bool Exporter::GetFilename()
          ++i;
          for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
-            maskString += pPlugin->GetMask(j) + wxT("|");
+            auto mask = pPlugin->GetMask(j);
+            fileTypes.insert( fileTypes.end(), mask.begin(), mask.end() );
             if (mPlugins[i]->GetFormat(j) == defaultFormat) {
                mFormat = i;
                mSubFormat = j;
@@ -620,7 +611,6 @@ bool Exporter::GetFilename()
       mFilterIndex = 0;
       mSubFormat = 0;
    }
-   maskString.RemoveLast();
    wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
 
 //Bug 1304: Set a default path if none was given.  For Export.
@@ -640,7 +630,7 @@ bool Exporter::GetFilename()
                        mFileDialogTitle,
                        mFilename.GetPath(),
                        useFileName.GetFullName(),
-                       maskString,
+                       fileTypes,
                        wxFD_SAVE | wxRESIZE_BORDER);
          mDialog = &fd;
          mDialog->PushEventHandler(this);

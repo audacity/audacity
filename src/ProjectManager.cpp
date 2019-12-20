@@ -38,6 +38,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "UndoManager.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
+#include "import/Import.h"
 #include "import/ImportMIDI.h"
 #include "ondemand/ODManager.h"
 #include "prefs/QualityPrefs.h"
@@ -834,10 +835,9 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
     * with Audacity. Do not include pipe symbols or .aup (this extension will
     * now be added automatically for the Save Projects dialogues).*/
    auto selectedFiles =
-      ProjectFileManager::ShowOpenDialog(_("Audacity projects"), wxT("*.aup"));
+      ProjectFileManager::ShowOpenDialog( FileNames::AudacityProjects );
    if (selectedFiles.size() == 0) {
-      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
-      gPrefs->Flush();
+      Importer::SetLastOpenType({});
       return;
    }
 
@@ -848,8 +848,7 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
    ODManager::Pauser pauser;
 
    auto cleanup = finally( [] {
-      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
-      gPrefs->Flush();
+      Importer::SetLastOpenType({});
    } );
 
    for (size_t ff = 0; ff < selectedFiles.size(); ff++) {

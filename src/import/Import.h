@@ -30,22 +30,8 @@ class ImportFileHandle;
 class UnusableImportPlugin;
 typedef bool (*progress_callback_t)( void *userData, float percent );
 
-class Format {
-public:
-   TranslatableString formatName;
-   FileExtensions formatExtensions;
-
-   Format(const TranslatableString &_formatName,
-      FileExtensions _formatExtensions):
-      formatName(_formatName),
-      formatExtensions( std::move( _formatExtensions ) )
-   {
-   }
-};
-
 class ExtImportItem;
 
-using FormatList = std::vector<Format> ;
 using ExtImportItems = std::vector< std::unique_ptr<ExtImportItem> >;
 
 class ExtImportItem
@@ -115,11 +101,6 @@ public:
     */
    bool Initialize();
    bool Terminate();
-
-   /**
-    * Fills @formatList with a list of supported import formats
-    */
-   void GetSupportedImportFormats(FormatList *formatList);
 
    /**
     * Constructs a list of types, for use by file opening dialogs, that includes

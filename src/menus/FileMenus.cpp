@@ -21,6 +21,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../export/ExportMultiple.h"
+#include "../import/Import.h"
 #include "../import/ImportMIDI.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
@@ -373,10 +374,9 @@ void OnImport(const CommandContext &context)
    // this serves to track the file if the users zooms in and such.
    MissingAliasFilesDialog::SetShouldShow(true);
 
-   wxArrayString selectedFiles = ProjectFileManager::ShowOpenDialog(wxT(""));
+   auto selectedFiles = ProjectFileManager::ShowOpenDialog();
    if (selectedFiles.size() == 0) {
-      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
-      gPrefs->Flush();
+      Importer::SetLastOpenType({});
       return;
    }
 
@@ -391,10 +391,7 @@ void OnImport(const CommandContext &context)
    ODManager::Pauser pauser;
 
    auto cleanup = finally( [&] {
-      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
-
-      gPrefs->Flush();
-
+      Importer::SetLastOpenType({});
       window.HandleResize(); // Adjust scrollers for NEW track sizes.
    } );
 

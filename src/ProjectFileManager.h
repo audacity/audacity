@@ -16,6 +16,7 @@ Paul Licameli split from AudacityProject.h
 
 #include "ClientData.h" // to inherit
 #include "import/ImportRaw.h" // defines TrackHolders
+#include "FileNames.h" // for FileType
 
 class wxString;
 class wxFileName;
@@ -83,20 +84,13 @@ public:
     * will be set to the DefaultOpenType from the preferences, failing that
     * the first format specified in the dialogue. These two parameters will
     * be saved to the preferences once the user has chosen a file to open.
-    * @param extraformat Specify the name of an additional format to allow
-    * opening in this dialogue. This string is free-form, but should be short
-    * enough to fit in the file dialogue filter drop-down. It should be
-    * translated.
-    * @param extrafilter Specify the file extension(s) for the additional format
-    * specified by extraformat. The patterns must include the wildcard (e.g.
-    * "*.aup" not "aup" or ".aup"), separate multiple patters with a semicolon,
-    * e.g. "*.aup;*.AUP" because patterns are case-sensitive. Do not add a
-    * trailing semicolon to the string. This string should not be translated
+    * @param extraType Specify an additional format to allow opening in this
+    * dialogue.
     * @return Array of file paths which the user selected to open (multiple
     * selections allowed).
     */
-   static wxArrayString ShowOpenDialog(const wxString &extraformat = {},
-         const wxString &extrafilter = {});
+   static wxArrayString ShowOpenDialog(
+      const FileNames::FileType &extraType = {});
 
    static bool IsAlreadyOpen(const FilePath &projPathName);
 

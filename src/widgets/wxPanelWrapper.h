@@ -158,6 +158,7 @@ public:
 };
 
 #include "../lib-src/FileDialog/FileDialog.h"
+#include "../FileNames.h" // for FileTypes
 
 class AUDACITY_DLL_API FileDialogWrapper
    : public wxTabTraversalWrapper<FileDialog>
@@ -171,15 +172,16 @@ public:
       const TranslatableString& message,
       const FilePath& defaultDir,
       const FilePath& defaultFile,
-      const wxString& wildCard,
+      const FileNames::FileTypes& fileTypes,
       long style = wxFD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& sz = wxDefaultSize,
       // Important:  default window name localizes!
       const TranslatableString& name = XO("File Dialog"))
    : wxTabTraversalWrapper<FileDialog>(
-      parent, message.Translation(), defaultDir, defaultFile, wildCard, style,
-      pos, sz, name.Translation() )
+      parent, message.Translation(), defaultDir, defaultFile,
+      FileNames::FormatWildcard( fileTypes ),
+      style, pos, sz, name.Translation() )
    {}
 
    // Pseudo ctor
@@ -188,7 +190,7 @@ public:
       const TranslatableString& message,
       const FilePath& defaultDir,
       const FilePath& defaultFile,
-      const wxString& wildCard,
+      const FileNames::FileTypes& fileTypes,
       long style = wxFD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& sz = wxDefaultSize,
@@ -196,7 +198,8 @@ public:
       const TranslatableString& name = XO("File Dialog"))
    {
       wxTabTraversalWrapper<FileDialog>::Create(
-         parent, message.Translation(), defaultDir, defaultFile, wildCard,
+         parent, message.Translation(), defaultDir, defaultFile,
+         FileNames::FormatWildcard( fileTypes ),
          style, pos, sz, name.Translation()
       );
    }
