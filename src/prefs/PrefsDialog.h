@@ -48,7 +48,7 @@ class PrefsDialog /* not final */ : public wxDialogWrapper
    static Factories &DefaultFactories();
 
    PrefsDialog(wxWindow * parent,
-      const wxString &titlePrefix = _("Preferences: "),
+      const TranslatableString &titlePrefix = XO("Preferences:"),
       Factories &factories = DefaultFactories());
    virtual ~PrefsDialog();
 
@@ -82,7 +82,7 @@ private:
    wxTreebook *mCategories{};
    PrefsPanel *mUniquePage{};
    Factories &mFactories;
-   const wxString mTitlePrefix;
+   const TranslatableString mTitlePrefix;
 
    DECLARE_EVENT_TABLE()
 };

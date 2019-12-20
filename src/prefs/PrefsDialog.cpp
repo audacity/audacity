@@ -417,14 +417,14 @@ class wxTreebookExt final : public wxTreebook
 {
 public:
    wxTreebookExt( wxWindow *parent,
-      wxWindowID id, const wxString &titlePrefix)
+      wxWindowID id, const TranslatableString &titlePrefix)
       : wxTreebook( parent, id )
       , mTitlePrefix(titlePrefix)
    {;};
    ~wxTreebookExt(){;};
    int ChangeSelection(size_t n) override;
    int SetSelection(size_t n) override;
-   const wxString mTitlePrefix;
+   const TranslatableString mTitlePrefix;
 };
 
 
@@ -439,7 +439,7 @@ int wxTreebookExt::ChangeSelection(size_t n) {
 int wxTreebookExt::SetSelection(size_t n)
 {
    int i = wxTreebook::SetSelection(n);
-   wxString Temp = wxString(mTitlePrefix) + GetPageText( n );
+   auto Temp = mTitlePrefix.Translation() + wxT(" ") + GetPageText( n );
    static_cast<wxDialog*>(GetParent())->SetTitle( Temp );
    static_cast<wxDialog*>(GetParent())->SetName( Temp );
 
@@ -532,8 +532,9 @@ PrefsDialog::Factories
 }
 
 
-PrefsDialog::PrefsDialog
-  (wxWindow * parent, const wxString &titlePrefix, Factories &factories)
+PrefsDialog::PrefsDialog(
+   wxWindow * parent,
+   const TranslatableString &titlePrefix, Factories &factories)
 :  wxDialogWrapper(parent, wxID_ANY, XO("Audacity Preferences"),
             wxDefaultPosition,
             wxDefaultSize,
@@ -694,7 +695,8 @@ int PrefsDialog::ShowModal()
       mCategories->SetSelection(selected);
    }
    else {
-      auto Temp = TranslatableString{ mTitlePrefix + mUniquePage->GetLabel() };
+      auto Temp = mTitlePrefix;
+      Temp.Join( TranslatableString{ mUniquePage->GetLabel() }, wxT(" ") );
       SetTitle(Temp);
       SetName(Temp);
    }
@@ -887,7 +889,7 @@ int PrefsDialog::GetSelectedPage() const
 }
 
 GlobalPrefsDialog::GlobalPrefsDialog(wxWindow * parent, Factories &factories)
-   : PrefsDialog(parent, _("Preferences: "), factories)
+   : PrefsDialog(parent, XO("Preferences:"), factories)
 {
 }
 

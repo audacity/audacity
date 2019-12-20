@@ -982,6 +982,7 @@ wxString LWSlider::GetTip(float value) const
 #endif
       }
 
+      /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
       label = XO("%s: %s").Format( mName, val ).Translation();
    }
    else

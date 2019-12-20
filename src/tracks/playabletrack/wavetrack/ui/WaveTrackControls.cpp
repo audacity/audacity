@@ -779,8 +779,8 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
    class ViewSettingsDialog final : public PrefsDialog
    {
    public:
-      ViewSettingsDialog
-         (wxWindow *parent, const wxString &title, PrefsDialog::Factories &factories,
+      ViewSettingsDialog(wxWindow *parent,
+         const TranslatableString &title, PrefsDialog::Factories &factories,
          int page)
          : PrefsDialog(parent, title, factories)
          , mPage(page)
@@ -817,8 +817,7 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
       // (pTrack->GetDisplay() == WaveTrack::Spectrum) ? 1 :
       0;
 
-   /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
-   auto title = wxString::Format(_("%s: %s"), pTrack->GetName(), wxT(""));
+   auto title = XO("%s:").Format( pTrack->GetName() );
    ViewSettingsDialog dialog(mpData->pParent, title, factories, page);
 
    if (0 != dialog.ShowModal()) {
