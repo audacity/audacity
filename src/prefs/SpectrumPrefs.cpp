@@ -112,7 +112,7 @@ void SpectrumPrefs::Populate(size_t windowSize)
    PopulatePaddingChoices(windowSize);
 
    for (int i = 0; i < NumWindowFuncs(); i++) {
-      mTypeChoices.push_back(WindowFuncName(i));
+      mTypeChoices.push_back( WindowFuncName(i).Translation() );
    }
 
    //------------------------- Main section --------------------

@@ -241,10 +241,11 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
    wxArrayStringEx funcChoices;
    for (int i = 0, cnt = NumWindowFuncs(); i < cnt; i++)
    {
-      /* i18n-hint: This refers to a "window function",
-       * such as Hann or Rectangular, used in the
-       * Frequency analyze dialog box. */
-      funcChoices.push_back(wxString::Format("%s window",  WindowFuncName(i) ) );
+      funcChoices.push_back(
+         /* i18n-hint: This refers to a "window function",
+          * such as Hann or Rectangular, used in the
+          * Frequency analyze dialog box. */
+         XO("%s window").Format( WindowFuncName(i) ).Translation() );
    }
 
    wxArrayStringEx axisChoices{
