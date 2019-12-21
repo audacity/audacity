@@ -242,7 +242,9 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          mAlgorithmChoice =
             S.Id(ID_ALGORITHM).TieChoice(_("A&lgorithm:"),
             mTempSettings.algorithm,
-            SpectrogramSettings::GetAlgorithmNames());
+            transform_container<wxArrayStringEx>(
+               SpectrogramSettings::GetAlgorithmNames(),
+               std::mem_fn( &TranslatableString::Translation ) ) );
 
          S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
             mTempSettings.windowSize,

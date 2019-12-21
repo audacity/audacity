@@ -147,20 +147,14 @@ void WaveformSettings::NextHigherDBRange()
 }
 
 //static
-const wxArrayStringEx &WaveformSettings::GetScaleNames()
+const TranslatableStrings &WaveformSettings::GetScaleNames()
 {
-   class ScaleNamesArray final : public TranslatableStringArray
-   {
-      void Populate() override
-      {
-         // Keep in correspondence with enum WaveTrack::WaveTrackDisplay:
-         mContents.push_back(_("Linear"));
-         mContents.push_back(_("Logarithmic"));
-      }
+   static const TranslatableStrings result{
+      // Keep in correspondence with enum WaveTrack::WaveTrackDisplay:
+      XO("Linear"),
+      XO("Logarithmic"),
    };
-
-   static ScaleNamesArray theArray;
-   return theArray.Get();
+   return result;
 }
 
 WaveformSettings::~WaveformSettings()

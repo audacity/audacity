@@ -110,7 +110,9 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
             mScaleChoice =
                S.Id(ID_SCALE).TieChoice(_("S&cale:"),
                   mTempSettings.scaleType,
-                  WaveformSettings::GetScaleNames());
+                  transform_container<wxArrayStringEx>(
+                     WaveformSettings::GetScaleNames(),
+                     std::mem_fn( &TranslatableString::Translation ) ) );
 
             mRangeChoice =
                S.Id(ID_RANGE).TieChoice(_("Waveform dB &range:"),
