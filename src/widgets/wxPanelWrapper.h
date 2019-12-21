@@ -168,10 +168,10 @@ public:
    // Constructor with no modal flag - the new convention.
    FileDialogWrapper(
       wxWindow *parent,
-      const TranslatableString& message = XO("Select a file"),
-      const FilePath& defaultDir = {},
-      const FilePath& defaultFile = {},
-      const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+      const TranslatableString& message,
+      const FilePath& defaultDir,
+      const FilePath& defaultFile,
+      const wxString& wildCard,
       long style = wxFD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& sz = wxDefaultSize,
@@ -185,10 +185,10 @@ public:
    // Pseudo ctor
    void Create(
       wxWindow *parent,
-      const TranslatableString& message = XO("Select a file"),
-      const FilePath& defaultDir = {},
-      const FilePath& defaultFile = {},
-      const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+      const TranslatableString& message,
+      const FilePath& defaultDir,
+      const FilePath& defaultFile,
+      const wxString& wildCard,
       long style = wxFD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& sz = wxDefaultSize,
