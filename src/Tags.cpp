@@ -735,33 +735,15 @@ private:
 #define LABEL_GENRE     XO("Genre")
 #define LABEL_COMMENTS  XO("Comments")
 
-static wxArrayString names()
-{
-   static TranslatableString theNames[] =
-   {
-      LABEL_ARTIST,
-      LABEL_TITLE,
-      LABEL_ALBUM,
-      LABEL_TRACK,
-      LABEL_YEAR,
-      LABEL_GENRE,
-      LABEL_COMMENTS
-   };
-
-   class NamesArray final : public TranslatableStringArray
-   {
-      void Populate() override
-      {
-         for (auto &name : theNames)
-            mContents.push_back( name.Translation() );
-      }
-   };
-
-   static NamesArray theArray;
-
-   // Yes, return array by value
-   return theArray.Get();
-}
+static TranslatableStrings names{
+   LABEL_ARTIST,
+   LABEL_TITLE,
+   LABEL_ALBUM,
+   LABEL_TRACK,
+   LABEL_YEAR,
+   LABEL_GENRE,
+   LABEL_COMMENTS
+};
 
 static const struct
 {
@@ -911,7 +893,8 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
 
          mGrid->SetColLabelSize(mGrid->GetDefaultRowSize());
 
-         auto  cs = names();
+         auto  cs = transform_container<wxArrayStringEx>(
+            names, std::mem_fn( &TranslatableString::Translation ) );
 
          // Build the initial (empty) grid
          mGrid->CreateGrid(0, 2);

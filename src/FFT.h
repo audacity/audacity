@@ -34,6 +34,8 @@
 
 #include <wx/defs.h>
 
+class TranslatableString;
+
 /*
   Salvo Ventura - November 2006
   Added more window functions:
@@ -138,7 +140,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
  * Returns the name of the windowing function (for UI display)
  */
 
-const wxChar *WindowFuncName(int whichFunction);
+const TranslatableString WindowFuncName(int whichFunction);
 
 /*
  * Returns the number of windowing functions supported

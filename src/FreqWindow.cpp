@@ -241,10 +241,11 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
    wxArrayStringEx funcChoices;
    for (int i = 0, cnt = NumWindowFuncs(); i < cnt; i++)
    {
-      /* i18n-hint: This refers to a "window function",
-       * such as Hann or Rectangular, used in the
-       * Frequency analyze dialog box. */
-      funcChoices.push_back(wxString::Format("%s window",  WindowFuncName(i) ) );
+      funcChoices.push_back(
+         /* i18n-hint: This refers to a "window function",
+          * such as Hann or Rectangular, used in the
+          * Frequency analyze dialog box. */
+         XO("%s window").Format( WindowFuncName(i) ).Translation() );
    }
 
    wxArrayStringEx axisChoices{
@@ -949,35 +950,32 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
          value = mAnalyst->GetProcessedValue(xPos, xPos + xStep);
       }
 
-      wxString cursor;
-      wxString peak;
-      wxString xpitch;
-      wxString peakpitch;
-      const wxChar *xp;
-      const wxChar *pp;
+      TranslatableString cursor;
+      TranslatableString peak;
 
       if (mAlg == SpectrumAnalyst::Spectrum) {
-         xpitch = PitchName_Absolute(FreqToMIDInote(xPos));
-         peakpitch = PitchName_Absolute(FreqToMIDInote(bestpeak));
-         xp = xpitch;
-         pp = peakpitch;
+         auto xp = PitchName_Absolute(FreqToMIDInote(xPos));
+         auto pp = PitchName_Absolute(FreqToMIDInote(bestpeak));
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
-         cursor.Printf(_("%d Hz (%s) = %d dB"), (int)(xPos + 0.5), xp, (int)(value + 0.5));
-         peak.Printf(_("%d Hz (%s) = %.1f dB"), (int)(bestpeak + 0.5), pp, bestValue);
+         cursor = XO("%d Hz (%s) = %d dB")
+            .Format( (int)(xPos + 0.5), xp, (int)(value + 0.5));
+         /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
+         peak = XO("%d Hz (%s) = %.1f dB")
+            .Format( (int)(bestpeak + 0.5), pp, bestValue );
       } else if (xPos > 0.0 && bestpeak > 0.0) {
-         xpitch = PitchName_Absolute(FreqToMIDInote(1.0 / xPos));
-         peakpitch = PitchName_Absolute(FreqToMIDInote(1.0 / bestpeak));
-         xp = xpitch;
-         pp = peakpitch;
+         auto xp = PitchName_Absolute(FreqToMIDInote(1.0 / xPos));
+         auto pp = PitchName_Absolute(FreqToMIDInote(1.0 / bestpeak));
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
           * the %.4f are numbers, and 'sec' should be an abbreviation for seconds */
-         cursor.Printf(_("%.4f sec (%d Hz) (%s) = %f"),
-                     xPos, (int)(1.0 / xPos + 0.5), xp, value);
-         peak.Printf(_("%.4f sec (%d Hz) (%s) = %.3f"),
-                     bestpeak, (int)(1.0 / bestpeak + 0.5), pp, bestValue);
+         cursor = XO("%.4f sec (%d Hz) (%s) = %f")
+            .Format( xPos, (int)(1.0 / xPos + 0.5), xp, value );
+         /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+          * the %.4f are numbers, and 'sec' should be an abbreviation for seconds */
+         peak = XO("%.4f sec (%d Hz) (%s) = %.3f")
+            .Format( bestpeak, (int)(1.0 / bestpeak + 0.5), pp, bestValue );
       }
-      mCursorText->SetValue(cursor);
-      mPeakText->SetValue(peak);
+      mCursorText->SetValue( cursor.Translation() );
+      mPeakText->SetValue( peak.Translation() );
    }
    else {
       mCursorText->SetValue(wxT(""));

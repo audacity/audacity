@@ -67,7 +67,7 @@ public:
    };
 
    static const TranslatableStrings &GetScaleNames();
-   static const wxArrayStringEx &GetAlgorithmNames();
+   static const TranslatableStrings &GetAlgorithmNames();
 
    static SpectrogramSettings &defaults();
    SpectrogramSettings();

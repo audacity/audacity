@@ -18,7 +18,7 @@
 #ifndef __AUDACITY_PITCHNAME__
 #define __AUDACITY_PITCHNAME__
 
-class wxString;
+class TranslatableString;
 
 // FreqToMIDInote takes a frequency in Hz (exponential scale relative to
 // alphabetic pitch names) and returns a pitch ID number (linear
@@ -44,14 +44,14 @@ enum class PitchNameChoice { Sharps, Flats, Both };
 
 // PitchName takes dMIDInote (per result from
 // FreqToMIDInote) and returns a standard pitch/note name [C, C#, etc.).
-wxString PitchName(
+TranslatableString PitchName(
    const double dMIDInote,
    const PitchNameChoice choice = PitchNameChoice::Sharps );
 
 // PitchName_Absolute does the same thing as PitchName, but appends
 // the octave number, e.g., instead of "C" it will return "C4"
 // if the dMIDInote corresonds to middle C, i.e., is 60.
-wxString PitchName_Absolute(
+TranslatableString PitchName_Absolute(
    const double dMIDInote,
    const PitchNameChoice choice = PitchNameChoice::Sharps);
 

@@ -965,8 +965,8 @@ void MacrosWindow::OnAdd(wxCommandEvent & WXUNUSED(event))
 {
    while (true) {
       AudacityTextEntryDialog d(this,
-                          _("Enter name of new macro"),
-                          _("Name of new macro"));
+         XO("Enter name of new macro"),
+         XO("Name of new macro"));
       d.SetName(d.GetTitle());
       wxString name;
 

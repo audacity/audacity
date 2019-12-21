@@ -295,7 +295,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    for( const auto &command : SpecialCommands )
       commands.push_back( {
          { command.second, command.first },
-         _("Special Command")
+         XO("Special Command")
       } );
 
    // end CLEANSPEECH remnant
@@ -311,7 +311,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
             commands.push_back( {
                { command, plug->GetSymbol().Msgid() },
                plug->GetPluginType() == PluginTypeEffect ?
-                  _("Effect") : _("Menu Command (With Parameters)")
+                  XO("Effect") : XO("Menu Command (With Parameters)")
             } );
          plug = pm.GetNextPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
       }
@@ -367,7 +367,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
                   mNames[i], // Internal name.
                   label // User readable name
                },
-               _("Menu Command (No Parameters)")
+               XO("Menu Command (No Parameters)")
             }
          );
       }

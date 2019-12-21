@@ -255,7 +255,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
    wxArrayStringEx pitch;
    for (int ii = 0; ii < 12; ++ii)
-      pitch.push_back( PitchName( ii, PitchNameChoice::Both ) );
+      pitch.push_back( PitchName( ii, PitchNameChoice::Both ).Translation() );
 
    S.SetBorder(5);
 
@@ -265,8 +265,9 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
       {
          S.AddTitle(_("Change Pitch without Changing Tempo"));
          S.AddTitle(
-            wxString::Format(_("Estimated Start Pitch: %s%d (%.3f Hz)"),
-                              pitch[m_nFromPitch], m_nFromOctave, m_FromFrequency));
+            XO("Estimated Start Pitch: %s%d (%.3f Hz)")
+               .Format( pitch[m_nFromPitch], m_nFromOctave, m_FromFrequency)
+                  .Translation() );
       }
       S.EndVerticalLay();
 

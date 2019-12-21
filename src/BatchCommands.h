@@ -30,7 +30,7 @@ public:
    // A triple of user-visible name, internal string identifier and type/help string.
    struct Entry {
       ComponentInterfaceSymbol name;
-      wxString category;
+      TranslatableString category;
    };
    using Entries = std::vector<Entry>;
 

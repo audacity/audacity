@@ -159,25 +159,17 @@ const TranslatableStrings &SpectrogramSettings::GetScaleNames()
 }
 
 //static
-const wxArrayStringEx &SpectrogramSettings::GetAlgorithmNames()
+const TranslatableStrings &SpectrogramSettings::GetAlgorithmNames()
 {
-   class AlgorithmNamesArray final : public TranslatableStringArray
-   {
-      void Populate() override
-      {
-         mContents.insert( mContents.end(), {
-            // Keep in correspondence with enum SpectrogramSettings::Algorithm:
-            _("Frequencies") ,
-            /* i18n-hint: the Reassignment algorithm for spectrograms */
-            _("Reassignment") ,
-            /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
-            _("Pitch (EAC)") ,
-         } );
-      }
+   static const TranslatableStrings results{
+      // Keep in correspondence with enum SpectrogramSettings::Algorithm:
+      XO("Frequencies") ,
+      /* i18n-hint: the Reassignment algorithm for spectrograms */
+      XO("Reassignment") ,
+      /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
+      XO("Pitch (EAC)") ,
    };
-
-   static AlgorithmNamesArray theArray;
-   return theArray.Get();
+   return results;
 }
 
 bool SpectrogramSettings::Validate(bool quiet)

@@ -812,10 +812,10 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
    // User selected the "New..." choice so ask for a NEW name
    if ( make_iterator_range( mTrackNames ).index( val ) == 0 ) {
       AudacityTextEntryDialog d(this,
-                          _("New Label Track"),
-                          _("Enter track name"),
-                          /* i18n-hint: (noun) it's the name of a kind of track.*/
-                          _("Label Track"));
+         XO("New Label Track"),
+         XO("Enter track name"),
+         /* i18n-hint: (noun) it's the name of a kind of track.*/
+         XO("Label Track").Translation());
 
       // User canceled so repopulating the grid will set the track
       // name to the orignal value
