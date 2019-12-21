@@ -57,7 +57,7 @@ int PitchOctave(const double dMIDInote)
 }
 
 
-wxString PitchName(const double dMIDInote, const PitchNameChoice choice)
+TranslatableString PitchName(const double dMIDInote, const PitchNameChoice choice)
 {
    static const TranslatableString sharpnames[12] = {
       /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
@@ -148,14 +148,14 @@ wxString PitchName(const double dMIDInote, const PitchNameChoice choice)
       default: wxASSERT(false); break;
    }
 
-   return table[PitchIndex(dMIDInote)].Translation();
+   return table[PitchIndex(dMIDInote)];
 }
 
-wxString PitchName_Absolute(const double dMIDInote, const PitchNameChoice choice)
+TranslatableString PitchName_Absolute(const double dMIDInote, const PitchNameChoice choice)
 {
    // The format string is not localized.  Should it be?
-   return wxString::Format(
-      wxT("%s%d"), PitchName(dMIDInote, choice), PitchOctave(dMIDInote) );
+   return Verbatim( wxT("%s%d") )
+      .Format( PitchName(dMIDInote, choice), PitchOctave(dMIDInote) );
 }
 
 double PitchToMIDInote(const unsigned int nPitchIndex, const int nPitchOctave)
