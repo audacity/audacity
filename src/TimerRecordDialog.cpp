@@ -799,7 +799,7 @@ TranslatableString TimerRecordDialog::GetDisplayDate( wxDateTime & dt )
                             len);
       if (len > 0) {
          s += wxT(" ") + dt.FormatTime();
-         return TranslatableString{ s };
+         return Verbatim( s );
       }
    }
 #endif
