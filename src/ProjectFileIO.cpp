@@ -137,8 +137,8 @@ void ProjectFileIO::SetProjectTitle( int number)
 // Most of this string was duplicated 3 places. Made the warning consistent in this global.
 // The %s is to be filled with the version string.
 // PRL:  Do not statically allocate a string in _() !
-static wxString gsLegacyFileWarning() { return
-_("This file was saved by Audacity version %s. The format has changed. \
+static TranslatableString gsLegacyFileWarning() { return
+XO("This file was saved by Audacity version %s. The format has changed. \
 \n\nAudacity can try to open and save this file, but saving it in this \
 \nversion will then prevent any 1.2 or earlier version opening it. \
 \n\nAudacity might corrupt the file in opening it, so you should \
@@ -150,15 +150,15 @@ bool ProjectFileIO::WarnOfLegacyFile( )
 {
    auto &project = mProject;
    auto &window = GetProjectFrame( project );
-   wxString msg;
-   msg.Printf(gsLegacyFileWarning(), _("1.0 or earlier"));
+   auto msg = gsLegacyFileWarning().Format( XO("1.0 or earlier") );
 
    // Stop icon, and choose 'NO' by default.
    int action =
-      AudacityMessageBox(msg,
-                   _("Warning - Opening Old Project File"),
-                   wxYES_NO | wxICON_STOP | wxNO_DEFAULT | wxCENTRE,
-                   &window);
+      AudacityMessageBox(
+         msg,
+         XO("Warning - Opening Old Project File"),
+         wxYES_NO | wxICON_STOP | wxNO_DEFAULT | wxCENTRE,
+         &window);
    return (action != wxNO);
 }
 
@@ -278,10 +278,12 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             {
                projName = project.GetProjectName() + wxT("_data");
                if (!dirManager.SetProject(projPath, projName, false)) {
-                  AudacityMessageBox(wxString::Format(_("Couldn't find the project data folder: \"%s\""),
-                                             projName),
-                                             _("Error Opening Project"),
-                                             wxOK | wxCENTRE, &window);
+                  AudacityMessageBox(
+                     XO("Couldn't find the project data folder: \"%s\"")
+                        .Format( projName ),
+                     XO("Error Opening Project"),
+                     wxOK | wxCENTRE,
+                     &window);
                   return false;
                }
             }
@@ -333,14 +335,15 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          //!XMLValueChecker::IsGoodInt(fileVersion) ||
          (fileVersion > wxT(AUDACITY_FILE_FORMAT_VERSION)))
    {
-      wxString msg;
       /* i18n-hint: %s will be replaced by the version number.*/
-      msg.Printf(_("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file."),
-                 audacityVersion,
+      auto msg = XO("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file.")
+         .Format(audacityVersion,
                  AUDACITY_VERSION_STRING);
-      AudacityMessageBox(msg,
-                   _("Can't open project file"),
-                   wxOK | wxICON_EXCLAMATION | wxCENTRE, &window);
+      AudacityMessageBox(
+         msg,
+         XO("Can't open project file"),
+         wxOK | wxICON_EXCLAMATION | wxCENTRE,
+         &window);
       return false;
    }
 
@@ -362,18 +365,17 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    bIsVeryOld |= wxAtoi( fileVersion )==0;
    // Specifically detect older versions of Audacity
    if ( bIsOld | bIsVeryOld ) {
-      wxString msg;
-      msg.Printf(gsLegacyFileWarning(), audacityVersion);
+      auto msg = gsLegacyFileWarning().Format( audacityVersion );
 
       int icon_choice = wxICON_EXCLAMATION;
       if( bIsVeryOld )
          // Stop icon, and choose 'NO' by default.
          icon_choice = wxICON_STOP | wxNO_DEFAULT;
-      int action =
-         AudacityMessageBox(msg,
-                      _("Warning - Opening Old Project File"),
-                      wxYES_NO | icon_choice | wxCENTRE,
-                      &window);
+      int action = AudacityMessageBox(
+         msg,
+         XO("Warning - Opening Old Project File"),
+         wxYES_NO | icon_choice | wxCENTRE,
+         &window);
       if (action == wxNO)
          return false;
    }
@@ -607,9 +609,11 @@ void ProjectFileIO::AutoSave()
    if (!wxRenameFile(fn + wxT(".tmp"), fn + wxT(".autosave")))
    {
       AudacityMessageBox(
-         wxString::Format( _("Could not create autosave file: %s"),
-            fn + wxT(".autosave") ),
-         _("Error"), wxICON_STOP, &window);
+         XO("Could not create autosave file: %s")
+            .Format( fn + wxT(".autosave") ),
+         XO("Error"),
+         wxICON_STOP,
+         &window);
       return;
    }
 
@@ -630,9 +634,11 @@ void ProjectFileIO::DeleteCurrentAutoSaveFile()
          if (!wxRemoveFile(mAutoSaveFileName))
          {
             AudacityMessageBox(
-               wxString::Format(
-                  _("Could not remove old autosave file: %s"), mAutoSaveFileName ),
-               _("Error"), wxICON_STOP, &window);
+               XO("Could not remove old autosave file: %s")
+                  .Format( mAutoSaveFileName ),
+               XO("Error"),
+               wxICON_STOP,
+               &window);
             return;
          }
       }

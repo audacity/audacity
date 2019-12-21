@@ -197,7 +197,7 @@ void SpectralSelectionBar::Populate()
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );
-      mCenterCtrl->SetName(_("Center Frequency"));
+      mCenterCtrl->SetName( XO("Center Frequency") );
       subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mWidthCtrl = safenew NumericTextCtrl(
@@ -206,7 +206,7 @@ void SpectralSelectionBar::Populate()
          NumericTextCtrl::Options{}
             .InvalidValue( true, -1.0 )
       );
-      mWidthCtrl->SetName(wxString(_("Bandwidth")));
+      mWidthCtrl->SetName( XO("Bandwidth") );
       subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mLowCtrl = safenew NumericTextCtrl(
@@ -215,7 +215,7 @@ void SpectralSelectionBar::Populate()
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );
-      mLowCtrl->SetName(_("Low Frequency"));
+      mLowCtrl->SetName( XO("Low Frequency") );
       subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mHighCtrl = safenew NumericTextCtrl(
@@ -224,7 +224,7 @@ void SpectralSelectionBar::Populate()
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );
-      mHighCtrl->SetName(wxString(_("High Frequency")));
+      mHighCtrl->SetName( XO("High Frequency") );
       subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mCenterCtrl->Show(mbCenterAndWidth);

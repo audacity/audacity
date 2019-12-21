@@ -120,7 +120,7 @@ public:
       std::function<
          const PluginID &(ModuleInterface *, ComponentInterface *) >;
    virtual unsigned DiscoverPluginsAtPath(
-      const PluginPath & path, wxString &errMsg,
+      const PluginPath & path, TranslatableString &errMsg,
       const RegistrationCallback &callback )
          = 0;
 

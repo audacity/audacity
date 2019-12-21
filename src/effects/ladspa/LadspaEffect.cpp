@@ -206,7 +206,7 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    // Audacity.  A little simplistic, but it should suffice for now.
    auto pathList = GetSearchPaths();
    FilePaths files;
-   wxString ignoredErrMsg;
+   TranslatableString ignoredErrMsg;
 
    for (int i = 0; i < (int)WXSIZEOF(kShippedEffects); i++)
    {
@@ -253,15 +253,15 @@ PluginPaths LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 }
 
 unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, wxString &errMsg,
+   const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
-   errMsg.clear();
+   errMsg = {};
    // Since we now have builtin VST support, ignore the VST bridge as it
    // causes duplicate menu entries to appear.
    wxFileName ff(path);
    if (ff.GetName().CmpNoCase(wxT("vst-bridge")) == 0) {
-      errMsg = _("Audacity no longer uses vst-bridge");
+      errMsg = XO("Audacity no longer uses vst-bridge");
       return 0;
    }
 
@@ -300,12 +300,12 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
                   callback( this, &effect );
             }
             else
-               errMsg = _("Could not load the library");
+               errMsg = XO("Could not load the library");
          }
       }
    }
    else
-      errMsg = _("Could not load the library");
+      errMsg = XO("Could not load the library");
 
 #if defined(__WXMSW__)
    if (lib.IsLoaded()) {
@@ -1251,7 +1251,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
                   mSampleRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
-            mDuration->SetName(_("Duration"));
+            mDuration->SetName( XO("Duration") );
             gridSizer->Add(mDuration, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
             gridSizer->Add(1, 1, 0);
             gridSizer->Add(1, 1, 0);

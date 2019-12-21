@@ -497,7 +497,7 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
       if (mCursorIsInWindow)
          UpdateStatus();
       else {
-         ProjectStatus::Get( *GetActiveProject() ).Set(wxT(""));
+         ProjectStatus::Get( *GetActiveProject() ).Set({});
       }
    }
    else
@@ -511,9 +511,9 @@ void AButton::UpdateStatus()
       // Display the tooltip in the status bar
       wxToolTip * pTip = this->GetToolTip();
       if( pTip ) {
-         wxString tipText = pTip->GetTip();
+         auto tipText = Verbatim( pTip->GetTip() );
          if (!mEnabled)
-            tipText += _(" (disabled)");
+            tipText.Join( XO("(disabled)"), " " );
          ProjectStatus::Get( *GetActiveProject() ).Set(tipText);
       }
 #endif

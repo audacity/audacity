@@ -156,12 +156,12 @@ class wxArrayString;
 class TipWindow final : public wxFrame
 {
  public:
-   TipWindow(wxWindow *parent, const wxArrayString & labels);
+   TipWindow(wxWindow *parent, const TranslatableStrings & labels);
    virtual ~TipWindow() {}
 
    wxSize GetSize() const;
    void SetPos(const wxPoint & pos);
-   void SetLabel(const wxString & label);
+   void SetLabel(const TranslatableString & label);
 
 private:
    void OnPaint(wxPaintEvent & event);
@@ -170,7 +170,7 @@ private:
 #endif
 
 private:
-   wxString mLabel;
+   TranslatableString mLabel;
    int mWidth;
    int mHeight;
 
@@ -184,7 +184,7 @@ BEGIN_EVENT_TABLE(TipWindow, wxFrame)
 #endif
 END_EVENT_TABLE()
 
-TipWindow::TipWindow(wxWindow *parent, const wxArrayString & labels)
+TipWindow::TipWindow(wxWindow *parent, const TranslatableStrings & labels)
 :  wxFrame(parent, wxID_ANY, wxString{}, wxDefaultPosition, wxDefaultSize,
            wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT)
 {
@@ -194,7 +194,7 @@ TipWindow::TipWindow(wxWindow *parent, const wxArrayString & labels)
    mWidth = mHeight = 0;
    for ( const auto &label : labels ) {
       int width, height;
-      GetTextExtent(label, &width, &height, NULL, NULL, &labelFont);
+      GetTextExtent(label.Translation(), &width, &height, NULL, NULL, &labelFont);
       mWidth =  std::max( mWidth,  width );
       mHeight = std::max( mHeight, height );
    }
@@ -223,7 +223,7 @@ void TipWindow::SetPos(const wxPoint & pos)
 #endif
 }
 
-void TipWindow::SetLabel(const wxString & label)
+void TipWindow::SetLabel(const TranslatableString & label)
 {
    mLabel = label;
 }
@@ -240,8 +240,9 @@ void TipWindow::OnPaint(wxPaintEvent & WXUNUSED(event))
    dc.SetTextForeground(AColor::tooltipPen.GetColour());
 
    int textWidth, textHeight;
-   dc.GetTextExtent(mLabel, &textWidth, &textHeight);
-   dc.DrawText(mLabel, (mWidth - textWidth) / 2, (mHeight - textHeight) / 2);
+   const auto visibleLabel = mLabel.Translation();
+   dc.GetTextExtent(visibleLabel, &textWidth, &textHeight);
+   dc.DrawText(visibleLabel, (mWidth - textWidth) / 2, (mHeight - textHeight) / 2);
 }
 
 #if defined(__WXGTK__)
@@ -858,7 +859,7 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
    mBitmap->SetMask(safenew wxMask(*mBitmap, backgroundColour));
 }
 
-void LWSlider::SetToolTipTemplate(const wxString & tip)
+void LWSlider::SetToolTipTemplate(const TranslatableString & tip)
 {
    mTipTemplate = tip;
 }
@@ -930,72 +931,74 @@ void LWSlider::FormatPopWin()
    mTipPanel->Refresh();
 }
 
-wxString LWSlider::GetTip(float value) const
+TranslatableString LWSlider::GetTip(float value) const
 {
-   wxString label;
+   TranslatableString label;
 
    if (mTipTemplate.empty())
    {
-      wxString val;
+      TranslatableString val;
 
       switch(mStyle)
       {
       case FRAC_SLIDER:
-         val.Printf( wxT("%.2f"), value );
+         Verbatim("%.2f").Format( value );
          break;
 
       case DB_SLIDER:
-         val.Printf( wxT("%+.1f dB"), value );
+         /* i18n-hint dB abbreviates decibels */
+         XO("%+.1f dB").Format( value );
          break;
 
       case PAN_SLIDER:
          if (value == 0.0)
          {
-            val = _("Center");
+            val = XO("Center");
          }
          else
          {
             const auto v = 100.0f * fabsf(value);
             if (value < 0.0)
                /* i18n-hint: Stereo pan setting */
-               val = wxString::Format( _("%.0f%% Left"), v );
+               val = XO("%.0f%% Left").Format( v );
             else
                /* i18n-hint: Stereo pan setting */
-               val = wxString::Format( _("%.0f%% Right"), v );
+               val = XO("%.0f%% Right").Format( v );
          }
          break;
 
       case SPEED_SLIDER:
          /* i18n-hint: "x" suggests a multiplicative factor */
-         val.Printf( wxT("%.2fx"), value );
+         XO("%.2fx").Format( value );
          break;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
       case VEL_SLIDER:
          if (value > 0.0f)
             // Signed
-            val.Printf( wxT("%+d"), (int) value );
+            Verbatim("%+d").Format( (int) value );
          else
             // Zero, or signed negative
-            val.Printf( wxT("%d"), (int) value );
+            Verbatim("%d").Format( (int) value );
          break;
 #endif
       }
 
       /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
-      label = XO("%s: %s").Format( mName, val ).Translation();
+      label = XO("%s: %s").Format( mName, val );
    }
    else
    {
-      label.Printf(mTipTemplate, value);
+      label = mTipTemplate;
+      label.Format( value );
    }
 
    return label;
 }
 
-wxArrayString LWSlider::GetWidestTips() const
+TranslatableStrings LWSlider::GetWidestTips() const
 {
-   wxArrayString results;
+   TranslatableStrings results;
 
    if (mTipTemplate.empty())
    {
@@ -1090,7 +1093,7 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
    if (event.Entering())
    {
       // Display the tooltip in the status bar
-      wxString tip = GetTip(mCurrentValue);
+      auto tip = GetTip(mCurrentValue);
       ProjectStatus::Get( *GetActiveProject() ).Set(tip);
       Refresh();
    }
@@ -1100,7 +1103,7 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
       {
          ShowTip(false);
       }
-      ProjectStatus::Get( *GetActiveProject() ).Set(wxT(""));
+      ProjectStatus::Get( *GetActiveProject() ).Set({});
       Refresh();
    }
 
@@ -1663,7 +1666,7 @@ void ASlider::SetScroll(float line, float page)
    mLWSlider->SetScroll(line, page);
 }
 
-void ASlider::SetToolTipTemplate(const wxString & tip)
+void ASlider::SetToolTipTemplate(const TranslatableString & tip)
 {
    mLWSlider->SetToolTipTemplate(tip);
 }

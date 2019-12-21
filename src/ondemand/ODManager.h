@@ -37,6 +37,7 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 int CompareNoCaseFileName(const wxString& first, const wxString& second);
 /// A singleton that manages currently running Tasks on an arbitrary
 /// number of threads.
+class TranslatableString;
 class Track;
 class WaveTrack;
 class ODWaveTrackTaskQueue;
@@ -100,7 +101,7 @@ class ODManager final
    static bool IsInstanceCreated();
 
    ///fills in the status bar message for a given track
-   void FillTipForWaveTrack( const WaveTrack * t, wxString &tip );
+   void FillTipForWaveTrack( const WaveTrack * t, TranslatableString &tip );
 
    ///Gets the total percent complete for all tasks combined.
    float GetOverallPercentComplete();

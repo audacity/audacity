@@ -997,15 +997,12 @@ registeredStatusWidthFunction{
       -> ProjectStatus::StatusWidthResult
    {
       if ( field == stateStatusBarField ) {
-         std::vector< wxString > strings;
+         TranslatableStrings strings;
          // Note that Scrubbing + Paused is not allowed.
          for (const auto &item : menuItems)
-            strings.push_back( item.GetStatus().Translation() );
+            strings.push_back( item.GetStatus() );
          strings.push_back(
-            sPlayAtSpeedStatus.Translation() +
-            wxT(" ") +
-            XO("Paused").Translation() +
-            wxT(".")
+            XO("%s Paused.").Format( sPlayAtSpeedStatus )
          );
          // added constant needed because xMax isn't large enough for some reason, plus some space.
          return { std::move( strings ), 30 };

@@ -155,8 +155,9 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
          auto message = AutoSaveFile::FailureMessage( fileName );
          AudacityMessageBox(
             message,
-            _("Error decoding file"),
-            wxOK | wxCENTRE, &window );
+            XO("Error decoding file"),
+            wxOK | wxCENTRE,
+            &window );
          // Important: Prevent deleting any temporary files!
          DirManager::SetDontDeleteTempFiles();
          return { true };
@@ -369,9 +370,12 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
       {
          if ( UndoManager::Get( proj ).UnsavedChanges()
          && settings.EmptyCanBeDirty()) {
-            int result = AudacityMessageBox(_("Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
-                                      _("Warning - Empty Project"),
-                                      wxYES_NO | wxICON_QUESTION, &window);
+            int result = AudacityMessageBox(
+               XO(
+"Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
+               XO("Warning - Empty Project"),
+               wxYES_NO | wxICON_QUESTION,
+               &window);
             if (result == wxNO)
                return false;
          }
@@ -410,9 +414,12 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
 
       if ( !wxRenameFile(fileName, safetyFileName) ) {
          AudacityMessageBox(
-            wxString::Format(
-               _("Audacity failed to write file %s.\nPerhaps disk is full or not writable."), safetyFileName ),
-            _("Error Writing to File"), wxICON_STOP, &window);
+            XO(
+"Audacity failed to write file %s.\nPerhaps disk is full or not writable.")
+               .Format( safetyFileName ),
+            XO("Error Writing to File"),
+            wxICON_STOP,
+            &window);
          return false;
       }
    }
@@ -431,10 +438,13 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
       // strOtherNamesArray is a temporary array of file names, used only when
       // saving compressed
       if (!success) {
-         AudacityMessageBox(wxString::Format(_("Could not save project. Perhaps %s \nis not writable or the disk is full."),
-                                       project),
-                      _("Error Saving Project"),
-                      wxICON_ERROR, &window);
+         AudacityMessageBox(
+            XO(
+"Could not save project. Perhaps %s \nis not writable or the disk is full.")
+               .Format( project ),
+            XO("Error Saving Project"),
+            wxICON_ERROR,
+            &window);
 
          // Make the export of tracks succeed all-or-none.
          auto dir = project + wxT("_data");
@@ -455,11 +465,13 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
       projPath = wxPathOnly(project);
 
       if( !wxDir::Exists( projPath ) ){
-         AudacityMessageBox(wxString::Format(
-            _("Could not save project. Path not found. Try creating \ndirectory \"%s\" before saving project with this name."),
-            projPath),
-                      _("Error Saving Project"),
-                      wxICON_ERROR, &window);
+         AudacityMessageBox(
+            XO(
+"Could not save project. Path not found. Try creating \ndirectory \"%s\" before saving project with this name.")
+               .Format( projPath ),
+            XO("Error Saving Project"),
+            wxICON_ERROR,
+            &window);
          return (success = false);
       }
 
@@ -600,8 +612,7 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
       // cancel the cleanup:
       safetyFileName = wxT("");
 
-   ProjectStatus::Get( proj ).Set(
-      wxString::Format(_("Saved %s"), fileName) );
+   ProjectStatus::Get( proj ).Set( XO("Saved %s").Format( fileName ) );
 
    return true;
 }
@@ -729,10 +740,10 @@ bool ProjectFileManager::SaveAs(const wxString & newFileName, bool bWantSaveCopy
    //simply chose to use the save as command although the save command would have the effect.
    if( !bOwnsNewAupName && wxFileExists(newFileName)) {
       AudacityMessageDialog m(
-         NULL,
-         _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
-         _("Error Saving Project"),
-         wxOK|wxICON_ERROR);
+         nullptr,
+         XO("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
+         XO("Error Saving Project"),
+         wxOK|wxICON_ERROR );
       m.ShowModal();
       return false;
    }
@@ -785,15 +796,15 @@ bool ProjectFileManager::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /
       filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
    }
 
-   wxString title;
-   wxString message;
+   TranslatableString title;
+   TranslatableString message;
    if (bWantSaveCopy)
    {
       if (bLossless)
       {
-         title = wxString::Format(_("%sSave Lossless Copy of Project \"%s\" As..."),
-                                           Restorer.sProjNumber,Restorer.sProjName);
-         message = _("\
+         title = XO("%sSave Lossless Copy of Project \"%s\" As...")
+            .Format( Restorer.sProjNumber,Restorer.sProjName );
+         message = XO("\
 'Save Lossless Copy of Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n\n\
 \
@@ -802,9 +813,9 @@ with no loss of quality, but the projects are large.\n");
       }
       else
       {
-         title = wxString::Format(_("%sSave Compressed Copy of Project \"%s\" As..."),
-                                           Restorer.sProjNumber,Restorer.sProjName);
-         message = _("\
+         title = XO("%sSave Compressed Copy of Project \"%s\" As...")
+            .Format( Restorer.sProjNumber, Restorer.sProjName );
+         message = XO("\
 'Save Compressed Copy of Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n\n\
 \
@@ -814,9 +825,9 @@ but they have some loss of fidelity.\n");
    }
    else
    {
-      title = wxString::Format(_("%sSave Project \"%s\" As..."),
-                               Restorer.sProjNumber, Restorer.sProjName);
-      message = _("\
+      title = XO("%sSave Project \"%s\" As...")
+         .Format( Restorer.sProjNumber, Restorer.sProjName );
+      message = XO("\
 'Save Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n");
    }
@@ -854,10 +865,10 @@ For an audio file that will open in other apps, use 'Export'.\n");
    if ((bWantSaveCopy||!bPrompt) && filename.FileExists()) {
       // Saving a copy of the project should never overwrite an existing project.
       AudacityMessageDialog m(
-         NULL,
-         _("Saving a copy must not overwrite an existing saved project.\nPlease try again and select an original name."),
-         _("Error Saving Copy of Project"),
-         wxOK|wxICON_ERROR);
+         nullptr,
+         XO("Saving a copy must not overwrite an existing saved project.\nPlease try again and select an original name."),
+         XO("Error Saving Copy of Project"),
+         wxOK|wxICON_ERROR );
       m.ShowModal();
       return false;
    }
@@ -886,17 +897,18 @@ For an audio file that will open in other apps, use 'Export'.\n");
       if (mayOverwrite > 0) {
          /* i18n-hint: In each case, %s is the name
           of the file being overwritten.*/
-         wxString Message = wxString::Format(_("\
+         auto Message = XO("\
 Do you want to overwrite the project:\n\"%s\"?\n\n\
 If you select \"Yes\" the project\n\"%s\"\n\
-will be irreversibly overwritten."), fName, fName);
+will be irreversibly overwritten.").Format( fName, fName );
 
          // For safety, there should NOT be an option to hide this warning.
-         int result = AudacityMessageBox(Message,
-                                         /* i18n-hint: Heading: A warning that a project is about to be overwritten.*/
-                                         _("Overwrite Project Warning"),
-                                         wxYES_NO | wxNO_DEFAULT | wxICON_WARNING,
-                                         &window);
+         int result = AudacityMessageBox(
+            Message,
+            /* i18n-hint: Heading: A warning that a project is about to be overwritten.*/
+            XO("Overwrite Project Warning"),
+            wxYES_NO | wxNO_DEFAULT | wxICON_WARNING,
+            &window);
          if (result != wxYES) {
             return false;
          }
@@ -905,10 +917,10 @@ will be irreversibly overwritten."), fName, fName);
       {
          // Overwrite disalowed. The destination project is open in another window.
          AudacityMessageDialog m(
-            NULL,
-            _("The project will not be saved because the selected project is open in another window.\nPlease try again and select an original name."),
-            _("Error Saving Project"),
-            wxOK|wxICON_ERROR);
+            nullptr,
+            XO("The project will not saved because the selected project is open in another window.\nPlease try again and select an original name."),
+            XO("Error Saving Project"),
+            wxOK|wxICON_ERROR );
          m.ShowModal();
          return false;
       }
@@ -1094,11 +1106,11 @@ wxArrayString ProjectFileManager::ShowOpenDialog(const wxString &extraformat, co
    wxArrayString selected;
 
    FileDialogWrapper dlog(NULL,
-                   _("Select one or more files"),
-                   path,
-                   wxT(""),
-                   mask,
-                   wxFD_OPEN | wxFD_MULTIPLE | wxRESIZE_BORDER);
+      XO("Select one or more files"),
+      path,
+      wxT(""),
+      mask,
+      wxFD_OPEN | wxFD_MULTIPLE | wxRESIZE_BORDER);
 
    dlog.SetFilterIndex(index);
 
@@ -1135,11 +1147,14 @@ bool ProjectFileManager::IsAlreadyOpen(const FilePath &projPathName)
          return newProjPathName.SameAs(wxFileNameWrapper{ ptr->GetFileName() });
       } );
    if (iter != finish) {
-      wxString errMsg =
-      wxString::Format(_("%s is already open in another window."),
-                       newProjPathName.GetName());
-      wxLogError(errMsg);
-      AudacityMessageBox(errMsg, _("Error Opening Project"), wxOK | wxCENTRE);
+      auto errMsg =
+      XO("%s is already open in another window.")
+         .Format( newProjPathName.GetName() );
+      wxLogError(errMsg.Translation()); //Debug?
+      AudacityMessageBox(
+         errMsg,
+         XO("Error Opening Project"),
+         wxOK | wxCENTRE);
       return true;
    }
    return false;
@@ -1289,17 +1304,20 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    if (fileName.Lower().EndsWith(wxT(".aup.bak")))
    {
       AudacityMessageBox(
-         _("You are trying to open an automatically created backup file.\nDoing this may result in severe data loss.\n\nPlease open the actual Audacity project file instead."),
-         _("Warning - Backup File Detected"),
-         wxOK | wxCENTRE, &window);
+         XO(
+"You are trying to open an automatically created backup file.\nDoing this may result in severe data loss.\n\nPlease open the actual Audacity project file instead."),
+         XO("Warning - Backup File Detected"),
+         wxOK | wxCENTRE,
+         &window);
       return;
    }
 
    if (!::wxFileExists(fileName)) {
       AudacityMessageBox(
-         wxString::Format( _("Could not open file: %s"), fileName ),
-         _("Error Opening File"),
-         wxOK | wxCENTRE, &window);
+         XO("Could not open file: %s").Format( fileName ),
+         XO("Error Opening File"),
+         wxOK | wxCENTRE,
+         &window);
       return;
    }
 
@@ -1313,16 +1331,19 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       wxFFile ff(fileName, wxT("rb"));
       if (!ff.IsOpened()) {
          AudacityMessageBox(
-            wxString::Format( _("Could not open file: %s"), fileName ),
-            _("Error opening file"),
-            wxOK | wxCENTRE, &window);
+            XO("Could not open file: %s").Format( fileName ),
+            XO("Error opening file"),
+            wxOK | wxCENTRE,
+            &window);
          return;
       }
       int numRead = ff.Read(buf, 15);
       if (numRead != 15) {
-         AudacityMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"),
-            fileName), _("Error Opening File or Project"),
-            wxOK | wxCENTRE, &window);
+         AudacityMessageBox(
+            XO("File may be invalid or corrupted: \n%s").Format( fileName ),
+            XO("Error Opening File or Project"),
+            wxOK | wxCENTRE,
+            &window);
          ff.Close();
          return;
       }
@@ -1339,9 +1360,12 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       // Convert to the NEW format.
       bool success = ConvertLegacyProjectFile(wxFileName{ fileName });
       if (!success) {
-         AudacityMessageBox(_("Audacity was unable to convert an Audacity 1.0 project to the new project format."),
-                      _("Error Opening Project"),
-                      wxOK | wxCENTRE, &window);
+         AudacityMessageBox(
+            XO(
+"Audacity was unable to convert an Audacity 1.0 project to the new project format."),
+            XO("Error Opening Project"),
+            wxOK | wxCENTRE,
+            &window);
          return;
       }
       else {
@@ -1455,8 +1479,11 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
          history.PushState(XO("Project was recovered"), XO("Recover"));
 
          if (!wxRemoveFile(fileName))
-            AudacityMessageBox(_("Could not remove old auto save file"),
-                         _("Error"), wxICON_STOP, &window);
+            AudacityMessageBox(
+               XO("Could not remove old auto save file"),
+               XO("Error"),
+               wxICON_STOP,
+               &window);
       }
       else
       {
@@ -1533,7 +1560,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       ShowErrorDialog(
          &window,
          XO("Error Opening Project"),
-         errorStr.Translation(),
+         errorStr,
          results.helpUrl);
    }
 }
@@ -1675,7 +1702,7 @@ bool ProjectFileManager::Import(
          // Error message derived from Importer::Import
          // Additional help via a Help button links to the manual.
          ShowErrorDialog(&GetProjectFrame( project ), XO("Error Importing"),
-                         errorMessage.Translation(), wxT("Importing_Audio"));
+                         errorMessage, wxT("Importing_Audio"));
       }
       if (!success)
          return false;

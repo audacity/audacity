@@ -619,11 +619,10 @@ public:
 
    void OnBrowse(wxCommandEvent & WXUNUSED(event))
    {
-      wxString question;
       /* i18n-hint: It's asking for the location of a file, for
        * example, "Where is lame_enc.dll?" - you could translate
        * "Where would I find the file %s" instead if you want. */
-      question.Printf(_("Where is %s?"), mName);
+      auto question = XO("Where is %s?").Format( mName );
 
       wxString path = FileNames::SelectFile(FileNames::Operation::_None,
                                    question,
@@ -832,7 +831,7 @@ private:
 #endif // DISABLE_DYNAMIC_LOADING_LAME
 
 #if defined(__WXMSW__)
-   wxString mBladeVersion;
+   TranslatableString mBladeVersion;
 #endif
 
    bool mEncoding;
@@ -970,7 +969,7 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
    }
 
 #if defined(__WXMSW__)
-   mBladeVersion.Empty();
+   mBladeVersion = {};
 #endif
 
    if( !mLibIsExternal ){
@@ -1011,7 +1010,7 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
    if (!ValidLibraryLoaded()) {
 #if defined(__WXMSW__)
       if (askuser && !mBladeVersion.empty()) {
-         AudacityMessageBox(mBladeVersion);
+         AudacityMessageBox( mBladeVersion );
       }
 #endif
       wxLogMessage(wxT("Failed to locate LAME library"));
@@ -1206,12 +1205,14 @@ bool MP3Exporter::InitLibraryExternal(wxString libpath)
          be_version v;
          beVersion(&v);
 
-         mBladeVersion.Printf(_("You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\nPlease download the latest version of 'LAME for Audacity'."),
-                              v.byMajorVersion,
-                              v.byMinorVersion,
-                              AUDACITY_VERSION,
-                              AUDACITY_RELEASE,
-                              AUDACITY_REVISION);
+         mBladeVersion = XO(
+"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\nPlease download the latest version of 'LAME for Audacity'.")
+            .Format(
+               v.byMajorVersion,
+               v.byMinorVersion,
+               AUDACITY_VERSION,
+               AUDACITY_RELEASE,
+               AUDACITY_REVISION);
       }
 #endif
 
@@ -1695,7 +1696,7 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
    MP3Exporter exporter;
 
    if (!exporter.LoadLibrary(wxTheApp->GetTopWindow(), MP3Exporter::Maybe)) {
-      AudacityMessageBox(_("Could not open MP3 encoding library!"));
+      AudacityMessageBox( XO("Could not open MP3 encoding library!") );
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
@@ -1735,7 +1736,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
    if (!exporter.InitLibrary(wxT(""))) {
-      AudacityMessageBox(_("Could not initialize MP3 encoding library!"));
+      AudacityMessageBox( _("Could not initialize MP3 encoding library!") );
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
@@ -1743,7 +1744,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    }
 #else
    if (!exporter.LoadLibrary(parent, MP3Exporter::Maybe)) {
-      AudacityMessageBox(_("Could not open MP3 encoding library!"));
+      AudacityMessageBox( XO("Could not open MP3 encoding library!") );
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
@@ -1751,7 +1752,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    }
 
    if (!exporter.ValidLibraryLoaded()) {
-      AudacityMessageBox(_("Not a valid or supported MP3 encoding library!"));
+      AudacityMessageBox( XO("Not a valid or supported MP3 encoding library!") );
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
@@ -1833,7 +1834,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
    auto inSamples = exporter.InitializeStream(channels, rate);
    if (((int)inSamples) < 0) {
-      AudacityMessageBox(_("Unable to initialize MP3 stream"));
+      AudacityMessageBox( XO("Unable to initialize MP3 stream") );
       return ProgressResult::Cancelled;
    }
 
@@ -1844,7 +1845,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    // Open file for writing
    wxFFile outFile(fName.GetFullPath(), wxT("w+b"));
    if (!outFile.IsOpened()) {
-      AudacityMessageBox(_("Unable to open target file for writing"));
+      AudacityMessageBox( XO("Unable to open target file for writing") );
       return ProgressResult::Cancelled;
    }
 
@@ -1854,7 +1855,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    if (id3len && !endOfFile) {
       if (id3len > outFile.Write(id3buffer.get(), id3len)) {
          // TODO: more precise message
-         AudacityMessageBox(_("Unable to export"));
+         AudacityMessageBox( XO("Unable to export") );
          return ProgressResult::Cancelled;
       }
    }
@@ -1866,7 +1867,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    size_t bufferSize = std::max(0, exporter.GetOutBufferSize());
    if (bufferSize <= 0) {
       // TODO: more precise message
-      AudacityMessageBox(_("Unable to export"));
+      AudacityMessageBox( XO("Unable to export") );
       return ProgressResult::Cancelled;
    }
 
@@ -1929,16 +1930,16 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
          }
 
          if (bytes < 0) {
-            wxString msg;
-            msg.Printf(_("Error %ld returned from MP3 encoder"), bytes);
-            AudacityMessageBox(msg);
+            auto msg = XO("Error %ld returned from MP3 encoder")
+               .Format( bytes );
+            AudacityMessageBox( msg );
             updateResult = ProgressResult::Cancelled;
             break;
          }
 
          if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
-            AudacityMessageBox(_("Unable to export"));
+            AudacityMessageBox( XO("Unable to export") );
             updateResult = ProgressResult::Cancelled;
             break;
          }
@@ -1953,14 +1954,14 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
       if (bytes < 0) {
          // TODO: more precise message
-         AudacityMessageBox(_("Unable to export"));
+         AudacityMessageBox( XO("Unable to export") );
          return ProgressResult::Cancelled;
       }
 
       if (bytes > 0) {
          if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
-            AudacityMessageBox(_("Unable to export"));
+            AudacityMessageBox( XO("Unable to export") );
             return ProgressResult::Cancelled;
          }
       }
@@ -1969,7 +1970,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       if (id3len > 0 && endOfFile) {
          if (bytes > (int)outFile.Write(id3buffer.get(), id3len)) {
             // TODO: more precise message
-            AudacityMessageBox(_("Unable to export"));
+            AudacityMessageBox( XO("Unable to export") );
             return ProgressResult::Cancelled;
          }
       }
@@ -1984,7 +1985,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
           !outFile.Flush() ||
           !outFile.Close()) {
          // TODO: more precise message
-         AudacityMessageBox(_("Unable to export"));
+         AudacityMessageBox( XO("Unable to export") );
          return ProgressResult::Cancelled;
       }
    }

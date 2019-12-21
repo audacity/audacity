@@ -225,7 +225,7 @@ protected:
       (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
        unsigned refreshResult) override;
 
-   void UpdateStatusMessage( const wxString &status ) override;
+   void UpdateStatusMessage( const TranslatableString &status ) override;
 };
 
 // A predicate class

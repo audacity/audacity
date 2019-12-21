@@ -586,17 +586,21 @@ bool EffectNoiseReduction::Settings::PrefsIO(bool read)
 bool EffectNoiseReduction::Settings::Validate(EffectNoiseReduction *effect) const
 {
    if (StepsPerWindow() < windowTypesInfo[mWindowTypes].minSteps) {
-      effect->Effect::MessageBox(_("Steps per block are too few for the window types."));
+      effect->Effect::MessageBox(
+         XO("Steps per block are too few for the window types.") );
       return false;
    }
 
    if (StepsPerWindow() > WindowSize()) {
-      effect->Effect::MessageBox(_("Steps per block cannot exceed the window size."));
+      effect->Effect::MessageBox(
+         XO("Steps per block cannot exceed the window size.") );
       return false;
    }
 
    if (mMethod == DM_MEDIAN && StepsPerWindow() > 4) {
-      effect->Effect::MessageBox(_("Median method is not implemented for more than four steps per window."));
+      effect->Effect::MessageBox(
+         XO(
+"Median method is not implemented for more than four steps per window.") );
       return false;
    }
 
@@ -622,12 +626,14 @@ bool EffectNoiseReduction::Process()
    }
    else if (mStatistics->mWindowSize != mSettings->WindowSize()) {
       // possible only with advanced settings
-      ::Effect::MessageBox(_("You must specify the same window size for steps 1 and 2."));
+      ::Effect::MessageBox(
+         XO("You must specify the same window size for steps 1 and 2.") );
       return false;
    }
    else if (mStatistics->mWindowTypes != mSettings->mWindowTypes) {
       // A warning only
-      ::Effect::MessageBox(_("Warning: window types are not the same as for profiling."));
+      ::Effect::MessageBox(
+         XO("Warning: window types are not the same as for profiling.") );
    }
 
    Worker worker(*mSettings, mStatistics->mRate
@@ -659,9 +665,12 @@ bool EffectNoiseReduction::Worker::Process
    for ( auto track : tracks.Selected< WaveTrack >() ) {
       if (track->GetRate() != mSampleRate) {
          if (mDoProfile)
-            effect.Effect::MessageBox(_("All noise profile data must have the same sample rate."));
+            effect.Effect::MessageBox(
+               XO("All noise profile data must have the same sample rate.") );
          else
-            effect.Effect::MessageBox(_("The sample rate of the noise profile must match that of the sound to be processed."));
+            effect.Effect::MessageBox(
+               XO(
+"The sample rate of the noise profile must match that of the sound to be processed.") );
          return false;
       }
 
@@ -684,7 +693,8 @@ bool EffectNoiseReduction::Worker::Process
 
    if (mDoProfile) {
       if (statistics.mTotalWindows == 0) {
-         effect.Effect::MessageBox(_("Selected noise profile is too short."));
+         effect.Effect::MessageBox(
+            XO("Selected noise profile is too short.") );
          return false;
       }
    }

@@ -737,13 +737,14 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       // Perhaps we should prompt the user if they are overwriting
       // an existing theme cache?
 #if 0
-      if( wxFileExist( FileName ))
+      if( wxFileExists( FileName ))
       {
-         AudacityMessageBox(
-            wxString::Format(
-//            _("Theme cache file:\n  %s\nalready exists.\nAre you sure you want to replace it?"),
-               FileName )
-                            );
+         auto message =
+//          XO(
+//"Theme cache file:\n  %s\nalready exists.\nAre you sure you want to replace it?")
+//             .Format( FileName );
+            TranslatableString{ FileName };
+         AudacityMessageBox( message );
          return;
       }
 #endif
@@ -758,19 +759,17 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       if( !ImageCache.SaveFile( FileName, wxBITMAP_TYPE_PNG ))
       {
          AudacityMessageBox(
-            wxString::Format(
-            _("Audacity could not write file:\n  %s."),
-               FileName ));
+            XO("Audacity could not write file:\n  %s.")
+               .Format( FileName ));
          return;
       }
       AudacityMessageBox(
-         wxString::Format(
 /* i18n-hint: A theme is a consistent visual style across an application's
  graphical user interface, including choices of colors, and similarity of images
  such as those on button controls.  Audacity can load and save alternative
  themes. */
-            _("Theme written to:\n  %s."),
-            FileName ));
+         XO("Theme written to:\n  %s.")
+            .Format( FileName ));
    }
    // ELSE saving to a C code textual version.
    else
@@ -780,24 +779,21 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       if( !OutStream.OpenFile( FileName ))
       {
          AudacityMessageBox(
-            wxString::Format(
-            _("Audacity could not open file:\n  %s\nfor writing."),
-            FileName ));
+            XO("Audacity could not open file:\n  %s\nfor writing.")
+               .Format( FileName ));
          return;
       }
       if( !ImageCache.SaveFile(OutStream, wxBITMAP_TYPE_PNG ) )
       {
          AudacityMessageBox(
-            wxString::Format(
-            _("Audacity could not write images to file:\n  %s."),
-            FileName ));
+            XO("Audacity could not write images to file:\n  %s.")
+               .Format( FileName ));
          return;
       }
       AudacityMessageBox(
-         wxString::Format(
-            /* i18n-hint "Cee" means the C computer programming language */
-            _("Theme as Cee code written to:\n  %s."),
-            FileName ));
+         /* i18n-hint "Cee" means the C computer programming language */
+         XO("Theme as Cee code written to:\n  %s.")
+            .Format( FileName ));
    }
 }
 
@@ -950,18 +946,16 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          if( bOkIfNotFound )
             return false; // did not load the images, so return false.
          AudacityMessageBox(
-            wxString::Format(
-            _("Audacity could not find file:\n  %s.\nTheme not loaded."),
-               FileName ));
+            XO("Audacity could not find file:\n  %s.\nTheme not loaded.")
+               .Format( FileName ));
          return false;
       }
       if( !ImageCache.LoadFile( FileName, wxBITMAP_TYPE_PNG ))
       {
          /* i18n-hint: Do not translate png.  It is the name of a file format.*/
          AudacityMessageBox(
-            wxString::Format(
-            _("Audacity could not load file:\n  %s.\nBad png format perhaps?"),
-               FileName ));
+            XO("Audacity could not load file:\n  %s.\nBad png format perhaps?")
+               .Format( FileName ));
          return false;
       }
    }
@@ -998,7 +992,9 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          // was not a valid png image.
          // Most likely someone edited it by mistake,
          // Or some experiment is being tried with NEW formats for it.
-         AudacityMessageBox(_("Audacity could not read its default theme.\nPlease report the problem."));
+         AudacityMessageBox(
+            XO(
+"Audacity could not read its default theme.\nPlease report the problem."));
          return false;
       }
       //wxLogDebug("Read %i by %i", ImageCache.GetWidth(), ImageCache.GetHeight() );
@@ -1082,9 +1078,9 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
             {
                /* i18n-hint: Do not translate png.  It is the name of a file format.*/
                AudacityMessageBox(
-                  wxString::Format(
-                  _("Audacity could not load file:\n  %s.\nBad png format perhaps?"),
-                     FileName ));
+                  XO(
+"Audacity could not load file:\n  %s.\nBad png format perhaps?")
+                     .Format( FileName ));
                return;
             }
             /// JKC: \bug (wxWidgets) A png may have been saved with alpha, but when you
@@ -1105,8 +1101,10 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
    {
       if( bOkIfNotFound )
          return;
-      AudacityMessageBox(wxString::Format(_("None of the expected theme component files\n were found in:\n  %s."),
-                                    FileNames::ThemeComponentsDir()));
+      AudacityMessageBox(
+         XO(
+"None of the expected theme component files\n were found in:\n  %s.")
+            .Format( FileNames::ThemeComponentsDir() ));
    }
 }
 
@@ -1128,9 +1126,8 @@ void ThemeBase::SaveComponents()
       if( !wxDirExists( FileNames::ThemeComponentsDir() ))
       {
          AudacityMessageBox(
-            wxString::Format(
-            _("Could not create directory:\n  %s"),
-               FileNames::ThemeComponentsDir() ));
+            XO("Could not create directory:\n  %s")
+               .Format( FileNames::ThemeComponentsDir() ) );
          return;
       }
    }
@@ -1156,11 +1153,11 @@ void ThemeBase::SaveComponents()
    {
       auto result =
          AudacityMessageBox(
-            wxString::Format(
-               _("Some required files in:\n  %s\nwere already present. Overwrite?"),
-               FileNames::ThemeComponentsDir()),
-               AudacityMessageBoxCaptionStr().Translation(),
-               wxYES_NO | wxNO_DEFAULT);
+            XO(
+"Some required files in:\n  %s\nwere already present. Overwrite?")
+               .Format( FileNames::ThemeComponentsDir() ),
+            AudacityMessageBoxCaptionStr(),
+            wxYES_NO | wxNO_DEFAULT);
       if(result == wxNO)
          return;
    }
@@ -1173,17 +1170,15 @@ void ThemeBase::SaveComponents()
          if( !mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
          {
             AudacityMessageBox(
-               wxString::Format(
-               _("Audacity could not save file:\n  %s"),
-                  FileName ));
+               XO("Audacity could not save file:\n  %s")
+                  .Format( FileName ));
             return;
          }
       }
    }
    AudacityMessageBox(
-      wxString::Format(
-         _("Theme written to:\n  %s."),
-         FileNames::ThemeComponentsDir() ));
+      XO("Theme written to:\n  %s.")
+         .Format( FileNames::ThemeComponentsDir() ) );
 }
 
 

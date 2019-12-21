@@ -159,8 +159,8 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
       oldTempDir = FileNames::DefaultTempDir();
 
    wxDirDialogWrapper dlog(this,
-                    _("Choose a location to place the temporary directory"),
-                    oldTempDir );
+      XO("Choose a location to place the temporary directory"),
+      oldTempDir );
    int retval = dlog.ShowModal();
    if (retval != wxID_CANCEL && !dlog.GetPath().empty()) {
       wxFileName tmpDirPath;
@@ -229,17 +229,17 @@ bool DirectoriesPrefs::Validate()
    wxString path{tempDir.GetPath()};
    if( !FileNames::IsTempDirectoryNameOK( path ) ) {
       AudacityMessageBox(
-         wxString::Format(_("Directory %s is not suitable (at risk of being cleaned out)"),
-                           path),
-         _("Error"),
+         XO("Directory %s is not suitable (at risk of being cleaned out)")
+            .Format( path ),
+         XO("Error"),
          wxOK | wxICON_ERROR);
       return false;
    }
    if (!tempDir.DirExists()) {
       int ans = AudacityMessageBox(
-         wxString::Format(_("Directory %s does not exist. Create it?"),
-                          path),
-         _("New Temporary Directory"),
+         XO("Directory %s does not exist. Create it?")
+            .Format( path ),
+         XO("New Temporary Directory"),
          wxYES_NO | wxCENTRE | wxICON_EXCLAMATION);
 
       if (ans != wxYES) {
@@ -258,9 +258,9 @@ bool DirectoriesPrefs::Validate()
       path =  tempDir.GetPath();
       if (!tempDir.Mkdir(0755)) {
          AudacityMessageBox(
-            wxString::Format(_("Directory %s is not writable"),
-                             path),
-            _("Error"),
+            XO("Directory %s is not writable")
+               .Format( path ),
+            XO("Error"),
             wxOK | wxICON_ERROR);
          return false;
       }
@@ -272,8 +272,9 @@ bool DirectoriesPrefs::Validate()
    oldDir.SetPath(gPrefs->Read(wxT("/Directories/TempDir")));
    if (tempDir != oldDir) {
       AudacityMessageBox(
-         _("Changes to temporary directory will not take effect until Audacity is restarted"),
-         _("Temp Directory Update"),
+         XO(
+"Changes to temporary directory will not take effect until Audacity is restarted"),
+         XO("Temp Directory Update"),
          wxOK | wxCENTRE | wxICON_INFORMATION);
    }
 

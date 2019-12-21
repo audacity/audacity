@@ -102,11 +102,11 @@ void FFmpegStartup()
    {
       if (enabled)
       {
-         AudacityMessageBox(_(
+         AudacityMessageBox(XO(
 "FFmpeg was configured in Preferences and successfully loaded before, \
 \nbut this time Audacity failed to load it at startup. \
 \n\nYou may want to go back to Preferences > Libraries and re-configure it."),
-            _("FFmpeg startup failed"));
+            XO("FFmpeg startup failed"));
       }
    }
 }
@@ -510,11 +510,10 @@ public:
 
    void OnBrowse(wxCommandEvent & WXUNUSED(event))
    {
-      wxString question;
       /* i18n-hint: It's asking for the location of a file, for
       example, "Where is lame_enc.dll?" - you could translate
       "Where would I find the file '%s'?" instead if you want. */
-      question.Printf(_("Where is '%s'?"), mName);
+      auto question = XO("Where is '%s'?").Format( mName );
 
       wxString path = FileNames::SelectFile(FileNames::Operation::_None,
          question,
@@ -746,10 +745,10 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
    */
    // Oh well, just give up
    if (!ValidLibsLoaded()) {
-      wxString msg = _("Failed to find compatible FFmpeg libraries.");
+      auto msg = XO("Failed to find compatible FFmpeg libraries.");
       if (showerr)
-         AudacityMessageBox(msg);
-      wxLogError(msg);
+         AudacityMessageBox( msg );
+      wxLogError(msg.Debug());
       return false;
    }
 

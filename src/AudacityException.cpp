@@ -96,8 +96,8 @@ void MessageBoxException::DelayedHandlerAction()
       // give the user no useful added information.
       if ( wxAtomicDec( sOutstandingMessages ) == 0 )
          ::AudacityMessageBox(
-            ErrorMessage().Translation(),
-            (caption.empty() ? AudacityMessageBoxCaptionStr() : caption).Translation(),
+            ErrorMessage(),
+            (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
             wxICON_ERROR
          );
       moved = true;

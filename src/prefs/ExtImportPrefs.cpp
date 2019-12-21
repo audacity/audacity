@@ -524,12 +524,14 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
       {
          if (!askedAboutSpaces)
          {
-            fixSpaces = AudacityMessageBox(_(
+            fixSpaces = AudacityMessageBox(
+               XO(
 "There are space characters (spaces, newlines, tabs or linefeeds) in one of \
 the items. They are likely to break the pattern matching. Unless you know \
 what you are doing, it is recommended to trim spaces. Do you want \
-Audacity to trim spaces for you?"
-            ),_("Spaces detected"), wxYES_NO);
+Audacity to trim spaces for you?"),
+               XO("Spaces detected"),
+               wxYES_NO);
             askedAboutSpaces = true;
          }
          if (fixSpaces != wxYES)
@@ -615,8 +617,11 @@ void ExtImportPrefs::OnDelRule(wxCommandEvent& WXUNUSED(event))
       return;
    auto &items = Importer::Get().GetImportItems();
 
-   int msgres = AudacityMessageBox (_("Do you really want to delete selected rule?"),
-      _("Rule deletion confirmation"), wxYES_NO, RuleTable);
+   int msgres = AudacityMessageBox (
+      XO("Do you really want to delete selected rule?"),
+      XO("Rule deletion confirmation"),
+      wxYES_NO,
+      RuleTable);
    // Yes or no, there is no third!
    if (msgres != wxYES)
       return;

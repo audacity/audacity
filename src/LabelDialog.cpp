@@ -628,7 +628,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
    // Ask user for a filename
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
-                    _("Select a text file containing labels"),
+                    XO("Select a text file containing labels"),
                     wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
@@ -644,7 +644,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
       f.Open(fileName);
       if (!f.IsOpened()) {
          AudacityMessageBox(
-            wxString::Format( _("Could not open file: %s"), fileName ));
+            XO("Could not open file: %s").Format( fileName ) );
       }
       else {
          // Create a temporary label track and load the labels
@@ -669,7 +669,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    // Silly user (could just disable the button, but that's a hassle ;-))
    if (cnt == 0) {
-      AudacityMessageBox(_("No labels to export."));
+      AudacityMessageBox( XO("No labels to export.") );
       return;
    }
 
@@ -677,7 +677,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = mTrackNames[mTrackNames.size() - 1].AfterFirst(wxT('-')).Mid(1);
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-      _("Export Labels As:"),
+      XO("Export Labels As:"),
       wxEmptyString,
       fName,
       wxT("txt"),
@@ -713,7 +713,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.Open();
    if (!f.IsOpened()) {
       AudacityMessageBox(
-         wxString::Format( _("Couldn't write to file: %s"), fName ) );
+         XO("Couldn't write to file: %s").Format( fName ) );
       return;
    }
 

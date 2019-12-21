@@ -612,7 +612,9 @@ void FrequencyPlotDialog::GetAudio()
       }
       else {
          if (track->GetRate() != mRate) {
-            AudacityMessageBox(_("To plot the spectrum, all selected tracks must be the same sample rate."));
+            AudacityMessageBox(
+               XO(
+"To plot the spectrum, all selected tracks must be the same sample rate.") );
             mData.reset();
             mDataLen = 0;
             return;
@@ -632,10 +634,10 @@ void FrequencyPlotDialog::GetAudio()
       return;
 
    if (warning) {
-      wxString msg;
-      msg.Printf(_("Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."),
-                          (mDataLen / mRate));
-      AudacityMessageBox(msg);
+      auto msg = XO(
+"Too much audio was selected. Only the first %.1f seconds of audio will be analyzed.")
+         .Format(mDataLen / mRate);
+      AudacityMessageBox( msg );
    }
 }
 
@@ -1061,7 +1063,7 @@ void FrequencyPlotDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = _("spectrum.txt");
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                                 _("Export Spectral Data As:"),
+                                 XO("Export Spectral Data As:"),
                                  wxEmptyString,
                                  fName,
                                  wxT("txt"),
@@ -1080,8 +1082,7 @@ void FrequencyPlotDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 #endif
    f.Open();
    if (!f.IsOpened()) {
-      AudacityMessageBox( wxString::Format(
-         _("Couldn't write to file: %s"), fName ) );
+      AudacityMessageBox( XO("Couldn't write to file: %s").Format( fName ) );
       return;
    }
 

@@ -250,9 +250,11 @@ void OnTimerRecord(const CommandContext &context)
    // it is now safer to disable Timer Recording when there is more than
    // one open project.
    if (AllProjects{}.size() > 1) {
-      AudacityMessageBox(_("Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."),
-                   _("Timer Recording"),
-                   wxICON_INFORMATION | wxOK);
+      AudacityMessageBox(
+         XO(
+"Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."),
+         XO("Timer Recording"),
+         wxICON_INFORMATION | wxOK);
       return;
    }
 
@@ -262,9 +264,11 @@ void OnTimerRecord(const CommandContext &context)
    // is used in Timer Recording.
    if ((undoManager.UnsavedChanges()) &&
        (TrackList::Get( project ).Any() || settings.EmptyCanBeDirty())) {
-      AudacityMessageBox(_("Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
-                   _("Timer Recording"),
-                   wxICON_INFORMATION | wxOK);
+      AudacityMessageBox(
+         XO(
+"Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
+         XO("Timer Recording"),
+         wxICON_INFORMATION | wxOK);
       return;
    }
    // We use this variable to display "Current Project" in the Timer Recording
@@ -360,11 +364,10 @@ void OnPunchAndRoll(const CommandContext &context)
          std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
       auto message =
          (recordingChannels == 1)
-         ? _("Please select in a mono track.")
+         ? XO("Please select in a mono track.")
          : (recordingChannels == 2)
-         ? _("Please select in a stereo track.")
-         : wxString::Format(
-            _("Please select at least %d channels."), recordingChannels);
+         ? XO("Please select in a stereo track.")
+         : XO("Please select at least %d channels.").Format( recordingChannels );
       ShowErrorDialog(&window, XO("Error"), message, url);
       return;
    }
@@ -406,7 +409,7 @@ void OnPunchAndRoll(const CommandContext &context)
    }
 
    if (error) {
-      auto message = _("Please select a time within a clip.");
+      auto message = XO("Please select a time within a clip.");
       ShowErrorDialog( &window, XO("Error"), message, url);
       return;
    }

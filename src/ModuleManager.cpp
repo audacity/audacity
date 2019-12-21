@@ -112,7 +112,11 @@ bool Module::Load()
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
       wxString ShortName = wxFileName( mName ).GetName();
-      AudacityMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName), _("Module Unsuitable"));
+      AudacityMessageBox(
+         XO(
+"The module %s does not provide a version string.\nIt will not be loaded.")
+            .Format( ShortName),
+         XO("Module Unsuitable"));
       wxLogMessage(wxString::Format(_("The module %s does not provide a version string. It will not be loaded."), mName));
       mLib->Unload();
       return false;
@@ -121,7 +125,11 @@ bool Module::Load()
    wxString moduleVersion = versionFn();
    if( moduleVersion != AUDACITY_VERSION_STRING) {
       wxString ShortName = wxFileName( mName ).GetName();
-      AudacityMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName, moduleVersion), _("Module Unsuitable"));
+      AudacityMessageBox(
+         XO(
+"The module %s is matched with Audacity version %s.\n\nIt will not be loaded.")
+            .Format( ShortName, moduleVersion),
+         XO("Module Unsuitable"));
       wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s. It will not be loaded."), mName, moduleVersion));
       mLib->Unload();
       return false;
@@ -537,9 +545,9 @@ PluginPaths ModuleManager::FindPluginsForProvider(const PluginID & providerID,
    return mDynModules[providerID]->FindPluginPaths(PluginManager::Get());
 }
 
-bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const PluginPath & path, wxString &errMsg)
+bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const PluginPath & path, TranslatableString &errMsg)
 {
-   errMsg.clear();
+   errMsg = {};
    if (mDynModules.find(providerID) == mDynModules.end())
    {
       return false;

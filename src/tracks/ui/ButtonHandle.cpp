@@ -75,7 +75,7 @@ HitTestPreview ButtonHandle::Preview
 {
    // No special cursor
    auto message = Tip(st.state);
-   return { message.Translation(), {}, message };
+   return { message, {}, message };
 }
 
 UIHandle::Result ButtonHandle::Release

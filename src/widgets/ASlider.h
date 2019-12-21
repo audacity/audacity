@@ -116,7 +116,7 @@ class LWSlider
    void SetScroll(float line, float page);
 
    void ShowTip(bool show);
-   void SetToolTipTemplate(const wxString & tip);
+   void SetToolTipTemplate(const TranslatableString & tip);
 
    float Get(bool convert = true);
    void Set(float value);
@@ -151,8 +151,8 @@ class LWSlider
 
  private:
 
-   wxString GetTip(float value) const;
-   wxArrayString GetWidestTips() const;
+   TranslatableString GetTip(float value) const;
+   TranslatableStrings GetWidestTips() const;
    void FormatPopWin();
    void SetPopWinPosition();
    void CreatePopWin();
@@ -218,7 +218,7 @@ class LWSlider
    wxWindowID mID;
 
    std::unique_ptr<TipWindow> mTipPanel;
-   wxString mTipTemplate;
+   TranslatableString mTipTemplate;
 
    bool mIsDragging;
 
@@ -273,7 +273,7 @@ class ASlider /* not final */ : public wxPanel
    void GetScroll(float & line, float & page);
    void SetScroll(float line, float page);
 
-   void SetToolTipTemplate(const wxString & tip);
+   void SetToolTipTemplate(const TranslatableString & tip);
 
    float Get( bool convert = true );
    void Set(float value);

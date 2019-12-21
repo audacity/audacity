@@ -156,7 +156,7 @@ HitTestPreview TrackSelectHandle::Preview
       const bool unsafe =
          ProjectAudioIO::Get( *GetActiveProject() ).IsAudioActive();
       return {
-         message.Translation(),
+         message,
          (unsafe
           ? &*disabledCursor
           : &*rearrangeCursor)
@@ -168,7 +168,7 @@ HitTestPreview TrackSelectHandle::Preview
       // Don't test safety, because the click to change selection is allowed
       static wxCursor arrowCursor{ wxCURSOR_ARROW };
       return {
-         message.Translation(),
+         message,
          &arrowCursor,
          message
       };

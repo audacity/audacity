@@ -331,7 +331,7 @@ Exporter::Exporter()
       }
    );
 
-   SetFileDialogTitle( _("Export Audio") );
+   SetFileDialogTitle( XO("Export Audio") );
 }
 
 Exporter::~Exporter()
@@ -361,7 +361,7 @@ void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
    HelpSystem::ShowHelp(pWin, wxT("File_Export_Dialog"), true);
 }
 
-void Exporter::SetFileDialogTitle( const wxString & DialogTitle )
+void Exporter::SetFileDialogTitle( const TranslatableString & DialogTitle )
 {
    // The default title is "Export File"
    mFileDialogTitle = DialogTitle;
@@ -552,14 +552,15 @@ bool Exporter::ExamineTracks()
    }
 
    if (mNumSelected == 0) {
-      wxString message;
+      TranslatableString message;
       if(mSelectedOnly)
-         message = _("All selected audio is muted.");
+         message = XO("All selected audio is muted.");
       else
-         message = _("All audio is muted.");
-      AudacityMessageBox(message,
-                    _("Unable to export"),
-                    wxOK | wxICON_INFORMATION);
+         message = XO("All audio is muted.");
+      AudacityMessageBox(
+         message,
+         XO("Unable to export"),
+         wxOK | wxICON_INFORMATION);
       return false;
    }
 
@@ -695,13 +696,14 @@ bool Exporter::GetFilename()
          // as an extension with no name, like just plain ".wav".
          //
          if (mFilename.GetName().Left(1) == wxT(".")) {
-            wxString prompt = wxString::Format(
-               _("Are you sure you want to export the file as \"%s\"?\n"),
-                  mFilename.GetFullName() );
+            auto prompt =
+               XO("Are you sure you want to export the file as \"%s\"?\n")
+                  .Format( mFilename.GetFullName() );
 
-            int action = AudacityMessageBox(prompt,
-                                      _("Warning"),
-                                      wxYES_NO | wxICON_EXCLAMATION);
+            int action = AudacityMessageBox(
+               prompt,
+               XO("Warning"),
+               wxYES_NO | wxICON_EXCLAMATION);
             if (action != wxYES) {
                continue;
             }
@@ -714,22 +716,23 @@ bool Exporter::GetFilename()
          continue;
       }
       else if (!ext.empty() && !mPlugins[mFormat]->IsExtension(ext,mSubFormat) && ext.CmpNoCase(defext)) {
-         wxString prompt;
-         prompt.Printf(_("You are about to export a %s file with the name \"%s\".\n\nNormally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n\nAre you sure you want to export the file under this name?"),
-                       mPlugins[mFormat]->GetFormat(mSubFormat),
+         auto prompt = XO("You are about to export a %s file with the name \"%s\".\n\nNormally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n\nAre you sure you want to export the file under this name?")
+               .Format(mPlugins[mFormat]->GetFormat(mSubFormat),
                        mFilename.GetFullName(),
                        defext);
 
-         int action = AudacityMessageBox(prompt,
-                                   _("Warning"),
-                                   wxYES_NO | wxICON_EXCLAMATION);
+         int action = AudacityMessageBox(
+            prompt,
+            XO("Warning"),
+            wxYES_NO | wxICON_EXCLAMATION);
          if (action != wxYES) {
             continue;
          }
       }
 
       if (mFilename.GetFullPath().length() >= 256) {
-         AudacityMessageBox(_("Sorry, pathnames longer than 256 characters not supported."));
+         AudacityMessageBox(
+            XO( "Sorry, pathnames longer than 256 characters not supported.") );
          continue;
       }
 
@@ -746,7 +749,7 @@ bool Exporter::GetFilename()
             if (mFilename.GetFullPath() == aliasedFile.mFileName.GetFullPath() &&
                 !mFilename.FileExists()) {
                // Warn and return to the dialog
-               AudacityMessageBox(_(
+               AudacityMessageBox(XO(
 "You are attempting to overwrite an aliased file that is missing.\n\
 The file cannot be written because the path is needed to restore the original audio to the project.\n\
 Choose Help > Diagnostics > Check Dependencies to view the locations of all missing files.\n\
@@ -759,14 +762,13 @@ If you still wish to export, please choose a different filename or folder."));
          continue;
 
       if (mFilename.FileExists()) {
-         wxString prompt;
+         auto prompt = XO("A file named \"%s\" already exists. Replace?")
+            .Format( mFilename.GetFullPath() );
 
-         prompt.Printf(_("A file named \"%s\" already exists. Replace?"),
-                       mFilename.GetFullPath());
-
-         int action = AudacityMessageBox(prompt,
-                                   _("Warning"),
-                                   wxYES_NO | wxICON_EXCLAMATION);
+         int action = AudacityMessageBox(
+            prompt,
+            XO("Warning"),
+            wxYES_NO | wxICON_EXCLAMATION);
          if (action != wxYES) {
             continue;
          }
@@ -881,21 +883,21 @@ bool Exporter::CheckMix()
          if (exportedChannels == 1) {
             if (ShowWarningDialog(pWindow,
                                   wxT("MixMono"),
-                                  _("Your tracks will be mixed down and exported as one mono file."),
+                                  XO("Your tracks will be mixed down and exported as one mono file."),
                                   true) == wxID_CANCEL)
                return false;
          }
          else if (exportedChannels == 2) {
             if (ShowWarningDialog(pWindow,
                                   wxT("MixStereo"),
-                                  _("Your tracks will be mixed down and exported as one stereo file."),
+                                  XO("Your tracks will be mixed down and exported as one stereo file."),
                                   true) == wxID_CANCEL)
                return false;
          }
          else {
             if (ShowWarningDialog(pWindow,
                                   wxT("MixUnknownChannels"),
-                                  _("Your tracks will be mixed down to one exported file according to the encoder settings."),
+                                  XO("Your tracks will be mixed down to one exported file according to the encoder settings."),
                                   true) == wxID_CANCEL)
                return false;
          }

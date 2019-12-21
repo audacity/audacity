@@ -181,7 +181,7 @@ void OnUndo(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    if (!ProjectHistory::Get( project ).UndoAvailable()) {
-      AudacityMessageBox(_("Nothing to undo"));
+      AudacityMessageBox( XO("Nothing to undo") );
       return;
    }
 
@@ -212,7 +212,7 @@ void OnRedo(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    if (!ProjectHistory::Get( project ).RedoAvailable()) {
-      AudacityMessageBox(_("Nothing to redo"));
+      AudacityMessageBox( XO("Nothing to redo") );
       return;
    }
    // Can't redo whilst dragging

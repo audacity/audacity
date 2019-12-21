@@ -44,7 +44,7 @@ HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
       ::MakeCursor(wxCURSOR_BULLSEYE, StretchCursorXpm, 16, 16);
 
    if (unsafe) {
-      return { wxT(""), &*disabledCursor };
+      return { {}, &*disabledCursor };
    }
    else {
       wxCursor *pCursor = NULL;
@@ -59,7 +59,7 @@ HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
          pCursor = &*stretchRightCursor; break;
       }
       return {
-         _("Click and drag to stretch selected region."),
+         XO("Click and drag to stretch selected region."),
          pCursor
       };
    }

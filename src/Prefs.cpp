@@ -222,12 +222,11 @@ bool CheckWritablePreferences()
    return gPrefs->Write("/TEST", true) && gPrefs->Flush();
 }
 
-wxString UnwritablePreferencesErrorMessage( const wxFileName &configFileName )
+TranslatableString UnwritablePreferencesErrorMessage( const wxFileName &configFileName )
 {
-   return wxString::Format(
-     _("Audacity cannot start because the settings file at %s is not writable."),
-     configFileName.GetFullPath()
-   );
+   return
+     XO("Audacity cannot start because the settings file at %s is not writable.")
+        .Format(configFileName.GetFullPath());
 }
 
 void FinishPreferences()

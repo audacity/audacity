@@ -184,7 +184,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 {
    if (!quiet &&
       maxFreq < 100) {
-      AudacityMessageBox(_("Maximum frequency must be 100 Hz or above"));
+      AudacityMessageBox( XO("Maximum frequency must be 100 Hz or above") );
       return false;
    }
    else
@@ -192,7 +192,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       minFreq < 0) {
-      AudacityMessageBox(_("Minimum frequency must be at least 0 Hz"));
+      AudacityMessageBox( XO("Minimum frequency must be at least 0 Hz") );
       return false;
    }
    else
@@ -200,7 +200,8 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       maxFreq <= minFreq) {
-      AudacityMessageBox(_("Minimum frequency must be less than maximum frequency"));
+      AudacityMessageBox( XO(
+"Minimum frequency must be less than maximum frequency") );
       return false;
    }
    else
@@ -208,7 +209,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       range <= 0) {
-      AudacityMessageBox(_("The range must be at least 1 dB"));
+      AudacityMessageBox( XO("The range must be at least 1 dB") );
       return false;
    }
    else
@@ -216,12 +217,13 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       frequencyGain < 0) {
-      AudacityMessageBox(_("The frequency gain cannot be negative"));
+      AudacityMessageBox( XO("The frequency gain cannot be negative") );
       return false;
    }
    else if (!quiet &&
       frequencyGain > 60) {
-      AudacityMessageBox(_("The frequency gain must be no more than 60 dB/dec"));
+      AudacityMessageBox( XO(
+"The frequency gain must be no more than 60 dB/dec") );
       return false;
    }
    else

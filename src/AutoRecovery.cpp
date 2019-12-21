@@ -246,10 +246,10 @@ enum FieldTypes
    FT_Name           // type, ID, name length, name
 };
 
-wxString AutoSaveFile::FailureMessage( const FilePath &/*filePath*/ )
+TranslatableString AutoSaveFile::FailureMessage( const FilePath &/*filePath*/ )
 {
    return 
-_("This recovery file was saved by Audacity 2.3.0 or before.\n"
+XO("This recovery file was saved by Audacity 2.3.0 or before.\n"
    "You need to run that version of Audacity to recover the project." );
 }
 

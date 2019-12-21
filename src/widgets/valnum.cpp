@@ -96,13 +96,16 @@ bool NumValidatorBase::Validate(wxWindow *parent)
    if ( !m_validatorWindow->IsEnabled() )
       return true;
 
-   wxString errmsg;
+   TranslatableString errmsg;
    bool res = DoValidateNumber(&errmsg);
 
    if ( !res )
    {
-      AudacityMessageBox(errmsg, _("Validation error"),
-                  wxOK | wxICON_ERROR, parent);
+      AudacityMessageBox(
+         errmsg,
+         XO("Validation error"),
+         wxOK | wxICON_ERROR,
+         parent);
       wxTextEntry *te = GetTextEntry();
       if ( te )
       {
@@ -348,7 +351,7 @@ IntegerValidatorBase::IsCharOk(const wxString& val, int pos, wxChar ch) const
    return true;
 }
 
-bool IntegerValidatorBase::DoValidateNumber(wxString * errMsg) const
+bool IntegerValidatorBase::DoValidateNumber(TranslatableString * errMsg) const
 {
    wxTextEntry * const control = GetTextEntry();
    if ( !control )
@@ -369,7 +372,7 @@ bool IntegerValidatorBase::DoValidateNumber(wxString * errMsg) const
       // We can't do any check with an empty string
       else
       {
-         *errMsg = _("Empty value");
+         *errMsg = XO("Empty value");
          return false;
       }
    }
@@ -378,13 +381,13 @@ bool IntegerValidatorBase::DoValidateNumber(wxString * errMsg) const
    LongestValueType value;
    bool res = FromString(s, &value);
    if ( !res )
-      *errMsg = _("Malformed number");
+      *errMsg = XO("Malformed number");
    else
    {
       res = IsInRange(value);
       if ( !res )
-         errMsg->Printf(_("Not in range %d to %d"),
-                        (int) m_min, (int) m_max);
+         *errMsg = XO("Not in range %d to %d")
+            .Format( (int) m_min, (int) m_max );
    }
 
    return res;
@@ -474,7 +477,7 @@ FloatingPointValidatorBase::IsCharOk(const wxString& val,
    return ValidatePrecision(str);
 }
 
-bool FloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
+bool FloatingPointValidatorBase::DoValidateNumber(TranslatableString * errMsg) const
 {
    wxTextEntry * const control = GetTextEntry();
    if ( !control )
@@ -491,7 +494,7 @@ bool FloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
          return true; //Is blank, but allowed. Stop here
       else
       {
-         *errMsg = _("Empty value");
+         *errMsg = XO("Empty value");
          return false; //We can't do any checks with an empty string
       }
    }
@@ -499,12 +502,12 @@ bool FloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
    LongestValueType value;
    bool res = FromString(s, &value); // Can it be converted to a value?
    if ( !res )
-      *errMsg = _("Value overflow");
+      *errMsg = XO("Value overflow");
    else
    {
       res = ValidatePrecision(s);
       if ( !res )
-         *errMsg = _("Too many decimal digits");
+         *errMsg = XO("Too many decimal digits");
       else
       {
          res = IsInRange(value);
@@ -517,16 +520,17 @@ bool FloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
 
             if (m_minSet && m_maxSet)
             {
-               errMsg->Printf(_("Value not in range: %s to %s"),
-                              strMin, strMax);
+               *errMsg = XO("Value not in range: %s to %s")
+                  .Format( strMin, strMax );
             }
             else if (m_minSet)
             {
-               errMsg->Printf(_("Value must not be less than %s"), strMin);
+               *errMsg = XO("Value must not be less than %s").Format( strMin );
             }
             else if (m_maxSet)
             {
-               errMsg->Printf(_("Value must not be greather than %s"), strMax);
+               *errMsg = XO("Value must not be greather than %s")
+                  .Format( strMax );
             }
          }
       }

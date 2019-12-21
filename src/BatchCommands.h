@@ -66,20 +66,20 @@ class MacroCommands final {
    static bool HandleTextualCommand( CommandManager &commandManager,
       const CommandID & Str,
       const CommandContext & context, CommandFlag flags, bool alwaysEnabled);
-   bool ApplyCommand( const wxString &friendlyCommand,
+   bool ApplyCommand( const TranslatableString &friendlyCommand,
       const CommandID & command, const wxString & params,
       CommandContext const * pContext=NULL );
-   bool ApplyCommandInBatchMode( const wxString &friendlyCommand,
+   bool ApplyCommandInBatchMode( const TranslatableString &friendlyCommand,
       const CommandID & command, const wxString &params,
       CommandContext const * pContext = NULL);
    bool ApplySpecialCommand(
-      int iCommand, const wxString &friendlyCommand,
+      int iCommand, const TranslatableString &friendlyCommand,
       const CommandID & command, const wxString & params);
    bool ApplyEffectCommand(
-      const PluginID & ID, const wxString &friendlyCommand,
+      const PluginID & ID, const TranslatableString &friendlyCommand,
       const CommandID & command,
       const wxString & params, const CommandContext & Context);
-   bool ReportAndSkip( const wxString & friendlyCommand, const wxString & params );
+   bool ReportAndSkip( const TranslatableString & friendlyCommand, const wxString & params );
    void AbortBatch();
 
    // Utility functions for the special commands.

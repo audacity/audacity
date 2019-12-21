@@ -45,7 +45,7 @@ HitTestPreview LabelTextHandle::HitPreview()
    static auto ibeamCursor =
       ::MakeCursor(wxCURSOR_IBEAM, IBeamCursorXpm, 17, 16);
    return {
-      _("Click to edit label text"),
+      XO("Click to edit label text"),
       ibeamCursor.get()
    };
 }

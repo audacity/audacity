@@ -24,6 +24,7 @@ tasks associated with a WaveTrack.
 
 #include <vector>
 #include "ODTaskThread.h"
+#include "../Internat.h" // for TranslatableString
 class Track;
 class WaveTrack;
 class ODTask;
@@ -87,7 +88,7 @@ class ODWaveTrackTaskQueue final
    ODTask* GetTask(size_t x);
 
    ///fills in the status bar message for a given track
-   void FillTipForWaveTrack( const WaveTrack * t, wxString &tip );
+   void FillTipForWaveTrack( const WaveTrack * t, TranslatableString &tip );
 
  protected:
 
@@ -95,7 +96,7 @@ class ODWaveTrackTaskQueue final
    void Compress();
 
    //because we need to save this around for the tool tip.
-   wxString mTipMsg;
+   TranslatableString mTipMsg;
 
 
   ///the list of tracks associated with this queue.

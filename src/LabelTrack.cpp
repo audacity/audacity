@@ -515,7 +515,7 @@ void LabelTrack::Import(wxTextFile & in)
       catch(const LabelStruct::BadFormatException&) { error = true; }
    }
    if (error)
-      ::AudacityMessageBox( _("One or more saved labels could not be read.") );
+      ::AudacityMessageBox( XO("One or more saved labels could not be read.") );
    SortLabels();
 }
 

@@ -200,7 +200,7 @@ private:
       (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
        unsigned refreshResult) override;
 
-   void UpdateStatusMessage( const wxString & ) override;
+   void UpdateStatusMessage( const TranslatableString & ) override;
 
    void CreateOverlays();
 

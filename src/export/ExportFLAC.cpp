@@ -283,7 +283,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    // See note in GetMetadata() about a bug in libflac++ 1.1.2
    if (success && !GetMetadata(project, metadata)) {
       // TODO: more precise message
-      AudacityMessageBox(_("Unable to export"));
+      AudacityMessageBox( XO("Unable to export") );
       return ProgressResult::Cancelled;
    }
 
@@ -336,7 +336,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    if (!success) {
       // TODO: more precise message
-      AudacityMessageBox(_("Unable to export"));
+      AudacityMessageBox( XO("Unable to export") );
       return ProgressResult::Cancelled;
    }
 
@@ -346,7 +346,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    wxFFile f;     // will be closed when it goes out of scope
    const auto path = fName.GetFullPath();
    if (!f.Open(path, wxT("w+b"))) {
-      AudacityMessageBox(wxString::Format(_("FLAC export couldn't open %s"), path));
+      AudacityMessageBox( XO("FLAC export couldn't open %s").Format( path ) );
       return ProgressResult::Cancelled;
    }
 
@@ -355,7 +355,9 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    // libflac can't (under Windows).
    int status = encoder.init(f.fp());
    if (status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
-      AudacityMessageBox(wxString::Format(_("FLAC encoder failed to initialize\nStatus: %d"), status));
+      AudacityMessageBox(
+         XO("FLAC encoder failed to initialize\nStatus: %d")
+            .Format( status ) );
       return ProgressResult::Cancelled;
    }
 #endif
@@ -408,7 +410,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                reinterpret_cast<FLAC__int32**>( tmpsmplbuf.get() ),
                samplesThisRun) ) {
             // TODO: more precise message
-            AudacityMessageBox(_("Unable to export"));
+            AudacityMessageBox( XO("Unable to export") );
             updateResult = ProgressResult::Cancelled;
             break;
          }

@@ -126,8 +126,10 @@ void AutoRecoveryDialog::OnQuitAudacity(wxCommandEvent & WXUNUSED(event))
 void AutoRecoveryDialog::OnRecoverNone(wxCommandEvent & WXUNUSED(event))
 {
    int ret = AudacityMessageBox(
-      _("Are you sure you want to discard all recoverable projects?\n\nChoosing \"Yes\" discards all recoverable projects immediately."),
-      _("Confirm Discard Projects"), wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
+      XO(
+"Are you sure you want to discard all recoverable projects?\n\nChoosing \"Yes\" discards all recoverable projects immediately."),
+      XO("Confirm Discard Projects"),
+      wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
 
    if (ret == wxYES)
       EndModal(ID_RECOVER_NONE);
@@ -145,8 +147,10 @@ static bool HaveFilesToRecover()
    wxDir dir(FileNames::AutoSaveDir());
    if (!dir.IsOpened())
    {
-      AudacityMessageBox(_("Could not enumerate files in auto save directory."),
-                   _("Error"), wxICON_STOP);
+      AudacityMessageBox(
+         XO("Could not enumerate files in auto save directory."),
+         XO("Error"),
+         wxICON_STOP);
       return false;
    }
 
@@ -168,8 +172,10 @@ static bool RemoveAllAutoSaveFiles()
       {
          // I don't think this error message is actually useful.
          // -dmazzoni
-         //AudacityMessageBox(wxT("Could not remove auto save file: " + files[i]),
-         //             _("Error"), wxICON_STOP);
+         //AudacityMessageBox(
+         //   XO("Could not remove auto save file: %s".Format( files[i] ),
+         //   XO("Error"),
+         //   wxICON_STOP);
          return false;
       }
    }
@@ -182,8 +188,10 @@ static bool RecoverAllProjects(AudacityProject** pproj)
    wxDir dir(FileNames::AutoSaveDir());
    if (!dir.IsOpened())
    {
-      AudacityMessageBox(_("Could not enumerate files in auto save directory."),
-                   _("Error"), wxICON_STOP);
+      AudacityMessageBox(
+         XO("Could not enumerate files in auto save directory."),
+         XO("Error"),
+         wxICON_STOP);
       return false;
    }
 

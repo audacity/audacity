@@ -344,7 +344,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
    wxString file = wxT("Audacity-keys.xml");
 
    file = FileNames::SelectFile(FileNames::Operation::Open,
-                        _("Select an XML file containing Audacity keyboard shortcuts..."),
+                        XO("Select an XML file containing Audacity keyboard shortcuts..."),
                        wxEmptyString,
                        file,
                        wxT(""),
@@ -358,9 +358,11 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
 
    XMLFileReader reader;
    if (!reader.Parse(mManager, file)) {
-      AudacityMessageBox(reader.GetErrorStr().Translation(),
-                   _("Error Importing Keyboard Shortcuts"),
-                   wxOK | wxCENTRE, this);
+      AudacityMessageBox(
+         reader.GetErrorStr(),
+         XO("Error Importing Keyboard Shortcuts"),
+         wxOK | wxCENTRE,
+         this);
    }
 
    RefreshBindings(true);
@@ -371,7 +373,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString file = wxT("Audacity-keys.xml");
 
    file = FileNames::SelectFile(FileNames::Operation::Export,
-                       _("Export Keyboard Shortcuts As:"),
+                       XO("Export Keyboard Shortcuts As:"),
                        wxEmptyString,
                        file,
                        wxT("xml"),
@@ -542,8 +544,11 @@ void KeyConfigPrefs::SetKeyForSelected(const NormalizedKeyString & key)
 
    if (!mView->CanSetKey(mCommandSelected))
    {
-      AudacityMessageBox(_("You may not assign a key to this entry"),
-         _("Error"), wxICON_ERROR | wxCENTRE, this);
+      AudacityMessageBox(
+         XO("You may not assign a key to this entry"),
+         XO("Error"),
+         wxICON_ERROR | wxCENTRE,
+         this);
       return;
    }
 
@@ -556,8 +561,11 @@ void KeyConfigPrefs::SetKeyForSelected(const NormalizedKeyString & key)
 void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
 {
    if (mCommandSelected == wxNOT_FOUND) {
-      AudacityMessageBox(_("You must select a binding before assigning a shortcut"),
-         _("Error"), wxICON_WARNING | wxCENTRE, this);
+      AudacityMessageBox(
+         XO("You must select a binding before assigning a shortcut"),
+         XO("Error"),
+         wxICON_WARNING | wxCENTRE,
+         this);
       return;
    }
 
@@ -580,16 +588,17 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
          .Format(
             mManager->GetCategoryFromName(newname),
             mManager->GetPrefixedLabelFromName(newname) );
-      if (AudacityMessageBox(
+      if (wxCANCEL == AudacityMessageBox(
             XO(
 "The keyboard shortcut '%s' is already assigned to:\n\n\t'%s'\n\nClick OK to assign the shortcut to\n\n\t'%s'\n\ninstead. Otherwise, click Cancel.")
                .Format(
                   mKey->GetValue(),
                   oldlabel,
                   newlabel
-               )
-                  .Translation(),
-            _("Error"), wxOK | wxCANCEL | wxICON_STOP | wxCENTRE, this) == wxCANCEL)
+               ),
+            XO("Error"),
+            wxOK | wxCANCEL | wxICON_STOP | wxCENTRE,
+            this))
       {
          return;
       }

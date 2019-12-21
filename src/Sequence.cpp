@@ -1018,12 +1018,14 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
          // editing operation that caused this, not fixing
          // the problem but moving the point of detection earlier if we
          // find a reproducible case.
-         wxString sMsg =
-            wxString::Format(
-               _("Sequence has block file exceeding maximum %s samples per block.\nTruncating to this maximum length."),
-               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0));
-         AudacityMessageBox(sMsg, _("Warning - Truncating Overlong Block File"), wxICON_EXCLAMATION | wxOK);
-         wxLogWarning(sMsg);
+         auto sMsg =
+            XO("Sequence has block file exceeding maximum %s samples per block.\nTruncating to this maximum length.")
+               .Format( Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0) );
+         AudacityMessageBox(
+            sMsg,
+            XO("Warning - Truncating Overlong Block File"),
+            wxICON_EXCLAMATION | wxOK);
+         wxLogWarning(sMsg.Translation()); //Debug?
          bb.f->SetLength(mMaxSamples);
       }
 

@@ -251,7 +251,7 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
    wxString fName = _("log.txt");
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                        _("Save log to:"),
+                        XO("Save log to:"),
                         wxEmptyString,
                         fName,
                         wxT("txt"),
@@ -265,8 +265,8 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
 
    if (!mText->SaveFile(fName)) {
       AudacityMessageBox(
-         wxString::Format( _("Couldn't save log to file: %s"), fName ),
-         _("Warning"),
+         XO("Couldn't save log to file: %s").Format( fName ),
+         XO("Warning"),
          wxICON_EXCLAMATION,
          mFrame.get());
       return;

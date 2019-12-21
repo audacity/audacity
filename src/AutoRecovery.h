@@ -59,7 +59,7 @@ class AUDACITY_DLL_API AutoSaveFile final : public XMLWriter
 {
 public:
 
-   static wxString FailureMessage( const FilePath &filePath );
+   static TranslatableString FailureMessage( const FilePath &filePath );
 
    AutoSaveFile(size_t allocSize = 1024 * 1024);
    virtual ~AutoSaveFile();

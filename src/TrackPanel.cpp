@@ -650,12 +650,12 @@ bool TrackPanel::IsAudioActive()
    return ProjectAudioIO::Get( *p ).IsAudioActive();
 }
 
-void TrackPanel::UpdateStatusMessage( const wxString &st )
+void TrackPanel::UpdateStatusMessage( const TranslatableString &st )
 {
    auto status = st;
    if (HasEscape())
-   /* i18n-hint Esc is a key on the keyboard */
-      status += wxT(" "), status += _("(Esc to cancel)");
+      /* i18n-hint Esc is a key on the keyboard */
+      status.Join( XO("(Esc to cancel)"), " " );
    ProjectStatus::Get( *GetProject() ).Set( status );
 }
 
@@ -693,7 +693,7 @@ void TrackPanel::UpdateViewIfNoTracks()
 
       mListener->TP_HandleResize();
       //STM: Clear message if all tracks are removed
-      ProjectStatus::Get( *GetProject() ).Set(wxT(""));
+      ProjectStatus::Get( *GetProject() ).Set({});
    }
 }
 

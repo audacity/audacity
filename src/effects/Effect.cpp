@@ -1081,12 +1081,8 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    if (!success)
    {
       Effect::MessageBox(
-         wxString::Format(
-            _("%s: Could not load settings below. Default settings will be used.\n\n%s"),
-            GetName().Translation(),
-            preset
-         )
-      );
+         XO("%s: Could not load settings below. Default settings will be used.\n\n%s")
+            .Format( GetName(), preset ) );
       // We are using defualt settings and we still wish to continue.
       return true;
       //return false;
@@ -2445,21 +2441,19 @@ void Effect::Preview(bool dryOnly)
       }
       else {
          ShowErrorDialog(FocusDialog, XO("Error"),
-                         _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+                         XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
                          wxT("Error_opening_sound_device"));
       }
    }
 }
 
-int Effect::MessageBox
-(const wxString& message, long style, const wxString &titleStr)
+int Effect::MessageBox( const TranslatableString& message,
+   long style, const TranslatableString &titleStr)
 {
-   wxString title;
-   if (titleStr.empty())
-      title = GetName().Translation();
-   else
-      title = wxString::Format(_("%s: %s"), GetName().Translation(), titleStr);
-   return AudacityMessageBox(message, title, style, mUIParent);
+   auto title = titleStr.empty()
+      ? GetName()
+      : XO("%s: %s").Format( GetName(), titleStr );
+   return AudacityMessageBox( message, title, style, mUIParent );
 }
 
 BEGIN_EVENT_TABLE(EffectDialog, wxDialogWrapper)
@@ -3450,9 +3444,10 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
 {
    auto preset = mUserPresets[evt.GetId() - kDeletePresetID];
 
-   int res = AudacityMessageBox(wxString::Format(_("Are you sure you want to delete \"%s\"?"), preset),
-                          _("Delete Preset"),
-                          wxICON_QUESTION | wxYES_NO);
+   int res = AudacityMessageBox(
+      XO("Are you sure you want to delete \"%s\"?").Format( preset ),
+      XO("Delete Preset"),
+      wxICON_QUESTION | wxYES_NO);
    if (res == wxYES)
    {
       mEffect->RemovePrivateConfigSubgroup(mEffect->GetUserPresetsGroup(preset));
@@ -3503,9 +3498,10 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
       name = text->GetValue();
       if (name.empty())
       {
-         AudacityMessageDialog md(this,
-                            _("You must specify a name"),
-                            _("Save Preset"));
+         AudacityMessageDialog md(
+            this,
+            XO("You must specify a name"),
+            XO("Save Preset") );
          md.Center();
          md.ShowModal();
          continue;
@@ -3513,10 +3509,11 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 
       if ( make_iterator_range( mUserPresets ).contains( name ) )
       {
-         AudacityMessageDialog md(this,
-                            _("Preset already exists.\n\nReplace?"),
-                            _("Save Preset"),
-                            wxYES_NO | wxCANCEL | wxICON_EXCLAMATION);
+         AudacityMessageDialog md(
+            this,
+            XO("Preset already exists.\n\nReplace?"),
+            XO("Save Preset"),
+            wxYES_NO | wxCANCEL | wxICON_EXCLAMATION );
          md.Center();
          int choice = md.ShowModal();
          if (choice == wxID_CANCEL)

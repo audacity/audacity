@@ -184,19 +184,23 @@ int ExportMultipleDialog::ShowModal()
    // Cannot export if all audio tracks are muted.
    if (mNumWaveTracks == 0)
    {
-      ::AudacityMessageBox(_("All audio is muted."),
-                     _("Cannot Export Multiple"),
-                     wxOK | wxCENTRE, this);
+      ::AudacityMessageBox(
+         XO("All audio is muted."),
+         XO("Cannot Export Multiple"),
+         wxOK | wxCENTRE,
+         this);
       return wxID_CANCEL;
    }
 
    if ((mNumWaveTracks < 1) && (mNumLabels < 1))
    {
-      ::AudacityMessageBox(_(
+      ::AudacityMessageBox(
+         XO(
 "You have no unmuted Audio Tracks and no applicable \
 \nlabels, so you cannot export to separate audio files."),
-                     _("Cannot Export Multiple"),
-                     wxOK | wxCENTRE, this);
+         XO("Cannot Export Multiple"),
+         wxOK | wxCENTRE,
+         this);
       return wxID_CANCEL;
    }
 
@@ -500,17 +504,18 @@ void ExportMultipleDialog::OnCreate(wxCommandEvent& WXUNUSED(event))
       return;
    }
 
-   ::AudacityMessageBox(wxString::Format(_("\"%s\" successfully created."),
-                                   fn.GetPath()),
-                  _("Export Multiple"),
-                  wxOK | wxCENTRE, this);
+   ::AudacityMessageBox(
+      XO("\"%s\" successfully created.").Format( fn.GetPath() ),
+      XO("Export Multiple"),
+      wxOK | wxCENTRE,
+      this);
 }
 
 void ExportMultipleDialog::OnChoose(wxCommandEvent& WXUNUSED(event))
 {
    wxDirDialogWrapper dlog(this,
-                    _("Choose a location to save the exported files"),
-                    mDir->GetValue());
+      XO("Choose a location to save the exported files"),
+      mDir->GetValue());
    dlog.ShowModal();
    if (!dlog.GetPath().empty())
       mDir->SetValue(dlog.GetPath());
@@ -601,16 +606,16 @@ void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))
    // Give 'em the result
    auto cleanup = finally( [&]
    {
-      wxString msg;
-      msg.Printf(
-         ok == ProgressResult::Success ? _("Successfully exported the following %lld file(s).")
-           : (ok == ProgressResult::Failed ? _("Something went wrong after exporting the following %lld file(s).")
-             : (ok == ProgressResult::Cancelled ? _("Export canceled after exporting the following %lld file(s).")
-               : (ok == ProgressResult::Stopped ? _("Export stopped after exporting the following %lld file(s).")
-                 : _("Something went really wrong after exporting the following %lld file(s).")
-                 )
-               )
-             ), (long long) mExported.size());
+      auto msg = (ok == ProgressResult::Success
+         ? XO("Successfully exported the following %lld file(s).")
+         : ok == ProgressResult::Failed
+            ? XO("Something went wrong after exporting the following %lld file(s).")
+            : ok == ProgressResult::Cancelled
+               ? XO("Export canceled after exporting the following %lld file(s).")
+               : ok == ProgressResult::Stopped
+                  ? XO("Export stopped after exporting the following %lld file(s).")
+                  : XO("Something went really wrong after exporting the following %lld file(s).")
+         ).Format((long long) mExported.size());
 
       wxString FileList;
       for (size_t i = 0; i < mExported.size(); i++) {
@@ -657,14 +662,13 @@ bool ExportMultipleDialog::DirOk()
       return true;
    }
 
-   wxString prompt;
+   auto prompt = XO("\"%s\" doesn't exist.\n\nWould you like to create it?")
+      .Format( fn.GetFullPath() );
 
-   prompt.Printf(_("\"%s\" doesn't exist.\n\nWould you like to create it?"),
-                 fn.GetFullPath());
-
-   int action = AudacityMessageBox(prompt,
-                             wxT("Warning"),
-                             wxYES_NO | wxICON_EXCLAMATION);
+   int action = AudacityMessageBox(
+      prompt,
+      XO("Warning"),
+      wxYES_NO | wxICON_EXCLAMATION);
    if (action != wxYES) {
       return false;
    }

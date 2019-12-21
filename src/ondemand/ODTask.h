@@ -117,7 +117,7 @@ class ODTask /* not final */
    bool GetNeedsODUpdate();
    void ResetNeedsODUpdate();
 
-   virtual const wxChar* GetTip()=0;
+   virtual TranslatableString GetTip()=0;
 
     ///returns true if the task is associated with the project.
    virtual bool IsTaskAssociatedWithProject(AudacityProject* proj);

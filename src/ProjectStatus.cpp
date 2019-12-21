@@ -57,16 +57,16 @@ auto ProjectStatus::GetStatusWidthFunctions() -> const StatusWidthFunctions &
    return statusWidthFunctions();
 }
 
-const wxString &ProjectStatus::Get( StatusBarField field ) const
+const TranslatableString &ProjectStatus::Get( StatusBarField field ) const
 {
    return mLastStatusMessages[ field - 1 ];
 }
 
-void ProjectStatus::Set(const wxString &msg, StatusBarField field )
+void ProjectStatus::Set(const TranslatableString &msg, StatusBarField field )
 {
    auto &project = mProject;
-   wxString &lastMessage = mLastStatusMessages[ field - 1 ];
-   if ( msg != lastMessage ) {
+   auto &lastMessage = mLastStatusMessages[ field - 1 ];
+   if ( msg.Translation() != lastMessage.Translation() ) {
       lastMessage = msg;
       wxCommandEvent evt{ EVT_PROJECT_STATUS_UPDATE };
       evt.SetInt( field );

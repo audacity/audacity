@@ -176,7 +176,7 @@ void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
 #endif
 
    path = FileNames::SelectFile(FileNames::Operation::Open,
-                       _("Find path to command"),
+                       XO("Find path to command"),
                        wxEmptyString,
                        wxEmptyString,
                        ext,
@@ -386,8 +386,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    }
 
    if (!rc) {
-      AudacityMessageBox(wxString::Format(_("Cannot export audio to %s"),
-                                    path));
+      AudacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
       process.Detach();
       process.CloseOutput();
 

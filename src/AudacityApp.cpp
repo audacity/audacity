@@ -313,7 +313,9 @@ void PopulatePreferences()
       bool gone = wxRemoveFile(fullPath);  // remove FirstTime.ini
       if (!gone)
       {
-         AudacityMessageBox(wxString::Format(_("Failed to remove %s"), fullPath), _("Failed!"));
+         AudacityMessageBox(
+            XO("Failed to remove %s").Format(fullPath),
+            XO("Failed!"));
       }
    }
 
@@ -323,9 +325,12 @@ void PopulatePreferences()
    if (resetPrefs)
    {
       // pop up a dialogue
-      wxString prompt = _("Reset Preferences?\n\nThis is a one-time question, after an 'install' where you asked to have the Preferences reset.");
-      int action = AudacityMessageBox(prompt, _("Reset Audacity Preferences"),
-                                wxYES_NO, NULL);
+      auto prompt = XO(
+"Reset Preferences?\n\nThis is a one-time question, after an 'install' where you asked to have the Preferences reset.");
+      int action = AudacityMessageBox(
+         prompt,
+         XO("Reset Audacity Preferences"),
+         wxYES_NO, NULL);
       if (action == wxYES)   // reset
       {
          gPrefs->DeleteAll();
@@ -955,8 +960,10 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
       }
       else {
          // File doesn't exist - remove file from history
-         AudacityMessageBox(wxString::Format(_("%s could not be found.\n\nIt has been removed from the list of recent files."),
-                      fullPathStr));
+         AudacityMessageBox(
+            XO(
+"%s could not be found.\n\nIt has been removed from the list of recent files.")
+               .Format(fullPathStr) );
          return(false);
       }
    }
@@ -1049,7 +1056,7 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
          window.Iconize(false);
          window.Raise();
 
-         wxString errorMessage = wxString::Format(_(
+         auto errorMessage = XO(
 "One or more external audio files could not be found.\n\
 It is possible they were moved, deleted, or the drive they \
 were on was unmounted.\n\
@@ -1058,7 +1065,7 @@ The first detected missing file is:\n\
 %s\n\
 There may be additional missing files.\n\
 Choose Help > Diagnostics > Check Dependencies to view a list of \
-locations of the missing files."), missingFileName);
+locations of the missing files.").Format( missingFileName ) ;
 
          // if an old dialog exists, raise it if it is
          if ( auto dialog = MissingAliasFilesDialog::Find( *offendingProject ) )
@@ -1475,7 +1482,7 @@ bool AudacityApp::OnInit()
       }
       else
       {
-         wxPrintf( AutoSaveFile::FailureMessage( fileName ) );
+         wxPrintf( AutoSaveFile::FailureMessage( fileName ) .Translation() ); //Debug()?
       }
       exit(1);
    }
@@ -1777,9 +1784,11 @@ bool AudacityApp::InitTempDir()
    if (temp.empty()) {
       // Failed
       if( !FileNames::IsTempDirectoryNameOK( tempFromPrefs ) ) {
-         AudacityMessageBox(_("Audacity could not find a safe place to store temporary files.\nAudacity needs a place where automatic cleanup programs won't delete the temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
+         AudacityMessageBox(XO(
+"Audacity could not find a safe place to store temporary files.\nAudacity needs a place where automatic cleanup programs won't delete the temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
       } else {
-         AudacityMessageBox(_("Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
+         AudacityMessageBox(XO(
+"Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
       }
 
       // Only want one page of the preferences
@@ -1788,7 +1797,8 @@ bool AudacityApp::InitTempDir()
       GlobalPrefsDialog dialog(NULL, factories);
       dialog.ShowModal();
 
-      AudacityMessageBox(_("Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."));
+      AudacityMessageBox(XO(
+"Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."));
       return false;
    }
 
@@ -1823,20 +1833,20 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    wxString sockFile(dir + wxT("/.audacity.sock"));
 #endif
 
-   wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
+   auto runningTwoCopiesStr = XO("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
 
    if (!checker->Create(name, dir)) {
       // Error initializing the wxSingleInstanceChecker.  We don't know
       // whether there is another instance running or not.
 
-      wxString prompt =
-         _("Audacity was not able to lock the temporary files directory.\nThis folder may be in use by another copy of Audacity.\n") +
-         runningTwoCopiesStr +
-         _("Do you still want to start Audacity?");
-      int action = AudacityMessageBox(prompt,
-                                _("Error Locking Temporary Folder"),
-                                wxYES_NO | wxICON_EXCLAMATION,
-                                NULL);
+      auto prompt = XO(
+"Audacity was not able to lock the temporary files directory.\nThis folder may be in use by another copy of Audacity.\n")
+         + runningTwoCopiesStr
+         + XO("Do you still want to start Audacity?");
+      int action = AudacityMessageBox(
+         prompt,
+         XO("Error Locking Temporary Folder"),
+         wxYES_NO | wxICON_EXCLAMATION, NULL);
       if (action == wxNO)
          return false;
    }
@@ -1945,12 +1955,14 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 #endif
       // There is another copy of Audacity running.  Force quit.
 
-      wxString prompt =
-         _("The system has detected that another copy of Audacity is running.\n") +
-         runningTwoCopiesStr +
-         _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
-      AudacityMessageBox(prompt, _("Audacity is already running"),
-            wxOK | wxICON_ERROR);
+      auto prompt =  XO(
+"The system has detected that another copy of Audacity is running.\n")
+         + runningTwoCopiesStr
+         + XO(
+"Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
+      AudacityMessageBox(
+         prompt, XO("Audacity is already running"),
+         wxOK | wxICON_ERROR);
 
 #ifdef __WXMAC__
       // Bug 2052
@@ -1958,10 +1970,10 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       auto lockFileName = wxFileName(dir,name);
       bool bIsLocked = lockFileName.IsOk() && lockFileName.FileExists();
       if( bIsLocked ){
-         int action = AudacityMessageBox(wxString::Format( _("If you're sure another copy of Audacity isn't\nrunning, Audacity can skip the test for\n'Audacity already running' next time\nby removing the lock file:\n\n%s\n\nDo you want to do that?"),
-               lockFileName.GetFullName()
-            ),
-            _("Possible Lock File Problem"),
+         int action = AudacityMessageBox(
+XO("If you're sure another copy of Audacity isn't\nrunning, Audacity can skip the test for\n'Audacity already running' next time\nby removing the lock file:\n\n%s\n\nDo you want to do that?")
+               .Format(lockFileName.GetFullName()),
+            XO("Possible Lock File Problem"),
             wxYES_NO | wxICON_EXCLAMATION,
             NULL);
          if (action == wxYES){
@@ -2289,8 +2301,9 @@ void AudacityApp::AssociateFileTypes()
          // and they got stepped on, so ask.
          int wantAssoc =
             AudacityMessageBox(
-               _("Audacity project (.AUP) files are not currently \nassociated with Audacity. \n\nAssociate them, so they open on double-click?"),
-               _("Audacity Project Files"),
+               XO(
+"Audacity project (.AUP) files are not currently \nassociated with Audacity. \n\nAssociate them, so they open on double-click?"),
+               XO("Audacity Project Files"),
                wxYES_NO | wxICON_QUESTION);
          if (wantAssoc == wxYES) {
             gPrefs->Write(wxT("/WantAssociateFiles"), true);

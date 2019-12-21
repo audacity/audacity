@@ -43,7 +43,7 @@ END_EVENT_TABLE()
 ErrorDialog::ErrorDialog(
    wxWindow *parent,
    const TranslatableString & dlogTitle,
-   const wxString & message,
+   const TranslatableString & message,
    const wxString & helpPage,
    const bool Close, const bool modal):
    wxDialogWrapper(parent, (wxWindowID)-1, dlogTitle)
@@ -63,7 +63,7 @@ ErrorDialog::ErrorDialog(
    S.StartVerticalLay();
    {
       S.SetBorder( 20 );
-      S.AddFixedText( message );
+      S.AddFixedText( message.Translation() );
       S.SetBorder( 2 );
       S.AddStandardButtons( buttonMask );
    }
@@ -104,7 +104,7 @@ void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 
 void ShowErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
-                     const wxString &message,
+                     const TranslatableString &message,
                      const wxString &helpPage,
                      const bool Close)
 {
@@ -117,7 +117,7 @@ void ShowErrorDialog(wxWindow *parent,
 // unused.
 void ShowModelessErrorDialog(wxWindow *parent,
                              const TranslatableString &dlogTitle,
-                             const wxString &message,
+                             const TranslatableString &message,
                              const wxString &helpPage,
                              const bool Close)
 {

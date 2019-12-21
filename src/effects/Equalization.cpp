@@ -505,9 +505,10 @@ bool EffectEqualization::ValidateUI()
    {
       // PRL:  This is unreachable.  mDisallowCustom is always false.
 
-      Effect::MessageBox(_("To use this filter curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
+      Effect::MessageBox(
+         XO("To use this filter curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
          wxOK | wxCENTRE,
-         _("Filter Curve needs a different name"));
+         XO("Filter Curve needs a different name") );
       return false;
    }
 
@@ -626,7 +627,9 @@ bool EffectEqualization::Init()
 
       for (auto track : trackRange) {
          if (track->GetRate() != rate) {
-            Effect::MessageBox(_("To apply Equalization, all selected tracks must have the same sample rate."));
+            Effect::MessageBox(
+               XO(
+"To apply Equalization, all selected tracks must have the same sample rate.") );
             return(false);
          }
          ++selcount;
@@ -636,9 +639,10 @@ bool EffectEqualization::Init()
    mHiFreq = rate / 2.0;
    // Unlikely, but better than crashing.
    if (mHiFreq <= loFreqI) {
-      Effect::MessageBox( _("Track sample rate is too low for this effect."),
-                    wxOK | wxCENTRE,
-                    _("Effect Unavailable"));
+      Effect::MessageBox(
+         XO("Track sample rate is too low for this effect."),
+         wxOK | wxCENTRE,
+         XO("Effect Unavailable") );
       return(false);
    }
 
@@ -1601,13 +1605,15 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    const wxString fullPath{ fn.GetFullPath() };
    if( !reader.Parse( this, fullPath ) )
    {
-      wxString msg;
       /* i18n-hint: EQ stands for 'Equalization'.*/
-      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fullPath, reader.GetErrorStr());
+      auto msg = XO(
+"Error Loading EQ Curves from file:\n%s\nError message says:\n%s")
+         .Format( fullPath, reader.GetErrorStr() );
       // Inform user of load failure
-      Effect::MessageBox( msg,
+      Effect::MessageBox(
+         msg,
          wxOK | wxCENTRE,
-         _("Error Loading EQ Curves"));
+         XO("Error Loading EQ Curves") );
       mCurves.push_back( _("unnamed") );  // we always need a default curve to use
       return;
    }
@@ -1771,9 +1777,9 @@ bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
    if( !fileName.FileExists() )
    {
       // LLL:  Is there really a need for an error message at all???
-      //wxString errorMessage;
-      //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir());
-      //ShowErrorDialog(mUIParent, _("EQCurves.xml and EQDefaultCurves.xml missing"),
+      //auto errorMessage = XO("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s")
+      //   .Format( FileNames::DataDir() );
+      //ShowErrorDialog(mUIParent, XO("EQCurves.xml and EQDefaultCurves.xml missing"),
       //   errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
 
       // Have another go at finding EQCurves.xml in the data dir, in case 'help' helped
@@ -2002,9 +2008,10 @@ void EffectEqualization::setCurve(const wxString &curveName)
          break;
    if( i == mCurves.size())
    {
-      Effect::MessageBox( _("Requested curve not found, using 'unnamed'"),
+      Effect::MessageBox(
+         XO("Requested curve not found, using 'unnamed'"),
          wxOK|wxICON_ERROR,
-         _("Curve not found") );
+         XO("Curve not found") );
       setCurve();
    }
    else
@@ -3411,9 +3418,10 @@ void EditCurvesDialog::OnUp(wxCommandEvent & WXUNUSED(event))
    {
       if ( item == mList->GetItemCount()-1)
       {  // 'unnamed' always stays at the bottom
-         mEffect->Effect::MessageBox(_("'unnamed' always stays at the bottom of the list"),
-                            Effect::DefaultMessageBoxStyle,
-                            _("'unnamed' is special"));   // these could get tedious!
+         mEffect->Effect::MessageBox(
+            XO("'unnamed' always stays at the bottom of the list"),
+            Effect::DefaultMessageBoxStyle,
+            XO("'unnamed' is special") );   // these could get tedious!
          return;
       }
       state = mList->GetItemState(item-1, wxLIST_STATE_SELECTED);
@@ -3533,12 +3541,16 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
                bad = true;
                if( curve == item )  // trying to rename a curve with the same name
                {
-                  mEffect->Effect::MessageBox( _("Name is the same as the original one"), wxOK, _("Same name") );
+                  mEffect->Effect::MessageBox(
+                     XO("Name is the same as the original one"),
+                     wxOK,
+                     XO("Same name") );
                   break;
                }
                int answer = mEffect->Effect::MessageBox(
-                  wxString::Format( _("Overwrite existing curve '%s'?"), name ),
-                  wxYES_NO, _("Curve exists") );
+                  XO("Overwrite existing curve '%s'?").Format( name ),
+                  wxYES_NO,
+                  XO("Curve exists") );
                if (answer == wxYES)
                {
                   bad = false;
@@ -3609,18 +3621,22 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
    {
       if(item == mList->GetItemCount()-1)   //unnamed
       {
-         mEffect->Effect::MessageBox(_("You cannot delete the 'unnamed' curve."),
-             wxOK | wxCENTRE, _("Can't delete 'unnamed'"));
+         mEffect->Effect::MessageBox(
+            XO("You cannot delete the 'unnamed' curve."),
+            wxOK | wxCENTRE,
+            XO("Can't delete 'unnamed'") );
       }
       else
       {
          // Create the prompt
-         wxString quest;
-         quest = wxString::Format(_("Delete '%s'?"),
-                                  mEditCurves[ item-deleted ].Name);
+         auto quest = XO("Delete '%s'?")
+            .Format(mEditCurves[ item-deleted ].Name));
 
          // Ask for confirmation before removal
-         int ans = mEffect->Effect::MessageBox( quest, wxYES_NO | wxCENTRE, _("Confirm Deletion") );
+         int ans = mEffect->Effect::MessageBox(
+            quest,
+            wxYES_NO | wxCENTRE,
+            XO("Confirm Deletion") );
          if( ans == wxYES )
          {  // Remove the curve from the array
             mEditCurves.RemoveAt( item-deleted );
@@ -3641,16 +3657,19 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
    int count = mList->GetSelectedItemCount();
    long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    // Create the prompt
-   wxString quest;
+   TranslatableString quest;
    if( count > 1 )
-      quest = wxString::Format(_("Delete %d items?"), count);
+      quest = XO("Delete %d items?").Format( count );
    else
       if( count == 1 )
-         quest = wxString::Format(_("Delete '%s'?"), mEditCurves[ item ].Name);
+         quest = XO("Delete '%s'?").Format( mEditCurves[ item ].Name );
       else
          return;
    // Ask for confirmation before removal
-   int ans = mEffect->Effect::MessageBox( quest, wxYES_NO | wxCENTRE, _("Confirm Deletion") );
+   int ans = mEffect->Effect::MessageBox(
+      quest,
+      wxYES_NO | wxCENTRE,
+      XO("Confirm Deletion") );
    if( ans == wxYES )
    {  // Remove the curve(s) from the array
       // Take care, mList and mEditCurves will get out of sync as curves are deleted
@@ -3660,9 +3679,10 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
          // TODO: Migrate to the standard "Manage" dialog.
          if(item == mList->GetItemCount()-1)   //unnamed
          {
-            mEffect->Effect::MessageBox(_("You cannot delete the 'unnamed' curve, it is special."),
-                                        Effect::DefaultMessageBoxStyle,
-                                        _("Can't delete 'unnamed'"));
+            mEffect->Effect::MessageBox(
+               XO("You cannot delete the 'unnamed' curve, it is special."),
+               Effect::DefaultMessageBoxStyle,
+               XO("Can't delete 'unnamed'") );
          }
          else
          {
@@ -3678,7 +3698,9 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 {
-   FileDialogWrapper filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
+   FileDialogWrapper filePicker(this,
+      XO("Choose an EQ curve file"), FileNames::DataDir(), wxT(""),
+      _("xml files (*.xml;*.XML)|*.xml;*.XML"));
    wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
@@ -3698,7 +3720,9 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {
-   FileDialogWrapper filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
+   FileDialogWrapper filePicker(this, XO("Export EQ curves as..."),
+      FileNames::DataDir(), wxT(""), wxT("*.XML"),
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER); // wxFD_CHANGE_DIR?
    wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
@@ -3720,9 +3744,10 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
          i++;
       }
       else
-         mEffect->Effect::MessageBox(_("You cannot export 'unnamed' curve, it is special."),
-                            Effect::DefaultMessageBoxStyle,
-                            _("Cannot Export 'unnamed'"));
+         mEffect->Effect::MessageBox(
+            XO("You cannot export 'unnamed' curve, it is special."),
+            Effect::DefaultMessageBoxStyle,
+            XO("Cannot Export 'unnamed'") );
       // get next selected item
       item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
@@ -3731,16 +3756,17 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
       mEffect->mCurves = exportCurves;
       mEffect->SaveCurves(fileName);
       mEffect->mCurves = temp;
-      wxString message;
-      message.Printf(_("%d curves exported to %s"), i, fileName);
-      mEffect->Effect::MessageBox(message,
-                                  Effect::DefaultMessageBoxStyle,
-                                  _("Curves exported"));
+      auto message = XO("%d curves exported to %s").Format( i, fileName );
+      mEffect->Effect::MessageBox(
+         message,
+         Effect::DefaultMessageBoxStyle,
+         XO("Curves exported") );
    }
    else
-      mEffect->Effect::MessageBox(_("No curves exported"),
-                                  Effect::DefaultMessageBoxStyle,
-                                  _("No curves exported"));
+      mEffect->Effect::MessageBox(
+         XO("No curves exported"),
+         Effect::DefaultMessageBoxStyle,
+         XO("No curves exported") );
 }
 
 void EditCurvesDialog::OnLibrary( wxCommandEvent & WXUNUSED(event))

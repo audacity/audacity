@@ -641,7 +641,9 @@ void OnNewTimeTrack(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    if ( *tracks.Any<TimeTrack>().begin() ) {
-      AudacityMessageBox(_("This version of Audacity only allows one time track for each project window."));
+      AudacityMessageBox(
+         XO(
+"This version of Audacity only allows one time track for each project window.") );
       return;
    }
 
@@ -748,8 +750,11 @@ void OnResample(const CommandContext &context)
          break;
       }
 
-      AudacityMessageBox(_("The entered value is invalid"), _("Error"),
-                   wxICON_ERROR, &window);
+      AudacityMessageBox(
+         XO("The entered value is invalid"),
+         XO("Error"),
+         wxICON_ERROR,
+         &window);
    }
 
    int ndx = 0;
@@ -910,7 +915,7 @@ void OnScoreAlign(const CommandContext &context)
       numNoteTracksSelected != 1 ||
       numOtherTracksSelected != 0){
       AudacityMessageBox(
-         _("Please select at least one audio track and one MIDI track."));
+         XO("Please select at least one audio track and one MIDI track.") );
       return;
    }
 
@@ -982,24 +987,27 @@ void OnScoreAlign(const CommandContext &context)
 
    if (result == SA_SUCCESS) {
       tracks->Replace(nt, holder);
-      AudacityMessageBox(wxString::Format(
-         _("Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."),
-         params.mMidiStart, params.mMidiEnd,
-         params.mAudioStart, params.mAudioEnd));
+      AudacityMessageBox(
+         XO("Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.")
+            .Format(
+               params.mMidiStart, params.mMidiEnd,
+               params.mAudioStart, params.mAudioEnd) );
       ProjectHistory::Get( project )
          .PushState(_("Sync MIDI with Audio"), _("Sync MIDI with Audio"));
    } else if (result == SA_TOOSHORT) {
-      AudacityMessageBox(wxString::Format(
-         _("Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."),
-         params.mMidiStart, params.mMidiEnd,
-         params.mAudioStart, params.mAudioEnd));
+      AudacityMessageBox(
+         XO(
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.")
+            .Format(
+               params.mMidiStart, params.mMidiEnd,
+               params.mAudioStart, params.mAudioEnd) );
    } else if (result == SA_CANCEL) {
       // wrong way to recover...
       //GetActiveProject()->OnUndo(); // recover any changes to note track
       return; // no message when user cancels alignment
    } else {
       //GetActiveProject()->OnUndo(); // recover any changes to note track
-      AudacityMessageBox(_("Internal error reported by alignment process."));
+      AudacityMessageBox( XO("Internal error reported by alignment process.") );
    }
 }
 #endif /* EXPERIMENTAL_SCOREALIGN */
@@ -1161,7 +1169,7 @@ void OnTrackClose(const CommandContext &context)
    if (isAudioActive)
    {
       ProjectStatus::Get( project ).Set(
-         _("Can't delete track with active audio"));
+         XO("Can't delete track with active audio"));
       wxBell();
       return;
    }

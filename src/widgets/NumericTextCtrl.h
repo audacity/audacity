@@ -187,6 +187,9 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
    virtual ~NumericTextCtrl();
 
+   // Hide the inherited function that takes wxString
+   void SetName( const TranslatableString &name );
+
    bool Layout() override;
    void Fit() override;
 

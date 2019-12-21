@@ -205,7 +205,7 @@ void OnExportSelection(const CommandContext &context)
    Exporter e;
 
    MissingAliasFilesDialog::SetShouldShow(true);
-   e.SetFileDialogTitle( _("Export Selected Audio") );
+   e.SetFileDialogTitle( XO("Export Selected Audio") );
    e.Process(&project, true, selectedRegion.t0(),
       selectedRegion.t1());
 }
@@ -222,14 +222,14 @@ void OnExportLabels(const CommandContext &context)
    auto numLabelTracks = trackRange.size();
 
    if (numLabelTracks == 0) {
-      AudacityMessageBox(_("There are no label tracks to export."));
+      AudacityMessageBox( XO("There are no label tracks to export.") );
       return;
    }
    else
       fName = (*trackRange.rbegin())->GetName();
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                        _("Export Labels As:"),
+                        XO("Export Labels As:"),
                         wxEmptyString,
                         fName,
                         wxT("txt"),
@@ -260,8 +260,8 @@ void OnExportLabels(const CommandContext &context)
    f.Create();
    f.Open();
    if (!f.IsOpened()) {
-      AudacityMessageBox( wxString::Format(
-         _("Couldn't write to file: %s"), fName ) );
+      AudacityMessageBox(
+         XO( "Couldn't write to file: %s" ).Format( fName ) );
       return;
    }
 
@@ -294,13 +294,13 @@ void OnExportMIDI(const CommandContext &context)
    const auto numNoteTracksSelected = range.size();
 
    if(numNoteTracksSelected > 1) {
-      AudacityMessageBox(_(
-         "Please select only one Note Track at a time."));
+      AudacityMessageBox(
+         XO("Please select only one Note Track at a time.") );
       return;
    }
    else if(numNoteTracksSelected < 1) {
-      AudacityMessageBox(_(
-         "Please select a Note Track."));
+      AudacityMessageBox(
+         XO("Please select a Note Track.") );
       return;
    }
 
@@ -315,7 +315,7 @@ void OnExportMIDI(const CommandContext &context)
       wxString fName;
 
       fName = FileNames::SelectFile(FileNames::Operation::Export,
-         _("Export MIDI As:"),
+         XO("Export MIDI As:"),
          wxEmptyString,
          fName,
          wxT(".mid|.gro"),
@@ -351,9 +351,10 @@ void OnExportMIDI(const CommandContext &context)
       } else if(fName.EndsWith(wxT(".gro"))) {
          nt->ExportAllegro(fName);
       } else {
-         wxString msg = _("You have selected a filename with an unrecognized file extension.\nDo you want to continue?");
-         wxString title = _("Export MIDI");
-         int id = AudacityMessageBox(msg, title, wxYES_NO);
+         auto msg = XO(
+"You have selected a filename with an unrecognized file extension.\nDo you want to continue?");
+         auto title = XO("Export MIDI");
+         int id = AudacityMessageBox( msg, title, wxYES_NO );
          if (id == wxNO) {
             continue;
          } else if (id == wxYES) {
@@ -419,7 +420,7 @@ void OnImportLabels(const CommandContext &context)
 
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
-                    _("Select a text file containing labels"),
+                    XO("Select a text file containing labels"),
                     wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
@@ -433,7 +434,7 @@ void OnImportLabels(const CommandContext &context)
       f.Open(fileName);
       if (!f.IsOpened()) {
          AudacityMessageBox(
-            wxString::Format( _("Could not open file: %s"), fileName ) );
+            XO("Could not open file: %s").Format( fileName ) );
          return;
       }
 
@@ -463,7 +464,7 @@ void OnImportMIDI(const CommandContext &context)
    auto &window = GetProjectFrame( project );
 
    wxString fileName = FileNames::SelectFile(FileNames::Operation::Open,
-      _("Select a MIDI file"),
+      XO("Select a MIDI file"),
       wxEmptyString,     // Path
       wxT(""),       // Name
       wxT(""),       // Extension
@@ -484,7 +485,7 @@ void OnImportRaw(const CommandContext &context)
 
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
-                    _("Select any uncompressed audio file"),
+                    XO("Select any uncompressed audio file"),
                     wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(""),       // Extension

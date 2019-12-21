@@ -653,16 +653,18 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       if ( UndoManager::Get( project ).UnsavedChanges() ) {
          TitleRestorer Restorer( window, project );// RAII
          /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
-         wxString Title =  wxString::Format(_("%sSave changes to %s?"), Restorer.sProjNumber, Restorer.sProjName);
-         wxString Message = _("Save project before closing?");
+         auto Title = XO("%sSave changes to %s?")
+            .Format( Restorer.sProjNumber, Restorer.sProjName );
+         auto Message = XO("Save project before closing?");
          if( !bHasTracks )
          {
-          Message += _("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
+          Message += XO("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
          }
-         int result = AudacityMessageBox( Message,
-                                    Title,
-                                   wxYES_NO | wxCANCEL | wxICON_QUESTION,
-                                   &window);
+         int result = AudacityMessageBox(
+            Message,
+            Title,
+            wxYES_NO | wxCANCEL | wxICON_QUESTION,
+            &window);
 
          if (result == wxCANCEL || (result == wxYES &&
               !GuardedCall<bool>( [&]{ return projectFileManager.Save(); } )
@@ -1018,7 +1020,7 @@ void ProjectManager::OnStatusChange( wxCommandEvent &evt )
 
    auto field = static_cast<StatusBarField>( evt.GetInt() );
    const auto &msg = ProjectStatus::Get( project ).Get( field );
-   window.GetStatusBar()->SetStatusText(msg, field);
+   window.GetStatusBar()->SetStatusText(msg.Translation(), field);
    
    if ( field == mainStatusBarField )
       // When recording, let the NEW status message stay at least as long as

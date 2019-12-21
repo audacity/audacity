@@ -133,8 +133,8 @@ private:
    void OnCloseWindow(wxCloseEvent & e);
    void Beep() const;
    
-   bool ConfirmAction(const wxString & sPrompt,
-                      const wxString & sTitle,
+   bool ConfirmAction(const TranslatableString & sPrompt,
+                      const TranslatableString & sTitle,
                       int iButtonID = -1);
 
    void AddMessageAsColumn(wxBoxSizer * pSizer,

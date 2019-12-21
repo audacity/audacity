@@ -74,6 +74,8 @@ public:
    void UpdateDisplay( bool bExpanded );
 
 private:
+   TranslatableString WindowTitle() const;
+
    void Populate();
    void PopulateOrExchange(ShuttleGui &S);
    void OnApplyToProject(wxCommandEvent & event) override;
