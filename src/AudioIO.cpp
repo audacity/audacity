@@ -3479,15 +3479,17 @@ void AudioIO::AILAProcess(double maxPeak) {
                //we can't improve it more now
                if (mAILATotalAnalysis != 0) {
                   mAILAActive = false;
-                  ProjectStatus::Get( *proj ).Set(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."));
+                  ProjectStatus::Get( *proj ).Set(
+                     XO(
+"Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high.") );
                }
                wxPrintf("\talready min vol:%f\n", iv);
             }
             else {
                float vol = (float) max(LOWER_BOUND, iv+(mAILAGoalPoint-mAILAMax)*mAILAChangeFactor);
                Px_SetInputVolume(mPortMixer, vol);
-               wxString msg;
-               msg.Printf(_("Automated Recording Level Adjustment decreased the volume to %f."), vol);
+               auto msg = XO(
+"Automated Recording Level Adjustment decreased the volume to %f.").Format( vol );
                ProjectStatus::Get( *proj ).Set(msg);
                changetype = 1;
                wxPrintf("\tnew vol:%f\n", vol);
@@ -3502,7 +3504,9 @@ void AudioIO::AILAProcess(double maxPeak) {
                //we can't improve it more
                if (mAILATotalAnalysis != 0) {
                   mAILAActive = false;
-                  ProjectStatus::Get( *proj ).Set(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."));
+                  ProjectStatus::Get( *proj ).Set(
+                     XO(
+"Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low.") );
                }
                wxPrintf("\talready max vol:%f\n", iv);
             }
@@ -3513,8 +3517,9 @@ void AudioIO::AILAProcess(double maxPeak) {
                   wxPrintf("\tTruncated vol:%f\n", vol);
                }
                Px_SetInputVolume(mPortMixer, vol);
-               wxString msg;
-               msg.Printf(_("Automated Recording Level Adjustment increased the volume to %.2f."), vol);
+               auto msg = XO(
+"Automated Recording Level Adjustment increased the volume to %.2f.")
+                  .Format( vol );
                ProjectStatus::Get( *proj ).Set(msg);
                changetype = 2;
                wxPrintf("\tnew vol:%f\n", vol);
@@ -3548,12 +3553,17 @@ void AudioIO::AILAProcess(double maxPeak) {
       if (mAILAActive && mAILATotalAnalysis != 0 && mAILAAnalysisCounter >= mAILATotalAnalysis) {
          mAILAActive = false;
          if (mAILAMax > mAILAGoalPoint + mAILAGoalDelta)
-            ProjectStatus::Get( *proj ).Set(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."));
+            ProjectStatus::Get( *proj ).Set(
+               XO(
+"Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high.") );
          else if (mAILAMax < mAILAGoalPoint - mAILAGoalDelta)
-            ProjectStatus::Get( *proj ).Set(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."));
+            ProjectStatus::Get( *proj ).Set(
+               XO(
+"Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low.") );
          else {
-            wxString msg;
-            msg.Printf(_("Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."), Px_GetInputVolume(mPortMixer));
+            auto msg = XO(
+"Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume.")
+               .Format( Px_GetInputVolume(mPortMixer) );
             ProjectStatus::Get( *proj ).Set(msg);
          }
       }
