@@ -182,7 +182,7 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override
    {return SET_TRACK_NAME_PLUGIN_SYMBOL;};
-   //wxString GetDescription() override {return _("Sets the track name.");};
+   //TranslatableString GetDescription() override {return XO("Sets the track name.");};
    //bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    //bool Apply(const CommandContext & context) override;
