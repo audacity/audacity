@@ -13,6 +13,9 @@
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 
+#include <wx/event.h>
+#include "../widgets/wxPanelWrapper.h"
+
 #if 1
 
 #include "ScoreAlignParams.h"

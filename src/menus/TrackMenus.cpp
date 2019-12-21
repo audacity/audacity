@@ -888,8 +888,8 @@ void OnMoveSelectionWithTracks(const CommandContext &WXUNUSED(context) )
 void OnScoreAlign(const CommandContext &context)
 {
    auto &project = context.project;
-   auto tracks = project.GetTracks();
-   const auto rate = project.GetRate();
+   auto &tracks = TrackList::Get( project );
+   const auto rate = ProjectSettings::Get( project ).GetRate();
 
    int numWaveTracksSelected = 0;
    int numNoteTracksSelected = 0;
@@ -898,7 +898,7 @@ void OnScoreAlign(const CommandContext &context)
 
    // Iterate through once to make sure that there is exactly
    // one WaveTrack and one NoteTrack selected.
-   GetTracks()->Selected().Visit(
+   tracks.Selected().Visit(
       [&](WaveTrack *wt) {
          numWaveTracksSelected++;
          endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();
@@ -993,7 +993,7 @@ void OnScoreAlign(const CommandContext &context)
                params.mMidiStart, params.mMidiEnd,
                params.mAudioStart, params.mAudioEnd) );
       ProjectHistory::Get( project )
-         .PushState(_("Sync MIDI with Audio"), _("Sync MIDI with Audio"));
+         .PushState(XO("Sync MIDI with Audio"), XO("Sync MIDI with Audio"));
    } else if (result == SA_TOOSHORT) {
       AudacityMessageBox(
          XO(
