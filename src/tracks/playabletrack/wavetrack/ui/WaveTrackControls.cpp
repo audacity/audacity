@@ -504,7 +504,7 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
          S.SetBorder(10);
          S.StartHorizontalLay(wxEXPAND, false);
          {
-            cb = S.AddCombo(_("New sample rate (Hz):"),
+            cb = S.AddCombo(XO("New sample rate (Hz):"),
                rate,
                rates);
 #if defined(__WXMAC__)

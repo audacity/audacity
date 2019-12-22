@@ -1051,13 +1051,13 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
          {
             S.AddTitle(
                (bitrate == 0
-                  ? wxString::Format(
-                     _("The project sample rate (%d) is not supported by the current output\nfile format. "),
-                     rate)
-                  : wxString::Format(
-                     _("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. "),
-                     rate, bitrate/1024))
-               + _("You may resample to one of the rates below.")
+                  ? XO(
+"The project sample rate (%d) is not supported by the current output\nfile format. ")
+                       .Format( rate )
+                  : XO(
+"The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. ")
+                       .Format( rate, bitrate/1024))
+               + XO("You may resample to one of the rates below.")
             );
          }
          S.EndHorizontalLay();

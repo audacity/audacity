@@ -105,7 +105,7 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
 
    S.StartVerticalLay(1);
    {
-      S.AddTitle( shortMsg.Translation() );
+      S.AddTitle( shortMsg );
       S.Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 |
               wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL )
          .AddTextWindow(message);

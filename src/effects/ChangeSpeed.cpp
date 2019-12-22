@@ -299,7 +299,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
    S.StartVerticalLay(0);
    {
       S.AddSpace(0, 5);
-      S.AddTitle(_("Change Speed, affecting both Tempo and Pitch"));
+      S.AddTitle(XO("Change Speed, affecting both Tempo and Pitch"));
       S.AddSpace(0, 10);
 
       // Speed multiplier and percent change controls.

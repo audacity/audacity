@@ -229,7 +229,7 @@ public:
       const int max,
       const int min = 0) override;
    wxSpinCtrl * TieSpinCtrl(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< int > &Setting,
       const int max,
       const int min) override;
@@ -342,14 +342,14 @@ wxSlider * ShuttleGuiGetDefinition::TieSlider(
    return ShuttleGui::TieSlider( Prompt, Setting, max, min );
 }
 wxSpinCtrl * ShuttleGuiGetDefinition::TieSpinCtrl(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< int > &Setting,
    const int max,
    const int min) 
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "number", "type" );
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();

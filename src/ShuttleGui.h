@@ -268,11 +268,12 @@ public:
    void HandleOptionality(const wxString &Prompt);
    void AddPrompt(const wxString &Prompt, int wrapWidth = 0);
    void AddUnits(const wxString &Prompt, int wrapWidth = 0);
-   void AddTitle(const wxString &Prompt, int wrapWidth = 0);
+   void AddTitle(const TranslatableString &Prompt, int wrapWidth = 0);
    wxWindow * AddWindow(wxWindow * pWindow);
    wxSlider * AddSlider(const wxString &Prompt, int pos, int Max, int Min = 0);
    wxSlider * AddVSlider(const wxString &Prompt, int pos, int Max);
-   wxSpinCtrl * AddSpinCtrl(const wxString &Prompt, int Value, int Max, int Min);
+   wxSpinCtrl * AddSpinCtrl(const TranslatableString &Prompt,
+      int Value, int Max, int Min);
    wxTreeCtrl * AddTree();
 
    // Pass the same initValue to the sequence of calls to AddRadioButton and
@@ -331,7 +332,8 @@ public:
    wxGrid * AddGrid();
    wxCheckBox * AddCheckBox( const wxString &Prompt, bool Selected);
    wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, bool Selected);
-   wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices );
+   wxComboBox * AddCombo( const TranslatableString &Prompt,
+      const wxString &Selected, const wxArrayStringEx & choices );
    wxChoice   * AddChoice( const TranslatableString &Prompt,
       const TranslatableStrings &choices, int Selected = -1 );
    wxChoice   * AddChoice( const TranslatableString &Prompt,
@@ -420,7 +422,8 @@ public:
    // and as many times as there are values in the enumeration.
    wxRadioButton * TieRadioButton();
 
-   wxSpinCtrl * TieSpinCtrl( const wxString &Prompt, int &Value, const int max, const int min = 0 );
+   wxSpinCtrl * TieSpinCtrl( const TranslatableString &Prompt,
+      int &Value, const int max, const int min = 0 );
 
 
 //-- Variants of the standard Tie functions which do two step exchange in one go
@@ -468,7 +471,7 @@ public:
       const int max,
       const int min = 0);
    virtual wxSpinCtrl * TieSpinCtrl(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< int > &Setting,
       const int max,
       const int min);
@@ -553,7 +556,8 @@ private:
       const TranslatableString &Prompt, WrappedType & WrappedRef,
       const TranslatableStrings & choices );
    wxSlider * DoTieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
-   wxSpinCtrl * DoTieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
+   wxSpinCtrl * DoTieSpinCtrl( const TranslatableString &Prompt,
+      WrappedType & WrappedRef, const int max, const int min = 0 );
 
    std::vector<EnumValueSymbol> mRadioSymbols;
    wxString mRadioSettingName; /// The setting controlled by a group.

@@ -576,13 +576,13 @@ public:
       S.StartVerticalLay(true);
       {
          S.AddTitle(
-            wxString::Format(_("Audacity needs the file %s to create MP3s."),
-               mName));
+            XO("Audacity needs the file %s to create MP3s.")
+               .Format( mName ) );
 
          S.SetBorder(3);
          S.StartHorizontalLay(wxALIGN_LEFT, true);
          {
-            S.AddTitle( wxString::Format(_("Location of %s:"), mName) );
+            S.AddTitle( XO("Location of %s:").Format( mName ) );
          }
          S.EndHorizontalLay();
 
@@ -2017,13 +2017,13 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
          {
             S.AddTitle(
                ((bitrate == 0)
-                  ? wxString::Format(
-                     _("The project sample rate (%d) is not supported by the MP3\nfile format. "),
-                     rate)
-                  : wxString::Format(
-                     _("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format. "),
-                     rate, bitrate))
-               + _("You may resample to one of the rates below.")
+                  ? XO(
+"The project sample rate (%d) is not supported by the MP3\nfile format. ")
+                       .Format( rate )
+                  : XO(
+"The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format. ")
+                       .Format( rate, bitrate ))
+               + XO("You may resample to one of the rates below.")
             );
          }
          S.EndHorizontalLay();

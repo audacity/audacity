@@ -444,15 +444,15 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S)
          .Style(wxSL_HORIZONTAL) \
          .AddSlider( {}, DEF_ ## n, MAX_ ## n, MIN_ ## n);
 
-      SpinSlider(RoomSize,       _("&Room Size (%):"))
-      SpinSlider(PreDelay,       _("&Pre-delay (ms):"))
-      SpinSlider(Reverberance,   _("Rever&berance (%):"))
-      SpinSlider(HfDamping,      _("Da&mping (%):"))
-      SpinSlider(ToneLow,        _("Tone &Low (%):"))
-      SpinSlider(ToneHigh,       _("Tone &High (%):"))
-      SpinSlider(WetGain,        _("Wet &Gain (dB):"))
-      SpinSlider(DryGain,        _("Dr&y Gain (dB):"))
-      SpinSlider(StereoWidth,    _("Stereo Wid&th (%):"))
+      SpinSlider(RoomSize,       XO("&Room Size (%):"))
+      SpinSlider(PreDelay,       XO("&Pre-delay (ms):"))
+      SpinSlider(Reverberance,   XO("Rever&berance (%):"))
+      SpinSlider(HfDamping,      XO("Da&mping (%):"))
+      SpinSlider(ToneLow,        XO("Tone &Low (%):"))
+      SpinSlider(ToneHigh,       XO("Tone &High (%):"))
+      SpinSlider(WetGain,        XO("Wet &Gain (dB):"))
+      SpinSlider(DryGain,        XO("Dr&y Gain (dB):"))
+      SpinSlider(StereoWidth,    XO("Stereo Wid&th (%):"))
 
 #undef SpinSlider
 

@@ -351,13 +351,13 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartHorizontalLay(wxLEFT, 50);
             {
-               S.AddTitle(_("Start"));
+               S.AddTitle(XO("Start"));
             }
             S.EndHorizontalLay();
 
             S.StartHorizontalLay(wxLEFT, 50);
             {
-               S.AddTitle(_("End"));
+               S.AddTitle(XO("End"));
             }
             S.EndHorizontalLay();
          }

@@ -122,8 +122,8 @@ void KeyConfigPrefs::Populate()
       {
          S.StartStatic( {}, true);
          {
-            S.AddTitle(_("Keyboard preferences currently unavailable."));
-            S.AddTitle(_("Open a new project to modify keyboard shortcuts."));
+            S.AddTitle(XO("Keyboard preferences currently unavailable."));
+            S.AddTitle(XO("Open a new project to modify keyboard shortcuts."));
          }
          S.EndStatic();
       }
@@ -173,7 +173,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.StartHorizontalLay(wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
          {
-            S.AddTitle(_("View by:"));
+            S.AddTitle(XO("View by:"));
             S.StartRadioButtonGroup({
                wxT("/Prefs/KeyConfig/ViewBy"),
                {

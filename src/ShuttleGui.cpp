@@ -266,18 +266,19 @@ void ShuttleGuiBase::AddUnits(const wxString &Prompt, int wrapWidth)
 }
 
 /// Centred text string.
-void ShuttleGuiBase::AddTitle(const wxString &Prompt, int wrapWidth)
+void ShuttleGuiBase::AddTitle(const TranslatableString &Prompt, int wrapWidth)
 {
    if( Prompt.empty() )
       return;
    if( mShuttleMode != eIsCreating )
       return;
-   auto text = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
+   const auto translated = Prompt.Translation();
+   auto text = safenew wxStaticText(GetParent(), -1, translated, wxDefaultPosition, wxDefaultSize,
       GetStyle( wxALIGN_CENTRE ));
    mpWind = text;
    if (wrapWidth > 0)
       text->Wrap(wrapWidth);
-   mpWind->SetName(Prompt); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   mpWind->SetName(translated); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizers();
 }
 
@@ -478,10 +479,13 @@ wxStaticText * ShuttleGuiBase::AddVariableText(
    return pStatic;
 }
 
-wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices )
+wxComboBox * ShuttleGuiBase::AddCombo(
+   const TranslatableString &Prompt,
+   const wxString &Selected, const wxArrayStringEx & choices )
 {
-   HandleOptionality( Prompt );
-   AddPrompt( Prompt );
+   const auto translated = Prompt.Translation();
+   HandleOptionality( translated );
+   AddPrompt( translated );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxComboBox);
@@ -499,7 +503,7 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
 
    mpWind = pCombo = safenew wxComboBox(GetParent(), miId, Selected, wxDefaultPosition, wxDefaultSize,
       n, Choices, GetStyle( 0 ));
-   mpWind->SetName(wxStripMenuCodes(Prompt));
+   mpWind->SetName(wxStripMenuCodes(translated));
 
    UpdateSizers();
    return pCombo;
@@ -569,10 +573,12 @@ wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, i
    return pSlider;
 }
 
-wxSpinCtrl * ShuttleGuiBase::AddSpinCtrl(const wxString &Prompt, int Value, int Max, int Min)
+wxSpinCtrl * ShuttleGuiBase::AddSpinCtrl(
+   const TranslatableString &Prompt, int Value, int Max, int Min)
 {
-   HandleOptionality( Prompt );
-   AddPrompt( Prompt );
+   const auto translated = Prompt.Translation();
+   HandleOptionality( translated );
+   AddPrompt( translated );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxSpinCtrl);
@@ -583,7 +589,7 @@ wxSpinCtrl * ShuttleGuiBase::AddSpinCtrl(const wxString &Prompt, int Value, int 
       GetStyle( wxSP_VERTICAL | wxSP_ARROW_KEYS ),
       Min, Max, Value
       );
-   mpWind->SetName(wxStripMenuCodes(Prompt));
+   mpWind->SetName(wxStripMenuCodes(translated));
    miProp=1;
    UpdateSizers();
    return pSpinCtrl;
@@ -1299,9 +1305,11 @@ wxCheckBox * ShuttleGuiBase::DoTieCheckBoxOnRight(const wxString &Prompt, Wrappe
    return pCheckBox;
 }
 
-wxSpinCtrl * ShuttleGuiBase::DoTieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min )
+wxSpinCtrl * ShuttleGuiBase::DoTieSpinCtrl(
+   const TranslatableString &Prompt,
+   WrappedType & WrappedRef, const int max, const int min )
 {
-   HandleOptionality( Prompt );
+   HandleOptionality( Prompt.Translation() );
    // The Add function does a UseUpId(), so don't do it here in that case.
    if( mShuttleMode == eIsCreating )
       return AddSpinCtrl( Prompt, WrappedRef.ReadAsInt(), max, min );
@@ -1625,7 +1633,8 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(const wxString &Prompt, bool &Va
    return DoTieCheckBox( Prompt, WrappedRef );
 }
 
-wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl( const wxString &Prompt, int &Value, const int max, const int min )
+wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
+   const TranslatableString &Prompt, int &Value, const int max, const int min )
 {
    WrappedType WrappedRef(Value);
    return DoTieSpinCtrl( Prompt, WrappedRef, max, min );
@@ -1872,10 +1881,10 @@ wxSlider * ShuttleGuiBase::TieSlider(
 /// Variant of the standard TieSpinCtrl which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
-                                     const wxString &Prompt,
-                                     const SettingSpec< int > &Setting,
-                                     const int max,
-                                     const int min)
+   const TranslatableString &Prompt,
+   const SettingSpec< int > &Setting,
+   const int max,
+   const int min)
 {
    wxSpinCtrl * pSpinCtrl=NULL;
 

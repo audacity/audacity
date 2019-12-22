@@ -469,14 +469,15 @@ public:
       S.SetBorder(10);
       S.StartVerticalLay(true);
       {
-         S.AddTitle( wxString::Format(
-            _("Audacity needs the file '%s' to import and export audio via FFmpeg."),
-               mName));
+         S.AddTitle(
+            XO(
+"Audacity needs the file '%s' to import and export audio via FFmpeg.")
+               .Format( mName ) );
 
          S.SetBorder(3);
          S.StartHorizontalLay(wxALIGN_LEFT, true);
          {
-            S.AddTitle( wxString::Format(_("Location of '%s':"), mName) );
+            S.AddTitle( XO("Location of '%s':").Format( mName ) );
          }
          S.EndHorizontalLay();
 

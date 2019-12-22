@@ -722,7 +722,7 @@ void OnResample(const CommandContext &context)
 
          S.StartHorizontalLay(wxCENTER, false);
          {
-            cb = S.AddCombo(_("New sample rate (Hz):"),
+            cb = S.AddCombo(XO("New sample rate (Hz):"),
                             rate,
                             rates);
          }

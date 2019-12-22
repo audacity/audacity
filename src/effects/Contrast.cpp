@@ -224,7 +224,8 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    S.StartHorizontalLay(wxCENTER, false);
    {
       /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
-      S.AddTitle(_("Contrast Analyzer, for measuring RMS volume differences between two selections of audio."));
+      S.AddTitle(XO(
+"Contrast Analyzer, for measuring RMS volume differences between two selections of audio."));
    }
    S.EndHorizontalLay();
    S.StartStatic( XO("Parameters") );

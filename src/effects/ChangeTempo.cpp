@@ -226,7 +226,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
    S.StartVerticalLay(0);
    {
       S.AddSpace(0, 5);
-      S.AddTitle(_("Change Tempo without Changing Pitch"));
+      S.AddTitle(XO("Change Tempo without Changing Pitch"));
       S.SetBorder(5);
 
       //
