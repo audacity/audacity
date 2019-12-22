@@ -811,12 +811,12 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartStatic(XO("Buffer Size"));
          {
-            S.AddVariableText(wxString() +
-               _("The buffer size controls the number of samples sent to the effect ") +
-               _("on each iteration. Smaller values will cause slower processing and ") +
-               _("some effects require 8192 samples or less to work properly. However ") +
-               _("most effects can accept large buffers and using them will greatly ") +
-               _("reduce processing time."),
+            S.AddVariableText( XO(
+"The buffer size controls the number of samples sent to the effect "
+"on each iteration. Smaller values will cause slower processing and "
+"some effects require 8192 samples or less to work properly. However "
+"most effects can accept large buffers and using them will greatly "
+"reduce processing time."),
                false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
@@ -835,12 +835,12 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
          S.StartStatic(XO("Latency Compensation"));
          {
-            S.AddVariableText(wxString() +
-               _("As part of their processing, some VST effects must delay returning ") +
-               _("audio to Audacity. When not compensating for this delay, you will ") +
-               _("notice that small silences have been inserted into the audio. ") +
-               _("Enabling this option will provide that compensation, but it may ") +
-               _("not work for all VST effects."),
+            S.AddVariableText( XO(
+"As part of their processing, some VST effects must delay returning "
+"audio to Audacity. When not compensating for this delay, you will "
+"notice that small silences have been inserted into the audio. "
+"Enabling this option will provide that compensation, but it may "
+"not work for all VST effects."),
                false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
@@ -854,10 +854,10 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
          S.StartStatic(XO("Graphical Mode"));
          {
-            S.AddVariableText(wxString() +
-               _("Most VST effects have a graphical interface for setting parameter values.") +
-               _(" A basic text-only method is also available. ") +
-               _(" Reopen the effect for this to take effect."),
+            S.AddVariableText( XO(
+"Most VST effects have a graphical interface for setting parameter values."
+" A basic text-only method is also available. "
+" Reopen the effect for this to take effect."),
                false, 0, 650);
             S.TieCheckBox(_("Enable &graphical interface"),
                           mUseGUI);

@@ -313,10 +313,10 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                      MAX_PeakLevel
                   )
                   .AddTextBox( {}, wxT(""), 10);
-               mLeveldB = S.AddVariableText(_("dB"), false,
-                                            wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               mLeveldB = S.AddVariableText(XO("dB"), false,
+                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,
-                                            wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             }
             S.EndHorizontalLay();
 

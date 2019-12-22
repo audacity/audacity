@@ -212,7 +212,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.StartHorizontalLay(wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
          {
-            mFilterLabel = S.AddVariableText(_("Searc&h:"));
+            mFilterLabel = S.AddVariableText(XO("Searc&h:"));
 
             if (!mFilter) {
                mFilter = safenew wxTextCtrl(S.GetParent(),

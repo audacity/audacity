@@ -298,7 +298,7 @@ public:
    // When PositionFlags is 0, applies wxALL (which affects borders),
    // and either wxALIGN_CENTER (if bCenter) or else wxEXPAND
    wxStaticText * AddVariableText(
-      const wxString &Str, bool bCenter = false,
+      const TranslatableString &Str, bool bCenter = false,
       int PositionFlags = 0, int wrapWidth = 0);
    wxTextCtrl * AddTextBox(
       const TranslatableString &Caption,

@@ -1707,8 +1707,8 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartStatic(XO("Step 1"));
    {
-      S.AddVariableText(_(
-         "Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:"));
+      S.AddVariableText(XO(
+"Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:"));
       //m_pButton_GetProfile =
       S.Id(ID_BUTTON_GETPROFILE).AddButton(XO("&Get Noise Profile"));
    }
@@ -1716,8 +1716,8 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Step 2"));
    {
-      S.AddVariableText(_(
-         "Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to reduce noise.\n"));
+      S.AddVariableText(XO(
+"Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to reduce noise.\n"));
 
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);

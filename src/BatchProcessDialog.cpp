@@ -683,7 +683,8 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
       /* i18n-hint: The Shrink button makes the dialog smaller, with less in it */
       mResize = S.Id(ShrinkID).AddButton(XO("Shrin&k"));
       // Using variable text just to get the positioning options.
-      S.Prop(0).AddVariableText( _("Apply Macro to:"), false, wxALL | wxALIGN_CENTRE_VERTICAL );
+      S.Prop(0).AddVariableText(
+         XO("Apply Macro to:"), false, wxALL | wxALIGN_CENTRE_VERTICAL );
       wxButton* btn = S.Id(ApplyToProjectID)
          .Name(XO("Apply macro to project"))
          .AddButton(XO("&Project"));

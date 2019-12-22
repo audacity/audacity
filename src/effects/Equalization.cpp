@@ -800,7 +800,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          S.SetBorder(5);
          S.StartVerticalLay();
          {
-            S.AddVariableText(_("+ dB"), false, wxCENTER);
+            S.AddVariableText(XO("+ dB"), false, wxCENTER);
             mdBMaxSlider = S.Id(ID_dBMax)
                .Name(XO("Max dB"))
                .Style(wxSL_VERTICAL | wxSL_INVERSE)
@@ -813,7 +813,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                .Name(XO("Min dB"))
                .Style(wxSL_VERTICAL | wxSL_INVERSE)
                .AddSlider( {}, -30, -10, -120);
-            S.AddVariableText(_("- dB"), false, wxCENTER);
+            S.AddVariableText(XO("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
             mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, _("%d dB")));
 #endif
@@ -995,7 +995,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                   mMText = S.Name( Verbatim( label ) )
                   // fix for bug 577 (NVDA/Narrator screen readers do not
                   // read static text in dialogs)
-                     .AddVariableText(label);
+                     .AddVariableText( Verbatim( label ) );
                }
                S.EndHorizontalLay();
             }

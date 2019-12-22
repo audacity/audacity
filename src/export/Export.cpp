@@ -1429,7 +1429,7 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
       S.StartHorizontalLay(wxALIGN_CENTRE | wxALL, 0);
       {
          mChannelsText = S.AddVariableText(
-            label.Translation(),
+            label,
             false, wxALIGN_LEFT | wxALL );
 
          S

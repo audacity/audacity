@@ -381,12 +381,12 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartStatic(XO("Latency Compensation"));
          {
-            S.AddVariableText(wxString() +
-               _("As part of their processing, some Audio Unit effects must delay returning ") +
-               _("audio to Audacity. When not compensating for this delay, you will ") +
-               _("notice that small silences have been inserted into the audio. ") +
-               _("Enabling this option will provide that compensation, but it may ") +
-               _("not work for all Audio Unit effects."),
+            S.AddVariableText( XO(
+"As part of their processing, some Audio Unit effects must delay returning "
+"audio to Audacity. When not compensating for this delay, you will "
+"notice that small silences have been inserted into the audio. "
+"Enabling this option will provide that compensation, but it may "
+"not work for all Audio Unit effects."),
                false, 0, 650 );
 
             S.StartHorizontalLay(wxALIGN_LEFT);
@@ -400,11 +400,11 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
          S.StartStatic(XO("User Interface"));
          {
-            S.AddVariableText(wxString() +
-               _("Select \"Full\" to use the graphical interface if supplied by the Audio Unit.") +
-               _(" Select \"Generic\" to use the system supplied generic interface.") +
-               _(" Select \"Basic\" for a basic text-only interface.") +
-               _(" Reopen the effect for this to take effect."),
+            S.AddVariableText( XO(
+"Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
+" Select \"Generic\" to use the system supplied generic interface."
+" Select \"Basic\" for a basic text-only interface."
+" Reopen the effect for this to take effect."),
                false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);

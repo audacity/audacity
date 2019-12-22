@@ -2607,7 +2607,7 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
       {
          S.SetStretchyCol(1);
 
-         S.AddVariableText(_("Enter Nyquist Command: "));
+         S.AddVariableText(XO("Enter Nyquist Command: "));
 
          S.AddSpace(1, 1);
 

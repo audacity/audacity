@@ -407,7 +407,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
       S.StartVerticalLay();
       {
-         S.AddVariableText(_("+ dB"), false, wxCENTER);
+         S.AddVariableText(XO("+ dB"), false, wxCENTER);
          mdBMaxSlider = S.Id(ID_dBMax)
             .Name(XO("Max dB"))
             .Style(wxSL_VERTICAL | wxSL_INVERSE)
@@ -423,7 +423,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, _("%d dB")));
 #endif
 
-         S.AddVariableText(_("- dB"), false, wxCENTER);
+         S.AddVariableText(XO("- dB"), false, wxCENTER);
       }
       S.EndVerticalLay();
 
@@ -483,14 +483,16 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             );
          S.AddSpace(1, 1);
 
-         mRippleCtlP = S.AddVariableText(_("&Passband Ripple:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         mRippleCtlP = S.AddVariableText( XO("&Passband Ripple:"),
+            false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          mRippleCtl = S.Id(ID_Ripple)
             .Name(XO("Passband Ripple (dB)"))
             .Validator<FloatingPointValidator<float>>(
                1, &mRipple, NumValidatorStyle::DEFAULT,
                MIN_Passband, MAX_Passband)
             .AddTextBox( {}, wxT(""), 10);
-         mRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+         mRippleCtlU = S.AddVariableText(XO("dB"),
+            false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
          mFilterSubTypeCtl = S.Id(ID_SubType)
             .Validator<wxGenericValidator>(&mFilterSubtype)
@@ -507,14 +509,18 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .AddTextBox(XO("C&utoff:"), wxT(""), 10);
          S.AddUnits(_("Hz"));
 
-         mStopbandRippleCtlP = S.AddVariableText(_("Minimum S&topband Attenuation:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         mStopbandRippleCtlP =
+            S.AddVariableText(XO("Minimum S&topband Attenuation:"),
+            false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          mStopbandRippleCtl = S.Id(ID_StopbandRipple)
             .Name(XO("Minimum S&topband Attenuation (dB)"))
             .Validator<FloatingPointValidator<float>>(
                1, &mStopbandRipple, NumValidatorStyle::DEFAULT,
                MIN_Stopband, MAX_Stopband)
             .AddTextBox( {}, wxT(""), 10);
-         mStopbandRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+         mStopbandRippleCtlU =
+            S.AddVariableText(XO("dB"),
+            false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
       }
       S.EndMultiColumn();
       S.AddSpace(1, 1);

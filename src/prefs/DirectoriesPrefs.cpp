@@ -137,7 +137,8 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndTwoColumn();
 
-      S.AddVariableText(_("If the available system memory falls below this value, audio will no longer\nbe cached in memory and will be written to disk."),
+      S.AddVariableText(XO(
+"If the available system memory falls below this value, audio will no longer\nbe cached in memory and will be written to disk."),
          false, 0, 600);
    }
    S.EndStatic();

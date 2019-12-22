@@ -68,7 +68,10 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartVerticalLay();
    {
-      S.AddVariableText(_("Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can be automatically recovered:"), false);
+      S.AddVariableText(
+         XO(
+"Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can be automatically recovered:"),
+         false);
 
       S.StartStatic(XO("Recoverable projects"));
       {
@@ -79,7 +82,9 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
       }
       S.EndStatic();
 
-      S.AddVariableText(_("After recovery, save the project to save the changes to disk."), false);
+      S.AddVariableText(
+         XO("After recovery, save the project to save the changes to disk."),
+         false);
 
       S.StartHorizontalLay();
       {

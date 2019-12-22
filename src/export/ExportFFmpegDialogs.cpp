@@ -1560,7 +1560,9 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
          mCodecName = S.Id(FECodecNameID).AddVariableText( {} );
       }
       S.EndMultiColumn();
-      S.AddVariableText(_("Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."), false);
+      S.AddVariableText(XO(
+"Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."),
+         false);
       S.StartMultiColumn(2, wxEXPAND);
       {
          S.StartMultiColumn(2, wxEXPAND);
@@ -1587,11 +1589,11 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                      .TieTextBox(XO("Language:"), {wxT("/FileFormats/FFmpegLanguage"), wxEmptyString}, 9);
 
                   S.AddSpace( 20,0 );
-                  S.AddVariableText(_("Bit Reservoir"));
+                  S.AddVariableText(XO("Bit Reservoir"));
                   S.Id(FEBitReservoirID).TieCheckBox( {}, {wxT("/FileFormats/FFmpegBitReservoir"), true});
 
                   S.AddSpace( 20,0 );
-                  S.AddVariableText(_("VBL"));
+                  S.AddVariableText(XO("VBL"));
                   S.Id(FEVariableBlockLenID).TieCheckBox( {}, {wxT("/FileFormats/FFmpegVariableBlockLen"), true});
                }
                S.EndMultiColumn();
@@ -1670,7 +1672,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
 
                   /* i18n-hint:  Abbreviates "Linear Predictive Coding",
                      but this text needs to be kept very short */
-                  S.AddVariableText(_("Use LPC"));
+                  S.AddVariableText(XO("Use LPC"));
                   // PRL:  This preference is not used anywhere!
                   S.Id(FEUseLPCID).TieCheckBox( {}, {wxT("/FileFormats/FFmpegUseLPC"), true});
                }

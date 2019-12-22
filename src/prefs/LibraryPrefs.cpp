@@ -101,27 +101,24 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartTwoColumn();
       {
-         S.AddVariableText(_("MP3 Library Version:"),
-                           true,
-                           wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         mMP3Version = S.AddVariableText(wxT("9.99"),
-                                         true,
-                                         wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+         S.AddVariableText(XO("MP3 Library Version:"),
+            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
+         // Change this text later:
+         mMP3Version = S.AddVariableText(Verbatim("9.99"),
+            true, wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
 // Old buttons, not needed now that the lib is built-in.
 #ifndef MP3_EXPORT_BUILT_IN
 
-         S.AddVariableText(_("LAME MP3 Library:"),
-                           true,
-                           wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
+         S.AddVariableText(XO("LAME MP3 Library:"),
+            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          S.Id(ID_MP3_FIND_BUTTON)
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
              .Disable()
 #endif
             .AddButton(XO("&Locate..."),
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-         S.AddVariableText(_("LAME MP3 Library:"),
-                           true,
-                           wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
+         S.AddVariableText(XO("LAME MP3 Library:"),
+            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          S.Id(ID_MP3_DOWN_BUTTON)
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
              .Disable()
@@ -139,21 +136,19 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartTwoColumn();
       {
-         S.AddVariableText(_("FFmpeg Library Version:"),
-                           true,
-                           wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
+         S.AddVariableText(XO("FFmpeg Library Version:"),
+            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
 #if defined(USE_FFMPEG)
-         mFFmpegVersion = S.AddVariableText(_("No compatible FFmpeg library was found"),
-                                            true,
-                                            wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+         mFFmpegVersion = S.AddVariableText(
+            XO("No compatible FFmpeg library was found"),
+            true, wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
 #else
-         mFFmpegVersion = S.AddVariableText(wxT("FFmpeg support is not compiled in"),
-                                            true,
-                                            wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+         mFFmpegVersion = S.AddVariableText(
+            XO("FFmpeg support is not compiled in"),
+            true, wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
 #endif
-         S.AddVariableText(_("FFmpeg Library:"),
-                           true,
-                           wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
+         S.AddVariableText(XO("FFmpeg Library:"),
+            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          S.Id(ID_FFMPEG_FIND_BUTTON);
          S
 #if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
@@ -161,9 +156,8 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
             .AddButton(XO("Loca&te..."),
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-         S.AddVariableText(_("FFmpeg Library:"),
-                           true,
-                           wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
+         S.AddVariableText(XO("FFmpeg Library:"),
+            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          S.Id(ID_FFMPEG_DOWN_BUTTON);
          S
 #if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)

@@ -599,7 +599,8 @@ public:
             }
             S.Id(ID_BROWSE).AddButton(XO("Browse..."), wxALIGN_RIGHT);
             /* i18n-hint: There is a  button to the right of the arrow.*/
-            S.AddVariableText(_("To get a free copy of LAME, click here -->"), true);
+            S.AddVariableText(
+               XO("To get a free copy of LAME, click here -->"), true);
             /* i18n-hint: (verb)*/
             S.Id(ID_DLOAD).AddButton(XO("Download"), wxALIGN_RIGHT);
          }

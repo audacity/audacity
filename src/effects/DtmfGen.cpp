@@ -366,13 +366,18 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxCENTER);
    {
       S.AddFixedText(_("Duty cycle:"), false);
-      mDtmfDutyT = S.AddVariableText(wxString::Format(wxT("%.1f %%"), dtmfDutyCycle), false);
+      mDtmfDutyT =
+         S.AddVariableText(XO("%.1f %%").Format( dtmfDutyCycle ), false);
       
       S.AddFixedText(_("Tone duration:"), false);
-      mDtmfSilenceT = S.AddVariableText(wxString::Format(wxString(wxT("%.0f ")) + _("ms"), dtmfTone * 1000.0), false);
+      mDtmfSilenceT =
+         /* i18n-hint milliseconds */
+         S.AddVariableText(XO("%.0f ms").Format( dtmfTone * 1000.0 ), false);
 
       S.AddFixedText(_("Silence duration:"), false);
-      mDtmfToneT = S.AddVariableText(wxString::Format(wxString(wxT("%0.f ")) + _("ms"), dtmfSilence * 1000.0), false);
+      mDtmfToneT =
+         /* i18n-hint milliseconds */
+         S.AddVariableText(XO("%0.f ms").Format( dtmfSilence * 1000.0 ), false);
    }
    S.EndMultiColumn();
 }

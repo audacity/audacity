@@ -346,7 +346,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          S.SetStretchyCol(1);
          {
             // Row 3 (indented)
-            S.AddVariableText(wxT("   "), false);
+            S.AddVariableText(Verbatim("   "), false);
             mFirst = S.Id(FirstID)
                .AddCheckBox(_("Include audio before first label"), false);
 
@@ -355,7 +355,8 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
             S.StartMultiColumn(2, wxEXPAND);
             S.SetStretchyCol(1);
             {
-               mFirstFileLabel = S.AddVariableText(_("First file name:"), false);
+               mFirstFileLabel =
+                  S.AddVariableText(XO("First file name:"), false);
                mFirstFileName = S.Id(FirstFileNameID)
                   .Prop(1)
                   .Name(XO("First file name"))
@@ -397,8 +398,8 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          S.SetStretchyCol(2);
          {
             // Row 3 (indented)
-            S.AddVariableText(wxT("   "), false);
-            mPrefixLabel = S.AddVariableText(_("File name prefix:"), false);
+            S.AddVariableText(Verbatim("   "), false);
+            mPrefixLabel = S.AddVariableText(XO("File name prefix:"), false);
             mPrefix = S.Id(PrefixID)
                .Name(XO("File name prefix"))
                .TieTextBox( {},

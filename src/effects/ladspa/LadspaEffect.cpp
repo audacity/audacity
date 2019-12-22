@@ -451,12 +451,12 @@ void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartStatic(XO("Latency Compensation"));
          {
-            S.AddVariableText(wxString() +
-               _("As part of their processing, some LADSPA effects must delay returning ") +
-               _("audio to Audacity. When not compensating for this delay, you will ") +
-               _("notice that small silences have been inserted into the audio. ") +
-               _("Enabling this option will provide that compensation, but it may ") +
-               _("not work for all LADSPA effects."),
+            S.AddVariableText( XO(
+"As part of their processing, some LADSPA effects must delay returning "
+"audio to Audacity. When not compensating for this delay, you will "
+"notice that small silences have been inserted into the audio. "
+"Enabling this option will provide that compensation, but it may "
+"not work for all LADSPA effects."),
                false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
