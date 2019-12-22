@@ -1736,7 +1736,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
    if (!exporter.InitLibrary(wxT(""))) {
-      AudacityMessageBox( _("Could not initialize MP3 encoding library!") );
+      AudacityMessageBox( XO("Could not initialize MP3 encoding library!") );
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
