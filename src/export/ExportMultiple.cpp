@@ -275,7 +275,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartMultiColumn(4, true);
          {
             mDir = S.Id(DirID)
-               .TieTextBox(_("Folder:"),
+               .TieTextBox(XO("Folder:"),
                            {wxT("/Export/MultiplePath"),
                             DefaultPath},
                            64);

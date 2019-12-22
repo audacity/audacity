@@ -237,7 +237,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
             .Validator<FloatingPointValidator<double>>(
                precision, &mAmp, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Amp, MAX_Amp
             )
-            .AddTextBox(_("Amplification (dB):"), wxT(""), 12);
+            .AddTextBox(XO("Amplification (dB):"), wxT(""), 12);
       }
       S.EndMultiColumn();
 
@@ -264,7 +264,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
                RoundValue( precision + 1, MIN_Amp + LINEAR_TO_DB(mPeak) ),
                RoundValue( precision + 1, MAX_Amp + LINEAR_TO_DB(mPeak) )
             )
-            .AddTextBox(_("New Peak Amplitude (dB):"), wxT(""), 12);
+            .AddTextBox(XO("New Peak Amplitude (dB):"), wxT(""), 12);
       }
       S.EndMultiColumn();
 

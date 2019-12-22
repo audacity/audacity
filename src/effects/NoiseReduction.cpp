@@ -1444,7 +1444,7 @@ struct ControlInfo {
             NumValidatorStyle::DEFAULT,
             valueMin, valueMax
          )
-         .AddTextBox(textBoxCaption.Translation(), wxT(""), 0);
+         .AddTextBox(textBoxCaption, wxT(""), 0);
 
       wxSlider *const slider =
          S.Id(id)

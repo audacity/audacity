@@ -86,8 +86,8 @@ void SetTrackBase::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasTrackIndex  ).TieNumericTextBox(  _("Track Index:"),   mTrackIndex );
-      S.Optional( bHasChannelIndex).TieNumericTextBox(  _("Channel Index:"), mChannelIndex );
+      S.Optional( bHasTrackIndex  ).TieNumericTextBox(  XO("Track Index:"),   mTrackIndex );
+      S.Optional( bHasChannelIndex).TieNumericTextBox(  XO("Channel Index:"), mChannelIndex );
    }
    S.EndMultiColumn();
 #endif
@@ -136,7 +136,7 @@ void SetTrackStatusCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasTrackName   ).TieTextBox(         _("Name:"),          mTrackName );
+      S.Optional( bHasTrackName   ).TieTextBox(         XO("Name:"),          mTrackName );
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxEXPAND);
@@ -315,7 +315,7 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasHeight      ).TieNumericTextBox(  _("Height:"),        mHeight );
+      S.Optional( bHasHeight      ).TieNumericTextBox(  XO("Height:"),        mHeight );
       S.Optional( bHasColour      ).TieChoice(          XO("Colour:"),        mColour,
          Msgids(  kColourStrings, nColours ) );
       S.Optional( bHasDisplayType ).TieChoice(          XO("Display:"),       mDisplayType,
@@ -324,8 +324,8 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
          Msgids( kScaleTypeStrings, nScaleTypes ) );
       S.Optional( bHasVZoom       ).TieChoice(          XO("VZoom:"),         mVZoom,
          Msgids( kZoomTypeStrings, nZoomTypes ) );
-      S.Optional( bHasVZoomTop    ).TieTextBox(         _("VZoom Top:"),     mVZoomTop );
-      S.Optional( bHasVZoomBottom ).TieTextBox(         _("VZoom Bottom:"),  mVZoomBottom );
+      S.Optional( bHasVZoomTop    ).TieTextBox(         XO("VZoom Top:"),     mVZoomTop );
+      S.Optional( bHasVZoomBottom ).TieTextBox(         XO("VZoom Bottom:"),  mVZoomBottom );
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxEXPAND);

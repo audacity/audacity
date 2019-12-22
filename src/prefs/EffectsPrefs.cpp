@@ -203,7 +203,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
             .MinSize()
             .TieChoice( XO("S&ort or Group:"), EffectsGroupBy);
 
-         S.TieIntegerTextBox(_("&Maximum effects per group (0 to disable):"),
+         S.TieIntegerTextBox(XO("&Maximum effects per group (0 to disable):"),
                              {wxT("/Effects/MaxPerGroup"),
 #if defined(__WXGTK__)
                               15

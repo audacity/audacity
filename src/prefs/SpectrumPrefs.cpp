@@ -192,11 +192,11 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                mTempSettings.scaleType,
                SpectrogramSettings::GetScaleNames() );
             mMinFreq =
-               S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&n Frequency (Hz):"),
+               S.Id(ID_MINIMUM).TieNumericTextBox(XO("Mi&n Frequency (Hz):"),
                mTempSettings.minFreq,
                12);
             mMaxFreq =
-               S.Id(ID_MAXIMUM).TieNumericTextBox(_("Ma&x Frequency (Hz):"),
+               S.Id(ID_MAXIMUM).TieNumericTextBox(XO("Ma&x Frequency (Hz):"),
                mTempSettings.maxFreq,
                12);
          }
@@ -211,16 +211,16 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol( 0 );
             S.SetStretchyCol( 1 );
             mGain =
-               S.Id(ID_GAIN).TieNumericTextBox(_("&Gain (dB):"),
+               S.Id(ID_GAIN).TieNumericTextBox(XO("&Gain (dB):"),
                mTempSettings.gain,
                8);
             mRange =
-               S.Id(ID_RANGE).TieNumericTextBox(_("&Range (dB):"),
+               S.Id(ID_RANGE).TieNumericTextBox(XO("&Range (dB):"),
                mTempSettings.range,
                8);
 
             mFrequencyGain =
-               S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(_("High &boost (dB/dec):"),
+               S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(XO("High &boost (dB/dec):"),
                mTempSettings.frequencyGain,
                8);
          }
@@ -293,12 +293,12 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          S.StartTwoColumn();
          {
             mFindNotesMinA =
-               S.TieNumericTextBox(_("Minimum Amplitude (dB):"),
+               S.TieNumericTextBox(XO("Minimum Amplitude (dB):"),
                mTempSettings.findNotesMinA,
                8);
 
             mFindNotesN =
-               S.TieNumericTextBox(_("Max. Number of Notes (1..128):"),
+               S.TieNumericTextBox(XO("Max. Number of Notes (1..128):"),
                mTempSettings.numberOfMaxima,
                8);
          }

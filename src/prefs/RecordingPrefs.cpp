@@ -216,13 +216,13 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.StartThreeColumn();
          {
-            S.TieIntegerTextBox(_("Analysis Time:"),
+            S.TieIntegerTextBox(XO("Analysis Time:"),
                                 {wxT("/AudioIO/AnalysisTime"),
                                  AILA_DEF_ANALYSIS_TIME},
                                 9);
             S.AddUnits(_("milliseconds (time of one analysis)"));
 
-            S.TieIntegerTextBox(_("Number of consecutive analysis:"),
+            S.TieIntegerTextBox(XO("Number of consecutive analysis:"),
                                 {wxT("/AudioIO/NumberAnalysis"),
                                  AILA_DEF_NUMBER_ANALYSIS},
                                 2);
@@ -240,7 +240,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             auto w = S
                .NameSuffix(XO("seconds"))
-               .TieNumericTextBox(_("Pre-ro&ll:"),
+               .TieNumericTextBox(XO("Pre-ro&ll:"),
                   {AUDIO_PRE_ROLL_KEY,
                    DEFAULT_PRE_ROLL_SECONDS},
                   9);
@@ -249,7 +249,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             auto w = S
                .NameSuffix(XO("milliseconds"))
-               .TieNumericTextBox(_("Cross&fade:"),
+               .TieNumericTextBox(XO("Cross&fade:"),
                   {AUDIO_ROLL_CROSSFADE_KEY,
                    DEFAULT_ROLL_CROSSFADE_MS},
                   9);

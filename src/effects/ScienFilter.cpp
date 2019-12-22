@@ -504,7 +504,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .Validator<FloatingPointValidator<float>>(
                1, &mCutoff, NumValidatorStyle::DEFAULT,
                MIN_Cutoff, mNyquist - 1)
-            .AddTextBox(_("C&utoff:"), wxT(""), 10);
+            .AddTextBox(XO("C&utoff:"), wxT(""), 10);
          S.AddUnits(_("Hz"));
 
          mStopbandRippleCtlP = S.AddVariableText(_("Minimum S&topband Attenuation:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);

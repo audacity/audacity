@@ -99,12 +99,12 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
          {
             mTotal = S.Id(ID_TOTAL)
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
-               .AddTextBox(_("&Total space used"), wxT("0"), 10);
+               .AddTextBox(XO("&Total space used"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
             mAvail = S.Id(ID_AVAIL)
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
-               .AddTextBox(_("&Undo levels available"), wxT("0"), 10);
+               .AddTextBox(XO("&Undo levels available"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
             S.AddPrompt(_("&Levels to discard"));
@@ -123,7 +123,7 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
 
             mClipboard = S
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
-               .AddTextBox(_("Clipboard space used"), wxT("0"), 10);
+               .AddTextBox(XO("Clipboard space used"), wxT("0"), 10);
             S.Id(ID_DISCARD_CLIPBOARD).AddButton(XO("Discard"));
          }
          S.EndMultiColumn();

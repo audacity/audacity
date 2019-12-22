@@ -300,8 +300,12 @@ public:
    wxStaticText * AddVariableText(
       const wxString &Str, bool bCenter = false,
       int PositionFlags = 0, int wrapWidth = 0);
-   wxTextCtrl * AddTextBox(const wxString &Caption, const wxString &Value, const int nChars);
-   wxTextCtrl * AddNumericTextBox(const wxString &Caption, const wxString &Value, const int nChars);
+   wxTextCtrl * AddTextBox(
+      const TranslatableString &Caption,
+      const wxString &Value, const int nChars);
+   wxTextCtrl * AddNumericTextBox(
+      const TranslatableString &Caption,
+      const wxString &Value, const int nChars);
    wxTextCtrl * AddTextWindow(const wxString &Value);
    wxListBox * AddListBox(const wxArrayStringEx &choices);
 
@@ -389,12 +393,15 @@ public:
 
 //-- Tie functions both add controls and also read/write to them.
 
-   wxTextCtrl * TieTextBox( const wxString &Caption, wxString & Value, const int nChars=0);
-   wxTextCtrl * TieTextBox( const wxString &Prompt, int &Selected, const int nChars=0);
-   wxTextCtrl * TieTextBox( const wxString &Prompt, double &Value, const int nChars=0);
+   wxTextCtrl * TieTextBox(
+      const TranslatableString &Caption, wxString & Value, const int nChars=0);
+   wxTextCtrl * TieTextBox(
+      const TranslatableString &Prompt, int &Selected, const int nChars=0);
+   wxTextCtrl * TieTextBox(
+      const TranslatableString &Prompt, double &Value, const int nChars=0);
 
-   wxTextCtrl * TieNumericTextBox( const wxString &Prompt, int &Value, const int nChars=0);
-   wxTextCtrl * TieNumericTextBox( const wxString &Prompt, double &Value, const int nChars=0);
+   wxTextCtrl * TieNumericTextBox( const TranslatableString &Prompt, int &Value, const int nChars=0);
+   wxTextCtrl * TieNumericTextBox( const TranslatableString &Prompt, double &Value, const int nChars=0);
 
    wxCheckBox * TieCheckBox( const wxString &Prompt, bool & Var );
    wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, bool & Var );
@@ -444,15 +451,15 @@ public:
       int iNoMatchSelector = 0 );
 
    virtual wxTextCtrl * TieTextBox(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< wxString > &Setting,
       const int nChars);
    virtual wxTextCtrl * TieIntegerTextBox(
-      const wxString & Prompt,
+      const TranslatableString & Prompt,
       const SettingSpec< int > &Setting,
       const int nChars);
    virtual wxTextCtrl * TieNumericTextBox(
-      const wxString & Prompt,
+      const TranslatableString & Prompt,
       const SettingSpec< double > &Setting,
       const int nChars);
    virtual wxSlider * TieSlider(
@@ -536,8 +543,11 @@ protected:
 private:
    void DoDataShuttle( const wxString &Name, WrappedType & WrappedRef );
    wxCheckBox * DoTieCheckBoxOnRight( const wxString & Prompt, WrappedType & WrappedRef );
-   wxTextCtrl * DoTieTextBox( const wxString &Prompt, WrappedType &  WrappedRef, const int nChars);
-   wxTextCtrl * DoTieNumericTextBox( const wxString &Prompt, WrappedType &  WrappedRef, const int nChars);
+   wxTextCtrl * DoTieTextBox(
+      const TranslatableString &Prompt,
+      WrappedType &  WrappedRef, const int nChars);
+   wxTextCtrl * DoTieNumericTextBox(
+      const TranslatableString &Prompt, WrappedType &  WrappedRef, const int nChars);
    wxCheckBox * DoTieCheckBox( const wxString &Prompt, WrappedType & WrappedRef );
    wxChoice * DoTieChoice(
       const TranslatableString &Prompt, WrappedType & WrappedRef,

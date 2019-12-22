@@ -432,13 +432,13 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
                MIN_Frequency,
                ProjectSettings::Get( *GetActiveProject() ).GetRate() / 2.0
             )
-            .AddTextBox(_("Frequency (Hz):"), wxT(""), 12);
+            .AddTextBox(XO("Frequency (Hz):"), wxT(""), 12);
 
          t = S.Validator<FloatingPointValidator<double>>(
                6, &mAmplitude[0], NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Amplitude, MAX_Amplitude
             )
-            .AddTextBox(_("Amplitude (0-1):"), wxT(""), 12);
+            .AddTextBox(XO("Amplitude (0-1):"), wxT(""), 12);
       }
 
       S.AddPrompt(_("Duration:"));

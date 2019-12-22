@@ -308,7 +308,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                   2, &m_dSemitonesChange,
                   NumValidatorStyle::TWO_TRAILING_ZEROES
                )
-               .AddTextBox(_("Semitones (half-steps):"), wxT(""), 12);
+               .AddTextBox(XO("Semitones (half-steps):"), wxT(""), 12);
          }
          S.EndHorizontalLay();
       }
@@ -325,7 +325,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::THREE_TRAILING_ZEROES,
                   0.0
                )
-               .AddTextBox(_("from"), wxT(""), 12);
+               .AddTextBox(XO("from"), wxT(""), 12);
 
             m_pTextCtrl_ToFrequency = S.Id(ID_ToFrequency)
                .Name(XO("to (Hz)"))
@@ -334,7 +334,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::THREE_TRAILING_ZEROES,
                   0.0
                )
-               .AddTextBox(_("to"), wxT(""), 12);
+               .AddTextBox(XO("to"), wxT(""), 12);
 
             S.AddUnits(_("Hz"));
          }
@@ -348,7 +348,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::THREE_TRAILING_ZEROES,
                   MIN_Percentage, MAX_Percentage
                )
-               .AddTextBox(_("Percent Change:"), wxT(""), 12);
+               .AddTextBox(XO("Percent Change:"), wxT(""), 12);
          }
          S.EndHorizontalLay();
 

@@ -825,7 +825,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
                t = S.Validator<IntegerValidator<int>>(
                      &mBufferSize, NumValidatorStyle::DEFAULT, 8, 1048576 * 1)
                   .MinSize( { 100, -1 } )
-                  .TieNumericTextBox(_("&Buffer Size (8 to 1048576 samples):"),
+                  .TieNumericTextBox(XO("&Buffer Size (8 to 1048576 samples):"),
                                        mBufferSize,
                                        12);
             }

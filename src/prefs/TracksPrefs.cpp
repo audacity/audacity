@@ -293,7 +293,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       {
 #ifdef SHOW_PINNED_POSITION_IN_PREFS
          S.TieNumericTextBox(
-            _("Pinned &head position"),
+            XO("Pinned &head position"),
             PinnedHeadPositionPreferenceKey(),
             PinnedHeadPositionPreferenceDefault(),
             30
@@ -305,7 +305,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
          S.TieChoice(XO("Display &samples:"),
                      sampleDisplaySetting );
 
-         S.TieTextBox(_("Default audio track &name:"),
+         S.TieTextBox(XO("Default audio track &name:"),
                       {wxT("/GUI/TrackNames/DefaultTrackName"),
                        _("Audio Track")},
                       30);

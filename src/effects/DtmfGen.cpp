@@ -332,13 +332,13 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
             vldDtmf.SetIncludes(wxArrayString(WXSIZEOF(kSymbols), kSymbols));
             return vldDtmf;
          })
-         .AddTextBox(_("DTMF sequence:"), wxT(""), 10);
+         .AddTextBox(XO("DTMF sequence:"), wxT(""), 10);
 
       S.Id(ID_Amplitude)
          .Validator<FloatingPointValidator<double>>(
             3, &dtmfAmplitude, NumValidatorStyle::NO_TRAILING_ZEROES,
             MIN_Amplitude, MAX_Amplitude)
-         .AddTextBox(_("Amplitude (0-1):"), wxT(""), 10);
+         .AddTextBox(XO("Amplitude (0-1):"), wxT(""), 10);
 
       S.AddPrompt(_("Duration:"));
       mDtmfDurationT = safenew

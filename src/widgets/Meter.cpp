@@ -2009,7 +2009,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
                .Validator<IntegerValidator<long>>(
                   &mMeterRefreshRate, NumValidatorStyle::DEFAULT,
                   MIN_REFRESH_RATE, MAX_REFRESH_RATE)
-               .AddTextBox(_("Meter refresh rate per second [1-100]: "),
+               .AddTextBox(XO("Meter refresh rate per second [1-100]: "),
                                 wxString::Format(wxT("%d"), meterRefreshRate),
                                 10);
          }

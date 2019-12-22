@@ -311,7 +311,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::THREE_TRAILING_ZEROES,
                MIN_Percentage / 100.0, ((MAX_Percentage / 100.0) + 1)
             )
-            .AddTextBox(_("Speed Multiplier:"), wxT(""), 12);
+            .AddTextBox(XO("Speed Multiplier:"), wxT(""), 12);
 
          mpTextCtrl_PercentChange = S.Id(ID_PercentChange)
             .Validator<FloatingPointValidator<double>>(
@@ -319,7 +319,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::THREE_TRAILING_ZEROES,
                MIN_Percentage, MAX_Percentage
             )
-            .AddTextBox(_("Percent Change:"), wxT(""), 12);
+            .AddTextBox(XO("Percent Change:"), wxT(""), 12);
       }
       S.EndMultiColumn();
 

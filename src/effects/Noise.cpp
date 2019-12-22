@@ -231,7 +231,7 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
       S.Validator<FloatingPointValidator<double>>(
             6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES, MIN_Amp, MAX_Amp
          )
-         .AddTextBox(_("Amplitude (0-1):"), wxT(""), 12);
+         .AddTextBox(XO("Amplitude (0-1):"), wxT(""), 12);
 
       S.AddPrompt(_("Duration:"));
       mNoiseDurationT = safenew

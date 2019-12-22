@@ -259,7 +259,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   MIN_HalfStepsStart, MAX_HalfStepsStart
                )
-               .AddTextBox(_("(semitones) [-12 to 12]:"), wxT(""), 12);
+               .AddTextBox(XO("(semitones) [-12 to 12]:"), wxT(""), 12);
 
 
             m_pTextCtrl_PitchPercentChangeStart = S.Id(ID_PitchPercentChangeStart)
@@ -268,7 +268,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   MIN_PitchPercentStart, MAX_PitchPercentStart
                )
-               .AddTextBox(_("(%) [-50 to 100]:"), wxT(""), 12);
+               .AddTextBox(XO("(%) [-50 to 100]:"), wxT(""), 12);
          }
          S.EndMultiColumn();
       }
@@ -285,14 +285,14 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   MIN_HalfStepsEnd, MAX_HalfStepsEnd
                )
-               .AddTextBox(_("(semitones) [-12 to 12]:"), wxT(""), 12);
+               .AddTextBox(XO("(semitones) [-12 to 12]:"), wxT(""), 12);
 
             m_pTextCtrl_PitchPercentChangeEnd = S.Id(ID_PitchPercentChangeEnd)
                .Validator<FloatingPointValidator<double>>(
                   3, &m_PitchPercentChangeEnd,
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   MIN_PitchPercentStart, MAX_PitchPercentStart)
-               .AddTextBox(_("(%) [-50 to 100]:"), wxT(""), 12);
+               .AddTextBox(XO("(%) [-50 to 100]:"), wxT(""), 12);
          }
          S.EndMultiColumn();
       }

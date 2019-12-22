@@ -1584,7 +1584,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                {
                   mLanguageText = S.Id(FELanguageID)
                      .ToolTip(XO("ISO 639 3-letter language code\nOptional\nempty - automatic"))
-                     .TieTextBox(_("Language:"), {wxT("/FileFormats/FFmpegLanguage"), wxEmptyString}, 9);
+                     .TieTextBox(XO("Language:"), {wxT("/FileFormats/FFmpegLanguage"), wxEmptyString}, 9);
 
                   S.AddSpace( 20,0 );
                   S.AddVariableText(_("Bit Reservoir"));
@@ -1600,7 +1600,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                   mTag = S.Id(FETagID)
                      /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
                      .ToolTip(XO("Codec tag (FOURCC)\nOptional\nempty - automatic"))
-                     .TieTextBox(_("Tag:"), {wxT("/FileFormats/FFmpegTag"), wxEmptyString}, 4);
+                     .TieTextBox(XO("Tag:"), {wxT("/FileFormats/FFmpegTag"), wxEmptyString}, 4);
 
                   mBitrateSpin = S.Id(FEBitrateID)
                      .ToolTip(XO("Bit Rate (bits/second) - influences the resulting file size and quality\nSome codecs may only accept specific values (128k, 192k, 256k etc)\n0 - automatic\nRecommended - 192000"))

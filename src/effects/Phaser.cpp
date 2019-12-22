@@ -259,7 +259,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mStagesT = S.Id(ID_Stages)
          .Validator<IntegerValidator<int>>(
             &mStages, NumValidatorStyle::DEFAULT, MIN_Stages, MAX_Stages)
-         .AddTextBox(_("&Stages:"), wxT(""), 15);
+         .AddTextBox(XO("&Stages:"), wxT(""), 15);
 
       mStagesS = S.Id(ID_Stages)
          .Name(XO("Stages"))
@@ -271,7 +271,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mDryWetT = S.Id(ID_DryWet)
          .Validator<IntegerValidator<int>>(
             &mDryWet, NumValidatorStyle::DEFAULT, MIN_DryWet, MAX_DryWet)
-         .AddTextBox(_("&Dry/Wet:"), wxT(""), 15);
+         .AddTextBox(XO("&Dry/Wet:"), wxT(""), 15);
 
       mDryWetS = S.Id(ID_DryWet)
          .Name(XO("Dry Wet"))
@@ -282,7 +282,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mFreqT = S.Id(ID_Freq)
          .Validator<FloatingPointValidator<double>>(
             5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Freq, MAX_Freq)
-         .AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 15);
+         .AddTextBox(XO("LFO Freq&uency (Hz):"), wxT(""), 15);
 
       mFreqS = S.Id(ID_Freq)
          .Name(XO("LFO frequency in hertz"))
@@ -293,7 +293,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mPhaseT = S.Id(ID_Phase)
          .Validator<FloatingPointValidator<double>>(
             1, &mPhase, NumValidatorStyle::DEFAULT, MIN_Phase, MAX_Phase)
-         .AddTextBox(_("LFO Sta&rt Phase (deg.):"), wxT(""), 15);
+         .AddTextBox(XO("LFO Sta&rt Phase (deg.):"), wxT(""), 15);
 
       mPhaseS = S.Id(ID_Phase)
          .Name(XO("LFO start phase in degrees"))
@@ -305,7 +305,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mDepthT = S.Id(ID_Depth)
          .Validator<IntegerValidator<int>>(
             &mDepth, NumValidatorStyle::DEFAULT, MIN_Depth, MAX_Depth)
-         .AddTextBox(_("Dept&h:"), wxT(""), 15);
+         .AddTextBox(XO("Dept&h:"), wxT(""), 15);
 
       mDepthS = S.Id(ID_Depth)
          .Name(XO("Depth in percent"))
@@ -316,7 +316,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mFeedbackT = S.Id(ID_Feedback)
          .Validator<IntegerValidator<int>>(
             &mFeedback, NumValidatorStyle::DEFAULT, MIN_Feedback, MAX_Feedback)
-         .AddTextBox(_("Feedbac&k (%):"), wxT(""), 15);
+         .AddTextBox(XO("Feedbac&k (%):"), wxT(""), 15);
 
       mFeedbackS = S.Id(ID_Feedback)
          .Name(XO("Feedback in percent"))
@@ -328,7 +328,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mOutGainT = S.Id(ID_OutGain)
          .Validator<FloatingPointValidator<double>>(
             1, &mOutGain, NumValidatorStyle::DEFAULT, MIN_OutGain, MAX_OutGain)
-         .AddTextBox(_("&Output gain (dB):"), wxT(""), 12);
+         .AddTextBox(XO("&Output gain (dB):"), wxT(""), 12);
 
       mOutGainS = S.Id(ID_OutGain)
          .Name(XO("Output gain (dB)"))

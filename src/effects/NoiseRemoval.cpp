@@ -719,7 +719,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
       {
          mGainT = S.Id(ID_GAIN_TEXT)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC)
-            .AddTextBox(_("Noise re&duction (dB):"), wxT(""), 0);
+            .AddTextBox(XO("Noise re&duction (dB):"), wxT(""), 0);
 
          mGainS = S.Id(ID_GAIN_SLIDER)
             .Name(XO("Noise reduction"))
@@ -729,7 +729,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 
          mSensitivityT = S.Id(ID_SENSITIVITY_TEXT)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC)
-            .AddTextBox(_("&Sensitivity (dB):"), wxT(""), 0);
+            .AddTextBox(XO("&Sensitivity (dB):"), wxT(""), 0);
          mSensitivityS = S.Id(ID_SENSITIVITY_SLIDER)
             .Name(XO("Sensitivity"))
             .Style(wxSL_HORIZONTAL)
@@ -738,7 +738,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 
          mFreqT = S.Id(ID_FREQ_TEXT)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC)
-            .AddTextBox(_("Fr&equency smoothing (Hz):"), wxT(""), 0);
+            .AddTextBox(XO("Fr&equency smoothing (Hz):"), wxT(""), 0);
          mFreqS = S.Id(ID_FREQ_SLIDER)
             .Name(XO("Frequency smoothing"))
             .Style(wxSL_HORIZONTAL)
@@ -747,7 +747,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 
          mTimeT = S.Id(ID_TIME_TEXT)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC)
-            .AddTextBox(_("Attac&k/decay time (secs):"), wxT(""), 0);
+            .AddTextBox(XO("Attac&k/decay time (secs):"), wxT(""), 0);
          mTimeS = S.Id(ID_TIME_SLIDER)
             .Name(XO("Attack/decay time"))
             .Style(wxSL_HORIZONTAL)

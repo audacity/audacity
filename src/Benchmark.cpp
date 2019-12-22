@@ -172,21 +172,21 @@ void BenchmarkDialog::MakeBenchmarkDialog()
          //
          S.Id(BlockSizeID)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC, &mBlockSizeStr)
-            .AddTextBox(_("Disk Block Size (KB):"),
+            .AddTextBox(XO("Disk Block Size (KB):"),
                                              wxT(""),
                                              12);
 
          //
          S.Id(NumEditsID)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC, &mNumEditsStr)
-            .AddTextBox(_("Number of Edits:"),
+            .AddTextBox(XO("Number of Edits:"),
                                             wxT(""),
                                             12);
 
          //
          S.Id(DataSizeID)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC, &mDataSizeStr)
-            .AddTextBox(_("Test Data Size (MB):"),
+            .AddTextBox(XO("Test Data Size (MB):"),
                                             wxT(""),
                                             12);
 
@@ -195,7 +195,7 @@ void BenchmarkDialog::MakeBenchmarkDialog()
             .Validator<wxTextValidator>(wxFILTER_NUMERIC, &mRandSeedStr)
             /* i18n-hint: A "seed" is a number that initializes a
                pseudorandom number generating algorithm */
-            .AddTextBox(_("Random Seed:"),
+            .AddTextBox(XO("Random Seed:"),
                                             wxT(""),
                                             12);
 

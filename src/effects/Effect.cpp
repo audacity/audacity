@@ -3472,7 +3472,7 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
       {
          S.StartHorizontalLay(wxALIGN_LEFT, 0);
          {
-            text = S.AddTextBox(_("Preset name:"), name, 30);
+            text = S.AddTextBox(XO("Preset name:"), name, 30);
          }
          S.EndHorizontalLay();
          S.SetBorder(10);

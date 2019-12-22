@@ -586,10 +586,12 @@ wxSpinCtrl * ShuttleGuiBase::AddSpinCtrl(const wxString &Prompt, int Value, int 
    return pSpinCtrl;
 }
 
-wxTextCtrl * ShuttleGuiBase::AddTextBox(const wxString &Caption, const wxString &Value, const int nChars)
+wxTextCtrl * ShuttleGuiBase::AddTextBox(
+   const TranslatableString &Caption, const wxString &Value, const int nChars)
 {
-   HandleOptionality( Caption );
-   AddPrompt( Caption );
+   const auto translated = Caption.Translation();
+   HandleOptionality( translated );
+   AddPrompt( translated );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxTextCtrl);
@@ -613,15 +615,17 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(const wxString &Caption, const wxString 
    // so that name can be set on a standard control
    mpWind->SetAccessible(safenew WindowAccessible(mpWind));
 #endif
-   mpWind->SetName(wxStripMenuCodes(Caption));
+   mpWind->SetName(wxStripMenuCodes(translated));
    UpdateSizers();
    return pTextCtrl;
 }
 
-wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(const wxString &Caption, const wxString &Value, const int nChars)
+wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(
+   const TranslatableString &Caption, const wxString &Value, const int nChars)
 {
-   HandleOptionality( Caption );
-   AddPrompt( Caption );
+   const auto translated = Caption.Translation();
+   HandleOptionality( translated );
+   AddPrompt( translated );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxTextCtrl);
@@ -648,7 +652,7 @@ wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(const wxString &Caption, const wx
    // so that name can be set on a standard control
    mpWind->SetAccessible(safenew WindowAccessible(mpWind));
 #endif
-   mpWind->SetName(wxStripMenuCodes(Caption));
+   mpWind->SetName(wxStripMenuCodes(translated));
    UpdateSizers();
    return pTextCtrl;
 }
@@ -1329,9 +1333,10 @@ wxSpinCtrl * ShuttleGuiBase::DoTieSpinCtrl( const wxString &Prompt, WrappedType 
    return pSpinCtrl;
 }
 
-wxTextCtrl * ShuttleGuiBase::DoTieTextBox( const wxString &Prompt, WrappedType & WrappedRef, const int nChars)
+wxTextCtrl * ShuttleGuiBase::DoTieTextBox(
+   const TranslatableString &Prompt, WrappedType & WrappedRef, const int nChars)
 {
-   HandleOptionality( Prompt );
+   HandleOptionality( Prompt.Translation() );
    // The Add function does a UseUpId(), so don't do it here in that case.
    if( mShuttleMode == eIsCreating )
       return AddTextBox( Prompt, WrappedRef.ReadAsString(), nChars );
@@ -1366,9 +1371,10 @@ wxTextCtrl * ShuttleGuiBase::DoTieTextBox( const wxString &Prompt, WrappedType &
    return pTextBox;
 }
 
-wxTextCtrl * ShuttleGuiBase::DoTieNumericTextBox( const wxString &Prompt, WrappedType & WrappedRef, const int nChars)
+wxTextCtrl * ShuttleGuiBase::DoTieNumericTextBox(
+   const TranslatableString &Prompt, WrappedType & WrappedRef, const int nChars)
 {
-   HandleOptionality( Prompt );
+   HandleOptionality( Prompt.Translation() );
    // The Add function does a UseUpId(), so don't do it here in that case.
    if( mShuttleMode == eIsCreating )
       return AddNumericTextBox( Prompt, WrappedRef.ReadAsString(), nChars );
@@ -1622,31 +1628,36 @@ wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl( const wxString &Prompt, int &Value, co
    return DoTieSpinCtrl( Prompt, WrappedRef, max, min );
 }
 
-wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, wxString &Selected, const int nChars)
+wxTextCtrl * ShuttleGuiBase::TieTextBox(
+   const TranslatableString &Prompt, wxString &Selected, const int nChars)
 {
    WrappedType WrappedRef(Selected);
    return DoTieTextBox( Prompt, WrappedRef, nChars );
 }
 
-wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, int &Selected, const int nChars)
+wxTextCtrl * ShuttleGuiBase::TieTextBox(
+   const TranslatableString &Prompt, int &Selected, const int nChars)
 {
    WrappedType WrappedRef( Selected );
    return DoTieTextBox( Prompt, WrappedRef, nChars );
 }
 
-wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, double &Value, const int nChars)
+wxTextCtrl * ShuttleGuiBase::TieTextBox(
+   const TranslatableString &Prompt, double &Value, const int nChars)
 {
    WrappedType WrappedRef( Value );
    return DoTieTextBox( Prompt, WrappedRef, nChars );
 }
 
-wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, int &Value, const int nChars)
+wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
+   const TranslatableString &Prompt, int &Value, const int nChars)
 {
    WrappedType WrappedRef( Value );
    return DoTieNumericTextBox( Prompt, WrappedRef, nChars );
 }
 
-wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, double &Value, const int nChars)
+wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
+   const TranslatableString &Prompt, double &Value, const int nChars)
 {
    WrappedType WrappedRef( Value );
    return DoTieNumericTextBox( Prompt, WrappedRef, nChars );
@@ -1877,7 +1888,7 @@ wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
 /// Variant of the standard TieTextBox which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 wxTextCtrl * ShuttleGuiBase::TieTextBox(
-   const wxString & Prompt,
+   const TranslatableString & Prompt,
    const SettingSpec< wxString > &Setting,
    const int nChars)
 {
@@ -1895,7 +1906,7 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
 /// between gui and stack variable and stack variable and shuttle.
 /// This one does it for double values...
 wxTextCtrl * ShuttleGuiBase::TieIntegerTextBox(
-   const wxString & Prompt,
+   const TranslatableString & Prompt,
    const SettingSpec< int > &Setting,
    const int nChars)
 {
@@ -1913,7 +1924,7 @@ wxTextCtrl * ShuttleGuiBase::TieIntegerTextBox(
 /// between gui and stack variable and stack variable and shuttle.
 /// This one does it for double values...
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
-   const wxString & Prompt,
+   const TranslatableString & Prompt,
    const SettingSpec< double > &Setting,
    const int nChars)
 {

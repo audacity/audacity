@@ -329,7 +329,7 @@ void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
 
             mDirectoryTextBox =
             S.Id(IdDirectory).AddTextBox(
-               _("Save images to:"),
+               XO("Save images to:"),
                gPrefs->Read(wxT("/ScreenshotPath"), wxFileName::GetHomeDir()),
                30
             );
