@@ -1758,7 +1758,7 @@ void AdornedRulerPanel::UpdateButtonStates()
       AButton &button, const CommandID &commandName, const TranslatableString &label) {
       ComponentInterfaceSymbol command{ commandName, label };
       ToolBar::SetButtonToolTip( *mProject, button, &command, 1u );
-      button.SetLabel(button.GetToolTipText());
+      button.SetLabel( Verbatim( button.GetToolTipText() ) );
 
       button.UpdateStatus();
    };

@@ -88,7 +88,7 @@ class ControlToolBar final : public ToolBar {
       teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
       int id,
       bool processdownevents,
-      const wxChar *label);
+      const TranslatableString &label);
 
    static
    void MakeAlternateImages(AButton &button, int idx,

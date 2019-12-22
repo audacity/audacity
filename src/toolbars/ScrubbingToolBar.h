@@ -62,7 +62,7 @@ private:
    static AButton *AddButton(
       ScrubbingToolBar *pBar,
       teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-      int id, const wxChar *label, bool toggle = false);
+      int id, const TranslatableString &label, bool toggle = false);
 
    void MakeButtons();
 

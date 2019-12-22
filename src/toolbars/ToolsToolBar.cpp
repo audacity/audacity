@@ -173,7 +173,7 @@ void ToolsToolBar::UpdatePrefs()
 
 AButton * ToolsToolBar::MakeTool(
    ToolsToolBar *pBar, teBmps eTool,
-   int id, const wxChar *label)
+   int id, const TranslatableString &label)
 {
    AButton *button = ToolBar::MakeButton(pBar,
       bmpRecoloredUpSmall, 
@@ -198,12 +198,12 @@ void ToolsToolBar::Populate()
 
    /* Tools */
    using namespace ToolCodes;
-   mTool[ selectTool   ] = MakeTool( this, bmpIBeam, selectTool, _("Selection Tool") );
-   mTool[ envelopeTool ] = MakeTool( this, bmpEnvelope, envelopeTool, _("Envelope Tool") );
-   mTool[ drawTool     ] = MakeTool( this, bmpDraw, drawTool, _("Draw Tool") );
-   mTool[ zoomTool     ] = MakeTool( this, bmpZoom, zoomTool, _("Zoom Tool") );
-   mTool[ slideTool    ] = MakeTool( this, bmpTimeShift, slideTool, _("Slide Tool") );
-   mTool[ multiTool    ] = MakeTool( this, bmpMulti, multiTool, _("Multi Tool") );
+   mTool[ selectTool   ] = MakeTool( this, bmpIBeam, selectTool, XO("Selection Tool") );
+   mTool[ envelopeTool ] = MakeTool( this, bmpEnvelope, envelopeTool, XO("Envelope Tool") );
+   mTool[ drawTool     ] = MakeTool( this, bmpDraw, drawTool, XO("Draw Tool") );
+   mTool[ zoomTool     ] = MakeTool( this, bmpZoom, zoomTool, XO("Zoom Tool") );
+   mTool[ slideTool    ] = MakeTool( this, bmpTimeShift, slideTool, XO("Slide Tool") );
+   mTool[ multiTool    ] = MakeTool( this, bmpMulti, multiTool, XO("Multi Tool") );
 
    mTool[mCurrentTool]->PushDown();
 
