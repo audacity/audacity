@@ -436,42 +436,42 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
                MIN_DuckAmountDb, MAX_DuckAmountDb
             )
             .AddTextBox(XO("Duck amount:"), wxT(""), 10);
-         S.AddUnits(_("dB"));
+         S.AddUnits(XO("dB"));
 
          mMaximumPauseBox = S.Validator<FloatingPointValidator<double>>(
                2, &mMaximumPause, NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_MaximumPause, MAX_MaximumPause
             )
             .AddTextBox(XO("Maximum pause:"), wxT(""), 10);
-         S.AddUnits(_("seconds"));
+         S.AddUnits(XO("seconds"));
 
          mOuterFadeDownLenBox = S.Validator<FloatingPointValidator<double>>(
                2, &mOuterFadeDownLen, NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_OuterFadeDownLen, MAX_OuterFadeDownLen
             )
             .AddTextBox(XO("Outer fade down length:"), wxT(""), 10);
-         S.AddUnits(_("seconds"));
+         S.AddUnits(XO("seconds"));
 
          mOuterFadeUpLenBox = S.Validator<FloatingPointValidator<double>>(
                2, &mOuterFadeUpLen, NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_OuterFadeUpLen, MAX_OuterFadeUpLen
             )
             .AddTextBox(XO("Outer fade up length:"), wxT(""), 10);
-         S.AddUnits(_("seconds"));
+         S.AddUnits(XO("seconds"));
 
          mInnerFadeDownLenBox = S.Validator<FloatingPointValidator<double>>(
                2, &mInnerFadeDownLen, NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_InnerFadeDownLen, MAX_InnerFadeDownLen
             )
             .AddTextBox(XO("Inner fade down length:"), wxT(""), 10);
-         S.AddUnits(_("seconds"));
+         S.AddUnits(XO("seconds"));
 
          mInnerFadeUpLenBox = S.Validator<FloatingPointValidator<double>>(
                2, &mInnerFadeUpLen, NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_InnerFadeUpLen, MAX_InnerFadeUpLen
             )
             .AddTextBox(XO("Inner fade up length:"), wxT(""), 10);
-         S.AddUnits(_("seconds"));
+         S.AddUnits(XO("seconds"));
       }
       S.EndMultiColumn();
 
@@ -482,7 +482,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
                MIN_ThresholdDb, MAX_ThresholdDb
             )
             .AddTextBox(XO("Threshold:"), wxT(""), 10);
-         S.AddUnits(_("dB"));
+         S.AddUnits(XO("dB"));
       }
       S.EndMultiColumn();
 

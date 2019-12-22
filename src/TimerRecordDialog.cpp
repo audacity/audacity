@@ -937,7 +937,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                   m_fnAutoSaveFile.Assign(sSaveValue);
                   sInitialValue = _("Current Project");
                }
-               S.AddPrompt(_("Save Project As:"));
+               S.AddPrompt(XO("Save Project As:"));
                m_pTimerSavePathTextCtrl = NewPathControl(
                   S.GetParent(), ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), sInitialValue);
                m_pTimerSavePathTextCtrl->SetEditable(false);
@@ -953,7 +953,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(XO("Enable Automatic &Export?"), bAutoExport);
             S.StartMultiColumn(3, wxEXPAND);
             {
-               S.AddPrompt(_("Export Project As:"));
+               S.AddPrompt(XO("Export Project As:"));
                m_pTimerExportPathTextCtrl = NewPathControl(
                   S.GetParent(), ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), wxT(""));
                m_pTimerExportPathTextCtrl->SetEditable(false);

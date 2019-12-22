@@ -762,7 +762,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                MIN_Threshold, MAX_Threshold
             )
             .AddTextBox(XO("Threshold:"), wxT(""), 0);
-         S.AddUnits(_("dB"));
+         S.AddUnits(XO("dB"));
 
          // Ignored silence
          mInitialAllowedSilenceT = S.Validator<FloatingPointValidator<double>>(
@@ -770,7 +770,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Minimum, MAX_Minimum)
             .AddTextBox(XO("Duration:"), wxT(""), 12);
-         S.AddUnits(_("seconds"));
+         S.AddUnits(XO("seconds"));
       }
       S.EndMultiColumn();
    }
@@ -798,7 +798,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                MIN_Truncate, MAX_Truncate
             )
             .AddTextBox(XO("Truncate to:"), wxT(""), 12);
-         S.AddUnits(_("seconds"));
+         S.AddUnits(XO("seconds"));
 
          mSilenceCompressPercentT = S.Validator<FloatingPointValidator<double>>(
                3, &mSilenceCompressPercent,
@@ -806,7 +806,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                MIN_Compress, MAX_Compress
             )
             .AddTextBox(XO("Compress to:"), wxT(""), 12);
-         S.AddUnits(_("%"));
+         S.AddUnits(XO("%"));
       }
       S.EndMultiColumn();
 

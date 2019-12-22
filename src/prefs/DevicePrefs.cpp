@@ -141,7 +141,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
             }
          );
 
-         S.AddPrompt(_("Using:"));
+         S.AddPrompt(XO("Using:"));
          S.AddFixedText( Verbatim(wxSafeConvertMB2WX(Pa_GetVersionText() ) ) );
       }
       S.EndMultiColumn();
@@ -192,7 +192,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
                                  {wxT("/AudioIO/LatencyDuration"),
                                   DEFAULT_LATENCY_DURATION},
                                  9);
-         S.AddUnits(_("milliseconds"));
+         S.AddUnits(XO("milliseconds"));
 
          w = S
             .NameSuffix(XO("milliseconds"))
@@ -200,7 +200,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
                                  {wxT("/AudioIO/LatencyCorrection"),
                                   DEFAULT_LATENCY_CORRECTION},
                                  9);
-         S.AddUnits(_("milliseconds"));
+         S.AddUnits(XO("milliseconds"));
       }
       S.EndThreeColumn();
    }

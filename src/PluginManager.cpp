@@ -516,7 +516,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          {
             S.StartHorizontalLay(wxALIGN_LEFT, 0);
             {
-               S.AddPrompt(_("Select effects, click the Enable or Disable button, then click OK."));
+               S.AddPrompt(XO("Select effects, click the Enable or Disable button, then click OK."));
             }
             S.EndHorizontalLay();
 
@@ -531,7 +531,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                wxRadioButton *rb;
 
                /* i18n-hint: This is before radio buttons selecting which effects to show */
-               S.AddPrompt(_("Show:"));
+               S.AddPrompt(XO("Show:"));
                rb = S.Id(ID_ShowAll)
                   /* i18n-hint: Radio button to show all effects */
                   .Name(XO("Show all"))

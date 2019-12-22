@@ -363,7 +363,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         S.AddPrompt(_("Frequency (Hz):"));
+         S.AddPrompt(XO("Frequency (Hz):"));
          S.StartHorizontalLay(wxEXPAND);
          {
             S.StartHorizontalLay(wxLEFT, 50);
@@ -394,7 +394,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         S.AddPrompt(_("Amplitude (0-1):"));
+         S.AddPrompt(XO("Amplitude (0-1):"));
          S.StartHorizontalLay(wxEXPAND);
          {
             S.StartHorizontalLay(wxLEFT, 50);
@@ -441,7 +441,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
             .AddTextBox(XO("Amplitude (0-1):"), wxT(""), 12);
       }
 
-      S.AddPrompt(_("Duration:"));
+      S.AddPrompt(XO("Duration:"));
       mToneDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,

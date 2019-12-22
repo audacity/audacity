@@ -340,7 +340,7 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
             MIN_Amplitude, MAX_Amplitude)
          .AddTextBox(XO("Amplitude (0-1):"), wxT(""), 10);
 
-      S.AddPrompt(_("Duration:"));
+      S.AddPrompt(XO("Duration:"));
       mDtmfDurationT = safenew
          NumericTextCtrl(S.GetParent(), ID_Duration,
                          NumericConverter::TIME,

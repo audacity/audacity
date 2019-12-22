@@ -1740,7 +1740,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          ,
          wxALIGN_CENTER_HORIZONTAL);
       {
-         S.AddPrompt(_("Noise:"));
+         S.AddPrompt(XO("Noise:"));
          mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)
                .AddRadioButton(XO("Re&duce")); /* i18n-hint: Translate differently from "Residue" ! */
 #ifdef ISOLATE_CHOICE

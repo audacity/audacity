@@ -321,17 +321,17 @@ static wxString AskCopyOrEdit()
       wxDialogWrapper dialog( nullptr, -1, XO("Warning") );
       dialog.SetName();
 
-      wxString clause1 = _(
+      auto clause1 = XO(
 "When importing uncompressed audio files you can either copy them into the project,"
 " or read them directly from their current location (without copying).\n\n"
       );
 
-      wxString clause2 = oldCopyPref == wxT("copy")
-         ? _("Your current preference is set to copy in.\n\n")
-         : _("Your current preference is set to read directly.\n\n")
+      auto clause2 = (oldCopyPref == wxT("copy"))
+         ? XO("Your current preference is set to copy in.\n\n")
+         : XO("Your current preference is set to read directly.\n\n")
       ;
 
-      wxString clause3 = _(
+      wxString clause3 = XO(
 "Reading the files directly allows you to play or edit them almost immediately. "
 "This is less safe than copying in, because you must retain the files with their "
 "original names in their original locations.\n"

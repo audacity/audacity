@@ -146,7 +146,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
             }
          );
 
-         S.AddPrompt(_("Using: PortMidi"));
+         S.AddPrompt(XO("Using: PortMidi"));
       }
       S.EndMultiColumn();
    }

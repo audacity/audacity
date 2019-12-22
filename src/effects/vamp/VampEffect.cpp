@@ -562,7 +562,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
             if (!programs.empty())
             {
-               S.AddPrompt(_("Program"));
+               S.AddPrompt(XO("Program"));
 
                S.Id(ID_Program);
                mProgram = S.Name(XO("Program"))
@@ -604,7 +604,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                }
                /* i18n-hint: An item name introducing a value, which is not part of the string but
                appears in a following text box window; translate with appropriate punctuation */
-               S.AddPrompt(wxString::Format(_("%s:"), labelText));
+               S.AddPrompt(XO("%s:").Format( labelText ));
 
                if (mParameters[p].isQuantized &&
                    mParameters[p].quantizeStep == 1.0 &&
@@ -672,7 +672,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                      .AddTextBox( {}, wxT(""), 12);
 
                   wxString str = Internat::ToDisplayString(mParameters[p].minValue);
-                  S.AddPrompt(str);
+                  S.AddPrompt( Verbatim( str ) );
 
                   S.Id(ID_Sliders + p);
                   mSliders[p] = S.ToolTip( Verbatim( tip ) )
@@ -682,7 +682,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                      .AddSlider( {}, 0, 1000, 0);
 
                   str = Internat::ToDisplayString(mParameters[p].maxValue);
-                  S.AddUnits(str);
+                  S.AddUnits( Verbatim( str ) );
                }
             }
          }

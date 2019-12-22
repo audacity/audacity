@@ -107,7 +107,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                     {wxT("/AudioIO/SWPlaythrough"),
                      false});
 #if !defined(__WXMAC__)
-      //S.AddUnits(wxString(wxT("     ")) + _("(uncheck when recording computer playback)"));
+      //S.AddUnits(XO("     (uncheck when recording computer playback)"));
 #endif
 
        S.TieCheckBox(XO("Record on a new track"),
@@ -223,13 +223,13 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                                 {wxT("/AudioIO/AnalysisTime"),
                                  AILA_DEF_ANALYSIS_TIME},
                                 9);
-            S.AddUnits(_("milliseconds (time of one analysis)"));
+            S.AddUnits(XO("milliseconds (time of one analysis)"));
 
             S.TieIntegerTextBox(XO("Number of consecutive analysis:"),
                                 {wxT("/AudioIO/NumberAnalysis"),
                                  AILA_DEF_NUMBER_ANALYSIS},
                                 2);
-            S.AddUnits(_("0 means endless"));
+            S.AddUnits(XO("0 means endless"));
           }
           S.EndThreeColumn();
       }
@@ -247,7 +247,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                   {AUDIO_PRE_ROLL_KEY,
                    DEFAULT_PRE_ROLL_SECONDS},
                   9);
-            S.AddUnits(_("seconds"));
+            S.AddUnits(XO("seconds"));
          }
          {
             auto w = S
@@ -256,7 +256,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                   {AUDIO_ROLL_CROSSFADE_KEY,
                    DEFAULT_ROLL_CROSSFADE_MS},
                   9);
-            S.AddUnits(_("milliseconds"));
+            S.AddUnits(XO("milliseconds"));
          }
          S.EndThreeColumn();
       }

@@ -142,7 +142,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         S.AddPrompt(_("Default Sample &Rate:"));
+         S.AddPrompt(XO("Default Sample &Rate:"));
 
          S.StartMultiColumn(2);
          {

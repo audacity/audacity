@@ -2659,7 +2659,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             else
             {
                auto prompt = XO("%s:").Format( ctrl.name );
-               S.AddPrompt( prompt.Translation() );
+               S.AddPrompt( prompt );
 
                if (ctrl.type == NYQ_CTRL_STRING)
                {
@@ -2782,7 +2782,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   }
                   else
                   {
-                     S.AddUnits(ctrl.label);
+                     S.AddUnits( Verbatim( ctrl.label ) );
                   }
                }
             }

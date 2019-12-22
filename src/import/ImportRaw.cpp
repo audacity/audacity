@@ -411,13 +411,13 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
          mOffsetText = S.AddTextBox(XO("Start offset:"),
                                     wxString::Format(wxT("%d"), mOffset),
                                     12);
-         S.AddUnits(_("bytes"));
+         S.AddUnits(XO("bytes"));
 
          // Percent text
          mPercentText = S.AddTextBox(XO("Amount to import:"),
                                      wxT("100"),
                                      12);
-         S.AddUnits(_("%"));
+         S.AddUnits(XO("%"));
 
          // Rate text
          /* i18n-hint: (noun)*/
@@ -426,7 +426,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
                                   12);
          /* i18n-hint: This is the abbreviation for "Hertz", or
             cycles per second. */
-         S.AddUnits(_("Hz"));
+         S.AddUnits(XO("Hz"));
       }
       S.EndMultiColumn();
 

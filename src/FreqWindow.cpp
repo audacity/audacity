@@ -419,12 +419,12 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
          S.SetStretchyCol(1);
          S.SetStretchyCol(3);
          {
-            S.AddPrompt(_("Cursor:"));
+            S.AddPrompt(XO("Cursor:"));
 
             mCursorText = S.Style(wxTE_READONLY)
                .AddTextBox( {}, wxT(""), 10);
 
-            S.AddPrompt(_("Peak:"));
+            S.AddPrompt(XO("Peak:"));
 
             mPeakText = S.Style(wxTE_READONLY)
                .AddTextBox( {}, wxT(""), 10);

@@ -914,7 +914,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
             {
-               S.AddPrompt(_("&EQ Type:"));
+               S.AddPrompt(XO("&EQ Type:"));
             }
             S.EndHorizontalLay();
 
@@ -975,7 +975,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
                {
-                  S.AddPrompt(_("Length of &Filter:"));
+                  S.AddPrompt(XO("Length of &Filter:"));
                }
                S.EndHorizontalLay();
 
@@ -1010,7 +1010,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.AddSpace(5, 5);
             S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
             {
-               S.AddPrompt(_("&Select Curve:"));
+               S.AddPrompt(XO("&Select Curve:"));
             }
             S.EndHorizontalLay();
 
@@ -1065,7 +1065,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
       S.StartHorizontalLay();
       {
-         S.AddUnits(_("&Processing: "));
+         S.AddUnits(XO("&Processing: "));
 
          // update the control state
          int mathPath = EffectEqualization48x::GetMathPath();

@@ -107,7 +107,7 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
                .AddTextBox(XO("&Undo levels available"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
-            S.AddPrompt(_("&Levels to discard"));
+            S.AddPrompt(XO("&Levels to discard"));
             mLevels = safenew wxSpinCtrl(S.GetParent(),
                                      ID_LEVELS,
                                      wxT("1"),

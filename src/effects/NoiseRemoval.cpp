@@ -756,7 +756,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
             .MinSize( { 150, -1 } )
             .AddSlider( {}, 0, TIME_MAX, TIME_MIN);
 
-         S.AddPrompt(_("Noise:"));
+         S.AddPrompt(XO("Noise:"));
          mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)
                .AddRadioButton(XO("Re&move"));
          mKeepNoise = S.Id(ID_RADIOBUTTON_KEEPNOISE)

@@ -104,7 +104,7 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
          mParameters = S.AddTextBox(XO("&Parameters"), wxT(""), 0);
          mParameters->SetEditable(false);
          auto prompt = XO("&Details");
-         S.Prop(0).AddPrompt(prompt.Translation());
+         S.Prop(0).AddPrompt(prompt);
          mDetails = S
             .Name( prompt )
             .AddTextWindow( wxT(""));

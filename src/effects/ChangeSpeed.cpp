@@ -337,7 +337,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(5, wxCENTER);
       {
          /* i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute". */
-         S.AddUnits(_("Standard Vinyl rpm:"));
+         S.AddUnits(XO("Standard Vinyl rpm:"));
 
          mpChoice_FromVinyl = S.Id(ID_FromVinyl)
             .Name(XO("From rpm"))
@@ -358,7 +358,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(2, wxALIGN_LEFT);
          {
-            S.AddPrompt(_("Current Length:"));
+            S.AddPrompt(XO("Current Length:"));
 
             mpFromLengthCtrl = safenew
                   NumericTextCtrl(S.GetParent(), wxID_ANY,
@@ -376,7 +376,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                .Position(wxALIGN_LEFT)
                .AddWindow(mpFromLengthCtrl);
 
-            S.AddPrompt(_("New Length:"));
+            S.AddPrompt(XO("New Length:"));
 
             mpToLengthCtrl = safenew
                   NumericTextCtrl(S.GetParent(), ID_ToLength,

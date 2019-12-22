@@ -225,7 +225,7 @@ void ShuttleGuiBase::HandleOptionality(const TranslatableString &Prompt)
 }
 
 /// Right aligned text string.
-void ShuttleGuiBase::AddPrompt(const wxString &Prompt, int wrapWidth)
+void ShuttleGuiBase::AddPrompt(const TranslatableString &Prompt, int wrapWidth)
 {
    if( mShuttleMode != eIsCreating )
       return;
@@ -239,29 +239,31 @@ void ShuttleGuiBase::AddPrompt(const wxString &Prompt, int wrapWidth)
    if( Prompt.empty() )
       return;
    miProp=1;
-   auto text = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
+   const auto translated = Prompt.Translation();
+   auto text = safenew wxStaticText(GetParent(), -1, translated, wxDefaultPosition, wxDefaultSize,
       GetStyle( wxALIGN_RIGHT ));
    mpWind = text;
    if (wrapWidth > 0)
       text->Wrap(wrapWidth);
-   mpWind->SetName(wxStripMenuCodes(Prompt)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   mpWind->SetName(wxStripMenuCodes(translated)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizersCore( false, wxALL | wxALIGN_CENTRE_VERTICAL, true );
 }
 
 /// Left aligned text string.
-void ShuttleGuiBase::AddUnits(const wxString &Prompt, int wrapWidth)
+void ShuttleGuiBase::AddUnits(const TranslatableString &Prompt, int wrapWidth)
 {
    if( Prompt.empty() )
       return;
    if( mShuttleMode != eIsCreating )
       return;
    miProp = 1;
-   auto text = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
+   const auto translated = Prompt.Translation();
+   auto text = safenew wxStaticText(GetParent(), -1, translated, wxDefaultPosition, wxDefaultSize,
       GetStyle( wxALIGN_LEFT ));
    mpWind = text;
    if (wrapWidth > 0)
       text->Wrap(wrapWidth);
-   mpWind->SetName(Prompt); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   mpWind->SetName(translated); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizersCore( false, wxALL | wxALIGN_CENTRE_VERTICAL );
 }
 
@@ -300,7 +302,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const TranslatableString &Prompt, bool
    auto realPrompt = Prompt.Translation();
    if( mpbOptionalFlag )
    {
-      AddPrompt( "");
+      AddPrompt( {} );
       //realPrompt = wxT("");
    }
 
@@ -331,7 +333,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const TranslatableString &Prompt, bool
 wxCheckBox * ShuttleGuiBase::AddCheckBoxOnRight( const TranslatableString &Prompt, bool Selected)
 {
    HandleOptionality( Prompt );
-   AddPrompt( Prompt.Translation() );
+   AddPrompt( Prompt );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxCheckBox);
@@ -387,7 +389,7 @@ wxChoice * ShuttleGuiBase::AddChoice( const TranslatableString &Prompt,
    const TranslatableStrings &choices, int Selected )
 {
    HandleOptionality( Prompt );
-   AddPrompt( Prompt.Translation() );
+   AddPrompt( Prompt );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxChoice);
@@ -487,7 +489,7 @@ wxComboBox * ShuttleGuiBase::AddCombo(
 {
    const auto translated = Prompt.Translation();
    HandleOptionality( Prompt );
-   AddPrompt( translated );
+   AddPrompt( Prompt );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxComboBox);
@@ -557,7 +559,7 @@ wxSlider * ShuttleGuiBase::AddSlider(
    const TranslatableString &Prompt, int pos, int Max, int Min)
 {
    HandleOptionality( Prompt );
-   AddPrompt( Prompt.Translation() );
+   AddPrompt( Prompt );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxSlider);
@@ -582,7 +584,7 @@ wxSpinCtrl * ShuttleGuiBase::AddSpinCtrl(
 {
    const auto translated = Prompt.Translation();
    HandleOptionality( Prompt );
-   AddPrompt( translated );
+   AddPrompt( Prompt );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxSpinCtrl);
@@ -604,7 +606,7 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(
 {
    const auto translated = Caption.Translation();
    HandleOptionality( Caption );
-   AddPrompt( translated );
+   AddPrompt( Caption );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxTextCtrl);
@@ -638,7 +640,7 @@ wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(
 {
    const auto translated = Caption.Translation();
    HandleOptionality( Caption );
-   AddPrompt( translated );
+   AddPrompt( Caption );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxTextCtrl);
@@ -695,9 +697,8 @@ wxTextCtrl * ShuttleGuiBase::AddTextWindow(const wxString &Value)
 void ShuttleGuiBase::AddConstTextBox(
    const TranslatableString &Prompt, const TranslatableString &Value)
 {
-   const auto translated = Prompt.Translation();
    HandleOptionality( Prompt );
-   AddPrompt( translated );
+   AddPrompt( Prompt );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return;

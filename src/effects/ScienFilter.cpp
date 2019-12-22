@@ -507,7 +507,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
                1, &mCutoff, NumValidatorStyle::DEFAULT,
                MIN_Cutoff, mNyquist - 1)
             .AddTextBox(XO("C&utoff:"), wxT(""), 10);
-         S.AddUnits(_("Hz"));
+         S.AddUnits(XO("Hz"));
 
          mStopbandRippleCtlP =
             S.AddVariableText(XO("Minimum S&topband Attenuation:"),

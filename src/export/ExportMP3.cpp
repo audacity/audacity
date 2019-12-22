@@ -372,7 +372,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol(1);
             S.StartTwoColumn();
             {
-               S.AddPrompt(_("Bit Rate Mode:"));
+               S.AddPrompt(XO("Bit Rate Mode:"));
                S.StartHorizontalLay();
                {
                   S.StartRadioButtonGroup(MP3RateModeSetting);
@@ -399,7 +399,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                      { wxT("/FileFormats/MP3VarMode"), ROUTINE_FAST },
                      varModeNames );
    
-               S.AddPrompt(_("Channel Mode:"));
+               S.AddPrompt(XO("Channel Mode:"));
                S.StartMultiColumn(3, wxEXPAND);
                {
                   S.StartRadioButtonGroup(MP3ChannelModeSetting);

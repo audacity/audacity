@@ -297,7 +297,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
             S.AddVariableText( {}, false);
             S.AddVariableText( {}, false);
 
-            S.AddPrompt(_("Options:"));
+            S.AddPrompt(XO("Options:"));
 
             mBook = S.Id(OptionsID)
                .Style(wxBORDER_STATIC)

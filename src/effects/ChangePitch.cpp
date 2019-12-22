@@ -335,7 +335,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                )
                .AddTextBox(XO("to"), wxT(""), 12);
 
-            S.AddUnits(_("Hz"));
+            S.AddUnits(XO("Hz"));
          }
          S.EndMultiColumn();
 

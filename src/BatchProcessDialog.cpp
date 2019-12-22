@@ -145,7 +145,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 
    S.StartHorizontalLay(wxEXPAND, 0);
    {
-      S.AddPrompt( _("Apply Macro to:") );
+      S.AddPrompt( XO("Apply Macro to:") );
       wxButton* btn = S.Id(ApplyToProjectID)
          .Name(XO("Apply macro to project"))
          .AddButton(XO("&Project"));
