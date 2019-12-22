@@ -56,10 +56,10 @@ int ProjectFSCK(
          The error message is confusing to users in English, and could just say
          "Found problems with <sequence> when checking project file." */
       wxString msg = _("Project check read faulty Sequence tags.");
-      const wxChar *buttons[] =
-         {_("Close project immediately with no changes"),
-            _("Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."),
-            NULL};
+      const TranslatableStrings buttons{
+         XO("Close project immediately with no changes"),
+         XO("Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts.")
+      };
       wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
       action = ShowMultiDialog(msg, XO("Warning - Problems Reading Sequence Tags"), buttons);
       if (action == 0)
@@ -110,11 +110,11 @@ _("Project check of \"%s\" folder \
 \nproject immediately\" on further error alerts.");
          wxString msg;
          msg.Printf(msgA, dm.GetProjectName(), (long long) missingAliasFilesPathHash.size());
-         const wxChar *buttons[] =
-            {_("Close project immediately with no changes"),
-               _("Treat missing audio as silence (this session only)"),
-               _("Replace missing audio with silence (permanent immediately)."),
-               NULL};
+         const TranslatableStrings buttons{
+            XO("Close project immediately with no changes"),
+            XO("Treat missing audio as silence (this session only)"),
+            XO("Replace missing audio with silence (permanent immediately)."),
+         };
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, XO("Warning - Missing Aliased File(s)"), buttons);
       }
@@ -188,10 +188,11 @@ _("Project check of \"%s\" folder \
 \nfrom the current audio in the project.");
          wxString msg;
          msg.Printf(msgA, dm.GetProjectName(), (long long) missingAUFHash.size());
-         const wxChar *buttons[] = {_("Regenerate alias summary files (safe and recommended)"),
-                                    _("Fill in silence for missing display data (this session only)"),
-                                    _("Close project immediately with no further changes"),
-                                    NULL};
+         const TranslatableStrings buttons{
+            XO("Regenerate alias summary files (safe and recommended)"),
+            XO("Fill in silence for missing display data (this session only)"),
+            XO("Close project immediately with no further changes"),
+         };
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, XO("Warning - Missing Alias Summary File(s)"), buttons);
       }
@@ -260,11 +261,11 @@ _("Project check of \"%s\" folder \
 \nmay not show silence.");
          wxString msg;
          msg.Printf(msgA, dm.GetProjectName(), (long long) missingAUHash.size());
-         const wxChar *buttons[] =
-            {_("Close project immediately with no further changes"),
-               _("Treat missing audio as silence (this session only)"),
-               _("Replace missing audio with silence (permanent immediately)"),
-               NULL};
+         const TranslatableStrings buttons{
+            XO("Close project immediately with no further changes"),
+            XO("Treat missing audio as silence (this session only)"),
+            XO("Replace missing audio with silence (permanent immediately)"),
+         };
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, XO("Warning - Missing Audio Data Block File(s)"), buttons);
       }
@@ -333,11 +334,11 @@ other projects. \
          wxString msg;
          msg.Printf(msgA, dm.GetProjectName(), (int)orphanFilePathArray.size());
 
-         const wxChar *buttons[] =
-            {_("Continue without deleting; ignore the extra files this session"),
-            _("Close project immediately with no further changes"),
-            _("Delete orphan files (permanent immediately)"),
-            NULL};
+         const TranslatableStrings buttons{
+            XO("Continue without deleting; ignore the extra files this session"),
+            XO("Close project immediately with no further changes"),
+            XO("Delete orphan files (permanent immediately)"),
+         };
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, XO("Warning - Orphan Block File(s)"), buttons);
       }

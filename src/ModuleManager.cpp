@@ -274,9 +274,13 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
          wxString msg;
          msg.Printf(_("Module \"%s\" found."), ShortName);
          msg += _("\n\nOnly use modules from trusted sources");
-         const wxChar *buttons[] = {_("Yes"), _("No"), NULL};  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
+         const TranslatableStrings buttons{
+            XO("Yes"), XO("No"),
+         };  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
          int action;
-         action = ShowMultiDialog(msg, XO("Audacity Module Loader"), buttons, _("Try and load this module?"), false);
+         action = ShowMultiDialog(msg, XO("Audacity Module Loader"),
+            buttons,
+            XO("Try and load this module?"), false);
 #ifdef EXPERIMENTAL_MODULE_PREFS
          // If we're not prompting always, accept the answer permanantly
          if( iModuleStatus == kModuleNew ){

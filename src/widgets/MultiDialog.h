@@ -17,17 +17,18 @@
 #include <wx/defs.h>
 
 #include <wx/chartype.h> // for typedef wxChar
-class TranslatableString;
+#include "../Internat.h" // for TranslatableStrings
 class wxString;
 
-const wxString &DefaultMultiDialogMessage();
+const TranslatableString &DefaultMultiDialogMessage();
 
 // Display a dialog with radio buttons.
 // Return the zero-based index of the chosen button.
 int ShowMultiDialog(const wxString &message,
                     const TranslatableString &title,
-                    const wxChar **buttons,
-                    const wxString &boxMsg = DefaultMultiDialogMessage(),
+                    const TranslatableStrings &buttons,
+                    const TranslatableString &boxMsg
+                       = DefaultMultiDialogMessage(),
                     bool log = true);
 
 #endif // __AUDACITY_MULTIDIALOG__
