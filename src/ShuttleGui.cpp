@@ -382,9 +382,10 @@ wxBitmapButton * ShuttleGuiBase::AddBitmapButton(
    return pBtn;
 }
 
-wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
+wxChoice * ShuttleGuiBase::AddChoice( const TranslatableString &inPrompt,
    const TranslatableStrings &choices, int Selected )
 {
+   const auto Prompt = inPrompt.Translation();
    HandleOptionality( Prompt );
    AddPrompt( Prompt );
    UseUpId();
@@ -417,7 +418,7 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
    return pChoice;
 }
 
-wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
+wxChoice * ShuttleGuiBase::AddChoice( const TranslatableString &Prompt,
    const TranslatableStrings &choices, const TranslatableString &Selected )
 {
    return AddChoice(
@@ -1439,11 +1440,11 @@ wxSlider * ShuttleGuiBase::DoTieSlider( const wxString &Prompt, WrappedType & Wr
 
 
 wxChoice * ShuttleGuiBase::DoTieChoice(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    WrappedType &WrappedRef,
    const TranslatableStrings &choices )
 {
-   HandleOptionality( Prompt );
+   HandleOptionality( Prompt.Translation() );
 
    // The Add function does a UseUpId(), so don't do it here in that case.
    if( mShuttleMode != eIsCreating )
@@ -1680,7 +1681,7 @@ wxSlider * ShuttleGuiBase::TieVSlider( const wxString &Prompt, float &pos, const
 }
 
 wxChoice * ShuttleGuiBase::TieChoice(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    wxString &Selected,
    const TranslatableStrings &choices )
 {
@@ -1689,7 +1690,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
 }
 
 wxChoice * ShuttleGuiBase::TieChoice(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    int &Selected,
    const TranslatableStrings &choices )
 {
@@ -1928,7 +1929,7 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
 ///                             choice strings, and a designation of one of
 ///                             those as default.
 wxChoice *ShuttleGuiBase::TieChoice(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const ChoiceSetting &choiceSetting )
 {
    // Do this to force any needed migrations first
@@ -1968,7 +1969,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
 ///   @param pInternalChoices   The corresponding values (as an integer array)
 ///                             if null, then use 0, 1, 2, ...
 wxChoice * ShuttleGuiBase::TieNumberAsChoice(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< int > &Setting,
    const TranslatableStrings & Choices,
    const std::vector<int> * pInternalChoices,

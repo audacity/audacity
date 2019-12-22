@@ -391,13 +391,13 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
       S.SetBorder(5);
       S.StartTwoColumn();
       {
-         mEncodingChoice = S.Id(ChoiceID).AddChoice(_("Encoding:"),
+         mEncodingChoice = S.Id(ChoiceID).AddChoice(XO("Encoding:"),
                                                     encodings,
                                                     selection);
-         mEndianChoice = S.Id(ChoiceID).AddChoice(_("Byte order:"),
+         mEndianChoice = S.Id(ChoiceID).AddChoice(XO("Byte order:"),
                                                   endians,
                                                   endian);
-         mChannelChoice = S.Id(ChoiceID).AddChoice(_("Channels:"),
+         mChannelChoice = S.Id(ChoiceID).AddChoice(XO("Channels:"),
                                                    chans,
                                                    mChannels - 1);
       }

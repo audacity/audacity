@@ -299,10 +299,10 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
             30
          );
 #endif
-         S.TieChoice(_("Default &view mode:"),
+         S.TieChoice(XO("Default &view mode:"),
                      viewModeSetting );
 
-         S.TieChoice(_("Display &samples:"),
+         S.TieChoice(XO("Display &samples:"),
                      sampleDisplaySetting );
 
          S.TieTextBox(_("Default audio track &name:"),
@@ -318,10 +318,10 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(4);
       {
-         S.TieChoice(_("Preset 1:"),
+         S.TieChoice(XO("Preset 1:"),
                      zoom1Setting );
 
-         S.TieChoice(_("Preset 2:"),
+         S.TieChoice(XO("Preset 2:"),
                      zoom2Setting );
       }
    }

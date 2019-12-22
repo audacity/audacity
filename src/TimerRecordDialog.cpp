@@ -970,7 +970,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.StartMultiColumn(1, wxEXPAND);
             {
                S.SetStretchyCol( 0 );
-               m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
+               m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(XO("After Recording completes:"),
                      {
                         XO("Do nothing") ,
                         XO("Exit Audacity") ,

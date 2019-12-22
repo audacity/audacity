@@ -73,7 +73,7 @@ void DragCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasFromY      ).TieNumericTextBox(  _("From Y:"),      mFromY );
       S.Optional( bHasToX        ).TieNumericTextBox(  _("To X:"),        mToX );
       S.Optional( bHasToY        ).TieNumericTextBox(  _("To Y:"),        mToY );
-      S.Optional( bHasRelativeTo ).TieChoice(          _("Relative To:"), mRelativeTo,
+      S.Optional( bHasRelativeTo ).TieChoice(          XO("Relative To:"), mRelativeTo,
          Msgids( kCoordTypeStrings, nCoordTypes ) );
    }
    S.EndMultiColumn();

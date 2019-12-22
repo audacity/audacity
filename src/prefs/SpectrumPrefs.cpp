@@ -188,7 +188,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStretchyCol( 0 );
             S.SetStretchyCol( 1 );
-            S.Id(ID_SCALE).TieChoice(_("S&cale:"),
+            S.Id(ID_SCALE).TieChoice(XO("S&cale:"),
                mTempSettings.scaleType,
                SpectrogramSettings::GetScaleNames() );
             mMinFreq =
@@ -238,11 +238,11 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          mAlgorithmChoice =
-            S.Id(ID_ALGORITHM).TieChoice(_("A&lgorithm:"),
+            S.Id(ID_ALGORITHM).TieChoice(XO("A&lgorithm:"),
             mTempSettings.algorithm,
             SpectrogramSettings::GetAlgorithmNames() );
 
-         S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
+         S.Id(ID_WINDOW_SIZE).TieChoice(XO("Window &size:"),
             mTempSettings.windowSize,
             {
                XO("8 - most wideband"),
@@ -261,13 +261,13 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             }
          );
 
-         S.Id(ID_WINDOW_TYPE).TieChoice(_("Window &type:"),
+         S.Id(ID_WINDOW_TYPE).TieChoice(XO("Window &type:"),
             mTempSettings.windowType,
             mTypeChoices);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
          mZeroPaddingChoiceCtrl =
-            S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor:"),
+            S.Id(ID_PADDING_SIZE).TieChoice(XO("&Zero padding factor:"),
             mTempSettings.zeroPaddingFactor,
             mZeroPaddingChoices);
 #endif

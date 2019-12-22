@@ -215,7 +215,7 @@ void ExportFFmpegAC3Options::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.TieNumberAsChoice(
-               _("Bit Rate:"),
+               XO("Bit Rate:"),
                {wxT("/FileFormats/AC3BitRate"),
                 160000},
                AC3BitRateNames,
@@ -366,7 +366,7 @@ void ExportFFmpegAMRNBOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.TieNumberAsChoice(
-               _("Bit Rate:"),
+               XO("Bit Rate:"),
                {wxT("/FileFormats/AMRNBBitRate"),
                 12200},
                AMRNBBitRateNames,
@@ -468,7 +468,7 @@ void ExportFFmpegWMAOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.TieNumberAsChoice(
-               _("Bit Rate:"),
+               XO("Bit Rate:"),
                {wxT("/FileFormats/WMABitRate"),
                 128000},
                WMABitRateNames,
@@ -1621,7 +1621,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                   mProfileChoice = S.Id(FEProfileID)
                      .ToolTip(XO("AAC Profile\nLow Complexity - default\nMost players won't play anything other than LC"))
                      .MinSize( { 100, -1 } )
-                     .TieChoice(_("Profile:"), AACProfiles);
+                     .TieChoice(XO("Profile:"), AACProfiles);
                }
                S.EndMultiColumn();
             }
@@ -1646,7 +1646,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                      .ToolTip(XO("Prediction Order Method\nEstimate - fastest, lower compression\nLog search - slowest, best compression\nFull search - default"))
                      .MinSize( { 100, -1 } )
                      .TieNumberAsChoice(
-                        _("PdO Method:"),
+                        XO("PdO Method:"),
                         {wxT("/FileFormats/FFmpegPredOrderMethod"),
                          4}, // Full search
                         PredictionOrderMethodNames

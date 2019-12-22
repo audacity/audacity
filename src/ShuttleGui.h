@@ -328,9 +328,9 @@ public:
    wxCheckBox * AddCheckBox( const wxString &Prompt, bool Selected);
    wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, bool Selected);
    wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices );
-   wxChoice   * AddChoice( const wxString &Prompt,
+   wxChoice   * AddChoice( const TranslatableString &Prompt,
       const TranslatableStrings &choices, int Selected = -1 );
-   wxChoice   * AddChoice( const wxString &Prompt,
+   wxChoice   * AddChoice( const TranslatableString &Prompt,
       const TranslatableStrings &choices, const TranslatableString &selected );
    wxMenuBar  * AddMenuBar( );
    wxMenu     * AddMenu( const wxString & Title );
@@ -399,9 +399,9 @@ public:
    wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, bool & Var );
 
    wxChoice * TieChoice(
-      const wxString &Prompt, wxString &Selected, const TranslatableStrings &choices );
+      const TranslatableString &Prompt, wxString &Selected, const TranslatableStrings &choices );
    wxChoice * TieChoice(
-      const wxString &Prompt, int &Selected, const TranslatableStrings &choices );
+      const TranslatableString &Prompt, int &Selected, const TranslatableStrings &choices );
 
    wxSlider * TieSlider( const wxString &Prompt, int &pos, const int max, const int min = 0);
    wxSlider * TieSlider( const wxString &Prompt, double &pos, const double max, const double min = 0.0);
@@ -427,7 +427,7 @@ public:
       const SettingSpec< bool > &Setting);
 
    virtual wxChoice *TieChoice(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const ChoiceSetting &choiceSetting );
 
    // This overload presents what is really a numerical setting as a choice among
@@ -436,7 +436,7 @@ public:
    // behavior is different when the call is intercepted for purposes of
    // emitting scripting information about Preferences.
    virtual wxChoice * TieNumberAsChoice(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< int > &Setting,
       const TranslatableStrings & Choices,
       const std::vector<int> * pInternalChoices = nullptr,
@@ -539,7 +539,7 @@ private:
    wxTextCtrl * DoTieNumericTextBox( const wxString &Prompt, WrappedType &  WrappedRef, const int nChars);
    wxCheckBox * DoTieCheckBox( const wxString &Prompt, WrappedType & WrappedRef );
    wxChoice * DoTieChoice(
-      const wxString &Prompt, WrappedType & WrappedRef,
+      const TranslatableString &Prompt, WrappedType & WrappedRef,
       const TranslatableStrings & choices );
    wxSlider * DoTieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
    wxSpinCtrl * DoTieSpinCtrl( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );

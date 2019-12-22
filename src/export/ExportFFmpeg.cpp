@@ -1064,7 +1064,7 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
-            choice = S.AddChoice(_("Sample Rates"),
+            choice = S.AddChoice(XO("Sample Rates"),
                [&]{
                   TranslatableStrings choices;
                   for (int i = 0; sampRates[i] > 0; i++)

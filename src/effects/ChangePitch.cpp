@@ -280,7 +280,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .Name(XO("from"))
                .MinSize( { 80, -1 } )
-               .AddChoice(_("from"), pitch);
+               .AddChoice(XO("from"), pitch);
 
             m_pSpin_FromOctave = S.Id(ID_FromOctave)
                .Name(XO("from Octave"))
@@ -291,7 +291,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .Name(XO("to"))
                .MinSize( { 80, -1 } )
-               .AddChoice(_("to"), pitch);
+               .AddChoice(XO("to"), pitch);
 
             m_pSpin_ToOctave = S.Id(ID_ToOctave)
                .Name(XO("to Octave"))

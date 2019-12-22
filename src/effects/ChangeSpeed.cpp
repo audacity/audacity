@@ -343,13 +343,13 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
             .Name(XO("From rpm"))
             .MinSize( { 100, -1 } )
             /* i18n-hint: changing a quantity "from" one value "to" another */
-            .AddChoice(_("from"), kVinylStrings);
+            .AddChoice(XO("from"), kVinylStrings);
 
          mpChoice_ToVinyl = S.Id(ID_ToVinyl)
             /* i18n-hint: changing a quantity "from" one value "to" another */
             .Name(XO("To rpm"))
             .MinSize( { 100, -1 } )
-            .AddChoice(_("to"), kVinylStrings);
+            .AddChoice(XO("to"), kVinylStrings);
       }
       S.EndMultiColumn();
 

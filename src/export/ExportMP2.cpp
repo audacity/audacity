@@ -160,7 +160,7 @@ void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.TieNumberAsChoice(
-               _("Bit Rate:"),
+               XO("Bit Rate:"),
                {wxT("/FileFormats/MP2Bitrate"),
                 160},
                BitRateNames,

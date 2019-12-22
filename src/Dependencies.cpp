@@ -397,7 +397,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
          {
             mFutureActionChoice =
                S.Id(FutureActionChoiceID).AddChoice(
-                  _("Whenever a project depends on other files:"),
+                  XO("Whenever a project depends on other files:"),
                   {
                      /*i18n-hint: One of the choices of what you want Audacity to do when
                      * Audacity finds a project depends on another file.*/

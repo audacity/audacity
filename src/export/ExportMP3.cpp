@@ -387,7 +387,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                S.EndHorizontalLay();
 
                mRate = S.Id(ID_QUALITY).TieNumberAsChoice(
-                  _("Quality"),
+                  XO("Quality"),
                   { wxT("/FileFormats/MP3Bitrate"), defrate },
                   *choices,
                   codes
@@ -395,7 +395,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 
                mMode = S.Disable(!enable)
                   .TieNumberAsChoice(
-                     _("Variable Speed:"),
+                     XO("Variable Speed:"),
                      { wxT("/FileFormats/MP3VarMode"), ROUTINE_FAST },
                      varModeNames );
    
@@ -2029,7 +2029,7 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
-            choice = S.AddChoice(_("Sample Rates"),
+            choice = S.AddChoice(XO("Sample Rates"),
                [&]{
                   TranslatableStrings choices;
                   for (size_t ii = 0, nn = sampRates.size(); ii < nn; ++ii) {

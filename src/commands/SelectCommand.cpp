@@ -77,7 +77,7 @@ void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasT1 ).TieTextBox(_("End Time:"),   mT1);
       // Chooses what time is relative to.
       S.Optional( bHasRelativeSpec ).TieChoice(
-         _("Relative To:"),
+         XO("Relative To:"),
          mRelativeTo, Msgids( kRelativeTo, nRelativeTos ));
    }
    S.EndMultiColumn();
@@ -203,7 +203,7 @@ void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       // Always used, so no check box.
-      S.TieChoice( _("Mode:"), mMode, Msgids( kModes, nModes ));
+      S.TieChoice( XO("Mode:"), mMode, Msgids( kModes, nModes ));
    }
    S.EndMultiColumn();
 }

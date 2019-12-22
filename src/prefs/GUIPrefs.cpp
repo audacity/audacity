@@ -188,18 +188,18 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
 
-         S.TieChoice( _("&Language:"),
+         S.TieChoice( XO("&Language:"),
             {
                wxT("/Locale/Language"),
                { ByColumns, mLangNames, mLangCodes }
             }
          );
 
-         S.TieChoice( _("Location of &Manual:"), GUIManualLocation);
+         S.TieChoice( XO("Location of &Manual:"), GUIManualLocation);
 
-         S.TieChoice( _("Th&eme:"), GUITheme);
+         S.TieChoice( XO("Th&eme:"), GUITheme);
 
-         S.TieChoice( _("Meter dB &range:"),
+         S.TieChoice( XO("Meter dB &range:"),
             {
                ENV_DB_KEY,
                { ByColumns, mRangeChoices, mRangeCodes },

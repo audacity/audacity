@@ -465,7 +465,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .Focus()
             .Validator<wxGenericValidator>(&mFilterType)
             .MinSize( { -1, -1 } )
-            .AddChoice(_("&Filter Type:"),
+            .AddChoice(XO("&Filter Type:"),
                Msgids(kTypeStrings, nTypes)
             );
 
@@ -473,7 +473,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .Validator<wxGenericValidator>(&mOrderIndex)
             /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
             .MinSize( { -1, -1 } )
-            .AddChoice(_("O&rder:"),
+            .AddChoice(XO("O&rder:"),
                []{
                   TranslatableStrings orders;
                   for (int i = 1; i <= 10; i++)
@@ -495,7 +495,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          mFilterSubTypeCtl = S.Id(ID_SubType)
             .Validator<wxGenericValidator>(&mFilterSubtype)
             .MinSize( { -1, -1 } )
-            .AddChoice(_("&Subtype:"),
+            .AddChoice(XO("&Subtype:"),
                Msgids(kSubTypeStrings, nSubTypes)
             );
 

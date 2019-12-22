@@ -409,7 +409,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieChoice(_("Select &interface"),
+               S.TieChoice(XO("Select &interface"),
                            mUIType,
                            { XO("Full"), XO("Generic"), XO("Basic") });
             }

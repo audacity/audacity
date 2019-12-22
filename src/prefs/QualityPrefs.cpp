@@ -167,7 +167,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         S.TieChoice(_("Default Sample &Format:"),
+         S.TieChoice(XO("Default Sample &Format:"),
                      formatSetting);
       }
       S.EndMultiColumn();
@@ -178,11 +178,11 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2, wxEXPAND);
       {
-         S.TieChoice(_("Sample Rate Con&verter:"),
+         S.TieChoice(XO("Sample Rate Con&verter:"),
                      Resample::FastMethodSetting);
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
-         S.TieChoice(_("&Dither:"),
+         S.TieChoice(XO("&Dither:"),
                      Dither::FastSetting);
       }
       S.EndMultiColumn();
@@ -193,11 +193,11 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         S.TieChoice(_("Sample Rate Conver&ter:"),
+         S.TieChoice(XO("Sample Rate Conver&ter:"),
                      Resample::BestMethodSetting);
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
-         S.TieChoice(_("Dit&her:"),
+         S.TieChoice(XO("Dit&her:"),
                      Dither::BestSetting);
       }
       S.EndMultiColumn();

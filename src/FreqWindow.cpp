@@ -458,13 +458,13 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 
       mAlgChoice = S.Id(FreqAlgChoiceID).Focus()
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(_("&Algorithm:"), algChoices, mAlg);
+         .AddChoice(XO("&Algorithm:"), algChoices, mAlg);
 
       S.AddSpace(5);
 
       mSizeChoice = S.Id(FreqSizeChoiceID)
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(_("&Size:"), sizeChoices, mSize);
+         .AddChoice(XO("&Size:"), sizeChoices, mSize);
 
       S.AddSpace(5);
 
@@ -481,14 +481,14 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 
       mFuncChoice = S.Id(FreqFuncChoiceID)
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(_("&Function:"), funcChoices, mFunc);
+         .AddChoice(XO("&Function:"), funcChoices, mFunc);
       mFuncChoice->MoveAfterInTabOrder(mSizeChoice);
 
       S.AddSpace(5);
 
       mAxisChoice = S.Id(FreqAxisChoiceID)
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(_("&Axis:"), axisChoices, mAxis);
+         .AddChoice(XO("&Axis:"), axisChoices, mAxis);
       mAxisChoice->MoveAfterInTabOrder(mFuncChoice);
 
       S.AddSpace(5);

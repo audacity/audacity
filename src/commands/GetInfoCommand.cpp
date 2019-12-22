@@ -108,9 +108,9 @@ void GetInfoCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieChoice( _("Type:"),
+      S.TieChoice( XO("Type:"),
          mInfoType, Msgids( kTypes, nTypes ));
-      S.TieChoice( _("Format:"),
+      S.TieChoice( XO("Format:"),
          mFormat, Msgids( kFormats, nFormats ));
    }
    S.EndMultiColumn();
@@ -206,7 +206,7 @@ public:
       const SettingSpec< bool > &Setting) override;
 
    wxChoice * TieNumberAsChoice(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< int > &Setting,
       const TranslatableStrings & Choices,
       const std::vector<int> * pInternalChoices, int iNoMatchSelector ) override;
@@ -271,7 +271,7 @@ wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
    return ShuttleGui::TieCheckBoxOnRight( Prompt, Setting );
 }
 wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< int > &Setting,
    const TranslatableStrings & Choices,
    const std::vector<int> * pInternalChoices, int iNoMatchSelector)
@@ -281,7 +281,7 @@ wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    // "Other..."
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "number", "type" ); // not "enum" !
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
