@@ -119,12 +119,12 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
                                      0);
             S.AddWindow(mLevels);
             /* i18n-hint: (verb)*/
-            mDiscard = S.Id(ID_DISCARD).AddButton(_("&Discard"));
+            mDiscard = S.Id(ID_DISCARD).AddButton(XO("&Discard"));
 
             mClipboard = S
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
                .AddTextBox(_("Clipboard space used"), wxT("0"), 10);
-            S.Id(ID_DISCARD_CLIPBOARD).AddButton(_("Discard"));
+            S.Id(ID_DISCARD_CLIPBOARD).AddButton(XO("Discard"));
          }
          S.EndMultiColumn();
       }
@@ -133,7 +133,7 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
       S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
          S.SetBorder(10);
-         S.Id(wxID_OK).AddButton(_("&OK"), wxALIGN_CENTER, true);
+         S.Id(wxID_OK).AddButton(XO("&OK"), wxALIGN_CENTER, true);
       }
       S.EndHorizontalLay();
    }

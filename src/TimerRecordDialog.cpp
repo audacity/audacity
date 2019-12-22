@@ -942,7 +942,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                   S.GetParent(), ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), sInitialValue);
                m_pTimerSavePathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerSavePathTextCtrl);
-               m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select..."));
+               m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(XO("Select..."));
                }
             S.EndMultiColumn();
          }
@@ -958,7 +958,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                   S.GetParent(), ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), wxT(""));
                m_pTimerExportPathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerExportPathTextCtrl);
-               m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_("Select..."));
+               m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(XO("Select..."));
             }
             S.EndMultiColumn();
          }

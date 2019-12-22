@@ -181,19 +181,19 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
       S.StartHorizontalLay (wxSHRINK, 0);
       {
-          MoveRuleUp = S.Id (EIPMoveRuleUp).AddButton (_("Move rule &up"));
-          MoveRuleDown = S.Id (EIPMoveRuleDown).AddButton
-                (_("Move rule &down"));
-          MoveFilterUp = S.Id (EIPMoveFilterUp).AddButton
-                (_("Move f&ilter up"));
-          MoveFilterDown = S.Id (EIPMoveFilterDown).AddButton
-                (_("Move &filter down"));
+          MoveRuleUp = S.Id (EIPMoveRuleUp).AddButton(XO("Move rule &up"));
+          MoveRuleDown = S.Id (EIPMoveRuleDown).AddButton(
+             XO("Move rule &down"));
+          MoveFilterUp = S.Id (EIPMoveFilterUp).AddButton(
+             XO("Move f&ilter up"));
+          MoveFilterDown = S.Id (EIPMoveFilterDown).AddButton(
+             XO("Move &filter down"));
       }
       S.EndHorizontalLay();
       S.StartHorizontalLay (wxSHRINK, 0);
       {
-          AddRule = S.Id (EIPAddRule).AddButton (_("&Add new rule"));
-          DelRule = S.Id (EIPDelRule).AddButton (_("De&lete selected rule"));
+          AddRule = S.Id (EIPAddRule).AddButton(XO("&Add new rule"));
+          DelRule = S.Id (EIPDelRule).AddButton(XO("De&lete selected rule"));
       }
       S.EndHorizontalLay();
    }

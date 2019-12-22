@@ -131,17 +131,17 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartHorizontalLay(wxALIGN_LEFT);
       {
-         S.Id(idSaveThemeCache).AddButton(_("Save Theme Cache"));
-         S.Id(idLoadThemeCache).AddButton(_("Load Theme Cache"));
+         S.Id(idSaveThemeCache).AddButton(XO("Save Theme Cache"));
+         S.Id(idLoadThemeCache).AddButton(XO("Load Theme Cache"));
 
          // This next button is only provided in Debug mode.
          // It is for developers who are compiling Audacity themselves
          // and who who wish to generate a NEW ThemeAsCeeCode.h and compile it in.
 #ifdef __WXDEBUG__
-         S.Id(idSaveThemeAsCode).AddButton(wxT("Output Sourcery"));
+         S.Id(idSaveThemeAsCode).AddButton(Verbatim("Output Sourcery"));
 #endif
 
-         S.Id(idReadThemeInternal).AddButton(_("&Defaults"));
+         S.Id(idReadThemeInternal).AddButton(XO("&Defaults"));
       }
       S.EndHorizontalLay();
    }
@@ -158,8 +158,8 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartHorizontalLay(wxALIGN_LEFT);
       {
-         S.Id(idSaveThemeComponents).AddButton( _("Save Files"));
-         S.Id(idLoadThemeComponents).AddButton( _("Load Files"));
+         S.Id(idSaveThemeComponents).AddButton( XO("Save Files"));
+         S.Id(idLoadThemeComponents).AddButton( XO("Load Files"));
       }
       S.EndHorizontalLay();
    }

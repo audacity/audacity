@@ -2626,8 +2626,8 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
 
       S.StartHorizontalLay(wxALIGN_CENTER, 0);
       {
-         S.Id(ID_Load).AddButton(_("&Load"));
-         S.Id(ID_Save).AddButton(_("&Save"));
+         S.Id(ID_Load).AddButton(XO("&Load"));
+         S.Id(ID_Save).AddButton(XO("&Save"));
       }
       S.EndHorizontalLay();
    }
@@ -2726,7 +2726,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   if (ctrl.label.empty())
                      // We'd expect wxFileSelectorPromptStr to already be translated, but apparently not.
                      ctrl.label = wxGetTranslation( wxFileSelectorPromptStr );
-                  S.Id(ID_FILE + i).AddButton(ctrl.label, wxALIGN_LEFT);
+                  S.Id(ID_FILE + i).AddButton(
+                     Verbatim(ctrl.label), wxALIGN_LEFT);
                }
                else
                {

@@ -151,7 +151,7 @@ void QuickFixDialog::AddStuck( ShuttleGui & S, bool & bBool, wxString Pref, wxSt
    if( !bBool)
       return;
    S.AddFixedText( Prompt );
-   S.Id(FixButtonID + mItem).AddButton( _("Fix") )->SetClientObject(
+   S.Id(FixButtonID + mItem).AddButton( XO("Fix") )->SetClientObject(
       safenew wxStringClientData(Pref));
 
    {

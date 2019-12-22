@@ -533,7 +533,7 @@ void ExportFFmpegCustomOptions::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartHorizontalLay(wxCENTER, 0);
       {
-         S.Id(OpenID).AddButton(_("Open custom FFmpeg format options"));
+         S.Id(OpenID).AddButton(XO("Open custom FFmpeg format options"));
       }
       S.EndHorizontalLay();
    }
@@ -1542,11 +1542,11 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
       {
          S.SetStretchyCol(1);
          mPresetCombo = S.Id(FEPresetID).AddCombo(_("Preset:"), gPrefs->Read(wxT("/FileFormats/FFmpegPreset"),wxEmptyString), mPresetNames);
-         mLoadPreset = S.Id(FELoadPresetID).AddButton(_("Load Preset"));
-         mSavePreset = S.Id(FESavePresetID).AddButton(_("Save Preset"));
-         mDeletePreset = S.Id(FEDeletePresetID).AddButton(_("Delete Preset"));
-         mImportPresets = S.Id(FEImportPresetsID).AddButton(_("Import Presets"));
-         mExportPresets = S.Id(FEExportPresetsID).AddButton(_("Export Presets"));
+         mLoadPreset = S.Id(FELoadPresetID).AddButton(XO("Load Preset"));
+         mSavePreset = S.Id(FESavePresetID).AddButton(XO("Save Preset"));
+         mDeletePreset = S.Id(FEDeletePresetID).AddButton(XO("Delete Preset"));
+         mImportPresets = S.Id(FEImportPresetsID).AddButton(XO("Import Presets"));
+         mExportPresets = S.Id(FEExportPresetsID).AddButton(XO("Export Presets"));
       }
       S.EndMultiColumn();
       S.StartMultiColumn(4, wxALIGN_LEFT);
@@ -1566,8 +1566,8 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxEXPAND);
          {
             S.SetStretchyRow(1);
-            S.Id(FEAllFormatsID).AddButton(_("Show All Formats"));
-            S.Id(FEAllCodecsID).AddButton(_("Show All Codecs"));
+            S.Id(FEAllFormatsID).AddButton(XO("Show All Formats"));
+            S.Id(FEAllCodecsID).AddButton(XO("Show All Codecs"));
             mFormatList = S.Id(FEFormatID).AddListBox(mFormatNames);
             mFormatList->DeselectAll();
             mCodecList = S.Id(FECodecID).AddListBox(mCodecNames);

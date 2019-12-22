@@ -345,15 +345,17 @@ wxCheckBox * ShuttleGuiBase::AddCheckBoxOnRight( const wxString &Prompt, bool Se
 }
 
 wxButton * ShuttleGuiBase::AddButton(
-   const wxString &Text, int PositionFlags, bool setDefault)
+   const TranslatableString &Text, int PositionFlags, bool setDefault)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxButton);
    wxButton * pBtn;
-   mpWind = pBtn = safenew wxButton(GetParent(), miId, Text, wxDefaultPosition, wxDefaultSize,
+   const auto translated = Text.Translation();
+   mpWind = pBtn = safenew wxButton(GetParent(), miId,
+      translated, wxDefaultPosition, wxDefaultSize,
       GetStyle( 0 ) );
-   mpWind->SetName(wxStripMenuCodes(Text));
+   mpWind->SetName(wxStripMenuCodes(translated));
    miProp=0;
    UpdateSizersCore(false, PositionFlags | wxALL);
    if (setDefault)
@@ -2318,7 +2320,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
 
    if( buttons & eCloseButton )
    {
-      bs->AddButton(safenew wxButton(parent, wxID_CANCEL, _("&Close")));
+      bs->AddButton(safenew wxButton(parent, wxID_CANCEL, XO("&Close").Translation()));
    }
 
    if( buttons & eHelpButton )
@@ -2326,24 +2328,24 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       // Replace standard Help button with smaller icon button.
       // bs->AddButton(safenew wxButton(parent, wxID_HELP));
       b = safenew wxBitmapButton(parent, wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
-      b->SetToolTip( _("Help") );
-      b->SetLabel(_("Help"));       // for screen readers
+      b->SetToolTip( XO("Help").Translation() );
+      b->SetLabel(XO("Help").Translation());       // for screen readers
       bs->AddButton( b );
    }
 
    if (buttons & ePreviewButton)
    {
-      bs->Add(safenew wxButton(parent, ePreviewID, _("&Preview")), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
+      bs->Add(safenew wxButton(parent, ePreviewID, XO("&Preview").Translation()), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
    }
    if (buttons & ePreviewDryButton)
    {
-      bs->Add(safenew wxButton(parent, ePreviewDryID, _("Dry Previe&w")), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
+      bs->Add(safenew wxButton(parent, ePreviewDryID, XO("Dry Previe&w").Translation()), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
       bs->Add( 20, 0 );
    }
 
    if( buttons & eSettingsButton )
    {
-      bs->Add(safenew wxButton(parent, eSettingsID, _("&Settings")), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
+      bs->Add(safenew wxButton(parent, eSettingsID, XO("&Settings").Translation()), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
       bs->Add( 20, 0 );
    }
 
@@ -2374,7 +2376,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
          }
       }
 
-      b = safenew wxButton(parent, eDebugID, _("Debu&g"));
+      b = safenew wxButton(parent, eDebugID, XO("Debu&g").Translation());
       bs->Insert( lastLastSpacer + 1, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
    }
 

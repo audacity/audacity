@@ -267,7 +267,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.Name(XO("Foreground end time"))
             .AddWindow(mForegroundEndT);
 
-         m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(_("&Measure selection"));
+         m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(XO("&Measure selection"));
          mForegroundRMSText = S.Id(ID_FOREGROUNDDB_TEXT)
             .ConnectRoot(wxEVT_KEY_DOWN,
                          &ContrastDialog::OnChar)
@@ -301,7 +301,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.Name(XO("Background end time"))
             .AddWindow(mBackgroundEndT);
 
-         m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(_("Mea&sure selection"));
+         m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(XO("Mea&sure selection"));
          mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT)
             .ConnectRoot(wxEVT_KEY_DOWN,
                          &ContrastDialog::OnChar)
@@ -323,7 +323,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             .ConnectRoot(wxEVT_KEY_DOWN,
                          &ContrastDialog::OnChar)
             .AddTextBox( {}, wxT(""), 50);
-         m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(_("R&eset"));
+         m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(XO("R&eset"));
 
          label = XO("&Difference:");
          S.AddFixedText(label.Translation());
@@ -332,7 +332,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             .ConnectRoot(wxEVT_KEY_DOWN,
                          &ContrastDialog::OnChar)
             .AddTextBox( {}, wxT(""), 50);
-         m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(_("E&xport..."));
+         m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(XO("E&xport..."));
       }
       S.EndMultiColumn();
    }
@@ -342,9 +342,9 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol(1);
-      m_pButton_GetURL = S.Id(ID_BUTTON_GETURL).AddButton(_("&Help"));
+      m_pButton_GetURL = S.Id(ID_BUTTON_GETURL).AddButton(XO("&Help"));
       S.AddFixedText(wxT(" "));   // spacer
-      m_pButton_Close = S.Id(ID_BUTTON_CLOSE).AddButton(_("&Close"));
+      m_pButton_Close = S.Id(ID_BUTTON_CLOSE).AddButton(XO("&Close"));
    }
    S.EndMultiColumn();
 #endif

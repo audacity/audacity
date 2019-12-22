@@ -91,10 +91,10 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
          mCommand->SetEditable(false);
          mEditParams = S.Id(EditParamsButtonID)
             .Disable() // disable button as box is empty
-            .AddButton(_("&Edit Parameters"));
+            .AddButton(XO("&Edit Parameters"));
          mUsePreset = S.Id(UsePresetButtonID)
             .Disable() // disable button as box is empty
-            .AddButton(_("&Use Preset"));
+            .AddButton(XO("&Use Preset"));
       }
       S.EndMultiColumn();
 

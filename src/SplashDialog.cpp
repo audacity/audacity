@@ -147,7 +147,7 @@ void SplashDialog::Populate( ShuttleGui & S )
 
       S.Id(wxID_OK)
          .Prop(0)
-         .AddButton(_("OK"), wxALIGN_RIGHT| wxALL, true);
+         .AddButton(XO("OK"), wxALIGN_RIGHT| wxALL, true);
    }
    S.EndVerticalLay();
 }

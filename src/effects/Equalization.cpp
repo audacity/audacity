@@ -1033,13 +1033,13 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             }
             S.EndHorizontalLay();
 
-            S.Id(ID_Manage).AddButton(_("S&ave/Manage Curves..."));
+            S.Id(ID_Manage).AddButton(XO("S&ave/Manage Curves..."));
          }
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
          {
-            S.Id(ID_Clear).AddButton(_("Fla&tten"));
-            S.Id(ID_Invert).AddButton(_("&Invert"));
+            S.Id(ID_Clear).AddButton(XO("Fla&tten"));
+            S.Id(ID_Invert).AddButton(XO("&Invert"));
 
             mGridOnOff = S.Id(ID_Grid)
                .Name(XO("Show grid lines"))
@@ -1101,7 +1101,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             .Disable(true /* !EffectEqualization48x::GetMathCaps()->AVX */)
             .AddRadioButtonToGroup(_("AV&X Threaded"),
                                    4, value);
-         S.Id(ID_Bench).AddButton(_("&Bench"));
+         S.Id(ID_Bench).AddButton(XO("&Bench"));
       }
       S.EndHorizontalLay();
 
@@ -3369,14 +3369,14 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
       S.StartVerticalLay(0);
       {
-         S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
-         S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
-         S.Id(RenameButtonID).AddButton(_("&Rename..."), wxALIGN_LEFT);
-         S.Id(DeleteButtonID).AddButton(_("D&elete..."), wxALIGN_LEFT);
-         S.Id(ImportButtonID).AddButton(_("I&mport..."), wxALIGN_LEFT);
-         S.Id(ExportButtonID).AddButton(_("E&xport..."), wxALIGN_LEFT);
-         S.Id(LibraryButtonID).AddButton(_("&Get More..."), wxALIGN_LEFT);
-         S.Id(DefaultsButtonID).AddButton(_("De&faults"), wxALIGN_LEFT);
+         S.Id(UpButtonID).AddButton(XO("Move &Up"), wxALIGN_LEFT);
+         S.Id(DownButtonID).AddButton(XO("Move &Down"), wxALIGN_LEFT);
+         S.Id(RenameButtonID).AddButton(XO("&Rename..."), wxALIGN_LEFT);
+         S.Id(DeleteButtonID).AddButton(XO("D&elete..."), wxALIGN_LEFT);
+         S.Id(ImportButtonID).AddButton(XO("I&mport..."), wxALIGN_LEFT);
+         S.Id(ExportButtonID).AddButton(XO("E&xport..."), wxALIGN_LEFT);
+         S.Id(LibraryButtonID).AddButton(XO("&Get More..."), wxALIGN_LEFT);
+         S.Id(DefaultsButtonID).AddButton(XO("De&faults"), wxALIGN_LEFT);
       }
       S.EndVerticalLay();
    }

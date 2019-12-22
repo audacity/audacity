@@ -706,7 +706,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(_("Step 1"));
    {
       S.AddVariableText(_("Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:"));
-      m_pButton_GetProfile = S.Id(ID_BUTTON_GETPROFILE).AddButton(_("&Get Noise Profile"));
+      m_pButton_GetProfile = S.Id(ID_BUTTON_GETPROFILE).AddButton(XO("&Get Noise Profile"));
    }
    S.EndStatic();
 

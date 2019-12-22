@@ -261,12 +261,12 @@ void LabelDialog::PopulateOrExchange( ShuttleGui & S )
       S.EndVerticalLay();
       S.StartVerticalLay(0);
       {
-         //S.Id(ID_INSERTA).AddButton(_("&Insert"), wxALIGN_LEFT);
-         S.Id(ID_INSERTB).AddButton(_("&Insert"), wxALIGN_LEFT);
-         //S.Id(EditButtonID).AddButton(_("&Edit"), wxALIGN_LEFT);
-         S.Id(ID_REMOVE).AddButton(_("De&lete"), wxALIGN_LEFT);
-         S.Id(ID_IMPORT).AddButton(_("I&mport..."), wxALIGN_LEFT);
-         S.Id(ID_EXPORT).AddButton(_("&Export..."), wxALIGN_LEFT);
+         //S.Id(ID_INSERTA).AddButton(XO("&Insert"), wxALIGN_LEFT);
+         S.Id(ID_INSERTB).AddButton(XO("&Insert"), wxALIGN_LEFT);
+         //S.Id(EditButtonID).AddButton(XO("&Edit"), wxALIGN_LEFT);
+         S.Id(ID_REMOVE).AddButton(XO("De&lete"), wxALIGN_LEFT);
+         S.Id(ID_IMPORT).AddButton(XO("I&mport..."), wxALIGN_LEFT);
+         S.Id(ID_EXPORT).AddButton(XO("&Export..."), wxALIGN_LEFT);
       }
       S.EndVerticalLay();
    }

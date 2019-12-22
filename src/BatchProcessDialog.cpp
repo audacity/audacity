@@ -148,7 +148,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
       S.AddPrompt( _("Apply Macro to:") );
       wxButton* btn = S.Id(ApplyToProjectID)
          .Name(XO("Apply macro to project"))
-         .AddButton(_("&Project"));
+         .AddButton(XO("&Project"));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
@@ -156,7 +156,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 
       btn = S.Id(ApplyToFilesID)
          .Name(XO("Apply macro to files..."))
-         .AddButton(_("&Files..."));
+         .AddButton(XO("&Files..."));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
@@ -167,7 +167,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
    S.StartHorizontalLay(wxEXPAND, 0);
    {
       /* i18n-hint: The Expand button makes the dialog bigger, with more in it */
-      mResize = S.Id(ExpandID).AddButton(_("&Expand"));
+      mResize = S.Id(ExpandID).AddButton(XO("&Expand"));
       S.Prop(1).AddSpace( 10 );
       S.AddStandardButtons( eCancelButton | eHelpButton);
    }
@@ -423,7 +423,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
       S.StartHorizontalLay(wxCENTER, false);
       {
-         S.Id(wxID_CANCEL).AddButton(_("&Cancel"));
+         S.Id(wxID_CANCEL).AddButton(XO("&Cancel"));
       }
       S.EndHorizontalLay();
    }
@@ -627,18 +627,18 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
               .AddListControlReportMode( { _("Macro") } );
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {
-               S.Id(AddButtonID).AddButton(_("&New"));
-               mRemove = S.Id(RemoveButtonID).AddButton(_("Remo&ve"));
-               mRename = S.Id(RenameButtonID).AddButton(_("&Rename..."));
-               mRestore = S.Id(RestoreButtonID).AddButton(_("Re&store"));
+               S.Id(AddButtonID).AddButton(XO("&New"));
+               mRemove = S.Id(RemoveButtonID).AddButton(XO("Remo&ve"));
+               mRename = S.Id(RenameButtonID).AddButton(XO("&Rename..."));
+               mRestore = S.Id(RestoreButtonID).AddButton(XO("Re&store"));
 // Not yet ready for prime time.
 #if 0
                S.Id(ImportButtonID)
                   .Disable()
-                  .AddButton(_("I&mport..."));
+                  .AddButton(XO("I&mport..."));
                S.Id(ExportButtonID)
                   .Disable()
-                  .AddButton(_("E&xport..."));
+                  .AddButton(XO("E&xport..."));
 #endif
             }
             S.EndVerticalLay();
@@ -664,11 +664,11 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {
-               S.Id(InsertButtonID).AddButton(_("&Insert"), wxALIGN_LEFT);
-               S.Id(EditButtonID).AddButton(_("&Edit..."), wxALIGN_LEFT);
-               S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
-               S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
-               S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
+               S.Id(InsertButtonID).AddButton(XO("&Insert"), wxALIGN_LEFT);
+               S.Id(EditButtonID).AddButton(XO("&Edit..."), wxALIGN_LEFT);
+               S.Id(DeleteButtonID).AddButton(XO("De&lete"), wxALIGN_LEFT);
+               S.Id(UpButtonID).AddButton(XO("Move &Up"), wxALIGN_LEFT);
+               S.Id(DownButtonID).AddButton(XO("Move &Down"), wxALIGN_LEFT);
             }
             S.EndVerticalLay();
          }
@@ -681,12 +681,12 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxEXPAND, 0);
    {  
       /* i18n-hint: The Shrink button makes the dialog smaller, with less in it */
-      mResize = S.Id(ShrinkID).AddButton(_("Shrin&k"));
+      mResize = S.Id(ShrinkID).AddButton(XO("Shrin&k"));
       // Using variable text just to get the positioning options.
       S.Prop(0).AddVariableText( _("Apply Macro to:"), false, wxALL | wxALIGN_CENTRE_VERTICAL );
       wxButton* btn = S.Id(ApplyToProjectID)
          .Name(XO("Apply macro to project"))
-         .AddButton(_("&Project"));
+         .AddButton(XO("&Project"));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
@@ -694,7 +694,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 
       btn = S.Id(ApplyToFilesID)
          .Name(XO("Apply macro to files..."))
-         .AddButton(_("&Files..."));
+         .AddButton(XO("&Files..."));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));

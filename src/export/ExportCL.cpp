@@ -123,7 +123,7 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
             mCmd = S.AddCombo(_("Command:"),
                               cmd,
                               cmds);
-            S.Id(ID_BROWSE).AddButton(_("Browse..."),
+            S.Id(ID_BROWSE).AddButton(XO("Browse..."),
                                       wxALIGN_CENTER_VERTICAL);
             S.AddFixedText( {} );
             S.TieCheckBox(_("Show output"),
@@ -540,7 +540,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       S.AddTextWindow(cmd + wxT("\n\n") + output);
       S.StartHorizontalLay(wxALIGN_CENTER, false);
       {
-         S.Id(wxID_OK).AddButton(_("&OK"), wxALIGN_CENTER, true);
+         S.Id(wxID_OK).AddButton(XO("&OK"), wxALIGN_CENTER, true);
       }
       dlg.GetSizer()->AddSpacer(5);
       dlg.Layout();

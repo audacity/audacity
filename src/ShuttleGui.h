@@ -288,7 +288,7 @@ public:
    // Only the last button specified as default (if more than one) will be
    // Always ORs the flags with wxALL (which affects borders):
    wxButton * AddButton(
-      const wxString & Text, int PositionFlags = wxALIGN_CENTRE,
+      const TranslatableString & Text, int PositionFlags = wxALIGN_CENTRE,
       bool setDefault = false );
    // Only the last button specified as default (if more than one) will be
    // Always ORs the flags with wxALL (which affects borders):

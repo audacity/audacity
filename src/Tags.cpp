@@ -914,10 +914,10 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(4, wxALIGN_CENTER);
       {
-         S.Id(AddID).AddButton(_("&Add"));
-         S.Id(RemoveID).AddButton(_("&Remove"));
+         S.Id(AddID).AddButton(XO("&Add"));
+         S.Id(RemoveID).AddButton(XO("&Remove"));
          S.AddTitle( {} );
-         S.Id(ClearID).AddButton(_("Cl&ear"));
+         S.Id(ClearID).AddButton(XO("Cl&ear"));
       }
       S.EndMultiColumn();
 
@@ -927,8 +927,8 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartMultiColumn(4, wxALIGN_CENTER);
             {
-               S.Id(EditID).AddButton(_("E&dit..."));
-               S.Id(ResetID).AddButton(_("Rese&t..."));
+               S.Id(EditID).AddButton(XO("E&dit..."));
+               S.Id(ResetID).AddButton(XO("Rese&t..."));
             }
             S.EndMultiColumn();
          }
@@ -937,10 +937,10 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartMultiColumn(4, wxALIGN_CENTER);
             {
-               S.Id(LoadID).AddButton(_("&Load..."));
-               S.Id(SaveID).AddButton(_("&Save..."));
+               S.Id(LoadID).AddButton(XO("&Load..."));
+               S.Id(SaveID).AddButton(XO("&Save..."));
                S.AddTitle( {} );
-               S.Id(SaveDefaultsID).AddButton(_("Set De&fault"));
+               S.Id(SaveDefaultsID).AddButton(XO("Set De&fault"));
             }
             S.EndMultiColumn();
          }

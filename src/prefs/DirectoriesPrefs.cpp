@@ -114,7 +114,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
          S.Prop(0).AddFixedText(_("Free Space:"));
          mFreeSpace = S.Prop(0).AddVariableText( {} );
          S.Prop(10).AddSpace( 10 );
-         S.Id(ChooseButtonID).Prop(0).AddButton(_("C&hoose..."));
+         S.Id(ChooseButtonID).Prop(0).AddButton(XO("C&hoose..."));
       }
 
    }

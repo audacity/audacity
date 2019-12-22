@@ -280,8 +280,8 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             .AddWindow(mKey);
 
          /* i18n-hint: (verb)*/
-         mSet = S.Id(SetButtonID).AddButton(_("&Set"));
-         mClear = S.Id(ClearButtonID).AddButton(_("Cl&ear"));
+         mSet = S.Id(SetButtonID).AddButton(XO("&Set"));
+         mClear = S.Id(ClearButtonID).AddButton(XO("Cl&ear"));
       }
       S.EndThreeColumn();
 
@@ -291,9 +291,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartThreeColumn();
       {
-         S.Id(ImportButtonID).AddButton(_("&Import..."));
-         S.Id(ExportButtonID).AddButton(_("&Export..."));
-         S.Id(AssignDefaultsButtonID).AddButton(_("&Defaults"));
+         S.Id(ImportButtonID).AddButton(XO("&Import..."));
+         S.Id(ExportButtonID).AddButton(XO("&Export..."));
+         S.Id(AssignDefaultsButtonID).AddButton(XO("&Defaults"));
       }
       S.EndThreeColumn();
    }

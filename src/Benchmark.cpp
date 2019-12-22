@@ -225,10 +225,10 @@ void BenchmarkDialog::MakeBenchmarkDialog()
       {
          S.StartHorizontalLay(wxALIGN_LEFT, false);
          {
-            S.Id(RunID).AddButton(_("Run"), wxALIGN_CENTRE, true);
-            S.Id(BSaveID).AddButton(_("Save"));
+            S.Id(RunID).AddButton(XO("Run"), wxALIGN_CENTRE, true);
+            S.Id(BSaveID).AddButton(XO("Save"));
             /* i18n-hint verb; to empty or erase */
-            S.Id(ClearID).AddButton(_("Clear"));
+            S.Id(ClearID).AddButton(XO("Clear"));
          }
          S.EndHorizontalLay();
 
@@ -241,7 +241,7 @@ void BenchmarkDialog::MakeBenchmarkDialog()
          S.StartHorizontalLay(wxALIGN_NOT | wxALIGN_LEFT, false);
          {
             /* i18n-hint verb */
-            S.Id(wxID_CANCEL).AddButton(_("Close"));
+            S.Id(wxID_CANCEL).AddButton(XO("Close"));
          }
          S.EndHorizontalLay();
       }

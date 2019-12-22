@@ -468,7 +468,7 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 
       S.AddSpace(5);
 
-      mExportButton = S.Id(FreqExportButtonID).AddButton(_("&Export..."));
+      mExportButton = S.Id(FreqExportButtonID).AddButton(XO("&Export..."));
 
       S.AddSpace(5);
 
@@ -493,11 +493,11 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 
       S.AddSpace(5);
 
-      mReplotButton = S.Id(ReplotButtonID).AddButton(_("&Replot..."));
+      mReplotButton = S.Id(ReplotButtonID).AddButton(XO("&Replot..."));
 
       S.AddSpace(5);
 
-      //mCloseButton = S.Id(wxID_CANCEL).AddButton(_("&Close"));
+      //mCloseButton = S.Id(wxID_CANCEL).AddButton(XO("&Close"));
 
       //S.AddSpace(5);
    }

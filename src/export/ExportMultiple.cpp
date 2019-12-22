@@ -279,8 +279,8 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
                            {wxT("/Export/MultiplePath"),
                             DefaultPath},
                            64);
-            S.Id(ChooseID).AddButton(_("Choose..."));
-            S.Id(CreateID).AddButton(_("Create"));
+            S.Id(ChooseID).AddButton(XO("Choose..."));
+            S.Id(CreateID).AddButton(XO("Create"));
 
             mFormat = S.Id(FormatID)
                .TieChoice( _("Format:"),

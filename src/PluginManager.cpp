@@ -587,8 +587,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, 0);
          {
-            S.Id(ID_SelectAll).AddButton(_("&Select All"));
-            S.Id(ID_ClearAll).AddButton(_("C&lear All"));
+            S.Id(ID_SelectAll).AddButton(XO("&Select All"));
+            S.Id(ID_ClearAll).AddButton(XO("C&lear All"));
 
             S.StartHorizontalLay(wxALIGN_CENTER);
             {
@@ -596,8 +596,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
             }
             S.EndHorizontalLay();
 
-            S.Id(ID_Enable).AddButton(_("&Enable"));
-            S.Id(ID_Disable).AddButton(_("&Disable"));
+            S.Id(ID_Enable).AddButton(XO("&Enable"));
+            S.Id(ID_Disable).AddButton(XO("&Disable"));
          }
          S.EndHorizontalLay();
       }
