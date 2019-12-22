@@ -988,7 +988,7 @@ void Exporter::CreateUserPane(wxWindow *parent)
    {
       S.StartHorizontalLay(wxEXPAND);
       {
-         S.StartStatic(_("Format Options"), 1);
+         S.StartStatic(XO("Format Options"), 1);
          {
             mBook = S.Position(wxEXPAND)
                .StartSimplebook();

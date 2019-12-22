@@ -751,7 +751,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
 
    S.AddSpace(0, 5);
 
-   S.StartStatic(_("Detect Silence"));
+   S.StartStatic(XO("Detect Silence"));
    {
       S.StartMultiColumn(3, wxALIGN_CENTER_HORIZONTAL);
       {
@@ -776,7 +776,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Action"));
+   S.StartStatic(XO("Action"));
    {
       S.StartHorizontalLay();
       {

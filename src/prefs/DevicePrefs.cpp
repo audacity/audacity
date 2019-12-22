@@ -129,7 +129,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Interface"));
+   S.StartStatic(XO("Interface"));
    {
       S.StartMultiColumn(2);
       {
@@ -148,7 +148,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Playback"));
+   S.StartStatic(XO("Playback"));
    {
       S.StartMultiColumn(2);
       {
@@ -160,7 +160,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Recording"));
+   S.StartStatic(XO("Recording"));
    {
       S.StartMultiColumn(2);
       {
@@ -179,7 +179,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    // These previously lived in recording preferences.
    // However they are liable to become device specific.
    // Buffering also affects playback, not just recording, so is a device characteristic.
-   S.StartStatic( _("Latency"));
+   S.StartStatic( XO("Latency"));
    {
       S.StartThreeColumn();
       {

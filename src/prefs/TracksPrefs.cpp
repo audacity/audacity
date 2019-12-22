@@ -265,7 +265,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Display"));
+   S.StartStatic(XO("Display"));
    {
       S.TieCheckBox(_("Auto-&fit track height"),
                     {wxT("/GUI/TracksFitVerticallyZoomed"),
@@ -314,7 +314,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Zoom Toggle"));
+   S.StartStatic(XO("Zoom Toggle"));
    {
       S.StartMultiColumn(4);
       {

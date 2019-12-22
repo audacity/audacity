@@ -84,7 +84,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Options"));
+   S.StartStatic(XO("Options"));
    {
       // Start wording of options with a verb, if possible.
       S.TieCheckBox(_("Play &other tracks while recording (overdub)"),
@@ -123,7 +123,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Sound Activated Recording"));
+   S.StartStatic(XO("Sound Activated Recording"));
    {
       S.TieCheckBox(_("&Enable"),
                     {wxT("/AudioIO/SoundActivatedRecord"),
@@ -143,7 +143,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Name newly recorded tracks"));
+   S.StartStatic(XO("Name newly recorded tracks"));
    {
       // Nested multicolumns to indent by 'With:' width, in a way that works if 
       // translated.
@@ -189,7 +189,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
    #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      S.StartStatic(_("Automated Recording Level Adjustment"));
+      S.StartStatic(XO("Automated Recording Level Adjustment"));
       {
          S.TieCheckBox(_("Enable Automated Recording Level Adjustment."),
                        {wxT("/AudioIO/AutomatedInputLevelAdjustment"),
@@ -234,7 +234,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    #endif
 
 #ifdef EXPERIMENTAL_PUNCH_AND_ROLL
-      S.StartStatic(_("Punch and Roll Recording"));
+      S.StartStatic(XO("Punch and Roll Recording"));
       {
          S.StartThreeColumn();
          {

@@ -82,7 +82,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartScroller();
    S.SetBorder(2);
 
-   S.StartStatic(_("Effects Preview"));
+   S.StartStatic(XO("Effects Preview"));
    {
       S.StartThreeColumn();
       {
@@ -98,7 +98,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
    /* i18n-hint: (noun) this is a preview of the cut */
-   S.StartStatic(_("Cut Preview"));
+   S.StartStatic(XO("Cut Preview"));
    {
       S.StartThreeColumn();
       {
@@ -120,7 +120,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Seek Time when playing"));
+   S.StartStatic(XO("Seek Time when playing"));
    {
       S.StartThreeColumn();
       {
@@ -142,7 +142,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Options"));
+   S.StartStatic(XO("Options"));
    {
       S.StartVerticalLay();
       {

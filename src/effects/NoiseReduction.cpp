@@ -1705,7 +1705,7 @@ void EffectNoiseReduction::Dialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 
 void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartStatic(_("Step 1"));
+   S.StartStatic(XO("Step 1"));
    {
       S.AddVariableText(_(
          "Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:"));
@@ -1714,7 +1714,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Step 2"));
+   S.StartStatic(XO("Step 2"));
    {
       S.AddVariableText(_(
          "Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to reduce noise.\n"));
@@ -1758,7 +1758,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 
 
 #ifdef ADVANCED_SETTINGS
-   S.StartStatic(_("Advanced Settings"));
+   S.StartStatic(XO("Advanced Settings"));
    {
       S.StartMultiColumn(2);
       {

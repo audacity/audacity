@@ -675,10 +675,12 @@ wxTextCtrl * ShuttleGuiBase::AddTextWindow(const wxString &Value)
 }
 
 /// Single line text box of fixed size.
-void ShuttleGuiBase::AddConstTextBox(const wxString &Prompt, const wxString &Value)
+void ShuttleGuiBase::AddConstTextBox(
+   const TranslatableString &Prompt, const TranslatableString &Value)
 {
-   HandleOptionality( Prompt );
-   AddPrompt( Prompt );
+   const auto translated = Prompt.Translation();
+   HandleOptionality( translated );
+   AddPrompt( translated );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return;
@@ -686,9 +688,11 @@ void ShuttleGuiBase::AddConstTextBox(const wxString &Prompt, const wxString &Val
    miProp=0;
    UpdateSizers();
    miProp=0;
-   mpWind = safenew wxStaticText(GetParent(), miId, Value, wxDefaultPosition, wxDefaultSize,
+   const auto translatedValue = Value.Translation();
+   mpWind = safenew wxStaticText(GetParent(), miId,
+      translatedValue, wxDefaultPosition, wxDefaultSize,
       GetStyle( 0 ));
-   mpWind->SetName(Value); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   mpWind->SetName(translatedValue); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizers();
 }
 
@@ -850,14 +854,15 @@ wxMenu * ShuttleGuiBase::AddMenu( const wxString & Title )
 ///  @param iProp The resizing proportion value.
 /// Use iProp == 0 for a minimum sized static box.
 /// Use iProp == 1 for a box that grows if there is space to spare.
-wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
+wxStaticBox * ShuttleGuiBase::StartStatic(const TranslatableString &Str, int iProp)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return NULL;
-   wxStaticBox * pBox = safenew wxStaticBoxWrapper(GetParent(), miId,
-      Str );
-   pBox->SetLabel( Str );
+   auto translated = Str.Translation();
+   wxStaticBox * pBox = safenew wxStaticBoxWrapper(
+      GetParent(), miId, translated );
+   pBox->SetLabel( translated );
    if (Str.empty()) {
       // NVDA 2018.3 or later does not read the controls in a group box which has
       // an accessibility name which is empty. Bug 2169.
@@ -868,7 +873,7 @@ wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
       pBox->SetName(wxT("\a"));      // non-empty string which screen readers do not read
    }
    else
-      pBox->SetName( wxStripMenuCodes( Str ) );
+      pBox->SetName( wxStripMenuCodes( translated ) );
    mpSubSizer = std::make_unique<wxStaticBoxSizer>(
       pBox,
       wxVERTICAL );

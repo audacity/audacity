@@ -227,7 +227,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
       S.AddTitle(_("Contrast Analyzer, for measuring RMS volume differences between two selections of audio."));
    }
    S.EndHorizontalLay();
-   S.StartStatic( _("Parameters") );
+   S.StartStatic( XO("Parameters") );
    {
       S.StartMultiColumn(5, wxEXPAND);
       {
@@ -312,7 +312,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    S.EndStatic();
 
    //Result
-   S.StartStatic( _("Result") );
+   S.StartStatic( XO("Result") );
    {
       S.StartMultiColumn(3, wxCENTER);
       {

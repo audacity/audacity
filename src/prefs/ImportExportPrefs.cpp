@@ -97,7 +97,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartScroller();
 
 #ifdef EXPERIMENTAL_OD_DATA
-   S.StartStatic(_("When importing audio files"));
+   S.StartStatic(XO("When importing audio files"));
    {
       S.StartRadioButtonGroup(FileFormatsCopyOrEditSetting);
       {
@@ -108,7 +108,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif
-   S.StartStatic(_("When exporting tracks to an audio file"));
+   S.StartStatic(XO("When exporting tracks to an audio file"));
    {
       S.StartRadioButtonGroup(ImportExportPrefs::ExportDownMixSetting);
       {
@@ -127,7 +127,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #ifdef USE_MIDI
-   S.StartStatic(_("Exported Allegro (.gro) files save time as:"));
+   S.StartStatic(XO("Exported Allegro (.gro) files save time as:"));
    {
       S.StartRadioButtonGroup(ImportExportPrefs::AllegroStyleSetting);
       {

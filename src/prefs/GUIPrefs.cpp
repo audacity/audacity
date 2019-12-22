@@ -183,7 +183,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Display"));
+   S.StartStatic(XO("Display"));
    {
       S.StartMultiColumn(2);
       {
@@ -218,7 +218,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Options"));
+   S.StartStatic(XO("Options"));
    {
       // Start wording of options with a verb, if possible.
       S.TieCheckBox(_("Show 'How to Get &Help' at launch"),

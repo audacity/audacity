@@ -354,7 +354,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
    {
       mMessageStaticText = S.AddVariableText(kStdMsg(), false);
 
-      S.StartStatic(_("Project Dependencies"),1);
+      S.StartStatic(XO("Project Dependencies"),1);
       {
          mFileListCtrl = S.Id(FileListID).AddListControlReportMode({
             { _("Audio File"), wxLIST_FORMAT_LEFT, 220 },

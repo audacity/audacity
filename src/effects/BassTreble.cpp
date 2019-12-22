@@ -220,7 +220,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(5);
    S.AddSpace(0, 5);
 
-   S.StartStatic(_("Tone controls"));
+   S.StartStatic(XO("Tone controls"));
    {
       S.StartMultiColumn(3, wxEXPAND);
       {
@@ -253,7 +253,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Output"));
+   S.StartStatic(XO("Output"));
    {
       S.StartMultiColumn(3, wxEXPAND);
       {

@@ -3358,7 +3358,7 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND);
    {
-      S.StartStatic(_("&Curves"), 1);
+      S.StartStatic(XO("&Curves"), 1);
       {
          mList = S.Id(CurvesListID)
             .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES )
@@ -3382,8 +3382,8 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndHorizontalLay();
    S.AddStandardButtons();
-   S.StartStatic(_("Help"));
-   S.AddConstTextBox( {}, _("Rename 'unnamed' to save a new entry.\n'OK' saves all changes, 'Cancel' doesn't."));
+   S.StartStatic(XO("Help"));
+   S.AddConstTextBox( {}, XO("Rename 'unnamed' to save a new entry.\n'OK' saves all changes, 'Cancel' doesn't."));
    S.EndStatic();
    PopulateList(mPosition);
    Fit();

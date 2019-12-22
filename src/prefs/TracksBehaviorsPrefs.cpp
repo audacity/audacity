@@ -78,7 +78,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Behaviors"));
+   S.StartStatic(XO("Behaviors"));
    {
       S.TieCheckBox(_("&Select all audio, if selection required"),
                     {wxT("/GUI/SelectAllOnNone"),

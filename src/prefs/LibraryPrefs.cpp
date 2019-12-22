@@ -97,7 +97,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("LAME MP3 Export Library"));
+   S.StartStatic(XO("LAME MP3 Export Library"));
    {
       S.StartTwoColumn();
       {
@@ -135,7 +135,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("FFmpeg Import/Export Library"));
+   S.StartStatic(XO("FFmpeg Import/Export Library"));
    {
       S.StartTwoColumn();
       {

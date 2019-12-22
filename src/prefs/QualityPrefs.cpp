@@ -138,7 +138,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Sampling"));
+   S.StartStatic(XO("Sampling"));
    {
       S.StartMultiColumn(2);
       {
@@ -174,7 +174,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Real-time Conversion"));
+   S.StartStatic(XO("Real-time Conversion"));
    {
       S.StartMultiColumn(2, wxEXPAND);
       {
@@ -189,7 +189,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("High-quality Conversion"));
+   S.StartStatic(XO("High-quality Conversion"));
    {
       S.StartMultiColumn(2);
       {

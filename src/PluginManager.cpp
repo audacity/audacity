@@ -509,7 +509,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /*i18n-hint: The dialog shows a list of plugins with check-boxes 
        beside each one.*/
-//      S.StartStatic(_("Effects"), true);
+//      S.StartStatic(XO("Effects"), true);
       S.StartVerticalLay();
       {
          S.StartHorizontalLay(wxEXPAND, 0);

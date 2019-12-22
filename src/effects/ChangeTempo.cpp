@@ -251,7 +251,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndHorizontalLay();
 
-      S.StartStatic(_("Beats per minute"));
+      S.StartStatic(XO("Beats per minute"));
       {
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
@@ -280,7 +280,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
 
       //
-      S.StartStatic(_("Length (seconds)"));
+      S.StartStatic(XO("Length (seconds)"));
       {
          S.StartHorizontalLay(wxALIGN_CENTER);
          {

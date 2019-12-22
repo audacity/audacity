@@ -165,7 +165,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
-   S.StartStatic(_("Key Bindings"), 1);
+   S.StartStatic(XO("Key Bindings"), 1);
    {
       S.StartMultiColumn(3, wxEXPAND);
       {

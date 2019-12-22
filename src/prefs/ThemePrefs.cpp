@@ -107,7 +107,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Info"));
+   S.StartStatic(XO("Info"));
    {
       S.AddFixedText(
          _("Themability is an experimental feature.\n\nTo try it out, click \"Save Theme Cache\" then find and modify the images and colors in\nImageCacheVxx.png using an image editor such as the Gimp.\n\nClick \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n\n(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\nthough the image file shows other icons too.)")
@@ -127,7 +127,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 
    /* i18n-hint: && in here is an escape character to get a single & on screen,
     * so keep it as is */
-   S.StartStatic(		_("Theme Cache - Images && Color"));
+   S.StartStatic(		XO("Theme Cache - Images && Color"));
    {
       S.StartHorizontalLay(wxALIGN_LEFT);
       {
@@ -154,7 +154,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    // To reduce that risk, we use a separate box to separate them off.
    // And choose text on the buttons that is shorter, making the
    // buttons smaller and less tempting to click.
-   S.StartStatic( _("Individual Theme Files"),1);
+   S.StartStatic( XO("Individual Theme Files"),1);
    {
       S.StartHorizontalLay(wxALIGN_LEFT);
       {

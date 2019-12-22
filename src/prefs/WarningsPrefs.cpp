@@ -67,7 +67,7 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Show Warnings/Prompts for"));
+   S.StartStatic(XO("Show Warnings/Prompts for"));
    {
       S.TieCheckBox(_("Saving &projects"),
                     {wxT("/Warnings/FirstProjectSave"),

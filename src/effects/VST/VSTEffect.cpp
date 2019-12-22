@@ -809,7 +809,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(false);
       {
-         S.StartStatic(_("Buffer Size"));
+         S.StartStatic(XO("Buffer Size"));
          {
             S.AddVariableText(wxString() +
                _("The buffer size controls the number of samples sent to the effect ") +
@@ -833,7 +833,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Latency Compensation"));
+         S.StartStatic(XO("Latency Compensation"));
          {
             S.AddVariableText(wxString() +
                _("As part of their processing, some VST effects must delay returning ") +
@@ -852,7 +852,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Graphical Mode"));
+         S.StartStatic(XO("Graphical Mode"));
          {
             S.AddVariableText(wxString() +
                _("Most VST effects have a graphical interface for setting parameter values.") +

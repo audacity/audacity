@@ -168,7 +168,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller(); {
 
-   // S.StartStatic(_("Track Settings"));
+   // S.StartStatic(XO("Track Settings"));
    // {
 
 
@@ -182,7 +182,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.SetStretchyCol( 0 );
       S.SetStretchyCol( 1 );
-      S.StartStatic(_("Scale"),1);
+      S.StartStatic(XO("Scale"),1);
       {
          S.StartMultiColumn(2,wxEXPAND);
          {
@@ -204,7 +204,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Colors"),1);
+      S.StartStatic(XO("Colors"),1);
       {
          S.StartMultiColumn(2,wxEXPAND);
          {
@@ -233,7 +233,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndMultiColumn();
 
-   S.StartStatic(_("Algorithm"));
+   S.StartStatic(XO("Algorithm"));
    {
       S.StartMultiColumn(2);
       {
@@ -288,7 +288,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 
 #ifdef EXPERIMENTAL_FIND_NOTES
       /* i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated*/
-      S.StartStatic(_("FFT Find Notes"));
+      S.StartStatic(XO("FFT Find Notes"));
       {
          S.StartTwoColumn();
          {
@@ -315,7 +315,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    // S.EndStatic();
 
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
-   S.StartStatic(_("Global settings"));
+   S.StartStatic(XO("Global settings"));
    {
       S.TieCheckBox(_("Ena&ble spectral selection"),
          SpectrogramSettings::Globals::Get().spectralSelection);

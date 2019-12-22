@@ -70,7 +70,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
    {
       S.AddVariableText(_("Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can be automatically recovered:"), false);
 
-      S.StartStatic(_("Recoverable projects"));
+      S.StartStatic(XO("Recoverable projects"));
       {
          mFileList = S.Id(ID_FILE_LIST)
             /*i18n-hint: (noun).  It's the name of the project to recover.*/

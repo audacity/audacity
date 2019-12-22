@@ -379,7 +379,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(false);
       {
-         S.StartStatic(_("Latency Compensation"));
+         S.StartStatic(XO("Latency Compensation"));
          {
             S.AddVariableText(wxString() +
                _("As part of their processing, some Audio Unit effects must delay returning ") +
@@ -398,7 +398,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("User Interface"));
+         S.StartStatic(XO("User Interface"));
          {
             S.AddVariableText(wxString() +
                _("Select \"Full\" to use the graphical interface if supplied by the Audio Unit.") +
@@ -509,7 +509,7 @@ void AudioUnitEffectExportDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(true);
       {
-         S.StartStatic(_("Presets (may select multiple)"));
+         S.StartStatic(XO("Presets (may select multiple)"));
          {
             mList = S.Style(wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                        wxLC_NO_SORT_HEADER)
@@ -681,7 +681,7 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(true);
       {
-         S.StartStatic(_("Presets (may select multiple)"));
+         S.StartStatic(XO("Presets (may select multiple)"));
          {
             mList = S.Style(wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                        wxLC_NO_SORT_HEADER)

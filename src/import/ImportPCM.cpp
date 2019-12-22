@@ -350,7 +350,7 @@ static wxString AskCopyOrEdit()
       wxRadioButton *copyRadio;
       wxCheckBox *dontAskNextTimeBox;
 
-      S.StartStatic(_("Choose an import method"));
+      S.StartStatic(XO("Choose an import method"));
       {
          S.SetBorder(0);
 

@@ -449,7 +449,7 @@ void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(false);
       {
-         S.StartStatic(_("Latency Compensation"));
+         S.StartStatic(XO("Latency Compensation"));
          {
             S.AddVariableText(wxString() +
                _("As part of their processing, some LADSPA effects must delay returning ") +

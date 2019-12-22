@@ -96,7 +96,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Temporary files directory"));
+   S.StartStatic(XO("Temporary files directory"));
    {
       S.StartMultiColumn(2, wxEXPAND);
       {
@@ -122,7 +122,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
 
 #ifdef DEPRECATED_AUDIO_CACHE
    // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
-   S.StartStatic(_("Audio cache"));
+   S.StartStatic(XO("Audio cache"));
    {
       S.TieCheckBox(_("Play and/or record using &RAM (useful for slow drives)"),
                     wxT("/Directories/CacheBlockFiles"),

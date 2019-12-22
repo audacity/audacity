@@ -321,7 +321,7 @@ void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.SetBorder(3);
 
-      S.StartStatic(_("Choose location to save files"));
+      S.StartStatic(XO("Choose location to save files"));
       {
          S.StartMultiColumn(3, wxEXPAND);
          {
@@ -339,7 +339,7 @@ void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Capture entire window or screen"));
+      S.StartStatic(XO("Capture entire window or screen"));
       {
          S.StartHorizontalLay();
          {
@@ -384,7 +384,7 @@ void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Capture part of a project window"));
+      S.StartStatic(XO("Capture part of a project window"));
       {
          S.StartHorizontalLay();
          {
@@ -434,7 +434,7 @@ void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Scale"));
+      S.StartStatic(XO("Scale"));
       {
          S.StartHorizontalLay();
          {

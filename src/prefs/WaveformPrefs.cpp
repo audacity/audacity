@@ -95,7 +95,7 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   // S.StartStatic(_("Track Settings"));
+   // S.StartStatic(XO("Track Settings"));
    {
       mDefaultsCheckbox = 0;
       if (mWt) {
@@ -103,7 +103,7 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
          mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("&Use Preferences"), mDefaulted);
       }
 
-      S.StartStatic(_("Display"));
+      S.StartStatic(XO("Display"));
       {
          S.StartTwoColumn();
          {
@@ -124,7 +124,7 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    // S.EndStatic();
 
    /*
-   S.StartStatic(_("Global settings"));
+   S.StartStatic(XO("Global settings"));
    {
    }
    S.EndStatic();

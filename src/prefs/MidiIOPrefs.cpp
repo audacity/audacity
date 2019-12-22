@@ -133,7 +133,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Interface"));
+   S.StartStatic(XO("Interface"));
    {
       S.StartMultiColumn(2);
       {
@@ -152,7 +152,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    }
    S.EndStatic();
 
-   S.StartStatic(_("Playback"));
+   S.StartStatic(XO("Playback"));
    {
       S.StartMultiColumn(2);
       {
@@ -167,7 +167,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    }
    S.EndStatic();
 #ifdef EXPERIMENTAL_MIDI_IN
-   S.StartStatic(_("Recording"));
+   S.StartStatic(XO("Recording"));
    {
       S.StartMultiColumn(2);
       {

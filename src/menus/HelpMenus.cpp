@@ -169,7 +169,7 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
 {
 
    S.StartVerticalLay(1);
-   S.StartStatic( _("Quick Fixes"));
+   S.StartStatic( XO("Quick Fixes"));
 
    // These aren't all possible modes one can be stuck in, but they are some of them.
    bool bStuckInMode = mbSyncLocked || mbInSnapTo || mbSoundActivated;

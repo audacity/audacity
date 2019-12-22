@@ -272,7 +272,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
       S.EndVerticalLay();
 
       /* i18n-hint: (noun) Musical pitch.*/
-      S.StartStatic(_("Pitch"));
+      S.StartStatic(XO("Pitch"));
       {
          S.StartMultiColumn(6, wxALIGN_CENTER); // 6 controls, because each AddChoice adds a wxStaticText and a wxChoice.
          {
@@ -314,7 +314,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Frequency"));
+      S.StartStatic(XO("Frequency"));
       {
          S.StartMultiColumn(5, wxALIGN_CENTER); // 5, because AddTextBox adds a wxStaticText and a wxTextCtrl.
          {

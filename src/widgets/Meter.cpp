@@ -2000,7 +2000,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();
    {
-      S.StartStatic(_("Refresh Rate"), 0);
+      S.StartStatic(XO("Refresh Rate"), 0);
       {
          S.AddFixedText(_("Higher refresh rates make the meter show more frequent\nchanges. A rate of 30 per second or less should prevent\nthe meter affecting audio quality on slower machines."));
          S.StartHorizontalLay();
@@ -2019,7 +2019,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
 
       S.StartHorizontalLay();
       {
-        S.StartStatic(_("Meter Style"), 0);
+        S.StartStatic(XO("Meter Style"), 0);
         {
            S.StartVerticalLay();
            {
@@ -2030,7 +2030,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
         }
         S.EndStatic();
 
-        S.StartStatic(_("Meter Type"), 0);
+        S.StartStatic(XO("Meter Type"), 0);
         {
            S.StartVerticalLay();
            {
@@ -2041,7 +2041,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
         }
         S.EndStatic();
 
-        S.StartStatic(_("Orientation"), 1);
+        S.StartStatic(XO("Orientation"), 1);
         {
            S.StartVerticalLay();
            {

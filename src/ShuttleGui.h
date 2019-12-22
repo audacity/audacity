@@ -337,7 +337,8 @@ public:
    void AddIcon( wxBitmap * pBmp);
    void AddIconButton( const wxString & Command, const wxString & Params,wxBitmap * pBmp );
    void AddFixedText( const wxString & Str, bool bCenter = false, int wrapWidth = 0 );
-   void AddConstTextBox( const wxString &Caption, const wxString & Value );
+   void AddConstTextBox(
+      const TranslatableString &Caption, const TranslatableString & Value );
 
 //-- Start and end functions.  These are used for sizer, or other window containers
 //   and create the appropriate widget.
@@ -359,7 +360,7 @@ public:
    void StartThreeColumn(){StartMultiColumn(3);};
    void EndThreeColumn(){EndMultiColumn();};
 
-   wxStaticBox * StartStatic( const wxString & Str, int iProp=0 );
+   wxStaticBox * StartStatic( const TranslatableString & Str, int iProp=0 );
    void EndStatic();
 
    wxNotebook * StartNotebook();

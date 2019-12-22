@@ -202,7 +202,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       // Rate Start
-      S.StartStatic(_("Initial Tempo Change (%)"));
+      S.StartStatic(XO("Initial Tempo Change (%)"));
       {
          S.StartMultiColumn(1, wxCENTER);
          {
@@ -225,7 +225,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Final Tempo Change (%)"));
+      S.StartStatic(XO("Final Tempo Change (%)"));
       {
          S.StartMultiColumn(1, wxCENTER);
          {
@@ -249,7 +249,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
 
       // Pitch Start
-      S.StartStatic(_("Initial Pitch Shift"));
+      S.StartStatic(XO("Initial Pitch Shift"));
       {
          S.StartMultiColumn(2, wxCENTER);
          {
@@ -275,7 +275,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
 
       // Pitch End
-      S.StartStatic(_("Final Pitch Shift"));
+      S.StartStatic(XO("Final Pitch Shift"));
       {
          S.StartMultiColumn(2, wxCENTER);
          {

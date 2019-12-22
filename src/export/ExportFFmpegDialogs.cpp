@@ -1578,7 +1578,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
          {
             //S.StartScroller( );
             S.SetBorder( 3 );
-            S.StartStatic(_("General Options"), 0);
+            S.StartStatic(XO("General Options"), 0);
             {
                S.StartMultiColumn(8, wxEXPAND);
                {
@@ -1626,7 +1626,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                S.EndMultiColumn();
             }
             S.EndStatic();
-            S.StartStatic(_("FLAC options"),0);
+            S.StartStatic(XO("FLAC options"),0);
             {
                S.StartMultiColumn(4, wxALIGN_LEFT);
                {
@@ -1677,7 +1677,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                S.EndMultiColumn();
             }
             S.EndStatic();
-            S.StartStatic(_("MPEG container options"),0);
+            S.StartStatic(XO("MPEG container options"),0);
             {
                S.StartMultiColumn(4, wxALIGN_LEFT);
                {

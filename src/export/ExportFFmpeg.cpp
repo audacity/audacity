@@ -1045,7 +1045,7 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
    S.StartVerticalLay();
    {
       S.SetBorder(10);
-      S.StartStatic(_("Resample"));
+      S.StartStatic(XO("Resample"));
       {
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {

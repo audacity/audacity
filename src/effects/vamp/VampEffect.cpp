@@ -554,7 +554,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
    wxScrolledWindow *scroller = S.Style(wxVSCROLL | wxTAB_TRAVERSAL)
       .StartScroller(2);
    {
-      S.StartStatic(_("Plugin Settings"));
+      S.StartStatic(XO("Plugin Settings"));
       {
          S.StartMultiColumn(5, wxEXPAND);
          {

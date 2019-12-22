@@ -92,7 +92,7 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
 
    S.SetBorder(5);
    S.StartVerticalLay(true);
-   S.StartStatic(wxT("Align MIDI to Audio"));
+   S.StartStatic(XO("Align MIDI to Audio"));
    S.StartMultiColumn(3, wxEXPAND | wxALIGN_CENTER_VERTICAL);
    S.SetStretchyCol(1);
 

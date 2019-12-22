@@ -81,7 +81,7 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {
-      S.StartStatic(_("&Manage History"), 1);
+      S.StartStatic(XO("&Manage History"), 1);
       {
          mList = S
             .MinSize()

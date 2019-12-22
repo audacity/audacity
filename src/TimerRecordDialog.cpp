@@ -842,7 +842,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
          * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
          */
-         S.StartStatic(_("Start Date and Time"), true);
+         S.StartStatic(XO("Start Date and Time"), true);
          {
             m_pDatePickerCtrl_Start =
                safenew wxDatePickerCtrl(S.GetParent(), // wxWindow *parent,
@@ -868,7 +868,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("End Date and Time"), true);
+         S.StartStatic(XO("End Date and Time"), true);
          {
             m_pDatePickerCtrl_End =
                safenew wxDatePickerCtrl(S.GetParent(), // wxWindow *parent,
@@ -897,7 +897,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Duration"), true);
+         S.StartStatic(XO("Duration"), true);
          {
             /* i18n-hint: This string is used to configure the controls which shows the recording
             * duration. As such it is important that only the alphabetic parts of the string
@@ -923,7 +923,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
       S.StartVerticalLay(true);
       {
-         S.StartStatic(_("Automatic Save"), true);
+         S.StartStatic(XO("Automatic Save"), true);
          {
             // If checked, the project will be saved when the recording is completed
             m_pTimerAutoSaveCheckBoxCtrl = S.Id(ID_AUTOSAVE_CHECKBOX).AddCheckBox(_("Enable &Automatic Save?"),
@@ -948,7 +948,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Automatic Export"), true);
+         S.StartStatic(XO("Automatic Export"), true);
          {
             m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(_("Enable Automatic &Export?"), bAutoExport);
             S.StartMultiColumn(3, wxEXPAND);
@@ -964,7 +964,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Options"), true);
+         S.StartStatic(XO("Options"), true);
          {
 
             S.StartMultiColumn(1, wxEXPAND);

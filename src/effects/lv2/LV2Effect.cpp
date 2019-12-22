@@ -243,7 +243,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
          // to specify their exact requirements in the TTL file and/or to check the host
          // supplied min/max values.  However, I've run across one (Harrison Consoles XT-EQ)
          // that crashed on sizes greater than 8192.
-         S.StartStatic(_("Buffer Size"));
+         S.StartStatic(XO("Buffer Size"));
          {
             IntegerValidator<int> vld(&mBufferSize);
             vld.SetRange(8, DEFAULT_BLOCKSIZE);
@@ -269,7 +269,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Latency Compensation"));
+         S.StartStatic(XO("Latency Compensation"));
          {
             S.AddVariableText(wxString() +
                               _("As part of their processing, some LV2 effects must delay returning ") +
@@ -288,7 +288,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Graphical Mode"));
+         S.StartStatic(XO("Graphical Mode"));
          {
             S.AddVariableText(wxString() +
                               _("LV2 effects can have a graphical interface for setting parameter values.") +

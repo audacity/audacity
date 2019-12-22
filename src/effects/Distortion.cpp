@@ -379,7 +379,7 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
       S.AddSpace(0, 10);
 
 
-      S.StartStatic(_("Threshold controls"));
+      S.StartStatic(XO("Threshold controls"));
       {
          S.StartMultiColumn(4, wxEXPAND);
          S.SetStretchyCol(2);
@@ -424,7 +424,7 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Parameter controls"));
+      S.StartStatic(XO("Parameter controls"));
       {
          S.StartMultiColumn(4, wxEXPAND);
          S.SetStretchyCol(2);

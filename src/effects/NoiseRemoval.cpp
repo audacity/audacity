@@ -703,14 +703,14 @@ void NoiseRemovalDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 
 void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartStatic(_("Step 1"));
+   S.StartStatic(XO("Step 1"));
    {
       S.AddVariableText(_("Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:"));
       m_pButton_GetProfile = S.Id(ID_BUTTON_GETPROFILE).AddButton(XO("&Get Noise Profile"));
    }
    S.EndStatic();
 
-   S.StartStatic(_("Step 2"));
+   S.StartStatic(XO("Step 2"));
    {
       S.AddVariableText(_("Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to remove noise.\n"));
 

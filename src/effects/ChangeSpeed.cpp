@@ -354,7 +354,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
 
       // From/To time controls.
-      S.StartStatic(_("Selection Length"), 0);
+      S.StartStatic(XO("Selection Length"), 0);
       {
          S.StartMultiColumn(2, wxALIGN_LEFT);
          {

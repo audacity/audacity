@@ -270,7 +270,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
    S.StartHorizontalLay(wxEXPAND, true);
    {
       S.SetBorder(5);
-      S.StartStatic(_("Export files to:"), true);
+      S.StartStatic(XO("Export files to:"), true);
       {
          S.StartMultiColumn(4, true);
          {
@@ -329,7 +329,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
    S.StartHorizontalLay(wxEXPAND, false);
    {
       S.SetBorder(5);
-      S.StartStatic(_("Split files based on:"), 1);
+      S.StartStatic(XO("Split files based on:"), 1);
       {
          // Row 1
          S.SetBorder(1);
@@ -372,7 +372,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
       S.EndStatic();
 
       S.SetBorder(5);
-      S.StartStatic(_("Name files:"), 1);
+      S.StartStatic(XO("Name files:"), 1);
       {
          S.SetBorder(2);
          S.StartRadioButtonGroup({

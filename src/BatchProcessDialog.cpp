@@ -133,7 +133,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 {
    /*i18n-hint: A macro is a sequence of commands that can be applied
       * to one or more audio files.*/
-   S.StartStatic(_("Select Macro"), 1);
+   S.StartStatic(XO("Select Macro"), 1);
    {
       mMacros = S.Id(MacrosListID).Prop(1)
          .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
@@ -406,7 +406,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    S.StartVerticalLay(false);
    {
-      S.StartStatic(_("Applying..."), 1);
+      S.StartStatic(XO("Applying..."), 1);
       {
          auto imageList = std::make_unique<wxImageList>(9, 16);
          imageList->Add(wxIcon(empty9x16_xpm));
@@ -616,7 +616,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND, 1);
    {
-      S.StartStatic(_("Select Macro"),0);
+      S.StartStatic(XO("Select Macro"),0);
       {
          S.StartHorizontalLay(wxEXPAND,1);
          {
@@ -647,7 +647,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Edit Steps"), true);
+      S.StartStatic(XO("Edit Steps"), true);
       {
          S.StartHorizontalLay(wxEXPAND,1);
          {

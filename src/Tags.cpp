@@ -923,7 +923,7 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
 
       S.StartHorizontalLay(wxALIGN_CENTRE, 0);
       {
-         S.StartStatic(_("Genres"));
+         S.StartStatic(XO("Genres"));
          {
             S.StartMultiColumn(4, wxALIGN_CENTER);
             {
@@ -933,7 +933,7 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
             S.EndMultiColumn();
          }
          S.EndStatic();
-         S.StartStatic(_("Template"));
+         S.StartStatic(XO("Template"));
          {
             S.StartMultiColumn(4, wxALIGN_CENTER);
             {
