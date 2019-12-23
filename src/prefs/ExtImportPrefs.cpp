@@ -150,7 +150,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
             .AddWindow(RuleTable);
 
          PluginList = S.Id(EIPPluginList).AddListControl(
-            { { _("Importer order"), wxLIST_FORMAT_LEFT,
+            { { XO("Importer order"), wxLIST_FORMAT_LEFT,
                 wxLIST_AUTOSIZE_USEHEADER } },
             wxLC_REPORT | wxLC_SINGLE_SEL
          );

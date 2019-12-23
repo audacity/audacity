@@ -513,7 +513,7 @@ void AudioUnitEffectExportDialog::PopulateOrExchange(ShuttleGui & S)
          {
             mList = S.Style(wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                        wxLC_NO_SORT_HEADER)
-               .AddListControlReportMode( { _("Preset") } );
+               .AddListControlReportMode( { XO("Preset") } );
          }
          S.EndStatic();
       }
@@ -685,7 +685,7 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
          {
             mList = S.Style(wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                        wxLC_NO_SORT_HEADER)
-               .AddListControlReportMode( { _("Preset"), _("Location") } );
+               .AddListControlReportMode( { XO("Preset"), XO("Location") } );
          }
          S.EndStatic();
       }

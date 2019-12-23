@@ -77,7 +77,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
       {
          mFileList = S.Id(ID_FILE_LIST)
             /*i18n-hint: (noun).  It's the name of the project to recover.*/
-            .AddListControlReportMode( { _("Name") } );
+            .AddListControlReportMode( { XO("Name") } );
          PopulateList();
       }
       S.EndStatic();

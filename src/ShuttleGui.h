@@ -313,11 +313,12 @@ public:
 
    struct ListControlColumn{
       ListControlColumn(
-         wxString h, int f = wxLIST_FORMAT_LEFT, int w = wxLIST_AUTOSIZE)
+         const TranslatableString &h,
+         int f = wxLIST_FORMAT_LEFT, int w = wxLIST_AUTOSIZE)
          : heading(h), format(f), width(w)
       {}
 
-      wxString heading;
+      TranslatableString heading;
       int format;
       int width;
    };
@@ -340,7 +341,7 @@ public:
    wxChoice   * AddChoice( const TranslatableString &Prompt,
       const TranslatableStrings &choices, const TranslatableString &selected );
    wxMenuBar  * AddMenuBar( );
-   wxMenu     * AddMenu( const wxString & Title );
+   wxMenu     * AddMenu( const TranslatableString & Title );
    void AddIcon( wxBitmap * pBmp);
    void AddIconButton( const wxString & Command, const wxString & Params,wxBitmap * pBmp );
    void AddFixedText(

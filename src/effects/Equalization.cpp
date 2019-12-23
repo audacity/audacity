@@ -3363,7 +3363,7 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
          mList = S.Id(CurvesListID)
             .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES )
             .AddListControlReportMode({
-               { _("Curve Name"), wxLIST_FORMAT_RIGHT }
+               { XO("Curve Name"), wxLIST_FORMAT_RIGHT }
             });
       }
       S.EndStatic();

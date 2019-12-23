@@ -86,8 +86,8 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
          mList = S
             .MinSize()
             .AddListControlReportMode(
-               { { _("Action"), wxLIST_FORMAT_LEFT, 260 },
-                 { _("Reclaimable Space"), wxLIST_FORMAT_LEFT, 125 } },
+               { { XO("Action"), wxLIST_FORMAT_LEFT, 260 },
+                 { XO("Reclaimable Space"), wxLIST_FORMAT_LEFT, 125 } },
                wxLC_SINGLE_SEL
             );
 

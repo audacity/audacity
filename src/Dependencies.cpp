@@ -357,8 +357,8 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
       S.StartStatic(XO("Project Dependencies"),1);
       {
          mFileListCtrl = S.Id(FileListID).AddListControlReportMode({
-            { _("Audio File"), wxLIST_FORMAT_LEFT, 220 },
-            { _("Disk Space"), wxLIST_FORMAT_LEFT, 120 }
+            { XO("Audio File"), wxLIST_FORMAT_LEFT, 220 },
+            { XO("Disk Space"), wxLIST_FORMAT_LEFT, 120 }
          });
          PopulateList();
 

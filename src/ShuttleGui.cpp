@@ -808,7 +808,7 @@ void ShuttleGuiBase::DoInsertListColumns(
 
    for (auto &column : columns)
       pListCtrl->InsertColumn(
-         iCol++, column.heading, column.format, column.width );
+         iCol++, column.heading.Translation(), column.format, column.width );
 
    if (dummyColumn)
       pListCtrl->DeleteColumn( 0 );
@@ -860,9 +860,9 @@ wxMenuBar * ShuttleGuiBase::AddMenuBar( )
    return mpMenuBar;
 }
 
-wxMenu * ShuttleGuiBase::AddMenu( const wxString & Title )
+wxMenu * ShuttleGuiBase::AddMenu( const TranslatableString & Title )
 {
-   mpMenuBar->Append( (mpMenu = safenew wxMenu), Title );
+   mpMenuBar->Append( (mpMenu = safenew wxMenu), Title.Translation() );
    return mpMenu;
 }
 
