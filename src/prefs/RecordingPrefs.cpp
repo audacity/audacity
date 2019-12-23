@@ -143,6 +143,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
+   /* i18n-hint: start of two-part phrase, "Name newly recorded tracks with:" */
    S.StartStatic(XO("Name newly recorded tracks"));
    {
       // Nested multicolumns to indent by 'With:' width, in a way that works if 
@@ -150,7 +151,8 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
       // This extra step is worth doing to get the check boxes lined up nicely.
       S.StartMultiColumn( 2 );
       {
-         S.AddFixedText(_("With:")) ;
+         /* i18n-hint: end of two-part phrase, "Name newly recorded tracks with:" */
+         S.AddFixedText(XO("With:")) ;
          S.StartMultiColumn(3);
          {
             S.Id(UseCustomTrackNameID).TieCheckBox(_("Custom Track &Name"),
@@ -165,6 +167,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                    _("Recorded_Audio")},
                   30);
          }
+         
          S.EndMultiColumn();
 
          S.AddFixedText(  {} );

@@ -235,13 +235,13 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
 
          // Headings
          S.AddFixedText( {} );   // spacer
-         S.AddFixedText(_("Start"));
-         S.AddFixedText(_("End"));
+         S.AddFixedText(XO("Start"));
+         S.AddFixedText(XO("End"));
          S.AddFixedText( {} );   // spacer
-         S.AddFixedText(_("Volume    "));
+         S.AddFixedText(XO("Volume    "));
 
          //Foreground
-         S.AddFixedText(_("&Foreground:"), false);
+         S.AddFixedText(XO("&Foreground:"), false);
          if (S.GetMode() == eIsCreating)
          {
             mForegroundStartT = safenew
@@ -275,7 +275,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             .AddTextBox( {}, wxT(""), 17);
 
          //Background
-         S.AddFixedText(_("&Background:"));
+         S.AddFixedText(XO("&Background:"));
          if (S.GetMode() == eIsCreating)
          {
             mBackgroundStartT = safenew
@@ -318,7 +318,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
       S.StartMultiColumn(3, wxCENTER);
       {
          auto label = XO("Co&ntrast Result:");
-         S.AddFixedText(label.Translation());
+         S.AddFixedText(label);
          mPassFailText = S.Id(ID_RESULTS_TEXT)
             .Name(label)
             .ConnectRoot(wxEVT_KEY_DOWN,
@@ -327,7 +327,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(XO("R&eset"));
 
          label = XO("&Difference:");
-         S.AddFixedText(label.Translation());
+         S.AddFixedText(label);
          mDiffText = S.Id(ID_RESULTSDB_TEXT)
             .Name(label)
             .ConnectRoot(wxEVT_KEY_DOWN,
@@ -344,7 +344,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    {
       S.SetStretchyCol(1);
       m_pButton_GetURL = S.Id(ID_BUTTON_GETURL).AddButton(XO("&Help"));
-      S.AddFixedText(wxT(" "));   // spacer
+      S.AddFixedText({});   // spacer
       m_pButton_Close = S.Id(ID_BUTTON_CLOSE).AddButton(XO("&Close"));
    }
    S.EndMultiColumn();

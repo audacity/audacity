@@ -268,8 +268,8 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
       S.StartStatic( {}, false);   // deliberately not translated (!)
       {
          S.SetBorder(20);
-         S.AddFixedText(wxString::Format(_("Applying '%s' to current project"),
-                                         name));
+         S.AddFixedText(XO("Applying '%s' to current project")
+            .Format( name ) );
       }
       S.EndStatic();
    }

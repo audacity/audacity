@@ -342,7 +342,8 @@ public:
    wxMenu     * AddMenu( const wxString & Title );
    void AddIcon( wxBitmap * pBmp);
    void AddIconButton( const wxString & Command, const wxString & Params,wxBitmap * pBmp );
-   void AddFixedText( const wxString & Str, bool bCenter = false, int wrapWidth = 0 );
+   void AddFixedText(
+      const TranslatableString & Str, bool bCenter = false, int wrapWidth = 0 );
    void AddConstTextBox(
       const TranslatableString &Caption, const TranslatableString & Value );
 

@@ -250,7 +250,7 @@ void LabelDialog::Populate()
 
 void LabelDialog::PopulateOrExchange( ShuttleGui & S )
 {
-   S.AddFixedText(_("Press F2 or double click to edit cell contents."));
+   S.AddFixedText(XO("Press F2 or double click to edit cell contents."));
    S.StartHorizontalLay(wxEXPAND,1);
    {
       S.StartVerticalLay(wxEXPAND,1);

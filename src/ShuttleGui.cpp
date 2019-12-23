@@ -426,17 +426,20 @@ wxChoice * ShuttleGuiBase::AddChoice( const TranslatableString &Prompt,
       Prompt, choices, make_iterator_range( choices ).index( Selected ) );
 }
 
-void ShuttleGuiBase::AddFixedText(const wxString &Str, bool bCenter, int wrapWidth)
+void ShuttleGuiBase::AddFixedText(
+   const TranslatableString &Str, bool bCenter, int wrapWidth)
 {
+   const auto translated = Str.Translation();
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return;
-   auto text = safenew wxStaticText(GetParent(), miId, Str, wxDefaultPosition, wxDefaultSize,
+   auto text = safenew wxStaticText(GetParent(),
+      miId, translated, wxDefaultPosition, wxDefaultSize,
       GetStyle( wxALIGN_LEFT ));
    mpWind = text;
    if ( wrapWidth > 0 )
       text->Wrap( wrapWidth );
-   mpWind->SetName(wxStripMenuCodes(Str)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   mpWind->SetName(wxStripMenuCodes(translated)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    if( bCenter )
    {
       miProp=1;

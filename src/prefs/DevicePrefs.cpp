@@ -142,7 +142,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
          );
 
          S.AddPrompt(_("Using:"));
-         S.AddFixedText(wxString(wxSafeConvertMB2WX(Pa_GetVersionText())));
+         S.AddFixedText( Verbatim(wxSafeConvertMB2WX(Pa_GetVersionText() ) ) );
       }
       S.EndMultiColumn();
    }

@@ -2651,7 +2651,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                S.StartHorizontalLay(wxALIGN_LEFT, 0);
                {
                   S.AddSpace(0, 10);
-                  S.AddFixedText( ctrl.label, false );
+                  S.AddFixedText( Verbatim( ctrl.label ), false );
                }
                S.EndHorizontalLay();
                S.StartMultiColumn(4);

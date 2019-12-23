@@ -2002,7 +2002,8 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
    {
       S.StartStatic(XO("Refresh Rate"), 0);
       {
-         S.AddFixedText(_("Higher refresh rates make the meter show more frequent\nchanges. A rate of 30 per second or less should prevent\nthe meter affecting audio quality on slower machines."));
+         S.AddFixedText(XO(
+"Higher refresh rates make the meter show more frequent\nchanges. A rate of 30 per second or less should prevent\nthe meter affecting audio quality on slower machines."));
          S.StartHorizontalLay();
          {
             rate = S.Name(XO("Meter refresh rate per second [1-100]"))

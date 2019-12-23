@@ -579,7 +579,7 @@ void FFmpegNotFoundDialog::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(10);
    S.StartVerticalLay(true);
    {
-      S.AddFixedText(_(
+      S.AddFixedText(XO(
 "Audacity attempted to use FFmpeg to import an audio file,\n\
 but the libraries were not found.\n\n\
 To use FFmpeg import, go to Edit > Preferences > Libraries\n\

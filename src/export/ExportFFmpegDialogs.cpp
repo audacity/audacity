@@ -1553,10 +1553,10 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
       {
          S.SetStretchyCol(1);
          S.SetStretchyCol(3);
-         S.Id(FEFormatLabelID).AddFixedText(_("Format:"));
+         S.Id(FEFormatLabelID).AddFixedText(XO("Format:"));
          mFormatName = S.Id(FEFormatNameID).AddVariableText( {} );
          /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-         S.Id(FECodecLabelID).AddFixedText(_("Codec:"));
+         S.Id(FECodecLabelID).AddFixedText(XO("Codec:"));
          mCodecName = S.Id(FECodecNameID).AddVariableText( {} );
       }
       S.EndMultiColumn();

@@ -286,7 +286,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndThreeColumn();
 
 #if defined(__WXMAC__)
-      S.AddFixedText(_("Note: Pressing Cmd+Q will quit. All other keys are valid."));
+      S.AddFixedText(XO("Note: Pressing Cmd+Q will quit. All other keys are valid."));
 #endif
 
       S.StartThreeColumn();

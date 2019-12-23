@@ -352,7 +352,7 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
       S.Name(XO("Duration"))
          .AddWindow(mDtmfDurationT);
 
-      S.AddFixedText(_("Tone/silence ratio:"), false);
+      S.AddFixedText(XO("Tone/silence ratio:"), false);
       mDtmfDutyCycleS = S.Id(ID_DutyCycle)
          .Style(wxSL_HORIZONTAL | wxEXPAND)
          .MinSize( { -1, -1 } )
@@ -365,16 +365,16 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxCENTER);
    {
-      S.AddFixedText(_("Duty cycle:"), false);
+      S.AddFixedText(XO("Duty cycle:"), false);
       mDtmfDutyT =
          S.AddVariableText(XO("%.1f %%").Format( dtmfDutyCycle ), false);
       
-      S.AddFixedText(_("Tone duration:"), false);
+      S.AddFixedText(XO("Tone duration:"), false);
       mDtmfSilenceT =
          /* i18n-hint milliseconds */
          S.AddVariableText(XO("%.0f ms").Format( dtmfTone * 1000.0 ), false);
 
-      S.AddFixedText(_("Silence duration:"), false);
+      S.AddFixedText(XO("Silence duration:"), false);
       mDtmfToneT =
          /* i18n-hint milliseconds */
          S.AddVariableText(XO("%0.f ms").Format( dtmfSilence * 1000.0 ), false);

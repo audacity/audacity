@@ -111,7 +111,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
       S.StartHorizontalLay(wxEXPAND);
       {
-         S.Prop(0).AddFixedText(_("Free Space:"));
+         S.Prop(0).AddFixedText(XO("Free Space:"));
          mFreeSpace = S.Prop(0).AddVariableText( {} );
          S.Prop(10).AddSpace( 10 );
          S.Id(ChooseButtonID).Prop(0).AddButton(XO("C&hoose..."));
