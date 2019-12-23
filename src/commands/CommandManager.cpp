@@ -626,12 +626,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
 
    const wxString & accel = options.accel;
    bool bIsEffect = options.bIsEffect;
-   CommandID cookedParameter;
-   const auto &parameter = options.parameter;
-   if( parameter == "" )
-      cookedParameter = nameIn;
-   else
-      cookedParameter = parameter;
+   CommandID parameter = options.parameter == "" ? nameIn : options.parameter;
 
    // if empty, new identifier's long label will be same as label, below:
    const auto &longLabel = options.longName;
