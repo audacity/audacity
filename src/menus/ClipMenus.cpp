@@ -327,7 +327,7 @@ wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results)
                clips.
              */
          _("dummyStringClipBoundaryMessage");
-         auto str = wxPLURAL(
+         str = wxPLURAL(
             "%s %d of %d clip %s",
             "%s %d of %d clips %s",
             2
@@ -349,7 +349,7 @@ wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results)
                clips.
              */
          _("dummyStringClipBoundaryMessageLong");
-         auto str = wxPLURAL(
+         str = wxPLURAL(
             "%s %d and %s %d of %d clip %s",
             "%s %d and %s %d of %d clips %s",
             4
