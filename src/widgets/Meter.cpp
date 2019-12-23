@@ -2024,8 +2024,8 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
         {
            S.StartVerticalLay();
            {
-              gradient = S.AddRadioButton(_("Gradient"), true, mGradient);
-              rms = S.AddRadioButtonToGroup(_("RMS"), false, mGradient);
+              gradient = S.AddRadioButton(XO("Gradient"), true, mGradient);
+              rms = S.AddRadioButtonToGroup(XO("RMS"), false, mGradient);
            }
            S.EndVerticalLay();
         }
@@ -2035,8 +2035,8 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
         {
            S.StartVerticalLay();
            {
-              db = S.AddRadioButton(_("dB"), true, mDB);
-              linear = S.AddRadioButtonToGroup(_("Linear"), false, mDB);
+              db = S.AddRadioButton(XO("dB"), true, mDB);
+              linear = S.AddRadioButtonToGroup(XO("Linear"), false, mDB);
            }
            S.EndVerticalLay();
         }
@@ -2047,11 +2047,11 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
            S.StartVerticalLay();
            {
               automatic = S.AddRadioButton(
-                  _("Automatic"), AutomaticStereo, mDesiredStyle);
+                  XO("Automatic"), AutomaticStereo, mDesiredStyle);
               horizontal = S.AddRadioButtonToGroup(
-                  _("Horizontal"), HorizontalStereo, mDesiredStyle);
+                  XO("Horizontal"), HorizontalStereo, mDesiredStyle);
               vertical = S.AddRadioButtonToGroup(
-                  _("Vertical"), VerticalStereo, mDesiredStyle);
+                  XO("Vertical"), VerticalStereo, mDesiredStyle);
            }
            S.EndVerticalLay();
         }

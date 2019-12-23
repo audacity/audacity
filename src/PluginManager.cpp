@@ -536,7 +536,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                   /* i18n-hint: Radio button to show all effects */
                   .Name(XO("Show all"))
                   /* i18n-hint: Radio button to show all effects */
-                  .AddRadioButton(_("&All"));
+                  .AddRadioButton(XO("&All"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
@@ -546,7 +546,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                   /* i18n-hint: Radio button to show just the currently disabled effects */
                   .Name(XO("Show disabled"))
                   /* i18n-hint: Radio button to show just the currently disabled effects */
-                  .AddRadioButtonToGroup(_("D&isabled"));
+                  .AddRadioButtonToGroup(XO("D&isabled"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
@@ -556,7 +556,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                   /* i18n-hint: Radio button to show just the currently enabled effects */
                   .Name(XO("Show enabled"))
                   /* i18n-hint: Radio button to show just the currently enabled effects */
-                  .AddRadioButtonToGroup(_("E&nabled"));
+                  .AddRadioButtonToGroup(XO("E&nabled"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
@@ -566,7 +566,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                   /* i18n-hint: Radio button to show just the newly discovered effects */
                   .Name(XO("Show new"))
                   /* i18n-hint: Radio button to show just the newly discovered effects */
-                  .AddRadioButtonToGroup(_("Ne&w"));
+                  .AddRadioButtonToGroup(XO("Ne&w"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));

@@ -283,9 +283,9 @@ public:
    // Spoken name of the button defaults to the same as the prompt
    // (after stripping menu codes):
    wxRadioButton * AddRadioButton(
-      const wxString & Prompt, int selector = 0, int initValue = 0 );
+      const TranslatableString & Prompt, int selector = 0, int initValue = 0 );
    wxRadioButton * AddRadioButtonToGroup(
-      const wxString & Prompt, int selector = 1, int initValue = 0 );
+      const TranslatableString & Prompt, int selector = 1, int initValue = 0 );
 
    // Only the last button specified as default (if more than one) will be
    // Always ORs the flags with wxALL (which affects borders):
@@ -578,7 +578,7 @@ private:
    int mRadioCount;       /// The index of this radio item.  -1 for none.
    wxString mRadioValueString; /// Unwrapped string value.
    wxRadioButton * DoAddRadioButton(
-      const wxString &Prompt, int style, int selector, int initValue);
+      const TranslatableString &Prompt, int style, int selector, int initValue);
 
 protected:
    DialogDefinition::Item mItem;

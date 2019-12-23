@@ -334,12 +334,12 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          // Row 1
          S.SetBorder(1);
          mTrack = S.Id(TrackID)
-            .AddRadioButton(_("Tracks"));
+            .AddRadioButton(XO("Tracks"));
 
          // Row 2
          S.SetBorder(1);
          mLabel = S.Id(LabelID)
-            .AddRadioButtonToGroup(_("Labels"));
+            .AddRadioButtonToGroup(XO("Labels"));
          S.SetBorder(3);
 
          S.StartMultiColumn(2, wxEXPAND);

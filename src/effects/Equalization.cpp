@@ -924,11 +924,11 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                {
                   mDraw = S.Id(ID_Draw)
                      .Name(XO("Draw Curves"))
-                     .AddRadioButton(_("&Draw"));
+                     .AddRadioButton(XO("&Draw"));
 
                   mGraphic = S.Id(ID_Graphic)
                      .Name(XO("Graphic EQ"))
-                     .AddRadioButtonToGroup(_("&Graphic"));
+                     .AddRadioButtonToGroup(XO("&Graphic"));
                }
                S.EndHorizontalLay();
             }
@@ -1081,25 +1081,25 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                : 0;
 
          mMathProcessingType[0] = S.Id(ID_DefaultMath)
-            .AddRadioButton(_("D&efault"),
+            .AddRadioButton(XO("D&efault"),
                             0, value);
          mMathProcessingType[1] = S.Id(ID_SSE)
             .Disable(!EffectEqualization48x::GetMathCaps()->SSE)
-            .AddRadioButtonToGroup(_("&SSE"),
+            .AddRadioButtonToGroup(XO("&SSE"),
                                    1, value);
          mMathProcessingType[2] = S.Id(ID_SSEThreaded)
             .Disable(!EffectEqualization48x::GetMathCaps()->SSE)
-            .AddRadioButtonToGroup(_("SSE &Threaded"),
+            .AddRadioButtonToGroup(XO("SSE &Threaded"),
                                    2, value);
          mMathProcessingType[3] = S.Id(ID_AVX)
             // not implemented
             .Disable(true /* !EffectEqualization48x::GetMathCaps()->AVX */)
-            .AddRadioButtonToGroup(_("A&VX"),
+            .AddRadioButtonToGroup(XO("A&VX"),
                                    3, value);
          mMathProcessingType[4] = S.Id(ID_AVXThreaded)
             // not implemented
             .Disable(true /* !EffectEqualization48x::GetMathCaps()->AVX */)
-            .AddRadioButtonToGroup(_("AV&X Threaded"),
+            .AddRadioButtonToGroup(XO("AV&X Threaded"),
                                    4, value);
          S.Id(ID_Bench).AddButton(XO("&Bench"));
       }

@@ -514,17 +514,18 @@ wxComboBox * ShuttleGuiBase::AddCombo(
 
 
 wxRadioButton * ShuttleGuiBase::DoAddRadioButton(
-   const wxString &Prompt, int style, int selector, int initValue)
+   const TranslatableString &Prompt, int style, int selector, int initValue)
 {
+   const auto translated = Prompt.Translation();
    /// \todo This function and the next two, suitably adapted, could be
    /// used by TieRadioButton.
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxRadioButton);
    wxRadioButton * pRad;
-   mpWind = pRad = safenew wxRadioButton(GetParent(), miId, Prompt,
+   mpWind = pRad = safenew wxRadioButton(GetParent(), miId, translated,
       wxDefaultPosition, wxDefaultSize, GetStyle( style ) );
-   mpWind->SetName(wxStripMenuCodes(Prompt));
+   mpWind->SetName(wxStripMenuCodes(translated));
    if ( style )
       pRad->SetValue( true );
    UpdateSizers();
@@ -533,13 +534,13 @@ wxRadioButton * ShuttleGuiBase::DoAddRadioButton(
 }
 
 wxRadioButton * ShuttleGuiBase::AddRadioButton(
-   const wxString &Prompt, int selector, int initValue)
+   const TranslatableString &Prompt, int selector, int initValue)
 {
    return DoAddRadioButton( Prompt, wxRB_GROUP, selector, initValue );
 }
 
 wxRadioButton * ShuttleGuiBase::AddRadioButtonToGroup(
-   const wxString &Prompt, int selector, int initValue)
+   const TranslatableString &Prompt, int selector, int initValue)
 {
    return DoAddRadioButton( Prompt, 0, selector, initValue );
 }
