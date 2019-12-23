@@ -307,14 +307,15 @@ int FindClipBoundaries
 }
 
 // for clip boundary commands, create a message for screen readers
-wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results)
+TranslatableString ClipBoundaryMessage(
+   const std::vector<FoundClipBoundary>& results)
 {
-   wxString message;
+   TranslatableString message;
    for (auto& result : results) {
 
       auto longName = result.ComposeTrackName();
 
-      wxString str;
+      TranslatableString str;
       auto nClips = result.waveTrack->GetNumClips();
       if (result.nFound < 2) {
             /* i18n-hint: in the string after this one,
@@ -336,7 +337,7 @@ wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results)
             result.index1 + 1,
             nClips,
             longName
-         ).Translation();
+         );
       }
       else {
             /* i18n-hint: in the string after this one,
@@ -360,13 +361,13 @@ wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results)
             result.index2 + 1,
             nClips,
             longName
-         ).Translation();
+         );
       }
 
       if (message.empty())
          message = str;
       else
-         message = wxString::Format(_("%s, %s"), message, str);
+         message = XO("%s, %s").Format( message, str );
    }
 
    return message;
@@ -391,7 +392,7 @@ void DoSelectClipBoundary(AudacityProject &project, bool next)
 
       ProjectHistory::Get( project ).ModifyState(false);
 
-      wxString message = ClipBoundaryMessage(results);
+      auto message = ClipBoundaryMessage(results);
       trackFocus.MessageForScreenReader(message);
    }
 }
@@ -576,7 +577,7 @@ void DoSelectClip(AudacityProject &project, bool next)
       window.ScrollIntoView(selectedRegion.t0());
 
       // create and send message to screen reader
-      wxString message;
+      TranslatableString message;
       for (auto& result : results) {
          auto longName = result.ComposeTrackName();
          auto nClips = result.waveTrack->GetNumClips();
@@ -593,12 +594,12 @@ void DoSelectClip(AudacityProject &project, bool next)
             result.index + 1,
             nClips,
             longName
-         ).Translation();
+         );
 
          if (message.empty())
             message = str;
          else
-            message = wxString::Format(_("%s, %s"), message, str);
+            message = XO("%s, %s").Format( message, str );
       }
       trackFocus.MessageForScreenReader(message);
    }
@@ -623,7 +624,7 @@ void DoCursorClipBoundary
       ProjectHistory::Get( project ).ModifyState(false);
       window.ScrollIntoView(selectedRegion.t0());
 
-      wxString message = ClipBoundaryMessage(results);
+      auto message = ClipBoundaryMessage(results);
       trackFocus.MessageForScreenReader(message);
    }
 }
@@ -726,7 +727,7 @@ void DoClipLeftOrRight
    }
 
    if ( amount == 0.0 )
-      trackFocus.MessageForScreenReader( _("clip not moved"));
+      trackFocus.MessageForScreenReader( XO("clip not moved"));
 }
 
 }
