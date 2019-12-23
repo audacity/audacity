@@ -201,8 +201,8 @@ void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasGain        ).TieSlider(          _("Gain:"),          mGain, 36.0,-36.0);
-      S.Optional( bHasPan         ).TieSlider(          _("Pan:"),           mPan,  100.0, -100.0);
+      S.Optional( bHasGain        ).TieSlider(          XO("Gain:"),          mGain, 36.0,-36.0);
+      S.Optional( bHasPan         ).TieSlider(          XO("Pan:"),           mPan,  100.0, -100.0);
    }
    S.EndMultiColumn();
 }

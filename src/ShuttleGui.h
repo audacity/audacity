@@ -270,8 +270,9 @@ public:
    void AddUnits(const wxString &Prompt, int wrapWidth = 0);
    void AddTitle(const TranslatableString &Prompt, int wrapWidth = 0);
    wxWindow * AddWindow(wxWindow * pWindow);
-   wxSlider * AddSlider(const wxString &Prompt, int pos, int Max, int Min = 0);
-   wxSlider * AddVSlider(const wxString &Prompt, int pos, int Max);
+   wxSlider * AddSlider(
+      const TranslatableString &Prompt, int pos, int Max, int Min = 0);
+   wxSlider * AddVSlider(const TranslatableString &Prompt, int pos, int Max);
    wxSpinCtrl * AddSpinCtrl(const TranslatableString &Prompt,
       int Value, int Max, int Min);
    wxTreeCtrl * AddTree();
@@ -414,10 +415,18 @@ public:
    wxChoice * TieChoice(
       const TranslatableString &Prompt, int &Selected, const TranslatableStrings &choices );
 
-   wxSlider * TieSlider( const wxString &Prompt, int &pos, const int max, const int min = 0);
-   wxSlider * TieSlider( const wxString &Prompt, double &pos, const double max, const double min = 0.0);
-   wxSlider * TieSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
-   wxSlider * TieVSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
+   wxSlider * TieSlider(
+      const TranslatableString &Prompt,
+      int &pos, const int max, const int min = 0);
+   wxSlider * TieSlider(
+      const TranslatableString &Prompt,
+      double &pos, const double max, const double min = 0.0);
+   wxSlider * TieSlider(
+      const TranslatableString &Prompt,
+      float &pos, const float fMin, const float fMax);
+   wxSlider * TieVSlider(
+      const TranslatableString &Prompt,
+      float &pos, const float fMin, const float fMax);
 
    // Must be called between a StartRadioButtonGroup / EndRadioButtonGroup pair,
    // and as many times as there are values in the enumeration.
@@ -467,7 +476,7 @@ public:
       const SettingSpec< double > &Setting,
       const int nChars);
    virtual wxSlider * TieSlider(
-      const wxString & Prompt,
+      const TranslatableString & Prompt,
       const SettingSpec< int > &Setting,
       const int max,
       const int min = 0);
@@ -556,7 +565,9 @@ private:
    wxChoice * DoTieChoice(
       const TranslatableString &Prompt, WrappedType & WrappedRef,
       const TranslatableStrings & choices );
-   wxSlider * DoTieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
+   wxSlider * DoTieSlider(
+      const TranslatableString &Prompt,
+      WrappedType & WrappedRef, const int max, const int min = 0 );
    wxSpinCtrl * DoTieSpinCtrl( const TranslatableString &Prompt,
       WrappedType & WrappedRef, const int max, const int min = 0 );
 

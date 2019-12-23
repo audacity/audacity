@@ -553,10 +553,11 @@ void wxSliderWrapper::SetFocus()
 }
 #endif
 
-wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, int Min)
+wxSlider * ShuttleGuiBase::AddSlider(
+   const TranslatableString &Prompt, int pos, int Max, int Min)
 {
-   HandleOptionality( Prompt );
-   AddPrompt( Prompt );
+   HandleOptionality( Prompt.Translation() );
+   AddPrompt( Prompt.Translation() );
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxSlider);
@@ -570,7 +571,7 @@ wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, i
    // so that name can be set on a standard control
    mpWind->SetAccessible(safenew WindowAccessible(mpWind));
 #endif
-   mpWind->SetName(wxStripMenuCodes(Prompt));
+   mpWind->SetName(wxStripMenuCodes(Prompt.Translation()));
    miProp=1;
    UpdateSizers();
    return pSlider;
@@ -1423,9 +1424,11 @@ wxTextCtrl * ShuttleGuiBase::DoTieNumericTextBox(
    return pTextBox;
 }
 
-wxSlider * ShuttleGuiBase::DoTieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, int min )
+wxSlider * ShuttleGuiBase::DoTieSlider(
+   const TranslatableString &Prompt,
+   WrappedType & WrappedRef, const int max, int min )
 {
-   HandleOptionality( Prompt );
+   HandleOptionality( Prompt.Translation() );
    // The Add function does a UseUpId(), so don't do it here in that case.
    if( mShuttleMode != eIsCreating )
       UseUpId();
@@ -1678,19 +1681,24 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
    return DoTieNumericTextBox( Prompt, WrappedRef, nChars );
 }
 
-wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, int &pos, const int max, const int min )
+wxSlider * ShuttleGuiBase::TieSlider(
+   const TranslatableString &Prompt, int &pos, const int max, const int min )
 {
    WrappedType WrappedRef( pos );
    return DoTieSlider( Prompt, WrappedRef, max, min );
 }
 
-wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, double &pos, const double max, const double min )
+wxSlider * ShuttleGuiBase::TieSlider(
+   const TranslatableString &Prompt,
+   double &pos, const double max, const double min )
 {
    WrappedType WrappedRef( pos );
    return DoTieSlider( Prompt, WrappedRef, max, min );
 }
 
-wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax)
+wxSlider * ShuttleGuiBase::TieSlider(
+   const TranslatableString &Prompt,
+   float &pos, const float fMin, const float fMax)
 {
    const float RoundFix=0.0000001f;
    int iVal=(pos-fMin+RoundFix)*100.0/(fMax-fMin);
@@ -1699,7 +1707,9 @@ wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, float &pos, const 
    return pWnd;
 }
 
-wxSlider * ShuttleGuiBase::TieVSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax)
+wxSlider * ShuttleGuiBase::TieVSlider(
+   const TranslatableString &Prompt,
+   float &pos, const float fMin, const float fMax)
 {
    int iVal=(pos-fMin)*100.0/(fMax-fMin);
 //   if( mShuttleMode == eIsCreating )
@@ -1865,7 +1875,7 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(
 /// Variant of the standard TieSlider which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 wxSlider * ShuttleGuiBase::TieSlider(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< int > &Setting,
    const int max,
    const int min)

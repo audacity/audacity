@@ -102,7 +102,7 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
       .Name(XO("Frame Period"))
       .Style(wxSL_HORIZONTAL)
       .MinSize( { 300, -1 } )
-      .AddSlider(wxT(""),
+      .AddSlider( {},
        /*pos*/ (int) (p.mFramePeriod * 100 + 0.5), /*max*/ 50, /*min*/ 5);
    mFramePeriodText = S.AddVariableText(
       SA_DFT_FRAME_PERIOD_TEXT, true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -112,7 +112,7 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mWindowSizeSlider = S.Id(ID_WINDOWSIZE)
       .Name(XO("Window Size"))
       .Style(wxSL_HORIZONTAL)
-      .AddSlider(wxT(""),
+      .AddSlider( {},
        /*pos*/ (int) (p.mWindowSize * 100 + 0.5), /*max*/ 100, /*min*/ 5);
    mWindowSizeText = S.AddVariableText(
       SA_DFT_WINDOW_SIZE_TEXT, true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -135,7 +135,7 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mSilenceThresholdSlider = S.Id(ID_SILENCETHRESHOLD)
       .Name(XO("Silence Threshold"))
       .Style(wxSL_HORIZONTAL)
-      .AddSlider(wxT(""),
+      .AddSlider( {},
          /*pos*/ (int) (p.mSilenceThreshold * 1000 + 0.5), /*max*/ 500);
    mSilenceThresholdText = S.AddVariableText(
       SA_DFT_SILENCE_THRESHOLD_TEXT,
@@ -150,7 +150,7 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mPresmoothSlider = S.Id(ID_PRESMOOTH)
       .Name(XO("Presmooth Time"))
       .Style(wxSL_HORIZONTAL)
-      .AddSlider(wxT(""),
+      .AddSlider( {},
                /*pos*/ (int) (p.mPresmoothTime * 100 + 0.5), /*max*/ 500);
    mPresmoothText = S.AddVariableText(
       SA_DFT_PRESMOOTH_TIME_TEXT, true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -164,7 +164,7 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mLineTimeSlider = S.Id(ID_LINETIME)
       .Name(XO("Line Time"))
       .Style(wxSL_HORIZONTAL)
-      .AddSlider(wxT(""),
+      .AddSlider( {},
                     /*pos*/ (int) (p.mLineTime * 100 + 0.5), /*max*/ 500);
    mLineTimeText = S.AddVariableText(
       SA_DFT_LINE_TIME_TEXT, true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -178,7 +178,7 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mSmoothTimeSlider = S.Id(ID_SMOOTHTIME)
       .Name(XO("Smooth Time"))
       .Style(wxSL_HORIZONTAL)
-      .AddSlider(wxT(""),
+      .AddSlider( {},
                   /*pos*/ (int) (p.mSmoothTime * 100 + 0.5), /*max*/ 500);
    mSmoothTimeText = S.AddVariableText(
       SA_DFT_SMOOTH_TIME_TEXT, true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);

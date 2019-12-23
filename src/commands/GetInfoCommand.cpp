@@ -224,7 +224,7 @@ public:
       const SettingSpec< double > &Setting,
       const int nChars) override;
    wxSlider * TieSlider(
-      const wxString & Prompt,
+      const TranslatableString & Prompt,
       const SettingSpec< int > &Setting,
       const int max,
       const int min = 0) override;
@@ -328,14 +328,14 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
    return ShuttleGui::TieNumericTextBox( Prompt, Setting, nChars );
 }
 wxSlider * ShuttleGuiGetDefinition::TieSlider(
-   const wxString & Prompt,
+   const TranslatableString & Prompt,
    const SettingSpec< int > &Setting,
    const int max,
    const int min) 
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "number", "type" );
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();

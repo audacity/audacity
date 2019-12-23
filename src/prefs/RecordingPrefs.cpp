@@ -133,7 +133,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.SetStretchyCol(1);
 
-         S.TieSlider(_("Le&vel (dB):"),
+         S.TieSlider(XO("Le&vel (dB):"),
                      {wxT("/AudioIO/SilenceLevel"),
                       -50},
                      0,
@@ -203,13 +203,13 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol(1);
 
             /* i18n-hint: Desired maximum (peak) volume for sound */
-            S.TieSlider(_("Target Peak:"),
+            S.TieSlider(XO("Target Peak:"),
                         {wxT("/AudioIO/TargetPeak"),
                          AILA_DEF_TARGET_PEAK},
                         100,
                         0);
 
-            S.TieSlider(_("Within:"),
+            S.TieSlider(XO("Within:"),
                      {wxT("/AudioIO/DeltaPeakVolume"),
                       AILA_DEF_DELTA_PEAK},
                      100,

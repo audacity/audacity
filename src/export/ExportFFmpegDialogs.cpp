@@ -278,7 +278,9 @@ void ExportFFmpegAACOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.SetStretchyCol(1);
-            S.Prop(1).TieSlider(_("Quality (kbps):"), {wxT("/FileFormats/AACQuality"), 160},320, 98);
+            S.Prop(1).TieSlider(
+               XO("Quality (kbps):"),
+               {wxT("/FileFormats/AACQuality"), 160},320, 98);
          }
          S.EndMultiColumn();
       }
