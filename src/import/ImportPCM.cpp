@@ -331,7 +331,7 @@ static wxString AskCopyOrEdit()
          : XO("Your current preference is set to read directly.\n\n")
       ;
 
-      wxString clause3 = XO(
+      auto clause3 = XO(
 "Reading the files directly allows you to play or edit them almost immediately. "
 "This is less safe than copying in, because you must retain the files with their "
 "original names in their original locations.\n"
