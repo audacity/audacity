@@ -120,12 +120,12 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mForceFinalAlignmentCheckBox = S.Id(ID_FORCEFINALALIGNMENT)
       .Name(XO("Force Final Alignment"))
       .AddCheckBox(
-                wxT("Force Final Alignment"),
+                XO("Force Final Alignment"),
                 p.mForceFinalAlignment);
    mIgnoreSilenceCheckBox = S.Id(ID_IGNORESILENCE)
       .Name(XO("Ignore Silence at Beginnings and Endings"))
       .AddCheckBox(
-         wxT("Ignore Silence at Beginnings and Endings"),
+         XO("Ignore Silence at Beginnings and Endings"),
          p.mIgnoreSilence );
    // need a third column after checkboxes:
    S.AddVariableText({}, true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);

@@ -279,7 +279,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                    false});
 #endif
 #ifdef SHOW_PINNED_UNPINNED_IN_PREFS
-      S.TieCheckBox(_("&Pinned Recording/Playback head"),
+      S.TieCheckBox(XO("&Pinned Recording/Playback head"),
          {PinnedHeadPreferenceKey(),
           PinnedHeadPreferenceDefault()});
 #endif

@@ -88,7 +88,7 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
                     {wxT("/Warnings/MixUnknownChannels"),
                      true});
 #ifdef EXPERIMENTAL_OD_DATA
-      S.TieCheckBox(_("&Importing uncompressed audio files"),
+      S.TieCheckBox(XO("&Importing uncompressed audio files"),
                     {wxT("/Warnings/CopyOrEditUncompressedDataAsk"),
                      true});
 #endif

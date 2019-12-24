@@ -361,7 +361,7 @@ static wxString AskCopyOrEdit()
             XO("Read the files &directly from the original (faster)") );
 
          dontAskNextTimeBox = S.AddCheckBox(
-            _("Don't &warn again and always use my choice above"),
+            XO("Don't &warn again and always use my choice above"),
             wxT("false"));
       }
       S.EndStatic();

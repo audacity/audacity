@@ -211,7 +211,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 //      S.AddSpace(10);
 // JKC: This is a silly preference.  Kept here as a reminder that we may
 // later want to have configurable button order.
-//      S.TieCheckBox(_("&Ergonomic order of Transport Toolbar buttons"),
+//      S.TieCheckBox(XO("&Ergonomic order of Transport Toolbar buttons"),
 //                    wxT("/GUI/ErgonomicTransportButtons"),
 //                    true);
 
@@ -230,7 +230,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef EXPERIMENTAL_THEME_PREFS
       // We do not want to make this option mainstream.  It's a 
       // convenience for developers.
-      S.TieCheckBox(_("Show alternative &styling (Mac vs PC)"),
+      S.TieCheckBox(XO("Show alternative &styling (Mac vs PC)"),
                     {wxT("/GUI/ShowMac"),
                      false});
 #endif

@@ -282,7 +282,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
-         S.TieCheckBox(_("Show a grid along the &Y-axis"),
+         S.TieCheckBox(XO("Show a grid along the &Y-axis"),
             mTempSettings.fftYGrid);
 #endif //EXPERIMENTAL_FFT_Y_GRID
 

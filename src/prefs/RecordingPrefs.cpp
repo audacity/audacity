@@ -99,7 +99,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 //#if defined(__WXMAC__)
 // Bug 388.  Feature not supported on any Mac Hardware.
 #if 0
-      S.TieCheckBox(_("Use &hardware to play other tracks"),
+      S.TieCheckBox(XO("Use &hardware to play other tracks"),
                     {wxT("/AudioIO/Playthrough"),
                      false});
 #endif
