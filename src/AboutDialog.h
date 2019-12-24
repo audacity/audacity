@@ -15,6 +15,7 @@
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 class wxStaticBitmap;
+class wxTextOutputStream;
 
 class ShuttleGui;
 
@@ -64,10 +65,10 @@ class AboutDialog final : public wxDialogWrapper {
    void AddCredit( const wxString &name, TranslatableString format, Role role );
    wxString GetCreditsByRole(AboutDialog::Role role);
 
-   void AddBuildinfoRow( wxString* htmlstring, const wxChar * libname,
+   void AddBuildinfoRow( wxTextOutputStream *str, const wxChar * libname,
       const TranslatableString &libdesc, const wxString &status);
-   void AddBuildinfoRow( wxString* htmlstring, const TranslatableString &description,
-      const wxChar *spec);
+   void AddBuildinfoRow( wxTextOutputStream *str,
+      const TranslatableString &description, const wxChar *spec);
 };
 
 #endif
