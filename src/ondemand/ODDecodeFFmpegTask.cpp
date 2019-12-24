@@ -10,6 +10,7 @@
 ******************************************************************/
 
 #include "../Audacity.h"   // needed before FFmpeg.h // for USE_* macros
+#include "ODDecodeBlockFile.h" // base class
 #include "ODDecodeFFmpegTask.h"
 
 #include "../Experimental.h"

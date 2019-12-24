@@ -172,9 +172,8 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #if !defined(USE_FFMPEG)
          .Disable()
 #endif
-         .TieCheckBox(_("Allow &background on-demand loading"),
-                    wxT("/Library/FFmpegOnDemand"),
-                    false);
+         .TieCheckBox(XO("Allow &background on-demand loading"),
+                    {wxT("/Library/FFmpegOnDemand"), false});
 #endif
    }
    S.EndStatic();
