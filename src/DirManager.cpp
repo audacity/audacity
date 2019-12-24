@@ -1777,8 +1777,8 @@ void DirManager::FillBlockfilesCache()
    if (numNeed == 0)
       return;
 
-   ProgressDialog progress(_("Caching audio"),
-                           _("Caching audio into memory"));
+   ProgressDialog progress(XO("Caching audio"),
+                           XO("Caching audio into memory"));
 
    iter = mBlockFileHash.begin();
    int current = 0;
