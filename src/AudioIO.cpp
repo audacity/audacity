@@ -449,6 +449,10 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include <wx/intl.h>
 #include <wx/debug.h>
 
+#if defined(__WXMAC__) || defined(__WXMSW__)
+#include <wx/power.h>
+#endif
+
 #include "MissingAliasFileDialog.h"
 #include "Mix.h"
 #include "Resample.h"
@@ -1404,6 +1408,13 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    }
 #endif
 
+#if defined(__WXMAC__) || defined(__WXMSW__)
+   // Don't want the system to sleep while audio I/O is active
+   if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
+      wxPowerResource::Acquire(wxPOWER_RESOURCE_SCREEN, _("Audacity Audio"));
+   }
+#endif
+
    return (mLastPaError == paNoError);
 }
 
@@ -2150,6 +2161,11 @@ void AudioIO::StopStream()
      )
       return;
 
+#if defined(__WXMAC__) || defined(__WXMSW__)
+   // Re-enable system sleep
+   wxPowerResource::Release(wxPOWER_RESOURCE_SCREEN);
+#endif
+ 
    if( mAudioThreadFillBuffersLoopRunning)
    {
       // PortAudio callback can use the information that we are stopping to fade
