@@ -303,7 +303,7 @@ using CommandIDs = std::vector<CommandID>;
 // The msgid should be used only in unusual cases and the translation more often
 //
 // Implicit conversions to and from wxString are intentionally disabled
-class TranslatableString : private wxString {
+class TranslatableString {
    enum class Request;
    template< size_t N > struct PluralTemp;
 
@@ -324,7 +324,7 @@ public:
    explicit TranslatableString( wxString str, Formatter formatter )
       : mFormatter{ std::move(formatter) }
    {
-      this->wxString::swap( str );
+      mMsgid.swap( str );
    }
 
    // copy and move
@@ -333,23 +333,22 @@ public:
    TranslatableString( TranslatableString && str )
       : mFormatter( std::move( str.mFormatter ) )
    {
-      this->wxString::swap( str );
+      mMsgid.swap( str.mMsgid );
    }
    TranslatableString &operator=( TranslatableString &&str )
    {
       mFormatter = std::move( str.mFormatter );
-      this->wxString::clear();
-      this->wxString::swap( str );
+      mMsgid.swap( str.mMsgid );
       return *this;
    }
 
-   using wxString::empty;
+   bool empty() const { return mMsgid.empty(); }
 
    // MSGID is the English lookup key in the message catalog, not necessarily
    // for user's eyes if the locale is some other.
    // The MSGID might not be all the information TranslatableString holds.
    // This is a deliberately ugly-looking function name.  Use with caution.
-   Identifier MSGID() const { return Identifier{ *this }; }
+   Identifier MSGID() const { return Identifier{ mMsgid }; }
 
    wxString Translation() const { return DoFormat( false ); }
 
@@ -476,7 +475,7 @@ private:
    explicit TranslatableString( wxString str )
       : mFormatter{ NullContextFormatter }
    {
-      this->wxString::swap( str );
+      mMsgid.swap( str );
    }
 
    friend TranslatableString Verbatim( wxString str );
@@ -494,7 +493,7 @@ private:
    static wxString DoSubstitute(
       const Formatter &formatter, const wxString &format, bool debug );
    wxString DoFormat( bool debug ) const
-   {  return DoSubstitute( mFormatter, *this, debug ); }
+   {  return DoSubstitute( mFormatter, mMsgid, debug ); }
 
    static wxString DoChooseFormat(
       const Formatter &formatter,
@@ -542,6 +541,7 @@ private:
       }
    };
 
+   wxString mMsgid;
    Formatter mFormatter;
 };
 
@@ -560,8 +560,8 @@ namespace std
    template<> struct hash< TranslatableString > {
       size_t operator () (const TranslatableString &str) const // noexcept
       {
-         auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
-         using Hasher = hash< decltype(stdstr) >;
+         const wxString &stdstr = str.mMsgid.ToStdWstring(); // no allocations, a cheap fetch
+         using Hasher = hash< wxString >;
          return Hasher{}( stdstr );
       }
    };
