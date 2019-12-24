@@ -101,12 +101,12 @@ enum DiscriminationMethod {
 };
 
 const struct DiscriminationMethodInfo {
-   const wxChar *name;
+   const TranslatableString name;
 } discriminationMethodInfo[DM_N_METHODS] = {
    // Experimental only, don't need translations
-      { wxT("Median") },
-      { wxT("Second greatest") },
-      { wxT("Old") },
+      { XO("Median") },
+      { XO("Second greatest") },
+      { XO("Old") },
 };
 
 // magic number used only in the old statistics
@@ -127,7 +127,7 @@ enum WindowTypes {
 };
 
 const struct WindowTypesInfo {
-   const wxChar *name;
+   const TranslatableString name;
    unsigned minSteps;
    double inCoefficients[3];
    double outCoefficients[3];
@@ -138,13 +138,13 @@ const struct WindowTypesInfo {
    // plus one half the product of the first cosine coefficients.
 
    // Experimental only, don't need translations
-   { wxT("none, Hann (2.0.6 behavior)"),    2, { 1, 0, 0 },            { 0.5, -0.5, 0 }, 0.5 },
-   { wxT("Hann, none"),                     2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
-   { wxT("Hann, Hann (default)"),           4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
-   { wxT("Blackman, Hann"),                 4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
-   { wxT("Hamming, none"),                  2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
-   { wxT("Hamming, Hann"),                  4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
-   { wxT("Hamming, Reciprocal Hamming"),    2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
+   { XO("none, Hann (2.0.6 behavior)"),    2, { 1, 0, 0 },            { 0.5, -0.5, 0 }, 0.5 },
+   { XO("Hann, none"),                     2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
+   { XO("Hann, Hann (default)"),           4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
+   { XO("Blackman, Hann"),                 4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
+   { XO("Hamming, none"),                  2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
+   { XO("Hamming, Hann"),                  4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
+   { XO("Hamming, Reciprocal Hamming"),    2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
 };
 
 enum {
@@ -1765,40 +1765,40 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          S.TieChoice(XO("&Window types:"),
             mTempSettings.mWindowTypes,
             []{
-               wxArrayStringEx windowTypeChoices;
+               TranslatableStrings windowTypeChoices;
                for (int ii = 0; ii < WT_N_WINDOW_TYPES; ++ii)
                   windowTypeChoices.push_back(windowTypesInfo[ii].name);
                return windowTypeChoices;
             }()
          );
 
-         S.TieChoice(XO("Window si&ze:")),
+         S.TieChoice(XO("Window si&ze:"),
             mTempSettings.mWindowSizeChoice,
             {
-               _("8") ,
-               _("16") ,
-               _("32") ,
-               _("64") ,
-               _("128") ,
-               _("256") ,
-               _("512") ,
-               _("1024") ,
-               _("2048 (default)") ,
-               _("4096") ,
-               _("8192") ,
-               _("16384") ,
+               XO("8") ,
+               XO("16") ,
+               XO("32") ,
+               XO("64") ,
+               XO("128") ,
+               XO("256") ,
+               XO("512") ,
+               XO("1024") ,
+               XO("2048 (default)") ,
+               XO("4096") ,
+               XO("8192") ,
+               XO("16384") ,
             }
          );
 
          S.TieChoice(XO("S&teps per window:"),
             mTempSettings.mStepsPerWindowChoice,
             {
-               _("2") ,
-               _("4 (default)") ,
-               _("8") ,
-               _("16") ,
-               _("32") ,
-               _("64") ,
+               XO("2") ,
+               XO("4 (default)") ,
+               XO("8") ,
+               XO("16") ,
+               XO("32") ,
+               XO("64") ,
             }
          );
 
@@ -1806,7 +1806,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          .TieChoice(XO("Discrimination &method:"),
             mTempSettings.mMethod,
             []{
-               wxArrayStringEx methodChoices;
+               TranslatableStrings methodChoices;
                int nn = DM_N_METHODS;
 #ifndef OLD_METHOD_AVAILABLE
                --nn;
