@@ -567,6 +567,13 @@ namespace std
    };
 }
 
+// Allow TranslatableString to work with shift output operators
+template< typename Sink >
+inline Sink &operator <<( Sink &sink, const TranslatableString &str )
+{
+   return sink << str.Translation();
+}
+
 // Require calls to the one-argument constructor to go through this
 // distinct global function name.  This makes it easier to locate and
 // review the uses of this function, separately from the uses of the type.
