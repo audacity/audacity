@@ -33,7 +33,7 @@ void HelpCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(_("Command:"),mCommandName);
+      S.TieTextBox(XO("Command:"),mCommandName);
    }
    S.EndMultiColumn();
 }

@@ -226,7 +226,7 @@ void ExportPlugin::OptionsCreate(ShuttleGui &S, int WXUNUSED(format))
    {
       S.StartHorizontalLay(wxCENTER, 0);
       {
-         S.Prop(1).AddTitle(_("No format specific options"));
+         S.Prop(1).AddTitle(XO("No format specific options"));
       }
       S.EndHorizontalLay();
    }
@@ -988,7 +988,7 @@ void Exporter::CreateUserPane(wxWindow *parent)
    {
       S.StartHorizontalLay(wxEXPAND);
       {
-         S.StartStatic(_("Format Options"), 1);
+         S.StartStatic(XO("Format Options"), 1);
          {
             mBook = S.Position(wxEXPAND)
                .StartSimplebook();
@@ -1429,7 +1429,7 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
       S.StartHorizontalLay(wxALIGN_CENTRE | wxALL, 0);
       {
          mChannelsText = S.AddVariableText(
-            label.Translation(),
+            label,
             false, wxALIGN_LEFT | wxALL );
 
          S

@@ -33,7 +33,7 @@ TimeDialog::TimeDialog(wxWindow *parent,
                        const NumericFormatSymbol &format,
                        double rate,
                        double time,
-                       const wxString &prompt)
+                       const TranslatableString &prompt)
 :  wxDialogWrapper(parent, wxID_ANY, title),
    mPrompt(prompt),
    mFormat(format),

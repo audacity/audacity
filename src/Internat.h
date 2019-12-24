@@ -160,7 +160,7 @@ private:
 #define LAT1CTOWX(X) wxString((X), wxConvISO8859_1)
 
 class ComponentInterfaceSymbol;
-wxArrayStringEx LocalizedStrings(
+TranslatableStrings Msgids(
    const EnumValueSymbol strings[], size_t nStrings);
 
 #endif

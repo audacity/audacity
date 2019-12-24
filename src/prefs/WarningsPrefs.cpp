@@ -67,24 +67,24 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Show Warnings/Prompts for"));
+   S.StartStatic(XO("Show Warnings/Prompts for"));
    {
-      S.TieCheckBox(_("Saving &projects"),
+      S.TieCheckBox(XO("Saving &projects"),
                     {wxT("/Warnings/FirstProjectSave"),
                      true});
-      S.TieCheckBox(_("Saving &empty project"),
+      S.TieCheckBox(XO("Saving &empty project"),
                     {wxT("/GUI/EmptyCanBeDirty"),
                      true});
-      S.TieCheckBox(_("&Low disk space at launch or new project"),
+      S.TieCheckBox(XO("&Low disk space at launch or new project"),
                     {wxT("/Warnings/DiskSpaceWarning"),
                      true});
-      S.TieCheckBox(_("Mixing down to &mono during export"),
+      S.TieCheckBox(XO("Mixing down to &mono during export"),
                     {wxT("/Warnings/MixMono"),
                      true});
-      S.TieCheckBox(_("Mixing down to &stereo during export"),
+      S.TieCheckBox(XO("Mixing down to &stereo during export"),
                     {wxT("/Warnings/MixStereo"),
                      true});
-      S.TieCheckBox(_("Mixing down on export (&Custom FFmpeg or external program)"),
+      S.TieCheckBox(XO("Mixing down on export (&Custom FFmpeg or external program)"),
                     {wxT("/Warnings/MixUnknownChannels"),
                      true});
 #ifdef EXPERIMENTAL_OD_DATA

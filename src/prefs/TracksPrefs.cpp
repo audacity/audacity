@@ -265,16 +265,16 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Display"));
+   S.StartStatic(XO("Display"));
    {
-      S.TieCheckBox(_("Auto-&fit track height"),
+      S.TieCheckBox(XO("Auto-&fit track height"),
                     {wxT("/GUI/TracksFitVerticallyZoomed"),
                      false});
-      S.TieCheckBox(_("Sho&w audio track name as overlay"),
+      S.TieCheckBox(XO("Sho&w audio track name as overlay"),
                   {wxT("/GUI/ShowTrackNameInWaveform"),
                    false});
 #ifdef EXPERIMENTAL_HALF_WAVE
-      S.TieCheckBox(_("Use &half-wave display when collapsed"),
+      S.TieCheckBox(XO("Use &half-wave display when collapsed"),
                   {wxT("/GUI/CollapseToHalfWave"),
                    false});
 #endif
@@ -283,7 +283,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
          {PinnedHeadPreferenceKey(),
           PinnedHeadPreferenceDefault()});
 #endif
-      S.TieCheckBox(_("A&uto-scroll if head unpinned"),
+      S.TieCheckBox(XO("A&uto-scroll if head unpinned"),
          {wxT("/GUI/AutoScroll"),
           true});
 
@@ -293,19 +293,19 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       {
 #ifdef SHOW_PINNED_POSITION_IN_PREFS
          S.TieNumericTextBox(
-            _("Pinned &head position"),
+            XO("Pinned &head position"),
             PinnedHeadPositionPreferenceKey(),
             PinnedHeadPositionPreferenceDefault(),
             30
          );
 #endif
-         S.TieChoice(_("Default &view mode:"),
+         S.TieChoice(XO("Default &view mode:"),
                      viewModeSetting );
 
-         S.TieChoice(_("Display &samples:"),
+         S.TieChoice(XO("Display &samples:"),
                      sampleDisplaySetting );
 
-         S.TieTextBox(_("Default audio track &name:"),
+         S.TieTextBox(XO("Default audio track &name:"),
                       {wxT("/GUI/TrackNames/DefaultTrackName"),
                        _("Audio Track")},
                       30);
@@ -314,14 +314,14 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Zoom Toggle"));
+   S.StartStatic(XO("Zoom Toggle"));
    {
       S.StartMultiColumn(4);
       {
-         S.TieChoice(_("Preset 1:"),
+         S.TieChoice(XO("Preset 1:"),
                      zoom1Setting );
 
-         S.TieChoice(_("Preset 2:"),
+         S.TieChoice(XO("Preset 2:"),
                      zoom2Setting );
       }
    }

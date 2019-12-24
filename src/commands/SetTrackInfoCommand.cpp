@@ -86,8 +86,8 @@ void SetTrackBase::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasTrackIndex  ).TieNumericTextBox(  _("Track Index:"),   mTrackIndex );
-      S.Optional( bHasChannelIndex).TieNumericTextBox(  _("Channel Index:"), mChannelIndex );
+      S.Optional( bHasTrackIndex  ).TieNumericTextBox(  XO("Track Index:"),   mTrackIndex );
+      S.Optional( bHasChannelIndex).TieNumericTextBox(  XO("Channel Index:"), mChannelIndex );
    }
    S.EndMultiColumn();
 #endif
@@ -136,14 +136,14 @@ void SetTrackStatusCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasTrackName   ).TieTextBox(         _("Name:"),          mTrackName );
+      S.Optional( bHasTrackName   ).TieTextBox(         XO("Name:"),          mTrackName );
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxEXPAND);
    {
       S.SetStretchyCol( 1 );
-      S.Optional( bHasSelected       ).TieCheckBox( _("Selected"),           bSelected );
-      S.Optional( bHasFocused        ).TieCheckBox( _("Focused"),            bFocused);
+      S.Optional( bHasSelected       ).TieCheckBox( XO("Selected"),           bSelected );
+      S.Optional( bHasFocused        ).TieCheckBox( XO("Focused"),            bFocused);
    }
    S.EndMultiColumn();
 }
@@ -194,15 +194,15 @@ void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxEXPAND);
    {
       S.SetStretchyCol( 1 );
-      S.Optional( bHasMute           ).TieCheckBox( _("Mute"),               bMute);
-      S.Optional( bHasSolo           ).TieCheckBox( _("Solo"),               bSolo);
+      S.Optional( bHasMute           ).TieCheckBox( XO("Mute"),               bMute);
+      S.Optional( bHasSolo           ).TieCheckBox( XO("Solo"),               bSolo);
    }
    S.EndMultiColumn();
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasGain        ).TieSlider(          _("Gain:"),          mGain, 36.0,-36.0);
-      S.Optional( bHasPan         ).TieSlider(          _("Pan:"),           mPan,  100.0, -100.0);
+      S.Optional( bHasGain        ).TieSlider(          XO("Gain:"),          mGain, 36.0,-36.0);
+      S.Optional( bHasPan         ).TieSlider(          XO("Pan:"),           mPan,  100.0, -100.0);
    }
    S.EndMultiColumn();
 }
@@ -315,25 +315,25 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasHeight      ).TieNumericTextBox(  _("Height:"),        mHeight );
-      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour,
-         LocalizedStrings(  kColourStrings, nColours ) );
-      S.Optional( bHasDisplayType ).TieChoice(          _("Display:"),       mDisplayType,
-         LocalizedStrings( kDisplayTypeStrings, nDisplayTypes ) );
-      S.Optional( bHasScaleType   ).TieChoice(          _("Scale:"),         mScaleType,
-         LocalizedStrings( kScaleTypeStrings, nScaleTypes ) );
-      S.Optional( bHasVZoom       ).TieChoice(          _("VZoom:"),         mVZoom,
-         LocalizedStrings( kZoomTypeStrings, nZoomTypes ) );
-      S.Optional( bHasVZoomTop    ).TieTextBox(         _("VZoom Top:"),     mVZoomTop );
-      S.Optional( bHasVZoomBottom ).TieTextBox(         _("VZoom Bottom:"),  mVZoomBottom );
+      S.Optional( bHasHeight      ).TieNumericTextBox(  XO("Height:"),        mHeight );
+      S.Optional( bHasColour      ).TieChoice(          XO("Colour:"),        mColour,
+         Msgids(  kColourStrings, nColours ) );
+      S.Optional( bHasDisplayType ).TieChoice(          XO("Display:"),       mDisplayType,
+         Msgids( kDisplayTypeStrings, nDisplayTypes ) );
+      S.Optional( bHasScaleType   ).TieChoice(          XO("Scale:"),         mScaleType,
+         Msgids( kScaleTypeStrings, nScaleTypes ) );
+      S.Optional( bHasVZoom       ).TieChoice(          XO("VZoom:"),         mVZoom,
+         Msgids( kZoomTypeStrings, nZoomTypes ) );
+      S.Optional( bHasVZoomTop    ).TieTextBox(         XO("VZoom Top:"),     mVZoomTop );
+      S.Optional( bHasVZoomBottom ).TieTextBox(         XO("VZoom Bottom:"),  mVZoomBottom );
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxEXPAND);
    {
       S.SetStretchyCol( 1 );
-      S.Optional( bHasUseSpecPrefs   ).TieCheckBox( _("Use Spectral Prefs"), bUseSpecPrefs );
-      S.Optional( bHasSpectralSelect ).TieCheckBox( _("Spectral Select"),    bSpectralSelect);
-      S.Optional( bHasGrayScale      ).TieCheckBox( _("Gray Scale"),         bGrayScale );
+      S.Optional( bHasUseSpecPrefs   ).TieCheckBox( XO("Use Spectral Prefs"), bUseSpecPrefs );
+      S.Optional( bHasSpectralSelect ).TieCheckBox( XO("Spectral Select"),    bSpectralSelect);
+      S.Optional( bHasGrayScale      ).TieCheckBox( XO("Gray Scale"),         bGrayScale );
    }
    S.EndMultiColumn();
 }

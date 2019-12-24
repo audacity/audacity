@@ -49,18 +49,18 @@ void SetProjectCommand::PopulateOrExchange(ShuttleGui & S)
    S.AddSpace(0, 5);
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
-      S.Optional( bHasName      ).TieTextBox(         _("Name:"),     mName );
-      S.Optional( bHasRate      ).TieTextBox(         _("Rate:"),     mRate );
-      S.TieCheckBox( _("Resize:"), bHasSizing    );
+      S.Optional( bHasName      ).TieTextBox(         XO("Name:"),     mName );
+      S.Optional( bHasRate      ).TieTextBox(         XO("Rate:"),     mRate );
+      S.TieCheckBox( XO("Resize:"), bHasSizing    );
       S.AddSpace(0,0);
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieNumericTextBox(  _("X:"),        mPosX );
-      S.TieNumericTextBox(  _("Y:"),        mPosY );
-      S.TieNumericTextBox(  _("Width:"),    mWidth );
-      S.TieNumericTextBox(  _("Height:"),   mHeight );
+      S.TieNumericTextBox(  XO("X:"),        mPosX );
+      S.TieNumericTextBox(  XO("Y:"),        mPosY );
+      S.TieNumericTextBox(  XO("Width:"),    mWidth );
+      S.TieNumericTextBox(  XO("Height:"),   mHeight );
    }
    S.EndMultiColumn();
 }

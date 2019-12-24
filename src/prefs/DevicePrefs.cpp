@@ -129,47 +129,47 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Interface"));
+   S.StartStatic(XO("Interface"));
    {
       S.StartMultiColumn(2);
       {
          S.Id(HostID);
-         mHost = S.TieChoice( _("&Host:"),
+         mHost = S.TieChoice( XO("&Host:"),
             {
                wxT("/AudioIO/Host"),
                { ByColumns, mHostNames, mHostLabels }
             }
          );
 
-         S.AddPrompt(_("Using:"));
-         S.AddFixedText(wxString(wxSafeConvertMB2WX(Pa_GetVersionText())));
+         S.AddPrompt(XO("Using:"));
+         S.AddFixedText( Verbatim(wxSafeConvertMB2WX(Pa_GetVersionText() ) ) );
       }
       S.EndMultiColumn();
    }
    S.EndStatic();
 
-   S.StartStatic(_("Playback"));
+   S.StartStatic(XO("Playback"));
    {
       S.StartMultiColumn(2);
       {
          S.Id(PlayID);
-         mPlay = S.AddChoice(_("&Device:"),
+         mPlay = S.AddChoice(XO("&Device:"),
                              {} );
       }
       S.EndMultiColumn();
    }
    S.EndStatic();
 
-   S.StartStatic(_("Recording"));
+   S.StartStatic(XO("Recording"));
    {
       S.StartMultiColumn(2);
       {
          S.Id(RecordID);
-         mRecord = S.AddChoice(_("De&vice:"),
+         mRecord = S.AddChoice(XO("De&vice:"),
                                {} );
 
          S.Id(ChannelsID);
-         mChannels = S.AddChoice(_("Cha&nnels:"),
+         mChannels = S.AddChoice(XO("Cha&nnels:"),
                                  {} );
       }
       S.EndMultiColumn();
@@ -179,7 +179,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    // These previously lived in recording preferences.
    // However they are liable to become device specific.
    // Buffering also affects playback, not just recording, so is a device characteristic.
-   S.StartStatic( _("Latency"));
+   S.StartStatic( XO("Latency"));
    {
       S.StartThreeColumn();
       {
@@ -188,19 +188,19 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
          // for Portaudio v18 we always use default buffer sizes
          w = S
             .NameSuffix(XO("milliseconds"))
-            .TieNumericTextBox(_("&Buffer length:"),
+            .TieNumericTextBox(XO("&Buffer length:"),
                                  {wxT("/AudioIO/LatencyDuration"),
                                   DEFAULT_LATENCY_DURATION},
                                  9);
-         S.AddUnits(_("milliseconds"));
+         S.AddUnits(XO("milliseconds"));
 
          w = S
             .NameSuffix(XO("milliseconds"))
-            .TieNumericTextBox(_("&Latency compensation:"),
+            .TieNumericTextBox(XO("&Latency compensation:"),
                                  {wxT("/AudioIO/LatencyCorrection"),
                                   DEFAULT_LATENCY_CORRECTION},
                                  9);
-         S.AddUnits(_("milliseconds"));
+         S.AddUnits(XO("milliseconds"));
       }
       S.EndThreeColumn();
    }

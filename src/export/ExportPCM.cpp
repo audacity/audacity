@@ -115,8 +115,8 @@ private:
 
 private:
 
-   wxArrayStringEx mHeaderNames;
-   wxArrayStringEx mEncodingNames;
+   TranslatableStrings mHeaderNames;
+   TranslatableStrings mEncodingNames;
    wxChoice *mHeaderChoice;
    wxChoice *mEncodingChoice;
    int mHeaderFromChoice;
@@ -146,7 +146,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
 
    mHeaderFromChoice = 0;
    for (int i = 0, num = sf_num_headers(); i < num; i++) {
-      mHeaderNames.push_back(sf_header_index_name(i));
+      mHeaderNames.push_back( Verbatim( sf_header_index_name(i) ) );
       if ((format & SF_FORMAT_TYPEMASK) == (int)sf_header_index_to_type(i))
          mHeaderFromChoice = i;
    }
@@ -158,7 +158,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
       bool valid = ValidatePair(fmt);
       if (valid)
       {
-         mEncodingNames.push_back(sf_encoding_index_name(i));
+         mEncodingNames.push_back( Verbatim( sf_encoding_index_name(i) ) );
          mEncodingFormats.push_back(enc);
          if ((format & SF_FORMAT_SUBMASK) == (int)sf_encoding_index_to_subtype(i))
             mEncodingFromChoice = sel;
@@ -189,11 +189,11 @@ void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStretchyCol(1);
             mHeaderChoice = S.Id(ID_HEADER_CHOICE)
-               .AddChoice(_("Header:"),
+               .AddChoice(XO("Header:"),
                           mHeaderNames,
                           mHeaderFromChoice);
             mEncodingChoice = S.Id(ID_ENCODING_CHOICE)
-               .AddChoice(_("Encoding:"),
+               .AddChoice(XO("Encoding:"),
                           mEncodingNames,
                           mEncodingFromChoice);
          }
@@ -258,7 +258,7 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
       if (valid)
       {
          const auto name = sf_encoding_index_name(i);
-         mEncodingNames.push_back(name);
+         mEncodingNames.push_back( Verbatim( name ) );
          mEncodingChoice->Append(name);
          mEncodingFormats.push_back(encSubtype);
          for (j = 0; j < sfnum; j++)

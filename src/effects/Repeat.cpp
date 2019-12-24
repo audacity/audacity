@@ -176,14 +176,15 @@ void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
             &repeatCount, NumValidatorStyle::DEFAULT,
             MIN_Count, 2147483647 / mProjectRate
          )
-         .AddTextBox(_("Number of repeats to add:"), wxT(""), 12);
+         .AddTextBox(XO("Number of repeats to add:"), wxT(""), 12);
    }
    S.EndHorizontalLay();
 
    S.StartMultiColumn(1, wxCENTER);
    {
-      mCurrentTime = S.AddVariableText(_("Current selection length: dd:hh:mm:ss"));
-      mTotalTime = S.AddVariableText(_("New selection length: dd:hh:mm:ss"));
+      mCurrentTime = S.AddVariableText(
+         XO("Current selection length: dd:hh:mm:ss"));
+      mTotalTime = S.AddVariableText(XO("New selection length: dd:hh:mm:ss"));
    }
    S.EndMultiColumn();
 }

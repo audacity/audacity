@@ -124,7 +124,7 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
          S.SetStretchyCol(1);
 
          /* i18n-hint: (noun) The name of the typeface*/
-         S.AddPrompt(_("Face name"));
+         S.AddPrompt(XO("Face name"));
          lb = safenew wxListBox(S.GetParent(), wxID_ANY,
             wxDefaultPosition,
             wxDefaultSize,
@@ -138,7 +138,7 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
             .AddWindow(lb);
 
          /* i18n-hint: (noun) The size of the typeface*/
-         S.AddPrompt(_("Face size"));
+         S.AddPrompt(XO("Face size"));
          sc = safenew wxSpinCtrl(S.GetParent(), wxID_ANY,
             wxString::Format(wxT("%ld"), fontsize),
             wxDefaultPosition,

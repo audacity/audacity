@@ -63,7 +63,7 @@ public:
    // Called to signal changes to a track
    void Updated();
 
-   void MessageForScreenReader(const wxString& message);
+   void MessageForScreenReader(const TranslatableString& message);
 
 #if wxUSE_ACCESSIBILITY
    // Retrieves the address of an IDispatch interface for the specified child.
@@ -186,7 +186,7 @@ public:
    void SetAccessible( wxWindow &owner,
       std::unique_ptr< TrackPanelAx > pAccessible );
 
-   void MessageForScreenReader(const wxString& message);
+   void MessageForScreenReader(const TranslatableString& message);
 
    void UpdateAccessibility();
 

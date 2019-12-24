@@ -56,9 +56,12 @@ class AButton final : public wxWindow {
 
    virtual ~ AButton();
 
-   // overload and hide the inherited function that takes naked wxString:
-   void SetToolTip(TranslatableString toolTip);
+   // hide the inherited function that takes naked wxString:
+   void SetToolTip(const TranslatableString &toolTip);
    
+   // hide the inherited function that takes naked wxString:
+   void SetLabel(const TranslatableString &label);
+
    bool AcceptsFocus() const override { return s_AcceptsFocus; }
    bool AcceptsFocusFromKeyboard() const override { return mEnabled; }
 

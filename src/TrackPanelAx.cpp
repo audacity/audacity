@@ -219,7 +219,7 @@ void TrackPanelAx::Updated()
 #endif
 }
 
-void TrackPanelAx::MessageForScreenReader(const wxString& message)
+void TrackPanelAx::MessageForScreenReader(const TranslatableString& message)
 {
 #if wxUSE_ACCESSIBILITY
    if (GetWindow() == wxWindow::FindFocus())
@@ -227,7 +227,7 @@ void TrackPanelAx::MessageForScreenReader(const wxString& message)
       auto t = GetFocus();
       int childId = t ? TrackNum(t) : 0;
 
-      mMessage = message;
+      mMessage = message.Translation();
 
       // append \a alernatively, so that the string is never the same as the previous string.
       // This ensures that screen readers read it.
@@ -788,7 +788,7 @@ void TrackFocus::SetAccessible(
 #endif
 }
 
-void TrackFocus::MessageForScreenReader(const wxString& message)
+void TrackFocus::MessageForScreenReader(const TranslatableString& message)
 {
    if (mAx)
       mAx->MessageForScreenReader( message );

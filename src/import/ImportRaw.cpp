@@ -314,7 +314,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
    SetName();
 
    ShuttleGui S(this, eIsCreating);
-   wxArrayStringEx encodings;
+   TranslatableStrings encodings;
    int num;
    int selection;
    int endian;
@@ -337,7 +337,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
       if (sf_format_check(&info)) {
          mEncodingSubtype[mNumEncodings] = subtype;
-         encodings.push_back(sf_encoding_index_name(i));
+         encodings.push_back( Verbatim( sf_encoding_index_name(i) ) );
 
          if ((mEncoding & SF_FORMAT_SUBMASK) == subtype)
             selection = mNumEncodings;
@@ -346,19 +346,19 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
       }
    }
 
-   wxArrayStringEx endians{
+   TranslatableStrings endians{
       /* i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
           know the correct technical word. */
-      _("No endianness") ,
+      XO("No endianness") ,
       /* i18n-hint: Refers to byte-order.  Don't translate this if you don't
        know the correct technical word. */
-      _("Little-endian") ,
+      XO("Little-endian") ,
       /* i18n-hint: Refers to byte-order.  Don't translate this if you don't
          know the correct technical word. */
-      _("Big-endian") ,
+      XO("Big-endian") ,
       /* i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
          know the correct technical word. */
-      _("Default endianness") ,
+      XO("Default endianness") ,
    };
 
    switch (mEncoding & (SF_FORMAT_ENDMASK))
@@ -378,12 +378,12 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
          break;
    }
 
-   wxArrayStringEx chans{
-      _("1 Channel (Mono)") ,
-      _("2 Channels (Stereo)") ,
+   TranslatableStrings chans{
+      XO("1 Channel (Mono)") ,
+      XO("2 Channels (Stereo)") ,
    };
    for (i=2; i<16; i++) {
-      chans.push_back(wxString::Format(_("%d Channels"), i + 1));
+      chans.push_back( XO("%d Channels").Format( i + 1 ) );
    }
 
    S.StartVerticalLay(false);
@@ -391,13 +391,13 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
       S.SetBorder(5);
       S.StartTwoColumn();
       {
-         mEncodingChoice = S.Id(ChoiceID).AddChoice(_("Encoding:"),
+         mEncodingChoice = S.Id(ChoiceID).AddChoice(XO("Encoding:"),
                                                     encodings,
                                                     selection);
-         mEndianChoice = S.Id(ChoiceID).AddChoice(_("Byte order:"),
+         mEndianChoice = S.Id(ChoiceID).AddChoice(XO("Byte order:"),
                                                   endians,
                                                   endian);
-         mChannelChoice = S.Id(ChoiceID).AddChoice(_("Channels:"),
+         mChannelChoice = S.Id(ChoiceID).AddChoice(XO("Channels:"),
                                                    chans,
                                                    mChannels - 1);
       }
@@ -408,25 +408,25 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
       {
          // Offset text
          /* i18n-hint: (noun)*/
-         mOffsetText = S.AddTextBox(_("Start offset:"),
+         mOffsetText = S.AddTextBox(XO("Start offset:"),
                                     wxString::Format(wxT("%d"), mOffset),
                                     12);
-         S.AddUnits(_("bytes"));
+         S.AddUnits(XO("bytes"));
 
          // Percent text
-         mPercentText = S.AddTextBox(_("Amount to import:"),
+         mPercentText = S.AddTextBox(XO("Amount to import:"),
                                      wxT("100"),
                                      12);
-         S.AddUnits(_("%"));
+         S.AddUnits(XO("%"));
 
          // Rate text
          /* i18n-hint: (noun)*/
-         mRateText = S.AddTextBox(_("Sample rate:"),
+         mRateText = S.AddTextBox(XO("Sample rate:"),
                                   wxString::Format(wxT("%d"), (int)mRate),
                                   12);
          /* i18n-hint: This is the abbreviation for "Hertz", or
             cycles per second. */
-         S.AddUnits(_("Hz"));
+         S.AddUnits(XO("Hz"));
       }
       S.EndMultiColumn();
 

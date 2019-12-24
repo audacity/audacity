@@ -202,7 +202,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       // Rate Start
-      S.StartStatic(_("Initial Tempo Change (%)"));
+      S.StartStatic(XO("Initial Tempo Change (%)"));
       {
          S.StartMultiColumn(1, wxCENTER);
          {
@@ -225,7 +225,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Final Tempo Change (%)"));
+      S.StartStatic(XO("Final Tempo Change (%)"));
       {
          S.StartMultiColumn(1, wxCENTER);
          {
@@ -249,7 +249,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
 
       // Pitch Start
-      S.StartStatic(_("Initial Pitch Shift"));
+      S.StartStatic(XO("Initial Pitch Shift"));
       {
          S.StartMultiColumn(2, wxCENTER);
          {
@@ -259,7 +259,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   MIN_HalfStepsStart, MAX_HalfStepsStart
                )
-               .AddTextBox(_("(semitones) [-12 to 12]:"), wxT(""), 12);
+               .AddTextBox(XO("(semitones) [-12 to 12]:"), wxT(""), 12);
 
 
             m_pTextCtrl_PitchPercentChangeStart = S.Id(ID_PitchPercentChangeStart)
@@ -268,14 +268,14 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   MIN_PitchPercentStart, MAX_PitchPercentStart
                )
-               .AddTextBox(_("(%) [-50 to 100]:"), wxT(""), 12);
+               .AddTextBox(XO("(%) [-50 to 100]:"), wxT(""), 12);
          }
          S.EndMultiColumn();
       }
       S.EndStatic();
 
       // Pitch End
-      S.StartStatic(_("Final Pitch Shift"));
+      S.StartStatic(XO("Final Pitch Shift"));
       {
          S.StartMultiColumn(2, wxCENTER);
          {
@@ -285,14 +285,14 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   MIN_HalfStepsEnd, MAX_HalfStepsEnd
                )
-               .AddTextBox(_("(semitones) [-12 to 12]:"), wxT(""), 12);
+               .AddTextBox(XO("(semitones) [-12 to 12]:"), wxT(""), 12);
 
             m_pTextCtrl_PitchPercentChangeEnd = S.Id(ID_PitchPercentChangeEnd)
                .Validator<FloatingPointValidator<double>>(
                   3, &m_PitchPercentChangeEnd,
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   MIN_PitchPercentStart, MAX_PitchPercentStart)
-               .AddTextBox(_("(%) [-50 to 100]:"), wxT(""), 12);
+               .AddTextBox(XO("(%) [-50 to 100]:"), wxT(""), 12);
          }
          S.EndMultiColumn();
       }

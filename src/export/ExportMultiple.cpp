@@ -270,20 +270,20 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
    S.StartHorizontalLay(wxEXPAND, true);
    {
       S.SetBorder(5);
-      S.StartStatic(_("Export files to:"), true);
+      S.StartStatic(XO("Export files to:"), true);
       {
          S.StartMultiColumn(4, true);
          {
             mDir = S.Id(DirID)
-               .TieTextBox(_("Folder:"),
+               .TieTextBox(XO("Folder:"),
                            {wxT("/Export/MultiplePath"),
                             DefaultPath},
                            64);
-            S.Id(ChooseID).AddButton(_("Choose..."));
-            S.Id(CreateID).AddButton(_("Create"));
+            S.Id(ChooseID).AddButton(XO("Choose..."));
+            S.Id(CreateID).AddButton(XO("Create"));
 
             mFormat = S.Id(FormatID)
-               .TieChoice( _("Format:"),
+               .TieChoice( XO("Format:"),
                {
                   wxT("/Export/MultipleFormat"),
                   {
@@ -297,7 +297,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
             S.AddVariableText( {}, false);
             S.AddVariableText( {}, false);
 
-            S.AddPrompt(_("Options:"));
+            S.AddPrompt(XO("Options:"));
 
             mBook = S.Id(OptionsID)
                .Style(wxBORDER_STATIC)
@@ -329,33 +329,34 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
    S.StartHorizontalLay(wxEXPAND, false);
    {
       S.SetBorder(5);
-      S.StartStatic(_("Split files based on:"), 1);
+      S.StartStatic(XO("Split files based on:"), 1);
       {
          // Row 1
          S.SetBorder(1);
          mTrack = S.Id(TrackID)
-            .AddRadioButton(_("Tracks"));
+            .AddRadioButton(XO("Tracks"));
 
          // Row 2
          S.SetBorder(1);
          mLabel = S.Id(LabelID)
-            .AddRadioButtonToGroup(_("Labels"));
+            .AddRadioButtonToGroup(XO("Labels"));
          S.SetBorder(3);
 
          S.StartMultiColumn(2, wxEXPAND);
          S.SetStretchyCol(1);
          {
             // Row 3 (indented)
-            S.AddVariableText(wxT("   "), false);
+            S.AddVariableText(Verbatim("   "), false);
             mFirst = S.Id(FirstID)
-               .AddCheckBox(_("Include audio before first label"), false);
+               .AddCheckBox(XO("Include audio before first label"), false);
 
             // Row 4
             S.AddVariableText( {}, false);
             S.StartMultiColumn(2, wxEXPAND);
             S.SetStretchyCol(1);
             {
-               mFirstFileLabel = S.AddVariableText(_("First file name:"), false);
+               mFirstFileLabel =
+                  S.AddVariableText(XO("First file name:"), false);
                mFirstFileName = S.Id(FirstFileNameID)
                   .Prop(1)
                   .Name(XO("First file name"))
@@ -372,7 +373,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
       S.EndStatic();
 
       S.SetBorder(5);
-      S.StartStatic(_("Name files:"), 1);
+      S.StartStatic(XO("Name files:"), 1);
       {
          S.SetBorder(2);
          S.StartRadioButtonGroup({
@@ -397,8 +398,8 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          S.SetStretchyCol(2);
          {
             // Row 3 (indented)
-            S.AddVariableText(wxT("   "), false);
-            mPrefixLabel = S.AddVariableText(_("File name prefix:"), false);
+            S.AddVariableText(Verbatim("   "), false);
+            mPrefixLabel = S.AddVariableText(XO("File name prefix:"), false);
             mPrefix = S.Id(PrefixID)
                .Name(XO("File name prefix"))
                .TieTextBox( {},
@@ -414,7 +415,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartHorizontalLay(wxEXPAND, false);
    {
-      mOverwrite = S.Id(OverwriteID).TieCheckBox(_("Overwrite existing files"),
+      mOverwrite = S.Id(OverwriteID).TieCheckBox(XO("Overwrite existing files"),
                                                  {wxT("/Export/OverwriteExisting"),
                                                   false});
    }

@@ -81,13 +81,13 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {
-      S.StartStatic(_("&Manage History"), 1);
+      S.StartStatic(XO("&Manage History"), 1);
       {
          mList = S
             .MinSize()
             .AddListControlReportMode(
-               { { _("Action"), wxLIST_FORMAT_LEFT, 260 },
-                 { _("Reclaimable Space"), wxLIST_FORMAT_LEFT, 125 } },
+               { { XO("Action"), wxLIST_FORMAT_LEFT, 260 },
+                 { XO("Reclaimable Space"), wxLIST_FORMAT_LEFT, 125 } },
                wxLC_SINGLE_SEL
             );
 
@@ -99,15 +99,15 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
          {
             mTotal = S.Id(ID_TOTAL)
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
-               .AddTextBox(_("&Total space used"), wxT("0"), 10);
+               .AddTextBox(XO("&Total space used"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
             mAvail = S.Id(ID_AVAIL)
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
-               .AddTextBox(_("&Undo levels available"), wxT("0"), 10);
+               .AddTextBox(XO("&Undo levels available"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
-            S.AddPrompt(_("&Levels to discard"));
+            S.AddPrompt(XO("&Levels to discard"));
             mLevels = safenew wxSpinCtrl(S.GetParent(),
                                      ID_LEVELS,
                                      wxT("1"),
@@ -119,12 +119,12 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
                                      0);
             S.AddWindow(mLevels);
             /* i18n-hint: (verb)*/
-            mDiscard = S.Id(ID_DISCARD).AddButton(_("&Discard"));
+            mDiscard = S.Id(ID_DISCARD).AddButton(XO("&Discard"));
 
             mClipboard = S
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
-               .AddTextBox(_("Clipboard space used"), wxT("0"), 10);
-            S.Id(ID_DISCARD_CLIPBOARD).AddButton(_("Discard"));
+               .AddTextBox(XO("Clipboard space used"), wxT("0"), 10);
+            S.Id(ID_DISCARD_CLIPBOARD).AddButton(XO("Discard"));
          }
          S.EndMultiColumn();
       }
@@ -133,7 +133,7 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
       S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
          S.SetBorder(10);
-         S.Id(wxID_OK).AddButton(_("&OK"), wxALIGN_CENTER, true);
+         S.Id(wxID_OK).AddButton(XO("&OK"), wxALIGN_CENTER, true);
       }
       S.EndHorizontalLay();
    }

@@ -104,7 +104,7 @@ AButton *EditToolBar::AddButton(
    EditToolBar *pBar,
    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
    int id,
-   const wxChar *label,
+   const TranslatableString &label,
    bool toggle)
 {
    AButton *&r = pBar->mButtons[id];
@@ -134,28 +134,28 @@ void EditToolBar::Populate()
    /* Buttons */
    // Tooltips slightly more verbose than the menu entries are.
    AddButton(this, bmpCut, bmpCut, bmpCutDisabled, ETBCutID,
-      _("Cut selection"));
+      XO("Cut selection"));
    AddButton(this, bmpCopy, bmpCopy, bmpCopyDisabled, ETBCopyID,
-      _("Copy selection"));
+      XO("Copy selection"));
    AddButton(this, bmpPaste, bmpPaste, bmpPasteDisabled, ETBPasteID,
-      _("Paste"));
+      XO("Paste"));
    AddButton(this, bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
-      _("Trim audio outside selection"));
+      XO("Trim audio outside selection"));
    AddButton(this, bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
-      _("Silence audio selection"));
+      XO("Silence audio selection"));
 
    AddSeparator();
 
    AddButton(this, bmpUndo, bmpUndo, bmpUndoDisabled, ETBUndoID,
-      _("Undo"));
+      XO("Undo"));
    AddButton(this, bmpRedo, bmpRedo, bmpRedoDisabled, ETBRedoID,
-      _("Redo"));
+      XO("Redo"));
 
    AddSeparator();
 
 #ifdef OPTION_SYNC_LOCK_BUTTON
    AddButton(this, bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
-               _("Sync-Lock Tracks"), true);
+               XO("Sync-Lock Tracks"), true);
 
    AddSeparator();
 #endif
@@ -163,17 +163,17 @@ void EditToolBar::Populate()
    // Tooltips match menu entries.
    // We previously had longer tooltips which were not more clear.
    AddButton(this, bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
-      _("Zoom In"));
+      XO("Zoom In"));
    AddButton(this, bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
-      _("Zoom Out"));
+      XO("Zoom Out"));
    AddButton(this, bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
-      _("Zoom to Selection"));
+      XO("Zoom to Selection"));
    AddButton(this, bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
-      _("Fit to Width"));
+      XO("Fit to Width"));
 
 #ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
    AddButton(this, bmpZoomToggle, bmpZoomToggle, bmpZoomToggleDisabled, ETBZoomToggleID,
-      _("Zoom Toggle"));
+      XO("Zoom Toggle"));
 #endif
 
 
@@ -195,7 +195,7 @@ void EditToolBar::Populate()
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    AddSeparator();
    AddButton(this, bmpEditEffects, bmpEditEffects, bmpEditEffects, ETBEffectsID,
-      _("Show Effects Rack"), true);
+      XO("Show Effects Rack"), true);
 #endif
 
    RegenerateTooltips();

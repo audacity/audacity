@@ -1045,35 +1045,35 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
    S.StartVerticalLay();
    {
       S.SetBorder(10);
-      S.StartStatic(_("Resample"));
+      S.StartStatic(XO("Resample"));
       {
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             S.AddTitle(
                (bitrate == 0
-                  ? wxString::Format(
-                     _("The project sample rate (%d) is not supported by the current output\nfile format. "),
-                     rate)
-                  : wxString::Format(
-                     _("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. "),
-                     rate, bitrate/1024))
-               + _("You may resample to one of the rates below.")
+                  ? XO(
+"The project sample rate (%d) is not supported by the current output\nfile format. ")
+                       .Format( rate )
+                  : XO(
+"The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. ")
+                       .Format( rate, bitrate/1024))
+               + XO("You may resample to one of the rates below.")
             );
          }
          S.EndHorizontalLay();
 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
-            choice = S.AddChoice(_("Sample Rates"),
+            choice = S.AddChoice(XO("Sample Rates"),
                [&]{
-                  wxArrayStringEx choices;
+                  TranslatableStrings choices;
                   for (int i = 0; sampRates[i] > 0; i++)
                   {
                      int label = sampRates[i];
                      if (label >= lowrate && label <= highrate)
                      {
                         wxString name = wxString::Format(wxT("%d"),label);
-                        choices.push_back(name);
+                        choices.push_back( Verbatim( name ) );
                         if (label <= rate)
                            selected = i;
                      }

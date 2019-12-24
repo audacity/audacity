@@ -107,41 +107,44 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Info"));
+   S.StartStatic(XO("Info"));
    {
       S.AddFixedText(
-         _("Themability is an experimental feature.\n\nTo try it out, click \"Save Theme Cache\" then find and modify the images and colors in\nImageCacheVxx.png using an image editor such as the Gimp.\n\nClick \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n\n(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\nthough the image file shows other icons too.)")
+         XO(
+"Themability is an experimental feature.\n\nTo try it out, click \"Save Theme Cache\" then find and modify the images and colors in\nImageCacheVxx.png using an image editor such as the Gimp.\n\nClick \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n\n(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\nthough the image file shows other icons too.)")
          );
 
 #ifdef __WXDEBUG__
       S.AddFixedText(
-         _("This is a debug version of Audacity, with an extra button, 'Output Sourcery'. This will save a\nC version of the image cache that can be compiled in as a default.")
+         Verbatim(
+"This is a debug version of Audacity, with an extra button, 'Output Sourcery'. This will save a\nC version of the image cache that can be compiled in as a default.")
          );
 #endif
 
       S.AddFixedText(
-         _("Saving and loading individual theme files uses a separate file for each image, but is\notherwise the same idea.")
+         XO(
+"Saving and loading individual theme files uses a separate file for each image, but is\notherwise the same idea.")
          );
    }
    S.EndStatic();
 
    /* i18n-hint: && in here is an escape character to get a single & on screen,
     * so keep it as is */
-   S.StartStatic(		_("Theme Cache - Images && Color"));
+   S.StartStatic(		XO("Theme Cache - Images && Color"));
    {
       S.StartHorizontalLay(wxALIGN_LEFT);
       {
-         S.Id(idSaveThemeCache).AddButton(_("Save Theme Cache"));
-         S.Id(idLoadThemeCache).AddButton(_("Load Theme Cache"));
+         S.Id(idSaveThemeCache).AddButton(XO("Save Theme Cache"));
+         S.Id(idLoadThemeCache).AddButton(XO("Load Theme Cache"));
 
          // This next button is only provided in Debug mode.
          // It is for developers who are compiling Audacity themselves
          // and who who wish to generate a NEW ThemeAsCeeCode.h and compile it in.
 #ifdef __WXDEBUG__
-         S.Id(idSaveThemeAsCode).AddButton(wxT("Output Sourcery"));
+         S.Id(idSaveThemeAsCode).AddButton(Verbatim("Output Sourcery"));
 #endif
 
-         S.Id(idReadThemeInternal).AddButton(_("&Defaults"));
+         S.Id(idReadThemeInternal).AddButton(XO("&Defaults"));
       }
       S.EndHorizontalLay();
    }
@@ -154,12 +157,12 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    // To reduce that risk, we use a separate box to separate them off.
    // And choose text on the buttons that is shorter, making the
    // buttons smaller and less tempting to click.
-   S.StartStatic( _("Individual Theme Files"),1);
+   S.StartStatic( XO("Individual Theme Files"),1);
    {
       S.StartHorizontalLay(wxALIGN_LEFT);
       {
-         S.Id(idSaveThemeComponents).AddButton( _("Save Files"));
-         S.Id(idLoadThemeComponents).AddButton( _("Load Files"));
+         S.Id(idSaveThemeComponents).AddButton( XO("Save Files"));
+         S.Id(idLoadThemeComponents).AddButton( XO("Load Files"));
       }
       S.EndHorizontalLay();
    }

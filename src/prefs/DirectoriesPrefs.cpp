@@ -96,14 +96,14 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Temporary files directory"));
+   S.StartStatic(XO("Temporary files directory"));
    {
       S.StartMultiColumn(2, wxEXPAND);
       {
          S.SetStretchyCol(1);
 
          S.Id(TempDirID);
-         mTempDir = S.TieTextBox(_("&Location:"),
+         mTempDir = S.TieTextBox(XO("&Location:"),
                                  {wxT("/Directories/TempDir"),
                                   wxT("")},
                                  30);
@@ -111,10 +111,10 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
       S.StartHorizontalLay(wxEXPAND);
       {
-         S.Prop(0).AddFixedText(_("Free Space:"));
+         S.Prop(0).AddFixedText(XO("Free Space:"));
          mFreeSpace = S.Prop(0).AddVariableText( {} );
          S.Prop(10).AddSpace( 10 );
-         S.Id(ChooseButtonID).Prop(0).AddButton(_("C&hoose..."));
+         S.Id(ChooseButtonID).Prop(0).AddButton(XO("C&hoose..."));
       }
 
    }
@@ -122,22 +122,23 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
 
 #ifdef DEPRECATED_AUDIO_CACHE
    // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
-   S.StartStatic(_("Audio cache"));
+   S.StartStatic(XO("Audio cache"));
    {
-      S.TieCheckBox(_("Play and/or record using &RAM (useful for slow drives)"),
+      S.TieCheckBox(XO("Play and/or record using &RAM (useful for slow drives)"),
                     wxT("/Directories/CacheBlockFiles"),
                     false);
 
       S.StartTwoColumn();
       {
-         S.TieIntegerTextBox(_("Mi&nimum Free Memory (MB):"),
+         S.TieIntegerTextBox(XO("Mi&nimum Free Memory (MB):"),
                              wxT("/Directories/CacheLowMem"),
                              16,
                              9);
       }
       S.EndTwoColumn();
 
-      S.AddVariableText(_("If the available system memory falls below this value, audio will no longer\nbe cached in memory and will be written to disk."),
+      S.AddVariableText(XO(
+"If the available system memory falls below this value, audio will no longer\nbe cached in memory and will be written to disk."),
          false, 0, 600);
    }
    S.EndStatic();

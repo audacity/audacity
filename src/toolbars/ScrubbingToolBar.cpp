@@ -89,7 +89,7 @@ AButton *ScrubbingToolBar::AddButton
 (ScrubbingToolBar *pBar,
  teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
  int id,
- const wxChar *label,
+ const TranslatableString &label,
  bool toggle)
 {
    AButton *&r = pBar->mButtons[id];
@@ -119,12 +119,12 @@ void ScrubbingToolBar::Populate()
 
    /* Buttons */
    AddButton(this, bmpScrub, bmpScrub, bmpScrubDisabled, STBScrubID,
-             _("Scrub"), true);
+             XO("Scrub"), true);
    AddButton(this, bmpSeek, bmpSeek, bmpSeekDisabled, STBSeekID,
-             _("Seek"), true);
+             XO("Seek"), true);
    AddButton(this, bmpToggleScrubRuler, bmpToggleScrubRuler, bmpToggleScrubRuler,
              STBRulerID,
-             _("Scrub Ruler"), true);
+             XO("Scrub Ruler"), true);
 
 
    RegenerateTooltips();

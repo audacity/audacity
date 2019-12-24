@@ -105,7 +105,7 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
 
    S.StartVerticalLay(1);
    {
-      S.AddTitle( shortMsg.Translation() );
+      S.AddTitle( shortMsg );
       S.Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 |
               wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL )
          .AddTextWindow(message);
@@ -171,13 +171,15 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
 #if wxUSE_TOOLTIPS
             .ToolTip( XO("Backwards" ) )
 #endif
-            .AddButton( _("<") );
+            /* i18n-hint arrowhead meaning backward movement */
+            .AddButton( XO("<") );
          S.Id( wxID_FORWARD  )
             .Disable()
 #if wxUSE_TOOLTIPS
             .ToolTip( XO("Forwards" ) )
 #endif
-            .AddButton( _(">") );
+            /* i18n-hint arrowhead meaning forward movement */
+            .AddButton( XO(">") );
       }
       S.EndHorizontalLay();
 
@@ -195,7 +197,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
       S.Prop(1).Focus().Position( wxEXPAND )
          .AddWindow( html );
 
-      S.Id( wxID_CANCEL ).AddButton( _("Close"), wxALIGN_CENTER, true );
+      S.Id( wxID_CANCEL ).AddButton( XO("Close"), wxALIGN_CENTER, true );
    }
    S.EndPanel();
 

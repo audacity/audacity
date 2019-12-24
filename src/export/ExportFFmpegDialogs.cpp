@@ -215,7 +215,7 @@ void ExportFFmpegAC3Options::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.TieNumberAsChoice(
-               _("Bit Rate:"),
+               XO("Bit Rate:"),
                {wxT("/FileFormats/AC3BitRate"),
                 160000},
                AC3BitRateNames,
@@ -278,7 +278,9 @@ void ExportFFmpegAACOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.SetStretchyCol(1);
-            S.Prop(1).TieSlider(_("Quality (kbps):"), {wxT("/FileFormats/AACQuality"), 160},320, 98);
+            S.Prop(1).TieSlider(
+               XO("Quality (kbps):"),
+               {wxT("/FileFormats/AACQuality"), 160},320, 98);
          }
          S.EndMultiColumn();
       }
@@ -366,7 +368,7 @@ void ExportFFmpegAMRNBOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.TieNumberAsChoice(
-               _("Bit Rate:"),
+               XO("Bit Rate:"),
                {wxT("/FileFormats/AMRNBBitRate"),
                 12200},
                AMRNBBitRateNames,
@@ -468,7 +470,7 @@ void ExportFFmpegWMAOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.TieNumberAsChoice(
-               _("Bit Rate:"),
+               XO("Bit Rate:"),
                {wxT("/FileFormats/WMABitRate"),
                 128000},
                WMABitRateNames,
@@ -533,7 +535,7 @@ void ExportFFmpegCustomOptions::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartHorizontalLay(wxCENTER, 0);
       {
-         S.Id(OpenID).AddButton(_("Open custom FFmpeg format options"));
+         S.Id(OpenID).AddButton(XO("Open custom FFmpeg format options"));
       }
       S.EndHorizontalLay();
    }
@@ -1541,33 +1543,35 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(7, wxEXPAND);
       {
          S.SetStretchyCol(1);
-         mPresetCombo = S.Id(FEPresetID).AddCombo(_("Preset:"), gPrefs->Read(wxT("/FileFormats/FFmpegPreset"),wxEmptyString), mPresetNames);
-         mLoadPreset = S.Id(FELoadPresetID).AddButton(_("Load Preset"));
-         mSavePreset = S.Id(FESavePresetID).AddButton(_("Save Preset"));
-         mDeletePreset = S.Id(FEDeletePresetID).AddButton(_("Delete Preset"));
-         mImportPresets = S.Id(FEImportPresetsID).AddButton(_("Import Presets"));
-         mExportPresets = S.Id(FEExportPresetsID).AddButton(_("Export Presets"));
+         mPresetCombo = S.Id(FEPresetID).AddCombo(XO("Preset:"), gPrefs->Read(wxT("/FileFormats/FFmpegPreset"),wxEmptyString), mPresetNames);
+         mLoadPreset = S.Id(FELoadPresetID).AddButton(XO("Load Preset"));
+         mSavePreset = S.Id(FESavePresetID).AddButton(XO("Save Preset"));
+         mDeletePreset = S.Id(FEDeletePresetID).AddButton(XO("Delete Preset"));
+         mImportPresets = S.Id(FEImportPresetsID).AddButton(XO("Import Presets"));
+         mExportPresets = S.Id(FEExportPresetsID).AddButton(XO("Export Presets"));
       }
       S.EndMultiColumn();
       S.StartMultiColumn(4, wxALIGN_LEFT);
       {
          S.SetStretchyCol(1);
          S.SetStretchyCol(3);
-         S.Id(FEFormatLabelID).AddFixedText(_("Format:"));
+         S.Id(FEFormatLabelID).AddFixedText(XO("Format:"));
          mFormatName = S.Id(FEFormatNameID).AddVariableText( {} );
          /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-         S.Id(FECodecLabelID).AddFixedText(_("Codec:"));
+         S.Id(FECodecLabelID).AddFixedText(XO("Codec:"));
          mCodecName = S.Id(FECodecNameID).AddVariableText( {} );
       }
       S.EndMultiColumn();
-      S.AddVariableText(_("Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."), false);
+      S.AddVariableText(XO(
+"Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."),
+         false);
       S.StartMultiColumn(2, wxEXPAND);
       {
          S.StartMultiColumn(2, wxEXPAND);
          {
             S.SetStretchyRow(1);
-            S.Id(FEAllFormatsID).AddButton(_("Show All Formats"));
-            S.Id(FEAllCodecsID).AddButton(_("Show All Codecs"));
+            S.Id(FEAllFormatsID).AddButton(XO("Show All Formats"));
+            S.Id(FEAllCodecsID).AddButton(XO("Show All Codecs"));
             mFormatList = S.Id(FEFormatID).AddListBox(mFormatNames);
             mFormatList->DeselectAll();
             mCodecList = S.Id(FECodecID).AddListBox(mCodecNames);
@@ -1578,20 +1582,20 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
          {
             //S.StartScroller( );
             S.SetBorder( 3 );
-            S.StartStatic(_("General Options"), 0);
+            S.StartStatic(XO("General Options"), 0);
             {
                S.StartMultiColumn(8, wxEXPAND);
                {
                   mLanguageText = S.Id(FELanguageID)
                      .ToolTip(XO("ISO 639 3-letter language code\nOptional\nempty - automatic"))
-                     .TieTextBox(_("Language:"), {wxT("/FileFormats/FFmpegLanguage"), wxEmptyString}, 9);
+                     .TieTextBox(XO("Language:"), {wxT("/FileFormats/FFmpegLanguage"), wxEmptyString}, 9);
 
                   S.AddSpace( 20,0 );
-                  S.AddVariableText(_("Bit Reservoir"));
+                  S.AddVariableText(XO("Bit Reservoir"));
                   S.Id(FEBitReservoirID).TieCheckBox( {}, {wxT("/FileFormats/FFmpegBitReservoir"), true});
 
                   S.AddSpace( 20,0 );
-                  S.AddVariableText(_("VBL"));
+                  S.AddVariableText(XO("VBL"));
                   S.Id(FEVariableBlockLenID).TieCheckBox( {}, {wxT("/FileFormats/FFmpegVariableBlockLen"), true});
                }
                S.EndMultiColumn();
@@ -1600,53 +1604,53 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                   mTag = S.Id(FETagID)
                      /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
                      .ToolTip(XO("Codec tag (FOURCC)\nOptional\nempty - automatic"))
-                     .TieTextBox(_("Tag:"), {wxT("/FileFormats/FFmpegTag"), wxEmptyString}, 4);
+                     .TieTextBox(XO("Tag:"), {wxT("/FileFormats/FFmpegTag"), wxEmptyString}, 4);
 
                   mBitrateSpin = S.Id(FEBitrateID)
                      .ToolTip(XO("Bit Rate (bits/second) - influences the resulting file size and quality\nSome codecs may only accept specific values (128k, 192k, 256k etc)\n0 - automatic\nRecommended - 192000"))
-                     .TieSpinCtrl(_("Bit Rate:"), {wxT("/FileFormats/FFmpegBitRate"), 0}, 1000000, 0);
+                     .TieSpinCtrl(XO("Bit Rate:"), {wxT("/FileFormats/FFmpegBitRate"), 0}, 1000000, 0);
 
                   mQualitySpin = S.Id(FEQualityID)
                      .ToolTip(XO("Overall quality, used differently by different codecs\nRequired for vorbis\n0 - automatic\n-1 - off (use bitrate instead)"))
-                     .TieSpinCtrl(_("Quality:"), {wxT("/FileFormats/FFmpegQuality"), 0}, 500, -1);
+                     .TieSpinCtrl(XO("Quality:"), {wxT("/FileFormats/FFmpegQuality"), 0}, 500, -1);
 
                   mSampleRateSpin = S.Id(FESampleRateID)
                      .ToolTip(XO("Sample rate (Hz)\n0 - don't change sample rate"))
-                     .TieSpinCtrl(_("Sample Rate:"), {wxT("/FileFormats/FFmpegSampleRate"), 0}, 200000, 0);
+                     .TieSpinCtrl(XO("Sample Rate:"), {wxT("/FileFormats/FFmpegSampleRate"), 0}, 200000, 0);
 
                   mCutoffSpin = S.Id(FECutoffID)
                      .ToolTip(XO("Audio cutoff bandwidth (Hz)\nOptional\n0 - automatic"))
-                     .TieSpinCtrl(_("Cutoff:"), {wxT("/FileFormats/FFmpegCutOff"), 0}, 10000000, 0);
+                     .TieSpinCtrl(XO("Cutoff:"), {wxT("/FileFormats/FFmpegCutOff"), 0}, 10000000, 0);
 
                   mProfileChoice = S.Id(FEProfileID)
                      .ToolTip(XO("AAC Profile\nLow Complexity - default\nMost players won't play anything other than LC"))
                      .MinSize( { 100, -1 } )
-                     .TieChoice(_("Profile:"), AACProfiles);
+                     .TieChoice(XO("Profile:"), AACProfiles);
                }
                S.EndMultiColumn();
             }
             S.EndStatic();
-            S.StartStatic(_("FLAC options"),0);
+            S.StartStatic(XO("FLAC options"),0);
             {
                S.StartMultiColumn(4, wxALIGN_LEFT);
                {
                   mCompressionLevelSpin = S
                      .ToolTip(XO("Compression level\nRequired for FLAC\n-1 - automatic\nmin - 0 (fast encoding, large output file)\nmax - 10 (slow encoding, small output file)"))
-                     .Id(FECompLevelID).TieSpinCtrl(_("Compression:"), {wxT("/FileFormats/FFmpegCompLevel"), 0}, 10, -1);
+                     .Id(FECompLevelID).TieSpinCtrl(XO("Compression:"), {wxT("/FileFormats/FFmpegCompLevel"), 0}, 10, -1);
 
                   mFrameSizeSpin =  S.Id(FEFrameSizeID)
                      .ToolTip(XO("Frame size\nOptional\n0 - default\nmin - 16\nmax - 65535"))
-                     .TieSpinCtrl(_("Frame:"), {wxT("/FileFormats/FFmpegFrameSize"), 0}, 65535, 0);
+                     .TieSpinCtrl(XO("Frame:"), {wxT("/FileFormats/FFmpegFrameSize"), 0}, 65535, 0);
 
                   mLPCCoeffsPrecisionSpin = S.Id(FELPCCoeffsID)
                      .ToolTip(XO("LPC coefficients precision\nOptional\n0 - default\nmin - 1\nmax - 15"))
-                     .TieSpinCtrl(_("LPC"), {wxT("/FileFormats/FFmpegLPCCoefPrec"), 0}, 15, 0);
+                     .TieSpinCtrl(XO("LPC"), {wxT("/FileFormats/FFmpegLPCCoefPrec"), 0}, 15, 0);
 
                   mPredictionOrderMethodChoice = S.Id(FEPredOrderID)
                      .ToolTip(XO("Prediction Order Method\nEstimate - fastest, lower compression\nLog search - slowest, best compression\nFull search - default"))
                      .MinSize( { 100, -1 } )
                      .TieNumberAsChoice(
-                        _("PdO Method:"),
+                        XO("PdO Method:"),
                         {wxT("/FileFormats/FFmpegPredOrderMethod"),
                          4}, // Full search
                         PredictionOrderMethodNames
@@ -1654,30 +1658,30 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
 
                   mMinPredictionOrderSpin = S.Id(FEMinPredID)
                      .ToolTip(XO("Minimal prediction order\nOptional\n-1 - default\nmin - 0\nmax - 32 (with LPC) or 4 (without LPC)"))
-                     .TieSpinCtrl(_("Min. PdO"), {wxT("/FileFormats/FFmpegMinPredOrder"), -1}, 32, -1);
+                     .TieSpinCtrl(XO("Min. PdO"), {wxT("/FileFormats/FFmpegMinPredOrder"), -1}, 32, -1);
 
                   mMaxPredictionOrderSpin = S.Id(FEMaxPredID)
                      .ToolTip(XO("Maximal prediction order\nOptional\n-1 - default\nmin - 0\nmax - 32 (with LPC) or 4 (without LPC)"))
-                     .TieSpinCtrl(_("Max. PdO"), {wxT("/FileFormats/FFmpegMaxPredOrder"), -1}, 32, -1);
+                     .TieSpinCtrl(XO("Max. PdO"), {wxT("/FileFormats/FFmpegMaxPredOrder"), -1}, 32, -1);
 
                   mMinPartitionOrderSpin = S.Id(FEMinPartOrderID)
                      .ToolTip(XO("Minimal partition order\nOptional\n-1 - default\nmin - 0\nmax - 8"))
-                     .TieSpinCtrl(_("Min. PtO"), {wxT("/FileFormats/FFmpegMinPartOrder"), -1}, 8, -1);
+                     .TieSpinCtrl(XO("Min. PtO"), {wxT("/FileFormats/FFmpegMinPartOrder"), -1}, 8, -1);
 
                   mMaxPartitionOrderSpin = S.Id(FEMaxPartOrderID)
                      .ToolTip(XO("Maximal partition order\nOptional\n-1 - default\nmin - 0\nmax - 8"))
-                     .TieSpinCtrl(_("Max. PtO"), {wxT("/FileFormats/FFmpegMaxPartOrder"), -1}, 8, -1);
+                     .TieSpinCtrl(XO("Max. PtO"), {wxT("/FileFormats/FFmpegMaxPartOrder"), -1}, 8, -1);
 
                   /* i18n-hint:  Abbreviates "Linear Predictive Coding",
                      but this text needs to be kept very short */
-                  S.AddVariableText(_("Use LPC"));
+                  S.AddVariableText(XO("Use LPC"));
                   // PRL:  This preference is not used anywhere!
                   S.Id(FEUseLPCID).TieCheckBox( {}, {wxT("/FileFormats/FFmpegUseLPC"), true});
                }
                S.EndMultiColumn();
             }
             S.EndStatic();
-            S.StartStatic(_("MPEG container options"),0);
+            S.StartStatic(XO("MPEG container options"),0);
             {
                S.StartMultiColumn(4, wxALIGN_LEFT);
                {
@@ -1686,13 +1690,13 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                     it has a hard to predict effect on the degree of compression */
                   mMuxRate = S.Id(FEMuxRateID)
                      .ToolTip(XO("Maximum bit rate of the multiplexed stream\nOptional\n0 - default"))
-                     .TieSpinCtrl(_("Mux Rate:"), {wxT("/FileFormats/FFmpegMuxRate"), 0}, 10000000, 0);
+                     .TieSpinCtrl(XO("Mux Rate:"), {wxT("/FileFormats/FFmpegMuxRate"), 0}, 10000000, 0);
 
                   /* i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
                     compression.  It measures how big a chunk of audio is compressed in one piece. */
                   mPacketSize = S.Id(FEPacketSizeID)
                      .ToolTip(XO("Packet size\nOptional\n0 - default"))
-                     .TieSpinCtrl(_("Packet Size:"), {wxT("/FileFormats/FFmpegPacketSize"), 0}, 10000000, 0);
+                     .TieSpinCtrl(XO("Packet Size:"), {wxT("/FileFormats/FFmpegPacketSize"), 0}, 10000000, 0);
                }
                S.EndMultiColumn();
             }

@@ -72,8 +72,8 @@ WarningDialog::WarningDialog(wxWindow *parent, const TranslatableString &message
    S.SetBorder(10);
    S.StartVerticalLay(false);
    {
-      S.AddFixedText(message.Translation());
-      mCheckBox = S.AddCheckBox(footer.Translation(), false);
+      S.AddFixedText(message);
+      mCheckBox = S.AddCheckBox(footer, false);
    }
    S.EndVerticalLay();
 

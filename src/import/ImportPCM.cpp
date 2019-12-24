@@ -321,17 +321,17 @@ static wxString AskCopyOrEdit()
       wxDialogWrapper dialog( nullptr, -1, XO("Warning") );
       dialog.SetName();
 
-      wxString clause1 = _(
+      auto clause1 = XO(
 "When importing uncompressed audio files you can either copy them into the project,"
 " or read them directly from their current location (without copying).\n\n"
       );
 
-      wxString clause2 = oldCopyPref == wxT("copy")
-         ? _("Your current preference is set to copy in.\n\n")
-         : _("Your current preference is set to read directly.\n\n")
+      auto clause2 = (oldCopyPref == wxT("copy"))
+         ? XO("Your current preference is set to copy in.\n\n")
+         : XO("Your current preference is set to read directly.\n\n")
       ;
 
-      wxString clause3 = _(
+      wxString clause3 = XO(
 "Reading the files directly allows you to play or edit them almost immediately. "
 "This is less safe than copying in, because you must retain the files with their "
 "original names in their original locations.\n"
@@ -350,15 +350,15 @@ static wxString AskCopyOrEdit()
       wxRadioButton *copyRadio;
       wxCheckBox *dontAskNextTimeBox;
 
-      S.StartStatic(_("Choose an import method"));
+      S.StartStatic(XO("Choose an import method"));
       {
          S.SetBorder(0);
 
          copyRadio = S.AddRadioButton(
-            _("Make a &copy of the files before editing (safer)") );
+            XO("Make a &copy of the files before editing (safer)") );
 
          aliasRadio = S.AddRadioButtonToGroup(
-            _("Read the files &directly from the original (faster)") );
+            XO("Read the files &directly from the original (faster)") );
 
          dontAskNextTimeBox = S.AddCheckBox(
             _("Don't &warn again and always use my choice above"),

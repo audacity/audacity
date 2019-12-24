@@ -876,7 +876,7 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartHorizontalLay(wxALIGN_LEFT, 0);
       {
-         S.AddUnits(_("Use arrow keys (or ENTER key after editing) to navigate fields."));
+         S.AddUnits(XO("Use arrow keys (or ENTER key after editing) to navigate fields."));
       }
       S.EndHorizontalLay();
 
@@ -914,33 +914,33 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(4, wxALIGN_CENTER);
       {
-         S.Id(AddID).AddButton(_("&Add"));
-         S.Id(RemoveID).AddButton(_("&Remove"));
+         S.Id(AddID).AddButton(XO("&Add"));
+         S.Id(RemoveID).AddButton(XO("&Remove"));
          S.AddTitle( {} );
-         S.Id(ClearID).AddButton(_("Cl&ear"));
+         S.Id(ClearID).AddButton(XO("Cl&ear"));
       }
       S.EndMultiColumn();
 
       S.StartHorizontalLay(wxALIGN_CENTRE, 0);
       {
-         S.StartStatic(_("Genres"));
+         S.StartStatic(XO("Genres"));
          {
             S.StartMultiColumn(4, wxALIGN_CENTER);
             {
-               S.Id(EditID).AddButton(_("E&dit..."));
-               S.Id(ResetID).AddButton(_("Rese&t..."));
+               S.Id(EditID).AddButton(XO("E&dit..."));
+               S.Id(ResetID).AddButton(XO("Rese&t..."));
             }
             S.EndMultiColumn();
          }
          S.EndStatic();
-         S.StartStatic(_("Template"));
+         S.StartStatic(XO("Template"));
          {
             S.StartMultiColumn(4, wxALIGN_CENTER);
             {
-               S.Id(LoadID).AddButton(_("&Load..."));
-               S.Id(SaveID).AddButton(_("&Save..."));
+               S.Id(LoadID).AddButton(XO("&Load..."));
+               S.Id(SaveID).AddButton(XO("&Save..."));
                S.AddTitle( {} );
-               S.Id(SaveDefaultsID).AddButton(_("Set De&fault"));
+               S.Id(SaveDefaultsID).AddButton(XO("Set De&fault"));
             }
             S.EndMultiColumn();
          }
@@ -949,7 +949,7 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
       S.StartHorizontalLay(wxALIGN_LEFT, 0);
       {
-         S.Id( DontShowID ).AddCheckBox( _("Don't show this when exporting audio"), !bShow );
+         S.Id( DontShowID ).AddCheckBox( XO("Don't show this when exporting audio"), !bShow );
       }
       S.EndHorizontalLay();
    }

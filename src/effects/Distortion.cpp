@@ -369,17 +369,17 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
          mTypeChoiceCtrl = S.Id(ID_Type)
             .MinSize( { -1, -1 } )
             .Validator<wxGenericValidator>(&mParams.mTableChoiceIndx)
-            .AddChoice(_("Distortion type:"),
-               LocalizedStrings(kTableTypeStrings, nTableTypes));
+            .AddChoice(XO("Distortion type:"),
+               Msgids(kTableTypeStrings, nTableTypes));
 
-         mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(_("DC blocking filter"),
+         mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(XO("DC blocking filter"),
                                        DEF_DCBlock);
       }
       S.EndMultiColumn();
       S.AddSpace(0, 10);
 
 
-      S.StartStatic(_("Threshold controls"));
+      S.StartStatic(XO("Threshold controls"));
       {
          S.StartMultiColumn(4, wxEXPAND);
          S.SetStretchyCol(2);
@@ -388,7 +388,8 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             S.AddSpace(250,0); S.AddSpace(0,0); S.AddSpace(0,0); S.AddSpace(0,0); 
 
             // Upper threshold control
-            mThresholdTxt = S.AddVariableText(defaultLabel(0), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mThresholdTxt = S.AddVariableText(defaultLabelUntranslated(0),
+               false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             mThresholdT = S.Id(ID_Threshold)
                .Name(defaultLabelUntranslated(0))
                .Validator<FloatingPointValidator<double>>(
@@ -405,7 +406,8 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             S.AddSpace(20, 0);
 
             // Noise floor control
-            mNoiseFloorTxt = S.AddVariableText(defaultLabel(1), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mNoiseFloorTxt = S.AddVariableText(defaultLabelUntranslated(1),
+               false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             mNoiseFloorT = S.Id(ID_NoiseFloor)
                .Name(defaultLabelUntranslated(1))
                .Validator<FloatingPointValidator<double>>(
@@ -424,7 +426,7 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Parameter controls"));
+      S.StartStatic(XO("Parameter controls"));
       {
          S.StartMultiColumn(4, wxEXPAND);
          S.SetStretchyCol(2);
@@ -433,7 +435,8 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             S.AddSpace(250,0); S.AddSpace(0,0); S.AddSpace(0,0); S.AddSpace(0,0); 
 
             // Parameter1 control
-            mParam1Txt = S.AddVariableText(defaultLabel(2), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mParam1Txt = S.AddVariableText(defaultLabelUntranslated(2),
+               false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             mParam1T = S.Id(ID_Param1)
                .Name(defaultLabelUntranslated(2))
                .Validator<FloatingPointValidator<double>>(
@@ -449,7 +452,8 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             S.AddSpace(20, 0);
 
             // Parameter2 control
-            mParam2Txt = S.AddVariableText(defaultLabel(3), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mParam2Txt = S.AddVariableText(defaultLabelUntranslated(3),
+               false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             mParam2T = S.Id(ID_Param2)
                .Name(defaultLabelUntranslated(3))
                .Validator<FloatingPointValidator<double>>(
@@ -465,7 +469,8 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             S.AddSpace(20, 0);
 
             // Repeats control
-            mRepeatsTxt = S.AddVariableText(defaultLabel(4), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mRepeatsTxt = S.AddVariableText(defaultLabelUntranslated(4),
+               false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             mRepeatsT = S.Id(ID_Repeats)
                .Name(defaultLabelUntranslated(4))
                .Validator<IntegerValidator<int>>(

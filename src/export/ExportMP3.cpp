@@ -372,7 +372,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol(1);
             S.StartTwoColumn();
             {
-               S.AddPrompt(_("Bit Rate Mode:"));
+               S.AddPrompt(XO("Bit Rate Mode:"));
                S.StartHorizontalLay();
                {
                   S.StartRadioButtonGroup(MP3RateModeSetting);
@@ -387,7 +387,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                S.EndHorizontalLay();
 
                mRate = S.Id(ID_QUALITY).TieNumberAsChoice(
-                  _("Quality"),
+                  XO("Quality"),
                   { wxT("/FileFormats/MP3Bitrate"), defrate },
                   *choices,
                   codes
@@ -395,11 +395,11 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 
                mMode = S.Disable(!enable)
                   .TieNumberAsChoice(
-                     _("Variable Speed:"),
+                     XO("Variable Speed:"),
                      { wxT("/FileFormats/MP3VarMode"), ROUTINE_FAST },
                      varModeNames );
    
-               S.AddPrompt(_("Channel Mode:"));
+               S.AddPrompt(XO("Channel Mode:"));
                S.StartMultiColumn(3, wxEXPAND);
                {
                   S.StartRadioButtonGroup(MP3ChannelModeSetting);
@@ -411,7 +411,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   }
                   S.EndRadioButtonGroup();
 
-                  mMono = S.Id(ID_MONO).AddCheckBox(_("Force export to mono"), mono);
+                  mMono = S.Id(ID_MONO).AddCheckBox(XO("Force export to mono"), mono);
                }
                S.EndTwoColumn();
             }
@@ -576,13 +576,13 @@ public:
       S.StartVerticalLay(true);
       {
          S.AddTitle(
-            wxString::Format(_("Audacity needs the file %s to create MP3s."),
-               mName));
+            XO("Audacity needs the file %s to create MP3s.")
+               .Format( mName ) );
 
          S.SetBorder(3);
          S.StartHorizontalLay(wxALIGN_LEFT, true);
          {
-            S.AddTitle( wxString::Format(_("Location of %s:"), mName) );
+            S.AddTitle( XO("Location of %s:").Format( mName ) );
          }
          S.EndHorizontalLay();
 
@@ -597,11 +597,12 @@ public:
             else {
                mPathText = S.AddTextBox( {}, mLibPath.GetFullPath(), 0);
             }
-            S.Id(ID_BROWSE).AddButton(_("Browse..."), wxALIGN_RIGHT);
+            S.Id(ID_BROWSE).AddButton(XO("Browse..."), wxALIGN_RIGHT);
             /* i18n-hint: There is a  button to the right of the arrow.*/
-            S.AddVariableText(_("To get a free copy of LAME, click here -->"), true);
+            S.AddVariableText(
+               XO("To get a free copy of LAME, click here -->"), true);
             /* i18n-hint: (verb)*/
-            S.Id(ID_DLOAD).AddButton(_("Download"), wxALIGN_RIGHT);
+            S.Id(ID_DLOAD).AddButton(XO("Download"), wxALIGN_RIGHT);
          }
          S.EndMultiColumn();
 
@@ -2010,32 +2011,32 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
    S.StartVerticalLay();
    {
       S.SetBorder(10);
-      S.StartStatic(_("Resample"));
+      S.StartStatic(XO("Resample"));
       {
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             S.AddTitle(
                ((bitrate == 0)
-                  ? wxString::Format(
-                     _("The project sample rate (%d) is not supported by the MP3\nfile format. "),
-                     rate)
-                  : wxString::Format(
-                     _("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format. "),
-                     rate, bitrate))
-               + _("You may resample to one of the rates below.")
+                  ? XO(
+"The project sample rate (%d) is not supported by the MP3\nfile format. ")
+                       .Format( rate )
+                  : XO(
+"The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format. ")
+                       .Format( rate, bitrate ))
+               + XO("You may resample to one of the rates below.")
             );
          }
          S.EndHorizontalLay();
 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
-            choice = S.AddChoice(_("Sample Rates"),
+            choice = S.AddChoice(XO("Sample Rates"),
                [&]{
-                  wxArrayStringEx choices;
+                  TranslatableStrings choices;
                   for (size_t ii = 0, nn = sampRates.size(); ii < nn; ++ii) {
                      int label = sampRates[ii];
                      if (label >= lowrate && label <= highrate) {
-                        choices.push_back( wxString::Format( "%d", label ) );
+                        choices.push_back( Verbatim( "%d" ).Format( label ) );
                         if (label <= rate)
                            selected = ii;
                      }

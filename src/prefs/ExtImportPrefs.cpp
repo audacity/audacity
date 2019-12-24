@@ -103,10 +103,10 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.TieCheckBox(_("A&ttempt to use filter in OpenFile dialog first"),
+   S.TieCheckBox(XO("A&ttempt to use filter in OpenFile dialog first"),
          {wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"),
           true});
-   S.StartStatic(_("Rules to choose import filters"), 1);
+   S.StartStatic(XO("Rules to choose import filters"), 1);
    {
       S.SetSizerProportion(1);
       S.StartHorizontalLay (wxEXPAND, 1);
@@ -150,7 +150,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
             .AddWindow(RuleTable);
 
          PluginList = S.Id(EIPPluginList).AddListControl(
-            { { _("Importer order"), wxLIST_FORMAT_LEFT,
+            { { XO("Importer order"), wxLIST_FORMAT_LEFT,
                 wxLIST_AUTOSIZE_USEHEADER } },
             wxLC_REPORT | wxLC_SINGLE_SEL
          );
@@ -181,19 +181,19 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
       S.StartHorizontalLay (wxSHRINK, 0);
       {
-          MoveRuleUp = S.Id (EIPMoveRuleUp).AddButton (_("Move rule &up"));
-          MoveRuleDown = S.Id (EIPMoveRuleDown).AddButton
-                (_("Move rule &down"));
-          MoveFilterUp = S.Id (EIPMoveFilterUp).AddButton
-                (_("Move f&ilter up"));
-          MoveFilterDown = S.Id (EIPMoveFilterDown).AddButton
-                (_("Move &filter down"));
+          MoveRuleUp = S.Id (EIPMoveRuleUp).AddButton(XO("Move rule &up"));
+          MoveRuleDown = S.Id (EIPMoveRuleDown).AddButton(
+             XO("Move rule &down"));
+          MoveFilterUp = S.Id (EIPMoveFilterUp).AddButton(
+             XO("Move f&ilter up"));
+          MoveFilterDown = S.Id (EIPMoveFilterDown).AddButton(
+             XO("Move &filter down"));
       }
       S.EndHorizontalLay();
       S.StartHorizontalLay (wxSHRINK, 0);
       {
-          AddRule = S.Id (EIPAddRule).AddButton (_("&Add new rule"));
-          DelRule = S.Id (EIPDelRule).AddButton (_("De&lete selected rule"));
+          AddRule = S.Id (EIPAddRule).AddButton(XO("&Add new rule"));
+          DelRule = S.Id (EIPDelRule).AddButton(XO("De&lete selected rule"));
       }
       S.EndHorizontalLay();
    }

@@ -79,7 +79,7 @@ enum {
 void WaveformPrefs::Populate()
 {
    // Reuse the same choices and codes as for Interface prefs
-   GUIPrefs::GetRangeChoices(nullptr, &mRangeChoices, &mRangeCodes);
+   GUIPrefs::GetRangeChoices(&mRangeChoices, &mRangeCodes);
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -95,27 +95,25 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   // S.StartStatic(_("Track Settings"));
+   // S.StartStatic(XO("Track Settings"));
    {
       mDefaultsCheckbox = 0;
       if (mWt) {
          /* i18n-hint: use is a verb */
-         mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("&Use Preferences"), mDefaulted);
+         mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(XO("&Use Preferences"), mDefaulted);
       }
 
-      S.StartStatic(_("Display"));
+      S.StartStatic(XO("Display"));
       {
          S.StartTwoColumn();
          {
             mScaleChoice =
-               S.Id(ID_SCALE).TieChoice(_("S&cale:"),
+               S.Id(ID_SCALE).TieChoice(XO("S&cale:"),
                   mTempSettings.scaleType,
-                  transform_container<wxArrayStringEx>(
-                     WaveformSettings::GetScaleNames(),
-                     std::mem_fn( &TranslatableString::Translation ) ) );
+                  WaveformSettings::GetScaleNames() );
 
             mRangeChoice =
-               S.Id(ID_RANGE).TieChoice(_("Waveform dB &range:"),
+               S.Id(ID_RANGE).TieChoice(XO("Waveform dB &range:"),
                mTempSettings.dBRange,
                mRangeChoices);
          }
@@ -126,7 +124,7 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    // S.EndStatic();
 
    /*
-   S.StartStatic(_("Global settings"));
+   S.StartStatic(XO("Global settings"));
    {
    }
    S.EndStatic();

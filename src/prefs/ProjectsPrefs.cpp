@@ -72,7 +72,7 @@ void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("When saving a project that depends on other audio files"));
+   S.StartStatic(XO("When saving a project that depends on other audio files"));
    {
       S.StartRadioButtonGroup(FileFormatsSaveWithDependenciesSetting);
       {

@@ -67,8 +67,7 @@ wxString GUIPrefs::HelpPageName()
 }
 
 void GUIPrefs::GetRangeChoices(
-   TranslatableStrings *pChoicesUntranslated,
-   wxArrayStringEx *pChoicesTranslated,
+   TranslatableStrings *pChoices,
    wxArrayStringEx *pCodes,
    int *pDefaultRangeIndex
 )
@@ -97,13 +96,8 @@ void GUIPrefs::GetRangeChoices(
       XO("-145 dB (PCM range of 24 bit samples)") ,
    };
 
-   if (pChoicesUntranslated)
-      *pChoicesUntranslated = sChoices;
-
-   if (pChoicesTranslated)
-      *pChoicesTranslated =
-         transform_container<wxArrayStringEx>( sChoices,
-            std::mem_fn( &TranslatableString::Translation ) );
+   if (pChoices)
+      *pChoices = sChoices;
 
    if (pDefaultRangeIndex)
       *pDefaultRangeIndex = 2; // 60 == ENV_DB_RANGE
@@ -114,7 +108,7 @@ void GUIPrefs::Populate()
    // First any pre-processing for constructing the GUI.
    GetLanguages(mLangCodes, mLangNames);
 
-   GetRangeChoices(&mRangeChoices, nullptr, &mRangeCodes, &mDefaultRangeIndex);
+   GetRangeChoices(&mRangeChoices, &mRangeCodes, &mDefaultRangeIndex);
 
 #if 0
    mLangCodes.insert( mLangCodes.end(), {
@@ -189,23 +183,23 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Display"));
+   S.StartStatic(XO("Display"));
    {
       S.StartMultiColumn(2);
       {
 
-         S.TieChoice( _("&Language:"),
+         S.TieChoice( XO("&Language:"),
             {
                wxT("/Locale/Language"),
                { ByColumns, mLangNames, mLangCodes }
             }
          );
 
-         S.TieChoice( _("Location of &Manual:"), GUIManualLocation);
+         S.TieChoice( XO("Location of &Manual:"), GUIManualLocation);
 
-         S.TieChoice( _("Th&eme:"), GUITheme);
+         S.TieChoice( XO("Th&eme:"), GUITheme);
 
-         S.TieChoice( _("Meter dB &range:"),
+         S.TieChoice( XO("Meter dB &range:"),
             {
                ENV_DB_KEY,
                { ByColumns, mRangeChoices, mRangeCodes },
@@ -224,13 +218,13 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Options"));
+   S.StartStatic(XO("Options"));
    {
       // Start wording of options with a verb, if possible.
-      S.TieCheckBox(_("Show 'How to Get &Help' at launch"),
+      S.TieCheckBox(XO("Show 'How to Get &Help' at launch"),
                     {wxT("/GUI/ShowSplashScreen"),
                      true});
-      S.TieCheckBox(_("Show e&xtra menus"),
+      S.TieCheckBox(XO("Show e&xtra menus"),
                     {wxT("/GUI/ShowExtraMenus"),
                      false});
 #ifdef EXPERIMENTAL_THEME_PREFS
@@ -240,18 +234,18 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                     {wxT("/GUI/ShowMac"),
                      false});
 #endif
-      S.TieCheckBox(_("&Beep on completion of longer activities"),
+      S.TieCheckBox(XO("&Beep on completion of longer activities"),
                     {wxT("/GUI/BeepOnCompletion"),
                      false});
-      S.TieCheckBox(_("Re&tain labels if selection snaps to a label"),
+      S.TieCheckBox(XO("Re&tain labels if selection snaps to a label"),
                     {wxT("/GUI/RetainLabels"),
                      false});
-      S.TieCheckBox(_("B&lend system and Audacity theme"),
+      S.TieCheckBox(XO("B&lend system and Audacity theme"),
                     {wxT("/GUI/BlendThemes"),
                      true});
 #ifndef __WXMAC__
       /* i18n-hint: RTL stands for 'Right to Left'  */
-      S.TieCheckBox(_("Use mostly Left-to-Right layouts in RTL languages"),
+      S.TieCheckBox(XO("Use mostly Left-to-Right layouts in RTL languages"),
          {"/GUI/RtlWorkaround",
           true});
 #endif

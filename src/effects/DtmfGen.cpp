@@ -332,15 +332,15 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
             vldDtmf.SetIncludes(wxArrayString(WXSIZEOF(kSymbols), kSymbols));
             return vldDtmf;
          })
-         .AddTextBox(_("DTMF sequence:"), wxT(""), 10);
+         .AddTextBox(XO("DTMF sequence:"), wxT(""), 10);
 
       S.Id(ID_Amplitude)
          .Validator<FloatingPointValidator<double>>(
             3, &dtmfAmplitude, NumValidatorStyle::NO_TRAILING_ZEROES,
             MIN_Amplitude, MAX_Amplitude)
-         .AddTextBox(_("Amplitude (0-1):"), wxT(""), 10);
+         .AddTextBox(XO("Amplitude (0-1):"), wxT(""), 10);
 
-      S.AddPrompt(_("Duration:"));
+      S.AddPrompt(XO("Duration:"));
       mDtmfDurationT = safenew
          NumericTextCtrl(S.GetParent(), ID_Duration,
                          NumericConverter::TIME,
@@ -352,7 +352,7 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
       S.Name(XO("Duration"))
          .AddWindow(mDtmfDurationT);
 
-      S.AddFixedText(_("Tone/silence ratio:"), false);
+      S.AddFixedText(XO("Tone/silence ratio:"), false);
       mDtmfDutyCycleS = S.Id(ID_DutyCycle)
          .Style(wxSL_HORIZONTAL | wxEXPAND)
          .MinSize( { -1, -1 } )
@@ -365,14 +365,19 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxCENTER);
    {
-      S.AddFixedText(_("Duty cycle:"), false);
-      mDtmfDutyT = S.AddVariableText(wxString::Format(wxT("%.1f %%"), dtmfDutyCycle), false);
+      S.AddFixedText(XO("Duty cycle:"), false);
+      mDtmfDutyT =
+         S.AddVariableText(XO("%.1f %%").Format( dtmfDutyCycle ), false);
       
-      S.AddFixedText(_("Tone duration:"), false);
-      mDtmfSilenceT = S.AddVariableText(wxString::Format(wxString(wxT("%.0f ")) + _("ms"), dtmfTone * 1000.0), false);
+      S.AddFixedText(XO("Tone duration:"), false);
+      mDtmfSilenceT =
+         /* i18n-hint milliseconds */
+         S.AddVariableText(XO("%.0f ms").Format( dtmfTone * 1000.0 ), false);
 
-      S.AddFixedText(_("Silence duration:"), false);
-      mDtmfToneT = S.AddVariableText(wxString::Format(wxString(wxT("%0.f ")) + _("ms"), dtmfSilence * 1000.0), false);
+      S.AddFixedText(XO("Silence duration:"), false);
+      mDtmfToneT =
+         /* i18n-hint milliseconds */
+         S.AddVariableText(XO("%0.f ms").Format( dtmfSilence * 1000.0 ), false);
    }
    S.EndMultiColumn();
 }

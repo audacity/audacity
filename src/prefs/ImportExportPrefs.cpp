@@ -97,7 +97,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartScroller();
 
 #ifdef EXPERIMENTAL_OD_DATA
-   S.StartStatic(_("When importing audio files"));
+   S.StartStatic(XO("When importing audio files"));
    {
       S.StartRadioButtonGroup(FileFormatsCopyOrEditSetting);
       {
@@ -108,7 +108,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif
-   S.StartStatic(_("When exporting tracks to an audio file"));
+   S.StartStatic(XO("When exporting tracks to an audio file"));
    {
       S.StartRadioButtonGroup(ImportExportPrefs::ExportDownMixSetting);
       {
@@ -117,17 +117,17 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndRadioButtonGroup();
 
-      S.TieCheckBox(_("S&how Metadata Tags editor before export"),
+      S.TieCheckBox(XO("S&how Metadata Tags editor before export"),
                     {wxT("/AudioFiles/ShowId3Dialog"),
                      true});
       /* i18n-hint 'blank space' is space on the tracks with no audio in it*/
-      S.TieCheckBox(_("&Ignore blank space at the beginning"),
+      S.TieCheckBox(XO("&Ignore blank space at the beginning"),
                     {wxT("/AudioFiles/SkipSilenceAtBeginning"),
                      false});
    }
    S.EndStatic();
 #ifdef USE_MIDI
-   S.StartStatic(_("Exported Allegro (.gro) files save time as:"));
+   S.StartStatic(XO("Exported Allegro (.gro) files save time as:"));
    {
       S.StartRadioButtonGroup(ImportExportPrefs::AllegroStyleSetting);
       {

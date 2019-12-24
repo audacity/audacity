@@ -214,43 +214,43 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
    if (!p)
       return;
 
-   wxArrayStringEx algChoices{
-      _("Spectrum") ,
-      _("Standard Autocorrelation") ,
-      _("Cuberoot Autocorrelation") ,
-      _("Enhanced Autocorrelation") ,
+   TranslatableStrings algChoices{
+      XO("Spectrum") ,
+      XO("Standard Autocorrelation") ,
+      XO("Cuberoot Autocorrelation") ,
+      XO("Enhanced Autocorrelation") ,
         /* i18n-hint: This is a technical term, derived from the word
          * "spectrum".  Do not translate it unless you are sure you
          * know the correct technical word in your language. */
-      _("Cepstrum") ,
+      XO("Cepstrum") ,
    };
 
-   wxArrayStringEx sizeChoices{
-      wxT("128") ,
-      wxT("256") ,
-      wxT("512") ,
-      wxT("1024") ,
-      wxT("2048") ,
-      wxT("4096") ,
-      wxT("8192") ,
-      wxT("16384") ,
-      wxT("32768") ,
-      wxT("65536") ,
+   TranslatableStrings sizeChoices{
+      Verbatim( "128" ) ,
+      Verbatim( "256" ) ,
+      Verbatim( "512" ) ,
+      Verbatim( "1024" ) ,
+      Verbatim( "2048" ) ,
+      Verbatim( "4096" ) ,
+      Verbatim( "8192" ) ,
+      Verbatim( "16384" ) ,
+      Verbatim( "32768" ) ,
+      Verbatim( "65536" ) ,
    };
 
-   wxArrayStringEx funcChoices;
+   TranslatableStrings funcChoices;
    for (int i = 0, cnt = NumWindowFuncs(); i < cnt; i++)
    {
       funcChoices.push_back(
          /* i18n-hint: This refers to a "window function",
           * such as Hann or Rectangular, used in the
           * Frequency analyze dialog box. */
-         XO("%s window").Format( WindowFuncName(i) ).Translation() );
+         XO("%s window").Format( WindowFuncName(i) ) );
    }
 
-   wxArrayStringEx axisChoices{
-      _("Linear frequency") ,
-      _("Log frequency") ,
+   TranslatableStrings axisChoices{
+      XO("Linear frequency") ,
+      XO("Log frequency") ,
    };
 
    mFreqFont = wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -261,7 +261,8 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 
    long size;
    gPrefs->Read(wxT("/FrequencyPlotDialog/SizeChoice"), &mSize, 3);
-   sizeChoices[mSize].ToLong(&size);
+   // reinterpret one of the verbatim strings above as a number
+   sizeChoices[mSize].MSGID().GET().ToLong(&size);
    mWindowSize = size;
 
    int alg;
@@ -418,18 +419,18 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
          S.SetStretchyCol(1);
          S.SetStretchyCol(3);
          {
-            S.AddPrompt(_("Cursor:"));
+            S.AddPrompt(XO("Cursor:"));
 
             mCursorText = S.Style(wxTE_READONLY)
                .AddTextBox( {}, wxT(""), 10);
 
-            S.AddPrompt(_("Peak:"));
+            S.AddPrompt(XO("Peak:"));
 
             mPeakText = S.Style(wxTE_READONLY)
                .AddTextBox( {}, wxT(""), 10);
             S.AddSpace(5);
 
-            mGridOnOff = S.Id(GridOnOffID).AddCheckBox(_("&Grids"), mDrawGrid);
+            mGridOnOff = S.Id(GridOnOffID).AddCheckBox(XO("&Grids"), mDrawGrid);
          }
          S.EndMultiColumn();
       }
@@ -457,17 +458,17 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 
       mAlgChoice = S.Id(FreqAlgChoiceID).Focus()
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(_("&Algorithm:"), algChoices, mAlg);
+         .AddChoice(XO("&Algorithm:"), algChoices, mAlg);
 
       S.AddSpace(5);
 
       mSizeChoice = S.Id(FreqSizeChoiceID)
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(_("&Size:"), sizeChoices, mSize);
+         .AddChoice(XO("&Size:"), sizeChoices, mSize);
 
       S.AddSpace(5);
 
-      mExportButton = S.Id(FreqExportButtonID).AddButton(_("&Export..."));
+      mExportButton = S.Id(FreqExportButtonID).AddButton(XO("&Export..."));
 
       S.AddSpace(5);
 
@@ -480,23 +481,23 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 
       mFuncChoice = S.Id(FreqFuncChoiceID)
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(_("&Function:"), funcChoices, mFunc);
+         .AddChoice(XO("&Function:"), funcChoices, mFunc);
       mFuncChoice->MoveAfterInTabOrder(mSizeChoice);
 
       S.AddSpace(5);
 
       mAxisChoice = S.Id(FreqAxisChoiceID)
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(_("&Axis:"), axisChoices, mAxis);
+         .AddChoice(XO("&Axis:"), axisChoices, mAxis);
       mAxisChoice->MoveAfterInTabOrder(mFuncChoice);
 
       S.AddSpace(5);
 
-      mReplotButton = S.Id(ReplotButtonID).AddButton(_("&Replot..."));
+      mReplotButton = S.Id(ReplotButtonID).AddButton(XO("&Replot..."));
 
       S.AddSpace(5);
 
-      //mCloseButton = S.Id(wxID_CANCEL).AddButton(_("&Close"));
+      //mCloseButton = S.Id(wxID_CANCEL).AddButton(XO("&Close"));
 
       //S.AddSpace(5);
    }

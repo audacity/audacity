@@ -167,7 +167,7 @@ AButton *TranscriptionToolBar::AddButton(
    TranscriptionToolBar *pBar,
    teBmps eFore, teBmps eDisabled,
    int id,
-   const wxChar *label)
+   const TranslatableString &label)
 {
    AButton *&r = pBar->mButtons[id];
 
@@ -206,7 +206,7 @@ void TranscriptionToolBar::Populate()
    MakeButtonBackgroundsSmall();
 
    AddButton(this, bmpPlay,     bmpPlayDisabled,   TTB_PlaySpeed,
-      _("Play at selected speed"));
+      XO("Play at selected speed"));
    MakeAlternateImages(bmpLoop, bmpLoopDisabled, TTB_PlaySpeed, 1);
    MakeAlternateImages(bmpCutPreview, bmpCutPreviewDisabled, TTB_PlaySpeed, 2);
    mButtons[TTB_PlaySpeed]->FollowModifierKeys();
@@ -238,7 +238,7 @@ void TranscriptionToolBar::Populate()
 #ifdef EXPERIMENTAL_VOICE_DETECTION
 // If we need these strings translated, then search and replace
 // TRANSLATBLE by _ and remove this #define.
-#define TRANSLATABLE( x ) wxT( x )
+#define TRANSLATABLE( x ) Verbatim( x )
    AddButton(this, bmpTnStartOn,     bmpTnStartOnDisabled,  TTB_StartOn,
       TRANSLATABLE("Adjust left selection to next onset"));
    AddButton(this, bmpTnEndOn,       bmpTnEndOnDisabled,   TTB_EndOn,

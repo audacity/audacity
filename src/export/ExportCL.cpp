@@ -120,13 +120,13 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(3, wxEXPAND);
          {
             S.SetStretchyCol(1);
-            mCmd = S.AddCombo(_("Command:"),
+            mCmd = S.AddCombo(XO("Command:"),
                               cmd,
                               cmds);
-            S.Id(ID_BROWSE).AddButton(_("Browse..."),
+            S.Id(ID_BROWSE).AddButton(XO("Browse..."),
                                       wxALIGN_CENTER_VERTICAL);
             S.AddFixedText( {} );
-            S.TieCheckBox(_("Show output"),
+            S.TieCheckBox(XO("Show output"),
                           {wxT("/FileFormats/ExternalProgramShowOutput"),
                            false});
          }
@@ -134,12 +134,13 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndHorizontalLay();
 
+      S.AddTitle(XO(
 /* i18n-hint: Some programmer-oriented terminology here:
    "Data" refers to the sound to be exported, "piped" means sent,
    and "standard in" means the default input stream that the external program,
    named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
    in the program as a format string.  Keep %f unchanged. */
-      S.AddTitle(_("Data will be piped to standard in. \"%f\" uses the file name in the export window."));
+"Data will be piped to standard in. \"%f\" uses the file name in the export window."));
    }
    S.EndVerticalLay();
 }
@@ -540,7 +541,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       S.AddTextWindow(cmd + wxT("\n\n") + output);
       S.StartHorizontalLay(wxALIGN_CENTER, false);
       {
-         S.Id(wxID_OK).AddButton(_("&OK"), wxALIGN_CENTER, true);
+         S.Id(wxID_OK).AddButton(XO("&OK"), wxALIGN_CENTER, true);
       }
       dlg.GetSizer()->AddSpacer(5);
       dlg.Layout();

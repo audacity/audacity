@@ -842,7 +842,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
          * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
          */
-         S.StartStatic(_("Start Date and Time"), true);
+         S.StartStatic(XO("Start Date and Time"), true);
          {
             m_pDatePickerCtrl_Start =
                safenew wxDatePickerCtrl(S.GetParent(), // wxWindow *parent,
@@ -868,7 +868,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("End Date and Time"), true);
+         S.StartStatic(XO("End Date and Time"), true);
          {
             m_pDatePickerCtrl_End =
                safenew wxDatePickerCtrl(S.GetParent(), // wxWindow *parent,
@@ -897,7 +897,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Duration"), true);
+         S.StartStatic(XO("Duration"), true);
          {
             /* i18n-hint: This string is used to configure the controls which shows the recording
             * duration. As such it is important that only the alphabetic parts of the string
@@ -923,10 +923,10 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
       S.StartVerticalLay(true);
       {
-         S.StartStatic(_("Automatic Save"), true);
+         S.StartStatic(XO("Automatic Save"), true);
          {
             // If checked, the project will be saved when the recording is completed
-            m_pTimerAutoSaveCheckBoxCtrl = S.Id(ID_AUTOSAVE_CHECKBOX).AddCheckBox(_("Enable &Automatic Save?"),
+            m_pTimerAutoSaveCheckBoxCtrl = S.Id(ID_AUTOSAVE_CHECKBOX).AddCheckBox(XO("Enable &Automatic Save?"),
                                                                                     bAutoSave);
             S.StartMultiColumn(3, wxEXPAND);
             {
@@ -937,46 +937,46 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                   m_fnAutoSaveFile.Assign(sSaveValue);
                   sInitialValue = _("Current Project");
                }
-               S.AddPrompt(_("Save Project As:"));
+               S.AddPrompt(XO("Save Project As:"));
                m_pTimerSavePathTextCtrl = NewPathControl(
                   S.GetParent(), ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), sInitialValue);
                m_pTimerSavePathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerSavePathTextCtrl);
-               m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select..."));
+               m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(XO("Select..."));
                }
             S.EndMultiColumn();
          }
          S.EndStatic();
 
-         S.StartStatic(_("Automatic Export"), true);
+         S.StartStatic(XO("Automatic Export"), true);
          {
-            m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(_("Enable Automatic &Export?"), bAutoExport);
+            m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(XO("Enable Automatic &Export?"), bAutoExport);
             S.StartMultiColumn(3, wxEXPAND);
             {
-               S.AddPrompt(_("Export Project As:"));
+               S.AddPrompt(XO("Export Project As:"));
                m_pTimerExportPathTextCtrl = NewPathControl(
                   S.GetParent(), ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), wxT(""));
                m_pTimerExportPathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerExportPathTextCtrl);
-               m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_("Select..."));
+               m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(XO("Select..."));
             }
             S.EndMultiColumn();
          }
          S.EndStatic();
 
-         S.StartStatic(_("Options"), true);
+         S.StartStatic(XO("Options"), true);
          {
 
             S.StartMultiColumn(1, wxEXPAND);
             {
                S.SetStretchyCol( 0 );
-               m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
+               m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(XO("After Recording completes:"),
                      {
-                        _("Do nothing") ,
-                        _("Exit Audacity") ,
+                        XO("Do nothing") ,
+                        XO("Exit Audacity") ,
                   #ifdef __WINDOWS__
-                        _("Restart system") ,
-                        _("Shutdown system") ,
+                        XO("Restart system") ,
+                        XO("Shutdown system") ,
                   #endif
                      },
                      iPostTimerRecordAction

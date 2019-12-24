@@ -283,17 +283,17 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartHorizontalLay(wxALIGN_LEFT, false);
             {
-               S.AddVariableText(_("Normalize"), false,
-                                 wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               S.AddVariableText(XO("Normalize"), false,
+                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
                S
                   .Validator<wxGenericValidator>( &mNormalizeTo )
                   .AddChoice( {},
-                     LocalizedStrings(kNormalizeTargetStrings, nAlgos),
+                     Msgids(kNormalizeTargetStrings, nAlgos),
                      mNormalizeTo
                );
-               S.AddVariableText(_("to"), false,
-                                 wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               S.AddVariableText(XO("to"), false,
+                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
                mLevelTextCtrl = S
                   /* i18n-hint: LUFS is a particular method for measuring loudnesss */
@@ -305,21 +305,21 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
                   )
                   .AddTextBox( {}, wxT(""), 10);
                /* i18n-hint: LUFS is a particular method for measuring loudnesss */
-               mLeveldB = S.AddVariableText(_("LUFS"), false,
-                                            wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               mLeveldB = S.AddVariableText(XO("LUFS"), false,
+                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,
-                                            wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             }
             S.EndHorizontalLay();
 
             mStereoIndCheckBox = S
                .Validator<wxGenericValidator>( &mStereoInd )
-               .AddCheckBox(_("Normalize stereo channels independently"),
+               .AddCheckBox(XO("Normalize stereo channels independently"),
                   mStereoInd ? wxT("true") : wxT("false"));
 
             mDualMonoCheckBox = S
                .Validator<wxGenericValidator>( &mDualMono )
-               .AddCheckBox(_("Treat mono as dual-mono (recommended)"),
+               .AddCheckBox(XO("Treat mono as dual-mono (recommended)"),
                   mDualMono ? wxT("true") : wxT("false"));
          }
          S.EndVerticalLay();

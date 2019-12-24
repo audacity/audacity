@@ -126,7 +126,7 @@ class TranscriptionToolBar final : public ToolBar {
       TranscriptionToolBar *pBar,
       teBmps eFore, teBmps eDisabled,
       int id,
-      const wxChar *label);
+      const TranslatableString &label);
    void MakeAlternateImages(
       teBmps eFore, teBmps eDisabled,
       int id, unsigned altIdx);

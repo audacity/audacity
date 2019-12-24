@@ -108,10 +108,10 @@ void GetInfoCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieChoice( _("Type:"),
-         mInfoType, LocalizedStrings( kTypes, nTypes ));
-      S.TieChoice( _("Format:"),
-         mFormat, LocalizedStrings( kFormats, nFormats ));
+      S.TieChoice( XO("Type:"),
+         mInfoType, Msgids( kTypes, nTypes ));
+      S.TieChoice( XO("Format:"),
+         mFormat, Msgids( kFormats, nFormats ));
    }
    S.EndMultiColumn();
 }
@@ -199,37 +199,37 @@ public:
    virtual ~ShuttleGuiGetDefinition();
 
    wxCheckBox * TieCheckBox(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< bool > &Setting) override;
    wxCheckBox * TieCheckBoxOnRight(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< bool > &Setting) override;
 
    wxChoice * TieNumberAsChoice(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< int > &Setting,
       const TranslatableStrings & Choices,
       const std::vector<int> * pInternalChoices, int iNoMatchSelector ) override;
 
    wxTextCtrl * TieTextBox(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< wxString > &Setting,
       const int nChars) override;
    wxTextCtrl * TieIntegerTextBox(
-      const wxString & Prompt,
+      const TranslatableString & Prompt,
       const SettingSpec< int > &Setting,
       const int nChars) override;
    wxTextCtrl * TieNumericTextBox(
-      const wxString & Prompt,
+      const TranslatableString & Prompt,
       const SettingSpec< double > &Setting,
       const int nChars) override;
    wxSlider * TieSlider(
-      const wxString & Prompt,
+      const TranslatableString & Prompt,
       const SettingSpec< int > &Setting,
       const int max,
       const int min = 0) override;
    wxSpinCtrl * TieSpinCtrl(
-      const wxString &Prompt,
+      const TranslatableString &Prompt,
       const SettingSpec< int > &Setting,
       const int max,
       const int min) override;
@@ -247,31 +247,31 @@ ShuttleGuiGetDefinition::~ShuttleGuiGetDefinition(void)
 }
 
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< bool > &Setting)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "bool", "type" );
    AddBool( Setting.GetDefault(), "default"  );
    EndStruct();
    return ShuttleGui::TieCheckBox( Prompt, Setting );
 }
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< bool > &Setting)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "bool", "type" );
    AddBool( Setting.GetDefault(), "default"  );
    EndStruct();
    return ShuttleGui::TieCheckBoxOnRight( Prompt, Setting );
 }
 wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< int > &Setting,
    const TranslatableStrings & Choices,
    const std::vector<int> * pInternalChoices, int iNoMatchSelector)
@@ -281,7 +281,7 @@ wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    // "Other..."
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "number", "type" ); // not "enum" !
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
@@ -289,67 +289,67 @@ wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
       Prompt, Setting, Choices, pInternalChoices, iNoMatchSelector );
 }
 wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< wxString > &Setting,
    const int nChars)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "string", "type" );
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
    return ShuttleGui::TieTextBox( Prompt, Setting, nChars );
 }
 wxTextCtrl * ShuttleGuiGetDefinition::TieIntegerTextBox(
-   const wxString & Prompt,
+   const TranslatableString & Prompt,
    const SettingSpec< int > &Setting,
    const int nChars)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "number", "type" );
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
    return ShuttleGui::TieIntegerTextBox( Prompt, Setting, nChars );
 }
 wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
-   const wxString & Prompt,
+   const TranslatableString & Prompt,
    const SettingSpec< double > &Setting,
    const int nChars)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "number", "type" );
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
    return ShuttleGui::TieNumericTextBox( Prompt, Setting, nChars );
 }
 wxSlider * ShuttleGuiGetDefinition::TieSlider(
-   const wxString & Prompt,
+   const TranslatableString & Prompt,
    const SettingSpec< int > &Setting,
    const int max,
    const int min) 
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "number", "type" );
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
    return ShuttleGui::TieSlider( Prompt, Setting, max, min );
 }
 wxSpinCtrl * ShuttleGuiGetDefinition::TieSpinCtrl(
-   const wxString &Prompt,
+   const TranslatableString &Prompt,
    const SettingSpec< int > &Setting,
    const int max,
    const int min) 
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
-   AddItem( Prompt, "prompt" );
+   AddItem( Prompt.Translation(), "prompt" );
    AddItem( "number", "type" );
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();

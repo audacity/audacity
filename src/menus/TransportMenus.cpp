@@ -145,7 +145,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    auto nLabelTrack = trackRange.size();
 
    if (nLabelTrack == 0 ) {
-      trackFocus.MessageForScreenReader(_("no label track"));
+      trackFocus.MessageForScreenReader(XO("no label track"));
    }
    else if (nLabelTrack > 1) {
       // find first label track, if any, starting at the focused track
@@ -153,7 +153,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
          *tracks.Find(trackFocus.Get()).Filter<LabelTrack>();
       if (!lt)
          trackFocus.MessageForScreenReader(
-            _("no label track at or below focused track"));
+            XO("no label track at or below focused track"));
    }
 
    // If there is a single label track, or there is a label track at or below
@@ -180,13 +180,12 @@ void DoMoveToLabel(AudacityProject &project, bool next)
             window.RedrawProject();
          }
 
-         wxString message;
-         message.Printf(
-            wxT("%s %d of %d"), label->title, i + 1, lt->GetNumLabels() );
+         auto message = XO("%s %d of %d")
+            .Format( label->title, i + 1, lt->GetNumLabels() );
          trackFocus.MessageForScreenReader(message);
       }
       else {
-         trackFocus.MessageForScreenReader(_("no labels in label track"));
+         trackFocus.MessageForScreenReader(XO("no labels in label track"));
       }
    }
 }

@@ -182,12 +182,12 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Enable Effects"));
+   S.StartStatic(XO("Enable Effects"));
    {
       for ( const auto &entry : GetModuleData() )
       {
          S.TieCheckBox(
-            entry.prompt.Translation(),
+            entry.prompt,
             {entry.setting,
              true}
          );
@@ -195,15 +195,15 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Effect Options"));
+   S.StartStatic(XO("Effect Options"));
    {
       S.StartMultiColumn(2);
       {
          wxChoice *c = S
             .MinSize()
-            .TieChoice( _("S&ort or Group:"), EffectsGroupBy);
+            .TieChoice( XO("S&ort or Group:"), EffectsGroupBy);
 
-         S.TieIntegerTextBox(_("&Maximum effects per group (0 to disable):"),
+         S.TieIntegerTextBox(XO("&Maximum effects per group (0 to disable):"),
                              {wxT("/Effects/MaxPerGroup"),
 #if defined(__WXGTK__)
                               15
@@ -218,7 +218,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
 #ifndef EXPERIMENTAL_EFFECT_MANAGEMENT
-   S.StartStatic(_("Plugin Options"));
+   S.StartStatic(XO("Plugin Options"));
    {
       S.TieCheckBox(_("Check for updated plugins when Audacity starts"),
                      wxT("/Plugins/CheckForUpdates"),
@@ -231,7 +231,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   S.StartStatic(_("Instruction Set"));
+   S.StartStatic(XO("Instruction Set"));
    {
       S.TieCheckBox(_("&Use SSE/SSE2/.../AVX"),
                     wxT("/SSE/GUI"),

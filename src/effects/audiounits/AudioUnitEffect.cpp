@@ -379,39 +379,39 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(false);
       {
-         S.StartStatic(_("Latency Compensation"));
+         S.StartStatic(XO("Latency Compensation"));
          {
-            S.AddVariableText(wxString() +
-               _("As part of their processing, some Audio Unit effects must delay returning ") +
-               _("audio to Audacity. When not compensating for this delay, you will ") +
-               _("notice that small silences have been inserted into the audio. ") +
-               _("Enabling this option will provide that compensation, but it may ") +
-               _("not work for all Audio Unit effects."),
+            S.AddVariableText( XO(
+"As part of their processing, some Audio Unit effects must delay returning "
+"audio to Audacity. When not compensating for this delay, you will "
+"notice that small silences have been inserted into the audio. "
+"Enabling this option will provide that compensation, but it may "
+"not work for all Audio Unit effects."),
                false, 0, 650 );
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(_("Enable &compensation"),
+               S.TieCheckBox(XO("Enable &compensation"),
                              mUseLatency);
             }
             S.EndHorizontalLay();
          }
          S.EndStatic();
 
-         S.StartStatic(_("User Interface"));
+         S.StartStatic(XO("User Interface"));
          {
-            S.AddVariableText(wxString() +
-               _("Select \"Full\" to use the graphical interface if supplied by the Audio Unit.") +
-               _(" Select \"Generic\" to use the system supplied generic interface.") +
-               _(" Select \"Basic\" for a basic text-only interface.") +
-               _(" Reopen the effect for this to take effect."),
+            S.AddVariableText( XO(
+"Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
+" Select \"Generic\" to use the system supplied generic interface."
+" Select \"Basic\" for a basic text-only interface."
+" Reopen the effect for this to take effect."),
                false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieChoice(_("Select &interface"),
+               S.TieChoice(XO("Select &interface"),
                            mUIType,
-                           { _("Full"), _("Generic"), _("Basic") });
+                           { XO("Full"), XO("Generic"), XO("Basic") });
             }
             S.EndHorizontalLay();
          }
@@ -509,11 +509,11 @@ void AudioUnitEffectExportDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(true);
       {
-         S.StartStatic(_("Presets (may select multiple)"));
+         S.StartStatic(XO("Presets (may select multiple)"));
          {
             mList = S.Style(wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                        wxLC_NO_SORT_HEADER)
-               .AddListControlReportMode( { _("Preset") } );
+               .AddListControlReportMode( { XO("Preset") } );
          }
          S.EndStatic();
       }
@@ -681,11 +681,11 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(true);
       {
-         S.StartStatic(_("Presets (may select multiple)"));
+         S.StartStatic(XO("Presets (may select multiple)"));
          {
             mList = S.Style(wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                        wxLC_NO_SORT_HEADER)
-               .AddListControlReportMode( { _("Preset"), _("Location") } );
+               .AddListControlReportMode( { XO("Preset"), XO("Location") } );
          }
          S.EndStatic();
       }

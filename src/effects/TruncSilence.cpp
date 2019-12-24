@@ -751,7 +751,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
 
    S.AddSpace(0, 5);
 
-   S.StartStatic(_("Detect Silence"));
+   S.StartStatic(XO("Detect Silence"));
    {
       S.StartMultiColumn(3, wxALIGN_CENTER_HORIZONTAL);
       {
@@ -761,27 +761,27 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                3, &mThresholdDB, NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Threshold, MAX_Threshold
             )
-            .AddTextBox(_("Threshold:"), wxT(""), 0);
-         S.AddUnits(_("dB"));
+            .AddTextBox(XO("Threshold:"), wxT(""), 0);
+         S.AddUnits(XO("dB"));
 
          // Ignored silence
          mInitialAllowedSilenceT = S.Validator<FloatingPointValidator<double>>(
                3, &mInitialAllowedSilence,
                NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Minimum, MAX_Minimum)
-            .AddTextBox(_("Duration:"), wxT(""), 12);
-         S.AddUnits(_("seconds"));
+            .AddTextBox(XO("Duration:"), wxT(""), 12);
+         S.AddUnits(XO("seconds"));
       }
       S.EndMultiColumn();
    }
    S.EndStatic();
 
-   S.StartStatic(_("Action"));
+   S.StartStatic(XO("Action"));
    {
       S.StartHorizontalLay();
       {
          // Action choices
-         auto actionChoices = LocalizedStrings(kActionStrings, nActions);
+         auto actionChoices = Msgids( kActionStrings, nActions );
          mActionChoice = S
             .Validator<wxGenericValidator>(&mActionIndex)
             .MinSize( { -1, -1 } )
@@ -797,22 +797,22 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Truncate, MAX_Truncate
             )
-            .AddTextBox(_("Truncate to:"), wxT(""), 12);
-         S.AddUnits(_("seconds"));
+            .AddTextBox(XO("Truncate to:"), wxT(""), 12);
+         S.AddUnits(XO("seconds"));
 
          mSilenceCompressPercentT = S.Validator<FloatingPointValidator<double>>(
                3, &mSilenceCompressPercent,
                NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Compress, MAX_Compress
             )
-            .AddTextBox(_("Compress to:"), wxT(""), 12);
-         S.AddUnits(_("%"));
+            .AddTextBox(XO("Compress to:"), wxT(""), 12);
+         S.AddUnits(XO("%"));
       }
       S.EndMultiColumn();
 
       S.StartMultiColumn(2, wxALIGN_CENTER_HORIZONTAL);
       {
-         mIndependent = S.AddCheckBox(_("Truncate tracks independently"),
+         mIndependent = S.AddCheckBox(XO("Truncate tracks independently"),
             mbIndependent);
       }
    S.EndMultiColumn();

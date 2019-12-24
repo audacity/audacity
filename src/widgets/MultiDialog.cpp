@@ -41,7 +41,8 @@ public:
    MultiDialog(wxWindow * pParent, 
                wxString message,
                const TranslatableString &title,
-               const wxChar **buttons, wxString boxMsg, bool log);
+               const TranslatableStrings &buttons,
+               const TranslatableString &boxMsg, bool log);
    ~MultiDialog() {};
 
 private:
@@ -63,7 +64,8 @@ END_EVENT_TABLE()
 MultiDialog::MultiDialog(wxWindow * pParent,
                          wxString message,
                          const TranslatableString &title,
-                         const wxChar **buttons, wxString boxMsg, bool log)
+                         const TranslatableStrings &buttons,
+                         const TranslatableString &boxMsg, bool log)
    : wxDialogWrapper(pParent, wxID_ANY, title,
                wxDefaultPosition, wxDefaultSize,
                wxCAPTION) // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU
@@ -92,22 +94,19 @@ MultiDialog::MultiDialog(wxWindow * pParent,
             vSizer->Add(iconAndTextSizer.release(), 0, wxALIGN_LEFT | wxALL, 5);
          }
 
-         size_t count = 0;
-         while (buttons[count])count++;
-         ArrayOf<wxString> buttonLabels{ count };
+         const auto buttonLabels = transform_container<wxArrayStringEx>(
+            buttons, std::mem_fn( &TranslatableString::Translation ) );
 
-         count = 0;
-         while (buttons[count]){
-            buttonLabels[count] = buttons[count];
-            count++;
-         }
+         const auto count = buttons.size();
+         
+         const auto boxStr = boxMsg.Translation();
 
          mRadioBox = safenew wxRadioBox(this, -1,
-            boxMsg,
+            boxStr,
             wxDefaultPosition, wxDefaultSize,
-            count, buttonLabels.get(),
+            count, count ? &buttonLabels[0] : nullptr,
             1, wxRA_SPECIFY_COLS);
-         mRadioBox->SetName(boxMsg);
+         mRadioBox->SetName(boxStr);
          mRadioBox->SetSelection(0);
          vSizer->Add(mRadioBox, 1, wxEXPAND | wxALL, 5);
 
@@ -160,7 +159,8 @@ void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
 
 int ShowMultiDialog(const wxString &message,
    const TranslatableString &title,
-   const wxChar **buttons, const wxString &boxMsg, bool log)
+   const TranslatableStrings &buttons,
+   const TranslatableString &boxMsg, bool log)
 {
    wxWindow * pParent = wxTheApp->GetTopWindow();
 
@@ -189,7 +189,8 @@ int ShowMultiDialog(const wxString &message,
    return dlog.ShowModal();
 }
 
-const wxString &DefaultMultiDialogMessage()
+const TranslatableString &DefaultMultiDialogMessage()
 {
-   return _("Please select an action");
+   static auto result = XO("Please select an action");
+   return result;
 }

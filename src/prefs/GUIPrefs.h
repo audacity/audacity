@@ -36,8 +36,7 @@ class GUIPrefs final : public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S) override;
 
    static void GetRangeChoices(
-      TranslatableStrings *pChoicesUntranslated,
-      wxArrayStringEx *pChoicesTranslated,
+      TranslatableStrings *pChoices,
       wxArrayStringEx *pCodes,
       int *pDefaultRangeIndex = nullptr
    );

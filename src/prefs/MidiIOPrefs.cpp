@@ -133,33 +133,33 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Interface"));
+   S.StartStatic(XO("Interface"));
    {
       S.StartMultiColumn(2);
       {
          S.Id(HostID);
          /* i18n-hint: (noun) */
-         mHost = S.TieChoice( _("&Host:"),
+         mHost = S.TieChoice( XO("&Host:"),
             {
                wxT("/MidiIO/Host"),
                { ByColumns, mHostNames, mHostLabels }
             }
          );
 
-         S.AddPrompt(_("Using: PortMidi"));
+         S.AddPrompt(XO("Using: PortMidi"));
       }
       S.EndMultiColumn();
    }
    S.EndStatic();
 
-   S.StartStatic(_("Playback"));
+   S.StartStatic(XO("Playback"));
    {
       S.StartMultiColumn(2);
       {
          S.Id(PlayID);
-         mPlay = S.AddChoice(_("&Device:"),
+         mPlay = S.AddChoice(XO("&Device:"),
                              {} );
-         mLatency = S.TieIntegerTextBox(_("MIDI Synth L&atency (ms):"),
+         mLatency = S.TieIntegerTextBox(XO("MIDI Synth L&atency (ms):"),
                                         {wxT("/MidiIO/SynthLatency"),
                                          DEFAULT_SYNTH_LATENCY}, 3);
       }
@@ -167,17 +167,17 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    }
    S.EndStatic();
 #ifdef EXPERIMENTAL_MIDI_IN
-   S.StartStatic(_("Recording"));
+   S.StartStatic(XO("Recording"));
    {
       S.StartMultiColumn(2);
       {
          S.Id(RecordID);
-         mRecord = S.AddChoice(_("De&vice:"),
+         mRecord = S.AddChoice(XO("De&vice:"),
                                {} );
 
          S.Id(ChannelsID);
          /*
-         mChannels = S.AddChoice(_("&Channels:"),
+         mChannels = S.AddChoice(XO("&Channels:"),
                                  wxEmptyString,
                                  {} );
          */

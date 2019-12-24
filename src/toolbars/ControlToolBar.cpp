@@ -151,7 +151,7 @@ AButton *ControlToolBar::MakeButton(ControlToolBar *pBar,
                                     teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
                                     int id,
                                     bool processdownevents,
-                                    const wxChar *label)
+                                    const TranslatableString &label)
 {
    AButton *r = ToolBar::MakeButton(pBar,
       bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
@@ -190,10 +190,10 @@ void ControlToolBar::Populate()
    MakeButtonBackgroundsLarge();
 
    mPause = MakeButton(this, bmpPause, bmpPause, bmpPauseDisabled,
-      ID_PAUSE_BUTTON,  true,  _("Pause"));
+      ID_PAUSE_BUTTON,  true,  XO("Pause"));
 
    mPlay = MakeButton(this, bmpPlay, bmpPlay, bmpPlayDisabled,
-      ID_PLAY_BUTTON, true, _("Play"));
+      ID_PLAY_BUTTON, true, XO("Play"));
    MakeAlternateImages(*mPlay, 1, bmpLoop, bmpLoop, bmpLoopDisabled);
    MakeAlternateImages(*mPlay, 2,
       bmpCutPreview, bmpCutPreview, bmpCutPreviewDisabled);
@@ -204,16 +204,16 @@ void ControlToolBar::Populate()
    mPlay->FollowModifierKeys();
 
    mStop = MakeButton(this, bmpStop, bmpStop, bmpStopDisabled ,
-      ID_STOP_BUTTON, false, _("Stop"));
+      ID_STOP_BUTTON, false, XO("Stop"));
 
    mRewind = MakeButton(this, bmpRewind, bmpRewind, bmpRewindDisabled,
-      ID_REW_BUTTON, false, _("Skip to Start"));
+      ID_REW_BUTTON, false, XO("Skip to Start"));
 
    mFF = MakeButton(this, bmpFFwd, bmpFFwd, bmpFFwdDisabled,
-      ID_FF_BUTTON, false, _("Skip to End"));
+      ID_FF_BUTTON, false, XO("Skip to End"));
 
    mRecord = MakeButton(this, bmpRecord, bmpRecord, bmpRecordDisabled,
-      ID_RECORD_BUTTON, false, _("Record"));
+      ID_RECORD_BUTTON, false, XO("Record"));
 
    bool bPreferNewTrack;
    gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);

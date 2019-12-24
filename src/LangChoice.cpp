@@ -86,11 +86,8 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
       S.StartHorizontalLay();
       {
          S.SetBorder(15);
-         mChoice = S.AddChoice(_("Choose Language for Audacity to use:"),
-            transform_container<wxArrayStringEx>(mLangNames,
-               // Using MSGID until AddChoice is rewritten to take
-               // TranslatableStrings directly
-               [](const TranslatableString &str){ return str.MSGID().GET(); }),
+         mChoice = S.AddChoice(XO("Choose Language for Audacity to use:"),
+            mLangNames,
             lang);
       }
       S.EndVerticalLay();

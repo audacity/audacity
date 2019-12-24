@@ -31,7 +31,7 @@ void MessageCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(_("Text:"),mMessage,60);
+      S.TieTextBox(XO("Text:"),mMessage,60);
    }
    S.EndMultiColumn();
 }

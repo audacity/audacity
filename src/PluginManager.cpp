@@ -509,14 +509,14 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /*i18n-hint: The dialog shows a list of plugins with check-boxes 
        beside each one.*/
-//      S.StartStatic(_("Effects"), true);
+//      S.StartStatic(XO("Effects"), true);
       S.StartVerticalLay();
       {
          S.StartHorizontalLay(wxEXPAND, 0);
          {
             S.StartHorizontalLay(wxALIGN_LEFT, 0);
             {
-               S.AddPrompt(_("Select effects, click the Enable or Disable button, then click OK."));
+               S.AddPrompt(XO("Select effects, click the Enable or Disable button, then click OK."));
             }
             S.EndHorizontalLay();
 
@@ -531,12 +531,12 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                wxRadioButton *rb;
 
                /* i18n-hint: This is before radio buttons selecting which effects to show */
-               S.AddPrompt(_("Show:"));
+               S.AddPrompt(XO("Show:"));
                rb = S.Id(ID_ShowAll)
                   /* i18n-hint: Radio button to show all effects */
                   .Name(XO("Show all"))
                   /* i18n-hint: Radio button to show all effects */
-                  .AddRadioButton(_("&All"));
+                  .AddRadioButton(XO("&All"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
@@ -546,7 +546,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                   /* i18n-hint: Radio button to show just the currently disabled effects */
                   .Name(XO("Show disabled"))
                   /* i18n-hint: Radio button to show just the currently disabled effects */
-                  .AddRadioButtonToGroup(_("D&isabled"));
+                  .AddRadioButtonToGroup(XO("D&isabled"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
@@ -556,7 +556,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                   /* i18n-hint: Radio button to show just the currently enabled effects */
                   .Name(XO("Show enabled"))
                   /* i18n-hint: Radio button to show just the currently enabled effects */
-                  .AddRadioButtonToGroup(_("E&nabled"));
+                  .AddRadioButtonToGroup(XO("E&nabled"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
@@ -566,7 +566,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                   /* i18n-hint: Radio button to show just the newly discovered effects */
                   .Name(XO("Show new"))
                   /* i18n-hint: Radio button to show just the newly discovered effects */
-                  .AddRadioButtonToGroup(_("Ne&w"));
+                  .AddRadioButtonToGroup(XO("Ne&w"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
@@ -580,15 +580,15 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
             .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES )
             .ConnectRoot(wxEVT_KEY_DOWN,
                       &PluginRegistrationDialog::OnListChar)
-            .AddListControlReportMode({ _("Name"), _("State"), _("Path") });
+            .AddListControlReportMode({ XO("Name"), XO("State"), XO("Path") });
 #if wxUSE_ACCESSIBILITY
          mEffects->SetAccessible(mAx = safenew CheckListAx(mEffects));
 #endif
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, 0);
          {
-            S.Id(ID_SelectAll).AddButton(_("&Select All"));
-            S.Id(ID_ClearAll).AddButton(_("C&lear All"));
+            S.Id(ID_SelectAll).AddButton(XO("&Select All"));
+            S.Id(ID_ClearAll).AddButton(XO("C&lear All"));
 
             S.StartHorizontalLay(wxALIGN_CENTER);
             {
@@ -596,8 +596,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
             }
             S.EndHorizontalLay();
 
-            S.Id(ID_Enable).AddButton(_("&Enable"));
-            S.Id(ID_Disable).AddButton(_("&Disable"));
+            S.Id(ID_Enable).AddButton(XO("&Enable"));
+            S.Id(ID_Disable).AddButton(XO("&Disable"));
          }
          S.EndHorizontalLay();
       }

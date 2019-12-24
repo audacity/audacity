@@ -2607,11 +2607,11 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
       {
          S.SetStretchyCol(1);
 
-         S.AddVariableText(_("Enter Nyquist Command: "));
+         S.AddVariableText(XO("Enter Nyquist Command: "));
 
          S.AddSpace(1, 1);
 
-         mVersionCheckBox = S.AddCheckBox(_("&Use legacy (version 3) syntax."),
+         mVersionCheckBox = S.AddCheckBox(XO("&Use legacy (version 3) syntax."),
                                           (mVersion == 3));
       }
       S.EndMultiColumn();
@@ -2626,8 +2626,8 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
 
       S.StartHorizontalLay(wxALIGN_CENTER, 0);
       {
-         S.Id(ID_Load).AddButton(_("&Load"));
-         S.Id(ID_Save).AddButton(_("&Save"));
+         S.Id(ID_Load).AddButton(XO("&Load"));
+         S.Id(ID_Save).AddButton(XO("&Save"));
       }
       S.EndHorizontalLay();
    }
@@ -2651,7 +2651,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                S.StartHorizontalLay(wxALIGN_LEFT, 0);
                {
                   S.AddSpace(0, 10);
-                  S.AddFixedText( ctrl.label, false );
+                  S.AddFixedText( Verbatim( ctrl.label ), false );
                }
                S.EndHorizontalLay();
                S.StartMultiColumn(4);
@@ -2659,7 +2659,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             else
             {
                auto prompt = XO("%s:").Format( ctrl.name );
-               S.AddPrompt( prompt.Translation() );
+               S.AddPrompt( prompt );
 
                if (ctrl.type == NYQ_CTRL_STRING)
                {
@@ -2675,7 +2675,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   S.AddSpace(10, 10);
 
                   S.Id(ID_Choice + i).AddChoice( {},
-                     LocalizedStrings(ctrl.choices.data(), ctrl.choices.size()));
+                     Msgids( ctrl.choices.data(), ctrl.choices.size() ) );
                }
                else if (ctrl.type == NYQ_CTRL_TIME)
                {
@@ -2726,7 +2726,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   if (ctrl.label.empty())
                      // We'd expect wxFileSelectorPromptStr to already be translated, but apparently not.
                      ctrl.label = wxGetTranslation( wxFileSelectorPromptStr );
-                  S.Id(ID_FILE + i).AddButton(ctrl.label, wxALIGN_LEFT);
+                  S.Id(ID_FILE + i).AddButton(
+                     Verbatim(ctrl.label), wxALIGN_LEFT);
                }
                else
                {
@@ -2781,7 +2782,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   }
                   else
                   {
-                     S.AddUnits(ctrl.label);
+                     S.AddUnits( Verbatim( ctrl.label ) );
                   }
                }
             }

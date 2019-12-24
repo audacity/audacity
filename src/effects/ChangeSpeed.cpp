@@ -49,12 +49,10 @@ enum kVinyl
    kVinyl_33AndAThird = 0,
    kVinyl_45,
    kVinyl_78,
-   kVinyl_NA,
-   nVinyl
+   kVinyl_NA
 };
 
-static const TranslatableString kVinylStrings[nVinyl] =
-{
+static const TranslatableStrings kVinylStrings{
    XO("33\u2153"),
    XO("45"),
    XO("78"),
@@ -296,18 +294,12 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
    }
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, mFromVinyl);
 
-   wxASSERT(nVinyl == WXSIZEOF(kVinylStrings));
-
-   wxArrayStringEx vinylChoices;
-   for (int i = 0; i < nVinyl; i++)
-      vinylChoices.push_back(kVinylStrings[i].Translation());
-
    S.SetBorder(5);
 
    S.StartVerticalLay(0);
    {
       S.AddSpace(0, 5);
-      S.AddTitle(_("Change Speed, affecting both Tempo and Pitch"));
+      S.AddTitle(XO("Change Speed, affecting both Tempo and Pitch"));
       S.AddSpace(0, 10);
 
       // Speed multiplier and percent change controls.
@@ -319,7 +311,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::THREE_TRAILING_ZEROES,
                MIN_Percentage / 100.0, ((MAX_Percentage / 100.0) + 1)
             )
-            .AddTextBox(_("Speed Multiplier:"), wxT(""), 12);
+            .AddTextBox(XO("Speed Multiplier:"), wxT(""), 12);
 
          mpTextCtrl_PercentChange = S.Id(ID_PercentChange)
             .Validator<FloatingPointValidator<double>>(
@@ -327,7 +319,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::THREE_TRAILING_ZEROES,
                MIN_Percentage, MAX_Percentage
             )
-            .AddTextBox(_("Percent Change:"), wxT(""), 12);
+            .AddTextBox(XO("Percent Change:"), wxT(""), 12);
       }
       S.EndMultiColumn();
 
@@ -345,28 +337,28 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(5, wxCENTER);
       {
          /* i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute". */
-         S.AddUnits(_("Standard Vinyl rpm:"));
+         S.AddUnits(XO("Standard Vinyl rpm:"));
 
          mpChoice_FromVinyl = S.Id(ID_FromVinyl)
             .Name(XO("From rpm"))
             .MinSize( { 100, -1 } )
             /* i18n-hint: changing a quantity "from" one value "to" another */
-            .AddChoice(_("from"), vinylChoices);
+            .AddChoice(XO("from"), kVinylStrings);
 
          mpChoice_ToVinyl = S.Id(ID_ToVinyl)
             /* i18n-hint: changing a quantity "from" one value "to" another */
             .Name(XO("To rpm"))
             .MinSize( { 100, -1 } )
-            .AddChoice(_("to"), vinylChoices);
+            .AddChoice(XO("to"), kVinylStrings);
       }
       S.EndMultiColumn();
 
       // From/To time controls.
-      S.StartStatic(_("Selection Length"), 0);
+      S.StartStatic(XO("Selection Length"), 0);
       {
          S.StartMultiColumn(2, wxALIGN_LEFT);
          {
-            S.AddPrompt(_("Current Length:"));
+            S.AddPrompt(XO("Current Length:"));
 
             mpFromLengthCtrl = safenew
                   NumericTextCtrl(S.GetParent(), wxID_ANY,
@@ -384,7 +376,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                .Position(wxALIGN_LEFT)
                .AddWindow(mpFromLengthCtrl);
 
-            S.AddPrompt(_("New Length:"));
+            S.AddPrompt(XO("New Length:"));
 
             mpToLengthCtrl = safenew
                   NumericTextCtrl(S.GetParent(), ID_ToLength,

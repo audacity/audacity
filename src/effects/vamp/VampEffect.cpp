@@ -554,7 +554,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
    wxScrolledWindow *scroller = S.Style(wxVSCROLL | wxTAB_TRAVERSAL)
       .StartScroller(2);
    {
-      S.StartStatic(_("Plugin Settings"));
+      S.StartStatic(XO("Plugin Settings"));
       {
          S.StartMultiColumn(5, wxEXPAND);
          {
@@ -562,7 +562,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
             if (!programs.empty())
             {
-               S.AddPrompt(_("Program"));
+               S.AddPrompt(XO("Program"));
 
                S.Id(ID_Program);
                mProgram = S.Name(XO("Program"))
@@ -570,12 +570,13 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   .Position(wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL)
                   .AddChoice( {},
                      [&]{
-                        wxArrayStringEx choices;
+                        TranslatableStrings choices;
                         for (const auto &program : programs)
-                           choices.push_back(wxString::FromUTF8(program.c_str()));
+                           choices.push_back(
+                              Verbatim(wxString::FromUTF8(program.c_str())));
                         return choices;
                      }(),
-                     wxString::FromUTF8(mPlugin->getCurrentProgram().c_str())
+                     Verbatim( wxString::FromUTF8(mPlugin->getCurrentProgram().c_str()) )
                   );
 
                S.AddSpace(1, 1);
@@ -603,7 +604,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                }
                /* i18n-hint: An item name introducing a value, which is not part of the string but
                appears in a following text box window; translate with appropriate punctuation */
-               S.AddPrompt(wxString::Format(_("%s:"), labelText));
+               S.AddPrompt(XO("%s:").Format( labelText ));
 
                if (mParameters[p].isQuantized &&
                    mParameters[p].quantizeStep == 1.0 &&
@@ -626,7 +627,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                         mParameters[p].quantizeStep == 1.0 &&
                         !mParameters[p].valueNames.empty())
                {
-                  wxArrayStringEx choices;
+                  TranslatableStrings choices;
                   int selected = -1;
 
                   for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
@@ -636,7 +637,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                      {
                         selected = i;
                      }
-                     choices.push_back(choice);
+                     choices.push_back( Verbatim( choice ) );
                   }
 
                   S.Id(ID_Choices + p);
@@ -671,7 +672,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                      .AddTextBox( {}, wxT(""), 12);
 
                   wxString str = Internat::ToDisplayString(mParameters[p].minValue);
-                  S.AddPrompt(str);
+                  S.AddPrompt( Verbatim( str ) );
 
                   S.Id(ID_Sliders + p);
                   mSliders[p] = S.ToolTip( Verbatim( tip ) )
@@ -681,7 +682,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                      .AddSlider( {}, 0, 1000, 0);
 
                   str = Internat::ToDisplayString(mParameters[p].maxValue);
-                  S.AddUnits(str);
+                  S.AddUnits( Verbatim( str ) );
                }
             }
          }

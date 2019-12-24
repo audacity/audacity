@@ -200,11 +200,11 @@ void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S)
           * the effect to a 1-second sample, with the default Stretch Factor of 10.0
           * will give an (approximately) 10 second sound
           */
-         .AddTextBox(_("Stretch Factor:"), wxT(""), 10);
+         .AddTextBox(XO("Stretch Factor:"), wxT(""), 10);
 
       S.Validator<FloatingPointValidator<float>>(
             3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Time)
-         .AddTextBox(_("Time Resolution (seconds):"), wxT(""), 10);
+         .AddTextBox(XO("Time Resolution (seconds):"), wxT(""), 10);
    }
    S.EndMultiColumn();
 };

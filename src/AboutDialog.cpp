@@ -294,7 +294,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
 
    S.Id(wxID_OK)
       .Prop(0)
-      .AddButton(_("OK"), wxALIGN_CENTER, true);
+      .AddButton(XO("OK"), wxALIGN_CENTER, true);
 
    Fit();
    this->Centre();

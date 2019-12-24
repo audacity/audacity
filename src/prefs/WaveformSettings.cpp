@@ -111,7 +111,7 @@ void WaveformSettings::ConvertToEnumeratedDBRange()
 {
    // Assumes the codes are in ascending sequence.
    wxArrayStringEx codes;
-   GUIPrefs::GetRangeChoices(nullptr, nullptr, &codes);
+   GUIPrefs::GetRangeChoices(nullptr, &codes);
    int ii = 0;
    for (int nn = codes.size(); ii < nn; ++ii) {
       long value = 0;
@@ -125,7 +125,7 @@ void WaveformSettings::ConvertToEnumeratedDBRange()
 void WaveformSettings::ConvertToActualDBRange()
 {
    wxArrayStringEx codes;
-   GUIPrefs::GetRangeChoices(nullptr, nullptr, &codes);
+   GUIPrefs::GetRangeChoices(nullptr, &codes);
    long value = 0;
    codes[std::max(0, std::min((int)(codes.size()) - 1, dBRange))]
       .ToLong(&value);

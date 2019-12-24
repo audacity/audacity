@@ -243,25 +243,27 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
          // to specify their exact requirements in the TTL file and/or to check the host
          // supplied min/max values.  However, I've run across one (Harrison Consoles XT-EQ)
          // that crashed on sizes greater than 8192.
-         S.StartStatic(_("Buffer Size"));
+         S.StartStatic(XO("Buffer Size"));
          {
             IntegerValidator<int> vld(&mBufferSize);
             vld.SetRange(8, DEFAULT_BLOCKSIZE);
 
-            S.AddVariableText(wxString() +
-                              _("The buffer size controls the number of samples sent to the effect ") +
-                              _("on each iteration. Smaller values will cause slower processing and ") +
-                              _("some effects require 8192 samples or less to work properly. However ") +
-                              _("most effects can accept large buffers and using them will greatly ") +
-                              _("reduce processing time."),
+            S.AddVariableText( XO(
+"The buffer size controls the number of samples sent to the effect "
+"on each iteration. Smaller values will cause slower processing and "
+"some effects require 8192 samples or less to work properly. However "
+"most effects can accept large buffers and using them will greatly "
+"reduce processing time."),
                false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
                wxTextCtrl *t;
-               t = S.TieNumericTextBox(wxString::Format(_("&Buffer Size (8 to %d) samples):"), DEFAULT_BLOCKSIZE),
-                                       mBufferSize,
-                                       12);
+               t = S.TieNumericTextBox(
+                  XO("&Buffer Size (8 to %d) samples):")
+                     .Format( DEFAULT_BLOCKSIZE ),
+                  mBufferSize,
+                  12);
                t->SetMinSize(wxSize(100, -1));
                t->SetValidator(vld);
             }
@@ -269,33 +271,33 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Latency Compensation"));
+         S.StartStatic(XO("Latency Compensation"));
          {
-            S.AddVariableText(wxString() +
-                              _("As part of their processing, some LV2 effects must delay returning ") +
-                              _("audio to Audacity. When not compensating for this delay, you will ") +
-                              _("notice that small silences have been inserted into the audio. ") +
-                              _("Enabling this setting will provide that compensation, but it may ") +
-                              _("not work for all LV2 effects."),
+            S.AddVariableText( XO(
+"As part of their processing, some LV2 effects must delay returning "
+"audio to Audacity. When not compensating for this delay, you will "
+"notice that small silences have been inserted into the audio. "
+"Enabling this setting will provide that compensation, but it may "
+"not work for all LV2 effects."),
                false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(_("Enable &compensation"),
+               S.TieCheckBox(XO("Enable &compensation"),
                              mUseLatency);
             }
             S.EndHorizontalLay();
          }
          S.EndStatic();
 
-         S.StartStatic(_("Graphical Mode"));
+         S.StartStatic(XO("Graphical Mode"));
          {
-            S.AddVariableText(wxString() +
-                              _("LV2 effects can have a graphical interface for setting parameter values.") +
-                              _(" A basic text-only method is also available. ") +
-                              _(" Reopen the effect for this to take effect."),
+            S.AddVariableText( XO(
+"LV2 effects can have a graphical interface for setting parameter values."
+" A basic text-only method is also available. "
+" Reopen the effect for this to take effect."),
                false, 0, 650);
-            S.TieCheckBox(_("Enable &graphical interface"),
+            S.TieCheckBox(XO("Enable &graphical interface"),
                           mUseGUI);
          }
          S.EndStatic();

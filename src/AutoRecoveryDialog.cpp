@@ -68,24 +68,29 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartVerticalLay();
    {
-      S.AddVariableText(_("Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can be automatically recovered:"), false);
+      S.AddVariableText(
+         XO(
+"Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can be automatically recovered:"),
+         false);
 
-      S.StartStatic(_("Recoverable projects"));
+      S.StartStatic(XO("Recoverable projects"));
       {
          mFileList = S.Id(ID_FILE_LIST)
             /*i18n-hint: (noun).  It's the name of the project to recover.*/
-            .AddListControlReportMode( { _("Name") } );
+            .AddListControlReportMode( { XO("Name") } );
          PopulateList();
       }
       S.EndStatic();
 
-      S.AddVariableText(_("After recovery, save the project to save the changes to disk."), false);
+      S.AddVariableText(
+         XO("After recovery, save the project to save the changes to disk."),
+         false);
 
       S.StartHorizontalLay();
       {
-         S.Id(ID_QUIT_AUDACITY).AddButton(_("Quit Audacity"));
-         S.Id(ID_RECOVER_NONE).AddButton(_("Discard Projects"));
-         S.Id(ID_RECOVER_ALL).AddButton(_("Recover Projects"));
+         S.Id(ID_QUIT_AUDACITY).AddButton(XO("Quit Audacity"));
+         S.Id(ID_RECOVER_NONE).AddButton(XO("Discard Projects"));
+         S.Id(ID_RECOVER_ALL).AddButton(XO("Recover Projects"));
       }
       S.EndHorizontalLay();
    }

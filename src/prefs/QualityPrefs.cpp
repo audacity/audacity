@@ -138,11 +138,11 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(_("Sampling"));
+   S.StartStatic(XO("Sampling"));
    {
       S.StartMultiColumn(2);
       {
-         S.AddPrompt(_("Default Sample &Rate:"));
+         S.AddPrompt(XO("Default Sample &Rate:"));
 
          S.StartMultiColumn(2);
          {
@@ -167,37 +167,37 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         S.TieChoice(_("Default Sample &Format:"),
+         S.TieChoice(XO("Default Sample &Format:"),
                      formatSetting);
       }
       S.EndMultiColumn();
    }
    S.EndStatic();
 
-   S.StartStatic(_("Real-time Conversion"));
+   S.StartStatic(XO("Real-time Conversion"));
    {
       S.StartMultiColumn(2, wxEXPAND);
       {
-         S.TieChoice(_("Sample Rate Con&verter:"),
+         S.TieChoice(XO("Sample Rate Con&verter:"),
                      Resample::FastMethodSetting);
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
-         S.TieChoice(_("&Dither:"),
+         S.TieChoice(XO("&Dither:"),
                      Dither::FastSetting);
       }
       S.EndMultiColumn();
    }
    S.EndStatic();
 
-   S.StartStatic(_("High-quality Conversion"));
+   S.StartStatic(XO("High-quality Conversion"));
    {
       S.StartMultiColumn(2);
       {
-         S.TieChoice(_("Sample Rate Conver&ter:"),
+         S.TieChoice(XO("Sample Rate Conver&ter:"),
                      Resample::BestMethodSetting);
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
-         S.TieChoice(_("Dit&her:"),
+         S.TieChoice(XO("Dit&her:"),
                      Dither::BestSetting);
       }
       S.EndMultiColumn();

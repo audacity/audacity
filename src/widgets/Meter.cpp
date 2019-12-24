@@ -2000,16 +2000,17 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();
    {
-      S.StartStatic(_("Refresh Rate"), 0);
+      S.StartStatic(XO("Refresh Rate"), 0);
       {
-         S.AddFixedText(_("Higher refresh rates make the meter show more frequent\nchanges. A rate of 30 per second or less should prevent\nthe meter affecting audio quality on slower machines."));
+         S.AddFixedText(XO(
+"Higher refresh rates make the meter show more frequent\nchanges. A rate of 30 per second or less should prevent\nthe meter affecting audio quality on slower machines."));
          S.StartHorizontalLay();
          {
             rate = S.Name(XO("Meter refresh rate per second [1-100]"))
                .Validator<IntegerValidator<long>>(
                   &mMeterRefreshRate, NumValidatorStyle::DEFAULT,
                   MIN_REFRESH_RATE, MAX_REFRESH_RATE)
-               .AddTextBox(_("Meter refresh rate per second [1-100]: "),
+               .AddTextBox(XO("Meter refresh rate per second [1-100]: "),
                                 wxString::Format(wxT("%d"), meterRefreshRate),
                                 10);
          }
@@ -2019,38 +2020,38 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
 
       S.StartHorizontalLay();
       {
-        S.StartStatic(_("Meter Style"), 0);
+        S.StartStatic(XO("Meter Style"), 0);
         {
            S.StartVerticalLay();
            {
-              gradient = S.AddRadioButton(_("Gradient"), true, mGradient);
-              rms = S.AddRadioButtonToGroup(_("RMS"), false, mGradient);
+              gradient = S.AddRadioButton(XO("Gradient"), true, mGradient);
+              rms = S.AddRadioButtonToGroup(XO("RMS"), false, mGradient);
            }
            S.EndVerticalLay();
         }
         S.EndStatic();
 
-        S.StartStatic(_("Meter Type"), 0);
+        S.StartStatic(XO("Meter Type"), 0);
         {
            S.StartVerticalLay();
            {
-              db = S.AddRadioButton(_("dB"), true, mDB);
-              linear = S.AddRadioButtonToGroup(_("Linear"), false, mDB);
+              db = S.AddRadioButton(XO("dB"), true, mDB);
+              linear = S.AddRadioButtonToGroup(XO("Linear"), false, mDB);
            }
            S.EndVerticalLay();
         }
         S.EndStatic();
 
-        S.StartStatic(_("Orientation"), 1);
+        S.StartStatic(XO("Orientation"), 1);
         {
            S.StartVerticalLay();
            {
               automatic = S.AddRadioButton(
-                  _("Automatic"), AutomaticStereo, mDesiredStyle);
+                  XO("Automatic"), AutomaticStereo, mDesiredStyle);
               horizontal = S.AddRadioButtonToGroup(
-                  _("Horizontal"), HorizontalStereo, mDesiredStyle);
+                  XO("Horizontal"), HorizontalStereo, mDesiredStyle);
               vertical = S.AddRadioButtonToGroup(
-                  _("Vertical"), VerticalStereo, mDesiredStyle);
+                  XO("Vertical"), VerticalStereo, mDesiredStyle);
            }
            S.EndVerticalLay();
         }

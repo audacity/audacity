@@ -122,8 +122,8 @@ void KeyConfigPrefs::Populate()
       {
          S.StartStatic( {}, true);
          {
-            S.AddTitle(_("Keyboard preferences currently unavailable."));
-            S.AddTitle(_("Open a new project to modify keyboard shortcuts."));
+            S.AddTitle(XO("Keyboard preferences currently unavailable."));
+            S.AddTitle(XO("Open a new project to modify keyboard shortcuts."));
          }
          S.EndStatic();
       }
@@ -165,7 +165,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
-   S.StartStatic(_("Key Bindings"), 1);
+   S.StartStatic(XO("Key Bindings"), 1);
    {
       S.StartMultiColumn(3, wxEXPAND);
       {
@@ -173,7 +173,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.StartHorizontalLay(wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
          {
-            S.AddTitle(_("View by:"));
+            S.AddTitle(XO("View by:"));
             S.StartRadioButtonGroup({
                wxT("/Prefs/KeyConfig/ViewBy"),
                {
@@ -212,7 +212,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.StartHorizontalLay(wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
          {
-            mFilterLabel = S.AddVariableText(_("Searc&h:"));
+            mFilterLabel = S.AddVariableText(XO("Searc&h:"));
 
             if (!mFilter) {
                mFilter = safenew wxTextCtrl(S.GetParent(),
@@ -280,20 +280,20 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             .AddWindow(mKey);
 
          /* i18n-hint: (verb)*/
-         mSet = S.Id(SetButtonID).AddButton(_("&Set"));
-         mClear = S.Id(ClearButtonID).AddButton(_("Cl&ear"));
+         mSet = S.Id(SetButtonID).AddButton(XO("&Set"));
+         mClear = S.Id(ClearButtonID).AddButton(XO("Cl&ear"));
       }
       S.EndThreeColumn();
 
 #if defined(__WXMAC__)
-      S.AddFixedText(_("Note: Pressing Cmd+Q will quit. All other keys are valid."));
+      S.AddFixedText(XO("Note: Pressing Cmd+Q will quit. All other keys are valid."));
 #endif
 
       S.StartThreeColumn();
       {
-         S.Id(ImportButtonID).AddButton(_("&Import..."));
-         S.Id(ExportButtonID).AddButton(_("&Export..."));
-         S.Id(AssignDefaultsButtonID).AddButton(_("&Defaults"));
+         S.Id(ImportButtonID).AddButton(XO("&Import..."));
+         S.Id(ExportButtonID).AddButton(XO("&Export..."));
+         S.Id(AssignDefaultsButtonID).AddButton(XO("&Defaults"));
       }
       S.EndThreeColumn();
    }

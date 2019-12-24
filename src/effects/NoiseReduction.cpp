@@ -1444,7 +1444,7 @@ struct ControlInfo {
             NumValidatorStyle::DEFAULT,
             valueMin, valueMax
          )
-         .AddTextBox(textBoxCaption.Translation(), wxT(""), 0);
+         .AddTextBox(textBoxCaption, wxT(""), 0);
 
       wxSlider *const slider =
          S.Id(id)
@@ -1705,19 +1705,19 @@ void EffectNoiseReduction::Dialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 
 void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartStatic(_("Step 1"));
+   S.StartStatic(XO("Step 1"));
    {
-      S.AddVariableText(_(
-         "Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:"));
+      S.AddVariableText(XO(
+"Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:"));
       //m_pButton_GetProfile =
-      S.Id(ID_BUTTON_GETPROFILE).AddButton(_("&Get Noise Profile"));
+      S.Id(ID_BUTTON_GETPROFILE).AddButton(XO("&Get Noise Profile"));
    }
    S.EndStatic();
 
-   S.StartStatic(_("Step 2"));
+   S.StartStatic(XO("Step 2"));
    {
-      S.AddVariableText(_(
-         "Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to reduce noise.\n"));
+      S.AddVariableText(XO(
+"Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to reduce noise.\n"));
 
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
@@ -1740,16 +1740,16 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          ,
          wxALIGN_CENTER_HORIZONTAL);
       {
-         S.AddPrompt(_("Noise:"));
+         S.AddPrompt(XO("Noise:"));
          mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)
-               .AddRadioButton(_("Re&duce")); /* i18n-hint: Translate differently from "Residue" ! */
+               .AddRadioButton(XO("Re&duce")); /* i18n-hint: Translate differently from "Residue" ! */
 #ifdef ISOLATE_CHOICE
          mKeepNoise = S.Id(ID_RADIOBUTTON_KEEPNOISE)
-               .AddRadioButtonToGroup(_("&Isolate"));
+               .AddRadioButtonToGroup(XO("&Isolate"));
 #endif
 #ifdef RESIDUE_CHOICE
          mResidue = S.Id(ID_RADIOBUTTON_RESIDUE)
-               .AddRadioButtonToGroup(_("Resid&ue")); /* i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" ! */
+               .AddRadioButtonToGroup(XO("Resid&ue")); /* i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" ! */
 #endif
       }
       S.EndMultiColumn();
@@ -1758,11 +1758,11 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 
 
 #ifdef ADVANCED_SETTINGS
-   S.StartStatic(_("Advanced Settings"));
+   S.StartStatic(XO("Advanced Settings"));
    {
       S.StartMultiColumn(2);
       {
-         S.TieChoice(_("&Window types:"),
+         S.TieChoice(XO("&Window types:"),
             mTempSettings.mWindowTypes,
             []{
                wxArrayStringEx windowTypeChoices;
@@ -1772,7 +1772,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
             }()
          );
 
-         S.TieChoice(_("Window si&ze:")),
+         S.TieChoice(XO("Window si&ze:")),
             mTempSettings.mWindowSizeChoice,
             {
                _("8") ,
@@ -1790,7 +1790,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
             }
          );
 
-         S.TieChoice(_("S&teps per window:"),
+         S.TieChoice(XO("S&teps per window:"),
             mTempSettings.mStepsPerWindowChoice,
             {
                _("2") ,
@@ -1803,7 +1803,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          );
 
          S.Id(ID_CHOICE_METHOD)
-         .TieChoice(_("Discrimination &method:"),
+         .TieChoice(XO("Discrimination &method:"),
             mTempSettings.mMethod,
             []{
                wxArrayStringEx methodChoices;

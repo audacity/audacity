@@ -91,7 +91,8 @@ public:
    QuickFixDialog(wxWindow * pParent);
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
-   void AddStuck( ShuttleGui & S, bool & bBool, wxString Pref,  wxString Prompt, wxString Help );
+   void AddStuck( ShuttleGui & S, bool & bBool, wxString Pref,
+      const TranslatableString &Prompt, wxString Help );
 
    void OnOk(wxCommandEvent &event);
    void OnCancel(wxCommandEvent &event);
@@ -145,13 +146,15 @@ QuickFixDialog::QuickFixDialog(wxWindow * pParent) :
    Center();
 }
 
-void QuickFixDialog::AddStuck( ShuttleGui & S, bool & bBool, wxString Pref, wxString Prompt, wxString Help )
+void QuickFixDialog::AddStuck(
+   ShuttleGui & S, bool & bBool, wxString Pref,
+   const TranslatableString &Prompt, wxString Help )
 {
    mItem++;
    if( !bBool)
       return;
    S.AddFixedText( Prompt );
-   S.Id(FixButtonID + mItem).AddButton( _("Fix") )->SetClientObject(
+   S.Id(FixButtonID + mItem).AddButton( XO("Fix") )->SetClientObject(
       safenew wxStringClientData(Pref));
 
    {
@@ -169,14 +172,14 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
 {
 
    S.StartVerticalLay(1);
-   S.StartStatic( _("Quick Fixes"));
+   S.StartStatic( XO("Quick Fixes"));
 
    // These aren't all possible modes one can be stuck in, but they are some of them.
    bool bStuckInMode = mbSyncLocked || mbInSnapTo || mbSoundActivated;
 
    if( !bStuckInMode ){
       SetLabel(XO("Nothing to do"));
-      S.AddFixedText(_("No quick, easily fixed problems were found"));
+      S.AddFixedText(XO("No quick, easily fixed problems were found"));
    }
    else {
       S.StartMultiColumn(3, wxALIGN_CENTER);
@@ -185,9 +188,13 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
 
          // Use # in the URLs to ensure we go to the online version of help.
          // Local help may well not be installed.
-         AddStuck( S, mbSyncLocked, "/GUI/SyncLockTracks", _("Clocks on the Tracks"), "Quick_Fix#sync_lock" );
-         AddStuck( S, mbInSnapTo, "/SnapTo", _("Can't select precisely"), "Quick_Fix#snap_to" );
-         AddStuck( S, mbSoundActivated, "/AudioIO/SoundActivatedRecord", _("Recording stops and starts"), "Quick_Fix#sound_activated_recording" );
+         AddStuck( S, mbSyncLocked, "/GUI/SyncLockTracks",
+            XO("Clocks on the Tracks"), "Quick_Fix#sync_lock" );
+         AddStuck( S, mbInSnapTo, "/SnapTo",
+            XO("Can't select precisely"), "Quick_Fix#snap_to" );
+         AddStuck( S, mbSoundActivated, "/AudioIO/SoundActivatedRecord",
+            XO("Recording stops and starts"),
+            "Quick_Fix#sound_activated_recording" );
       }
       S.EndMultiColumn();
    }
