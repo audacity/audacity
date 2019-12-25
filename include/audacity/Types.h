@@ -501,6 +501,13 @@ private:
 
    template< typename T > static const T &TranslateArgument( const T &arg, bool )
    { return arg; }
+   // This allows you to wrap arguments of Format in std::cref so that they
+   // are captured (as if) by reference rather than by value
+   template< typename T > static auto TranslateArgument(
+      const std::reference_wrapper<T> &arg, bool debug )
+         -> decltype(
+            TranslatableString::TranslateArgument( arg.get(), debug ) )
+   { return TranslatableString::TranslateArgument( arg.get(), debug ); }
    static wxString TranslateArgument( const TranslatableString &arg, bool debug )
    { return arg.DoFormat( debug ); }
 
