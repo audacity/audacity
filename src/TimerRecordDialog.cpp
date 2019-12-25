@@ -437,10 +437,8 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    if (iMinsRecording >= iMinsLeft) {
 
       // Format the strings
-      wxString sRemainingTime;
-      sRemainingTime = projectManager.GetHoursMinsString(iMinsLeft);
-      wxString sPlannedTime;
-      sPlannedTime = projectManager.GetHoursMinsString(iMinsRecording);
+      auto sRemainingTime = projectManager.GetHoursMinsString(iMinsLeft);
+      auto sPlannedTime = projectManager.GetHoursMinsString(iMinsRecording);
 
       // Create the message string
       auto sMessage = XO(

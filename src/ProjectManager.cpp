@@ -955,13 +955,13 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
    if (projectAudioIO.GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
       wxLongLong freeSpace = dirManager.GetFreeDiskSpace();
       if (freeSpace >= 0) {
-         wxString sMessage;
 
          int iRecordingMins = GetEstimatedRecordingMinsLeftOnDisk(gAudioIO->GetNumCaptureChannels());
-         sMessage.Printf(_("Disk space remaining for recording: %s"), GetHoursMinsString(iRecordingMins));
+         auto sMessage = XO("Disk space remaining for recording: %s")
+            .Format( GetHoursMinsString(iRecordingMins) );
 
          // Do not change mLastMainStatusMessage
-         statusBar.SetStatusText(sMessage, mainStatusBarField);
+         statusBar.SetStatusText(sMessage.Translation(), mainStatusBarField);
       }
    }
    else if(ODManager::IsInstanceCreated())
@@ -1029,27 +1029,22 @@ void ProjectManager::OnStatusChange( wxCommandEvent &evt )
       RestartTimer();
 }
 
-wxString ProjectManager::GetHoursMinsString(int iMinutes)
+TranslatableString ProjectManager::GetHoursMinsString(int iMinutes)
 {
-   wxString sFormatted;
-
-   if (iMinutes < 1) {
+   if (iMinutes < 1)
       // Less than a minute...
-      sFormatted = _("Less than 1 minute");
-      return sFormatted;
-   }
+      return XO("Less than 1 minute");
 
    // Calculate
    int iHours = iMinutes / 60;
    int iMins = iMinutes % 60;
 
-   auto sHours = wxPLURAL( "%d hour", "%d hours", 0 )( iHours ).Translation();
+   auto sHours = wxPLURAL( "%d hour", "%d hours", 0 )( iHours );
 
-   auto sMins = wxPLURAL( "%d minute", "%d minutes", 0 )( iMins ).Translation();
+   auto sMins = wxPLURAL( "%d minute", "%d minutes", 0 )( iMins );
 
    /* i18n-hint: A time in hours and minutes. Only translate the "and". */
-   sFormatted.Printf( _("%s and %s."), sHours, sMins);
-   return sFormatted;
+   return XO("%s and %s.").Format( sHours, sMins );
 }
 
 // This routine will give an estimate of how many

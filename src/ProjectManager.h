@@ -59,7 +59,7 @@ public:
    // Routine to estimate how many minutes of recording time are left on disk
    int GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels = 0);
    // Converts number of minutes to human readable format
-   wxString GetHoursMinsString(int iMinutes);
+   TranslatableString GetHoursMinsString(int iMinutes);
 
 private:
    void OnCloseWindow(wxCloseEvent & event);
