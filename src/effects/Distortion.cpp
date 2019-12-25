@@ -142,11 +142,6 @@ TranslatableString defaultLabelUntranslated(int index)
    return names[ index ];
 }
 
-wxString defaultLabel(int index)
-{
-   return defaultLabelUntranslated(index).Translation();
-}
-
 //
 // EffectDistortion
 //
@@ -717,12 +712,12 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, true, _("Clipping level"));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Drive"));
-         UpdateControl(ID_Param2, true, _("Make-up Gain"));
-         UpdateControl(ID_Repeats, false, defaultLabel(4));
-         UpdateControl(ID_DCBlock, false, wxEmptyString);
+         UpdateControl(ID_Threshold, true, XO("Clipping level"));
+         UpdateControl(ID_NoiseFloor, false, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Drive"));
+         UpdateControl(ID_Param2, true, XO("Make-up Gain"));
+         UpdateControl(ID_Repeats, false, defaultLabelUntranslated(4));
+         UpdateControl(ID_DCBlock, false, {});
          break;
       case kSoftClip:
          UpdateControlText(mThresholdT, mOldThresholdTxt, true);
@@ -731,12 +726,12 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, true, _("Clipping threshold"));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Hardness"));
-         UpdateControl(ID_Param2, true, _("Make-up Gain"));
-         UpdateControl(ID_Repeats, false, defaultLabel(4));
-         UpdateControl(ID_DCBlock, false, wxEmptyString);
+         UpdateControl(ID_Threshold, true, XO("Clipping threshold"));
+         UpdateControl(ID_NoiseFloor, false, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Hardness"));
+         UpdateControl(ID_Param2, true, XO("Make-up Gain"));
+         UpdateControl(ID_Repeats, false, defaultLabelUntranslated(4));
+         UpdateControl(ID_DCBlock, false, {});
          break;
       case kHalfSinCurve:
          UpdateControlText(mThresholdT, mOldThresholdTxt, false);
@@ -745,12 +740,12 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel(0));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Distortion amount"));
-         UpdateControl(ID_Param2, true, _("Output level"));
-         UpdateControl(ID_Repeats, false, defaultLabel(4));
-         UpdateControl(ID_DCBlock, false, wxEmptyString);
+         UpdateControl(ID_Threshold, false, defaultLabelUntranslated(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Distortion amount"));
+         UpdateControl(ID_Param2, true, XO("Output level"));
+         UpdateControl(ID_Repeats, false, defaultLabelUntranslated(4));
+         UpdateControl(ID_DCBlock, false, {});
          break;
       case kExpCurve:
          UpdateControlText(mThresholdT, mOldThresholdTxt, false);
@@ -759,12 +754,12 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel(0));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Distortion amount"));
-         UpdateControl(ID_Param2, true, _("Output level"));
-         UpdateControl(ID_Repeats, false, defaultLabel(4));
-         UpdateControl(ID_DCBlock, false, wxEmptyString);
+         UpdateControl(ID_Threshold, false, defaultLabelUntranslated(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Distortion amount"));
+         UpdateControl(ID_Param2, true, XO("Output level"));
+         UpdateControl(ID_Repeats, false, defaultLabelUntranslated(4));
+         UpdateControl(ID_DCBlock, false, {});
          break;
       case kLogCurve:
          UpdateControlText(mThresholdT, mOldThresholdTxt, false);
@@ -773,12 +768,12 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel(0));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Distortion amount"));
-         UpdateControl(ID_Param2, true, _("Output level"));
-         UpdateControl(ID_Repeats, false, defaultLabel(4));
-         UpdateControl(ID_DCBlock, false, wxEmptyString);
+         UpdateControl(ID_Threshold, false, defaultLabelUntranslated(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Distortion amount"));
+         UpdateControl(ID_Param2, true, XO("Output level"));
+         UpdateControl(ID_Repeats, false, defaultLabelUntranslated(4));
+         UpdateControl(ID_DCBlock, false, {});
          break;
       case kCubic:
          UpdateControlText(mThresholdT, mOldThresholdTxt, false);
@@ -787,12 +782,12 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, true);
 
-         UpdateControl(ID_Threshold, false, defaultLabel(0));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Distortion amount"));
-         UpdateControl(ID_Param2, true, _("Output level"));
-         UpdateControl(ID_Repeats, true, _("Repeat processing"));
-         UpdateControl(ID_DCBlock, false, wxEmptyString);
+         UpdateControl(ID_Threshold, false, defaultLabelUntranslated(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Distortion amount"));
+         UpdateControl(ID_Param2, true, XO("Output level"));
+         UpdateControl(ID_Repeats, true, XO("Repeat processing"));
+         UpdateControl(ID_DCBlock, false, {});
          break;
       case kEvenHarmonics:
          UpdateControlText(mThresholdT, mOldThresholdTxt, false);
@@ -801,12 +796,12 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel(0));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Distortion amount"));
-         UpdateControl(ID_Param2, true, _("Harmonic brightness"));
-         UpdateControl(ID_Repeats, false, defaultLabel(4));
-         UpdateControl(ID_DCBlock, true, wxEmptyString);
+         UpdateControl(ID_Threshold, false, defaultLabelUntranslated(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Distortion amount"));
+         UpdateControl(ID_Param2, true, XO("Harmonic brightness"));
+         UpdateControl(ID_Repeats, false, defaultLabelUntranslated(4));
+         UpdateControl(ID_DCBlock, true, {});
          break;
       case kSinCurve:
          UpdateControlText(mThresholdT, mOldThresholdTxt, false);
@@ -815,12 +810,12 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel(0));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Distortion amount"));
-         UpdateControl(ID_Param2, true, _("Output level"));
-         UpdateControl(ID_Repeats, false, defaultLabel(4));
-         UpdateControl(ID_DCBlock, false, wxEmptyString);
+         UpdateControl(ID_Threshold, false, defaultLabelUntranslated(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Distortion amount"));
+         UpdateControl(ID_Param2, true, XO("Output level"));
+         UpdateControl(ID_Repeats, false, defaultLabelUntranslated(4));
+         UpdateControl(ID_DCBlock, false, {});
          break;
       case kLeveller:
          UpdateControlText(mThresholdT, mOldThresholdTxt, false);
@@ -829,12 +824,12 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, false);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, true);
 
-         UpdateControl(ID_Threshold, false, defaultLabel(0));
-         UpdateControl(ID_NoiseFloor, true, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Levelling fine adjustment"));
-         UpdateControl(ID_Param2, false, defaultLabel(3));
-         UpdateControl(ID_Repeats, true, _("Degree of Levelling"));
-         UpdateControl(ID_DCBlock, false, wxEmptyString);
+         UpdateControl(ID_Threshold, false, defaultLabelUntranslated(0));
+         UpdateControl(ID_NoiseFloor, true, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Levelling fine adjustment"));
+         UpdateControl(ID_Param2, false, defaultLabelUntranslated(3));
+         UpdateControl(ID_Repeats, true, XO("Degree of Levelling"));
+         UpdateControl(ID_DCBlock, false, {});
          break;
       case kRectifier:
          UpdateControlText(mThresholdT, mOldThresholdTxt, false);
@@ -843,12 +838,12 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, false);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel(0));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Distortion amount"));
-         UpdateControl(ID_Param2, false, defaultLabel(3));
-         UpdateControl(ID_Repeats, false, defaultLabel(4));
-         UpdateControl(ID_DCBlock, true, wxEmptyString);
+         UpdateControl(ID_Threshold, false, defaultLabelUntranslated(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Distortion amount"));
+         UpdateControl(ID_Param2, false, defaultLabelUntranslated(3));
+         UpdateControl(ID_Repeats, false, defaultLabelUntranslated(4));
+         UpdateControl(ID_DCBlock, true, {});
          break;
       case kHardLimiter:
          UpdateControlText(mThresholdT, mOldThresholdTxt, true);
@@ -857,88 +852,99 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, true, _("dB Limit"));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
-         UpdateControl(ID_Param1, true, _("Wet level"));
-         UpdateControl(ID_Param2, true, _("Residual level"));
-         UpdateControl(ID_Repeats, false, defaultLabel(4));
-         UpdateControl(ID_DCBlock, false, wxEmptyString);
+         UpdateControl(ID_Threshold, true, XO("dB Limit"));
+         UpdateControl(ID_NoiseFloor, false, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1, true, XO("Wet level"));
+         UpdateControl(ID_Param2, true, XO("Residual level"));
+         UpdateControl(ID_Repeats, false, defaultLabelUntranslated(4));
+         UpdateControl(ID_DCBlock, false, {});
          break;
       default:
-         UpdateControl(ID_Threshold,   true, defaultLabel(0));
-         UpdateControl(ID_NoiseFloor,  true, defaultLabel(1));
-         UpdateControl(ID_Param1,      true, defaultLabel(2));
-         UpdateControl(ID_Param2,      true, defaultLabel(3));
-         UpdateControl(ID_Repeats,     true, defaultLabel(4));
-         UpdateControl(ID_DCBlock,     false, wxEmptyString);
+         UpdateControl(ID_Threshold,   true, defaultLabelUntranslated(0));
+         UpdateControl(ID_NoiseFloor,  true, defaultLabelUntranslated(1));
+         UpdateControl(ID_Param1,      true, defaultLabelUntranslated(2));
+         UpdateControl(ID_Param2,      true, defaultLabelUntranslated(3));
+         UpdateControl(ID_Repeats,     true, defaultLabelUntranslated(4));
+         UpdateControl(ID_DCBlock,     false, {});
    }
 }
 
-void EffectDistortion::UpdateControl(control id, bool enabled, wxString name)
+void EffectDistortion::UpdateControl(
+   control id, bool enabled, TranslatableString name)
 {
-   wxString suffix = _(" (Not Used):");
+   auto suffix = XO("(Not Used):");
    switch (id)
    {
-      case ID_Threshold:
+      case ID_Threshold: {
          /* i18n-hint: Control range. */
-         if (enabled) suffix = _(" (-100 to 0 dB):");
-         name += suffix;
+         if (enabled) suffix = XO("(-100 to 0 dB):");
+         name.Join( suffix, wxT(" ") );
 
          // Logarithmic slider is set indirectly
          mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
          mThresholdS->SetValue((int) (mThreshold * SCL_Threshold_dB + 0.5));
 
-         mThresholdTxt->SetLabel(name);
-         mThresholdS->SetName(name);
-         mThresholdT->SetName(name);
+         auto translated = name.Translation();
+         mThresholdTxt->SetLabel(translated);
+         mThresholdS->SetName(translated);
+         mThresholdT->SetName(translated);
          mThresholdS->Enable(enabled);
          mThresholdT->Enable(enabled);
          break;
-      case ID_NoiseFloor:
+      }
+      case ID_NoiseFloor: {
          /* i18n-hint: Control range. */
-         if (enabled) suffix = _(" (-80 to -20 dB):");
-         name += suffix;
+         if (enabled) suffix = XO("(-80 to -20 dB):");
+         name.Join( suffix, wxT(" ") );
 
-         mNoiseFloorTxt->SetLabel(name);
-         mNoiseFloorS->SetName(name);
-         mNoiseFloorT->SetName(name);
+         auto translated = name.Translation();
+         mNoiseFloorTxt->SetLabel(translated);
+         mNoiseFloorS->SetName(translated);
+         mNoiseFloorT->SetName(translated);
          mNoiseFloorS->Enable(enabled);
          mNoiseFloorT->Enable(enabled);
          break;
-      case ID_Param1:
+      }
+      case ID_Param1: {
          /* i18n-hint: Control range. */
-         if (enabled) suffix = _(" (0 to 100):");
-         name += suffix;
+         if (enabled) suffix = XO("(0 to 100):");
+         name.Join( suffix, wxT(" ") );
 
-         mParam1Txt->SetLabel(name);
-         mParam1S->SetName(name);
-         mParam1T->SetName(name);
+         auto translated = name.Translation();
+         mParam1Txt->SetLabel(translated);
+         mParam1S->SetName(translated);
+         mParam1T->SetName(translated);
          mParam1S->Enable(enabled);
          mParam1T->Enable(enabled);
          break;
-      case ID_Param2:
+      }
+      case ID_Param2: {
          /* i18n-hint: Control range. */
-         if (enabled) suffix = _(" (0 to 100):");
-         name += suffix;
+         if (enabled) suffix = XO("(0 to 100):");
+         name.Join( suffix, wxT(" ") );
 
-         mParam2Txt->SetLabel(name);
-         mParam2S->SetName(name);
-         mParam2T->SetName(name);
+         auto translated = name.Translation();
+         mParam2Txt->SetLabel(translated);
+         mParam2S->SetName(translated);
+         mParam2T->SetName(translated);
          mParam2S->Enable(enabled);
          mParam2T->Enable(enabled);
          break;
-      case ID_Repeats:
+      }
+      case ID_Repeats: {
          /* i18n-hint: Control range. */
-         if (enabled) suffix = _(" (0 to 5):");
-         name += suffix;
+         if (enabled) suffix = XO("(0 to 5):");
+         name.Join( suffix, wxT(" ") );
 
-         mRepeatsTxt->SetLabel(name);
-         mRepeatsS->SetName(name);
-         mRepeatsT->SetName(name);
+         auto translated = name.Translation();
+         mRepeatsTxt->SetLabel(translated);
+         mRepeatsS->SetName(translated);
+         mRepeatsT->SetName(translated);
          mRepeatsS->Enable(enabled);
          mRepeatsT->Enable(enabled);
          break;
-      case ID_DCBlock:
+      }
+      case ID_DCBlock: {
          if (enabled) {
             mDCBlockCheckBox->SetValue(mbSavedFilterState);
             mParams.mDCBlock = mbSavedFilterState;
@@ -950,7 +956,9 @@ void EffectDistortion::UpdateControl(control id, bool enabled, wxString name)
 
          mDCBlockCheckBox->Enable(enabled);
          break;
-      default: break;
+      }
+      default:
+         break;
    }
 }
 

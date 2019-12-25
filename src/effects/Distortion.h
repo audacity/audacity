@@ -131,7 +131,7 @@ private:
    void OnRepeatsText(wxCommandEvent & evt);
    void OnRepeatsSlider(wxCommandEvent & evt);
    void UpdateUI();
-   void UpdateControl(control id, bool enable, wxString name);
+   void UpdateControl(control id, bool enable, TranslatableString name);
    void UpdateControlText(wxTextCtrl *textCtrl, wxString &string, bool enabled);
 
    void MakeTable();
