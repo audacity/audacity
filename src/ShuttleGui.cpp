@@ -1047,18 +1047,20 @@ void ShuttleGuiBase::EndSimplebook()
 }
 
 
-wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
+wxNotebookPage * ShuttleGuiBase::StartNotebookPage(
+   const TranslatableString & Name )
 {
    if( mShuttleMode != eIsCreating )
       return NULL;
 //      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wx);
    auto pNotebook = static_cast< wxBookCtrlBase* >( mpParent );
    wxNotebookPage * pPage = safenew wxPanelWrapper(GetParent());
-   pPage->SetName(Name);
+   const auto translated = Name.Translation();
+   pPage->SetName(translated);
 
    pNotebook->AddPage(
       pPage,
-      Name);
+      translated);
 
    SetProportions( 1 );
    mpParent = pPage;
@@ -1066,27 +1068,6 @@ wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
    PushSizer();
    //   UpdateSizers();
    return pPage;
-}
-
-void ShuttleGuiBase::StartNotebookPage( const wxString & Name, wxNotebookPage * pPage )
-{
-   if( mShuttleMode != eIsCreating )
-      return;
-//      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wx);
-   auto pNotebook = static_cast< wxBookCtrlBase* >( mpParent );
-//   wxNotebookPage * pPage = safenew wxPanelWrapper(GetParent());
-   pPage->Create( mpParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("panel"));
-   pPage->SetName(Name);
-
-   pNotebook->AddPage(
-      pPage,
-      Name);
-
-   SetProportions( 1 );
-   mpParent = pPage;
-   pPage->SetSizer(mpSizer = safenew wxBoxSizer(wxVERTICAL));
-   PushSizer();
-   //   UpdateSizers();
 }
 
 void ShuttleGuiBase::EndNotebookPage()
@@ -1468,9 +1449,9 @@ wxSlider * ShuttleGuiBase::DoTieSlider(
 }
 
 
-wxChoice * ShuttleGuiBase::DoTieChoice(
+wxChoice * ShuttleGuiBase::TieChoice(
    const TranslatableString &Prompt,
-   WrappedType &WrappedRef,
+   int &Selected,
    const TranslatableStrings &choices )
 {
    HandleOptionality( Prompt );
@@ -1484,17 +1465,7 @@ wxChoice * ShuttleGuiBase::DoTieChoice(
    {
    case eIsCreating:
       {
-         if( WrappedRef.IsString() ) {
-            auto str = WrappedRef.ReadAsString();
-            auto begin = choices.begin();
-            auto iter = std::find_if( begin, choices.end(),
-               [&str]( const TranslatableString &choice ){
-                  return str == choice.Translation(); } );
-            int Selected = std::distance( begin, iter );
-            pChoice = AddChoice( Prompt, choices, Selected );
-         }
-         else
-            pChoice = AddChoice( Prompt, choices, WrappedRef.ReadAsInt() );
+         pChoice = AddChoice( Prompt, choices, Selected );
          ShuttleGui::SetMinSize(pChoice, choices);
       }
       break;
@@ -1506,10 +1477,7 @@ wxChoice * ShuttleGuiBase::DoTieChoice(
          wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
          pChoice = wxDynamicCast(pWnd, wxChoice);
          wxASSERT( pChoice );
-         if( WrappedRef.IsString())
-            WrappedRef.WriteToAsString( pChoice->GetStringSelection());
-         else
-            WrappedRef.WriteToAsInt( pChoice->GetSelection() );
+         Selected = pChoice->GetSelection();
       }
       break;
    case eIsSettingToDialog:
@@ -1517,10 +1485,7 @@ wxChoice * ShuttleGuiBase::DoTieChoice(
          wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
          pChoice = wxDynamicCast(pWnd, wxChoice);
          wxASSERT( pChoice );
-         if( WrappedRef.IsString() )
-            pChoice->SetStringSelection( WrappedRef.ReadAsString() );
-         else
-            pChoice->SetSelection( WrappedRef.ReadAsInt() );
+         pChoice->SetSelection( Selected );
       }
       break;
    default:
@@ -1724,20 +1689,16 @@ wxSlider * ShuttleGuiBase::TieVSlider(
 
 wxChoice * ShuttleGuiBase::TieChoice(
    const TranslatableString &Prompt,
-   wxString &Selected,
+   TranslatableString &Selected,
    const TranslatableStrings &choices )
 {
-   WrappedType WrappedRef( Selected );
-   return DoTieChoice( Prompt, WrappedRef, choices );
-}
-
-wxChoice * ShuttleGuiBase::TieChoice(
-   const TranslatableString &Prompt,
-   int &Selected,
-   const TranslatableStrings &choices )
-{
-   WrappedType WrappedRef( Selected );
-   return DoTieChoice( Prompt, WrappedRef, choices );
+   int Index = make_iterator_range( choices ).index( Selected );
+   auto result = TieChoice( Prompt, Index, choices );
+   if ( Index >= 0 && Index < choices.size() )
+      Selected = choices[ Index ];
+   else
+      Selected = {};
+   return result;
 }
 
 //-----------------------------------------------------------------------//

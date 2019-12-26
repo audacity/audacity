@@ -343,7 +343,6 @@ public:
    wxMenuBar  * AddMenuBar( );
    wxMenu     * AddMenu( const TranslatableString & Title );
    void AddIcon( wxBitmap * pBmp);
-   void AddIconButton( const wxString & Command, const wxString & Params,wxBitmap * pBmp );
    void AddFixedText(
       const TranslatableString & Str, bool bCenter = false, int wrapWidth = 0 );
    void AddConstTextBox(
@@ -380,8 +379,7 @@ public:
 
    // Use within any kind of book control:
    // IDs of notebook pages cannot be chosen by the caller
-   wxNotebookPage * StartNotebookPage( const wxString & Name );
-   void StartNotebookPage( const wxString & Name, wxNotebookPage * pPage );
+   wxNotebookPage * StartNotebookPage( const TranslatableString & Name );
 
    void EndNotebookPage();
 
@@ -412,7 +410,8 @@ public:
    wxCheckBox * TieCheckBoxOnRight( const TranslatableString & Prompt, bool & Var );
 
    wxChoice * TieChoice(
-      const TranslatableString &Prompt, wxString &Selected, const TranslatableStrings &choices );
+      const TranslatableString &Prompt,
+      TranslatableString &Selected, const TranslatableStrings &choices );
    wxChoice * TieChoice(
       const TranslatableString &Prompt, int &Selected, const TranslatableStrings &choices );
 
@@ -563,9 +562,6 @@ private:
    wxTextCtrl * DoTieNumericTextBox(
       const TranslatableString &Prompt, WrappedType &  WrappedRef, const int nChars);
    wxCheckBox * DoTieCheckBox( const TranslatableString &Prompt, WrappedType & WrappedRef );
-   wxChoice * DoTieChoice(
-      const TranslatableString &Prompt, WrappedType & WrappedRef,
-      const TranslatableStrings & choices );
    wxSlider * DoTieSlider(
       const TranslatableString &Prompt,
       WrappedType & WrappedRef, const int max, const int min = 0 );
