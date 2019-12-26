@@ -411,7 +411,7 @@ visit our [[https://forum.audacityteam.org/|forum]].");
       wxT("</center>")
    );
 
-   auto pPage = S.StartNotebookPage( _("Audacity") );
+   auto pPage = S.StartNotebookPage( XO("Audacity") );
    S.StartVerticalLay(1);
    {
       //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
@@ -464,7 +464,7 @@ visit our [[https://forum.audacityteam.org/|forum]].");
 void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 {
    wxString informationStr;   // string to build up list of information in
-   S.StartNotebookPage( _("Build Information") );  // start the tab
+   S.StartNotebookPage( XO("Build Information") );  // start the tab
    S.StartVerticalLay(2);  // create the window
    HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1, wxDefaultPosition,
                            wxSize(ABOUT_DIALOG_WIDTH, 264),
@@ -718,7 +718,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
 void AboutDialog::PopulateLicensePage( ShuttleGui & S )
 {
-   S.StartNotebookPage( _("GPL License") );
+   S.StartNotebookPage( XO("GPL License") );
    S.StartVerticalLay(1);
    HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,

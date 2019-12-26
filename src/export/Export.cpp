@@ -998,7 +998,7 @@ void Exporter::CreateUserPane(wxWindow *parent)
                for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                {
                   // Name of simple book page is not displayed
-                  S.StartNotebookPage( wxEmptyString );
+                  S.StartNotebookPage( {} );
                   pPlugin->OptionsCreate(S, j);
                   S.EndNotebookPage();
                }

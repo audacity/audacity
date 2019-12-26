@@ -1047,18 +1047,20 @@ void ShuttleGuiBase::EndSimplebook()
 }
 
 
-wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
+wxNotebookPage * ShuttleGuiBase::StartNotebookPage(
+   const TranslatableString & Name )
 {
    if( mShuttleMode != eIsCreating )
       return NULL;
 //      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wx);
    auto pNotebook = static_cast< wxBookCtrlBase* >( mpParent );
    wxNotebookPage * pPage = safenew wxPanelWrapper(GetParent());
-   pPage->SetName(Name);
+   const auto translated = Name.Translation();
+   pPage->SetName(translated);
 
    pNotebook->AddPage(
       pPage,
-      Name);
+      translated);
 
    SetProportions( 1 );
    mpParent = pPage;
@@ -1066,27 +1068,6 @@ wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
    PushSizer();
    //   UpdateSizers();
    return pPage;
-}
-
-void ShuttleGuiBase::StartNotebookPage( const wxString & Name, wxNotebookPage * pPage )
-{
-   if( mShuttleMode != eIsCreating )
-      return;
-//      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wx);
-   auto pNotebook = static_cast< wxBookCtrlBase* >( mpParent );
-//   wxNotebookPage * pPage = safenew wxPanelWrapper(GetParent());
-   pPage->Create( mpParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("panel"));
-   pPage->SetName(Name);
-
-   pNotebook->AddPage(
-      pPage,
-      Name);
-
-   SetProportions( 1 );
-   mpParent = pPage;
-   pPage->SetSizer(mpSizer = safenew wxBoxSizer(wxVERTICAL));
-   PushSizer();
-   //   UpdateSizers();
 }
 
 void ShuttleGuiBase::EndNotebookPage()

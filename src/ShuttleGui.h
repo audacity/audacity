@@ -380,8 +380,7 @@ public:
 
    // Use within any kind of book control:
    // IDs of notebook pages cannot be chosen by the caller
-   wxNotebookPage * StartNotebookPage( const wxString & Name );
-   void StartNotebookPage( const wxString & Name, wxNotebookPage * pPage );
+   wxNotebookPage * StartNotebookPage( const TranslatableString & Name );
 
    void EndNotebookPage();
 
