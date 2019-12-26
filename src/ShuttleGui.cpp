@@ -1449,9 +1449,9 @@ wxSlider * ShuttleGuiBase::DoTieSlider(
 }
 
 
-wxChoice * ShuttleGuiBase::DoTieChoice(
+wxChoice * ShuttleGuiBase::TieChoice(
    const TranslatableString &Prompt,
-   WrappedType &WrappedRef,
+   int &Selected,
    const TranslatableStrings &choices )
 {
    HandleOptionality( Prompt );
@@ -1465,17 +1465,7 @@ wxChoice * ShuttleGuiBase::DoTieChoice(
    {
    case eIsCreating:
       {
-         if( WrappedRef.IsString() ) {
-            auto str = WrappedRef.ReadAsString();
-            auto begin = choices.begin();
-            auto iter = std::find_if( begin, choices.end(),
-               [&str]( const TranslatableString &choice ){
-                  return str == choice.Translation(); } );
-            int Selected = std::distance( begin, iter );
-            pChoice = AddChoice( Prompt, choices, Selected );
-         }
-         else
-            pChoice = AddChoice( Prompt, choices, WrappedRef.ReadAsInt() );
+         pChoice = AddChoice( Prompt, choices, Selected );
          ShuttleGui::SetMinSize(pChoice, choices);
       }
       break;
@@ -1487,10 +1477,7 @@ wxChoice * ShuttleGuiBase::DoTieChoice(
          wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
          pChoice = wxDynamicCast(pWnd, wxChoice);
          wxASSERT( pChoice );
-         if( WrappedRef.IsString())
-            WrappedRef.WriteToAsString( pChoice->GetStringSelection());
-         else
-            WrappedRef.WriteToAsInt( pChoice->GetSelection() );
+         Selected = pChoice->GetSelection();
       }
       break;
    case eIsSettingToDialog:
@@ -1498,10 +1485,7 @@ wxChoice * ShuttleGuiBase::DoTieChoice(
          wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
          pChoice = wxDynamicCast(pWnd, wxChoice);
          wxASSERT( pChoice );
-         if( WrappedRef.IsString() )
-            pChoice->SetStringSelection( WrappedRef.ReadAsString() );
-         else
-            pChoice->SetSelection( WrappedRef.ReadAsInt() );
+         pChoice->SetSelection( Selected );
       }
       break;
    default:
@@ -1709,22 +1693,12 @@ wxChoice * ShuttleGuiBase::TieChoice(
    const TranslatableStrings &choices )
 {
    int Index = make_iterator_range( choices ).index( Selected );
-   WrappedType WrappedRef( Index );
-   auto result = DoTieChoice( Prompt, WrappedRef, choices );
+   auto result = TieChoice( Prompt, Index, choices );
    if ( Index >= 0 && Index < choices.size() )
       Selected = choices[ Index ];
    else
       Selected = {};
    return result;
-}
-
-wxChoice * ShuttleGuiBase::TieChoice(
-   const TranslatableString &Prompt,
-   int &Selected,
-   const TranslatableStrings &choices )
-{
-   WrappedType WrappedRef( Selected );
-   return DoTieChoice( Prompt, WrappedRef, choices );
 }
 
 //-----------------------------------------------------------------------//

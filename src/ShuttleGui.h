@@ -562,9 +562,6 @@ private:
    wxTextCtrl * DoTieNumericTextBox(
       const TranslatableString &Prompt, WrappedType &  WrappedRef, const int nChars);
    wxCheckBox * DoTieCheckBox( const TranslatableString &Prompt, WrappedType & WrappedRef );
-   wxChoice * DoTieChoice(
-      const TranslatableString &Prompt, WrappedType & WrappedRef,
-      const TranslatableStrings & choices );
    wxSlider * DoTieSlider(
       const TranslatableString &Prompt,
       WrappedType & WrappedRef, const int max, const int min = 0 );
