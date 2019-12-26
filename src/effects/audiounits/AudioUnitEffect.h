@@ -200,7 +200,7 @@ private:
    EffectUIHostInterface *mUIHost;
    wxWindow *mParent;
    wxDialog *mDialog;
-   wxString mUIType;
+   wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
    bool mIsGraphical;
 
    AudioUnitEffect *mMaster;     // non-NULL if a slave

@@ -1049,8 +1049,6 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
       mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
       mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), mUIType, wxT("Full"));
 
-      mUIType = wxGetTranslation(mUIType);
-
       bool haveDefaults;
       mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
@@ -1868,8 +1866,6 @@ void AudioUnitEffect::ShowOptions()
       // Reinitialize configuration settings
       mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
       mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), mUIType, wxT("Full"));
-
-      mUIType = wxGetTranslation(mUIType);
    }
 }
 
