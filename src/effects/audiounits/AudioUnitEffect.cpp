@@ -344,7 +344,7 @@ private:
    EffectHostInterface *mHost;
 
    bool mUseLatency;
-   wxString mUIType;
+   TranslatableString mUIType;
 
    DECLARE_EVENT_TABLE()
 };
@@ -359,9 +359,13 @@ AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent, Ef
    mHost = host;
 
    mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
-   mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), mUIType, wxT("Full"));
 
-   mUIType = wxGetTranslation(mUIType);
+   // Expect one of three string values from the config file
+   wxString uiType;
+   mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), uiType, wxT("Full"));
+
+   // Get the localization of the string for display to the user
+   mUIType = TranslatableString{ uiType, {} };
 
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -410,8 +414,8 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
                S.TieChoice(XO("Select &interface"),
-                           mUIType,
-                           { XO("Full"), XO("Generic"), XO("Basic") });
+                  mUIType,
+                  { XO("Full"), XO("Generic"), XO("Basic") });
             }
             S.EndHorizontalLay();
          }
@@ -438,21 +442,11 @@ void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   if (mUIType == _("Full"))
-   {
-      mUIType = wxT("Full");
-   }
-   else if (mUIType == _("Generic"))
-   {
-      mUIType = wxT("Generic");
-   }
-   else if (mUIType == _("Basic"))
-   {
-      mUIType = wxT("Basic");
-   }
+   // un-translate the type
+   auto uiType = mUIType.MSGID().GET();
 
    mHost->SetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency);
-   mHost->SetSharedConfig(wxT("Options"), wxT("UIType"), mUIType);
+   mHost->SetSharedConfig(wxT("Options"), wxT("UIType"), uiType);
 
    EndModal(wxID_OK);
 }

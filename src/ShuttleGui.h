@@ -410,7 +410,8 @@ public:
    wxCheckBox * TieCheckBoxOnRight( const TranslatableString & Prompt, bool & Var );
 
    wxChoice * TieChoice(
-      const TranslatableString &Prompt, wxString &Selected, const TranslatableStrings &choices );
+      const TranslatableString &Prompt,
+      TranslatableString &Selected, const TranslatableStrings &choices );
    wxChoice * TieChoice(
       const TranslatableString &Prompt, int &Selected, const TranslatableStrings &choices );
 

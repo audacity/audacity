@@ -1705,11 +1705,17 @@ wxSlider * ShuttleGuiBase::TieVSlider(
 
 wxChoice * ShuttleGuiBase::TieChoice(
    const TranslatableString &Prompt,
-   wxString &Selected,
+   TranslatableString &Selected,
    const TranslatableStrings &choices )
 {
-   WrappedType WrappedRef( Selected );
-   return DoTieChoice( Prompt, WrappedRef, choices );
+   int Index = make_iterator_range( choices ).index( Selected );
+   WrappedType WrappedRef( Index );
+   auto result = DoTieChoice( Prompt, WrappedRef, choices );
+   if ( Index >= 0 && Index < choices.size() )
+      Selected = choices[ Index ];
+   else
+      Selected = {};
+   return result;
 }
 
 wxChoice * ShuttleGuiBase::TieChoice(
