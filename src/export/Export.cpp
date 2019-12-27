@@ -123,7 +123,7 @@ void ExportPlugin::SetDescription(const TranslatableString & description, int in
    mFormatInfos[index].mDescription = description;
 }
 
-void ExportPlugin::AddExtension(const wxString &extension,int index)
+void ExportPlugin::AddExtension(const FileExtension &extension, int index)
 {
    mFormatInfos[index].mExtensions.push_back(extension);
 }
@@ -201,7 +201,7 @@ bool ExportPlugin::GetCanMetaData(int index)
    return mFormatInfos[index].mCanMetaData;
 }
 
-bool ExportPlugin::IsExtension(const wxString & ext, int index)
+bool ExportPlugin::IsExtension(const FileExtension & ext, int index)
 {
    bool isext = false;
    for (int i = index; i < GetFormatCount(); i = GetFormatCount())
@@ -462,7 +462,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
 }
 
 bool Exporter::Process(AudacityProject *project, unsigned numChannels,
-                       const wxChar *type, const wxString & filename,
+                       const FileExtension &type, const wxString & filename,
                        bool selectedOnly, double t0, double t1)
 {
    // Save parms
@@ -592,7 +592,7 @@ bool Exporter::GetFilename()
    mFormat = -1;
 
    wxString maskString;
-   wxString defaultFormat = mFormatName;
+   auto defaultFormat = mFormatName;
    if( defaultFormat.empty() )
       defaultFormat = gPrefs->Read(wxT("/Export/Format"),
                                          wxT("WAV"));
@@ -683,7 +683,7 @@ bool Exporter::GetFilename()
          }
       }
 
-      auto ext = mFilename.GetExt();
+      const auto ext = mFilename.GetExt();
       defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
 
       //

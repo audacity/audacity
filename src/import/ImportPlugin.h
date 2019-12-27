@@ -173,7 +173,7 @@ public:
       return mFormatName;
    }
 
-   bool SupportsExtension(const wxString &extension)
+   bool SupportsExtension(const FileExtension &extension)
    {
       return mExtensions.Index(extension, false) != wxNOT_FOUND;
    }

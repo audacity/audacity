@@ -69,7 +69,7 @@ public:
    int AddFormat();
    void SetFormat(const wxString & format, int index);
    void SetDescription(const TranslatableString & description, int index);
-   void AddExtension(const wxString &extension,int index);
+   void AddExtension(const FileExtension &extension, int index);
    void SetExtensions(FileExtensions extensions, int index);
    void SetMask(const wxString & mask, int index);
    void SetMaxChannels(unsigned maxchannels, unsigned index);
@@ -89,7 +89,7 @@ public:
    virtual unsigned GetMaxChannels(int index);
    virtual bool GetCanMetaData(int index);
 
-   virtual bool IsExtension(const wxString & ext, int index);
+   virtual bool IsExtension(const FileExtension & ext, int index);
 
    virtual bool DisplayOptions(wxWindow *parent, int format = 0);
    
@@ -185,12 +185,12 @@ public:
    virtual ~Exporter();
 
    void SetFileDialogTitle( const TranslatableString & DialogTitle );
-   void SetDefaultFormat( const wxString & Format ){ mFormatName = Format;};
+   void SetDefaultFormat( const FileExtension & Format ){ mFormatName = Format;};
 
    bool Process(AudacityProject *project, bool selectedOnly,
                 double t0, double t1);
    bool Process(AudacityProject *project, unsigned numChannels,
-                const wxChar *type, const wxString & filename,
+                const FileExtension &type, const wxString & filename,
                 bool selectedOnly, double t0, double t1);
 
    void DisplayOptions(int index);
@@ -227,7 +227,7 @@ private:
    void OnFilterChanged(wxFileCtrlEvent & evt);
 
 private:
-   wxString mFormatName;
+   FileExtension mFormatName;
    FileDialogWrapper *mDialog;
    TranslatableString mFileDialogTitle;
    AudacityProject *mProject;

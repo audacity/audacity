@@ -214,13 +214,13 @@ ExportFFmpeg::ExportFFmpeg()
       switch(newfmt)
       {
       case FMT_M4A:
-         AddExtension(wxString(wxT("3gp")),fmtindex);
-         AddExtension(wxString(wxT("m4r")),fmtindex);
-         AddExtension(wxString(wxT("mp4")),fmtindex);
+         AddExtension(wxT("3gp"),fmtindex);
+         AddExtension(wxT("m4r"),fmtindex);
+         AddExtension(wxT("mp4"),fmtindex);
          break;
       case FMT_WMA2:
-         AddExtension(wxString(wxT("asf")),fmtindex);
-         AddExtension(wxString(wxT("wmv")),fmtindex);
+         AddExtension(wxT("asf"),fmtindex);
+         AddExtension(wxT("wmv"),fmtindex);
          break;
       default:
          break;

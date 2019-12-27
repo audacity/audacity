@@ -35,8 +35,7 @@
 
 // private helper classes and functions
 namespace {
-void DoExport
-(AudacityProject &project, const wxString & Format )
+void DoExport( AudacityProject &project, const FileExtension & Format )
 {
    auto &tracks = TrackList::Get( project );
 

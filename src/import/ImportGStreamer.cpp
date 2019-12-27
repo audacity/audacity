@@ -345,7 +345,7 @@ GStreamerImportPlugin::GetSupportedExtensions()
    // We refresh the extensions each time this is called in case the
    // user had installed additional gstreamer plugins while Audacity
    // was active.
-   mExtensions.Empty();
+   mExtensions.clear();
 
    // Gather extensions from all factories that support audio
    {

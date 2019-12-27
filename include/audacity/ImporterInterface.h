@@ -73,7 +73,7 @@ public:
    // import.  If a filename matches any of these extensions,
    // this importer will get first dibs on importing it.
    virtual FileExtensions GetSupportedExtensions() = 0;
-   virtual bool SupportsExtension(const wxString & extension) = 0;
+   virtual bool SupportsExtension(const FileExtension & extension) = 0;
 
    // Create the client that will be used to import a file.
    virtual ImporterClientInterface *CreateClient() = 0;

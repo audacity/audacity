@@ -350,7 +350,7 @@ bool Importer::Import(const FilePath &fName,
    AudacityProject *pProj = GetActiveProject();
    auto cleanup = valueRestorer( pProj->mbBusyImporting, true );
 
-   wxString extension = fName.AfterLast(wxT('.'));
+   const FileExtension extension{ fName.AfterLast(wxT('.')) };
 
    // Always refuse to import MIDI, even though the FFmpeg plugin pretends to know how (but makes very bad renderings)
 #ifdef USE_MIDI

@@ -372,7 +372,7 @@ ExportPCM::ExportPCM()
       si.format = kFormats[i].format;
       for (si.channels = 1; sf_format_check(&si); si.channels++)
          ;
-      wxString ext = sf_header_extension(si.format);
+      auto ext = sf_header_extension(si.format);
 
       SetFormat(kFormats[i].name, format);
       SetCanMetaData(true, format);

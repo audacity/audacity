@@ -631,7 +631,7 @@ bool MacroCommands::ApplySpecialCommand(
    }
 
    wxString filename;
-   wxString extension; // required for correct message
+   FileExtension extension; // required for correct message
    if (command == wxT("ExportWAV"))
       extension = wxT(".wav");
    else if (command == wxT("ExportOgg"))

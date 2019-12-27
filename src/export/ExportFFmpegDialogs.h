@@ -48,7 +48,7 @@ struct ExposedFormat
 {
    FFmpegExposedFormat fmtid; //!< one of the FFmpegExposedFormat
    const wxChar *name;        //!< format name (internal, should be unique; if not - export dialog may show unusual behaviour)
-   const wxChar *extension;   //!< default extension for this format. More extensions may be added later via AddExtension.
+   const FileExtension extension;   //!< default extension for this format. More extensions may be added later via AddExtension.
    const wxChar *shortname;   //!< used to guess the format
    unsigned maxchannels;      //!< how many channels this format could handle
    const int canmetadata;           //!< !=0 if format supports metadata, AV_CANMETA any avformat version, otherwise version support added
