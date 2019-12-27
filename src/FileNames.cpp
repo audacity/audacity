@@ -465,14 +465,17 @@ FileNames::SelectFile(Operation op,
            const TranslatableString& message,
            const FilePath& default_path,
            const FilePath& default_filename,
-           const wxString& default_extension,
+           const FileExtension& default_extension,
            const wxString& wildcard,
            int flags,
            wxWindow *parent)
 {
    return WithDefaultPath(op, default_path, [&](const FilePath &path) {
+      wxString filter;
+      if ( !default_extension.empty() )
+         filter = wxT("*.") + default_extension;
       return FileSelector(
-            message.Translation(), path, default_filename, default_extension,
+            message.Translation(), path, default_filename, filter,
             wildcard, flags, parent, wxDefaultCoord, wxDefaultCoord);
    });
 }
@@ -624,7 +627,7 @@ char *FileNames::VerifyFilename(const wxString &s, bool input)
                              wxEmptyString,
                              name,
                              ext,
-                             wxT("*.") + ext,
+                             ext.empty() ? wxT("*") : (wxT("*.") + ext),
                              wxFD_SAVE | wxRESIZE_BORDER,
                              wxGetTopLevelParent(NULL));
       }

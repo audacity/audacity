@@ -318,7 +318,7 @@ void OnExportMIDI(const CommandContext &context)
          XO("Export MIDI As:"),
          wxEmptyString,
          fName,
-         wxT(".mid|.gro"),
+         wxT("mid"),
          _("MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"),
          wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
          &window);
@@ -423,7 +423,7 @@ void OnImportLabels(const CommandContext &context)
                     XO("Select a text file containing labels"),
                     wxEmptyString,     // Path
                     wxT(""),       // Name
-                    wxT(".txt"),   // Extension
+                    wxT("txt"),   // Extension
                     _("Text files (*.txt)|*.txt|All files|*"),
                     wxRESIZE_BORDER,        // Flags
                     &window);    // Parent

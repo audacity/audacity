@@ -178,7 +178,7 @@ void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
    wxString ext;
 
 #if defined(__WXMSW__)
-   ext = wxT(".exe");
+   ext = wxT("exe");
 #endif
 
    path = FileNames::SelectFile(FileNames::Operation::Open,
@@ -186,7 +186,7 @@ void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
                        wxEmptyString,
                        wxEmptyString,
                        ext,
-                       wxT("*") + ext,
+                       ext.empty() ? wxT("*") : (wxT("*.") + ext),
                        wxFD_OPEN | wxRESIZE_BORDER,
                        this);
    if (path.empty()) {

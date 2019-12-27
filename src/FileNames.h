@@ -130,9 +130,7 @@ public:
               const TranslatableString& message,
                 const FilePath& default_path,
                 const FilePath& default_filename,
-                // empty, or one extension, or multiple extensions joined with
-                // '|', extensions including the leading dot:
-                const wxString& default_extension,
+                const FileExtension& default_extension,
                 const wxString& wildcard,
                 int flags,
                 wxWindow *parent);
