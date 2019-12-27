@@ -41,6 +41,7 @@ and ImportLOF.cpp.
 #include "ImportPlugin.h"
 
 #include <algorithm>
+#include <unordered_set>
 
 #include <wx/textctrl.h>
 #include <wx/string.h>
@@ -143,6 +144,78 @@ void Importer::GetSupportedImportFormats(FormatList *formatList)
       formatList->emplace_back(importPlugin->GetPluginFormatDescription(),
                                importPlugin->GetSupportedExtensions());
    }
+}
+
+FileNames::FileTypes
+Importer::GetFileTypes( const FileNames::FileType &extraType )
+{
+   // Construct the filter
+   FileNames::FileTypes fileTypes{
+      FileNames::AllFiles,
+      // Will fill in the list of extensions later:
+      { XO("All supported files"), {} }
+   };
+
+   if ( !extraType.extensions.empty() )
+      fileTypes.push_back( extraType );
+   
+   FormatList l;
+   GetSupportedImportFormats(&l);
+   
+   using ExtensionSet = std::unordered_set< FileExtension >;
+   FileExtensions allList = extraType.extensions, newList;
+   ExtensionSet allSet{ allList.begin(), allList.end() }, newSet;
+   for ( const auto &format : l ) {
+      newList.clear();
+      newSet.clear();
+      for ( const auto &extension : format.formatExtensions ) {
+         if ( newSet.insert( extension ).second )
+            newList.push_back( extension );
+         if ( allSet.insert( extension ).second )
+            allList.push_back( extension );
+      }
+      fileTypes.push_back( { format.formatName, newList } );
+   }
+
+   fileTypes[1].extensions = allList;
+   return fileTypes;
+}
+
+void Importer::SetLastOpenType( const FileNames::FileType &type )
+{
+   // PRL:  Preference key /LastOpenType, unusually, stores a localized
+   // string!
+   // The bad consequences of a change of locale are not severe -- only that
+   // a default choice of file type for an open dialog is not remembered
+   gPrefs->Write(wxT("/LastOpenType"), type.description.Translation());
+   gPrefs->Flush();
+}
+
+void Importer::SetDefaultOpenType( const FileNames::FileType &type )
+{
+   // PRL:  Preference key /DefaultOpenType, unusually, stores a localized
+   // string!
+   // The bad consequences of a change of locale are not severe -- only that
+   // a default choice of file type for an open dialog is not remembered
+   gPrefs->Write(wxT("/DefaultOpenType"), type.description.Translation());
+   gPrefs->Flush();
+}
+
+size_t Importer::SelectDefaultOpenType( const FileNames::FileTypes &fileTypes )
+{
+   wxString defaultValue;
+   if ( !fileTypes.empty() )
+      defaultValue = fileTypes[0].description.Translation();
+
+   wxString type = gPrefs->Read(wxT("/DefaultOpenType"), defaultValue);
+   // Convert the type to the filter index
+   auto begin = fileTypes.begin();
+   auto index = std::distance(
+      begin,
+      std::find_if( begin, fileTypes.end(),
+         [&type](const FileNames::FileType &fileType){
+            return fileType.description.Translation() == type; } ) );
+   return (index == fileTypes.size()) ? 0 : index;
 }
 
 void Importer::StringToList(wxString &str, wxString &delims, wxArrayString &list, wxStringTokenizerMode mod)
@@ -389,10 +462,6 @@ bool Importer::Import(const FilePath &fName,
 
       for (const auto &plugin : sImportPluginList())
       {
-         // PRL:  Preference keys /DefaultOpenType and /LastOpenType, unusually,
-         // store localized strings!
-         // The bad consequences of a change of locale are not severe -- only that
-         // a default choice of file type for an open dialog is not remembered
          if (plugin->GetPluginFormatDescription().Translation() == type )
          {
             // This plugin corresponds to user-selected filter, try it first.

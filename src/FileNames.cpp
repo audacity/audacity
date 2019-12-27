@@ -49,6 +49,102 @@ used throughout Audacity into this one place.
 
 static wxString gDataDir;
 
+const FileNames::FileType
+     FileNames::AllFiles{ XO("All files"), { wxT("") } }
+     /* i18n-hint an Audacity project is the state of the program, stored as
+     files that can be reopened to resume the session later */
+   , FileNames::AudacityProjects{ XO("Audacity projects"), { wxT("aup") }, true }
+   , FileNames::DynamicLibraries{
+#if defined(__WXMSW__)
+      XO("Dynamically Linked Libraries"), { wxT("dll") }, true
+#elif defined(__WXMAC__)
+      XO("Dynamic Libraries"), { wxT("dylib") }, true
+#else
+      XO("Dynamically Linked Libraries"), { wxT("so*") }, true
+#endif
+     }
+   , FileNames::TextFiles{ XO("Text files"), { wxT("txt") }, true }
+   , FileNames::XMLFiles{ XO("XML files"), { wxT("xml"), wxT("XML") }, true }
+;
+
+wxString FileNames::FormatWildcard( const FileTypes &fileTypes )
+{
+   // |-separated list of:
+   // [ Description,
+   //   ( if appendExtensions, then ' (', globs, ')' ),
+   //   '|',
+   //   globs ]
+   // where globs is a ;-separated list of filename patterns, which are
+   // '*' for an empty extension, else '*.' then the extension
+   // Only the part before | is displayed in the choice drop-down of file
+   // dialogs
+   //
+   // Exceptional case: if there is only one type and its description is empty,
+   // then just give the globs with no |
+   // Another exception: an empty description, when there is more than one
+   // type, is replaced with a default
+   // Another exception:  if an extension contains a dot, it is interpreted as
+   // not really an extension, but a literal filename
+
+   const wxString dot{ '.' };
+   const auto makeGlobs = [&dot]( const FileExtensions &extensions ){
+      wxString globs;
+      for ( const auto &extension: extensions ) {
+         if ( !globs.empty() )
+            globs += ';';
+         if ( extension.Contains( dot ) )
+            globs += extension;
+         else {
+            globs += '*';
+            if ( !extension.empty() ) {
+               globs += '.';
+               globs += extension;
+            }
+         }
+      }
+      return globs;
+   };
+
+   const auto defaultDescription = []( const FileExtensions &extensions ){
+      // Assume extensions is not empty
+      wxString exts = extensions[0];
+      for (size_t ii = 1, size = extensions.size(); ii < size; ++ii ) {
+         exts += XO(", ").Translation();
+         exts += extensions[ii];
+      }
+      /* i18n-hint a type or types such as "txt" or "txt, xml" will be
+         substituted for %s */
+      return XO("%s files").Format( exts );
+   };
+
+   if ( fileTypes.size() == 1 && fileTypes[0].description.empty() ) {
+      return makeGlobs( fileTypes[0].extensions );
+   }
+   else {
+      wxString result;
+      for ( const auto &fileType : fileTypes ) {
+         const auto &extensions = fileType.extensions;
+         if (extensions.empty())
+            continue;
+
+         if (!result.empty())
+            result += '|';
+
+         const auto globs = makeGlobs( extensions );
+
+         auto mask = fileType.description;
+         if ( mask.empty() )
+           mask = defaultDescription( extensions );
+         if ( fileType.appendExtensions )
+            mask.Join( XO("(%s)").Format( globs ), " " );
+         result += mask.Translation();
+         result += '|';
+         result += globs;
+      }
+      return result;
+   }
+}
+
 bool FileNames::CopyFile(
    const FilePath& file1, const FilePath& file2, bool overwrite)
 {

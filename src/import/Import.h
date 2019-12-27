@@ -18,6 +18,7 @@
 #include <wx/tokenzr.h> // for enum wxStringTokenizerMode
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
+#include "../FileNames.h" // for FileType
 
 class wxArrayString;
 class wxListBox;
@@ -119,6 +120,31 @@ public:
     * Fills @formatList with a list of supported import formats
     */
    void GetSupportedImportFormats(FormatList *formatList);
+
+   /**
+    * Constructs a list of types, for use by file opening dialogs, that includes
+    * all supported file types
+    */
+   FileNames::FileTypes
+   GetFileTypes( const FileNames::FileType &extraType = {} );
+
+   /**
+    * Remember a file type in preferences
+    */
+   static void
+   SetLastOpenType( const FileNames::FileType &type );
+
+   /**
+    * Remember a file type in preferences
+    */
+   static void
+   SetDefaultOpenType( const FileNames::FileType &type );
+
+   /**
+    * Choose index of preferred type
+    */
+   static size_t
+   SelectDefaultOpenType( const FileNames::FileTypes &fileTypes );
 
    /**
     * Reads extended import filters from gPrefs into internal

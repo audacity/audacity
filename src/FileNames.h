@@ -16,6 +16,7 @@
 #include <wx/dir.h> // for wxDIR_FILES
 #include <wx/string.h> // function return value
 #include "audacity/Types.h"
+#include "MemoryX.h"
 
 class wxFileName;
 class wxFileNameWrapper;
@@ -25,6 +26,37 @@ class wxFileNameWrapper;
 class AUDACITY_DLL_API FileNames
 {
 public:
+   // A description of a type of file
+   struct FileType {
+      FileType() = default;
+
+      FileType( TranslatableString d, FileExtensions e, bool a = false )
+         : description{ std::move( d ) }
+         , extensions( std::move( e ) )
+         , appendExtensions{ a }
+      {}
+
+      TranslatableString description;
+      FileExtensions extensions;
+      // Whether to extend the displayed description with mention of the
+      // extensions:
+      bool appendExtensions = false;
+   };
+
+   // Frequently used types
+   static const FileType
+        AllFiles // *
+      , AudacityProjects // *.aup
+      , DynamicLibraries // depends on the operating system
+      , TextFiles // *.txt
+      , XMLFiles; // *.xml, *.XML
+   
+   using FileTypes = std::vector< FileType >;
+
+   // Convert fileTypes into a single string as expected by wxWidgets file
+   // selection dialog
+   static wxString FormatWildcard( const FileTypes &fileTypes );
+
    // This exists to compensate for bugs in wxCopyFile:
    static bool CopyFile(
       const FilePath& file1, const FilePath& file2, bool overwrite = true);
