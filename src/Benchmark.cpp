@@ -62,7 +62,7 @@ private:
    void OnClear( wxCommandEvent &event );
    void OnClose( wxCommandEvent &event );
 
-   void Printf(const wxChar *format, ...);
+   void Printf(const TranslatableString &str);
    void HoldPrint(bool hold);
    void FlushPrint();
 
@@ -257,7 +257,7 @@ void BenchmarkDialog::OnSave( wxCommandEvent & WXUNUSED(event))
 {
 /* i18n-hint: Benchmark means a software speed test;
    leave untranslated file extension .txt */
-   wxString fName = _("benchmark.txt");
+   auto fName = XO("benchmark.txt").Translation();
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
                         XO("Export Benchmark Data as:"),
@@ -279,17 +279,12 @@ void BenchmarkDialog::OnClear(wxCommandEvent & WXUNUSED(event))
    mText->Clear();
 }
 
-void BenchmarkDialog::Printf(const wxChar *format, ...)
+void BenchmarkDialog::Printf(const TranslatableString &str)
 {
-   va_list argptr;
-   va_start(argptr, format);
-
-   wxString s = wxString::FormatV(format, argptr);
+   auto s = str.Translation();
    mToPrint += s;
    if (!mHoldPrint)
       FlushPrint();
-
-   va_end(argptr);
 }
 
 void BenchmarkDialog::HoldPrint(bool hold)
@@ -385,8 +380,8 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    // They are (and are supposed to be) a different size to
    // the blocks that make the blockfiles.  That way we get to
    // do some testing of when edit chunks cross blockfile boundaries.
-   Printf(_("Using %d chunks of %d samples each, for a total of %.1f MB.\n"),
-          nChunks, chunkSize, nChunks*chunkSize*sizeof(short)/1048576.0);
+   Printf( XO("Using %ld chunks of %ld samples each, for a total of %.1f MB.\n")
+      .Format( nChunks, chunkSize, nChunks*chunkSize*sizeof(short)/1048576.0 ) );
 
    int trials = numEdits;
 
@@ -394,7 +389,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    Shorts small1{ nChunks };
    Shorts block{ chunkSize };
 
-   Printf(_("Preparing...\n"));
+   Printf( XO("Preparing...\n") );
 
    wxTheApp->Yield();
    FlushPrint();
@@ -422,12 +417,15 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    t->GetEndTime();
 
    if (t->GetClipByIndex(0)->GetSequence()->GetNumSamples() != nChunks * chunkSize) {
-      Printf(_("Expected len %d, track len %lld.\n"), nChunks * chunkSize,
-             t->GetClipByIndex(0)->GetSequence()->GetNumSamples().as_long_long());
+      Printf( XO("Expected len %ld, track len %lld.\n")
+         .Format(
+            nChunks * chunkSize,
+            t->GetClipByIndex(0)->GetSequence()->GetNumSamples()
+               .as_long_long() ) );
       goto fail;
    }
 
-   Printf(_("Performing %d edits...\n"), trials);
+   Printf( XO("Performing %d edits...\n").Format( trials ) );
    wxTheApp->Yield();
    FlushPrint();
 
@@ -441,18 +439,22 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       // 1 <= xlen <= nChunks - x0
       const size_t xlen = 1 + (rand() % (nChunks - x0));
       if (mEditDetail)
-         Printf(_("Cut: %d - %d \n"), x0 * chunkSize, (x0 + xlen) * chunkSize);
+         Printf( XO("Cut: %ld - %ld \n")
+            .Format( x0 * chunkSize, (x0 + xlen) * chunkSize) );
 
       Track::Holder tmp;
       try {
          tmp = t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
       }
       catch (const AudacityException&) {
-         Printf(_("Trial %d\n"), z);
-         Printf(_("Cut (%d, %d) failed.\n"), (x0 * chunkSize),
-                (x0 + xlen) * chunkSize);
-         Printf(_("Expected len %d, track len %lld.\n"), nChunks * chunkSize,
-                t->GetClipByIndex(0)->GetSequence()->GetNumSamples().as_long_long());
+         Printf( XO("Trial %d\n").Format( z ) );
+         Printf( XO("Cut (%ld, %ld) failed.\n")
+            .Format( (x0 * chunkSize), (x0 + xlen) * chunkSize) );
+         Printf( XO("Expected len %ld, track len %lld.\n")
+            .Format(
+               nChunks * chunkSize,
+               t->GetClipByIndex(0)->GetSequence()->GetNumSamples()
+                  .as_long_long() ) );
          goto fail;
       }
 
@@ -461,20 +463,23 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       const size_t y0 = rand() % (nChunks - xlen + 1);
 
       if (mEditDetail)
-         Printf(_("Paste: %d\n"), y0 * chunkSize);
+         Printf( XO("Paste: %ld\n").Format( y0 * chunkSize ) );
 
       try {
          t->Paste((double)(y0 * chunkSize), tmp.get());
       }
       catch (const AudacityException&) {
-         Printf(_("Trial %d\nFailed on Paste.\n"), z);
+         Printf( XO("Trial %d\nFailed on Paste.\n").Format( z ) );
          goto fail;
       }
 
       if (t->GetClipByIndex(0)->GetSequence()->GetNumSamples() != nChunks * chunkSize) {
-         Printf(_("Trial %d\n"), z);
-         Printf(_("Expected len %d, track len %lld.\n"), nChunks * chunkSize,
-                t->GetClipByIndex(0)->GetSequence()->GetNumSamples().as_long_long());
+         Printf( XO("Trial %d\n").Format( z ) );
+         Printf( XO("Expected len %ld, track len %lld.\n")
+            .Format(
+               nChunks * chunkSize,
+               t->GetClipByIndex(0)->GetSequence()->GetNumSamples()
+                  .as_long_long() ) );
          goto fail;
       }
 
@@ -492,19 +497,19 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       seq->DebugPrintf(seq->GetBlockArray(), seq->GetNumSamples(), &tempStr);
       mToPrint += tempStr;
    }
-   Printf(_("Time to perform %d edits: %ld ms\n"), trials, elapsed);
+   Printf( XO("Time to perform %d edits: %ld ms\n").Format( trials, elapsed ) );
    FlushPrint();
    wxTheApp->Yield();
 
 
 #if 0
-   Printf(_("Checking file pointer leaks:\n"));
-   Printf(_("Track # blocks: %d\n"), t->GetBlockArray()->size());
-   Printf(_("Disk # blocks: \n"));
+   Printf( XO("Checking file pointer leaks:\n") );
+   Printf( XO("Track # blocks: %ld\n").Format( t->GetBlockArray()->size() ) );
+   Printf( XO("Disk # blocks: \n") );
    system("ls .audacity_temp/* | wc --lines");
 #endif
 
-   Printf(_("Doing correctness check...\n"));
+   Printf( XO("Doing correctness check...\n") );
    FlushPrint();
    wxTheApp->Yield();
 
@@ -517,19 +522,19 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          if (block[b] != v) {
             bad++;
             if (bad < 10)
-               Printf(_("Bad: chunk %d sample %d\n"), i, b);
+               Printf( XO("Bad: chunk %ld sample %ld\n").Format( i, b ) );
             b = chunkSize;
          }
    }
    if (bad == 0)
-      Printf(_("Passed correctness check!\n"));
+      Printf( XO("Passed correctness check!\n") );
    else
-      Printf(_("Errors in %d/%d chunks\n"), bad, nChunks);
+      Printf( XO("Errors in %d/%ld chunks\n").Format( bad, nChunks ) );
 
    elapsed = timer.Time();
 
-   Printf(_("Time to check all data: %ld ms\n"), elapsed);
-   Printf(_("Reading data again...\n"));
+   Printf( XO("Time to check all data: %ld ms\n").Format( elapsed ) );
+   Printf( XO("Reading data again...\n") );
 
    wxTheApp->Yield();
    FlushPrint();
@@ -546,20 +551,20 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    elapsed = timer.Time();
 
-   Printf(_("Time to check all data (2): %ld ms\n"), elapsed);
+   Printf( XO("Time to check all data (2): %ld ms\n").Format( elapsed ) );
 
-   Printf(_("At 44100 Hz, 16-bits per sample, the estimated number of\n simultaneous tracks that could be played at once: %.1f\n"),
-          (nChunks*chunkSize/44100.0)/(elapsed/1000.0));
+   Printf( XO("At 44100 Hz, 16-bits per sample, the estimated number of\n simultaneous tracks that could be played at once: %.1f\n" )
+      .Format( (nChunks*chunkSize/44100.0)/(elapsed/1000.0) ) );
 
    goto success;
 
  fail:
-   Printf(_("TEST FAILED!!!\n"));
+   Printf( XO("TEST FAILED!!!\n") );
 
  success:
 
    dd.reset();
 
-   Printf(_("Benchmark completed successfully.\n"));
+   Printf( XO("Benchmark completed successfully.\n") );
    HoldPrint(false);
 }
