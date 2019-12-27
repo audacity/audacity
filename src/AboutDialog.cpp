@@ -37,6 +37,8 @@ hold information about one contributor to Audacity.
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
 #include <wx/intl.h>
+#include <wx/sstream.h>
+#include <wx/txtstrm.h>
 
 #include "FileNames.h"
 #include "HelpText.h"
@@ -306,110 +308,141 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 {
    CreateCreditsList();
 
-   wxString par1Str = 
+   auto par1Str =
 // DA: Says that it is a customised version.
 #ifdef EXPERIMENTAL_DA
       wxT(
 "Audacity, which this is a customised version of, is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
 #else
-      _(
+      XO(
 "Audacity is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
 #endif
+   ;
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
-   wxString par2StrUntranslated = wxT(
+   auto par2Str = XO(
 "If you find a bug or have a suggestion for us, please write, in English, to our [[https://forum.audacityteam.org/|forum]]. \
 For help, view the tips and tricks on our [[https://wiki.audacityteam.org/|wiki]] or \
 visit our [[https://forum.audacityteam.org/|forum]].");
-   wxString par2Str = _(
-"If you find a bug or have a suggestion for us, please write, in English, to our [[https://forum.audacityteam.org/|forum]]. \
-For help, view the tips and tricks on our [[https://wiki.audacityteam.org/|wiki]] or \
-visit our [[https://forum.audacityteam.org/|forum]].");
+   auto par2StrTranslated = par2Str.Translation();
 
-   if( par2Str == par2StrUntranslated )
-      par2Str.Replace( wxT(", in English,"), wxT("") );
+   if( par2StrTranslated == par2Str.MSGID().GET() )
+      par2StrTranslated.Replace( wxT(", in English,"), wxT("") );
 
-   wxString translatorCredits;
+   auto translatorCreditsMsgid = XO("translator_credits");
+   auto translatorCredits = translatorCreditsMsgid.Translation();
    /* i18n-hint: The translation of "translator_credits" will appear
     *  in the credits in the About Audacity window.  Use this to add
     *  your own name(s) to the credits.
     *
     *  For example:  "English translation by Dominic Mazzoni." */
-   if (_("translator_credits") != wxString(wxT("translator_credits")))
-   {
-      translatorCredits = _("translator_credits") + wxT("<br>");
-   }
+   if ( translatorCredits == translatorCreditsMsgid.MSGID().GET() )
+      // We're in an English locale
+      translatorCredits.clear();
+   else
+      translatorCredits += wxT("<br>");
 
-   wxString creditStr = FormatHtmlText(
-      wxString( wxT("<center>") ) +
+   wxStringOutputStream o;
+   wxTextOutputStream informationStr( o );   // string to build up list of information in
+   informationStr
+      << wxT("<center>")
 // DA: Description and provenance in About box
 #ifdef EXPERIMENTAL_DA
       #undef _
       #define _(s) wxGetTranslation((s))
-      wxT("<h3>DarkAudacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
-      wxT("Customised version of the Audacity free, open source, cross-platform software " ) +
-      wxT("for recording and editing sounds.") +
-      wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>") +
-      wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
+      << wxT("<h3>DarkAudacity ")
+      << wxString(AUDACITY_VERSION_STRING)
+      << wxT("</center></h3>")
+      << wxT("Customised version of the Audacity free, open source, cross-platform software " )
+      << wxT("for recording and editing sounds.")
+      << wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>")
+      << wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>")
 
 #else
-      _("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
-      _("Audacity the free, open source, cross-platform software for recording and editing sounds.") +
+      << XO("<h3>Audacity ")
+      << wxString(AUDACITY_VERSION_STRING)
+      << wxT("</center></h3>")
+      << XO("Audacity the free, open source, cross-platform software for recording and editing sounds.")
 #endif
 
-      //wxT("<p><br>") + par1Str +
-      //wxT("<p>") + par2Str +
-      wxT("<h3>") + _("Credits") + wxT("</h3>") + wxT("<p>") +
+      // << wxT("<p><br>")
+      // << par1Str
+      // << wxT("<p>")
+      // << par2Str
+      << wxT("<h3>")
+      << XO("Credits")
+      << wxT("</h3>")
+      << wxT("<p>")
 
 // DA: Customisation credit
 #ifdef EXPERIMENTAL_DA
-      wxT("<p><b>") + wxString::Format(_("DarkAudacity Customisation")) + wxT("</b><br>") +
-      wxT("James Crook, art, coding &amp; design<br>") +
+      << wxT("<p><b>")
+      << XO("DarkAudacity Customisation")
+      << wxT("</b><br>")
+      << wxT("James Crook, art, coding &amp; design<br>")
 #endif
 
-      wxT("<p><b>") + _("Audacity Team Members") + wxT("</b><br>") +
-      GetCreditsByRole(roleTeamMember) +
+      << wxT("<p><b>")
+      << XO("Audacity Team Members")
+      << wxT("</b><br>")
+      << GetCreditsByRole(roleTeamMember)
 
-      wxT("<p><b> ") + _("Emeritus:") + wxT("</b><br>") +
-      _("Distinguished Audacity Team members, not currently active") + wxT("<br><br>") +
-      GetCreditsByRole(roleEmeritusTeam) +
+      << wxT("<p><b> ")
+      << XO("Emeritus:")
+      << wxT("</b><br>")
+      << XO("Distinguished Audacity Team members, not currently active")
+      << wxT("<br><br>")
+      << GetCreditsByRole(roleEmeritusTeam)
 
-      wxT("<p><b>") + _("Contributors") + wxT("</b><br>") +
-      GetCreditsByRole(roleContributor) +
+      << wxT("<p><b>")
+      << XO("Contributors")
+      << wxT("</b><br>")
+      << GetCreditsByRole(roleContributor)
 
-      wxT("<p><b>") + _("Website and Graphics") + wxT("</b><br>") +
-      GetCreditsByRole(roleGraphics) +
+      << wxT("<p><b>")
+      << XO("Website and Graphics")
+      << wxT("</b><br>")
+      << GetCreditsByRole(roleGraphics)
+   ;
 
-      (translatorCredits.empty()
-         ? wxT("")
-         : (wxT("<p><b>") + _("Translators") + wxT("</b><br>") +
-            translatorCredits)) +
+   if(!translatorCredits.empty()) informationStr
+      << wxT("<p><b>")
+      << XO("Translators")
+      << wxT("</b><br>")
+      << translatorCredits
+   ;
 
-      wxT("<p><b>") +  _("Libraries") + wxT("</b><br>") +
-      _("Audacity includes code from the following projects:") + wxT("<br><br>") +
-      GetCreditsByRole(roleLibrary) +
+   informationStr
+      << wxT("<p><b>")
+      << XO("Libraries")
+      << wxT("</b><br>")
+      << XO("Audacity includes code from the following projects:")
+      << wxT("<br><br>")
+      << GetCreditsByRole(roleLibrary)
 
-      wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
-      GetCreditsByRole(roleThanks) +
+      << wxT("<p><b>")
+      << XO("Special thanks:")
+      << wxT("</b><br>")
+      << GetCreditsByRole(roleThanks)
 
-      wxT("<p><br>") + _("Audacity website: ") + wxT("[[https://www.audacityteam.org/|https://www.audacityteam.org/]]") +
+      << wxT("<p><br>")
+      << XO("Audacity website: ")
+      << wxT("[[https://www.audacityteam.org/|https://www.audacityteam.org/]]")
 
 // DA: Link for DA url too
 #ifdef EXPERIMENTAL_DA
-      wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|https://www.darkaudacity.com/]]") +
+      << wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|https://www.darkaudacity.com/]]")
 #else
-      _("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>")
+      << XO("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>")
 
-      +
-
-      _("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
+      << XO("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>")
 #endif
 
-      wxT("</center>")
-   );
+      << wxT("</center>")
+   ;
 
    auto pPage = S.StartNotebookPage( XO("Audacity") );
    S.StartVerticalLay(1);
@@ -446,7 +479,7 @@ visit our [[https://forum.audacityteam.org/|forum]].");
                                          wxDefaultPosition,
                                          wxSize(ABOUT_DIALOG_WIDTH, 359),
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
-   html->SetPage(creditStr);
+   html->SetPage( FormatHtmlText( o.GetString() ) );
 
    /* locate the html renderer where it fits in the dialogue */
    S.Prop(1).Position( wxEXPAND ).Focus()
@@ -463,7 +496,8 @@ visit our [[https://forum.audacityteam.org/|forum]].");
  * about the build we might wish to know should be visible here */
 void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 {
-   wxString informationStr;   // string to build up list of information in
+   wxStringOutputStream o;
+   wxTextOutputStream informationStr( o );   // string to build up list of information in
    S.StartNotebookPage( XO("Build Information") );  // start the tab
    S.StartVerticalLay(2);  // create the window
    HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1, wxDefaultPosition,
@@ -476,18 +510,20 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
    /* this builds up the list of information to go in the window in the string
     * informationStr */
-   informationStr = wxT("<h2><center>");
-   informationStr += _("Build Information");
-   informationStr += wxT("</center></h2>\n");
-   informationStr += VerCheckHtml();
-   // top level heading
-   informationStr += wxT("<h3>");
-   informationStr += _("File Format Support");
-   informationStr += wxT("</h3>\n<p>");
+   informationStr
+      << wxT("<h2><center>")
+      << XO("Build Information")
+      << wxT("</center></h2>\n")
+      << VerCheckHtml()
+      // top level heading
+      << wxT("<h3>")
+      << XO("File Format Support")
+      << wxT("</h3>\n<p>");
    // 2nd level headings to split things up a bit
 
 
-   informationStr += wxT("<table>");   // start table of libraries
+   informationStr
+      << wxT("<table>");   // start table of libraries
 
 
    #ifdef USE_LIBMAD
@@ -553,11 +589,12 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    AddBuildinfoRow(&informationStr, wxT("gstreamer"), XO("Import via GStreamer"), disabled);
    #endif
 
-   informationStr += wxT("</table>\n");  //end table of file format libraries
-   informationStr += wxT("<h3>");
-   /* i18n-hint: Libraries that are essential to audacity */
-   informationStr += _("Core Libraries");
-   informationStr += wxT("</h3>\n<table>");  // start table of features
+   informationStr
+      << wxT("</table>\n")  //end table of file format libraries
+      << wxT("<h3>")
+      /* i18n-hint: Libraries that are essential to audacity */
+      << XO("Core Libraries")
+      << wxT("</h3>\n<table>");  // start table of features
 
    AddBuildinfoRow(&informationStr, wxT("libsoxr"),
          XO("Sample rate conversion"), enabled);
@@ -568,10 +605,11 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    AddBuildinfoRow(&informationStr, wxT("wxWidgets"),
          XO("Cross-platform GUI library"), wxVERSION_NUM_DOT_STRING_T);
 
-   informationStr += wxT("</table>\n");  //end table of libraries
-   informationStr += wxT("<h3>");
-   informationStr += _("Features");
-   informationStr += wxT("</h3>\n<table>");  // start table of features
+   informationStr
+      << wxT("</table>\n")  //end table of libraries
+      << wxT("<h3>")
+      << XO("Features")
+      << wxT("</h3>\n<table>");  // start table of features
 
 #ifdef EXPERIMENTAL_DA
    AddBuildinfoRow(&informationStr, wxT("Theme"), XO("Dark Theme Extras"), enabled);
@@ -651,12 +689,13 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
          disabled);
    # endif
 
-   informationStr += wxT("</table>\n");   // end of table of features
+   informationStr << wxT("</table>\n");   // end of table of features
 
-   informationStr += wxT("<h3>");
+   informationStr
+      << wxT("<h3>")
    /* i18n-hint: Information about when audacity was compiled */
-   informationStr += _("Build Information");
-   informationStr += wxT("</h3>\n<table>");
+      << XO("Build Information")
+      << wxT("</h3>\n<table>");
 
    // Current date
    AddBuildinfoRow(&informationStr, XO("Program build date:"), __TDATE__);
@@ -702,11 +741,9 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    AddBuildinfoRow(&informationStr, XO("Settings folder:"), \
       FileNames::DataDir());
    // end of table
-   informationStr += wxT("</table>\n");
+   informationStr << wxT("</table>\n");
 
-   informationStr = FormatHtmlText( informationStr );
-
-   html->SetPage(informationStr);   // push the page into the html renderer
+   html->SetPage( FormatHtmlText( o.GetString() ) );   // push the page into the html renderer
    S.Prop(2)
       .Position( wxEXPAND )
       .AddWindow( html ); // make it fill the page
@@ -1064,16 +1101,17 @@ wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
  * Used when creating the build information tab to show if each optional
  * library is enabled or not, and what it does */
 void AboutDialog::AddBuildinfoRow(
-   wxString* htmlstring, const wxChar * libname,
+   wxTextOutputStream *str, const wxChar * libname,
    const TranslatableString &libdesc, const wxString &status)
 {
-   *htmlstring += wxT("<tr><td>");
-   *htmlstring += libname;
-   *htmlstring += wxT("</td><td>(");
-   *htmlstring += libdesc.Translation();
-   *htmlstring += wxT(")</td><td>");
-   *htmlstring += status;
-   *htmlstring += wxT("</td></tr>");
+   *str
+      << wxT("<tr><td>")
+      << libname
+      << wxT("</td><td>(")
+      << libdesc
+      << wxT(")</td><td>")
+      << status
+      << wxT("</td></tr>");
 }
 
 /** \brief Add a table row saying if a library is used or not
@@ -1081,13 +1119,15 @@ void AboutDialog::AddBuildinfoRow(
  * Used when creating the build information tab to show build dates and
  * file paths */
 void AboutDialog::AddBuildinfoRow(
-   wxString* htmlstring, const TranslatableString &description, const wxChar *spec)
+   wxTextOutputStream *str,
+   const TranslatableString &description, const wxChar *spec)
 {
-   *htmlstring += wxT("<tr><td>");
-   *htmlstring += description.Translation();
-   *htmlstring += wxT("</td><td>");
-   *htmlstring += spec;
-   *htmlstring += wxT("</td></tr>");
+   *str
+      << wxT("<tr><td>")
+      << description
+      << wxT("</td><td>")
+      << spec
+      << wxT("</td></tr>");
 }
 
 AboutDialog::~AboutDialog()

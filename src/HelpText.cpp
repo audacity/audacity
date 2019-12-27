@@ -19,6 +19,8 @@
 
 #include <wx/string.h>
 #include <wx/intl.h>
+#include <wx/sstream.h>
+#include <wx/txtstrm.h>
 
 #include "FileNames.h"
 #include "Internat.h"
@@ -206,50 +208,80 @@ TranslatableString TitleText( const wxString & Key )
 static wxString HelpTextBuiltIn( const wxString & Key )
 {
    // PRL:  Is it necessary to define these outside of conditional compilation so that both get into the .pot file?
-   auto alphamsg = _("<br><br>The version of Audacity you are using is an <b>Alpha test version</b>.");
-   auto betamsg = _("<br><br>The version of Audacity you are using is a <b>Beta test version</b>.");
+   const auto alphamsg = XO(
+"<br><br>The version of Audacity you are using is an <b>Alpha test version</b>.");
+   const auto betamsg = XO(
+"<br><br>The version of Audacity you are using is a <b>Beta test version</b>.");
 
-      if (Key == wxT("welcome"))
+   if (Key == wxT("welcome"))
    {
       /* i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.*/
       /* i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.*/
-      wxString result = 
-         wxString(wxT("")) + 
+      wxStringOutputStream o;
+      wxTextOutputStream s(o);
+      s
 #if defined(IS_ALPHA) || defined(IS_BETA)
-         wxT("<hr><center><h3>") + _("Get the Official Released Version of Audacity") + wxT("</h3></center>") +
-         VerCheckHtml() +
+         << wxT("<hr><center><h3>")
+         << XO("Get the Official Released Version of Audacity")
+         << wxT("</h3></center>")
+         << VerCheckHtml()
 #ifdef IS_ALPHA
-         alphamsg
+         << alphamsg
 #else
-         betamsg
+         << betamsg
 #endif
-         + " " +
-         _("We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>") +
-         _("You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>") +
+         << wxT(" ")
+         << XO(
+"We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>")
+         << XO(
+"You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>")
 #endif
 
 // DA: Support methods text.
 #ifdef EXPERIMENTAL_DA
          // Deliberately not translated.
-         wxT("<center><h3>DarkAudacity ") + AUDACITY_VERSION_STRING + wxT("</h3></center>") +
-         wxT("<br><br>DarkAudacity is based on Audacity:") + wxT("<ul><li>") +
-         wxT(" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.") + wxT("</li><li>") +
-         wxT(" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity.") + wxT("</li><li>") +
-         wxT(" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.") + wxT("</li></ul>") +
-
-         wxT("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
-         wxT(" [[https://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
-         wxT(" [[https://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.") + wxT("</li></ul>");
+         << wxT("<center><h3>DarkAudacity ")
+         << AUDACITY_VERSION_STRING
+         << wxT("</h3></center>")
+         << wxT("<br><br>DarkAudacity is based on Audacity:")
+         << wxT("<ul><li>")
+         << wxT(" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.")
+         << wxT("</li><li>")
+         << wxT(
+" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity.")
+         << wxT("</li><li>")
+         << wxT(
+" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.")
+         << wxT("</li></ul>")
+         << wxT("<br><br>Audacity has these support methods:")
+         << wxT("<ul><li>")
+         << wxT(" [[https://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation")
+         << wxT("</li><li>")
+         << wxT(" [[https://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.")
+         << wxT("</li></ul>")
 #else
-         wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
-         _("How to get help") + wxT("</h3></center>") + 
-         _("These are our support methods:") + wxT("<p><ul><li>") +
-         _("[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]") + wxT("</li><li>") +
-         _(" [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]") + wxT("</li><li>") +
-         _(" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online.") + wxT("</li></ul></p><p>") + wxT("<b>") +
-         _("More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>");
+         << wxT("<center><h3>Audacity ")
+         << AUDACITY_VERSION_STRING
+         << wxT("</h3><h3>")
+         << XO("How to get help")
+         << wxT("</h3></center>")
+         << XO("These are our support methods:")
+         << wxT("<p><ul><li>")
+         << XO("[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]")
+         << wxT("</li><li>")
+         << XO(
+" [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]")
+         << wxT("</li><li>")
+         << XO(
+" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online.")
+         << wxT("</li></ul></p><p>")
+         << wxT("<b>")
+         << XO("More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.")
+         << wxT("</p>")
 #endif
+   ;
 
+      auto result = o.GetString();
 #ifdef USE_ALPHA_MANUAL
       result.Replace( "//manual.audacityteam.org/quick_help.html","//alphamanual.audacityteam.org/man/Quick_Help" );
       result.Replace( "//manual.audacityteam.org/","//alphamanual.audacityteam.org/man/" );
@@ -259,18 +291,24 @@ static wxString HelpTextBuiltIn( const wxString & Key )
    }
    if(Key==wxT("wma-proprietary"))
    {
-      return WrapText(
-         wxString(wxT("<p>"))+
-         _("Audacity can import unprotected files in many other formats (such as M4A and WMA, \
+      wxStringOutputStream o;
+      wxTextOutputStream s(o);
+      s
+         << wxT("<p>")
+         << XO(
+"Audacity can import unprotected files in many other formats (such as M4A and WMA, \
 compressed WAV files from portable recorders and audio from video files) if you download and install \
 the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| \
-FFmpeg library]] to your computer.") + wxT("</p><p>") +
-         _("You can also read our help on importing \
+FFmpeg library]] to your computer.")
+         << wxT("</p><p>")
+         <<  XO(
+"You can also read our help on importing \
 [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] \
 and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| \
 audio CDs]].")
-    + wxT("</p>")
-      );
+         << wxT("</p>")
+      ;
+      return WrapText( o.GetString() );
    }
 
    // Remote help allows us to link to a local copy of the help if it exists,
@@ -278,23 +316,30 @@ audio CDs]].")
    // It's used by the menu item Help > Index
    if(Key ==  wxT("remotehelp") )
    {
+      wxStringOutputStream o;
+      wxTextOutputStream s(o);
+      s
 // *URL* will be replaced by whatever URL we are looking for.
 // DA: View the manual on line is expected.
 #ifdef EXPERIMENTAL_DA
-      return WrapText(_("The Manual does not appear to be installed. \
+         << XO(
+"The Manual does not appear to be installed. \
 Please [[*URL*|view the Manual online]].<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
-Interface Preferences to \"From Internet\"."));
+Interface Preferences to \"From Internet\".")
 #else
-      return WrapText( _("The Manual does not appear to be installed. \
+         << XO(
+"The Manual does not appear to be installed. \
 Please [[*URL*|view the Manual online]] or \
 [[https://manual.audacityteam.org/man/unzipping_the_manual.html| \
 download the Manual]].<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
-Interface Preferences to \"From Internet\"."));
+Interface Preferences to \"From Internet\".")
 #endif
+      ;
+      return WrapText( o.GetString() );
    }
-   return wxT("");
+   return {};
 }
 
 wxString HelpText( const wxString & Key )
@@ -342,11 +387,15 @@ const wxString VerCheckArgs(){
 
 // Text of hyperlink to check versions.
 const wxString VerCheckHtml(){
-
-   wxString result = "<center>[[";
-   result += VerCheckUrl() + "|" + _("Check Online");
-   result += "]]</center>\n";
-   return result;
+   wxStringOutputStream o;
+   wxTextOutputStream s(o);
+   s
+      << "<center>[["
+      << VerCheckUrl()
+      << "|"
+      << XO("Check Online")
+      << "]]</center>\n";
+   return o.GetString();
 }
 
 // Url with Version check args attached.

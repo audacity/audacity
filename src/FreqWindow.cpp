@@ -68,6 +68,9 @@ and in the spectrogram spectral selection.
 #include <wx/textctrl.h>
 #include <wx/textfile.h>
 
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
+
 #include <math.h>
 
 #include "ShuttleGui.h"
@@ -1073,31 +1076,32 @@ void FrequencyPlotDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    if (fName.empty())
       return;
 
-   wxTextFile f(fName);
-   f.Create();
-   f.Open();
-   if (!f.IsOpened()) {
+   wxFFileOutputStream ffStream{ fName };
+   if (!ffStream.IsOk()) {
       AudacityMessageBox( XO("Couldn't write to file: %s").Format( fName ) );
       return;
    }
 
+  wxTextOutputStream ss(ffStream);
+
    const int processedSize = mAnalyst->GetProcessedSize();
    const float *const processed = mAnalyst->GetProcessed();
    if (mAlgChoice->GetSelection() == 0) {
-      f.AddLine(_("Frequency (Hz)\tLevel (dB)"));
+      ss
+         << XO("Frequency (Hz)\tLevel (dB)") << '\n';
       for (int i = 1; i < processedSize; i++)
-         f.AddLine(wxString::
-                   Format(wxT("%f\t%f"), i * mRate / mWindowSize,
-                          processed[i]));
-   } else {
-      f.AddLine(_("Lag (seconds)\tFrequency (Hz)\tLevel"));
-      for (int i = 1; i < processedSize; i++)
-         f.AddLine(wxString::Format(wxT("%f\t%f\t%f"),
-                                    i / mRate, mRate / i, processed[i]));
+         ss
+            << wxString::Format(wxT("%f\t%f\n"),
+               i * mRate / mWindowSize, processed[i] );
    }
-
-   f.Write();
-   f.Close();
+   else {
+      ss
+         << XO("Lag (seconds)\tFrequency (Hz)\tLevel") << '\n';
+      for (int i = 1; i < processedSize; i++)
+         ss
+            << wxString::Format(wxT("%f\t%f\t%f\n"),
+               i / mRate, mRate / i, processed[i] );
+   }
 }
 
 void FrequencyPlotDialog::OnReplot(wxCommandEvent & WXUNUSED(event))
