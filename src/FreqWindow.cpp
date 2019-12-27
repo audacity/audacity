@@ -1074,11 +1074,7 @@ void FrequencyPlotDialog::OnExport(wxCommandEvent & WXUNUSED(event))
       return;
 
    wxTextFile f(fName);
-#ifdef __WXMAC__
-   wxFile{}.Create(fName);
-#else
    f.Create();
-#endif
    f.Open();
    if (!f.IsOpened()) {
       AudacityMessageBox( XO("Couldn't write to file: %s").Format( fName ) );
@@ -1100,11 +1096,7 @@ void FrequencyPlotDialog::OnExport(wxCommandEvent & WXUNUSED(event))
                                     i / mRate, mRate / i, processed[i]));
    }
 
-#ifdef __WXMAC__
-   f.Write(wxTextFileType_Mac);
-#else
    f.Write();
-#endif
    f.Close();
 }
 
