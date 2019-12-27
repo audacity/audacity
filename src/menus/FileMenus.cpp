@@ -54,8 +54,7 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
    if (!bPromptingRequired) {
 
       // We're in batch mode, and we have an mFileName and Format.
-      wxString extension = ".";
-      extension += Format;
+      wxString extension = Format;
       extension.MakeLower();
 
       filename =
@@ -73,7 +72,7 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
          number.Printf("%03i", counter);
          // So now the name has a number in it too.
          filename = MacroCommands::BuildCleanFileName(
-            project.GetFileName(), number + extension);
+            project.GetFileName() + number, extension);
          bPromptingRequired = wxFileExists(filename);
       }
       // If we've run out of alternative names, we will fall back to prompting

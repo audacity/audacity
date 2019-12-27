@@ -537,7 +537,7 @@ wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
       //OnSelectAll();
       pathName = FileNames::FindDefaultPath(FileNames::Operation::Export);
       ::AudacityMessageBox(
-         XO("Export recording to %s\n/%s/%s%s")
+         XO("Export recording to %s\n/%s/%s.%s")
             .Format(pathName, cleanedString, justName, extension),
          XO("Export recording"),
          wxOK | wxCENTRE);
@@ -557,6 +557,7 @@ wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
 
    cleanedName += wxFileName::GetPathSeparator();
    cleanedName += justName;
+   cleanedName += '.';
    cleanedName += extension;
 
    return cleanedName;
@@ -633,12 +634,12 @@ bool MacroCommands::ApplySpecialCommand(
    wxString filename;
    FileExtension extension; // required for correct message
    if (command == wxT("ExportWAV"))
-      extension = wxT(".wav");
+      extension = wxT("wav");
    else if (command == wxT("ExportOgg"))
-      extension = wxT(".ogg");
+      extension = wxT("ogg");
    else if (command == wxT("ExportFLAC"))
-      extension = wxT(".flac");
-   else extension = wxT(".mp3");
+      extension = wxT("flac");
+   else extension = wxT("mp3");
 
    if (mFileName.empty()) {
       filename = BuildCleanFileName(project->GetFileName(), extension);
