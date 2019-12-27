@@ -849,7 +849,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
          filename.GetPath(),
          filename.GetFullName(),
          wxT("aup"),
-         _("Audacity projects") + wxT(" (*.aup)|*.aup"),
+         { FileNames::AudacityProjects },
          wxFD_SAVE | wxRESIZE_BORDER,
          &window);
 

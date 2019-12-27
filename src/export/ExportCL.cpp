@@ -175,20 +175,23 @@ bool ExportCLOptions::TransferDataFromWindow()
 void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
 {
    wxString path;
-   wxString ext;
+   FileExtension ext;
+   FileNames::FileType type = FileNames::AllFiles;
 
 #if defined(__WXMSW__)
    ext = wxT("exe");
+   /* i18n-hint files that can be run as programs */
+   type = { XO("Executables"), { ext } };
 #endif
 
    path = FileNames::SelectFile(FileNames::Operation::Open,
-                       XO("Find path to command"),
-                       wxEmptyString,
-                       wxEmptyString,
-                       ext,
-                       ext.empty() ? wxT("*") : (wxT("*.") + ext),
-                       wxFD_OPEN | wxRESIZE_BORDER,
-                       this);
+      XO("Find path to command"),
+      wxEmptyString,
+      wxEmptyString,
+      ext,
+      { type },
+      wxFD_OPEN | wxRESIZE_BORDER,
+      this);
    if (path.empty()) {
       return;
    }

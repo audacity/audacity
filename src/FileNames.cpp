@@ -558,13 +558,13 @@ void FileNames::UpdateDefaultPath(Operation op, const FilePath &path)
 
 wxString
 FileNames::SelectFile(Operation op,
-           const TranslatableString& message,
-           const FilePath& default_path,
-           const FilePath& default_filename,
-           const FileExtension& default_extension,
-           const wxString& wildcard,
-           int flags,
-           wxWindow *parent)
+   const TranslatableString& message,
+   const FilePath& default_path,
+   const FilePath& default_filename,
+   const FileExtension& default_extension,
+   const FileTypes& fileTypes,
+   int flags,
+   wxWindow *parent)
 {
    return WithDefaultPath(op, default_path, [&](const FilePath &path) {
       wxString filter;
@@ -572,7 +572,8 @@ FileNames::SelectFile(Operation op,
          filter = wxT("*.") + default_extension;
       return FileSelector(
             message.Translation(), path, default_filename, filter,
-            wildcard, flags, parent, wxDefaultCoord, wxDefaultCoord);
+            FormatWildcard( fileTypes ),
+            flags, parent, wxDefaultCoord, wxDefaultCoord);
    });
 }
 
@@ -711,7 +712,7 @@ char *FileNames::VerifyFilename(const wxString &s, bool input)
    }
    else {
       wxFileName ff(name);
-      wxString ext;
+      FileExtension ext;
       while ((char *) (const char *)name.mb_str() == NULL) {
          AudacityMessageBox(
             XO(
@@ -719,13 +720,16 @@ char *FileNames::VerifyFilename(const wxString &s, bool input)
 
          ext = ff.GetExt();
          name = FileNames::SelectFile(FileNames::Operation::_None,
-                             XO("Specify New Filename:"),
-                             wxEmptyString,
-                             name,
-                             ext,
-                             ext.empty() ? wxT("*") : (wxT("*.") + ext),
-                             wxFD_SAVE | wxRESIZE_BORDER,
-                             wxGetTopLevelParent(NULL));
+            XO("Specify New Filename:"),
+            wxEmptyString,
+            name,
+            ext,
+            { ext.empty()
+               ? FileNames::AllFiles
+               : FileType{ {}, { ext } }
+            },
+            wxFD_SAVE | wxRESIZE_BORDER,
+            wxGetTopLevelParent(NULL));
       }
    }
 

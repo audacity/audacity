@@ -1066,13 +1066,13 @@ void FrequencyPlotDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = _("spectrum.txt");
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                                 XO("Export Spectral Data As:"),
-                                 wxEmptyString,
-                                 fName,
-                                 wxT("txt"),
-                                 _("Text files (*.txt)|*.txt|All files|*"),
-                                 wxFD_SAVE | wxRESIZE_BORDER,
-                                 this);
+      XO("Export Spectral Data As:"),
+      wxEmptyString,
+      fName,
+      wxT("txt"),
+      { FileNames::TextFiles, FileNames::AllFiles },
+      wxFD_SAVE | wxRESIZE_BORDER,
+      this);
 
    if (fName.empty())
       return;

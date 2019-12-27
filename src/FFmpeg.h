@@ -242,10 +242,14 @@ public:
 #if defined(__WXMSW__)
    /* Library names and file filters for Windows only */
 
-   wxString GetLibraryTypeString()
+   FileNames::FileTypes GetLibraryTypes()
    {
-      /* i18n-hint: do not translate avformat.  Preserve the computer gibberish.*/
-      return _("Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files|*");
+      return {
+         /* i18n-hint: do not translate avformat.  Preserve the computer gibberish.*/
+         { XO("Only avformat.dll"), { wxT("avformat.dll") } },
+         FileNames::DynamicLibraries,
+         FileNames::AllFiles
+      };
    }
 
    wxString GetLibAVFormatPath()
@@ -276,9 +280,12 @@ public:
    }
 #elif defined(__WXMAC__)
    /* Library names and file filters for Mac OS only */
-   wxString GetLibraryTypeString()
+   FileNames::FileTypes GetLibraryTypes()
    {
-      return _("Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*");
+      return {
+         FileNames::DynamicLibraries,
+         FileNames::AllFiles
+      };
    }
 
    wxString GetLibAVFormatPath()
@@ -309,9 +316,13 @@ public:
 #else
    /* Library names and file filters for other platforms, basically Linux and
     * other *nix platforms */
-   wxString GetLibraryTypeString()
+   FileNames::FileTypes GetLibraryTypes()
    {
-      return _("Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*.so*|All Files (*)|*");
+      return {
+         { XO("Only libavformat.so"), { wxT("libavformat*.so*") } },
+         FileNames::DynamicLibraries,
+         FileNames::AllFiles
+      };
    }
 
    wxString GetLibAVFormatPath()

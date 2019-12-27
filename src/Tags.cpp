@@ -1234,13 +1234,13 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
 
    // Ask the user for the real name
    fn = FileNames::SelectFile(FileNames::Operation::_None,
-                     XO("Load Metadata As:"),
-                     FileNames::DataDir(),
-                     wxT("Tags.xml"),
-                     wxT("xml"),
-                     wxT("*.xml"),
-                     wxFD_OPEN | wxRESIZE_BORDER,
-                     this);
+      XO("Load Metadata As:"),
+      FileNames::DataDir(),
+      wxT("Tags.xml"),
+      wxT("xml"),
+      { FileNames::XMLFiles },
+      wxFD_OPEN | wxRESIZE_BORDER,
+      this);
 
    // User canceled...
    if (fn.empty()) {
@@ -1290,13 +1290,13 @@ void TagsEditorDialog::OnSave(wxCommandEvent & WXUNUSED(event))
 
    // Ask the user for the real name
    fn = FileNames::SelectFile(FileNames::Operation::_None,
-                     XO("Save Metadata As:"),
-                     FileNames::DataDir(),
-                     wxT("Tags.xml"),
-                     wxT("xml"),
-                     wxT("*.xml"),
-                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-                     this);
+      XO("Save Metadata As:"),
+      FileNames::DataDir(),
+      wxT("Tags.xml"),
+      wxT("xml"),
+      { FileNames::XMLFiles },
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+      this);
 
    // User canceled...
    if (fn.empty()) {

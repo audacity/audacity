@@ -159,13 +159,13 @@ public:
 
    static wxString
    SelectFile(Operation op,   // op matters only when default_path is empty
-              const TranslatableString& message,
-                const FilePath& default_path,
-                const FilePath& default_filename,
-                const FileExtension& default_extension,
-                const wxString& wildcard,
-                int flags,
-                wxWindow *parent);
+      const TranslatableString& message,
+      const FilePath& default_path,
+      const FilePath& default_filename,
+      const FileExtension& default_extension,
+      const FileTypes& fileTypes,
+      int flags,
+      wxWindow *parent);
 
    // Useful functions for working with search paths
    static void AddUniquePathToPathList(const FilePath &path,
