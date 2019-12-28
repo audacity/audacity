@@ -656,9 +656,11 @@ bool NyquistEffect::Process()
       ? 0
       : mOutputTracks->Selected< const WaveTrack >().size();
 
-   mDebugOutput.clear();
+   mDebugOutput = {};
    if (!mHelpFile.empty() && !mHelpFileExists) {
-      mDebugOutput = wxString::Format(_("error: File \"%s\" specified in header but not found in plug-in path.\n"), mHelpFile);
+      mDebugOutput = XO(
+"error: File \"%s\" specified in header but not found in plug-in path.\n")
+         .Format( mHelpFile );
    }
 
    if (mVersion >= 4)
@@ -798,6 +800,10 @@ bool NyquistEffect::Process()
         bOnePassTool || pRange->first != pRange->second;
         (void) (!pRange || (++pRange->first, true))
    ) {
+      // Prepare to accumulate more debug output in OutputCallback
+      mDebugOutputStr = mDebugOutput.Translation();
+      mDebugOutput = Verbatim( "%s" ).Format( std::cref( mDebugOutputStr ) );
+
       mCurTrack[0] = pRange ? *pRange->first : nullptr;
       mCurNumChannels = 1;
       if ( (mT1 >= mT0) || bOnePassTool ) {
@@ -934,12 +940,12 @@ bool NyquistEffect::Process()
 finish:
 
    // Show debug window if trace set in plug-in header and something to show.
-   mDebug = (mTrace && !mDebugOutput.empty())? true : mDebug;
+   mDebug = (mTrace && !mDebugOutput.Translation().empty())? true : mDebug;
 
    if (mDebug && !mRedirectOutput) {
       NyquistOutputDialog dlog(mUIParent, -1,
                                mName,
-                               _("Debug Output: "),
+                               XO("Debug Output: "),
                                mDebugOutput);
       dlog.CentreOnParent();
       dlog.ShowModal();
@@ -1345,9 +1351,11 @@ bool NyquistEffect::ProcessOne()
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
 
    // If we're not showing debug window, log errors and warnings:
-   if (!mDebugOutput.empty() && !mDebug && !mTrace) {
+   const auto output = mDebugOutput.Translation();
+   if (!output.empty() && !mDebug && !mTrace) {
       /* i18n-hint: An effect "returned" a message.*/
-      wxLogMessage(_("\'%s\' returned:\n%s"), mName.Translation(), mDebugOutput);
+      wxLogMessage(_("\'%s\' returned:\n%s"),
+         mName.Translation(), output);
    }
 
    // Audacity has no idea how long Nyquist processing will take, but
@@ -1366,14 +1374,18 @@ bool NyquistEffect::ProcessOne()
    if ((rval == nyx_audio) && (GetType() == EffectTypeTool)) {
       // Catch this first so that we can also handle other errors.
       /* i18n-hint: Don't translate ';type tool'.  */
-      mDebugOutput = _("';type tool' effects cannot return audio from Nyquist.\n") + mDebugOutput;
+      mDebugOutput =
+         XO("';type tool' effects cannot return audio from Nyquist.\n")
+         + mDebugOutput;
       rval = nyx_error;
    }
 
    if ((rval == nyx_labels) && (GetType() == EffectTypeTool)) {
       // Catch this first so that we can also handle other errors.
       /* i18n-hint: Don't translate ';type tool'.  */
-      mDebugOutput = _("';type tool' effects cannot return labels from Nyquist.\n") + mDebugOutput;
+      mDebugOutput =
+         XO("';type tool' effects cannot return labels from Nyquist.\n")
+         + mDebugOutput;
       rval = nyx_error;
    }
 
@@ -1382,14 +1394,14 @@ bool NyquistEffect::ProcessOne()
       // Show error in debug window if trace enabled, otherwise log.
       if (mTrace) {
          /* i18n-hint: "%s" is replaced by name of plug-in.*/
-         mDebugOutput = wxString::Format(
-            _("nyx_error returned from %s.\n"),
-            mName.empty()? _("plug-in") : mName.Translation()
-         ) + mDebugOutput;
+         mDebugOutput = XO("nyx_error returned from %s.\n")
+            .Format( mName.empty() ? XO("plug-in") : mName )
+         + mDebugOutput;
          mDebug = true;
       }
       else {
-         wxLogMessage("Nyquist returned nyx_error:\n%s", mDebugOutput);
+         wxLogMessage(
+            "Nyquist returned nyx_error:\n%s", mDebugOutput.Translation());
       }
       return false;
    }
@@ -2352,7 +2364,7 @@ void NyquistEffect::OutputCallback(int c)
 {
    // Always collect Nyquist error messages for normal plug-ins
    if (!mRedirectOutput) {
-      mDebugOutput += (char)c;
+      mDebugOutputStr += (char)c;
       return;
    }
 
@@ -3159,8 +3171,8 @@ END_EVENT_TABLE()
 
 NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                                        const TranslatableString & title,
-                                       const wxString & prompt,
-                                       const wxString &message)
+                                       const TranslatableString & prompt,
+                                       const TranslatableString &message)
 : wxDialogWrapper{ parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER }
 {
    SetName();
@@ -3172,13 +3184,14 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
       wxButton   *button;
       wxControl  *item;
 
-      item = safenew wxStaticText(this, -1, prompt);
-      item->SetName(prompt);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      const auto translated = prompt.Translation();
+      item = safenew wxStaticText(this, -1, translated);
+      item->SetName(translated);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
       mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
 
       // TODO: use ShowInfoDialog() instead.
       // Beware this dialog MUST work with screen readers.
-      item = safenew wxTextCtrl(this, -1, message,
+      item = safenew wxTextCtrl(this, -1, message.Translation(),
                             wxDefaultPosition, wxSize(480, 250),
                             wxTE_MULTILINE | wxTE_READONLY);
       mainSizer->Add(item, 1, wxEXPAND | wxALL, 10);

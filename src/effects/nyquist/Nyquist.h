@@ -235,7 +235,8 @@ private:
    bool              mDebug;        // When true, debug window is shown.
    bool              mRedirectOutput;
    bool              mProjectChanged;
-   wxString          mDebugOutput;
+   wxString          mDebugOutputStr;
+   TranslatableString mDebugOutput;
 
    int               mVersion;   // Syntactic version of Nyquist plug-in (not to be confused with mReleaseVersion)
    std::vector<NyqControl>   mControls;
@@ -284,8 +285,8 @@ class NyquistOutputDialog final : public wxDialogWrapper
 public:
    NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                        const TranslatableString & title,
-                       const wxString & prompt,
-                       const wxString &message);
+                       const TranslatableString & prompt,
+                       const TranslatableString &message);
 
 private:
    void OnOk(wxCommandEvent & event);
