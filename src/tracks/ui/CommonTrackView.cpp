@@ -187,6 +187,22 @@ static void DrawTrackName(
       nameRect.y + MarginY);
 }
 
+wxRect CommonTrackView::DrawingArea(
+   TrackPanelDrawingContext &context,
+   const wxRect &rect, const wxRect &panelRect, unsigned iPass )
+{
+   auto result = rect;
+   if ( iPass == TrackArtist::PassBorders ) {
+      if ( true ) {
+         wxCoord textWidth, textHeight;
+         GetTrackNameExtent( context.dc, FindTrack().get(),
+            &textWidth, &textHeight );
+         result = GetTrackNameRect( rect, textWidth, textHeight );
+      }
+   }
+   return rect;
+}
+
 void CommonTrackView::Draw(
    TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
 {
