@@ -95,6 +95,25 @@ namespace {
    };
 }
 
+static void GetTrackNameExtent(
+   wxDC &dc, const Track *t, wxCoord *pW, wxCoord *pH )
+{
+   wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   dc.SetFont(labelFont);
+   dc.GetTextExtent( t->GetName(), pW, pH );
+}
+
+static wxRect GetTrackNameRect(
+   const wxRect &trackRect, wxCoord textWidth, wxCoord textHeight )
+{
+   return {
+      trackRect.x + DisplaceX,
+      trackRect.y + DisplaceY,
+      textWidth + MarginsX,
+      textHeight + MarginsY
+   };
+}
+
 // Draws the track name on the track, if it is needed.
 static void DrawTrackName(
    TrackPanelDrawingContext &context, const Track * t, const wxRect & rect )
@@ -109,9 +128,7 @@ static void DrawTrackName(
    auto &dc = context.dc;
    wxBrush Brush;
    wxCoord textWidth, textHeight;
-   wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   dc.SetFont(labelFont);
-   dc.GetTextExtent( t->GetName(), &textWidth, &textHeight );
+   GetTrackNameExtent( dc, t, &textWidth, &textHeight );
 
    // Logic for name background translucency (aka 'shields')
    // Tracks less than kOpaqueHeight high will have opaque shields.
@@ -128,12 +145,12 @@ static void DrawTrackName(
    // 0.0 maps to full opacity, 1.0 maps to full translucency.
    int opacity = 255 - (255-140)*f;
 
+   const auto nameRect = GetTrackNameRect( rect, textWidth, textHeight );
+
 #ifdef __WXMAC__
    // Mac dc is a graphics dc already.
    AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, opacity );
-   dc.DrawRoundedRectangle(
-      rect.x + DisplaceX, rect.y + DisplaceY,
-      textWidth + MarginsX, textHeight + MarginsY, 8.0 );
+   dc.DrawRoundedRectangle( nameRect, 8.0 );
 #else
    // This little dance with wxImage in order to draw to a graphic dc
    // which we can then paste as a translucent bitmap onto the real dc.
@@ -162,12 +179,12 @@ static void DrawTrackName(
    }
    wxBitmap bitmap( image );
    dc.DrawBitmap( bitmap,
-      rect.x + DisplaceX - SecondMarginX, rect.y + DisplaceY - SecondMarginY );
+      nameRect.x - SecondMarginX, nameRect.y - SecondMarginY );
 #endif
    dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
    dc.DrawText(t->GetName(),
-      rect.x + DisplaceX + MarginX,
-      rect.y + DisplaceY + MarginY);
+      nameRect.x + MarginX,
+      nameRect.y + MarginY);
 }
 
 void CommonTrackView::Draw(
