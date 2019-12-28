@@ -134,6 +134,7 @@ void BackgroundCell::Draw(
 }
 
 wxRect BackgroundCell::DrawingArea(
+   TrackPanelDrawingContext &,
    const wxRect &rect, const wxRect &, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassBackground )

@@ -89,6 +89,7 @@ void WaveformVZoomHandle::Draw(
 }
 
 wxRect WaveformVZoomHandle::DrawingArea(
+   TrackPanelDrawingContext &,
    const wxRect &rect, const wxRect &panelRect, unsigned iPass )
 {
    return WaveTrackVZoomHandle::DoDrawingArea( rect, panelRect, iPass );

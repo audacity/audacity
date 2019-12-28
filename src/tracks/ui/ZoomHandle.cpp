@@ -208,6 +208,7 @@ void ZoomHandle::Draw(
 }
 
 wxRect ZoomHandle::DrawingArea(
+   TrackPanelDrawingContext &,
    const wxRect &rect, const wxRect &panelRect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassZooming )

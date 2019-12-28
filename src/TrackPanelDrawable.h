@@ -33,7 +33,10 @@ public:
    // hit-test purposes, spilling over into other parts of the partition of the
    // panel area.
    // Default implementation returns rect unchanged.
+   // TrackPanelContext is passed in because sometimes a drawing context is
+   // needed for text extent calculations.
    virtual wxRect DrawingArea(
+      TrackPanelDrawingContext &context,
       const wxRect &rect, const wxRect &panelRect, unsigned iPass );
 
    // Utilities for implementing DrawingArea:

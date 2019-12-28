@@ -372,6 +372,7 @@ void NoteTrackVZoomHandle::Draw(
 }
 
 wxRect NoteTrackVZoomHandle::DrawingArea(
+   TrackPanelDrawingContext &,
    const wxRect &rect, const wxRect &panelRect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassZooming )
