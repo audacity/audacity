@@ -413,14 +413,14 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .Style(wxSL_VERTICAL | wxSL_INVERSE)
             .AddSlider( {}, 10, 20, 0);
 #if wxUSE_ACCESSIBILITY
-         mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, _("%d dB")));
+         mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, XO("%d dB")));
 #endif
          mdBMinSlider = S.Id(ID_dBMin)
             .Name(XO("Min dB"))
             .Style(wxSL_VERTICAL | wxSL_INVERSE)
             .AddSlider( {}, -10, -10, -120);
 #if wxUSE_ACCESSIBILITY
-         mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, _("%d dB")));
+         mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, XO("%d dB")));
 #endif
 
          S.AddVariableText(XO("- dB"), false, wxCENTER);

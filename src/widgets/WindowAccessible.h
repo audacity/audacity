@@ -16,6 +16,7 @@
 #if wxUSE_ACCESSIBILITY
 
 #include <wx/access.h> // to inherit
+#include <../Internat.h> // for TranslatableString
 
 class WindowAccessible: public wxAccessible
 {
@@ -30,7 +31,7 @@ public:
 class SliderAx final : public WindowAccessible
 {
 public:
-   SliderAx(wxWindow * window, const wxString &fmt);
+   SliderAx(wxWindow * window, const TranslatableString &fmt);
 
    virtual ~ SliderAx();
 
@@ -94,7 +95,7 @@ public:
 
 private:
    wxWindow *mParent;
-   wxString mFmt;
+   TranslatableString mFmt;
 };
 
 #endif      // wxUSE_ACCESSIBILITY
