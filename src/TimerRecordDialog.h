@@ -44,11 +44,16 @@ class TimerRecordPathCtrl final : public wxTextCtrl
    // We override AcceptsFocusFromKeyboard in order to add
    // the text controls to the Tab Order.
 public:
-   TimerRecordPathCtrl(wxWindow * parent, wxWindowID id, const wxString &value
-      = {}, const wxPoint &pos = wxDefaultPosition, const wxSize &
-      size = wxDefaultSize, long  style = 0, const wxValidator &  validator =
-      wxDefaultValidator, const wxString &  name = wxTextCtrlNameStr)
-      :wxTextCtrl(parent, id, value, pos, size, style, validator, name) {};
+   TimerRecordPathCtrl(wxWindow * parent, wxWindowID id,
+      const TranslatableString &value = {},
+      const wxPoint &pos = wxDefaultPosition,
+      const wxSize &size = wxDefaultSize,
+      long  style = 0,
+      const wxValidator &validator = wxDefaultValidator,
+      const wxString &name = wxTextCtrlNameStr)
+      :wxTextCtrl(parent, id, value.Translation(), pos, size, style, validator, name)
+   {
+   };
    ~TimerRecordPathCtrl() {};
 
    virtual bool AcceptsFocusFromKeyboard() const override {
@@ -101,7 +106,9 @@ private:
    bool RemoveAllAutoSaveFiles();
 
    // Add Path Controls to Form
-   TimerRecordPathCtrl *NewPathControl(wxWindow *wParent, const int iID, const wxString &sCaption, const wxString &sValue);
+   TimerRecordPathCtrl *NewPathControl(
+      wxWindow *wParent, const int iID,
+      const TranslatableString &sCaption, const TranslatableString &sValue);
 
    int ExecutePostRecordActions(bool bWasStopped);
    ProgressResult PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions);

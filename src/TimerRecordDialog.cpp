@@ -809,13 +809,14 @@ wxPrintf(wxT("%s\n"), dt.Format());
    return Verbatim( dt.FormatDate() + wxT(" ") + dt.FormatTime() );
 }
 
-TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(wxWindow *wParent, const int iID,
-                                                        const wxString &sCaption, const wxString &sValue)
+TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(
+   wxWindow *wParent, const int iID,
+   const TranslatableString &sCaption, const TranslatableString &sValue)
 {
    TimerRecordPathCtrl * pTextCtrl;
    wxASSERT(wParent); // to justify safenew
    pTextCtrl = safenew TimerRecordPathCtrl(wParent, iID, sValue);
-   pTextCtrl->SetName(sCaption);
+   pTextCtrl->SetName(sCaption.Translation());
    return pTextCtrl;
 }
 
@@ -930,16 +931,17 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                                                                                     bAutoSave);
             S.StartMultiColumn(3, wxEXPAND);
             {
-               wxString sInitialValue;
+               TranslatableString sInitialValue;
                AudacityProject* pProject = GetActiveProject();
                auto sSaveValue = pProject->GetFileName();
                if (!sSaveValue.empty()) {
                   m_fnAutoSaveFile.Assign(sSaveValue);
-                  sInitialValue = _("Current Project");
+                  sInitialValue = XO("Current Project");
                }
                S.AddPrompt(XO("Save Project As:"));
                m_pTimerSavePathTextCtrl = NewPathControl(
-                  S.GetParent(), ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), sInitialValue);
+                  S.GetParent(), ID_AUTOSAVEPATH_TEXT,
+                  XO("Save Project As:"), sInitialValue);
                m_pTimerSavePathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerSavePathTextCtrl);
                m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(XO("Select..."));
@@ -955,7 +957,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             {
                S.AddPrompt(XO("Export Project As:"));
                m_pTimerExportPathTextCtrl = NewPathControl(
-                  S.GetParent(), ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), wxT(""));
+                  S.GetParent(), ID_AUTOEXPORTPATH_TEXT,
+                  XO("Export Project As:"), {});
                m_pTimerExportPathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerExportPathTextCtrl);
                m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(XO("Select..."));
