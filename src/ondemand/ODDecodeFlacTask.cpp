@@ -27,8 +27,6 @@ extern "C" {
 
 #define FLAC_HEADER "fLaC"
 
-#define DESC _("FLAC files")
-
 ODDecodeFlacTask::~ODDecodeFlacTask()
 {
 }
