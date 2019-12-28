@@ -81,6 +81,20 @@ std::vector<UIHandlePtr> CommonTrackView::HitTest
    return results;
 }
 
+namespace {
+   // Drawing constants
+   // DisplaceX and MarginX are large enough to avoid overwriting <- symbol
+   // See TrackArt::DrawNegativeOffsetTrackArrows
+   enum : int {
+      // Displacement of the rectangle from upper left corner
+      DisplaceX = 7, DisplaceY = 1,
+      // Size of margins about the text extent that determine the rectangle size
+      MarginX = 8, MarginY = 2,
+      // Derived constants
+      MarginsX = 2 * MarginX, MarginsY = 2 * MarginY,
+   };
+}
+
 // Draws the track name on the track, if it is needed.
 static void DrawTrackName(
    TrackPanelDrawingContext &context, const Track * t, const wxRect & rect )
@@ -94,10 +108,10 @@ static void DrawTrackName(
       return;
    auto &dc = context.dc;
    wxBrush Brush;
-   wxCoord x,y;
+   wxCoord textWidth, textHeight;
    wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    dc.SetFont(labelFont);
-   dc.GetTextExtent( t->GetName(), &x, &y );
+   dc.GetTextExtent( t->GetName(), &textWidth, &textHeight );
 
    // Logic for name background translucency (aka 'shields')
    // Tracks less than kOpaqueHeight high will have opaque shields.
@@ -117,15 +131,23 @@ static void DrawTrackName(
 #ifdef __WXMAC__
    // Mac dc is a graphics dc already.
    AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, opacity );
-   dc.DrawRoundedRectangle( rect.x+7, rect.y+1,  x+16, y+4, 8.0 );
+   dc.DrawRoundedRectangle(
+      rect.x + DisplaceX, rect.y + DisplaceY,
+      textWidth + MarginsX, textHeight + MarginsY, 8.0 );
 #else
    // This little dance with wxImage in order to draw to a graphic dc
    // which we can then paste as a translucent bitmap onto the real dc.
-   wxImage image( x+18, y+6 );
+   enum : int {
+      SecondMarginX = 1, SecondMarginY = 1,
+      SecondMarginsX = 2 * SecondMarginX, SecondMarginsY = 2 * SecondMarginY,
+   };
+   wxImage image(
+      textWidth + MarginsX + SecondMarginsX,
+      textHeight + MarginsY + SecondMarginsY );
    image.InitAlpha();
    unsigned char *alpha=image.GetAlpha();
    memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
-   
+
    {
       std::unique_ptr< wxGraphicsContext >
          pGc{ wxGraphicsContext::Create(image) };
@@ -133,14 +155,19 @@ static void DrawTrackName(
       // This is to a gc, not a dc.
       AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, opacity );
       // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
-      gc.DrawRoundedRectangle( 1, 1,  x+16, y+4, 8.0 );
+      gc.DrawRoundedRectangle(
+         SecondMarginX, SecondMarginY,
+         textWidth + MarginsX, textHeight + MarginsY, 8.0 );
       // destructor of gc updates the wxImage.
    }
    wxBitmap bitmap( image );
-   dc.DrawBitmap( bitmap, rect.x+6, rect.y);
+   dc.DrawBitmap( bitmap,
+      rect.x + DisplaceX - SecondMarginX, rect.y + DisplaceY - SecondMarginY );
 #endif
    dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
-   dc.DrawText (t->GetName(), rect.x+15, rect.y+3);  // move right 15 pixels to avoid overwriting <- symbol
+   dc.DrawText(t->GetName(),
+      rect.x + DisplaceX + MarginX,
+      rect.y + DisplaceY + MarginY);
 }
 
 void CommonTrackView::Draw(
