@@ -845,20 +845,20 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
    Track::ChannelType channel;
-   wxString channelmsg;
+   TranslatableString channelmsg;
    switch (id) {
    default:
    case OnChannelMonoID:
       channel = Track::MonoChannel;
-      channelmsg = _("Mono");
+      channelmsg = XO("Mono");
       break;
    case OnChannelLeftID:
       channel = Track::LeftChannel;
-      channelmsg = _("Left Channel");
+      channelmsg = XO("Left Channel");
       break;
    case OnChannelRightID:
       channel = Track::RightChannel;
-      channelmsg = _("Right Channel");
+      channelmsg = XO("Right Channel");
       break;
    }
    pTrack->SetChannel(channel);

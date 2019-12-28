@@ -1522,7 +1522,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
 
             // Vaughan, 2010-08-20: This was bogus, as all the actions in ProjectFSCK
             // that return FSCKstatus_CHANGED cannot be undone.
-            //    this->PushState(_("Project checker repaired file"), _("Project Repair"));
+            //    this->PushState(XO("Project checker repaired file"), XO("Project Repair"));
 
             if (status & FSCKstatus_SAVE_AUP)
                Save(), saved = true;

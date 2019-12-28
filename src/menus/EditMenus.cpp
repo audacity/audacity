@@ -832,7 +832,7 @@ void OnSplit(const CommandContext &context)
       n = nIter.Next();
    }
 
-   PushState(_("Split"), _("Split"));
+   PushState(XO("Split"), XO("Split"));
    */
 #endif
 }
