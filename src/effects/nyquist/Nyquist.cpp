@@ -2466,6 +2466,13 @@ bool NyquistEffect::TransferDataToEffectWindow()
 bool NyquistEffect::TransferDataFromPromptWindow()
 {
    mInputCmd = mCommandText->GetValue();
+
+   // Un-correct smart quoting, bothersomely applied in wxTextCtrl by
+   // the native widget of MacOS 10.9 SDK
+   const wxString left = wxT("\u201c"), right = wxT("\u201d"), dumb = '"';
+   mInputCmd.Replace(left, dumb, true);
+   mInputCmd.Replace(right, dumb, true);
+
    mVersion = mVersionCheckBox->GetValue() ? 3 : 4;
 
    return ParseCommand(mInputCmd);
