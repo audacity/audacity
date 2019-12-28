@@ -1050,6 +1050,7 @@ void SelectHandle::Draw(
 }
 
 wxRect SelectHandle::DrawingArea(
+   TrackPanelDrawingContext &,
    const wxRect &rect, const wxRect &panelRect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassSnapping )

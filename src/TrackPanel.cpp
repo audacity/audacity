@@ -1240,6 +1240,7 @@ struct LabeledChannelGroup final : TrackPanelGroup {
    }
 
    wxRect DrawingArea(
+      TrackPanelDrawingContext &,
       const wxRect &rect, const wxRect &, unsigned iPass ) override
    {
       if ( iPass == TrackArtist::PassBorders )
@@ -1393,6 +1394,7 @@ void TrackPanelDrawable::Draw(
 }
 
 wxRect TrackPanelDrawable::DrawingArea(
+   TrackPanelDrawingContext &,
    const wxRect &rect, const wxRect &, unsigned )
 {
    return rect;

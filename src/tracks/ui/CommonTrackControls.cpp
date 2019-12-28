@@ -401,6 +401,7 @@ void CommonTrackControls::Draw(
 }
 
 wxRect CommonTrackControls::DrawingArea(
+   TrackPanelDrawingContext &,
    const wxRect &rect, const wxRect &, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassControls )

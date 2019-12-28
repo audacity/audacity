@@ -1125,7 +1125,8 @@ void CellularPanel::Draw( TrackPanelDrawingContext &context, unsigned nPasses )
       VisitPostorder( [&]( const wxRect &rect, TrackPanelNode &node ) {
 
          // Draw the node
-         const auto newRect = node.DrawingArea( rect, panelRect, iPass );
+         const auto newRect = node.DrawingArea(
+            context, rect, panelRect, iPass );
          if ( newRect.Intersects( panelRect ) )
             node.Draw( context, newRect, iPass );
 
@@ -1134,7 +1135,7 @@ void CellularPanel::Draw( TrackPanelDrawingContext &context, unsigned nPasses )
             auto target = Target();
             if ( target ) {
                const auto targetRect =
-                  target->DrawingArea( rect, panelRect, iPass );
+                  target->DrawingArea( context, rect, panelRect, iPass );
                if ( targetRect.Intersects( panelRect ) )
                   target->Draw( context, targetRect, iPass );
             }

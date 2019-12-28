@@ -121,6 +121,7 @@ void TrackVRulerControls::Draw(
 }
 
 wxRect TrackVRulerControls::DrawingArea(
+   TrackPanelDrawingContext &,
    const wxRect &rect, const wxRect &, unsigned iPass )
 {
    // Common area change for all subclasses when drawing the controls

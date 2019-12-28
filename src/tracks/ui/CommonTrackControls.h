@@ -62,6 +62,7 @@ protected:
       const wxRect &rect, unsigned iPass ) override;
 
    wxRect DrawingArea(
+      TrackPanelDrawingContext &,
       const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
 
    std::weak_ptr<CloseButtonHandle> mCloseHandle;

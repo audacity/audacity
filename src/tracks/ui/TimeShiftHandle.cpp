@@ -863,6 +863,7 @@ void TimeShiftHandle::Draw(
 }
 
 wxRect TimeShiftHandle::DrawingArea(
+   TrackPanelDrawingContext &,
    const wxRect &rect, const wxRect &panelRect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassSnapping )

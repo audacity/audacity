@@ -34,6 +34,10 @@ public:
    void TimeShiftHitTest();
 
    // TrackPanelDrawable implementation
+   wxRect DrawingArea(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
+
    void Draw(
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
