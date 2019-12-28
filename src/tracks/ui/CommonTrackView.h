@@ -47,8 +47,6 @@ protected:
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       = 0;
 
-   Track *GetTrack() const;
-
    std::weak_ptr<SelectHandle> mSelectHandle;
 
 public:
