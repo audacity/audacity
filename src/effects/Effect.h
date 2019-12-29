@@ -692,7 +692,7 @@ public:
    void SetSelected(const wxString & parms);
 
 private:
-   void SetPrefix(const wxString & type, const wxString & prefix);
+   void SetPrefix(const TranslatableString & type, const wxString & prefix);
    void UpdateUI();
 
    void OnType(wxCommandEvent & evt);

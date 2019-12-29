@@ -166,7 +166,7 @@ void Ruler::SetLog(bool log)
    }
 }
 
-void Ruler::SetUnits(const wxString &units)
+void Ruler::SetUnits(const TranslatableString &units)
 {
    // Specify the name of the units (like "dB") if you
    // want numbers like "1.6" formatted as "1.6 dB".
@@ -576,7 +576,7 @@ void Ruler::FindLinearTickSizes(double UPP)
    }
 }
 
-wxString Ruler::LabelString(double d, bool major)
+TranslatableString Ruler::LabelString(double d, bool major)
 {
    // Given a value, turn it into a string according
    // to the current ruler format.  The number of digits of
@@ -584,6 +584,9 @@ wxString Ruler::LabelString(double d, bool major)
    // i.e. how far zoomed in or out you are.
 
    wxString s;
+
+   // PRL Todo: are all these cases properly localized?  (Decimal points,
+   // hour-minute-second, etc.?)
 
    // Replace -0 with 0
    if (d < 0.0 && (d+mMinor > 0.0) && ( mFormat != RealLogFormat ))
@@ -718,15 +721,15 @@ wxString Ruler::LabelString(double d, bool major)
       }
    }
 
+   auto result = Verbatim( s );
    if (!mUnits.empty())
-      s = (s + mUnits);
+      result += mUnits;
 
-   return s;
+   return result;
 }
 
 void Ruler::Tick(int pos, double d, bool major, bool minor)
 {
-   wxString l;
    wxCoord strW, strH, strD, strL;
    int strPos, strLen, strLeft, strTop;
 
@@ -751,14 +754,14 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
    label->pos = pos;
    label->lx = mLeft - 1000; // don't display
    label->ly = mTop - 1000;  // don't display
-   label->text = wxT("");
+   label->text = {};
 
    mDC->SetFont(major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont);
    // Bug 521.  dB view for waveforms needs a 2-sided scale.
    if(( mDbMirrorValue > 1.0 ) && ( -d > mDbMirrorValue ))
       d = -2*mDbMirrorValue - d;
-   l = LabelString(d, major);
-   mDC->GetTextExtent(l, &strW, &strH, &strD, &strL);
+   auto l = LabelString(d, major);
+   mDC->GetTextExtent(l.Translation(), &strW, &strH, &strD, &strL);
 
    if (mOrientation == wxHORIZONTAL) {
       strLen = strW;
@@ -842,7 +845,6 @@ void Ruler::TickCustom(int labelIdx, bool major, bool minor)
    // be optimized.
 
    int pos;
-   wxString l;
    wxCoord strW, strH, strD, strL;
    int strPos, strLen, strLeft, strTop;
 
@@ -863,13 +865,13 @@ void Ruler::TickCustom(int labelIdx, bool major, bool minor)
 
    label->value = 0.0;
    pos = label->pos;         // already stored in label class
-   l   = label->text;
+   auto l   = label->text;
    label->lx = mLeft - 1000; // don't display
    label->ly = mTop - 1000;  // don't display
 
    mDC->SetFont(major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont);
 
-   mDC->GetTextExtent(l, &strW, &strH, &strD, &strL);
+   mDC->GetTextExtent(l.Translation(), &strW, &strH, &strD, &strL);
 
    if (mOrientation == wxHORIZONTAL) {
       strLen = strW;
@@ -1170,7 +1172,7 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
          //    mNumMinor = 0;
          // Nowadays we just drop the labels.
          for(i=0; i<mNumMinor; i++)
-            mMinorLabels[i].text = "";
+            mMinorLabels[i].text = {};
       }
 
       // Left and Right Edges
@@ -1541,25 +1543,29 @@ void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
 
 void Ruler::SetCustomMode(bool value) { mCustom = value; }
 
-void Ruler::SetCustomMajorLabels(wxArrayString *label, size_t numLabel, int start, int step)
+void Ruler::SetCustomMajorLabels(
+   const TranslatableStrings &labels, int start, int step)
 {
+   const auto numLabel = labels.size();
    mNumMajor = numLabel;
    mMajorLabels.reinit(numLabel);
 
    for(size_t i = 0; i<numLabel; i++) {
-      mMajorLabels[i].text = (*label)[i];
+      mMajorLabels[i].text = labels[i];
       mMajorLabels[i].pos  = start + i*step;
    }
    //Remember: DELETE majorlabels....
 }
 
-void Ruler::SetCustomMinorLabels(wxArrayString *label, size_t numLabel, int start, int step)
+void Ruler::SetCustomMinorLabels(
+   const TranslatableStrings &labels, int start, int step)
 {
+   const auto numLabel = labels.size();
    mNumMinor = numLabel;
    mMinorLabels.reinit(numLabel);
 
    for(size_t i = 0; i<numLabel; i++) {
-      mMinorLabels[i].text = (*label)[i];
+      mMinorLabels[i].text = labels[i];
       mMinorLabels[i].pos  = start + i*step;
    }
    //Remember: DELETE majorlabels....
@@ -1576,7 +1582,7 @@ void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
       dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
 #endif
 
-      dc.DrawText(text, lx, ly);
+      dc.DrawText(text.Translation(), lx, ly);
    }
 }
 
@@ -1603,7 +1609,7 @@ RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
                        const wxSize &bounds,
                        const Range &range,
                        Ruler::RulerFormat format,
-                       const wxString &units,
+                       const TranslatableString &units,
                        const Options &options,
                        const wxPoint& pos /*= wxDefaultPosition*/,
                        const wxSize& size /*= wxDefaultSize*/):

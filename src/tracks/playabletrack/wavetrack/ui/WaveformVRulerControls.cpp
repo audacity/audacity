@@ -220,7 +220,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
       vruler->SetFormat(Ruler::RealFormat);
-      vruler->SetUnits(wxT(""));
+      vruler->SetUnits({});
       vruler->SetLabelEdges(false);
       vruler->SetLog(false);
    }
@@ -228,7 +228,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       wxASSERT(scaleType == WaveformSettings::stLogarithmic);
       scaleType = WaveformSettings::stLogarithmic;
       
-      vruler->SetUnits(wxT(""));
+      vruler->SetUnits({});
       
       float min, max;
       wt->GetDisplayBounds(&min, &max);

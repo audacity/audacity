@@ -41,7 +41,7 @@ wxAccStatus WindowAccessible::GetName(int childId, wxString* name)
 
 #include <wx/slider.h>
 
-SliderAx::SliderAx(wxWindow * window, const wxString &fmt) :
+SliderAx::SliderAx(wxWindow * window, const TranslatableString &fmt) :
 WindowAccessible( window )
 {
    mParent = window;
@@ -224,7 +224,7 @@ wxAccStatus SliderAx::GetValue(int childId, wxString* strValue)
 
    if( childId == 0 )
    {
-      strValue->Printf( mFmt, s->GetValue() );
+      strValue->Printf( mFmt.Translation(), s->GetValue() );
 
       return wxACC_OK;
    }

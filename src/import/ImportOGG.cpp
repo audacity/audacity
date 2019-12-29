@@ -186,23 +186,23 @@ std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(const FilePath &filename
    int err = ov_open(file->fp(), vorbisFile.get(), NULL, 0);
 
    if (err < 0) {
-      wxString message;
+      TranslatableString message;
 
       switch (err) {
          case OV_EREAD:
-            message = _("Media read error");
+            message = XO("Media read error");
             break;
          case OV_ENOTVORBIS:
-            message = _("Not an Ogg Vorbis file");
+            message = XO("Not an Ogg Vorbis file");
             break;
          case OV_EVERSION:
-            message = _("Vorbis version mismatch");
+            message = XO("Vorbis version mismatch");
             break;
          case OV_EBADHEADER:
-            message = _("Invalid Vorbis bitstream header");
+            message = XO("Invalid Vorbis bitstream header");
             break;
          case OV_EFAULT:
-            message = _("Internal logic fault");
+            message = XO("Internal logic fault");
             break;
       }
 

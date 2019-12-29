@@ -75,7 +75,7 @@ class AUDACITY_DLL_API Ruler {
 
    // Specify the name of the units (like "dB") if you
    // want numbers like "1.6" formatted as "1.6 dB".
-   void SetUnits(const wxString &units);
+   void SetUnits(const TranslatableString &units);
    void SetDbMirrorValue( const double d ){ mDbMirrorValue = d ; };
 
    // Logarithmic
@@ -125,8 +125,10 @@ class AUDACITY_DLL_API Ruler {
    // If this is the case, you should provide a wxString array of labels, start
    // label position, and labels step. The range eventually specified will be
    // ignored.
-   void SetCustomMajorLabels(wxArrayString *label, size_t numLabel, int start, int step);
-   void SetCustomMinorLabels(wxArrayString *label, size_t numLabel, int start, int step);
+   void SetCustomMajorLabels(
+      const TranslatableStrings &labels, int start, int step);
+   void SetCustomMinorLabels(
+      const TranslatableStrings &labels, int start, int step);
 
    void SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo);
 
@@ -154,7 +156,7 @@ class AUDACITY_DLL_API Ruler {
    void Update(const Envelope* envelope);
    void FindTickSizes();
    void FindLinearTickSizes(double UPP);
-   wxString LabelString(double d, bool major);
+   TranslatableString LabelString(double d, bool major);
 
    void Tick(int pos, double d, bool major, bool minor);
 
@@ -198,7 +200,7 @@ private:
       double value;
       int pos;
       int lx, ly;
-      wxString text;
+      TranslatableString text;
 
       void Draw(wxDC &dc, bool twoTone, wxColour c) const;
    };
@@ -230,7 +232,7 @@ private:
    bool         mMajorGrid;      //  for grid drawing
    bool         mMinorGrid;      //         .
    int          mGridLineLength; //        end
-   wxString     mUnits;
+   TranslatableString mUnits;
    bool         mTwoTone;
    const ZoomInfo *mUseZoomInfo;
    int          mLeftOffset;
@@ -275,7 +277,7 @@ class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
               const wxSize &bounds,
               const Range &range,
               Ruler::RulerFormat format,
-              const wxString &units,
+              const TranslatableString &units,
               const Options &options = {},
               const wxPoint& pos = wxDefaultPosition,
               const wxSize& size = wxDefaultSize);

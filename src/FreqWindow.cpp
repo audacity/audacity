@@ -301,7 +301,7 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 0.0, -dBRange },
             Ruler::LinearDBFormat,
-            _("dB"),
+            XO("dB"),
             RulerPanel::Options{}
                .LabelEdges(true)
                .TickColour( theTheme.Colour( clrGraphLabels ) )
@@ -384,7 +384,7 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 10, 20000 },
             Ruler::RealFormat,
-            _("Hz"),
+            XO("Hz"),
             RulerPanel::Options{}
                .Log(true)
                .Flip(true)
@@ -721,10 +721,10 @@ void FrequencyPlotDialog::DrawPlot()
    // Set up y axis ruler
 
    if (mAlg == SpectrumAnalyst::Spectrum) {
-      vRuler->ruler.SetUnits(_("dB"));
+      vRuler->ruler.SetUnits(XO("dB"));
       vRuler->ruler.SetFormat(Ruler::LinearDBFormat);
    } else {
-      vRuler->ruler.SetUnits(wxT(""));
+      vRuler->ruler.SetUnits({});
       vRuler->ruler.SetFormat(Ruler::RealFormat);
    }
    int w1, w2, h;
@@ -767,13 +767,14 @@ void FrequencyPlotDialog::DrawPlot()
          xStep = (xMax - xMin) / width;
          hRuler->ruler.SetLog(false);
       }
-      hRuler->ruler.SetUnits(_("Hz"));
+      hRuler->ruler.SetUnits(XO("Hz"));
    } else {
       xMin = 0;
       xMax = mAnalyst->GetProcessedSize() / mRate;
       xStep = (xMax - xMin) / width;
       hRuler->ruler.SetLog(false);
-      hRuler->ruler.SetUnits(_("s"));
+      /* i18n-hint: short form of 'seconds'.*/
+      hRuler->ruler.SetUnits(XO("s"));
    }
    hRuler->ruler.SetRange(xMin, xMax-xStep);
    hRuler->Refresh(false);

@@ -356,10 +356,9 @@ wxString GUIPrefs::SetLang( const wxString & lang )
       wxTheApp->ProcessEvent(evt);
    }
 
-   // PRL: Moved this, do it only after language intialized
    // Unused strings that we want to be translated, even though
    // we're not using them yet...
-   wxString future1 = _("Master Gain Control");
+   using future1 = decltype( XO("Master Gain Control") );
 
    return result;
 }

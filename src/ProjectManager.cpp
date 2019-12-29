@@ -512,9 +512,9 @@ void InitProjectWindow( ProjectWindow &window )
 #endif
 
    window.UpdateStatusWidths();
-   wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
-                                   AUDACITY_VERSION_STRING);
-   statusBar->SetStatusText(msg, mainStatusBarField);
+   auto msg = XO("Welcome to Audacity version %s")
+      .Format( AUDACITY_VERSION_STRING );
+   ProjectManager::Get( project ).SetStatusText( msg, mainStatusBarField );
 
 #ifdef EXPERIMENTAL_DA2
    ClearBackground();// For wxGTK.
@@ -942,26 +942,23 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    auto &project = mProject;
    auto &projectAudioIO = ProjectAudioIO::Get( project );
-   auto &window = GetProjectFrame( project );
    auto &dirManager = DirManager::Get( project );
    auto mixerToolBar = &MixerToolBar::Get( project );
    mixerToolBar->UpdateControls();
    
-   auto &statusBar = *window.GetStatusBar();
-
    auto gAudioIO = AudioIO::Get();
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
    if (projectAudioIO.GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
       wxLongLong freeSpace = dirManager.GetFreeDiskSpace();
       if (freeSpace >= 0) {
-         wxString sMessage;
 
          int iRecordingMins = GetEstimatedRecordingMinsLeftOnDisk(gAudioIO->GetNumCaptureChannels());
-         sMessage.Printf(_("Disk space remaining for recording: %s"), GetHoursMinsString(iRecordingMins));
+         auto sMessage = XO("Disk space remaining for recording: %s")
+            .Format( GetHoursMinsString(iRecordingMins) );
 
          // Do not change mLastMainStatusMessage
-         statusBar.SetStatusText(sMessage, mainStatusBarField);
+         SetStatusText(sMessage, mainStatusBarField);
       }
    }
    else if(ODManager::IsInstanceCreated())
@@ -970,7 +967,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
       int numTasks = ODManager::Instance()->GetTotalNumTasks();
       if(numTasks)
       {
-         wxString msg;
+         TranslatableString msg;
          float ratioComplete= ODManager::Instance()->GetOverallPercentComplete();
 
          if(ratioComplete>=1.0f)
@@ -980,20 +977,18 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
             //signal the od task queue loop to wake up so it can remove the tasks from the queue and the queue if it is empty.
             ODManager::Instance()->SignalTaskQueueLoop();
 
-
-            msg = _("On-demand import and waveform calculation complete.");
-            statusBar.SetStatusText(msg, mainStatusBarField);
-
+            msg = XO("On-demand import and waveform calculation complete.");
          }
          else if(numTasks>1)
-            msg.Printf(_("Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."),
-              numTasks,ratioComplete*100.0);
+            msg = XO(
+"Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete.")
+               .Format( numTasks, ratioComplete * 100.0 );
          else
-            msg.Printf(_("Import complete. Running an on-demand waveform calculation. %2.0f%% complete."),
-             ratioComplete*100.0);
+            msg = XO(
+"Import complete. Running an on-demand waveform calculation. %2.0f%% complete.")
+               .Format( ratioComplete * 100.0 );
 
-
-         statusBar.SetStatusText(msg, mainStatusBarField);
+         SetStatusText(msg, mainStatusBarField);
       }
    }
 
@@ -1020,7 +1015,7 @@ void ProjectManager::OnStatusChange( wxCommandEvent &evt )
 
    auto field = static_cast<StatusBarField>( evt.GetInt() );
    const auto &msg = ProjectStatus::Get( project ).Get( field );
-   window.GetStatusBar()->SetStatusText(msg.Translation(), field);
+   SetStatusText( msg, field );
    
    if ( field == mainStatusBarField )
       // When recording, let the NEW status message stay at least as long as
@@ -1029,27 +1024,32 @@ void ProjectManager::OnStatusChange( wxCommandEvent &evt )
       RestartTimer();
 }
 
-wxString ProjectManager::GetHoursMinsString(int iMinutes)
+void ProjectManager::SetStatusText( const TranslatableString &text, int number )
 {
-   wxString sFormatted;
+   auto &project = mProject;
+   auto pWindow = ProjectWindow::Find( &project );
+   if ( !pWindow )
+      return;
+   auto &window = *pWindow;
+   window.GetStatusBar()->SetStatusText(text.Translation(), number);
+}
 
-   if (iMinutes < 1) {
+TranslatableString ProjectManager::GetHoursMinsString(int iMinutes)
+{
+   if (iMinutes < 1)
       // Less than a minute...
-      sFormatted = _("Less than 1 minute");
-      return sFormatted;
-   }
+      return XO("Less than 1 minute");
 
    // Calculate
    int iHours = iMinutes / 60;
    int iMins = iMinutes % 60;
 
-   auto sHours = wxPLURAL( "%d hour", "%d hours", 0 )( iHours ).Translation();
+   auto sHours = wxPLURAL( "%d hour", "%d hours", 0 )( iHours );
 
-   auto sMins = wxPLURAL( "%d minute", "%d minutes", 0 )( iMins ).Translation();
+   auto sMins = wxPLURAL( "%d minute", "%d minutes", 0 )( iMins );
 
    /* i18n-hint: A time in hours and minutes. Only translate the "and". */
-   sFormatted.Printf( _("%s and %s."), sHours, sMins);
-   return sFormatted;
+   return XO("%s and %s.").Format( sHours, sMins );
 }
 
 // This routine will give an estimate of how many

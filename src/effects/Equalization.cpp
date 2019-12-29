@@ -776,7 +776,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                wxSize{ 100, 100 }, // Ruler can't handle small sizes
                RulerPanel::Range{ 60.0, -120.0 },
                Ruler::LinearDBFormat,
-               _("dB"),
+               XO("dB"),
                RulerPanel::Options{}
                   .LabelEdges(true)
                   .TicksAtExtremes(true)
@@ -806,7 +806,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                .Style(wxSL_VERTICAL | wxSL_INVERSE)
                .AddSlider( {}, 30, 60, 0);
 #if wxUSE_ACCESSIBILITY
-            mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, _("%d dB")));
+            mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, XO("%d dB")));
 #endif
 
             mdBMinSlider = S.Id(ID_dBMin)
@@ -815,7 +815,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                .AddSlider( {}, -30, -10, -120);
             S.AddVariableText(XO("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
-            mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, _("%d dB")));
+            mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, XO("%d dB")));
 #endif
          }
          S.EndVerticalLay();
@@ -833,7 +833,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ mLoFreq, mHiFreq },
             Ruler::IntFormat,
-            _("Hz"),
+            XO("Hz"),
             RulerPanel::Options{}
                .Log(true)
                .Flip(true)
@@ -876,7 +876,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL | wxSL_INVERSE);
 
 #if wxUSE_ACCESSIBILITY
-            mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], _("%d dB")));
+            mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], XO("%d dB")));
 #endif
 
             mSlidersOld[i] = 0;

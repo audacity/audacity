@@ -20,7 +20,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
-#define DESC _("QuickTime files")
+#define DESC XO("QuickTime files")
 
 static const auto exts = {
    wxT("aif"),
@@ -119,9 +119,9 @@ class QTImportPlugin final : public ImportPlugin
       mInitialized = false;
    }
 
-   wxString GetPluginStringID() { return wxT("quicktime"); }
+   wxString GetPluginStringID() override { return wxT("quicktime"); }
 
-   TranslatableString GetPluginFormatDescription();
+   TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const wxString & Filename) override;
 
    unsigned SequenceNumber() const override;

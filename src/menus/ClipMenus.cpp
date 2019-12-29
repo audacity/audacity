@@ -327,13 +327,13 @@ TranslatableString ClipBoundaryMessage(
                and the last string is the name of the track containing the
                clips.
              */
-         _("dummyStringClipBoundaryMessage");
+         XO("dummyStringClipBoundaryMessage");
          str = wxPLURAL(
             "%s %d of %d clip %s",
             "%s %d of %d clips %s",
             2
          )(
-            result.clipStart1 ? _("start") : _("end"),
+            result.clipStart1 ? XO("start") : XO("end"),
             result.index1 + 1,
             nClips,
             longName
@@ -349,15 +349,15 @@ TranslatableString ClipBoundaryMessage(
                and the last string is the name of the track containing the
                clips.
              */
-         _("dummyStringClipBoundaryMessageLong");
+         XO("dummyStringClipBoundaryMessageLong");
          str = wxPLURAL(
             "%s %d and %s %d of %d clip %s",
             "%s %d and %s %d of %d clips %s",
             4
          )(
-            result.clipStart1 ? _("start") : _("end"),
+            result.clipStart1 ? XO("start") : XO("end"),
             result.index1 + 1,
-            result.clipStart2 ? _("start") : _("end"),
+            result.clipStart2 ? XO("start") : XO("end"),
             result.index2 + 1,
             nClips,
             longName
@@ -585,7 +585,7 @@ void DoSelectClip(AudacityProject &project, bool next)
                first number identifies one of a sequence of clips,
                last number counts the clips,
                string names a track */
-         _("dummyStringOnSelectClip");
+         XO("dummyStringOnSelectClip");
          auto str = wxPLURAL(
             "%d of %d clip %s",
             "%d of %d clips %s",

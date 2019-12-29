@@ -381,8 +381,8 @@ class ASAProgress final : public SAProgress {
                     work[1], mFrames[1], is_audio[1]);
             wxFprintf(mTimeFile, "work2 = %g, work3 = %g\n", work2, work3);
          #endif
-         mProgress.create(_("Synchronize MIDI with Audio"),
-                               _("Synchronizing MIDI and Audio Tracks"));
+         mProgress.create(XO("Synchronize MIDI with Audio"),
+                               XO("Synchronizing MIDI and Audio Tracks"));
       } else if (i < 3) {
          wxFprintf(mTimeFile,
                 "Phase %d took %d ms for %g frames, coefficient = %g s/frame\n",
@@ -933,7 +933,7 @@ void OnScoreAlign(const CommandContext &context)
 
    // We're going to do it.
    //pushing the state before the change is wrong (I think)
-   //PushState(_("Sync MIDI with Audio"), _("Sync MIDI with Audio"));
+   //PushState(XO("Sync MIDI with Audio"), XO("Sync MIDI with Audio"));
    // Make a copy of the note track in case alignment is canceled or fails
    auto holder = nt->Duplicate();
    auto alignedNoteTrack = static_cast<NoteTrack*>(holder.get());
