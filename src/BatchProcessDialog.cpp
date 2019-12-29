@@ -339,54 +339,17 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    auto prompt =  XO("Select file(s) for batch processing...");
 
-   FormatList l;
-   wxString filter;
-   wxString all;
-
-   Importer::Get().GetSupportedImportFormats(&l);
-   for (const auto &format : l) {
-      const Format *f = &format;
-
-      wxString newfilter = f->formatName.Translation() + wxT("|");
-      for (size_t i = 0; i < f->formatExtensions.size(); i++) {
-         if (!newfilter.Contains(wxT("*.") + f->formatExtensions[i] + wxT(";")))
-            newfilter += wxT("*.") + f->formatExtensions[i] + wxT(";");
-         if (!all.Contains(wxT("*.") + f->formatExtensions[i] + wxT(";")))
-            all += wxT("*.") + f->formatExtensions[i] + wxT(";");
-      }
-      newfilter.RemoveLast(1);
-      filter += newfilter;
-      filter += wxT("|");
-   }
-   all.RemoveLast(1);
-   filter.RemoveLast(1);
-
-   wxString mask = _("All files|*|All supported files|") +
-                   all + wxT("|") +
-                   filter;
-
-   wxString type = gPrefs->Read(wxT("/DefaultOpenType"),mask.BeforeFirst(wxT('|')));
-   // Convert the type to the filter index
-   int index = mask.First(type + wxT("|"));
-   if (index == wxNOT_FOUND) {
-      index = 0;
-   }
-   else {
-      index = mask.Left(index).Freq(wxT('|')) / 2;
-      if (index < 0) {
-         index = 0;
-      }
-   }
+   const auto fileTypes = Importer::Get().GetFileTypes();
 
    auto path = FileNames::FindDefaultPath(FileNames::Operation::Open);
    FileDialogWrapper dlog(this,
-                   prompt,
-                   path,
-                   wxT(""),
-                   mask,
-                   wxFD_OPEN | wxFD_MULTIPLE | wxRESIZE_BORDER);
+      prompt,
+      path,
+      wxT(""),
+      fileTypes,
+      wxFD_OPEN | wxFD_MULTIPLE | wxRESIZE_BORDER);
 
-   dlog.SetFilterIndex(index);
+   dlog.SetFilterIndex( Importer::SelectDefaultOpenType( fileTypes ) );
    if (dlog.ShowModal() != wxID_OK) {
       Raise();
       return;

@@ -2818,6 +2818,13 @@ bool NyquistEffect::IsOk()
    return mOK;
 }
 
+static const FileNames::FileType
+   /* i18n-hint: Nyquist is the name of a programming language */
+     NyquistScripts = { XO("Nyquist scripts"), { wxT("ny") }, true }
+   /* i18n-hint: Lisp is the name of a programming language */
+   , LispScripts = { XO("Lisp scripts"), { wxT("lsp") }, true }
+;
+
 void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
 {
    if (mCommandText->IsModified())
@@ -2835,7 +2842,12 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
       XO("Load Nyquist script"),
       mFileName.GetPath(),
       wxEmptyString,
-      _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|*.txt|All files|*"),
+      {
+         NyquistScripts,
+         LispScripts,
+         FileNames::TextFiles,
+         FileNames::AllFiles
+      },
       wxFD_OPEN | wxRESIZE_BORDER);
 
    if (dlog.ShowModal() != wxID_OK)
@@ -2858,7 +2870,11 @@ void NyquistEffect::OnSave(wxCommandEvent & WXUNUSED(evt))
       XO("Save Nyquist script"),
       mFileName.GetPath(),
       mFileName.GetFullName(),
-      _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"),
+      {
+         NyquistScripts,
+         LispScripts,
+         FileNames::AllFiles
+      },
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
 
    if (dlog.ShowModal() != wxID_OK)

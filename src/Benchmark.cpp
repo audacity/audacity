@@ -261,13 +261,13 @@ void BenchmarkDialog::OnSave( wxCommandEvent & WXUNUSED(event))
    auto fName = XO("benchmark.txt").Translation();
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                        XO("Export Benchmark Data as:"),
-                        wxEmptyString,
-                        fName,
-                        wxT("txt"),
-                        wxT("*.txt"),
-                        wxFD_SAVE | wxRESIZE_BORDER,
-                        this);
+      XO("Export Benchmark Data as:"),
+      wxEmptyString,
+      fName,
+      wxT("txt"),
+      { FileNames::TextFiles },
+      wxFD_SAVE | wxRESIZE_BORDER,
+      this);
 
    if (fName.empty())
       return;

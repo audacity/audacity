@@ -849,7 +849,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
          filename.GetPath(),
          filename.GetFullName(),
          wxT("aup"),
-         _("Audacity projects") + wxT(" (*.aup)|*.aup"),
+         { FileNames::AudacityProjects },
          wxFD_SAVE | wxRESIZE_BORDER,
          &window);
 
@@ -1028,107 +1028,35 @@ void ProjectFileManager::CloseLock()
 }
 
 // static method, can be called outside of a project
-wxArrayString ProjectFileManager::ShowOpenDialog(const wxString &extraformat, const wxString &extrafilter)
+wxArrayString ProjectFileManager::ShowOpenDialog(
+   const FileNames::FileType &extraType )
 {
-   FormatList l;
-   wxString filter;  ///< List of file format names and extensions, separated
-   /// by | characters between _formats_ and extensions for each _format_, i.e.
-   /// format1name | *.ext | format2name | *.ex1;*.ex2
-   wxString all;  ///< One long list of all supported file extensions,
-   /// semicolon separated
-
-   if (!extraformat.empty())
-   {  // additional format specified
-      all = extrafilter + wxT(';');
-      // add it to the "all supported files" filter string
-   }
-
    // Construct the filter
-   Importer::Get().GetSupportedImportFormats(&l);
+   const auto fileTypes = Importer::Get().GetFileTypes( extraType );
 
-   for (const auto &format : l) {
-      /* this loop runs once per supported _format_ */
-      const Format *f = &format;
-
-      wxString newfilter = f->formatName.Translation() + wxT("|");
-      // bung format name into string plus | separator
-      for (size_t i = 0; i < f->formatExtensions.size(); i++) {
-         /* this loop runs once per valid _file extension_ for file containing
-          * the current _format_ */
-         if (!newfilter.Contains(wxT("*.") + f->formatExtensions[i] + wxT(";")))
-            newfilter += wxT("*.") + f->formatExtensions[i] + wxT(";");
-         if (!all.Contains(wxT("*.") + f->formatExtensions[i] + wxT(";")))
-            all += wxT("*.") + f->formatExtensions[i] + wxT(";");
-      }
-      newfilter.RemoveLast(1);
-      filter += newfilter;
-      filter += wxT("|");
-   }
-   all.RemoveLast(1);
-   filter.RemoveLast(1);
-
-   // For testing long filters
-#if 0
-   wxString test = wxT("*.aaa;*.bbb;*.ccc;*.ddd;*.eee");
-   all = test + wxT(';') + test + wxT(';') + test + wxT(';') +
-         test + wxT(';') + test + wxT(';') + test + wxT(';') +
-         test + wxT(';') + test + wxT(';') + test + wxT(';') +
-         all;
-#endif
-
-   /* i18n-hint: The vertical bars and * are essential here.*/
-   wxString mask = _("All files|*|All supported files|") +
-                   all + wxT("|"); // "all" and "all supported" entries
-   if (!extraformat.empty())
-   {  // append caller-defined format if supplied
-      mask +=  extraformat + wxT("|") + extrafilter + wxT("|");
-   }
-   mask += filter;   // put the names and extensions of all the importer formats
-   // we built up earlier into the mask
-
-   // Retrieve saved path and type
+   // Retrieve saved path
    auto path = FileNames::FindDefaultPath(FileNames::Operation::Open);
-   wxString type = gPrefs->Read(wxT("/DefaultOpenType"),mask.BeforeFirst(wxT('|')));
-
-   // Convert the type to the filter index
-   int index = mask.First(type + wxT("|"));
-   if (index == wxNOT_FOUND) {
-      index = 0;
-   }
-   else {
-      index = mask.Left(index).Freq(wxT('|')) / 2;
-      if (index < 0) {
-         index = 0;
-      }
-   }
 
    // Construct and display the file dialog
    wxArrayString selected;
 
-   FileDialogWrapper dlog(NULL,
+   FileDialogWrapper dlog(nullptr,
       XO("Select one or more files"),
       path,
       wxT(""),
-      mask,
+      fileTypes,
       wxFD_OPEN | wxFD_MULTIPLE | wxRESIZE_BORDER);
 
-   dlog.SetFilterIndex(index);
+   dlog.SetFilterIndex( Importer::SelectDefaultOpenType( fileTypes ) );
 
    int dialogResult = dlog.ShowModal();
 
    // Convert the filter index to type and save
-   index = dlog.GetFilterIndex();
-   for (int i = 0; i < index; i++) {
-      mask = mask.AfterFirst(wxT('|')).AfterFirst(wxT('|'));
-   }
+   auto index = dlog.GetFilterIndex();
+   const auto &saveType = fileTypes[ index ];
 
-   // PRL:  Preference keys /DefaultOpenType and /LastOpenType, unusually,
-   // store localized strings!
-   // The bad consequences of a change of locale are not severe -- only that
-   // a default choice of file type for an open dialog is not remembered
-   gPrefs->Write(wxT("/DefaultOpenType"), mask.BeforeFirst(wxT('|')));
-   gPrefs->Write(wxT("/LastOpenType"), mask.BeforeFirst(wxT('|')));
-   gPrefs->Flush();
+   Importer::SetDefaultOpenType( saveType );
+   Importer::SetLastOpenType( saveType );
 
    if (dialogResult == wxID_OK) {
       // Return the selected files

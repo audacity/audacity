@@ -553,7 +553,8 @@ public:
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
 
-   FindDialog(wxWindow *parent, wxString path, wxString name, wxString type)
+   FindDialog(wxWindow *parent, wxString path, wxString name,
+      FileNames::FileTypes types)
    :  wxDialogWrapper(parent, wxID_ANY,
    /* i18n-hint: LAME is the name of an MP3 converter and should not be translated*/
    XO("Locate LAME"))
@@ -563,7 +564,7 @@ public:
 
       mPath = path;
       mName = name;
-      mType = type;
+      mTypes = std::move( types );
 
       mLibPath.Assign(mPath, mName);
 
@@ -626,13 +627,13 @@ public:
       auto question = XO("Where is %s?").Format( mName );
 
       wxString path = FileNames::SelectFile(FileNames::Operation::_None,
-                                   question,
-                                   mLibPath.GetPath(),
-                                   mLibPath.GetName(),
-                                   wxT(""),
-                                   mType,
-                                   wxFD_OPEN | wxRESIZE_BORDER,
-                                   this);
+         question,
+            mLibPath.GetPath(),
+            mLibPath.GetName(),
+            wxT(""),
+            mTypes,
+            wxFD_OPEN | wxRESIZE_BORDER,
+            this);
       if (!path.empty()) {
          mLibPath = path;
          mPathText->SetValue(path);
@@ -658,7 +659,7 @@ private:
 
    wxString mPath;
    wxString mName;
-   wxString mType;
+   FileNames::FileTypes mTypes;
 #endif // DISABLE_DYNAMIC_LOADING_LAME
 
    wxTextCtrl *mPathText;
@@ -800,7 +801,7 @@ public:
    wxString GetLibraryVersion();
    wxString GetLibraryName();
    wxString GetLibraryPath();
-   wxString GetLibraryTypeString();
+   FileNames::FileTypes GetLibraryTypes();
 
    /* returns the number of samples PER CHANNEL to send for each call to EncodeBuffer */
    int InitializeStream(unsigned channels, int sampleRate);
@@ -942,9 +943,9 @@ bool MP3Exporter::FindLibrary(wxWindow *parent)
    }
 
    FindDialog fd(parent,
-                 path,
-                 name,
-                 GetLibraryTypeString());
+      path,
+      name,
+      GetLibraryTypes());
 
    if (fd.ShowModal() == wxID_CANCEL) {
       return false;
@@ -1493,9 +1494,13 @@ wxString MP3Exporter::GetLibraryName()
    return wxT("lame_enc.dll");
 }
 
-wxString MP3Exporter::GetLibraryTypeString()
+FileNames::FileTypes MP3Exporter::GetLibraryTypes()
 {
-   return _("Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files|*");
+   return {
+      { XO("Only lame_enc.dll"), { wxT("lame_enc.dll") } },
+      FileNames::DynamicLibraries,
+      FileNames::AllFiles
+   };
 }
 
 #elif defined(__WXMAC__)
@@ -1527,11 +1532,20 @@ wxString MP3Exporter::GetLibraryName()
    return wxT("libmp3lame.dylib");
 }
 
-wxString MP3Exporter::GetLibraryTypeString()
+FileNames::FileTypes MP3Exporter::GetLibraryTypes()
 {
-   if (sizeof(void*) == 8)
-      return wxString(_("Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"));
-   return wxString(_("Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"));
+   return {
+      (sizeof(void*) == 8)
+         ? FileNames::FileType{
+              XO("Only libmp3lame64bit.dylib"), { wxT("libmp3lame64bit.dylib") }
+           }
+         : FileNames::FileType{
+              XO("Only libmp3lame.dylib"), { wxT("libmp3lame.dylib") }
+           }
+      ,
+      FileNames::DynamicLibraries,
+      FileNames::AllFiles
+   };
 }
 
 #else //!__WXMAC__
@@ -1547,9 +1561,14 @@ wxString MP3Exporter::GetLibraryName()
    return wxT("libmp3lame.so.0");
 }
 
-wxString MP3Exporter::GetLibraryTypeString()
+FileNames::FileTypes MP3Exporter::GetLibraryTypes()
 {
-   return wxString(_("Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*.so|Extended Libraries (*.so*)|*.so*|All Files (*)|*"));
+   return {
+      { XO("Only libmp3lame.so.0"), { wxT("libmp3lame.so.0") } },
+      { XO("Primary shared object files"), { wxT("so") }, true },
+      { XO("Extended libraries"), { wxT("so*") }, true },
+      FileNames::AllFiles
+   };
 }
 #endif
 

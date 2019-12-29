@@ -449,7 +449,8 @@ class FindFFmpegDialog final : public wxDialogWrapper
 {
 public:
 
-   FindFFmpegDialog(wxWindow *parent, const wxString &path, const wxString &name, const wxString &type)
+   FindFFmpegDialog(wxWindow *parent, const wxString &path, const wxString &name,
+      FileNames::FileTypes types)
       :  wxDialogWrapper(parent, wxID_ANY, XO("Locate FFmpeg"))
    {
       SetName();
@@ -457,7 +458,7 @@ public:
 
       mPath = path;
       mName = name;
-      mType = type;
+      mTypes = std::move( types );
 
       mLibPath.Assign(mPath, mName);
 
@@ -522,7 +523,7 @@ public:
          mLibPath.GetPath(),
          mLibPath.GetName(),
          wxT(""),
-         mType,
+         mTypes,
          wxFD_OPEN | wxRESIZE_BORDER,
          this);
       if (!path.empty()) {
@@ -547,7 +548,7 @@ private:
 
    wxString mPath;
    wxString mName;
-   wxString mType;
+   FileNames::FileTypes mTypes;
 
    wxTextCtrl *mPathText;
 
@@ -659,7 +660,7 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
    FindFFmpegDialog fd(parent,
                         path,
                         name,
-                        GetLibraryTypeString());
+                        GetLibraryTypes());
 
    if (fd.ShowModal() == wxID_CANCEL) {
       wxLogMessage(wxT("User canceled the dialog. Failed to find FFmpeg libraries."));

@@ -18,6 +18,7 @@
 #include <wx/tokenzr.h> // for enum wxStringTokenizerMode
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
+#include "../FileNames.h" // for FileType
 
 class wxArrayString;
 class wxListBox;
@@ -29,22 +30,8 @@ class ImportFileHandle;
 class UnusableImportPlugin;
 typedef bool (*progress_callback_t)( void *userData, float percent );
 
-class Format {
-public:
-   TranslatableString formatName;
-   FileExtensions formatExtensions;
-
-   Format(const TranslatableString &_formatName,
-      FileExtensions _formatExtensions):
-      formatName(_formatName),
-      formatExtensions( std::move( _formatExtensions ) )
-   {
-   }
-};
-
 class ExtImportItem;
 
-using FormatList = std::vector<Format> ;
 using ExtImportItems = std::vector< std::unique_ptr<ExtImportItem> >;
 
 class ExtImportItem
@@ -116,9 +103,29 @@ public:
    bool Terminate();
 
    /**
-    * Fills @formatList with a list of supported import formats
+    * Constructs a list of types, for use by file opening dialogs, that includes
+    * all supported file types
     */
-   void GetSupportedImportFormats(FormatList *formatList);
+   FileNames::FileTypes
+   GetFileTypes( const FileNames::FileType &extraType = {} );
+
+   /**
+    * Remember a file type in preferences
+    */
+   static void
+   SetLastOpenType( const FileNames::FileType &type );
+
+   /**
+    * Remember a file type in preferences
+    */
+   static void
+   SetDefaultOpenType( const FileNames::FileType &type );
+
+   /**
+    * Choose index of preferred type
+    */
+   static size_t
+   SelectDefaultOpenType( const FileNames::FileTypes &fileTypes );
 
    /**
     * Reads extended import filters from gPrefs into internal

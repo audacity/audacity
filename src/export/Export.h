@@ -17,6 +17,7 @@
 #include "audacity/Types.h"
 #include "../SampleFormat.h"
 #include "../widgets/wxPanelWrapper.h" // to inherit
+#include "../FileNames.h" // for FileTypes
 
 class wxArrayString;
 class FileDialogWrapper;
@@ -51,7 +52,7 @@ class AUDACITY_DLL_API FormatInfo
       TranslatableString mDescription;
       // wxString mExtension;
       FileExtensions mExtensions;
-      wxString mMask;
+      FileNames::FileTypes mMask;
       unsigned mMaxChannels;
       bool mCanMetaData;
 };
@@ -71,21 +72,20 @@ public:
    void SetDescription(const TranslatableString & description, int index);
    void AddExtension(const FileExtension &extension, int index);
    void SetExtensions(FileExtensions extensions, int index);
-   void SetMask(const wxString & mask, int index);
+   void SetMask(FileNames::FileTypes mask, int index);
    void SetMaxChannels(unsigned maxchannels, unsigned index);
    void SetCanMetaData(bool canmetadata, int index);
 
    virtual int GetFormatCount();
    virtual wxString GetFormat(int index);
-   TranslatableString GetUntranslatedDescription(int index);
-   wxString GetTranslatedDescription(int index);
+   TranslatableString GetDescription(int index);
    /** @brief Return the (first) file name extension for the sub-format.
     * @param index The sub-format for which the extension is wanted */
    virtual FileExtension GetExtension(int index = 0);
    /** @brief Return all the file name extensions used for the sub-format.
     * @param index the sub-format for which the extension is required */
    virtual FileExtensions GetExtensions(int index = 0);
-   virtual wxString GetMask(int index);
+   FileNames::FileTypes GetMask(int index);
    virtual unsigned GetMaxChannels(int index);
    virtual bool GetCanMetaData(int index);
 

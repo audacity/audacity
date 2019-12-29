@@ -532,13 +532,13 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = wxT("contrast.txt");
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                        XO("Export Contrast Result As:"),
-                        wxEmptyString,
-                        fName,
-                        wxT("txt"),
-                        _("Text files (*.txt)|*.txt|All files|*"),
-                        wxFD_SAVE | wxRESIZE_BORDER,
-                        this);
+      XO("Export Contrast Result As:"),
+      wxEmptyString,
+      fName,
+      wxT("txt"),
+      { FileNames::TextFiles, FileNames::AllFiles },
+      wxFD_SAVE | wxRESIZE_BORDER,
+      this);
 
    if (fName.empty())
       return;

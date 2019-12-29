@@ -628,13 +628,13 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
    // Ask user for a filename
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
-                    XO("Select a text file containing labels"),
-                    wxEmptyString,     // Path
-                    wxT(""),       // Name
-                    wxT("txt"),   // Extension
-                    _("Text files (*.txt)|*.txt|All files|*"),
-                    wxRESIZE_BORDER, // Flags
-                    this);    // Parent
+         XO("Select a text file containing labels"),
+         wxEmptyString,     // Path
+         wxT(""),       // Name
+         wxT("txt"),   // Extension
+         { FileNames::TextFiles, FileNames::AllFiles },
+         wxRESIZE_BORDER, // Flags
+         this);    // Parent
 
    // They gave us one...
    if (!fileName.empty()) {
@@ -681,7 +681,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
       wxEmptyString,
       fName,
       wxT("txt"),
-      wxT("*.txt"),
+      { FileNames::TextFiles },
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
       this);
 

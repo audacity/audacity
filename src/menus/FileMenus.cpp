@@ -21,6 +21,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../export/ExportMultiple.h"
+#include "../import/Import.h"
 #include "../import/ImportMIDI.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
@@ -227,13 +228,13 @@ void OnExportLabels(const CommandContext &context)
       fName = (*trackRange.rbegin())->GetName();
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
-                        XO("Export Labels As:"),
-                        wxEmptyString,
-                        fName,
-                        wxT("txt"),
-                        wxT("*.txt"),
-                        wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-                        &window);
+      XO("Export Labels As:"),
+      wxEmptyString,
+      fName,
+      wxT("txt"),
+      { FileNames::TextFiles },
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+      &window);
 
    if (fName.empty())
       return;
@@ -317,7 +318,10 @@ void OnExportMIDI(const CommandContext &context)
          wxEmptyString,
          fName,
          wxT("mid"),
-         _("MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"),
+         {
+            { XO("MIDI file"),    { wxT("mid") }, true },
+            { XO("Allegro file"), { wxT("gro") }, true },
+         },
          wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
          &window);
 
@@ -373,10 +377,9 @@ void OnImport(const CommandContext &context)
    // this serves to track the file if the users zooms in and such.
    MissingAliasFilesDialog::SetShouldShow(true);
 
-   wxArrayString selectedFiles = ProjectFileManager::ShowOpenDialog(wxT(""));
+   auto selectedFiles = ProjectFileManager::ShowOpenDialog();
    if (selectedFiles.size() == 0) {
-      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
-      gPrefs->Flush();
+      Importer::SetLastOpenType({});
       return;
    }
 
@@ -391,10 +394,7 @@ void OnImport(const CommandContext &context)
    ODManager::Pauser pauser;
 
    auto cleanup = finally( [&] {
-      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
-
-      gPrefs->Flush();
-
+      Importer::SetLastOpenType({});
       window.HandleResize(); // Adjust scrollers for NEW track sizes.
    } );
 
@@ -418,13 +418,13 @@ void OnImportLabels(const CommandContext &context)
 
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
-                    XO("Select a text file containing labels"),
-                    wxEmptyString,     // Path
-                    wxT(""),       // Name
-                    wxT("txt"),   // Extension
-                    _("Text files (*.txt)|*.txt|All files|*"),
-                    wxRESIZE_BORDER,        // Flags
-                    &window);    // Parent
+         XO("Select a text file containing labels"),
+         wxEmptyString,     // Path
+         wxT(""),       // Name
+         wxT("txt"),   // Extension
+         { FileNames::TextFiles, FileNames::AllFiles },
+         wxRESIZE_BORDER,        // Flags
+         &window);    // Parent
 
    if (!fileName.empty()) {
       wxTextFile f;
@@ -466,7 +466,15 @@ void OnImportMIDI(const CommandContext &context)
       wxEmptyString,     // Path
       wxT(""),       // Name
       wxT(""),       // Extension
-      _("MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"),
+      {
+         { XO("MIDI and Allegro files"),
+           { wxT("mid"), wxT("midi"), wxT("gro"), }, true },
+         { XO("MIDI files"),
+           { wxT("mid"), wxT("midi"), }, true },
+         { XO("Allegro files"),
+           { wxT("gro"), }, true },
+         FileNames::AllFiles
+      },
       wxRESIZE_BORDER,        // Flags
       &window);    // Parent
 
@@ -483,13 +491,13 @@ void OnImportRaw(const CommandContext &context)
 
    wxString fileName =
        FileNames::SelectFile(FileNames::Operation::Open,
-                    XO("Select any uncompressed audio file"),
-                    wxEmptyString,     // Path
-                    wxT(""),       // Name
-                    wxT(""),       // Extension
-                    _("All files|*"),
-                    wxRESIZE_BORDER,        // Flags
-                    &window);    // Parent
+         XO("Select any uncompressed audio file"),
+         wxEmptyString,     // Path
+         wxT(""),       // Name
+         wxT(""),       // Extension
+         { FileNames::AllFiles },
+         wxRESIZE_BORDER,        // Flags
+         &window);    // Parent
 
    if (fileName.empty())
       return;

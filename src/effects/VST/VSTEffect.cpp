@@ -1861,13 +1861,17 @@ void VSTEffect::ExportPresets()
    // Passing a valid parent will cause some effects dialogs to malfunction
    // upon returning from the FileNames::SelectFile().
    path = FileNames::SelectFile(FileNames::Operation::_None,
-                       XO("Save VST Preset As:"),
-                       FileNames::DataDir(),
-                       wxEmptyString,
-                       wxT("xml"),
-                       wxT("Standard VST bank file (*.fxb)|*.fxb|Standard VST program file (*.fxp)|*.fxp|Audacity VST preset file (*.xml)|*.xml"),
-                       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-                       NULL);
+      XO("Save VST Preset As:"),
+      FileNames::DataDir(),
+      wxEmptyString,
+      wxT("xml"),
+      {
+        { XO("Standard VST bank file"), { wxT("fxb") }, true },
+        { XO("Standard VST program file"), { wxT("fxp") }, true },
+        { XO("Audacity VST preset file"), { wxT("xml") }, true },
+      },
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+      NULL);
 
    // User canceled...
    if (path.empty())
@@ -1914,13 +1918,17 @@ void VSTEffect::ImportPresets()
 
    // Ask the user for the real name
    path = FileNames::SelectFile(FileNames::Operation::_None,
-                       XO("Load VST Preset:"),
-                       FileNames::DataDir(),
-                       wxEmptyString,
-                       wxT("xml"),
-                       wxT("VST preset files (*.fxb; *.fxp; *.xml)|*.fxb;*.fxp;*.xml"),
-                       wxFD_OPEN | wxRESIZE_BORDER,
-                       mParent);
+      XO("Load VST Preset:"),
+      FileNames::DataDir(),
+      wxEmptyString,
+      wxT("xml"),
+      { {
+         XO("VST preset files"),
+         { wxT("fxb"), wxT("fxp"), wxT("xml") },
+         true
+      } },
+      wxFD_OPEN | wxRESIZE_BORDER,
+      mParent);
 
    // User canceled...
    if (path.empty())
