@@ -90,7 +90,7 @@ void TimeTrackVRulerControls::UpdateRuler( const wxRect &rect )
    vruler->SetOrientation(wxVERTICAL);
    vruler->SetRange(max, min);
    vruler->SetFormat((tt->GetDisplayLog()) ? Ruler::RealLogFormat : Ruler::RealFormat);
-   vruler->SetUnits(wxT(""));
+   vruler->SetUnits({});
    vruler->SetLabelEdges(false);
    vruler->SetLog(tt->GetDisplayLog());
 

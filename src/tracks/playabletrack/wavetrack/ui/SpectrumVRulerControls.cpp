@@ -162,12 +162,13 @@ void SpectrumVRulerControls::DoUpdateVRuler(
          // use kHz in scale, if appropriate
          if (maxFreq >= 2000) {
             vruler->SetRange((maxFreq / 1000.), (minFreq / 1000.));
-            vruler->SetUnits(wxT("k"));
+            /* i18n-hint k abbreviating kilo meaning thousands */
+            vruler->SetUnits(XO("k"));
          }
          else {
             // use Hz
             vruler->SetRange((int)(maxFreq), (int)(minFreq));
-            vruler->SetUnits(wxT(""));
+            vruler->SetUnits({});
          }
          vruler->SetLog(false);
       }
@@ -193,7 +194,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
          vruler->SetFormat(Ruler::IntFormat);
          vruler->SetLabelEdges(true);
          vruler->SetRange(maxFreq, minFreq);
-         vruler->SetUnits(wxT(""));
+         vruler->SetUnits({});
          vruler->SetLog(true);
          NumberScale scale(
             wt->GetSpectrogramSettings().GetScale( minFreq, maxFreq )

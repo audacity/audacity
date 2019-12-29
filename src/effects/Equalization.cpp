@@ -776,7 +776,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                wxSize{ 100, 100 }, // Ruler can't handle small sizes
                RulerPanel::Range{ 60.0, -120.0 },
                Ruler::LinearDBFormat,
-               _("dB"),
+               XO("dB"),
                RulerPanel::Options{}
                   .LabelEdges(true)
                   .TicksAtExtremes(true)
@@ -833,7 +833,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ mLoFreq, mHiFreq },
             Ruler::IntFormat,
-            _("Hz"),
+            XO("Hz"),
             RulerPanel::Options{}
                .Log(true)
                .Flip(true)
