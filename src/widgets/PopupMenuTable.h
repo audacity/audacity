@@ -121,7 +121,7 @@ BEGIN_POPUP_MENU(MyTable)
    // This is inside a function and can contain arbitrary code.  But usually
    // you only need a sequence of macro calls:
 
-   POPUP_MENU_ITEM(OnCutSelectedTextID,     _("Cu&t"),          OnCutSelectedText)
+   POPUP_MENU_ITEM(OnCutSelectedTextID,     XO("Cu&t"),          OnCutSelectedText)
    // etc.
  
 END_POPUP_MENU()
