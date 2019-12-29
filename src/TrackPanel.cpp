@@ -89,6 +89,7 @@ is time to refresh some aspect of the screen.
 
 #include <algorithm>
 
+#include <wx/dc.h>
 #include <wx/dcclient.h>
 
 /**
