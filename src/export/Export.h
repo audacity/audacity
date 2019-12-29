@@ -78,8 +78,7 @@ public:
 
    virtual int GetFormatCount();
    virtual wxString GetFormat(int index);
-   TranslatableString GetUntranslatedDescription(int index);
-   wxString GetTranslatedDescription(int index);
+   TranslatableString GetDescription(int index);
    /** @brief Return the (first) file name extension for the sub-format.
     * @param index The sub-format for which the extension is wanted */
    virtual FileExtension GetExtension(int index = 0);

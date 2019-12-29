@@ -239,7 +239,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          ++i;
          for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
-            auto format = mPlugins[i]->GetUntranslatedDescription(j);
+            auto format = mPlugins[i]->GetDescription(j);
             visibleFormats.push_back( format );
             // use MSGID of description as a value too, written into config file
             // This is questionable.  A change in the msgid can make the

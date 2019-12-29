@@ -153,14 +153,9 @@ wxString ExportPlugin::GetFormat(int index)
    return mFormatInfos[index].mFormat;
 }
 
-TranslatableString ExportPlugin::GetUntranslatedDescription(int index)
+TranslatableString ExportPlugin::GetDescription(int index)
 {
    return mFormatInfos[index].mDescription;
-}
-
-wxString ExportPlugin::GetTranslatedDescription(int index)
-{
-   return GetUntranslatedDescription( index ).Translation();
 }
 
 FileExtension ExportPlugin::GetExtension(int index)
@@ -178,7 +173,7 @@ FileNames::FileTypes ExportPlugin::GetMask(int index)
    if (!mFormatInfos[index].mMask.empty())
       return mFormatInfos[index].mMask;
 
-   return { { GetUntranslatedDescription(index), GetExtensions(index) } };
+   return { { GetDescription(index), GetExtensions(index) } };
 }
 
 unsigned ExportPlugin::GetMaxChannels(int index)
