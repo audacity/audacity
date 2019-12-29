@@ -16,7 +16,7 @@
 #if wxUSE_ACCESSIBILITY
 
 #include <wx/access.h> // to inherit
-#include <../Internat.h> // for TranslatableString
+#include <Internat.h> // for TranslatableString
 
 class WindowAccessible: public wxAccessible
 {
