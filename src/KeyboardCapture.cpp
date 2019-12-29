@@ -11,6 +11,7 @@
 #include "KeyboardCapture.h"
 
 #if defined(__WXMAC__)
+#include <wx/textctrl.h>
 #include <AppKit/AppKit.h>
 #include <wx/osx/private.h>
 #elif defined(__WXGTK__)
@@ -193,20 +194,26 @@ public:
             return Event_Skip;
 
 #ifdef __WXMAC__
-         // Bug 2107 (Mac only)
+         // Bugs 1329 and 2107 (Mac only)
          // wxButton::SetDefault() alone doesn't cause correct event routing
          // of key-down to the button when a text entry or combo has focus,
          // but we can intercept wxEVT_CHAR_HOOK here and do it
          if ( type == wxEVT_CHAR_HOOK &&
             key.GetKeyCode() == WXK_RETURN ) {
-            if (auto top =
-               dynamic_cast< wxTopLevelWindow* >(
-                  wxGetTopLevelParent( wxWindow::FindFocus() ) ) ) {
-               if ( auto button =
-                  dynamic_cast<wxButton*>( top->GetDefaultItem() ) ) {
-                  wxCommandEvent newEvent{ wxEVT_BUTTON, button->GetId() };
-                  button->GetEventHandler()->AddPendingEvent( newEvent );
-                  return Event_Processed;
+            const auto focus = wxWindow::FindFocus();
+            // Bug 2267 (Mac only): don't apply fix for 2107 when a text entry
+            // needs to allow multiple line input
+            const auto text = dynamic_cast<wxTextCtrl*>(focus);
+            if ( !(text && text->IsMultiLine()) ) {
+               if (auto top =
+                  dynamic_cast< wxTopLevelWindow* >(
+                     wxGetTopLevelParent( focus ) ) ) {
+                  if ( auto button =
+                     dynamic_cast<wxButton*>( top->GetDefaultItem() ) ) {
+                     wxCommandEvent newEvent{ wxEVT_BUTTON, button->GetId() };
+                     button->GetEventHandler()->AddPendingEvent( newEvent );
+                     return Event_Processed;
+                  }
                }
             }
          }
