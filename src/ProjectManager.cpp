@@ -512,9 +512,9 @@ void InitProjectWindow( ProjectWindow &window )
 #endif
 
    window.UpdateStatusWidths();
-   wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
-                                   AUDACITY_VERSION_STRING);
-   statusBar->SetStatusText(msg, mainStatusBarField);
+   auto msg = XO("Welcome to Audacity version %s")
+      .Format( AUDACITY_VERSION_STRING );
+   ProjectManager::Get( project ).SetStatusText( msg, mainStatusBarField );
 
 #ifdef EXPERIMENTAL_DA2
    ClearBackground();// For wxGTK.
@@ -942,13 +942,10 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    auto &project = mProject;
    auto &projectAudioIO = ProjectAudioIO::Get( project );
-   auto &window = GetProjectFrame( project );
    auto &dirManager = DirManager::Get( project );
    auto mixerToolBar = &MixerToolBar::Get( project );
    mixerToolBar->UpdateControls();
    
-   auto &statusBar = *window.GetStatusBar();
-
    auto gAudioIO = AudioIO::Get();
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
@@ -961,7 +958,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
             .Format( GetHoursMinsString(iRecordingMins) );
 
          // Do not change mLastMainStatusMessage
-         statusBar.SetStatusText(sMessage.Translation(), mainStatusBarField);
+         SetStatusText(sMessage, mainStatusBarField);
       }
    }
    else if(ODManager::IsInstanceCreated())
@@ -970,7 +967,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
       int numTasks = ODManager::Instance()->GetTotalNumTasks();
       if(numTasks)
       {
-         wxString msg;
+         TranslatableString msg;
          float ratioComplete= ODManager::Instance()->GetOverallPercentComplete();
 
          if(ratioComplete>=1.0f)
@@ -980,20 +977,18 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
             //signal the od task queue loop to wake up so it can remove the tasks from the queue and the queue if it is empty.
             ODManager::Instance()->SignalTaskQueueLoop();
 
-
-            msg = _("On-demand import and waveform calculation complete.");
-            statusBar.SetStatusText(msg, mainStatusBarField);
-
+            msg = XO("On-demand import and waveform calculation complete.");
          }
          else if(numTasks>1)
-            msg.Printf(_("Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."),
-              numTasks,ratioComplete*100.0);
+            msg = XO(
+"Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete.")
+               .Format( numTasks, ratioComplete * 100.0 );
          else
-            msg.Printf(_("Import complete. Running an on-demand waveform calculation. %2.0f%% complete."),
-             ratioComplete*100.0);
+            msg = XO(
+"Import complete. Running an on-demand waveform calculation. %2.0f%% complete.")
+               .Format( ratioComplete * 100.0 );
 
-
-         statusBar.SetStatusText(msg, mainStatusBarField);
+         SetStatusText(msg, mainStatusBarField);
       }
    }
 
@@ -1020,13 +1015,23 @@ void ProjectManager::OnStatusChange( wxCommandEvent &evt )
 
    auto field = static_cast<StatusBarField>( evt.GetInt() );
    const auto &msg = ProjectStatus::Get( project ).Get( field );
-   window.GetStatusBar()->SetStatusText(msg.Translation(), field);
+   SetStatusText( msg, field );
    
    if ( field == mainStatusBarField )
       // When recording, let the NEW status message stay at least as long as
       // the timer interval (if it is not replaced again by this function),
       // before replacing it with the message about remaining disk capacity.
       RestartTimer();
+}
+
+void ProjectManager::SetStatusText( const TranslatableString &text, int number )
+{
+   auto &project = mProject;
+   auto pWindow = ProjectWindow::Find( &project );
+   if ( !pWindow )
+      return;
+   auto &window = *pWindow;
+   window.GetStatusBar()->SetStatusText(text.Translation(), number);
 }
 
 TranslatableString ProjectManager::GetHoursMinsString(int iMinutes)

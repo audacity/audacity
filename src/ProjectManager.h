@@ -61,6 +61,8 @@ public:
    // Converts number of minutes to human readable format
    TranslatableString GetHoursMinsString(int iMinutes);
 
+   void SetStatusText( const TranslatableString &text, int number );
+
 private:
    void OnCloseWindow(wxCloseEvent & event);
    void OnTimer(wxTimerEvent & event);
