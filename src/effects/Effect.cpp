@@ -3801,28 +3801,29 @@ void EffectPresetsDialog::SetSelected(const wxString & parms)
    if (preset.StartsWith(Effect::kUserPresetIdent))
    {
       preset.Replace(Effect::kUserPresetIdent, wxEmptyString, false);
-      SetPrefix(_("User Presets"), preset);
+      SetPrefix(XO("User Presets"), preset);
    }
    else if (preset.StartsWith(Effect::kFactoryPresetIdent))
    {
       preset.Replace(Effect::kFactoryPresetIdent, wxEmptyString, false);
-      SetPrefix(_("Factory Presets"), preset);
+      SetPrefix(XO("Factory Presets"), preset);
    }
    else if (preset.StartsWith(Effect::kCurrentSettingsIdent))
    {
-      SetPrefix(_("Current Settings"), wxEmptyString);
+      SetPrefix(XO("Current Settings"), wxEmptyString);
    }
    else if (preset.StartsWith(Effect::kFactoryDefaultsIdent))
    {
-      SetPrefix(_("Factory Defaults"), wxEmptyString);
+      SetPrefix(XO("Factory Defaults"), wxEmptyString);
    }
 }
 
-void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & prefix)
+void EffectPresetsDialog::SetPrefix(
+   const TranslatableString & type, const wxString & prefix)
 {
-   mType->SetStringSelection(type);
+   mType->SetStringSelection(type.Translation());
 
-   if (type == _("User Presets"))
+   if (type == XO("User Presets"))
    {
       mPresets->Clear();
       for (const auto &preset : mUserPresets)
@@ -3835,7 +3836,7 @@ void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & pref
       }
       mSelection = Effect::kUserPresetIdent + mPresets->GetStringSelection();
    }
-   else if (type == _("Factory Presets"))
+   else if (type == XO("Factory Presets"))
    {
       mPresets->Clear();
       for (size_t i = 0, cnt = mFactoryPresets.size(); i < cnt; i++)
@@ -3855,13 +3856,13 @@ void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & pref
       }
       mSelection = Effect::kFactoryPresetIdent + mPresets->GetStringSelection();
    }
-   else if (type == _("Current Settings"))
+   else if (type == XO("Current Settings"))
    {
       mPresets->Clear();
       mPresets->Enable(false);
       mSelection = Effect::kCurrentSettingsIdent;
    }
-   else if (type == _("Factory Defaults"))
+   else if (type == XO("Factory Defaults"))
    {
       mPresets->Clear();
       mPresets->Enable(false);
