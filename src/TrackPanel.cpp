@@ -66,6 +66,7 @@ is time to refresh some aspect of the screen.
 #include "UndoManager.h"
 
 #include "AColor.h"
+#include "AllThemeResources.h"
 #include "AudioIO.h"
 #include "float_cast.h"
 
@@ -1050,6 +1051,112 @@ void TrackPanel::VerticalScroll( float fracPosition){
 
 
 namespace {
+   // Drawing constants
+   // DisplaceX and MarginX are large enough to avoid overwriting <- symbol
+   // See TrackArt::DrawNegativeOffsetTrackArrows
+   enum : int {
+      // Displacement of the rectangle from upper left corner
+      DisplaceX = 7, DisplaceY = 1,
+      // Size of margins about the text extent that determine the rectangle size
+      MarginX = 8, MarginY = 2,
+      // Derived constants
+      MarginsX = 2 * MarginX, MarginsY = 2 * MarginY,
+   };
+
+void GetTrackNameExtent(
+   wxDC &dc, const Track *t, wxCoord *pW, wxCoord *pH )
+{
+   wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   dc.SetFont(labelFont);
+   dc.GetTextExtent( t->GetName(), pW, pH );
+}
+
+wxRect GetTrackNameRect(
+   int leftOffset,
+   const wxRect &trackRect, wxCoord textWidth, wxCoord textHeight )
+{
+   return {
+      leftOffset + DisplaceX,
+      trackRect.y + DisplaceY,
+      textWidth + MarginsX,
+      textHeight + MarginsY
+   };
+}
+
+// Draws the track name on the track, if it is needed.
+void DrawTrackName(
+   int leftOffset,
+   TrackPanelDrawingContext &context, const Track * t, const wxRect & rect )
+{
+   if( !TrackArtist::Get( context )->mbShowTrackNameInTrack )
+      return;
+   auto name = t->GetName();
+   if( name.IsEmpty())
+      return;
+   if( !t->IsLeader())
+      return;
+   auto &dc = context.dc;
+   wxBrush Brush;
+   wxCoord textWidth, textHeight;
+   GetTrackNameExtent( dc, t, &textWidth, &textHeight );
+
+   // Logic for name background translucency (aka 'shields')
+   // Tracks less than kOpaqueHeight high will have opaque shields.
+   // Tracks more than kTranslucentHeight will have maximum translucency for shields.
+   const int kOpaqueHeight = 44;
+   const int kTranslucentHeight = 124;
+   int h = rect.GetHeight();
+   // f codes the opacity as a number between 0.0 and 1.0
+   float f = wxClip((h-kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
+   // kOpaque is the shield's alpha for tracks that are not tall
+   // kTranslucent is the shield's alpha for tracks that are tall.
+   const int kOpaque = 255;
+   const int kTranslucent = 140;
+   // 0.0 maps to full opacity, 1.0 maps to full translucency.
+   int opacity = 255 - (255-140)*f;
+
+   const auto nameRect =
+      GetTrackNameRect( leftOffset, rect, textWidth, textHeight );
+
+#ifdef __WXMAC__
+   // Mac dc is a graphics dc already.
+   AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, opacity );
+   dc.DrawRoundedRectangle( nameRect, 8.0 );
+#else
+   // This little dance with wxImage in order to draw to a graphic dc
+   // which we can then paste as a translucent bitmap onto the real dc.
+   enum : int {
+      SecondMarginX = 1, SecondMarginY = 1,
+      SecondMarginsX = 2 * SecondMarginX, SecondMarginsY = 2 * SecondMarginY,
+   };
+   wxImage image(
+      textWidth + MarginsX + SecondMarginsX,
+      textHeight + MarginsY + SecondMarginsY );
+   image.InitAlpha();
+   unsigned char *alpha=image.GetAlpha();
+   memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
+
+   {
+      std::unique_ptr< wxGraphicsContext >
+         pGc{ wxGraphicsContext::Create(image) };
+      auto &gc = *pGc;
+      // This is to a gc, not a dc.
+      AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, opacity );
+      // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
+      gc.DrawRoundedRectangle(
+         SecondMarginX, SecondMarginY,
+         textWidth + MarginsX, textHeight + MarginsY, 8.0 );
+      // destructor of gc updates the wxImage.
+   }
+   wxBitmap bitmap( image );
+   dc.DrawBitmap( bitmap,
+      nameRect.x - SecondMarginX, nameRect.y - SecondMarginY );
+#endif
+   dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
+   dc.DrawText(t->GetName(),
+      nameRect.x + MarginX,
+      nameRect.y + MarginY);
+}
 
 /*
 
@@ -1079,8 +1186,10 @@ namespace {
   Fifthly, divide what remains into the vertically stacked channels, if there
   are more than one, alternating with separators, which can be clicked to
   resize the channel views.
+
+  Sixthly, divide each channel into one or more vertically stacked sub-views.
   
-  Lastly, split the area for each channel into a vertical ruler, and an area
+  Lastly, split the area for each sub-view into a vertical ruler, and an area
   that displays the channel's own contents.
 
 */
@@ -1128,6 +1237,62 @@ struct VRulerAndChannel final : TrackPanelGroup {
    wxCoord mLeftOffset;
 };
 
+// One or more sub-views of one channel, stacked vertically, each contianing
+// a vertical ruler and a channel
+struct VRulersAndChannels final : TrackPanelGroup {
+   VRulersAndChannels(
+      const std::shared_ptr<Track> &pTrack,
+      TrackView::Refinement refinement, wxCoord leftOffset )
+         : mpTrack{ pTrack }
+         , mRefinement{ std::move( refinement ) }
+         , mLeftOffset{ leftOffset } {}
+   Subdivision Children( const wxRect &rect ) override
+   {
+      Refinement refinement;
+      auto y1 = rect.GetTop();
+      for ( const auto &subView : mRefinement ) {
+         y1 = std::max( y1, subView.first );
+         refinement.emplace_back( y1,
+            std::make_shared< VRulerAndChannel >(
+               subView.second, mLeftOffset ) );
+      }
+      return { Axis::Y, std::move( refinement ) };
+   }
+
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override
+   {
+      // This overpaints the track area, but sometimes too the stereo channel
+      // separator, so draw at least later than that
+      if ( iPass == TrackArtist::PassBorders )
+         DrawTrackName( mLeftOffset,
+            context, mpTrack->SubstitutePendingChangedTrack().get(), rect );
+   }
+
+   wxRect DrawingArea(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override
+   {
+      auto result = rect;
+      if ( iPass == TrackArtist::PassBorders ) {
+         if ( true ) {
+            wxCoord textWidth, textHeight;
+            GetTrackNameExtent( context.dc, mpTrack.get(),
+               &textWidth, &textHeight );
+            result =
+               GetTrackNameRect( mLeftOffset, rect, textWidth, textHeight );
+         }
+      }
+      return result;
+   }
+
+   std::shared_ptr< Track > mpTrack;
+   TrackView::Refinement mRefinement;
+   wxCoord mLeftOffset;
+};
+
 // n channels with vertical rulers, alternating with n - 1 resizers;
 // each channel-ruler pair might be divided into multiple views
 struct ChannelGroup final : TrackPanelGroup {
@@ -1146,14 +1311,11 @@ struct ChannelGroup final : TrackPanelGroup {
          auto height = view.GetHeight();
          rect.SetTop( yy );
          rect.SetHeight( height - kSeparatorThickness );
-         const auto subViews = TrackView::Get( *channel ).GetSubViews( rect );
-         auto y1 = yy;
-         for ( const auto &subView : subViews ) {
-            y1 = std::max( y1, subView.first );
-            refinement.emplace_back( y1,
-               std::make_shared< VRulerAndChannel >(
-                  subView.second, mLeftOffset ) );
-         }
+         refinement.emplace_back( yy,
+            std::make_shared< VRulersAndChannels >(
+               channel->shared_from_this(),
+               TrackView::Get( *channel ).GetSubViews( rect ),
+               mLeftOffset ) );
          if ( channel != pLast ) {
             yy += height;
             refinement.emplace_back(
