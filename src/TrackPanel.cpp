@@ -91,6 +91,7 @@ is time to refresh some aspect of the screen.
 
 #include <wx/dc.h>
 #include <wx/dcclient.h>
+#include <wx/graphics.h>
 
 /**
 
