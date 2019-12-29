@@ -1079,8 +1079,10 @@ namespace {
   Fifthly, divide what remains into the vertically stacked channels, if there
   are more than one, alternating with separators, which can be clicked to
   resize the channel views.
+
+  Sixthly, divide each channel into one or more vertically stacked sub-views.
   
-  Lastly, split the area for each channel into a vertical ruler, and an area
+  Lastly, split the area for each sub-view into a vertical ruler, and an area
   that displays the channel's own contents.
 
 */
@@ -1128,6 +1130,29 @@ struct VRulerAndChannel final : TrackPanelGroup {
    wxCoord mLeftOffset;
 };
 
+// One or more sub-views of one channel, stacked vertically, each contianing
+// a vertical ruler and a channel
+struct VRulersAndChannels final : TrackPanelGroup {
+   VRulersAndChannels(
+      TrackView::Refinement refinement, wxCoord leftOffset )
+         : mRefinement{ std::move( refinement ) }
+         , mLeftOffset{ leftOffset } {}
+   Subdivision Children( const wxRect &rect ) override
+   {
+      Refinement refinement;
+      auto y1 = rect.GetTop();
+      for ( const auto &subView : mRefinement ) {
+         y1 = std::max( y1, subView.first );
+         refinement.emplace_back( y1,
+            std::make_shared< VRulerAndChannel >(
+               subView.second, mLeftOffset ) );
+      }
+      return { Axis::Y, std::move( refinement ) };
+   }
+   TrackView::Refinement mRefinement;
+   wxCoord mLeftOffset;
+};
+
 // n channels with vertical rulers, alternating with n - 1 resizers;
 // each channel-ruler pair might be divided into multiple views
 struct ChannelGroup final : TrackPanelGroup {
@@ -1146,14 +1171,10 @@ struct ChannelGroup final : TrackPanelGroup {
          auto height = view.GetHeight();
          rect.SetTop( yy );
          rect.SetHeight( height - kSeparatorThickness );
-         const auto subViews = TrackView::Get( *channel ).GetSubViews( rect );
-         auto y1 = yy;
-         for ( const auto &subView : subViews ) {
-            y1 = std::max( y1, subView.first );
-            refinement.emplace_back( y1,
-               std::make_shared< VRulerAndChannel >(
-                  subView.second, mLeftOffset ) );
-         }
+         refinement.emplace_back( yy,
+            std::make_shared< VRulersAndChannels >(
+               TrackView::Get( *channel ).GetSubViews( rect ),
+               mLeftOffset ) );
          if ( channel != pLast ) {
             yy += height;
             refinement.emplace_back(
