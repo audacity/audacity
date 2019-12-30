@@ -204,16 +204,18 @@ public:
 
       if ( index < adjuster.mPermutation.size() )
          return std::make_shared< SubViewAdjustHandle >(
-            std::move( adjuster ), index, hit.second
+            std::move( adjuster ), index, view.GetLastHeight(), hit.second
          );
       else
          return {};
    }
 
    SubViewAdjustHandle(
-      SubViewAdjuster &&adjuster, size_t subViewIndex, bool top )
+      SubViewAdjuster &&adjuster, size_t subViewIndex,
+         wxCoord viewHeight, bool top )
       : mAdjuster{ std::move( adjuster ) }
       , mMySubView{ subViewIndex }
+      , mViewHeight{ viewHeight }
       , mTop{ top }
    {
       if ( mAdjuster.ModifyPermutation( top ) )
@@ -233,22 +235,33 @@ public:
       const auto height = rect.GetHeight();
       mOrigHeight = height;
 
-      wxASSERT( height ==
-         mAdjuster.mOrigPlacements[ mAdjuster.mPermutation[ mMySubView ] ]
-            .fraction
-      );
-
-      // Find the total height of the sub-views that may resize
-      // Note that this depends on the redenomination of fractions that
-      // happened in the last call to GetSubViews
-      mTotalHeight = 0;
-      const auto begin = permutation.begin();
-      auto iter = begin + ( mTop ? mAdjuster.mFirstSubView : mMySubView );
-      const auto end = ( mTop ? begin + mMySubView + 1 : permutation.end() );
-      for (; iter != end; ++iter) {
-         const auto &placement = mAdjuster.mOrigPlacements[ *iter ];
-         mTotalHeight += placement.fraction;
+      // Compute integer-valued heights
+      {
+         float total = 0;
+         for (const auto index : mAdjuster.mPermutation ) {
+            const auto &placement = mAdjuster.mOrigPlacements[ index ];
+            total += std::max( 0.f, placement.fraction );
+         }
+         float partial = 0;
+         wxCoord lastCoord = 0;
+         for (const auto index : mAdjuster.mPermutation ) {
+            const auto &placement = mAdjuster.mOrigPlacements[ index ];
+            auto fraction = std::max( 0.f, placement.fraction );
+            wxCoord coord = ( (partial + fraction ) / total ) * mViewHeight;
+            mOrigHeights.emplace_back( coord - lastCoord );
+            lastCoord = coord;
+            partial += fraction;
+         }
       }
+      
+      // Find the total height of the sub-views that may resize
+      mTotalHeight = 0;
+      auto index = ( mTop ? mAdjuster.mFirstSubView : mMySubView );
+      const auto end = ( mTop ?  mMySubView + 1 : permutation.size() );
+      for (; index != end; ++index)
+         mTotalHeight += mOrigHeights[ index ];
+
+      wxASSERT( height == mOrigHeights[ mMySubView ] );
 
       // Compute the maximum and minimum Y coordinates for drag effect
       if ( mTop ) {
@@ -295,11 +308,9 @@ public:
          if (excess == 0)
             return true;
 
+         const auto oldFraction = mOrigHeights[ ii ];
+
          auto index = mAdjuster.mPermutation[ ii ];
-
-         const auto &origPlacement = mAdjuster.mOrigPlacements[ index ];
-         const auto oldFraction = origPlacement.fraction;
-
          auto &placement = mAdjuster.mNewPlacements[ index ];
          auto &fraction = placement.fraction;
 
@@ -368,12 +379,14 @@ public:
 private:
 
    SubViewAdjuster mAdjuster;
+   std::vector<wxCoord> mOrigHeights;
 
    // An index into mAdjuster.mPermutation
    size_t mMySubView{};
 
    wxCoord mYMin{}, mYMax{};
-   wxCoord mTotalHeight{};
+   wxCoord mViewHeight{}; // Total height of all sub-views
+   wxCoord mTotalHeight{}; // Total height of adjusting sub-views only
    wxCoord mOrigHeight{};
    wxCoord mOrigY{};
 
@@ -531,17 +544,17 @@ auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
    Refinement results;
 
    // Collect the visible views in the right sequence
-   using Pair = std::pair< float*, std::shared_ptr< TrackView > >;
+   using Pair = std::pair< float, std::shared_ptr< TrackView > >;
    std::vector< Pair > pairs( mPlacements.size() );
    size_t ii = 0;
    float total = 0;
    WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
       auto &placement = mPlacements[ii];
       auto index = placement.index;
-      auto &fraction = placement.fraction;
+      auto fraction = placement.fraction;
       if ( index >= 0 && fraction > 0.0 )
          total += fraction,
-         pairs[ index ] = { &fraction, subView.shared_from_this() };
+         pairs[ index ] = { fraction, subView.shared_from_this() };
       ++ii;
    } );
 
@@ -552,25 +565,20 @@ auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
    pairs.erase( newEnd, end );
    results.reserve( pairs.size() );
 
-   // Assign coordinates
-   // Also update the stored placements, redenominating to the total height,
+   // Assign coordinates, redenominating to the total height,
    // storing integer values
    const auto top = rect.GetTop();
    const auto height = rect.GetHeight();
    float partial = 0;
    wxCoord lastCoord = 0;
-   float *lastFraction = nullptr;
    for ( const auto &pair : pairs ) {
       wxCoord newCoord = top + (partial / total) * height;
       results.emplace_back( newCoord, pair.second );
-      partial += *pair.first;
-      if (lastFraction)
-        *lastFraction = newCoord - lastCoord;
-      lastFraction = pair.first;
-      lastCoord = newCoord;
+      partial += pair.first;
    }
-   if ( lastFraction )
-      *lastFraction = top + height - lastCoord;
+
+   // Cache for the use of sub-view dragging
+   mLastHeight = height;
 
    return results;
 }

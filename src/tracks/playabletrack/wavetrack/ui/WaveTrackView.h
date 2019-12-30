@@ -95,6 +95,9 @@ public:
    // correspondence with the result of SavePlacements
    std::vector< std::shared_ptr< WaveTrackSubView > > GetAllSubViews();
 
+   // Return cached height of rect in last call of GetSubViews
+   wxCoord GetLastHeight() const { return mLastHeight; }
+
 private:
    void BuildSubViews() const;
    void DoSetDisplay(WaveTrackDisplay display);
@@ -117,6 +120,7 @@ protected:
    void DoSetMinimized( bool minimized ) override;
 
    WaveTrackSubViewPlacements mPlacements;
+   mutable wxCoord mLastHeight{};
 };
 
 // Helper for drawing routines
