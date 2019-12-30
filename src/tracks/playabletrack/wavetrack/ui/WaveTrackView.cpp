@@ -18,6 +18,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
 
+#include "../../../../../images/Cursors.h"
+#include "../../../../AllThemeResources.h"
+
 #include "../../../../HitTestResult.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
@@ -32,6 +35,25 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ui/TimeShiftHandle.h"
 
 namespace {
+
+/// Makes a cursor from an XPM, uses CursorId as a fallback.
+/// TODO:  Move this function to some other source file for reuse elsewhere.
+std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * const pXpm[36],  int HotX, int HotY )
+{
+#ifdef CURSORS_SIZE32
+   const int HotAdjust =0;
+#else
+   const int HotAdjust =8;
+#endif
+
+   wxImage Image = wxImage(wxBitmap(pXpm).ConvertToImage());
+   Image.SetMaskColour(255,0,0);
+   Image.SetMask();// Enable mask.
+
+   Image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_X, HotX-HotAdjust );
+   Image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, HotY-HotAdjust );
+   return std::make_unique<wxCursor>( Image );
+}
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
 
@@ -321,10 +343,11 @@ public:
    HitTestPreview Preview(
       const TrackPanelMouseState &state, const AudacityProject * ) override
    {
-      static wxCursor resizeCursor{ wxCURSOR_SIZENS };
+      static auto resizeCursor =
+         ::MakeCursor(wxCURSOR_ARROW, SubViewsCursorXpm, 16, 16);
       return {
          XO("Click and drag to adjust sizes of sub-views."),
-         &resizeCursor
+         &*resizeCursor
       };
    }
 

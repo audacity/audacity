@@ -32,6 +32,7 @@
 #include "Cursors32/StretchLeftCursor.xpm"
 #include "Cursors32/StretchRightCursor.xpm"
 #endif
+#include "Cursors32/SubViewsCursor.xpm"
 
 #else
 
@@ -52,6 +53,7 @@
 #include "Cursors16/StretchLeftCursor.xpm"
 #include "Cursors16/StretchRightCursor.xpm"
 #endif
+#include "Cursors16/SubViewsCursor.xpm"
 
 #endif
 
