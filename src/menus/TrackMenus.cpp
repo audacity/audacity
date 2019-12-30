@@ -66,6 +66,11 @@ void DoMixAndRender
       // Remove originals, get stats on what tracks were mixed
 
       auto trackRange = tracks.Selected< WaveTrack >();
+
+      // But before removing, determine the first track after the removal
+      auto last = *trackRange.rbegin();
+      auto insertionPoint = * ++ tracks.Find( last );
+      
       auto selectedCount = (trackRange + &Track::IsLeader).size();
       wxString firstName;
       if (selectedCount > 0)
@@ -91,6 +96,29 @@ void DoMixAndRender
          pNewLeft->SetName(firstName);
          if (pNewRight)
             pNewRight->SetName(firstName);
+      }
+
+      // Permute the tracks as needed
+      // The new track appears after the old tracks (or where the old tracks
+      // had been) so that they are in the same sync-lock group
+      if (insertionPoint)
+      {
+         std::vector<TrackNodePointer> arr;
+         arr.reserve( tracks.size() );
+         size_t begin = 0, ii = 0;
+         for (auto iter = tracks.ListOfTracks::begin(),
+              end = tracks.ListOfTracks::end(); iter != end; ++iter) {
+            arr.push_back( {iter, &tracks} );
+            if ( iter->get() == insertionPoint )
+               begin = ii;
+            ++ii;
+         }
+         auto mid = arr.end();
+         --mid;
+         if (pNewRight)
+           --mid;
+         std::rotate( arr.begin() + begin, mid, arr.end() );
+         tracks.Permute( arr );
       }
 
       // Smart history/undo message
