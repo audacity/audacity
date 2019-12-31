@@ -307,10 +307,10 @@ MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
       Command( wxT("ShowSelectionTB"), XXO("&Selection Toolbar"),
          FN(OnShowSelectionToolBar), AlwaysEnabledFlag, checkOff )
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         for selecting a frequency range of audio*/
       ,
       Command( wxT("ShowSpectralSelectionTB"),
+      /* i18n-hint: Clicking this menu item shows the toolbar
+         for selecting a frequency range of audio*/
          XXO("Spe&ctral Selection Toolbar"),
          FN(OnShowSpectralSelectionToolBar), AlwaysEnabledFlag, checkOff )
 #endif
