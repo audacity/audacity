@@ -223,13 +223,27 @@ public:
    }
 
    Result Click(
-      const TrackPanelMouseEvent &event, AudacityProject * ) override
+      const TrackPanelMouseEvent &event, AudacityProject *pProject ) override
    {
       using namespace RefreshCode;
       const auto &permutation = mAdjuster.mPermutation;
       const auto size = permutation.size();
       if ( mMySubView >= size )
          return Cancelled;
+
+      if (event.event.LeftDClick()) {
+         for ( auto &placement : mAdjuster.mNewPlacements ) {
+            if ( placement.index >= 0 )
+               placement.fraction = 1.0f;
+            else
+               placement.fraction = 0.0f;
+         }
+         mAdjuster.UpdateViews( false );
+         ProjectHistory::Get( *pProject ).ModifyState( false );
+
+         // Do not start a drag
+         return Cancelled | RefreshAll;
+      }
 
       const auto &rect = event.rect;
       const auto height = rect.GetHeight();
@@ -359,7 +373,8 @@ public:
       static auto resizeCursor =
          ::MakeCursor(wxCURSOR_ARROW, SubViewsCursorXpm, 16, 16);
       return {
-         XO("Click and drag to adjust sizes of sub-views."),
+         XO(
+"Click and drag to adjust sizes of sub-views, double-click to split evenly"),
          &*resizeCursor
       };
    }
