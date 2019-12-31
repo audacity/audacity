@@ -693,7 +693,7 @@ void FileNames::FindFilesInPathList(const wxString & pattern,
 }
 
 #if defined(__WXMSW__)
-wxCharBuffer FileNames::mFilename;
+static wxCharBuffer mFilename;
 
 //
 // On Windows, wxString::mb_str() can return a NULL pointer if the

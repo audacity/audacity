@@ -178,9 +178,6 @@ namespace FileNames
     * on Windows */
 #if defined(__WXMSW__)
    char *VerifyFilename(const wxString &s, bool input = true);
-   
-   // stuff for file name sanitisation
-   wxCharBuffer mFilename;
 #endif
 };
 
