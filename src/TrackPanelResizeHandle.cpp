@@ -35,7 +35,8 @@ HitTestPreview TrackPanelResizeHandle::HitPreview(bool bLinked)
       // is shorter when it is between stereo tracks).
 
       return {
-         XO("Click and drag to adjust relative size of stereo tracks."),
+         XO(
+"Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"),
          &resizeCursor
       };
    }
@@ -51,10 +52,32 @@ TrackPanelResizeHandle::~TrackPanelResizeHandle()
 {
 }
 
-UIHandle::Result TrackPanelResizeHandle::Click
-(const TrackPanelMouseEvent &WXUNUSED(evt), AudacityProject *WXUNUSED(pProject))
+UIHandle::Result TrackPanelResizeHandle::Click(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject )
 {
-   return RefreshCode::RefreshNone;
+   using namespace RefreshCode;
+   if ( evt.event.LeftDClick() && mMode == IsResizingBetweenLinkedTracks ) {
+      auto &tracks = TrackList::Get( *pProject );
+      auto pTrack = tracks.Lock(mpTrack);
+      if (pTrack &&
+          !TrackView::Get(*pTrack).GetMinimized()) {
+         auto range = TrackList::Channels( pTrack.get() );
+         auto size = range.size();
+         auto height = range.sum( [](const Track *pTrack){
+            return TrackView::Get(*pTrack).GetHeight(); } );
+         int ii = 1;
+         int coord = 0;
+         for ( const auto channel : range ) {
+            int newCoord = ((double)ii++ /size) * height;
+            TrackView::Get(*channel).SetHeight( newCoord - coord );
+            coord = newCoord;
+         }
+         ProjectHistory::Get( *pProject ).ModifyState(false);
+         // Do not start a drag
+         return Cancelled | RefreshAll;
+      }
+   }
+   return RefreshNone;
 }
 
 TrackPanelResizeHandle::TrackPanelResizeHandle
