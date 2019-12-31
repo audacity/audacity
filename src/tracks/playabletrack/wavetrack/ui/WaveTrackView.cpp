@@ -248,7 +248,9 @@ public:
             const auto &placement = mAdjuster.mOrigPlacements[ index ];
             auto fraction = std::max( 0.f, placement.fraction );
             wxCoord coord = ( (partial + fraction ) / total ) * mViewHeight;
-            mOrigHeights.emplace_back( coord - lastCoord );
+            auto height = coord - lastCoord;
+            mOrigHeights.emplace_back( height );
+            mAdjuster.mNewPlacements[ index ].fraction = height;
             lastCoord = coord;
             partial += fraction;
          }
