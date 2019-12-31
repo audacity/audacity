@@ -9608,10 +9608,7 @@
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
-				WARNING_CFLAGS = (
-					"-Wno-nonnull",
-					"-Wno-underaligned-exception-object",
-				);
+				WARNING_CFLAGS = "-Wno-nonnull";
 			};
 			name = Debug;
 		};
@@ -9949,10 +9946,7 @@
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
-				WARNING_CFLAGS = (
-					"-Wno-nonnull",
-					"-Wno-underaligned-exception-object",
-				);
+				WARNING_CFLAGS = "-Wno-nonnull";
 			};
 			name = Release;
 		};
@@ -10345,10 +10339,7 @@
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
-				WARNING_CFLAGS = (
-					"-Wno-nonnull",
-					"-Wno-underaligned-exception-object",
-				);
+				WARNING_CFLAGS = "-Wno-nonnull";
 			};
 			name = Debug64;
 		};
@@ -10810,10 +10801,7 @@
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
-				WARNING_CFLAGS = (
-					"-Wno-nonnull",
-					"-Wno-underaligned-exception-object",
-				);
+				WARNING_CFLAGS = "-Wno-nonnull";
 			};
 			name = Release64;
 		};
