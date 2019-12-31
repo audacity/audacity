@@ -1025,7 +1025,7 @@ const ReservedCommandFlag
 
          return false;
       },
-      cutCopyOptions
+      cutCopyOptions()
    };
 
 MenuTable::BaseItemPtr EditMenu( AudacityProject & )

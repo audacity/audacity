@@ -18,7 +18,7 @@ Paul Licameli split from Menus.cpp
 bool TracksSelectedPred( const AudacityProject &project );
 bool AudioIOBusyPred( const AudacityProject &project );
 bool TimeSelectedPred( const AudacityProject &project );
-extern const CommandFlagOptions cutCopyOptions;
+extern const CommandFlagOptions &cutCopyOptions();
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
    AudioIONotBusyFlag,

@@ -71,7 +71,8 @@ bool TimeSelectedPred( const AudacityProject &project )
    return !ViewInfo::Get( project ).selectedRegion.isPoint();
 };
 
-const CommandFlagOptions cutCopyOptions{
+const CommandFlagOptions &cutCopyOptions() {
+static CommandFlagOptions result{
 // In reporting the issue with cut or copy, we don't tell the user they could also select some text in a label.
    []( const TranslatableString &Name ) {
       // PRL:  These strings have hard-coded mention of a certain shortcut key,
@@ -101,6 +102,8 @@ const CommandFlagOptions cutCopyOptions{
    "Selecting_Audio_-_the_basics",
    XO("No Audio Selected")
 };
+return result;
+}
 
 // Noise Reduction has a custom error message, when nothing selected.
 const CommandFlagOptions noiseReductionOptions{
@@ -153,7 +156,7 @@ const ReservedCommandFlag
    },
    TimeSelectedFlag{
       TimeSelectedPred,
-      cutCopyOptions
+      cutCopyOptions()
    },
    WaveTracksSelectedFlag{
       [](const AudacityProject &project){
