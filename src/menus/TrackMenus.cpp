@@ -114,9 +114,7 @@ void DoMixAndRender
             ++ii;
          }
          auto mid = arr.end();
-         --mid;
-         if (pNewRight)
-           --mid;
+         std::advance( mid, -TrackList::Channels( pNewLeft ).size() );
          std::rotate( arr.begin() + begin, mid, arr.end() );
          tracks.Permute( arr );
       }
