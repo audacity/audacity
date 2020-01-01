@@ -279,6 +279,16 @@ void WaveformVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 
+   {
+      const auto & names = WaveformSettings::GetScaleNames();
+      for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
+         POPUP_MENU_RADIO_ITEM(OnFirstWaveformScaleID + ii, names[ii],
+            OnWaveformScaleType);
+      }
+   }
+
+   POPUP_MENU_SEPARATOR()
+
    POPUP_MENU_ITEM(OnZoomFitVerticalID, XO("Zoom Reset\tShift-Right-Click"), OnZoomReset)
    POPUP_MENU_ITEM(OnZoomDiv2ID,        XO("Zoom x1/2"),                     OnZoomDiv2Vertical)
    POPUP_MENU_ITEM(OnZoomTimes2ID,      XO("Zoom x2"),                       OnZoomTimes2Vertical)
@@ -291,14 +301,6 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
    POPUP_MENU_ITEM(OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
    POPUP_MENU_ITEM(OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
 
-   POPUP_MENU_SEPARATOR()
-   {
-      const auto & names = WaveformSettings::GetScaleNames();
-      for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         POPUP_MENU_RADIO_ITEM(OnFirstWaveformScaleID + ii, names[ii],
-            OnWaveformScaleType);
-      }
-   }
 
 END_POPUP_MENU()
 
