@@ -152,7 +152,7 @@ const TranslatableStrings &WaveformSettings::GetScaleNames()
    static const TranslatableStrings result{
       // Keep in correspondence with enum WaveTrack::WaveTrackDisplay:
       XO("Linear"),
-      XO("Logarithmic"),
+      XO("dB"),
    };
    return result;
 }

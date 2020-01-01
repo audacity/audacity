@@ -271,12 +271,10 @@ void WaveformVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    WaveTrackVRulerMenuTable::InitMenu(pMenu, pUserData);
 
 // DB setting is already on track drop down.
-#if 0 
    WaveTrack *const wt = mpData->pTrack;
    const int id =
       OnFirstWaveformScaleID + (int)(wt->GetWaveformSettings().scaleType);
    pMenu->Check(id, true);
-#endif
 }
 
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
@@ -292,9 +290,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_ITEM(OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
    POPUP_MENU_ITEM(OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
-// The log and linear options are already available as waveform db.
-// So don't repeat them here.
-#if 0
+
    POPUP_MENU_SEPARATOR()
    {
       const auto & names = WaveformSettings::GetScaleNames();
@@ -303,7 +299,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
             OnWaveformScaleType);
       }
    }
-#endif
+
 END_POPUP_MENU()
 
 #include "../../../../Project.h" // for GetActiveProject

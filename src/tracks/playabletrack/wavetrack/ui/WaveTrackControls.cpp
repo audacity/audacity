@@ -121,7 +121,6 @@ enum {
    OnFloatID,              // <---
 
    OnWaveformID,
-   OnWaveformDBID,
    OnSpectrumID,
    OnSpectrogramSettingsID,
 
@@ -607,8 +606,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    for ( auto display : displays ) {
       checkedIds.push_back(
          display == WaveTrackViewConstants::Waveform
-            ? (pTrack->GetWaveformSettings().isLinear()
-               ? OnWaveformID : OnWaveformDBID)
+            ? OnWaveformID
             : OnSpectrumID);
    }
 
@@ -696,7 +694,6 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    // spectrogram, after a mouse drag.  Clicking any of these three makes that
    // view take up all the height.
    POPUP_MENU_CHECK_ITEM(OnWaveformID, XO("Wa&veform"), OnSetDisplay)
-   POPUP_MENU_CHECK_ITEM(OnWaveformDBID, XO("&Waveform (dB)"), OnSetDisplay)
    POPUP_MENU_CHECK_ITEM(OnSpectrumID, XO("&Spectrogram"), OnSetDisplay)
 
    POPUP_MENU_ITEM(OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
@@ -741,13 +738,10 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
    wxASSERT(idInt >= OnWaveformID && idInt <= OnSpectrumID);
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
-   bool linear = false;
    WaveTrackView::WaveTrackDisplay id;
    switch (idInt) {
    default:
    case OnWaveformID:
-      linear = true, id = Waveform; break;
-   case OnWaveformDBID:
       id = Waveform; break;
    case OnSpectrumID:
       id = Spectrum; break;
@@ -755,18 +749,11 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
 
    const auto displays = WaveTrackView::Get( *pTrack ).GetDisplays();
    const bool wrongType = !(displays.size() == 1 && displays[0] == id);
-   const bool wrongScale =
-      (id == Waveform &&
-      pTrack->GetWaveformSettings().isLinear() != linear);
-   if (wrongType || wrongScale) {
+   if (wrongType) {
       for (auto channel : TrackList::Channels(pTrack)) {
          channel->SetLastScaleType();
          WaveTrackView::Get( *channel )
             .SetDisplay(WaveTrackView::WaveTrackDisplay(id));
-         if (wrongScale)
-            channel->GetIndependentWaveformSettings().scaleType = linear
-               ? WaveformSettings::stLinear
-               : WaveformSettings::stLogarithmic;
       }
 
       AudacityProject *const project = ::GetActiveProject();
