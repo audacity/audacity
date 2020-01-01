@@ -91,12 +91,17 @@ public:
    void RestorePlacements( const WaveTrackSubViewPlacements &placements )
       { mPlacements = placements; }
 
+   void ToggleSubView( WaveTrackDisplay id );
+
    // Get all the sub-views, in a sequence that is unspecified but in
    // correspondence with the result of SavePlacements
    std::vector< std::shared_ptr< WaveTrackSubView > > GetAllSubViews();
 
    // Return cached height of rect in last call of GetSubViews
    wxCoord GetLastHeight() const { return mLastHeight; }
+
+   bool GetMultiView() const { return mMultiView; }
+   void SetMultiView( bool value ) { mMultiView = value; }
 
 private:
    void BuildSubViews() const;
@@ -121,6 +126,8 @@ protected:
 
    WaveTrackSubViewPlacements mPlacements;
    mutable wxCoord mLastHeight{};
+
+   bool mMultiView{ false };
 };
 
 // Helper for drawing routines

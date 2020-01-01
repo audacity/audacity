@@ -197,6 +197,9 @@ public:
       WaveTrackView &view, WaveTrackSubView &subView,
       const TrackPanelMouseState &state )
    {
+      if ( !view.GetMultiView() )
+         return {};
+
       SubViewAdjuster adjuster{ view };
       auto hit = adjuster.HitTest( subView,
          state.state.GetY(), state.rect.GetTop(), state.rect.GetHeight() );
@@ -470,8 +473,9 @@ void WaveTrackView::CopyTo( Track &track ) const
    auto &other = TrackView::Get( track );
 
    if ( const auto pOther = dynamic_cast< WaveTrackView* >( &other ) ) {
-      // only one field is important to preserve in undo/redo history
+      // only these fields are important to preserve in undo/redo history
       pOther->RestorePlacements( SavePlacements() );
+      pOther->mMultiView = mMultiView;
    }
 }
 
@@ -540,6 +544,47 @@ void WaveTrackView::SetDisplay(WaveTrackDisplay display)
 {
    BuildSubViews();
    DoSetDisplay( display );
+}
+
+void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
+{
+   size_t ii = 0;
+   size_t found = 0;
+   if ( WaveTrackSubViews::FindIf( [&]( const WaveTrackSubView &subView ) {
+      if ( subView.SubViewType() == display ) {
+         found = ii;
+         return true;
+      }
+      ++ii;
+      return false;
+   } ) ) {
+      auto &foundPlacement = mPlacements[found];
+      if ( foundPlacement.fraction > 0.0 ) {
+         auto index = foundPlacement.index;
+         foundPlacement = { -1, 0.0 };
+         if (index >= 0) {
+            for ( auto &placement : mPlacements ) {
+               if ( placement.index > index )
+                  --placement.index;
+            }
+         }
+      }
+      else {
+         float total = 0;
+         int greatest = -1;
+         unsigned nn = 0;
+         for ( const auto &placement : mPlacements ) {
+            if ( placement.fraction >= 0.0 && placement.index >= 0 ) {
+               total += placement.fraction;
+               greatest = std::max( greatest, placement.index );
+               ++nn;
+            }
+         }
+         // Turn on the sub-view, putting it lowest, and with average of the
+         // heights of the other sub-views
+         foundPlacement = { greatest + 1, total / nn };
+      }
+   }
 }
 
 void WaveTrackView::DoSetDisplay(WaveTrackDisplay display)

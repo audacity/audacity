@@ -120,6 +120,7 @@ enum {
    On24BitID,              //    |
    OnFloatID,              // <---
 
+   OnMultiViewID,
    OnWaveformID,
    OnSpectrumID,
    OnSpectrogramSettingsID,
@@ -567,6 +568,7 @@ protected:
 
    PlayableTrackControls::InitMenuData *mpData;
 
+   void OnMultiView(wxCommandEvent & event);
    void OnSetDisplay(wxCommandEvent & event);
    void OnSpectrogramSettings(wxCommandEvent & event);
 
@@ -602,7 +604,11 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    std::vector<int> checkedIds;
 
-   const auto displays = WaveTrackView::Get( *pTrack ).GetDisplays();
+   const auto &view = WaveTrackView::Get( *pTrack );
+   if (view.GetMultiView())
+      checkedIds.push_back( OnMultiViewID );
+
+   const auto displays = view.GetDisplays();
    for ( auto display : displays ) {
       checkedIds.push_back(
          display == WaveTrackViewConstants::Waveform
@@ -687,18 +693,28 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 }
 
 BEGIN_POPUP_MENU(WaveTrackMenuTable)
+
+   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
+   const auto &view = WaveTrackView::Get( *pTrack );
+
    POPUP_MENU_SEPARATOR()
 
-   // View types are now a non-exclusive choice.  The first two are mutually
-   // exclusive, but the view may be in a state with either of those, and also
-   // spectrogram, after a mouse drag.  Clicking any of these three makes that
-   // view take up all the height.
-   POPUP_MENU_CHECK_ITEM(OnWaveformID, XO("Wa&veform"), OnSetDisplay)
-   POPUP_MENU_CHECK_ITEM(OnSpectrumID, XO("&Spectrogram"), OnSetDisplay)
+   POPUP_MENU_CHECK_ITEM(OnMultiViewID, XO("&Multi View"), OnMultiView)
+
+   if ( view.GetMultiView() ) {
+      POPUP_MENU_CHECK_ITEM(OnWaveformID, XO("Wa&veform"), OnSetDisplay)
+      POPUP_MENU_CHECK_ITEM(OnSpectrumID, XO("&Spectrogram"), OnSetDisplay)
+   }
+   else {
+      POPUP_MENU_RADIO_ITEM(OnWaveformID, XO("Wa&veform"), OnSetDisplay)
+      POPUP_MENU_RADIO_ITEM(OnSpectrumID, XO("&Spectrogram"), OnSetDisplay)
+   }
 
    POPUP_MENU_ITEM(OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
    POPUP_MENU_SEPARATOR()
 
+// If these are enabled again, choose a hot key for Mono that does not conflict
+// with Multi View
 //   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, XO("&Mono"), OnChannelChange)
 //   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, XO("&Left Channel"), OnChannelChange)
 //   POPUP_MENU_RADIO_ITEM(OnChannelRightID, XO("R&ight Channel"), OnChannelChange)
@@ -711,9 +727,8 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    POPUP_MENU_ITEM(OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), OnSplitStereoMono)
 #endif
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
    if ( pTrack ) {
-      const auto displays = WaveTrackView::Get( *pTrack ).GetDisplays();
+      const auto displays = view.GetDisplays();
       bool hasWaveform =
          make_iterator_range( displays.begin(), displays.end() )
             .contains( WaveTrackViewConstants::Waveform );
@@ -729,6 +744,23 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    POPUP_MENU_SUB_MENU(0, XO("Rat&e"), RateMenuTable)
 END_POPUP_MENU()
 
+
+void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
+{
+   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   const auto &view = WaveTrackView::Get( *pTrack );
+   bool multi = !view.GetMultiView();
+   WaveTrackView::WaveTrackDisplay display;
+   if ( !multi )
+      display = *view.GetDisplays().begin();
+   for (const auto channel : TrackList::Channels(pTrack)) {
+      auto &channelView = WaveTrackView::Get( *channel );
+      channelView.SetMultiView( multi );
+      if ( !multi )
+         // Whichever sub-view was on top will take up all
+         channelView.SetDisplay( display );
+   }
+}
 
 ///  Set the Display mode based on the menu choice in the Track Menu.
 void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
@@ -747,20 +779,28 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
       id = Spectrum; break;
    }
 
-   const auto displays = WaveTrackView::Get( *pTrack ).GetDisplays();
-   const bool wrongType = !(displays.size() == 1 && displays[0] == id);
-   if (wrongType) {
+   auto &view = WaveTrackView::Get( *pTrack );
+   if ( view.GetMultiView() ) {
       for (auto channel : TrackList::Channels(pTrack)) {
-         channel->SetLastScaleType();
-         WaveTrackView::Get( *channel )
-            .SetDisplay(WaveTrackView::WaveTrackDisplay(id));
+         WaveTrackView::Get( *channel ).ToggleSubView( id );
       }
+   }
+   else {
+      const auto displays = view.GetDisplays();
+      const bool wrongType = !(displays.size() == 1 && displays[0] == id);
+      if (wrongType) {
+         for (auto channel : TrackList::Channels(pTrack)) {
+            channel->SetLastScaleType();
+            WaveTrackView::Get( *channel )
+               .SetDisplay(WaveTrackView::WaveTrackDisplay(id));
+         }
 
-      AudacityProject *const project = ::GetActiveProject();
-      ProjectHistory::Get( *project ).ModifyState(true);
+         AudacityProject *const project = ::GetActiveProject();
+         ProjectHistory::Get( *project ).ModifyState(true);
 
-      using namespace RefreshCode;
-      mpData->result = RefreshAll | UpdateVRuler;
+         using namespace RefreshCode;
+         mpData->result = RefreshAll | UpdateVRuler;
+      }
    }
 }
 
@@ -896,6 +936,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    partnerView.SetMinimized(bBothMinimizedp);
 
    partnerView.RestorePlacements( view.SavePlacements() );
+   partnerView.SetMultiView( view.GetMultiView() );
 
    //On Demand - join the queues together.
    if (ODManager::IsInstanceCreated())
