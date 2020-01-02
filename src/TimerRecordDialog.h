@@ -38,6 +38,8 @@ enum TimerRecordCompletedActions {
    TR_ACTION_EXPORTED = 0x00000002
 };
 
+class AudacityProject;
+
 class TimerRecordPathCtrl final : public wxTextCtrl
 {
    // MY: Class that inherits from the wxTextCtrl class.
@@ -64,7 +66,8 @@ public:
 class TimerRecordDialog final : public wxDialogWrapper
 {
 public:
-   TimerRecordDialog(wxWindow* parent, bool bAlreadySaved);
+   TimerRecordDialog(
+      wxWindow* parent, AudacityProject &project, bool bAlreadySaved);
    ~TimerRecordDialog();
 
    void OnTimer(wxTimerEvent& event);
@@ -114,6 +117,8 @@ private:
    ProgressResult PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions);
 
 private:
+   AudacityProject &mProject;
+
    wxDateTime m_DateTime_Start;
    wxDateTime m_DateTime_End;
    wxTimeSpan m_TimeSpan_Duration;
