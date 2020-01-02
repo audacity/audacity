@@ -26,7 +26,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../include/audacity/Types.h"
 
 class AudacityProject;
-extern AudacityProject *GetActiveProject();
 class TranslatableString;
 
 // Conditionally compile either a separate thead, or else use a timer in the main
@@ -127,7 +126,7 @@ public:
    // Convenience wrapper for the above
    template<void (Scrubber::*pfn)(const CommandContext&)>
       void Thunk(wxCommandEvent &)
-         { (this->*pfn)(*GetActiveProject()); }
+         { (this->*pfn)(*mProject); }
 
    // A string to put in the leftmost part of the status bar
    // when scrub or seek is in progress, or else empty.

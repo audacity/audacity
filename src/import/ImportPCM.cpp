@@ -87,7 +87,8 @@ public:
 
    wxString GetPluginStringID() override { return wxT("libsndfile"); }
    TranslatableString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(
+      const FilePath &Filename, AudacityProject*) override;
 
    unsigned SequenceNumber() const override;
 };
@@ -126,7 +127,8 @@ TranslatableString PCMImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(const FilePath &filename)
+std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(
+   const FilePath &filename, AudacityProject*)
 {
    SF_INFO info;
    wxFile f;   // will be closed when it goes out of scope

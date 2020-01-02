@@ -89,7 +89,8 @@ public:
 
    wxString GetPluginStringID() override { return wxT("liboggvorbis"); }
    TranslatableString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(
+      const FilePath &Filename, AudacityProject*) override;
 
    unsigned SequenceNumber() const override;
 };
@@ -167,7 +168,8 @@ TranslatableString OggImportPlugin::GetPluginFormatDescription()
     return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(const FilePath &filename)
+std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(
+   const FilePath &filename, AudacityProject*)
 {
    // Suppress some compiler warnings about unused global variables in the library header
    wxUnusedVar(OV_CALLBACKS_DEFAULT);

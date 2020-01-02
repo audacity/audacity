@@ -697,7 +697,7 @@ bool ProjectFileManager::SaveCopyWaveTracks(const FilePath & strProjectPathName,
    // Export all WaveTracks to OGG.
    bool bSuccess = true;
 
-   Exporter theExporter;
+   Exporter theExporter{ project };
    wxFileName uniqueTrackFileName;
    for (auto pTrack : (trackRange + &Track::IsLeader))
    {
@@ -711,7 +711,7 @@ bool ProjectFileManager::SaveCopyWaveTracks(const FilePath & strProjectPathName,
       const auto startTime = channels.min( &Track::GetStartTime );
       const auto endTime = channels.max( &Track::GetEndTime );
       bSuccess =
-         theExporter.Process(&project, channels.size(),
+         theExporter.Process(channels.size(),
                               fileFormat, uniqueTrackFileName.GetFullPath(), true,
                               startTime, endTime);
 
@@ -1620,7 +1620,7 @@ bool ProjectFileManager::Import(
       auto newTags = oldTags->Duplicate();
       Tags::Set( project, newTags );
 
-      bool success = Importer::Get().Import(fileName,
+      bool success = Importer::Get().Import(project, fileName,
                                             &TrackFactory::Get( project ),
                                             newTracks,
                                             newTags.get(),

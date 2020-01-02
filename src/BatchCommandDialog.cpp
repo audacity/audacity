@@ -61,11 +61,12 @@ BEGIN_EVENT_TABLE(MacroCommandDialog, wxDialogWrapper)
    EVT_LIST_ITEM_SELECTED(CommandsListID,  MacroCommandDialog::OnItemSelected)
 END_EVENT_TABLE();
 
-MacroCommandDialog::MacroCommandDialog(wxWindow * parent, wxWindowID id):
+MacroCommandDialog::MacroCommandDialog(
+   wxWindow * parent, wxWindowID id, AudacityProject &project):
    wxDialogWrapper(parent, id, XO("Select Command"),
             wxDefaultPosition, wxDefaultSize,
             wxCAPTION | wxRESIZE_BORDER)
-   , mCatalog( GetActiveProject() )
+   , mCatalog{ &project }
 {
    SetLabel(XO("Select Command"));         // Provide visual label
    SetName(XO("Select Command"));          // Provide audible label

@@ -86,7 +86,9 @@ static const std::pair<TranslatableString, CommandID> SpecialCommands[] = {
 };
 // end CLEANSPEECH remnant
 
-MacroCommands::MacroCommands()
+MacroCommands::MacroCommands( AudacityProject &project )
+: mProject{ project }
+, mExporter{ project }
 {
    ResetMacro();
 
@@ -482,7 +484,7 @@ wxString MacroCommands::PromptForPresetFor(const CommandID & command, const wxSt
 
 double MacroCommands::GetEndTime()
 {
-   AudacityProject *project = GetActiveProject();
+   AudacityProject *project = &mProject;
    if( project == NULL )
    {
       //AudacityMessageBox( XO("No project to process!") );
@@ -494,9 +496,8 @@ double MacroCommands::GetEndTime()
    return endTime;
 }
 
-bool MacroCommands::IsMono()
+bool MacroCommands::IsMono( AudacityProject *project )
 {
-   AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
       //AudacityMessageBox( XO("No project and no Audio to process!") );
@@ -567,19 +568,18 @@ wxString MacroCommands::BuildCleanFileName(const FilePath &fileName,
 bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
 {  //check if current project is mono or stereo
    unsigned numChannels = 2;
-   if (IsMono()) {
+   if (IsMono( &mProject )) {
       numChannels = 1;
    }
 
    double endTime = GetEndTime();
    if( endTime <= 0.0f )
       return false;
-   AudacityProject *project = GetActiveProject();
    if( bitrate <=0 )
    {
       // 'No' bitrate given, use the current default.
       // Use Mp3Stereo to control if export is to a stereo or mono file
-      return mExporter.Process(project, numChannels, wxT("MP3"), Name, false, 0.0, endTime);
+      return mExporter.Process(numChannels, wxT("MP3"), Name, false, 0.0, endTime);
    }
 
 
@@ -596,7 +596,7 @@ bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
    } );
 
    // Use Mp3Stereo to control if export is to a stereo or mono file
-   rc = mExporter.Process(project, numChannels, wxT("MP3"), Name, false, 0.0, endTime);
+   rc = mExporter.Process(numChannels, wxT("MP3"), Name, false, 0.0, endTime);
    return rc;
 }
 
@@ -622,10 +622,10 @@ bool MacroCommands::ApplySpecialCommand(
    if (ReportAndSkip(friendlyCommand, params))
       return true;
 
-   AudacityProject *project = GetActiveProject();
+   AudacityProject *project = &mProject;
 
    unsigned numChannels = 1;    //used to switch between mono and stereo export
-   if (IsMono()) {
+   if (IsMono( &mProject )) {
       numChannels = 1;  //export in mono
    } else {
       numChannels = 2;  //export in stereo
@@ -679,7 +679,7 @@ bool MacroCommands::ApplySpecialCommand(
       if (endTime <= 0.0f) {
          return false;
       }
-      return mExporter.Process(project, numChannels, wxT("WAV"), filename, false, 0.0, endTime);
+      return mExporter.Process(numChannels, wxT("WAV"), filename, false, 0.0, endTime);
    } else if (command == wxT("ExportOgg")) {
 #ifdef USE_LIBVORBIS
       filename.Replace(wxT(".mp3"), wxT(".ogg"), false);
@@ -687,7 +687,7 @@ bool MacroCommands::ApplySpecialCommand(
       if (endTime <= 0.0f) {
          return false;
       }
-      return mExporter.Process(project, numChannels, wxT("OGG"), filename, false, 0.0, endTime);
+      return mExporter.Process(numChannels, wxT("OGG"), filename, false, 0.0, endTime);
 #else
       AudacityMessageBox( XO(
 "Ogg Vorbis support is not included in this build of Audacity"));
@@ -700,7 +700,7 @@ bool MacroCommands::ApplySpecialCommand(
       if (endTime <= 0.0f) {
          return false;
       }
-      return mExporter.Process(project, numChannels, wxT("FLAC"), filename, false, 0.0, endTime);
+      return mExporter.Process(numChannels, wxT("FLAC"), filename, false, 0.0, endTime);
 #else
       AudacityMessageBox(XO(
 "FLAC support is not included in this build of Audacity"));
@@ -771,7 +771,7 @@ bool MacroCommands::ApplyEffectCommand(
    if (!plug)
       return false;
 
-   AudacityProject *project = GetActiveProject();
+   AudacityProject *project = &mProject;
 
    // FIXME: for later versions may want to not select-all in batch mode.
    // IF nothing selected, THEN select everything
@@ -861,12 +861,12 @@ bool MacroCommands::ApplyCommand( const TranslatableString &friendlyCommand,
       if( pContext )
          return ApplyEffectCommand(
             ID, friendlyCommand, command, params, *pContext);
-      const CommandContext context(  *GetActiveProject() );
+      const CommandContext context( mProject );
       return ApplyEffectCommand(
          ID, friendlyCommand, command, params, context);
    }
 
-   AudacityProject *project = GetActiveProject();
+   AudacityProject *project = &mProject;
    auto &manager = CommandManager::Get( *project );
    if( pContext ){
       if( HandleTextualCommand(
@@ -878,7 +878,7 @@ bool MacroCommands::ApplyCommand( const TranslatableString &friendlyCommand,
    }
    else
    {
-      const CommandContext context(  *GetActiveProject() );
+      const CommandContext context(  mProject );
       if( HandleTextualCommand(
          manager, command, context, AlwaysEnabledFlag, true ) )
          return true;
@@ -896,7 +896,7 @@ bool MacroCommands::ApplyCommandInBatchMode(
    const CommandID & command, const wxString &params,
    CommandContext const * pContext)
 {
-   AudacityProject *project = GetActiveProject();
+   AudacityProject *project = &mProject;
    auto &settings = ProjectSettings::Get( *project );
    // Recalc flags and enable items that may have become enabled.
    MenuManager::Get(*project).UpdateMenus(false);
@@ -931,7 +931,7 @@ bool MacroCommands::ApplyMacro(
 
    mFileName = filename;
 
-   AudacityProject *proj = GetActiveProject();
+   AudacityProject *proj = &mProject;
    bool res = false;
    auto cleanup2 = finally( [&] {
       if (!res) {

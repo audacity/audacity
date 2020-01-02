@@ -133,9 +133,8 @@ bool EffectStereoToMono::ProcessOne(int count)
    Floats rightBuffer{ idealBlockLen };
    bool bResult = true;
 
-   AudacityProject *p = GetActiveProject();
    auto outTrack =
-      TrackFactory::Get( *p ).NewWaveTrack(floatSample, mLeftTrack->GetRate());
+      mFactory->NewWaveTrack(floatSample, mLeftTrack->GetRate());
 
    while (index < mEnd) {
       bResult &= mLeftTrack->Get((samplePtr)leftBuffer.get(), floatSample, index, idealBlockLen);

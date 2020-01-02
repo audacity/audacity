@@ -247,7 +247,8 @@ public:
    FileExtensions GetSupportedExtensions() override;
 
    ///! Probes the file and opens it if appropriate
-   std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(
+      const wxString &Filename, AudacityProject*) override;
 
    unsigned SequenceNumber() const override;
 };
@@ -409,7 +410,8 @@ GStreamerImportPlugin::GetSupportedExtensions()
 
 // ----------------------------------------------------------------------------
 // Open the file and return an importer "file handle"
-std::unique_ptr<ImportFileHandle> GStreamerImportPlugin::Open(const wxString &filename)
+std::unique_ptr<ImportFileHandle> GStreamerImportPlugin::Open(
+   const wxString &filename, AudacityProject*)
 {
    auto handle = std::make_unique<GStreamerImportFileHandle>(filename);
 

@@ -80,13 +80,15 @@ BEGIN_EVENT_TABLE(ApplyMacroDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_HELP, ApplyMacroDialog::OnHelp)
 END_EVENT_TABLE()
 
-ApplyMacroDialog::ApplyMacroDialog(wxWindow * parent, bool bInherited):
+ApplyMacroDialog::ApplyMacroDialog(
+   wxWindow * parent, AudacityProject &project, bool bInherited):
    wxDialogWrapper(parent, wxID_ANY, XO("Macros Palette"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
-   , mCatalog( GetActiveProject() )
+   , mMacroCommands{ project }
+   , mProject{ project }
+   , mCatalog( &project )
 {
-   //AudacityProject * p = GetActiveProject();
    mAbort = false;
    mbExpanded = false;
    if( bInherited )
@@ -330,7 +332,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    gPrefs->Write(wxT("/Batch/ActiveMacro"), name);
    gPrefs->Flush();
 
-   AudacityProject *project = GetActiveProject();
+   AudacityProject *project = &mProject;
    if (!TrackList::Get( *project ).empty()) {
       AudacityMessageBox(
          XO("Please save and close the current project first.") );
@@ -518,8 +520,10 @@ enum {
 };
 
 /// Constructor
-MacrosWindow::MacrosWindow(wxWindow * parent, bool bExpanded):
-   ApplyMacroDialog(parent, true)
+MacrosWindow::MacrosWindow(
+   wxWindow * parent, AudacityProject &project, bool bExpanded):
+   ApplyMacroDialog(parent, project, true)
+   , mProject{ project }
 {
    mbExpanded = bExpanded;
    auto Title = WindowTitle();
@@ -726,7 +730,7 @@ void MacrosWindow::AddItem(const CommandID &Action, const wxString &Params)
 void MacrosWindow::UpdateMenus()
 {
    // OK even on mac, as dialog is modal.
-   auto p = GetActiveProject();
+   auto p = &mProject;
    MenuManager::Get(*p).RebuildMenuBar(*p);
 }
 
@@ -1060,7 +1064,7 @@ void MacrosWindow::InsertCommandAt(int item)
       return;
    }
 
-   MacroCommandDialog d(this, wxID_ANY);
+   MacroCommandDialog d(this, wxID_ANY, mProject);
 
    if (!d.ShowModal()) {
       Raise();

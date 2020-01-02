@@ -96,7 +96,7 @@ UIHandle::Result TrackSelectHandle::Click
       result |= Cancelled;
    else {
       mRearrangeCount = 0;
-      CalculateRearrangingThresholds(event);
+      CalculateRearrangingThresholds(event, pProject);
    }
 
    SelectUtilities::DoListSelection(*pProject,
@@ -135,7 +135,7 @@ UIHandle::Result TrackSelectHandle::Drag
 
    // JH: if we moved up or down, recalculate the thresholds and make sure the
    // track is fully on-screen.
-   CalculateRearrangingThresholds(event);
+   CalculateRearrangingThresholds(event, pProject);
 
    result |= EnsureVisible | RefreshAll;
    return result;
@@ -154,7 +154,7 @@ HitTestPreview TrackSelectHandle::Preview
          ::MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
 
       const bool unsafe =
-         ProjectAudioIO::Get( *GetActiveProject() ).IsAudioActive();
+         ProjectAudioIO::Get( *project ).IsAudioActive();
       return {
          message,
          (unsafe
@@ -176,12 +176,11 @@ HitTestPreview TrackSelectHandle::Preview
 }
 
 UIHandle::Result TrackSelectHandle::Release
-(const TrackPanelMouseEvent &, AudacityProject *, wxWindow *)
+(const TrackPanelMouseEvent &, AudacityProject *project, wxWindow *)
 {
    // If we're releasing, surely we are dragging a track?
    wxASSERT( mpTrack );
    if (mRearrangeCount != 0) {
-      AudacityProject *const project = ::GetActiveProject();
       ProjectHistory::Get( *project ).PushState(
          /* i18n-hint: will substitute name of track for %s */
          ( mRearrangeCount < 0 ? XO("Moved '%s' up") : XO("Moved '%s' down") )
@@ -207,13 +206,13 @@ UIHandle::Result TrackSelectHandle::Cancel(AudacityProject *pProject)
 
 /// Figure out how far the user must drag the mouse up or down
 /// before the track will swap with the one above or below
-void TrackSelectHandle::CalculateRearrangingThresholds(const wxMouseEvent & event)
+void TrackSelectHandle::CalculateRearrangingThresholds(
+   const wxMouseEvent & event, AudacityProject *project)
 {
    // JH: this will probably need to be tweaked a bit, I'm just
    //   not sure what formula will have the best feel for the
    //   user.
 
-   AudacityProject *const project = ::GetActiveProject();
    auto &tracks = TrackList::Get( *project );
 
    if (tracks.CanMoveUp(mpTrack.get()))

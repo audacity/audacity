@@ -115,7 +115,8 @@ public:
 
    wxString GetPluginStringID() override { return wxT("libmad"); }
    TranslatableString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(
+      const FilePath &Filename, AudacityProject*) override;
 
    unsigned SequenceNumber() const override;
 };
@@ -177,7 +178,8 @@ TranslatableString MP3ImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(const FilePath &Filename)
+std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(
+   const FilePath &Filename, AudacityProject*)
 {
    auto file = std::make_unique<wxFile>(Filename);
 

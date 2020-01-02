@@ -165,9 +165,11 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialogWrapper)
 
 END_EVENT_TABLE()
 
-TimerRecordDialog::TimerRecordDialog(wxWindow* parent, bool bAlreadySaved)
+TimerRecordDialog::TimerRecordDialog(
+   wxWindow* parent, AudacityProject &project, bool bAlreadySaved)
 : wxDialogWrapper(parent, -1, XO("Audacity Timer Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION)
+, mProject{ project }
 {
    SetName();
 
@@ -329,7 +331,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
    if (fName.empty())
       return;
 
-   AudacityProject* pProject = GetActiveProject();
+   AudacityProject* pProject = &mProject;
 
    // If project already exists then abort - we do not allow users to overwrite an existing project
    // unless it is the current project.
@@ -355,11 +357,10 @@ would overwrite another project.\nPlease try again and select an original name."
 
 void TimerRecordDialog::OnAutoExportPathButton_Click(wxCommandEvent& WXUNUSED(event))
 {
-   AudacityProject* pProject = GetActiveProject();
-   Exporter eExporter;
+   Exporter eExporter{ mProject };
 
    // Call the Exporter to set the options required
-   if (eExporter.SetAutoExportOptions(pProject)) {
+   if (eExporter.SetAutoExportOptions()) {
       // Populate the options so that we can destroy this instance of the Exporter
       m_fnAutoExportFile = eExporter.GetAutoExportFileName();
       m_iAutoExportFormat = eExporter.GetAutoExportFormat();
@@ -424,7 +425,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    // We don't stop the user from starting the recording 
    // as its possible that they plan to free up some
    // space before the recording begins
-   AudacityProject* pProject = GetActiveProject();
+   AudacityProject* pProject = &mProject;
    auto &projectManager = ProjectManager::Get( *pProject );
 
    // How many minutes do we have left on the disc?
@@ -539,7 +540,7 @@ bool TimerRecordDialog::RemoveAllAutoSaveFiles()
 /// or if the post recording actions fail.
 int TimerRecordDialog::RunWaitDialog()
 {
-   AudacityProject* pProject = GetActiveProject();
+   AudacityProject* pProject = &mProject;
    
    auto updateResult = ProgressResult::Success;
 
@@ -620,7 +621,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    // Finally, if there is no post-record action selected then we output
    // a dialog detailing what has been carried out instead.
 
-   AudacityProject* pProject = GetActiveProject();
+   AudacityProject* pProject = &mProject;
 
    bool bSaveOK = false;
    bool bExportOK = false;
@@ -642,10 +643,10 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
    // Do Automatic Export?
    if (m_bAutoExportEnabled) {
-      Exporter e;
+      Exporter e{ mProject };
       MissingAliasFilesDialog::SetShouldShow(true);
       bExportOK = e.ProcessFromTimerRecording(
-         pProject, false, 0.0, TrackList::Get( *pProject ).GetEndTime(),
+         false, 0.0, TrackList::Get( *pProject ).GetEndTime(),
             m_fnAutoExportFile, m_iAutoExportFormat,
             m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
    }
@@ -930,7 +931,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.StartMultiColumn(3, wxEXPAND);
             {
                TranslatableString sInitialValue;
-               AudacityProject* pProject = GetActiveProject();
+               AudacityProject* pProject = &mProject;
                auto sSaveValue = pProject->GetFileName();
                if (!sSaveValue.empty()) {
                   m_fnAutoSaveFile.Assign(sSaveValue);

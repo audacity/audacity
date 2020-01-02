@@ -80,10 +80,9 @@ bool ExportCommand::Apply(const CommandContext & context)
    }
    wxString extension = mFileName.Mid(splitAt+1).MakeUpper();
 
-   Exporter exporter;
+   Exporter exporter{ context.project };
 
-   bool exportSuccess = exporter.Process(&context.project,
-                                         std::max(0, mnChannels),
+   bool exportSuccess = exporter.Process(std::max(0, mnChannels),
                                          extension, mFileName,
                                          true, t0, t1);
 

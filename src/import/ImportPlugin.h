@@ -52,6 +52,7 @@ but little else.
 
 #include "ImportRaw.h" // defines TrackHolders
 
+class AudacityProject;
 class wxArrayString;
 class ProgressDialog;
 enum class ProgressResult : unsigned;
@@ -92,7 +93,8 @@ public:
    // Open the given file, returning true if it is in a recognized
    // format, false otherwise.  This puts the importer into the open
    // state.
-   virtual std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) = 0;
+   virtual std::unique_ptr<ImportFileHandle> Open(
+      const FilePath &Filename, AudacityProject*) = 0;
 
    virtual unsigned SequenceNumber() const = 0;
 

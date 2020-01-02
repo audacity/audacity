@@ -326,7 +326,7 @@ void OnTimerRecord(const CommandContext &context)
    //and therefore remove the newly inserted track.
 
    TimerRecordDialog dialog(
-      &window, bProjectSaved); /* parent, project saved? */
+      &window, project, bProjectSaved); /* parent, project, project saved? */
    int modalResult = dialog.ShowModal();
    if (modalResult == wxID_CANCEL)
    {

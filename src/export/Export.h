@@ -181,15 +181,15 @@ public:
       const TranslatableString &title,
       const TranslatableString &shortUndoDescription, bool force);
 
-   Exporter();
+   Exporter( AudacityProject &project );
    virtual ~Exporter();
 
    void SetFileDialogTitle( const TranslatableString & DialogTitle );
    void SetDefaultFormat( const FileExtension & Format ){ mFormatName = Format;};
 
-   bool Process(AudacityProject *project, bool selectedOnly,
+   bool Process(bool selectedOnly,
                 double t0, double t1);
-   bool Process(AudacityProject *project, unsigned numChannels,
+   bool Process(unsigned numChannels,
                 const FileExtension &type, const wxString & filename,
                 bool selectedOnly, double t0, double t1);
 
@@ -199,15 +199,14 @@ public:
    const ExportPluginArray &GetPlugins();
 
    // Auto Export from Timer Recording
-   bool ProcessFromTimerRecording(AudacityProject *project,
-                                  bool selectedOnly,
+   bool ProcessFromTimerRecording(bool selectedOnly,
                                   double t0,
                                   double t1,
                                   wxFileName fnFile,
                                   int iFormat,
                                   int iSubFormat,
                                   int iFilterIndex);
-   bool SetAutoExportOptions(AudacityProject *project);
+   bool SetAutoExportOptions();
    int GetAutoExportFormat();
    int GetAutoExportSubFormat();
    int GetAutoExportFilterIndex();

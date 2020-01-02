@@ -183,7 +183,8 @@ public:
    TranslatableString GetPluginFormatDescription() override;
 
    ///! Probes the file and opens it if appropriate
-   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename) override;
+   std::unique_ptr<ImportFileHandle> Open(
+      const FilePath &Filename, AudacityProject*) override;
    
    unsigned SequenceNumber() const override;
 };
@@ -291,7 +292,8 @@ TranslatableString FFmpegImportPlugin::GetPluginFormatDescription()
    return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const FilePath &filename)
+std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(
+   const FilePath &filename, AudacityProject*)
 {
    auto handle = std::make_unique<FFmpegImportFileHandle>(filename);
 
