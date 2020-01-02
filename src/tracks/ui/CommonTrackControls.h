@@ -28,11 +28,12 @@ class CommonTrackControls /* not final */ : public TrackControls
 public:
    using TrackControls::TrackControls;
 
-   // This is passed to the InitMenu() methods of the PopupMenuTable
+   // This is passed to the InitUserData() methods of the PopupMenuTable
    // objects returned by GetMenuExtension:
    struct InitMenuData
    {
    public:
+      AudacityProject &project;
       Track *pTrack;
       wxWindow *pParent;
       unsigned result;
@@ -53,7 +54,8 @@ protected:
        const AudacityProject *) override = 0;
 
    unsigned DoContextMenu
-      (const wxRect &rect, wxWindow *pParent, wxPoint *pPosition) override;
+      (const wxRect &rect, wxWindow *pParent, wxPoint *pPosition,
+       AudacityProject *pProject) override;
    virtual PopupMenuTable *GetMenuExtension(Track *pTrack) = 0;
 
    // TrackPanelDrawable implementation

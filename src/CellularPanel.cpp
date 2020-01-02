@@ -877,7 +877,7 @@ void CellularPanel::DoContextMenu( TrackPanelCell *pCell )
 
    auto rect = FindRect( *delegate );
    const UIHandle::Result refreshResult =
-      delegate->DoContextMenu(rect, this, NULL);
+      delegate->DoContextMenu(rect, this, nullptr, GetProject());
 
    // To do: use safer shared_ptr to pCell
    ProcessUIHandleResult(pCell, pCell, refreshResult);

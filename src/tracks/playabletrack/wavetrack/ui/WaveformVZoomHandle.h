@@ -83,7 +83,7 @@ public:
    static PopupMenuTable &Instance();
 
 private:
-   virtual void InitMenu(Menu *pMenu, void *pUserData) override;
+   virtual void InitMenu(Menu *pMenu) override;
 
    void OnWaveformScaleType(wxCommandEvent &evt);
 };

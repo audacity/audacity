@@ -266,9 +266,9 @@ PopupMenuTable &WaveformVRulerMenuTable::Instance()
    return instance;
 }
 
-void WaveformVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void WaveformVRulerMenuTable::InitMenu(Menu *pMenu)
 {
-   WaveTrackVRulerMenuTable::InitMenu(pMenu, pUserData);
+   WaveTrackVRulerMenuTable::InitMenu(pMenu);
 
 // DB setting is already on track drop down.
    WaveTrack *const wt = mpData->pTrack;
@@ -304,8 +304,6 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 
 END_POPUP_MENU()
 
-#include "../../../../Project.h" // for GetActiveProject
-
 void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
 {
    WaveTrack *const wt = mpData->pTrack;
@@ -322,7 +320,8 @@ void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
          channel->GetIndependentWaveformSettings().scaleType = newScaleType;
       }
 
-      ProjectHistory::Get( *::GetActiveProject() ).ModifyState(true);
+      AudacityProject *const project = &mpData->project;
+      ProjectHistory::Get( *project ).ModifyState(true);
 
       using namespace RefreshCode;
       mpData->result = UpdateVRuler | RefreshAll;

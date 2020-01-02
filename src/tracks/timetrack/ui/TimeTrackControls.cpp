@@ -47,9 +47,13 @@ public:
    static TimeTrackMenuTable &Instance();
 
 private:
-   void InitMenu(Menu *pMenu, void *pUserData) override
+   void InitUserData(void *pUserData) override
    {
       mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+   }
+
+   void InitMenu(Menu *pMenu) override
+   {
       TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
 
       pMenu->Check(OnTimeTrackLogIntID, pTrack->GetInterpolateLog());
@@ -102,7 +106,7 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
          1000);
 
       if (lower >= 10 && upper <= 1000 && lower < upper) {
-         AudacityProject *const project = ::GetActiveProject();
+         AudacityProject *const project = &mpData->project;
          pTrack->SetRangeLower((double)lower / 100.0);
          pTrack->SetRangeUpper((double)upper / 100.0);
          ProjectHistory::Get( *project )
@@ -118,7 +122,7 @@ void TimeTrackMenuTable::OnTimeTrackLin(wxCommandEvent & /*event*/)
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(false);
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )
       .PushState(XO("Set time track display to linear"), XO("Set Display"));
 
@@ -130,7 +134,7 @@ void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(true);
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )
       .PushState(XO("Set time track display to logarithmic"), XO("Set Display"));
 
@@ -141,7 +145,7 @@ void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
 void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
-   AudacityProject *const project = ::GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    if (pTrack->GetInterpolateLog()) {
       pTrack->SetInterpolateLog(false);
       ProjectHistory::Get( *project )

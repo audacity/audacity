@@ -20,6 +20,8 @@ PopupMenuTable::Menu::~Menu()
 
 void PopupMenuTable::Menu::Extend(PopupMenuTable *pTable)
 {
+   pTable->InitUserData(pUserData);
+
    auto connect = [&]( const PopupMenuTable::Entry *pEntry ) {
       this->pParent->Bind
          (wxEVT_COMMAND_MENU_SELECTED,
@@ -61,7 +63,7 @@ void PopupMenuTable::Menu::Extend(PopupMenuTable *pTable)
       }
    }
 
-   pTable->InitMenu(this, pUserData);
+   pTable->InitMenu(this);
 }
 
 void PopupMenuTable::Menu::DisconnectTable(PopupMenuTable *pTable)
@@ -83,6 +85,10 @@ void PopupMenuTable::Menu::Disconnect()
 {
    for ( auto pTable : tables )
       DisconnectTable(pTable);
+}
+
+void PopupMenuTable::InitMenu(Menu *)
+{
 }
 
 // static

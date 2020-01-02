@@ -59,6 +59,7 @@ public:
    struct InitMenuData
    {
    public:
+      AudacityProject &project;
       WaveTrack *pTrack;
       wxRect rect;
       unsigned result;
@@ -69,7 +70,7 @@ public:
 protected:
    WaveTrackVRulerMenuTable() {}
 
-   void InitMenu(Menu *pMenu, void *pUserData) override;
+   void InitUserData(void *pUserData) override;
 
 private:
    void DestroyMenu() override

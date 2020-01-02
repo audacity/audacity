@@ -90,7 +90,8 @@ private:
    void OnSetName(wxCommandEvent &);
    void OnMoveTrack(wxCommandEvent &event);
 
-   void InitMenu(Menu *pMenu, void *pUserData) override;
+   void InitUserData(void *pUserData) override;
+   void InitMenu(Menu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -106,12 +107,16 @@ TrackMenuTable &TrackMenuTable::Instance()
    return instance;
 }
 
-void TrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void TrackMenuTable::InitUserData(void *pUserData)
 {
    mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+}
+
+void TrackMenuTable::InitMenu(Menu *pMenu)
+{
    Track *const pTrack = mpData->pTrack;
 
-   const auto &tracks = TrackList::Get( *GetActiveProject() );
+   const auto &tracks = TrackList::Get( mpData->project );
 
    pMenu->Enable(OnMoveUpID, tracks.CanMoveUp(pTrack));
    pMenu->Enable(OnMoveDownID, tracks.CanMoveDown(pTrack));
@@ -129,7 +134,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
       OnMoveUpID,
       XO("Move Track &Up").Join(
          Verbatim(
-            CommandManager::Get( *GetActiveProject() ).
+            CommandManager::Get( mpData->project ).
                 // using GET to compose menu item name for wxWidgets
                 GetKeyFromName(wxT("TrackMoveUp")).GET() ),
           wxT("\t")
@@ -139,7 +144,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
       OnMoveDownID,
       XO("Move Track &Down").Join(
          Verbatim(
-            CommandManager::Get( *GetActiveProject() ).
+            CommandManager::Get( mpData->project ).
                // using GET to compose menu item name for wxWidgets
                GetKeyFromName(wxT("TrackMoveDown")).GET() ),
           wxT("\t")
@@ -149,7 +154,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
       OnMoveTopID,
       XO("Move Track to &Top").Join(
          Verbatim(
-            CommandManager::Get( *GetActiveProject() ).
+            CommandManager::Get( mpData->project ).
                 // using GET to compose menu item name for wxWidgets
                 GetKeyFromName(wxT("TrackMoveTop")).GET() ),
           wxT("\t")
@@ -159,7 +164,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
       OnMoveBottomID,
       XO("Move Track to &Bottom").Join(
          Verbatim(
-            CommandManager::Get( *GetActiveProject() ).
+            CommandManager::Get( mpData->project ).
                // using GET to compose menu item name for wxWidgets
                GetKeyFromName(wxT("TrackMoveBottom")).GET() ),
           wxT("\t")
@@ -209,7 +214,7 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
    Track *const pTrack = mpData->pTrack;
    if (pTrack)
    {
-      AudacityProject *const proj = ::GetActiveProject();
+      AudacityProject *const proj = &mpData->project;
       const wxString oldName = pTrack->GetName();
 
       SetTrackNameCommand Command;
@@ -234,7 +239,7 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
 
 void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
 {
-   AudacityProject *const project = GetActiveProject();
+   AudacityProject *const project = &mpData->project;
    TrackUtilities::MoveChoice choice;
    switch (event.GetId()) {
    default:
@@ -256,17 +261,18 @@ void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
    mpData->result = RefreshCode::RefreshAll;
 }
 
-unsigned CommonTrackControls::DoContextMenu
-   (const wxRect &rect, wxWindow *pParent, wxPoint *)
+unsigned CommonTrackControls::DoContextMenu(
+   const wxRect &rect, wxWindow *pParent, wxPoint *, AudacityProject *pProject)
 {
+   using namespace RefreshCode;
    wxRect buttonRect;
    TrackInfo::GetTitleBarRect(rect, buttonRect);
 
    auto track = FindTrack();
    if (!track)
-      return RefreshCode::RefreshNone;
+      return RefreshNone;
 
-   InitMenuData data{ track.get(), pParent, RefreshCode::RefreshNone };
+   InitMenuData data{ *pProject, track.get(), pParent, RefreshNone };
 
    const auto pTable = &TrackMenuTable::Instance();
    auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);

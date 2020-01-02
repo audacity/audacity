@@ -35,6 +35,7 @@ namespace
    struct InitMenuData
    {
    public:
+      AudacityProject &project;
       NoteTrack *pTrack;
       wxRect rect;
       unsigned result;
@@ -209,7 +210,7 @@ private:
       mpData = nullptr;
    }
 
-   virtual void InitMenu(Menu *pMenu, void *pUserData) override;
+   void InitUserData(void *pUserData) override;
 };
 
 NoteTrackVRulerMenuTable &NoteTrackVRulerMenuTable::Instance()
@@ -218,7 +219,7 @@ NoteTrackVRulerMenuTable &NoteTrackVRulerMenuTable::Instance()
    return instance;
 }
 
-void NoteTrackVRulerMenuTable::InitMenu(Menu *WXUNUSED(pMenu), void *pUserData)
+void NoteTrackVRulerMenuTable::InitUserData(void *pUserData)
 {
    mpData = static_cast<InitMenuData*>(pUserData);
 }
@@ -244,7 +245,8 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
       mpData->pTrack->ShiftNoteRange(-12);
       break;
    }
-   ProjectHistory::Get( *GetActiveProject() ).ModifyState(false);
+   AudacityProject *const project = &mpData->project;
+   ProjectHistory::Get( *project ).ModifyState(false);
    using namespace RefreshCode;
    mpData->result = UpdateVRuler | RefreshAll;
 }
@@ -290,7 +292,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
        !(event.ShiftDown() || event.CmdDown()))
    {
       InitMenuData data {
-         pTrack.get(), mRect, RefreshCode::RefreshNone, event.m_y
+         *pProject, pTrack.get(), mRect, RefreshNone, event.m_y
       };
 
       PopupMenuTable *const pTable =

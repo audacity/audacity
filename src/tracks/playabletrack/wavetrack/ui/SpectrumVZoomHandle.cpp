@@ -265,9 +265,9 @@ PopupMenuTable &SpectrumVRulerMenuTable::Instance()
    return instance;
 }
 
-void SpectrumVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void SpectrumVRulerMenuTable::InitMenu(Menu *pMenu)
 {
-   WaveTrackVRulerMenuTable::InitMenu(pMenu, pUserData);
+   WaveTrackVRulerMenuTable::InitMenu(pMenu);
 
    WaveTrack *const wt = mpData->pTrack;
    const int id =
@@ -292,8 +292,6 @@ POPUP_MENU_SEPARATOR()
    POPUP_MENU_ITEM(OnZoomOutVerticalID,   XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
 END_POPUP_MENU()
 
-#include "../../../../Project.h" // for GetActiveProject
-
 void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
 {
    WaveTrack *const wt = mpData->pTrack;
@@ -308,7 +306,7 @@ void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
       for (auto channel : TrackList::Channels(wt))
          channel->GetIndependentSpectrogramSettings().scaleType = newScaleType;
 
-      ProjectHistory::Get( *::GetActiveProject() ).ModifyState(true);
+      ProjectHistory::Get( mpData->project ).ModifyState(true);
 
       using namespace RefreshCode;
       mpData->result = UpdateVRuler | RefreshAll;
