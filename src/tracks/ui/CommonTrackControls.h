@@ -53,7 +53,8 @@ protected:
        const AudacityProject *) override = 0;
 
    unsigned DoContextMenu
-      (const wxRect &rect, wxWindow *pParent, wxPoint *pPosition) override;
+      (const wxRect &rect, wxWindow *pParent, wxPoint *pPosition,
+       AudacityProject *pProject) override;
    virtual PopupMenuTable *GetMenuExtension(Track *pTrack) = 0;
 
    // TrackPanelDrawable implementation

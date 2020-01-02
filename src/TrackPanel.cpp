@@ -1597,7 +1597,7 @@ unsigned TrackPanelCell::HandleWheelRotation
 }
 
 unsigned TrackPanelCell::DoContextMenu
-   (const wxRect &, wxWindow*, wxPoint *)
+   (const wxRect &, wxWindow*, wxPoint *, AudacityProject*)
 {
    return RefreshCode::RefreshNone;
 }

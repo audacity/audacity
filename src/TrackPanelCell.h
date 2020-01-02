@@ -109,7 +109,7 @@ public:
    // Default implementation does nothing
    virtual unsigned DoContextMenu
       (const wxRect &rect,
-       wxWindow *pParent, wxPoint *pPosition);
+       wxWindow *pParent, wxPoint *pPosition, AudacityProject *pProject);
 
    // Return value is a bitwise OR of RefreshCode values
    // Default skips the event and does nothing

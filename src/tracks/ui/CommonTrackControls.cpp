@@ -262,7 +262,7 @@ void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
 }
 
 unsigned CommonTrackControls::DoContextMenu
-   (const wxRect &rect, wxWindow *pParent, wxPoint *)
+   (const wxRect &rect, wxWindow *pParent, wxPoint *, AudacityProject*)
 {
    wxRect buttonRect;
    TrackInfo::GetTitleBarRect(rect, buttonRect);
