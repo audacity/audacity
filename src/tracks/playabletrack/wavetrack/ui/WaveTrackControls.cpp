@@ -155,7 +155,8 @@ public:
    static WaveColorMenuTable &Instance();
 
 private:
-   void InitMenu(Menu *pMenu, void *pUserData) override;
+   void InitUserData(void *pUserData) override;
+   void InitMenu(Menu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -174,9 +175,13 @@ WaveColorMenuTable &WaveColorMenuTable::Instance()
    return instance;
 }
 
-void WaveColorMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void WaveColorMenuTable::InitUserData(void *pUserData)
 {
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
+}
+
+void WaveColorMenuTable::InitMenu(Menu *pMenu)
+{
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto WaveColorId = IdOfWaveColor( pTrack->GetWaveColorIndex());
    SetMenuChecks(*pMenu, [=](int id){ return id == WaveColorId; });
@@ -247,7 +252,8 @@ public:
    static FormatMenuTable &Instance();
 
 private:
-   void InitMenu(Menu *pMenu, void *pUserData) override;
+   void InitUserData(void *pUserData) override;
+   void InitMenu(Menu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -267,9 +273,13 @@ FormatMenuTable &FormatMenuTable::Instance()
    return instance;
 }
 
-void FormatMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void FormatMenuTable::InitUserData(void *pUserData)
 {
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
+}
+
+void FormatMenuTable::InitMenu(Menu *pMenu)
+{
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto formatId = IdOfFormat(pTrack->GetSampleFormat());
    SetMenuChecks(*pMenu, [=](int id){ return id == formatId; });
@@ -363,7 +373,8 @@ public:
    static RateMenuTable &Instance();
 
 private:
-   void InitMenu(Menu *pMenu, void *pUserData) override;
+   void InitUserData(void *pUserData) override;
+   void InitMenu(Menu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -385,9 +396,13 @@ RateMenuTable &RateMenuTable::Instance()
    return instance;
 }
 
-void RateMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void RateMenuTable::InitUserData(void *pUserData)
 {
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
+}
+
+void RateMenuTable::InitMenu(Menu *pMenu)
+{
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    const auto rateId = IdOfRate((int)pTrack->GetRate());
    SetMenuChecks(*pMenu, [=](int id){ return id == rateId; });
@@ -557,7 +572,8 @@ public:
 protected:
    WaveTrackMenuTable() : mpData(NULL) {mpTrack=NULL;}
 
-   void InitMenu(Menu *pMenu, void *pUserData) override;
+   void InitUserData(void *pUserData) override;
+   void InitMenu(Menu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -597,9 +613,13 @@ WaveTrackMenuTable &WaveTrackMenuTable::Instance( Track * pTrack )
    return instance;
 }
 
-void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void WaveTrackMenuTable::InitUserData(void *pUserData)
 {
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
+}
+
+void WaveTrackMenuTable::InitMenu(Menu *pMenu)
+{
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    std::vector<int> checkedIds;
@@ -637,7 +657,6 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
    if ( isMono )
    {
-      mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
       WaveTrack *const pTrack2 = static_cast<WaveTrack*>(mpData->pTrack);
 
       auto next = * ++ tracks.Find(pTrack2);

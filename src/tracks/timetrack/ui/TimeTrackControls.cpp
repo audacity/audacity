@@ -47,9 +47,13 @@ public:
    static TimeTrackMenuTable &Instance();
 
 private:
-   void InitMenu(Menu *pMenu, void *pUserData) override
+   void InitUserData(void *pUserData) override
    {
       mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+   }
+
+   void InitMenu(Menu *pMenu) override
+   {
       TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
 
       pMenu->Check(OnTimeTrackLogIntID, pTrack->GetInterpolateLog());

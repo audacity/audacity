@@ -266,9 +266,9 @@ PopupMenuTable &WaveformVRulerMenuTable::Instance()
    return instance;
 }
 
-void WaveformVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void WaveformVRulerMenuTable::InitMenu(Menu *pMenu)
 {
-   WaveTrackVRulerMenuTable::InitMenu(pMenu, pUserData);
+   WaveTrackVRulerMenuTable::InitMenu(pMenu);
 
 // DB setting is already on track drop down.
    WaveTrack *const wt = mpData->pTrack;

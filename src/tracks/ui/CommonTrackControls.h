@@ -28,7 +28,7 @@ class CommonTrackControls /* not final */ : public TrackControls
 public:
    using TrackControls::TrackControls;
 
-   // This is passed to the InitMenu() methods of the PopupMenuTable
+   // This is passed to the InitUserData() methods of the PopupMenuTable
    // objects returned by GetMenuExtension:
    struct InitMenuData
    {

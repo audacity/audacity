@@ -265,9 +265,9 @@ PopupMenuTable &SpectrumVRulerMenuTable::Instance()
    return instance;
 }
 
-void SpectrumVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void SpectrumVRulerMenuTable::InitMenu(Menu *pMenu)
 {
-   WaveTrackVRulerMenuTable::InitMenu(pMenu, pUserData);
+   WaveTrackVRulerMenuTable::InitMenu(pMenu);
 
    WaveTrack *const wt = mpData->pTrack;
    const int id =

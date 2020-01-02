@@ -83,7 +83,7 @@ public:
    static NoteTrackMenuTable &Instance();
 
 private:
-   void InitMenu(Menu*, void *pUserData) override
+   void InitUserData(void *pUserData) override
    {
       mpData = static_cast<NoteTrackControlsBase::InitMenuData*>(pUserData);
    }

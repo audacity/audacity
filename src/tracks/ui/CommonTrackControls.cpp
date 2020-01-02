@@ -90,7 +90,8 @@ private:
    void OnSetName(wxCommandEvent &);
    void OnMoveTrack(wxCommandEvent &event);
 
-   void InitMenu(Menu *pMenu, void *pUserData) override;
+   void InitUserData(void *pUserData) override;
+   void InitMenu(Menu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -106,9 +107,13 @@ TrackMenuTable &TrackMenuTable::Instance()
    return instance;
 }
 
-void TrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void TrackMenuTable::InitUserData(void *pUserData)
 {
    mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+}
+
+void TrackMenuTable::InitMenu(Menu *pMenu)
+{
    Track *const pTrack = mpData->pTrack;
 
    const auto &tracks = TrackList::Get( *GetActiveProject() );

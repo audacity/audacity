@@ -79,14 +79,19 @@ public:
       void *pUserData;
    };
 
+   // Called before the menu items are appended.
+   // Store user data, if needed.
+   virtual void InitUserData(void *pUserData) = 0;
+
    // Called when the menu is about to pop up.
    // Your chance to enable and disable items.
-   virtual void InitMenu(Menu *pMenu, void *pUserData) = 0;
+   // Default implementation does nothing.
+   virtual void InitMenu(Menu *pMenu);
 
    // Called when menu is destroyed.
    virtual void DestroyMenu() = 0;
 
-   // Optional pUserData gets passed to the InitMenu routines of tables.
+   // Optional pUserData gets passed to the InitUserData routines of tables.
    // No memory management responsibility is assumed by this function.
    static std::unique_ptr<Menu> BuildMenu
       (wxEvtHandler *pParent, PopupMenuTable *pTable, void *pUserData = NULL);
@@ -101,14 +106,19 @@ In class MyTable (maybe in the private section),
 which inherits from PopupMenuTable,
 
 DECLARE_POPUP_MENU(MyTable);
-virtual void InitMenu(Menu *pMenu, void *pUserData);
+virtual void InitUserData(void *pUserData);
+virtual void InitMenu(Menu *pMenu);
 virtual void DestroyMenu();
 
 Then in MyTable.cpp,
 
-void MyTable::InitMenu(Menu *pMenu, void *pUserData)
+void MyTable::InitUserData(void *pUserData)
 {
    auto pData = static_cast<MyData*>(pUserData);
+}
+
+void MyTable::InitMenu(Menu *pMenu)
+{
    // Remember pData, enable or disable menu items
 }
 

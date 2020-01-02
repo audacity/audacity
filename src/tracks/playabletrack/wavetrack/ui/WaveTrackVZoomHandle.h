@@ -69,7 +69,7 @@ public:
 protected:
    WaveTrackVRulerMenuTable() {}
 
-   void InitMenu(Menu *pMenu, void *pUserData) override;
+   void InitUserData(void *pUserData) override;
 
 private:
    void DestroyMenu() override

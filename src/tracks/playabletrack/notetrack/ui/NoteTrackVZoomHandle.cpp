@@ -209,7 +209,7 @@ private:
       mpData = nullptr;
    }
 
-   virtual void InitMenu(Menu *pMenu, void *pUserData) override;
+   void InitUserData(void *pUserData) override;
 };
 
 NoteTrackVRulerMenuTable &NoteTrackVRulerMenuTable::Instance()
@@ -218,7 +218,7 @@ NoteTrackVRulerMenuTable &NoteTrackVRulerMenuTable::Instance()
    return instance;
 }
 
-void NoteTrackVRulerMenuTable::InitMenu(Menu *WXUNUSED(pMenu), void *pUserData)
+void NoteTrackVRulerMenuTable::InitUserData(void *pUserData)
 {
    mpData = static_cast<InitMenuData*>(pUserData);
 }

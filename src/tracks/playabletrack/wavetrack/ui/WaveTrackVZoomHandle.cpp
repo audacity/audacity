@@ -34,7 +34,7 @@ bool WaveTrackVZoomHandle::IsDragZooming(int zoomStart, int zoomEnd)
 ///////////////////////////////////////////////////////////////////////////////
 // Table class
 
-void WaveTrackVRulerMenuTable::InitMenu(Menu *, void *pUserData)
+void WaveTrackVRulerMenuTable::InitUserData(void *pUserData)
 {
    mpData = static_cast<InitMenuData*>(pUserData);
 }

@@ -43,7 +43,7 @@ class LabelTrackMenuTable : public PopupMenuTable
 public:
    static LabelTrackMenuTable &Instance();
 
-   void InitMenu(Menu*, void *pUserData) override
+   void InitUserData(void *pUserData) override
    {
       mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    }
