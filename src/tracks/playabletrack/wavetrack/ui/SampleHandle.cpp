@@ -41,7 +41,7 @@ SampleHandle::SampleHandle( const std::shared_ptr<WaveTrack> &pTrack )
 {
 }
 
-void SampleHandle::Enter(bool)
+void SampleHandle::Enter(bool, AudacityProject *)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

@@ -27,7 +27,7 @@ ButtonHandle::~ButtonHandle()
 {
 }
 
-void ButtonHandle::Enter(bool)
+void ButtonHandle::Enter(bool, AudacityProject *)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
 }

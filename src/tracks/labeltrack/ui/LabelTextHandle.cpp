@@ -33,7 +33,7 @@ LabelTextHandle::LabelTextHandle
 {
 }
 
-void LabelTextHandle::Enter(bool)
+void LabelTextHandle::Enter(bool, AudacityProject *)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

@@ -12,11 +12,10 @@ Paul Licameli split from AudacityProject.h
 #define __AUDACITY_PROJECT_WINDOW__
 
 #include <memory>
-#include <wx/frame.h> // to inherit
+#include "ProjectWindowBase.h" // to inherit
 #include "TrackPanelListener.h" // to inherit
 #include "Prefs.h"
 
-class AudacityProject;
 class Track;
 
 class wxScrollBar;
@@ -27,7 +26,7 @@ void InitProjectWindow( ProjectWindow &window );
 
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
-class ProjectWindow final : public wxFrame
+class ProjectWindow final : public ProjectWindowBase
    , public TrackPanelListener
    , public PrefsListener
 {
@@ -36,8 +35,6 @@ public:
    static const ProjectWindow &Get( const AudacityProject &project );
    static ProjectWindow *Find( AudacityProject *pProject );
    static const ProjectWindow *Find( const AudacityProject *pProject );
-   AudacityProject &GetProject() { return mProject; }
-   const AudacityProject &GetProject() const { return mProject; }
 
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
@@ -173,7 +170,6 @@ public:
    bool mbInitializingScrollbar{ false };
 
 private:
-   AudacityProject &mProject;
    wxRect mNormalizedWindowState;
 
    wxPanel *mTopPanel{};

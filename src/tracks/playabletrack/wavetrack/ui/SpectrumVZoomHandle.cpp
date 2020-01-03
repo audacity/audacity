@@ -32,7 +32,7 @@ SpectrumVZoomHandle::SpectrumVZoomHandle
 
 SpectrumVZoomHandle::~SpectrumVZoomHandle() = default;
 
-void SpectrumVZoomHandle::Enter(bool)
+void SpectrumVZoomHandle::Enter( bool, AudacityProject* )
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

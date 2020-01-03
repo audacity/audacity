@@ -495,7 +495,7 @@ protected:
       return RefreshCode::DrawOverlays;
    }
    
-   void Enter(bool) override
+   void Enter(bool, AudacityProject *) override
    {
       mChangeHighlight = RefreshCode::DrawOverlays;
    }
@@ -649,7 +649,7 @@ protected:
       return RefreshCode::DrawOverlays;
    }
    
-   void Enter(bool) override
+   void Enter(bool, AudacityProject *) override
    {
       mChangeHighlight = RefreshCode::DrawOverlays;
    }

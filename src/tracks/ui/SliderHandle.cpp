@@ -25,7 +25,7 @@ SliderHandle::SliderHandle
 {
 }
 
-void SliderHandle::Enter(bool)
+void SliderHandle::Enter(bool, AudacityProject *)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
 }

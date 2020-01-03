@@ -48,7 +48,7 @@ protected:
    // Define a message for the status bar and tooltip.
    virtual TranslatableString Tip(const wxMouseState &state) const = 0;
 
-   void Enter(bool forward) final override;
+   void Enter(bool forward, AudacityProject *) final override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject)

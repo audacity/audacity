@@ -17,7 +17,7 @@ UIHandle::~UIHandle()
 {
 }
 
-void UIHandle::Enter(bool)
+void UIHandle::Enter(bool, AudacityProject *)
 {
 }
 
@@ -36,7 +36,7 @@ bool UIHandle::HasEscape() const
    return false;
 }
 
-bool UIHandle::Escape()
+bool UIHandle::Escape(AudacityProject *)
 {
    return false;
 }

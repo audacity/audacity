@@ -183,7 +183,7 @@ bool CellularPanel::HandleEscapeKey(bool down)
 
    {
       auto target = Target();
-      if (target && target->HasEscape() && target->Escape()) {
+      if (target && target->HasEscape() && target->Escape(GetProject())) {
          HandleCursorForPresentMouseState(false);
          return true;
       }
@@ -331,7 +331,7 @@ void CellularPanel::HandleMotion
          refreshCode = updateFlags;
 
       if (handle && handle != oldHandle)
-         handle->Enter(true);
+         handle->Enter(true, GetProject());
 
       if (oldHandle == handle)
          oldHandle.reset();
@@ -436,7 +436,7 @@ bool CellularPanel::ChangeTarget(bool forward, bool cycle)
          return true;
       else if (cycle && (size == 1 || IsMouseCaptured())) {
          // Rotate through the states of this target only.
-         target->Enter(forward);
+         target->Enter(forward, GetProject());
          return true;
       }
    }
@@ -453,7 +453,7 @@ bool CellularPanel::ChangeTarget(bool forward, bool cycle)
          state.mTarget += size - 1;
       state.mTarget %= size;
       if (Target())
-         Target()->Enter(forward);
+         Target()->Enter(forward, GetProject());
       return true;
    }
 
