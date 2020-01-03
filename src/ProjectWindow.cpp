@@ -564,19 +564,6 @@ enum {
    NextID,
 };
 
-ProjectWindowBase::ProjectWindowBase(wxWindow * parent, wxWindowID id,
-                                 const wxPoint & pos,
-                                 const wxSize & size, AudacityProject &project)
-   : wxFrame(parent, id, _TS("Audacity"), pos, size)
-   , mProject{ project }
-{
-   project.SetFrame( this );
-};
-
-ProjectWindowBase::~ProjectWindowBase()
-{
-}
-
 ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size, AudacityProject &project)

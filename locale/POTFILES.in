@@ -191,6 +191,8 @@ src/ProjectStatus.cpp
 src/ProjectStatus.h
 src/ProjectWindow.cpp
 src/ProjectWindow.h
+src/ProjectWindowBase.cpp
+src/ProjectWindowBase.h
 src/RealFFTf.cpp
 src/RealFFTf.h
 src/RealFFTf48x.cpp
