@@ -50,7 +50,7 @@ public:
 
    bool IsClicked() const;
 
-   void SetUseSnap(bool use, AudacityProject *project);
+   void SetUseSnap(bool use);
    void Enter(bool forward, AudacityProject *) override;
 
    bool HasSnap() const;
