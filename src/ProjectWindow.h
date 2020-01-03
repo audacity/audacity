@@ -25,9 +25,27 @@ class wxPanel;
 class ProjectWindow;
 void InitProjectWindow( ProjectWindow &window );
 
+///\brief A top-level window associated with a project
+class ProjectWindowBase /* not final */ : public wxFrame
+{
+public:
+   explicit ProjectWindowBase(
+      wxWindow * parent, wxWindowID id,
+      const wxPoint & pos, const wxSize &size,
+      AudacityProject &project );
+
+   ~ProjectWindowBase() override;
+
+   AudacityProject &GetProject() { return mProject; }
+   const AudacityProject &GetProject() const { return mProject; }
+
+protected:
+   AudacityProject &mProject;
+};
+
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
-class ProjectWindow final : public wxFrame
+class ProjectWindow final : public ProjectWindowBase
    , public TrackPanelListener
    , public PrefsListener
 {
@@ -36,8 +54,6 @@ public:
    static const ProjectWindow &Get( const AudacityProject &project );
    static ProjectWindow *Find( AudacityProject *pProject );
    static const ProjectWindow *Find( const AudacityProject *pProject );
-   AudacityProject &GetProject() { return mProject; }
-   const AudacityProject &GetProject() const { return mProject; }
 
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
@@ -173,7 +189,6 @@ public:
    bool mbInitializingScrollbar{ false };
 
 private:
-   AudacityProject &mProject;
    wxRect mNormalizedWindowState;
 
    wxPanel *mTopPanel{};
