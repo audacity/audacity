@@ -1582,7 +1582,6 @@ bool AudacityApp::OnInit()
    // seemed to arrive with wx3.
    {
       project = ProjectManager::New();
-      mCmdHandler->SetProject(project);
       wxWindow * pWnd = MakeHijackPanel();
       if (pWnd)
       {
