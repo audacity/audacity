@@ -107,35 +107,9 @@ void EBUR128::NextSample()
 
    if(mBlockRingPos % mBlockOverlap == 0)
    {
-      // Process new full block. As incomplete blocks shall be discarded
-      // according to the EBU R128 specification there is no need for
-      // some special logic for the last blocks.
+      // A new full block of samples was submitted.
       if(mBlockRingSize >= mBlockSize)
-      {
-         // Reset mBlockRingSize to full state to avoid overflow.
-         // The actual value of mBlockRingSize does not matter
-         // since this is only used to detect if blocks are complete (>= mBlockSize).
-         mBlockRingSize = mBlockSize;
-
-         size_t idx;
-         double blockVal = 0;
-         for(size_t i = 0; i < mBlockSize; ++i)
-            blockVal += mBlockRingBuffer[i];
-
-         // Histogram values are simplified log10() immediate values
-         // without -0.691 + 10*(...) to safe computing power. This is
-         // possible because these constant cancel out anyway during the
-         // following processing steps.
-         blockVal = log10(blockVal/double(mBlockSize));
-         // log(blockVal) is within ]-inf, 1]
-         idx = round((blockVal - GAMMA_A) * double(HIST_BIN_COUNT) / -GAMMA_A - 1);
-
-         // idx is within ]-inf, HIST_BIN_COUNT-1], discard indices below 0
-         // as they are below the EBU R128 absolute threshold anyway.
-         if(// idx >= 0 &&
-            idx < HIST_BIN_COUNT)
-            ++mLoudnessHist[idx];
-      }
+         AddBlockToHistogram(mBlockSize);
    }
    // Close the ring.
    if(mBlockRingPos == mBlockSize)
@@ -148,14 +122,15 @@ double EBUR128::IntegrativeLoudness()
    // EBU R128: z_i = mean square without root
 
    // Calculate Gamma_R from histogram.
-   double sum_v = 0;
-   double val;
-   long int sum_c = 0;
-   for(size_t i = 0; i < HIST_BIN_COUNT; ++i)
+   double sum_v;
+   long int sum_c;
+   HistogramSums(0, sum_v, sum_c);
+
+   // Handle incomplete block if no non-zero block was found.
+   if(sum_c == 0)
    {
-      val = -GAMMA_A / double(HIST_BIN_COUNT) * (i+1) + GAMMA_A;
-      sum_v += pow(10, val) * mLoudnessHist[i];
-      sum_c += mLoudnessHist[i];
+      AddBlockToHistogram(mBlockRingSize);
+      HistogramSums(0, sum_v, sum_c);
    }
 
    // Histogram values are simplified log(x^2) immediate values
@@ -167,15 +142,54 @@ double EBUR128::IntegrativeLoudness()
    size_t idx_R = round((Gamma_R - GAMMA_A) * double(HIST_BIN_COUNT) / -GAMMA_A - 1);
 
    // Apply Gamma_R threshold and calculate gated loudness (extent).
-   sum_v = 0;
-   sum_c = 0;
-   for(size_t i = idx_R+1; i < HIST_BIN_COUNT; ++i)
-   {
-      val = -GAMMA_A / double(HIST_BIN_COUNT) * (i+1) + GAMMA_A;
-      sum_v += pow(10, val) * mLoudnessHist[i];
-      sum_c += mLoudnessHist[i];
-   }
+   HistogramSums(idx_R+1, sum_v, sum_c);
+   if(sum_c == 0)
+      // Silence was processed.
+      return 0;
    // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
    return 0.8529037031 * sum_v / sum_c;
 }
 
+void EBUR128::HistogramSums(size_t start_idx, double& sum_v, long int& sum_c)
+{
+    double val;
+    sum_v = 0;
+    sum_c = 0;
+    for(size_t i = start_idx; i < HIST_BIN_COUNT; ++i)
+    {
+       val = -GAMMA_A / double(HIST_BIN_COUNT) * (i+1) + GAMMA_A;
+       sum_v += pow(10, val) * mLoudnessHist[i];
+       sum_c += mLoudnessHist[i];
+    }
+}
+
+/// Process new full block. Incomplete blocks shall be discarded
+/// according to the EBU R128 specification there is usually no need
+/// to call this on the last block.
+/// However, allow to override the block size if the audio to be
+/// processed is shorter than one block.
+void EBUR128::AddBlockToHistogram(size_t validLen)
+{
+   // Reset mBlockRingSize to full state to avoid overflow.
+   // The actual value of mBlockRingSize does not matter
+   // since this is only used to detect if blocks are complete (>= mBlockSize).
+   mBlockRingSize = mBlockSize;
+
+   size_t idx;
+   double blockVal = 0;
+   for(size_t i = 0; i < validLen; ++i)
+      blockVal += mBlockRingBuffer[i];
+
+   // Histogram values are simplified log10() immediate values
+   // without -0.691 + 10*(...) to safe computing power. This is
+   // possible because these constant cancel out anyway during the
+   // following processing steps.
+   blockVal = log10(blockVal/double(validLen));
+   // log(blockVal) is within ]-inf, 1]
+   idx = round((blockVal - GAMMA_A) * double(HIST_BIN_COUNT) / -GAMMA_A - 1);
+
+   // idx is within ]-inf, HIST_BIN_COUNT-1], discard indices below 0
+   // as they are below the EBU R128 absolute threshold anyway.
+   if(idx < HIST_BIN_COUNT)
+      ++mLoudnessHist[idx];
+}

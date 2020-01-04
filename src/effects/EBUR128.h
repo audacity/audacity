@@ -33,6 +33,9 @@ public:
       { return 10 * log10(loudness); }
 
 private:
+   void HistogramSums(size_t start_idx, double& sum_v, long int& sum_c);
+   void AddBlockToHistogram(size_t validLen);
+
    static const size_t HIST_BIN_COUNT = 65536;
    /// EBU R128 absolute threshold
    static constexpr double GAMMA_A = (-70.0 + 0.691) / 10.0;

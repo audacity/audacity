@@ -252,6 +252,13 @@ bool EffectLoudness::Process()
             // RMS: use average RMS, average must be calculated in quadratic domain.
             extent = sqrt((mRMS[0] * mRMS[0] + mRMS[1] * mRMS[1]) / 2.0);
       }
+
+      if(extent == 0.0)
+      {
+         mLoudnessProcessor.reset();
+         FreeBuffers();
+         return false;
+      }
       mMult = mRatio / extent;
 
       if(mNormalizeTo == kLoudness)
