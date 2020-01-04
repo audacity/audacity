@@ -122,11 +122,29 @@ if TEST_LUFS_HELPER
   printf("LUFS-selftest3.wav should be %f LUFS\n", calc_LUFS(x, fs));
 end
 
+## Test Loudness LUFS mode: block to short and all silent
+CURRENT_TEST = "Loudness LUFS mode, calculating loudness shall fail";
+fs= 44100;
+x = zeros(ceil(fs*0.35), 2);
+audiowrite(TMP_FILENAME, x, fs);
+if EXPORT_TEST_SIGNALS
+  audiowrite(cstrcat(pwd(), "/Loudness-LUFS-silence-test.wav"), x, fs);
+end
+
+remove_all_tracks();
+aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
+select_tracks(0, 100);
+aud_do("LoudnessNormalization: LUFSLevel=-23 DualMono=1 NormalizeTo=0 StereoIndependent=0\n");
+aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
+system("sync");
+
+y = audioread(TMP_FILENAME);
+do_test_equ(y, x, "calculation shall fail");
+
 ## Test Loudness LUFS mode: stereo dependent
 CURRENT_TEST = "Loudness LUFS mode, keep DC and stereo balance";
 randn("seed", 1);
-fs= 44100;
-# Include some silecne in the test signal to test loudness gating
+# Include some silence in the test signal to test loudness gating
 # and vary the overall loudness over time.
 x = [0.1*randn(15*fs, 2).', zeros(5*fs, 2).', 0.1*randn(15*fs, 2).'].';
 x(:,1) = x(:,1) .* sin(2*pi/fs/35*(1:1:35*fs)).' .* 1.2;

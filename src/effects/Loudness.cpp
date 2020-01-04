@@ -245,7 +245,18 @@ bool EffectLoudness::Process()
             // RMS: use average RMS, average must be calculated in quadratic domain.
             extent = sqrt((mRMS[0] * mRMS[0] + mRMS[1] * mRMS[1]) / 2.0);
       }
-      mMult = mRatio / extent;
+      if(isnan(extent))
+      {
+         FreeBuffers();
+         Effect::MessageBox(
+            XO("Loudness calculation failed.\n" \
+               "This may be caused by a completely silent audio or " \
+               "a selection shorter than 400 ms."),
+            wxOK | wxICON_ERROR);
+         return false;
+      }
+      else
+         mMult = mRatio / extent;
 
       if(mNormalizeTo == kLoudness)
       {
