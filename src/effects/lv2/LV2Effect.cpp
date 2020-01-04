@@ -418,7 +418,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 
 LV2Effect::~LV2Effect()
 {
-   wxLogDebug(wxT("asdf"));
 }
 
 // ============================================================================
