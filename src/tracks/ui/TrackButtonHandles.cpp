@@ -57,7 +57,8 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
    return RefreshNone;
 }
 
-TranslatableString MinimizeButtonHandle::Tip(const wxMouseState &) const
+TranslatableString MinimizeButtonHandle::Tip(
+   const wxMouseState &, AudacityProject &) const
 {
    auto pTrack = GetTrack();
    return TrackView::Get( *pTrack ).GetMinimized()
@@ -108,7 +109,8 @@ UIHandle::Result SelectButtonHandle::CommitChanges
    return RefreshNone;
 }
 
-TranslatableString SelectButtonHandle::Tip(const wxMouseState &) const
+TranslatableString SelectButtonHandle::Tip(
+   const wxMouseState &, AudacityProject &) const
 {
    auto pTrack = GetTrack();
 #if defined(__WXMAC__)
@@ -170,7 +172,8 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    return result;
 }
 
-TranslatableString CloseButtonHandle::Tip(const wxMouseState &) const
+TranslatableString CloseButtonHandle::Tip(
+   const wxMouseState &, AudacityProject &) const
 {
    auto name = XO("Close");
    auto project = ::GetActiveProject();
@@ -230,7 +233,8 @@ UIHandle::Result MenuButtonHandle::CommitChanges
    return RefreshCode::RefreshNone;
 }
 
-TranslatableString MenuButtonHandle::Tip(const wxMouseState &) const
+TranslatableString MenuButtonHandle::Tip(
+   const wxMouseState &, AudacityProject&) const
 {
    auto name = XO("Open menu...");
    auto project = ::GetActiveProject();

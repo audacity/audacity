@@ -31,7 +31,8 @@ protected:
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
 
-   TranslatableString Tip(const wxMouseState &state) const override;
+   TranslatableString Tip(
+      const wxMouseState &state, AudacityProject &) const override;
 
    bool StopsOnKeystroke () override { return true; }
 
@@ -61,7 +62,8 @@ protected:
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
 
-   TranslatableString Tip(const wxMouseState &state) const override;
+   TranslatableString Tip(
+      const wxMouseState &state, AudacityProject &) const override;
 
    bool StopsOnKeystroke () override { return true; }
 

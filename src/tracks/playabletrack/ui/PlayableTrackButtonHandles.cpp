@@ -41,7 +41,8 @@ UIHandle::Result MuteButtonHandle::CommitChanges
    return RefreshCode::RefreshNone;
 }
 
-TranslatableString MuteButtonHandle::Tip(const wxMouseState &) const
+TranslatableString MuteButtonHandle::Tip(
+   const wxMouseState &, AudacityProject &) const
 {
    auto name = XO("Mute");
    auto project = ::GetActiveProject();
@@ -97,7 +98,8 @@ UIHandle::Result SoloButtonHandle::CommitChanges
    return RefreshCode::RefreshNone;
 }
 
-TranslatableString SoloButtonHandle::Tip(const wxMouseState &) const
+TranslatableString SoloButtonHandle::Tip(
+   const wxMouseState &, AudacityProject &) const
 {
    auto name = XO("Solo");
    auto project = ::GetActiveProject();
