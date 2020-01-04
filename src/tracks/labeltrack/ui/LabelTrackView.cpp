@@ -1081,10 +1081,7 @@ int LabelTrackView::GetSelectedIndex( AudacityProject &project ) const
    // may make delayed update of mutable mSelIndex after track selection change
    auto track = FindLabelTrack();
    if ( track->GetSelected() ||
-      TrackFocus::Get(
-         // unhappy const_cast because because focus may be set if undefined
-         const_cast<AudacityProject&>( project )
-      ).Get() == track.get()
+      TrackFocus::Get( project ).Get() == track.get()
    )
       return mSelIndex = std::max( -1,
          std::min<int>( track->GetLabels().size() - 1, mSelIndex ) );
