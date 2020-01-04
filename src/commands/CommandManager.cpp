@@ -1016,6 +1016,9 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
 ///
 bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit)
 {
+   if (!project)
+      return false;
+   
    auto pWindow = FindProjectFrame( project );
    CommandListEntry *entry = mCommandKeyHash[KeyEventToKeyString(evt)];
    if (entry == NULL)
@@ -1034,7 +1037,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       // LL:  Why do they need to be disabled???
       entry->enabled = false;
       auto cleanup = valueRestorer( entry->enabled, true );
-      return HandleCommandEntry(entry, NoFlagsSpecified, false, &evt);
+      return HandleCommandEntry(*project, entry, NoFlagsSpecified, false, &evt);
    }
 
    wxWindow * pFocus = wxWindow::FindFocus();
@@ -1108,12 +1111,12 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       {
          return true;
       }
-      return HandleCommandEntry(entry, flags, false, &temp);
+      return HandleCommandEntry(*project, entry, flags, false, &temp);
    }
 
    if (type == wxEVT_KEY_UP && entry->wantKeyup)
    {
-      return HandleCommandEntry(entry, flags, false, &temp);
+      return HandleCommandEntry(*project, entry, flags, false, &temp);
    }
 
    return false;
@@ -1123,7 +1126,8 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 /// returning true iff successful.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
+bool CommandManager::HandleCommandEntry(AudacityProject &project,
+   const CommandListEntry * entry,
    CommandFlag flags, bool alwaysEnabled, const wxEvent * evt)
 {
    if (!entry )
@@ -1132,19 +1136,13 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
    if (flags != AlwaysEnabledFlag && !entry->enabled)
       return false;
 
-   auto proj = GetActiveProject();
-
    if (!alwaysEnabled && entry->flags.any()) {
-
-      wxASSERT( proj );
-      if( !proj )
-         return false;
 
       const auto NiceName = entry->label.Stripped(
          TranslatableString::Ellipses | TranslatableString::MenuCodes );
       // NB: The call may have the side effect of changing flags.
       bool allowed =
-         MenuManager::Get(*proj).ReportIfActionNotAllowed(
+         MenuManager::Get(project).ReportIfActionNotAllowed(
             NiceName, flags, entry->flags );
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).
@@ -1153,8 +1151,8 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
          return true;
    }
 
-   const CommandContext context{ *proj, evt, entry->index, entry->parameter };
-   auto &handler = entry->finder(*proj);
+   const CommandContext context{ project, evt, entry->index, entry->parameter };
+   auto &handler = entry->finder(project);
    (handler.*(entry->callback))(context);
 
    return true;
@@ -1165,7 +1163,8 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
 ///CommandManagerListener function.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-bool CommandManager::HandleMenuID(int id, CommandFlag flags, bool alwaysEnabled)
+bool CommandManager::HandleMenuID(
+   AudacityProject &project, int id, CommandFlag flags, bool alwaysEnabled)
 {
    CommandListEntry *entry = mCommandNumericIDHash[id];
 
@@ -1173,7 +1172,7 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, bool alwaysEnabled)
    if (hook && hook(entry->name))
       return true;
 
-   return HandleCommandEntry( entry, flags, alwaysEnabled );
+   return HandleCommandEntry( project, entry, flags, alwaysEnabled );
 }
 
 /// HandleTextualCommand() allows us a limitted version of script/batch
@@ -1197,7 +1196,8 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
             // sub-menu name)
             Str == entry->labelPrefix.Translation() )
          {
-            return HandleCommandEntry( entry.get(), flags, alwaysEnabled)
+            return HandleCommandEntry(
+               context.project, entry.get(), flags, alwaysEnabled)
                ? CommandSuccess : CommandFailure;
          }
       }
@@ -1206,7 +1206,8 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
          // Handle multis too...
          if( Str == entry->name )
          {
-            return HandleCommandEntry( entry.get(), flags, alwaysEnabled)
+            return HandleCommandEntry(
+               context.project, entry.get(), flags, alwaysEnabled)
                ? CommandSuccess : CommandFailure;
          }
       }
@@ -1214,7 +1215,8 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
    return CommandNotFound;
 }
 
-void CommandManager::GetCategories(wxArrayString &cats)
+void CommandManager::GetCategories(
+   wxArrayString &cats, AudacityProject * /* p */)
 {
    cats.clear();
 
@@ -1230,7 +1232,6 @@ void CommandManager::GetCategories(wxArrayString &cats)
          names.push_back(mCommandList[i]->name);
    }
 
-   AudacityProject *p = GetActiveProject();
    if (p == NULL) {
       return;
    }
