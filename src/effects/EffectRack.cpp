@@ -80,8 +80,8 @@ BEGIN_EVENT_TABLE(EffectRack, wxFrame)
    EVT_COMMAND_RANGE(ID_FAV,    ID_FAV + 99,    wxEVT_COMMAND_BUTTON_CLICKED, EffectRack::OnFav)
 END_EVENT_TABLE()
 
-EffectRack::EffectRack()
-:  wxFrame( FindProjectFrame( GetActiveProject() ),
+EffectRack::EffectRack( AudacityProject &project )
+:  wxFrame( &GetProjectFrame( project ),
       wxID_ANY,
       _("Effects Rack"),
       wxDefaultPosition,
@@ -91,6 +91,7 @@ EffectRack::EffectRack()
       wxCAPTION |
       wxFRAME_NO_TASKBAR |
       wxFRAME_FLOAT_ON_PARENT)
+, mProject{ project }
 {
    mBypassing = false;
    mNumEffects = 0;
@@ -296,7 +297,7 @@ void EffectRack::OnTimer(wxTimerEvent & WXUNUSED(evt))
 
 void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
 {
-   AudacityProject *project = GetActiveProject();
+   AudacityProject *project = &mProject;
 
    bool success = false;
    auto state = UndoManager::Get( *project ).GetCurrentState();
@@ -566,6 +567,22 @@ void EffectRack::UpdateActive()
    RealtimeEffectManager::Get().RealtimeSetEffects(
       { mActive.begin(), mActive.end() }
    );
+}
+
+namespace
+{
+AudacityProject::AttachedWindows::RegisteredFactory sKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      auto result = safenew EffectRack( parent );
+      result->CenterOnParent();
+      return result;
+   }
+};
+}
+
+EffectRack &EffectRack::Get( AudacityProject &project )
+{
+   return project.AttachedWindows::Get< EffectRack >( sKey );
 }
 
 #endif

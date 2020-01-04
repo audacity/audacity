@@ -67,17 +67,10 @@ EffectManager & EffectManager::Get()
 EffectManager::EffectManager()
 {
    mSkipStateFlag = false;
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-   mRack = NULL;
-#endif
 }
 
 EffectManager::~EffectManager()
 {
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-   // wxWidgets has already destroyed the rack since it was derived from wxFrame. So
-   // no need to DELETE it here.
-#endif
 }
 
 // Here solely for the purpose of Nyquist Workbench until
@@ -166,7 +159,7 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
 
    EffectManager & em = EffectManager::Get();
 
-   success = em.DoEffect(ID, &window, rate,
+   success = em.DoEffect(ID, &window, context.project, rate,
       &tracks, &trackFactory, selectedRegion,
       (flags & EffectManager::kConfigured) == 0);
 
@@ -238,6 +231,7 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
 
 bool EffectManager::DoEffect(const PluginID & ID,
                              wxWindow *parent,
+                             AudacityProject &project,
                              double projectRate,
                              TrackList *list,
                              TrackFactory *factory,
@@ -256,8 +250,10 @@ bool EffectManager::DoEffect(const PluginID & ID,
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    if (effect->SupportsRealtime())
    {
-      GetRack()->Add(effect);
+      EffectRack::Get( project ).Add(effect);
    }
+#else
+   (void)project;
 #endif
 
    bool res = effect->DoEffect(parent,
@@ -635,27 +631,6 @@ void EffectManager::SetBatchProcessing(const PluginID & ID, bool start)
    }
 
 }
-
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-EffectRack *EffectManager::GetRack()
-{
-   if (!mRack)
-   {
-      // EffectRack is constructed with the current project as owner, so safenew is OK
-      mRack = safenew EffectRack();
-      // Make sure what I just commented remains true:
-      wxASSERT(mRack->GetParent());
-      mRack->CenterOnParent();
-   }
-
-   return mRack;
-}
-
-void EffectManager::ShowRack()
-{
-   GetRack()->Show(!GetRack()->IsShown());
-}
-#endif
 
 Effect *EffectManager::GetEffect(const PluginID & ID)
 {

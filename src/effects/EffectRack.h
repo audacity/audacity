@@ -28,16 +28,20 @@ class wxFlexGridSizer;
 class wxPanel;
 class wxStaticText;
 
+class AudacityProject;
+
 class Effect;
 using EffectArray = std::vector<Effect*>;
 
 class EffectRack final : public wxFrame
 {
 public:
-   EffectRack();
+   EffectRack( AudacityProject &project );
    virtual ~EffectRack();
 
    void Add(Effect *effect, bool active = false, bool favorite = false);
+
+   static EffectRack &Get( AudacityProject &project );
 
 private:
 
@@ -59,6 +63,8 @@ private:
    void OnRemove(wxCommandEvent & evt);
 
 private:
+   AudacityProject &mProject;
+
    wxStaticText *mLatency;
    int mLastLatency;
 

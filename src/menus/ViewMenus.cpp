@@ -23,7 +23,7 @@
 #include "../tracks/ui/TrackView.h"
 
 #ifdef EXPERIMENTAL_EFFECTS_RACK
-#include "../effects/EffectManager.h"
+#include "../effects/EffectRack.h"
 #endif
 
 #include <wx/scrolbar.h>
@@ -383,9 +383,10 @@ void OnShowClipping(const CommandContext &context)
 }
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-void OnShowEffectsRack(const CommandContext &WXUNUSED(context) )
+void OnShowEffectsRack(const CommandContext &context )
 {
-   EffectManager::Get().ShowRack();
+   auto &rack = EffectRack::Get( context.project );
+   rack.Show( !rack.IsShown() );
 }
 #endif
 

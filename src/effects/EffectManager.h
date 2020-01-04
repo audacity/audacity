@@ -21,6 +21,7 @@
 #include "audacity/Types.h"
 
 class AudacityCommand;
+class AudacityProject;
 class CommandContext;
 class CommandMessageTarget;
 class ComponentInterfaceSymbol;
@@ -87,6 +88,7 @@ public:
    // Audacity's standard UI.
    bool DoEffect(const PluginID & ID,
                  wxWindow *parent,
+                 AudacityProject &project,
                  double projectRate,
                  TrackList *list,
                  TrackFactory *factory,
@@ -143,20 +145,12 @@ public:
    void SetSkipStateFlag(bool flag);
    bool GetSkipStateFlag();
 
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-   void ShowRack();
-#endif
-
    const PluginID & GetEffectByIdentifier(const CommandID & strTarget);
 
 private:
    /** Return an effect by its ID. */
    Effect *GetEffect(const PluginID & ID);
    AudacityCommand *GetAudacityCommand(const PluginID & ID);
-
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-   EffectRack *GetRack();
-#endif
 
 private:
    EffectMap mEffects;
@@ -170,8 +164,6 @@ private:
    bool mSkipStateFlag;
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-   EffectRack *mRack;
-
    friend class EffectRack;
 #endif
 
