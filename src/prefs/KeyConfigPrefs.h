@@ -32,7 +32,9 @@ enum ViewByType : int;
 class KeyConfigPrefs final : public PrefsPanel
 {
 public:
-   KeyConfigPrefs(wxWindow * parent, wxWindowID winid, const CommandID &name);
+   KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
+      AudacityProject *pProject,
+      const CommandID &name);
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
 
@@ -79,6 +81,8 @@ private:
    wxRadioButton *mViewByTree;
    wxRadioButton *mViewByName;
    wxRadioButton *mViewByKey;
+
+   AudacityProject *mProject{};
 
    CommandManager *mManager;
    int mCommandSelected;

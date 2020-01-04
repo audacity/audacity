@@ -80,8 +80,9 @@ BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
    EVT_TIMER(FilterTimerID, KeyConfigPrefs::OnFilterTimer)
 END_EVENT_TABLE()
 
-KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
-                               const CommandID &name)
+KeyConfigPrefs::KeyConfigPrefs(
+   wxWindow * parent, wxWindowID winid, AudacityProject *pProject,
+   const CommandID &name)
 /* i18n-hint: as in computer keyboard (not musical!) */
 :  PrefsPanel(parent, winid, XO("Keyboard")),
    mView(NULL),
@@ -89,6 +90,7 @@ KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
    mFilter(NULL),
    mFilterTimer(this, FilterTimerID),
    mFilterPending(false)
+   , mProject{ pProject }
 {
    Populate();
    if (!name.empty()) {
@@ -115,9 +117,8 @@ wxString KeyConfigPrefs::HelpPageName()
 void KeyConfigPrefs::Populate()
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);
-   AudacityProject *project = GetActiveProject();
 
-   if (!project) {
+   if (!mProject) {
       S.StartVerticalLay(true);
       {
          S.StartStatic( {}, true);
@@ -136,7 +137,7 @@ void KeyConfigPrefs::Populate()
 
    mCommandSelected = wxNOT_FOUND;
 
-   mManager = &CommandManager::Get( *project );
+   mManager = &CommandManager::Get( *mProject );
 
    // For speed, don't sort here.  We're just creating.
    // Instead sort when we do SetView later in this function.
@@ -669,7 +670,7 @@ bool KeyConfigPrefs::Commit()
    // either.  So we can't attempt to save preferences, otherwise
    // NULL ptr dereferences will happen in ShuttleGui because the
    // radio buttons are never created.  (See Populate() above.)
-   if (!GetActiveProject()) {
+   if ( !mProject ) {
       return true;
    }
 
@@ -714,10 +715,10 @@ void KeyConfigPrefs::Cancel()
 PrefsPanel::Factory
 KeyConfigPrefsFactory( const CommandID &name )
 {
-   return [=](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   return [=](wxWindow *parent, wxWindowID winid, AudacityProject *pProject)
    {
       wxASSERT(parent); // to justify safenew
-      auto result = safenew KeyConfigPrefs{ parent, winid, name };
+      auto result = safenew KeyConfigPrefs{ parent, winid, pProject, name };
       return result;
    };
 }
