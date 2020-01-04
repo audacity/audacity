@@ -1494,8 +1494,6 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.po";
 			fileType = pattern.proxy;
-			inputFiles = (
-			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).mo",
@@ -9515,8 +9513,6 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGNING_ALLOWED = no;
-				CODE_SIGNING_REQUIRED = no;
 				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				CONFIG_DEBUG = yes;
@@ -9534,14 +9530,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.9;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -9549,7 +9545,7 @@
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = debug;
-				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
 				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
@@ -9562,6 +9558,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
@@ -9572,7 +9569,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /;
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/build/Debug\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug\"";
 				OTHER_CFLAGS = (
 					"$(WX_CFLAGS)",
 					"$(FFMPEG_CFLAGS)",
@@ -9848,8 +9849,6 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGNING_ALLOWED = no;
-				CODE_SIGNING_REQUIRED = no;
 				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				CONFIG_DEBUG = no;
@@ -9867,14 +9866,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.9;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -9882,7 +9881,7 @@
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = release;
-				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
 				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
@@ -9895,6 +9894,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -9907,7 +9907,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /;
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/build/Release\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Release\"";
 				OTHER_CFLAGS = (
 					"$(WX_CFLAGS)",
 					"$(FFMPEG_CFLAGS)",
@@ -10242,8 +10246,6 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
-				CODE_SIGNING_ALLOWED = no;
-				CODE_SIGNING_REQUIRED = no;
 				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				CONFIG_DEBUG = yes;
@@ -10261,14 +10263,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.9;
 				SSE_CPPFLAGS = "";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -10276,7 +10278,7 @@
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = debug;
-				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
 				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
@@ -10289,6 +10291,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
@@ -10299,7 +10302,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /;
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/build/Debug64\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug\"";
 				OTHER_CFLAGS = (
 					"$(WX_CFLAGS)",
 					"$(FFMPEG_CFLAGS)",
@@ -10699,8 +10706,6 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
-				CODE_SIGNING_ALLOWED = no;
-				CODE_SIGNING_REQUIRED = no;
 				CODE_SIGN_ENTITLEMENTS = Audacity.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				CONFIG_DEBUG = no;
@@ -10718,14 +10723,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.9;
 				SSE_CPPFLAGS = "";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -10733,7 +10738,7 @@
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
 				WX_FLAVOR = release;
-				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
 				WX_PREFIX = "/usr/local/$(ARCHS)";
 				WX_VER = 3.1;
 				ZERO_LINK = NO;
@@ -10746,6 +10751,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -10758,7 +10764,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /;
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/build/Release64\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Release\"";
 				OTHER_CFLAGS = (
 					"$(WX_CFLAGS)",
 					"$(FFMPEG_CFLAGS)",
