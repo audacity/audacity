@@ -23,7 +23,9 @@
 
 #include <wx/defs.h>
 
-void OpenScreenshotTools();
+class AudacityProject;
+
+void OpenScreenshotTools( AudacityProject &project );
 void CloseScreenshotTools();
 
 #endif // __AUDACITY_SCREENSHOT__

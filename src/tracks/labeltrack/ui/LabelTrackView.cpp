@@ -2049,7 +2049,7 @@ void LabelTrackView::DoEditLabels
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   LabelDialog dlg(&window, trackFactory, &tracks,
+   LabelDialog dlg(&window, project, trackFactory, &tracks,
                    lt, index,
                    viewInfo, rate,
                    format, freqFormat);

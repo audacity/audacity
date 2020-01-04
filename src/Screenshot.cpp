@@ -58,7 +58,8 @@ class ScreenshotBigDialog final : public wxFrame
 {
  public:
    // constructors and destructors
-   ScreenshotBigDialog(wxWindow *parent, wxWindowID id);
+   ScreenshotBigDialog(
+      wxWindow *parent, wxWindowID id, AudacityProject &project);
    virtual ~ScreenshotBigDialog();
 
    bool ProcessEvent(wxEvent & event) override;
@@ -95,6 +96,8 @@ class ScreenshotBigDialog final : public wxFrame
    void OnMedTracks(wxCommandEvent & event);
    void OnTallTracks(wxCommandEvent & event);
 
+   AudacityProject &mProject;
+
    std::unique_ptr<ScreenshotCommand> CreateCommand();
 
    wxCheckBox *mDelayCheckBox;
@@ -118,7 +121,7 @@ ScreenshotBigDialogPtr mFrame;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void OpenScreenshotTools()
+void OpenScreenshotTools( AudacityProject &project )
 {
    if (!mFrame) {
       auto parent = wxTheApp->GetTopWindow();
@@ -126,7 +129,8 @@ void OpenScreenshotTools()
          wxASSERT(false);
          return;
       }
-      mFrame = ScreenshotBigDialogPtr{ safenew ScreenshotBigDialog(parent, -1) };
+      mFrame = ScreenshotBigDialogPtr{
+         safenew ScreenshotBigDialog(parent, -1, project) };
    }
    mFrame->Show();
    mFrame->Raise();
@@ -263,7 +267,8 @@ std::unique_ptr<ScreenshotCommand> ScreenshotBigDialog::CreateCommand()
    return std::make_unique<ScreenshotCommand>();//*type, std::move(output), this);
 }
 
-ScreenshotBigDialog::ScreenshotBigDialog(wxWindow * parent, wxWindowID id)
+ScreenshotBigDialog::ScreenshotBigDialog(
+   wxWindow * parent, wxWindowID id, AudacityProject &project)
 :  wxFrame(parent, id, _("Screen Capture Frame"),
            wxDefaultPosition, wxDefaultSize,
 
@@ -279,8 +284,9 @@ ScreenshotBigDialog::ScreenshotBigDialog(wxWindow * parent, wxWindowID id)
 
 #endif
 
-           wxSYSTEM_MENU|wxCAPTION|wxCLOSE_BOX),
-   mContext( *GetActiveProject() )
+           wxSYSTEM_MENU|wxCAPTION|wxCLOSE_BOX)
+   , mProject{ project }
+   , mContext( project )
 {
    mDelayCheckBox = NULL;
    mDirectoryTextBox = NULL;
@@ -530,7 +536,7 @@ void ScreenshotBigDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 void ScreenshotBigDialog::OnUIUpdate(wxUpdateUIEvent &  WXUNUSED(event))
 {
 #ifdef __WXMAC__
-   wxTopLevelWindow *top = mCommand->GetFrontWindow(GetActiveProject());
+   wxTopLevelWindow *top = mCommand->GetFrontWindow(&mProject);
    bool needupdate = false;
    bool enable = false;
 

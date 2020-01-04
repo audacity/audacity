@@ -95,6 +95,7 @@ BEGIN_EVENT_TABLE(LabelDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 LabelDialog::LabelDialog(wxWindow *parent,
+                         AudacityProject &project,
                          TrackFactory &factory,
                          TrackList *tracks,
                          LabelTrack *selectedTrack,
@@ -108,9 +109,10 @@ LabelDialog::LabelDialog(wxWindow *parent,
            XO("Edit Labels"),
            wxDefaultPosition,
            wxSize(800, 600),
-           wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-  mFactory(factory),
-  mTracks(tracks)
+           wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+  , mProject{ project }
+  , mFactory(factory)
+  , mTracks(tracks)
   , mSelectedTrack(selectedTrack)
   , mIndex(index)
   , mViewInfo(&viewinfo),
@@ -748,7 +750,7 @@ void LabelDialog::OnSelectCell(wxGridEvent &event)
       RowData &rd = mData[event.GetRow()];
       mViewInfo->selectedRegion = rd.selectedRegion;
 
-      ProjectWindow::Get( *GetActiveProject() ).RedrawProject();
+      ProjectWindow::Get( mProject ).RedrawProject();
    }
 
    event.Skip();

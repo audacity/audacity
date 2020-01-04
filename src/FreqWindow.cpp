@@ -213,10 +213,6 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
    mRate = 0;
    mDataLen = 0;
 
-   p = GetActiveProject();
-   if (!p)
-      return;
-
    TranslatableStrings algChoices{
       XO("Spectrum") ,
       XO("Standard Autocorrelation") ,
