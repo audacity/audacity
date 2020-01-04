@@ -35,21 +35,11 @@ CommandHandler::~CommandHandler()
 {
 }
 
-void CommandHandler::SetProject(AudacityProject *)
-{
-   // TODO:  Review if the extend command handling is ever utilized
-}
-
 void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
 {
    // First retrieve the actual command from the event 'envelope'.
    OldStyleCommandPointer cmd = event.GetCommand();
 
-   // JKC: In case the user changed the project, let us track that.
-   // This saves us the embarrassment (crash) of a NEW project
-   // being opened, the old one closed and still trying to act
-   // on the old one.
-   SetProject( GetActiveProject() );
    // Then apply it to current application & project.  Note that the
    // command may change the context - for example, switching to a
    // different project.

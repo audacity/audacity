@@ -24,15 +24,9 @@ class CommandContext;
 
 class CommandHandler
 {
-   private:
-      std::unique_ptr<const CommandContext> mCurrentContext;
-
    public:
       CommandHandler();
       ~CommandHandler();
-
-      // This should only be used during initialization
-      void SetProject(AudacityProject *proj);
 
       // Whenever a command is received, process it.
       void OnReceiveCommand(AppCommandEvent &event);

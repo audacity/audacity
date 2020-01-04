@@ -37,8 +37,10 @@
 
 #include "../widgets/AudacityMessageBox.h"
 
-SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
+SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid,
+   AudacityProject *pProject, WaveTrack *wt)
 :  PrefsPanel(parent, winid, wt ? XO("Spectrogram Settings") : XO("Spectrograms"))
+, mProject{ pProject }
 , mWt(wt)
 , mPopulating(false)
 {
@@ -429,9 +431,8 @@ void SpectrumPrefs::Rollback()
    }
 
    if (isOpenPage) {
-      auto pProject = ::GetActiveProject();
-      if ( pProject ) {
-         auto &tp = TrackPanel::Get ( *pProject );
+      if ( mProject ) {
+         auto &tp = TrackPanel::Get ( *mProject );
          tp.UpdateVRulers();
          tp.Refresh(false);
       }
@@ -480,9 +481,8 @@ void SpectrumPrefs::Preview()
    }
 
    if (isOpenPage) {
-      auto pProject = ::GetActiveProject();
-      if ( pProject ) {
-         auto &tp = TrackPanel::Get( *pProject );
+      if ( mProject ) {
+         auto &tp = TrackPanel::Get( *mProject );
          tp.UpdateVRulers();
          tp.Refresh(false);
       }
@@ -506,7 +506,7 @@ bool SpectrumPrefs::Commit()
 
 bool SpectrumPrefs::ShowsPreviewButton()
 {
-   return GetActiveProject() != nullptr;
+   return mProject != nullptr;
 }
 
 void SpectrumPrefs::OnControl(wxCommandEvent&)
@@ -588,9 +588,9 @@ END_EVENT_TABLE()
 PrefsPanel::Factory
 SpectrumPrefsFactory( WaveTrack *wt )
 {
-   return [=](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   return [=](wxWindow *parent, wxWindowID winid, AudacityProject *pProject)
    {
       wxASSERT(parent); // to justify safenew
-      return safenew SpectrumPrefs(parent, winid, wt);
+      return safenew SpectrumPrefs(parent, winid, pProject, wt);
    };
 }

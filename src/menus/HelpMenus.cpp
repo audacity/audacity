@@ -88,7 +88,7 @@ void ShowDiagnostics(
 class QuickFixDialog : public wxDialogWrapper
 {
 public: 
-   QuickFixDialog(wxWindow * pParent);
+   QuickFixDialog(wxWindow * pParent, AudacityProject &project);
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
    void AddStuck( ShuttleGui & S, bool & bBool, wxString Pref,
@@ -100,6 +100,8 @@ public:
    void OnFix(wxCommandEvent &event);
 
    wxString StringFromEvent( wxCommandEvent &event );
+
+   AudacityProject &mProject;
 
    int mItem;
    bool mbSyncLocked;
@@ -120,10 +122,11 @@ BEGIN_EVENT_TABLE(QuickFixDialog, wxDialogWrapper)
    EVT_COMMAND_RANGE(HelpButtonID, FakeButtonID-1, wxEVT_BUTTON,  QuickFixDialog::OnHelp)
 END_EVENT_TABLE();
 
-QuickFixDialog::QuickFixDialog(wxWindow * pParent) :
+QuickFixDialog::QuickFixDialog(wxWindow * pParent, AudacityProject &project) :
       wxDialogWrapper(pParent, wxID_ANY, XO("Do you have these problems?"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE )
+      , mProject{ project }
 {
    const long SNAP_OFF = 0;
 
@@ -255,19 +258,19 @@ void QuickFixDialog::OnFix(wxCommandEvent &event)
    gPrefs->Write( Str, 0);
    gPrefs->Flush();
 
-   if ( auto pProject = GetActiveProject() ) {
+   {
       // Sadly SnapTo has to be handled specially, as it is not part of the standard
       // preference dialogs.
       if( Str == "/SnapTo" )
       {
-         ProjectSelectionManager::Get( *pProject ).AS_SetSnapTo( 0 );
+         ProjectSelectionManager::Get( mProject ).AS_SetSnapTo( 0 );
       }
       else
       {
          // This is overkill (aka slow), as all preferences are reloaded and all 
          // toolbars recreated.
          // Overkill probably doesn't matter, as this command is infrequently used.
-         DoReloadPreferences( *pProject );
+         DoReloadPreferences( mProject );
       }
    }
    
@@ -295,7 +298,7 @@ struct Handler : CommandHandlerObject {
 void OnQuickFix(const CommandContext &context)
 {
    auto &project = context.project;
-   QuickFixDialog dlg( &GetProjectFrame( project ) );
+   QuickFixDialog dlg( &GetProjectFrame( project ), project );
    dlg.ShowModal();
 }
 

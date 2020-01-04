@@ -42,16 +42,15 @@ UIHandle::Result MuteButtonHandle::CommitChanges
 }
 
 TranslatableString MuteButtonHandle::Tip(
-   const wxMouseState &, AudacityProject &) const
+   const wxMouseState &, AudacityProject &project) const
 {
    auto name = XO("Mute");
-   auto project = ::GetActiveProject();
    auto focused =
-      TrackFocus::Get( *project ).Get() == GetTrack().get();
+      TrackFocus::Get( project ).Get() == GetTrack().get();
    if (!focused)
       return name;
 
-   auto &commandManager = CommandManager::Get( *project );
+   auto &commandManager = CommandManager::Get( project );
    ComponentInterfaceSymbol command{ wxT("TrackMute"), name };
    return commandManager.DescribeCommandsAndShortcuts(&command, 1u);
 }
@@ -99,16 +98,15 @@ UIHandle::Result SoloButtonHandle::CommitChanges
 }
 
 TranslatableString SoloButtonHandle::Tip(
-   const wxMouseState &, AudacityProject &) const
+   const wxMouseState &, AudacityProject &project) const
 {
    auto name = XO("Solo");
-   auto project = ::GetActiveProject();
    auto focused =
-      TrackFocus::Get( *project ).Get() == GetTrack().get();
+      TrackFocus::Get( project ).Get() == GetTrack().get();
    if (!focused)
       return name;
 
-   auto &commandManager = CommandManager::Get( *project );
+   auto &commandManager = CommandManager::Get( project );
    ComponentInterfaceSymbol command{ wxT("TrackSolo"), name };
    return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
 }

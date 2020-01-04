@@ -46,7 +46,8 @@ struct WaveTrackSubViewPlacement;
 class SpectrumPrefs final : public PrefsPanel
 {
  public:
-   SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt);
+   SpectrumPrefs(wxWindow * parent, wxWindowID winid,
+      AudacityProject *pProject, WaveTrack *wt);
    virtual ~SpectrumPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
@@ -70,6 +71,8 @@ class SpectrumPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 
    void EnableDisableSTFTOnlyControls();
+
+   AudacityProject *mProject{};
 
    WaveTrack *const mWt;
    bool mDefaulted, mOrigDefaulted;

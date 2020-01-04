@@ -173,16 +173,15 @@ UIHandle::Result CloseButtonHandle::CommitChanges
 }
 
 TranslatableString CloseButtonHandle::Tip(
-   const wxMouseState &, AudacityProject &) const
+   const wxMouseState &, AudacityProject &project) const
 {
    auto name = XO("Close");
-   auto project = ::GetActiveProject();
    auto focused =
-      TrackFocus::Get( *project ).Get() == GetTrack().get();
+      TrackFocus::Get( project ).Get() == GetTrack().get();
    if (!focused)
       return name;
 
-   auto &commandManager = CommandManager::Get( *project );
+   auto &commandManager = CommandManager::Get( project );
    ComponentInterfaceSymbol command{ wxT("TrackClose"), name };
    return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
 }
@@ -234,16 +233,15 @@ UIHandle::Result MenuButtonHandle::CommitChanges
 }
 
 TranslatableString MenuButtonHandle::Tip(
-   const wxMouseState &, AudacityProject&) const
+   const wxMouseState &, AudacityProject &project) const
 {
    auto name = XO("Open menu...");
-   auto project = ::GetActiveProject();
    auto focused =
-      TrackFocus::Get( *project ).Get() == GetTrack().get();
+      TrackFocus::Get( project ).Get() == GetTrack().get();
    if (!focused)
       return name;
 
-   auto &commandManager = CommandManager::Get( *project );
+   auto &commandManager = CommandManager::Get( project );
    ComponentInterfaceSymbol command{ wxT("TrackMenu"), name };
    return commandManager.DescribeCommandsAndShortcuts( &command, 1u );
 }

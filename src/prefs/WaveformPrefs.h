@@ -27,7 +27,8 @@ class wxArrayStringEx;
 class WaveformPrefs final : public PrefsPanel
 {
 public:
-   WaveformPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt);
+   WaveformPrefs(wxWindow * parent, wxWindowID winid,
+      AudacityProject *pProject, WaveTrack *wt);
    virtual ~WaveformPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
@@ -47,6 +48,8 @@ private:
    DECLARE_EVENT_TABLE()
 
    void EnableDisableRange();
+
+   AudacityProject *mProject{};
 
    WaveTrack *const mWt;
    bool mDefaulted;

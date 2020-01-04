@@ -16,6 +16,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectSettings.h"
+#include "../ProjectWindowBase.h"
 #include "../ShuttleGui.h"
 #include "../FileNames.h"
 #include "../ViewInfo.h"
@@ -52,7 +53,7 @@ bool ContrastDialog::GetDB(float &dB)
    // For stereo tracks: sqrt((mean(L)+mean(R))/2)
    double meanSq = 0.0;
 
-   AudacityProject *p = GetActiveProject();
+   auto p = FindProjectFromWindow( this );
    auto range =
       TrackList::Get( *p ).SelectedLeaders< const WaveTrack >();
    auto numberSelectedTracks = range.size();
@@ -132,7 +133,7 @@ bool ContrastDialog::GetDB(float &dB)
 
 void ContrastDialog::SetStartAndEndTime()
 {
-   AudacityProject *p = GetActiveProject();
+   auto p = FindProjectFromWindow( this );
    auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
    mT0 = selectedRegion.t0();
    mT1 = selectedRegion.t1();
@@ -211,7 +212,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    wxTextValidator vld(wxFILTER_NUMERIC);
    wxString number;
 
-   AudacityProject *p = GetActiveProject();
+   auto p = FindProjectFromWindow( this );
    const auto &settings = ProjectSettings::Get( *p );
    mProjectRate = settings.GetRate();
 
@@ -374,7 +375,7 @@ void ContrastDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 
 void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
 {
-   AudacityProject *p = GetActiveProject();
+   auto p = FindProjectFromWindow( this );
    auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
    if( TrackList::Get( *p ).Selected< const WaveTrack >() ) {
@@ -390,7 +391,7 @@ void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
 
 void ContrastDialog::OnGetBackground(wxCommandEvent & /*event*/)
 {
-   AudacityProject *p = GetActiveProject();
+   auto p = FindProjectFromWindow( this );
    auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
    if( TrackList::Get( *p ).Selected< const WaveTrack >() ) {
@@ -528,7 +529,7 @@ void ContrastDialog::results()
 void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 {
    // TODO: Handle silence checks better (-infinity dB)
-   AudacityProject * project = GetActiveProject();
+   auto project = FindProjectFromWindow( this );
    wxString fName = wxT("contrast.txt");
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,

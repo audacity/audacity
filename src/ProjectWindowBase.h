@@ -33,5 +33,8 @@ protected:
    AudacityProject &mProject;
 };
 
+AudacityProject *FindProjectFromWindow( wxWindow *pWindow );
+const AudacityProject *FindProjectFromWindow( const wxWindow *pWindow );
+
 #endif
 

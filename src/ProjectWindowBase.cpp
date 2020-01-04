@@ -24,3 +24,26 @@ ProjectWindowBase::ProjectWindowBase(wxWindow * parent, wxWindowID id,
 ProjectWindowBase::~ProjectWindowBase()
 {
 }
+
+namespace {
+
+ProjectWindowBase *FindProjectWindow( wxWindow *pWindow )
+{
+   while ( pWindow && pWindow->GetParent() )
+      pWindow = pWindow->GetParent();
+   return dynamic_cast< ProjectWindowBase* >( pWindow );
+}
+
+}
+
+AudacityProject *FindProjectFromWindow( wxWindow *pWindow )
+{
+   auto pProjectWindow = FindProjectWindow( pWindow );
+   return pProjectWindow ? &pProjectWindow->GetProject() : nullptr;
+}
+
+const AudacityProject *FindProjectFromWindow( const wxWindow *pWindow )
+{
+   return FindProjectFromWindow( const_cast< wxWindow* >( pWindow ) );
+}
+

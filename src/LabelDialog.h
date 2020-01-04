@@ -19,6 +19,7 @@
 
 class wxArrayString;
 class wxGridEvent;
+class AudacityProject;
 class ChoiceEditor;
 class Grid;
 class NumericEditor;
@@ -37,6 +38,7 @@ class LabelDialog final : public wxDialogWrapper
  public:
 
    LabelDialog(wxWindow *parent,
+               AudacityProject &project,
                TrackFactory &factory,
                TrackList *tracks,
 
@@ -92,6 +94,8 @@ class LabelDialog final : public wxDialogWrapper
    void WriteSize();
 
  private:
+
+   AudacityProject &mProject;
 
    Grid *mGrid;
    ChoiceEditor *mChoiceEditor;

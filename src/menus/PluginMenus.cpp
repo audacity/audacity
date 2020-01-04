@@ -503,9 +503,9 @@ void OnApplyMacrosPalette(const CommandContext &context )
    }
 }
 
-void OnScreenshot(const CommandContext &WXUNUSED(context) )
+void OnScreenshot(const CommandContext &context )
 {
-   ::OpenScreenshotTools();
+   ::OpenScreenshotTools( context.project );
 }
 
 void OnBenchmark(const CommandContext &context)
