@@ -895,7 +895,7 @@ UIHandle::Result SelectHandle::Drag
 }
 
 HitTestPreview SelectHandle::Preview
-(const TrackPanelMouseState &st, const AudacityProject *pProject)
+(const TrackPanelMouseState &st, AudacityProject *pProject)
 {
    if (!HasSnap() && !mUseSnap)
       // Moved out of snapping; revert to un-escaped state

@@ -371,7 +371,7 @@ public:
    }
 
    HitTestPreview Preview(
-      const TrackPanelMouseState &state, const AudacityProject * ) override
+      const TrackPanelMouseState &state, AudacityProject * ) override
    {
       static auto resizeCursor =
          ::MakeCursor(wxCURSOR_ARROW, SubViewsCursorXpm, 16, 16);

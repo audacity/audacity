@@ -70,7 +70,7 @@ public:
    { return RefreshCode::RefreshNone; }
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &, const AudacityProject *) override
+      (const TrackPanelMouseState &, AudacityProject *) override
    { return HitPreview(); }
 
    Result Release

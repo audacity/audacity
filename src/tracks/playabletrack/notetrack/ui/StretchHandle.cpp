@@ -206,7 +206,7 @@ UIHandle::Result StretchHandle::Drag
 }
 
 HitTestPreview StretchHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, AudacityProject *pProject)
 {
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    return HitPreview( mStretchState.mMode, unsafe );

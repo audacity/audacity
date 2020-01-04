@@ -288,7 +288,7 @@ UIHandle::Result LabelTextHandle::Drag
 }
 
 HitTestPreview LabelTextHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *)
+(const TrackPanelMouseState &, AudacityProject *)
 {
    return HitPreview();
 }

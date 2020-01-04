@@ -85,7 +85,7 @@ public:
    // or called after Drag().
    // Specifies cursor and status bar message.
    virtual HitTestPreview Preview
-      (const TrackPanelMouseState &state, const AudacityProject *pProject) = 0;
+      (const TrackPanelMouseState &state, AudacityProject *pProject) = 0;
 
    // Assume previously Clicked and not yet Released or Cancelled.
    // event.pCell may be other than for Click; may be NULL, and rect empty.

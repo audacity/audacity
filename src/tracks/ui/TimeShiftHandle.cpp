@@ -775,7 +775,7 @@ UIHandle::Result TimeShiftHandle::Drag
 }
 
 HitTestPreview TimeShiftHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, AudacityProject *pProject)
 {
    // After all that, it still may be unsafe to drag.
    // Even if so, make an informative cursor change from default to "banned."

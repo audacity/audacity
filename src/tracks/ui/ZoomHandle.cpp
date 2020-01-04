@@ -118,7 +118,7 @@ UIHandle::Result ZoomHandle::Drag
 }
 
 HitTestPreview ZoomHandle::Preview
-(const TrackPanelMouseState &st, const AudacityProject *pProject)
+(const TrackPanelMouseState &st, AudacityProject *pProject)
 {
    return HitPreview(st.state, pProject);
 }

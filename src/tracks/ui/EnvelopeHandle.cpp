@@ -248,7 +248,7 @@ UIHandle::Result EnvelopeHandle::Drag
 }
 
 HitTestPreview EnvelopeHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, AudacityProject *pProject)
 {
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    static auto disabledCursor =

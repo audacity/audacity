@@ -59,7 +59,7 @@ protected:
       final override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, AudacityProject *pProject)
       final override;
 
    Result Release

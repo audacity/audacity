@@ -401,7 +401,7 @@ UIHandle::Result SampleHandle::Drag
 }
 
 HitTestPreview SampleHandle::Preview
-(const TrackPanelMouseState &st, const AudacityProject *pProject)
+(const TrackPanelMouseState &st, AudacityProject *pProject)
 {
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    return HitPreview(st.state, pProject, unsafe);

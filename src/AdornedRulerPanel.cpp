@@ -529,7 +529,7 @@ private:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, AudacityProject *pProject)
    override;
 
    Result Release
@@ -619,7 +619,7 @@ protected:
    }
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, AudacityProject *pProject)
       override
    {
       (void)pProject;// Compiler food
@@ -771,7 +771,7 @@ private:
    }
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, AudacityProject *pProject)
    override;
 
    Result Release
@@ -1494,7 +1494,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
 }
 
 auto AdornedRulerPanel::ScrubbingHandle::Preview
-(const TrackPanelMouseState &state, const AudacityProject *pProject)
+(const TrackPanelMouseState &state, AudacityProject *pProject)
 -> HitTestPreview
 {
    (void)state;// Compiler food
@@ -1510,7 +1510,7 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview
 }
 
 auto AdornedRulerPanel::QPHandle::Preview
-(const TrackPanelMouseState &state, const AudacityProject *pProject)
+(const TrackPanelMouseState &state, AudacityProject *pProject)
 -> HitTestPreview
 {
    TranslatableString tooltip;

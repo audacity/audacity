@@ -363,7 +363,7 @@ UIHandle::Result LabelGlyphHandle::Drag
 }
 
 HitTestPreview LabelGlyphHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *)
+(const TrackPanelMouseState &, AudacityProject *)
 {
    return HitPreview( (mpHit->mEdge & 4 )!=0);
 }

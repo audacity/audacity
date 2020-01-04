@@ -55,7 +55,7 @@ UIHandle::Result WaveformVZoomHandle::Drag
 }
 
 HitTestPreview WaveformVZoomHandle::Preview
-(const TrackPanelMouseState &st, const AudacityProject *)
+(const TrackPanelMouseState &st, AudacityProject *)
 {
    return WaveTrackVZoomHandle::HitPreview(st.state);
 }

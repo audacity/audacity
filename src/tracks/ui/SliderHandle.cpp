@@ -74,7 +74,7 @@ UIHandle::Result SliderHandle::Drag
 }
 
 HitTestPreview SliderHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *)
+(const TrackPanelMouseState &, AudacityProject *)
 {
    // No special message or cursor
    return {};

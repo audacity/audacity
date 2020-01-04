@@ -142,7 +142,7 @@ UIHandle::Result TrackSelectHandle::Drag
 }
 
 HitTestPreview TrackSelectHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *project)
+(const TrackPanelMouseState &, AudacityProject *project)
 {
    const auto trackCount = TrackList::Get( *project ).Leaders().size();
    auto message = Message(trackCount);

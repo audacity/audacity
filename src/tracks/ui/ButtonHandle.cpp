@@ -71,7 +71,7 @@ UIHandle::Result ButtonHandle::Drag
 }
 
 HitTestPreview ButtonHandle::Preview
-(const TrackPanelMouseState &st, const AudacityProject *)
+(const TrackPanelMouseState &st, AudacityProject *)
 {
    // No special cursor
    auto message = Tip(st.state);

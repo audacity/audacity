@@ -81,7 +81,7 @@ UIHandle::Result NoteTrackButtonHandle::Drag
 }
 
 HitTestPreview NoteTrackButtonHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *)
+(const TrackPanelMouseState &, AudacityProject *)
 {
    // auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    auto pTrack = mpTrack.lock();

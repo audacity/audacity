@@ -206,7 +206,7 @@ UIHandle::Result CutlineHandle::Drag
 }
 
 HitTestPreview CutlineHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, AudacityProject *pProject)
 {
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    auto bCutline = (mLocation.typ == WaveTrackLocation::locationCutLine);
