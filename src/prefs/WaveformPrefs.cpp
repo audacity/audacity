@@ -191,9 +191,12 @@ bool WaveformPrefs::Commit()
    }
 
    if (isOpenPage) {
-      auto &tp = TrackPanel::Get( *::GetActiveProject() );
-      tp.UpdateVRulers();
-      tp.Refresh(false);
+      auto pProject = ::GetActiveProject();
+      if ( pProject ) {
+         auto &tp = TrackPanel::Get( *pProject );
+         tp.UpdateVRulers();
+         tp.Refresh(false);
+      }
    }
 
    return true;

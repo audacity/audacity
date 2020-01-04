@@ -429,9 +429,12 @@ void SpectrumPrefs::Rollback()
    }
 
    if (isOpenPage) {
-      auto &tp = TrackPanel::Get ( *::GetActiveProject() );
-      tp.UpdateVRulers();
-      tp.Refresh(false);
+      auto pProject = ::GetActiveProject();
+      if ( pProject ) {
+         auto &tp = TrackPanel::Get ( *pProject );
+         tp.UpdateVRulers();
+         tp.Refresh(false);
+      }
    }
 }
 
@@ -477,9 +480,12 @@ void SpectrumPrefs::Preview()
    }
 
    if (isOpenPage) {
-      auto &tp = TrackPanel::Get( *::GetActiveProject() );
-      tp.UpdateVRulers();
-      tp.Refresh(false);
+      auto pProject = ::GetActiveProject();
+      if ( pProject ) {
+         auto &tp = TrackPanel::Get( *pProject );
+         tp.UpdateVRulers();
+         tp.Refresh(false);
+      }
    }
 }
 
@@ -500,7 +506,7 @@ bool SpectrumPrefs::Commit()
 
 bool SpectrumPrefs::ShowsPreviewButton()
 {
-   return true;
+   return GetActiveProject() != nullptr;
 }
 
 void SpectrumPrefs::OnControl(wxCommandEvent&)
