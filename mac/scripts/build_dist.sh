@@ -89,7 +89,6 @@ IDENT=$(plist "${INSTALL_ROOT}/Audacity.app/Contents/Info.plist" "CFBundleIdenti
 # and unnotarized.
 #
 # CODESIGN_APP_IDENTITY="Developer ID Application:"
-# CODESIGN_DMG_IDENTITY="Developer ID Installer:"
 # NOTARIZE_USERNAME="specify your Apple developer email address"
 # NOTARIZE_PASSWORD="@keychain:APP_PASSWORD"
 #
@@ -104,7 +103,7 @@ SIGNING=
 if [ -r ~/.audacity_signing ]
 then
    source ~/.audacity_signing
-   if [ -n "${CODESIGN_APP_IDENTITY}" -a -n "${CODESIGN_DMG_IDENTITY}" -a -n "${NOTARIZE_USERNAME}" -a -n "${NOTARIZE_PASSWORD}" ]
+   if [ -n "${CODESIGN_APP_IDENTITY}" -a -n "${NOTARIZE_USERNAME}" -a -n "${NOTARIZE_PASSWORD}" ]
    then
       SIGNING="y"
    fi
@@ -123,10 +122,6 @@ chown -RH "${INSTALL_OWNER}:${INSTALL_GROUP}" "${TARGET_BUILD_DIR}"
 # Preclean
 rm -rf "$DMG" "$DMG.dmg" TMP.dmg
 
-# Create structure
-mkdir "$DMG"
-cp -pR "${DSTROOT}/" "${DMG}"
-
 # Sign and notarize the app
 if [ -n "${SIGNING}" ]
 then
@@ -138,22 +133,24 @@ then
                   --options runtime \
                   --entitlements "${SRCROOT}/${CODE_SIGN_ENTITLEMENTS}" \
                   --sign "${CODESIGN_APP_IDENTITY}" \
-                  "${DMG}/Audacity.app"
+                  "${DSTROOT}/Audacity.app"
 
    # Create the ZIP archive for notarization
-   xcrun ditto -c -k --keepParent "${DMG}" "${DMG}.zip" 
+   xcrun ditto -c -k --keepParent "${DSTROOT}" "${DSTROOT}.zip" 
 
    # Send it off for notarization
-   notarize "${DMG}.zip"
+   notarize "${DSTROOT}.zip"
 
    # Remove the zip file
-   rm "${DMG}.zip"
+   rm "${DSTROOT}.zip"
 
    # Staple the app
-   stapler staple "${DMG}/Audacity.app"
+   stapler staple "${DSTROOT}/Audacity.app"
 fi
 
-
+# Create structure
+mkdir "$DMG"
+cp -pR "${DSTROOT}/" "${DMG}"
 
 #Add a custom icon for the DMG
 #cp -p mac/Resources/Audacity.icns "${DMG}"/.VolumeIcon.icns
@@ -194,25 +191,27 @@ EOF
 # Make our DMG look pretty and install the custom background image
 echo '
    tell application "Finder"
-     tell disk "'$TITLE'"
-           open
-           set current view of container window to icon view
-           set toolbar visible of container window to false
-           set statusbar visible of container window to false
-           set the bounds of container window to {400, 100, 1000, 550}
-           set theViewOptions to the icon view options of container window
-           set arrangement of theViewOptions to not arranged
-           set icon size of theViewOptions to 72
-           set background picture of theViewOptions to file ".background:Audacity-DMG-background.png" 
-           make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
-           set position of item "Audacity" of container window to {170, 350}
-           set position of item "Applications" of container window to {430, 350}
-           close
-           open
-           update without registering applications
-           delay 5
-           eject
-     end tell
+     with timeout of 300 seconds
+        tell disk "'$TITLE'"
+              open
+              set current view of container window to icon view
+              set toolbar visible of container window to false
+              set statusbar visible of container window to false
+              set the bounds of container window to {400, 100, 1000, 550}
+              set theViewOptions to the icon view options of container window
+              set arrangement of theViewOptions to not arranged
+              set icon size of theViewOptions to 72
+              set background picture of theViewOptions to file ".background:Audacity-DMG-background.png" 
+              make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
+              set position of item "Audacity" of container window to {170, 350}
+              set position of item "Applications" of container window to {430, 350}
+              close
+              open
+              update without registering applications
+              delay 5
+              eject
+        end tell
+     end timeout
    end tell
 ' | osascript
 
@@ -225,7 +224,7 @@ then
    xcrun codesign --verbose \
                   --timestamp \
                   --identifier "${IDENT}" \
-                  --sign "${CODESIGN_DMG_IDENTITY}" \
+                  --sign "${CODESIGN_APP_IDENTITY}" \
                   "${DMG}.dmg"
    notarize "${DMG}.dmg"
    stapler staple "${DMG}.dmg"
@@ -233,7 +232,7 @@ fi
 
 # Create zip version
 rm -rf "${DMG}/.background"
-rm -rf "${DMG}/Audacity.app/help/"
+rm -rf "${DMG}/Audacity.app/Contents/help"
 zip -r9 "${DMG}.zip" "${DMG}"
 
 # Cleanup
