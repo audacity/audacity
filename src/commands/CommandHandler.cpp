@@ -40,15 +40,17 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
    // First retrieve the actual command from the event 'envelope'.
    OldStyleCommandPointer cmd = event.GetCommand();
 
-   // Then apply it to current application & project.  Note that the
-   // command may change the context - for example, switching to a
-   // different project.
-   CommandContext context{ *GetActiveProject() };
-   auto result = GuardedCall<bool>( [&] {
-      return cmd->Apply( context );
-   });
-   wxUnusedVar(result);
+   if (const auto pProject = GetActiveProject()) {
+      // Then apply it to current application & project.  Note that the
+      // command may change the context - for example, switching to a
+      // different project.
+      CommandContext context{ *pProject };
+      auto result = GuardedCall<bool>( [&] {
+         return cmd->Apply( context );
+      });
+      wxUnusedVar(result);
 
-   // Redraw the project
-   ProjectWindow::Get( context.project ).RedrawProject();
+      // Redraw the project
+      ProjectWindow::Get( context.project ).RedrawProject();
+   }
 }
