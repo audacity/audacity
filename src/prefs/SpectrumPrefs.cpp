@@ -588,7 +588,7 @@ END_EVENT_TABLE()
 PrefsPanel::Factory
 SpectrumPrefsFactory( WaveTrack *wt )
 {
-   return [=](wxWindow *parent, wxWindowID winid)
+   return [=](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew SpectrumPrefs(parent, winid, wt);

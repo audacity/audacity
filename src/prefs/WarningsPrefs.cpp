@@ -107,7 +107,7 @@ bool WarningsPrefs::Commit()
 }
 
 PrefsPanel::Factory
-WarningsPrefsFactory = [](wxWindow *parent, wxWindowID winid)
+WarningsPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew WarningsPrefs(parent, winid);

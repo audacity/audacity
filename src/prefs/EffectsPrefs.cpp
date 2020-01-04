@@ -251,7 +251,7 @@ bool EffectsPrefs::Commit()
 }
 
 PrefsPanel::Factory
-EffectsPrefsFactory = [](wxWindow *parent, wxWindowID winid)
+EffectsPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew EffectsPrefs(parent, winid);

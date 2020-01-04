@@ -16,6 +16,7 @@
 #include <vector>
 #include "../widgets/wxPanelWrapper.h" // to inherit
 
+class AudacityProject;
 class wxTreebook;
 class wxTreeEvent;
 class PrefsPanel;
@@ -27,13 +28,16 @@ class ShuttleGui;
 #define CONST const
 #endif
 
+class AudacityProject;
+
 class PrefsDialog /* not final */ : public wxDialogWrapper
 {
  public:
     // An array of PrefsNode specifies the tree of pages in pre-order traversal.
     struct PrefsNode {
        using Factory =
-         std::function< PrefsPanel * (wxWindow *parent, wxWindowID winid) >;
+         std::function< PrefsPanel * (
+            wxWindow *parent, wxWindowID winid, AudacityProject *) >;
        Factory factory;
        CONST int nChildren;
        bool expanded;
@@ -48,6 +52,7 @@ class PrefsDialog /* not final */ : public wxDialogWrapper
    static Factories &DefaultFactories();
 
    PrefsDialog(wxWindow * parent,
+      AudacityProject *pProject, // may be null
       const TranslatableString &titlePrefix = XO("Preferences:"),
       Factories &factories = DefaultFactories());
    virtual ~PrefsDialog();
@@ -92,7 +97,9 @@ private:
 class GlobalPrefsDialog final : public PrefsDialog
 {
 public:
-   GlobalPrefsDialog(wxWindow * parent, Factories &factories = DefaultFactories());
+   GlobalPrefsDialog(
+      wxWindow * parent, AudacityProject *pProject,
+      Factories &factories = DefaultFactories());
    virtual ~GlobalPrefsDialog();
    long GetPreferredPage() override;
    void SavePreferredPage() override;

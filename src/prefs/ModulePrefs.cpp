@@ -188,7 +188,7 @@ void ModulePrefs::SetModuleStatus(const FilePath &fname, int iStatus){
 }
 
 PrefsPanel::Factory
-ModulePrefsFactory = [](wxWindow *parent, wxWindowID winid)
+ModulePrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew ModulePrefs(parent, winid);

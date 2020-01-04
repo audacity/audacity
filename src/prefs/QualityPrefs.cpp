@@ -234,7 +234,7 @@ bool QualityPrefs::Commit()
 }
 
 PrefsPanel::Factory
-QualityPrefsFactory = [](wxWindow *parent, wxWindowID winid)
+QualityPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew QualityPrefs(parent, winid);

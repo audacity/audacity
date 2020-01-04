@@ -305,7 +305,7 @@ void RecordingPrefs::OnToggleCustomName(wxCommandEvent & /* Evt */)
 }
 
 PrefsPanel::Factory
-RecordingPrefsFactory = [](wxWindow *parent, wxWindowID winid)
+RecordingPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew RecordingPrefs(parent, winid);

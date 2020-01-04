@@ -423,7 +423,7 @@ bool DevicePrefs::Commit()
 }
 
 PrefsPanel::Factory
-DevicePrefsFactory = [](wxWindow *parent, wxWindowID winid)
+DevicePrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 
 {
    wxASSERT(parent); // to justify safenew

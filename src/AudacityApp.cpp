@@ -1658,8 +1658,9 @@ bool AudacityApp::OnInit()
          // Only want one page of the preferences
          PrefsDialog::Factories factories;
          factories.push_back(KeyConfigPrefsFactory( id ));
-         auto pWindow = FindProjectFrame( GetActiveProject() );
-         GlobalPrefsDialog dialog( pWindow, factories );
+         const auto pProject = GetActiveProject();
+         auto pWindow = FindProjectFrame( pProject );
+         GlobalPrefsDialog dialog( pWindow, pProject, factories );
          dialog.ShowModal();
          MenuCreator::RebuildAllMenuBars();
          return true;
@@ -1796,7 +1797,7 @@ bool AudacityApp::InitTempDir()
       // Only want one page of the preferences
       PrefsDialog::Factories factories;
       factories.push_back(DirectoriesPrefsFactory());
-      GlobalPrefsDialog dialog(NULL, factories);
+      GlobalPrefsDialog dialog(nullptr, nullptr, factories);
       dialog.ShowModal();
 
       AudacityMessageBox(XO(
@@ -2248,7 +2249,7 @@ void AudacityApp::OnMenuPreferences(wxCommandEvent & event)
    // all platforms.
 
    if(AllProjects{}.empty()) {
-      GlobalPrefsDialog dialog(NULL /* parent */ );
+      GlobalPrefsDialog dialog(nullptr /* parent */, nullptr );
       dialog.ShowModal();
    }
    else

@@ -223,7 +223,7 @@ bool MousePrefs::Commit()
 }
 
 PrefsPanel::Factory
-MousePrefsFactory = [](wxWindow *parent, wxWindowID winid)
+MousePrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew MousePrefs(parent, winid);

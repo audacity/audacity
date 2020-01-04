@@ -132,7 +132,7 @@ bool TracksBehaviorsPrefs::Commit()
 }
 
 PrefsPanel::Factory
-TracksBehaviorsPrefsFactory = [](wxWindow *parent, wxWindowID winid)
+TracksBehaviorsPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew TracksBehaviorsPrefs(parent, winid);

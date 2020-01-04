@@ -96,7 +96,7 @@ bool ProjectsPrefs::Commit()
 }
 
 PrefsPanel::Factory
-ProjectsPrefsFactory = [](wxWindow *parent, wxWindowID winid)
+ProjectsPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew ProjectsPrefs(parent, winid);

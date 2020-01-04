@@ -828,10 +828,10 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
    class ViewSettingsDialog final : public PrefsDialog
    {
    public:
-      ViewSettingsDialog(wxWindow *parent,
+      ViewSettingsDialog(wxWindow *parent, AudacityProject &project,
          const TranslatableString &title, PrefsDialog::Factories &factories,
          int page)
-         : PrefsDialog(parent, title, factories)
+         : PrefsDialog(parent, &project, title, factories)
          , mPage(page)
       {
       }
@@ -869,7 +869,8 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
       0;
 
    auto title = XO("%s:").Format( pTrack->GetName() );
-   ViewSettingsDialog dialog(mpData->pParent, title, factories, page);
+   ViewSettingsDialog dialog(
+      mpData->pParent, mpData->project, title, factories, page);
 
    if (0 != dialog.ShowModal()) {
       // Redraw

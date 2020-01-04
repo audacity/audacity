@@ -262,7 +262,7 @@ bool LibraryPrefs::Commit()
 }
 
 PrefsPanel::Factory
-LibraryPrefsFactory = [](wxWindow *parent, wxWindowID winid)
+LibraryPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew LibraryPrefs(parent, winid);

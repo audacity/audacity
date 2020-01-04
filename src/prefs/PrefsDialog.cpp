@@ -533,7 +533,7 @@ PrefsDialog::Factories
 
 
 PrefsDialog::PrefsDialog(
-   wxWindow * parent,
+   wxWindow * parent, AudacityProject *pProject,
    const TranslatableString &titlePrefix, Factories &factories)
 :  wxDialogWrapper(parent, wxID_ANY, XO("Audacity Preferences"),
             wxDefaultPosition,
@@ -575,7 +575,7 @@ PrefsDialog::PrefsDialog(
                {
                   const PrefsNode &node = *it;
                   const PrefsPanel::Factory &factory = node.factory;
-                  wxWindow *const w = factory(mCategories, wxID_ANY);
+                  wxWindow *const w = factory(mCategories, wxID_ANY, pProject);
                   if (stack.empty())
                      // Parameters are: AddPage(page, name, IsSelected, imageId).
                      mCategories->AddPage(w, w->GetName(), false, 0);
@@ -603,7 +603,7 @@ PrefsDialog::PrefsDialog(
          // Unique page, don't show the factory
          const PrefsNode &node = factories[0];
          const PrefsPanel::Factory &factory = node.factory;
-         mUniquePage = factory(S.GetParent(), wxID_ANY);
+         mUniquePage = factory(S.GetParent(), wxID_ANY, pProject);
          wxWindow * uniquePageWindow = S.Prop(1)
             .Position(wxEXPAND)
             .AddWindow(mUniquePage);
@@ -888,8 +888,9 @@ int PrefsDialog::GetSelectedPage() const
       return 0;
 }
 
-GlobalPrefsDialog::GlobalPrefsDialog(wxWindow * parent, Factories &factories)
-   : PrefsDialog(parent, XO("Preferences:"), factories)
+GlobalPrefsDialog::GlobalPrefsDialog(
+   wxWindow * parent, AudacityProject *pProject, Factories &factories)
+   : PrefsDialog(parent, pProject, XO("Preferences:"), factories)
 {
 }
 
@@ -951,7 +952,8 @@ void DoReloadPreferences( AudacityProject &project )
       SpectrogramSettings::defaults().LoadPrefs();
       WaveformSettings::defaults().LoadPrefs();
 
-      GlobalPrefsDialog dialog(&GetProjectFrame( project ) /* parent */ );
+      GlobalPrefsDialog dialog(
+         &GetProjectFrame( project ) /* parent */, &project );
       wxCommandEvent Evt;
       //dialog.Show();
       dialog.OnOK(Evt);

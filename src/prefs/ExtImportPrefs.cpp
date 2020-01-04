@@ -827,7 +827,7 @@ void ExtImportPrefsDropTarget::OnLeave()
 }
 
 PrefsPanel::Factory
-ExtImportPrefsFactory = [](wxWindow *parent, wxWindowID winid)
+ExtImportPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew ExtImportPrefs(parent, winid);

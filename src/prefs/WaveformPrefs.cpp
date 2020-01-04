@@ -256,7 +256,7 @@ END_EVENT_TABLE()
 PrefsPanel::Factory
 WaveformPrefsFactory(WaveTrack *wt)
 {
-   return [=](wxWindow *parent, wxWindowID winid)
+   return [=](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew WaveformPrefs(parent, winid, wt);

@@ -362,7 +362,7 @@ bool GetInfoCommand::SendPreferences(const CommandContext &context)
 {
    context.StartArray();
    auto pWin = &GetProjectFrame( context.project );
-   GlobalPrefsDialog dialog( pWin );
+   GlobalPrefsDialog dialog( pWin, &context.project );
    // wxCommandEvent Evt;
    //dialog.Show();
    ShuttleGuiGetDefinition S(pWin, *((context.pOutput)->mStatusTarget) );

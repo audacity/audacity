@@ -42,6 +42,7 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 #define TOP_LEVEL_BORDER       5
 #define GENERIC_CONTROL_BORDER 5
 
+class AudacityProject;
 class ShuttleGui;
 
 class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
@@ -49,8 +50,12 @@ class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
  public:
    // \brief Type alias for factories such as GUIPrefsFactory that produce a
    // PrefsPanel.
+   // The project pointer may be null.  Usually it's not needed because
+   // preferences are global.  But sometimes you need a project, such as to
+   // preview the preference changes for spectrograms.
    using Factory =
-      std::function< PrefsPanel * (wxWindow *parent, wxWindowID winid) >;
+      std::function< PrefsPanel * (
+         wxWindow *parent, wxWindowID winid, AudacityProject *) >;
 
    PrefsPanel(
       wxWindow * parent, wxWindowID winid, const TranslatableString &title)

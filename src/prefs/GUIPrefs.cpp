@@ -378,7 +378,7 @@ int ShowClippingPrefsID()
 }
 
 PrefsPanel::Factory
-GUIPrefsFactory = [](wxWindow *parent, wxWindowID winid)
+GUIPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew GUIPrefs(parent, winid);

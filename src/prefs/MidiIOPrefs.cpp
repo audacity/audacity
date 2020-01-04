@@ -302,7 +302,7 @@ bool MidiIOPrefs::Validate()
 }
 
 PrefsPanel::Factory
-MidiIOPrefsFactory = [](wxWindow *parent, wxWindowID winid)
+MidiIOPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew MidiIOPrefs(parent, winid);

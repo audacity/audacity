@@ -933,7 +933,7 @@ void OnPreferences(const CommandContext &context)
 {
    auto &project = context.project;
 
-   GlobalPrefsDialog dialog(&GetProjectFrame( project ) /* parent */ );
+   GlobalPrefsDialog dialog(&GetProjectFrame( project ) /* parent */, &project );
 
    if( ScreenshotCommand::MayCapture( &dialog ) )
       return;

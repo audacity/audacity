@@ -230,7 +230,7 @@ bool ThemePrefs::Commit()
 }
 
 PrefsPanel::Factory
-ThemePrefsFactory = [](wxWindow *parent, wxWindowID winid)
+ThemePrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
 {
    wxASSERT(parent); // to justify safenew
    return safenew ThemePrefs(parent, winid);
