@@ -1439,7 +1439,8 @@ bool LV2Effect::RealtimeProcessEnd()
    return true;
 }
 
-bool LV2Effect::ShowInterface(wxWindow *parent, bool forceModal)
+bool LV2Effect::ShowInterface(
+   wxWindow *parent, const EffectDialogFactory &factory, bool forceModal)
 {
    if (mDialog)
    {
@@ -1453,7 +1454,8 @@ bool LV2Effect::ShowInterface(wxWindow *parent, bool forceModal)
    // mDialog is null
    auto cleanup = valueRestorer(mDialog);
 
-   mDialog = mHost->CreateUI(parent, this);
+   if ( factory )
+      mDialog = factory(parent, mHost, this);
    if (!mDialog)
    {
       return false;

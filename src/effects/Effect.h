@@ -16,6 +16,7 @@
 
 #include "../Experimental.h"
 
+#include <functional>
 #include <set>
 
 #include <wx/defs.h>
@@ -141,7 +142,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
+   bool ShowInterface( wxWindow *parent,
+      const EffectDialogFactory &factory, bool forceModal = false) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -177,10 +179,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
    void SetDuration(double duration) override;
 
-   bool Apply() override;
    void Preview() override;
-
-   wxDialog *CreateUI(wxWindow *parent, EffectUIClientInterface *client) override;
 
    RegistryPath GetUserPresetsGroup(const RegistryPath & name) override;
    RegistryPath GetCurrentSettingsGroup() override;
@@ -257,11 +256,13 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // Returns true on success.  Will only operate on tracks that
    // have the "selected" flag set to true, which is consistent with
    // Audacity's standard UI.
+   // Create a user interface only if the supplied function is not null.
    /* not virtual */ bool DoEffect(wxWindow *parent, double projectRate, TrackList *list,
-                 TrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
-                 bool shouldPrompt = true);
+      TrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
+      const EffectDialogFactory &dialogFactory );
 
-   bool Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt);
+   bool Delegate( Effect &delegate,
+      wxWindow *parent, const EffectDialogFactory &factory );
 
    virtual bool IsHidden();
 
@@ -287,12 +288,6 @@ protected:
    // make sure that the effect can be performed on the selected tracks and
    // return false otherwise
    virtual bool Init();
-
-   // If necessary, open a dialog to get parameters from the user.
-   // This method will not always be called (for example if a user
-   // repeats an effect) but if it is called, it will be called
-   // after Init.
-   virtual bool PromptUser(wxWindow *parent);
 
    // Check whether effect should be skipped
    // Typically this is only useful in automation, for example
@@ -581,105 +576,6 @@ private:
 
    DECLARE_EVENT_TABLE()
    wxDECLARE_NO_COPY_CLASS(EffectDialog);
-};
-
-//
-class EffectUIHost final : public wxDialogWrapper,
-                     public EffectUIHostInterface
-{
-public:
-   // constructors and destructors
-   EffectUIHost(wxWindow *parent,
-                Effect *effect,
-                EffectUIClientInterface *client);
-   EffectUIHost(wxWindow *parent,
-                AudacityCommand *command,
-                EffectUIClientInterface *client);
-   virtual ~EffectUIHost();
-
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
-
-   int ShowModal() override;
-
-   bool Initialize();
-
-private:
-   void OnInitDialog(wxInitDialogEvent & evt);
-   void OnErase(wxEraseEvent & evt);
-   void OnPaint(wxPaintEvent & evt);
-   void OnClose(wxCloseEvent & evt);
-   void OnApply(wxCommandEvent & evt);
-   void DoCancel();
-   void OnCancel(wxCommandEvent & evt);
-   void OnHelp(wxCommandEvent & evt);
-   void OnDebug(wxCommandEvent & evt);
-   void OnMenu(wxCommandEvent & evt);
-   void OnEnable(wxCommandEvent & evt);
-   void OnPlay(wxCommandEvent & evt);
-   void OnRewind(wxCommandEvent & evt);
-   void OnFFwd(wxCommandEvent & evt);
-   void OnPlayback(wxCommandEvent & evt);
-   void OnCapture(wxCommandEvent & evt);
-   void OnUserPreset(wxCommandEvent & evt);
-   void OnFactoryPreset(wxCommandEvent & evt);
-   void OnDeletePreset(wxCommandEvent & evt);
-   void OnSaveAs(wxCommandEvent & evt);
-   void OnImport(wxCommandEvent & evt);
-   void OnExport(wxCommandEvent & evt);
-   void OnOptions(wxCommandEvent & evt);
-   void OnDefaults(wxCommandEvent & evt);
-
-   void UpdateControls();
-   wxBitmap CreateBitmap(const char * const xpm[], bool up, bool pusher);
-   void LoadUserPresets();
-
-   void InitializeRealtime();
-   void CleanupRealtime();
-   void Resume();
-
-private:
-   AudacityProject *mProject;
-   wxWindow *mParent;
-   Effect *mEffect;
-   AudacityCommand * mCommand;
-   EffectUIClientInterface *mClient;
-
-   RegistryPaths mUserPresets;
-   bool mInitialized;
-   bool mSupportsRealtime;
-   bool mIsGUI;
-   bool mIsBatch;
-
-   wxButton *mApplyBtn;
-   wxButton *mCloseBtn;
-   wxButton *mMenuBtn;
-   wxButton *mPlayBtn;
-   wxButton *mRewindBtn;
-   wxButton *mFFwdBtn;
-   wxCheckBox *mEnableCb;
-
-   wxButton *mEnableToggleBtn;
-   wxButton *mPlayToggleBtn;
-
-   wxBitmap mPlayBM;
-   wxBitmap mPlayDisabledBM;
-   wxBitmap mStopBM;
-   wxBitmap mStopDisabledBM;
-
-   bool mEnabled;
-
-   bool mDisableTransport;
-   bool mPlaying;
-   bool mCapturing;
-
-   SelectedRegion mRegion;
-   double mPlayPos;
-
-   bool mDismissed{};
-   bool mNeedsResume{};
-
-   DECLARE_EVENT_TABLE()
 };
 
 class EffectPresetsDialog final : public wxDialogWrapper

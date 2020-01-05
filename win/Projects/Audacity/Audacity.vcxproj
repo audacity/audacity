@@ -160,7 +160,7 @@
     <ClCompile Include="..\..\..\src\DirManager.cpp" />
     <ClCompile Include="..\..\..\src\Dither.cpp" />
     <ClCompile Include="..\..\..\src\effects\Distortion.cpp" />
-    <ClCompile Include="..\..\..\src\effects\EffectRack.cpp" />
+    <ClCompile Include="..\..\..\src\effects\EffectUI.cpp" />
     <ClCompile Include="..\..\..\src\effects\Equalization48x.cpp" />
     <ClCompile Include="..\..\..\src\effects\lv2\zix\ring.cpp" />
     <ClCompile Include="..\..\..\src\effects\NoiseReduction.cpp" />
@@ -562,7 +562,7 @@
     <ClInclude Include="..\..\..\src\DeviceChange.h" />
     <ClInclude Include="..\..\..\src\Diags.h" />
     <ClInclude Include="..\..\..\src\effects\Distortion.h" />
-    <ClInclude Include="..\..\..\src\effects\EffectRack.h" />
+    <ClInclude Include="..\..\..\src\effects\EffectUI.h" />
     <ClInclude Include="..\..\..\src\effects\Equalization48x.h" />
     <ClInclude Include="..\..\..\src\effects\lv2\zix\common.h" />
     <ClInclude Include="..\..\..\src\effects\lv2\zix\ring.h" />

@@ -406,8 +406,8 @@ src/effects/Effect.cpp
 src/effects/Effect.h
 src/effects/EffectManager.cpp
 src/effects/EffectManager.h
-src/effects/EffectRack.cpp
-src/effects/EffectRack.h
+src/effects/EffectUI.cpp
+src/effects/EffectUI.h
 src/effects/Equalization.cpp
 src/effects/Equalization.h
 src/effects/Equalization48x.cpp

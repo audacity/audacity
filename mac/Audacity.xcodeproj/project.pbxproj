@@ -433,7 +433,6 @@
 		2808285A0A75E0EA000002EF /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828580A75E0EA000002EF /* Grid.cpp */; };
 		2809C4B80BCB7E560006010F /* FileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2809C4B60BCB7E560006010F /* FileIO.cpp */; };
 		280A8B4719F4403B0091DE70 /* ModuleManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280A8B4519F4403B0091DE70 /* ModuleManager.cpp */; };
-		280A8B4A19F440880091DE70 /* EffectRack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280A8B4819F440880091DE70 /* EffectRack.cpp */; };
 		28105D9C0AD09FB200BB4269 /* portmixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 28105D9B0AD09FB200BB4269 /* portmixer.h */; };
 		28105DAA0AD09FC500BB4269 /* px_mac_coreaudio.c in Sources */ = {isa = PBXBuildFile; fileRef = 28105DA00AD09FC500BB4269 /* px_mac_coreaudio.c */; };
 		28105DAB0AD09FC500BB4269 /* px_mixer.c in Sources */ = {isa = PBXBuildFile; fileRef = 28105DA10AD09FC500BB4269 /* px_mixer.c */; };
@@ -1319,6 +1318,7 @@
 		5EBD1C9522D11DAF00299FD4 /* WaveformVZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD1C9222D11DAF00299FD4 /* WaveformVZoomHandle.cpp */; };
 		5EBD243D1F74C50800132E0A /* eu_ES.po in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD243C1F74C50800132E0A /* eu_ES.po */; };
 		5EBD35861F78D37A0084D13F /* pt_PT.po in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD35851F78D37A0084D13F /* pt_PT.po */; };
+		5EBDF98522E49CE700DD697E /* EffectUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDF98322E49CE700DD697E /* EffectUI.cpp */; };
 		5EBE711C22D0EA82004ABABB /* SpectrumView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBE711422D0EA82004ABABB /* SpectrumView.cpp */; };
 		5EBE711D22D0EA82004ABABB /* SpectrumVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBE711622D0EA82004ABABB /* SpectrumVRulerControls.cpp */; };
 		5EBE711E22D0EA82004ABABB /* WaveformView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBE711822D0EA82004ABABB /* WaveformView.cpp */; };
@@ -2014,7 +2014,7 @@
 		1790B01619883BFD008A330A /* EBUR128.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = EBUR128.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01709883BFD008A330A /* Echo.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Echo.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01809883BFD008A330A /* Echo.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Echo.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790B01909883BFD008A330A /* Effect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; indentWidth = 3; path = Effect.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		1790B01909883BFD008A330A /* Effect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; indentWidth = 3; path = Effect.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01A09883BFD008A330A /* Effect.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Effect.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01B09883BFD008A330A /* Equalization.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Equalization.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B01C09883BFD008A330A /* Equalization.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Equalization.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -2321,8 +2321,6 @@
 		280A8B4419F440160091DE70 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = ../include/audacity/Types.h; sourceTree = SOURCE_ROOT; };
 		280A8B4519F4403B0091DE70 /* ModuleManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModuleManager.cpp; sourceTree = "<group>"; };
 		280A8B4619F4403B0091DE70 /* ModuleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleManager.h; sourceTree = "<group>"; };
-		280A8B4819F440880091DE70 /* EffectRack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectRack.cpp; sourceTree = "<group>"; };
-		280A8B4919F440880091DE70 /* EffectRack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectRack.h; sourceTree = "<group>"; };
 		280F5C8B1B676699003022C5 /* NumberScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberScale.h; sourceTree = "<group>"; };
 		28105D9B0AD09FB200BB4269 /* portmixer.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = portmixer.h; sourceTree = "<group>"; tabWidth = 3; };
 		28105DA00AD09FC500BB4269 /* px_mac_coreaudio.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = px_mac_coreaudio.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -3404,6 +3402,8 @@
 		5EBD1C9322D11DAF00299FD4 /* WaveformVZoomHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveformVZoomHandle.h; sourceTree = "<group>"; };
 		5EBD243C1F74C50800132E0A /* eu_ES.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = eu_ES.po; path = ../locale/eu_ES.po; sourceTree = "<group>"; };
 		5EBD35851F78D37A0084D13F /* pt_PT.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = pt_PT.po; path = ../locale/pt_PT.po; sourceTree = "<group>"; };
+		5EBDF98322E49CE700DD697E /* EffectUI.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = EffectUI.cpp; sourceTree = "<group>"; };
+		5EBDF98422E49CE700DD697E /* EffectUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectUI.h; sourceTree = "<group>"; };
 		5EBE711422D0EA82004ABABB /* SpectrumView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpectrumView.cpp; sourceTree = "<group>"; };
 		5EBE711522D0EA82004ABABB /* SpectrumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpectrumView.h; sourceTree = "<group>"; };
 		5EBE711622D0EA82004ABABB /* SpectrumVRulerControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpectrumVRulerControls.cpp; sourceTree = "<group>"; };
@@ -4770,8 +4770,8 @@
 				1790B01A09883BFD008A330A /* Effect.h */,
 				ED3D7FEE0DF73889000F43E3 /* EffectManager.cpp */,
 				ED3D7FEF0DF73889000F43E3 /* EffectManager.h */,
-				280A8B4819F440880091DE70 /* EffectRack.cpp */,
-				280A8B4919F440880091DE70 /* EffectRack.h */,
+				5EBDF98322E49CE700DD697E /* EffectUI.cpp */,
+				5EBDF98422E49CE700DD697E /* EffectUI.h */,
 				1790B01B09883BFD008A330A /* Equalization.cpp */,
 				1790B01C09883BFD008A330A /* Equalization.h */,
 				EDFCEBB318894B9E00C98E51 /* Equalization48x.cpp */,
@@ -8871,6 +8871,7 @@
 				5E19F59922A9665500E3F88E /* AutoRecoveryDialog.cpp in Sources */,
 				2860BA280E0F0DD800A13878 /* ExportFFmpeg.cpp in Sources */,
 				5E36A0AB217FA2430068E082 /* NavigationMenus.cpp in Sources */,
+				5EBDF98522E49CE700DD697E /* EffectUI.cpp in Sources */,
 				28D587CB0E264CF4009C7DEA /* LoadLV2.cpp in Sources */,
 				5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */,
 				5E18CFF322931D3D00E75250 /* AudacityMessageBox.cpp in Sources */,
@@ -9053,7 +9054,6 @@
 				28F6717A197DFA1C00075C32 /* MultiFormatReader.cpp in Sources */,
 				28F6717B197DFA1C00075C32 /* SpecPowerMeter.cpp in Sources */,
 				280A8B4719F4403B0091DE70 /* ModuleManager.cpp in Sources */,
-				280A8B4A19F440880091DE70 /* EffectRack.cpp in Sources */,
 				5E7396471DAFD8F200BA0A4D /* EnvelopeHandle.cpp in Sources */,
 				5E135A4E22A62B7E0076E983 /* MeterPanelBase.cpp in Sources */,
 				28001B3E1A0F0E5D007DD161 /* NumericTextCtrl.cpp in Sources */,

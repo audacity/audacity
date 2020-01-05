@@ -1428,7 +1428,8 @@ bool AudioUnitEffect::RealtimeProcessEnd()
    return true;
 }
 
-bool AudioUnitEffect::ShowInterface(wxWindow *parent, bool forceModal)
+bool AudioUnitEffect::ShowInterface(
+   wxWindow *parent, const EffectDialogFactory &factory, bool forceModal)
 {
    if (mDialog)
    {
@@ -1440,7 +1441,8 @@ bool AudioUnitEffect::ShowInterface(wxWindow *parent, bool forceModal)
    // mDialog is null
    auto cleanup = valueRestorer( mDialog );
 
-   mDialog = mHost->CreateUI(parent, this);
+   if ( factory )
+      mDialog = factory(parent, mHost, this);
    if (!mDialog)
    {
       return false;

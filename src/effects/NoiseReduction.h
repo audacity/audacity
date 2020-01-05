@@ -38,7 +38,8 @@ public:
 
 //   using Effect::TrackProgress;
 
-   bool PromptUser(wxWindow *parent) override;
+   bool ShowInterface( wxWindow *parent,
+      const EffectDialogFactory &factory, bool forceModal = false) override;
 
    bool Init() override;
    bool CheckWhetherSkipEffect() override;

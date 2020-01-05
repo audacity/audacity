@@ -17,6 +17,7 @@
 #include "../commands/ScreenshotCommand.h"
 #include "../effects/Contrast.h"
 #include "../effects/EffectManager.h"
+#include "../effects/EffectUI.h"
 #include "../effects/RealtimeEffectManager.h"
 #include "../prefs/EffectsPrefs.h"
 
@@ -423,7 +424,7 @@ void OnManageGenerators(const CommandContext &context)
 void OnEffect(const CommandContext &context)
 {
    // using GET to interpret parameter as a PluginID
-   EffectManager::DoEffect(context.parameter.GET(), context, 0);
+   EffectUI::DoEffect(context.parameter.GET(), context, 0);
 }
 
 void OnManageEffects(const CommandContext &context)
@@ -437,7 +438,7 @@ void OnRepeatLastEffect(const CommandContext &context)
    auto lastEffect = MenuManager::Get(context.project).mLastEffect;
    if (!lastEffect.empty())
    {
-      EffectManager::DoEffect(
+      EffectUI::DoEffect(
          lastEffect, context, EffectManager::kConfigured );
    }
 }

@@ -28,6 +28,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
+#include "../effects/EffectUI.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -688,7 +689,7 @@ void OnNewTimeTrack(const CommandContext &context)
 
 void OnStereoToMono(const CommandContext &context)
 {
-   EffectManager::DoEffect(
+   EffectUI::DoEffect(
       EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
       context,
       EffectManager::kConfigured);
