@@ -27,38 +27,36 @@ function bld
    export CXX="g++ -std=c++1z -stdlib=libc++"
    export LD="g++ -std=c++1z -stdlib=libc++"
 
-   # Ensure configure uses the proper SDK while performing its tests
-   run="xcrun ${sdkdir:+-sdk ${asdf}}"
-
    # NOTES: liblzma isn't available on MacOS 10.8 or older and Audacity doesn't
    #        need it.  So, build wxWidgets without the support to allow Audacity
    #        to run on MacOS 10.7 or newer.
-   ${run} ../configure --prefix="/usr/local/${arch}" \
-                       --enable-macosx-arch="${arch}" \
-                       --enable-shared=yes \
-                       --enable-unicode=yes \
-                       --enable-universal_binary=no \
-                       --enable-webkit=no \
-                       --with-expat=builtin \
-                       --with-flavour="${flavour}" \
-                       --with-libjpeg=builtin \
-                       --with-libpng=builtin \
-                       --with-libtiff=builtin \
-                       --with-macosx-sdk="${sdkdir}" \
-                       --with-macosx-version-min="${minver}" \
-                       --with-regex=builtin \
-                       --with-zlib=builtin \
-                       --without-liblzma \
-                       ${@}
-   ${run} make -j $(sysctl -n hw.ncpu) install
+   ../configure --prefix="/usr/local/${arch}" \
+                --enable-macosx-arch="${arch}" \
+                --enable-shared=yes \
+                --enable-unicode=yes \
+                --enable-universal_binary=no \
+                --enable-webkit=no \
+                --with-expat=builtin \
+                --with-flavour="${flavour}" \
+                --with-libjpeg=builtin \
+                --with-libpng=builtin \
+                --with-libtiff=builtin \
+                --with-macosx-sdk="${sdkdir}" \
+                --with-macosx-version-min="${minver}" \
+                --with-regex=builtin \
+                 --with-zlib=builtin \
+                --without-liblzma \
+                ${@}
+   make -j $(sysctl -n hw.ncpu) install
    popd
 }
 
-# If building on 10.15 (Catalina) or newer, 32-bit versions can't be
-# created without forcing "configure" to cross compile.
+# Only build 32-bit version if running on 10.14 or older and
+# using the 10.13 SDK or older.
 arches="x86_64"
-osver=$(sw_vers -productVersion)
-if [ "${osver}" \< "10.15" ]
+osver="$(sw_vers -productVersion)"
+sdkver="$(xcrun --show-sdk-version)"
+if [ "${osver}" \< "10.15" -a "${sdkver}" \< "10.14" ]
 then
    arches="${arches} i386"
 fi
