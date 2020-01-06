@@ -758,14 +758,14 @@ void MeterPanel::OnMouse(wxMouseEvent &evt)
 
   #if wxUSE_TOOLTIPS // Not available in wxX11
    if (evt.Leaving()){
-      ProjectStatus::Get( *GetActiveProject() ).Set({});
+      ProjectStatus::Get( *mProject ).Set({});
    }
    else if (evt.Entering()) {
       // Display the tooltip in the status bar
       wxToolTip * pTip = this->GetToolTip();
       if( pTip ) {
          auto tipText = Verbatim( pTip->GetTip() );
-         ProjectStatus::Get( *GetActiveProject() ).Set(tipText);
+         ProjectStatus::Get( *mProject ).Set(tipText);
       }
    }
   #endif
@@ -1875,7 +1875,7 @@ void MeterPanel::StartMonitoring()
    } 
 
    if (start && !gAudioIO->IsBusy()){
-      AudacityProject *p = GetActiveProject();
+      AudacityProject *p = mProject;
       if (p){
          gAudioIO->StartMonitoring( DefaultPlayOptions( *p ) );
       }
@@ -1994,8 +1994,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
    // Dialog is a child of the project, rather than of the toolbar.
    // This determines where it pops up.
 
-   wxDialogWrapper dlg( FindProjectFrame( GetActiveProject() ),
-      wxID_ANY, title );
+   wxDialogWrapper dlg( FindProjectFrame( mProject ), wxID_ANY, title);
    dlg.SetName();
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();
