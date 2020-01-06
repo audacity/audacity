@@ -676,13 +676,14 @@ void LabelTrackView::CalcHighlightXs(int *x1, int *x2) const
 }
 
 #include "LabelGlyphHandle.h"
-// TODO:  don't rely on the global ::GetActiveProject() to find this.
-// Rather, give TrackPanelCell a drawing function and pass context into it.
 namespace {
-   LabelTrackHit *findHit()
+   LabelTrackHit *findHit( TrackPanel *pPanel )
    {
+      if (! pPanel )
+         return nullptr;
+
       // Fetch the highlighting state
-      auto target = TrackPanel::Get( *GetActiveProject() ).Target();
+      auto target = pPanel->Target();
       if (target) {
          auto handle = dynamic_cast<LabelGlyphHandle*>( target.get() );
          if (handle)
@@ -705,7 +706,7 @@ void LabelTrackView::Draw
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
 
-   auto pHit = findHit();
+   auto pHit = findHit( artist->parent );
 
    if(msFont.Ok())
       dc.SetFont(msFont);
