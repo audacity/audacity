@@ -120,9 +120,11 @@ class EffectUIHost final : public wxDialogWrapper,
 public:
    // constructors and destructors
    EffectUIHost(wxWindow *parent,
+                AudacityProject &project,
                 Effect *effect,
                 EffectUIClientInterface *client);
    EffectUIHost(wxWindow *parent,
+                AudacityProject &project,
                 AudacityCommand *command,
                 EffectUIClientInterface *client);
    virtual ~EffectUIHost();

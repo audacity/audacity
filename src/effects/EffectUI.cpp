@@ -717,6 +717,7 @@ EVT_MENU_RANGE(kFactoryPresetsID, kFactoryPresetsID + 999, EffectUIHost::OnFacto
 END_EVENT_TABLE()
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
+                           AudacityProject &project,
                            Effect *effect,
                            EffectUIClientInterface *client)
 :  wxDialogWrapper(parent, wxID_ANY, effect->GetName(),
@@ -736,7 +737,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    mCommand = NULL;
    mClient = client;
    
-   mProject = GetActiveProject();
+   mProject = &project;
    
    mInitialized = false;
    mSupportsRealtime = false;
@@ -750,6 +751,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 }
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
+                           AudacityProject &project,
                            AudacityCommand *command,
                            EffectUIClientInterface *client)
 :  wxDialogWrapper(parent, wxID_ANY, XO("Some Command") /*command->GetName()*/,
@@ -769,7 +771,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    mCommand = command;
    mClient = client;
    
-   mProject = GetActiveProject();
+   mProject = &project;
    
    mInitialized = false;
    mSupportsRealtime = false;
@@ -1828,7 +1830,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
       return nullptr;
 
    Destroy_ptr<EffectUIHost> dlg{
-      safenew EffectUIHost{ &parent, pEffect, client} };
+      safenew EffectUIHost{ &parent, *project, pEffect, client} };
    
    if (dlg->Initialize())
    {
