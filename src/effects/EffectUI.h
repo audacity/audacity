@@ -212,7 +212,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-struct CommandContext;
+class CommandContext;
 
 namespace  EffectUI {
 
