@@ -25,6 +25,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../ShuttleGui.h"
+#include "../../../../TrackArtist.h"
+#include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelAx.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"
@@ -1098,12 +1100,13 @@ void SliderDrawFunction
 ( LWSlider *(*Selector)
     (const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow*),
   wxDC *dc, const wxRect &rect, const Track *pTrack,
+  wxWindow *pParent,
   bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
    TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto wt = static_cast<const WaveTrack*>( pTrack );
-   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, highlight);
+   Selector( sliderRect, wt, captured, pParent )->OnPaint(*dc, highlight);
 }
 
 void PanSliderDrawFunction
@@ -1114,8 +1117,13 @@ void PanSliderDrawFunction
    auto dc = &context.dc;
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
-   SliderDrawFunction
-      ( &WaveTrackControls::PanSlider, dc, rect, pTrack, captured, hit);
+
+   const auto artist = TrackArtist::Get( context );
+   auto pParent = FindProjectFrame( artist->parent->GetProject() );
+
+   SliderDrawFunction(
+      &WaveTrackControls::PanSlider, dc, rect, pTrack,
+      pParent, captured, hit);
 }
 
 void GainSliderDrawFunction
@@ -1128,8 +1136,13 @@ void GainSliderDrawFunction
    if( hit )
       hit=hit;
    bool captured = hit && target->IsClicked();
-   SliderDrawFunction
-      ( &WaveTrackControls::GainSlider, dc, rect, pTrack, captured, hit);
+
+   const auto artist = TrackArtist::Get( context );
+   auto pParent = FindProjectFrame( artist->parent->GetProject() );
+
+   SliderDrawFunction(
+      &WaveTrackControls::GainSlider, dc, rect, pTrack,
+      pParent, captured, hit);
 }
 
 void StatusDrawFunction
@@ -1269,8 +1282,7 @@ LWSlider * WaveTrackControls::GainSlider
    gGainCaptured->Set(gain);
 
    auto slider = (captured ? gGainCaptured : gGain).get();
-   slider->SetParent( pParent ? pParent :
-      FindProjectFrame( ::GetActiveProject() ) );
+   slider->SetParent( pParent );
    return slider;
 }
 
@@ -1326,8 +1338,7 @@ LWSlider * WaveTrackControls::PanSlider
    gPanCaptured->Set(pan);
 
    auto slider = (captured ? gPanCaptured : gPan).get();
-   slider->SetParent( pParent ? pParent :
-      FindProjectFrame( ::GetActiveProject() ) );
+   slider->SetParent( pParent );
    return slider;
 }
 
