@@ -142,7 +142,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow *parent,
+   bool ShowInterface( wxWindow &parent,
       const EffectDialogFactory &factory, bool forceModal = false) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
@@ -255,12 +255,12 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // have the "selected" flag set to true, which is consistent with
    // Audacity's standard UI.
    // Create a user interface only if the supplied function is not null.
-   /* not virtual */ bool DoEffect(wxWindow *parent, double projectRate, TrackList *list,
+   /* not virtual */ bool DoEffect(wxWindow &parent, double projectRate, TrackList *list,
       TrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
       const EffectDialogFactory &dialogFactory );
 
    bool Delegate( Effect &delegate,
-      wxWindow *parent, const EffectDialogFactory &factory );
+      wxWindow &parent, const EffectDialogFactory &factory );
 
    virtual bool IsHidden();
 

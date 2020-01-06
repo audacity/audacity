@@ -150,10 +150,10 @@ bool EffectNoiseRemoval::CheckWhetherSkipEffect()
 }
 
 bool EffectNoiseRemoval::ShowInterface(
-   wxWindow *parent, const EffectDialogFactory &, bool forceModal  /* forceModal */ )
+   wxWindow &parent, const EffectDialogFactory &, bool forceModal  /* forceModal */ )
 {
    // to do: use forceModal correctly
-   NoiseRemovalDialog dlog(this, parent);
+   NoiseRemovalDialog dlog(this, &parent);
    dlog.mSensitivity = mSensitivity;
    dlog.mGain = -mNoiseGain;
    dlog.mFreq = mFreqSmoothingHz;

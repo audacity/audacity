@@ -977,7 +977,7 @@ finish:
 }
 
 bool NyquistEffect::ShowInterface(
-   wxWindow *parent, const EffectDialogFactory &factory, bool forceModal)
+   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
 {
    // Show the normal (prompt or effect) interface
    bool res = Effect::ShowInterface(parent, factory, forceModal);

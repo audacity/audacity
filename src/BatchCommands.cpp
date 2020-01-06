@@ -438,7 +438,8 @@ wxString MacroCommands::GetCurrentParamsFor(const CommandID & command)
    return EffectManager::Get().GetEffectParameters(ID);
 }
 
-wxString MacroCommands::PromptForParamsFor(const CommandID & command, const wxString & params, wxWindow *parent)
+wxString MacroCommands::PromptForParamsFor(
+   const CommandID & command, const wxString & params, wxWindow &parent)
 {
    const PluginID & ID =
       EffectManager::Get().GetEffectByIdentifier(command);

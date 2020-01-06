@@ -120,9 +120,11 @@ class EffectUIHost final : public wxDialogWrapper,
 public:
    // constructors and destructors
    EffectUIHost(wxWindow *parent,
+                AudacityProject &project,
                 Effect *effect,
                 EffectUIClientInterface *client);
    EffectUIHost(wxWindow *parent,
+                AudacityProject &project,
                 AudacityCommand *command,
                 EffectUIClientInterface *client);
    virtual ~EffectUIHost();
@@ -216,7 +218,7 @@ class CommandContext;
 
 namespace  EffectUI {
 
-   wxDialog *DialogFactory( wxWindow *parent, EffectHostInterface *pHost,
+   wxDialog *DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
       EffectUIClientInterface *client);
 
    /** Run an effect given the plugin ID */

@@ -218,7 +218,7 @@ void MacroCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
    auto command = mInternalCommandName;
    wxString params  = mParameters->GetValue();
 
-   params = MacroCommands::PromptForParamsFor(command, params, this).Trim();
+   params = MacroCommands::PromptForParamsFor(command, params, *this).Trim();
 
    mParameters->SetValue(params);
    mParameters->Refresh();

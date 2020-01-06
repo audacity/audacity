@@ -1071,7 +1071,7 @@ bool LadspaEffect::RealtimeProcessEnd()
 }
 
 bool LadspaEffect::ShowInterface(
-   wxWindow *parent, const EffectDialogFactory &factory, bool forceModal)
+   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
 {
    if (mDialog)
    {

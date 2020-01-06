@@ -1440,7 +1440,7 @@ bool LV2Effect::RealtimeProcessEnd()
 }
 
 bool LV2Effect::ShowInterface(
-   wxWindow *parent, const EffectDialogFactory &factory, bool forceModal)
+   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
 {
    if (mDialog)
    {

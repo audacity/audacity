@@ -38,7 +38,7 @@ public:
 
 //   using Effect::TrackProgress;
 
-   bool ShowInterface( wxWindow *parent,
+   bool ShowInterface( wxWindow &parent,
       const EffectDialogFactory &factory, bool forceModal = false) override;
 
    bool Init() override;

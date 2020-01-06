@@ -19,6 +19,7 @@
 #include "Effect.h"
 #include "EffectManager.h"
 #include "../ProjectHistory.h"
+#include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
 #include "RealtimeEffectManager.h"
 
@@ -377,7 +378,7 @@ void EffectRack::OnEditor(wxCommandEvent & evt)
    }
 
    auto pEffect = mEffects[index];
-   pEffect->ShowInterface( GetParent(), EffectUI::DialogFactory,
+   pEffect->ShowInterface( *GetParent(), EffectUI::DialogFactory,
       pEffect->IsBatchProcessing() );
 }
 
@@ -716,6 +717,7 @@ EVT_MENU_RANGE(kFactoryPresetsID, kFactoryPresetsID + 999, EffectUIHost::OnFacto
 END_EVENT_TABLE()
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
+                           AudacityProject &project,
                            Effect *effect,
                            EffectUIClientInterface *client)
 :  wxDialogWrapper(parent, wxID_ANY, effect->GetName(),
@@ -735,7 +737,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    mCommand = NULL;
    mClient = client;
    
-   mProject = GetActiveProject();
+   mProject = &project;
    
    mInitialized = false;
    mSupportsRealtime = false;
@@ -749,6 +751,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 }
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
+                           AudacityProject &project,
                            AudacityCommand *command,
                            EffectUIClientInterface *client)
 :  wxDialogWrapper(parent, wxID_ANY, XO("Some Command") /*command->GetName()*/,
@@ -768,7 +771,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    mCommand = command;
    mClient = client;
    
-   mProject = GetActiveProject();
+   mProject = &project;
    
    mInitialized = false;
    mSupportsRealtime = false;
@@ -1128,6 +1131,8 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnApply(wxCommandEvent & evt)
 {
+   auto &project = *mProject;
+
    // On wxGTK (wx2.8.12), the default action is still executed even if
    // the button is disabled.  This appears to affect all wxDialogs, not
    // just our Effects dialogs.  So, this is a only temporary workaround
@@ -1143,14 +1148,14 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
        mEffect &&
        mEffect->GetType() != EffectTypeGenerate &&
        mEffect->GetType() != EffectTypeTool &&
-       ViewInfo::Get( *mProject ).selectedRegion.isPoint())
+       ViewInfo::Get( project ).selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
       bool allowed =
-      MenuManager::Get(*mProject).ReportIfActionNotAllowed(
-                                                           mEffect->GetName(),
-                                                           flags,
-                                                           WaveTracksSelectedFlag | TimeSelectedFlag);
+      MenuManager::Get( project ).ReportIfActionNotAllowed(
+         mEffect->GetName(),
+         flags,
+         WaveTracksSelectedFlag | TimeSelectedFlag);
       if (!allowed)
          return;
    }
@@ -1191,7 +1196,6 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    auto cleanup = finally( [&] { mApplyBtn->Enable(); } );
 
    if( mEffect ) {
-      auto &project = *GetActiveProject();
       CommandContext context( project );
       // This is absolute hackage...but easy and I can't think of another way just now.
       //
@@ -1203,7 +1207,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    if( mCommand )
       // PRL:  I don't like the global and would rather pass *mProject!
       // But I am preserving old behavior
-      mCommand->Apply( CommandContext{ *GetActiveProject() } );
+      mCommand->Apply( CommandContext{ project } );
 }
 
 void EffectUIHost::DoCancel()
@@ -1812,15 +1816,22 @@ void EffectUIHost::CleanupRealtime()
    }
 }
 
-wxDialog *EffectUI::DialogFactory( wxWindow *parent, EffectHostInterface *pHost,
+wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
    EffectUIClientInterface *client)
 {
    auto pEffect = dynamic_cast< Effect* >( pHost );
    if ( ! pEffect )
       return nullptr;
 
+   // Make sure there is an associated project, whose lifetime will
+   // govern the lifetime of the dialog, even when the dialog is
+   // non-modal, as for realtime effects
+   auto project = FindProjectFromWindow(&parent);
+   if ( !project )
+      return nullptr;
+
    Destroy_ptr<EffectUIHost> dlg{
-      safenew EffectUIHost{ parent, pEffect, client} };
+      safenew EffectUIHost{ &parent, *project, pEffect, client} };
    
    if (dlg->Initialize())
    {
@@ -1913,7 +1924,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow *parent, EffectHostInterface *pHost,
          EffectRack::Get( context.project ).Add(effect);
       }
 #endif
-      success = effect->DoEffect(&window,
+      success = effect->DoEffect(window,
          rate,
          &tracks,
          &trackFactory,
