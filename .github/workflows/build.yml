@@ -72,14 +72,14 @@ jobs:
         path: wxroot
 
     # =========================================================================
-    # WINDOWS: Setup Nuget (for all versions of Ubuntu) 
+    # WINDOWS: Setup Nuget (for all versions of Windows) 
     # =========================================================================
     - name: Setup Nuget
       uses: nuget/setup-nuget@v1
       if: startswith( matrix.os, 'windows' )
 
     # =========================================================================
-    # WINDOWS: Build (for all versions of Ubuntu)
+    # WINDOWS: Build (for all versions of Windows)
     # =========================================================================
     - name: Build Windows
       if: startswith( matrix.os, 'windows' )
@@ -154,7 +154,6 @@ jobs:
       shell: bash
       run: |
         set -x
-        set
 
         # Setup environment
         sudo apt-get install -y libgtk2.0-dev libasound2-dev autoconf automake zip
