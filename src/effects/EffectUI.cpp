@@ -1131,6 +1131,8 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnApply(wxCommandEvent & evt)
 {
+   auto &project = *mProject;
+
    // On wxGTK (wx2.8.12), the default action is still executed even if
    // the button is disabled.  This appears to affect all wxDialogs, not
    // just our Effects dialogs.  So, this is a only temporary workaround
@@ -1146,14 +1148,14 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
        mEffect &&
        mEffect->GetType() != EffectTypeGenerate &&
        mEffect->GetType() != EffectTypeTool &&
-       ViewInfo::Get( *mProject ).selectedRegion.isPoint())
+       ViewInfo::Get( project ).selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
       bool allowed =
-      MenuManager::Get(*mProject).ReportIfActionNotAllowed(
-                                                           mEffect->GetName(),
-                                                           flags,
-                                                           WaveTracksSelectedFlag | TimeSelectedFlag);
+      MenuManager::Get( project ).ReportIfActionNotAllowed(
+         mEffect->GetName(),
+         flags,
+         WaveTracksSelectedFlag | TimeSelectedFlag);
       if (!allowed)
          return;
    }
@@ -1194,7 +1196,6 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    auto cleanup = finally( [&] { mApplyBtn->Enable(); } );
 
    if( mEffect ) {
-      auto &project = *GetActiveProject();
       CommandContext context( project );
       // This is absolute hackage...but easy and I can't think of another way just now.
       //
@@ -1206,7 +1207,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    if( mCommand )
       // PRL:  I don't like the global and would rather pass *mProject!
       // But I am preserving old behavior
-      mCommand->Apply( CommandContext{ *GetActiveProject() } );
+      mCommand->Apply( CommandContext{ project } );
 }
 
 void EffectUIHost::DoCancel()
