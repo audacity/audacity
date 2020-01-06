@@ -20,6 +20,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "NoteTrackSliderHandles.h"
 
 #include "../../../../HitTestResult.h"
+#include "../../../../TrackArtist.h"
+#include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
@@ -174,12 +176,13 @@ void SliderDrawFunction
 ( LWSlider *(*Selector)
     (const wxRect &sliderRect, const NoteTrack *t, bool captured, wxWindow*),
   wxDC *dc, const wxRect &rect, const Track *pTrack,
+  wxWindow *pParent,
   bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
    TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto nt = static_cast<const NoteTrack*>( pTrack );
-   Selector( sliderRect, nt, captured, nullptr )->OnPaint(*dc, highlight);
+   Selector( sliderRect, nt, captured, pParent )->OnPaint(*dc, highlight);
 }
 
 void VelocitySliderDrawFunction
@@ -190,8 +193,13 @@ void VelocitySliderDrawFunction
    auto target = dynamic_cast<VelocitySliderHandle*>( context.target.get() );
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
+
+   const auto artist = TrackArtist::Get( context );
+   auto pParent = FindProjectFrame( artist->parent->GetProject() );
+
    SliderDrawFunction(
-      &NoteTrackControls::VelocitySlider, dc, rect, pTrack, captured, hit);
+      &NoteTrackControls::VelocitySlider, dc, rect, pTrack,
+      pParent, captured, hit);
 }
 
 void MidiControlsDrawFunction
@@ -279,8 +287,7 @@ LWSlider * NoteTrackControls::VelocitySlider
    gVelocityCaptured->Set(velocity);
 
    auto slider = (captured ? gVelocityCaptured : gVelocity).get();
-   slider->SetParent( pParent ? pParent :
-      FindProjectFrame( ::GetActiveProject() ) );
+   slider->SetParent( pParent );
    return slider;
 }
 #endif

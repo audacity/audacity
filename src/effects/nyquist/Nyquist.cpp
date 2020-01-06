@@ -543,7 +543,7 @@ bool NyquistEffect::Init()
    // selected track(s) - (but don't apply to Nyquist Prompt).
 
    if (!mIsPrompt && mIsSpectral) {
-      AudacityProject *project = GetActiveProject();
+      auto *project = FindProject();
       bool bAllowSpectralEditing = true;
 
       for ( auto t :
@@ -665,7 +665,7 @@ bool NyquistEffect::Process()
 
    if (mVersion >= 4)
    {
-      AudacityProject *project = GetActiveProject();
+      auto project = FindProject();
 
       mProps = wxEmptyString;
 
@@ -957,7 +957,7 @@ finish:
    else{
       ReplaceProcessedTracks(false); // Do not use the results.
       // Selection is to be set to whatever it is in the project.
-      AudacityProject *project = GetActiveProject();
+      auto project = FindProject();
       if (project) {
          auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;
          mT0 = selectedRegion.t0();
@@ -1693,7 +1693,7 @@ double NyquistEffect::GetCtrlValue(const wxString &s)
     * parsed on each run so that the correct value for "half-srate" may
     * be determined.
     *
-   AudacityProject *project = GetActiveProject();
+   auto project = FindProject();
    if (project && s.IsSameAs(wxT("half-srate"), false)) {
       auto rate =
          TrackList::Get( *project ).Selected< const WaveTrack >()

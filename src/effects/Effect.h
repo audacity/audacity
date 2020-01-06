@@ -456,6 +456,7 @@ protected:
    wxWeakRef<NotifyingSelectedRegion> mpSelectedRegion{};
    TrackFactory   *mFactory;
    const TrackList *inputTracks() const { return mTracks; }
+   const AudacityProject *FindProject() const;
    std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
    double         mT0;
    double         mT1;
@@ -477,7 +478,6 @@ protected:
  // Used only by the base Effect class
  //
  private:
-   void CommonInit();
    void CountWaveTracks();
 
    // Driver for client effects

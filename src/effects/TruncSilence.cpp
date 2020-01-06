@@ -329,7 +329,7 @@ bool EffectTruncSilence::ProcessIndependently()
 {
    unsigned nGroups = 0;
 
-   const auto &settings = ProjectSettings::Get( *::GetActiveProject() );
+   const auto &settings = ProjectSettings::Get( *FindProject() );
    const bool syncLock = settings.IsSyncLocked();
 
    // Check if it's permissible

@@ -115,8 +115,12 @@ Effect::Effect()
 
    mUIDebug = false;
 
-   AudacityProject *p = GetActiveProject();
-   mProjectRate = p ? ProjectSettings::Get( *p ).GetRate() : 44100;
+   // PRL:  I think this initialization of mProjectRate doesn't matter
+   // because it is always reassigned in DoEffect before it is used
+   gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
+                &mProjectRate,
+                AudioIOBase::GetOptimalSupportedSampleRate());
+
    mIsBatch = false;
 }
 
@@ -706,7 +710,7 @@ NumericFormatSymbol Effect::GetDurationFormat()
 
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
-   return ProjectSettings::Get( *GetActiveProject() ).GetSelectionFormat();
+   return ProjectSettings::Get( *FindProject() ).GetSelectionFormat();
 }
 
 void Effect::SetDuration(double seconds)
@@ -1770,7 +1774,7 @@ bool Effect::ProcessTrack(int count,
 
    if (rc && isGenerator)
    {
-      AudacityProject *p = GetActiveProject();
+      auto pProject = FindProject();
 
       // PRL:  this code was here and could not have been the right
       // intent, mixing time and sampleCount values:
@@ -1790,7 +1794,7 @@ bool Effect::ProcessTrack(int count,
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
       // mT1 gives us the NEW selection. We want to replace up to GetSel1().
-      auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
+      auto &selectedRegion = ViewInfo::Get( *pProject ).selectedRegion;
       left->ClearAndPaste(mT0,
          selectedRegion.t1(), genLeft.get(), true, true,
          nullptr /* &warper */);
@@ -2183,6 +2187,11 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    nEffectsDone++;
 }
 
+const AudacityProject *Effect::FindProject() const
+{
+   return inputTracks()->GetOwner();
+}
+
 void Effect::CountWaveTracks()
 {
    mNumTracks = mTracks->Selected< const WaveTrack >().size();
@@ -2341,7 +2350,7 @@ void Effect::Preview(bool dryOnly)
       t1 = std::min(mT0 + previewLen, mT1);
 
       // Start audio playing
-      AudioIOStartStreamOptions options { ::GetActiveProject(), rate };
+      AudioIOStartStreamOptions options { pProject, rate };
       int token =
          gAudioIO->StartStream(tracks, mT0, t1, options);
 
