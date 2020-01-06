@@ -706,7 +706,7 @@ NumericFormatSymbol Effect::GetDurationFormat()
 
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
-   return ProjectSettings( *GetActiveProject() ).GetSelectionFormat();
+   return ProjectSettings::Get( *GetActiveProject() ).GetSelectionFormat();
 }
 
 void Effect::SetDuration(double seconds)
