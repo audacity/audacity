@@ -1104,7 +1104,7 @@ void MacrosWindow::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
    auto command = mMacroCommands.GetCommand(item);
    wxString params  = mMacroCommands.GetParams(item);
 
-   params = MacroCommands::PromptForParamsFor(command, params, this).Trim();
+   params = MacroCommands::PromptForParamsFor(command, params, *this).Trim();
    Raise();
 
    mMacroCommands.DeleteFromMacro(item);

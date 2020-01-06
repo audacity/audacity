@@ -478,7 +478,7 @@ bool Effect::RealtimeProcessEnd()
    return true;
 }
 
-bool Effect::ShowInterface(wxWindow *parent,
+bool Effect::ShowInterface(wxWindow &parent,
    const EffectDialogFactory &factory, bool forceModal)
 {
    if (!IsInteractive())
@@ -1091,7 +1091,7 @@ void Effect::SetBatchProcessing(bool start)
    }
 }
 
-bool Effect::DoEffect(wxWindow *parent,
+bool Effect::DoEffect(wxWindow &parent,
                       double projectRate,
                       TrackList *list,
                       TrackFactory *factory,
@@ -1214,7 +1214,7 @@ bool Effect::DoEffect(wxWindow *parent,
 }
 
 bool Effect::Delegate(
-   Effect &delegate, wxWindow *parent, const EffectDialogFactory &factory )
+   Effect &delegate, wxWindow &parent, const EffectDialogFactory &factory )
 {
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );

@@ -216,7 +216,7 @@ class CommandContext;
 
 namespace  EffectUI {
 
-   wxDialog *DialogFactory( wxWindow *parent, EffectHostInterface *pHost,
+   wxDialog *DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
       EffectUIClientInterface *client);
 
    /** Run an effect given the plugin ID */

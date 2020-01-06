@@ -210,7 +210,7 @@ public:
    ~Settings() {}
 
    bool PromptUser(EffectNoiseReduction *effect,
-      wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings);
+      wxWindow &parent, bool bHasProfile, bool bAllowTwiddleSettings);
    bool PrefsIO(bool read);
    bool Validate(EffectNoiseReduction *effect) const;
 
@@ -460,7 +460,7 @@ bool EffectNoiseReduction::CheckWhetherSkipEffect()
 }
 
 bool EffectNoiseReduction::ShowInterface(
-   wxWindow *parent, const EffectDialogFactory &, bool forceModal)
+   wxWindow &parent, const EffectDialogFactory &, bool forceModal)
 {
    // to do: use forceModal correctly
 
@@ -474,11 +474,11 @@ bool EffectNoiseReduction::ShowInterface(
 }
 
 bool EffectNoiseReduction::Settings::PromptUser
-(EffectNoiseReduction *effect, wxWindow *parent,
+(EffectNoiseReduction *effect, wxWindow &parent,
  bool bHasProfile, bool bAllowTwiddleSettings)
 {
    EffectNoiseReduction::Dialog dlog
-      (effect, this, parent, bHasProfile, bAllowTwiddleSettings);
+      (effect, this, &parent, bHasProfile, bAllowTwiddleSettings);
 
    dlog.CentreOnParent();
    dlog.ShowModal();

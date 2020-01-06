@@ -19,6 +19,7 @@
 #include "Effect.h"
 #include "EffectManager.h"
 #include "../ProjectHistory.h"
+#include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
 #include "RealtimeEffectManager.h"
 
@@ -377,7 +378,7 @@ void EffectRack::OnEditor(wxCommandEvent & evt)
    }
 
    auto pEffect = mEffects[index];
-   pEffect->ShowInterface( GetParent(), EffectUI::DialogFactory,
+   pEffect->ShowInterface( *GetParent(), EffectUI::DialogFactory,
       pEffect->IsBatchProcessing() );
 }
 
@@ -1812,15 +1813,22 @@ void EffectUIHost::CleanupRealtime()
    }
 }
 
-wxDialog *EffectUI::DialogFactory( wxWindow *parent, EffectHostInterface *pHost,
+wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
    EffectUIClientInterface *client)
 {
    auto pEffect = dynamic_cast< Effect* >( pHost );
    if ( ! pEffect )
       return nullptr;
 
+   // Make sure there is an associated project, whose lifetime will
+   // govern the lifetime of the dialog, even when the dialog is
+   // non-modal, as for realtime effects
+   auto project = FindProjectFromWindow(&parent);
+   if ( !project )
+      return nullptr;
+
    Destroy_ptr<EffectUIHost> dlg{
-      safenew EffectUIHost{ parent, pEffect, client} };
+      safenew EffectUIHost{ &parent, pEffect, client} };
    
    if (dlg->Initialize())
    {
@@ -1913,7 +1921,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow *parent, EffectHostInterface *pHost,
          EffectRack::Get( context.project ).Add(effect);
       }
 #endif
-      success = effect->DoEffect(&window,
+      success = effect->DoEffect(window,
          rate,
          &tracks,
          &trackFactory,

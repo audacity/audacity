@@ -1429,7 +1429,7 @@ bool AudioUnitEffect::RealtimeProcessEnd()
 }
 
 bool AudioUnitEffect::ShowInterface(
-   wxWindow *parent, const EffectDialogFactory &factory, bool forceModal)
+   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
 {
    if (mDialog)
    {

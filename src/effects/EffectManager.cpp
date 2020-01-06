@@ -326,7 +326,7 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
 
 bool EffectManager::PromptUser(
    const PluginID & ID,
-   const EffectClientInterface::EffectDialogFactory &factory, wxWindow *parent)
+   const EffectClientInterface::EffectDialogFactory &factory, wxWindow &parent)
 {
    bool result = false;
    Effect *effect = GetEffect(ID);
@@ -342,7 +342,7 @@ bool EffectManager::PromptUser(
 
    if (command)
    {
-      result = command->PromptUser(parent);
+      result = command->PromptUser(&parent);
       return result;
    }
 

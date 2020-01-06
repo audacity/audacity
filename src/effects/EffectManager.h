@@ -107,7 +107,7 @@ public:
    bool SetEffectParameters(const PluginID & ID, const wxString & params);
    bool PromptUser( const PluginID & ID,
       const EffectClientInterface::EffectDialogFactory &factory,
-      wxWindow *parent );
+      wxWindow &parent );
    bool HasPresets(const PluginID & ID);
    wxString GetPreset(const PluginID & ID, const wxString & params, wxWindow * parent);
    wxString GetDefaultPreset(const PluginID & ID);

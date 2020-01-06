@@ -1602,7 +1602,7 @@ bool VSTEffect::RealtimeProcessEnd()
 /// all provide the information (kn0ck0ut is one).
 ///
 bool VSTEffect::ShowInterface(
-   wxWindow *parent, const EffectDialogFactory &factory, bool forceModal)
+   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
 {
    if (mDialog)
    {
