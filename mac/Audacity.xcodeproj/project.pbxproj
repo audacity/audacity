@@ -9443,6 +9443,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				PRODUCT_NAME = portmidi;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/portmidi/** $(TOPLEVEL)/lib-src/portmidi/**";
@@ -9453,6 +9454,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				PRODUCT_NAME = portmidi;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/portmidi/** $(TOPLEVEL)/lib-src/portmidi/**";
