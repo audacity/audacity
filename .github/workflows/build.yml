@@ -67,6 +67,7 @@ jobs:
     - name: Cache wxWidgets
       uses: actions/cache@v1
       with:
+        # Increment the number at the end to force recreation of the cache
         key: wxWidgets_${{ matrix.os }}_${{ env.WXHASH }}.8
         path: wxroot
 
