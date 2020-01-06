@@ -468,10 +468,8 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
       {
          if(!ProcessBufferBlock())
             return false;
-      }
-
-      if(!analyse)
          StoreBufferBlock(range, s, blockLen);
+      }
 
       // Increment s one blockfull of samples
       s += blockLen;
@@ -485,21 +483,24 @@ bool EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
                                      sampleCount pos, size_t len)
 {
    sampleCount read_size = -1;
+   sampleCount last_read_size = -1;
    // Get the samples from the track and put them in the buffer
    int idx = 0;
    for(auto channel : range)
    {
       channel->Get((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len,
                    fillZero, true, &read_size);
-      mTrackBufferLen = read_size.as_size_t();
-
+      // WaveTrack::Get returns the amount of read samples excluding zero
+      // filled samples from clip gaps. But in case of stereo tracks with
+      // assymetric gaps it still returns the same number for both channels.
+      //
       // Fail if we read different sample count from stereo pair tracks.
-      // Ignore this check during first iteration (read_size == -1).
-      if(read_size.as_size_t() != mTrackBufferLen && read_size != -1)
+      // Ignore this check during first iteration (last_read_size == -1).
+      if(read_size != last_read_size && last_read_size.as_long_long() != -1)
          return false;
-
       ++idx;
    }
+   mTrackBufferLen = len;
    return true;
 }
 
