@@ -131,11 +131,12 @@ void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
 
 // static member variable.
 void (*ScreenshotCommand::mIdleHandler)(wxIdleEvent& event) = NULL;
+static AudacityProject *pIdleHandlerProject = nullptr;
 // This static variable is used to get from an idle event to the screenshot
 // command that caused the idle event interception to be set up.
 ScreenshotCommand * ScreenshotCommand::mpShooter=NULL;
 
-// IdleHandler is expected to be called from EVT_IDLE when a dialog has been 
+// IdleHandler is expected to be called from EVT_IDLE when a dialog has been
 // fully created.  Usually the dialog will have been created by invoking
 // an effects gui.
 void IdleHandler(wxIdleEvent& event){
@@ -143,12 +144,17 @@ void IdleHandler(wxIdleEvent& event){
    wxWindow * pWin = dynamic_cast<wxWindow*>(event.GetEventObject());
    wxASSERT( pWin );
    pWin->Unbind(wxEVT_IDLE, IdleHandler);
-   CommandContext context( *GetActiveProject() );
+   CommandContext context( *pIdleHandlerProject );
    // We have the relevant window, so go and capture it.
    if( ScreenshotCommand::mpShooter )
       ScreenshotCommand::mpShooter->CaptureWindowOnIdle( context, pWin );
 }
 
+void ScreenshotCommand::SetIdleHandler( AudacityProject &project )
+{
+   mIdleHandler = IdleHandler;
+   pIdleHandlerProject = &project;
+}
 
 wxTopLevelWindow *ScreenshotCommand::GetFrontWindow(AudacityProject *project)
 {
@@ -450,7 +456,7 @@ void ScreenshotCommand::CapturePreferences(
 
    for( int i=0;i<nPrefsPages;i++){
       // The handler is cleared each time it is used.
-      SetIdleHandler( IdleHandler );
+      SetIdleHandler( context.project );
       gPrefs->Write(wxT("/Prefs/PrefsCategory"), (long)i);
       gPrefs->Flush();
       CommandID Command{ wxT("Preferences") };
@@ -615,7 +621,7 @@ void ScreenshotCommand::CaptureCommands(
 
    for( size_t i=0;i<Commands.size();i++){
       // The handler is cleared each time it is used.
-      SetIdleHandler( IdleHandler );
+      SetIdleHandler( context.project );
       Str = Commands[i];
       const CommandContext projectContext( *pProject );
       if( !manager.HandleTextualCommand( Str, projectContext, AlwaysEnabledFlag, true ) )
