@@ -117,9 +117,10 @@ Effect::Effect()
 
    // PRL:  I think this initialization of mProjectRate doesn't matter
    // because it is always reassigned in DoEffect before it is used
+   // STF: but can't call AudioIOBase::GetOptimalSupportedSampleRate() here.
    gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
                 &mProjectRate,
-                AudioIOBase::GetOptimalSupportedSampleRate());
+                44100);
 
    mIsBatch = false;
 }
