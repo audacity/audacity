@@ -248,12 +248,12 @@ namespace {
 bool Track::IsSyncLockSelected() const
 {
 #ifdef EXPERIMENTAL_SYNC_LOCK
-   AudacityProject *p = GetActiveProject();
-   if (!p || !ProjectSettings::Get( *p ).IsSyncLocked())
-      return false;
-
    auto pList = mList.lock();
    if (!pList)
+      return false;
+
+   auto p = pList->GetOwner();
+   if (!p || !ProjectSettings::Get( *p ).IsSyncLocked())
       return false;
 
    auto shTrack = this->SubstituteOriginalTrack();
