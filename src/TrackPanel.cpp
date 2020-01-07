@@ -306,7 +306,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                     this);
 
    auto theProject = GetProject();
-   theProject->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
+   wxTheApp->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
    theProject->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
    theProject->Bind(
       EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
