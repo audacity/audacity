@@ -14,6 +14,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "AudioIOBase.h"
 #include "Project.h"
+#include "prefs/QualityPrefs.h"
 #include "widgets/NumericTextCtrl.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 
@@ -61,6 +62,7 @@ ProjectSettings::ProjectSettings( AudacityProject &project )
    NumericConverter::BANDWIDTH,
    gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) )
 }
+, mDefaultFormat{ QualityPrefs::SampleFormatChoice() }
 , mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
 {
    if (!gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate,
@@ -113,6 +115,8 @@ void ProjectSettings::UpdatePrefs()
       bar.SetRate( mRate );
    }
 #endif
+
+   mDefaultFormat = QualityPrefs::SampleFormatChoice();
 }
 
 const NumericFormatSymbol &

@@ -64,6 +64,8 @@ public:
    ProjectSettings( const ProjectSettings & ) PROHIBITED;
    ProjectSettings &operator=( const ProjectSettings & ) PROHIBITED;
 
+   sampleFormat GetDefaultFormat() const { return mDefaultFormat; }
+
    double GetRate() const { return mRate; }
    void SetRate( double value ) { mRate = value; }
 
@@ -129,6 +131,7 @@ private:
    // the main
    std::atomic<double> mPlaySpeed{};
 
+   sampleFormat mDefaultFormat;
    int mSnapTo;
 
    int mCurrentTool;
