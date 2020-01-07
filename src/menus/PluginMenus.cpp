@@ -10,6 +10,7 @@
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../Screenshot.h"
 #include "../commands/CommandContext.h"
@@ -512,8 +513,9 @@ void OnScreenshot(const CommandContext &context )
 void OnBenchmark(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &settings = ProjectSettings::Get( project );
    auto &window = GetProjectFrame( project );
-   ::RunBenchmark(&window);
+   ::RunBenchmark( &window, settings );
 }
 
 void OnSimulateRecordingErrors(const CommandContext &context)

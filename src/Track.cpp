@@ -1288,6 +1288,7 @@ static auto TrackFactoryFactory = []( AudacityProject &project ) {
    auto &dirManager = DirManager::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    return std::make_shared< TrackFactory >(
+      ProjectSettings::Get( project ),
       dirManager.shared_from_this(), &viewInfo );
 };
 

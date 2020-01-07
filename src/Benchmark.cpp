@@ -41,6 +41,7 @@ of the BlockFile system.
 #include "WaveTrack.h"
 #include "Sequence.h"
 #include "Prefs.h"
+#include "ProjectSettings.h"
 #include "ViewInfo.h"
 
 #include "FileNames.h"
@@ -51,7 +52,7 @@ class BenchmarkDialog final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
-   BenchmarkDialog( wxWindow *parent );
+   BenchmarkDialog( wxWindow *parent, const ProjectSettings &settings );
 
    void MakeBenchmarkDialog();
 
@@ -65,6 +66,8 @@ private:
    void Printf(const TranslatableString &str);
    void HoldPrint(bool hold);
    void FlushPrint();
+
+   const ProjectSettings &mSettings;
 
    bool      mHoldPrint;
    wxString  mToPrint;
@@ -83,7 +86,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-void RunBenchmark(wxWindow *parent)
+void RunBenchmark( wxWindow *parent, const ProjectSettings &settings )
 {
    /*
    int action = AudacityMessageBox(
@@ -99,7 +102,7 @@ XO("This will close all project windows (without saving)\nand open the Audacity 
       GetProjectFrame( *pProject ).Close();
    */
 
-   BenchmarkDialog dlog(parent);
+   BenchmarkDialog dlog{ parent, settings };
 
    dlog.CentreOnParent();
 
@@ -128,12 +131,15 @@ BEGIN_EVENT_TABLE(BenchmarkDialog, wxDialogWrapper)
    EVT_BUTTON( wxID_CANCEL, BenchmarkDialog::OnClose )
 END_EVENT_TABLE()
 
-BenchmarkDialog::BenchmarkDialog(wxWindow *parent):
+BenchmarkDialog::BenchmarkDialog(
+   wxWindow *parent, const ProjectSettings &settings)
+   :
 /* i18n-hint: Benchmark means a software speed test */
       wxDialogWrapper( parent, 0, XO("Benchmark"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE |
                 wxRESIZE_BORDER)
+   , mSettings{ settings }
 {
    SetName();
 
@@ -362,7 +368,8 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
    auto dd = DirManager::Create();
-   const auto t = TrackFactory{ dd, &zoomInfo }.NewWaveTrack(int16Sample);
+   const auto t =
+      TrackFactory{ mSettings, dd, &zoomInfo }.NewWaveTrack(int16Sample);
 
    t->SetRate(1);
 

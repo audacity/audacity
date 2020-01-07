@@ -34,6 +34,7 @@ class DirManager;
 class Track;
 class AudioTrack;
 class PlayableTrack;
+class ProjectSettings;
 class LabelTrack;
 class TimeTrack;
 class TrackControls;
@@ -1582,8 +1583,10 @@ class AUDACITY_DLL_API TrackFactory final
    static TrackFactory &Reset( AudacityProject &project );
    static void Destroy( AudacityProject &project );
 
-   TrackFactory(const std::shared_ptr<DirManager> &dirManager, const ZoomInfo *zoomInfo):
-      mDirManager(dirManager)
+   TrackFactory( const ProjectSettings &settings,
+      const std::shared_ptr<DirManager> &dirManager, const ZoomInfo *zoomInfo)
+      : mSettings{ settings }
+      , mDirManager(dirManager)
       , mZoomInfo(zoomInfo)
    {
    }
@@ -1591,11 +1594,10 @@ class AUDACITY_DLL_API TrackFactory final
    TrackFactory &operator=( const TrackFactory & ) PROHIBITED;
 
  private:
+   const ProjectSettings &mSettings;
    const std::shared_ptr<DirManager> mDirManager;
    const ZoomInfo *const mZoomInfo;
    friend class AudacityProject;
-   friend class BenchmarkDialog;
-
  public:
    // These methods are defined in WaveTrack.cpp, NoteTrack.cpp,
    // LabelTrack.cpp, and TimeTrack.cpp respectively

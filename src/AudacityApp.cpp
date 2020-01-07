@@ -1627,7 +1627,7 @@ bool AudacityApp::OnInit()
       {
          if (parser->Found(wxT("t")))
          {
-            RunBenchmark(NULL);
+            RunBenchmark( nullptr, ProjectSettings::Get( *project ) );
             QuitAudacity(true);
          }
 
