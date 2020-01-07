@@ -69,8 +69,7 @@ public:
    //
 
    WaveTrack(const std::shared_ptr<DirManager> &projDirManager,
-             sampleFormat format = (sampleFormat)0,
-             double rate = 0);
+             sampleFormat format, double rate);
    WaveTrack(const WaveTrack &orig);
 
    // overwrite data excluding the sample sequence but including display

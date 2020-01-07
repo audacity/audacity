@@ -421,10 +421,7 @@ void ODManager::Start()
       {
          mNeedsDraw=0;
          wxCommandEvent event( EVT_ODTASK_UPDATE );
-         ODLocker locker{ &AllProjects::Mutex() };
-         AudacityProject* proj = GetActiveProject();
-         if(proj)
-            proj->wxEvtHandler::AddPendingEvent(event);
+         wxTheApp->AddPendingEvent(event);
       }
       mTerminateMutex.Lock();
    }

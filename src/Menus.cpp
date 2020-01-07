@@ -558,12 +558,6 @@ void MenuManager::UpdateMenus( bool checkActive )
 {
    auto &project = mProject;
 
-   //ANSWER-ME: Why UpdateMenus only does active project?
-   //JKC: Is this test fixing a bug when multiple projects are open?
-   //so that menu states work even when different in different projects?
-   if (&project != GetActiveProject())
-      return;
-
    auto flags = GetUpdateFlags(checkActive);
    // Return from this function if nothing's changed since
    // the last time we were here.

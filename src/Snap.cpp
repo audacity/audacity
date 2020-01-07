@@ -54,7 +54,7 @@ SnapManager::SnapManager(const TrackList *tracks,
    mPixelTolerance = pixelTolerance;
    mNoTimeSnap = noTimeSnap;
 
-   mProject = GetActiveProject();
+   mProject = tracks->GetOwner();
    wxASSERT(mProject);
 
    mSnapTo = 0;
@@ -333,7 +333,7 @@ SnapResults SnapManager::Snap
       // Find where it would snap time to the grid
       mConverter.ValueToControls(
          t,
-         ProjectSettings::Get( *GetActiveProject() ).GetSnapTo() == SNAP_NEAREST
+         ProjectSettings::Get( *mProject ).GetSnapTo() == SNAP_NEAREST
       );
       mConverter.ControlsToValue();
       results.timeSnappedTime = mConverter.GetValue();

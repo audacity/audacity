@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_BENCHMARK__
 #define __AUDACITY_BENCHMARK__
 
-void RunBenchmark(wxWindow *parent);
+class ProjectSettings;
+
+void RunBenchmark( wxWindow *parent, const ProjectSettings &settings );
 
 #endif // define __AUDACITY_BENCHMARK__

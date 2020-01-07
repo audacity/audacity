@@ -248,12 +248,12 @@ namespace {
 bool Track::IsSyncLockSelected() const
 {
 #ifdef EXPERIMENTAL_SYNC_LOCK
-   AudacityProject *p = GetActiveProject();
-   if (!p || !ProjectSettings::Get( *p ).IsSyncLocked())
-      return false;
-
    auto pList = mList.lock();
    if (!pList)
+      return false;
+
+   auto p = pList->GetOwner();
+   if (!p || !ProjectSettings::Get( *p ).IsSyncLocked())
       return false;
 
    auto shTrack = this->SubstituteOriginalTrack();
@@ -1288,6 +1288,7 @@ static auto TrackFactoryFactory = []( AudacityProject &project ) {
    auto &dirManager = DirManager::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    return std::make_shared< TrackFactory >(
+      ProjectSettings::Get( project ),
       dirManager.shared_from_this(), &viewInfo );
 };
 

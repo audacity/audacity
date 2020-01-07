@@ -79,24 +79,16 @@ WaveTrack::Holder TrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 
 WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 {
+   if (format == (sampleFormat)0)
+      format = mSettings.GetDefaultFormat();
+   if (rate == 0)
+      rate = mSettings.GetRate();
    return std::make_shared<WaveTrack> ( mDirManager, format, rate );
 }
 
 WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, double rate) :
    PlayableTrack(projDirManager)
 {
-   {
-      const auto &settings = ProjectSettings::Get( *GetActiveProject() );
-      if (format == (sampleFormat)0)
-      {
-         format = settings.GetDefaultFormat();
-      }
-      if (rate == 0)
-      {
-         rate = settings.GetRate();
-      }
-   }
-
    mLegacyProjectFileOffset = 0;
 
    mFormat = format;
@@ -535,7 +527,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   auto result = std::make_shared<WaveTrack>( mDirManager );
+   auto result = std::make_shared<WaveTrack>( mDirManager, mFormat, mRate );
    WaveTrack *newTrack = result.get();
 
    newTrack->Init(*this);

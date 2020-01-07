@@ -30,6 +30,7 @@ number of threads.
 #include <time.h>
 #endif //__WXMAC__
 
+// This event is posted to the application
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_ODTASK_UPDATE, wxCommandEvent);
 

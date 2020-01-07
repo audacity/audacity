@@ -303,7 +303,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    mMeter.Release();
    if (GetWave()) {
       mMeter =
-         safenew MeterPanel(GetActiveProject(), // AudacityProject* project,
+         safenew MeterPanel(mProject, // AudacityProject* project,
                    this, -1, // wxWindow* parent, wxWindowID id,
                    false, // bool isInput
                    ctrlPos, ctrlSize, // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
@@ -1462,7 +1462,7 @@ void MixerBoardFrame::OnSize(wxSizeEvent & WXUNUSED(event))
 
 void MixerBoardFrame::OnKeyEvent(wxKeyEvent & event)
 {
-   AudacityProject *project = GetActiveProject();
+   AudacityProject *project = mMixerBoard->mProject;
    auto &commandManager = CommandManager::Get( *project );
    commandManager.FilterKeyEvent(project, event, true);
 }
