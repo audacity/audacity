@@ -200,11 +200,13 @@ SpectrumAnalyst::~SpectrumAnalyst()
 }
 
 FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
+                           AudacityProject &project,
                            const TranslatableString & title,
                            const wxPoint & pos)
 :  wxDialogWrapper(parent, id, title, pos, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX),
    mAnalyst(std::make_unique<SpectrumAnalyst>())
+,  mProject{ &project }
 {
    SetName();
 
@@ -212,10 +214,6 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
    mMouseY = 0;
    mRate = 0;
    mDataLen = 0;
-
-   p = GetActiveProject();
-   if (!p)
-      return;
 
    TranslatableStrings algChoices{
       XO("Spectrum") ,
@@ -596,8 +594,8 @@ void FrequencyPlotDialog::GetAudio()
 
    int selcount = 0;
    bool warning = false;
-   for (auto track : TrackList::Get( *p ).Selected< const WaveTrack >()) {
-      auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
+   for (auto track : TrackList::Get( *mProject ).Selected< const WaveTrack >()) {
+      auto &selectedRegion = ViewInfo::Get( *mProject ).selectedRegion;
       if (selcount==0) {
          mRate = track->GetRate();
          auto start = track->TimeToLongSamples(selectedRegion.t0());

@@ -117,6 +117,7 @@ class FrequencyPlotDialog final : public wxDialogWrapper
 {
 public:
    FrequencyPlotDialog(wxWindow *parent, wxWindowID id,
+              AudacityProject &project,
               const TranslatableString & title, const wxPoint & pos);
    virtual ~ FrequencyPlotDialog();
 
@@ -155,7 +156,7 @@ private:
    int mFunc;
    int mAxis;
    int dBRange;
-   AudacityProject *p;
+   AudacityProject *mProject;
 
 #ifdef __WXMSW__
    static const int fontSize = 8;

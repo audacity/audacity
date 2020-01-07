@@ -39,7 +39,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
       return safenew FrequencyPlotDialog(
-         &window, -1, XO("Frequency Analysis"),
+         &window, -1, parent, XO("Frequency Analysis"),
          wxPoint{ 150, 150 }
       );
    }
