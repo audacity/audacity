@@ -373,7 +373,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
                      6, &mFrequency[0],
                      NumValidatorStyle::NO_TRAILING_ZEROES,
                      MIN_StartFreq,
-                     ProjectSettings::Get( *FindProject() ).GetRate() / 2.0
+                     mProjectRate / 2.0
                   )
                   .AddTextBox( {}, wxT(""), 12);
             }
@@ -386,7 +386,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
                      6, &mFrequency[1],
                      NumValidatorStyle::NO_TRAILING_ZEROES,
                      MIN_EndFreq,
-                     ProjectSettings::Get( *FindProject() ).GetRate() / 2.0
+                     mProjectRate / 2.0
                   )
                   .AddTextBox( {}, wxT(""), 12);
             }
@@ -430,7 +430,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          t = S.Validator<FloatingPointValidator<double>>(
                6, &mFrequency[0], NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Frequency,
-               ProjectSettings::Get( *FindProject() ).GetRate() / 2.0
+               mProjectRate / 2.0
             )
             .AddTextBox(XO("Frequency (Hz):"), wxT(""), 12);
 

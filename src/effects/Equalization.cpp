@@ -98,7 +98,6 @@
 #include "../FFT.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../ProjectSettings.h"
 #include "../TrackArtist.h"
 #include "../WaveClip.h"
 #include "../ViewInfo.h"
@@ -739,7 +738,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    mHiFreq =
       (t
          ? t->GetRate()
-         : ProjectSettings::Get( *FindProject() ).GetRate())
+         : mProjectRate)
       / 2.0;
    mLoFreq = loFreqI;
 

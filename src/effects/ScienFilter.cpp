@@ -56,7 +56,6 @@ a graph for EffectScienFilter.
 #include "../PlatformCompatibility.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../ProjectSettings.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
@@ -334,7 +333,7 @@ bool EffectScienFilter::Init()
       mNyquist =
          (t
             ? t->GetRate()
-            : ProjectSettings::Get( *FindProject() ).GetRate())
+            : mProjectRate)
          / 2.0;
    }
 
