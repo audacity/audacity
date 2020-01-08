@@ -591,13 +591,18 @@ bool Scrubber::StartKeyboardScrubbing(double time0, bool backwards)
 
    options.pScrubbingOptions = &mOptions;
    options.envelope = nullptr;
+
+   // delay and minStutterTime are used in AudioIO::AllocateBuffers() for setting the
+   // values of mPlaybackQueueMinimum and mPlaybackSamplesToCopy respectively. minStutterTime
+   // is set lower here than in mouse scrubbing to ensure that there is not a long
+   // delay before the start of the playback of the audio.
    mOptions.delay = (ScrubPollInterval_ms / 1000.0);
+   mOptions.minStutterTime = mOptions.delay;
+
    mOptions.minSpeed = ScrubbingOptions::MinAllowedScrubSpeed();
    mOptions.maxSpeed = ScrubbingOptions::MaxAllowedScrubSpeed();
-
    mOptions.minTime = 0;
    mOptions.maxTime = std::max(0.0, TrackList::Get(*mProject).GetEndTime());
-   mOptions.minStutterTime = std::max(0.0, MinStutter);
    mOptions.bySpeed = true;
    mOptions.adjustStart = false;
    mOptions.isPlayingAtSpeed = false;
@@ -623,8 +628,8 @@ bool Scrubber::StartKeyboardScrubbing(double time0, bool backwards)
 
 double Scrubber::GetKeyboardScrubbingSpeed()
 {
-   const double speedAtDefaultZoom = 0.25;
-   const double maxSpeed = 4.0;
+   const double speedAtDefaultZoom = 0.5;
+   const double maxSpeed = 3.0;
    const double minSpeed = 0.0625;
 
    auto &viewInfo = ViewInfo::Get(*mProject);
