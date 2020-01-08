@@ -647,7 +647,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             wxString nameSuffix = wxString(wxT(""));
 
             if (useTrackNumber) {
-               nameSuffix += wxString::Format(wxT("%d"), 1 + numTracks + c);
+               nameSuffix += wxString::Format(wxT("%d"), 1 + (int) numTracks + c);
             }
 
             if (useDateStamp) {
