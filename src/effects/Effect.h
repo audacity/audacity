@@ -261,8 +261,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       wxWindow *pParent = nullptr,
       const EffectDialogFactory &dialogFactory = {} );
 
-   bool Delegate( Effect &delegate,
-      wxWindow &parent, const EffectDialogFactory &factory );
+   bool Delegate( Effect &delegate );
 
    virtual bool IsHidden();
 
