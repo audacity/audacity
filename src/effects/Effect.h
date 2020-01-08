@@ -255,9 +255,11 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // have the "selected" flag set to true, which is consistent with
    // Audacity's standard UI.
    // Create a user interface only if the supplied function is not null.
-   /* not virtual */ bool DoEffect(wxWindow &parent, double projectRate, TrackList *list,
+   /* not virtual */ bool DoEffect( double projectRate, TrackList *list,
       TrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
-      const EffectDialogFactory &dialogFactory );
+      // Prompt the user for input only if these arguments are both not null.
+      wxWindow *pParent = nullptr,
+      const EffectDialogFactory &dialogFactory = {} );
 
    bool Delegate( Effect &delegate,
       wxWindow &parent, const EffectDialogFactory &factory );

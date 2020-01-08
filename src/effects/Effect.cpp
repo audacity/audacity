@@ -1096,11 +1096,11 @@ void Effect::SetBatchProcessing(bool start)
    }
 }
 
-bool Effect::DoEffect(wxWindow &parent,
-                      double projectRate,
+bool Effect::DoEffect(double projectRate,
                       TrackList *list,
                       TrackFactory *factory,
                       NotifyingSelectedRegion &selectedRegion,
+                      wxWindow *pParent,
                       const EffectDialogFactory &dialogFactory)
 {
    wxASSERT(selectedRegion.duration() >= 0.0);
@@ -1187,9 +1187,9 @@ bool Effect::DoEffect(wxWindow &parent,
    // Prompting will be bypassed when applying an effect that has already
    // been configured, e.g. repeating the last effect on a different selection.
    // Prompting may call Effect::Preview
-   if ( dialogFactory &&
+   if ( pParent && dialogFactory &&
       IsInteractive() &&
-      !ShowInterface(parent, dialogFactory, IsBatchProcessing()) )
+      !ShowInterface( *pParent, dialogFactory, IsBatchProcessing() ) )
    {
       return false;
    }
@@ -1224,8 +1224,8 @@ bool Effect::Delegate(
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
-   return delegate.DoEffect( parent, mProjectRate, mTracks, mFactory,
-      region, factory );
+   return delegate.DoEffect( mProjectRate, mTracks, mFactory,
+      region, &parent, factory );
 }
 
 // All legacy effects should have this overridden
