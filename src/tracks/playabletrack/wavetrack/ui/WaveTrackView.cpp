@@ -625,11 +625,11 @@ auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 {
    BuildSubViews();
 
-   Refinement results;
-
    // Collect the visible views in the right sequence
-   using Pair = std::pair< float, std::shared_ptr< TrackView > >;
-   std::vector< Pair > pairs( mPlacements.size() );
+   struct Item {
+      int index; float fraction; std::shared_ptr< TrackView > pView;
+   };
+   std::vector< Item > items;
    size_t ii = 0;
    float total = 0;
    WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
@@ -638,27 +638,31 @@ auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
       auto fraction = placement.fraction;
       if ( index >= 0 && fraction > 0.0 )
          total += fraction,
-         pairs[ index ] = { fraction, subView.shared_from_this() };
+         items.push_back( { index, fraction, subView.shared_from_this() } );
       ++ii;
+   } );
+   std::sort( items.begin(), items.end(), [](const Item &a, const Item &b){
+      return a.index < b.index;
    } );
 
    // Remove views we don't need
-   auto begin = pairs.begin(), end = pairs.end(),
+   auto begin = items.begin(), end = items.end(),
      newEnd = std::remove_if( begin, end,
-        []( const Pair &item ){ return !item.second; } );
-   pairs.erase( newEnd, end );
-   results.reserve( pairs.size() );
+        []( const Item &item ){ return !item.pView; } );
+   items.erase( newEnd, end );
 
    // Assign coordinates, redenominating to the total height,
    // storing integer values
+   Refinement results;
+   results.reserve( items.size() );
    const auto top = rect.GetTop();
    const auto height = rect.GetHeight();
    float partial = 0;
    wxCoord lastCoord = 0;
-   for ( const auto &pair : pairs ) {
+   for ( const auto &item : items ) {
       wxCoord newCoord = top + (partial / total) * height;
-      results.emplace_back( newCoord, pair.second );
-      partial += pair.first;
+      results.emplace_back( newCoord, item.pView );
+      partial += item.fraction;
    }
 
    // Cache for the use of sub-view dragging
