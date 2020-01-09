@@ -559,50 +559,31 @@ void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
       return false;
    } ) ) {
       auto &foundPlacement = mPlacements[found];
-      auto index = foundPlacement.index;
-      unsigned nn = 0;
-
-      // if found and active, deactivate it..
       if ( foundPlacement.fraction > 0.0 ) {
-         for (auto &placement : mPlacements) {
-            if (placement.fraction > 0.0 && placement.index >= 0) {
-               nn++;
-            }
-         }
-         // if removing the last one, then don't!
-         // Switch to radio-button view instead.
-         if (nn <= 1) {
-            DoSetDisplay(display);
-            SetMultiView(false);
-         }
-         else
-         {
-            foundPlacement = { -1, 0.0 };
-            if (index >= 0) {
-               for (auto &placement : mPlacements) {
-                  if (placement.index > index)
-                     --placement.index;
-               }
+         auto index = foundPlacement.index;
+         foundPlacement = { -1, 0.0 };
+         if (index >= 0) {
+            for ( auto &placement : mPlacements ) {
+               if ( placement.index > index )
+                  --placement.index;
             }
          }
       }
-      // else found and zero size, so add it on the bottom.
       else {
          float total = 0;
          int greatest = -1;
+         unsigned nn = 0;
+         int removedIndex = foundPlacement.index;
          for ( auto &placement : mPlacements ) {
             if ( placement.fraction >= 0.0 && placement.index >= 0 ) {
                // renumber in case there's an item removed.
-               if( (index >= 0) && (placement.index >= index))
-                  --placement.index;
+               if( (removedIndex >= 0) && (placement.index >= removedIndex))
+                  placement.index -= 1;
                total += placement.fraction;
                greatest = std::max( greatest, placement.index );
                ++nn;
             }
          }
-         // 
-         if ( index >= 0)
-            --nn;
          // Turn on the sub-view, putting it lowest, and with average of the
          // heights of the other sub-views
          foundPlacement = { greatest + 1, total / nn };
