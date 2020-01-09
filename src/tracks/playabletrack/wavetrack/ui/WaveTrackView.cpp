@@ -573,12 +573,8 @@ void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
          float total = 0;
          int greatest = -1;
          unsigned nn = 0;
-         int removedIndex = foundPlacement.index;
-         for ( auto &placement : mPlacements ) {
+         for ( const auto &placement : mPlacements ) {
             if ( placement.fraction >= 0.0 && placement.index >= 0 ) {
-               // renumber in case there's an item removed.
-               if( (removedIndex >= 0) && (placement.index >= removedIndex))
-                  placement.index -= 1;
                total += placement.fraction;
                greatest = std::max( greatest, placement.index );
                ++nn;
