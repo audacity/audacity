@@ -474,11 +474,16 @@ void SpectrumPrefs::Preview()
    }
    mTempSettings.ConvertToEnumeratedWindowSizes();
 
+   // Bug 2278
+   // This code destroys any Multi-view we had.
+   // Commenting it out as it seems not to be needed.
+   /*
    if (mWt && isOpenPage) {
       for (auto channel : TrackList::Channels(mWt))
          WaveTrackView::Get( *channel )
             .SetDisplay( WaveTrackViewConstants::Spectrum );
    }
+   */
 
    if (isOpenPage) {
       if ( mProject ) {
