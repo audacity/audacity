@@ -574,7 +574,7 @@ void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
          int greatest = -1;
          unsigned nn = 0;
          for ( const auto &placement : mPlacements ) {
-            if ( placement.fraction >= 0.0 && placement.index >= 0 ) {
+            if ( placement.fraction > 0.0 && placement.index >= 0 ) {
                total += placement.fraction;
                greatest = std::max( greatest, placement.index );
                ++nn;
