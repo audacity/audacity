@@ -67,6 +67,11 @@ KeyConfigPrefs and MousePrefs use.
 #define ViewByKeyID             17011
 #define FilterTimerID           17012
 
+// EMPTY_SHORTCUT means "user chose to have no shortcut"
+#define EMPTY_SHORTCUT          _("")
+// NO_SHORTCUT means "user made no choice"
+#define NO_SHORTCUT             _((wxChar)7)        
+
 BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
    EVT_BUTTON(AssignDefaultsButtonID, KeyConfigPrefs::OnDefaults)
    EVT_BUTTON(SetButtonID, KeyConfigPrefs::OnSet)
@@ -340,6 +345,120 @@ void KeyConfigPrefs::RefreshBindings(bool bSort)
    mNewKeys = mKeys;
 }
 
+// RefreshKeyInfo is used to update mKeys vector only
+// Introduced for efficiency purposes to avoid unnecessary usage of RefreshBinding
+void KeyConfigPrefs::RefreshKeyInfo()
+{
+   mKeys.clear();
+
+   for (const auto & name : mNames)
+      mKeys.push_back(mManager->GetKeyFromName(name));
+}
+
+// Removes all shortcuts
+// Doesn't call RefreshBindings()
+void KeyConfigPrefs::ClearAllKeys()
+{
+   const NormalizedKeyString noKey{ NO_SHORTCUT };
+   for (const auto & command : mNames)
+      mManager->SetKeyFromName(command, noKey);
+}
+
+// Checks if the given vector of keys contains illegal duplicates.
+// In case it does, stores the prefixed labels of operations 
+// with illegal key duplicates in fMatching and sMatching.
+// Search for duplicates fully implemented here 
+// to avoid possible problems with legal shortcut duplicates.  
+bool KeyConfigPrefs::ContainsIllegalDups(
+   TranslatableString & fMatching, TranslatableString & sMatching) const
+{
+   using IndexesArray = std::vector<int>;
+   std::unordered_map<NormalizedKeyString, IndexesArray> seen;
+
+   for (size_t i{ 0 }; i < mKeys.size(); i++)
+   {
+      if (mKeys[i] == EMPTY_SHORTCUT or mKeys[i] == NO_SHORTCUT)
+         continue;
+
+      if (seen.count(mKeys[i]) == 0)
+         seen.insert({ mKeys[i], {(int)i} });
+      else
+      {
+         IndexesArray checkMe{ seen.at(mKeys[i]) };
+         for (int index : checkMe)
+         {
+            if (mDefaultKeys[i] == EMPTY_SHORTCUT or
+               mDefaultKeys[i] != mDefaultKeys[index])
+            {
+               fMatching = mManager->GetPrefixedLabelFromName(mNames[i]);
+               sMatching = mManager->GetPrefixedLabelFromName(mNames[index]);
+               return true;
+            }
+            else
+               seen.at(mKeys[i]).push_back(index);
+         }
+      }
+   }
+   return false;
+}
+
+
+// This function tries to add the given shortcuts(keys) "toAdd" 
+// to the already existing shortcuts(keys). Shortcuts are added only if 
+//      1. the shortcut for the operation isn't defined already
+//      2. the added shortcut doesn't create illigal shortcut dublicate
+// The names of operations for which the second condition was violated 
+// are returned in a single wxString
+TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
+   const std::vector<NormalizedKeyString> &toAdd)
+{
+   TranslatableString disabledShortcuts;
+
+   auto searchAddInKeys = [&](size_t index)
+   {
+      for (size_t k{ 0 }; k < toAdd.size(); k++)
+         if (k == index)
+            continue;
+         else if (toAdd[index] == mKeys[k] and
+            (mDefaultKeys[k] == EMPTY_SHORTCUT or
+             mDefaultKeys[k] != mDefaultKeys[index]))
+            return (int)k;
+
+      return -1;
+   };
+   
+   const NormalizedKeyString noKey{ EMPTY_SHORTCUT };
+
+   for (size_t i{ 0 }; i < toAdd.size(); i++)
+   {
+      if (mKeys[i] != NO_SHORTCUT)
+         continue;
+      else if (toAdd[i] == EMPTY_SHORTCUT)
+         mManager->SetKeyFromIndex(i, noKey);
+      else
+      {
+         int sRes{ searchAddInKeys(i) };
+
+         if (sRes == -1)
+            mManager->SetKeyFromIndex(i, toAdd[i]);
+         else
+         {
+            TranslatableString name{ mManager->GetKeyFromName(mNames[sRes]).GET(), {} };
+            
+            disabledShortcuts += XO("\n   *   \"") +
+               mManager->GetPrefixedLabelFromName(mNames[i]) + 
+               XO("\"  (because the shortcut \'") + name + 
+               XO("\' is used by \"") + mManager->GetPrefixedLabelFromName(mNames[sRes])
+               +XO("\")\n");
+            
+            mManager->SetKeyFromIndex(i, noKey);
+         }
+      }
+   }
+
+   return disabledShortcuts;
+}
+
 void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
 {
    wxString file = wxT("Audacity-keys.xml");
@@ -357,6 +476,17 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
+   // this RefreshKeyInfo is here to account for 
+   // potential OnSet() function executions before importing
+   RefreshKeyInfo();
+
+   // saving pre-import settings
+   const std::vector<NormalizedKeyString> oldKeys{ mKeys };
+
+   // clearing all pre-import settings
+   ClearAllKeys();
+
+   // getting new settings
    XMLFileReader reader;
    if (!reader.Parse(mManager, file)) {
       AudacityMessageBox(
@@ -366,7 +496,44 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
          this);
    }
 
+   RefreshKeyInfo();
+
+   // checking new setting for duplicates
+   // if there are duplicates, throwing error and returning to pre-import state
+   TranslatableString fMatching;
+   TranslatableString sMatching;
+
+   if (ContainsIllegalDups(fMatching, sMatching))
+   {
+      // restore the old pre-import hotkeys stored in oldKeys
+      for (size_t k{ 0 }; k < mNames.size(); k++)
+         mManager->SetKeyFromName(mNames[k], oldKeys[k]);
+      mKeys = oldKeys;
+
+      // output an error message
+      AudacityMessageBox(XO("The file with the shortcuts contains illegal shortcut duplicates for \"") +
+         fMatching + XO("\" and \"") + sMatching + XO("\".\nNothing is imported."),
+         XO("Error Importing Keyboard Shortcuts"),
+         wxICON_ERROR | wxCENTRE, this);
+
+      // stop the function
+      return;
+   }
+
+   // adding possible old settings to the new settings and recording the conflicting ones
+   TranslatableString disabledShortcuts{ MergeWithExistingKeys(oldKeys) };
+
    RefreshBindings(true);
+   
+   TranslatableString message{ 
+      XO("Loaded %d keyboard shortcuts\n").Format(mManager->GetNumberOfKeysRead()) };
+
+   if (disabledShortcuts.Translation() != _(""))
+      message += XO("\nThe following commands are not mentioned in the imported file, "
+         "but have their shortcuts removed because of the conflict with other new shortcuts:\n") +
+         disabledShortcuts;
+
+   AudacityMessageBox(message, XO("Loading Keyboard Shortcuts"), wxOK | wxCENTRE);
 }
 
 void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
