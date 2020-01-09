@@ -84,7 +84,7 @@ public:
    using WaveTrackDisplay = WaveTrackViewConstants::Display;
 
    std::vector<WaveTrackDisplay> GetDisplays() const;
-   void SetDisplay(WaveTrackDisplay display);
+   void SetDisplay(WaveTrackDisplay display, float frac=1.0);
 
    const WaveTrackSubViewPlacements &SavePlacements() const
       { return mPlacements; }
@@ -105,7 +105,7 @@ public:
 
 private:
    void BuildSubViews() const;
-   void DoSetDisplay(WaveTrackDisplay display);
+   void DoSetDisplay(WaveTrackDisplay display, float frac);
 
    // TrackPanelDrawable implementation
    void Draw(

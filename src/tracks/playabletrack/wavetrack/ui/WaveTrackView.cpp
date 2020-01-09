@@ -540,10 +540,10 @@ auto WaveTrackView::GetDisplays() const -> std::vector<WaveTrackDisplay>
    return results;
 }
 
-void WaveTrackView::SetDisplay(WaveTrackDisplay display)
+void WaveTrackView::SetDisplay(WaveTrackDisplay display, float frac)
 {
    BuildSubViews();
-   DoSetDisplay( display );
+   DoSetDisplay( display, frac );
 }
 
 void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
@@ -587,15 +587,31 @@ void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
    }
 }
 
-void WaveTrackView::DoSetDisplay(WaveTrackDisplay display)
+// frac sets proportion/height of the chosen display, which will be first.
+//   use 1.0 to take up entire space
+//   use some fraction to take up that proportion, leaving the rest for 
+//       one each of the other types.
+//   use 1.0/number-of-types for equal spacing.
+void WaveTrackView::DoSetDisplay(WaveTrackDisplay display,float frac)
 {
    size_t ii = 0;
+   size_t jj = 1;
+   const int nViewTypes = 2;
    WaveTrackSubViews::ForEach( [&,display]( WaveTrackSubView &subView ){
-      if ( subView.SubViewType() == display )
-         mPlacements[ii] = {  0, 1.0 };
-      else
+      auto viewType = subView.SubViewType();
+      if (viewType == display) {
+         // 0 for first view
+         mPlacements[ii] = { 0, frac };
+         --jj;
+      }
+      else if( frac > 0.999)
+         // -1 for not displayed
          mPlacements[ii] = { -1, 0.0 };
+      else
+         // jj for positions excluding the first.
+         mPlacements[ii] = { (int)jj, (1.0f-frac)/(nViewTypes-1) };
       ++ii;
+      ++jj;
    } );
 }
 
@@ -904,7 +920,7 @@ void WaveTrackView::BuildSubViews() const
             settings.scaleType = WaveformSettings::stLogarithmic;
          }
          
-         pThis->DoSetDisplay( display );
+         pThis->DoSetDisplay( display, 1.0 );
       }
    }
 }
