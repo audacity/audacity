@@ -91,7 +91,9 @@ public:
    void RestorePlacements( const WaveTrackSubViewPlacements &placements )
       { mPlacements = placements; }
 
-   void ToggleSubView( WaveTrackDisplay id );
+   // Return true if successful.  Fails if you try to toggle off the only
+   // sub-view.
+   bool ToggleSubView( WaveTrackDisplay id );
 
    // Get all the sub-views, in a sequence that is unspecified but in
    // correspondence with the result of SavePlacements

@@ -805,7 +805,11 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
    auto &view = WaveTrackView::Get( *pTrack );
    if ( view.GetMultiView() ) {
       for (auto channel : TrackList::Channels(pTrack)) {
-         WaveTrackView::Get( *channel ).ToggleSubView( id );
+         if ( !WaveTrackView::Get( *channel ).ToggleSubView( id ) ) {
+            // Trying to toggle off the last sub-view.  It was refused.
+            // Decide what to do here.  Turn off multi-view instead?
+            // PRL:  I don't agree that it makes sense
+         }
       }
    }
    else {

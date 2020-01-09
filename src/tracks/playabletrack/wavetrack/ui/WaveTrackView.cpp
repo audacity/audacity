@@ -546,7 +546,7 @@ void WaveTrackView::SetDisplay(WaveTrackDisplay display, bool exclusive)
    DoSetDisplay( display, exclusive );
 }
 
-void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
+bool WaveTrackView::ToggleSubView(WaveTrackDisplay display)
 {
    size_t ii = 0;
    size_t found = 0;
@@ -560,6 +560,12 @@ void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
    } ) ) {
       auto &foundPlacement = mPlacements[found];
       if ( foundPlacement.fraction > 0.0 ) {
+         // Toggle off
+
+         if (GetDisplays().size() < 2)
+            // refuse to do it
+            return false;
+         
          auto index = foundPlacement.index;
          foundPlacement = { -1, 0.0 };
          if (index >= 0) {
@@ -568,8 +574,11 @@ void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
                   --placement.index;
             }
          }
+
+         return true;
       }
       else {
+         // Toggle on
          float total = 0;
          int greatest = -1;
          unsigned nn = 0;
@@ -583,8 +592,13 @@ void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
          // Turn on the sub-view, putting it lowest, and with average of the
          // heights of the other sub-views
          foundPlacement = { greatest + 1, total / nn };
+
+         return true;
       }
    }
+   else
+      // unknown sub-view
+      return false;
 }
 
 // If exclusive, make the chosen view take up all the height.  Else,
