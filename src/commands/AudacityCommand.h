@@ -74,7 +74,6 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    bool ShowInterface(wxWindow *parent, bool forceModal = false);
    virtual void SetHostUI(EffectUIHostInterface * WXUNUSED(host)){;};
 
-   bool PopulateUI(wxWindow *parent);
    wxDialog *CreateUI(wxWindow *parent, AudacityCommand *client);
 
    virtual bool GetAutomationParameters(wxString & parms);
