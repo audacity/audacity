@@ -124,6 +124,9 @@ private:
 protected:
    void DoSetMinimized( bool minimized ) override;
 
+   // Placements are in correspondence with the array of sub-views
+   // in the WaveTrackSubViews base class, though their sequence is
+   // unspecified and maybe different in different platforms.
    WaveTrackSubViewPlacements mPlacements;
    mutable wxCoord mLastHeight{};
 
