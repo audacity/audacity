@@ -540,10 +540,10 @@ auto WaveTrackView::GetDisplays() const -> std::vector<WaveTrackDisplay>
    return results;
 }
 
-void WaveTrackView::SetDisplay(WaveTrackDisplay display, float frac)
+void WaveTrackView::SetDisplay(WaveTrackDisplay display, bool exclusive)
 {
    BuildSubViews();
-   DoSetDisplay( display, frac );
+   DoSetDisplay( display, exclusive );
 }
 
 void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
@@ -572,7 +572,7 @@ void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
          // if removing the last one, then don't!
          // Switch to radio-button view instead.
          if (nn <= 1) {
-            DoSetDisplay(display, 1.0);
+            DoSetDisplay(display);
             SetMultiView(false);
          }
          else
@@ -610,32 +610,38 @@ void WaveTrackView::ToggleSubView(WaveTrackDisplay display)
    }
 }
 
-// frac sets proportion/height of the chosen display, which will be first.
-//   use 1.0 to take up entire space
-//   use some fraction to take up that proportion, leaving the rest for 
-//       one each of the other types.
-//   use 1.0/number-of-types for equal spacing.
-void WaveTrackView::DoSetDisplay(WaveTrackDisplay display,float frac)
+// If exclusive, make the chosen view take up all the height.  Else,
+// partition equally, putting the specified view on top.
+// Be sure the sequence in which the other views appear is determinate.
+void WaveTrackView::DoSetDisplay(WaveTrackDisplay display, bool exclusive)
 {
+   // Some generality here anticipating more than two views.
+   // The order of sub-views in the array is not specified, so make it definite
+   // by sorting by the view type constants.
    size_t ii = 0;
-   size_t jj = 1;
-   const int nViewTypes = 2;
-   WaveTrackSubViews::ForEach( [&,display]( WaveTrackSubView &subView ){
-      auto viewType = subView.SubViewType();
-      if (viewType == display) {
-         // 0 for first view
-         mPlacements[ii] = { 0, frac };
-         --jj;
-      }
-      else if( frac > 0.999)
-         // -1 for not displayed
-         mPlacements[ii] = { -1, 0.0 };
-      else
-         // jj for positions excluding the first.
-         mPlacements[ii] = { (int)jj, (1.0f-frac)/(nViewTypes-1) };
-      ++ii;
-      ++jj;
+   std::vector< std::pair< WaveTrackViewConstants::Display, size_t > > pairs;
+   WaveTrackSubViews::ForEach( [&pairs, &ii]( WaveTrackSubView &subView ){
+      pairs.push_back( { subView.SubViewType(), ii++ } );
    } );
+   std::sort( pairs.begin(), pairs.end() );
+
+   int jj = 1;
+   for ( const auto &pair : pairs ) {
+      auto &placement = mPlacements[ pair.second ];
+      if (pair.first == display) {
+         // 0 for first view
+         placement = { 0, 1.0 };
+      }
+      else if( exclusive )
+         // -1 for not displayed
+         placement = { -1, 0.0 };
+      else
+         // positions other than the first.
+         // (Note that the fractions in the placement don't need to be
+         // denominated to 1.  Just make them all equal to get an equal
+         // partitioning of the sub-views.)
+         placement = { jj++, 1.0 };
+   }
 }
 
 auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
@@ -943,7 +949,7 @@ void WaveTrackView::BuildSubViews() const
             settings.scaleType = WaveformSettings::stLogarithmic;
          }
          
-         pThis->DoSetDisplay( display, 1.0 );
+         pThis->DoSetDisplay( display );
       }
    }
 }

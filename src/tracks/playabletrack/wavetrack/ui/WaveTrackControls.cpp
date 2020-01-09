@@ -770,10 +770,10 @@ void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
 {
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    const auto &view = WaveTrackView::Get( *pTrack );
-   const int nViewTypes = 2;
    bool multi = !view.GetMultiView();
-   WaveTrackView::WaveTrackDisplay display;
-   display = *view.GetDisplays().begin();
+   const auto &displays = view.GetDisplays();
+   const auto display = displays.empty()
+      ? WaveTrackViewConstants::Waveform : *displays.begin();
    for (const auto channel : TrackList::Channels(pTrack)) {
       auto &channelView = WaveTrackView::Get( *channel );
       channelView.SetMultiView( multi );
@@ -781,7 +781,7 @@ void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
       // Whichever sub-view was on top stays on top
       // If going into Multi-view, it will be 1/nth the height.
       // If exiting multi-view, it will be full height.
-      channelView.SetDisplay(display, multi ? 1.0/nViewTypes :1.0);
+      channelView.SetDisplay(display, !multi);
    }
 }
 
