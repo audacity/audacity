@@ -273,6 +273,7 @@ class AUDACITY_DLL_API CommandManager final
    NormalizedKeyString GetDefaultKeyFromName(const CommandID &name);
 
    bool GetEnabled(const CommandID &name);
+   int GetNumberOfKeysRead() const;
 
 #if defined(__WXDEBUG__)
    void CheckDups();

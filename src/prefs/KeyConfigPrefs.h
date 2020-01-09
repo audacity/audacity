@@ -46,6 +46,12 @@ public:
 private:
    void Populate();
    void RefreshBindings(bool bSort);
+   void RefreshKeyInfo();
+   void ClearAllKeys();
+   bool ContainsIllegalDups(TranslatableString & fMatching, 
+      TranslatableString & sMatching) const;
+   TranslatableString MergeWithExistingKeys(
+      const std::vector<NormalizedKeyString> &toAdd);
    void FilterKeys( std::vector<NormalizedKeyString> & arr );
    CommandID NameFromKey(const NormalizedKeyString & key);
    void SetKeyForSelected(const NormalizedKeyString & key);

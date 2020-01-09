@@ -924,6 +924,11 @@ bool CommandManager::GetEnabled(const CommandID &name)
    return entry->enabled;
 }
 
+int CommandManager::GetNumberOfKeysRead() const
+{
+   return mXMLKeysRead;
+}
+
 void CommandManager::Check(const CommandID &name, bool checked)
 {
    CommandListEntry *entry = mCommandNameHash[name];
@@ -1409,8 +1414,10 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
+// This message is displayed now in KeyConfigPrefs::OnImport()
 void CommandManager::HandleXMLEndTag(const wxChar *tag)
 {
+   /*
    if (!wxStrcmp(tag, wxT("audacitykeyboard"))) {
       AudacityMessageBox(
          XO("Loaded %d keyboard shortcuts\n")
@@ -1418,6 +1425,7 @@ void CommandManager::HandleXMLEndTag(const wxChar *tag)
          XO("Loading Keyboard Shortcuts"),
          wxOK | wxCENTRE);
    }
+   */
 }
 
 XMLTagHandler *CommandManager::HandleXMLChild(const wxChar * WXUNUSED(tag))
