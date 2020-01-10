@@ -509,7 +509,7 @@ void ScreenshotCommand::CaptureEffects(
       "Distortion...",
       "Echo...",
       //"Equalization...",
-      "Filter Curve...",
+      "Filter Curve EQ...",
       "Graphic EQ...",
       //"Fade In",
       //"Fade Out",

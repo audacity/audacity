@@ -316,7 +316,7 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.SetStretchyCol( 2 );
       S.Optional( bHasHeight      ).TieNumericTextBox(  XO("Height:"),        mHeight );
-      S.Optional( bHasColour      ).TieChoice(          XO("Colour:"),        mColour,
+      S.Optional( bHasColour      ).TieChoice(          XO("Color:"),         mColour,
          Msgids(  kColourStrings, nColours ) );
       S.Optional( bHasDisplayType ).TieChoice(          XO("Display:"),       mDisplayType,
          Msgids( kDisplayTypeStrings, nDisplayTypes ) );

@@ -149,7 +149,7 @@ void ToolsToolBar::RegenerateTooltips()
       { slideTool,    wxT("TimeShiftTool"), XO("Time Shift Tool") },
       { zoomTool,     wxT("ZoomTool"),      XO("Zoom Tool")       },
       { drawTool,     wxT("DrawTool"),      XO("Draw Tool")       },
-      { multiTool,    wxT("MultiTool"),     XO("Multi Tool")      },
+      { multiTool,    wxT("MultiTool"),     XO("Multi-Tool")      },
    };
 
    for (const auto &entry : table) {
@@ -203,7 +203,7 @@ void ToolsToolBar::Populate()
    mTool[ drawTool     ] = MakeTool( this, bmpDraw, drawTool, XO("Draw Tool") );
    mTool[ zoomTool     ] = MakeTool( this, bmpZoom, zoomTool, XO("Zoom Tool") );
    mTool[ slideTool    ] = MakeTool( this, bmpTimeShift, slideTool, XO("Slide Tool") );
-   mTool[ multiTool    ] = MakeTool( this, bmpMulti, multiTool, XO("Multi Tool") );
+   mTool[ multiTool    ] = MakeTool( this, bmpMulti, multiTool, XO("Multi-Tool") );
 
    mTool[mCurrentTool]->PushDown();
 

@@ -27,7 +27,7 @@ ComponentInterfaceSymbol{ XO("Equalization") }
 #define GRAPHIC_EQ_PLUGIN_SYMBOL \
 ComponentInterfaceSymbol{ wxT("Graphic EQ"), XO("Graphic EQ") }
 #define FILTER_CURVE_PLUGIN_SYMBOL \
-ComponentInterfaceSymbol{ wxT("Filter Curve"), XO("Filter Curve") }
+ComponentInterfaceSymbol{ wxT("Filter Curve EQ"), XO("Filter Curve EQ") }
 
 // Flags to specialise the UI
 const int kEqOptionGraphic =1;

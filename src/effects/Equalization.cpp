@@ -320,7 +320,7 @@ wxString EffectEqualization::ManualPage()
    if( mOptions == kEqOptionGraphic )
       return wxT("Graphic EQ");
    if( mOptions == kEqOptionCurve )
-      return wxT("Filter Curve");
+      return wxT("Filter Curve EQ");
    return wxT("Equalization");
 }
 
@@ -507,7 +507,7 @@ bool EffectEqualization::ValidateUI()
       Effect::MessageBox(
          XO("To use this filter curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
          wxOK | wxCENTRE,
-         XO("Filter Curve needs a different name") );
+         XO("Filter Curve EQ needs a different name") );
       return false;
    }
 

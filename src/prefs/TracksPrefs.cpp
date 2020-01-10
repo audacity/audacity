@@ -270,7 +270,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XO("Auto-&fit track height"),
                     {wxT("/GUI/TracksFitVerticallyZoomed"),
                      false});
-      S.TieCheckBox(XO("Sho&w audio track name as overlay"),
+      S.TieCheckBox(XO("Sho&w track name as overlay"),
                   {wxT("/GUI/ShowTrackNameInWaveform"),
                    false});
 #ifdef EXPERIMENTAL_HALF_WAVE
