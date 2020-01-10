@@ -68,7 +68,7 @@ KeyConfigPrefs and MousePrefs use.
 #define FilterTimerID           17012
 
 // EMPTY_SHORTCUT means "user chose to have no shortcut"
-#define EMPTY_SHORTCUT             _("")
+#define EMPTY_SHORTCUT          _("")
 // NO_SHORTCUT means "user made no choice"
 #define NO_SHORTCUT             _((wxChar)7)        
 
@@ -367,29 +367,37 @@ void KeyConfigPrefs::ClearAllKeys()
 // Checks if the given vector of keys contains illegal duplicates.
 // In case it does, stores the prefixed labels of operations 
 // with illegal key duplicates in fMatching and sMatching.
-// Search is intentionally brute-force to avoid 
-// possible problems with legal shortcut duplicates.  
+// Search for duplicates fully implemented here 
+// to avoid possible problems with legal shortcut duplicates.  
 bool KeyConfigPrefs::ContainsIllegalDups(
    TranslatableString & fMatching, TranslatableString & sMatching) const
 {
+   using IndexesArray = std::vector<int>;
+   std::unordered_map<NormalizedKeyString, IndexesArray> seen;
+
    for (size_t i{ 0 }; i < mKeys.size(); i++)
    {
       if (mKeys[i] == EMPTY_SHORTCUT or mKeys[i] == NO_SHORTCUT)
          continue;
 
-     for (size_t j{ i + 1 }; j < mKeys.size(); j++)
-     {
-         if (mKeys[i] == mKeys[j])
+      if (seen.count(mKeys[i]) == 0)
+         seen.insert({ mKeys[i], {(int)i} });
+      else
+      {
+         IndexesArray checkMe{ seen.at(mKeys[i]) };
+         for (int index : checkMe)
          {
-            if (mDefaultKeys[i] == EMPTY_SHORTCUT or 
-               mDefaultKeys[i] != mDefaultKeys[j])
+            if (mDefaultKeys[i] == EMPTY_SHORTCUT or
+               mDefaultKeys[i] != mDefaultKeys[index])
             {
                fMatching = mManager->GetPrefixedLabelFromName(mNames[i]);
-               sMatching = mManager->GetPrefixedLabelFromName(mNames[j]);
+               sMatching = mManager->GetPrefixedLabelFromName(mNames[index]);
                return true;
             }
+            else
+               seen.at(mKeys[i]).push_back(index);
          }
-     }
+      }
    }
    return false;
 }
