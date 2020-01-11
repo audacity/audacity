@@ -17,7 +17,7 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 
 
 ;i18n-hint: "Browse..." is text on a button that launches a file browser.
-$control files (_ "Select plug-in file") file (_ "Browse...") "~/Desktop/" "Plug-in|*.ny;*.NY|Lisp file|*.lsp;*.LSP|HTML file|*.htm;*.HTM;*.html;*.HTML|Text file|*.txt;*.TXT|All supported|*.ny;*.NY;*.lsp;*.LSP;*.htm;*.HTM;*.html;*.HTML;*.txt;*.TXT|All files|*.*;*" "open,exists,multiple"
+$control files (_ "Select file(s) to install") file (_ "Browse...") "~/Desktop/" "Plug-in|*.ny;*.NY|Lisp file|*.lsp;*.LSP|HTML file|*.htm;*.HTM;*.html;*.HTML|Text file|*.txt;*.TXT|All supported|*.ny;*.NY;*.lsp;*.LSP;*.htm;*.HTM;*.html;*.HTML;*.txt;*.TXT|All files|*.*;*" "open,exists,multiple"
 $control overwrite (_ "Allow overwriting") choice ((_ "Disallow") (_ "Allow")) 0
 
 
