@@ -414,7 +414,7 @@ TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
 {
    TranslatableString disabledShortcuts;
 
-   auto searchAddInKeys = [&](int index)
+   auto searchAddInKeys = [&](size_t index)
    {
       for (size_t k{ 0 }; k < toAdd.size(); k++)
          if (k == index)
@@ -435,13 +435,24 @@ TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
          continue;
       else if (toAdd[i] == EMPTY_SHORTCUT)
          mManager->SetKeyFromIndex(i, noKey);
-      else if (searchAddInKeys(i) == -1)
-         mManager->SetKeyFromIndex(i, toAdd[i]);
       else
       {
-         disabledShortcuts += XO("   * ") +
-            mManager->GetPrefixedLabelFromName(mNames[i]) + XO("\n");
-         mManager->SetKeyFromIndex(i, noKey);
+         int sRes{ searchAddInKeys(i) };
+
+         if (sRes == -1)
+            mManager->SetKeyFromIndex(i, toAdd[i]);
+         else
+         {
+            TranslatableString name{ mManager->GetKeyFromName(mNames[sRes]).GET(), {} };
+            
+            disabledShortcuts += XO("\n   *   \"") +
+               mManager->GetPrefixedLabelFromName(mNames[i]) + 
+               XO("\"  (because the shortcut \'") + name + 
+               XO("\' is used by \"") + mManager->GetPrefixedLabelFromName(mNames[sRes])
+               +XO("\")\n");
+            
+            mManager->SetKeyFromIndex(i, noKey);
+         }
       }
    }
 
@@ -501,7 +512,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
 
       // output an error message
       AudacityMessageBox(XO("The file with the shortcuts contains illegal shortcut duplicates for \"") +
-         fMatching + XO("\" and \"") + sMatching + XO("\"\nNothing is imported."),
+         fMatching + XO("\" and \"") + sMatching + XO("\".\nNothing is imported."),
          XO("Error Importing Keyboard Shortcuts"),
          wxICON_ERROR | wxCENTRE, this);
 
@@ -518,7 +529,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
       XO("Loaded %d keyboard shortcuts\n").Format(mManager->GetNumberOfKeysRead()) };
 
    if (disabledShortcuts.Translation() != _(""))
-      message += XO("\nThe following operations are not mentioned in the imported file, "
+      message += XO("\nThe following commands are not mentioned in the imported file, "
          "but have their shortcuts removed because of the conflict with other new shortcuts:\n") +
          disabledShortcuts;
 
