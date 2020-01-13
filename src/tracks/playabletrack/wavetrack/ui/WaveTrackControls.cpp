@@ -627,16 +627,25 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu)
    std::vector<int> checkedIds;
 
    const auto &view = WaveTrackView::Get( *pTrack );
-   if (view.GetMultiView())
+   auto multiView = view.GetMultiView();
+   if (multiView)
       checkedIds.push_back( OnMultiViewID );
+
+   int uniqueDisplay = 0;
 
    const auto displays = view.GetDisplays();
    for ( auto display : displays ) {
-      checkedIds.push_back(
-         display == WaveTrackViewConstants::Waveform
-            ? OnWaveformID
-            : OnSpectrumID);
+      auto id = (display == WaveTrackViewConstants::Waveform)
+         ? OnWaveformID
+         : OnSpectrumID;
+      checkedIds.push_back( id );
+      if ( displays.size() == 1 )
+         uniqueDisplay = id;
    }
+
+   if ( multiView && uniqueDisplay )
+      // Disable the checking-off of the only sub-view
+      pMenu->Enable( uniqueDisplay, false );
 
    // Bug 1253.  Shouldn't open preferences if audio is busy.
    // We can't change them on the fly yet anyway.
