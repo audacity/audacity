@@ -1,4 +1,4 @@
-;; envelopes.lsp -- support functions for envelope editor in jNyqIDE
+;; envelopes.lsp -- support functions for envelope editor in NyquistIDE
 
 #| In Nyquist, editable envelopes are saved as one entry in the workspace
 named *envelopes*. The entry is an association list where each element
@@ -18,7 +18,7 @@ To convert envelope data into functions, call (MAKE-ENV-FUNCTIONS).
 This function should be on the workspace's list of functions to call.
 (See ADD-ACTION-TO-WORKSPACE in Nyquist Manual.)
 
-When the jNyqIDE wants to get the envelope data from the workspace, it
+When the NyquistIDE wants to get the envelope data from the workspace, it
 should call (GET-ENV-DATA), which will dump formatted data to Nyquist's
 standard output as follows:
 
@@ -119,7 +119,7 @@ Saving the workspace automatically is something that Nyquist should do
   (make-env-function name expression)
   ; make sure envelopes are redefined when workspace is loaded
   (add-to-workspace '*envelopes*) ; so *envelopes* will be saved
-  (describe '*envelopes* "data for envelope editor in jNyqIDE")
+  (describe '*envelopes* "data for envelope editor in NyquistIDE")
   (add-action-to-workspace 'make-env-functions)
   nil)
 

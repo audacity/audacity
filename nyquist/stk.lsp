@@ -140,25 +140,36 @@
   (snd-stkrev 2 snd rev-time mix))
 
 (defun nrev (snd rev-time mix)
-  (multichan-expand #'nyq:nrev snd rev-time mix))
+  (multichan-expand "NREV" #'nyq:nrev 
+    '(((SOUND) "snd") ((NUMBER) "rev-time") ((NUMBER) "mix"))
+    snd rev-time mix))
 
 (defun jcrev (snd rev-time mix)
-  (multichan-expand #'nyq:jcrev snd rev-time mix))
+  (multichan-expand "JCREV" #'nyq:jcrev 
+    '(((SOUND) "snd") ((NUMBER) "rev-time") ((NUMBER) "mix"))
+    snd rev-time mix))
 
 (defun prcrev (snd rev-time mix)
-  (multichan-expand #'nyq:prcrev snd rev-time mix))
+  (multichan-expand "PRCREV" #'nyq:prcrev 
+    '(((SOUND) "snd") ((NUMBER) "rev-time") ((NUMBER) "mix"))
+    snd rev-time mix))
 
 (defun nyq:chorus (snd depth freq mix &optional (base-delay 6000))
   (snd-stkchorus snd base-delay depth freq mix))
 
 (defun stkchorus (snd depth freq mix &optional (base-delay 6000))
-  (multichan-expand #'nyq:chorus snd depth freq mix base-delay))
+  (multichan-expand "STKCHORUS" #'nyq:chorus 
+    '(((SOUND) "snd") ((NUMBER) "depth") ((NUMBER) "freq") ((NUMBER) "mix")
+      ((INTEGER) "base-delay"))
+    snd depth freq mix base-delay))
 
 (defun nyq:pitshift (snd shift mix)
   (snd-stkpitshift snd shift mix))
 
 (defun pitshift (snd shift mix)
-  (multichan-expand #'nyq:pitshift snd shift mix))
+  (multichan-expand "PITSHIFT" #'nyq:pitshift 
+    '(((SOUND) "snd") ((NUMBER) "shift") ((NUMBER) "mix"))
+    snd shift mix))
 
 
 

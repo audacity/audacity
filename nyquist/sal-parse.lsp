@@ -15,11 +15,11 @@
 
 (setfn nreverse reverse)
 
-(defconstant +quote+ #\")		; "..." string 
-(defconstant +kwote+ #\')		; '...' kwoted expr
+(defconstant +quote+ #\")                ; "..." string 
+(defconstant +kwote+ #\')                ; '...' kwoted expr
 (defconstant +comma+ #\,)                ; positional arg delimiter
 (defconstant +pound+ #\#)                ; for bools etc
-(defconstant +semic+ #\;)		; comment char
+(defconstant +semic+ #\;)                ; comment char
 (defconstant +lbrace+ #\{)               ; {} list notation 
 (defconstant +rbrace+ #\})
 (defconstant +lbrack+ #\[)               ; unused for now
@@ -45,7 +45,7 @@
 
 (defparameter +operators+
   ;; each op is: (<token-class> <sal-name> <lisp-form>)
-  '((:+ "+" sum)
+  '((:+ "+" sal-plus)
     (:- "-" diff)
     (:* "*" mult)
     (:/ "/" /)
@@ -57,7 +57,7 @@
     (:> ">" >)
     (:<= "<=" <=) ; leq and assignment minimization
     (:>= ">=" >=) ; geq and assignment maximization
-    (:~= "~=" equal) ; general equality
+    (:~= "~=" sal-about-equal) ; general equality
     (:+= "+=" +=) ; assignment increment-and-store
     (:-= "-=" -=) ; assignment increment-and-store
     (:*= "*=" *=) ; assignment multiply-and-store
@@ -84,13 +84,13 @@
 (defparameter +delimiters+
   '((:lp #\()
     (:rp #\))
-    (:lc #\{)				; left curly
+    (:lc #\{)                                ; left curly
     (:rc #\})
     (:lb #\[)
     (:rb #\])
     (:co #\,)
-    (:kw #\')				; kwote
-    (nil #\")				; not token
+    (:kw #\')                                ; kwote
+    (nil #\")                                ; not token
    ; (nil #\#)
     (nil #\;)
     ))
@@ -112,7 +112,7 @@
                          (:END "end") (:VARIABLE "variable")
                          (:FUNCTION "function") (:PROCESS "process")
                          (:CHDIR "chdir") (:DEFINE "define") (:LOAD "load")
-                         (:PLAY "play")
+                         (:PLAY "play") (:PLOT "plot")
                          (:EXEC "exec") (:exit "exit") (:DISPLAY "display")
                          (:~ "~") (:~~ "~~") (:@ ":@") (:@@ ":@@")))
 
@@ -138,7 +138,7 @@
 
 (defmacro errexit (message &optional start)
   `(parse-error (make-sal-error :type "parse"
-		 :line *sal-input-text* :text ,message
+                 :line *sal-input-text* :text ,message
                  :start ,(sal-tokens-error-start start))))
 
 (defmacro sal-warning (message &optional start)
@@ -187,7 +187,7 @@
 
 (defun pperror (x &optional (msg-type "error"))
   (let* ((source (sal-error-line x))
-	 (llen (length source))
+         (llen (length source))
          line-no
          beg end)
     ; (display "pperror" x (strcat "|" (sal-error-line x) "|"))
@@ -195,17 +195,17 @@
     (setf beg (sal-error-start x))
     (setf beg (min beg (1- llen)))
     (do ((i beg (- i 1))
-	 (n nil)) ; n gets set when we find a newline
-	((or (< i 0) n)
-	 (setq beg (or n 0)))
+         (n nil)) ; n gets set when we find a newline
+        ((or (< i 0) n)
+         (setq beg (or n 0)))
       (if (char= (char source i) #\newline)
-	  (setq n (+ i 1))))
+          (setq n (+ i 1))))
     (do ((i (sal-error-start x) (+ i 1))
-	 (n nil))
-	((or (>= i llen) n)
-	 (setq end (or n llen)))
+         (n nil))
+        ((or (>= i llen) n)
+         (setq end (or n llen)))
       (if (char= (char source i) #\newline)
-	  (setq n i)))
+          (setq n i)))
     (setf line-no (pos-to-line beg source))
     ; (display "pperror" beg end (sal-error-start x))
       
@@ -213,17 +213,17 @@
     ;; the error as well as a line below it marking the error position
     ;; with an arrow: ^
     (let* ((pos (- (sal-error-start x) beg))
-	   (line (if (and (= beg 0) (= end llen)) 
-		     source
-		     (subseq source beg end)))
-	   (mark (make-spaces pos)))
+           (line (if (and (= beg 0) (= end llen)) 
+                     source
+                     (subseq source beg end)))
+           (mark (make-spaces pos)))
       (format t "~%>>> ~A ~A: ~A.~%>>> in ~A, line ~A, col ~A.~%~%~A~%~A^~%"
               (sal-error-type x) msg-type (sal-error-text x)
               *sal-input-file-name* line-no (1+ pos)
               line mark)
 ;      (format t "~%>>> ~A error in \"~A\", line ~A, col ~A: ~A.~%~%~A~%~A^~%" 
 ;              (sal-error-type x) *sal-input-file-name* line-no pos
-;	      (sal-error-text x) line mark)
+;              (sal-error-text x) line mark)
       x)))
 
 
@@ -238,21 +238,21 @@
   (do ((i start )
        (p nil))
       ((or p (if (< start end)
-		 (not (< -1 i end))
-		 (not (> i end -1))))
+                 (not (< -1 i end))
+                 (not (> i end -1))))
        (or p end))
     (cond ((consp white)
-	   (unless (member (char str i) white :test #'char=)
-	     (setq p i)))
-	  ((characterp white)
-	   (unless (char= (char str i) white)
-	     (setq p i)))
-	  ((functionp white)
-	   (unless (funcall white (char str i))
-	     (setq p i))))
+           (unless (member (char str i) white :test #'char=)
+             (setq p i)))
+          ((characterp white)
+           (unless (char= (char str i) white)
+             (setq p i)))
+          ((functionp white)
+           (unless (funcall white (char str i))
+             (setq p i))))
     (if (< start end)
-	(incf i)
-	(decf i))))
+        (incf i)
+        (decf i))))
 
 
 (defun search-delim (str delim start end)
@@ -263,14 +263,14 @@
       ((or (not (< i end)) p)
        (or p end))
     (cond ((consp delim)
-	   (if (member (char str i) delim :test #'char=)
-	       (setq p i)))
-	  ((characterp delim)
-	   (if (char= (char str i) delim)
-	       (setq p i)))
-	  ((functionp delim)
-	   (if (funcall delim (char str i))
-	       (setq p i))))))
+           (if (member (char str i) delim :test #'char=)
+               (setq p i)))
+          ((characterp delim)
+           (if (char= (char str i) delim)
+               (setq p i)))
+          ((functionp delim)
+           (if (funcall delim (char str i))
+               (setq p i))))))
 
 
 ;; UNBALANCED-INPUT AND TOKENIZE HAVE BEEN REWRITTEN, SEE BELOW. THIS ONE IS 
@@ -303,45 +303,45 @@
               (incf n))))    
     (errexit text pos)))
 
-
+;; REMINDER: THIS IS PART OF A BIG BLOCK COMMENT
 (defun tokenize (str reserved error-fn)
   ;&key (start 0) (end (length str)) 
-  ;		 (white-space +whites+) (delimiters +delimiters+)
-  ;		 (operators +operators+) (null-ok t)
+  ;                 (white-space +whites+) (delimiters +delimiters+)
+  ;                 (operators +operators+) (null-ok t)
   ;              (keyword-style +kwstyle+) (reserved nil) 
-  ;		 (error-fn nil)
-  ;		 &allow-other-keys)
+  ;                 (error-fn nil)
+  ;                 &allow-other-keys)
   ;; return zero or more tokens or a sal-error
   (let ((toks (list t))
         (start 0)
         (end (length str))
         (all-delimiters +whites+)
-	(errf (or error-fn 
-		  (lambda (x) (pperror x) (return-from tokenize x)))))
+        (errf (or error-fn 
+                  (lambda (x) (pperror x) (return-from tokenize x)))))
     (dolist (x +delimiters+)
       (push (cadr x) all-delimiters))
     (do ((beg start)
-	 (pos nil)
-	 (all all-delimiters)
-	 (par 0)
-	 (bra 0)
-	 (brk 0)
-	 (kwo 0)
-	 (tok nil)
-	 (tail toks))
-	((not (< beg end))
-	 ;; since input is complete check parens levels.
-	 (if (= 0 par bra brk kwo)
-	     (if (null (cdr toks))
-		 (list)
-		 (cdr toks))
-	     (unbalanced-input errf str (reverse (cdr toks)) 
-			       par bra brk kwo)))
+             (pos nil)
+         (all all-delimiters)
+         (par 0)
+         (bra 0)
+         (brk 0)
+         (kwo 0)
+         (tok nil)
+         (tail toks))
+        ((not (< beg end))
+             ;; since input is complete check parens levels.
+         (if (= 0 par bra brk kwo)
+                 (if (null (cdr toks))
+                 (list)
+                 (cdr toks))
+         (unbalanced-input errf str (reverse (cdr toks)) 
+                                       par bra brk kwo)))
       (setq beg (advance-white str +whites+ beg end))
       (setf tok
-	(read-delimited str :start beg :end end 
-			:white +whites+ :delimit all
-			:skip-initial-white nil :errorf errf))
+        (read-delimited str :start beg :end end 
+                        :white +whites+ :delimit all
+                        :skip-initial-white nil :errorf errf))
       ;; multiple values are returned, so split them here:
       (setf pos (second tok)) ; pos is the end of the token (!)
       (setf tok (first tok))
@@ -349,29 +349,29 @@
       ;; tok now string, char (delimiter), :eof or token since input
       ;; is complete keep track of balancing delims
       (cond ((eql tok +lbrace+) (incf bra))
-	    ((eql tok +rbrace+) (decf bra))
-	    ((eql tok +lparen+) (incf par))
-	    ((eql tok +rparen+) (decf par))
-	    ((eql tok +lbrack+) (incf brk))
-	    ((eql tok +rbrack+) (decf brk))
-	    ((eql tok +kwote+) (setq kwo (mod (+ kwo 1) 2))))
+            ((eql tok +rbrace+) (decf bra))
+            ((eql tok +lparen+) (incf par))
+            ((eql tok +rparen+) (decf par))
+            ((eql tok +lbrack+) (incf brk))
+            ((eql tok +rbrack+) (decf brk))
+            ((eql tok +kwote+) (setq kwo (mod (+ kwo 1) 2))))
       (cond ((eql tok ':eof)
-	     (setq beg end))
-	    
-	    (t
+             (setq beg end))
+            
+            (t
              ;; may have to skip over comments to reach token, so
              ;; token beginning is computed by backing up from current
              ;; position (returned by read-delimited) by string length
              (setf beg (if (stringp tok)
                            (- pos (length tok))
                            (1- pos)))
-	     (setq tok (classify-token tok beg str errf
-				       +delimiters+ +operators+
-				       +kwstyle+ reserved))
+             (setq tok (classify-token tok beg str errf
+                                       +delimiters+ +operators+
+                                       +kwstyle+ reserved))
              ;(display "classify-token-result" tok)
-	     (setf (cdr tail) (list tok ))
-	     (setf tail (cdr tail))
-	     (setq beg pos))))))
+             (setf (cdr tail) (list tok ))
+             (setf tail (cdr tail))
+             (setq beg pos))))))
 |#
 
 
@@ -422,53 +422,53 @@
         (start 0)
         (end (length str))
         (all-delimiters +whites+)
-	(errf (or error-fn 
-		  (lambda (x) (pperror x) (return-from tokenize x)))))
+        (errf (or error-fn 
+                  (lambda (x) (pperror x) (return-from tokenize x)))))
     (dolist (x +delimiters+)
       (push (cadr x) all-delimiters))
     (delimiter-init)
     (do ((beg start)
-	 (pos nil)
-	 (all all-delimiters)
-	 (tok nil)
-	 (tail toks))
-	((not (< beg end))
-	 ;; since input is complete check parens levels.
+         (pos nil)
+         (all all-delimiters)
+         (tok nil)
+         (tail toks))
+        ((not (< beg end))
+         ;; since input is complete check parens levels.
          (delimiter-finish)
          (if (null (cdr toks)) nil (cdr toks)))
       (setq beg (advance-white str +whites+ beg end))
       (setf tok
-	(read-delimited str :start beg :end end 
-			:white +whites+ :delimit all
-			:skip-initial-white nil :errorf errf))
+        (read-delimited str :start beg :end end 
+                        :white +whites+ :delimit all
+                        :skip-initial-white nil :errorf errf))
       ;; multiple values are returned, so split them here:
       (setf pos (second tok)) ; pos is the end of the token (!)
       (setf tok (first tok))
 
       (cond ((eql tok ':eof)
-	     (setq beg end))
-	    (t
+             (setq beg end))
+            (t
              ;; may have to skip over comments to reach token, so
              ;; token beginning is computed by backing up from current
              ;; position (returned by read-delimited) by string length
              (setf beg (if (stringp tok)
                            (- pos (length tok))
                            (1- pos)))
-	     (setq tok (classify-token tok beg str errf
-				       +delimiters+ +operators+
-				       +kwstyle+ reserved))
+             (setq tok (classify-token tok beg str errf
+                                       +delimiters+ +operators+
+                                       +kwstyle+ reserved))
              (delimiter-check tok)
              ;(display "classify-token-result" tok)
-	     (setf (cdr tail) (list tok ))
-	     (setf tail (cdr tail))
-	     (setq beg pos))))))
+             (setf (cdr tail) (list tok ))
+             (setf tail (cdr tail))
+             (setq beg pos))))))
 
 
 (defun read-delimited (input &key (start 0) end (null-ok t)
-		       (delimit +delims+) ; includes whites...
-		       (white +whites+)
-		       (skip-initial-white t)
-		       (errorf #'pperror))
+                       (delimit +delims+) ; includes whites...
+                       (white +whites+)
+                       (skip-initial-white t)
+                       (errorf #'pperror))
   ;; read a substring from input, optionally skipping any white chars
   ;; first. reading a comment delim equals end-of-line, input delim
   ;; reads whole input, pound reads next token. call errf if error
@@ -478,10 +478,10 @@
       (when skip-initial-white
         (setq start (advance-white input white start len)))
         (if (< start len)
-	  (let ((char (char input start)))
-	    (setq end (search-delim input delimit start len))
-            (if (equal start end)		; have a delimiter
-	       (cond ((char= char +semic+)
+          (let ((char (char input start)))
+            (setq end (search-delim input delimit start len))
+            (if (equal start end)                ; have a delimiter
+               (cond ((char= char +semic+)
                       ;; comment skips to next line and trys again...
                       (while (and (< start len)
                                   (char/= (char input start) #\newline))
@@ -493,22 +493,22 @@
                              (return (list ':eof end)))
                             (t
                              (errexit "Unexpected end of input"))))
-;		     ((char= char +pound+)
-;		      ;; read # dispatch
-;		      (read-hash input delimit start len errorf))
-		     ((char= char +quote+)
-		      ;; input delim reads whole input
-		      (return (sal:read-string input delimit start len errorf)))
-		     ((char= char +kwote+)
-		      (errexit "Illegal delimiter" start))
-		     (t ;; all other delimiters are tokens in and of themselves
-		      (return (list char (+ start 1)))))
+;                     ((char= char +pound+)
+;                      ;; read # dispatch
+;                      (read-hash input delimit start len errorf))
+                     ((char= char +quote+)
+                      ;; input delim reads whole input
+                      (return (sal:read-string input delimit start len errorf)))
+                     ((char= char +kwote+)
+                      (errexit "Illegal delimiter" start))
+                     (t ;; all other delimiters are tokens in and of themselves
+                      (return (list char (+ start 1)))))
             ; else part of (equal start end), so we have token before delimiter
               (return (list (subseq input start end) end))))
         ; else part of (< start len)...
-	  (if null-ok 
+          (if null-ok 
               (return (list ':eof end))
-	      (errexit "Unexpected end of input" start))))))
+              (errexit "Unexpected end of input" start))))))
 
 
 (defparameter hash-readers 
@@ -521,18 +521,18 @@
 (defun read-hash (str delims pos len errf)
   (let ((e (+ pos 1)))
     (if (< e len)
-	(let ((a (assoc (char str e) hash-readers)))
-	  (if (not a)
-	      (errexit "Illegal # character" e)
-	      (funcall (cadr a) str delims e len errf)))
-	(errexit "Missing # character" pos))))
+        (let ((a (assoc (char str e) hash-readers)))
+          (if (not a)
+              (errexit "Illegal # character" e)
+              (funcall (cadr a) str delims e len errf)))
+        (errexit "Missing # character" pos))))
 
 
 (defun read-iftok (str delims pos len errf)
   str delims len errf
   (list (make-token :type ':? :string "#?" :lisp 'if
-			 :start (- pos 1))
-	(+ pos 1)))
+                         :start (- pos 1))
+        (+ pos 1)))
 
 ; (sal:read-string str start len)
 
@@ -544,8 +544,8 @@
     (list (let ((t? (char= (char str pos) #\t) ))
             (make-token :type ':bool 
                            :string (if t? "#t" "#f")
-			   :lisp t?
-			   :start (- pos 1)))
+                           :lisp t?
+                           :start (- pos 1)))
           (+ pos 1))))
 
 
@@ -603,8 +603,8 @@
 (defmethod token-print (obj stream)
   (let ((*print-case* ':downcase))
     (format stream "#<~s ~s>" 
-	    (token-type obj) 
-	    (token-string obj))))
+            (token-type obj) 
+            (token-string obj))))
 
 (defun parse-token ()
   (prog1 (car *sal-tokens*)
@@ -617,19 +617,19 @@
 (defun classify-token (str pos input errf delims ops kstyle res)
   (let ((tok nil))
     (cond ((characterp str)
-	   ;; normalize char delimiter tokens
-	   (setq tok (delimiter-token? str pos input errf delims)))
-	  ((stringp str)
-	   (setq tok (or (number-token? str pos input errf)
-			 (operator-token? str pos input errf ops)
-			 (keyword-token? str pos input errf kstyle)
-			 (class-token? str pos input errf res)
-			 (reserved-token? str pos input errf res)
-			 (symbol-token? str pos input errf)
-			 ))
-	   (unless tok
-	     (errexit "Not an expression or symbol" pos)))
-	  (t (setq tok str)))
+           ;; normalize char delimiter tokens
+           (setq tok (delimiter-token? str pos input errf delims)))
+          ((stringp str)
+           (setq tok (or (number-token? str pos input errf)
+                         (operator-token? str pos input errf ops)
+                         (keyword-token? str pos input errf kstyle)
+                         (class-token? str pos input errf res)
+                         (reserved-token? str pos input errf res)
+                         (symbol-token? str pos input errf)
+                         ))
+           (unless tok
+             (errexit "Not an expression or symbol" pos)))
+          (t (setq tok str)))
     tok))
 
 
@@ -638,9 +638,9 @@
     ;; member returns remainder of the list
     ;(display "delimiter-token?" str delims typ)
     (if (and typ (car typ) (caar typ))
-	(make-token :type (caar typ) :string str
-		       :start pos)
-	(+ (break) (errexit "Shouldn't: non-token delimiter" pos)))))
+        (make-token :type (caar typ) :string str
+                       :start pos)
+        (+ (break) (errexit "Shouldn't: non-token delimiter" pos)))))
 
 
 (defun string-to-number (s)
@@ -660,30 +660,30 @@
        (non nil))
       ((or (not (< i len)) non)
        (if non nil
-	   (if (> dig 0) 
-	       (make-token :type typ :string str
-			      :start pos :lisp (string-to-number str))
-	       nil)))
+           (if (> dig 0) 
+               (make-token :type typ :string str
+                              :start pos :lisp (string-to-number str))
+               nil)))
     (setq c (char str i))
     (cond ((member c '(#\+ #\-))
-	   (if (> i 0) (setq non t)
-	       (incf sig)))
-	  ((char= c #\.)
-	   (if (> dot 0) (setq non t)
-	       (if (> sla 0) (setq non t)
-		   (incf dot))))
+           (if (> i 0) (setq non t)
+               (incf sig)))
+          ((char= c #\.)
+           (if (> dot 0) (setq non t)
+               (if (> sla 0) (setq non t)
+                   (incf dot))))
 ; xlisp does not have ratios
-;	  ((char= c #\/)
-;	   (setq typ ':ratio)
-;	   (if (> sla 0) (setq non t)
-;	       (if (= dig 0) (setq non t)
-;		   (if (> dot 0) (setq non t)
-;		       (if (= i (1- len)) (setq non t)
-;			   (incf sla))))))
-	  ((digit-char-p c)
-	   (incf dig)
-	   (if (> dot 0) (setq typ ':float)))
-	  (t (setq non t)))))
+;          ((char= c #\/)
+;           (setq typ ':ratio)
+;           (if (> sla 0) (setq non t)
+;               (if (= dig 0) (setq non t)
+;                   (if (> dot 0) (setq non t)
+;                       (if (= i (1- len)) (setq non t)
+;                           (incf sla))))))
+          ((digit-char-p c)
+           (incf dig)
+           (if (> dot 0) (setq typ ':float)))
+          (t (setq non t)))))
 
 #||
 (number-token? "" 0 "" #'pperror)
@@ -712,8 +712,8 @@
     (cond (typ 
            (setf typ (car typ)) ;; member returns remainder of list
            (make-token :type (car typ) :string str
-		       :start pos :lisp (or (third typ)
-					    (read-from-string str)))))))
+                       :start pos :lisp (or (third typ)
+                                            (read-from-string str)))))))
 
 (defun str-to-keyword (str)
   (intern (strcat ":" (string-upcase str))))
@@ -721,40 +721,40 @@
 
 (defun keyword-token? (tok pos input errf style)
   (let* ((tlen (length tok))
-	 (keys (cdr style))
-	 (klen (length keys)))
+         (keys (cdr style))
+         (klen (length keys)))
     (cond ((not (< klen tlen)) nil)
-	  ((eql (car style) ':prefix)
-	   (do ((i 0 (+ i 1))
-		(x nil))
-	       ((or (not (< i klen)) x)
-		(if (not x)
-		    (let ((sym (symbol-token? (subseq tok i)
-					      pos input errf )))
-		      (cond (sym
+          ((eql (car style) ':prefix)
+           (do ((i 0 (+ i 1))
+                (x nil))
+               ((or (not (< i klen)) x)
+                (if (not x)
+                    (let ((sym (symbol-token? (subseq tok i)
+                                              pos input errf )))
+                      (cond (sym
                              (set-token-type sym ':key)
                              (set-token-lisp sym
                                 (str-to-keyword (token-string sym)))
                              sym)))
-		    nil))
-	     (unless (char= (char tok i) (nth i keys))
-	       (setq x t))))
-	  ((eql (car style) ':suffix)
-	   (do ((j (- tlen klen) (+ j 1))
-		(i 0 (+ i 1))
-		(x nil))
-	       ((or (not (< i klen)) x)
-		(if (not x)
-		    (let ((sym (symbol-token? (subseq tok 0 (- tlen klen))
-					      pos input errf )))
-		      (cond (sym
+                    nil))
+             (unless (char= (char tok i) (nth i keys))
+               (setq x t))))
+          ((eql (car style) ':suffix)
+           (do ((j (- tlen klen) (+ j 1))
+                (i 0 (+ i 1))
+                (x nil))
+               ((or (not (< i klen)) x)
+                (if (not x)
+                    (let ((sym (symbol-token? (subseq tok 0 (- tlen klen))
+                                              pos input errf )))
+                      (cond (sym
                              (set-token-type sym ':key)
                              (set-token-lisp sym
                                 (str-to-keyword (token-string sym)))
                              sym)))
-		    nil))
-	     (unless (char= (char tok j) (nth i keys))
-	       (setq x t)))))))
+                    nil))
+             (unless (char= (char tok j) (nth i keys))
+               (setq x t)))))))
 
 
 (setfn alpha-char-p both-case-p)
@@ -764,17 +764,17 @@
   res
   (let ((a (char str 0)))
     (if (char= a #\<)
-	(let* ((l (length str))
-	       (b (char str (- l 1))))
-	  (if (char= b #\>)
-	      (let ((tok (symbol-token? (subseq str 1 (- l 1))
-					pos input errf)))
-		;; class token has <> removed!
-		(if tok (progn (set-token-type tok ':class)
-			       tok)
-		    (errexit "Not a class identifer" pos)))
-	      (errexit "Not a class identifer" pos)))
-	nil)))
+        (let* ((l (length str))
+               (b (char str (- l 1))))
+          (if (char= b #\>)
+              (let ((tok (symbol-token? (subseq str 1 (- l 1))
+                                        pos input errf)))
+                ;; class token has <> removed!
+                (if tok (progn (set-token-type tok ':class)
+                               tok)
+                    (errexit "Not a class identifer" pos)))
+              (errexit "Not a class identifer" pos)))
+        nil)))
 
 ; (keyword-token? ":asd" '(:prefix #\:))
 ; (keyword-token? "asd" KSTYLE)
@@ -787,13 +787,18 @@
 ; (keyword-token? "--asd" '(:prefix #\-)) ; ok since -asd is legal symbol
 
 
+;; determine if str is a reserved word using reserved as the list of
+;; reserved words, of the form ((id string) (id string) ...) where
+;; id identifies the token, e.g. :to and string is the token, e.g. "to"
+;;
 (defun reserved-token? (str pos input errf reserved)
   errf input
-  (let ((typ (member str reserved :test (lambda (a b) (equal a (cadr b))))))
+  (let ((typ (member str reserved :test 
+                     (lambda (a b) (string-equal a (cadr b))))))
     (if typ 
-	(make-token :type (caar typ) :string str
-		       :start pos)
-	nil)))
+        (make-token :type (caar typ) :string str
+                       :start pos)
+        nil)))
 
 
 (defun sal-string-to-symbol (str)
@@ -825,6 +830,7 @@
                 (not (fboundp sym)) ; existing functions not suspicious
                 (not (boundp sym))  ; existing globals not suspicious
                 (not (member sym *sal-local-variables*))
+                (not (eq sym '->))  ; used by make-markov, so let it pass
                 (contains-op-char str)) ; suspicious if embedded operators
            (sal-warning
              (strcat "Identifier contains operator character(s).\n"
@@ -859,43 +865,44 @@
       ((or (not (< i len)) err)
        (if (or (> ltr 0) ; must be at least one letter, or
                (equal str "->")) ; symbol can be "->"
-	   (let ((info ()) sym)
-	     (if pkg (push (cons ':pkg pkg) info))
-	     (if dot (push (cons ':slot dot) info))	     
+           (let ((info ()) sym)
+             (if pkg (push (cons ':pkg pkg) info))
+             (if dot (push (cons ':slot dot) info))
              ;(display "in symbol-token?" str)
              (setf sym (sal-string-to-symbol str))
-	     (make-token :type ':id :string str
-			    :info info :start pos
+             (make-token :type ':id :string str
+                            :info info :start pos
                             :lisp sym))
-	   nil))
+           nil))
     (setq chr (char str i))
     (cond ((alpha-char-p chr) (incf ltr))
 ; need to allow arbitrary lisp symbols
-;	  ((member chr '(#\* #\+)) ;; special variable names can start/end 
-;	   (if (< 0 i (- len 2))   ;; with + or *
-;	       (errexit bad pos)))
-	  ((char= chr #\/) ;; embedded / is not allowed
-	   (errexit bad pos))
-	  ;((char= chr #\-) ;; hyphens are allowed anywhere in symbol
-	  ; (if (= ltr 0) 
-	  ;     (errexit errf input bad pos )
-	  ;     (setq ltr 0)
-	  ;     ))
-	  ((char= chr #\:)
+;          ((member chr '(#\* #\+)) ;; special variable names can start/end 
+;           (if (< 0 i (- len 2))   ;; with + or *
+;               (errexit bad pos)))
+          ((char= chr #\/) ;; embedded / is not allowed
+           (errexit bad pos))
+          ;((char= chr #\-) ;; hyphens are allowed anywhere in symbol
+          ; (if (= ltr 0) 
+          ;     (errexit errf input bad pos )
+          ;     (setq ltr 0)
+          ;     ))
+          ((char= chr #\$) (incf ltr)) ;; "$" is treated as a letter
+          ((char= chr #\:)
            ; allowable forms are :foo, foo:bar, :foo:bar
-	   (if (> i 0) ;; lisp keyword symbols ok
-	       (cond ((= ltr 0)
-		      (errexit bad pos))
-		     ((not pkg)
-		      (setq pkg i))
-		     (t (errexit errf input
-				 (format nil "Too many colons in ~s" str)
-				 pos))))
-	   (setq ltr 0))
-	  ((char= chr #\.)
-	   (if (or dot (= i 0) (= i (- len 1)))
-	       (errexit bad pos)
-	       (progn (setq dot i) (setq ltr 0)))))))
+           (if (> i 0) ;; lisp keyword symbols ok
+               (cond ((= ltr 0)
+                      (errexit bad pos))
+                     ((not pkg)
+                      (setq pkg i))
+                     (t (errexit errf input
+                                 (format nil "Too many colons in ~s" str)
+                                 pos))))
+           (setq ltr 0))
+          ((char= chr #\.)
+           (if (or dot (= i 0) (= i (- len 1)))
+               (errexit bad pos)
+               (progn (setq dot i) (setq ltr 0)))))))
 
 
 ; (let ((i "foo")) (symbol-token? i 0 i #'pperror))
@@ -966,7 +973,7 @@
 ;;   read later (maybe) by ERREXIT. 
 ;; If input is a token list, it is assumed these are leftovers
 ;;   from tokenized text, so *sal-input-text* is already valid.
-;; *Therfore*, do not call sal-parse with tokens unless 
+;; *Therefore*, do not call sal-parse with tokens unless 
 ;;   *sal-input-text* is set to the corresponding text.
 ;;
 (defun sal-parse (grammar pat input multiple-statements file)
@@ -1025,7 +1032,7 @@
 (defun maybe-parse-command ()
   (if (token-is '(:define :load :chdir :variable :function
                   ;  :system 
-                  :play :print :display))
+                  :play :print :display :plot))
       (parse-command)
       (if (and (token-is '(:return)) *audacity-top-level-return-flag*)
           (parse-command))))
@@ -1046,6 +1053,8 @@
          (parse-print-display :print 'sal-print))
         ((token-is :display)
          (parse-print-display :display 'display))
+        ((token-is :plot)
+         (parse-plot))
         ((and *audacity-top-level-return-flag* (token-is :return))
          (parse-return))
 ;        ((token-is :output)
@@ -1067,6 +1076,8 @@
          (parse-print-display :print 'sal-print))
         ((token-is :display)
          (parse-print-display :display 'display))
+        ((token-is :plot)
+         (parse-plot))
 ;        ((token-is :output)
 ;         (parse-output))
         ((token-is :exec)
@@ -1315,6 +1326,21 @@
     (push arg args))
    (add-line-info-to-stmt (cons function (reverse args)) loc)))
 
+(defun parse-plot ()
+  ;; assumes next token is :plot
+  (or (token-is :plot) (error "parse-plot internal error"))
+  (let (arg args loc)
+   (setf loc (parse-token))
+   (setf arg (parse-sexpr))
+   (setf args (list arg))
+   (cond ((token-is :co) ; get duration parameter
+          (parse-token) ; remove and ignore the comma
+          (setf arg (parse-sexpr))
+          (push arg args)
+          (cond ((token-is :co) ; get n points parameter
+                 (parse-token) ; remove and ignore the comma
+                 (setf arg (parse-sexpr))))))
+   (add-line-info-to-stmt (cons 's-plot (reverse args)) loc)))
 
 ;(defun parse-output ()
 ; ;; assume next token is :output
@@ -1415,14 +1441,14 @@
       (cond ((eq op '=))
             ((eq op '-=) (setf expr `(diff ,vref ,expr)))
             ((eq op '+=) (setf expr `(sum ,vref ,expr)))
-	    ((eq op '*=) (setq expr `(mult ,vref ,expr)))
-	    ((eq op '/=) (setq expr `(/ ,vref ,expr)))
-	    ((eq op '&=) (setq expr `(nconc ,vref (list ,expr))))
-	    ((eq op '@=) (setq expr `(cons ,expr ,vref)))
+            ((eq op '*=) (setq expr `(mult ,vref ,expr)))
+            ((eq op '/=) (setq expr `(/ ,vref ,expr)))
+            ((eq op '&=) (setq expr `(nconc ,vref (list ,expr))))
+            ((eq op '@=) (setq expr `(cons ,expr ,vref)))
             ((eq op '^=) (setq expr `(nconc ,vref (append ,expr nil))))
-	    ((eq op '<=) (setq expr `(min ,vref ,expr)))
-	    ((eq op '>=) (setq expr `(max ,vref ,expr)))
-	    (t (errexit (format nil "unknown assigment operator ~A" op))))
+            ((eq op '<=) (setq expr `(min ,vref ,expr)))
+            ((eq op '>=) (setq expr `(max ,vref ,expr)))
+            (t (errexit (format nil "unknown assigment operator ~A" op))))
       (push (list 'setf vref expr) rslt))
     (setf rslt (add-line-info-to-stmts rslt set-token))
     (if (> (length rslt) 1)
@@ -1507,7 +1533,7 @@
 ;; OR-IZE -- compute the OR of a list of expressions
 ;;
 (defun or-ize (exprs)
- (if (> 1 (length exprs)) (cons 'or exprs)
+ (if (> (length exprs) 1) (cons 'or exprs)
      (car exprs)))
 
 
@@ -1758,8 +1784,12 @@
     (while (not (token-is :rc))
            (cond ((token-is '(:int :float :id :bool :key :string))
                   (push (token-lisp (parse-token)) elts))
+                 ((token-is *sal-operators*)
+                  (push (intern (token-string (parse-token))) elts))
                  ((token-is :lc)
                   (push (parse-list) elts))
+                 ((token-is :co)
+                  (errexit "expected list element or right brace; do not use commas inside braces {}"))
                  (t
                   (errexit "expected list element or right brace"))))
     (parse-token)
@@ -1793,7 +1823,7 @@
 (defun is-op? (x)
   ;; return op weight if x is operator
   (let ((o (assoc (if (listp x) (token-type x) x)
-		 *op-weights*)))
+                 *op-weights*)))
     (and o (cadr o))))
 
 
@@ -1802,26 +1832,26 @@
   ;; depth-first so subexprs are already processed
   (let (op lh rh w1)
     (if (consp inf)
-	(do ()
-	    ((null inf) lh)
-	  (setq op (car inf))		; look at each element of in
+        (do ()
+            ((null inf) lh)
+          (setq op (car inf))                ; look at each element of in
           (pop inf)
-	  (setq w1 (is-op? op))
-	  (cond ((numberp w1)		; found op (w1 is precedence)
-		 (do ((w2 nil)
-		      (ok t)
-		      (li (list)))
-		     ((or (not inf) (not ok))
-		      (setq rh (inf->pre (nreverse li)))
-		      (setq lh (if lh (list (get-lisp-op op) lh rh)
-				   (list (get-lisp-op op) rh nil))))
-		   (setq w2 (is-op? (first inf)))
-		   (cond ((and w2 (<= w2 w1))
-		          (setq ok nil))
+          (setq w1 (is-op? op))
+          (cond ((numberp w1)                ; found op (w1 is precedence)
+                 (do ((w2 nil)
+                      (ok t)
+                      (li (list)))
+                     ((or (not inf) (not ok))
+                      (setq rh (inf->pre (nreverse li)))
+                      (setq lh (if lh (list (get-lisp-op op) lh rh)
+                                   (list (get-lisp-op op) rh nil))))
+                   (setq w2 (is-op? (first inf)))
+                   (cond ((and w2 (<= w2 w1))
+                          (setq ok nil))
                          (t
                           (push (car inf) li)
                           (pop inf)))))
-		(t
-		 (setq lh op))))
-	inf)))
+                (t
+                 (setq lh op))))
+        inf)))
 

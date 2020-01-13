@@ -19,7 +19,7 @@
     (setf _the-seq (seq-copy ,the-seq))
     (setf _nyq-environment (nyq:the-environment))
     (setf _seq-midi-closure #'(lambda (t0)
-      ; (format t "_seq_midi_closure: t0 = ~A~%" t0)
+      (format t "_seq_midi_closure: t0 = ~A~%" t0) ;DEBUG
       (prog (_the-sound)
 loop	; go forward until we find note to play (we may be there)
         ; then go forward to find time of next note
@@ -45,6 +45,7 @@ loop	; go forward until we find note to play (we may be there)
               ((and (= _tag seq-note-tag)
                     ,(make-note-test cases))
                (cond (_the-sound ; we now have time of next note
+                      ; (display "note" (seq-time _the-event))
                       (setf _next-time (/ (seq-time _the-event) 1000.0))
                       (go exit-loop))
                      (t
@@ -52,13 +53,13 @@ loop	; go forward until we find note to play (we may be there)
         (seq-next _the-seq)
         (go loop)
 exit-loop ; here, we know time of next note
-        ; (display "seq-midi" _next-time)
-        ; (format t "seq-midi calling snd-seq\n")
+        (display "seq-midi" _next-time) ;DEBUG
+        (format t "seq-midi calling snd-seq\n") ;DEBUG
         (return (snd-seq
                   (set-logical-stop-abs _the-sound 
                         (local-to-global _next-time))
                   _seq-midi-closure)))))
-    ; (display "calling closure" (get-lambda-expression _seq-midi-closure))
+    (display "calling closure" (get-lambda-expression _seq-midi-closure)) ; DEBUG
     (funcall _seq-midi-closure (local-to-global 0))))
 
 
@@ -157,3 +158,14 @@ exit-loop ; here, we know time of next note
 ;    (seq-next the-seq)
 ;    (go loop)))
 ; 
+
+;; for SAL we can't pass in lisp expressions as arguments, so
+;; we pass in functions instead, using keyword parameters for
+;; ctrl, bend, touch, and prgm. The note parameter is required.
+;;
+(defun seq-midi-sal (seq note &optional ctrl bend touch prgm)
+  (seq-midi seq (note (chan pitch vel) (funcall note chan pitch vel))
+    (ctrl (chan num val) (if ctrl (funcall ctrl chan num val)))
+    (bend (chan val) (if bend (funcall bend chan val)))
+    (touch (chan val) (if touch (funcall touch chan val)))
+    (prgm (chan val) (if prgm (funcall prgm chan val)))))

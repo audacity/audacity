@@ -366,7 +366,7 @@
 
 (defun lisp-loader (filename &key (verbose t) print)
   (if (load filename :verbose verbose :print print)
-      nil ; be quiet if things work ok
+      t ; be quiet if things work ok
       (format t "error loading lisp file ~A~%" filename)))
 
 
@@ -467,7 +467,7 @@
 ;; read-eval-print loop for sal commands
 (defun sal ()
   (progv '(*breakenable* *tracenable* *sal-exit* *sal-mode*)
-         (list *sal-break* nil nil t)
+         (list *sal-break* *xlisp-traceback* nil t)
     (let (input line)
       (setf *sal-call-stack* nil)
       (read-line) ; read the newline after the one the user 
@@ -587,9 +587,44 @@
          (> (length input) i)
          (eq (char input i) #\())))
 
+(defun sal-list-equal (a b)
+  (let ((rslt t)) ;; set to false if any element not equal
+    (dolist (x a) 
+      (if (sal-equal x (car b))
+          t ;; continue comparing
+          (return (setf rslt nil))) ;; break out of loop
+      (setf b (cdr b)))
+    (and rslt (null b)))) ;; make sure no leftovers in b
+
+
+(defun sal-plus(a b &optional (source "+ operation in SAL"))
+  (ny:typecheck (not (or (numberp a) (soundp a) (multichannel-soundp a)))
+    (ny:error source 0 number-sound-anon a t))
+  (ny:typecheck (not (or (numberp b) (soundp b) (multichannel-soundp b)))
+    (ny:error source 0 number-sound-anon b t))
+  (nyq:add2 a b))
+
+
 (defun sal-equal (a b)
   (or (and (numberp a) (numberp b) (= a b)) 
+      (and (consp a) (consp b) (sal-list-equal a b))
       (equal a b)))
 
 (defun not-sal-equal (a b)
   (not (sal-equal a b)))
+
+(defun sal-list-about-equal (a b)
+  (let ((rslt t)) ;; set to false if any element not equal
+    (dolist (x a) 
+      (if (sal-about-equal x (car b))
+          t ;; continue comparing
+          (return (setf rslt nil))) ;; break out of loop
+      (setf b (cdr b)))
+    (and rslt (null b)))) ;; make sure no leftovers in b
+
+(setf *~=tolerance* 0.000001)
+
+(defun sal-about-equal (a b)
+  (or (and (numberp a) (numberp b) (< (abs (- a b)) *~=tolerance*))
+      (and (consp a) (consp b) (sal-list-about-equal a b))
+      (equal a b)))

@@ -42,7 +42,8 @@
 ;                  Typically, you want this on.
 ; *xlisp-traceback* -- print XLISP traceback on error in XLISP mode
 ;                      Typically, you do not want this because the full
-;                      stack can be long and tedious.
+;                      stack can be long and tedious. Also allow XLISP
+;                      traceback in SAL mode if *sal-break* is true.
 
 (setf *sal-mode* nil)
 
@@ -191,4 +192,44 @@
        t
        ;; search for either .lsp or .sal file
        (sal-load ,file-name)))
+
+;; COMPUTE-DEFAULT-SOUND-FILE -- construct and set *default-sound-file*
+;;
+;; (this is harder than it might seem because the default place for
+;;  sound files is in /tmp, which is shared by users, so we'd like to
+;;  use a user-specific name to avoid collisions)
+;;
+(defun compute-default-sound-file () 
+  (let (inf user extension)
+      ; the reason for the user name is that if UserA creates a temp file,
+      ; then UserB will not be able to overwrite it. The user name is a
+      ; way to give each user a unique temp file name. Note that we don't
+      ; want each session to generate a unique name because Nyquist doesn't
+      ; delete the sound file at the end of the session.
+   (setf user (get-user))
+#|
+   (cond ((null user)           
+       (format t 
+"Please type your user-id so that I can construct a default 
+sound-file name.  To avoid this message in the future, add
+this to your .login file:
+    setenv USER <your id here>
+or add this to your init.lsp file:
+    (setf *default-sound-file* \"<your filename here>\")
+    (setf *default-sf-dir* \"<full pathname of desired directory here>\")
+
+Your id please: ")
+       (setf user (read))))
+|#
+    ; now compute the extension based on *default-sf-format*
+    (cond ((= *default-sf-format* snd-head-AIFF)
+           (setf extension ".aif"))
+          ((= *default-sf-format* snd-head-Wave)
+           (setf extension ".wav"))
+          (t
+           (setf extension ".snd")))
+    (setf *default-sound-file* 
+      (strcat (string-downcase user) "-temp" extension))
+    (format t "Default sound file is ~A.~%" *default-sound-file*)))
+
 

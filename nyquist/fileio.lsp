@@ -33,6 +33,7 @@
   (cond ((equal *default-sf-dir* "") (setf *default-sf-dir* path))))
 
 ;; s-save -- saves a file
+(setf *in-s-save* nil)
 (setf NY:ALL 1000000000)	; 1GIG constant for maxlen
 (defmacro s-save (expression &optional (maxlen NY:ALL) filename 
                   &key (format '*default-sf-format*)
@@ -42,27 +43,47 @@
   `(let ((ny:fname ,filename)
          (ny:maxlen ,maxlen)
          (ny:endian ,endian)
-         (ny:swap 0))
-     ; allow caller to omit maxlen, in which case the filename will
-     ; be a string in the maxlen parameter position and filename will be null
-     (cond ((null ny:fname)
-                 (cond ((stringp ny:maxlen)
-                            (setf ny:fname ny:maxlen)
-                            (setf ny:maxlen NY:ALL))
-                           (t
-                            (setf ny:fname *default-sound-file*)))))
+         (ny:swap 0) 
+         max-sample)     ; return value
+     (cond (*in-s-save*
+            (error "Recursive call to s-save (maybe play?) detected!")))
+     (progv '(*in-s-save*) '(t)
+       ; allow caller to omit maxlen, in which case the filename will
+       ; be a string in the maxlen parameter position and filename will be null
+       (cond ((null ny:fname)
+              (cond ((stringp ny:maxlen)
+                     (setf ny:fname ny:maxlen)
+                     (setf ny:maxlen NY:ALL))
+                    (t
+                     (setf ny:fname *default-sound-file*)))))
      
-     (cond ((equal ny:fname "")
-                 (cond ((not ,play)
-                       (format t "s-save: no file to write! play option is off!\n"))))
-           (t
-            (setf ny:fname (soundfilename ny:fname))
-            (format t "Saving sound file to ~A~%" ny:fname)))
-	 (cond ((eq ny:endian :big)
-	        (setf ny:swap (if (bigendianp) 0 1)))
-		   ((eq ny:endian :little)
-			(setf ny:swap (if (bigendianp) 1 0))))
-     (snd-save ',expression ny:maxlen ny:fname ,format ,mode ,bits ny:swap ,play)))
+       (cond ((equal ny:fname "")
+              (cond ((not ,play)
+                     (format t "s-save: no file to write! play option is off!\n"))))
+             (t
+              (setf ny:fname (soundfilename ny:fname))
+              (format t "Saving sound file to ~A~%" ny:fname)))
+       (cond ((eq ny:endian :big)
+              (setf ny:swap (if (bigendianp) 0 1)))
+             ((eq ny:endian :little)
+              (setf ny:swap (if (bigendianp) 1 0))))
+       ; print device info the first time sound is played
+       (cond (,play
+              (cond ((not (boundp '*snd-list-devices*))
+                     (setf *snd-list-devices* t))))) ; one-time show
+       (setf max-sample
+             (snd-save ',expression ny:maxlen ny:fname ,format 
+                       ,mode ,bits ny:swap ,play))
+       ; more information if *snd-list-devices* was unbound:
+       (cond (,play
+              (cond (*snd-list-devices*
+		     (format t "\nSet *snd-list-devices* = t\n~A\n~A\n~A\n~A\n\n"
+                  "  and call play to see device list again."
+                  "Set *snd-device* to a fixnum to select an output device"
+                  "  or set *snd-device* to a substring of a device name"
+                  "  to select the first device containing the substring.")))
+	      (setf *snd-list-devices* nil))) ; normally nil
+       max-sample)))
 
 ;; MULTICHANNEL-MAX -- find peak over all channels
 ;;
@@ -217,21 +238,21 @@
             (local-to-global 0) format nchans mode bits swap srate
             dur)))
 
+
 ;; SF-INFO -- print sound file info
 ;;
 (defun sf-info (filename)
   (let (s format channels mode bits swap srate dur flags)
     (format t "~A:~%" (soundfilename filename))
     (setf s (s-read filename))
-    (setf format (car *rslt*))
-    (setf channels (cadr *rslt*))
-    (setf mode (caddr *rslt*))
-    (setf bits (cadddr *rslt*))
-    (setf *rslt* (cddddr *rslt*))
-    (setf swap (car *rslt*))
-    (setf srate (cadr *rslt*))
-    (setf dur (caddr *rslt*))
-    (setf flags (cadddr *rslt*))
+    (setf format (snd-read-format *rslt*))
+    (setf channels (snd-read-channels *rslt*))
+    (setf mode (snd-read-mode *rslt*))
+    (setf bits (snd-read-bits *rslt*))
+    ; (setf swap (snd-read-swap *rslt*))
+    (setf srate (snd-read-srate *rslt*))
+    (setf dur (snd-read-dur *rslt*))
+    (setf flags (snd-read-flags *rslt*))
     (format t "Format: ~A~%" 
             (nth format '("none" "AIFF" "IRCAM" "NeXT" "Wave" "PAF" "SVX"
                           "NIST" "VOC" "W64" "MAT4" "Mat5" "PVF" "XI" "HTK"
@@ -290,14 +311,15 @@
   filename)
 
 
-(setfn s-read-format car)
-(setfn s-read-channels cadr)
-(setfn s-read-mode caddr)
-(setfn s-read-bits cadddr)
-(defun s-read-swap (rslt) (car (cddddr rslt)))
-(defun s-read-srate (rslt) (cadr (cddddr rslt)))
-(defun s-read-dur (rslt) (caddr (cddddr rslt)))
-(defun s-read-byte-offset (rslt) (car (cddddr (cddddr rslt))))
+(setfn snd-read-format car)
+(setfn snd-read-channels cadr)
+(setfn snd-read-mode caddr)
+(setfn snd-read-bits cadddr)
+(defun snd-read-swap (rslt) (car (cddddr rslt)))
+(defun snd-read-srate (rslt) (cadr (cddddr rslt)))
+(defun snd-read-dur (rslt) (caddr (cddddr rslt)))
+(defun snd-read-flags (rslt) (cadddr (cddddr rslt)))
+(defun snd-read-byte-offset (rslt) (cadr (cddddr (cddddr rslt))))
 
 ;; round is tricky because truncate rounds toward zero as does C
 ;; in other words, rounding is down for positive numbers and up
@@ -328,7 +350,7 @@
                                           :time-offset ny:offset)
                                          ny:addend)
                                     ny:addend))
-                   ,maxlen ny:fname ny:offset SND-HEAD-NONE 0 0 0 0.0))
+                   ,maxlen ny:fname ny:offset SND-HEAD-NONE 0 0 0))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 
@@ -338,9 +360,9 @@
          (ny:peak 0.0)
          ny:input ny:rslt (ny:offset ,time-offset))
     (format t "Overwriting ~A at offset ~A~%" ny:fname ny:offset)
-    (setf ny:offset (s-read-byte-offset ny:rslt))
+    (setf ny:offset (snd-read-byte-offset ny:rslt))
     (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname ny:offset
-                   SND-HEAD-NONE 0 0 0 0.0))
+                   SND-HEAD-NONE 0 0 0))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 
