@@ -762,9 +762,32 @@ void Mixer::SetTimesAndSpeed(double t0, double t1, double speed)
    Reposition(t0);
 }
 
-void Mixer::SetSpeed(double speed)
+void Mixer::SetSpeedForPlayAtSpeed(double speed)
 {
    wxASSERT(std::isfinite(speed));
+   mSpeed = fabs(speed);
+}
+
+void Mixer::SetSpeedForKeyboardScrubbing(double speed, double startTime)
+{
+   wxASSERT(std::isfinite(speed));
+
+   // Check if the direction has changed
+   if ((speed > 0.0 && mT1 < mT0) || (speed < 0.0 && mT1 > mT0)) {
+      // It's safe to use 0 and DBL_MAX, because Mixer::MixVariableRates()
+      // doesn't sample past the start or end of the audio in a track.
+      if (speed > 0.0 && mT1 < mT0) {
+         mT0 = 0;
+         mT1 = DBL_MAX;
+      }
+      else {
+         mT0 = DBL_MAX;
+         mT1 = 0;
+      }
+
+      Reposition(startTime, true);
+   }
+
    mSpeed = fabs(speed);
 }
 

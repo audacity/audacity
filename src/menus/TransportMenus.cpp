@@ -198,7 +198,7 @@ void DoKeyboardScrub(AudacityProject& project, bool backwards, bool keyUp)
 
    if (keyUp) {
       auto &scrubber = Scrubber::Get(project);
-      if (scrubber.IsKeyboardScrubbing()) {
+      if (scrubber.IsKeyboardScrubbing() && scrubber.IsBackwards() == backwards) {
          auto gAudioIO = AudioIOBase::Get();
          auto time = gAudioIO->GetStreamTime();
          auto &viewInfo = ViewInfo::Get(project);
@@ -221,7 +221,11 @@ void DoKeyboardScrub(AudacityProject& project, bool backwards, bool keyUp)
    else {      // KeyDown
       auto gAudioIO = AudioIOBase::Get();
       auto &scrubber = Scrubber::Get(project);
-      if (!gAudioIO->IsBusy() && !scrubber.HasMark()) {
+      if (scrubber.IsKeyboardScrubbing() && scrubber.IsBackwards() != backwards) {
+         // change direction
+         scrubber.SetBackwards(backwards);
+      }
+      else if (!gAudioIO->IsBusy() && !scrubber.HasMark()) {
          auto &viewInfo = ViewInfo::Get(project);
          auto &selection = viewInfo.selectedRegion;
          double endTime = TrackList::Get(project).GetEndTime();

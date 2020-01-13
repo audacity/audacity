@@ -82,6 +82,10 @@ public:
    { return mKeyboardScrubbing; }
    bool IsKeyboardScrubbing() const
    { return IsScrubbing() && mKeyboardScrubbing; }
+   void SetBackwards(bool backwards)
+   { mBackwards = backwards;}
+   bool IsBackwards() const
+   { return mBackwards;}
    // True iff the user has clicked to start scrub and not yet stopped,
    // but IsScrubbing() may yet be false
    bool HasMark() const

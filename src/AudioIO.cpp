@@ -2827,14 +2827,13 @@ void AudioIO::FillBuffers()
                      if (!mSilentScrub)
                      {
                         for (i = 0; i < mPlaybackTracks.size(); i++) {
-                           if (mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_AT_SPEED ||
-                              mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_KEYBOARD_SCRUB) {
-                              mPlaybackMixers[i]->SetSpeed(mScrubSpeed);
-                           }
-                           else {
+                           if (mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_AT_SPEED)
+                              mPlaybackMixers[i]->SetSpeedForPlayAtSpeed(mScrubSpeed);
+                           else if (mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_KEYBOARD_SCRUB)
+                              mPlaybackMixers[i]->SetSpeedForKeyboardScrubbing(mScrubSpeed, startTime);
+                           else
                               mPlaybackMixers[i]->SetTimesAndSpeed(
                                  startTime, endTime, fabs( mScrubSpeed ));
-                           }
                         }
                      }
                      mTimeQueue.mLastTime = startTime;
