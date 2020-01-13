@@ -644,6 +644,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu)
    }
 
    if ( multiView && uniqueDisplay )
+      // Bug2275 residual
       // Disable the checking-off of the only sub-view
       pMenu->Enable( uniqueDisplay, false );
 
