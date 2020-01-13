@@ -180,7 +180,7 @@ public:
       long defaultSymbol,
 
       std::vector<int> intValues, // must have same size as symbols
-      const wxString &oldKey
+      const wxString &oldKey = {}
    );
 
 protected:
@@ -215,7 +215,7 @@ public:
       long defaultSymbol,
 
       std::initializer_list< Enum > values, // must have same size as symbols
-      const wxString &oldKey
+      const wxString &oldKey = {}
    )
       : EnumSettingBase{
          key, symbols, defaultSymbol,

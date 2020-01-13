@@ -53,75 +53,118 @@ namespace {
 }
 
 
+namespace {
+   const auto waveformScaleKey = wxT("/GUI/DefaultWaveformScaleChoice");
+   const auto dbValueString = wxT("dB");
+}
+
+static EnumSetting< WaveformSettings::ScaleTypeValues > waveformScaleSetting{
+   waveformScaleKey,
+   {
+      { XO("Linear") },
+      { dbValueString, XO("Logarithmic (dB)") },
+   },
+
+   0, // linear
+   
+   {
+      WaveformSettings::stLinear,
+      WaveformSettings::stLogarithmic,
+   }
+};
+
 //////////
+// There is a complicated migration history here!
+namespace {
+   const auto key0 = wxT("/GUI/DefaultViewMode");
+   const auto key1 = wxT("/GUI/DefaultViewModeNew");
+   const auto key2 = wxT("/GUI/DefaultViewModeChoice");
+   const auto key3 = wxT("/GUI/DefaultViewModeChoiceNew");
+
+   const EnumValueSymbol waveformSymbol{ XO("Waveform") };
+   const EnumValueSymbol spectrumSymbol{ XO("Spectrogram") };
+   const wxString obsoleteValue{ wxT("WaveformDB") };
+};
+
 class TracksViewModeEnumSetting
    : public EnumSetting< WaveTrackViewConstants::Display > {
 public:
-   TracksViewModeEnumSetting(
-      const wxString &key,
-      EnumValueSymbols symbols,
-      long defaultSymbol,
-
-      std::initializer_list< WaveTrackViewConstants::Display > intValues,
-      const wxString &oldKey
-   )
-      : EnumSetting{
-         key, std::move( symbols ), defaultSymbol,
-         std::move( intValues ), oldKey
-      }
-   {}
+   using EnumSetting< WaveTrackViewConstants::Display >::EnumSetting;
 
    void Migrate( wxString &value ) override
    {
-      // Special logic for this preference which was twice migrated!
-
-      // First test for the older but not oldest key:
-      EnumSetting::Migrate(value);
-      if (!value.empty())
-         return;
+      // Special logic for this preference which was three times migrated!
 
       // PRL:  Bugs 1043, 1044
       // 2.1.1 writes a NEW key for this preference, which got NEW values,
       // to avoid confusing version 2.1.0 if it reads the preference file afterwards.
       // Prefer the NEW preference key if it is present
 
+      WaveTrackViewConstants::Display viewMode;
       int oldMode;
-      gPrefs->Read(wxT("/GUI/DefaultViewMode"), // The very old key
+      wxString newValue;
+      auto stringValue =
+         []( WaveTrackViewConstants::Display display ){
+         switch ( display ) {
+            case WaveTrackViewConstants::Spectrum:
+               return spectrumSymbol.Internal();
+            case WaveTrackViewConstants::obsoleteWaveformDBDisplay:
+               return obsoleteValue;
+            default:
+               return waveformSymbol.Internal();
+         }
+      };
+
+      if ( gPrefs->Read(key0, // The very old key
          &oldMode,
-         (int)(WaveTrackViewConstants::Waveform));
-      auto viewMode = WaveTrackViewConstants::ConvertLegacyDisplayValue(oldMode);
+         (int)(WaveTrackViewConstants::Waveform) ) ) {
+         viewMode = WaveTrackViewConstants::ConvertLegacyDisplayValue(oldMode);
+         newValue = stringValue( viewMode );
+      }
+      else if ( gPrefs->Read(key1,
+         &oldMode,
+         (int)(WaveTrackViewConstants::Waveform) ) ) {
+         viewMode = static_cast<WaveTrackViewConstants::Display>( oldMode );
+         newValue = stringValue( viewMode );
+      }
+      else
+         gPrefs->Read( key2, &newValue );
 
-      // Now future-proof 2.1.1 against a recurrence of this sort of bug!
-      viewMode = WaveTrackViewConstants::ValidateWaveTrackDisplay(viewMode);
+      if ( !gPrefs->Read( key3, &value ) ) {
+         if (newValue == obsoleteValue) {
+            newValue = waveformSymbol.Internal();
+            gPrefs->Write(waveformScaleKey, dbValueString);
+         }
 
-      const_cast<TracksViewModeEnumSetting*>(this)->WriteInt( viewMode );
-      gPrefs->Flush();
-
-      value = mSymbols[ FindInt(viewMode) ].Internal();
+         Write( value = newValue );
+         gPrefs->Flush();
+         return;
+      }
    }
 };
 
 static TracksViewModeEnumSetting viewModeSetting{
-   wxT("/GUI/DefaultViewModeChoice"),
+   key3,
    {
-      { XO("Waveform") },
-      { wxT("WaveformDB"), XO("Waveform (dB)") },
-      { XO("Spectrogram") }
+      { waveformSymbol },
+      { spectrumSymbol }
    },
    0, // Waveform
 
-   // for migrating old preferences:
    {
       WaveTrackViewConstants::Waveform,
-      WaveTrackViewConstants::obsoleteWaveformDBDisplay,
       WaveTrackViewConstants::Spectrum
-   },
-   wxT("/GUI/DefaultViewModeNew")
+   }
 };
 
 WaveTrackViewConstants::Display TracksPrefs::ViewModeChoice()
 {
    return viewModeSetting.ReadEnum();
+}
+
+WaveformSettings::ScaleTypeValues TracksPrefs::WaveformScaleChoice()
+{
+   return waveformScaleSetting.ReadEnum();
 }
 
 //////////
@@ -299,8 +342,12 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
             30
          );
 #endif
+
          S.TieChoice(XO("Default &view mode:"),
                      viewModeSetting );
+
+         S.TieChoice(XO("Default Waveform scale:"),
+                     waveformScaleSetting );
 
          S.TieChoice(XO("Display &samples:"),
                      sampleDisplaySetting );

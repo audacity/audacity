@@ -1206,13 +1206,12 @@ void WaveTrackView::BuildSubViews() const
          
          // Force creation always:
          WaveformSettings &settings = static_cast< WaveTrack* >( pTrack.get() )
-         ->GetIndependentWaveformSettings();
-         
-         if (display == WaveTrackViewConstants::obsoleteWaveformDBDisplay) {
-            display = WaveTrackViewConstants::Waveform;
-            settings.scaleType = WaveformSettings::stLogarithmic;
-         }
-         
+            ->GetIndependentWaveformSettings();
+
+         // Set the default scale type to linear or log, even if we are showing
+         // spectrogram
+         settings.scaleType = TracksPrefs::WaveformScaleChoice();
+
          pThis->DoSetDisplay( display );
       }
    }

@@ -77,9 +77,6 @@ namespace WaveTrackViewConstants
 
    // Handle remapping of enum values from 2.1.0 and earlier
    Display ConvertLegacyDisplayValue(int oldValue);
-
-   // Handle restriction of range of values of the enum from future versions
-   Display ValidateWaveTrackDisplay(Display display);
 }
 
 #endif

@@ -18,6 +18,7 @@
 #include <vector>
 #include "PrefsPanel.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "WaveformSettings.h" // for ScaleTypeValues
 
 class ShuttleGui;
 
@@ -43,6 +44,7 @@ class TracksPrefs final : public PrefsPanel
    static wxString GetDefaultAudioTrackNamePreference();
 
    static WaveTrackViewConstants::Display ViewModeChoice();
+   static WaveformSettings::ScaleTypeValues WaveformScaleChoice();
    static WaveTrackViewConstants::SampleDisplay SampleViewChoice();
    static WaveTrackViewConstants::ZoomPresets Zoom1Choice();
    static WaveTrackViewConstants::ZoomPresets Zoom2Choice();

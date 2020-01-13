@@ -43,27 +43,3 @@ WaveTrackViewConstants::ConvertLegacyDisplayValue(int oldValue)
    }
    return newValue;
 }
-
-// static
-WaveTrackViewConstants::Display
-WaveTrackViewConstants::ValidateWaveTrackDisplay(Display display)
-{
-   switch (display) {
-      // non-obsolete codes
-   case Waveform:
-   case obsoleteWaveformDBDisplay:
-   case Spectrum:
-      return display;
-
-      // obsolete codes
-   case obsolete1: // was SpectrumLogDisplay
-   case obsolete2: // was SpectralSelectionDisplay
-   case obsolete3: // was SpectralSelectionLogDisplay
-   case obsolete4: // was PitchDisplay
-      return Spectrum;
-
-      // codes out of bounds (from future prefs files?)
-   default:
-      return MinDisplay;
-   }
-}
