@@ -2478,6 +2478,18 @@
   <ItemGroup>
     <None Include="..\..\ny.rules" />
     <None Include="..\..\po.rules" />
+    <None Include="..\..\..\nyquist\sliders.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\spec-plot.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\spectral-analysis.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\system.lsp">
+      <Filter>nyquist</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand1.raw">
@@ -2538,9 +2550,6 @@
       <Filter>nyquist</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\fileio.lsp">
-      <Filter>nyquist</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\..\nyquist\follow.lsp">
       <Filter>nyquist</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\init.lsp">
@@ -2607,6 +2616,9 @@
       <Filter>nyquist</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\aud-do-support.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\nyinit-dbg.lsp">
       <Filter>nyquist</Filter>
     </CustomBuild>
   </ItemGroup>

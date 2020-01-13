@@ -428,6 +428,10 @@
 		2801E2BE23A75F8300FA38FA /* alpassvc.c in Sources */ = {isa = PBXBuildFile; fileRef = 2801E2BC23A75F8300FA38FA /* alpassvc.c */; };
 		2801E2C123A75FB300FA38FA /* stoponzero.c in Sources */ = {isa = PBXBuildFile; fileRef = 2801E2BF23A75FB300FA38FA /* stoponzero.c */; };
 		2801E2C223A75FB300FA38FA /* stoponzero.h in Headers */ = {isa = PBXBuildFile; fileRef = 2801E2C023A75FB300FA38FA /* stoponzero.h */; };
+		2803FBEC23CCFC0300CD9594 /* sliders.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2803FBE823CCFC0200CD9594 /* sliders.lsp */; };
+		2803FBED23CCFC0300CD9594 /* spectral-analysis.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2803FBE923CCFC0200CD9594 /* spectral-analysis.lsp */; };
+		2803FBEE23CCFC0300CD9594 /* spec-plot.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2803FBEA23CCFC0200CD9594 /* spec-plot.lsp */; };
+		2803FBEF23CCFC0300CD9594 /* nyinit-dbg.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2803FBEB23CCFC0200CD9594 /* nyinit-dbg.lsp */; };
 		2806EF7A1B32532A00D1AB9A /* FileDialogPrivate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2806EF791B32532A00D1AB9A /* FileDialogPrivate.mm */; };
 		280828550A75E0D0000002EF /* LabelDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828530A75E0D0000002EF /* LabelDialog.cpp */; };
 		2808285A0A75E0EA000002EF /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828580A75E0EA000002EF /* Grid.cpp */; };
@@ -1494,8 +1498,6 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.po";
 			fileType = pattern.proxy;
-			inputFiles = (
-			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).mo",
@@ -2268,6 +2270,10 @@
 		2803C8B519F35AA000278526 /* PluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginManager.h; sourceTree = "<group>"; };
 		2803C8B619F35AA000278526 /* TrackPanelListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelListener.h; sourceTree = "<group>"; };
 		2803C8BB19F35B4900278526 /* SelectionBarListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionBarListener.h; sourceTree = "<group>"; };
+		2803FBE823CCFC0200CD9594 /* sliders.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sliders.lsp; path = ../nyquist/sliders.lsp; sourceTree = "<group>"; };
+		2803FBE923CCFC0200CD9594 /* spectral-analysis.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "spectral-analysis.lsp"; path = "../nyquist/spectral-analysis.lsp"; sourceTree = "<group>"; };
+		2803FBEA23CCFC0200CD9594 /* spec-plot.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "spec-plot.lsp"; path = "../nyquist/spec-plot.lsp"; sourceTree = "<group>"; };
+		2803FBEB23CCFC0200CD9594 /* nyinit-dbg.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "nyinit-dbg.lsp"; path = "../nyquist/nyinit-dbg.lsp"; sourceTree = "<group>"; };
 		2806EF781B32532A00D1AB9A /* FileDialogPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDialogPrivate.h; sourceTree = "<group>"; };
 		2806EF791B32532A00D1AB9A /* FileDialogPrivate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileDialogPrivate.mm; sourceTree = "<group>"; };
 		2808025C0F32C11F0021001D /* dspprims.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = dspprims.lsp; path = ../nyquist/dspprims.lsp; sourceTree = SOURCE_ROOT; };
@@ -6049,6 +6055,7 @@
 				280802620F32C11F0021001D /* init.lsp */,
 				280802630F32C11F0021001D /* misc.lsp */,
 				280802640F32C11F0021001D /* nyinit.lsp */,
+				2803FBEB23CCFC0200CD9594 /* nyinit-dbg.lsp */,
 				280802650F32C11F0021001D /* nyqmisc.lsp */,
 				280802660F32C11F0021001D /* nyquist-plot.txt */,
 				280802670F32C11F0021001D /* nyquist.lsp */,
@@ -6059,7 +6066,10 @@
 				2808027C0F32C11F0021001D /* seq.lsp */,
 				2808027D0F32C11F0021001D /* seqfnint.lsp */,
 				2808027E0F32C11F0021001D /* seqmidi.lsp */,
+				2803FBE823CCFC0200CD9594 /* sliders.lsp */,
 				2808027F0F32C11F0021001D /* sndfnint.lsp */,
+				2803FBEA23CCFC0200CD9594 /* spec-plot.lsp */,
+				2803FBE923CCFC0200CD9594 /* spectral-analysis.lsp */,
 				280802800F32C11F0021001D /* stk.lsp */,
 				280802810F32C11F0021001D /* system.lsp */,
 				2862CECE1AD3900000A53194 /* test.lsp */,
@@ -8029,14 +8039,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */,
+				2803FBEE23CCFC0300CD9594 /* spec-plot.lsp in Resources */,
 				174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */,
+				2803FBEC23CCFC0300CD9594 /* sliders.lsp in Resources */,
 				AAA15DB72195F26B000ECCD8 /* aud-do-support.lsp in Resources */,
+				2803FBED23CCFC0300CD9594 /* spectral-analysis.lsp in Resources */,
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,
 				174F73D3098D516D009CD6E0 /* AudacityMP3.icns in Resources */,
 				AAA677852243BA4400D42A28 /* nyquist-plug-in-installer.ny in Resources */,
 				AAB5D42F216A9764006136B4 /* rms.ny in Resources */,
 				174F73D4098D516D009CD6E0 /* AudacityOGG.icns in Resources */,
+				2803FBEF23CCFC0300CD9594 /* nyinit-dbg.lsp in Resources */,
 				5ED8FF8A239AB9960065BC5B /* noisegate.ny in Resources */,
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,

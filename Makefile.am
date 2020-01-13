@@ -16,34 +16,37 @@ nobase_dist_pkgdata_DATA = \
    include/audacity/ModuleInterface.h \
    include/audacity/PluginInterface.h \
    include/audacity/Types.h \
-   nyquist/aud-do-support.lsp \
-   nyquist/dspprims.lsp \
-   nyquist/envelopes.lsp \
-   nyquist/equalizer.lsp \
-   nyquist/evalenv.lsp \
-   nyquist/fileio.lsp \
-   nyquist/follow.lsp \
-   nyquist/init.lsp \
-   nyquist/misc.lsp \
-   nyquist/nyinit.lsp \
-   nyquist/nyqmisc.lsp \
-   nyquist/nyquist-plot.txt \
-   nyquist/nyquist.lsp \
-   nyquist/printrec.lsp \
-   nyquist/profile.lsp \
-   nyquist/sal-parse.lsp \
-   nyquist/sal.lsp \
-   nyquist/seq.lsp \
-   nyquist/seqfnint.lsp \
-   nyquist/seqmidi.lsp \
-   nyquist/sndfnint.lsp \
-   nyquist/stk.lsp \
-   nyquist/system.lsp \
-   nyquist/test.lsp \
-   nyquist/upic.sal \
-   nyquist/velocity.lsp \
-   nyquist/xlinit.lsp \
-   nyquist/xm.lsp \
+	nyquist/aud-do-support.lsp \
+	nyquist/dspprims.lsp \
+	nyquist/envelopes.lsp \
+	nyquist/equalizer.lsp \
+	nyquist/evalenv.lsp \
+	nyquist/fileio.lsp \
+	nyquist/init.lsp \
+	nyquist/misc.lsp \
+	nyquist/nyinit-dbg.lsp \
+	nyquist/nyinit.lsp \
+	nyquist/nyqmisc.lsp \
+	nyquist/nyquist-plot.txt
+	nyquist/nyquist.lsp \
+	nyquist/printrec.lsp \
+	nyquist/profile.lsp \
+	nyquist/sal-parse.lsp \
+	nyquist/sal.lsp \
+	nyquist/seq.lsp \
+	nyquist/seqfnint.lsp \
+	nyquist/seqmidi.lsp \
+	nyquist/sliders.lsp \
+	nyquist/sndfnint.lsp \
+	nyquist/spec-plot.lsp \
+	nyquist/spectral-analysis.lsp \
+	nyquist/stk.lsp \
+	nyquist/system.lsp \
+	nyquist/test.lsp \
+	nyquist/upic.sal
+	nyquist/velocity.lsp \
+	nyquist/xlinit.lsp \
+	nyquist/xm.lsp \
    nyquist/rawwaves/mand1.raw \
    nyquist/rawwaves/mand2.raw \
    nyquist/rawwaves/mand3.raw \
