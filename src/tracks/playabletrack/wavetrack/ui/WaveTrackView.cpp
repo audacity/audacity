@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <numeric>
 #include <wx/graphics.h>
 
+#include "../../../../AColor.h"
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
 
@@ -906,6 +907,22 @@ ClipParameters::ClipParameters
       const int distortedRightOffset = (time64 < rect.width) ? (int)time64 : rect.width;
 
       mid.width = std::max(0, distortedRightOffset - leftOffset);
+   }
+}
+
+void ClipParameters::DrawClipEdges( wxDC &dc, const wxRect &rect ) const
+{
+   // Draw clip edges
+   dc.SetPen(*wxGREY_PEN);
+   if (tpre < 0) {
+      AColor::Line(dc,
+                   mid.x - 1, mid.y,
+                   mid.x - 1, mid.y + rect.height);
+   }
+   if (tpost > t1) {
+      AColor::Line(dc,
+                   mid.x + mid.width, mid.y,
+                   mid.x + mid.width, mid.y + rect.height);
    }
 }
 

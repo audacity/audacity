@@ -903,19 +903,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    if (h == 0.0 && tOffset < 0.0) {
       TrackArt::DrawNegativeOffsetTrackArrows( context, rect );
    }
-
-   // Draw clip edges
-   dc.SetPen(*wxGREY_PEN);
-   if (tpre < 0) {
-      AColor::Line(dc,
-                   mid.x - 1, mid.y,
-                   mid.x - 1, mid.y + rect.height);
-   }
-   if (tpost > t1) {
-      AColor::Line(dc,
-                   mid.x + mid.width, mid.y,
-                   mid.x + mid.width, mid.y + rect.height);
-   }
+   params.DrawClipEdges( dc, rect );
 }
 
 void DrawTimeSlider( TrackPanelDrawingContext &context,

@@ -600,6 +600,10 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    memDC.SelectObject(converted);
 
    dc.Blit(mid.x, mid.y, mid.width, mid.height, &memDC, 0, 0, wxCOPY, FALSE);
+
+   // Draw clip edges, as also in waveform view, which improves the appearance
+   // of split views
+   params.DrawClipEdges( dc, rect );
 }
 
 }

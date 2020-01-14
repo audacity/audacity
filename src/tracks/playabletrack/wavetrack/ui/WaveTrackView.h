@@ -170,6 +170,8 @@ struct ClipParameters
 
    wxRect mid;
    int leftOffset;
+
+   void DrawClipEdges( wxDC &dc, const wxRect &rect ) const;
 };
 
 #endif
