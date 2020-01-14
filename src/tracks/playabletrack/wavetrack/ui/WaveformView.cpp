@@ -17,7 +17,6 @@ Paul Licameli split from WaveTrackView.cpp
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
 
-#include "CutlineHandle.h"
 #include "SampleHandle.h"
 #include "../../../ui/EnvelopeHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
@@ -43,24 +42,17 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
    const TrackPanelMouseState &st,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
-   const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
-
    auto &view = *this;
+   const auto pTrack =
+      std::static_pointer_cast< WaveTrack >( view.FindTrack() );
 
    auto pair = WaveTrackSubView::DoDetailedHitTest(
-      st, pProject, currentTool, bMultiTool, wt, view);
+      st, pProject, currentTool, bMultiTool, pTrack);
    auto &results = pair.second;
 
    if (!pair.first) {
-      const auto pTrack =
-         std::static_pointer_cast< WaveTrack >( view.FindTrack() );
       UIHandlePtr result;
 
-      if (NULL != (result = CutlineHandle::HitTest(
-         view.mCutlineHandle, st.state, st.rect,
-         pProject, pTrack )))
-         // This overriding test applies in all tools
-         results.push_back(result);
       if (bMultiTool) {
          // Conditional hit tests
          // If Tools toolbar were eliminated, we would keep these
@@ -966,9 +958,8 @@ void DrawTimeSlider( TrackPanelDrawingContext &context,
 
 }
 
-// Headers needed only for experimental drawing below
+// Header needed only for experimental drawing below
 //#include "tracks/ui/TimeShiftHandle.h"
-//#include "tracks/playabletrack/wavetrack/ui/CutlineHandle.h"
 void WaveformView::DoDraw(TrackPanelDrawingContext &context,
                                const WaveTrack *track,
                                const wxRect & rect,
@@ -996,41 +987,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
       DrawClipWaveform(context, track, clip.get(), rect,
                        dB, muted);
 
-   // Update cache for locations, e.g. cutlines and merge points
-   track->UpdateLocationsCache();
-
-   const auto &zoomInfo = *artist->pZoomInfo;
-
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   auto target2 = dynamic_cast<CutlineHandle*>(context.target.get());
-#endif
-   for (const auto loc : track->GetCachedLocations()) {
-      bool highlightLoc = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-      highlightLoc =
-         target2 && target2->GetTrack().get() == track &&
-         target2->GetLocation() == loc;
-#endif
-      const int xx = zoomInfo.TimeToPosition(loc.pos);
-      if (xx >= 0 && xx < rect.width) {
-         dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );
-         AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
-         if (loc.typ == WaveTrackLocation::locationCutLine) {
-            dc.SetPen( highlightLoc ? AColor::uglyPen : *wxRED_PEN );
-         }
-         else {
-#ifdef EXPERIMENTAL_DA
-            // JKC Black does not show up enough.
-            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxWHITE_PEN);
-#else
-            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxBLACK_PEN);
-#endif
-         }
-         AColor::Line(dc, (int) (rect.x + xx), rect.y, (int) (rect.x + xx), rect.y + rect.height);
-         dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );
-         AColor::Line(dc, (int) (rect.x + xx + 1), rect.y, (int) (rect.x + xx + 1), rect.y + rect.height);
-      }
-   }
+   DrawBoldBoundaries( context, track, rect );
 
    const auto drawSliders = artist->drawSliders;
    if (drawSliders) {

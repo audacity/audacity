@@ -15,6 +15,7 @@ Paul Licameli split from class WaveTrack
 #include "../../../../ClientData.h"
 namespace WaveTrackViewConstants{ enum Display : int; }
 
+class CutlineHandle;
 class WaveTrack;
 class WaveTrackView;
 
@@ -32,11 +33,17 @@ public:
    > DoDetailedHitTest(
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
-      const std::shared_ptr<WaveTrack> &wt,
-      CommonTrackView &view);
+      const std::shared_ptr<WaveTrack> &wt );
+   
+protected:
+   static void DrawBoldBoundaries(
+      TrackPanelDrawingContext &context, const WaveTrack *track,
+      const wxRect &rect );
+
 private:
+   std::weak_ptr<CutlineHandle> mCutlineHandle;
    std::weak_ptr<WaveTrackView> mwWaveTrackView;
-   };
+};
 
 struct WaveTrackSubViewPlacement {
    int index;

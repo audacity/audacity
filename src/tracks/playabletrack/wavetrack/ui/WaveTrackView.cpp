@@ -10,6 +10,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "WaveTrackView.h"
 
+#include "CutlineHandle.h"
+
 #include "../../../../Experimental.h"
 
 #include <numeric>
@@ -423,11 +425,10 @@ std::pair<
 > WaveTrackSubView::DoDetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool,
-   const std::shared_ptr<WaveTrack> &wt,
-   CommonTrackView &view)
+   const std::shared_ptr<WaveTrack> &wt)
 {
    auto results = WaveTrackView::DoDetailedHitTest(
-      state, pProject, currentTool, bMultiTool, wt, view );
+      state, pProject, currentTool, bMultiTool, wt, *this );
    if ( results.first )
       return results;
 
@@ -438,8 +439,58 @@ std::pair<
       if (pHandle)
          results.second.push_back( pHandle );
    }
+   if (auto result = CutlineHandle::HitTest(
+      mCutlineHandle, state.state, state.rect,
+      pProject, wt ))
+      // This overriding test applies in all tools
+      results.second.push_back(result);
 
    return results;
+}
+
+
+void WaveTrackSubView::DrawBoldBoundaries(
+   TrackPanelDrawingContext &context, const WaveTrack *track,
+   const wxRect &rect )
+{
+   auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
+
+   // Update cache for locations, e.g. cutlines and merge points
+   track->UpdateLocationsCache();
+
+   const auto &zoomInfo = *artist->pZoomInfo;
+
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   auto target2 = dynamic_cast<CutlineHandle*>(context.target.get());
+#endif
+   for (const auto loc : track->GetCachedLocations()) {
+      bool highlightLoc = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+      highlightLoc =
+         target2 && target2->GetTrack().get() == track &&
+         target2->GetLocation() == loc;
+#endif
+      const int xx = zoomInfo.TimeToPosition(loc.pos);
+      if (xx >= 0 && xx < rect.width) {
+         dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );
+         AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
+         if (loc.typ == WaveTrackLocation::locationCutLine) {
+            dc.SetPen( highlightLoc ? AColor::uglyPen : *wxRED_PEN );
+         }
+         else {
+#ifdef EXPERIMENTAL_DA
+            // JKC Black does not show up enough.
+            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxWHITE_PEN);
+#else
+            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxBLACK_PEN);
+#endif
+         }
+         AColor::Line(dc, (int) (rect.x + xx), rect.y, (int) (rect.x + xx), rect.y + rect.height);
+         dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );
+         AColor::Line(dc, (int) (rect.x + xx + 1), rect.y, (int) (rect.x + xx + 1), rect.y + rect.height);
+      }
+   }
 }
 
 WaveTrackView &WaveTrackView::Get( WaveTrack &track )

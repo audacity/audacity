@@ -44,7 +44,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
 
    return WaveTrackSubView::DoDetailedHitTest(
-      state, pProject, currentTool, bMultiTool, wt, *this
+      state, pProject, currentTool, bMultiTool, wt
    ).second;
 }
 
@@ -621,6 +621,8 @@ void SpectrumView::DoDraw( TrackPanelDrawingContext &context,
    WaveTrackCache cache(track->SharedPointer<const WaveTrack>());
    for (const auto &clip: track->GetClips())
       DrawClipSpectrum( context, cache, clip.get(), rect );
+
+   DrawBoldBoundaries( context, track, rect );
 }
 
 void SpectrumView::Draw(

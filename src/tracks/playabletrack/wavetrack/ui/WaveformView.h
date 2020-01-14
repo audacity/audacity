@@ -14,7 +14,6 @@ Paul Licameli split from WaveTrackView.h
 #include "WaveTrackView.h" // to inherit
 
 class WaveTrack;
-class CutlineHandle;
 class SampleHandle;
 class EnvelopeHandle;
 
@@ -50,7 +49,6 @@ private:
 protected:
    void DoSetMinimized( bool minimized ) override;
 
-   std::weak_ptr<CutlineHandle> mCutlineHandle;
    std::weak_ptr<SampleHandle> mSampleHandle;
    std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
 };
