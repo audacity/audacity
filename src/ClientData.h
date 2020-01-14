@@ -222,6 +222,8 @@ public:
 
    size_t size() const { return mData.size(); }
 
+   static size_t slots() { return GetFactories().mObject.size(); }
+
    /// \brief a type meant to be stored by client code in a static variable,
    /// and used as a retrieval key to get the manufactured client object back
    /// from the host object.
