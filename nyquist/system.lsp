@@ -77,14 +77,25 @@
 ;; we also need to save the location of this file so we can find
 ;; nyquist-plot.txt, the command file for gnuplot
 ;;
-(setf *runtime-path* (current-path))
-(display "system.lsp" *runtime-path*)
-
-(setfn standard-s-plot s-plot)
-
-(defun s-plot (s &optional (n 1000) (dur 2.0))
-  (let (plot-file)
-    (standard-s-plot s n dur) ;; this calculates the data points
-    (setf plot-file (strcat *runtime-path* "nyquist-plot.txt"))
-    (system (strcat "gnuplot -persist " plot-file))))
+;; This code is broken in the following ways:
+;;    it tries to run gnuplot even when plotting can be done by NyquistIDE
+;;    it plots "points.dat", but "points.dat" may not be correct 
+;;       (see *default-plot-file*)
+;;    it assumes the plot file is in the current directory, but it
+;;       by default goes to the sound file directory
+;;
+;; Fix this code or complain if you want to plot with gnuplot while
+;; running ny (or even NyquistIDE (jny) if you want). Otherwise, use
+;; NyquistIDE to get s-plot to work.
+;;
+;(setf *runtime-path* (current-path))
+;(display "system.lsp" *runtime-path*)
+;
+;(setfn standard-s-plot s-plot)
+;
+;(defun s-plot (s &optional (dur 2.0) (n 1000))
+;  (let (plot-file)
+;    (standard-s-plot s dur n) ;; this calculates the data points
+;    (setf plot-file (strcat *runtime-path* "nyquist-plot.txt"))
+;    (system (strcat "gnuplot -persist " plot-file))))
 
