@@ -730,7 +730,8 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 
    POPUP_MENU_SEPARATOR()
 
-   POPUP_MENU_CHECK_ITEM(OnMultiViewID, XO("&Multi-view"), OnMultiView)
+   if ( WaveTrackSubViews::slots() > 1 )
+      POPUP_MENU_CHECK_ITEM(OnMultiViewID, XO("&Multi-view"), OnMultiView)
 
    if ( view.GetMultiView() ) {
       POPUP_MENU_CHECK_ITEM(OnWaveformID, XO("Wa&veform"), OnSetDisplay)
