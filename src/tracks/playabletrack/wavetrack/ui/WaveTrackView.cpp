@@ -431,6 +431,169 @@ private:
    bool mTop{};
 };
 
+class SubViewRearrangeHandle : public UIHandle
+{
+public:
+   enum { HotZoneWidth = 15 };
+
+   static UIHandlePtr HitTest(
+      WaveTrackView &view, WaveTrackSubView &subView,
+      const TrackPanelMouseState &state )
+   {
+      if ( !view.GetMultiView() )
+         return {};
+
+      SubViewAdjuster adjuster{ view };
+      if ( adjuster.NVisible() < 2 )
+         return {};
+
+      auto relX = state.state.GetX() - state.rect.GetLeft();
+      if ( relX >= HotZoneWidth )
+         return {};
+
+      auto index = adjuster.FindIndex( subView );
+      return std::make_shared< SubViewRearrangeHandle >(
+         std::move( adjuster ),
+         index, view.GetLastHeight()
+      );
+   }
+
+   SubViewRearrangeHandle(
+      SubViewAdjuster &&adjuster, size_t subViewIndex,
+         wxCoord viewHeight )
+      : mAdjuster{ std::move( adjuster ) }
+      , mMySubView{ subViewIndex }
+      , mViewHeight{ viewHeight }
+   {
+   }
+   
+   Result Click(
+      const TrackPanelMouseEvent &event, AudacityProject *pProject ) override
+   {
+      using namespace RefreshCode;
+      const auto &permutation = mAdjuster.mPermutation;
+      const auto size = permutation.size();
+      if ( mMySubView >= size )
+         return Cancelled;
+
+      mHeights = mAdjuster.ComputeHeights( mViewHeight );
+
+      // Find y coordinate of first sub-view
+      wxCoord heightAbove = 0;
+      for (auto index = mAdjuster.mFirstSubView;
+         index != mMySubView; ++index)
+         heightAbove += mHeights[ index ];
+      mTopY = event.rect.GetTop() - heightAbove;
+
+      return RefreshNone;
+   }
+
+   enum DragChoice_t{ Upward, Downward, Neutral };
+
+   DragChoice_t DragChoice( const TrackPanelMouseEvent &event ) const
+   {
+      // Disregard x coordinate -- so the mouse need not be in any sub-view,
+      // just in the correct range of y coordinates
+      auto yy = event.event.GetY();
+      auto coord = mTopY;
+      size_t ii = mAdjuster.mFirstSubView;
+      if ( yy < mTopY )
+         return ( mMySubView == ii ) ? Neutral : Upward;
+
+      for ( auto nn = mHeights.size(); ii < nn; ++ii ) {
+         const auto height = mHeights[ ii ];
+         coord += height;
+         if ( yy < coord )
+            break;
+      }
+
+      if ( ii < mMySubView ) {
+         if ( yy < coord - mHeights[ ii ] + mHeights[ mMySubView ] )
+            return Upward;
+      }
+   
+      if ( ii > mMySubView ) {
+         if( mMySubView < mHeights.size() - 1 &&
+            yy >= coord - mHeights[ mMySubView ] )
+         return Downward;
+      }
+   
+      return Neutral;
+   }
+
+   Result Drag( const TrackPanelMouseEvent &event, AudacityProject * ) override
+   {
+      using namespace RefreshCode;
+      auto pView = mAdjuster.mwView.lock();
+      if ( !pView )
+         return Cancelled;
+
+      switch( DragChoice( event ) ) {
+         case Upward:
+         {
+            std::swap( mHeights[ mMySubView ], mHeights[ mMySubView - 1 ] );
+            std::swap(
+               mAdjuster.mNewPlacements[ mMySubView ].index,
+               mAdjuster.mNewPlacements[ mMySubView - 1 ].index
+            );
+            --mMySubView;
+            break;
+         }
+         case Downward:
+         {
+            std::swap( mHeights[ mMySubView ], mHeights[ mMySubView + 1 ] );
+            std::swap(
+               mAdjuster.mNewPlacements[ mMySubView ].index,
+               mAdjuster.mNewPlacements[ mMySubView + 1 ].index
+            );
+            ++mMySubView;
+            break;
+         }
+         default:
+            return RefreshNone;
+      }
+
+      // Save adjustment to the track and request a redraw
+      mAdjuster.UpdateViews( false );
+      return RefreshAll;
+   }
+
+   HitTestPreview Preview(
+      const TrackPanelMouseState &state, AudacityProject * ) override
+   {
+      static wxCursor cursor{ wxCURSOR_HAND };
+      return {
+         XO("Click and drag to rearrange sub-views"),
+         &cursor
+      };
+   }
+
+   Result Release(
+      const TrackPanelMouseEvent &event, AudacityProject *pProject,
+      wxWindow *pParent) override
+   {
+      ProjectHistory::Get( *pProject ).ModifyState( false );
+      return RefreshCode::RefreshNone;
+   }
+
+   Result Cancel( AudacityProject * ) override
+   {
+      mAdjuster.UpdateViews( true );
+      return RefreshCode::RefreshAll;
+   }
+
+private:
+
+   SubViewAdjuster mAdjuster;
+   std::vector<wxCoord> mHeights;
+   wxCoord mTopY;
+
+   // An index into mAdjuster.mPermutation
+   size_t mMySubView{};
+
+   wxCoord mViewHeight{}; // Total height of all sub-views
+};
+
 }
 
 std::pair<
@@ -448,6 +611,9 @@ std::pair<
 
    auto pWaveTrackView = mwWaveTrackView.lock();
    if ( pWaveTrackView && !state.state.HasModifiers() ) {
+      if ( auto pHandle = SubViewRearrangeHandle::HitTest(
+         *pWaveTrackView, *this, state ) )
+         results.second.push_back( pHandle );
       if ( auto pHandle = SubViewAdjustHandle::HitTest(
          *pWaveTrackView, *this, state ) )
          results.second.push_back( pHandle );
