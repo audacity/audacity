@@ -1276,7 +1276,7 @@ struct VRulersAndChannels final : TrackPanelGroup {
          if (mRefinement.size() > 1) {
             // Draw lines separating sub-views
             auto &dc = context.dc;
-            dc.SetPen(*wxBLACK_PEN);
+            AColor::CursorColor( &dc );
             auto iter = mRefinement.begin() + 1, end = mRefinement.end();
             for ( ; iter != end; ++iter ) {
                auto yy = iter->first;
