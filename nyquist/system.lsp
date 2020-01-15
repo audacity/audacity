@@ -71,6 +71,9 @@
 (defmacro play (expr)
   `(s-save-autonorm ,expr NY:ALL *default-sound-file* :play *soundenable*))
 
+(setf *runtime-path* (current-path))
+(display "system.lsp" *runtime-path*)
+
 ;; for Linux, modify s-plot (defined in nyquist.lsp) by saving s-plot
 ;; in standard-s-plot, then call gnuplot to display the points.
 ;;
