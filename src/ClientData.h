@@ -373,7 +373,7 @@ protected:
          const auto &ptr = Dereferenceable(pObject);
          if ( ptr ) {
             const auto &c_ref = *ptr;
-            if ( function( c_ref ) );
+            if ( function( c_ref ) )
                return &*c_ref;
          }
       }
