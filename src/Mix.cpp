@@ -762,6 +762,12 @@ void Mixer::SetTimesAndSpeed(double t0, double t1, double speed)
    Reposition(t0);
 }
 
+void Mixer::SetSpeed(double speed)
+{
+   wxASSERT(std::isfinite(speed));
+   mSpeed = fabs(speed);
+}
+
 MixerSpec::MixerSpec( unsigned numTracks, unsigned maxNumChannels )
 {
    mNumTracks = mNumChannels = numTracks;

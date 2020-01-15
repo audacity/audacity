@@ -427,10 +427,14 @@ void AudioIOBase::PlaybackSchedule::Init(
          wxASSERT(false);
          scrubbing = false;
       }
-      else
-         mPlayMode = (scrubOptions.isPlayingAtSpeed)
-            ? PlaybackSchedule::PLAY_AT_SPEED
-            : PlaybackSchedule::PLAY_SCRUB;
+      else {
+         if (scrubOptions.isPlayingAtSpeed)
+            mPlayMode = PLAY_AT_SPEED;
+         else if (scrubOptions.isKeyboardScrubbing)
+            mPlayMode = PLAY_KEYBOARD_SCRUB;
+         else
+            mPlayMode = PLAY_SCRUB;
+      }
    }
 #endif
 

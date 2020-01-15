@@ -406,6 +406,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             options.envelope = nullptr;
             mOptions.delay = (ScrubPollInterval_ms / 1000.0);
             mOptions.isPlayingAtSpeed = false;
+            mOptions.isKeyboardScrubbing = false;
             mOptions.minSpeed = 0.0;
 #ifdef USE_TRANSCRIPTION_TOOLBAR
             if (!mAlwaysSeeking) {
@@ -530,6 +531,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    mOptions.bySpeed = true;
    mOptions.adjustStart = false;
    mOptions.isPlayingAtSpeed = true;
+   mOptions.isKeyboardScrubbing = false;
       
    const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
@@ -606,6 +608,7 @@ bool Scrubber::StartKeyboardScrubbing(double time0, bool backwards)
    mOptions.bySpeed = true;
    mOptions.adjustStart = false;
    mOptions.isPlayingAtSpeed = false;
+   mOptions.isKeyboardScrubbing = true;
 
    // Must start the thread and poller first or else PlayPlayRegion
    // will insert some silence

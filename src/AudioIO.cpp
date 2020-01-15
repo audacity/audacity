@@ -2795,6 +2795,7 @@ void AudioIO::FillBuffers()
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
             case PlaybackSchedule::PLAY_SCRUB:
             case PlaybackSchedule::PLAY_AT_SPEED:
+            case PlaybackSchedule::PLAY_KEYBOARD_SCRUB:
             {
                mScrubDuration -= frames;
                wxASSERT(mScrubDuration >= 0);
@@ -2825,9 +2826,16 @@ void AudioIO::FillBuffers()
                            double(diff) / mScrubDuration.as_double();
                      if (!mSilentScrub)
                      {
-                        for (i = 0; i < mPlaybackTracks.size(); i++)
-                           mPlaybackMixers[i]->SetTimesAndSpeed(
-                              startTime, endTime, fabs( mScrubSpeed ));
+                        for (i = 0; i < mPlaybackTracks.size(); i++) {
+                           if (mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_AT_SPEED ||
+                              mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_KEYBOARD_SCRUB) {
+                              mPlaybackMixers[i]->SetSpeed(mScrubSpeed);
+                           }
+                           else {
+                              mPlaybackMixers[i]->SetTimesAndSpeed(
+                                 startTime, endTime, fabs( mScrubSpeed ));
+                           }
+                        }
                      }
                      mTimeQueue.mLastTime = startTime;
                   }

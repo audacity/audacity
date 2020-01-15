@@ -49,6 +49,7 @@ struct ScrubbingOptions {
 
    bool bySpeed {};
    bool isPlayingAtSpeed{};
+   bool isKeyboardScrubbing{};
 
    double delay {};
 
@@ -358,6 +359,7 @@ protected:
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
          PLAY_SCRUB,
          PLAY_AT_SPEED, // a version of PLAY_SCRUB.
+         PLAY_KEYBOARD_SCRUB,
 #endif
       }                   mPlayMode { PLAY_STRAIGHT };
       double              mCutPreviewGapStart;
@@ -411,7 +413,7 @@ protected:
 
       bool PlayingStraight() const { return mPlayMode == PLAY_STRAIGHT; }
       bool Looping() const         { return mPlayMode == PLAY_LOOPED; }
-      bool Scrubbing() const       { return mPlayMode == PLAY_SCRUB; }
+      bool Scrubbing() const       { return mPlayMode == PLAY_SCRUB || mPlayMode == PLAY_KEYBOARD_SCRUB; }
       bool PlayingAtSpeed() const  { return mPlayMode == PLAY_AT_SPEED; }
       bool Interactive() const     { return Scrubbing() || PlayingAtSpeed(); }
 
