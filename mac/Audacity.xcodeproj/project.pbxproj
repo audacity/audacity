@@ -428,10 +428,6 @@
 		2801E2BE23A75F8300FA38FA /* alpassvc.c in Sources */ = {isa = PBXBuildFile; fileRef = 2801E2BC23A75F8300FA38FA /* alpassvc.c */; };
 		2801E2C123A75FB300FA38FA /* stoponzero.c in Sources */ = {isa = PBXBuildFile; fileRef = 2801E2BF23A75FB300FA38FA /* stoponzero.c */; };
 		2801E2C223A75FB300FA38FA /* stoponzero.h in Headers */ = {isa = PBXBuildFile; fileRef = 2801E2C023A75FB300FA38FA /* stoponzero.h */; };
-		2803FBEC23CCFC0300CD9594 /* sliders.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2803FBE823CCFC0200CD9594 /* sliders.lsp */; };
-		2803FBED23CCFC0300CD9594 /* spectral-analysis.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2803FBE923CCFC0200CD9594 /* spectral-analysis.lsp */; };
-		2803FBEE23CCFC0300CD9594 /* spec-plot.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2803FBEA23CCFC0200CD9594 /* spec-plot.lsp */; };
-		2803FBEF23CCFC0300CD9594 /* nyinit-dbg.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2803FBEB23CCFC0200CD9594 /* nyinit-dbg.lsp */; };
 		2806EF7A1B32532A00D1AB9A /* FileDialogPrivate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2806EF791B32532A00D1AB9A /* FileDialogPrivate.mm */; };
 		280828550A75E0D0000002EF /* LabelDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828530A75E0D0000002EF /* LabelDialog.cpp */; };
 		2808285A0A75E0EA000002EF /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828580A75E0EA000002EF /* Grid.cpp */; };
@@ -1338,7 +1334,6 @@
 		5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */; };
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
 		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
-		5ED8FF8A239AB9960065BC5B /* noisegate.ny in Resources */ = {isa = PBXBuildFile; fileRef = 5ED8FF89239AB9960065BC5B /* noisegate.ny */; };
 		5EE2698323BBD4E800C58E4D /* TimerToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EE2698123BBD4E800C58E4D /* TimerToolBar.cpp */; };
 		5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */; };
 		5EF3E64D203FBAFB006C6882 /* AudacityCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E643203FBAFB006C6882 /* AudacityCommand.cpp */; };
@@ -1457,9 +1452,6 @@
 		AA6B5BAF2061EC58008B5B26 /* soxr.h in Headers */ = {isa = PBXBuildFile; fileRef = ED152160163C244200451B5F /* soxr.h */; };
 		AA6B5BB02061EC58008B5B26 /* soxr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15215F163C244200451B5F /* soxr.c */; };
 		AA6B5BB12061EC58008B5B26 /* vr32.c in Sources */ = {isa = PBXBuildFile; fileRef = EDE325FF168243EF00C19E60 /* vr32.c */; };
-		AAA15DB72195F26B000ECCD8 /* aud-do-support.lsp in Resources */ = {isa = PBXBuildFile; fileRef = AAA15DB62195F26B000ECCD8 /* aud-do-support.lsp */; };
-		AAA677852243BA4400D42A28 /* nyquist-plug-in-installer.ny in Resources */ = {isa = PBXBuildFile; fileRef = AAA677842243BA4400D42A28 /* nyquist-plug-in-installer.ny */; };
-		AAB5D42F216A9764006136B4 /* rms.ny in Resources */ = {isa = PBXBuildFile; fileRef = AAB5D42E216A9764006136B4 /* rms.ny */; };
 		ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED152130163C227C00451B5F /* libsoxr.a */; };
 		ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED1944981733F92800F4F5CA /* Reverb.cpp */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
@@ -2270,10 +2262,10 @@
 		2803C8B519F35AA000278526 /* PluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginManager.h; sourceTree = "<group>"; };
 		2803C8B619F35AA000278526 /* TrackPanelListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelListener.h; sourceTree = "<group>"; };
 		2803C8BB19F35B4900278526 /* SelectionBarListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionBarListener.h; sourceTree = "<group>"; };
-		2803FBE823CCFC0200CD9594 /* sliders.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sliders.lsp; path = ../nyquist/sliders.lsp; sourceTree = "<group>"; };
-		2803FBE923CCFC0200CD9594 /* spectral-analysis.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "spectral-analysis.lsp"; path = "../nyquist/spectral-analysis.lsp"; sourceTree = "<group>"; };
-		2803FBEA23CCFC0200CD9594 /* spec-plot.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "spec-plot.lsp"; path = "../nyquist/spec-plot.lsp"; sourceTree = "<group>"; };
-		2803FBEB23CCFC0200CD9594 /* nyinit-dbg.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "nyinit-dbg.lsp"; path = "../nyquist/nyinit-dbg.lsp"; sourceTree = "<group>"; };
+		2803FBE823CCFC0200CD9594 /* sliders.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = sliders.lsp; path = ../nyquist/sliders.lsp; sourceTree = "<group>"; };
+		2803FBE923CCFC0200CD9594 /* spectral-analysis.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = "spectral-analysis.lsp"; path = "../nyquist/spectral-analysis.lsp"; sourceTree = "<group>"; };
+		2803FBEA23CCFC0200CD9594 /* spec-plot.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = "spec-plot.lsp"; path = "../nyquist/spec-plot.lsp"; sourceTree = "<group>"; };
+		2803FBEB23CCFC0200CD9594 /* nyinit-dbg.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = "nyinit-dbg.lsp"; path = "../nyquist/nyinit-dbg.lsp"; sourceTree = "<group>"; };
 		2806EF781B32532A00D1AB9A /* FileDialogPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDialogPrivate.h; sourceTree = "<group>"; };
 		2806EF791B32532A00D1AB9A /* FileDialogPrivate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileDialogPrivate.mm; sourceTree = "<group>"; };
 		2808025C0F32C11F0021001D /* dspprims.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = dspprims.lsp; path = ../nyquist/dspprims.lsp; sourceTree = SOURCE_ROOT; };
@@ -2281,12 +2273,11 @@
 		2808025E0F32C11F0021001D /* equalizer.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = equalizer.lsp; path = ../nyquist/equalizer.lsp; sourceTree = SOURCE_ROOT; };
 		2808025F0F32C11F0021001D /* evalenv.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = evalenv.lsp; path = ../nyquist/evalenv.lsp; sourceTree = SOURCE_ROOT; };
 		280802600F32C11F0021001D /* fileio.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = fileio.lsp; path = ../nyquist/fileio.lsp; sourceTree = SOURCE_ROOT; };
-		280802610F32C11F0021001D /* follow.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = follow.lsp; path = ../nyquist/follow.lsp; sourceTree = SOURCE_ROOT; };
 		280802620F32C11F0021001D /* init.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = init.lsp; path = ../nyquist/init.lsp; sourceTree = SOURCE_ROOT; };
 		280802630F32C11F0021001D /* misc.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = misc.lsp; path = ../nyquist/misc.lsp; sourceTree = SOURCE_ROOT; };
 		280802640F32C11F0021001D /* nyinit.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = nyinit.lsp; path = ../nyquist/nyinit.lsp; sourceTree = SOURCE_ROOT; };
 		280802650F32C11F0021001D /* nyqmisc.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = nyqmisc.lsp; path = ../nyquist/nyqmisc.lsp; sourceTree = SOURCE_ROOT; };
-		280802660F32C11F0021001D /* nyquist-plot.txt */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = "nyquist-plot.txt"; path = "../nyquist/nyquist-plot.txt"; sourceTree = SOURCE_ROOT; };
+		280802660F32C11F0021001D /* nyquist-plot.txt */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = text; name = "nyquist-plot.txt"; path = "../nyquist/nyquist-plot.txt"; sourceTree = SOURCE_ROOT; };
 		280802670F32C11F0021001D /* nyquist.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = nyquist.lsp; path = ../nyquist/nyquist.lsp; sourceTree = SOURCE_ROOT; };
 		280802680F32C11F0021001D /* printrec.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = printrec.lsp; path = ../nyquist/printrec.lsp; sourceTree = SOURCE_ROOT; };
 		280802690F32C11F0021001D /* profile.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = profile.lsp; path = ../nyquist/profile.lsp; sourceTree = SOURCE_ROOT; };
@@ -2668,9 +2659,9 @@
 		286229B0181CE4B600E1AD1A /* liblv2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblv2.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		286243A0181CE65500E1AD1A /* sratom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sratom.h; path = lv2/sratom/sratom/sratom.h; sourceTree = "<group>"; };
 		286243A1181CE65500E1AD1A /* sratom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sratom.c; path = lv2/sratom/src/sratom.c; sourceTree = "<group>"; };
-		2862CECE1AD3900000A53194 /* test.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = test.lsp; path = ../nyquist/test.lsp; sourceTree = SOURCE_ROOT; };
-		2862CECF1AD3900000A53194 /* upic.sal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = upic.sal; path = ../nyquist/upic.sal; sourceTree = SOURCE_ROOT; };
-		2862CED01AD3900000A53194 /* velocity.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = velocity.lsp; path = ../nyquist/velocity.lsp; sourceTree = SOURCE_ROOT; };
+		2862CECE1AD3900000A53194 /* test.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = test.lsp; path = ../nyquist/test.lsp; sourceTree = SOURCE_ROOT; };
+		2862CECF1AD3900000A53194 /* upic.sal */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = upic.sal; path = ../nyquist/upic.sal; sourceTree = SOURCE_ROOT; };
+		2862CED01AD3900000A53194 /* velocity.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = velocity.lsp; path = ../nyquist/velocity.lsp; sourceTree = SOURCE_ROOT; };
 		287DBE830F3F6B2700C5BBED /* audio_detect.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = audio_detect.c; sourceTree = "<group>"; tabWidth = 3; };
 		287DBE840F3F6B2700C5BBED /* chunk.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = chunk.c; sourceTree = "<group>"; tabWidth = 3; };
 		287DBE850F3F6B2700C5BBED /* ima_oki_adpcm.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = ima_oki_adpcm.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -3445,7 +3436,7 @@
 		5ED1D0AC1CDE55BD00471E3C /* OverlayPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayPanel.h; sourceTree = "<group>"; };
 		5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackedPanel.cpp; sourceTree = "<group>"; };
 		5ED1D0B01CDE560C00471E3C /* BackedPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackedPanel.h; sourceTree = "<group>"; };
-		5ED8FF89239AB9960065BC5B /* noisegate.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = noisegate.ny; path = "../plug-ins/noisegate.ny"; sourceTree = "<group>"; };
+		5ED8FF89239AB9960065BC5B /* noisegate.ny */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = noisegate.ny; path = "../plug-ins/noisegate.ny"; sourceTree = "<group>"; };
 		5EE2698123BBD4E800C58E4D /* TimerToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimerToolBar.cpp; sourceTree = "<group>"; };
 		5EE2698223BBD4E800C58E4D /* TimerToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerToolBar.h; sourceTree = "<group>"; };
 		5EE8984821D68D88006DE939 /* CommandManagerWindowClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandManagerWindowClasses.h; sourceTree = "<group>"; };
@@ -3601,9 +3592,9 @@
 		AA6B5B872061DF3B008B5B26 /* util32s.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util32s.h; sourceTree = "<group>"; };
 		AA6B5B8D2061E20A008B5B26 /* fifo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fifo.h; sourceTree = "<group>"; };
 		AA6B5B8F2061E6A8008B5B26 /* std-types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "std-types.h"; sourceTree = "<group>"; };
-		AAA15DB62195F26B000ECCD8 /* aud-do-support.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "aud-do-support.lsp"; path = "../nyquist/aud-do-support.lsp"; sourceTree = "<group>"; };
-		AAA677842243BA4400D42A28 /* nyquist-plug-in-installer.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "nyquist-plug-in-installer.ny"; path = "../plug-ins/nyquist-plug-in-installer.ny"; sourceTree = "<group>"; };
-		AAB5D42E216A9764006136B4 /* rms.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = rms.ny; path = "../plug-ins/rms.ny"; sourceTree = "<group>"; };
+		AAA15DB62195F26B000ECCD8 /* aud-do-support.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = "aud-do-support.lsp"; path = "../nyquist/aud-do-support.lsp"; sourceTree = "<group>"; };
+		AAA677842243BA4400D42A28 /* nyquist-plug-in-installer.ny */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = "nyquist-plug-in-installer.ny"; path = "../plug-ins/nyquist-plug-in-installer.ny"; sourceTree = "<group>"; };
+		AAB5D42E216A9764006136B4 /* rms.ny */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = rms.ny; path = "../plug-ins/rms.ny"; sourceTree = "<group>"; };
 		AAC1F49C1DE653A70038BB3A /* sample-data-import.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sample-data-import.ny"; path = "../../Audacity/plug-ins/sample-data-import.ny"; sourceTree = "<group>"; };
 		ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = audioreader.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1030E50AD5700CC4BD3 /* audioreader.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = audioreader.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -6051,7 +6042,6 @@
 				2808025E0F32C11F0021001D /* equalizer.lsp */,
 				2808025F0F32C11F0021001D /* evalenv.lsp */,
 				280802600F32C11F0021001D /* fileio.lsp */,
-				280802610F32C11F0021001D /* follow.lsp */,
 				280802620F32C11F0021001D /* init.lsp */,
 				280802630F32C11F0021001D /* misc.lsp */,
 				280802640F32C11F0021001D /* nyinit.lsp */,
@@ -8039,19 +8029,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */,
-				2803FBEE23CCFC0300CD9594 /* spec-plot.lsp in Resources */,
 				174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */,
-				2803FBEC23CCFC0300CD9594 /* sliders.lsp in Resources */,
-				AAA15DB72195F26B000ECCD8 /* aud-do-support.lsp in Resources */,
-				2803FBED23CCFC0300CD9594 /* spectral-analysis.lsp in Resources */,
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,
 				174F73D3098D516D009CD6E0 /* AudacityMP3.icns in Resources */,
-				AAA677852243BA4400D42A28 /* nyquist-plug-in-installer.ny in Resources */,
-				AAB5D42F216A9764006136B4 /* rms.ny in Resources */,
 				174F73D4098D516D009CD6E0 /* AudacityOGG.icns in Resources */,
-				2803FBEF23CCFC0300CD9594 /* nyinit-dbg.lsp in Resources */,
-				5ED8FF8A239AB9960065BC5B /* noisegate.ny in Resources */,
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
 				8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */,
