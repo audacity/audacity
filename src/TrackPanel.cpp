@@ -1268,9 +1268,22 @@ struct VRulersAndChannels final : TrackPanelGroup {
    {
       // This overpaints the track area, but sometimes too the stereo channel
       // separator, so draw at least later than that
-      if ( iPass == TrackArtist::PassBorders )
+      if ( iPass == TrackArtist::PassBorders ) {
          DrawTrackName( mLeftOffset,
             context, mpTrack->SubstitutePendingChangedTrack().get(), rect );
+      }
+      if ( iPass == TrackArtist::PassControls ) {
+         if (mRefinement.size() > 1) {
+            // Draw lines separating sub-views
+            auto &dc = context.dc;
+            dc.SetPen(*wxBLACK_PEN);
+            auto iter = mRefinement.begin() + 1, end = mRefinement.end();
+            for ( ; iter != end; ++iter ) {
+               auto yy = iter->first;
+               AColor::Line( dc, mLeftOffset, yy, rect.GetRight(), yy );
+            }
+         }
+      }
    }
 
    wxRect DrawingArea(
