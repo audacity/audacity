@@ -93,7 +93,7 @@ void TrackView::WriteXMLAttributes( XMLWriter &xmlFile ) const
 
 bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
 {
-   wxString strValue;
+   wxString strValue( value );
    long nValue;
    if (!wxStrcmp(attr, wxT("height")) &&
          XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {

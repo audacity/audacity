@@ -28,6 +28,10 @@
 #include "ProjectSettings.h"
 #include "ProjectFileIORegistry.h"
 
+#include "tracks/ui/TrackView.h"
+#include "tracks/ui/TrackControls.h"
+
+
 //TODO-MB: are these sensible values?
 #define TIMETRACK_MIN 0.01
 #define TIMETRACK_MAX 10.0
@@ -42,7 +46,10 @@ static ProjectFileIORegistry::Entry registerFactory{
    []( AudacityProject &project ){
       auto &trackFactory = TrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
-      return tracks.Add(trackFactory.NewTimeTrack());
+      auto result = tracks.Add(trackFactory.NewTimeTrack());
+      TrackView::Get( *result );
+      TrackControls::Get( *result );
+      return result;
    }
 };
 

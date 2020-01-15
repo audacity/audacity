@@ -38,6 +38,9 @@
 
 #include "InconsistencyException.h"
 
+#include "tracks/ui/TrackView.h"
+#include "tracks/ui/TrackControls.h"
+
 #include "AllThemeResources.h"
 
 #ifdef SONIFY
@@ -108,7 +111,10 @@ static ProjectFileIORegistry::Entry registerFactory{
    []( AudacityProject &project ){
       auto &trackFactory = TrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
-      return tracks.Add(trackFactory.NewNoteTrack());
+      auto result = tracks.Add(trackFactory.NewNoteTrack());
+      TrackView::Get( *result );
+      TrackControls::Get( *result );
+      return result;
    }
 };
 

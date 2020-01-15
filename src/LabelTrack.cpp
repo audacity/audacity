@@ -31,6 +31,9 @@ for drawing different aspects of the label and its text box.
 #include "Audacity.h" // for HAVE_GTK
 #include "LabelTrack.h"
 
+#include "tracks/ui/TrackView.h"
+#include "tracks/ui/TrackControls.h"
+
 #include "Experimental.h"
 
 #include <stdio.h>
@@ -56,7 +59,10 @@ static ProjectFileIORegistry::Entry registerFactory{
    []( AudacityProject &project ){
       auto &trackFactory = TrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
-      return tracks.Add(trackFactory.NewLabelTrack());
+      auto result = tracks.Add(trackFactory.NewLabelTrack());
+      TrackView::Get( *result );
+      TrackControls::Get( *result );
+      return result;
    }
 };
 
