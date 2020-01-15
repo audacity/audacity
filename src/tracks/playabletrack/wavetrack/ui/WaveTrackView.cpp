@@ -111,6 +111,9 @@ struct SubViewAdjuster
       mFirstSubView = first - begin;
    }
 
+   size_t NVisible() const
+   { return mPermutation.size() - mFirstSubView; }
+
    bool ModifyPermutation( bool top )
    {
       bool rotated = false;
@@ -149,15 +152,20 @@ struct SubViewAdjuster
       return rotated;
    }
 
-   std::pair< size_t, bool >
-   HitTest( WaveTrackSubView &subView,
-      wxCoord yy, wxCoord top, wxCoord height )
+   size_t FindIndex( WaveTrackSubView &subView ) const
    {
       const auto begin = mPermutation.begin(), end = mPermutation.end();
       auto iter = std::find_if( begin, end, [&](size_t ii){
          return mSubViews[ ii ].get() == &subView;
       } );
-      auto index = iter - begin;
+      return iter - begin;
+   }
+
+   std::pair< size_t, bool >
+   HitTest( WaveTrackSubView &subView,
+      wxCoord yy, wxCoord top, wxCoord height )
+   {
+      const auto index = FindIndex( subView );
       auto size = mPermutation.size();
       if ( index < (int)size ) {
          yy -= top;
@@ -170,6 +178,30 @@ struct SubViewAdjuster
             return { index, false }; // bottom hit
       }
       return { size, false }; // not hit
+   }
+
+   std::vector<wxCoord> ComputeHeights( wxCoord totalHeight )
+   {
+      // Compute integer-valued heights
+      float total = 0;
+      for (const auto index : mPermutation ) {
+         const auto &placement = mOrigPlacements[ index ];
+         total += std::max( 0.f, placement.fraction );
+      }
+      float partial = 0;
+      wxCoord lastCoord = 0;
+      std::vector<wxCoord> result;
+      for (const auto index : mPermutation ) {
+         const auto &placement = mOrigPlacements[ index ];
+         auto fraction = std::max( 0.f, placement.fraction );
+         wxCoord coord = ( (partial + fraction ) / total ) * totalHeight;
+         auto height = coord - lastCoord;
+         result.emplace_back( height );
+         mNewPlacements[ index ].fraction = height;
+         lastCoord = coord;
+         partial += fraction;
+      }
+      return result;
    }
 
    void UpdateViews( bool rollback )
@@ -256,26 +288,7 @@ public:
       const auto height = rect.GetHeight();
       mOrigHeight = height;
 
-      // Compute integer-valued heights
-      {
-         float total = 0;
-         for (const auto index : mAdjuster.mPermutation ) {
-            const auto &placement = mAdjuster.mOrigPlacements[ index ];
-            total += std::max( 0.f, placement.fraction );
-         }
-         float partial = 0;
-         wxCoord lastCoord = 0;
-         for (const auto index : mAdjuster.mPermutation ) {
-            const auto &placement = mAdjuster.mOrigPlacements[ index ];
-            auto fraction = std::max( 0.f, placement.fraction );
-            wxCoord coord = ( (partial + fraction ) / total ) * mViewHeight;
-            auto height = coord - lastCoord;
-            mOrigHeights.emplace_back( height );
-            mAdjuster.mNewPlacements[ index ].fraction = height;
-            lastCoord = coord;
-            partial += fraction;
-         }
-      }
+      mOrigHeights = mAdjuster.ComputeHeights( mViewHeight );
       
       // Find the total height of the sub-views that may resize
       mTotalHeight = 0;
@@ -435,9 +448,8 @@ std::pair<
 
    auto pWaveTrackView = mwWaveTrackView.lock();
    if ( pWaveTrackView && !state.state.HasModifiers() ) {
-      auto pHandle = SubViewAdjustHandle::HitTest(
-         *pWaveTrackView, *this, state );
-      if (pHandle)
+      if ( auto pHandle = SubViewAdjustHandle::HitTest(
+         *pWaveTrackView, *this, state ) )
          results.second.push_back( pHandle );
    }
    if (auto result = CutlineHandle::HitTest(
