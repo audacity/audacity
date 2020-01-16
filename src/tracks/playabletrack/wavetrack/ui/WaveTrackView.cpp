@@ -452,6 +452,23 @@ public:
          return {};
 
       auto index = adjuster.FindIndex( subView );
+
+      // Hit on the rearrange cursor only in the top and bottom thirds of
+      // sub-view height, leaving the rest free to hit the selection cursor
+      // first.
+      // And also exclude the top third of the topmost sub-view and bottom
+      // third of bottommost.
+      auto relY = state.state.GetY() - state.rect.GetTop();
+      auto height = state.rect.GetHeight();
+      bool hit =
+         ( ( 3 * relY < height ) && index > 0 ) // top hit
+      ||
+         ( ( 3 * relY > 2 * height ) &&
+           index < adjuster.mPermutation.size() - 1 ) // bottom
+      ;
+      if ( ! hit )
+         return {};
+
       return std::make_shared< SubViewRearrangeHandle >(
          std::move( adjuster ),
          index, view.GetLastHeight()
