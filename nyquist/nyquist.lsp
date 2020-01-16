@@ -2179,7 +2179,40 @@ loop
 ;;          In LOPASS8, 2nd argument (cutoff) must be a number, sound
 ;;          or array thereof, got "bad-value"
 ;;
-(defun multichan-expand (src fn types &rest args)
+;; Many existing Nyquist plug-ins require the old version of multichan-expand,
+;; so in Audacity we need to support both the old and new versions.
+(defun multichan-expand (&rest args)
+  (if (stringp (first args))
+      (apply 'multichan-expand-new args)
+      (apply 'multichan-expand-old args)))
+
+;; Legacy version:
+(defun multichan-expand-old (fn &rest args)
+  (let (len newlen result) ; len is a flag as well as a count
+    (dolist (a args)
+        (cond ((arrayp a)
+           (setf newlen (length a))
+           (cond ((and len (/= len newlen))
+              (error (format nil "In ~A, two arguments are vectors of differing length." fn))))
+           (setf len newlen))))
+    (cond (len
+       (setf result (make-array len))
+       ; for each channel, call fn with args
+       (dotimes (i len)
+           (setf (aref result i)
+             (apply fn
+            (mapcar
+                #'(lambda (a)
+                ; take i'th entry or replicate:
+                (cond ((arrayp a) (aref a i))
+                      (t a)))
+                args))))
+       result)
+      (t
+       (apply fn args)))))
+
+;; The new (Nyquist 3.15) version:
+(defun multichan-expand-new (src fn types &rest args)
   (let (len newlen result prev typ (index 0) nonsnd) ; len is a flag as well as a count
     (dolist (a args)
       (setf typ (car types) types (cdr types))
