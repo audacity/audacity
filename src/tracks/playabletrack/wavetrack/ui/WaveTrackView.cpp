@@ -488,6 +488,8 @@ public:
       return RefreshNone;
    }
 
+   bool Clicked() const { return !mHeights.empty(); }
+
    enum DragChoice_t{ Upward, Downward, Neutral };
 
    DragChoice_t DragChoice( const TrackPanelMouseEvent &event ) const
@@ -561,10 +563,13 @@ public:
    HitTestPreview Preview(
       const TrackPanelMouseState &state, AudacityProject * ) override
    {
-      static wxCursor cursor{ wxCURSOR_HAND };
+      static auto hoverCursor =
+         ::MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
+      static auto clickedCursor =
+         ::MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
       return {
          XO("Click and drag to rearrange sub-views"),
-         &cursor
+         Clicked() ? &*clickedCursor : &*hoverCursor
       };
    }
 

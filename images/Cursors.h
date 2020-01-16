@@ -16,6 +16,7 @@
 
 #include "Cursors32/DisabledCursor.xpm"
 #include "Cursors32/RearrangeCursor.xpm"
+#include "Cursors32/RearrangingCursor.xpm"
 #include "Cursors32/EnvCursor.xpm"
 #include "Cursors32/TimeCursor.xpm"
 #include "Cursors32/IBeamCursor.xpm"
