@@ -22,6 +22,7 @@ class wxRect;
 class wxString;
 class wxWindow;
 
+class ButtonHandle;
 class LWSlider;
 class NoteTrack;
 class Track;
@@ -80,6 +81,10 @@ namespace TrackInfo
         const wxRect &rect, const Track *pTrack,
         const std::vector<TCPLine> &topLines,
         const std::vector<TCPLine> &bottomLines );
+
+   void DrawCloseButton(
+      TrackPanelDrawingContext &context, const wxRect &bev,
+      const Track *pTrack, ButtonHandle *target );
 
    void CloseTitleDrawFunction
       ( TrackPanelDrawingContext &context,

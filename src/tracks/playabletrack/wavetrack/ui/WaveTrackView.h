@@ -41,6 +41,7 @@ protected:
       const wxRect &rect );
 
 private:
+   std::weak_ptr<UIHandle> mCloseHandle;
    std::weak_ptr<UIHandle> mAdjustHandle;
    std::weak_ptr<UIHandle> mRearrangeHandle;
    std::weak_ptr<CutlineHandle> mCutlineHandle;

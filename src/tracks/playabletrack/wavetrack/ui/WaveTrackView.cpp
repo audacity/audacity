@@ -37,6 +37,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../prefs/TracksPrefs.h"
 
 #include "../../../ui/TimeShiftHandle.h"
+#include "../../../ui/ButtonHandle.h"
+#include "../../../../TrackInfo.h"
 
 namespace {
 
@@ -603,6 +605,80 @@ private:
    wxCoord mViewHeight{}; // Total height of all sub-views
 };
 
+class SubViewCloseHandle : public ButtonHandle
+{
+   static wxRect GetButtonRect( const wxRect &rect )
+   {
+      return {
+         rect.GetLeft(),
+         rect.GetTop(),
+         kTrackInfoBtnSize,
+         kTrackInfoBtnSize
+      };
+   }
+
+public:
+   static UIHandlePtr HitTest( std::weak_ptr<UIHandle> &holder,
+      WaveTrackView &view, WaveTrackSubView &subView,
+      const TrackPanelMouseState &state )
+   {
+      SubViewAdjuster adjuster{ view };
+      if ( adjuster.NVisible() < 2 )
+         return {};
+   
+      const auto rect = GetButtonRect( state.rect );
+      if ( !rect.Contains( state.state.GetPosition() ) )
+         return {};
+      auto index = adjuster.FindIndex( subView );
+      UIHandlePtr result = std::make_shared<SubViewCloseHandle>(
+         std::move( adjuster ), index, view.FindTrack(), rect );
+      result = AssignUIHandlePtr( holder, result );
+      return result;
+   }
+
+   SubViewCloseHandle(
+      SubViewAdjuster &&adjuster, size_t index,
+      const std::shared_ptr<Track> &pTrack, const wxRect &rect )
+      : ButtonHandle{ pTrack, rect }
+      , mAdjuster{ std::move( adjuster ) }
+      , mMySubView{ index }
+   {
+   }
+
+   Result CommitChanges(
+      const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
+      override
+   {
+      ProjectHistory::Get( *pProject ).ModifyState( false );
+      auto &myPlacement =
+         mAdjuster.mNewPlacements[ mAdjuster.mPermutation[ mMySubView ] ];
+      myPlacement.fraction = 0;
+      mAdjuster.UpdateViews( false );
+      return RefreshCode::RefreshAll;
+   }
+
+   TranslatableString Tip(
+      const wxMouseState &state, AudacityProject &project) const override
+   {
+      return XO("Close sub-view");
+   }
+
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
+      override
+   {
+      if ( iPass == TrackArtist::PassMargins ) { // after PassTracks
+          TrackInfo::DrawCloseButton(
+             context, GetButtonRect(rect), GetTrack().get(), this );
+      }
+   }
+
+private:
+   SubViewAdjuster mAdjuster;
+   size_t mMySubView{};
+};
+
 }
 
 std::pair<
@@ -620,6 +696,10 @@ std::pair<
 
    auto pWaveTrackView = mwWaveTrackView.lock();
    if ( pWaveTrackView && !state.state.HasModifiers() ) {
+      if ( auto pHandle = SubViewCloseHandle::HitTest(
+         mCloseHandle,
+         *pWaveTrackView, *this, state ) )
+         results.second.push_back( pHandle );
       if ( auto pHandle = SubViewAdjustHandle::HitTest(
          mAdjustHandle,
          *pWaveTrackView, *this, state ) )

@@ -263,6 +263,39 @@ void TrackInfo::DrawItems
 }
 
 #include "tracks/ui/TrackButtonHandles.h"
+void TrackInfo::DrawCloseButton(
+   TrackPanelDrawingContext &context, const wxRect &bev,
+   const Track *pTrack, ButtonHandle *target )
+{
+   auto dc = &context.dc;
+   bool selected = pTrack ? pTrack->GetSelected() : true;
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
+   bool down = captured && bev.Contains( context.lastState.GetPosition());
+   AColor::Bevel2(*dc, !down, bev, selected, hit );
+
+#ifdef EXPERIMENTAL_THEMING
+   wxPen pen( theTheme.Colour( clrTrackPanelText ));
+   dc->SetPen( pen );
+#else
+   dc->SetPen(*wxBLACK_PEN);
+#endif
+   bev.Inflate( -1, -1 );
+   // Draw the "X"
+   const int s = 6;
+
+   int ls = bev.x + ((bev.width - s) / 2);
+   int ts = bev.y + ((bev.height - s) / 2);
+   int rs = ls + s;
+   int bs = ts + s;
+
+   AColor::Line(*dc, ls,     ts, rs,     bs);
+   AColor::Line(*dc, ls + 1, ts, rs + 1, bs);
+   AColor::Line(*dc, rs,     ts, ls,     bs);
+   AColor::Line(*dc, rs + 1, ts, ls + 1, bs);
+   //   bev.Inflate(-1, -1);
+}
+
 void TrackInfo::CloseTitleDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
@@ -273,32 +306,7 @@ void TrackInfo::CloseTitleDrawFunction
       wxRect bev = rect;
       GetCloseBoxHorizontalBounds( rect, bev );
       auto target = dynamic_cast<CloseButtonHandle*>( context.target.get() );
-      bool hit = target && target->GetTrack().get() == pTrack;
-      bool captured = hit && target->IsClicked();
-      bool down = captured && bev.Contains( context.lastState.GetPosition());
-      AColor::Bevel2(*dc, !down, bev, selected, hit );
-
-#ifdef EXPERIMENTAL_THEMING
-      wxPen pen( theTheme.Colour( clrTrackPanelText ));
-      dc->SetPen( pen );
-#else
-      dc->SetPen(*wxBLACK_PEN);
-#endif
-      bev.Inflate( -1, -1 );
-      // Draw the "X"
-      const int s = 6;
-
-      int ls = bev.x + ((bev.width - s) / 2);
-      int ts = bev.y + ((bev.height - s) / 2);
-      int rs = ls + s;
-      int bs = ts + s;
-
-      AColor::Line(*dc, ls,     ts, rs,     bs);
-      AColor::Line(*dc, ls + 1, ts, rs + 1, bs);
-      AColor::Line(*dc, rs,     ts, ls,     bs);
-      AColor::Line(*dc, rs + 1, ts, ls + 1, bs);
-
-      //   bev.Inflate(-1, -1);
+      DrawCloseButton( context, bev, pTrack, target );
    }
 
    {
