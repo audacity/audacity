@@ -229,8 +229,9 @@ class SubViewAdjustHandle : public UIHandle
 public:
    enum { MinHeight = SubViewAdjuster::HotZoneSize };
 
-   static UIHandlePtr HitTest(
-      WaveTrackView &view, WaveTrackSubView &subView,
+   static UIHandlePtr HitTest( std::weak_ptr<UIHandle> &holder,
+      WaveTrackView &view,
+      WaveTrackSubView &subView,
       const TrackPanelMouseState &state )
    {
       if ( !view.GetMultiView() )
@@ -241,10 +242,13 @@ public:
          state.state.GetY(), state.rect.GetTop(), state.rect.GetHeight() );
       auto index = hit.first;
 
-      if ( index < adjuster.mPermutation.size() )
-         return std::make_shared< SubViewAdjustHandle >(
+      if ( index < adjuster.mPermutation.size() ) {
+         UIHandlePtr result = std::make_shared< SubViewAdjustHandle >(
             std::move( adjuster ), index, view.GetLastHeight(), hit.second
          );
+         result = AssignUIHandlePtr( holder, result );
+         return result;
+      }
       else
          return {};
    }
@@ -436,7 +440,7 @@ class SubViewRearrangeHandle : public UIHandle
 public:
    enum { HotZoneWidth = 15 };
 
-   static UIHandlePtr HitTest(
+   static UIHandlePtr HitTest(  std::weak_ptr<UIHandle> &holder,
       WaveTrackView &view, WaveTrackSubView &subView,
       const TrackPanelMouseState &state )
    {
@@ -469,10 +473,12 @@ public:
       if ( ! hit )
          return {};
 
-      return std::make_shared< SubViewRearrangeHandle >(
+      UIHandlePtr result = std::make_shared< SubViewRearrangeHandle >(
          std::move( adjuster ),
          index, view.GetLastHeight()
       );
+      result = AssignUIHandlePtr( holder, result );
+      return result;
    }
 
    SubViewRearrangeHandle(
@@ -634,9 +640,11 @@ std::pair<
    auto pWaveTrackView = mwWaveTrackView.lock();
    if ( pWaveTrackView && !state.state.HasModifiers() ) {
       if ( auto pHandle = SubViewAdjustHandle::HitTest(
+         mAdjustHandle,
          *pWaveTrackView, *this, state ) )
          results.second.push_back( pHandle );
       if ( auto pHandle = SubViewRearrangeHandle::HitTest(
+         mRearrangeHandle,
          *pWaveTrackView, *this, state ) )
          results.second.push_back( pHandle );
    }
