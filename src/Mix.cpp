@@ -774,14 +774,15 @@ void Mixer::SetSpeedForKeyboardScrubbing(double speed, double startTime)
 
    // Check if the direction has changed
    if ((speed > 0.0 && mT1 < mT0) || (speed < 0.0 && mT1 > mT0)) {
-      // It's safe to use 0 and DBL_MAX, because Mixer::MixVariableRates()
-      // doesn't sample past the start or end of the audio in a track.
+      // It's safe to use 0 and std::numeric_limits<double>::max(),
+      // because Mixer::MixVariableRates() doesn't sample past the start
+      // or end of the audio in a track.
       if (speed > 0.0 && mT1 < mT0) {
          mT0 = 0;
-         mT1 = DBL_MAX;
+         mT1 = std::numeric_limits<double>::max();
       }
       else {
-         mT0 = DBL_MAX;
+         mT0 = std::numeric_limits<double>::max();
          mT1 = 0;
       }
 
