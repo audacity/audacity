@@ -178,6 +178,7 @@ END_EVENT_TABLE()
 /// TODO:  Move this function to some other source file for reuse elsewhere.
 std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * const pXpm[36],  int HotX, int HotY )
 {
+#define CURSORS_SIZE32
 #ifdef CURSORS_SIZE32
    const int HotAdjust =0;
 #else

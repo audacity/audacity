@@ -40,25 +40,6 @@ Paul Licameli split from TrackPanel.cpp
 
 namespace {
 
-/// Makes a cursor from an XPM, uses CursorId as a fallback.
-/// TODO:  Move this function to some other source file for reuse elsewhere.
-std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * const pXpm[36],  int HotX, int HotY )
-{
-#ifdef CURSORS_SIZE32
-   const int HotAdjust =0;
-#else
-   const int HotAdjust =8;
-#endif
-
-   wxImage Image = wxImage(wxBitmap(pXpm).ConvertToImage());
-   Image.SetMaskColour(255,0,0);
-   Image.SetMask();// Enable mask.
-
-   Image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_X, HotX-HotAdjust );
-   Image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, HotY-HotAdjust );
-   return std::make_unique<wxCursor>( Image );
-}
-
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
 
 // Structure that collects and modifies information on sub-view positions
