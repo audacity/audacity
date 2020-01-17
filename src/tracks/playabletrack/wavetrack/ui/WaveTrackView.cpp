@@ -421,7 +421,8 @@ private:
 class SubViewRearrangeHandle : public UIHandle
 {
 public:
-   enum { HotZoneWidth = 15 };
+   // Make it somewhat wider than the close button
+   enum { HotZoneWidth = 3 * kTrackInfoBtnSize / 2 };
 
    static UIHandlePtr HitTest(  std::weak_ptr<UIHandle> &holder,
       WaveTrackView &view, WaveTrackSubView &subView,
