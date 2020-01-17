@@ -633,10 +633,10 @@ std::pair<
 
    auto pWaveTrackView = mwWaveTrackView.lock();
    if ( pWaveTrackView && !state.state.HasModifiers() ) {
-      if ( auto pHandle = SubViewRearrangeHandle::HitTest(
+      if ( auto pHandle = SubViewAdjustHandle::HitTest(
          *pWaveTrackView, *this, state ) )
          results.second.push_back( pHandle );
-      if ( auto pHandle = SubViewAdjustHandle::HitTest(
+      if ( auto pHandle = SubViewRearrangeHandle::HitTest(
          *pWaveTrackView, *this, state ) )
          results.second.push_back( pHandle );
    }
