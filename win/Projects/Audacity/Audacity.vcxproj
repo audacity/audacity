@@ -261,6 +261,7 @@
       <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Spectrum.cpp" />
+    <ClCompile Include="..\..\..\src\SpectrumAnalyst.cpp" />
     <ClCompile Include="..\..\..\src\SplashDialog.cpp" />
     <ClCompile Include="..\..\..\src\SseMathFuncs.cpp" />
     <ClCompile Include="..\..\..\src\Tags.cpp" />
@@ -734,6 +735,7 @@
     <ClInclude Include="..\..\..\src\Snap.h" />
     <ClInclude Include="..\..\..\src\SoundActivatedRecord.h" />
     <ClInclude Include="..\..\..\src\Spectrum.h" />
+    <ClInclude Include="..\..\..\src\SpectrumAnalyst.h" />
     <ClInclude Include="..\..\..\src\SplashDialog.h" />
     <ClInclude Include="..\..\..\src\Tags.h" />
     <ClInclude Include="..\..\..\src\Theme.h" />
