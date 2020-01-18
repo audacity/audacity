@@ -36,6 +36,11 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/graphics.h>
 #include <wx/dc.h>
 
+static WaveTrackSubView::RegisteredType reg{ {
+   WaveTrackViewConstants::Waveform,
+   { wxT("Waveform"), XO("Wa&veform") }
+} };
+
 WaveformView::~WaveformView() = default;
 
 std::vector<UIHandlePtr> WaveformView::DetailedHitTest(

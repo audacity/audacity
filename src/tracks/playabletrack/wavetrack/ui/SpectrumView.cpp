@@ -30,6 +30,11 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
 
+static WaveTrackSubView::RegisteredType reg{ {
+   WaveTrackViewConstants::Spectrum,
+   { wxT("Spectrogram"), XO("&Spectrogram") }
+} };
+
 SpectrumView::~SpectrumView() = default;
 
 bool SpectrumView::IsSpectral() const

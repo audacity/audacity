@@ -41,6 +41,53 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackInfo.h"
 
 namespace {
+   class Registry {
+   public:
+      using Type = WaveTrackSubView::Type;
+      using Types = std::vector< Type >;
+
+      void Append( Type type )
+      {
+         types.emplace_back( std::move( type ) );
+         sorted = false;
+      }
+
+      Types &Get()
+      {
+         if ( !sorted ) {
+            auto begin = types.begin(), end = types.end();
+            std::sort( begin, end );
+            // We don't want duplicate ids!
+            wxASSERT( end == std::adjacent_find( begin, end ) );
+            sorted = true;
+         }
+         return types;
+      }
+
+   private:
+      Types types;
+      bool sorted = false;
+   };
+
+   Registry &GetRegistry()
+   {
+      static Registry result;
+      return result;
+   }
+}
+
+WaveTrackSubView::RegisteredType::RegisteredType( Type type )
+{
+   GetRegistry().Append( std::move( type ) );
+}
+
+// static
+auto WaveTrackSubView::AllTypes() -> const Types &
+{
+   return GetRegistry().Get();
+}
+
+namespace {
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
 
