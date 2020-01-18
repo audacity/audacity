@@ -73,7 +73,7 @@ void SpectrumView::DoSetMinimized( bool minimized )
    TrackView::DoSetMinimized( minimized );
 }
 
-WaveTrackViewConstants::Display SpectrumView::SubViewType() const
+auto SpectrumView::SubViewType() const -> Display
 {
    return WaveTrackViewConstants::Spectrum;
 }

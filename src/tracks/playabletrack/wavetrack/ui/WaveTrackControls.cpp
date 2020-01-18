@@ -804,7 +804,7 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
    wxASSERT(idInt >= OnWaveformID && idInt <= OnSpectrumID);
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
-   WaveTrackView::WaveTrackDisplay id;
+   WaveTrackView::Display id;
    switch (idInt) {
    default:
    case OnWaveformID:
@@ -816,7 +816,8 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
    auto &view = WaveTrackView::Get( *pTrack );
    if ( view.GetMultiView() ) {
       for (auto channel : TrackList::Channels(pTrack)) {
-         if ( !WaveTrackView::Get( *channel ).ToggleSubView( id ) ) {
+         if ( !WaveTrackView::Get( *channel )
+               .ToggleSubView( WaveTrackView::Display{ id } ) ) {
             // Trying to toggle off the last sub-view.  It was refused.
             // Decide what to do here.  Turn off multi-view instead?
             // PRL:  I don't agree that it makes sense
@@ -832,7 +833,7 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
          for (auto channel : TrackList::Channels(pTrack)) {
             channel->SetLastScaleType();
             WaveTrackView::Get( *channel )
-               .SetDisplay(WaveTrackView::WaveTrackDisplay(id));
+               .SetDisplay( WaveTrackView::Display{ id } );
          }
 
          AudacityProject *const project = &mpData->project;

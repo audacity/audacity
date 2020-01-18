@@ -22,10 +22,12 @@ class WaveTrackView;
 class WaveTrackSubView : public CommonTrackView
 {
 public:
+   using Display = WaveTrackViewConstants::Display;
+
    explicit
    WaveTrackSubView( WaveTrackView &waveTrackView );
    
-   virtual WaveTrackViewConstants::Display SubViewType() const = 0;
+   virtual Display SubViewType() const = 0;
 
    std::pair<
       bool, // if true, hit-testing is finished
@@ -67,6 +69,8 @@ class WaveTrackView final
    WaveTrackView &operator=( const WaveTrackView& ) = delete;
 
 public:
+   using Display = WaveTrackViewConstants::Display;
+
    static WaveTrackView &Get( WaveTrack &track );
    static const WaveTrackView &Get( const WaveTrack &track );
 
@@ -91,10 +95,8 @@ public:
       const std::shared_ptr<WaveTrack> &wt,
       CommonTrackView &view);
 
-   using WaveTrackDisplay = WaveTrackViewConstants::Display;
-
-   std::vector<WaveTrackDisplay> GetDisplays() const;
-   void SetDisplay(WaveTrackDisplay display, bool exclusive = true);
+   std::vector<Display> GetDisplays() const;
+   void SetDisplay(Display display, bool exclusive = true);
 
    const WaveTrackSubViewPlacements &SavePlacements() const
       { return mPlacements; }
@@ -103,7 +105,7 @@ public:
 
    // Return true if successful.  Fails if you try to toggle off the only
    // sub-view.
-   bool ToggleSubView( WaveTrackDisplay id );
+   bool ToggleSubView( Display id );
 
    // Get all the sub-views, in a sequence that is unspecified but in
    // correspondence with the result of SavePlacements
@@ -117,7 +119,7 @@ public:
 
 private:
    void BuildSubViews() const;
-   void DoSetDisplay(WaveTrackDisplay display, bool exclusive = true);
+   void DoSetDisplay(Display display, bool exclusive = true);
 
    // TrackPanelDrawable implementation
    void Draw(

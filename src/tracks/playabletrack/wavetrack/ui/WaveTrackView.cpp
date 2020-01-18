@@ -842,12 +842,12 @@ WaveTrackView::DoDetailedHitTest
    return { false, results };
 }
 
-auto WaveTrackView::GetDisplays() const -> std::vector<WaveTrackDisplay>
+auto WaveTrackView::GetDisplays() const -> std::vector<Display>
 {
    BuildSubViews();
 
    // Collect the display types of visible views and sort them by position
-   using Pair = std::pair< int, WaveTrackDisplay >;
+   using Pair = std::pair< int, Display >;
    std::vector< Pair > pairs;
    size_t ii = 0;
    WaveTrackSubViews::ForEach( [&]( const WaveTrackSubView &subView ){
@@ -857,19 +857,19 @@ auto WaveTrackView::GetDisplays() const -> std::vector<WaveTrackDisplay>
       ++ii;
    } );
    std::sort( pairs.begin(), pairs.end() );
-   std::vector<WaveTrackDisplay> results;
+   std::vector<Display> results;
    for ( const auto &pair : pairs )
       results.push_back( pair.second );
    return results;
 }
 
-void WaveTrackView::SetDisplay(WaveTrackDisplay display, bool exclusive)
+void WaveTrackView::SetDisplay(Display display, bool exclusive)
 {
    BuildSubViews();
    DoSetDisplay( display, exclusive );
 }
 
-bool WaveTrackView::ToggleSubView(WaveTrackDisplay display)
+bool WaveTrackView::ToggleSubView(Display display)
 {
    size_t ii = 0;
    size_t found = 0;
@@ -927,7 +927,7 @@ bool WaveTrackView::ToggleSubView(WaveTrackDisplay display)
 // If exclusive, make the chosen view take up all the height.  Else,
 // partition equally, putting the specified view on top.
 // Be sure the sequence in which the other views appear is determinate.
-void WaveTrackView::DoSetDisplay(WaveTrackDisplay display, bool exclusive)
+void WaveTrackView::DoSetDisplay(Display display, bool exclusive)
 {
    // Some generality here anticipating more than two views.
    // The order of sub-views in the array is not specified, so make it definite

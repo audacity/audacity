@@ -119,7 +119,7 @@ void WaveformView::DoSetMinimized( bool minimized )
    TrackView::DoSetMinimized( minimized );
 }
 
-WaveTrackViewConstants::Display WaveformView::SubViewType() const
+auto WaveformView::SubViewType() const -> Display
 {
    return WaveTrackViewConstants::Waveform;
 }
