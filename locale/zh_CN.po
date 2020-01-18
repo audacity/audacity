@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-09-07 14:02+0100\n"
-"PO-Revision-Date: 2019-09-10 22:44+0900\n"
-"Last-Translator: mkpoli <snowwolf1001@gmail.com>\n"
+"PO-Revision-Date: 2020-01-18 14:28+0800\n"
+"Last-Translator: dingpengyu <dingpengyu06@gmail.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
 "zh/)\n"
 "Language: zh_CN\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -525,7 +525,7 @@ msgstr "Audacity 团队成员"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
-msgstr "名誉成员"
+msgstr "名誉成员："
 
 #: src/AboutDialog.cpp
 msgid "Distinguished Audacity Team members, not currently active"
@@ -549,15 +549,15 @@ msgstr "库"
 
 #: src/AboutDialog.cpp
 msgid "Audacity includes code from the following projects:"
-msgstr "Audacity 包含以下项目的代码"
+msgstr "Audacity 包含以下项目的代码："
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
-msgstr "特别鸣谢"
+msgstr "特别鸣谢："
 
 #: src/AboutDialog.cpp
 msgid "Audacity website: "
-msgstr "Audacity 网站："
+msgstr "Audacity 网站： "
 
 #: src/AboutDialog.cpp
 msgid ""
@@ -671,7 +671,7 @@ msgstr "极限音高和速度改变支持"
 
 #: src/AboutDialog.cpp
 msgid "Program build date: "
-msgstr "程序构建日期："
+msgstr "程序构建日期： "
 
 #: src/AboutDialog.cpp
 msgid "Commit Id:"
@@ -695,11 +695,11 @@ msgstr "编译器："
 
 #: src/AboutDialog.cpp
 msgid "Installation Prefix: "
-msgstr "安装路径前缀："
+msgstr "安装路径前缀： "
 
 #: src/AboutDialog.cpp
 msgid "Settings folder: "
-msgstr "设置路径："
+msgstr "设置路径： "
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1087,7 +1087,7 @@ msgstr ""
 
 #: src/AudioIO.cpp
 msgid "Error: "
-msgstr "错误："
+msgstr "错误： "
 
 #: src/AudioIO.cpp
 msgid "Error Initializing Audio"
@@ -2719,7 +2719,7 @@ msgid ""
 "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
 "audacityteam.org/quick_help.html|view online]]"
 msgstr ""
-" [[help:Quick_Help|快速帮助]] - 如果没有被安装到本地，请参阅[[https://manual."
+"[[help:Quick_Help|快速帮助]] - 如果没有被安装到本地，请参阅[[https://manual."
 "audacityteam.org/quick_help.html|在线版]]"
 
 #: src/HelpText.cpp
@@ -5003,13 +5003,13 @@ msgstr "轨道 %d"
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
 msgid " Muted"
-msgstr "已设为静音"
+msgstr " 已设为静音"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is soloed. (The Solo button is on.)
 #: src/TrackPanelAx.cpp
 msgid " Soloed"
-msgstr "已设为独奏"
+msgstr " 已设为独奏"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is selected.
@@ -5217,7 +5217,7 @@ msgstr "比较音频"
 
 #: src/commands/CompareAudioCommand.h
 msgid "Compares a range on two tracks."
-msgstr "比较两个轨道上的范围"
+msgstr "比较两个轨道上的范围。"
 
 #: src/commands/Demo.cpp src/effects/Echo.cpp
 msgid "Delay time (seconds):"
@@ -6796,27 +6796,27 @@ msgstr "剩余等级"
 
 #: src/effects/Distortion.cpp
 msgid " (Not Used):"
-msgstr "（未使用）："
+msgstr " （未使用）："
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (-100 to 0 dB):"
-msgstr "（-100 ~ 0 dB）："
+msgstr " （-100 ~ 0 dB）："
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (-80 to -20 dB):"
-msgstr "（-80 ~ -20 dB）："
+msgstr " （-80 ~ -20 dB）："
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (0 to 100):"
-msgstr "（0 ~ 100）："
+msgstr " （0 ~ 100）："
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (0 to 5):"
-msgstr "（0 ~ 5）："
+msgstr " （0 ~ 5）："
 
 #: src/effects/Distortion.h
 msgid "Distortion"
@@ -7367,7 +7367,7 @@ msgstr "显示网格线"
 
 #: src/effects/Equalization.cpp
 msgid "&Processing: "
-msgstr "处理中(&P)："
+msgstr "处理中(&P)： "
 
 #: src/effects/Equalization.cpp
 msgid "D&efault"
@@ -8661,19 +8661,19 @@ msgstr "缓冲大小"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "The buffer size controls the number of samples sent to the effect "
-msgstr "缓冲大小控制每次重复时发送到效果插件的采样点数。"
+msgstr "缓冲大小控制每次重复时发送到效果插件的采样点数 "
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "on each iteration. Smaller values will cause slower processing and "
-msgstr "值过小会导致处理缓慢，"
+msgstr "值过小会导致处理缓慢 "
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "some effects require 8192 samples or less to work properly. However "
-msgstr "有些效果需要 8192 或更少的采样才能正常工作。但是"
+msgstr "有些效果需要 8192 或更少的采样才能正常工作。但是 "
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "most effects can accept large buffers and using them will greatly "
-msgstr "大部分效果支持比较大的缓冲，使用他们能很大地"
+msgstr "大部分效果支持比较大的缓冲，使用他们能很大地 "
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "reduce processing time."
@@ -8690,22 +8690,22 @@ msgstr "延迟补偿"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "As part of their processing, some VST effects must delay returning "
-msgstr "作为处理的一部分，有些 VST 效果必须延迟将"
+msgstr "作为处理的一部分，有些 VST 效果必须延迟将 "
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid "audio to Audacity. When not compensating for this delay, you will "
-msgstr "音频送回给 Audacity。当没设置补偿时，您会"
+msgstr "音频送回给 Audacity。当没设置补偿时，您会 "
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid "notice that small silences have been inserted into the audio. "
-msgstr "听到音频中间有少量静音。"
+msgstr "听到音频中间有少量静音 "
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Enabling this option will provide that compensation, but it may "
-msgstr "启用此选项将会添加这个补偿，但是"
+msgstr "启用此选项将会添加这个补偿，但是 "
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "not work for all VST effects."
@@ -8727,12 +8727,12 @@ msgstr "大部分 VST 插件提供一个图形化界面来设置各种参数值�
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid " A basic text-only method is also available. "
-msgstr "但同时也提供基础文本修改模式。"
+msgstr " 但同时也提供基础文本修改模式。 "
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/lv2/LV2Effect.cpp
 msgid " Reopen the effect for this to take effect."
-msgstr "重新打开效果以生效设置。"
+msgstr " 重新打开效果以生效设置。"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid "Enable &graphical interface"
@@ -8749,7 +8749,7 @@ msgstr "保存 VST 预设为："
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unrecognized file extension."
-msgstr "未识别文件扩展名"
+msgstr "未识别文件扩展名。"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Error Saving VST Presets"
@@ -8863,11 +8863,11 @@ msgstr "Audio Unit 效果器选项"
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
 "As part of their processing, some Audio Unit effects must delay returning "
-msgstr "作为处理的一部分，某些 Audio Unit 效果必须延迟返回"
+msgstr "作为处理的一部分，某些 Audio Unit 效果必须延迟返回 "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "not work for all Audio Unit effects."
-msgstr "不一定能被所有 Audio Unit 效果支持"
+msgstr "不一定能被所有 Audio Unit 效果支持。"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -8884,7 +8884,7 @@ msgstr " 选择 \"常规\" 使用系统提供的通用接口。"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid " Select \"Basic\" for a basic text-only interface."
-msgstr " 选择 \"基本\" 以使用基本的纯文本界面. "
+msgstr " 选择 \"基本\" 以使用基本的纯文本界面。"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -8949,11 +8949,11 @@ msgstr "LADSPA 效果器选项"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "As part of their processing, some LADSPA effects must delay returning "
-msgstr "作为处理的一部分，有些 LADSPA 效果必须延迟返回"
+msgstr "作为处理的一部分，有些 LADSPA 效果必须延迟返回 "
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "not work for all LADSPA effects."
-msgstr "不一定能被所有 LADSPA 效果支持"
+msgstr "不一定能被所有 LADSPA 效果支持。"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Effect Output"
@@ -8972,11 +8972,11 @@ msgstr "LV2 效果设置"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "As part of their processing, some LV2 effects must delay returning "
-msgstr "作为处理的一部分，某些 LV2 效果必须延迟返回"
+msgstr "作为处理的一部分，某些 LV2 效果必须延迟返回 "
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Enabling this setting will provide that compensation, but it may "
-msgstr "启用此项可以提供那个补偿，但是可能"
+msgstr "启用此项可以提供那个补偿，但是可能 "
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "not work for all LV2 effects."
@@ -9078,7 +9078,7 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Debug Output: "
-msgstr "调试输出："
+msgstr "调试输出： "
 
 #. i18n-hint: An effect "returned" a message.
 #: src/effects/nyquist/Nyquist.cpp
@@ -9205,7 +9205,7 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
-msgstr "输入 Nyquist 命令："
+msgstr "输入 Nyquist 命令： "
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Use legacy (version 3) syntax."
@@ -9396,7 +9396,7 @@ msgstr "您的轨道将被合成并导出为一个单声道文件。"
 
 #: src/export/Export.cpp
 msgid "Your tracks will be mixed down and exported as one stereo file."
-msgstr "您的轨道将被合成并导出为一个立体声文件，"
+msgstr "您的轨道将被合成并导出为一个立体声文件。"
 
 #: src/export/Export.cpp
 msgid ""
@@ -9611,7 +9611,7 @@ msgstr "重采样"
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
-msgstr "此项目的采样率（%d）不被当前的输出文件格式支持。"
+msgstr "此项目的采样率（%d）不被当前的输出文件格式支持。 "
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -9620,7 +9620,7 @@ msgid ""
 "supported by the current output file format. "
 msgstr ""
 "此项目的采样率（%d）和比特率（%d kbps）的组合\n"
-"不被当前的输出文件格式支持。"
+"不被当前的输出文件格式支持。 "
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -10092,7 +10092,7 @@ msgstr "XML 文件(*.xml)|*.xml| 所有文件|*"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "No presets to export"
-msgstr "没有可导出的预设。"
+msgstr "没有可导出的预设"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Select xml file to export presets into"
@@ -10433,7 +10433,7 @@ msgid ""
 "file format. "
 msgstr ""
 "项目的采样率（%d）不被 MP3\n"
-"文件格式支持。"
+"文件格式支持。 "
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -10442,7 +10442,7 @@ msgid ""
 "supported by the MP3 file format. "
 msgstr ""
 "项目的采样率（%d）和比特率（%d kbps）的组合\n"
-"不被 MP3 文件格式支持。"
+"不被 MP3 文件格式支持。 "
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
@@ -10531,7 +10531,7 @@ msgstr "覆盖现有的文件"
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "\"%s\" successfully created."
-msgstr "\"%s\" 新建成功"
+msgstr "\"%s\" 新建成功。"
 
 #: src/export/ExportMultiple.cpp
 msgid "Choose a location to save the exported files"
@@ -10540,27 +10540,27 @@ msgstr "选择保存导出文件的位置"
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "Successfully exported the following %lld file(s)."
-msgstr "成功导出下列 %lld 文件"
+msgstr "成功导出下列 %lld 文件。"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "Something went wrong after exporting the following %lld file(s)."
-msgstr "导出下列 %lld 文件之后出现错误"
+msgstr "导出下列 %lld 文件之后出现错误。"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "Export canceled after exporting the following %lld file(s)."
-msgstr "导出下列%lld 文件后取消了导出操作"
+msgstr "导出下列%lld 文件后取消了导出操作。"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "Export stopped after exporting the following %lld file(s)."
-msgstr "导出下列%lld 文件后终止了导出操作"
+msgstr "导出下列%lld 文件后终止了导出操作。"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "Something went really wrong after exporting the following %lld file(s)."
-msgstr "导出下列 %lld 文件之后出现严重错误"
+msgstr "导出下列 %lld 文件之后出现严重错误。"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
@@ -10581,7 +10581,7 @@ msgid ""
 "Use..."
 msgstr ""
 "标签或轨道 \"%s\" 不是合法的文件名。您不能使用：%s\n"
-"您可以使用："
+"您可以使用：..."
 
 #. i18n-hint: The second %s gives a letter that can't be used.
 #: src/export/ExportMultiple.cpp
@@ -10591,7 +10591,7 @@ msgid ""
 "Use..."
 msgstr ""
 "标签或轨道 \"%s\" 不是合法的文件名。您不能使用：%s\n"
-"您可以使用："
+"您可以使用：..."
 
 #: src/export/ExportMultiple.cpp
 msgid "Save As..."
@@ -14563,7 +14563,7 @@ msgstr "分类"
 
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
 msgid "Preferences: "
-msgstr "偏好设置："
+msgstr "偏好设置： "
 
 #. i18n-hint: (noun) i.e Audacity projects.
 #: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
@@ -16452,7 +16452,7 @@ msgstr ""
 
 #: src/widgets/Meter.cpp
 msgid "Meter refresh rate per second [1-100]: "
-msgstr "指示表的每秒刷新率 [1-100]："
+msgstr "指示表的每秒刷新率 [1-100]： "
 
 #: src/widgets/Meter.cpp
 msgid "Meter refresh rate per second [1-100]"
@@ -17024,7 +17024,7 @@ msgstr "未找到声音。尝试减少静音水平和最小静音持续时长。
 
 #: plug-ins/SoundFinder.ny
 msgid "[End]"
-msgstr "（结束）"
+msgstr "[结束]"
 
 #: plug-ins/SpectralEditMulti.ny
 msgid "Spectral edit multi tool"
@@ -17085,12 +17085,12 @@ msgstr "增益（dB）"
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
 msgid "~aLow frequency is undefined."
-msgstr "~a低频未定义"
+msgstr "~a低频未定义。"
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
 msgid "~aHigh frequency is undefined."
-msgstr "~a高频未定义"
+msgstr "~a高频未定义。"
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
@@ -17255,7 +17255,7 @@ msgstr "错误~%~%"
 #: plug-ins/adjustable-fade.ny
 #, lisp-format
 msgid "~aPercentage values cannot be negative."
-msgstr "~a频率值不能为负"
+msgstr "~a频率值不能为负。"
 
 #: plug-ins/adjustable-fade.ny
 #, lisp-format
@@ -17614,7 +17614,7 @@ msgstr "限幅器"
 
 #: plug-ins/limiter.ny
 msgid "Limiting..."
-msgstr "正在限制"
+msgstr "正在限制..."
 
 #: plug-ins/limiter.ny
 msgid "Type"
@@ -17817,7 +17817,7 @@ msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr "设置“小节数”为零以启用“节奏轨道持续时长”"
+msgstr "设置“小节数”为零以启用“节奏轨道持续时长”。"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
@@ -17837,7 +17837,7 @@ msgstr "'Number of bars' = 0 时将被使用"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"
-msgstr "开始时间偏移："
+msgstr "开始时间偏移"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Silence before first beat"
@@ -18008,7 +18008,7 @@ msgstr "仅错误"
 #. i18n-hint abbreviates negative infinity
 #: plug-ins/sample-data-export.ny
 msgid "[-inf]"
-msgstr "（负无限大）"
+msgstr "[负无限大]"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -18507,7 +18507,7 @@ msgstr "脉冲列频率（Hz）"
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%Stereo track required."
-msgstr "错误.~%需要立体声轨"
+msgstr "错误.~%需要立体声轨。"
 
 #~ msgid "Decoding failed\n"
 #~ msgstr "解码失败\n"
