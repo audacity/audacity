@@ -36,8 +36,11 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
    const WaveTrack *pTrack {};
    for ( auto wt : tracks.Selected< const WaveTrack >() ) {
       const auto displays = WaveTrackView::Get( *wt ).GetDisplays();
-      if ( make_iterator_range( displays.begin(), displays.end() )
-         .contains( WaveTrackViewConstants::Spectrum) ) {
+      bool hasSpectrum = (displays.end() != std::find(
+         displays.begin(), displays.end(),
+         WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
+      ) );
+      if ( hasSpectrum ) {
          pTrack = wt;
          break;
       }

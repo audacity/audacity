@@ -551,9 +551,10 @@ bool NyquistEffect::Init()
       for ( auto t :
                TrackList::Get( *project ).Selected< const WaveTrack >() ) {
          const auto displays = WaveTrackView::Get(*t).GetDisplays();
-         bool hasSpectral =
-            make_iterator_range( displays.begin(), displays.end())
-               .contains( WaveTrackViewConstants::Spectrum );
+         bool hasSpectral = (displays.end() != std::find(
+            displays.begin(), displays.end(),
+            WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
+         ) );
          if ( !hasSpectral ||
              !(t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
             bAllowSpectralEditing = false;
@@ -1097,7 +1098,7 @@ bool NyquistEffect::ProcessOne()
             spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
             auto displays = WaveTrackView::Get( *wt ).GetDisplays();
             auto format = [&]( decltype(displays[0]) display ){
-               switch ( display )
+               switch ( display.id )
                {
                case Waveform:
                   return wxT("\"Waveform\"");

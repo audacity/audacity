@@ -36,10 +36,12 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/graphics.h>
 #include <wx/dc.h>
 
-static WaveTrackSubView::RegisteredType reg{ {
+static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Waveform,
    { wxT("Waveform"), XO("Wa&veform") }
-} };
+};
+
+static WaveTrackSubView::RegisteredType reg{ sType };
 
 WaveformView::~WaveformView() = default;
 
@@ -124,9 +126,9 @@ void WaveformView::DoSetMinimized( bool minimized )
    TrackView::DoSetMinimized( minimized );
 }
 
-auto WaveformView::SubViewType() const -> Display
+auto WaveformView::SubViewType() const -> const Type &
 {
-   return WaveTrackViewConstants::Waveform;
+   return sType;
 }
 
 std::shared_ptr<TrackVRulerControls> WaveformView::DoGetVRulerControls()

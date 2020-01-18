@@ -889,12 +889,13 @@ WaveTrackView::DoDetailedHitTest
    return { false, results };
 }
 
-auto WaveTrackView::GetDisplays() const -> std::vector<Display>
+auto WaveTrackView::GetDisplays() const
+   -> std::vector< WaveTrackSubView::Type >
 {
    BuildSubViews();
 
    // Collect the display types of visible views and sort them by position
-   using Pair = std::pair< int, Display >;
+   using Pair = std::pair< int, WaveTrackSubView::Type >;
    std::vector< Pair > pairs;
    size_t ii = 0;
    WaveTrackSubViews::ForEach( [&]( const WaveTrackSubView &subView ){
@@ -904,7 +905,7 @@ auto WaveTrackView::GetDisplays() const -> std::vector<Display>
       ++ii;
    } );
    std::sort( pairs.begin(), pairs.end() );
-   std::vector<Display> results;
+   std::vector< WaveTrackSubView::Type > results;
    for ( const auto &pair : pairs )
       results.push_back( pair.second );
    return results;
@@ -921,7 +922,7 @@ bool WaveTrackView::ToggleSubView(Display display)
    size_t ii = 0;
    size_t found = 0;
    if ( WaveTrackSubViews::FindIf( [&]( const WaveTrackSubView &subView ) {
-      if ( subView.SubViewType() == display ) {
+      if ( subView.SubViewType().id == display ) {
          found = ii;
          return true;
       }
@@ -982,7 +983,7 @@ void WaveTrackView::DoSetDisplay(Display display, bool exclusive)
    size_t ii = 0;
    std::vector< std::pair< WaveTrackViewConstants::Display, size_t > > pairs;
    WaveTrackSubViews::ForEach( [&pairs, &ii]( WaveTrackSubView &subView ){
-      pairs.push_back( { subView.SubViewType(), ii++ } );
+      pairs.push_back( { subView.SubViewType().id, ii++ } );
    } );
    std::sort( pairs.begin(), pairs.end() );
 

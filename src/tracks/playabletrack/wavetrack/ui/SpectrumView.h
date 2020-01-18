@@ -24,7 +24,7 @@ public:
    using WaveTrackSubView::WaveTrackSubView;
    ~SpectrumView() override;
 
-   virtual Display SubViewType() const override;
+   const Type &SubViewType() const override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 

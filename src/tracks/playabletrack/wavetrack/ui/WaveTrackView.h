@@ -50,7 +50,7 @@ public:
    explicit
    WaveTrackSubView( WaveTrackView &waveTrackView );
    
-   virtual Display SubViewType() const = 0;
+   virtual const Type &SubViewType() const = 0;
 
    std::pair<
       bool, // if true, hit-testing is finished
@@ -118,7 +118,7 @@ public:
       const std::shared_ptr<WaveTrack> &wt,
       CommonTrackView &view);
 
-   std::vector<Display> GetDisplays() const;
+   std::vector< WaveTrackSubView::Type > GetDisplays() const;
    void SetDisplay(Display display, bool exclusive = true);
 
    const WaveTrackSubViewPlacements &SavePlacements() const

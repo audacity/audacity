@@ -659,7 +659,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu)
       int displayId = OnSetDisplayId;
       int nDisplays = 0;
       for ( const auto &type : AllTypes() ) {
-         if ( iter != end && *iter == type.id ) {
+         if ( iter != end && iter->id == type.id ) {
             checkedIds.push_back( displayId );
             uniqueDisplay = displayId;
             ++iter;
@@ -796,9 +796,10 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 
    if ( pTrack ) {
       const auto displays = view.GetDisplays();
-      bool hasWaveform =
-         make_iterator_range( displays.begin(), displays.end() )
-            .contains( WaveTrackViewConstants::Waveform );
+      bool hasWaveform = (displays.end() != std::find(
+         displays.begin(), displays.end(),
+         WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
+      ) );
       if( hasWaveform ){
          POPUP_MENU_SEPARATOR()
          POPUP_MENU_SUB_MENU(OnWaveColorID, XO("&Wave Color"), WaveColorMenuTable)
@@ -819,7 +820,7 @@ void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
    const auto display = displays.empty()
-      ? WaveTrackViewConstants::Waveform : *displays.begin();
+      ? WaveTrackViewConstants::Waveform : displays.begin()->id;
    for (const auto channel : TrackList::Channels(pTrack)) {
       auto &channelView = WaveTrackView::Get( *channel );
       channelView.SetMultiView( multi );
@@ -856,7 +857,8 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
    }
    else {
       const auto displays = view.GetDisplays();
-      const bool wrongType = !(displays.size() == 1 && displays[0] == id);
+      const bool wrongType =
+         !(displays.size() == 1 && displays[0].id == id);
       if (wrongType) {
          for (auto channel : TrackList::Channels(pTrack)) {
             channel->SetLastScaleType();

@@ -30,10 +30,12 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
 
-static WaveTrackSubView::RegisteredType reg{ {
+static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Spectrum,
    { wxT("Spectrogram"), XO("&Spectrogram") }
-} };
+};
+
+static WaveTrackSubView::RegisteredType reg{ sType };
 
 SpectrumView::~SpectrumView() = default;
 
@@ -78,9 +80,9 @@ void SpectrumView::DoSetMinimized( bool minimized )
    TrackView::DoSetMinimized( minimized );
 }
 
-auto SpectrumView::SubViewType() const -> Display
+auto SpectrumView::SubViewType() const -> const Type &
 {
-   return WaveTrackViewConstants::Spectrum;
+   return sType;
 }
 
 std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
