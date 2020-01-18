@@ -821,6 +821,8 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
             // Decide what to do here.  Turn off multi-view instead?
             // PRL:  I don't agree that it makes sense
          }
+         else
+            ProjectHistory::Get( mpData->project ).ModifyState(true);
       }
    }
    else {
