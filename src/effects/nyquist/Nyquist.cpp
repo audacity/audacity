@@ -1095,13 +1095,12 @@ bool NyquistEffect::ProcessOne()
          [&](const WaveTrack *wt) {
             type = wxT("wave");
             spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
-            // To do: accommodate split views
             auto displays = WaveTrackView::Get( *wt ).GetDisplays();
             auto format = [&]( decltype(displays[0]) display ){
                switch ( display )
                {
                case Waveform:
-                  return (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
+                  return wxT("\"Waveform\"");
                case Spectrum:
                   return wxT("\"Spectrogram\"");
                default: return wxT("NIL");
