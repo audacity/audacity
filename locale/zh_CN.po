@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-09-07 14:02+0100\n"
-"PO-Revision-Date: 2020-01-18 14:28+0800\n"
+"PO-Revision-Date: 2020-01-18 15:22+0800\n"
 "Last-Translator: dingpengyu <dingpengyu06@gmail.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
 "zh/)\n"
@@ -23,6 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 2.2.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
