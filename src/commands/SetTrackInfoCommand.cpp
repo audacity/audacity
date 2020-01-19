@@ -248,20 +248,6 @@ static const EnumValueSymbol kColourStrings[nColours] =
 };
 
 
-enum kDisplayTypes
-{
-   kWaveform,
-   kSpectrogram,
-   nDisplayTypes
-};
-
-static const EnumValueSymbol kDisplayTypeStrings[nDisplayTypes] =
-{
-   // These are acceptable dual purpose internal/visible names
-   { XO("Waveform") },
-   { XO("Spectrogram") },
-};
-
 enum kScaleTypes
 {
    kLinear,
@@ -292,10 +278,22 @@ static const EnumValueSymbol kZoomTypeStrings[nZoomTypes] =
    { XO("HalfWave") },
 };
 
+static EnumValueSymbols DiscoverSubViewTypes()
+{
+   const auto &types = WaveTrackSubView::AllTypes();
+   return transform_container< EnumValueSymbols >(
+      types, std::mem_fn( &WaveTrackSubView::Type::name ) );
+}
+
 bool SetTrackVisualsCommand::DefineParams( ShuttleParams & S ){ 
    SetTrackBase::DefineParams( S );
    S.OptionalN( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 2000 );
-   S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    kWaveform, kDisplayTypeStrings, nDisplayTypes );
+
+   {
+      auto symbols = DiscoverSubViewTypes();
+      S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    0, symbols.data(), symbols.size() );
+   }
+
    S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   kScaleTypeStrings, nScaleTypes );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  kColourStrings, nColours );
    S.OptionalN( bHasVZoom          ).DefineEnum( mVZoom,          wxT("VZoom"),      kReset,    kZoomTypeStrings, nZoomTypes );
@@ -318,8 +316,15 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasHeight      ).TieNumericTextBox(  XO("Height:"),        mHeight );
       S.Optional( bHasColour      ).TieChoice(          XO("Color:"),         mColour,
          Msgids(  kColourStrings, nColours ) );
-      S.Optional( bHasDisplayType ).TieChoice(          XO("Display:"),       mDisplayType,
-         Msgids( kDisplayTypeStrings, nDisplayTypes ) );
+      
+      {
+         auto symbols = DiscoverSubViewTypes();
+         auto typeNames = transform_container<TranslatableStrings>(
+             symbols, std::mem_fn( &EnumValueSymbol::Stripped ) );
+         S.Optional( bHasDisplayType ).TieChoice(          XO("Display:"),       mDisplayType,
+            typeNames );
+      }
+
       S.Optional( bHasScaleType   ).TieChoice(          XO("Scale:"),         mScaleType,
          Msgids( kScaleTypeStrings, nScaleTypes ) );
       S.Optional( bHasVZoom       ).TieChoice(          XO("VZoom:"),         mVZoom,
@@ -355,10 +360,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
 
    if( wt && bHasDisplayType  )
       WaveTrackView::Get( *wt ).SetDisplay(
-         (mDisplayType == kWaveform) ?
-            WaveTrackViewConstants::Waveform
-            : WaveTrackViewConstants::Spectrum
-         );
+         WaveTrackSubView::AllTypes()[ mDisplayType ].id );
    if( wt && bHasScaleType )
       wt->GetIndependentWaveformSettings().scaleType = 
          (mScaleType==kLinear) ? 

@@ -13,19 +13,44 @@ Paul Licameli split from class WaveTrack
 
 #include "../../../ui/CommonTrackView.h"
 #include "../../../../ClientData.h"
+#include "audacity/ComponentInterface.h"
 namespace WaveTrackViewConstants{ enum Display : int; }
 
 class CutlineHandle;
+class TranslatableString;
 class WaveTrack;
 class WaveTrackView;
 
 class WaveTrackSubView : public CommonTrackView
 {
 public:
+
+   using Display = WaveTrackViewConstants::Display;
+   struct Type {
+      // Identifies the type session-wide, and determines relative position in
+      // menus listing all types
+      Display id;
+      // The translation is suitable for the track control panel drop-down,
+      // and it may contain a menu accelerator
+      EnumValueSymbol name;
+
+      bool operator < ( const Type &other ) const { return id < other.id; }
+      bool operator == ( const Type &other ) const { return id == other.id; }
+   };
+   using Types = std::vector< Type >;
+
+   // Typically a file scope statically constructed object
+   struct RegisteredType {
+      RegisteredType( Type type );
+   };
+
+   // Discover all registered types
+   static const Types &AllTypes();
+
    explicit
    WaveTrackSubView( WaveTrackView &waveTrackView );
    
-   virtual WaveTrackViewConstants::Display SubViewType() const = 0;
+   virtual const Type &SubViewType() const = 0;
 
    std::pair<
       bool, // if true, hit-testing is finished
@@ -67,6 +92,8 @@ class WaveTrackView final
    WaveTrackView &operator=( const WaveTrackView& ) = delete;
 
 public:
+   using Display = WaveTrackViewConstants::Display;
+
    static WaveTrackView &Get( WaveTrack &track );
    static const WaveTrackView &Get( const WaveTrack &track );
 
@@ -91,10 +118,8 @@ public:
       const std::shared_ptr<WaveTrack> &wt,
       CommonTrackView &view);
 
-   using WaveTrackDisplay = WaveTrackViewConstants::Display;
-
-   std::vector<WaveTrackDisplay> GetDisplays() const;
-   void SetDisplay(WaveTrackDisplay display, bool exclusive = true);
+   std::vector< WaveTrackSubView::Type > GetDisplays() const;
+   void SetDisplay(Display display, bool exclusive = true);
 
    const WaveTrackSubViewPlacements &SavePlacements() const
       { return mPlacements; }
@@ -103,7 +128,7 @@ public:
 
    // Return true if successful.  Fails if you try to toggle off the only
    // sub-view.
-   bool ToggleSubView( WaveTrackDisplay id );
+   bool ToggleSubView( Display id );
 
    // Get all the sub-views, in a sequence that is unspecified but in
    // correspondence with the result of SavePlacements
@@ -117,7 +142,7 @@ public:
 
 private:
    void BuildSubViews() const;
-   void DoSetDisplay(WaveTrackDisplay display, bool exclusive = true);
+   void DoSetDisplay(Display display, bool exclusive = true);
 
    // TrackPanelDrawable implementation
    void Draw(

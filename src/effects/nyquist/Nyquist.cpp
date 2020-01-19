@@ -551,9 +551,10 @@ bool NyquistEffect::Init()
       for ( auto t :
                TrackList::Get( *project ).Selected< const WaveTrack >() ) {
          const auto displays = WaveTrackView::Get(*t).GetDisplays();
-         bool hasSpectral =
-            make_iterator_range( displays.begin(), displays.end())
-               .contains( WaveTrackViewConstants::Spectrum );
+         bool hasSpectral = (displays.end() != std::find(
+            displays.begin(), displays.end(),
+            WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
+         ) );
          if ( !hasSpectral ||
              !(t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
             bAllowSpectralEditing = false;
@@ -1090,21 +1091,16 @@ bool NyquistEffect::ProcessOne()
       wxString bitFormat;
       wxString spectralEditp;
 
-      using namespace WaveTrackViewConstants;
       mCurTrack[0]->TypeSwitch(
          [&](const WaveTrack *wt) {
             type = wxT("wave");
             spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
             auto displays = WaveTrackView::Get( *wt ).GetDisplays();
-            auto format = [&]( decltype(displays[0]) display ){
-               switch ( display )
-               {
-               case Waveform:
-                  return wxT("\"Waveform\"");
-               case Spectrum:
-                  return wxT("\"Spectrogram\"");
-               default: return wxT("NIL");
-               }
+            auto format = [&]( decltype(displays[0]) display ) {
+               // Get the English name of the view type, without menu codes,
+               // as a string that Lisp can examine
+               return wxString::Format( wxT("\"%s\""),
+                  display.name.Stripped().Debug() );
             };
             if (displays.empty())
                view = wxT("NIL");

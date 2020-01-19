@@ -41,6 +41,53 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackInfo.h"
 
 namespace {
+   class Registry {
+   public:
+      using Type = WaveTrackSubView::Type;
+      using Types = std::vector< Type >;
+
+      void Append( Type type )
+      {
+         types.emplace_back( std::move( type ) );
+         sorted = false;
+      }
+
+      Types &Get()
+      {
+         if ( !sorted ) {
+            auto begin = types.begin(), end = types.end();
+            std::sort( begin, end );
+            // We don't want duplicate ids!
+            wxASSERT( end == std::adjacent_find( begin, end ) );
+            sorted = true;
+         }
+         return types;
+      }
+
+   private:
+      Types types;
+      bool sorted = false;
+   };
+
+   Registry &GetRegistry()
+   {
+      static Registry result;
+      return result;
+   }
+}
+
+WaveTrackSubView::RegisteredType::RegisteredType( Type type )
+{
+   GetRegistry().Append( std::move( type ) );
+}
+
+// static
+auto WaveTrackSubView::AllTypes() -> const Types &
+{
+   return GetRegistry().Get();
+}
+
+namespace {
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
 
@@ -842,12 +889,13 @@ WaveTrackView::DoDetailedHitTest
    return { false, results };
 }
 
-auto WaveTrackView::GetDisplays() const -> std::vector<WaveTrackDisplay>
+auto WaveTrackView::GetDisplays() const
+   -> std::vector< WaveTrackSubView::Type >
 {
    BuildSubViews();
 
    // Collect the display types of visible views and sort them by position
-   using Pair = std::pair< int, WaveTrackDisplay >;
+   using Pair = std::pair< int, WaveTrackSubView::Type >;
    std::vector< Pair > pairs;
    size_t ii = 0;
    WaveTrackSubViews::ForEach( [&]( const WaveTrackSubView &subView ){
@@ -857,24 +905,24 @@ auto WaveTrackView::GetDisplays() const -> std::vector<WaveTrackDisplay>
       ++ii;
    } );
    std::sort( pairs.begin(), pairs.end() );
-   std::vector<WaveTrackDisplay> results;
+   std::vector< WaveTrackSubView::Type > results;
    for ( const auto &pair : pairs )
       results.push_back( pair.second );
    return results;
 }
 
-void WaveTrackView::SetDisplay(WaveTrackDisplay display, bool exclusive)
+void WaveTrackView::SetDisplay(Display display, bool exclusive)
 {
    BuildSubViews();
    DoSetDisplay( display, exclusive );
 }
 
-bool WaveTrackView::ToggleSubView(WaveTrackDisplay display)
+bool WaveTrackView::ToggleSubView(Display display)
 {
    size_t ii = 0;
    size_t found = 0;
    if ( WaveTrackSubViews::FindIf( [&]( const WaveTrackSubView &subView ) {
-      if ( subView.SubViewType() == display ) {
+      if ( subView.SubViewType().id == display ) {
          found = ii;
          return true;
       }
@@ -927,7 +975,7 @@ bool WaveTrackView::ToggleSubView(WaveTrackDisplay display)
 // If exclusive, make the chosen view take up all the height.  Else,
 // partition equally, putting the specified view on top.
 // Be sure the sequence in which the other views appear is determinate.
-void WaveTrackView::DoSetDisplay(WaveTrackDisplay display, bool exclusive)
+void WaveTrackView::DoSetDisplay(Display display, bool exclusive)
 {
    // Some generality here anticipating more than two views.
    // The order of sub-views in the array is not specified, so make it definite
@@ -935,7 +983,7 @@ void WaveTrackView::DoSetDisplay(WaveTrackDisplay display, bool exclusive)
    size_t ii = 0;
    std::vector< std::pair< WaveTrackViewConstants::Display, size_t > > pairs;
    WaveTrackSubViews::ForEach( [&pairs, &ii]( WaveTrackSubView &subView ){
-      pairs.push_back( { subView.SubViewType(), ii++ } );
+      pairs.push_back( { subView.SubViewType().id, ii++ } );
    } );
    std::sort( pairs.begin(), pairs.end() );
 

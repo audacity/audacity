@@ -27,6 +27,7 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 
 int TracksPrefs::iPreferencePinned = -1;
 
@@ -81,8 +82,6 @@ namespace {
    const auto key2 = wxT("/GUI/DefaultViewModeChoice");
    const auto key3 = wxT("/GUI/DefaultViewModeChoiceNew");
 
-   const EnumValueSymbol waveformSymbol{ XO("Waveform") };
-   const EnumValueSymbol spectrumSymbol{ XO("Spectrogram") };
    const wxString obsoleteValue{ wxT("WaveformDB") };
 };
 
@@ -99,6 +98,9 @@ public:
       // 2.1.1 writes a NEW key for this preference, which got NEW values,
       // to avoid confusing version 2.1.0 if it reads the preference file afterwards.
       // Prefer the NEW preference key if it is present
+
+      static const EnumValueSymbol waveformSymbol{ XO("Waveform") };
+      static const EnumValueSymbol spectrumSymbol{ XO("Spectrogram") };
 
       WaveTrackViewConstants::Display viewMode;
       int oldMode;
@@ -143,23 +145,26 @@ public:
    }
 };
 
-static TracksViewModeEnumSetting viewModeSetting{
-   key3,
-   {
-      { waveformSymbol },
-      { spectrumSymbol }
-   },
-   0, // Waveform
-
-   {
-      WaveTrackViewConstants::Waveform,
-      WaveTrackViewConstants::Spectrum
-   }
-};
+static TracksViewModeEnumSetting viewModeSetting()
+{
+   // Do a delayed computation, so that registration of sub-view types completes
+   // first
+   const auto &types = WaveTrackSubView::AllTypes();
+   auto symbols = transform_container< EnumValueSymbols >(
+      types, std::mem_fn( &WaveTrackSubView::Type::name ) );
+   auto ids = transform_container< std::vector< WaveTrackSubView::Display > >(
+      types, std::mem_fn( &WaveTrackSubView::Type::id ) );
+   return {
+      key3,
+      symbols,
+      0, // Waveform
+      ids
+   };
+}
 
 WaveTrackViewConstants::Display TracksPrefs::ViewModeChoice()
 {
-   return viewModeSetting.ReadEnum();
+   return viewModeSetting().ReadEnum();
 }
 
 WaveformSettings::ScaleTypeValues TracksPrefs::WaveformScaleChoice()
@@ -344,7 +349,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 
          S.TieChoice(XO("Default &view mode:"),
-                     viewModeSetting );
+                     viewModeSetting() );
 
          S.TieChoice(XO("Default Waveform scale:"),
                      waveformScaleSetting );

@@ -214,7 +214,7 @@ public:
       EnumValueSymbols symbols,
       long defaultSymbol,
 
-      std::initializer_list< Enum > values, // must have same size as symbols
+      std::vector< Enum > values, // must have same size as symbols
       const wxString &oldKey = {}
    )
       : EnumSettingBase{
