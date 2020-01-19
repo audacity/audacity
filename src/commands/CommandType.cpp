@@ -41,7 +41,7 @@ CommandSignature &OldStyleCommandType::GetSignature()
 {
    if (!mSignature)
    {
-      mSignature.create();
+      mSignature.emplace();
       BuildSignature(*mSignature);
    }
    return *mSignature;

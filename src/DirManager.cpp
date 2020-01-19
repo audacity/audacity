@@ -204,16 +204,16 @@ int DirManager::RecursivelyEnumerateWithProgress(const FilePath &dirPath,
                                              int progress_count,
                                              const TranslatableString &message)
 {
-   Maybe<ProgressDialog> progress{};
+   Optional<ProgressDialog> progress{};
 
    if (!message.empty())
-      progress.create( XO("Progress"), message );
+      progress.emplace( XO("Progress"), message );
 
    int count = RecursivelyEnumerate(
                   dirPath, filePathArray, dirspec,filespec,
                   bFiles, bDirs,
                   progress_count, 0,
-                  progress.get());
+                  progress ? &*progress : nullptr);
 
    return count;
 }
@@ -289,11 +289,11 @@ void DirManager::RecursivelyRemove(const FilePaths& filePathArray, int count, in
    bool bFiles= (flags & kCleanFiles) != 0;
    bool bDirs = (flags & kCleanDirs) != 0;
    bool bDirsMustBeEmpty = (flags & kCleanDirsOnlyIfEmpty) != 0;
-   Maybe<ProgressDialog> progress{};
+   Optional<ProgressDialog> progress{};
 
 
    if (!message.empty())
-      progress.create( XO("Progress"), message );
+      progress.emplace( XO("Progress"), message );
 
    auto nn = filePathArray.size();
    for ( size_t ii = 0; ii < nn; ++ii ) {
@@ -568,7 +568,7 @@ struct DirManager::ProjectSetter::Impl
 
    // Another RAII object
    // Be prepared to un-create directory on failure
-   Maybe<DirCleaner> dirCleaner;
+   Optional<DirCleaner> dirCleaner;
    
    // State variables to carry over into Commit()
    // Remember old path to be cleaned up in case of successful move
@@ -646,7 +646,7 @@ DirManager::ProjectSetter::Impl::Impl(
 
    // Be prepared to un-create directory on failure
    if (bCreate)
-      dirCleaner.create( committed, dirManager.projFull );
+      dirCleaner.emplace( committed, dirManager.projFull );
 
    /* Hard-link or copy all files into this NEW directory.
 

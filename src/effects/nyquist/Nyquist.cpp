@@ -789,9 +789,9 @@ bool NyquistEffect::Process()
          XO("Nyquist Error") );
    }
 
-   Maybe<TrackIterRange<WaveTrack>> pRange;
+   Optional<TrackIterRange<WaveTrack>> pRange;
    if (!bOnePassTool)
-      pRange.create(mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader);
+      pRange.emplace(mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader);
 
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have

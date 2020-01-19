@@ -1012,9 +1012,9 @@ void FrequencyPlotDialog::Recalc()
    // controls while the plot was being recalculated.  This doesn't appear to be necessary
    // so just use the the top level window instead.
    {
-      Maybe<wxWindowDisabler> blocker;
+      Optional<wxWindowDisabler> blocker;
       if (IsShown())
-         blocker.create(this);
+         blocker.emplace(this);
       wxYieldIfNeeded();
 
       mAnalyst->Calculate(alg, windowFunc, mWindowSize, mRate,

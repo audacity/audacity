@@ -667,7 +667,7 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       for (int i = 0; i < mNumStreams; i++)
       {
          auto sc = scs[i].get();
-         sc->m_pkt.create();
+         sc->m_pkt.emplace();
          if (DecodeFrame(sc, true) == 0)
          {
             WriteData(sc);

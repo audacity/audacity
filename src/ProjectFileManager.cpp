@@ -515,7 +515,7 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
 
    {
    std::vector<std::unique_ptr<WaveTrack::Locker>> lockers;
-   Maybe<DirManager::ProjectSetter> pSetter;
+   Optional<DirManager::ProjectSetter> pSetter;
    bool moving = true;
 
    if (fromSaveAs && !bWantSaveCopy) {
@@ -536,7 +536,7 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
 
       // This renames the project directory, and moves or copies
       // all of our block files over.
-      pSetter.create( dirManager, projPath, projName, true, moving );
+      pSetter.emplace( dirManager, projPath, projName, true, moving );
 
       if (!pSetter->Ok()){
          success = false;

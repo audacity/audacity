@@ -1561,7 +1561,7 @@ void ShuttleGuiBase::StartRadioButtonGroup( const ChoiceSetting &Setting )
 
    // Configure the generic type mechanism to use OUR string.
    mRadioValueString = Setting.Default().Internal();
-   mRadioValue.create( mRadioValueString );
+   mRadioValue.emplace( mRadioValueString );
 
    // Now actually start the radio button group.
    mRadioSettingName = Setting.Key();

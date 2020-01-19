@@ -335,7 +335,7 @@ streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
    }
 
    // Copy the frame to the stream context
-   sc->m_pkt.create(std::move(pkt));
+   sc->m_pkt.emplace(std::move(pkt));
 
    sc->m_pktDataPtr = sc->m_pkt->data;
    sc->m_pktRemainingSiz = sc->m_pkt->size;

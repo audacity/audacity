@@ -545,9 +545,9 @@ size_t BlockFile::CommonReadData(
    SFFile sf;
 
    {
-      Maybe<wxLogNull> silence{};
+      Optional<wxLogNull> silence{};
       if (mSilentLog)
-         silence.create();
+         silence.emplace();
 
       const auto fullPath = fileName.GetFullPath();
       if (wxFile::Exists(fullPath) && f.Open(fullPath)) {
@@ -756,9 +756,9 @@ bool AliasBlockFile::ReadSummary(ArrayOf<char> &data)
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
 
    {
-      Maybe<wxLogNull> silence{};
+      Optional<wxLogNull> silence{};
       if (mSilentLog)
-         silence.create();
+         silence.emplace();
 
       if (!summaryFile.IsOpened()){
 

@@ -93,7 +93,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
 
       Track* pFirstNewTrack = NULL;
       for (auto pClip : clipTrackRange) {
-         Maybe<WaveTrack::Locker> locker;
+         Optional<WaveTrack::Locker> locker;
 
          Track::Holder uNewTrack;
          Track *pNewTrack;
@@ -102,7 +102,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
                if ((clipboard.Project() != &project))
                   // Cause duplication of block files on disk, when copy is
                   // between projects
-                  locker.create(wc);
+                  locker.emplace(wc);
                uNewTrack = trackFactory.NewWaveTrack(
                   wc->GetSampleFormat(), wc->GetRate()),
                pNewTrack = uNewTrack.get();
@@ -505,7 +505,7 @@ void OnPaste(const CommandContext &context)
             ff = n;
          
          wxASSERT( n && c && n->SameKindAs(*c) );
-         Maybe<WaveTrack::Locker> locker;
+         Optional<WaveTrack::Locker> locker;
 
          n->TypeSwitch(
             [&](WaveTrack *wn){
@@ -513,7 +513,7 @@ void OnPaste(const CommandContext &context)
                if (clipboard.Project() != &project)
                   // Cause duplication of block files on disk, when copy is
                   // between projects
-                  locker.create(wc);
+                  locker.emplace(wc);
                bPastedSomething = true;
                wn->ClearAndPaste(t0, t1, wc, true, true);
             },
@@ -583,11 +583,11 @@ void OnPaste(const CommandContext &context)
    {
       const auto wc =
          *clipboard.GetTracks().Any< const WaveTrack >().rbegin();
-      Maybe<WaveTrack::Locker> locker;
+      Optional<WaveTrack::Locker> locker;
       if (clipboard.Project() != &project && wc)
          // Cause duplication of block files on disk, when copy is
          // between projects
-         locker.create(static_cast<const WaveTrack*>(wc));
+         locker.emplace(static_cast<const WaveTrack*>(wc));
 
       tracks.Any().StartingWith(*pN).Visit(
          [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {
