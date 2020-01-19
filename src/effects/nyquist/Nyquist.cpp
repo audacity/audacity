@@ -2475,6 +2475,11 @@ bool NyquistEffect::TransferDataFromPromptWindow()
    mInputCmd.Replace(left, dumb, true);
    mInputCmd.Replace(right, dumb, true);
 
+   const wxString leftSingle = wxT("\u2018"), rightSingle = wxT("\u2019"),
+      dumbSingle = '\'';
+   mInputCmd.Replace(leftSingle, dumbSingle, true);
+   mInputCmd.Replace(rightSingle, dumbSingle, true);
+
    mVersion = mVersionCheckBox->GetValue() ? 3 : 4;
 
    return ParseCommand(mInputCmd);
