@@ -79,4 +79,32 @@ namespace WaveTrackViewConstants
    Display ConvertLegacyDisplayValue(int oldValue);
 }
 
+#include <vector>
+#include "audacity/ComponentInterface.h" // for EnumValueSymbol
+
+struct WaveTrackSubViewType {
+   using Display = WaveTrackViewConstants::Display;
+
+   // Identifies the type session-wide, and determines relative position in
+   // menus listing all types
+   Display id;
+   // The translation is suitable for the track control panel drop-down,
+   // and it may contain a menu accelerator
+   EnumValueSymbol name;
+
+   bool operator < ( const WaveTrackSubViewType &other ) const
+   { return id < other.id; }
+
+   bool operator == ( const WaveTrackSubViewType &other ) const
+   { return id == other.id; }
+
+   // Typically a file scope statically constructed object
+   struct RegisteredType {
+      RegisteredType( WaveTrackSubViewType type );
+   };
+
+   // Discover all registered types
+   static const std::vector<WaveTrackSubViewType> &All();
+};
+
 #endif

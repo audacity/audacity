@@ -280,7 +280,7 @@ static const EnumValueSymbol kZoomTypeStrings[nZoomTypes] =
 
 static EnumValueSymbols DiscoverSubViewTypes()
 {
-   const auto &types = WaveTrackSubView::AllTypes();
+   const auto &types = WaveTrackSubViewType::All();
    return transform_container< EnumValueSymbols >(
       types, std::mem_fn( &WaveTrackSubView::Type::name ) );
 }
@@ -360,7 +360,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
 
    if( wt && bHasDisplayType  )
       WaveTrackView::Get( *wt ).SetDisplay(
-         WaveTrackSubView::AllTypes()[ mDisplayType ].id );
+         WaveTrackSubViewType::All()[ mDisplayType ].id );
    if( wt && bHasScaleType )
       wt->GetIndependentWaveformSettings().scaleType = 
          (mScaleType==kLinear) ? 

@@ -41,7 +41,7 @@ static WaveTrackSubView::Type sType{
    { wxT("Waveform"), XO("Wa&veform") }
 };
 
-static WaveTrackSubView::RegisteredType reg{ sType };
+static WaveTrackSubViewType::RegisteredType reg{ sType };
 
 WaveformView::~WaveformView() = default;
 

@@ -27,7 +27,7 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 int TracksPrefs::iPreferencePinned = -1;
 
@@ -149,11 +149,11 @@ static TracksViewModeEnumSetting viewModeSetting()
 {
    // Do a delayed computation, so that registration of sub-view types completes
    // first
-   const auto &types = WaveTrackSubView::AllTypes();
+   const auto &types = WaveTrackSubViewType::All();
    auto symbols = transform_container< EnumValueSymbols >(
-      types, std::mem_fn( &WaveTrackSubView::Type::name ) );
-   auto ids = transform_container< std::vector< WaveTrackSubView::Display > >(
-      types, std::mem_fn( &WaveTrackSubView::Type::id ) );
+      types, std::mem_fn( &WaveTrackSubViewType::name ) );
+   auto ids = transform_container< std::vector< WaveTrackSubViewType::Display > >(
+      types, std::mem_fn( &WaveTrackSubViewType::id ) );
    return {
       key3,
       symbols,

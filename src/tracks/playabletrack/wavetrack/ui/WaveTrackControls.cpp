@@ -623,9 +623,9 @@ void WaveTrackMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-static WaveTrackSubView::Types AllTypes()
+static std::vector<WaveTrackSubViewType> AllTypes()
 {
-   auto result = WaveTrackSubView::AllTypes();
+   auto result = WaveTrackSubViewType::All();
    if ( result.size() > reserveDisplays ) {
       wxASSERT( false );
       result.resize( reserveDisplays );

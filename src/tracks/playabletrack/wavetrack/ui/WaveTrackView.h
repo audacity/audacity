@@ -13,8 +13,8 @@ Paul Licameli split from class WaveTrack
 
 #include "../../../ui/CommonTrackView.h"
 #include "../../../../ClientData.h"
-#include "audacity/ComponentInterface.h"
 namespace WaveTrackViewConstants{ enum Display : int; }
+struct WaveTrackSubViewType;
 
 class CutlineHandle;
 class TranslatableString;
@@ -26,26 +26,7 @@ class WaveTrackSubView : public CommonTrackView
 public:
 
    using Display = WaveTrackViewConstants::Display;
-   struct Type {
-      // Identifies the type session-wide, and determines relative position in
-      // menus listing all types
-      Display id;
-      // The translation is suitable for the track control panel drop-down,
-      // and it may contain a menu accelerator
-      EnumValueSymbol name;
-
-      bool operator < ( const Type &other ) const { return id < other.id; }
-      bool operator == ( const Type &other ) const { return id == other.id; }
-   };
-   using Types = std::vector< Type >;
-
-   // Typically a file scope statically constructed object
-   struct RegisteredType {
-      RegisteredType( Type type );
-   };
-
-   // Discover all registered types
-   static const Types &AllTypes();
+   using Type = WaveTrackSubViewType;
 
    explicit
    WaveTrackSubView( WaveTrackView &waveTrackView );
