@@ -12,6 +12,7 @@
 
 #include <functional>
 #include <memory>
+#include <unordered_map>
 #include "../MemoryX.h"
 
 class Effect;
@@ -81,7 +82,7 @@ private:
    ModuleManagerInterface *mModMan;
    PluginPath mPath;
 
-   PluginPaths mNames;
-
    struct Entry;
+   using EffectHash = std::unordered_map< wxString, const Entry* > ;
+   EffectHash mEffects;
 };
