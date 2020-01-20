@@ -1093,22 +1093,55 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
       double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
       FindLinearTickSizes(UPP);
 
-      // Left and Right Edges
+      auto TickAtValue = [this, zoomInfo]( double value ) -> int {
+         // Make a tick only if the value is strictly between the bounds
+         if ( value <= std::min( mMin, mMax ) )
+            return -1;
+         if ( value >= std::max( mMin, mMax ) )
+            return -1;
+
+         int mid;
+         if (zoomInfo != NULL) {
+            // Tick only at zero
+            if ( value )
+               return -1;
+            mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
+         }
+         else
+            mid = (int)(mLength*((mMin - value) / (mMin - mMax)) + 0.5);
+
+         const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
+         if (mid >= 0 && mid < iMaxPos)
+            Tick(mid, value, true, false);
+         else
+            return -1;
+         
+         return mid;
+      };
+
+      if ( mDbMirrorValue ) {
+         // For dB scale, let the zeroes prevail over the extreme values if
+         // not the same, and let midline prevail over all
+
+         // Do the midline
+         TickAtValue( -mDbMirrorValue );
+
+         // Do the upper zero
+         TickAtValue( 0.0 );
+
+         // Do the other zero
+         TickAtValue( -2 * mDbMirrorValue );
+      }
+
+      // Extreme values
       if (mLabelEdges) {
          Tick(0, mMin, true, false);
          Tick(mLength, mMax, true, false);
       }
 
-      // Zero (if it's in the middle somewhere)
-      if (mMin * mMax < 0.0) {
-         int mid;
-         if (zoomInfo != NULL)
-            mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
-         else
-            mid = (int)(mLength*(mMin / (mMin - mMax)) + 0.5);
-         const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
-         if (mid >= 0 && mid < iMaxPos)
-            Tick(mid, 0.0, true, false);
+      if ( !mDbMirrorValue ) {
+         // Zero (if it's strictly in the middle somewhere)
+         TickAtValue( 0.0 );
       }
 
       double sg = UPP > 0.0? 1.0: -1.0;
