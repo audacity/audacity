@@ -28,11 +28,11 @@ class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 
-#define CHANGETEMPO_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Change Tempo") }
-
 class EffectChangeTempo final : public EffectSoundTouch
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectChangeTempo();
    virtual ~EffectChangeTempo();
 

@@ -16,11 +16,11 @@
 
 class ShuttleGui;
 
-#define ECHO_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Echo") }
-
 class EffectEcho final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectEcho();
    virtual ~EffectEcho();
 

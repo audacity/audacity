@@ -36,10 +36,17 @@
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/valnum.h"
 
+#include "LoadEffects.h"
+
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type  Key             Def  Min   Max      Scale
 Param( Count,  int,  wxT("Count"),    1,  1,    INT_MAX, 1  );
+
+const ComponentInterfaceSymbol EffectRepeat::Symbol
+{ XO("Repeat") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectRepeat > reg; }
 
 BEGIN_EVENT_TABLE(EffectRepeat, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectRepeat::OnRepeatTextChange)
@@ -60,7 +67,7 @@ EffectRepeat::~EffectRepeat()
 
 ComponentInterfaceSymbol EffectRepeat::GetSymbol()
 {
-   return REPEAT_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectRepeat::GetDescription()

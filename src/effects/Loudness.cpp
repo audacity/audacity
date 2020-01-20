@@ -31,6 +31,8 @@
 #include "../widgets/valnum.h"
 #include "../widgets/ProgressDialog.h"
 
+#include "LoadEffects.h"
+
 enum kNormalizeTargets
 {
    kLoudness,
@@ -58,6 +60,11 @@ BEGIN_EVENT_TABLE(EffectLoudness, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectLoudness::OnUpdateUI)
 END_EVENT_TABLE()
 
+const ComponentInterfaceSymbol EffectLoudness::Symbol
+{ XO("Loudness Normalization") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectLoudness > reg; }
+
 EffectLoudness::EffectLoudness()
 {
    mStereoInd = DEF_StereoInd;
@@ -77,7 +84,7 @@ EffectLoudness::~EffectLoudness()
 
 ComponentInterfaceSymbol EffectLoudness::GetSymbol()
 {
-   return LOUDNESS_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectLoudness::GetDescription()

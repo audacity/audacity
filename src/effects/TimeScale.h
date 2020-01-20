@@ -21,15 +21,11 @@ class wxSlider;
 class wxTextCtrl;
 class ShuttleGui;
 
-// two strings here
-// unusual case
-#define TIMESCALE_PLUGIN_SYMBOL \
-   ComponentInterfaceSymbol{ wxT("Sliding Stretch"), \
-                         XO("Sliding Stretch") }
-
 class EffectTimeScale final : public EffectSBSMS
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectTimeScale();
    virtual ~EffectTimeScale();
 

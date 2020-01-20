@@ -21,6 +21,7 @@
 
 #include "../Audacity.h"
 #include "FindClipping.h"
+#include "LoadEffects.h"
 
 #include <math.h>
 
@@ -40,6 +41,11 @@
 Param( Start,  int,  wxT("Duty Cycle Start"), 3,    1,    INT_MAX, 1   );
 Param( Stop,   int,  wxT("Duty Cycle End"),   3,    1,    INT_MAX, 1   );
 
+const ComponentInterfaceSymbol EffectFindClipping::Symbol
+{ XO("Find Clipping") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectFindClipping > reg; }
+
 EffectFindClipping::EffectFindClipping()
 {
    mStart = DEF_Start;
@@ -54,7 +60,7 @@ EffectFindClipping::~EffectFindClipping()
 
 ComponentInterfaceSymbol EffectFindClipping::GetSymbol()
 {
-   return FINDCLIPPING_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectFindClipping::GetDescription()

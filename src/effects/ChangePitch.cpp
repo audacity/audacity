@@ -19,6 +19,7 @@ the pitch without changing the tempo.
 
 #if USE_SOUNDTOUCH
 #include "ChangePitch.h"
+#include "LoadEffects.h"
 
 #if USE_SBSMS
 #include <wx/valgen.h>
@@ -81,6 +82,11 @@ static const double kSliderWarp = 1.30105;       // warp power takes max from 10
 
 // EffectChangePitch
 
+const ComponentInterfaceSymbol EffectChangePitch::Symbol
+{ XO("Change Pitch") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectChangePitch > reg; }
+
 BEGIN_EVENT_TABLE(EffectChangePitch, wxEvtHandler)
    EVT_CHOICE(ID_FromPitch, EffectChangePitch::OnChoice_FromPitch)
    EVT_TEXT(ID_FromOctave, EffectChangePitch::OnSpin_FromOctave)
@@ -136,7 +142,7 @@ EffectChangePitch::~EffectChangePitch()
 
 ComponentInterfaceSymbol EffectChangePitch::GetSymbol()
 {
-   return CHANGEPITCH_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectChangePitch::GetDescription()

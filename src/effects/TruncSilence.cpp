@@ -17,6 +17,7 @@
 
 #include "../Audacity.h"
 #include "TruncSilence.h"
+#include "LoadEffects.h"
 
 #include <algorithm>
 #include <list>
@@ -119,6 +120,11 @@ static const double DEF_MinTruncMs = 0.001;
 // Typical fraction of total time taken by detection (better to guess low)
 const double detectFrac = 0.4;
 
+const ComponentInterfaceSymbol EffectTruncSilence::Symbol
+{ XO("Truncate Silence") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectTruncSilence > reg; }
+
 BEGIN_EVENT_TABLE(EffectTruncSilence, wxEvtHandler)
    EVT_CHOICE(wxID_ANY, EffectTruncSilence::OnControlChange)
    EVT_TEXT(wxID_ANY, EffectTruncSilence::OnControlChange)
@@ -154,7 +160,7 @@ EffectTruncSilence::~EffectTruncSilence()
 
 ComponentInterfaceSymbol EffectTruncSilence::GetSymbol()
 {
-   return TRUNCATESILENCE_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectTruncSilence::GetDescription()

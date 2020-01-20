@@ -16,13 +16,13 @@
 class wxTextCtrl;
 class ShuttleGui;
 
-#define REPEAT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Repeat") }
-
 class wxStaticText;
 
 class EffectRepeat final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectRepeat();
    virtual ~EffectRepeat();
 

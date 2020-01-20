@@ -15,11 +15,17 @@
 
 #include "../Audacity.h"
 #include "StereoToMono.h"
+#include "LoadEffects.h"
 
 #include <wx/intl.h>
 
 #include "../Project.h"
 #include "../WaveTrack.h"
+
+const ComponentInterfaceSymbol EffectStereoToMono::Symbol
+{ XO("Stereo To Mono") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectStereoToMono > reg; }
 
 EffectStereoToMono::EffectStereoToMono()
 {
@@ -33,7 +39,7 @@ EffectStereoToMono::~EffectStereoToMono()
 
 ComponentInterfaceSymbol EffectStereoToMono::GetSymbol()
 {
-   return STEREOTOMONO_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectStereoToMono::GetDescription()

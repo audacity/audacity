@@ -15,12 +15,18 @@
 
 #include "../Audacity.h"
 #include "Silence.h"
+#include "LoadEffects.h"
 
 #include <wx/intl.h>
 
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
+
+const ComponentInterfaceSymbol EffectSilence::Symbol
+{ XO("Silence") };
+
+namespace{ BuiltinEffectsModule::Registration< EffectSilence > reg; }
 
 EffectSilence::EffectSilence()
 {
@@ -35,7 +41,7 @@ EffectSilence::~EffectSilence()
 
 ComponentInterfaceSymbol EffectSilence::GetSymbol()
 {
-   return SILENCE_PLUGIN_SYMBOL;
+   return Symbol;
 }
 
 TranslatableString EffectSilence::GetDescription()

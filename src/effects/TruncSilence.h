@@ -24,13 +24,13 @@ class wxChoice;
 class wxTextCtrl;
 class wxCheckBox;
 
-#define TRUNCATESILENCE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Truncate Silence") }
-
 class RegionList;
 
 class EffectTruncSilence final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectTruncSilence();
    virtual ~EffectTruncSilence();
 

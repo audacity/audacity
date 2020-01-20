@@ -27,13 +27,13 @@ class wxTextCtrl;
 class RulerPanel;
 class ShuttleGui;
 
-#define CLASSICFILTERS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Classic Filters") }
-
 class EffectScienFilterPanel;
 
 class EffectScienFilter final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectScienFilter();
    virtual ~EffectScienFilter();
 

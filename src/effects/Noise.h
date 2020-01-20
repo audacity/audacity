@@ -18,11 +18,11 @@
 class NumericTextCtrl;
 class ShuttleGui;
 
-#define NOISE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Noise") }
-
 class EffectNoise final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectNoise();
    virtual ~EffectNoise();
 

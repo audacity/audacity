@@ -13,13 +13,13 @@
 
 #include "Effect.h"
 
-#define REPAIR_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Repair") }
-
 class WaveTrack;
 
 class EffectRepair final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectRepair();
    virtual ~EffectRepair();
 

@@ -17,11 +17,11 @@
 
 class NumericTextCtrl;
 
-#define SILENCE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Silence") }
-
 class EffectSilence final : public Generator
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectSilence();
    virtual ~EffectSilence();
 
