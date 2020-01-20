@@ -49,7 +49,7 @@ class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
 {
  public:
    // \brief Type alias for factories such as GUIPrefsFactory that produce a
-   // PrefsPanel.
+   // PrefsPanel, used by the Preferences dialog in a treebook.
    // The project pointer may be null.  Usually it's not needed because
    // preferences are global.  But sometimes you need a project, such as to
    // preview the preference changes for spectrograms.
@@ -57,8 +57,18 @@ class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
       std::function< PrefsPanel * (
          wxWindow *parent, wxWindowID winid, AudacityProject *) >;
 
-   PrefsPanel(
-      wxWindow * parent, wxWindowID winid, const TranslatableString &title)
+   // Typically you make a static object of this type in the .cpp file that
+   // also implements the PrefsPanel subclass.
+   struct Registration final
+   {
+      Registration( unsigned sequenceNumber,
+         const Factory &factory,
+         unsigned nChildren = 0,
+         bool expanded = true );
+   };
+
+   PrefsPanel(wxWindow * parent,
+      wxWindowID winid, const TranslatableString &title)
    :  wxPanelWrapper(parent, winid)
    {
       SetLabel(title);     // Provide visual label

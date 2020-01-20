@@ -63,6 +63,4 @@ class RecordingPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
-/// A PrefsPanel::Factory that creates one RecordingPrefs panel.
-extern PrefsPanel::Factory RecordingPrefsFactory;
 #endif

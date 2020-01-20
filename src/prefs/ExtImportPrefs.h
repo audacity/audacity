@@ -113,7 +113,4 @@ class ExtImportPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
-
-/// A PrefsPanel::Factory that creates one ExtImportPrefs panel.
-extern PrefsPanel::Factory ExtImportPrefsFactory;
 #endif

@@ -42,6 +42,4 @@ class MousePrefs final : public PrefsPanel
    wxListCtrl * mList;
 };
 
-/// A PrefsPanel::Factory that creates one MousePrefs panel.
-extern PrefsPanel::Factory MousePrefsFactory;
 #endif

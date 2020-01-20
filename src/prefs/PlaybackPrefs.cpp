@@ -182,10 +182,12 @@ bool PlaybackPrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-PlaybackPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew PlaybackPrefs(parent, winid);
+namespace{
+PrefsPanel::Registration sAttachment{ 20,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew PlaybackPrefs(parent, winid);
+   }
 };
-
+}

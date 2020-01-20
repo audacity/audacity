@@ -222,9 +222,12 @@ bool MousePrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-MousePrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew MousePrefs(parent, winid);
+namespace{
+PrefsPanel::Registration sAttachment{ 210,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew MousePrefs(parent, winid);
+   }
 };
+}

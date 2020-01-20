@@ -447,9 +447,13 @@ bool TracksPrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-TracksPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew TracksPrefs(parent, winid);
+namespace{
+PrefsPanel::Registration sAttachment{ 70,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew TracksPrefs(parent, winid);
+   },
+   2
 };
+}

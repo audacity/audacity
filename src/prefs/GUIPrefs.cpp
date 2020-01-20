@@ -377,9 +377,12 @@ int ShowClippingPrefsID()
    return value;
 }
 
-PrefsPanel::Factory
-GUIPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew GUIPrefs(parent, winid);
+namespace{
+PrefsPanel::Registration sAttachment{ 60,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew GUIPrefs(parent, winid);
+   }
 };
+}

@@ -261,9 +261,14 @@ bool LibraryPrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-LibraryPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew LibraryPrefs(parent, winid);
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
+namespace{
+PrefsPanel::Registration sAttachment{ 140,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew LibraryPrefs(parent, winid);
+   }
 };
+}
+#endif

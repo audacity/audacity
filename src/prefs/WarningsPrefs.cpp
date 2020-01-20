@@ -106,9 +106,12 @@ bool WarningsPrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-WarningsPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew WarningsPrefs(parent, winid);
+namespace{
+PrefsPanel::Registration sAttachment{ 160,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew WarningsPrefs(parent, winid);
+   }
 };
+}

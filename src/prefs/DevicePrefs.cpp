@@ -422,10 +422,12 @@ bool DevicePrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-DevicePrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew DevicePrefs(parent, winid);
+namespace{
+PrefsPanel::Registration sAttachment{ 10,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew DevicePrefs(parent, winid);
+   }
 };
+}
