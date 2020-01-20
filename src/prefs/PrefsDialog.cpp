@@ -17,6 +17,8 @@
 #include "../Audacity.h" // for USE_* macros
 #include "PrefsDialog.h"
 
+#include <mutex> // for std::call_once
+
 #include <wx/app.h>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
