@@ -36,6 +36,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "../Audacity.h"
 #include "SetTrackInfoCommand.h"
 
+#include "LoadCommands.h"
 #include "../Project.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
@@ -121,7 +122,12 @@ bool SetTrackBase::Apply(const CommandContext & context  )
    return true;
 }
 
-bool SetTrackStatusCommand::DefineParams( ShuttleParams & S ){ 
+const ComponentInterfaceSymbol SetTrackStatusCommand::Symbol
+{ XO("Set Track Status") };
+
+namespace{ BuiltinCommandsModule::Registration< SetTrackStatusCommand > reg; }
+
+bool SetTrackStatusCommand::DefineParams( ShuttleParams & S ){
    SetTrackBase::DefineParams( S );
    S.OptionalN( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       _("Unnamed") );
    // There is also a select command.  This is an alternative.
@@ -178,6 +184,11 @@ bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t
 
 
 
+const ComponentInterfaceSymbol SetTrackAudioCommand::Symbol
+{ XO("Set Track Audio") };
+
+namespace{ BuiltinCommandsModule::Registration< SetTrackAudioCommand > reg2; }
+
 bool SetTrackAudioCommand::DefineParams( ShuttleParams & S ){ 
    SetTrackBase::DefineParams( S );
    S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
@@ -229,6 +240,11 @@ bool SetTrackAudioCommand::ApplyInner(const CommandContext & context, Track * t 
 }
 
 
+
+const ComponentInterfaceSymbol SetTrackVisualsCommand::Symbol
+{ XO("Set Track Visuals") };
+
+namespace{ BuiltinCommandsModule::Registration< SetTrackVisualsCommand > reg3; }
 
 enum kColours
 {
@@ -417,6 +433,11 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
    return true;
 }
 
+
+const ComponentInterfaceSymbol SetTrackCommand::Symbol
+{ XO("Set Track") };
+
+namespace{ BuiltinCommandsModule::Registration< SetTrackCommand > reg4; }
 
 SetTrackCommand::SetTrackCommand()
 {

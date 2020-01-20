@@ -20,6 +20,7 @@
 #include "../Audacity.h"
 #include "SetProjectCommand.h"
 
+#include "LoadCommands.h"
 #include "../Project.h"
 #include "../WaveTrack.h"
 #include "../Shuttle.h"
@@ -28,6 +29,11 @@
 #include "../toolbars/SelectionBar.h"
 
 #include <wx/frame.h>
+
+const ComponentInterfaceSymbol SetProjectCommand::Symbol
+{ XO("Set Project") };
+
+namespace{ BuiltinCommandsModule::Registration< SetProjectCommand > reg; }
 
 SetProjectCommand::SetProjectCommand()
 {

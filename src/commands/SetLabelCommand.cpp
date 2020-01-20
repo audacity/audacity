@@ -19,6 +19,7 @@
 #include "../Audacity.h"
 #include "SetLabelCommand.h"
 
+#include "LoadCommands.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
@@ -26,6 +27,11 @@
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
+
+const ComponentInterfaceSymbol SetLabelCommand::Symbol
+{ XO("Set Label") };
+
+namespace{ BuiltinCommandsModule::Registration< SetLabelCommand > reg; }
 
 SetLabelCommand::SetLabelCommand()
 {

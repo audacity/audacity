@@ -19,11 +19,18 @@
 #include "../Audacity.h"
 #include "GetTrackInfoCommand.h"
 
+#include "LoadCommands.h"
 #include "../NoteTrack.h"
 #include "../WaveTrack.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
+
+const ComponentInterfaceSymbol GetTrackInfoCommand::Symbol
+{ XO("Get Track Info") };
+
+// GET_TRACK_INFO subsumed by GET_INFO
+// namespace{ BuiltinCommandsModule::Registration< GetTrackInfoCommand > reg; }
 
 const int nTypes =3;
 static const EnumValueSymbol kTypes[nTypes] =

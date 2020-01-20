@@ -23,14 +23,14 @@ classes
 
 class WaveTrack;
 
-#define COMPARE_AUDIO_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Compare Audio") }
-
 class CompareAudioCommand final : public AudacityCommand
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return XO("Compare Audio");}
-   TranslatableString GetDescription() override {return XO("Compares a range on two tracks.");};
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;}
+   TranslatableString  GetDescription() override {return XO("Compares a range on two tracks.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

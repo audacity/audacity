@@ -21,6 +21,7 @@ threshold of difference in two selected tracks
 #include "../Audacity.h"
 #include "CompareAudioCommand.h"
 
+#include "LoadCommands.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 
@@ -33,6 +34,11 @@ threshold of difference in two selected tracks
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 #include "CommandContext.h"
+
+const ComponentInterfaceSymbol CompareAudioCommand::Symbol
+{ XO("Compare Audio") };
+
+namespace{ BuiltinCommandsModule::Registration< CompareAudioCommand > reg; }
 
 extern void RegisterCompareAudio( Registrar & R){
    R.AddCommand( std::make_unique<CompareAudioCommand>() );
@@ -157,3 +163,4 @@ bool CompareAudioCommand::Apply(const CommandContext & context)
    context.Status(wxString::Format(wxT("Finished comparison: %li samples (%.3f seconds) exceeded the error threshold of %f."), errorCount, errorSeconds, errorThreshold));
    return true;
 }
+

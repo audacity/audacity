@@ -19,11 +19,18 @@
 #include "../Audacity.h"
 #include "SetEnvelopeCommand.h"
 
+#include "LoadCommands.h"
 #include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../Envelope.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
+
+const ComponentInterfaceSymbol SetEnvelopeCommand::Symbol
+{ XO("Set Envelope") };
+
+namespace{ BuiltinCommandsModule::Registration< SetEnvelopeCommand > reg; }
+
 
 SetEnvelopeCommand::SetEnvelopeCommand()
 {

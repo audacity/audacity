@@ -21,6 +21,7 @@ parameters.  It is for development purposes.
 
 #include "../Audacity.h"
 #include "Demo.h"
+#include "LoadCommands.h"
 
 #include <float.h>
 
@@ -31,6 +32,11 @@ parameters.  It is for development purposes.
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 #include "../commands/CommandContext.h"
+
+const ComponentInterfaceSymbol DemoCommand::Symbol
+{ XO("Demo") };
+
+namespace{ BuiltinCommandsModule::Registration< DemoCommand > reg; }
 
 bool DemoCommand::DefineParams( ShuttleParams & S ){
    S.Define( delay, wxT("Delay"), 1.0f, 0.001f,  FLT_MAX, 1.0f );

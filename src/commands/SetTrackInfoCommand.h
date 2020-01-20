@@ -20,11 +20,6 @@
 #include "Command.h"
 #include "CommandType.h"
 
-#define SET_TRACK_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Track") }
-#define SET_TRACK_STATUS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Track Status") }
-#define SET_TRACK_AUDIO_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Track Audio") }
-#define SET_TRACK_VISUALS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Track Visuals") }
-
 class Track;
 
 class SetTrackBase : public AudacityCommand
@@ -49,9 +44,11 @@ public:
 class SetTrackStatusCommand : public SetTrackBase
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    //SetTrackStatusCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return SET_TRACK_STATUS_PLUGIN_SYMBOL;};
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -74,9 +71,11 @@ public:
 class SetTrackAudioCommand : public SetTrackBase
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    //SetTrackAudioCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return SET_TRACK_AUDIO_PLUGIN_SYMBOL;};
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -101,9 +100,11 @@ public:
 class SetTrackVisualsCommand : public SetTrackBase
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    //SetTrackVisualsCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return SET_TRACK_VISUALS_PLUGIN_SYMBOL;};
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -142,9 +143,11 @@ public:
 class SetTrackCommand : public SetTrackBase
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    SetTrackCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return SET_TRACK_PLUGIN_SYMBOL;};
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
    // AudacityCommand overrides
    wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#set_track");};
