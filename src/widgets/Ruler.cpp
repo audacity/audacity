@@ -932,8 +932,6 @@ void Ruler::Update(
    // (i.e. we've been invalidated).  Recompute all
    // tick positions and font size.
 
-   int j;
-
    if (!mUserFonts) {
       int fontSize = 4;
       wxCoord strW, strH, strD, strL;
@@ -1082,7 +1080,7 @@ void Ruler::Update(
       // Major and minor ticks
       for (int jj = 0; jj < 2; ++jj) {
          const double denom = jj == 0 ? tickSizes.mMajor : tickSizes.mMinor;
-         int i = -1; j = 0;
+         int ii = -1, j = 0;
          double d, warpedD, nextD;
 
          double prevTime = 0.0, time = 0.0;
@@ -1101,8 +1099,8 @@ void Ruler::Update(
          // using ints doesn't work, as
          // this will overflow and be negative at high zoom.
          double step = floor(sg * warpedD / denom);
-         while (i <= mLength) {
-            i++;
+         while (ii <= mLength) {
+            ii++;
             if (zoomInfo)
             {
                prevTime = time;
@@ -1121,7 +1119,7 @@ void Ruler::Update(
             if (floor(sg * warpedD / denom) > step) {
                step = floor(sg * warpedD / denom);
                bool major = jj == 0;
-               bool ticked = Tick( dc, i, sg * step * denom, major, !major, tickSizes );
+               bool ticked = Tick( dc, ii, sg * step * denom, major, !major, tickSizes );
                if( !major && !ticked ){
                   nDroppedMinorLabels++;
                }
@@ -1192,7 +1190,7 @@ void Ruler::Update(
       }
       steps++;
       for(int i=0; i<=steps; i++) {
-         for(j=start; j!=end; j+=mstep) {
+         for(int j=start; j!=end; j+=mstep) {
             val = decade * j;
             if(val >= rMin && val < rMax) {
                const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
