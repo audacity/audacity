@@ -42,7 +42,4 @@ class ImportExportPrefs final : public PrefsPanel
    void Populate();
 };
 
-/// A PrefsPanel::Factory that creates one ImportExportPrefs panel.
-extern PrefsPanel::Factory ImportExportPrefsFactory;
-
 #endif

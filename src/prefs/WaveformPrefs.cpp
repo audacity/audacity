@@ -263,3 +263,11 @@ WaveformPrefsFactory(WaveTrack *wt)
       return safenew WaveformPrefs(parent, winid, pProject, wt);
    };
 }
+#if 0
+namespace{
+PrefsPanel::Registration sAttachment{ 80,
+   WaveformPrefsFactory( nullptr ),
+   false
+};
+}
+#endif

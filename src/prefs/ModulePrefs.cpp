@@ -18,6 +18,8 @@ with names like mnod-script-pipe that add NEW features.
 #include "../Audacity.h"
 #include "ModulePrefs.h"
 
+#include "Experimental.h"
+
 #include <wx/defs.h>
 #include <wx/filename.h>
 
@@ -187,9 +189,14 @@ void ModulePrefs::SetModuleStatus(const FilePath &fname, int iStatus){
    gPrefs->Flush();
 }
 
-PrefsPanel::Factory
-ModulePrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew ModulePrefs(parent, winid);
+#ifdef EXPERIMENTAL_MODULE_PREFS
+namespace{
+PrefsPanel::Registration sAttachment{ 220,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew ModulePrefs(parent, winid);
+   }
 };
+}
+#endif

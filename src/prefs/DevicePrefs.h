@@ -57,7 +57,4 @@ class DevicePrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
-/// A PrefsPanel::Factory that creates one DevicePrefs panel.
-extern PrefsPanel::Factory DevicePrefsFactory;
-
 #endif

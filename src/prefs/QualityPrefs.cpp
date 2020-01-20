@@ -233,12 +233,15 @@ bool QualityPrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-QualityPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew QualityPrefs(parent, winid);
+namespace{
+PrefsPanel::Registration sAttachment{ 50,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew QualityPrefs(parent, winid);
+   }
 };
+}
 
 sampleFormat QualityPrefs::SampleFormatChoice()
 {

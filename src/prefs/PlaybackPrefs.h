@@ -38,8 +38,4 @@ class PlaybackPrefs final : public PrefsPanel
    void Populate();
 };
 
-
-/// A PrefsPanel::Factory that creates one PlaybackPrefs panel.
-extern PrefsPanel::Factory PlaybackPrefsFactory;
-
 #endif

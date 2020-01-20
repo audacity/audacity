@@ -600,3 +600,10 @@ SpectrumPrefsFactory( WaveTrack *wt )
       return safenew SpectrumPrefs(parent, winid, pProject, wt);
    };
 }
+
+namespace{
+PrefsPanel::Registration sAttachment{ 100,
+   SpectrumPrefsFactory( nullptr ),
+   false
+};
+}

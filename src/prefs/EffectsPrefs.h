@@ -38,9 +38,5 @@ class EffectsPrefs final : public PrefsPanel
    void Populate();
 };
 
-/// A PrefsPanel::Factory that creates one EffectsPrefs panel.
-extern PrefsPanel::Factory EffectsPrefsFactory;
-
 extern ChoiceSetting EffectsGroupBy;
-
 #endif

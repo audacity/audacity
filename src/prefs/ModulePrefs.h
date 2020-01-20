@@ -55,6 +55,4 @@ class ModulePrefs final : public PrefsPanel
    FilePaths mPaths;
 };
 
-/// A PrefsPanel::Factory that creates one ModulePrefs panel.
-extern PrefsPanel::Factory ModulePrefsFactory;
 #endif

@@ -19,6 +19,8 @@ handling.
 #include "../Audacity.h"
 #include "ProjectsPrefs.h"
 
+#include "../Experimental.h"
+
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 
@@ -95,9 +97,14 @@ bool ProjectsPrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-ProjectsPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew ProjectsPrefs(parent, winid);
+#ifdef EXPERIMENTAL_OD_DATA
+namespace{
+PrefsPanel::Registration sAttachment{ 130,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew ProjectsPrefs(parent, winid);
+   }
 };
+}
+#endif

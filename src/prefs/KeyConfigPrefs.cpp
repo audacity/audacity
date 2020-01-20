@@ -722,3 +722,8 @@ KeyConfigPrefsFactory( const CommandID &name )
       return result;
    };
 }
+namespace{
+PrefsPanel::Registration sAttachment{ 200,
+   KeyConfigPrefsFactory()
+};
+}

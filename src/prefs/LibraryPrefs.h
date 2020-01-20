@@ -50,6 +50,4 @@ class LibraryPrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
-/// A PrefsPanel::Factory that creates one LibraryPrefs panel.
-extern PrefsPanel::Factory LibraryPrefsFactory;
 #endif
