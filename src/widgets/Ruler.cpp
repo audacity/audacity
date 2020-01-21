@@ -787,14 +787,10 @@ void Ruler::Tick(
       if (strPos + strW >= mLength)
          strPos = mLength - strW;
       strLeft = mLeft + strPos;
-      if (mFlip) {
+      if (mFlip)
          strTop = mTop + 4;
-         mMaxHeight = max(mMaxHeight, strH + 4);
-      }
-      else {
+      else
          strTop =-strH-mLead;
-         mMaxHeight = max(mMaxHeight, strH + 6);
-      }
    }
    else {
       strLen = strH;
@@ -804,10 +800,8 @@ void Ruler::Tick(
       if (strPos + strH >= mLength)
          strPos = mLength - strH;
       strTop = mTop + strPos;
-      if (mFlip) {
+      if (mFlip)
          strLeft = mLeft + 5;
-         mMaxWidth = max(mMaxWidth, strW + 5);
-      }
       else
          strLeft =-strW-6;
    }
@@ -897,15 +891,10 @@ void Ruler::TickCustom(int labelIdx, bool major, bool minor)
       if (strPos + strW >= mLength)
          strPos = mLength - strW;
       strLeft = mLeft + strPos;
-      if (mFlip) {
+      if (mFlip)
          strTop = mTop + 4;
-         mMaxHeight = max(mMaxHeight, strH + 4);
-      }
-      else {
-
+      else
          strTop = mTop- mLead+4;// More space was needed...
-         mMaxHeight = max(mMaxHeight, strH + 6);
-      }
    }
    else {
       strLen = strH;
@@ -915,14 +904,10 @@ void Ruler::TickCustom(int labelIdx, bool major, bool minor)
       if (strPos + strH >= mLength)
          strPos = mLength - strH;
       strTop = mTop + strPos;
-      if (mFlip) {
+      if (mFlip)
          strLeft = mLeft + 5;
-         mMaxWidth = max(mMaxWidth, strW + 5);
-      }
-      else {
-
+      else
          strLeft =-strW-6;
-       }
    }
 
 
@@ -1049,16 +1034,10 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
    if( mLength <= 0 )
       return;
 
-   if (mOrientation == wxHORIZONTAL) {
-      mMaxWidth = mLength;
-      mMaxHeight = 0;
+   if (mOrientation == wxHORIZONTAL)
       mRect = wxRect(0,0, mLength,0);
-   }
-   else {
-      mMaxWidth = 0;
-      mMaxHeight = mLength;
+   else
       mRect = wxRect(0,0, 0,mLength);
-   }
 
    // FIXME: Surely we do not need to allocate storage for the labels?
    // We can just recompute them as we need them?  Yes, but only if
@@ -1348,8 +1327,6 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
       mMinorMinorLabels[i].lx+= displacementx;
       mMinorMinorLabels[i].ly+= displacementy;
    }
-   mMaxWidth = mRect.GetWidth ();
-   mMaxHeight= mRect.GetHeight();
    mValid = true;
 }
 
@@ -1588,10 +1565,10 @@ void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
    }
 
    if (width)
-      *width = mRect.GetWidth(); //mMaxWidth;
+      *width = mRect.GetWidth();
 
    if (height)
-      *height = mRect.GetHeight(); //mMaxHeight;
+      *height = mRect.GetHeight();
 }
 
 

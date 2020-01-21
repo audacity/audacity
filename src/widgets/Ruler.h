@@ -172,7 +172,6 @@ private:
    wxColour mTickColour;
    wxPen mPen;
 
-   int          mMaxWidth, mMaxHeight;
    int          mLeft, mTop, mRight, mBottom, mLead;
    int          mLength;
    int          mLengthOld;
