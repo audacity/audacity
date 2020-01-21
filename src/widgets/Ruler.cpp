@@ -343,8 +343,19 @@ void Ruler::Invalidate()
    }
 }
 
-void Ruler::FindLinearTickSizes(double UPP)
+struct Ruler::TickSizes
 {
+
+   double       mMajor;
+   double       mMinor;
+
+   int          mDigits;
+
+TickSizes( double UPP, int orientation, RulerFormat format, bool log )
+{
+   //TODO: better dynamic digit computation for the log case
+   (void)log;
+
    // Given the dimensions of the ruler, the range of values it
    // has to display, and the format (i.e. Int, Real, Time),
    // figure out how many units are in one Minor tick, and
@@ -360,11 +371,11 @@ void Ruler::FindLinearTickSizes(double UPP)
    // minor tick.  We want to show numbers like "-48"
    // in that space.
    // If vertical, we don't need as much space.
-   double units = ((mOrientation == wxHORIZONTAL) ? 22 : 16) * fabs(UPP);
+   double units = ((orientation == wxHORIZONTAL) ? 22 : 16) * fabs(UPP);
 
    mDigits = 0;
 
-   switch(mFormat) {
+   switch(format) {
    case LinearDBFormat:
       if (units < 0.001) {
          mMinor = 0.001;
@@ -576,7 +587,9 @@ void Ruler::FindLinearTickSizes(double UPP)
    }
 }
 
-TranslatableString Ruler::LabelString(double d, bool major)
+TranslatableString LabelString(
+   double d, bool major, RulerFormat format, const TranslatableString &units )
+   const
 {
    // Given a value, turn it into a string according
    // to the current ruler format.  The number of digits of
@@ -589,10 +602,10 @@ TranslatableString Ruler::LabelString(double d, bool major)
    // hour-minute-second, etc.?)
 
    // Replace -0 with 0
-   if (d < 0.0 && (d+mMinor > 0.0) && ( mFormat != RealLogFormat ))
+   if (d < 0.0 && (d+mMinor > 0.0) && ( format != RealLogFormat ))
       d = 0.0;
 
-   switch(mFormat) {
+   switch( format ) {
    case IntFormat:
       s.Printf(wxT("%d"), (int)floor(d+0.5));
       break;
@@ -722,13 +735,16 @@ TranslatableString Ruler::LabelString(double d, bool major)
    }
 
    auto result = Verbatim( s );
-   if (!mUnits.empty())
-      result += mUnits;
+   if (!units.empty())
+      result += units;
 
    return result;
 }
 
-void Ruler::Tick(int pos, double d, bool major, bool minor)
+}; // struct Ruler::TickSizes
+
+void Ruler::Tick(
+   int pos, double d, bool major, bool minor, const TickSizes &tickSizes )
 {
    wxCoord strW, strH, strD, strL;
    int strPos, strLen, strLeft, strTop;
@@ -760,7 +776,7 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
    // Bug 521.  dB view for waveforms needs a 2-sided scale.
    if(( mDbMirrorValue > 1.0 ) && ( -d > mDbMirrorValue ))
       d = -2*mDbMirrorValue - d;
-   auto l = LabelString(d, major);
+   auto l = tickSizes.LabelString( d, major, mFormat, mUnits );
    mDC->GetTextExtent(l.Translation(), &strW, &strH, &strD, &strL);
 
    if (mOrientation == wxHORIZONTAL) {
@@ -1084,16 +1100,17 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
          i++;
       }
 
-   } else if(mLog==false) {
+   }
+   else if( !mLog ) {
 
       // Use the "hidden" min and max to determine the tick size.
       // That may make a difference with fisheye.
       // Otherwise you may see the tick size for the whole ruler change
       // when the fisheye approaches start or end.
       double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
-      FindLinearTickSizes(UPP);
+      TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
 
-      auto TickAtValue = [this, zoomInfo]( double value ) -> int {
+      auto TickAtValue = [this, zoomInfo, &tickSizes]( double value ) -> int {
          // Make a tick only if the value is strictly between the bounds
          if ( value <= std::min( mMin, mMax ) )
             return -1;
@@ -1112,7 +1129,7 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
 
          const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
          if (mid >= 0 && mid < iMaxPos)
-            Tick(mid, value, true, false);
+            Tick( mid, value, true, false, tickSizes );
          else
             return -1;
          
@@ -1135,8 +1152,8 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
 
       // Extreme values
       if (mLabelEdges) {
-         Tick(0, mMin, true, false);
-         Tick(mLength, mMax, true, false);
+         Tick( 0, mMin, true, false, tickSizes );
+         Tick( mLength, mMax, true, false, tickSizes );
       }
 
       if ( !mDbMirrorValue ) {
@@ -1149,7 +1166,7 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
       int nDroppedMinorLabels=0;
       // Major and minor ticks
       for (int jj = 0; jj < 2; ++jj) {
-         const double denom = jj == 0 ? mMajor : mMinor;
+         const double denom = jj == 0 ? tickSizes.mMajor : tickSizes.mMinor;
          i = -1; j = 0;
          double d, warpedD, nextD;
 
@@ -1189,7 +1206,7 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
             if (floor(sg * warpedD / denom) > step) {
                step = floor(sg * warpedD / denom);
                bool major = jj == 0;
-               Tick(i, sg * step * denom, major, !major);
+               Tick( i, sg * step * denom, major, !major, tickSizes );
                if( !major && mMinorLabels[mNumMinor-1].text.empty() ){
                   nDroppedMinorLabels++;
                }
@@ -1210,8 +1227,8 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
 
       // Left and Right Edges
       if (mLabelEdges) {
-         Tick(0, mMin, true, false);
-         Tick(mLength, mMax, true, false);
+         Tick( 0, mMin, true, false, tickSizes );
+         Tick( mLength, mMax, true, false, tickSizes );
       }
    }
    else {
@@ -1222,7 +1239,11 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
          : NumberScale(nstLogarithmic, mMin, mMax)
       );
 
-      mDigits=2; //TODO: implement dynamic digit computation
+      double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
+      TickSizes tickSizes{ UPP, mOrientation, mFormat, true };
+
+      tickSizes.mDigits = 2; //TODO: implement dynamic digit computation
+
       double loLog = log10(mMin);
       double hiLog = log10(mMax);
       int loDecade = (int) floor(loLog);
@@ -1240,7 +1261,7 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
          {  val = decade;
             if(val >= rMin && val < rMax) {
                const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               Tick(pos, val, true, false);
+               Tick( pos, val, true, false, tickSizes );
             }
          }
          decade *= step;
@@ -1260,7 +1281,7 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
             val = decade * j;
             if(val >= rMin && val < rMax) {
                const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               Tick(pos, val, false, true);
+               Tick( pos, val, false, true, tickSizes );
             }
          }
          decade *= step;
@@ -1282,7 +1303,7 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
                   val = decade * f / 10;
                   if (val >= rMin && val < rMax) {
                      const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-                     Tick(pos, val, false, false);
+                     Tick( pos, val, false, false, tickSizes );
                   }
                }
             }

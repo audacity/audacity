@@ -152,13 +152,13 @@ class AUDACITY_DLL_API Ruler {
    void Invalidate();
 
  private:
+   struct TickSizes;
+
    void Update();
    void Update(const Envelope* envelope);
-   void FindTickSizes();
-   void FindLinearTickSizes(double UPP);
-   TranslatableString LabelString(double d, bool major);
 
-   void Tick(int pos, double d, bool major, bool minor);
+   void Tick(
+      int pos, double d, bool major, bool minor, const TickSizes &tickSizes );
 
    // Another tick generator for custom ruler case (noauto) .
    void TickCustom(int labelIdx, bool major, bool minor);
@@ -183,11 +183,6 @@ private:
 
    double       mMin, mMax;
    double       mHiddenMin, mHiddenMax;
-
-   double       mMajor;
-   double       mMinor;
-
-   int          mDigits;
 
    ArrayOf<int> mUserBits;
    ArrayOf<int> mBits;
