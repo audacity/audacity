@@ -174,7 +174,6 @@ private:
 
    int          mLeft, mTop, mRight, mBottom, mLead;
    int          mLength;
-   int          mLengthOld;
    wxDC        *mDC;
 
    std::unique_ptr<wxFont> mMinorFont, mMajorFont, mMinorMinorFont;
@@ -183,9 +182,9 @@ private:
    double       mMin, mMax;
    double       mHiddenMin, mHiddenMax;
 
-   ArrayOf<int> mUserBits;
-   ArrayOf<int> mBits;
-   int          mUserBitLen;
+   using Bits = std::vector< bool >;
+   Bits mUserBits;
+   Bits mBits;
 
    bool         mValid;
 
@@ -199,15 +198,13 @@ private:
       void Draw(wxDC &dc, bool twoTone, wxColour c) const;
    };
 
-   int          mNumMajor;
-   ArrayOf<Label> mMajorLabels;
-   int          mNumMinor;
-   ArrayOf<Label> mMinorLabels;
-   int          mNumMinorMinor;
-   ArrayOf<Label> mMinorMinorLabels;
+   using Labels = std::vector<Label>;
+   Labels mMajorLabels;
+   Labels mMinorLabels;
+   Labels mMinorMinorLabels;
 
    // Returns 'zero' label coordinate (for grid drawing)
-   int FindZero(Label * label, int len);
+   int FindZero( const Labels &labels );
 
    public:
    int GetZeroPosition();
