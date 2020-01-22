@@ -110,9 +110,9 @@ Ruler::Ruler()
    fontSize = 8;
 #endif
 
-   mMinorMinorFont = std::make_unique<wxFont>(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   mMinorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   mMajorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+   mMinorMinorFont = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
+   mMinorFont = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
+   mMajorFont = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD };
 
    mUserFonts = false;
 
@@ -261,9 +261,9 @@ void Ruler::SetMinor(bool value)
 
 void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont)
 {
-   *mMinorMinorFont = minorMinorFont;
-   *mMinorFont = minorFont;
-   *mMajorFont = majorFont;
+   mMinorMinorFont = minorMinorFont;
+   mMinorFont = minorFont;
+   mMajorFont = majorFont;
 
    // Won't override these fonts
    mUserFonts = true;
@@ -853,7 +853,7 @@ bool Ruler::Tick(
    const auto result = MakeTick(
       lab,
       dc,
-      (major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont),
+      (major? mMajorFont: minor? mMinorFont : mMinorMinorFont),
       mBits,
       mLeft, mTop, mSpacing, mLead,
       mFlip,
@@ -891,7 +891,7 @@ bool Ruler::TickCustom( wxDC &dc, int labelIdx, bool major, bool minor )
       lab,
 
       dc,
-      (major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont),
+      (major? mMajorFont: minor? mMinorFont : mMinorMinorFont),
       mBits,
       mLeft, mTop, mSpacing, mLead,
       mFlip,
@@ -970,11 +970,11 @@ void Ruler::Update(
       dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
       mLead = strL;
 
-      mMajorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+      mMajorFont = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD };
 
-      mMinorFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+      mMinorFont = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
 
-      mMinorMinorFont = std::make_unique<wxFont>(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+      mMinorMinorFont = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
    }
 
    // If ruler is being resized, we could end up with it being too small.
@@ -1305,7 +1305,7 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope)
       }
    }
 
-   dc.SetFont(*mMajorFont);
+   dc.SetFont(mMajorFont);
 
    // We may want to not show the ticks at the extremes,
    // though still showing the labels.
@@ -1343,12 +1343,12 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope)
       drawLabel( label, 4 );
 
    if( mbMinor ) {
-      dc.SetFont(*mMinorFont);
+      dc.SetFont(mMinorFont);
       for( const auto &label : mMinorLabels )
          drawLabel( label, 2 );
    }
 
-   dc.SetFont(*mMinorMinorFont);
+   dc.SetFont(mMinorMinorFont);
 
    for( const auto &label : mMinorMinorLabels )
       if ( !label.text.empty() )

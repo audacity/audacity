@@ -98,9 +98,9 @@ class AUDACITY_DLL_API Ruler {
 
    // Good defaults are provided, but you can override here
    void SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont);
-   struct Fonts { wxFont *major, *minor, *minorMinor; };
+   struct Fonts { wxFont major, minor, minorMinor; };
    Fonts GetFonts() const
-   { return { mMajorFont.get(), mMinorFont.get(), mMinorMinorFont.get() }; }
+   { return { mMajorFont, mMinorFont, mMinorMinorFont }; }
 
    // Copies *pScale if it is not NULL
    void SetNumberScale(const NumberScale *pScale);
@@ -174,7 +174,7 @@ private:
    int          mLeft, mTop, mRight, mBottom, mLead;
    int          mLength;
 
-   std::unique_ptr<wxFont> mMinorFont, mMajorFont, mMinorMinorFont;
+   wxFont mMinorFont, mMajorFont, mMinorMinorFont;
    bool         mUserFonts;
 
    double       mMin, mMax;
