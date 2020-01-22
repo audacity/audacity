@@ -255,6 +255,20 @@ void Ruler::SetMinor(bool value)
    mbMinor = value;
 }
 
+namespace {
+void FindFontHeights(
+   wxCoord &height, wxCoord &lead,
+   wxDC &dc, int fontSize, wxFontWeight weight = wxFONTWEIGHT_NORMAL )
+{
+   wxCoord strW, strH, strD, strL;
+   static const wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
+   dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, weight));
+   dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
+   height = strH - strD - strL;
+   lead = strL;
+}
+}
+
 void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont)
 {
    mFonts.minorMinor = minorMinorFont;
@@ -263,6 +277,10 @@ void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxF
 
    // Won't override these fonts
    mUserFonts = true;
+
+   wxScreenDC dc;
+   wxCoord height;
+   FindFontHeights( height, mFonts.lead, dc, majorFont.GetPointSize() );
 
    Invalidate();
 }
@@ -929,25 +947,20 @@ static constexpr int MaxPixelHeight =
 void Ruler::ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight )
 {
    int fontSize = 4;
-   wxCoord strW, strH, strD, strL;
-   wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
 
    desiredPixelHeight =
       std::max(MinPixelHeight, std::min(MaxPixelHeight, -desiredPixelHeight));
 
    // Keep making the font bigger until it's too big, then subtract one.
-   dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
-   dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
-   while ((strH - strD - strL) <= desiredPixelHeight && fontSize < 40) {
+   wxCoord height;
+   FindFontHeights( height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD );
+   while (height <= desiredPixelHeight && fontSize < 40) {
       fontSize++;
-      dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
-      dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
+      FindFontHeights( height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD );
    }
    fontSize--;
-   dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-   dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
+   FindFontHeights( height, fonts.lead, dc, fontSize );
 
-   fonts.lead = strL;
    fonts.major = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD };
    fonts.minor = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
    fonts.minorMinor = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
