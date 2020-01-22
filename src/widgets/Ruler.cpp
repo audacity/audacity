@@ -843,7 +843,37 @@ auto Ruler::MakeTick(
    return { { strLeft, strTop, strW, strH }, lab };
 }
 
-bool Ruler::Tick( wxDC &dc,
+struct Ruler::TickOutputs{ Labels &labels; Bits &bits; wxRect &box; };
+struct Ruler::Updater {
+   const Ruler &mRuler;
+
+   const double mDbMirrorValue = mRuler.mDbMirrorValue;
+   const int mLength = mRuler.mLength;
+   const RulerFormat mFormat = mRuler.mFormat;
+   const TranslatableString mUnits = mRuler.mUnits;
+   const int mLeft = mRuler.mLeft;
+   const int mTop = mRuler.mTop;
+   const int mSpacing = mRuler.mSpacing;
+   const int mOrientation = mRuler.mOrientation;
+   const int mLead = mRuler.mFonts.lead;
+   const bool mFlip = mRuler.mFlip;
+
+   explicit Updater( const Ruler &ruler )
+     : mRuler( ruler )
+   {}
+
+   bool Tick( wxDC &dc,
+      int pos, double d, const TickSizes &tickSizes, wxFont font,
+      TickOutputs outputs
+   ) const;
+
+   // Another tick generator for custom ruler case (noauto) .
+   bool TickCustom( wxDC &dc, int labelIdx, wxFont font,
+      TickOutputs outputs
+   ) const;
+};
+
+bool Ruler::Updater::Tick( wxDC &dc,
    int pos, double d, const TickSizes &tickSizes, wxFont font,
    // in/out:
    TickOutputs outputs ) const
@@ -866,7 +896,7 @@ bool Ruler::Tick( wxDC &dc,
       lab,
       dc, font,
       outputs.bits,
-      mLeft, mTop, mSpacing, mFonts.lead,
+      mLeft, mTop, mSpacing, mLead,
       mFlip,
       mOrientation );
 
@@ -876,7 +906,7 @@ bool Ruler::Tick( wxDC &dc,
    return !rect.IsEmpty();
 }
 
-bool Ruler::TickCustom( wxDC &dc, int labelIdx, wxFont font,
+bool Ruler::Updater::TickCustom( wxDC &dc, int labelIdx, wxFont font,
    // in/out:
    TickOutputs outputs ) const
 {
@@ -895,7 +925,7 @@ bool Ruler::TickCustom( wxDC &dc, int labelIdx, wxFont font,
 
       dc, font,
       outputs.bits,
-      mLeft, mTop, mSpacing, mFonts.lead,
+      mLeft, mTop, mSpacing, mLead,
       mFlip,
       mOrientation );
 
@@ -992,6 +1022,10 @@ void Ruler::Update(
    mBits = mUserBits;
    mBits.resize( static_cast<size_t>(mLength + 1), false );
 
+   // Keep Updater const!  We want no hidden state changes affecting its
+   // computations.
+   const Updater updater{ *this };
+
    TickOutputs majorOutputs{ mMajorLabels, mBits, mRect };
 
    // *************** Label calculation routine **************
@@ -1003,7 +1037,7 @@ void Ruler::Update(
       int numLabel = mMajorLabels.size();
 
       for( int i = 0; (i<numLabel) && (i<=mLength); ++i )
-         TickCustom( dc, i, mFonts.major, majorOutputs );
+         updater.TickCustom( dc, i, mFonts.major, majorOutputs );
 
    }
    else if( !mLog ) {
@@ -1015,7 +1049,8 @@ void Ruler::Update(
       double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
       TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
 
-      auto TickAtValue = [this, zoomInfo, &tickSizes, &dc, &majorOutputs]
+      auto TickAtValue =
+      [this, zoomInfo, &tickSizes, &dc, &updater, &majorOutputs]
       ( double value ) -> int {
          // Make a tick only if the value is strictly between the bounds
          if ( value <= std::min( mMin, mMax ) )
@@ -1035,7 +1070,7 @@ void Ruler::Update(
 
          const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
          if (mid >= 0 && mid < iMaxPos)
-            Tick( dc, mid, value, tickSizes, mFonts.major, majorOutputs );
+            updater.Tick( dc, mid, value, tickSizes, mFonts.major, majorOutputs );
          else
             return -1;
          
@@ -1058,8 +1093,8 @@ void Ruler::Update(
 
       // Extreme values
       if (mLabelEdges) {
-         Tick( dc, 0, mMax, tickSizes, mFonts.major, majorOutputs );
-         Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
+         updater.Tick( dc, 0, mMax, tickSizes, mFonts.major, majorOutputs );
+         updater.Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
       }
 
       if ( !mDbMirrorValue ) {
@@ -1118,7 +1153,7 @@ void Ruler::Update(
                step = floor(sg * warpedD / denom);
                bool major = jj == 0;
                tickSizes.useMajor = major;
-               bool ticked = Tick( dc, ii, sg * step * denom, tickSizes,
+               bool ticked = updater.Tick( dc, ii, sg * step * denom, tickSizes,
                   font, outputs );
                if( !major && !ticked ){
                   nDroppedMinorLabels++;
@@ -1142,8 +1177,8 @@ void Ruler::Update(
 
       // Left and Right Edges
       if (mLabelEdges) {
-         Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
-         Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
+         updater.Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
+         updater.Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
       }
    }
    else {
@@ -1176,7 +1211,7 @@ void Ruler::Update(
          {  val = decade;
             if(val >= rMin && val < rMax) {
                const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               Tick( dc, pos, val, tickSizes, mFonts.major, majorOutputs );
+               updater.Tick( dc, pos, val, tickSizes, mFonts.major, majorOutputs );
             }
          }
          decade *= step;
@@ -1198,7 +1233,7 @@ void Ruler::Update(
             val = decade * j;
             if(val >= rMin && val < rMax) {
                const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               Tick( dc, pos, val, tickSizes, mFonts.minor, minorOutputs );
+               updater.Tick( dc, pos, val, tickSizes, mFonts.minor, minorOutputs );
             }
          }
          decade *= step;
@@ -1221,7 +1256,7 @@ void Ruler::Update(
                   val = decade * f / 10;
                   if (val >= rMin && val < rMax) {
                      const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-                     Tick( dc, pos, val, tickSizes,
+                     updater.Tick( dc, pos, val, tickSizes,
                         mFonts.minorMinor, minorMinorOutputs );
                   }
                }

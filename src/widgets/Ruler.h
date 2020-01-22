@@ -173,18 +173,9 @@ class AUDACITY_DLL_API Ruler {
    static void ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight );
    void Update( wxDC &dc, const Envelope* envelope );
 
-   struct TickOutputs{ Labels &labels; Bits &bits; wxRect &box; };
+   struct TickOutputs;
+   struct Updater;
    
-   bool Tick( wxDC &dc,
-      int pos, double d, const TickSizes &tickSizes, wxFont font,
-      TickOutputs outputs
-   ) const;
-
-   // Another tick generator for custom ruler case (noauto) .
-   bool TickCustom( wxDC &dc, int labelIdx, wxFont font,
-      TickOutputs outputs
-   ) const;
-
 public:
    bool mbTicksOnly; // true => no line the length of the ruler
    bool mbTicksAtExtremes;
