@@ -754,7 +754,10 @@ auto Ruler::MakeTick(
    dc.SetFont( font );
 
    wxCoord strW, strH, strD, strL;
-   dc.GetTextExtent(lab.text.Translation(), &strW, &strH, &strD, &strL);
+   auto str = lab.text;
+   // Do not put the text into results until we are sure it does not overlap
+   lab.text = {};
+   dc.GetTextExtent(str.Translation(), &strW, &strH, &strD, &strL);
 
    int strPos, strLen, strLeft, strTop;
    if ( orientation == wxHORIZONTAL ) {
@@ -820,6 +823,8 @@ auto Ruler::MakeTick(
    for(i=0; i<strLen; i++)
       bits[strPos+i] = true;
 
+   // Good to display the text
+   lab.text = str;
    return { { strLeft, strTop, strW, strH }, lab };
 }
 
