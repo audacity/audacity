@@ -1403,7 +1403,8 @@ void Ruler::DrawGrid(wxDC& dc, int length, bool minor, bool major, int xOffset, 
    mMajorGrid = major;
    mMinorGrid = minor;
 
-   Update( dc, nullptr );
+   if ( !mValid )
+      Update( dc, nullptr );
 
    int gridPos;
    wxPen gridPen;
