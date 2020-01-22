@@ -154,14 +154,13 @@ class AUDACITY_DLL_API Ruler {
  private:
    struct TickSizes;
 
-   void Update();
-   void Update(const Envelope* envelope);
+   void Update( wxDC &dc, const Envelope* envelope );
 
-   bool Tick(
+   bool Tick( wxDC &dc,
       int pos, double d, bool major, bool minor, const TickSizes &tickSizes );
 
    // Another tick generator for custom ruler case (noauto) .
-   bool TickCustom(int labelIdx, bool major, bool minor);
+   bool TickCustom( wxDC &dc, int labelIdx, bool major, bool minor );
 
 public:
    bool mbTicksOnly; // true => no line the length of the ruler
@@ -174,7 +173,6 @@ private:
 
    int          mLeft, mTop, mRight, mBottom, mLead;
    int          mLength;
-   wxDC        *mDC;
 
    std::unique_ptr<wxFont> mMinorFont, mMajorFont, mMinorMinorFont;
    bool         mUserFonts;
