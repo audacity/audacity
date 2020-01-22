@@ -737,212 +737,170 @@ TranslatableString LabelString(
 
 }; // struct Ruler::TickSizes
 
-void Ruler::Tick(
+auto Ruler::MakeTick(
+   Label lab,
+   wxDC &dc, wxFont font,
+   std::vector<bool> &bits,
+   int left, int top, int spacing, int lead,
+   bool flip, int orientation )
+      -> std::pair< wxRect, Label >
+{
+   lab.lx = left - 1000; // don't display
+   lab.ly = top - 1000;  // don't display
+
+   auto length = bits.size() - 1;
+   auto pos = lab.pos;
+
+   dc.SetFont( font );
+
+   wxCoord strW, strH, strD, strL;
+   dc.GetTextExtent(lab.text.Translation(), &strW, &strH, &strD, &strL);
+
+   int strPos, strLen, strLeft, strTop;
+   if ( orientation == wxHORIZONTAL ) {
+      strLen = strW;
+      strPos = pos - strW/2;
+      if (strPos < 0)
+         strPos = 0;
+      if (strPos + strW >= length)
+         strPos = length - strW;
+      strLeft = left + strPos;
+      if ( flip )
+         strTop = top + 4;
+      else
+         strTop = -strH - lead;
+//         strTop = top - lead + 4;// More space was needed...
+   }
+   else {
+      strLen = strH;
+      strPos = pos - strH/2;
+      if (strPos < 0)
+         strPos = 0;
+      if (strPos + strH >= length)
+         strPos = length - strH;
+      strTop = top + strPos;
+      if ( flip )
+         strLeft = left + 5;
+      else
+         strLeft = -strW - 6;
+   }
+
+   // FIXME: we shouldn't even get here if strPos < 0.
+   // Ruler code currently does  not handle very small or
+   // negative sized windows (i.e. don't draw) properly.
+   if( strPos < 0 )
+      return { {}, lab };
+
+   // See if any of the pixels we need to draw this
+   // label is already covered
+
+   int i;
+   for(i=0; i<strLen; i++)
+      if ( bits[strPos+i] )
+         return { {}, lab };
+
+   // If not, position the label
+
+   lab.lx = strLeft;
+   lab.ly = strTop;
+
+   // And mark these pixels, plus some surrounding
+   // ones (the spacing between labels), as covered
+   int leftMargin = spacing;
+   if (strPos < leftMargin)
+      leftMargin = strPos;
+   strPos -= leftMargin;
+   strLen += leftMargin;
+
+   int rightMargin = spacing;
+   if (strPos + strLen > length - spacing)
+      rightMargin = length - strPos - strLen;
+   strLen += rightMargin;
+
+   for(i=0; i<strLen; i++)
+      bits[strPos+i] = true;
+
+   return { { strLeft, strTop, strW, strH }, lab };
+}
+
+bool Ruler::Tick(
    int pos, double d, bool major, bool minor, const TickSizes &tickSizes )
 {
-   wxCoord strW, strH, strD, strL;
-   int strPos, strLen, strLeft, strTop;
+   // Bug 521.  dB view for waveforms needs a 2-sided scale.
+   if(( mDbMirrorValue > 1.0 ) && ( -d > mDbMirrorValue ))
+      d = -2*mDbMirrorValue - d;
 
    // FIXME: We don't draw a tick if off end of our label arrays
    // But we shouldn't have an array of labels.
    if( mMinorMinorLabels.size() >= mLength )
-      return;
+      return false;
    if( mMinorLabels.size() >= mLength )
-      return;
+      return false;
    if( mMajorLabels.size() >= mLength )
-      return;
+      return false;
+
+   Label lab;
+   lab.value = d;
+   lab.pos = pos;
+   lab.text = tickSizes.LabelString( d, major, mFormat, mUnits );
+
+   const auto result = MakeTick(
+      lab,
+      *mDC,
+      (major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont),
+      mBits,
+      mLeft, mTop, mSpacing, mLead,
+      mFlip,
+      mOrientation );
+
+   auto &rect = result.first;
+   mRect.Union( rect );
 
    Labels *pLabels = major
       ? &mMajorLabels
       : minor
          ? &mMinorLabels
          : &mMinorMinorLabels;
-   pLabels->emplace_back();
-   Label *label = &pLabels->back();
-
-   label->value = d;
-   label->pos = pos;
-   label->lx = mLeft - 1000; // don't display
-   label->ly = mTop - 1000;  // don't display
-   label->text = {};
-
-   mDC->SetFont(major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont);
-   // Bug 521.  dB view for waveforms needs a 2-sided scale.
-   if(( mDbMirrorValue > 1.0 ) && ( -d > mDbMirrorValue ))
-      d = -2*mDbMirrorValue - d;
-   auto l = tickSizes.LabelString( d, major, mFormat, mUnits );
-   mDC->GetTextExtent(l.Translation(), &strW, &strH, &strD, &strL);
-
-   if (mOrientation == wxHORIZONTAL) {
-      strLen = strW;
-      strPos = pos - strW/2;
-      if (strPos < 0)
-         strPos = 0;
-      if (strPos + strW >= mLength)
-         strPos = mLength - strW;
-      strLeft = mLeft + strPos;
-      if (mFlip)
-         strTop = mTop + 4;
-      else
-         strTop =-strH-mLead;
-   }
-   else {
-      strLen = strH;
-      strPos = pos - strH/2;
-      if (strPos < 0)
-         strPos = 0;
-      if (strPos + strH >= mLength)
-         strPos = mLength - strH;
-      strTop = mTop + strPos;
-      if (mFlip)
-         strLeft = mLeft + 5;
-      else
-         strLeft =-strW-6;
-   }
-
-
-   // FIXME: we shouldn't even get here if strPos < 0.
-   // Ruler code currently does  not handle very small or
-   // negative sized windows (i.e. don't draw) properly.
-   if( strPos < 0 )
-      return;
-
-   // See if any of the pixels we need to draw this
-   // label is already covered
-
-   int i;
-   for(i=0; i<strLen; i++)
-      if (mBits[strPos+i])
-         return;
-
-   // If not, position the label and give it text
-
-   label->lx = strLeft;
-   label->ly = strTop;
-   label->text = l;
-
-   // And mark these pixels, plus some surrounding
-   // ones (the spacing between labels), as covered
-   int leftMargin = mSpacing;
-   if (strPos < leftMargin)
-      leftMargin = strPos;
-   strPos -= leftMargin;
-   strLen += leftMargin;
-
-   int rightMargin = mSpacing;
-   if (strPos + strLen > mLength - mSpacing)
-      rightMargin = mLength - strPos - strLen;
-   strLen += rightMargin;
-
-   for(i=0; i<strLen; i++)
-      mBits[strPos+i] = true;
-
-   wxRect r(strLeft, strTop, strW, strH);
-   mRect.Union(r);
-
+   pLabels->emplace_back( result.second );
+   return !rect.IsEmpty();
 }
 
-void Ruler::TickCustom(int labelIdx, bool major, bool minor)
+bool Ruler::TickCustom(int labelIdx, bool major, bool minor)
 {
+   // FIXME: We don't draw a tick if of end of our label arrays
+   // But we shouldn't have an array of labels.
+   if( mMinorLabels.size() >= mLength )
+      return false;
+   if( mMajorLabels.size() >= mLength )
+      return false;
+
    //This should only used in the mCustom case
    // Many code comes from 'Tick' method: this should
    // be optimized.
 
-   int pos;
-   wxCoord strW, strH, strD, strL;
-   int strPos, strLen, strLeft, strTop;
+   Label lab;
+   lab.value = 0.0;
 
-   // FIXME: We don't draw a tick if of end of our label arrays
-   // But we shouldn't have an array of labels.
-   if( mMinorLabels.size() >= mLength )
-      return;
-   if( mMajorLabels.size() >= mLength )
-      return;
+   const auto result = MakeTick(
+      lab,
+
+      *mDC,
+      (major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont),
+      mBits,
+      mLeft, mTop, mSpacing, mLead,
+      mFlip,
+      mOrientation );
+
+   auto &rect = result.first;
+   mRect.Union( rect );
 
    Labels *pLabels = major
       ? &mMajorLabels
       : minor
          ? &mMinorLabels
          : &mMinorMinorLabels;
-   Label *label = &(*pLabels)[ labelIdx ];
-
-   label->value = 0.0;
-   pos = label->pos;         // already stored in label class
-   auto l   = label->text;
-   label->lx = mLeft - 1000; // don't display
-   label->ly = mTop - 1000;  // don't display
-
-   mDC->SetFont(major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont);
-
-   mDC->GetTextExtent(l.Translation(), &strW, &strH, &strD, &strL);
-
-   if (mOrientation == wxHORIZONTAL) {
-      strLen = strW;
-      strPos = pos - strW/2;
-      if (strPos < 0)
-         strPos = 0;
-      if (strPos + strW >= mLength)
-         strPos = mLength - strW;
-      strLeft = mLeft + strPos;
-      if (mFlip)
-         strTop = mTop + 4;
-      else
-         strTop = mTop- mLead+4;// More space was needed...
-   }
-   else {
-      strLen = strH;
-      strPos = pos - strH/2;
-      if (strPos < 0)
-         strPos = 0;
-      if (strPos + strH >= mLength)
-         strPos = mLength - strH;
-      strTop = mTop + strPos;
-      if (mFlip)
-         strLeft = mLeft + 5;
-      else
-         strLeft =-strW-6;
-   }
-
-
-   // FIXME: we shouldn't even get here if strPos < 0.
-   // Ruler code currently does  not handle very small or
-   // negative sized windows (i.e. don't draw) properly.
-   if( strPos < 0 )
-      return;
-
-   // See if any of the pixels we need to draw this
-   // label is already covered
-
-   int i;
-   for(i=0; i<strLen; i++)
-      if (mBits[strPos+i])
-         return;
-
-   // If not, position the label
-
-   label->lx = strLeft;
-   label->ly = strTop;
-
-   // And mark these pixels, plus some surrounding
-   // ones (the spacing between labels), as covered
-   int leftMargin = mSpacing;
-   if (strPos < leftMargin)
-      leftMargin = strPos;
-   strPos -= leftMargin;
-   strLen += leftMargin;
-
-   int rightMargin = mSpacing;
-   if (strPos + strLen > mLength - mSpacing)
-      rightMargin = mLength - strPos - strLen;
-   strLen += rightMargin;
-
-   for(i=0; i<strLen; i++)
-      mBits[strPos+i] = true;
-
-
-   wxRect r(strLeft, strTop, strW, strH);
-   mRect.Union(r);
-
+   (*pLabels)[labelIdx] = ( result.second );
+   return !rect.IsEmpty();
 }
 
 void Ruler::Update()
@@ -1161,8 +1119,8 @@ void Ruler::Update(const Envelope* envelope)// Envelope *speedEnv, long minSpeed
             if (floor(sg * warpedD / denom) > step) {
                step = floor(sg * warpedD / denom);
                bool major = jj == 0;
-               Tick( i, sg * step * denom, major, !major, tickSizes );
-               if( !major && mMinorLabels.back().text.empty() ){
+               bool ticked = Tick( i, sg * step * denom, major, !major, tickSizes );
+               if( !major && !ticked ){
                   nDroppedMinorLabels++;
                }
             }
