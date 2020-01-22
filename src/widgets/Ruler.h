@@ -157,14 +157,33 @@ class AUDACITY_DLL_API Ruler {
  private:
    struct TickSizes;
 
+   class Label {
+    public:
+      double value;
+      int pos;
+      int lx, ly;
+      TranslatableString text;
+
+      void Draw(wxDC &dc, bool twoTone, wxColour c) const;
+   };
+   using Labels = std::vector<Label>;
+
+   using Bits = std::vector< bool >;
+
    static void ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight );
    void Update( wxDC &dc, const Envelope* envelope );
 
+   struct TickOutputs{ Labels &labels; Bits &bits; wxRect &box; };
+   
    bool Tick( wxDC &dc,
-      int pos, double d, bool major, bool minor, const TickSizes &tickSizes );
+      int pos, double d, const TickSizes &tickSizes, wxFont font,
+      TickOutputs outputs
+   ) const;
 
    // Another tick generator for custom ruler case (noauto) .
-   bool TickCustom( wxDC &dc, int labelIdx, bool major, bool minor );
+   bool TickCustom( wxDC &dc, int labelIdx, wxFont font,
+      TickOutputs outputs
+   ) const;
 
 public:
    bool mbTicksOnly; // true => no line the length of the ruler
@@ -184,21 +203,10 @@ private:
    double       mMin, mMax;
    double       mHiddenMin, mHiddenMax;
 
-   using Bits = std::vector< bool >;
    Bits mUserBits;
    Bits mBits;
 
    bool         mValid;
-
-   class Label {
-    public:
-      double value;
-      int pos;
-      int lx, ly;
-      TranslatableString text;
-
-      void Draw(wxDC &dc, bool twoTone, wxColour c) const;
-   };
 
    static std::pair< wxRect, Label > MakeTick(
       Label lab,
@@ -207,7 +215,6 @@ private:
       int left, int top, int spacing, int lead,
       bool flip, int orientation );
 
-   using Labels = std::vector<Label>;
    Labels mMajorLabels;
    Labels mMinorLabels;
    Labels mMinorMinorLabels;

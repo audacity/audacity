@@ -843,9 +843,10 @@ auto Ruler::MakeTick(
    return { { strLeft, strTop, strW, strH }, lab };
 }
 
-bool Ruler::Tick(
-   wxDC &dc,
-   int pos, double d, bool major, bool minor, const TickSizes &tickSizes )
+bool Ruler::Tick( wxDC &dc,
+   int pos, double d, const TickSizes &tickSizes, wxFont font,
+   // in/out:
+   TickOutputs outputs ) const
 {
    // Bug 521.  dB view for waveforms needs a 2-sided scale.
    if(( mDbMirrorValue > 1.0 ) && ( -d > mDbMirrorValue ))
@@ -853,11 +854,7 @@ bool Ruler::Tick(
 
    // FIXME: We don't draw a tick if off end of our label arrays
    // But we shouldn't have an array of labels.
-   if( mMinorMinorLabels.size() >= mLength )
-      return false;
-   if( mMinorLabels.size() >= mLength )
-      return false;
-   if( mMajorLabels.size() >= mLength )
+   if( outputs.labels.size() >= mLength )
       return false;
 
    Label lab;
@@ -867,37 +864,28 @@ bool Ruler::Tick(
 
    const auto result = MakeTick(
       lab,
-      dc,
-      (major? mFonts.major: minor? mFonts.minor : mFonts.minorMinor),
-      mBits,
+      dc, font,
+      outputs.bits,
       mLeft, mTop, mSpacing, mFonts.lead,
       mFlip,
       mOrientation );
 
    auto &rect = result.first;
-   mRect.Union( rect );
-
-   Labels *pLabels = major
-      ? &mMajorLabels
-      : minor
-         ? &mMinorLabels
-         : &mMinorMinorLabels;
-   pLabels->emplace_back( result.second );
+   outputs.box.Union( rect );
+   outputs.labels.emplace_back( result.second );
    return !rect.IsEmpty();
 }
 
-bool Ruler::TickCustom( wxDC &dc, int labelIdx, bool major, bool minor )
+bool Ruler::TickCustom( wxDC &dc, int labelIdx, wxFont font,
+   // in/out:
+   TickOutputs outputs ) const
 {
    // FIXME: We don't draw a tick if of end of our label arrays
    // But we shouldn't have an array of labels.
-   if( mMinorLabels.size() >= mLength )
-      return false;
-   if( mMajorLabels.size() >= mLength )
+   if( labelIdx >= outputs.labels.size() )
       return false;
 
    //This should only used in the mCustom case
-   // Many code comes from 'Tick' method: this should
-   // be optimized.
 
    Label lab;
    lab.value = 0.0;
@@ -905,22 +893,15 @@ bool Ruler::TickCustom( wxDC &dc, int labelIdx, bool major, bool minor )
    const auto result = MakeTick(
       lab,
 
-      dc,
-      (major? mFonts.major: minor? mFonts.minor : mFonts.minorMinor),
-      mBits,
+      dc, font,
+      outputs.bits,
       mLeft, mTop, mSpacing, mFonts.lead,
       mFlip,
       mOrientation );
 
    auto &rect = result.first;
-   mRect.Union( rect );
-
-   Labels *pLabels = major
-      ? &mMajorLabels
-      : minor
-         ? &mMinorLabels
-         : &mMinorMinorLabels;
-   (*pLabels)[labelIdx] = ( result.second );
+   outputs.box.Union( rect );
+   outputs.labels[labelIdx] = ( result.second );
    return !rect.IsEmpty();
 }
 
@@ -1011,6 +992,8 @@ void Ruler::Update(
    mBits = mUserBits;
    mBits.resize( static_cast<size_t>(mLength + 1), false );
 
+   TickOutputs majorOutputs{ mMajorLabels, mBits, mRect };
+
    // *************** Label calculation routine **************
    if( mCustom ) {
 
@@ -1020,7 +1003,7 @@ void Ruler::Update(
       int numLabel = mMajorLabels.size();
 
       for( int i = 0; (i<numLabel) && (i<=mLength); ++i )
-         TickCustom( dc, i, true, false );
+         TickCustom( dc, i, mFonts.major, majorOutputs );
 
    }
    else if( !mLog ) {
@@ -1032,7 +1015,8 @@ void Ruler::Update(
       double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
       TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
 
-      auto TickAtValue = [this, zoomInfo, &tickSizes, &dc]( double value ) -> int {
+      auto TickAtValue = [this, zoomInfo, &tickSizes, &dc, &majorOutputs]
+      ( double value ) -> int {
          // Make a tick only if the value is strictly between the bounds
          if ( value <= std::min( mMin, mMax ) )
             return -1;
@@ -1051,7 +1035,7 @@ void Ruler::Update(
 
          const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
          if (mid >= 0 && mid < iMaxPos)
-            Tick( dc, mid, value, true, false, tickSizes );
+            Tick( dc, mid, value, tickSizes, mFonts.major, majorOutputs );
          else
             return -1;
          
@@ -1074,8 +1058,8 @@ void Ruler::Update(
 
       // Extreme values
       if (mLabelEdges) {
-         Tick( dc, 0, mMin, true, false, tickSizes );
-         Tick( dc, mLength, mMax, true, false, tickSizes );
+         Tick( dc, 0, mMax, tickSizes, mFonts.major, majorOutputs );
+         Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
       }
 
       if ( !mDbMirrorValue ) {
@@ -1089,6 +1073,11 @@ void Ruler::Update(
       // Major and minor ticks
       for (int jj = 0; jj < 2; ++jj) {
          const double denom = jj == 0 ? tickSizes.mMajor : tickSizes.mMinor;
+         auto font = jj == 0 ? mFonts.major : mFonts.minor;
+         TickOutputs outputs{
+            (jj == 0 ? mMajorLabels : mMinorLabels),
+            mBits, mRect
+         };
          int ii = -1, j = 0;
          double d, warpedD, nextD;
 
@@ -1129,7 +1118,8 @@ void Ruler::Update(
                step = floor(sg * warpedD / denom);
                bool major = jj == 0;
                tickSizes.useMajor = major;
-               bool ticked = Tick( dc, ii, sg * step * denom, major, !major, tickSizes );
+               bool ticked = Tick( dc, ii, sg * step * denom, tickSizes,
+                  font, outputs );
                if( !major && !ticked ){
                   nDroppedMinorLabels++;
                }
@@ -1152,8 +1142,8 @@ void Ruler::Update(
 
       // Left and Right Edges
       if (mLabelEdges) {
-         Tick( dc, 0, mMin, true, false, tickSizes );
-         Tick( dc, mLength, mMax, true, false, tickSizes );
+         Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
+         Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
       }
    }
    else {
@@ -1186,7 +1176,7 @@ void Ruler::Update(
          {  val = decade;
             if(val >= rMin && val < rMax) {
                const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               Tick( dc, pos, val, true, false, tickSizes );
+               Tick( dc, pos, val, tickSizes, mFonts.major, majorOutputs );
             }
          }
          decade *= step;
@@ -1202,12 +1192,13 @@ void Ruler::Update(
       }
       steps++;
       tickSizes.useMajor = false;
+      TickOutputs minorOutputs{ mMinorLabels, mBits, mRect };
       for(int i=0; i<=steps; i++) {
          for(int j=start; j!=end; j+=mstep) {
             val = decade * j;
             if(val >= rMin && val < rMax) {
                const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               Tick( dc, pos, val, false, true, tickSizes );
+               Tick( dc, pos, val, tickSizes, mFonts.minor, minorOutputs );
             }
          }
          decade *= step;
@@ -1221,6 +1212,7 @@ void Ruler::Update(
       {  start=100; end= 10; mstep=-1;
       }
       steps++;
+      TickOutputs minorMinorOutputs{ mMinorMinorLabels, mBits, mRect };
       for (int i = 0; i <= steps; i++) {
          // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
          if (!(mFormat == IntFormat && decade < 10.0)) {
@@ -1229,7 +1221,8 @@ void Ruler::Update(
                   val = decade * f / 10;
                   if (val >= rMin && val < rMax) {
                      const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-                     Tick( dc, pos, val, false, false, tickSizes );
+                     Tick( dc, pos, val, tickSizes,
+                        mFonts.minorMinor, minorMinorOutputs );
                   }
                }
             }
