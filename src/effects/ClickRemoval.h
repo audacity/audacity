@@ -23,11 +23,11 @@ class wxTextCtrl;
 class Envelope;
 class ShuttleGui;
 
-#define CLICKREMOVAL_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Click Removal") }
-
 class EffectClickRemoval final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectClickRemoval();
    virtual ~EffectClickRemoval();
 

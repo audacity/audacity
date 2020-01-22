@@ -22,11 +22,11 @@ class wxTextCtrl;
 class NumericTextCtrl;
 class ShuttleGui;
 
-#define DTMFTONES_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("DTMF Tones") }
-
 class EffectDtmf final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectDtmf();
    virtual ~EffectDtmf();
 

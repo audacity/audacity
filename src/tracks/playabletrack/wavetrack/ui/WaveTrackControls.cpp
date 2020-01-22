@@ -104,6 +104,8 @@ std::vector<UIHandlePtr> WaveTrackControls::HitTest
 }
 
 enum {
+   reserveDisplays = 100,
+
    OnRate8ID = 30000,      // <---
    OnRate11ID,             //    |
    OnRate16ID,             //    |
@@ -123,8 +125,9 @@ enum {
    OnFloatID,              // <---
 
    OnMultiViewID,
-   OnWaveformID,
-   OnSpectrumID,
+
+   OnSetDisplayId, lastDisplayId = (OnSetDisplayId + reserveDisplays - 1),
+
    OnSpectrogramSettingsID,
 
    OnChannelLeftID,
@@ -620,6 +623,16 @@ void WaveTrackMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
+static std::vector<WaveTrackSubViewType> AllTypes()
+{
+   auto result = WaveTrackSubViewType::All();
+   if ( result.size() > reserveDisplays ) {
+      wxASSERT( false );
+      result.resize( reserveDisplays );
+   }
+   return result;
+}
+
 void WaveTrackMenuTable::InitMenu(Menu *pMenu)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
@@ -631,16 +644,40 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu)
    if (multiView)
       checkedIds.push_back( OnMultiViewID );
 
+   bool hasSpectrum = false;
    int uniqueDisplay = 0;
+   {
+      // Find the set of type ids of the shown displays, disregarding their
+      // top-to-bottom arrangement
+      auto displays = view.GetDisplays();
+      const auto end = displays.end();
+      auto iter = displays.begin();
+      std::sort( iter, end );
 
-   const auto displays = view.GetDisplays();
-   for ( auto display : displays ) {
-      auto id = (display == WaveTrackViewConstants::Waveform)
-         ? OnWaveformID
-         : OnSpectrumID;
-      checkedIds.push_back( id );
-      if ( displays.size() == 1 )
-         uniqueDisplay = id;
+      // Check the corresponding menu items, and decide which if any has
+      // the unique check
+      int displayId = OnSetDisplayId;
+      int nDisplays = 0;
+      for ( const auto &type : AllTypes() ) {
+         if ( iter != end && iter->id == type.id ) {
+            checkedIds.push_back( displayId );
+            uniqueDisplay = displayId;
+            ++iter;
+            ++nDisplays;
+
+            // Unfortunately this special knowledge of the Spectrum view type
+            // remains.  In future, either let a registry system insert this
+            // menu item, or (better) move it to the context menu of the
+            // Spectrum vertical ruler.
+            // (But the latter won't be satisfactory without a means to
+            // open that other context menu with keystrokes only, and that
+            // would require some notion of a focused sub-view.)
+            hasSpectrum = ( type.id == WaveTrackViewConstants::Spectrum );
+         }
+         ++displayId;
+      }
+      if ( nDisplays > 1 )
+         uniqueDisplay = 0;
    }
 
    if ( multiView && uniqueDisplay )
@@ -652,9 +689,6 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu)
    // We can't change them on the fly yet anyway.
    auto gAudioIO = AudioIOBase::Get();
    const bool bAudioBusy = gAudioIO->IsBusy();
-   bool hasSpectrum =
-      make_iterator_range( displays.begin(), displays.end() )
-         .contains( WaveTrackViewConstants::Spectrum );
    pMenu->Enable(OnSpectrogramSettingsID, hasSpectrum && !bAudioBusy);
 
    AudacityProject *const project = &mpData->project;
@@ -733,13 +767,14 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    if ( WaveTrackSubViews::slots() > 1 )
       POPUP_MENU_CHECK_ITEM(OnMultiViewID, XO("&Multi-view"), OnMultiView)
 
-   if ( view.GetMultiView() ) {
-      POPUP_MENU_CHECK_ITEM(OnWaveformID, XO("Wa&veform"), OnSetDisplay)
-      POPUP_MENU_CHECK_ITEM(OnSpectrumID, XO("&Spectrogram"), OnSetDisplay)
-   }
-   else {
-      POPUP_MENU_RADIO_ITEM(OnWaveformID, XO("Wa&veform"), OnSetDisplay)
-      POPUP_MENU_RADIO_ITEM(OnSpectrumID, XO("&Spectrogram"), OnSetDisplay)
+   int id = OnSetDisplayId;
+   for ( const auto &type : AllTypes() ) {
+      if ( view.GetMultiView() ) {
+         POPUP_MENU_CHECK_ITEM(id++, type.name.Msgid(), OnSetDisplay)
+      }
+      else {
+         POPUP_MENU_RADIO_ITEM(id++, type.name.Msgid(), OnSetDisplay)
+      }
    }
 
    POPUP_MENU_ITEM(OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
@@ -761,9 +796,10 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 
    if ( pTrack ) {
       const auto displays = view.GetDisplays();
-      bool hasWaveform =
-         make_iterator_range( displays.begin(), displays.end() )
-            .contains( WaveTrackViewConstants::Waveform );
+      bool hasWaveform = (displays.end() != std::find(
+         displays.begin(), displays.end(),
+         WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
+      ) );
       if( hasWaveform ){
          POPUP_MENU_SEPARATOR()
          POPUP_MENU_SUB_MENU(OnWaveColorID, XO("&Wave Color"), WaveColorMenuTable)
@@ -784,7 +820,7 @@ void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
    const auto display = displays.empty()
-      ? WaveTrackViewConstants::Waveform : *displays.begin();
+      ? WaveTrackViewConstants::Waveform : displays.begin()->id;
    for (const auto channel : TrackList::Channels(pTrack)) {
       auto &channelView = WaveTrackView::Get( *channel );
       channelView.SetMultiView( multi );
@@ -799,38 +835,35 @@ void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
 ///  Set the Display mode based on the menu choice in the Track Menu.
 void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
 {
-   using namespace WaveTrackViewConstants;
    int idInt = event.GetId();
-   wxASSERT(idInt >= OnWaveformID && idInt <= OnSpectrumID);
+   wxASSERT(idInt >= OnSetDisplayId &&
+            idInt <= lastDisplayId);
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
-   WaveTrackView::WaveTrackDisplay id;
-   switch (idInt) {
-   default:
-   case OnWaveformID:
-      id = Waveform; break;
-   case OnSpectrumID:
-      id = Spectrum; break;
-   }
+   auto id = AllTypes()[ idInt - OnSetDisplayId ].id;
 
    auto &view = WaveTrackView::Get( *pTrack );
    if ( view.GetMultiView() ) {
       for (auto channel : TrackList::Channels(pTrack)) {
-         if ( !WaveTrackView::Get( *channel ).ToggleSubView( id ) ) {
+         if ( !WaveTrackView::Get( *channel )
+               .ToggleSubView( WaveTrackView::Display{ id } ) ) {
             // Trying to toggle off the last sub-view.  It was refused.
             // Decide what to do here.  Turn off multi-view instead?
             // PRL:  I don't agree that it makes sense
          }
+         else
+            ProjectHistory::Get( mpData->project ).ModifyState(true);
       }
    }
    else {
       const auto displays = view.GetDisplays();
-      const bool wrongType = !(displays.size() == 1 && displays[0] == id);
+      const bool wrongType =
+         !(displays.size() == 1 && displays[0].id == id);
       if (wrongType) {
          for (auto channel : TrackList::Channels(pTrack)) {
             channel->SetLastScaleType();
             WaveTrackView::Get( *channel )
-               .SetDisplay(WaveTrackView::WaveTrackDisplay(id));
+               .SetDisplay( WaveTrackView::Display{ id } );
          }
 
          AudacityProject *const project = &mpData->project;
@@ -884,7 +917,7 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
    // factories.push_back(WaveformPrefsFactory( pTrack ));
    factories.push_back(SpectrumPrefsFactory( pTrack ));
    const int page =
-      // (pTrack->GetDisplay() == WaveTrack::Spectrum) ? 1 :
+      // (pTrack->GetDisplay() == WaveTrackViewConstants::Spectrum) ? 1 :
       0;
 
    auto title = XO("%s:").Format( pTrack->GetName() );

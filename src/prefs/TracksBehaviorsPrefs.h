@@ -41,9 +41,5 @@ class TracksBehaviorsPrefs final : public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S) override;
 };
 
-/// A PrefsPanel::Factory that creates one TracksBehaviorsPrefs panel.
-extern PrefsPanel::Factory TracksBehaviorsPrefsFactory;
-
 extern ChoiceSetting TracksBehaviorsSolo;
-
 #endif

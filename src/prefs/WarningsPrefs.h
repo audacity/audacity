@@ -37,6 +37,4 @@ class WarningsPrefs final : public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S) override;
 };
 
-/// A PrefsPanel::Factory that creates one WarningPrefs panel.
-extern PrefsPanel::Factory WarningsPrefsFactory;
 #endif

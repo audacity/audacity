@@ -150,7 +150,7 @@ void WaveformSettings::NextHigherDBRange()
 const TranslatableStrings &WaveformSettings::GetScaleNames()
 {
    static const TranslatableStrings result{
-      // Keep in correspondence with enum WaveTrack::WaveTrackDisplay:
+      // Keep in correspondence with ScaleTypeValues:
       XO("Linear"),
       XO("dB"),
    };

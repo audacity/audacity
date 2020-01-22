@@ -230,6 +230,8 @@ src/SoundActivatedRecord.cpp
 src/SoundActivatedRecord.h
 src/Spectrum.cpp
 src/Spectrum.h
+src/SpectrumAnalyst.cpp
+src/SpectrumAnalyst.h
 src/SplashDialog.cpp
 src/SplashDialog.h
 src/SseMathFuncs.cpp

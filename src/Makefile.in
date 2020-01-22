@@ -343,7 +343,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
 	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
-	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
+	Spectrum.h SpectrumAnalyst.cpp SpectrumAnalyst.h \
+	SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
 	ThemeAsCeeCode.h TimeDialog.cpp TimeDialog.h \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
@@ -727,7 +728,8 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-ShuttleGui.$(OBJEXT) audacity-ShuttlePrefs.$(OBJEXT) \
 	audacity-Snap.$(OBJEXT) \
 	audacity-SoundActivatedRecord.$(OBJEXT) \
-	audacity-Spectrum.$(OBJEXT) audacity-SplashDialog.$(OBJEXT) \
+	audacity-Spectrum.$(OBJEXT) audacity-SpectrumAnalyst.$(OBJEXT) \
+	audacity-SplashDialog.$(OBJEXT) \
 	audacity-SseMathFuncs.$(OBJEXT) audacity-Tags.$(OBJEXT) \
 	audacity-Theme.$(OBJEXT) audacity-TimeDialog.$(OBJEXT) \
 	audacity-TimerRecordDialog.$(OBJEXT) \
@@ -1121,6 +1123,7 @@ am__depfiles_remade = ./$(DEPDIR)/audacity-AColor.Po \
 	./$(DEPDIR)/audacity-Snap.Po \
 	./$(DEPDIR)/audacity-SoundActivatedRecord.Po \
 	./$(DEPDIR)/audacity-Spectrum.Po \
+	./$(DEPDIR)/audacity-SpectrumAnalyst.Po \
 	./$(DEPDIR)/audacity-SplashDialog.Po \
 	./$(DEPDIR)/audacity-SseMathFuncs.Po \
 	./$(DEPDIR)/audacity-Tags.Po ./$(DEPDIR)/audacity-Theme.Po \
@@ -1868,7 +1871,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	ShuttleGetDefinition.cpp ShuttleGetDefinition.h ShuttleGui.cpp \
 	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
-	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
+	Spectrum.h SpectrumAnalyst.cpp SpectrumAnalyst.h \
+	SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
 	ThemeAsCeeCode.h TimeDialog.cpp TimeDialog.h \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
@@ -3139,6 +3143,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Snap.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SoundActivatedRecord.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Spectrum.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SpectrumAnalyst.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SplashDialog.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SseMathFuncs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Tags.Po@am__quote@ # am--include-marker
@@ -4996,6 +5001,20 @@ audacity-Spectrum.obj: Spectrum.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Spectrum.cpp' object='audacity-Spectrum.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Spectrum.obj `if test -f 'Spectrum.cpp'; then $(CYGPATH_W) 'Spectrum.cpp'; else $(CYGPATH_W) '$(srcdir)/Spectrum.cpp'; fi`
+
+audacity-SpectrumAnalyst.o: SpectrumAnalyst.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-SpectrumAnalyst.o -MD -MP -MF $(DEPDIR)/audacity-SpectrumAnalyst.Tpo -c -o audacity-SpectrumAnalyst.o `test -f 'SpectrumAnalyst.cpp' || echo '$(srcdir)/'`SpectrumAnalyst.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-SpectrumAnalyst.Tpo $(DEPDIR)/audacity-SpectrumAnalyst.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='SpectrumAnalyst.cpp' object='audacity-SpectrumAnalyst.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-SpectrumAnalyst.o `test -f 'SpectrumAnalyst.cpp' || echo '$(srcdir)/'`SpectrumAnalyst.cpp
+
+audacity-SpectrumAnalyst.obj: SpectrumAnalyst.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-SpectrumAnalyst.obj -MD -MP -MF $(DEPDIR)/audacity-SpectrumAnalyst.Tpo -c -o audacity-SpectrumAnalyst.obj `if test -f 'SpectrumAnalyst.cpp'; then $(CYGPATH_W) 'SpectrumAnalyst.cpp'; else $(CYGPATH_W) '$(srcdir)/SpectrumAnalyst.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-SpectrumAnalyst.Tpo $(DEPDIR)/audacity-SpectrumAnalyst.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='SpectrumAnalyst.cpp' object='audacity-SpectrumAnalyst.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-SpectrumAnalyst.obj `if test -f 'SpectrumAnalyst.cpp'; then $(CYGPATH_W) 'SpectrumAnalyst.cpp'; else $(CYGPATH_W) '$(srcdir)/SpectrumAnalyst.cpp'; fi`
 
 audacity-SplashDialog.o: SplashDialog.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-SplashDialog.o -MD -MP -MF $(DEPDIR)/audacity-SplashDialog.Tpo -c -o audacity-SplashDialog.o `test -f 'SplashDialog.cpp' || echo '$(srcdir)/'`SplashDialog.cpp
@@ -9278,6 +9297,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/audacity-Snap.Po
 	-rm -f ./$(DEPDIR)/audacity-SoundActivatedRecord.Po
 	-rm -f ./$(DEPDIR)/audacity-Spectrum.Po
+	-rm -f ./$(DEPDIR)/audacity-SpectrumAnalyst.Po
 	-rm -f ./$(DEPDIR)/audacity-SplashDialog.Po
 	-rm -f ./$(DEPDIR)/audacity-SseMathFuncs.Po
 	-rm -f ./$(DEPDIR)/audacity-Tags.Po
@@ -9723,6 +9743,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/audacity-Snap.Po
 	-rm -f ./$(DEPDIR)/audacity-SoundActivatedRecord.Po
 	-rm -f ./$(DEPDIR)/audacity-Spectrum.Po
+	-rm -f ./$(DEPDIR)/audacity-SpectrumAnalyst.Po
 	-rm -f ./$(DEPDIR)/audacity-SplashDialog.Po
 	-rm -f ./$(DEPDIR)/audacity-SseMathFuncs.Po
 	-rm -f ./$(DEPDIR)/audacity-Tags.Po

@@ -13,11 +13,11 @@
 
 #include "Effect.h"
 
-#define STEREOTOMONO_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Stereo To Mono") }
-
 class EffectStereoToMono final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectStereoToMono();
    virtual ~EffectStereoToMono();
 

@@ -517,7 +517,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    wxString effectIDs = wxT("0;");
    wxStringTokenizer effectTzr(effectIDs, wxT(";"));
 
-   Maybe<wxProgressDialog> progress{};
+   Optional<wxProgressDialog> progress{};
    size_t idCnt = 0;
    size_t idNdx = 0;
 
@@ -577,7 +577,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
                idCnt = effectTzr.CountTokens();
                if (idCnt > 3)
                {
-                  progress.create( _("Scanning Shell VST"),
+                  progress.emplace( _("Scanning Shell VST"),
                         wxString::Format(_("Registering %d of %d: %-64.64s"), 0, idCnt,
                                          proc.GetSymbol().Translation()),
                         static_cast<int>(idCnt),

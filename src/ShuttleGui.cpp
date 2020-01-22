@@ -402,7 +402,7 @@ wxChoice * ShuttleGuiBase::AddChoice( const TranslatableString &Prompt,
       wxDefaultPosition,
       wxDefaultSize,
       transform_container<wxArrayString>(
-         choices, std::mem_fn( &TranslatableString::Translation ) ),
+         choices, std::mem_fn( &TranslatableString::StrippedTranslation ) ),
       GetStyle( 0 ) );
 
    pChoice->SetMinSize( { 180, -1 } );// Use -1 for 'default size' - Platform specific.
@@ -1561,7 +1561,7 @@ void ShuttleGuiBase::StartRadioButtonGroup( const ChoiceSetting &Setting )
 
    // Configure the generic type mechanism to use OUR string.
    mRadioValueString = Setting.Default().Internal();
-   mRadioValue.create( mRadioValueString );
+   mRadioValue.emplace( mRadioValueString );
 
    // Now actually start the radio button group.
    mRadioSettingName = Setting.Key();
@@ -2421,7 +2421,7 @@ void ShuttleGui::SetMinSize( wxWindow *window, const TranslatableStrings & items
 {
    SetMinSize( window,
       transform_container<wxArrayStringEx>(
-         items, std::mem_fn( &TranslatableString::Translation ) ) );
+         items, std::mem_fn( &TranslatableString::StrippedTranslation ) ) );
 }
 
 void ShuttleGui::SetMinSize( wxWindow *window, const wxArrayStringEx & items )

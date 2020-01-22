@@ -37,6 +37,4 @@ class ProjectsPrefs final : public PrefsPanel
    void Populate();
 };
 
-/// A PrefsPanel::Factory that creates one ProjectPrefs panel.
-extern PrefsPanel::Factory ProjectsPrefsFactory;
 #endif

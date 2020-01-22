@@ -144,22 +144,24 @@ UIHandle::Result TrackSelectHandle::Drag
 HitTestPreview TrackSelectHandle::Preview
 (const TrackPanelMouseState &, AudacityProject *project)
 {
+   static auto disabledCursor =
+      ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
+   //static wxCursor rearrangeCursor{ wxCURSOR_HAND };
+   static auto hoverCursor =
+      ::MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
+   static auto clickedCursor =
+      ::MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
+
    const auto trackCount = TrackList::Get( *project ).Leaders().size();
    auto message = Message(trackCount);
    if (mClicked) {
-      static auto disabledCursor =
-         ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
-      //static wxCursor rearrangeCursor{ wxCURSOR_HAND };
-      static auto rearrangeCursor =
-         ::MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
-
       const bool unsafe =
          ProjectAudioIO::Get( *project ).IsAudioActive();
       return {
          message,
          (unsafe
           ? &*disabledCursor
-          : &*rearrangeCursor)
+          : &*clickedCursor)
          // , message // Stop showing the tooltip after the click
       };
    }
@@ -169,7 +171,7 @@ HitTestPreview TrackSelectHandle::Preview
       static wxCursor arrowCursor{ wxCURSOR_ARROW };
       return {
          message,
-         &arrowCursor,
+         &*hoverCursor,
          message
       };
    }

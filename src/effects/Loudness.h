@@ -24,11 +24,11 @@
 
 class ShuttleGui;
 
-#define LOUDNESS_PLUGIN_SYMBOL  ComponentInterfaceSymbol{ XO("Loudness Normalization") }
-
 class EffectLoudness final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectLoudness();
    virtual ~EffectLoudness();
 

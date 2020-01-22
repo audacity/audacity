@@ -185,16 +185,15 @@ public:
 };
 
 /**
-  \class Maybe
+  \class Optional
   \brief Like a smart pointer, allows for object to not exist (nullptr)
+  \brief emulating some of std::optional of C++17
 
-  template class Maybe<X>
+  template class Optional<X>
   Can be used for monomorphic objects that are stack-allocable, but only conditionally constructed.
   You might also use it as a member.
-  Initialize with create(), then use like a smart pointer,
-  with *, ->, get(), reset(), or in if()
-
-  Like std::optional of C++17 but with other member naming conventions
+  Initialize with emplace(), then use like a smart pointer,
+  with *, ->, reset(), or in if()
  */
 
 // Placement-NEW is used below, and that does not cooperate with the DEBUG_NEW for Visual Studio
@@ -206,41 +205,43 @@ public:
 
 
 template<typename X>
-class Maybe {
+class Optional {
 public:
 
+   using value_type = X;
+
    // Construct as NULL
-   Maybe() {}
+   Optional() {}
 
    // Supply the copy and move, so you might use this as a class member too
-   Maybe(const Maybe &that)
+   Optional(const Optional &that)
    {
-      if (that.get())
-         create(*that);
+      if (that)
+         emplace(*that);
    }
 
-   Maybe& operator= (const Maybe &that)
+   Optional& operator= (const Optional &that)
    {
       if (this != &that) {
-         if (that.get())
-            create(*that);
+         if (that)
+            emplace(*that);
          else
             reset();
       }
       return *this;
    }
 
-   Maybe(Maybe &&that)
+   Optional(Optional &&that)
    {
-      if (that.get())
-         create(::std::move(*that));
+      if (that)
+         emplace(::std::move(*that));
    }
 
-   Maybe& operator= (Maybe &&that)
+   Optional& operator= (Optional &&that)
    {
       if (this != &that) {
-         if (that.get())
-            create(::std::move(*that));
+         if (that)
+            emplace(::std::move(*that));
          else
             reset();
       }
@@ -253,16 +254,17 @@ public:
    /// NULL state -- giving exception safety but only weakly
    /// (previous value was lost if present)
    template<typename... Args>
-   void create(Args&&... args)
+   X& emplace(Args&&... args)
    {
       // Lose any old value
       reset();
-      // Create NEW value
+      // emplace NEW value
       pp = safenew(address()) X(std::forward<Args>(args)...);
+      return **this;
    }
 
    // Destroy any object that was built in it
-   ~Maybe()
+   ~Optional()
    {
       reset();
    }
@@ -280,11 +282,6 @@ public:
       return pp;
    }
 
-   X* get() const
-   {
-      return pp;
-   }
-
    void reset()
    {
       if (pp)
@@ -293,6 +290,11 @@ public:
 
    // So you can say if(ptr)
    explicit operator bool() const
+   {
+      return pp != nullptr;
+   }
+
+   bool has_value() const
    {
       return pp != nullptr;
    }

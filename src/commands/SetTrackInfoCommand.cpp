@@ -36,6 +36,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "../Audacity.h"
 #include "SetTrackInfoCommand.h"
 
+#include "LoadCommands.h"
 #include "../Project.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
@@ -121,7 +122,12 @@ bool SetTrackBase::Apply(const CommandContext & context  )
    return true;
 }
 
-bool SetTrackStatusCommand::DefineParams( ShuttleParams & S ){ 
+const ComponentInterfaceSymbol SetTrackStatusCommand::Symbol
+{ XO("Set Track Status") };
+
+namespace{ BuiltinCommandsModule::Registration< SetTrackStatusCommand > reg; }
+
+bool SetTrackStatusCommand::DefineParams( ShuttleParams & S ){
    SetTrackBase::DefineParams( S );
    S.OptionalN( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       _("Unnamed") );
    // There is also a select command.  This is an alternative.
@@ -178,6 +184,11 @@ bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t
 
 
 
+const ComponentInterfaceSymbol SetTrackAudioCommand::Symbol
+{ XO("Set Track Audio") };
+
+namespace{ BuiltinCommandsModule::Registration< SetTrackAudioCommand > reg2; }
+
 bool SetTrackAudioCommand::DefineParams( ShuttleParams & S ){ 
    SetTrackBase::DefineParams( S );
    S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
@@ -230,6 +241,11 @@ bool SetTrackAudioCommand::ApplyInner(const CommandContext & context, Track * t 
 
 
 
+const ComponentInterfaceSymbol SetTrackVisualsCommand::Symbol
+{ XO("Set Track Visuals") };
+
+namespace{ BuiltinCommandsModule::Registration< SetTrackVisualsCommand > reg3; }
+
 enum kColours
 {
    kColour0,
@@ -247,20 +263,6 @@ static const EnumValueSymbol kColourStrings[nColours] =
    { wxT("Color3"), XO("Color 3") },
 };
 
-
-enum kDisplayTypes
-{
-   kWaveform,
-   kSpectrogram,
-   nDisplayTypes
-};
-
-static const EnumValueSymbol kDisplayTypeStrings[nDisplayTypes] =
-{
-   // These are acceptable dual purpose internal/visible names
-   { XO("Waveform") },
-   { XO("Spectrogram") },
-};
 
 enum kScaleTypes
 {
@@ -292,10 +294,22 @@ static const EnumValueSymbol kZoomTypeStrings[nZoomTypes] =
    { XO("HalfWave") },
 };
 
+static EnumValueSymbols DiscoverSubViewTypes()
+{
+   const auto &types = WaveTrackSubViewType::All();
+   return transform_container< EnumValueSymbols >(
+      types, std::mem_fn( &WaveTrackSubView::Type::name ) );
+}
+
 bool SetTrackVisualsCommand::DefineParams( ShuttleParams & S ){ 
    SetTrackBase::DefineParams( S );
    S.OptionalN( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 2000 );
-   S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    kWaveform, kDisplayTypeStrings, nDisplayTypes );
+
+   {
+      auto symbols = DiscoverSubViewTypes();
+      S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    0, symbols.data(), symbols.size() );
+   }
+
    S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   kScaleTypeStrings, nScaleTypes );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  kColourStrings, nColours );
    S.OptionalN( bHasVZoom          ).DefineEnum( mVZoom,          wxT("VZoom"),      kReset,    kZoomTypeStrings, nZoomTypes );
@@ -318,8 +332,15 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasHeight      ).TieNumericTextBox(  XO("Height:"),        mHeight );
       S.Optional( bHasColour      ).TieChoice(          XO("Color:"),         mColour,
          Msgids(  kColourStrings, nColours ) );
-      S.Optional( bHasDisplayType ).TieChoice(          XO("Display:"),       mDisplayType,
-         Msgids( kDisplayTypeStrings, nDisplayTypes ) );
+      
+      {
+         auto symbols = DiscoverSubViewTypes();
+         auto typeNames = transform_container<TranslatableStrings>(
+             symbols, std::mem_fn( &EnumValueSymbol::Stripped ) );
+         S.Optional( bHasDisplayType ).TieChoice(          XO("Display:"),       mDisplayType,
+            typeNames );
+      }
+
       S.Optional( bHasScaleType   ).TieChoice(          XO("Scale:"),         mScaleType,
          Msgids( kScaleTypeStrings, nScaleTypes ) );
       S.Optional( bHasVZoom       ).TieChoice(          XO("VZoom:"),         mVZoom,
@@ -355,10 +376,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
 
    if( wt && bHasDisplayType  )
       WaveTrackView::Get( *wt ).SetDisplay(
-         (mDisplayType == kWaveform) ?
-            WaveTrackViewConstants::Waveform
-            : WaveTrackViewConstants::Spectrum
-         );
+         WaveTrackSubViewType::All()[ mDisplayType ].id );
    if( wt && bHasScaleType )
       wt->GetIndependentWaveformSettings().scaleType = 
          (mScaleType==kLinear) ? 
@@ -415,6 +433,11 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
    return true;
 }
 
+
+const ComponentInterfaceSymbol SetTrackCommand::Symbol
+{ XO("Set Track") };
+
+namespace{ BuiltinCommandsModule::Registration< SetTrackCommand > reg4; }
 
 SetTrackCommand::SetTrackCommand()
 {

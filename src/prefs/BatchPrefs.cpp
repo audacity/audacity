@@ -95,9 +95,14 @@ BatchPrefs::~BatchPrefs()
 {
 }
 
-PrefsPanel::Factory
-BatchPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew BatchPrefs(parent, winid);
+#if 0
+namespace{
+PrefsPanel::Registration sAttachment{ 190,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew BatchPrefs(parent, winid);
+   }
 };
+}
+#endif

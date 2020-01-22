@@ -347,7 +347,7 @@ class ASAProgress final : public SAProgress {
    long mTotalCells; // how many matrix cells?
    long mCellCount; // how many cells so far?
    long mPrevCellCount; // cell_count last reported with Update()
-   Maybe<ProgressDialog> mProgress;
+   Optional<ProgressDialog> mProgress;
    #ifdef COLLECT_TIMING_DATA
       FILE *mTimeFile;
       wxDateTime mStartTime;
@@ -409,7 +409,7 @@ class ASAProgress final : public SAProgress {
                     work[1], mFrames[1], is_audio[1]);
             wxFprintf(mTimeFile, "work2 = %g, work3 = %g\n", work2, work3);
          #endif
-         mProgress.create(XO("Synchronize MIDI with Audio"),
+         mProgress.emplace(XO("Synchronize MIDI with Audio"),
                                XO("Synchronizing MIDI and Audio Tracks"));
       } else if (i < 3) {
          wxFprintf(mTimeFile,

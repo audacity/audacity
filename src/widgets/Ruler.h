@@ -152,16 +152,15 @@ class AUDACITY_DLL_API Ruler {
    void Invalidate();
 
  private:
-   void Update();
-   void Update(const Envelope* envelope);
-   void FindTickSizes();
-   void FindLinearTickSizes(double UPP);
-   TranslatableString LabelString(double d, bool major);
+   struct TickSizes;
 
-   void Tick(int pos, double d, bool major, bool minor);
+   void Update( wxDC &dc, const Envelope* envelope );
+
+   bool Tick( wxDC &dc,
+      int pos, double d, bool major, bool minor, const TickSizes &tickSizes );
 
    // Another tick generator for custom ruler case (noauto) .
-   void TickCustom(int labelIdx, bool major, bool minor);
+   bool TickCustom( wxDC &dc, int labelIdx, bool major, bool minor );
 
 public:
    bool mbTicksOnly; // true => no line the length of the ruler
@@ -172,11 +171,8 @@ private:
    wxColour mTickColour;
    wxPen mPen;
 
-   int          mMaxWidth, mMaxHeight;
    int          mLeft, mTop, mRight, mBottom, mLead;
    int          mLength;
-   int          mLengthOld;
-   wxDC        *mDC;
 
    std::unique_ptr<wxFont> mMinorFont, mMajorFont, mMinorMinorFont;
    bool         mUserFonts;
@@ -184,14 +180,9 @@ private:
    double       mMin, mMax;
    double       mHiddenMin, mHiddenMax;
 
-   double       mMajor;
-   double       mMinor;
-
-   int          mDigits;
-
-   ArrayOf<int> mUserBits;
-   ArrayOf<int> mBits;
-   int          mUserBitLen;
+   using Bits = std::vector< bool >;
+   Bits mUserBits;
+   Bits mBits;
 
    bool         mValid;
 
@@ -205,15 +196,20 @@ private:
       void Draw(wxDC &dc, bool twoTone, wxColour c) const;
    };
 
-   int          mNumMajor;
-   ArrayOf<Label> mMajorLabels;
-   int          mNumMinor;
-   ArrayOf<Label> mMinorLabels;
-   int          mNumMinorMinor;
-   ArrayOf<Label> mMinorMinorLabels;
+   static std::pair< wxRect, Label > MakeTick(
+      Label lab,
+      wxDC &dc, wxFont font,
+      std::vector<bool> &bits,
+      int left, int top, int spacing, int lead,
+      bool flip, int orientation );
+
+   using Labels = std::vector<Label>;
+   Labels mMajorLabels;
+   Labels mMinorLabels;
+   Labels mMinorMinorLabels;
 
    // Returns 'zero' label coordinate (for grid drawing)
-   int FindZero(Label * label, int len);
+   int FindZero( const Labels &labels );
 
    public:
    int GetZeroPosition();

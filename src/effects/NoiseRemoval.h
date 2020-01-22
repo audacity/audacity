@@ -33,11 +33,11 @@ class wxTextCtrl;
 
 #include "../RealFFTf.h"
 
-#define NOISEREMOVAL_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Noise Removal") }
-
 class EffectNoiseRemoval final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectNoiseRemoval();
    virtual ~EffectNoiseRemoval();
 

@@ -73,11 +73,11 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
 
    int read;
    {
-      Maybe<wxLogNull> silence{};
+      Optional<wxLogNull> silence{};
       const wxString fullPath{ fileName.GetFullPath() };
       wxFFile summaryFile(fullPath, wxT("rb"));
       if (Silent)
-         silence.create();
+         silence.emplace();
 
       // FIXME: TRAP_ERR no report to user of absent summary files.
       if (!summaryFile.IsOpened()) {
@@ -160,9 +160,9 @@ bool LegacyBlockFile::ReadSummary(ArrayOf<char> &data)
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
    size_t read;
    {
-      Maybe<wxLogNull> silence{};
+      Optional<wxLogNull> silence{};
       if (mSilentLog)
-         silence.create();
+         silence.emplace();
 
       if (!summaryFile.IsOpened()) {
 

@@ -149,9 +149,13 @@ bool ImportExportPrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-ImportExportPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew ImportExportPrefs(parent, winid);
+namespace{
+PrefsPanel::Registration sAttachment{ 110,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew ImportExportPrefs(parent, winid);
+   },
+   1
 };
+}

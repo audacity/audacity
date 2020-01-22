@@ -301,11 +301,16 @@ bool MidiIOPrefs::Validate()
    return true;
 }
 
-PrefsPanel::Factory
-MidiIOPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew MidiIOPrefs(parent, winid);
+#ifdef EXPERIMENTAL_MIDI_OUT
+namespace{
+PrefsPanel::Registration sAttachment{ 40,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew MidiIOPrefs(parent, winid);
+   }
 };
+}
+#endif
 
 #endif

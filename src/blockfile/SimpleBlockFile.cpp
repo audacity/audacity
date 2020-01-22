@@ -356,9 +356,9 @@ bool SimpleBlockFile::ReadSummary(ArrayOf<char> &data)
       wxFFile file(mFileName.GetFullPath(), wxT("rb"));
 
       {
-         Maybe<wxLogNull> silence{};
+         Optional<wxLogNull> silence{};
          if (mSilentLog)
-            silence.create();
+            silence.emplace();
          // FIXME: TRAP_ERR no report to user of absent summary files?
          // filled with zero instead.
          if (!file.IsOpened()){

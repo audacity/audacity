@@ -501,10 +501,11 @@ bool SpectrumPrefs::Commit()
 
    mCommitted = true;
    SpectrogramSettings::Globals::Get().SavePrefs(); // always
+   SpectrogramSettings *const pSettings = &SpectrogramSettings::defaults();
    if (!mWt || mDefaulted) {
-      SpectrogramSettings *const pSettings = &SpectrogramSettings::defaults();
       pSettings->SavePrefs();
    }
+   pSettings->LoadPrefs(); // always; in case Globals changed
 
    return true;
 }
@@ -598,4 +599,11 @@ SpectrumPrefsFactory( WaveTrack *wt )
       wxASSERT(parent); // to justify safenew
       return safenew SpectrumPrefs(parent, winid, pProject, wt);
    };
+}
+
+namespace{
+PrefsPanel::Registration sAttachment{ 100,
+   SpectrumPrefsFactory( nullptr ),
+   false
+};
 }

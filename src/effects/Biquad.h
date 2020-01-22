@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-EffectScienFilter.h
+Biquad.h
 
 Norm C
 Max Maisel

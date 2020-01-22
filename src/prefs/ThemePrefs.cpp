@@ -31,6 +31,8 @@ Provides:
 #include "../Audacity.h"
 #include "ThemePrefs.h"
 
+#include "../Experimental.h"
+
 #include <wx/app.h>
 #include <wx/wxprec.h>
 #include "../Prefs.h"
@@ -229,9 +231,14 @@ bool ThemePrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-ThemePrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew ThemePrefs(parent, winid);
+#ifdef EXPERIMENTAL_THEME_PREFS
+namespace{
+PrefsPanel::Registration sAttachment{ 180,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew ThemePrefs(parent, winid);
+   }
 };
+}
+#endif

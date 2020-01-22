@@ -250,9 +250,12 @@ bool EffectsPrefs::Commit()
    return true;
 }
 
-PrefsPanel::Factory
-EffectsPrefsFactory = [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-{
-   wxASSERT(parent); // to justify safenew
-   return safenew EffectsPrefs(parent, winid);
+namespace{
+PrefsPanel::Registration sAttachment{ 170,
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   {
+      wxASSERT(parent); // to justify safenew
+      return safenew EffectsPrefs(parent, winid);
+   }
 };
+}

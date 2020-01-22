@@ -18,11 +18,11 @@ class LabelTrack;
 
 #include "Effect.h"
 
-#define FINDCLIPPING_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Find Clipping") }
-
 class EffectFindClipping final : public Effect
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    EffectFindClipping();
    virtual ~EffectFindClipping();
 

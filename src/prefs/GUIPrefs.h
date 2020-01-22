@@ -64,9 +64,6 @@ class GUIPrefs final : public PrefsPanel
    int mDefaultRangeIndex;
 };
 
-/// A PrefsPanel::Factory that creates one GUIPrefs panel.
-extern PrefsPanel::Factory GUIPrefsFactory;
-
 int ShowClippingPrefsID();
 
 extern ChoiceSetting

@@ -26,13 +26,13 @@ channel.
 class wxMenuBar;
 class wxPoint;
 
-#define GET_INFO_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Get Info") }
-
 class GetInfoCommand : public AudacityCommand
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return GET_INFO_PLUGIN_SYMBOL;};
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Gets information in JSON format.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

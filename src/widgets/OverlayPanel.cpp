@@ -95,8 +95,8 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
       } while (!done);
    }
 
-   Maybe<wxClientDC> myDC;
-   auto &dc = pDC ? *pDC : (myDC.create(this), *myDC);
+   Optional<wxClientDC> myDC;
+   auto &dc = pDC ? *pDC : (myDC.emplace(this), *myDC);
 
    // Erase
    auto it2 = pairs.begin();

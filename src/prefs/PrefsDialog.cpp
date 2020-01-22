@@ -17,7 +17,7 @@
 #include "../Audacity.h" // for USE_* macros
 #include "PrefsDialog.h"
 
-#include "../Experimental.h"
+#include <mutex> // for std::call_once
 
 #include <wx/app.h>
 #include <wx/setup.h> // for wxUSE_* macros
@@ -40,34 +40,7 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "BatchPrefs.h"
-#include "DevicePrefs.h"
-#include "DirectoriesPrefs.h"
-#include "EffectsPrefs.h"
-#include "GUIPrefs.h"
-#include "ImportExportPrefs.h"
-#include "KeyConfigPrefs.h"
-#include "LibraryPrefs.h"
-#include "MousePrefs.h"
-#ifdef EXPERIMENTAL_MODULE_PREFS
-#include "ModulePrefs.h"
-#endif
-#include "PlaybackPrefs.h"
-#include "ProjectsPrefs.h"
-#include "QualityPrefs.h"
-#include "RecordingPrefs.h"
-#include "SpectrumPrefs.h"
-#include "ThemePrefs.h"
-#include "TracksPrefs.h"
-#include "TracksBehaviorsPrefs.h"
-#include "WarningsPrefs.h"
-// #include "WaveformPrefs.h"
-#include "WaveformSettings.h"
-#include "ExtImportPrefs.h"
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-#include "MidiIOPrefs.h"
-#endif
+#include "PrefsPanel.h"
 
 #include "../widgets/HelpSystem.h"
 
@@ -478,56 +451,48 @@ int wxTreebookExt::SetSelection(size_t n)
    return i;
 }
 
+namespace {
+   struct Entry{
+      unsigned sequenceNumber;
+      PrefsDialog::PrefsNode node;
 
+      bool operator < ( const Entry &other ) const
+      { return sequenceNumber < other.sequenceNumber; }
+   };
+   using Entries = std::vector< Entry >;
+   Entries &Registry()
+   {
+      static Entries result;
+      return result;
+   }
+}
+
+PrefsPanel::Registration::Registration( unsigned sequenceNumber,
+   const Factory &factory,
+   unsigned nChildren,
+   bool expanded )
+{
+   auto &registry = Registry();
+   Entry entry{ sequenceNumber, { factory, nChildren, expanded } };
+   const auto end = registry.end();
+   // Find insertion point:
+   auto iter = std::lower_bound( registry.begin(), end, entry );
+   // There should not be duplicate sequence numbers:
+   wxASSERT( iter == end || entry < *iter );
+   registry.insert( iter, entry );
+}
 
 PrefsDialog::Factories
 &PrefsDialog::DefaultFactories()
 {
-   // To do, perhaps:  create this table by registration, without including each PrefsPanel
-   // class... and thus allowing a plug-in protocol
+   static Factories factories;
+   static std::once_flag flag;
 
-   static PrefsNode nodes[] = {
-      DevicePrefsFactory,
-      PlaybackPrefsFactory,
-      RecordingPrefsFactory,
-#ifdef EXPERIMENTAL_MIDI_OUT
-      MidiIOPrefsFactory,
-#endif
-      QualityPrefsFactory,
-      GUIPrefsFactory,
-
-      // Group other page(s)
-      PrefsNode(TracksPrefsFactory, 2),
-      // WaveformPrefsFactory(),
-      TracksBehaviorsPrefsFactory,
-      SpectrumPrefsFactory(),
-
-      // Group one other page
-      PrefsNode(ImportExportPrefsFactory, 1),
-      ExtImportPrefsFactory,
-
-#ifdef EXPERIMENTAL_OD_DATA
-      ProjectsPrefsFactory,
-#endif
-
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
-      LibraryPrefsFactory,
-#endif
-      DirectoriesPrefsFactory(),
-      WarningsPrefsFactory,
-      EffectsPrefsFactory,
-#ifdef EXPERIMENTAL_THEME_PREFS
-      ThemePrefsFactory,
-#endif
-      // &batchPrefsFactory,
-      KeyConfigPrefsFactory(),
-      MousePrefsFactory,
-#ifdef EXPERIMENTAL_MODULE_PREFS
-      ModulePrefsFactory,
-#endif
-   };
-
-   static Factories factories(nodes, nodes + sizeof(nodes) / sizeof(nodes[0]));
+   std::call_once( flag, []{
+      for ( const auto &entry : Registry() ) {
+         factories.push_back( entry.node );
+      }
+   } );
    return factories;
 }
 
@@ -857,9 +822,6 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
    wxTheApp->AddPendingEvent(wxCommandEvent{ EVT_PREFS_UPDATE });
 
-   WaveformSettings::defaults().LoadPrefs();
-   SpectrogramSettings::defaults().LoadPrefs();
-
    if( IsModal() )
       EndModal(true);
    else
@@ -949,9 +911,6 @@ wxString PrefsPanel::HelpPageName()
 void DoReloadPreferences( AudacityProject &project )
 {
    {
-      SpectrogramSettings::defaults().LoadPrefs();
-      WaveformSettings::defaults().LoadPrefs();
-
       GlobalPrefsDialog dialog(
          &GetProjectFrame( project ) /* parent */, &project );
       wxCommandEvent Evt;

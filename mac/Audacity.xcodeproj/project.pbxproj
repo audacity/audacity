@@ -1313,6 +1313,7 @@
 		5EA0182A1EC7B226001F2996 /* NoteTrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA0181F1EC7B226001F2996 /* NoteTrackVRulerControls.cpp */; };
 		5EA0182B1EC7B226001F2996 /* WaveTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA018231EC7B226001F2996 /* WaveTrackControls.cpp */; };
 		5EA0182D1EC7B226001F2996 /* WaveTrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA018261EC7B226001F2996 /* WaveTrackVRulerControls.cpp */; };
+		5EAF751923C0EA4F00E94479 /* SpectrumAnalyst.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EAF751723C0EA4E00E94479 /* SpectrumAnalyst.cpp */; };
 		5EB15A2022A94043009FEC89 /* ProjectHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EB15A1E22A94043009FEC89 /* ProjectHistory.cpp */; };
 		5EBD1C9422D11DAF00299FD4 /* SpectrumVZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD1C9022D11DAF00299FD4 /* SpectrumVZoomHandle.cpp */; };
 		5EBD1C9522D11DAF00299FD4 /* WaveformVZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD1C9222D11DAF00299FD4 /* WaveformVZoomHandle.cpp */; };
@@ -3392,6 +3393,8 @@
 		5EA018241EC7B226001F2996 /* WaveTrackControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackControls.h; sourceTree = "<group>"; };
 		5EA018261EC7B226001F2996 /* WaveTrackVRulerControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveTrackVRulerControls.cpp; sourceTree = "<group>"; };
 		5EA018271EC7B226001F2996 /* WaveTrackVRulerControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackVRulerControls.h; sourceTree = "<group>"; };
+		5EAF751723C0EA4E00E94479 /* SpectrumAnalyst.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpectrumAnalyst.cpp; sourceTree = "<group>"; };
+		5EAF751823C0EA4E00E94479 /* SpectrumAnalyst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpectrumAnalyst.h; sourceTree = "<group>"; };
 		5EB15A1E22A94043009FEC89 /* ProjectHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectHistory.cpp; sourceTree = "<group>"; };
 		5EB15A1F22A94043009FEC89 /* ProjectHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectHistory.h; sourceTree = "<group>"; };
 		5EB9EA281D5B81270050AF40 /* ImportForwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportForwards.h; sourceTree = "<group>"; };
@@ -4644,6 +4647,8 @@
 				2860BA210E0F0D8600A13878 /* SoundActivatedRecord.h */,
 				1790B0DE09883BFD008A330A /* Spectrum.cpp */,
 				1790B0DF09883BFD008A330A /* Spectrum.h */,
+				5EAF751723C0EA4E00E94479 /* SpectrumAnalyst.cpp */,
+				5EAF751823C0EA4E00E94479 /* SpectrumAnalyst.h */,
 				28501E9F0CEECEF80029ABAA /* SplashDialog.cpp */,
 				28501EA00CEECEF80029ABAA /* SplashDialog.h */,
 				EDFCEBA418894B2A00C98E51 /* SseMathFuncs.cpp */,
@@ -8713,6 +8718,7 @@
 				1790B16F09883BFD008A330A /* RawAudioGuess.cpp in Sources */,
 				1790B17009883BFD008A330A /* Internat.cpp in Sources */,
 				1790B17109883BFD008A330A /* LabelTrack.cpp in Sources */,
+				5EAF751923C0EA4F00E94479 /* SpectrumAnalyst.cpp in Sources */,
 				1790B17309883BFD008A330A /* LangChoice.cpp in Sources */,
 				5EF3E651203FBAFB006C6882 /* LoadCommands.cpp in Sources */,
 				282B70331B682342009A1618 /* WaveformPrefs.cpp in Sources */,

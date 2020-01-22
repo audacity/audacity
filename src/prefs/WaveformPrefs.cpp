@@ -177,12 +177,12 @@ bool WaveformPrefs::Commit()
       }
    }
 
+   WaveformSettings *const pSettings = &WaveformSettings::defaults();
    if (!mWt || mDefaulted) {
-      WaveformSettings *const pSettings =
-         &WaveformSettings::defaults();
       *pSettings = mTempSettings;
       pSettings->SavePrefs();
    }
+   pSettings->LoadPrefs(); // always; in case Globals changed
 
    mTempSettings.ConvertToEnumeratedDBRange();
 
@@ -263,3 +263,11 @@ WaveformPrefsFactory(WaveTrack *wt)
       return safenew WaveformPrefs(parent, winid, pProject, wt);
    };
 }
+#if 0
+namespace{
+PrefsPanel::Registration sAttachment{ 80,
+   WaveformPrefsFactory( nullptr ),
+   false
+};
+}
+#endif

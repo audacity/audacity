@@ -175,8 +175,6 @@ END_POPUP_MENU()
 
 
 
-#define SET_TRACK_NAME_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Set Track Name") }
-
 // An example of using an AudacityCommand simply to create a dialog.
 // We can add additional functions later, if we want to make it
 // available to scripting.
@@ -184,9 +182,11 @@ END_POPUP_MENU()
 class SetTrackNameCommand : public AudacityCommand
 {
 public:
+   static const ComponentInterfaceSymbol Symbol;
+
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() override
-   {return SET_TRACK_NAME_PLUGIN_SYMBOL;};
+   { return Symbol; }
    //TranslatableString GetDescription() override {return XO("Sets the track name.");};
    //bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -197,6 +197,9 @@ public:
 public:
    wxString mName;
 };
+
+const ComponentInterfaceSymbol SetTrackNameCommand::Symbol
+{ XO("Set Track Name") };
 
 void SetTrackNameCommand::PopulateOrExchange(ShuttleGui & S)
 {

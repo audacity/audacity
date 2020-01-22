@@ -43,7 +43,7 @@ class OldStyleCommandType : public AudacityCommand
 {
 private:
    ComponentInterfaceSymbol mSymbol;
-   Maybe<CommandSignature> mSignature;
+   Optional<CommandSignature> mSignature;
 
 public:
    OldStyleCommandType();

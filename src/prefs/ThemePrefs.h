@@ -53,6 +53,4 @@ class ThemePrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
-/// A PrefsPanel::Factory that creates one ThemePrefs panel.
-extern PrefsPanel::Factory ThemePrefsFactory;
 #endif

@@ -467,6 +467,8 @@ public:
    TranslatableString Stripped( unsigned options = MenuCodes ) const
    { return TranslatableString{ *this }.Strip( options ); }
 
+   wxString StrippedTranslation() const { return Stripped().Translation(); }
+
 private:
    static const Formatter NullContextFormatter;
 
