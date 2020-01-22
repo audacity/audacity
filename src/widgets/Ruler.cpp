@@ -119,10 +119,6 @@ Ruler::Ruler()
    mCustom = false;
    mbMinor = true;
 
-   mGridLineLength = 0;
-   mMajorGrid = false;
-   mMinorGrid = false;
-
    mTwoTone = false;
 
    mUseZoomInfo = NULL;
@@ -1412,46 +1408,44 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope)
 }
 
 // ********** Draw grid ***************************
-void Ruler::DrawGrid(wxDC& dc, int length, bool minor, bool major, int xOffset, int yOffset)
+void Ruler::DrawGrid(wxDC& dc,
+   const int gridLineLength,
+   const bool minorGrid, const bool majorGrid, int xOffset, int yOffset)
 {
-   mGridLineLength = length;
-   mMajorGrid = major;
-   mMinorGrid = minor;
-
    if ( !mValid )
       Update( dc, nullptr );
 
    int gridPos;
    wxPen gridPen;
 
-   if(mbMinor && (mMinorGrid && (mGridLineLength != 0 ))) {
+   if(mbMinor && (minorGrid && (gridLineLength != 0 ))) {
       gridPen.SetColour(178, 178, 178); // very light grey
       dc.SetPen(gridPen);
       for( const auto &label : mMinorLabels ) {
          gridPos = label.pos;
          if(mOrientation == wxHORIZONTAL) {
-            if((gridPos != 0) && (gridPos != mGridLineLength))
-               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, mGridLineLength-1+yOffset);
+            if((gridPos != 0) && (gridPos != gridLineLength))
+               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, gridLineLength-1+yOffset);
          }
          else {
-            if((gridPos != 0) && (gridPos != mGridLineLength))
-               AColor::Line(dc, xOffset, gridPos+yOffset, mGridLineLength-1+xOffset, gridPos+yOffset);
+            if((gridPos != 0) && (gridPos != gridLineLength))
+               AColor::Line(dc, xOffset, gridPos+yOffset, gridLineLength-1+xOffset, gridPos+yOffset);
          }
       }
    }
 
-   if(mMajorGrid && (mGridLineLength != 0 )) {
+   if(majorGrid && (gridLineLength != 0 )) {
       gridPen.SetColour(127, 127, 127); // light grey
       dc.SetPen(gridPen);
       for( const auto &label : mMajorLabels ) {
          gridPos = label.pos;
          if(mOrientation == wxHORIZONTAL) {
-            if((gridPos != 0) && (gridPos != mGridLineLength))
-               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, mGridLineLength-1+yOffset);
+            if((gridPos != 0) && (gridPos != gridLineLength))
+               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, gridLineLength-1+yOffset);
          }
          else {
-            if((gridPos != 0) && (gridPos != mGridLineLength))
-               AColor::Line(dc, xOffset, gridPos+yOffset, mGridLineLength-1+xOffset, gridPos+yOffset);
+            if((gridPos != 0) && (gridPos != gridLineLength))
+               AColor::Line(dc, xOffset, gridPos+yOffset, gridLineLength-1+xOffset, gridPos+yOffset);
          }
       }
 
@@ -1460,18 +1454,18 @@ void Ruler::DrawGrid(wxDC& dc, int length, bool minor, bool major, int xOffset, 
          // Draw 'zero' grid line in black
          dc.SetPen(*wxBLACK_PEN);
          if(mOrientation == wxHORIZONTAL) {
-            if(zeroPosition != mGridLineLength)
-               AColor::Line(dc, zeroPosition+xOffset, yOffset, zeroPosition+xOffset, mGridLineLength-1+yOffset);
+            if(zeroPosition != gridLineLength)
+               AColor::Line(dc, zeroPosition+xOffset, yOffset, zeroPosition+xOffset, gridLineLength-1+yOffset);
          }
          else {
-            if(zeroPosition != mGridLineLength)
-               AColor::Line(dc, xOffset, zeroPosition+yOffset, mGridLineLength-1+xOffset, zeroPosition+yOffset);
+            if(zeroPosition != gridLineLength)
+               AColor::Line(dc, xOffset, zeroPosition+yOffset, gridLineLength-1+xOffset, zeroPosition+yOffset);
          }
       }
    }
 }
 
-int Ruler::FindZero( const Labels &labels )
+int Ruler::FindZero( const Labels &labels ) const
 {
    auto begin = labels.begin(), end = labels.end(),
       iter = std::find_if( begin, end, []( const Label &label ){
@@ -1484,7 +1478,7 @@ int Ruler::FindZero( const Labels &labels )
       return iter->pos;
 }
 
-int Ruler::GetZeroPosition()
+int Ruler::GetZeroPosition() const
 {
    int zero;
    if( (zero = FindZero( mMajorLabels ) ) < 0)

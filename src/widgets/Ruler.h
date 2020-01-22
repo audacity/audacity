@@ -211,10 +211,10 @@ private:
    Labels mMinorMinorLabels;
 
    // Returns 'zero' label coordinate (for grid drawing)
-   int FindZero( const Labels &labels );
+   int FindZero( const Labels &labels ) const;
 
    public:
-   int GetZeroPosition();
+   int GetZeroPosition() const;
 
    private:
    int          mOrientation;
@@ -227,9 +227,6 @@ private:
    bool         mFlip;
    bool         mCustom;
    bool         mbMinor;
-   bool         mMajorGrid;      //  for grid drawing
-   bool         mMinorGrid;      //         .
-   int          mGridLineLength; //        end
    TranslatableString mUnits;
    bool         mTwoTone;
    const ZoomInfo *mUseZoomInfo;
