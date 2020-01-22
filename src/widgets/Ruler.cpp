@@ -353,6 +353,7 @@ void Ruler::Invalidate()
 
 struct Ruler::TickSizes
 {
+   bool useMajor = true;
 
    double       mMajor;
    double       mMinor;
@@ -596,7 +597,7 @@ TickSizes( double UPP, int orientation, RulerFormat format, bool log )
 }
 
 TranslatableString LabelString(
-   double d, bool major, RulerFormat format, const TranslatableString &units )
+   double d, RulerFormat format, const TranslatableString &units )
    const
 {
    // Given a value, turn it into a string according
@@ -640,7 +641,7 @@ TranslatableString LabelString(
       }
       break;
    case TimeFormat:
-      if (major) {
+      if (useMajor) {
          if (d < 0) {
             s = wxT("-");
             d = -d;
@@ -862,7 +863,7 @@ bool Ruler::Tick(
    Label lab;
    lab.value = d;
    lab.pos = pos;
-   lab.text = tickSizes.LabelString( d, major, mFormat, mUnits );
+   lab.text = tickSizes.LabelString( d, mFormat, mUnits );
 
    const auto result = MakeTick(
       lab,
@@ -1127,6 +1128,7 @@ void Ruler::Update(
             if (floor(sg * warpedD / denom) > step) {
                step = floor(sg * warpedD / denom);
                bool major = jj == 0;
+               tickSizes.useMajor = major;
                bool ticked = Tick( dc, ii, sg * step * denom, major, !major, tickSizes );
                if( !major && !ticked ){
                   nDroppedMinorLabels++;
@@ -1134,6 +1136,8 @@ void Ruler::Update(
             }
          }
       }
+
+      tickSizes.useMajor = true;
 
       // If we've dropped minor labels through overcrowding, then don't show
       // any of them.  We're allowed though to drop ones which correspond to the
@@ -1197,6 +1201,7 @@ void Ruler::Update(
       {  start=9; end=1; mstep=-1;
       }
       steps++;
+      tickSizes.useMajor = false;
       for(int i=0; i<=steps; i++) {
          for(int j=start; j!=end; j+=mstep) {
             val = decade * j;
