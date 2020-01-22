@@ -172,6 +172,15 @@ void Ruler::SetUnits(const TranslatableString &units)
    }
 }
 
+void Ruler::SetDbMirrorValue( const double d )
+{
+   if (mDbMirrorValue != d) {
+      mDbMirrorValue = d;
+
+      Invalidate();
+   }
+}
+
 void Ruler::SetOrientation(int orient)
 {
    // wxHORIZONTAL || wxVERTICAL
@@ -303,14 +312,18 @@ void Ruler::SetNumberScale(const NumberScale *pScale)
 
 void Ruler::OfflimitsPixels(int start, int end)
 {
-   if ( mUserBits.empty() ) {
-      if (mOrientation == wxHORIZONTAL)
-         mLength = mRight-mLeft;
-      else
-         mLength = mBottom-mTop;
-      if( mLength < 0 )
-         return;
-      mUserBits.resize( static_cast<size_t>( mLength + 1 ), false );
+   int length = mLength;
+   if (mOrientation == wxHORIZONTAL)
+      length = mRight - mLeft;
+   else
+      length = mBottom - mTop;
+   if( length < 0 )
+      return;
+
+   auto size = static_cast<size_t>( length + 1 );
+   if ( mUserBits.size() < size ) {
+      mLength = length;
+      mUserBits.resize( size, false );
    }
 
    if (end < start)
@@ -323,6 +336,8 @@ void Ruler::OfflimitsPixels(int start, int end)
 
    for(int i = start; i <= end; i++)
       mUserBits[i] = true;
+
+   Invalidate();
 }
 
 void Ruler::SetBounds(int left, int top, int right, int bottom)

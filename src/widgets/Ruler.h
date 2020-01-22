@@ -76,7 +76,7 @@ class AUDACITY_DLL_API Ruler {
    // Specify the name of the units (like "dB") if you
    // want numbers like "1.6" formatted as "1.6 dB".
    void SetUnits(const TranslatableString &units);
-   void SetDbMirrorValue( const double d ){ mDbMirrorValue = d ; };
+   void SetDbMirrorValue( const double d );
 
    // Logarithmic
    void SetLog(bool log);
