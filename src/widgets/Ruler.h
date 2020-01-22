@@ -76,7 +76,7 @@ class AUDACITY_DLL_API Ruler {
    // Specify the name of the units (like "dB") if you
    // want numbers like "1.6" formatted as "1.6 dB".
    void SetUnits(const TranslatableString &units);
-   void SetDbMirrorValue( const double d ){ mDbMirrorValue = d ; };
+   void SetDbMirrorValue( const double d );
 
    // Logarithmic
    void SetLog(bool log);
@@ -98,9 +98,12 @@ class AUDACITY_DLL_API Ruler {
 
    // Good defaults are provided, but you can override here
    void SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont);
-   struct Fonts { wxFont *major, *minor, *minorMinor; };
+   struct Fonts {
+      wxFont major, minor, minorMinor;
+      int lead;
+   };
    Fonts GetFonts() const
-   { return { mMajorFont.get(), mMinorFont.get(), mMinorMinorFont.get() }; }
+   { return mFonts; }
 
    // Copies *pScale if it is not NULL
    void SetNumberScale(const NumberScale *pScale);
@@ -152,48 +155,7 @@ class AUDACITY_DLL_API Ruler {
    void Invalidate();
 
  private:
-   void Update();
-   void Update(const Envelope* envelope);
-   void FindTickSizes();
-   void FindLinearTickSizes(double UPP);
-   TranslatableString LabelString(double d, bool major);
-
-   void Tick(int pos, double d, bool major, bool minor);
-
-   // Another tick generator for custom ruler case (noauto) .
-   void TickCustom(int labelIdx, bool major, bool minor);
-
-public:
-   bool mbTicksOnly; // true => no line the length of the ruler
-   bool mbTicksAtExtremes;
-   wxRect mRect;
-
-private:
-   wxColour mTickColour;
-   wxPen mPen;
-
-   int          mMaxWidth, mMaxHeight;
-   int          mLeft, mTop, mRight, mBottom, mLead;
-   int          mLength;
-   int          mLengthOld;
-   wxDC        *mDC;
-
-   std::unique_ptr<wxFont> mMinorFont, mMajorFont, mMinorMinorFont;
-   bool         mUserFonts;
-
-   double       mMin, mMax;
-   double       mHiddenMin, mHiddenMax;
-
-   double       mMajor;
-   double       mMinor;
-
-   int          mDigits;
-
-   ArrayOf<int> mUserBits;
-   ArrayOf<int> mBits;
-   int          mUserBitLen;
-
-   bool         mValid;
+   struct TickSizes;
 
    class Label {
     public:
@@ -204,16 +166,52 @@ private:
 
       void Draw(wxDC &dc, bool twoTone, wxColour c) const;
    };
+   using Labels = std::vector<Label>;
 
-   int          mNumMajor;
-   ArrayOf<Label> mMajorLabels;
-   int          mNumMinor;
-   ArrayOf<Label> mMinorLabels;
-   int          mNumMinorMinor;
-   ArrayOf<Label> mMinorMinorLabels;
+   using Bits = std::vector< bool >;
+
+   static void ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight );
+   void Update( wxDC &dc, const Envelope* envelope );
+
+   struct TickOutputs;
+   struct Updater;
+   
+public:
+   bool mbTicksOnly; // true => no line the length of the ruler
+   bool mbTicksAtExtremes;
+   wxRect mRect;
+
+private:
+   wxColour mTickColour;
+   wxPen mPen;
+
+   int          mLeft, mTop, mRight, mBottom;
+   int          mLength;
+
+   Fonts mFonts;
+   bool         mUserFonts;
+
+   double       mMin, mMax;
+   double       mHiddenMin, mHiddenMax;
+
+   Bits mUserBits;
+   Bits mBits;
+
+   bool         mValid;
+
+   static std::pair< wxRect, Label > MakeTick(
+      Label lab,
+      wxDC &dc, wxFont font,
+      std::vector<bool> &bits,
+      int left, int top, int spacing, int lead,
+      bool flip, int orientation );
+
+   Labels mMajorLabels;
+   Labels mMinorLabels;
+   Labels mMinorMinorLabels;
 
    // Returns 'zero' label coordinate (for grid drawing)
-   int FindZero(Label * label, int len);
+   int FindZero( const Labels &labels );
 
    public:
    int GetZeroPosition();
