@@ -110,10 +110,6 @@ Ruler::Ruler()
    fontSize = 8;
 #endif
 
-   mFonts.minorMinor = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
-   mFonts.minor = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
-   mFonts.major = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD };
-
    mUserFonts = false;
 
    mLength = 0;
@@ -921,6 +917,42 @@ double SolveWarpedLength(const Envelope &env, double t0, double length)
 }
 }
 
+static constexpr int MinPixelHeight = 10; // 8;
+static constexpr int MaxPixelHeight =
+#ifdef __WXMAC__
+   10
+#else
+   12
+#endif
+;
+
+void Ruler::ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight )
+{
+   int fontSize = 4;
+   wxCoord strW, strH, strD, strL;
+   wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
+
+   desiredPixelHeight =
+      std::max(MinPixelHeight, std::min(MaxPixelHeight, -desiredPixelHeight));
+
+   // Keep making the font bigger until it's too big, then subtract one.
+   dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
+   dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
+   while ((strH - strD - strL) <= desiredPixelHeight && fontSize < 40) {
+      fontSize++;
+      dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
+      dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
+   }
+   fontSize--;
+   dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+   dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
+
+   fonts.lead = strL;
+   fonts.major = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD };
+   fonts.minor = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
+   fonts.minorMinor = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
+}
+
 void Ruler::Update(
    wxDC &dc, const Envelope* envelope )// Envelope *speedEnv, long minSpeed, long maxSpeed )
 {
@@ -933,48 +965,11 @@ void Ruler::Update(
    // tick positions and font size.
 
    if (!mUserFonts) {
-      int fontSize = 4;
-      wxCoord strW, strH, strD, strL;
-      wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
-      int desiredPixelHeight;
-
-
-      static const int MinPixelHeight = 10; // 8;
-      static const int MaxPixelHeight =
-#ifdef __WXMAC__
-            10
-#else
-            12
-#endif
-      ;
-
-      if (mOrientation == wxHORIZONTAL)
-         desiredPixelHeight = mBottom - mTop - 5; // height less ticks and 1px gap
-      else
-         desiredPixelHeight = MaxPixelHeight;
-
-      desiredPixelHeight =
-         std::max(MinPixelHeight, std::min(MaxPixelHeight,
-            desiredPixelHeight));
-
-      // Keep making the font bigger until it's too big, then subtract one.
-      dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
-      dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
-      while ((strH - strD - strL) <= desiredPixelHeight && fontSize < 40) {
-         fontSize++;
-         dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
-         dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
-      }
-      fontSize--;
-      dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-      dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
-      mFonts.lead = strL;
-
-      mFonts.major = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD };
-
-      mFonts.minor = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
-
-      mFonts.minorMinor = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
+      ChooseFonts( mFonts, dc,
+         mOrientation == wxHORIZONTAL
+            ? mBottom - mTop - 5 // height less ticks and 1px gap
+            : MaxPixelHeight
+      );
    }
 
    // If ruler is being resized, we could end up with it being too small.

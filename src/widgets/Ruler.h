@@ -157,6 +157,7 @@ class AUDACITY_DLL_API Ruler {
  private:
    struct TickSizes;
 
+   static void ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight );
    void Update( wxDC &dc, const Envelope* envelope );
 
    bool Tick( wxDC &dc,
