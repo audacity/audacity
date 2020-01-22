@@ -170,10 +170,8 @@ class AUDACITY_DLL_API Ruler {
 
    using Bits = std::vector< bool >;
 
-   static void ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight );
    void Update( wxDC &dc, const Envelope* envelope );
 
-   struct TickOutputs;
    struct Updater;
    
 public:
