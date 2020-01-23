@@ -903,6 +903,11 @@ struct Ruler::Updater {
       UpdateOutputs &allOutputs
    )// Envelope *speedEnv, long minSpeed, long maxSpeed )
       const;
+
+   void UpdateCustom( wxDC &dc, UpdateOutputs &allOutputs ) const;
+   void UpdateLinear(
+      wxDC &dc, const Envelope *envelope, UpdateOutputs &allOutputs ) const;
+   void UpdateNonlinear( wxDC &dc, UpdateOutputs &allOutputs ) const;
 };
 
 struct Ruler::Cache {
@@ -1036,6 +1041,256 @@ void Ruler::Updater::ChooseFonts(
    fonts.minorMinor = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
 }
 
+void Ruler::Updater::UpdateCustom( wxDC &dc, UpdateOutputs &allOutputs ) const
+{
+   TickOutputs majorOutputs{
+      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
+
+   // SET PARAMETER IN MCUSTOM CASE
+   // Works only with major labels
+
+   int numLabel = allOutputs.majorLabels.size();
+
+   for( int i = 0; (i<numLabel) && (i<=mLength); ++i )
+      TickCustom( dc, i, mFonts.major, majorOutputs );
+}
+
+void Ruler::Updater::UpdateLinear(
+   wxDC &dc, const Envelope *envelope, UpdateOutputs &allOutputs ) const
+{
+   TickOutputs majorOutputs{
+      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
+
+   // Use the "hidden" min and max to determine the tick size.
+   // That may make a difference with fisheye.
+   // Otherwise you may see the tick size for the whole ruler change
+   // when the fisheye approaches start or end.
+   double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
+   TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
+
+   auto TickAtValue =
+   [this, &tickSizes, &dc, &majorOutputs]
+   ( double value ) -> int {
+      // Make a tick only if the value is strictly between the bounds
+      if ( value <= std::min( mMin, mMax ) )
+         return -1;
+      if ( value >= std::max( mMin, mMax ) )
+         return -1;
+
+      int mid;
+      if (zoomInfo != NULL) {
+         // Tick only at zero
+         if ( value )
+            return -1;
+         mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
+      }
+      else
+         mid = (int)(mLength*((mMin - value) / (mMin - mMax)) + 0.5);
+
+      const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
+      if (mid >= 0 && mid < iMaxPos)
+         Tick( dc, mid, value, tickSizes, mFonts.major, majorOutputs );
+      else
+         return -1;
+      
+      return mid;
+   };
+
+   if ( mDbMirrorValue ) {
+      // For dB scale, let the zeroes prevail over the extreme values if
+      // not the same, and let midline prevail over all
+
+      // Do the midline
+      TickAtValue( -mDbMirrorValue );
+
+      // Do the upper zero
+      TickAtValue( 0.0 );
+
+      // Do the other zero
+      TickAtValue( -2 * mDbMirrorValue );
+   }
+
+   // Extreme values
+   if (mLabelEdges) {
+      Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
+      Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
+   }
+
+   if ( !mDbMirrorValue ) {
+      // Zero (if it's strictly in the middle somewhere)
+      TickAtValue( 0.0 );
+   }
+
+   double sg = UPP > 0.0? 1.0: -1.0;
+
+   int nDroppedMinorLabels=0;
+   // Major and minor ticks
+   for (int jj = 0; jj < 2; ++jj) {
+      const double denom = jj == 0 ? tickSizes.mMajor : tickSizes.mMinor;
+      auto font = jj == 0 ? mFonts.major : mFonts.minor;
+      TickOutputs outputs{
+         (jj == 0 ? allOutputs.majorLabels : allOutputs.minorLabels),
+         allOutputs.bits, allOutputs.box
+      };
+      int ii = -1, j = 0;
+      double d, warpedD, nextD;
+
+      double prevTime = 0.0, time = 0.0;
+      if (zoomInfo != NULL) {
+         j = zoomInfo->TimeToPosition(mMin);
+         prevTime = zoomInfo->PositionToTime(--j);
+         time = zoomInfo->PositionToTime(++j);
+         d = (prevTime + time) / 2.0;
+      }
+      else
+         d = mMin - UPP / 2;
+      if (envelope)
+         warpedD = ComputeWarpedLength(*envelope, 0.0, d);
+      else
+         warpedD = d;
+      // using ints doesn't work, as
+      // this will overflow and be negative at high zoom.
+      double step = floor(sg * warpedD / denom);
+      while (ii <= mLength) {
+         ii++;
+         if (zoomInfo)
+         {
+            prevTime = time;
+            time = zoomInfo->PositionToTime(++j);
+            nextD = (prevTime + time) / 2.0;
+            // wxASSERT(time >= prevTime);
+         }
+         else
+            nextD = d + UPP;
+         if (envelope)
+            warpedD += ComputeWarpedLength(*envelope, d, nextD);
+         else
+            warpedD = nextD;
+         d = nextD;
+
+         if (floor(sg * warpedD / denom) > step) {
+            step = floor(sg * warpedD / denom);
+            bool major = jj == 0;
+            tickSizes.useMajor = major;
+            bool ticked = Tick( dc, ii, sg * step * denom, tickSizes,
+               font, outputs );
+            if( !major && !ticked ){
+               nDroppedMinorLabels++;
+            }
+         }
+      }
+   }
+
+   tickSizes.useMajor = true;
+
+   // If we've dropped minor labels through overcrowding, then don't show
+   // any of them.  We're allowed though to drop ones which correspond to the
+   // major numbers.
+   if( nDroppedMinorLabels >
+         (allOutputs.majorLabels.size() + (mLabelEdges ? 2:0)) ){
+      // Old code dropped the labels AND their ticks, like so:
+      //    mMinorLabels.clear();
+      // Nowadays we just drop the labels.
+      for( auto &label : allOutputs.minorLabels )
+         label.text = {};
+   }
+
+   // Left and Right Edges
+   if (mLabelEdges) {
+      Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
+      Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
+   }
+}
+
+void Ruler::Updater::UpdateNonlinear(
+    wxDC &dc, UpdateOutputs &allOutputs ) const
+{
+   TickOutputs majorOutputs{
+      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
+
+   auto numberScale = ( mNumberScale == NumberScale{} )
+      ? NumberScale( nstLogarithmic, mMin, mMax )
+      : mNumberScale;
+
+   double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
+   TickSizes tickSizes{ UPP, mOrientation, mFormat, true };
+
+   tickSizes.mDigits = 2; //TODO: implement dynamic digit computation
+
+   double loLog = log10(mMin);
+   double hiLog = log10(mMax);
+   int loDecade = (int) floor(loLog);
+
+   double val;
+   double startDecade = pow(10., (double)loDecade);
+
+   // Major ticks are the decades
+   double decade = startDecade;
+   double delta=hiLog-loLog, steps=fabs(delta);
+   double step = delta>=0 ? 10 : 0.1;
+   double rMin=std::min(mMin, mMax), rMax=std::max(mMin, mMax);
+   for(int i=0; i<=steps; i++)
+   {  // if(i!=0)
+      {  val = decade;
+         if(val >= rMin && val < rMax) {
+            const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+            Tick( dc, pos, val, tickSizes, mFonts.major, majorOutputs );
+         }
+      }
+      decade *= step;
+   }
+
+   // Minor ticks are multiples of decades
+   decade = startDecade;
+   float start, end, mstep;
+   if (delta > 0)
+   {  start=2; end=10; mstep=1;
+   }else
+   {  start=9; end=1; mstep=-1;
+   }
+   steps++;
+   tickSizes.useMajor = false;
+   TickOutputs minorOutputs{
+      allOutputs.minorLabels, allOutputs.bits, allOutputs.box };
+   for(int i=0; i<=steps; i++) {
+      for(int j=start; j!=end; j+=mstep) {
+         val = decade * j;
+         if(val >= rMin && val < rMax) {
+            const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+            Tick( dc, pos, val, tickSizes, mFonts.minor, minorOutputs );
+         }
+      }
+      decade *= step;
+   }
+
+   // MinorMinor ticks are multiples of decades
+   decade = startDecade;
+   if (delta > 0)
+   {  start= 10; end=100; mstep= 1;
+   }else
+   {  start=100; end= 10; mstep=-1;
+   }
+   steps++;
+   TickOutputs minorMinorOutputs{
+      allOutputs.minorMinorLabels, allOutputs.bits, allOutputs.box };
+   for (int i = 0; i <= steps; i++) {
+      // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
+      if (!(mFormat == IntFormat && decade < 10.0)) {
+         for (int f = start; f != (int)(end); f += mstep) {
+            if ((int)(f / 10) != f / 10.0f) {
+               val = decade * f / 10;
+               if (val >= rMin && val < rMax) {
+                  const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+                  Tick( dc, pos, val, tickSizes,
+                     mFonts.minorMinor, minorMinorOutputs );
+               }
+            }
+         }
+      }
+      decade *= step;
+   }
+}
+
 void Ruler::Updater::Update(
    wxDC &dc, const Envelope* envelope,
    UpdateOutputs &allOutputs
@@ -1045,245 +1300,12 @@ void Ruler::Updater::Update(
    TickOutputs majorOutputs{
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
 
-   // *************** Label calculation routine **************
-   if( mCustom ) {
-
-      // SET PARAMETER IN MCUSTOM CASE
-      // Works only with major labels
-
-      int numLabel = allOutputs.majorLabels.size();
-
-      for( int i = 0; (i<numLabel) && (i<=mLength); ++i )
-         TickCustom( dc, i, mFonts.major, majorOutputs );
-
-   }
-   else if( !mLog ) {
-
-      // Use the "hidden" min and max to determine the tick size.
-      // That may make a difference with fisheye.
-      // Otherwise you may see the tick size for the whole ruler change
-      // when the fisheye approaches start or end.
-      double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
-      TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
-
-      auto TickAtValue =
-      [this, &tickSizes, &dc, &majorOutputs]
-      ( double value ) -> int {
-         // Make a tick only if the value is strictly between the bounds
-         if ( value <= std::min( mMin, mMax ) )
-            return -1;
-         if ( value >= std::max( mMin, mMax ) )
-            return -1;
-
-         int mid;
-         if (zoomInfo != NULL) {
-            // Tick only at zero
-            if ( value )
-               return -1;
-            mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
-         }
-         else
-            mid = (int)(mLength*((mMin - value) / (mMin - mMax)) + 0.5);
-
-         const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
-         if (mid >= 0 && mid < iMaxPos)
-            Tick( dc, mid, value, tickSizes, mFonts.major, majorOutputs );
-         else
-            return -1;
-         
-         return mid;
-      };
-
-      if ( mDbMirrorValue ) {
-         // For dB scale, let the zeroes prevail over the extreme values if
-         // not the same, and let midline prevail over all
-
-         // Do the midline
-         TickAtValue( -mDbMirrorValue );
-
-         // Do the upper zero
-         TickAtValue( 0.0 );
-
-         // Do the other zero
-         TickAtValue( -2 * mDbMirrorValue );
-      }
-
-      // Extreme values
-      if (mLabelEdges) {
-         Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
-         Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
-      }
-
-      if ( !mDbMirrorValue ) {
-         // Zero (if it's strictly in the middle somewhere)
-         TickAtValue( 0.0 );
-      }
-
-      double sg = UPP > 0.0? 1.0: -1.0;
-
-      int nDroppedMinorLabels=0;
-      // Major and minor ticks
-      for (int jj = 0; jj < 2; ++jj) {
-         const double denom = jj == 0 ? tickSizes.mMajor : tickSizes.mMinor;
-         auto font = jj == 0 ? mFonts.major : mFonts.minor;
-         TickOutputs outputs{
-            (jj == 0 ? allOutputs.majorLabels : allOutputs.minorLabels),
-            allOutputs.bits, allOutputs.box
-         };
-         int ii = -1, j = 0;
-         double d, warpedD, nextD;
-
-         double prevTime = 0.0, time = 0.0;
-         if (zoomInfo != NULL) {
-            j = zoomInfo->TimeToPosition(mMin);
-            prevTime = zoomInfo->PositionToTime(--j);
-            time = zoomInfo->PositionToTime(++j);
-            d = (prevTime + time) / 2.0;
-         }
-         else
-            d = mMin - UPP / 2;
-         if (envelope)
-            warpedD = ComputeWarpedLength(*envelope, 0.0, d);
-         else
-            warpedD = d;
-         // using ints doesn't work, as
-         // this will overflow and be negative at high zoom.
-         double step = floor(sg * warpedD / denom);
-         while (ii <= mLength) {
-            ii++;
-            if (zoomInfo)
-            {
-               prevTime = time;
-               time = zoomInfo->PositionToTime(++j);
-               nextD = (prevTime + time) / 2.0;
-               // wxASSERT(time >= prevTime);
-            }
-            else
-               nextD = d + UPP;
-            if (envelope)
-               warpedD += ComputeWarpedLength(*envelope, d, nextD);
-            else
-               warpedD = nextD;
-            d = nextD;
-
-            if (floor(sg * warpedD / denom) > step) {
-               step = floor(sg * warpedD / denom);
-               bool major = jj == 0;
-               tickSizes.useMajor = major;
-               bool ticked = Tick( dc, ii, sg * step * denom, tickSizes,
-                  font, outputs );
-               if( !major && !ticked ){
-                  nDroppedMinorLabels++;
-               }
-            }
-         }
-      }
-
-      tickSizes.useMajor = true;
-
-      // If we've dropped minor labels through overcrowding, then don't show
-      // any of them.  We're allowed though to drop ones which correspond to the
-      // major numbers.
-      if( nDroppedMinorLabels >
-            (allOutputs.majorLabels.size() + (mLabelEdges ? 2:0)) ){
-         // Old code dropped the labels AND their ticks, like so:
-         //    mMinorLabels.clear();
-         // Nowadays we just drop the labels.
-         for( auto &label : allOutputs.minorLabels )
-            label.text = {};
-      }
-
-      // Left and Right Edges
-      if (mLabelEdges) {
-         Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
-         Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
-      }
-   }
-   else {
-      // log case
-
-      auto numberScale = ( mNumberScale == NumberScale{} )
-         ? NumberScale( nstLogarithmic, mMin, mMax )
-         : mNumberScale;
-
-      double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
-      TickSizes tickSizes{ UPP, mOrientation, mFormat, true };
-
-      tickSizes.mDigits = 2; //TODO: implement dynamic digit computation
-
-      double loLog = log10(mMin);
-      double hiLog = log10(mMax);
-      int loDecade = (int) floor(loLog);
-
-      double val;
-      double startDecade = pow(10., (double)loDecade);
-
-      // Major ticks are the decades
-      double decade = startDecade;
-      double delta=hiLog-loLog, steps=fabs(delta);
-      double step = delta>=0 ? 10 : 0.1;
-      double rMin=std::min(mMin, mMax), rMax=std::max(mMin, mMax);
-      for(int i=0; i<=steps; i++)
-      {  // if(i!=0)
-         {  val = decade;
-            if(val >= rMin && val < rMax) {
-               const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               Tick( dc, pos, val, tickSizes, mFonts.major, majorOutputs );
-            }
-         }
-         decade *= step;
-      }
-
-      // Minor ticks are multiples of decades
-      decade = startDecade;
-      float start, end, mstep;
-      if (delta > 0)
-      {  start=2; end=10; mstep=1;
-      }else
-      {  start=9; end=1; mstep=-1;
-      }
-      steps++;
-      tickSizes.useMajor = false;
-      TickOutputs minorOutputs{
-         allOutputs.minorLabels, allOutputs.bits, allOutputs.box };
-      for(int i=0; i<=steps; i++) {
-         for(int j=start; j!=end; j+=mstep) {
-            val = decade * j;
-            if(val >= rMin && val < rMax) {
-               const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               Tick( dc, pos, val, tickSizes, mFonts.minor, minorOutputs );
-            }
-         }
-         decade *= step;
-      }
-
-      // MinorMinor ticks are multiples of decades
-      decade = startDecade;
-      if (delta > 0)
-      {  start= 10; end=100; mstep= 1;
-      }else
-      {  start=100; end= 10; mstep=-1;
-      }
-      steps++;
-      TickOutputs minorMinorOutputs{
-         allOutputs.minorMinorLabels, allOutputs.bits, allOutputs.box };
-      for (int i = 0; i <= steps; i++) {
-         // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
-         if (!(mFormat == IntFormat && decade < 10.0)) {
-            for (int f = start; f != (int)(end); f += mstep) {
-               if ((int)(f / 10) != f / 10.0f) {
-                  val = decade * f / 10;
-                  if (val >= rMin && val < rMax) {
-                     const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-                     Tick( dc, pos, val, tickSizes,
-                        mFonts.minorMinor, minorMinorOutputs );
-                  }
-               }
-            }
-         }
-         decade *= step;
-      }
-   }
+   if ( mCustom )
+      UpdateCustom( dc, allOutputs );
+   else if ( !mLog )
+      UpdateLinear( dc, envelope, allOutputs );
+   else
+      UpdateNonlinear( dc, allOutputs );
 
    int displacementx=0, displacementy=0;
    auto &box = allOutputs.box;
