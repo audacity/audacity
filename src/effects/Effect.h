@@ -530,15 +530,13 @@ private:
    size_t mBlockSize;
    unsigned mNumChannels;
 
+public:
    const static wxString kUserPresetIdent;
    const static wxString kFactoryPresetIdent;
    const static wxString kCurrentSettingsIdent;
    const static wxString kFactoryDefaultsIdent;
 
-   friend class EffectManager;// so it can call PromptUser in support of batch commands.
-   friend class EffectRack;
    friend class EffectUIHost;
-   friend class EffectPresetsDialog;
 };
 
 // FIXME:
