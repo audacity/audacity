@@ -259,15 +259,22 @@ void Ruler::SetMinor(bool value)
 
 namespace {
 void FindFontHeights(
-   wxCoord &height, wxCoord &lead,
-   wxDC &dc, int fontSize, wxFontWeight weight = wxFONTWEIGHT_NORMAL )
+   wxCoord &height, wxCoord &lead, wxDC &dc, const wxFont &font )
 {
    wxCoord strW, strH, strD, strL;
    static const wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
-   dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, weight));
+   dc.SetFont( font );
    dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
    height = strH - strD - strL;
    lead = strL;
+}
+
+void FindFontHeights(
+   wxCoord &height, wxCoord &lead,
+   wxDC &dc, int fontSize, wxFontWeight weight = wxFONTWEIGHT_NORMAL )
+{
+   const wxFont font{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, weight };
+   FindFontHeights( height, lead, dc, font );
 }
 }
 
@@ -280,7 +287,7 @@ void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxF
 
    wxScreenDC dc;
    wxCoord height;
-   FindFontHeights( height, mpUserFonts->lead, dc, majorFont.GetPointSize() );
+   FindFontHeights( height, mpUserFonts->lead, dc, majorFont );
 
    mpFonts.reset();
    Invalidate();
