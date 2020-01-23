@@ -193,7 +193,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
          NumberScale scale(
             wt->GetSpectrogramSettings().GetScale( minFreq, maxFreq )
                .Reversal() );
-         vruler->SetNumberScale(&scale);
+         vruler->SetNumberScale(scale);
       }
          break;
    }

@@ -78,7 +78,6 @@ using std::max;
 //
 
 Ruler::Ruler()
-   : mpNumberScale{}
 {
    mMin = mHiddenMin = 0.0;
    mMax = mHiddenMax = 100.0;
@@ -110,18 +109,10 @@ Ruler::Ruler()
    fontSize = 8;
 #endif
 
-   mUserFonts = false;
-
    mLength = 0;
-
-   mValid = false;
 
    mCustom = false;
    mbMinor = true;
-
-   mGridLineLength = 0;
-   mMajorGrid = false;
-   mMinorGrid = false;
 
    mTwoTone = false;
 
@@ -266,47 +257,46 @@ void Ruler::SetMinor(bool value)
 
 namespace {
 void FindFontHeights(
-   wxCoord &height, wxCoord &lead,
-   wxDC &dc, int fontSize, wxFontWeight weight = wxFONTWEIGHT_NORMAL )
+   wxCoord &height, wxCoord &lead, wxDC &dc, const wxFont &font )
 {
    wxCoord strW, strH, strD, strL;
    static const wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
-   dc.SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, weight));
+   dc.SetFont( font );
    dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
    height = strH - strD - strL;
    lead = strL;
+}
+
+void FindFontHeights(
+   wxCoord &height, wxCoord &lead,
+   wxDC &dc, int fontSize, wxFontWeight weight = wxFONTWEIGHT_NORMAL )
+{
+   const wxFont font{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, weight };
+   FindFontHeights( height, lead, dc, font );
 }
 }
 
 void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont)
 {
-   mFonts.minorMinor = minorMinorFont;
-   mFonts.minor = minorFont;
-   mFonts.major = majorFont;
-
    // Won't override these fonts
-   mUserFonts = true;
+
+   mpUserFonts = std::make_unique<Fonts>(
+      Fonts{ majorFont, minorFont, minorMinorFont, 0 } );
 
    wxScreenDC dc;
    wxCoord height;
-   FindFontHeights( height, mFonts.lead, dc, majorFont.GetPointSize() );
+   FindFontHeights( height, mpUserFonts->lead, dc, majorFont );
 
+   mpFonts.reset();
+   mpFonts.reset();
    Invalidate();
 }
 
-void Ruler::SetNumberScale(const NumberScale *pScale)
+void Ruler::SetNumberScale(const NumberScale &scale)
 {
-   if (!pScale) {
-      if (mpNumberScale) {
-         mpNumberScale.reset();
-         Invalidate();
-      }
-   }
-   else {
-      if (!mpNumberScale || *mpNumberScale != *pScale) {
-         mpNumberScale = std::make_unique<NumberScale>(*pScale);
-         Invalidate();
-      }
+   if ( mNumberScale != scale ) {
+      mNumberScale = scale;
+      Invalidate();
    }
 }
 
@@ -355,14 +345,12 @@ void Ruler::SetBounds(int left, int top, int right, int bottom)
 
 void Ruler::Invalidate()
 {
-   mValid = false;
-
    if (mOrientation == wxHORIZONTAL)
       mLength = mRight-mLeft;
    else
       mLength = mBottom-mTop;
 
-   mBits.clear();
+   mpCache.reset();
    mUserBits.clear();
 }
 
@@ -858,25 +846,42 @@ auto Ruler::MakeTick(
    return { { strLeft, strTop, strW, strH }, lab };
 }
 
-struct Ruler::TickOutputs{ Labels &labels; Bits &bits; wxRect &box; };
 struct Ruler::Updater {
    const Ruler &mRuler;
+   const ZoomInfo *zoomInfo;
+
+   explicit Updater( const Ruler &ruler, const ZoomInfo *z )
+   : mRuler{ ruler }
+   , zoomInfo{ z }
+   {}
 
    const double mDbMirrorValue = mRuler.mDbMirrorValue;
    const int mLength = mRuler.mLength;
    const RulerFormat mFormat = mRuler.mFormat;
    const TranslatableString mUnits = mRuler.mUnits;
+
    const int mLeft = mRuler.mLeft;
    const int mTop = mRuler.mTop;
+   const int mBottom = mRuler.mBottom;
+   const int mRight = mRuler.mRight;
+
    const int mSpacing = mRuler.mSpacing;
    const int mOrientation = mRuler.mOrientation;
-   const int mLead = mRuler.mFonts.lead;
    const bool mFlip = mRuler.mFlip;
 
-   explicit Updater( const Ruler &ruler )
-     : mRuler( ruler )
-   {}
+   const bool mCustom = mRuler.mCustom;
+   const Fonts &mFonts = *mRuler.mpFonts;
+   const bool mLog = mRuler.mLog;
+   const double mHiddenMin = mRuler.mHiddenMin;
+   const double mHiddenMax = mRuler.mHiddenMax;
+   const bool mLabelEdges = mRuler.mLabelEdges;
+   const double mMin = mRuler.mMin;
+   const double mMax = mRuler.mMax;
+   const int mLeftOffset = mRuler.mLeftOffset;
+   const NumberScale mNumberScale = mRuler.mNumberScale;
 
+   struct TickOutputs;
+   
    bool Tick( wxDC &dc,
       int pos, double d, const TickSizes &tickSizes, wxFont font,
       TickOutputs outputs
@@ -886,6 +891,36 @@ struct Ruler::Updater {
    bool TickCustom( wxDC &dc, int labelIdx, wxFont font,
       TickOutputs outputs
    ) const;
+
+   static void ChooseFonts(
+      std::unique_ptr<Fonts> &pFonts, const Fonts *pUserFonts,
+      wxDC &dc, int desiredPixelHeight );
+
+   struct UpdateOutputs;
+   
+   void Update(
+      wxDC &dc, const Envelope* envelope,
+      UpdateOutputs &allOutputs
+   )// Envelope *speedEnv, long minSpeed, long maxSpeed )
+      const;
+
+   void UpdateCustom( wxDC &dc, UpdateOutputs &allOutputs ) const;
+   void UpdateLinear(
+      wxDC &dc, const Envelope *envelope, UpdateOutputs &allOutputs ) const;
+   void UpdateNonlinear( wxDC &dc, UpdateOutputs &allOutputs ) const;
+};
+
+struct Ruler::Cache {
+   Bits mBits;
+   Labels mMajorLabels, mMinorLabels, mMinorMinorLabels;
+   wxRect mRect;
+};
+
+struct Ruler::Updater::TickOutputs{ Labels &labels; Bits &bits; wxRect &box; };
+struct Ruler::Updater::UpdateOutputs {
+   Labels &majorLabels, &minorLabels, &minorMinorLabels;
+   Bits &bits;
+   wxRect &box;
 };
 
 bool Ruler::Updater::Tick( wxDC &dc,
@@ -911,7 +946,7 @@ bool Ruler::Updater::Tick( wxDC &dc,
       lab,
       dc, font,
       outputs.bits,
-      mLeft, mTop, mSpacing, mLead,
+      mLeft, mTop, mSpacing, mFonts.lead,
       mFlip,
       mOrientation );
 
@@ -940,7 +975,7 @@ bool Ruler::Updater::TickCustom( wxDC &dc, int labelIdx, wxFont font,
 
       dc, font,
       outputs.bits,
-      mLeft, mTop, mSpacing, mLead,
+      mLeft, mTop, mSpacing, mFonts.lead,
       mFlip,
       mOrientation );
 
@@ -971,8 +1006,21 @@ static constexpr int MaxPixelHeight =
 #endif
 ;
 
-void Ruler::ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight )
+void Ruler::Updater::ChooseFonts(
+   std::unique_ptr<Fonts> &pFonts, const Fonts *pUserFonts,
+   wxDC &dc, int desiredPixelHeight )
 {
+   if ( pFonts )
+      return;
+
+   if ( pUserFonts ) {
+      pFonts = std::make_unique<Fonts>( *pUserFonts );
+      return;
+   }
+
+   pFonts = std::make_unique<Fonts>( Fonts{ {}, {}, {}, 0 } );
+   auto &fonts = *pFonts;
+
    int fontSize = 4;
 
    desiredPixelHeight =
@@ -993,9 +1041,325 @@ void Ruler::ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight )
    fonts.minorMinor = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
 }
 
-void Ruler::Update(
-   wxDC &dc, const Envelope* envelope )// Envelope *speedEnv, long minSpeed, long maxSpeed )
+void Ruler::Updater::UpdateCustom( wxDC &dc, UpdateOutputs &allOutputs ) const
 {
+   TickOutputs majorOutputs{
+      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
+
+   // SET PARAMETER IN MCUSTOM CASE
+   // Works only with major labels
+
+   int numLabel = allOutputs.majorLabels.size();
+
+   for( int i = 0; (i<numLabel) && (i<=mLength); ++i )
+      TickCustom( dc, i, mFonts.major, majorOutputs );
+}
+
+void Ruler::Updater::UpdateLinear(
+   wxDC &dc, const Envelope *envelope, UpdateOutputs &allOutputs ) const
+{
+   TickOutputs majorOutputs{
+      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
+
+   // Use the "hidden" min and max to determine the tick size.
+   // That may make a difference with fisheye.
+   // Otherwise you may see the tick size for the whole ruler change
+   // when the fisheye approaches start or end.
+   double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
+   TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
+
+   auto TickAtValue =
+   [this, &tickSizes, &dc, &majorOutputs]
+   ( double value ) -> int {
+      // Make a tick only if the value is strictly between the bounds
+      if ( value <= std::min( mMin, mMax ) )
+         return -1;
+      if ( value >= std::max( mMin, mMax ) )
+         return -1;
+
+      int mid;
+      if (zoomInfo != NULL) {
+         // Tick only at zero
+         if ( value )
+            return -1;
+         mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
+      }
+      else
+         mid = (int)(mLength*((mMin - value) / (mMin - mMax)) + 0.5);
+
+      const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
+      if (mid >= 0 && mid < iMaxPos)
+         Tick( dc, mid, value, tickSizes, mFonts.major, majorOutputs );
+      else
+         return -1;
+      
+      return mid;
+   };
+
+   if ( mDbMirrorValue ) {
+      // For dB scale, let the zeroes prevail over the extreme values if
+      // not the same, and let midline prevail over all
+
+      // Do the midline
+      TickAtValue( -mDbMirrorValue );
+
+      // Do the upper zero
+      TickAtValue( 0.0 );
+
+      // Do the other zero
+      TickAtValue( -2 * mDbMirrorValue );
+   }
+
+   // Extreme values
+   if (mLabelEdges) {
+      Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
+      Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
+   }
+
+   if ( !mDbMirrorValue ) {
+      // Zero (if it's strictly in the middle somewhere)
+      TickAtValue( 0.0 );
+   }
+
+   double sg = UPP > 0.0? 1.0: -1.0;
+
+   int nDroppedMinorLabels=0;
+   // Major and minor ticks
+   for (int jj = 0; jj < 2; ++jj) {
+      const double denom = jj == 0 ? tickSizes.mMajor : tickSizes.mMinor;
+      auto font = jj == 0 ? mFonts.major : mFonts.minor;
+      TickOutputs outputs{
+         (jj == 0 ? allOutputs.majorLabels : allOutputs.minorLabels),
+         allOutputs.bits, allOutputs.box
+      };
+      int ii = -1, j = 0;
+      double d, warpedD, nextD;
+
+      double prevTime = 0.0, time = 0.0;
+      if (zoomInfo != NULL) {
+         j = zoomInfo->TimeToPosition(mMin);
+         prevTime = zoomInfo->PositionToTime(--j);
+         time = zoomInfo->PositionToTime(++j);
+         d = (prevTime + time) / 2.0;
+      }
+      else
+         d = mMin - UPP / 2;
+      if (envelope)
+         warpedD = ComputeWarpedLength(*envelope, 0.0, d);
+      else
+         warpedD = d;
+      // using ints doesn't work, as
+      // this will overflow and be negative at high zoom.
+      double step = floor(sg * warpedD / denom);
+      while (ii <= mLength) {
+         ii++;
+         if (zoomInfo)
+         {
+            prevTime = time;
+            time = zoomInfo->PositionToTime(++j);
+            nextD = (prevTime + time) / 2.0;
+            // wxASSERT(time >= prevTime);
+         }
+         else
+            nextD = d + UPP;
+         if (envelope)
+            warpedD += ComputeWarpedLength(*envelope, d, nextD);
+         else
+            warpedD = nextD;
+         d = nextD;
+
+         if (floor(sg * warpedD / denom) > step) {
+            step = floor(sg * warpedD / denom);
+            bool major = jj == 0;
+            tickSizes.useMajor = major;
+            bool ticked = Tick( dc, ii, sg * step * denom, tickSizes,
+               font, outputs );
+            if( !major && !ticked ){
+               nDroppedMinorLabels++;
+            }
+         }
+      }
+   }
+
+   tickSizes.useMajor = true;
+
+   // If we've dropped minor labels through overcrowding, then don't show
+   // any of them.  We're allowed though to drop ones which correspond to the
+   // major numbers.
+   if( nDroppedMinorLabels >
+         (allOutputs.majorLabels.size() + (mLabelEdges ? 2:0)) ){
+      // Old code dropped the labels AND their ticks, like so:
+      //    mMinorLabels.clear();
+      // Nowadays we just drop the labels.
+      for( auto &label : allOutputs.minorLabels )
+         label.text = {};
+   }
+
+   // Left and Right Edges
+   if (mLabelEdges) {
+      Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
+      Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
+   }
+}
+
+void Ruler::Updater::UpdateNonlinear(
+    wxDC &dc, UpdateOutputs &allOutputs ) const
+{
+   TickOutputs majorOutputs{
+      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
+
+   auto numberScale = ( mNumberScale == NumberScale{} )
+      ? NumberScale( nstLogarithmic, mMin, mMax )
+      : mNumberScale;
+
+   double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
+   TickSizes tickSizes{ UPP, mOrientation, mFormat, true };
+
+   tickSizes.mDigits = 2; //TODO: implement dynamic digit computation
+
+   double loLog = log10(mMin);
+   double hiLog = log10(mMax);
+   int loDecade = (int) floor(loLog);
+
+   double val;
+   double startDecade = pow(10., (double)loDecade);
+
+   // Major ticks are the decades
+   double decade = startDecade;
+   double delta=hiLog-loLog, steps=fabs(delta);
+   double step = delta>=0 ? 10 : 0.1;
+   double rMin=std::min(mMin, mMax), rMax=std::max(mMin, mMax);
+   for(int i=0; i<=steps; i++)
+   {  // if(i!=0)
+      {  val = decade;
+         if(val >= rMin && val < rMax) {
+            const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+            Tick( dc, pos, val, tickSizes, mFonts.major, majorOutputs );
+         }
+      }
+      decade *= step;
+   }
+
+   // Minor ticks are multiples of decades
+   decade = startDecade;
+   float start, end, mstep;
+   if (delta > 0)
+   {  start=2; end=10; mstep=1;
+   }else
+   {  start=9; end=1; mstep=-1;
+   }
+   steps++;
+   tickSizes.useMajor = false;
+   TickOutputs minorOutputs{
+      allOutputs.minorLabels, allOutputs.bits, allOutputs.box };
+   for(int i=0; i<=steps; i++) {
+      for(int j=start; j!=end; j+=mstep) {
+         val = decade * j;
+         if(val >= rMin && val < rMax) {
+            const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+            Tick( dc, pos, val, tickSizes, mFonts.minor, minorOutputs );
+         }
+      }
+      decade *= step;
+   }
+
+   // MinorMinor ticks are multiples of decades
+   decade = startDecade;
+   if (delta > 0)
+   {  start= 10; end=100; mstep= 1;
+   }else
+   {  start=100; end= 10; mstep=-1;
+   }
+   steps++;
+   TickOutputs minorMinorOutputs{
+      allOutputs.minorMinorLabels, allOutputs.bits, allOutputs.box };
+   for (int i = 0; i <= steps; i++) {
+      // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
+      if (!(mFormat == IntFormat && decade < 10.0)) {
+         for (int f = start; f != (int)(end); f += mstep) {
+            if ((int)(f / 10) != f / 10.0f) {
+               val = decade * f / 10;
+               if (val >= rMin && val < rMax) {
+                  const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+                  Tick( dc, pos, val, tickSizes,
+                     mFonts.minorMinor, minorMinorOutputs );
+               }
+            }
+         }
+      }
+      decade *= step;
+   }
+}
+
+void Ruler::Updater::Update(
+   wxDC &dc, const Envelope* envelope,
+   UpdateOutputs &allOutputs
+)// Envelope *speedEnv, long minSpeed, long maxSpeed )
+   const
+{
+   TickOutputs majorOutputs{
+      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
+
+   if ( mCustom )
+      UpdateCustom( dc, allOutputs );
+   else if ( !mLog )
+      UpdateLinear( dc, envelope, allOutputs );
+   else
+      UpdateNonlinear( dc, allOutputs );
+
+   int displacementx=0, displacementy=0;
+   auto &box = allOutputs.box;
+   if (!mFlip) {
+      if (mOrientation==wxHORIZONTAL) {
+         int d = mTop + box.GetHeight() + 5;
+         box.Offset(0,d);
+         box.Inflate(0,5);
+         displacementx=0;
+         displacementy=d;
+      }
+      else {
+         int d = mLeft - box.GetLeft() + 5;
+         box.Offset(d,0);
+         box.Inflate(5,0);
+         displacementx=d;
+         displacementy=0;
+      }
+   }
+   else {
+      if (mOrientation==wxHORIZONTAL) {
+         box.Inflate(0,5);
+         displacementx=0;
+         displacementy=0;
+      }
+   }
+   auto update = [=]( Label &label ){
+      label.lx += displacementx;
+      label.ly += displacementy;
+   };
+   for( auto &label : allOutputs.majorLabels )
+      update( label );
+   for( auto &label : allOutputs.minorLabels )
+      update( label );
+   for( auto &label : allOutputs.minorMinorLabels )
+      update( label );
+}
+
+void Ruler::ChooseFonts( wxDC &dc ) const
+{
+   Updater::ChooseFonts( mpFonts, mpUserFonts.get(), dc,
+      mOrientation == wxHORIZONTAL
+         ? mBottom - mTop - 5 // height less ticks and 1px gap
+         : MaxPixelHeight
+   );
+}
+
+void Ruler::UpdateCache(
+   wxDC &dc, const Envelope* envelope )
+   const // Envelope *speedEnv, long minSpeed, long maxSpeed )
+{
+   if ( mpCache )
+      return;
+
    const ZoomInfo *zoomInfo = NULL;
    if (!mLog && mOrientation == wxHORIZONTAL)
       zoomInfo = mUseZoomInfo;
@@ -1004,13 +1368,9 @@ void Ruler::Update(
    // (i.e. we've been invalidated).  Recompute all
    // tick positions and font size.
 
-   if (!mUserFonts) {
-      ChooseFonts( mFonts, dc,
-         mOrientation == wxHORIZONTAL
-            ? mBottom - mTop - 5 // height less ticks and 1px gap
-            : MaxPixelHeight
-      );
-   }
+   ChooseFonts( dc );
+   mpCache = std::make_unique< Cache >();
+   auto &cache = *mpCache;
 
    // If ruler is being resized, we could end up with it being too small.
    // Values of mLength of zero or below cause bad array allocations and
@@ -1020,317 +1380,55 @@ void Ruler::Update(
       return;
 
    if (mOrientation == wxHORIZONTAL)
-      mRect = wxRect(0,0, mLength,0);
+      cache.mRect = { 0, 0, mLength, 0 };
    else
-      mRect = wxRect(0,0, 0,mLength);
+      cache.mRect = { 0, 0, 0, mLength };
 
    // FIXME: Surely we do not need to allocate storage for the labels?
    // We can just recompute them as we need them?  Yes, but only if
    // mCustom is false!!!!
 
    if(!mCustom) {
-      mMajorLabels.clear();
-      mMinorLabels.clear();
-      mMinorMinorLabels.clear();
+      cache.mMajorLabels.clear();
+      cache.mMinorLabels.clear();
+      cache.mMinorMinorLabels.clear();
    }
 
-   mBits = mUserBits;
-   mBits.resize( static_cast<size_t>(mLength + 1), false );
+   cache.mBits = mUserBits;
+   cache.mBits.resize( static_cast<size_t>(mLength + 1), false );
 
    // Keep Updater const!  We want no hidden state changes affecting its
    // computations.
-   const Updater updater{ *this };
-
-   TickOutputs majorOutputs{ mMajorLabels, mBits, mRect };
-
-   // *************** Label calculation routine **************
-   if( mCustom ) {
-
-      // SET PARAMETER IN MCUSTOM CASE
-      // Works only with major labels
-
-      int numLabel = mMajorLabels.size();
-
-      for( int i = 0; (i<numLabel) && (i<=mLength); ++i )
-         updater.TickCustom( dc, i, mFonts.major, majorOutputs );
-
-   }
-   else if( !mLog ) {
-
-      // Use the "hidden" min and max to determine the tick size.
-      // That may make a difference with fisheye.
-      // Otherwise you may see the tick size for the whole ruler change
-      // when the fisheye approaches start or end.
-      double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
-      TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
-
-      auto TickAtValue =
-      [this, zoomInfo, &tickSizes, &dc, &updater, &majorOutputs]
-      ( double value ) -> int {
-         // Make a tick only if the value is strictly between the bounds
-         if ( value <= std::min( mMin, mMax ) )
-            return -1;
-         if ( value >= std::max( mMin, mMax ) )
-            return -1;
-
-         int mid;
-         if (zoomInfo != NULL) {
-            // Tick only at zero
-            if ( value )
-               return -1;
-            mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
-         }
-         else
-            mid = (int)(mLength*((mMin - value) / (mMin - mMax)) + 0.5);
-
-         const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
-         if (mid >= 0 && mid < iMaxPos)
-            updater.Tick( dc, mid, value, tickSizes, mFonts.major, majorOutputs );
-         else
-            return -1;
-         
-         return mid;
-      };
-
-      if ( mDbMirrorValue ) {
-         // For dB scale, let the zeroes prevail over the extreme values if
-         // not the same, and let midline prevail over all
-
-         // Do the midline
-         TickAtValue( -mDbMirrorValue );
-
-         // Do the upper zero
-         TickAtValue( 0.0 );
-
-         // Do the other zero
-         TickAtValue( -2 * mDbMirrorValue );
-      }
-
-      // Extreme values
-      if (mLabelEdges) {
-         updater.Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
-         updater.Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
-      }
-
-      if ( !mDbMirrorValue ) {
-         // Zero (if it's strictly in the middle somewhere)
-         TickAtValue( 0.0 );
-      }
-
-      double sg = UPP > 0.0? 1.0: -1.0;
-
-      int nDroppedMinorLabels=0;
-      // Major and minor ticks
-      for (int jj = 0; jj < 2; ++jj) {
-         const double denom = jj == 0 ? tickSizes.mMajor : tickSizes.mMinor;
-         auto font = jj == 0 ? mFonts.major : mFonts.minor;
-         TickOutputs outputs{
-            (jj == 0 ? mMajorLabels : mMinorLabels),
-            mBits, mRect
-         };
-         int ii = -1, j = 0;
-         double d, warpedD, nextD;
-
-         double prevTime = 0.0, time = 0.0;
-         if (zoomInfo != NULL) {
-            j = zoomInfo->TimeToPosition(mMin);
-            prevTime = zoomInfo->PositionToTime(--j);
-            time = zoomInfo->PositionToTime(++j);
-            d = (prevTime + time) / 2.0;
-         }
-         else
-            d = mMin - UPP / 2;
-         if (envelope)
-            warpedD = ComputeWarpedLength(*envelope, 0.0, d);
-         else
-            warpedD = d;
-         // using ints doesn't work, as
-         // this will overflow and be negative at high zoom.
-         double step = floor(sg * warpedD / denom);
-         while (ii <= mLength) {
-            ii++;
-            if (zoomInfo)
-            {
-               prevTime = time;
-               time = zoomInfo->PositionToTime(++j);
-               nextD = (prevTime + time) / 2.0;
-               // wxASSERT(time >= prevTime);
-            }
-            else
-               nextD = d + UPP;
-            if (envelope)
-               warpedD += ComputeWarpedLength(*envelope, d, nextD);
-            else
-               warpedD = nextD;
-            d = nextD;
-
-            if (floor(sg * warpedD / denom) > step) {
-               step = floor(sg * warpedD / denom);
-               bool major = jj == 0;
-               tickSizes.useMajor = major;
-               bool ticked = updater.Tick( dc, ii, sg * step * denom, tickSizes,
-                  font, outputs );
-               if( !major && !ticked ){
-                  nDroppedMinorLabels++;
-               }
-            }
-         }
-      }
-
-      tickSizes.useMajor = true;
-
-      // If we've dropped minor labels through overcrowding, then don't show
-      // any of them.  We're allowed though to drop ones which correspond to the
-      // major numbers.
-      if( nDroppedMinorLabels > (mMajorLabels.size() + (mLabelEdges ? 2:0)) ){
-         // Old code dropped the labels AND their ticks, like so:
-         //    mMinorLabels.clear();
-         // Nowadays we just drop the labels.
-         for( auto &label : mMinorLabels )
-            label.text = {};
-      }
-
-      // Left and Right Edges
-      if (mLabelEdges) {
-         updater.Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
-         updater.Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
-      }
-   }
-   else {
-      // log case
-
-      NumberScale numberScale(mpNumberScale
-         ? *mpNumberScale
-         : NumberScale(nstLogarithmic, mMin, mMax)
-      );
-
-      double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
-      TickSizes tickSizes{ UPP, mOrientation, mFormat, true };
-
-      tickSizes.mDigits = 2; //TODO: implement dynamic digit computation
-
-      double loLog = log10(mMin);
-      double hiLog = log10(mMax);
-      int loDecade = (int) floor(loLog);
-
-      double val;
-      double startDecade = pow(10., (double)loDecade);
-
-      // Major ticks are the decades
-      double decade = startDecade;
-      double delta=hiLog-loLog, steps=fabs(delta);
-      double step = delta>=0 ? 10 : 0.1;
-      double rMin=std::min(mMin, mMax), rMax=std::max(mMin, mMax);
-      for(int i=0; i<=steps; i++)
-      {  // if(i!=0)
-         {  val = decade;
-            if(val >= rMin && val < rMax) {
-               const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               updater.Tick( dc, pos, val, tickSizes, mFonts.major, majorOutputs );
-            }
-         }
-         decade *= step;
-      }
-
-      // Minor ticks are multiples of decades
-      decade = startDecade;
-      float start, end, mstep;
-      if (delta > 0)
-      {  start=2; end=10; mstep=1;
-      }else
-      {  start=9; end=1; mstep=-1;
-      }
-      steps++;
-      tickSizes.useMajor = false;
-      TickOutputs minorOutputs{ mMinorLabels, mBits, mRect };
-      for(int i=0; i<=steps; i++) {
-         for(int j=start; j!=end; j+=mstep) {
-            val = decade * j;
-            if(val >= rMin && val < rMax) {
-               const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               updater.Tick( dc, pos, val, tickSizes, mFonts.minor, minorOutputs );
-            }
-         }
-         decade *= step;
-      }
-
-      // MinorMinor ticks are multiples of decades
-      decade = startDecade;
-      if (delta > 0)
-      {  start= 10; end=100; mstep= 1;
-      }else
-      {  start=100; end= 10; mstep=-1;
-      }
-      steps++;
-      TickOutputs minorMinorOutputs{ mMinorMinorLabels, mBits, mRect };
-      for (int i = 0; i <= steps; i++) {
-         // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
-         if (!(mFormat == IntFormat && decade < 10.0)) {
-            for (int f = start; f != (int)(end); f += mstep) {
-               if ((int)(f / 10) != f / 10.0f) {
-                  val = decade * f / 10;
-                  if (val >= rMin && val < rMax) {
-                     const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-                     updater.Tick( dc, pos, val, tickSizes,
-                        mFonts.minorMinor, minorMinorOutputs );
-                  }
-               }
-            }
-         }
-         decade *= step;
-      }
-   }
-
-   int displacementx=0, displacementy=0;
-   if (!mFlip) {
-      if (mOrientation==wxHORIZONTAL) {
-         int d=mTop+mRect.GetHeight()+5;
-         mRect.Offset(0,d);
-         mRect.Inflate(0,5);
-         displacementx=0;
-         displacementy=d;
-      }
-      else {
-         int d=mLeft-mRect.GetLeft()+5;
-         mRect.Offset(d,0);
-         mRect.Inflate(5,0);
-         displacementx=d;
-         displacementy=0;
-      }
-   }
-   else {
-      if (mOrientation==wxHORIZONTAL) {
-         mRect.Inflate(0,5);
-         displacementx=0;
-         displacementy=0;
-      }
-   }
-   auto update = [=]( Label &label ){
-      label.lx += displacementx;
-      label.ly += displacementy;
+   const Updater updater{ *this, zoomInfo };
+   Updater::UpdateOutputs allOutputs{
+      cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
+      cache.mBits, cache.mRect
    };
-   for( auto &label : mMajorLabels )
-      update( label );
-   for( auto &label : mMinorLabels )
-      update( label );
-   for( auto &label : mMinorMinorLabels )
-      update( label );
-
-   mValid = true;
+   updater.Update(dc, envelope, allOutputs);
 }
 
-void Ruler::Draw(wxDC& dc)
+auto Ruler::GetFonts() const -> Fonts
+{
+   if ( !mpFonts ) {
+      wxScreenDC dc;
+      ChooseFonts( dc );
+   }
+
+   return *mpFonts;
+}
+
+void Ruler::Draw(wxDC& dc) const
 {
    Draw( dc, NULL);
 }
 
-void Ruler::Draw(wxDC& dc, const Envelope* envelope)
+void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
 {
    if( mLength <=0 )
       return;
 
-   if (!mValid)
-      Update( dc, envelope );
+   UpdateCache( dc, envelope );
+   auto &cache = *mpCache;
 
    dc.SetTextForeground( mTickColour );
 #ifdef EXPERIMENTAL_THEMING
@@ -1361,7 +1459,7 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope)
       }
    }
 
-   dc.SetFont(mFonts.major);
+   dc.SetFont( mpFonts->major );
 
    // We may want to not show the ticks at the extremes,
    // though still showing the labels.
@@ -1395,63 +1493,62 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope)
       label.Draw(dc, mTwoTone, mTickColour);
    };
 
-   for( const auto &label : mMajorLabels )
+   for( const auto &label : cache.mMajorLabels )
       drawLabel( label, 4 );
 
    if( mbMinor ) {
-      dc.SetFont(mFonts.minor);
-      for( const auto &label : mMinorLabels )
+      dc.SetFont( mpFonts->minor );
+      for( const auto &label : cache.mMinorLabels )
          drawLabel( label, 2 );
    }
 
-   dc.SetFont(mFonts.minorMinor);
+   dc.SetFont( mpFonts->minorMinor );
 
-   for( const auto &label : mMinorMinorLabels )
+   for( const auto &label : cache.mMinorMinorLabels )
       if ( !label.text.empty() )
          drawLabel( label, 2 );
 }
 
 // ********** Draw grid ***************************
-void Ruler::DrawGrid(wxDC& dc, int length, bool minor, bool major, int xOffset, int yOffset)
+void Ruler::DrawGrid(wxDC& dc,
+   const int gridLineLength,
+   const bool minorGrid, const bool majorGrid, int xOffset, int yOffset)
+   const
 {
-   mGridLineLength = length;
-   mMajorGrid = major;
-   mMinorGrid = minor;
-
-   if ( !mValid )
-      Update( dc, nullptr );
+   UpdateCache( dc, nullptr );
+   auto &cache = *mpCache;
 
    int gridPos;
    wxPen gridPen;
 
-   if(mbMinor && (mMinorGrid && (mGridLineLength != 0 ))) {
+   if(mbMinor && (minorGrid && (gridLineLength != 0 ))) {
       gridPen.SetColour(178, 178, 178); // very light grey
       dc.SetPen(gridPen);
-      for( const auto &label : mMinorLabels ) {
+      for( const auto &label : cache.mMinorLabels ) {
          gridPos = label.pos;
          if(mOrientation == wxHORIZONTAL) {
-            if((gridPos != 0) && (gridPos != mGridLineLength))
-               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, mGridLineLength-1+yOffset);
+            if((gridPos != 0) && (gridPos != gridLineLength))
+               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, gridLineLength-1+yOffset);
          }
          else {
-            if((gridPos != 0) && (gridPos != mGridLineLength))
-               AColor::Line(dc, xOffset, gridPos+yOffset, mGridLineLength-1+xOffset, gridPos+yOffset);
+            if((gridPos != 0) && (gridPos != gridLineLength))
+               AColor::Line(dc, xOffset, gridPos+yOffset, gridLineLength-1+xOffset, gridPos+yOffset);
          }
       }
    }
 
-   if(mMajorGrid && (mGridLineLength != 0 )) {
+   if(majorGrid && (gridLineLength != 0 )) {
       gridPen.SetColour(127, 127, 127); // light grey
       dc.SetPen(gridPen);
-      for( const auto &label : mMajorLabels ) {
+      for( const auto &label : cache.mMajorLabels ) {
          gridPos = label.pos;
          if(mOrientation == wxHORIZONTAL) {
-            if((gridPos != 0) && (gridPos != mGridLineLength))
-               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, mGridLineLength-1+yOffset);
+            if((gridPos != 0) && (gridPos != gridLineLength))
+               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, gridLineLength-1+yOffset);
          }
          else {
-            if((gridPos != 0) && (gridPos != mGridLineLength))
-               AColor::Line(dc, xOffset, gridPos+yOffset, mGridLineLength-1+xOffset, gridPos+yOffset);
+            if((gridPos != 0) && (gridPos != gridLineLength))
+               AColor::Line(dc, xOffset, gridPos+yOffset, gridLineLength-1+xOffset, gridPos+yOffset);
          }
       }
 
@@ -1460,18 +1557,18 @@ void Ruler::DrawGrid(wxDC& dc, int length, bool minor, bool major, int xOffset, 
          // Draw 'zero' grid line in black
          dc.SetPen(*wxBLACK_PEN);
          if(mOrientation == wxHORIZONTAL) {
-            if(zeroPosition != mGridLineLength)
-               AColor::Line(dc, zeroPosition+xOffset, yOffset, zeroPosition+xOffset, mGridLineLength-1+yOffset);
+            if(zeroPosition != gridLineLength)
+               AColor::Line(dc, zeroPosition+xOffset, yOffset, zeroPosition+xOffset, gridLineLength-1+yOffset);
          }
          else {
-            if(zeroPosition != mGridLineLength)
-               AColor::Line(dc, xOffset, zeroPosition+yOffset, mGridLineLength-1+xOffset, zeroPosition+yOffset);
+            if(zeroPosition != gridLineLength)
+               AColor::Line(dc, xOffset, zeroPosition+yOffset, gridLineLength-1+xOffset, zeroPosition+yOffset);
          }
       }
    }
 }
 
-int Ruler::FindZero( const Labels &labels )
+int Ruler::FindZero( const Labels &labels ) const
 {
    auto begin = labels.begin(), end = labels.end(),
       iter = std::find_if( begin, end, []( const Label &label ){
@@ -1484,35 +1581,52 @@ int Ruler::FindZero( const Labels &labels )
       return iter->pos;
 }
 
-int Ruler::GetZeroPosition()
+int Ruler::GetZeroPosition() const
 {
+   wxASSERT( mpCache );
+   auto &cache = *mpCache;
    int zero;
-   if( (zero = FindZero( mMajorLabels ) ) < 0)
-      zero = FindZero( mMinorLabels );
+   if( (zero = FindZero( cache.mMajorLabels ) ) < 0)
+      zero = FindZero( cache.mMinorLabels );
    // PRL: don't consult minor minor??
    return zero;
 }
 
 void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
 {
-   if (!mValid) {
+   if ( !mpCache ) {
       wxScreenDC sdc;
-      Update( sdc, nullptr );
+      UpdateCache( sdc, nullptr );
    }
 
+   auto &cache = *mpCache;
    if (width)
-      *width = mRect.GetWidth();
+      *width = cache.mRect.GetWidth();
 
    if (height)
-      *height = mRect.GetHeight();
+      *height = cache.mRect.GetHeight();
 }
 
 
-void Ruler::SetCustomMode(bool value) { mCustom = value; }
+void Ruler::SetCustomMode(bool value)
+{
+   if ( mCustom != value ) {
+      mCustom = value;
+      Invalidate();
+   }
+}
 
+#if 0
+// These two unused functions need reconsideration of their interactions with
+// the cache and update
 void Ruler::SetCustomMajorLabels(
    const TranslatableStrings &labels, int start, int step)
 {
+   SetCustomMode( true );
+   mpCache = std::make_unique<Cache>();
+   auto &cache = *mpCache;
+   auto &mMajorLabels = cache.mMajorLabels;
+
    const auto numLabel = labels.size();
    mMajorLabels.resize( numLabel );
 
@@ -1520,12 +1634,16 @@ void Ruler::SetCustomMajorLabels(
       mMajorLabels[i].text = labels[i];
       mMajorLabels[i].pos  = start + i*step;
    }
-   //Remember: DELETE majorlabels....
 }
 
 void Ruler::SetCustomMinorLabels(
    const TranslatableStrings &labels, int start, int step)
 {
+   SetCustomMode( true );
+   mpCache = std::make_unique<Cache>();
+   auto &cache = *mpCache;
+   auto &mMinorLabels = cache.mMinorLabels;
+
    const auto numLabel = labels.size();
    mMinorLabels.resize( numLabel );
 
@@ -1533,8 +1651,8 @@ void Ruler::SetCustomMinorLabels(
       mMinorLabels[i].text = labels[i];
       mMinorLabels[i].pos  = start + i*step;
    }
-   //Remember: DELETE majorlabels....
 }
+#endif
 
 void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
 {
@@ -1553,8 +1671,15 @@ void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
 
 void Ruler::SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo)
 {
-   mLeftOffset = leftOffset;
-   mUseZoomInfo = zoomInfo;
+   
+   if ( mLeftOffset != leftOffset ||
+      // Hm, is this invalidation sufficient?  What if *zoomInfo changes under us?
+      mUseZoomInfo != zoomInfo
+   ) {
+      mLeftOffset = leftOffset;
+      mUseZoomInfo = zoomInfo;
+      Invalidate();
+   }
 }
 
 //

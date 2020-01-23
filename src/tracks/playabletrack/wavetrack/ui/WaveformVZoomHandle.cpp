@@ -120,7 +120,6 @@ void WaveformVZoomHandle::DoZoom(
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
    const SpectrogramSettings &specSettings = pTrack->GetSpectrogramSettings();
-   NumberScale scale;
 
    bool bDragZoom = WaveTrackVZoomHandle::IsDragZooming(zoomStart, zoomEnd);
    // Add 100 if spectral to separate the kinds of zoom.
