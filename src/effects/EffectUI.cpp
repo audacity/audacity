@@ -2003,3 +2003,96 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
 
    return true;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+BEGIN_EVENT_TABLE(EffectDialog, wxDialogWrapper)
+   EVT_BUTTON(wxID_OK, EffectDialog::OnOk)
+END_EVENT_TABLE()
+
+EffectDialog::EffectDialog(wxWindow * parent,
+                           const TranslatableString & title,
+                           int type,
+                           int flags,
+                           int additionalButtons)
+: wxDialogWrapper(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, flags)
+{
+   mType = type;
+   mAdditionalButtons = additionalButtons;
+}
+
+void EffectDialog::Init()
+{
+   long buttons = eOkButton;
+   if ((mType != EffectTypeAnalyze) && (mType != EffectTypeTool))
+   {
+      buttons |= eCancelButton;
+      if (mType == EffectTypeProcess)
+      {
+         buttons |= ePreviewButton;
+      }
+   }
+
+   ShuttleGui S(this, eIsCreating);
+
+   S.SetBorder(5);
+   S.StartVerticalLay(true);
+   {
+      PopulateOrExchange(S);
+      S.AddStandardButtons(buttons|mAdditionalButtons);
+   }
+   S.EndVerticalLay();
+
+   Layout();
+   Fit();
+   SetMinSize(GetSize());
+   Center();
+}
+
+/// This is a virtual function which will be overridden to
+/// provide the actual parameters that we want for each
+/// kind of dialog.
+void EffectDialog::PopulateOrExchange(ShuttleGui & WXUNUSED(S))
+{
+   return;
+}
+
+bool EffectDialog::TransferDataToWindow()
+{
+   ShuttleGui S(this, eIsSettingToDialog);
+   PopulateOrExchange(S);
+
+   return true;
+}
+
+bool EffectDialog::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsGettingFromDialog);
+   PopulateOrExchange(S);
+
+   return true;
+}
+
+bool EffectDialog::Validate()
+{
+   return true;
+}
+
+void EffectDialog::OnPreview(wxCommandEvent & WXUNUSED(evt))
+{
+   return;
+}
+
+void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
+{
+   // On wxGTK (wx2.8.12), the default action is still executed even if
+   // the button is disabled.  This appears to affect all wxDialogs, not
+   // just our Effects dialogs.  So, this is a only temporary workaround
+   // for legacy effects that disable the OK button.  Hopefully this has
+   // been corrected in wx3.
+   if (FindWindow(wxID_OK)->IsEnabled() && Validate() && TransferDataFromWindow())
+   {
+      EndModal(true);
+   }
+
+   return;
+}

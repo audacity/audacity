@@ -236,7 +236,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual RegistryPaths GetUserPresets();
    virtual bool HasCurrentSettings();
    virtual bool HasFactoryDefaults();
-   virtual wxString GetPreset(wxWindow * parent, const wxString & parms);
 
    // Name of page in the Audacity alpha manual
    virtual wxString ManualPage();
@@ -530,15 +529,13 @@ private:
    size_t mBlockSize;
    unsigned mNumChannels;
 
+public:
    const static wxString kUserPresetIdent;
    const static wxString kFactoryPresetIdent;
    const static wxString kCurrentSettingsIdent;
    const static wxString kFactoryDefaultsIdent;
 
-   friend class EffectManager;// so it can call PromptUser in support of batch commands.
-   friend class EffectRack;
    friend class EffectUIHost;
-   friend class EffectPresetsDialog;
 };
 
 // FIXME:
@@ -546,64 +543,6 @@ private:
 // FIXME:
 
 #define ID_EFFECT_PREVIEW ePreviewID
-
-// Base dialog for regular effect
-class AUDACITY_DLL_API EffectDialog /* not final */ : public wxDialogWrapper
-{
-public:
-   // constructors and destructors
-   EffectDialog(wxWindow * parent,
-                const TranslatableString & title,
-                int type = 0,
-                int flags = wxDEFAULT_DIALOG_STYLE,
-                int additionalButtons = 0);
-
-   void Init();
-
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
-   bool Validate() override;
-
-   // NEW virtuals:
-   virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual void OnPreview(wxCommandEvent & evt);
-   virtual void OnOk(wxCommandEvent & evt);
-
-private:
-   int mType;
-   int mAdditionalButtons;
-
-   DECLARE_EVENT_TABLE()
-   wxDECLARE_NO_COPY_CLASS(EffectDialog);
-};
-
-class EffectPresetsDialog final : public wxDialogWrapper
-{
-public:
-   EffectPresetsDialog(wxWindow *parent, Effect *effect);
-   virtual ~EffectPresetsDialog();
-
-   wxString GetSelected() const;
-   void SetSelected(const wxString & parms);
-
-private:
-   void SetPrefix(const TranslatableString & type, const wxString & prefix);
-   void UpdateUI();
-
-   void OnType(wxCommandEvent & evt);
-   void OnOk(wxCommandEvent & evt);
-   void OnCancel(wxCommandEvent & evt);
-
-private:
-   wxChoice *mType;
-   wxListBox *mPresets;
-
-   RegistryPaths mFactoryPresets;
-   RegistryPaths mUserPresets;
-   wxString mSelection;
-
-   DECLARE_EVENT_TABLE()
-};
 
 // Utility functions
 

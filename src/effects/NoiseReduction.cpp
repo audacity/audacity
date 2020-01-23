@@ -43,6 +43,7 @@
 
 #include "LoadEffects.h"
 #include "EffectManager.h"
+#include "EffectUI.h"
 
 #include "../ShuttleGui.h"
 #include "../widgets/HelpSystem.h"
