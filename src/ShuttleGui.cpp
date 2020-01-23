@@ -374,7 +374,7 @@ wxBitmapButton * ShuttleGuiBase::AddBitmapButton(
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxBitmapButton);
    wxBitmapButton * pBtn;
    mpWind = pBtn = safenew wxBitmapButton(GetParent(), miId, Bitmap,
-      wxDefaultPosition, wxDefaultSize, GetStyle( wxNO_BORDER ) );
+      wxDefaultPosition, wxDefaultSize, GetStyle( wxBU_AUTODRAW ) );
    pBtn->SetBackgroundColour(
       wxColour( 246,246,243));
 //      wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
@@ -2077,8 +2077,13 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
          if ( !mItem.mToolTip.empty() )
             mpWind->SetToolTip( mItem.mToolTip.Translation() );
 
-         if ( !mItem.mName.empty() )
+         if ( !mItem.mName.empty() ) {
             mpWind->SetName( mItem.mName.Stripped().Translation() );
+#ifndef __WXMAC__
+            if (auto pButton = dynamic_cast< wxBitmapButton* >( mpWind ))
+               pButton->SetLabel(  mItem.mName.Translation() );
+#endif
+         }
 
          if ( !mItem.mNameSuffix.empty() )
             mpWind->SetName(
