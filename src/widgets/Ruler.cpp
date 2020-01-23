@@ -1108,7 +1108,7 @@ void Ruler::Update(
 
       // Extreme values
       if (mLabelEdges) {
-         updater.Tick( dc, 0, mMax, tickSizes, mFonts.major, majorOutputs );
+         updater.Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
          updater.Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
       }
 
