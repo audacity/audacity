@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  Ruler.cpp
+  AdornedRulerPanel.cpp
 
   Dominic Mazzoni
 
