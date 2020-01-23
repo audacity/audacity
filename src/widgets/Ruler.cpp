@@ -78,7 +78,6 @@ using std::max;
 //
 
 Ruler::Ruler()
-   : mpNumberScale{}
 {
    mMin = mHiddenMin = 0.0;
    mMax = mHiddenMax = 100.0;
@@ -290,19 +289,11 @@ void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxF
    Invalidate();
 }
 
-void Ruler::SetNumberScale(const NumberScale *pScale)
+void Ruler::SetNumberScale(const NumberScale &scale)
 {
-   if (!pScale) {
-      if (mpNumberScale) {
-         mpNumberScale.reset();
-         Invalidate();
-      }
-   }
-   else {
-      if (!mpNumberScale || *mpNumberScale != *pScale) {
-         mpNumberScale = std::make_unique<NumberScale>(*pScale);
-         Invalidate();
-      }
+   if ( mNumberScale != scale ) {
+      mNumberScale = scale;
+      Invalidate();
    }
 }
 
@@ -886,7 +877,7 @@ struct Ruler::Updater {
    const double mMin = mRuler.mMin;
    const double mMax = mRuler.mMax;
    const int mLeftOffset = mRuler.mLeftOffset;
-   const NumberScale *mpNumberScale = mRuler.mpNumberScale.get();
+   const NumberScale mNumberScale = mRuler.mNumberScale;
 
    struct TickOutputs;
    
@@ -1189,10 +1180,9 @@ void Ruler::Updater::Update(
    else {
       // log case
 
-      NumberScale numberScale(mpNumberScale
-         ? *mpNumberScale
-         : NumberScale(nstLogarithmic, mMin, mMax)
-      );
+      auto numberScale = ( mNumberScale == NumberScale{} )
+         ? NumberScale( nstLogarithmic, mMin, mMax )
+         : mNumberScale;
 
       double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
       TickSizes tickSizes{ UPP, mOrientation, mFormat, true };

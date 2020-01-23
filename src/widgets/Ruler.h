@@ -12,6 +12,7 @@
 #define __AUDACITY_RULER__
 
 #include "wxPanelWrapper.h" // to inherit
+#include "../NumberScale.h" // member variable
 
 #include <wx/colour.h> // member variable
 #include <wx/pen.h> // member variable
@@ -20,7 +21,6 @@ class wxArrayString;
 class wxDC;
 class wxFont;
 
-class NumberScale;
 class Envelope;
 class ZoomInfo;
 
@@ -105,8 +105,7 @@ class AUDACITY_DLL_API Ruler {
    Fonts GetFonts() const
    { return mFonts; }
 
-   // Copies *pScale if it is not NULL
-   void SetNumberScale(const NumberScale *pScale);
+   void SetNumberScale(const NumberScale &scale);
 
    // The ruler will not draw text within this (pixel) range.
    // Use this if you have another graphic object obscuring part
@@ -230,7 +229,7 @@ private:
    const ZoomInfo *mUseZoomInfo;
    int          mLeftOffset;
 
-   std::unique_ptr<NumberScale> mpNumberScale;
+   NumberScale mNumberScale;
 };
 
 class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {

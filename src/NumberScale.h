@@ -24,6 +24,7 @@ enum NumberScaleType {
    nstPeriod,
 
    nstNumScaleTypes,
+   nstNone,
 };
 
 
@@ -31,7 +32,7 @@ class NumberScale
 {
 public:
    NumberScale()
-      : mType(nstLinear), mValue0(0), mValue1(1)
+      : mType(nstNone), mValue0(0), mValue1(1)
    {}
 
    NumberScale(NumberScaleType type, float value0, float value1)
@@ -39,6 +40,7 @@ public:
    {
       switch (mType) {
       case nstLinear:
+      case nstNone:
       {
          mValue0 = value0;
          mValue1 = value1;
@@ -156,6 +158,7 @@ public:
       default:
          wxASSERT(false);
       case nstLinear:
+      case nstNone:
          return mValue0 + pp * (mValue1 - mValue0);
       case nstLogarithmic:
          return exp(mValue0 + pp * (mValue1 - mValue0));
@@ -186,6 +189,7 @@ public:
          default:
             wxASSERT(false);
          case nstLinear:
+         case nstNone:
          case nstLogarithmic:
             return mValue;
          case nstMel:
@@ -203,6 +207,7 @@ public:
       {
          switch (mType) {
          case nstLinear:
+         case nstNone:
          case nstMel:
          case nstBark:
          case nstErb:
@@ -230,6 +235,7 @@ public:
       default:
          wxASSERT(false);
       case nstLinear:
+      case nstNone:
       case nstMel:
       case nstBark:
       case nstErb:
@@ -253,6 +259,7 @@ public:
       default:
          wxASSERT(false);
       case nstLinear:
+      case nstNone:
          return ((val - mValue0) / (mValue1 - mValue0));
       case nstLogarithmic:
          return ((log(val) - mValue0) / (mValue1 - mValue0));
