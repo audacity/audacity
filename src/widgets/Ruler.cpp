@@ -111,8 +111,6 @@ Ruler::Ruler()
 
    mLength = 0;
 
-   mValid = false;
-
    mCustom = false;
    mbMinor = true;
 
@@ -290,6 +288,7 @@ void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxF
    FindFontHeights( height, mpUserFonts->lead, dc, majorFont );
 
    mpFonts.reset();
+   mpFonts.reset();
    Invalidate();
 }
 
@@ -346,14 +345,12 @@ void Ruler::SetBounds(int left, int top, int right, int bottom)
 
 void Ruler::Invalidate()
 {
-   mValid = false;
-
    if (mOrientation == wxHORIZONTAL)
       mLength = mRight-mLeft;
    else
       mLength = mBottom-mTop;
 
-   mBits.clear();
+   mpCache.reset();
    mUserBits.clear();
 }
 
@@ -908,6 +905,12 @@ struct Ruler::Updater {
       const;
 };
 
+struct Ruler::Cache {
+   Bits mBits;
+   Labels mMajorLabels, mMinorLabels, mMinorMinorLabels;
+   wxRect mRect;
+};
+
 struct Ruler::Updater::TickOutputs{ Labels &labels; Bits &bits; wxRect &box; };
 struct Ruler::Updater::UpdateOutputs {
    Labels &majorLabels, &minorLabels, &minorMinorLabels;
@@ -1328,9 +1331,13 @@ void Ruler::ChooseFonts( wxDC &dc ) const
    );
 }
 
-void Ruler::Update(
-   wxDC &dc, const Envelope* envelope )// Envelope *speedEnv, long minSpeed, long maxSpeed )
+void Ruler::UpdateCache(
+   wxDC &dc, const Envelope* envelope )
+   const // Envelope *speedEnv, long minSpeed, long maxSpeed )
 {
+   if ( mpCache )
+      return;
+
    const ZoomInfo *zoomInfo = NULL;
    if (!mLog && mOrientation == wxHORIZONTAL)
       zoomInfo = mUseZoomInfo;
@@ -1340,6 +1347,8 @@ void Ruler::Update(
    // tick positions and font size.
 
    ChooseFonts( dc );
+   mpCache = std::make_unique< Cache >();
+   auto &cache = *mpCache;
 
    // If ruler is being resized, we could end up with it being too small.
    // Values of mLength of zero or below cause bad array allocations and
@@ -1349,33 +1358,31 @@ void Ruler::Update(
       return;
 
    if (mOrientation == wxHORIZONTAL)
-      mRect = wxRect(0,0, mLength,0);
+      cache.mRect = { 0, 0, mLength, 0 };
    else
-      mRect = wxRect(0,0, 0,mLength);
+      cache.mRect = { 0, 0, 0, mLength };
 
    // FIXME: Surely we do not need to allocate storage for the labels?
    // We can just recompute them as we need them?  Yes, but only if
    // mCustom is false!!!!
 
    if(!mCustom) {
-      mMajorLabels.clear();
-      mMinorLabels.clear();
-      mMinorMinorLabels.clear();
+      cache.mMajorLabels.clear();
+      cache.mMinorLabels.clear();
+      cache.mMinorMinorLabels.clear();
    }
 
-   mBits = mUserBits;
-   mBits.resize( static_cast<size_t>(mLength + 1), false );
+   cache.mBits = mUserBits;
+   cache.mBits.resize( static_cast<size_t>(mLength + 1), false );
 
    // Keep Updater const!  We want no hidden state changes affecting its
    // computations.
    const Updater updater{ *this, zoomInfo };
    Updater::UpdateOutputs allOutputs{
-      mMajorLabels, mMinorLabels, mMinorMinorLabels,
-      mBits, mRect
+      cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
+      cache.mBits, cache.mRect
    };
    updater.Update(dc, envelope, allOutputs);
-
-   mValid = true;
 }
 
 auto Ruler::GetFonts() const -> Fonts
@@ -1388,18 +1395,18 @@ auto Ruler::GetFonts() const -> Fonts
    return *mpFonts;
 }
 
-void Ruler::Draw(wxDC& dc)
+void Ruler::Draw(wxDC& dc) const
 {
    Draw( dc, NULL);
 }
 
-void Ruler::Draw(wxDC& dc, const Envelope* envelope)
+void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
 {
    if( mLength <=0 )
       return;
 
-   if (!mValid)
-      Update( dc, envelope );
+   UpdateCache( dc, envelope );
+   auto &cache = *mpCache;
 
    dc.SetTextForeground( mTickColour );
 #ifdef EXPERIMENTAL_THEMING
@@ -1464,18 +1471,18 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope)
       label.Draw(dc, mTwoTone, mTickColour);
    };
 
-   for( const auto &label : mMajorLabels )
+   for( const auto &label : cache.mMajorLabels )
       drawLabel( label, 4 );
 
    if( mbMinor ) {
       dc.SetFont( mpFonts->minor );
-      for( const auto &label : mMinorLabels )
+      for( const auto &label : cache.mMinorLabels )
          drawLabel( label, 2 );
    }
 
    dc.SetFont( mpFonts->minorMinor );
 
-   for( const auto &label : mMinorMinorLabels )
+   for( const auto &label : cache.mMinorMinorLabels )
       if ( !label.text.empty() )
          drawLabel( label, 2 );
 }
@@ -1484,9 +1491,10 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope)
 void Ruler::DrawGrid(wxDC& dc,
    const int gridLineLength,
    const bool minorGrid, const bool majorGrid, int xOffset, int yOffset)
+   const
 {
-   if ( !mValid )
-      Update( dc, nullptr );
+   UpdateCache( dc, nullptr );
+   auto &cache = *mpCache;
 
    int gridPos;
    wxPen gridPen;
@@ -1494,7 +1502,7 @@ void Ruler::DrawGrid(wxDC& dc,
    if(mbMinor && (minorGrid && (gridLineLength != 0 ))) {
       gridPen.SetColour(178, 178, 178); // very light grey
       dc.SetPen(gridPen);
-      for( const auto &label : mMinorLabels ) {
+      for( const auto &label : cache.mMinorLabels ) {
          gridPos = label.pos;
          if(mOrientation == wxHORIZONTAL) {
             if((gridPos != 0) && (gridPos != gridLineLength))
@@ -1510,7 +1518,7 @@ void Ruler::DrawGrid(wxDC& dc,
    if(majorGrid && (gridLineLength != 0 )) {
       gridPen.SetColour(127, 127, 127); // light grey
       dc.SetPen(gridPen);
-      for( const auto &label : mMajorLabels ) {
+      for( const auto &label : cache.mMajorLabels ) {
          gridPos = label.pos;
          if(mOrientation == wxHORIZONTAL) {
             if((gridPos != 0) && (gridPos != gridLineLength))
@@ -1553,25 +1561,28 @@ int Ruler::FindZero( const Labels &labels ) const
 
 int Ruler::GetZeroPosition() const
 {
+   wxASSERT( mpCache );
+   auto &cache = *mpCache;
    int zero;
-   if( (zero = FindZero( mMajorLabels ) ) < 0)
-      zero = FindZero( mMinorLabels );
+   if( (zero = FindZero( cache.mMajorLabels ) ) < 0)
+      zero = FindZero( cache.mMinorLabels );
    // PRL: don't consult minor minor??
    return zero;
 }
 
 void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
 {
-   if (!mValid) {
+   if ( !mpCache ) {
       wxScreenDC sdc;
-      Update( sdc, nullptr );
+      UpdateCache( sdc, nullptr );
    }
 
+   auto &cache = *mpCache;
    if (width)
-      *width = mRect.GetWidth();
+      *width = cache.mRect.GetWidth();
 
    if (height)
-      *height = mRect.GetHeight();
+      *height = cache.mRect.GetHeight();
 }
 
 
@@ -1583,9 +1594,17 @@ void Ruler::SetCustomMode(bool value)
    }
 }
 
+#if 0
+// These two unused functions need reconsideration of their interactions with
+// the cache and update
 void Ruler::SetCustomMajorLabels(
    const TranslatableStrings &labels, int start, int step)
 {
+   SetCustomMode( true );
+   mpCache = std::make_unique<Cache>();
+   auto &cache = *mpCache;
+   auto &mMajorLabels = cache.mMajorLabels;
+
    const auto numLabel = labels.size();
    mMajorLabels.resize( numLabel );
 
@@ -1593,12 +1612,16 @@ void Ruler::SetCustomMajorLabels(
       mMajorLabels[i].text = labels[i];
       mMajorLabels[i].pos  = start + i*step;
    }
-   //Remember: DELETE majorlabels....
 }
 
 void Ruler::SetCustomMinorLabels(
    const TranslatableStrings &labels, int start, int step)
 {
+   SetCustomMode( true );
+   mpCache = std::make_unique<Cache>();
+   auto &cache = *mpCache;
+   auto &mMinorLabels = cache.mMinorLabels;
+
    const auto numLabel = labels.size();
    mMinorLabels.resize( numLabel );
 
@@ -1606,8 +1629,8 @@ void Ruler::SetCustomMinorLabels(
       mMinorLabels[i].text = labels[i];
       mMinorLabels[i].pos  = start + i*step;
    }
-   //Remember: DELETE majorlabels....
 }
+#endif
 
 void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
 {

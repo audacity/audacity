@@ -138,12 +138,12 @@ class AUDACITY_DLL_API Ruler {
    //
 
    // Note that it will not erase for you...
-   void Draw(wxDC& dc);
-   void Draw(wxDC& dc, const Envelope* envelope);
+   void Draw(wxDC& dc) const;
+   void Draw(wxDC& dc, const Envelope* envelope) const;
    // If length <> 0, draws lines perpendiculars to ruler corresponding
    // to selected ticks (major, minor, or both), in an adjacent window.
    // You may need to use the offsets if you are using part of the dc for rulers, borders etc.
-   void DrawGrid(wxDC& dc, int length, bool minor = true, bool major = true, int xOffset = 0, int yOffset = 0);
+   void DrawGrid(wxDC& dc, int length, bool minor = true, bool major = true, int xOffset = 0, int yOffset = 0) const;
 
    // So we can have white ticks on black...
    void SetTickColour( const wxColour & colour)
@@ -169,14 +169,14 @@ class AUDACITY_DLL_API Ruler {
    using Bits = std::vector< bool >;
 
    void ChooseFonts( wxDC &dc ) const;
-   void Update( wxDC &dc, const Envelope* envelope );
+
+   void UpdateCache( wxDC &dc, const Envelope* envelope ) const;
 
    struct Updater;
    
 public:
    bool mbTicksOnly; // true => no line the length of the ruler
    bool mbTicksAtExtremes;
-   wxRect mRect;
 
 private:
    wxColour mTickColour;
@@ -192,9 +192,6 @@ private:
    double       mHiddenMin, mHiddenMax;
 
    Bits mUserBits;
-   Bits mBits;
-
-   bool         mValid;
 
    static std::pair< wxRect, Label > MakeTick(
       Label lab,
@@ -203,17 +200,14 @@ private:
       int left, int top, int spacing, int lead,
       bool flip, int orientation );
 
-   Labels mMajorLabels;
-   Labels mMinorLabels;
-   Labels mMinorMinorLabels;
+   struct Cache;
+   mutable std::unique_ptr<Cache> mpCache;
 
    // Returns 'zero' label coordinate (for grid drawing)
    int FindZero( const Labels &labels ) const;
 
-   public:
    int GetZeroPosition() const;
 
-   private:
    int          mOrientation;
    int          mSpacing;
    double       mDbMirrorValue;
