@@ -236,7 +236,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual RegistryPaths GetUserPresets();
    virtual bool HasCurrentSettings();
    virtual bool HasFactoryDefaults();
-   virtual wxString GetPreset(wxWindow * parent, const wxString & parms);
 
    // Name of page in the Audacity alpha manual
    virtual wxString ManualPage();
@@ -544,34 +543,6 @@ public:
 // FIXME:
 
 #define ID_EFFECT_PREVIEW ePreviewID
-
-class EffectPresetsDialog final : public wxDialogWrapper
-{
-public:
-   EffectPresetsDialog(wxWindow *parent, Effect *effect);
-   virtual ~EffectPresetsDialog();
-
-   wxString GetSelected() const;
-   void SetSelected(const wxString & parms);
-
-private:
-   void SetPrefix(const TranslatableString & type, const wxString & prefix);
-   void UpdateUI();
-
-   void OnType(wxCommandEvent & evt);
-   void OnOk(wxCommandEvent & evt);
-   void OnCancel(wxCommandEvent & evt);
-
-private:
-   wxChoice *mType;
-   wxListBox *mPresets;
-
-   RegistryPaths mFactoryPresets;
-   RegistryPaths mUserPresets;
-   wxString mSelection;
-
-   DECLARE_EVENT_TABLE()
-};
 
 // Utility functions
 
