@@ -19,6 +19,7 @@
 #if !defined(EXPERIMENTAL_NOISE_REDUCTION)
 
 #include "Effect.h"
+#include "EffectUI.h"
 
 class wxButton;
 class wxSizer;
