@@ -147,9 +147,6 @@ void SpectrumVRulerControls::DoUpdateVRuler(
       {
          // Spectrum
          
-         if (rect.height < 60)
-            return;
-         
          /*
           draw the ruler
           we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
@@ -180,9 +177,6 @@ void SpectrumVRulerControls::DoUpdateVRuler(
       case SpectrogramSettings::stPeriod:
       {
          // SpectrumLog
-         
-         if (rect.height < 10)
-            return;
          
          /*
           draw the ruler
