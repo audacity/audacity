@@ -102,8 +102,7 @@ class AUDACITY_DLL_API Ruler {
       wxFont major, minor, minorMinor;
       int lead;
    };
-   Fonts GetFonts() const
-   { return mFonts; }
+   Fonts GetFonts() const;
 
    void SetNumberScale(const NumberScale &scale);
 
@@ -169,6 +168,7 @@ class AUDACITY_DLL_API Ruler {
 
    using Bits = std::vector< bool >;
 
+   void ChooseFonts( wxDC &dc ) const;
    void Update( wxDC &dc, const Envelope* envelope );
 
    struct Updater;
@@ -185,8 +185,8 @@ private:
    int          mLeft, mTop, mRight, mBottom;
    int          mLength;
 
-   Fonts mFonts;
-   bool         mUserFonts;
+   std::unique_ptr<Fonts> mpUserFonts;
+   mutable std::unique_ptr<Fonts> mpFonts;
 
    double       mMin, mMax;
    double       mHiddenMin, mHiddenMax;

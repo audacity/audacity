@@ -109,8 +109,6 @@ Ruler::Ruler()
    fontSize = 8;
 #endif
 
-   mUserFonts = false;
-
    mLength = 0;
 
    mValid = false;
@@ -275,17 +273,16 @@ void FindFontHeights(
 
 void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont)
 {
-   mFonts.minorMinor = minorMinorFont;
-   mFonts.minor = minorFont;
-   mFonts.major = majorFont;
-
    // Won't override these fonts
-   mUserFonts = true;
+
+   mpUserFonts = std::make_unique<Fonts>(
+      Fonts{ majorFont, minorFont, minorMinorFont, 0 } );
 
    wxScreenDC dc;
    wxCoord height;
-   FindFontHeights( height, mFonts.lead, dc, majorFont.GetPointSize() );
+   FindFontHeights( height, mpUserFonts->lead, dc, majorFont.GetPointSize() );
 
+   mpFonts.reset();
    Invalidate();
 }
 
@@ -869,7 +866,7 @@ struct Ruler::Updater {
    const bool mFlip = mRuler.mFlip;
 
    const bool mCustom = mRuler.mCustom;
-   const Fonts mFonts = mRuler.mFonts;
+   const Fonts &mFonts = *mRuler.mpFonts;
    const bool mLog = mRuler.mLog;
    const double mHiddenMin = mRuler.mHiddenMin;
    const double mHiddenMax = mRuler.mHiddenMax;
@@ -891,7 +888,9 @@ struct Ruler::Updater {
       TickOutputs outputs
    ) const;
 
-   static void ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight );
+   static void ChooseFonts(
+      std::unique_ptr<Fonts> &pFonts, const Fonts *pUserFonts,
+      wxDC &dc, int desiredPixelHeight );
 
    struct UpdateOutputs;
    
@@ -992,8 +991,21 @@ static constexpr int MaxPixelHeight =
 #endif
 ;
 
-void Ruler::Updater::ChooseFonts( Fonts &fonts, wxDC &dc, int desiredPixelHeight )
+void Ruler::Updater::ChooseFonts(
+   std::unique_ptr<Fonts> &pFonts, const Fonts *pUserFonts,
+   wxDC &dc, int desiredPixelHeight )
 {
+   if ( pFonts )
+      return;
+
+   if ( pUserFonts ) {
+      pFonts = std::make_unique<Fonts>( *pUserFonts );
+      return;
+   }
+
+   pFonts = std::make_unique<Fonts>( Fonts{ {}, {}, {}, 0 } );
+   auto &fonts = *pFonts;
+
    int fontSize = 4;
 
    desiredPixelHeight =
@@ -1300,6 +1312,15 @@ void Ruler::Updater::Update(
       update( label );
 }
 
+void Ruler::ChooseFonts( wxDC &dc ) const
+{
+   Updater::ChooseFonts( mpFonts, mpUserFonts.get(), dc,
+      mOrientation == wxHORIZONTAL
+         ? mBottom - mTop - 5 // height less ticks and 1px gap
+         : MaxPixelHeight
+   );
+}
+
 void Ruler::Update(
    wxDC &dc, const Envelope* envelope )// Envelope *speedEnv, long minSpeed, long maxSpeed )
 {
@@ -1311,13 +1332,7 @@ void Ruler::Update(
    // (i.e. we've been invalidated).  Recompute all
    // tick positions and font size.
 
-   if (!mUserFonts) {
-      Updater::ChooseFonts( mFonts, dc,
-         mOrientation == wxHORIZONTAL
-            ? mBottom - mTop - 5 // height less ticks and 1px gap
-            : MaxPixelHeight
-      );
-   }
+   ChooseFonts( dc );
 
    // If ruler is being resized, we could end up with it being too small.
    // Values of mLength of zero or below cause bad array allocations and
@@ -1354,6 +1369,16 @@ void Ruler::Update(
    updater.Update(dc, envelope, allOutputs);
 
    mValid = true;
+}
+
+auto Ruler::GetFonts() const -> Fonts
+{
+   if ( !mpFonts ) {
+      wxScreenDC dc;
+      ChooseFonts( dc );
+   }
+
+   return *mpFonts;
 }
 
 void Ruler::Draw(wxDC& dc)
@@ -1398,7 +1423,7 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope)
       }
    }
 
-   dc.SetFont(mFonts.major);
+   dc.SetFont( mpFonts->major );
 
    // We may want to not show the ticks at the extremes,
    // though still showing the labels.
@@ -1436,12 +1461,12 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope)
       drawLabel( label, 4 );
 
    if( mbMinor ) {
-      dc.SetFont(mFonts.minor);
+      dc.SetFont( mpFonts->minor );
       for( const auto &label : mMinorLabels )
          drawLabel( label, 2 );
    }
 
-   dc.SetFont(mFonts.minorMinor);
+   dc.SetFont( mpFonts->minorMinor );
 
    for( const auto &label : mMinorMinorLabels )
       if ( !label.text.empty() )
