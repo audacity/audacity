@@ -430,20 +430,22 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& ViewActions::Handler :: X)
+#define FN(X) (& ViewActions::Handler :: X)
 
-MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr ToolbarsMenu();
 
-MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
+// Under /MenuBar
+MenuTable::BaseItemSharedPtr ViewMenu()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
    static const auto checkOff = Options{}.CheckState( false );
 
-   return Menu( XO("&View"),
-      Menu( XO("&Zoom"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("View"), XO("&View"),
+      Menu( wxT("Zoom"), XO("&Zoom"),
          Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
             ZoomInAvailableFlag, wxT("Ctrl+1") ),
          Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), FN(OnZoomNormal),
@@ -457,10 +459,10 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
          Separator(),
          Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
             FN(OnAdvancedVZoom), AlwaysEnabledFlag,
-            Options{}.CheckState( gPrefs->Read(wxT("/GUI/VerticalZooming"), 0L) ) )
+            Options{}.CheckTest( wxT("/GUI/VerticalZooming"), false ) )
       ),
 
-      Menu( XO("T&rack Size"),
+      Menu( wxT("TrackSize"), XO("T&rack Size"),
          Command( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
             TracksExistFlag, wxT("Ctrl+F") ),
          Command( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
@@ -471,7 +473,7 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
             FN(OnExpandAllTracks), TracksExistFlag, wxT("Ctrl+Shift+X") )
       ),
 
-      Menu( XO("Sk&ip to"),
+      Menu( wxT("SkipTo"), XO("Sk&ip to"),
          Command( wxT("SkipSelStart"), XXO("Selection Sta&rt"),
             FN(OnGoSelStart), TimeSelectedFlag,
             Options{ wxT("Ctrl+["), XO("Skip to Selection Start") } ),
@@ -532,22 +534,24 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
 
       //////////////////////////////////////////////////////////////////////////
 
-      ToolbarsMenu,
+      ToolbarsMenu(),
 
       Separator(),
 
       Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
          FN(OnShowExtraMenus), AlwaysEnabledFlag,
-         Options{}.CheckState( gPrefs->Read(wxT("/GUI/ShowExtraMenus"), 0L) ) ),
+         Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
       Command( wxT("ShowClipping"), XXO("&Show Clipping (on/off)"),
          FN(OnShowClipping), AlwaysEnabledFlag,
-         Options{}.CheckState( gPrefs->Read(wxT("/GUI/ShowClipping"), 0L) ) )
+         Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
       ,
       Command( wxT("ShowEffectsRack"), XXO("Show Effects Rack"),
          FN(OnShowEffectsRack), AlwaysEnabledFlag, checkOff )
 #endif
-   );
+   ) ) };
+   return menu;
+   
 }
 
 #undef FN

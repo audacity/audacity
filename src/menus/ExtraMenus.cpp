@@ -134,66 +134,73 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& ExtraActions::Handler :: X)
+#define FN(X) (& ExtraActions::Handler :: X)
 
 // Imported menu item definitions
 
-MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraScriptablesIMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraScriptablesIIMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraWindowItems( AudacityProject & );
-MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & );
-MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraMenu( AudacityProject& );
-MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & );
+MenuTable::BaseItemSharedPtr ExtraEditMenu();
+MenuTable::BaseItemSharedPtr ExtraSelectionMenu();
+MenuTable::BaseItemSharedPtr ExtraCursorMenu();
+MenuTable::BaseItemSharedPtr ExtraSeekMenu();
+MenuTable::BaseItemSharedPtr ExtraToolsMenu();
+MenuTable::BaseItemSharedPtr ExtraTransportMenu();
+MenuTable::BaseItemSharedPtr ExtraPlayAtSpeedMenu();
+MenuTable::BaseItemSharedPtr ExtraTrackMenu();
+MenuTable::BaseItemSharedPtr ExtraScriptablesIMenu();
+MenuTable::BaseItemSharedPtr ExtraScriptablesIIMenu();
+MenuTable::BaseItemSharedPtr ExtraWindowItems();
+MenuTable::BaseItemSharedPtr ExtraGlobalCommands();
+MenuTable::BaseItemSharedPtr ExtraFocusMenu();
+MenuTable::BaseItemSharedPtr ExtraMenu();
+MenuTable::BaseItemSharedPtr ExtraMixerMenu();
+MenuTable::BaseItemSharedPtr ExtraDeviceMenu();
 MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject & );
 
-// Table of menu factories.
-// TODO:  devise a registration system instead.
-static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
-   ExtraTransportMenu
-   , ExtraToolsMenu
-   , ExtraMixerMenu
-   , ExtraEditMenu
-   , ExtraPlayAtSpeedMenu
-   , ExtraSeekMenu
-   , ExtraDeviceMenu
-   , ExtraSelectionMenu
-
-   , MenuTable::Separator()
-
-   , ExtraGlobalCommands
-   , ExtraFocusMenu
-   , ExtraCursorMenu
-   , ExtraTrackMenu
-   , ExtraScriptablesIMenu
-   , ExtraScriptablesIIMenu
-   , ExtraMiscItems
-);
-
-MenuTable::BaseItemPtr ExtraMenu( AudacityProject & )
+MenuTable::BaseItemSharedPtr ExtraMenu()
 {
    using namespace MenuTable;
+
+   // Table of menu factories.
+   // TODO:  devise a registration system instead.
+   static BaseItemSharedPtr extraItems{ Items( wxEmptyString
+      , ExtraTransportMenu()
+      , ExtraToolsMenu()
+      , ExtraMixerMenu()
+      , ExtraEditMenu()
+      , ExtraPlayAtSpeedMenu()
+      , ExtraSeekMenu()
+      , ExtraDeviceMenu()
+      , ExtraSelectionMenu()
+
+      , MenuTable::Separator()
+
+      , ExtraGlobalCommands()
+      , ExtraFocusMenu()
+      , ExtraCursorMenu()
+      , ExtraTrackMenu()
+      , ExtraScriptablesIMenu()
+      , ExtraScriptablesIIMenu()
+
+      // Delayed evaluation:
+      , ExtraMiscItems
+   ) };
+
    static const auto pred =
       []{ return gPrefs->ReadBool(wxT("/GUI/ShowExtraMenus"), false); };
-   static const auto factory =
-      [](AudacityProject &){ return extraItems; };
-   return ConditionalItems( pred, Menu( XO("Ext&ra"), factory ) );
+   static BaseItemSharedPtr menu{
+      ConditionalItems( wxT("Optional"),
+         pred, Menu( wxT("Extra"), XO("Ext&ra"), extraItems ) )
+   };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & )
+// Under /MenuBar/Optional/Extra
+MenuTable::BaseItemSharedPtr ExtraMixerMenu()
 {
    using namespace MenuTable;
-   return Menu( XO("Mi&xer"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Mixer"), XO("Mi&xer"),
       Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
          FN(OnOutputGain), AlwaysEnabledFlag ),
       Command( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
@@ -206,13 +213,17 @@ MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & )
          FN(OnInputGainInc), AlwaysEnabledFlag ),
       Command( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
          FN(OnInputGainDec), AlwaysEnabledFlag )
-   );
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & )
+// Under /MenuBar/Optional/Extra
+MenuTable::BaseItemSharedPtr ExtraDeviceMenu()
 {
    using namespace MenuTable;
-   return Menu( XO("De&vice"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Device"), XO("De&vice"),
       Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
          FN(OnInputDevice),
          AudioIONotBusyFlag, wxT("Shift+I") ),
@@ -224,9 +235,11 @@ MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & )
       Command( wxT("InputChannels"), XXO("Change Recording Cha&nnels..."),
          FN(OnInputChannels),
          AudioIONotBusyFlag, wxT("Shift+N") )
-   );
+   ) ) };
+   return menu;
 }
 
+// Under /MenuBar/Optional/Extra
 MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
 {
    using namespace MenuTable;
@@ -241,7 +254,8 @@ MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
    ;
 
    // Not a menu.
-   return Items(
+   return FinderScope( findCommandHandler ).Eval(
+   Items( wxT("Misc"),
       // Accel key is not bindable.
       Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
          FN(OnFullScreen),
@@ -249,8 +263,8 @@ MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
          Options{ key }.CheckState(
             GetProjectFrame( project ).wxTopLevelWindow::IsFullScreen() ) ),
 
-      ExtraWindowItems
-   );
+      ExtraWindowItems()
+   ) );
 }
 
 #undef FN

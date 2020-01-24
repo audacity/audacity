@@ -360,6 +360,10 @@ wxString GUIPrefs::SetLang( const wxString & lang )
    // we're not using them yet...
    using future1 = decltype( XO("Master Gain Control") );
 
+#ifdef __WXMAC__
+      wxApp::s_macHelpMenuTitleName = _("&Help");
+#endif
+
    return result;
 }
 

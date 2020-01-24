@@ -995,10 +995,9 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& EditActions::Handler :: X)
+#define FN(X) (& EditActions::Handler :: X)
 
-MenuTable::BaseItemPtr LabelEditMenus( AudacityProject &project );
+MenuTable::BaseItemSharedPtr LabelEditMenus();
 
 const ReservedCommandFlag
    CutCopyAvailableFlag{
@@ -1025,7 +1024,8 @@ const ReservedCommandFlag
       cutCopyOptions()
    };
 
-MenuTable::BaseItemPtr EditMenu( AudacityProject & )
+// Under /MenuBar
+MenuTable::BaseItemSharedPtr EditMenu()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
@@ -1052,14 +1052,17 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 #endif
    ;
 
-   return Menu( XO("&Edit"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Edit"), XO("&Edit"),
       Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
          AudioIONotBusyFlag | UndoAvailableFlag, wxT("Ctrl+Z") ),
 
       Command( wxT("Redo"), XXO("&Redo"), FN(OnRedo),
          AudioIONotBusyFlag | RedoAvailableFlag, redoKey ),
          
-      Special( [](AudacityProject &project, wxMenu&) {
+      Special( wxT("UndoItemsUpdateStep"),
+      [](AudacityProject &project, wxMenu&) {
          // Change names in the CommandManager as a side-effect
          MenuManager::ModifyUndoMenuItems(project);
       }),
@@ -1086,7 +1089,7 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 
       Separator(),
 
-      Menu( XO("R&emove Special"),
+      Menu( wxT("RemoveSpecial"), XO("R&emove Special"),
          /* i18n-hint: (verb) Do a special kind of cut*/
          Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
             NotBusyTimeAndTracksFlags,
@@ -1112,7 +1115,7 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( XO("Clip B&oundaries"),
+      Menu( wxT("Clip"), XO("Clip B&oundaries"),
          /* i18n-hint: (verb) It's an item on a menu. */
          Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
             AudioIONotBusyFlag | WaveTracksSelectedFlag,
@@ -1132,7 +1135,7 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 
       //////////////////////////////////////////////////////////////////////////
 
-      LabelEditMenus,
+      LabelEditMenus(),
 
       Command( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
          AudioIONotBusyFlag ),
@@ -1145,23 +1148,28 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 
       Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
          AudioIONotBusyFlag, prefKey )
-   );
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & )
+// Under /MenuBar/Optional/Extra
+MenuTable::BaseItemSharedPtr ExtraEditMenu()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
    static const auto flags =
       AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag;
-   return Menu( XO("&Edit"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Edit"), XO("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          (flags | NoAutoSelect),
          wxT("Backspace") ),
       Command( wxT("DeleteKey2"), XXO("Delete Key&2"), FN(OnDelete),
          (flags | NoAutoSelect),
          wxT("Delete") )
-   );
+   ) ) };
+   return menu;
 }
 
 auto canSelectAll = [](const AudacityProject &project){

@@ -258,7 +258,7 @@ static const ReservedCommandFlag
    HasWaveDataFlag{ HasWaveDataPred }; // jkc
 
 namespace {
-   const struct MenuItem {
+   struct MenuItem {
       CommandID name;
       TranslatableString label;
       TranslatableString status;
@@ -268,7 +268,11 @@ namespace {
       bool (Scrubber::*StatusTest)() const;
 
       const TranslatableString &GetStatus() const { return status; }
-   } menuItems[] = {
+   };
+   using MenuItems = std::vector< MenuItem >;
+   const MenuItems &menuItems()
+   {
+      static MenuItems theItems{
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
          "Scrubbing" is variable-speed playback, ...
          "Seeking" is normal speed playback but with skips, ...
@@ -287,13 +291,13 @@ namespace {
          AlwaysEnabledFlag,
          &Scrubber::OnToggleScrubRuler, false,    &Scrubber::ShowsBar,
       },
+      };
+      return theItems;
    };
-
-   enum { nMenuItems = sizeof(menuItems) / sizeof(*menuItems) };
 
    inline const MenuItem &FindMenuItem(bool seek)
    {
-      return *std::find_if(menuItems, menuItems + nMenuItems,
+      return *std::find_if(menuItems().begin(), menuItems().end(),
          [=](const MenuItem &item) {
             return seek == item.seek;
          }
@@ -1055,7 +1059,7 @@ BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID + 2, THUNK(OnToggleScrubRuler))
 END_EVENT_TABLE()
 
-static_assert(nMenuItems == 3, "wrong number of items");
+//static_assert(menuItems().size() == 3, "wrong number of items");
 
 static auto sPlayAtSpeedStatus = XO("Playing at Speed");
 
@@ -1101,7 +1105,7 @@ registeredStatusWidthFunction{
       if ( field == stateStatusBarField ) {
          TranslatableStrings strings;
          // Note that Scrubbing + Paused is not allowed.
-         for (const auto &item : menuItems)
+         for (const auto &item : menuItems())
             strings.push_back( item.GetStatus() );
          strings.push_back(
             XO("%s Paused.").Format( sPlayAtSpeedStatus )
@@ -1121,35 +1125,44 @@ bool Scrubber::CanScrub() const
       HasWaveDataPred( *mProject );
 }
 
-// To supply the "finder" argument
-static CommandHandlerObject &findme(AudacityProject &project)
-{ return Scrubber::Get( project ); }
-
-MenuTable::BaseItemPtr Scrubber::Menu()
+MenuTable::BaseItemSharedPtr Scrubber::Menu()
 {
+   using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   MenuTable::BaseItemPtrs ptrs;
-   for (const auto &item : menuItems) {
-      ptrs.push_back( MenuTable::Command( item.name, item.label,
-          findme, static_cast<CommandFunctorPointer>(item.memFn),
-          item.flags,
-          item.StatusTest
-             ? // a checkmark item
-               Options{}.CheckState( (this->*item.StatusTest)() )
-             : // not a checkmark item
-               Options{}
-      ) );
-   }
-
-   return MenuTable::Menu( XO("Scru&bbing"), std::move( ptrs ) );
+   static BaseItemSharedPtr menu {
+   FinderScope(
+      [](AudacityProject &project) -> CommandHandlerObject&
+         { return Scrubber::Get( project ); }
+   ).Eval(
+   MenuTable::Menu( wxT("Scrubbing"),
+      XO("Scru&bbing"),
+      []{
+         BaseItemPtrs ptrs;
+         for (const auto &item : menuItems()) {
+            ptrs.push_back( MenuTable::Command( item.name, item.label,
+               item.memFn,
+               item.flags,
+               item.StatusTest
+                  ? // a checkmark item
+                     Options{}.CheckTest( [&item](AudacityProject &project){
+                     return ( Scrubber::Get(project).*(item.StatusTest) )(); } )
+                  : // not a checkmark item
+                     Options{}
+            ) );
+         }
+         return ptrs;
+      }()
+   ) ) };
+   
+   return menu;
 }
 
 void Scrubber::PopulatePopupMenu(wxMenu &menu)
 {
    int id = CMD_ID;
    auto &cm = CommandManager::Get( *mProject );
-   for (const auto &item : menuItems) {
+   for (const auto &item : menuItems()) {
       if (cm.GetEnabled(item.name)) {
          auto test = item.StatusTest;
          menu.Append(id, item.label.Translation(), wxString{},
@@ -1164,7 +1177,7 @@ void Scrubber::PopulatePopupMenu(wxMenu &menu)
 void Scrubber::CheckMenuItems()
 {
    auto &cm = CommandManager::Get( *mProject );
-   for (const auto &item : menuItems) {
+   for (const auto &item : menuItems()) {
       auto test = item.StatusTest;
       if (test)
          cm.Check(item.name, (this->*test)());

@@ -118,7 +118,7 @@ public:
    bool CanScrub() const;
 
    // For the toolbar
-   MenuTable::BaseItemPtr Menu();
+   static MenuTable::BaseItemSharedPtr Menu();
    // For popup
    void PopulatePopupMenu(wxMenu &menu);
 

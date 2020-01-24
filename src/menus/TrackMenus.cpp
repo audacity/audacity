@@ -1274,17 +1274,19 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& TrackActions::Handler :: X)
+#define FN(X) (& TrackActions::Handler :: X)
 
-MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
+// Under /MenuBar
+MenuTable::BaseItemSharedPtr TracksMenu()
 {
    // Tracks Menu (formerly Project Menu)
    using namespace MenuTable;
    using Options = CommandManager::Options;
    
-   return Menu( XO("&Tracks"),
-      Menu( XO("Add &New"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Tracks"), XO("&Tracks"),
+      Menu( wxT("Add"), XO("Add &New"),
          Command( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
             AudioIONotBusyFlag, wxT("Ctrl+Shift+N") ),
          Command( wxT("NewStereoTrack"), XXO("&Stereo Track"),
@@ -1299,7 +1301,8 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
 
       Separator(),
 
-      Menu( XO("Mi&x"),
+      Menu( wxT("Mix"), XO("Mi&x"),
+         // Delayed evaluation
          // Stereo to Mono is an oddball command that is also subject to control
          // by the plug-in manager, as if an effect.  Decide whether to show or
          // hide it.
@@ -1311,7 +1314,7 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
                return Command( wxT("Stereo to Mono"),
                   XXO("Mix Stereo Down to &Mono"), FN(OnStereoToMono),
                   AudioIONotBusyFlag | StereoRequiredFlag |
-                     WaveTracksSelectedFlag );
+                     WaveTracksSelectedFlag, Options{}, findCommandHandler );
             else
                return {};
          },
@@ -1334,14 +1337,14 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
 
       Separator(),
 
-      Menu( XO("M&ute/Unmute"),
+      Menu( wxT("Mute"), XO("M&ute/Unmute"),
          Command( wxT("MuteAllTracks"), XXO("&Mute All Tracks"),
             FN(OnMuteAllTracks), AudioIONotBusyFlag, wxT("Ctrl+U") ),
          Command( wxT("UnmuteAllTracks"), XXO("&Unmute All Tracks"),
             FN(OnUnmuteAllTracks), AudioIONotBusyFlag, wxT("Ctrl+Shift+U") )
       ),
 
-      Menu( XO("&Pan"),
+      Menu( wxT("Pan"), XO("&Pan"),
          // As Pan changes are not saved on Undo stack,
          // pan settings for all tracks
          // in the project could very easily be lost unless we
@@ -1361,7 +1364,7 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( XO("&Align Tracks"), // XO("Just Move Tracks"),
+      Menu( wxT("Align"), XO("&Align Tracks"), // XO("Just Move Tracks"),
          // Mutual alignment of tracks independent of selection or zero
          CommandGroup(wxT("Align"),
             {
@@ -1372,7 +1375,7 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
 
          Separator(),
 
-            // Alignment commands using selection or zero
+         // Alignment commands using selection or zero
          CommandGroup(wxT("Align"),
             alignLabels,
             FN(OnAlign), AudioIONotBusyFlag | TracksSelectedFlag),
@@ -1383,14 +1386,13 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
             XXO("&Move Selection with Tracks (on/off)"),
             FN(OnMoveSelectionWithTracks),
             AlwaysEnabledFlag,
-            Options{}.CheckState(
-               gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 0L ) ) )
+            Options{}.CheckTest( wxT("/GUI/MoveSelectionWithTracks"), false ) )
       ),
 
 #if 0
       // TODO: Can these labels be made clearer?
       // Do we need this sub-menu at all?
-      Menu( XO("Move Sele&ction and Tracks"), {
+      Menu( wxT("MoveSelectionAndTracks"), XO("Move Sele&ction and Tracks"), {
          CommandGroup(wxT("AlignMove"), alignLabels,
             FN(OnAlignMoveSel), AudioIONotBusyFlag | TracksSelectedFlag),
       } ),
@@ -1406,7 +1408,7 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( XO("S&ort Tracks"),
+      Menu( wxT("Sort"), XO("S&ort Tracks"),
          Command( wxT("SortByTime"), XXO("By &Start Time"), FN(OnSortTime),
             TracksExistFlag,
             Options{}.LongName( XO("Sort by Time") ) ),
@@ -1424,17 +1426,20 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
 
       Command( wxT("SyncLock"), XXO("Sync-&Lock Tracks (on/off)"),
          FN(OnSyncLock), AlwaysEnabledFlag,
-         Options{}.CheckState( gPrefs->Read(wxT("/GUI/SyncLockTracks"), 0L) ) )
+         Options{}.CheckTest( wxT("/GUI/SyncLockTracks"), false ) )
 
 #endif
-   );
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & )
+// Under /MenuBar/Optional/Extra
+MenuTable::BaseItemSharedPtr ExtraTrackMenu()
 {
    using namespace MenuTable;
-
-   return Menu( XO("&Track"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Track"), XO("&Track"),
       Command( wxT("TrackPan"), XXO("Change P&an on Focused Track..."),
          FN(OnTrackPan),
          TrackPanelHasFocus | TracksExistFlag, wxT("Shift+P") ),
@@ -1478,7 +1483,8 @@ MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & )
       Command( wxT("TrackMoveBottom"), XXO("Move Focused Track to &Bottom"),
          FN(OnTrackMoveBottom),
          AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag )
-   );
+   ) ) };
+   return menu;
 }
 
 #undef FN

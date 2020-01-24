@@ -549,15 +549,17 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& FileActions::Handler :: X)
+#define FN(X) (& FileActions::Handler :: X)
 
-MenuTable::BaseItemPtr FileMenu( AudacityProject& )
+// under /MenuBar
+MenuTable::BaseItemSharedPtr FileMenu()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   return Menu( XO("&File"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("File"), XO("&File"),
       /*i18n-hint: "New" is an action (verb) to create a NEW project*/
       Command( wxT("New"), XXO("&New"), FN(OnNew),
          AudioIONotBusyFlag, wxT("Ctrl+N") ),
@@ -577,7 +579,7 @@ MenuTable::BaseItemPtr FileMenu( AudacityProject& )
 
 /////////////////////////////////////////////////////////////////////////////
 
-      Menu(
+      Menu( wxT("Recent"),
 #ifdef __WXMAC__
          /* i18n-hint: This is the name of the menu item on Mac OS X only */
          XO("Open Recent")
@@ -586,7 +588,8 @@ MenuTable::BaseItemPtr FileMenu( AudacityProject& )
          XO("Recent &Files")
 #endif
          ,
-         Special( [](AudacityProject &, wxMenu &theMenu){
+         Special( wxT("PopulateRecentFilesStep"),
+         [](AudacityProject &, wxMenu &theMenu){
             // Recent Files and Recent Projects menus
             auto &history = FileHistory::Global();
             history.UseMenu( &theMenu );
@@ -615,7 +618,7 @@ MenuTable::BaseItemPtr FileMenu( AudacityProject& )
 
       Separator(),
 
-      Menu( XO("&Save Project"),
+      Menu( wxT("Save"), XO("&Save Project"),
          Command( wxT("Save"), XXO("&Save Project"), FN(OnSave),
             AudioIONotBusyFlag | UnsavedChangesFlag, wxT("Ctrl+S") ),
          Command( wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs),
@@ -633,7 +636,7 @@ MenuTable::BaseItemPtr FileMenu( AudacityProject& )
 
       Separator(),
 
-      Menu( XO("&Export"),
+      Menu( wxT("Export"), XO("&Export"),
          // Enable Export audio commands only when there are audio tracks.
          Command( wxT("ExportMp3"), XXO("Export as MP&3"), FN(OnExportMp3),
             AudioIONotBusyFlag | WaveTracksExistFlag ),
@@ -667,7 +670,7 @@ MenuTable::BaseItemPtr FileMenu( AudacityProject& )
 #endif
       ),
 
-      Menu( XO("&Import"),
+      Menu( wxT("Import"), XO("&Import"),
          Command( wxT("ImportAudio"), XXO("&Audio..."), FN(OnImport),
             AudioIONotBusyFlag, wxT("Ctrl+Shift+I") ),
          Command( wxT("ImportLabels"), XXO("&Labels..."), FN(OnImportLabels),
@@ -698,7 +701,8 @@ MenuTable::BaseItemPtr FileMenu( AudacityProject& )
       /* i18n-hint: (verb) It's item on a menu. */
       Command( wxT("Exit"), XXO("E&xit"), FN(OnExit),
          AlwaysEnabledFlag, wxT("Ctrl+Q") )
-   );
+   ) ) };
+   return menu;
 }
 
 #undef FN

@@ -116,16 +116,18 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& WindowActions::Handler :: X)
+#define FN(X) (& WindowActions::Handler :: X)
 
-MenuTable::BaseItemPtr WindowMenu( AudacityProject & )
+// Under /MenuBar
+MenuTable::BaseItemSharedPtr WindowMenu()
 {
       //////////////////////////////////////////////////////////////////////////
       // poor imitation of the Mac Windows Menu
       //////////////////////////////////////////////////////////////////////////
    using namespace MenuTable;
-   return Menu( XO("&Window"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Window"), XO("&Window"),
       /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
        * window) shrink to an icon on the dock */
       Command( wxT("MacMinimize"), XXO("&Minimize"), FN(OnMacMinimize),
@@ -141,20 +143,24 @@ MenuTable::BaseItemPtr WindowMenu( AudacityProject & )
        * windows un-hidden */
       Command( wxT("MacBringAllToFront"), XXO("&Bring All to Front"),
          FN(OnMacBringAllToFront), AlwaysEnabledFlag )
-   );
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ExtraWindowItems( AudacityProject & )
+// Under /MenuBar/Optional/Extra/Misc
+MenuTable::BaseItemSharedPtr ExtraWindowItems()
 {
    using namespace MenuTable;
-
-   return Items(
+   static BaseItemSharedPtr items{
+   FinderScope( findCommandHandler ).Eval(
+   Items( wxT("MacWindows"),
       /* i18n-hint: Shrink all project windows to icons on the Macintosh
          tooldock */
       Command( wxT("MacMinimizeAll"), XXO("Minimize All Projects"),
          FN(OnMacMinimizeAll),
          AlwaysEnabledFlag, wxT("Ctrl+Alt+M") )
-   );
+   ) ) };
+   return items;
 }
 
 #undef FN
@@ -162,12 +168,12 @@ MenuTable::BaseItemPtr ExtraWindowItems( AudacityProject & )
 #else
 
 // Not WXMAC.  Stub functions.
-MenuTable::BaseItemPtr WindowMenu( AudacityProject & )
+MenuTable::BaseItemSharedPtr WindowMenu()
 {
    return nullptr;
 }
 
-MenuTable::BaseItemPtr ExtraWindowItems( AudacityProject & )
+MenuTable::BaseItemSharedPtr ExtraWindowItems()
 {
    return nullptr;
 }

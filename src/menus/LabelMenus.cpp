@@ -559,10 +559,10 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& LabelEditActions::Handler :: X)
+#define FN(X) (& LabelEditActions::Handler :: X)
 
-MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
+// Under /MenuBar/Edit
+MenuTable::BaseItemSharedPtr LabelEditMenus()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
@@ -575,9 +575,11 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
 
    // Returns TWO menus.
    
-   return Items(
-
-   Menu( XO("&Labels"),
+   static BaseItemSharedPtr menus{
+   FinderScope( findCommandHandler ).Eval(
+   Items( wxEmptyString,
+   
+   Menu( wxT("Labels"), XO("&Labels"),
       Command( wxT("EditLabels"), XXO("&Edit Labels..."), FN(OnEditLabels),
                  AudioIONotBusyFlag ),
 
@@ -607,7 +609,7 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
 
    /////////////////////////////////////////////////////////////////////////////
 
-   Menu( XO("La&beled Audio"),
+   Menu( wxT("Labeled"), XO("La&beled Audio"),
       /* i18n-hint: (verb)*/
       Command( wxT("CutLabels"), XXO("&Cut"), FN(OnCutLabels),
          AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |
@@ -653,7 +655,8 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
          wxT("Alt+Shift+J") )
    ) // second menu
 
-   ); // two menus
+   ) ) }; // two menus
+   return menus;
 }
 
 #undef FN

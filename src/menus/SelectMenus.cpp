@@ -1026,18 +1026,19 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& SelectActions::Handler :: X)
+#define FN(X) (& SelectActions::Handler :: X)
 
-MenuTable::BaseItemPtr ClipSelectMenu( AudacityProject& );
+MenuTable::BaseItemSharedPtr ClipSelectMenu();
 
-MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
+// Under /MenuBar
+MenuTable::BaseItemSharedPtr SelectMenu()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
-   
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
    /* i18n-hint: (verb) It's an item on a menu. */
-   return Menu( XO("&Select"),
+   Menu( wxT("Select"), XO("&Select"),
       Command( wxT("SelectAll"), XXO("&All"), FN(OnSelectAll),
          TracksExistFlag,
          Options{ wxT("Ctrl+A"), XO("Select All") } ),
@@ -1047,7 +1048,7 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( XO("&Tracks"),
+      Menu( wxT("Tracks"), XO("&Tracks"),
          Command( wxT("SelAllTracks"), XXO("In All &Tracks"),
             FN(OnSelectAllTracks),
             TracksExistFlag,
@@ -1064,7 +1065,7 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
 
       //////////////////////////////////////////////////////////////////////////
 
-      Menu( XO("R&egion"),
+      Menu( wxT("Region"), XO("R&egion"),
          Command( wxT("SetLeftSelection"), XXO("&Left at Playback Position"),
             FN(OnSetLeftSelection), TracksExistFlag,
             Options{ wxT("["), XO("Set Selection Left at Play Position") } ),
@@ -1098,7 +1099,7 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
       //////////////////////////////////////////////////////////////////////////
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      Menu( XO("S&pectral"),
+      Menu( wxT("Spectral"), XO("S&pectral"),
          Command( wxT("ToggleSpectralSelection"),
             XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection),
             TracksExistFlag, wxT("Q") ),
@@ -1113,7 +1114,7 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
 
       //////////////////////////////////////////////////////////////////////////
 
-      ClipSelectMenu,
+      ClipSelectMenu(),
 
       //////////////////////////////////////////////////////////////////////////
 
@@ -1135,13 +1136,17 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& )
       Command( wxT("ZeroCross"), XXO("At &Zero Crossings"),
          FN(OnZeroCrossing), TracksSelectedFlag,
          Options{ wxT("Z"), XO("Select Zero Crossing") } )
-   );
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & )
+// Under /MenuBar/Optional/Extra
+MenuTable::BaseItemSharedPtr ExtraSelectionMenu()
 {
    using namespace MenuTable;
-   return Menu( XO("&Selection"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Select"), XO("&Selection"),
       Command( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
          AlwaysEnabledFlag ),
       Command( wxT("SnapToNearest"), XXO("Snap-To &Nearest"),
@@ -1174,12 +1179,14 @@ MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & )
          FN(OnSelContractRight),
          TracksExistFlag | TrackPanelHasFocus,
          wxT("Ctrl+Shift+Left\twantKeyup") )
-   );
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ClipCursorItems( AudacityProject & );
+MenuTable::BaseItemSharedPtr ClipCursorItems();
 
-MenuTable::BaseItemPtr CursorMenu( AudacityProject & )
+// Under /MenuBar/Transport
+MenuTable::BaseItemSharedPtr CursorMenu()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
@@ -1190,7 +1197,9 @@ MenuTable::BaseItemPtr CursorMenu( AudacityProject & )
    // GA: 'Skip to' moves the viewpoint to center of the track and preserves the
    // selection. 'Cursor to' does neither. 'Center at' might describe it better
    // than 'Skip'.
-   return Menu( XO("&Cursor to"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Cursor"), XO("&Cursor to"),
       Command( wxT("CursSelStart"), XXO("Selection Star&t"),
          FN(OnCursorSelStart),
          TimeSelectedFlag,
@@ -1209,7 +1218,7 @@ MenuTable::BaseItemPtr CursorMenu( AudacityProject & )
          TracksSelectedFlag,
          Options{ wxT("K"), XO("Cursor to Track End") } ),
 
-      ClipCursorItems,
+      ClipCursorItems(),
 
       Command( wxT("CursProjectStart"), XXO("&Project Start"),
          FN(OnSkipStart),
@@ -1218,16 +1227,20 @@ MenuTable::BaseItemPtr CursorMenu( AudacityProject & )
       Command( wxT("CursProjectEnd"), XXO("Project E&nd"), FN(OnSkipEnd),
          CanStopFlags,
          Options{ wxT("End"), XO("Cursor to Project End") } )
-   );
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ExtraClipCursorItems( AudacityProject & );
+MenuTable::BaseItemSharedPtr ExtraClipCursorItems();
 
-MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & )
+// Under /MenuBar/Optional/Extra
+MenuTable::BaseItemSharedPtr ExtraCursorMenu()
 {
    using namespace MenuTable;
 
-   return Menu( XO("&Cursor"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Cursor"), XO("&Cursor"),
       Command( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
          TracksExistFlag | TrackPanelHasFocus,
          wxT("Left\twantKeyup\tallowDup") ),
@@ -1247,14 +1260,18 @@ MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & )
          FN(OnCursorLongJumpRight),
          TracksExistFlag | TrackPanelHasFocus, wxT("Shift+.") ),
 
-      ExtraClipCursorItems
-   );
+      ExtraClipCursorItems()
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & )
+// Under /MenuBar/Optional/Extra
+MenuTable::BaseItemSharedPtr ExtraSeekMenu()
 {
    using namespace MenuTable;
-   return Menu( XO("See&k"),
+   static BaseItemSharedPtr menu{
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Seek"), XO("See&k"),
       Command( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
          FN(OnSeekLeftShort), AudioIOBusyFlag, wxT("Left\tallowDup") ),
       Command( wxT("SeekRightShort"),
@@ -1264,7 +1281,8 @@ MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & )
          FN(OnSeekLeftLong), AudioIOBusyFlag, wxT("Shift+Left\tallowDup") ),
       Command( wxT("SeekRightLong"), XXO("Long Seek Rig&ht During Playback"),
          FN(OnSeekRightLong), AudioIOBusyFlag, wxT("Shift+Right\tallowDup") )
-   );
+   ) ) };
+   return menu;
 }
 
 #undef FN

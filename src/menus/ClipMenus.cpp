@@ -821,15 +821,17 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& ClipActions::Handler :: X)
+#define FN(X) (& ClipActions::Handler :: X)
 
-MenuTable::BaseItemPtr ClipSelectMenu( AudacityProject& )
+// Under /MenuBar/Select
+MenuTable::BaseItemSharedPtr ClipSelectMenu()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   return Menu( XO("Clip B&oundaries"),
+   static BaseItemSharedPtr menu {
+   FinderScope( findCommandHandler ).Eval(
+   Menu( wxT("Clip"), XO("Clip B&oundaries"),
       Command( wxT("SelPrevClipBoundaryToCursor"),
          XXO("Pre&vious Clip Boundary to Cursor"),
          FN(OnSelectPrevClipBoundaryToCursor),
@@ -844,15 +846,19 @@ MenuTable::BaseItemPtr ClipSelectMenu( AudacityProject& )
       Command( wxT("SelNextClip"), XXO("N&ext Clip"), FN(OnSelectNextClip),
          WaveTracksExistFlag,
          Options{ wxT("Alt+."), XO("Select Next Clip") } )
-   );
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ClipCursorItems( AudacityProject & )
+// Under /MenuBar/Transport/Cursor
+MenuTable::BaseItemSharedPtr ClipCursorItems()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   return Items(
+   static BaseItemSharedPtr items{
+   FinderScope( findCommandHandler ).Eval(
+   Items( wxT("Clip"),
       Command( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"),
          FN(OnCursorPrevClipBoundary),
          WaveTracksExistFlag,
@@ -861,19 +867,24 @@ MenuTable::BaseItemPtr ClipCursorItems( AudacityProject & )
          FN(OnCursorNextClipBoundary),
          WaveTracksExistFlag,
          Options{}.LongName( XO("Cursor to Next Clip Boundary") ) )
-   );
+   ) ) };
+   return items;
 }
 
-MenuTable::BaseItemPtr ExtraClipCursorItems( AudacityProject & )
+// Under /MenuBar/Optional/Extra/Cursor
+MenuTable::BaseItemSharedPtr ExtraClipCursorItems()
 {
    using namespace MenuTable;
 
-   return Items(
+   static BaseItemSharedPtr items{
+   FinderScope( findCommandHandler ).Eval(
+   Items( wxT("Clip"),
       Command( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
          TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") ),
       Command( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),
          TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") )
-   );
+   ) ) };
+   return items;
 }
 
 #undef FN
