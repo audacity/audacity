@@ -2228,8 +2228,11 @@ bool LV2Effect::BuildFancy()
       g_signal_connect(widget, "size-request", G_CALLBACK(LV2Effect::size_request), this);
 #endif
 
-      mNativeWin = new NativeWindow();
-      mNativeWin->Create(mParent, widget);
+      Destroy_ptr< NativeWindow > uNativeWin{ safenew NativeWindow() };
+      if ( !uNativeWin->Create(mParent, widget) )
+         return false;
+      mNativeWin = uNativeWin.release();
+
       mNativeWin->Bind(wxEVT_SIZE, &LV2Effect::OnSize, this);
 
       // The plugin called the LV2UI_Resize::ui_resize function to set the size before
