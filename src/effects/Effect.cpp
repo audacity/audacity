@@ -615,14 +615,14 @@ void Effect::SetHostUI(EffectUIHostInterface *WXUNUSED(host))
 {
 }
 
-bool Effect::PopulateUI(wxWindow *parent)
+bool Effect::PopulateUI(ShuttleGui &S)
 {
+   auto parent = S.GetParent();
    mUIParent = parent;
    mUIParent->PushEventHandler(this);
 
 //   LoadUserPreset(GetCurrentSettingsGroup());
 
-   ShuttleGui S(mUIParent, eIsCreating);
    PopulateOrExchange(S);
 
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());

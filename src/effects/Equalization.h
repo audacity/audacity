@@ -131,7 +131,6 @@ public:
    bool Init() override;
    bool Process() override;
 
-   bool PopulateUI(wxWindow *parent) override;
    bool CloseUI() override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;
