@@ -407,7 +407,7 @@ private:
 
 // Define classes and functions that associate parts of the user interface
 // with path names
-namespace MenuTable {
+namespace Registry {
    // TODO C++17: maybe use std::variant (discriminated unions) to achieve
    // polymorphism by other means, not needing unique_ptr and dynamic_cast
    // and using less heap.
@@ -525,7 +525,27 @@ namespace MenuTable {
       ~TransparentGroupItem() override;
    };
 
+   // Define actions to be done in Visit.
+   // Default implementations do nothing
+   // The supplied path does not include the name of the item
+   class Visitor
+   {
+   public:
+      virtual ~Visitor();
+      using Path = std::vector< Identifier >;
+      virtual void BeginGroup( GroupItem &item, const Path &path );
+      virtual void EndGroup( GroupItem &item, const Path &path );
+      virtual void Visit( SingleItem &item, const Path &path );
+   };
+
+   // Top-down visitation of all items and groups in a tree
+   void Visit(
+      Visitor &visitor, AudacityProject &project, BaseItem *pTopItem );
+}
+
 // Define items that populate tables that specifically describe menu trees
+namespace MenuTable {
+   using namespace Registry;
 
    // Describes a main menu in the toolbar, or a sub-menu
    struct MenuItem final : GroupItem {
