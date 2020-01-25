@@ -67,10 +67,6 @@
 #include <wx/msw/wrapwin.h>
 #endif
 
-#if defined(__WXMAC__)
-#include <AppKit/AppKit.h>
-#endif
-
 // Define a maximum block size in number of samples (not bytes)
 #define DEFAULT_BLOCKSIZE 1048576
 
