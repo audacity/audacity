@@ -123,7 +123,8 @@ namespace MenuTable {
 
 MenuItem::MenuItem( const wxString &internalName,
    const TranslatableString &title_, BaseItemPtrs &&items_ )
-: ConcreteGroupItem< false >{ internalName, std::move( items_ ) }, title{ title_ }
+: ConcreteGroupItem< false, MenuVisitor >{
+   internalName, std::move( items_ ) }, title{ title_ }
 {
    wxASSERT( !title.empty() );
 }
@@ -131,7 +132,8 @@ MenuItem::~MenuItem() {}
 
 ConditionalGroupItem::ConditionalGroupItem(
    const wxString &internalName, Condition condition_, BaseItemPtrs &&items_ )
-: ConcreteGroupItem< false >{ internalName, std::move( items_ ) }, condition{ condition_ }
+: ConcreteGroupItem< false, MenuVisitor >{
+   internalName, std::move( items_ ) }, condition{ condition_ }
 {
 }
 ConditionalGroupItem::~ConditionalGroupItem() {}
