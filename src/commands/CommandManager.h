@@ -427,6 +427,8 @@ namespace Registry {
    using BaseItemPtr = std::unique_ptr<BaseItem>;
    using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
    using BaseItemPtrs = std::vector<BaseItemPtr>;
+
+   struct Visitor;
    
 
    // An item that delegates to another held in a shared pointer; this allows
@@ -457,7 +459,7 @@ namespace Registry {
       template< typename VisitorType >
       using Factory = std::function< BaseItemSharedPtr( VisitorType & ) >;
 
-      using DefaultVisitor = AudacityProject;
+      using DefaultVisitor = Visitor;
 
       explicit ComputedItem( const Factory< DefaultVisitor > &factory_ )
          : BaseItem( wxEmptyString )
@@ -531,7 +533,10 @@ namespace Registry {
       // appled implicitly.)
       void AppendOne( const ComputedItem::Factory<VisitorType> &factory )
       {
-         AppendOne( std::make_unique<ComputedItem>( factory ) );
+         auto adaptedFactory = [factory]( Registry::Visitor &visitor ){
+            return factory( dynamic_cast< VisitorType& >( visitor ) );
+         };
+         AppendOne( std::make_unique<ComputedItem>( adaptedFactory ) );
       }
       // This overload lets you supply a shared pointer to an item, directly
       template<typename Subtype>
@@ -572,11 +577,16 @@ namespace Registry {
    };
 
    // Top-down visitation of all items and groups in a tree
-   void Visit(
-      Visitor &visitor, AudacityProject &project, BaseItem *pTopItem );
+   void Visit( Visitor &visitor, BaseItem *pTopItem );
 }
 
-using MenuVisitor = Registry::ComputedItem::DefaultVisitor;
+struct MenuVisitor : Registry::Visitor
+{
+   explicit MenuVisitor( AudacityProject &p ) : project{ p } {}
+   operator AudacityProject & () const { return project; }
+
+   AudacityProject &project;
+};
 
 // Define items that populate tables that specifically describe menu trees
 namespace MenuTable {

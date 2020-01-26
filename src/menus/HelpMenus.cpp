@@ -380,8 +380,10 @@ void OnMenuTree(const CommandContext &context)
    auto &project = context.project;
    
    using namespace MenuTable;
-   struct MyVisitor : Visitor
+   struct MyVisitor : MenuVisitor
    {
+      using MenuVisitor::MenuVisitor;
+
       enum : unsigned { TAB = 3 };
       void BeginGroup( GroupItem &item, const Path& ) override
       {
@@ -415,9 +417,9 @@ void OnMenuTree(const CommandContext &context)
       unsigned level{};
       wxString indentation;
       wxString info;
-   } visitor;
+   } visitor{ project };
 
-   MenuManager::Visit( visitor, project );
+   MenuManager::Visit( visitor );
 
    ShowDiagnostics( project, visitor.info,
       XO("Menu Tree"), wxT("menutree.txt"), true );
