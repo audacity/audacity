@@ -110,17 +110,7 @@ ComputedItem::~ComputedItem() {}
 
 SingleItem::~SingleItem() {}
 
-GroupItem::GroupItem( const wxString &internalName, BaseItemPtrs &&items_ )
-: BaseItem{ internalName }, items{ std::move( items_ ) }
-{
-}
-void GroupItem::AppendOne( BaseItemPtr&& ptr )
-{
-   items.push_back( std::move( ptr ) );
-}
 GroupItem::~GroupItem() {}
-
-TransparentGroupItem::~TransparentGroupItem() {}
 
 Visitor::~Visitor(){}
 void Visitor::BeginGroup(GroupItem &, const Path &) {}
@@ -133,7 +123,7 @@ namespace MenuTable {
 
 MenuItem::MenuItem( const wxString &internalName,
    const TranslatableString &title_, BaseItemPtrs &&items_ )
-: GroupItem{ internalName, std::move( items_ ) }, title{ title_ }
+: ConcreteGroupItem< false >{ internalName, std::move( items_ ) }, title{ title_ }
 {
    wxASSERT( !title.empty() );
 }
@@ -141,7 +131,7 @@ MenuItem::~MenuItem() {}
 
 ConditionalGroupItem::ConditionalGroupItem(
    const wxString &internalName, Condition condition_, BaseItemPtrs &&items_ )
-: GroupItem{ internalName, std::move( items_ ) }, condition{ condition_ }
+: ConcreteGroupItem< false >{ internalName, std::move( items_ ) }, condition{ condition_ }
 {
 }
 ConditionalGroupItem::~ConditionalGroupItem() {}
@@ -237,7 +227,7 @@ void CollectItem( AudacityProject &project,
    }
    else
    if (auto pGroup = dynamic_cast<GroupItem*>(pItem)) {
-      if (dynamic_cast<TransparentGroupItem*>(pItem) && pItem->name.empty())
+      if (pGroup->Transparent() && pItem->name.empty())
          // nameless grouping item is transparent to path calculations
          // recursion
          CollectItems( project, collection, pGroup->items );
@@ -384,8 +374,8 @@ struct MenuItemVisitor : Registry::Visitor
          flags.push_back(flag);
       }
       else
-      if (const auto pGroup =
-          dynamic_cast<TransparentGroupItem*>( pItem )) {
+      if (const auto pGroup = dynamic_cast<GroupItem*>( pItem )) {
+         wxASSERT( pGroup->Transparent() );
       }
       else
          wxASSERT( false );
@@ -407,8 +397,8 @@ struct MenuItemVisitor : Registry::Visitor
          flags.pop_back();
       }
       else
-      if (const auto pGroup =
-          dynamic_cast<TransparentGroupItem*>( pItem )) {
+      if (const auto pGroup = dynamic_cast<GroupItem*>( pItem )) {
+         wxASSERT( pGroup->Transparent() );
       }
       else
          wxASSERT( false );

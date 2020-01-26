@@ -473,17 +473,30 @@ namespace Registry {
 
    // Common abstract base class for items that group other items
    struct GroupItem : BaseItem {
+      using BaseItem::BaseItem;
+
       // Construction from an internal name and a previously built-up
       // vector of pointers
-      GroupItem( const wxString &internalName, BaseItemPtrs &&items_ );
-      // In-line, variadic constructor that doesn't require building a vector
-      template< typename... Args >
-         GroupItem( const wxString &internalName, Args&&... args )
-         : BaseItem( internalName )
-         { Append( std::forward< Args >( args )... ); }
+      GroupItem( const wxString &internalName, BaseItemPtrs &&items_ )
+         : BaseItem{ internalName }, items{ std::move( items_ ) }
+      {}
       ~GroupItem() override = 0;
 
+      // Whether the item is non-significant for path naming
+      // when it also has an empty name
+      virtual bool Transparent() const = 0;
+
       BaseItemPtrs items;
+   };
+   
+   // GroupItem adding variadic constructor conveniences
+   struct InlineGroupItem : GroupItem {
+      using GroupItem::GroupItem;
+      // In-line, variadic constructor that doesn't require building a vector
+      template< typename... Args >
+         InlineGroupItem( const wxString &internalName, Args&&... args )
+         : GroupItem( internalName )
+         { Append( std::forward< Args >( args )... ); }
 
    private:
       // nullary overload grounds the recursion
@@ -502,7 +515,10 @@ namespace Registry {
          };
 
       // Move one unique_ptr to an item into our array
-      void AppendOne( BaseItemPtr&& ptr );
+      void AppendOne( BaseItemPtr&& ptr )
+      {
+         items.push_back( std::move( ptr ) );
+      }
       // This overload allows a lambda or function pointer in the variadic
       // argument lists without any other syntactic wrapping, and also
       // allows implicit conversions to type Factory.
@@ -517,12 +533,21 @@ namespace Registry {
       { AppendOne( std::make_unique<SharedItem>(ptr) ); }
    };
 
+   // Inline group item also specifying transparency
+   template< bool transparent >
+   struct ConcreteGroupItem : InlineGroupItem
+   {
+      using InlineGroupItem::InlineGroupItem;
+      ~ConcreteGroupItem() {}
+      bool Transparent() const override { return transparent; }
+   };
+
    // Concrete subclass of GroupItem that adds nothing else
    // TransparentGroupItem with an empty name is transparent to item path calculations
-   struct TransparentGroupItem final : GroupItem
+   struct TransparentGroupItem final : ConcreteGroupItem< true >
    {
-      using GroupItem::GroupItem;
-      ~TransparentGroupItem() override;
+      using ConcreteGroupItem< true >::ConcreteGroupItem;
+      ~TransparentGroupItem() override {}
    };
 
    // Define actions to be done in Visit.
@@ -548,7 +573,7 @@ namespace MenuTable {
    using namespace Registry;
 
    // Describes a main menu in the toolbar, or a sub-menu
-   struct MenuItem final : GroupItem {
+   struct MenuItem final : ConcreteGroupItem< false > {
       // Construction from an internal name and a previously built-up
       // vector of pointers
       MenuItem( const wxString &internalName,
@@ -557,7 +582,7 @@ namespace MenuTable {
       template< typename... Args >
          MenuItem( const wxString &internalName,
             const TranslatableString &title_, Args&&... args )
-            : GroupItem{ internalName, std::forward<Args>(args)... }
+            : ConcreteGroupItem< false >{ internalName, std::forward<Args>(args)... }
             , title{ title_ }
          {}
       ~MenuItem() override;
@@ -567,7 +592,7 @@ namespace MenuTable {
 
    // Collects other items that are conditionally shown or hidden, but are
    // always available to macro programming
-   struct ConditionalGroupItem final : GroupItem {
+   struct ConditionalGroupItem final : ConcreteGroupItem< false > {
       using Condition = std::function< bool() >;
 
       // Construction from an internal name and a previously built-up
@@ -578,7 +603,7 @@ namespace MenuTable {
       template< typename... Args >
          ConditionalGroupItem( const wxString &internalName,
             Condition condition_, Args&&... args )
-            : GroupItem{ internalName, std::forward<Args>(args)... }
+            : ConcreteGroupItem< false >{ internalName, std::forward<Args>(args)... }
             , condition{ condition_ }
          {}
       ~ConditionalGroupItem() override;
