@@ -110,17 +110,7 @@ ComputedItem::~ComputedItem() {}
 
 SingleItem::~SingleItem() {}
 
-GroupItem::GroupItem( const wxString &internalName, BaseItemPtrs &&items_ )
-: BaseItem{ internalName }, items{ std::move( items_ ) }
-{
-}
-void GroupItem::AppendOne( BaseItemPtr&& ptr )
-{
-   items.push_back( std::move( ptr ) );
-}
 GroupItem::~GroupItem() {}
-
-TransparentGroupItem::~TransparentGroupItem() {}
 
 Visitor::~Visitor(){}
 void Visitor::BeginGroup(GroupItem &, const Path &) {}
@@ -133,7 +123,8 @@ namespace MenuTable {
 
 MenuItem::MenuItem( const wxString &internalName,
    const TranslatableString &title_, BaseItemPtrs &&items_ )
-: GroupItem{ internalName, std::move( items_ ) }, title{ title_ }
+: ConcreteGroupItem< false, MenuVisitor >{
+   internalName, std::move( items_ ) }, title{ title_ }
 {
    wxASSERT( !title.empty() );
 }
@@ -141,7 +132,8 @@ MenuItem::~MenuItem() {}
 
 ConditionalGroupItem::ConditionalGroupItem(
    const wxString &internalName, Condition condition_, BaseItemPtrs &&items_ )
-: GroupItem{ internalName, std::move( items_ ) }, condition{ condition_ }
+: ConcreteGroupItem< false, MenuVisitor >{
+   internalName, std::move( items_ ) }, condition{ condition_ }
 {
 }
 ConditionalGroupItem::~ConditionalGroupItem() {}
@@ -203,15 +195,15 @@ struct CollectedItems
 // alternate as the entire tree is recursively visited.
 
 // forward declaration for mutually recursive functions
-void CollectItem( AudacityProject &project,
+void CollectItem( Registry::Visitor &visitor,
    CollectedItems &collection, BaseItem *Item );
-void CollectItems( AudacityProject &project,
+void CollectItems( Registry::Visitor &visitor,
    CollectedItems &collection, const BaseItemPtrs &items )
 {
    for ( auto &item : items )
-      CollectItem( project, collection, item.get() );
+      CollectItem( visitor, collection, item.get() );
 }
-void CollectItem( AudacityProject &project,
+void CollectItem( Registry::Visitor &visitor,
    CollectedItems &collection, BaseItem *pItem )
 {
    if (!pItem)
@@ -222,25 +214,25 @@ void CollectItem( AudacityProject &project,
        dynamic_cast<SharedItem*>( pItem )) {
       auto &delegate = pShared->ptr;
       // recursion
-      CollectItem( project, collection, delegate.get() );
+      CollectItem( visitor, collection, delegate.get() );
    }
    else
    if (const auto pComputed =
        dynamic_cast<ComputedItem*>( pItem )) {
-      auto result = pComputed->factory( project );
+      auto result = pComputed->factory( visitor );
       if (result) {
          // Guarantee long enough lifetime of the result
          collection.computedItems.push_back( result );
          // recursion
-         CollectItem( project, collection, result.get() );
+         CollectItem( visitor, collection, result.get() );
       }
    }
    else
    if (auto pGroup = dynamic_cast<GroupItem*>(pItem)) {
-      if (dynamic_cast<TransparentGroupItem*>(pItem) && pItem->name.empty())
+      if (pGroup->Transparent() && pItem->name.empty())
          // nameless grouping item is transparent to path calculations
          // recursion
-         CollectItems( project, collection, pGroup->items );
+         CollectItems( visitor, collection, pGroup->items );
       else
          // all other group items
          collection.items.push_back( pItem );
@@ -256,29 +248,26 @@ using Path = std::vector< Identifier >;
 
 // forward declaration for mutually recursive functions
 void VisitItem(
-   Registry::Visitor &visitor,
-   AudacityProject &project, CollectedItems &collection,
+   Registry::Visitor &visitor, CollectedItems &collection,
    Path &path, BaseItem *pItem );
 void VisitItems(
-   Registry::Visitor &visitor,
-   AudacityProject &project, CollectedItems &collection,
+   Registry::Visitor &visitor, CollectedItems &collection,
    Path &path, GroupItem *pGroup )
 {
    // Make a new collection for this subtree, sharing the memo cache
    CollectedItems newCollection{ {}, collection.computedItems };
 
    // Gather items at this level
-   CollectItems( project, newCollection, pGroup->items );
+   CollectItems( visitor, newCollection, pGroup->items );
 
    // Now visit them
    path.push_back( pGroup->name );
    for ( const auto &pSubItem : newCollection.items )
-      VisitItem( visitor, project, collection, path, pSubItem );
+      VisitItem( visitor, collection, path, pSubItem );
    path.pop_back();
 }
 void VisitItem(
-   Registry::Visitor &visitor,
-   AudacityProject &project, CollectedItems &collection,
+   Registry::Visitor &visitor, CollectedItems &collection,
    Path &path, BaseItem *pItem )
 {
    if (!pItem)
@@ -293,7 +282,7 @@ void VisitItem(
        dynamic_cast<GroupItem*>( pItem )) {
       visitor.BeginGroup( *pGroup, path );
       // recursion
-      VisitItems( visitor, project, collection, path, pGroup );
+      VisitItems( visitor, collection, path, pGroup );
       visitor.EndGroup( *pGroup, path );
    }
    else
@@ -304,14 +293,12 @@ void VisitItem(
 
 namespace Registry {
 
-void Visit(
-   Visitor &visitor, AudacityProject &project,
-   BaseItem *pTopItem )
+void Visit( Visitor &visitor,  BaseItem *pTopItem )
 {
    std::vector< BaseItemSharedPtr > computedItems;
    CollectedItems collection{ {}, computedItems };
    Path emptyPath;
-   VisitItem( visitor, project, collection, emptyPath, pTopItem );
+   VisitItem( visitor, collection, emptyPath, pTopItem );
 }
 
 }
@@ -362,10 +349,10 @@ static const auto menuTree = MenuTable::Items( MenuPathStart
 );
 
 namespace {
-struct MenuItemVisitor : Registry::Visitor
+struct MenuItemVisitor : MenuVisitor
 {
    MenuItemVisitor( AudacityProject &proj, CommandManager &man )
-      : project(proj), manager( man ) {}
+      : MenuVisitor(proj), manager( man ) {}
 
    void BeginGroup( GroupItem &item, const Path& ) override
    {
@@ -384,8 +371,8 @@ struct MenuItemVisitor : Registry::Visitor
          flags.push_back(flag);
       }
       else
-      if (const auto pGroup =
-          dynamic_cast<TransparentGroupItem*>( pItem )) {
+      if (const auto pGroup = dynamic_cast<GroupItem*>( pItem )) {
+         wxASSERT( pGroup->Transparent() );
       }
       else
          wxASSERT( false );
@@ -407,8 +394,8 @@ struct MenuItemVisitor : Registry::Visitor
          flags.pop_back();
       }
       else
-      if (const auto pGroup =
-          dynamic_cast<TransparentGroupItem*>( pItem )) {
+      if (const auto pGroup = dynamic_cast<GroupItem*>( pItem )) {
+         wxASSERT( pGroup->Transparent() );
       }
       else
          wxASSERT( false );
@@ -448,7 +435,6 @@ struct MenuItemVisitor : Registry::Visitor
          wxASSERT( false );
    }
 
-   AudacityProject &project;
    CommandManager &manager;
    std::vector<bool> flags;
 };
@@ -466,7 +452,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
    wxASSERT(menubar);
 
    MenuItemVisitor visitor{ project, commandManager };
-   MenuManager::Visit( visitor, project );
+   MenuManager::Visit( visitor );
 
    GetProjectFrame( project ).SetMenuBar(menubar.release());
 
@@ -477,9 +463,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 #endif
 }
 
-void MenuManager::Visit( Registry::Visitor &visitor, AudacityProject &project )
+void MenuManager::Visit( MenuVisitor &visitor )
 {
-   Registry::Visit( visitor, project, menuTree.get() );
+   Registry::Visit( visitor, menuTree.get() );
 }
 
 // TODO: This surely belongs in CommandManager?

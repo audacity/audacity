@@ -427,6 +427,8 @@ namespace Registry {
    using BaseItemPtr = std::unique_ptr<BaseItem>;
    using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
    using BaseItemPtrs = std::vector<BaseItemPtr>;
+
+   struct Visitor;
    
 
    // An item that delegates to another held in a shared pointer; this allows
@@ -454,15 +456,18 @@ namespace Registry {
       // Return type is a shared_ptr to let the function decide whether to
       // recycle the object or rebuild it on demand each time.
       // Return value from the factory may be null
-      using Factory = std::function< BaseItemSharedPtr( AudacityProject & ) >;
+      template< typename VisitorType >
+      using Factory = std::function< BaseItemSharedPtr( VisitorType & ) >;
 
-      explicit ComputedItem( const Factory &factory_ )
+      using DefaultVisitor = Visitor;
+
+      explicit ComputedItem( const Factory< DefaultVisitor > &factory_ )
          : BaseItem( wxEmptyString )
          , factory{ factory_ }
       {}
       ~ComputedItem() override;
 
-      Factory factory;
+      Factory< DefaultVisitor > factory;
    };
 
    // Common abstract base class for items that are not groups
@@ -473,17 +478,31 @@ namespace Registry {
 
    // Common abstract base class for items that group other items
    struct GroupItem : BaseItem {
+      using BaseItem::BaseItem;
+
       // Construction from an internal name and a previously built-up
       // vector of pointers
-      GroupItem( const wxString &internalName, BaseItemPtrs &&items_ );
-      // In-line, variadic constructor that doesn't require building a vector
-      template< typename... Args >
-         GroupItem( const wxString &internalName, Args&&... args )
-         : BaseItem( internalName )
-         { Append( std::forward< Args >( args )... ); }
+      GroupItem( const wxString &internalName, BaseItemPtrs &&items_ )
+         : BaseItem{ internalName }, items{ std::move( items_ ) }
+      {}
       ~GroupItem() override = 0;
 
+      // Whether the item is non-significant for path naming
+      // when it also has an empty name
+      virtual bool Transparent() const = 0;
+
       BaseItemPtrs items;
+   };
+   
+   // GroupItem adding variadic constructor conveniences
+   template< typename VisitorType = ComputedItem::DefaultVisitor >
+   struct InlineGroupItem : GroupItem {
+      using GroupItem::GroupItem;
+      // In-line, variadic constructor that doesn't require building a vector
+      template< typename... Args >
+         InlineGroupItem( const wxString &internalName, Args&&... args )
+         : GroupItem( internalName )
+         { Append( std::forward< Args >( args )... ); }
 
    private:
       // nullary overload grounds the recursion
@@ -502,27 +521,46 @@ namespace Registry {
          };
 
       // Move one unique_ptr to an item into our array
-      void AppendOne( BaseItemPtr&& ptr );
+      void AppendOne( BaseItemPtr&& ptr )
+      {
+         items.push_back( std::move( ptr ) );
+      }
       // This overload allows a lambda or function pointer in the variadic
       // argument lists without any other syntactic wrapping, and also
       // allows implicit conversions to type Factory.
       // (Thus, a lambda can return a unique_ptr<BaseItem> rvalue even though
       // Factory's return type is shared_ptr, and the needed conversion is
       // appled implicitly.)
-      void AppendOne( const ComputedItem::Factory &factory )
-      { AppendOne( std::make_unique<ComputedItem>( factory ) ); }
+      void AppendOne( const ComputedItem::Factory<VisitorType> &factory )
+      {
+         auto adaptedFactory = [factory]( Registry::Visitor &visitor ){
+            return factory( dynamic_cast< VisitorType& >( visitor ) );
+         };
+         AppendOne( std::make_unique<ComputedItem>( adaptedFactory ) );
+      }
       // This overload lets you supply a shared pointer to an item, directly
       template<typename Subtype>
       void AppendOne( const std::shared_ptr<Subtype> &ptr )
       { AppendOne( std::make_unique<SharedItem>(ptr) ); }
    };
 
+   // Inline group item also specifying transparency
+   template< bool transparent,
+      typename VisitorType = ComputedItem::DefaultVisitor >
+   struct ConcreteGroupItem : InlineGroupItem< VisitorType >
+   {
+      using InlineGroupItem< VisitorType >::InlineGroupItem;
+      ~ConcreteGroupItem() {}
+      bool Transparent() const override { return transparent; }
+   };
+
    // Concrete subclass of GroupItem that adds nothing else
    // TransparentGroupItem with an empty name is transparent to item path calculations
-   struct TransparentGroupItem final : GroupItem
+   template< typename VisitorType = ComputedItem::DefaultVisitor >
+   struct TransparentGroupItem final : ConcreteGroupItem< true, VisitorType >
    {
-      using GroupItem::GroupItem;
-      ~TransparentGroupItem() override;
+      using ConcreteGroupItem< true, VisitorType >::ConcreteGroupItem;
+      ~TransparentGroupItem() override {}
    };
 
    // Define actions to be done in Visit.
@@ -539,16 +577,23 @@ namespace Registry {
    };
 
    // Top-down visitation of all items and groups in a tree
-   void Visit(
-      Visitor &visitor, AudacityProject &project, BaseItem *pTopItem );
+   void Visit( Visitor &visitor, BaseItem *pTopItem );
 }
+
+struct MenuVisitor : Registry::Visitor
+{
+   explicit MenuVisitor( AudacityProject &p ) : project{ p } {}
+   operator AudacityProject & () const { return project; }
+
+   AudacityProject &project;
+};
 
 // Define items that populate tables that specifically describe menu trees
 namespace MenuTable {
    using namespace Registry;
 
    // Describes a main menu in the toolbar, or a sub-menu
-   struct MenuItem final : GroupItem {
+   struct MenuItem final : ConcreteGroupItem< false, MenuVisitor > {
       // Construction from an internal name and a previously built-up
       // vector of pointers
       MenuItem( const wxString &internalName,
@@ -557,7 +602,8 @@ namespace MenuTable {
       template< typename... Args >
          MenuItem( const wxString &internalName,
             const TranslatableString &title_, Args&&... args )
-            : GroupItem{ internalName, std::forward<Args>(args)... }
+            : ConcreteGroupItem< false, MenuVisitor >{
+               internalName, std::forward<Args>(args)... }
             , title{ title_ }
          {}
       ~MenuItem() override;
@@ -567,7 +613,7 @@ namespace MenuTable {
 
    // Collects other items that are conditionally shown or hidden, but are
    // always available to macro programming
-   struct ConditionalGroupItem final : GroupItem {
+   struct ConditionalGroupItem final : ConcreteGroupItem< false, MenuVisitor > {
       using Condition = std::function< bool() >;
 
       // Construction from an internal name and a previously built-up
@@ -578,7 +624,8 @@ namespace MenuTable {
       template< typename... Args >
          ConditionalGroupItem( const wxString &internalName,
             Condition condition_, Args&&... args )
-            : GroupItem{ internalName, std::forward<Args>(args)... }
+            : ConcreteGroupItem< false, MenuVisitor >{
+               internalName, std::forward<Args>(args)... }
             , condition{ condition_ }
          {}
       ~ConditionalGroupItem() override;
@@ -713,10 +760,10 @@ namespace MenuTable {
    // in identification of items by path.  Otherwise try to keep the name
    // stable across Audacity versions.
    template< typename... Args >
-   inline std::unique_ptr<TransparentGroupItem> Items(
+   inline std::unique_ptr<TransparentGroupItem< MenuVisitor > > Items(
       const wxString &internalName, Args&&... args )
-         { return std::make_unique<TransparentGroupItem>( internalName,
-            std::forward<Args>(args)... ); }
+         { return std::make_unique<TransparentGroupItem< MenuVisitor > >(
+            internalName, std::forward<Args>(args)... ); }
 
    // Menu items can be constructed two ways, as for group items
    // Items will appear in a main toolbar menu or in a sub-menu.
