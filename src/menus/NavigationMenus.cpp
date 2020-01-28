@@ -579,7 +579,7 @@ MenuTable::BaseItemSharedPtr ExtraGlobalCommands()
 MenuTable::BaseItemSharedPtr ExtraFocusMenu()
 {
    using namespace MenuTable;
-   static const auto FocusedTracksFlags = TracksExistFlag | TrackPanelHasFocus;
+   static const auto FocusedTracksFlags = TracksExistFlag() | TrackPanelHasFocus();
 
    static BaseItemSharedPtr menu{
    FinderScope( findCommandHandler ).Eval(

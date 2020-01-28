@@ -562,11 +562,11 @@ MenuTable::BaseItemSharedPtr FileMenu()
    Menu( wxT("File"), XO("&File"),
       /*i18n-hint: "New" is an action (verb) to create a NEW project*/
       Command( wxT("New"), XXO("&New"), FN(OnNew),
-         AudioIONotBusyFlag, wxT("Ctrl+N") ),
+         AudioIONotBusyFlag(), wxT("Ctrl+N") ),
 
       /*i18n-hint: (verb)*/
       Command( wxT("Open"), XXO("&Open..."), FN(OnOpen),
-         AudioIONotBusyFlag, wxT("Ctrl+O") ),
+         AudioIONotBusyFlag(), wxT("Ctrl+O") ),
 
 #ifdef EXPERIMENTAL_RESET
       // Empty the current project and forget its name and path.  DANGEROUS
@@ -574,7 +574,7 @@ MenuTable::BaseItemSharedPtr FileMenu()
       // Do not translate this menu item (no XXO).  
       // It MUST not be shown to regular users.
       Command( wxT("Reset"), XXO("&Dangerous Reset..."), FN(OnProjectReset),
-         AudioIONotBusyFlag ),
+         AudioIONotBusyFlag() ),
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -614,23 +614,23 @@ MenuTable::BaseItemSharedPtr FileMenu()
 /////////////////////////////////////////////////////////////////////////////
 
       Command( wxT("Close"), XXO("&Close"), FN(OnClose),
-         AudioIONotBusyFlag, wxT("Ctrl+W") ),
+         AudioIONotBusyFlag(), wxT("Ctrl+W") ),
 
       Separator(),
 
       Menu( wxT("Save"), XO("&Save Project"),
          Command( wxT("Save"), XXO("&Save Project"), FN(OnSave),
-            AudioIONotBusyFlag | UnsavedChangesFlag, wxT("Ctrl+S") ),
+            AudioIONotBusyFlag() | UnsavedChangesFlag(), wxT("Ctrl+S") ),
          Command( wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs),
-            AudioIONotBusyFlag ),
+            AudioIONotBusyFlag() ),
          // TODO: The next two items should be disabled if project is empty
          Command( wxT("SaveCopy"), XXO("Save Lossless Copy of Project..."),
-            FN(OnSaveCopy), AudioIONotBusyFlag )
+            FN(OnSaveCopy), AudioIONotBusyFlag() )
 #ifdef USE_LIBVORBIS
          ,
          Command( wxT("SaveCompressed"),
             XXO("&Save Compressed Copy of Project..."),
-            FN(OnSaveCompressed), AudioIONotBusyFlag )
+            FN(OnSaveCompressed), AudioIONotBusyFlag() )
 #endif
       ),
 
@@ -639,48 +639,48 @@ MenuTable::BaseItemSharedPtr FileMenu()
       Menu( wxT("Export"), XO("&Export"),
          // Enable Export audio commands only when there are audio tracks.
          Command( wxT("ExportMp3"), XXO("Export as MP&3"), FN(OnExportMp3),
-            AudioIONotBusyFlag | WaveTracksExistFlag ),
+            AudioIONotBusyFlag() | WaveTracksExistFlag() ),
 
          Command( wxT("ExportWav"), XXO("Export as &WAV"), FN(OnExportWav),
-            AudioIONotBusyFlag | WaveTracksExistFlag ),
+            AudioIONotBusyFlag() | WaveTracksExistFlag() ),
 
          Command( wxT("ExportOgg"), XXO("Export as &OGG"), FN(OnExportOgg),
-            AudioIONotBusyFlag | WaveTracksExistFlag ),
+            AudioIONotBusyFlag() | WaveTracksExistFlag() ),
 
          Command( wxT("Export"), XXO("&Export Audio..."), FN(OnExportAudio),
-            AudioIONotBusyFlag | WaveTracksExistFlag, wxT("Ctrl+Shift+E") ),
+            AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+E") ),
 
          // Enable Export Selection commands only when there's a selection.
          Command( wxT("ExportSel"), XXO("Expo&rt Selected Audio..."),
             FN(OnExportSelection),
-            AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
+            AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
             Options{}.UseStrictFlags() ),
 
          Command( wxT("ExportLabels"), XXO("Export &Labels..."),
             FN(OnExportLabels),
-            AudioIONotBusyFlag | LabelTracksExistFlag ),
+            AudioIONotBusyFlag() | LabelTracksExistFlag() ),
          // Enable Export audio commands only when there are audio tracks.
          Command( wxT("ExportMultiple"), XXO("Export &Multiple..."),
             FN(OnExportMultiple),
-            AudioIONotBusyFlag | WaveTracksExistFlag, wxT("Ctrl+Shift+L") )
+            AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+L") )
 #if defined(USE_MIDI)
          ,
          Command( wxT("ExportMIDI"), XXO("Export MI&DI..."), FN(OnExportMIDI),
-            AudioIONotBusyFlag | NoteTracksExistFlag )
+            AudioIONotBusyFlag() | NoteTracksExistFlag() )
 #endif
       ),
 
       Menu( wxT("Import"), XO("&Import"),
          Command( wxT("ImportAudio"), XXO("&Audio..."), FN(OnImport),
-            AudioIONotBusyFlag, wxT("Ctrl+Shift+I") ),
+            AudioIONotBusyFlag(), wxT("Ctrl+Shift+I") ),
          Command( wxT("ImportLabels"), XXO("&Labels..."), FN(OnImportLabels),
-            AudioIONotBusyFlag ),
+            AudioIONotBusyFlag() ),
    #ifdef USE_MIDI
          Command( wxT("ImportMIDI"), XXO("&MIDI..."), FN(OnImportMIDI),
-            AudioIONotBusyFlag ),
+            AudioIONotBusyFlag() ),
    #endif // USE_MIDI
          Command( wxT("ImportRaw"), XXO("&Raw Data..."), FN(OnImportRaw),
-            AudioIONotBusyFlag )
+            AudioIONotBusyFlag() )
       ),
 
       Separator(),
@@ -688,10 +688,10 @@ MenuTable::BaseItemSharedPtr FileMenu()
 /////////////////////////////////////////////////////////////////////////////
 
       Command( wxT("PageSetup"), XXO("Pa&ge Setup..."), FN(OnPageSetup),
-         AudioIONotBusyFlag | TracksExistFlag ),
+         AudioIONotBusyFlag() | TracksExistFlag() ),
       /* i18n-hint: (verb) It's item on a menu. */
       Command( wxT("Print"), XXO("&Print..."), FN(OnPrint),
-         AudioIONotBusyFlag | TracksExistFlag ),
+         AudioIONotBusyFlag() | TracksExistFlag() ),
 
       Separator(),
 

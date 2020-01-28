@@ -199,7 +199,7 @@ extern "C"
                XO("&Nyquist Workbench..."),
                findme,
                static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench),
-               AudioIONotBusyFlag);
+               AudioIONotBusyFlag());
 
             c->ClearCurrentMenu();
          }

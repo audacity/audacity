@@ -538,7 +538,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
    // NB: The call may have the side effect of changing flags.
    bool allowed = MenuManager::Get(project).TryToMakeActionAllowed(
       flags,
-      AudioIONotBusyFlag | CanStopAudioStreamFlag);
+      AudioIONotBusyFlag() | CanStopAudioStreamFlag());
 
    if (!allowed)
       return false;
@@ -939,14 +939,14 @@ bool ProjectAudioManager::CanStopAudioStream() const
            gAudioIO->GetOwningProject() == &mProject );
 }
 
-const ReservedCommandFlag
-   CanStopAudioStreamFlag{
+const ReservedCommandFlag&
+   CanStopAudioStreamFlag(){ static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          auto &projectAudioManager = ProjectAudioManager::Get( project );
          bool canStop = projectAudioManager.CanStopAudioStream();
          return canStop;
       }
-   };
+   }; return flag; }
 
 AudioIOStartStreamOptions
 DefaultPlayOptions( AudacityProject &project )
@@ -1091,8 +1091,8 @@ void ProjectAudioManager::DoPlayStopSelect()
 #include "CommonCommandFlags.h"
 
 static RegisteredMenuItemEnabler stopIfPaused{{
-   []{ return PausedFlag; },
-   []{ return AudioIONotBusyFlag; },
+   []{ return PausedFlag(); },
+   []{ return AudioIONotBusyFlag(); },
    []( const AudacityProject &project ){
       return MenuManager::Get( project ).mStopIfWasPaused; },
    []( AudacityProject &project, CommandFlag ){

@@ -1155,7 +1155,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       MenuManager::Get( project ).ReportIfActionNotAllowed(
          mEffect->GetName(),
          flags,
-         WaveTracksSelectedFlag | TimeSelectedFlag);
+         WaveTracksSelectedFlag() | TimeSelectedFlag());
       if (!allowed)
          return;
    }

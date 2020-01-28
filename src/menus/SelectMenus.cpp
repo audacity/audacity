@@ -1040,10 +1040,10 @@ MenuTable::BaseItemSharedPtr SelectMenu()
    /* i18n-hint: (verb) It's an item on a menu. */
    Menu( wxT("Select"), XO("&Select"),
       Command( wxT("SelectAll"), XXO("&All"), FN(OnSelectAll),
-         TracksExistFlag,
+         TracksExistFlag(),
          Options{ wxT("Ctrl+A"), XO("Select All") } ),
       Command( wxT("SelectNone"), XXO("&None"), FN(OnSelectNone),
-         TracksExistFlag,
+         TracksExistFlag(),
          Options{ wxT("Ctrl+Shift+A"), XO("Select None") } ),
 
       //////////////////////////////////////////////////////////////////////////
@@ -1051,14 +1051,14 @@ MenuTable::BaseItemSharedPtr SelectMenu()
       Menu( wxT("Tracks"), XO("&Tracks"),
          Command( wxT("SelAllTracks"), XXO("In All &Tracks"),
             FN(OnSelectAllTracks),
-            TracksExistFlag,
+            TracksExistFlag(),
             wxT("Ctrl+Shift+K") )
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
          ,
          Command( wxT("SelSyncLockTracks"), XXO("In All &Sync-Locked Tracks"),
             FN(OnSelectSyncLockSel),
-            TracksSelectedFlag | IsSyncLockedFlag,
+            TracksSelectedFlag() | IsSyncLockedFlag(),
             Options{ wxT("Ctrl+Shift+Y"), XO("Select Sync-Locked") } )
 #endif
       ),
@@ -1067,10 +1067,10 @@ MenuTable::BaseItemSharedPtr SelectMenu()
 
       Menu( wxT("Region"), XO("R&egion"),
          Command( wxT("SetLeftSelection"), XXO("&Left at Playback Position"),
-            FN(OnSetLeftSelection), TracksExistFlag,
+            FN(OnSetLeftSelection), TracksExistFlag(),
             Options{ wxT("["), XO("Set Selection Left at Play Position") } ),
          Command( wxT("SetRightSelection"), XXO("&Right at Playback Position"),
-            FN(OnSetRightSelection), TracksExistFlag,
+            FN(OnSetRightSelection), TracksExistFlag(),
             Options{ wxT("]"), XO("Set Selection Right at Play Position") } ),
          Command( wxT("SelTrackStartToCursor"), XXO("Track &Start to Cursor"),
             FN(OnSelectStartCursor), AlwaysEnabledFlag,
@@ -1090,10 +1090,10 @@ MenuTable::BaseItemSharedPtr SelectMenu()
          // the region or the cursor is better. But it does not belong in a
          // 'Region' submenu.
          Command( wxT("SelSave"), XXO("S&tore Selection"), FN(OnSelectionSave),
-            WaveTracksSelectedFlag ),
+            WaveTracksSelectedFlag() ),
          // Audacity had 'Retrieve Regio&n' here previously.
          Command( wxT("SelRestore"), XXO("Retrieve Selectio&n"),
-            FN(OnSelectionRestore), TracksExistFlag )
+            FN(OnSelectionRestore), TracksExistFlag() )
       ),
 
       //////////////////////////////////////////////////////////////////////////
@@ -1102,13 +1102,13 @@ MenuTable::BaseItemSharedPtr SelectMenu()
       Menu( wxT("Spectral"), XO("S&pectral"),
          Command( wxT("ToggleSpectralSelection"),
             XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection),
-            TracksExistFlag, wxT("Q") ),
+            TracksExistFlag(), wxT("Q") ),
          Command( wxT("NextHigherPeakFrequency"),
             XXO("Next &Higher Peak Frequency"), FN(OnNextHigherPeakFrequency),
-            TracksExistFlag ),
+            TracksExistFlag() ),
          Command( wxT("NextLowerPeakFrequency"),
             XXO("Next &Lower Peak Frequency"), FN(OnNextLowerPeakFrequency),
-            TracksExistFlag )
+            TracksExistFlag() )
       ),
 #endif
 
@@ -1122,19 +1122,19 @@ MenuTable::BaseItemSharedPtr SelectMenu()
 
       Command( wxT("SelCursorStoredCursor"),
          XXO("Cursor to Stored &Cursor Position"),
-         FN(OnSelectCursorStoredCursor), TracksExistFlag,
+         FN(OnSelectCursorStoredCursor), TracksExistFlag(),
          Options{}.LongName( XO("Select Cursor to Stored") ) ),
 
       Command( wxT("StoreCursorPosition"), XXO("Store Cursor Pos&ition"),
          FN(OnCursorPositionStore),
-         WaveTracksExistFlag ),
+         WaveTracksExistFlag() ),
       // Save cursor position is used in some selections.
       // Maybe there should be a restore for it?
 
       Separator(),
 
       Command( wxT("ZeroCross"), XXO("At &Zero Crossings"),
-         FN(OnZeroCrossing), TracksSelectedFlag,
+         FN(OnZeroCrossing), TracksSelectedFlag(),
          Options{ wxT("Z"), XO("Select Zero Crossing") } )
    ) ) };
    return menu;
@@ -1159,25 +1159,25 @@ MenuTable::BaseItemSharedPtr ExtraSelectionMenu()
          AlwaysEnabledFlag, wxT("Shift+End") ),
       Command( wxT("SelExtLeft"), XXO("Selection Extend &Left"),
          FN(OnSelExtendLeft),
-         TracksExistFlag | TrackPanelHasFocus,
+         TracksExistFlag() | TrackPanelHasFocus(),
          wxT("Shift+Left\twantKeyup\tallowDup") ),
       Command( wxT("SelExtRight"), XXO("Selection Extend &Right"),
          FN(OnSelExtendRight),
-         TracksExistFlag | TrackPanelHasFocus,
+         TracksExistFlag() | TrackPanelHasFocus(),
          wxT("Shift+Right\twantKeyup\tallowDup") ),
       Command( wxT("SelSetExtLeft"), XXO("Set (or Extend) Le&ft Selection"),
          FN(OnSelSetExtendLeft),
-         TracksExistFlag | TrackPanelHasFocus ),
+         TracksExistFlag() | TrackPanelHasFocus() ),
       Command( wxT("SelSetExtRight"), XXO("Set (or Extend) Rig&ht Selection"),
          FN(OnSelSetExtendRight),
-         TracksExistFlag | TrackPanelHasFocus ),
+         TracksExistFlag() | TrackPanelHasFocus() ),
       Command( wxT("SelCntrLeft"), XXO("Selection Contract L&eft"),
          FN(OnSelContractLeft),
-         TracksExistFlag | TrackPanelHasFocus,
+         TracksExistFlag() | TrackPanelHasFocus(),
          wxT("Ctrl+Shift+Right\twantKeyup") ),
       Command( wxT("SelCntrRight"), XXO("Selection Contract R&ight"),
          FN(OnSelContractRight),
-         TracksExistFlag | TrackPanelHasFocus,
+         TracksExistFlag() | TrackPanelHasFocus(),
          wxT("Ctrl+Shift+Left\twantKeyup") )
    ) ) };
    return menu;
@@ -1190,7 +1190,7 @@ MenuTable::BaseItemSharedPtr CursorMenu()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
-   static const auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
+   static const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
 
    // JKC: ANSWER-ME: How is 'cursor to' different to 'Skip To' and how is it
    // useful?
@@ -1202,20 +1202,20 @@ MenuTable::BaseItemSharedPtr CursorMenu()
    Menu( wxT("Cursor"), XO("&Cursor to"),
       Command( wxT("CursSelStart"), XXO("Selection Star&t"),
          FN(OnCursorSelStart),
-         TimeSelectedFlag,
+         TimeSelectedFlag(),
          Options{}.LongName( XO("Cursor to Selection Start") ) ),
       Command( wxT("CursSelEnd"), XXO("Selection En&d"),
          FN(OnCursorSelEnd),
-         TimeSelectedFlag,
+         TimeSelectedFlag(),
          Options{}.LongName( XO("Cursor to Selection End") ) ),
 
       Command( wxT("CursTrackStart"), XXO("Track &Start"),
          FN(OnCursorTrackStart),
-         TracksSelectedFlag,
+         TracksSelectedFlag(),
          Options{ wxT("J"), XO("Cursor to Track Start") } ),
       Command( wxT("CursTrackEnd"), XXO("Track &End"),
          FN(OnCursorTrackEnd),
-         TracksSelectedFlag,
+         TracksSelectedFlag(),
          Options{ wxT("K"), XO("Cursor to Track End") } ),
 
       ClipCursorItems(),
@@ -1242,23 +1242,23 @@ MenuTable::BaseItemSharedPtr ExtraCursorMenu()
    FinderScope( findCommandHandler ).Eval(
    Menu( wxT("Cursor"), XO("&Cursor"),
       Command( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
-         TracksExistFlag | TrackPanelHasFocus,
+         TracksExistFlag() | TrackPanelHasFocus(),
          wxT("Left\twantKeyup\tallowDup") ),
       Command( wxT("CursorRight"), XXO("Cursor &Right"), FN(OnCursorRight),
-         TracksExistFlag | TrackPanelHasFocus,
+         TracksExistFlag() | TrackPanelHasFocus(),
          wxT("Right\twantKeyup\tallowDup") ),
       Command( wxT("CursorShortJumpLeft"), XXO("Cursor Sh&ort Jump Left"),
          FN(OnCursorShortJumpLeft),
-         TracksExistFlag | TrackPanelHasFocus, wxT(",") ),
+         TracksExistFlag() | TrackPanelHasFocus(), wxT(",") ),
       Command( wxT("CursorShortJumpRight"), XXO("Cursor Shor&t Jump Right"),
          FN(OnCursorShortJumpRight),
-         TracksExistFlag | TrackPanelHasFocus, wxT(".") ),
+         TracksExistFlag() | TrackPanelHasFocus(), wxT(".") ),
       Command( wxT("CursorLongJumpLeft"), XXO("Cursor Long J&ump Left"),
          FN(OnCursorLongJumpLeft),
-         TracksExistFlag | TrackPanelHasFocus, wxT("Shift+,") ),
+         TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+,") ),
       Command( wxT("CursorLongJumpRight"), XXO("Cursor Long Ju&mp Right"),
          FN(OnCursorLongJumpRight),
-         TracksExistFlag | TrackPanelHasFocus, wxT("Shift+.") ),
+         TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+.") ),
 
       ExtraClipCursorItems()
    ) ) };
@@ -1273,14 +1273,14 @@ MenuTable::BaseItemSharedPtr ExtraSeekMenu()
    FinderScope( findCommandHandler ).Eval(
    Menu( wxT("Seek"), XO("See&k"),
       Command( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
-         FN(OnSeekLeftShort), AudioIOBusyFlag, wxT("Left\tallowDup") ),
+         FN(OnSeekLeftShort), AudioIOBusyFlag(), wxT("Left\tallowDup") ),
       Command( wxT("SeekRightShort"),
          XXO("Short Seek &Right During Playback"), FN(OnSeekRightShort),
-         AudioIOBusyFlag, wxT("Right\tallowDup") ),
+         AudioIOBusyFlag(), wxT("Right\tallowDup") ),
       Command( wxT("SeekLeftLong"), XXO("Long Seek Le&ft During Playback"),
-         FN(OnSeekLeftLong), AudioIOBusyFlag, wxT("Shift+Left\tallowDup") ),
+         FN(OnSeekLeftLong), AudioIOBusyFlag(), wxT("Shift+Left\tallowDup") ),
       Command( wxT("SeekRightLong"), XXO("Long Seek Rig&ht During Playback"),
-         FN(OnSeekRightLong), AudioIOBusyFlag, wxT("Shift+Right\tallowDup") )
+         FN(OnSeekRightLong), AudioIOBusyFlag(), wxT("Shift+Right\tallowDup") )
    ) ) };
    return menu;
 }

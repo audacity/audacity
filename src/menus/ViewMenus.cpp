@@ -447,15 +447,15 @@ MenuTable::BaseItemSharedPtr ViewMenu()
    Menu( wxT("View"), XO("&View"),
       Menu( wxT("Zoom"), XO("&Zoom"),
          Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
-            ZoomInAvailableFlag, wxT("Ctrl+1") ),
+            ZoomInAvailableFlag(), wxT("Ctrl+1") ),
          Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), FN(OnZoomNormal),
-            TracksExistFlag, wxT("Ctrl+2") ),
+            TracksExistFlag(), wxT("Ctrl+2") ),
          Command( wxT("ZoomOut"), XXO("Zoom &Out"), FN(OnZoomOut),
-            ZoomOutAvailableFlag, wxT("Ctrl+3") ),
+            ZoomOutAvailableFlag(), wxT("Ctrl+3") ),
          Command( wxT("ZoomSel"), XXO("&Zoom to Selection"), FN(OnZoomSel),
-            TimeSelectedFlag, wxT("Ctrl+E") ),
+            TimeSelectedFlag(), wxT("Ctrl+E") ),
          Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), FN(OnZoomToggle),
-            TracksExistFlag, wxT("Shift+Z") ),
+            TracksExistFlag(), wxT("Shift+Z") ),
          Separator(),
          Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
             FN(OnAdvancedVZoom), AlwaysEnabledFlag,
@@ -464,21 +464,21 @@ MenuTable::BaseItemSharedPtr ViewMenu()
 
       Menu( wxT("TrackSize"), XO("T&rack Size"),
          Command( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
-            TracksExistFlag, wxT("Ctrl+F") ),
+            TracksExistFlag(), wxT("Ctrl+F") ),
          Command( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
-            TracksExistFlag, wxT("Ctrl+Shift+F") ),
+            TracksExistFlag(), wxT("Ctrl+Shift+F") ),
          Command( wxT("CollapseAllTracks"), XXO("&Collapse All Tracks"),
-            FN(OnCollapseAllTracks), TracksExistFlag, wxT("Ctrl+Shift+C") ),
+            FN(OnCollapseAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+C") ),
          Command( wxT("ExpandAllTracks"), XXO("E&xpand Collapsed Tracks"),
-            FN(OnExpandAllTracks), TracksExistFlag, wxT("Ctrl+Shift+X") )
+            FN(OnExpandAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+X") )
       ),
 
       Menu( wxT("SkipTo"), XO("Sk&ip to"),
          Command( wxT("SkipSelStart"), XXO("Selection Sta&rt"),
-            FN(OnGoSelStart), TimeSelectedFlag,
+            FN(OnGoSelStart), TimeSelectedFlag(),
             Options{ wxT("Ctrl+["), XO("Skip to Selection Start") } ),
          Command( wxT("SkipSelEnd"), XXO("Selection En&d"), FN(OnGoSelEnd),
-            TimeSelectedFlag,
+            TimeSelectedFlag(),
             Options{ wxT("Ctrl+]"), XO("Skip to Selection End") } )
       ),
 
@@ -523,12 +523,12 @@ MenuTable::BaseItemSharedPtr ViewMenu()
       /* i18n-hint: Clicking this menu item shows the various editing steps
          that have been taken.*/
       Command( wxT("UndoHistory"), XXO("&History..."), FN(OnHistory),
-         AudioIONotBusyFlag ),
+         AudioIONotBusyFlag() ),
 
       Command( wxT("Karaoke"), XXO("&Karaoke..."), FN(OnKaraoke),
-         LabelTracksExistFlag ),
+         LabelTracksExistFlag() ),
       Command( wxT("MixerBoard"), XXO("&Mixer Board..."), FN(OnMixerBoard),
-         PlayableTracksExistFlag ),
+         PlayableTracksExistFlag() ),
 
       Separator(),
 

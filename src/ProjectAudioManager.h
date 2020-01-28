@@ -164,6 +164,6 @@ AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 #include "commands/CommandFlag.h"
 
 extern const ReservedCommandFlag
-   CanStopAudioStreamFlag;
+   &CanStopAudioStreamFlag();
 
 #endif

@@ -570,8 +570,8 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
    static const auto checkOff = Options{}.CheckState( false );
 
    static const auto NotBusyLabelsAndWaveFlags =
-      AudioIONotBusyFlag |
-      LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag;
+      AudioIONotBusyFlag() |
+      LabelsSelectedFlag() | WaveTracksExistFlag() | TimeSelectedFlag();
 
    // Returns TWO menus.
    
@@ -581,7 +581,7 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
    
    Menu( wxT("Labels"), XO("&Labels"),
       Command( wxT("EditLabels"), XXO("&Edit Labels..."), FN(OnEditLabels),
-                 AudioIONotBusyFlag ),
+                 AudioIONotBusyFlag() ),
 
       Separator(),
 
@@ -589,7 +589,7 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
          FN(OnAddLabel), AlwaysEnabledFlag, wxT("Ctrl+B") ),
       Command( wxT("AddLabelPlaying"),
          XXO("Add Label at &Playback Position"),
-         FN(OnAddLabelPlaying), AudioIOBusyFlag,
+         FN(OnAddLabelPlaying), AudioIOBusyFlag(),
 #ifdef __WXMAC__
          wxT("Ctrl+.")
 #else
@@ -598,7 +598,7 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
       ),
       Command( wxT("PasteNewLabel"), XXO("Paste Te&xt to New Label"),
          FN(OnPasteNewLabel),
-         AudioIONotBusyFlag, wxT("Ctrl+Alt+V") ),
+         AudioIONotBusyFlag(), wxT("Ctrl+Alt+V") ),
 
       Separator(),
 
@@ -612,12 +612,12 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
    Menu( wxT("Labeled"), XO("La&beled Audio"),
       /* i18n-hint: (verb)*/
       Command( wxT("CutLabels"), XXO("&Cut"), FN(OnCutLabels),
-         AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |
-            TimeSelectedFlag | IsNotSyncLockedFlag,
+         AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
+            TimeSelectedFlag() | IsNotSyncLockedFlag(),
             Options{ wxT("Alt+X"), XO("Label Cut") } ),
       Command( wxT("DeleteLabels"), XXO("&Delete"), FN(OnDeleteLabels),
-         AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |
-            TimeSelectedFlag | IsNotSyncLockedFlag,
+         AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
+            TimeSelectedFlag() | IsNotSyncLockedFlag(),
          Options{ wxT("Alt+K"), XO("Label Delete") } ),
 
       Separator(),
@@ -644,7 +644,7 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
 
       /* i18n-hint: (verb)*/
       Command( wxT("SplitLabels"), XXO("Spli&t"), FN(OnSplitLabels),
-         AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag,
+         AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag(),
          Options{ wxT("Alt+I"), XO("Label Split") } ),
       /* i18n-hint: (verb)*/
       Command( wxT("JoinLabels"), XXO("&Join"), FN(OnJoinLabels),

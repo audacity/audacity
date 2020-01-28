@@ -164,12 +164,12 @@ int ModuleDispatch(ModuleDispatchTypes type)
             _T("A New Command"), // internal name
             XO("1st Experimental Command..."), //displayed name
             ident, ModNullFN( OnFuncFirst ),
-            AudioIONotBusyFlag );
+            AudioIONotBusyFlag() );
          c->AddItem( *p,
             _T("Another New Command"),
             XO("2nd Experimental Command"),
             ident, ModNullFN( OnFuncSecond ),
-            AudioIONotBusyFlag );
+            AudioIONotBusyFlag() );
          c->ClearCurrentMenu();
    }
       break;

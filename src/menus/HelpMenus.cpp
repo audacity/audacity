@@ -509,11 +509,11 @@ MenuTable::BaseItemSharedPtr HelpMenu()
       Menu( wxT("Diagnostics"), XO("&Diagnostics"),
          Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
             FN(OnAudioDeviceInfo),
-            AudioIONotBusyFlag ),
+            AudioIONotBusyFlag() ),
    #ifdef EXPERIMENTAL_MIDI_OUT
          Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
             FN(OnMidiDeviceInfo),
-            AudioIONotBusyFlag ),
+            AudioIONotBusyFlag() ),
    #endif
          Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
             AlwaysEnabledFlag ),
@@ -523,7 +523,7 @@ MenuTable::BaseItemSharedPtr HelpMenu()
    #endif
          Command( wxT("CheckDeps"), XXO("Chec&k Dependencies..."),
             FN(OnCheckDependencies),
-            AudioIONotBusyFlag )
+            AudioIONotBusyFlag() )
 
 #ifdef IS_ALPHA
          ,

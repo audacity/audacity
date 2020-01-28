@@ -131,11 +131,11 @@ MenuTable::BaseItemSharedPtr WindowMenu()
       /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
        * window) shrink to an icon on the dock */
       Command( wxT("MacMinimize"), XXO("&Minimize"), FN(OnMacMinimize),
-         NotMinimizedFlag, wxT("Ctrl+M") ),
+         NotMinimizedFlag(), wxT("Ctrl+M") ),
       /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
        * window) full sized */
       Command( wxT("MacZoom"), XXO("&Zoom"),
-         FN(OnMacZoom), NotMinimizedFlag ),
+         FN(OnMacZoom), NotMinimizedFlag() ),
 
       Separator(),
 

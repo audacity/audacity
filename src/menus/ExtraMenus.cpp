@@ -226,15 +226,15 @@ MenuTable::BaseItemSharedPtr ExtraDeviceMenu()
    Menu( wxT("Device"), XO("De&vice"),
       Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
          FN(OnInputDevice),
-         AudioIONotBusyFlag, wxT("Shift+I") ),
+         AudioIONotBusyFlag(), wxT("Shift+I") ),
       Command( wxT("OutputDevice"), XXO("Change &Playback Device..."),
          FN(OnOutputDevice),
-         AudioIONotBusyFlag, wxT("Shift+O") ),
+         AudioIONotBusyFlag(), wxT("Shift+O") ),
       Command( wxT("AudioHost"), XXO("Change Audio &Host..."), FN(OnAudioHost),
-         AudioIONotBusyFlag, wxT("Shift+H") ),
+         AudioIONotBusyFlag(), wxT("Shift+H") ),
       Command( wxT("InputChannels"), XXO("Change Recording Cha&nnels..."),
          FN(OnInputChannels),
-         AudioIONotBusyFlag, wxT("Shift+N") )
+         AudioIONotBusyFlag(), wxT("Shift+N") )
    ) ) };
    return menu;
 }

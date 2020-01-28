@@ -835,16 +835,16 @@ MenuTable::BaseItemSharedPtr ClipSelectMenu()
       Command( wxT("SelPrevClipBoundaryToCursor"),
          XXO("Pre&vious Clip Boundary to Cursor"),
          FN(OnSelectPrevClipBoundaryToCursor),
-         WaveTracksExistFlag ),
+         WaveTracksExistFlag() ),
       Command( wxT("SelCursorToNextClipBoundary"),
          XXO("Cursor to Ne&xt Clip Boundary"),
          FN(OnSelectCursorToNextClipBoundary),
-         WaveTracksExistFlag ),
+         WaveTracksExistFlag() ),
       Command( wxT("SelPrevClip"), XXO("Previo&us Clip"),
-         FN(OnSelectPrevClip), WaveTracksExistFlag,
+         FN(OnSelectPrevClip), WaveTracksExistFlag(),
          Options{ wxT("Alt+,"), XO("Select Previous Clip") } ),
       Command( wxT("SelNextClip"), XXO("N&ext Clip"), FN(OnSelectNextClip),
-         WaveTracksExistFlag,
+         WaveTracksExistFlag(),
          Options{ wxT("Alt+."), XO("Select Next Clip") } )
    ) ) };
    return menu;
@@ -861,11 +861,11 @@ MenuTable::BaseItemSharedPtr ClipCursorItems()
    Items( wxT("Clip"),
       Command( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"),
          FN(OnCursorPrevClipBoundary),
-         WaveTracksExistFlag,
+         WaveTracksExistFlag(),
          Options{}.LongName( XO("Cursor to Prev Clip Boundary") ) ),
       Command( wxT("CursNextClipBoundary"), XXO("Ne&xt Clip Boundary"),
          FN(OnCursorNextClipBoundary),
-         WaveTracksExistFlag,
+         WaveTracksExistFlag(),
          Options{}.LongName( XO("Cursor to Next Clip Boundary") ) )
    ) ) };
    return items;
@@ -880,9 +880,9 @@ MenuTable::BaseItemSharedPtr ExtraClipCursorItems()
    FinderScope( findCommandHandler ).Eval(
    Items( wxT("Clip"),
       Command( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
-         TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") ),
+         TracksExistFlag() | TrackPanelHasFocus(), wxT("\twantKeyup") ),
       Command( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),
-         TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") )
+         TracksExistFlag() | TrackPanelHasFocus(), wxT("\twantKeyup") )
    ) ) };
    return items;
 }
