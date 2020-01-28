@@ -706,7 +706,7 @@ namespace MenuTable {
    // in the CommandContext identifying the command
    struct CommandGroupItem final : SingleItem {
       CommandGroupItem(const wxString &name_,
-               std::initializer_list< ComponentInterfaceSymbol > items_,
+               std::vector< ComponentInterfaceSymbol > items_,
                CommandFunctorPointer callback_,
                CommandFlag flags_,
                bool isEffect_,
@@ -716,12 +716,12 @@ namespace MenuTable {
       // previous constructor; useful within the lifetime of a FinderScope
       template< typename Handler >
       CommandGroupItem(const wxString &name_,
-               std::initializer_list< ComponentInterfaceSymbol > items_,
+               std::vector< ComponentInterfaceSymbol > items_,
                void (Handler::*pmf)(const CommandContext&),
                CommandFlag flags_,
                bool isEffect_,
                CommandHandlerFinder finder = FinderScope::DefaultFinder())
-         : CommandGroupItem(name_, items_,
+         : CommandGroupItem(name_, std::move(items_),
             static_cast<CommandFunctorPointer>(pmf),
             flags_, isEffect_, finder)
       {}
@@ -842,13 +842,13 @@ namespace MenuTable {
    template< typename Handler >
    inline std::unique_ptr<CommandGroupItem> CommandGroup(
       const wxString &name,
-      std::initializer_list< ComponentInterfaceSymbol > items,
+      std::vector< ComponentInterfaceSymbol > items,
       void (Handler::*pmf)(const CommandContext&),
       CommandFlag flags, bool isEffect = false,
       CommandHandlerFinder finder = FinderScope::DefaultFinder())
    {
       return std::make_unique<CommandGroupItem>(
-         name, items, pmf, flags, isEffect, finder
+         name, std::move(items), pmf, flags, isEffect, finder
       );
    }
 

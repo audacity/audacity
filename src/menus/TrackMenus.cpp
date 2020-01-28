@@ -175,15 +175,16 @@ enum {
    kAlignTogether
 };
 
-static const std::initializer_list< ComponentInterfaceSymbol > alignLabels{
+static const std::vector< ComponentInterfaceSymbol >
+&alignLabels() { static std::vector< ComponentInterfaceSymbol > symbols{
    { wxT("StartToZero"),     XO("Start to &Zero") },
    { wxT("StartToSelStart"), XO("Start to &Cursor/Selection Start") },
    { wxT("StartToSelEnd"),   XO("Start to Selection &End") },
    { wxT("EndToSelStart"),   XO("End to Cu&rsor/Selection Start") },
    { wxT("EndToSelEnd"),     XO("End to Selection En&d") },
-};
+}; return symbols; }
 
-const size_t kAlignLabelsCount = alignLabels.end() - alignLabels.begin();
+const size_t kAlignLabelsCount(){ return alignLabels().size(); }
 
 void DoAlign
 (AudacityProject &project, int index, bool moveSel)
@@ -288,7 +289,7 @@ void DoAlign
          : XO("Align Together");
    }
 
-   if ((unsigned)index >= kAlignLabelsCount) {
+   if ((unsigned)index >= kAlignLabelsCount()) {
       // This is an alignLabelsNoSync command.
       for (auto t : tracks.SelectedLeaders< AudioTrack >()) {
          // This shifts different tracks in different ways, so no sync-lock
@@ -884,7 +885,7 @@ void OnAlignNoSync(const CommandContext &context)
    auto &project = context.project;
 
    DoAlign(project,
-      context.index + kAlignLabelsCount, false);
+      context.index + kAlignLabelsCount(), false);
 }
 
 void OnAlign(const CommandContext &context)
@@ -1377,7 +1378,7 @@ MenuTable::BaseItemSharedPtr TracksMenu()
 
          // Alignment commands using selection or zero
          CommandGroup(wxT("Align"),
-            alignLabels,
+            alignLabels(),
             FN(OnAlign), AudioIONotBusyFlag | TracksSelectedFlag),
 
          Separator(),
@@ -1393,7 +1394,7 @@ MenuTable::BaseItemSharedPtr TracksMenu()
       // TODO: Can these labels be made clearer?
       // Do we need this sub-menu at all?
       Menu( wxT("MoveSelectionAndTracks"), XO("Move Sele&ction and Tracks"), {
-         CommandGroup(wxT("AlignMove"), alignLabels,
+         CommandGroup(wxT("AlignMove"), alignLabels(),
             FN(OnAlignMoveSel), AudioIONotBusyFlag | TracksSelectedFlag),
       } ),
 #endif

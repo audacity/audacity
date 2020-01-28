@@ -153,12 +153,12 @@ CommandItem::CommandItem(const CommandID &name_,
 CommandItem::~CommandItem() {}
 
 CommandGroupItem::CommandGroupItem(const wxString &name_,
-         std::initializer_list< ComponentInterfaceSymbol > items_,
+         std::vector< ComponentInterfaceSymbol > items_,
          CommandFunctorPointer callback_,
          CommandFlag flags_,
          bool isEffect_,
          CommandHandlerFinder finder_)
-: SingleItem{ name_ }, items{ items_ }
+: SingleItem{ name_ }, items{ std::move(items_) }
 , finder{ finder_ }, callback{ callback_ }
 , flags{ flags_ }, isEffect{ isEffect_ }
 {}
