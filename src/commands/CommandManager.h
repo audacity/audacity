@@ -745,6 +745,17 @@ namespace MenuTable {
       Appender fn;
    };
 
+   template< bool Transparent >
+   struct MenuPart : ConcreteGroupItem< Transparent, MenuVisitor >
+   {
+      template< typename... Args >
+      MenuPart( const wxString &internalName, Args&&... args )
+         : ConcreteGroupItem< Transparent, MenuVisitor >{
+            internalName, std::forward< Args >( args )... }
+      {}
+   };
+   using MenuItems = MenuPart< true >;
+
    // Following are the functions to use directly in writing table definitions.
 
    // Group items can be constructed two ways.
@@ -755,9 +766,9 @@ namespace MenuTable {
    // in identification of items by path.  Otherwise try to keep the name
    // stable across Audacity versions.
    template< typename... Args >
-   inline std::unique_ptr<TransparentGroupItem< MenuVisitor > > Items(
+   inline std::unique_ptr< MenuItems > Items(
       const wxString &internalName, Args&&... args )
-         { return std::make_unique<TransparentGroupItem< MenuVisitor > >(
+         { return std::make_unique< MenuItems >(
             internalName, std::forward<Args>(args)... ); }
 
    // Menu items can be constructed two ways, as for group items
