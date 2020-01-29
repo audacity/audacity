@@ -999,30 +999,30 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 MenuTable::BaseItemSharedPtr LabelEditMenus();
 
-const ReservedCommandFlag
-   CutCopyAvailableFlag {
-      [](const AudacityProject &project){
-         auto range = TrackList::Get( project ).Any<const LabelTrack>()
-            + [&](const LabelTrack *pTrack){
-               return LabelTrackView::Get( *pTrack ).IsTextSelected(
-                  // unhappy const_cast because track focus might be set
-                  const_cast<AudacityProject&>(project)
-               );
-            };
-         if ( !range.empty() )
-            return true;
+static const ReservedCommandFlag
+&CutCopyAvailableFlag() { static ReservedCommandFlag flag{
+   [](const AudacityProject &project){
+      auto range = TrackList::Get( project ).Any<const LabelTrack>()
+         + [&](const LabelTrack *pTrack){
+            return LabelTrackView::Get( *pTrack ).IsTextSelected(
+               // unhappy const_cast because track focus might be set
+               const_cast<AudacityProject&>(project)
+            );
+         };
+      if ( !range.empty() )
+         return true;
 
-         if (
-            TimeSelectedPred( project )
-         &&
-            TracksSelectedPred( project )
-         )
-            return true;
+      if (
+         TimeSelectedPred( project )
+      &&
+         TracksSelectedPred( project )
+      )
+         return true;
 
-         return false;
-      },
-      cutCopyOptions()
-   };
+      return false;
+   },
+   cutCopyOptions()
+}; return flag; }
 
 // Under /MenuBar
 MenuTable::BaseItemSharedPtr EditMenu()
@@ -1072,14 +1072,14 @@ MenuTable::BaseItemSharedPtr EditMenu()
       // Basic Edit commands
       /* i18n-hint: (verb)*/
       Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
-         AudioIONotBusyFlag() | CutCopyAvailableFlag | NoAutoSelect(),
+         AudioIONotBusyFlag() | CutCopyAvailableFlag() | NoAutoSelect(),
          wxT("Ctrl+X") ),
       Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
          AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag() | NoAutoSelect(),
          wxT("Ctrl+K") ),
       /* i18n-hint: (verb)*/
       Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
-         AudioIONotBusyFlag() | CutCopyAvailableFlag, wxT("Ctrl+C") ),
+         AudioIONotBusyFlag() | CutCopyAvailableFlag(), wxT("Ctrl+C") ),
       /* i18n-hint: (verb)*/
       Command( wxT("Paste"), XXO("&Paste"), FN(OnPaste),
          AudioIONotBusyFlag(), wxT("Ctrl+V") ),
@@ -1197,7 +1197,7 @@ RegisteredMenuItemEnabler selectAnyTracks{{
 
 RegisteredMenuItemEnabler selectWaveTracks{{
    []{ return WaveTracksExistFlag(); },
-   []{ return TimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag; },
+   []{ return TimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag(); },
    canSelectAll,
    selectAll
 }};
@@ -1205,7 +1205,7 @@ RegisteredMenuItemEnabler selectWaveTracks{{
 // Also enable select for the noise reduction case.
 RegisteredMenuItemEnabler selectWaveTracks2{{
    []{ return WaveTracksExistFlag(); },
-   []{ return NoiseReductionTimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag; },
+   []{ return NoiseReductionTimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag(); },
    canSelectAll,
    selectAll
 }};

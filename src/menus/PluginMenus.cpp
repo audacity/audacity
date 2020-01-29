@@ -770,12 +770,12 @@ MenuTable::BaseItemSharedPtr GenerateMenu()
    return menu;
 }
 
-const ReservedCommandFlag
-   IsRealtimeNotActiveFlag{
-      [](const AudacityProject &){
-         return !RealtimeEffectManager::Get().RealtimeIsActive();
-      }
-   };  //lll
+static const ReservedCommandFlag
+&IsRealtimeNotActiveFlag() { static ReservedCommandFlag flag{
+   [](const AudacityProject &){
+      return !RealtimeEffectManager::Get().RealtimeIsActive();
+   }
+}; return flag; }  //lll
 
 // Under /MenuBar
 MenuTable::BaseItemSharedPtr EffectMenu()
@@ -820,7 +820,7 @@ MenuTable::BaseItemSharedPtr EffectMenu()
       { return Items( wxEmptyString, PopulateEffectsMenu(
          EffectTypeProcess,
          AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-         IsRealtimeNotActiveFlag )
+         IsRealtimeNotActiveFlag() )
       ); }
       
    ) ) };
@@ -856,7 +856,7 @@ MenuTable::BaseItemSharedPtr AnalyzeMenu()
       { return Items( wxEmptyString, PopulateEffectsMenu(
          EffectTypeAnalyze,
          AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-         IsRealtimeNotActiveFlag )
+         IsRealtimeNotActiveFlag() )
       ); }
    ) ) };
    return menu;

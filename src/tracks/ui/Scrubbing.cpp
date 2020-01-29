@@ -255,7 +255,9 @@ static const auto HasWaveDataPred =
    };
 
 static const ReservedCommandFlag
-   HasWaveDataFlag{ HasWaveDataPred }; // jkc
+&HasWaveDataFlag() { static ReservedCommandFlag flag{
+   HasWaveDataPred
+}; return flag; } // jkc
 
 namespace {
    struct MenuItem {
@@ -278,12 +280,12 @@ namespace {
          "Seeking" is normal speed playback but with skips, ...
        */
       { wxT("Scrub"),       XO("&Scrub"),           XO("Scrubbing"),
-         CaptureNotBusyFlag() | HasWaveDataFlag,
+         CaptureNotBusyFlag() | HasWaveDataFlag(),
          &Scrubber::OnScrub,       false,      &Scrubber::Scrubs,
       },
 
       { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
-         CaptureNotBusyFlag() | HasWaveDataFlag,
+         CaptureNotBusyFlag() | HasWaveDataFlag(),
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
 
