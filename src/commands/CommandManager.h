@@ -633,13 +633,6 @@ namespace MenuTable {
       Condition condition;
    };
 
-   // Describes a separator between menu items
-   struct SeparatorItem final : SingleItem
-   {
-      SeparatorItem() : SingleItem{ wxEmptyString } {}
-      ~SeparatorItem() override;
-   };
-
    // usage:
    //   auto scope = FinderScope( findCommandHandler );
    //   return Items( ... );
@@ -772,6 +765,17 @@ namespace MenuTable {
          { return std::make_unique< MenuItems >(
             internalName, std::forward<Args>(args)... ); }
 
+   // Like Items, but insert a menu separator between the menu section and
+   // any other items or sections before or after it in the same (innermost,
+   // enclosing) menu.
+   // It's not necessary that the sisters of sections be other sections, but it
+   // might clarify the logical groupings.
+   template< typename... Args >
+   inline std::unique_ptr< MenuSection > Section(
+      const wxString &internalName, Args&&... args )
+         { return std::make_unique< MenuSection >(
+            internalName, std::forward<Args>(args)... ); }
+
    // Menu items can be constructed two ways, as for group items
    // Items will appear in a main toolbar menu or in a sub-menu.
    // The name is untranslated.  Try to keep the name stable across Audacity
@@ -829,9 +833,6 @@ namespace MenuTable {
             else
                return std::make_unique<MenuItem>(
                   internalName, title, std::move( items ) ); }
-
-   inline std::unique_ptr<SeparatorItem> Separator()
-      { return std::make_unique<SeparatorItem>(); }
 
    template< typename Handler >
    inline std::unique_ptr<CommandItem> Command(

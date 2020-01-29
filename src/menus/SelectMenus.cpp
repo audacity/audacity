@@ -1039,6 +1039,7 @@ MenuTable::BaseItemSharedPtr SelectMenu()
    ( FinderScope{ findCommandHandler },
    /* i18n-hint: (verb) It's an item on a menu. */
    Menu( wxT("Select"), XO("&Select"),
+    Section( "",
       Command( wxT("SelectAll"), XXO("&All"), FN(OnSelectAll),
          TracksExistFlag(),
          Options{ wxT("Ctrl+A"), XO("Select All") } ),
@@ -1066,6 +1067,7 @@ MenuTable::BaseItemSharedPtr SelectMenu()
       //////////////////////////////////////////////////////////////////////////
 
       Menu( wxT("Region"), XO("R&egion"),
+       Section( "",
          Command( wxT("SetLeftSelection"), XXO("&Left at Playback Position"),
             FN(OnSetLeftSelection), TracksExistFlag(),
             Options{ wxT("["), XO("Set Selection Left at Play Position") } ),
@@ -1080,10 +1082,10 @@ MenuTable::BaseItemSharedPtr SelectMenu()
             Options{ wxT("Shift+K"), XO("Select Cursor to Track End") } ),
          Command( wxT("SelTrackStartToEnd"), XXO("Track Start to En&d"),
             FN(OnSelectTrackStartToEnd), AlwaysEnabledFlag,
-            Options{}.LongName( XO("Select Track Start to End") ) ),
+            Options{}.LongName( XO("Select Track Start to End") ) )
+       ),
 
-         Separator(),
-
+       Section( "",
          // GA: Audacity had 'Store Re&gion' here previously. There is no
          // one-step way to restore the 'Saved Cursor Position' in Select Menu,
          // so arguably using the word 'Selection' to do duty for both saving
@@ -1094,6 +1096,7 @@ MenuTable::BaseItemSharedPtr SelectMenu()
          // Audacity had 'Retrieve Regio&n' here previously.
          Command( wxT("SelRestore"), XXO("Retrieve Selectio&n"),
             FN(OnSelectionRestore), TracksExistFlag() )
+       )
       ),
 
       //////////////////////////////////////////////////////////////////////////
@@ -1114,12 +1117,12 @@ MenuTable::BaseItemSharedPtr SelectMenu()
 
       //////////////////////////////////////////////////////////////////////////
 
-      ClipSelectMenu(),
+      ClipSelectMenu()
 
       //////////////////////////////////////////////////////////////////////////
+    ),
 
-      Separator(),
-
+    Section( "",
       Command( wxT("SelCursorStoredCursor"),
          XXO("Cursor to Stored &Cursor Position"),
          FN(OnSelectCursorStoredCursor), TracksExistFlag(),
@@ -1127,15 +1130,16 @@ MenuTable::BaseItemSharedPtr SelectMenu()
 
       Command( wxT("StoreCursorPosition"), XXO("Store Cursor Pos&ition"),
          FN(OnCursorPositionStore),
-         WaveTracksExistFlag() ),
+         WaveTracksExistFlag() )
       // Save cursor position is used in some selections.
       // Maybe there should be a restore for it?
+     ),
 
-      Separator(),
-
+     Section( "",
       Command( wxT("ZeroCross"), XXO("At &Zero Crossings"),
          FN(OnZeroCrossing), TracksSelectedFlag(),
          Options{ wxT("Z"), XO("Select Zero Crossing") } )
+     )
    ) ) };
    return menu;
 }

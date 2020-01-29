@@ -264,12 +264,13 @@ MenuTable::BaseItemSharedPtr ToolbarsMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Toolbars"), XO("&Toolbars"),
+    Section( "",
       /* i18n-hint: (verb)*/
       Command( wxT("ResetToolbars"), XXO("Reset Toolb&ars"),
-         FN(OnResetToolBars), AlwaysEnabledFlag ),
+         FN(OnResetToolBars), AlwaysEnabledFlag )
+    ),
 
-      Separator(),
-
+    Section( "",
       /* i18n-hint: Clicking this menu item shows the toolbar
          with the big buttons on it (play record etc)*/
       Command( wxT("ShowTransportTB"), XXO("&Transport Toolbar"),
@@ -332,6 +333,7 @@ MenuTable::BaseItemSharedPtr ToolbarsMenu()
          XXO("Spe&ctral Selection Toolbar"),
          FN(OnShowSpectralSelectionToolBar), AlwaysEnabledFlag, checkOff )
 #endif
+    )
    ) ) };
    return menu;
 }

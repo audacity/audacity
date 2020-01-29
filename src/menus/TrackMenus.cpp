@@ -1287,6 +1287,7 @@ MenuTable::BaseItemSharedPtr TracksMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Tracks"), XO("&Tracks"),
+    Section( "",
       Menu( wxT("Add"), XO("Add &New"),
          Command( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
             AudioIONotBusyFlag(), wxT("Ctrl+Shift+N") ),
@@ -1296,12 +1297,12 @@ MenuTable::BaseItemSharedPtr TracksMenu()
             FN(OnNewLabelTrack), AudioIONotBusyFlag() ),
          Command( wxT("NewTimeTrack"), XXO("&Time Track"),
             FN(OnNewTimeTrack), AudioIONotBusyFlag() )
-      ),
+      )
+    ),
 
       //////////////////////////////////////////////////////////////////////////
 
-      Separator(),
-
+    Section( "",
       Menu( wxT("Mix"), XO("Mi&x"),
          // Delayed evaluation
          // Stereo to Mono is an oddball command that is also subject to control
@@ -1329,15 +1330,15 @@ MenuTable::BaseItemSharedPtr TracksMenu()
       ),
 
       Command( wxT("Resample"), XXO("&Resample..."), FN(OnResample),
-         AudioIONotBusyFlag() | WaveTracksSelectedFlag() ),
+         AudioIONotBusyFlag() | WaveTracksSelectedFlag() )
+    ),
 
-      Separator(),
-
+    Section( "",
       Command( wxT("RemoveTracks"), XXO("Remo&ve Tracks"), FN(OnRemoveTracks),
-         AudioIONotBusyFlag() | AnyTracksSelectedFlag() ),
+         AudioIONotBusyFlag() | AnyTracksSelectedFlag() )
+    ),
 
-      Separator(),
-
+    Section( "",
       Menu( wxT("Mute"), XO("M&ute/Unmute"),
          Command( wxT("MuteAllTracks"), XXO("&Mute All Tracks"),
             FN(OnMuteAllTracks), AudioIONotBusyFlag(), wxT("Ctrl+U") ),
@@ -1359,35 +1360,35 @@ MenuTable::BaseItemSharedPtr TracksMenu()
          Command( wxT("PanCenter"), XXO("&Center"), FN(OnPanCenter),
             TracksSelectedFlag(),
             Options{}.LongName( XO("Pan Center") ) )
-      ),
+      )
+    ),
 
-      Separator(),
-
-      //////////////////////////////////////////////////////////////////////////
-
+    Section( "",
       Menu( wxT("Align"), XO("&Align Tracks"), // XO("Just Move Tracks"),
+       Section( "",
          // Mutual alignment of tracks independent of selection or zero
          CommandGroup(wxT("Align"),
             {
                { wxT("EndToEnd"),     XO("&Align End to End") },
                { wxT("Together"),     XO("Align &Together") },
             },
-            FN(OnAlignNoSync), AudioIONotBusyFlag() | TracksSelectedFlag()),
+            FN(OnAlignNoSync), AudioIONotBusyFlag() | TracksSelectedFlag())
+       ),
 
-         Separator(),
-
+       Section( "",
          // Alignment commands using selection or zero
          CommandGroup(wxT("Align"),
             alignLabels(),
-            FN(OnAlign), AudioIONotBusyFlag() | TracksSelectedFlag()),
+            FN(OnAlign), AudioIONotBusyFlag() | TracksSelectedFlag())
+       ),
 
-         Separator(),
-
+       Section( "",
          Command( wxT("MoveSelectionWithTracks"),
             XXO("&Move Selection with Tracks (on/off)"),
             FN(OnMoveSelectionWithTracks),
             AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/MoveSelectionWithTracks"), false ) )
+       )
       ),
 
 #if 0
@@ -1419,17 +1420,19 @@ MenuTable::BaseItemSharedPtr TracksMenu()
       )
 
       //////////////////////////////////////////////////////////////////////////
+    )
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
+    ,
 
-      ,
-      Separator(),
-
+    Section( "",
       Command( wxT("SyncLock"), XXO("Sync-&Lock Tracks (on/off)"),
          FN(OnSyncLock), AlwaysEnabledFlag,
          Options{}.CheckTest( wxT("/GUI/SyncLockTracks"), false ) )
+    )
 
 #endif
+
    ) ) };
    return menu;
 }

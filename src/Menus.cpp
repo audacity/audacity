@@ -138,8 +138,6 @@ ConditionalGroupItem::ConditionalGroupItem(
 }
 ConditionalGroupItem::~ConditionalGroupItem() {}
 
-SeparatorItem::~SeparatorItem() {}
-
 CommandItem::CommandItem(const CommandID &name_,
          const TranslatableString &label_in_,
          CommandFunctorPointer callback_,
@@ -425,10 +423,6 @@ struct MenuItemVisitor : MenuVisitor
             pCommandList->items.data(), pCommandList->items.size(),
             pCommandList->finder, pCommandList->callback,
             pCommandList->flags, pCommandList->isEffect);
-      }
-      else
-      if (dynamic_cast<SeparatorItem*>( pItem )) {
-         manager.AddSeparator();
       }
       else
       if (const auto pSpecial =

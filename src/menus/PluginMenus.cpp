@@ -394,12 +394,18 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    std::sort( defplugs.begin(), defplugs.end(), comp1 );
    std::sort( optplugs.begin(), optplugs.end(), comp2 );
 
-   AddEffectMenuItems( result, defplugs, batchflags, realflags, true );
+   MenuTable::BaseItemPtrs section1;
+   AddEffectMenuItems( section1, defplugs, batchflags, realflags, true );
 
-   if (defplugs.size() && optplugs.size())
-      result.push_back( MenuTable::Separator() );
+   MenuTable::BaseItemPtrs section2;
+   AddEffectMenuItems( section2, optplugs, batchflags, realflags, false );
 
-   AddEffectMenuItems( result, optplugs, batchflags, realflags, false );
+   bool section = !section1.empty() && !section2.empty();
+   result.push_back( MenuTable::Items( "", std::move( section1 ) ) );
+   if ( section )
+      result.push_back( MenuTable::Section( "", std::move( section2 ) ) );
+   else
+      result.push_back( MenuTable::Items( "", std::move( section2 ) ) );
 
    return result;
 }
@@ -752,13 +758,13 @@ MenuTable::BaseItemSharedPtr GenerateMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Generate"), XO("&Generate"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+    Section( "",
       Command( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
-         FN(OnManageGenerators), AudioIONotBusyFlag() ),
-
-      Separator(),
-
+         FN(OnManageGenerators), AudioIONotBusyFlag() )
+    ),
 #endif
 
+    Section( "",
       // Delayed evaluation:
       [](AudacityProject &)
       { return Items( wxEmptyString, PopulateEffectsMenu(
@@ -766,6 +772,7 @@ MenuTable::BaseItemSharedPtr GenerateMenu()
          AudioIONotBusyFlag(),
          AudioIONotBusyFlag())
       ); }
+    )
    ) ) };
    return menu;
 }
@@ -788,13 +795,13 @@ MenuTable::BaseItemSharedPtr EffectMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Effect"), XO("Effe&ct"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+    Section( "",
       Command( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."),
-         FN(OnManageEffects), AudioIONotBusyFlag() ),
-
-      Separator(),
-
+         FN(OnManageEffects), AudioIONotBusyFlag() )
+    ),
 #endif
 
+    Section( "",
       // Delayed evaluation:
       [](AudacityProject &project)
       {
@@ -811,10 +818,10 @@ MenuTable::BaseItemSharedPtr EffectMenu()
             AudioIONotBusyFlag() | TimeSelectedFlag() |
                WaveTracksSelectedFlag() | HasLastEffectFlag(),
             wxT("Ctrl+R"), findCommandHandler );
-      },
+      }
+    ),
 
-      Separator(),
-
+    Section( "",
       // Delayed evaluation:
       [](AudacityProject &)
       { return Items( wxEmptyString, PopulateEffectsMenu(
@@ -822,6 +829,7 @@ MenuTable::BaseItemSharedPtr EffectMenu()
          AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
          IsRealtimeNotActiveFlag() )
       ); }
+    )
       
    ) ) };
    return menu;
@@ -838,13 +846,13 @@ MenuTable::BaseItemSharedPtr AnalyzeMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Analyze"), XO("&Analyze"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+    Section( "",
       Command( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
-         FN(OnManageAnalyzers), AudioIONotBusyFlag() ),
-
-      Separator(),
-
+         FN(OnManageAnalyzers), AudioIONotBusyFlag() )
+    ),
 #endif
 
+    Section( "",
       Command( wxT("ContrastAnalyser"), XXO("Contrast..."), FN(OnContrast),
          AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag(),
          wxT("Ctrl+Shift+T") ),
@@ -858,6 +866,7 @@ MenuTable::BaseItemSharedPtr AnalyzeMenu()
          AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
          IsRealtimeNotActiveFlag() )
       ); }
+    )
    ) ) };
    return menu;
 }
@@ -871,7 +880,7 @@ MenuTable::BaseItemSharedPtr ToolsMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XO("T&ools"),
-
+    Section( "",
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Command( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."),
          FN(OnManageTools), AudioIONotBusyFlag() ),
@@ -886,18 +895,20 @@ MenuTable::BaseItemSharedPtr ToolsMenu()
       Menu( wxT("Macros"), XO("&Apply Macro"),
          // Palette has no access key to ensure first letter navigation of
          // sub menu
+       Section( "",
          Command( wxT("ApplyMacrosPalette"), XXO("Palette..."),
-            FN(OnApplyMacrosPalette), AudioIONotBusyFlag() ),
+            FN(OnApplyMacrosPalette), AudioIONotBusyFlag() )
+       ),
 
-         Separator(),
-
+       Section( "",
          // Delayed evaluation:
          [](AudacityProject&)
          { return Items( wxEmptyString, PopulateMacrosMenu( AudioIONotBusyFlag() ) ); }
-      ),
+       )
+      )
+    ),
 
-      Separator(),
-
+    Section( "",
       Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
          FN(OnScreenshot), AudioIONotBusyFlag() ),
 
@@ -907,11 +918,11 @@ MenuTable::BaseItemSharedPtr ToolsMenu()
       // TODO: What should we do here?  Make benchmark a plug-in?
       // Easy enough to do.  We'd call it mod-self-test.
       Command( wxT("Benchmark"), XXO("&Run Benchmark..."),
-         FN(OnBenchmark), AudioIONotBusyFlag() ),
+         FN(OnBenchmark), AudioIONotBusyFlag() )
 //#endif
+    ),
 
-      Separator(),
-
+    Section( "",
       // Delayed evaluation:
       [](AudacityProject&)
       { return Items( wxEmptyString, PopulateEffectsMenu(
@@ -919,12 +930,11 @@ MenuTable::BaseItemSharedPtr ToolsMenu()
          AudioIONotBusyFlag(),
          AudioIONotBusyFlag() )
       ); }
+    )
 
 #ifdef IS_ALPHA
-      ,
-
-      Separator(),
-
+    ,
+    Section( "",
       Command( wxT("SimulateRecordingErrors"),
          XXO("Simulate Recording Errors"),
          FN(OnSimulateRecordingErrors),
@@ -939,6 +949,7 @@ MenuTable::BaseItemSharedPtr ToolsMenu()
          Options{}.CheckTest(
             [](AudacityProject&){
                return AudioIO::Get()->mDetectUpstreamDropouts; } ) )
+    )
 #endif
    ) ) };
    return menu;

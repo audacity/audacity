@@ -1055,6 +1055,7 @@ MenuTable::BaseItemSharedPtr EditMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XO("&Edit"),
+    Section( "",
       Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
          AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
 
@@ -1065,10 +1066,10 @@ MenuTable::BaseItemSharedPtr EditMenu()
       [](AudacityProject &project, wxMenu&) {
          // Change names in the CommandManager as a side-effect
          MenuManager::ModifyUndoMenuItems(project);
-      }),
+      })
+    ),
 
-      Separator(),
-
+    Section( "",
       // Basic Edit commands
       /* i18n-hint: (verb)*/
       Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
@@ -1085,11 +1086,12 @@ MenuTable::BaseItemSharedPtr EditMenu()
          AudioIONotBusyFlag(), wxT("Ctrl+V") ),
       /* i18n-hint: (verb)*/
       Command( wxT("Duplicate"), XXO("Duplic&ate"), FN(OnDuplicate),
-         NotBusyTimeAndTracksFlags, wxT("Ctrl+D") ),
+         NotBusyTimeAndTracksFlags, wxT("Ctrl+D") )
+    ),
 
-      Separator(),
-
+    Section( "",
       Menu( wxT("RemoveSpecial"), XO("R&emove Special"),
+       Section( "",
          /* i18n-hint: (verb) Do a special kind of cut*/
          Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
             NotBusyTimeAndTracksFlags,
@@ -1097,10 +1099,10 @@ MenuTable::BaseItemSharedPtr EditMenu()
          /* i18n-hint: (verb) Do a special kind of DELETE*/
          Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
             NotBusyTimeAndTracksFlags,
-            Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() ),
+            Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() )
+       ),
 
-         Separator(),
-
+       Section( "",
          /* i18n-hint: (verb)*/
          Command( wxT("Silence"), XXO("Silence Audi&o"), FN(OnSilence),
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
@@ -1109,28 +1111,31 @@ MenuTable::BaseItemSharedPtr EditMenu()
          Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
             Options{ wxT("Ctrl+T") }.UseStrictFlags() )
-      ),
+       )
+      )
+    ),
 
-      Separator(),
-
+    Section( "",
       //////////////////////////////////////////////////////////////////////////
 
       Menu( wxT("Clip"), XO("Clip B&oundaries"),
+       Section( "",
          /* i18n-hint: (verb) It's an item on a menu. */
          Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
             AudioIONotBusyFlag() | WaveTracksSelectedFlag(),
             Options{ wxT("Ctrl+I") }.UseStrictFlags() ),
          Command( wxT("SplitNew"), XXO("Split Ne&w"), FN(OnSplitNew),
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            Options{ wxT("Ctrl+Alt+I") }.UseStrictFlags() ),
+            Options{ wxT("Ctrl+Alt+I") }.UseStrictFlags() )
+       ),
 
-         Separator(),
-
+       Section( "",
          /* i18n-hint: (verb)*/
          Command( wxT("Join"), XXO("&Join"), FN(OnJoin),
             NotBusyTimeAndTracksFlags, wxT("Ctrl+J") ),
          Command( wxT("Disjoin"), XXO("Detac&h at Silences"), FN(OnDisjoin),
             NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+J") )
+       )
       ),
 
       //////////////////////////////////////////////////////////////////////////
@@ -1138,16 +1143,23 @@ MenuTable::BaseItemSharedPtr EditMenu()
       LabelEditMenus(),
 
       Command( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
-         AudioIONotBusyFlag() ),
+         AudioIONotBusyFlag() )
 
       //////////////////////////////////////////////////////////////////////////
 
 #ifndef __WXMAC__
-      Separator(),
+    ),
+
+    Section( "",
+#else
+    ,
 #endif
 
       Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
          AudioIONotBusyFlag(), prefKey )
+
+    )
+
    ) ) };
    return menu;
 }

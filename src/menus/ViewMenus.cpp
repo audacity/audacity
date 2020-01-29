@@ -445,7 +445,9 @@ MenuTable::BaseItemSharedPtr ViewMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("View"), XO("&View"),
+    Section( "",
       Menu( wxT("Zoom"), XO("&Zoom"),
+       Section( "",
          Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
             ZoomInAvailableFlag(), wxT("Ctrl+1") ),
          Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), FN(OnZoomNormal),
@@ -455,11 +457,13 @@ MenuTable::BaseItemSharedPtr ViewMenu()
          Command( wxT("ZoomSel"), XXO("&Zoom to Selection"), FN(OnZoomSel),
             TimeSelectedFlag(), wxT("Ctrl+E") ),
          Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), FN(OnZoomToggle),
-            TracksExistFlag(), wxT("Shift+Z") ),
-         Separator(),
+            TracksExistFlag(), wxT("Shift+Z") )
+       ),
+       Section( "",
          Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
             FN(OnAdvancedVZoom), AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/VerticalZooming"), false ) )
+       )
       ),
 
       Menu( wxT("TrackSize"), XO("T&rack Size"),
@@ -480,10 +484,10 @@ MenuTable::BaseItemSharedPtr ViewMenu()
          Command( wxT("SkipSelEnd"), XXO("Selection En&d"), FN(OnGoSelEnd),
             TimeSelectedFlag(),
             Options{ wxT("Ctrl+]"), XO("Skip to Selection End") } )
-      ),
+      )
+    ),
 
-      Separator(),
-
+    Section( "",
       // History window should be available either for UndoAvailableFlag
       // or RedoAvailableFlag,
       // but we can't make the AddItem flags and mask have both,
@@ -528,16 +532,16 @@ MenuTable::BaseItemSharedPtr ViewMenu()
       Command( wxT("Karaoke"), XXO("&Karaoke..."), FN(OnKaraoke),
          LabelTracksExistFlag() ),
       Command( wxT("MixerBoard"), XXO("&Mixer Board..."), FN(OnMixerBoard),
-         PlayableTracksExistFlag() ),
+         PlayableTracksExistFlag() )
+    ),
 
-      Separator(),
-
+    Section( "",
       //////////////////////////////////////////////////////////////////////////
 
-      ToolbarsMenu(),
+      ToolbarsMenu()
+    ),
 
-      Separator(),
-
+    Section( "",
       Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
          FN(OnShowExtraMenus), AlwaysEnabledFlag,
          Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
@@ -549,6 +553,7 @@ MenuTable::BaseItemSharedPtr ViewMenu()
       Command( wxT("ShowEffectsRack"), XXO("Show Effects Rack"),
          FN(OnShowEffectsRack), AlwaysEnabledFlag, checkOff )
 #endif
+    )
    ) ) };
    return menu;
    

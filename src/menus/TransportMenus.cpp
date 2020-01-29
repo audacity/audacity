@@ -986,6 +986,7 @@ MenuTable::BaseItemSharedPtr TransportMenu()
    /* i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */
    Menu( wxT("Transport"), XO("Tra&nsport"),
+    Section( "",
       Menu( wxT("Play"), XO("Pl&aying"),
          /* i18n-hint: (verb) Start or Stop audio playback*/
          Command( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
@@ -1040,25 +1041,24 @@ MenuTable::BaseItemSharedPtr TransportMenu()
       // Scrubbing sub-menu
       Scrubber::Menu(),
 
-      CursorMenu(),
+      CursorMenu()
+    ),
 
-      Separator(),
-
-      //////////////////////////////////////////////////////////////////////////
-
+    Section( "",
       Menu( wxT("PlayRegion"), XO("Pla&y Region"),
          Command( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
             PlayRegionNotLockedFlag() ),
          Command( wxT("UnlockPlayRegion"), XXO("&Unlock"),
             FN(OnUnlockPlayRegion), PlayRegionLockedFlag() )
-      ),
+      )
+    ),
 
-      Separator(),
-
+    Section( "",
       Command( wxT("RescanDevices"), XXO("R&escan Audio Devices"),
          FN(OnRescanDevices), AudioIONotBusyFlag() | CanStopAudioStreamFlag() ),
 
       Menu( wxT("Options"), XO("Transport &Options"),
+       Section( "",
          // Sound Activated recording options
          Command( wxT("SoundActivationLevel"),
             XXO("Sound Activation Le&vel..."), FN(OnSoundActivated),
@@ -1066,9 +1066,10 @@ MenuTable::BaseItemSharedPtr TransportMenu()
          Command( wxT("SoundActivation"),
             XXO("Sound A&ctivated Recording (on/off)"),
             FN(OnToggleSoundActivated),
-            AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff ),
-         Separator(),
+            AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
+       ),
 
+       Section( "",
          Command( wxT("PinnedHead"), XXO("Pinned Play/Record &Head (on/off)"),
             FN(OnTogglePinnedHead),
             // Switching of scrolling on and off is permitted
@@ -1090,7 +1091,9 @@ MenuTable::BaseItemSharedPtr TransportMenu()
             FN(OnToggleAutomatedInputLevelAdjustment),
             AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
 #endif
+       )
       )
+    )
    ) ) };
    return menu;
 }

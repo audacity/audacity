@@ -604,10 +604,12 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
    Items( wxEmptyString,
    
    Menu( wxT("Labels"), XO("&Labels"),
+    Section( "",
       Command( wxT("EditLabels"), XXO("&Edit Labels..."), FN(OnEditLabels),
-                 AudioIONotBusyFlag() ),
+                 AudioIONotBusyFlag() )
+    ),
 
-      Separator(),
+    Section( "",
 
       Command( wxT("AddLabel"), XXO("Add Label at &Selection"),
          FN(OnAddLabel), AlwaysEnabledFlag, wxT("Ctrl+B") ),
@@ -622,18 +624,21 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
       ),
       Command( wxT("PasteNewLabel"), XXO("Paste Te&xt to New Label"),
          FN(OnPasteNewLabel),
-         AudioIONotBusyFlag(), wxT("Ctrl+Alt+V") ),
+         AudioIONotBusyFlag(), wxT("Ctrl+Alt+V") )
 
-      Separator(),
+    ),
 
+    Section( "",
       Command( wxT("TypeToCreateLabel"),
          XXO("&Type to Create a Label (on/off)"),
          FN(OnToggleTypeToCreateLabel), AlwaysEnabledFlag, checkOff )
+    )
    ), // first menu
 
    /////////////////////////////////////////////////////////////////////////////
 
    Menu( wxT("Labeled"), XO("La&beled Audio"),
+    Section( "",
       /* i18n-hint: (verb)*/
       Command( wxT("CutLabels"), XXO("&Cut"), FN(OnCutLabels),
          AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
@@ -642,9 +647,10 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
       Command( wxT("DeleteLabels"), XXO("&Delete"), FN(OnDeleteLabels),
          AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
             TimeSelectedFlag() | IsNotSyncLockedFlag(),
-         Options{ wxT("Alt+K"), XO("Label Delete") } ),
+         Options{ wxT("Alt+K"), XO("Label Delete") } )
+    ),
 
-      Separator(),
+    Section( "",
 
       /* i18n-hint: (verb) A special way to cut out a piece of audio*/
       Command( wxT("SplitCutLabels"), XXO("&Split Cut"),
@@ -652,9 +658,11 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
          Options{ wxT("Alt+Shift+X"), XO("Label Split Cut") } ),
       Command( wxT("SplitDeleteLabels"), XXO("Sp&lit Delete"),
          FN(OnSplitDeleteLabels), NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+Shift+K"), XO("Label Split Delete") } ),
+         Options{ wxT("Alt+Shift+K"), XO("Label Split Delete") } )
 
-      Separator(),
+    ),
+
+    Section( "",
 
       Command( wxT("SilenceLabels"), XXO("Silence &Audio"),
          FN(OnSilenceLabels), NotBusyLabelsAndWaveFlags,
@@ -662,10 +670,10 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
       /* i18n-hint: (verb)*/
       Command( wxT("CopyLabels"), XXO("Co&py"), FN(OnCopyLabels),
          NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+Shift+C"), XO("Label Copy") } ),
+         Options{ wxT("Alt+Shift+C"), XO("Label Copy") } )
+    ),
 
-      Separator(),
-
+    Section( "",
       /* i18n-hint: (verb)*/
       Command( wxT("SplitLabels"), XXO("Spli&t"), FN(OnSplitLabels),
          AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag(),
@@ -677,6 +685,7 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
       Command( wxT("DisjoinLabels"), XXO("Detac&h at Silences"),
          FN(OnDisjoinLabels), NotBusyLabelsAndWaveFlags,
          wxT("Alt+Shift+J") )
+    )
    ) // second menu
 
    ) ) }; // two menus

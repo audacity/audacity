@@ -395,12 +395,14 @@ void OnMenuTree(const CommandContext &context)
                needSeparator.back() = true;
          }
          else {
+            MaybeEmitSeparator();
             Indent();
             // using GET for alpha only diagnostic tool
             info += item.name.GET();
             Return();
             indentation = wxString{ ' ', TAB * ++level };
             needSeparator.push_back( false );
+            firstItem.push_back( true );
          }
       }
 
@@ -414,6 +416,7 @@ void OnMenuTree(const CommandContext &context)
                needSeparator.back() = true;
          }
          else {
+            firstItem.pop_back();
             needSeparator.pop_back();
             indentation = wxString{ ' ', TAB * --level };
          }
@@ -421,23 +424,28 @@ void OnMenuTree(const CommandContext &context)
 
       void Visit( SingleItem &item, const Path& ) override
       {
+         MaybeEmitSeparator();
+
+         // using GET for alpha only diagnostic tool
+         Indent();
+         info += item.name.GET();
+         Return();
+      }
+
+      void MaybeEmitSeparator()
+      {
          static const wxString separatorName{ '=', 20 };
 
          bool separate = false;
          if ( !needSeparator.empty() ) {
-            separate = needSeparator.back();
+            separate = needSeparator.back() && !firstItem.back();
             needSeparator.back() = false;
+            firstItem.back() = false;
          }
 
-         if ( separate || dynamic_cast<SeparatorItem*>(&item) ) {
+         if ( separate ) {
             Indent();
             info += separatorName;
-            Return();
-         }
-         if ( !dynamic_cast<SeparatorItem*>(&item) ) {
-         // using GET for alpha only diagnostic tool
-            Indent();
-            info += item.name.GET();
             Return();
          }
       }
@@ -449,6 +457,7 @@ void OnMenuTree(const CommandContext &context)
       wxString indentation;
       wxString info;
 
+      std::vector<bool> firstItem;
       std::vector<bool> needSeparator;
    } visitor{ project };
 
@@ -521,6 +530,7 @@ MenuTable::BaseItemSharedPtr HelpMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Help"), XO("&Help"),
+    Section( "",
       // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
 #ifdef EXPERIMENTAL_DA
       // DA: Has QuickFix menu item.
@@ -529,16 +539,21 @@ MenuTable::BaseItemSharedPtr HelpMenu()
       // DA: 'Getting Started' rather than 'Quick Help'.
       Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) ),
       // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-      Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) ),
+      Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) )
 #else
       Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
          AlwaysEnabledFlag ),
       Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
-         AlwaysEnabledFlag ),
+         AlwaysEnabledFlag )
 #endif
+    ),
 
-      Separator(),
-
+#ifdef __WXMAC__
+    Items
+#else
+    Section
+#endif
+    ( "",
       Menu( wxT("Diagnostics"), XO("&Diagnostics"),
          Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
             FN(OnAudioDeviceInfo),
@@ -565,10 +580,13 @@ MenuTable::BaseItemSharedPtr HelpMenu()
             FN(OnMenuTree),
             AlwaysEnabledFlag )
 #endif
-      ),
-
+      )
 #ifndef __WXMAC__
-      Separator(),
+    ),
+
+    Section( "",
+#else
+    ,
 #endif
 
       // DA: Does not fully support update checking.
@@ -579,6 +597,7 @@ MenuTable::BaseItemSharedPtr HelpMenu()
 #endif
       Command( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
          AlwaysEnabledFlag )
+    )
    ) ) };
    return menu;
 }

@@ -162,8 +162,9 @@ MenuTable::BaseItemSharedPtr ExtraMenu()
 
    // Table of menu factories.
    // TODO:  devise a registration system instead.
-   static BaseItemSharedPtr extraItems{ Items( wxEmptyString
-      , ExtraTransportMenu()
+   static BaseItemSharedPtr extraItems{ Items( wxEmptyString,
+    Section( "",
+        ExtraTransportMenu()
       , ExtraToolsMenu()
       , ExtraMixerMenu()
       , ExtraEditMenu()
@@ -171,10 +172,10 @@ MenuTable::BaseItemSharedPtr ExtraMenu()
       , ExtraSeekMenu()
       , ExtraDeviceMenu()
       , ExtraSelectionMenu()
+    ),
 
-      , MenuTable::Separator()
-
-      , ExtraGlobalCommands()
+    Section( "",
+        ExtraGlobalCommands()
       , ExtraFocusMenu()
       , ExtraCursorMenu()
       , ExtraTrackMenu()
@@ -183,6 +184,7 @@ MenuTable::BaseItemSharedPtr ExtraMenu()
 
       // Delayed evaluation:
       , ExtraMiscItems
+    )
    ) };
 
    static const auto pred =
