@@ -382,8 +382,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 #define FN(X) (& ViewActions::Handler :: X)
 
-MenuTable::BaseItemSharedPtr ToolbarsMenu();
-
 // Under /MenuBar
 namespace {
 using namespace MenuTable;
@@ -439,12 +437,6 @@ BaseItemSharedPtr ViewMenu()
       ),
 
       Section( "Windows" ),
-
-      Section( "",
-         //////////////////////////////////////////////////////////////////////////
-
-         ToolbarsMenu()
-      ),
 
       Section( "Other",
          Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
