@@ -371,8 +371,11 @@ struct MenuItemVisitor : MenuVisitor
          flags.push_back(flag);
       }
       else
-      if (const auto pGroup = dynamic_cast<GroupItem*>( pItem )) {
-         wxASSERT( pGroup->Transparent() );
+      if ( pItem->Transparent() ) {
+      }
+      else
+      if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
+         manager.AddSeparator();
       }
       else
          wxASSERT( false );
@@ -394,8 +397,11 @@ struct MenuItemVisitor : MenuVisitor
          flags.pop_back();
       }
       else
-      if (const auto pGroup = dynamic_cast<GroupItem*>( pItem )) {
-         wxASSERT( pGroup->Transparent() );
+      if ( pItem->Transparent() ) {
+      }
+      else
+      if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
+         manager.AddSeparator();
       }
       else
          wxASSERT( false );

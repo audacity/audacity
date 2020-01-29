@@ -387,28 +387,59 @@ void OnMenuTree(const CommandContext &context)
       enum : unsigned { TAB = 3 };
       void BeginGroup( GroupItem &item, const Path& ) override
       {
-         Indent();
-         // using GET for alpha only diagnostic tool
-         info += item.name.GET();
-         Return();
-         indentation = wxString{ ' ', TAB * ++level };
+         auto pItem = &item;
+         if ( pItem->Transparent() ) {
+         }
+         else if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
+            if ( !needSeparator.empty() )
+               needSeparator.back() = true;
+         }
+         else {
+            Indent();
+            // using GET for alpha only diagnostic tool
+            info += item.name.GET();
+            Return();
+            indentation = wxString{ ' ', TAB * ++level };
+            needSeparator.push_back( false );
+         }
       }
 
-      void EndGroup( GroupItem &, const Path& ) override
+      void EndGroup( GroupItem &item, const Path& ) override
       {
-         indentation = wxString{ ' ', TAB * --level };
+         auto pItem = &item;
+         if ( pItem->Transparent() ) {
+         }
+         else if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
+            if ( !needSeparator.empty() )
+               needSeparator.back() = true;
+         }
+         else {
+            needSeparator.pop_back();
+            indentation = wxString{ ' ', TAB * --level };
+         }
       }
 
       void Visit( SingleItem &item, const Path& ) override
       {
          static const wxString separatorName{ '=', 20 };
 
-         Indent();
-         info += dynamic_cast<SeparatorItem*>(&item)
-            ? separatorName
-            // using GET for alpha only diagnostic tool
-            : item.name.GET();
-         Return();
+         bool separate = false;
+         if ( !needSeparator.empty() ) {
+            separate = needSeparator.back();
+            needSeparator.back() = false;
+         }
+
+         if ( separate || dynamic_cast<SeparatorItem*>(&item) ) {
+            Indent();
+            info += separatorName;
+            Return();
+         }
+         if ( !dynamic_cast<SeparatorItem*>(&item) ) {
+         // using GET for alpha only diagnostic tool
+            Indent();
+            info += item.name.GET();
+            Return();
+         }
       }
 
       void Indent() { info += indentation; }
@@ -417,6 +448,8 @@ void OnMenuTree(const CommandContext &context)
       unsigned level{};
       wxString indentation;
       wxString info;
+
+      std::vector<bool> needSeparator;
    } visitor{ project };
 
    MenuManager::Visit( visitor );

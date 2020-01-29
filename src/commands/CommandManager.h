@@ -755,6 +755,7 @@ namespace MenuTable {
       {}
    };
    using MenuItems = MenuPart< true >;
+   using MenuSection = MenuPart< false >;
 
    // Following are the functions to use directly in writing table definitions.
 
