@@ -28,7 +28,6 @@
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
-#include "../tracks/ui/Scrubbing.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 
@@ -186,57 +185,6 @@ void DoMoveToLabel(AudacityProject &project, bool next)
       }
       else {
          trackFocus.MessageForScreenReader(XO("no labels in label track"));
-      }
-   }
-}
-
-
-void DoKeyboardScrub(AudacityProject& project, bool backwards, bool keyUp)
-{
-   static double initT0 = 0;
-   static double initT1 = 0;
-
-   if (keyUp) {
-      auto &scrubber = Scrubber::Get(project);
-      if (scrubber.IsKeyboardScrubbing() && scrubber.IsBackwards() == backwards) {
-         auto gAudioIO = AudioIOBase::Get();
-         auto time = gAudioIO->GetStreamTime();
-         auto &viewInfo = ViewInfo::Get(project);
-         auto &selection = viewInfo.selectedRegion;
-
-         // If the time selection has not changed during scrubbing
-         // set the cursor position
-         if (selection.t0() == initT0 && selection.t1() == initT1) {
-            double endTime = TrackList::Get(project).GetEndTime();
-            time = std::min(time, endTime);
-            time = std::max(time, 0.0);
-            selection.setTimes(time, time);
-            ProjectHistory::Get(project).ModifyState(false);
-         }
-
-         scrubber.Cancel();
-         ProjectAudioManager::Get(project).Stop();
-      }
-   }
-   else {      // KeyDown
-      auto gAudioIO = AudioIOBase::Get();
-      auto &scrubber = Scrubber::Get(project);
-      if (scrubber.IsKeyboardScrubbing() && scrubber.IsBackwards() != backwards) {
-         // change direction
-         scrubber.SetBackwards(backwards);
-      }
-      else if (!gAudioIO->IsBusy() && !scrubber.HasMark()) {
-         auto &viewInfo = ViewInfo::Get(project);
-         auto &selection = viewInfo.selectedRegion;
-         double endTime = TrackList::Get(project).GetEndTime();
-         double t0 = selection.t0();
-    
-         if ((!backwards && t0 >= 0 && t0 < endTime) ||
-            (backwards && t0 > 0 && t0 <= endTime)) {
-            initT0 = t0;
-            initT1 = selection.t1();
-            scrubber.StartKeyboardScrubbing(t0, backwards);
-         }
       }
    }
 }
@@ -837,32 +785,6 @@ void OnPlayCutPreview(const CommandContext &context)
    );
 }
 
-void OnKeyboardScrubBackwards(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto evt = context.pEvt;
-   if (evt)
-      DoKeyboardScrub(project, true, evt->GetEventType() == wxEVT_KEY_UP);
-   else {              // called from menu, so simulate keydown and keyup
-      DoKeyboardScrub(project, true, false);
-      DoKeyboardScrub(project, true, true);
-   }
-}
-
-
-void OnKeyboardScrubForwards(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto evt = context.pEvt;
-   if (evt)
-      DoKeyboardScrub(project, false, evt->GetEventType() == wxEVT_KEY_UP);
-   else {              // called from menu, so simulate keydown and keyup
-      DoKeyboardScrub(project, false, false);
-      DoKeyboardScrub(project, false, true);
-   }
-}
-
-
 void OnPlayAtSpeed(const CommandContext &context)
 {
    auto &project = context.project;
@@ -968,8 +890,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& TransportActions::Handler :: X)
 
-MenuTable::BaseItemSharedPtr CursorMenu();
-
 // Under /MenuBar
 namespace {
 using namespace MenuTable;
@@ -1037,12 +957,7 @@ BaseItemSharedPtr TransportMenu()
             // PRL:  caution, this is a duplicated command name!
             Command( wxT("Pause"), XXO("&Pause"), FN(OnPause),
                CanStopAudioStreamFlag(), wxT("P") )
-         ),
-
-         // Scrubbing sub-menu
-         Scrubber::Menu(),
-
-         CursorMenu()
+         )
       ),
 
       Section( "Other",
@@ -1143,13 +1058,7 @@ BaseItemSharedPtr ExtraTransportMenu()
          wxT("Ctrl+Shift+F7") ),
       Command( wxT("PlayCutPreview"), XXO("Play C&ut Preview"),
          FN(OnPlayCutPreview),
-         CaptureNotBusyFlag(), wxT("C") ),
-      Command(wxT("KeyboardScrubBackwards"), XXO("Scrub Bac&kwards"),
-         FN(OnKeyboardScrubBackwards),
-         CaptureNotBusyFlag() | CanStopAudioStreamFlag(), wxT("U\twantKeyup")),
-      Command(wxT("KeyboardScrubForwards"), XXO("Scrub For&wards"),
-         FN(OnKeyboardScrubForwards),
-         CaptureNotBusyFlag() | CanStopAudioStreamFlag(), wxT("I\twantKeyup"))
+         CaptureNotBusyFlag(), wxT("C") )
    ) ) };
    return menu;
 }

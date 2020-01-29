@@ -984,6 +984,7 @@ void InitializeMenuOrdering()
        )},
       {wxT("/View/Windows"), wxT("UndoHistory,Karaoke,MixerBoard")},
       {wxT("/Analyze/Analyzers/Windows"), wxT("ContrastAnalyser,PlotSpectrum")},
+      {wxT("/Transport/Basic"),wxT("Play,Record,Scrubbing,Cursor")},
    };
 
    bool doFlush = false;

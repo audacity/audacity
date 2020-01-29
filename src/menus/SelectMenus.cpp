@@ -1188,8 +1188,8 @@ AttachedItem sAttachment2{
 };
 }
 
-// Under /MenuBar/Transport
-MenuTable::BaseItemSharedPtr CursorMenu()
+namespace {
+BaseItemSharedPtr CursorMenu()
 {
    using Options = CommandManager::Options;
    static const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
@@ -1231,7 +1231,11 @@ MenuTable::BaseItemSharedPtr CursorMenu()
    return menu;
 }
 
-namespace {
+AttachedItem sAttachment0{
+   wxT("Transport/Basic"),
+   Shared( CursorMenu() )
+};
+
 BaseItemSharedPtr ExtraCursorMenu()
 {
    static BaseItemSharedPtr menu{
