@@ -645,8 +645,7 @@ namespace MenuTable {
    //   return Items( ... );
    //
    // or:
-   //   return FinderScope( findCommandHandler )
-   //      .Eval( Items( ... ) );
+   //   return ( FinderScope( findCommandHandler ), Items( ... ) );
    //
    // where findCommandHandler names a function.
    // This is used before a sequence of many calls to Command() and
@@ -663,10 +662,6 @@ namespace MenuTable {
       FinderScope( CommandHandlerFinder finder )
          : ValueRestorer( sFinder, finder )
       {}
-
-      // See usage comment above about this pass-through function
-      template< typename Value > Value&& Eval( Value &&value ) const
-         { return std::forward<Value>(value); }
    };
 
    // Describes one command in a menu

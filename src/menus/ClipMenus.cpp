@@ -830,7 +830,7 @@ MenuTable::BaseItemSharedPtr ClipSelectMenu()
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu {
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Clip"), XO("Clip B&oundaries"),
       Command( wxT("SelPrevClipBoundaryToCursor"),
          XXO("Pre&vious Clip Boundary to Cursor"),
@@ -857,7 +857,7 @@ MenuTable::BaseItemSharedPtr ClipCursorItems()
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr items{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Items( wxT("Clip"),
       Command( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"),
          FN(OnCursorPrevClipBoundary),
@@ -877,7 +877,7 @@ MenuTable::BaseItemSharedPtr ExtraClipCursorItems()
    using namespace MenuTable;
 
    static BaseItemSharedPtr items{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Items( wxT("Clip"),
       Command( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
          TracksExistFlag() | TrackPanelHasFocus(), wxT("\twantKeyup") ),

@@ -600,7 +600,7 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
    // Returns TWO menus.
    
    static BaseItemSharedPtr menus{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Items( wxEmptyString,
    
    Menu( wxT("Labels"), XO("&Labels"),

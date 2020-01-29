@@ -1053,7 +1053,7 @@ MenuTable::BaseItemSharedPtr EditMenu()
    ;
 
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XO("&Edit"),
       Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
          AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
@@ -1160,7 +1160,7 @@ MenuTable::BaseItemSharedPtr ExtraEditMenu()
    static const auto flags =
       AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag();
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XO("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          (flags | NoAutoSelect()),

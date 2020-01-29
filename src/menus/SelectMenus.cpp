@@ -1036,7 +1036,7 @@ MenuTable::BaseItemSharedPtr SelectMenu()
    using namespace MenuTable;
    using Options = CommandManager::Options;
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    /* i18n-hint: (verb) It's an item on a menu. */
    Menu( wxT("Select"), XO("&Select"),
       Command( wxT("SelectAll"), XXO("&All"), FN(OnSelectAll),
@@ -1145,7 +1145,7 @@ MenuTable::BaseItemSharedPtr ExtraSelectionMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Select"), XO("&Selection"),
       Command( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
          AlwaysEnabledFlag ),
@@ -1198,7 +1198,7 @@ MenuTable::BaseItemSharedPtr CursorMenu()
    // selection. 'Cursor to' does neither. 'Center at' might describe it better
    // than 'Skip'.
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Cursor"), XO("&Cursor to"),
       Command( wxT("CursSelStart"), XXO("Selection Star&t"),
          FN(OnCursorSelStart),
@@ -1239,7 +1239,7 @@ MenuTable::BaseItemSharedPtr ExtraCursorMenu()
    using namespace MenuTable;
 
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Cursor"), XO("&Cursor"),
       Command( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
          TracksExistFlag() | TrackPanelHasFocus(),
@@ -1270,7 +1270,7 @@ MenuTable::BaseItemSharedPtr ExtraSeekMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Seek"), XO("See&k"),
       Command( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
          FN(OnSeekLeftShort), AudioIOBusyFlag(), wxT("Left\tallowDup") ),

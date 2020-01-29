@@ -749,7 +749,7 @@ MenuTable::BaseItemSharedPtr GenerateMenu()
    // the plugin manager...sorry! :-(
 
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Generate"), XO("&Generate"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Command( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
@@ -785,7 +785,7 @@ MenuTable::BaseItemSharedPtr EffectMenu()
    // the plugin manager...sorry! :-(
 
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Effect"), XO("Effe&ct"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Command( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."),
@@ -835,7 +835,7 @@ MenuTable::BaseItemSharedPtr AnalyzeMenu()
    // the plugin manager...sorry! :-(
 
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Analyze"), XO("&Analyze"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Command( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
@@ -869,7 +869,7 @@ MenuTable::BaseItemSharedPtr ToolsMenu()
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XO("T&ools"),
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
@@ -951,7 +951,7 @@ MenuTable::BaseItemSharedPtr ExtraScriptablesIMenu()
 
    // These are the more useful to VI user Scriptables.
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables1"), XO("Script&ables I"),
       // Note that the PLUGIN_SYMBOL must have a space between words,
@@ -1001,7 +1001,7 @@ MenuTable::BaseItemSharedPtr ExtraScriptablesIIMenu()
 
    // Less useful to VI users.
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Scriptables2"), XO("Scripta&bles II"),
       Command( wxT("Select"), XXO("Select..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag() ),

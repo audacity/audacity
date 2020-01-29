@@ -486,7 +486,7 @@ MenuTable::BaseItemSharedPtr HelpMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Help"), XO("&Help"),
       // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
 #ifdef EXPERIMENTAL_DA

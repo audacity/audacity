@@ -443,7 +443,7 @@ MenuTable::BaseItemSharedPtr ViewMenu()
    static const auto checkOff = Options{}.CheckState( false );
 
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("View"), XO("&View"),
       Menu( wxT("Zoom"), XO("&Zoom"),
          Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),

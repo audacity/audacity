@@ -558,7 +558,7 @@ MenuTable::BaseItemSharedPtr FileMenu()
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("File"), XO("&File"),
       /*i18n-hint: "New" is an action (verb) to create a NEW project*/
       Command( wxT("New"), XXO("&New"), FN(OnNew),

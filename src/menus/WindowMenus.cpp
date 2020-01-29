@@ -126,7 +126,7 @@ MenuTable::BaseItemSharedPtr WindowMenu()
       //////////////////////////////////////////////////////////////////////////
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Window"), XO("&Window"),
       /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
        * window) shrink to an icon on the dock */
@@ -152,7 +152,7 @@ MenuTable::BaseItemSharedPtr ExtraWindowItems()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr items{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Items( wxT("MacWindows"),
       /* i18n-hint: Shrink all project windows to icons on the Macintosh
          tooldock */

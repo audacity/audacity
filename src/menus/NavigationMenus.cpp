@@ -563,7 +563,7 @@ MenuTable::BaseItemSharedPtr ExtraGlobalCommands()
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr items{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Items( wxT("Navigation"),
       Command( wxT("PrevWindow"), XXO("Move Backward Through Active Windows"),
          FN(OnPrevWindow), AlwaysEnabledFlag,
@@ -582,7 +582,7 @@ MenuTable::BaseItemSharedPtr ExtraFocusMenu()
    static const auto FocusedTracksFlags = TracksExistFlag() | TrackPanelHasFocus();
 
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Focus"), XO("F&ocus"),
       Command( wxT("PrevFrame"),
          XXO("Move &Backward from Toolbars to Tracks"), FN(OnPrevFrame),

@@ -262,7 +262,7 @@ MenuTable::BaseItemSharedPtr ToolbarsMenu()
    static const auto checkOff = Options{}.CheckState( false );
 
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Toolbars"), XO("&Toolbars"),
       /* i18n-hint: (verb)*/
       Command( wxT("ResetToolbars"), XXO("Reset Toolb&ars"),
@@ -341,7 +341,7 @@ MenuTable::BaseItemSharedPtr ExtraToolsMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XO("T&ools"),
       Command( wxT("SelectTool"), XXO("&Selection Tool"), FN(OnSelectTool),
          AlwaysEnabledFlag, wxT("F1") ),

@@ -1285,7 +1285,7 @@ MenuTable::BaseItemSharedPtr TracksMenu()
    using Options = CommandManager::Options;
    
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Tracks"), XO("&Tracks"),
       Menu( wxT("Add"), XO("Add &New"),
          Command( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
@@ -1439,7 +1439,7 @@ MenuTable::BaseItemSharedPtr ExtraTrackMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Track"), XO("&Track"),
       Command( wxT("TrackPan"), XXO("Change P&an on Focused Track..."),
          FN(OnTrackPan),

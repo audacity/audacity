@@ -1132,11 +1132,10 @@ MenuTable::BaseItemSharedPtr Scrubber::Menu()
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   static BaseItemSharedPtr menu {
-   FinderScope(
+   static BaseItemSharedPtr menu { (
+   FinderScope{
       [](AudacityProject &project) -> CommandHandlerObject&
-         { return Scrubber::Get( project ); }
-   ).Eval(
+         { return Scrubber::Get( project ); } },
    MenuTable::Menu( wxT("Scrubbing"),
       XO("Scru&bbing"),
       []{
@@ -1155,7 +1154,8 @@ MenuTable::BaseItemSharedPtr Scrubber::Menu()
          }
          return ptrs;
       }()
-   ) ) };
+   )
+   ) };
    
    return menu;
 }

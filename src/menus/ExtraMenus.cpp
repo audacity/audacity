@@ -199,7 +199,7 @@ MenuTable::BaseItemSharedPtr ExtraMixerMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Mixer"), XO("Mi&xer"),
       Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
          FN(OnOutputGain), AlwaysEnabledFlag ),
@@ -222,7 +222,7 @@ MenuTable::BaseItemSharedPtr ExtraDeviceMenu()
 {
    using namespace MenuTable;
    static BaseItemSharedPtr menu{
-   FinderScope( findCommandHandler ).Eval(
+   ( FinderScope{ findCommandHandler },
    Menu( wxT("Device"), XO("De&vice"),
       Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
          FN(OnInputDevice),
@@ -254,7 +254,7 @@ MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
    ;
 
    // Not a menu.
-   return FinderScope( findCommandHandler ).Eval(
+   return ( FinderScope{ findCommandHandler },
    Items( wxT("Misc"),
       // Accel key is not bindable.
       Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
