@@ -321,7 +321,7 @@ MenuTable::BaseItemSharedPtr ToolbarsMenu()
       ,
       /* i18n-hint: Clicking this menu item shows the toolbar
          for viewing actual time of the cursor*/
-      Command( wxT("ShowTImerToolBarTB"), XXO("&Timer Toolbar"),
+      Command( wxT("ShowTimerToolBarTB"), XXO("&Timer Toolbar"),
          FN(OnShowTimerToolBar), AlwaysEnabledFlag, checkOff )
 #endif
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
