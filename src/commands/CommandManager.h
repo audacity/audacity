@@ -133,8 +133,6 @@ class AUDACITY_DLL_API CommandManager final
 
    std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
 
-   // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
-   // or else BeginMenu followed by EndMenu.  Don't mix them.
    wxMenu *BeginMenu(const TranslatableString & tName);
    void EndMenu();
 
@@ -234,11 +232,6 @@ class AUDACITY_DLL_API CommandManager final
    void Enable(const wxString &name, bool enabled);
    void Check(const CommandID &name, bool checked);
    void Modify(const wxString &name, const TranslatableString &newLabel);
-
-   // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
-   // or else BeginMenu followed by EndMenu.  Don't mix them.
-   void SetCurrentMenu(wxMenu * menu);
-   void ClearCurrentMenu();
 
    //
    // Modifying accelerators
@@ -408,6 +401,40 @@ private:
 // Define classes and functions that associate parts of the user interface
 // with path names
 namespace Registry {
+   // Items in the registry form an unordered tree, but each may also describe a
+   // desired insertion point among its peers.  The request might not be honored
+   // (as when the other name is not found, or when more than one item requests
+   // the same ordering), but this is not treated as an error.
+   struct OrderingHint
+   {
+      // The default Unspecified hint is just like End, except that in case the
+      // item is delegated to (by a SharedItem, ComputedItem, or nameless
+      // transparent group), the delegating item's hint will be used instead
+      enum Type : int {
+         Before, After,
+         Begin, End,
+         Unspecified // keep this last
+      } type{ Unspecified };
+
+      // name of some other BaseItem; significant only when type is Before or
+      // After:
+      Identifier name;
+
+      OrderingHint() {}
+      OrderingHint( Type type_, const wxString &name_ = {} )
+         : type(type_), name(name_) {}
+
+      bool operator == ( const OrderingHint &other ) const
+      { return name == other.name && type == other.type; }
+
+      bool operator < ( const OrderingHint &other ) const
+      {
+         // This sorts unspecified placements later
+         return std::make_pair( type, name ) <
+            std::make_pair( other.type, other.name );
+      }
+   };
+
    // TODO C++17: maybe use std::variant (discriminated unions) to achieve
    // polymorphism by other means, not needing unique_ptr and dynamic_cast
    // and using less heap.
@@ -423,6 +450,8 @@ namespace Registry {
       virtual ~BaseItem();
 
       const Identifier name;
+
+      OrderingHint orderingHint;
    };
    using BaseItemPtr = std::unique_ptr<BaseItem>;
    using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
@@ -433,7 +462,8 @@ namespace Registry {
 
    // An item that delegates to another held in a shared pointer; this allows
    // static tables of items to be computed once and reused
-   // The name of the delegate is significant for path calculations
+   // The name of the delegate is significant for path calculations, but the
+   // SharedItem's ordering hint is used if the delegate has none
    struct SharedItem final : BaseItem {
       explicit SharedItem( const BaseItemSharedPtr &ptr_ )
          : BaseItem{ wxEmptyString }
@@ -450,7 +480,8 @@ namespace Registry {
 
    // An item that computes some other item to substitute for it, each time
    // the ComputedItem is visited
-   // The name of the substitute is significant for path calculations
+   // The name of the substitute is significant for path calculations, but the
+   // ComputedItem's ordering hint is used if the substitute has none
    struct ComputedItem final : BaseItem {
       // The type of functions that generate descriptions of items.
       // Return type is a shared_ptr to let the function decide whether to
@@ -482,7 +513,7 @@ namespace Registry {
 
       // Construction from an internal name and a previously built-up
       // vector of pointers
-      GroupItem( const wxString &internalName, BaseItemPtrs &&items_ )
+      GroupItem( const Identifier &internalName, BaseItemPtrs &&items_ )
          : BaseItem{ internalName }, items{ std::move( items_ ) }
       {}
       ~GroupItem() override = 0;
@@ -500,7 +531,7 @@ namespace Registry {
       using GroupItem::GroupItem;
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         InlineGroupItem( const wxString &internalName, Args&&... args )
+         InlineGroupItem( const Identifier &internalName, Args&&... args )
          : GroupItem( internalName )
          { Append( std::forward< Args >( args )... ); }
 
@@ -556,6 +587,7 @@ namespace Registry {
 
    // Concrete subclass of GroupItem that adds nothing else
    // TransparentGroupItem with an empty name is transparent to item path calculations
+   // and propagates its ordering hint if subordinates don't specify hints
    template< typename VisitorType = ComputedItem::DefaultVisitor >
    struct TransparentGroupItem final : ConcreteGroupItem< true, VisitorType >
    {
@@ -563,6 +595,25 @@ namespace Registry {
       ~TransparentGroupItem() override {}
    };
 
+   // The /-separated path is relative to the GroupItem supplied to
+   // RegisterItem.
+   // For instance, wxT("Transport/Cursor") to locate an item under a sub-menu
+   // of a main menu
+   struct Placement {
+      wxString path;
+      OrderingHint hint;
+
+      Placement( const wxString &path_, const OrderingHint &hint_ = {} )
+         : path( path_ ), hint( hint_ )
+      {}
+   };
+
+   // registry collects items, before consulting preferences and ordering
+   // hints, and applying the merge procedure to them.
+   // This function puts one more item into the registry.
+   void RegisterItem( GroupItem &registry, const Placement &placement,
+      BaseItemPtr pItem );
+   
    // Define actions to be done in Visit.
    // Default implementations do nothing
    // The supplied path does not include the name of the item
@@ -576,8 +627,19 @@ namespace Registry {
       virtual void Visit( SingleItem &item, const Path &path );
    };
 
-   // Top-down visitation of all items and groups in a tree
-   void Visit( Visitor &visitor, BaseItem *pTopItem );
+   // Top-down visitation of all items and groups in a tree rooted in
+   // pTopItem, as merged with pRegistry.
+   // The merger of the trees is recomputed in each call, not saved.
+   // So neither given tree is modified.
+   // But there may be a side effect on preferences to remember the ordering
+   // imposed on each node of the unordered tree of registered items; each item
+   // seen in the registry for the first time is placed somehere, and that
+   // ordering should be kept the same thereafter in later runs (which may add
+   // yet other previously unknown items).
+   void Visit(
+      Visitor &visitor,
+      BaseItem *pTopItem,
+      GroupItem *pRegistry = nullptr );
 }
 
 struct MenuVisitor : Registry::Visitor
@@ -750,7 +812,8 @@ namespace MenuTable {
    using MenuItems = MenuPart< true >;
    using MenuSection = MenuPart< false >;
 
-   // Following are the functions to use directly in writing table definitions.
+   // The following, and Shared(), are the functions to use directly
+   // in writing table definitions.
 
    // Group items can be constructed two ways.
    // Pointers to subordinate items are moved into the result.
@@ -775,7 +838,7 @@ namespace MenuTable {
       const wxString &internalName, Args&&... args )
          { return std::make_unique< MenuSection >(
             internalName, std::forward<Args>(args)... ); }
-
+   
    // Menu items can be constructed two ways, as for group items
    // Items will appear in a main toolbar menu or in a sub-menu.
    // The name is untranslated.  Try to keep the name stable across Audacity
@@ -863,6 +926,20 @@ namespace MenuTable {
    inline std::unique_ptr<SpecialItem> Special(
       const wxString &name, const SpecialItem::Appender &fn )
          { return std::make_unique<SpecialItem>( name, fn ); }
+
+   // Typically you make a static object of this type in the .cpp file that
+   // also defines the added menu actions.
+   // pItem can be specified by an expression using the inline functions above.
+   struct AttachedItem final
+   {
+      AttachedItem( const Placement &placement, BaseItemPtr pItem );
+
+      AttachedItem( const wxString &path, BaseItemPtr pItem )
+         // Delegating constructor
+         : AttachedItem( Placement{ path }, std::move( pItem ) )
+      {}
+   };
+
 }
 
 #endif
