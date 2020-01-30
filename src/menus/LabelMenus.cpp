@@ -604,88 +604,83 @@ MenuTable::BaseItemSharedPtr LabelEditMenus()
    Items( wxEmptyString,
    
    Menu( wxT("Labels"), XO("&Labels"),
-    Section( "",
-      Command( wxT("EditLabels"), XXO("&Edit Labels..."), FN(OnEditLabels),
-                 AudioIONotBusyFlag() )
-    ),
-
-    Section( "",
-
-      Command( wxT("AddLabel"), XXO("Add Label at &Selection"),
-         FN(OnAddLabel), AlwaysEnabledFlag, wxT("Ctrl+B") ),
-      Command( wxT("AddLabelPlaying"),
-         XXO("Add Label at &Playback Position"),
-         FN(OnAddLabelPlaying), AudioIOBusyFlag(),
-#ifdef __WXMAC__
-         wxT("Ctrl+.")
-#else
-         wxT("Ctrl+M")
-#endif
+      Section( "",
+         Command( wxT("EditLabels"), XXO("&Edit Labels..."), FN(OnEditLabels),
+                    AudioIONotBusyFlag() )
       ),
-      Command( wxT("PasteNewLabel"), XXO("Paste Te&xt to New Label"),
-         FN(OnPasteNewLabel),
-         AudioIONotBusyFlag(), wxT("Ctrl+Alt+V") )
 
-    ),
+      Section( "",
+         Command( wxT("AddLabel"), XXO("Add Label at &Selection"),
+            FN(OnAddLabel), AlwaysEnabledFlag, wxT("Ctrl+B") ),
+         Command( wxT("AddLabelPlaying"),
+            XXO("Add Label at &Playback Position"),
+            FN(OnAddLabelPlaying), AudioIOBusyFlag(),
+   #ifdef __WXMAC__
+            wxT("Ctrl+.")
+   #else
+            wxT("Ctrl+M")
+   #endif
+         ),
+         Command( wxT("PasteNewLabel"), XXO("Paste Te&xt to New Label"),
+            FN(OnPasteNewLabel),
+            AudioIONotBusyFlag(), wxT("Ctrl+Alt+V") )
+      ),
 
-    Section( "",
-      Command( wxT("TypeToCreateLabel"),
-         XXO("&Type to Create a Label (on/off)"),
-         FN(OnToggleTypeToCreateLabel), AlwaysEnabledFlag, checkOff )
-    )
+      Section( "",
+         Command( wxT("TypeToCreateLabel"),
+            XXO("&Type to Create a Label (on/off)"),
+            FN(OnToggleTypeToCreateLabel), AlwaysEnabledFlag, checkOff )
+      )
    ), // first menu
 
    /////////////////////////////////////////////////////////////////////////////
 
    Menu( wxT("Labeled"), XO("La&beled Audio"),
-    Section( "",
-      /* i18n-hint: (verb)*/
-      Command( wxT("CutLabels"), XXO("&Cut"), FN(OnCutLabels),
-         AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
-            TimeSelectedFlag() | IsNotSyncLockedFlag(),
-            Options{ wxT("Alt+X"), XO("Label Cut") } ),
-      Command( wxT("DeleteLabels"), XXO("&Delete"), FN(OnDeleteLabels),
-         AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
-            TimeSelectedFlag() | IsNotSyncLockedFlag(),
-         Options{ wxT("Alt+K"), XO("Label Delete") } )
-    ),
+      Section( "",
+         /* i18n-hint: (verb)*/
+         Command( wxT("CutLabels"), XXO("&Cut"), FN(OnCutLabels),
+            AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
+               TimeSelectedFlag() | IsNotSyncLockedFlag(),
+               Options{ wxT("Alt+X"), XO("Label Cut") } ),
+         Command( wxT("DeleteLabels"), XXO("&Delete"), FN(OnDeleteLabels),
+            AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
+               TimeSelectedFlag() | IsNotSyncLockedFlag(),
+            Options{ wxT("Alt+K"), XO("Label Delete") } )
+      ),
 
-    Section( "",
+      Section( "",
+         /* i18n-hint: (verb) A special way to cut out a piece of audio*/
+         Command( wxT("SplitCutLabels"), XXO("&Split Cut"),
+            FN(OnSplitCutLabels), NotBusyLabelsAndWaveFlags,
+            Options{ wxT("Alt+Shift+X"), XO("Label Split Cut") } ),
+         Command( wxT("SplitDeleteLabels"), XXO("Sp&lit Delete"),
+            FN(OnSplitDeleteLabels), NotBusyLabelsAndWaveFlags,
+            Options{ wxT("Alt+Shift+K"), XO("Label Split Delete") } )
+      ),
 
-      /* i18n-hint: (verb) A special way to cut out a piece of audio*/
-      Command( wxT("SplitCutLabels"), XXO("&Split Cut"),
-         FN(OnSplitCutLabels), NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+Shift+X"), XO("Label Split Cut") } ),
-      Command( wxT("SplitDeleteLabels"), XXO("Sp&lit Delete"),
-         FN(OnSplitDeleteLabels), NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+Shift+K"), XO("Label Split Delete") } )
+      Section( "",
+         Command( wxT("SilenceLabels"), XXO("Silence &Audio"),
+            FN(OnSilenceLabels), NotBusyLabelsAndWaveFlags,
+            Options{ wxT("Alt+L"), XO("Label Silence") } ),
+         /* i18n-hint: (verb)*/
+         Command( wxT("CopyLabels"), XXO("Co&py"), FN(OnCopyLabels),
+            NotBusyLabelsAndWaveFlags,
+            Options{ wxT("Alt+Shift+C"), XO("Label Copy") } )
+      ),
 
-    ),
-
-    Section( "",
-
-      Command( wxT("SilenceLabels"), XXO("Silence &Audio"),
-         FN(OnSilenceLabels), NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+L"), XO("Label Silence") } ),
-      /* i18n-hint: (verb)*/
-      Command( wxT("CopyLabels"), XXO("Co&py"), FN(OnCopyLabels),
-         NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+Shift+C"), XO("Label Copy") } )
-    ),
-
-    Section( "",
-      /* i18n-hint: (verb)*/
-      Command( wxT("SplitLabels"), XXO("Spli&t"), FN(OnSplitLabels),
-         AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag(),
-         Options{ wxT("Alt+I"), XO("Label Split") } ),
-      /* i18n-hint: (verb)*/
-      Command( wxT("JoinLabels"), XXO("&Join"), FN(OnJoinLabels),
-         NotBusyLabelsAndWaveFlags,
-         Options{ wxT("Alt+J"), XO("Label Join") } ),
-      Command( wxT("DisjoinLabels"), XXO("Detac&h at Silences"),
-         FN(OnDisjoinLabels), NotBusyLabelsAndWaveFlags,
-         wxT("Alt+Shift+J") )
-    )
+      Section( "",
+         /* i18n-hint: (verb)*/
+         Command( wxT("SplitLabels"), XXO("Spli&t"), FN(OnSplitLabels),
+            AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag(),
+            Options{ wxT("Alt+I"), XO("Label Split") } ),
+         /* i18n-hint: (verb)*/
+         Command( wxT("JoinLabels"), XXO("&Join"), FN(OnJoinLabels),
+            NotBusyLabelsAndWaveFlags,
+            Options{ wxT("Alt+J"), XO("Label Join") } ),
+         Command( wxT("DisjoinLabels"), XXO("Detac&h at Silences"),
+            FN(OnDisjoinLabels), NotBusyLabelsAndWaveFlags,
+            wxT("Alt+Shift+J") )
+      )
    ) // second menu
 
    ) ) }; // two menus

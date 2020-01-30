@@ -986,114 +986,114 @@ MenuTable::BaseItemSharedPtr TransportMenu()
    /* i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */
    Menu( wxT("Transport"), XO("Tra&nsport"),
-    Section( "",
-      Menu( wxT("Play"), XO("Pl&aying"),
-         /* i18n-hint: (verb) Start or Stop audio playback*/
-         Command( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
-            CanStopAudioStreamFlag(), wxT("Space") ),
-         Command( wxT("PlayStopSelect"), XXO("Play/Stop and &Set Cursor"),
-            FN(OnPlayStopSelect), CanStopAudioStreamFlag(), wxT("X") ),
-         Command( wxT("PlayLooped"), XXO("&Loop Play"), FN(OnPlayLooped),
-            CanStopAudioStreamFlag(), wxT("Shift+Space") ),
-         Command( wxT("Pause"), XXO("&Pause"), FN(OnPause),
-            CanStopAudioStreamFlag(), wxT("P") )
+      Section( "",
+         Menu( wxT("Play"), XO("Pl&aying"),
+            /* i18n-hint: (verb) Start or Stop audio playback*/
+            Command( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
+               CanStopAudioStreamFlag(), wxT("Space") ),
+            Command( wxT("PlayStopSelect"), XXO("Play/Stop and &Set Cursor"),
+               FN(OnPlayStopSelect), CanStopAudioStreamFlag(), wxT("X") ),
+            Command( wxT("PlayLooped"), XXO("&Loop Play"), FN(OnPlayLooped),
+               CanStopAudioStreamFlag(), wxT("Shift+Space") ),
+            Command( wxT("Pause"), XXO("&Pause"), FN(OnPause),
+               CanStopAudioStreamFlag(), wxT("P") )
+         ),
+
+         Menu( wxT("Record"), XO("&Recording"),
+            /* i18n-hint: (verb)*/
+            Command( wxT("Record1stChoice"), XXO("&Record"), FN(OnRecord),
+               CanStopFlags, wxT("R") ),
+
+            // The OnRecord2ndChoice function is: if normal record records beside,
+            // it records below, if normal record records below, it records beside.
+            // TODO: Do 'the right thing' with other options like TimerRecord.
+            // Delayed evaluation in case gPrefs is not yet defined
+            [](const AudacityProject&)
+            { return Command( wxT("Record2ndChoice"),
+               // Our first choice is bound to R (by default)
+               // and gets the prime position.
+               // We supply the name for the 'other one' here.
+               // It should be bound to Shift+R
+               (gPrefs->ReadBool("/GUI/PreferNewTrackRecord", false)
+                ? XO("&Append Record") : XO("Record &New Track")),
+               FN(OnRecord2ndChoice), CanStopFlags,
+               wxT("Shift+R"),
+               findCommandHandler
+            ); },
+
+            Command( wxT("TimerRecord"), XXO("&Timer Record..."),
+               FN(OnTimerRecord), CanStopFlags, wxT("Shift+T") ),
+
+   #ifdef EXPERIMENTAL_PUNCH_AND_ROLL
+            Command( wxT("PunchAndRoll"), XXO("Punch and Rol&l Record"),
+               FN(OnPunchAndRoll),
+               WaveTracksExistFlag() | AudioIONotBusyFlag(), wxT("Shift+D") ),
+   #endif
+
+            // JKC: I decided to duplicate this between play and record,
+            // rather than put it at the top level.
+            // CommandManger::AddItem can now cope with simple duplicated items.
+            // PRL:  caution, this is a duplicated command name!
+            Command( wxT("Pause"), XXO("&Pause"), FN(OnPause),
+               CanStopAudioStreamFlag(), wxT("P") )
+         ),
+
+         // Scrubbing sub-menu
+         Scrubber::Menu(),
+
+         CursorMenu()
       ),
 
-      Menu( wxT("Record"), XO("&Recording"),
-         /* i18n-hint: (verb)*/
-         Command( wxT("Record1stChoice"), XXO("&Record"), FN(OnRecord),
-            CanStopFlags, wxT("R") ),
-
-         // The OnRecord2ndChoice function is: if normal record records beside,
-         // it records below, if normal record records below, it records beside.
-         // TODO: Do 'the right thing' with other options like TimerRecord.
-         // Delayed evaluation in case gPrefs is not yet defined
-         [](const AudacityProject&)
-         { return Command( wxT("Record2ndChoice"),
-            // Our first choice is bound to R (by default)
-            // and gets the prime position.
-            // We supply the name for the 'other one' here.
-            // It should be bound to Shift+R
-            (gPrefs->ReadBool("/GUI/PreferNewTrackRecord", false)
-             ? XO("&Append Record") : XO("Record &New Track")),
-            FN(OnRecord2ndChoice), CanStopFlags,
-            wxT("Shift+R"),
-            findCommandHandler
-         ); },
-
-         Command( wxT("TimerRecord"), XXO("&Timer Record..."),
-            FN(OnTimerRecord), CanStopFlags, wxT("Shift+T") ),
-
-#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
-         Command( wxT("PunchAndRoll"), XXO("Punch and Rol&l Record"),
-            FN(OnPunchAndRoll),
-            WaveTracksExistFlag() | AudioIONotBusyFlag(), wxT("Shift+D") ),
-#endif
-
-         // JKC: I decided to duplicate this between play and record,
-         // rather than put it at the top level.
-         // CommandManger::AddItem can now cope with simple duplicated items.
-         // PRL:  caution, this is a duplicated command name!
-         Command( wxT("Pause"), XXO("&Pause"), FN(OnPause),
-            CanStopAudioStreamFlag(), wxT("P") )
+      Section( "",
+         Menu( wxT("PlayRegion"), XO("Pla&y Region"),
+            Command( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
+               PlayRegionNotLockedFlag() ),
+            Command( wxT("UnlockPlayRegion"), XXO("&Unlock"),
+               FN(OnUnlockPlayRegion), PlayRegionLockedFlag() )
+         )
       ),
 
-      // Scrubbing sub-menu
-      Scrubber::Menu(),
+      Section( "",
+         Command( wxT("RescanDevices"), XXO("R&escan Audio Devices"),
+            FN(OnRescanDevices), AudioIONotBusyFlag() | CanStopAudioStreamFlag() ),
 
-      CursorMenu()
-    ),
+         Menu( wxT("Options"), XO("Transport &Options"),
+            Section( "",
+               // Sound Activated recording options
+               Command( wxT("SoundActivationLevel"),
+                  XXO("Sound Activation Le&vel..."), FN(OnSoundActivated),
+                  AudioIONotBusyFlag() | CanStopAudioStreamFlag() ),
+               Command( wxT("SoundActivation"),
+                  XXO("Sound A&ctivated Recording (on/off)"),
+                  FN(OnToggleSoundActivated),
+                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
+            ),
 
-    Section( "",
-      Menu( wxT("PlayRegion"), XO("Pla&y Region"),
-         Command( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
-            PlayRegionNotLockedFlag() ),
-         Command( wxT("UnlockPlayRegion"), XXO("&Unlock"),
-            FN(OnUnlockPlayRegion), PlayRegionLockedFlag() )
+            Section( "",
+               Command( wxT("PinnedHead"), XXO("Pinned Play/Record &Head (on/off)"),
+                  FN(OnTogglePinnedHead),
+                  // Switching of scrolling on and off is permitted
+                  // even during transport
+                  AlwaysEnabledFlag, checkOff ),
+
+               Command( wxT("Overdub"), XXO("&Overdub (on/off)"),
+                  FN(OnTogglePlayRecording),
+                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOn ),
+               Command( wxT("SWPlaythrough"), XXO("So&ftware Playthrough (on/off)"),
+                  FN(OnToggleSWPlaythrough),
+                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
+
+
+      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+               ,
+               Command( wxT("AutomatedInputLevelAdjustmentOnOff"),
+                  XXO("A&utomated Recording Level Adjustment (on/off)"),
+                  FN(OnToggleAutomatedInputLevelAdjustment),
+                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
+      #endif
+            )
+         )
       )
-    ),
-
-    Section( "",
-      Command( wxT("RescanDevices"), XXO("R&escan Audio Devices"),
-         FN(OnRescanDevices), AudioIONotBusyFlag() | CanStopAudioStreamFlag() ),
-
-      Menu( wxT("Options"), XO("Transport &Options"),
-       Section( "",
-         // Sound Activated recording options
-         Command( wxT("SoundActivationLevel"),
-            XXO("Sound Activation Le&vel..."), FN(OnSoundActivated),
-            AudioIONotBusyFlag() | CanStopAudioStreamFlag() ),
-         Command( wxT("SoundActivation"),
-            XXO("Sound A&ctivated Recording (on/off)"),
-            FN(OnToggleSoundActivated),
-            AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
-       ),
-
-       Section( "",
-         Command( wxT("PinnedHead"), XXO("Pinned Play/Record &Head (on/off)"),
-            FN(OnTogglePinnedHead),
-            // Switching of scrolling on and off is permitted
-            // even during transport
-            AlwaysEnabledFlag, checkOff ),
-
-         Command( wxT("Overdub"), XXO("&Overdub (on/off)"),
-            FN(OnTogglePlayRecording),
-            AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOn ),
-         Command( wxT("SWPlaythrough"), XXO("So&ftware Playthrough (on/off)"),
-            FN(OnToggleSWPlaythrough),
-            AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
-
-
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         ,
-         Command( wxT("AutomatedInputLevelAdjustmentOnOff"),
-            XXO("A&utomated Recording Level Adjustment (on/off)"),
-            FN(OnToggleAutomatedInputLevelAdjustment),
-            AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
-#endif
-       )
-      )
-    )
    ) ) };
    return menu;
 }

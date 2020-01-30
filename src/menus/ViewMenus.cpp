@@ -445,115 +445,115 @@ MenuTable::BaseItemSharedPtr ViewMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("View"), XO("&View"),
-    Section( "",
-      Menu( wxT("Zoom"), XO("&Zoom"),
-       Section( "",
-         Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
-            ZoomInAvailableFlag(), wxT("Ctrl+1") ),
-         Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), FN(OnZoomNormal),
-            TracksExistFlag(), wxT("Ctrl+2") ),
-         Command( wxT("ZoomOut"), XXO("Zoom &Out"), FN(OnZoomOut),
-            ZoomOutAvailableFlag(), wxT("Ctrl+3") ),
-         Command( wxT("ZoomSel"), XXO("&Zoom to Selection"), FN(OnZoomSel),
-            TimeSelectedFlag(), wxT("Ctrl+E") ),
-         Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), FN(OnZoomToggle),
-            TracksExistFlag(), wxT("Shift+Z") )
-       ),
-       Section( "",
-         Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
-            FN(OnAdvancedVZoom), AlwaysEnabledFlag,
-            Options{}.CheckTest( wxT("/GUI/VerticalZooming"), false ) )
-       )
+      Section( "",
+         Menu( wxT("Zoom"), XO("&Zoom"),
+            Section( "",
+               Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
+                  ZoomInAvailableFlag(), wxT("Ctrl+1") ),
+               Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), FN(OnZoomNormal),
+                  TracksExistFlag(), wxT("Ctrl+2") ),
+               Command( wxT("ZoomOut"), XXO("Zoom &Out"), FN(OnZoomOut),
+                  ZoomOutAvailableFlag(), wxT("Ctrl+3") ),
+               Command( wxT("ZoomSel"), XXO("&Zoom to Selection"), FN(OnZoomSel),
+                  TimeSelectedFlag(), wxT("Ctrl+E") ),
+               Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), FN(OnZoomToggle),
+                  TracksExistFlag(), wxT("Shift+Z") )
+            ),
+            Section( "",
+               Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
+                  FN(OnAdvancedVZoom), AlwaysEnabledFlag,
+                  Options{}.CheckTest( wxT("/GUI/VerticalZooming"), false ) )
+            )
+         ),
+
+         Menu( wxT("TrackSize"), XO("T&rack Size"),
+            Command( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
+               TracksExistFlag(), wxT("Ctrl+F") ),
+            Command( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
+               TracksExistFlag(), wxT("Ctrl+Shift+F") ),
+            Command( wxT("CollapseAllTracks"), XXO("&Collapse All Tracks"),
+               FN(OnCollapseAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+C") ),
+            Command( wxT("ExpandAllTracks"), XXO("E&xpand Collapsed Tracks"),
+               FN(OnExpandAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+X") )
+         ),
+
+         Menu( wxT("SkipTo"), XO("Sk&ip to"),
+            Command( wxT("SkipSelStart"), XXO("Selection Sta&rt"),
+               FN(OnGoSelStart), TimeSelectedFlag(),
+               Options{ wxT("Ctrl+["), XO("Skip to Selection Start") } ),
+            Command( wxT("SkipSelEnd"), XXO("Selection En&d"), FN(OnGoSelEnd),
+               TimeSelectedFlag(),
+               Options{ wxT("Ctrl+]"), XO("Skip to Selection End") } )
+         )
       ),
 
-      Menu( wxT("TrackSize"), XO("T&rack Size"),
-         Command( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
-            TracksExistFlag(), wxT("Ctrl+F") ),
-         Command( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
-            TracksExistFlag(), wxT("Ctrl+Shift+F") ),
-         Command( wxT("CollapseAllTracks"), XXO("&Collapse All Tracks"),
-            FN(OnCollapseAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+C") ),
-         Command( wxT("ExpandAllTracks"), XXO("E&xpand Collapsed Tracks"),
-            FN(OnExpandAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+X") )
+      Section( "",
+         // History window should be available either for UndoAvailableFlag
+         // or RedoAvailableFlag,
+         // but we can't make the AddItem flags and mask have both,
+         // because they'd both have to be true for the
+         // command to be enabled.
+         //    If user has Undone the entire stack, RedoAvailableFlag is on
+         //    but UndoAvailableFlag is off.
+         //    If user has done things but not Undone anything,
+         //    RedoAvailableFlag is off but UndoAvailableFlag is on.
+         // So in either of those cases,
+         // (AudioIONotBusyFlag | UndoAvailableFlag | RedoAvailableFlag) mask
+         // would fail.
+         // The only way to fix this in the current architecture
+         // is to hack in special cases for RedoAvailableFlag
+         // in AudacityProject::UpdateMenus() (ugly)
+         // and CommandManager::HandleCommandEntry() (*really* ugly --
+         // shouldn't know about particular command names and flags).
+         // Here's the hack that would be necessary in
+         // AudacityProject::UpdateMenus(), if somebody decides to do it:
+         //    // Because EnableUsingFlags requires all the flag bits match the
+         //    // corresponding mask bits,
+         //    // "UndoHistory" specifies only
+         //    // AudioIONotBusyFlag | UndoAvailableFlag, because that
+         //    // covers the majority of cases where it should be enabled.
+         //    // If history is not empty but we've Undone the whole stack,
+         //    // we also want to enable,
+         //    // to show the Redo's on stack.
+         //    // "UndoHistory" might already be enabled,
+         //    // but add this check for RedoAvailableFlag.
+         //    if (flags & RedoAvailableFlag)
+         //       GetCommandManager()->Enable(wxT("UndoHistory"), true);
+         // So for now, enable the command regardless of stack.
+         // It will just show empty sometimes.
+         // FOR REDESIGN,
+         // clearly there are some limitations with the flags/mask bitmaps.
+
+         /* i18n-hint: Clicking this menu item shows the various editing steps
+            that have been taken.*/
+         Command( wxT("UndoHistory"), XXO("&History..."), FN(OnHistory),
+            AudioIONotBusyFlag() ),
+
+         Command( wxT("Karaoke"), XXO("&Karaoke..."), FN(OnKaraoke),
+            LabelTracksExistFlag() ),
+         Command( wxT("MixerBoard"), XXO("&Mixer Board..."), FN(OnMixerBoard),
+            PlayableTracksExistFlag() )
       ),
 
-      Menu( wxT("SkipTo"), XO("Sk&ip to"),
-         Command( wxT("SkipSelStart"), XXO("Selection Sta&rt"),
-            FN(OnGoSelStart), TimeSelectedFlag(),
-            Options{ wxT("Ctrl+["), XO("Skip to Selection Start") } ),
-         Command( wxT("SkipSelEnd"), XXO("Selection En&d"), FN(OnGoSelEnd),
-            TimeSelectedFlag(),
-            Options{ wxT("Ctrl+]"), XO("Skip to Selection End") } )
+      Section( "",
+         //////////////////////////////////////////////////////////////////////////
+
+         ToolbarsMenu()
+      ),
+
+      Section( "",
+         Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
+            FN(OnShowExtraMenus), AlwaysEnabledFlag,
+            Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
+         Command( wxT("ShowClipping"), XXO("&Show Clipping (on/off)"),
+            FN(OnShowClipping), AlwaysEnabledFlag,
+            Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )
+   #if defined(EXPERIMENTAL_EFFECTS_RACK)
+         ,
+         Command( wxT("ShowEffectsRack"), XXO("Show Effects Rack"),
+            FN(OnShowEffectsRack), AlwaysEnabledFlag, checkOff )
+   #endif
       )
-    ),
-
-    Section( "",
-      // History window should be available either for UndoAvailableFlag
-      // or RedoAvailableFlag,
-      // but we can't make the AddItem flags and mask have both,
-      // because they'd both have to be true for the
-      // command to be enabled.
-      //    If user has Undone the entire stack, RedoAvailableFlag is on
-      //    but UndoAvailableFlag is off.
-      //    If user has done things but not Undone anything,
-      //    RedoAvailableFlag is off but UndoAvailableFlag is on.
-      // So in either of those cases,
-      // (AudioIONotBusyFlag | UndoAvailableFlag | RedoAvailableFlag) mask
-      // would fail.
-      // The only way to fix this in the current architecture
-      // is to hack in special cases for RedoAvailableFlag
-      // in AudacityProject::UpdateMenus() (ugly)
-      // and CommandManager::HandleCommandEntry() (*really* ugly --
-      // shouldn't know about particular command names and flags).
-      // Here's the hack that would be necessary in
-      // AudacityProject::UpdateMenus(), if somebody decides to do it:
-      //    // Because EnableUsingFlags requires all the flag bits match the
-      //    // corresponding mask bits,
-      //    // "UndoHistory" specifies only
-      //    // AudioIONotBusyFlag | UndoAvailableFlag, because that
-      //    // covers the majority of cases where it should be enabled.
-      //    // If history is not empty but we've Undone the whole stack,
-      //    // we also want to enable,
-      //    // to show the Redo's on stack.
-      //    // "UndoHistory" might already be enabled,
-      //    // but add this check for RedoAvailableFlag.
-      //    if (flags & RedoAvailableFlag)
-      //       GetCommandManager()->Enable(wxT("UndoHistory"), true);
-      // So for now, enable the command regardless of stack.
-      // It will just show empty sometimes.
-      // FOR REDESIGN,
-      // clearly there are some limitations with the flags/mask bitmaps.
-
-      /* i18n-hint: Clicking this menu item shows the various editing steps
-         that have been taken.*/
-      Command( wxT("UndoHistory"), XXO("&History..."), FN(OnHistory),
-         AudioIONotBusyFlag() ),
-
-      Command( wxT("Karaoke"), XXO("&Karaoke..."), FN(OnKaraoke),
-         LabelTracksExistFlag() ),
-      Command( wxT("MixerBoard"), XXO("&Mixer Board..."), FN(OnMixerBoard),
-         PlayableTracksExistFlag() )
-    ),
-
-    Section( "",
-      //////////////////////////////////////////////////////////////////////////
-
-      ToolbarsMenu()
-    ),
-
-    Section( "",
-      Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
-         FN(OnShowExtraMenus), AlwaysEnabledFlag,
-         Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
-      Command( wxT("ShowClipping"), XXO("&Show Clipping (on/off)"),
-         FN(OnShowClipping), AlwaysEnabledFlag,
-         Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-      ,
-      Command( wxT("ShowEffectsRack"), XXO("Show Effects Rack"),
-         FN(OnShowEffectsRack), AlwaysEnabledFlag, checkOff )
-#endif
-    )
    ) ) };
    return menu;
    

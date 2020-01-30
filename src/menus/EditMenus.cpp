@@ -1055,110 +1055,109 @@ MenuTable::BaseItemSharedPtr EditMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XO("&Edit"),
-    Section( "",
-      Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
-         AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
+      Section( "",
+         Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
+            AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
 
-      Command( wxT("Redo"), XXO("&Redo"), FN(OnRedo),
-         AudioIONotBusyFlag() | RedoAvailableFlag(), redoKey ),
-         
-      Special( wxT("UndoItemsUpdateStep"),
-      [](AudacityProject &project, wxMenu&) {
-         // Change names in the CommandManager as a side-effect
-         MenuManager::ModifyUndoMenuItems(project);
-      })
-    ),
-
-    Section( "",
-      // Basic Edit commands
-      /* i18n-hint: (verb)*/
-      Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
-         AudioIONotBusyFlag() | CutCopyAvailableFlag() | NoAutoSelect(),
-         wxT("Ctrl+X") ),
-      Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
-         AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag() | NoAutoSelect(),
-         wxT("Ctrl+K") ),
-      /* i18n-hint: (verb)*/
-      Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
-         AudioIONotBusyFlag() | CutCopyAvailableFlag(), wxT("Ctrl+C") ),
-      /* i18n-hint: (verb)*/
-      Command( wxT("Paste"), XXO("&Paste"), FN(OnPaste),
-         AudioIONotBusyFlag(), wxT("Ctrl+V") ),
-      /* i18n-hint: (verb)*/
-      Command( wxT("Duplicate"), XXO("Duplic&ate"), FN(OnDuplicate),
-         NotBusyTimeAndTracksFlags, wxT("Ctrl+D") )
-    ),
-
-    Section( "",
-      Menu( wxT("RemoveSpecial"), XO("R&emove Special"),
-       Section( "",
-         /* i18n-hint: (verb) Do a special kind of cut*/
-         Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
-            NotBusyTimeAndTracksFlags,
-            Options{ wxT("Ctrl+Alt+X") }.UseStrictFlags() ),
-         /* i18n-hint: (verb) Do a special kind of DELETE*/
-         Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
-            NotBusyTimeAndTracksFlags,
-            Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() )
-       ),
-
-       Section( "",
-         /* i18n-hint: (verb)*/
-         Command( wxT("Silence"), XXO("Silence Audi&o"), FN(OnSilence),
-            AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            wxT("Ctrl+L") ),
-         /* i18n-hint: (verb)*/
-         Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
-            AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            Options{ wxT("Ctrl+T") }.UseStrictFlags() )
-       )
-      )
-    ),
-
-    Section( "",
-      //////////////////////////////////////////////////////////////////////////
-
-      Menu( wxT("Clip"), XO("Clip B&oundaries"),
-       Section( "",
-         /* i18n-hint: (verb) It's an item on a menu. */
-         Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
-            AudioIONotBusyFlag() | WaveTracksSelectedFlag(),
-            Options{ wxT("Ctrl+I") }.UseStrictFlags() ),
-         Command( wxT("SplitNew"), XXO("Split Ne&w"), FN(OnSplitNew),
-            AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            Options{ wxT("Ctrl+Alt+I") }.UseStrictFlags() )
-       ),
-
-       Section( "",
-         /* i18n-hint: (verb)*/
-         Command( wxT("Join"), XXO("&Join"), FN(OnJoin),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+J") ),
-         Command( wxT("Disjoin"), XXO("Detac&h at Silences"), FN(OnDisjoin),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+J") )
-       )
+         Command( wxT("Redo"), XXO("&Redo"), FN(OnRedo),
+            AudioIONotBusyFlag() | RedoAvailableFlag(), redoKey ),
+            
+         Special( wxT("UndoItemsUpdateStep"),
+         [](AudacityProject &project, wxMenu&) {
+            // Change names in the CommandManager as a side-effect
+            MenuManager::ModifyUndoMenuItems(project);
+         })
       ),
 
+      Section( "",
+         // Basic Edit commands
+         /* i18n-hint: (verb)*/
+         Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
+            AudioIONotBusyFlag() | CutCopyAvailableFlag() | NoAutoSelect(),
+            wxT("Ctrl+X") ),
+         Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
+            AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag() | NoAutoSelect(),
+            wxT("Ctrl+K") ),
+         /* i18n-hint: (verb)*/
+         Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
+            AudioIONotBusyFlag() | CutCopyAvailableFlag(), wxT("Ctrl+C") ),
+         /* i18n-hint: (verb)*/
+         Command( wxT("Paste"), XXO("&Paste"), FN(OnPaste),
+            AudioIONotBusyFlag(), wxT("Ctrl+V") ),
+         /* i18n-hint: (verb)*/
+         Command( wxT("Duplicate"), XXO("Duplic&ate"), FN(OnDuplicate),
+            NotBusyTimeAndTracksFlags, wxT("Ctrl+D") )
+      ),
+
+      Section( "",
+         Menu( wxT("RemoveSpecial"), XO("R&emove Special"),
+            Section( "",
+               /* i18n-hint: (verb) Do a special kind of cut*/
+               Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
+                  NotBusyTimeAndTracksFlags,
+                  Options{ wxT("Ctrl+Alt+X") }.UseStrictFlags() ),
+               /* i18n-hint: (verb) Do a special kind of DELETE*/
+               Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
+                  NotBusyTimeAndTracksFlags,
+                  Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() )
+            ),
+
+            Section( "",
+               /* i18n-hint: (verb)*/
+               Command( wxT("Silence"), XXO("Silence Audi&o"), FN(OnSilence),
+                  AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+                  wxT("Ctrl+L") ),
+               /* i18n-hint: (verb)*/
+               Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
+                  AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+                  Options{ wxT("Ctrl+T") }.UseStrictFlags() )
+            )
+         )
+      ),
+
+      Section( "",
       //////////////////////////////////////////////////////////////////////////
 
-      LabelEditMenus(),
+         Menu( wxT("Clip"), XO("Clip B&oundaries"),
+            Section( "",
+               /* i18n-hint: (verb) It's an item on a menu. */
+               Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
+                  AudioIONotBusyFlag() | WaveTracksSelectedFlag(),
+                  Options{ wxT("Ctrl+I") }.UseStrictFlags() ),
+               Command( wxT("SplitNew"), XXO("Split Ne&w"), FN(OnSplitNew),
+                  AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+                  Options{ wxT("Ctrl+Alt+I") }.UseStrictFlags() )
+            ),
 
-      Command( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
-         AudioIONotBusyFlag() )
+            Section( "",
+               /* i18n-hint: (verb)*/
+               Command( wxT("Join"), XXO("&Join"), FN(OnJoin),
+                  NotBusyTimeAndTracksFlags, wxT("Ctrl+J") ),
+               Command( wxT("Disjoin"), XXO("Detac&h at Silences"), FN(OnDisjoin),
+                  NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+J") )
+            )
+         ),
 
-      //////////////////////////////////////////////////////////////////////////
+         //////////////////////////////////////////////////////////////////////////
+
+         LabelEditMenus(),
+
+         Command( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
+            AudioIONotBusyFlag() )
+
+         //////////////////////////////////////////////////////////////////////////
 
 #ifndef __WXMAC__
-    ),
+      ),
 
-    Section( "",
+      Section( "",
 #else
-    ,
+      ,
 #endif
 
-      Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
-         AudioIONotBusyFlag(), prefKey )
-
-    )
+         Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
+            AudioIONotBusyFlag(), prefKey )
+      )
 
    ) ) };
    return menu;

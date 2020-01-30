@@ -530,74 +530,74 @@ MenuTable::BaseItemSharedPtr HelpMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Help"), XO("&Help"),
-    Section( "",
-      // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
-#ifdef EXPERIMENTAL_DA
-      // DA: Has QuickFix menu item.
-      Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
-         AlwaysEnabledFlag ),
-      // DA: 'Getting Started' rather than 'Quick Help'.
-      Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) ),
-      // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-      Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) )
-#else
-      Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
-         AlwaysEnabledFlag ),
-      Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
-         AlwaysEnabledFlag )
-#endif
-    ),
-
-#ifdef __WXMAC__
-    Items
-#else
-    Section
-#endif
-    ( "",
-      Menu( wxT("Diagnostics"), XO("&Diagnostics"),
-         Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
-            FN(OnAudioDeviceInfo),
-            AudioIONotBusyFlag() ),
-   #ifdef EXPERIMENTAL_MIDI_OUT
-         Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
-            FN(OnMidiDeviceInfo),
-            AudioIONotBusyFlag() ),
-   #endif
-         Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
+      Section( "",
+         // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
+   #ifdef EXPERIMENTAL_DA
+         // DA: Has QuickFix menu item.
+         Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
             AlwaysEnabledFlag ),
-   #if defined(EXPERIMENTAL_CRASH_REPORT)
-         Command( wxT("CrashReport"), XXO("&Generate Support Data..."),
-            FN(OnCrashReport), AlwaysEnabledFlag ),
-   #endif
-         Command( wxT("CheckDeps"), XXO("Chec&k Dependencies..."),
-            FN(OnCheckDependencies),
-            AudioIONotBusyFlag() )
-
-#ifdef IS_ALPHA
-         ,
-         // Menu explorer.  Perhaps this should become a macro command
-         Command( wxT("MenuTree"), XXO("Menu Tree..."),
-            FN(OnMenuTree),
+         // DA: 'Getting Started' rather than 'Quick Help'.
+         Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) ),
+         // DA: Emphasise it is the Audacity Manual (No separate DA manual).
+         Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) )
+   #else
+         Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
+            AlwaysEnabledFlag ),
+         Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
             AlwaysEnabledFlag )
-#endif
-      )
-#ifndef __WXMAC__
-    ),
+   #endif
+      ),
 
-    Section( "",
+   #ifdef __WXMAC__
+      Items
+   #else
+      Section
+   #endif
+      ( "",
+         Menu( wxT("Diagnostics"), XO("&Diagnostics"),
+            Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
+               FN(OnAudioDeviceInfo),
+               AudioIONotBusyFlag() ),
+      #ifdef EXPERIMENTAL_MIDI_OUT
+            Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
+               FN(OnMidiDeviceInfo),
+               AudioIONotBusyFlag() ),
+      #endif
+            Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
+               AlwaysEnabledFlag ),
+      #if defined(EXPERIMENTAL_CRASH_REPORT)
+            Command( wxT("CrashReport"), XXO("&Generate Support Data..."),
+               FN(OnCrashReport), AlwaysEnabledFlag ),
+      #endif
+            Command( wxT("CheckDeps"), XXO("Chec&k Dependencies..."),
+               FN(OnCheckDependencies),
+               AudioIONotBusyFlag() )
+
+   #ifdef IS_ALPHA
+            ,
+            // Menu explorer.  Perhaps this should become a macro command
+            Command( wxT("MenuTree"), XXO("Menu Tree..."),
+               FN(OnMenuTree),
+               AlwaysEnabledFlag )
+   #endif
+         )
+   #ifndef __WXMAC__
+      ),
+
+      Section( "",
 #else
-    ,
+      ,
 #endif
 
-      // DA: Does not fully support update checking.
-#ifndef EXPERIMENTAL_DA
-      Command( wxT("Updates"), XXO("&Check for Updates..."),
-         FN(OnCheckForUpdates),
-         AlwaysEnabledFlag ),
-#endif
-      Command( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
-         AlwaysEnabledFlag )
-    )
+         // DA: Does not fully support update checking.
+   #ifndef EXPERIMENTAL_DA
+         Command( wxT("Updates"), XXO("&Check for Updates..."),
+            FN(OnCheckForUpdates),
+            AlwaysEnabledFlag ),
+   #endif
+         Command( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
+            AlwaysEnabledFlag )
+      )
    ) ) };
    return menu;
 }
