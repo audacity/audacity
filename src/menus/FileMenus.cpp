@@ -560,147 +560,147 @@ MenuTable::BaseItemSharedPtr FileMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("File"), XO("&File"),
-      /*i18n-hint: "New" is an action (verb) to create a NEW project*/
-      Command( wxT("New"), XXO("&New"), FN(OnNew),
-         AudioIONotBusyFlag(), wxT("Ctrl+N") ),
+      Section( "",
+         /*i18n-hint: "New" is an action (verb) to create a NEW project*/
+         Command( wxT("New"), XXO("&New"), FN(OnNew),
+            AudioIONotBusyFlag(), wxT("Ctrl+N") ),
 
-      /*i18n-hint: (verb)*/
-      Command( wxT("Open"), XXO("&Open..."), FN(OnOpen),
-         AudioIONotBusyFlag(), wxT("Ctrl+O") ),
+         /*i18n-hint: (verb)*/
+         Command( wxT("Open"), XXO("&Open..."), FN(OnOpen),
+            AudioIONotBusyFlag(), wxT("Ctrl+O") ),
 
-#ifdef EXPERIMENTAL_RESET
-      // Empty the current project and forget its name and path.  DANGEROUS
-      // It's just for developers.
-      // Do not translate this menu item (no XXO).  
-      // It MUST not be shown to regular users.
-      Command( wxT("Reset"), XXO("&Dangerous Reset..."), FN(OnProjectReset),
-         AudioIONotBusyFlag() ),
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-
-      Menu( wxT("Recent"),
-#ifdef __WXMAC__
-         /* i18n-hint: This is the name of the menu item on Mac OS X only */
-         XO("Open Recent")
-#else
-         /* i18n-hint: This is the name of the menu item on Windows and Linux */
-         XO("Recent &Files")
-#endif
-         ,
-         Special( wxT("PopulateRecentFilesStep"),
-         [](AudacityProject &, wxMenu &theMenu){
-            // Recent Files and Recent Projects menus
-            auto &history = FileHistory::Global();
-            history.UseMenu( &theMenu );
-            history.AddFilesToMenu( &theMenu );
-
-            wxWeakRef<wxMenu> recentFilesMenu{ &theMenu };
-            wxTheApp->CallAfter( [=] {
-               // Bug 143 workaround.
-               // The bug is in wxWidgets.  For a menu that has scrollers,
-               // the scrollers have an ID of 0 (not wxID_NONE which is -3).
-               // Therefore wxWidgets attempts to find a help string. See
-               // wxFrameBase::ShowMenuHelp(int menuId)
-               // It finds a bogus automatic help string of "Recent &Files"
-               // from that submenu.
-               // So we set the help string for command with Id 0 to empty.
-               if ( recentFilesMenu )
-                  recentFilesMenu->GetParent()->SetHelpString( 0, "" );
-            } );
-         } )
-      ),
-
-/////////////////////////////////////////////////////////////////////////////
-
-      Command( wxT("Close"), XXO("&Close"), FN(OnClose),
-         AudioIONotBusyFlag(), wxT("Ctrl+W") ),
-
-      Separator(),
-
-      Menu( wxT("Save"), XO("&Save Project"),
-         Command( wxT("Save"), XXO("&Save Project"), FN(OnSave),
-            AudioIONotBusyFlag() | UnsavedChangesFlag(), wxT("Ctrl+S") ),
-         Command( wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs),
+   #ifdef EXPERIMENTAL_RESET
+         // Empty the current project and forget its name and path.  DANGEROUS
+         // It's just for developers.
+         // Do not translate this menu item (no XXO).
+         // It MUST not be shown to regular users.
+         Command( wxT("Reset"), XXO("&Dangerous Reset..."), FN(OnProjectReset),
             AudioIONotBusyFlag() ),
-         // TODO: The next two items should be disabled if project is empty
-         Command( wxT("SaveCopy"), XXO("Save Lossless Copy of Project..."),
-            FN(OnSaveCopy), AudioIONotBusyFlag() )
-#ifdef USE_LIBVORBIS
-         ,
-         Command( wxT("SaveCompressed"),
-            XXO("&Save Compressed Copy of Project..."),
-            FN(OnSaveCompressed), AudioIONotBusyFlag() )
-#endif
+   #endif
+
+   /////////////////////////////////////////////////////////////////////////////
+
+         Menu( wxT("Recent"),
+   #ifdef __WXMAC__
+            /* i18n-hint: This is the name of the menu item on Mac OS X only */
+            XO("Open Recent")
+   #else
+            /* i18n-hint: This is the name of the menu item on Windows and Linux */
+            XO("Recent &Files")
+   #endif
+            ,
+            Special( wxT("PopulateRecentFilesStep"),
+            [](AudacityProject &, wxMenu &theMenu){
+               // Recent Files and Recent Projects menus
+               auto &history = FileHistory::Global();
+               history.UseMenu( &theMenu );
+               history.AddFilesToMenu( &theMenu );
+
+               wxWeakRef<wxMenu> recentFilesMenu{ &theMenu };
+               wxTheApp->CallAfter( [=] {
+                  // Bug 143 workaround.
+                  // The bug is in wxWidgets.  For a menu that has scrollers,
+                  // the scrollers have an ID of 0 (not wxID_NONE which is -3).
+                  // Therefore wxWidgets attempts to find a help string. See
+                  // wxFrameBase::ShowMenuHelp(int menuId)
+                  // It finds a bogus automatic help string of "Recent &Files"
+                  // from that submenu.
+                  // So we set the help string for command with Id 0 to empty.
+                  if ( recentFilesMenu )
+                     recentFilesMenu->GetParent()->SetHelpString( 0, "" );
+               } );
+            } )
+         ),
+
+   /////////////////////////////////////////////////////////////////////////////
+
+         Command( wxT("Close"), XXO("&Close"), FN(OnClose),
+            AudioIONotBusyFlag(), wxT("Ctrl+W") )
       ),
 
-      Separator(),
-
-      Menu( wxT("Export"), XO("&Export"),
-         // Enable Export audio commands only when there are audio tracks.
-         Command( wxT("ExportMp3"), XXO("Export as MP&3"), FN(OnExportMp3),
-            AudioIONotBusyFlag() | WaveTracksExistFlag() ),
-
-         Command( wxT("ExportWav"), XXO("Export as &WAV"), FN(OnExportWav),
-            AudioIONotBusyFlag() | WaveTracksExistFlag() ),
-
-         Command( wxT("ExportOgg"), XXO("Export as &OGG"), FN(OnExportOgg),
-            AudioIONotBusyFlag() | WaveTracksExistFlag() ),
-
-         Command( wxT("Export"), XXO("&Export Audio..."), FN(OnExportAudio),
-            AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+E") ),
-
-         // Enable Export Selection commands only when there's a selection.
-         Command( wxT("ExportSel"), XXO("Expo&rt Selected Audio..."),
-            FN(OnExportSelection),
-            AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            Options{}.UseStrictFlags() ),
-
-         Command( wxT("ExportLabels"), XXO("Export &Labels..."),
-            FN(OnExportLabels),
-            AudioIONotBusyFlag() | LabelTracksExistFlag() ),
-         // Enable Export audio commands only when there are audio tracks.
-         Command( wxT("ExportMultiple"), XXO("Export &Multiple..."),
-            FN(OnExportMultiple),
-            AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+L") )
-#if defined(USE_MIDI)
-         ,
-         Command( wxT("ExportMIDI"), XXO("Export MI&DI..."), FN(OnExportMIDI),
-            AudioIONotBusyFlag() | NoteTracksExistFlag() )
-#endif
+      Section( "",
+         Menu( wxT("Save"), XO("&Save Project"),
+            Command( wxT("Save"), XXO("&Save Project"), FN(OnSave),
+               AudioIONotBusyFlag() | UnsavedChangesFlag(), wxT("Ctrl+S") ),
+            Command( wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs),
+               AudioIONotBusyFlag() ),
+            // TODO: The next two items should be disabled if project is empty
+            Command( wxT("SaveCopy"), XXO("Save Lossless Copy of Project..."),
+               FN(OnSaveCopy), AudioIONotBusyFlag() )
+   #ifdef USE_LIBVORBIS
+            ,
+            Command( wxT("SaveCompressed"),
+               XXO("&Save Compressed Copy of Project..."),
+               FN(OnSaveCompressed), AudioIONotBusyFlag() )
+   #endif
+         )
       ),
 
-      Menu( wxT("Import"), XO("&Import"),
-         Command( wxT("ImportAudio"), XXO("&Audio..."), FN(OnImport),
-            AudioIONotBusyFlag(), wxT("Ctrl+Shift+I") ),
-         Command( wxT("ImportLabels"), XXO("&Labels..."), FN(OnImportLabels),
-            AudioIONotBusyFlag() ),
-   #ifdef USE_MIDI
-         Command( wxT("ImportMIDI"), XXO("&MIDI..."), FN(OnImportMIDI),
-            AudioIONotBusyFlag() ),
-   #endif // USE_MIDI
-         Command( wxT("ImportRaw"), XXO("&Raw Data..."), FN(OnImportRaw),
-            AudioIONotBusyFlag() )
+      Section( "",
+         Menu( wxT("Export"), XO("&Export"),
+            // Enable Export audio commands only when there are audio tracks.
+            Command( wxT("ExportMp3"), XXO("Export as MP&3"), FN(OnExportMp3),
+               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
+
+            Command( wxT("ExportWav"), XXO("Export as &WAV"), FN(OnExportWav),
+               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
+
+            Command( wxT("ExportOgg"), XXO("Export as &OGG"), FN(OnExportOgg),
+               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
+
+            Command( wxT("Export"), XXO("&Export Audio..."), FN(OnExportAudio),
+               AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+E") ),
+
+            // Enable Export Selection commands only when there's a selection.
+            Command( wxT("ExportSel"), XXO("Expo&rt Selected Audio..."),
+               FN(OnExportSelection),
+               AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+               Options{}.UseStrictFlags() ),
+
+            Command( wxT("ExportLabels"), XXO("Export &Labels..."),
+               FN(OnExportLabels),
+               AudioIONotBusyFlag() | LabelTracksExistFlag() ),
+            // Enable Export audio commands only when there are audio tracks.
+            Command( wxT("ExportMultiple"), XXO("Export &Multiple..."),
+               FN(OnExportMultiple),
+               AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+L") )
+   #if defined(USE_MIDI)
+            ,
+            Command( wxT("ExportMIDI"), XXO("Export MI&DI..."), FN(OnExportMIDI),
+               AudioIONotBusyFlag() | NoteTracksExistFlag() )
+   #endif
+         ),
+
+         Menu( wxT("Import"), XO("&Import"),
+            Command( wxT("ImportAudio"), XXO("&Audio..."), FN(OnImport),
+               AudioIONotBusyFlag(), wxT("Ctrl+Shift+I") ),
+            Command( wxT("ImportLabels"), XXO("&Labels..."), FN(OnImportLabels),
+               AudioIONotBusyFlag() ),
+      #ifdef USE_MIDI
+            Command( wxT("ImportMIDI"), XXO("&MIDI..."), FN(OnImportMIDI),
+               AudioIONotBusyFlag() ),
+      #endif // USE_MIDI
+            Command( wxT("ImportRaw"), XXO("&Raw Data..."), FN(OnImportRaw),
+               AudioIONotBusyFlag() )
+         )
       ),
 
-      Separator(),
+      Section( "",
+         Command( wxT("PageSetup"), XXO("Pa&ge Setup..."), FN(OnPageSetup),
+            AudioIONotBusyFlag() | TracksExistFlag() ),
+         /* i18n-hint: (verb) It's item on a menu. */
+         Command( wxT("Print"), XXO("&Print..."), FN(OnPrint),
+            AudioIONotBusyFlag() | TracksExistFlag() )
+      ),
 
-/////////////////////////////////////////////////////////////////////////////
-
-      Command( wxT("PageSetup"), XXO("Pa&ge Setup..."), FN(OnPageSetup),
-         AudioIONotBusyFlag() | TracksExistFlag() ),
-      /* i18n-hint: (verb) It's item on a menu. */
-      Command( wxT("Print"), XXO("&Print..."), FN(OnPrint),
-         AudioIONotBusyFlag() | TracksExistFlag() ),
-
-      Separator(),
-
-      // On the Mac, the Exit item doesn't actually go here...wxMac will
-      // pull it out
-      // and put it in the Audacity menu for us based on its ID.
-      /* i18n-hint: (verb) It's item on a menu. */
-      Command( wxT("Exit"), XXO("E&xit"), FN(OnExit),
-         AlwaysEnabledFlag, wxT("Ctrl+Q") )
+      Section( "",
+         // On the Mac, the Exit item doesn't actually go here...wxMac will
+         // pull it out
+         // and put it in the Audacity menu for us based on its ID.
+         /* i18n-hint: (verb) It's item on a menu. */
+         Command( wxT("Exit"), XXO("E&xit"), FN(OnExit),
+            AlwaysEnabledFlag, wxT("Ctrl+Q") )
+      )
    ) ) };
    return menu;
 }

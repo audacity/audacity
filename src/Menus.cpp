@@ -138,8 +138,6 @@ ConditionalGroupItem::ConditionalGroupItem(
 }
 ConditionalGroupItem::~ConditionalGroupItem() {}
 
-SeparatorItem::~SeparatorItem() {}
-
 CommandItem::CommandItem(const CommandID &name_,
          const TranslatableString &label_in_,
          CommandFunctorPointer callback_,
@@ -371,8 +369,11 @@ struct MenuItemVisitor : MenuVisitor
          flags.push_back(flag);
       }
       else
-      if (const auto pGroup = dynamic_cast<GroupItem*>( pItem )) {
-         wxASSERT( pGroup->Transparent() );
+      if ( pItem->Transparent() ) {
+      }
+      else
+      if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
+         manager.AddSeparator();
       }
       else
          wxASSERT( false );
@@ -394,8 +395,11 @@ struct MenuItemVisitor : MenuVisitor
          flags.pop_back();
       }
       else
-      if (const auto pGroup = dynamic_cast<GroupItem*>( pItem )) {
-         wxASSERT( pGroup->Transparent() );
+      if ( pItem->Transparent() ) {
+      }
+      else
+      if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
+         manager.AddSeparator();
       }
       else
          wxASSERT( false );
@@ -419,10 +423,6 @@ struct MenuItemVisitor : MenuVisitor
             pCommandList->items.data(), pCommandList->items.size(),
             pCommandList->finder, pCommandList->callback,
             pCommandList->flags, pCommandList->isEffect);
-      }
-      else
-      if (dynamic_cast<SeparatorItem*>( pItem )) {
-         manager.AddSeparator();
       }
       else
       if (const auto pSpecial =
