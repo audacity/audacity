@@ -588,7 +588,8 @@ namespace Registry {
 
    // Concrete subclass of GroupItem that adds nothing else
    // TransparentGroupItem with an empty name is transparent to item path calculations
-   // and propagates its ordering hint if subordinates don't specify hints
+   // and propagates its ordering hint if subordinates don't specify hints
+   // and it does specify one
    template< typename VisitorType = ComputedItem::DefaultVisitor >
    struct TransparentGroupItem final : ConcreteGroupItem< true, VisitorType >
    {
@@ -612,6 +613,9 @@ namespace Registry {
    // registry collects items, before consulting preferences and ordering
    // hints, and applying the merge procedure to them.
    // This function puts one more item into the registry.
+   // The sequence of calls to RegisterItem has no significance for
+   // determining the visitation ordering.  When sequence is important, register
+   // a GroupItem.
    void RegisterItem( GroupItem &registry, const Placement &placement,
       BaseItemPtr pItem );
    
