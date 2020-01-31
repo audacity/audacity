@@ -823,13 +823,6 @@ using EffectFamilySymbol = ComponentInterfaceSymbol;
       #endif
    #endif //_MSC_VER
 
-   #ifdef __GNUC__
-      #ifndef __CONFIG_UNIX_INCLUDED
-         #define __CONFIG_UNIX_INCLUDED
-         #include "configunix.h"
-      #endif
-   #endif
-
    /* The GCC-elf implementation */
    #ifdef HAVE_VISIBILITY // this is provided by the configure script, is only
    // enabled for suitable GCC versions

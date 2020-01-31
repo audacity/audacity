@@ -8,6 +8,8 @@
 
 **********************************************************************/
 
+#include "../../Audacity.h"
+
 #include "LoadNyquist.h"
 
 #include <wx/log.h>
