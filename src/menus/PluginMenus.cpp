@@ -758,13 +758,13 @@ MenuTable::BaseItemSharedPtr GenerateMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Generate"), XO("&Generate"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      Section( "",
+      Section( "Manage",
          Command( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageGenerators), AudioIONotBusyFlag() )
       ),
 #endif
 
-      Section( "",
+      Section( "Generators",
          // Delayed evaluation:
          [](AudacityProject &)
          { return Items( wxEmptyString, PopulateEffectsMenu(
@@ -795,13 +795,13 @@ MenuTable::BaseItemSharedPtr EffectMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Effect"), XO("Effe&ct"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      Section( "",
+      Section( "Manage",
          Command( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageEffects), AudioIONotBusyFlag() )
       ),
 #endif
 
-      Section( "",
+      Section( "RepeatLast",
          // Delayed evaluation:
          [](AudacityProject &project)
          {
@@ -821,7 +821,7 @@ MenuTable::BaseItemSharedPtr EffectMenu()
          }
       ),
 
-      Section( "",
+      Section( "Effects",
          // Delayed evaluation:
          [](AudacityProject &)
          { return Items( wxEmptyString, PopulateEffectsMenu(
@@ -845,13 +845,13 @@ MenuTable::BaseItemSharedPtr AnalyzeMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Analyze"), XO("&Analyze"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      Section( "",
+      Section( "Manage",
          Command( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageAnalyzers), AudioIONotBusyFlag() )
       ),
 #endif
 
-      Section( "",
+      Section( "Analyzers",
          Command( wxT("ContrastAnalyser"), XXO("Contrast..."), FN(OnContrast),
             AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag(),
             wxT("Ctrl+Shift+T") ),
@@ -879,7 +879,7 @@ MenuTable::BaseItemSharedPtr ToolsMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XO("T&ools"),
-      Section( "",
+      Section( "Manage",
    #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
          Command( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageTools), AudioIONotBusyFlag() ),
@@ -907,7 +907,7 @@ MenuTable::BaseItemSharedPtr ToolsMenu()
          )
       ),
 
-      Section( "",
+      Section( "Other",
          Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
             FN(OnScreenshot), AudioIONotBusyFlag() ),
 
@@ -921,7 +921,7 @@ MenuTable::BaseItemSharedPtr ToolsMenu()
    //#endif
       ),
 
-      Section( "",
+      Section( "Tools",
          // Delayed evaluation:
          [](AudacityProject&)
          { return Items( wxEmptyString, PopulateEffectsMenu(

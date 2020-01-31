@@ -163,7 +163,7 @@ MenuTable::BaseItemSharedPtr ExtraMenu()
    // Table of menu factories.
    // TODO:  devise a registration system instead.
    static BaseItemSharedPtr extraItems{ Items( wxEmptyString,
-      Section( "",
+      Section( "Part1",
            ExtraTransportMenu()
          , ExtraToolsMenu()
          , ExtraMixerMenu()
@@ -174,7 +174,7 @@ MenuTable::BaseItemSharedPtr ExtraMenu()
          , ExtraSelectionMenu()
       ),
 
-      Section( "",
+      Section( "Part2",
            ExtraGlobalCommands()
          , ExtraFocusMenu()
          , ExtraCursorMenu()

@@ -1287,7 +1287,7 @@ MenuTable::BaseItemSharedPtr TracksMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Tracks"), XO("&Tracks"),
-      Section( "",
+      Section( "Add",
          Menu( wxT("Add"), XO("Add &New"),
             Command( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
                AudioIONotBusyFlag(), wxT("Ctrl+Shift+N") ),

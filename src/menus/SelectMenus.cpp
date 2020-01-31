@@ -1039,7 +1039,7 @@ MenuTable::BaseItemSharedPtr SelectMenu()
    ( FinderScope{ findCommandHandler },
    /* i18n-hint: (verb) It's an item on a menu. */
    Menu( wxT("Select"), XO("&Select"),
-      Section( "",
+      Section( "Basic",
          Command( wxT("SelectAll"), XXO("&All"), FN(OnSelectAll),
             TracksExistFlag(),
             Options{ wxT("Ctrl+A"), XO("Select All") } ),

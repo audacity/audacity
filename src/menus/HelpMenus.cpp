@@ -530,7 +530,7 @@ MenuTable::BaseItemSharedPtr HelpMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Help"), XO("&Help"),
-      Section( "",
+      Section( "Basic",
          // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
    #ifdef EXPERIMENTAL_DA
          // DA: Has QuickFix menu item.
@@ -553,7 +553,7 @@ MenuTable::BaseItemSharedPtr HelpMenu()
    #else
       Section
    #endif
-      ( "",
+      ( "Other",
          Menu( wxT("Diagnostics"), XO("&Diagnostics"),
             Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
                FN(OnAudioDeviceInfo),

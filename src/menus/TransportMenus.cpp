@@ -986,7 +986,7 @@ MenuTable::BaseItemSharedPtr TransportMenu()
    /* i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */
    Menu( wxT("Transport"), XO("Tra&nsport"),
-      Section( "",
+      Section( "Basic",
          Menu( wxT("Play"), XO("Pl&aying"),
             /* i18n-hint: (verb) Start or Stop audio playback*/
             Command( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
@@ -1044,16 +1044,16 @@ MenuTable::BaseItemSharedPtr TransportMenu()
          CursorMenu()
       ),
 
-      Section( "",
-         Menu( wxT("PlayRegion"), XO("Pla&y Region"),
-            Command( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
-               PlayRegionNotLockedFlag() ),
-            Command( wxT("UnlockPlayRegion"), XXO("&Unlock"),
-               FN(OnUnlockPlayRegion), PlayRegionLockedFlag() )
-         )
-      ),
+      Section( "Other",
+         Section( "",
+            Menu( wxT("PlayRegion"), XO("Pla&y Region"),
+               Command( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
+                  PlayRegionNotLockedFlag() ),
+               Command( wxT("UnlockPlayRegion"), XXO("&Unlock"),
+                  FN(OnUnlockPlayRegion), PlayRegionLockedFlag() )
+            )
+         ),
 
-      Section( "",
          Command( wxT("RescanDevices"), XXO("R&escan Audio Devices"),
             FN(OnRescanDevices), AudioIONotBusyFlag() | CanStopAudioStreamFlag() ),
 

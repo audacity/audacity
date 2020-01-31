@@ -560,7 +560,7 @@ MenuTable::BaseItemSharedPtr FileMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("File"), XO("&File"),
-      Section( "",
+      Section( "Basic",
          /*i18n-hint: "New" is an action (verb) to create a NEW project*/
          Command( wxT("New"), XXO("&New"), FN(OnNew),
             AudioIONotBusyFlag(), wxT("Ctrl+N") ),
@@ -618,7 +618,7 @@ MenuTable::BaseItemSharedPtr FileMenu()
             AudioIONotBusyFlag(), wxT("Ctrl+W") )
       ),
 
-      Section( "",
+      Section( "Save",
          Menu( wxT("Save"), XO("&Save Project"),
             Command( wxT("Save"), XXO("&Save Project"), FN(OnSave),
                AudioIONotBusyFlag() | UnsavedChangesFlag(), wxT("Ctrl+S") ),
@@ -636,7 +636,7 @@ MenuTable::BaseItemSharedPtr FileMenu()
          )
       ),
 
-      Section( "",
+      Section( "Import-Export",
          Menu( wxT("Export"), XO("&Export"),
             // Enable Export audio commands only when there are audio tracks.
             Command( wxT("ExportMp3"), XXO("Export as MP&3"), FN(OnExportMp3),
@@ -685,7 +685,7 @@ MenuTable::BaseItemSharedPtr FileMenu()
          )
       ),
 
-      Section( "",
+      Section( "Print",
          Command( wxT("PageSetup"), XXO("Pa&ge Setup..."), FN(OnPageSetup),
             AudioIONotBusyFlag() | TracksExistFlag() ),
          /* i18n-hint: (verb) It's item on a menu. */
@@ -693,7 +693,7 @@ MenuTable::BaseItemSharedPtr FileMenu()
             AudioIONotBusyFlag() | TracksExistFlag() )
       ),
 
-      Section( "",
+      Section( "Exit",
          // On the Mac, the Exit item doesn't actually go here...wxMac will
          // pull it out
          // and put it in the Audacity menu for us based on its ID.

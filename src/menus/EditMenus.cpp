@@ -1055,7 +1055,7 @@ MenuTable::BaseItemSharedPtr EditMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XO("&Edit"),
-      Section( "",
+      Section( "UndoRedo",
          Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
             AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
 
@@ -1069,7 +1069,7 @@ MenuTable::BaseItemSharedPtr EditMenu()
          })
       ),
 
-      Section( "",
+      Section( "Basic",
          // Basic Edit commands
          /* i18n-hint: (verb)*/
          Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
@@ -1086,36 +1086,37 @@ MenuTable::BaseItemSharedPtr EditMenu()
             AudioIONotBusyFlag(), wxT("Ctrl+V") ),
          /* i18n-hint: (verb)*/
          Command( wxT("Duplicate"), XXO("Duplic&ate"), FN(OnDuplicate),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+D") )
-      ),
+            NotBusyTimeAndTracksFlags, wxT("Ctrl+D") ),
 
-      Section( "",
-         Menu( wxT("RemoveSpecial"), XO("R&emove Special"),
-            Section( "",
-               /* i18n-hint: (verb) Do a special kind of cut*/
-               Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
-                  NotBusyTimeAndTracksFlags,
-                  Options{ wxT("Ctrl+Alt+X") }.UseStrictFlags() ),
-               /* i18n-hint: (verb) Do a special kind of DELETE*/
-               Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
-                  NotBusyTimeAndTracksFlags,
-                  Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() )
-            ),
+         Section( "",
+            Menu( wxT("RemoveSpecial"), XO("R&emove Special"),
+               Section( "",
+                  /* i18n-hint: (verb) Do a special kind of cut*/
+                  Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
+                     NotBusyTimeAndTracksFlags,
+                     Options{ wxT("Ctrl+Alt+X") }.UseStrictFlags() ),
+                  /* i18n-hint: (verb) Do a special kind of DELETE*/
+                  Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
+                     NotBusyTimeAndTracksFlags,
+                     Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() )
+               ),
 
-            Section( "",
-               /* i18n-hint: (verb)*/
-               Command( wxT("Silence"), XXO("Silence Audi&o"), FN(OnSilence),
-                  AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-                  wxT("Ctrl+L") ),
-               /* i18n-hint: (verb)*/
-               Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
-                  AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-                  Options{ wxT("Ctrl+T") }.UseStrictFlags() )
+               Section( "",
+                  /* i18n-hint: (verb)*/
+                  Command( wxT("Silence"), XXO("Silence Audi&o"), FN(OnSilence),
+                     AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+                     wxT("Ctrl+L") ),
+                  /* i18n-hint: (verb)*/
+                  Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
+                     AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+                     Options{ wxT("Ctrl+T") }.UseStrictFlags() )
+               )
             )
          )
       ),
+        
 
-      Section( "",
+      Section( "Other",
       //////////////////////////////////////////////////////////////////////////
 
          Menu( wxT("Clip"), XO("Clip B&oundaries"),
@@ -1150,7 +1151,7 @@ MenuTable::BaseItemSharedPtr EditMenu()
 #ifndef __WXMAC__
       ),
 
-      Section( "",
+      Section( "Preferences",
 #else
       ,
 #endif

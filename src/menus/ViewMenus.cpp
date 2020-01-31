@@ -445,7 +445,7 @@ MenuTable::BaseItemSharedPtr ViewMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("View"), XO("&View"),
-      Section( "",
+      Section( "Basic",
          Menu( wxT("Zoom"), XO("&Zoom"),
             Section( "",
                Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
@@ -487,7 +487,7 @@ MenuTable::BaseItemSharedPtr ViewMenu()
          )
       ),
 
-      Section( "",
+      Section( "Windows",
          // History window should be available either for UndoAvailableFlag
          // or RedoAvailableFlag,
          // but we can't make the AddItem flags and mask have both,
@@ -541,7 +541,7 @@ MenuTable::BaseItemSharedPtr ViewMenu()
          ToolbarsMenu()
       ),
 
-      Section( "",
+      Section( "Other",
          Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
             FN(OnShowExtraMenus), AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
