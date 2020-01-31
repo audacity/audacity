@@ -776,7 +776,8 @@ KeyView::RefreshBindings(const CommandIDs & names,
       }
       else
       {
-         node.label = labels[i].Translation();
+         auto label = labels[i];
+         node.label = label.Strip().Translation();
       }
 
       // Fill in remaining info
