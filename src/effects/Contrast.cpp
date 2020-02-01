@@ -12,11 +12,12 @@
 #include "../Audacity.h"
 #include "Contrast.h"
 
+#include "../CommonCommandFlags.h"
 #include "../WaveTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectSettings.h"
-#include "../ProjectWindowBase.h"
+#include "../ProjectWindow.h"
 #include "../ShuttleGui.h"
 #include "../FileNames.h"
 #include "../ViewInfo.h"
@@ -647,4 +648,57 @@ void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
    mBackgroundRMSText->ChangeValue(wxT(""));
    mPassFailText->ChangeValue(wxT(""));
    mDiffText->ChangeValue(wxT(""));
+}
+
+// Remaining code hooks this add-on into the application
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "../commands/ScreenshotCommand.h"
+
+namespace {
+
+// Contrast window attached to each project is built on demand by:
+AudacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      auto &window = ProjectWindow::Get( parent );
+      return safenew ContrastDialog(
+         &window, -1, XO("Contrast Analysis (WCAG 2 compliance)"),
+         wxPoint{ 150, 150 }
+      );
+   }
+};
+
+// Define our extra menu item that invokes that factory
+struct Handler : CommandHandlerObject {
+   void OnContrast(const CommandContext &context)
+   {
+      auto &project = context.project;
+      auto contrastDialog =
+         &project.AttachedWindows::Get< ContrastDialog >( sContrastDialogKey );
+
+      contrastDialog->CentreOnParent();
+      if( ScreenshotCommand::MayCapture( contrastDialog ) )
+         return;
+      contrastDialog->Show();
+   }
+};
+
+CommandHandlerObject &findCommandHandler(AudacityProject &) {
+   // Handler is not stateful.  Doesn't need a factory registered with
+   // AudacityProject.
+   static Handler instance;
+   return instance;
+}
+
+// Register that menu item
+
+using namespace MenuTable;
+AttachedItem sAttachment{ wxT("Analyze/Analyzers/Windows"),
+   ( FinderScope{ findCommandHandler },
+      Command( wxT("ContrastAnalyser"), XXO("Contrast..."),
+         &Handler::OnContrast,
+         AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag(),
+         wxT("Ctrl+Shift+T") ) )
+};
+
 }

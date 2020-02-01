@@ -1278,10 +1278,11 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 #define FN(X) (& TrackActions::Handler :: X)
 
 // Under /MenuBar
-MenuTable::BaseItemSharedPtr TracksMenu()
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr TracksMenu()
 {
    // Tracks Menu (formerly Project Menu)
-   using namespace MenuTable;
    using Options = CommandManager::Options;
    
    static BaseItemSharedPtr menu{
@@ -1437,10 +1438,13 @@ MenuTable::BaseItemSharedPtr TracksMenu()
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraTrackMenu()
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( TracksMenu() )
+};
+
+BaseItemSharedPtr ExtraTrackMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Track"), XO("&Track"),
@@ -1489,6 +1493,13 @@ MenuTable::BaseItemSharedPtr ExtraTrackMenu()
          AudioIONotBusyFlag() | TrackPanelHasFocus() | TracksExistFlag() )
    ) ) };
    return menu;
+}
+
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part2"),
+   Shared( ExtraTrackMenu() )
+};
+
 }
 
 #undef FN
