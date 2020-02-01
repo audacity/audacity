@@ -890,7 +890,7 @@ KeyConfigPrefsFactory( const CommandID &name )
    };
 }
 namespace{
-PrefsPanel::Registration sAttachment{ 200,
+PrefsPanel::Registration sAttachment{ "KeyConfig",
    KeyConfigPrefsFactory()
 };
 }

@@ -97,12 +97,16 @@ BatchPrefs::~BatchPrefs()
 
 #if 0
 namespace{
-PrefsPanel::Registration sAttachment{ 190,
+PrefsPanel::Registration sAttachment{ "Batch",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew BatchPrefs(parent, winid);
-   }
+   },
+   false,
+   // Register with an explicit ordering hint because this one is
+   // only conditionally compiled
+   { "", { Registry::OrderingHint::Before, "KeyConfig" } }
 };
 }
 #endif

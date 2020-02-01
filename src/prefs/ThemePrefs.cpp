@@ -233,12 +233,16 @@ bool ThemePrefs::Commit()
 
 #ifdef EXPERIMENTAL_THEME_PREFS
 namespace{
-PrefsPanel::Registration sAttachment{ 180,
+PrefsPanel::Registration sAttachment{ "Theme",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew ThemePrefs(parent, winid);
-   }
+   },
+   false,
+   // Register with an explicit ordering hint because this one is
+   // only conditionally compiled
+   { "", { Registry::OrderingHint::After, "Effects" } }
 };
 }
 #endif

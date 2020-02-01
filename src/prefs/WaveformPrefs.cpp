@@ -265,9 +265,12 @@ WaveformPrefsFactory(WaveTrack *wt)
 }
 #if 0
 namespace{
-PrefsPanel::Registration sAttachment{ 80,
+PrefsPanel::Registration sAttachment{ "Waveform",
    WaveformPrefsFactory( nullptr ),
-   false
+   false,
+   // Register with an explicit ordering hint because this one is
+   // only conditionally compiled; and place it at a lower tree level
+   { "Tracks", { Registry::OrderingHint::Before, "Spectrum" } }
 };
 }
 #endif

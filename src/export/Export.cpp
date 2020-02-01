@@ -282,6 +282,24 @@ BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
 END_EVENT_TABLE()
 
 namespace {
+const auto PathStart = wxT("Exporters");
+
+static Registry::GroupItem &sRegistry()
+{
+   static Registry::TransparentGroupItem<> registry{ PathStart };
+   return registry;
+}
+
+struct ExporterItem final : Registry::SingleItem {
+   ExporterItem(
+      const Identifier &id, const Exporter::ExportPluginFactory &factory )
+      : SingleItem{ id }
+      , mFactory{ factory }
+   {}
+
+   Exporter::ExportPluginFactory mFactory;
+};
+
    using ExportPluginFactories = std::vector< Exporter::ExportPluginFactory >;
    ExportPluginFactories &sFactories()
    {
@@ -291,15 +309,24 @@ namespace {
 }
 
 Exporter::RegisteredExportPlugin::RegisteredExportPlugin(
-   const ExportPluginFactory &factory )
+   const Identifier &id,
+   const ExportPluginFactory &factory,
+   const Registry::Placement &placement )
 {
    if ( factory )
-      sFactories().emplace_back( factory );
+      Registry::RegisterItem( sRegistry(), placement,
+         std::make_unique< ExporterItem >( id, factory ) );
 }
 
 Exporter::Exporter( AudacityProject &project )
 : mProject{ &project }
 {
+   using namespace Registry;
+   static OrderingPreferenceInitializer init{
+      PathStart,
+      { {wxT(""), wxT("PCM,MP3,OGG,FLAC,MP2,CommandLine,FFmpeg") } },
+   };
+
    mMixerSpec = NULL;
    mBook = NULL;
 
@@ -307,15 +334,25 @@ Exporter::Exporter( AudacityProject &project )
    for ( const auto &factory : sFactories() )
       mPlugins.emplace_back( factory() );
 
-   // The factories were pushed on the array at static initialization time in an
-   // unspecified sequence.  Sort according to the sequence numbers the plugins
-   // report to make the order determinate.
-   std::sort( mPlugins.begin(), mPlugins.end(),
-      []( const ExportPluginArray::value_type &a,
-          const ExportPluginArray::value_type &b ){
-         return a->SequenceNumber() < b->SequenceNumber();
+   struct MyVisitor final : Visitor {
+      MyVisitor()
+      {
+         // visit the registry to collect the plug-ins properly
+         // sorted
+         TransparentGroupItem<> top{ PathStart };
+         Registry::Visit( *this, &top, &sRegistry() );
       }
-   );
+
+      void Visit( SingleItem &item, const Path &path ) override
+      {
+         mPlugins.emplace_back(
+            static_cast<ExporterItem&>( item ).mFactory() );
+      }
+
+      ExportPluginArray mPlugins;
+   } visitor;
+
+   mPlugins.swap( visitor.mPlugins );
 
    SetFileDialogTitle( XO("Export Audio") );
 }

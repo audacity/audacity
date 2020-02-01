@@ -223,7 +223,7 @@ bool MousePrefs::Commit()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 210,
+PrefsPanel::Registration sAttachment{ "Mouse",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew

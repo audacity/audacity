@@ -89,8 +89,6 @@ public:
    TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(
       const FilePath &Filename, AudacityProject*) override;
-
-   unsigned SequenceNumber() const override;
 };
 
 
@@ -192,12 +190,7 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(
    return std::make_unique<PCMImportFileHandle>(filename, std::move(file), info);
 }
 
-unsigned PCMImportPlugin::SequenceNumber() const
-{
-   return 10;
-}
-
-static Importer::RegisteredImportPlugin registered{
+static Importer::RegisteredImportPlugin registered{ "PCM",
    std::make_unique< PCMImportPlugin >()
 };
 

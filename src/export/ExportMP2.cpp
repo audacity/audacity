@@ -217,8 +217,6 @@ public:
                const Tags *metadata = NULL,
                int subformat = 0) override;
 
-   virtual unsigned SequenceNumber() const override { return 50; }
-
 private:
 
    int AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
@@ -498,8 +496,9 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-static Exporter::RegisteredExportPlugin
-sRegisteredPlugin{ []{ return std::make_unique< ExportMP2 >(); } };
+static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "MP2",
+   []{ return std::make_unique< ExportMP2 >(); }
+};
 
 #endif // #ifdef USE_LIBTWOLAME
 

@@ -20,6 +20,8 @@
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include "../FileNames.h" // for FileType
 
+#include "../commands/CommandManager.h" // for Registry::Placement
+
 class wxArrayString;
 class wxListBox;
 class AudacityProject;
@@ -80,7 +82,10 @@ public:
    // Objects of this type are statically constructed in files implementing
    // subclasses of ImportPlugin
    struct RegisteredImportPlugin{
-      RegisteredImportPlugin( std::unique_ptr<ImportPlugin> );
+      RegisteredImportPlugin(
+         const Identifier &id, // an internal string naming the plug-in
+         std::unique_ptr<ImportPlugin>,
+         const Registry::Placement &placement = { wxEmptyString, {} } );
    };
 
    // Objects of this type are statically constructed in files, to identify

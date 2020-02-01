@@ -137,8 +137,6 @@ class FLACImportPlugin final : public ImportPlugin
    TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(
       const FilePath &Filename, AudacityProject*)  override;
-
-   unsigned SequenceNumber() const override;
 };
 
 
@@ -334,12 +332,7 @@ std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(
    return std::move(handle);
 }
 
-unsigned FLACImportPlugin::SequenceNumber() const
-{
-   return 30;
-}
-
-static Importer::RegisteredImportPlugin registered{
+static Importer::RegisteredImportPlugin registered{ "FLAC",
    std::make_unique< FLACImportPlugin >()
 };
 

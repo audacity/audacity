@@ -84,11 +84,33 @@ ImportPluginList &Importer::sImportPluginList()
    return theList;
 }
 
+namespace {
+static const auto PathStart = wxT("Importers");
+
+static Registry::GroupItem &sRegistry()
+{
+   static Registry::TransparentGroupItem<> registry{ PathStart };
+   return registry;
+}
+
+struct ImporterItem final : Registry::SingleItem {
+   ImporterItem( const Identifier &id, std::unique_ptr<ImportPlugin> pPlugin )
+      : SingleItem{ id }
+      , mpPlugin{ std::move( pPlugin ) }
+   {}
+
+   std::unique_ptr<ImportPlugin> mpPlugin;
+};
+}
+
 Importer::RegisteredImportPlugin::RegisteredImportPlugin(
-   std::unique_ptr<ImportPlugin> pPlugin )
+   const Identifier &id,
+   std::unique_ptr<ImportPlugin> pPlugin,
+   const Registry::Placement &placement )
 {
    if ( pPlugin )
-      sImportPluginList().emplace_back( std::move( pPlugin ) );
+      Registry::RegisterItem( sRegistry(), placement,
+         std::make_unique< ImporterItem >( id, std::move( pPlugin ) ) );
 }
 
 UnusableImportPluginList &Importer::sUnusableImportPluginList()
@@ -110,16 +132,29 @@ bool Importer::Initialize()
    // order is significant.  If none match, they will all be tried
    // in the order defined here.
 
-   // They were pushed on the array at static initialization time in an
-   // unspecified sequence.  Sort according to the sequence numbers they
-   // report to make the order determinate.
-   auto &list = sImportPluginList();
-   std::sort( list.begin(), list.end(),
-      []( const ImportPluginList::value_type &a,
-          const ImportPluginList::value_type &b ){
-         return a->SequenceNumber() < b->SequenceNumber();
+   using namespace Registry;
+   static OrderingPreferenceInitializer init{
+      PathStart,
+      { {wxT(""), wxT("PCM,OGG,FLAC,MP3,LOF,FFmpeg") } }
+      // QT and GStreamer are only conditionally compiled and would get
+      // placed at the end if present
+   };
+   
+   static struct MyVisitor final : Visitor {
+      MyVisitor()
+      {
+         // Once only, visit the registry to collect the plug-ins properly
+         // sorted
+         TransparentGroupItem<> top{ PathStart };
+         Registry::Visit( *this, &top, &sRegistry() );
       }
-   );
+
+      void Visit( SingleItem &item, const Path &path ) override
+      {
+         sImportPluginList().push_back(
+            static_cast<ImporterItem&>( item ).mpPlugin.get() );
+      }
+   } visitor;
 
    // Ordering of the unusable plugin list is not important.
 
@@ -292,7 +327,7 @@ void Importer::ReadImportItems()
          {
             if (importPlugin->GetPluginStringID() == new_item->filters[i])
             {
-               new_item->filter_objects.push_back(importPlugin.get());
+               new_item->filter_objects.push_back(importPlugin);
                found = true;
                break;
             }
@@ -307,7 +342,7 @@ void Importer::ReadImportItems()
          bool found = false;
          for (size_t i = 0; i < new_item->filter_objects.size(); i++)
          {
-            if (importPlugin.get() == new_item->filter_objects[i])
+            if (importPlugin == new_item->filter_objects[i])
             {
                found = true;
                break;
@@ -323,7 +358,7 @@ void Importer::ReadImportItems()
                new_item->filters.begin() + index,
                importPlugin->GetPluginStringID());
             new_item->filter_objects.insert(
-               new_item->filter_objects.begin() + index, importPlugin.get());
+               new_item->filter_objects.begin() + index, importPlugin);
             if (new_item->divider >= 0)
                new_item->divider++;
          }
@@ -402,7 +437,7 @@ std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
    for (const auto &importPlugin : sImportPluginList())
    {
       new_item->filters.push_back(importPlugin->GetPluginStringID());
-      new_item->filter_objects.push_back(importPlugin.get());
+      new_item->filter_objects.push_back(importPlugin);
    }
    new_item->divider = -1;
    return new_item;
@@ -462,7 +497,7 @@ bool Importer::Import( AudacityProject &project,
          {
             // This plugin corresponds to user-selected filter, try it first.
             wxLogDebug(wxT("Inserting %s"),plugin->GetPluginStringID());
-            importPlugins.insert(importPlugins.begin(), plugin.get());
+            importPlugins.insert(importPlugins.begin(), plugin);
          }
       }
    }
@@ -532,14 +567,14 @@ bool Importer::Import( AudacityProject &project,
    // is not changed by user selection overrides or any other mechanism, but we include an assert
    // in case subsequent code revisions to the constructor should break this assumption that
    // libsndfile is first.
-   ImportPlugin *libsndfilePlugin = sImportPluginList().begin()->get();
+   ImportPlugin *libsndfilePlugin = *sImportPluginList().begin();
    wxASSERT(libsndfilePlugin->GetPluginStringID() == wxT("libsndfile"));
 
    for (const auto &plugin : sImportPluginList())
    {
       // Make sure its not already in the list
       if (importPlugins.end() ==
-          std::find(importPlugins.begin(), importPlugins.end(), plugin.get()))
+          std::find(importPlugins.begin(), importPlugins.end(), plugin))
       {
          if (plugin->SupportsExtension(extension))
          {
@@ -562,7 +597,7 @@ bool Importer::Import( AudacityProject &project,
                }
             }
             wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID());
-            importPlugins.push_back(plugin.get());
+            importPlugins.push_back(plugin);
          }
       }
    }
@@ -577,10 +612,10 @@ bool Importer::Import( AudacityProject &project,
       {
          // Make sure its not already in the list
          if (importPlugins.end() ==
-             std::find(importPlugins.begin(), importPlugins.end(), plugin.get()))
+             std::find(importPlugins.begin(), importPlugins.end(), plugin))
          {
             wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID());
-            importPlugins.push_back(plugin.get());
+            importPlugins.push_back(plugin);
          }
       }
    }

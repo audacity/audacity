@@ -30,6 +30,7 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 #include <functional>
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include "../include/audacity/ComponentInterface.h"
+#include "../commands/CommandManager.h"
 
 /* A few constants for an attempt at semi-uniformity */
 #define PREFS_FONT_SIZE     8
@@ -61,10 +62,9 @@ class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
    // also implements the PrefsPanel subclass.
    struct Registration final
    {
-      Registration( unsigned sequenceNumber,
-         const Factory &factory,
-         unsigned nChildren = 0,
-         bool expanded = true );
+      Registration( const wxString &name, const Factory &factory,
+         bool expanded = true,
+         const Registry::Placement &placement = { wxEmptyString, {} });
    };
 
    PrefsPanel(wxWindow * parent,

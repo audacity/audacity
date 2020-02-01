@@ -224,8 +224,6 @@ public:
                const Tags *metadata = NULL,
                int subformat = 0) override;
 
-   virtual unsigned SequenceNumber() const override { return 40; }
-
 private:
 
    bool GetMetadata(AudacityProject *project, const Tags *tags);
@@ -474,8 +472,9 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
    return true;
 }
 
-static Exporter::RegisteredExportPlugin
-sRegisteredPlugin{ []{ return std::make_unique< ExportFLAC >(); } };
+static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FLAC",
+   []{ return std::make_unique< ExportFLAC >(); }
+};
 
 #endif // USE_LIBFLAC
 

@@ -125,8 +125,6 @@ class QTImportPlugin final : public ImportPlugin
    std::unique_ptr<ImportFileHandle> Open(
       const wxString & Filename, AudacityProject*) override;
 
-   unsigned SequenceNumber() const override;
-
  private:
    bool mInitialized;
 };
@@ -222,12 +220,7 @@ std::unique_ptr<ImportFileHandle> QTImportPlugin::Open(
    return std::make_unique<QTImportFileHandle>(Filename, theMovie);
 }
 
-unsigned QTImportPlugin::SequenceNumber() const
-{
-   return 70;
-}
-
-static Importer::RegisteredImportPlugin registered{
+static Importer::RegisteredImportPlugin registered{ "QT",
    std::make_unique< QTImportPlugin >()
 };
 

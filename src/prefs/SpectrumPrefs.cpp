@@ -602,8 +602,10 @@ SpectrumPrefsFactory( WaveTrack *wt )
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 100,
+PrefsPanel::Registration sAttachment{ "Spectrum",
    SpectrumPrefsFactory( nullptr ),
-   false
+   false,
+   // Place it at a lower tree level
+   { "Tracks" }
 };
 }

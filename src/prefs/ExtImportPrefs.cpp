@@ -827,11 +827,14 @@ void ExtImportPrefsDropTarget::OnLeave()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 120,
+PrefsPanel::Registration sAttachment{ "ExtImport",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew ExtImportPrefs(parent, winid);
-   }
+   },
+   false,
+   // Place as a lower level of the tree of pages:
+   { "ImportExport" }
 };
 }

@@ -263,12 +263,16 @@ bool LibraryPrefs::Commit()
 
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
 namespace{
-PrefsPanel::Registration sAttachment{ 140,
+PrefsPanel::Registration sAttachment{ "Library",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew LibraryPrefs(parent, winid);
-   }
+   },
+   false,
+   // Register with an explicit ordering hint because this one is
+   // only conditionally compiled
+   { "", { Registry::OrderingHint::Before, "Directories" } }
 };
 }
 #endif
