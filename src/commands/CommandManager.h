@@ -645,6 +645,27 @@ namespace Registry {
       Visitor &visitor,
       BaseItem *pTopItem,
       GroupItem *pRegistry = nullptr );
+
+   // Typically a static object.  Constructor initializes certain preferences
+   // if they are not present.  These preferences determine an extrinsic
+   // visitation ordering for registered items.  This is needed in some
+   // places that have migrated from a system of exhaustive listings, to a
+   // registry of plug-ins, and something must be done to preserve old
+   // behavior.  It can be done in the central place using string literal
+   // identifiers only, not requiring static compilation or linkage dependency.
+   struct OrderingPreferenceInitializer {
+      using Literal = const wxChar *;
+      using Pair = std::pair< Literal, Literal >;
+      using Pairs = std::vector< Pair >;
+      OrderingPreferenceInitializer(
+         // Specifies the topmost preference section:
+         Literal root,
+         // Specifies /-separated Registry paths relative to root
+         // (these should be blank or start with / and not end with /),
+         // each with a ,-separated sequence of identifiers, which specify a
+         // desired ordering at one node of the tree:
+         const Pairs &pairs );
+   };
 }
 
 struct MenuVisitor : Registry::Visitor
