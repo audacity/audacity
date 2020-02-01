@@ -82,7 +82,7 @@ enum
    SpectralSelectionBarID,
 #endif
    TimerBarID,
-   ToolBarCount
+   ToolBarCount
 };
 
 // How may pixels padding each side of a floating toolbar
