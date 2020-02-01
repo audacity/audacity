@@ -68,7 +68,6 @@ enum
 {
    NoBarID = -1,
    TransportBarID,
-   TimerBarID,
    ToolsBarID,
    MeterBarID,
    RecordMeterBarID,
@@ -82,7 +81,8 @@ enum
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBarID,
 #endif
-   ToolBarCount
+   TimerBarID,
+   ToolBarCount
 };
 
 // How may pixels padding each side of a floating toolbar
