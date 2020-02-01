@@ -12,6 +12,7 @@
 #include "LyricsWindow.h"
 #include "Lyrics.h"
 #include "AudioIOBase.h"
+#include "CommonCommandFlags.h"
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -166,4 +167,47 @@ void LyricsWindow::OnTimer(wxCommandEvent &event)
 
    // Let other listeners get the notification
    event.Skip();
+}
+
+// Remaining code hooks this add-on into the application
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+
+namespace {
+
+// Lyrics window attached to each project is built on demand by:
+AudacityProject::AttachedWindows::RegisteredFactory sLyricsWindowKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      return safenew LyricsWindow( &parent );
+   }
+};
+
+// Define our extra menu item that invokes that factory
+struct Handler : CommandHandlerObject {
+   void OnKaraoke(const CommandContext &context)
+   {
+      auto &project = context.project;
+
+      auto lyricsWindow = &project.AttachedWindows::Get( sLyricsWindowKey );
+      lyricsWindow->Show();
+      lyricsWindow->Raise();
+   }
+};
+
+CommandHandlerObject &findCommandHandler(AudacityProject &) {
+   // Handler is not stateful.  Doesn't need a factory registered with
+   // AudacityProject.
+   static Handler instance;
+   return instance;
+}
+
+// Register that menu item
+
+using namespace MenuTable;
+AttachedItem sAttachment{ wxT("View/Windows"),
+   ( FinderScope{ findCommandHandler },
+      Command( wxT("Karaoke"), XXO("&Karaoke..."), &Handler::OnKaraoke,
+         LabelTracksExistFlag() ) )
+};
+
 }

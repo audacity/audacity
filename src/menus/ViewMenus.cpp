@@ -2,10 +2,7 @@
 #include "../Experimental.h"
 
 #include "../CommonCommandFlags.h"
-#include "../HistoryWindow.h"
-#include "../LyricsWindow.h"
 #include "../Menus.h"
-#include "../MixerBoard.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
@@ -30,25 +27,6 @@
 
 // private helper classes and functions
 namespace {
-
-AudacityProject::AttachedWindows::RegisteredFactory sMixerBoardKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      return safenew MixerBoardFrame( &parent );
-   }
-};
-
-AudacityProject::AttachedWindows::RegisteredFactory sHistoryWindowKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &undoManager = UndoManager::Get( parent );
-      return safenew HistoryDialog( &parent, &undoManager );
-   }
-};
-
-AudacityProject::AttachedWindows::RegisteredFactory sLyricsWindowKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      return safenew LyricsWindow( &parent );
-   }
-};
 
 double GetZoomOfSelection( const AudacityProject &project )
 {
@@ -325,34 +303,6 @@ void OnGoSelEnd(const CommandContext &context)
       selectedRegion.t1() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
-void OnHistory(const CommandContext &context)
-{
-   auto &project = context.project;
-
-   auto historyWindow = &project.AttachedWindows::Get( sHistoryWindowKey );
-   historyWindow->Show();
-   historyWindow->Raise();
-}
-
-void OnKaraoke(const CommandContext &context)
-{
-   auto &project = context.project;
-
-   auto lyricsWindow = &project.AttachedWindows::Get( sLyricsWindowKey );
-   lyricsWindow->Show();
-   lyricsWindow->Raise();
-}
-
-void OnMixerBoard(const CommandContext &context)
-{
-   auto &project = context.project;
-
-   auto mixerBoardFrame = &project.AttachedWindows::Get( sMixerBoardKey );
-   mixerBoardFrame->Show();
-   mixerBoardFrame->Raise();
-   mixerBoardFrame->SetFocus();
-}
-
 void OnShowExtraMenus(const CommandContext &context)
 {
    auto &project = context.project;
@@ -432,12 +382,11 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 #define FN(X) (& ViewActions::Handler :: X)
 
-MenuTable::BaseItemSharedPtr ToolbarsMenu();
-
 // Under /MenuBar
-MenuTable::BaseItemSharedPtr ViewMenu()
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr ViewMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
 
    static const auto checkOff = Options{}.CheckState( false );
@@ -487,59 +436,7 @@ MenuTable::BaseItemSharedPtr ViewMenu()
          )
       ),
 
-      Section( "Windows",
-         // History window should be available either for UndoAvailableFlag
-         // or RedoAvailableFlag,
-         // but we can't make the AddItem flags and mask have both,
-         // because they'd both have to be true for the
-         // command to be enabled.
-         //    If user has Undone the entire stack, RedoAvailableFlag is on
-         //    but UndoAvailableFlag is off.
-         //    If user has done things but not Undone anything,
-         //    RedoAvailableFlag is off but UndoAvailableFlag is on.
-         // So in either of those cases,
-         // (AudioIONotBusyFlag | UndoAvailableFlag | RedoAvailableFlag) mask
-         // would fail.
-         // The only way to fix this in the current architecture
-         // is to hack in special cases for RedoAvailableFlag
-         // in AudacityProject::UpdateMenus() (ugly)
-         // and CommandManager::HandleCommandEntry() (*really* ugly --
-         // shouldn't know about particular command names and flags).
-         // Here's the hack that would be necessary in
-         // AudacityProject::UpdateMenus(), if somebody decides to do it:
-         //    // Because EnableUsingFlags requires all the flag bits match the
-         //    // corresponding mask bits,
-         //    // "UndoHistory" specifies only
-         //    // AudioIONotBusyFlag | UndoAvailableFlag, because that
-         //    // covers the majority of cases where it should be enabled.
-         //    // If history is not empty but we've Undone the whole stack,
-         //    // we also want to enable,
-         //    // to show the Redo's on stack.
-         //    // "UndoHistory" might already be enabled,
-         //    // but add this check for RedoAvailableFlag.
-         //    if (flags & RedoAvailableFlag)
-         //       GetCommandManager()->Enable(wxT("UndoHistory"), true);
-         // So for now, enable the command regardless of stack.
-         // It will just show empty sometimes.
-         // FOR REDESIGN,
-         // clearly there are some limitations with the flags/mask bitmaps.
-
-         /* i18n-hint: Clicking this menu item shows the various editing steps
-            that have been taken.*/
-         Command( wxT("UndoHistory"), XXO("&History..."), FN(OnHistory),
-            AudioIONotBusyFlag() ),
-
-         Command( wxT("Karaoke"), XXO("&Karaoke..."), FN(OnKaraoke),
-            LabelTracksExistFlag() ),
-         Command( wxT("MixerBoard"), XXO("&Mixer Board..."), FN(OnMixerBoard),
-            PlayableTracksExistFlag() )
-      ),
-
-      Section( "",
-         //////////////////////////////////////////////////////////////////////////
-
-         ToolbarsMenu()
-      ),
+      Section( "Windows" ),
 
       Section( "Other",
          Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
@@ -557,6 +454,12 @@ MenuTable::BaseItemSharedPtr ViewMenu()
    ) ) };
    return menu;
    
+}
+
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( ViewMenu() )
+};
 }
 
 #undef FN

@@ -997,8 +997,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& EditActions::Handler :: X)
 
-MenuTable::BaseItemSharedPtr LabelEditMenus();
-
 static const ReservedCommandFlag
 &CutCopyAvailableFlag() { static ReservedCommandFlag flag{
    [](const AudacityProject &project){
@@ -1024,10 +1022,10 @@ static const ReservedCommandFlag
    cutCopyOptions()
 }; return flag; }
 
-// Under /MenuBar
-MenuTable::BaseItemSharedPtr EditMenu()
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr EditMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
 
    static const auto NotBusyTimeAndTracksFlags =
@@ -1141,8 +1139,6 @@ MenuTable::BaseItemSharedPtr EditMenu()
 
          //////////////////////////////////////////////////////////////////////////
 
-         LabelEditMenus(),
-
          Command( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
             AudioIONotBusyFlag() )
 
@@ -1164,10 +1160,13 @@ MenuTable::BaseItemSharedPtr EditMenu()
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraEditMenu()
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( EditMenu() )
+};
+
+BaseItemSharedPtr ExtraEditMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
    static const auto flags =
       AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag();
@@ -1222,4 +1221,10 @@ RegisteredMenuItemEnabler selectWaveTracks2{{
    selectAll
 }};
 
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraEditMenu() )
+};
+
+}
 #undef FN

@@ -136,55 +136,23 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& ExtraActions::Handler :: X)
 
-// Imported menu item definitions
+namespace {
+using namespace MenuTable;
 
-MenuTable::BaseItemSharedPtr ExtraEditMenu();
-MenuTable::BaseItemSharedPtr ExtraSelectionMenu();
-MenuTable::BaseItemSharedPtr ExtraCursorMenu();
-MenuTable::BaseItemSharedPtr ExtraSeekMenu();
-MenuTable::BaseItemSharedPtr ExtraToolsMenu();
-MenuTable::BaseItemSharedPtr ExtraTransportMenu();
-MenuTable::BaseItemSharedPtr ExtraPlayAtSpeedMenu();
-MenuTable::BaseItemSharedPtr ExtraTrackMenu();
-MenuTable::BaseItemSharedPtr ExtraScriptablesIMenu();
-MenuTable::BaseItemSharedPtr ExtraScriptablesIIMenu();
-MenuTable::BaseItemSharedPtr ExtraWindowItems();
-MenuTable::BaseItemSharedPtr ExtraGlobalCommands();
-MenuTable::BaseItemSharedPtr ExtraFocusMenu();
-MenuTable::BaseItemSharedPtr ExtraMenu();
-MenuTable::BaseItemSharedPtr ExtraMixerMenu();
-MenuTable::BaseItemSharedPtr ExtraDeviceMenu();
-MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject & );
+BaseItemSharedPtr ExtraMixerMenu();
+BaseItemSharedPtr ExtraDeviceMenu();
 
-MenuTable::BaseItemSharedPtr ExtraMenu()
+BaseItemSharedPtr ExtraMenu()
 {
-   using namespace MenuTable;
-
    // Table of menu factories.
    // TODO:  devise a registration system instead.
    static BaseItemSharedPtr extraItems{ Items( wxEmptyString,
       Section( "Part1",
-           ExtraTransportMenu()
-         , ExtraToolsMenu()
-         , ExtraMixerMenu()
-         , ExtraEditMenu()
-         , ExtraPlayAtSpeedMenu()
-         , ExtraSeekMenu()
+           ExtraMixerMenu()
          , ExtraDeviceMenu()
-         , ExtraSelectionMenu()
       ),
 
-      Section( "Part2",
-           ExtraGlobalCommands()
-         , ExtraFocusMenu()
-         , ExtraCursorMenu()
-         , ExtraTrackMenu()
-         , ExtraScriptablesIMenu()
-         , ExtraScriptablesIIMenu()
-
-         // Delayed evaluation:
-         , ExtraMiscItems
-      )
+      Section( "Part2" )
    ) };
 
    static const auto pred =
@@ -196,10 +164,14 @@ MenuTable::BaseItemSharedPtr ExtraMenu()
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraMixerMenu()
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( ExtraMenu() )
+};
+
+// Under /MenuBar/Optional/Extra/Part1
+BaseItemSharedPtr ExtraMixerMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Mixer"), XO("Mi&xer"),
@@ -219,10 +191,9 @@ MenuTable::BaseItemSharedPtr ExtraMixerMenu()
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraDeviceMenu()
+// Under /MenuBar/Optional/Extra/Part1
+BaseItemSharedPtr ExtraDeviceMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Device"), XO("De&vice"),
@@ -241,10 +212,9 @@ MenuTable::BaseItemSharedPtr ExtraDeviceMenu()
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
+// Under /MenuBar/Optional/Extra/Part2
+BaseItemPtr ExtraMiscItems()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
 
    constexpr auto key =
@@ -258,15 +228,24 @@ MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
    // Not a menu.
    return ( FinderScope{ findCommandHandler },
    Items( wxT("Misc"),
-      // Accel key is not bindable.
-      Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
-         FN(OnFullScreen),
-         AlwaysEnabledFlag,
-         Options{ key }.CheckState(
-            GetProjectFrame( project ).wxTopLevelWindow::IsFullScreen() ) ),
-
-      ExtraWindowItems()
+      // Delayed evaluation
+      []( AudacityProject &project ) {
+         return
+         // Accel key is not bindable.
+         Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
+            FN(OnFullScreen),
+            AlwaysEnabledFlag,
+            Options{ key }.CheckState(
+               GetProjectFrame( project ).wxTopLevelWindow::IsFullScreen() ) );
+      }
    ) );
+}
+
+AttachedItem sAttachment2{
+   Placement{ wxT("Optional/Extra/Part2"), { OrderingHint::End } },
+   Shared( ExtraMiscItems() )
+};
+
 }
 
 #undef FN

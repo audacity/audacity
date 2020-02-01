@@ -1028,12 +1028,10 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 #define FN(X) (& SelectActions::Handler :: X)
 
-MenuTable::BaseItemSharedPtr ClipSelectMenu();
-
-// Under /MenuBar
-MenuTable::BaseItemSharedPtr SelectMenu()
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr SelectMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
@@ -1112,14 +1110,8 @@ MenuTable::BaseItemSharedPtr SelectMenu()
             Command( wxT("NextLowerPeakFrequency"),
                XXO("Next &Lower Peak Frequency"), FN(OnNextLowerPeakFrequency),
                TracksExistFlag() )
-         ),
+         )
    #endif
-
-         //////////////////////////////////////////////////////////////////////////
-
-         ClipSelectMenu()
-
-         //////////////////////////////////////////////////////////////////////////
       ),
 
       Section( "",
@@ -1144,10 +1136,13 @@ MenuTable::BaseItemSharedPtr SelectMenu()
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraSelectionMenu()
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( SelectMenu() )
+};
+
+BaseItemSharedPtr ExtraSelectionMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Select"), XO("&Selection"),
@@ -1187,12 +1182,15 @@ MenuTable::BaseItemSharedPtr ExtraSelectionMenu()
    return menu;
 }
 
-MenuTable::BaseItemSharedPtr ClipCursorItems();
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraSelectionMenu() )
+};
+}
 
-// Under /MenuBar/Transport
-MenuTable::BaseItemSharedPtr CursorMenu()
+namespace {
+BaseItemSharedPtr CursorMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
    static const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
 
@@ -1222,8 +1220,6 @@ MenuTable::BaseItemSharedPtr CursorMenu()
          TracksSelectedFlag(),
          Options{ wxT("K"), XO("Cursor to Track End") } ),
 
-      ClipCursorItems(),
-
       Command( wxT("CursProjectStart"), XXO("&Project Start"),
          FN(OnSkipStart),
          CanStopFlags,
@@ -1235,13 +1231,13 @@ MenuTable::BaseItemSharedPtr CursorMenu()
    return menu;
 }
 
-MenuTable::BaseItemSharedPtr ExtraClipCursorItems();
+AttachedItem sAttachment0{
+   wxT("Transport/Basic"),
+   Shared( CursorMenu() )
+};
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraCursorMenu()
+BaseItemSharedPtr ExtraCursorMenu()
 {
-   using namespace MenuTable;
-
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Cursor"), XO("&Cursor"),
@@ -1262,17 +1258,18 @@ MenuTable::BaseItemSharedPtr ExtraCursorMenu()
          TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+,") ),
       Command( wxT("CursorLongJumpRight"), XXO("Cursor Long Ju&mp Right"),
          FN(OnCursorLongJumpRight),
-         TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+.") ),
-
-      ExtraClipCursorItems()
+         TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+.") )
    ) ) };
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra
-MenuTable::BaseItemSharedPtr ExtraSeekMenu()
+AttachedItem sAttachment4{
+   wxT("Optional/Extra/Part2"),
+   Shared( ExtraCursorMenu() )
+};
+
+BaseItemSharedPtr ExtraSeekMenu()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Seek"), XO("See&k"),
@@ -1287,6 +1284,13 @@ MenuTable::BaseItemSharedPtr ExtraSeekMenu()
          FN(OnSeekRightLong), AudioIOBusyFlag(), wxT("Shift+Right\tallowDup") )
    ) ) };
    return menu;
+}
+
+AttachedItem sAttachment5{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraSeekMenu() )
+};
+
 }
 
 #undef FN

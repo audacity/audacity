@@ -118,13 +118,13 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& WindowActions::Handler :: X)
 
-// Under /MenuBar
-MenuTable::BaseItemSharedPtr WindowMenu()
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr WindowMenu()
 {
       //////////////////////////////////////////////////////////////////////////
       // poor imitation of the Mac Windows Menu
       //////////////////////////////////////////////////////////////////////////
-   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Window"), XO("&Window"),
@@ -149,10 +149,13 @@ MenuTable::BaseItemSharedPtr WindowMenu()
    return menu;
 }
 
-// Under /MenuBar/Optional/Extra/Misc
-MenuTable::BaseItemSharedPtr ExtraWindowItems()
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( WindowMenu() )
+};
+
+BaseItemSharedPtr ExtraWindowItems()
 {
-   using namespace MenuTable;
    static BaseItemSharedPtr items{
    ( FinderScope{ findCommandHandler },
    Items( wxT("MacWindows"),
@@ -165,19 +168,17 @@ MenuTable::BaseItemSharedPtr ExtraWindowItems()
    return items;
 }
 
+AttachedItem sAttachment2{
+   Placement{ wxT("Optional/Extra/Part2/Misc"), OrderingHint::End },
+   Shared( ExtraWindowItems() )
+};
+
+}
+
 #undef FN
 
 #else
 
-// Not WXMAC.  Stub functions.
-MenuTable::BaseItemSharedPtr WindowMenu()
-{
-   return nullptr;
-}
-
-MenuTable::BaseItemSharedPtr ExtraWindowItems()
-{
-   return nullptr;
-}
+// Not WXMAC.
 
 #endif
