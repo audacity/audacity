@@ -117,8 +117,6 @@ public:
    TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(
       const FilePath &Filename, AudacityProject*) override;
-
-   unsigned SequenceNumber() const override;
 };
 
 class MP3ImportFileHandle final : public ImportFileHandle
@@ -257,12 +255,7 @@ ProgressResult MP3ImportFileHandle::Import(
    return privateData.updateResult;
 }
 
-unsigned MP3ImportPlugin::SequenceNumber() const
-{
-   return 40;
-}
-
-static Importer::RegisteredImportPlugin registered{
+static Importer::RegisteredImportPlugin registered{ "MP3",
    std::make_unique< MP3ImportPlugin >()
 };
 

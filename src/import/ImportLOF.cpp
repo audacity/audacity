@@ -116,8 +116,6 @@ public:
    TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(
       const FilePath &Filename, AudacityProject *pProject) override;
-
-   unsigned SequenceNumber() const override;
 };
 
 
@@ -272,12 +270,7 @@ ProgressResult LOFImportFileHandle::Import(
    return ProgressResult::Success;
 }
 
-unsigned LOFImportPlugin::SequenceNumber() const
-{
-   return 50;
-}
-
-static Importer::RegisteredImportPlugin registered{
+static Importer::RegisteredImportPlugin registered{ "LOF",
    std::make_unique< LOFImportPlugin >()
 };
 

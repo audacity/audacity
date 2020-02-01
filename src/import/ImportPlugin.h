@@ -96,8 +96,6 @@ public:
    virtual std::unique_ptr<ImportFileHandle> Open(
       const FilePath &Filename, AudacityProject*) = 0;
 
-   virtual unsigned SequenceNumber() const = 0;
-
    virtual ~ImportPlugin() { }
 
 protected:
