@@ -585,9 +585,8 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& LabelEditActions::Handler :: X)
 
-namespace {
-using namespace MenuTable;
-BaseItemSharedPtr LabelEditMenus()
+// Under /MenuBar/Edit
+MenuTable::BaseItemSharedPtr LabelEditMenus()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
@@ -602,7 +601,7 @@ BaseItemSharedPtr LabelEditMenus()
    
    static BaseItemSharedPtr menus{
    ( FinderScope{ findCommandHandler },
-   Items( wxT("LabelEditMenus"),
+   Items( wxEmptyString,
    
    Menu( wxT("Labels"), XO("&Labels"),
       Section( "",
@@ -686,14 +685,6 @@ BaseItemSharedPtr LabelEditMenus()
 
    ) ) }; // two menus
    return menus;
-}
-
-AttachedItem sAttachment1{
-   { wxT("Edit/Other"),
-     { OrderingHint::Before, wxT("EditMetaData") } },
-   Shared( LabelEditMenus() )
-};
-
 }
 
 #undef FN

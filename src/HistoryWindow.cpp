@@ -35,7 +35,6 @@ undo memory so as to free up space.
 
 #include "AudioIO.h"
 #include "Clipboard.h"
-#include "CommonCommandFlags.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "UndoManager.h"
@@ -316,86 +315,4 @@ void HistoryDialog::OnSize(wxSizeEvent & WXUNUSED(event))
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));
    if (mList->GetItemCount() > 0)
       mList->EnsureVisible(mSelected);
-}
-
-// Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
-
-namespace {
-
-// History window attached to each project is built on demand by:
-AudacityProject::AttachedWindows::RegisteredFactory sHistoryWindowKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &undoManager = UndoManager::Get( parent );
-      return safenew HistoryDialog( &parent, &undoManager );
-   }
-};
-
-// Define our extra menu item that invokes that factory
-struct Handler : CommandHandlerObject {
-   void OnHistory(const CommandContext &context)
-   {
-      auto &project = context.project;
-
-      auto historyWindow = &project.AttachedWindows::Get( sHistoryWindowKey );
-      historyWindow->Show();
-      historyWindow->Raise();
-   }
-};
-
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
-}
-
-// Register that menu item
-
-using namespace MenuTable;
-AttachedItem sAttachment{ wxT("View/Windows"),
-   // History window should be available either for UndoAvailableFlag
-   // or RedoAvailableFlag,
-   // but we can't make the AddItem flags and mask have both,
-   // because they'd both have to be true for the
-   // command to be enabled.
-   //    If user has Undone the entire stack, RedoAvailableFlag is on
-   //    but UndoAvailableFlag is off.
-   //    If user has done things but not Undone anything,
-   //    RedoAvailableFlag is off but UndoAvailableFlag is on.
-   // So in either of those cases,
-   // (AudioIONotBusyFlag | UndoAvailableFlag | RedoAvailableFlag) mask
-   // would fail.
-   // The only way to fix this in the current architecture
-   // is to hack in special cases for RedoAvailableFlag
-   // in AudacityProject::UpdateMenus() (ugly)
-   // and CommandManager::HandleCommandEntry() (*really* ugly --
-   // shouldn't know about particular command names and flags).
-   // Here's the hack that would be necessary in
-   // AudacityProject::UpdateMenus(), if somebody decides to do it:
-   //    // Because EnableUsingFlags requires all the flag bits match the
-   //    // corresponding mask bits,
-   //    // "UndoHistory" specifies only
-   //    // AudioIONotBusyFlag | UndoAvailableFlag, because that
-   //    // covers the majority of cases where it should be enabled.
-   //    // If history is not empty but we've Undone the whole stack,
-   //    // we also want to enable,
-   //    // to show the Redo's on stack.
-   //    // "UndoHistory" might already be enabled,
-   //    // but add this check for RedoAvailableFlag.
-   //    if (flags & RedoAvailableFlag)
-   //       GetCommandManager()->Enable(wxT("UndoHistory"), true);
-   // So for now, enable the command regardless of stack.
-   // It will just show empty sometimes.
-   // FOR REDESIGN,
-   // clearly there are some limitations with the flags/mask bitmaps.
-
-   /* i18n-hint: Clicking this menu item shows the various editing steps
-      that have been taken.*/
-   ( FinderScope{ findCommandHandler },
-      Command( wxT("UndoHistory"), XXO("&History..."), &Handler::OnHistory,
-         AudioIONotBusyFlag() ) )
-};
-
 }

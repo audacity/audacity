@@ -42,7 +42,6 @@
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 
-#include <mutex>
 #include <unordered_set>
 
 #include <wx/menu.h>
@@ -945,6 +944,29 @@ void Visit( Visitor &visitor, BaseItem *pTopItem, GroupItem *pRegistry )
 /// changes in configured preferences - for example changes in key-bindings
 /// affect the short-cut key legend that appears beside each command,
 
+MenuTable::BaseItemSharedPtr FileMenu();
+
+MenuTable::BaseItemSharedPtr EditMenu();
+
+MenuTable::BaseItemSharedPtr SelectMenu();
+
+MenuTable::BaseItemSharedPtr ViewMenu();
+
+MenuTable::BaseItemSharedPtr TransportMenu();
+
+MenuTable::BaseItemSharedPtr TracksMenu();
+
+MenuTable::BaseItemSharedPtr GenerateMenu();
+MenuTable::BaseItemSharedPtr EffectMenu();
+MenuTable::BaseItemSharedPtr AnalyzeMenu();
+MenuTable::BaseItemSharedPtr ToolsMenu();
+
+MenuTable::BaseItemSharedPtr WindowMenu();
+
+MenuTable::BaseItemSharedPtr ExtraMenu();
+
+MenuTable::BaseItemSharedPtr HelpMenu();
+
 namespace {
 static Registry::GroupItem &sRegistry()
 {
@@ -959,49 +981,26 @@ MenuTable::AttachedItem::AttachedItem(
    Registry::RegisterItem( sRegistry(), placement, std::move( pItem ) );
 }
 
+// Table of menu factories.
+// TODO:  devise a registration system instead.
+static const auto menuTree = MenuTable::Items( MenuPathStart
+   , FileMenu()
+   , EditMenu()
+   , SelectMenu()
+   , ViewMenu()
+   , TransportMenu()
+   , TracksMenu()
+   , GenerateMenu()
+   , EffectMenu()
+   , AnalyzeMenu()
+   , ToolsMenu()
+   , WindowMenu()
+   , ExtraMenu()
+   , HelpMenu()
+);
+
 namespace {
-
-// Once only, cause initial population of preferences for the ordering
-// of some menu items that used to be given in tables but are now separately
-// registered in several .cpp files; the sequence of registration depends
-// on unspecified accidents of static initialization order across
-// compilation units, so we need something specific here to preserve old
-// default appearance of menus.
-// But this needs only to mention some strings -- there is no compilation or
-// link dependency of this source file on those other implementation files.
-void InitializeMenuOrdering()
-{
-   using Pair = std::pair<const wxChar *, const wxChar *>;
-   static const Pair pairs [] = {
-      {wxT(""), wxT(
-"File,Edit,Select,View,Transport,Tracks,Generate,Effect,Analyze,Tools,Window,Optional,Help"
-       )},
-      {wxT("/Optional/Extra/Part1"), wxT(
-"Transport,Tools,Mixer,Edit,PlayAtSpeed,Seek,Device,Select"
-       )},
-      {wxT("/Optional/Extra/Part2"), wxT(
-"Navigation,Focus,Cursor,Track,Scriptables1,Scriptables2"
-       )},
-      {wxT("/View/Windows"), wxT("UndoHistory,Karaoke,MixerBoard")},
-      {wxT("/Analyze/Analyzers/Windows"), wxT("ContrastAnalyser,PlotSpectrum")},
-      {wxT("/Transport/Basic"),wxT("Play,Record,Scrubbing,Cursor")},
-   };
-
-   bool doFlush = false;
-   for (auto pair : pairs) {
-      const auto key = wxString{'/'} + MenuPathStart + pair.first;
-      if ( gPrefs->Read(key).empty() ) {
-         gPrefs->Write( key, pair.second );
-         doFlush = true;
-      }
-   }
-   
-   if (doFlush)
-      gPrefs->Flush();
-}
-
 using namespace MenuTable;
-
 struct MenuItemVisitor : MenuVisitor
 {
    MenuItemVisitor( AudacityProject &proj, CommandManager &man )
@@ -1103,9 +1102,6 @@ struct MenuItemVisitor : MenuVisitor
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 {
-   static std::once_flag flag;
-   std::call_once( flag, InitializeMenuOrdering );
-
    auto &commandManager = CommandManager::Get( project );
 
    // The list of defaults to exclude depends on
@@ -1129,7 +1125,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
 void MenuManager::Visit( MenuVisitor &visitor )
 {
-   static const auto menuTree = MenuTable::Items( MenuPathStart );
    Registry::Visit( visitor, menuTree.get(), &sRegistry() );
 }
 

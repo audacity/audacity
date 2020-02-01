@@ -5,6 +5,7 @@
 #include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
 #include "../CommonCommandFlags.h"
+#include "../FreqWindow.h"
 #include "../Menus.h"
 #include "../PluginManager.h"
 #include "../Prefs.h"
@@ -15,6 +16,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../commands/ScreenshotCommand.h"
+#include "../effects/Contrast.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "../effects/RealtimeEffectManager.h"
@@ -22,6 +24,26 @@
 
 // private helper classes and functions
 namespace {
+
+AudacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      auto &window = ProjectWindow::Get( parent );
+      return safenew ContrastDialog(
+         &window, -1, XO("Contrast Analysis (WCAG 2 compliance)"),
+         wxPoint{ 150, 150 }
+      );
+   }
+};
+
+AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
+   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+      auto &window = ProjectWindow::Get( parent );
+      return safenew FrequencyPlotDialog(
+         &window, -1, parent, XO("Frequency Analysis"),
+         wxPoint{ 150, 150 }
+      );
+   }
+};
 
 AudacityProject::AttachedWindows::RegisteredFactory sMacrosWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
@@ -434,6 +456,31 @@ void OnManageAnalyzers(const CommandContext &context)
    DoManagePluginsMenu(project, EffectTypeAnalyze);
 }
 
+void OnContrast(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto contrastDialog =
+      &project.AttachedWindows::Get< ContrastDialog >( sContrastDialogKey );
+
+   contrastDialog->CentreOnParent();
+   if( ScreenshotCommand::MayCapture( contrastDialog ) )
+      return;
+   contrastDialog->Show();
+}
+
+void OnPlotSpectrum(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto freqWindow =
+      &project.AttachedWindows::Get< FrequencyPlotDialog >( sFrequencyWindowKey );
+
+   if( ScreenshotCommand::MayCapture( freqWindow ) )
+      return;
+   freqWindow->Show(true);
+   freqWindow->Raise();
+   freqWindow->SetFocus();
+}
+
 void OnManageTools(const CommandContext &context )
 {
    auto &project = context.project;
@@ -701,10 +748,9 @@ MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
 // Menu definitions
 
 // Under /MenuBar
-namespace {
-using namespace MenuTable;
-BaseItemSharedPtr GenerateMenu()
+MenuTable::BaseItemSharedPtr GenerateMenu()
 {
+   using namespace MenuTable;
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
 
@@ -738,13 +784,10 @@ static const ReservedCommandFlag
    }
 }; return flag; }  //lll
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Shared( GenerateMenu() )
-};
-
-BaseItemSharedPtr EffectMenu()
+// Under /MenuBar
+MenuTable::BaseItemSharedPtr EffectMenu()
 {
+   using namespace MenuTable;
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
 
@@ -791,13 +834,10 @@ BaseItemSharedPtr EffectMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT(""),
-   Shared( EffectMenu() )
-};
-
-BaseItemSharedPtr AnalyzeMenu()
+// Under /MenuBar
+MenuTable::BaseItemSharedPtr AnalyzeMenu()
 {
+   using namespace MenuTable;
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
 
@@ -812,7 +852,11 @@ BaseItemSharedPtr AnalyzeMenu()
 #endif
 
       Section( "Analyzers",
-         Items( "Windows" ),
+         Command( wxT("ContrastAnalyser"), XXO("Contrast..."), FN(OnContrast),
+            AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag(),
+            wxT("Ctrl+Shift+T") ),
+         Command( wxT("PlotSpectrum"), XXO("Plot Spectrum..."), FN(OnPlotSpectrum),
+            AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag() ),
 
          // Delayed evaluation:
          [](AudacityProject&)
@@ -826,13 +870,10 @@ BaseItemSharedPtr AnalyzeMenu()
    return menu;
 }
 
-AttachedItem sAttachment3{
-   wxT(""),
-   Shared( AnalyzeMenu() )
-};
-
-BaseItemSharedPtr ToolsMenu()
+// Under /MenuBar
+MenuTable::BaseItemSharedPtr ToolsMenu()
 {
+   using namespace MenuTable;
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
@@ -913,13 +954,11 @@ BaseItemSharedPtr ToolsMenu()
    return menu;
 }
 
-AttachedItem sAttachment4{
-   wxT(""),
-   Shared( ToolsMenu() )
-};
-
-BaseItemSharedPtr ExtraScriptablesIMenu()
+// Under /MenuBar/Optional/Extra
+MenuTable::BaseItemSharedPtr ExtraScriptablesIMenu()
 {
+   using namespace MenuTable;
+
    // These are the more useful to VI user Scriptables.
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
@@ -965,13 +1004,11 @@ BaseItemSharedPtr ExtraScriptablesIMenu()
    return menu;
 }
 
-AttachedItem sAttachment5{
-   wxT("Optional/Extra/Part2"),
-   Shared( ExtraScriptablesIMenu() )
-};
-
-BaseItemSharedPtr ExtraScriptablesIIMenu()
+// Under /MenuBar/Optional/Extra
+MenuTable::BaseItemSharedPtr ExtraScriptablesIIMenu()
 {
+   using namespace MenuTable;
+
    // Less useful to VI users.
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
@@ -1007,13 +1044,6 @@ BaseItemSharedPtr ExtraScriptablesIIMenu()
          AudioIONotBusyFlag() )
    ) ) };
    return menu;
-}
-
-AttachedItem sAttachment6{
-   wxT("Optional/Extra/Part2"),
-   Shared( ExtraScriptablesIIMenu() )
-};
-
 }
 
 #undef FN

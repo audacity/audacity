@@ -523,10 +523,10 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& HelpActions::Handler :: X)
 
-namespace {
-using namespace MenuTable;
-BaseItemSharedPtr HelpMenu()
+// Under /MenuBar
+MenuTable::BaseItemSharedPtr HelpMenu()
 {
+   using namespace MenuTable;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Help"), XO("&Help"),
@@ -600,13 +600,6 @@ BaseItemSharedPtr HelpMenu()
       )
    ) ) };
    return menu;
-}
-
-AttachedItem sAttachment1{
-   wxT(""),
-   Shared( HelpMenu() )
-};
-
 }
 
 #undef FN

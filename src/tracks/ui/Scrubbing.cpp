@@ -21,7 +21,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"
-#include "../../ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../ProjectStatus.h"
 #include "../../Track.h"
@@ -1128,99 +1127,21 @@ bool Scrubber::CanScrub() const
       HasWaveDataPred( *mProject );
 }
 
-void Scrubber::DoKeyboardScrub(bool backwards, bool keyUp)
+MenuTable::BaseItemSharedPtr Scrubber::Menu()
 {
-   auto &project = *mProject;
-
-   static double initT0 = 0;
-   static double initT1 = 0;
-
-   if (keyUp) {
-      auto &scrubber = Scrubber::Get(project);
-      if (scrubber.IsKeyboardScrubbing() && scrubber.IsBackwards() == backwards) {
-         auto gAudioIO = AudioIOBase::Get();
-         auto time = gAudioIO->GetStreamTime();
-         auto &viewInfo = ViewInfo::Get(project);
-         auto &selection = viewInfo.selectedRegion;
-
-         // If the time selection has not changed during scrubbing
-         // set the cursor position
-         if (selection.t0() == initT0 && selection.t1() == initT1) {
-            double endTime = TrackList::Get(project).GetEndTime();
-            time = std::min(time, endTime);
-            time = std::max(time, 0.0);
-            selection.setTimes(time, time);
-            ProjectHistory::Get(project).ModifyState(false);
-         }
-
-         scrubber.Cancel();
-         ProjectAudioManager::Get(project).Stop();
-      }
-   }
-   else {      // KeyDown
-      auto gAudioIO = AudioIOBase::Get();
-      auto &scrubber = Scrubber::Get(project);
-      if (scrubber.IsKeyboardScrubbing() && scrubber.IsBackwards() != backwards) {
-         // change direction
-         scrubber.SetBackwards(backwards);
-      }
-      else if (!gAudioIO->IsBusy() && !scrubber.HasMark()) {
-         auto &viewInfo = ViewInfo::Get(project);
-         auto &selection = viewInfo.selectedRegion;
-         double endTime = TrackList::Get(project).GetEndTime();
-         double t0 = selection.t0();
-    
-         if ((!backwards && t0 >= 0 && t0 < endTime) ||
-            (backwards && t0 > 0 && t0 <= endTime)) {
-            initT0 = t0;
-            initT1 = selection.t1();
-            scrubber.StartKeyboardScrubbing(t0, backwards);
-         }
-      }
-   }
-}
-
-void Scrubber::OnKeyboardScrubBackwards(const CommandContext &context)
-{
-   auto evt = context.pEvt;
-   if (evt)
-      DoKeyboardScrub(true, evt->GetEventType() == wxEVT_KEY_UP);
-   else {              // called from menu, so simulate keydown and keyup
-      DoKeyboardScrub(true, false);
-      DoKeyboardScrub(true, true);
-   }
-}
-
-void Scrubber::OnKeyboardScrubForwards(const CommandContext &context)
-{
-   auto evt = context.pEvt;
-   if (evt)
-      DoKeyboardScrub(false, evt->GetEventType() == wxEVT_KEY_UP);
-   else {              // called from menu, so simulate keydown and keyup
-      DoKeyboardScrub(false, false);
-      DoKeyboardScrub(false, true);
-   }
-}
-
-namespace {
-
-static const auto finder =
-   [](AudacityProject &project) -> CommandHandlerObject&
-     { return Scrubber::Get( project ); };
-
-using namespace MenuTable;
-BaseItemSharedPtr ToolbarMenu()
-{
+   using namespace MenuTable;
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu { (
-   FinderScope{ finder },
-   Menu( wxT("Scrubbing"),
+   FinderScope{
+      [](AudacityProject &project) -> CommandHandlerObject&
+         { return Scrubber::Get( project ); } },
+   MenuTable::Menu( wxT("Scrubbing"),
       XO("Scru&bbing"),
       []{
          BaseItemPtrs ptrs;
          for (const auto &item : menuItems()) {
-            ptrs.push_back( Command( item.name, item.label,
+            ptrs.push_back( MenuTable::Command( item.name, item.label,
                item.memFn,
                item.flags,
                item.StatusTest
@@ -1237,35 +1158,6 @@ BaseItemSharedPtr ToolbarMenu()
    ) };
    
    return menu;
-}
-
-AttachedItem sAttachment{
-   wxT("Transport/Basic"),
-   Shared( ToolbarMenu() )
-};
-
-BaseItemSharedPtr KeyboardScrubbingItems()
-{
-   using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr items{
-   ( FinderScope{ finder },
-   Items( wxT("KeyboardScrubbing"),
-      Command(wxT("KeyboardScrubBackwards"), XXO("Scrub Bac&kwards"),
-         &Scrubber::OnKeyboardScrubBackwards,
-         CaptureNotBusyFlag() | CanStopAudioStreamFlag(), wxT("U\twantKeyup")),
-      Command(wxT("KeyboardScrubForwards"), XXO("Scrub For&wards"),
-         &Scrubber::OnKeyboardScrubForwards,
-         CaptureNotBusyFlag() | CanStopAudioStreamFlag(), wxT("I\twantKeyup"))
-   ) ) };
-   return items;
-}
-
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part1/Transport"),
-   Shared( KeyboardScrubbingItems() )
-};
-
 }
 
 void Scrubber::PopulatePopupMenu(wxMenu &menu)

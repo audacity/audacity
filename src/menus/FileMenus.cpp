@@ -551,11 +551,10 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 #define FN(X) (& FileActions::Handler :: X)
 
-namespace {
-using namespace MenuTable;
-
-BaseItemSharedPtr FileMenu()
+// under /MenuBar
+MenuTable::BaseItemSharedPtr FileMenu()
 {
+   using namespace MenuTable;
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
@@ -704,12 +703,6 @@ BaseItemSharedPtr FileMenu()
       )
    ) ) };
    return menu;
-}
-
-AttachedItem sAttachment1{
-   wxT(""),
-   Shared( FileMenu() )
-};
 }
 
 #undef FN
