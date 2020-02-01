@@ -1287,36 +1287,7 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
    // be deleted, so protect against it.
    auto &toolManager = ToolManager::Get( project );
 
-   auto &commandManager = CommandManager::Get( project );
-
    auto &settings = ProjectSettings::Get( project );
-
-   commandManager.Check(wxT("ShowScrubbingTB"),
-                         toolManager.IsVisible(ScrubbingBarID));
-   commandManager.Check(wxT("ShowDeviceTB"),
-                         toolManager.IsVisible(DeviceBarID));
-   commandManager.Check(wxT("ShowEditTB"),
-                         toolManager.IsVisible(EditBarID));
-   commandManager.Check(wxT("ShowMeterTB"),
-                         toolManager.IsVisible(MeterBarID));
-   commandManager.Check(wxT("ShowRecordMeterTB"),
-                         toolManager.IsVisible(RecordMeterBarID));
-   commandManager.Check(wxT("ShowPlayMeterTB"),
-                         toolManager.IsVisible(PlayMeterBarID));
-   commandManager.Check(wxT("ShowMixerTB"),
-                         toolManager.IsVisible(MixerBarID));
-   commandManager.Check(wxT("ShowSelectionTB"),
-                         toolManager.IsVisible(SelectionBarID));
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   commandManager.Check(wxT("ShowSpectralSelectionTB"),
-                         toolManager.IsVisible(SpectralSelectionBarID));
-#endif
-   commandManager.Check(wxT("ShowToolsTB"),
-                         toolManager.IsVisible(ToolsBarID));
-   commandManager.Check(wxT("ShowTranscriptionTB"),
-                         toolManager.IsVisible(TranscriptionBarID));
-   commandManager.Check(wxT("ShowTransportTB"),
-                         toolManager.IsVisible(TransportBarID));
 
    // Now, go through each toolbar, and call EnableDisableButtons()
    for (int i = 0; i < ToolBarCount; i++) {
@@ -1328,31 +1299,11 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
    // These don't really belong here, but it's easier and especially so for
    // the Edit toolbar and the sync-lock menu item.
    bool active;
-   gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"),&active, false);
-   commandManager.Check(wxT("SoundActivation"), active);
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"),&active, false);
-   commandManager.Check(wxT("AutomatedInputLevelAdjustmentOnOff"), active);
-#endif
-
-   active = TracksPrefs::GetPinnedHeadPreference();
-   commandManager.Check(wxT("PinnedHead"), active);
-
-#ifdef EXPERIMENTAL_DA
-   gPrefs->Read(wxT("/AudioIO/Duplex"),&active, false);
-#else
-   gPrefs->Read(wxT("/AudioIO/Duplex"),&active, true);
-#endif
-   commandManager.Check(wxT("Overdub"), active);
-   gPrefs->Read(wxT("/AudioIO/SWPlaythrough"),&active, false);
-   commandManager.Check(wxT("SWPlaythrough"), active);
 
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &active, false);
    settings.SetSyncLock(active);
 
-   commandManager.Check(wxT("SyncLock"), active);
-   gPrefs->Read(wxT("/GUI/TypeToCreateLabel"),&active, false);
-   commandManager.Check(wxT("TypeToCreateLabel"), active);
+   CommandManager::Get( project ).UpdateCheckmarks( project );
 }
 
 namespace

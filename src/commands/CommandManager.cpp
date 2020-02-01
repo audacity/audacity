@@ -477,6 +477,15 @@ wxMenu * CommandManager::CurrentMenu() const
    return tmpCurrentSubMenu;
 }
 
+void CommandManager::UpdateCheckmarks( AudacityProject &project )
+{
+   for ( const auto &entry : mCommandList ) {
+      if ( entry->menu && entry->checkmarkFn && !entry->isOccult) {
+         entry->menu->Check( entry->id, entry->checkmarkFn( project ) );
+      }
+   }
+}
+
 
 
 void CommandManager::AddItem(AudacityProject &project,
@@ -522,7 +531,7 @@ void CommandManager::AddItem(AudacityProject &project,
 }
 
 auto CommandManager::Options::MakeCheckFn(
-   const wxString key, bool defaultValue ) -> CheckFn
+   const wxString key, bool defaultValue ) -> CommandListEntry::CheckFn
 {
    return [=](AudacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
 }
@@ -689,6 +698,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
       entry->isGlobal = false;
       entry->isOccult = bMakingOccultCommands;
+      entry->checkmarkFn = options.checker;
 
       // Exclude accelerators that are in the MaxList.
       // Note that the default is unaffected, intentionally so.

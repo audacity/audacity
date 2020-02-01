@@ -389,8 +389,6 @@ BaseItemSharedPtr ViewMenu()
 {
    using Options = CommandManager::Options;
 
-   static const auto checkOff = Options{}.CheckState( false );
-
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("View"), XO("&View"),
@@ -448,7 +446,10 @@ BaseItemSharedPtr ViewMenu()
    #if defined(EXPERIMENTAL_EFFECTS_RACK)
          ,
          Command( wxT("ShowEffectsRack"), XXO("Show Effects Rack"),
-            FN(OnShowEffectsRack), AlwaysEnabledFlag, checkOff )
+            FN(OnShowEffectsRack), AlwaysEnabledFlag,
+            Options{}.CheckTest( [](AudacityProject &project){
+               auto &rack = EffectRack::Get( project );
+               return rack.IsShown(); } ) )
    #endif
       )
    ) ) };

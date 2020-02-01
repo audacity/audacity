@@ -592,8 +592,6 @@ BaseItemSharedPtr LabelEditMenus()
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   static const auto checkOff = Options{}.CheckState( false );
-
    static const auto NotBusyLabelsAndWaveFlags =
       AudioIONotBusyFlag() |
       LabelsSelectedFlag() | WaveTracksExistFlag() | TimeSelectedFlag();
@@ -630,7 +628,8 @@ BaseItemSharedPtr LabelEditMenus()
       Section( "",
          Command( wxT("TypeToCreateLabel"),
             XXO("&Type to Create a Label (on/off)"),
-            FN(OnToggleTypeToCreateLabel), AlwaysEnabledFlag, checkOff )
+            FN(OnToggleTypeToCreateLabel), AlwaysEnabledFlag,
+            Options{}.CheckTest(wxT("/GUI/TypeToCreateLabel"), false) )
       )
    ), // first menu
 

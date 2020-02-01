@@ -22,6 +22,7 @@
 #include "../UndoManager.h"
 #include "../WaveClip.h"
 #include "../prefs/RecordingPrefs.h"
+#include "../prefs/TracksPrefs.h"
 #include "../WaveTrack.h"
 #include "../ViewInfo.h"
 #include "../commands/CommandContext.h"
@@ -897,9 +898,6 @@ BaseItemSharedPtr TransportMenu()
 {
    using Options = CommandManager::Options;
 
-   static const auto checkOff = Options{}.CheckState( false );
-   static const auto checkOn = Options{}.CheckState( true );
-
    static const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
 
    static BaseItemSharedPtr menu{
@@ -982,7 +980,8 @@ BaseItemSharedPtr TransportMenu()
                Command( wxT("SoundActivation"),
                   XXO("Sound A&ctivated Recording (on/off)"),
                   FN(OnToggleSoundActivated),
-                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
+                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
+                  Options{}.CheckTest(wxT("/AudioIO/SoundActivatedRecord"), false) )
             ),
 
             Section( "",
@@ -990,14 +989,24 @@ BaseItemSharedPtr TransportMenu()
                   FN(OnTogglePinnedHead),
                   // Switching of scrolling on and off is permitted
                   // even during transport
-                  AlwaysEnabledFlag, checkOff ),
+                  AlwaysEnabledFlag,
+                  Options{}.CheckTest([](const AudacityProject&){
+                     return TracksPrefs::GetPinnedHeadPreference(); } ) ),
 
                Command( wxT("Overdub"), XXO("&Overdub (on/off)"),
                   FN(OnTogglePlayRecording),
-                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOn ),
+                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
+                  Options{}.CheckTest( wxT("/AudioIO/Duplex"),
+#ifdef EXPERIMENTAL_DA
+                     false
+#else
+                     true
+#endif
+                  ) ),
                Command( wxT("SWPlaythrough"), XXO("So&ftware Playthrough (on/off)"),
                   FN(OnToggleSWPlaythrough),
-                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
+                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
+                  Options{}.CheckTest( wxT("/AudioIO/SWPlaythrough"), false ) )
 
 
       #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
@@ -1005,7 +1014,9 @@ BaseItemSharedPtr TransportMenu()
                Command( wxT("AutomatedInputLevelAdjustmentOnOff"),
                   XXO("A&utomated Recording Level Adjustment (on/off)"),
                   FN(OnToggleAutomatedInputLevelAdjustment),
-                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(), checkOff )
+                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
+                  Options{}.CheckTest(
+                     wxT("/AudioIO/AutomatedInputLevelAdjustment"), false ) )
       #endif
             )
          )

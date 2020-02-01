@@ -1,4 +1,5 @@
 #include "../CommonCommandFlags.h"
+#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../commands/CommandContext.h"
@@ -114,11 +115,11 @@ void OnFullScreen(const CommandContext &context)
 {
    auto &project = context.project;
    auto &window = GetProjectFrame( project );
-   auto &commandManager = CommandManager::Get( project );
 
    bool bChecked = !window.wxTopLevelWindow::IsFullScreen();
    window.wxTopLevelWindow::ShowFullScreen(bChecked);
-   commandManager.Check(wxT("FullScreenOnOff"), bChecked);
+
+   MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
 }; // struct Handler
@@ -235,8 +236,9 @@ BaseItemPtr ExtraMiscItems()
          Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
             FN(OnFullScreen),
             AlwaysEnabledFlag,
-            Options{ key }.CheckState(
-               GetProjectFrame( project ).wxTopLevelWindow::IsFullScreen() ) );
+            Options{ key }.CheckTest( []( const AudacityProject &project ) {
+               return GetProjectFrame( project )
+                  .wxTopLevelWindow::IsFullScreen(); } ) );
       }
    ) );
 }

@@ -69,6 +69,11 @@ struct CommandListEntry
    CommandHandlerFinder finder;
    CommandFunctorPointer callback;
    CommandParameter parameter;
+
+   // type of a function that determines checkmark state
+   using CheckFn = std::function< bool(AudacityProject&) >;
+   CheckFn checkmarkFn;
+
    bool multi;
    int index;
    int count;
@@ -139,9 +144,6 @@ class AUDACITY_DLL_API CommandManager final
    // For specifying unusual arguments in AddItem
    struct Options
    {
-      // type of a function that determines checkmark state
-      using CheckFn = std::function< bool(AudacityProject&) >;
-
       Options() {}
       // Allow implicit construction from an accelerator string, which is
       // a very common case
@@ -167,17 +169,9 @@ class AUDACITY_DLL_API CommandManager final
       Options &&AllowInMacros ( int value = 1 ) &&
          { allowInMacros = value; return std::move(*this); }
 
-      // Specify a constant check state
-      Options &&CheckState (bool value) && {
-         checker = value
-            ? [](AudacityProject&){ return true; }
-            : [](AudacityProject&){ return false; }
-           ;
-           return std::move(*this);
-      }
       // CheckTest is overloaded
       // Take arbitrary predicate
-      Options &&CheckTest (const CheckFn &fn) &&
+      Options &&CheckTest (const CommandListEntry::CheckFn &fn) &&
          { checker = fn; return std::move(*this); }
       // Take a preference path
       Options &&CheckTest (const wxChar *key, bool defaultValue) && {
@@ -186,7 +180,7 @@ class AUDACITY_DLL_API CommandManager final
       }
 
       const wxChar *accel{ wxT("") };
-      CheckFn checker; // default value means it's not a check item
+      CommandListEntry::CheckFn checker; // default value means it's not a check item
       bool bIsEffect{ false };
       CommandParameter parameter{};
       TranslatableString longName{};
@@ -195,7 +189,8 @@ class AUDACITY_DLL_API CommandManager final
       int allowInMacros{ -1 }; // 0 = never, 1 = always, -1 = deduce from label
 
    private:
-      static CheckFn MakeCheckFn( const wxString key, bool defaultValue );
+      static CommandListEntry::CheckFn
+         MakeCheckFn( const wxString key, bool defaultValue );
    };
 
    void AddItemList(const CommandID & name,
@@ -363,6 +358,8 @@ private:
    wxMenu * CurrentSubMenu() const;
 public:
    wxMenu * CurrentMenu() const;
+
+   void UpdateCheckmarks( AudacityProject &project );
 private:
    wxString FormatLabelForMenu(const CommandListEntry *entry) const;
    wxString FormatLabelWithDisabledAccel(const CommandListEntry *entry) const;
