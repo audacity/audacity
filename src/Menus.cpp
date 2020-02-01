@@ -534,6 +534,8 @@ auto CollectedItems::InsertNewItemUsingHint(
             if ( found == end ) {
                if ( !force )
                   return false;
+               else
+                  insertPoint = found;
             }
             else {
                insertPoint = found;
@@ -673,15 +675,15 @@ auto CollectedItems::MergeLikeNamedItems(
    auto &item = *iter;
    auto pItem = item.first;
    const auto &hint = item.second;
-   bool success = true;
+   bool success = false;
    if ( iPass == -1 )
       // A first pass consults preferences.
       success = InsertNewItemUsingPreferences( itemOrdering, pItem );
-   else {
+   else if ( iPass == hint.type ) {
       // Later passes for choosing placements.
       // Maybe it fails in this pass, because a placement refers to some
       // other name that has not yet been placed.
-      success = ( iPass == hint.type ) &&
+      success =
          InsertNewItemUsingHint( pItem, hint, endItemsCount, force );
       wxASSERT( !force || success );
    }
@@ -797,7 +799,7 @@ auto CollectedItems::MergeItems(
    bool force = false;
    size_t oldSize = 0;
    size_t endItemsCount = 0;
-   auto prevSize = items.size();
+   auto prevSize = newItems.size();
    while( !newItems.empty() )
    {
       // If several items have the same hint, we try to preserve the sort by
@@ -822,12 +824,13 @@ auto CollectedItems::MergeItems(
          oldSize = newSize;
       else if ( iPass == OrderingHint::Unspecified ) {
          if ( !force ) {
+            iPass = 0, oldSize = newSize;
             // Are we really ready for the final pass?
             bool progress = ( oldSize > newSize );
             if ( progress )
                // No.  While some progress is made, don't force final placements.
                // Retry Before and After hints.
-               iPass = 0, oldSize = newSize;
+               ;
             else
                force = true;
          }
