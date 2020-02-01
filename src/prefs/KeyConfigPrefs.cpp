@@ -68,9 +68,9 @@ KeyConfigPrefs and MousePrefs use.
 #define FilterTimerID           17012
 
 // EMPTY_SHORTCUT means "user chose to have no shortcut"
-#define EMPTY_SHORTCUT          _("")
+#define EMPTY_SHORTCUT          ("")
 // NO_SHORTCUT means "user made no choice"
-#define NO_SHORTCUT             _((wxChar)7)        
+#define NO_SHORTCUT             (wxString)((wxChar)7)
 
 BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
    EVT_BUTTON(AssignDefaultsButtonID, KeyConfigPrefs::OnDefaults)
@@ -528,7 +528,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
    TranslatableString message{ 
       XO("Loaded %d keyboard shortcuts\n").Format(mManager->GetNumberOfKeysRead()) };
 
-   if (disabledShortcuts.Translation() != _(""))
+   if (disabledShortcuts.Translation() != (""))
       message += XO("\nThe following commands are not mentioned in the imported file, "
          "but have their shortcuts removed because of the conflict with other new shortcuts:\n") +
          disabledShortcuts;
