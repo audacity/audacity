@@ -227,18 +227,20 @@ BaseItemPtr ExtraMiscItems()
    ;
 
    // Not a menu.
-   return ( FinderScope{ findCommandHandler },
+   return (
    Items( wxT("Misc"),
       // Delayed evaluation
       []( AudacityProject &project ) {
-         return
+         return (
+         FinderScope{ findCommandHandler },
          // Accel key is not bindable.
          Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
             FN(OnFullScreen),
             AlwaysEnabledFlag,
             Options{ key }.CheckTest( []( const AudacityProject &project ) {
                return GetProjectFrame( project )
-                  .wxTopLevelWindow::IsFullScreen(); } ) );
+                  .wxTopLevelWindow::IsFullScreen(); } ) )
+        );
       }
    ) );
 }
