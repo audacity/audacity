@@ -549,7 +549,7 @@ auto CollectedItems::InsertNewItemUsingHint(
             break;
          case OrderingHint::Unspecified:
          default:
-            if ( force )
+            if ( !force )
                return false;
             break;
       }
@@ -752,12 +752,11 @@ auto CollectedItems::MergeItemsDescendingNamesPass(
 {
    // Inner loop over ranges of like-named items.
    auto left = newItems.begin();
-   auto end = newItems.end();
-   while ( left != end ) {
+   while ( left != newItems.end() ) {
       // Find the range
       using namespace std::placeholders;
       auto right = std::find_if(
-         left + 1, end, std::bind( MajorComp, *left, _1 ) );
+         left + 1, newItems.end(), std::bind( MajorComp, *left, _1 ) );
 
       bool success = MergeLikeNamedItems(
          visitor, itemOrdering, left, right, iPass,
