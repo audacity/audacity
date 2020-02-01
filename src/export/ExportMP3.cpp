@@ -1687,8 +1687,6 @@ public:
                const Tags *metadata = NULL,
                int subformat = 0) override;
 
-   virtual unsigned SequenceNumber() const override { return 20; }
-
 private:
 
    int AskResample(int bitrate, int rate, int lowrate, int highrate);
@@ -2199,8 +2197,9 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-static Exporter::RegisteredExportPlugin
-sRegisteredPlugin{ []{ return std::make_unique< ExportMP3 >(); } };
+static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "MP3",
+   []{ return std::make_unique< ExportMP3 >(); }
+};
 
 //----------------------------------------------------------------------------
 // Return library version
