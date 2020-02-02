@@ -1,11 +1,5 @@
 #!/bin/sh
 
-# Only want to run during a build
-if [ -n "${ACTION}" -a "${ACTION}" != "build" ]
-then
-   exit 0
-fi
-
 #
 # Here we create empty xcconfig files if they do not exist.  Otherwise,
 # the build will fail.
