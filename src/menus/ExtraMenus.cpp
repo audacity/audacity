@@ -214,9 +214,15 @@ BaseItemSharedPtr ExtraDeviceMenu()
 }
 
 // Under /MenuBar/Optional/Extra/Part2
-BaseItemPtr ExtraMiscItems()
+BaseItemSharedPtr ExtraMiscItems()
 {
    using Options = CommandManager::Options;
+
+   // Not a menu.
+   static BaseItemSharedPtr items{
+   Items( wxT("Misc"),
+      // Delayed evaluation
+      []( AudacityProject &project ) {
 
    static const auto key =
 #ifdef __WXMAC__
@@ -226,11 +232,6 @@ BaseItemPtr ExtraMiscItems()
 #endif
    ;
 
-   // Not a menu.
-   return (
-   Items( wxT("Misc"),
-      // Delayed evaluation
-      []( AudacityProject &project ) {
          return (
          FinderScope{ findCommandHandler },
          // Accel key is not bindable.
@@ -242,7 +243,8 @@ BaseItemPtr ExtraMiscItems()
                   .wxTopLevelWindow::IsFullScreen(); } ) )
         );
       }
-   ) );
+   ) };
+   return items;
 }
 
 AttachedItem sAttachment2{
