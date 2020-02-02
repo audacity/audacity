@@ -314,7 +314,6 @@ audacity_SOURCES = \
 	TrackPanelResizerCell.h \
 	TrackUtilities.cpp \
 	TrackUtilities.h \
-	TranslatableStringArray.h \
 	UIHandle.h \
 	UIHandle.cpp \
 	UndoManager.cpp \

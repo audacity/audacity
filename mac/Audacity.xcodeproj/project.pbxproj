@@ -2416,7 +2416,6 @@
 		2840CF4B0AEB807E00F49FC3 /* util.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; name = util.c; path = twolame/libtwolame/util.c; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF4C0AEB807E00F49FC3 /* util.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = util.h; path = twolame/libtwolame/util.h; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF840AEB83DB00F49FC3 /* ExportMP2.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportMP2.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		284416391B82D6BC0000574D /* TranslatableStringArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TranslatableStringArray.h; sourceTree = "<group>"; };
 		2844163A1B82D6BC0000574D /* WaveTrackLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackLocation.h; sourceTree = "<group>"; };
 		28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ThemePrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28456AC10A2C180E00C23C1E /* ThemePrefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ThemePrefs.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -4709,7 +4708,6 @@
 				5E74D2DB1CC4429700D88B0B /* tracks */,
 				5E2B3E5D22BD97A7005042E1 /* TrackUtilities.cpp */,
 				5E2B3E5E22BD97A7005042E1 /* TrackUtilities.h */,
-				284416391B82D6BC0000574D /* TranslatableStringArray.h */,
 				5E15123B1DB000C000702E29 /* UIHandle.cpp */,
 				5E15123C1DB000C000702E29 /* UIHandle.h */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,

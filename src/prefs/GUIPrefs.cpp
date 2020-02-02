@@ -35,10 +35,7 @@
 
 #include "ThemePrefs.h"
 #include "../AColor.h"
-#include "../TranslatableStringArray.h"
 #include "../widgets/AudacityMessageBox.h"
-
-wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 
 GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: refers to Audacity's user interface settings */
@@ -349,12 +346,6 @@ wxString GUIPrefs::SetLang( const wxString & lang )
    // creating the wxLocale instance sets the application-wide locale.
 
    Internat::Init();
-
-   // Notify listeners of language changes
-   {
-      wxCommandEvent evt(EVT_LANGUAGE_CHANGE);
-      wxTheApp->ProcessEvent(evt);
-   }
 
    // Unused strings that we want to be translated, even though
    // we're not using them yet...

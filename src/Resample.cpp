@@ -24,7 +24,6 @@
 
 #include "Resample.h"
 #include "Prefs.h"
-#include "TranslatableStringArray.h"
 #include "Internat.h"
 #include "../include/audacity/ComponentInterface.h"
 

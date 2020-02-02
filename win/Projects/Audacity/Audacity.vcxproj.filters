@@ -2122,9 +2122,6 @@
     <ClInclude Include="..\..\..\src\effects\VST\VSTControlMSW.h">
       <Filter>src\effects\VST</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\TranslatableStringArray.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\TrackPanelListener.h">
       <Filter>src</Filter>
     </ClInclude>

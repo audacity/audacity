@@ -355,22 +355,22 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	TrackPanelListener.h TrackPanelMouseEvent.h \
 	TrackPanelResizeHandle.cpp TrackPanelResizeHandle.h \
 	TrackPanelResizerCell.cpp TrackPanelResizerCell.h \
-	TrackUtilities.cpp TrackUtilities.h TranslatableStringArray.h \
-	UIHandle.h UIHandle.cpp UndoManager.cpp UndoManager.h \
-	UserException.cpp UserException.h ViewInfo.cpp ViewInfo.h \
-	VoiceKey.cpp VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp \
-	WaveTrack.h WaveTrackLocation.h WrappedType.cpp WrappedType.h \
-	ZoomInfo.cpp ZoomInfo.h wxFileNameWrapper.h \
-	commands/AppCommandEvent.cpp commands/AppCommandEvent.h \
-	commands/AudacityCommand.cpp commands/AudacityCommand.h \
-	commands/BatchEvalCommand.cpp commands/BatchEvalCommand.h \
-	commands/Command.cpp commands/Command.h \
-	commands/CommandBuilder.cpp commands/CommandBuilder.h \
-	commands/CommandContext.cpp commands/CommandContext.h \
-	commands/CommandDirectory.cpp commands/CommandDirectory.h \
-	commands/CommandFlag.h commands/CommandFunctors.h \
-	commands/CommandHandler.cpp commands/CommandHandler.h \
-	commands/CommandManager.cpp commands/CommandManager.h \
+	TrackUtilities.cpp TrackUtilities.h UIHandle.h UIHandle.cpp \
+	UndoManager.cpp UndoManager.h UserException.cpp \
+	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
+	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
+	WaveTrackLocation.h WrappedType.cpp WrappedType.h ZoomInfo.cpp \
+	ZoomInfo.h wxFileNameWrapper.h commands/AppCommandEvent.cpp \
+	commands/AppCommandEvent.h commands/AudacityCommand.cpp \
+	commands/AudacityCommand.h commands/BatchEvalCommand.cpp \
+	commands/BatchEvalCommand.h commands/Command.cpp \
+	commands/Command.h commands/CommandBuilder.cpp \
+	commands/CommandBuilder.h commands/CommandContext.cpp \
+	commands/CommandContext.h commands/CommandDirectory.cpp \
+	commands/CommandDirectory.h commands/CommandFlag.h \
+	commands/CommandFunctors.h commands/CommandHandler.cpp \
+	commands/CommandHandler.h commands/CommandManager.cpp \
+	commands/CommandManager.h \
 	commands/CommandManagerWindowClasses.h commands/CommandMisc.h \
 	commands/CommandSignature.cpp commands/CommandSignature.h \
 	commands/CommandTargets.h commands/CommandType.cpp \
@@ -1883,22 +1883,22 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	TrackPanelListener.h TrackPanelMouseEvent.h \
 	TrackPanelResizeHandle.cpp TrackPanelResizeHandle.h \
 	TrackPanelResizerCell.cpp TrackPanelResizerCell.h \
-	TrackUtilities.cpp TrackUtilities.h TranslatableStringArray.h \
-	UIHandle.h UIHandle.cpp UndoManager.cpp UndoManager.h \
-	UserException.cpp UserException.h ViewInfo.cpp ViewInfo.h \
-	VoiceKey.cpp VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp \
-	WaveTrack.h WaveTrackLocation.h WrappedType.cpp WrappedType.h \
-	ZoomInfo.cpp ZoomInfo.h wxFileNameWrapper.h \
-	commands/AppCommandEvent.cpp commands/AppCommandEvent.h \
-	commands/AudacityCommand.cpp commands/AudacityCommand.h \
-	commands/BatchEvalCommand.cpp commands/BatchEvalCommand.h \
-	commands/Command.cpp commands/Command.h \
-	commands/CommandBuilder.cpp commands/CommandBuilder.h \
-	commands/CommandContext.cpp commands/CommandContext.h \
-	commands/CommandDirectory.cpp commands/CommandDirectory.h \
-	commands/CommandFlag.h commands/CommandFunctors.h \
-	commands/CommandHandler.cpp commands/CommandHandler.h \
-	commands/CommandManager.cpp commands/CommandManager.h \
+	TrackUtilities.cpp TrackUtilities.h UIHandle.h UIHandle.cpp \
+	UndoManager.cpp UndoManager.h UserException.cpp \
+	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
+	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
+	WaveTrackLocation.h WrappedType.cpp WrappedType.h ZoomInfo.cpp \
+	ZoomInfo.h wxFileNameWrapper.h commands/AppCommandEvent.cpp \
+	commands/AppCommandEvent.h commands/AudacityCommand.cpp \
+	commands/AudacityCommand.h commands/BatchEvalCommand.cpp \
+	commands/BatchEvalCommand.h commands/Command.cpp \
+	commands/Command.h commands/CommandBuilder.cpp \
+	commands/CommandBuilder.h commands/CommandContext.cpp \
+	commands/CommandContext.h commands/CommandDirectory.cpp \
+	commands/CommandDirectory.h commands/CommandFlag.h \
+	commands/CommandFunctors.h commands/CommandHandler.cpp \
+	commands/CommandHandler.h commands/CommandManager.cpp \
+	commands/CommandManager.h \
 	commands/CommandManagerWindowClasses.h commands/CommandMisc.h \
 	commands/CommandSignature.cpp commands/CommandSignature.h \
 	commands/CommandTargets.h commands/CommandType.cpp \

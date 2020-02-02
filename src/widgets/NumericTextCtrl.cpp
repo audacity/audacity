@@ -172,7 +172,6 @@ different formats.
 #include "../AllThemeResources.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
-#include "../TranslatableStringArray.h"
 
 #include <algorithm>
 #include <math.h>

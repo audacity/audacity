@@ -23,7 +23,6 @@ Paul Licameli
 #include <wx/intl.h>
 
 #include "../Prefs.h"
-#include "../TranslatableStringArray.h"
 
 
 WaveformSettings::Globals::Globals()

@@ -19,7 +19,6 @@ Paul Licameli
 #include "../Experimental.h"
 
 #include "../NumberScale.h"
-#include "../TranslatableStringArray.h"
 
 #include <algorithm>
 

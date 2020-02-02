@@ -647,7 +647,6 @@
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\ScrubUI.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\TrackView.h" />
-    <ClInclude Include="..\..\..\src\TranslatableStringArray.h" />
     <ClInclude Include="..\..\..\src\UserException.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\SliderHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\TimeShiftHandle.h" />
