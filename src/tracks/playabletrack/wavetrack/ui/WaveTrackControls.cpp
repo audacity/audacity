@@ -608,9 +608,8 @@ protected:
 WaveTrackMenuTable &WaveTrackMenuTable::Instance( Track * pTrack )
 {
    static WaveTrackMenuTable instance;
-   wxCommandEvent evt;
    // Clear it out so we force a repopulate
-   instance.Invalidate( evt );
+   instance.Clear();
    // Ensure we know how to populate.
    // Messy, but the design does not seem to offer an alternative.
    // We won't use pTrack after populate.
