@@ -25,7 +25,6 @@ class wxString;
 #include "../MemoryX.h"
 
 #include "../Internat.h"
-#include "../TranslatableStringArray.h"
 
 class PopupMenuTable;
 
@@ -53,7 +52,7 @@ struct PopupMenuTableEntry
    bool IsValid() const { return type != Invalid; }
 };
 
-class PopupMenuTable : public TranslatableArray< std::vector<PopupMenuTableEntry> >
+class PopupMenuTable : public wxEvtHandler
 {
 public:
    typedef PopupMenuTableEntry Entry;
@@ -95,6 +94,20 @@ public:
    // No memory management responsibility is assumed by this function.
    static std::unique_ptr<Menu> BuildMenu
       (wxEvtHandler *pParent, PopupMenuTable *pTable, void *pUserData = NULL);
+
+protected:
+   virtual void Populate() = 0;
+   void Clear() { mContents.clear(); }
+   
+   using Entries = std::vector<PopupMenuTableEntry>;
+   const Entries& Get()
+   {
+      if (mContents.empty())
+         Populate();
+      return mContents;
+   }
+
+   Entries mContents;
 };
 
 /*
@@ -114,17 +127,18 @@ Then in MyTable.cpp,
 
 void MyTable::InitUserData(void *pUserData)
 {
+   // Remember pData
    auto pData = static_cast<MyData*>(pUserData);
 }
 
 void MyTable::InitMenu(Menu *pMenu)
 {
-   // Remember pData, enable or disable menu items
+   // enable or disable menu items
 }
 
 void MyTable::DestroyMenu()
 {
-// Do cleanup
+   // Do cleanup
 }
 
 BEGIN_POPUP_MENU(MyTable)

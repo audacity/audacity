@@ -64,6 +64,7 @@ void PopupMenuTable::Menu::Extend(PopupMenuTable *pTable)
    }
 
    pTable->InitMenu(this);
+   tables.push_back( pTable );
 }
 
 void PopupMenuTable::Menu::DisconnectTable(PopupMenuTable *pTable)
