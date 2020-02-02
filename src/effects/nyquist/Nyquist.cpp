@@ -1179,10 +1179,18 @@ bool NyquistEffect::ProcessOne()
             clips += wxT("(list ");
          }
          // Each clip is a list (start-time, end-time)
-         for (const auto clip: ca) {
-            clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                                      Internat::ToString(clip->GetStartTime()),
-                                      Internat::ToString(clip->GetEndTime()));
+         // Limit number of clips added to avoid argument stack overflow error (bug 2300).
+         for (size_t i=0; i<ca.size(); i++) {
+            if (i < 1000) {
+               clips += wxString::Format(wxT("(list (float %s) (float %s))"),
+                                         Internat::ToString(ca[i]->GetStartTime()),
+                                         Internat::ToString(ca[i]->GetEndTime()));
+            } else if (i == 1000) {
+               // If final clip is NIL, plug-in developer knows there are more than 1000 clips in channel.
+               clips += "NIL";
+            } else if (i > 1000) {
+               break;
+            }
          }
          if (mCurNumChannels > 1) clips += wxT(" )");
 
@@ -1203,7 +1211,7 @@ bool NyquistEffect::ProcessOne()
          if (!std::isinf(rms) && !std::isnan(rms)) {
             rmsString += wxString::Format(wxT("(float %s) "), Internat::ToString(rms));
          } else {
-            rmsString += wxT("nil ");
+            rmsString += wxT("NIL ");
          }
       }
       // A list of clips for mono, or an array of lists for multi-channel.
