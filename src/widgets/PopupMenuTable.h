@@ -114,17 +114,18 @@ Then in MyTable.cpp,
 
 void MyTable::InitUserData(void *pUserData)
 {
+   // Remember pData
    auto pData = static_cast<MyData*>(pUserData);
 }
 
 void MyTable::InitMenu(Menu *pMenu)
 {
-   // Remember pData, enable or disable menu items
+   // enable or disable menu items
 }
 
 void MyTable::DestroyMenu()
 {
-// Do cleanup
+   // Do cleanup
 }
 
 BEGIN_POPUP_MENU(MyTable)
