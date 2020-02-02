@@ -218,7 +218,7 @@ BaseItemPtr ExtraMiscItems()
 {
    using Options = CommandManager::Options;
 
-   constexpr auto key =
+   static const auto key =
 #ifdef __WXMAC__
       wxT("Ctrl+/")
 #else
