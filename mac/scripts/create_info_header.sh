@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Only want to run during a build
+if [ -n "${ACTION}" -a "${ACTION}" != "build" ]
+then
+   exit 0
+fi
+
 #
 # Here we create empty xcconfig files if they do not exist.  Otherwise,
 # the build will fail.
@@ -20,12 +26,12 @@ done
 #
 cd ${TOPLEVEL}
 mkdir -p mac/build
-eval $(g++ -E -dM src/Audacity.h | awk '/#define *AUDACITY_(VERSION|RELEASE|REVISION|MODLEVEL) /{print $2 "=" $3}')
+eval $(g++ -Wno-deprecated -stdlib=libc++ -E -dM src/Audacity.h | awk '/#define *AUDACITY_(VERSION|RELEASE|REVISION|MODLEVEL) /{print $2 "=" $3}')
 case $CONFIGURATION in
 Debug|Debug64)
-    AUDACITY_EXECUTABLE=Audacity;;
+    AUDACITY_EXECUTABLE=Wrapper;;
 *)
-    AUDACITY_EXECUTABLE=Audacity;;
+    AUDACITY_EXECUTABLE=Wrapper;;
 esac
 cat >mac/build/Info.plist.h <<EOF
 #define AUDACITY_EXECUTABLE ${AUDACITY_EXECUTABLE}

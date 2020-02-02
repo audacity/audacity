@@ -133,10 +133,10 @@ then
                   --options runtime \
                   --entitlements "${SRCROOT}/${CODE_SIGN_ENTITLEMENTS}" \
                   --sign "${CODESIGN_APP_IDENTITY}" \
-                  "${DSTROOT}/Audacity.app"
+                  $(find ${DSTROOT}/Audacity.app -type f ! -path "*help*")
 
    # Create the ZIP archive for notarization
-   xcrun ditto -c -k --keepParent "${DSTROOT}" "${DSTROOT}.zip" 
+   xcrun ditto -c -k --keepParent "${DSTROOT}/Audacity.app" "${DSTROOT}.zip" 
 
    # Send it off for notarization
    notarize "${DSTROOT}.zip"
