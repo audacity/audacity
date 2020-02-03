@@ -199,7 +199,7 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
    auto pNode = &registry;
    pItems = &pNode->items;
 
-   auto pathComponents = ::wxSplit( placement.path, '/' );
+   const auto pathComponents = ::wxSplit( placement.path, '/' );
    auto pComponent = pathComponents.begin(), end = pathComponents.end();
 
    // Descend the registry hierarchy, while groups matching the path components
@@ -234,7 +234,7 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
    while ( pComponent != end ) {
       auto newNode = std::make_unique<TransparentGroupItem<>>( *pComponent );
       pNode = newNode.get();
-      pItems->insert( find( newNode->name ).second, std::move( newNode ) );
+      pItems->insert( find( pNode->name ).second, std::move( newNode ) );
       pItems = &pNode->items;
       ++pComponent;
    }
