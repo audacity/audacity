@@ -128,10 +128,10 @@ void TrackMenuTable::InitMenu(wxMenu *pMenu)
 
 BEGIN_POPUP_MENU(TrackMenuTable)
    BEGIN_POPUP_MENU_SECTION( "Basic" )
-      POPUP_MENU_ITEM(OnSetNameID, XO("&Name..."), OnSetName)
+      POPUP_MENU_ITEM( "Name", OnSetNameID, XO("&Name..."), OnSetName)
    END_POPUP_MENU_SECTION()
    BEGIN_POPUP_MENU_SECTION( "Move" )
-      POPUP_MENU_ITEM(
+      POPUP_MENU_ITEM( "Up",
          // It is not correct to use NormalizedKeyString::Display here --
          // wxWidgets will apply its equivalent to the key names passed to menu
          // functions.
@@ -144,7 +144,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
              wxT("\t")
          ),
          OnMoveTrack)
-      POPUP_MENU_ITEM(
+      POPUP_MENU_ITEM( "Down",
          OnMoveDownID,
          XO("Move Track &Down").Join(
             Verbatim(
@@ -154,7 +154,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
              wxT("\t")
          ),
          OnMoveTrack)
-      POPUP_MENU_ITEM(
+      POPUP_MENU_ITEM( "Top",
          OnMoveTopID,
          XO("Move Track to &Top").Join(
             Verbatim(
@@ -164,7 +164,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
              wxT("\t")
          ),
          OnMoveTrack)
-      POPUP_MENU_ITEM(
+      POPUP_MENU_ITEM( "Bottom",
          OnMoveBottomID,
          XO("Move Track to &Bottom").Join(
             Verbatim(

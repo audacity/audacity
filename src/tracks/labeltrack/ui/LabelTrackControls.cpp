@@ -73,7 +73,7 @@ enum
 
 BEGIN_POPUP_MENU(LabelTrackMenuTable)
    BEGIN_POPUP_MENU_SECTION( "Basic" )
-      POPUP_MENU_ITEM(OnSetFontID, XO("&Font..."), OnSetFont)
+      POPUP_MENU_ITEM( "Font", OnSetFontID, XO("&Font..."), OnSetFont)
    END_POPUP_MENU_SECTION()
 END_POPUP_MENU()
 

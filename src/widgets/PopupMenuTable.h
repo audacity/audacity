@@ -136,7 +136,7 @@ BEGIN_POPUP_MENU(MyTable)
    // This is inside a function and can contain arbitrary code.  But usually
    // you only need a sequence of macro calls:
 
-   POPUP_MENU_ITEM(OnCutSelectedTextID,     XO("Cu&t"),          OnCutSelectedText)
+   POPUP_MENU_ITEM("Cut", OnCutSelectedTextID,     XO("Cu&t"),          OnCutSelectedText)
    // etc.
  
 END_POPUP_MENU()
@@ -166,7 +166,7 @@ That's all!
 void HandlerClass::Populate() { \
    using My = HandlerClass;
 
-#define POPUP_MENU_APPEND(type, id, string, memFn, subTable) \
+#define POPUP_MENU_APPEND(stringId, type, id, string, memFn, subTable) \
    mContents.push_back( Entry { \
       type, \
       id, \
@@ -175,37 +175,37 @@ void HandlerClass::Populate() { \
       subTable \
    } );
 
-#define POPUP_MENU_APPEND_ITEM(type, id, string, memFn) \
-   POPUP_MENU_APPEND( \
+#define POPUP_MENU_APPEND_ITEM(stringId, type, id, string, memFn) \
+   POPUP_MENU_APPEND( stringId, \
       type, \
       id, \
       string, \
       (wxCommandEventFunction) (&My::memFn), \
       nullptr )
 
-#define POPUP_MENU_ITEM(id, string, memFn) \
-   POPUP_MENU_APPEND_ITEM(Entry::Item, id, string, memFn);
+#define POPUP_MENU_ITEM(stringId, id, string, memFn) \
+   POPUP_MENU_APPEND_ITEM(stringId, Entry::Item, id, string, memFn);
 
-#define POPUP_MENU_RADIO_ITEM(id, string, memFn) \
-   POPUP_MENU_APPEND_ITEM(Entry::RadioItem, id, string, memFn);
+#define POPUP_MENU_RADIO_ITEM(stringId, id, string, memFn) \
+   POPUP_MENU_APPEND_ITEM(stringId, Entry::RadioItem, id, string, memFn);
 
-#define POPUP_MENU_CHECK_ITEM(id, string, memFn) \
-   POPUP_MENU_APPEND_ITEM(Entry::CheckItem, id, string, memFn);
+#define POPUP_MENU_CHECK_ITEM(stringId, id, string, memFn) \
+   POPUP_MENU_APPEND_ITEM(stringId, Entry::CheckItem, id, string, memFn);
 
 // classname names a class that derives from MenuTable and defines Instance()
-#define POPUP_MENU_SUB_MENU(classname) \
-   POPUP_MENU_APPEND( \
+#define POPUP_MENU_SUB_MENU(stringId, classname) \
+   POPUP_MENU_APPEND( stringId, \
       Entry::SubMenu, -1, classname::Instance().Caption(), nullptr, &classname::Instance() );
 
 #define BEGIN_POPUP_MENU_SECTION( name ) \
-   POPUP_MENU_APPEND( \
+   POPUP_MENU_APPEND( "", \
       Entry::Separator, -1, {}, nullptr, nullptr );
 
 #define END_POPUP_MENU_SECTION()
 
 // ends function
 #define END_POPUP_MENU() \
-   POPUP_MENU_APPEND( \
+   POPUP_MENU_APPEND( "", \
       Entry::Invalid, -1, {}, nullptr, nullptr ) \
    }
 

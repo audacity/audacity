@@ -163,13 +163,13 @@ void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 
 BEGIN_POPUP_MENU(TimeTrackMenuTable)
    BEGIN_POPUP_MENU_SECTION( "Scales" )
-      POPUP_MENU_RADIO_ITEM(OnTimeTrackLinID, XO("&Linear scale"), OnTimeTrackLin)
-      POPUP_MENU_RADIO_ITEM(OnTimeTrackLogID, XO("L&ogarithmic scale"), OnTimeTrackLog)
+      POPUP_MENU_RADIO_ITEM( "Linear", OnTimeTrackLinID, XO("&Linear scale"), OnTimeTrackLin)
+      POPUP_MENU_RADIO_ITEM( "Log", OnTimeTrackLogID, XO("L&ogarithmic scale"), OnTimeTrackLog)
    END_POPUP_MENU_SECTION()
 
    BEGIN_POPUP_MENU_SECTION( "Other" )
-      POPUP_MENU_ITEM(OnSetTimeTrackRangeID, XO("&Range..."), OnSetTimeTrackRange)
-      POPUP_MENU_CHECK_ITEM(OnTimeTrackLogIntID, XO("Logarithmic &Interpolation"), OnTimeTrackLogInt)
+      POPUP_MENU_ITEM( "Range", OnSetTimeTrackRangeID, XO("&Range..."), OnSetTimeTrackRange)
+      POPUP_MENU_CHECK_ITEM( "LogInterp", OnTimeTrackLogIntID, XO("Logarithmic &Interpolation"), OnTimeTrackLogInt)
    END_POPUP_MENU_SECTION()
 END_POPUP_MENU()
 
