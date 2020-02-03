@@ -37,7 +37,9 @@ std::vector<UIHandlePtr> LabelTrackControls::HitTest
 
 class LabelTrackMenuTable : public PopupMenuTable
 {
-   LabelTrackMenuTable() : mpData(NULL) {}
+   LabelTrackMenuTable()
+      : PopupMenuTable{ "LabelTrack" }
+   {}
    DECLARE_POPUP_MENU(LabelTrackMenuTable);
 
 public:
@@ -53,7 +55,7 @@ public:
       mpData = nullptr;
    }
 
-   CommonTrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData{};
 
    void OnSetFont(wxCommandEvent &);
 };

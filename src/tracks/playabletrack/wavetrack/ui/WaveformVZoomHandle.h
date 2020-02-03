@@ -75,7 +75,9 @@ private:
 
 class WaveformVRulerMenuTable : public WaveTrackVRulerMenuTable
 {
-   WaveformVRulerMenuTable() : WaveTrackVRulerMenuTable() {}
+   WaveformVRulerMenuTable()
+      : WaveTrackVRulerMenuTable{ "WaveFormVRuler" }
+   {}
    virtual ~WaveformVRulerMenuTable() {}
    DECLARE_POPUP_MENU(WaveformVRulerMenuTable);
 

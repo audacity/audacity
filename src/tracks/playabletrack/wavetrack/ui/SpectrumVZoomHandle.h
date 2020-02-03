@@ -75,7 +75,9 @@ private:
 
 class SpectrumVRulerMenuTable : public WaveTrackVRulerMenuTable
 {
-   SpectrumVRulerMenuTable() : WaveTrackVRulerMenuTable() {}
+   SpectrumVRulerMenuTable()
+      : WaveTrackVRulerMenuTable{ "SpectrumVRuler" }
+   {}
    virtual ~SpectrumVRulerMenuTable() {}
    DECLARE_POPUP_MENU(SpectrumVRulerMenuTable);
 

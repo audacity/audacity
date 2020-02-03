@@ -78,7 +78,9 @@ std::vector<UIHandlePtr> NoteTrackControls::HitTest
 
 class NoteTrackMenuTable : public PopupMenuTable
 {
-   NoteTrackMenuTable() : mpData(NULL) {}
+   NoteTrackMenuTable()
+      : PopupMenuTable{ "NoteTrack" }
+   {}
    DECLARE_POPUP_MENU(NoteTrackMenuTable);
 
 public:
@@ -95,7 +97,7 @@ private:
       mpData = nullptr;
    }
 
-   NoteTrackControlsBase::InitMenuData *mpData;
+   NoteTrackControlsBase::InitMenuData *mpData{};
 
    void OnChangeOctave(wxCommandEvent &);
 };

@@ -58,7 +58,7 @@ public:
    using Entry = PopupMenuTableEntry;
 
    // Supply a nonempty caption for sub-menu tables
-   PopupMenuTable( const TranslatableString &caption = {} )
+   PopupMenuTable( const Identifier &id, const TranslatableString &caption = {} )
       : mCaption{ caption }
    {}
 

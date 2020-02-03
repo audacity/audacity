@@ -80,7 +80,9 @@ enum
 
 class TrackMenuTable : public PopupMenuTable
 {
-   TrackMenuTable() : mpData(NULL) {}
+   TrackMenuTable()
+      : PopupMenuTable{ "Track" }
+   {}
    DECLARE_POPUP_MENU(TrackMenuTable);
 
 public:
@@ -98,7 +100,7 @@ private:
       mpData = nullptr;
    }
 
-   CommonTrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData{};
 };
 
 TrackMenuTable &TrackMenuTable::Instance()

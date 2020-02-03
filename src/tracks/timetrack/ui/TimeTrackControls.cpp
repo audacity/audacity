@@ -40,7 +40,9 @@ enum
 
 class TimeTrackMenuTable : public PopupMenuTable
 {
-   TimeTrackMenuTable() : mpData(NULL) {}
+   TimeTrackMenuTable()
+      : PopupMenuTable{ "TimeTrack" }
+   {}
    DECLARE_POPUP_MENU(TimeTrackMenuTable);
 
 public:
@@ -68,7 +70,7 @@ private:
       mpData = nullptr;
    }
 
-   CommonTrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData{};
 
    void OnSetTimeTrackRange(wxCommandEvent & /*event*/);
    void OnTimeTrackLin(wxCommandEvent & /*event*/);

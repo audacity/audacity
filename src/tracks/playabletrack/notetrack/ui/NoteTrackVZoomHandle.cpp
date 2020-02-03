@@ -167,7 +167,9 @@ enum {
 
 class NoteTrackVRulerMenuTable : public PopupMenuTable
 {
-   NoteTrackVRulerMenuTable(){};
+   NoteTrackVRulerMenuTable()
+      : PopupMenuTable{ "NoteTrackVRuler" }
+   {};
    virtual ~NoteTrackVRulerMenuTable() {}
    DECLARE_POPUP_MENU(NoteTrackVRulerMenuTable);
 

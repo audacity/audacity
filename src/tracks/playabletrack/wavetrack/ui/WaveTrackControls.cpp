@@ -153,7 +153,7 @@ enum {
 class WaveColorMenuTable : public PopupMenuTable
 {
    WaveColorMenuTable()
-      : PopupMenuTable( XO("&Wave Color") )
+      : PopupMenuTable( "WaveColor", XO("&Wave Color") )
    {}
    DECLARE_POPUP_MENU(WaveColorMenuTable);
 
@@ -252,7 +252,7 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 class FormatMenuTable : public PopupMenuTable
 {
    FormatMenuTable()
-      : PopupMenuTable{ XO("&Format") }
+      : PopupMenuTable{ "SampleFormat", XO("&Format") }
    {}
    DECLARE_POPUP_MENU(FormatMenuTable);
 
@@ -375,7 +375,7 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 class RateMenuTable : public PopupMenuTable
 {
    RateMenuTable()
-      : PopupMenuTable{ XO("Rat&e") }
+      : PopupMenuTable{ "SampleRate", XO("Rat&e") }
    {}
    DECLARE_POPUP_MENU(RateMenuTable);
 
@@ -577,10 +577,12 @@ class WaveTrackMenuTable : public PopupMenuTable
 {
 public:
    static WaveTrackMenuTable &Instance( Track * pTrack);
-   Track * mpTrack;
+   Track * mpTrack{};
 
 protected:
-   WaveTrackMenuTable() : mpData(NULL) {mpTrack=NULL;}
+   WaveTrackMenuTable()
+      : PopupMenuTable{ "WaveTrack" }
+   {}
 
    void InitUserData(void *pUserData) override;
    void InitMenu(wxMenu *pMenu) override;
@@ -592,7 +594,7 @@ protected:
 
    DECLARE_POPUP_MENU(WaveTrackMenuTable);
 
-   PlayableTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData{};
 
    void OnMultiView(wxCommandEvent & event);
    void OnSetDisplay(wxCommandEvent & event);
