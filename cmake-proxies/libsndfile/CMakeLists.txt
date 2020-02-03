@@ -164,7 +164,7 @@ try_run( r_rc c_rc
 )
 
 if( NOT c_rc )
-   message( STATUS c_out )
+   message( STATUS "${c_out}" )
    message( FATAL_ERROR "${CMAKE_CURRENT_SOURCE_DIR}/clipcheck.c compile failed:" )
 endif()
 
