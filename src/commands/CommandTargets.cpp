@@ -126,7 +126,7 @@ void LispyCommandMessageTarget::StartArray()
 {
    wxString Padding;
    Padding.Pad( mCounts.size() *2 -2);
-   Update( wxString::Format( "\n%s(", Padding ));
+   Update( wxString::Format( (mCounts.back()>0)?"\n%s(":"(", Padding ));
    mCounts.back() += 1;
    mCounts.push_back( 0 );
 }
@@ -140,7 +140,7 @@ void LispyCommandMessageTarget::EndArray(){
 void LispyCommandMessageTarget::StartStruct(){
    wxString Padding;
    Padding.Pad( mCounts.size() *2 -2);
-   Update( wxString::Format( "\n%s(", Padding ));
+   Update( wxString::Format( (mCounts.back()>0)?"\n%s(":"(", Padding ));
    mCounts.back() += 1;
    mCounts.push_back( 0 );
 }
