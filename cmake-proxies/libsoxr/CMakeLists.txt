@@ -1,57 +1,95 @@
-#directory cmake-proxies/libsoxr
-set( TARGET libsoxr )
-set( TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET} )
-project( ${TARGET} )
 
-set( SOURCES 
-#${LIB_SRC_DIRECTORY}libsoxr/examples/1-single-block.c
-#${LIB_SRC_DIRECTORY}libsoxr/examples/1a-lsr.c
-#${LIB_SRC_DIRECTORY}libsoxr/examples/2-stream.C
-#${LIB_SRC_DIRECTORY}libsoxr/examples/3-options-input-fn.c
-#${LIB_SRC_DIRECTORY}libsoxr/examples/4-split-channels.c
-#${LIB_SRC_DIRECTORY}libsoxr/examples/5-variable-rate.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/avfft32.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/avfft32s.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/cr-core.c
-${LIB_SRC_DIRECTORY}libsoxr/src/cr.c
-${LIB_SRC_DIRECTORY}libsoxr/src/cr32.c
-${LIB_SRC_DIRECTORY}libsoxr/src/cr32s.c
-${LIB_SRC_DIRECTORY}libsoxr/src/cr64.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/cr64s.c
-${LIB_SRC_DIRECTORY}libsoxr/src/data-io.c
-${LIB_SRC_DIRECTORY}libsoxr/src/dbesi0.c
-${LIB_SRC_DIRECTORY}libsoxr/src/fft4g.c
-${LIB_SRC_DIRECTORY}libsoxr/src/fft4g32.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/fft4g32s.c
-${LIB_SRC_DIRECTORY}libsoxr/src/fft4g64.c
-${LIB_SRC_DIRECTORY}libsoxr/src/filter.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/pffft-wrap.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/pffft.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/pffft32.c
-${LIB_SRC_DIRECTORY}libsoxr/src/pffft32s.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/pffft64s.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/soxr-lsr.c
-${LIB_SRC_DIRECTORY}libsoxr/src/soxr.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/util-simd.c
-${LIB_SRC_DIRECTORY}libsoxr/src/util32s.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/util64s.c
-#${LIB_SRC_DIRECTORY}libsoxr/src/vr-coefs.c
-${LIB_SRC_DIRECTORY}libsoxr/src/vr32.c
-#${LIB_SRC_DIRECTORY}libsoxr/tests/1-delay-clear.c
-#${LIB_SRC_DIRECTORY}libsoxr/tests/throughput.c
-#${LIB_SRC_DIRECTORY}libsoxr/tests/vector-cmp.c
-#${LIB_SRC_DIRECTORY}libsoxr/tests/vector-gen.c
-)
-# This defines the #define on both Windows and Linux.
-add_definitions( 
--D_USE_MATH_DEFINES
--D_CRT_SECURE_NO_WARNINGS
--DSOXR_LIB
- )
-add_library( ${TARGET} STATIC ${SOURCES})
+add_library( ${TARGET} STATIC )
 
-target_include_directories( ${TARGET} PRIVATE 
-${TARGET_SOURCE}/msvc
+set(CMAKE_MODULE_PATH ${TARGET_ROOT}/cmake/Modules )
+
+list( APPEND SOURCES
+   PRIVATE
+      ${TARGET_ROOT}/src/cr.c
+      ${TARGET_ROOT}/src/cr32.c
+      ${TARGET_ROOT}/src/cr32s.c
+      ${TARGET_ROOT}/src/cr64.c
+      ${TARGET_ROOT}/src/cr64s.c
+      ${TARGET_ROOT}/src/data-io.c
+      ${TARGET_ROOT}/src/dbesi0.c
+      ${TARGET_ROOT}/src/fft4g.c
+      ${TARGET_ROOT}/src/fft4g32.c
+      ${TARGET_ROOT}/src/fft4g64.c
+      ${TARGET_ROOT}/src/filter.c
+      ${TARGET_ROOT}/src/pffft32s.c
+      ${TARGET_ROOT}/src/pffft64s.c
+      ${TARGET_ROOT}/src/soxr.c
+      ${TARGET_ROOT}/src/util32s.c
+      ${TARGET_ROOT}/src/util64s.c
+      ${TARGET_ROOT}/src/vr32.c
 )
 
-target_link_libraries( ${TARGET} )
+list( APPEND INCLUDES
+   PRIVATE
+      ${CMAKE_CURRENT_BINARY_DIR}/private
+   PUBLIC
+      ${TARGET_ROOT}/src
+)
+
+list( APPEND DEFINES
+   PRIVATE
+      _USE_MATH_DEFINES
+      _CRT_SECURE_NO_WARNINGS
+      SOXR_LIB
+)
+
+list( APPEND OPTIONS
+   PRIVATE
+      $<$<IN_LIST:${CMAKE_C_COMPILER_ID},GNU;Clang;AppleClang>:-Wall>
+)
+
+if( CMAKE_C_COMPILER_ID MATCHES "GNU|.*Clang" )
+   list( APPEND OPTIONS
+      PRIVATE
+         -Wconversion -Wall -Wextra -pedantic -Wundef -Wpointer-arith -Wno-long-long
+         $<$<C_COMPILER_ID:Clang>:-Wno-keyword-macro>
+         $<$<COMPILE_LANGUAGE:CXX>:
+            -std=gnu89 -Wnested-externs -Wmissing-prototypes -Wstrict-prototypes
+         >
+   )
+endif()
+
+set( HAVE_BIGENDIAN ${WORDS_BIGENDIAN} )
+
+set( AVCODEC_FOUND NO )
+set( AVUTIL_FOUND NO )
+set( WITH_PFFFT YES )
+
+set( WITH_CR32 YES )
+set( WITH_CR32S YES )
+set( WITH_CR64 YES )
+set( WITH_CR64S YES )
+set( WITH_VR32 YES )
+
+# Copied from libsoxr CMakeLists.txt
+if( WITH_CR32S )
+   find_package( SIMD32 )
+   set( WITH_CR32S ${SIMD32_FOUND} )
+#   list( APPEND OPTIONS ${SIMD32_C_FLAGS} )
+endif()
+
+if( WITH_CR64S )
+   find_package( SIMD64 )
+   set( WITH_CR64S ${SIMD64_FOUND} )
+   list( APPEND OPTIONS ${SIMD64_C_FLAGS} )
+endif()
+
+set( WITH_HI_PREC_CLOCK YES )
+set( WITH_FLOAT_STD_PREC_CLOCK NO )
+set( WITH_DEV_TRACE NO )
+
+configure_file( soxr-config.h.in private/soxr-config.h )
+
+organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
+target_sources( ${TARGET} PRIVATE ${SOURCES} )
+target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+target_compile_features( ${TARGET} PRIVATE ${FEATURES} )
+target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
+target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
+

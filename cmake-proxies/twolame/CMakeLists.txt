@@ -1,44 +1,56 @@
-#directory cmake-proxies/twolame
-#UNUSED
-set( TARGET twolame )
-set( TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET} )
-project( ${TARGET} )
 
-set( SOURCES 
-#${LIB_SRC_DIRECTORY}twolame/frontend/audioin_raw.c
-#${LIB_SRC_DIRECTORY}twolame/frontend/audioin_sndfile.c
-#${LIB_SRC_DIRECTORY}twolame/frontend/frontend.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/ath.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/availbits.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/bitbuffer.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/crc.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/dab.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/encode.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/energy.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/fft.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/get_set.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/mem.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/psycho_0.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/psycho_1.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/psycho_2.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/psycho_3.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/psycho_4.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/psycho_n1.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/subband.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/twolame.c
-${LIB_SRC_DIRECTORY}twolame/libtwolame/util.c
-#${LIB_SRC_DIRECTORY}twolame/simplefrontend/audio_wave.c
-#${LIB_SRC_DIRECTORY}twolame/simplefrontend/simplefrontend.c
-)
-# This defines the #define on both Windows and Linux.
-add_definitions( 
--D_LIB
--DLIBTWOLAME_STATIC
- )
-add_library( ${TARGET} STATIC ${SOURCES})
+add_library( ${TARGET} STATIC )
 
-target_include_directories( ${TARGET} PRIVATE 
-
+list( APPEND SOURCES
+   PRIVATE
+      ${TARGET_ROOT}/libtwolame/ath.c
+      ${TARGET_ROOT}/libtwolame/availbits.c
+      ${TARGET_ROOT}/libtwolame/bitbuffer.c
+      ${TARGET_ROOT}/libtwolame/crc.c
+      ${TARGET_ROOT}/libtwolame/dab.c
+      ${TARGET_ROOT}/libtwolame/encode.c
+      ${TARGET_ROOT}/libtwolame/energy.c
+      ${TARGET_ROOT}/libtwolame/fft.c
+      ${TARGET_ROOT}/libtwolame/get_set.c
+      ${TARGET_ROOT}/libtwolame/mem.c
+      ${TARGET_ROOT}/libtwolame/psycho_0.c
+      ${TARGET_ROOT}/libtwolame/psycho_1.c
+      ${TARGET_ROOT}/libtwolame/psycho_2.c
+      ${TARGET_ROOT}/libtwolame/psycho_3.c
+      ${TARGET_ROOT}/libtwolame/psycho_4.c
+      ${TARGET_ROOT}/libtwolame/psycho_n1.c
+      ${TARGET_ROOT}/libtwolame/subband.c
+      ${TARGET_ROOT}/libtwolame/twolame.c
+      ${TARGET_ROOT}/libtwolame/util.c
 )
 
-target_link_libraries( ${TARGET} )
+list( APPEND INCLUDES
+   PRIVATE
+      ${CMAKE_CURRENT_BINARY_DIR}/private
+   PUBLIC
+      ${TARGET_ROOT}/libtwolame
+)
+
+list( APPEND DEFINES
+   PRIVATE
+      LIBTWOLAME_STATIC
+)
+
+list( APPEND OPTIONS
+   PRIVATE
+      $<$<C_COMPILER_ID:GNU>:-Wno-implicit-function-declaration>
+)
+
+set( PACKAGE_BUGREPORT "twolame-discuss@lists.sourceforge.net" )
+set( PACKAGE_VERSION "0.3.13" )
+
+configure_file( config.h.in private/config.h )
+
+organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
+target_sources( ${TARGET} PRIVATE ${SOURCES} )
+target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+target_compile_features( ${TARGET} PRIVATE ${FEATURES} )
+target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
+target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
+

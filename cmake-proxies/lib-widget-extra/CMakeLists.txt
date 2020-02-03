@@ -3,20 +3,17 @@ add_library( ${TARGET} STATIC )
 
 list( APPEND SOURCES
    PRIVATE
-      ${TARGET_ROOT}/audioreader.cpp
-      ${TARGET_ROOT}/comp_chroma.cpp
-      ${TARGET_ROOT}/curvefit.cpp
-      ${TARGET_ROOT}/gen_chroma.cpp
-      ${TARGET_ROOT}/hillclimb.cpp
-      ${TARGET_ROOT}/regression.cpp
-      ${TARGET_ROOT}/sautils.cpp
-      ${TARGET_ROOT}/scorealign.cpp
-      ${TARGET_ROOT}/fft3/FFT3.cpp
+      ${TARGET_ROOT}/NonGuiThread.cpp
 )
 
 list( APPEND INCLUDES
    PUBLIC
       ${TARGET_ROOT}
+)
+
+list( APPEND LIBRARIES
+   PRIVATE
+      wxwidgets
 )
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )

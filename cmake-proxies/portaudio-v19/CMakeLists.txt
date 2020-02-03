@@ -1,55 +1,149 @@
-cmake_minimum_required(VERSION 3.13)
 
-set(TARGET portaudio-v19)
-set(TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET})
+add_library( ${TARGET} STATIC )
 
-add_subdirectory("${TARGET_SOURCE}" "${CMAKE_CURRENT_BINARY_DIR}/portaudio" EXCLUDE_FROM_ALL)
-target_include_directories(portaudio_static INTERFACE "${TARGET_SOURCE}/include")
-set_target_properties(portaudio_static PROPERTIES OSX_ARCHITECTURES "")
+list( APPEND SOURCES
+   PRIVATE
+      ${TARGET_ROOT}/src/common/pa_allocation.c
+      ${TARGET_ROOT}/src/common/pa_converters.c
+      ${TARGET_ROOT}/src/common/pa_cpuload.c
+      ${TARGET_ROOT}/src/common/pa_debugprint.c
+      ${TARGET_ROOT}/src/common/pa_dither.c
+      ${TARGET_ROOT}/src/common/pa_dynload.c
+      ${TARGET_ROOT}/src/common/pa_front.c
+      ${TARGET_ROOT}/src/common/pa_process.c
+      ${TARGET_ROOT}/src/common/pa_ringbuffer.c
+      ${TARGET_ROOT}/src/common/pa_stream.c
+      ${TARGET_ROOT}/src/common/pa_trace.c
+)
 
-if(NOT UNIX)
-    return()
+list( APPEND INCLUDES
+   PRIVATE
+      ${TARGET_ROOT}/src/common
+   PUBLIC
+      ${TARGET_ROOT}/include
+)
+
+if( WIN32 )
+   list( APPEND DEFINES
+      PUBLIC
+         PA_USE_DS=1
+         PA_USE_WASAPI=1
+         PA_USE_WMME=1
+   )
+
+   list( APPEND SOURCES
+      PRIVATE
+         ${TARGET_ROOT}/src/hostapi/dsound/pa_win_ds.c
+         ${TARGET_ROOT}/src/hostapi/dsound/pa_win_ds_dynlink.c
+         ${TARGET_ROOT}/src/hostapi/wasapi/pa_win_wasapi.c
+         ${TARGET_ROOT}/src/hostapi/wmme/pa_win_wmme.c
+         ${TARGET_ROOT}/src/os/win/pa_win_coinitialize.c
+         ${TARGET_ROOT}/src/os/win/pa_win_hostapis.c
+         ${TARGET_ROOT}/src/os/win/pa_win_util.c
+         ${TARGET_ROOT}/src/os/win/pa_win_waveformat.c
+         ${TARGET_ROOT}/src/os/win/pa_win_wdmks_utils.c
+         ${TARGET_ROOT}/src/os/win/pa_x86_plain_converters.c
+   )
+
+   list( APPEND INCLUDES
+      PRIVATE
+         ${TARGET_ROOT}/src/hostapi/dsound
+         ${TARGET_ROOT}/src/os/win
+   )
+
+elseif( APPLE )
+   list( APPEND DEFINES
+      PUBLIC
+         PA_USE_COREAUDIO=1
+   )
+
+   list( APPEND SOURCES
+      PRIVATE
+         ${TARGET_ROOT}/src/hostapi/coreaudio/pa_mac_core.c
+         ${TARGET_ROOT}/src/hostapi/coreaudio/pa_mac_core_blocking.c
+         ${TARGET_ROOT}/src/hostapi/coreaudio/pa_mac_core_utilities.c
+         ${TARGET_ROOT}/src/os/unix/pa_unix_hostapis.c
+         ${TARGET_ROOT}/src/os/unix/pa_unix_util.c
+   )
+
+   list( APPEND INCLUDES
+      PRIVATE
+         ${TARGET_ROOT}/src/hostapi/coreaudio
+         ${TARGET_ROOT}/src/os/unix
+   )
+
+   list( APPEND LIBRARIES
+      INTERFACE
+         "-framework CoreAudio"
+   )
+elseif( UNIX )
+   find_package(ALSA)
+   if( ALSA_FOUND )
+      list( APPEND DEFINES
+         PUBLIC
+            PA_USE_ALSA=1
+      )
+
+      list( APPEND SOURCES
+         PRIVATE
+            ${TARGET_ROOT}/src/hostapi/alsa/pa_linux_alsa.c
+      )
+
+      list( APPEND INCLUDES
+         PRIVATE
+            ${ALSA_INCLUDE_DIRS}
+      )
+
+      list( APPEND LIBRARIES
+         INTERFACE
+            ${ALSA_LIBRARIES}
+      )
+   endif()
+
+   list( APPEND SOURCES
+      PRIVATE
+         ${TARGET_ROOT}/src/os/unix/pa_unix_hostapis.c
+         ${TARGET_ROOT}/src/os/unix/pa_unix_util.c
+   )
+
+   list( APPEND INCLUDES
+      PRIVATE
+         ${TARGET_ROOT}/src/os/unix
+   )
 endif()
 
-include(CheckIncludeFile)
+set( CMAKE_MODULE_PATH ${TARGET_ROOT}/cmake_support )
 
-target_include_directories(portaudio_static PRIVATE
-    "${TARGET_SOURCE}/src/os/unix/")
-target_sources(portaudio_static PRIVATE
-    "${TARGET_SOURCE}/src/os/unix/pa_unix_hostapis.c"
-    "${TARGET_SOURCE}/src/os/unix/pa_unix_util.c")
+find_package(Jack)
+if( JACK_FOUND )
+   list( APPEND DEFINES
+      PUBLIC
+        PA_USE_JACK=1
+   )
 
-if(APPLE)
-    target_compile_definitions(portaudio_static PUBLIC PA_USE_COREAUDIO=1)
-    target_sources(portaudio_static PRIVATE
-        "${TARGET_SOURCE}/src/hostapi/coreaudio/pa_mac_core.c"
-        "${TARGET_SOURCE}/src/hostapi/coreaudio/pa_mac_core_utilities.c"
-        "${TARGET_SOURCE}/src/hostapi/coreaudio/pa_mac_core_blocking.c"
-        "${TARGET_SOURCE}/src/common/pa_ringbuffer.c")
-else()
-    option(PA_WITH_ALSA "Enable support for ALSA" OFF)
-    if(PA_WITH_ALSA)
-        find_package(ALSA REQUIRED)
-        target_compile_definitions(portaudio_static PUBLIC PA_USE_ALSA=1)
-        target_sources(portaudio_static PRIVATE
-            "${TARGET_SOURCE}/src/hostapi/alsa/pa_linux_alsa.c")
-        target_link_libraries(portaudio_static PUBLIC ALSA::ALSA)
-    endif()
+   list( APPEND SOURCES
+      PRIVATE
+         ${TARGET_ROOT}/src/hostapi/jack/pa_jack.c
+         ${TARGET_ROOT}/src/hostapi/jack/pa_jack_dynload.c
+   )
 
-    option(PA_WITH_OSS "Enable support for OSS" OFF)
-    if(PA_WITH_OSS)
-        check_include_file(sys/soundcard.h HAVE_SYS_SOUNDCARD_H)
-        check_include_file(linux/soundcard.h HAVE_LINUX_SOUNDCARD_H)
-        check_include_file(machine/soundcard.h HAVE_MACHINE_SOUNDCARD_H)
-        if(NOT (HAVE_SYS_SOUNDCARD_H OR HAVE_LINUX_SOUNDCARD_H OR HAVE_MACHINE_SOUNDCARD_H))
-            message(FATAL_ERROR "Couldn't find OSS")
-        endif()
-        target_compile_definitions(portaudio_static PUBLIC
-            PA_USE_OSS=1
-            $<$<BOOL:${HAVE_SYS_SOUNDCARD_H}>:HAVE_SYS_SOUNDCARD_H>
-            $<$<BOOL:${HAVE_LINUX_SOUNDCARD_H}>:HAVE_LINUX_SOUNDCARD_H>
-            $<$<BOOL:${HAVE_MACHINE_SOUNDCARD_H}>:HAVE_MACHINE_SOUNDCARD_H>)
-        target_sources(portaudio_static PRIVATE
-            "${TARGET_SOURCE}/src/hostapi/oss/pa_unix_oss.c")
-    endif()
+   list( APPEND INCLUDES
+      PRIVATE
+         ${TARGET_ROOT}/src/hostapi/jack
+         ${JACK_INCLUDE_DIRS}      
+   )
+
+   list( APPEND LIBRARIES
+      INTERFACE
+         ${JACK_LIBRARIES}
+   )
 endif()
+
+organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
+target_sources( ${TARGET} PRIVATE ${SOURCES} )
+target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+target_compile_features( ${TARGET} PRIVATE ${FEATURES} )
+target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
+target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
+

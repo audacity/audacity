@@ -1,93 +1,273 @@
-#directory cmake-proxies/lv2
-set( TARGET lv2 )
-set( TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET} )
-project( ${TARGET} )
 
-set( SOURCES
-#${LIB_SRC_DIRECTORY}lv2/sord/src/sordmm_test.cpp
-#${LIB_SRC_DIRECTORY}lv2/suil/src/gtk2_in_qt4.cpp
-#${LIB_SRC_DIRECTORY}lv2/suil/src/qt4_in_gtk2.cpp
-#${LIB_SRC_DIRECTORY}lv2/suil/src/win_in_gtk2.cpp
-#${LIB_SRC_DIRECTORY}lv2/suil/src/x11_in_qt4.cpp
+add_library( ${TARGET} STATIC )
 
-#${LIB_SRC_DIRECTORY}lv2/lilv/bindings/test/bindings_test_plugin.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/collections.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/instance.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/lib.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/node.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/plugin.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/pluginclass.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/port.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/query.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/scalepoint.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/state.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/ui.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/util.c
-${LIB_SRC_DIRECTORY}lv2/lilv/src/world.c
-#${LIB_SRC_DIRECTORY}lv2/lilv/src/zix/tree.c #see sord source.
+def_vars()
 
-#${LIB_SRC_DIRECTORY}lv2/lilv/test/lilv_test.c
-#${LIB_SRC_DIRECTORY}lv2/lilv/test/test_plugin.c
-#${LIB_SRC_DIRECTORY}lv2/lilv/utils/lilv-bench.c
-#${LIB_SRC_DIRECTORY}lv2/lilv/utils/lv2bench.c
-#${LIB_SRC_DIRECTORY}lv2/lilv/utils/lv2info.c
-#${LIB_SRC_DIRECTORY}lv2/lilv/utils/lv2ls.c
-#${LIB_SRC_DIRECTORY}lv2/lv2/lv2/lv2plug.in/ns/ext/atom/atom-test.c
-#${LIB_SRC_DIRECTORY}lv2/lv2/plugins/eg-amp.lv2/amp.c
-#${LIB_SRC_DIRECTORY}lv2/lv2/plugins/eg-fifths.lv2/fifths.c
-#${LIB_SRC_DIRECTORY}lv2/lv2/plugins/eg-metro.lv2/metro.c
-#${LIB_SRC_DIRECTORY}lv2/lv2/plugins/eg-midigate.lv2/midigate.c
-#${LIB_SRC_DIRECTORY}lv2/lv2/plugins/eg-sampler.lv2/sampler.c
-#${LIB_SRC_DIRECTORY}lv2/lv2/plugins/eg-sampler.lv2/sampler_ui.c
-#${LIB_SRC_DIRECTORY}lv2/lv2/plugins/eg-scope.lv2/examploscope.c
-#${LIB_SRC_DIRECTORY}lv2/lv2/plugins/eg-scope.lv2/examploscope_ui.c
-${LIB_SRC_DIRECTORY}lv2/serd/src/env.c
-#${LIB_SRC_DIRECTORY}lv2/serd/src/node.c
-${LIB_SRC_DIRECTORY}lv2/serd/src/reader.c
-#${LIB_SRC_DIRECTORY}lv2/serd/src/serdi.c
-${LIB_SRC_DIRECTORY}lv2/serd/src/serdnode.c
-${LIB_SRC_DIRECTORY}lv2/serd/src/string.c
-${LIB_SRC_DIRECTORY}lv2/serd/src/uri.c
-${LIB_SRC_DIRECTORY}lv2/serd/src/writer.c
-#${LIB_SRC_DIRECTORY}lv2/serd/tests/serd_test.c
-${LIB_SRC_DIRECTORY}lv2/sord/src/sord.c
-#${LIB_SRC_DIRECTORY}lv2/sord/src/sordi.c
-#${LIB_SRC_DIRECTORY}lv2/sord/src/sord_test.c
-#${LIB_SRC_DIRECTORY}lv2/sord/src/sord_validate.c
-${LIB_SRC_DIRECTORY}lv2/sord/src/syntax.c
-${LIB_SRC_DIRECTORY}lv2/sord/src/zix/digest.c
-${LIB_SRC_DIRECTORY}lv2/sord/src/zix/hash.c
-${LIB_SRC_DIRECTORY}lv2/sord/src/zix/tree.c
-${LIB_SRC_DIRECTORY}lv2/sratom/src/sratom.c
-#${LIB_SRC_DIRECTORY}lv2/sratom/tests/sratom_test.c
-${LIB_SRC_DIRECTORY}lv2/suil/src/host.c
-#${LIB_SRC_DIRECTORY}lv2/suil/src/instance.c
-${LIB_SRC_DIRECTORY}lv2/suil/src/suil_instance.c
-#${LIB_SRC_DIRECTORY}lv2/suil/src/x11_in_gtk2.c
+list( APPEND SOURCES
+   PRIVATE
 
+      # lilv
+
+      ${TARGET_ROOT}/lilv/src/collections.c
+      ${TARGET_ROOT}/lilv/src/instance.c
+      ${TARGET_ROOT}/lilv/src/lib.c
+      ${TARGET_ROOT}/lilv/src/node.c
+      ${TARGET_ROOT}/lilv/src/plugin.c
+      ${TARGET_ROOT}/lilv/src/pluginclass.c
+      ${TARGET_ROOT}/lilv/src/port.c
+      ${TARGET_ROOT}/lilv/src/query.c
+      ${TARGET_ROOT}/lilv/src/scalepoint.c
+      ${TARGET_ROOT}/lilv/src/state.c
+      ${TARGET_ROOT}/lilv/src/ui.c
+      ${TARGET_ROOT}/lilv/src/util.c
+      ${TARGET_ROOT}/lilv/src/world.c
+      ${TARGET_ROOT}/lilv/src/zix/tree.c
+
+      # serd
+
+      ${TARGET_ROOT}/serd/src/byte_source.c
+      ${TARGET_ROOT}/serd/src/env.c
+      ${TARGET_ROOT}/serd/src/n3.c
+      ${TARGET_ROOT}/serd/src/node.c
+      ${TARGET_ROOT}/serd/src/reader.c
+      ${TARGET_ROOT}/serd/src/serdi.c
+      ${TARGET_ROOT}/serd/src/string.c
+      ${TARGET_ROOT}/serd/src/uri.c
+      ${TARGET_ROOT}/serd/src/writer.c
+      
+      # sord
+
+      ${TARGET_ROOT}/sord/src/sord.c
+      ${TARGET_ROOT}/sord/src/sord_validate.c
+      ${TARGET_ROOT}/sord/src/sordi.c
+      ${TARGET_ROOT}/sord/src/syntax.c
+      ${TARGET_ROOT}/sord/src/zix/btree.c
+      ${TARGET_ROOT}/sord/src/zix/digest.c
+      ${TARGET_ROOT}/sord/src/zix/hash.c
+
+      # sratom
+
+      ${TARGET_ROOT}/sratom/src/sratom.c
+
+      # suil
+
+      ${TARGET_ROOT}/suil/src/host.c
+      ${TARGET_ROOT}/suil/src/instance.c
 )
-# This defines the #define on both Windows and Linux.
-add_definitions(
--D_LIB
--Dinline=__inline # Not needed in non CMake version.
--DHAVE_FMAX
--DLILV_INTERNAL
--D_DEBUG
- )
-if( NOT MSVC OR MSVC_VERSION LESS 1900 )
-    add_definitions(-Dsnprintf=_snprintf)
+
+list( APPEND INCLUDES
+   PRIVATE
+      ${_PRVDIR}
+      ${TARGET_ROOT}/lilv/src
+      ${TARGET_ROOT}/lilv/src/zix
+      ${TARGET_ROOT}/serd/src
+      ${TARGET_ROOT}/sord/src
+      ${TARGET_ROOT}/sord/src/zix
+      ${TARGET_ROOT}/sratom/src
+      ${TARGET_ROOT}/suil/src
+   PUBLIC
+      ${_PUBDIR}
+      ${TARGET_ROOT}/lv2
+      ${TARGET_ROOT}/lilv
+      ${TARGET_ROOT}/serd
+      ${TARGET_ROOT}/sord
+      ${TARGET_ROOT}/sratom
+      ${TARGET_ROOT}/suil
+)
+
+list( APPEND DEFINES
+   PRIVATE
+      SUIL_INTERNAL
+)
+
+list( APPEND HEADERS
+
+   # lv2
+
+   ${TARGET_ROOT}/lv2/lv2/atom/atom.h
+   ${TARGET_ROOT}/lv2/lv2/atom/forge.h
+   ${TARGET_ROOT}/lv2/lv2/atom/util.h
+   ${TARGET_ROOT}/lv2/lv2/buf-size/buf-size.h
+   ${TARGET_ROOT}/lv2/lv2/core/attributes.h
+   ${TARGET_ROOT}/lv2/lv2/core/lv2.h
+   ${TARGET_ROOT}/lv2/lv2/core/lv2_util.h
+   ${TARGET_ROOT}/lv2/lv2/data-access/data-access.h
+   ${TARGET_ROOT}/lv2/lv2/dynmanifest/dynmanifest.h
+   ${TARGET_ROOT}/lv2/lv2/event/event-helpers.h
+   ${TARGET_ROOT}/lv2/lv2/event/event.h
+   ${TARGET_ROOT}/lv2/lv2/instance-access/instance-access.h
+   ${TARGET_ROOT}/lv2/lv2/log/log.h
+   ${TARGET_ROOT}/lv2/lv2/log/logger.h
+   ${TARGET_ROOT}/lv2/lv2/midi/midi.h
+   ${TARGET_ROOT}/lv2/lv2/morph/morph.h
+   ${TARGET_ROOT}/lv2/lv2/options/options.h
+   ${TARGET_ROOT}/lv2/lv2/parameters/parameters.h
+   ${TARGET_ROOT}/lv2/lv2/patch/patch.h
+   ${TARGET_ROOT}/lv2/lv2/port-groups/port-groups.h
+   ${TARGET_ROOT}/lv2/lv2/port-props/port-props.h
+   ${TARGET_ROOT}/lv2/lv2/presets/presets.h
+   ${TARGET_ROOT}/lv2/lv2/resize-port/resize-port.h
+   ${TARGET_ROOT}/lv2/lv2/state/state.h
+   ${TARGET_ROOT}/lv2/lv2/time/time.h
+   ${TARGET_ROOT}/lv2/lv2/ui/ui.h
+   ${TARGET_ROOT}/lv2/lv2/units/units.h
+   ${TARGET_ROOT}/lv2/lv2/uri-map/uri-map.h
+   ${TARGET_ROOT}/lv2/lv2/urid/urid.h
+   ${TARGET_ROOT}/lv2/lv2/worker/worker.h
+)
+
+set( src "${TARGET_ROOT}/lv2" )
+set( dst "${_PUBDIR}" )
+set( ns "${dst}/lv2/lv2plug.in/ns" )
+set( stamp "${_INTDIR}/.stamp.lv2" )
+
+execute_process(
+   COMMAND
+      "${CMAKE_COMMAND}" -E make_directory "${ns}"
+)
+
+execute_process(
+   COMMAND
+      "${CMAKE_COMMAND}" -E create_symlink "${src}/lv2/core/lv2.h" "${dst}/lv2.h"
+)
+
+execute_process(
+   COMMAND
+      "${CMAKE_COMMAND}" -E create_symlink "${src}/lv2" "${ns}/ext"
+)
+
+execute_process(
+   COMMAND
+      "${CMAKE_COMMAND}" -E create_symlink "${src}/lv2" "${ns}/extensions"
+)
+
+execute_process(
+   COMMAND
+      "${CMAKE_COMMAND}" -E create_symlink "${src}/lv2/core" "${ns}/lv2core"
+)
+
+set( LILV_VERSION "0.24.4" )
+set( SERD_VERSION "0.30.2" )
+set( SORD_VERSION "0.16.4" )
+set( SRATOM_VERSION "0.6.4" )
+set( SUIL_VERSION "0.10.6" )
+
+set( HAVE_LV2 1 )
+set( HAVE_SERD 1 )
+set( HAVE_SORD 1 )
+set( HAVE_SRATOM 1 )
+
+macro( bld name packages define sources )
+   set( libs )
+   set( missing )
+   foreach( pkg ${packages} )
+      if( NOT "${${pkg}_FOUND}" )
+         set( missing ON )
+         break()
+      endif()
+
+      list( APPEND libs PRIVATE
+         "PkgConfig::${pkg}"
+      )
+   endforeach()
+
+   if( NOT missing )
+
+      list( APPEND DEFINES
+#         PUBLIC
+         PRIVATE
+            ${define}
+      )
+
+      add_library( ${name} SHARED "${sources}" )
+      set_target_properties( ${name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${_MODDIR} )
+      add_dependencies( ${TARGET} ${name} )
+      organize_source( "${TARGET_ROOT}" "" "${sources}" )
+      target_compile_definitions( ${name} PRIVATE SUIL_SHARED ${DEFINES} )
+      target_include_directories( ${name} PRIVATE ${INCLUDES} )
+      target_link_libraries( ${name} PRIVATE ${libs} )
+   endif()
+endmacro()
+
+if( WIN32 )
+   set( LILV_PATH_SEP ";" )
+   set( LILV_DIR_SEP "\\\\" )
+   set( LILV_DEFAULT_LV2_PATH "%APPDATA%\\LV2;%COMMONPROGRAMFILES%\\LV2" )
+
+   set( SUIL_MODULE_DIR "C:\\Windows\\System32" )
+   set( SUIL_DIR_SEP "\\\\" )
+   set( SUIL_GTK2_LIB_NAME "libgtk-x11-2.0.so.0" )
+   set( SUIL_GTK3_LIB_NAME "libgtk-x11-3.0.so.0" )
+   set( SUIL_MODULE_PREFIX "" )
+   set( SUIL_MODULE_EXT ".dll" )
+elseif( APPLE )
+   set( LILV_PATH_SEP ":" )
+   set( LILV_DIR_SEP "/" )
+   set( LILV_DEFAULT_LV2_PATH "~/Library/Audio/Plug-Ins/LV2:~/.lv2:/usr/local/lib/lv2:/usr/lib/lv2:/Library/Audio/Plug-Ins/LV2" )
+
+   set( SUIL_MODULE_DIR "/usr/local/lib/suil-0" )
+   set( SUIL_DIR_SEP "/" )
+   set( SUIL_GTK2_LIB_NAME "libgtk-x11-2.0.so.0" )
+   set( SUIL_GTK3_LIB_NAME "libgtk-x11-3.0.so.0" )
+   set( SUIL_MODULE_PREFIX "lib" )
+   set( SUIL_MODULE_EXT ".dylib" )
+elseif( UNIX )
+   set( LILV_PATH_SEP ":" )
+   set( LILV_DIR_SEP "/" )
+   set( LILV_DEFAULT_LV2_PATH "~/.lv2:/usr/lib/lv2:/usr/local/lib/lv2" )
+
+   set( SUIL_MODULE_DIR "/usr/local/lib/suil-0" )
+   set( SUIL_DIR_SEP "/" )
+   set( SUIL_GTK2_LIB_NAME "libgtk-x11-2.0.so.0" )
+   set( SUIL_GTK3_LIB_NAME "libgtk-x11-3.0.so.0" )
+   set( SUIL_MODULE_PREFIX "lib" )
+   set( SUIL_MODULE_EXT ".so" )
+
+   pkg_check_modules( X11 IMPORTED_TARGET "x11" )
+   pkg_check_modules( GTK2 IMPORTED_TARGET "gtk+-2.0" )
+   pkg_check_modules( GTK3 IMPORTED_TARGET "gtk+-3.0" )
+   pkg_check_modules( GTK2X11 IMPORTED_TARGET "gtk+-x11-2.0" )
+   pkg_check_modules( GTK3X11 IMPORTED_TARGET "gtk+-x11-3.0" )
+   pkg_check_modules( QT4 IMPORTED_TARGET "QtGui >= 4.4.0" )
+   pkg_check_modules( QT5 IMPORTED_TARGET "Qt5Widgets >= 5.1.0" )
+
+   bld( "suil_x11"
+        "X11"
+        "SUIL_WITH_X11"
+        "${TARGET_ROOT}/suil/src/x11.c" )
+   bld( "suil_x11_in_gtk2"
+        "X11;GTK2X11"
+        "SUIL_WITH_X11_IN_GTK2"
+        "${TARGET_ROOT}/suil/src/x11_in_gtk2.c" )
+   bld( "suil_x11_in_gtk3"
+        "X11;GTK3X11"
+        "SUIL_WITH_X11_IN_GTK3"
+        "${TARGET_ROOT}/suil/src/x11_in_gtk3.c" )
+   bld( "suil_qt4_in_gtk2"
+        "QT4;GTK2"
+        "SUIL_WITH_QT4_IN_GTK2"
+        "${TARGET_ROOT}/suil/src/qt4_in_gtk2.cpp" )
+   bld( "suil_qt5_in_gtk2"
+        "QT5;GTK2"
+        "SUIL_WITH_QT5_IN_GTK2"
+        "${TARGET_ROOT}/suil/src/qt5_in_gtk.cpp" )
+   bld( "suil_qt5_in_gtk3"
+        "QT5;GTK3"
+        "SUIL_WITH_QT5_IN_GTK3"
+        "${TARGET_ROOT}/suil/src/qt5_in_gtk.cpp" )
 endif()
-add_library( ${TARGET} STATIC ${SOURCES})
-add_compile_options(/TP)
-target_include_directories( ${TARGET} PRIVATE
-${TARGET_SOURCE}/windows
-${TARGET_SOURCE}/sord/src
-${TARGET_SOURCE}/lilv
-${TARGET_SOURCE}/lv2
-${TARGET_SOURCE}/serd
-${TARGET_SOURCE}/sord
-${TARGET_SOURCE}/sratom
-${TARGET_SOURCE}/suil
-)
 
-target_link_libraries( ${TARGET} )
+configure_file( lilv_config.h.in "${_PRVDIR}/lilv_config.h" )
+configure_file( serd_config.h.in "${_PRVDIR}/serd_config.h" )
+configure_file( sord_config.h.in "${_PRVDIR}/sord_config.h" )
+configure_file( sratom_config.h.in "${_PRVDIR}/sratom_config.h" )
+configure_file( suil_config.h.in "${_PRVDIR}/suil_config.h" )
+
+organize_source( "${TARGET_ROOT}" "" "${SOURCES} ${HEADERS}" )
+target_sources( ${TARGET} PRIVATE ${SOURCES} ${HEADERS} )# ${stamp} )
+target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+target_compile_features( ${TARGET} PRIVATE ${FEATURES} )
+target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
+target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
+

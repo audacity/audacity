@@ -1,31 +1,28 @@
-#directory cmake-proxies/portsmf
-set( TARGET portsmf )
-set( TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET} )
-project( ${TARGET} )
 
-set( SOURCES 
-${LIB_SRC_DIRECTORY}portsmf/allegro.cpp
-${LIB_SRC_DIRECTORY}portsmf/allegrord.cpp
-${LIB_SRC_DIRECTORY}portsmf/allegroserial.cpp
-${LIB_SRC_DIRECTORY}portsmf/allegrosmfrd.cpp
-${LIB_SRC_DIRECTORY}portsmf/allegrosmfwr.cpp
-${LIB_SRC_DIRECTORY}portsmf/allegrowr.cpp
-${LIB_SRC_DIRECTORY}portsmf/mfmidi.cpp
-${LIB_SRC_DIRECTORY}portsmf/strparse.cpp
-#${LIB_SRC_DIRECTORY}portsmf/trace.cpp
-#${LIB_SRC_DIRECTORY}portsmf/apps/allegroconvert.cpp
-#${LIB_SRC_DIRECTORY}portsmf/apps/allegroplay.cpp
-#${LIB_SRC_DIRECTORY}portsmf/apps/seq2midi.cpp
-#${LIB_SRC_DIRECTORY}portsmf/portsmf_test/portsmf_test.cpp
-)
-# This defines the #define on both Windows and Linux.
-add_definitions( 
--D_LIB
- )
-add_library( ${TARGET} STATIC ${SOURCES})
+add_library( ${TARGET} STATIC )
 
-target_include_directories( ${TARGET} PRIVATE 
-
+list( APPEND SOURCES
+   PRIVATE
+      ${TARGET_ROOT}/allegro.cpp
+      ${TARGET_ROOT}/allegrord.cpp
+      ${TARGET_ROOT}/allegroserial.cpp
+      ${TARGET_ROOT}/allegrosmfrd.cpp
+      ${TARGET_ROOT}/allegrosmfwr.cpp
+      ${TARGET_ROOT}/allegrowr.cpp
+      ${TARGET_ROOT}/mfmidi.cpp
+      ${TARGET_ROOT}/strparse.cpp
 )
 
-target_link_libraries( ${TARGET} )
+list( APPEND INCLUDES
+   PUBLIC
+      ${TARGET_ROOT}/include
+)
+
+organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
+target_sources( ${TARGET} PRIVATE ${SOURCES} )
+target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+target_compile_features( ${TARGET} PRIVATE ${FEATURES} )
+target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
+target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
+
