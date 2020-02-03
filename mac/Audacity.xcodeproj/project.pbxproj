@@ -9591,14 +9591,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -9925,14 +9925,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -10356,14 +10356,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SSE_CPPFLAGS = "";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -10814,14 +10814,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SSE_CPPFLAGS = "";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
