@@ -741,8 +741,12 @@ auto CollectedItems::MergeItemsAscendingNamesPass(
          visitor, itemOrdering, rleft.base(), rright.base(), iPass,
          endItemsCount, force );
 
-      if ( success )
+      if ( success ) {
+         auto diff = rend - rleft;
          newItems.erase( rleft.base(), rright.base() );
+         rend = newItems.rend();
+         rleft = rend - diff;
+      }
       rright = rleft;
    }
 }
