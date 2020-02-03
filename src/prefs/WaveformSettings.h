@@ -13,6 +13,8 @@ Paul Licameli
 
 #include "../Internat.h" // for TranslatableStrings
 
+class EnumValueSymbols;
+
 class WaveformSettings
 {
 public:
@@ -58,7 +60,7 @@ public:
       stNumScaleTypes,
    };
 
-   static const TranslatableStrings &GetScaleNames();
+   static const EnumValueSymbols &GetScaleNames();
 
    ScaleType scaleType;
    int dBRange;

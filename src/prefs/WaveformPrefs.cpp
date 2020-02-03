@@ -112,7 +112,7 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
             mScaleChoice =
                S.Id(ID_SCALE).TieChoice(XO("S&cale:"),
                   mTempSettings.scaleType,
-                  WaveformSettings::GetScaleNames() );
+                  Msgids( WaveformSettings::GetScaleNames() ) );
 
             mRangeChoice =
                S.Id(ID_RANGE).TieChoice(XO("Waveform dB &range:"),

@@ -17,6 +17,7 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 
 #include "../../../../HitTestResult.h"
 #include "../../../../NumberScale.h"
+#include "../../../../Prefs.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -281,7 +282,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
    {
       const auto & names = WaveformSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         POPUP_MENU_RADIO_ITEM(OnFirstWaveformScaleID + ii, names[ii],
+         POPUP_MENU_RADIO_ITEM(OnFirstWaveformScaleID + ii, names[ii].Msgid(),
             OnWaveformScaleType);
       }
    }

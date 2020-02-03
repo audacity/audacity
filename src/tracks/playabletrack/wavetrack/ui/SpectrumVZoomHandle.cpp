@@ -280,7 +280,7 @@ BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
    {
       const auto & names = SpectrogramSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         POPUP_MENU_RADIO_ITEM(OnFirstSpectrumScaleID + ii, names[ii],
+         POPUP_MENU_RADIO_ITEM(OnFirstSpectrumScaleID + ii, names[ii].Msgid(),
             OnSpectrumScaleType);
       }
    }

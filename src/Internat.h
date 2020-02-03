@@ -162,5 +162,6 @@ private:
 class ComponentInterfaceSymbol;
 TranslatableStrings Msgids(
    const EnumValueSymbol strings[], size_t nStrings);
+TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
 
 #endif
