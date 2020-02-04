@@ -120,6 +120,81 @@ void Visitor::Visit(SingleItem &, const Path &) {}
 
 }
 
+void MenuVisitor::BeginGroup( Registry::GroupItem &item, const Path &path )
+{
+   bool isMenu = false;
+   auto pItem = &item;
+   if ( pItem->Transparent() ) {
+   }
+   else if ( dynamic_cast<MenuTable::MenuSection*>( pItem ) ) {
+      if ( !needSeparator.empty() )
+         needSeparator.back() = true;
+   }
+   else {
+      isMenu = true;
+      MaybeDoSeparator();
+   }
+
+   DoBeginGroup( item, path );
+
+   if ( isMenu ) {
+      needSeparator.push_back( false );
+      firstItem.push_back( true );
+   }
+}
+
+void MenuVisitor::EndGroup( Registry::GroupItem &item, const Path &path )
+{
+   auto pItem = &item;
+   if ( pItem->Transparent() ) {
+   }
+   else if ( dynamic_cast<MenuTable::MenuSection*>( pItem ) ) {
+      if ( !needSeparator.empty() )
+         needSeparator.back() = true;
+   }
+   else {
+      firstItem.pop_back();
+      needSeparator.pop_back();
+   }
+
+   DoEndGroup( item, path );
+}
+
+void MenuVisitor::Visit( Registry::SingleItem &item, const Path &path )
+{
+   MaybeDoSeparator();
+   DoVisit( item, path );
+}
+
+void MenuVisitor::MaybeDoSeparator()
+{
+   bool separate = false;
+   if ( !needSeparator.empty() ) {
+      separate = needSeparator.back() && !firstItem.back();
+      needSeparator.back() = false;
+      firstItem.back() = false;
+   }
+
+   if ( separate )
+      DoSeparator();
+}
+
+void MenuVisitor::DoBeginGroup( Registry::GroupItem &, const Path & )
+{
+}
+
+void MenuVisitor::DoEndGroup( Registry::GroupItem &, const Path & )
+{
+}
+
+void MenuVisitor::DoVisit( Registry::SingleItem &, const Path & )
+{
+}
+
+void MenuVisitor::DoSeparator()
+{
+}
+
 namespace MenuTable {
 
 MenuItem::MenuItem( const wxString &internalName,
@@ -988,7 +1063,7 @@ struct MenuItemVisitor : MenuVisitor
    MenuItemVisitor( AudacityProject &proj, CommandManager &man )
       : MenuVisitor(proj), manager( man ) {}
 
-   void BeginGroup( GroupItem &item, const Path& ) override
+   void DoBeginGroup( GroupItem &item, const Path& ) override
    {
       auto pItem = &item;
       if (const auto pMenu =
@@ -1009,13 +1084,12 @@ struct MenuItemVisitor : MenuVisitor
       }
       else
       if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
-         manager.AddSeparator();
       }
       else
          wxASSERT( false );
    }
 
-   void EndGroup( GroupItem &item, const Path& ) override
+   void DoEndGroup( GroupItem &item, const Path& ) override
    {
       auto pItem = &item;
       if (const auto pMenu =
@@ -1035,13 +1109,12 @@ struct MenuItemVisitor : MenuVisitor
       }
       else
       if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
-         manager.AddSeparator();
       }
       else
          wxASSERT( false );
    }
 
-   void Visit( SingleItem &item, const Path& ) override
+   void DoVisit( SingleItem &item, const Path& ) override
    {
       const auto pCurrentMenu = manager.CurrentMenu();
       if ( !pCurrentMenu ) {
@@ -1075,6 +1148,11 @@ struct MenuItemVisitor : MenuVisitor
       }
       else
          wxASSERT( false );
+   }
+
+   void DoSeparator() override
+   {
+      manager.AddSeparator();
    }
 
    CommandManager &manager;

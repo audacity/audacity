@@ -670,7 +670,23 @@ struct MenuVisitor : Registry::Visitor
    explicit MenuVisitor( AudacityProject &p ) : project{ p } {}
    operator AudacityProject & () const { return project; }
 
+   // final overrides
+   void BeginGroup( Registry::GroupItem &item, const Path &path ) final;
+   void EndGroup( Registry::GroupItem &item, const Path& ) final;
+   void Visit( Registry::SingleItem &item, const Path &path ) final;
+
+   // added virtuals
+   virtual void DoBeginGroup( Registry::GroupItem &item, const Path &path );
+   virtual void DoEndGroup( Registry::GroupItem &item, const Path &path );
+   virtual void DoVisit( Registry::SingleItem &item, const Path &path );
+   virtual void DoSeparator();
+
    AudacityProject &project;
+
+private:
+   void MaybeDoSeparator();
+   std::vector<bool> firstItem;
+   std::vector<bool> needSeparator;
 };
 
 // Define items that populate tables that specifically describe menu trees

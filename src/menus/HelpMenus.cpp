@@ -385,69 +385,37 @@ void OnMenuTree(const CommandContext &context)
       using MenuVisitor::MenuVisitor;
 
       enum : unsigned { TAB = 3 };
-      void BeginGroup( GroupItem &item, const Path& ) override
+      void DoBeginGroup( GroupItem &item, const Path& ) override
       {
-         auto pItem = &item;
-         if ( pItem->Transparent() ) {
-         }
-         else if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
-            if ( !needSeparator.empty() )
-               needSeparator.back() = true;
-         }
-         else {
-            MaybeEmitSeparator();
+         if ( dynamic_cast<MenuItem*>( &item ) ) {
             Indent();
             // using GET for alpha only diagnostic tool
             info += item.name.GET();
             Return();
             indentation = wxString{ ' ', TAB * ++level };
-            needSeparator.push_back( false );
-            firstItem.push_back( true );
          }
       }
 
-      void EndGroup( GroupItem &item, const Path& ) override
+      void DoEndGroup( GroupItem &item, const Path& ) override
       {
-         auto pItem = &item;
-         if ( pItem->Transparent() ) {
-         }
-         else if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
-            if ( !needSeparator.empty() )
-               needSeparator.back() = true;
-         }
-         else {
-            firstItem.pop_back();
-            needSeparator.pop_back();
+         if ( dynamic_cast<MenuItem*>( &item ) )
             indentation = wxString{ ' ', TAB * --level };
-         }
       }
 
-      void Visit( SingleItem &item, const Path& ) override
+      void DoVisit( SingleItem &item, const Path& ) override
       {
-         MaybeEmitSeparator();
-
          // using GET for alpha only diagnostic tool
          Indent();
          info += item.name.GET();
          Return();
       }
 
-      void MaybeEmitSeparator()
+      void DoSeparator() override
       {
          static const wxString separatorName{ '=', 20 };
-
-         bool separate = false;
-         if ( !needSeparator.empty() ) {
-            separate = needSeparator.back() && !firstItem.back();
-            needSeparator.back() = false;
-            firstItem.back() = false;
-         }
-
-         if ( separate ) {
-            Indent();
-            info += separatorName;
-            Return();
-         }
+         Indent();
+         info += separatorName;
+         Return();
       }
 
       void Indent() { info += indentation; }
@@ -456,9 +424,6 @@ void OnMenuTree(const CommandContext &context)
       unsigned level{};
       wxString indentation;
       wxString info;
-
-      std::vector<bool> firstItem;
-      std::vector<bool> needSeparator;
    } visitor{ project };
 
    MenuManager::Visit( visitor );
