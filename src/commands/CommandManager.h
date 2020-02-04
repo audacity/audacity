@@ -697,11 +697,11 @@ namespace MenuTable {
    struct MenuItem final : ConcreteGroupItem< false, MenuVisitor > {
       // Construction from an internal name and a previously built-up
       // vector of pointers
-      MenuItem( const wxString &internalName,
+      MenuItem( const Identifier &internalName,
          const TranslatableString &title_, BaseItemPtrs &&items_ );
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         MenuItem( const wxString &internalName,
+         MenuItem( const Identifier &internalName,
             const TranslatableString &title_, Args&&... args )
             : ConcreteGroupItem< false, MenuVisitor >{
                internalName, std::forward<Args>(args)... }
@@ -719,11 +719,11 @@ namespace MenuTable {
 
       // Construction from an internal name and a previously built-up
       // vector of pointers
-      ConditionalGroupItem( const wxString &internalName,
+      ConditionalGroupItem( const Identifier &internalName,
          Condition condition_, BaseItemPtrs &&items_ );
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         ConditionalGroupItem( const wxString &internalName,
+         ConditionalGroupItem( const Identifier &internalName,
             Condition condition_, Args&&... args )
             : ConcreteGroupItem< false, MenuVisitor >{
                internalName, std::forward<Args>(args)... }
@@ -794,7 +794,7 @@ namespace MenuTable {
    // and dispatch to one common callback, which will be passed a number
    // in the CommandContext identifying the command
    struct CommandGroupItem final : SingleItem {
-      CommandGroupItem(const wxString &name_,
+      CommandGroupItem(const Identifier &name_,
                std::vector< ComponentInterfaceSymbol > items_,
                CommandFunctorPointer callback_,
                CommandFlag flags_,
@@ -804,7 +804,7 @@ namespace MenuTable {
       // Takes a pointer to member function directly, and delegates to the
       // previous constructor; useful within the lifetime of a FinderScope
       template< typename Handler >
-      CommandGroupItem(const wxString &name_,
+      CommandGroupItem(const Identifier &name_,
                std::vector< ComponentInterfaceSymbol > items_,
                void (Handler::*pmf)(const CommandContext&),
                CommandFlag flags_,
@@ -830,7 +830,7 @@ namespace MenuTable {
    {
       using Appender = std::function< void( AudacityProject&, wxMenu& ) >;
 
-      explicit SpecialItem( const wxString &internalName, const Appender &fn_ )
+      explicit SpecialItem( const Identifier &internalName, const Appender &fn_ )
       : SingleItem{ internalName }
       , fn{ fn_ }
       {}
@@ -843,7 +843,8 @@ namespace MenuTable {
    struct MenuPart : ConcreteGroupItem< Transparent, MenuVisitor >
    {
       template< typename... Args >
-      MenuPart( const wxString &internalName, Args&&... args )
+      explicit
+      MenuPart( const Identifier &internalName, Args&&... args )
          : ConcreteGroupItem< Transparent, MenuVisitor >{
             internalName, std::forward< Args >( args )... }
       {}
@@ -863,7 +864,7 @@ namespace MenuTable {
    // stable across Audacity versions.
    template< typename... Args >
    inline std::unique_ptr< MenuItems > Items(
-      const wxString &internalName, Args&&... args )
+      const Identifier &internalName, Args&&... args )
          { return std::make_unique< MenuItems >(
             internalName, std::forward<Args>(args)... ); }
 
@@ -874,7 +875,7 @@ namespace MenuTable {
    // might clarify the logical groupings.
    template< typename... Args >
    inline std::unique_ptr< MenuSection > Section(
-      const wxString &internalName, Args&&... args )
+      const Identifier &internalName, Args&&... args )
          { return std::make_unique< MenuSection >(
             internalName, std::forward<Args>(args)... ); }
    
@@ -886,11 +887,11 @@ namespace MenuTable {
    // by path.
    template< typename... Args >
    inline std::unique_ptr<MenuItem> Menu(
-      const wxString &internalName, const TranslatableString &title, Args&&... args )
+      const Identifier &internalName, const TranslatableString &title, Args&&... args )
          { return std::make_unique<MenuItem>(
             internalName, title, std::forward<Args>(args)... ); }
    inline std::unique_ptr<MenuItem> Menu(
-      const wxString &internalName, const TranslatableString &title, BaseItemPtrs &&items )
+      const Identifier &internalName, const TranslatableString &title, BaseItemPtrs &&items )
          { return std::make_unique<MenuItem>(
             internalName, title, std::move( items ) ); }
 
@@ -902,12 +903,12 @@ namespace MenuTable {
    // Name for conditional group must be non-empty.
    template< typename... Args >
    inline std::unique_ptr<ConditionalGroupItem> ConditionalItems(
-      const wxString &internalName,
+      const Identifier &internalName,
       ConditionalGroupItem::Condition condition, Args&&... args )
          { return std::make_unique<ConditionalGroupItem>(
             internalName, condition, std::forward<Args>(args)... ); }
    inline std::unique_ptr<ConditionalGroupItem> ConditionalItems(
-      const wxString &internalName, ConditionalGroupItem::Condition condition,
+      const Identifier &internalName, ConditionalGroupItem::Condition condition,
       BaseItemPtrs &&items )
          { return std::make_unique<ConditionalGroupItem>(
             internalName, condition, std::move( items ) ); }
@@ -921,14 +922,14 @@ namespace MenuTable {
    // by path.
    template< typename... Args >
    inline BaseItemPtr MenuOrItems(
-      const wxString &internalName, const TranslatableString &title, Args&&... args )
+      const Identifier &internalName, const TranslatableString &title, Args&&... args )
          {  if ( title.empty() )
                return Items( internalName, std::forward<Args>(args)... );
             else
                return std::make_unique<MenuItem>(
                   internalName, title, std::forward<Args>(args)... ); }
    inline BaseItemPtr MenuOrItems(
-      const wxString &internalName,
+      const Identifier &internalName,
       const TranslatableString &title, BaseItemPtrs &&items )
          {  if ( title.empty() )
                return Items( internalName, std::move( items ) );
@@ -951,7 +952,7 @@ namespace MenuTable {
 
    template< typename Handler >
    inline std::unique_ptr<CommandGroupItem> CommandGroup(
-      const wxString &name,
+      const Identifier &name,
       std::vector< ComponentInterfaceSymbol > items,
       void (Handler::*pmf)(const CommandContext&),
       CommandFlag flags, bool isEffect = false,
@@ -963,7 +964,7 @@ namespace MenuTable {
    }
 
    inline std::unique_ptr<SpecialItem> Special(
-      const wxString &name, const SpecialItem::Appender &fn )
+      const Identifier &name, const SpecialItem::Appender &fn )
          { return std::make_unique<SpecialItem>( name, fn ); }
 
    // Typically you make a static object of this type in the .cpp file that

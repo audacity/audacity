@@ -197,7 +197,7 @@ void MenuVisitor::DoSeparator()
 
 namespace MenuTable {
 
-MenuItem::MenuItem( const wxString &internalName,
+MenuItem::MenuItem( const Identifier &internalName,
    const TranslatableString &title_, BaseItemPtrs &&items_ )
 : ConcreteGroupItem< false, MenuVisitor >{
    internalName, std::move( items_ ) }, title{ title_ }
@@ -207,7 +207,7 @@ MenuItem::MenuItem( const wxString &internalName,
 MenuItem::~MenuItem() {}
 
 ConditionalGroupItem::ConditionalGroupItem(
-   const wxString &internalName, Condition condition_, BaseItemPtrs &&items_ )
+   const Identifier &internalName, Condition condition_, BaseItemPtrs &&items_ )
 : ConcreteGroupItem< false, MenuVisitor >{
    internalName, std::move( items_ ) }, condition{ condition_ }
 {
@@ -226,7 +226,7 @@ CommandItem::CommandItem(const CommandID &name_,
 {}
 CommandItem::~CommandItem() {}
 
-CommandGroupItem::CommandGroupItem(const wxString &name_,
+CommandGroupItem::CommandGroupItem(const Identifier &name_,
          std::vector< ComponentInterfaceSymbol > items_,
          CommandFunctorPointer callback_,
          CommandFlag flags_,
