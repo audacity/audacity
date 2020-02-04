@@ -199,7 +199,7 @@ namespace MenuTable {
 
 MenuItem::MenuItem( const Identifier &internalName,
    const TranslatableString &title_, BaseItemPtrs &&items_ )
-: ConcreteGroupItem< false, MenuVisitor >{
+: ConcreteGroupItem< false, ToolbarMenuVisitor >{
    internalName, std::move( items_ ) }, title{ title_ }
 {
    wxASSERT( !title.empty() );
@@ -208,7 +208,7 @@ MenuItem::~MenuItem() {}
 
 ConditionalGroupItem::ConditionalGroupItem(
    const Identifier &internalName, Condition condition_, BaseItemPtrs &&items_ )
-: ConcreteGroupItem< false, MenuVisitor >{
+: ConcreteGroupItem< false, ToolbarMenuVisitor >{
    internalName, std::move( items_ ) }, condition{ condition_ }
 {
 }
@@ -239,6 +239,8 @@ CommandGroupItem::CommandGroupItem(const Identifier &name_,
 CommandGroupItem::~CommandGroupItem() {}
 
 SpecialItem::~SpecialItem() {}
+
+MenuSection::~MenuSection() {}
 
 CommandHandlerFinder FinderScope::sFinder =
    [](AudacityProject &project) -> CommandHandlerObject & {
@@ -1058,10 +1060,10 @@ namespace {
 
 using namespace MenuTable;
 
-struct MenuItemVisitor : MenuVisitor
+struct MenuItemVisitor : ToolbarMenuVisitor
 {
    MenuItemVisitor( AudacityProject &proj, CommandManager &man )
-      : MenuVisitor(proj), manager( man ) {}
+      : ToolbarMenuVisitor(proj), manager( man ) {}
 
    void DoBeginGroup( GroupItem &item, const Path& ) override
    {
@@ -1209,7 +1211,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 #endif
 }
 
-void MenuManager::Visit( MenuVisitor &visitor )
+void MenuManager::Visit( ToolbarMenuVisitor &visitor )
 {
    static const auto menuTree = MenuTable::Items( MenuPathStart );
    Registry::Visit( visitor, menuTree.get(), &sRegistry() );

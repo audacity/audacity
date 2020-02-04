@@ -667,9 +667,6 @@ namespace Registry {
 
 struct MenuVisitor : Registry::Visitor
 {
-   explicit MenuVisitor( AudacityProject &p ) : project{ p } {}
-   operator AudacityProject & () const { return project; }
-
    // final overrides
    void BeginGroup( Registry::GroupItem &item, const Path &path ) final;
    void EndGroup( Registry::GroupItem &item, const Path& ) final;
@@ -681,12 +678,17 @@ struct MenuVisitor : Registry::Visitor
    virtual void DoVisit( Registry::SingleItem &item, const Path &path );
    virtual void DoSeparator();
 
-   AudacityProject &project;
-
 private:
    void MaybeDoSeparator();
    std::vector<bool> firstItem;
    std::vector<bool> needSeparator;
+};
+
+struct ToolbarMenuVisitor : MenuVisitor
+{
+   explicit ToolbarMenuVisitor( AudacityProject &p ) : project{ p } {}
+   operator AudacityProject & () const { return project; }
+   AudacityProject &project;
 };
 
 // Define items that populate tables that specifically describe menu trees
@@ -694,7 +696,7 @@ namespace MenuTable {
    using namespace Registry;
 
    // Describes a main menu in the toolbar, or a sub-menu
-   struct MenuItem final : ConcreteGroupItem< false, MenuVisitor > {
+   struct MenuItem final : ConcreteGroupItem< false, ToolbarMenuVisitor > {
       // Construction from an internal name and a previously built-up
       // vector of pointers
       MenuItem( const Identifier &internalName,
@@ -703,7 +705,7 @@ namespace MenuTable {
       template< typename... Args >
          MenuItem( const Identifier &internalName,
             const TranslatableString &title_, Args&&... args )
-            : ConcreteGroupItem< false, MenuVisitor >{
+            : ConcreteGroupItem< false, ToolbarMenuVisitor >{
                internalName, std::forward<Args>(args)... }
             , title{ title_ }
          {}
@@ -714,7 +716,8 @@ namespace MenuTable {
 
    // Collects other items that are conditionally shown or hidden, but are
    // always available to macro programming
-   struct ConditionalGroupItem final : ConcreteGroupItem< false, MenuVisitor > {
+   struct ConditionalGroupItem final
+      : ConcreteGroupItem< false, ToolbarMenuVisitor > {
       using Condition = std::function< bool() >;
 
       // Construction from an internal name and a previously built-up
@@ -725,7 +728,7 @@ namespace MenuTable {
       template< typename... Args >
          ConditionalGroupItem( const Identifier &internalName,
             Condition condition_, Args&&... args )
-            : ConcreteGroupItem< false, MenuVisitor >{
+            : ConcreteGroupItem< false, ToolbarMenuVisitor >{
                internalName, std::forward<Args>(args)... }
             , condition{ condition_ }
          {}
@@ -839,18 +842,21 @@ namespace MenuTable {
       Appender fn;
    };
 
-   template< bool Transparent >
-   struct MenuPart : ConcreteGroupItem< Transparent, MenuVisitor >
+   // This exists only so that dynamic_cast can find it
+   struct MenuSection {
+      virtual ~MenuSection();
+   };
+
+   struct MenuPart : ConcreteGroupItem< false, ToolbarMenuVisitor >, MenuSection
    {
       template< typename... Args >
       explicit
       MenuPart( const Identifier &internalName, Args&&... args )
-         : ConcreteGroupItem< Transparent, MenuVisitor >{
+         : ConcreteGroupItem< false, ToolbarMenuVisitor >{
             internalName, std::forward< Args >( args )... }
       {}
    };
-   using MenuItems = MenuPart< true >;
-   using MenuSection = MenuPart< false >;
+   using MenuItems = ConcreteGroupItem< true, ToolbarMenuVisitor >;
 
    // The following, and Shared(), are the functions to use directly
    // in writing table definitions.
@@ -874,9 +880,9 @@ namespace MenuTable {
    // It's not necessary that the sisters of sections be other sections, but it
    // might clarify the logical groupings.
    template< typename... Args >
-   inline std::unique_ptr< MenuSection > Section(
+   inline std::unique_ptr< MenuPart > Section(
       const Identifier &internalName, Args&&... args )
-         { return std::make_unique< MenuSection >(
+         { return std::make_unique< MenuPart >(
             internalName, std::forward<Args>(args)... ); }
    
    // Menu items can be constructed two ways, as for group items

@@ -54,7 +54,7 @@ public:
    PluginID mLastEffect{};
 };
 
-struct MenuVisitor;
+struct ToolbarMenuVisitor;
 
 class MenuManager final
    : public MenuCreator
@@ -72,7 +72,7 @@ public:
    MenuManager &operator=( const MenuManager & ) PROHIBITED;
    ~MenuManager();
 
-   static void Visit( MenuVisitor &visitor );
+   static void Visit( ToolbarMenuVisitor &visitor );
 
    static void ModifyUndoMenuItems(AudacityProject &project);
    static void ModifyToolbarMenus(AudacityProject &project);

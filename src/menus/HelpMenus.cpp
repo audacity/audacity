@@ -380,9 +380,9 @@ void OnMenuTree(const CommandContext &context)
    auto &project = context.project;
    
    using namespace MenuTable;
-   struct MyVisitor : MenuVisitor
+   struct MyVisitor : ToolbarMenuVisitor
    {
-      using MenuVisitor::MenuVisitor;
+      using ToolbarMenuVisitor::ToolbarMenuVisitor;
 
       enum : unsigned { TAB = 3 };
       void DoBeginGroup( GroupItem &item, const Path& ) override
