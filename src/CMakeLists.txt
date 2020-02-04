@@ -1053,6 +1053,12 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    configure_file( audacity_config.h.in private/configwin.h )
 
    # Copy over the wxWidgets DLLs
+   if( use_system_wxwidgets )
+      set( wxlibs "$ENV{WXWIN}" )
+   else()
+      set( wxlibs "${CMAKE_BINARY_DIR}" )
+   endif()
+
    file( TO_NATIVE_PATH ${_EXEDIR} exedir )
    add_custom_command(
       TARGET
@@ -1060,7 +1066,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       COMMAND
          XCOPY "*.dll" ${exedir} /I /R /Y 
       WORKING_DIRECTORY
-         "${CMAKE_BINARY_DIR}/lib/vc_dll" 
+         "${wxlibs}/lib/vc_dll"
       POST_BUILD
    )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )

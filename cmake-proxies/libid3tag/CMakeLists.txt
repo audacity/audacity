@@ -25,6 +25,7 @@ list( APPEND SOURCES
 list( APPEND INCLUDES
    PRIVATE
       ${CMAKE_CURRENT_BINARY_DIR}/private
+      $<$<PLATFORM_ID:Windows>:$ENV{WXWIN}/src/zlib>
    PUBLIC
       ${TARGET_ROOT}
 )
