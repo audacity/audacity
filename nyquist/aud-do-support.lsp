@@ -92,8 +92,7 @@
     (eval-string func-def)))
 
 
-(defun aud-import-commands ()
-  ;;; Import all Audacity commands as LISP functions
-  ;;; Function names prefix the command id with "aup-".
-  (dolist (command (aud-get-info "Commands"))
-      (aud-import-command command)))
+;;; Import all Audacity commands as LISP functions
+;;; Function names prefix the command id with "aud-".
+(dolist (command (aud-get-info "Commands"))
+    (aud-import-command command))
