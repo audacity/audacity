@@ -254,16 +254,24 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
 
 BEGIN_POPUP_MENU(NoteTrackVRulerMenuTable)
 
-   POPUP_MENU_ITEM(OnZoomResetID,      XO("Zoom Reset\tShift-Right-Click"), OnZoomReset)
-   POPUP_MENU_ITEM(OnZoomMaxID,        XO("Max Zoom"), OnZoomMax)
+   BEGIN_POPUP_MENU_SECTION( "Zoom" )
+      BEGIN_POPUP_MENU_SECTION( "Basic" )
+         POPUP_MENU_ITEM(OnZoomResetID,      XO("Zoom Reset\tShift-Right-Click"), OnZoomReset)
+         POPUP_MENU_ITEM(OnZoomMaxID,        XO("Max Zoom"), OnZoomMax)
+      END_POPUP_MENU_SECTION()
 
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-   POPUP_MENU_ITEM(OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
+      BEGIN_POPUP_MENU_SECTION( "InOut" )
+         POPUP_MENU_ITEM(OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
+         POPUP_MENU_ITEM(OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
+      END_POPUP_MENU_SECTION()
+   END_POPUP_MENU_SECTION()
 
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnUpOctaveID,   XO("Up &Octave"),   OnUpOctave)
-   POPUP_MENU_ITEM(OnDownOctaveID, XO("Down Octa&ve"), OnDownOctave)
+   BEGIN_POPUP_MENU_SECTION( "Pan" )
+      BEGIN_POPUP_MENU_SECTION( "Octaves" )
+         POPUP_MENU_ITEM(OnUpOctaveID,   XO("Up &Octave"),   OnUpOctave)
+         POPUP_MENU_ITEM(OnDownOctaveID, XO("Down Octa&ve"), OnDownOctave)
+      END_POPUP_MENU_SECTION()
+   END_POPUP_MENU_SECTION()
 
 END_POPUP_MENU()
 

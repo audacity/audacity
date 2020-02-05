@@ -766,7 +766,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
    const auto &view = WaveTrackView::Get( *pTrack );
 
-   POPUP_MENU_SEPARATOR()
+   BEGIN_POPUP_MENU_SECTION( "SubViews" )
 
    if ( WaveTrackSubViews::slots() > 1 )
       POPUP_MENU_CHECK_ITEM(OnMultiViewID, XO("&Multi-view"), OnMultiView)
@@ -781,22 +781,24 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       }
    }
 
-   POPUP_MENU_ITEM(OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
-   POPUP_MENU_SEPARATOR()
+      POPUP_MENU_ITEM(OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
+   END_POPUP_MENU_SECTION()
 
-// If these are enabled again, choose a hot key for Mono that does not conflict
-// with Multi View
-//   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, XO("&Mono"), OnChannelChange)
-//   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, XO("&Left Channel"), OnChannelChange)
-//   POPUP_MENU_RADIO_ITEM(OnChannelRightID, XO("R&ight Channel"), OnChannelChange)
-   POPUP_MENU_ITEM(OnMergeStereoID, XO("Ma&ke Stereo Track"), OnMergeStereo)
+   BEGIN_POPUP_MENU_SECTION( "Channels" )
+   // If these are enabled again, choose a hot key for Mono that does not conflict
+   // with Multi View
+   //   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, XO("&Mono"), OnChannelChange)
+   //   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, XO("&Left Channel"), OnChannelChange)
+   //   POPUP_MENU_RADIO_ITEM(OnChannelRightID, XO("R&ight Channel"), OnChannelChange)
+      POPUP_MENU_ITEM(OnMergeStereoID, XO("Ma&ke Stereo Track"), OnMergeStereo)
 
-   POPUP_MENU_ITEM(OnSwapChannelsID, XO("Swap Stereo &Channels"), OnSwapChannels)
-   POPUP_MENU_ITEM(OnSplitStereoID, XO("Spl&it Stereo Track"), OnSplitStereo)
-// DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
-#ifndef EXPERIMENTAL_DA
-   POPUP_MENU_ITEM(OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), OnSplitStereoMono)
-#endif
+      POPUP_MENU_ITEM(OnSwapChannelsID, XO("Swap Stereo &Channels"), OnSwapChannels)
+      POPUP_MENU_ITEM(OnSplitStereoID, XO("Spl&it Stereo Track"), OnSplitStereo)
+   // DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
+   #ifndef EXPERIMENTAL_DA
+      POPUP_MENU_ITEM(OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), OnSplitStereoMono)
+   #endif
+   END_POPUP_MENU_SECTION()
 
    if ( pTrack ) {
       const auto displays = view.GetDisplays();
@@ -805,15 +807,19 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
       ) );
       if( hasWaveform ){
-         POPUP_MENU_SEPARATOR()
-         POPUP_MENU_SUB_MENU(WaveColorMenuTable)
+         BEGIN_POPUP_MENU_SECTION( "WaveColor" )
+            POPUP_MENU_SUB_MENU(WaveColorMenuTable)
+         END_POPUP_MENU_SECTION()
       }
    }
 
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(FormatMenuTable)
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(RateMenuTable)
+   BEGIN_POPUP_MENU_SECTION( "Format" )
+      POPUP_MENU_SUB_MENU(FormatMenuTable)
+   END_POPUP_MENU_SECTION()
+
+   BEGIN_POPUP_MENU_SECTION( "Rate" )
+      POPUP_MENU_SUB_MENU(RateMenuTable)
+   END_POPUP_MENU_SECTION()
 END_POPUP_MENU()
 
 

@@ -197,9 +197,11 @@ void HandlerClass::Populate() { \
    POPUP_MENU_APPEND( \
       Entry::SubMenu, -1, classname::Instance().Caption(), nullptr, &classname::Instance() );
 
-#define POPUP_MENU_SEPARATOR() \
+#define BEGIN_POPUP_MENU_SECTION( name ) \
    POPUP_MENU_APPEND( \
       Entry::Separator, -1, {}, nullptr, nullptr );
+
+#define END_POPUP_MENU_SECTION()
 
 // ends function
 #define END_POPUP_MENU() \

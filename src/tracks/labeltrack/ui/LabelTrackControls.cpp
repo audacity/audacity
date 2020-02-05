@@ -70,8 +70,9 @@ enum
 };
 
 BEGIN_POPUP_MENU(LabelTrackMenuTable)
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnSetFontID, XO("&Font..."), OnSetFont)
+   BEGIN_POPUP_MENU_SECTION( "Basic" )
+      POPUP_MENU_ITEM(OnSetFontID, XO("&Font..."), OnSetFont)
+   END_POPUP_MENU_SECTION()
 END_POPUP_MENU()
 
 void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
