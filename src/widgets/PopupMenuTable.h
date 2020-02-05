@@ -55,7 +55,12 @@ struct PopupMenuTableEntry
 class PopupMenuTable : public wxEvtHandler
 {
 public:
-   typedef PopupMenuTableEntry Entry;
+   using Entry = PopupMenuTableEntry;
+
+   // Supply a nonempty caption for sub-menu tables
+   PopupMenuTable( const TranslatableString &caption = {} )
+      : mCaption{ caption }
+   {}
 
    class Menu
       : public wxMenu
@@ -95,6 +100,8 @@ public:
    static std::unique_ptr<Menu> BuildMenu
       (wxEvtHandler *pParent, PopupMenuTable *pTable, void *pUserData = NULL);
 
+   const TranslatableString &Caption() const { return mCaption; }
+
 protected:
    virtual void Populate() = 0;
    void Clear() { mContents.clear(); }
@@ -108,6 +115,7 @@ protected:
    }
 
    Entries mContents;
+   TranslatableString mCaption;
 };
 
 /*
@@ -173,7 +181,7 @@ That's all!
 // begins function
 #define BEGIN_POPUP_MENU(HandlerClass) \
 void HandlerClass::Populate() { \
-   typedef HandlerClass My;
+   using My = HandlerClass;
 
 #define POPUP_MENU_APPEND(type, id, string, memFn, subTable) \
    mContents.push_back( Entry { \
@@ -202,9 +210,9 @@ void HandlerClass::Populate() { \
    POPUP_MENU_APPEND_ITEM(Entry::CheckItem, id, string, memFn);
 
 // classname names a class that derives from MenuTable and defines Instance()
-#define POPUP_MENU_SUB_MENU(string, classname) \
+#define POPUP_MENU_SUB_MENU(classname) \
    POPUP_MENU_APPEND( \
-      Entry::SubMenu, -1, string, nullptr, &classname::Instance() );
+      Entry::SubMenu, -1, classname::Instance().Caption(), nullptr, &classname::Instance() );
 
 #define POPUP_MENU_SEPARATOR() \
    POPUP_MENU_APPEND( \

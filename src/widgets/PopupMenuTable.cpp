@@ -56,7 +56,8 @@ void PopupMenuTable::Menu::Extend(PopupMenuTable *pTable)
       {
          const auto subTable = pEntry->subTable;
          auto subMenu = BuildMenu( this->pParent, subTable, pUserData );
-         this->AppendSubMenu( subMenu.release(), pEntry->caption.Translation());
+         this->AppendSubMenu(
+            subMenu.release(), subTable->Caption().Translation());
       }
       default:
          break;

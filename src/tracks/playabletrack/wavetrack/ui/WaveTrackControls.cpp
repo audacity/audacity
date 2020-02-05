@@ -152,7 +152,9 @@ enum {
 // Table class for a sub-menu
 class WaveColorMenuTable : public PopupMenuTable
 {
-   WaveColorMenuTable() : mpData(NULL) {}
+   WaveColorMenuTable()
+      : PopupMenuTable( XO("&Wave Color") )
+   {}
    DECLARE_POPUP_MENU(WaveColorMenuTable);
 
 public:
@@ -167,7 +169,7 @@ private:
       mpData = NULL;
    }
 
-   PlayableTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData{};
 
    int IdOfWaveColor(int WaveColor);
    void OnWaveColorChange(wxCommandEvent & event);
@@ -249,7 +251,9 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 // Table class for a sub-menu
 class FormatMenuTable : public PopupMenuTable
 {
-   FormatMenuTable() : mpData(NULL) {}
+   FormatMenuTable()
+      : PopupMenuTable{ XO("&Format") }
+   {}
    DECLARE_POPUP_MENU(FormatMenuTable);
 
 public:
@@ -264,7 +268,7 @@ private:
       mpData = NULL;
    }
 
-   PlayableTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData{};
 
    int IdOfFormat(int format);
 
@@ -370,7 +374,9 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 // Table class for a sub-menu
 class RateMenuTable : public PopupMenuTable
 {
-   RateMenuTable() : mpData(NULL) {}
+   RateMenuTable()
+      : PopupMenuTable{ XO("Rat&e") }
+   {}
    DECLARE_POPUP_MENU(RateMenuTable);
 
 public:
@@ -385,7 +391,7 @@ private:
       mpData = NULL;
    }
 
-   PlayableTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData{};
 
    int IdOfRate(int rate);
    void SetRate(WaveTrack * pTrack, double rate);
@@ -800,14 +806,14 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       ) );
       if( hasWaveform ){
          POPUP_MENU_SEPARATOR()
-         POPUP_MENU_SUB_MENU(XO("&Wave Color"), WaveColorMenuTable)
+         POPUP_MENU_SUB_MENU(WaveColorMenuTable)
       }
    }
 
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(XO("&Format"), FormatMenuTable)
+   POPUP_MENU_SUB_MENU(FormatMenuTable)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(XO("Rat&e"), RateMenuTable)
+   POPUP_MENU_SUB_MENU(RateMenuTable)
 END_POPUP_MENU()
 
 
