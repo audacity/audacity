@@ -1778,16 +1778,16 @@ libaudacity_la_SOURCES = \
 
 audacity_CPPFLAGS = -std=c++11 -Wno-deprecated-declarations \
 	-D__STDC_CONSTANT_MACROS -DWXINTL_NO_GETTEXT_MACRO \
-	-DLIBDIR=\"$(libdir)\" $(EXPAT_CFLAGS) $(FILEDIALOG_CFLAGS) \
-	$(PORTAUDIO_CFLAGS) $(PORTMIXER_CFLAGS) $(SNDFILE_CFLAGS) \
-	$(SOXR_CFLAGS) $(WIDGETEXTRA_CFLAGS) $(WX_CXXFLAGS) $(NULL) \
-	$(am__append_1) $(am__append_4) $(am__append_7) \
-	$(am__append_10) $(am__append_13) $(am__append_15) \
-	$(am__append_18) $(am__append_20) $(am__append_22) \
-	$(am__append_25) $(am__append_27) $(am__append_29) \
-	$(am__append_31) $(am__append_34) $(am__append_37) \
-	$(am__append_39) $(am__append_42) $(am__append_44) \
-	$(am__append_47)
+	-DPKGLIBDIR=\"$(pkglibdir)\" -DLIBDIR=\"$(libdir)\" \
+	$(EXPAT_CFLAGS) $(FILEDIALOG_CFLAGS) $(PORTAUDIO_CFLAGS) \
+	$(PORTMIXER_CFLAGS) $(SNDFILE_CFLAGS) $(SOXR_CFLAGS) \
+	$(WIDGETEXTRA_CFLAGS) $(WX_CXXFLAGS) $(NULL) $(am__append_1) \
+	$(am__append_4) $(am__append_7) $(am__append_10) \
+	$(am__append_13) $(am__append_15) $(am__append_18) \
+	$(am__append_20) $(am__append_22) $(am__append_25) \
+	$(am__append_27) $(am__append_29) $(am__append_31) \
+	$(am__append_34) $(am__append_37) $(am__append_39) \
+	$(am__append_42) $(am__append_44) $(am__append_47)
 
 # Until we upgrade to a newer version of wxWidgets...will get rid of hundreds of these:
 #
