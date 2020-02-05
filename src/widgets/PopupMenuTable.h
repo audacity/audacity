@@ -202,9 +202,9 @@ void HandlerClass::Populate() { \
    POPUP_MENU_APPEND_ITEM(Entry::CheckItem, id, string, memFn);
 
 // classname names a class that derives from MenuTable and defines Instance()
-#define POPUP_MENU_SUB_MENU(id, string, classname) \
+#define POPUP_MENU_SUB_MENU(string, classname) \
    POPUP_MENU_APPEND( \
-      Entry::SubMenu, id, string, nullptr, &classname::Instance() );
+      Entry::SubMenu, -1, string, nullptr, &classname::Instance() );
 
 #define POPUP_MENU_SEPARATOR() \
    POPUP_MENU_APPEND( \

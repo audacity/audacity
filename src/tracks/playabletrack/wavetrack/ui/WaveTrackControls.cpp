@@ -135,7 +135,6 @@ enum {
    OnChannelMonoID,
 
    OnMergeStereoID,
-   OnWaveColorID,
    OnInstrument1ID,
    OnInstrument2ID,
    OnInstrument3ID,
@@ -801,14 +800,14 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       ) );
       if( hasWaveform ){
          POPUP_MENU_SEPARATOR()
-         POPUP_MENU_SUB_MENU(OnWaveColorID, XO("&Wave Color"), WaveColorMenuTable)
+         POPUP_MENU_SUB_MENU(XO("&Wave Color"), WaveColorMenuTable)
       }
    }
 
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(0, XO("&Format"), FormatMenuTable)
+   POPUP_MENU_SUB_MENU(XO("&Format"), FormatMenuTable)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(0, XO("Rat&e"), RateMenuTable)
+   POPUP_MENU_SUB_MENU(XO("Rat&e"), RateMenuTable)
 END_POPUP_MENU()
 
 
