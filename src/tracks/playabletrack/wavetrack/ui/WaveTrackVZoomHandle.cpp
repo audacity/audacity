@@ -118,8 +118,7 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
          *pProject,
          pTrack, rect, RefreshCode::RefreshNone, event.m_y, doZoom };
 
-      std::unique_ptr<PopupMenuTable::Menu>
-         pMenu(PopupMenuTable::BuildMenu(pParent, &table, &data));
+      auto pMenu = PopupMenuTable::BuildMenu(pParent, &table, &data);
 
       // Accelerators only if zooming enabled.
       if( !bVZoom )

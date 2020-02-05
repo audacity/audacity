@@ -11,14 +11,31 @@ Paul Licameli split from TrackPanel.cpp
 #include "../Audacity.h"
 #include "PopupMenuTable.h"
 
-PopupMenuTable::Menu::~Menu()
+namespace {
+struct PopupMenu : public wxMenu
+{
+   PopupMenu(wxEvtHandler *pParent_, void *pUserData_)
+      : pParent{ pParent_ }, tables{}, pUserData{ pUserData_ } {}
+
+   ~PopupMenu() override;
+
+   void Extend(PopupMenuTable *pTable);
+   void DisconnectTable(PopupMenuTable *pTable);
+   void Disconnect();
+
+   wxEvtHandler *pParent;
+   std::vector<PopupMenuTable*> tables;
+   void *pUserData;
+};
+
+PopupMenu::~PopupMenu()
 {
    // Event connections between the parent window and the singleton table
    // object must be broken when this menu is destroyed.
    Disconnect();
 }
 
-void PopupMenuTable::Menu::Extend(PopupMenuTable *pTable)
+void PopupMenu::Extend(PopupMenuTable *pTable)
 {
    pTable->InitUserData(pUserData);
 
@@ -55,7 +72,8 @@ void PopupMenuTable::Menu::Extend(PopupMenuTable *pTable)
       case PopupMenuTable::Entry::SubMenu:
       {
          const auto subTable = pEntry->subTable;
-         auto subMenu = BuildMenu( this->pParent, subTable, pUserData );
+         auto subMenu =
+            PopupMenuTable::BuildMenu( this->pParent, subTable, pUserData );
          this->AppendSubMenu(
             subMenu.release(), subTable->Caption().Translation());
       }
@@ -68,7 +86,7 @@ void PopupMenuTable::Menu::Extend(PopupMenuTable *pTable)
    tables.push_back( pTable );
 }
 
-void PopupMenuTable::Menu::DisconnectTable(PopupMenuTable *pTable)
+void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
 {
    for (const PopupMenuTable::Entry *pEntry = &*pTable->Get().begin();
       pEntry->IsValid(); ++pEntry) {
@@ -83,22 +101,28 @@ void PopupMenuTable::Menu::DisconnectTable(PopupMenuTable *pTable)
    pTable->DestroyMenu();
 }
 
-void PopupMenuTable::Menu::Disconnect()
+void PopupMenu::Disconnect()
 {
    for ( auto pTable : tables )
       DisconnectTable(pTable);
 }
+}
 
-void PopupMenuTable::InitMenu(Menu *)
+void PopupMenuTable::InitMenu(wxMenu *)
 {
 }
 
 // static
-std::unique_ptr<PopupMenuTable::Menu> PopupMenuTable::BuildMenu
+std::unique_ptr<wxMenu> PopupMenuTable::BuildMenu
 ( wxEvtHandler *pParent, PopupMenuTable *pTable, void *pUserData )
 {
    // Rebuild as needed each time.  That makes it safe in case of language change.
-   std::unique_ptr<Menu> theMenu{ safenew Menu( pParent, pUserData ) };
+   auto theMenu = std::make_unique<PopupMenu>( pParent, pUserData );
    theMenu->Extend(pTable);
    return theMenu;
+}
+
+void PopupMenuTable::ExtendMenu( wxMenu &menu, PopupMenuTable &otherTable )
+{
+   dynamic_cast<PopupMenu&>(menu).Extend(&otherTable);
 }

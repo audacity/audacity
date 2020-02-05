@@ -265,7 +265,7 @@ PopupMenuTable &SpectrumVRulerMenuTable::Instance()
    return instance;
 }
 
-void SpectrumVRulerMenuTable::InitMenu(Menu *pMenu)
+void SpectrumVRulerMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrackVRulerMenuTable::InitMenu(pMenu);
 

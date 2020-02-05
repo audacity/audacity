@@ -266,7 +266,7 @@ PopupMenuTable &WaveformVRulerMenuTable::Instance()
    return instance;
 }
 
-void WaveformVRulerMenuTable::InitMenu(Menu *pMenu)
+void WaveformVRulerMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrackVRulerMenuTable::InitMenu(pMenu);
 

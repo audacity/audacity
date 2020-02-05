@@ -297,8 +297,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
 
       PopupMenuTable *const pTable =
           (PopupMenuTable *) &NoteTrackVRulerMenuTable::Instance();
-      std::unique_ptr<PopupMenuTable::Menu>
-         pMenu(PopupMenuTable::BuildMenu(pParent, pTable, &data));
+      auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
 
       // Accelerators only if zooming enabled.
       if( !bVZoom )

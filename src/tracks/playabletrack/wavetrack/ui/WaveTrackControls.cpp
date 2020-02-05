@@ -162,7 +162,7 @@ public:
 
 private:
    void InitUserData(void *pUserData) override;
-   void InitMenu(Menu *pMenu) override;
+   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -186,7 +186,7 @@ void WaveColorMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-void WaveColorMenuTable::InitMenu(Menu *pMenu)
+void WaveColorMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto WaveColorId = IdOfWaveColor( pTrack->GetWaveColorIndex());
@@ -261,7 +261,7 @@ public:
 
 private:
    void InitUserData(void *pUserData) override;
-   void InitMenu(Menu *pMenu) override;
+   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -286,7 +286,7 @@ void FormatMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-void FormatMenuTable::InitMenu(Menu *pMenu)
+void FormatMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto formatId = IdOfFormat(pTrack->GetSampleFormat());
@@ -384,7 +384,7 @@ public:
 
 private:
    void InitUserData(void *pUserData) override;
-   void InitMenu(Menu *pMenu) override;
+   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -411,7 +411,7 @@ void RateMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-void RateMenuTable::InitMenu(Menu *pMenu)
+void RateMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    const auto rateId = IdOfRate((int)pTrack->GetRate());
@@ -583,7 +583,7 @@ protected:
    WaveTrackMenuTable() : mpData(NULL) {mpTrack=NULL;}
 
    void InitUserData(void *pUserData) override;
-   void InitMenu(Menu *pMenu) override;
+   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -637,7 +637,7 @@ static std::vector<WaveTrackSubViewType> AllTypes()
    return result;
 }
 
-void WaveTrackMenuTable::InitMenu(Menu *pMenu)
+void WaveTrackMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 

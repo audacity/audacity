@@ -91,7 +91,7 @@ private:
    void OnMoveTrack(wxCommandEvent &event);
 
    void InitUserData(void *pUserData) override;
-   void InitMenu(Menu *pMenu) override;
+   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -112,7 +112,7 @@ void TrackMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
 }
 
-void TrackMenuTable::InitMenu(Menu *pMenu)
+void TrackMenuTable::InitMenu(wxMenu *pMenu)
 {
    Track *const pTrack = mpData->pTrack;
 
@@ -282,7 +282,7 @@ unsigned CommonTrackControls::DoContextMenu(
 
    PopupMenuTable *const pExtension = GetMenuExtension(track.get());
    if (pExtension)
-      pMenu->Extend(pExtension);
+      PopupMenuTable::ExtendMenu( *pMenu, *pExtension );
 
    pParent->PopupMenu
       (pMenu.get(), buttonRect.x + 1, buttonRect.y + buttonRect.height + 1);

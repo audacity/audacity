@@ -52,7 +52,7 @@ private:
       mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    }
 
-   void InitMenu(Menu *pMenu) override
+   void InitMenu(wxMenu *pMenu) override
    {
       TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
 

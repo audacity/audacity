@@ -62,27 +62,6 @@ public:
       : mCaption{ caption }
    {}
 
-   class Menu
-      : public wxMenu
-   {
-      friend class PopupMenuTable;
-
-      Menu(wxEvtHandler *pParent_, void *pUserData_)
-         : pParent{ pParent_ }, tables{}, pUserData{ pUserData_ } {}
-
-   public:
-      virtual ~Menu();
-
-      void Extend(PopupMenuTable *pTable);
-      void DisconnectTable(PopupMenuTable *pTable);
-      void Disconnect();
-
-   private:
-      wxEvtHandler *pParent;
-      std::vector<PopupMenuTable*> tables;
-      void *pUserData;
-   };
-
    // Called before the menu items are appended.
    // Store user data, if needed.
    virtual void InitUserData(void *pUserData) = 0;
@@ -90,22 +69,22 @@ public:
    // Called when the menu is about to pop up.
    // Your chance to enable and disable items.
    // Default implementation does nothing.
-   virtual void InitMenu(Menu *pMenu);
+   virtual void InitMenu(wxMenu *pMenu);
 
    // Called when menu is destroyed.
    virtual void DestroyMenu() = 0;
 
    // Optional pUserData gets passed to the InitUserData routines of tables.
    // No memory management responsibility is assumed by this function.
-   static std::unique_ptr<Menu> BuildMenu
+   static std::unique_ptr<wxMenu> BuildMenu
       (wxEvtHandler *pParent, PopupMenuTable *pTable, void *pUserData = NULL);
 
    const TranslatableString &Caption() const { return mCaption; }
 
-protected:
-   virtual void Populate() = 0;
-   void Clear() { mContents.clear(); }
-   
+   // menu must have been built by BuildMenu
+   // More items get added to the end of it
+   static void ExtendMenu( wxMenu &menu, PopupMenuTable &otherTable );
+
    using Entries = std::vector<PopupMenuTableEntry>;
    const Entries& Get()
    {
@@ -114,6 +93,10 @@ protected:
       return mContents;
    }
 
+protected:
+   virtual void Populate() = 0;
+   void Clear() { mContents.clear(); }
+   
    Entries mContents;
    TranslatableString mCaption;
 };
@@ -128,7 +111,7 @@ which inherits from PopupMenuTable,
 
 DECLARE_POPUP_MENU(MyTable);
 virtual void InitUserData(void *pUserData);
-virtual void InitMenu(Menu *pMenu);
+virtual void InitMenu(wxMenu *pMenu);
 virtual void DestroyMenu();
 
 Then in MyTable.cpp,
@@ -139,7 +122,7 @@ void MyTable::InitUserData(void *pUserData)
    auto pData = static_cast<MyData*>(pUserData);
 }
 
-void MyTable::InitMenu(Menu *pMenu)
+void MyTable::InitMenu(wxMenu *pMenu)
 {
    // enable or disable menu items
 }
@@ -168,7 +151,7 @@ auto pMenu = PopupMenuTable::BuildMenu(pParent, &myTable, &data);
 
 // Optionally:
 OtherTable otherTable;
-pMenu->Extend(&otherTable);
+PopupMenuTable::ExtendMenu( *pMenu, otherTable );
 
 pParent->PopupMenu(pMenu.get(), event.m_x, event.m_y);
 
