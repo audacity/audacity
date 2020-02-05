@@ -3246,7 +3246,7 @@ void LV2Effect::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
       }
       // Otherwise, the plugin has resized the widget and we need to let WX know
       // about it.
-      else
+      else if (mNativeWin)
       {
          mResized = true;
          wxSizeEvent se(wxSize(requisition->width, requisition->height));
