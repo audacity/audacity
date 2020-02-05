@@ -903,7 +903,7 @@ list( APPEND HEADERS
 #
 #
 list( APPEND INCLUDES
-   PRIVATE
+   PUBLIC
       ${CMAKE_CURRENT_BINARY_DIR}/private
       ${topdir}/lib-src/lib-widget-extra
       ${topdir}/include
@@ -953,15 +953,8 @@ list( APPEND DEFINES
 
 list( APPEND OPTIONS
    PRIVATE
-      -std=c++11
-      $<$<CXX_COMPILER_ID:Clang>:-stdlib=libc++>
       $<$<PLATFORM_ID:Windows>:/permissive->
 #      $<$<CXX_COMPILER_ID:GNU>:-Wl,-rpath -Wl,${_RPATH}>
-)
-
-list( APPEND FEATURES
-   PRIVATE
-      cxx_std_11
 )
 
 list( APPEND LDFLAGS
@@ -983,12 +976,17 @@ list( APPEND LIBRARIES
       libsoxr
       lib-widget-extra
       portaudio-v19
+      $<$<BOOL:USE_FFMPEG>:libavcodec>
+      $<$<BOOL:USE_FFMPEG>:libavformat>
+      $<$<BOOL:USE_FFMPEG>:libavutil>
       $<$<BOOL:USE_LIBID3TAG>:libid3tag>
       $<$<BOOL:USE_LIBFLAC>:libflac>
       $<$<BOOL:USE_LIBFLAC>:libflac++>
       $<$<BOOL:USE_LIBMAD>:libmad>
       $<$<BOOL:USE_LIBVORBIS>:libogg>
       $<$<BOOL:USE_LIBVORBIS>:libvorbis>
+      $<$<BOOL:USE_LIBVORBIS>:libvorbisenc>
+      $<$<BOOL:USE_LIBVORBIS>:libvorbisfile>
       $<$<BOOL:USE_LIBTWOLAME>:twolame>
       $<$<BOOL:USE_LV2>:lv2>
       $<$<BOOL:USE_MIDI>:portmidi>
@@ -998,6 +996,7 @@ list( APPEND LIBRARIES
       $<$<BOOL:USE_SBSMS>:sbsms>
       $<$<BOOL:USE_SOUNDTOUCH>:soundtouch>
       $<$<BOOL:USE_VAMP>:libvamp>
+      $<$<BOOL:USE_VAMP>:libvamp-hostsdk>
 )
 
 #
@@ -1020,10 +1019,12 @@ set( USE_VST ${enable_vst} )
 set( AUDACITY_NAME "Audacity" )
 set( BUILDING_AUDACITY 1 )
 set( INSTALL_PREFIX "" )
-#set( DISABLE_DYNAMIC_LOADING_FFMPEG 1 )
-#set( DISABLE_DYNAMIC_LOADING_LAME 1 )
+set( LIBDIR "" )
+set( HAVE_GTK ${GTK_FOUND} )
+set( DISABLE_DYNAMIC_LOADING_FFMPEG ${disable_dynamic_loading} )
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+
    set_directory_properties(
       PROPERTIES
          # Make sure Audacity is the startup project
@@ -1069,7 +1070,9 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
          "${wxlibs}/lib/vc_dll"
       POST_BUILD
    )
+
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+
    # Handle Audio Units option
    option( enable_audiounits "Enable Audio Unit plug-in support" ON )
    set( USE_AUDIO_UNITS ${enable_audiounits} )
@@ -1137,7 +1140,33 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          ${CMAKE_BINARY_DIR}/lib
       POST_BUILD
    )
+
+   # Define the Wrapper target
+   add_executable( Wrapper )
+   add_dependencies( Wrapper "${TARGET}" )
+
+   set( WRAPPER_ROOT
+      ${TARGET_ROOT}/../mac
+   )
+
+   set( WRAPPER_SOURCES
+      ${WRAPPER_ROOT}/Wrapper.c
+   )
+
+   set_target_properties(
+      "Wrapper"
+      PROPERTIES
+         RUNTIME_OUTPUT_DIRECTORY_RELEASE "${_EXEDIR}/MacOS"
+         RUNTIME_OUTPUT_DIRECTORY_DEBUG "${_EXEDIR}/MacOS"
+         RUNTIME_OUTPUT_DIRECTORY "${_EXEDIR}/MacOS"
+   )
+
+   organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
+
+   target_sources( "Wrapper" PRIVATE ${WRAPPER_SOURCES} )
+
 elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
+
    # Add additional library requirements
    list( APPEND LIBRARIES
       PRIVATE
@@ -1170,6 +1199,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
          ${WXWIN}/lib
       POST_BUILD
    )
+
 endif()
 
 find_package (Git)
@@ -1177,17 +1207,30 @@ if (GIT_FOUND)
    execute_process(
       COMMAND
          ${GIT_EXECUTABLE} show -s "--format=\"%H\";\"%cd\";"
+      WORKING_DIRECTORY
+         ${TARGET_ROOT}
       OUTPUT_VARIABLE
          output
    )
+
    list( GET output 0 long )
    list( GET output 1 time )
    list( APPEND DEFINES
       REV_LONG=${long}
       REV_TIME=${time}
    )
-
 endif()
+
+install(
+   TARGETS
+      ${TARGET}
+   CONFIGURATIONS
+      "" Debug Release RelWithDebInfo RelWithDebInfo 
+   RUNTIME DESTINATION
+      ${CMAKE_INSTALL_BINDIR}
+   BUNDLE DESTINATION
+      ${CMAKE_INSTALL_BINDIR}
+)
 
 organize_source( "${TARGET_ROOT}/.." "include" "${HEADERS}" )
 organize_source( "${TARGET_ROOT}/../win" "win" "${RESOURCES}" )
@@ -1195,7 +1238,6 @@ organize_source( "${TARGET_ROOT}" "src" "${SOURCES}" )
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
-target_compile_features( ${TARGET} PRIVATE ${FEATURES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( "${TARGET}" PRIVATE ${LDFLAGS} )

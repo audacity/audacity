@@ -48,8 +48,7 @@ elseif( APPLE )
    set( CMAKE_OSX_SYSROOT macosx CACHE INTERNAL "" )
 
    # A bit of a no-no, but couldn't figure out a better way to make it GLOBAL
-   set( CMAKE_CXX_FLAGS "-stdlib=libc++ -std=gnu++11" )
-
+   set( CMAKE_CXX_FLAGS "-stdlib=libc++" )
 endif()
 
 # Add our module path
@@ -59,6 +58,10 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION ON )
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF )
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_Debug OFF )
+
+# Set the required C++ stardard
+set( CMAKE_CXX_STANDARD 14 )
+set( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 # Our very own project
 project( Audacity )
@@ -70,6 +73,7 @@ include( CheckIncludeFiles )
 include( CheckLibraryExists )
 include( CheckSymbolExists )
 include( CheckTypeSize )
+include( CMakeDependentOption )
 include( CMakeDetermineASM_NASMCompiler )
 include( CMakePushCheckState )
 include( GNUInstallDirs )
@@ -193,7 +197,10 @@ check_type_size( "size_t" SIZEOF_SIZE LANGUAGE C )
 check_type_size( "wchar_t" SIZEOF_WCHAR LANGUAGE C )
 check_type_size( "void*" SIZEOF_POINTER LANGUAGE C )
 
+# We'll be using it if it's available
 find_package( PkgConfig )
+
+# Mostly just to make the CMP0072 policy happy
 find_package( OpenGL )
 
 # When called will define several useful directory paths for the 
@@ -214,7 +221,7 @@ endif()
 set( _MODDIR "${_EXEDIR}/modules" )
 set( _RPATH "\$ORIGIN/../${CMAKE_INSTALL_LIBDIR}/audacity" )
 
-# Helper to organize sources into folder for the IDEs
+# Helper to organize sources into folders for the IDEs
 macro( organize_source root prefix sources )
    set( cleaned )
    foreach(source ${sources})
@@ -228,7 +235,7 @@ macro( organize_source root prefix sources )
       list( APPEND cleaned "${source}" )
    endforeach()
       
-   # Define source groups
+   # Define the source groups
    if( "${prefix}" STREQUAL "" )
       source_group( TREE "${root}" FILES ${cleaned} )
    else()
@@ -253,6 +260,36 @@ function( set_dir_folder dir folder)
    endforeach()
 endfunction()
 
+# Helper to retrieve the settings returned from pkg_check_modules()
+macro( get_package_interface package )
+   set( INCLUDES
+      INTERFACE
+         ${${package}_INCLUDE_DIRS}
+   )
+
+   set( CLFAGS
+      INTERFACE
+         ${${package}_CFLAGS}
+         ${${package}_CFLAGS_OTHER}
+   )
+
+   set( LDFLAGS
+      INTERFACE
+         ${${package}_LDFLAGS}
+         ${${package}_LDFLAGS_OTHER}
+   )
+
+   set( LINKDIRS
+      INTERFACE
+         ${${package}_LIBRARY_DIRS}
+   )
+
+   set( LIBRARIES
+      INTERFACE
+         ${${package}_LIBRARIES}
+   )
+endmacro()
+
 # Add our children
 add_subdirectory( "cmake-proxies" )
 add_subdirectory( "help" )
@@ -260,6 +297,7 @@ add_subdirectory( "locale" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
 add_subdirectory( "src" )
+add_subdirectory( "cmake-proxies/mod-script-pipe" )
 
 # Uncomment what follows for symbol values.
 #[[

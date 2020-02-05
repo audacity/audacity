@@ -26,11 +26,6 @@ list( APPEND OPTIONS
       $<$<PLATFORM_ID:Linux>:-Wno-deprecated-declarations>
 )
 
-list( APPEND FEATURES
-   PRIVATE
-      cxx_std_11
-)
-
 list( APPEND LIBRARIES
    PRIVATE
       wxwidgets
@@ -42,7 +37,6 @@ organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
-target_compile_features( ${TARGET} PRIVATE ${FEATURES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 

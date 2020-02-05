@@ -203,7 +203,7 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>Audacity</string>
+	<string>Wrapper</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Audacity version ${AUDACITY_INFO_VERSION}</string>
 	<key>CFBundleIconFile</key>

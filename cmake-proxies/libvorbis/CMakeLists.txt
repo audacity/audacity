@@ -1,5 +1,7 @@
 
 add_library( ${TARGET} STATIC )
+add_library( ${TARGET}enc ALIAS ${TARGET} )
+add_library( ${TARGET}file ALIAS ${TARGET} )
 
 list( APPEND SOURCES
    PRIVATE
@@ -51,8 +53,6 @@ configure_file( config.h.in private/config.h )
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
-target_compile_features( ${TARGET} PRIVATE ${FEATURES} )
-target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 

@@ -3,22 +3,24 @@ add_library( ${TARGET} INTERFACE )
 
 def_vars()
 
-option( use_system_wxwidgets "Prefer wxWidgets system library if available" ON )
+message( STATUS "========== Configuring ${TARGET} ==========" )
+
+option( use_system_wxwidgets "Use ${TARGET} system library if available" ${prefer_system_libs} )
 if( use_system_wxwidgets )
    find_package(wxWidgets)
 endif()
 
 if( wxWidgets_FOUND )
-   #include(${wxWidgets_USE_FILE})
+   message( STATUS "Using '${TARGET}' system library" )
 
    if( wxWidgets_INCLUDE_DIRS_NO_SYSTEM )
       set( INCLUDES
          INTERFACE
-            ${wxWidgets_INCLUDE_DIRS}
+            ${wxWidgets_INCLUDE_DIRS_NO_SYSTEM}
       )
    else()
       set( INCLUDES
-         SYSTEM
+         INTERFACE
             ${wxWidgets_INCLUDE_DIRS}
       )
    endif() 
@@ -29,6 +31,11 @@ if( wxWidgets_FOUND )
          ${wxWidgets_DEFINITIONS_DEBUG}
    )
 
+   set( LINKDIRS
+      INTERFACE
+         $<$<PLATFORM_ID:Windows>:${wxWidgets_LIB_DIR}>
+   )
+
    set( LIBRARIES
       INTERFACE
          ${wxWidgets_LIBRARIES}
@@ -37,6 +44,8 @@ if( wxWidgets_FOUND )
 
    set( toolkit "${wxWidgets_LIBRARIES}" )
 else()
+   message( STATUS "Using '${TARGET}' system library" )
+
    set( use_system_wxwidgets OFF CACHE BOOL "Prefer wxWidgets system library if available" FORCE )
 
    set( WXWIN $ENV{WXWIN} )
@@ -146,5 +155,6 @@ endif()
 
 target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
 target_compile_definitions( ${TARGET} INTERFACE ${DEFINES} )
+target_link_directories( ${TARGET} INTERFACE ${LINKDIRS} )
 target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
 

@@ -174,14 +174,19 @@ macro( bld name packages define sources )
    if( NOT missing )
 
       list( APPEND DEFINES
-#         PUBLIC
          PRIVATE
             ${define}
       )
 
-      add_library( ${name} SHARED "${sources}" )
-      set_target_properties( ${name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${_MODDIR} )
+      add_library( ${name} MODULE "${sources}" )
       add_dependencies( ${TARGET} ${name} )
+
+      set_target_properties( ${name}
+         PROPERTIES
+            LIBRARY_OUTPUT_DIRECTORY "${_LIBDIR}"
+            PREFIX ""
+      )
+
       organize_source( "${TARGET_ROOT}" "" "${sources}" )
       target_compile_definitions( ${name} PRIVATE SUIL_SHARED ${DEFINES} )
       target_include_directories( ${name} PRIVATE ${INCLUDES} )
@@ -266,8 +271,5 @@ configure_file( suil_config.h.in "${_PRVDIR}/suil_config.h" )
 organize_source( "${TARGET_ROOT}" "" "${SOURCES} ${HEADERS}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} ${HEADERS} )# ${stamp} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
-target_compile_features( ${TARGET} PRIVATE ${FEATURES} )
-target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
-target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 
