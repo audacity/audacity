@@ -2467,6 +2467,9 @@
     <ClInclude Include="..\..\..\src\effects\lv2\zix\ring.h">
       <Filter>src\effects\lv2\zix</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\TimerToolBar.h">
+      <Filter>src\toolbars</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\audacity.ico">
@@ -2481,15 +2484,6 @@
   <ItemGroup>
     <None Include="..\..\ny.rules" />
     <None Include="..\..\po.rules" />
-    <None Include="..\..\..\nyquist\sliders.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\spec-plot.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\spectral-analysis.lsp">
-      <Filter>nyquist</Filter>
-    </None>
     <None Include="..\..\..\nyquist\system.lsp">
       <Filter>nyquist</Filter>
     </None>
@@ -2624,6 +2618,9 @@
     <CustomBuild Include="..\..\..\nyquist\nyinit-dbg.lsp">
       <Filter>nyquist</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\sliders.lsp" />
+    <CustomBuild Include="..\..\..\nyquist\spec-plot.lsp" />
+    <CustomBuild Include="..\..\..\nyquist\spectral-analysis.lsp" />
   </ItemGroup>
   <ItemGroup>
     <copy Include="..\..\..\plug-ins\adjustable-fade.ny">

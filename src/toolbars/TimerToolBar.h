@@ -37,6 +37,10 @@ public:
    
    void SetTimes(double audio);
    void RegenerateTooltips() override {};
+   wxSize GetDockedSize() override {
+      return GetSmartDockedSize();
+   };
+
    
 private:
    NumericTextCtrl * AddTime( const TranslatableString &Name, int id);
@@ -44,8 +48,8 @@ private:
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
    void OnSize(wxSizeEvent &evt);
+   void OnIdle( wxIdleEvent &evt );
    void OnSnapTo(wxCommandEvent & event);
-   virtual void SetDocked(ToolDock *dock, bool pushed) override;
    
    SelectionBarListener * mListener;
    double mRate;

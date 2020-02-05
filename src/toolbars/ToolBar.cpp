@@ -483,6 +483,22 @@ void ToolBar::SetToDefaultSize(){
    SetSize( sz );
 }
 
+wxSize ToolBar::GetSmartDockedSize()
+{
+   const int tbs = toolbarSingle + toolbarGap;
+   wxSize sz = GetSize();
+   wxSize sz2 = GetMinSize();
+   sz.x = wxMax( sz.x, sz2.x );
+   sz.y = wxMax( sz.y, sz2.y );
+   // 46 is the size where we switch from expanded to compact.
+   if( sz.y < 46 )
+      sz.y = tbs-1;
+   else 
+      sz.y = 2 * tbs -1;
+   return sz;
+}
+
+
 void ToolBar::ReCreateButtons()
 {
    wxSize sz3 = GetSize();

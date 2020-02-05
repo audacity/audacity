@@ -43,7 +43,10 @@
 #include "../KeyboardCapture.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectAudioIO.h"
+#include "../ProjectSettings.h"
 #include "../Snap.h"
+#include "../ViewInfo.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../AllThemeResources.h"
 
@@ -59,8 +62,9 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(TimerToolBar, ToolBar)
-EVT_SIZE(TimerToolBar::OnSize)
-EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, TimerToolBar::OnCaptureKey)
+  EVT_SIZE(TimerToolBar::OnSize)
+  EVT_IDLE( TimerToolBar::OnIdle )
+  EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, TimerToolBar::OnCaptureKey)
 END_EVENT_TABLE()
 
 TimerToolBar::TimerToolBar( AudacityProject &project )
@@ -119,26 +123,36 @@ void TimerToolBar::UpdatePrefs()
    ToolBar::UpdatePrefs();
 }
 
-void TimerToolBar::OnSize(wxSizeEvent & event)
+void TimerToolBar::OnSize(wxSizeEvent & ev)
 {
-   event.Skip();
+   ev.Skip();
+
+   if (!mAudioTime)
+      return;
    
-   int sh = GetSize().GetHeight() - 10;
-   
-   if (mAudioTime)
-   {
-      mAudioTime->SetDigitSize( sh*.63, sh );
-      wxSize ms = mAudioTime->GetSize();
-      //int mw = ms.GetWidth();
-      //mAudioTime->SetMinSize(GetSizer()->GetMinSize());
-      //printf("(size) %i %i\n", GetSizer()->GetSize());
-   }
-   //SetMinSize( GetSizer()->GetMinSize() );
-   //Layout();
-   //Fit();
-   
-   //Refresh(true);
-   //evt.Skip();
+   // This 'OnSize' function is also called during moving the
+   // toolbar.  
+
+   // 10 and 40 are magic numbers to allow some space around
+   // the numeric control.  The horizontal space reserved
+   // is deliberately not quite enough.  Size of font is set
+   // primarily by the height of the toolbar.  The width 
+   // calculations just stop the font width being 
+   // ridiculously too large to fit.
+   // In practice a user will drag the size to get a good font
+   // size and adjust the width so that part of the control 
+   // does not disappear.
+   float f = mAudioTime->GetAspectRatio();
+   int sh = wxMax( 5, ev.GetSize().GetHeight() - 10);
+   int sw = wxMax( sh, ev.GetSize().GetWidth() - 40)/f;
+   sh = wxMin( sh, sw );
+   mAudioTime->SetDigitSize( sh*0.63, sh );
+
+   // Refresh and update immediately, so that we don't get 
+   // to see grot from partly redrawn toolbar during 
+   // the resizing.
+   Refresh(false);
+   Update();
 }
 
 void TimerToolBar::SetTimes(double audio)
@@ -169,9 +183,24 @@ void TimerToolBar::OnCaptureKey(wxCommandEvent &event)
    event.Skip();
 }
 
-void TimerToolBar::SetDocked(ToolDock *dock, bool pushed) {
-   ToolBar::SetDocked(dock, pushed);
-   Fit();
+void TimerToolBar::OnIdle( wxIdleEvent &evt )
+{
+   evt.Skip();
+   auto &project = mProject;
+
+   double audioTime;
+
+   auto &projectAudioIO = ProjectAudioIO::Get( project );
+   if ( projectAudioIO.IsAudioActive() ){
+      auto gAudioIO = AudioIOBase::Get();
+      audioTime = gAudioIO->GetStreamTime();
+   }
+   else {
+      const auto &playRegion = ViewInfo::Get( project ).playRegion;
+      audioTime = playRegion.GetStart();
+   }
+
+   SetTimes( audioTime);
 }
 
 

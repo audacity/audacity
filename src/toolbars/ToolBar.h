@@ -141,6 +141,10 @@ public:
    virtual int GetInitialWidth() { return -1; }
    virtual int GetMinToolbarWidth() { return GetInitialWidth(); }
    virtual wxSize GetDockedSize() { return GetMinSize(); }
+   
+   // Utility function for certain resizable toolbars.
+   // Allows them to dock at normal or double size.
+   wxSize GetSmartDockedSize();
 
  public:
    static
