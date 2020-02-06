@@ -15,6 +15,10 @@
 
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wparentheses"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(__clang__)
+#pragma clang diagnostic ignored "-Wparentheses"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 #include "LV2Effect.h"
