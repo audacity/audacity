@@ -24,7 +24,12 @@
 //   Vertical Line
 //   Cursor position
 
+#ifdef TIME_IN_SELECT_TOOLBAR
 #define SIZER_COLS 7
+#else
+#define SIZER_COLS 5
+#endif
+
 
 class wxChoice;
 class wxComboBox;

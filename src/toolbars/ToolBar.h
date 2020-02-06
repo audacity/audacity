@@ -81,7 +81,7 @@ enum
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBarID,
 #endif
-   TimerBarID,
+   TimeBarID,
    ToolBarCount
 };
 
@@ -106,7 +106,7 @@ class ToolBar /* not final */
 
    bool AcceptsFocus() const override { return false; };
 
-   void SetToDefaultSize();
+   virtual void SetToDefaultSize();
    //NEW virtuals:
    virtual void Create(wxWindow *parent);
    virtual void EnableDisableButtons() = 0;

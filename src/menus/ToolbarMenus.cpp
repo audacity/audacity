@@ -52,12 +52,12 @@ void OnShowTransportToolBar(const CommandContext &context)
    MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
-void OnShowTimerToolBar(const CommandContext &context)
+void OnShowTimeToolBar(const CommandContext &context)
 {
    auto &project = context.project;
    auto &toolManager = ToolManager::Get( project );
 
-   toolManager.ShowHide( TimerBarID );
+   toolManager.ShowHide( TimeBarID );
    MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
@@ -341,9 +341,9 @@ BaseItemSharedPtr ToolbarsMenu()
             ,
             /* i18n-hint: Clicking this menu item shows the toolbar
                for viewing actual time of the cursor*/
-            Command( wxT("ShowTimerToolBarTB"), XXO("&Timer Toolbar"),
-               FN(OnShowTimerToolBar), AlwaysEnabledFlag,
-               Options{}.CheckTest( ToolbarCheckFn( TimerBarID ) ) )
+            Command( wxT("ShowTimeToolBarTB"), XXO("&Time Toolbar"),
+               FN(OnShowTimeToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( TimeBarID ) ) )
       #endif
       #ifdef EXPERIMENTAL_SPECTRAL_EDITING
             ,

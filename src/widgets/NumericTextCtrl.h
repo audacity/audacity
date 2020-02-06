@@ -56,6 +56,7 @@ public:
    static NumericFormatSymbol DefaultSelectionFormat();
    static NumericFormatSymbol TimeAndSampleFormat();
    static NumericFormatSymbol SecondsFormat();
+   static NumericFormatSymbol HoursMinsSecondsFormat();
    static NumericFormatSymbol HundredthsFormat();
    static NumericFormatSymbol HertzFormat();
    

@@ -37,6 +37,10 @@ public:
    
    void SetTimes(double audio);
    void RegenerateTooltips() override {};
+
+   int GetInitialWidth() override {return 250;} 
+   int GetMinToolbarWidth()  override { return 150; }
+   void SetToDefaultSize() override;
    wxSize GetDockedSize() override {
       return GetSmartDockedSize();
    };

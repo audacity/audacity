@@ -68,7 +68,7 @@ BEGIN_EVENT_TABLE(TimerToolBar, ToolBar)
 END_EVENT_TABLE()
 
 TimerToolBar::TimerToolBar( AudacityProject &project )
-: ToolBar(project, TimerBarID, XO("TimerToolBar"), wxT("TimerToolBar"),true),
+: ToolBar(project, TimeBarID, XO("TimeToolBar"), wxT("TimeToolBar"),true),
 mListener(NULL), mAudioTime(NULL)
 {
    mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
@@ -82,7 +82,7 @@ TimerToolBar::~TimerToolBar()
 TimerToolBar &TimerToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<TimerToolBar*>( toolManager.GetToolBar(TimerBarID) );
+   return *static_cast<TimerToolBar*>( toolManager.GetToolBar(TimeBarID) );
 }
 
 const TimerToolBar &TimerToolBar::Get( const AudacityProject &project )
@@ -99,11 +99,13 @@ void TimerToolBar::Create(wxWindow * parent)
 NumericTextCtrl * TimerToolBar::AddTime(
    const TranslatableString &Name, int id)
 {
-   auto formatName = mListener ? mListener->AS_GetSelectionFormat()
-   : NumericFormatSymbol{};
+   //auto formatName = mListener ? mListener->AS_GetSelectionFormat()
+   //: NumericFormatSymbol{};
+   auto formatName = NumericConverter::HoursMinsSecondsFormat();
    auto pCtrl = safenew NumericTextCtrl(
       this, id, NumericConverter::TIME, formatName, 0.0, mRate);
    pCtrl->SetName(Name);
+   pCtrl->SetReadOnly(true);
    return pCtrl;
 }
 
@@ -119,9 +121,17 @@ void TimerToolBar::Populate()
 
 void TimerToolBar::UpdatePrefs()
 {
-   SetLabel(XO("TimerToolBar"));
+   SetLabel(XO("Time"));
    ToolBar::UpdatePrefs();
 }
+
+void TimerToolBar::SetToDefaultSize(){
+   wxSize sz;
+   sz.SetHeight( 80 );
+   sz.SetWidth( GetInitialWidth());
+   SetSize( sz );
+}
+
 
 void TimerToolBar::OnSize(wxSizeEvent & ev)
 {
@@ -133,7 +143,7 @@ void TimerToolBar::OnSize(wxSizeEvent & ev)
    // This 'OnSize' function is also called during moving the
    // toolbar.  
 
-   // 10 and 40 are magic numbers to allow some space around
+   // 10 and 50 are magic numbers to allow some space around
    // the numeric control.  The horizontal space reserved
    // is deliberately not quite enough.  Size of font is set
    // primarily by the height of the toolbar.  The width 
@@ -143,15 +153,20 @@ void TimerToolBar::OnSize(wxSizeEvent & ev)
    // size and adjust the width so that part of the control 
    // does not disappear.
    float f = mAudioTime->GetAspectRatio();
-   int sh = wxMax( 5, ev.GetSize().GetHeight() - 10);
-   int sw = wxMax( sh, ev.GetSize().GetWidth() - 40)/f;
-   sh = wxMin( sh, sw );
-   mAudioTime->SetDigitSize( sh*0.63, sh );
+   int sh = ev.GetSize().GetHeight() - 10;
+   int sw = (ev.GetSize().GetWidth() - 50)/f;
+   sw = wxMin( sh, sw );
+   // The 22 and 77 are magic numbers setting min and max 
+   // font sizes.
+   sw = wxMin( sw, 77 );
+   sw = wxMax( 20, sw );
+   sh = sw * 0.63;
+   mAudioTime->SetDigitSize( sh, sw );
 
    // Refresh and update immediately, so that we don't get 
    // to see grot from partly redrawn toolbar during 
    // the resizing.
-   Refresh(false);
+   Refresh(true);
    Update();
 }
 
@@ -209,7 +224,7 @@ void TimerToolBar::OnSnapTo(wxCommandEvent & WXUNUSED(event))
    mListener->AS_SetSnapTo(mSnapTo->GetSelection());
 }
 
-static RegisteredToolbarFactory factory{ TimerBarID,
+static RegisteredToolbarFactory factory{ TimeBarID,
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew TimerToolBar{ project } }; }
 };

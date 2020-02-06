@@ -650,6 +650,8 @@ NumericFormatSymbol NumericConverter::TimeAndSampleFormat()
 { return TimeConverterFormats_[5].name; }
 NumericFormatSymbol NumericConverter::SecondsFormat()
 { return TimeConverterFormats_[0].name; }
+NumericFormatSymbol NumericConverter::HoursMinsSecondsFormat()
+{ return TimeConverterFormats_[1].name; }
 NumericFormatSymbol NumericConverter::HundredthsFormat()
 { return TimeConverterFormats_[3].name; }
 
