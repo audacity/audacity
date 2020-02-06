@@ -694,8 +694,8 @@ void WaveTrackMenuTable::InitMenu(wxMenu *pMenu)
    // Bug 1253.  Shouldn't open preferences if audio is busy.
    // We can't change them on the fly yet anyway.
    auto gAudioIO = AudioIOBase::Get();
-   const bool bAudioBusy = gAudioIO->IsBusy();
-   pMenu->Enable(OnSpectrogramSettingsID, hasSpectrum && !bAudioBusy);
+   if ( hasSpectrum )
+      pMenu->Enable(OnSpectrogramSettingsID, !gAudioIO->IsBusy());
 
    AudacityProject *const project = &mpData->project;
    auto &tracks = TrackList::Get( *project );
@@ -769,22 +769,44 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    const auto &view = WaveTrackView::Get( *pTrack );
 
    BEGIN_POPUP_MENU_SECTION( "SubViews" )
+      if ( WaveTrackSubViews::slots() > 1 )
+         POPUP_MENU_CHECK_ITEM( "MultiView", OnMultiViewID, XO("&Multi-view"), OnMultiView)
 
-   if ( WaveTrackSubViews::slots() > 1 )
-      POPUP_MENU_CHECK_ITEM( "MultiView", OnMultiViewID, XO("&Multi-view"), OnMultiView)
-
-   int id = OnSetDisplayId;
-   for ( const auto &type : AllTypes() ) {
-      if ( view.GetMultiView() ) {
-         POPUP_MENU_CHECK_ITEM( type.name.Internal(), id++, type.name.Msgid(), OnSetDisplay)
+      int id = OnSetDisplayId;
+      for ( const auto &type : AllTypes() ) {
+         if ( view.GetMultiView() ) {
+            POPUP_MENU_CHECK_ITEM( type.name.Internal(), id++, type.name.Msgid(), OnSetDisplay)
+         }
+         else {
+            POPUP_MENU_RADIO_ITEM( type.name.Internal(), id++, type.name.Msgid(), OnSetDisplay)
+         }
       }
-      else {
-         POPUP_MENU_RADIO_ITEM( type.name.Internal(), id++, type.name.Msgid(), OnSetDisplay)
-      }
-   }
-
-      POPUP_MENU_ITEM( "SpectrogramSettings", OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
    END_POPUP_MENU_SECTION()
+
+   if ( pTrack ) {
+
+      const auto displays = view.GetDisplays();
+      bool hasWaveform = (displays.end() != std::find(
+         displays.begin(), displays.end(),
+         WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
+      ) );
+      if( hasWaveform ){
+         BEGIN_POPUP_MENU_SECTION( "WaveColor" )
+            POPUP_MENU_SUB_MENU( "WaveColor", WaveColorMenuTable)
+         END_POPUP_MENU_SECTION()
+      }
+
+      bool hasSpectrum = (displays.end() != std::find(
+         displays.begin(), displays.end(),
+         WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
+      ) );
+      if( hasSpectrum ){
+         BEGIN_POPUP_MENU_SECTION( "SpectrogramSettings" )
+            POPUP_MENU_ITEM( "SpectrogramSettings", OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
+         END_POPUP_MENU_SECTION()
+      }
+
+   }
 
    BEGIN_POPUP_MENU_SECTION( "Channels" )
    // If these are enabled again, choose a hot key for Mono that does not conflict
@@ -801,19 +823,6 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       POPUP_MENU_ITEM( "SplitToMono", OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), OnSplitStereoMono)
    #endif
    END_POPUP_MENU_SECTION()
-
-   if ( pTrack ) {
-      const auto displays = view.GetDisplays();
-      bool hasWaveform = (displays.end() != std::find(
-         displays.begin(), displays.end(),
-         WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
-      ) );
-      if( hasWaveform ){
-         BEGIN_POPUP_MENU_SECTION( "WaveColor" )
-            POPUP_MENU_SUB_MENU( "WaveColor", WaveColorMenuTable)
-         END_POPUP_MENU_SECTION()
-      }
-   }
 
    BEGIN_POPUP_MENU_SECTION( "Format" )
       POPUP_MENU_SUB_MENU( "Format", FormatMenuTable)
