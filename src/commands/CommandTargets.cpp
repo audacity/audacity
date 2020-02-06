@@ -349,6 +349,10 @@ LongMessageDialog::LongMessageDialog(wxWindow * parent,
    mType = type;
    mAdditionalButtons = additionalButtons;
    SetName(XO("Long Message"));
+   // The long message adds lots of short strings onto this one.
+   // So preallocate to make it faster.
+   // Needs 37Kb for all commands.
+   mText.Alloc(40000);
 }
 
 LongMessageDialog::~LongMessageDialog(){
