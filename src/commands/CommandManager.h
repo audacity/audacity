@@ -695,8 +695,19 @@ struct ToolbarMenuVisitor : MenuVisitor
 namespace MenuTable {
    using namespace Registry;
 
+   // These are found by dynamic_cast
+   struct MenuSection {
+      virtual ~MenuSection();
+   };
+   struct WholeMenu {
+      WholeMenu( bool extend = false ) : extension{ extend }  {}
+      virtual ~WholeMenu();
+      bool extension;
+   };
+
    // Describes a main menu in the toolbar, or a sub-menu
-   struct MenuItem final : ConcreteGroupItem< false, ToolbarMenuVisitor > {
+   struct MenuItem final : ConcreteGroupItem< false, ToolbarMenuVisitor >
+      , WholeMenu {
       // Construction from an internal name and a previously built-up
       // vector of pointers
       MenuItem( const Identifier &internalName,
@@ -840,11 +851,6 @@ namespace MenuTable {
       ~SpecialItem() override;
 
       Appender fn;
-   };
-
-   // This exists only so that dynamic_cast can find it
-   struct MenuSection {
-      virtual ~MenuSection();
    };
 
    struct MenuPart : ConcreteGroupItem< false, ToolbarMenuVisitor >, MenuSection

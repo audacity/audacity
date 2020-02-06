@@ -123,6 +123,7 @@ void Visitor::Visit(SingleItem &, const Path &) {}
 void MenuVisitor::BeginGroup( Registry::GroupItem &item, const Path &path )
 {
    bool isMenu = false;
+   bool isExtension = false;
    auto pItem = &item;
    if ( pItem->Transparent() ) {
    }
@@ -130,8 +131,9 @@ void MenuVisitor::BeginGroup( Registry::GroupItem &item, const Path &path )
       if ( !needSeparator.empty() )
          needSeparator.back() = true;
    }
-   else {
+   else if ( auto pWhole = dynamic_cast<MenuTable::WholeMenu*>( pItem ) ) {
       isMenu = true;
+      isExtension = pWhole->extension;
       MaybeDoSeparator();
    }
 
@@ -139,7 +141,7 @@ void MenuVisitor::BeginGroup( Registry::GroupItem &item, const Path &path )
 
    if ( isMenu ) {
       needSeparator.push_back( false );
-      firstItem.push_back( true );
+      firstItem.push_back( !isExtension );
    }
 }
 
@@ -152,7 +154,7 @@ void MenuVisitor::EndGroup( Registry::GroupItem &item, const Path &path )
       if ( !needSeparator.empty() )
          needSeparator.back() = true;
    }
-   else {
+   else if ( dynamic_cast<MenuTable::WholeMenu*>( pItem ) ) {
       firstItem.pop_back();
       needSeparator.pop_back();
    }
@@ -241,6 +243,7 @@ CommandGroupItem::~CommandGroupItem() {}
 SpecialItem::~SpecialItem() {}
 
 MenuSection::~MenuSection() {}
+WholeMenu::~WholeMenu() {}
 
 CommandHandlerFinder FinderScope::sFinder =
    [](AudacityProject &project) -> CommandHandlerObject & {

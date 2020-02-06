@@ -20,6 +20,7 @@ PopupSubMenu::~PopupSubMenu()
 PopupSubMenu::PopupSubMenu( const Identifier &stringId,
    const TranslatableString &caption_, PopupMenuTable &table )
    : ConcreteGroupItem< false >{ stringId }
+   , WholeMenu{ caption_.empty() }
    , caption{ caption_ }
 {
 }

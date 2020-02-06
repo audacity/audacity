@@ -53,6 +53,7 @@ struct PopupMenuTableEntry : Registry::SingleItem
 };
 
 struct PopupSubMenu : Registry::ConcreteGroupItem< false >
+   , MenuTable::WholeMenu
 {
    TranslatableString caption;
 
@@ -103,8 +104,7 @@ public:
    // More items get added to the end of it
    static void ExtendMenu( wxMenu &menu, PopupMenuTable &otherTable );
    
-   using Entries = std::vector<PopupMenuTableEntry>;
-   const std::shared_ptr< PopupSubMenu > &Get()
+   const std::shared_ptr< Registry::GroupItem > &Get()
    {
       if (!mTop)
          Populate();
@@ -115,7 +115,7 @@ protected:
    virtual void Populate() = 0;
    void Clear() { mTop.reset(); }
    
-   std::shared_ptr< PopupSubMenu > mTop;
+   std::shared_ptr< Registry::GroupItem > mTop;
    std::vector< Registry::GroupItem* > mStack;
    Identifier mId;
    TranslatableString mCaption;
