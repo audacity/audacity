@@ -1,5 +1,5 @@
 
-set( TARGET mod-script-pipe )
+set( TARGET mod-nyq-bench )
 set( TARGET_ROOT "${libsrc}/${TARGET}" )
 
 message( STATUS "========== Configuring ${TARGET} ==========" )
@@ -10,8 +10,8 @@ add_library( ${TARGET} MODULE )
 
 list( APPEND SOURCES
    PRIVATE
-      ${TARGET_ROOT}/PipeServer.cpp
-      ${TARGET_ROOT}/ScripterCallback.cpp
+      ${TARGET_ROOT}/NyqBench.cpp
+      ${TARGET_ROOT}/NyqBench.h
 )
 
 list( APPEND INCLUDES
@@ -19,15 +19,12 @@ list( APPEND INCLUDES
       ${TARGET_ROOT}
 )
 
-list( APPEND DEFINES
-   PRIVATE
-      BUILDING_SCRIPT_PIPE
-)
-
 list( APPEND LIBRARIES
    PRIVATE
-      wxwidgets
       Audacity
+      libnyquist
+      portaudio-v19
+      wxwidgets
 )
 
 set_target_properties( ${TARGET}
@@ -41,7 +38,6 @@ set_target_properties( ${TARGET}
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
-target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 

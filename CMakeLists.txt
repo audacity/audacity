@@ -213,13 +213,20 @@ macro( def_vars )
 endmacro()
 
 # And define the non-context dependent paths
-set( _EXEDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}" )
-# These aren't really context dependent, but...
+set( _EXEDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" )
+if( CMAKE_BUILD_TYPE )
+   set( _EXEDIR "${_EXEDIR}/${CMAKE_BUILD_TYPE}" )
+endif()
+
+# On the Mac, make it the content directory
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( _EXEDIR "${_EXEDIR}/Audacity.app/Contents" )
 endif()
+
 set( _MODDIR "${_EXEDIR}/modules" )
-set( _RPATH "\$ORIGIN/../${CMAKE_INSTALL_LIBDIR}/audacity" )
+set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
+set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}/audacity" )
+set( _RPATH "\$ORIGIN/../${_LIBDIR}" )
 
 # Helper to organize sources into folders for the IDEs
 macro( organize_source root prefix sources )
@@ -297,6 +304,7 @@ add_subdirectory( "locale" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
 add_subdirectory( "src" )
+add_subdirectory( "cmake-proxies/mod-nyq-bench" )
 add_subdirectory( "cmake-proxies/mod-script-pipe" )
 
 # Uncomment what follows for symbol values.

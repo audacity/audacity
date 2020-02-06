@@ -32,11 +32,14 @@
    declarations. */
 #cmakedefine HAVE_VISIBILITY 1
 
-/* define as prefix where Audacity is installed */
+/* Define as prefix where Audacity is installed */
 #define INSTALL_PREFIX "@INSTALL_PREFIX@"
 
-/* define as prefix where Audacity is installed */
+/* Define where libraries get installed */
 #define LIBDIR "@LIBDIR@"
+
+/* Define where Audacity specific libraries get installed */
+#define PKGLIBDIR "@PKGLIBDIR@"
 
 /* Define if Audio Unit plug-ins are enabled (Mac OS X only) */
 #cmakedefine USE_AUDIO_UNITS 1

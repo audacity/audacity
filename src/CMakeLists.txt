@@ -1018,8 +1018,9 @@ set( USE_VST ${enable_vst} )
 
 set( AUDACITY_NAME "Audacity" )
 set( BUILDING_AUDACITY 1 )
-set( INSTALL_PREFIX "" )
-set( LIBDIR "" )
+set( INSTALL_PREFIX "${_PREFIX}" )
+set( PKGLIBDIR "${_LIBDIR}" )
+set( LIBDIR "${_LIBDIR}" )
 set( HAVE_GTK ${GTK_FOUND} )
 set( DISABLE_DYNAMIC_LOADING_FFMPEG ${disable_dynamic_loading} )
 
