@@ -78,7 +78,9 @@ std::vector<UIHandlePtr> NoteTrackControls::HitTest
 
 class NoteTrackMenuTable : public PopupMenuTable
 {
-   NoteTrackMenuTable() : mpData(NULL) {}
+   NoteTrackMenuTable()
+      : PopupMenuTable{ "NoteTrack" }
+   {}
    DECLARE_POPUP_MENU(NoteTrackMenuTable);
 
 public:
@@ -95,7 +97,7 @@ private:
       mpData = nullptr;
    }
 
-   NoteTrackControlsBase::InitMenuData *mpData;
+   NoteTrackControlsBase::InitMenuData *mpData{};
 
    void OnChangeOctave(wxCommandEvent &);
 };
@@ -129,9 +131,10 @@ void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
 }
 
 BEGIN_POPUP_MENU(NoteTrackMenuTable)
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnUpOctaveID, XO("Up &Octave"), OnChangeOctave)
-   POPUP_MENU_ITEM(OnDownOctaveID, XO("Down Octa&ve"), OnChangeOctave)
+   BEGIN_POPUP_MENU_SECTION( "Basic" )
+      POPUP_MENU_ITEM( "Up", OnUpOctaveID, XO("Up &Octave"), OnChangeOctave)
+      POPUP_MENU_ITEM( "Down", OnDownOctaveID, XO("Down Octa&ve"), OnChangeOctave)
+   END_POPUP_MENU_SECTION()
 END_POPUP_MENU()
 
 PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)

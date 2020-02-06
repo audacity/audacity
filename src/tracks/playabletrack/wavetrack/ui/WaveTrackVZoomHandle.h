@@ -68,7 +68,9 @@ public:
    };
 
 protected:
-   WaveTrackVRulerMenuTable() {}
+   WaveTrackVRulerMenuTable( const Identifier &id )
+      : PopupMenuTable{ id }
+   {}
 
    void InitUserData(void *pUserData) override;
 

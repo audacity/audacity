@@ -266,7 +266,7 @@ PopupMenuTable &WaveformVRulerMenuTable::Instance()
    return instance;
 }
 
-void WaveformVRulerMenuTable::InitMenu(Menu *pMenu)
+void WaveformVRulerMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrackVRulerMenuTable::InitMenu(pMenu);
 
@@ -279,28 +279,33 @@ void WaveformVRulerMenuTable::InitMenu(Menu *pMenu)
 
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 
+   BEGIN_POPUP_MENU_SECTION( "Scales" )
    {
       const auto & names = WaveformSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         POPUP_MENU_RADIO_ITEM(OnFirstWaveformScaleID + ii, names[ii].Msgid(),
+         POPUP_MENU_RADIO_ITEM( names[ii].Internal(),
+            OnFirstWaveformScaleID + ii, names[ii].Msgid(),
             OnWaveformScaleType);
       }
    }
+   END_POPUP_MENU_SECTION()
 
-   POPUP_MENU_SEPARATOR()
+   BEGIN_POPUP_MENU_SECTION( "Zoom" )
+      BEGIN_POPUP_MENU_SECTION( "Basic" )
+         POPUP_MENU_ITEM( "Reset", OnZoomFitVerticalID, XO("Zoom Reset\tShift-Right-Click"), OnZoomReset)
+         POPUP_MENU_ITEM( "TimesHalf", OnZoomDiv2ID,        XO("Zoom x1/2"),                     OnZoomDiv2Vertical)
+         POPUP_MENU_ITEM( "TimesTwo", OnZoomTimes2ID,      XO("Zoom x2"),                       OnZoomTimes2Vertical)
 
-   POPUP_MENU_ITEM(OnZoomFitVerticalID, XO("Zoom Reset\tShift-Right-Click"), OnZoomReset)
-   POPUP_MENU_ITEM(OnZoomDiv2ID,        XO("Zoom x1/2"),                     OnZoomDiv2Vertical)
-   POPUP_MENU_ITEM(OnZoomTimes2ID,      XO("Zoom x2"),                       OnZoomTimes2Vertical)
+   #ifdef EXPERIMENTAL_HALF_WAVE
+         POPUP_MENU_ITEM( "HalfWave", OnZoomHalfWaveID,    XO("Half Wave"),                     OnZoomHalfWave)
+   #endif
+      END_POPUP_MENU_SECTION()
 
-#ifdef EXPERIMENTAL_HALF_WAVE
-   POPUP_MENU_ITEM(OnZoomHalfWaveID,    XO("Half Wave"),                     OnZoomHalfWave)
-#endif
-
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-   POPUP_MENU_ITEM(OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
-
+      BEGIN_POPUP_MENU_SECTION( "InOut" )
+         POPUP_MENU_ITEM( "In", OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
+         POPUP_MENU_ITEM( "Out", OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
+      END_POPUP_MENU_SECTION()
+   END_POPUP_MENU_SECTION()
 
 END_POPUP_MENU()
 

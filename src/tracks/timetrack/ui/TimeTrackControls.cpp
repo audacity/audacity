@@ -40,7 +40,9 @@ enum
 
 class TimeTrackMenuTable : public PopupMenuTable
 {
-   TimeTrackMenuTable() : mpData(NULL) {}
+   TimeTrackMenuTable()
+      : PopupMenuTable{ "TimeTrack" }
+   {}
    DECLARE_POPUP_MENU(TimeTrackMenuTable);
 
 public:
@@ -52,7 +54,7 @@ private:
       mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    }
 
-   void InitMenu(Menu *pMenu) override
+   void InitMenu(wxMenu *pMenu) override
    {
       TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
 
@@ -68,7 +70,7 @@ private:
       mpData = nullptr;
    }
 
-   CommonTrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData{};
 
    void OnSetTimeTrackRange(wxCommandEvent & /*event*/);
    void OnTimeTrackLin(wxCommandEvent & /*event*/);
@@ -160,12 +162,15 @@ void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 }
 
 BEGIN_POPUP_MENU(TimeTrackMenuTable)
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_RADIO_ITEM(OnTimeTrackLinID, XO("&Linear scale"), OnTimeTrackLin)
-   POPUP_MENU_RADIO_ITEM(OnTimeTrackLogID, XO("L&ogarithmic scale"), OnTimeTrackLog)
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnSetTimeTrackRangeID, XO("&Range..."), OnSetTimeTrackRange)
-   POPUP_MENU_CHECK_ITEM(OnTimeTrackLogIntID, XO("Logarithmic &Interpolation"), OnTimeTrackLogInt)
+   BEGIN_POPUP_MENU_SECTION( "Scales" )
+      POPUP_MENU_RADIO_ITEM( "Linear", OnTimeTrackLinID, XO("&Linear scale"), OnTimeTrackLin)
+      POPUP_MENU_RADIO_ITEM( "Log", OnTimeTrackLogID, XO("L&ogarithmic scale"), OnTimeTrackLog)
+   END_POPUP_MENU_SECTION()
+
+   BEGIN_POPUP_MENU_SECTION( "Other" )
+      POPUP_MENU_ITEM( "Range", OnSetTimeTrackRangeID, XO("&Range..."), OnSetTimeTrackRange)
+      POPUP_MENU_CHECK_ITEM( "LogInterp", OnTimeTrackLogIntID, XO("Logarithmic &Interpolation"), OnTimeTrackLogInt)
+   END_POPUP_MENU_SECTION()
 END_POPUP_MENU()
 
 PopupMenuTable *TimeTrackControls::GetMenuExtension(Track *)

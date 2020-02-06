@@ -135,7 +135,6 @@ enum {
    OnChannelMonoID,
 
    OnMergeStereoID,
-   OnWaveColorID,
    OnInstrument1ID,
    OnInstrument2ID,
    OnInstrument3ID,
@@ -153,7 +152,9 @@ enum {
 // Table class for a sub-menu
 class WaveColorMenuTable : public PopupMenuTable
 {
-   WaveColorMenuTable() : mpData(NULL) {}
+   WaveColorMenuTable()
+      : PopupMenuTable( "WaveColor", XO("&Wave Color") )
+   {}
    DECLARE_POPUP_MENU(WaveColorMenuTable);
 
 public:
@@ -161,14 +162,14 @@ public:
 
 private:
    void InitUserData(void *pUserData) override;
-   void InitMenu(Menu *pMenu) override;
+   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
       mpData = NULL;
    }
 
-   PlayableTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData{};
 
    int IdOfWaveColor(int WaveColor);
    void OnWaveColorChange(wxCommandEvent & event);
@@ -185,7 +186,7 @@ void WaveColorMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-void WaveColorMenuTable::InitMenu(Menu *pMenu)
+void WaveColorMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto WaveColorId = IdOfWaveColor( pTrack->GetWaveColorIndex());
@@ -205,13 +206,13 @@ const TranslatableString GetWaveColorStr(int colorIndex)
 
 
 BEGIN_POPUP_MENU(WaveColorMenuTable)
-   POPUP_MENU_RADIO_ITEM(OnInstrument1ID,
+   POPUP_MENU_RADIO_ITEM( "Instrument1", OnInstrument1ID,
       GetWaveColorStr(0), OnWaveColorChange)
-   POPUP_MENU_RADIO_ITEM(OnInstrument2ID,
+   POPUP_MENU_RADIO_ITEM( "Instrument2", OnInstrument2ID,
       GetWaveColorStr(1), OnWaveColorChange)
-   POPUP_MENU_RADIO_ITEM(OnInstrument3ID,
+   POPUP_MENU_RADIO_ITEM( "Instrument3", OnInstrument3ID,
       GetWaveColorStr(2), OnWaveColorChange)
-   POPUP_MENU_RADIO_ITEM(OnInstrument4ID,
+   POPUP_MENU_RADIO_ITEM( "Instrument4", OnInstrument4ID,
       GetWaveColorStr(3), OnWaveColorChange)
 END_POPUP_MENU()
 
@@ -250,7 +251,9 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 // Table class for a sub-menu
 class FormatMenuTable : public PopupMenuTable
 {
-   FormatMenuTable() : mpData(NULL) {}
+   FormatMenuTable()
+      : PopupMenuTable{ "SampleFormat", XO("&Format") }
+   {}
    DECLARE_POPUP_MENU(FormatMenuTable);
 
 public:
@@ -258,14 +261,14 @@ public:
 
 private:
    void InitUserData(void *pUserData) override;
-   void InitMenu(Menu *pMenu) override;
+   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
       mpData = NULL;
    }
 
-   PlayableTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData{};
 
    int IdOfFormat(int format);
 
@@ -283,7 +286,7 @@ void FormatMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-void FormatMenuTable::InitMenu(Menu *pMenu)
+void FormatMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    auto formatId = IdOfFormat(pTrack->GetSampleFormat());
@@ -297,11 +300,11 @@ void FormatMenuTable::InitMenu(Menu *pMenu)
 }
 
 BEGIN_POPUP_MENU(FormatMenuTable)
-   POPUP_MENU_RADIO_ITEM(On16BitID,
+   POPUP_MENU_RADIO_ITEM( "16Bit", On16BitID,
       GetSampleFormatStr(int16Sample), OnFormatChange)
-   POPUP_MENU_RADIO_ITEM(On24BitID,
-      GetSampleFormatStr(int24Sample), OnFormatChange)
-   POPUP_MENU_RADIO_ITEM(OnFloatID,
+   POPUP_MENU_RADIO_ITEM("24Bit", On24BitID,
+      GetSampleFormatStr( int24Sample), OnFormatChange)
+   POPUP_MENU_RADIO_ITEM( "Float", OnFloatID,
       GetSampleFormatStr(floatSample), OnFormatChange)
 END_POPUP_MENU()
 
@@ -371,7 +374,9 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 // Table class for a sub-menu
 class RateMenuTable : public PopupMenuTable
 {
-   RateMenuTable() : mpData(NULL) {}
+   RateMenuTable()
+      : PopupMenuTable{ "SampleRate", XO("Rat&e") }
+   {}
    DECLARE_POPUP_MENU(RateMenuTable);
 
 public:
@@ -379,14 +384,14 @@ public:
 
 private:
    void InitUserData(void *pUserData) override;
-   void InitMenu(Menu *pMenu) override;
+   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
       mpData = NULL;
    }
 
-   PlayableTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData{};
 
    int IdOfRate(int rate);
    void SetRate(WaveTrack * pTrack, double rate);
@@ -406,7 +411,7 @@ void RateMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-void RateMenuTable::InitMenu(Menu *pMenu)
+void RateMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    const auto rateId = IdOfRate((int)pTrack->GetRate());
@@ -423,19 +428,19 @@ void RateMenuTable::InitMenu(Menu *pMenu)
 // If we did, we'd get no message when clicking on Other...
 // when it is already selected.
 BEGIN_POPUP_MENU(RateMenuTable)
-   POPUP_MENU_CHECK_ITEM(OnRate8ID, XO("8000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate11ID, XO("11025 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate16ID, XO("16000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate22ID, XO("22050 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate44ID, XO("44100 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate48ID, XO("48000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate88ID, XO("88200 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate96ID, XO("96000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate176ID, XO("176400 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate192ID, XO("192000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate352ID, XO("352800 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRate384ID, XO("384000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM(OnRateOtherID, XO("&Other..."), OnRateOther)
+   POPUP_MENU_CHECK_ITEM( "8000", OnRate8ID, XO("8000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "11025", OnRate11ID, XO("11025 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "16000", OnRate16ID, XO("16000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "22050", OnRate22ID, XO("22050 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "44100", OnRate44ID, XO("44100 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "48000", OnRate48ID, XO("48000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "88200", OnRate88ID, XO("88200 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "96000", OnRate96ID, XO("96000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "176400", OnRate176ID, XO("176400 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "192000", OnRate192ID, XO("192000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "352800", OnRate352ID, XO("352800 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "384000", OnRate384ID, XO("384000 Hz"), OnRateChange)
+   POPUP_MENU_CHECK_ITEM( "Other", OnRateOtherID, XO("&Other..."), OnRateOther)
 END_POPUP_MENU()
 
 const int nRates = 12;
@@ -572,13 +577,15 @@ class WaveTrackMenuTable : public PopupMenuTable
 {
 public:
    static WaveTrackMenuTable &Instance( Track * pTrack);
-   Track * mpTrack;
+   Track * mpTrack{};
 
 protected:
-   WaveTrackMenuTable() : mpData(NULL) {mpTrack=NULL;}
+   WaveTrackMenuTable()
+      : PopupMenuTable{ "WaveTrack" }
+   {}
 
    void InitUserData(void *pUserData) override;
-   void InitMenu(Menu *pMenu) override;
+   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -587,7 +594,7 @@ protected:
 
    DECLARE_POPUP_MENU(WaveTrackMenuTable);
 
-   PlayableTrackControls::InitMenuData *mpData;
+   PlayableTrackControls::InitMenuData *mpData{};
 
    void OnMultiView(wxCommandEvent & event);
    void OnSetDisplay(wxCommandEvent & event);
@@ -632,7 +639,7 @@ static std::vector<WaveTrackSubViewType> AllTypes()
    return result;
 }
 
-void WaveTrackMenuTable::InitMenu(Menu *pMenu)
+void WaveTrackMenuTable::InitMenu(wxMenu *pMenu)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
@@ -761,37 +768,39 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
    const auto &view = WaveTrackView::Get( *pTrack );
 
-   POPUP_MENU_SEPARATOR()
+   BEGIN_POPUP_MENU_SECTION( "SubViews" )
 
    if ( WaveTrackSubViews::slots() > 1 )
-      POPUP_MENU_CHECK_ITEM(OnMultiViewID, XO("&Multi-view"), OnMultiView)
+      POPUP_MENU_CHECK_ITEM( "MultiView", OnMultiViewID, XO("&Multi-view"), OnMultiView)
 
    int id = OnSetDisplayId;
    for ( const auto &type : AllTypes() ) {
       if ( view.GetMultiView() ) {
-         POPUP_MENU_CHECK_ITEM(id++, type.name.Msgid(), OnSetDisplay)
+         POPUP_MENU_CHECK_ITEM( type.name.Internal(), id++, type.name.Msgid(), OnSetDisplay)
       }
       else {
-         POPUP_MENU_RADIO_ITEM(id++, type.name.Msgid(), OnSetDisplay)
+         POPUP_MENU_RADIO_ITEM( type.name.Internal(), id++, type.name.Msgid(), OnSetDisplay)
       }
    }
 
-   POPUP_MENU_ITEM(OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
-   POPUP_MENU_SEPARATOR()
+      POPUP_MENU_ITEM( "SpectrogramSettings", OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
+   END_POPUP_MENU_SECTION()
 
-// If these are enabled again, choose a hot key for Mono that does not conflict
-// with Multi View
-//   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, XO("&Mono"), OnChannelChange)
-//   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, XO("&Left Channel"), OnChannelChange)
-//   POPUP_MENU_RADIO_ITEM(OnChannelRightID, XO("R&ight Channel"), OnChannelChange)
-   POPUP_MENU_ITEM(OnMergeStereoID, XO("Ma&ke Stereo Track"), OnMergeStereo)
+   BEGIN_POPUP_MENU_SECTION( "Channels" )
+   // If these are enabled again, choose a hot key for Mono that does not conflict
+   // with Multi View
+   //   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, XO("&Mono"), OnChannelChange)
+   //   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, XO("&Left Channel"), OnChannelChange)
+   //   POPUP_MENU_RADIO_ITEM(OnChannelRightID, XO("R&ight Channel"), OnChannelChange)
+      POPUP_MENU_ITEM( "MakeStereo", OnMergeStereoID, XO("Ma&ke Stereo Track"), OnMergeStereo)
 
-   POPUP_MENU_ITEM(OnSwapChannelsID, XO("Swap Stereo &Channels"), OnSwapChannels)
-   POPUP_MENU_ITEM(OnSplitStereoID, XO("Spl&it Stereo Track"), OnSplitStereo)
-// DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
-#ifndef EXPERIMENTAL_DA
-   POPUP_MENU_ITEM(OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), OnSplitStereoMono)
-#endif
+      POPUP_MENU_ITEM( "Swap", OnSwapChannelsID, XO("Swap Stereo &Channels"), OnSwapChannels)
+      POPUP_MENU_ITEM( "Split", OnSplitStereoID, XO("Spl&it Stereo Track"), OnSplitStereo)
+   // DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
+   #ifndef EXPERIMENTAL_DA
+      POPUP_MENU_ITEM( "SplitToMono", OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), OnSplitStereoMono)
+   #endif
+   END_POPUP_MENU_SECTION()
 
    if ( pTrack ) {
       const auto displays = view.GetDisplays();
@@ -800,15 +809,19 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
       ) );
       if( hasWaveform ){
-         POPUP_MENU_SEPARATOR()
-         POPUP_MENU_SUB_MENU(OnWaveColorID, XO("&Wave Color"), WaveColorMenuTable)
+         BEGIN_POPUP_MENU_SECTION( "WaveColor" )
+            POPUP_MENU_SUB_MENU( "WaveColor", WaveColorMenuTable)
+         END_POPUP_MENU_SECTION()
       }
    }
 
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(0, XO("&Format"), FormatMenuTable)
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(0, XO("Rat&e"), RateMenuTable)
+   BEGIN_POPUP_MENU_SECTION( "Format" )
+      POPUP_MENU_SUB_MENU( "Format", FormatMenuTable)
+   END_POPUP_MENU_SECTION()
+
+   BEGIN_POPUP_MENU_SECTION( "Rate" )
+      POPUP_MENU_SUB_MENU( "Rate", RateMenuTable)
+   END_POPUP_MENU_SECTION()
 END_POPUP_MENU()
 
 

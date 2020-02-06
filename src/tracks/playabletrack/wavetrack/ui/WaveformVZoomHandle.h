@@ -75,7 +75,9 @@ private:
 
 class WaveformVRulerMenuTable : public WaveTrackVRulerMenuTable
 {
-   WaveformVRulerMenuTable() : WaveTrackVRulerMenuTable() {}
+   WaveformVRulerMenuTable()
+      : WaveTrackVRulerMenuTable{ "WaveFormVRuler" }
+   {}
    virtual ~WaveformVRulerMenuTable() {}
    DECLARE_POPUP_MENU(WaveformVRulerMenuTable);
 
@@ -83,7 +85,7 @@ public:
    static PopupMenuTable &Instance();
 
 private:
-   virtual void InitMenu(Menu *pMenu) override;
+   virtual void InitMenu(wxMenu *pMenu) override;
 
    void OnWaveformScaleType(wxCommandEvent &evt);
 };
