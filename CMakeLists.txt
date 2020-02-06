@@ -213,21 +213,24 @@ macro( def_vars )
    set( _PUBDIR "${CMAKE_CURRENT_BINARY_DIR}/public" )
 endmacro()
 
-# And define the non-context dependent paths
-set( _EXEDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" )
+# Define the non-install and executable destinations
+set( _DEST "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" )
 if( CMAKE_BUILD_TYPE )
-   set( _EXEDIR "${_EXEDIR}/${CMAKE_BUILD_TYPE}" )
+   set( _DEST "${_DEST}/${CMAKE_BUILD_TYPE}" )
 endif()
+set( _EXEDIR "${_DEST}" )
 
-# On the Mac, make it the content directory
+# Adjust them for the Mac
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   set( _EXEDIR "${_EXEDIR}/Audacity.app/Contents" )
+   set( _DEST "${_DEST}/Audacity.app/Contents" )
+   set( _EXEDIR "${_DEST}/Macos" )
 endif()
 
-set( _MODDIR "${_EXEDIR}/modules" )
 set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
 set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}/audacity" )
 set( _RPATH "\$ORIGIN/../${_LIBDIR}" )
+set( _DATADIR "${CMAKE_INSTALL_DATADIR}" )
+set( _PKGDATA "${_DATADIR}/audacity" )
 
 # Helper to organize sources into folders for the IDEs
 macro( organize_source root prefix sources )
@@ -301,6 +304,7 @@ endmacro()
 # Add our children
 add_subdirectory( "cmake-proxies" )
 add_subdirectory( "help" )
+add_subdirectory( "images" )
 add_subdirectory( "locale" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )

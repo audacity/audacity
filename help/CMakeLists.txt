@@ -1,15 +1,17 @@
 
 set( TARGET manual )
-set( TARGET_ROOT ${topdir}/help )
+set( TARGET_ROOT ${topdir}/manual )
 
 message( STATUS "========== Configuring ${TARGET} ==========" )
 
+def_vars()
+
 set( host "alphamanual.audacityteam.org" )
 set( src "https://${host}/man" )
-set( dst "$<TARGET_FILE_DIR:Audacity>/help/manual" )
-set( script_dir "${top_dir}/scripts/mw2html_audacity" )
+set( dst "${_DEST}/help/manual" )
+set( script_dir "${topdir}/scripts/mw2html_audacity" )
 set( script "mw2html.py" )
-set( out_dir "${CMAKE_CURRENT_BINARY_DIR}" )
+set( out_dir "${_INTDIR}" )
 set( out "${out_dir}/${host}/index.html" )
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
@@ -43,4 +45,13 @@ add_custom_command(
 )
 
 add_custom_target( ${TARGET} DEPENDS "${out}" )
-add_dependencies( ${TARGET} Audacity )
+
+if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
+   install( DIRECTORY "${dst}" OPTIONAL
+            DESTINATION "${_DATADIR}/audacity/help" )
+   install( FILES "${_SRCDIR}/audacity.1"
+            DESTINATION "${_DATADIR}/man/man.1" )
+   install( FILES "${_SRCDIR}/audacity.appdata.xml"
+            DESTINATION "${_DATADIR}/appdata" )
+endif()
+

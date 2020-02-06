@@ -128,16 +128,24 @@ if( NOT DEFINED msgfmt )
    return()
 endif()
 
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( locale "${_DEST}/Resources" )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
+   set( locale "${_DEST}/locale" )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   set( locale "${_DEST}/Languanges" )
+endif()
+
 set( OUTPUTS )
 foreach( source ${SOURCES} )
    get_filename_component( lang "${source}" NAME_WE )
 
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-      set( dst "${_EXEDIR}/Resources/${lang}.lproj" )
+      set( dst "${locale}/${lang}.lproj" )
    elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
-      set( dst "${_EXEDIR}/locale/${lang}/LC_MESSAGES" )
+      set( dst "${locale}/${lang}/LC_MESSAGES" )
    elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-      set( dst "${_EXEDIR}/Languanges/${lang}" )
+      set( dst "${locale}/${lang}" )
    endif()
 
    set( po "${_SRCDIR}/${source}" )
@@ -160,7 +168,7 @@ foreach( source ${SOURCES} )
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       add_custom_command(
          COMMAND
-            ${CMAKE_COMMAND} -E make_directory "${_EXEDIR}/Resources/en.lproj"
+            ${CMAKE_COMMAND} -E make_directory "${_DEST}/Resources/en.lproj"
          OUTPUT
             "${mo}"
          APPEND
@@ -171,4 +179,9 @@ foreach( source ${SOURCES} )
 endforeach()
 
 add_custom_target( "${TARGET}" ALL DEPENDS ${OUTPUTS} SOURCES "${SOURCES}" )
+
+if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
+   install( DIRECTORY ${locale}/
+            TYPE LOCALE )
+endif()
 

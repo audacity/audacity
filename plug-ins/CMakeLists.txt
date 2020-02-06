@@ -39,13 +39,13 @@ list( APPEND SOURCES
 
 foreach( source ${SOURCES} )
    set( src "${_SRCDIR}/${source}" )
-   set( dst "${_EXEDIR}/${TARGET}/${source}" )
+   set( dst "${_DEST}/${TARGET}/${source}" )
 
    add_custom_command(
       DEPENDS
          "${src}"
       COMMAND
-         ${CMAKE_COMMAND} -E make_directory "${_EXEDIR}/${TARGET}"
+         ${CMAKE_COMMAND} -E make_directory "${_DEST}/${TARGET}"
       COMMAND
          ${CMAKE_COMMAND} -E copy "${src}" "${dst}"
       OUTPUT
@@ -56,4 +56,9 @@ foreach( source ${SOURCES} )
 endforeach()
 
 add_custom_target( ${TARGET} ALL DEPENDS ${OUTPUTS} SOURCES ${SOURCES} )
+
+if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
+   install( DIRECTORY "${_DEST}/${TARGET}"
+            DESTINATION "${_PKGDATA}" )
+endif()
 

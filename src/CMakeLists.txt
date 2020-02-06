@@ -1025,6 +1025,7 @@ set( HAVE_GTK ${GTK_FOUND} )
 set( DISABLE_DYNAMIC_LOADING_FFMPEG ${disable_dynamic_loading} )
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   set( _EXE "Audacity" )
 
    set_directory_properties(
       PROPERTIES
@@ -1061,18 +1062,19 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       set( wxlibs "${CMAKE_BINARY_DIR}" )
    endif()
 
-   file( TO_NATIVE_PATH ${_EXEDIR} exedir )
+   file( TO_NATIVE_PATH ${_DEST} dest )
    add_custom_command(
       TARGET
          ${TARGET}
       COMMAND
-         XCOPY "*.dll" ${exedir} /I /R /Y 
+         XCOPY "*.dll" ${dest} /I /R /Y 
       WORKING_DIRECTORY
          "${wxlibs}/lib/vc_dll"
       POST_BUILD
    )
 
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( _EXE "Audacity" )
 
    # Handle Audio Units option
    option( enable_audiounits "Enable Audio Unit plug-in support" ON )
@@ -1132,15 +1134,17 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( AUDACITY_INFO_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION}.${AUDACITY_MODLEVEL} )
 
    # Copy the wxWidgets libraries into the bundle
-   add_custom_command(
-      TARGET
-         ${TARGET}
-      COMMAND
-         sh -c "TARGET_BUILD_DIR=${_EXEDIR} EXECUTABLE_PATH=MacOS/Audacity FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
-      WORKING_DIRECTORY
-         ${CMAKE_BINARY_DIR}/lib
-      POST_BUILD
-   )
+   if( "${CMAKE_GENERATOR}" MATCHES "Xcode" )
+      add_custom_command(
+         TARGET
+            ${TARGET}
+         COMMAND
+            sh -c "TARGET_BUILD_DIR=${_DEST} EXECUTABLE_PATH=${_EXEDIR}/${_EXE} FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
+#         WORKING_DIRECTORY
+#            ${CMAKE_BINARY_DIR}/lib
+         POST_BUILD
+      )
+   endif()
 
    # Define the Wrapper target
    add_executable( Wrapper )
@@ -1157,9 +1161,8 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set_target_properties(
       "Wrapper"
       PROPERTIES
-         RUNTIME_OUTPUT_DIRECTORY_RELEASE "${_EXEDIR}/MacOS"
-         RUNTIME_OUTPUT_DIRECTORY_DEBUG "${_EXEDIR}/MacOS"
-         RUNTIME_OUTPUT_DIRECTORY "${_EXEDIR}/MacOS"
+         RUNTIME_OUTPUT_DIRECTORY_${CMAKE_BUILD_TYPE} "${_EXEDIR}"
+         RUNTIME_OUTPUT_DIRECTORY "${_EXEDIR}"
    )
 
    organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
@@ -1167,6 +1170,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    target_sources( "Wrapper" PRIVATE ${WRAPPER_SOURCES} )
 
 elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
+   set( _EXE "audacity" )
 
    # Add additional library requirements
    list( APPEND LIBRARIES
@@ -1180,9 +1184,30 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
    set( HAVE_VISIBILITY 1 )
    configure_file( audacity_config.h.in private/configunix.h )
 
+   # Create the MIMETYPES list (must be a better way...)
+   if( USE_FFMPEG)
+      list( APPEND MIMETYPES "audio/aac;audio/ac3;audio/mp4;audio/x-ms-wma;video/mpeg" )
+   endif()
+   if( USE_LIBFLAC)
+      list( APPEND MIMETYPES "audio/flac;audio/x-flac" )
+   endif()
+   if( USE_LIBMAD )
+      list( APPEND MIMETYPES "audio/mpeg" )
+   endif()
+   if( USE_SNDFILE )
+      list( APPEND MIMETYPES "audio/basic;audio/x-aiff;audio/x-wav" )
+   endif()
+   if( USE_LIBOGG AND USE_LIBVORBIS )
+      list( APPEND MIMETYPES "application/ogg;audio/x-vorbis+ogg" )
+   endif()
+
+   # Create the desktop file
+   set( AUDACITY_NAME "${_EXE}" )
+   configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
+
    # Create the script to copy required wxWidgets libraries
    file( WRITE "${_INTDIR}/copy_libs.sh"
-      "for lib in \$(ldd ${_EXEDIR}/Audacity | awk '/libwx/{print \$1}')
+      "for lib in \$(ldd ${_EXEDIR}/${_EXE} | awk '/libwx/{print \$1}')
        do
           echo \${lib}
           ldd ${WXWIN}/lib/\${lib} | awk '/libwx/{print \$1}'
@@ -1203,6 +1228,14 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
 
 endif()
 
+set_target_properties(
+   ${TARGET}
+   PROPERTIES
+      # Want a lowercase executable
+      RUNTIME_OUTPUT_NAME_${CMAKE_BUILD_TYPE} audacity
+      RUNTIME_OUTPUT_NAME ${_EXE}
+)
+
 find_package (Git)
 if (GIT_FOUND)
    execute_process(
@@ -1222,17 +1255,6 @@ if (GIT_FOUND)
    )
 endif()
 
-install(
-   TARGETS
-      ${TARGET}
-   CONFIGURATIONS
-      "" Debug Release RelWithDebInfo RelWithDebInfo 
-   RUNTIME DESTINATION
-      ${CMAKE_INSTALL_BINDIR}
-   BUNDLE DESTINATION
-      ${CMAKE_INSTALL_BINDIR}
-)
-
 organize_source( "${TARGET_ROOT}/.." "include" "${HEADERS}" )
 organize_source( "${TARGET_ROOT}/../win" "win" "${RESOURCES}" )
 organize_source( "${TARGET_ROOT}" "src" "${SOURCES}" )
@@ -1244,4 +1266,24 @@ target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( "${TARGET}" PRIVATE ${LDFLAGS} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 target_precompile_headers( ${TARGET} PRIVATE ${PRECOMP} )
+
+if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
+   if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+      install( FILES "${_DEST}/Info.plist"
+               DESTINATION "${CMAKE_INSTALL_BINDIR}/Audacity.app/Contents" )
+      install( PROGRAMS "${_EXEDIR}/${_EXE}" "${_EXEDIR}/Wrapper"
+               DESTINATION "${CMAKE_INSTALL_BINDIR}/Audacity.app/Contents/MacOS" )
+   else()
+      install( PROGRAMS "${_EXEDIR}/${_EXE}"
+               TYPE BIN )
+      install( FILES "${_INTDIR}/audacity.desktop"
+               DESTINATION "${_DATADIR}/applications" )
+      install( FILES "${topdir}/LICENSE.txt" "${topdir}/README.txt"
+               DESTINATION "${_DATADIR}/doc" )
+      install( FILES "${_SRCDIR}/audacity.xml"
+               DESTINATION "${_DATADIR}/mime/packages" )
+      install( FILES "${topdir}/presets/EQDefaultCurves.xml"
+               DESTINATION "${_PKGDATA}" )
+   endif()
+endif()
 
