@@ -680,6 +680,8 @@ dnl Check for lrint/lrintf
 AC_C99_FUNC_LRINT
 AC_C99_FUNC_LRINTF
 
+dnl Check for memory locking
+AC_CHECK_FUNCS_ONCE(mlock)
 
 if [[ "$use_ladspa" = "yes" ]] ; then
    AC_DEFINE(USE_LADSPA, 1,
