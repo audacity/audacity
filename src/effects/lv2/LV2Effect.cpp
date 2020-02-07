@@ -2958,7 +2958,8 @@ LV2_URID LV2Effect::Lookup_URI(URIDMap & map, const char *uri, bool add)
 
    if (add)
    {
-      map.push_back(MallocString<>(strdup(uri)));
+      // Almost all compilers have strdup(), but VC++ and MinGW call it _strdup().
+      map.push_back(MallocString<>(wxCRT_StrdupA(uri)));
       return ndx + 1;
    }
 
