@@ -1158,17 +1158,11 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       ${WRAPPER_ROOT}/Wrapper.c
    )
 
-   set_target_properties(
-      "Wrapper"
-      PROPERTIES
-         RUNTIME_OUTPUT_DIRECTORY_${CMAKE_BUILD_TYPE} "${_EXEDIR}"
-         RUNTIME_OUTPUT_DIRECTORY "${_EXEDIR}"
-   )
+   set_target_property_all( "Wrapper" RUNTIME_OUTPUT_DIRECTORY "${_EXEDIR}" )
 
    organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
 
    target_sources( "Wrapper" PRIVATE ${WRAPPER_SOURCES} )
-
 elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
    set( _EXE "audacity" )
 
@@ -1228,13 +1222,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
 
 endif()
 
-set_target_properties(
-   ${TARGET}
-   PROPERTIES
-      # Want a lowercase executable
-      RUNTIME_OUTPUT_NAME_${CMAKE_BUILD_TYPE} audacity
-      RUNTIME_OUTPUT_NAME ${_EXE}
-)
+set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${_EXE} )
 
 find_package (Git)
 if (GIT_FOUND)

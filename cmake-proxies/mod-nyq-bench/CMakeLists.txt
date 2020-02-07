@@ -27,10 +27,9 @@ list( APPEND LIBRARIES
       wxwidgets
 )
 
+set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_DEST}/modules" )
 set_target_properties( ${TARGET}
    PROPERTIES
-      LIBRARY_OUTPUT_DIRECTORY_${CMAKE_BUILD_TYPE} "${_DEST}/modules"
-      LIBRARY_OUTPUT_DIRECTORY "${_DEST}/modules"
       PREFIX ""
       FOLDER "lib-src"
 )

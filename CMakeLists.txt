@@ -214,10 +214,19 @@ macro( def_vars )
 endmacro()
 
 # Define the non-install and executable destinations
-set( _DEST "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" )
-if( CMAKE_BUILD_TYPE )
-   set( _DEST "${_DEST}/${CMAKE_BUILD_TYPE}" )
-endif()
+#
+# If this is a multi-config build system (VS, Xcode), CMAKE_CFG_INTDIR
+# will (eventually) resolve to the build type, i.e., Debug, Release, etc.
+# and CMAKE_BUILD_TYPE will be empty.
+#
+# For single-config build systems, CMAKE_CFG_INTDIR will be "." and
+# CMAKE_BUILD_TYPE will be something like Debug.
+#
+# So, in either case we end up with what we want:
+#     .../bin/Debug//
+# or:
+#     .../bin/./Debug
+set( _DEST "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${CMAKE_BUILD_TYPE}" )
 set( _EXEDIR "${_DEST}" )
 
 # Adjust them for the Mac
@@ -301,6 +310,15 @@ macro( get_package_interface package )
    )
 endmacro()
 
+# Set the given property and its config specific brethren to the same value
+function( set_target_property_all target property value )
+   set_target_properties( "${target}" PROPERTIES "${property}" "${value}" )
+   foreach( type ${CMAKE_CONFIGURATION_TYPES} )
+      string( TOUPPER "${property}_${type}" prop )
+      set_target_properties( "${target}" PROPERTIES "${prop}" "${value}" )
+   endforeach()
+endfunction()
+
 # Add our children
 add_subdirectory( "cmake-proxies" )
 add_subdirectory( "help" )
@@ -314,9 +332,14 @@ add_subdirectory( "cmake-proxies/mod-script-pipe" )
 
 # Uncomment what follows for symbol values.
 #[[
-get_cmake_property(_variableNames VARIABLES)
-foreach (_variableName ${_variableNames})
-message(STATUS "${_variableName}=${${_variableName}}")
-endforeach()
+   get_cmake_property(_variableNames VARIABLES)
+   foreach (_variableName ${_variableNames})
+   message(STATUS "${_variableName}=${${_variableName}}")
+   endforeach()
 #]]
+#[[
+   include(PrintProperties)
+   print_properties(TARGET "Audacity")
+#]]
+
 
