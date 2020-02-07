@@ -56,8 +56,8 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
 
 # This "is a good thing" but greatly increases link time on Linux
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION ON )
+#set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON )
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF )
-#set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_Debug OFF )
 
 # Set the required C++ stardard
 set( CMAKE_CXX_STANDARD 14 )

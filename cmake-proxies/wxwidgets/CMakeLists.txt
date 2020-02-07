@@ -28,7 +28,7 @@ if( wxWidgets_FOUND )
    set( DEFINES
       INTERFACE
          ${wxWidgets_DEFINITIONS}
-         ${wxWidgets_DEFINITIONS_DEBUG}
+         $<$<CONFIG:Debug>:${wxWidgets_DEFINITIONS_DEBUG}>
    )
 
    set( LINKDIRS

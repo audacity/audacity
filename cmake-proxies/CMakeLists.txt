@@ -119,12 +119,6 @@ function( addlib dir name symbol required check ) #packages )
 
    # Set the folder (for the IDEs) for each one
    foreach( target ${targets} )
-      # Add "global" defines
-      set( DEFINES
-         NDEBUG
-      )
-      target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
-
       # Skip interface libraries since they don't have any source to
       # present in the IDEs   
       get_target_property( type "${target}" TYPE )
