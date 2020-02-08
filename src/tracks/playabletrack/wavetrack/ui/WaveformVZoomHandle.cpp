@@ -266,17 +266,6 @@ PopupMenuTable &WaveformVRulerMenuTable::Instance()
    return instance;
 }
 
-void WaveformVRulerMenuTable::InitMenu(wxMenu *pMenu)
-{
-   WaveTrackVRulerMenuTable::InitMenu(pMenu);
-
-// DB setting is already on track drop down.
-   WaveTrack *const wt = mpData->pTrack;
-   const int id =
-      OnFirstWaveformScaleID + (int)(wt->GetWaveformSettings().scaleType);
-   pMenu->Check(id, true);
-}
-
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 
    BeginSection( "Scales" );
@@ -285,7 +274,17 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
          AppendRadioItem( names[ii].Internal(),
             OnFirstWaveformScaleID + ii, names[ii].Msgid(),
-            POPUP_MENU_FN( OnWaveformScaleType ) );
+            POPUP_MENU_FN( OnWaveformScaleType ),
+            []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+               const auto pData =
+                  static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
+               WaveTrack *const wt = pData->pTrack;
+               if ( id ==
+                  OnFirstWaveformScaleID +
+                  (int)(wt->GetWaveformSettings().scaleType) )
+                  menu.Check(id, true);
+            }
+          );
       }
    }
    EndSection();

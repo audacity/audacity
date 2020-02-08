@@ -85,8 +85,6 @@ public:
    static PopupMenuTable &Instance();
 
 private:
-   void InitMenu(wxMenu *pMenu) override;
-
    void OnSpectrumScaleType(wxCommandEvent &evt);
 };
 

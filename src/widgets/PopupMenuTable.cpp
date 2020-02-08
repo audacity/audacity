@@ -80,7 +80,6 @@ void PopupMenuBuilder::DoBeginGroup( Registry::GroupItem &item, const Path &path
 void PopupMenuBuilder::DoEndGroup( Registry::GroupItem &item, const Path &path )
 {
    if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
-      pItem->table.InitMenu( mMenu );
       if ( !pItem->caption.empty() ) {
          auto subMenu = std::move( mMenus.back() );
          mMenus.pop_back();
@@ -118,6 +117,9 @@ void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
    // redundant
    pEntry->handler.InitUserData( mpUserData );
 
+   if ( pEntry->init )
+      pEntry->init( pEntry->handler, *mMenu, pEntry->id );
+
    mMenu->pParent->Bind(
       wxEVT_COMMAND_MENU_SELECTED, pEntry->func, &pEntry->handler, pEntry->id);
 }
@@ -146,10 +148,11 @@ void PopupMenuTable::ExtendMenu( wxMenu &menu, PopupMenuTable &table )
 
 void PopupMenuTable::Append(
    const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
-   const TranslatableString &string, wxCommandEventFunction memFn)
+   const TranslatableString &string, wxCommandEventFunction memFn,
+   const PopupMenuTableEntry::InitFunction &init )
 {
    mStack.back()->items.push_back( std::make_unique<Entry>(
-      stringId, type, id, string, memFn, *this
+      stringId, type, id, string, memFn, *this, init
    ) );
 }
 
@@ -198,10 +201,6 @@ void PopupMenu::Disconnect()
    for ( auto pTable : tables )
       DisconnectTable(pTable);
 }
-}
-
-void PopupMenuHandler::InitMenu(wxMenu *)
-{
 }
 
 // static

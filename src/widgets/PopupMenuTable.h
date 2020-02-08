@@ -20,6 +20,7 @@ tables, and automatically attaches and detaches the event handlers.
 
 class wxCommandEvent;
 class wxString;
+#include <functional>
 #include <vector>
 #include <wx/menu.h> // to inherit wxMenu
 #include "../MemoryX.h"
@@ -33,22 +34,27 @@ class PopupMenuTable;
 struct PopupMenuTableEntry : Registry::SingleItem
 {
    enum Type { Item, RadioItem, CheckItem };
+   using InitFunction =
+      std::function< void( PopupMenuHandler &handler, wxMenu &menu, int id ) >;
 
    Type type;
    int id;
    TranslatableString caption;
    wxCommandEventFunction func;
    PopupMenuHandler &handler;
+   InitFunction init;
 
    PopupMenuTableEntry( const Identifier &stringId,
       Type type_, int id_, const TranslatableString &caption_,
-      wxCommandEventFunction func_, PopupMenuHandler &handler_ )
+      wxCommandEventFunction func_, PopupMenuHandler &handler_,
+      InitFunction init_ )
       : SingleItem{ stringId }
       , type(type_)
       , id(id_)
       , caption(caption_)
       , func(func_)
       , handler( handler_ )
+      , init( init_ )
    {}
 
    ~PopupMenuTableEntry() override;
@@ -83,11 +89,6 @@ public:
    // Store context data, if needed.
    // May be called more than once before the menu opens.
    virtual void InitUserData(void *pUserData) = 0;
-
-   // Called when the menu is about to pop up.
-   // Your chance to enable and disable items.
-   // Default implementation does nothing.
-   virtual void InitMenu(wxMenu *pMenu);
 
    // Called when menu is destroyed.
    // May be called more than once.
@@ -131,19 +132,26 @@ protected:
    // To be used in implementations of Populate():
    void Append(
       const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
-      const TranslatableString &string, wxCommandEventFunction memFn);
+      const TranslatableString &string, wxCommandEventFunction memFn,
+      // This callback might check or disable a menu item:
+      const PopupMenuTableEntry::InitFunction &init );
 
    void AppendItem( const Identifier &stringId, int id,
-      const TranslatableString &string, wxCommandEventFunction memFn )
-   { Append( stringId, PopupMenuTableEntry::Item, id, string, memFn ); }
+      const TranslatableString &string, wxCommandEventFunction memFn,
+      // This callback might check or disable a menu item:
+      const PopupMenuTableEntry::InitFunction &init = {} )
+   { Append( stringId, PopupMenuTableEntry::Item, id, string, memFn, init ); }
 
    void AppendRadioItem( const Identifier &stringId, int id,
-      const TranslatableString &string, wxCommandEventFunction memFn )
-   { Append( stringId, PopupMenuTableEntry::RadioItem, id, string, memFn ); }
+      const TranslatableString &string, wxCommandEventFunction memFn,
+      // This callback might check or disable a menu item:
+      const PopupMenuTableEntry::InitFunction &init = {} )
+   { Append( stringId, PopupMenuTableEntry::RadioItem, id, string, memFn, init ); }
 
    void AppendCheckItem( const Identifier &stringId, int id,
-      const TranslatableString &string, wxCommandEventFunction memFn )
-   { Append( stringId, PopupMenuTableEntry::CheckItem, id, string, memFn ); }
+      const TranslatableString &string, wxCommandEventFunction memFn,
+      const PopupMenuTableEntry::InitFunction &init = {} )
+   { Append( stringId, PopupMenuTableEntry::CheckItem, id, string, memFn, init ); }
 
    void BeginSection( const Identifier &name );
    void EndSection();
@@ -166,7 +174,6 @@ which inherits from PopupMenuTable,
 
 DECLARE_POPUP_MENU(MyTable);
 virtual void InitUserData(void *pUserData);
-virtual void InitMenu(wxMenu *pMenu);
 virtual void DestroyMenu();
 
 Then in MyTable.cpp,
@@ -175,11 +182,6 @@ void MyTable::InitUserData(void *pUserData)
 {
    // Remember pData
    auto pData = static_cast<MyData*>(pUserData);
-}
-
-void MyTable::InitMenu(wxMenu *pMenu)
-{
-   // enable or disable menu items
 }
 
 void MyTable::DestroyMenu()
@@ -192,7 +194,14 @@ BEGIN_POPUP_MENU(MyTable)
    // you only need a sequence of calls:
 
    AppendItem("Cut",
-      OnCutSelectedTextID, XO("Cu&t"), POPUP_MENU_FN( OnCutSelectedText ) );
+      OnCutSelectedTextID, XO("Cu&t"), POPUP_MENU_FN( OnCutSelectedText ),
+      // optional argument:
+      [](PopupMenuHandler &handler, wxMenu &menu, int id)
+      {
+         auto data = static_cast<MyTable&>( handler ).pData;
+         // maybe enable or disable the menu item
+      }
+   );
    // etc.
  
 END_POPUP_MENU()

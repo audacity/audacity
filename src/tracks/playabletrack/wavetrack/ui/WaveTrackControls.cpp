@@ -43,22 +43,6 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/frame.h>
 #include <wx/sizer.h>
 
-namespace
-{
-   /// Puts a check mark at a given position in a menu.
-   template<typename Pred>
-   void SetMenuChecks(wxMenu & menu, const Pred &pred)
-   {
-      for (auto &item : menu.GetMenuItems())
-      {
-         if (item->IsCheckable()) {
-            auto id = item->GetId();
-            menu.Check(id, pred(id));
-         }
-      }
-   }
-}
-
 WaveTrackControls::~WaveTrackControls()
 {
 }
@@ -148,21 +132,38 @@ enum {
 };
 
 
+namespace {
+using ValueFinder = std::function< int( WaveTrack& ) >;
+
+// A function that makes functions that check and enable sub-menu items,
+// parametrized by how you get the relevant value from a track's settings
+template< typename Table >
+PopupMenuTableEntry::InitFunction initFn( const ValueFinder &findValue )
+{
+   return [findValue]( PopupMenuHandler &handler, wxMenu &menu, int id ){
+      auto pData = static_cast<Table&>( handler ).mpData;
+      const auto pTrack = static_cast<WaveTrack*>(pData->pTrack);
+      auto &project = pData->project;
+      bool unsafe = ProjectAudioIO::Get( project ).IsAudioActive();
+
+      menu.Check( id, id == findValue( *pTrack ) );
+      menu.Enable( id, !unsafe );
+   };
+};
+}
+
 //=============================================================================
 // Table class for a sub-menu
-class WaveColorMenuTable : public PopupMenuTable
+struct WaveColorMenuTable : PopupMenuTable
 {
    WaveColorMenuTable()
       : PopupMenuTable( "WaveColor", XO("&Wave Color") )
    {}
    DECLARE_POPUP_MENU(WaveColorMenuTable);
 
-public:
    static WaveColorMenuTable &Instance();
 
-private:
    void InitUserData(void *pUserData) override;
-   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -171,7 +172,7 @@ private:
 
    PlayableTrackControls::InitMenuData *mpData{};
 
-   int IdOfWaveColor(int WaveColor);
+   static int IdOfWaveColor(int WaveColor);
    void OnWaveColorChange(wxCommandEvent & event);
 };
 
@@ -186,34 +187,27 @@ void WaveColorMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-void WaveColorMenuTable::InitMenu(wxMenu *pMenu)
-{
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   auto WaveColorId = IdOfWaveColor( pTrack->GetWaveColorIndex());
-   SetMenuChecks(*pMenu, [=](int id){ return id == WaveColorId; });
-
-   AudacityProject *const project = &mpData->project;
-   bool unsafe = ProjectAudioIO::Get( *project ).IsAudioActive();
-   for (int i = OnInstrument1ID; i <= OnInstrument4ID; i++) {
-      pMenu->Enable(i, !unsafe);
-   }
-}
-
 const TranslatableString GetWaveColorStr(int colorIndex)
 {
    return XO("Instrument %i").Format( colorIndex+1 );
 }
 
-
 BEGIN_POPUP_MENU(WaveColorMenuTable)
+   static const auto fn = initFn< WaveColorMenuTable >(
+      []( WaveTrack &track ){
+         return IdOfWaveColor( track.GetWaveColorIndex() );
+      }
+   );
+
    AppendRadioItem( "Instrument1", OnInstrument1ID,
-      GetWaveColorStr(0), POPUP_MENU_FN( OnWaveColorChange ) );
+      GetWaveColorStr(0), POPUP_MENU_FN( OnWaveColorChange ), fn );
    AppendRadioItem( "Instrument2", OnInstrument2ID,
-      GetWaveColorStr(1), POPUP_MENU_FN( OnWaveColorChange ) );
+      GetWaveColorStr(1), POPUP_MENU_FN( OnWaveColorChange ), fn );
    AppendRadioItem( "Instrument3", OnInstrument3ID,
-      GetWaveColorStr(2), POPUP_MENU_FN( OnWaveColorChange ) );
+      GetWaveColorStr(2), POPUP_MENU_FN( OnWaveColorChange ), fn );
    AppendRadioItem( "Instrument4", OnInstrument4ID,
-      GetWaveColorStr(3), POPUP_MENU_FN( OnWaveColorChange ) );
+      GetWaveColorStr(3), POPUP_MENU_FN( OnWaveColorChange ), fn );
+
 END_POPUP_MENU()
 
 /// Converts a WaveColor enumeration to a wxWidgets menu item Id.
@@ -249,19 +243,16 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 
 //=============================================================================
 // Table class for a sub-menu
-class FormatMenuTable : public PopupMenuTable
+struct FormatMenuTable :  PopupMenuTable
 {
    FormatMenuTable()
       : PopupMenuTable{ "SampleFormat", XO("&Format") }
    {}
    DECLARE_POPUP_MENU(FormatMenuTable);
 
-public:
    static FormatMenuTable &Instance();
 
-private:
    void InitUserData(void *pUserData) override;
-   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -270,7 +261,7 @@ private:
 
    PlayableTrackControls::InitMenuData *mpData{};
 
-   int IdOfFormat(int format);
+   static int IdOfFormat(int format);
 
    void OnFormatChange(wxCommandEvent & event);
 };
@@ -286,26 +277,21 @@ void FormatMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-void FormatMenuTable::InitMenu(wxMenu *pMenu)
-{
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   auto formatId = IdOfFormat(pTrack->GetSampleFormat());
-   SetMenuChecks(*pMenu, [=](int id){ return id == formatId; });
-
-   AudacityProject *const project = &mpData->project;
-   bool unsafe = ProjectAudioIO::Get( *project ).IsAudioActive();
-   for (int i = On16BitID; i <= OnFloatID; i++) {
-      pMenu->Enable(i, !unsafe);
-   }
-}
 
 BEGIN_POPUP_MENU(FormatMenuTable)
+   static const auto fn = initFn< FormatMenuTable >(
+      []( WaveTrack &track ){
+         return IdOfFormat( track.GetSampleFormat() );
+      }
+   );
+
    AppendRadioItem( "16Bit", On16BitID,
-      GetSampleFormatStr(int16Sample), POPUP_MENU_FN( OnFormatChange ) );
+      GetSampleFormatStr(int16Sample), POPUP_MENU_FN( OnFormatChange ), fn );
    AppendRadioItem("24Bit", On24BitID,
-      GetSampleFormatStr( int24Sample), POPUP_MENU_FN( OnFormatChange ) );
+      GetSampleFormatStr( int24Sample), POPUP_MENU_FN( OnFormatChange ), fn );
    AppendRadioItem( "Float", OnFloatID,
-      GetSampleFormatStr(floatSample), POPUP_MENU_FN( OnFormatChange ) );
+      GetSampleFormatStr(floatSample), POPUP_MENU_FN( OnFormatChange ), fn );
+
 END_POPUP_MENU()
 
 /// Converts a format enumeration to a wxWidgets menu item Id.
@@ -372,19 +358,16 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 
 //=============================================================================
 // Table class for a sub-menu
-class RateMenuTable : public PopupMenuTable
+struct RateMenuTable : PopupMenuTable
 {
    RateMenuTable()
       : PopupMenuTable{ "SampleRate", XO("Rat&e") }
    {}
    DECLARE_POPUP_MENU(RateMenuTable);
 
-public:
    static RateMenuTable &Instance();
 
-private:
    void InitUserData(void *pUserData) override;
-   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -393,7 +376,7 @@ private:
 
    PlayableTrackControls::InitMenuData *mpData{};
 
-   int IdOfRate(int rate);
+   static int IdOfRate(int rate);
    void SetRate(WaveTrack * pTrack, double rate);
 
    void OnRateChange(wxCommandEvent & event);
@@ -411,36 +394,30 @@ void RateMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-void RateMenuTable::InitMenu(wxMenu *pMenu)
-{
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   const auto rateId = IdOfRate((int)pTrack->GetRate());
-   SetMenuChecks(*pMenu, [=](int id){ return id == rateId; });
-
-   AudacityProject *const project = &mpData->project;
-   bool unsafe = ProjectAudioIO::Get( *project ).IsAudioActive();
-   for (int i = OnRate8ID; i <= OnRateOtherID; i++) {
-      pMenu->Enable(i, !unsafe);
-   }
-}
-
 // Because of Bug 1780 we can't use AppendRadioItem
 // If we did, we'd get no message when clicking on Other...
 // when it is already selected.
 BEGIN_POPUP_MENU(RateMenuTable)
-   AppendCheckItem( "8000", OnRate8ID, XO("8000 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "11025", OnRate11ID, XO("11025 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "16000", OnRate16ID, XO("16000 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "22050", OnRate22ID, XO("22050 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "44100", OnRate44ID, XO("44100 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "48000", OnRate48ID, XO("48000 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "88200", OnRate88ID, XO("88200 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "96000", OnRate96ID, XO("96000 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "176400", OnRate176ID, XO("176400 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "192000", OnRate192ID, XO("192000 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "352800", OnRate352ID, XO("352800 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "384000", OnRate384ID, XO("384000 Hz"), POPUP_MENU_FN( OnRateChange ) );
-   AppendCheckItem( "Other", OnRateOtherID, XO("&Other..."), POPUP_MENU_FN( OnRateOther ) );
+   static const auto fn = initFn< RateMenuTable >(
+      []( WaveTrack &track ){
+         return IdOfRate( (int)track.GetRate() );
+      }
+   );
+
+   AppendCheckItem( "8000", OnRate8ID, XO("8000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "11025", OnRate11ID, XO("11025 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "16000", OnRate16ID, XO("16000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "22050", OnRate22ID, XO("22050 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "44100", OnRate44ID, XO("44100 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "48000", OnRate48ID, XO("48000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "88200", OnRate88ID, XO("88200 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "96000", OnRate96ID, XO("96000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "176400", OnRate176ID, XO("176400 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "192000", OnRate192ID, XO("192000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "352800", OnRate352ID, XO("352800 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "384000", OnRate384ID, XO("384000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "Other", OnRateOtherID, XO("&Other..."), POPUP_MENU_FN( OnRateOther ), fn );
+
 END_POPUP_MENU()
 
 const int nRates = 12;
@@ -573,19 +550,16 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
 
 //=============================================================================
 // Class defining common command handlers for mono and stereo tracks
-class WaveTrackMenuTable : public PopupMenuTable
+struct WaveTrackMenuTable : PopupMenuTable
 {
-public:
    static WaveTrackMenuTable &Instance( Track * pTrack);
    Track * mpTrack{};
 
-protected:
    WaveTrackMenuTable()
       : PopupMenuTable{ "WaveTrack" }
    {}
 
    void InitUserData(void *pUserData) override;
-   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -639,146 +613,81 @@ static std::vector<WaveTrackSubViewType> AllTypes()
    return result;
 }
 
-void WaveTrackMenuTable::InitMenu(wxMenu *pMenu)
-{
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-
-   std::vector<int> checkedIds;
-
-   const auto &view = WaveTrackView::Get( *pTrack );
-   auto multiView = view.GetMultiView();
-   if (multiView)
-      checkedIds.push_back( OnMultiViewID );
-
-   bool hasSpectrum = false;
-   int uniqueDisplay = 0;
-   {
-      // Find the set of type ids of the shown displays, disregarding their
-      // top-to-bottom arrangement
-      auto displays = view.GetDisplays();
-      const auto end = displays.end();
-      auto iter = displays.begin();
-      std::sort( iter, end );
-
-      // Check the corresponding menu items, and decide which if any has
-      // the unique check
-      int displayId = OnSetDisplayId;
-      int nDisplays = 0;
-      for ( const auto &type : AllTypes() ) {
-         if ( iter != end && iter->id == type.id ) {
-            checkedIds.push_back( displayId );
-            uniqueDisplay = displayId;
-            ++iter;
-            ++nDisplays;
-
-            // Unfortunately this special knowledge of the Spectrum view type
-            // remains.  In future, either let a registry system insert this
-            // menu item, or (better) move it to the context menu of the
-            // Spectrum vertical ruler.
-            // (But the latter won't be satisfactory without a means to
-            // open that other context menu with keystrokes only, and that
-            // would require some notion of a focused sub-view.)
-            hasSpectrum = ( type.id == WaveTrackViewConstants::Spectrum );
-         }
-         ++displayId;
-      }
-      if ( nDisplays > 1 )
-         uniqueDisplay = 0;
-   }
-
-   if ( multiView && uniqueDisplay )
-      // Bug2275 residual
-      // Disable the checking-off of the only sub-view
-      pMenu->Enable( uniqueDisplay, false );
-
-   // Bug 1253.  Shouldn't open preferences if audio is busy.
-   // We can't change them on the fly yet anyway.
-   auto gAudioIO = AudioIOBase::Get();
-   if ( hasSpectrum )
-      pMenu->Enable(OnSpectrogramSettingsID, !gAudioIO->IsBusy());
-
-   AudacityProject *const project = &mpData->project;
-   auto &tracks = TrackList::Get( *project );
-   bool unsafe = RealtimeEffectManager::Get().RealtimeIsActive() &&
-      ProjectAudioIO::Get( *project ).IsAudioActive();
-
-   auto nChannels = TrackList::Channels(pTrack).size();
-   const bool isMono = ( nChannels == 1 );
-   const bool isStereo = ( nChannels == 2 );
-   // Maybe more than stereo tracks some time?
-
-   if ( isMono )
-   {
-      WaveTrack *const pTrack2 = static_cast<WaveTrack*>(mpData->pTrack);
-
-      auto next = * ++ tracks.Find(pTrack2);
-
-      if (isMono) {
-         const bool canMakeStereo =
-            (next &&
-             TrackList::Channels(next).size() == 1 &&
-             track_cast<WaveTrack*>(next));
-
-         pMenu->Enable(OnMergeStereoID, canMakeStereo && !unsafe);
-
-         int itemId;
-         switch (pTrack2->GetChannel()) {
-            case Track::LeftChannel:
-               itemId = OnChannelLeftID;
-               break;
-            case Track::RightChannel:
-               itemId = OnChannelRightID;
-               break;
-            default:
-               itemId = OnChannelMonoID;
-               break;
-         }
-         checkedIds.push_back(itemId);
-      }
-   }
-   else
-   {
-      pMenu->Enable(OnMergeStereoID, false);
-   }
-
-   SetMenuChecks(*pMenu, [&](int id){
-      auto end = checkedIds.end();
-      return end != std::find(checkedIds.begin(), end, id);
-   });
-
-   // Enable this only for properly stereo tracks:
-   pMenu->Enable(OnSwapChannelsID, isStereo && !unsafe);
-   pMenu->Enable(OnSplitStereoID, !isMono && !unsafe);
-
-#ifndef EXPERIMENTAL_DA
-   // Can be achieved by split stereo and then dragging pan slider.
-   pMenu->Enable(OnSplitStereoMonoID, !isMono && !unsafe);
-#endif
-
-   // Several menu items no longer needed....
-#if 0
-   pMenu->Enable(OnChannelMonoID, isMono);
-   pMenu->Enable(OnChannelLeftID, isMono);
-   pMenu->Enable(OnChannelRightID, isMono);
-#endif
-}
-
 BEGIN_POPUP_MENU(WaveTrackMenuTable)
+   // Functions usable "now" (list population time) and also "later"
+   // (in callbacks to check and disable items)
+   static const auto findTrack =
+   []( PopupMenuHandler &handler ) -> WaveTrack & {
+      return *static_cast< WaveTrack* >(
+         static_cast< WaveTrackMenuTable& >( handler ).mpData->pTrack);
+   };
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
+   static const auto isMono =
+   []( PopupMenuHandler &handler ) -> bool {
+      return 1 == TrackList::Channels( &findTrack( handler ) ).size();
+   };
+
+   static const auto isUnsafe =
+   []( PopupMenuHandler &handler ) -> bool {
+      auto &project =
+         static_cast< WaveTrackMenuTable& >( handler ).mpData->project;
+      return RealtimeEffectManager::Get().RealtimeIsActive() &&
+         ProjectAudioIO::Get( project ).IsAudioActive();
+   };
+
+   const auto pTrack = &findTrack( *this );
    const auto &view = WaveTrackView::Get( *pTrack );
 
    BeginSection( "SubViews" );
       if ( WaveTrackSubViews::slots() > 1 )
-         AppendCheckItem( "MultiView", OnMultiViewID, XO("&Multi-view"), POPUP_MENU_FN( OnMultiView ) );
+         AppendCheckItem( "MultiView", OnMultiViewID, XO("&Multi-view"),
+         POPUP_MENU_FN( OnMultiView ),
+         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+            auto &track = findTrack( handler );
+            const auto &view = WaveTrackView::Get( track );
+            menu.Check( id, view.GetMultiView() );
+         }
+      );
 
       int id = OnSetDisplayId;
       for ( const auto &type : AllTypes() ) {
+         static const auto initFn = []( bool radio ){ return
+            [radio]( PopupMenuHandler &handler, wxMenu &menu, int id ){
+               // Find all known sub-view types
+               const auto allTypes = AllTypes();
+
+               // How to convert a type to a menu item id
+               const auto IdForType =
+               [&allTypes]( const WaveTrackSubViewType &type ) -> int {
+                  const auto begin = allTypes.begin();
+                  return OnSetDisplayId +
+                     (std::find( begin, allTypes.end(), type ) - begin);
+               };
+
+               auto &track = findTrack( handler );
+               const auto &view = WaveTrackView::Get( track );
+
+               const auto displays = view.GetDisplays();
+               const auto end = displays.end();
+               bool check = (end !=
+                  std::find_if( displays.begin(), end,
+                     [&]( const WaveTrackSubViewType &type ){
+                        return id == IdForType( type ); } ) );
+               menu.Check( id, check );
+
+               // Bug2275 residual
+               // Disable the checking-off of the only sub-view
+               if ( !radio && displays.size() == 1 && check )
+                  menu.Enable( id, false );
+            };
+         };
          if ( view.GetMultiView() ) {
-            AppendCheckItem( type.name.Internal(), id++, type.name.Msgid(), POPUP_MENU_FN( OnSetDisplay ) );
+            AppendCheckItem( type.name.Internal(), id++, type.name.Msgid(),
+               POPUP_MENU_FN( OnSetDisplay ), initFn( false ) );
          }
          else {
-            AppendRadioItem( type.name.Internal(), id++, type.name.Msgid(), POPUP_MENU_FN( OnSetDisplay ) );
+            AppendRadioItem( type.name.Internal(), id++, type.name.Msgid(),
+               POPUP_MENU_FN( OnSetDisplay ), initFn( true ) );
          }
       }
    EndSection();
@@ -801,8 +710,21 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
       ) );
       if( hasSpectrum ){
+         // In future, we might move this to the context menu of the
+         // Spectrum vertical ruler.
+         // (But the latter won't be satisfactory without a means to
+         // open that other context menu with keystrokes only, and that
+         // would require some notion of a focused sub-view.)
+
          BeginSection( "SpectrogramSettings" );
-            AppendItem( "SpectrogramSettings", OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), POPUP_MENU_FN( OnSpectrogramSettings ) );
+            AppendItem( "SpectrogramSettings", OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), POPUP_MENU_FN( OnSpectrogramSettings ),
+               []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+                  // Bug 1253.  Shouldn't open preferences if audio is busy.
+                  // We can't change them on the fly yet anyway.
+                  auto gAudioIO = AudioIOBase::Get();
+                  menu.Enable(id, !gAudioIO->IsBusy());
+               }
+         );
          EndSection();
       }
 
@@ -811,16 +733,65 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    BeginSection( "Channels" );
    // If these are enabled again, choose a hot key for Mono that does not conflict
    // with Multi View
-   //   AppendRadioItem(OnChannelMonoID, XO("&Mono"), OnChannelChange)
-   //   AppendRadioItem(OnChannelLeftID, XO("&Left Channel"), OnChannelChange)
-   //   AppendRadioItem(OnChannelRightID, XO("R&ight Channel"), OnChannelChange)
-      AppendItem( "MakeStereo", OnMergeStereoID, XO("Ma&ke Stereo Track"), POPUP_MENU_FN( OnMergeStereo ) );
+   //   AppendRadioItem(OnChannelMonoID, XO("&Mono"),
+   //      POPUP_MENU_FN( OnChannelChange ),
+   //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+   //         menu.Enable( id, isMono( handler ) );
+   //         menu.Check( id, findTrack( handler ).GetChannel() == Track::MonoChannel );
+   //      }
+   //   );
+   //   AppendRadioItem(OnChannelLeftID, XO("&Left Channel"),
+   //      POPUP_MENU_FN( OnChannelChange ),
+   //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+   //         menu.Enable( id, isMono( handler ) );
+   //         menu.Check( id, findTrack( handler ).GetChannel() == Track::LeftChannel );
+   //      }
+   //   );
+   //   AppendRadioItem(OnChannelRightID, XO("R&ight Channel"),
+   //      POPUP_MENU_FN( OnChannelChange ),
+   //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+   //         menu.Enable( id, isMono( handler ) );
+   //         menu.Check( id, findTrack( handler ).GetChannel() == Track::RightChannel );
+   //      }
+   //   );
+      AppendItem( "MakeStereo", OnMergeStereoID, XO("Ma&ke Stereo Track"),
+         POPUP_MENU_FN( OnMergeStereo ),
+         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+            bool canMakeStereo = !isUnsafe( handler ) && isMono( handler );
+            if ( canMakeStereo ) {
+               AudacityProject &project =
+                  static_cast< WaveTrackMenuTable& >( handler ).mpData->project;
+               auto &tracks = TrackList::Get( project );
+               auto &track = findTrack( handler );
+               auto next = * ++ tracks.Find(&track);
+               canMakeStereo =
+                  (next &&
+                   TrackList::Channels(next).size() == 1 &&
+                   track_cast<WaveTrack*>(next));
+            }
+            menu.Enable( id, canMakeStereo );
+         }
+      );
 
-      AppendItem( "Swap", OnSwapChannelsID, XO("Swap Stereo &Channels"), POPUP_MENU_FN( OnSwapChannels ) );
-      AppendItem( "Split", OnSplitStereoID, XO("Spl&it Stereo Track"), POPUP_MENU_FN( OnSplitStereo ) );
+      AppendItem( "Swap", OnSwapChannelsID, XO("Swap Stereo &Channels"),
+         POPUP_MENU_FN( OnSwapChannels ),
+         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+            bool isStereo =
+               2 == TrackList::Channels( &findTrack( handler ) ).size();
+            menu.Enable( id, isStereo && !isUnsafe( handler ) );
+         }
+      );
+
+      static const auto enableSplitStereo =
+      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+         menu.Enable( id, !isMono( handler ) && !isUnsafe( handler ) );
+      };
+
+      AppendItem( "Split", OnSplitStereoID, XO("Spl&it Stereo Track"),
+         POPUP_MENU_FN( OnSplitStereo ), enableSplitStereo );
    // DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
    #ifndef EXPERIMENTAL_DA
-      AppendItem( "SplitToMono", OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), POPUP_MENU_FN( OnSplitStereoMono ) );
+      AppendItem( "SplitToMono", OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), POPUP_MENU_FN( OnSplitStereoMono ), enableSplitStereo );
    #endif
    EndSection();
 
