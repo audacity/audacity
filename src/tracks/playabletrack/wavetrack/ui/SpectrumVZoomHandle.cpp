@@ -277,24 +277,28 @@ void SpectrumVRulerMenuTable::InitMenu(wxMenu *pMenu)
 
 BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
 
-BEGIN_POPUP_MENU_SECTION( "Scales" )
+BeginSection( "Scales" );
    {
       const auto & names = SpectrogramSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         POPUP_MENU_RADIO_ITEM( names[ii].Internal(),
+         AppendRadioItem( names[ii].Internal(),
             OnFirstSpectrumScaleID + ii, names[ii].Msgid(),
-            OnSpectrumScaleType);
+            POPUP_MENU_FN( OnSpectrumScaleType ) );
       }
    }
-END_POPUP_MENU_SECTION()
+EndSection();
 
 
-BEGIN_POPUP_MENU_SECTION( "Zoom" )
-   POPUP_MENU_ITEM( "Reset", OnZoomResetID,         XO("Zoom Reset"),                     OnZoomReset)
-   POPUP_MENU_ITEM( "Fit", OnZoomFitVerticalID,   XO("Zoom to Fit\tShift-Right-Click"), OnZoomFitVertical)
-   POPUP_MENU_ITEM( "In", OnZoomInVerticalID,    XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-   POPUP_MENU_ITEM( "Out", OnZoomOutVerticalID,   XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
-END_POPUP_MENU_SECTION()
+BeginSection( "Zoom" );
+   AppendItem( "Reset", OnZoomResetID,         XO("Zoom Reset"),
+              POPUP_MENU_FN( OnZoomReset ) );
+   AppendItem( "Fit", OnZoomFitVerticalID,   XO("Zoom to Fit\tShift-Right-Click"),
+              POPUP_MENU_FN( OnZoomFitVertical ) );
+   AppendItem( "In", OnZoomInVerticalID,    XO("Zoom In\tLeft-Click/Left-Drag"),
+              POPUP_MENU_FN( OnZoomInVertical ) );
+   AppendItem( "Out", OnZoomOutVerticalID,   XO("Zoom Out\tShift-Left-Click"),
+              POPUP_MENU_FN( OnZoomOutVertical ) );
+EndSection();
 
 END_POPUP_MENU()
 

@@ -162,15 +162,15 @@ void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 }
 
 BEGIN_POPUP_MENU(TimeTrackMenuTable)
-   BEGIN_POPUP_MENU_SECTION( "Scales" )
-      POPUP_MENU_RADIO_ITEM( "Linear", OnTimeTrackLinID, XO("&Linear scale"), OnTimeTrackLin)
-      POPUP_MENU_RADIO_ITEM( "Log", OnTimeTrackLogID, XO("L&ogarithmic scale"), OnTimeTrackLog)
-   END_POPUP_MENU_SECTION()
+   BeginSection( "Scales" );
+      AppendRadioItem( "Linear", OnTimeTrackLinID, XO("&Linear scale"), POPUP_MENU_FN( OnTimeTrackLin ) );
+      AppendRadioItem( "Log", OnTimeTrackLogID, XO("L&ogarithmic scale"), POPUP_MENU_FN( OnTimeTrackLog ) );
+   EndSection();
 
-   BEGIN_POPUP_MENU_SECTION( "Other" )
-      POPUP_MENU_ITEM( "Range", OnSetTimeTrackRangeID, XO("&Range..."), OnSetTimeTrackRange)
-      POPUP_MENU_CHECK_ITEM( "LogInterp", OnTimeTrackLogIntID, XO("Logarithmic &Interpolation"), OnTimeTrackLogInt)
-   END_POPUP_MENU_SECTION()
+   BeginSection( "Other" );
+      AppendItem( "Range", OnSetTimeTrackRangeID, XO("&Range..."), POPUP_MENU_FN( OnSetTimeTrackRange ) );
+      AppendCheckItem( "LogInterp", OnTimeTrackLogIntID, XO("Logarithmic &Interpolation"), POPUP_MENU_FN( OnTimeTrackLogInt) );
+   EndSection();
 END_POPUP_MENU()
 
 PopupMenuTable *TimeTrackControls::GetMenuExtension(Track *)

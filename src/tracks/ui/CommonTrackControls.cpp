@@ -127,11 +127,11 @@ void TrackMenuTable::InitMenu(wxMenu *pMenu)
 }
 
 BEGIN_POPUP_MENU(TrackMenuTable)
-   BEGIN_POPUP_MENU_SECTION( "Basic" )
-      POPUP_MENU_ITEM( "Name", OnSetNameID, XO("&Name..."), OnSetName)
-   END_POPUP_MENU_SECTION()
-   BEGIN_POPUP_MENU_SECTION( "Move" )
-      POPUP_MENU_ITEM( "Up",
+   BeginSection( "Basic" );
+      AppendItem( "Name", OnSetNameID, XO("&Name..."), POPUP_MENU_FN( OnSetName ) );
+   EndSection();
+   BeginSection( "Move" );
+      AppendItem( "Up",
          // It is not correct to use NormalizedKeyString::Display here --
          // wxWidgets will apply its equivalent to the key names passed to menu
          // functions.
@@ -143,8 +143,8 @@ BEGIN_POPUP_MENU(TrackMenuTable)
                    GetKeyFromName(wxT("TrackMoveUp")).GET() ),
              wxT("\t")
          ),
-         OnMoveTrack)
-      POPUP_MENU_ITEM( "Down",
+         POPUP_MENU_FN( OnMoveTrack ) );
+      AppendItem( "Down",
          OnMoveDownID,
          XO("Move Track &Down").Join(
             Verbatim(
@@ -153,8 +153,8 @@ BEGIN_POPUP_MENU(TrackMenuTable)
                   GetKeyFromName(wxT("TrackMoveDown")).GET() ),
              wxT("\t")
          ),
-         OnMoveTrack)
-      POPUP_MENU_ITEM( "Top",
+         POPUP_MENU_FN( OnMoveTrack ) );
+      AppendItem( "Top",
          OnMoveTopID,
          XO("Move Track to &Top").Join(
             Verbatim(
@@ -163,8 +163,8 @@ BEGIN_POPUP_MENU(TrackMenuTable)
                    GetKeyFromName(wxT("TrackMoveTop")).GET() ),
              wxT("\t")
          ),
-         OnMoveTrack)
-      POPUP_MENU_ITEM( "Bottom",
+         POPUP_MENU_FN( OnMoveTrack ) );
+      AppendItem( "Bottom",
          OnMoveBottomID,
          XO("Move Track to &Bottom").Join(
             Verbatim(
@@ -173,8 +173,8 @@ BEGIN_POPUP_MENU(TrackMenuTable)
                   GetKeyFromName(wxT("TrackMoveBottom")).GET() ),
              wxT("\t")
          ),
-         OnMoveTrack)
-   END_POPUP_MENU_SECTION()
+         POPUP_MENU_FN( OnMoveTrack ) );
+   EndSection();
 END_POPUP_MENU()
 
 

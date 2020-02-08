@@ -145,6 +145,28 @@ void PopupMenuTable::ExtendMenu( wxMenu &menu, PopupMenuTable &table )
    Registry::Visit( visitor, table.Get( theMenu.pUserData ).get() );
 }
 
+void PopupMenuTable::Append(
+   const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
+   const TranslatableString &string, wxCommandEventFunction memFn)
+{
+   mStack.back()->items.push_back( std::make_unique<Entry>(
+      stringId, type, id, string, memFn
+   ) );
+}
+
+void PopupMenuTable::BeginSection( const Identifier &name )
+{
+   auto uSection = std::make_unique< PopupMenuSection >( name );
+   auto section = uSection.get();
+   mStack.back()->items.push_back( std::move( uSection ) );
+   mStack.push_back( section );
+}
+
+void PopupMenuTable::EndSection()
+{
+   mStack.pop_back();
+}
+
 namespace{
 void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
 {

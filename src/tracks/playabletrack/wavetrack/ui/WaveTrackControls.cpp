@@ -206,14 +206,14 @@ const TranslatableString GetWaveColorStr(int colorIndex)
 
 
 BEGIN_POPUP_MENU(WaveColorMenuTable)
-   POPUP_MENU_RADIO_ITEM( "Instrument1", OnInstrument1ID,
-      GetWaveColorStr(0), OnWaveColorChange)
-   POPUP_MENU_RADIO_ITEM( "Instrument2", OnInstrument2ID,
-      GetWaveColorStr(1), OnWaveColorChange)
-   POPUP_MENU_RADIO_ITEM( "Instrument3", OnInstrument3ID,
-      GetWaveColorStr(2), OnWaveColorChange)
-   POPUP_MENU_RADIO_ITEM( "Instrument4", OnInstrument4ID,
-      GetWaveColorStr(3), OnWaveColorChange)
+   AppendRadioItem( "Instrument1", OnInstrument1ID,
+      GetWaveColorStr(0), POPUP_MENU_FN( OnWaveColorChange ) );
+   AppendRadioItem( "Instrument2", OnInstrument2ID,
+      GetWaveColorStr(1), POPUP_MENU_FN( OnWaveColorChange ) );
+   AppendRadioItem( "Instrument3", OnInstrument3ID,
+      GetWaveColorStr(2), POPUP_MENU_FN( OnWaveColorChange ) );
+   AppendRadioItem( "Instrument4", OnInstrument4ID,
+      GetWaveColorStr(3), POPUP_MENU_FN( OnWaveColorChange ) );
 END_POPUP_MENU()
 
 /// Converts a WaveColor enumeration to a wxWidgets menu item Id.
@@ -300,12 +300,12 @@ void FormatMenuTable::InitMenu(wxMenu *pMenu)
 }
 
 BEGIN_POPUP_MENU(FormatMenuTable)
-   POPUP_MENU_RADIO_ITEM( "16Bit", On16BitID,
-      GetSampleFormatStr(int16Sample), OnFormatChange)
-   POPUP_MENU_RADIO_ITEM("24Bit", On24BitID,
-      GetSampleFormatStr( int24Sample), OnFormatChange)
-   POPUP_MENU_RADIO_ITEM( "Float", OnFloatID,
-      GetSampleFormatStr(floatSample), OnFormatChange)
+   AppendRadioItem( "16Bit", On16BitID,
+      GetSampleFormatStr(int16Sample), POPUP_MENU_FN( OnFormatChange ) );
+   AppendRadioItem("24Bit", On24BitID,
+      GetSampleFormatStr( int24Sample), POPUP_MENU_FN( OnFormatChange ) );
+   AppendRadioItem( "Float", OnFloatID,
+      GetSampleFormatStr(floatSample), POPUP_MENU_FN( OnFormatChange ) );
 END_POPUP_MENU()
 
 /// Converts a format enumeration to a wxWidgets menu item Id.
@@ -424,23 +424,23 @@ void RateMenuTable::InitMenu(wxMenu *pMenu)
    }
 }
 
-// Because of Bug 1780 we can't use POPUP_MENU_RADIO_ITEM
+// Because of Bug 1780 we can't use AppendRadioItem
 // If we did, we'd get no message when clicking on Other...
 // when it is already selected.
 BEGIN_POPUP_MENU(RateMenuTable)
-   POPUP_MENU_CHECK_ITEM( "8000", OnRate8ID, XO("8000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "11025", OnRate11ID, XO("11025 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "16000", OnRate16ID, XO("16000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "22050", OnRate22ID, XO("22050 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "44100", OnRate44ID, XO("44100 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "48000", OnRate48ID, XO("48000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "88200", OnRate88ID, XO("88200 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "96000", OnRate96ID, XO("96000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "176400", OnRate176ID, XO("176400 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "192000", OnRate192ID, XO("192000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "352800", OnRate352ID, XO("352800 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "384000", OnRate384ID, XO("384000 Hz"), OnRateChange)
-   POPUP_MENU_CHECK_ITEM( "Other", OnRateOtherID, XO("&Other..."), OnRateOther)
+   AppendCheckItem( "8000", OnRate8ID, XO("8000 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "11025", OnRate11ID, XO("11025 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "16000", OnRate16ID, XO("16000 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "22050", OnRate22ID, XO("22050 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "44100", OnRate44ID, XO("44100 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "48000", OnRate48ID, XO("48000 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "88200", OnRate88ID, XO("88200 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "96000", OnRate96ID, XO("96000 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "176400", OnRate176ID, XO("176400 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "192000", OnRate192ID, XO("192000 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "352800", OnRate352ID, XO("352800 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "384000", OnRate384ID, XO("384000 Hz"), POPUP_MENU_FN( OnRateChange ) );
+   AppendCheckItem( "Other", OnRateOtherID, XO("&Other..."), POPUP_MENU_FN( OnRateOther ) );
 END_POPUP_MENU()
 
 const int nRates = 12;
@@ -768,20 +768,20 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
    const auto &view = WaveTrackView::Get( *pTrack );
 
-   BEGIN_POPUP_MENU_SECTION( "SubViews" )
+   BeginSection( "SubViews" );
       if ( WaveTrackSubViews::slots() > 1 )
-         POPUP_MENU_CHECK_ITEM( "MultiView", OnMultiViewID, XO("&Multi-view"), OnMultiView)
+         AppendCheckItem( "MultiView", OnMultiViewID, XO("&Multi-view"), POPUP_MENU_FN( OnMultiView ) );
 
       int id = OnSetDisplayId;
       for ( const auto &type : AllTypes() ) {
          if ( view.GetMultiView() ) {
-            POPUP_MENU_CHECK_ITEM( type.name.Internal(), id++, type.name.Msgid(), OnSetDisplay)
+            AppendCheckItem( type.name.Internal(), id++, type.name.Msgid(), POPUP_MENU_FN( OnSetDisplay ) );
          }
          else {
-            POPUP_MENU_RADIO_ITEM( type.name.Internal(), id++, type.name.Msgid(), OnSetDisplay)
+            AppendRadioItem( type.name.Internal(), id++, type.name.Msgid(), POPUP_MENU_FN( OnSetDisplay ) );
          }
       }
-   END_POPUP_MENU_SECTION()
+   EndSection();
 
    if ( pTrack ) {
 
@@ -791,9 +791,9 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
       ) );
       if( hasWaveform ){
-         BEGIN_POPUP_MENU_SECTION( "WaveColor" )
+         BeginSection( "WaveColor" );
             POPUP_MENU_SUB_MENU( "WaveColor", WaveColorMenuTable, mpData )
-         END_POPUP_MENU_SECTION()
+         EndSection();
       }
 
       bool hasSpectrum = (displays.end() != std::find(
@@ -801,36 +801,36 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
       ) );
       if( hasSpectrum ){
-         BEGIN_POPUP_MENU_SECTION( "SpectrogramSettings" )
-            POPUP_MENU_ITEM( "SpectrogramSettings", OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), OnSpectrogramSettings)
-         END_POPUP_MENU_SECTION()
+         BeginSection( "SpectrogramSettings" );
+            AppendItem( "SpectrogramSettings", OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), POPUP_MENU_FN( OnSpectrogramSettings ) );
+         EndSection();
       }
 
    }
 
-   BEGIN_POPUP_MENU_SECTION( "Channels" )
+   BeginSection( "Channels" );
    // If these are enabled again, choose a hot key for Mono that does not conflict
    // with Multi View
-   //   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, XO("&Mono"), OnChannelChange)
-   //   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, XO("&Left Channel"), OnChannelChange)
-   //   POPUP_MENU_RADIO_ITEM(OnChannelRightID, XO("R&ight Channel"), OnChannelChange)
-      POPUP_MENU_ITEM( "MakeStereo", OnMergeStereoID, XO("Ma&ke Stereo Track"), OnMergeStereo)
+   //   AppendRadioItem(OnChannelMonoID, XO("&Mono"), OnChannelChange)
+   //   AppendRadioItem(OnChannelLeftID, XO("&Left Channel"), OnChannelChange)
+   //   AppendRadioItem(OnChannelRightID, XO("R&ight Channel"), OnChannelChange)
+      AppendItem( "MakeStereo", OnMergeStereoID, XO("Ma&ke Stereo Track"), POPUP_MENU_FN( OnMergeStereo ) );
 
-      POPUP_MENU_ITEM( "Swap", OnSwapChannelsID, XO("Swap Stereo &Channels"), OnSwapChannels)
-      POPUP_MENU_ITEM( "Split", OnSplitStereoID, XO("Spl&it Stereo Track"), OnSplitStereo)
+      AppendItem( "Swap", OnSwapChannelsID, XO("Swap Stereo &Channels"), POPUP_MENU_FN( OnSwapChannels ) );
+      AppendItem( "Split", OnSplitStereoID, XO("Spl&it Stereo Track"), POPUP_MENU_FN( OnSplitStereo ) );
    // DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
    #ifndef EXPERIMENTAL_DA
-      POPUP_MENU_ITEM( "SplitToMono", OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), OnSplitStereoMono)
+      AppendItem( "SplitToMono", OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), POPUP_MENU_FN( OnSplitStereoMono ) );
    #endif
-   END_POPUP_MENU_SECTION()
+   EndSection();
 
-   BEGIN_POPUP_MENU_SECTION( "Format" )
+   BeginSection( "Format" );
       POPUP_MENU_SUB_MENU( "Format", FormatMenuTable, mpData )
-   END_POPUP_MENU_SECTION()
+   EndSection();
 
-   BEGIN_POPUP_MENU_SECTION( "Rate" )
+   BeginSection( "Rate" );
       POPUP_MENU_SUB_MENU( "Rate", RateMenuTable, mpData )
-   END_POPUP_MENU_SECTION()
+   EndSection();
 END_POPUP_MENU()
 
 
