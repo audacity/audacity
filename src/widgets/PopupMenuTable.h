@@ -109,6 +109,7 @@ public:
    PopupMenuTable( const Identifier &id, const TranslatableString &caption = {} )
       : mId{ id }
       , mCaption{ caption }
+      , mRegistry{ std::make_unique<Registry::TransparentGroupItem<>>( mId ) }
    {}
 
    // Optional pUserData gets passed to the InitUserData routines of tables.
@@ -118,6 +119,14 @@ public:
 
    const Identifier &Id() const { return mId; }
    const TranslatableString &Caption() const { return mCaption; }
+   const Registry::GroupItem *GetRegistry() const { return mRegistry.get(); }
+
+   // Typically statically constructed:
+   struct AttachedItem {
+      AttachedItem( PopupMenuTable &table,
+         const Registry::Placement &placement, Registry::BaseItemPtr pItem )
+      { table.RegisterItem( placement, std::move( pItem ) ); }
+   };
 
    // menu must have been built by BuildMenu
    // More items get added to the end of it
@@ -131,6 +140,10 @@ public:
          Populate();
       return mTop;
    }
+
+private:
+   void RegisterItem(
+      const Registry::Placement &placement, Registry::BaseItemPtr pItem );
 
 protected:
    virtual void Populate() = 0;
@@ -168,6 +181,7 @@ protected:
    std::vector< Registry::GroupItem* > mStack;
    Identifier mId;
    TranslatableString mCaption;
+   std::unique_ptr<Registry::GroupItem> mRegistry;
 };
 
 // A "CRTP" class that injects a convenience function, which appends a menu item

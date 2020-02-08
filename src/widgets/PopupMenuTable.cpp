@@ -142,7 +142,14 @@ void PopupMenuTable::ExtendMenu( wxMenu &menu, PopupMenuTable &table )
    theMenu.tables.push_back( &table );
 
    PopupMenuBuilder visitor{ table, theMenu, theMenu.pUserData };
-   Registry::Visit( visitor, table.Get( theMenu.pUserData ).get() );
+   Registry::Visit(
+      visitor, table.Get( theMenu.pUserData ).get(), table.GetRegistry() );
+}
+
+void PopupMenuTable::RegisterItem(
+   const Registry::Placement &placement, Registry::BaseItemPtr pItem )
+{
+   Registry::RegisterItem( *mRegistry, placement, std::move( pItem ) );
 }
 
 void PopupMenuTable::Append( Registry::BaseItemPtr pItem )
@@ -195,7 +202,8 @@ void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
    };
 
    PopupMenuDestroyer visitor{ *pTable, *this };
-   Registry::Visit( visitor, pTable->Get( nullptr ).get() );
+   Registry::Visit( visitor, pTable->Get( nullptr ).get(),
+      pTable->GetRegistry() );
 }
 
 void PopupMenu::Disconnect()
