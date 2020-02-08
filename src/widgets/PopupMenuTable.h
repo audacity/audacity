@@ -56,6 +56,7 @@ struct PopupSubMenu : Registry::ConcreteGroupItem< false >
    , MenuTable::WholeMenu
 {
    TranslatableString caption;
+   PopupMenuTable &table;
 
    PopupSubMenu( const Identifier &stringId,
       const TranslatableString &caption_, PopupMenuTable &table );
@@ -104,8 +105,9 @@ public:
    // More items get added to the end of it
    static void ExtendMenu( wxMenu &menu, PopupMenuTable &otherTable );
    
-   const std::shared_ptr< Registry::GroupItem > &Get()
+   const std::shared_ptr< Registry::GroupItem > &Get( void *pUserData )
    {
+      this->InitUserData( pUserData );
       if (!mTop)
          Populate();
       return mTop;
@@ -216,9 +218,9 @@ void HandlerClass::Populate() { \
    POPUP_MENU_APPEND_ITEM(stringId, Entry::CheckItem, id, string, memFn);
 
 // classname names a class that derives from MenuTable and defines Instance()
-#define POPUP_MENU_SUB_MENU(stringId, classname) \
+#define POPUP_MENU_SUB_MENU(stringId, classname, pUserData ) \
    mStack.back()->items.push_back( \
-      Registry::Shared( classname::Instance().Get() ) );
+      Registry::Shared( classname::Instance().Get( pUserData ) ) );
 
 #define BEGIN_POPUP_MENU_SECTION( name ) \
    {  auto uSection = std::make_unique< PopupMenuSection >( \

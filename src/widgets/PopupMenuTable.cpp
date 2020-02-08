@@ -18,10 +18,11 @@ PopupSubMenu::~PopupSubMenu()
 {}
 
 PopupSubMenu::PopupSubMenu( const Identifier &stringId,
-   const TranslatableString &caption_, PopupMenuTable &table )
+   const TranslatableString &caption_, PopupMenuTable &table_ )
    : ConcreteGroupItem< false >{ stringId }
    , WholeMenu{ caption_.empty() }
    , caption{ caption_ }
+   , table{ table_ }
 {
 }
 
@@ -69,6 +70,7 @@ void PopupMenuBuilder::DoBeginGroup( Registry::GroupItem &item, const Path &path
       if ( !pItem->caption.empty() ) {
          auto newMenu =
             std::make_unique<PopupMenu>( mMenu->pParent, mMenu->pUserData );
+         newMenu->tables.push_back( &pItem->table );
          mMenu = newMenu.get();
          mMenus.push_back( std::move( newMenu ) );
       }
@@ -78,6 +80,7 @@ void PopupMenuBuilder::DoBeginGroup( Registry::GroupItem &item, const Path &path
 void PopupMenuBuilder::DoEndGroup( Registry::GroupItem &item, const Path &path )
 {
    if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
+      pItem->table.InitMenu( mMenu );
       if ( !pItem->caption.empty() ) {
          auto subMenu = std::move( mMenus.back() );
          mMenus.pop_back();
@@ -92,7 +95,7 @@ void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
    auto connect = [this]( const PopupMenuTable::Entry *pEntry ) {
       mMenu->pParent->Bind
          (wxEVT_COMMAND_MENU_SELECTED,
-         pEntry->func, &mTable, pEntry->id);
+         pEntry->func, mMenu->tables.back(), pEntry->id);
    };
 
    auto pEntry = static_cast<PopupMenuTableEntry*>( &item );
@@ -136,14 +139,10 @@ PopupMenu::~PopupMenu()
 void PopupMenuTable::ExtendMenu( wxMenu &menu, PopupMenuTable &table )
 {
    auto &theMenu = dynamic_cast<PopupMenu&>(menu);
-
-   table.InitUserData(theMenu.pUserData);
+   theMenu.tables.push_back( &table );
 
    PopupMenuBuilder visitor{ table, theMenu, theMenu.pUserData };
-   Registry::Visit( visitor, table.Get().get() );
-
-   table.InitMenu( &menu );
-   theMenu.tables.push_back( &table );
+   Registry::Visit( visitor, table.Get( theMenu.pUserData ).get() );
 }
 
 namespace{
@@ -169,7 +168,7 @@ void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
    };
 
    PopupMenuDestroyer visitor{ *pTable, *this };
-   Registry::Visit( visitor, pTable->Get().get() );
+   Registry::Visit( visitor, pTable->Get( nullptr ).get() );
 
    pTable->DestroyMenu();
 }

@@ -792,7 +792,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       ) );
       if( hasWaveform ){
          BEGIN_POPUP_MENU_SECTION( "WaveColor" )
-            POPUP_MENU_SUB_MENU( "WaveColor", WaveColorMenuTable)
+            POPUP_MENU_SUB_MENU( "WaveColor", WaveColorMenuTable, mpData )
          END_POPUP_MENU_SECTION()
       }
 
@@ -825,11 +825,11 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    END_POPUP_MENU_SECTION()
 
    BEGIN_POPUP_MENU_SECTION( "Format" )
-      POPUP_MENU_SUB_MENU( "Format", FormatMenuTable)
+      POPUP_MENU_SUB_MENU( "Format", FormatMenuTable, mpData )
    END_POPUP_MENU_SECTION()
 
    BEGIN_POPUP_MENU_SECTION( "Rate" )
-      POPUP_MENU_SUB_MENU( "Rate", RateMenuTable)
+      POPUP_MENU_SUB_MENU( "Rate", RateMenuTable, mpData )
    END_POPUP_MENU_SECTION()
 END_POPUP_MENU()
 
