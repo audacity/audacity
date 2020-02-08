@@ -92,35 +92,34 @@ void PopupMenuBuilder::DoEndGroup( Registry::GroupItem &item, const Path &path )
 
 void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
 {
-   auto connect = [this]( const PopupMenuTable::Entry *pEntry ) {
-      mMenu->pParent->Bind
-         (wxEVT_COMMAND_MENU_SELECTED,
-         pEntry->func, mMenu->tables.back(), pEntry->id);
-   };
-
    auto pEntry = static_cast<PopupMenuTableEntry*>( &item );
    switch (pEntry->type) {
       case PopupMenuTable::Entry::Item:
       {
          mMenu->Append(pEntry->id, pEntry->caption.Translation());
-         connect( pEntry );
          break;
       }
       case PopupMenuTable::Entry::RadioItem:
       {
          mMenu->AppendRadioItem(pEntry->id, pEntry->caption.Translation());
-         connect( pEntry );
          break;
       }
       case PopupMenuTable::Entry::CheckItem:
       {
          mMenu->AppendCheckItem(pEntry->id, pEntry->caption.Translation());
-         connect( pEntry );
          break;
       }
       default:
+         wxASSERT( false );
          break;
    }
+
+   // This call necessary for externally registered items, else harmlessly
+   // redundant
+   pEntry->handler.InitUserData( mpUserData );
+
+   mMenu->pParent->Bind(
+      wxEVT_COMMAND_MENU_SELECTED, pEntry->func, &pEntry->handler, pEntry->id);
 }
 
 void PopupMenuBuilder::DoSeparator()
@@ -150,7 +149,7 @@ void PopupMenuTable::Append(
    const TranslatableString &string, wxCommandEventFunction memFn)
 {
    mStack.back()->items.push_back( std::make_unique<Entry>(
-      stringId, type, id, string, memFn
+      stringId, type, id, string, memFn, *this
    ) );
 }
 
@@ -182,7 +181,8 @@ void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
       {
          auto pEntry = static_cast<PopupMenuTableEntry*>( &item );
          mMenu.pParent->Unbind( wxEVT_COMMAND_MENU_SELECTED,
-         pEntry->func, &mTable, pEntry->id );
+         pEntry->func, &pEntry->handler, pEntry->id );
+         pEntry->handler.DestroyMenu();
       }
 
       PopupMenuTable &mTable;
@@ -191,8 +191,6 @@ void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
 
    PopupMenuDestroyer visitor{ *pTable, *this };
    Registry::Visit( visitor, pTable->Get( nullptr ).get() );
-
-   pTable->DestroyMenu();
 }
 
 void PopupMenu::Disconnect()
@@ -202,7 +200,7 @@ void PopupMenu::Disconnect()
 }
 }
 
-void PopupMenuTable::InitMenu(wxMenu *)
+void PopupMenuHandler::InitMenu(wxMenu *)
 {
 }
 

@@ -27,6 +27,7 @@ class wxString;
 #include "../Internat.h"
 #include "../commands/CommandManager.h"
 
+class PopupMenuHandler;
 class PopupMenuTable;
 
 struct PopupMenuTableEntry : Registry::SingleItem
@@ -37,16 +38,17 @@ struct PopupMenuTableEntry : Registry::SingleItem
    int id;
    TranslatableString caption;
    wxCommandEventFunction func;
-   PopupMenuTable *subTable;
+   PopupMenuHandler &handler;
 
    PopupMenuTableEntry( const Identifier &stringId,
       Type type_, int id_, const TranslatableString &caption_,
-      wxCommandEventFunction func_)
+      wxCommandEventFunction func_, PopupMenuHandler &handler_ )
       : SingleItem{ stringId }
       , type(type_)
       , id(id_)
       , caption(caption_)
       , func(func_)
+      , handler( handler_ )
    {}
 
    ~PopupMenuTableEntry() override;
@@ -70,7 +72,29 @@ struct PopupMenuSection
    using ConcreteGroupItem< false >::ConcreteGroupItem;
 };
 
-class PopupMenuTable : public wxEvtHandler
+class PopupMenuHandler : public wxEvtHandler
+{
+public:
+   PopupMenuHandler() = default;
+   PopupMenuHandler( const PopupMenuHandler& ) = delete;
+   PopupMenuHandler& operator=( const PopupMenuHandler& ) = delete;
+
+   // Called before the menu items are appended.
+   // Store context data, if needed.
+   // May be called more than once before the menu opens.
+   virtual void InitUserData(void *pUserData) = 0;
+
+   // Called when the menu is about to pop up.
+   // Your chance to enable and disable items.
+   // Default implementation does nothing.
+   virtual void InitMenu(wxMenu *pMenu);
+
+   // Called when menu is destroyed.
+   // May be called more than once.
+   virtual void DestroyMenu() = 0;
+};
+
+class PopupMenuTable : public PopupMenuHandler
 {
 public:
    using Entry = PopupMenuTableEntry;
@@ -80,18 +104,6 @@ public:
       : mId{ id }
       , mCaption{ caption }
    {}
-
-   // Called before the menu items are appended.
-   // Store user data, if needed.
-   virtual void InitUserData(void *pUserData) = 0;
-
-   // Called when the menu is about to pop up.
-   // Your chance to enable and disable items.
-   // Default implementation does nothing.
-   virtual void InitMenu(wxMenu *pMenu);
-
-   // Called when menu is destroyed.
-   virtual void DestroyMenu() = 0;
 
    // Optional pUserData gets passed to the InitUserData routines of tables.
    // No memory management responsibility is assumed by this function.
