@@ -33,6 +33,8 @@ for each problem encountered, since there can be many orphans.
 #include <wx/statbmp.h>
 #include <wx/artprov.h>
 #include <wx/radiobox.h>
+#include <wx/bmpbuttn.h>
+
 
 #include "../AudacityLogger.h"
 #include "wxPanelWrapper.h"
