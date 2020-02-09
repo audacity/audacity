@@ -30,6 +30,7 @@
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "../widgets/ProgressDialog.h"
+#include "../widgets/SliderTextCtrl.h"
 
 #include "LoadEffects.h"
 
@@ -76,7 +77,15 @@ Param( LookbehindTime, double,  wxT("LookbehindTime"),     0.1,     0.0,     10.
 Param( MakeupGain,     double,  wxT("MakeupGain"),         0.0,     0.0,    100.0,     1.0 );
 Param( DryWet,         double,  wxT("DryWet"),           100.0,     0.0,    100.0,     1.0 );
 
+inline int ScaleToPrecision(double scale)
+{
+   return ceil(log10(scale));
+}
+
 BEGIN_EVENT_TABLE(EffectCompressor2, wxEvtHandler)
+   EVT_CHECKBOX(wxID_ANY, EffectCompressor2::OnUpdateUI)
+   EVT_CHOICE(wxID_ANY, EffectCompressor2::OnUpdateUI)
+   EVT_SLIDERTEXT(wxID_ANY, EffectCompressor2::OnUpdateUI)
 END_EVENT_TABLE()
 
 const ComponentInterfaceSymbol EffectCompressor2::Symbol
@@ -85,6 +94,7 @@ const ComponentInterfaceSymbol EffectCompressor2::Symbol
 namespace{ BuiltinEffectsModule::Registration< EffectCompressor2 > reg; }
 
 EffectCompressor2::EffectCompressor2()
+   : mIgnoreGuiEvents(false)
 {
    mAlgorithm = DEF_Algorithm;
    mCompressBy = DEF_CompressBy;
@@ -199,6 +209,7 @@ bool EffectCompressor2::SetAutomationParameters(CommandParameters & parms)
    mLookbehindTime = LookbehindTime;
    mMakeupGainPct = MakeupGain;
    mDryWetPct = DryWet;
+
    return true;
 }
 
@@ -243,16 +254,166 @@ bool EffectCompressor2::Process()
 
 void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
 {
+   S.StartStatic(XO("Algorithm"));
+   {
+      S.StartMultiColumn(2, wxALIGN_LEFT);
+      {
+         S.SetStretchyCol(1);
+
+         wxChoice* ctrl = nullptr;
+
+         ctrl = S.Validator<wxGenericValidator>(&mAlgorithm)
+            .AddChoice(XO("Envelope Algorithm:"),
+               Msgids(kAlgorithmStrings, nAlgos),
+               mAlgorithm);
+
+         wxSize box_size = ctrl->GetMinSize();
+         int width = S.GetParent()->GetTextExtent(wxString::Format(
+            "%sxxxx",  kAlgorithmStrings[nAlgos-1].Translation())).GetWidth();
+         box_size.SetWidth(width);
+         ctrl->SetMinSize(box_size);
+
+         ctrl = S.Validator<wxGenericValidator>(&mCompressBy)
+            .AddChoice(XO("Compress based on:"),
+               Msgids(kCompressByStrings, nBy),
+               mCompressBy);
+         ctrl->SetMinSize(box_size);
+
+         S.Validator<wxGenericValidator>(&mStereoInd)
+            .AddCheckBox(XO("Compress stereo channels independently"),
+               DEF_StereoInd);
+      }
+      S.EndMultiColumn();
+   }
+   S.EndStatic();
+
+   S.StartStatic(XO("Compressor"));
+   {
+      S.StartMultiColumn(3, wxEXPAND);
+      {
+         S.SetStretchyCol(1);
+         int textbox_width = S.GetParent()->GetTextExtent("0.000001").GetWidth();
+         SliderTextCtrl* ctrl = nullptr;
+
+         S.AddVariableText(XO("Threshold:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Threshold"))
+            .Style(SliderTextCtrl::HORIZONTAL)
+            .AddSliderTextCtrl({}, DEF_Threshold, MAX_Threshold,
+               MIN_Threshold, ScaleToPrecision(SCL_Threshold), &mThresholdDB);
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO("dB"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         S.AddVariableText(XO("Ratio:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Ratio"))
+            .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
+            .AddSliderTextCtrl({}, DEF_Ratio, MAX_Ratio, MIN_Ratio,
+               ScaleToPrecision(SCL_Ratio), &mRatio);
+         /* i18n-hint: Unless your language has a different convention for ratios,
+          * like 8:1, leave as is.*/
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO(":1"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         S.AddVariableText(XO("Knee Width:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Knee Width"))
+            .Style(SliderTextCtrl::HORIZONTAL)
+            .AddSliderTextCtrl({}, DEF_KneeWidth, MAX_KneeWidth,
+               MIN_KneeWidth, ScaleToPrecision(SCL_KneeWidth),
+               &mKneeWidthDB);
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO("dB"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         S.AddVariableText(XO("Attack Time:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Attack Time"))
+            .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
+            .AddSliderTextCtrl({}, DEF_AttackTime, MAX_AttackTime,
+               MIN_AttackTime, ScaleToPrecision(SCL_AttackTime),
+               &mAttackTime, SCL_AttackTime / 1000);
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO("s"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         S.AddVariableText(XO("Release Time:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Release Time"))
+            .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
+            .AddSliderTextCtrl({}, DEF_ReleaseTime, MAX_ReleaseTime,
+               MIN_ReleaseTime, ScaleToPrecision(SCL_ReleaseTime),
+               &mReleaseTime, SCL_ReleaseTime / 1000);
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO("s"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         S.AddVariableText(XO("Lookahead Time:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Lookahead Time"))
+            .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
+            .AddSliderTextCtrl({}, DEF_LookaheadTime, MAX_LookaheadTime,
+               MIN_LookaheadTime, ScaleToPrecision(SCL_LookaheadTime),
+               &mLookaheadTime);
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO("s"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         S.AddVariableText(XO("Hold Time:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Hold Time"))
+            .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
+            .AddSliderTextCtrl({}, DEF_LookbehindTime, MAX_LookbehindTime,
+               MIN_LookbehindTime, ScaleToPrecision(SCL_LookbehindTime),
+               &mLookbehindTime);
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO("s"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
+         S.AddVariableText(XO("Make-up Gain:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Make-up Gain"))
+            .Style(SliderTextCtrl::HORIZONTAL)
+            .AddSliderTextCtrl({}, DEF_MakeupGain, MAX_MakeupGain,
+               MIN_MakeupGain, ScaleToPrecision(SCL_MakeupGain),
+               &mMakeupGainPct);
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO("%"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         S.AddVariableText(XO("Dry/Wet:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Dry/Wet"))
+            .Style(SliderTextCtrl::HORIZONTAL)
+            .AddSliderTextCtrl({}, DEF_DryWet, MAX_DryWet,
+               MIN_DryWet, ScaleToPrecision(SCL_DryWet),
+               &mDryWetPct);
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO("%"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+      }
+      S.EndMultiColumn();
+   }
+   S.EndVerticalLay();
 }
 
 bool EffectCompressor2::TransferDataToWindow()
 {
+   // Transferring data to window causes spurious UpdateUI events
+   // which would reset the UI values to the previous value.
+   // This guard lets the program ignore them.
+   mIgnoreGuiEvents = true;
    if (!mUIParent->TransferDataToWindow())
    {
+      mIgnoreGuiEvents = false;
       return false;
    }
 
    UpdateUI();
+   mIgnoreGuiEvents = false;
    return true;
 }
 
@@ -269,6 +430,8 @@ bool EffectCompressor2::TransferDataFromWindow()
 
 void EffectCompressor2::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 {
+   if(!mIgnoreGuiEvents)
+      TransferDataFromWindow();
    UpdateUI();
 }
 
