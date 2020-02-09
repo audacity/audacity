@@ -63,6 +63,19 @@ private:
    void UpdateUI();
 
 private:
+   int    mAlgorithm;
+   int    mCompressBy;
+   bool   mStereoInd;
+
+   double    mThresholdDB;
+   double    mRatio;
+   double    mKneeWidthDB;
+   double    mAttackTime;
+   double    mReleaseTime;
+   double    mLookaheadTime;
+   double    mLookbehindTime;
+   double    mMakeupGainPct;
+   double    mDryWetPct;
 
    DECLARE_EVENT_TABLE()
 };
