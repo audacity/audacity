@@ -77,6 +77,8 @@ private:
    double    mMakeupGainPct;
    double    mDryWetPct;
 
+   bool mIgnoreGuiEvents;
+
    DECLARE_EVENT_TABLE()
 };
 
