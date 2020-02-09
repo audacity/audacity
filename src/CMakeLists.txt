@@ -950,6 +950,8 @@ list( APPEND SOURCES
       widgets/ReadOnlyText.h
       widgets/Ruler.cpp
       widgets/Ruler.h
+      widgets/SliderTextCtrl.cpp
+      widgets/SliderTextCtrl.h
       widgets/Warning.cpp
       widgets/Warning.h
       widgets/WindowAccessible.cpp
