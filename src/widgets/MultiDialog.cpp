@@ -36,6 +36,9 @@ for each problem encountered, since there can be many orphans.
 
 #include "../AudacityLogger.h"
 #include "wxPanelWrapper.h"
+#include "../Theme.h"
+#include "../AllThemeResources.h"
+#include "../widgets/HelpSystem.h"
 
 class MultiDialog final : public wxDialogWrapper
 {
@@ -44,14 +47,17 @@ public:
                const TranslatableString &message,
                const TranslatableString &title,
                const TranslatableStrings &buttons,
+               const wxString &helpPage,
                const TranslatableString &boxMsg, bool log);
    ~MultiDialog() {};
 
 private:
    void OnOK( wxCommandEvent &event );
    void OnShowLog(wxCommandEvent& event);
+   void OnHelp(wxCommandEvent& event);
 
    wxRadioBox* mRadioBox;
+   wxString mHelpPage;
 
    DECLARE_EVENT_TABLE()
 };
@@ -61,16 +67,21 @@ private:
 BEGIN_EVENT_TABLE(MultiDialog, wxDialogWrapper)
    EVT_BUTTON( wxID_OK, MultiDialog::OnOK )
    EVT_BUTTON(ID_SHOW_LOG_BUTTON, MultiDialog::OnShowLog)
+   EVT_BUTTON(wxID_HELP, MultiDialog::OnHelp)
 END_EVENT_TABLE()
 
 MultiDialog::MultiDialog(wxWindow * pParent,
                          const TranslatableString &message,
                          const TranslatableString &title,
                          const TranslatableStrings &buttons,
-                         const TranslatableString &boxMsg, bool log)
+                         const wxString &helpPage,
+                         const TranslatableString &boxMsg, 
+                         bool log
+   )
    : wxDialogWrapper(pParent, wxID_ANY, title,
                wxDefaultPosition, wxDefaultSize,
-               wxCAPTION) // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU
+               wxCAPTION), // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU
+    mHelpPage( helpPage)
 {
    SetName();
 
@@ -120,17 +131,24 @@ MultiDialog::MultiDialog(wxWindow * pParent,
             if (log)
             {
                S
-                  .Id( ID_SHOW_LOG_BUTTON )
+                  .Id(ID_SHOW_LOG_BUTTON)
                   .AddButton(
                      XO("Show Log for Details"), wxALIGN_LEFT | wxALL,
                      // set default to encourage user to look at files.
-                     true );
+                     true);
 
-               S.AddSpace( 40, 0 );
+               S.AddSpace(40, 0);
             }
 
-            auto pButton = S.Id( wxID_OK )
-               .AddButton( XO("OK"), wxALIGN_CENTER, !log );
+            auto pButton = S.Id(wxID_OK)
+               .AddButton(XO("OK"), wxALIGN_CENTER, !log);
+
+            if (!mHelpPage.IsEmpty()) {
+               auto pHelpBtn = S.Id(wxID_HELP)
+                  .AddBitmapButton(theTheme.Bitmap(bmpHelpIcon), wxALIGN_CENTER, false);
+               pHelpBtn->SetToolTip(XO("Help").Translation());
+               pHelpBtn->SetLabel(XO("Help").Translation());       // for screen readers
+            }
          }
          S.EndHorizontalLay();
       }
@@ -155,10 +173,15 @@ void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
    }
 }
 
+void MultiDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
+{
+   HelpSystem::ShowHelp(FindWindow(wxID_HELP), mHelpPage, true);
+}
 
 int ShowMultiDialog(const TranslatableString &message,
    const TranslatableString &title,
    const TranslatableStrings &buttons,
+   const wxString &helpPage,
    const TranslatableString &boxMsg, bool log)
 {
    wxWindow * pParent = wxTheApp->GetTopWindow();
@@ -170,7 +193,7 @@ int ShowMultiDialog(const TranslatableString &message,
          pParent = NULL;
    }
    MultiDialog dlog(pParent,
-      message, title, buttons, boxMsg, log);
+      message, title, buttons, helpPage, boxMsg, log);
    // If dialog does not have a parent, cannot be centred on it.
    if (pParent != NULL)
       dlog.CentreOnParent();
