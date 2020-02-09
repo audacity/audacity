@@ -2698,7 +2698,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   auto item = S.Id(ID_Text + i)
                      .Validator<wxGenericValidator>(&ctrl.valStr)
                      .Name( prompt )
-                     .AddTextBox( {}, wxT(""), 12);
+                     .AddTextBox( {}, wxT(""), 50);
                }
                else if (ctrl.type == NYQ_CTRL_CHOICE)
                {
