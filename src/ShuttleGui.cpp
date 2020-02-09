@@ -119,6 +119,8 @@ for registering for changes.
 #include "widgets/wxTextCtrlWrapper.h"
 #include "AllThemeResources.h"
 
+#include "widgets/SliderTextCtrl.h"
+
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
 #endif
@@ -596,6 +598,31 @@ wxSlider * ShuttleGuiBase::AddSlider(
       ( ( mItem.mWindowSize == wxSize{} ) ? wxDefaultSize : mItem.mWindowSize ),
       GetStyle( wxSL_HORIZONTAL | wxSL_LABELS | wxSL_AUTOTICKS )
       );
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
+   mpWind->SetName(wxStripMenuCodes(Prompt.Translation()));
+   miProp=1;
+   UpdateSizers();
+   return pSlider;
+}
+
+SliderTextCtrl* ShuttleGuiBase::AddSliderTextCtrl(
+   const TranslatableString &Prompt, double pos, double Max, double Min,
+   int precision, double* value, double scale)
+{
+   HandleOptionality( Prompt );
+   AddPrompt( Prompt );
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), SliderTextCtrl);
+   SliderTextCtrl * pSlider;
+   mpWind = pSlider = safenew SliderTextCtrl(GetParent(), miId,
+      pos, Min, Max, precision, scale, wxDefaultPosition, wxDefaultSize,
+      GetStyle( SliderTextCtrl::HORIZONTAL ),
+      value
+   );
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    mpWind->SetAccessible(safenew WindowAccessible(mpWind));
