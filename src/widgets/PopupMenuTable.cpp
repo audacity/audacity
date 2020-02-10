@@ -80,7 +80,6 @@ void PopupMenuBuilder::DoBeginGroup( Registry::GroupItem &item, const Path &path
 void PopupMenuBuilder::DoEndGroup( Registry::GroupItem &item, const Path &path )
 {
    if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
-      pItem->table.InitMenu( mMenu );
       if ( !pItem->caption.empty() ) {
          auto subMenu = std::move( mMenus.back() );
          mMenus.pop_back();
@@ -92,35 +91,37 @@ void PopupMenuBuilder::DoEndGroup( Registry::GroupItem &item, const Path &path )
 
 void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
 {
-   auto connect = [this]( const PopupMenuTable::Entry *pEntry ) {
-      mMenu->pParent->Bind
-         (wxEVT_COMMAND_MENU_SELECTED,
-         pEntry->func, mMenu->tables.back(), pEntry->id);
-   };
-
    auto pEntry = static_cast<PopupMenuTableEntry*>( &item );
    switch (pEntry->type) {
       case PopupMenuTable::Entry::Item:
       {
          mMenu->Append(pEntry->id, pEntry->caption.Translation());
-         connect( pEntry );
          break;
       }
       case PopupMenuTable::Entry::RadioItem:
       {
          mMenu->AppendRadioItem(pEntry->id, pEntry->caption.Translation());
-         connect( pEntry );
          break;
       }
       case PopupMenuTable::Entry::CheckItem:
       {
          mMenu->AppendCheckItem(pEntry->id, pEntry->caption.Translation());
-         connect( pEntry );
          break;
       }
       default:
+         wxASSERT( false );
          break;
    }
+
+   // This call necessary for externally registered items, else harmlessly
+   // redundant
+   pEntry->handler.InitUserData( mpUserData );
+
+   if ( pEntry->init )
+      pEntry->init( pEntry->handler, *mMenu, pEntry->id );
+
+   mMenu->pParent->Bind(
+      wxEVT_COMMAND_MENU_SELECTED, pEntry->func, &pEntry->handler, pEntry->id);
 }
 
 void PopupMenuBuilder::DoSeparator()
@@ -145,6 +146,29 @@ void PopupMenuTable::ExtendMenu( wxMenu &menu, PopupMenuTable &table )
    Registry::Visit( visitor, table.Get( theMenu.pUserData ).get() );
 }
 
+void PopupMenuTable::Append(
+   const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
+   const TranslatableString &string, wxCommandEventFunction memFn,
+   const PopupMenuTableEntry::InitFunction &init )
+{
+   mStack.back()->items.push_back( std::make_unique<Entry>(
+      stringId, type, id, string, memFn, *this, init
+   ) );
+}
+
+void PopupMenuTable::BeginSection( const Identifier &name )
+{
+   auto uSection = std::make_unique< PopupMenuSection >( name );
+   auto section = uSection.get();
+   mStack.back()->items.push_back( std::move( uSection ) );
+   mStack.push_back( section );
+}
+
+void PopupMenuTable::EndSection()
+{
+   mStack.pop_back();
+}
+
 namespace{
 void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
 {
@@ -160,7 +184,8 @@ void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
       {
          auto pEntry = static_cast<PopupMenuTableEntry*>( &item );
          mMenu.pParent->Unbind( wxEVT_COMMAND_MENU_SELECTED,
-         pEntry->func, &mTable, pEntry->id );
+         pEntry->func, &pEntry->handler, pEntry->id );
+         pEntry->handler.DestroyMenu();
       }
 
       PopupMenuTable &mTable;
@@ -169,8 +194,6 @@ void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
 
    PopupMenuDestroyer visitor{ *pTable, *this };
    Registry::Visit( visitor, pTable->Get( nullptr ).get() );
-
-   pTable->DestroyMenu();
 }
 
 void PopupMenu::Disconnect()
@@ -178,10 +201,6 @@ void PopupMenu::Disconnect()
    for ( auto pTable : tables )
       DisconnectTable(pTable);
 }
-}
-
-void PopupMenuTable::InitMenu(wxMenu *)
-{
 }
 
 // static

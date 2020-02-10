@@ -266,46 +266,45 @@ PopupMenuTable &WaveformVRulerMenuTable::Instance()
    return instance;
 }
 
-void WaveformVRulerMenuTable::InitMenu(wxMenu *pMenu)
-{
-   WaveTrackVRulerMenuTable::InitMenu(pMenu);
-
-// DB setting is already on track drop down.
-   WaveTrack *const wt = mpData->pTrack;
-   const int id =
-      OnFirstWaveformScaleID + (int)(wt->GetWaveformSettings().scaleType);
-   pMenu->Check(id, true);
-}
-
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 
-   BEGIN_POPUP_MENU_SECTION( "Scales" )
+   BeginSection( "Scales" );
    {
       const auto & names = WaveformSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         POPUP_MENU_RADIO_ITEM( names[ii].Internal(),
+         AppendRadioItem( names[ii].Internal(),
             OnFirstWaveformScaleID + ii, names[ii].Msgid(),
-            OnWaveformScaleType);
+            POPUP_MENU_FN( OnWaveformScaleType ),
+            []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+               const auto pData =
+                  static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
+               WaveTrack *const wt = pData->pTrack;
+               if ( id ==
+                  OnFirstWaveformScaleID +
+                  (int)(wt->GetWaveformSettings().scaleType) )
+                  menu.Check(id, true);
+            }
+          );
       }
    }
-   END_POPUP_MENU_SECTION()
+   EndSection();
 
-   BEGIN_POPUP_MENU_SECTION( "Zoom" )
-      BEGIN_POPUP_MENU_SECTION( "Basic" )
-         POPUP_MENU_ITEM( "Reset", OnZoomFitVerticalID, XO("Zoom Reset\tShift-Right-Click"), OnZoomReset)
-         POPUP_MENU_ITEM( "TimesHalf", OnZoomDiv2ID,        XO("Zoom x1/2"),                     OnZoomDiv2Vertical)
-         POPUP_MENU_ITEM( "TimesTwo", OnZoomTimes2ID,      XO("Zoom x2"),                       OnZoomTimes2Vertical)
+   BeginSection( "Zoom" );
+      BeginSection( "Basic" );
+         AppendItem( "Reset", OnZoomFitVerticalID, XO("Zoom Reset\tShift-Right-Click"), POPUP_MENU_FN( OnZoomReset ) );
+         AppendItem( "TimesHalf", OnZoomDiv2ID,        XO("Zoom x1/2"),                     POPUP_MENU_FN( OnZoomDiv2Vertical ) );
+         AppendItem( "TimesTwo", OnZoomTimes2ID,      XO("Zoom x2"),                       POPUP_MENU_FN( OnZoomTimes2Vertical ) );
 
    #ifdef EXPERIMENTAL_HALF_WAVE
-         POPUP_MENU_ITEM( "HalfWave", OnZoomHalfWaveID,    XO("Half Wave"),                     OnZoomHalfWave)
+         AppendItem( "HalfWave", OnZoomHalfWaveID,    XO("Half Wave"),                     POPUP_MENU_FN( OnZoomHalfWave ) );
    #endif
-      END_POPUP_MENU_SECTION()
+      EndSection();
 
-      BEGIN_POPUP_MENU_SECTION( "InOut" )
-         POPUP_MENU_ITEM( "In", OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-         POPUP_MENU_ITEM( "Out", OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
-      END_POPUP_MENU_SECTION()
-   END_POPUP_MENU_SECTION()
+      BeginSection( "InOut" );
+         AppendItem( "In", OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  POPUP_MENU_FN( OnZoomInVertical ) );
+         AppendItem( "Out", OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     POPUP_MENU_FN( OnZoomOutVertical ) );
+      EndSection();
+   EndSection();
 
 END_POPUP_MENU()
 

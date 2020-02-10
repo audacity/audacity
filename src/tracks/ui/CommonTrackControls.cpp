@@ -93,7 +93,6 @@ private:
    void OnMoveTrack(wxCommandEvent &event);
 
    void InitUserData(void *pUserData) override;
-   void InitMenu(wxMenu *pMenu) override;
 
    void DestroyMenu() override
    {
@@ -114,24 +113,22 @@ void TrackMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
 }
 
-void TrackMenuTable::InitMenu(wxMenu *pMenu)
-{
-   Track *const pTrack = mpData->pTrack;
-
-   const auto &tracks = TrackList::Get( mpData->project );
-
-   pMenu->Enable(OnMoveUpID, tracks.CanMoveUp(pTrack));
-   pMenu->Enable(OnMoveDownID, tracks.CanMoveDown(pTrack));
-   pMenu->Enable(OnMoveTopID, tracks.CanMoveUp(pTrack));
-   pMenu->Enable(OnMoveBottomID, tracks.CanMoveDown(pTrack));
-}
-
 BEGIN_POPUP_MENU(TrackMenuTable)
-   BEGIN_POPUP_MENU_SECTION( "Basic" )
-      POPUP_MENU_ITEM( "Name", OnSetNameID, XO("&Name..."), OnSetName)
-   END_POPUP_MENU_SECTION()
-   BEGIN_POPUP_MENU_SECTION( "Move" )
-      POPUP_MENU_ITEM( "Up",
+   static const auto enableIfCanMove = [](bool up){ return
+      [up]( PopupMenuHandler &handler, wxMenu &menu, int id ){
+         auto pData = static_cast<TrackMenuTable&>( handler ).mpData;
+         const auto &tracks = TrackList::Get( pData->project );
+         Track *const pTrack = pData->pTrack;
+         menu.Enable( id,
+            up ? tracks.CanMoveUp(pTrack) : tracks.CanMoveDown(pTrack) );
+      };
+   };
+
+   BeginSection( "Basic" );
+      AppendItem( "Name", OnSetNameID, XO("&Name..."), POPUP_MENU_FN( OnSetName ) );
+   EndSection();
+   BeginSection( "Move" );
+      AppendItem( "Up",
          // It is not correct to use NormalizedKeyString::Display here --
          // wxWidgets will apply its equivalent to the key names passed to menu
          // functions.
@@ -143,8 +140,8 @@ BEGIN_POPUP_MENU(TrackMenuTable)
                    GetKeyFromName(wxT("TrackMoveUp")).GET() ),
              wxT("\t")
          ),
-         OnMoveTrack)
-      POPUP_MENU_ITEM( "Down",
+         POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(true) );
+      AppendItem( "Down",
          OnMoveDownID,
          XO("Move Track &Down").Join(
             Verbatim(
@@ -153,8 +150,8 @@ BEGIN_POPUP_MENU(TrackMenuTable)
                   GetKeyFromName(wxT("TrackMoveDown")).GET() ),
              wxT("\t")
          ),
-         OnMoveTrack)
-      POPUP_MENU_ITEM( "Top",
+         POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(false) );
+      AppendItem( "Top",
          OnMoveTopID,
          XO("Move Track to &Top").Join(
             Verbatim(
@@ -163,8 +160,8 @@ BEGIN_POPUP_MENU(TrackMenuTable)
                    GetKeyFromName(wxT("TrackMoveTop")).GET() ),
              wxT("\t")
          ),
-         OnMoveTrack)
-      POPUP_MENU_ITEM( "Bottom",
+         POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(true) );
+      AppendItem( "Bottom",
          OnMoveBottomID,
          XO("Move Track to &Bottom").Join(
             Verbatim(
@@ -173,8 +170,8 @@ BEGIN_POPUP_MENU(TrackMenuTable)
                   GetKeyFromName(wxT("TrackMoveBottom")).GET() ),
              wxT("\t")
          ),
-         OnMoveTrack)
-   END_POPUP_MENU_SECTION()
+         POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(false) );
+   EndSection();
 END_POPUP_MENU()
 
 
