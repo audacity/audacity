@@ -36,7 +36,6 @@ This class now lists
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../Envelope.h"
-#include "CommandContext.h"
 
 #include "SelectCommand.h"
 #include "../ShuttleGui.h"
