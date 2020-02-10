@@ -304,9 +304,9 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
                   2, &m_ToLength, NumValidatorStyle::TWO_TRAILING_ZEROES,
                   // min and max need same precision as what we're validating (bug 963)
                   RoundValue( precision,
-                     (m_FromLength * 100.0) / (100.0 + MIN_Percentage) ),
+                     (m_FromLength * 100.0) / (100.0 + MAX_Percentage) ),
                   RoundValue( precision,
-                     (m_FromLength * 100.0) / (100.0 + MAX_Percentage) )
+                     (m_FromLength * 100.0) / (100.0 + MIN_Percentage) )
                )
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .AddTextBox(XO("to"), wxT(""), 12);
