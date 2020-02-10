@@ -550,13 +550,12 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
 
 //=============================================================================
 // Class defining common command handlers for mono and stereo tracks
-struct WaveTrackMenuTable : PopupMenuTable
+struct WaveTrackMenuTable : ComputedPopupMenuTable< WaveTrackMenuTable >
 {
-   static WaveTrackMenuTable &Instance( Track * pTrack);
-   Track * mpTrack{};
+   static WaveTrackMenuTable &Instance();
 
    WaveTrackMenuTable()
-      : PopupMenuTable{ "WaveTrack" }
+      : ComputedPopupMenuTable< WaveTrackMenuTable >{ "WaveTrack" }
    {}
 
    void InitUserData(void *pUserData) override;
@@ -586,15 +585,9 @@ struct WaveTrackMenuTable : PopupMenuTable
    void OnSplitStereoMono(wxCommandEvent & event);
 };
 
-WaveTrackMenuTable &WaveTrackMenuTable::Instance( Track * pTrack )
+WaveTrackMenuTable &WaveTrackMenuTable::Instance()
 {
    static WaveTrackMenuTable instance;
-   // Clear it out so we force a repopulate
-   instance.Clear();
-   // Ensure we know how to populate.
-   // Messy, but the design does not seem to offer an alternative.
-   // We won't use pTrack after populate.
-   instance.mpTrack = pTrack;
    return instance;
 }
 
@@ -614,8 +607,7 @@ static std::vector<WaveTrackSubViewType> AllTypes()
 }
 
 BEGIN_POPUP_MENU(WaveTrackMenuTable)
-   // Functions usable "now" (list population time) and also "later"
-   // (in callbacks to check and disable items)
+   // Functions usable in callbacks to check and disable items
    static const auto findTrack =
    []( PopupMenuHandler &handler ) -> WaveTrack & {
       return *static_cast< WaveTrack* >(
@@ -635,20 +627,26 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          ProjectAudioIO::Get( project ).IsAudioActive();
    };
 
-   const auto pTrack = &findTrack( *this );
-   const auto &view = WaveTrackView::Get( *pTrack );
-
    BeginSection( "SubViews" );
-      if ( WaveTrackSubViews::slots() > 1 )
-         AppendCheckItem( "MultiView", OnMultiViewID, XO("&Multi-view"),
-         POPUP_MENU_FN( OnMultiView ),
-         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-            auto &track = findTrack( handler );
-            const auto &view = WaveTrackView::Get( track );
-            menu.Check( id, view.GetMultiView() );
-         }
-      );
+      // Multi-view check mark item, if more than one track sub-view type is
+      // known
+      Append( []( My &table ) -> Registry::BaseItemPtr {
+         if ( WaveTrackSubViews::slots() > 1 )
+            return std::make_unique<Entry>(
+               "MultiView", Entry::CheckItem, OnMultiViewID, XO("&Multi-view"),
+               POPUP_MENU_FN( OnMultiView ),
+               table,
+               []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+                  auto &track = findTrack( handler );
+                  const auto &view = WaveTrackView::Get( track );
+                  menu.Check( id, view.GetMultiView() );
+               } );
+            else
+               return nullptr;
+      } );
 
+      // Append either a checkbox or radio item for each sub-view.
+      // Radio buttons if in single-view mode, else checkboxes
       int id = OnSetDisplayId;
       for ( const auto &type : AllTypes() ) {
          static const auto initFn = []( bool radio ){ return
@@ -681,54 +679,66 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                   menu.Enable( id, false );
             };
          };
-         if ( view.GetMultiView() ) {
-            AppendCheckItem( type.name.Internal(), id++, type.name.Msgid(),
-               POPUP_MENU_FN( OnSetDisplay ), initFn( false ) );
-         }
-         else {
-            AppendRadioItem( type.name.Internal(), id++, type.name.Msgid(),
-               POPUP_MENU_FN( OnSetDisplay ), initFn( true ) );
-         }
+         Append( [type, id]( My &table ) -> Registry::BaseItemPtr {
+            const auto pTrack = &findTrack( table );
+            const auto &view = WaveTrackView::Get( *pTrack );
+            const auto itemType =
+               view.GetMultiView() ? Entry::CheckItem : Entry::RadioItem;
+            return std::make_unique<Entry>( type.name.Internal(), itemType,
+               id, type.name.Msgid(),
+               POPUP_MENU_FN( OnSetDisplay ), table,
+               initFn( !view.GetMultiView() ) );
+         } );
+         ++id;
       }
    EndSection();
 
-   if ( pTrack ) {
-
+   // Conditionally add sub-menu for wave color, if showing waveform
+   Append( []( My &table ) -> Registry::BaseItemPtr {
+      const auto pTrack = &findTrack( table );
+      const auto &view = WaveTrackView::Get( *pTrack );
       const auto displays = view.GetDisplays();
       bool hasWaveform = (displays.end() != std::find(
          displays.begin(), displays.end(),
          WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
       ) );
-      if( hasWaveform ){
-         BeginSection( "WaveColor" );
-            POPUP_MENU_SUB_MENU( "WaveColor", WaveColorMenuTable, mpData )
-         EndSection();
-      }
+      if( hasWaveform )
+         return std::make_unique<PopupMenuSection>( "WaveColor",
+            Registry::Shared( WaveColorMenuTable::Instance()
+               .Get( table.mpData ) ) );
+      else
+         return nullptr;
+   } );
 
+   // Conditionally add sub-menu for spectrogram settings, if showing spectrum
+   Append( []( My &table ) -> Registry::BaseItemPtr {
+      const auto pTrack = &findTrack( table );
+      const auto &view = WaveTrackView::Get( *pTrack );
+      const auto displays = view.GetDisplays();
       bool hasSpectrum = (displays.end() != std::find(
          displays.begin(), displays.end(),
          WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
       ) );
-      if( hasSpectrum ){
+      if( hasSpectrum )
          // In future, we might move this to the context menu of the
          // Spectrum vertical ruler.
          // (But the latter won't be satisfactory without a means to
          // open that other context menu with keystrokes only, and that
          // would require some notion of a focused sub-view.)
-
-         BeginSection( "SpectrogramSettings" );
-            AppendItem( "SpectrogramSettings", OnSpectrogramSettingsID, XO("S&pectrogram Settings..."), POPUP_MENU_FN( OnSpectrogramSettings ),
+         return std::make_unique<PopupMenuSection>( "SpectrogramSettings",
+            std::make_unique<Entry>( "SpectrogramSettings", Entry::Item,
+               OnSpectrogramSettingsID,
+               XO("S&pectrogram Settings..."),
+               POPUP_MENU_FN( OnSpectrogramSettings ), table,
                []( PopupMenuHandler &handler, wxMenu &menu, int id ){
                   // Bug 1253.  Shouldn't open preferences if audio is busy.
                   // We can't change them on the fly yet anyway.
                   auto gAudioIO = AudioIOBase::Get();
                   menu.Enable(id, !gAudioIO->IsBusy());
-               }
-         );
-         EndSection();
-      }
-
-   }
+               } ) );
+      else
+         return nullptr;
+   } );
 
    BeginSection( "Channels" );
    // If these are enabled again, choose a hot key for Mono that does not conflict
@@ -791,7 +801,9 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          POPUP_MENU_FN( OnSplitStereo ), enableSplitStereo );
    // DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
    #ifndef EXPERIMENTAL_DA
-      AppendItem( "SplitToMono", OnSplitStereoMonoID, XO("Split Stereo to Mo&no"), POPUP_MENU_FN( OnSplitStereoMono ), enableSplitStereo );
+      AppendItem( "SplitToMono", OnSplitStereoMonoID,
+         XO("Split Stereo to Mo&no"), POPUP_MENU_FN( OnSplitStereoMono ),
+         enableSplitStereo );
    #endif
    EndSection();
 
@@ -1126,7 +1138,7 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
 PopupMenuTable *WaveTrackControls::GetMenuExtension(Track * pTrack)
 {
 
-   WaveTrackMenuTable & result = WaveTrackMenuTable::Instance( pTrack );
+   WaveTrackMenuTable & result = WaveTrackMenuTable::Instance();
    return &result;
 }
 

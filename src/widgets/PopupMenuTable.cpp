@@ -43,11 +43,11 @@ struct PopupMenu : public wxMenu
    void *pUserData;
 };
 
-class PopupMenuBuilder : public MenuVisitor {
+class PopupMenuBuilder : public PopupMenuVisitor {
 public:
    explicit
    PopupMenuBuilder( PopupMenuTable &table, PopupMenu &menu, void *pUserData )
-      : mTable{ table }
+      : PopupMenuVisitor{ table }
       , mMenu{ &menu }
       , mRoot{ mMenu }
       , mpUserData{ pUserData }
@@ -58,7 +58,6 @@ public:
    void DoVisit( Registry::SingleItem &item, const Path &path ) override;
    void DoSeparator() override;
 
-   PopupMenuTable &mTable;
    std::vector< std::unique_ptr<PopupMenu> > mMenus;
    PopupMenu *mMenu, *mRoot;
    void *const mpUserData;
@@ -146,14 +145,18 @@ void PopupMenuTable::ExtendMenu( wxMenu &menu, PopupMenuTable &table )
    Registry::Visit( visitor, table.Get( theMenu.pUserData ).get() );
 }
 
+void PopupMenuTable::Append( Registry::BaseItemPtr pItem )
+{
+   mStack.back()->items.push_back( std::move( pItem ) );
+}
+
 void PopupMenuTable::Append(
    const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
    const TranslatableString &string, wxCommandEventFunction memFn,
    const PopupMenuTableEntry::InitFunction &init )
 {
-   mStack.back()->items.push_back( std::make_unique<Entry>(
-      stringId, type, id, string, memFn, *this, init
-   ) );
+   Append( std::make_unique<Entry>(
+      stringId, type, id, string, memFn, *this, init ) );
 }
 
 void PopupMenuTable::BeginSection( const Identifier &name )
@@ -172,11 +175,11 @@ void PopupMenuTable::EndSection()
 namespace{
 void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
 {
-   class PopupMenuDestroyer : public MenuVisitor {
+   class PopupMenuDestroyer : public PopupMenuVisitor {
    public:
       explicit
       PopupMenuDestroyer( PopupMenuTable &table, PopupMenu &menu )
-         : mTable{ table }
+         : PopupMenuVisitor{ table }
          , mMenu{ menu }
       {}
 
@@ -188,7 +191,6 @@ void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
          pEntry->handler.DestroyMenu();
       }
 
-      PopupMenuTable &mTable;
       PopupMenu &mMenu;
    };
 

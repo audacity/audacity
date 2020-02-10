@@ -47,7 +47,7 @@ struct PopupMenuTableEntry : Registry::SingleItem
    PopupMenuTableEntry( const Identifier &stringId,
       Type type_, int id_, const TranslatableString &caption_,
       wxCommandEventFunction func_, PopupMenuHandler &handler_,
-      InitFunction init_ )
+      InitFunction init_ = {} )
       : SingleItem{ stringId }
       , type(type_)
       , id(id_)
@@ -95,6 +95,11 @@ public:
    virtual void DestroyMenu() = 0;
 };
 
+struct PopupMenuVisitor : public MenuVisitor {
+   explicit PopupMenuVisitor( PopupMenuTable &table ) : mTable{ table } {}
+   PopupMenuTable &mTable;
+};
+
 class PopupMenuTable : public PopupMenuHandler
 {
 public:
@@ -120,7 +125,8 @@ public:
    
    const std::shared_ptr< Registry::GroupItem > &Get( void *pUserData )
    {
-      this->InitUserData( pUserData );
+      if ( pUserData )
+         this->InitUserData( pUserData );
       if (!mTop)
          Populate();
       return mTop;
@@ -130,6 +136,8 @@ protected:
    virtual void Populate() = 0;
 
    // To be used in implementations of Populate():
+   void Append( Registry::BaseItemPtr pItem );
+   
    void Append(
       const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
       const TranslatableString &string, wxCommandEventFunction memFn,
@@ -156,12 +164,36 @@ protected:
    void BeginSection( const Identifier &name );
    void EndSection();
 
-   void Clear() { mTop.reset(); }
-   
    std::shared_ptr< Registry::GroupItem > mTop;
    std::vector< Registry::GroupItem* > mStack;
    Identifier mId;
    TranslatableString mCaption;
+};
+
+// A "CRTP" class that injects a convenience function, which appends a menu item
+// computed lazily by a function that is passed the table (after it has stored
+// its user data)
+template< typename Derived >
+class ComputedPopupMenuTable : public PopupMenuTable
+{
+public:
+   using PopupMenuTable::PopupMenuTable;
+   using PopupMenuTable::Append;
+
+   // Appends a computed item, which may be omitted when function returns null
+   // and thus can be a conditional item
+   using Factory = std::function< Registry::BaseItemPtr( Derived& ) >;
+   void Append( const Factory &factory )
+   {
+      using namespace Registry;
+      Append( std::make_unique< ComputedItem >(
+         [factory]( Visitor &baseVisitor ){
+            auto &visitor = static_cast< PopupMenuVisitor& >( baseVisitor );
+            auto &table =  static_cast< Derived& >( visitor.mTable );
+            return factory( table );
+         }
+      ) );
+   }
 };
 
 /*
