@@ -1,288 +1,306 @@
-#directory cmake-proxies/libnyquist
-set( TARGET libnyquist )
-set( TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET} )
-project( ${TARGET} )
 
-set( SOURCES 
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/f0.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/instr.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/stkinit.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/stkint.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/ADSR.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/BandedWG.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/BiQuad.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Bowed.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/BowTable.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Chorus.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Clarinet.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Delay.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/DelayA.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/DelayL.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Effect.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Envelope.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/FileRead.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/FileWvIn.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Filter.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Flute.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Function.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Generator.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Instrmnt.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/JCRev.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/JetTable.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Mandolin.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Modal.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/ModalBar.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Noise.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/NRev.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/OnePole.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/OneZero.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/PitShift.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/PluckTwo.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/PoleZero.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/PRCRev.cpp
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/ReedTabl.cpp  #Junk??
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/ReedTable.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Saxofony.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/SineWave.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Sitar.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Stk.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/WaveLoop.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/WvIn.cpp
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/longque.cpp
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/textio.cpp
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/winmain.cpp
+add_library( ${TARGET} STATIC )
 
-${LIB_SRC_DIRECTORY}libnyquist/nyx.c
-${LIB_SRC_DIRECTORY}libnyquist/xlextstart.c
+list( APPEND SOURCES
+   PRIVATE
+      # libnyquist
 
-${LIB_SRC_DIRECTORY}libnyquist/nyx.c
-${LIB_SRC_DIRECTORY}libnyquist/xlextstart.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/cext.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/cleanup.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/cmdline.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/cmtcmd.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/cmtio.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/mem.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/midifile.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/midifns.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/midimgr.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/moxc.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/record.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/seq.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/seqmread.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/seqmwrite.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/seqread.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/seqwrite.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/tempomap.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/timebase.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/userio.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Matlab-testing/conv2dTest.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Matlab-testing/convTest.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Matlab-testing/rfft2dTestML.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Numerical-Recipes-testing/fftTest.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Numerical-Recipes-testing/fftTest2d.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Numerical-Recipes-testing/fftTest3d.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Numerical-Recipes-testing/rfftTest.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Numerical-Recipes-testing/rfftTest2d.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/src/dxpose.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/src/fft2d.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/src/fftext.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/src/fftlib.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/src/matlib.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Timing-code/fftTiming.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Timing-code/rfftTiming.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/add.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/avg.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/compose.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/convolve.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/debug.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/downsample.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/falloc.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/ffilterkit.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/fft-rbd.c #?? using official fft.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/fft.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/fftr4.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/handlers.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/inverse.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/local.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/lpanal.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/multiread.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/multiseq.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/nfilterkit.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/nyq-osc-server.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/nyx.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/oldyin.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/phasevocoder.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/probe.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/pvshell.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/resamp.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/resampv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/samples.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/seqext.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/seqfnint.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/seqinterf.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/sliderdata.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/sndfail.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/sndfnint.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/sndmax.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/sndread.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/sndseq.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/sndsliders.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/sndwrite.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/sndwritepa.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/sound.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/stats.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/trigger.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqsrc/yin.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/mac/macaboutbox.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/mac/MacAE.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/mac/MacCommandWin.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/mac/macdrag.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/mac/MacFileUtils.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/mac/macfun.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/mac/MacHandleEv.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/mac/macint.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/mac/macstuff.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/mac/xlextstart.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/unix/io.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/unix/osstuff.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/unix/term.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/unix/termtest.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/msvc/winfun.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/msvc/winstuff.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/winguistuff.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/xlextstart.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/xlispfns.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/abs.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/allpoles.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/alpass.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/alpasscv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/alpassvc.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/alpassvv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/amosc.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/areson.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/aresoncv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/aresonvc.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/aresonvv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/atone.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/atonev.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/biquadfilt.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/buzz.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/chase.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/clip.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/congen.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/const.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/coterm.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/delaycc.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/delaycv.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/downproto.c #?? Used downsample.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/eqbandvvv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/exp.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/fmfb.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/fmfbv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/fmosc.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/follow.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/fromarraystream.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/fromobject.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/gate.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/ifft.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrbanded.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrbow.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrbowedfreq.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrclar.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrclarall.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrclarfreq.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrflute.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrfluteall.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrflutefreq.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrmandolin.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrmodalbar.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrsax.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrsaxall.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrsaxfreq.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/instrsitar.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/integrate.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/log.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/lpreson.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/maxv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/offset.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/oneshot.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/osc.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/partial.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/pluck.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/prod.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/pwl.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/quantize.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/recip.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/reson.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/resoncv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/resonvc.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/resonvv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/sampler.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/scale.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/shape.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/sine.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/siosc.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/slope.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/sqrt.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/stkchorus.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/stkpitshift.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/stkrev.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/tapf.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/tapv.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/tone.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/tonev.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/upsample.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/tran/white.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/extern.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/path.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/security.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlbfun.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlcont.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xldbug.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xldmem.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xleval.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlfio.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlftab.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlglob.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlimage.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlinit.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlio.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlisp.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xljump.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xllist.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlmath.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlobj.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlpp.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlprin.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlread.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlstr.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlsubr.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlsym.c
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/xlisp/xlsys.c
-)
-# This defines the #define on both Windows and Linux.
-add_definitions( -DWIN32 -D_LIB )
-add_library( ${TARGET} STATIC ${SOURCES})
+      ${TARGET_ROOT}/nyx.c
 
-target_include_directories( ${TARGET} PRIVATE 
-${TARGET_SOURCE}
-${TARGET_SOURCE}/nyquist
-${TARGET_SOURCE}/nyquist/cmt
-${TARGET_SOURCE}/nyquist/ffts/src
-${TARGET_SOURCE}/nyquist/nyqsrc
-${TARGET_SOURCE}/nyquist/nyqstk
-${TARGET_SOURCE}/nyquist/nyqstk/include
-${TARGET_SOURCE}/nyquist/snd
-${TARGET_SOURCE}/nyquist/tran
-${TARGET_SOURCE}/nyquist/sys/win/msvc
-${TARGET_SOURCE}/nyquist/xlisp
-${TARGET_SOURCE}/nyquist/win
-${top_dir}/win/Projects/libsndfile # This is terrible place for sndfile.h!
-${LIB_SRC_DIRECTORY}portaudio-v19/include
+      # libnyquist/nyquist/cmt
+
+      ${TARGET_ROOT}/nyquist/cmt/cext.c
+      ${TARGET_ROOT}/nyquist/cmt/cleanup.c
+      ${TARGET_ROOT}/nyquist/cmt/cmdline.c
+      ${TARGET_ROOT}/nyquist/cmt/cmtcmd.c
+      ${TARGET_ROOT}/nyquist/cmt/mem.c
+      ${TARGET_ROOT}/nyquist/cmt/midifile.c
+      ${TARGET_ROOT}/nyquist/cmt/midifns.c
+      ${TARGET_ROOT}/nyquist/cmt/moxc.c
+      ${TARGET_ROOT}/nyquist/cmt/record.c
+      ${TARGET_ROOT}/nyquist/cmt/seq.c
+      ${TARGET_ROOT}/nyquist/cmt/seqmread.c
+      ${TARGET_ROOT}/nyquist/cmt/seqmwrite.c
+      ${TARGET_ROOT}/nyquist/cmt/seqread.c
+      ${TARGET_ROOT}/nyquist/cmt/seqwrite.c
+      ${TARGET_ROOT}/nyquist/cmt/tempomap.c
+      ${TARGET_ROOT}/nyquist/cmt/timebase.c
+      ${TARGET_ROOT}/nyquist/cmt/userio.c
+
+      # libnyquist/nyquist/cmupv
+
+      ${TARGET_ROOT}/nyquist/cmupv/src/cmupv.c
+      ${TARGET_ROOT}/nyquist/cmupv/src/cmupvdbg.c
+      ${TARGET_ROOT}/nyquist/cmupv/src/internal.c
+
+      # libnyquist/nyquist/ffts
+
+      ${TARGET_ROOT}/nyquist/ffts/src/fftext.c
+      ${TARGET_ROOT}/nyquist/ffts/src/fftlib.c
+      ${TARGET_ROOT}/nyquist/ffts/src/matlib.c
+
+      # libnyquist/nyquist/nyqsrc
+
+      ${TARGET_ROOT}/nyquist/nyqsrc/add.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/avg.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/compose.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/convolve.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/debug.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/downsample.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/f0.cpp
+      ${TARGET_ROOT}/nyquist/nyqsrc/falloc.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/ffilterkit.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/fft.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/handlers.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/inverse.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/local.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/lpanal.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/multiread.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/multiseq.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/phasevocoder.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/probe.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/pvshell.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/resamp.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/resampv.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/samples.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/seqext.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/seqfnint.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/seqinterf.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/sliderdata.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/sndfnint.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/sndmax.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/sndread.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/sndseq.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/sndsliders.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/sndwritepa.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/sound.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/stats.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/stoponzero.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/trigger.c
+      ${TARGET_ROOT}/nyquist/nyqsrc/yin.c
+
+      # libnyquist/nyquist/nyqstk
+
+      ${TARGET_ROOT}/nyquist/nyqstk/instr.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/stkinit.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/stkint.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/ADSR.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/BandedWG.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/BiQuad.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Bowed.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/BowTable.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Chorus.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Clarinet.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Delay.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/DelayA.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/DelayL.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Effect.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Envelope.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/FileRead.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/FileWvIn.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Filter.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Flute.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Function.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Generator.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Instrmnt.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/JCRev.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/JetTable.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Mandolin.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Modal.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/ModalBar.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Noise.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/NRev.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/OnePole.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/OneZero.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/PitShift.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/PluckTwo.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/PoleZero.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/PRCRev.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/ReedTable.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Saxofony.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/SineWave.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Sitar.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/Stk.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/WaveLoop.cpp
+      ${TARGET_ROOT}/nyquist/nyqstk/src/WvIn.cpp
+
+
+      # libnyquist/nyquist/sys
+
+      #${TARGET_ROOT}/nyquist/sys/mac/macaboutbox.c
+      #${TARGET_ROOT}/nyquist/sys/mac/MacAE.c
+      #${TARGET_ROOT}/nyquist/sys/mac/MacCommandWin.c
+      #${TARGET_ROOT}/nyquist/sys/mac/macdrag.c
+      #${TARGET_ROOT}/nyquist/sys/mac/MacFileUtils.c
+      #${TARGET_ROOT}/nyquist/sys/mac/macfun.c
+      #${TARGET_ROOT}/nyquist/sys/mac/MacHandleEv.c
+      #${TARGET_ROOT}/nyquist/sys/mac/macint.c
+      #${TARGET_ROOT}/nyquist/sys/mac/macstuff.c
+      #${TARGET_ROOT}/nyquist/sys/mac/xlextstart.c
+      #${TARGET_ROOT}/nyquist/sys/unix/io.c
+      #${TARGET_ROOT}/nyquist/sys/unix/osstuff.c
+      #${TARGET_ROOT}/nyquist/sys/unix/term.c
+      #${TARGET_ROOT}/nyquist/sys/unix/termtest.c
+      #${TARGET_ROOT}/nyquist/sys/win/msvc/winfun.c
+      #${TARGET_ROOT}/nyquist/sys/win/msvc/winstuff.c
+      #${TARGET_ROOT}/nyquist/sys/win/wingui/winguistuff.c
+      #${TARGET_ROOT}/nyquist/sys/win/wingui/xlextstart.c
+      #${TARGET_ROOT}/nyquist/sys/win/wingui/xlispfns.c
+
+      # libnyquist/nyquist/tran
+
+      ${TARGET_ROOT}/nyquist/tran/abs.c
+      ${TARGET_ROOT}/nyquist/tran/allpoles.c
+      ${TARGET_ROOT}/nyquist/tran/alpass.c
+      ${TARGET_ROOT}/nyquist/tran/alpasscv.c
+      ${TARGET_ROOT}/nyquist/tran/alpassvc.c
+      ${TARGET_ROOT}/nyquist/tran/alpassvv.c
+      ${TARGET_ROOT}/nyquist/tran/amosc.c
+      ${TARGET_ROOT}/nyquist/tran/areson.c
+      ${TARGET_ROOT}/nyquist/tran/aresoncv.c
+      ${TARGET_ROOT}/nyquist/tran/aresonvc.c
+      ${TARGET_ROOT}/nyquist/tran/aresonvv.c
+      ${TARGET_ROOT}/nyquist/tran/atone.c
+      ${TARGET_ROOT}/nyquist/tran/atonev.c
+      ${TARGET_ROOT}/nyquist/tran/biquadfilt.c
+      ${TARGET_ROOT}/nyquist/tran/buzz.c
+      ${TARGET_ROOT}/nyquist/tran/chase.c
+      ${TARGET_ROOT}/nyquist/tran/clip.c
+      ${TARGET_ROOT}/nyquist/tran/congen.c
+      ${TARGET_ROOT}/nyquist/tran/const.c
+      ${TARGET_ROOT}/nyquist/tran/coterm.c
+      ${TARGET_ROOT}/nyquist/tran/delaycc.c
+      ${TARGET_ROOT}/nyquist/tran/delaycv.c
+      ${TARGET_ROOT}/nyquist/tran/eqbandvvv.c
+      ${TARGET_ROOT}/nyquist/tran/exp.c
+      ${TARGET_ROOT}/nyquist/tran/fmfb.c
+      ${TARGET_ROOT}/nyquist/tran/fmfbv.c
+      ${TARGET_ROOT}/nyquist/tran/fmosc.c
+      ${TARGET_ROOT}/nyquist/tran/follow.c
+      ${TARGET_ROOT}/nyquist/tran/fromarraystream.c
+      ${TARGET_ROOT}/nyquist/tran/fromobject.c
+      ${TARGET_ROOT}/nyquist/tran/gate.c
+      ${TARGET_ROOT}/nyquist/tran/ifft.c
+      ${TARGET_ROOT}/nyquist/tran/instrbanded.c
+      ${TARGET_ROOT}/nyquist/tran/instrbow.c
+      ${TARGET_ROOT}/nyquist/tran/instrbowedfreq.c
+      ${TARGET_ROOT}/nyquist/tran/instrclar.c
+      ${TARGET_ROOT}/nyquist/tran/instrclarall.c
+      ${TARGET_ROOT}/nyquist/tran/instrclarfreq.c
+      ${TARGET_ROOT}/nyquist/tran/instrflute.c
+      ${TARGET_ROOT}/nyquist/tran/instrfluteall.c
+      ${TARGET_ROOT}/nyquist/tran/instrflutefreq.c
+      ${TARGET_ROOT}/nyquist/tran/instrmandolin.c
+      ${TARGET_ROOT}/nyquist/tran/instrmodalbar.c
+      ${TARGET_ROOT}/nyquist/tran/instrsax.c
+      ${TARGET_ROOT}/nyquist/tran/instrsaxall.c
+      ${TARGET_ROOT}/nyquist/tran/instrsaxfreq.c
+      ${TARGET_ROOT}/nyquist/tran/instrsitar.c
+      ${TARGET_ROOT}/nyquist/tran/integrate.c
+      ${TARGET_ROOT}/nyquist/tran/log.c
+      ${TARGET_ROOT}/nyquist/tran/lpreson.c
+      ${TARGET_ROOT}/nyquist/tran/maxv.c
+      ${TARGET_ROOT}/nyquist/tran/offset.c
+      ${TARGET_ROOT}/nyquist/tran/oneshot.c
+      ${TARGET_ROOT}/nyquist/tran/osc.c
+      ${TARGET_ROOT}/nyquist/tran/partial.c
+      ${TARGET_ROOT}/nyquist/tran/pluck.c
+      ${TARGET_ROOT}/nyquist/tran/prod.c
+      ${TARGET_ROOT}/nyquist/tran/pwl.c
+      ${TARGET_ROOT}/nyquist/tran/quantize.c
+      ${TARGET_ROOT}/nyquist/tran/recip.c
+      ${TARGET_ROOT}/nyquist/tran/reson.c
+      ${TARGET_ROOT}/nyquist/tran/resoncv.c
+      ${TARGET_ROOT}/nyquist/tran/resonvc.c
+      ${TARGET_ROOT}/nyquist/tran/resonvv.c
+      ${TARGET_ROOT}/nyquist/tran/sampler.c
+      ${TARGET_ROOT}/nyquist/tran/scale.c
+      ${TARGET_ROOT}/nyquist/tran/shape.c
+      ${TARGET_ROOT}/nyquist/tran/sine.c
+      ${TARGET_ROOT}/nyquist/tran/siosc.c
+      ${TARGET_ROOT}/nyquist/tran/slope.c
+      ${TARGET_ROOT}/nyquist/tran/sqrt.c
+      ${TARGET_ROOT}/nyquist/tran/stkchorus.c
+      ${TARGET_ROOT}/nyquist/tran/stkpitshift.c
+      ${TARGET_ROOT}/nyquist/tran/stkrev.c
+      ${TARGET_ROOT}/nyquist/tran/tapf.c
+      ${TARGET_ROOT}/nyquist/tran/tapv.c
+      ${TARGET_ROOT}/nyquist/tran/tone.c
+      ${TARGET_ROOT}/nyquist/tran/tonev.c
+      ${TARGET_ROOT}/nyquist/tran/upsample.c
+      ${TARGET_ROOT}/nyquist/tran/white.c
+
+      # libnyquist/nyquist/xlisp
+
+      ${TARGET_ROOT}/nyquist/xlisp/extern.c
+      ${TARGET_ROOT}/nyquist/xlisp/path.c
+      ${TARGET_ROOT}/nyquist/xlisp/security.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlbfun.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlcont.c
+      ${TARGET_ROOT}/nyquist/xlisp/xldbug.c
+      ${TARGET_ROOT}/nyquist/xlisp/xldmem.c
+      ${TARGET_ROOT}/nyquist/xlisp/xleval.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlfio.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlftab.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlglob.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlimage.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlinit.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlio.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlisp.c
+      ${TARGET_ROOT}/nyquist/xlisp/xljump.c
+      ${TARGET_ROOT}/nyquist/xlisp/xllist.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlmath.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlobj.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlpp.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlprin.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlread.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlstr.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlsubr.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlsym.c
+      ${TARGET_ROOT}/nyquist/xlisp/xlsys.c
 )
 
-target_link_libraries( ${TARGET} )
+list( APPEND INCLUDES
+   PRIVATE
+      ${TARGET_ROOT}/nyquist/cmt
+      ${TARGET_ROOT}/nyquist/cmupv/src
+      ${TARGET_ROOT}/nyquist/ffts/src
+      ${TARGET_ROOT}/nyquist/nyqsrc
+      ${TARGET_ROOT}/nyquist/nyqstk
+      ${TARGET_ROOT}/nyquist/nyqstk/include
+      ${TARGET_ROOT}/nyquist/tran
+      ${TARGET_ROOT}/nyquist/xlisp
 
+      $<$<PLATFORM_ID:Darwin>:${TARGET_ROOT}/nyquist/sys/unix>
+      $<$<PLATFORM_ID:Linux>:${TARGET_ROOT}/nyquist/sys/unix>
+      $<$<PLATFORM_ID:Windows>:${TARGET_ROOT}/nyquist/sys/win/msvc>
 
+   PUBLIC
+      ${TARGET_ROOT}
+)
+
+list( APPEND DEFINES
+   PRIVATE
+      CMTSTUFF
+      EXT
+      $<$<PLATFORM_ID:Windows>:_LIB WIN32 D_LIB>
+)
+
+list( APPEND OPTIONS
+   PRIVATE
+      $<$<PLATFORM_ID:Darwin>:-fno-common>
+)
+
+list( APPEND LIBRARIES
+   PRIVATE
+      portaudio-v19
+      libsndfile
+)
+
+organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
+target_sources( ${TARGET} PRIVATE ${SOURCES} )
+target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
+target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 

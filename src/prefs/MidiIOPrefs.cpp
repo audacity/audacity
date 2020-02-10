@@ -303,12 +303,16 @@ bool MidiIOPrefs::Validate()
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 namespace{
-PrefsPanel::Registration sAttachment{ 40,
+PrefsPanel::Registration sAttachment{ "MidiIO",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew MidiIOPrefs(parent, winid);
-   }
+   },
+   false,
+   // Register with an explicit ordering hint because this one is
+   // only conditionally compiled
+   { "", { Registry::OrderingHint::After, "Recording" } }
 };
 }
 #endif

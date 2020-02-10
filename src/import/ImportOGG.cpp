@@ -91,8 +91,6 @@ public:
    TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(
       const FilePath &Filename, AudacityProject*) override;
-
-   unsigned SequenceNumber() const override;
 };
 
 
@@ -215,12 +213,7 @@ std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(
    return std::make_unique<OggImportFileHandle>(filename, std::move(file), std::move(vorbisFile));
 }
 
-unsigned OggImportPlugin::SequenceNumber() const
-{
-   return 20;
-}
-
-static Importer::RegisteredImportPlugin registered{
+static Importer::RegisteredImportPlugin registered{ "OGG",
    std::make_unique< OggImportPlugin >()
 };
 

@@ -21,41 +21,40 @@ bool TimeSelectedPred( const AudacityProject &project );
 extern const CommandFlagOptions &cutCopyOptions();
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
-   AudioIONotBusyFlag,
-   StereoRequiredFlag,  //lda
-   NoiseReductionTimeSelectedFlag,
-   TimeSelectedFlag, // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
-   WaveTracksSelectedFlag,
-   TracksExistFlag,
-   TracksSelectedFlag,
-   AnyTracksSelectedFlag,
-   TrackPanelHasFocus;  //lll
+   &AudioIONotBusyFlag(),
+   &StereoRequiredFlag(),  //lda
+   &NoiseReductionTimeSelectedFlag(),
+   &TimeSelectedFlag(), // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
+   &WaveTracksSelectedFlag(),
+   &TracksExistFlag(),
+   &TracksSelectedFlag(),
+   &AnyTracksSelectedFlag(),
+   &TrackPanelHasFocus();  //lll
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
-   AudioIOBusyFlag, // lll
-   CaptureNotBusyFlag;
+   &AudioIOBusyFlag(), // lll
+   &CaptureNotBusyFlag();
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
-   LabelTracksExistFlag,
-   UnsavedChangesFlag,
-   HasLastEffectFlag,
-   UndoAvailableFlag,
-   RedoAvailableFlag,
-   ZoomInAvailableFlag,
-   ZoomOutAvailableFlag,
-   LabelsSelectedFlag,
-   PlayRegionLockedFlag,  //msmeyer
-   PlayRegionNotLockedFlag,  //msmeyer
-   WaveTracksExistFlag,
-   NoteTracksExistFlag,  //gsw
-   NoteTracksSelectedFlag,  //gsw
-   IsNotSyncLockedFlag,  //awd
-   IsSyncLockedFlag,  //awd
-   NotMinimizedFlag, // prl
-   PausedFlag, // jkc
-   PlayableTracksExistFlag,
-   AudioTracksSelectedFlag,
-   NoAutoSelect // jkc
+   &LabelTracksExistFlag(),
+   &UnsavedChangesFlag(),
+   &HasLastEffectFlag(),
+   &UndoAvailableFlag(),
+   &RedoAvailableFlag(),
+   &ZoomInAvailableFlag(),
+   &ZoomOutAvailableFlag(),
+   &PlayRegionLockedFlag(),  //msmeyer
+   &PlayRegionNotLockedFlag(),  //msmeyer
+   &WaveTracksExistFlag(),
+   &NoteTracksExistFlag(),  //gsw
+   &NoteTracksSelectedFlag(),  //gsw
+   &IsNotSyncLockedFlag(),  //awd
+   &IsSyncLockedFlag(),  //awd
+   &NotMinimizedFlag(), // prl
+   &PausedFlag(), // jkc
+   &PlayableTracksExistFlag(),
+   &AudioTracksSelectedFlag(),
+   &NoAutoSelect() // jkc
 ;
 
 #endif

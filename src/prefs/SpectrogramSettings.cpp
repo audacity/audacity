@@ -19,7 +19,6 @@ Paul Licameli
 #include "../Experimental.h"
 
 #include "../NumberScale.h"
-#include "../TranslatableStringArray.h"
 
 #include <algorithm>
 
@@ -140,9 +139,9 @@ SpectrogramSettings& SpectrogramSettings::defaults()
 }
 
 //static
-const TranslatableStrings &SpectrogramSettings::GetScaleNames()
+const EnumValueSymbols &SpectrogramSettings::GetScaleNames()
 {
-   static const TranslatableStrings result{
+   static const EnumValueSymbols result{
       // Keep in correspondence with enum SpectrogramSettings::ScaleType:
       XO("Linear") ,
       XO("Logarithmic") ,

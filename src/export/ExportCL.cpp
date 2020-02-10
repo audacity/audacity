@@ -310,8 +310,6 @@ public:
                MixerSpec *mixerSpec = NULL,
                const Tags *metadata = NULL,
                int subformat = 0) override;
-
-   virtual unsigned SequenceNumber() const override { return 60; }
 };
 
 ExportCL::ExportCL()
@@ -567,5 +565,6 @@ void ExportCL::OptionsCreate(ShuttleGui &S, int format)
    S.AddWindow( safenew ExportCLOptions{ S.GetParent(), format } );
 }
 
-static Exporter::RegisteredExportPlugin
-sRegisteredPlugin{ []{ return std::make_unique< ExportCL >(); } };
+static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "CommandLine",
+   []{ return std::make_unique< ExportCL >(); }
+};

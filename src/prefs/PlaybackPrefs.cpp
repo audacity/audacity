@@ -183,7 +183,7 @@ bool PlaybackPrefs::Commit()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 20,
+PrefsPanel::Registration sAttachment{ "Playback",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew

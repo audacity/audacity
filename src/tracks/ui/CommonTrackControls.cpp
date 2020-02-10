@@ -80,7 +80,9 @@ enum
 
 class TrackMenuTable : public PopupMenuTable
 {
-   TrackMenuTable() : mpData(NULL) {}
+   TrackMenuTable()
+      : PopupMenuTable{ "Track" }
+   {}
    DECLARE_POPUP_MENU(TrackMenuTable);
 
 public:
@@ -91,14 +93,13 @@ private:
    void OnMoveTrack(wxCommandEvent &event);
 
    void InitUserData(void *pUserData) override;
-   void InitMenu(Menu *pMenu) override;
 
    void DestroyMenu() override
    {
       mpData = nullptr;
    }
 
-   CommonTrackControls::InitMenuData *mpData;
+   CommonTrackControls::InitMenuData *mpData{};
 };
 
 TrackMenuTable &TrackMenuTable::Instance()
@@ -112,64 +113,65 @@ void TrackMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
 }
 
-void TrackMenuTable::InitMenu(Menu *pMenu)
-{
-   Track *const pTrack = mpData->pTrack;
-
-   const auto &tracks = TrackList::Get( mpData->project );
-
-   pMenu->Enable(OnMoveUpID, tracks.CanMoveUp(pTrack));
-   pMenu->Enable(OnMoveDownID, tracks.CanMoveDown(pTrack));
-   pMenu->Enable(OnMoveTopID, tracks.CanMoveUp(pTrack));
-   pMenu->Enable(OnMoveBottomID, tracks.CanMoveDown(pTrack));
-}
-
 BEGIN_POPUP_MENU(TrackMenuTable)
-   POPUP_MENU_ITEM(OnSetNameID, XO("&Name..."), OnSetName)
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(
-      // It is not correct to use NormalizedKeyString::Display here --
-      // wxWidgets will apply its equivalent to the key names passed to menu
-      // functions.
-      OnMoveUpID,
-      XO("Move Track &Up").Join(
-         Verbatim(
-            CommandManager::Get( mpData->project ).
-                // using GET to compose menu item name for wxWidgets
-                GetKeyFromName(wxT("TrackMoveUp")).GET() ),
-          wxT("\t")
-      ),
-      OnMoveTrack)
-   POPUP_MENU_ITEM(
-      OnMoveDownID,
-      XO("Move Track &Down").Join(
-         Verbatim(
-            CommandManager::Get( mpData->project ).
-               // using GET to compose menu item name for wxWidgets
-               GetKeyFromName(wxT("TrackMoveDown")).GET() ),
-          wxT("\t")
-      ),
-      OnMoveTrack)
-   POPUP_MENU_ITEM(
-      OnMoveTopID,
-      XO("Move Track to &Top").Join(
-         Verbatim(
-            CommandManager::Get( mpData->project ).
-                // using GET to compose menu item name for wxWidgets
-                GetKeyFromName(wxT("TrackMoveTop")).GET() ),
-          wxT("\t")
-      ),
-      OnMoveTrack)
-   POPUP_MENU_ITEM(
-      OnMoveBottomID,
-      XO("Move Track to &Bottom").Join(
-         Verbatim(
-            CommandManager::Get( mpData->project ).
-               // using GET to compose menu item name for wxWidgets
-               GetKeyFromName(wxT("TrackMoveBottom")).GET() ),
-          wxT("\t")
-      ),
-      OnMoveTrack)
+   static const auto enableIfCanMove = [](bool up){ return
+      [up]( PopupMenuHandler &handler, wxMenu &menu, int id ){
+         auto pData = static_cast<TrackMenuTable&>( handler ).mpData;
+         const auto &tracks = TrackList::Get( pData->project );
+         Track *const pTrack = pData->pTrack;
+         menu.Enable( id,
+            up ? tracks.CanMoveUp(pTrack) : tracks.CanMoveDown(pTrack) );
+      };
+   };
+
+   BeginSection( "Basic" );
+      AppendItem( "Name", OnSetNameID, XO("&Name..."), POPUP_MENU_FN( OnSetName ) );
+   EndSection();
+   BeginSection( "Move" );
+      AppendItem( "Up",
+         // It is not correct to use NormalizedKeyString::Display here --
+         // wxWidgets will apply its equivalent to the key names passed to menu
+         // functions.
+         OnMoveUpID,
+         XO("Move Track &Up").Join(
+            Verbatim(
+               CommandManager::Get( mpData->project ).
+                   // using GET to compose menu item name for wxWidgets
+                   GetKeyFromName(wxT("TrackMoveUp")).GET() ),
+             wxT("\t")
+         ),
+         POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(true) );
+      AppendItem( "Down",
+         OnMoveDownID,
+         XO("Move Track &Down").Join(
+            Verbatim(
+               CommandManager::Get( mpData->project ).
+                  // using GET to compose menu item name for wxWidgets
+                  GetKeyFromName(wxT("TrackMoveDown")).GET() ),
+             wxT("\t")
+         ),
+         POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(false) );
+      AppendItem( "Top",
+         OnMoveTopID,
+         XO("Move Track to &Top").Join(
+            Verbatim(
+               CommandManager::Get( mpData->project ).
+                   // using GET to compose menu item name for wxWidgets
+                   GetKeyFromName(wxT("TrackMoveTop")).GET() ),
+             wxT("\t")
+         ),
+         POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(true) );
+      AppendItem( "Bottom",
+         OnMoveBottomID,
+         XO("Move Track to &Bottom").Join(
+            Verbatim(
+               CommandManager::Get( mpData->project ).
+                  // using GET to compose menu item name for wxWidgets
+                  GetKeyFromName(wxT("TrackMoveBottom")).GET() ),
+             wxT("\t")
+         ),
+         POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(false) );
+   EndSection();
 END_POPUP_MENU()
 
 
@@ -282,7 +284,7 @@ unsigned CommonTrackControls::DoContextMenu(
 
    PopupMenuTable *const pExtension = GetMenuExtension(track.get());
    if (pExtension)
-      pMenu->Extend(pExtension);
+      PopupMenuTable::ExtendMenu( *pMenu, *pExtension );
 
    pParent->PopupMenu
       (pMenu.get(), buttonRect.x + 1, buttonRect.y + buttonRect.height + 1);

@@ -182,6 +182,9 @@ bool LV2EffectsModule::Initialize()
    newVar += wxT(":/usr/local/lib/lv2");
    newVar += wxT(":/usr/lib/lv2");
    newVar += wxT(":") + libdir.GetPath();
+
+   // Tell SUIL where to find his GUI support modules
+   wxSetEnv(wxT("SUIL_MODULE_DIR"), wxT(PKGLIBDIR));
 #endif
 
    // Start with the LV2_PATH environment variable (if any)

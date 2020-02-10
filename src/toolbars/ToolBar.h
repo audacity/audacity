@@ -68,7 +68,6 @@ enum
 {
    NoBarID = -1,
    TransportBarID,
-   TimerBarID,
    ToolsBarID,
    MeterBarID,
    RecordMeterBarID,
@@ -82,6 +81,7 @@ enum
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBarID,
 #endif
+   TimeBarID,
    ToolBarCount
 };
 
@@ -106,7 +106,7 @@ class ToolBar /* not final */
 
    bool AcceptsFocus() const override { return false; };
 
-   void SetToDefaultSize();
+   virtual void SetToDefaultSize();
    //NEW virtuals:
    virtual void Create(wxWindow *parent);
    virtual void EnableDisableButtons() = 0;
@@ -141,6 +141,10 @@ public:
    virtual int GetInitialWidth() { return -1; }
    virtual int GetMinToolbarWidth() { return GetInitialWidth(); }
    virtual wxSize GetDockedSize() { return GetMinSize(); }
+   
+   // Utility function for certain resizable toolbars.
+   // Allows them to dock at normal or double size.
+   wxSize GetSmartDockedSize();
 
  public:
    static

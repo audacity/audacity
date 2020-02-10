@@ -216,8 +216,10 @@ void SelectionBar::Populate()
    AddVLine( mainSizer );
    AddTitle( _("Snap-To"), mainSizer );
    AddVLine( mainSizer );
+#ifdef TIME_IN_SELECT_TOOLBAR
    AddTitle( _("Audio Position"), mainSizer );
    AddVLine( mainSizer );
+#endif
 
    {
       const wxString choices[4] = {
@@ -328,6 +330,7 @@ void SelectionBar::Populate()
 
    AddVLine( mainSizer );
 
+#ifdef TIME_IN_SELECT_TOOLBAR
    mAudioTime = AddTime( XO("Audio Position"), AudioTimeID, mainSizer );
    // This vertical line is NOT just for decoration!
    // It works around a wxWidgets-on-Windows RadioButton bug, where tabbing
@@ -338,6 +341,7 @@ void SelectionBar::Populate()
    // More about the bug here:
    // https://forums.wxwidgets.org/viewtopic.php?t=41120
    AddVLine( mainSizer );
+#endif
 
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
@@ -543,10 +547,12 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    auto format = mStartTime->GetBuiltinFormat(index);
    for( i=0;i<5;i++)
-      (*Ctrls[i])->SetFormatString( format );
+      if( *Ctrls[i] )
+         (*Ctrls[i])->SetFormatString( format );
 
    if( iFocus >=0 )
-      (*Ctrls[iFocus])->SetFocus();
+      if( *Ctrls[iFocus] )
+         (*Ctrls[iFocus])->SetFocus();
    Updated();
 }
 

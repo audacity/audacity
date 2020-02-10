@@ -156,7 +156,7 @@ jobs:
         set -x
 
         # Setup environment
-        sudo apt-get install -y libgtk2.0-dev libasound2-dev autoconf automake zip
+        sudo apt-get install -y libgtk2.0-dev libasound2-dev autoconf automake autogen zip
 
         # Identify wxWidgets installation directory
         WXROOT="${GITHUB_WORKSPACE}/wxroot"

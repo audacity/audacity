@@ -99,12 +99,16 @@ bool ProjectsPrefs::Commit()
 
 #ifdef EXPERIMENTAL_OD_DATA
 namespace{
-PrefsPanel::Registration sAttachment{ 130,
+PrefsPanel::Registration sAttachment{ "Projects",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew ProjectsPrefs(parent, winid);
-   }
+   },
+   false,
+   // Register with an explicit ordering hint because this one is
+   // only conditionally compiled
+   { "", { Registry::OrderingHint::After, "ImportExport" } }
 };
 }
 #endif

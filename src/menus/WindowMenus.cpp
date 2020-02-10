@@ -116,60 +116,69 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& WindowActions::Handler :: X)
+#define FN(X) (& WindowActions::Handler :: X)
 
-MenuTable::BaseItemPtr WindowMenu( AudacityProject & )
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr WindowMenu()
 {
       //////////////////////////////////////////////////////////////////////////
       // poor imitation of the Mac Windows Menu
       //////////////////////////////////////////////////////////////////////////
-   using namespace MenuTable;
-   return Menu( XO("&Window"),
-      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
-       * window) shrink to an icon on the dock */
-      Command( wxT("MacMinimize"), XXO("&Minimize"), FN(OnMacMinimize),
-         NotMinimizedFlag, wxT("Ctrl+M") ),
-      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
-       * window) full sized */
-      Command( wxT("MacZoom"), XXO("&Zoom"),
-         FN(OnMacZoom), NotMinimizedFlag ),
+   static BaseItemSharedPtr menu{
+   ( FinderScope{ findCommandHandler },
+   Menu( wxT("Window"), XO("&Window"),
+      Section( "",
+         /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
+          * window) shrink to an icon on the dock */
+         Command( wxT("MacMinimize"), XXO("&Minimize"), FN(OnMacMinimize),
+            NotMinimizedFlag(), wxT("Ctrl+M") ),
+         /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
+          * window) full sized */
+         Command( wxT("MacZoom"), XXO("&Zoom"),
+            FN(OnMacZoom), NotMinimizedFlag() )
+      ),
 
-      Separator(),
-
-      /* i18n-hint: Standard Macintosh Window menu item:  Make all project
-       * windows un-hidden */
-      Command( wxT("MacBringAllToFront"), XXO("&Bring All to Front"),
-         FN(OnMacBringAllToFront), AlwaysEnabledFlag )
-   );
+      Section( "",
+         /* i18n-hint: Standard Macintosh Window menu item:  Make all project
+          * windows un-hidden */
+         Command( wxT("MacBringAllToFront"), XXO("&Bring All to Front"),
+            FN(OnMacBringAllToFront), AlwaysEnabledFlag )
+      )
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ExtraWindowItems( AudacityProject & )
-{
-   using namespace MenuTable;
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( WindowMenu() )
+};
 
-   return Items(
+BaseItemSharedPtr ExtraWindowItems()
+{
+   static BaseItemSharedPtr items{
+   ( FinderScope{ findCommandHandler },
+   Items( wxT("MacWindows"),
       /* i18n-hint: Shrink all project windows to icons on the Macintosh
          tooldock */
       Command( wxT("MacMinimizeAll"), XXO("Minimize All Projects"),
          FN(OnMacMinimizeAll),
          AlwaysEnabledFlag, wxT("Ctrl+Alt+M") )
-   );
+   ) ) };
+   return items;
+}
+
+AttachedItem sAttachment2{
+   Placement{ wxT("Optional/Extra/Part2/Misc"), OrderingHint::End },
+   Shared( ExtraWindowItems() )
+};
+
 }
 
 #undef FN
 
 #else
 
-// Not WXMAC.  Stub functions.
-MenuTable::BaseItemPtr WindowMenu( AudacityProject & )
-{
-   return nullptr;
-}
-
-MenuTable::BaseItemPtr ExtraWindowItems( AudacityProject & )
-{
-   return nullptr;
-}
+// Not WXMAC.
 
 #endif

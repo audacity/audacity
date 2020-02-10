@@ -15,6 +15,10 @@
 
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wparentheses"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(__clang__)
+#pragma clang diagnostic ignored "-Wparentheses"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 #include "LV2Effect.h"
@@ -65,10 +69,6 @@
 
 #if defined(__WXMSW__)
 #include <wx/msw/wrapwin.h>
-#endif
-
-#if defined(__WXMAC__)
-#include <AppKit/AppKit.h>
 #endif
 
 // Define a maximum block size in number of samples (not bytes)
@@ -1548,8 +1548,9 @@ void LV2Effect::SetHostUI(EffectUIHostInterface *host)
    mUIHost = host;
 }
 
-bool LV2Effect::PopulateUI(wxWindow *parent)
+bool LV2Effect::PopulateUI(ShuttleGui &S)
 {
+   auto parent = S.GetParent();
    mParent = parent;
 
    mParent->PushEventHandler(this);
@@ -2227,8 +2228,11 @@ bool LV2Effect::BuildFancy()
       g_signal_connect(widget, "size-request", G_CALLBACK(LV2Effect::size_request), this);
 #endif
 
-      mNativeWin = new NativeWindow();
-      mNativeWin->Create(mParent, widget);
+      Destroy_ptr< NativeWindow > uNativeWin{ safenew NativeWindow() };
+      if ( !uNativeWin->Create(mParent, widget) )
+         return false;
+      mNativeWin = uNativeWin.release();
+
       mNativeWin->Bind(wxEVT_SIZE, &LV2Effect::OnSize, this);
 
       // The plugin called the LV2UI_Resize::ui_resize function to set the size before
@@ -2954,7 +2958,8 @@ LV2_URID LV2Effect::Lookup_URI(URIDMap & map, const char *uri, bool add)
 
    if (add)
    {
-      map.push_back(MallocString<>(strdup(uri)));
+      // Almost all compilers have strdup(), but VC++ and MinGW call it _strdup().
+      map.push_back(MallocString<>(wxCRT_StrdupA(uri)));
       return ndx + 1;
    }
 
@@ -3246,7 +3251,7 @@ void LV2Effect::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
       }
       // Otherwise, the plugin has resized the widget and we need to let WX know
       // about it.
-      else
+      else if (mNativeWin)
       {
          mResized = true;
          wxSizeEvent se(wxSize(requisition->width, requisition->height));

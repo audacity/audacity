@@ -133,8 +133,13 @@ unsigned EffectDtmf::GetAudioOutCount()
 
 bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
 {
-   if (dtmfNTones <= 0)   // Bail if no DTFM sequence.
+   if (dtmfNTones <= 0) {   // Bail if no DTFM sequence.
+      ::Effect::MessageBox(
+               XO("DTMF sequence empty.\nCheck ALL settings for this effect."),
+         wxICON_ERROR );
+
       return false;
+   }
    double duration = GetDuration();
 
    // all dtmf sequence durations in samples from seconds

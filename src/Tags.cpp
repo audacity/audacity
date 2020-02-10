@@ -48,7 +48,6 @@
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
 #include "ShuttleGui.h"
-#include "TranslatableStringArray.h"
 #include "widgets/Grid.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/HelpSystem.h"

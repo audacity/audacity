@@ -143,7 +143,8 @@ CONFIG_HEADER = $(top_builddir)/src/configwin.h \
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(docdir)" \
-	"$(DESTDIR)$(pkgdatadir)" "$(DESTDIR)$(pkgdatadir)"
+	"$(DESTDIR)$(pkgdatadir)" "$(DESTDIR)$(pkgdatadir)" \
+	"$(DESTDIR)$(suillibdir)"
 PROGRAMS = $(bin_PROGRAMS)
 audacity_SOURCES = audacity.c
 audacity_OBJECTS = audacity.$(OBJEXT)
@@ -230,7 +231,7 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 DATA = $(dist_doc_DATA) $(dist_pkgdata_DATA) \
-	$(nobase_dist_pkgdata_DATA)
+	$(nobase_dist_pkgdata_DATA) $(suillib_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 am__recursive_targets = \
@@ -525,6 +526,8 @@ ACLOCAL_AMFLAGS = -I m4
 bin_PROGRAMS = audacity$(EXEEXT)
 dist_doc_DATA = LICENSE.txt README.txt
 dist_pkgdata_DATA = presets/EQDefaultCurves.xml
+suillibdir = $(pkglibdir)
+suillib_DATA = $(shell find lib-src/lv2/build -name \*.so)
 nobase_dist_pkgdata_DATA = \
    include/audacity/ComponentInterface.h \
    include/audacity/ConfigInterface.h \
@@ -747,6 +750,27 @@ uninstall-nobase_dist_pkgdataDATA:
 	@list='$(nobase_dist_pkgdata_DATA)'; test -n "$(pkgdatadir)" || list=; \
 	$(am__nobase_strip_setup); files=`$(am__nobase_strip)`; \
 	dir='$(DESTDIR)$(pkgdatadir)'; $(am__uninstall_files_from_dir)
+install-suillibDATA: $(suillib_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(suillib_DATA)'; test -n "$(suillibdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(suillibdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(suillibdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(suillibdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(suillibdir)" || exit $$?; \
+	done
+
+uninstall-suillibDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(suillib_DATA)'; test -n "$(suillibdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(suillibdir)'; $(am__uninstall_files_from_dir)
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run 'make' without going through this Makefile.
@@ -1049,7 +1073,7 @@ check: check-recursive
 all-am: Makefile $(PROGRAMS) $(DATA)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(pkgdatadir)" "$(DESTDIR)$(pkgdatadir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(pkgdatadir)" "$(DESTDIR)$(pkgdatadir)" "$(DESTDIR)$(suillibdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -1107,7 +1131,7 @@ info: info-recursive
 info-am:
 
 install-data-am: install-dist_docDATA install-dist_pkgdataDATA \
-	install-nobase_dist_pkgdataDATA
+	install-nobase_dist_pkgdataDATA install-suillibDATA
 
 install-dvi: install-dvi-recursive
 
@@ -1156,7 +1180,8 @@ ps: ps-recursive
 ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-dist_docDATA \
-	uninstall-dist_pkgdataDATA uninstall-nobase_dist_pkgdataDATA
+	uninstall-dist_pkgdataDATA uninstall-nobase_dist_pkgdataDATA \
+	uninstall-suillibDATA
 
 .MAKE: $(am__recursive_targets) install-am install-strip
 
@@ -1174,12 +1199,13 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_docDATA \
 	install-html install-html-am install-info install-info-am \
 	install-man install-nobase_dist_pkgdataDATA install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am \
-	uninstall-binPROGRAMS uninstall-dist_docDATA \
-	uninstall-dist_pkgdataDATA uninstall-nobase_dist_pkgdataDATA
+	install-suillibDATA installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-binPROGRAMS uninstall-dist_docDATA \
+	uninstall-dist_pkgdataDATA uninstall-nobase_dist_pkgdataDATA \
+	uninstall-suillibDATA
 
 .PRECIOUS: Makefile
 

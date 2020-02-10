@@ -774,43 +774,6 @@ IMPLEMENT_WX_THEME_SUPPORT
 
 int main(int argc, char *argv[])
 {
-   // Give the user more control over where libraries such as FFmpeg get loaded from.
-   //
-   // Since absolute pathnames are used when loading these libraries, the normal search
-   // path would be DYLD_LIBRARY_PATH, absolute path, DYLD_FALLBACK_LIBRARY_PATH.  This
-   // means that DYLD_LIBRARY_PATH can override what the user actually wants.
-   //
-   // So, we move DYLD_LIBRARY_PATH values to the beginning of DYLD_FALLBACK_LIBRARY_PATH
-   // and clear DYLD_LIBRARY_PATH, allowing the users choice to be the first one tried.
-   extern char **environ;
-
-   char *dyld_library_path = getenv("DYLD_LIBRARY_PATH");
-   if (dyld_library_path)
-   {
-      size_t len = strlen(dyld_library_path);
-      if (len)
-      {
-         std::string fallback(dyld_library_path);
-
-         char *dyld_fallback_library_path = getenv("DYLD_FALLBACK_LIBRARY_PATH");
-         if (dyld_fallback_library_path)
-         {
-            size_t fallback_len = strlen(dyld_fallback_library_path);
-            if (fallback_len)
-            {
-               fallback.push_back(':');
-               fallback.append(dyld_fallback_library_path);
-            }
-         }
-
-         fallback.append(":/usr/local/lib:/usr/lib");
-
-         setenv("DYLD_FALLBACK_LIBRARY_PATH", &fallback.front(), 1);
-         unsetenv("DYLD_LIBRARY_PATH");
-         execve(argv[0], argv, environ);
-      }
-   }
-
    wxDISABLE_DEBUG_SUPPORT();
 
    return wxEntry(argc, argv);

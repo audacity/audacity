@@ -185,8 +185,6 @@ public:
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(
       const FilePath &Filename, AudacityProject*) override;
-   
-   unsigned SequenceNumber() const override;
 };
 
 ///! Does acual import, returned by FFmpegImportPlugin::Open
@@ -335,12 +333,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(
    return std::move(handle);
 }
 
-unsigned FFmpegImportPlugin::SequenceNumber() const
-{
-   return 60;
-}
-
-static Importer::RegisteredImportPlugin registered{
+static Importer::RegisteredImportPlugin registered{ "FFmpeg",
    std::make_unique< FFmpegImportPlugin >()
 };
 

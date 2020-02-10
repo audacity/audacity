@@ -41,7 +41,7 @@ AC_CONFIG_AUX_DIR([autotools])
 dnl we have some extra macros in m4/
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([1.9 dist-xz foreign no-dist-gzip subdir-objects -Wall -Wno-override tar-ustar])
+AM_INIT_AUTOMAKE([1.9 dist-xz foreign no-dist-gzip subdir-objects -Wall -Wno-override -Wno-portability tar-ustar])
 AM_MAINTAINER_MODE([disable])
 
 AM_GNU_GETTEXT_VERSION([0.18])
@@ -680,6 +680,8 @@ dnl Check for lrint/lrintf
 AC_C99_FUNC_LRINT
 AC_C99_FUNC_LRINTF
 
+dnl Check for memory locking
+AC_CHECK_FUNCS_ONCE(mlock)
 
 if [[ "$use_ladspa" = "yes" ]] ; then
    AC_DEFINE(USE_LADSPA, 1,

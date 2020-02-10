@@ -1,39 +1,19 @@
-Instructions for building on Mac
+Instructions for building on macOS.
 
-At this time, Audacity is usually built with the 10.7 SDK.  This is to give
-compatibility with older versions of MacOSX.
-To build Audacity using Xcode 5.1 or newer, you need to extract the 10.7 SDK
-from an earlier version of Xcode.
+Building on macOS has been made much simpler with the Audacity 2.4.0 release. Still,
+read this document throughly before starting.
 
-In the instructions below, Xcode 4.3.3 (for the 10.7 SDK) and Xcode 8.1 will
-be used and can be downloaded from https://developer.apple.com/download/more/ 
-(requires Apple ID to login).
+1) Get and install the Xcode version that is for your macOS version. 
 
-Fuller instructions that include 
-   * Using other Xcodes
-   * Optional signing of DMGs
-can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
+      MacOS                   Xcode Version
+      Catalina - 10.15        11.3
+      Mojave - 10.14          10.3
+      High Sierra - 10.13     9.4.1
+      Sierra - 10.12          9.2
+      El Capitan - 10.11      8.2.1
+      Yosemite - 10.10        7.2.1
 
-1) Download Xcode 8.1 and install it to /Applications.
-2) Download Xcode 4.3.3 (it includes the 10.6 and 10.7 SDK's despite 
-   the downloads page says it only has the 10.7 SDK).
-3) Open the DMG in Finder.
-4) Right-click the "Xcode.app" bundle and select "Show Package Contents".
-5) Navigate down the directories to get to:
-
-   Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/ .
-
-6) Copy the MacOSX10.7.sdk folder to:
-
-   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-
-7) Change the MinimumSDKVersion key value in 
-   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist 
-   to 10.7
-
-   Xcode is now ready.
-
-8) Clone wxWidgets 3.1.1
+2) Clone wxWidgets 3.1.1
 
    git clone --recurse-submodules https://github.com/audacity/wxWidgets.git
 
@@ -51,55 +31,45 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
 
    git checkout audacity-fixes-3.1.1
 
-9) Change directory to the folder wxWidgets was cloned to then build/install 
-    wxWidgets:
+3) Change directory to the folder wxWidgets was cloned to then build/install 
+   wxWidgets:
 
    sudo <path to Audacity source>/mac/scripts/build_wxwidgets
 
-Check that this worked by looking for <path to wxWidgets>/bld_release_x86_64 
-containing library .o files.  There should also be 3 other directories for
-other combinations of debug/release i386/x86_64.  If this step did not work,
-then later steps to build Audacity won't either.
+   Check that this worked by looking for <path to wxWidgets>/bld_release_x86_64 
+   containing library .o files.  There should also be 3 other directories for
+   other combinations of debug/release i386/x86_64.  If this step did not work,
+   then later steps to build Audacity won't either.
 
-If building wxWidgets worked, you should now be able to build Audacity 
-using either the Xcode application or the Xcodebuild command line tool. 
+   If building wxWidgets worked, you should now be able to build Audacity 
+   using either the Xcode application or the Xcodebuild command line tool. 
 
-* Change directory to <path to Audacity source>/mac
-* Optionally, if you have built before, clean the Debug build with:
+4) Change directory to <path to Audacity source>/mac
+   * Optionally, if you have built before, clean the Debug build with:
 
-  xcodebuild clean
+      xcodebuild clean
 
-* Or clean up other versions using some variant of:
+   * Or clean up other versions using some variant of:
 
-  xcodebuild clean -configuration Release64
+      xcodebuild clean -configuration Release64
 
-'Release64' is for the 64 bit build.  'Release' is for the 32 bit build.
-'Debug64' is for 64 bit debug build, 'Debug' is for 32 bit debug build.
+         'Release64' is for the 64 bit build. 'Release' is for the 32 bit build.
+         'Debug64' is for 64 bit debug build, 'Debug' is for 32 bit debug build.
   
-* Build Audacity and create DMG and ZIP bundles in 
-  /private/tmp by typing the following in the terminal:
+5) Build Audacity and create DMG and ZIP bundles in 
+   /private/tmp by typing the following in the terminal:
 
-  xcodebuild -configuration Release64 install
+      xcodebuild -configuration Release64 install
 
-If you get errors about 'plist' at this stage, probably you skipped the step 
-of cleaning first.  
+Notes: 
 
-* If you use the Xcode application, don't make any changes to 
-  Audacity.xcodeproj recommended by Xcode. In particular, be sure to leave the
-  Base SDK configuration set to 10.7 as it is now. 
+   - If you get errors about 'plist' at this stage, probably you skipped the step 
+     of cleaning first.  
 
-If you need Audacity to show languages other than English, install the gettext
-suite of tools (to get the msgfmt command).  The source can be downloaded from:
+   - If you use the Xcode application, don't make any changes to Audacity.xcodeproj
+     recommended by Xcode.  
 
-   ftp://ftp.gnu.org/gnu/gettext/gettext-latest.tar.gz
+   - Instructions on optional signing of DMGs, showing languages other than English,
+     and other useful information can be found on our wiki at: 
+     http://wiki.audacityteam.org/wiki/Building_On_Mac
 
-Untar it:
-
-   tar xf gettext-latest.tar.gz
-
-And install:
-
-   cd gexttext-latest
-   ./configure
-   sudo make install
-   

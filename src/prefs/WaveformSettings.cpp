@@ -23,7 +23,6 @@ Paul Licameli
 #include <wx/intl.h>
 
 #include "../Prefs.h"
-#include "../TranslatableStringArray.h"
 
 
 WaveformSettings::Globals::Globals()
@@ -147,9 +146,9 @@ void WaveformSettings::NextHigherDBRange()
 }
 
 //static
-const TranslatableStrings &WaveformSettings::GetScaleNames()
+const EnumValueSymbols &WaveformSettings::GetScaleNames()
 {
-   static const TranslatableStrings result{
+   static const EnumValueSymbols result{
       // Keep in correspondence with ScaleTypeValues:
       XO("Linear"),
       XO("dB"),

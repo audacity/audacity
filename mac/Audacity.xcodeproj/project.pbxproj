@@ -732,7 +732,6 @@
 		2860BA280E0F0DD800A13878 /* ExportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA260E0F0DD800A13878 /* ExportFFmpeg.cpp */; };
 		28624C0F181CE65700E1AD1A /* sratom.h in Headers */ = {isa = PBXBuildFile; fileRef = 286243A0181CE65500E1AD1A /* sratom.h */; };
 		28624C10181CE65700E1AD1A /* sratom.c in Sources */ = {isa = PBXBuildFile; fileRef = 286243A1181CE65500E1AD1A /* sratom.c */; };
-		2872DFEA1B5EEC15004385B1 /* hy.po in Sources */ = {isa = PBXBuildFile; fileRef = 28ECC1911A66CC5000EECC53 /* hy.po */; };
 		287DBE890F3F6B2700C5BBED /* audio_detect.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE830F3F6B2700C5BBED /* audio_detect.c */; };
 		287DBE8A0F3F6B2700C5BBED /* chunk.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE840F3F6B2700C5BBED /* chunk.c */; };
 		287DBE8B0F3F6B2700C5BBED /* ima_oki_adpcm.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE850F3F6B2700C5BBED /* ima_oki_adpcm.c */; };
@@ -828,6 +827,8 @@
 		2897F6F80AB3DB5A003C20C5 /* ToolsToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6EC0AB3DB5A003C20C5 /* ToolsToolBar.cpp */; };
 		2897F6F90AB3DB5A003C20C5 /* TranscriptionToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6EE0AB3DB5A003C20C5 /* TranscriptionToolBar.cpp */; };
 		2897F6FE0AB3DCD0003C20C5 /* Grabber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6FC0AB3DCD0003C20C5 /* Grabber.cpp */; };
+		289A865023E66001006A8CC5 /* Wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 289A864E23E65EAA006A8CC5 /* Wrapper.c */; };
+		289A865323E66478006A8CC5 /* Wrapper in Install wrapper */ = {isa = PBXBuildFile; fileRef = 289A864223E65A3E006A8CC5 /* Wrapper */; };
 		289D127A1B44D57F00B5B6AA /* VSTControlOSX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 289D12791B44D57F00B5B6AA /* VSTControlOSX.mm */; };
 		289E750A1006D0BD00CEF79B /* MixerBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 289E75081006D0BD00CEF79B /* MixerBoard.cpp */; };
 		289F9C7E0AC671BB00797DC1 /* DeviceToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 289F9C7C0AC671BB00797DC1 /* DeviceToolBar.cpp */; };
@@ -1275,7 +1276,6 @@
 		5E36A0AE217FA2430068E082 /* TransportMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A5217FA2430068E082 /* TransportMenus.cpp */; };
 		5E36A0AF217FA2430068E082 /* ViewMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A6217FA2430068E082 /* ViewMenus.cpp */; };
 		5E36A0B0217FA2430068E082 /* WindowMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A7217FA2430068E082 /* WindowMenus.cpp */; };
-		5E36A0B2217FC5A10068E082 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		5E36A0B4217FC6540068E082 /* HelpMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0B3217FC6540068E082 /* HelpMenus.cpp */; };
 		5E3A530822AD277A00C4ADB8 /* ProjectSelectionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E3A530622AD277A00C4ADB8 /* ProjectSelectionManager.cpp */; };
 		5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */; };
@@ -1612,6 +1612,13 @@
 			remoteGlobalIDString = 2862299E181CE4B600E1AD1A;
 			remoteInfo = lv2;
 		};
+		289A864C23E65E25006A8CC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 289A864123E65A3E006A8CC5;
+			remoteInfo = Wrapper;
+		};
 		28D489281B5F061200A2E4DF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1790ABE309883346008A330A /* Project object */;
@@ -1676,6 +1683,17 @@
 			);
 			name = "Install miscellany";
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		289A865223E66456006A8CC5 /* Install wrapper */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				289A865323E66478006A8CC5 /* Wrapper in Install wrapper */,
+			);
+			name = "Install wrapper";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		ED95519E195D956F0027176E /* Install background image */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -2398,7 +2416,6 @@
 		2840CF4B0AEB807E00F49FC3 /* util.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; name = util.c; path = twolame/libtwolame/util.c; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF4C0AEB807E00F49FC3 /* util.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = util.h; path = twolame/libtwolame/util.h; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF840AEB83DB00F49FC3 /* ExportMP2.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportMP2.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		284416391B82D6BC0000574D /* TranslatableStringArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TranslatableStringArray.h; sourceTree = "<group>"; };
 		2844163A1B82D6BC0000574D /* WaveTrackLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackLocation.h; sourceTree = "<group>"; };
 		28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ThemePrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28456AC10A2C180E00C23C1E /* ThemePrefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ThemePrefs.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -2787,6 +2804,8 @@
 		2897F6EF0AB3DB5A003C20C5 /* TranscriptionToolBar.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = TranscriptionToolBar.h; sourceTree = "<group>"; tabWidth = 3; };
 		2897F6FC0AB3DCD0003C20C5 /* Grabber.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Grabber.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2897F6FD0AB3DCD0003C20C5 /* Grabber.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Grabber.h; sourceTree = "<group>"; tabWidth = 3; };
+		289A864223E65A3E006A8CC5 /* Wrapper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Wrapper; sourceTree = BUILT_PRODUCTS_DIR; };
+		289A864E23E65EAA006A8CC5 /* Wrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Wrapper.c; path = mac/Wrapper.c; sourceTree = "<group>"; };
 		289D12771B44D57F00B5B6AA /* VSTControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VSTControl.h; path = VST/VSTControl.h; sourceTree = "<group>"; };
 		289D12781B44D57F00B5B6AA /* VSTControlOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VSTControlOSX.h; path = VST/VSTControlOSX.h; sourceTree = "<group>"; };
 		289D12791B44D57F00B5B6AA /* VSTControlOSX.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = VSTControlOSX.mm; path = VST/VSTControlOSX.mm; sourceTree = "<group>"; };
@@ -4369,9 +4388,10 @@
 			isa = PBXGroup;
 			children = (
 				174F73C8098D516D009CD6E0 /* Resources */,
-				28006FFA132C167600BD34D7 /* Install.txt */,
-				178CF4FF0989541C0056CE58 /* configmac.h */,
 				174F73D7098D51AA009CD6E0 /* Info.plist */,
+				28006FFA132C167600BD34D7 /* Install.txt */,
+				289A864E23E65EAA006A8CC5 /* Wrapper.c */,
+				178CF4FF0989541C0056CE58 /* configmac.h */,
 			);
 			name = mac;
 			path = ..;
@@ -4424,6 +4444,7 @@
 				28FADDEF1833C3C500BA4141 /* libexpat.a */,
 				65326E9E2253D2BE00844F28 /* libmp3lame.a */,
 				65326EA72253D68900844F28 /* libmpg123.a */,
+				289A864223E65A3E006A8CC5 /* Wrapper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4687,7 +4708,6 @@
 				5E74D2DB1CC4429700D88B0B /* tracks */,
 				5E2B3E5D22BD97A7005042E1 /* TrackUtilities.cpp */,
 				5E2B3E5E22BD97A7005042E1 /* TrackUtilities.h */,
-				284416391B82D6BC0000574D /* TranslatableStringArray.h */,
 				5E15123B1DB000C000702E29 /* UIHandle.cpp */,
 				5E15123C1DB000C000702E29 /* UIHandle.h */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
@@ -7638,6 +7658,7 @@
 				28032580131DB4960059D002 /* Copy plug-ins */,
 				28032560131DAFAF0059D002 /* Copy nyquist */,
 				28708D631B17C3C400496FEB /* Copy wxWidgets libs */,
+				289A865223E66456006A8CC5 /* Install wrapper */,
 				288F0980131A400F0008E860 /* Install manual */,
 				282413DA131D52CE009FD931 /* Install plugins */,
 				2892CE28131AFB1900E1E17D /* Install miscellany */,
@@ -7648,6 +7669,7 @@
 				286D31370F264C38004E6E4A /* PBXBuildRule */,
 			);
 			dependencies = (
+				289A864D23E65E25006A8CC5 /* PBXTargetDependency */,
 				28D489291B5F061200A2E4DF /* PBXTargetDependency */,
 				285B11851833D0F10073B36C /* PBXTargetDependency */,
 				176EEC7109A2F54D00188F3B /* PBXTargetDependency */,
@@ -7759,6 +7781,21 @@
 			productName = "mod-script-pipe";
 			productReference = 2880527E0DEA694100671EA4 /* mod-script-pipe.so */;
 			productType = "com.apple.product-type.library.dynamic";
+		};
+		289A864123E65A3E006A8CC5 /* Wrapper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 289A864623E65A3F006A8CC5 /* Build configuration list for PBXNativeTarget "Wrapper" */;
+			buildPhases = (
+				289A863E23E65A3E006A8CC5 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Wrapper;
+			productName = Wrapper;
+			productReference = 289A864223E65A3E006A8CC5 /* Wrapper */;
+			productType = "com.apple.product-type.tool";
 		};
 		28E236F40E515D1D00281398 /* libscorealign */ = {
 			isa = PBXNativeTarget;
@@ -7954,6 +7991,10 @@
 					2880527D0DEA694100671EA4 = {
 						ProvisioningStyle = Manual;
 					};
+					289A864123E65A3E006A8CC5 = {
+						CreatedOnToolsVersion = 10.3;
+						ProvisioningStyle = Manual;
+					};
 					28D489241B5F052C00A2E4DF = {
 						ProvisioningStyle = Manual;
 					};
@@ -7999,6 +8040,7 @@
 			projectRoot = ..;
 			targets = (
 				1790AFAF09883B6D008A330A /* Audacity */,
+				289A864123E65A3E006A8CC5 /* Wrapper */,
 				28D489241B5F052C00A2E4DF /* Create Info Header */,
 				28FADDCA1833C3C500BA4141 /* expat */,
 				176EEBE909A2F16200188F3B /* libFLAC */,
@@ -8078,7 +8120,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/scripts/copy_plugins.sh\"";
+			shellScript = "\"${PROJECT_DIR}/scripts/copy_plugins.sh\"\n";
 		};
 		282413D8131D51FC009FD931 /* Create dist */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8106,7 +8148,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/scripts/install_ladspa_plugins.sh\"";
+			shellScript = "\"${PROJECT_DIR}/scripts/install_ladspa_plugins.sh\"\n";
 		};
 		28708D631B17C3C400496FEB /* Copy wxWidgets libs */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8135,7 +8177,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/scripts/install_manual.sh\"";
+			shellScript = "\"${PROJECT_DIR}/scripts/install_manual.sh\"\n";
 		};
 		28AF137C23A832AC0084A82E /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8621,7 +8663,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2872DFEA1B5EEC15004385B1 /* hy.po in Sources */,
 				28C8211D1B5C661E00B53328 /* ViewInfo.cpp in Sources */,
 				1790B11A09883BFD008A330A /* AudacityApp.cpp in Sources */,
 				5E2B3E5C22BD9798005042E1 /* SelectUtilities.cpp in Sources */,
@@ -8744,7 +8785,6 @@
 				1790B18809883BFD008A330A /* SpectrumPrefs.cpp in Sources */,
 				5EBD1C9422D11DAF00299FD4 /* SpectrumVZoomHandle.cpp in Sources */,
 				5E36A0B4217FC6540068E082 /* HelpMenus.cpp in Sources */,
-				5E36A0B2217FC5A10068E082 /* (null) in Sources */,
 				1790B18909883BFD008A330A /* Prefs.cpp in Sources */,
 				5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */,
 				1790B18A09883BFD008A330A /* Printing.cpp in Sources */,
@@ -9181,6 +9221,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		289A863E23E65A3E006A8CC5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				289A865023E66001006A8CC5 /* Wrapper.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		28E236FB0E515D1D00281398 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9403,6 +9451,11 @@
 			target = 2862299E181CE4B600E1AD1A /* lv2 */;
 			targetProxy = 28640879181CE78E00CC4E2C /* PBXContainerItemProxy */;
 		};
+		289A864D23E65E25006A8CC5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 289A864123E65A3E006A8CC5 /* Wrapper */;
+			targetProxy = 289A864C23E65E25006A8CC5 /* PBXContainerItemProxy */;
+		};
 		28D489291B5F061200A2E4DF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 28D489241B5F052C00A2E4DF /* Create Info Header */;
@@ -9538,14 +9591,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -9566,9 +9619,11 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
+					"HAVE_MLOCK=1",
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
@@ -9871,14 +9926,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -9899,11 +9954,13 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
+					"HAVE_MLOCK=1",
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
@@ -10181,6 +10238,42 @@
 			};
 			name = Release;
 		};
+		289A864723E65A3F006A8CC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = Wrapper;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		289A864823E65A3F006A8CC5 /* Debug64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = Wrapper;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug64;
+		};
+		289A864923E65A3F006A8CC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = Wrapper;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		289A864A23E65A3F006A8CC5 /* Release64 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = Wrapper;
+				SKIP_INSTALL = YES;
+			};
+			name = Release64;
+		};
 		28D489261B5F052C00A2E4DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10265,14 +10358,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SSE_CPPFLAGS = "";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -10293,9 +10386,11 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
+					"HAVE_MLOCK=1",
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
@@ -10722,14 +10817,14 @@
 				INFOPLIST_PREFIX_HEADER = build/Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				SSE_CPPFLAGS = "";
 				TOPLEVEL = ..;
 				USE_HEADERMAP = NO;
@@ -10750,11 +10845,13 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
+					"HAVE_MLOCK=1",
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
@@ -11584,6 +11681,17 @@
 				5EC18AB0219B5AFD000EFBF9 /* Debug64 */,
 				288052F30DEA74FD00671EA4 /* Release */,
 				5EC18AC9219B5B02000EFBF9 /* Release64 */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug64;
+		};
+		289A864623E65A3F006A8CC5 /* Build configuration list for PBXNativeTarget "Wrapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				289A864723E65A3F006A8CC5 /* Debug */,
+				289A864823E65A3F006A8CC5 /* Debug64 */,
+				289A864923E65A3F006A8CC5 /* Release */,
+				289A864A23E65A3F006A8CC5 /* Release64 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug64;

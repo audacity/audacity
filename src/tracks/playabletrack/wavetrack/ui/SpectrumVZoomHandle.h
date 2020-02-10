@@ -75,7 +75,9 @@ private:
 
 class SpectrumVRulerMenuTable : public WaveTrackVRulerMenuTable
 {
-   SpectrumVRulerMenuTable() : WaveTrackVRulerMenuTable() {}
+   SpectrumVRulerMenuTable()
+      : WaveTrackVRulerMenuTable{ "SpectrumVRuler" }
+   {}
    virtual ~SpectrumVRulerMenuTable() {}
    DECLARE_POPUP_MENU(SpectrumVRulerMenuTable);
 
@@ -83,8 +85,6 @@ public:
    static PopupMenuTable &Instance();
 
 private:
-   void InitMenu(Menu *pMenu) override;
-
    void OnSpectrumScaleType(wxCommandEvent &evt);
 };
 

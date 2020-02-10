@@ -152,8 +152,6 @@ public:
       const Tags *metadata = NULL,
       int subformat = 0) override;
 
-   virtual unsigned SequenceNumber() const override { return 70; }
-
 private:
 
    AVOutputFormat  *   mEncFormatDesc{};       // describes our output file to libavformat
@@ -1141,8 +1139,9 @@ void ExportFFmpeg::OptionsCreate(ShuttleGui &S, int format)
    ExportPlugin::OptionsCreate(S, format);
 }
 
-static Exporter::RegisteredExportPlugin
-sRegisteredPlugin{ []{ return std::make_unique< ExportFFmpeg >(); } };
+static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FFmpeg",
+   []{ return std::make_unique< ExportFFmpeg >(); }
+};
 
 #endif
 

@@ -35,10 +35,7 @@
 
 #include "ThemePrefs.h"
 #include "../AColor.h"
-#include "../TranslatableStringArray.h"
 #include "../widgets/AudacityMessageBox.h"
-
-wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 
 GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: refers to Audacity's user interface settings */
@@ -350,15 +347,13 @@ wxString GUIPrefs::SetLang( const wxString & lang )
 
    Internat::Init();
 
-   // Notify listeners of language changes
-   {
-      wxCommandEvent evt(EVT_LANGUAGE_CHANGE);
-      wxTheApp->ProcessEvent(evt);
-   }
-
    // Unused strings that we want to be translated, even though
    // we're not using them yet...
    using future1 = decltype( XO("Master Gain Control") );
+
+#ifdef __WXMAC__
+      wxApp::s_macHelpMenuTitleName = _("&Help");
+#endif
 
    return result;
 }
@@ -378,7 +373,7 @@ int ShowClippingPrefsID()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 60,
+PrefsPanel::Registration sAttachment{ "GUI",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew

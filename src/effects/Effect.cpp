@@ -13,12 +13,6 @@
 \class Effect
 \brief Base class for many of the effects in Audacity.
 
-*//****************************************************************//**
-
-\class EffectDialog
-\brief New (Jun-2006) base class for effects dialogs.  Likely to get
-greater use in future.
-
 *//*******************************************************************/
 
 #include "../Audacity.h"
@@ -28,16 +22,13 @@ greater use in future.
 
 #include <algorithm>
 
-#include <wx/choice.h>
 #include <wx/defs.h>
-#include <wx/listbox.h>
 #include <wx/sizer.h>
 
 #include "../AudioIO.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"
 #include "../PluginManager.h"
-#include "../Project.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
@@ -624,14 +615,14 @@ void Effect::SetHostUI(EffectUIHostInterface *WXUNUSED(host))
 {
 }
 
-bool Effect::PopulateUI(wxWindow *parent)
+bool Effect::PopulateUI(ShuttleGui &S)
 {
+   auto parent = S.GetParent();
    mUIParent = parent;
    mUIParent->PushEventHandler(this);
 
 //   LoadUserPreset(GetCurrentSettingsGroup());
 
-   ShuttleGui S(mUIParent, eIsCreating);
    PopulateOrExchange(S);
 
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
@@ -1048,23 +1039,6 @@ bool Effect::HasCurrentSettings()
 bool Effect::HasFactoryDefaults()
 {
    return HasPrivateConfigGroup(GetFactoryDefaultsGroup());
-}
-
-wxString Effect::GetPreset(wxWindow * parent, const wxString & parms)
-{
-   EffectPresetsDialog dlg(parent, this);
-   dlg.Layout();
-   dlg.Fit();
-   dlg.SetSize(dlg.GetMinSize());
-   dlg.CenterOnParent();
-   dlg.SetSelected(parms);
-
-   if (dlg.ShowModal())
-   {
-      return dlg.GetSelected();
-   }
-
-   return wxEmptyString;
 }
 
 wxString Effect::ManualPage()
@@ -2392,325 +2366,3 @@ int Effect::MessageBox( const TranslatableString& message,
    return AudacityMessageBox( message, title, style, mUIParent );
 }
 
-BEGIN_EVENT_TABLE(EffectDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, EffectDialog::OnOk)
-END_EVENT_TABLE()
-
-EffectDialog::EffectDialog(wxWindow * parent,
-                           const TranslatableString & title,
-                           int type,
-                           int flags,
-                           int additionalButtons)
-: wxDialogWrapper(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, flags)
-{
-   mType = type;
-   mAdditionalButtons = additionalButtons;
-}
-
-void EffectDialog::Init()
-{
-   long buttons = eOkButton;
-   if ((mType != EffectTypeAnalyze) && (mType != EffectTypeTool))
-   {
-      buttons |= eCancelButton;
-      if (mType == EffectTypeProcess)
-      {
-         buttons |= ePreviewButton;
-      }
-   }
-
-   ShuttleGui S(this, eIsCreating);
-
-   S.SetBorder(5);
-   S.StartVerticalLay(true);
-   {
-      PopulateOrExchange(S);
-      S.AddStandardButtons(buttons|mAdditionalButtons);
-   }
-   S.EndVerticalLay();
-
-   Layout();
-   Fit();
-   SetMinSize(GetSize());
-   Center();
-}
-
-/// This is a virtual function which will be overridden to
-/// provide the actual parameters that we want for each
-/// kind of dialog.
-void EffectDialog::PopulateOrExchange(ShuttleGui & WXUNUSED(S))
-{
-   return;
-}
-
-bool EffectDialog::TransferDataToWindow()
-{
-   ShuttleGui S(this, eIsSettingToDialog);
-   PopulateOrExchange(S);
-
-   return true;
-}
-
-bool EffectDialog::TransferDataFromWindow()
-{
-   ShuttleGui S(this, eIsGettingFromDialog);
-   PopulateOrExchange(S);
-
-   return true;
-}
-
-bool EffectDialog::Validate()
-{
-   return true;
-}
-
-void EffectDialog::OnPreview(wxCommandEvent & WXUNUSED(evt))
-{
-   return;
-}
-
-void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
-{
-   // On wxGTK (wx2.8.12), the default action is still executed even if
-   // the button is disabled.  This appears to affect all wxDialogs, not
-   // just our Effects dialogs.  So, this is a only temporary workaround
-   // for legacy effects that disable the OK button.  Hopefully this has
-   // been corrected in wx3.
-   if (FindWindow(wxID_OK)->IsEnabled() && Validate() && TransferDataFromWindow())
-   {
-      EndModal(true);
-   }
-
-   return;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// EffectPresetsDialog
-//
-///////////////////////////////////////////////////////////////////////////////
-
-enum
-{
-   ID_Type = 10000
-};
-
-BEGIN_EVENT_TABLE(EffectPresetsDialog, wxDialogWrapper)
-   EVT_CHOICE(ID_Type, EffectPresetsDialog::OnType)
-   EVT_LISTBOX_DCLICK(wxID_ANY, EffectPresetsDialog::OnOk)
-   EVT_BUTTON(wxID_OK, EffectPresetsDialog::OnOk)
-   EVT_BUTTON(wxID_CANCEL, EffectPresetsDialog::OnCancel)
-END_EVENT_TABLE()
-
-EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
-:  wxDialogWrapper(parent, wxID_ANY, XO("Select Preset"))
-{
-   ShuttleGui S(this, eIsCreating);
-   S.StartVerticalLay();
-   {
-      S.StartTwoColumn();
-      S.SetStretchyCol(1);
-      {
-         S.AddPrompt(XO("Type:"));
-         mType = S.Id(ID_Type).AddChoice( {}, {}, 0 );
-
-         S.AddPrompt(XO("&Preset:"));
-         mPresets = S
-            .Style( wxLB_SINGLE | wxLB_NEEDED_SB )
-            .AddListBox( {} );
-      }
-      S.EndTwoColumn();
-
-      S.AddStandardButtons();
-   }
-   S.EndVerticalLay();
-
-   mUserPresets = effect->GetUserPresets();
-   mFactoryPresets = effect->GetFactoryPresets();
-
-   if (mUserPresets.size() > 0)
-   {
-      mType->Append(_("User Presets"));
-   }
-
-   if (mFactoryPresets.size() > 0)
-   {
-      mType->Append(_("Factory Presets"));
-   }
-
-   if (effect->HasCurrentSettings())
-   {
-      mType->Append(_("Current Settings"));
-   }
-
-   if (effect->HasFactoryDefaults())
-   {
-      mType->Append(_("Factory Defaults"));
-   }
-
-   UpdateUI();
-}
-
-EffectPresetsDialog::~EffectPresetsDialog()
-{
-}
-
-wxString EffectPresetsDialog::GetSelected() const
-{
-   return mSelection;
-}
-
-void EffectPresetsDialog::SetSelected(const wxString & parms)
-{
-   wxString preset = parms;
-   if (preset.StartsWith(Effect::kUserPresetIdent))
-   {
-      preset.Replace(Effect::kUserPresetIdent, wxEmptyString, false);
-      SetPrefix(XO("User Presets"), preset);
-   }
-   else if (preset.StartsWith(Effect::kFactoryPresetIdent))
-   {
-      preset.Replace(Effect::kFactoryPresetIdent, wxEmptyString, false);
-      SetPrefix(XO("Factory Presets"), preset);
-   }
-   else if (preset.StartsWith(Effect::kCurrentSettingsIdent))
-   {
-      SetPrefix(XO("Current Settings"), wxEmptyString);
-   }
-   else if (preset.StartsWith(Effect::kFactoryDefaultsIdent))
-   {
-      SetPrefix(XO("Factory Defaults"), wxEmptyString);
-   }
-}
-
-void EffectPresetsDialog::SetPrefix(
-   const TranslatableString & type, const wxString & prefix)
-{
-   mType->SetStringSelection(type.Translation());
-
-   if (type == XO("User Presets"))
-   {
-      mPresets->Clear();
-      for (const auto &preset : mUserPresets)
-         mPresets->Append(preset);
-      mPresets->Enable(true);
-      mPresets->SetStringSelection(prefix);
-      if (mPresets->GetSelection() == wxNOT_FOUND)
-      {
-         mPresets->SetSelection(0);
-      }
-      mSelection = Effect::kUserPresetIdent + mPresets->GetStringSelection();
-   }
-   else if (type == XO("Factory Presets"))
-   {
-      mPresets->Clear();
-      for (size_t i = 0, cnt = mFactoryPresets.size(); i < cnt; i++)
-      {
-         auto label = mFactoryPresets[i];
-         if (label.empty())
-         {
-            label = _("None");
-         }
-         mPresets->Append(label);
-      }
-      mPresets->Enable(true);
-      mPresets->SetStringSelection(prefix);
-      if (mPresets->GetSelection() == wxNOT_FOUND)
-      {
-         mPresets->SetSelection(0);
-      }
-      mSelection = Effect::kFactoryPresetIdent + mPresets->GetStringSelection();
-   }
-   else if (type == XO("Current Settings"))
-   {
-      mPresets->Clear();
-      mPresets->Enable(false);
-      mSelection = Effect::kCurrentSettingsIdent;
-   }
-   else if (type == XO("Factory Defaults"))
-   {
-      mPresets->Clear();
-      mPresets->Enable(false);
-      mSelection = Effect::kFactoryDefaultsIdent;
-   }
-}
-
-void EffectPresetsDialog::UpdateUI()
-{
-   int selected = mType->GetSelection();
-   if (selected == wxNOT_FOUND)
-   {
-      selected = 0;
-      mType->SetSelection(selected);
-   }
-   wxString type = mType->GetString(selected);
-
-   if (type == _("User Presets"))
-   {
-      selected = mPresets->GetSelection();
-      if (selected == wxNOT_FOUND)
-      {
-         selected = 0;
-      }
-
-      mPresets->Clear();
-      for (const auto &preset : mUserPresets)
-         mPresets->Append(preset);
-      mPresets->Enable(true);
-      mPresets->SetSelection(selected);
-      mSelection = Effect::kUserPresetIdent + mPresets->GetString(selected);
-   }
-   else if (type == _("Factory Presets"))
-   {
-      selected = mPresets->GetSelection();
-      if (selected == wxNOT_FOUND)
-      {
-         selected = 0;
-      }
-
-      mPresets->Clear();
-      for (size_t i = 0, cnt = mFactoryPresets.size(); i < cnt; i++)
-      {
-         auto label = mFactoryPresets[i];
-         if (label.empty())
-         {
-            label = _("None");
-         }
-         mPresets->Append(label);
-      }
-      mPresets->Enable(true);
-      mPresets->SetSelection(selected);
-      mSelection = Effect::kFactoryPresetIdent + mPresets->GetString(selected);
-   }
-   else if (type == _("Current Settings"))
-   {
-      mPresets->Clear();
-      mPresets->Enable(false);
-      mSelection = Effect::kCurrentSettingsIdent;
-   }
-   else if (type == _("Factory Defaults"))
-   {
-      mPresets->Clear();
-      mPresets->Enable(false);
-      mSelection = Effect::kFactoryDefaultsIdent;
-   }
-}
-
-void EffectPresetsDialog::OnType(wxCommandEvent & WXUNUSED(evt))
-{
-   UpdateUI();
-}
-
-void EffectPresetsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
-{
-   UpdateUI();
-
-   EndModal(true);
-}
-
-void EffectPresetsDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
-{
-   mSelection = wxEmptyString;
-
-   EndModal(false);
-}

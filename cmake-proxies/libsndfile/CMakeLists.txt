@@ -1,171 +1,181 @@
-#directory cmake-proxies/libsndfile
-set( TARGET libsndfile )
-set( TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET} )
-project( ${TARGET} )
 
-set( SOURCES 
-#${LIB_SRC_DIRECTORY}libsndfile/examples/generate.c
-#${LIB_SRC_DIRECTORY}libsndfile/examples/list_formats.c
-#${LIB_SRC_DIRECTORY}libsndfile/examples/make_sine.c
-#${LIB_SRC_DIRECTORY}libsndfile/examples/sfprocess.c
-#${LIB_SRC_DIRECTORY}libsndfile/examples/sndfile-to-text.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/common.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-cmp.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-concat.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-convert.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-deinterleave.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-info.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-interleave.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-metadata-get.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-metadata-set.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-play.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-salvage.c
-#${LIB_SRC_DIRECTORY}libsndfile/regtest/checksum.c
-#${LIB_SRC_DIRECTORY}libsndfile/regtest/database.c
-#${LIB_SRC_DIRECTORY}libsndfile/regtest/sndfile-regtest.c
-${LIB_SRC_DIRECTORY}libsndfile/src/aiff.c
-${LIB_SRC_DIRECTORY}libsndfile/src/alaw.c
-${LIB_SRC_DIRECTORY}libsndfile/src/au.c
-${LIB_SRC_DIRECTORY}libsndfile/src/audio_detect.c
-${LIB_SRC_DIRECTORY}libsndfile/src/avr.c
-${LIB_SRC_DIRECTORY}libsndfile/src/broadcast.c
-${LIB_SRC_DIRECTORY}libsndfile/src/caf.c
-${LIB_SRC_DIRECTORY}libsndfile/src/chanmap.c
-${LIB_SRC_DIRECTORY}libsndfile/src/chunk.c
-${LIB_SRC_DIRECTORY}libsndfile/src/command.c
-${LIB_SRC_DIRECTORY}libsndfile/src/common.c
-${LIB_SRC_DIRECTORY}libsndfile/src/dither.c
-${LIB_SRC_DIRECTORY}libsndfile/src/double64.c
-${LIB_SRC_DIRECTORY}libsndfile/src/dwd.c
-${LIB_SRC_DIRECTORY}libsndfile/src/dwvw.c
-${LIB_SRC_DIRECTORY}libsndfile/src/file_io.c
-${LIB_SRC_DIRECTORY}libsndfile/src/flac.c
-${LIB_SRC_DIRECTORY}libsndfile/src/float32.c
-${LIB_SRC_DIRECTORY}libsndfile/src/g72x.c
-${LIB_SRC_DIRECTORY}libsndfile/src/gsm610.c
-${LIB_SRC_DIRECTORY}libsndfile/src/htk.c
-${LIB_SRC_DIRECTORY}libsndfile/src/id3.c
-${LIB_SRC_DIRECTORY}libsndfile/src/ima_adpcm.c
-${LIB_SRC_DIRECTORY}libsndfile/src/ima_oki_adpcm.c
-${LIB_SRC_DIRECTORY}libsndfile/src/interleave.c
-${LIB_SRC_DIRECTORY}libsndfile/src/ircam.c
-${LIB_SRC_DIRECTORY}libsndfile/src/macbinary3.c
-${LIB_SRC_DIRECTORY}libsndfile/src/macos.c
-${LIB_SRC_DIRECTORY}libsndfile/src/mat4.c
-${LIB_SRC_DIRECTORY}libsndfile/src/mat5.c
-${LIB_SRC_DIRECTORY}libsndfile/src/mpc2k.c
-${LIB_SRC_DIRECTORY}libsndfile/src/ms_adpcm.c
-${LIB_SRC_DIRECTORY}libsndfile/src/nist.c
-${LIB_SRC_DIRECTORY}libsndfile/src/ogg.c
-${LIB_SRC_DIRECTORY}libsndfile/src/paf.c
-${LIB_SRC_DIRECTORY}libsndfile/src/pcm.c
-${LIB_SRC_DIRECTORY}libsndfile/src/pvf.c
-${LIB_SRC_DIRECTORY}libsndfile/src/raw.c
-${LIB_SRC_DIRECTORY}libsndfile/src/rf64.c
-${LIB_SRC_DIRECTORY}libsndfile/src/rx2.c
-${LIB_SRC_DIRECTORY}libsndfile/src/sd2.c
-${LIB_SRC_DIRECTORY}libsndfile/src/sds.c
-${LIB_SRC_DIRECTORY}libsndfile/src/sndfile.c
-${LIB_SRC_DIRECTORY}libsndfile/src/strings.c
-${LIB_SRC_DIRECTORY}libsndfile/src/svx.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/test_audio_detect.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/test_broadcast_var.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/test_conversions.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/test_endswap.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/test_file_io.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/test_float.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/test_ima_oki_adpcm.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/test_log_printf.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/test_main.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/test_strncpy_crlf.c
-${LIB_SRC_DIRECTORY}libsndfile/src/txw.c
-${LIB_SRC_DIRECTORY}libsndfile/src/ulaw.c
-${LIB_SRC_DIRECTORY}libsndfile/src/voc.c
-${LIB_SRC_DIRECTORY}libsndfile/src/vox_adpcm.c
-${LIB_SRC_DIRECTORY}libsndfile/src/w64.c
-${LIB_SRC_DIRECTORY}libsndfile/src/wav.c
-${LIB_SRC_DIRECTORY}libsndfile/src/wav_w64.c
-${LIB_SRC_DIRECTORY}libsndfile/src/windows.c
-${LIB_SRC_DIRECTORY}libsndfile/src/wve.c
-${LIB_SRC_DIRECTORY}libsndfile/src/xi.c
-${LIB_SRC_DIRECTORY}libsndfile/src/G72x/g721.c
-${LIB_SRC_DIRECTORY}libsndfile/src/G72x/g723_16.c
-${LIB_SRC_DIRECTORY}libsndfile/src/G72x/g723_24.c
-${LIB_SRC_DIRECTORY}libsndfile/src/G72x/g723_40.c
-${LIB_SRC_DIRECTORY}libsndfile/src/G72x/g72x.c
-#${LIB_SRC_DIRECTORY}libsndfile/src/G72x/g72x_test.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/add.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/code.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/decode.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/gsm_create.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/gsm_decode.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/gsm_destroy.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/gsm_encode.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/gsm_option.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/long_term.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/lpc.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/preprocess.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/rpe.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/short_term.c
-${LIB_SRC_DIRECTORY}libsndfile/src/GSM610/table.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/aiff_rw_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/alaw_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/benchmark.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/checksum_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/command_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/dft_cmp.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/dither_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/dwvw_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/error_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/external_libs_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/fix_this.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/floating_point_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/generate.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/headerless_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/header_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/largefile_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/locale_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/lossy_comp_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/misc_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/multi_file_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/ogg_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/pcm_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/peak_chunk_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/pipe_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/raw_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/rdwr_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/scale_clip_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/sfversion.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/stdin_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/stdio_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/stdout_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/string_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/ulaw_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/utils.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/virtual_io_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/vorbis_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/win32_ordinal_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/win32_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/tests/write_read_test.c
-#${LIB_SRC_DIRECTORY}libsndfile/Win32/testprog.c
-#${LIB_SRC_DIRECTORY}libsndfile/programs/sndfile-play-beos.cpp
+add_library( ${TARGET} STATIC )
 
-)
-# This defines the #define on both Windows and Linux.
-add_definitions( 
--D_LIB
--Dinline=__inline
--DLIBSNDFILE_PRIVATE_CONFIG
- )
-add_library( ${TARGET} STATIC ${SOURCES})
+def_vars()
 
-add_compile_options(/wd4996)
-
-target_include_directories( ${TARGET} PRIVATE 
-${TARGET_SOURCE}/include
-${TARGET_SOURCE}/src
-${LIB_SRC_DIRECTORY}/ffmpeg/win32
-${top_dir}/win/Projects/libsndfile #to get config.h
+list( APPEND SOURCES
+   PRIVATE
+      ${TARGET_ROOT}/src/aiff.c
+      ${TARGET_ROOT}/src/alaw.c
+      ${TARGET_ROOT}/src/au.c
+      ${TARGET_ROOT}/src/audio_detect.c
+      ${TARGET_ROOT}/src/avr.c
+      ${TARGET_ROOT}/src/broadcast.c
+      ${TARGET_ROOT}/src/caf.c
+      ${TARGET_ROOT}/src/chanmap.c
+      ${TARGET_ROOT}/src/chunk.c
+      ${TARGET_ROOT}/src/command.c
+      ${TARGET_ROOT}/src/common.c
+      ${TARGET_ROOT}/src/dither.c
+      ${TARGET_ROOT}/src/double64.c
+      ${TARGET_ROOT}/src/dwd.c
+      ${TARGET_ROOT}/src/dwvw.c
+      ${TARGET_ROOT}/src/file_io.c
+      ${TARGET_ROOT}/src/flac.c
+      ${TARGET_ROOT}/src/float32.c
+      ${TARGET_ROOT}/src/g72x.c
+      ${TARGET_ROOT}/src/gsm610.c
+      ${TARGET_ROOT}/src/htk.c
+      ${TARGET_ROOT}/src/id3.c
+      ${TARGET_ROOT}/src/ima_adpcm.c
+      ${TARGET_ROOT}/src/ima_oki_adpcm.c
+      ${TARGET_ROOT}/src/interleave.c
+      ${TARGET_ROOT}/src/ircam.c
+      ${TARGET_ROOT}/src/macbinary3.c
+      ${TARGET_ROOT}/src/macos.c
+      ${TARGET_ROOT}/src/mat4.c
+      ${TARGET_ROOT}/src/mat5.c
+      ${TARGET_ROOT}/src/mpc2k.c
+      ${TARGET_ROOT}/src/ms_adpcm.c
+      ${TARGET_ROOT}/src/nist.c
+      ${TARGET_ROOT}/src/ogg.c
+      ${TARGET_ROOT}/src/paf.c
+      ${TARGET_ROOT}/src/pcm.c
+      ${TARGET_ROOT}/src/pvf.c
+      ${TARGET_ROOT}/src/raw.c
+      ${TARGET_ROOT}/src/rf64.c
+      ${TARGET_ROOT}/src/rx2.c
+      ${TARGET_ROOT}/src/sd2.c
+      ${TARGET_ROOT}/src/sds.c
+      ${TARGET_ROOT}/src/sndfile.c
+      ${TARGET_ROOT}/src/strings.c
+      ${TARGET_ROOT}/src/svx.c
+      ${TARGET_ROOT}/src/txw.c
+      ${TARGET_ROOT}/src/ulaw.c
+      ${TARGET_ROOT}/src/voc.c
+      ${TARGET_ROOT}/src/vox_adpcm.c
+      ${TARGET_ROOT}/src/w64.c
+      ${TARGET_ROOT}/src/wav.c
+      ${TARGET_ROOT}/src/wav_w64.c
+      ${TARGET_ROOT}/src/windows.c
+      ${TARGET_ROOT}/src/wve.c
+      ${TARGET_ROOT}/src/xi.c
+      ${TARGET_ROOT}/src/G72x/g721.c
+      ${TARGET_ROOT}/src/G72x/g723_16.c
+      ${TARGET_ROOT}/src/G72x/g723_24.c
+      ${TARGET_ROOT}/src/G72x/g723_40.c
+      ${TARGET_ROOT}/src/G72x/g72x.c
+      ${TARGET_ROOT}/src/GSM610/add.c
+      ${TARGET_ROOT}/src/GSM610/code.c
+      ${TARGET_ROOT}/src/GSM610/decode.c
+      ${TARGET_ROOT}/src/GSM610/gsm_create.c
+      ${TARGET_ROOT}/src/GSM610/gsm_decode.c
+      ${TARGET_ROOT}/src/GSM610/gsm_destroy.c
+      ${TARGET_ROOT}/src/GSM610/gsm_encode.c
+      ${TARGET_ROOT}/src/GSM610/gsm_option.c
+      ${TARGET_ROOT}/src/GSM610/long_term.c
+      ${TARGET_ROOT}/src/GSM610/lpc.c
+      ${TARGET_ROOT}/src/GSM610/preprocess.c
+      ${TARGET_ROOT}/src/GSM610/rpe.c
+      ${TARGET_ROOT}/src/GSM610/short_term.c
+      ${TARGET_ROOT}/src/GSM610/table.c
 )
 
-target_link_libraries( ${TARGET} )
+list( APPEND INCLUDES
+   PRIVATE
+      ${_PRVDIR}
+      ${TARGET_ROOT}/src
+   PUBLIC
+      ${_PUBDIR}
+)
+
+list( APPEND DEFINES
+   PRIVATE
+      inline=__inline
+      LIBSNDFILE_PRIVATE_CONFIG
+)
+
+list( APPEND OPTIONS
+   PRIVATE
+      $<$<C_COMPILER_ID:MSVC>:/wd4996>
+)
+
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+    cmake_push_check_state(RESET)
+    set( CMAKE_EXTRA_INCLUDE_FILES "BaseTsd.h" )
+    check_type_size( "SSIZE_T" SIZEOF_SSIZE LANGUAGE C )
+    list( APPEND DEFINES
+        ssize_t=SSIZE_T
+    )
+    cmake_pop_check_state()
+else()
+    check_type_size( "ssize_t" SIZEOF_SSIZE LANGUAGE C )
+endif()
+
+set( TYPEOF_SF_COUNT_T "int64_t" )
+set( SIZEOF_SF_COUNT_T ${SIZEOF_INT64} )
+set( SF_COUNT_MAX "0x7FFFFFFFFFFFFFFFLL" )
+
+configure_file( sndfile.h.in ${_PUBDIR}/sndfile.h )
+
+check_symbol_exists( S_IRGRP "sys/stat.h" HAVE_DECL_S_IRGRP )
+
+set( COMPILER_IS_GCC OFF )
+if( CMAKE_C_COMPILER_ID MATCHES "GNU|.*Clang" )
+   set( COMPILER_IS_GCC ON )
+endif()
+
+set( OS_IS_MACOSX OFF)
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( OS_IS_MACOSX ON )
+endif()
+
+set( OS_IS_WIN32 OFF )
+set( USE_WINDOWS_API OFF )
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   set( OS_IS_MACOSX ON )
+   set( USE_WINDOWS_API ON )
+endif()
+
+set( CPU_IS_BIG_ENDIAN ${WORDS_BIGENDIAN} )
+set( CPU_IS_LITTLE_ENDIAN NOT ${WORDS_BIGENDIAN} )
+set( HAVE_EXTERNAL_LIBS 0 )
+
+set( VERSION "1.0.24" )
+set( PACKAGE "libsndfile" )
+set( PACKAGE_NAME ${PACKAGE} )
+set( PACKAGE_VERSION ${VERSION} )
+
+# Does compiler support "flexible array members"
+try_compile( HAVE_FLEXIBLE_ARRAY
+   ${CMAKE_CURRENT_BINARY_DIR}
+   ${CMAKE_CURRENT_SOURCE_DIR}/famcheck.c
+   LINK_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES}
+   OUTPUT_VARIABLE c_out
+)
+
+# Determine how the CPU clips when doing float to int conversions
+try_run( r_rc c_rc
+   ${CMAKE_CURRENT_BINARY_DIR}
+   ${CMAKE_CURRENT_SOURCE_DIR}/clipcheck.c
+   LINK_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES}
+   RUN_OUTPUT_VARIABLE r_out
+   COMPILE_OUTPUT_VARIABLE c_out
+)
+
+if( NOT c_rc )
+   message( STATUS "${c_out}" )
+   message( FATAL_ERROR "${CMAKE_CURRENT_SOURCE_DIR}/clipcheck.c compile failed:" )
+endif()
+
+list( GET r_out 0 CPU_CLIPS_POSITIVE )
+list( GET r_out 1 CPU_CLIPS_NEGATIVE )
+
+configure_file( config.h.in ${_PRVDIR}/config.h )
+
+organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
+target_sources( ${TARGET} PRIVATE ${SOURCES} )
+target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
+target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+

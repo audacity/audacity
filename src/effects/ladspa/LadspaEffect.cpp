@@ -1195,8 +1195,10 @@ void LadspaEffect::SetHostUI(EffectUIHostInterface *host)
    mUIHost = host;
 }
 
-bool LadspaEffect::PopulateUI(wxWindow *parent)
+bool LadspaEffect::PopulateUI(ShuttleGui &S)
 {
+   auto parent = S.GetParent();
+
    mParent = parent;
 
    mParent->PushEventHandler(this);

@@ -192,7 +192,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol( 1 );
             S.Id(ID_SCALE).TieChoice(XO("S&cale:"),
                mTempSettings.scaleType,
-               SpectrogramSettings::GetScaleNames() );
+               Msgids( SpectrogramSettings::GetScaleNames() ) );
             mMinFreq =
                S.Id(ID_MINIMUM).TieNumericTextBox(XO("Mi&n Frequency (Hz):"),
                mTempSettings.minFreq,
@@ -602,8 +602,10 @@ SpectrumPrefsFactory( WaveTrack *wt )
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 100,
+PrefsPanel::Registration sAttachment{ "Spectrum",
    SpectrumPrefsFactory( nullptr ),
-   false
+   false,
+   // Place it at a lower tree level
+   { "Tracks" }
 };
 }

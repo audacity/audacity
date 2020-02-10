@@ -234,7 +234,7 @@ bool QualityPrefs::Commit()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 50,
+PrefsPanel::Registration sAttachment{ "Quality",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew

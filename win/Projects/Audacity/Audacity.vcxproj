@@ -596,6 +596,7 @@
     <ClInclude Include="..\..\..\src\toolbars\ScrubbingToolBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBarListener.h" />
+    <ClInclude Include="..\..\..\src\toolbars\TimerToolBar.h" />
     <ClInclude Include="..\..\..\src\TrackPanelCell.h" />
     <ClInclude Include="..\..\..\src\TrackPanelDrawable.h" />
     <ClInclude Include="..\..\..\src\TrackPanelDrawingContext.h" />
@@ -647,7 +648,6 @@
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\ScrubUI.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\TrackView.h" />
-    <ClInclude Include="..\..\..\src\TranslatableStringArray.h" />
     <ClInclude Include="..\..\..\src\UserException.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\SliderHandle.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\TimeShiftHandle.h" />

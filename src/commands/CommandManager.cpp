@@ -477,29 +477,19 @@ wxMenu * CommandManager::CurrentMenu() const
    return tmpCurrentSubMenu;
 }
 
-void CommandManager::SetCurrentMenu(wxMenu * menu)
+void CommandManager::UpdateCheckmarks( AudacityProject &project )
 {
-   // uCurrentMenu ought to be null in correct usage
-   wxASSERT(!uCurrentMenu);
-   // Make sure of it anyway
-   uCurrentMenu.reset();
-
-   mCurrentMenu = menu;
-}
-
-void CommandManager::ClearCurrentMenu()
-{
-   // uCurrentMenu ought to be null in correct usage
-   wxASSERT(!uCurrentMenu);
-   // Make sure of it anyway
-   uCurrentMenu.reset();
-
-   mCurrentMenu = nullptr;
+   for ( const auto &entry : mCommandList ) {
+      if ( entry->menu && entry->checkmarkFn && !entry->isOccult) {
+         entry->menu->Check( entry->id, entry->checkmarkFn( project ) );
+      }
+   }
 }
 
 
 
-void CommandManager::AddItem(const CommandID &name,
+void CommandManager::AddItem(AudacityProject &project,
+                             const CommandID &name,
                              const TranslatableString &label_in,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
@@ -528,16 +518,22 @@ void CommandManager::AddItem(const CommandID &name,
    SetCommandFlags(name, flags);
 
 
-   auto checkmark = options.check;
-   if (checkmark >= 0) {
+   auto &checker = options.checker;
+   if (checker) {
       CurrentMenu()->AppendCheckItem(ID, label);
-      CurrentMenu()->Check(ID, checkmark != 0);
+      CurrentMenu()->Check(ID, checker( project ));
    }
    else {
       CurrentMenu()->Append(ID, label);
    }
 
    mbSeparatorAllowed = true;
+}
+
+auto CommandManager::Options::MakeCheckFn(
+   const wxString key, bool defaultValue ) -> CommandListEntry::CheckFn
+{
+   return [=](AudacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
 }
 
 ///
@@ -702,6 +698,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
       entry->isGlobal = false;
       entry->isOccult = bMakingOccultCommands;
+      entry->checkmarkFn = options.checker;
 
       // Exclude accelerators that are in the MaxList.
       // Note that the default is unaffected, intentionally so.
@@ -922,6 +919,11 @@ bool CommandManager::GetEnabled(const CommandID &name)
       return false;
    }
    return entry->enabled;
+}
+
+int CommandManager::GetNumberOfKeysRead() const
+{
+   return mXMLKeysRead;
 }
 
 void CommandManager::Check(const CommandID &name, bool checked)
@@ -1410,8 +1412,10 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
+// This message is displayed now in KeyConfigPrefs::OnImport()
 void CommandManager::HandleXMLEndTag(const wxChar *tag)
 {
+   /*
    if (!wxStrcmp(tag, wxT("audacitykeyboard"))) {
       AudacityMessageBox(
          XO("Loaded %d keyboard shortcuts\n")
@@ -1419,6 +1423,7 @@ void CommandManager::HandleXMLEndTag(const wxChar *tag)
          XO("Loading Keyboard Shortcuts"),
          wxOK | wxCENTRE);
    }
+   */
 }
 
 XMLTagHandler *CommandManager::HandleXMLChild(const wxChar * WXUNUSED(tag))

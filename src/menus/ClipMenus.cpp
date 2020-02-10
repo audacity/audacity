@@ -821,59 +821,86 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& ClipActions::Handler :: X)
+#define FN(X) (& ClipActions::Handler :: X)
 
-MenuTable::BaseItemPtr ClipSelectMenu( AudacityProject& )
+namespace {
+using namespace MenuTable;
+
+// Register menu items
+
+BaseItemSharedPtr ClipSelectMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   return Menu( XO("Clip B&oundaries"),
+   static BaseItemSharedPtr menu {
+   ( FinderScope{ findCommandHandler },
+   Menu( wxT("Clip"), XO("Clip B&oundaries"),
       Command( wxT("SelPrevClipBoundaryToCursor"),
          XXO("Pre&vious Clip Boundary to Cursor"),
          FN(OnSelectPrevClipBoundaryToCursor),
-         WaveTracksExistFlag ),
+         WaveTracksExistFlag() ),
       Command( wxT("SelCursorToNextClipBoundary"),
          XXO("Cursor to Ne&xt Clip Boundary"),
          FN(OnSelectCursorToNextClipBoundary),
-         WaveTracksExistFlag ),
+         WaveTracksExistFlag() ),
       Command( wxT("SelPrevClip"), XXO("Previo&us Clip"),
-         FN(OnSelectPrevClip), WaveTracksExistFlag,
+         FN(OnSelectPrevClip), WaveTracksExistFlag(),
          Options{ wxT("Alt+,"), XO("Select Previous Clip") } ),
       Command( wxT("SelNextClip"), XXO("N&ext Clip"), FN(OnSelectNextClip),
-         WaveTracksExistFlag,
+         WaveTracksExistFlag(),
          Options{ wxT("Alt+."), XO("Select Next Clip") } )
-   );
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ClipCursorItems( AudacityProject & )
+AttachedItem sAttachment1{
+   wxT("Select/Basic"),
+   Shared( ClipSelectMenu() )
+};
+
+BaseItemSharedPtr ClipCursorItems()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
 
-   return Items(
+   static BaseItemSharedPtr items{
+   ( FinderScope{ findCommandHandler },
+   Items( wxT("Clip"),
       Command( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"),
          FN(OnCursorPrevClipBoundary),
-         WaveTracksExistFlag,
+         WaveTracksExistFlag(),
          Options{}.LongName( XO("Cursor to Prev Clip Boundary") ) ),
       Command( wxT("CursNextClipBoundary"), XXO("Ne&xt Clip Boundary"),
          FN(OnCursorNextClipBoundary),
-         WaveTracksExistFlag,
+         WaveTracksExistFlag(),
          Options{}.LongName( XO("Cursor to Next Clip Boundary") ) )
-   );
+   ) ) };
+   return items;
 }
 
-MenuTable::BaseItemPtr ExtraClipCursorItems( AudacityProject & )
-{
-   using namespace MenuTable;
+AttachedItem sAttachment2{
+   { wxT("Transport/Basic/Cursor"),
+     { OrderingHint::Before, wxT("CursProjectStart") } },
+   Shared( ClipCursorItems() )
+};
 
-   return Items(
+BaseItemSharedPtr ExtraClipCursorItems()
+{
+   static BaseItemSharedPtr items{
+   ( FinderScope{ findCommandHandler },
+   Items( wxT("Clip"),
       Command( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
-         TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") ),
+         TracksExistFlag() | TrackPanelHasFocus(), wxT("\twantKeyup") ),
       Command( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),
-         TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") )
-   );
+         TracksExistFlag() | TrackPanelHasFocus(), wxT("\twantKeyup") )
+   ) ) };
+   return items;
+}
+
+AttachedItem sAttachment3{
+  { wxT("Optional/Extra/Part2/Cursor"), { OrderingHint::End, {} } },
+  Shared( ExtraClipCursorItems() )
+};
+
 }
 
 #undef FN

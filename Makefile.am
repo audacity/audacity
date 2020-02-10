@@ -7,6 +7,9 @@ bin_PROGRAMS = audacity$(EXEEXT)
 dist_doc_DATA = LICENSE.txt README.txt
 dist_pkgdata_DATA = presets/EQDefaultCurves.xml
 
+suillibdir = $(pkglibdir)
+suillib_DATA = $(shell find lib-src/lv2/build -name \*.so)
+
 nobase_dist_pkgdata_DATA = \
    include/audacity/ComponentInterface.h \
    include/audacity/ConfigInterface.h \

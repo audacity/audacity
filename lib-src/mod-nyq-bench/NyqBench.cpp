@@ -35,6 +35,7 @@
 #include "effects/nyquist/Nyquist.h"
 #include "../images/AudacityLogo.xpm"
 #include "../../src/commands/CommandContext.h"
+#include "../../src/commands/CommandManager.h"
 #include "widgets/AudacityMessageBox.h"
 
 #include "NyqBench.h"
@@ -167,8 +168,7 @@ extern "C"
 
    extern int DLL_API ModuleDispatch(ModuleDispatchTypes type);
    // ModuleDispatch
-   // is called by Audacity to initialize/terminmate the module,
-   // and ask if it has anything for the menus.
+   // is called by Audacity to initialize/terminate the module
    int ModuleDispatch(ModuleDispatchTypes type){
       switch (type){
          case AppQuiting: {
@@ -181,35 +181,24 @@ extern "C"
             }
          }
          break;
-         case ProjectInitialized:
-         case MenusRebuilt:  {
-            AudacityProject *p = GetActiveProject();
-            wxASSERT(p != NULL);
-            CommandManager *c = &CommandManager::Get( *p );
-            wxASSERT(c != NULL);
-
-            wxMenuBar * pBar = GetProjectFrame( *p ).GetMenuBar();
-            wxASSERT(pBar != NULL );
-            wxMenu * pMenu = pBar->GetMenu( 9 );  // Menu 9 is the Tools Menu.
-            wxASSERT( pMenu != NULL );
-
-            c->SetCurrentMenu(pMenu);
-            c->AddSeparator();
-            c->AddItem(wxT("NyqBench"),
-               XO("&Nyquist Workbench..."),
-               findme,
-               static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench),
-               AudioIONotBusyFlag);
-
-            c->ClearCurrentMenu();
-         }
-         break;
          default:
          break;
       }
       return 1;
    }
 };
+
+// Register our extra menu item
+namespace {
+   using namespace MenuTable;
+   AttachedItem sAttachment{ wxT("Tools"),
+      ( FinderScope( findme ), Section( wxT("NyquistWorkBench"),
+         Command( wxT("NyqBench"), XO("&Nyquist Workbench..."),
+            static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench),
+            AudioIONotBusyFlag())
+      ) )
+   };
+}
 
 //----------------------------------------------------------------------------
 // NyqTextCtrl

@@ -167,7 +167,9 @@ enum {
 
 class NoteTrackVRulerMenuTable : public PopupMenuTable
 {
-   NoteTrackVRulerMenuTable(){};
+   NoteTrackVRulerMenuTable()
+      : PopupMenuTable{ "NoteTrackVRuler" }
+   {};
    virtual ~NoteTrackVRulerMenuTable() {}
    DECLARE_POPUP_MENU(NoteTrackVRulerMenuTable);
 
@@ -254,16 +256,24 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
 
 BEGIN_POPUP_MENU(NoteTrackVRulerMenuTable)
 
-   POPUP_MENU_ITEM(OnZoomResetID,      XO("Zoom Reset\tShift-Right-Click"), OnZoomReset)
-   POPUP_MENU_ITEM(OnZoomMaxID,        XO("Max Zoom"), OnZoomMax)
+   BeginSection( "Zoom" );
+      BeginSection( "Basic" );
+         AppendItem( "Reset", OnZoomResetID,      XO("Zoom Reset\tShift-Right-Click"), POPUP_MENU_FN( OnZoomReset ) );
+         AppendItem( "Max", OnZoomMaxID,        XO("Max Zoom"), POPUP_MENU_FN( OnZoomMax ) );
+      EndSection();
 
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-   POPUP_MENU_ITEM(OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
+      BeginSection( "InOut" );
+         AppendItem( "In", OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  POPUP_MENU_FN( OnZoomInVertical ) );
+         AppendItem( "Out", OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     POPUP_MENU_FN( OnZoomOutVertical ) );
+      EndSection();
+   EndSection();
 
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnUpOctaveID,   XO("Up &Octave"),   OnUpOctave)
-   POPUP_MENU_ITEM(OnDownOctaveID, XO("Down Octa&ve"), OnDownOctave)
+   BeginSection( "Pan" );
+      BeginSection( "Octaves" );
+         AppendItem( "Up", OnUpOctaveID,   XO("Up &Octave"),   POPUP_MENU_FN( OnUpOctave) );
+         AppendItem( "Down", OnDownOctaveID, XO("Down Octa&ve"), POPUP_MENU_FN( OnDownOctave ) );
+      EndSection();
+   EndSection();
 
 END_POPUP_MENU()
 
@@ -297,8 +307,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
 
       PopupMenuTable *const pTable =
           (PopupMenuTable *) &NoteTrackVRulerMenuTable::Instance();
-      std::unique_ptr<PopupMenuTable::Menu>
-         pMenu(PopupMenuTable::BuildMenu(pParent, pTable, &data));
+      auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
 
       // Accelerators only if zooming enabled.
       if( !bVZoom )

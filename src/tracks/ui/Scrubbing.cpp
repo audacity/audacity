@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"
+#include "../../ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../ProjectStatus.h"
 #include "../../Track.h"
@@ -255,10 +256,12 @@ static const auto HasWaveDataPred =
    };
 
 static const ReservedCommandFlag
-   HasWaveDataFlag{ HasWaveDataPred }; // jkc
+&HasWaveDataFlag() { static ReservedCommandFlag flag{
+   HasWaveDataPred
+}; return flag; } // jkc
 
 namespace {
-   const struct MenuItem {
+   struct MenuItem {
       CommandID name;
       TranslatableString label;
       TranslatableString status;
@@ -268,18 +271,22 @@ namespace {
       bool (Scrubber::*StatusTest)() const;
 
       const TranslatableString &GetStatus() const { return status; }
-   } menuItems[] = {
+   };
+   using MenuItems = std::vector< MenuItem >;
+   const MenuItems &menuItems()
+   {
+      static MenuItems theItems{
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
          "Scrubbing" is variable-speed playback, ...
          "Seeking" is normal speed playback but with skips, ...
        */
       { wxT("Scrub"),       XO("&Scrub"),           XO("Scrubbing"),
-         CaptureNotBusyFlag | HasWaveDataFlag,
+         CaptureNotBusyFlag() | HasWaveDataFlag(),
          &Scrubber::OnScrub,       false,      &Scrubber::Scrubs,
       },
 
       { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
-         CaptureNotBusyFlag | HasWaveDataFlag,
+         CaptureNotBusyFlag() | HasWaveDataFlag(),
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
 
@@ -287,13 +294,13 @@ namespace {
          AlwaysEnabledFlag,
          &Scrubber::OnToggleScrubRuler, false,    &Scrubber::ShowsBar,
       },
+      };
+      return theItems;
    };
-
-   enum { nMenuItems = sizeof(menuItems) / sizeof(*menuItems) };
 
    inline const MenuItem &FindMenuItem(bool seek)
    {
-      return *std::find_if(menuItems, menuItems + nMenuItems,
+      return *std::find_if(menuItems().begin(), menuItems().end(),
          [=](const MenuItem &item) {
             return seek == item.seek;
          }
@@ -1055,7 +1062,7 @@ BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
    EVT_MENU(CMD_ID + 2, THUNK(OnToggleScrubRuler))
 END_EVENT_TABLE()
 
-static_assert(nMenuItems == 3, "wrong number of items");
+//static_assert(menuItems().size() == 3, "wrong number of items");
 
 static auto sPlayAtSpeedStatus = XO("Playing at Speed");
 
@@ -1101,7 +1108,7 @@ registeredStatusWidthFunction{
       if ( field == stateStatusBarField ) {
          TranslatableStrings strings;
          // Note that Scrubbing + Paused is not allowed.
-         for (const auto &item : menuItems)
+         for (const auto &item : menuItems())
             strings.push_back( item.GetStatus() );
          strings.push_back(
             XO("%s Paused.").Format( sPlayAtSpeedStatus )
@@ -1121,35 +1128,151 @@ bool Scrubber::CanScrub() const
       HasWaveDataPred( *mProject );
 }
 
-// To supply the "finder" argument
-static CommandHandlerObject &findme(AudacityProject &project)
-{ return Scrubber::Get( project ); }
+void Scrubber::DoKeyboardScrub(bool backwards, bool keyUp)
+{
+   auto &project = *mProject;
 
-MenuTable::BaseItemPtr Scrubber::Menu()
+   static double initT0 = 0;
+   static double initT1 = 0;
+
+   if (keyUp) {
+      auto &scrubber = Scrubber::Get(project);
+      if (scrubber.IsKeyboardScrubbing() && scrubber.IsBackwards() == backwards) {
+         auto gAudioIO = AudioIOBase::Get();
+         auto time = gAudioIO->GetStreamTime();
+         auto &viewInfo = ViewInfo::Get(project);
+         auto &selection = viewInfo.selectedRegion;
+
+         // If the time selection has not changed during scrubbing
+         // set the cursor position
+         if (selection.t0() == initT0 && selection.t1() == initT1) {
+            double endTime = TrackList::Get(project).GetEndTime();
+            time = std::min(time, endTime);
+            time = std::max(time, 0.0);
+            selection.setTimes(time, time);
+            ProjectHistory::Get(project).ModifyState(false);
+         }
+
+         scrubber.Cancel();
+         ProjectAudioManager::Get(project).Stop();
+      }
+   }
+   else {      // KeyDown
+      auto gAudioIO = AudioIOBase::Get();
+      auto &scrubber = Scrubber::Get(project);
+      if (scrubber.IsKeyboardScrubbing() && scrubber.IsBackwards() != backwards) {
+         // change direction
+         scrubber.SetBackwards(backwards);
+      }
+      else if (!gAudioIO->IsBusy() && !scrubber.HasMark()) {
+         auto &viewInfo = ViewInfo::Get(project);
+         auto &selection = viewInfo.selectedRegion;
+         double endTime = TrackList::Get(project).GetEndTime();
+         double t0 = selection.t0();
+    
+         if ((!backwards && t0 >= 0 && t0 < endTime) ||
+            (backwards && t0 > 0 && t0 <= endTime)) {
+            initT0 = t0;
+            initT1 = selection.t1();
+            scrubber.StartKeyboardScrubbing(t0, backwards);
+         }
+      }
+   }
+}
+
+void Scrubber::OnKeyboardScrubBackwards(const CommandContext &context)
+{
+   auto evt = context.pEvt;
+   if (evt)
+      DoKeyboardScrub(true, evt->GetEventType() == wxEVT_KEY_UP);
+   else {              // called from menu, so simulate keydown and keyup
+      DoKeyboardScrub(true, false);
+      DoKeyboardScrub(true, true);
+   }
+}
+
+void Scrubber::OnKeyboardScrubForwards(const CommandContext &context)
+{
+   auto evt = context.pEvt;
+   if (evt)
+      DoKeyboardScrub(false, evt->GetEventType() == wxEVT_KEY_UP);
+   else {              // called from menu, so simulate keydown and keyup
+      DoKeyboardScrub(false, false);
+      DoKeyboardScrub(false, true);
+   }
+}
+
+namespace {
+
+static const auto finder =
+   [](AudacityProject &project) -> CommandHandlerObject&
+     { return Scrubber::Get( project ); };
+
+using namespace MenuTable;
+BaseItemSharedPtr ToolbarMenu()
 {
    using Options = CommandManager::Options;
 
-   MenuTable::BaseItemPtrs ptrs;
-   for (const auto &item : menuItems) {
-      ptrs.push_back( MenuTable::Command( item.name, item.label,
-          findme, static_cast<CommandFunctorPointer>(item.memFn),
-          item.flags,
-          item.StatusTest
-             ? // a checkmark item
-               Options{}.CheckState( (this->*item.StatusTest)() )
-             : // not a checkmark item
-               Options{}
-      ) );
-   }
+   static BaseItemSharedPtr menu { (
+   FinderScope{ finder },
+   Menu( wxT("Scrubbing"),
+      XO("Scru&bbing"),
+      []{
+         BaseItemPtrs ptrs;
+         for (const auto &item : menuItems()) {
+            ptrs.push_back( Command( item.name, item.label,
+               item.memFn,
+               item.flags,
+               item.StatusTest
+                  ? // a checkmark item
+                     Options{}.CheckTest( [&item](AudacityProject &project){
+                     return ( Scrubber::Get(project).*(item.StatusTest) )(); } )
+                  : // not a checkmark item
+                     Options{}
+            ) );
+         }
+         return ptrs;
+      }()
+   )
+   ) };
+   
+   return menu;
+}
 
-   return MenuTable::Menu( XO("Scru&bbing"), std::move( ptrs ) );
+AttachedItem sAttachment{
+   wxT("Transport/Basic"),
+   Shared( ToolbarMenu() )
+};
+
+BaseItemSharedPtr KeyboardScrubbingItems()
+{
+   using Options = CommandManager::Options;
+
+   static BaseItemSharedPtr items{
+   ( FinderScope{ finder },
+   Items( wxT("KeyboardScrubbing"),
+      Command(wxT("KeyboardScrubBackwards"), XXO("Scrub Bac&kwards"),
+         &Scrubber::OnKeyboardScrubBackwards,
+         CaptureNotBusyFlag() | CanStopAudioStreamFlag(), wxT("U\twantKeyup")),
+      Command(wxT("KeyboardScrubForwards"), XXO("Scrub For&wards"),
+         &Scrubber::OnKeyboardScrubForwards,
+         CaptureNotBusyFlag() | CanStopAudioStreamFlag(), wxT("I\twantKeyup"))
+   ) ) };
+   return items;
+}
+
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part1/Transport"),
+   Shared( KeyboardScrubbingItems() )
+};
+
 }
 
 void Scrubber::PopulatePopupMenu(wxMenu &menu)
 {
    int id = CMD_ID;
    auto &cm = CommandManager::Get( *mProject );
-   for (const auto &item : menuItems) {
+   for (const auto &item : menuItems()) {
       if (cm.GetEnabled(item.name)) {
          auto test = item.StatusTest;
          menu.Append(id, item.label.Translation(), wxString{},
@@ -1164,7 +1287,7 @@ void Scrubber::PopulatePopupMenu(wxMenu &menu)
 void Scrubber::CheckMenuItems()
 {
    auto &cm = CommandManager::Get( *mProject );
-   for (const auto &item : menuItems) {
+   for (const auto &item : menuItems()) {
       auto test = item.StatusTest;
       if (test)
          cm.Check(item.name, (this->*test)());

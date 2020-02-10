@@ -995,43 +995,41 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& EditActions::Handler :: X)
+#define FN(X) (& EditActions::Handler :: X)
 
-MenuTable::BaseItemPtr LabelEditMenus( AudacityProject &project );
+static const ReservedCommandFlag
+&CutCopyAvailableFlag() { static ReservedCommandFlag flag{
+   [](const AudacityProject &project){
+      auto range = TrackList::Get( project ).Any<const LabelTrack>()
+         + [&](const LabelTrack *pTrack){
+            return LabelTrackView::Get( *pTrack ).IsTextSelected(
+               // unhappy const_cast because track focus might be set
+               const_cast<AudacityProject&>(project)
+            );
+         };
+      if ( !range.empty() )
+         return true;
 
-const ReservedCommandFlag
-   CutCopyAvailableFlag{
-      [](const AudacityProject &project){
-         auto range = TrackList::Get( project ).Any<const LabelTrack>()
-            + [&](const LabelTrack *pTrack){
-               return LabelTrackView::Get( *pTrack ).IsTextSelected(
-                  // unhappy const_cast because track focus might be set
-                  const_cast<AudacityProject&>(project)
-               );
-            };
-         if ( !range.empty() )
-            return true;
+      if (
+         TimeSelectedPred( project )
+      &&
+         TracksSelectedPred( project )
+      )
+         return true;
 
-         if (
-            TimeSelectedPred( project )
-         &&
-            TracksSelectedPred( project )
-         )
-            return true;
+      return false;
+   },
+   cutCopyOptions()
+}; return flag; }
 
-         return false;
-      },
-      cutCopyOptions()
-   };
-
-MenuTable::BaseItemPtr EditMenu( AudacityProject & )
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr EditMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
 
    static const auto NotBusyTimeAndTracksFlags =
-      AudioIONotBusyFlag | TimeSelectedFlag | TracksSelectedFlag;
+      AudioIONotBusyFlag() | TimeSelectedFlag() | TracksSelectedFlag();
 
    // The default shortcut key for Redo is different on different platforms.
    static constexpr auto redoKey =
@@ -1052,154 +1050,181 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject & )
 #endif
    ;
 
-   return Menu( XO("&Edit"),
-      Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
-         AudioIONotBusyFlag | UndoAvailableFlag, wxT("Ctrl+Z") ),
+   static BaseItemSharedPtr menu{
+   ( FinderScope{ findCommandHandler },
+   Menu( wxT("Edit"), XO("&Edit"),
+      Section( "UndoRedo",
+         Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
+            AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
 
-      Command( wxT("Redo"), XXO("&Redo"), FN(OnRedo),
-         AudioIONotBusyFlag | RedoAvailableFlag, redoKey ),
-         
-      Special( [](AudacityProject &project, wxMenu&) {
-         // Change names in the CommandManager as a side-effect
-         MenuManager::ModifyUndoMenuItems(project);
-      }),
-
-      Separator(),
-
-      // Basic Edit commands
-      /* i18n-hint: (verb)*/
-      Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
-         AudioIONotBusyFlag | CutCopyAvailableFlag | NoAutoSelect,
-         wxT("Ctrl+X") ),
-      Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
-         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
-         wxT("Ctrl+K") ),
-      /* i18n-hint: (verb)*/
-      Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
-         AudioIONotBusyFlag | CutCopyAvailableFlag, wxT("Ctrl+C") ),
-      /* i18n-hint: (verb)*/
-      Command( wxT("Paste"), XXO("&Paste"), FN(OnPaste),
-         AudioIONotBusyFlag, wxT("Ctrl+V") ),
-      /* i18n-hint: (verb)*/
-      Command( wxT("Duplicate"), XXO("Duplic&ate"), FN(OnDuplicate),
-         NotBusyTimeAndTracksFlags, wxT("Ctrl+D") ),
-
-      Separator(),
-
-      Menu( XO("R&emove Special"),
-         /* i18n-hint: (verb) Do a special kind of cut*/
-         Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
-            NotBusyTimeAndTracksFlags,
-            Options{ wxT("Ctrl+Alt+X") }.UseStrictFlags() ),
-         /* i18n-hint: (verb) Do a special kind of DELETE*/
-         Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
-            NotBusyTimeAndTracksFlags,
-            Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() ),
-
-         Separator(),
-
-         /* i18n-hint: (verb)*/
-         Command( wxT("Silence"), XXO("Silence Audi&o"), FN(OnSilence),
-            AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-            wxT("Ctrl+L") ),
-         /* i18n-hint: (verb)*/
-         Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
-            AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-            Options{ wxT("Ctrl+T") }.UseStrictFlags() )
+         Command( wxT("Redo"), XXO("&Redo"), FN(OnRedo),
+            AudioIONotBusyFlag() | RedoAvailableFlag(), redoKey ),
+            
+         Special( wxT("UndoItemsUpdateStep"),
+         [](AudacityProject &project, wxMenu&) {
+            // Change names in the CommandManager as a side-effect
+            MenuManager::ModifyUndoMenuItems(project);
+         })
       ),
 
-      Separator(),
-
-      //////////////////////////////////////////////////////////////////////////
-
-      Menu( XO("Clip B&oundaries"),
-         /* i18n-hint: (verb) It's an item on a menu. */
-         Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
-            AudioIONotBusyFlag | WaveTracksSelectedFlag,
-            Options{ wxT("Ctrl+I") }.UseStrictFlags() ),
-         Command( wxT("SplitNew"), XXO("Split Ne&w"), FN(OnSplitNew),
-            AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-            Options{ wxT("Ctrl+Alt+I") }.UseStrictFlags() ),
-
-         Separator(),
-
+      Section( "Basic",
+         // Basic Edit commands
          /* i18n-hint: (verb)*/
-         Command( wxT("Join"), XXO("&Join"), FN(OnJoin),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+J") ),
-         Command( wxT("Disjoin"), XXO("Detac&h at Silences"), FN(OnDisjoin),
-            NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+J") )
+         Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
+            AudioIONotBusyFlag() | CutCopyAvailableFlag() | NoAutoSelect(),
+            wxT("Ctrl+X") ),
+         Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
+            AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag() | NoAutoSelect(),
+            wxT("Ctrl+K") ),
+         /* i18n-hint: (verb)*/
+         Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
+            AudioIONotBusyFlag() | CutCopyAvailableFlag(), wxT("Ctrl+C") ),
+         /* i18n-hint: (verb)*/
+         Command( wxT("Paste"), XXO("&Paste"), FN(OnPaste),
+            AudioIONotBusyFlag(), wxT("Ctrl+V") ),
+         /* i18n-hint: (verb)*/
+         Command( wxT("Duplicate"), XXO("Duplic&ate"), FN(OnDuplicate),
+            NotBusyTimeAndTracksFlags, wxT("Ctrl+D") ),
+
+         Section( "",
+            Menu( wxT("RemoveSpecial"), XO("R&emove Special"),
+               Section( "",
+                  /* i18n-hint: (verb) Do a special kind of cut*/
+                  Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
+                     NotBusyTimeAndTracksFlags,
+                     Options{ wxT("Ctrl+Alt+X") }.UseStrictFlags() ),
+                  /* i18n-hint: (verb) Do a special kind of DELETE*/
+                  Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
+                     NotBusyTimeAndTracksFlags,
+                     Options{ wxT("Ctrl+Alt+K") }.UseStrictFlags() )
+               ),
+
+               Section( "",
+                  /* i18n-hint: (verb)*/
+                  Command( wxT("Silence"), XXO("Silence Audi&o"), FN(OnSilence),
+                     AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+                     wxT("Ctrl+L") ),
+                  /* i18n-hint: (verb)*/
+                  Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
+                     AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+                     Options{ wxT("Ctrl+T") }.UseStrictFlags() )
+               )
+            )
+         )
       ),
+        
 
+      Section( "Other",
       //////////////////////////////////////////////////////////////////////////
 
-      LabelEditMenus,
+         Menu( wxT("Clip"), XO("Clip B&oundaries"),
+            Section( "",
+               /* i18n-hint: (verb) It's an item on a menu. */
+               Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
+                  AudioIONotBusyFlag() | WaveTracksSelectedFlag(),
+                  Options{ wxT("Ctrl+I") }.UseStrictFlags() ),
+               Command( wxT("SplitNew"), XXO("Split Ne&w"), FN(OnSplitNew),
+                  AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+                  Options{ wxT("Ctrl+Alt+I") }.UseStrictFlags() )
+            ),
 
-      Command( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
-         AudioIONotBusyFlag ),
+            Section( "",
+               /* i18n-hint: (verb)*/
+               Command( wxT("Join"), XXO("&Join"), FN(OnJoin),
+                  NotBusyTimeAndTracksFlags, wxT("Ctrl+J") ),
+               Command( wxT("Disjoin"), XXO("Detac&h at Silences"), FN(OnDisjoin),
+                  NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+J") )
+            )
+         ),
 
-      //////////////////////////////////////////////////////////////////////////
+         //////////////////////////////////////////////////////////////////////////
+
+         Command( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
+            AudioIONotBusyFlag() )
+
+         //////////////////////////////////////////////////////////////////////////
 
 #ifndef __WXMAC__
-      Separator(),
+      ),
+
+      Section( "Preferences",
+#else
+      ,
 #endif
 
-      Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
-         AudioIONotBusyFlag, prefKey )
-   );
+         Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
+            AudioIONotBusyFlag(), prefKey )
+      )
+
+   ) ) };
+   return menu;
 }
 
-MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & )
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( EditMenu() )
+};
+
+BaseItemSharedPtr ExtraEditMenu()
 {
-   using namespace MenuTable;
    using Options = CommandManager::Options;
    static const auto flags =
-      AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag;
-   return Menu( XO("&Edit"),
+      AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag();
+   static BaseItemSharedPtr menu{
+   ( FinderScope{ findCommandHandler },
+   Menu( wxT("Edit"), XO("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
-         (flags | NoAutoSelect),
+         (flags | NoAutoSelect()),
          wxT("Backspace") ),
       Command( wxT("DeleteKey2"), XXO("Delete Key&2"), FN(OnDelete),
-         (flags | NoAutoSelect),
+         (flags | NoAutoSelect()),
          wxT("Delete") )
-   );
+   ) ) };
+   return menu;
 }
 
 auto canSelectAll = [](const AudacityProject &project){
    return MenuManager::Get( project ).mWhatIfNoSelection != 0; };
 auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
    if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
-      (flagsRqd & NoAutoSelect).none() )
+      (flagsRqd & NoAutoSelect()).none() )
       SelectUtilities::DoSelectAllAudio(project);
 };
 
 RegisteredMenuItemEnabler selectTracks{{
-   []{ return TracksExistFlag; },
-   []{ return TracksSelectedFlag; },
+   []{ return TracksExistFlag(); },
+   []{ return TracksSelectedFlag(); },
    canSelectAll,
    selectAll
 }};
 
 // Including time tracks.
 RegisteredMenuItemEnabler selectAnyTracks{{
-   []{ return TracksExistFlag; },
-   []{ return AnyTracksSelectedFlag; },
+   []{ return TracksExistFlag(); },
+   []{ return AnyTracksSelectedFlag(); },
    canSelectAll,
    selectAll
 }};
 
 RegisteredMenuItemEnabler selectWaveTracks{{
-   []{ return WaveTracksExistFlag; },
-   []{ return TimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag; },
+   []{ return WaveTracksExistFlag(); },
+   []{ return TimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag(); },
    canSelectAll,
    selectAll
 }};
 
 // Also enable select for the noise reduction case.
 RegisteredMenuItemEnabler selectWaveTracks2{{
-   []{ return WaveTracksExistFlag; },
-   []{ return NoiseReductionTimeSelectedFlag | WaveTracksSelectedFlag | CutCopyAvailableFlag; },
+   []{ return WaveTracksExistFlag(); },
+   []{ return NoiseReductionTimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag(); },
    canSelectAll,
    selectAll
 }};
 
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraEditMenu() )
+};
+
+}
 #undef FN

@@ -137,6 +137,8 @@ public:
    bool Initialize();
 
 private:
+   wxPanel *BuildButtonBar( wxWindow *parent );
+
    void OnInitDialog(wxInitDialogEvent & evt);
    void OnErase(wxEraseEvent & evt);
    void OnPaint(wxPaintEvent & evt);
@@ -229,5 +231,37 @@ namespace  EffectUI {
       const PluginID & ID, const CommandContext &context, unsigned flags );
 
 }
+
+class ShuttleGui;
+
+// Obsolescent dialog still used only in Noise Reduction/Removal
+class AUDACITY_DLL_API EffectDialog /* not final */ : public wxDialogWrapper
+{
+public:
+   // constructors and destructors
+   EffectDialog(wxWindow * parent,
+                const TranslatableString & title,
+                int type = 0,
+                int flags = wxDEFAULT_DIALOG_STYLE,
+                int additionalButtons = 0);
+
+   void Init();
+
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
+   bool Validate() override;
+
+   // NEW virtuals:
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual void OnPreview(wxCommandEvent & evt);
+   virtual void OnOk(wxCommandEvent & evt);
+
+private:
+   int mType;
+   int mAdditionalButtons;
+
+   DECLARE_EVENT_TABLE()
+   wxDECLARE_NO_COPY_CLASS(EffectDialog);
+};
 
 #endif // __AUDACITY_EFFECTUI_H__

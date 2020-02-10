@@ -633,6 +633,7 @@ ac_includes_default="\
 ac_default_prefix=/usr/local
 ac_header_list=
 enable_option_checking=no
+ac_func_list=
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
@@ -2806,6 +2807,7 @@ fi
 gt_needs="$gt_needs "
 as_fn_append ac_header_list " alloca.h"
 as_fn_append ac_header_list " libudev.h"
+as_fn_append ac_func_list " mlock"
 # Check that the precious variables saved in the cache have kept the same
 # value.
 ac_cache_corrupted=false
@@ -24191,6 +24193,24 @@ if test "x$ac_cv_c99_lrintf" = "xyes"; then
 $as_echo "#define HAVE_LRINTF 1" >>confdefs.h
 
 fi
+
+
+
+
+
+  for ac_func in $ac_func_list
+do :
+  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+ac_fn_cxx_check_func "$LINENO" "$ac_func" "$as_ac_var"
+if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
+  cat >>confdefs.h <<_ACEOF
+#define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
+_ACEOF
+
+fi
+done
+
+
 
 
 

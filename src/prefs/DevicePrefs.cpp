@@ -423,7 +423,7 @@ bool DevicePrefs::Commit()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 10,
+PrefsPanel::Registration sAttachment{ "Device",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew

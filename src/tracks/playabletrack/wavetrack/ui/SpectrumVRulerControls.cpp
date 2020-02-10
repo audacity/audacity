@@ -147,9 +147,6 @@ void SpectrumVRulerControls::DoUpdateVRuler(
       {
          // Spectrum
          
-         if (rect.height < 60)
-            return;
-         
          /*
           draw the ruler
           we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
@@ -181,9 +178,6 @@ void SpectrumVRulerControls::DoUpdateVRuler(
       {
          // SpectrumLog
          
-         if (rect.height < 10)
-            return;
-         
          /*
           draw the ruler
           we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
@@ -199,7 +193,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
          NumberScale scale(
             wt->GetSpectrogramSettings().GetScale( minFreq, maxFreq )
                .Reversal() );
-         vruler->SetNumberScale(&scale);
+         vruler->SetNumberScale(scale);
       }
          break;
    }

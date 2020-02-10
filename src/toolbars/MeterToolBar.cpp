@@ -248,21 +248,6 @@ bool MeterToolBar::Expose( bool show )
    return ToolBar::Expose( show );
 }
 
-wxSize MeterToolBar::GetDockedSize()
-{
-   const int tbs = toolbarSingle + toolbarGap;
-   wxSize sz = GetSize();
-   wxSize sz2 = GetMinSize();
-   sz.x = wxMax( sz.x, sz2.x );
-   sz.y = wxMax( sz.y, sz2.y );
-   // 50 is the size where we switch from expanded to compact.
-   if( sz.y < 50 )
-      sz.y = tbs-1;
-   else 
-      sz.y = 2 * tbs -1;
-   return sz;
-}
-
 // The meter's sizing code does not take account of the resizer
 // Hence after docking we need to enlarge the bar (using fit)
 // so that the resizer can be reached.

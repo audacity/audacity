@@ -265,31 +265,41 @@ PopupMenuTable &SpectrumVRulerMenuTable::Instance()
    return instance;
 }
 
-void SpectrumVRulerMenuTable::InitMenu(Menu *pMenu)
-{
-   WaveTrackVRulerMenuTable::InitMenu(pMenu);
-
-   WaveTrack *const wt = mpData->pTrack;
-   const int id =
-      OnFirstSpectrumScaleID + (int)(wt->GetSpectrogramSettings().scaleType);
-   pMenu->Check(id, true);
-}
-
 BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
 
+BeginSection( "Scales" );
    {
       const auto & names = SpectrogramSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         POPUP_MENU_RADIO_ITEM(OnFirstSpectrumScaleID + ii, names[ii],
-            OnSpectrumScaleType);
+         AppendRadioItem( names[ii].Internal(),
+            OnFirstSpectrumScaleID + ii, names[ii].Msgid(),
+            POPUP_MENU_FN( OnSpectrumScaleType ),
+            []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+               WaveTrack *const wt =
+                  static_cast<SpectrumVRulerMenuTable&>( handler )
+                     .mpData->pTrack;
+               if ( id ==
+                  OnFirstSpectrumScaleID +
+                      (int)(wt->GetSpectrogramSettings().scaleType ) )
+                  menu.Check(id, true);
+            }
+         );
       }
    }
+EndSection();
 
-POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnZoomResetID,         XO("Zoom Reset"),                     OnZoomReset)
-   POPUP_MENU_ITEM(OnZoomFitVerticalID,   XO("Zoom to Fit\tShift-Right-Click"), OnZoomFitVertical)
-   POPUP_MENU_ITEM(OnZoomInVerticalID,    XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-   POPUP_MENU_ITEM(OnZoomOutVerticalID,   XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
+
+BeginSection( "Zoom" );
+   AppendItem( "Reset", OnZoomResetID,         XO("Zoom Reset"),
+              POPUP_MENU_FN( OnZoomReset ) );
+   AppendItem( "Fit", OnZoomFitVerticalID,   XO("Zoom to Fit\tShift-Right-Click"),
+              POPUP_MENU_FN( OnZoomFitVertical ) );
+   AppendItem( "In", OnZoomInVerticalID,    XO("Zoom In\tLeft-Click/Left-Drag"),
+              POPUP_MENU_FN( OnZoomInVertical ) );
+   AppendItem( "Out", OnZoomOutVerticalID,   XO("Zoom Out\tShift-Left-Click"),
+              POPUP_MENU_FN( OnZoomOutVertical ) );
+EndSection();
+
 END_POPUP_MENU()
 
 void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)

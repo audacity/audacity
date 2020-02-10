@@ -52,12 +52,12 @@ void OnShowTransportToolBar(const CommandContext &context)
    MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
-void OnShowTimerToolBar(const CommandContext &context)
+void OnShowTimeToolBar(const CommandContext &context)
 {
    auto &project = context.project;
    auto &toolManager = ToolManager::Get( project );
 
-   toolManager.ShowHide( TimerBarID );
+   toolManager.ShowHide( TimeBarID );
    MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
@@ -251,92 +251,125 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& ToolbarActions::Handler :: X)
+#define FN(X) (& ToolbarActions::Handler :: X)
 
-MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
+namespace{
+using namespace MenuTable;
+
+auto ToolbarCheckFn( int toolbarId ) -> CommandListEntry::CheckFn
 {
-   using namespace MenuTable;
-   using Options = CommandManager::Options;
-
-   static const auto checkOff = Options{}.CheckState( false );
-
-   return Menu( XO("&Toolbars"),
-      /* i18n-hint: (verb)*/
-      Command( wxT("ResetToolbars"), XXO("Reset Toolb&ars"),
-         FN(OnResetToolBars), AlwaysEnabledFlag ),
-
-      Separator(),
-
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         with the big buttons on it (play record etc)*/
-      Command( wxT("ShowTransportTB"), XXO("&Transport Toolbar"),
-         FN(OnShowTransportToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows a toolbar
-         that has some tools in it*/
-      Command( wxT("ShowToolsTB"), XXO("T&ools Toolbar"),
-         FN(OnShowToolsToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         with the recording level meters*/
-      Command( wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"),
-         FN(OnShowRecordMeterToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         with the playback level meter*/
-      Command( wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"),
-         FN(OnShowPlayMeterToolBar), AlwaysEnabledFlag, checkOff )
-
-      /* --i18nhint: Clicking this menu item shows the toolbar
-         which has sound level meters*/
-      //Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
-      //   FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
-
-         ,
-
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         with the mixer*/
-      Command( wxT("ShowMixerTB"), XXO("Mi&xer Toolbar"),
-         FN(OnShowMixerToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
-      Command( wxT("ShowEditTB"), XXO("&Edit Toolbar"),
-         FN(OnShowEditToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         for transcription (currently just vary play speed)*/
-      Command( wxT("ShowTranscriptionTB"), XXO("Pla&y-at-Speed Toolbar"),
-         FN(OnShowTranscriptionToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         that enables Scrub or Seek playback and Scrub Ruler*/
-      Command( wxT("ShowScrubbingTB"), XXO("Scru&b Toolbar"),
-         FN(OnShowScrubbingToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         that manages devices*/
-      Command( wxT("ShowDeviceTB"), XXO("&Device Toolbar"),
-         FN(OnShowDeviceToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         for selecting a time range of audio*/
-      Command( wxT("ShowSelectionTB"), XXO("&Selection Toolbar"),
-         FN(OnShowSelectionToolBar), AlwaysEnabledFlag, checkOff )
-#ifdef EXPERIMENTAL_TIMER_TOOLBAR
-      ,
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         for viewing actual time of the cursor*/
-      Command( wxT("ShowTImerToolBarTB"), XXO("&Timer Toolbar"),
-         FN(OnShowTimerToolBar), AlwaysEnabledFlag, checkOff )
-#endif
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      ,
-      Command( wxT("ShowSpectralSelectionTB"),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         for selecting a frequency range of audio*/
-         XXO("Spe&ctral Selection Toolbar"),
-         FN(OnShowSpectralSelectionToolBar), AlwaysEnabledFlag, checkOff )
-#endif
-   );
+   return [toolbarId](AudacityProject &project){
+      auto &toolManager = ToolManager::Get( project );
+      return toolManager.IsVisible(toolbarId);
+   };
 }
 
-MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & )
+BaseItemSharedPtr ToolbarsMenu()
 {
-   using namespace MenuTable;
-   return Menu( XO("T&ools"),
+   using Options = CommandManager::Options;
+
+   static BaseItemSharedPtr menu{
+   ( FinderScope{ findCommandHandler },
+   Section( wxT("Toolbars"),
+      Menu( wxT("Toolbars"), XO("&Toolbars"),
+         Section( "Reset",
+            /* i18n-hint: (verb)*/
+            Command( wxT("ResetToolbars"), XXO("Reset Toolb&ars"),
+               FN(OnResetToolBars), AlwaysEnabledFlag )
+         ),
+
+         Section( "Other",
+            /* i18n-hint: Clicking this menu item shows the toolbar
+               with the big buttons on it (play record etc)*/
+            Command( wxT("ShowTransportTB"), XXO("&Transport Toolbar"),
+               FN(OnShowTransportToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( TransportBarID ) ) ),
+            /* i18n-hint: Clicking this menu item shows a toolbar
+               that has some tools in it*/
+            Command( wxT("ShowToolsTB"), XXO("T&ools Toolbar"),
+               FN(OnShowToolsToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( ToolsBarID ) ) ),
+            /* i18n-hint: Clicking this menu item shows the toolbar
+               with the recording level meters*/
+            Command( wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"),
+               FN(OnShowRecordMeterToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( RecordMeterBarID ) ) ),
+            /* i18n-hint: Clicking this menu item shows the toolbar
+               with the playback level meter*/
+            Command( wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"),
+               FN(OnShowPlayMeterToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( PlayMeterBarID ) ) )
+
+            /* --i18nhint: Clicking this menu item shows the toolbar
+               which has sound level meters*/
+            //Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+            //   FN(OnShowMeterToolBar), AlwaysEnabledFlag,
+            //   Options{}.CheckTest( ToolbarCheckFn( MeterBarID ) ) )
+
+               ,
+
+            /* i18n-hint: Clicking this menu item shows the toolbar
+               with the mixer*/
+            Command( wxT("ShowMixerTB"), XXO("Mi&xer Toolbar"),
+               FN(OnShowMixerToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( MixerBarID ) ) ),
+            /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
+            Command( wxT("ShowEditTB"), XXO("&Edit Toolbar"),
+               FN(OnShowEditToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( EditBarID ) ) ),
+            /* i18n-hint: Clicking this menu item shows the toolbar
+               for transcription (currently just vary play speed)*/
+            Command( wxT("ShowTranscriptionTB"), XXO("Pla&y-at-Speed Toolbar"),
+               FN(OnShowTranscriptionToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( TranscriptionBarID ) ) ),
+            /* i18n-hint: Clicking this menu item shows the toolbar
+               that enables Scrub or Seek playback and Scrub Ruler*/
+            Command( wxT("ShowScrubbingTB"), XXO("Scru&b Toolbar"),
+               FN(OnShowScrubbingToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( ScrubbingBarID ) ) ),
+            /* i18n-hint: Clicking this menu item shows the toolbar
+               that manages devices*/
+            Command( wxT("ShowDeviceTB"), XXO("&Device Toolbar"),
+               FN(OnShowDeviceToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( DeviceBarID ) ) ),
+            /* i18n-hint: Clicking this menu item shows the toolbar
+               for selecting a time range of audio*/
+            Command( wxT("ShowSelectionTB"), XXO("&Selection Toolbar"),
+               FN(OnShowSelectionToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( SelectionBarID ) ) )
+      #ifdef EXPERIMENTAL_TIMER_TOOLBAR
+            ,
+            /* i18n-hint: Clicking this menu item shows the toolbar
+               for viewing actual time of the cursor*/
+            Command( wxT("ShowTimeToolBarTB"), XXO("&Time Toolbar"),
+               FN(OnShowTimeToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( TimeBarID ) ) )
+      #endif
+      #ifdef EXPERIMENTAL_SPECTRAL_EDITING
+            ,
+            Command( wxT("ShowSpectralSelectionTB"),
+            /* i18n-hint: Clicking this menu item shows the toolbar
+               for selecting a frequency range of audio*/
+               XXO("Spe&ctral Selection Toolbar"),
+               FN(OnShowSpectralSelectionToolBar), AlwaysEnabledFlag,
+               Options{}.CheckTest( ToolbarCheckFn( SpectralSelectionBarID ) ) )
+      #endif
+         )
+      )
+   ) ) };
+   return menu;
+}
+
+AttachedItem sAttachment1{
+   Placement{ wxT("View/Other"), { OrderingHint::Begin } },
+   Shared( ToolbarsMenu() )
+};
+
+BaseItemSharedPtr ExtraToolsMenu()
+{
+   static BaseItemSharedPtr menu{
+   ( FinderScope{ findCommandHandler },
+   Menu( wxT("Tools"), XO("T&ools"),
       Command( wxT("SelectTool"), XXO("&Selection Tool"), FN(OnSelectTool),
          AlwaysEnabledFlag, wxT("F1") ),
       Command( wxT("EnvelopeTool"), XXO("&Envelope Tool"),
@@ -353,7 +386,14 @@ MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & )
          AlwaysEnabledFlag, wxT("A") ),
       Command( wxT("NextTool"), XXO("&Next Tool"), FN(OnNextTool),
          AlwaysEnabledFlag, wxT("D") )
-   );
+   ) ) };
+   return menu;
+}
+
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraToolsMenu() )
+};
 }
 
 #undef FN

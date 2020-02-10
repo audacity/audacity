@@ -305,7 +305,7 @@ void RecordingPrefs::OnToggleCustomName(wxCommandEvent & /* Evt */)
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 30,
+PrefsPanel::Registration sAttachment{ "Recording",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew

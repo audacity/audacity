@@ -269,6 +269,11 @@ TranslatableStrings Msgids(
    );
 }
 
+TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings )
+{
+   return Msgids( strings.data(), strings.size() );
+}
+
 // Find a better place for this?
 #include "audacity/Types.h"
 Identifier::Identifier(

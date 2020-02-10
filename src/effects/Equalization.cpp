@@ -723,19 +723,6 @@ bool EffectEqualization::Process()
    return bGoodResult;
 }
 
-bool EffectEqualization::PopulateUI(wxWindow *parent)
-{
-   mUIParent = parent;
-   mUIParent->PushEventHandler(this);
-
-   LoadUserPreset(GetCurrentSettingsGroup());
-
-   ShuttleGui S(mUIParent, eIsCreating);
-   PopulateOrExchange(S);
-
-   return true;
-}
-
 bool EffectEqualization::CloseUI()
 {
    mCurve = NULL;
@@ -746,6 +733,9 @@ bool EffectEqualization::CloseUI()
 
 void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 {
+   if ( S.GetMode() == eIsCreating )
+      LoadUserPreset(GetCurrentSettingsGroup());
+
    //LoadCurves();
 
    auto trackList = inputTracks();

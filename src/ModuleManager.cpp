@@ -279,7 +279,9 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
          int action;
          action = ShowMultiDialog(msg, XO("Audacity Module Loader"),
             buttons,
-            XO("Try and load this module?"), false);
+            "",
+            XO("Try and load this module?"), 
+            false);
 #ifdef EXPERIMENTAL_MODULE_PREFS
          // If we're not prompting always, accept the answer permanantly
          if( iModuleStatus == kModuleNew ){

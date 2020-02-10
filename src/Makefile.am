@@ -53,6 +53,7 @@ audacity_CPPFLAGS = \
 	-Wno-deprecated-declarations \
 	-D__STDC_CONSTANT_MACROS \
 	-DWXINTL_NO_GETTEXT_MACRO \
+	-DPKGLIBDIR=\"$(pkglibdir)\" \
 	-DLIBDIR=\"$(libdir)\" \
 	$(EXPAT_CFLAGS) \
 	$(FILEDIALOG_CFLAGS) \
@@ -314,7 +315,6 @@ audacity_SOURCES = \
 	TrackPanelResizerCell.h \
 	TrackUtilities.cpp \
 	TrackUtilities.h \
-	TranslatableStringArray.h \
 	UIHandle.h \
 	UIHandle.cpp \
 	UndoManager.cpp \

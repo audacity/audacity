@@ -231,7 +231,10 @@ public:
 
    ResponseQueueTarget()
       : mBuffer( wxEmptyString )
-   { }
+   { 
+      // Cater for handling long responses quickly.
+      mBuffer.Alloc(40000);
+   }
    virtual ~ResponseQueueTarget()
    {
       if( mBuffer.StartsWith("\n" ) )

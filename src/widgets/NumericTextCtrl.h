@@ -56,6 +56,7 @@ public:
    static NumericFormatSymbol DefaultSelectionFormat();
    static NumericFormatSymbol TimeAndSampleFormat();
    static NumericFormatSymbol SecondsFormat();
+   static NumericFormatSymbol HoursMinsSecondsFormat();
    static NumericFormatSymbol HundredthsFormat();
    static NumericFormatSymbol HertzFormat();
    
@@ -216,6 +217,8 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
    int GetFocusedField() { return mLastField; }
    int GetFocusedDigit() { return mFocusedDigit; }
+   // give a sane aspect ratio even if zero height.
+   float GetAspectRatio() { return mHeight ? (mWidth / mHeight):10; }
 
 private:
 

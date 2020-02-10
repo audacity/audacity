@@ -117,8 +117,6 @@ public:
    // This returns the same as the enabled state of the menu items:
    bool CanScrub() const;
 
-   // For the toolbar
-   MenuTable::BaseItemPtr Menu();
    // For popup
    void PopulatePopupMenu(wxMenu &menu);
 
@@ -126,6 +124,10 @@ public:
    void OnScrub(const CommandContext&);
    void OnSeek(const CommandContext&);
    void OnToggleScrubRuler(const CommandContext&);
+
+   void OnKeyboardScrubBackwards(const CommandContext&);
+   void OnKeyboardScrubForwards(const CommandContext&);
+   void DoKeyboardScrub(bool backwards, bool keyUp);
 
    // Convenience wrapper for the above
    template<void (Scrubber::*pfn)(const CommandContext&)>

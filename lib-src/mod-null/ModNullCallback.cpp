@@ -113,7 +113,7 @@ void ModNullCallback::OnFuncSecond(const CommandContext &)
 }
 ModNullCallback * pModNullCallback=NULL;
 
-#define ModNullFN(X) ident, static_cast<CommandFunctorPointer>(&ModNullCallback:: X)
+#define ModNullFN(X) static_cast<CommandFunctorPointer>((&ModNullCallback:: X))
 
 extern "C" {
 
@@ -146,38 +146,31 @@ int ModuleDispatch(ModuleDispatchTypes type)
       break;
    case AppQuiting:
       break;
-   case ProjectInitialized:
-   case MenusRebuilt:
-      {
-         AudacityProject *p = GetActiveProject();
-         if( p== NULL )
-            return 0;
-
-         wxMenuBar * pBar = GetProjectFrame( *p ).GetMenuBar();
-         wxMenu * pMenu = pBar->GetMenu( 8 );  // Menu 8 is the Analyze Menu.
-         CommandManager * c = &CommandManager::Get( *p );
-
-         c->SetCurrentMenu( pMenu );
-         c->AddSeparator();
-         // We add two new commands into the Analyze menu.
-         c->AddItem( 
-            _T("A New Command"), // internal name
-            XO("1st Experimental Command..."), //displayed name
-            ModNullFN( OnFuncFirst ),
-            AudioIONotBusyFlag );
-         c->AddItem( 
-            _T("Another New Command"), 
-            XO("2nd Experimental Command"),
-            ModNullFN( OnFuncSecond ),
-            AudioIONotBusyFlag );
-         c->ClearCurrentMenu();
-   }
-      break;
    default:
       break;
    }
 
    return 1;
+}
+
+// Register our extra menu items
+namespace {
+   using namespace MenuTable;
+   // We add two new commands into the Analyze menu.
+   AttachedItem sAttachment{ wxT("Analyze"),
+      ( FinderScope( ident ), Section( wxT("NullModule"),
+         Command(
+            _T("A New Command"), // internal name
+            XO("1st Experimental Command..."), //displayed name
+            ModNullFN( OnFuncFirst ),
+            AudioIONotBusyFlag() ),
+         Command( 
+            _T("Another New Command"), 
+            XO("2nd Experimental Command"),
+            ModNullFN( OnFuncSecond ),
+            AudioIONotBusyFlag() )
+      ) )
+   };
 }
 
 //Example code commented out.

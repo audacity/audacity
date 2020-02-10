@@ -1,32 +1,46 @@
-#directory cmake-proxies/portmixer
-set(TARGET portmixer)
-set(TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET})
-project(${TARGET})
 
-include(CheckIncludeFiles)
+add_library( ${TARGET} STATIC )
 
-get_target_property(PA_DEFINITIONS portaudio_static INTERFACE_COMPILE_DEFINITIONS)
+get_target_property( PA_DEFS portaudio-v19 COMPILE_DEFINITIONS )
+string( REPLACE ";" " " PA_DEFS "${PA_DEFS}" )
 
-add_library(${TARGET} STATIC
-    "${TARGET_SOURCE}/src/px_mixer.c"
-    "$<$<BOOL:${WIN32}>:${TARGET_SOURCE}/src/px_win_common.c>"
-    "$<$<BOOL:${WIN32}>:${TARGET_SOURCE}/src/px_win_ds.c>"
-    "$<$<BOOL:${WIN32}>:${TARGET_SOURCE}/src/px_win_endpoint.c>"
-    "$<$<BOOL:${WIN32}>:${TARGET_SOURCE}/src/px_win_wasapi.c>"
-    "$<$<BOOL:${WIN32}>:${TARGET_SOURCE}/src/px_win_wmme.c>"
-    "$<$<IN_LIST:PA_USE_ALSA=1,${PA_DEFINITIONS}>:${TARGET_SOURCE}/src/px_linux_alsa.c>"
-    "$<$<IN_LIST:PA_USE_OSS=1,${PA_DEFINITIONS}>:${TARGET_SOURCE}/src/px_unix_oss.c>"
-    "$<$<IN_LIST:PA_USE_COREAUDIO=1,${PA_DEFINITIONS}>:${TARGET_SOURCE}/src/px_mac_coreaudio.c>")
+list( APPEND SOURCES
+   PRIVATE
+      ${TARGET_ROOT}/src/px_mixer.c
+      $<$<PLATFORM_ID:Windows>:${TARGET_ROOT}/src/px_win_common.c>
+      $<$<IN_LIST:PA_USE_DS=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_win_ds.c>
+      $<$<IN_LIST:PA_USE_WASAPI=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_win_wasapi.c>
+      $<$<IN_LIST:PA_USE_WMME=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_win_wmme.c>
+      $<$<IN_LIST:PA_USE_COREAUDIO=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_mac_coreaudio.c>
+      $<$<IN_LIST:PA_USE_ALSA=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_linux_alsa.c>
+      $<$<IN_LIST:PA_USE_OSS=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_unix_oss.c>
+)
 
+list( APPEND INCLUDES
+   PRIVATE
+      ${TARGET_ROOT}/src
+   PUBLIC
+      ${TARGET_ROOT}/include
+)
 
-target_compile_definitions(${TARGET} PRIVATE
-#   $<$<BOOL:${WIN32}>:PX_USE_WIN_DSOUND>
-    $<$<BOOL:${WIN32}>:PX_USE_WIN_MME>
-    $<$<BOOL:${WIN32}>:PX_USE_WIN_WASAPI>
-    $<$<IN_LIST:PA_USE_ALSA=1,${PA_DEFINITIONS}>:PX_USE_LINUX_ALSA>
-    $<$<IN_LIST:PA_USE_OSS=1,${PA_DEFINITIONS}>:PX_USE_UNIX_OSS>
-    $<$<IN_LIST:PA_USE_COREAUDIO=1,${PA_DEFINITIONS}>:PX_USE_MAC_COREAUDIO>)
+list( APPEND DEFINES
+   PRIVATE
+      $<$<IN_LIST:PA_USE_DS=1,${PA_DEFS}>:PX_USE_WIN_DSOUND=1>
+      $<$<IN_LIST:PA_USE_WASAPI=1,${PA_DEFS}>:PX_USE_WIN_WASAPI=1>
+      $<$<IN_LIST:PA_USE_WMME=1,${PA_DEFS}>:PX_USE_WIN_MME=1>
+      $<$<IN_LIST:PA_USE_COREAUDIO=1,${PA_DEFS}>:PX_USE_MAC_COREAUDIO=1>
+      $<$<IN_LIST:PA_USE_ALSA=1,${PA_DEFS}>:PX_USE_LINUX_ALSA=1>
+      $<$<IN_LIST:PA_USE_OSS=1,${PA_DEFS}>:PX_USE_UNIX_OSS=1>
+)
 
-target_include_directories(${TARGET} PUBLIC "${TARGET_SOURCE}/include")
-target_link_libraries(${TARGET} PUBLIC portaudio_static)
-set_target_properties(${TARGET} PROPERTIES OSX_ARCHITECTURES "")
+list( APPEND LIBRARIES
+   PRIVATE
+      portaudio-v19
+)
+
+organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
+target_sources( ${TARGET} PRIVATE ${SOURCES} )
+target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
+

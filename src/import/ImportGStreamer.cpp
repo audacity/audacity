@@ -249,8 +249,6 @@ public:
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(
       const wxString &Filename, AudacityProject*) override;
-
-   unsigned SequenceNumber() const override;
 };
 
 // ============================================================================
@@ -261,7 +259,8 @@ public:
 // Instantiate GStreamerImportPlugin and add to the list of known importers
 
 static
-Importer::RegisteredImportPlugin{ []() -> std::unique_ptr< ImportPlugin > {
+Importer::RegisteredImportPlugin{ "GStreamer",
+   []() -> std::unique_ptr< ImportPlugin > {
    wxLogMessage(_TS("Audacity is built against GStreamer version %d.%d.%d-%d"),
                 GST_VERSION_MAJOR,
                 GST_VERSION_MINOR,
@@ -1150,11 +1149,6 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    *tags = mTags;
 
    return updateResult;
-}
-
-unsigned GStreamerImportPlugin::SequenceNumber() const
-{
-   return 80;
 }
 
 // ----------------------------------------------------------------------------

@@ -16,7 +16,6 @@ Paul Licameli split from Menus.cpp
 #include <wx/frame.h>
 
 #include "AudioIO.h"
-#include "LabelTrack.h"
 #include "Menus.h"
 #include "NoteTrack.h"
 #include "Project.h"
@@ -117,7 +116,6 @@ const CommandFlagOptions noiseReductionOptions{
 };
 
 
-const ReservedCommandFlag
    // The sequence of these definitions has a minor significance in determining
    // which user error message has precedence if more than one might apply, so
    // they should be kept in this sequence in one .cpp file if it is important
@@ -125,7 +123,8 @@ const ReservedCommandFlag
    // then the precedence will be unspecified.
    // The ordering of the flags that only disable the default message is not
    // significant.
-   AudioIONotBusyFlag{
+const ReservedCommandFlag&
+   AudioIONotBusyFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project ){
          return !AudioIOBusyPred( project );
       },
@@ -135,8 +134,9 @@ const ReservedCommandFlag
       } ,"FAQ:Errors:Audio Must Be Stopped"}
       .QuickTest()
       .Priority( 1 )
-   }, //lll
-   StereoRequiredFlag{
+   }; return flag; }//lll
+const ReservedCommandFlag&
+   StereoRequiredFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          // True iff at least one stereo track is selected, i.e., at least
          // one right channel is selected.
@@ -149,44 +149,51 @@ const ReservedCommandFlag
          // This reason will not be shown, because the stereo-to-mono is greyed out if not allowed.
          XO("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
       } ,"Audacity_Selection"}
-   },  //lda
-   NoiseReductionTimeSelectedFlag{
+   }; return flag; }  //lda
+const ReservedCommandFlag&
+   NoiseReductionTimeSelectedFlag() { static ReservedCommandFlag flag{
       TimeSelectedPred,
       noiseReductionOptions
-   },
-   TimeSelectedFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   TimeSelectedFlag() { static ReservedCommandFlag flag{
       TimeSelectedPred,
       cutCopyOptions()
-   },
-   WaveTracksSelectedFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   WaveTracksSelectedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Selected<const WaveTrack>().empty();
       },
       { []( const TranslatableString& ) { return
          XO("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
       } ,"Audacity_Selection"}
-   },
-   TracksExistFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   TracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any().empty();
       },
       CommandFlagOptions{}.DisableDefaultMessage()
-   },
-   TracksSelectedFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   TracksSelectedFlag() { static ReservedCommandFlag flag{
       TracksSelectedPred, // exclude TimeTracks
       { []( const TranslatableString &Name ){ return
          // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
          XO("\"%s\" requires one or more tracks to be selected.").Format( Name );
       },"Audacity_Selection" }
-   },
-   AnyTracksSelectedFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   AnyTracksSelectedFlag() { static ReservedCommandFlag flag{
       AnyTracksSelectedPred, // Allow TimeTracks
       { []( const TranslatableString &Name ){ return
          // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
          XO("\"%s\" requires one or more tracks to be selected.").Format( Name );
       },"Audacity_Selection" }
-   },
-   TrackPanelHasFocus{
+   }; return flag; }
+const ReservedCommandFlag&
+   TrackPanelHasFocus() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          for (auto w = wxWindow::FindFocus(); w; w = w->GetParent()) {
             if (dynamic_cast<const NonKeystrokeInterceptingWindow*>(w))
@@ -195,14 +202,15 @@ const ReservedCommandFlag
          return false;
       },
       CommandFlagOptions{}.DisableDefaultMessage()
-   };  //lll
+   }; return flag; };  //lll
 
-const ReservedCommandFlag
-   AudioIOBusyFlag{
+const ReservedCommandFlag&
+   AudioIOBusyFlag() { static ReservedCommandFlag flag{
       AudioIOBusyPred,
       CommandFlagOptions{}.QuickTest()
-   }, //lll
-   CaptureNotBusyFlag{
+   }; return flag; } //lll
+const ReservedCommandFlag&
+   CaptureNotBusyFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &){
          auto gAudioIO = AudioIO::Get();
          return !(
@@ -210,15 +218,16 @@ const ReservedCommandFlag
             gAudioIO->GetNumCaptureChannels() > 0
          );
       }
-   };
+   }; return flag; };
 
-const ReservedCommandFlag
-   LabelTracksExistFlag{
+const ReservedCommandFlag&
+   LabelTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any<const LabelTrack>().empty();
       }
-   },
-   UnsavedChangesFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   UnsavedChangesFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          auto &undoManager = UndoManager::Get( project );
          return
@@ -227,23 +236,27 @@ const ReservedCommandFlag
             !ProjectFileIO::Get( project ).IsProjectSaved()
          ;
       }
-   },
-   HasLastEffectFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   HasLastEffectFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !MenuManager::Get( project ).mLastEffect.empty();
       }
-   },
-   UndoAvailableFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   UndoAvailableFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return ProjectHistory::Get( project ).UndoAvailable();
       }
-   },
-   RedoAvailableFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   RedoAvailableFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return ProjectHistory::Get( project ).RedoAvailable();
       }
-   },
-   ZoomInAvailableFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   ZoomInAvailableFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return
             ViewInfo::Get( project ).ZoomInAvailable()
@@ -251,8 +264,9 @@ const ReservedCommandFlag
             !TrackList::Get( project ).Any().empty()
          ;
       }
-   },
-   ZoomOutAvailableFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   ZoomOutAvailableFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return
             ViewInfo::Get( project ).ZoomOutAvailable()
@@ -260,68 +274,54 @@ const ReservedCommandFlag
             !TrackList::Get( project ).Any().empty()
          ;
       }
-   },
-   LabelsSelectedFlag{
-      [](const AudacityProject &project){
-         // At least one label track selected, having at least one label
-         // completely within the time selection.
-         const auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-         const auto &test = [&]( const LabelTrack *pTrack ){
-            const auto &labels = pTrack->GetLabels();
-            return std::any_of( labels.begin(), labels.end(),
-               [&](const LabelStruct &label){
-                  return
-                     label.getT0() >= selectedRegion.t0()
-                  &&
-                     label.getT1() <= selectedRegion.t1()
-                  ;
-               }
-            );
-         };
-         auto range = TrackList::Get( project ).Selected<const LabelTrack>()
-            + test;
-         return !range.empty();
-      }
-   },
-   PlayRegionLockedFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   PlayRegionLockedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return ViewInfo::Get(project).playRegion.Locked();
       }
-   },  //msmeyer
-   PlayRegionNotLockedFlag{
+   }; return flag; }  //msmeyer
+const ReservedCommandFlag&
+   PlayRegionNotLockedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          const auto &playRegion = ViewInfo::Get(project).playRegion;
          return !playRegion.Locked() && !playRegion.Empty();
       }
-   },  //msmeyer
-   WaveTracksExistFlag{
+   }; return flag; }  //msmeyer
+const ReservedCommandFlag&
+   WaveTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any<const WaveTrack>().empty();
       }
-   },
+   }; return flag; }
 #ifdef USE_MIDI
-   NoteTracksExistFlag{
+const ReservedCommandFlag&
+   NoteTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any<const NoteTrack>().empty();
       }
-   },  //gsw
-   NoteTracksSelectedFlag{
+   }; return flag; }  //gsw
+const ReservedCommandFlag&
+   NoteTracksSelectedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Selected<const NoteTrack>().empty();
       }
-   },  //gsw
+   }; return flag; }  //gsw
 #endif
-   IsNotSyncLockedFlag{
+const ReservedCommandFlag&
+   IsNotSyncLockedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !ProjectSettings::Get( project ).IsSyncLocked();
       }
-   },  //awd
-   IsSyncLockedFlag{
+   }; return flag; }  //awd
+const ReservedCommandFlag&
+   IsSyncLockedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return ProjectSettings::Get( project ).IsSyncLocked();
       }
-   },  //awd
-   NotMinimizedFlag{
+   }; return flag; }  //awd
+const ReservedCommandFlag&
+   NotMinimizedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          const wxWindow *focus = FindProjectFrame( &project );
          if (focus) {
@@ -333,14 +333,16 @@ const ReservedCommandFlag
          );
       },
       CommandFlagOptions{}.QuickTest()
-   }, // prl
-   PausedFlag{
+   }; return flag; } // prl
+const ReservedCommandFlag&
+   PausedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject&){
          return AudioIOBase::Get()->IsPaused();
       },
       CommandFlagOptions{}.QuickTest()
-   },
-   PlayableTracksExistFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   PlayableTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          auto &tracks = TrackList::Get( project );
          return
@@ -351,8 +353,9 @@ const ReservedCommandFlag
             !tracks.Any<const WaveTrack>().empty()
          ;
       }
-   },
-   AudioTracksSelectedFlag{
+   }; return flag; }
+const ReservedCommandFlag&
+   AudioTracksSelectedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          auto &tracks = TrackList::Get( project );
          return
@@ -364,8 +367,10 @@ const ReservedCommandFlag
             !tracks.Selected<const WaveTrack>().empty()
          ;
       }
-   },
-   NoAutoSelect{
+   }; return flag; }
+const ReservedCommandFlag&
+   NoAutoSelect() { static ReservedCommandFlag flag{
      [](const AudacityProject &){ return true; }
-   } // jkc
+   }; return flag; } // jkc
 ;
+

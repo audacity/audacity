@@ -17,6 +17,7 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 
 #include "../../../../HitTestResult.h"
 #include "../../../../NumberScale.h"
+#include "../../../../Prefs.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -120,7 +121,6 @@ void WaveformVZoomHandle::DoZoom(
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
    const SpectrogramSettings &specSettings = pTrack->GetSpectrogramSettings();
-   NumberScale scale;
 
    bool bDragZoom = WaveTrackVZoomHandle::IsDragZooming(zoomStart, zoomEnd);
    // Add 100 if spectral to separate the kinds of zoom.
@@ -266,41 +266,45 @@ PopupMenuTable &WaveformVRulerMenuTable::Instance()
    return instance;
 }
 
-void WaveformVRulerMenuTable::InitMenu(Menu *pMenu)
-{
-   WaveTrackVRulerMenuTable::InitMenu(pMenu);
-
-// DB setting is already on track drop down.
-   WaveTrack *const wt = mpData->pTrack;
-   const int id =
-      OnFirstWaveformScaleID + (int)(wt->GetWaveformSettings().scaleType);
-   pMenu->Check(id, true);
-}
-
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 
+   BeginSection( "Scales" );
    {
       const auto & names = WaveformSettings::GetScaleNames();
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         POPUP_MENU_RADIO_ITEM(OnFirstWaveformScaleID + ii, names[ii],
-            OnWaveformScaleType);
+         AppendRadioItem( names[ii].Internal(),
+            OnFirstWaveformScaleID + ii, names[ii].Msgid(),
+            POPUP_MENU_FN( OnWaveformScaleType ),
+            []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+               const auto pData =
+                  static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
+               WaveTrack *const wt = pData->pTrack;
+               if ( id ==
+                  OnFirstWaveformScaleID +
+                  (int)(wt->GetWaveformSettings().scaleType) )
+                  menu.Check(id, true);
+            }
+          );
       }
    }
+   EndSection();
 
-   POPUP_MENU_SEPARATOR()
+   BeginSection( "Zoom" );
+      BeginSection( "Basic" );
+         AppendItem( "Reset", OnZoomFitVerticalID, XO("Zoom Reset\tShift-Right-Click"), POPUP_MENU_FN( OnZoomReset ) );
+         AppendItem( "TimesHalf", OnZoomDiv2ID,        XO("Zoom x1/2"),                     POPUP_MENU_FN( OnZoomDiv2Vertical ) );
+         AppendItem( "TimesTwo", OnZoomTimes2ID,      XO("Zoom x2"),                       POPUP_MENU_FN( OnZoomTimes2Vertical ) );
 
-   POPUP_MENU_ITEM(OnZoomFitVerticalID, XO("Zoom Reset\tShift-Right-Click"), OnZoomReset)
-   POPUP_MENU_ITEM(OnZoomDiv2ID,        XO("Zoom x1/2"),                     OnZoomDiv2Vertical)
-   POPUP_MENU_ITEM(OnZoomTimes2ID,      XO("Zoom x2"),                       OnZoomTimes2Vertical)
+   #ifdef EXPERIMENTAL_HALF_WAVE
+         AppendItem( "HalfWave", OnZoomHalfWaveID,    XO("Half Wave"),                     POPUP_MENU_FN( OnZoomHalfWave ) );
+   #endif
+      EndSection();
 
-#ifdef EXPERIMENTAL_HALF_WAVE
-   POPUP_MENU_ITEM(OnZoomHalfWaveID,    XO("Half Wave"),                     OnZoomHalfWave)
-#endif
-
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-   POPUP_MENU_ITEM(OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
-
+      BeginSection( "InOut" );
+         AppendItem( "In", OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  POPUP_MENU_FN( OnZoomInVertical ) );
+         AppendItem( "Out", OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     POPUP_MENU_FN( OnZoomOutVertical ) );
+      EndSection();
+   EndSection();
 
 END_POPUP_MENU()
 

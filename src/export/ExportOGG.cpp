@@ -143,8 +143,6 @@ public:
                const Tags *metadata = NULL,
                int subformat = 0) override;
 
-   virtual unsigned SequenceNumber() const override { return 30; }
-
 private:
 
    bool FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata);
@@ -398,8 +396,9 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, c
    return true;
 }
 
-static Exporter::RegisteredExportPlugin
-sRegisteredPlugin{ []{ return std::make_unique< ExportOGG >(); } };
+static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "OGG",
+   []{ return std::make_unique< ExportOGG >(); }
+};
 
 #endif // USE_LIBVORBIS
 

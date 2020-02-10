@@ -14,6 +14,7 @@
 #include "../Dependencies.h"
 #include "../FileNames.h"
 #include "../HelpText.h"
+#include "../Menus.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectSelectionManager.h"
@@ -35,7 +36,8 @@ namespace {
 
 void ShowDiagnostics(
    AudacityProject &project, const wxString &info,
-   const TranslatableString &description, const wxString &defaultPath)
+   const TranslatableString &description, const wxString &defaultPath,
+   bool fixedWidth = false)
 {
    auto &window = GetProjectFrame( project );
    wxDialogWrapper dlg( &window, wxID_ANY, description);
@@ -46,11 +48,20 @@ void ShowDiagnostics(
    S.StartVerticalLay();
    {
       text = S.Id(wxID_STATIC)
-         .Style(wxTE_MULTILINE | wxTE_READONLY)
-         .AddTextWindow(info);
+         .Style(wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH)
+         .AddTextWindow("");
+
       S.AddStandardButtons(eOkButton | eCancelButton);
    }
    S.EndVerticalLay();
+
+   if (fixedWidth) {
+      auto style = text->GetDefaultStyle();
+      style.SetFontFamily( wxFONTFAMILY_TELETYPE );
+      text->SetDefaultStyle(style);
+   }
+
+   *text << info;
 
    dlg.FindWindowById(wxID_OK)->SetLabel(_("&Save"));
    dlg.SetSize(350, 450);
@@ -364,6 +375,63 @@ void OnCheckDependencies(const CommandContext &context)
    ::ShowDependencyDialogIfNeeded(&project, false);
 }
 
+void OnMenuTree(const CommandContext &context)
+{
+   auto &project = context.project;
+   
+   using namespace MenuTable;
+   struct MyVisitor : ToolbarMenuVisitor
+   {
+      using ToolbarMenuVisitor::ToolbarMenuVisitor;
+
+      enum : unsigned { TAB = 3 };
+      void DoBeginGroup( GroupItem &item, const Path& ) override
+      {
+         if ( dynamic_cast<MenuItem*>( &item ) ) {
+            Indent();
+            // using GET for alpha only diagnostic tool
+            info += item.name.GET();
+            Return();
+            indentation = wxString{ ' ', TAB * ++level };
+         }
+      }
+
+      void DoEndGroup( GroupItem &item, const Path& ) override
+      {
+         if ( dynamic_cast<MenuItem*>( &item ) )
+            indentation = wxString{ ' ', TAB * --level };
+      }
+
+      void DoVisit( SingleItem &item, const Path& ) override
+      {
+         // using GET for alpha only diagnostic tool
+         Indent();
+         info += item.name.GET();
+         Return();
+      }
+
+      void DoSeparator() override
+      {
+         static const wxString separatorName{ '=', 20 };
+         Indent();
+         info += separatorName;
+         Return();
+      }
+
+      void Indent() { info += indentation; }
+      void Return() { info += '\n'; }
+
+      unsigned level{};
+      wxString indentation;
+      wxString info;
+   } visitor{ project };
+
+   MenuManager::Visit( visitor );
+
+   ShowDiagnostics( project, visitor.info,
+      XO("Menu Tree"), wxT("menutree.txt"), true );
+}
+
 void OnCheckForUpdates(const CommandContext &WXUNUSED(context))
 {
    ::OpenInDefaultBrowser( VerCheckUrl());
@@ -418,69 +486,92 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 // Menu definitions
 
-#define FN(X) findCommandHandler, \
-   static_cast<CommandFunctorPointer>(& HelpActions::Handler :: X)
+#define FN(X) (& HelpActions::Handler :: X)
 
-MenuTable::BaseItemPtr HelpMenu( AudacityProject & )
+namespace {
+using namespace MenuTable;
+BaseItemSharedPtr HelpMenu()
 {
-#ifdef __WXMAC__
-      wxApp::s_macHelpMenuTitleName = _("&Help");
-#endif
-
-   using namespace MenuTable;
-
-   return Menu( XO("&Help"),
-      // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
-#ifdef EXPERIMENTAL_DA
-      // DA: Has QuickFix menu item.
-      Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
-         AlwaysEnabledFlag ),
-      // DA: 'Getting Started' rather than 'Quick Help'.
-      Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) ),
-      // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-      Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) ),
-#else
-      Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
-         AlwaysEnabledFlag ),
-      Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
-         AlwaysEnabledFlag ),
-#endif
-
-      Separator(),
-
-      Menu( XO("&Diagnostics"),
-         Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
-            FN(OnAudioDeviceInfo),
-            AudioIONotBusyFlag ),
-   #ifdef EXPERIMENTAL_MIDI_OUT
-         Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
-            FN(OnMidiDeviceInfo),
-            AudioIONotBusyFlag ),
-   #endif
-         Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
+   static BaseItemSharedPtr menu{
+   ( FinderScope{ findCommandHandler },
+   Menu( wxT("Help"), XO("&Help"),
+      Section( "Basic",
+         // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
+   #ifdef EXPERIMENTAL_DA
+         // DA: Has QuickFix menu item.
+         Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
             AlwaysEnabledFlag ),
-   #if defined(EXPERIMENTAL_CRASH_REPORT)
-         Command( wxT("CrashReport"), XXO("&Generate Support Data..."),
-            FN(OnCrashReport), AlwaysEnabledFlag ),
+         // DA: 'Getting Started' rather than 'Quick Help'.
+         Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) ),
+         // DA: Emphasise it is the Audacity Manual (No separate DA manual).
+         Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) )
+   #else
+         Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
+            AlwaysEnabledFlag ),
+         Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
+            AlwaysEnabledFlag )
    #endif
-         Command( wxT("CheckDeps"), XXO("Chec&k Dependencies..."),
-            FN(OnCheckDependencies),
-            AudioIONotBusyFlag )
       ),
 
-#ifndef __WXMAC__
-      Separator(),
+   #ifdef __WXMAC__
+      Items
+   #else
+      Section
+   #endif
+      ( "Other",
+         Menu( wxT("Diagnostics"), XO("&Diagnostics"),
+            Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
+               FN(OnAudioDeviceInfo),
+               AudioIONotBusyFlag() ),
+      #ifdef EXPERIMENTAL_MIDI_OUT
+            Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
+               FN(OnMidiDeviceInfo),
+               AudioIONotBusyFlag() ),
+      #endif
+            Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
+               AlwaysEnabledFlag ),
+      #if defined(EXPERIMENTAL_CRASH_REPORT)
+            Command( wxT("CrashReport"), XXO("&Generate Support Data..."),
+               FN(OnCrashReport), AlwaysEnabledFlag ),
+      #endif
+            Command( wxT("CheckDeps"), XXO("Chec&k Dependencies..."),
+               FN(OnCheckDependencies),
+               AudioIONotBusyFlag() )
+
+   #ifdef IS_ALPHA
+            ,
+            // Menu explorer.  Perhaps this should become a macro command
+            Command( wxT("MenuTree"), XXO("Menu Tree..."),
+               FN(OnMenuTree),
+               AlwaysEnabledFlag )
+   #endif
+         )
+   #ifndef __WXMAC__
+      ),
+
+      Section( "",
+#else
+      ,
 #endif
 
-      // DA: Does not fully support update checking.
-#ifndef EXPERIMENTAL_DA
-      Command( wxT("Updates"), XXO("&Check for Updates..."),
-         FN(OnCheckForUpdates),
-         AlwaysEnabledFlag ),
-#endif
-      Command( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
-         AlwaysEnabledFlag )
-   );
+         // DA: Does not fully support update checking.
+   #ifndef EXPERIMENTAL_DA
+         Command( wxT("Updates"), XXO("&Check for Updates..."),
+            FN(OnCheckForUpdates),
+            AlwaysEnabledFlag ),
+   #endif
+         Command( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
+            AlwaysEnabledFlag )
+      )
+   ) ) };
+   return menu;
+}
+
+AttachedItem sAttachment1{
+   wxT(""),
+   Shared( HelpMenu() )
+};
+
 }
 
 #undef FN

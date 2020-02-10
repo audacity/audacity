@@ -19,6 +19,8 @@
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include "../FileNames.h" // for FileTypes
 
+#include "../commands/CommandManager.h" // for Registry::Placement
+
 class wxArrayString;
 class FileDialogWrapper;
 class wxFileCtrlEvent;
@@ -132,8 +134,6 @@ public:
                        const Tags *metadata = NULL,
                        int subformat = 0) = 0;
 
-   virtual unsigned SequenceNumber() const = 0;
-
 protected:
    std::unique_ptr<Mixer> CreateMixer(const TrackList &tracks,
          bool selectionOnly,
@@ -174,7 +174,10 @@ public:
    // to have some fresh state variables each time export begins again
    // and to compute translated strings for the current locale
    struct RegisteredExportPlugin{
-      RegisteredExportPlugin( const ExportPluginFactory& );
+      RegisteredExportPlugin(
+         const Identifier &id, // an internal string naming the plug-in
+         const ExportPluginFactory&,
+         const Registry::Placement &placement = { wxEmptyString, {} } );
    };
 
    static bool DoEditMetadata(AudacityProject &project,

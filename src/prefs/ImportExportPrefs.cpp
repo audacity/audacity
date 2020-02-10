@@ -150,12 +150,11 @@ bool ImportExportPrefs::Commit()
 }
 
 namespace{
-PrefsPanel::Registration sAttachment{ 110,
+PrefsPanel::Registration sAttachment{ "ImportExport",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew ImportExportPrefs(parent, winid);
-   },
-   1
+   }
 };
 }

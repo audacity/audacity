@@ -27,6 +27,7 @@ const TranslatableString &DefaultMultiDialogMessage();
 int ShowMultiDialog(const TranslatableString &message,
                     const TranslatableString &title,
                     const TranslatableStrings &buttons,
+                    const wxString & helpPage,
                     const TranslatableString &boxMsg
                        = DefaultMultiDialogMessage(),
                     bool log = true);
