@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-09-07 14:02+0100\n"
-"PO-Revision-Date: 2020-01-18 15:22+0800\n"
+"PO-Revision-Date: 2020-02-10 19:05+0800\n"
 "Last-Translator: dingpengyu <dingpengyu06@gmail.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
 "zh/)\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -16950,7 +16950,7 @@ msgstr "静音寻找"
 
 #: plug-ins/SilenceMarker.ny
 msgid "Finding silence..."
-msgstr "正在寻找静音……"
+msgstr "正在寻找静音..."
 
 #: plug-ins/SilenceMarker.ny
 msgid "Alex S. Brown"
@@ -16994,7 +16994,7 @@ msgstr "声音寻找"
 
 #: plug-ins/SoundFinder.ny
 msgid "Finding sound..."
-msgstr "正在寻找声音……"
+msgstr "正在寻找声音..."
 
 #: plug-ins/SoundFinder.ny
 msgid "Jeremy R. Brown"
@@ -17034,7 +17034,7 @@ msgstr "频谱滤波器"
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
 msgid "Filtering..."
-msgstr "滤波中……"
+msgstr "滤波中..."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -17317,7 +17317,7 @@ msgstr "交叉渐变片段"
 
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
 msgid "Crossfading..."
-msgstr "正在交叉渐变……"
+msgstr "正在交叉渐变..."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -17559,7 +17559,7 @@ msgstr "高通滤波器"
 
 #: plug-ins/highpass.ny
 msgid "Performing High-Pass Filter..."
-msgstr "正在执行高通滤波器……"
+msgstr "正在执行高通滤波器..."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
 msgid "Dominic Mazzoni"
@@ -17672,7 +17672,7 @@ msgstr "低通滤波器"
 
 #: plug-ins/lowpass.ny
 msgid "Performing Low-Pass Filter..."
-msgstr "正在执行低通滤波器……"
+msgstr "正在执行低通滤波器..."
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
@@ -17680,7 +17680,7 @@ msgstr "陷波滤波器"
 
 #: plug-ins/notch.ny
 msgid "Applying Notch Filter..."
-msgstr "正在应用陷波滤波器……"
+msgstr "正在应用陷波滤波器..."
 
 #: plug-ins/notch.ny
 msgid "Steve Daulton and Bill Wharrie"
@@ -17790,7 +17790,7 @@ msgstr "节奏轨道"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Generating Rhythm..."
-msgstr "正在生成节奏……"
+msgstr "正在生成节奏..."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -17938,7 +17938,7 @@ msgstr "采样数据导出"
 
 #: plug-ins/sample-data-export.ny
 msgid "Analyzing..."
-msgstr "正在分析……"
+msgstr "正在分析..."
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
