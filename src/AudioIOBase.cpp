@@ -1275,7 +1275,7 @@ double AudioIOBase::PlaybackSchedule::AdvancedTrackTime(
       } while ( true );
    }
    else {
-      time += realElapsed * speed;
+      time += realElapsed * fabs(speed);
 
       // Wrap to start if looping
       if (Looping()) {
