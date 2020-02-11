@@ -23,10 +23,9 @@
 
 (defun aud-get-command (id)
   ;;; Return command signature from id string
-  (let ((all (aud-get-info "Commands")))
-    (dolist (cmd all)
-      (when (member (string id) (assoc 'id cmd) :test 'equal)
-        (return cmd)))))
+  (let* ((helpstr (format nil "Help: Command=~s Format=LISP" id))
+         (cmd-sig (first (aud-do helpstr))))
+    (eval-string (quote-string cmd-sig))))
 
 
 (defun aud-import-command (command-sig &optional func-name)
@@ -87,12 +86,37 @@
   (setf command \"" id ": \")
     (dolist (p params)
       (setf command (strcat command p)))
-    ;(print command)
     (aud-do command))")
     (eval-string func-def)))
 
 
-;;; Import all Audacity "Commands" as LISP functions
-;;; Function names prefix the command id with "aud-".
-(dolist (command (aud-get-info "Commands"))
-    (aud-import-command command))
+(defun aud-import-commands ()
+  ;;; Import all Audacity "Commands" as LISP functions
+  ;;; Function names prefix the command id with "aud-".
+  (dolist (command (aud-get-info "Commands"))
+      (aud-import-command command)))
+
+
+(defun aud-import (id &optional func-name)
+  ;;; Import one Command by ID.
+  ;;; Example (aud-import "tone")
+  ;;; Creates a function (aud-tone :frequency 440 :amplitude 0.8 :waveform "Sine")
+  (let ((cmd (aud-get-command id)))
+    (aud-import-command cmd func-name)))
+
+
+(defun aud-import-effects ()
+  ;;; Import built-in effect commands
+  (let ((common (list "Amplify" "AutoDuck" "BassAndTreble" "ChangePitch" "ChangeSpeed"
+                      "ChangeTempo" "Chirp" "ClickRemoval" "Compressor" "DtmfTones"
+                      "Distortion" "Echo" "FadeIn" "FadeOut" "FilterCurve" "FindClipping"
+                      "GraphicEq" "Invert" "LoudnessNormalization" "Noise" "Normalize"
+                      "Paulstretch" "Phaser" "Repeat" "Repair" "Reverb" "Reverse"
+                      "Silence" "SlidingStretch" "Tone" "TruncateSilence" "Wahwah")))
+    (dolist (cmd common)
+      (aud-import cmd))))
+
+(aud-import-effects)
+
+;;; Uncomment the next line to load all "AUD-" commands.
+;(aud-import-commands)
