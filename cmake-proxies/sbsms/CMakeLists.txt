@@ -1,6 +1,8 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/src/buffer.cpp
@@ -18,15 +20,14 @@ list( APPEND SOURCES
 
 list( APPEND INCLUDES
    PRIVATE
-      ${CMAKE_CURRENT_BINARY_DIR}/private
+      ${_PRVDIR}
    PUBLIC
       ${TARGET_ROOT}/include
 )
 
 list( APPEND OPTIONS
    PRIVATE
-      $<$<C_COMPILER_ID:CLANG>:-Wno-enum-compare>
-      $<$<C_COMPILER_ID:GNU>:-Wno-enum-compare>
+      $<$<C_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-enum-compare>
 )
 
 find_package( Threads )
@@ -34,14 +35,7 @@ if( Threads_FOUND AND CMAKE_USE_PTHREADS_INIT )
    set( MULTITHREADED 1 )
 endif()
 
-if( UNIX )
-   check_cxx_compiler_flag( "-msse" ENABLE_SSE )
-   if( ENABLE_SSE )
-      list( APPEND OPTIONS
-         PRIVATE -msse
-      )
-   endif()
-endif()
+set( ENABLE_SSE ${HAVE_SSE} )
 
 configure_file( config.h.in private/config.h )
 

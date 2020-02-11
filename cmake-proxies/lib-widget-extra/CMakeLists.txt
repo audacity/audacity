@@ -1,6 +1,8 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/NonGuiThread.cpp
@@ -13,7 +15,7 @@ list( APPEND INCLUDES
 
 list( APPEND LIBRARIES
    PRIVATE
-      wxwidgets
+      wxWidgets
 )
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )

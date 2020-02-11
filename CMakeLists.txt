@@ -63,6 +63,12 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
 set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 
+# Use ccache if available
+find_program( CCACHE_PROGRAM ccache )
+if( CCACHE_PROGRAM )
+    set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}" )
+endif()
+
 # Our very own project
 project( Audacity )
 
@@ -118,10 +124,15 @@ if( HAVE_LIBM )
    list( APPEND CMAKE_REQUIRED_LIBRARIES -lm )
 endif()
 
-# Add the dynamic linker library (if found) to the list of required libraries
-check_library_exists( dl dlopen "" HAVE_LIBDL )
-if( HAVE_LIBDL )
-   list( APPEND CMAKE_REQUIRED_LIBRARIES -ldl )
+# Add the dynamic linker library (if needed) to the list of required libraries
+list( APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS} )
+
+# May be a misconfiguration in my system, but CMake doesn't want to look
+# in /usr/local/lib by default...so force the issue
+if( CMAKE_SYSTEM_NAME MATCHES "FreeBSD" )
+   list( APPEND CMAKE_EXE_LINKER_FLAGS -L/usr/local/lib )
+   list( APPEND CMAKE_MODULE_LINKER_FLAGS -L/usr/local/lib )
+   list( APPEND CMAKE_SHARED_LINKER_FLAGS -L/usr/local/lib )
 endif()
 
 # Make sure they're used during the link steps
@@ -130,10 +141,35 @@ set( CMAKE_LINK_INTERFACE_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} )
 # Various common checks whose results are used by the various targets
 test_big_endian( WORDS_BIGENDIAN )
 
+# Check for various compiler flags
+if( CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang|GNU" )
+   check_cxx_compiler_flag( "-mmmx" HAVE_MMX )
+   if( HAVE_MMX )
+      set( MMX_FLAG "-mmmx" CACHE INTERNAL "" )
+   endif()
+
+   check_cxx_compiler_flag( "-msse" HAVE_SSE )
+   if( HAVE_SSE )
+      set( SSE_FLAG "-msse" CACHE INTERNAL "" )
+   endif()
+
+   check_cxx_compiler_flag( "-msse2" HAVE_SSE2 )
+   if( HAVE_SSE2 )
+      set( SSE_FLAG "-msse2" CACHE INTERNAL "" )
+   endif()
+elseif( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
+   set( HAVE_MMX ON )
+   set( MMX_FLAG "" )
+   set( HAVE_SSE ON )
+   set( SSE_FLAG "/arch:SSE" )
+   set( HAVE_SSE2 ON )
+   set( SSE2_FLAG "/arch:SSE2" )
+endif()
+
 check_include_files( "float.h;stdarg.h;stdlib.h;string.h" STDC_HEADERS )
 
-check_include_file( "byteswap.h" HAVE_BYTESWAP_H )
 check_include_file( "assert.h" HAVE_ASSERT_H )
+check_include_file( "byteswap.h" HAVE_BYTESWAP_H )
 check_include_file( "errno.h" HAVE_ERRNO_H )
 check_include_file( "fcntl.h" HAVE_FCNTL_H )
 check_include_file( "fenv.h" HAVE_FENV_H )
@@ -151,12 +187,15 @@ check_include_file( "xmmintrin.h" HAVE_XMMINTRIN_H )
 check_include_file( "sys/param.h" HAVE_SYS_PARAM_H )
 check_include_file( "sys/stat.h" HAVE_SYS_STAT_H )
 check_include_file( "sys/types.h" HAVE_SYS_TYPES_H )
+check_include_file( "sys/wait.h" HAVE_SYS_WAIT_H )
 
+check_symbol_exists( bcopy "strings.h" HAVE_BCOPY )
 check_symbol_exists( fileno "stdio.h" HAVE_FILENO )
 check_symbol_exists( flock "sys/file.h" HAVE_FLOCK )
 check_symbol_exists( fork "unistd.h" HAVE_FORK )
 check_symbol_exists( fsync "unistd.h" HAVE_FSYNC )
 check_symbol_exists( ftruncate "unistd.h" HAVE_FTRUNCATE )
+check_symbol_exists( getpagesize "unistd.h" HAVE_GETPAGESIZE )
 check_symbol_exists( gettimeofday "sys/time.h" HAVE_GETTIMEOFDAY )
 check_symbol_exists( gmtime "time.h" HAVE_GMTIME )
 check_symbol_exists( gmtime_r "time.h" HAVE_GMTIME_R )
@@ -165,6 +204,7 @@ check_symbol_exists( lrintf "math.h" HAVE_LRINTF )
 check_symbol_exists( lround "math.h" HAVE_LROUND )
 check_symbol_exists( lstat "sys/stat.h" HAVE_LSTAT )
 check_symbol_exists( memcpy "string.h" HAVE_MEMCPY )
+check_symbol_exists( memmove "string.h" HAVE_MEMMOVE )
 check_symbol_exists( mlock "sys/mman.h" HAVE_MLOCK )
 check_symbol_exists( pipe "unistd.h" HAVE_PIPE )
 check_symbol_exists( posix_fadvise "fcntl.h" HAVE_POSIX_FADVISE )
@@ -239,14 +279,24 @@ set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
 set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}/audacity" )
 set( _RPATH "\$ORIGIN/../${_LIBDIR}" )
 set( _DATADIR "${CMAKE_INSTALL_DATADIR}" )
-set( _PKGDATA "${_DATADIR}/audacity" )
+set( _PKGDATA "${_DATADIR}/audacity/" )
+
+# Precreate the lib and lib64 directories so we can make then the same
+if( NOT EXISTS "${CMAKE_BINARY_DIR}/lib" )
+   file( MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/lib" )
+endif()
+
+if( NOT EXISTS "${CMAKE_BINARY_DIR}/lib64" )
+   file( CREATE_LINK "${CMAKE_BINARY_DIR}/lib" "${CMAKE_BINARY_DIR}/lib64" SYMBOLIC )
+endif()
 
 # Helper to organize sources into folders for the IDEs
 macro( organize_source root prefix sources )
    set( cleaned )
-   foreach(source ${sources})
+   foreach( source ${sources} )
       # Remove generator expressions
-      string( REGEX REPLACE ".*>:(.*)>" "\\1" source "${source}" )
+      string( REGEX REPLACE ".*>:(.*)>*" "\\1" source "${source}" )
+      string( REPLACE ">" "" source "${source}" )
 
       # Remove keywords
       string( REGEX REPLACE "^[A-Z]+$" "" source "${source}" )
@@ -254,7 +304,7 @@ macro( organize_source root prefix sources )
       # Add to cleaned
       list( APPEND cleaned "${source}" )
    endforeach()
-      
+
    # Define the source groups
    if( "${prefix}" STREQUAL "" )
       source_group( TREE "${root}" FILES ${cleaned} )
@@ -283,30 +333,25 @@ endfunction()
 # Helper to retrieve the settings returned from pkg_check_modules()
 macro( get_package_interface package )
    set( INCLUDES
-      INTERFACE
-         ${${package}_INCLUDE_DIRS}
+      ${${package}_INCLUDE_DIRS}
    )
 
-   set( CLFAGS
-      INTERFACE
-         ${${package}_CFLAGS}
-         ${${package}_CFLAGS_OTHER}
+   set( COPTS
+      ${${package}_CFLAGS}
+      ${${package}_CFLAGS_OTHER}
    )
 
-   set( LDFLAGS
-      INTERFACE
-         ${${package}_LDFLAGS}
-         ${${package}_LDFLAGS_OTHER}
+   set( LOPTS
+      ${${package}_LDFLAGS}
+      ${${package}_LDFLAGS_OTHER}
    )
 
    set( LINKDIRS
-      INTERFACE
-         ${${package}_LIBRARY_DIRS}
+      ${${package}_LIBRARY_DIRS}
    )
 
    set( LIBRARIES
-      INTERFACE
-         ${${package}_LIBRARIES}
+      ${${package}_LIBRARIES}
    )
 endmacro()
 
@@ -341,5 +386,4 @@ add_subdirectory( "cmake-proxies/mod-script-pipe" )
    include(PrintProperties)
    print_properties(TARGET "Audacity")
 #]]
-
 

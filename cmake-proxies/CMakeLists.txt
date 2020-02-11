@@ -23,7 +23,7 @@ option( prefer_system_libs "Use system libraries if available" YES )
 #
 #     packages A list of packages required for this target in pkg-config
 #              format.
-function( addlib dir name symbol required check ) #packages )
+function( addlib dir name symbol required check )
    # Extract the list of packages from the function args
    list( SUBLIST ARGV 5 -1 packages )
 
@@ -39,6 +39,9 @@ function( addlib dir name symbol required check ) #packages )
    else()
       option( ${enable} "Enable ${name} library" ON )
    endif()
+
+   # Let the Audacity target know that this library will be used.
+   set( USE_${symbol} ${${enable}} CACHE INTERNAL USE_${symbol} )
 
    # Bail if the target isn't enabled.
    if( NOT ${enable} )
@@ -65,65 +68,62 @@ function( addlib dir name symbol required check ) #packages )
 
    message( STATUS "========== Configuring ${name} ==========" )
 
-   # Let the Audacity target know that this library will be used.
-   set( USE_${symbol} ON CACHE INTERNAL USE_${symbol} )
-
    # Check for the system package if the user prefers it.
    if( ${system} )
       # Look them up
-      pkg_check_modules( ${symbol} ${packages} )
-      if( ${symbol}_FOUND )
+      pkg_check_modules( ${TARGET} ${packages} )
+      if( ${TARGET}_FOUND )
          message( STATUS "Using '${name}' system library" )
-
-         # Use the symbol name for the target to prevent a collision when
-         # the alias libraries are defined for the listed packages.
-         set( TARGET ${symbol} )
 
          # Create the target interface library
          add_library( ${TARGET} INTERFACE IMPORTED GLOBAL )
 
          # Retrieve the package information
-         get_package_interface( ${symbol} )
+         get_package_interface( ${TARGET} )
 
          # And add it to our target
          target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
-         target_compile_options( ${TARGET} INTERFACE ${CFLAGS} )
+         target_compile_options( ${TARGET} INTERFACE ${COPTS} )
          target_link_directories( ${TARGET} INTERFACE ${LINKDIRS} )
-         target_link_options( ${TARGET} INTERFACE ${LDFLAGS} )
+         target_link_options( ${TARGET} INTERFACE ${LOPTS} )
          target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
-
-         # Define a library alias for each of the packages
-         foreach( package ${packages} )
-            # Convert the package spec to a list
-            string( REPLACE " " ";" package "${package}" )
-
-            # And extract just the package name
-            list( GET package 0 package )
-
-            # Create the alias
-            add_library( "lib${package}" ALIAS ${TARGET} )
-         endforeach()
-
-         # We are done...
-         return()
       endif()
    endif()
 
-   message( STATUS "Using '${name}' local library" )
+   # User want the local package or the system one wasn't found
+   if( NOT ${TARGET}_FOUND )
+      message( STATUS "Using '${name}' local library" )
 
-   # Pull in the target config
-   add_subdirectory( ${dir} EXCLUDE_FROM_ALL )
+      # Pull in the target config
+      add_subdirectory( ${dir} EXCLUDE_FROM_ALL )
 
-   # Get the list of targets defined by that config
-   get_property( targets DIRECTORY "${dir}" PROPERTY BUILDSYSTEM_TARGETS )
+      # Get the list of targets defined by that config
+      get_property( targets DIRECTORY "${dir}" PROPERTY BUILDSYSTEM_TARGETS )
 
-   # Set the folder (for the IDEs) for each one
-   foreach( target ${targets} )
-      # Skip interface libraries since they don't have any source to
-      # present in the IDEs   
-      get_target_property( type "${target}" TYPE )
-      if( NOT "${type}" STREQUAL "INTERFACE_LIBRARY" )
-         set_target_properties( ${target} PROPERTIES FOLDER "lib-src" )
+      # Set the folder (for the IDEs) for each one
+      foreach( target ${targets} )
+         # Skip interface libraries since they don't have any source to
+         # present in the IDEs   
+         get_target_property( type "${target}" TYPE )
+         if( NOT "${type}" STREQUAL "INTERFACE_LIBRARY" )
+            set_target_properties( ${target} PROPERTIES FOLDER "lib-src" )
+         endif()
+      endforeach()
+   endif()
+
+   # Define a library alias for each of the packages
+   foreach( package ${packages} )
+      # Convert the package spec to a list
+      string( REPLACE " " ";" package "${package}" )
+
+      # And extract just the package name
+      list( GET package 0 package )
+
+      # But only if the package name doesn't conflict with the
+      # target name.
+      if( NOT TARGET ${package} )
+         # Create the alias
+         add_library( "${package}" ALIAS ${TARGET} )
       endif()
    endforeach()
 endfunction()
@@ -131,11 +131,11 @@ endfunction()
 # Required libraries
 #
 #       directory          option      symbol      req   chk   version
-addlib( wxwidgets          wxwidgets   WXWIDGETS   YES   NO    "" ) # must be first
+addlib( wxWidgets          wxwidgets   WX          YES   NO    "" ) # must be first
 addlib( FileDialog         FileDialog  FILEDIALOG  YES   YES   "" )
 addlib( expat              expat       EXPAT       YES   YES   "" )
 addlib( lame               lame        LAME        YES   YES   "lame >= 3.100" )
-addlib( lib-widget-extra   libextra    WIDGET      YES   YES   "" )
+addlib( lib-widget-extra   libextra    EXTRA       YES   YES   "" )
 addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.24" )
 addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
 addlib( portaudio-v19      portaudio   PORTAUDIO   YES   YES   "" )
@@ -148,11 +148,11 @@ addlib( libid3tag          id3tag      LIBID3TAG   NO    YES   "id3tag >= 0.15.1
 addlib( libmad             mad         LIBMAD      NO    YES   "mad >= 2.3" )
 addlib( libnyquist         nyquist     NYQUIST     NO    YES   "" )
 addlib( libvamp            vamp        VAMP        NO    YES   "vamp >= 2.5" "vamp-hostsdk >= 2.5" )
-addlib( libogg             ogg         LIBOGG      NO    YES   "ogg >= 1.3.1" )
+addlib( libogg             ogg         LIBVORBIS   NO    YES   "ogg >= 1.3.1" )
 addlib( libvorbis          vorbis      LIBVORBIS   NO    YES   "vorbis >= 1.3.3" "vorbisenc >= 1.3.3" "vorbisfile >= 1.3.3" )
 addlib( libflac            flac        LIBFLAC     NO    YES   "flac >= 1.3.1" "flac++ >= 1.3.1" )
 addlib( lv2                lv2         LV2         NO    YES   "lilv-0 >= 0.24.6" "lv2 >= 1.16.0" "serd-0 >= 0.30.2" "sord-0 >= 0.16.4" "sratom-0 >= 0.6.4" )
-addlib( portmidi           midi        PORTMIDI    NO    YES   "portmidi >= 0.1" )
+addlib( portmidi           midi        MIDI        NO    YES   "portmidi >= 0.1" )
 addlib( portmixer          portmixer   PORTMIXER   NO    YES   "" )
 addlib( portsmf            portsmf     PORTSMF     NO    YES   "portsmf >= 0.1" )
 addlib( sbsms              sbsms       SBSMS       NO    YES   "sbsms >= 2.0.2" )

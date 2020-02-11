@@ -100,13 +100,11 @@ list( APPEND OPTIONS
       $<$<C_COMPILER_ID:MSVC>:/wd4996>
 )
 
-if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-    cmake_push_check_state(RESET)
+if( CMAKE_C_COMPILER_ID MATCHES "MSVC" )
+    cmake_push_check_state( RESET )
     set( CMAKE_EXTRA_INCLUDE_FILES "BaseTsd.h" )
     check_type_size( "SSIZE_T" SIZEOF_SSIZE LANGUAGE C )
-    list( APPEND DEFINES
-        ssize_t=SSIZE_T
-    )
+    list( APPEND DEFINES ssize_t=SSIZE_T )
     cmake_pop_check_state()
 else()
     check_type_size( "ssize_t" SIZEOF_SSIZE LANGUAGE C )
@@ -138,7 +136,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
 endif()
 
 set( CPU_IS_BIG_ENDIAN ${WORDS_BIGENDIAN} )
-set( CPU_IS_LITTLE_ENDIAN NOT ${WORDS_BIGENDIAN} )
+set( CPU_IS_LITTLE_ENDIAN !${WORDS_BIGENDIAN} )
 set( HAVE_EXTERNAL_LIBS 0 )
 
 set( VERSION "1.0.24" )
@@ -149,7 +147,7 @@ set( PACKAGE_VERSION ${VERSION} )
 # Does compiler support "flexible array members"
 try_compile( HAVE_FLEXIBLE_ARRAY
    ${CMAKE_CURRENT_BINARY_DIR}
-   ${CMAKE_CURRENT_SOURCE_DIR}/famcheck.c
+   ${_SRCDIR}/famcheck.c
    LINK_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES}
    OUTPUT_VARIABLE c_out
 )
@@ -157,7 +155,7 @@ try_compile( HAVE_FLEXIBLE_ARRAY
 # Determine how the CPU clips when doing float to int conversions
 try_run( r_rc c_rc
    ${CMAKE_CURRENT_BINARY_DIR}
-   ${CMAKE_CURRENT_SOURCE_DIR}/clipcheck.c
+   ${_SRCDIR}/clipcheck.c
    LINK_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES}
    RUN_OUTPUT_VARIABLE r_out
    COMPILE_OUTPUT_VARIABLE c_out
@@ -165,7 +163,7 @@ try_run( r_rc c_rc
 
 if( NOT c_rc )
    message( STATUS "${c_out}" )
-   message( FATAL_ERROR "${CMAKE_CURRENT_SOURCE_DIR}/clipcheck.c compile failed:" )
+   message( FATAL_ERROR "${_SRCDIR}/clipcheck.c compile failed:" )
 endif()
 
 list( GET r_out 0 CPU_CLIPS_POSITIVE )

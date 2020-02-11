@@ -28,6 +28,9 @@
 /* Define if you have C99's lrintf function. */
 #cmakedefine HAVE_LRINTF 1
 
+/* Define if you have the mlock functions. */
+#cmakedefine HAVE_MLOCK 1
+
 /* Define to 1 or 0, depending whether the compiler supports simple visibility
    declarations. */
 #cmakedefine HAVE_VISIBILITY 1

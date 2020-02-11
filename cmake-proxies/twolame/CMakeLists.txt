@@ -1,6 +1,8 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/libtwolame/ath.c
@@ -26,7 +28,7 @@ list( APPEND SOURCES
 
 list( APPEND INCLUDES
    PRIVATE
-      ${CMAKE_CURRENT_BINARY_DIR}/private
+      ${_PRVDIR}
    PUBLIC
       ${TARGET_ROOT}/libtwolame
 )
@@ -38,7 +40,7 @@ list( APPEND DEFINES
 
 list( APPEND OPTIONS
    PRIVATE
-      $<$<C_COMPILER_ID:GNU>:-Wno-implicit-function-declaration>
+      $<$<C_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-implicit-function-declaration>
 )
 
 set( PACKAGE_BUGREPORT "twolame-discuss@lists.sourceforge.net" )

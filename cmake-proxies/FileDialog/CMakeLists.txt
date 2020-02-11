@@ -1,12 +1,14 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/FileDialog.cpp
-      $<$<PLATFORM_ID:Windows>:${TARGET_ROOT}/win/FileDialogPrivate.cpp>
-      $<$<PLATFORM_ID:Darwin>:${TARGET_ROOT}/mac/FileDialogPrivate.mm>
-      $<$<PLATFORM_ID:Linux>:${TARGET_ROOT}/gtk/FileDialogPrivate.cpp>
+      $<$<BOOL:${wxIS_WIN}>:${TARGET_ROOT}/win/FileDialogPrivate.cpp>
+      $<$<BOOL:${wxIS_MAC}>:${TARGET_ROOT}/mac/FileDialogPrivate.mm>
+      $<$<BOOL:${wxIS_GTK}>:${TARGET_ROOT}/gtk/FileDialogPrivate.cpp>
 )
 
 list( APPEND INCLUDES
@@ -21,16 +23,15 @@ list( APPEND DEFINES
 
 list( APPEND OPTIONS
    PRIVATE
-      $<$<PLATFORM_ID:Windows>:/permissive->
-      $<$<PLATFORM_ID:Darwin>:-Wno-deprecated-declarations>
-      $<$<PLATFORM_ID:Linux>:-Wno-deprecated-declarations>
+      $<$<CXX_COMPILER_ID:MSVC>:/permissive->
+      $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-deprecated-declarations>
 )
 
 list( APPEND LIBRARIES
    PRIVATE
-      wxwidgets
+      wxWidgets
    PUBLIC
-      $<$<PLATFORM_ID:Linux>:PkgConfig::GTK>
+      $<$<BOOL:${wxIS_GTK}>:PkgConfig::GTK>
 )
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )

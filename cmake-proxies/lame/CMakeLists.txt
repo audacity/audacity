@@ -1,6 +1,8 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       # libmp3lame
@@ -39,11 +41,11 @@ list( APPEND SOURCES
 
 list( APPEND INCLUDES
    PRIVATE
-      ${CMAKE_CURRENT_BINARY_DIR}/private
+      ${_PRVDIR}
       ${TARGET_ROOT}/../libmp3lame
       ${TARGET_ROOT}/../mpglib
    PUBLIC
-      ${CMAKE_CURRENT_BINARY_DIR}/public
+      ${_PUBDIR}
 )
 
 list( APPEND DEFINES

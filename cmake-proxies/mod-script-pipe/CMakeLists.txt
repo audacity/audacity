@@ -26,8 +26,8 @@ list( APPEND DEFINES
 
 list( APPEND LIBRARIES
    PRIVATE
-      wxwidgets
       Audacity
+      wxWidgets
 )
 
 set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_DEST}/modules" )

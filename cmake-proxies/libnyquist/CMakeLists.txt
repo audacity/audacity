@@ -1,6 +1,8 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       # libnyquist
@@ -270,11 +272,8 @@ list( APPEND INCLUDES
       ${TARGET_ROOT}/nyquist/nyqstk/include
       ${TARGET_ROOT}/nyquist/tran
       ${TARGET_ROOT}/nyquist/xlisp
-
-      $<$<PLATFORM_ID:Darwin>:${TARGET_ROOT}/nyquist/sys/unix>
-      $<$<PLATFORM_ID:Linux>:${TARGET_ROOT}/nyquist/sys/unix>
-      $<$<PLATFORM_ID:Windows>:${TARGET_ROOT}/nyquist/sys/win/msvc>
-
+      $<$<BOOL:${UNIX}>:${TARGET_ROOT}/nyquist/sys/unix>
+      $<$<NOT:$<BOOL:${UNIX}>>:${TARGET_ROOT}/nyquist/sys/win/msvc>
    PUBLIC
       ${TARGET_ROOT}
 )
@@ -283,7 +282,7 @@ list( APPEND DEFINES
    PRIVATE
       CMTSTUFF
       EXT
-      $<$<PLATFORM_ID:Windows>:_LIB WIN32 D_LIB>
+      $<$<PLATFORM_ID:Windows>:WIN32>
 )
 
 list( APPEND OPTIONS

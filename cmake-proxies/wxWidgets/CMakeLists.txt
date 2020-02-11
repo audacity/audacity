@@ -1,17 +1,18 @@
 
 add_library( ${TARGET} INTERFACE )
+add_library( ${symbol} ALIAS ${TARGET} )
 
 def_vars()
 
-message( STATUS "========== Configuring ${TARGET} ==========" )
+message( STATUS "========== Configuring ${name} ==========" )
 
-option( use_system_wxwidgets "Use ${TARGET} system library if available" ${prefer_system_libs} )
-if( use_system_wxwidgets )
+option( use_system_${name} "Use ${name} system library if available" ${prefer_system_libs} )
+if( use_system_${name} )
    find_package(wxWidgets)
 endif()
 
 if( wxWidgets_FOUND )
-   message( STATUS "Using '${TARGET}' system library" )
+   message( STATUS "Using '${name}' system library" )
 
    if( wxWidgets_INCLUDE_DIRS_NO_SYSTEM )
       set( INCLUDES
@@ -28,25 +29,31 @@ if( wxWidgets_FOUND )
    set( DEFINES
       INTERFACE
          ${wxWidgets_DEFINITIONS}
-         $<$<CONFIG:Debug>:${wxWidgets_DEFINITIONS_DEBUG}>
+         $<$<CONFIG:Debug>:
+            ${wxWidgets_DEFINITIONS_DEBUG}
+         >
    )
 
    set( LINKDIRS
       INTERFACE
-         $<$<PLATFORM_ID:Windows>:${wxWidgets_LIB_DIR}>
+         $<$<PLATFORM_ID:Windows>:
+            ${wxWidgets_LIB_DIR}
+         >
    )
 
    set( LIBRARIES
       INTERFACE
          ${wxWidgets_LIBRARIES}
-         $<$<NOT:$<PLATFORM_ID:Windows>>:z>
+         $<$<NOT:$<PLATFORM_ID:Windows>>:
+            z
+         >
    )
 
    set( toolkit "${wxWidgets_LIBRARIES}" )
 else()
-   message( STATUS "Using '${TARGET}' system library" )
+   message( STATUS "Using local '${name}' library" )
 
-   set( use_system_wxwidgets OFF CACHE BOOL "Prefer wxWidgets system library if available" FORCE )
+   set( use_system_${name} OFF CACHE BOOL "Prefer ${name} system library if available" FORCE )
 
    set( WXWIN $ENV{WXWIN} )
    if( "${WXWIN}" STREQUAL "" )
@@ -83,7 +90,7 @@ else()
 
       # Causes problems on OSX, so turn it off
       set( wxBUILD_PRECOMP NO )
-   elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
+   elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
       # Doesn't yet have accessbility
       set( wxUSE_ACCESSIBILITY NO )
 
@@ -101,13 +108,18 @@ else()
    set_dir_folder( ${WXWIN} "wxWidgets" )
 
    set( INCLUDES
-      $<$<STREQUAL:"${wxUSE_ZLIB}","builtin">:${WXWIN}/src/zlib>
+      $<$<STREQUAL:"${wxUSE_ZLIB}","builtin">:
+         ${WXWIN}/src/zlib
+      >
    )
 
    set( DEFINES
       WXUSINGDLL
    )
 
+   # Do NOT split the generator expressions across multiple lines here.
+   # CMake appears to have a bug and doesn't see to handle it correctly
+   # for target link libraries.
    set( LIBRARIES
       adv
       base
@@ -129,26 +141,37 @@ else()
       # since wxRegex compile defines do not include __WXOSX_COCOA__.  So,
       # add it here.
       target_compile_definitions( wxregex PRIVATE "__WXOSX_COCOA__" )
-   elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
-      set( toolkit "${wxBUILD_TOOLKIT}" )
    endif()
+
+   set( toolkit "${wxBUILD_TOOLKIT}" )
 endif()
 
-if( CMAKE_SYSTEM_NAME MATCHES "Linux" )
-   # We need the system GTK/GLIB packages
-   if( "${toolkit}" MATCHES ".*gtk2.*" )
-      set( gtk gtk+-2.0 )
-      set( glib glib-2.0 )
-   elseif( "${toolkit}" MATCHES ".*gtk3.*" )
-      set( gtk gtk+-3.0 )
-      set( glib glib-2.0 )
-   elseif( "${toolkit}" MATCHES ".*gtk4.*" )
-      set( gtk gtk+-4.0 )
-      set( glib glib-2.0 )
-   else()
-      message( FATAL_ERROR "Unrecognized wxGTK version: ${wxBUILD_TOOLKIT}" )
-   endif()
+if( "${toolkit}" MATCHES ".*gtk2.*" )
+   set( gtk gtk+-2.0 )
+   set( glib glib-2.0 )
+   set( wxTOOLKIT "GTK2" CACHE INTERNAL "" )
+   set( wxIS_GTK YES CACHE INTERNAL "" )
+elseif( "${toolkit}" MATCHES ".*gtk3.*" )
+   set( gtk gtk+-3.0 )
+   set( glib glib-2.0 )
+   set( wxTOOLKIT "GTK3" CACHE INTERNAL "" )
+   set( wxIS_GTK YES CACHE INTERNAL "" )
+elseif( "${toolkit}" MATCHES ".*gtk4.*" )
+   set( gtk gtk+-4.0 )
+   set( glib glib-2.0 )
+   set( wxTOOLKIT "GTK4" CACHE INTERNAL "" )
+   set( wxIS_GTK YES CACHE INTERNAL "" )
+elseif( "${toolkit}" MATCHES ".*msw.*" )
+   set( wxTOOLKIT "MSW" CACHE INTERNAL "" )
+   set( wxIS_WIN YES CACHE INTERNAL "" )
+elseif( "${toolkit}" MATCHES ".*osx.*" )
+   set( wxTOOLKIT "MAC" CACHE INTERNAL "" )
+   set( wxIS_MAC YES CACHE INTERNAL "" )
+else()
+   message( FATAL_ERROR "Unrecognized wxWidgets toolkit" )
+endif()
  
+if( "${wxTOOLKIT}" MATCHES "GTK." )
    pkg_check_modules( GTK REQUIRED IMPORTED_TARGET GLOBAL ${gtk} )
    pkg_check_modules( GLIB REQUIRED IMPORTED_TARGET GLOBAL ${glib} )
 endif()
@@ -158,3 +181,4 @@ target_compile_definitions( ${TARGET} INTERFACE ${DEFINES} )
 target_link_directories( ${TARGET} INTERFACE ${LINKDIRS} )
 target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
 
+INSTALL( TARGETS ${TARGET} DESTINATION ${_LIBDIR} )

@@ -1,6 +1,8 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/bit.c
@@ -18,9 +20,9 @@ list( APPEND SOURCES
 
 list( APPEND INCLUDES
    PRIVATE
-      ${CMAKE_CURRENT_BINARY_DIR}/private
+      ${_PRVDIR}
    PUBLIC
-      ${CMAKE_CURRENT_BINARY_DIR}/public
+      ${_PUBDIR}
       ${TARGET_ROOT}
 )
 
@@ -34,13 +36,12 @@ list( APPEND DEFINES
 
 list( APPEND OPTIONS
    PRIVATE
-      $<$<IN_LIST:${CMAKE_C_COMPILER_ID},GNU;Clang;AppleClang>:-Wall>
+      $<$<C_COMPILER_ID:AppleClang,Clang,GNU>:-Wall>
 )
-
-configure_file( config.h.in private/config.h )
 
 set( FPM FPM_DEFAULT )
 
+configure_file( config.h.in private/config.h )
 configure_file( mad.h.in public/mad.h )
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )

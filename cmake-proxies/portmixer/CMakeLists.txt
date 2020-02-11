@@ -1,19 +1,39 @@
 
 add_library( ${TARGET} STATIC )
 
-get_target_property( PA_DEFS portaudio-v19 COMPILE_DEFINITIONS )
-string( REPLACE ";" " " PA_DEFS "${PA_DEFS}" )
+def_vars()
 
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/src/px_mixer.c
-      $<$<PLATFORM_ID:Windows>:${TARGET_ROOT}/src/px_win_common.c>
-      $<$<IN_LIST:PA_USE_DS=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_win_ds.c>
-      $<$<IN_LIST:PA_USE_WASAPI=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_win_wasapi.c>
-      $<$<IN_LIST:PA_USE_WMME=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_win_wmme.c>
-      $<$<IN_LIST:PA_USE_COREAUDIO=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_mac_coreaudio.c>
-      $<$<IN_LIST:PA_USE_ALSA=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_linux_alsa.c>
-      $<$<IN_LIST:PA_USE_OSS=1,${PA_DEFS}>:${TARGET_ROOT}/src/px_unix_oss.c>
+      $<$<PLATFORM_ID:Windows>:
+         ${TARGET_ROOT}/src/px_win_common.c
+      >
+
+      $<$<BOOL:${use_pa_ds}>:
+         ${TARGET_ROOT}/src/px_win_ds.c
+      >
+
+      $<$<BOOL:${use_pa_wasapi}>:
+         ${TARGET_ROOT}/src/px_win_wasapi.c
+         ${TARGET_ROOT}/src/px_win_endpoint.c
+      >
+
+      $<$<BOOL:${use_pa_wmme}>:
+         ${TARGET_ROOT}/src/px_win_wmme.c
+      >
+
+      $<$<BOOL:${use_pa_coreaudio}>:
+         ${TARGET_ROOT}/src/px_mac_coreaudio.c
+      >
+
+      $<$<BOOL:${use_pa_alsa}>:
+         ${TARGET_ROOT}/src/px_linux_alsa.c
+      >
+
+      $<$<BOOL:${use_pa_oss}>:
+         ${TARGET_ROOT}/src/px_unix_oss.c
+      >
 )
 
 list( APPEND INCLUDES
@@ -25,12 +45,29 @@ list( APPEND INCLUDES
 
 list( APPEND DEFINES
    PRIVATE
-      $<$<IN_LIST:PA_USE_DS=1,${PA_DEFS}>:PX_USE_WIN_DSOUND=1>
-      $<$<IN_LIST:PA_USE_WASAPI=1,${PA_DEFS}>:PX_USE_WIN_WASAPI=1>
-      $<$<IN_LIST:PA_USE_WMME=1,${PA_DEFS}>:PX_USE_WIN_MME=1>
-      $<$<IN_LIST:PA_USE_COREAUDIO=1,${PA_DEFS}>:PX_USE_MAC_COREAUDIO=1>
-      $<$<IN_LIST:PA_USE_ALSA=1,${PA_DEFS}>:PX_USE_LINUX_ALSA=1>
-      $<$<IN_LIST:PA_USE_OSS=1,${PA_DEFS}>:PX_USE_UNIX_OSS=1>
+      $<$<BOOL:${use_pa_ds}>:
+         PX_USE_WIN_DSOUND=1
+      >
+
+      $<$<BOOL:${use_pa_wasapi}>:
+         PX_USE_WIN_WASAPI=1
+      >
+
+      $<$<BOOL:${use_pa_wmme}>:
+         PX_USE_WIN_MME=1
+      >
+
+      $<$<BOOL:${use_pa_coreaudio}>:
+         PX_USE_MAC_COREAUDIO=1
+      >
+
+      $<$<BOOL:${use_pa_alsa}>:
+         PX_USE_LINUX_ALSA=1
+      >
+
+      $<$<BOOL:${use_pa_oss}>:
+         PX_USE_UNIX_OSS=1
+      >
 )
 
 list( APPEND LIBRARIES

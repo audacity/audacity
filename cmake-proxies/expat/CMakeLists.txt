@@ -1,6 +1,8 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/lib/xmlparse.c
@@ -12,7 +14,7 @@ list( APPEND SOURCES
 
 list( APPEND INCLUDES
    PRIVATE
-      ${CMAKE_CURRENT_BINARY_DIR}/private
+      ${_PRVDIR}
    PUBLIC
       ${TARGET_ROOT}/lib
 )
@@ -21,10 +23,6 @@ list( APPEND DEFINES
    PRIVATE
       HAVE_EXPAT_CONFIG_H
 )
-
-check_symbol_exists( "getpagesize" "unistd.h" HAVE_GETPAGESIZE )
-check_symbol_exists( "bcopy" "strings.h" HAVE_BCOPY )
-check_symbol_exists( "memmove" "string.h" HAVE_MEMMOVE )
 
 if( WORDS_BIGENDIAN )
    set( BYTEORDER 4321 )

@@ -1,6 +1,8 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/compat.c
@@ -23,7 +25,7 @@ list( APPEND SOURCES
 
 list( APPEND INCLUDES
    PRIVATE
-      ${CMAKE_CURRENT_BINARY_DIR}/private
+      ${_PRVDIR}
       $<$<PLATFORM_ID:Windows>:$ENV{WXWIN}/src/zlib>
    PUBLIC
       ${TARGET_ROOT}
@@ -31,18 +33,18 @@ list( APPEND INCLUDES
 
 list( APPEND OPTIONS
    PRIVATE
-      $<$<C_COMPILER_ID:GNU>:-Wno-implicit-function-declaration>
+      $<$<C_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-implicit-function-declaration>
 )
 
 list( APPEND LIBRARIES
    PRIVATE
-     wxwidgets
+     wxWidgets
 )
+
 configure_file( config.h.in private/config.h )
 
 organize_source( "${TARGET_ROOT}" "src" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
-target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )

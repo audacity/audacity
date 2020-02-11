@@ -24,7 +24,7 @@ list( APPEND LIBRARIES
       Audacity
       libnyquist
       portaudio-v19
-      wxwidgets
+      wxWidgets
 )
 
 set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_DEST}/modules" )

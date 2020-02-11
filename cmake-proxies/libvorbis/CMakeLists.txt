@@ -3,6 +3,8 @@ add_library( ${TARGET} STATIC )
 add_library( ${TARGET}enc ALIAS ${TARGET} )
 add_library( ${TARGET}file ALIAS ${TARGET} )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/lib/analysis.c
@@ -31,9 +33,8 @@ list( APPEND SOURCES
 
 list( APPEND INCLUDES
    PRIVATE
-      ${CMAKE_CURRENT_BINARY_DIR}/private
+      ${_PRVDIR}
       ${TARGET_ROOT}/lib
-      ${LIBOGG_INCLUDES}
    PUBLIC
       ${TARGET_ROOT}/include
 )

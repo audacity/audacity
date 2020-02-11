@@ -166,13 +166,13 @@ macro( bld name packages define sources )
          break()
       endif()
 
-      list( APPEND libs PRIVATE
-         "PkgConfig::${pkg}"
+      list( APPEND libs
+         PRIVATE
+            "PkgConfig::${pkg}"
       )
    endforeach()
 
    if( NOT missing )
-
       list( APPEND DEFINES
          PRIVATE
             ${define}
@@ -199,8 +199,8 @@ if( WIN32 )
    set( LILV_DIR_SEP "\\\\" )
    set( LILV_DEFAULT_LV2_PATH "%APPDATA%\\LV2;%COMMONPROGRAMFILES%\\LV2" )
 
-   set( SUIL_MODULE_DIR "C:\\Windows\\System32" )
-   set( SUIL_DIR_SEP "\\\\" )
+   set( SUIL_MODULE_DIR "" )
+   set( SUIL_DIR_SEP "" )
    set( SUIL_GTK2_LIB_NAME "libgtk-x11-2.0.so.0" )
    set( SUIL_GTK3_LIB_NAME "libgtk-x11-3.0.so.0" )
    set( SUIL_MODULE_PREFIX "" )
@@ -210,8 +210,8 @@ elseif( APPLE )
    set( LILV_DIR_SEP "/" )
    set( LILV_DEFAULT_LV2_PATH "~/Library/Audio/Plug-Ins/LV2:~/.lv2:/usr/local/lib/lv2:/usr/lib/lv2:/Library/Audio/Plug-Ins/LV2" )
 
-   set( SUIL_MODULE_DIR "/usr/local/lib/suil-0" )
-   set( SUIL_DIR_SEP "/" )
+   set( SUIL_MODULE_DIR "" )
+   set( SUIL_DIR_SEP "" )
    set( SUIL_GTK2_LIB_NAME "libgtk-x11-2.0.so.0" )
    set( SUIL_GTK3_LIB_NAME "libgtk-x11-3.0.so.0" )
    set( SUIL_MODULE_PREFIX "lib" )
@@ -221,8 +221,8 @@ elseif( UNIX )
    set( LILV_DIR_SEP "/" )
    set( LILV_DEFAULT_LV2_PATH "~/.lv2:/usr/lib/lv2:/usr/local/lib/lv2" )
 
-   set( SUIL_MODULE_DIR "/usr/local/lib/suil-0" )
-   set( SUIL_DIR_SEP "/" )
+   set( SUIL_MODULE_DIR "" )
+   set( SUIL_DIR_SEP "" )
    set( SUIL_GTK2_LIB_NAME "libgtk-x11-2.0.so.0" )
    set( SUIL_GTK3_LIB_NAME "libgtk-x11-3.0.so.0" )
    set( SUIL_MODULE_PREFIX "lib" )
@@ -269,7 +269,7 @@ configure_file( sratom_config.h.in "${_PRVDIR}/sratom_config.h" )
 configure_file( suil_config.h.in "${_PRVDIR}/suil_config.h" )
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES} ${HEADERS}" )
-target_sources( ${TARGET} PRIVATE ${SOURCES} ${HEADERS} )# ${stamp} )
+target_sources( ${TARGET} PRIVATE ${SOURCES} ${HEADERS} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 

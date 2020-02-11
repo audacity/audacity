@@ -1,6 +1,8 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/src/bitwise.c
@@ -9,7 +11,7 @@ list( APPEND SOURCES
 
 list( APPEND INCLUDES
    PUBLIC
-      ${CMAKE_CURRENT_BINARY_DIR}/public
+      ${_PUBDIR}
       ${TARGET_ROOT}/include
 )
 

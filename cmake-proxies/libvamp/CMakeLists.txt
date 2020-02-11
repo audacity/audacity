@@ -2,6 +2,8 @@
 add_library( ${TARGET} STATIC )
 add_library( ${TARGET}-hostsdk ALIAS ${TARGET} )
 
+def_vars()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/src/vamp-hostsdk/PluginBufferingAdapter.cpp

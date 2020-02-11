@@ -1,6 +1,8 @@
 
 add_library( ${TARGET} STATIC )
 
+def_vars()
+
 set(CMAKE_MODULE_PATH ${TARGET_ROOT}/cmake/Modules )
 
 list( APPEND SOURCES
@@ -26,7 +28,7 @@ list( APPEND SOURCES
 
 list( APPEND INCLUDES
    PRIVATE
-      ${CMAKE_CURRENT_BINARY_DIR}/private
+      ${_PRVDIR}
    PUBLIC
       ${TARGET_ROOT}/src
 )
@@ -40,19 +42,20 @@ list( APPEND DEFINES
 
 list( APPEND OPTIONS
    PRIVATE
-      $<$<IN_LIST:${CMAKE_C_COMPILER_ID},GNU;Clang;AppleClang>:-Wall>
+      $<$<C_COMPILER_ID:AppleClang,Clang,GNU>:
+         -Wconversion
+         -Wall
+         -Wextra
+         -pedantic
+         -Wundef
+         -Wpointer-arith
+         -Wno-long-long
+         -Wnested-externs
+         -Wmissing-prototypes
+         -Wstrict-prototypes
+      >
+      $<$<C_COMPILER_ID:AppleClang,Clang>:-Wno-keyword-macro>
 )
-
-if( CMAKE_C_COMPILER_ID MATCHES "GNU|.*Clang" )
-   list( APPEND OPTIONS
-      PRIVATE
-         -Wconversion -Wall -Wextra -pedantic -Wundef -Wpointer-arith -Wno-long-long
-         $<$<C_COMPILER_ID:Clang>:-Wno-keyword-macro>
-         $<$<COMPILE_LANGUAGE:CXX>:
-            -std=gnu89 -Wnested-externs -Wmissing-prototypes -Wstrict-prototypes
-         >
-   )
-endif()
 
 set( HAVE_BIGENDIAN ${WORDS_BIGENDIAN} )
 
@@ -61,21 +64,22 @@ set( AVUTIL_FOUND NO )
 set( WITH_PFFFT YES )
 
 set( WITH_CR32 YES )
-set( WITH_CR32S YES )
+set( WITH_CR32S NO )
 set( WITH_CR64 YES )
-set( WITH_CR64S YES )
+set( WITH_CR64S NO )
 set( WITH_VR32 YES )
 
-# Copied from libsoxr CMakeLists.txt
-if( WITH_CR32S )
-   find_package( SIMD32 )
-   set( WITH_CR32S ${SIMD32_FOUND} )
-#   list( APPEND OPTIONS ${SIMD32_C_FLAGS} )
+find_package( SIMD32 )
+if( SIMD32_FOUND )
+   set( WITH_CR32S ON )
+   string( STRIP "${SIMD32_C_FLAGS}" SIMD32_C_FLAGS )
+   list( APPEND OPTIONS ${SIMD32_C_FLAGS} )
 endif()
 
-if( WITH_CR64S )
-   find_package( SIMD64 )
-   set( WITH_CR64S ${SIMD64_FOUND} )
+find_package( SIMD64 )
+if( SIMD64_FOUND )
+   set( WITH_CR64S ON )
+   string( STRIP "${SIMD64_C_FLAGS}" SIMD64_C_FLAGS )
    list( APPEND OPTIONS ${SIMD64_C_FLAGS} )
 endif()
 

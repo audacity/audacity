@@ -479,55 +479,76 @@ list( APPEND SOURCES
 
       # VST Effects
 
-      $<$<BOOL:USE_VST>:effects/VST/VSTControl.h>
-      $<$<BOOL:USE_VST>:effects/VST/VSTEffect.cpp>
-      $<$<BOOL:USE_VST>:effects/VST/VSTEffect.h>
-      $<$<BOOL:USE_VST>:effects/VST/aeffectx.h>
-      $<$<AND:$<BOOL:USE_VST>,$<PLATFORM_ID:Linux>>:effects/VST/VSTControlGTK.cpp>
-      $<$<AND:$<BOOL:USE_VST>,$<PLATFORM_ID:Linux>>:effects/VST/VSTControlGTK.h>
-      $<$<AND:$<BOOL:USE_VST>,$<PLATFORM_ID:Windows>>:effects/VST/VSTControlMSW.cpp>
-      $<$<AND:$<BOOL:USE_VST>,$<PLATFORM_ID:Windows>>:effects/VST/VSTControlMSW.h>
-      $<$<AND:$<BOOL:USE_VST>,$<PLATFORM_ID:Darwin>>:effects/VST/VSTControlOSX.h>
-      $<$<AND:$<BOOL:USE_VST>,$<PLATFORM_ID:Darwin>>:effects/VST/VSTControlOSX.mm>
+      $<$<BOOL:${USE_VST}>:
+         effects/VST/VSTControl.h
+         effects/VST/VSTEffect.cpp
+         effects/VST/VSTEffect.h
+         effects/VST/aeffectx.h
+      >
+
+      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_GTK}>>:
+         effects/VST/VSTControlGTK.cpp
+         effects/VST/VSTControlGTK.h
+      >
+
+      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_WIN}>>:
+         effects/VST/VSTControlMSW.cpp
+         effects/VST/VSTControlMSW.h
+      >
+
+      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_MAC}>>:
+         effects/VST/VSTControlOSX.h
+         effects/VST/VSTControlOSX.mm
+      >
 
       # Audio Unit Effects
 
-      $<$<AND:$<BOOL:USE_AUDIO_UNITS>,$<PLATFORM_ID:Darwin>>:effects/audiounits/AUControl.h>
-      $<$<AND:$<BOOL:USE_AUDIO_UNITS>,$<PLATFORM_ID:Darwin>>:effects/audiounits/AUControl.mm>
-      $<$<AND:$<BOOL:USE_AUDIO_UNITS>,$<PLATFORM_ID:Darwin>>:effects/audiounits/AudioUnitEffect.cpp>
-      $<$<AND:$<BOOL:USE_AUDIO_UNITS>,$<PLATFORM_ID:Darwin>>:effects/audiounits/AudioUnitEffect.h>
+      $<$<AND:$<BOOL:${USE_AUDIO_UNITS}>,$<BOOL:${wxIS_MAC}>>:
+         effects/audiounits/AUControl.h
+         effects/audiounits/AUControl.mm
+         effects/audiounits/AudioUnitEffect.cpp
+         effects/audiounits/AudioUnitEffect.h
+      >
 
       # Ladspa Effects
 
-      $<$<BOOL:USE_LADSPA>:effects/ladspa/LadspaEffect.cpp>
-      $<$<BOOL:USE_LADSPA>:effects/ladspa/LadspaEffect.h>
-      $<$<BOOL:USE_LADSPA>:effects/ladspa/ladspa.h>
+      $<$<BOOL:${USE_LADSPA}>:
+         effects/ladspa/LadspaEffect.cpp
+         effects/ladspa/LadspaEffect.h
+         effects/ladspa/ladspa.h
+      >
 
       # LV2 Effects
 
-      $<$<BOOL:USE_LV2>:effects/lv2/LV2Effect.cpp>
-      $<$<BOOL:USE_LV2>:effects/lv2/LV2Effect.h>
-      $<$<BOOL:USE_LV2>:effects/lv2/LoadLV2.cpp>
-      $<$<BOOL:USE_LV2>:effects/lv2/LoadLV2.h>
-      $<$<BOOL:USE_LV2>:effects/lv2/NativeWindow.h>
-      $<$<BOOL:USE_LV2>:effects/lv2/lv2_external_ui.h>
-      $<$<BOOL:USE_LV2>:effects/lv2/zix/common.h>
-      $<$<BOOL:USE_LV2>:effects/lv2/zix/ring.cpp>
-      $<$<BOOL:USE_LV2>:effects/lv2/zix/ring.h>
+      $<$<BOOL:${USE_LV2}>:
+         effects/lv2/LV2Effect.cpp
+         effects/lv2/LV2Effect.h
+         effects/lv2/LoadLV2.cpp
+         effects/lv2/LoadLV2.h
+         effects/lv2/NativeWindow.h
+         effects/lv2/lv2_external_ui.h
+         effects/lv2/zix/common.h
+         effects/lv2/zix/ring.cpp
+         effects/lv2/zix/ring.h
+      >
 
       # Nyquist Effects
 
-      $<$<BOOL:USE_NYQUIST>:effects/nyquist/LoadNyquist.cpp>
-      $<$<BOOL:USE_NYQUIST>:effects/nyquist/LoadNyquist.h>
-      $<$<BOOL:USE_NYQUIST>:effects/nyquist/Nyquist.cpp>
-      $<$<BOOL:USE_NYQUIST>:effects/nyquist/Nyquist.h>
+      $<$<BOOL:${USE_NYQUIST}>:
+         effects/nyquist/LoadNyquist.cpp
+         effects/nyquist/LoadNyquist.h
+         effects/nyquist/Nyquist.cpp
+         effects/nyquist/Nyquist.h
+      >
 
       # VAMP Effects
 
-      $<$<BOOL:USE_VAMP>:effects/vamp/LoadVamp.cpp>
-      $<$<BOOL:USE_VAMP>:effects/vamp/LoadVamp.h>
-      $<$<BOOL:USE_VAMP>:effects/vamp/VampEffect.cpp>
-      $<$<BOOL:USE_VAMP>:effects/vamp/VampEffect.h>
+      $<$<BOOL:${USE_VAMP}>:
+         effects/vamp/LoadVamp.cpp
+         effects/vamp/LoadVamp.h
+         effects/vamp/VampEffect.cpp
+         effects/vamp/VampEffect.h
+      >
 
       # Export
 
@@ -542,14 +563,24 @@ list( APPEND SOURCES
       export/ExportMultiple.h
       export/ExportPCM.cpp
 
-
       # Optional exporters
-      $<$<BOOL:USE_FFMPEG>:export/ExportFFmpeg.cpp>
-      $<$<BOOL:USE_FFMPEG>:export/ExportFFmpegDialogs.cpp>
-      $<$<BOOL:USE_FFMPEG>:export/ExportFFmpegDialogs.h>
-      $<$<BOOL:USE_FLAC>:export/ExportFLAC.cpp>
-      $<$<BOOL:USE_TWOLAME>:export/ExportMP2.cpp>
-      $<$<BOOL:USE_LIBVORBIS>:export/ExportOGG.cpp>
+      $<$<BOOL:${USE_FFMPEG}>:
+         export/ExportFFmpeg.cpp
+         export/ExportFFmpegDialogs.cpp
+         export/ExportFFmpegDialogs.h
+      >
+
+      $<$<BOOL:${USE_LIBFLAC}>:
+         export/ExportFLAC.cpp
+      >
+
+      $<$<BOOL:${USE_LIBTWOLAME}>:
+         export/ExportMP2.cpp
+      >
+
+      $<$<BOOL:${USE_LIBVORBIS}>:
+         export/ExportOGG.cpp
+      >
 
       # Import
 
@@ -575,14 +606,30 @@ list( APPEND SOURCES
 
       # Optional importers
 
-      $<$<BOOL:USE_FFMPEG>:import/ImportFFmpeg.cpp>
-      $<$<BOOL:USE_FLAC>:import/ImportFLAC.cpp>
-      $<$<BOOL:USE_GSTREAMER>:import/ImportGStreamer.cpp>
-      $<$<BOOL:USE_MIDI>:import/ImportMIDI.cpp>
-      $<$<BOOL:USE_MIDI>:import/ImportMIDI.h>
-      $<$<BOOL:USE_LIBMAD>:import/ImportMP3.cpp>
-      $<$<BOOL:USE_LIBVORBIS>:import/ImportOGG.cpp>
-#      import/ImportQT.cpp
+      $<$<BOOL:${USE_FFMPEG}>:
+         import/ImportFFmpeg.cpp
+      >
+
+      $<$<BOOL:${USE_LIBFLAC}>:
+         import/ImportFLAC.cpp
+      >
+
+      $<$<BOOL:${USE_GSTREAMER}>:
+         import/ImportGStreamer.cpp
+      >
+
+      $<$<BOOL:${USE_MIDI}>:
+         import/ImportMIDI.cpp
+         import/ImportMIDI.h
+      >
+
+      $<$<BOOL:${USE_LIBMAD}>:
+         import/ImportMP3.cpp
+      >
+
+      $<$<BOOL:${USE_LIBVORBIS}>:
+         import/ImportOGG.cpp
+      >
 
       # Menus
 
@@ -914,8 +961,10 @@ list( APPEND INCLUDES
 #
 #
 list( APPEND RESOURCES
-   $<$<PLATFORM_ID:Windows>:../win/audacity.rc>
-   $<$<PLATFORM_ID:Windows>:../win/packages.config>
+   $<$<PLATFORM_ID:Windows>:
+      ../win/audacity.rc
+      ../win/packages.config
+   >
 )
 
 #
@@ -953,7 +1002,7 @@ list( APPEND DEFINES
 
 list( APPEND OPTIONS
    PRIVATE
-      $<$<PLATFORM_ID:Windows>:/permissive->
+      $<$<CXX_COMPILER_ID:MSVC>:/permissive->
 #      $<$<CXX_COMPILER_ID:GNU>:-Wl,-rpath -Wl,${_RPATH}>
 )
 
@@ -968,7 +1017,7 @@ list( APPEND LDFLAGS
 list( APPEND LIBRARIES
    PRIVATE
       ${CMAKE_REQUIRED_LIBRARIES}
-      wxwidgets
+      wxWidgets
       FileDialog
       expat
       lame
@@ -976,36 +1025,44 @@ list( APPEND LIBRARIES
       libsoxr
       lib-widget-extra
       portaudio-v19
-      $<$<BOOL:USE_FFMPEG>:libavcodec>
-      $<$<BOOL:USE_FFMPEG>:libavformat>
-      $<$<BOOL:USE_FFMPEG>:libavutil>
-      $<$<BOOL:USE_LIBID3TAG>:libid3tag>
-      $<$<BOOL:USE_LIBFLAC>:libflac>
-      $<$<BOOL:USE_LIBFLAC>:libflac++>
-      $<$<BOOL:USE_LIBMAD>:libmad>
-      $<$<BOOL:USE_LIBVORBIS>:libogg>
-      $<$<BOOL:USE_LIBVORBIS>:libvorbis>
-      $<$<BOOL:USE_LIBVORBIS>:libvorbisenc>
-      $<$<BOOL:USE_LIBVORBIS>:libvorbisfile>
-      $<$<BOOL:USE_LIBTWOLAME>:twolame>
-      $<$<BOOL:USE_LV2>:lv2>
-      $<$<BOOL:USE_MIDI>:portmidi>
-      $<$<BOOL:USE_MIDI>:portsmf>
-      $<$<BOOL:USE_NYQUIST>:libnyquist>
-      $<$<BOOL:USE_PORTMIXER>:portmixer>
-      $<$<BOOL:USE_SBSMS>:sbsms>
-      $<$<BOOL:USE_SOUNDTOUCH>:soundtouch>
-      $<$<BOOL:USE_VAMP>:libvamp>
-      $<$<BOOL:USE_VAMP>:libvamp-hostsdk>
+#      $<$<BOOL:${USE_FFMPEG}>:ibavcodec>
+#      $<$<BOOL:${USE_FFMPEG}>:libavformat>
+#      $<$<BOOL:${USE_FFMPEG}>:libavutil>
+      $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
+      $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
+
+      # This flac mess can be resolved by removing the Windows pragmas
+      # in AudacityApp.cpp.
+      $<$<BOOL:${USE_LIBFLAC}>:flac>
+      $<$<BOOL:${USE_LIBFLAC}>:flac++>
+      $<$<BOOL:${USE_LIBFLAC}>:libflac>
+
+      $<$<BOOL:${USE_LIBMAD}>:libmad>
+      $<$<BOOL:${USE_LIBVORBIS}>:libogg>
+      $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
+#      $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
+#      $<$<BOOL:${USE_LIBVORBIS}>:libvorbisenc>
+#      $<$<BOOL:${USE_LIBVORBIS}>:libvorbisfile>
+      $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
+      $<$<BOOL:${USE_LV2}>:lv2>
+      $<$<BOOL:${USE_MIDI}>:portmidi>
+      $<$<BOOL:${USE_MIDI}>:portsmf>
+      $<$<BOOL:${USE_NYQUIST}>:libnyquist>
+      $<$<BOOL:${USE_PORTMIXER}>:portmixer>
+      $<$<BOOL:${USE_SBSMS}>:sbsms>
+      $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
+      $<$<BOOL:${USE_VAMP}>:libvamp>
+#      $<$<BOOL:${USE_VAMP}>:libvamp-hostsdk>
+      $<$<PLATFORM_ID:Linux,FreeBSD>:PkgConfig::GLIB>
+      $<$<PLATFORM_ID:Linux,FreeBSD>:z>
+      $<$<PLATFORM_ID:Linux,FreeBSD>:pthread>
 )
 
 #
 # If was have cmake 3.16 or higher, we can use precompiled headers
 #
 if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" )
-   list( APPEND PRECOMP
-      AudacityHeaders.h
-   )
+   set( PRECOMP AudacityHeaders.h )
 endif()
 
 # Handle Ladspa option
@@ -1062,12 +1119,11 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       set( wxlibs "${CMAKE_BINARY_DIR}" )
    endif()
 
-   file( TO_NATIVE_PATH ${_DEST} dest )
    add_custom_command(
       TARGET
          ${TARGET}
       COMMAND
-         XCOPY "*.dll" ${dest} /I /R /Y 
+         XCOPY "*.dll" $<SHELL_PATH:${_DEST}> /I /R /Y 
       WORKING_DIRECTORY
          "${wxlibs}/lib/vc_dll"
       POST_BUILD
@@ -1106,6 +1162,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    list(APPEND LIBRARIES
       PRIVATE
          "-framework AudioUnit"
+         "-framework CoreAudio"
          "-framework CoreAudioKit"
    )
 
@@ -1139,9 +1196,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          TARGET
             ${TARGET}
          COMMAND
-            sh -c "TARGET_BUILD_DIR=${_DEST} EXECUTABLE_PATH=${_EXEDIR}/${_EXE} FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
-#         WORKING_DIRECTORY
-#            ${CMAKE_BINARY_DIR}/lib
+            sh -c "TARGET_BUILD_DIR=${_DEST} EXECUTABLE_PATH=Macos/${_EXE} FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
          POST_BUILD
       )
    endif()
@@ -1163,63 +1218,66 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
 
    target_sources( "Wrapper" PRIVATE ${WRAPPER_SOURCES} )
-elseif( CMAKE_SYSTEM_NAME MATCHES "Linux" )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
    set( _EXE "audacity" )
-
-   # Add additional library requirements
-   list( APPEND LIBRARIES
-      PRIVATE
-         PkgConfig::GLIB
-         z
-         pthread
-   )
 
    # Create the config file
    set( HAVE_VISIBILITY 1 )
    configure_file( audacity_config.h.in private/configunix.h )
 
-   # Create the MIMETYPES list (must be a better way...)
-   if( USE_FFMPEG)
-      list( APPEND MIMETYPES "audio/aac;audio/ac3;audio/mp4;audio/x-ms-wma;video/mpeg" )
-   endif()
-   if( USE_LIBFLAC)
-      list( APPEND MIMETYPES "audio/flac;audio/x-flac" )
-   endif()
-   if( USE_LIBMAD )
-      list( APPEND MIMETYPES "audio/mpeg" )
-   endif()
-   if( USE_SNDFILE )
-      list( APPEND MIMETYPES "audio/basic;audio/x-aiff;audio/x-wav" )
-   endif()
-   if( USE_LIBOGG AND USE_LIBVORBIS )
-      list( APPEND MIMETYPES "application/ogg;audio/x-vorbis+ogg" )
-   endif()
+   # Create the MIMETYPES list
+   list( APPEND MIMETYPES
+      $<$<BOOL:${USE_FFMPEG}>:
+         audio/aac
+         audio/ac3
+         audio/mp4
+         audio/x-ms-wma
+         video/mpeg
+      >
+      $<$<BOOL:${USE_LIBFLAC}>:
+         audio/flac
+         audio/x-flac
+      >
+      $<$<BOOL:${USE_LIBMAD}>:
+         audio/mpeg
+      >
+      $<$<BOOL:${USE_SNDFILE}>:
+         audio/basic
+         audio/x-aiff
+         audio/x-wav
+      >
+      $<$<AND:$<BOOL:${USE_LIBOGG},${USE_LIBVORBIS}>>:
+         application/ogg
+         audio/x-vorbis+ogg
+      >
+   )
 
    # Create the desktop file
    set( AUDACITY_NAME "${_EXE}" )
    configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
 
    # Create the script to copy required wxWidgets libraries
-   file( WRITE "${_INTDIR}/copy_libs.sh"
-      "for lib in \$(ldd ${_EXEDIR}/${_EXE} | awk '/libwx/{print \$1}')
-       do
-          echo \${lib}
-          ldd ${WXWIN}/lib/\${lib} | awk '/libwx/{print \$1}'
-       done | sort -u | xargs cp -n -H -t ${_LIBDIR}
-      rm \${0}"
-   )
+   if( NOT use_system_wxwidgets )
+      file( WRITE "${_INTDIR}/copy_libs.sh"
+         "for lib in \$(ldd ${_EXEDIR}/${_EXE} | awk '/libwx/{print \$1}')
+          do
+             echo \${lib}
+             ldd ${WXWIN}/lib/\${lib} | awk '/libwx/{print \$1}'
+          done | sort -u | xargs cp -n -H -t ${_LIBDIR}
+          rm \${0}"
+      )
 
-   # And run it after the build
-   add_custom_command(
-      TARGET
-         ${TARGET}
-      COMMAND
-         sh "${_INTDIR}/copy_libs.sh"
-      WORKING_DIRECTORY
-         ${WXWIN}/lib
-      POST_BUILD
-   )
-
+      # And run it after the build
+      add_custom_command(
+         TARGET
+            ${TARGET}
+         COMMAND
+            sh "${_INTDIR}/copy_libs.sh"
+         WORKING_DIRECTORY
+            ${WXWIN}/lib
+         POST_BUILD
+      )
+   endif()
 endif()
 
 set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${_EXE} )
@@ -1253,7 +1311,10 @@ target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( "${TARGET}" PRIVATE ${LDFLAGS} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
-target_precompile_headers( ${TARGET} PRIVATE ${PRECOMP} )
+
+if( PRECOMP )
+   target_precompile_headers( ${TARGET} PRIVATE ${PRECOMP} )
+endif()
 
 if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
