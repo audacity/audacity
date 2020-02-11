@@ -53,7 +53,8 @@ struct ScrubbingOptions {
 
    double delay {};
 
-   // Limiting values for the speed of a scrub interval:
+   // Initial and limiting values for the speed of a scrub interval:
+   double initSpeed { 1.0 };
    double minSpeed { 0.0 };
    double maxSpeed { 1.0 };
 

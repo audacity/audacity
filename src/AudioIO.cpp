@@ -543,7 +543,7 @@ struct AudioIoCallback::ScrubState
       : mRate(rate)
       , mStartTime( t0 )
    {
-      const double t1 = options.bySpeed ? 1.0 : t0;
+      const double t1 = options.bySpeed ? options.initSpeed : t0;
       Update( t1, options );
    }
 
@@ -558,25 +558,33 @@ struct AudioIoCallback::ScrubState
    {
       // Called by the thread that calls AudioIO::FillBuffers
       startSample = endSample = duration = -1LL;
+      sampleCount s0Init;
 
       Message message( mMessage.Read() );
       if ( !mStarted ) {
-         // Make some initial silence
-         const sampleCount s0 { llrint( mRate *
+         s0Init = llrint( mRate *
             std::max( message.options.minTime,
-               std::min( message.options.maxTime, mStartTime ) ) ) };
-         mData.mS0 = mData.mS1 = s0;
-         mData.mGoal = -1;
-         mData.mDuration = duration = inDuration;
-         mData.mSilence = 0;
-         mStarted = true;
+               std::min( message.options.maxTime, mStartTime ) ) );
+
+         // Make some initial silence. This is not needed in the case of
+         // keyboard scrubbing or play-at-speed, because the initial speed
+         // is known when this function is called the first time.
+         if ( !(message.options.isKeyboardScrubbing ||
+            message.options.isPlayingAtSpeed) ) {
+            mData.mS0 = mData.mS1 = s0Init;
+            mData.mGoal = -1;
+            mData.mDuration = duration = inDuration;
+            mData.mSilence = 0;
+         }
       }
-      else {
+
+      if (mStarted || message.options.isKeyboardScrubbing ||
+         message.options.isPlayingAtSpeed) {
          Data newData;
          inDuration += mAccumulatedSeekDuration;
 
-         // Use the previous end as NEW start.
-         const auto s0 = mData.mS1;
+         // If already started, use the previous end as NEW start.
+         const auto s0 = mStarted ? mData.mS1 : s0Init;
          const sampleCount s1 ( message.options.bySpeed
             ? s0.as_double() +
                lrint(inDuration.as_double() * message.end) // end is a speed
@@ -592,6 +600,8 @@ struct AudioIoCallback::ScrubState
          }
          mData = newData;
       };
+
+      mStarted = true;
 
       Data &entry = mData;
       if (  mStopped.load( std::memory_order_relaxed ) ) {

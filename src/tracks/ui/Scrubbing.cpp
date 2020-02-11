@@ -527,6 +527,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    options.pScrubbingOptions = &mOptions;
    options.envelope = nullptr;
    mOptions.delay = (ScrubPollInterval_ms / 1000.0);
+   mOptions.initSpeed = speed;
    mOptions.minSpeed = speed -0.01;
    mOptions.maxSpeed = speed +0.01;
 
@@ -602,12 +603,11 @@ bool Scrubber::StartKeyboardScrubbing(double time0, bool backwards)
    options.envelope = nullptr;
 
    // delay and minStutterTime are used in AudioIO::AllocateBuffers() for setting the
-   // values of mPlaybackQueueMinimum and mPlaybackSamplesToCopy respectively. minStutterTime
-   // is set lower here than in mouse scrubbing to ensure that there is not a long
-   // delay before the start of the playback of the audio.
+   // values of mPlaybackQueueMinimum and mPlaybackSamplesToCopy respectively.
    mOptions.delay = (ScrubPollInterval_ms / 1000.0);
    mOptions.minStutterTime = mOptions.delay;
 
+   mOptions.initSpeed = GetKeyboardScrubbingSpeed();
    mOptions.minSpeed = ScrubbingOptions::MinAllowedScrubSpeed();
    mOptions.maxSpeed = ScrubbingOptions::MaxAllowedScrubSpeed();
    mOptions.minTime = 0;
