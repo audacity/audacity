@@ -372,7 +372,7 @@ void ShuttleGetAutomation::Define( int & var,      const wxChar * key, const int
 void ShuttleGetAutomation::Define( size_t & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
 {
    if( !ShouldSet() ) return;
-   mpEap->Write(key, var);
+   mpEap->Write(key, (int) var);
 }
 
 void ShuttleGetAutomation::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
