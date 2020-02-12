@@ -989,6 +989,12 @@ list( APPEND DEFINES
       wxDEBUG_LEVEL=0
       WXINTL_NO_GETTEXT_MACRO
       WXUSINGDLL
+      $<$<BOOL:${HAVE_LRINT}>:
+         HAVE_LRINT
+      >
+      $<$<BOOL:${HAVE_LRINTF}>:
+         HAVE_LRINTF
+      >
       $<$<BOOL:${HAVE_MLOCK}>:
          HAVE_MLOCK
       >

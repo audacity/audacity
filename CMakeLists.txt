@@ -35,13 +35,6 @@ if( WIN32 )
    set( GETTEXT_VERSION "0.20.1.1" )
    set( PYTHON_NAME "python2" )
    set( PYTHON_VERSION "2.7.17" )
-
-   # Force the build to 32-bit, unless the user specifically specified
-   # something else.
-   if( NOT CMAKE_GENERATOR_PLATFORM )
-      message( STATUS "Defaulting to 32-bit build..." ) 
-      set( CMAKE_GENERATOR_PLATFORM Win32 )
-   endif()
 elseif( APPLE )
    # Define the OSX compatibility parameters
    set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
@@ -257,6 +250,19 @@ check_type_size( "off64_t" SIZEOF_OFF64 LANGUAGE C )
 check_type_size( "size_t" SIZEOF_SIZE LANGUAGE C )
 check_type_size( "wchar_t" SIZEOF_WCHAR LANGUAGE C )
 check_type_size( "void*" SIZEOF_POINTER LANGUAGE C )
+
+# Determine 32-bit or 64-bit target
+if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
+   set( IS_64BIT ON )
+elseif( NOT CMAKE_SIZEOF_VOID_P STREQUAL "4" )
+   set( IS_64BIT ON )
+endif()
+
+if( IS_64BIT )
+   message( STATUS "Building for 64-bit target" )
+else()
+   message( STATUS "Building for 32-bit target" )
+endif()
 
 # We'll be using it if it's available
 find_package( PkgConfig QUIET )
