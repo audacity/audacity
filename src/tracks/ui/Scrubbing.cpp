@@ -608,6 +608,8 @@ bool Scrubber::StartKeyboardScrubbing(double time0, bool backwards)
    mOptions.minStutterTime = mOptions.delay;
 
    mOptions.initSpeed = GetKeyboardScrubbingSpeed();
+   if (backwards)
+      mOptions.initSpeed *= -1.0;
    mOptions.minSpeed = ScrubbingOptions::MinAllowedScrubSpeed();
    mOptions.maxSpeed = ScrubbingOptions::MaxAllowedScrubSpeed();
    mOptions.minTime = 0;
