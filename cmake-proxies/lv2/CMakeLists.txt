@@ -123,7 +123,7 @@ set( stamp "${_INTDIR}/.stamp.lv2" )
 
 # Simulate the older directory structure (trailing "/" is important)
 file( MAKE_DIRECTORY "${ns}" )
-file( COPY "${src}/lv2/core/lv2.h" DESTINATION "${dst}/lv2.h" )
+file( COPY "${src}/lv2/core/lv2.h" DESTINATION "${dst}" )
 file( COPY "${src}/lv2/" DESTINATION "${ns}/ext" )
 file( COPY "${src}/lv2/" DESTINATION "${ns}/extensions" )
 file( COPY "${src}/lv2/core/" DESTINATION  "${ns}/lv2core" )
