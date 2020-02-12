@@ -6,8 +6,8 @@ def_vars()
 
 message( STATUS "========== Configuring ${name} ==========" )
 
-option( use_system_${name} "Use ${name} system library if available" ${prefer_system_libs} )
-if( use_system_${name} )
+option( ${_OPT}use_system_${name} "Use ${name} system library if available" ${${_OPT}prefer_system_libs} )
+if( ${_OPT}use_system_${name} )
    find_package(wxWidgets)
 endif()
 
@@ -53,7 +53,7 @@ if( wxWidgets_FOUND )
 else()
    message( STATUS "Using local '${name}' library" )
 
-   set( use_system_${name} OFF CACHE BOOL "Prefer ${name} system library if available" FORCE )
+   set( ${_OPT}use_system_${name} OFF CACHE BOOL "Prefer ${name} system library if available" FORCE )
 
    set( WXWIN $ENV{WXWIN} )
    if( "${WXWIN}" STREQUAL "" )

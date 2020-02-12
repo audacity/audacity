@@ -70,6 +70,9 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
 
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    find_package( Gettext )
+   mark_as_advanced( FORCE GETTEXT_MSGFMT_EXECUTABLE )
+   mark_as_advanced( FORCE GETTEXT_MSGMERGE_EXECUTABLE )
+
    if( GETTEXT_FOUND )
       set( msgfmt "${GETTEXT_MSGFMT_EXECUTABLE}" )
    else()

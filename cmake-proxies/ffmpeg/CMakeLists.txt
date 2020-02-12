@@ -15,19 +15,19 @@ message( STATUS "========== Configuring ${name} ==========" )
 set( USE_${symbol} ON CACHE INTERNAL USE_${symbol} )
 
 # Add the system/local option
-option( use_system_${name} "Use ${name} system library if available" ${prefer_system_libs} )
+option( ${_OPT}use_system_${name} "Use ${name} system library if available" ${${_OPT}prefer_system_libs} )
 
 # Look up the system packages if the user wants them
-if( use_system_${name} )
+if( ${_OPT}use_system_${name} )
    # Provide an option that determines if the libraries are loaded
    # dynamically at run time or statically linked at build time
-   option( disable_dynamic_${name} "Disable dynamic loading of ${name} libraries" NO)
+   option( ${_OPT}disable_dynamic_${name} "Disable dynamic loading of ${name} libraries" NO)
 
    # Look them up
    pkg_check_modules( ${TARGET} ${packages} )
 else()
    # Make sure to reset in case user reconfigures between local/system
-   set( disable_dynamic_${name} NO CACHE INTERNAL "" )
+   set( ${_OPT}disable_dynamic_${name} NO CACHE INTERNAL "" )
 endif()
 
 # If the system packages were found

@@ -1,6 +1,6 @@
 
 # Allow user to globally set the system library preference
-option( prefer_system_libs "Use system libraries if available" YES )
+option( ${_OPT}prefer_system_libs "Use system libraries if available" YES )
 
 #
 # Add individual library targets
@@ -33,7 +33,7 @@ function( addlib dir name symbol required check )
 
    # If the target is required, then it's always enabled.  Otherwise,
    # give the user the option to enable/disable it.
-   set( enable enable_${name} ) 
+   set( enable ${_OPT}enable_${name} ) 
    if( required )
       set( ${enable} YES )
    else()
@@ -59,9 +59,9 @@ function( addlib dir name symbol required check )
    # Only present the system library option if pkg-config was found and
    # a package has been specified.  Otherwise, the local library will
    # be used unconditionally.
-   set( system use_system_${name} ) 
+   set( system ${_OPT}use_system_${name} ) 
    if( PkgConfig_FOUND AND packages )
-      option( ${system} "Use ${name} system library if available" ${prefer_system_libs} )
+      option( ${system} "Use ${name} system library if available" ${${_OPT}prefer_system_libs} )
    else()
       set( ${system} NO )
    endif()

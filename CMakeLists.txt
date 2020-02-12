@@ -29,27 +29,24 @@ cmake_policy( SET CMP0072 NEW )
 cmake_policy( SET CMP0075 NEW )
 
 if( WIN32 )
-
    # The NuGet packages that the Windows build requires
    # (Only here for visibility)
    set( GETTEXT_NAME "Gettext.Tools" )
    set( GETTEXT_VERSION "0.20.1.1" )
    set( PYTHON_NAME "python2" )
    set( PYTHON_VERSION "2.7.17" )
-
-   # Define the SDK version we require
-   set( CMAKE_SYSTEM_VERSION "10.0.17763.0" CACHE INTERNAL "" )
-
 elseif( APPLE )
-
    # Define the OSX compatibility parameters
    set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
    set( CMAKE_OSX_DEPLOYMENT_TARGET 10.7 CACHE INTERNAL "" )
    set( CMAKE_OSX_SYSROOT macosx CACHE INTERNAL "" )
 
-   # A bit of a no-no, but couldn't figure out a better way to make it GLOBAL
-   set( CMAKE_CXX_FLAGS "-stdlib=libc++" )
+   # Shouldn't cmake do this???
+   string( APPEND CMAKE_CXX_FLAGS " -stdlib=libc++" )
 endif()
+
+# Define option() prefix
+set( _OPT "audacity_" )
 
 # Add our module path
 set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
@@ -59,14 +56,16 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON )
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF )
 
-# Set the required C++ stardard
+# Set the required C++ standard
 set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 # Use ccache if available
 find_program( CCACHE_PROGRAM ccache )
+mark_as_advanced( FORCE CCACHE_PROGRAM )
+
 if( CCACHE_PROGRAM )
-    set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}" )
+   set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}" )
 endif()
 
 # Our very own project
@@ -88,12 +87,26 @@ include( TestBigEndian )
 # Organize subdirectories/targets into folders for the IDEs
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 
-# Make sure Audacity is the startup project on Windows
 if( CMAKE_GENERATOR MATCHES "Visual Studio" )
+   # Make sure Audacity is the startup project
    set_directory_properties(
       PROPERTIES
          VS_STARTUP_PROJECT "${CMAKE_PROJECT_NAME}"
    )
+
+   # Build using multiple processors
+   foreach( config ${CMAKE_CONFIGURATION_TYPES} )
+      string( TOUPPER "${config}" config )
+      string( APPEND CMAKE_C_FLAGS_${config} " /MP" )
+      string( APPEND CMAKE_CXX_FLAGS_${config} " /MP" )
+   endforeach()
+
+   # Define system library information, but we'll do the install
+   set( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP YES )
+   set( CMAKE_INSTALL_UCRT_LIBRARIES NO )
+   set( CMAKE_INSTALL_MFC_LIBRARIES NO )
+   set( CMAKE_INSTALL_OPENMP_LIBRARIES NO )
+   include( InstallRequiredSystemLibraries )
 endif()
 
 # Where the final product is stored
@@ -127,6 +140,9 @@ endif()
 # Add the dynamic linker library (if needed) to the list of required libraries
 list( APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS} )
 
+# Make sure they're used during the link steps
+set( CMAKE_LINK_INTERFACE_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} )
+
 # May be a misconfiguration in my system, but CMake doesn't want to look
 # in /usr/local/lib by default...so force the issue
 if( CMAKE_SYSTEM_NAME MATCHES "FreeBSD" )
@@ -135,13 +151,10 @@ if( CMAKE_SYSTEM_NAME MATCHES "FreeBSD" )
    list( APPEND CMAKE_SHARED_LINKER_FLAGS -L/usr/local/lib )
 endif()
 
-# Make sure they're used during the link steps
-set( CMAKE_LINK_INTERFACE_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} )
-
-# Various common checks whose results are used by the various targets
+# Various common checks whose results are used by the different targets
 test_big_endian( WORDS_BIGENDIAN )
 
-# Check for various compiler flags
+# Check for compiler flags
 if( CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang|GNU" )
    check_cxx_compiler_flag( "-mmmx" HAVE_MMX )
    if( HAVE_MMX )
@@ -239,10 +252,10 @@ check_type_size( "wchar_t" SIZEOF_WCHAR LANGUAGE C )
 check_type_size( "void*" SIZEOF_POINTER LANGUAGE C )
 
 # We'll be using it if it's available
-find_package( PkgConfig )
+find_package( PkgConfig QUIET )
 
 # Mostly just to make the CMP0072 policy happy
-find_package( OpenGL )
+find_package( OpenGL QUIET )
 
 # When called will define several useful directory paths for the 
 # current context.
@@ -265,9 +278,10 @@ endmacro()
 # So, in either case we end up with what we want:
 #     .../bin/Debug//
 # or:
-#     .../bin/./Debug
+#     .../bin//Debug
 set( _DEST "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${CMAKE_BUILD_TYPE}" )
 set( _EXEDIR "${_DEST}" )
+string( REGEX REPLACE "/+$" "" _EXEDIR "${_EXEDIR}" )
 
 # Adjust them for the Mac
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
@@ -286,7 +300,9 @@ if( NOT EXISTS "${CMAKE_BINARY_DIR}/lib" )
    file( MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/lib" )
 endif()
 
-if( NOT EXISTS "${CMAKE_BINARY_DIR}/lib64" )
+# Only create on systems that need it, effectively excluding Windows where links
+# may not work due to insufficient privileges
+if( NOT CMAKE_INSTALL_LIBDIR STREQUAL "lib" AND NOT EXISTS "${CMAKE_BINARY_DIR}/lib64" )
    file( CREATE_LINK "${CMAKE_BINARY_DIR}/lib" "${CMAKE_BINARY_DIR}/lib64" SYMBOLIC )
 endif()
 
@@ -379,11 +395,11 @@ add_subdirectory( "cmake-proxies/mod-script-pipe" )
 #[[
    get_cmake_property(_variableNames VARIABLES)
    foreach (_variableName ${_variableNames})
-   message(STATUS "${_variableName}=${${_variableName}}")
+      message(STATUS "${_variableName}=${${_variableName}}")
    endforeach()
 #]]
 #[[
    include(PrintProperties)
-   print_properties(TARGET "Audacity")
+   print_properties(TARGET "wxWidgets")
 #]]
 

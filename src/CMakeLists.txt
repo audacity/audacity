@@ -986,16 +986,15 @@ source_group(
 list( APPEND DEFINES
    PRIVATE
       BUILDING_AUDACITY
-      XML_STATIC
       wxDEBUG_LEVEL=0
       WXINTL_NO_GETTEXT_MACRO
       WXUSINGDLL
+      $<$<BOOL:${HAVE_MLOCK}>:
+         HAVE_MLOCK
+      >
       $<$<PLATFORM_ID:Windows>:
          _CRT_SECURE_NO_WARNINGS
          __STDC_CONSTANT_MACROS
-         __WXMSW__
-         NDEBUG
-         WIN32
          STRICT
       >
 )
@@ -1059,19 +1058,20 @@ list( APPEND LIBRARIES
 )
 
 #
-# If was have cmake 3.16 or higher, we can use precompiled headers
+# If was have cmake 3.16 or higher, we can use precompiled headers, but
+# only use them if ccache is not available
 #
-if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" )
+if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
    set( PRECOMP AudacityHeaders.h )
 endif()
 
 # Handle Ladspa option
-option( enable_ladspa "Enable LADSPA plug-in support" ON )
-set( USE_LADSPA ${enable_ladspa} )
+option( ${_OPT}enable_ladspa "Enable LADSPA plug-in support" ON )
+set( USE_LADSPA ${${_OPT}enable_ladspa} )
 
 # Handle VST option
-option( enable_vst "Enable VST2 plug-in support" ON )
-set( USE_VST ${enable_vst} )
+option( ${_OPT}enable_vst "Enable VST2 plug-in support" ON )
+set( USE_VST ${${_OPT}enable_vst} )
 
 set( AUDACITY_NAME "Audacity" )
 set( BUILDING_AUDACITY 1 )
@@ -1119,22 +1119,55 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       set( wxlibs "${CMAKE_BINARY_DIR}" )
    endif()
 
+   # Convert the paths to native
+   file( TO_NATIVE_PATH "${_INTDIR}/dlls" dlls )
+   file( TO_NATIVE_PATH "${wxWidgets_LIB_DIR}" libdir )
+   file( TO_NATIVE_PATH "${_EXEDIR}" exedir )
+
+   # And create the script to copy the WX libs to the exeutable directory
+   file( WRITE "${_INTDIR}/copy_libs.bat"
+      "@ECHO OFF
+      IF NOT %1 EQU xyzzy (
+         IF EXIST \"${dlls}\" DEL \"${dlls}\"
+         CALL %0 xyzzy \"%1\" %2
+         FOR /F \"delims=\" %%c IN ('SORT \"${dlls}\"') DO (
+            IF NOT EXIST \"%1\"\\%%c (
+               xcopy \"${libdir}\"\\%%c \"%1\"
+            )
+         )
+         DEL ${dlls}
+      )
+      IF %1 EQU xyzzy (
+         FOR /F %%i IN ('DUMPBIN /DEPENDENTS \"%2\"\\%3 ^| FIND \" wx\"') DO (
+            ECHO %%i >>\"${dlls}\"
+            CALL %0 xyzzy \"${libdir}\" %%i
+         )
+      )"
+   )
+
+   # Add it to the build
    add_custom_command(
       TARGET
          ${TARGET}
       COMMAND
-         XCOPY "*.dll" $<SHELL_PATH:${_DEST}> /I /R /Y 
-      WORKING_DIRECTORY
-         "${wxlibs}/lib/vc_dll"
+         ${_INTDIR}/copy_libs.bat ${exedir} ${_EXE}.exe
       POST_BUILD
    )
 
+   # Copy the VC runtime libraries as well
+   add_custom_command(
+      TARGET
+         ${TARGET}
+      COMMAND
+         ${CMAKE_COMMAND} -E copy ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} ${_DEST}
+      POST_BUILD
+   )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( _EXE "Audacity" )
 
    # Handle Audio Units option
-   option( enable_audiounits "Enable Audio Unit plug-in support" ON )
-   set( USE_AUDIO_UNITS ${enable_audiounits} )
+   option( ${_OPT}enable_audiounits "Enable Audio Unit plug-in support" ON )
+   set( USE_AUDIO_UNITS ${${_OPT}enable_audiounits} )
 
    set_target_properties(
       ${TARGET}

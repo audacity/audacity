@@ -7,54 +7,58 @@ set( CMAKE_MODULE_PATH ${TARGET_ROOT}/cmake_support )
 
 # Define the platform specific interface options
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   option( use_pa_ds "Enable the portaudio DirectSound interface if available" YES )
-   option( use_pa_wasapi "Enable the portaudio WASAPI interface if available" YES )
-   option( use_pa_wmme "Enable the portaudio WMME interface if available" YES )
+   option( ${_OPT}use_pa_ds "Enable the portaudio DirectSound interface if available" YES )
+   option( ${_OPT}use_pa_wasapi "Enable the portaudio WASAPI interface if available" YES )
+   option( ${_OPT}use_pa_wmme "Enable the portaudio WMME interface if available" YES )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   option( use_pa_coreaudio "Enable the portaudio CoreAudio interface if available" YES )
+   option( ${_OPT}use_pa_coreaudio "Enable the portaudio CoreAudio interface if available" YES )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
-   option( use_pa_alsa "Enable the portaudio ALSA interface if available" YES )
-   if( use_pa_alsa )
+   option( ${_OPT}use_pa_alsa "Enable the portaudio ALSA interface if available" YES )
+   if( ${_OPT}use_pa_alsa )
       find_package( ALSA )
       if( NOT ALSA_FOUND )
-         set( use_pa_alsa NO CACHE INTERNAL "" )
+         set( ${_OPT}use_pa_alsa NO CACHE INTERNAL "" )
       endif()
    endif()
 endif()
 
 # Look for OSS if the user wants it
-option( use_pa_oss "Use the OSS audio interface if available" YES )
-if( use_pa_oss )
+option( ${_OPT}use_pa_oss "Use the OSS audio interface if available" YES )
+if( ${_OPT}use_pa_oss )
    find_path( OSS_INCLUDE NAMES sys/soundcard.h )
+   mark_as_advanced( FORCE OSS_INCLUDE )
+
    if( OSS_INCLUDE )
       set( OSS_INCLUDE_DIRS ${OSS_INCLUDE} )
    endif()
 
    find_library( OSS_LIBRARY NAMES ossaudio )
+   mark_as_advanced( FORCE OSS_LIBRARY )
+
    if( OSS_LIBRARY )
       set( OSS_LIBRARIES ${OSS_LIBRARY} )
    endif()
 
    if( NOT OSS_INCLUDE_DIRS )
-      set( use_pa_oss NO CACHE INTERNAL "" )
+      set( ${_OPT}use_pa_oss NO CACHE INTERNAL "" )
    endif()
 endif()
 
 # Look for JACK if the user wants it
-option( use_pa_jack "Use the JACK audio interface if available" YES )
-if( use_pa_jack )
+option( ${_OPT}use_pa_jack "Use the JACK audio interface if available" YES )
+if( ${_OPT}use_pa_jack )
    # Provide an option that determines if the libraries are loaded
    # dynamically at run time or statically linked at build time
-   option( disable_dynamic_jack "Disable dynamic loading of JACK libraries" YES )
+   option( ${_OPT}disable_dynamic_jack "Disable dynamic loading of JACK libraries" YES )
 
    # Find it
    find_package( Jack )
    if( NOT JACK_FOUND)
-      set( use_pa_jack NO CACHE INTERNAL "" )
+      set( ${_OPT}use_pa_jack NO CACHE INTERNAL "" )
    endif()
 else()
    # Make sure to reset in case user reconfigures later
-   set( disable_dynamic_jack NO CACHE INTERNAL "" )
+   set( ${_OPT}disable_dynamic_jack NO CACHE INTERNAL "" )
 endif()
 
 list( APPEND SOURCES
@@ -91,28 +95,28 @@ list( APPEND SOURCES
          ${TARGET_ROOT}/src/os/unix/pa_unix_util.c
       >
 
-      $<$<BOOL:${use_pa_ds}>:
+      $<$<BOOL:${${_OPT}use_pa_ds}>:
          ${TARGET_ROOT}/src/hostapi/dsound/pa_win_ds.c
          ${TARGET_ROOT}/src/hostapi/dsound/pa_win_ds_dynlink.c
       >
 
-      $<$<BOOL:${use_pa_wasapi}>:
+      $<$<BOOL:${${_OPT}use_pa_wasapi}>:
          ${TARGET_ROOT}/src/hostapi/wasapi/pa_win_wasapi.c
       >
 
-      $<$<BOOL:${use_pa_wmme}>:
+      $<$<BOOL:${${_OPT}use_pa_wmme}>:
          ${TARGET_ROOT}/src/hostapi/wmme/pa_win_wmme.c
       >
 
-      $<$<BOOL:${use_pa_alsa}>:
+      $<$<BOOL:${${_OPT}use_pa_alsa}>:
          ${TARGET_ROOT}/src/hostapi/alsa/pa_linux_alsa.c
       >
 
-      $<$<BOOL:${use_pa_oss}>:
+      $<$<BOOL:${${_OPT}use_pa_oss}>:
          ${TARGET_ROOT}/src/hostapi/oss/pa_unix_oss.c
       >
 
-      $<$<BOOL:${use_pa_jack}>:
+      $<$<BOOL:${${_OPT}use_pa_jack}>:
          ${TARGET_ROOT}/src/hostapi/jack/pa_jack.c
          ${TARGET_ROOT}/src/hostapi/jack/pa_jack_dynload.c
       >
@@ -130,23 +134,23 @@ list( APPEND INCLUDES
          ${TARGET_ROOT}/src/os/unix
       >
 
-      $<$<BOOL:${use_pa_ds}>:
+      $<$<BOOL:${${_OPT}use_pa_ds}>:
          ${TARGET_ROOT}/src/hostapi/dsound
       >
 
-      $<$<BOOL:${use_pa_coreaudio}>:
+      $<$<BOOL:${${_OPT}use_pa_coreaudio}>:
          ${TARGET_ROOT}/src/hostapi/coreaudio
       >
 
-      $<$<BOOL:${use_pa_alsa}>:
+      $<$<BOOL:${${_OPT}use_pa_alsa}>:
          ${ALSA_INCLUDE_DIRS}
       >
 
-      $<$<BOOL:${use_pa_oss}>:
+      $<$<BOOL:${${_OPT}use_pa_oss}>:
          ${OSS_INCLUDE_DIRS}
       >
 
-      $<$<BOOL:${use_pa_jack}>:
+      $<$<BOOL:${${_OPT}use_pa_jack}>:
          ${TARGET_ROOT}/src/hostapi/jack
          ${JACK_INCLUDE_DIRS}
       >
@@ -157,51 +161,51 @@ list( APPEND INCLUDES
 
 list( APPEND DEFINES
    PUBLIC
-      $<$<BOOL:${use_pa_ds}>:
+      $<$<BOOL:${${_OPT}use_pa_ds}>:
          PA_USE_DS=1
       >
 
-      $<$<BOOL:${use_pa_wasapi}>:
+      $<$<BOOL:${${_OPT}use_pa_wasapi}>:
          PA_USE_WASAPI=1
       >
 
-      $<$<BOOL:${use_pa_wmme}>:
+      $<$<BOOL:${${_OPT}use_pa_wmme}>:
          PA_USE_WMME=1
       >
 
-      $<$<BOOL:${use_pa_coreaudio}>:
+      $<$<BOOL:${${_OPT}use_pa_coreaudio}>:
          PA_USE_COREAUDIO=1
       >
 
-      $<$<BOOL:${use_pa_alsa}>:
+      $<$<BOOL:${${_OPT}use_pa_alsa}>:
          PA_USE_ALSA=1
       >
 
-      $<$<BOOL:${use_pa_oss}>:
+      $<$<BOOL:${${_OPT}use_pa_oss}>:
          PA_USE_OSS=1
          HAVE_SYS_SOUNDCARD_H=1
       >
 
-      $<$<BOOL:${use_pa_jack}>:
+      $<$<BOOL:${${_OPT}use_pa_jack}>:
          PA_USE_JACK=1
       >
 
-      $<$<NOT:$<BOOL:${disable_dynamic_jack}>>:
+      $<$<NOT:$<BOOL:${${_OPT}disable_dynamic_jack}>>:
          PA_DYNAMIC_JACK=1
       >
 )
 
 list( APPEND LIBRARIES
    INTERFACE
-      $<$<BOOL:${use_pa_alsa}>:
+      $<$<BOOL:${${_OPT}use_pa_alsa}>:
          ${ALSA_LIBRARIES}
       >
 
-      $<$<BOOL:${use_pa_oss}>:
+      $<$<BOOL:${${_OPT}use_pa_oss}>:
          ${OSS_LIBRARIES}
       >
 
-      $<$<BOOL:${use_pa_jack}>:
+      $<$<BOOL:${${_OPT}use_pa_jack}>:
          ${JACK_LIBRARIES}
       >
 )

@@ -121,30 +121,12 @@ set( dst "${_PUBDIR}" )
 set( ns "${dst}/lv2/lv2plug.in/ns" )
 set( stamp "${_INTDIR}/.stamp.lv2" )
 
-execute_process(
-   COMMAND
-      "${CMAKE_COMMAND}" -E make_directory "${ns}"
-)
-
-execute_process(
-   COMMAND
-      "${CMAKE_COMMAND}" -E create_symlink "${src}/lv2/core/lv2.h" "${dst}/lv2.h"
-)
-
-execute_process(
-   COMMAND
-      "${CMAKE_COMMAND}" -E create_symlink "${src}/lv2" "${ns}/ext"
-)
-
-execute_process(
-   COMMAND
-      "${CMAKE_COMMAND}" -E create_symlink "${src}/lv2" "${ns}/extensions"
-)
-
-execute_process(
-   COMMAND
-      "${CMAKE_COMMAND}" -E create_symlink "${src}/lv2/core" "${ns}/lv2core"
-)
+# Simulate the older directory structure (trailing "/" is important)
+file( MAKE_DIRECTORY "${ns}" )
+file( COPY "${src}/lv2/core/lv2.h" DESTINATION "${dst}/lv2.h" )
+file( COPY "${src}/lv2/" DESTINATION "${ns}/ext" )
+file( COPY "${src}/lv2/" DESTINATION "${ns}/extensions" )
+file( COPY "${src}/lv2/core/" DESTINATION  "${ns}/lv2core" )
 
 set( LILV_VERSION "0.24.4" )
 set( SERD_VERSION "0.30.2" )
