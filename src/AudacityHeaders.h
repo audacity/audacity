@@ -75,7 +75,7 @@
 //    #include <wx/msw/msvcrt.h>      // redefines the NEW() operator
 //#endif
 
-#if __WXMSW__
+#ifdef __WXMSW__
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
