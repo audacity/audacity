@@ -334,7 +334,7 @@ void DirManager::RecursivelyRemove(const FilePaths& filePathArray, int count, in
          }
       }
       if (progress)
-         progress->Update(ii + bias, (size_t) count);
+         progress->Update((int) ii + bias, count);
    }
 }
 
@@ -690,11 +690,11 @@ DirManager::ProjectSetter::Impl::Impl(
       ProgressDialog progress(XO("Progress"),
          XO("Saving project data files"));
 
-      size_t total = dirManager.mBlockFileHash.size();
+      int total = dirManager.mBlockFileHash.size();
 
       bool link = moving;
       for (const auto &pair : dirManager.mBlockFileHash) {
-         if( progress.Update(newPaths.size(), total) != ProgressResult::Success )
+         if( progress.Update((int) newPaths.size(), total) != ProgressResult::Success )
             return;
 
          FilePath newPath;
