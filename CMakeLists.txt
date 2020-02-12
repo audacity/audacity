@@ -36,8 +36,12 @@ if( WIN32 )
    set( PYTHON_NAME "python2" )
    set( PYTHON_VERSION "2.7.17" )
 
-   # For now, force the build to Win32 until we support 64-bit
-   set( CMAKE_GENERATOR_PLATFORM Win32 )
+   # Force the build to 32-bit, unless the user specifically specified
+   # something else.
+   if( NOT CMAKE_GENERATOR_PLATFORM )
+      message( STATUS "Defaulting to 32-bit build..." ) 
+      set( CMAKE_GENERATOR_PLATFORM Win32 )
+   endif()
 elseif( APPLE )
    # Define the OSX compatibility parameters
    set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
