@@ -270,6 +270,39 @@ void OnTimerRecord(const CommandContext &context)
          wxICON_INFORMATION | wxOK);
       return;
    }
+
+   // We check the selected tracks to see if there is enough of them to accomodate
+   // all input channels and all of them have the same sampling rate.
+   // Those checks will be later performed by recording function anyway,
+   // but we want to warn the user about potential problems from the very start.
+   const auto selectedTracks{ GetPropertiesOfSelected(project) };
+   const int rateOfSelected{ selectedTracks.rateOfSelected };
+   const int numberOfSelected{ selectedTracks.numberOfSelected };
+   const bool allSameRate{ selectedTracks.allSameRate };
+
+   if (!allSameRate) {
+      AudacityMessageBox(XO("TRACK SELECTION PROBLEM:\nthe tracks selected "
+         "for recording must all have the same sampling rate"),
+         XO("Unfitting track selection"),
+         wxICON_ERROR | wxCENTRE);
+
+      return;
+   }
+
+   const auto existingTracks{ ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected) };
+   if (existingTracks.empty()) {
+      if (numberOfSelected > 0 && rateOfSelected != settings.GetRate()) {
+         AudacityMessageBox(XO("TRACK SELECTION PROBLEM:\n"
+            "Not enough tracks are selected for recording on non-project rate.\n"
+            "(keep in mind that Audacity doesn\'t allow "
+            "using only one channel of a stereo track)"),
+            XO("Insufficient track selection"),
+            wxICON_ERROR | wxCENTRE);
+
+         return;
+      }
+   }
+   
    // We use this variable to display "Current Project" in the Timer Recording
    // save project field
    bool bProjectSaved = ProjectFileIO::Get( project ).IsProjectSaved();
@@ -355,9 +388,23 @@ void OnPunchAndRoll(const CommandContext &context)
    viewInfo.selectedRegion.collapseToT0();
    double t1 = std::max(0.0, viewInfo.selectedRegion.t1());
 
+   // Checking the selected tracks: making sure they all have the same rate
+   const auto selectedTracks{ GetPropertiesOfSelected(project) };
+   const int rateOfSelected{ selectedTracks.rateOfSelected };
+   const bool allSameRate{ selectedTracks.allSameRate };
+
+   if (!allSameRate) {
+      AudacityMessageBox(XO("TRACK SELECTION PROBLEM:\nthe tracks selected "
+         "for recording must all have the same sampling rate"),
+         XO("Unfitting track selection"),
+         wxICON_ERROR | wxCENTRE);
+
+      return;
+   }
+
    // Decide which tracks to record in.
    auto tracks =
-      ProjectAudioManager::ChooseExistingRecordingTracks(project, true);
+      ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected);
    if (tracks.empty()) {
       int recordingChannels =
          std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
@@ -365,7 +412,7 @@ void OnPunchAndRoll(const CommandContext &context)
          (recordingChannels == 1)
          ? XO("Please select in a mono track.")
          : (recordingChannels == 2)
-         ? XO("Please select in a stereo track.")
+         ? XO("Please select in a stereo track or two mono tracks.")
          : XO("Please select at least %d channels.").Format( recordingChannels );
       ShowErrorDialog(&window, XO("Error"), message, url);
       return;
@@ -452,6 +499,7 @@ void OnPunchAndRoll(const CommandContext &context)
 
    // Try to start recording
    auto options = DefaultPlayOptions( project );
+   options.rate = rateOfSelected;
    options.preRoll = std::max(0L,
       gPrefs->Read(AUDIO_PRE_ROLL_KEY, DEFAULT_PRE_ROLL_SECONDS));
    options.pCrossfadeData = &crossfadeData;

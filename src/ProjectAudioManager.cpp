@@ -39,6 +39,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "widgets/ErrorDialog.h"
 #include "widgets/MeterPanelBase.h"
 #include "widgets/Warning.h"
+#include "widgets/AudacityMessageBox.h"
 
 
 static AudacityProject::AttachedObjects::RegisteredFactory
@@ -375,7 +376,7 @@ void ProjectAudioManager::Pause()
 }
 
 WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
-   AudacityProject &proj, bool selectedOnly)
+   AudacityProject &proj, bool selectedOnly, double targetRate)
 {
    auto p = &proj;
    size_t recordingChannels =
@@ -383,6 +384,7 @@ WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    bool strictRules = (recordingChannels <= 2);
 
    // Iterate over all wave tracks, or over selected wave tracks only.
+   // If target rate was specified, ignore all tracks with other rates.
    //
    // In the usual cases of one or two recording channels, seek a first-fit
    // unbroken sub-sequence for which the total number of channels matches the
@@ -406,6 +408,9 @@ WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    WaveTrackArray candidates;
    const auto range = trackList.Leaders<WaveTrack>();
    for ( auto candidate : selectedOnly ? range + &Track::IsSelected : range ) {
+      if (targetRate != RATE_NOT_SELECTED && candidate->GetRate() != targetRate)
+         continue;
+
       // count channels in this track
       const auto channels = TrackList::Channels( candidate );
       unsigned nChannels = channels.size();
@@ -464,24 +469,53 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
       if (t1 == t0)
          t1 = DBL_MAX;
 
+      auto options = DefaultPlayOptions(*p);
       WaveTrackArray existingTracks;
+
+      // Checking the selected tracks: counting them and
+      // making sure they all have the same rate
+      const auto selectedTracks{ GetPropertiesOfSelected(*p) };
+      const int rateOfSelected{ selectedTracks.rateOfSelected };
+      const int numberOfSelected{ selectedTracks.numberOfSelected };
+      const bool allSameRate{ selectedTracks.allSameRate };
+
+      if (!allSameRate) {
+         AudacityMessageBox(XO("TRACK SELECTION PROBLEM:\nthe tracks selected "
+            "for recording must all have the same sampling rate"),
+            XO("Unfitting track selection"),
+            wxICON_ERROR | wxCENTRE);
+
+         return;
+      }
 
       if (appendRecord) {
          const auto trackRange = TrackList::Get( *p ).Any< const WaveTrack >();
 
          // Try to find wave tracks to record into.  (If any are selected,
          // try to choose only from them; else if wave tracks exist, may record into any.)
-         existingTracks = ChooseExistingRecordingTracks(*p, true);
-         if ( !existingTracks.empty() )
-            t0 = std::max( t0,
-               ( trackRange + &Track::IsSelected ).max( &Track::GetEndTime ) );
+         existingTracks = ChooseExistingRecordingTracks(*p, true, rateOfSelected);
+         if (!existingTracks.empty()) {
+            t0 = std::max(t0,
+               (trackRange + &Track::IsSelected).max(&Track::GetEndTime));
+         }
          else {
-            existingTracks = ChooseExistingRecordingTracks(*p, false);
+            if (numberOfSelected > 0 && rateOfSelected != options.rate) {
+               AudacityMessageBox(XO("TRACK SELECTION PROBLEM:\n"
+                  "Not enough tracks are selected for recording on non-project rate.\n"
+                  "(keep in mind that Audacity doesn\'t allow "
+                  "using only one channel of a stereo track)"),
+                  XO("Insufficient track selection"),
+                  wxICON_ERROR | wxCENTRE);
+
+               return;
+            }
+
+            existingTracks = ChooseExistingRecordingTracks(*p, false, options.rate);
             t0 = std::max( t0, trackRange.max( &Track::GetEndTime ) );
             // If suitable tracks still not found, will record into NEW ones,
             // but the choice of t0 does not depend on that.
          }
-
+         
          // Whether we decided on NEW tracks or not:
          if (t1 <= selectedRegion.t0() && selectedRegion.t1() > selectedRegion.t0()) {
             t1 = selectedRegion.t1();   // record within the selection
@@ -507,7 +541,10 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
       }
 
       transportTracks.captureTracks = existingTracks;
-      auto options = DefaultPlayOptions( *p );
+
+      if (rateOfSelected != RATE_NOT_SELECTED)
+         options.rate = rateOfSelected;
+
       DoRecord(*p, transportTracks, t0, t1, altAppearance, options);
    }
 }
@@ -1017,8 +1054,6 @@ void ProjectAudioManager::StopIfPaused()
       Stop();
 }
 
-#include "widgets/AudacityMessageBox.h"
-
 bool ProjectAudioManager::DoPlayStopSelect( bool click, bool shift )
 {
    auto &project = mProject;
@@ -1100,3 +1135,31 @@ static RegisteredMenuItemEnabler stopIfPaused{{
          ProjectAudioManager::Get( project ).StopIfPaused();
    }
 }};
+
+// GetSelectedProperties collects information about 
+// currently selected audio tracks
+PropertiesOfSelected
+GetPropertiesOfSelected(const AudacityProject &proj)
+{
+   double rateOfSelection{ RATE_NOT_SELECTED };
+
+   PropertiesOfSelected result;
+   result.allSameRate = true;
+
+   const auto selectedTracks{ 
+      TrackList::Get(proj).Selected< const WaveTrack >() };
+
+   for (const auto & track : selectedTracks) 
+   {
+      if (rateOfSelection != RATE_NOT_SELECTED &&
+         track->GetRate() != rateOfSelection)
+         result.allSameRate = false;
+      else if (rateOfSelection == RATE_NOT_SELECTED)
+         rateOfSelection = track->GetRate();
+   }
+
+   result.numberOfSelected = selectedTracks.size();
+   result.rateOfSelected = rateOfSelection;
+
+   return  result;
+}
