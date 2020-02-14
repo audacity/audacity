@@ -384,6 +384,12 @@ macro( get_package_interface package )
    )
 endmacro()
 
+# Set the cache and context value
+macro( set_cache_value var value )
+   set( ${var} "${value}" )
+   set_property( CACHE ${var} PROPERTY VALUE "${value}" )
+endmacro()
+
 # Set the given property and its config specific brethren to the same value
 function( set_target_property_all target property value )
    set_target_properties( "${target}" PROPERTIES "${property}" "${value}" )
@@ -391,6 +397,51 @@ function( set_target_property_all target property value )
       string( TOUPPER "${property}_${type}" prop )
       set_target_properties( "${target}" PROPERTIES "${prop}" "${value}" )
    endforeach()
+endfunction()
+
+# Taken from wxWidgets and modified for Audcaity
+#
+# cmd_option(<name> <desc> [default] [STRINGS strings])
+# The default is ON if third parameter isn't specified
+function( cmd_option name desc )
+   cmake_parse_arguments( OPTION "" "" "STRINGS" ${ARGN} )
+
+   if( ARGC EQUAL 2 )
+      if( OPTION_STRINGS )
+         list( GET OPTION_STRINGS 1 default )
+      else()
+         set( default ON )
+      endif()
+   else()
+      set( default ${OPTION_UNPARSED_ARGUMENTS} )
+   endif()
+
+   if( OPTION_STRINGS )
+      set( cache_type STRING )
+   else()
+      set( cache_type BOOL )
+   endif()
+
+   set( ${name} "${default}" CACHE ${cache_type} "${desc}" )
+   if( OPTION_STRINGS )
+      set_property( CACHE ${name} PROPERTY STRINGS ${OPTION_STRINGS} )
+
+      # Check valid value
+      set( value_is_valid FALSE )
+      set( avail_values )
+      foreach( opt ${OPTION_STRINGS} )
+         if( ${name} STREQUAL opt )
+            set( value_is_valid TRUE )
+            break()
+         endif()
+         string( APPEND avail_values " ${opt}" )
+      endforeach()
+      if( NOT value_is_valid )
+         message( FATAL_ERROR "Invalid value \"${${name}}\" for option ${name}. Valid values are: ${avail_values}" )
+      endif()
+   endif()
+
+   set( ${name} "${${name}}" PARENT_SCOPE )
 endfunction()
 
 # Add our children

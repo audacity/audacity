@@ -1,6 +1,9 @@
-
-# Allow user to globally set the system library preference
-option( ${_OPT}prefer_system_libs "Use system libraries if available" YES )
+# Allow user to globally set the library preference
+cmd_option( ${_OPT}lib_preference
+            "Library preference [system (if available), local]"
+            "system"
+            STRINGS "system" "local"
+)
 
 #
 # Add individual library targets
@@ -31,23 +34,8 @@ function( addlib dir name symbol required check )
    set( TARGET ${dir} )
    set( TARGET_ROOT ${libsrc}/${dir} )
 
-   # If the target is required, then it's always enabled.  Otherwise,
-   # give the user the option to enable/disable it.
-   set( enable ${_OPT}enable_${name} ) 
-   if( required )
-      set( ${enable} YES )
-   else()
-      option( ${enable} "Enable ${name} library" ON )
-   endif()
-
-   # Let the Audacity target know that this library will be used.
-   set( USE_${symbol} ${${enable}} CACHE INTERNAL USE_${symbol} )
-
-   # Bail if the target isn't enabled.
-   if( NOT ${enable} )
-      message( STATUS "========== ${name} disabled ==========" )
-      return()
-   endif()
+   # Define the option name
+   set( use ${_OPT}use_${name} ) 
 
    # If we're not checking for system or local here, then let the
    # target config handle the rest.
@@ -56,30 +44,54 @@ function( addlib dir name symbol required check )
       return()
    endif()
 
-   # Only present the system library option if pkg-config was found and
-   # a package has been specified.  Otherwise, the local library will
-   # be used unconditionally.
-   set( system ${_OPT}use_system_${name} ) 
-   if( PkgConfig_FOUND AND packages )
-      option( ${system} "Use ${name} system library if available" ${${_OPT}prefer_system_libs} )
+   # If the target isn't required, allow the user to select which one
+   # to use or disable it entirely
+   set( desc "local" )
+   if( packages )
+      set( sysopt "system" )
+      string( PREPEND desc "system (if available), " )
+      set( default "${${_OPT}lib_preference}" )
    else()
-      set( ${system} NO )
+      set( default "local" )
    endif()
+
+   if( NOT required )
+      set( reqopt "off" )
+      string( APPEND desc ", off" )
+   endif()
+
+   cmd_option( ${use}
+               "Use ${name} library [${desc}]"
+               "${default}"
+               STRINGS ${sysopt} "local" ${reqopt}
+   )
+
+   # Bail if the target will not be used
+   if( ${use} STREQUAL "off" )
+      message( STATUS "========== ${name} disabled ==========" )
+
+      set( USE_${symbol} OFF CACHE INTERNAL "" FORCE )
+
+      return()
+   endif()
+
+   # Let the Audacity target know that this library will be used
+   set( USE_${symbol} ON CACHE INTERNAL "" FORCE )
 
    message( STATUS "========== Configuring ${name} ==========" )
 
-   # Check for the system package if the user prefers it.
-   if( ${system} )
+   # Check for the system package(s) if the user prefers it
+   if( ${use} STREQUAL "system" )
       # Look them up
-      pkg_check_modules( ${TARGET} ${packages} )
-      if( ${TARGET}_FOUND )
+      pkg_check_modules( PKG_${TARGET} ${packages} )
+      if( PKG_${TARGET}_FOUND )
          message( STATUS "Using '${name}' system library" )
 
          # Create the target interface library
          add_library( ${TARGET} INTERFACE IMPORTED GLOBAL )
 
          # Retrieve the package information
-         get_package_interface( ${TARGET} )
+         get_package_interface( PKG_${TARGET} )
 
          # And add it to our target
          target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
@@ -87,11 +99,14 @@ function( addlib dir name symbol required check )
          target_link_directories( ${TARGET} INTERFACE ${LINKDIRS} )
          target_link_options( ${TARGET} INTERFACE ${LOPTS} )
          target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
+      else()
+         set( ${use} "local" )
+         set_property( CACHE ${use} PROPERTY VALUE "local" )
       endif()
    endif()
 
-   # User want the local package or the system one wasn't found
-   if( NOT ${TARGET}_FOUND )
+   # User wants the local package or the system one wasn't found
+   if( ${use} STREQUAL "local" )
       message( STATUS "Using '${name}' local library" )
 
       # Pull in the target config

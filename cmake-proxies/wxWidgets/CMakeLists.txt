@@ -6,8 +6,13 @@ def_vars()
 
 message( STATUS "========== Configuring ${name} ==========" )
 
-option( ${_OPT}use_system_${name} "Use ${name} system library if available" ${${_OPT}prefer_system_libs} )
-if( ${_OPT}use_system_${name} )
+cmd_option( ${_OPT}use_wxwidgets
+            "Use ${name} library [system (if available), local]"
+            "${audacity_lib_preference}"
+            STRINGS "system" "local"
+)
+
+if( ${_OPT}use_wxwidgets STREQUAL "system" )
    find_package(wxWidgets)
 endif()
 
@@ -52,8 +57,6 @@ if( wxWidgets_FOUND )
    set( toolkit "${wxWidgets_LIBRARIES}" )
 else()
    message( STATUS "Using local '${name}' library" )
-
-   set( ${_OPT}use_system_${name} OFF CACHE BOOL "Prefer ${name} system library if available" FORCE )
 
    set( WXWIN $ENV{WXWIN} )
    if( "${WXWIN}" STREQUAL "" )
@@ -118,7 +121,7 @@ else()
    )
 
    # Do NOT split the generator expressions across multiple lines here.
-   # CMake appears to have a bug and doesn't see to handle it correctly
+   # CMake appears to have a bug and doesn't seem to handle it correctly
    # for target link libraries.
    set( LIBRARIES
       adv

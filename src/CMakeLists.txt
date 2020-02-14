@@ -1072,11 +1072,19 @@ if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
 endif()
 
 # Handle Ladspa option
-option( ${_OPT}enable_ladspa "Enable LADSPA plug-in support" ON )
-set( USE_LADSPA ${${_OPT}enable_ladspa} )
+cmd_option(
+   ${_OPT}use_ladspa
+   "Use LADSPA plug-in support [on, off]"
+   ON
+)
+set( USE_LADSPA ${${_OPT}use_ladspa} )
 
 # Handle VST option
-option( ${_OPT}enable_vst "Enable VST2 plug-in support" ON )
+cmd_option(
+   ${_OPT}use_vst
+   "Use VST2 plug-in support [on, off]"
+   ON
+)
 set( USE_VST ${${_OPT}enable_vst} )
 
 set( AUDACITY_NAME "Audacity" )
@@ -1119,7 +1127,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    configure_file( audacity_config.h.in private/configwin.h )
 
    # Copy over the wxWidgets DLLs
-   if( use_system_wxwidgets )
+   if( ${_OPT}use_wxwidgets STREQUAL "system" )
       set( wxlibs "$ENV{WXWIN}" )
    else()
       set( wxlibs "${CMAKE_BINARY_DIR}" )
@@ -1144,7 +1152,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
          DEL ${dlls}
       )
       IF %1 EQU xyzzy (
-         FOR /F %%i IN ('DUMPBIN /DEPENDENTS \"%2\"\\%3 ^| FIND \" wx\"') DO (
+         FOR /F %%i IN ('DUMPBIN /DEPENDENTS \"%2\"\\%3 ^| findstr /B \"/C:    wx\"') DO (
             ECHO %%i >>\"${dlls}\"
             CALL %0 xyzzy \"${libdir}\" %%i
          )
@@ -1172,7 +1180,11 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( _EXE "Audacity" )
 
    # Handle Audio Units option
-   option( ${_OPT}enable_audiounits "Enable Audio Unit plug-in support" ON )
+   cmd_option(
+      ${_OPT}enable_audiounits
+      "Enable Audio Unit plug-in support"
+      ON
+   )
    set( USE_AUDIO_UNITS ${${_OPT}enable_audiounits} )
 
    set_target_properties(
@@ -1296,7 +1308,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
    configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
 
    # Create the script to copy required wxWidgets libraries
-   if( NOT use_system_wxwidgets )
+   if( ${_OPT}use_wxwidgets STREQUAL "local" )
       file( WRITE "${_INTDIR}/copy_libs.sh"
          "for lib in \$(ldd ${_EXEDIR}/${_EXE} | awk '/libwx/{print \$1}')
           do

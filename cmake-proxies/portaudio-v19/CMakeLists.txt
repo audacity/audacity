@@ -7,23 +7,48 @@ set( CMAKE_MODULE_PATH ${TARGET_ROOT}/cmake_support )
 
 # Define the platform specific interface options
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   option( ${_OPT}use_pa_ds "Enable the portaudio DirectSound interface if available" YES )
-   option( ${_OPT}use_pa_wasapi "Enable the portaudio WASAPI interface if available" YES )
-   option( ${_OPT}use_pa_wmme "Enable the portaudio WMME interface if available" YES )
+   cmd_option(
+      ${_OPT}use_pa_ds
+      "Use the portaudio DirectSound interface if available"
+      YES
+   )
+   cmd_option(
+      ${_OPT}use_pa_wasapi
+      "Use the portaudio WASAPI interface if available"
+      YES
+   )
+   cmd_option(
+      ${_OPT}use_pa_wmme
+      "Use the portaudio WMME interface if available"
+      YES
+   )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   option( ${_OPT}use_pa_coreaudio "Enable the portaudio CoreAudio interface if available" YES )
+   cmd_option(
+      ${_OPT}use_pa_coreaudio
+      "Use the portaudio CoreAudio interface if available"
+      YES
+   )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
-   option( ${_OPT}use_pa_alsa "Enable the portaudio ALSA interface if available" YES )
+   cmd_option(
+      ${_OPT}use_pa_alsa
+      "Use the portaudio ALSA interface if available"
+      YES
+   )
+
    if( ${_OPT}use_pa_alsa )
       find_package( ALSA )
       if( NOT ALSA_FOUND )
-         set( ${_OPT}use_pa_alsa NO CACHE INTERNAL "" )
+         set_cache_value( ${_OPT}use_pa_alsa NO )
       endif()
    endif()
 endif()
 
 # Look for OSS if the user wants it
-option( ${_OPT}use_pa_oss "Use the OSS audio interface if available" YES )
+cmd_option(
+   ${_OPT}use_pa_oss
+   "Use the OSS audio interface if available"
+   YES
+)
 if( ${_OPT}use_pa_oss )
    find_path( OSS_INCLUDE NAMES sys/soundcard.h )
    mark_as_advanced( FORCE OSS_INCLUDE )
@@ -40,25 +65,23 @@ if( ${_OPT}use_pa_oss )
    endif()
 
    if( NOT OSS_INCLUDE_DIRS )
-      set( ${_OPT}use_pa_oss NO CACHE INTERNAL "" )
+      set_cache_value( ${_OPT}use_pa_oss NO )
    endif()
 endif()
 
-# Look for JACK if the user wants it
-option( ${_OPT}use_pa_jack "Use the JACK audio interface if available" YES )
-if( ${_OPT}use_pa_jack )
-   # Provide an option that determines if the libraries are loaded
-   # dynamically at run time or statically linked at build time
-   option( ${_OPT}disable_dynamic_jack "Disable dynamic loading of JACK libraries" YES )
+# JACK can be dynamically loaded, linked to, or off
+cmd_option( ${_OPT}use_pa_jack
+            "Use the JACK audio interface if available [loaded, linked, off]"
+            "linked"
+            STRINGS "loaded" "linked" "off"
+)
 
+if( NOT ${_OPT}use_pa_jack STREQUAL "off" )
    # Find it
    find_package( Jack )
    if( NOT JACK_FOUND)
-      set( ${_OPT}use_pa_jack NO CACHE INTERNAL "" )
+      set_cache_value( ${_OPT}use_pa_jack "off" )
    endif()
-else()
-   # Make sure to reset in case user reconfigures later
-   set( ${_OPT}disable_dynamic_jack NO CACHE INTERNAL "" )
 endif()
 
 list( APPEND SOURCES
@@ -116,7 +139,7 @@ list( APPEND SOURCES
          ${TARGET_ROOT}/src/hostapi/oss/pa_unix_oss.c
       >
 
-      $<$<BOOL:${${_OPT}use_pa_jack}>:
+      $<$<NOT:$<STREQUAL:${${_OPT}use_pa_jack},off>>:
          ${TARGET_ROOT}/src/hostapi/jack/pa_jack.c
          ${TARGET_ROOT}/src/hostapi/jack/pa_jack_dynload.c
       >
@@ -150,7 +173,7 @@ list( APPEND INCLUDES
          ${OSS_INCLUDE_DIRS}
       >
 
-      $<$<BOOL:${${_OPT}use_pa_jack}>:
+      $<$<NOT:$<STREQUAL:${${_OPT}use_pa_jack},off>>:
          ${TARGET_ROOT}/src/hostapi/jack
          ${JACK_INCLUDE_DIRS}
       >
@@ -186,11 +209,11 @@ list( APPEND DEFINES
          HAVE_SYS_SOUNDCARD_H=1
       >
 
-      $<$<BOOL:${${_OPT}use_pa_jack}>:
+      $<$<NOT:$<STREQUAL:${${_OPT}use_pa_jack},off>>:
          PA_USE_JACK=1
       >
 
-      $<$<NOT:$<BOOL:${${_OPT}disable_dynamic_jack}>>:
+      $<$<STREQUAL:${${_OPT}use_pa_jack},dynamic>:
          PA_DYNAMIC_JACK=1
       >
 )
@@ -205,7 +228,7 @@ list( APPEND LIBRARIES
          ${OSS_LIBRARIES}
       >
 
-      $<$<BOOL:${${_OPT}use_pa_jack}>:
+      $<$<NOT:$<STREQUAL:${${_OPT}use_pa_jack},off>>:
          ${JACK_LIBRARIES}
       >
 )

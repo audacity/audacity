@@ -11,39 +11,52 @@ def_vars()
 
 message( STATUS "========== Configuring ${name} ==========" )
 
-# Let the Audacity target know we're using ffmpeg
-set( USE_${symbol} ON CACHE INTERNAL USE_${symbol} )
-
-# Add the system/local option
-option( ${_OPT}use_system_${name} "Use ${name} system library if available" ${${_OPT}prefer_system_libs} )
-
-# Look up the system packages if the user wants them
-if( ${_OPT}use_system_${name} )
-   # Provide an option that determines if the libraries are loaded
-   # dynamically at run time or statically linked at build time
-   option( ${_OPT}disable_dynamic_${name} "Disable dynamic loading of ${name} libraries" NO)
-
-   # Look them up
-   pkg_check_modules( ${TARGET} ${packages} )
-else()
-   # Make sure to reset in case user reconfigures between local/system
-   set( ${_OPT}disable_dynamic_${name} NO CACHE INTERNAL "" )
+# We can only (possibly) link to it if we have pkg-config
+if( PkgConfig_FOUND )
+   set( opt "linked" )
+   set( desc "linked, " )
 endif()
 
-# If the system packages were found
-if( ${TARGET}_FOUND )
-   message( STATUS "Using '${name}' system library" )
+# FFmpeg is either dynamically loaded, linked to, or off
+cmd_option( ${_OPT}use_ffmpeg
+            "Use ffmpeg library [loaded, ${desc}off]"
+            "loaded"
+            STRINGS "loaded" ${opt} "off"
+)
 
-   # Pull in the package settings
-   get_package_interface( ${TARGET} )
+# Deteremine if it will be turned off, linked to, or loaded
+if( ${_OPT}use_ffmpeg STREQUAL "off" )
+   message( STATUS "Disabling '${name}' library" )
 else()
-   message( STATUS "Using '${name}' local library" )
+   # Let the Audacity target know that this library will be used.
+   set( USE_${symbol} ON CACHE INTERNAL USE_${symbol} )
 
-   # Otherwise define the local settings
-   list( APPEND INCLUDES
-      INTERFACE
-         ${TARGET_ROOT}
-   )
+   # Only need to look up the package if we're linking to it
+   set( isdyn YES )
+   if( ${_OPT}use_ffmpeg STREQUAL "linked" )
+      pkg_check_modules( ${TARGET} ${packages} )
+
+      # Set up for link if it was found
+      if( ${TARGET}_FOUND )
+         message( STATUS "Linking '${name}' library during build" )
+
+         # Pull in the package settings
+         get_package_interface( ${TARGET} )
+
+         # Not dynamic
+         set( isdyn NO )
+      endif()
+   endif()
+
+   # Pull in the local includes if we're dynamically loading
+   if( isdyn )
+      message( STATUS "Will dynamically load '${name}' library at runtime" )
+
+      list( APPEND INCLUDES
+         INTERFACE
+            ${TARGET_ROOT}
+      )
+   endif()
 endif()
 
 # And add the settings to the target
