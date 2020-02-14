@@ -1329,6 +1329,7 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
    Layout();
    Fit();
    ValueToControls();
+
    //PRL -- would this fix the following?
    //ValueToControls();
 
@@ -1351,6 +1352,7 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
 
    if (options.hasValue)
       SetValue( options.value );
+
 }
 
 NumericTextCtrl::~NumericTextCtrl()
@@ -1456,7 +1458,8 @@ void NumericTextCtrl::SetInvalidValue(double invalidValue)
       SetValue(invalidValue);
 }
 
-bool NumericTextCtrl::Layout()
+
+void NumericTextCtrl::ComputeSizing()
 {
    unsigned int i, j;
    int x, pos;
@@ -1525,6 +1528,19 @@ bool NumericTextCtrl::Layout()
 
    mWidth = x + mBorderRight;
    mHeight = mDigitBoxH + mBorderTop + mBorderBottom;
+}
+
+
+bool NumericTextCtrl::Layout()
+{
+   ComputeSizing();
+
+   wxMemoryDC memDC;
+   wxCoord strW, strH;
+   memDC.SetFont(*mLabelFont);
+   memDC.GetTextExtent(mPrefix, &strW, &strH);
+
+   int i;
 
    // Draw the background bitmap - it contains black boxes where
    // all of the digits go and all of the other text

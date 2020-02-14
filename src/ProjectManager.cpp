@@ -45,6 +45,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"
+#include "toolbars/TimerToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
@@ -569,6 +570,7 @@ AudacityProject *ProjectManager::New()
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBar::Get( project ).SetListener( &projectSelectionManager );
 #endif
+   TimerToolBar::Get( project ).SetListener( &projectSelectionManager );
    
 #if wxUSE_DRAG_AND_DROP
    // We can import now, so become a drag target

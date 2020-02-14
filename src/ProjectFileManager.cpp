@@ -1352,6 +1352,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       auto &selectionManager = ProjectSelectionManager::Get( project );
       selectionManager.AS_SetSnapTo(settings.GetSnapTo());
       selectionManager.AS_SetSelectionFormat(settings.GetSelectionFormat());
+      selectionManager.TT_SetAudioTimeFormat(settings.GetAudioTimeFormat());
       selectionManager.SSBL_SetFrequencySelectionFormatName(
       settings.GetFrequencySelectionFormatName());
       selectionManager.SSBL_SetBandwidthSelectionFormatName(

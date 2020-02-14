@@ -22,6 +22,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "WaveTrack.h"
 #include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"
+#include "toolbars/TimerToolBar.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectSelectionManagerKey {
@@ -147,6 +148,26 @@ void ProjectSelectionManager::AS_SetSelectionFormat(
       TrackPanel::Get( project ).Refresh(false);
 
    SelectionBar::Get( project ).SetSelectionFormat(format);
+}
+
+const NumericFormatSymbol & ProjectSelectionManager::TT_GetAudioTimeFormat()
+{
+   auto &project = mProject;
+   auto &settings = ProjectSettings::Get( project );
+   return settings.GetAudioTimeFormat();
+}
+
+void ProjectSelectionManager::TT_SetAudioTimeFormat(
+   const NumericFormatSymbol & format)
+{
+   auto &project = mProject;
+   auto &settings = ProjectSettings::Get( project );
+   settings.SetAudioTimeFormat( format );
+
+   gPrefs->Write(wxT("/AudioTimeFormat"), format.Internal());
+   gPrefs->Flush();
+
+   TimerToolBar::Get( project ).SetAudioTimeFormat(format);
 }
 
 void ProjectSelectionManager::AS_ModifySelection(

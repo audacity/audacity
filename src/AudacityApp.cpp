@@ -455,6 +455,21 @@ void PopulatePreferences()
       gPrefs->Write(wxT("/GUI/Shortcuts/FullDefaults"),1);
    }
 
+   // Upgrading pre 2.4.0 configs, the selection toolbar is now split.
+   if ((0<vMajor && vMajor < 2) ||
+       (vMajor == 2 && vMinor < 4))
+   {
+      gPrefs->Write(wxT("/GUI/Toolbars/Selection/W"),"");
+      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/X"),-1);
+      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Y"),-1);
+      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/H"),55);
+      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/W"),251);
+      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/DockV2"),2);
+      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Dock"),2);
+      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Path"),"0,0");
+      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Show"),1);
+   }
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);

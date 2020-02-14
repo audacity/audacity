@@ -93,12 +93,14 @@ public:
       mPlaySpeed.store( value, std::memory_order_relaxed ); }
 
    // Selection Format
-
    void SetSelectionFormat(const NumericFormatSymbol & format);
    const NumericFormatSymbol & GetSelectionFormat() const;
 
-   // Spectral Selection Formats
+   // AudioTime format
+   void SetAudioTimeFormat(const NumericFormatSymbol & format);
+   const NumericFormatSymbol & GetAudioTimeFormat() const;
 
+   // Spectral Selection Formats
    void SetFrequencySelectionFormatName(const NumericFormatSymbol & format);
    const NumericFormatSymbol & GetFrequencySelectionFormatName() const;
 
@@ -120,6 +122,7 @@ private:
    NumericFormatSymbol mSelectionFormat;
    NumericFormatSymbol mFrequencySelectionFormatName;
    NumericFormatSymbol mBandwidthSelectionFormatName;
+   NumericFormatSymbol mAudioTimeFormat;
 
    wxString mSoloPref;
 

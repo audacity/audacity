@@ -164,6 +164,7 @@ public:
 
    ToolBar *GetBar() { return mBar; }
    void ClearBar() { mBar = nullptr; }
+   void LockInMinSize(ToolBar * pBar);
 
    //
    // Transition a toolbar from float to dragging

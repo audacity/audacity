@@ -158,6 +158,23 @@ void ToolFrame::OnGrabber( GrabberEvent & event )
    mManager->ProcessEvent( event );
 }
 
+// The current size determines the min size for resizing...
+// the 'lock in' is at that aspect ratio.
+void ToolFrame::LockInMinSize(ToolBar * pBar)
+{
+   mBar = pBar;
+
+   wxSize sz = mBar->GetSize();
+   SetClientSize( sz );
+   int yDesiredMin = 26;
+   int y = sz.GetHeight();
+   if (y > yDesiredMin) {
+      sz.SetWidth((sz.GetWidth() * yDesiredMin) / y);
+      sz.SetHeight( yDesiredMin );
+   }
+   mMinSize = sz -wxSize( 10, 0);
+}
+
 void ToolFrame::OnToolBarUpdate( wxCommandEvent & event )
 {
    // Resize floater window to exactly contain toolbar

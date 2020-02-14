@@ -21,6 +21,7 @@ class ProjectSelectionManager final
    : public ClientData::Base
    , public SelectionBarListener
    , public SpectralSelectionBarListener
+   , public TimerToolBarListener
 {
 public:
    static ProjectSelectionManager &Get( AudacityProject &project );
@@ -39,6 +40,8 @@ public:
    void AS_SetSnapTo(int snap) override;
    const NumericFormatSymbol & AS_GetSelectionFormat() override;
    void AS_SetSelectionFormat(const NumericFormatSymbol & format) override;
+   const NumericFormatSymbol & TT_GetAudioTimeFormat() override;
+   void TT_SetAudioTimeFormat(const NumericFormatSymbol & format) override;
    void AS_ModifySelection(double &start, double &end, bool done) override;
 
    // SpectralSelectionBarListener callback methods

@@ -34,30 +34,37 @@ public:
    void Repaint(wxDC * WXUNUSED(dc)) override {};
    void EnableDisableButtons() override {};
    void UpdatePrefs() override;
-   
+   void OnUpdate(wxCommandEvent &evt);
    void SetTimes(double audio);
+
+   void SetListener(TimerToolBarListener *l);
+   void SetAudioTimeFormat(const NumericFormatSymbol & format);
    void RegenerateTooltips() override {};
 
    int GetInitialWidth() override {return 250;} 
-   int GetMinToolbarWidth()  override { return 150; }
+   int GetMinToolbarWidth()  override { return mMinWidth; }
    void SetToDefaultSize() override;
    wxSize GetDockedSize() override {
       return GetSmartDockedSize();
    };
-
+   void SetDocked(ToolDock *dock, bool pushed) override;
+   void SetResizingLimits();
    
 private:
-   NumericTextCtrl * AddTime( const TranslatableString &Name, int id);
+   NumericTextCtrl * AddTime( const TranslatableString &Name, int id, 
+      wxSizer * pSizer);
    
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
    void OnSize(wxSizeEvent &evt);
    void OnIdle( wxIdleEvent &evt );
-   void OnSnapTo(wxCommandEvent & event);
    
-   SelectionBarListener * mListener;
+   TimerToolBarListener * mListener;
    double mRate;
    double mAudio;
+   int mMinWidth;
+   int mDigitHeight;
+   bool mbPreserveHeight;
    
    NumericTextCtrl   *mAudioTime;
    wxChoice          *mSnapTo;

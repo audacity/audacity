@@ -47,11 +47,15 @@ const ProjectSettings &ProjectSettings::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-ProjectSettings::ProjectSettings( AudacityProject &project )
-: mProject{ project }
-, mSelectionFormat{ NumericTextCtrl::LookupFormat(
+ProjectSettings::ProjectSettings(AudacityProject &project)
+   : mProject{ project }
+   , mSelectionFormat{ NumericTextCtrl::LookupFormat(
+      NumericConverter::TIME,
+      gPrefs->Read(wxT("/SelectionFormat"), wxT("")))
+}
+, mAudioTimeFormat{ NumericTextCtrl::LookupFormat(
    NumericConverter::TIME,
-   gPrefs->Read(wxT("/SelectionFormat"), wxT("")) )
+   gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss")))
 }
 , mFrequencySelectionFormatName{ NumericTextCtrl::LookupFormat(
    NumericConverter::FREQUENCY,
@@ -147,6 +151,16 @@ void ProjectSettings::SetSelectionFormat(const NumericFormatSymbol & format)
 const NumericFormatSymbol & ProjectSettings::GetSelectionFormat() const
 {
    return mSelectionFormat;
+}
+
+void ProjectSettings::SetAudioTimeFormat(const NumericFormatSymbol & format)
+{
+   mAudioTimeFormat = format;
+}
+
+const NumericFormatSymbol & ProjectSettings::GetAudioTimeFormat() const
+{
+   return mAudioTimeFormat;
 }
 
 void ProjectSettings::SetSnapTo(int snap)

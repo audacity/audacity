@@ -49,6 +49,7 @@ public:
 
    enum Type {
       TIME,
+      ATIME, // for Audio time control.
       FREQUENCY,
       BANDWIDTH,
    };
@@ -192,6 +193,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    void SetName( const TranslatableString &name );
 
    bool Layout() override;
+   void ComputeSizing();
    void Fit() override;
 
    void SetSampleRate(double sampleRate);
@@ -218,7 +220,10 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    int GetFocusedField() { return mLastField; }
    int GetFocusedDigit() { return mFocusedDigit; }
    // give a sane aspect ratio even if zero height.
-   float GetAspectRatio() { return mHeight ? (mWidth / mHeight):10; }
+   bool IsTooBig(int width, int height) {
+      ComputeSizing();
+      return (mWidth > width) || (mHeight > height);
+   }
 
 private:
 

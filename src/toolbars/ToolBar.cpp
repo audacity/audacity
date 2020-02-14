@@ -487,9 +487,6 @@ wxSize ToolBar::GetSmartDockedSize()
 {
    const int tbs = toolbarSingle + toolbarGap;
    wxSize sz = GetSize();
-   wxSize sz2 = GetMinSize();
-   sz.x = wxMax( sz.x, sz2.x );
-   sz.y = wxMax( sz.y, sz2.y );
    // 46 is the size where we switch from expanded to compact.
    if( sz.y < 46 )
       sz.y = tbs-1;
@@ -540,7 +537,6 @@ void ToolBar::ReCreateButtons()
       // Set dock after possibly creating resizer.
       // (Re)Establish dock state
       SetDocked(GetDock(), false);
-
       // Set the sizer
       SetSizerAndFit(ms.release());
    }
@@ -556,13 +552,17 @@ void ToolBar::ReCreateButtons()
       // JKC we're going to allow all resizable toolbars to be resized
       // to 1 unit high, typically 27 pixels.
       wxSize sz2 = sz;
-      sz2.SetWidth(GetMinToolbarWidth());
+      sz2.SetWidth(wxMax( sz2.GetX(), GetMinToolbarWidth()));
+      if (!IsDocked()) {
+         sz2.x += 30;// for the stripy resize handle.
+      }
       sz2.y = tbs -1;
       SetMinSize(sz2);
       
       // sz2 is now the minimum size.
       // sz3 is the size we were.
-      // When recreating buttons, we want to preserve size.
+
+      // We're recreating buttons, and we want to preserve original size.
       // But not if that makes the size too small.
 
       // Size at least as big as minimum.
@@ -570,7 +570,6 @@ void ToolBar::ReCreateButtons()
          sz3.y = sz2.y;
       if( sz3.x < sz2.x )
          sz3.x = sz2.x;
-
       SetSize(sz3);
    }
    else

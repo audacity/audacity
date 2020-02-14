@@ -306,6 +306,10 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          settings.SetSelectionFormat(
             NumericConverter::LookupFormat( NumericConverter::TIME, value) );
 
+      else if (!wxStrcmp(attr, wxT("audiotimeformat")))
+         settings.SetAudioTimeFormat(
+            NumericConverter::LookupFormat( NumericConverter::TIME, value) );
+
       else if (!wxStrcmp(attr, wxT("frequencyformat")))
          settings.SetFrequencySelectionFormatName(
             NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
