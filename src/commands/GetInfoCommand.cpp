@@ -149,8 +149,8 @@ bool GetInfoCommand::Apply(const CommandContext &context)
 bool GetInfoCommand::ApplyInner(const CommandContext &context)
 {
    switch( mInfoType  ){
-      case kCommands     : return SendCommands( context, 0 );
-      //case kCommandsPlus : return SendCommands( context, 1 );
+      // flag of 1 to include parameterless commands.
+      case kCommands     : return SendCommands( context, 1 );
       case kMenus        : return SendMenus( context );
       case kPreferences  : return SendPreferences( context );
       case kTracks       : return SendTracks( context );
