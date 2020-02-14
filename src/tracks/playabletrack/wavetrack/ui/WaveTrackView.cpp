@@ -32,8 +32,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../ViewInfo.h"
-#include "../../../../prefs/SpectrogramSettings.h"
-#include "../../../../prefs/WaveformSettings.h"
 #include "../../../../prefs/TracksPrefs.h"
 
 #include "../../../ui/TimeShiftHandle.h"

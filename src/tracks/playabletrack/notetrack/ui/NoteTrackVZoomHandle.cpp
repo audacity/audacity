@@ -149,14 +149,6 @@ enum {
    OnZoomInVerticalID,
    OnZoomOutVerticalID,
 
-   // Reserve an ample block of ids for waveform scale types
-   OnFirstWaveformScaleID,
-   OnLastWaveformScaleID = OnFirstWaveformScaleID + 9,
-
-   // Reserve an ample block of ids for spectrum scale types
-   OnFirstSpectrumScaleID,
-   OnLastSpectrumScaleID = OnFirstSpectrumScaleID + 19,
-
    OnZoomMaxID,
 
    OnUpOctaveID,

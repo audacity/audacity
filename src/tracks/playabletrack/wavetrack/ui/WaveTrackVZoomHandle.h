@@ -116,11 +116,6 @@ enum {
    // Reserve an ample block of ids for spectrum scale types
    OnFirstSpectrumScaleID,
    OnLastSpectrumScaleID = OnFirstSpectrumScaleID + 19,
-
-   OnZoomMaxID,
-
-   OnUpOctaveID,
-   OnDownOctaveID,
 };
 
 #endif
