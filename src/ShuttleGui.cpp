@@ -119,6 +119,7 @@ for registering for changes.
 #include "widgets/wxTextCtrlWrapper.h"
 #include "AllThemeResources.h"
 
+#include "widgets/Plot.h"
 #include "widgets/SliderTextCtrl.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -768,6 +769,33 @@ void ShuttleGuiBase::AddConstTextBox(
       GetStyle( 0 ));
    mpWind->SetName(translatedValue); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizers();
+}
+
+Plot* ShuttleGuiBase::AddPlot( const TranslatableString &Prompt,
+   double x_min, double x_max, double y_min, double y_max,
+   const TranslatableString& x_label, const TranslatableString& y_label,
+   int x_format, int y_format, int count)
+{
+   HandleOptionality( Prompt );
+   AddPrompt( Prompt );
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return wxDynamicCast(wxWindow::FindWindowById(miId, mpDlg), Plot);
+   Plot* pPlot;
+   mpWind = pPlot = safenew Plot(GetParent(), miId,
+      x_min, x_max, y_min, y_max, x_label, y_label,
+      x_format, y_format, count,
+      wxDefaultPosition, wxDefaultSize,
+      GetStyle( SliderTextCtrl::HORIZONTAL )
+   );
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
+   mpWind->SetName(wxStripMenuCodes(Prompt.Translation()));
+   miProp=1;
+   UpdateSizers();
+   return pPlot;
 }
 
 wxListBox * ShuttleGuiBase::AddListBox(const wxArrayStringEx &choices)

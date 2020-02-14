@@ -939,6 +939,8 @@ list( APPEND SOURCES
       widgets/Overlay.h
       widgets/OverlayPanel.cpp
       widgets/OverlayPanel.h
+      widgets/Plot.cpp
+      widgets/Plot.h
       widgets/PopupMenuTable.cpp
       widgets/PopupMenuTable.h
       widgets/ProgressDialog.cpp
