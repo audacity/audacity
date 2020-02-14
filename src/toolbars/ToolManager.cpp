@@ -1249,9 +1249,16 @@ void ToolManager::OnMouse( wxMouseEvent & event )
             }
             else
             {
+               // r is the rectangle of the toolbar being dragged.
+               // A tall undocked toolbar will become at most 2 tbs
+               // high when docked, so the triangular drop indicator
+               // needs to use that height, h, not the bar height
+               // for calculating where to be drawn.
+               const int tbs = toolbarSingle + toolbarGap;
+               int h = wxMin(r.GetHeight(), 2*tbs-1);
                p.x = dr.GetLeft() + r.GetLeft();
                p.y = dr.GetTop() + r.GetTop() +
-                  ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );
+                  ( ( h - mLeft->GetBox().GetHeight() ) / 2 );
                mCurrent = mLeft.get();
             }
 
