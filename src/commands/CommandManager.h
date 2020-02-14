@@ -289,6 +289,7 @@ class AUDACITY_DLL_API CommandManager final
 #if defined(__WXDEBUG__)
    void CheckDups();
 #endif
+   void RemoveDuplicateShortcuts();
 
    //
    // Loading/Saving

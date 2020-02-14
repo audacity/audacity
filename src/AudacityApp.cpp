@@ -1587,6 +1587,13 @@ bool AudacityApp::OnInit()
 
    // Bug1561: delay the recovery dialog, to avoid crashes.
    CallAfter( [=] () mutable {
+      // Remove duplicate shortcuts when there's a change of version
+      int vMajorInit, vMinorInit, vMicroInit;
+      gPrefs->GetVersionKeysInit(vMajorInit, vMinorInit, vMicroInit);
+      if (vMajorInit != AUDACITY_VERSION || vMinorInit != AUDACITY_RELEASE
+         || vMicroInit != AUDACITY_REVISION) {
+         CommandManager::Get(*project).RemoveDuplicateShortcuts();
+      }
       //
       // Auto-recovery
       //

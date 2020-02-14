@@ -1505,6 +1505,53 @@ void CommandManager::CheckDups()
 
 #endif
 
+// If a default shortcut of a command is introduced or changed, then this
+// shortcut may be the same shortcut a user has previously assigned to another
+// command. This function removes such duplicates by removing the shortcut
+// from the command whose default has changed.
+// Note that two commands may have the same shortcut if their default shortcuts
+// are the same. However, in this function default shortcuts are checked against
+// user assigned shortcuts. Two such commands with the same shortcut
+// must both be in either the first or the second group, so there is no need
+// to test for this case.
+// Note that if a user is using the full set of default shortcuts, and one
+// of these is changed, then if /GUI/Shortcuts/FullDefaults is not set in audacity.cfg,
+// because the defaults appear as user assigned shorcuts in audacity.cfg,
+// the previous default overrides the changed default, and no duplicate can
+// be introduced.
+void CommandManager::RemoveDuplicateShortcuts()
+{
+   TranslatableString disabledShortcuts;
+
+   for (auto& entry : mCommandList) {
+      if (!entry->key.empty() && entry->key != entry->defaultKey) {  // user assigned
+         for (auto& entry2 : mCommandList) {
+            if (!entry2->key.empty() && entry2->key == entry2->defaultKey) { // default
+               if (entry2->key == entry->key) {
+                  auto name = wxT("/NewKeys/") + entry2->name.GET();
+                  gPrefs->Write(name, NormalizedKeyString{});
+
+                  disabledShortcuts +=
+                     XO("\n* %s, because you have assigned the shortcut %s to %s")
+                     .Format(entry2->label.Strip(), entry->key.GET(), entry->label.Strip());
+               }
+            }
+         }
+      }
+   }
+
+   if (!disabledShortcuts.Translation().empty()) {
+      TranslatableString message = XO("The following commands have had their shortcuts removed,"
+      " because their default shortcut is new or changed, and is the same shortcut"
+      " that you have assigned to another command.")
+         + disabledShortcuts;
+      AudacityMessageBox(message, XO("Shortcuts have been removed"), wxOK | wxCENTRE);
+
+      gPrefs->Flush();
+      MenuCreator::RebuildAllMenuBars();
+   }
+}
+
 #include "../KeyboardCapture.h"
 
 static struct InstallHandlers
