@@ -1189,7 +1189,13 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
           )},
          {wxT("/View/Windows"), wxT("UndoHistory,Karaoke,MixerBoard")},
          {wxT("/Analyze/Analyzers/Windows"), wxT("ContrastAnalyser,PlotSpectrum")},
-         {wxT("/Transport/Basic"),wxT("Play,Record,Scrubbing,Cursor")},
+         {wxT("/Transport/Basic"), wxT("Play,Record,Scrubbing,Cursor")},
+         {wxT("/View/Other/Toolbars/Toolbars/Other"), wxT(
+"ShowTransportTB,ShowToolsTB,ShowRecordMeterTB,ShowPlayMeterTB,"
+//"ShowMeterTB,"
+"ShowMixerTB,"
+"ShowEditTB,ShowTranscriptionTB,ShowScrubbingTB,ShowDeviceTB,ShowSelectionTB,"
+"ShowSpectralSelectionTB") }
       }
    };
 

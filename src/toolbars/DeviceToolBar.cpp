@@ -872,3 +872,12 @@ static RegisteredToolbarFactory factory{ DeviceBarID,
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew DeviceToolBar{ project } }; }
 };
+
+namespace {
+AttachedToolBarMenuItem sAttachment{
+   /* i18n-hint: Clicking this menu item shows the toolbar
+      that manages devices */
+   DeviceBarID, wxT("ShowDeviceTB"), XXO("&Device Toolbar")
+};
+}
+

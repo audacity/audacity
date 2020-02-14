@@ -1006,3 +1006,12 @@ static RegisteredToolbarFactory factory{ TranscriptionBarID,
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew TranscriptionToolBar{ project } }; }
 };
+
+namespace {
+AttachedToolBarMenuItem sAttachment{
+   /* i18n-hint: Clicking this menu item shows the toolbar
+      for transcription (currently just vary play speed) */
+   TranscriptionBarID, wxT("ShowTranscriptionTB"), XXO("Pla&y-at-Speed Toolbar")
+};
+}
+

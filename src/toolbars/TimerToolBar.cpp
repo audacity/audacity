@@ -13,6 +13,8 @@
 
 
 #include "../Audacity.h"
+#include "../Experimental.h"
+
 #include "SelectionBar.h"
 
 #include "SelectionBarListener.h"
@@ -344,3 +346,15 @@ static RegisteredToolbarFactory factory{ TimeBarID,
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew TimerToolBar{ project } }; }
 };
+
+#ifdef EXPERIMENTAL_TIMER_TOOLBAR
+namespace {
+AttachedToolBarMenuItem sAttachment{
+   /* i18n-hint: Clicking this menu item shows the toolbar
+      for viewing actual time of the cursor */
+   TimeBarID, wxT("ShowTimeToolBarTB"), XXO("&Time Toolbar"),
+   { Registry::OrderingHint::After, "ShowSelectionTB" }
+};
+}
+#endif
+

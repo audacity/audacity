@@ -297,3 +297,11 @@ static RegisteredToolbarFactory factory{ ToolsBarID,
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew ToolsToolBar{ project } }; }
 };
+
+namespace {
+AttachedToolBarMenuItem sAttachment{
+   /* i18n-hint: Clicking this menu item shows a toolbar
+      that has some tools in it */
+   ToolsBarID, wxT("ShowToolsTB"), XXO("T&ools Toolbar"),
+};
+}

@@ -315,3 +315,11 @@ static RegisteredToolbarFactory factory{ MixerBarID,
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew MixerToolBar{ project } }; }
 };
+
+namespace {
+AttachedToolBarMenuItem sAttachment{
+   /* i18n-hint: Clicking this menu item shows the toolbar
+      with the mixer */
+   MixerBarID, wxT("ShowMixerTB"), XXO("Mi&xer Toolbar")
+};
+}

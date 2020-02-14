@@ -1538,3 +1538,40 @@ bool ToolManager::RestoreFocus()
    }
    return false;
 }
+
+#include "../commands/CommandContext.h"
+#include "../Menus.h"
+
+AttachedToolBarMenuItem::AttachedToolBarMenuItem(
+   ToolBarID id, const CommandID &name, const TranslatableString &label_in,
+   const Registry::OrderingHint &hint,
+   std::vector< ToolBarID > excludeIDs )
+   : mId{ id }
+   , mAttachedItem{
+      Registry::Placement{ wxT("View/Other/Toolbars/Toolbars/Other"), hint },
+      (  MenuTable::FinderScope(
+            [this](AudacityProject &) -> CommandHandlerObject&
+               { return *this; } ),
+         MenuTable::Command( name, label_in,
+            &AttachedToolBarMenuItem::OnShowToolBar,
+            AlwaysEnabledFlag,
+            CommandManager::Options{}.CheckTest( [id](AudacityProject &project){
+               auto &toolManager = ToolManager::Get( project );
+               return toolManager.IsVisible( id ); } ) ) ) }
+   , mExcludeIds{ std::move( excludeIDs ) }
+{}
+
+void AttachedToolBarMenuItem::OnShowToolBar( const CommandContext &context )
+{
+   auto &project = context.project;
+   auto &toolManager = ToolManager::Get( project );
+
+   if( !toolManager.IsVisible( mId ) )
+   {
+      for ( const auto excludedID : mExcludeIds )
+         toolManager.Expose( excludedID, false );
+   }
+
+   toolManager.ShowHide(mId);
+   MenuManager::Get(project).ModifyToolbarMenus(project);
+}

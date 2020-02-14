@@ -210,4 +210,23 @@ public:
 };
 
 
+#include "../commands/CommandFunctors.h"
+#include "../commands/CommandManager.h"
+
+// Construct a static instance of this class to add a menu item that shows and
+// hides a toolbar
+struct AttachedToolBarMenuItem : CommandHandlerObject {
+   AttachedToolBarMenuItem(
+      ToolBarID id, const CommandID &name, const TranslatableString &label_in,
+      const Registry::OrderingHint &hint = {},
+      // IDs of other toolbars not to be shown simultaneously with this one:
+      std::vector< ToolBarID > excludeIds = {} );
+
+   void OnShowToolBar(const CommandContext &context);
+
+   const ToolBarID mId;
+   const MenuTable::AttachedItem mAttachedItem;
+   const std::vector< ToolBarID > mExcludeIds;
+};
+
 #endif

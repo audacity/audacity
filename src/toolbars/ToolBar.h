@@ -64,7 +64,7 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TOOLBAR_UPDATED, -1);
 //
 // ToolBar IDs
 //
-enum
+enum ToolBarID
 {
    NoBarID = -1,
    TransportBarID,

@@ -799,3 +799,11 @@ static RegisteredToolbarFactory factory{ TransportBarID,
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew ControlToolBar{ project } }; }
 };
+
+namespace {
+AttachedToolBarMenuItem sAttachment{
+   /* i18n-hint: Clicking this menu item shows the toolbar
+      with the big buttons on it (play record etc) */
+   TransportBarID, wxT("ShowTransportTB"), XXO("&Transport Toolbar")
+};
+}

@@ -308,3 +308,13 @@ static RegisteredToolbarFactory factory{ EditBarID,
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew EditToolBar{ project } }; }
 };
+
+#include "ToolManager.h"
+
+namespace {
+AttachedToolBarMenuItem sAttachment{
+   /* i18n-hint: Clicking this menu item shows the toolbar for editing */
+   EditBarID, wxT("ShowEditTB"), XXO("&Edit Toolbar")
+};
+}
+

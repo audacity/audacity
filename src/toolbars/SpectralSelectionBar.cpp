@@ -510,4 +510,13 @@ static RegisteredToolbarFactory factory{ SpectralSelectionBarID,
       return ToolBar::Holder{ safenew SpectralSelectionBar{ project } }; }
 };
 
+namespace {
+AttachedToolBarMenuItem sAttachment{
+   SpectralSelectionBarID,
+      /* i18n-hint: Clicking this menu item shows the toolbar
+      for selecting a frequency range of audio */
+   wxT("ShowSpectralSelectionTB"), XXO("Spe&ctral Selection Toolbar")
+};
+}
+
 #endif // #ifdef EXPERIMENTAL_SPECTRAL_EDITING
