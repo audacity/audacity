@@ -270,7 +270,7 @@ void TimerToolBar::OnSize(wxSizeEvent & ev)
       int mx = ev.GetSize().GetWidth() - 25;
       int my = ev.GetSize().GetHeight();
       int h = my-2;
-      h = wxMax(21, h);
+      h = wxMax(17, h);
       h = wxMin(h, 77);
 
       //wxLogDebug("Try h=%i dimensions(%i,%i)", h,mx,my);
@@ -278,7 +278,7 @@ void TimerToolBar::OnSize(wxSizeEvent & ev)
       do {
          h--;
          mAudioTime->SetDigitSize(h*0.66, h);
-      } while ((h > 21) && mAudioTime->IsTooBig(mx, my));
+      } while ((h > 17) && mAudioTime->IsTooBig(mx, my));
       mAudioTime->Layout();
       //wxLogDebug(" accept height:%i", h);
 
