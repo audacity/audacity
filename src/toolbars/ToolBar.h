@@ -181,6 +181,7 @@ public:
 
    static void MakeButtonBackgroundsSmall();
    static void MakeButtonBackgroundsLarge();
+   virtual void ResizingDone() {};
 
  protected:
    void SetButton(bool down, AButton *button);

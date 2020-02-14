@@ -824,6 +824,7 @@ void ToolManager::ReadConfig()
          {
             wxSize sz( width[ ndx ], height[ ndx ] );
             bar->SetSize( sz );
+            bar->ResizingDone();
          }
 
 #ifdef EXPERIMENTAL_SYNC_LOCK

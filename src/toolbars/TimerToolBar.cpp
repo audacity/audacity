@@ -76,7 +76,9 @@ mListener(NULL), mAudioTime(NULL)
 {
    mMinWidth = 50;
    mDigitHeight = 48;
+   mbReady = false;
    mbPreserveHeight = false;
+   mbPreserveWidth = false;
    mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
                                  AudioIO::GetOptimalSupportedSampleRate());
 }
@@ -98,8 +100,10 @@ const TimerToolBar &TimerToolBar::Get( const AudacityProject &project )
 
 void TimerToolBar::Create(wxWindow * parent)
 {
+   mbIsCreating = true;
    ToolBar::Create(parent);
    UpdatePrefs();
+   mbIsCreating = false;
 }
 
 NumericTextCtrl * TimerToolBar::AddTime(
@@ -130,16 +134,20 @@ void TimerToolBar::Populate()
 
 void TimerToolBar::SetListener(TimerToolBarListener *l)
 {
+   mbPreserveWidth = true;
    mListener = l;
    SetAudioTimeFormat(mListener->TT_GetAudioTimeFormat());
+   mbPreserveWidth = false;
 };
 
 
 void TimerToolBar::UpdatePrefs()
 {
+   mbPreserveWidth = true;
    wxCommandEvent e;
    e.SetInt(mAudioTime->GetFormatIndex());
    OnUpdate(e);
+   mbPreserveWidth = false;
 
    SetLabel(XO("Time"));
    ToolBar::UpdatePrefs();
@@ -151,7 +159,11 @@ void TimerToolBar::SetAudioTimeFormat(const NumericFormatSymbol & format)
       mAudioTime->SetFormatString(mAudioTime->GetBuiltinFormat(format));
 
    // Test first whether changed, to avoid infinite recursion from OnUpdate
-   if ( changed ) {
+   if ( changed || !mbReady ) {
+      if (!mbReady) {
+         //wxLogDebug("Ready!");
+         mbReady = true;
+      }
       wxCommandEvent e;
       e.SetInt(mAudioTime->GetFormatIndex());
       OnUpdate(e);
@@ -159,8 +171,10 @@ void TimerToolBar::SetAudioTimeFormat(const NumericFormatSymbol & format)
 }
 
 // Called when the format drop downs is changed.
+// This causes recreation of the toolbar contents.
 void TimerToolBar::OnUpdate(wxCommandEvent &evt)
 {
+   //wxLogDebug("OnUpdate");
    int index = evt.GetInt();
    wxWindow *w = FindFocus();
 
@@ -170,7 +184,10 @@ void TimerToolBar::OnUpdate(wxCommandEvent &evt)
    // If docked, font height is determined by toolbar height.
    // If undocked, determined by last resize.
    if (IsDocked())
-      mDigitHeight = GetSize().GetHeight()-6;
+   {
+      mDigitHeight = GetSize().GetHeight() - 6;
+      mDigitHeight = wxMin(mDigitHeight, 25);
+   }
 
    evt.Skip(false);
    // Save format name before recreating the controls so they resize properly
@@ -199,11 +216,21 @@ void TimerToolBar::OnUpdate(wxCommandEvent &evt)
 
 void TimerToolBar::SetDocked(ToolDock *dock, bool pushed)
 {
+   //wxLogDebug("SetDocked");
    ToolBar::SetDocked(dock, pushed);
-   if (!IsDocked()) {
+   if (!mbReady)
+      return;
+
+   // Do not use IsDocked() here.  It's not valid!
+   if ( dock == nullptr) {
+      // The min height when undocked is always 22
       wxSize sz = GetMinSize();
       sz.y = 22;
       SetMinSize(sz);
+   }
+   else {
+      //SetResizingLimits();
+      ResizingDone();
    }
 
 }
@@ -217,6 +244,7 @@ void TimerToolBar::SetToDefaultSize(){
 
 void TimerToolBar::SetResizingLimits() {
 
+   //wxLogDebug("Set Resizing Limits");
    if (!IsDocked()) {
       wxWindow * pWnd = GetParent();
       ToolFrame * pFrame = dynamic_cast<ToolFrame*>(pWnd);
@@ -228,13 +256,12 @@ void TimerToolBar::SetResizingLimits() {
          // Fit frame around the toolbar
          pFrame->Fit();
 
-         // The resize handle takes 25 pixels.
+         // The resize handle takes 39 pixels.
          // And was not accounted for in the Fit().
          wxSize sz = pFrame->GetSize();
-         sz.x += 45;
+         sz.x += 39;
          sz.y += 2;
          pFrame->SetSize(sz);
-
          // Now compute and lock in the min frame size
          // using aspect ratio, so that dragging won't go 
          // smaller than this.
@@ -243,22 +270,53 @@ void TimerToolBar::SetResizingLimits() {
    }
    else
    {
-      Fit();
+      Fit(); // Toolbar size to fit around minimum sizer.
       Layout();
+      //GetSizer()->RecalcSizes();
       wxSize sz1 = GetSizer()->GetMinSize();
       int minHeight = 21;
       if (sz1.y > minHeight) {
-         sz1.x = 47+(sz1.x * minHeight) / sz1.y;
+         sz1.x = (sz1.x * minHeight) / sz1.y;
          GetSizer()->SetMinSize(sz1);
          SetMinSize(sz1);
       }
    }
 }
 
+// We are given the size of the toolbar.
+// Compute digit Height and layout the Numeric Control.
+void TimerToolBar::ResizeTime( const wxSize & sz) {
+
+   int mx = sz.GetWidth() - 25;
+   int my = sz.GetHeight();
+   //wxLogDebug("ResizeTime %i,%i",mx,my);
+
+   // Digit height is 2 less than y
+   // OR fits to width, if width is a bit low.
+   int h = my-2;
+   h = wxMax(17, h);
+   h = wxMin(h, 77);
+
+   //wxLogDebug("Try h=%i dimensions(%i,%i)", h,mx,my);
+   h++;
+   do {
+      h--;
+      mAudioTime->SetDigitSize(h*0.66, h);
+   } while ((h > 17) && mAudioTime->IsTooBig(mx, my));
+   mAudioTime->Layout();
+   //wxLogDebug(" accept height:%i", h);
+
+   mDigitHeight = h;
+}
+
 // This 'OnSize' function is also called during moving the
 // toolbar.  
 void TimerToolBar::OnSize(wxSizeEvent & ev)
 {
+   //wxLogDebug("OnSize");
+   if (!mbReady)
+      return;
+
    ev.Skip();
 
    if (!mAudioTime)
@@ -267,24 +325,8 @@ void TimerToolBar::OnSize(wxSizeEvent & ev)
    // If we are changing the time format, then we
    // preserve the height.  Otherwise we size the font to fit 
    // the space given.
-   if (!mbPreserveHeight) {
-
-      int mx = ev.GetSize().GetWidth() - 25;
-      int my = ev.GetSize().GetHeight();
-      int h = my-2;
-      h = wxMax(17, h);
-      h = wxMin(h, 77);
-
-      //wxLogDebug("Try h=%i dimensions(%i,%i)", h,mx,my);
-      h++;
-      do {
-         h--;
-         mAudioTime->SetDigitSize(h*0.66, h);
-      } while ((h > 17) && mAudioTime->IsTooBig(mx, my));
-      mAudioTime->Layout();
-      //wxLogDebug(" accept height:%i", h);
-
-      mDigitHeight = h;
+   if (mbPreserveWidth || !mbPreserveHeight) {
+      ResizeTime( ev.GetSize() );
    }
 
    // Refresh and update immediately, so that we don't get 
@@ -293,6 +335,22 @@ void TimerToolBar::OnSize(wxSizeEvent & ev)
    Refresh(true);
    Update();
 }
+
+// The intention of this is to get the resize handle in the 
+// correct position, after we've let go in dragging.
+void TimerToolBar::ResizingDone() {
+   if (!mbReady)
+      return;
+   wxSize sz = GetSize();
+   //wxLogDebug("ReSizingDone %i,%i",sz.x,sz.y);
+
+   Fit();
+   sz.x = GetSize().GetX();
+   //wxLogDebug("Fitted %i,%i",sz.x,sz.y);
+   SetSize(sz);
+   Updated();
+}
+
 
 void TimerToolBar::SetTimes(double audio)
 {

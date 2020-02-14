@@ -18,6 +18,7 @@
 
 class SelectionBarListener;
 class NumericTextCtrl;
+class wxSize;
 
 class TimerToolBar final : public ToolBar {
    
@@ -48,8 +49,10 @@ public:
       return GetSmartDockedSize();
    };
    void SetDocked(ToolDock *dock, bool pushed) override;
+   void ResizeTime( const wxSize & sz );
    void SetResizingLimits();
-   
+   void ResizingDone() override;
+
 private:
    NumericTextCtrl * AddTime( const TranslatableString &Name, int id, 
       wxSizer * pSizer);
@@ -64,6 +67,9 @@ private:
    double mAudio;
    int mMinWidth;
    int mDigitHeight;
+   bool mbReady;
+   bool mbIsCreating;
+   bool mbPreserveWidth;
    bool mbPreserveHeight;
    
    NumericTextCtrl   *mAudioTime;

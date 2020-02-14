@@ -193,6 +193,7 @@ void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
       if (mOrigFocus)
          mOrigFocus->SetFocus();
       mOrigFocus = nullptr;
+      mBar->ResizingDone();
    }
 }
 
@@ -553,9 +554,6 @@ void ToolBar::ReCreateButtons()
       // to 1 unit high, typically 27 pixels.
       wxSize sz2 = sz;
       sz2.SetWidth(wxMax( sz2.GetX(), GetMinToolbarWidth()));
-      if (!IsDocked()) {
-         sz2.x += 30;// for the stripy resize handle.
-      }
       sz2.y = tbs -1;
       SetMinSize(sz2);
       
