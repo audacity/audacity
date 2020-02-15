@@ -1039,3 +1039,143 @@ static const WaveTrackSubViews::RegisteredFactory key{
       return std::make_shared< WaveformView >( view );
    }
 };
+
+// The following attaches the wave color sub-menu to the wave track popup
+// menu.  It is appropriate only to waveform view and so is kept in this
+// source file with the rest of the waveform view implementation.
+
+#include <mutex> // for std::call_once
+#include "WaveTrackControls.h"
+#include "../../../../widgets/PopupMenuTable.h"
+#include "../../../../ProjectAudioIO.h"
+#include "../../../../ProjectHistory.h"
+#include "../../../../RefreshCode.h"
+
+//=============================================================================
+// Table class for a sub-menu
+struct WaveColorMenuTable : PopupMenuTable
+{
+   WaveColorMenuTable() : PopupMenuTable{ "WaveColor", XO("&Wave Color") } {}
+   DECLARE_POPUP_MENU(WaveColorMenuTable);
+
+   static WaveColorMenuTable &Instance();
+
+   void InitUserData(void *pUserData) override;
+
+   void DestroyMenu() override
+   {
+      mpData = NULL;
+   }
+
+   PlayableTrackControls::InitMenuData *mpData{};
+
+   int IdOfWaveColor(int WaveColor);
+   void OnWaveColorChange(wxCommandEvent & event);
+
+   int OnInstrument1ID, OnInstrument2ID, OnInstrument3ID, OnInstrument4ID;
+};
+
+WaveColorMenuTable &WaveColorMenuTable::Instance()
+{
+   static WaveColorMenuTable instance;
+   return instance;
+}
+
+void WaveColorMenuTable::InitUserData(void *pUserData)
+{
+   mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
+}
+
+namespace {
+using ValueFinder = std::function< int( WaveTrack& ) >;
+
+const TranslatableString GetWaveColorStr(int colorIndex)
+{
+   return XO("Instrument %i").Format( colorIndex+1 );
+}
+}
+
+BEGIN_POPUP_MENU(WaveColorMenuTable)
+   static const auto fn = []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+      auto &me = static_cast<WaveColorMenuTable&>( handler );
+      auto pData = me.mpData;
+      const auto &track = *static_cast<WaveTrack*>(pData->pTrack);
+      auto &project = pData->project;
+      bool unsafe = ProjectAudioIO::Get( project ).IsAudioActive();
+      
+      menu.Check( id, id == me.IdOfWaveColor( track.GetWaveColorIndex() ) );
+      menu.Enable( id, !unsafe );
+   };
+
+   static std::once_flag flag;
+   std::call_once( flag, [this]{
+      auto &hostTable = GetWaveTrackMenuTable();
+      OnInstrument1ID = hostTable.ReserveId();
+      OnInstrument2ID = hostTable.ReserveId();
+      OnInstrument3ID = hostTable.ReserveId();
+      OnInstrument4ID = hostTable.ReserveId();
+   } );
+
+   AppendRadioItem( "Instrument1", OnInstrument1ID,
+      GetWaveColorStr(0), POPUP_MENU_FN( OnWaveColorChange ), fn );
+   AppendRadioItem( "Instrument2", OnInstrument2ID,
+      GetWaveColorStr(1), POPUP_MENU_FN( OnWaveColorChange ), fn );
+   AppendRadioItem( "Instrument3", OnInstrument3ID,
+      GetWaveColorStr(2), POPUP_MENU_FN( OnWaveColorChange ), fn );
+   AppendRadioItem( "Instrument4", OnInstrument4ID,
+      GetWaveColorStr(3), POPUP_MENU_FN( OnWaveColorChange ), fn );
+
+END_POPUP_MENU()
+
+/// Converts a WaveColor enumeration to a wxWidgets menu item Id.
+int WaveColorMenuTable::IdOfWaveColor(int WaveColor)
+{  return OnInstrument1ID + WaveColor;}
+
+/// Handles the selection from the WaveColor submenu of the
+/// track menu.
+void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
+{
+   int id = event.GetId();
+   wxASSERT(id >= OnInstrument1ID && id <= OnInstrument4ID);
+   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+
+   int newWaveColor = id - OnInstrument1ID;
+
+   AudacityProject *const project = &mpData->project;
+
+   for (auto channel : TrackList::Channels(pTrack))
+      channel->SetWaveColorIndex(newWaveColor);
+
+   ProjectHistory::Get( *project )
+      .PushState(XO("Changed '%s' to %s")
+         .Format( pTrack->GetName(), GetWaveColorStr(newWaveColor) ),
+      XO("WaveColor Change"));
+
+   using namespace RefreshCode;
+   mpData->result = RefreshAll | FixScrollbars;
+}
+
+namespace {
+PopupMenuTable::AttachedItem sAttachment{
+   GetWaveTrackMenuTable(),
+   { "SubViews/Extra" },
+   std::make_unique<PopupMenuSection>( "WaveColor",
+      // Conditionally add sub-menu for wave color, if showing waveform
+      PopupMenuTable::Computed< WaveTrackPopupMenuTable >(
+         []( WaveTrackPopupMenuTable &table ) -> Registry::BaseItemPtr {
+            const auto pTrack = &table.FindWaveTrack();
+            const auto &view = WaveTrackView::Get( *pTrack );
+            const auto displays = view.GetDisplays();
+            bool hasWaveform = (displays.end() != std::find(
+               displays.begin(), displays.end(),
+               WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
+            ) );
+            if( hasWaveform )
+               return Registry::Shared( WaveColorMenuTable::Instance()
+                  .Get( table.mpData ) );
+            else
+               return nullptr;
+         } ) )
+};
+}
+

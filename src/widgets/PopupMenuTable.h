@@ -109,6 +109,7 @@ public:
    PopupMenuTable( const Identifier &id, const TranslatableString &caption = {} )
       : mId{ id }
       , mCaption{ caption }
+      , mRegistry{ std::make_unique<Registry::TransparentGroupItem<>>( mId ) }
    {}
 
    // Optional pUserData gets passed to the InitUserData routines of tables.
@@ -118,6 +119,14 @@ public:
 
    const Identifier &Id() const { return mId; }
    const TranslatableString &Caption() const { return mCaption; }
+   const Registry::GroupItem *GetRegistry() const { return mRegistry.get(); }
+
+   // Typically statically constructed:
+   struct AttachedItem {
+      AttachedItem( PopupMenuTable &table,
+         const Registry::Placement &placement, Registry::BaseItemPtr pItem )
+      { table.RegisterItem( placement, std::move( pItem ) ); }
+   };
 
    // menu must have been built by BuildMenu
    // More items get added to the end of it
@@ -131,6 +140,26 @@ public:
          Populate();
       return mTop;
    }
+
+   // Forms a computed item, which may be omitted when function returns null
+   // and thus can be a conditional item
+   template< typename Table >
+   static Registry::BaseItemPtr Computed(
+      const std::function< Registry::BaseItemPtr( Table& ) > &factory )
+   {
+      using namespace Registry;
+      return std::make_unique< ComputedItem >(
+         [factory]( Visitor &baseVisitor ){
+            auto &visitor = static_cast< PopupMenuVisitor& >( baseVisitor );
+            auto &table =  static_cast< Table& >( visitor.mTable );
+            return factory( table );
+         }
+      );
+   }
+
+private:
+   void RegisterItem(
+      const Registry::Placement &placement, Registry::BaseItemPtr pItem );
 
 protected:
    virtual void Populate() = 0;
@@ -168,31 +197,30 @@ protected:
    std::vector< Registry::GroupItem* > mStack;
    Identifier mId;
    TranslatableString mCaption;
+   std::unique_ptr<Registry::GroupItem> mRegistry;
 };
 
 // A "CRTP" class that injects a convenience function, which appends a menu item
 // computed lazily by a function that is passed the table (after it has stored
 // its user data)
-template< typename Derived >
-class ComputedPopupMenuTable : public PopupMenuTable
+template< typename Derived, typename Base = PopupMenuTable >
+class ComputedPopupMenuTable : public Base
 {
 public:
-   using PopupMenuTable::PopupMenuTable;
-   using PopupMenuTable::Append;
+   using Base::Base;
+   using Base::Append;
 
    // Appends a computed item, which may be omitted when function returns null
    // and thus can be a conditional item
    using Factory = std::function< Registry::BaseItemPtr( Derived& ) >;
+   static Registry::BaseItemPtr Computed( const Factory &factory )
+   {
+      return Base::Computed( factory );
+   }
+
    void Append( const Factory &factory )
    {
-      using namespace Registry;
-      Append( std::make_unique< ComputedItem >(
-         [factory]( Visitor &baseVisitor ){
-            auto &visitor = static_cast< PopupMenuVisitor& >( baseVisitor );
-            auto &table =  static_cast< Derived& >( visitor.mTable );
-            return factory( table );
-         }
-      ) );
+      Append( Computed( factory ) );
    }
 };
 

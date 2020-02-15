@@ -665,3 +665,144 @@ static const WaveTrackSubViews::RegisteredFactory key{
       return std::make_shared< SpectrumView >( view );
    }
 };
+
+// The following attaches the spectrogram settings item to the wave track popup
+// menu.  It is appropriate only to spectrum view and so is kept in this
+// source file with the rest of the spectrum view implementation.
+#include "WaveTrackControls.h"
+#include "../../../../AudioIOBase.h"
+#include "../../../../Menus.h"
+#include "../../../../ProjectHistory.h"
+#include "../../../../RefreshCode.h"
+#include "../../../../prefs/PrefsDialog.h"
+#include "../../../../prefs/SpectrumPrefs.h"
+#include "../../../../widgets/AudacityMessageBox.h"
+#include "../../../../widgets/PopupMenuTable.h"
+
+namespace {
+struct SpectrogramSettingsHandler : PopupMenuHandler {
+
+   PlayableTrackControls::InitMenuData *mpData{};
+   static SpectrogramSettingsHandler &Instance()
+   {
+      static SpectrogramSettingsHandler instance;
+      return instance;
+   }
+
+   void OnSpectrogramSettings(wxCommandEvent &);
+
+   void InitUserData(void *pUserData) override
+   {
+      mpData = static_cast< PlayableTrackControls::InitMenuData* >(pUserData);
+   }
+
+   void DestroyMenu() override
+   {
+      mpData = nullptr;
+   }
+};
+
+void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
+{
+   class ViewSettingsDialog final : public PrefsDialog
+   {
+   public:
+      ViewSettingsDialog(wxWindow *parent, AudacityProject &project,
+         const TranslatableString &title, PrefsDialog::Factories &factories,
+         int page)
+         : PrefsDialog(parent, &project, title, factories)
+         , mPage(page)
+      {
+      }
+
+      long GetPreferredPage() override
+      {
+         return mPage;
+      }
+
+      void SavePreferredPage() override
+      {
+      }
+
+   private:
+      const int mPage;
+   };
+
+   auto gAudioIO = AudioIOBase::Get();
+   if (gAudioIO->IsBusy()){
+      AudacityMessageBox(
+         XO(
+"To change Spectrogram Settings, stop any\n playing or recording first."),
+         XO("Stop the Audio First"),
+         wxOK | wxICON_EXCLAMATION | wxCENTRE);
+      return;
+   }
+
+   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+
+   PrefsDialog::Factories factories;
+   // factories.push_back(WaveformPrefsFactory( pTrack ));
+   factories.push_back(SpectrumPrefsFactory( pTrack ));
+   const int page =
+      // (pTrack->GetDisplay() == WaveTrackViewConstants::Spectrum) ? 1 :
+      0;
+
+   auto title = XO("%s:").Format( pTrack->GetName() );
+   ViewSettingsDialog dialog(
+      mpData->pParent, mpData->project, title, factories, page);
+
+   if (0 != dialog.ShowModal()) {
+      // Redraw
+      AudacityProject *const project = &mpData->project;
+      ProjectHistory::Get( *project ).ModifyState(true);
+      //Bug 1725 Toolbar was left greyed out.
+      //This solution is overkill, but does fix the problem and is what the
+      //prefs dialog normally does.
+      MenuCreator::RebuildAllMenuBars();
+      mpData->result = RefreshCode::RefreshAll;
+   }
+}
+
+PopupMenuTable::AttachedItem sAttachment{
+   GetWaveTrackMenuTable(),
+   { "SubViews/Extra" },
+   std::make_unique<PopupMenuSection>( "SpectrogramSettings",
+      // Conditionally add menu item for settings, if showing spectrum
+      PopupMenuTable::Computed< WaveTrackPopupMenuTable >(
+         []( WaveTrackPopupMenuTable &table ) -> Registry::BaseItemPtr {
+            using Entry = PopupMenuTable::Entry;
+            static const int OnSpectrogramSettingsID =
+            GetWaveTrackMenuTable().ReserveId();
+
+            const auto pTrack = &table.FindWaveTrack();
+            const auto &view = WaveTrackView::Get( *pTrack );
+            const auto displays = view.GetDisplays();
+            bool hasSpectrum = (displays.end() != std::find(
+               displays.begin(), displays.end(),
+               WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
+            ) );
+            if( hasSpectrum )
+               // In future, we might move this to the context menu of the
+               // Spectrum vertical ruler.
+               // (But the latter won't be satisfactory without a means to
+               // open that other context menu with keystrokes only, and that
+               // would require some notion of a focused sub-view.)
+               return std::make_unique<Entry>( "SpectrogramSettings",
+                  Entry::Item,
+                  OnSpectrogramSettingsID,
+                  XO("S&pectrogram Settings..."),
+                  (wxCommandEventFunction)
+                     (&SpectrogramSettingsHandler::OnSpectrogramSettings),
+                  SpectrogramSettingsHandler::Instance(),
+                  []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+                     // Bug 1253.  Shouldn't open preferences if audio is busy.
+                     // We can't change them on the fly yet anyway.
+                     auto gAudioIO = AudioIOBase::Get();
+                     menu.Enable(id, !gAudioIO->IsBusy());
+                  } );
+            else
+               return nullptr;
+         } ) )
+};
+}
+
