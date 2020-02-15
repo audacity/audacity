@@ -75,6 +75,12 @@ struct WaveTrackPopupMenuTable : public PopupMenuTable
    using PopupMenuTable::PopupMenuTable;
    PlayableTrackControls::InitMenuData *mpData{};
    WaveTrack &FindWaveTrack () const;
+   int ReserveId() { return mNextId++; }
+protected:
+   int mNextId = 0;
 };
+
+// Expose the wave track menu table to registration of menu items
+WaveTrackPopupMenuTable &GetWaveTrackMenuTable();
 
 #endif

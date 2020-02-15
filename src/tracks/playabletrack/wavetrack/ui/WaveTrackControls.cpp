@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackSliderHandles.h"
 
 #include "WaveTrackView.h"
+#include "WaveTrackViewConstants.h"
 #include "../../../../AudioIOBase.h"
 #include "../../../../CellularPanel.h"
 #include "../../../../Menus.h"
@@ -33,9 +34,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../effects/RealtimeEffectManager.h"
 #include "../../../../ondemand/ODManager.h"
 #include "../../../../prefs/PrefsDialog.h"
-#include "../../../../prefs/SpectrumPrefs.h"
 #include "../../../../prefs/ThemePrefs.h"
-#include "../../../../prefs/WaveformPrefs.h"
 #include "../../../../widgets/AudacityMessageBox.h"
 
 #include <wx/combobox.h>
@@ -116,23 +115,20 @@ enum {
 
    OnSetDisplayId, lastDisplayId = (OnSetDisplayId + reserveDisplays - 1),
 
-   OnSpectrogramSettingsID,
-
    OnChannelLeftID,
    OnChannelRightID,
    OnChannelMonoID,
 
    OnMergeStereoID,
-   OnInstrument1ID,
-   OnInstrument2ID,
-   OnInstrument3ID,
-   OnInstrument4ID,
 
    OnSwapChannelsID,
    OnSplitStereoID,
    OnSplitStereoMonoID,
 
    ChannelMenuID,
+
+   // Range of ids for registered items -- keep this last!
+   FirstAttachedItemId,
 };
 
 
@@ -155,94 +151,6 @@ PopupMenuTableEntry::InitFunction initFn( const ValueFinder &findValue )
    };
 };
 }
-
-//=============================================================================
-// Table class for a sub-menu
-struct WaveColorMenuTable : PopupMenuTable
-{
-   WaveColorMenuTable()
-      : PopupMenuTable( "WaveColor", XO("&Wave Color") )
-   {}
-   DECLARE_POPUP_MENU(WaveColorMenuTable);
-
-   static WaveColorMenuTable &Instance();
-
-   void InitUserData(void *pUserData) override;
-
-   void DestroyMenu() override
-   {
-      mpData = NULL;
-   }
-
-   PlayableTrackControls::InitMenuData *mpData{};
-
-   static int IdOfWaveColor(int WaveColor);
-   void OnWaveColorChange(wxCommandEvent & event);
-};
-
-WaveColorMenuTable &WaveColorMenuTable::Instance()
-{
-   static WaveColorMenuTable instance;
-   return instance;
-}
-
-void WaveColorMenuTable::InitUserData(void *pUserData)
-{
-   mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
-}
-
-const TranslatableString GetWaveColorStr(int colorIndex)
-{
-   return XO("Instrument %i").Format( colorIndex+1 );
-}
-
-BEGIN_POPUP_MENU(WaveColorMenuTable)
-   static const auto fn = initFn< WaveColorMenuTable >(
-      []( WaveTrack &track ){
-         return IdOfWaveColor( track.GetWaveColorIndex() );
-      }
-   );
-
-   AppendRadioItem( "Instrument1", OnInstrument1ID,
-      GetWaveColorStr(0), POPUP_MENU_FN( OnWaveColorChange ), fn );
-   AppendRadioItem( "Instrument2", OnInstrument2ID,
-      GetWaveColorStr(1), POPUP_MENU_FN( OnWaveColorChange ), fn );
-   AppendRadioItem( "Instrument3", OnInstrument3ID,
-      GetWaveColorStr(2), POPUP_MENU_FN( OnWaveColorChange ), fn );
-   AppendRadioItem( "Instrument4", OnInstrument4ID,
-      GetWaveColorStr(3), POPUP_MENU_FN( OnWaveColorChange ), fn );
-
-END_POPUP_MENU()
-
-/// Converts a WaveColor enumeration to a wxWidgets menu item Id.
-int WaveColorMenuTable::IdOfWaveColor(int WaveColor)
-{  return OnInstrument1ID + WaveColor;}
-
-/// Handles the selection from the WaveColor submenu of the
-/// track menu.
-void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
-{
-   int id = event.GetId();
-   wxASSERT(id >= OnInstrument1ID && id <= OnInstrument4ID);
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-
-   int newWaveColor = id - OnInstrument1ID;
-
-   AudacityProject *const project = &mpData->project;
-
-   for (auto channel : TrackList::Channels(pTrack))
-      channel->SetWaveColorIndex(newWaveColor);
-
-   ProjectHistory::Get( *project )
-      .PushState(XO("Changed '%s' to %s")
-         .Format( pTrack->GetName(), GetWaveColorStr(newWaveColor) ),
-      XO("WaveColor Change"));
-
-   using namespace RefreshCode;
-   mpData->result = RefreshAll | FixScrollbars;
-}
-
-
 
 
 //=============================================================================
@@ -552,6 +460,8 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
    mpData->result = RefreshAll | FixScrollbars;
 }
 
+static const auto MenuPathStart = wxT("WaveTrackMenu");
+
 //=============================================================================
 // Class defining common command handlers for mono and stereo tracks
 struct WaveTrackMenuTable
@@ -561,21 +471,22 @@ struct WaveTrackMenuTable
 
    WaveTrackMenuTable()
       : ComputedPopupMenuTable< WaveTrackMenuTable, WaveTrackPopupMenuTable >{
-         "WaveTrack" }
-   {}
+         MenuPathStart }
+   {
+      mNextId = FirstAttachedItemId;
+   }
 
    void InitUserData(void *pUserData) override;
 
    void DestroyMenu() override
    {
-      mpData = nullptr;
+      //mpData = nullptr;
    }
 
    DECLARE_POPUP_MENU(WaveTrackMenuTable);
 
    void OnMultiView(wxCommandEvent & event);
    void OnSetDisplay(wxCommandEvent & event);
-   void OnSpectrogramSettings(wxCommandEvent & event);
 
    void OnChannelChange(wxCommandEvent & event);
    void OnMergeStereo(wxCommandEvent & event);
@@ -694,54 +605,9 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          } );
          ++id;
       }
+      BeginSection( "Extra" );
+      EndSection();
    EndSection();
-
-   // Conditionally add sub-menu for wave color, if showing waveform
-   Append( []( My &table ) -> Registry::BaseItemPtr {
-      const auto pTrack = &table.FindWaveTrack();
-      const auto &view = WaveTrackView::Get( *pTrack );
-      const auto displays = view.GetDisplays();
-      bool hasWaveform = (displays.end() != std::find(
-         displays.begin(), displays.end(),
-         WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
-      ) );
-      if( hasWaveform )
-         return std::make_unique<PopupMenuSection>( "WaveColor",
-            Registry::Shared( WaveColorMenuTable::Instance()
-               .Get( table.mpData ) ) );
-      else
-         return nullptr;
-   } );
-
-   // Conditionally add sub-menu for spectrogram settings, if showing spectrum
-   Append( []( My &table ) -> Registry::BaseItemPtr {
-      const auto pTrack = &table.FindWaveTrack();
-      const auto &view = WaveTrackView::Get( *pTrack );
-      const auto displays = view.GetDisplays();
-      bool hasSpectrum = (displays.end() != std::find(
-         displays.begin(), displays.end(),
-         WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
-      ) );
-      if( hasSpectrum )
-         // In future, we might move this to the context menu of the
-         // Spectrum vertical ruler.
-         // (But the latter won't be satisfactory without a means to
-         // open that other context menu with keystrokes only, and that
-         // would require some notion of a focused sub-view.)
-         return std::make_unique<PopupMenuSection>( "SpectrogramSettings",
-            std::make_unique<Entry>( "SpectrogramSettings", Entry::Item,
-               OnSpectrogramSettingsID,
-               XO("S&pectrogram Settings..."),
-               POPUP_MENU_FN( OnSpectrogramSettings ), table,
-               []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-                  // Bug 1253.  Shouldn't open preferences if audio is busy.
-                  // We can't change them on the fly yet anyway.
-                  auto gAudioIO = AudioIOBase::Get();
-                  menu.Enable(id, !gAudioIO->IsBusy());
-               } ) );
-      else
-         return nullptr;
-   } );
 
    BeginSection( "Channels" );
    // If these are enabled again, choose a hot key for Mono that does not conflict
@@ -882,67 +748,6 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
          using namespace RefreshCode;
          mpData->result = RefreshAll | UpdateVRuler;
       }
-   }
-}
-
-void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
-{
-   class ViewSettingsDialog final : public PrefsDialog
-   {
-   public:
-      ViewSettingsDialog(wxWindow *parent, AudacityProject &project,
-         const TranslatableString &title, PrefsDialog::Factories &factories,
-         int page)
-         : PrefsDialog(parent, &project, title, factories)
-         , mPage(page)
-      {
-      }
-
-      long GetPreferredPage() override
-      {
-         return mPage;
-      }
-
-      void SavePreferredPage() override
-      {
-      }
-
-   private:
-      const int mPage;
-   };
-
-   auto gAudioIO = AudioIOBase::Get();
-   if (gAudioIO->IsBusy()){
-      AudacityMessageBox(
-         XO(
-"To change Spectrogram Settings, stop any\n playing or recording first."),
-         XO("Stop the Audio First"),
-         wxOK | wxICON_EXCLAMATION | wxCENTRE);
-      return;
-   }
-
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-
-   PrefsDialog::Factories factories;
-   // factories.push_back(WaveformPrefsFactory( pTrack ));
-   factories.push_back(SpectrumPrefsFactory( pTrack ));
-   const int page =
-      // (pTrack->GetDisplay() == WaveTrackViewConstants::Spectrum) ? 1 :
-      0;
-
-   auto title = XO("%s:").Format( pTrack->GetName() );
-   ViewSettingsDialog dialog(
-      mpData->pParent, mpData->project, title, factories, page);
-
-   if (0 != dialog.ShowModal()) {
-      // Redraw
-      AudacityProject *const project = &mpData->project;
-      ProjectHistory::Get( *project ).ModifyState(true);
-      //Bug 1725 Toolbar was left greyed out.
-      //This solution is overkill, but does fix the problem and is what the
-      //prefs dialog normally does.
-      MenuCreator::RebuildAllMenuBars();
-      mpData->result = RefreshCode::RefreshAll;
    }
 }
 
@@ -1143,9 +948,20 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
 //=============================================================================
 PopupMenuTable *WaveTrackControls::GetMenuExtension(Track * pTrack)
 {
+   static Registry::OrderingPreferenceInitializer init{
+      MenuPathStart,
+      {
+         {wxT("/SubViews/Extra"), wxT("WaveColor,SpectrogramSettings")},
+      }
+   };
 
    WaveTrackMenuTable & result = WaveTrackMenuTable::Instance();
    return &result;
+}
+
+WaveTrackPopupMenuTable &GetWaveTrackMenuTable()
+{
+   return WaveTrackMenuTable::Instance();
 }
 
 // drawing related
