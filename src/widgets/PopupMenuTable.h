@@ -141,6 +141,22 @@ public:
       return mTop;
    }
 
+   // Forms a computed item, which may be omitted when function returns null
+   // and thus can be a conditional item
+   template< typename Table >
+   static Registry::BaseItemPtr Computed(
+      const std::function< Registry::BaseItemPtr( Table& ) > &factory )
+   {
+      using namespace Registry;
+      return std::make_unique< ComputedItem >(
+         [factory]( Visitor &baseVisitor ){
+            auto &visitor = static_cast< PopupMenuVisitor& >( baseVisitor );
+            auto &table =  static_cast< Table& >( visitor.mTable );
+            return factory( table );
+         }
+      );
+   }
+
 private:
    void RegisterItem(
       const Registry::Placement &placement, Registry::BaseItemPtr pItem );
@@ -197,16 +213,14 @@ public:
    // Appends a computed item, which may be omitted when function returns null
    // and thus can be a conditional item
    using Factory = std::function< Registry::BaseItemPtr( Derived& ) >;
+   static Registry::BaseItemPtr Computed( const Factory &factory )
+   {
+      return Base::Computed( factory );
+   }
+
    void Append( const Factory &factory )
    {
-      using namespace Registry;
-      Append( std::make_unique< ComputedItem >(
-         [factory]( Visitor &baseVisitor ){
-            auto &visitor = static_cast< PopupMenuVisitor& >( baseVisitor );
-            auto &table =  static_cast< Derived& >( visitor.mTable );
-            return factory( table );
-         }
-      ) );
+      Append( Computed( factory ) );
    }
 };
 
