@@ -30,7 +30,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelAx.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"
-#include "../../../../widgets/PopupMenuTable.h"
 #include "../../../../effects/RealtimeEffectManager.h"
 #include "../../../../ondemand/ODManager.h"
 #include "../../../../prefs/PrefsDialog.h"
@@ -86,6 +85,11 @@ std::vector<UIHandlePtr> WaveTrackControls::HitTest
 
    return PlayableTrackControls::HitTest(st, pProject);
 }
+
+WaveTrack &WaveTrackPopupMenuTable::FindWaveTrack() const
+{
+   return *static_cast< WaveTrack* >( mpData->pTrack );
+};
 
 enum {
    reserveDisplays = 100,
@@ -550,12 +554,14 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
 
 //=============================================================================
 // Class defining common command handlers for mono and stereo tracks
-struct WaveTrackMenuTable : ComputedPopupMenuTable< WaveTrackMenuTable >
+struct WaveTrackMenuTable
+   : ComputedPopupMenuTable< WaveTrackMenuTable, WaveTrackPopupMenuTable >
 {
    static WaveTrackMenuTable &Instance();
 
    WaveTrackMenuTable()
-      : ComputedPopupMenuTable< WaveTrackMenuTable >{ "WaveTrack" }
+      : ComputedPopupMenuTable< WaveTrackMenuTable, WaveTrackPopupMenuTable >{
+         "WaveTrack" }
    {}
 
    void InitUserData(void *pUserData) override;
@@ -566,8 +572,6 @@ struct WaveTrackMenuTable : ComputedPopupMenuTable< WaveTrackMenuTable >
    }
 
    DECLARE_POPUP_MENU(WaveTrackMenuTable);
-
-   PlayableTrackControls::InitMenuData *mpData{};
 
    void OnMultiView(wxCommandEvent & event);
    void OnSetDisplay(wxCommandEvent & event);
@@ -608,15 +612,11 @@ static std::vector<WaveTrackSubViewType> AllTypes()
 
 BEGIN_POPUP_MENU(WaveTrackMenuTable)
    // Functions usable in callbacks to check and disable items
-   static const auto findTrack =
-   []( PopupMenuHandler &handler ) -> WaveTrack & {
-      return *static_cast< WaveTrack* >(
-         static_cast< WaveTrackMenuTable& >( handler ).mpData->pTrack);
-   };
-
    static const auto isMono =
    []( PopupMenuHandler &handler ) -> bool {
-      return 1 == TrackList::Channels( &findTrack( handler ) ).size();
+      auto &track =
+         static_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
+      return 1 == TrackList::Channels( &track ).size();
    };
 
    static const auto isUnsafe =
@@ -637,7 +637,8 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                POPUP_MENU_FN( OnMultiView ),
                table,
                []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-                  auto &track = findTrack( handler );
+                  auto &table = static_cast< WaveTrackMenuTable& >( handler );
+                  auto &track = table.FindWaveTrack();
                   const auto &view = WaveTrackView::Get( track );
                   menu.Check( id, view.GetMultiView() );
                } );
@@ -662,7 +663,9 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                      (std::find( begin, allTypes.end(), type ) - begin);
                };
 
-               auto &track = findTrack( handler );
+               auto &table = static_cast< WaveTrackMenuTable& >( handler );
+               auto &track = table.FindWaveTrack();
+
                const auto &view = WaveTrackView::Get( track );
 
                const auto displays = view.GetDisplays();
@@ -680,7 +683,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
             };
          };
          Append( [type, id]( My &table ) -> Registry::BaseItemPtr {
-            const auto pTrack = &findTrack( table );
+            const auto pTrack = &table.FindWaveTrack();
             const auto &view = WaveTrackView::Get( *pTrack );
             const auto itemType =
                view.GetMultiView() ? Entry::CheckItem : Entry::RadioItem;
@@ -695,7 +698,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 
    // Conditionally add sub-menu for wave color, if showing waveform
    Append( []( My &table ) -> Registry::BaseItemPtr {
-      const auto pTrack = &findTrack( table );
+      const auto pTrack = &table.FindWaveTrack();
       const auto &view = WaveTrackView::Get( *pTrack );
       const auto displays = view.GetDisplays();
       bool hasWaveform = (displays.end() != std::find(
@@ -712,7 +715,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 
    // Conditionally add sub-menu for spectrogram settings, if showing spectrum
    Append( []( My &table ) -> Registry::BaseItemPtr {
-      const auto pTrack = &findTrack( table );
+      const auto pTrack = &table.FindWaveTrack();
       const auto &view = WaveTrackView::Get( *pTrack );
       const auto displays = view.GetDisplays();
       bool hasSpectrum = (displays.end() != std::find(
@@ -772,7 +775,8 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                AudacityProject &project =
                   static_cast< WaveTrackMenuTable& >( handler ).mpData->project;
                auto &tracks = TrackList::Get( project );
-               auto &track = findTrack( handler );
+               auto &table = static_cast< WaveTrackMenuTable& >( handler );
+               auto &track = table.FindWaveTrack();
                auto next = * ++ tracks.Find(&track);
                canMakeStereo =
                   (next &&
@@ -786,8 +790,10 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       AppendItem( "Swap", OnSwapChannelsID, XO("Swap Stereo &Channels"),
          POPUP_MENU_FN( OnSwapChannels ),
          []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+            auto &track =
+               static_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
             bool isStereo =
-               2 == TrackList::Channels( &findTrack( handler ) ).size();
+               2 == TrackList::Channels( &track ).size();
             menu.Enable( id, isStereo && !isUnsafe( handler ) );
          }
       );
@@ -1435,3 +1441,4 @@ auto GetDefaultWaveTrackHeight::Implementation() -> Function {
    };
 }
 static GetDefaultWaveTrackHeight registerGetDefaultWaveTrackHeight;
+

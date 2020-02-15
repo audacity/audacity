@@ -187,12 +187,12 @@ protected:
 // A "CRTP" class that injects a convenience function, which appends a menu item
 // computed lazily by a function that is passed the table (after it has stored
 // its user data)
-template< typename Derived >
-class ComputedPopupMenuTable : public PopupMenuTable
+template< typename Derived, typename Base = PopupMenuTable >
+class ComputedPopupMenuTable : public Base
 {
 public:
-   using PopupMenuTable::PopupMenuTable;
-   using PopupMenuTable::Append;
+   using Base::Base;
+   using Base::Append;
 
    // Appends a computed item, which may be omitted when function returns null
    // and thus can be a conditional item
