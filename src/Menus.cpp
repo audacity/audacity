@@ -929,12 +929,12 @@ auto CollectedItems::MergeItems(
 void VisitItem(
    Registry::Visitor &visitor, CollectedItems &collection,
    Path &path, BaseItem *pItem,
-   GroupItem *pToMerge, const OrderingHint &hint,
+   const GroupItem *pToMerge, const OrderingHint &hint,
    bool &doFlush );
 void VisitItems(
    Registry::Visitor &visitor, CollectedItems &collection,
    Path &path, GroupItem *pGroup,
-   GroupItem *pToMerge, const OrderingHint &hint,
+   const GroupItem *pToMerge, const OrderingHint &hint,
    bool &doFlush )
 {
    // Make a NEW collection for this subtree, sharing the memo cache
@@ -981,7 +981,7 @@ void VisitItems(
 void VisitItem(
    Registry::Visitor &visitor, CollectedItems &collection,
    Path &path, BaseItem *pItem,
-   GroupItem *pToMerge, const OrderingHint &hint,
+   const GroupItem *pToMerge, const OrderingHint &hint,
    bool &doFlush )
 {
    if (!pItem)
@@ -1009,7 +1009,7 @@ void VisitItem(
 
 namespace Registry {
 
-void Visit( Visitor &visitor, BaseItem *pTopItem, GroupItem *pRegistry )
+void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItem *pRegistry )
 {
    std::vector< BaseItemSharedPtr > computedItems;
    bool doFlush = false;

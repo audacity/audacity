@@ -641,7 +641,7 @@ namespace Registry {
    void Visit(
       Visitor &visitor,
       BaseItem *pTopItem,
-      GroupItem *pRegistry = nullptr );
+      const GroupItem *pRegistry = nullptr );
 
    // Typically a static object.  Constructor initializes certain preferences
    // if they are not present.  These preferences determine an extrinsic
