@@ -18,6 +18,7 @@
 #include "Compressor2.h"
 
 #include <math.h>
+#include <numeric>
 
 #include <wx/intl.h>
 #include <wx/valgen.h>
@@ -270,6 +271,9 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       plot = mGainPlot->GetPlotData(0);
       plot->pen = std::unique_ptr<wxPen>(
          safenew wxPen(AColor::WideEnvelopePen));
+      plot->xdata.resize(61);
+      plot->ydata.resize(61);
+      std::iota(plot->xdata.begin(), plot->xdata.end(), -60);
 
       mResponsePlot = S.MinSize( { 200, 200 } )
          .AddPlot({}, 0, 5, -0.2, 1.2, XO("s"), XO(""),
@@ -465,6 +469,46 @@ bool EffectCompressor2::TransferDataFromWindow()
 
 // EffectCompressor2 implementation
 
+void EffectCompressor2::InitGainCalculation()
+{
+   mMakeupGainDB = mMakeupGainPct / 100.0 *
+      -(mThresholdDB * (1.0 - 1.0 / mRatio));
+   mMakeupGain = DB_TO_LINEAR(mMakeupGainDB);
+}
+
+double EffectCompressor2::CompressorGain(double env)
+{
+   double kneeCond;
+   double envDB = LINEAR_TO_DB(env);
+
+   // envDB can become NaN is env is exactly zero.
+   // As solution, use a very low dB value to prevent NaN propagation.
+   if(isnan(envDB))
+      envDB = -200;
+
+   kneeCond = 2.0 * (envDB - mThresholdDB);
+   if(kneeCond < -mKneeWidthDB)
+   {
+      // Below threshold: only apply make-up gain
+      return mMakeupGain;
+   }
+   else if(kneeCond >= mKneeWidthDB)
+   {
+      // Above threshold: apply compression and make-up gain
+      return DB_TO_LINEAR(mThresholdDB +
+         (envDB - mThresholdDB) / mRatio + mMakeupGainDB - envDB);
+   }
+   else
+   {
+      // Within knee: apply interpolated compression and make-up gain
+      return DB_TO_LINEAR(
+         (1.0 / mRatio - 1.0)
+         * pow(envDB - mThresholdDB + mKneeWidthDB / 2.0, 2)
+         / (2.0 * mKneeWidthDB) + mMakeupGainDB);
+   }
+}
+
+
 void EffectCompressor2::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 {
    if(!mIgnoreGuiEvents)
@@ -474,14 +518,30 @@ void EffectCompressor2::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 
 void EffectCompressor2::UpdateUI()
 {
-   PlotData* plot;
-   plot = mGainPlot->GetPlotData(0);
-   plot->xdata = {-60, -40, 0};
-   plot->ydata = {-60, -40, -20};
-   mGainPlot->Refresh(false);
+   UpdateCompressorPlot();
 
+   // TODO: update plots
+   PlotData* plot;
    plot = mResponsePlot->GetPlotData(1);
    plot->xdata = {0, 2,   2, 3, 3,   5};
    plot->ydata = {0, 0.5, 1, 1, 0.5, 0};
    mResponsePlot->Refresh(false);
+}
+
+void EffectCompressor2::UpdateCompressorPlot()
+{
+   PlotData* plot;
+   plot = mGainPlot->GetPlotData(0);
+   wxASSERT(plot->xdata.size() == plot->ydata.size());
+
+   InitGainCalculation();
+   size_t xsize = plot->xdata.size();
+   for(size_t i = 0; i < xsize; ++i)
+      plot->ydata[i] = plot->xdata[i] +
+         LINEAR_TO_DB(CompressorGain(DB_TO_LINEAR(plot->xdata[i])));
+
+// XXX: accessibility but fails with TranslatableString required
+//   mGainPlot->SetName(wxString::Format(
+//      "Compressor gain reduction: %.1f dB", plot->ydata[xsize-1]));
+   mGainPlot->Refresh(false);
 }

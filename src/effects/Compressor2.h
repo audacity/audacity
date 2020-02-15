@@ -58,12 +58,14 @@ public:
 
 private:
    // EffectCompressor2 implementation
+   void InitGainCalculation();
+   double CompressorGain(double env);
 
    bool UpdateProgress();
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
+   void UpdateCompressorPlot();
 
-private:
    int    mAlgorithm;
    int    mCompressBy;
    bool   mStereoInd;
@@ -77,6 +79,10 @@ private:
    double    mLookbehindTime;
    double    mMakeupGainPct;
    double    mDryWetPct;
+
+   // cached intermediate values
+   double mMakeupGain;
+   double mMakeupGainDB;
 
    Plot* mGainPlot;
    Plot* mResponsePlot;
