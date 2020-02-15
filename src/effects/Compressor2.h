@@ -20,6 +20,7 @@
 
 #include "Effect.h"
 
+class Plot;
 class ShuttleGui;
 
 class EffectCompressor2 final : public Effect
@@ -77,6 +78,8 @@ private:
    double    mMakeupGainPct;
    double    mDryWetPct;
 
+   Plot* mGainPlot;
+   Plot* mResponsePlot;
    bool mIgnoreGuiEvents;
 
    DECLARE_EVENT_TABLE()
