@@ -5,7 +5,7 @@ cmake_minimum_required( VERSION 3.14 )
 # Don't allow in-source builds...no real reason, just
 # keeping those source trees nice and tidy.  :-)
 # (This can be removed if it becomes an issue.)
-if( EXISTS "lib-src" )
+if( "${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}" )
    message( FATAL_ERROR
       "In-source builds not allowed.\n"
       "Create a new directory and run cmake from there, i.e.:\n"
