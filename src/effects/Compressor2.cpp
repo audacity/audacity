@@ -22,6 +22,7 @@
 #include <wx/intl.h>
 #include <wx/valgen.h>
 
+#include "../AColor.h"
 #include "../Internat.h"
 #include "../Prefs.h"
 #include "../ProjectFileManager.h"
@@ -29,7 +30,9 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
+#include "../widgets/Plot.h"
 #include "../widgets/ProgressDialog.h"
+#include "../widgets/Ruler.h"
 #include "../widgets/SliderTextCtrl.h"
 
 #include "LoadEffects.h"
@@ -254,6 +257,40 @@ bool EffectCompressor2::Process()
 
 void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
 {
+   S.SetBorder(10);
+
+   S.StartHorizontalLay(wxEXPAND, true);
+   {
+      PlotData* plot;
+
+      mGainPlot = S.MinSize( { 200, 200 } )
+         .AddPlot({}, -60, 0, -60, 0, XO("dB"), XO("dB"),
+            Ruler::LinearDBFormat, Ruler::LinearDBFormat);
+
+      plot = mGainPlot->GetPlotData(0);
+      plot->pen = std::unique_ptr<wxPen>(
+         safenew wxPen(AColor::WideEnvelopePen));
+
+      mResponsePlot = S.MinSize( { 200, 200 } )
+         .AddPlot({}, 0, 5, -0.2, 1.2, XO("s"), XO(""),
+            Ruler::IntFormat, Ruler::RealFormat, 2);
+
+      plot = mResponsePlot->GetPlotData(0);
+      plot->pen = std::unique_ptr<wxPen>(
+         safenew wxPen(AColor::WideEnvelopePen));
+      plot->xdata = {0, 2, 2, 3, 3, 5};
+      plot->ydata = {0, 0, 1, 1, 0, 0};
+
+      plot = mResponsePlot->GetPlotData(1);
+      plot->pen = std::unique_ptr<wxPen>(
+         safenew wxPen(AColor::WideEnvelopePen));
+      plot->pen->SetColour(wxColor( 230,80,80 )); // Same color as TrackArtist RMS red.
+      plot->pen->SetWidth(2);
+   }
+   S.EndHorizontalLay();
+
+   S.SetBorder(5);
+
    S.StartStatic(XO("Algorithm"));
    {
       S.StartMultiColumn(2, wxALIGN_LEFT);
@@ -437,4 +474,14 @@ void EffectCompressor2::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 
 void EffectCompressor2::UpdateUI()
 {
+   PlotData* plot;
+   plot = mGainPlot->GetPlotData(0);
+   plot->xdata = {-60, -40, 0};
+   plot->ydata = {-60, -40, -20};
+   mGainPlot->Refresh(false);
+
+   plot = mResponsePlot->GetPlotData(1);
+   plot->xdata = {0, 2,   2, 3, 3,   5};
+   plot->ydata = {0, 0.5, 1, 1, 0.5, 0};
+   mResponsePlot->Refresh(false);
 }
