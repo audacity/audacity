@@ -613,7 +613,7 @@ bool NyquistEffect::Process()
       mDelegate.reset();
       return result;
    }
-   
+
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
    // they are skipped.  The reason is that when Nyquist calls out to a chain,
@@ -1410,6 +1410,16 @@ bool NyquistEffect::ProcessOne()
             "Nyquist returned nyx_error:\n%s", mDebugOutput.Translation());
       }
       return false;
+   }
+
+   if (rval == nyx_list) {
+      wxLogMessage("Nyquist returned nyx_list");
+      if (GetType() == EffectTypeTool) {
+         mProjectChanged = true;
+      } else {
+         Effect::MessageBox(XO("Nyquist returned a list.") );
+      }
+      return true;
    }
 
    if (rval == nyx_string) {

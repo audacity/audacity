@@ -24,9 +24,10 @@ extern "C"
       nyx_int,
       nyx_double,
       nyx_string,
-      nyx_labels
+      nyx_labels,
+      nyx_list
    } nyx_rval;
-   
+
    void        nyx_init();
    void        nyx_cleanup();
    void        nyx_set_xlisp_path(const char *path);
@@ -64,9 +65,9 @@ extern "C"
 
    char       *nyx_get_audio_name();
    void        nyx_set_audio_name(const char *name);
-   
+
    nyx_rval    nyx_eval_expression(const char *expr);
-   
+
    /** @brief Get the number of channels in the Nyquist audio object
     *
     * @return The positive integer number of audio channels in the
@@ -94,6 +95,6 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-   
+
 #endif /* __NYX__ */
 

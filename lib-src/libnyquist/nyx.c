@@ -87,7 +87,7 @@ typedef struct nyx_susp_struct {
 } nyx_susp_node, *nyx_susp_type;
 
 #if defined(NYX_DEBUG_COPY) && NYX_DEBUG_COPY
-static const char *_types_[] = 
+static const char *_types_[] =
 {
    "FREE_NODE",
    "SUBR",
@@ -393,7 +393,7 @@ LOCAL void nyx_restore_obarray()
             }
          }
 
-         // If we didn't find the symbol in the original obarray, then it 
+         // If we didn't find the symbol in the original obarray, then it
          // must've been added and must be removed from the current obarray.
          // Exception: if the new symbol is a property symbol of *scratch*,
          // then allow the symbol to stay; otherwise, property lookups will
@@ -458,7 +458,7 @@ void nyx_init()
       nyx_audio_name = NULL;
       nyx_os_cb = NULL;
       nyx_output_cb = NULL;
-      
+
       nyx_first_time = 0;
 
 #if defined(NYX_FULL_COPY) && NYX_FULL_COPY
@@ -467,7 +467,7 @@ void nyx_init()
 #else
       // Permanently protect the original obarray value.  This is needed since
       // it would be unreferenced in the new obarray and would be garbage
-      // collected.  We want to keep it around so we can make copies of it to 
+      // collected.  We want to keep it around so we can make copies of it to
       // refresh the execution state.
       xlprot1(nyx_obarray);
       nyx_obarray = getvalue(obarray);
@@ -686,7 +686,7 @@ void nyx_set_input_audio(nyx_audio_callback callback,
       susp->susp.sr = rate;
       susp->susp.t0 = 0.0;
       susp->susp.log_stop_cnt = 0;
-      
+
       snd = sound_create((snd_susp_type) susp, 0.0, rate, 1.0);
       if (num_channels > 1) {
          setelement(val, ch, cvsound(snd));
@@ -775,7 +775,7 @@ nyx_rval nyx_get_type(LVAL expr)
       case FIXNUM:
          nyx_result_type = nyx_int;
       break;
-         
+
       case FLONUM:
          nyx_result_type = nyx_double;
       break;
@@ -804,6 +804,8 @@ nyx_rval nyx_get_type(LVAL expr)
             label track */
          if (nyx_is_labels(expr)) {
             nyx_result_type = nyx_labels;
+         } else {
+            nyx_result_type = nyx_list;
          }
       }
       break;
@@ -1218,7 +1220,7 @@ void osinit(const char *banner)
 }
 
 /* osfinish - clean up before returning to the operating system */
-void osfinish(void) 
+void osfinish(void)
 {
 }
 
@@ -1244,7 +1246,7 @@ FILE *osaopen(const char *name, const char *mode)
 FILE *osbopen(const char *name, const char *mode)
 {
    char bmode[10];
-   
+
    strncpy(bmode, mode, 8);
    strcat(bmode, "b");
 
@@ -1289,9 +1291,9 @@ int osbputc(int ch, FILE *fp)
 
 /* ostputc - put a character to the terminal */
 void ostputc(int ch)
-{     
+{
    oscheck();		/* check for control characters */
-   
+
    if (nyx_output_cb) {
       nyx_output_cb(ch, nyx_output_ud);
    }
