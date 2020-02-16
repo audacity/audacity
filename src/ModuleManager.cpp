@@ -153,10 +153,12 @@ bool Module::Load()
    return false;
 }
 
+// This isn't yet used?
 void Module::Unload()
 {
    if (mLib->IsLoaded()) {
-      mDispatch(ModuleTerminate);
+      if (mDispatch)
+         mDispatch(ModuleTerminate);
    }
 
    mLib->Unload();
