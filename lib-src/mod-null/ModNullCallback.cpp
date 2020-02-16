@@ -136,12 +136,38 @@ const wxChar * GetVersionString()
    return AUDACITY_VERSION_STRING;
 }
 
+namespace {
+void RegisterMenuItems()
+{
+   // Get here only after the module version check passes
+   using namespace MenuTable;
+   // We add two new commands into the Analyze menu.
+   static AttachedItem sAttachment{ wxT("Analyze"),
+      ( FinderScope( ident ), Section( wxT("NullModule"),
+         Command(
+            _T("A New Command"), // internal name
+            XO("1st Experimental Command..."), //displayed name
+            ModNullFN( OnFuncFirst ),
+            AudioIONotBusyFlag() ),
+         Command(
+            _T("Another New Command"),
+            XO("2nd Experimental Command"),
+            ModNullFN( OnFuncSecond ),
+            AudioIONotBusyFlag() )
+      ) )
+   };
+}
+}
+
 // This is the function that connects us to Audacity.
 extern int DLL_API ModuleDispatch(ModuleDispatchTypes type);
 int ModuleDispatch(ModuleDispatchTypes type)
 {
    switch (type)
    {
+   case ModuleInitialize:
+      RegisterMenuItems();
+      break;
    case AppInitialized:
       break;
    case AppQuiting:
@@ -151,26 +177,6 @@ int ModuleDispatch(ModuleDispatchTypes type)
    }
 
    return 1;
-}
-
-// Register our extra menu items
-namespace {
-   using namespace MenuTable;
-   // We add two new commands into the Analyze menu.
-   AttachedItem sAttachment{ wxT("Analyze"),
-      ( FinderScope( ident ), Section( wxT("NullModule"),
-         Command(
-            _T("A New Command"), // internal name
-            XO("1st Experimental Command..."), //displayed name
-            ModNullFN( OnFuncFirst ),
-            AudioIONotBusyFlag() ),
-         Command( 
-            _T("Another New Command"), 
-            XO("2nd Experimental Command"),
-            ModNullFN( OnFuncSecond ),
-            AudioIONotBusyFlag() )
-      ) )
-   };
 }
 
 //Example code commented out.

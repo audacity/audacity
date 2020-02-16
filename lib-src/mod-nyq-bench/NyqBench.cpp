@@ -140,14 +140,29 @@ and replace the main project window with our own wxFrame.
 
 */
 
+namespace {
+CommandHandlerObject &findme(AudacityProject&)
+{
+   return *NyqBench::GetBench();
+}
+
+void RegisterMenuItems()
+{
+  // Get here only after the module version check passes
+   using namespace MenuTable;
+   static AttachedItem sAttachment{ wxT("Tools"),
+      ( FinderScope( findme ), Section( wxT("NyquistWorkBench"),
+         Command( wxT("NyqBench"), XO("&Nyquist Workbench..."),
+            static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench),
+            AudioIONotBusyFlag())
+      ) )
+   };
+}
+}
+
 extern "C"
 {
    static NyqBench *gBench = NULL;
-
-   static CommandHandlerObject &findme(AudacityProject&)
-   {
-      return *NyqBench::GetBench();
-   }
 
    #ifdef _MSC_VER
       #define DLL_API _declspec(dllexport)
@@ -171,6 +186,9 @@ extern "C"
    // is called by Audacity to initialize/terminate the module
    int ModuleDispatch(ModuleDispatchTypes type){
       switch (type){
+         case ModuleInitialize:
+            RegisterMenuItems();
+            break;
          case AppQuiting: {
             //It is perfectly OK for gBench to be NULL.
             //Can happen if the menu item was never invoked.
@@ -187,18 +205,6 @@ extern "C"
       return 1;
    }
 };
-
-// Register our extra menu item
-namespace {
-   using namespace MenuTable;
-   AttachedItem sAttachment{ wxT("Tools"),
-      ( FinderScope( findme ), Section( wxT("NyquistWorkBench"),
-         Command( wxT("NyqBench"), XO("&Nyquist Workbench..."),
-            static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench),
-            AudioIONotBusyFlag())
-      ) )
-   };
-}
 
 //----------------------------------------------------------------------------
 // NyqTextCtrl
