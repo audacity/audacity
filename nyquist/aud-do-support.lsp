@@ -1,7 +1,7 @@
 ;;; A collection of helper functions and macros to make scripting Audacity commands
 ;;; easier and more Lisp-like.
 ;;;
-;;; Copyright 2018 - 2019 Audacity Team
+;;; Copyright 2018 - 2020 Audacity Team
 ;;; Steve Daulton
 ;;; Released under terms of the GNU General Public License version 2:
 ;;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -22,31 +22,38 @@
 
 
 (defun aud-get-command (id)
-  ;;; Return command signature from id string
+  ;;; Return command signature from id string or NIL.
   (let* ((helpstr (format nil "Help: Command=~s Format=LISP" id))
-         (cmd-sig (first (aud-do helpstr))))
-    (eval-string (quote-string cmd-sig))))
+         (cmd-sig (aud-do helpstr)))
+    (cond
+      ((not (listp cmd-sig)) (error "Unknown error in aud-do" cmd-sig))
+      ((string-equal (first cmd-sig) "Command not found") nil)
+      (t (setf cmd-sig (first cmd-sig))
+         (eval-string (quote-string cmd-sig))))))
 
 
-(defun aud-import-command (command-sig &optional func-name)
-  ;;; Generate a LISP function from Audacity command signature.
+(defun aud-import-command (cmd &optional func-name)
+  ;;; Generate a LISP function from Audacity command ID or signature.
   ;;; If supplied, the generated function name will be 'func-name', otherwise
   ;;; it will be the command id, preceeded by 'aud-'.
-  (let ((id (second (assoc 'id command-sig)))
-        (params (second (assoc 'params command-sig)))
+  (when (stringp cmd)
+    ;; cmd is the id, so get the command signature
+    (let ((id cmd))
+      (setf cmd (aud-get-command id))
+      (if cmd
+          (aud-import-command cmd func-name)
+          (error "in aud-import-command, invalid argument" id))))
+  (let ((id (second (assoc 'id cmd)))
+        (params (second (assoc 'params cmd)))
         (func-def "(defun aud-")
         (func-kwargs "(&key ")
-        (func-body "")
-        (aud-do-params ())
-        (validate-func "")
-        (aud-do-command ""))
+        (func-body ""))
     (if func-name
         (setf func-def (format nil "(defun ~a " func-name))
         (string-append func-def id " "))
     (dolist (p params)
       (let* ((key     (second (assoc 'key p)))
              (type    (second (assoc 'type p)))
-             (default (second (assoc 'default p)))
              (enums   (second (assoc 'enum p)))
              ; The kwarg value must be a valid Lisp variable name (no spaces).
              (val     (char-remove #\Space key)))
@@ -63,7 +70,6 @@
 "  (when " val "
     (unless (validate " val " \"" type "\" " enums ")(error \"bad argument type\" " val "))
     (push  (format nil \"\\\"" key "\\\"=~s \" " val ") params))\n")))
-
     ;; concatenate strings to build the complete function.
     (string-append func-def func-kwargs "&aux (params ()))\n"
 "  ;; Push validated 'val's onto 'params' list
@@ -90,33 +96,39 @@
     (eval-string func-def)))
 
 
-(defun aud-import-commands ()
-  ;;; Import all Audacity "Commands" as LISP functions
-  ;;; Function names prefix the command id with "aud-".
-  (dolist (command (aud-get-info "Commands"))
-      (aud-import-command command)))
+(defun aud-generate-command-stubs (cmd-list)
+  ;; Generate one stub for each function.
+  ;; Stubs check that command is actually available before
+  ;; generating the Lisp function.
+  ;; This function is for internal use only.
+  (dolist (cmd-id cmd-list)
+    (let ((func-def (format nil
+"(defun aud-~a (&rest args)
+(if (string-equal (first (aud-do \"Help: Command=~a\")) \"Command not found\")
+(error \"Command unavailable\" ~s))
+(aud-import-command ~s)
+(let ((arg-string \"\") (cmd-string \"(aud-~a \"))
+(dolist (arg args)
+(setf arg-string (format nil \"~a ~a\" arg-string arg)))
+(setf cmd-string (format nil \"~a~a)\" cmd-string arg-string))
+(eval-string cmd-string)))"
+cmd-id cmd-id cmd-id cmd-id cmd-id "~a" "~s" "~a" "~a")))
+      (eval-string func-def))))
 
 
-(defun aud-import (id &optional func-name)
-  ;;; Import one Command by ID.
-  ;;; Example (aud-import "tone")
-  ;;; Creates a function (aud-tone :frequency 440 :amplitude 0.8 :waveform "Sine")
-  (let ((cmd (aud-get-command id)))
-    (aud-import-command cmd func-name)))
-
-
-(defun aud-import-effects ()
-  ;;; Import built-in effect commands
-  (let ((common (list "Amplify" "AutoDuck" "BassAndTreble" "ChangePitch" "ChangeSpeed"
-                      "ChangeTempo" "Chirp" "ClickRemoval" "Compressor" "DtmfTones"
-                      "Distortion" "Echo" "FadeIn" "FadeOut" "FilterCurve" "FindClipping"
-                      "GraphicEq" "Invert" "LoudnessNormalization" "Noise" "Normalize"
-                      "Paulstretch" "Phaser" "Repeat" "Repair" "Reverb" "Reverse"
-                      "Silence" "SlidingStretch" "Tone" "TruncateSilence" "Wahwah")))
-    (dolist (cmd common)
-      (aud-import cmd))))
-
-(aud-import-effects)
-
-;;; Uncomment the next line to load all "AUD-" commands.
-;(aud-import-commands)
+;; Hard coded list because "GetInfo:" is slow and we can't yet exclude
+;; Nyquist plug-ins (Nyquist plug-ins can't run from Nyquist Macros).
+;; TODO: Create a fast scripting command to return this list instead of relying on hard coded.
+(aud-generate-command-stubs
+  (list "Amplify" "AutoDuck" "BassAndTreble" "ChangePitch" "ChangeSpeed"
+        "ChangeTempo" "Chirp" "ClickRemoval" "Compressor" "DtmfTones"
+        "Distortion" "Echo" "FadeIn" "FadeOut" "FilterCurve" "FindClipping"
+        "GraphicEq" "Invert" "LoudnessNormalization" "Noise" "Normalize"
+        "Paulstretch" "Phaser" "Repeat" "Repair" "Reverb" "Reverse"
+        "Silence" "SlidingStretch" "Tone" "TruncateSilence" "Wahwah"
+        ;; Scriptable Commands
+        "CompareAudio" "Demo" "Export2" "GetInfo" "GetPreference" "Help"
+        "Import2" "Message" "OpenProject2" "SaveProject2" "Screenshot"
+        "SelectFrequencies" "SelectTime" "SelectTracks" "Select" "SetClip"
+        "SetEnvelope" "SetLabel" "SetPreference" "SetProject" "SetTrackAudio"
+        "SetTrackStatus" "SetTrackVisuals" "SetTrack"))
