@@ -886,27 +886,39 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
          {
-            mSliders[i] = safenew wxSliderWrapper(pParent, ID_Slider + i, 0, -20, +20,
-               wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL | wxSL_INVERSE);
+            TranslatableString freq = kThirdOct[i] < 1000.
+               ? XO("%d Hz").Format((int)kThirdOct[i])
+               : XO("%g kHz").Format(kThirdOct[i] / 1000.);
+            TranslatableString fNum = kThirdOct[i] < 1000.
+               ? XO("%d").Format((int)kThirdOct[i])
+               : XO("%gk").Format(kThirdOct[i] / 1000.);
+            //TranslatableString fUnits = kThirdOct[i] < 1000.
+            //   ? XO("Hz") : XO("kHz");
+            S.StartVerticalLay();
+            {
+               // Abuse of TranslatableString - since there is no
+               // 
+               S.AddFixedText( fNum  );
+               //S.AddFixedText( fUnits);
+               mSliders[i] = safenew wxSliderWrapper(pParent, ID_Slider + i, 0, -20, +20,
+                  wxDefaultPosition, wxSize(-1,50), wxSL_VERTICAL | wxSL_INVERSE);
 
 #if wxUSE_ACCESSIBILITY
-            mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], XO("%d dB")));
+               mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], XO("%d dB")));
 #endif
 
-            mSlidersOld[i] = 0;
-            mEQVals[i] = 0.;
-            //S.SetSizerProportion(1);
-            S.Prop(1)
-               .Name(
-                  kThirdOct[i] < 1000.
-                     ? XO("%d Hz").Format( (int)kThirdOct[i] )
-                     : XO("%g kHz").Format( kThirdOct[i]/1000. )
-               )
-               .ConnectRoot(
-                  wxEVT_ERASE_BACKGROUND, &EffectEqualization::OnErase)
-               .Position(wxEXPAND)
-               .Size( { -1, 150 } )
-               .AddWindow( mSliders[i] );
+               mSlidersOld[i] = 0;
+               mEQVals[i] = 0.;
+               //S.SetSizerProportion(1);
+               S.Prop(1)
+                  .Name(freq)
+                  .ConnectRoot(
+                     wxEVT_ERASE_BACKGROUND, &EffectEqualization::OnErase)
+                  .Position(wxEXPAND)
+                  .Size({ -1, 50 })
+                  .AddWindow(mSliders[i]);
+            }
+            S.EndVerticalLay();
          }
          S.AddSpace(15,0);
 
@@ -1136,12 +1148,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
    if( mOptions == kEqOptionGraphic){
       mPanel->Show( false );
-      szrV->Show(szr1,false);
-      //szrG->Show( true );
-      //mUIParent->Layout();
-      //S.GetParent()->Layout();
       wxSize sz = szrV->GetMinSize();
-      sz += wxSize( 30, 100);
+      sz += wxSize( 30, 0);
       mUIParent->SetMinSize(sz);
    }
    else{
