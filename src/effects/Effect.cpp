@@ -786,7 +786,9 @@ NumericFormatSymbol Effect::GetDurationFormat()
 
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
-   return ProjectSettings::Get( *FindProject() ).GetSelectionFormat();
+   if( FindProject() )
+      return ProjectSettings::Get( *FindProject() ).GetSelectionFormat();
+   return NumericConverter::HoursMinsSecondsFormat();
 }
 
 void Effect::SetDuration(double seconds)
@@ -2247,6 +2249,8 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 
 const AudacityProject *Effect::FindProject() const
 {
+   if (!inputTracks())
+      return nullptr;
    return inputTracks()->GetOwner();
 }
 
