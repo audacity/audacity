@@ -948,7 +948,7 @@ TranslatableString LWSlider::GetTip(float value) const
 
       case DB_SLIDER:
          /* i18n-hint dB abbreviates decibels */
-         XO("%+.1f dB").Format( value );
+         val = XO("%+.1f dB").Format( value );
          break;
 
       case PAN_SLIDER:
@@ -970,7 +970,7 @@ TranslatableString LWSlider::GetTip(float value) const
 
       case SPEED_SLIDER:
          /* i18n-hint: "x" suggests a multiplicative factor */
-         XO("%.2fx").Format( value );
+         val = XO("%.2fx").Format( value );
          break;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
