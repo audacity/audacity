@@ -1008,6 +1008,10 @@ void MacrosWindow::OnRemove(wxCommandEvent & WXUNUSED(event))
       item--;
    }
 
+   // Bug 2284.  The macro we have just removed might have been 
+   // changed.  Since we've just deleted the macro, we should
+   // forget about that change.
+   mChanged = false;
    mActiveMacro = mMacros->GetItemText(item);
 
    PopulateMacros();
