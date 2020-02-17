@@ -884,7 +884,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          S.AddSpace(15,0);
          {
 
-         for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
+         // for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
+         // May show more sliders than needed.  Fixes Bug 2269
+         for (int i = 0; i < NUMBER_OF_BANDS; ++i)
          {
             TranslatableString freq = kThirdOct[i] < 1000.
                ? XO("%d Hz").Format((int)kThirdOct[i])
