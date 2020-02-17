@@ -194,6 +194,8 @@ extern "C"
             //Can happen if the menu item was never invoked.
             //wxASSERT(gBench != NULL);
             if (gBench) {
+               // be sure to do this while gPrefs still exists:
+               gBench->SavePrefs();
                gBench->Destroy();
                gBench = NULL;
             }
@@ -863,6 +865,10 @@ NyqBench::NyqBench(wxWindow * parent)
 }
 
 NyqBench::~NyqBench()
+{
+}
+
+void NyqBench::SavePrefs()
 {
    gPrefs->Write(wxT("NyqBench/Window/Maximized"), IsMaximized());
    if (!IsMaximized()) {

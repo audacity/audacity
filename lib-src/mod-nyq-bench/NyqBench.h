@@ -107,6 +107,7 @@ class NyqBench:public wxFrame
    void ShowNyqBench(const CommandContext&);
 
    static NyqBench *GetBench();
+   void SavePrefs();
 
  private:
    void PopulateOrExchange(ShuttleGui & S);
