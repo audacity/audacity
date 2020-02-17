@@ -992,6 +992,8 @@ namespace MenuTable {
       {}
    };
 
+   void DestroyRegistry();
+
 }
 
 #endif

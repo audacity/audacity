@@ -1059,6 +1059,11 @@ MenuTable::AttachedItem::AttachedItem(
    Registry::RegisterItem( sRegistry(), placement, std::move( pItem ) );
 }
 
+void MenuTable::DestroyRegistry()
+{
+   sRegistry().items.clear();
+}
+
 namespace {
 
 using namespace MenuTable;
