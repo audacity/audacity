@@ -658,15 +658,99 @@ bool Effect::CloseUI()
 
 bool Effect::CanExportPresets()
 {
-   return false;
+   return true;
 }
 
 void Effect::ExportPresets()
 {
+   wxString params;
+   if (!GetAutomationParameters(params))
+   {
+      wxLogDebug("No Params");
+   }
+
+   wxFileName path;
+
+   path = gPrefs->Read(wxT("Presets/Path"), wxEmptyString);
+
+   wxFileDialog dlog(NULL,
+                     _("Export Effect Parameters"),
+                     path.GetFullPath(),
+                     wxEmptyString,
+                     _("Presets (*.txt)|*.txt|All files|*"),
+                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
+ 
+   if (dlog.ShowModal() != wxID_OK) {
+      return;
+   }
+
+   path = dlog.GetPath();
+   gPrefs->Write(wxT("Presets/Path"), path.GetFullPath());
+
+   wxLogDebug("Params: %s", params);
+
+   // Create/Open the file
+   wxFFile f(path.GetFullPath(), wxT("wb"));
+   if (!f.IsOpened())
+   {
+      AudacityMessageBox(
+         XO("Could not open file: \"%s\"").Format( path.GetFullPath() ),
+         XO("Error Saving Effect Presets"),
+         wxICON_EXCLAMATION,
+         NULL);
+      return;
+   }
+
+   f.Write(params);
+   if (f.Error())
+   {
+      AudacityMessageBox(
+         XO("Error writing to file: \"%s\"").Format( path.GetFullPath() ),
+         XO("Error Saving Effect Presets"),
+         wxICON_EXCLAMATION,
+         NULL);
+   }
+
+   f.Close();
+
+
+   //SetWindowTitle();
+
 }
 
 void Effect::ImportPresets()
 {
+   wxString params;
+   wxFileName path;
+
+   path = gPrefs->Read(wxT("Presets/Path"), wxEmptyString);
+
+   wxFileDialog dlog(NULL,
+                     _("Import Effect Parameters"),
+                     path.GetPath(),
+                     wxEmptyString,
+                     _("Presets (*.txt)|*.txt|All files|*"),
+                     wxFD_OPEN | wxRESIZE_BORDER);
+ 
+   if (dlog.ShowModal() != wxID_OK) {
+      return;
+   }
+
+   path = dlog.GetPath();
+   if( !path.IsOk())
+      return;
+
+   gPrefs->Write(wxT("Presets/Path"), path.GetFullPath());
+
+   wxFFile f(path.GetFullPath());
+   if (f.IsOpened()) {
+      if (f.ReadAll(&params)) {
+         SetAutomationParameters(params);
+      }
+   }
+
+   //SetWindowTitle();
+
 }
 
 bool Effect::HasOptions()
