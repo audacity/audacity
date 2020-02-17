@@ -64,6 +64,7 @@ kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
    { XO("Preferences") },
    { XO("Selectionbar") },
    { wxT("SpectralSelection"), XO("Spectral Selection") },
+   { XO("Timer") },
    { XO("Tools") },
    { XO("Transport") },
    { XO("Mixer") },
@@ -868,6 +869,8 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
       return CaptureToolbar(context, &toolManager, SelectionBarID, mFileName);
    case kspectralselection:
       return CaptureToolbar(context, &toolManager, SpectralSelectionBarID, mFileName);
+   case ktimer:
+      return CaptureToolbar(context, &toolManager, TimeBarID, mFileName);
    case ktools:
       return CaptureToolbar(context, &toolManager, ToolsBarID, mFileName);
    case ktransport:

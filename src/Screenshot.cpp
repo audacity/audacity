@@ -677,6 +677,7 @@ void ScreenshotBigDialog::OnCaptureSomething(wxCommandEvent &  event)
       ScreenshotCommand::kfullscreen,
       ScreenshotCommand::kselectionbar,
       ScreenshotCommand::kspectralselection,
+      ScreenshotCommand::ktimer,
       ScreenshotCommand::ktools,
       ScreenshotCommand::ktransport,
       ScreenshotCommand::kmixer,

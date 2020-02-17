@@ -51,6 +51,7 @@ public:
       kpreferences,
       kselectionbar,
       kspectralselection,
+      ktimer,
       ktools,
       ktransport,
       kmixer,
