@@ -1141,7 +1141,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       //mUIParent->Layout();
       //S.GetParent()->Layout();
       wxSize sz = szrV->GetMinSize();
-      sz += wxSize( 30, 0);
+      sz += wxSize( 30, 100);
       mUIParent->SetMinSize(sz);
    }
    else{
