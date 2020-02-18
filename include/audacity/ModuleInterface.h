@@ -108,7 +108,7 @@ public:
    // Once the user selects desired paths from FindPluginPaths(),
    // a call to DiscoverPluginsAtPath()
    // will be made to request registration of one or more plugins.  If the module must create
-   // an instance of the plugin to register it, then then instance should be deleted
+   // an instance of the plugin to register it, then the instance should be deleted
    // after registration.
    // May discover more than one plug-in at the path, and
    // may call-back with paths not equal to path (perhaps appending

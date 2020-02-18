@@ -491,7 +491,7 @@ void ModuleManager::RegisterModule(ModuleInterface *inModule)
 
    if (mDynModules.find(id) != mDynModules.end())
    {
-      // TODO:  Should we complain about a duplicate registeration????
+      // TODO:  Should we complain about a duplicate registration????
       // PRL:  Don't leak resources!
       module->Terminate();
       return;
