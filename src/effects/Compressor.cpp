@@ -300,8 +300,8 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
                MAX_Ratio * SCL_Ratio,
                MIN_Ratio * SCL_Ratio);
          mRatioSlider->SetPageSize(5);
-         mRatioText = S.AddVariableText(XO("XXXX:1"), true, //??
-                                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+         mRatioText = S.AddVariableText(RatioTextFormat( 1, 99.9 ), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
          /* i18n-hint: Particularly in percussion, sounds can be regarded as having
           * an 'attack' phase where the sound builds up and a 'decay' where the
@@ -665,7 +665,7 @@ void EffectCompressor::UpdateUI()
    mNoiseFloorText->SetLabel(ThresholdFormat((int) mNoiseFloorDB).Translation());
    mNoiseFloorText->SetName(mNoiseFloorText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
-   mRatioLabel->SetLabel(
+   mRatioLabel->SetName(
       RatioLabelFormat(mRatioSlider->GetValue(), mRatio).Translation());
    mRatioText->SetLabel(
       RatioTextFormat(mRatioSlider->GetValue(), mRatio).Translation());
