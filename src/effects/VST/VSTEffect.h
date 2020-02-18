@@ -403,7 +403,7 @@ private:
 class VSTEffectsModule final : public ModuleInterface
 {
 public:
-   VSTEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
+   VSTEffectsModule(const wxString *path);
    virtual ~VSTEffectsModule();
 
    // ComponentInterface implementation
@@ -440,7 +440,6 @@ public:
    static void Check(const wxChar *path);
 
 private:
-   ModuleManagerInterface *mModMan;
    PluginPath mPath;
 };
 

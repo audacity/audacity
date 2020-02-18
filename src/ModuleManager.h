@@ -73,14 +73,9 @@ typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
 using PluginIDs = wxArrayString;
 
-class ModuleManager final : public ModuleManagerInterface
+class ModuleManager final
 {
 public:
-   // -------------------------------------------------------------------------
-   // ModuleManagerInterface implementation
-   // -------------------------------------------------------------------------
-
-   void RegisterModule(ModuleInterface *module) override;
 
    // -------------------------------------------------------------------------
    // ModuleManager implementation

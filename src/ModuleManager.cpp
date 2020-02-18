@@ -446,7 +446,7 @@ void ModuleManager::InitializeBuiltins()
    for (auto moduleMain : builtinModuleList())
    {
       ModuleInterfaceHandle module {
-         moduleMain(this, NULL), ModuleInterfaceDeleter{}
+         moduleMain(nullptr), ModuleInterfaceDeleter{}
       };
 
       if (module->Initialize())
@@ -480,7 +480,7 @@ ModuleInterface *ModuleManager::LoadModule(const PluginPath & path)
       if (success && audacityMain)
       {
          ModuleInterfaceHandle handle {
-            audacityMain(this, &path), ModuleInterfaceDeleter{}
+            audacityMain(&path), ModuleInterfaceDeleter{}
          };
          if (handle)
          {
@@ -516,27 +516,6 @@ void ModuleInterfaceDeleter::operator() (ModuleInterface *pInterface) const
 
       std::unique_ptr < ModuleInterface > { pInterface }; // DELETE it
    }
-}
-
-void ModuleManager::RegisterModule(ModuleInterface *inModule)
-{
-   std::unique_ptr<ModuleInterface> module{ inModule };
-
-   PluginID id = PluginManager::GetID(module.get());
-
-   if (mDynModules.find(id) != mDynModules.end())
-   {
-      // TODO:  Should we complain about a duplicate registration????
-      // PRL:  Don't leak resources!
-      module->Terminate();
-      return;
-   }
-
-   mDynModules[id] = ModuleInterfaceHandle {
-      module.release(), ModuleInterfaceDeleter{}
-   };
-
-   PluginManager::Get().RegisterPlugin(inModule);
 }
 
 PluginPaths ModuleManager::FindPluginsForProvider(const PluginID & providerID,

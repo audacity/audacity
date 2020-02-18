@@ -66,7 +66,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew NyquistEffectsModule(moduleManager, path);
+   return safenew NyquistEffectsModule(path);
 }
 
 // ============================================================================
@@ -80,10 +80,8 @@ DECLARE_BUILTIN_MODULE(NyquistsEffectBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-NyquistEffectsModule::NyquistEffectsModule(ModuleManagerInterface *moduleManager,
-                                           const wxString *path)
+NyquistEffectsModule::NyquistEffectsModule(const wxString *path)
 {
-   mModMan = moduleManager;
    if (path)
    {
       mPath = *path;

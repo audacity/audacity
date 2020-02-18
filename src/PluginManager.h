@@ -18,7 +18,6 @@
 
 #include "audacity/EffectInterface.h"
 #include "audacity/ImporterInterface.h"
-#include "audacity/ModuleInterface.h"
 #include "audacity/PluginInterface.h"
 
 class wxArrayString;

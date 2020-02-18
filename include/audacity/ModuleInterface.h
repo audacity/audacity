@@ -135,20 +135,6 @@ public:
    virtual void DeleteInstance(ComponentInterface *instance) = 0;
 };
 
-// ============================================================================
-//
-// ModuleManagerInterface class
-//
-// ============================================================================
-
-class ModuleManagerInterface /* not final */
-{
-public:
-
-   // Modules call this to register their interface
-   virtual void RegisterModule(ModuleInterface *module) = 0;
-};
-
 // ----------------------------------------------------------------------------
 // The default entry point name and the name that will be searched for during
 // load if the module has been built as a external library.
@@ -158,8 +144,7 @@ public:
 // ----------------------------------------------------------------------------
 // The module entry point prototype
 // ----------------------------------------------------------------------------
-typedef ModuleInterface *(*ModuleMain)(ModuleManagerInterface *moduleManager,
-                                       const wxString *path);
+typedef ModuleInterface *(*ModuleMain)(const wxString *path);
 
 // ----------------------------------------------------------------------------
 // If BUILDING_AUDACITY is defined during the current build, it is assumed
@@ -172,7 +157,7 @@ typedef ModuleInterface *(*ModuleMain)(ModuleManagerInterface *moduleManager,
 // be declared static so as not to interfere with other modules during link.
 // ----------------------------------------------------------------------------
 #define DECLARE_MODULE_ENTRY(name)                    \
-static ModuleInterface * name(ModuleManagerInterface *moduleManager, const wxString *path)
+static ModuleInterface * name(const wxString *path)
 
 // ----------------------------------------------------------------------------
 // This will create a class and instnace that will register the module entry
@@ -214,8 +199,7 @@ void name::Register()                                 \
 // ----------------------------------------------------------------------------
 #define DECLARE_MODULE_ENTRY(name)                                            \
 extern "C" __declspec(dllexport)                                              \
-   ModuleInterface * name(ModuleManagerInterface *moduleManager,              \
-                          const wxString *path)
+   ModuleInterface * name(const wxString *path)
 
 // ----------------------------------------------------------------------------
 // Define these as empty will effectively remove the embedded registration

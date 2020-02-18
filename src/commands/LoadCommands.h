@@ -27,7 +27,7 @@ class AudacityCommand;
 class BuiltinCommandsModule final : public ModuleInterface
 {
 public:
-   BuiltinCommandsModule(ModuleManagerInterface *moduleManager, const wxString *path);
+   BuiltinCommandsModule(const wxString *path);
    virtual ~BuiltinCommandsModule();
 
    using Factory = std::function< std::unique_ptr<AudacityCommand> () >;
@@ -80,7 +80,6 @@ private:
    static void DoRegistration(
       const ComponentInterfaceSymbol &name, const Factory &factory );
 
-   ModuleManagerInterface *mModMan;
    wxString mPath;
 
    using CommandHash = std::unordered_map< wxString, const Entry* > ;
