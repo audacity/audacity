@@ -2391,7 +2391,7 @@ void PluginManager::CheckForUpdates(bool bFast)
    // All NEW plugins get a stub entry created that will remain in place until the
    // user enables or disables the plugin.
    //
-   // Becuase we use the plugins "path" as returned by the providers, we can actually
+   // Because we use the plugins "path" as returned by the providers, we can actually
    // have multiple providers report the same path since, at this point, they only
    // know that the path might possibly be one supported by the provider.
    //
