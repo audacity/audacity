@@ -29,7 +29,7 @@ if( ${_OPT}use_ffmpeg STREQUAL "off" )
    message( STATUS "Disabling '${name}' library" )
 else()
    # Let the Audacity target know that this library will be used.
-   set( USE_${symbol} ON CACHE INTERNAL USE_${symbol} )
+   set( USE_${symbol} ON CACHE INTERNAL "" )
 
    # Only need to look up the package if we're linking to it
    set( isdyn YES )

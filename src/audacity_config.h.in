@@ -81,9 +81,6 @@
 /* Define if Nyquist support should be enabled */
 #cmakedefine USE_NYQUIST 1
 
-/* Define if midi support should be enabled */
-#cmakedefine USE_PORTMIDI 1
-
 /* Define if PortMixer support should be enabled */
 #cmakedefine USE_PORTMIXER 1
 

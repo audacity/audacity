@@ -578,7 +578,7 @@ list( APPEND SOURCES
          export/ExportMP2.cpp
       >
 
-      $<$<BOOL:${USE_LIBVORBIS}>:
+      $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
          export/ExportOGG.cpp
       >
 
@@ -627,7 +627,7 @@ list( APPEND SOURCES
          import/ImportMP3.cpp
       >
 
-      $<$<BOOL:${USE_LIBVORBIS}>:
+      $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
          import/ImportOGG.cpp
       >
 
@@ -1043,7 +1043,7 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
 
       $<$<BOOL:${USE_LIBMAD}>:libmad>
-      $<$<BOOL:${USE_LIBVORBIS}>:libogg>
+      $<$<BOOL:${USE_LIBOGG}>:libogg>
       $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
 #      $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
 #      $<$<BOOL:${USE_LIBVORBIS}>:libvorbisenc>
@@ -1085,7 +1085,7 @@ cmd_option(
    "Use VST2 plug-in support [on, off]"
    ON
 )
-set( USE_VST ${${_OPT}enable_vst} )
+set( USE_VST ${${_OPT}use_vst} )
 
 set( AUDACITY_NAME "Audacity" )
 set( BUILDING_AUDACITY 1 )
@@ -1181,11 +1181,10 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
 
    # Handle Audio Units option
    cmd_option(
-      ${_OPT}enable_audiounits
+      ${_OPT}use_audiounits
       "Enable Audio Unit plug-in support"
       ON
    )
-   set( USE_AUDIO_UNITS ${${_OPT}enable_audiounits} )
 
    set_target_properties(
       ${TARGET}
@@ -1297,7 +1296,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
          audio/x-aiff
          audio/x-wav
       >
-      $<$<AND:$<BOOL:${USE_LIBOGG},${USE_LIBVORBIS}>>:
+      $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
          application/ogg
          audio/x-vorbis+ogg
       >
