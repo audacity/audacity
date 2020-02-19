@@ -958,16 +958,6 @@ list( APPEND INCLUDES
 )
 
 #
-#
-#
-list( APPEND RESOURCES
-   $<$<PLATFORM_ID:Windows>:
-      ../win/audacity.rc
-      ../win/packages.config
-   >
-)
-
-#
 # Get those pesky CMake files out of the way (on Windows)
 #
 source_group(
@@ -978,6 +968,13 @@ source_group(
     FILES
         ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.cxx
         ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.hxx
+)
+
+#
+# Define resources
+#
+list( APPEND RESOURCES
+   ../presets/EQDefaultCurves.xml
 )
 
 #
@@ -1126,6 +1123,12 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    # Create the config file
    configure_file( audacity_config.h.in private/configwin.h )
 
+   # Define the Windows specific resources
+   list( APPEND WIN_RESOURCES
+      ../win/audacity.rc
+      ../win/packages.config
+   )
+
    # Copy over the wxWidgets DLLs
    if( ${_OPT}use_wxwidgets STREQUAL "system" )
       set( wxlibs "$ENV{WXWIN}" )
@@ -1186,11 +1189,24 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       ON
    )
 
+   # Define Mac specific resources
+   list( APPEND MAC_RESOURCES
+      ../mac/Resources/Audacity.icns
+      ../mac/Resources/AudacityAIFF.icns
+      ../mac/Resources/AudacityAU.icns
+      ../mac/Resources/AudacityMP3.icns
+      ../mac/Resources/AudacityOGG.icns
+      ../mac/Resources/AudacityProject.icns
+      ../mac/Resources/AudacityWAV.icns
+   )
+
    set_target_properties(
       ${TARGET}
       PROPERTIES
          # Build a bundle
-         MACOSX_BUNDLE 1
+         MACOSX_BUNDLE ON
+         # Add the resources
+         RESOURCE "${MAC_RESOURCES};${RESOURCES}"
    )
 
    # These sources must be compiled as Objective C++
@@ -1352,10 +1368,12 @@ if (GIT_FOUND)
 endif()
 
 organize_source( "${TARGET_ROOT}/.." "include" "${HEADERS}" )
-organize_source( "${TARGET_ROOT}/../win" "win" "${RESOURCES}" )
+organize_source( "${TARGET_ROOT}/../presets" "presets" "${RESOURCES}" )
 organize_source( "${TARGET_ROOT}" "src" "${SOURCES}" )
+organize_source( "${TARGET_ROOT}/../mac/Resources" "mac" "${MAC_RESOURCES}" )
+organize_source( "${TARGET_ROOT}/../win" "win" "${WIN_RESOURCES}" )
 
-target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} )
+target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
