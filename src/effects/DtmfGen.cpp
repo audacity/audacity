@@ -580,24 +580,21 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, size_t len, float fs, wxChar tone, 
 
    // generate a fade-in of duration 1/250th of second
    if (last == 0) {
-      A = (fs / kFadeInOut);
+      A = wxMin(len, (fs / kFadeInOut));
       for(size_t i = 0; i < A; i++) {
          buffer[i] *= i/A;
       }
    }
 
    // generate a fade-out of duration 1/250th of second
-   if (last == total - len) {
+   if (last >= total - len) {
       // we are at the last buffer of 'len' size, so, offset is to
       // backup 'A' samples, from 'len'
-      A = (fs / kFadeInOut);
-      auto offset = long(len) - long(fs / kFadeInOut);
-      // protect against negative offset, which can occur if too a
-      // small selection is made
-      if (offset >= 0) {
-         for(size_t i = 0; i < A; i++) {
-            buffer[i + offset] *= (1 - (i / A));
-         }
+      A = wxMin(len, (fs / kFadeInOut));
+      size_t offset = len - A;
+      wxASSERT(offset >= 0);
+      for(size_t i = 0; i < A; i++) {
+         buffer[i + offset] *= (1 - (i / A));
       }
    }
    return true;
