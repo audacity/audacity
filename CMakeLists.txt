@@ -40,6 +40,7 @@ elseif( APPLE )
    set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
    set( CMAKE_OSX_DEPLOYMENT_TARGET 10.7 CACHE INTERNAL "" )
    set( CMAKE_OSX_SYSROOT macosx CACHE INTERNAL "" )
+   set( CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "" CACHE INTERNAL "" )
 
    # Shouldn't cmake do this???
    string( APPEND CMAKE_CXX_FLAGS " -stdlib=libc++" )
@@ -452,7 +453,8 @@ add_subdirectory( "locale" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
 add_subdirectory( "src" )
-add_subdirectory( "cmake-proxies/mod-nyq-bench" )
+add_subdirectory( "cmake-proxies/mod-null" EXCLUDE_FROM_ALL )
+add_subdirectory( "cmake-proxies/mod-nyq-bench" EXCLUDE_FROM_ALL )
 add_subdirectory( "cmake-proxies/mod-script-pipe" )
 
 # Uncomment what follows for symbol values.
