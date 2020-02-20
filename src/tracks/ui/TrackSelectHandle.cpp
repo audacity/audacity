@@ -149,7 +149,7 @@ HitTestPreview TrackSelectHandle::Preview
    //static wxCursor rearrangeCursor{ wxCURSOR_HAND };
    static auto rearrangingCursor =
       ::MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
-
+   static wxCursor arrowCursor{ wxCURSOR_ARROW };
 
    //static auto hoverCursor =
    //   ::MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
@@ -161,18 +161,20 @@ HitTestPreview TrackSelectHandle::Preview
    if (mClicked) {
       const bool unsafe =
          ProjectAudioIO::Get( *project ).IsAudioActive();
+      const bool canMove = TrackList::Get( *project ).Leaders().size() > 1;
       return {
          message,
          (unsafe
           ? &*disabledCursor
-          : &*rearrangingCursor)
+          : canMove
+             ? &*rearrangingCursor
+             : &arrowCursor)
          // , message // Stop showing the tooltip after the click
       };
    }
    else {
       // Only mouse-over
       // Don't test safety, because the click to change selection is allowed
-      static wxCursor arrowCursor{ wxCURSOR_ARROW };
       return {
          message,
          &arrowCursor,
