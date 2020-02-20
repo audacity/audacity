@@ -568,7 +568,7 @@ void AddEffectMenuItemGroup(
    int groupCnt = namesCnt;
    for (int i = 0; i < namesCnt; i++)
    {
-      while (i + 1 < namesCnt && names[i] == names[i + 1])
+      while (i + 1 < namesCnt && names[i].Translation() == names[i + 1].Translation())
       {
          i++;
          groupCnt--;
@@ -604,12 +604,13 @@ void AddEffectMenuItemGroup(
          pTable = &temp1;
       }
 
-      if (i + 1 < namesCnt && names[i] == names[i + 1])
+      if (i + 1 < namesCnt && names[i].Translation() == names[i + 1].Translation())
       {
          // collect a sub-menu for like-named items
          const auto name = names[i];
+         const auto translation = name.Translation();
          BaseItemPtrs temp2;
-         while (i < namesCnt && names[i] == name)
+         while (i < namesCnt && names[i].Translation() == translation)
          {
             const PluginDescriptor *plug =
                PluginManager::Get().GetPlugin(plugs[i]);
