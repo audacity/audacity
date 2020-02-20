@@ -92,6 +92,7 @@ public:
    int Dispatch(ModuleDispatchTypes type);
 
    // PluginManager use
+   // Can be called before Initialize()
    bool DiscoverProviders();
 
    // Seems we don't currently use FindAllPlugins
@@ -122,9 +123,18 @@ private:
    static std::unique_ptr<ModuleManager> mInstance;
 
    ModuleMainMap mModuleMains;
+
+   // Module objects, also called Providers, can each report availability of any
+   // number of Plug-Ins identified by "paths", and are also factories of
+   // ComponentInterface objects for each path:
    ModuleMap mDynModules;
+
+   // Dynamically loaded libraries, each one a factory that makes one of the
+   // (non-built-in) providers:
    LibraryMap mLibs;
 
+   // Other libraries that receive notifications of events described by
+   // ModuleDispatchTypes:
    std::vector<std::unique_ptr<Module>> mModules;
 };
 
