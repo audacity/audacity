@@ -31,7 +31,6 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "FileNames.h"
 #include "MemoryX.h"
-#include "PluginManager.h"
 
 #include "audacity/PluginInterface.h"
 
@@ -486,22 +485,6 @@ void ModuleInterfaceDeleter::operator() (ModuleInterface *pInterface) const
       pInterface->Terminate();
       std::unique_ptr < ModuleInterface > { pInterface }; // DELETE it
    }
-}
-
-PluginPaths ModuleManager::FindPluginsForProvider(const PluginID & providerID,
-                                                    const PluginPath & path)
-{
-   // Instantiate if it hasn't already been done
-   if (mDynModules.find(providerID) == mDynModules.end())
-   {
-      // If it couldn't be created, just give up and return an empty list
-      if (!CreateProviderInstance(providerID, path))
-      {
-         return {};
-      }
-   }
-
-   return mDynModules[providerID]->FindPluginPaths(PluginManager::Get());
 }
 
 bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const PluginPath & path, TranslatableString &errMsg)

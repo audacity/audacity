@@ -103,7 +103,6 @@ public:
    auto Providers() const
    { return make_iterator_range(mDynModules.cbegin(), mDynModules.cend()); }
 
-   PluginPaths FindPluginsForProvider(const PluginID & provider, const PluginPath & path);
    bool RegisterEffectPlugin(const PluginID & provider, const PluginPath & path,
                        TranslatableString &errMsg);
 

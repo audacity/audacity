@@ -1382,7 +1382,9 @@ void PluginManager::CheckForUpdates(bool bFast)
          else
          {
             // Collect plugin paths
-            auto paths = mm.FindPluginsForProvider(plugID, plugPath);
+            PluginPaths paths;
+            if (auto provider = mm.CreateProviderInstance( plugID, plugPath ) )
+               paths = provider->FindPluginPaths( *this );
             for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
             {
                wxString path = paths[i].BeforeFirst(wxT(';'));;
