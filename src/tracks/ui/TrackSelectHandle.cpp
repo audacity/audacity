@@ -147,8 +147,8 @@ HitTestPreview TrackSelectHandle::Preview
    static auto disabledCursor =
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    //static wxCursor rearrangeCursor{ wxCURSOR_HAND };
-   static auto rearrangeCursor =
-      ::MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
+   static auto rearrangingCursor =
+      ::MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
 
 
    //static auto hoverCursor =
@@ -165,7 +165,7 @@ HitTestPreview TrackSelectHandle::Preview
          message,
          (unsafe
           ? &*disabledCursor
-          : &*rearrangeCursor)
+          : &*rearrangingCursor)
          // , message // Stop showing the tooltip after the click
       };
    }
