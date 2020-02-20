@@ -448,20 +448,8 @@ bool ModuleManager::DiscoverProviders()
    FileNames::FindFilesInPathList(wxT("*.so"), pathList, provList);
 #endif
 
-   PluginManager & pm = PluginManager::Get();
-
-   for (int i = 0, cnt = provList.size(); i < cnt; i++)
-   {
-      ModuleInterface *module = LoadModule(provList[i]);
-      if (module)
-      {
-         // Register the provider
-         pm.RegisterPlugin(module);
-
-         // Now, allow the module to auto-register children
-         module->AutoRegisterPlugins(pm);
-      }
-   }
+   for ( const auto &path : provList )
+      LoadModule(path);
 #endif
 
    return true;
@@ -469,8 +457,6 @@ bool ModuleManager::DiscoverProviders()
 
 void ModuleManager::InitializeBuiltins()
 {
-   PluginManager & pm = PluginManager::Get();
-
    for (auto moduleMain : builtinModuleList())
    {
       ModuleInterfaceHandle module {
@@ -481,13 +467,10 @@ void ModuleManager::InitializeBuiltins()
       {
          // Register the provider
          ModuleInterface *pInterface = module.get();
-         const PluginID & id = pm.RegisterPlugin(pInterface);
+         auto id = GetID(pInterface);
 
          // Need to remember it 
          mDynModules[id] = std::move(module);
-
-         // Allow the module to auto-register children
-         pInterface->AutoRegisterPlugins(pm);
       }
       else
       {
