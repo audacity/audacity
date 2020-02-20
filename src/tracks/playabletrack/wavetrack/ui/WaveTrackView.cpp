@@ -574,7 +574,8 @@ public:
          ::MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
       return {
          XO("Click and drag to rearrange sub-views"),
-         Clicked() ? &*clickedCursor : &*hoverCursor
+         Clicked() ? &*clickedCursor : &*hoverCursor,
+         XO("Rearrange sub-views")
       };
    }
 
