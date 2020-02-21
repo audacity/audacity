@@ -20,6 +20,7 @@
 
 #include <wx/dcclient.h>
 #include <wx/event.h>
+#include <wx/windowptr.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // class ScrubbingOverlay is responsible for drawing the speed numbers
@@ -218,9 +219,22 @@ struct ScrubForwarder
     : public wxEvtHandler
     , public ClientData::Base
 {
-   ScrubForwarder( AudacityProject &project ) : mProject{ project } {}
+   ScrubForwarder( AudacityProject &project )
+      : mProject{ project }
+   {
+      mWindow = &ProjectWindow::Get( project );
+      if ( mWindow )
+         mWindow->PushEventHandler( this );
+   }
+
+   ~ScrubForwarder()
+   {
+      if ( mWindow )
+         mWindow->PopEventHandler();
+   }
 
    AudacityProject &mProject;
+   wxWindowPtr<wxWindow> mWindow;
 
    void OnMouse(wxMouseEvent &event);
    DECLARE_EVENT_TABLE()
@@ -269,9 +283,6 @@ END_EVENT_TABLE()
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sForwarderKey{
    []( AudacityProject &parent ){
-      auto result = std::make_shared< ScrubForwarder >( parent );
-      auto &window = ProjectWindow::Get( parent );
-      window.PushEventHandler( result.get() );
-      return result;
+      return std::make_shared< ScrubForwarder >( parent );
    }
 };
