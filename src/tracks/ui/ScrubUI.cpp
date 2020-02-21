@@ -271,7 +271,6 @@ static const AudacityProject::AttachedObjects::RegisteredFactory sForwarderKey{
    []( AudacityProject &parent ){
       auto result = std::make_shared< ScrubForwarder >( parent );
       auto &window = ProjectWindow::Get( parent );
-      window.PushEventHandler( result.get() );
       return result;
    }
 };
