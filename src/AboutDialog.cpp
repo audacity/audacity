@@ -713,7 +713,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
 // Remove this once the transition to CMake is complete
 #if defined(CMAKE_INTDIR)
-   buildType = XO("CMake %s").Format( buildType );
+   buildType = Verbatim("CMake %s").Format( buildType );
 #endif
 
    AddBuildinfoRow(&informationStr, XO("Build type:"), buildType.Translation());
