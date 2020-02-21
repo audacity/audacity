@@ -767,6 +767,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                3, &mThresholdDB, NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Threshold, MAX_Threshold
             )
+            .NameSuffix(XO("db"))
             .AddTextBox(XO("Threshold:"), wxT(""), 0);
          S.AddUnits(XO("dB"));
 
@@ -775,6 +776,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                3, &mInitialAllowedSilence,
                NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Minimum, MAX_Minimum)
+            .NameSuffix(XO("seconds"))
             .AddTextBox(XO("Duration:"), wxT(""), 12);
          S.AddUnits(XO("seconds"));
       }
@@ -803,6 +805,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Truncate, MAX_Truncate
             )
+            .NameSuffix(XO("seconds"))
             .AddTextBox(XO("Truncate to:"), wxT(""), 12);
          S.AddUnits(XO("seconds"));
 
@@ -811,6 +814,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Compress, MAX_Compress
             )
+            .NameSuffix(XO("%"))
             .AddTextBox(XO("Compress to:"), wxT(""), 12);
          S.AddUnits(XO("%"));
       }
