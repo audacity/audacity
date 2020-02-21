@@ -241,6 +241,9 @@ Scrubber::~Scrubber()
    if (mpThread)
       mpThread->Delete();
 #endif
+
+   if ( mWindow )
+      mWindow->PopEventHandler();
 }
 
 static const auto HasWaveDataPred =
