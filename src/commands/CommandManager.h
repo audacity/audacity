@@ -456,7 +456,7 @@ namespace Registry {
    using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
    using BaseItemPtrs = std::vector<BaseItemPtr>;
 
-   struct Visitor;
+   class Visitor;
    
 
    // An item that delegates to another held in a shared pointer; this allows
