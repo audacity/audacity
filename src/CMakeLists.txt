@@ -11,6 +11,32 @@ add_executable( ${TARGET} )
 
 def_vars()
 
+# Handle Audio Units option
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   cmd_option(
+      ${_OPT}use_audio_units
+      "Use Audio Units plug-in support [on, off]"
+      ON
+   )
+   set( USE_AUDIO_UNITS ${${_OPT}use_audio_units} CACHE INTERNAL "" )
+endif()
+
+# Handle Ladspa option
+cmd_option(
+   ${_OPT}use_ladspa
+   "Use LADSPA plug-in support [on, off]"
+   ON
+)
+set( USE_LADSPA ${${_OPT}use_ladspa} CACHE INTERNAL "" )
+
+# Handle VST option
+cmd_option(
+   ${_OPT}use_vst
+   "Use VST2 plug-in support [on, off]"
+   ON
+)
+set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
+
 #
 #
 #
@@ -1067,22 +1093,6 @@ list( APPEND LIBRARIES
 if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
    set( PRECOMP AudacityHeaders.h )
 endif()
-
-# Handle Ladspa option
-cmd_option(
-   ${_OPT}use_ladspa
-   "Use LADSPA plug-in support [on, off]"
-   ON
-)
-set( USE_LADSPA ${${_OPT}use_ladspa} )
-
-# Handle VST option
-cmd_option(
-   ${_OPT}use_vst
-   "Use VST2 plug-in support [on, off]"
-   ON
-)
-set( USE_VST ${${_OPT}use_vst} )
 
 set( AUDACITY_NAME "Audacity" )
 set( BUILDING_AUDACITY 1 )
