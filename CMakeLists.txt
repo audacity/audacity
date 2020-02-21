@@ -1,6 +1,9 @@
 # If you want built-in precompiled header support
 # then make sure you have cmake 3.16 or higher.
-cmake_minimum_required( VERSION 3.14 )
+#
+# Minimum required is 3.15 due to use of multiple values in
+# generator expressions.
+cmake_minimum_required( VERSION 3.15 )
 
 # Don't allow in-source builds...no real reason, just
 # keeping those source trees nice and tidy.  :-)
@@ -71,6 +74,36 @@ endif()
 
 # Our very own project
 project( Audacity )
+
+message( STATUS "Build Info:" )
+message( STATUS "  Host System: ${CMAKE_HOST_SYSTEM}" )
+message( STATUS "  Host System Name: ${CMAKE_HOST_SYSTEM_NAME}" )
+message( STATUS "  Host System Processor: ${CMAKE_HOST_SYSTEM_PROCESSOR}" )
+message( STATUS "  Host System Version: ${CMAKE_HOST_SYSTEM_VERSION}" )
+message( STATUS )
+message( STATUS "  Compiler: ${CMAKE_CXX_COMPILER}" )
+message( STATUS "  Compiler Standard: ${CMAKE_CXX_STANDARD}" )
+message( STATUS "  Compiler Standard Required: ${CMAKE_CXX_STANDARD_REQUIRED}" )
+message( STATUS "  Compiler Extensions: ${CMAKE_CXX_EXTENSIONS}" )
+message( STATUS )
+if( APPLE )
+   message( STATUS "  Xcode Version: ${XCODE_VERSION}" )
+   message( STATUS "  MacOS SDK: ${CMAKE_OSX_SYSROOT}" )
+endif()
+message( STATUS )
+
+# Try to get the current commit hash
+find_package( Git QUIET )
+if( GIT_FOUND )
+   execute_process(
+      COMMAND
+         ${GIT_EXECUTABLE} show -s --format='%h'
+      OUTPUT_VARIABLE
+         short_hash
+   )
+   message( STATUS "  Current Commit: ${short_hash}" )
+   message( STATUS )
+endif()
 
 # Pull all the modules we'll need
 include( CheckCXXCompilerFlag )

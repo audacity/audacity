@@ -65,7 +65,6 @@ else()
    endif()
 
    if( NOT EXISTS "${WXWIN}" )
-      find_package( Git )
       if( NOT GIT_FOUND )
          message( FATAL_ERROR "Git is needed to clone wxWidgets" )
       endif()
