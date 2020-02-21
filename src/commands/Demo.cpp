@@ -36,7 +36,8 @@ parameters.  It is for development purposes.
 const ComponentInterfaceSymbol DemoCommand::Symbol
 { XO("Demo") };
 
-namespace{ BuiltinCommandsModule::Registration< DemoCommand > reg; }
+//Don't register the demo command.  
+//namespace{ BuiltinCommandsModule::Registration< DemoCommand > reg; }
 
 bool DemoCommand::DefineParams( ShuttleParams & S ){
    S.Define( delay, wxT("Delay"), 1.0f, 0.001f,  FLT_MAX, 1.0f );
