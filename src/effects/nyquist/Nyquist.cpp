@@ -2177,6 +2177,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    wxTextInputStream pgm(stream, wxT(" \t"), wxConvAuto());
 
    mCmd = wxT("");
+   mCmd.Alloc(10000);
    mIsSal = false;
    mControls.clear();
    mCategories.clear();
@@ -2261,7 +2262,8 @@ or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .")
 
 void NyquistEffect::ParseFile()
 {
-   wxFileInputStream stream(mFileName.GetFullPath());
+   wxFileInputStream rawStream(mFileName.GetFullPath());
+   wxBufferedInputStream stream(rawStream, 10000);
 
    ParseProgram(stream);
 }
