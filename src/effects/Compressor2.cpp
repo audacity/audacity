@@ -97,6 +97,105 @@ const ComponentInterfaceSymbol EffectCompressor2::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectCompressor2 > reg; }
 
+SlidingRmsPreprocessor::SlidingRmsPreprocessor(size_t windowSize, float gain)
+   : mSum(0),
+   mGain(gain),
+   mWindow(windowSize, 0),
+   mPos(0),
+   mInsertCount(0)
+{
+}
+
+float SlidingRmsPreprocessor::ProcessSample(float value)
+{
+   return DoProcessSample(value * value);
+}
+
+float SlidingRmsPreprocessor::ProcessSample(float valueL, float valueR)
+{
+   return DoProcessSample((valueL * valueL + valueR * valueR) / 2.0);
+}
+
+float SlidingRmsPreprocessor::DoProcessSample(float value)
+{
+   if(mInsertCount > REFRESH_WINDOW_EVERY)
+   {
+      // Update RMS sum directly from the circle buffer every
+      // REFRESH_WINDOW_EVERY samples to avoid accumulation of rounding errors.
+      mWindow[mPos] = value;
+      Refresh();
+   }
+   else
+   {
+      // Calculate current level from root-mean-squared of
+      // circular buffer ("RMS").
+      mSum -= mWindow[mPos];
+      mWindow[mPos] = value;
+      mSum += mWindow[mPos];
+      ++mInsertCount;
+   }
+
+   // Also refresh if there are severe rounding errors that
+   // caused mRMSSum to be negative.
+   if(mSum < 0)
+      Refresh();
+
+   mPos = (mPos + 1) % mWindow.size();
+
+   // Multiply by gain (usually two) to approximately correct peak level
+   // of standard audio (avoid clipping).
+   return mGain * sqrt(mSum/float(mWindow.size()));
+}
+
+void SlidingRmsPreprocessor::Refresh()
+{
+   // Recompute the RMS sum periodically to prevent accumulation
+   // of rounding errors during long waveforms.
+   mSum = 0;
+   for(const auto& sample : mWindow)
+      mSum += sample;
+   mInsertCount = 0;
+}
+
+SlidingMaxPreprocessor::SlidingMaxPreprocessor(size_t windowSize)
+   : mWindow(windowSize, 0),
+   mMaxes(windowSize, 0),
+   mPos(0)
+{
+}
+
+float SlidingMaxPreprocessor::ProcessSample(float value)
+{
+   return DoProcessSample(value);
+}
+
+float SlidingMaxPreprocessor::ProcessSample(float valueL, float valueR)
+{
+   return DoProcessSample((fabs(valueL) + fabs(valueR)) / 2.0);
+}
+
+float SlidingMaxPreprocessor::DoProcessSample(float value)
+{
+   size_t oldHead     = (mPos-1) % mWindow.size();
+   size_t currentHead = mPos;
+   size_t nextHead    = (mPos+1) % mWindow.size();
+   mWindow[mPos] = value;
+   mMaxes[mPos]  = std::max(value, mMaxes[oldHead]);
+
+   if(mPos % ((mWindow.size()+1)/2) == 0)
+   {
+      mMaxes[mPos] = mWindow[mPos];
+      for(size_t i = 1; i < mWindow.size(); ++i)
+      {
+         size_t pos1 = (mPos-i+mWindow.size()) % mWindow.size();
+         size_t pos2 = (mPos-i+mWindow.size()+1) % mWindow.size();
+         mMaxes[pos1] = std::max(mWindow[pos1], mMaxes[pos2]);
+      }
+   }
+   mPos = nextHead;
+   return std::max(mMaxes[currentHead], mMaxes[nextHead]);
+}
+
 EffectCompressor2::EffectCompressor2()
    : mIgnoreGuiEvents(false)
 {
@@ -282,7 +381,8 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       plot = mResponsePlot->GetPlotData(0);
       plot->pen = std::unique_ptr<wxPen>(
          safenew wxPen(AColor::WideEnvelopePen));
-      plot->xdata = {0, 2, 2, 3, 3, 5};
+      plot->xdata = {0, RESPONSE_PLOT_STEP_START, RESPONSE_PLOT_STEP_START,
+         RESPONSE_PLOT_STEP_STOP, RESPONSE_PLOT_STEP_STOP, 5};
       plot->ydata = {0, 0, 1, 1, 0, 0};
 
       plot = mResponsePlot->GetPlotData(1);
@@ -290,6 +390,10 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
          safenew wxPen(AColor::WideEnvelopePen));
       plot->pen->SetColour(wxColor( 230,80,80 )); // Same color as TrackArtist RMS red.
       plot->pen->SetWidth(2);
+      plot->xdata.resize(RESPONSE_PLOT_SAMPLES+1);
+      plot->ydata.resize(RESPONSE_PLOT_SAMPLES+1);
+      for(size_t x = 0; x < plot->xdata.size(); ++x)
+         plot->xdata[x] = x * float(RESPONSE_PLOT_TIME) / float(RESPONSE_PLOT_SAMPLES);
    }
    S.EndHorizontalLay();
 
@@ -519,13 +623,7 @@ void EffectCompressor2::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 void EffectCompressor2::UpdateUI()
 {
    UpdateCompressorPlot();
-
-   // TODO: update plots
-   PlotData* plot;
-   plot = mResponsePlot->GetPlotData(1);
-   plot->xdata = {0, 2,   2, 3, 3,   5};
-   plot->ydata = {0, 0.5, 1, 1, 0.5, 0};
-   mResponsePlot->Refresh(false);
+   UpdateResponsePlot();
 }
 
 void EffectCompressor2::UpdateCompressorPlot()
@@ -544,4 +642,44 @@ void EffectCompressor2::UpdateCompressorPlot()
 //   mGainPlot->SetName(wxString::Format(
 //      "Compressor gain reduction: %.1f dB", plot->ydata[xsize-1]));
    mGainPlot->Refresh(false);
+}
+
+void EffectCompressor2::UpdateResponsePlot()
+{
+   PlotData* plot;
+   plot = mResponsePlot->GetPlotData(1);
+   wxASSERT(plot->xdata.size() == plot->ydata.size());
+
+   std::unique_ptr<SamplePreprocessor> preproc;
+   float plot_rate = RESPONSE_PLOT_SAMPLES / RESPONSE_PLOT_TIME;
+
+   size_t window_size =
+      std::max(1, int(round((mLookaheadTime + mLookbehindTime) * plot_rate)));
+   size_t lookahead_size =
+      std::max(0, int(round(mLookaheadTime * plot_rate)));
+
+   if(mCompressBy == kRMS)
+      preproc = std::unique_ptr<SamplePreprocessor>(
+         safenew SlidingRmsPreprocessor(window_size, 1.0));
+   else
+      preproc = std::unique_ptr<SamplePreprocessor>(
+         safenew SlidingMaxPreprocessor(window_size));
+
+   ssize_t step_start = RESPONSE_PLOT_STEP_START * plot_rate - lookahead_size;
+   ssize_t step_stop = RESPONSE_PLOT_STEP_STOP * plot_rate - lookahead_size;
+
+   float value;
+   ssize_t xsize = plot->xdata.size();
+   for(ssize_t i = -lookahead_size; i < xsize; ++i)
+   {
+      if(i < step_start || i > step_stop)
+         value = preproc->ProcessSample(0);
+      else
+         value = preproc->ProcessSample(1);
+
+      if(i >= 0)
+         plot->ydata[i] = value;
+   }
+
+   mResponsePlot->Refresh(false);
 }

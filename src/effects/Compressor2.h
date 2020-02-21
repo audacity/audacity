@@ -23,6 +23,50 @@
 class Plot;
 class ShuttleGui;
 
+class SamplePreprocessor
+{
+   public:
+      virtual float ProcessSample(float value) = 0;
+      virtual float ProcessSample(float valueL, float valueR) = 0;
+};
+
+class SlidingRmsPreprocessor : public SamplePreprocessor
+{
+   public:
+      SlidingRmsPreprocessor(size_t windowSize, float gain = 2.0);
+
+      virtual float ProcessSample(float value);
+      virtual float ProcessSample(float valueL, float valueR);
+
+      static const size_t REFRESH_WINDOW_EVERY = 1048576; // 1 MB
+
+   private:
+      float mSum;
+      float mGain;
+      std::vector<float> mWindow;
+      size_t mPos;
+      size_t mInsertCount;
+
+      inline float DoProcessSample(float value);
+      void Refresh();
+};
+
+class SlidingMaxPreprocessor : public SamplePreprocessor
+{
+   public:
+      SlidingMaxPreprocessor(size_t windowSize);
+
+      virtual float ProcessSample(float value);
+      virtual float ProcessSample(float valueL, float valueR);
+
+   private:
+      std::vector<float> mWindow;
+      std::vector<float> mMaxes;
+      size_t mPos;
+
+      inline float DoProcessSample(float value);
+};
+
 class EffectCompressor2 final : public Effect
 {
 public:
@@ -65,6 +109,7 @@ private:
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
    void UpdateCompressorPlot();
+   void UpdateResponsePlot();
 
    int    mAlgorithm;
    int    mCompressBy;
@@ -83,6 +128,11 @@ private:
    // cached intermediate values
    double mMakeupGain;
    double mMakeupGainDB;
+
+   static const size_t RESPONSE_PLOT_SAMPLES = 200;
+   static const size_t RESPONSE_PLOT_TIME = 5;
+   static const size_t RESPONSE_PLOT_STEP_START = 2;
+   static const size_t RESPONSE_PLOT_STEP_STOP = 3;
 
    Plot* mGainPlot;
    Plot* mResponsePlot;
