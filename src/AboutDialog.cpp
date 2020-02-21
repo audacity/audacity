@@ -711,6 +711,11 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    if( (sizeof(void*) == 8) )
       buildType = XO("%s, 64 bits").Format( buildType );
 
+// Remove this once the transition to CMake is complete
+#if defined(CMAKE_INTDIR)
+   buildType = XO("CMake %s").Format( buildType );
+#endif
+
    AddBuildinfoRow(&informationStr, XO("Build type:"), buildType.Translation());
 
 #ifdef _MSC_FULL_VER
