@@ -891,17 +891,13 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             TranslatableString freq = kThirdOct[i] < 1000.
                ? XO("%d Hz").Format((int)kThirdOct[i])
                : XO("%g kHz").Format(kThirdOct[i] / 1000.);
+            /* i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation. */
             TranslatableString fNum = kThirdOct[i] < 1000.
-               ? XO("%d").Format((int)kThirdOct[i])
+               ? Verbatim("%d").Format((int)kThirdOct[i])
                : XO("%gk").Format(kThirdOct[i] / 1000.);
-            //TranslatableString fUnits = kThirdOct[i] < 1000.
-            //   ? XO("Hz") : XO("kHz");
             S.StartVerticalLay();
             {
-               // Abuse of TranslatableString - since there is no
-               // 
                S.AddFixedText( fNum  );
-               //S.AddFixedText( fUnits);
                mSliders[i] = safenew wxSliderWrapper(pParent, ID_Slider + i, 0, -20, +20,
                   wxDefaultPosition, wxSize(-1,50), wxSL_VERTICAL | wxSL_INVERSE);
 
@@ -911,7 +907,6 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
                mSlidersOld[i] = 0;
                mEQVals[i] = 0.;
-               //S.SetSizerProportion(1);
                S.Prop(1)
                   .Name(freq)
                   .ConnectRoot(
