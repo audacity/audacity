@@ -664,10 +664,7 @@ bool Effect::CanExportPresets()
 void Effect::ExportPresets()
 {
    wxString params;
-   if (!GetAutomationParameters(params))
-   {
-      wxLogDebug("No Params");
-   }
+   GetAutomationParameters(params);
 
    wxFileName path;
 
@@ -686,8 +683,6 @@ void Effect::ExportPresets()
 
    path = dlog.GetPath();
    gPrefs->Write(wxT("Presets/Path"), path.GetFullPath());
-
-   wxLogDebug("Params: %s", params);
 
    // Create/Open the file
    wxFFile f(path.GetFullPath(), wxT("wb"));
