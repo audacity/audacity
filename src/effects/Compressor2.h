@@ -67,6 +67,50 @@ class SlidingMaxPreprocessor : public SamplePreprocessor
       inline float DoProcessSample(float value);
 };
 
+class EnvelopeDetector
+{
+   public:
+      EnvelopeDetector(size_t buffer_size);
+
+      float ProcessSample(float value);
+      size_t GetBlockSize() const;
+   protected:
+      static const int TAU_FACTOR = 5;
+
+      size_t mPos;
+      std::vector<float> mLookaheadBuffer;
+      std::vector<float> mProcessingBuffer;
+      std::vector<float> mProcessedBuffer;
+
+      virtual void Follow() = 0;
+};
+
+class ExpFitEnvelopeDetector : public EnvelopeDetector
+{
+   public:
+      ExpFitEnvelopeDetector(float rate, float attackTime, float releaseTime);
+
+   private:
+      double mAttackFactor;
+      double mReleaseFactor;
+
+      virtual void Follow();
+};
+
+class Pt1EnvelopeDetector : public EnvelopeDetector
+{
+   public:
+      Pt1EnvelopeDetector(float rate, float attackTime, float releaseTime,
+         bool correctGain = true);
+
+   private:
+      double mGainCorrection;
+      double mAttackFactor;
+      double mReleaseFactor;
+
+      virtual void Follow();
+};
+
 class EffectCompressor2 final : public Effect
 {
 public:
