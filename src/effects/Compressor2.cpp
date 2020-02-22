@@ -196,6 +196,157 @@ float SlidingMaxPreprocessor::DoProcessSample(float value)
    return std::max(mMaxes[currentHead], mMaxes[nextHead]);
 }
 
+EnvelopeDetector::EnvelopeDetector(size_t buffer_size)
+   : mPos(0),
+   mLookaheadBuffer(buffer_size, 0),
+   mProcessingBuffer(buffer_size, 0),
+   mProcessedBuffer(buffer_size, 0)
+{
+}
+
+float EnvelopeDetector::ProcessSample(float value)
+{
+   float retval = mProcessedBuffer[mPos];
+   mLookaheadBuffer[mPos++] = value;
+   if(mPos == mProcessingBuffer.size())
+   {
+      Follow();
+      mPos = 0;
+      mProcessedBuffer.swap(mProcessingBuffer);
+      mLookaheadBuffer.swap(mProcessingBuffer);
+   }
+   return retval;
+}
+
+size_t EnvelopeDetector::GetBlockSize() const
+{
+   wxASSERT(mProcessedBuffer.size() == mProcessingBuffer.size());
+   wxASSERT(mProcessedBuffer.size() == mLookaheadBuffer.size());
+   return mLookaheadBuffer.size();
+}
+
+ExpFitEnvelopeDetector::ExpFitEnvelopeDetector(
+   float rate, float attackTime, float releaseTime)
+   : EnvelopeDetector(TAU_FACTOR * (attackTime + 1.0) * rate)
+{
+   mAttackFactor = exp(-1.0 / (rate * attackTime));
+   mReleaseFactor = exp(-1.0 / (rate * releaseTime));
+}
+
+void ExpFitEnvelopeDetector::Follow()
+{
+   /*
+   "Follow"ing algorithm by Roger B. Dannenberg, taken from
+   Nyquist.  His description follows.  -DMM
+
+   Description: this is a sophisticated envelope follower.
+   The input is an envelope, e.g. something produced with
+   the AVG function. The purpose of this function is to
+   generate a smooth envelope that is generally not less
+   than the input signal. In other words, we want to "ride"
+   the peaks of the signal with a smooth function. The
+   algorithm is as follows: keep a current output value
+   (called the "value"). The value is allowed to increase
+   by at most rise_factor and decrease by at most fall_factor.
+   Therefore, the next value should be between
+   value * rise_factor and value * fall_factor. If the input
+   is in this range, then the next value is simply the input.
+   If the input is less than value * fall_factor, then the
+   next value is just value * fall_factor, which will be greater
+   than the input signal. If the input is greater than value *
+   rise_factor, then we compute a rising envelope that meets
+   the input value by working backwards in time, changing the
+   previous values to input / rise_factor, input / rise_factor^2,
+   input / rise_factor^3, etc. until this NEW envelope intersects
+   the previously computed values. There is only a limited buffer
+   in which we can work backwards, so if the NEW envelope does not
+   intersect the old one, then make yet another pass, this time
+   from the oldest buffered value forward, increasing on each
+   sample by rise_factor to produce a maximal envelope. This will
+   still be less than the input.
+
+   The value has a lower limit of floor to make sure value has a
+   reasonable positive value from which to begin an attack.
+   */
+   wxASSERT(mProcessedBuffer.size() == mProcessingBuffer.size());
+   wxASSERT(mProcessedBuffer.size() == mLookaheadBuffer.size());
+
+   // First apply a peak detect with the requested release rate.
+   size_t buffer_size = mProcessingBuffer.size();
+   double env = mProcessedBuffer[buffer_size-1];
+   for(size_t i = 0; i < buffer_size; ++i)
+   {
+      env *= mReleaseFactor;
+      if(mProcessingBuffer[i] > env)
+         env = mProcessingBuffer[i];
+      mProcessingBuffer[i] = env;
+   }
+   // Preprocess lookahead buffer as well.
+   for(size_t i = 0; i < buffer_size; ++i)
+   {
+      env *= mReleaseFactor;
+      if(mLookaheadBuffer[i] > env)
+         env = mLookaheadBuffer[i];
+      mLookaheadBuffer[i] = env;
+   }
+
+   // Next do the same process in reverse direction to get the
+   // requested attack rate and preprocess lookahead buffer.
+   for(ssize_t i = buffer_size - 1; i >= 0; --i)
+   {
+      env *= mAttackFactor;
+      if(mLookaheadBuffer[i] < env)
+         mLookaheadBuffer[i] = env;
+      else
+         env = mLookaheadBuffer[i];
+   }
+   for(ssize_t i = buffer_size - 1; i >= 0; --i)
+   {
+      if(mProcessingBuffer[i] < env * mAttackFactor)
+      {
+         env *= mAttackFactor;
+         mProcessingBuffer[i] = env;
+      }
+      else if(mProcessingBuffer[i] > env)
+         // Intersected the previous envelope buffer, so we are finished
+         return;
+      else
+         ; // Do nothing if we are on a plateau from peak look-around
+   }
+}
+
+Pt1EnvelopeDetector::Pt1EnvelopeDetector(
+   float rate, float attackTime, float releaseTime, bool correctGain)
+   : EnvelopeDetector(TAU_FACTOR * (attackTime + 1.0) * rate)
+{
+   // Approximate peak amplitude correction factor.
+   if(correctGain)
+      mGainCorrection = 1.0 + exp(attackTime / 30.0);
+   else
+      mGainCorrection = 1.0;
+
+   mAttackFactor = 1.0 / (attackTime * rate);
+   mReleaseFactor  = 1.0 / (releaseTime  * rate);
+}
+
+void Pt1EnvelopeDetector::Follow()
+{
+   wxASSERT(mProcessedBuffer.size() == mProcessingBuffer.size());
+   wxASSERT(mProcessedBuffer.size() == mLookaheadBuffer.size());
+
+   // Simulate analog compressor with PT1 characteristic.
+   size_t buffer_size = mProcessingBuffer.size();
+   float level = mProcessedBuffer[buffer_size-1] / mGainCorrection;
+   for(size_t i = 0; i < buffer_size; ++i)
+   {
+      if(mProcessingBuffer[i] >= level)
+         level += mAttackFactor * (mProcessingBuffer[i] - level);
+      else
+         level += mReleaseFactor * (mProcessingBuffer[i] - level);
+      mProcessingBuffer[i] = level * mGainCorrection;
+   }
+}
+
 EffectCompressor2::EffectCompressor2()
    : mIgnoreGuiEvents(false)
 {
@@ -612,7 +763,6 @@ double EffectCompressor2::CompressorGain(double env)
    }
 }
 
-
 void EffectCompressor2::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 {
    if(!mIgnoreGuiEvents)
@@ -651,6 +801,7 @@ void EffectCompressor2::UpdateResponsePlot()
    wxASSERT(plot->xdata.size() == plot->ydata.size());
 
    std::unique_ptr<SamplePreprocessor> preproc;
+   std::unique_ptr<EnvelopeDetector> envelope;
    float plot_rate = RESPONSE_PLOT_SAMPLES / RESPONSE_PLOT_TIME;
 
    size_t window_size =
@@ -665,21 +816,27 @@ void EffectCompressor2::UpdateResponsePlot()
       preproc = std::unique_ptr<SamplePreprocessor>(
          safenew SlidingMaxPreprocessor(window_size));
 
+   if(mAlgorithm == kExpFit)
+      envelope = std::unique_ptr<EnvelopeDetector>(
+         safenew ExpFitEnvelopeDetector(plot_rate, mAttackTime, mReleaseTime));
+   else
+      envelope = std::unique_ptr<EnvelopeDetector>(
+         safenew Pt1EnvelopeDetector(plot_rate, mAttackTime, mReleaseTime, false));
+
    ssize_t step_start = RESPONSE_PLOT_STEP_START * plot_rate - lookahead_size;
    ssize_t step_stop = RESPONSE_PLOT_STEP_STOP * plot_rate - lookahead_size;
 
-   float value;
    ssize_t xsize = plot->xdata.size();
-   for(ssize_t i = -lookahead_size; i < xsize; ++i)
+   ssize_t block_size = envelope->GetBlockSize();
+   for(ssize_t i = -lookahead_size; i < 2*block_size; ++i)
    {
       if(i < step_start || i > step_stop)
-         value = preproc->ProcessSample(0);
+         envelope->ProcessSample(preproc->ProcessSample(0));
       else
-         value = preproc->ProcessSample(1);
-
-      if(i >= 0)
-         plot->ydata[i] = value;
+         envelope->ProcessSample(preproc->ProcessSample(1));
    }
+   for(ssize_t i = 0; i < xsize; ++i)
+      plot->ydata[i] = envelope->ProcessSample(preproc->ProcessSample(0));
 
    mResponsePlot->Refresh(false);
 }
