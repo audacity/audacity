@@ -1105,7 +1105,9 @@ set( LIBDIR "${_LIBDIR}" )
 set( HAVE_GTK ${GTK_FOUND} )
 
 if( "${${_OPT}use_lame}" STREQUAL "local" )
-   set( DISABLE_DYNAMIC_LOADING_LAME YES )
+# Something is wrong in ExportMP3 when this is defined.
+# fix it and then uncomment this.
+#   set( DISABLE_DYNAMIC_LOADING_LAME YES )
 endif()
 
 if( "${${_OPT}use_ffmpeg}" STREQUAL "linked" )
