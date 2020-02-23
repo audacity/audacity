@@ -161,7 +161,7 @@ jobs:
         rm -f "${DEST}"/{*.iobj,*.ipdb}
 
         # Create artifact (zipped as Github actions don't preserve permissions)
-        powershell -Command "Compress-Archive '${DEST}' '${GITHUB_SHA}.zip'"
+        cmake -E tar c --format=zip "${GETHUB_SHA}.zip" "${DEST}"
 
     # =========================================================================
     # MACOS: Build (for all versions of MacOS)
@@ -235,7 +235,7 @@ jobs:
         cp -a build/bin/Release/ "${DEST}"
 
         # Create artifact (zipped as Github actions don't preserve permissions)
-        zip -ry9 "${GITHUB_SHA}.zip" "${DEST}"
+        cmake -E tar c --format=zip "${GETHUB_SHA}.zip" "${DEST}"
 
     # =========================================================================
     # UBUNTU: Build (for all versions of Ubuntu)
@@ -307,7 +307,7 @@ jobs:
         chmod +x "${DEST}/audacity"
 
         # Create artifact (zipped as Github actions don't preserve permissions)
-        zip -ry9 "${GITHUB_SHA}.zip" "${DEST}"
+        cmake -E tar c --format=zip "${GETHUB_SHA}.zip" "${DEST}"
 
     # =========================================================================
     # SHARED: Attach the artifact to the workflow results

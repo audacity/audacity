@@ -95,9 +95,6 @@ function( addlib dir name symbol required check )
 
          # And add it to our target
          target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
-         target_compile_options( ${TARGET} INTERFACE ${COPTS} )
-         target_link_directories( ${TARGET} INTERFACE ${LINKDIRS} )
-         target_link_options( ${TARGET} INTERFACE ${LOPTS} )
          target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
       else()
          set( ${use} "local" )
@@ -170,7 +167,7 @@ addlib( lv2                lv2         LV2         NO    YES   "lilv-0 >= 0.24.6
 addlib( portmidi           midi        MIDI        NO    YES   "portmidi >= 0.1" )
 addlib( portmixer          portmixer   PORTMIXER   NO    YES   "" )
 addlib( portsmf            portsmf     PORTSMF     NO    YES   "portsmf >= 0.1" )
-addlib( sbsms              sbsms       SBSMS       NO    YES   "sbsms >= 2.0.2" )
+addlib( sbsms              sbsms       SBSMS       NO    YES   "" )
 addlib( soundtouch         soundtouch  SOUNDTOUCH  NO    YES   "soundtouch >= 1.7.1" )
 addlib( twolame            twolame     LIBTWOLAME  NO    YES   "twolame >= 0.3.13" )
 

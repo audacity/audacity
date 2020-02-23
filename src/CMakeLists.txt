@@ -8,6 +8,9 @@ message( STATUS "========== Configuring ${TARGET} ==========" )
 set( CMAKE_ENABLE_EXPORTS ON )
 
 add_executable( ${TARGET} )
+add_dependencies( ${TARGET} locale )
+add_dependencies( ${TARGET} nyquist )
+add_dependencies( ${TARGET} plug-ins )
 
 def_vars()
 
@@ -1009,9 +1012,9 @@ list( APPEND RESOURCES
 list( APPEND DEFINES
    PRIVATE
       BUILDING_AUDACITY
-      wxDEBUG_LEVEL=0
       WXINTL_NO_GETTEXT_MACRO
       WXUSINGDLL
+      CMAKE
       $<$<BOOL:${HAVE_LRINT}>:
          HAVE_LRINT
       >
@@ -1095,49 +1098,37 @@ if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
 endif()
 
 set( AUDACITY_NAME "Audacity" )
-set( BUILDING_AUDACITY 1 )
+set( BUILDING_AUDACITY YES )
 set( INSTALL_PREFIX "${_PREFIX}" )
 set( PKGLIBDIR "${_LIBDIR}" )
 set( LIBDIR "${_LIBDIR}" )
 set( HAVE_GTK ${GTK_FOUND} )
-set( DISABLE_DYNAMIC_LOADING_FFMPEG ${disable_dynamic_loading} )
+
+if( "${${_OPT}use_lame}" STREQUAL "local" )
+   set( DISABLE_DYNAMIC_LOADING_LAME YES )
+endif()
+
+if( "${${_OPT}use_ffmpeg}" STREQUAL "linked" )
+   set( DISABLE_DYNAMIC_LOADING_FFMPEG YES )
+endif()
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    set( _EXE "Audacity" )
-
-   set_directory_properties(
-      PROPERTIES
-         # Make sure Audacity is the startup project
-         VS_STARTUP_PROJECT "${TARGET}"
-   )
-
-   set( PACKAGES
-      "${GETTEXT_NAME}_${GETTEXT_VERSION}"
-      "${PYTHON_NAME}_${PYTHON_VERSION}"
-   )
 
    set_target_properties(
       ${TARGET}
       PROPERTIES
          # Make sure we're a GUI application and not a console tool
          WIN32_EXECUTABLE ON
-
-         # These two are for auto-restoring gettext and python
-         VS_PACKAGE_REFERENCES "${PACKAGES}"
-         DOTNET_TARGET_FRAMEWORK_VERSION "v4.5"
    )
-
-   # And copy the NuGet packages config
-   configure_file( ../win/packages.config packages.config COPYONLY )
-
-   # Create the config file
-   configure_file( audacity_config.h.in private/configwin.h )
 
    # Define the Windows specific resources
    list( APPEND WIN_RESOURCES
       ../win/audacity.rc
-      ../win/packages.config
    )
+
+   # Create the config file
+   configure_file( audacity_config.h.in private/configwin.h )
 
    # Copy over the wxWidgets DLLs
    if( ${_OPT}use_wxwidgets STREQUAL "system" )
@@ -1235,7 +1226,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    endif()
 
    # Add our required frameworks
-   list(APPEND LIBRARIES
+   list( APPEND LIBRARIES
       PRIVATE
          "-framework AudioUnit"
          "-framework CoreAudio"
@@ -1247,15 +1238,12 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    configure_file( audacity_config.h.in private/configmac.h )
 
    # Extract the version information
-   execute_process(
-      COMMAND
-         gcc -E -dM ${_SRCDIR}/Audacity.h
-      COMMAND
-         awk "/#define *AUDACITY_(VERSION|RELEASE|REVISION|MODLEVEL) /{printf \"%s %s;\",$2,$3}"
-      OUTPUT_VARIABLE
-         output
+   file( STRINGS ${_SRCDIR}/Audacity.h output
+      REGEX
+         "^#define +AUDACITY_(VERSION|RELEASE|REVISION|MODLEVEL) +"
    )
 
+   # And store as variables
    foreach( line ${output} )
       string( REPLACE " " ";" line ${line})
       list( GET line 0 name )
@@ -1278,22 +1266,15 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    endif()
 
    # Define the Wrapper target
-   add_executable( Wrapper )
+   set( WRAPPER_ROOT "${TARGET_ROOT}/../mac" )
+   set( WRAPPER_SOURCES "${WRAPPER_ROOT}/Wrapper.c" )
+
+   add_executable( Wrapper "${WRAPPER_SOURCES}" )
    add_dependencies( Wrapper "${TARGET}" )
 
-   set( WRAPPER_ROOT
-      ${TARGET_ROOT}/../mac
-   )
-
-   set( WRAPPER_SOURCES
-      ${WRAPPER_ROOT}/Wrapper.c
-   )
-
    set_target_property_all( "Wrapper" RUNTIME_OUTPUT_DIRECTORY "${_EXEDIR}" )
-
    organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
 
-   target_sources( "Wrapper" PRIVATE ${WRAPPER_SOURCES} )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
    set( _EXE "audacity" )
 
@@ -1358,7 +1339,6 @@ endif()
 
 set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${_EXE} )
 
-find_package (Git)
 if (GIT_FOUND)
    execute_process(
       COMMAND

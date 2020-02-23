@@ -19,11 +19,6 @@ list( APPEND INCLUDES
       ${TARGET_ROOT}
 )
 
-list( APPEND DEFINES
-   PRIVATE
-      wxDEBUG_LEVEL=0
-)
-
 list( APPEND LIBRARIES
    PRIVATE
       Audacity
@@ -39,7 +34,6 @@ set_target_properties( ${TARGET}
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
-target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 

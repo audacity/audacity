@@ -209,7 +209,7 @@
 #cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
 
 /* Set to maximum allowed value of sf_count_t type. */
-#cmakedefine SF_COUNT_MAX @SF_COUNT_MAX@
+/* unused #cmakedefine SF_COUNT_MAX @SF_COUNT_MAX@ */
 
 /* The size of `double', as computed by sizeof. */
 #define SIZEOF_DOUBLE @SIZEOF_DOUBLE@

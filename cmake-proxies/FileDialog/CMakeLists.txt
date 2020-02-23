@@ -18,7 +18,6 @@ list( APPEND INCLUDES
 
 list( APPEND DEFINES
    PRIVATE
-      wxDEBUG_LEVEL=0
       $<$<PLATFORM_ID:Windows>:__WIN32__>
 )
 

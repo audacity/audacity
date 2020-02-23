@@ -20,7 +20,7 @@
  * $Id: acconfig.h,v 1.2 2001-10-21 22:26:32 dmazzoni Exp $
  */
 
-# ifndef LIBMAD_CONFIG_H 1
+# ifndef LIBMAD_CONFIG_H
 # define LIBMAD_CONFIG_H 1
 
 /*****************************************************************************

@@ -31,14 +31,9 @@ cmake_policy( SET CMP0072 NEW )
 # Include file check macros honor ``CMAKE_REQUIRED_LIBRARIES``.
 cmake_policy( SET CMP0075 NEW )
 
-if( WIN32 )
-   # The NuGet packages that the Windows build requires
-   # (Only here for visibility)
-   set( GETTEXT_NAME "Gettext.Tools" )
-   set( GETTEXT_VERSION "0.20.1.1" )
-   set( PYTHON_NAME "python2" )
-   set( PYTHON_VERSION "2.7.17" )
-elseif( APPLE )
+# Definitions that must happen before the project() command
+if( APPLE )
+
    # Define the OSX compatibility parameters
    set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
    set( CMAKE_OSX_DEPLOYMENT_TARGET 10.7 CACHE INTERNAL "" )
@@ -51,9 +46,6 @@ elseif( APPLE )
    # Shouldn't cmake do this???
    string( APPEND CMAKE_CXX_FLAGS " -stdlib=libc++" )
 endif()
-
-# Define option() prefix
-set( _OPT "audacity_" )
 
 # Add our module path
 set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
@@ -92,8 +84,11 @@ message( STATUS )
 if( APPLE )
    message( STATUS "  Xcode Version: ${XCODE_VERSION}" )
    message( STATUS "  MacOS SDK: ${CMAKE_OSX_SYSROOT}" )
+   message( STATUS )
 endif()
-message( STATUS )
+
+# Define option() prefix
+set( _OPT "audacity_" )
 
 # Try to get the current commit hash
 find_package( Git QUIET )
@@ -103,6 +98,7 @@ if( GIT_FOUND )
          ${GIT_EXECUTABLE} show -s --format='%h'
       OUTPUT_VARIABLE
          short_hash
+      OUTPUT_STRIP_TRAILING_WHITESPACE
    )
    message( STATUS "  Current Commit: ${short_hash}" )
    message( STATUS )
@@ -402,23 +398,16 @@ macro( get_package_interface package )
       ${${package}_INCLUDE_DIRS}
    )
 
-   set( COPTS
-      ${${package}_CFLAGS}
-      ${${package}_CFLAGS_OTHER}
-   )
-
-   set( LOPTS
-      ${${package}_LDFLAGS}
-      ${${package}_LDFLAGS_OTHER}
-   )
-
    set( LINKDIRS
-      ${${package}_LIBRARY_DIRS}
+      ${${package}_LIBDIR}
    )
 
-   set( LIBRARIES
-      ${${package}_LIBRARIES}
-   )
+   # We resolve the full path of each library to ensure the
+   # correct one is referenced while linking
+   foreach( lib ${${package}_LIBRARIES} )
+      find_library( LIB_${lib} ${lib} HINTS ${LINKDIRS} )
+      list( APPEND LIBRARIES ${LIB_${lib}} )
+   endforeach()
 endmacro()
 
 # Set the cache and context value
@@ -481,6 +470,63 @@ function( cmd_option name desc )
    set( ${name} "${${name}}" PARENT_SCOPE )
 endfunction()
 
+# Downloads NuGet packages
+#
+# Why this is needed...
+#
+# To get NuGet to work, you have to add the VS_PACKAGE_REFERENCES
+# property to a target. This target must NOT be a UTILITY target,
+# which is what we use to compile the message catalogs and assemble
+# the manual. We could add that property to the Audacity target and
+# CMake would add the required nodes to the VS project. And when the
+# Audacity target is built, the NuGet packages would get automatically
+# downloaded. This also means that the locale and manual targets
+# must be dependent on the Audacity target so the packages would get
+# downloaded before they execute. This would be handled by the CMake
+# provided ALL_BUILD target which is, by default, set as the startup
+# project in Visual Studio. Sweet right? Well, not quite...
+#
+# We want the Audacity target to be the startup project to provide
+# eaiser debugging. But, if we do that, the ALL_BUILD target is no
+# longer "in control" and any dependents of the Audacity target would
+# not get built. So, targets like "nyquist" and "plug-ins" would have
+# to be manually built. This is not what we want since Nyquist would
+# not be available during Audacity debugging because the Nyquist runtime
+# would not be copied into the destination folder alonside the Audacity
+# executable.
+#
+# To remedy this conundrum, we simply download the NuGet packages
+# ourselves and make the Audacity target dependent on the targets
+# mentioned above. This ensures that the dest folder is populated
+# and laid out like Audacity expects.
+#
+function( nuget_package dir name version )
+   # Generate the full package directory name
+   set( pkgdir "${CMAKE_BINARY_DIR}/packages/${name}/${version}" )
+
+   # Don't download it again if the package directory already exists
+   if( NOT EXISTS "${pkgdir}" )
+      set( pkgurl "https://www.nuget.org/api/v2/package/${name}/${version}" )
+
+      # Create the package directory
+      file( MAKE_DIRECTORY "${pkgdir}" )
+
+      # And download the package into the package directory
+      file( DOWNLOAD "${pkgurl}" "${pkgdir}/package.zip" )
+
+      # Extract the contents of the package into the package directory
+      execute_process(
+         COMMAND
+            ${CMAKE_COMMAND} -E tar x "${pkgdir}/package.zip"
+         WORKING_DIRECTORY
+            ${pkgdir}
+      )
+   endif()
+
+   # Return the package directory name to the caller
+   set( ${dir} "${pkgdir}" PARENT_SCOPE )
+endfunction()
+
 # Add our children
 add_subdirectory( "cmake-proxies" )
 add_subdirectory( "help" )
@@ -489,8 +535,8 @@ add_subdirectory( "locale" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
 add_subdirectory( "src" )
-add_subdirectory( "cmake-proxies/mod-null" EXCLUDE_FROM_ALL )
-add_subdirectory( "cmake-proxies/mod-nyq-bench" EXCLUDE_FROM_ALL )
+add_subdirectory( "cmake-proxies/mod-null" )
+add_subdirectory( "cmake-proxies/mod-nyq-bench" )
 add_subdirectory( "cmake-proxies/mod-script-pipe" )
 
 # Uncomment what follows for symbol values.

@@ -15,10 +15,8 @@ set( out_dir "${_INTDIR}" )
 set( out "${out_dir}/${host}/index.html" )
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   file( TO_NATIVE_PATH
-      "${CMAKE_BINARY_DIR}/packages/${PYTHON_NAME}.${PYTHON_VERSION}/tools/python.exe"
-      python
-   )
+   nuget_package( pkgdir "python2" "2.7.17" )
+   file( TO_NATIVE_PATH "${pkgdir}/tools/python.exe" python )
 else()
    find_package( Python2 )
    if( Python2_FOUND )

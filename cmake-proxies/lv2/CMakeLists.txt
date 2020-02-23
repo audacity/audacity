@@ -30,7 +30,6 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/serd/src/n3.c
       ${TARGET_ROOT}/serd/src/node.c
       ${TARGET_ROOT}/serd/src/reader.c
-      ${TARGET_ROOT}/serd/src/serdi.c
       ${TARGET_ROOT}/serd/src/string.c
       ${TARGET_ROOT}/serd/src/uri.c
       ${TARGET_ROOT}/serd/src/writer.c
@@ -39,7 +38,6 @@ list( APPEND SOURCES
 
       ${TARGET_ROOT}/sord/src/sord.c
       ${TARGET_ROOT}/sord/src/sord_validate.c
-      ${TARGET_ROOT}/sord/src/sordi.c
       ${TARGET_ROOT}/sord/src/syntax.c
       ${TARGET_ROOT}/sord/src/zix/btree.c
       ${TARGET_ROOT}/sord/src/zix/digest.c

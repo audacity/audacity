@@ -65,9 +65,8 @@ list( APPEND SOURCES
 )
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-
-   file( TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/packages/${GETTEXT_NAME}.${GETTEXT_VERSION}/tools/bin/msgfmt.exe" msgfmt )
-
+   nuget_package( pkgdir "Gettext.Tools" "0.20.1.1" )
+   file( TO_NATIVE_PATH "${pkgdir}/tools/bin/msgfmt.exe" msgfmt )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    find_package( Gettext )
    mark_as_advanced( FORCE GETTEXT_MSGFMT_EXECUTABLE )
