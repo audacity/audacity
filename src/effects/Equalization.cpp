@@ -891,9 +891,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             TranslatableString freq = kThirdOct[i] < 1000.
                ? XO("%d Hz").Format((int)kThirdOct[i])
                : XO("%g kHz").Format(kThirdOct[i] / 1000.);
-            /* i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation. */
             TranslatableString fNum = kThirdOct[i] < 1000.
                ? Verbatim("%d").Format((int)kThirdOct[i])
+               /* i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation. */
                : XO("%gk").Format(kThirdOct[i] / 1000.);
             S.StartVerticalLay();
             {
