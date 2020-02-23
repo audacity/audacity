@@ -249,7 +249,7 @@ jobs:
         export LD_LIBRARY_PATH="/usr/local/lib"
 
         # Install required packages
-        sudo apt-get install -y libgtk2.0-dev libasound2-dev gettext zip
+        sudo apt-get install -y libgtk2.0-dev libasound2-dev gettext
         sudo apt-get remove -y ccache
 
         # Build wxWidgets if needed

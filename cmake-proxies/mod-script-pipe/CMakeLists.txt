@@ -27,7 +27,7 @@ list( APPEND DEFINES
       # the Windows pragmas are removed from ScripterCallback.cpp.
       # Without it, the wxWidgets "debug.h" will define __WXDEBUG__
       # which then causes this module to emit library pragmas for the
-      # debug versions of wxWidgets...even if the build if for Release.
+      # debug versions of wxWidgets...even if the build is for Release.
       wxDEBUG_LEVEL=0
 )
 
