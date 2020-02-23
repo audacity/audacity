@@ -136,6 +136,14 @@ jobs:
         export WXWIN="${WXWIN//\\//}"
 
         # Configure Audacity
+        #
+        # The wxWidgets_USE_REL_AND_DBG is needed because,
+        # on Github, we only build the Release version of
+        # wxWidgets and the FindwxWidgets CMake module
+        # defaults to looking for both.  If either of them
+        # isn't found, then it doesn't provides the required
+        # library information.  This is only a concern for
+        # Windows.
         cmake -S . \
               -B build \
               -G "${{matrix.config.generator}}" \

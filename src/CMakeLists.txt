@@ -1104,14 +1104,17 @@ set( PKGLIBDIR "${_LIBDIR}" )
 set( LIBDIR "${_LIBDIR}" )
 set( HAVE_GTK ${GTK_FOUND} )
 
-if( "${${_OPT}use_lame}" STREQUAL "local" )
-# Something is wrong in ExportMP3 when this is defined.
-# fix it and then uncomment this.
-#   set( DISABLE_DYNAMIC_LOADING_LAME YES )
-endif()
+# Do not define these for Windows or Mac until further testing
+# can be done against ExportMP3.cpp.  If either are defined, the
+# build will fail.
+if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
+   if( "${${_OPT}use_lame}" STREQUAL "local" )
+      set( DISABLE_DYNAMIC_LOADING_LAME YES )
+   endif()
 
-if( "${${_OPT}use_ffmpeg}" STREQUAL "linked" )
-   set( DISABLE_DYNAMIC_LOADING_FFMPEG YES )
+   if( "${${_OPT}use_ffmpeg}" STREQUAL "linked" )
+      set( DISABLE_DYNAMIC_LOADING_FFMPEG YES )
+   endif()
 endif()
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
