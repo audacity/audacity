@@ -100,13 +100,6 @@ jobs:
         path: ${{ env.WXWIN }}
 
     # =========================================================================
-    # WINDOWS: Setup Nuget (for all versions of Windows)
-    # =========================================================================
-    - name: Setup Nuget
-      uses: nuget/setup-nuget@v1
-      if: startswith( matrix.config.os, 'windows' )
-
-    # =========================================================================
     # WINDOWS: Build (for all versions of Windows)
     # =========================================================================
     - name: Build for Windows
@@ -148,9 +141,6 @@ jobs:
               -G "${{matrix.config.generator}}" \
               -A ${{matrix.config.platform}} \
               -D wxWidgets_USE_REL_AND_DBG=NO
-
-        # Restore the nuget packages
-        nuget restore 'build/src/packages.config' -SolutionDirectory "build"
 
         # Build Audacity
         cmake --build build --config Release --verbose
