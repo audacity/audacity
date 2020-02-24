@@ -1188,13 +1188,6 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( _EXE "Audacity" )
 
-   # Handle Audio Units option
-   cmd_option(
-      ${_OPT}use_audiounits
-      "Enable Audio Unit plug-in support"
-      ON
-   )
-
    # Define Mac specific resources
    list( APPEND MAC_RESOURCES
       ../mac/Resources/Audacity.icns
