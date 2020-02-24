@@ -1250,9 +1250,9 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
 
    # And store as variables
    foreach( line ${output} )
-      string( REPLACE " " ";" line ${line})
-      list( GET line 0 name )
-      list( GET line 1 value )
+      string( REGEX MATCHALL "[A-Za-z0-9_]+" line "${line}" )
+      list( GET line 1 name )
+      list( GET line 2 value )
       set( ${name} ${value} )
    endforeach()
 
