@@ -156,6 +156,7 @@ jobs:
         set -x
 
         # Setup environment
+        sudo apt-get update -y
         sudo apt-get install -y libgtk2.0-dev libasound2-dev autoconf automake autogen zip
 
         # Identify wxWidgets installation directory
