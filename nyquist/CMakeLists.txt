@@ -31,7 +31,15 @@ list( APPEND SOURCES
    spec-plot.lsp
    spectral-analysis.lsp
    stk.lsp
-   system.lsp
+
+   # Fix this when reorganizing the Nyquist sources
+   $<$<PLATFORM_ID:Windows>:
+      ${libsrc}/libnyquist/nyquist/sys/win/msvc/system.lsp
+   >
+   $<$<NOT:$<PLATFORM_ID:Windows>>:
+      system.lsp
+   >
+
    test.lsp
    velocity.lsp
    xlinit.lsp
