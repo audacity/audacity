@@ -997,12 +997,12 @@ double SolveWarpedLength(const Envelope &env, double t0, double length)
 }
 }
 
-static constexpr int MinPixelHeight = 10; // 8;
+static constexpr int MinPixelHeight = 12;
 static constexpr int MaxPixelHeight =
 #ifdef __WXMAC__
-   10
-#else
    12
+#else
+   14
 #endif
 ;
 
