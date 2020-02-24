@@ -291,7 +291,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                             wxDefaultPosition,
                             size,
                             ASlider::Options{}
-                               .Style( style ).Line( line ).Page( page ) );
+                               .Style( style ).Line( line ).Page( page ).Popup( false) );
       S.Position(wxEXPAND)
          .AddWindow(mSlider);
    }
