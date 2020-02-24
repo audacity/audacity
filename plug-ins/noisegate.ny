@@ -15,19 +15,20 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 
 
 $control mode (_ "Select Function") choice ((_ "Gate")
-                                             ("Analyze" (_ "Analyse Noise Level")))
-                                             0
+                                            ("Analyze" (_ "Analyse Noise Level")))
+                                            0
 $control stereo-link (_ "Stereo Linking") choice (("LinkStereo" (_ "Link Stereo Tracks"))
-                                             ("DoNotLink" (_ "Don't Link Stereo")))
-                                             0
+                                                  ("DoNotLink" (_ "Don't Link Stereo")))
+                                                  0
 $control low-cut (_ "Apply Low-Cut filter") choice ((_ "No")
-                                                ("10Hz" (_ "10Hz 6dB/octave"))
-                                                ("20Hz" (_ "20Hz 6dB/octave")))
-                                                0
-$control gate-freq (_ "Gate frequencies above") float (_ "kHz") 0 0 10
-$control level-reduction (_ "Level reduction") float (_ "dB") -12 -100 0
-$control threshold (_ "Gate threshold") float (_ "dB") -48 -96 -6
-$control attack (_ "Attack/Decay") float (_ "milliseconds") 250 10 1000
+                                                    ("10Hz" (_ "10Hz 6dB/octave"))
+                                                    ("20Hz" (_ "20Hz 6dB/octave")))
+                                                    0
+;; Work around bug 2336.
+$control gate-freq (_ "Gate frequencies above (kHz)") float "" 0 0 10
+$control level-reduction (_ "Level reduction (dB)") float "" -12 -100 0
+$control threshold (_ "Gate threshold (dB)") float "" -48 -96 -6
+$control attack (_ "Attack/Decay (ms)") float "" 250 10 1000
 
 
 ; Global variables
@@ -42,15 +43,17 @@ $control attack (_ "Attack/Decay") float (_ "milliseconds") 250 10 1000
 
 (defun error-check ()
   (when (>= freq (* *sound-srate* 0.45))  ;10% below Nyquist should be safe maximum.
-    (throw 'err (format nil (_ "Error.~%~
-                            \"Gate frequencies above: ~s kHz\"~%~
-                            is too high for selected track.~%~
-                            Set the control below ~a kHz.")
+    ;; Work around bug 2012.
+    (throw 'err (format nil (_ "Error.
+\"Gate frequencies above: ~s kHz\"
+is too high for selected track.
+Set the control below ~a kHz.")
                         gate-freq
                         (roundn (* 0.00045 *sound-srate*) 1))))
   (when (< len 100) ;100 samples required 
-    (throw 'err (format nil (_ "~%Insufficient audio selected.~%~
-                            Make the selection longer than ~a ms.~%")
+    ;; Work around bug 2012.
+    (throw 'err (format nil (_ "~%Insufficient audio selected.
+Make the selection longer than ~a ms.")
                         (round-up (/ 100000 *sound-srate*))))))
 
 
@@ -61,8 +64,9 @@ $control attack (_ "Attack/Decay") float (_ "milliseconds") 250 10 1000
   (let* ((test-length (truncate (min len (/ *sound-srate* 2.0))))
          (levm (peak-avg-db sig test-length))
          (target (* 0.925 levm))) ;suggest 7.5% above noise level
-    (format nil "Peak based on first ~a seconds ~a dB~%~%~
-                Suggested Threshold Setting ~a dB."
+    ;; Work around bug 2012.
+    (format nil (_ "Peak based on first ~a seconds ~a dB~%
+Suggested Threshold Setting ~a dB.")
             (roundn (/ test-length *sound-srate*) 2)
             (roundn levm 2)
             (roundn target 0))))
