@@ -665,6 +665,7 @@ void Effect::ExportPresets()
 {
    wxString params;
    GetAutomationParameters(params);
+   params = GetSymbol().Internal() + ":" + params;
 
    wxFileName path;
 
@@ -740,6 +741,27 @@ void Effect::ImportPresets()
    wxFFile f(path.GetFullPath());
    if (f.IsOpened()) {
       if (f.ReadAll(&params)) {
+         wxString ident = params.BeforeFirst(':');
+         params = params.AfterFirst(':');
+         if (ident != GetSymbol().Internal()) {
+            // effect identifiers are a sensible length!
+            // must also have some params.
+            if ((params.Length() < 2 ) || (ident.Length() < 2) || (ident.Length() > 30)) 
+            {
+               Effect::MessageBox(
+                  /* i18n-hint %s will be replaced by a file name */
+                  XO("%s: Was not a valid presets file.\n")
+                  .Format(path.GetFullName()));
+            }
+            else
+            {
+               Effect::MessageBox(
+                  /* i18n-hint %s will be replaced by a file name */
+                  XO("%s: Was not for this effect.\n")
+                  .Format(path.GetFullName()));
+            }
+            return;
+         }
          SetAutomationParameters(params);
       }
    }
