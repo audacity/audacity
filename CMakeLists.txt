@@ -22,6 +22,9 @@ endif()
 # Ignore COMPILE_DEFINITIONS_<Config> properties
 cmake_policy( SET CMP0043 NEW )
 
+# Link libraries by full path even in implicit directories.
+cmake_policy( SET CMP0060 NEW )
+
 # ``INTERPROCEDURAL_OPTIMIZATION`` is enforced when enabled.
 cmake_policy( SET CMP0069 NEW )
 
