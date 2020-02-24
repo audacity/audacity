@@ -712,7 +712,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
       buildType = XO("%s, 64 bits").Format( buildType );
 
 // Remove this once the transition to CMake is complete
-#if defined(CMAKE_INTDIR)
+#if defined(CMAKE)
    buildType = Verbatim("CMake %s").Format( buildType );
 #endif
 
