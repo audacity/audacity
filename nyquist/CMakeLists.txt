@@ -6,7 +6,7 @@ message( STATUS "========== Configuring ${TARGET} ==========" )
 
 def_vars()
 
-list( APPEND SOURCES
+list( APPEND RUNTIME
    aud-do-support.lsp
    dspprims.lsp
    envelopes.lsp
@@ -31,15 +31,7 @@ list( APPEND SOURCES
    spec-plot.lsp
    spectral-analysis.lsp
    stk.lsp
-
-   # Fix this when reorganizing the Nyquist sources
-   $<$<PLATFORM_ID:Windows>:
-      ${libsrc}/libnyquist/nyquist/sys/win/msvc/system.lsp
-   >
-   $<$<NOT:$<PLATFORM_ID:Windows>>:
-      system.lsp
-   >
-
+   system.lsp
    test.lsp
    velocity.lsp
    xlinit.lsp
@@ -61,9 +53,16 @@ list( APPEND SOURCES
    rawwaves/sinewave.raw
 )
 
-foreach( source ${SOURCES} )
+foreach( source ${RUNTIME} )
    set( src "${_SRCDIR}/${source}" )
    set( dst "${_DEST}/${TARGET}/${source}" )
+
+   # Fix this when reorganizing the Nyquist sources
+   if( source STREQUAL "system.lsp" )
+      if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+         set( src "${libsrc}/libnyquist/nyquist/sys/win/msvc/system.lsp" )
+      endif()
+   endif()
 
    add_custom_command(
       DEPENDS
@@ -76,6 +75,7 @@ foreach( source ${SOURCES} )
          "${dst}"
    )
 
+   list( APPEND SOURCES "${src}" )
    list( APPEND OUTPUTS "${dst}" )
 endforeach()
 
