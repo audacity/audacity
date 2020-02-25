@@ -1,11 +1,15 @@
 #!/bin/bash
 
-set -x
 
 # Function to retrieve a value from a plist
 function plist
 {
    /usr/libexec/PlistBuddy -c "Print ${2}" "${1}"
+}
+
+function realpath
+{
+   python -c "import os; import sys; print(os.path.realpath(sys.argv[1]))" "${1}"
 }
 
 # Function to notarize a file (APP or DMG)
@@ -58,6 +62,7 @@ function notarize
 
       # Extract the current status and stop polling if it's no longer in progress
       STATUS=$(plist "${OUTPUT}" "notarization-info:Status")
+      echo "Notarization status: ${STATUS}"
       if [ "${STATUS}" != "in progress" ]
       then
          break
@@ -75,12 +80,34 @@ function notarize
    rm "${OUTPUT}"
 }
 
+if [ -z "${SRCROOT}" -o -z "${DSTROOT}" ]
+then
+   if [ "${#}" -ne 2 ]
+   then
+      echo "You must specify the source and destination roots"
+      echo
+      echo "Usage: ${0} srcroot dstroot"
+      echo
+      echo "  srcroot   path to the 'mac' subdirectory of your source tree"
+      echo "  dstroot   path to where Audacity was built:"
+      echo "            legacy build = /tmp/Audacity.dst"
+      echo "            cmake build = <build directory/bin/Release"
+      exit 1
+   fi
+   SRCROOT="${1}"
+   DSTROOT="${2}"
+fi
+
+# Get full paths
+SRCROOT=$(realpath "${SRCROOT}")
+DSTROOT=$(realpath "${DSTROOT}")
+
 # Setup
-VERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' build/Info.plist.h`
-RELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' build/Info.plist.h`
-REVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' build/Info.plist.h`
+VERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' ${SRCROOT}/../src/Audacity.h`
+RELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' ${SRCROOT}/../src/Audacity.h`
+REVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' ${SRCROOT}/../src/Audacity.h`
 VERSION=$VERSION.$RELEASE.$REVISION
-IDENT=$(plist "${INSTALL_ROOT}/Audacity.app/Contents/Info.plist" "CFBundleIdentifier")
+IDENT=$(plist "${DSTROOT}/Audacity.app/Contents/Info.plist" "CFBundleIdentifier")
 
 #
 # This depends on a file in the builders HOME directory called ".audacity_signing" that
@@ -116,8 +143,8 @@ echo "Audacity has been installed to: ${DSTROOT}"
 cd "${DSTROOT}/.."
 
 # Make sure we have consistent ownership and permissions
-chmod -RH "${INSTALL_MODE_FLAG}" "${TARGET_BUILD_DIR}"
-chown -RH "${INSTALL_OWNER}:${INSTALL_GROUP}" "${TARGET_BUILD_DIR}"
+chmod -RH 755 "${DSTROOT}"
+chown -RH $(id -u):$(id -g) "${DSTROOT}"
 
 # Preclean
 rm -rf "$DMG" "$DMG.dmg" TMP.dmg
@@ -125,15 +152,30 @@ rm -rf "$DMG" "$DMG.dmg" TMP.dmg
 # Sign and notarize the app
 if [ -n "${SIGNING}" ]
 then
-   xcrun codesign --force \
-                  --deep \
-                  --verbose \
+   xcrun codesign --verbose \
                   --timestamp \
                   --identifier "${IDENT}" \
                   --options runtime \
-                  --entitlements "${SRCROOT}/${CODE_SIGN_ENTITLEMENTS}" \
+                  --entitlements "${SRCROOT}/Audacity.entitlements" \
                   --sign "${CODESIGN_APP_IDENTITY}" \
-                  $(find ${DSTROOT}/Audacity.app -type f ! -path "*help*")
+                  ${DSTROOT}/Audacity.app/Contents/modules/*
+
+   xcrun codesign --verbose \
+                  --timestamp \
+                  --identifier "${IDENT}" \
+                  --options runtime \
+                  --entitlements "${SRCROOT}/Audacity.entitlements" \
+                  --sign "${CODESIGN_APP_IDENTITY}" \
+                  ${DSTROOT}/Audacity.app/Contents/plug-ins/*
+
+   xcrun codesign --verbose \
+                  --deep \
+                  --timestamp \
+                  --identifier "${IDENT}" \
+                  --options runtime \
+                  --entitlements "${SRCROOT}/Audacity.entitlements" \
+                  --sign "${CODESIGN_APP_IDENTITY}" \
+                  ${DSTROOT}/Audacity.app
 
    # Create the ZIP archive for notarization
    xcrun ditto -c -k --keepParent "${DSTROOT}/Audacity.app" "${DSTROOT}.zip" 
@@ -151,6 +193,10 @@ fi
 # Create structure
 mkdir "$DMG"
 cp -pR "${DSTROOT}/" "${DMG}"
+
+# Copy over the background image
+mkdir "${DMG}/.background"
+cp "${SRCROOT}/Resources/Audacity-DMG-background.png" "${DMG}/.background"
 
 #Add a custom icon for the DMG
 #cp -p mac/Resources/Audacity.icns "${DMG}"/.VolumeIcon.icns
