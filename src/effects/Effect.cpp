@@ -750,14 +750,14 @@ void Effect::ImportPresets()
             {
                Effect::MessageBox(
                   /* i18n-hint %s will be replaced by a file name */
-                  XO("%s: Was not a valid presets file.\n")
+                  XO("%s: is not a valid presets file.\n")
                   .Format(path.GetFullName()));
             }
             else
             {
                Effect::MessageBox(
                   /* i18n-hint %s will be replaced by a file name */
-                  XO("%s: Was not for this effect.\n")
+                  XO("%s: is not for this effect.\n")
                   .Format(path.GetFullName()));
             }
             return;
