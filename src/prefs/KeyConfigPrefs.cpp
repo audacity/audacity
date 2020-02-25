@@ -102,6 +102,10 @@ KeyConfigPrefs::KeyConfigPrefs(
       auto index = mView->GetIndexByName(name);
       mView->SelectNode(index);
    }
+
+   // See bug #2315 for discussion. This should be reviewed
+   // and (possibly) removed after wx3.1.3.
+   Bind(wxEVT_SHOW, &KeyConfigPrefs::OnShow, this);
 }
 
 ComponentInterfaceSymbol KeyConfigPrefs::GetSymbol()
@@ -457,6 +461,15 @@ TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
    }
 
    return disabledShortcuts;
+}
+
+// See bug #2315 for discussion. This should be reviewed
+// and (possibly) removed after wx3.1.3.
+void KeyConfigPrefs::OnShow(wxShowEvent & event)
+{
+   event.Skip();
+
+   mView->Refresh();
 }
 
 void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))

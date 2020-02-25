@@ -65,8 +65,11 @@ ExtImportPrefs::ExtImportPrefs(wxWindow * parent, wxWindowID winid)
     mFakeKeyEvent (false), mStopRecursiveSelection (false), last_selected (-1)
 {
    Populate();
-}
 
+   // See bug #2315 for discussion
+   // This should be reviewed and (possibly) removed after wx3.1.3.
+   Bind(wxEVT_SHOW, &ExtImportPrefs::OnShow, this);
+}
 ExtImportPrefs::~ExtImportPrefs()
 {
 }
@@ -211,6 +214,16 @@ bool ExtImportPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
+}
+
+// See bug #2315 for discussion. This should be reviewed
+// and (possibly) removed after wx3.1.3.
+void ExtImportPrefs::OnShow(wxShowEvent &event)
+{
+   event.Skip();
+
+   RuleTable->Refresh();
+   PluginList->Refresh();
 }
 
 void ExtImportPrefs::OnPluginKeyDown(wxListEvent& event)

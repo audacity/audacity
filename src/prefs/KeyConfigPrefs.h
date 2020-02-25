@@ -56,6 +56,10 @@ private:
    CommandID NameFromKey(const NormalizedKeyString & key);
    void SetKeyForSelected(const NormalizedKeyString & key);
 
+   // See bug #2315 for discussion. This should be reviewed
+   // and (possibly) removed after wx3.1.3.
+   void OnShow(wxShowEvent & e);
+
    void OnViewBy(wxCommandEvent & e);
    void OnDefaults(wxCommandEvent & e);
    void OnImportDefaults(wxCommandEvent & e);

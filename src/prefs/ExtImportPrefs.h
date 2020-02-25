@@ -58,6 +58,10 @@ class ExtImportPrefs final : public PrefsPanel
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
+   // See bug #2315 for discussion. This should be reviewed
+   // and (possibly) removed after wx3.1.3.
+   void OnShow(wxShowEvent& event);
+
    void OnPluginKeyDown(wxListEvent& event);
    void OnPluginBeginDrag(wxListEvent& event);
    void OnRuleTableKeyDown(wxKeyEvent& event);

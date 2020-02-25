@@ -64,6 +64,10 @@ MousePrefs::MousePrefs(wxWindow * parent, wxWindowID winid)
 :  PrefsPanel(parent, winid, XO("Mouse"))
 {
    Populate();
+
+   // See bug #2315 for discussion. This should be reviewed
+   // and (possibly) removed after wx3.1.3.
+   Bind(wxEVT_SHOW, &MousePrefs::OnShow, this);
 }
 
 MousePrefs::~MousePrefs()
@@ -211,6 +215,14 @@ void MousePrefs::AddItem(
    mList->SetItem(i, CommentColumn, wxT(" ") + comment.Translation());
 }
 
+// See bug #2315 for discussion. This should be reviewed
+// and (possibly) removed after wx3.1.3.
+void MousePrefs::OnShow(wxShowEvent &event)
+{
+   event.Skip();
+
+   mList->Refresh();
+}
 
 /// Update the preferences stored on disk.
 /// Currently does nothing as Mouse Preferences don't change.

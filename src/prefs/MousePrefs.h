@@ -39,6 +39,10 @@ class MousePrefs final : public PrefsPanel
                 TranslatableString const & action,
                 TranslatableString const & comment = {});
 
+   // See bug #2315 for discussion. This should be reviewed
+   // and (possibly) removed after wx3.1.3.
+   void OnShow(wxShowEvent & event);
+
    wxListCtrl * mList;
 };
 
