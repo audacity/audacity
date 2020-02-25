@@ -166,8 +166,10 @@ struct Handler final
 void OnZoomIn(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
    window.ZoomInByFactor( 2.0 );
+   trackPanel.Refresh(false);
 }
 
 void OnZoomNormal(const CommandContext &context)

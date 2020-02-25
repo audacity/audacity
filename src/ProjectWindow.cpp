@@ -401,6 +401,8 @@ unsigned operator()
          double ZoomFactor = pow(2.0, steps);
          AudacityProject *p = GetProject();
          if( steps > 0 )
+            // PRL:  Track panel refresh may be needed if you reenable this
+            // code, but we don't want this file dependent on TrackPanel.cpp
             p->ZoomInByFactor( ZoomFactor );
          else
             p->ZoomOutByFactor( ZoomFactor );
