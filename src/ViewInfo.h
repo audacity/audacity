@@ -59,9 +59,7 @@ public:
 
    bool HandleXMLAttribute
       (const wxChar *attr, const wxChar *value,
-       const wxChar *legacyT0Name, const wxChar *legacyT1Name)
-   { return mRegion.HandleXMLAttribute(
-      attr, value, legacyT0Name, legacyT1Name ); }
+       const wxChar *legacyT0Name, const wxChar *legacyT1Name);
 
    // const-only access allows assignment from this into a SelectedRegion
    // or otherwise passing it into a function taking const SelectedRegion&
@@ -95,7 +93,7 @@ public:
    bool setF1(double f, bool maySwap = true);
 
 private:
-   void Notify();
+   void Notify( bool delayed = false  );
 
    SelectedRegion mRegion;
 };

@@ -34,6 +34,17 @@ wxEvent *SelectedRegionEvent::Clone() const
    return safenew SelectedRegionEvent{ *this };
 }
 
+bool NotifyingSelectedRegion::HandleXMLAttribute
+   (const wxChar *attr, const wxChar *value,
+    const wxChar *legacyT0Name, const wxChar *legacyT1Name)
+{
+   auto result = mRegion.HandleXMLAttribute(
+      attr, value, legacyT0Name, legacyT1Name );
+   if ( result )
+      Notify( true );
+   return result;
+}
+
 NotifyingSelectedRegion& NotifyingSelectedRegion::operator =
 ( const SelectedRegion &other )
 {
@@ -128,10 +139,13 @@ bool NotifyingSelectedRegion::setF1(double f, bool maySwap)
    return result;
 }
 
-void NotifyingSelectedRegion::Notify()
+void NotifyingSelectedRegion::Notify( bool delayed )
 {
    SelectedRegionEvent evt{ EVT_SELECTED_REGION_CHANGE, this };
-   ProcessEvent( evt );
+   if ( delayed )
+      QueueEvent( evt.Clone() );
+   else
+      ProcessEvent( evt );
 }
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
