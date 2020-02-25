@@ -184,6 +184,18 @@ void OnExportWav(const CommandContext &context)
    DoExport(project, "WAV");
 }
 
+void OnExportWav24(const CommandContext &context)
+{
+   auto &project = context.project;
+   DoExport(project, "WAV24");
+}
+
+void OnExportWav32(const CommandContext &context)
+{
+   auto &project = context.project;
+   DoExport(project, "WAVFLT");
+}
+
 void OnExportOgg(const CommandContext &context)
 {
    auto &project = context.project;
@@ -644,6 +656,12 @@ BaseItemSharedPtr FileMenu()
                AudioIONotBusyFlag() | WaveTracksExistFlag() ),
 
             Command( wxT("ExportWav"), XXO("Export as &WAV"), FN(OnExportWav),
+               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
+
+            Command( wxT("ExportWav24"), XXO("Export as WAV (signed 24-bit)"), FN(OnExportWav24),
+               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
+
+            Command( wxT("ExportWav32"), XXO("Export as WAV (32-bit float)"), FN(OnExportWav32),
                AudioIONotBusyFlag() | WaveTracksExistFlag() ),
 
             Command( wxT("ExportOgg"), XXO("Export as &OGG"), FN(OnExportOgg),
