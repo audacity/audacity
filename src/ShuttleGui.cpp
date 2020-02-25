@@ -2057,6 +2057,17 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
          // override the given Flags
          useFlags = mItem.mWindowPositionFlags;
 
+      if (!prompt) {
+         // Do these steps before adding the window to the sizer
+         if( mItem.mUseBestSize )
+            mpWind->SetMinSize( mpWind->GetBestSize() );
+         else if( mItem.mHasMinSize )
+            mpWind->SetMinSize( mItem.mMinSize );
+
+         if ( mItem.mWindowSize != wxSize{} )
+            mpWind->SetSize( mItem.mWindowSize );
+      }
+
       if( mpSizer){
          if( bPrepend )
          {
@@ -2069,7 +2080,7 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
       }
 
       if (!prompt) {
-         // Apply certain optional window attributes here
+         // Apply certain other optional window attributes here
 
          if ( mItem.mValidatorSetter )
             mItem.mValidatorSetter( mpWind );
@@ -2097,14 +2108,6 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
 
          for (auto &pair : mItem.mRootConnections)
             mpWind->Connect( pair.first, pair.second, nullptr, mpDlg );
-
-         if( mItem.mUseBestSize )
-            mpWind->SetMinSize( mpWind->GetBestSize() );
-         else if( mItem.mHasMinSize )
-            mpWind->SetMinSize( mItem.mMinSize );
-
-         if ( mItem.mWindowSize != wxSize{} )
-            mpWind->SetSize( mItem.mWindowSize );
 
          // Reset to defaults
          mItem = {};
