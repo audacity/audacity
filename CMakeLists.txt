@@ -173,6 +173,11 @@ if( HAVE_LIBM )
    list( APPEND CMAKE_REQUIRED_LIBRARIES -lm )
 endif()
 
+check_library_exists( atomic __atomic_fetch_add_4 "" HAVE_LIBATOMIC )
+if( HAVE_LIBATOMIC )
+  list( APPEND CMAKE_REQUIRED_LIBRARIES -latomic )
+endif()
+
 # Add the dynamic linker library (if needed) to the list of required libraries
 list( APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS} )
 
