@@ -997,14 +997,22 @@ double SolveWarpedLength(const Envelope &env, double t0, double length)
 }
 }
 
-static constexpr int MinPixelHeight = 12;
-static constexpr int MaxPixelHeight =
-#ifdef __WXMAC__
-   12
+static constexpr int MinPixelHeight =
+#ifdef __WXMSW__
+   12;
 #else
-   14
+   10;
 #endif
-;
+
+static constexpr int MaxPixelHeight =
+#ifdef __WXMSW__
+   14;
+#elif __WXMAC__
+   10;
+#else
+   12;
+#endif
+
 
 void Ruler::Updater::ChooseFonts(
    std::unique_ptr<Fonts> &pFonts, const Fonts *pUserFonts,
