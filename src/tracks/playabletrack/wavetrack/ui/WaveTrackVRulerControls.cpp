@@ -67,14 +67,23 @@ void WaveTrackVRulerControls::DoDraw( TrackVRulerControls &controls,
       if ( !t )
          return;
 
+// Next code tests for a VRuler that is narrower than the rectangle
+// we are drawing into.  If so, it 'right aligns' the ruler into the 
+// rectangle.
+// However, it seems this occurs only because vrulerSize is not up to
+// date.  That in turn caused Bug 2248, which was the labels being
+// drawn further right than they should be (in MultiView mode).
+// #ifdeffing out this code fixes bug 2248
+#if 0 
       if ( t->vrulerSize.GetWidth() < rect.GetWidth()) {
          int adj = rr.GetWidth() - t->vrulerSize.GetWidth();
          rr.x += adj;
          rr.width -= adj;
       }
-      
+#endif
+
       controls.UpdateRuler(rr);
-      
+
       vruler.SetTickColour( theTheme.Colour( clrTrackPanelText ));
       vruler.Draw(*dc);
    }
