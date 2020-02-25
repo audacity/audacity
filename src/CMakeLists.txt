@@ -1084,9 +1084,9 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
       $<$<BOOL:${USE_VAMP}>:libvamp>
 #      $<$<BOOL:${USE_VAMP}>:libvamp-hostsdk>
-      $<$<PLATFORM_ID:Linux,FreeBSD>:PkgConfig::GLIB>
-      $<$<PLATFORM_ID:Linux,FreeBSD>:z>
-      $<$<PLATFORM_ID:Linux,FreeBSD>:pthread>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GLIB>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:z>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:pthread>
 )
 
 #
@@ -1273,7 +1273,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set_target_property_all( "Wrapper" RUNTIME_OUTPUT_DIRECTORY "${_EXEDIR}" )
    organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
 
-elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
+else()
    set( _EXE "audacity" )
 
    # Create the config file
