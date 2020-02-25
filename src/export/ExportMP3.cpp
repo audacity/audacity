@@ -334,35 +334,6 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
    bool enable;
    int defrate;
 
-   switch( MP3RateModeSetting.ReadEnum() ) {
-      case MODE_SET:
-         choices = &setRateNames;
-         enable = true;
-         defrate = mSetRate;
-         break;
-
-      case MODE_VBR:
-         choices = &varRateNames;
-         enable = true;
-         defrate = mVbrRate;
-         break;
-
-      case MODE_ABR:
-         choices = &fixRateNames;
-         codes = &fixRateValues;
-         enable = false;
-         defrate = mAbrRate;
-         break;
-
-      case MODE_CBR:
-      default:
-         choices = &fixRateNames;
-         codes = &fixRateValues;
-         enable = false;
-         defrate = mCbrRate;
-         break;
-   }
-
    S.StartVerticalLay();
    {
       S.StartHorizontalLay(wxCENTER);
@@ -385,6 +356,41 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   S.EndRadioButtonGroup();
                }
                S.EndHorizontalLay();
+
+               /* PRL: unfortunately this bit of procedural code must
+                interrupt the mostly-declarative dialog description, until
+                we find a better solution.  Because when shuttling values
+                from the dialog, we must shuttle out the MP3RateModeSetting
+                first. */
+
+               switch( MP3RateModeSetting.ReadEnum() ) {
+                  case MODE_SET:
+                     choices = &setRateNames;
+                     enable = true;
+                     defrate = mSetRate;
+                     break;
+
+                  case MODE_VBR:
+                     choices = &varRateNames;
+                     enable = true;
+                     defrate = mVbrRate;
+                     break;
+
+                  case MODE_ABR:
+                     choices = &fixRateNames;
+                     codes = &fixRateValues;
+                     enable = false;
+                     defrate = mAbrRate;
+                     break;
+
+                  case MODE_CBR:
+                  default:
+                     choices = &fixRateNames;
+                     codes = &fixRateValues;
+                     enable = false;
+                     defrate = mCbrRate;
+                     break;
+               }
 
                mRate = S.Id(ID_QUALITY).TieNumberAsChoice(
                   XO("Quality"),
@@ -1814,7 +1820,8 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       exporter.SetQuality(brate, r);
    }
    else if (rmode == MODE_ABR) {
-      bitrate = brate = ValidateValue(fixRateValues, brate, 128);
+      brate = ValidateIndex( fixRateValues, brate, 6 /* 128 kbps */ );
+      bitrate = fixRateValues[ brate ];
       exporter.SetMode(MODE_ABR);
       exporter.SetBitrate(bitrate);
 
@@ -1826,7 +1833,8 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       }
    }
    else {
-      bitrate = brate = ValidateValue(fixRateValues, brate, 128);
+      brate = ValidateIndex( fixRateValues, brate, 6 /* 128 kbps */ );
+      bitrate = fixRateValues[ brate ];
       exporter.SetMode(MODE_CBR);
       exporter.SetBitrate(bitrate);
 
@@ -1923,7 +1931,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
          title = (selectionOnly ?
             XO("Exporting selected audio at %d Kbps") :
             XO("Exporting the audio at %d Kbps"))
-               .Format( brate );
+               .Format( bitrate );
       }
 
       InitProgress( pDialog, fName, title );
