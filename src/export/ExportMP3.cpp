@@ -451,11 +451,19 @@ int ValidateValue( int nValues, int value, int defaultValue )
 {
    return (value >= 0 && value < nValues) ? value : defaultValue;
 }
+
 int ValidateValue( const std::vector<int> &values, int value, int defaultValue )
 {
    auto start = values.begin(), finish = values.end(),
       iter = std::find( start, finish, value );
    return ( iter != finish ) ? value : defaultValue;
+}
+
+int ValidateIndex( const std::vector<int> &values, int value, int defaultIndex )
+{
+   auto start = values.begin(), finish = values.end(),
+      iter = std::find( start, finish, value );
+   return ( iter != finish ) ? static_cast<int>( iter - start ) : defaultIndex;
 }
 
 }
@@ -488,7 +496,7 @@ void ExportMP3Options::OnABR(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(fixRateNames);
 
-   mRate->SetSelection(ValidateValue(fixRateValues, mAbrRate, 10));
+   mRate->SetSelection(ValidateIndex(fixRateValues, mAbrRate, 10));
    mRate->Refresh();
    mMode->Enable(false);
 }
@@ -499,7 +507,7 @@ void ExportMP3Options::OnCBR(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(fixRateNames);
 
-   mRate->SetSelection(ValidateValue(fixRateValues, mCbrRate, 10));
+   mRate->SetSelection(ValidateIndex(fixRateValues, mCbrRate, 10));
    mRate->Refresh();
    mMode->Enable(false);
 }
