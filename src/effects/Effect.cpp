@@ -35,6 +35,7 @@
 #include "../Shuttle.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
+#include "../wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
 #include "../ondemand/ODManager.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
@@ -667,9 +668,7 @@ void Effect::ExportPresets()
    GetAutomationParameters(params);
    params = GetSymbol().Internal() + ":" + params;
 
-   wxFileName path;
-
-   path = gPrefs->Read(wxT("Presets/Path"), wxEmptyString);
+   auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
 
    wxFileDialog dlog(NULL,
                      _("Export Effect Parameters"),
@@ -683,7 +682,7 @@ void Effect::ExportPresets()
    }
 
    path = dlog.GetPath();
-   gPrefs->Write(wxT("Presets/Path"), path.GetFullPath());
+   gPrefs->Write(wxT("Presets/Path"), path.GetPath());
 
    // Create/Open the file
    wxFFile f(path.GetFullPath(), wxT("wb"));
@@ -717,9 +716,8 @@ void Effect::ExportPresets()
 void Effect::ImportPresets()
 {
    wxString params;
-   wxFileName path;
 
-   path = gPrefs->Read(wxT("Presets/Path"), wxEmptyString);
+   auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
 
    wxFileDialog dlog(NULL,
                      _("Import Effect Parameters"),
@@ -736,7 +734,7 @@ void Effect::ImportPresets()
    if( !path.IsOk())
       return;
 
-   gPrefs->Write(wxT("Presets/Path"), path.GetFullPath());
+   gPrefs->Write(wxT("Presets/Path"), path.GetPath());
 
    wxFFile f(path.GetFullPath());
    if (f.IsOpened()) {
