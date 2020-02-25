@@ -757,7 +757,7 @@ void Effect::ImportPresets()
             {
                Effect::MessageBox(
                   /* i18n-hint %s will be replaced by a file name */
-                  XO("%s: is not for this effect.\n")
+                  XO("%s: is for a different Effect, Generator or Analyzer.\n")
                   .Format(path.GetFullName()));
             }
             return;
