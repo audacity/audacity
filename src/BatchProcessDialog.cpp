@@ -1112,14 +1112,18 @@ void MacrosWindow::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
    // Just edit the parameters, and not the command.
    auto command = mMacroCommands.GetCommand(item);
    wxString params  = mMacroCommands.GetParams(item);
+   wxString oldParams = params;
 
    params = MacroCommands::PromptForParamsFor(command, params, *this).Trim();
    Raise();
 
+   if (oldParams == params)
+      return; // They did not actually make any changes..
+
    mMacroCommands.DeleteFromMacro(item);
    mMacroCommands.AddToMacro(command,
-                             params,
-                             item);
+      params,
+      item);
    mChanged = true;
    mSelectedCommand = item;
    PopulateList();
