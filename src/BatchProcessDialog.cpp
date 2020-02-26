@@ -931,6 +931,11 @@ void MacrosWindow::OnMacrosEndEdit(wxListEvent &event)
 ///
 void MacrosWindow::OnAdd(wxCommandEvent & WXUNUSED(event))
 {
+   // Similar to Bug 2284 we may need to save a changed macro.
+   if (!ChangeOK()) {
+      return;
+   }
+
    while (true) {
       AudacityTextEntryDialog d(this,
          XO("Enter name of new macro"),
