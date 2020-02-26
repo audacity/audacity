@@ -740,7 +740,7 @@ bool EffectEqualization::CloseUI()
 
 void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 {
-   if ( S.GetMode() == eIsCreating )
+   if ( (S.GetMode() == eIsCreating ) && !IsBatchProcessing() )
       LoadUserPreset(GetCurrentSettingsGroup());
 
    //LoadCurves();
