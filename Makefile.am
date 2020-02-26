@@ -8,7 +8,7 @@ dist_doc_DATA = LICENSE.txt README.txt
 dist_pkgdata_DATA = presets/EQDefaultCurves.xml
 
 suillibdir = $(pkglibdir)
-suillib_DATA = $(shell find lib-src/lv2/build -name \*.so)
+suillib_DATA = $(shell [ -e lib-src/lv2/build ] && find lib-src/lv2/build -name \*.so)
 
 nobase_dist_pkgdata_DATA = \
    include/audacity/ComponentInterface.h \
