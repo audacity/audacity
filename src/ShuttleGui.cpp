@@ -566,7 +566,10 @@ wxSlider * ShuttleGuiBase::AddSlider(
    wxSlider * pSlider;
    mpWind = pSlider = safenew wxSliderWrapper(GetParent(), miId,
       pos, Min, Max,
-      wxDefaultPosition, wxDefaultSize,
+      wxDefaultPosition,
+      // Bug2289:  On Linux at least, sliders like to be constructed with the
+      // proper size, not reassigned size later
+      ( ( mItem.mWindowSize == wxSize{} ) ? wxDefaultSize : mItem.mWindowSize ),
       GetStyle( wxSL_HORIZONTAL | wxSL_LABELS | wxSL_AUTOTICKS )
       );
 #if wxUSE_ACCESSIBILITY
