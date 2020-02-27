@@ -47,7 +47,9 @@ typedef union {
 } ls_pcast32;
 
 // Sometimes it doesn't get defined, even though it eists and C99 is declared
+#if !defined(HAVE_LRINTF)
 long int lrintf (float x);
+#endif
 
 // 1.0 / ln(2)
 #define LN2R 1.442695041f

@@ -13,7 +13,7 @@ typedef struct {
 
 rms_env *rms_env_new();
 
-static inline float rms_env_process(rms_env *r, float x);
+static inline float rms_env_process(rms_env *r, const float x);
 
 void rms_env_reset(rms_env *r);
 

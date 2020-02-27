@@ -19,12 +19,12 @@ list( APPEND SOURCES
 list( APPEND INCLUDES
    PRIVATE
       ${_SRCDIR}
-      ${topdir}/src/effects/ladspa
 )
 
 list( APPEND OPTIONS
    PRIVATE
       $<$<C_COMPILER_ID:AppleClang,Clang,GNU>:-D_init=__attribute__\(\(constructor\)\)_${TARGET}_init>
+      $<$<BOOL:HAVE_LRINTF>:-DHAVE_LRINTF=1>
 )
 
 set_target_property_all( ${TARGET}
