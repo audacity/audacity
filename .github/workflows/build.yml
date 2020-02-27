@@ -5,6 +5,10 @@ on:
     # Remove the "#" from the next 2 lines if you need to disable this action
     #branches:
     #  - disable
+  pull_request:
+    # Remove the "#" from the next 2 lines if you need to disable this action
+    #branches:
+    #  - disable
 
 jobs:
   build:
