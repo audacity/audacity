@@ -5,6 +5,7 @@ set( TARGET_ROOT "${_SRCDIR}" )
 message( STATUS "========== Configuring ${TARGET} ==========" )
 
 add_library( ${TARGET} MODULE EXCLUDE_FROM_ALL )
+add_dependencies( Audacity ${TARGET} )
 
 def_vars()
 
