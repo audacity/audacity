@@ -1444,10 +1444,7 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
          .Position(wxEXPAND | wxALL)
          .AddWindow(mixerPanel);
 
-      // Bug 2289 if wxALIGN_CENTER is used here the slider has
-      // no width.  This 'fix' gives us an overlong slider, but
-      // that is better than no slider at all.
-      S.StartHorizontalLay(wxEXPAND, 0);
+      S.StartHorizontalLay(wxALIGN_CENTER | wxALL, 0);
       {
          mChannelsText = S.AddVariableText(
             label,
