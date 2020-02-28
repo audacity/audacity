@@ -1231,6 +1231,9 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          "-framework CoreAudioKit"
    )
 
+   # Use the Aqua theme
+   set( USE_AQUA_THEME 1 )
+
    # Create the config file
    set( HAVE_VISIBILITY 1 )
    configure_file( audacity_config.h.in private/configmac.h )
