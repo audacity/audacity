@@ -74,11 +74,10 @@ int main(int argc, char *argv[])
 
 bool App::OnInit()
 {
+   // Leave no persistent side-effect on preferences
+   SettingScope scope;
    // Don't blend colors
-   const auto old_value = GUIBlendThemes.Read();
    GUIBlendThemes.Write(false);
-   // Don't have a persistent side-effect on preferences
-   auto cleanup = finally([=]{ GUIBlendThemes.Write(old_value); });
 
    // So that the program can interpret PNG
    wxInitAllImageHandlers();
