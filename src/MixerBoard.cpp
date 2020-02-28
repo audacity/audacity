@@ -1446,6 +1446,14 @@ MixerBoardFrame::~MixerBoardFrame()
 // event handlers
 void MixerBoardFrame::OnCloseWindow(wxCloseEvent &WXUNUSED(event))
 {
+   // Fix for bug #2175.
+   //
+   // If the mixerboard enters fullscreen, the main project will be
+   // "lowered", so ensure it's visible after the mixerboard closes.
+#if defined(__WXMAC__)
+   dynamic_cast<wxFrame*>(GetParent())->Raise();
+#endif
+
    this->Hide();
 }
 
