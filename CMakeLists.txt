@@ -311,8 +311,7 @@ find_package( PkgConfig QUIET )
 # Mostly just to make the CMP0072 policy happy
 find_package( OpenGL QUIET )
 
-# When called will define several useful directory paths for the 
-# current context.
+# Defines several useful directory paths for the active context.
 macro( def_vars )
    set( _SRCDIR "${CMAKE_CURRENT_SOURCE_DIR}" )
    set( _INTDIR "${CMAKE_CURRENT_BINARY_DIR}" )
@@ -358,6 +357,55 @@ endif()
 # may not work due to insufficient privileges
 if( NOT CMAKE_INSTALL_LIBDIR STREQUAL "lib" AND NOT EXISTS "${CMAKE_BINARY_DIR}/lib64" )
    file( CREATE_LINK "${CMAKE_BINARY_DIR}/lib" "${CMAKE_BINARY_DIR}/lib64" SYMBOLIC )
+endif()
+
+# Extract the Audacity version information
+file(
+   STRINGS
+      ${topdir}/src/Audacity.h output
+   REGEX
+      "^#define +AUDACITY_(VERSION|RELEASE|REVISION|MODLEVEL|BUILD_LEVEL) +"
+)
+
+# And store as variables
+foreach( line ${output} )
+   string( REGEX MATCHALL "[A-Za-z0-9_]+" line "${line}" )
+   list( GET line 1 name )
+   list( GET line 2 value )
+   set( ${name} ${value} )
+endforeach()
+
+# Create short and full version strings
+set( AUDACITY_DIST_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION} )
+set( AUDACITY_INFO_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION}.${AUDACITY_MODLEVEL} )
+
+# Define the version suffix (duplicates what happens in src/Audacity.h)
+string( TIMESTAMP __TDATE__ "%Y%m%d" )
+if( AUDACITY_BUILD_LEVEL EQUAL 0 )
+   set( AUDACITY_SUFFIX "-alpha-${__TDATE__}" )
+elseif(  AUDACITY_BUILD_LEVEL EQUAL 1 )
+   set( AUDACITY_SUFFIX "-beta-${__TDATE__}" )
+else()
+   set( AUDACITY_SUFFIX "" )
+endif()
+
+# Extract the current commit information
+if (GIT_FOUND)
+   execute_process(
+      COMMAND
+         ${GIT_EXECUTABLE} show -s "--format=\"%H\";\"%cd\";"
+      WORKING_DIRECTORY
+         ${topdir}
+      OUTPUT_VARIABLE
+         output
+   )
+
+   list( GET output 0 long )
+   list( GET output 1 time )
+   list( APPEND DEFINES
+      REV_LONG=${long}
+      REV_TIME=${time}
+   )
 endif()
 
 # Helper to organize sources into folders for the IDEs
@@ -546,6 +594,7 @@ add_subdirectory( "src" )
 add_subdirectory( "cmake-proxies/mod-null" )
 add_subdirectory( "cmake-proxies/mod-nyq-bench" )
 add_subdirectory( "cmake-proxies/mod-script-pipe" )
+add_subdirectory( "scripts" )
 
 # Only need the sc4_1882 Ladspa plug-in on Windows and Mac
 if( CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )

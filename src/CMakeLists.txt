@@ -1235,23 +1235,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( HAVE_VISIBILITY 1 )
    configure_file( audacity_config.h.in private/configmac.h )
 
-   # Extract the version information
-   file( STRINGS ${_SRCDIR}/Audacity.h output
-      REGEX
-         "^#define +AUDACITY_(VERSION|RELEASE|REVISION|MODLEVEL) +"
-   )
-
-   # And store as variables
-   foreach( line ${output} )
-      string( REGEX MATCHALL "[A-Za-z0-9_]+" line "${line}" )
-      list( GET line 1 name )
-      list( GET line 2 value )
-      set( ${name} ${value} )
-   endforeach()
-
-   set( AUDACITY_DIST_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION} )
-   set( AUDACITY_INFO_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION}.${AUDACITY_MODLEVEL} )
-
    # Copy the wxWidgets libraries into the bundle
    if( "${CMAKE_GENERATOR}" MATCHES "Xcode" )
       add_custom_command(
@@ -1336,24 +1319,6 @@ else()
 endif()
 
 set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${_EXE} )
-
-if (GIT_FOUND)
-   execute_process(
-      COMMAND
-         ${GIT_EXECUTABLE} show -s "--format=\"%H\";\"%cd\";"
-      WORKING_DIRECTORY
-         ${TARGET_ROOT}
-      OUTPUT_VARIABLE
-         output
-   )
-
-   list( GET output 0 long )
-   list( GET output 1 time )
-   list( APPEND DEFINES
-      REV_LONG=${long}
-      REV_TIME=${time}
-   )
-endif()
 
 organize_source( "${TARGET_ROOT}/.." "include" "${HEADERS}" )
 organize_source( "${TARGET_ROOT}/../presets" "presets" "${RESOURCES}" )
