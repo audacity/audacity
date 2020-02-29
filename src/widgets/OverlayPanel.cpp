@@ -41,6 +41,9 @@ void OverlayPanel::ClearOverlays()
 
 void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
 {
+   if ( !IsShownOnScreen() )
+      return;
+
    size_t n_pairs = mOverlays.size();
 
    using Pair = std::pair<wxRect, bool /*out of date?*/>;
