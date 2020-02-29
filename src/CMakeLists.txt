@@ -1272,34 +1272,28 @@ else()
 
    # Create the MIMETYPES list
    list( APPEND MIMETYPES
-      $<$<BOOL:${USE_FFMPEG}>:
-         audio/aac
+      $<$<BOOL:${USE_FFMPEG}>:audio/aac
          audio/ac3
          audio/mp4
          audio/x-ms-wma
-         video/mpeg
-      >
-      $<$<BOOL:${USE_LIBFLAC}>:
-         audio/flac
-         audio/x-flac
-      >
-      $<$<BOOL:${USE_LIBMAD}>:
-         audio/mpeg
-      >
-      $<$<BOOL:${USE_SNDFILE}>:
-         audio/basic
+         video/mpeg>
+      $<$<BOOL:${USE_LIBFLAC}>:audio/flac
+         audio/x-flac>
+      $<$<BOOL:${USE_LIBMAD}>:audio/mpeg>
+      $<$<BOOL:${USE_SNDFILE}>:audio/basic
          audio/x-aiff
-         audio/x-wav
-      >
-      $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
-         application/ogg
-         audio/x-vorbis+ogg
-      >
+         audio/x-wav>
+      $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:application/ogg
+         audio/x-vorbis+ogg>
    )
 
    # Create the desktop file
    set( AUDACITY_NAME "${_EXE}" )
    configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
+   file( GENERATE
+      OUTPUT ${_INTDIR}/audacity.desktop
+      INPUT ${_INTDIR}/audacity.desktop
+   )
 
    # Create the script to copy required wxWidgets libraries
    if( ${_OPT}use_wxwidgets STREQUAL "local" )
