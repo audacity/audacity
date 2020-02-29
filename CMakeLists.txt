@@ -19,6 +19,10 @@ if( "${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}" )
    )
 endif()
 
+# Just a couple of convenience variables
+set( topdir "${CMAKE_SOURCE_DIR}" )
+set( libsrc "${topdir}/lib-src" )
+
 # Ignore COMPILE_DEFINITIONS_<Config> properties
 cmake_policy( SET CMP0043 NEW )
 
@@ -73,39 +77,8 @@ endif()
 # Our very own project
 project( Audacity )
 
-message( STATUS "Build Info:" )
-message( STATUS "  Host System: ${CMAKE_HOST_SYSTEM}" )
-message( STATUS "  Host System Name: ${CMAKE_HOST_SYSTEM_NAME}" )
-message( STATUS "  Host System Processor: ${CMAKE_HOST_SYSTEM_PROCESSOR}" )
-message( STATUS "  Host System Version: ${CMAKE_HOST_SYSTEM_VERSION}" )
-message( STATUS )
-message( STATUS "  Compiler: ${CMAKE_CXX_COMPILER}" )
-message( STATUS "  Compiler Standard: ${CMAKE_CXX_STANDARD}" )
-message( STATUS "  Compiler Standard Required: ${CMAKE_CXX_STANDARD_REQUIRED}" )
-message( STATUS "  Compiler Extensions: ${CMAKE_CXX_EXTENSIONS}" )
-message( STATUS )
-if( APPLE )
-   message( STATUS "  Xcode Version: ${XCODE_VERSION}" )
-   message( STATUS "  MacOS SDK: ${CMAKE_OSX_SYSROOT}" )
-   message( STATUS )
-endif()
-
-# Define option() prefix
-set( _OPT "audacity_" )
-
-# Try to get the current commit hash
-find_package( Git QUIET )
-if( GIT_FOUND )
-   execute_process(
-      COMMAND
-         ${GIT_EXECUTABLE} show -s --format='%h'
-      OUTPUT_VARIABLE
-         short_hash
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-   )
-   message( STATUS "  Current Commit: ${short_hash}" )
-   message( STATUS )
-endif()
+# Load our functions/macros
+include( AudacityFunctions )
 
 # Pull all the modules we'll need
 include( CheckCXXCompilerFlag )
@@ -119,6 +92,55 @@ include( CMakeDetermineASM_NASMCompiler )
 include( CMakePushCheckState )
 include( GNUInstallDirs )
 include( TestBigEndian )
+
+message( STATUS "Build Info:" )
+message( STATUS "  Host System: ${CMAKE_HOST_SYSTEM}" )
+message( STATUS "  Host System Name: ${CMAKE_HOST_SYSTEM_NAME}" )
+message( STATUS "  Host System Processor: ${CMAKE_HOST_SYSTEM_PROCESSOR}" )
+message( STATUS "  Host System Version: ${CMAKE_HOST_SYSTEM_VERSION}" )
+message( STATUS )
+message( STATUS "  Compiler: ${CMAKE_CXX_COMPILER}" )
+message( STATUS "  Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}" )
+message( STATUS "  Compiler Standard: ${CMAKE_CXX_STANDARD}" )
+message( STATUS "  Compiler Standard Required: ${CMAKE_CXX_STANDARD_REQUIRED}" )
+message( STATUS "  Compiler Extensions: ${CMAKE_CXX_EXTENSIONS}" )
+message( STATUS )
+
+if( CMAKE_GENERATOR MATCHES "Visual Studio" )
+   message( STATUS "  MSVC Version: ${MSVC_VERSION}" )
+   message( STATUS "  MSVC Toolset: ${MSVC_TOOLSET_VERSION}" )
+   message( STATUS ) 
+elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   if( CMAKE_GENERATOR MATCHES "Visual Studio" )
+      message( STATUS "  Xcode Version: ${XCODE_VERSION}" )
+   endif()
+   message( STATUS "  MacOS SDK: ${CMAKE_OSX_SYSROOT}" )
+   message( STATUS )
+endif()
+
+# Try to get the current commit information
+find_package( Git QUIET )
+if( GIT_FOUND )
+   execute_process(
+      COMMAND
+         ${GIT_EXECUTABLE} show -s "--format=%h;%H;%cd"
+      WORKING_DIRECTORY
+         ${topdir}
+      OUTPUT_VARIABLE
+         output
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+   )
+
+   list( GET output 0 GIT_COMMIT_SHORT )
+   list( GET output 1 GIT_COMMIT_LONG )
+   list( GET output 2 GIT_COMMIT_TIME )
+
+   message( STATUS "  Current Commit: ${GIT_COMMIT_SHORT}" )
+   message( STATUS )
+endif()
+
+# Define option() prefix
+set( _OPT "audacity_" )
 
 # Organize subdirectories/targets into folders for the IDEs
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
@@ -158,14 +180,10 @@ set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE )
 set( CMAKE_MACOSX_RPATH FALSE )
 
 # the RPATH to be used when installing, but only if it's not a system directory
-#list( FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_FULL_LIBDIR}" isSystemDir)
-#IF("${isSystemDir}" STREQUAL "-1")
-#   SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-#ENDIF("${isSystemDir}" STREQUAL "-1")
-
-# Just a couple of convenience variables
-set( topdir "${CMAKE_SOURCE_DIR}" )
-set( libsrc "${topdir}/lib-src" )
+#list( FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_FULL_LIBDIR}" isSysDir )
+#if( "${isSysDir}" STREQUAL "-1" )
+#   set( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
+#endif()
 
 # Add the math library (if found) to the list of required libraries
 check_library_exists( m pow "" HAVE_LIBM )
@@ -222,14 +240,12 @@ endif()
 
 check_include_files( "float.h;stdarg.h;stdlib.h;string.h" STDC_HEADERS )
 
-check_include_file( "alloca.h" HAVE_ALLOCA_H )
 check_include_file( "assert.h" HAVE_ASSERT_H )
 check_include_file( "byteswap.h" HAVE_BYTESWAP_H )
 check_include_file( "errno.h" HAVE_ERRNO_H )
 check_include_file( "fcntl.h" HAVE_FCNTL_H )
 check_include_file( "fenv.h" HAVE_FENV_H )
 check_include_file( "inttypes.h" HAVE_INTTYPES_H )
-check_include_file( "libudev.h" HAVE_LIBUDEV_H )
 check_include_file( "limits.h" HAVE_LIMITS_H )
 check_include_file( "malloc.h" HAVE_MALLOC_H )
 check_include_file( "memory.h" HAVE_MEMORY_H )
@@ -313,14 +329,6 @@ find_package( PkgConfig QUIET )
 # Mostly just to make the CMP0072 policy happy
 find_package( OpenGL QUIET )
 
-# Defines several useful directory paths for the active context.
-macro( def_vars )
-   set( _SRCDIR "${CMAKE_CURRENT_SOURCE_DIR}" )
-   set( _INTDIR "${CMAKE_CURRENT_BINARY_DIR}" )
-   set( _PRVDIR "${CMAKE_CURRENT_BINARY_DIR}/private" )
-   set( _PUBDIR "${CMAKE_CURRENT_BINARY_DIR}/public" )
-endmacro()
-
 # Define the non-install and executable destinations
 #
 # If this is a multi-config build system (VS, Xcode), CMAKE_CFG_INTDIR
@@ -391,199 +399,14 @@ else()
    set( AUDACITY_SUFFIX "" )
 endif()
 
-# Extract the current commit information
-if (GIT_FOUND)
-   execute_process(
-      COMMAND
-         ${GIT_EXECUTABLE} show -s "--format=\"%H\";\"%cd\";"
-      WORKING_DIRECTORY
-         ${topdir}
-      OUTPUT_VARIABLE
-         output
-   )
-
-   list( GET output 0 long )
-   list( GET output 1 time )
-   list( APPEND DEFINES
-      REV_LONG=${long}
-      REV_TIME=${time}
-   )
+# Python is used for the manual and (possibly) message catalogs
+find_package( Python2 )
+if( Python2_FOUND )
+   set( PYTHON "${Python2_EXECUTABLE}" )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   nuget_package( pkgdir "python2" "2.7.17" )
+   file( TO_NATIVE_PATH "${pkgdir}/tools/python.exe" PYTHON )
 endif()
-
-# Helper to organize sources into folders for the IDEs
-macro( organize_source root prefix sources )
-   set( cleaned )
-   foreach( source ${sources} )
-      # Remove generator expressions
-      string( REGEX REPLACE ".*>:(.*)>*" "\\1" source "${source}" )
-      string( REPLACE ">" "" source "${source}" )
-
-      # Remove keywords
-      string( REGEX REPLACE "^[A-Z]+$" "" source "${source}" )
-
-      # Add to cleaned
-      list( APPEND cleaned "${source}" )
-   endforeach()
-
-   # Define the source groups
-   if( "${prefix}" STREQUAL "" )
-      source_group( TREE "${root}" FILES ${cleaned} )
-   else()
-      source_group( TREE "${root}" PREFIX ${prefix} FILES ${cleaned} )
-   endif()
-endmacro()
-
-# Given a directory, recurse to all defined subdirectories and assign
-# the given folder name to all of the targets found.
-function( set_dir_folder dir folder)
-   get_property( subdirs DIRECTORY "${dir}" PROPERTY SUBDIRECTORIES )
-   foreach( sub ${subdirs} )
-      set_dir_folder( "${sub}" "${folder}" )
-   endforeach()
-
-   get_property( targets DIRECTORY "${dir}" PROPERTY BUILDSYSTEM_TARGETS )
-   foreach( target ${targets} )
-      get_target_property( type "${target}" TYPE )
-      if( NOT "${type}" STREQUAL "INTERFACE_LIBRARY" )
-         set_target_properties( ${target} PROPERTIES FOLDER ${folder} )
-      endif()
-   endforeach()
-endfunction()
-
-# Helper to retrieve the settings returned from pkg_check_modules()
-macro( get_package_interface package )
-   set( INCLUDES
-      ${${package}_INCLUDE_DIRS}
-   )
-
-   set( LINKDIRS
-      ${${package}_LIBDIR}
-   )
-
-   # We resolve the full path of each library to ensure the
-   # correct one is referenced while linking
-   foreach( lib ${${package}_LIBRARIES} )
-      find_library( LIB_${lib} ${lib} HINTS ${LINKDIRS} )
-      list( APPEND LIBRARIES ${LIB_${lib}} )
-   endforeach()
-endmacro()
-
-# Set the cache and context value
-macro( set_cache_value var value )
-   set( ${var} "${value}" )
-   set_property( CACHE ${var} PROPERTY VALUE "${value}" )
-endmacro()
-
-# Set the given property and its config specific brethren to the same value
-function( set_target_property_all target property value )
-   set_target_properties( "${target}" PROPERTIES "${property}" "${value}" )
-   foreach( type ${CMAKE_CONFIGURATION_TYPES} )
-      string( TOUPPER "${property}_${type}" prop )
-      set_target_properties( "${target}" PROPERTIES "${prop}" "${value}" )
-   endforeach()
-endfunction()
-
-# Taken from wxWidgets and modified for Audcaity
-#
-# cmd_option(<name> <desc> [default] [STRINGS strings])
-# The default is ON if third parameter isn't specified
-function( cmd_option name desc )
-   cmake_parse_arguments( OPTION "" "" "STRINGS" ${ARGN} )
-
-   if( ARGC EQUAL 2 )
-      if( OPTION_STRINGS )
-         list( GET OPTION_STRINGS 1 default )
-      else()
-         set( default ON )
-      endif()
-   else()
-      set( default ${OPTION_UNPARSED_ARGUMENTS} )
-   endif()
-
-   if( OPTION_STRINGS )
-      set( cache_type STRING )
-   else()
-      set( cache_type BOOL )
-   endif()
-
-   set( ${name} "${default}" CACHE ${cache_type} "${desc}" )
-   if( OPTION_STRINGS )
-      set_property( CACHE ${name} PROPERTY STRINGS ${OPTION_STRINGS} )
-
-      # Check valid value
-      set( value_is_valid FALSE )
-      set( avail_values )
-      foreach( opt ${OPTION_STRINGS} )
-         if( ${name} STREQUAL opt )
-            set( value_is_valid TRUE )
-            break()
-         endif()
-         string( APPEND avail_values " ${opt}" )
-      endforeach()
-      if( NOT value_is_valid )
-         message( FATAL_ERROR "Invalid value \"${${name}}\" for option ${name}. Valid values are: ${avail_values}" )
-      endif()
-   endif()
-
-   set( ${name} "${${name}}" PARENT_SCOPE )
-endfunction()
-
-# Downloads NuGet packages
-#
-# Why this is needed...
-#
-# To get NuGet to work, you have to add the VS_PACKAGE_REFERENCES
-# property to a target. This target must NOT be a UTILITY target,
-# which is what we use to compile the message catalogs and assemble
-# the manual. We could add that property to the Audacity target and
-# CMake would add the required nodes to the VS project. And when the
-# Audacity target is built, the NuGet packages would get automatically
-# downloaded. This also means that the locale and manual targets
-# must be dependent on the Audacity target so the packages would get
-# downloaded before they execute. This would be handled by the CMake
-# provided ALL_BUILD target which is, by default, set as the startup
-# project in Visual Studio. Sweet right? Well, not quite...
-#
-# We want the Audacity target to be the startup project to provide
-# eaiser debugging. But, if we do that, the ALL_BUILD target is no
-# longer "in control" and any dependents of the Audacity target would
-# not get built. So, targets like "nyquist" and "plug-ins" would have
-# to be manually built. This is not what we want since Nyquist would
-# not be available during Audacity debugging because the Nyquist runtime
-# would not be copied into the destination folder alonside the Audacity
-# executable.
-#
-# To remedy this conundrum, we simply download the NuGet packages
-# ourselves and make the Audacity target dependent on the targets
-# mentioned above. This ensures that the dest folder is populated
-# and laid out like Audacity expects.
-#
-function( nuget_package dir name version )
-   # Generate the full package directory name
-   set( pkgdir "${CMAKE_BINARY_DIR}/packages/${name}/${version}" )
-
-   # Don't download it again if the package directory already exists
-   if( NOT EXISTS "${pkgdir}" )
-      set( pkgurl "https://www.nuget.org/api/v2/package/${name}/${version}" )
-
-      # Create the package directory
-      file( MAKE_DIRECTORY "${pkgdir}" )
-
-      # And download the package into the package directory
-      file( DOWNLOAD "${pkgurl}" "${pkgdir}/package.zip" )
-
-      # Extract the contents of the package into the package directory
-      execute_process(
-         COMMAND
-            ${CMAKE_COMMAND} -E tar x "${pkgdir}/package.zip"
-         WORKING_DIRECTORY
-            ${pkgdir}
-      )
-   endif()
-
-   # Return the package directory name to the caller
-   set( ${dir} "${pkgdir}" PARENT_SCOPE )
-endfunction()
 
 # Add our children
 add_subdirectory( "cmake-proxies" )
@@ -605,13 +428,13 @@ endif()
 
 # Uncomment what follows for symbol values.
 #[[
-   get_cmake_property(_variableNames VARIABLES)
-   foreach (_variableName ${_variableNames})
-      message(STATUS "${_variableName}=${${_variableName}}")
+   get_cmake_property( _variableNames VARIABLES )
+   foreach( _variableName ${_variableNames} )
+      message( STATUS "${_variableName}=${${_variableName}}" )
    endforeach()
 #]]
 #[[
-   include(PrintProperties)
-   print_properties(TARGET "wxWidgets")
+   include( PrintProperties )
+   print_properties( TARGET "wxWidgets" )
 #]]
 

@@ -1015,6 +1015,10 @@ list( APPEND DEFINES
       WXINTL_NO_GETTEXT_MACRO
       WXUSINGDLL
       CMAKE
+      $<$<BOOL:${GIT_FOUND}>:
+         REV_LONG="${GIT_COMMIT_LONG}"
+         REV_TIME="${GIT_COMMIT_TIME}"
+      >
       $<$<BOOL:${HAVE_LRINT}>:
          HAVE_LRINT
       >

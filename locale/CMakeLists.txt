@@ -64,69 +64,21 @@ list( APPEND SOURCES
    zh_TW.po
 )
 
-if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   nuget_package( pkgdir "Gettext.Tools" "0.20.1.1" )
-   file( TO_NATIVE_PATH "${pkgdir}/tools/bin/msgfmt.exe" msgfmt )
-elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   find_package( Gettext )
+# Look for gettext
+find_package( Gettext QUIET )
+if( GETTEXT_FOUND )
    mark_as_advanced( FORCE GETTEXT_MSGFMT_EXECUTABLE )
    mark_as_advanced( FORCE GETTEXT_MSGMERGE_EXECUTABLE )
-
-   if( GETTEXT_FOUND )
-      set( msgfmt "${GETTEXT_MSGFMT_EXECUTABLE}" )
-   else()
-      set( root "${CMAKE_CURRENT_BINARY_DIR}/usr/local" )
-      set( msgfmt "${CMAKE_CURRENT_BINARY_DIR}/msgfmt" )
-
-      if( NOT EXISTS "${root}" )
-         execute_process(
-            COMMAND
-               curl -L -o /tmp/gettext.pkg https://raw.githubusercontent.com/rudix-mac/packages/master/gettext-0.20.1-macos10.14.pkg
-         )
-         execute_process(
-            COMMAND
-               pkgutil --force --expand /tmp/gettext.pkg /tmp/gettext
-         )
-         execute_process(
-            COMMAND
-               tar -C "${CMAKE_CURRENT_BINARY_DIR}" -x -f /tmp/gettext/gettextinstall.pkg/Payload
-         )
-         execute_process(
-            COMMAND
-               rm -rf /tmp/gettext.pkg /tmp/gettext 
-         )
-      endif()
-
-      file( WRITE ${CMAKE_BINARY_DIR}/msgfmt
-         "#!/bin/sh\n"
-         "export DYLD_LIBRARY_PATH=${root}/lib\n"
-         "${root}/bin/msgfmt \$@ \n"
-      )
-
-      file( COPY ${CMAKE_BINARY_DIR}/msgfmt
-         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
-         FILE_PERMISSIONS
-            OWNER_READ OWNER_EXECUTE
-            GROUP_READ GROUP_EXECUTE
-            WORLD_READ WORLD_EXECUTE
-      )
-
-      file( REMOVE ${CMAKE_BINARY_DIR}/msgfmt )
-
-   endif()
-
- 
-else()
-
-   find_package( Gettext )
-   if( GETTEXT_FOUND )
-      set( msgfmt "${GETTEXT_MSGFMT_EXECUTABLE}" )
-   endif()
-
+   set( msgfmt "${GETTEXT_MSGFMT_EXECUTABLE}" )
+elseif( PYTHON )
+   set( msgfmt "${PYTHON}" "${TARGET_ROOT}/msgfmt.py" )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   nuget_package( pkgdir "Gettext.Tools" "0.20.1.1" )
+   file( TO_NATIVE_PATH "${pkgdir}/tools/bin/msgfmt.exe" msgfmt )
 endif()
 
 if( NOT DEFINED msgfmt )
-   message( WARNING "Gettext not found...translations will not be provided." )
+   message( WARNING "The msgfmt program wasn't found...translations will not be provided." )
    return()
 endif()
 
@@ -159,7 +111,7 @@ foreach( source ${SOURCES} )
       COMMAND
          "${CMAKE_COMMAND}" -E make_directory "${dst}"
       COMMAND
-         "${msgfmt}" -o "${mo}" "${po}"
+         ${msgfmt} -o "${mo}" "${po}"
       OUTPUT
          "${mo}"
    )
