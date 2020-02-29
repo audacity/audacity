@@ -1270,30 +1270,47 @@ else()
    set( HAVE_VISIBILITY 1 )
    configure_file( audacity_config.h.in private/configunix.h )
 
-   # Create the MIMETYPES list
-   list( APPEND MIMETYPES
-      $<$<BOOL:${USE_FFMPEG}>:audio/aac
+   # Build the list of mimetypes
+   #
+   # (Don't use generator expressions since it will leave null/empty
+   # entries in the list.)
+   if( USE_FFMPEG )
+      list( APPEND MIMETYPES
+         audio/aac
          audio/ac3
          audio/mp4
          audio/x-ms-wma
-         video/mpeg>
-      $<$<BOOL:${USE_LIBFLAC}>:audio/flac
-         audio/x-flac>
-      $<$<BOOL:${USE_LIBMAD}>:audio/mpeg>
-      $<$<BOOL:${USE_SNDFILE}>:audio/basic
+         video/mpeg
+      )
+   endif()
+   if( USE_LIBFLAC )
+      list( APPEND MIMETYPES
+         audio/flac
+         audio/x-flac
+      )
+   endif()
+   if( USE_LIBMAD )
+      list( APPEND MIMETYPES
+         audio/mpeg
+      )
+   endif()
+   if( USE_SNDFILE )
+      list( APPEND MIMETYPES
+         audio/basic
          audio/x-aiff
-         audio/x-wav>
-      $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:application/ogg
-         audio/x-vorbis+ogg>
-   )
+         audio/x-wav
+      )
+   endif()
+   if( USE_LIBOGG AND USE_LIBVORBIS )
+      list( APPEND MIMETYPES
+         application/ogg
+         audio/x-vorbis+ogg
+      )
+   endif()
 
    # Create the desktop file
    set( AUDACITY_NAME "${_EXE}" )
    configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
-   file( GENERATE
-      OUTPUT ${_INTDIR}/audacity.desktop
-      INPUT ${_INTDIR}/audacity.desktop
-   )
 
    # Create the script to copy required wxWidgets libraries
    if( ${_OPT}use_wxwidgets STREQUAL "local" )
