@@ -86,4 +86,4 @@
 ;;; Load wrapper functions for aud-do commands.
 ;;; If commented out, "aud-do-support.lsp" may be loaded by a plug-in.
 ;;; Example: (lisp-loader (strcat *runtime-path* "aud-do-support.lsp"))
-(load "aud-do-support.lsp")
+(load "aud-do-support.lsp" :verbose nil)
