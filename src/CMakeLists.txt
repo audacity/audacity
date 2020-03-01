@@ -980,23 +980,10 @@ list( APPEND HEADERS
 #
 list( APPEND INCLUDES
    PUBLIC
-      ${CMAKE_CURRENT_BINARY_DIR}/private
+      ${_PRVDIR}
       ${topdir}/lib-src/lib-widget-extra
       ${topdir}/include
       ${TARGET_ROOT}
-)
-
-#
-# Get those pesky CMake files out of the way (on Windows)
-#
-source_group(
-    TREE
-        "${_INTDIR}"
-    PREFIX
-        "CMake"
-    FILES
-        ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.cxx
-        ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.hxx
 )
 
 #
@@ -1343,6 +1330,19 @@ organize_source( "${TARGET_ROOT}/../presets" "presets" "${RESOURCES}" )
 organize_source( "${TARGET_ROOT}" "src" "${SOURCES}" )
 organize_source( "${TARGET_ROOT}/../mac/Resources" "mac" "${MAC_RESOURCES}" )
 organize_source( "${TARGET_ROOT}/../win" "win" "${WIN_RESOURCES}" )
+
+#
+# Get those pesky CMake files out of the way (on Windows)
+#
+source_group(
+    TREE
+        "${_INTDIR}"
+    PREFIX
+        "CMake"
+    FILES
+        ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.cxx
+        ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.hxx
+)
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )

@@ -421,11 +421,6 @@ add_subdirectory( "cmake-proxies/mod-nyq-bench" )
 add_subdirectory( "cmake-proxies/mod-script-pipe" )
 add_subdirectory( "scripts" )
 
-# Only need the sc4_1882 Ladspa plug-in on Windows and Mac
-if( CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
-   add_subdirectory( "cmake-proxies/ladspa-plugins" )
-endif()
-
 # Uncomment what follows for symbol values.
 #[[
    get_cmake_property( _variableNames VARIABLES )
