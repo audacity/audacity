@@ -467,7 +467,7 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
           event.m_x < clientSize.x && event.m_y < clientSize.y);
 
    if (mEnabled && event.IsButton()) {
-      if (event.ButtonIsDown(wxMOUSE_BTN_ANY)) {
+      if (event.ButtonIsDown(wxMOUSE_BTN_LEFT)) {
          mIsClicking = true;
          if (event.ButtonDClick())
             mIsDoubleClicked = true;
