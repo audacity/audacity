@@ -153,7 +153,7 @@ list( APPEND INCLUDES
          ${TARGET_ROOT}/src/os/win
       >
 
-      $<$<PLATFORM_ID:Darwin,Linux,FreeBSD>:
+      $<$<PLATFORM_ID:Darwin,Linux,FreeBSD,CYGWIN>:
          ${TARGET_ROOT}/src/os/unix
       >
 
