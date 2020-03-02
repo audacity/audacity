@@ -75,8 +75,11 @@ void DoMixAndRender
       
       auto selectedCount = (trackRange + &Track::IsLeader).size();
       wxString firstName;
-      if (selectedCount > 0)
+      int firstColour = -1;
+      if (selectedCount > 0) {
          firstName = (*trackRange.begin())->GetName();
+         firstColour = (*trackRange.begin())->GetWaveColorIndex();
+      }
       if (!toNewTrack)  {
          // Beware iterator invalidation!
          for (auto &it = trackRange.first, &end = trackRange.second; it != end;)
@@ -96,8 +99,18 @@ void DoMixAndRender
       // If we're just rendering (not mixing), keep the track name the same
       if (selectedCount==1) {
          pNewLeft->SetName(firstName);
-         if (pNewRight)
+         if (pNewRight) {
             pNewRight->SetName(firstName);
+         }
+      }
+
+      // Bug 2218, remember more things...
+      if (selectedCount>=1) {
+         pNewLeft->SetWaveColorIndex(firstColour);
+         if (pNewRight) {
+            pNewRight->SetWaveColorIndex(firstColour);
+         }
+         pNewLeft->SetSelected(true);
       }
 
       // Permute the tracks as needed
