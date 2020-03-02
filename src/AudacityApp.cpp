@@ -1805,10 +1805,10 @@ bool AudacityApp::InitTempDir()
    return bSuccess;
 }
 
+#if defined(__WXMSW__)
+
 // Return true if there are no other instances of Audacity running,
 // false otherwise.
-//
-// Use "dir" for creating lockfiles (on OS X and Unix).
 
 bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 {
@@ -1816,13 +1816,10 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    mChecker.reset();
    auto checker = std::make_unique<wxSingleInstanceChecker>();
 
-#if defined(__UNIX__)
-   wxString sockFile(dir + wxT("/.audacity.sock"));
-#endif
-
    auto runningTwoCopiesStr = XO("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
 
-   if (!checker->Create(name, dir)) {
+   if (!checker->Create(name, dir))
+   {
       // Error initializing the wxSingleInstanceChecker.  We don't know
       // whether there is another instance running or not.
 
@@ -1860,10 +1857,11 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       {
          wxFileName filename(parser->GetParam(i));
          if (filename.MakeAbsolute())
+         {
             filenames.push_back(filename.GetLongPath());
+         }
       }
 
-#if defined(__WXMSW__)
       // On Windows, we attempt to make a connection
       // to an already active Audacity.  If successful, we send
       // the first command line argument (the audio file name)
@@ -1897,49 +1895,6 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 
          wxMilliSleep(10);
       }
-#else
-      // On Unix-like machines, we use a local (file based) socket to
-      // send the first command line argument to an already running
-      // Audacity.
-      wxUNIXaddress addr;
-      addr.Filename(sockFile);
-
-      {
-         // Setup the socket
-         // A wxSocketClient must not be deleted by us, but rather, let the
-         // framework do appropriate delayed deletion after Destroy()
-         Destroy_ptr<wxSocketClient> sock { safenew wxSocketClient() };
-         sock->SetFlags(wxSOCKET_WAITALL);
-
-         // We try up to 50 times since there's a small window
-         // where the server may not have been fully initialized.
-         for (int i = 0; i < 50; i++)
-         {
-            // Connect to the existing Audacity
-            sock->Connect(addr, true);
-            if (sock->IsConnected())
-            {
-               if (filenames.size() > 0)
-               {
-                  for (size_t i = 0, cnt = filenames.size(); i < cnt; i++)
-                  {
-                     const wxString param = filenames[i];
-                     sock->WriteMsg((const wxChar *) param, (param.length() + 1) * sizeof(wxChar));
-                  }
-               }
-               else
-               {
-                  // Send an empty string to force existing Audacity to front
-                  sock->WriteMsg(wxEmptyString, sizeof(wxChar));
-               }
-
-               return sock->Error();
-            }
-
-            wxMilliSleep(100);
-         }
-      }
-#endif
       // There is another copy of Audacity running.  Force quit.
 
       auto prompt =  XO(
@@ -1951,54 +1906,146 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          prompt, XO("Audacity is already running"),
          wxOK | wxICON_ERROR);
 
-#ifdef __WXMAC__
-      // Bug 2052
-      // On mac, the lock file may persist and stop Audacity starting properly.
-      auto lockFileName = wxFileName(dir,name);
-      bool bIsLocked = lockFileName.IsOk() && lockFileName.FileExists();
-      if( bIsLocked ){
-         int action = AudacityMessageBox(
-XO("If you're sure another copy of Audacity isn't\nrunning, Audacity can skip the test for\n'Audacity already running' next time\nby removing the lock file:\n\n%s\n\nDo you want to do that?")
-               .Format(lockFileName.GetFullName()),
-            XO("Possible Lock File Problem"),
-            wxYES_NO | wxICON_EXCLAMATION,
-            NULL);
-         if (action == wxYES){
-            // If locked, unlock.
-            lockFileName.SetPermissions( wxS_DEFAULT );
-            ::wxRemoveFile( lockFileName.GetFullName() );
-         }
-      }
-#endif
       return false;
    }
 
-#if defined(__WXMSW__)
    // Create the DDE IPC server
    mIPCServ = std::make_unique<IPCServ>(IPC_APPL);
-#else
-   int mask = umask(077);
-   remove(OSFILENAME(sockFile));
-   wxUNIXaddress addr;
-   addr.Filename(sockFile);
-   mIPCServ = std::make_unique<wxSocketServer>(addr, wxSOCKET_NOWAIT);
-   umask(mask);
-
-   if (!mIPCServ || !mIPCServ->IsOk())
-   {
-      // TODO:  Complain here
-      return false;
-   }
-
-   mIPCServ->SetEventHandler(*this, ID_IPC_SERVER);
-   mIPCServ->SetNotify(wxSOCKET_CONNECTION_FLAG);
-   mIPCServ->Notify(true);
-#endif
    mChecker = std::move(checker);
    return true;
 }
+#endif
 
 #if defined(__UNIX__)
+
+// Return true if there are no other instances of Audacity running,
+// false otherwise.
+//
+// Use "dir" for creating lockfiles (on OS X and Unix).
+
+bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
+{
+   wxUNIXaddress addr;
+   addr.Filename(dir + wxT("/.audacity.sock"));
+
+   mIPCServ.reset();
+
+   // Try twice to either become the server or make a connnection to one.  If
+   // both attempts fail, then there's something wrong that we can't deal with,
+   // like insufficient access to create the socket, no memory, etc.
+   for (int attempts = 0; attempts < 2; ++attempts)
+   {
+      // Make sure only the current user has access to the socket after
+      // it's created.
+      wxUmaskChanger mask(077);
+
+      // Create the socket and bind to it.
+      //
+      // Here is where the actual socket inode is created.  If it
+      // already exists and is currently bound or abandoned, this will
+      // fail. Otherwise, we have become the server.
+      auto serv = std::make_unique<wxSocketServer>(addr, wxSOCKET_NOWAIT);
+      if (serv && serv->IsOk())
+      {
+         serv->SetEventHandler(*this, ID_IPC_SERVER);
+         serv->SetNotify(wxSOCKET_CONNECTION_FLAG);
+         serv->Notify(true);
+         mIPCServ = std::move(serv);
+         return true;
+      }
+
+      // If we get here, then Audacity is currently active or it has
+      // failed, leaving the socket inode defined in the filesystem.
+      //
+      // So, we try to connect to it and if that is successful, we
+      // forward all filenames listed on the command line to the
+      // active process.
+      //
+      // If we can't connect after several attempts, we assume we've
+      // had a failure, cleanup the socket inode, and loop back up to
+      // retry creating a server.
+
+      // Setup the socket
+      //
+      // A wxSocketClient must not be deleted by us, but rather, let the
+      // framework do appropriate delayed deletion after Destroy()
+      Destroy_ptr<wxSocketClient> sock { safenew wxSocketClient() };
+      sock->SetFlags(wxSOCKET_WAITALL);
+
+      // We try up to 50 times since there's a small window
+      // where the server may not have been fully initialized.
+      for (int i = 0; i < 50; ++i)
+      {
+         // Attempt to connect to an active Audacity.
+         sock->Connect(addr, true);
+         if (sock->IsConnected())
+         {
+            // Parse the command line to ensure correct syntax, but ignore
+            // options other than -v, and only use the filenames, if any.
+            auto parser = ParseCommandLine();
+            if (!parser)
+            {
+               // Complaints have already been made
+               return false;
+            }
+
+            if (parser->Found(wxT("v")))
+            {
+               wxPrintf("Audacity v%s\n", AUDACITY_VERSION_STRING);
+               return false;
+            }
+
+            // Windows and Linux require absolute file names as command may
+            // not come from current working directory.
+            for (size_t j = 0, cnt = parser->GetParamCount(); j < cnt; ++j)
+            {
+               wxFileName filename(parser->GetParam(j));
+               if (filename.MakeAbsolute())
+               {
+                  const wxString param = filename.GetLongPath();
+                  sock->WriteMsg((const wxChar *) param, (param.length() + 1) * sizeof(wxChar));
+               }
+            }
+
+            // Send an empty string to force existing Audacity to front
+            sock->WriteMsg(wxEmptyString, sizeof(wxChar));
+
+            return sock->Error();
+         }
+
+         wxMilliSleep(100);
+      }
+
+      // At this point, we've exhausted our connections attempts. So, we assume
+      // that we've had a failure and clean up any existing socket inodes.
+      //
+      // We could use POSIX shared memory to store the servers PID and check that
+      // here to see if it's still active using kill(pid, 0), but I "think" it's
+      // a pretty safe bet that it's not.
+
+      // Clean up the socket it if still exists.
+      wxFileName file(addr.Filename());
+      if (file.Exists())
+      {
+         // Reset the sockets permissions in case they got munged somehow.
+         file.SetPermissions( wxS_DEFAULT );
+
+         // And remove it
+         wxRemove(file.GetFullPath());
+      }
+   }
+
+   // All attempts to become the server or connect to one have failed.  Not
+   // sure what we can say about the error, but it's probably not because
+   // Audacity is already running.
+   AudacityMessageBox(
+      XO("An unrecoverable error has occurred during startup"),
+      XO("Audacity Startup Failure"),
+      wxOK | wxICON_ERROR);
+
+   return false;
+}
+
 void AudacityApp::OnServerEvent(wxSocketEvent & /* evt */)
 {
    wxSocketBase *sock;
