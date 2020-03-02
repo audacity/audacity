@@ -334,6 +334,14 @@ public:
    wxGrid * AddGrid();
    wxCheckBox * AddCheckBox( const TranslatableString &Prompt, bool Selected);
    wxCheckBox * AddCheckBoxOnRight( const TranslatableString &Prompt, bool Selected);
+
+   // These deleted overloads are meant to break compilation of old calls that
+   // passed literal "true" and "false" strings
+   wxCheckBox * AddCheckBox( const TranslatableString &Prompt, const wxChar *) = delete;
+   wxCheckBox * AddCheckBox( const TranslatableString &Prompt, const char *) = delete;
+   wxCheckBox * AddCheckBoxOnRight( const TranslatableString &Prompt, const wxChar *) = delete;
+   wxCheckBox * AddCheckBoxOnRight( const TranslatableString &Prompt, const char *) = delete;
+
    wxComboBox * AddCombo( const TranslatableString &Prompt,
       const wxString &Selected, const wxArrayStringEx & choices );
    wxChoice   * AddChoice( const TranslatableString &Prompt,
