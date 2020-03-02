@@ -451,10 +451,15 @@ sampleCount WaveClip::GetNumSamples() const
    return mSequence->GetNumSamples();
 }
 
+// Bug 2288 allowed overlapping clips.
+// This was a classic fencepost error.
+// We are within the clip if start < t <= end.
+// Note that BeforeClip and AfterClip must be consistent 
+// with this definition.
 bool WaveClip::WithinClip(double t) const
 {
    auto ts = (sampleCount)floor(t * mRate + 0.5);
-   return ts > GetStartSample() && ts < GetEndSample() + mAppendBufferLen;
+   return ts > GetStartSample() && ts <= GetEndSample() + mAppendBufferLen;
 }
 
 bool WaveClip::BeforeClip(double t) const
@@ -466,7 +471,7 @@ bool WaveClip::BeforeClip(double t) const
 bool WaveClip::AfterClip(double t) const
 {
    auto ts = (sampleCount)floor(t * mRate + 0.5);
-   return ts >= GetEndSample() + mAppendBufferLen;
+   return ts > GetEndSample() + mAppendBufferLen;
 }
 
 ///Delete the wave cache - force redraw.  Thread-safe
