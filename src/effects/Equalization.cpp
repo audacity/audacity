@@ -309,6 +309,23 @@ EffectEqualization::EffectEqualization(int Options)
       mEffectEqualization48x.reset();
    mBench=false;
 #endif
+
+   // We expect these Hi and Lo frequences to be overridden by Init().
+   // Don't use inputTracks().  See bug 2321.
+#if 0
+   auto trackList = inputTracks();
+   const auto t = trackList
+      ? *trackList->Any< const WaveTrack >().first
+      : nullptr
+   ;
+   mHiFreq =
+      (t
+         ? t->GetRate()
+         : mProjectRate)
+      / 2.0;
+#endif
+   mHiFreq = mProjectRate / 2.0;
+   mLoFreq = loFreqI;
 }
 
 
@@ -745,17 +762,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
    //LoadCurves();
 
-   auto trackList = inputTracks();
-   const auto t = trackList
-      ? *trackList->Any< const WaveTrack >().first
-      : nullptr
-   ;
-   mHiFreq =
-      (t
-         ? t->GetRate()
-         : mProjectRate)
-      / 2.0;
-   mLoFreq = loFreqI;
+
 
    S.SetBorder(0);
 
