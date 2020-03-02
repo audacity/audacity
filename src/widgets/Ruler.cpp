@@ -351,7 +351,8 @@ void Ruler::Invalidate()
       mLength = mBottom-mTop;
 
    mpCache.reset();
-   mUserBits.clear();
+   // Bug 2316 we must preserve off-limit pixels.
+   // mUserBits.clear();
 }
 
 struct Ruler::TickSizes
