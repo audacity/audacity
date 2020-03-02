@@ -508,6 +508,9 @@ public:
 
    wxSizer * GetSizer() {return mpSizer;}
 
+   static void ApplyItem( int step, const DialogDefinition::Item &item,
+      wxWindow *pWind, wxWindow *pDlg );
+
 protected:
    void SetProportions( int Default );
    void PushSizer();

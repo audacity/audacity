@@ -2033,6 +2033,52 @@ void ShuttleGuiBase::SetProportions( int Default )
 }
 
 
+void ShuttleGuiBase::ApplyItem( int step, const DialogDefinition::Item &item,
+   wxWindow *pWind, wxWindow *pDlg )
+{  
+   if ( step == 0 ) {
+      // Do these steps before adding the window to the sizer
+      if( item.mUseBestSize )
+         pWind->SetMinSize( pWind->GetBestSize() );
+      else if( item.mHasMinSize )
+         pWind->SetMinSize( item.mMinSize );
+
+      if ( item.mWindowSize != wxSize{} )
+         pWind->SetSize( item.mWindowSize );
+   }
+   else if ( step == 1) {
+      // Apply certain other optional window attributes here
+
+      if ( item.mValidatorSetter )
+         item.mValidatorSetter( pWind );
+
+      if ( !item.mToolTip.empty() )
+         pWind->SetToolTip( item.mToolTip.Translation() );
+
+      if ( !item.mName.empty() ) {
+         pWind->SetName( item.mName.Stripped().Translation() );
+#ifndef __WXMAC__
+         if (auto pButton = dynamic_cast< wxBitmapButton* >( pWind ))
+            pButton->SetLabel(  item.mText.mName.Translation() );
+#endif
+      }
+
+      if ( !item.mNameSuffix.empty() )
+         pWind->SetName(
+            pWind->GetName() + " " + item.mNameSuffix.Translation() );
+
+      if (item.mFocused)
+         pWind->SetFocus();
+
+      if (item.mDisabled)
+         pWind->Enable( false );
+
+      for (auto &pair : item.mRootConnections)
+         pWind->Connect( pair.first, pair.second, nullptr, pDlg );
+   }
+}
+
+
 void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
 {
    if( mpWind && mpParent )
@@ -2043,16 +2089,8 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
          // override the given Flags
          useFlags = mItem.mWindowPositionFlags;
 
-      if (!prompt) {
-         // Do these steps before adding the window to the sizer
-         if( mItem.mUseBestSize )
-            mpWind->SetMinSize( mpWind->GetBestSize() );
-         else if( mItem.mHasMinSize )
-            mpWind->SetMinSize( mItem.mMinSize );
-
-         if ( mItem.mWindowSize != wxSize{} )
-            mpWind->SetSize( mItem.mWindowSize );
-      }
+      if (!prompt)
+         ApplyItem( 0, mItem, mpWind, mpDlg );
 
       if( mpSizer){
          if( bPrepend )
@@ -2066,35 +2104,7 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
       }
 
       if (!prompt) {
-         // Apply certain other optional window attributes here
-
-         if ( mItem.mValidatorSetter )
-            mItem.mValidatorSetter( mpWind );
-
-         if ( !mItem.mToolTip.empty() )
-            mpWind->SetToolTip( mItem.mToolTip.Translation() );
-
-         if ( !mItem.mName.empty() ) {
-            mpWind->SetName( mItem.mName.Stripped().Translation() );
-#ifndef __WXMAC__
-            if (auto pButton = dynamic_cast< wxBitmapButton* >( mpWind ))
-               pButton->SetLabel(  mItem.mName.Translation() );
-#endif
-         }
-
-         if ( !mItem.mNameSuffix.empty() )
-            mpWind->SetName(
-               mpWind->GetName() + " " + mItem.mNameSuffix.Translation() );
-
-         if (mItem.mFocused)
-            mpWind->SetFocus();
-
-         if (mItem.mDisabled)
-            mpWind->Enable( false );
-
-         for (auto &pair : mItem.mRootConnections)
-            mpWind->Connect( pair.first, pair.second, nullptr, mpDlg );
-
+         ApplyItem( 1, mItem, mpWind, mpDlg );
          // Reset to defaults
          mItem = {};
       }
