@@ -215,8 +215,10 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
 {
    enum{ precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
 
-   if (IsBatchProcessing())
+   bool batch = IsBatchProcessing();
+   if ( batch )
    {
+      mCanClip = true;
       mPeak = 1.0;
    }
    else 
@@ -277,7 +279,8 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       // Clipping
       S.StartHorizontalLay(wxCENTER);
       {
-         mClip = S.Id(ID_Clip).Disable( mCanClip = IsBatchProcessing() )
+
+         mClip = S.Id(ID_Clip).Disable( batch )
             .AddCheckBox(XO("Allow clipping"), false);
       }
       S.EndHorizontalLay();
