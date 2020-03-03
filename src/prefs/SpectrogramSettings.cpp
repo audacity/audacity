@@ -465,8 +465,9 @@ size_t SpectrogramSettings::GetFFTLength() const
    return windowSize
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
       * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
-#endif
+#else
    ;
+#endif
 }
 
 size_t SpectrogramSettings::NBins() const
