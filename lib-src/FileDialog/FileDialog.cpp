@@ -145,7 +145,6 @@ wxString FileSelectorEx(const wxString& title,
     {
         if ( defaultFilterIndex )
             *defaultFilterIndex = fileDialog.GetFilterIndex();
-
         filename = fileDialog.GetPath();
     }
 
