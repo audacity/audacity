@@ -474,10 +474,9 @@ bool EffectNoiseReduction::ShowInterface(
    // Doesn't use the factory but substitutes its own dialog
 
    // We may want to twiddle the levels if we are setting
-   // from an automation dialog, the only case in which we can
-   // get here without any wavetracks.
+   // from an automation dialog
    return mSettings->PromptUser(this, parent,
-      bool(mStatistics), (GetNumWaveTracks() == 0));
+      bool(mStatistics), forceModal);
 }
 
 bool EffectNoiseReduction::Settings::PromptUser

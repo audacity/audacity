@@ -157,7 +157,7 @@ bool EffectNoiseRemoval::CheckWhetherSkipEffect()
 }
 
 bool EffectNoiseRemoval::ShowInterface(
-   wxWindow &parent, const EffectDialogFactory &, bool forceModal  /* forceModal */ )
+   wxWindow &parent, const EffectDialogFactory &, bool forceModal )
 {
    // to do: use forceModal correctly
    NoiseRemovalDialog dlog(this, &parent);
@@ -170,9 +170,8 @@ bool EffectNoiseRemoval::ShowInterface(
    dlog.mKeepNoise->SetValue(mbLeaveNoise);
 
    // We may want to twiddle the levels if we are setting
-   // from an automation dialog, the only case in which we can
-   // get here without any wavetracks.
-   bool bAllowTwiddleSettings = (GetNumWaveTracks() == 0);
+   // from an automation dialog
+   bool bAllowTwiddleSettings = forceModal;
 
    if (mHasProfile || bAllowTwiddleSettings) {
       dlog.m_pButton_Preview->Enable(GetNumWaveTracks() != 0);
