@@ -127,14 +127,19 @@ if( GIT_FOUND )
       WORKING_DIRECTORY
          ${topdir}
       OUTPUT_VARIABLE
-         output
+         git_output
       OUTPUT_STRIP_TRAILING_WHITESPACE
+      ERROR_QUIET
    )
-
-   list( GET output 0 GIT_COMMIT_SHORT )
-   list( GET output 1 GIT_COMMIT_LONG )
-   list( GET output 2 GIT_COMMIT_TIME )
-
+   if ( git_output )
+      list( GET git_output 0 GIT_COMMIT_SHORT )
+      list( GET git_output 1 GIT_COMMIT_LONG )
+      list( GET git_output 2 GIT_COMMIT_TIME )
+   else()
+      set( GIT_COMMIT_SHORT "unknown" )
+      set( GIT_COMMIT_LONG "unknown" )
+      set( GIT_COMMIT_TIME "unknown" )
+   endif()
    message( STATUS "  Current Commit: ${GIT_COMMIT_SHORT}" )
    message( STATUS )
 endif()
