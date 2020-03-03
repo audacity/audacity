@@ -357,6 +357,7 @@ set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}/audacity" )
 set( _RPATH "\$ORIGIN/../${_LIBDIR}" )
 set( _DATADIR "${CMAKE_INSTALL_DATADIR}" )
 set( _PKGDATA "${_DATADIR}/audacity/" )
+set( _MANDIR "${CMAKE_INSTALL_MANDIR}" )
 
 # Precreate the lib and lib64 directories so we can make then the same
 if( NOT EXISTS "${CMAKE_BINARY_DIR}/lib" )
