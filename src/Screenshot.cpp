@@ -50,6 +50,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "WaveTrack.h"
 
 class OldStyleCommandType;
+class ScreenFrameTimer;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -106,6 +107,8 @@ class ScreenshotBigDialog final : public wxFrame
    wxToggleButton *mWhite;
    wxStatusBar *mStatus;
 
+   std::unique_ptr<ScreenFrameTimer> mTimer;
+
    std::unique_ptr<ScreenshotCommand> mCommand;
    const CommandContext mContext;
 
@@ -158,7 +161,6 @@ class ScreenFrameTimer final : public wxTimer
       // Process timer notification just once, then destroy self
       evt->SetEventObject(NULL);
       screenFrame->ProcessEvent(*evt);
-      delete this;
    }
 
  private:
@@ -505,9 +507,8 @@ bool ScreenshotBigDialog::ProcessEvent(wxEvent & e)
    {
       if( id >= IdAllDelayedEvents && id <= IdLastDelayedEvent &&
        e.GetEventObject() != NULL) {
-         // safenew because it's a one-shot that deletes itself
-         ScreenFrameTimer *timer = safenew ScreenFrameTimer(this, e);
-         timer->Start(5000, true);
+         mTimer = std::make_unique<ScreenFrameTimer>(this, e);
+         mTimer->Start(5000, true);
          return true;
       }
    }
@@ -520,11 +521,13 @@ bool ScreenshotBigDialog::ProcessEvent(wxEvent & e)
 
 void ScreenshotBigDialog::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
 {
+   mTimer->Stop();
    Destroy();
 }
 
 void ScreenshotBigDialog::OnClose(wxCommandEvent &  WXUNUSED(event))
 {
+   mTimer->Stop();
    Destroy();
 }
 
