@@ -380,7 +380,6 @@ void ExtImportPrefs::OnPluginBeginDrag(wxListEvent& WXUNUSED(event))
       case wxDragMove:
       case wxDragNone:
          return;
-         break;
       default:
          break;
    }

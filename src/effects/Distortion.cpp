@@ -556,12 +556,9 @@ size_t EffectDistortion::InstanceProcess(EffectDistortionState& data, float** in
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
-   bool update = (mParams.mTableChoiceIndx == data.tablechoiceindx &&
-                  mParams.mNoiseFloor == data.noisefloor &&
-                  mParams.mThreshold_dB == data.threshold &&
-                  mParams.mParam1 == data.param1 &&
-                  mParams.mParam2 == data.param2 &&
-                  mParams.mRepeats == data.repeats)? false : true;
+   bool update = mParams.mTableChoiceIndx != data.tablechoiceindx || mParams.mNoiseFloor != data.noisefloor ||
+                 mParams.mThreshold_dB != data.threshold || mParams.mParam1 != data.param1 ||
+                 mParams.mParam2 != data.param2 || mParams.mRepeats != data.repeats;
 
    double p1 = mParams.mParam1 / 100.0;
    double p2 = mParams.mParam2 / 100.0;
