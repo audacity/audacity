@@ -23,7 +23,7 @@ list( APPEND SOURCES
          ${TARGET_ROOT}/porttime/ptmacosx_mach.c
       >
 
-      $<$<PLATFORM_ID:Linux,FreeBSD>:
+      $<$<PLATFORM_ID:Linux,FreeBSD,CYGWIN>:
          ${TARGET_ROOT}/pm_linux/finddefault.c
          ${TARGET_ROOT}/pm_linux/pmlinux.c
          ${TARGET_ROOT}/porttime/ptlinux.c
