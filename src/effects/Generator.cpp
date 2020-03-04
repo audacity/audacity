@@ -20,6 +20,7 @@
 #include "../Prefs.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
+#include "../prefs/TracksBehaviorsPrefs.h"
 
 #include "TimeWarper.h"
 
@@ -43,7 +44,7 @@ bool Generator::Process()
       [&](WaveTrack *track, const Track::Fallthrough &fallthrough) {
          if (!track->GetSelected())
             return fallthrough();
-         bool editClipCanMove = gPrefs->GetEditClipsCanMove();
+         bool editClipCanMove = GetEditClipsCanMove();
 
          //if we can't move clips, and we're generating into an empty space,
          //make sure there's room.

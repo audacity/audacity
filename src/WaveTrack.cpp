@@ -57,6 +57,7 @@ Track classes.
 #include "prefs/QualityPrefs.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
+#include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/WaveformSettings.h"
 
 #include "InconsistencyException.h"
@@ -940,7 +941,7 @@ void WaveTrack::HandleClear(double t0, double t1,
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   bool editClipCanMove = gPrefs->GetEditClipsCanMove();
+   bool editClipCanMove = GetEditClipsCanMove();
 
    WaveClipPointers clipsToDelete;
    WaveClipHolders clipsToAdd;
@@ -1113,7 +1114,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
 void WaveTrack::Paste(double t0, const Track *src)
 // WEAK-GUARANTEE
 {
-   bool editClipCanMove = gPrefs->GetEditClipsCanMove();
+   bool editClipCanMove = GetEditClipsCanMove();
 
    bool bOk = src && src->TypeSwitch< bool >( [&](const WaveTrack *other) {
 
@@ -2356,7 +2357,7 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                               double* cutlineEnd)
 // STRONG-GUARANTEE
 {
-   bool editClipCanMove = gPrefs->GetEditClipsCanMove();
+   bool editClipCanMove = GetEditClipsCanMove();
 
    // Find clip which contains this cut line
    double start = 0, end = 0;

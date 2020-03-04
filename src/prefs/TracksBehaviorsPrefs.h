@@ -42,4 +42,7 @@ class TracksBehaviorsPrefs final : public PrefsPanel
 };
 
 extern ChoiceSetting TracksBehaviorsSolo;
+
+bool GetEditClipsCanMove();
+
 #endif
