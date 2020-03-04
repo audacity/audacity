@@ -121,7 +121,7 @@
     (aud-do cmd)))
 
 
-(defun aud-import-effects (&aux cmd)
+(defun aud-import-commands (&aux cmd)
   ;; Generate function stubs in the form (aud-<command> [&key arg ...])
   ;; Call once to make "aud-<command>"s available.
   ;; Unfortunatly we can't call this on load, as the cache may
