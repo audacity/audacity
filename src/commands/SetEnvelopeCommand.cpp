@@ -52,7 +52,7 @@ void SetEnvelopeCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.Optional( bHasT           ).TieNumericTextBox(  XO("Time:"),          mT );
       S.Optional( bHasV           ).TieNumericTextBox(  XO("Value:"),         mV );
-      S.Optional( bHasDelete      ).TieCheckBox(        XO("Delete:"),        mbDelete );
+      S.Optional( bHasDelete      ).TieCheckBox(        XO("Delete"),         mbDelete );
    }
    S.EndMultiColumn();
 }
