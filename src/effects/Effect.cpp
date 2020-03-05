@@ -17,6 +17,7 @@
 
 #include "../Audacity.h"
 #include "Effect.h"
+#include "EffectManager.h"
 
 #include "../Experimental.h"
 
@@ -35,7 +36,6 @@
 #include "../Shuttle.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
-#include "../Effects/EffectManager.h"
 #include "../wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
 #include "../ondemand/ODManager.h"
