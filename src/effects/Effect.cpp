@@ -35,6 +35,7 @@
 #include "../Shuttle.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
+#include "../Effects/EffectManager.h"
 #include "../wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
 #include "../ondemand/ODManager.h"
@@ -666,7 +667,9 @@ void Effect::ExportPresets()
 {
    wxString params;
    GetAutomationParameters(params);
-   params = GetSymbol().Internal() + ":" + params;
+   EffectManager & em = EffectManager::Get();
+   wxString commandId = em.GetSquashedName(GetSymbol().Internal()).GET();
+   params =  commandId + ":" + params;
 
    auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
 
@@ -741,7 +744,11 @@ void Effect::ImportPresets()
       if (f.ReadAll(&params)) {
          wxString ident = params.BeforeFirst(':');
          params = params.AfterFirst(':');
-         if (ident != GetSymbol().Internal()) {
+
+         EffectManager & em = EffectManager::Get();
+         wxString commandId = em.GetSquashedName(GetSymbol().Internal()).GET();
+
+         if (ident != commandId) {
             // effect identifiers are a sensible length!
             // must also have some params.
             if ((params.Length() < 2 ) || (ident.Length() < 2) || (ident.Length() > 30)) 
