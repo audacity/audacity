@@ -808,7 +808,7 @@ NumericFormatSymbol Effect::GetDurationFormat()
 
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
-   if( FindProject() )
+   if( !IsBatchProcessing() && FindProject() )
       return ProjectSettings::Get( *FindProject() ).GetSelectionFormat();
    return NumericConverter::HoursMinsSecondsFormat();
 }
