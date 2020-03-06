@@ -24,6 +24,7 @@ and TimeTrack.
 #include "Audacity.h" // for USE_* macros
 
 #include "Track.h"
+#include "WaveTrack.h" // for preserving colour.
 
 #include "Experimental.h"
 
@@ -775,6 +776,7 @@ auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
       pTrack->SetId( t->GetId() );
       RecalcPositions(node);
 
+      // Fix for Bug 2346.  Preserve colour when replacing tracks.
       WaveTrack * wt1 = dynamic_cast<WaveTrack *>(t);
       WaveTrack * wt2 = dynamic_cast<WaveTrack *>(pTrack);
       if (wt1 && wt2) {
