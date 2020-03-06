@@ -62,6 +62,7 @@ public:
    TranslatableString GetHoursMinsString(int iMinutes);
 
    void SetStatusText( const TranslatableString &text, int number );
+   void SetSkipSavePrompt(bool bSkip) { sbSkipPromptingForSave = bSkip; };
 
 private:
    void OnCloseWindow(wxCloseEvent & event);
@@ -79,6 +80,7 @@ private:
    DECLARE_EVENT_TABLE()
 
    static bool sbWindowRectAlreadySaved;
+   static bool sbSkipPromptingForSave;
 };
 
 #endif

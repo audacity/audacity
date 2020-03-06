@@ -15,6 +15,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../ProjectManager.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"
 #include "../TrackPanelAx.h"
@@ -320,15 +321,18 @@ void OnTimerRecord(const CommandContext &context)
             wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
             wxTheApp->AddPendingEvent( evt );
          } );
+         ProjectManager::Get(project).SetSkipSavePrompt(true);
          break;
       case POST_TIMER_RECORD_RESTART:
          // Restart System
+         ProjectManager::Get(project).SetSkipSavePrompt(true);
 #ifdef __WINDOWS__
          system("shutdown /r /f /t 30");
 #endif
          break;
       case POST_TIMER_RECORD_SHUTDOWN:
          // Shutdown System
+         ProjectManager::Get(project).SetSkipSavePrompt(true);
 #ifdef __WINDOWS__
          system("shutdown /s /f /t 30");
 #endif

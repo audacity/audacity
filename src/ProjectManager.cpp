@@ -105,6 +105,7 @@ BEGIN_EVENT_TABLE( ProjectManager, wxEvtHandler )
 END_EVENT_TABLE()
 
 bool ProjectManager::sbWindowRectAlreadySaved = false;
+bool ProjectManager::sbSkipPromptingForSave = false;
 
 void ProjectManager::SaveWindowSize()
 {
@@ -652,7 +653,9 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // We may not bother to prompt the user to save, if the
    // project is now empty.
-   if (event.CanVeto() && (settings.EmptyCanBeDirty() || bHasTracks)) {
+   if (!sbSkipPromptingForSave 
+      && event.CanVeto() 
+      && (settings.EmptyCanBeDirty() || bHasTracks)) {
       if ( UndoManager::Get( project ).UnsavedChanges() ) {
          TitleRestorer Restorer( window, project );// RAII
          /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
