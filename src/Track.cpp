@@ -775,6 +775,12 @@ auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
       pTrack->SetId( t->GetId() );
       RecalcPositions(node);
 
+      WaveTrack * wt1 = dynamic_cast<WaveTrack *>(t);
+      WaveTrack * wt2 = dynamic_cast<WaveTrack *>(pTrack);
+      if (wt1 && wt2) {
+         wt2->SetWaveColorIndex(wt1->GetWaveColorIndex());
+      }
+
       DeletionEvent(node);
       AdditionEvent(node);
    }
