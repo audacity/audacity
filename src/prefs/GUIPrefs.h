@@ -52,6 +52,9 @@ class GUIPrefs final : public PrefsPanel
 
    // Returns the last language code that was set
    static wxString GetLang();
+   // Returns the last language code that was set
+   // Unlike GetLang, gives en rather than en_GB or en_US for result.
+   static wxString GetLangShort();
 
  private:
    void Populate();

@@ -366,6 +366,14 @@ wxString GUIPrefs::GetLang()
       return {};
 }
 
+wxString GUIPrefs::GetLangShort()
+{
+   if (sLocale)
+      return sLocale->GetName();
+   else
+      return {};
+}
+
 int ShowClippingPrefsID()
 {
    static int value = wxNewId();
