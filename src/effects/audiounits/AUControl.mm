@@ -226,21 +226,34 @@ void AUControl::OnSize(wxSizeEvent & evt)
 
       NSRect viewFrame = [mAUView frame];
       NSRect viewRect = [mView frame];
-   
-      if (mask & NSViewWidthSizable)
+
+      if (mask & (NSViewWidthSizable | NSViewHeightSizable))
       {
-         viewRect.size.width = sz.GetWidth();
-      }
+         if (mask & NSViewWidthSizable)
+         {
+            viewRect.size.width = sz.GetWidth();
+         }
 
-      if (mask & NSViewHeightSizable)
+         if (mask & NSViewHeightSizable)
+         {
+            viewRect.size.height = sz.GetHeight();
+         }
+
+         viewRect.origin.x = 0;
+         viewRect.origin.y = 0;
+
+         [mView setFrame:viewRect];
+      }
+      else
       {
-         viewRect.size.height = sz.GetHeight();
+         viewRect.origin.x = abs((viewFrame.size.width - viewRect.size.width) / 2);
+         viewRect.origin.y = abs((viewFrame.size.height - viewRect.size.height) / 2);
+
+         if (viewRect.origin.x || viewRect.origin.y)
+         {
+            [mAUView setFrame:viewRect];
+         }
       }
-
-      viewRect.origin.x = (viewFrame.size.width - viewRect.size.width) / 2;
-      viewRect.origin.y = (viewFrame.size.height - viewRect.size.height) / 2;
-
-      [mView setFrame:viewRect];
    }
 
 #if !defined(_LP64)
@@ -440,29 +453,32 @@ void AUControl::CocoaViewResized()
 
    [mAUView setFrameSize:viewSize];
 
+   SetMinSize(wxSize(viewSize.width, viewSize.height));;
+
    int diffW = (viewSize.width - frameSize.width);
    int diffH = (viewSize.height - frameSize.height);
 
    wxWindow *w = wxGetTopLevelParent(this);
 
    wxSize min = w->GetMinSize();
-   if ([mView autoresizingMask] == NSViewNotSizable)
+   if ([mView autoresizingMask] & (NSViewWidthSizable | NSViewHeightSizable))
+   {
+      min.x += diffW;
+      min.y += diffH;
+   }
+   else
    {
       min.x += (viewSize.width - mLastMin.GetWidth());
       min.y += (viewSize.height - mLastMin.GetHeight());
       mLastMin = wxSize(viewSize.width, viewSize.height);;
    }
-   else
-   {
-      min.x += diffW;
-      min.y += diffH;
-   }
    w->SetMinSize(min);
 
-   wxSize size = w->GetSize();
-   size.x += diffW;
-   size.y += diffH;
-   w->SetSize(size);
+   // Resize the dialog as well
+   w->Fit();
+
+   // Send a "dummy" event to have the OnSize() method recalc mView position
+   GetEventHandler()->AddPendingEvent(wxSizeEvent(GetSize()));
 }
 
 #if !defined(_LP64)
