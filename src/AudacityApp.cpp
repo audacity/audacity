@@ -460,14 +460,14 @@ void PopulatePreferences()
        (vMajor == 2 && vMinor < 4))
    {
       gPrefs->Write(wxT("/GUI/Toolbars/Selection/W"),"");
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/X"),-1);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Y"),-1);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/H"),55);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/W"),251);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/DockV2"),2);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Dock"),2);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Path"),"0,0");
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Show"),1);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/X"),-1);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/Y"),-1);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/H"),55);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/W"),251);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/DockV2"),2);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/Dock"),2);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/Path"),"0,0");
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/Show"),1);
    }
 
    // write out the version numbers to the prefs file for future checking

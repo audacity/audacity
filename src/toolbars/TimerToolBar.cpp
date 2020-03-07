@@ -71,7 +71,7 @@ BEGIN_EVENT_TABLE(TimerToolBar, ToolBar)
 END_EVENT_TABLE()
 
 TimerToolBar::TimerToolBar( AudacityProject &project )
-: ToolBar(project, TimeBarID, XO("TimeToolBar"), wxT("TimeToolBar"),true),
+: ToolBar(project, TimeBarID, XO("Time"), wxT("Time"),true),
 mListener(NULL), mAudioTime(NULL)
 {
    mMinWidth = 50;
@@ -410,7 +410,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       for viewing actual time of the cursor */
-   TimeBarID, wxT("ShowTimeToolBarTB"), XXO("&Time Toolbar"),
+   TimeBarID, wxT("ShowTimeTB"), XXO("&Time Toolbar"),
    { Registry::OrderingHint::After, "ShowSelectionTB" }
 };
 }
