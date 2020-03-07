@@ -1092,29 +1092,32 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
 
       // And get them
       UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-      ArrayOf<AudioUnitParameterID> array {cnt};
-   
-      result = AudioUnitGetProperty(mUnit,
-                                    kAudioUnitProperty_ParameterList,
-                                    kAudioUnitScope_Global,
-                                    0,
-                                    array.get(),
-                                    &dataSize);  
-      if (result != noErr)
+      if (cnt != 0)
       {
-         return false;
-      }
+         ArrayOf<AudioUnitParameterID> array {cnt};
 
-      // Register them as something we're interested in
-      for (int i = 0; i < cnt; i++)
-      {
-         event.mArgument.mParameter.mParameterID = array[i];
-         result = AUEventListenerAddEventType(mEventListenerRef,
-                                              this,
-                                              &event);
+         result = AudioUnitGetProperty(mUnit,
+                                       kAudioUnitProperty_ParameterList,
+                                       kAudioUnitScope_Global,
+                                       0,
+                                       array.get(),
+                                       &dataSize);  
          if (result != noErr)
          {
             return false;
+         }
+
+         // Register them as something we're interested in
+         for (int i = 0; i < cnt; i++)
+         {
+            event.mArgument.mParameter.mParameterID = array[i];
+            result = AUEventListenerAddEventType(mEventListenerRef,
+                                                 this,
+                                                 &event);
+            if (result != noErr)
+            {
+               return false;
+            }
          }
       }
 
