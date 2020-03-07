@@ -835,7 +835,7 @@ void OnRemoveTracks(const CommandContext &context)
    TrackUtilities::DoRemoveTracks( context.project );
 }
 
-void OnMuteAllTracks(const CommandContext &context)
+static void MuteTracks(const CommandContext &context, bool mute, bool selected)
 {
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
@@ -845,9 +845,10 @@ void OnMuteAllTracks(const CommandContext &context)
    auto soloSimple = settings.IsSoloSimple();
    auto soloNone = settings.IsSoloNone();
 
-   for (auto pt : tracks.Any<PlayableTrack>())
+   auto iter = selected ? tracks.Selected<PlayableTrack>() : tracks.Any<PlayableTrack>();
+   for (auto pt : iter)
    {
-      pt->SetMute(true);
+      pt->SetMute(mute);
       if (soloSimple || soloNone)
          pt->SetSolo(false);
    }
@@ -855,24 +856,24 @@ void OnMuteAllTracks(const CommandContext &context)
    ProjectHistory::Get( project ).ModifyState(true);
 }
 
+void OnMuteAllTracks(const CommandContext &context)
+{
+   MuteTracks(context, true, false);
+}
+
 void OnUnmuteAllTracks(const CommandContext &context)
 {
-   auto &project = context.project;
-   const auto &settings = ProjectSettings::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   MuteTracks(context, false, false);
+}
 
-   auto soloSimple = settings.IsSoloSimple();
-   auto soloNone = settings.IsSoloNone();
+void OnMuteSelectedTracks(const CommandContext &context)
+{
+   MuteTracks(context, true, true);
+}
 
-   for (auto pt : tracks.Any<PlayableTrack>())
-   {
-      pt->SetMute(false);
-      if (soloSimple || soloNone)
-         pt->SetSolo(false);
-   }
-
-   ProjectHistory::Get( project ).ModifyState(true);
+void OnUnmuteSelectedTracks(const CommandContext &context)
+{
+   MuteTracks(context, false, true);
 }
 
 void OnPanLeft(const CommandContext &context)
@@ -1357,7 +1358,11 @@ BaseItemSharedPtr TracksMenu()
             Command( wxT("MuteAllTracks"), XXO("&Mute All Tracks"),
                FN(OnMuteAllTracks), AudioIONotBusyFlag(), wxT("Ctrl+U") ),
             Command( wxT("UnmuteAllTracks"), XXO("&Unmute All Tracks"),
-               FN(OnUnmuteAllTracks), AudioIONotBusyFlag(), wxT("Ctrl+Shift+U") )
+               FN(OnUnmuteAllTracks), AudioIONotBusyFlag(), wxT("Ctrl+Shift+U") ),
+            Command( wxT("MuteSelectedTracks"), XXO("&Mute Selected Tracks"),
+               FN(OnMuteSelectedTracks), AudioIONotBusyFlag(), wxT("Ctrl+Alt+U") ),
+            Command( wxT("UnmuteSelectedTracks"), XXO("&Unmute Selected Tracks"),
+               FN(OnUnmuteSelectedTracks), AudioIONotBusyFlag(), wxT("Ctrl+Alt+Shift+U") )
          ),
 
          Menu( wxT("Pan"), XO("&Pan"),
