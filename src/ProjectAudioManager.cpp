@@ -158,7 +158,8 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
    double init_seek = 0.0;
 #endif
-double loop_offset = 0.0;
+
+   double loop_offset = 0.0;
 
    if (t1 == t0) {
       if (looped) {

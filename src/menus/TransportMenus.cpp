@@ -1,5 +1,4 @@
 #include "../Audacity.h"
-
 #include "../Experimental.h"
 
 #include "../AdornedRulerPanel.h"
@@ -184,7 +183,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
             window.RedrawProject();
          }
          auto message = XO("%s %d of %d")
-             .Format( label->title, i + 1, lt->GetNumLabels() );
+            .Format( label->title, i + 1, lt->GetNumLabels() );
          trackFocus.MessageForScreenReader(message);
       }
       else {
