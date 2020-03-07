@@ -158,6 +158,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
    double init_seek = 0.0;
 #endif
+double loop_offset = 0.0;
 
    if (t1 == t0) {
       if (looped) {
@@ -172,6 +173,8 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          }
          else {
             // loop the entire project
+            // Bug2347, loop playback from cursor position instead of project start
+            loop_offset = t0;
             t0 = tracks.GetStartTime();
             t1 = tracks.GetEndTime();
          }
@@ -239,8 +242,12 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
       }
       if (token != 0) {
          success = true;
-         ProjectAudioIO::Get( *p ).SetAudioIOToken(token);
-#if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
+         ProjectAudioIO::Get(*p).SetAudioIOToken(token);
+         if (loop_offset != t0) {
+            // Bug 2347
+            gAudioIO->SeekStream(loop_offset);
+         }
+#if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR )
          //AC: If init_seek was set, now's the time to make it happen.
          gAudioIO->SeekStream(init_seek);
 #endif
@@ -1011,7 +1018,8 @@ TransportTracks ProjectAudioManager::GetAllPlaybackTracks(
 }
 
 // Stop playing or recording, if paused.
-void ProjectAudioManager::StopIfPaused()
+void ProjectAudioManager::StopIfPaused
+()
 {
    if( AudioIOBase::Get()->IsPaused() )
       Stop();

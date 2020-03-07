@@ -1,4 +1,5 @@
 #include "../Audacity.h"
+
 #include "../Experimental.h"
 
 #include "../AdornedRulerPanel.h"
@@ -82,7 +83,7 @@ enum {
    POST_TIMER_RECORD_SHUTDOWN
 };
 
-void DoPlayStop(const CommandContext &context)
+void DoPlayStop(const CommandContext &context, bool looping = false )
 {
    auto &project = context.project;
    auto &projectAudioManager = ProjectAudioManager::Get( project );
@@ -122,14 +123,14 @@ void DoPlayStop(const CommandContext &context)
          //Otherwise, start playing (assuming audio I/O isn't busy)
 
          // Will automatically set mLastPlayMode
-         projectAudioManager.PlayCurrentRegion(false);
+         projectAudioManager.PlayCurrentRegion(looping);
       }
    }
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
 
       // Will automatically set mLastPlayMode
-      projectAudioManager.PlayCurrentRegion(false);
+      projectAudioManager.PlayCurrentRegion(looping);
    }
 }
 
@@ -138,6 +139,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    auto &tracks = TrackList::Get( project );
    auto &trackFocus = TrackFocus::Get( project );
    auto &window = ProjectWindow::Get( project );
+   auto &projectAudioManager = ProjectAudioManager::Get(project);
 
    // Find the number of label tracks, and ptr to last track found
    auto trackRange = tracks.Any<LabelTrack>();
@@ -168,20 +170,20 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 
       if (i >= 0) {
          const LabelStruct* label = lt->GetLabel(i);
+         bool looping = projectAudioManager.Looping();
          if (ProjectAudioIO::Get( project ).IsAudioActive()) {
             DoPlayStop(project);     // stop
             selectedRegion = label->selectedRegion;
             window.RedrawProject();
-            DoPlayStop(project);     // play
+            DoPlayStop(project, looping);     // play
          }
          else {
             selectedRegion = label->selectedRegion;
             window.ScrollIntoView(selectedRegion.t0());
             window.RedrawProject();
          }
-
          auto message = XO("%s %d of %d")
-            .Format( label->title, i + 1, lt->GetNumLabels() );
+             .Format( label->title, i + 1, lt->GetNumLabels() );
          trackFocus.MessageForScreenReader(message);
       }
       else {
