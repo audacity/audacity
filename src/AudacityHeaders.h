@@ -17,18 +17,6 @@
 
 **********************************************************************/
 
-#include "Audacity.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#ifdef __WXMSW__
-#include <initializer_list>
-#endif
-
-
-
 #include <wx/wx.h>
 #include <wx/bitmap.h>
 #include <wx/filedlg.h>
@@ -40,6 +28,16 @@
 #include <wx/textfile.h>
 #include <wx/thread.h>
 #include <wx/tooltip.h>
+
+#include "Audacity.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#ifdef __WXMSW__
+#include <initializer_list>
+#endif
 
 #include "audacity/Types.h"
 
