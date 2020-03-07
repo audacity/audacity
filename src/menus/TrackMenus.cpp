@@ -1356,13 +1356,13 @@ BaseItemSharedPtr TracksMenu()
       Section( "",
          Menu( wxT("Mute"), XO("M&ute/Unmute"),
             Command( wxT("MuteAllTracks"), XXO("&Mute All Tracks"),
-               FN(OnMuteAllTracks), AudioIONotBusyFlag(), wxT("Ctrl+U") ),
+               FN(OnMuteAllTracks), TracksExistFlag(), wxT("Ctrl+U") ),
             Command( wxT("UnmuteAllTracks"), XXO("&Unmute All Tracks"),
-               FN(OnUnmuteAllTracks), AudioIONotBusyFlag(), wxT("Ctrl+Shift+U") ),
+               FN(OnUnmuteAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+U") ),
             Command( wxT("MuteSelectedTracks"), XXO("&Mute Selected Tracks"),
-               FN(OnMuteSelectedTracks), AudioIONotBusyFlag(), wxT("Ctrl+Alt+U") ),
+               FN(OnMuteSelectedTracks), TracksSelectedFlag(), wxT("Ctrl+Alt+U") ),
             Command( wxT("UnmuteSelectedTracks"), XXO("&Unmute Selected Tracks"),
-               FN(OnUnmuteSelectedTracks), AudioIONotBusyFlag(), wxT("Ctrl+Alt+Shift+U") )
+               FN(OnUnmuteSelectedTracks), TracksSelectedFlag(), wxT("Ctrl+Alt+Shift+U") )
          ),
 
          Menu( wxT("Pan"), XO("&Pan"),
