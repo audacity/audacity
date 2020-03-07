@@ -119,6 +119,9 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
 endif()
 
 # Try to get the current commit information
+set( GIT_COMMIT_SHORT "unknown" )
+set( GIT_COMMIT_LONG "unknown" )
+set( GIT_COMMIT_TIME "unknown" )
 find_package( Git QUIET )
 if( GIT_FOUND )
    execute_process(
@@ -127,17 +130,19 @@ if( GIT_FOUND )
       WORKING_DIRECTORY
          ${topdir}
       OUTPUT_VARIABLE
-         output
+         git_output
       OUTPUT_STRIP_TRAILING_WHITESPACE
+      ERROR_QUIET
    )
 
-   list( GET output 0 GIT_COMMIT_SHORT )
-   list( GET output 1 GIT_COMMIT_LONG )
-   list( GET output 2 GIT_COMMIT_TIME )
-
-   message( STATUS "  Current Commit: ${GIT_COMMIT_SHORT}" )
-   message( STATUS )
+   if( git_output )
+      list( GET git_output 0 GIT_COMMIT_SHORT )
+      list( GET git_output 1 GIT_COMMIT_LONG )
+      list( GET git_output 2 GIT_COMMIT_TIME )
+   endif()
 endif()
+message( STATUS "  Current Commit: ${GIT_COMMIT_SHORT}" )
+message( STATUS )
 
 # Define option() prefix
 set( _OPT "audacity_" )
@@ -357,6 +362,7 @@ set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}/audacity" )
 set( _RPATH "\$ORIGIN/../${_LIBDIR}" )
 set( _DATADIR "${CMAKE_INSTALL_DATADIR}" )
 set( _PKGDATA "${_DATADIR}/audacity/" )
+set( _MANDIR "${CMAKE_INSTALL_MANDIR}" )
 
 # Precreate the lib and lib64 directories so we can make then the same
 if( NOT EXISTS "${CMAKE_BINARY_DIR}/lib" )

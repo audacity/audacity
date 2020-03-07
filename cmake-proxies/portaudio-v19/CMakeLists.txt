@@ -113,7 +113,7 @@ list( APPEND SOURCES
          ${TARGET_ROOT}/src/hostapi/coreaudio/pa_mac_core_utilities.c
       >
 
-      $<$<PLATFORM_ID:Darwin,Linux,FreeBSD>:
+      $<$<PLATFORM_ID:Darwin,Linux,FreeBSD,CYGWIN>:
          ${TARGET_ROOT}/src/os/unix/pa_unix_hostapis.c
          ${TARGET_ROOT}/src/os/unix/pa_unix_util.c
       >
@@ -153,7 +153,7 @@ list( APPEND INCLUDES
          ${TARGET_ROOT}/src/os/win
       >
 
-      $<$<PLATFORM_ID:Darwin,Linux,FreeBSD>:
+      $<$<PLATFORM_ID:Darwin,Linux,FreeBSD,CYGWIN>:
          ${TARGET_ROOT}/src/os/unix
       >
 

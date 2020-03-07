@@ -25,7 +25,7 @@ namespace CrashReport {
 void Generate(wxDebugReport::Context ctx)
 {
    wxDebugReportCompress rpt;
-   rpt.AddAll(ctx);
+   //rpt.AddAll(ctx);
    
    wxFileNameWrapper fn{ FileNames::DataDir(), wxT("audacity.cfg") };
    rpt.AddFile(fn.GetFullPath(), _TS("Audacity Configuration"));
@@ -34,7 +34,7 @@ void Generate(wxDebugReport::Context ctx)
    
    if (ctx == wxDebugReport::Context_Current)
    {
-      auto saveLang = GUIPrefs::GetLang();
+      auto saveLang = GUIPrefs::GetLangShort();
       GUIPrefs::InitLang( wxT("en") );
       auto cleanup = finally( [&]{ GUIPrefs::InitLang( saveLang ); } );
       

@@ -90,8 +90,8 @@ void SaveProjectCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S.TieTextBox(XO("File Name:"),mFileName);
-      S.TieCheckBox(XO("Add to History:"), mbAddToHistory );
-      S.TieCheckBox(XO("Compress:"), mbCompress );
+      S.TieCheckBox(XO("Add to History"), mbAddToHistory );
+      S.TieCheckBox(XO("Compress"), mbCompress );
    }
    S.EndMultiColumn();
 }

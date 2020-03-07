@@ -38,7 +38,7 @@ if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
    install( DIRECTORY "${dst}" OPTIONAL
             DESTINATION "${_DATADIR}/audacity/help" )
    install( FILES "${_SRCDIR}/audacity.1"
-            DESTINATION "${_DATADIR}/man/man.1" )
+            DESTINATION "${_MANDIR}/man1" )
    install( FILES "${_SRCDIR}/audacity.appdata.xml"
             DESTINATION "${_DATADIR}/appdata" )
 endif()

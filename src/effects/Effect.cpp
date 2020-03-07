@@ -17,6 +17,7 @@
 
 #include "../Audacity.h"
 #include "Effect.h"
+#include "EffectManager.h"
 
 #include "../Experimental.h"
 
@@ -666,7 +667,9 @@ void Effect::ExportPresets()
 {
    wxString params;
    GetAutomationParameters(params);
-   params = GetSymbol().Internal() + ":" + params;
+   EffectManager & em = EffectManager::Get();
+   wxString commandId = em.GetSquashedName(GetSymbol().Internal()).GET();
+   params =  commandId + ":" + params;
 
    auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
 
@@ -741,7 +744,11 @@ void Effect::ImportPresets()
       if (f.ReadAll(&params)) {
          wxString ident = params.BeforeFirst(':');
          params = params.AfterFirst(':');
-         if (ident != GetSymbol().Internal()) {
+
+         EffectManager & em = EffectManager::Get();
+         wxString commandId = em.GetSquashedName(GetSymbol().Internal()).GET();
+
+         if (ident != commandId) {
             // effect identifiers are a sensible length!
             // must also have some params.
             if ((params.Length() < 2 ) || (ident.Length() < 2) || (ident.Length() > 30)) 
@@ -801,7 +808,7 @@ NumericFormatSymbol Effect::GetDurationFormat()
 
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
-   if( FindProject() )
+   if( !IsBatchProcessing() && FindProject() )
       return ProjectSettings::Get( *FindProject() ).GetSelectionFormat();
    return NumericConverter::HoursMinsSecondsFormat();
 }
@@ -1585,9 +1592,12 @@ bool Effect::ProcessTrack(int count,
 
       // Create temporary tracks
       genLeft = mFactory->NewWaveTrack(left->GetSampleFormat(), left->GetRate());
+      genLeft->SetWaveColorIndex( left->GetWaveColorIndex() );
 
-      if (right)
+      if (right) {
          genRight = mFactory->NewWaveTrack(right->GetSampleFormat(), right->GetRate());
+         genRight->SetWaveColorIndex( right->GetWaveColorIndex() );
+      }
    }
 
    // Call the effect until we run out of input or delayed samples

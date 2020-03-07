@@ -77,7 +77,7 @@ void SetPreferenceCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.TieTextBox(XO("Name:"),mName);
       S.TieTextBox(XO("Value:"),mValue);
-      S.TieCheckBox(XO("Reload:"),mbReload);
+      S.TieCheckBox(XO("Reload"),mbReload);
    }
    S.EndMultiColumn();
 }

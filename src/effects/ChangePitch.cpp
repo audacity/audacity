@@ -438,7 +438,7 @@ bool EffectChangePitch::TransferDataFromWindow()
 void EffectChangePitch::DeduceFrequencies()
 {
     auto FirstTrack = [&]()->const WaveTrack *{
-      if( !inputTracks() )
+      if( IsBatchProcessing() || !inputTracks() )
          return nullptr;
       return *( inputTracks()->Selected< const WaveTrack >() ).first;
    };
@@ -448,7 +448,7 @@ void EffectChangePitch::DeduceFrequencies()
    // As a neat trick, attempt to get the frequency of the note at the
    // beginning of the selection.
    auto track = FirstTrack();
-   if (track) {
+   if (track ) {
       double rate = track->GetRate();
 
       // Auto-size window -- high sample rates require larger windowSize.

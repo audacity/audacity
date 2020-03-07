@@ -122,7 +122,11 @@ TranslatableString EffectManager::GetVendorName(const PluginID & ID)
 CommandID EffectManager::GetCommandIdentifier(const PluginID & ID)
 {
    wxString name = PluginManager::Get().GetSymbol(ID).Internal();
+   return GetSquashedName(name);
+}
 
+CommandID EffectManager::GetSquashedName(wxString name)
+{
    // Get rid of leading and trailing white space
    name.Trim(true).Trim(false);
 
