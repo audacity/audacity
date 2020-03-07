@@ -163,8 +163,8 @@ private:
 
    void GetChannelCounts();
 
-   bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group);
+   bool LoadPreset(const RegistryPath & group);
+   bool SavePreset(const RegistryPath & group);
 
 
    bool CreatePlain(wxWindow *parent);

@@ -20,10 +20,12 @@
 #include "AudioUnitEffect.h"
 
 #include <wx/defs.h>
+#include <wx/base64.h>
 #include <wx/button.h>
 #include <wx/control.h>
-#include <wx/dir.h>
 #include <wx/crt.h>
+#include <wx/dir.h>
+#include <wx/ffile.h>
 
 #ifdef __WXMAC__
 #include <wx/evtloop.h>
@@ -32,6 +34,7 @@
 #include <wx/filename.h>
 #include <wx/frame.h>
 #include <wx/listctrl.h>
+#include <wx/log.h>
 #include <wx/sizer.h>
 #include <wx/settings.h>
 #include <wx/stattext.h>
@@ -39,23 +42,137 @@
 #include <wx/tokenzr.h>
 
 #include "../../ShuttleGui.h"
+#include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
+
+//
+// When a plug-ins state is saved to the settings file (as a preset),
+// it can be one of two formats, binary or XML.  In either case, it
+// gets base64 encoded before storing.
+//
+// The advantages of XML format is less chance of failures occurring
+// when exporting.  But, it can take a bit more space per preset int
+// the Audacity settings file.
+//
+// Using binary for now.  Use kCFPropertyListXMLFormat_v1_0 if XML
+// format is desired.
+//
+#define PRESET_FORMAT kCFPropertyListBinaryFormat_v1_0
+
+// Name of the settings key to use for the above value
+#define PRESET_KEY wxT("Data")
+
+// Where the presets are located
+#define PRESET_LOCAL_PATH wxT("/Library/Audio/Presets")
+#define PRESET_USER_PATH wxT("~/Library/Audio/Presets")
 
 struct CFReleaser
    { void operator () (const void *p) const { if (p) CFRelease(p); } };
 template <typename T>
    using CFunique_ptr = std::unique_ptr<T, CFReleaser>;
 
-struct AudioUnitParameterInfoEx : AudioUnitParameterInfo
+class ParameterInfo
 {
-   ~AudioUnitParameterInfoEx ()
+public:
+   ParameterInfo()
    {
-      if ((flags & kAudioUnitParameterFlag_HasCFNameString)
-          &&
-          (flags & kAudioUnitParameterFlag_CFNameRelease))
-         CFRelease( cfNameString );
+      info = {};
    }
+
+   virtual ~ParameterInfo()
+   {
+      if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
+      {
+         if (info.flags & kAudioUnitParameterFlag_CFNameRelease)
+         {
+            CFRelease(info.cfNameString);
+         }
+      }
+   }
+
+   bool Get(AudioUnit mUnit, AudioUnitParameterID parmId)
+   {
+      OSStatus result;
+      UInt32 dataSize;
+
+      info = {};
+      dataSize = sizeof(info);
+      result = AudioUnitGetProperty(mUnit,
+                                    kAudioUnitProperty_ParameterInfo,
+                                    kAudioUnitScope_Global,
+                                    parmId,
+                                    &info,
+                                    &dataSize);  
+      if (result != noErr)
+      {
+         return false;
+      }
+
+      if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
+      {
+         name = wxCFStringRef::AsString(info.cfNameString);
+      }
+      else
+      {
+         name = wxString(info.name);
+      }
+
+      if (name.empty())
+      {
+         return false;
+      }
+
+      // If the parameter has a clumpID, then the final parameter name will be
+      // either:
+      //
+      //    <clumpID,clumpName>ParameterName
+      //
+      // or (if the clumpName isn't available):
+      //
+      //    <clumpID>ParameterName
+      if (info.flags & kAudioUnitParameterFlag_HasClump)
+      {
+         wxString clumpName;
+
+         AudioUnitParameterNameInfo clumpInfo = {};
+         clumpInfo.inID = info.clumpID;
+         clumpInfo.inDesiredLength = kAudioUnitParameterName_Full;
+         dataSize = sizeof(clumpInfo);
+
+         result = AudioUnitGetProperty(mUnit,
+                                       kAudioUnitProperty_ParameterClumpName,
+                                       kAudioUnitScope_Global,
+                                       0,
+                                       &clumpInfo,
+                                       &dataSize);  
+         if (result == noErr)
+         {
+            clumpName.Printf(wxT("%c%s"),
+                             idSep,
+                             wxCFStringRef::AsString(clumpInfo.outName));
+            clumpName.Replace(idEnd, wxT("_"));
+         }
+
+         name.Replace(idBeg, wxT('_'));
+         name.Replace(idEnd, wxT('_'));
+         name = wxString::Format(wxT("%c%x%s%c%s"),
+                                 idBeg,
+                                 info.clumpID,
+                                 clumpName,
+                                 idEnd,
+                                 name);
+      }
+
+      return true;
+   }
+
+   static const char idBeg = wxT('<');
+   static const char idSep = wxT(',');
+   static const char idEnd = wxT('>');
+
+   wxString name;
+   AudioUnitParameterInfo info;
 };
 
 // ============================================================================
@@ -457,9 +574,6 @@ void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#define PRESET_LOCAL_PATH wxT("/Library/Audio/Presets")
-#define PRESET_USER_PATH wxT("~/Library/Audio/Presets")
-
 class AudioUnitEffectExportDialog final : public wxDialogWrapper
 {
 public:
@@ -467,6 +581,7 @@ public:
    virtual ~AudioUnitEffectExportDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
+   wxString Export(const wxString & name);
 
    void OnOk(wxCommandEvent & evt);
 
@@ -528,8 +643,6 @@ void AudioUnitEffectExportDialog::PopulateOrExchange(ShuttleGui & S)
       mList->InsertItem(i, presets[i]);
    }
 
-   mList->SetColumnWidth(0, wxLIST_AUTOSIZE);
-
    // Set the list size...with a little extra for good measure
    wxSize sz = mList->GetBestSize();
    sz.x += 5;
@@ -539,90 +652,150 @@ void AudioUnitEffectExportDialog::PopulateOrExchange(ShuttleGui & S)
    Layout();
    Fit();
    Center();
+
+   // Make the single column a reasonable size...not perfect but better
+   // than using wxLIST_AUTOSIZE.
+   sz = mList->GetSize();
+   mList->SetColumnWidth(0, sz.x - 10);
 }
 
-void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
+wxString AudioUnitEffectExportDialog::Export(const wxString & name)
 {
-   // Save active settings
-   wxString settingsName(wxT("Export Save"));
-   mEffect->SaveParameters(settingsName);
+   RegistryPath group = mEffect->mHost->GetUserPresetsGroup(name);
 
-   // Look for selected presets
-   long sel = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-   while (sel >= 0)
+   // Make sure the user preset directory exists
+   wxString path;
+   path.Printf(wxT("%s/%s/%s/%s.aupreset"),
+               PRESET_USER_PATH,
+               mEffect->mVendor,
+               mEffect->mName,
+               name);
+   wxFileName fn(path);
+   fn.Normalize();
+   if (!fn.Mkdir(0755, wxPATH_MKDIR_FULL))
+   {
+      return _("Couldn't create the \"%s\" directory").Format(fn.GetPath());
+   }
+
+   // Create the file
+   const wxString fullPath{fn.GetFullPath()};
+   wxFFile f(fullPath, wxT("wb"));
+   if (!f.IsOpened())
+   {
+      return _("Couldn't open \"%s\"").Format(fullPath);
+   }
+
+   // Retrieve preset from config file
+   wxString parms;
+   if (!mEffect->mHost->GetPrivateConfig(group, PRESET_KEY, parms, wxEmptyString))
+   {
+      return _("Preset key \"%s\" not found in group \"%s\"").Format(PRESET_KEY, group);
+   }
+   
+   // Decode it
+   wxMemoryBuffer buf = wxBase64Decode(parms);
+   size_t bufLen = buf.GetDataLen();
+   if (!bufLen)
+   {
+      return _("Failed to decode preset");
+   }
+   const uint8_t *bufPtr = (uint8_t *) buf.GetData();
+
+   // Determine if the data is binary or XML
+   bool isBin = (bufLen >= 6 && memcmp(bufPtr, "bplist", 6) == 0);
+
+   // Convert binary plist to XML
+   if (isBin)
+   {
+      // Create a CFData object that references the decoded preset
+      CFunique_ptr<const __CFData> data
+      {
+         CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
+                                     bufPtr,
+                                     bufLen,
+                                     kCFAllocatorNull)
+      };
+      if (!data)
+      {
+         return _("Failed to convert preset to internal data representation");
+      }
+
+      // Convert it back to a property list.
+      CFPropertyListRef content
+      {
+         CFPropertyListCreateWithData(kCFAllocatorDefault,
+                                      data.get(),
+                                      kCFPropertyListImmutable,
+                                      NULL,
+                                      NULL)
+      };
+      if (!content)
+      {
+         return _("Failed to create property list from preset data");
+      }
+      CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
+
+      // Serialize it as XML data
+      data.reset(CFPropertyListCreateData(kCFAllocatorDefault,
+                                          content,
+                                          kCFPropertyListXMLFormat_v1_0,
+                                          0,
+                                          NULL));
+      if (!data)
+      {
+         return _("Failed to convert property list to XML data");
+      }
+
+      // Nothing to do if we don't have any data
+      SInt32 length = CFDataGetLength(data.get());
+      if (!length)
+      {
+         return _("XML data is empty after conversion");
+      }
+
+      // Write XML data
+      if (f.Write(CFDataGetBytePtr(data.get()), length) != length || f.Error())
+      {
+         return _("Failed to write XML preset to \"%s\"").Format(fullPath);
+      }
+   }
+   else
+   {
+      // Write XML data
+      if (f.Write(bufPtr, bufLen) != bufLen || f.Error())
+      {
+         return _("Failed to write XML preset to \"%s\"").Format(fullPath);
+      }
+   }
+
+   f.Close();
+
+   return wxEmptyString;
+}
+
+void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & evt)
+{
+   evt.Skip();
+
+   // Export all selected presets
+   long sel = -1;
+   while ((sel = mList->GetNextItem(sel, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) >= 0)
    {
       wxString name = mList->GetItemText(sel);
 
-      // Make the preset current
-      mEffect->LoadParameters(mEffect->mHost->GetUserPresetsGroup(name));
+      wxString msg = Export(name);
 
-      // Make sure the user preset directory exists
-      wxString path;
-      path.Printf(wxT("%s/%s/%s/%s.aupreset"),
-                  PRESET_USER_PATH,
-                  mEffect->mVendor,
-                  mEffect->mName,
-                  name);
-      wxFileName fn(path);
-      fn.Normalize();
-      fn.Mkdir(0755, wxPATH_MKDIR_FULL);
-      path = fn.GetFullPath();
-
-      // First set the name of the preset
-      wxCFStringRef cfname(name);
-
-      AUPreset preset;
-      preset.presetNumber = -1; // indicates user preset
-      preset.presetName = cfname;
-
-      AudioUnitSetProperty(mEffect->mUnit,
-                           kAudioUnitProperty_PresentPreset,
-                           kAudioUnitScope_Global,
-                           0,
-                           &preset,
-                           sizeof(preset));
-
-      // Now retrieve the preset content
-      CFPropertyListRef content;
-      UInt32 size = sizeof(content);
-      AudioUnitGetProperty(mEffect->mUnit,
-                           kAudioUnitProperty_ClassInfo,
-                           kAudioUnitScope_Global,
-                           0,
-                           &content,
-                           &size);
-
-      // And convert it to XML
-      CFunique_ptr<const __CFData> xml {
-         CFPropertyListCreateXMLData(kCFAllocatorDefault, content)
-      };
-      if (xml)
+      if (!msg.IsEmpty())
       {
-         // Create the CFURL for the path
-         CFunique_ptr<const __CFURL> url {
-            CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-                                          wxCFStringRef(path),
-                                          kCFURLPOSIXPathStyle,
-                                          false)
-         };
-         if (url)
-         {
-            SInt32 error;
-            Boolean res = CFURLWriteDataAndPropertiesToResource(url.get(),
-                                                                xml.get(),
-                                                                NULL,
-                                                                &error);
-         }
+         AudacityMessageBox(
+            XO("Could not export \"%s\" preset\n\n%s").Format( name, msg ),
+            XO("Export Audio Unit Presets"),
+            wxOK | wxCENTRE,
+            this);
+         return;
       }
-
-      // And continue to the next selected preset
-      sel = mList->GetNextItem(sel, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
 
-   // Restore active settings
-   mEffect->LoadParameters(settingsName);
-   mEffect->mHost->RemovePrivateConfigSubgroup(settingsName);
-   
    EndModal(wxID_OK);
 }
 
@@ -639,6 +812,8 @@ public:
    virtual ~AudioUnitEffectImportDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
+   bool HasPresets();
+   wxString Import(const wxString & path, const wxString & name);
 
    void OnOk(wxCommandEvent & evt);
 
@@ -690,19 +865,21 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
    S.AddStandardButtons();
 
    FilePaths presets;
+   wxFileName fn;
 
-   // Make sure the user preset directory exists
+   // Generate the local domain path
    wxString path;
    path.Printf(wxT("%s/%s/%s"),
                PRESET_LOCAL_PATH,
                mEffect->mVendor,
                mEffect->mName);
-   wxFileName fn(path);
+   fn = path;
    fn.Normalize();
    
    // Get all presets in the local domain for this effect
    wxDir::GetAllFiles(fn.GetFullPath(), &presets, wxT("*.aupreset"));
 
+   // Generate the user domain path
    path.Printf(wxT("%s/%s/%s"),
                PRESET_USER_PATH,
                mEffect->mVendor,
@@ -736,13 +913,55 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
    Center();
 }
 
-void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
+bool AudioUnitEffectImportDialog::HasPresets()
 {
-   // Save active settings
-   wxString settingsName(wxT("Import Save"));
-   mEffect->SaveParameters(settingsName);
+   return mList->GetItemCount() > 0;
+}
 
-   // Look for selected presets
+wxString AudioUnitEffectImportDialog::Import(const wxString & path, const wxString & name)
+{
+   // Generate the path
+   wxString fullPath;
+   fullPath.Printf(wxT("%s/%s.aupreset"),
+                    path,
+                    name);
+
+   // Open the preset
+   wxFFile f(fullPath, wxT("r"));
+   if (!f.IsOpened())
+   {
+      return wxString::Format(_("Couldn't open \"%s\""), fullPath);
+   }
+
+   // Load it into the buffer
+   size_t len = f.Length();
+   wxMemoryBuffer buf(len);
+   if (f.Read(buf.GetData(), len) != len || f.Error())
+   {
+      return wxString::Format(_("Unable to read the preset from \"%s\""), fullPath);
+   }
+
+   wxString parms = wxBase64Encode(buf.GetData(), len);
+   if (parms.IsEmpty())
+   {
+      return wxString::Format(_("Failed to encode preset from \"%s\""), fullPath);
+   }
+
+   // And write it to the config
+   wxString group = mEffect->mHost->GetUserPresetsGroup(name);
+   if (!mEffect->mHost->SetPrivateConfig(group, PRESET_KEY, parms))
+   {
+      return wxString::Format(_("Unable to store preset in config file"));
+   }
+
+   return wxEmptyString;
+}
+
+void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & evt)
+{
+   evt.Skip();
+   
+   // Import all selected presets
    long sel = -1;
    while ((sel = mList->GetNextItem(sel, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) >= 0)
    {
@@ -752,65 +971,21 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
       item.SetMask(wxLIST_MASK_TEXT);
       mList->GetItem(item);
 
-      wxString path;
-      path.Printf(wxT("%s/%s.aupreset"),
-                  item.GetText(),
-                  mList->GetItemText(sel));
+      wxString path = item.GetText();
+      wxString name = mList->GetItemText(sel);
+      wxString msg = Import(path, name);
 
-      // Create the CFURL for the path
-      CFunique_ptr<const __CFURL> url {
-         CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-                                       wxCFStringRef(path),
-                                       kCFURLPOSIXPathStyle,
-                                       false)
-      };
-
-      if (!url)
+      if (!msg.IsEmpty())
       {
-         continue;
+         AudacityMessageBox(
+            XO("Could not import \"%s\" preset\n\n%s").Format( name, msg ),
+            XO("Import Audio Unit Presets"),
+            wxOK | wxCENTRE,
+            this);
+         return;
       }
-
-      CFDataRef xml{};
-      SInt32 error;
-      Boolean res = CFURLCreateDataAndPropertiesFromResource(kCFAllocatorDefault,
-                                                             url.get(),
-                                                             &xml,
-                                                             NULL,
-                                                             NULL,
-                                                             &error);
-      CFunique_ptr<const __CFData> uxml { xml };
-
-      if (!res)
-      {
-         continue;
-      }
-
-      CFunique_ptr<char> content {
-         (char*)CFPropertyListCreateFromXMLData(kCFAllocatorDefault,
-                                         xml,
-                                         kCFPropertyListImmutable,
-                                         NULL)
-      };
-
-      if (!content)
-      {
-         continue;
-      }
-
-      OSStatus result = AudioUnitSetProperty(mEffect->mUnit,
-                                             kAudioUnitProperty_ClassInfo,
-                                             kAudioUnitScope_Global,
-                                             0,
-                                             &content,
-                                             sizeof(content));
-
-      mEffect->SaveUserPreset(mEffect->mHost->GetUserPresetsGroup(mList->GetItemText(sel)));
    }
-
-   // Restore active settings
-   mEffect->LoadParameters(settingsName);
-   mEffect->mHost->RemovePrivateConfigSubgroup(settingsName);
-   
+  
    EndModal(wxID_OK);
 }
 
@@ -968,7 +1143,7 @@ bool AudioUnitEffect::SupportsAutomation()
    }
 
    UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   ArrayOf < AudioUnitParameterID > array{cnt};
+   ArrayOf<AudioUnitParameterID> array{cnt};
 
    result = AudioUnitGetProperty(mUnit,
                                  kAudioUnitProperty_ParameterList,
@@ -983,23 +1158,15 @@ bool AudioUnitEffect::SupportsAutomation()
 
    for (int i = 0; i < cnt; i++)
    {
-      AudioUnitParameterInfoEx info;
-      dataSize = sizeof(info);
-      result = AudioUnitGetProperty(mUnit,
-                                    kAudioUnitProperty_ParameterInfo,
-                                    kAudioUnitScope_Global,
-                                    array[i],
-                                    &info,
-                                    &dataSize);  
-      if (result != noErr)
-      {
-         return false;
-      }
+      ParameterInfo pi;
 
-      if (info.flags & kAudioUnitParameterFlag_IsWritable)
+      if (pi.Get(mUnit, array[i]))
       {
-         // All we need is one
-         return true;
+         if (pi.info.flags & kAudioUnitParameterFlag_IsWritable)
+         {
+            // All we need is one
+            return true;
+         }
       }
    }
 
@@ -1015,7 +1182,7 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
    OSStatus result;
    
    mHost = host;
-   
+ 
    mSampleRate = 44100;
    result = AudioComponentInstanceNew(mComponent, &mUnit);
    if (!mUnit)
@@ -1047,22 +1214,22 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
       mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
       {
-         SaveParameters(mHost->GetFactoryDefaultsGroup());
+         SavePreset(mHost->GetFactoryDefaultsGroup());
          mHost->SetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(mHost->GetCurrentSettingsGroup());
+      LoadPreset(mHost->GetCurrentSettingsGroup());
    } 
 
    if (!mMaster)
    {
      result = AUEventListenerCreate(AudioUnitEffect::EventListenerCallback,
-                                     this,
-                                     (CFRunLoopRef)GetCFRunLoopFromEventLoop(GetCurrentEventLoop()),
-                                     kCFRunLoopDefaultMode,
-                                     0.0,
-                                     0.0,
-                                     &mEventListenerRef);
+                                    this,
+                                    (CFRunLoopRef)GetCFRunLoopFromEventLoop(GetCurrentEventLoop()),
+                                    kCFRunLoopDefaultMode,
+                                    0.0,
+                                    0.0,
+                                    &mEventListenerRef);
       if (result != noErr)
       {
          return false;
@@ -1078,7 +1245,7 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
       UInt32 dataSize;
       Boolean isWritable;
 
-      // Retrieve the list of properties
+      // Retrieve the list of parameters
       result = AudioUnitGetPropertyInfo(mUnit,
                                         kAudioUnitProperty_ParameterList,
                                         kAudioUnitScope_Global,
@@ -1403,9 +1570,9 @@ bool AudioUnitEffect::RealtimeProcessStart()
 }
 
 size_t AudioUnitEffect::RealtimeProcess(int group,
-                                             float **inbuf,
-                                             float **outbuf,
-                                             size_t numSamples)
+                                        float **inbuf,
+                                        float **outbuf,
+                                        size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
 
@@ -1497,27 +1664,13 @@ bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms)
 
    for (int i = 0; i < cnt; i++)
    {
-      AudioUnitParameterInfoEx info;
-      dataSize = sizeof(info);
-      result = AudioUnitGetProperty(mUnit,
-                                    kAudioUnitProperty_ParameterInfo,
-                                    kAudioUnitScope_Global,
-                                    array[i],
-                                    &info,
-                                    &dataSize);  
-      if (result != noErr)
-      {
-         return false;
-      }
+      ParameterInfo pi;
 
-      wxString name;
-      if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
+      if (!pi.Get(mUnit, array[i]))
       {
-         name = wxCFStringRef::AsString(info.cfNameString);
-      }
-
-      if (name.empty())
-      {
+         // Probably failed because of invalid parameter which can happen
+         // if a plug-in is in a certain mode that doesn't contain the
+         // parameter.  In any case, just ignore it.
          continue;
       }
 
@@ -1529,9 +1682,13 @@ bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms)
                                      &value);
       if (result != noErr)
       {
-         return false;
+         // Probably failed because of invalid parameter which can happen
+         // if a plug-in is in a certain mode that doesn't contain the
+         // parameter.  In any case, just ignore it.
+         continue;
       }
-      parms.Write(name, value);
+
+      parms.Write(pi.name, value);
    }
 
    return true;
@@ -1570,68 +1727,47 @@ bool AudioUnitEffect::SetAutomationParameters(CommandParameters & parms)
 
    for (int i = 0; i < cnt; i++)
    {
-      AudioUnitParameterInfoEx info;
-      dataSize = sizeof(info);
-      result = AudioUnitGetProperty(mUnit,
-                                    kAudioUnitProperty_ParameterInfo,
-                                    kAudioUnitScope_Global,
-                                    array[i],
-                                    &info,
-                                    &dataSize);  
-      if (result != noErr)
-      {
-         return false;
-      }
+      ParameterInfo pi;
 
-      wxString name;
-      if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
+      if (!pi.Get(mUnit, array[i]))
       {
-         name = wxCFStringRef::AsString(info.cfNameString);
-      }
-
-      if (name.empty())
-      {
+         // Probably failed because of invalid parameter which can happen
+         // if a plug-in is in a certain mode that doesn't contain the
+         // parameter.  In any case, just ignore it.
          continue;
       }
 
-
       double d = 0.0;
-      if (!parms.Read(name, &d))
+      if (parms.Read(pi.name, &d))
       {
-         return false;
-      }
+         AudioUnitParameterValue value = d;
+         AudioUnitSetParameter(mUnit,
+                               array[i],
+                               kAudioUnitScope_Global,
+                               0,
+                               value,
+                               0);
 
-      AudioUnitParameterValue value = d;
-      result = AudioUnitSetParameter(mUnit,
-                                     array[i],
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     value,
-                                     0);
-      if (result != noErr)
-      {
-         return false;
+         AudioUnitParameter aup = {};
+         aup.mAudioUnit = mUnit;
+         aup.mParameterID = array[i];
+         aup.mScope = kAudioUnitScope_Global;
+         aup.mElement = 0;
+         AUParameterListenerNotify(NULL, NULL, &aup);
       }
    }
-
-   AudioUnitParameter aup;
-   aup.mAudioUnit = mUnit;
-   aup.mParameterID = kAUParameterListener_AnyParameter;
-   aup.mScope = kAudioUnitScope_Global;
-   aup.mElement = 0;
-   AUParameterListenerNotify(NULL, NULL, &aup);
 
    return true;
 }
 
 bool AudioUnitEffect::LoadUserPreset(const RegistryPath & name)
 {
-   return LoadParameters(name);
+   return LoadPreset(name);
 }
 
 bool AudioUnitEffect::SaveUserPreset(const RegistryPath & name)
 {
-   return SaveParameters(name);
+   return SavePreset(name);
 }
 
 bool AudioUnitEffect::LoadFactoryPreset(int id)
@@ -1647,7 +1783,7 @@ bool AudioUnitEffect::LoadFactoryPreset(int id)
                                  0,
                                  &array,
                                  &dataSize);
-   CFunique_ptr < const __CFArray > uarray { array };
+   CFunique_ptr<const __CFArray> uarray { array };
    if (result != noErr)
    {
       return false;
@@ -1681,7 +1817,7 @@ bool AudioUnitEffect::LoadFactoryPreset(int id)
 
 bool AudioUnitEffect::LoadFactoryDefaults()
 {
-   return LoadParameters(mHost->GetFactoryDefaultsGroup());
+   return LoadPreset(mHost->GetFactoryDefaultsGroup());
 }
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets()
@@ -1698,7 +1834,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets()
                                  0,
                                  &array,
                                  &dataSize);
-   CFunique_ptr< const __CFArray > uarray { array };
+   CFunique_ptr<const __CFArray> uarray { array };
    if (result == noErr)
    {
       for (CFIndex i = 0, cnt = CFArrayGetCount(array); i < cnt; i++)
@@ -1739,7 +1875,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
       mParent->SetSizer(mainSizer.release());
    }
 
-   if (mUIType == wxT("Plain"))
+   if (mUIType == wxT("Basic"))
    {
       if (!CreatePlain(mParent))
       {
@@ -1803,6 +1939,7 @@ bool AudioUnitEffect::ValidateUI()
 
 bool AudioUnitEffect::CreatePlain(wxWindow *parent)
 {
+   // TODO???  Never implemented...
    return false;
 }
 
@@ -1824,7 +1961,10 @@ bool AudioUnitEffect::CloseUI()
    wxEventLoop::SetBusyWaiting(false);
 #endif
    if (mpControl)
-      mpControl->Close(), mpControl = nullptr;
+   {
+      mpControl->Close();
+      mpControl = nullptr;
+   }
 #endif
 
    mParent->RemoveEventHandler(this);
@@ -1843,14 +1983,38 @@ bool AudioUnitEffect::CanExportPresets()
 
 void AudioUnitEffect::ExportPresets()
 {
-   AudioUnitEffectExportDialog dlg(mDialog, this);
-   dlg.ShowModal();
+   RegistryPaths presets;
+
+   mHost->GetPrivateConfigSubgroups(mHost->GetUserPresetsGroup(wxEmptyString), presets);
+
+   if (presets.size())
+   { 
+      AudioUnitEffectExportDialog dlg(mDialog, this);
+      dlg.ShowModal();
+   }
+   else
+   {
+      AudacityMessageBox(XO("No user presets to export."),
+                         XO("Export Presets"),
+                         wxOK | wxCENTRE,
+                         mDialog);
+   }
 }
 
 void AudioUnitEffect::ImportPresets()
 {
    AudioUnitEffectImportDialog dlg(mDialog, this);
-   dlg.ShowModal();
+   if (dlg.HasPresets())
+   {
+      dlg.ShowModal();
+   }
+   else
+   {
+      AudacityMessageBox(XO("No user or local presets to import."),
+                         XO("Import Presets"),
+                         wxOK | wxCENTRE,
+                         mDialog);
+   }
 }
 
 bool AudioUnitEffect::HasOptions()
@@ -1873,38 +2037,184 @@ void AudioUnitEffect::ShowOptions()
 // AudioUnitEffect Implementation
 // ============================================================================
 
-bool AudioUnitEffect::LoadParameters(const RegistryPath & group)
+bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
 {
    wxString parms;
-   if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
+
+   // Attempt to load old preset parameters and resave using new method
+   if (mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
    {
+      CommandParameters eap;
+      if (eap.SetParameters(parms))
+      {
+         if (SetAutomationParameters(eap))
+         {
+            if (SavePreset(group))
+            {
+               mHost->RemovePrivateConfig(group, wxT("Parameters"));
+            }
+         }
+      }
+      return true;
+   }
+
+   // Retrieve the preset
+   if (!mHost->GetPrivateConfig(group, PRESET_KEY, parms, wxEmptyString))
+   {
+      // Commented "CurrentSettings" gets tried a lot and useless messages appear
+      // in the log
+      //wxLogError(wxT("Preset key \"%s\" not found in group \"%s\""), PRESET_KEY, group);
+      return false;
+   }
+   
+   // Decode it
+   wxMemoryBuffer buf = wxBase64Decode(parms);
+   size_t bufLen = buf.GetDataLen();
+   if (!bufLen)
+   {
+      wxLogError(wxT("Failed to decode \"%s\" preset"), group);
+      return false;
+   }
+   const uint8_t *bufPtr = (uint8_t *) buf.GetData();
+
+   // Create a CFData object that references the decoded preset
+   CFunique_ptr<const __CFData> data
+   {
+      CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
+                                  bufPtr,
+                                  bufLen,
+                                  kCFAllocatorNull)
+   };
+   if (!data)
+   {
+      wxLogError(wxT("Failed to convert \"%s\" preset to internal format"), group);
       return false;
    }
 
-   CommandParameters eap;
-   if (!eap.SetParameters(parms))
+   // Convert it back to a property list.
+   CFPropertyListRef content
    {
+      CFPropertyListCreateWithData(kCFAllocatorDefault,
+                                   data.get(),
+                                   kCFPropertyListImmutable,
+                                   NULL,
+                                   NULL)
+   };
+   if (!content)
+   {
+      wxLogError(wxT("Failed to create property list for \"%s\" preset"), group);
+      return false;
+   }
+   CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
+
+   // Finally, update the properties and parameters
+   OSStatus result;
+   result = AudioUnitSetProperty(mUnit,
+                                 kAudioUnitProperty_ClassInfo,
+                                 kAudioUnitScope_Global,
+                                 0,
+                                 &content,
+                                 sizeof(content));
+   if (result != noErr)
+   {
+      wxLogError(wxT("Failed to set class info for \"%s\" preset"), group);
       return false;
    }
 
-   return SetAutomationParameters(eap);
+   // And notify any interested parties
+   AudioUnitParameter aup = {};
+   aup.mAudioUnit = mUnit;
+   aup.mParameterID = kAUParameterListener_AnyParameter;
+   aup.mScope = kAudioUnitScope_Global;
+   aup.mElement = 0;
+   AUParameterListenerNotify(NULL, NULL, &aup);
+
+   // Make sure all slaves get the new preset as well
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
+   {
+      // Finally, update the properties and parameters
+      OSStatus result;
+      result = AudioUnitSetProperty(mSlaves[i]->mUnit,
+                                    kAudioUnitProperty_ClassInfo,
+                                    kAudioUnitScope_Global,
+                                    0,
+                                    &content,
+                                    sizeof(content));
+      if (result != noErr)
+      {
+         wxLogError(wxT("Failed to set slave class info for \"%s\" preset"), group);
+      }
+
+      // And notify any interested parties
+      AudioUnitParameter aup = {};
+      aup.mAudioUnit = mUnit;
+      aup.mParameterID = kAUParameterListener_AnyParameter;
+      aup.mScope = kAudioUnitScope_Global;
+      aup.mElement = 0;
+      AUParameterListenerNotify(NULL, NULL, &aup);
+   }
+
+   return true;
 }
 
-bool AudioUnitEffect::SaveParameters(const RegistryPath & group)
+bool AudioUnitEffect::SavePreset(const RegistryPath & group)
 {
-   CommandParameters eap;
-   if (!GetAutomationParameters(eap))
+   // First set the name of the preset
+   wxCFStringRef cfname(wxFileNameFromPath(group));
+
+   // Define the preset property
+   AUPreset preset;
+   preset.presetNumber = -1; // indicates user preset
+   preset.presetName = cfname;
+
+   // And set it in the audio unit
+   AudioUnitSetProperty(mUnit,
+                        kAudioUnitProperty_PresentPreset,
+                        kAudioUnitScope_Global,
+                        0,
+                        &preset,
+                        sizeof(preset));
+
+   // Now retrieve the preset content
+   CFPropertyListRef content;
+   UInt32 size = sizeof(content);
+   AudioUnitGetProperty(mUnit,
+                        kAudioUnitProperty_ClassInfo,
+                        kAudioUnitScope_Global,
+                        0,
+                        &content,
+                        &size);
+   CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
+
+   // And convert it to serialized binary data
+   CFunique_ptr<const __CFData> data
+   {
+      CFPropertyListCreateData(kCFAllocatorDefault,
+                               content,
+                               PRESET_FORMAT,
+                               0,
+                               NULL)
+   };
+   if (!data)
    {
       return false;
    }
 
-   wxString parms;
-   if (!eap.GetParameters(parms))
+   // Nothing to do if we don't have any data
+   SInt32 length = CFDataGetLength(data.get());
+   if (length)
    {
-      return false;
+      // Base64 encode the returned binary property list
+      wxString parms = wxBase64Encode(CFDataGetBytePtr(data.get()), length);
+
+      // And write it to the config
+      if (!mHost->SetPrivateConfig(group, PRESET_KEY, parms))
+      {
+         return false;
+      }
    }
 
-   return mHost->SetPrivateConfig(group, wxT("Parameters"), parms);
+   return true;
 }
 
 bool AudioUnitEffect::SetRateAndChannels()
@@ -2041,68 +2351,43 @@ bool AudioUnitEffect::SetRateAndChannels()
 bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
 {
    OSStatus result;
-   Float32 parameterValue;
-   UInt32 size;
 
-   // Get number of parameters by passing NULL in the data field and
-   // getting back the size of the parameter list
-
-   size = 0;
+   // Retrieve the class state from the source AU
+   CFPropertyListRef content;
+   UInt32 size = sizeof(content);
    result = AudioUnitGetProperty(srcUnit,
-                                   kAudioUnitProperty_ParameterList,
-                                   kAudioUnitScope_Global,
-                                   0,
-                                   NULL,
-                                   &size);
-   if (result != 0)
+                                 kAudioUnitProperty_ClassInfo,
+                                 kAudioUnitScope_Global,
+                                 0,
+                                 &content,
+                                 &size);
+   if (result != noErr)
    {
-      wxPrintf("Couldn't get number of parameters\n");
       return false;
    }
 
-   // Now get the list of all parameter IDs
+   // Make sure it get's freed
+   CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
 
-   auto numParameters = size / sizeof(AudioUnitParameterID);
-   ArrayOf<AudioUnitParameterID> parameters{ numParameters };
-   result = AudioUnitGetProperty(srcUnit,
-                                   kAudioUnitProperty_ParameterList,
-                                   kAudioUnitScope_Global,
-                                   0,
-                                   parameters.get(),
-                                   &size);
-   if (result != 0)
+   // Set the destination AUs state from the source AU's content
+   result = AudioUnitSetProperty(dstUnit,
+                                 kAudioUnitProperty_ClassInfo,
+                                 kAudioUnitScope_Global,
+                                 0,
+                                 &content,
+                                 sizeof(content));
+   if (result != noErr)
    {
-      wxPrintf("Couldn't get parameter list\n");
       return false;
    }
 
-   // Copy the parameters from the main unit to the unit specific to
-   // this track
-
-   for (unsigned i = 0; i < numParameters; i++)
-   {
-      result = AudioUnitGetParameter(srcUnit,
-                                       parameters[i],
-                                       kAudioUnitScope_Global,
-                                       0,
-                                       &parameterValue);
-      if (result != 0)
-      {
-         wxPrintf("Couldn't get parameter %d: ID=%d\n", i, (int)parameters[i]);
-         continue;
-      }
-
-      result = AudioUnitSetParameter(dstUnit,
-                                       parameters[i],
-                                       kAudioUnitScope_Global,
-                                       0,
-                                       parameterValue,
-                                       0);
-      if (result != 0)
-      {
-         wxPrintf("Couldn't set parameter %d: ID=%d\n", i, (int)parameters[i]);
-      }
-   }
+   // Notify interested parties
+   AudioUnitParameter aup = {};
+   aup.mAudioUnit = dstUnit;
+   aup.mParameterID = kAUParameterListener_AnyParameter;
+   aup.mScope = kAudioUnitScope_Global;
+   aup.mElement = 0;
+   AUParameterListenerNotify(NULL, NULL, &aup);
 
    return true;
 }
@@ -2150,7 +2435,7 @@ void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
    // Handle property changes
    if (inEvent->mEventType == kAudioUnitEvent_PropertyChange)
    {
-      // We're only registered for Latency changes
+      // Handle latency changes
       if (inEvent->mArgument.mProperty.mPropertyID == kAudioUnitProperty_Latency)
       {
          // Allow change to be used
@@ -2176,7 +2461,9 @@ void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
    {
       // We're the master, so propogate 
       for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
+      {
          mSlaves[i]->EventListener(inEvent, inParameterValue);
+      }
    }
 }
                            
