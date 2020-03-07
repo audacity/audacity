@@ -879,6 +879,9 @@ void PluginRegistrationDialog::OnSort(wxListEvent & evt)
 
    mSortColumn = col;
    mEffects->SortItems(SortCompare, (wxUIntPtr) this);
+
+   // Without a refresh, wxMac doesn't redisplay the list properly after a sort
+   mEffects->Refresh();
 }
 
 void PluginRegistrationDialog::OnListChar(wxKeyEvent & evt)
