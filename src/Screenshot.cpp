@@ -156,6 +156,14 @@ class ScreenFrameTimer final : public wxTimer
       evt.reset(event.Clone());
    }
 
+   virtual ~ScreenFrameTimer()
+   {
+      if (IsRunning())
+      {
+         Stop();
+      }
+   }
+
    void Notify() override
    {
       // Process timer notification just once, then destroy self
@@ -521,13 +529,11 @@ bool ScreenshotBigDialog::ProcessEvent(wxEvent & e)
 
 void ScreenshotBigDialog::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
 {
-   mTimer->Stop();
    Destroy();
 }
 
 void ScreenshotBigDialog::OnClose(wxCommandEvent &  WXUNUSED(event))
 {
-   mTimer->Stop();
    Destroy();
 }
 
