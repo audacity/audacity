@@ -122,31 +122,7 @@ TranslatableString EffectManager::GetVendorName(const PluginID & ID)
 CommandID EffectManager::GetCommandIdentifier(const PluginID & ID)
 {
    wxString name = PluginManager::Get().GetSymbol(ID).Internal();
-   return GetSquashedName(name);
-}
-
-CommandID EffectManager::GetSquashedName(wxString name)
-{
-   // Get rid of leading and trailing white space
-   name.Trim(true).Trim(false);
-
-   if (name.empty())
-   {
-      return name;
-   }
-
-   wxStringTokenizer st(name, wxT(" "));
-   wxString id;
-
-   // CamelCase the name
-   while (st.HasMoreTokens())
-   {
-      wxString tok = st.GetNextToken();
-
-      id += tok.Left(1).MakeUpper() + tok.Mid(1).MakeLower();
-   }
-
-   return id;
+   return Effect::GetSquashedName(name);
 }
 
 TranslatableString EffectManager::GetCommandDescription(const PluginID & ID)

@@ -94,7 +94,6 @@ public:
    ComponentInterfaceSymbol GetCommandSymbol(const PluginID & ID);
    TranslatableString GetCommandName(const PluginID & ID);
    CommandID GetCommandIdentifier(const PluginID & ID);
-   CommandID GetSquashedName(wxString name);
    TranslatableString GetCommandDescription(const PluginID & ID);
    wxString GetCommandUrl(const PluginID & ID);
    wxString GetCommandTip(const PluginID & ID);
