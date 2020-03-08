@@ -995,7 +995,6 @@ void EffectCompressor2::SwapPipeline()
    std::cerr << "\n" << std::flush;
 #endif
 
-   ++mProgressVal;
    for(size_t i = 0; i < PIPELINE_DEPTH-1; ++i)
       mPipeline[i].swap(mPipeline[i+1]);
 #ifdef DEBUG_COMPRESSOR2_TRACE
@@ -1063,6 +1062,9 @@ bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
 
       // Increment s one blockfull of samples
       pos += blockLen;
+
+      if(!UpdateProgress())
+          return false;
    }
 
    // Handle short selections
@@ -1079,6 +1081,8 @@ bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
 #endif
       SwapPipeline();
       FillPipeline();
+      if(!UpdateProgress())
+          return false;
    }
 
    while(PipelineHasData())
@@ -1086,6 +1090,8 @@ bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
       StorePipeline(range);
       SwapPipeline();
       DrainPipeline();
+      if(!UpdateProgress())
+          return false;
    }
 #ifdef DEBUG_COMPRESSOR2_TRACE
    std::cerr << "StoreLastBlock\n" << std::flush;
@@ -1287,6 +1293,14 @@ void EffectCompressor2::StorePipeline(TrackIterRange<WaveTrack> range)
    }
    mPipeline[0].trackSize = 0;
    mPipeline[0].size = 0;
+}
+
+bool EffectCompressor2::UpdateProgress()
+{
+   mProgressVal +=
+      (double(1+mProcStereo) * mPipeline[PIPELINE_DEPTH-1].trackSize)
+      / (double(GetNumWaveTracks()) * mTrackLen);
+   return !TotalProgress(mProgressVal);
 }
 
 void EffectCompressor2::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
