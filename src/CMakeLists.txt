@@ -1198,6 +1198,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          # Add the resources
          RESOURCE "${MAC_RESOURCES};${RESOURCES}"
    )
+   set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}" )
 
    # These sources must be compiled as Objective C++
    set_source_files_properties(
@@ -1235,7 +1236,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          TARGET
             ${TARGET}
          COMMAND
-            sh -c "TARGET_BUILD_DIR=${_DEST} EXECUTABLE_PATH=Macos/${_EXE} FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
+            sh -c "TARGET_BUILD_DIR=${_DEST} EXECUTABLE_PATH=MacOS/${_EXE} FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
          POST_BUILD
       )
    endif()

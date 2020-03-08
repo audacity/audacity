@@ -347,14 +347,15 @@ find_package( OpenGL QUIET )
 #     .../bin/Debug//
 # or:
 #     .../bin//Debug
-set( _DEST "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${CMAKE_BUILD_TYPE}" )
+set( _DESTDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${CMAKE_BUILD_TYPE}" )
+set( _DEST "${_DESTDIR}" )
 set( _EXEDIR "${_DEST}" )
 string( REGEX REPLACE "/+$" "" _EXEDIR "${_EXEDIR}" )
 
 # Adjust them for the Mac
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( _DEST "${_DEST}/Audacity.app/Contents" )
-   set( _EXEDIR "${_DEST}/Macos" )
+   set( _EXEDIR "${_DEST}/MacOS" )
 endif()
 
 set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
