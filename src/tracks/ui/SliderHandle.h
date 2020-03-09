@@ -16,6 +16,7 @@ Paul Licameli
 class wxMouseEvent;
 class LWSlider;
 class Track;
+class TranslatableString;
 
 class SliderHandle /* not final */ : public UIHandle
 {
