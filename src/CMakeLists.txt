@@ -1254,6 +1254,8 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
 else()
    set( _EXE "audacity" )
 
+   set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}" )
+
    # Create the config file
    set( HAVE_VISIBILITY 1 )
    configure_file( audacity_config.h.in private/configunix.h )
