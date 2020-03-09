@@ -1019,8 +1019,7 @@ TransportTracks ProjectAudioManager::GetAllPlaybackTracks(
 }
 
 // Stop playing or recording, if paused.
-void ProjectAudioManager::StopIfPaused
-()
+void ProjectAudioManager::StopIfPaused()
 {
    if( AudioIOBase::Get()->IsPaused() )
       Stop();

@@ -83,50 +83,56 @@ enum {
    POST_TIMER_RECORD_SHUTDOWN
 };
 
-void DoPlayStop(const CommandContext &context, bool looping = false )
+// Returns true if this project was stopped, otherwise false.
+// (it may though have stopped another project playing)
+bool DoStopPlaying(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &projectAudioManager = ProjectAudioManager::Get( project );
-   auto &toolbar = ControlToolBar::Get( project );
-   auto &window = ProjectWindow::Get( project );
-   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
+   auto &projectAudioManager = ProjectAudioManager::Get(project);
+   auto gAudioIO = AudioIOBase::Get();
+   auto &toolbar = ControlToolBar::Get(project);
+   auto &window = ProjectWindow::Get(project);
+   auto token = ProjectAudioIO::Get(project).GetAudioIOToken();
 
    //If this project is playing, stop playing, make sure everything is unpaused.
-   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive(token)) {
       toolbar.SetStop();         //Pushes stop down
       projectAudioManager.Stop();
+      // Playing project was stopped.  All done.
+      return true;
    }
-   else if (gAudioIO->IsStreamActive()) {
-      // If this project isn't playing, but another one is, stop playing the
-      // old and start the NEW.
+
+   // This project isn't playing.
+   // If some other project is playing, stop playing it
+   if (gAudioIO->IsStreamActive()) {
 
       //find out which project we need;
       auto start = AllProjects{}.begin(), finish = AllProjects{}.end(),
-         iter = std::find_if( start, finish,
-            [&]( const AllProjects::value_type &ptr ){
-               return gAudioIO->IsStreamActive(
-                  ProjectAudioIO::Get( *ptr ).GetAudioIOToken()); } );
+         iter = std::find_if(start, finish,
+            [&](const AllProjects::value_type &ptr) {
+         return gAudioIO->IsStreamActive(
+            ProjectAudioIO::Get(*ptr).GetAudioIOToken()); });
 
       //stop playing the other project
-      if(iter != finish) {
+      if (iter != finish) {
          auto otherProject = *iter;
-         auto &otherToolbar = ControlToolBar::Get( *otherProject );
+         auto &otherToolbar = ControlToolBar::Get(*otherProject);
          auto &otherProjectAudioManager =
-            ProjectAudioManager::Get( *otherProject );
+            ProjectAudioManager::Get(*otherProject);
          otherToolbar.SetStop();         //Pushes stop down
          otherProjectAudioManager.Stop();
       }
-
-      //play the front project
-      if (!gAudioIO->IsBusy()) {
-         //Otherwise, start playing (assuming audio I/O isn't busy)
-
-         // Will automatically set mLastPlayMode
-         projectAudioManager.PlayCurrentRegion(looping);
-      }
    }
-   else if (!gAudioIO->IsBusy()) {
+   return false;
+}
+
+void DoStartPlaying(const CommandContext &context, bool looping = false)
+{
+   auto &project = context.project;
+   auto &projectAudioManager = ProjectAudioManager::Get(project);
+   auto gAudioIO = AudioIOBase::Get();
+   //play the front project
+   if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
 
       // Will automatically set mLastPlayMode
@@ -172,10 +178,10 @@ void DoMoveToLabel(AudacityProject &project, bool next)
          const LabelStruct* label = lt->GetLabel(i);
          bool looping = projectAudioManager.Looping();
          if (ProjectAudioIO::Get( project ).IsAudioActive()) {
-            DoPlayStop(project);     // stop
+            DoStopPlaying(project);
             selectedRegion = label->selectedRegion;
             window.RedrawProject();
-            DoPlayStop(project, looping);     // play
+            DoStartPlaying(project, looping);
          }
          else {
             selectedRegion = label->selectedRegion;
@@ -200,9 +206,13 @@ namespace TransportActions {
 
 struct Handler : CommandHandlerObject {
 
+// This Plays OR Stops audio.  It's a toggle.
+// It is usually bound to the SPACE key.
 void OnPlayStop(const CommandContext &context)
 {
-   DoPlayStop( context.project );
+   if (DoStopPlaying(context.project))
+      return;
+   DoStartPlaying(context.project);
 }
 
 void OnPlayStopSelect(const CommandContext &context)
