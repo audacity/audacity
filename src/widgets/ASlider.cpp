@@ -943,7 +943,7 @@ TranslatableString LWSlider::GetTip(float value) const
       switch(mStyle)
       {
       case FRAC_SLIDER:
-         Verbatim("%.2f").Format( value );
+         val = Verbatim("%.2f").Format( value );
          break;
 
       case DB_SLIDER:
@@ -977,10 +977,10 @@ TranslatableString LWSlider::GetTip(float value) const
       case VEL_SLIDER:
          if (value > 0.0f)
             // Signed
-            Verbatim("%+d").Format( (int) value );
+            val = Verbatim("%+d").Format( (int) value );
          else
             // Zero, or signed negative
-            Verbatim("%d").Format( (int) value );
+            val = Verbatim("%d").Format( (int) value );
          break;
 #endif
       }

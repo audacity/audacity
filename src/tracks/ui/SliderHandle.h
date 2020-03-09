@@ -45,6 +45,10 @@ protected:
    virtual Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject) = 0;
 
+   // Define a message for the status bar and tooltip.
+   virtual TranslatableString Tip(
+      const wxMouseState &state, AudacityProject &project) const = 0;
+ 
    void Enter(bool forward, AudacityProject *) override;
 
    Result Click

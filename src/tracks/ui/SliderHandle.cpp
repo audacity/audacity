@@ -74,10 +74,13 @@ UIHandle::Result SliderHandle::Drag
 }
 
 HitTestPreview SliderHandle::Preview
-(const TrackPanelMouseState &, AudacityProject *)
+(const TrackPanelMouseState &st, AudacityProject *project)
 {
-   // No special message or cursor
-   return {};
+   // No special cursor
+   TranslatableString message;
+   if (project)
+      message = Tip(st.state, *project);
+   return { message, {}, message };
 }
 
 UIHandle::Result SliderHandle::Release
