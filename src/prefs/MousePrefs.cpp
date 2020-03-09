@@ -221,7 +221,10 @@ void MousePrefs::OnShow(wxShowEvent &event)
 {
    event.Skip();
 
-   mList->Refresh();
+   if (event.IsShown())
+   {
+      mList->Refresh();
+   }
 }
 
 /// Update the preferences stored on disk.

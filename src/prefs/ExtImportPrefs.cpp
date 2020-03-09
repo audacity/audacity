@@ -221,9 +221,11 @@ bool ExtImportPrefs::Commit()
 void ExtImportPrefs::OnShow(wxShowEvent &event)
 {
    event.Skip();
-
-   RuleTable->Refresh();
-   PluginList->Refresh();
+   if (event.IsShown())
+   {
+      RuleTable->Refresh();
+      PluginList->Refresh();
+   }
 }
 
 void ExtImportPrefs::OnPluginKeyDown(wxListEvent& event)

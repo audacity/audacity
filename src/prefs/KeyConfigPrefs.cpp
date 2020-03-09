@@ -469,7 +469,10 @@ void KeyConfigPrefs::OnShow(wxShowEvent & event)
 {
    event.Skip();
 
-   mView->Refresh();
+   if (event.IsShown())
+   {
+      mView->Refresh();
+   }
 }
 
 void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
