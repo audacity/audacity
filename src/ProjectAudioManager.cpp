@@ -244,7 +244,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
       if (token != 0) {
          success = true;
          ProjectAudioIO::Get(*p).SetAudioIOToken(token);
-         if (loop_offset != t0) {
+         if (loop_offset != 0.0) {
             // Bug 2347
             gAudioIO->SeekStream(loop_offset);
          }
