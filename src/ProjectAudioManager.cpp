@@ -165,7 +165,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
       if (looped) {
          const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
          // play selection if there is one, otherwise
-         // set start of play region to project start, 
+         // set start of play region to project start,
          // and loop the project from current play position.
 
          if ((t0 > selectedRegion.t0()) && (t0 < selectedRegion.t1())) {
@@ -175,7 +175,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          else {
             // loop the entire project
             // Bug2347, loop playback from cursor position instead of project start
-            loop_offset = t0;
+            loop_offset = t0 - tracks.GetStartTime();
             t0 = tracks.GetStartTime();
             t1 = tracks.GetEndTime();
          }
@@ -698,7 +698,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(*p).Set(first);
       }
-      
+
       //Automated Input Level Adjustment Initialization
       #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
          gAudioIO->AILAInitialize();
@@ -747,7 +747,7 @@ void ProjectAudioManager::OnPause()
    // Bug 1494 - Pausing a seek or scrub should just STOP as
    // it is confusing to be in a paused scrub state.
    bool bStopInstead = paused &&
-      gAudioIO->IsScrubbing() && 
+      gAudioIO->IsScrubbing() &&
       !scrubber.IsSpeedPlaying() &&
       !scrubber.IsKeyboardScrubbing();
 
@@ -755,7 +755,7 @@ void ProjectAudioManager::OnPause()
       Stop();
       return;
    }
-   
+
    if (gAudioIO->IsScrubbing())
       scrubber.Pause(paused);
    else
