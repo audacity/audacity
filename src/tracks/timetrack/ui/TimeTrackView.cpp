@@ -99,12 +99,7 @@ void DrawHorzRulerAndCurve
    // Draw the Ruler
    ruler.SetBounds(r.x, r.y, r.x + r.width - 1, r.y + r.height - 1);
    ruler.SetRange(min, max);
-   ruler.SetFlip(false);  // If we don't do this, the Ruler doesn't redraw itself when the envelope is modified.
-   // I have no idea why!
-   //
-   // LL:  It's because the ruler only Invalidate()s when the NEW value is different
-   //      than the current value.
-   ruler.SetFlip(TrackView::Get( track ).GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
+   ruler.Invalidate(); //So the ruler can redraw itself.
    ruler.SetTickColour( theTheme.Colour( clrTrackPanelText ));
    ruler.Draw(dc, track.GetEnvelope());
    
