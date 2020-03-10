@@ -502,9 +502,12 @@ BaseItemSharedPtr HelpMenu()
          Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
             AlwaysEnabledFlag ),
          // DA: 'Getting Started' rather than 'Quick Help'.
-         Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) ),
+         Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp),
+            AlwaysEnabledFlag ),
          // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-         Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) )
+         Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual),
+            AlwaysEnabledFlag )
+
    #else
          Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
             AlwaysEnabledFlag ),
