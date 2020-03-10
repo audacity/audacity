@@ -1141,50 +1141,6 @@ bool AudacityApp::OnExceptionInMainLoop()
 #pragma warning( pop )
 #endif //_MSC_VER
 
-int AudacityApp::FilterEvent(wxEvent & event)
-{
-   (void)event;// compiler food (stops unused parameter warning)
-#if !wxCHECK_VERSION(3, 0, 0) && defined(__WXGTK__)
-   // On wxGTK, there's a focus issue where dialogs do not automatically pass focus
-   // to the first child.  This means that you can use the keyboard to navigate within
-   // the dialog.  Watching for the ACTIVATE event allows us to set the focus ourselves
-   // when each dialog opens.
-   //
-   // See bug #57
-   //
-   if (event.GetEventType() == wxEVT_ACTIVATE)
-   {
-      wxActivateEvent & e = (wxActivateEvent &) event;
-
-      if (e.GetEventObject() && e.GetActive() && e.GetEventObject()->IsKindOf(CLASSINFO(wxDialog)))
-      {
-         ((wxWindow *)e.GetEventObject())->SetFocus();
-      }
-   }
-#endif
-
-
-#if defined(__WXMAC__) || defined(__WXGTK__)
-   if (event.GetEventType() == wxEVT_ACTIVATE)
-   {
-      wxActivateEvent & e = static_cast<wxActivateEvent &>(event);
-
-      const auto object = e.GetEventObject();
-      if (object && e.GetActive() &&
-          object->IsKindOf(CLASSINFO(wxWindow)))
-      {
-         const auto window = ((wxWindow *)e.GetEventObject());
-         window->SetFocus();
-#if defined(__WXMAC__)
-         window->NavigateIn();
-#endif
-      }
-   }
-#endif
-
-   return Event_Skip;
-}
-
 AudacityApp::AudacityApp()
 {
 // Do not capture crashes in debug builds
