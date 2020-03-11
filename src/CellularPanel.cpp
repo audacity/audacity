@@ -84,8 +84,6 @@ struct CellularPanel::State
    size_t mTarget {};
    unsigned mMouseOverUpdateFlags{};
 
-   wxString mToolTip;
-   
    int mMouseMostRecentX;
    int mMouseMostRecentY;
    
@@ -276,7 +274,6 @@ void CellularPanel::HandleMotion
    TranslatableString status, tooltip;
    wxCursor *pCursor{};
    unsigned refreshCode = 0;
-
    if ( ! doHit ) {
       // Dragging or not
       handle = Target();
@@ -375,11 +372,11 @@ void CellularPanel::HandleMotion
       UpdateStatusMessage(status);
 
 #if wxUSE_TOOLTIPS
-      if (tooltip.Translation() != state.mToolTip) {
+      if (tooltip.Translation() != GetToolTipText()) {
          // Unset first, by analogy with AButton
          UnsetToolTip();
-         SetToolTip(tooltip);
-         state.mToolTip = tooltip.Translation();
+         if (handle != oldHandle)
+            SetToolTip(tooltip);
       }
 #endif
 
@@ -818,11 +815,6 @@ catch( ... )
 
 void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
 {
-#if wxUSE_TOOLTIPS
-   // Any click should cancel the tooltip
-   UnsetToolTip();
-#endif
-
    auto pCell = tpmEvent.pCell;
    // Do hit test once more, in case the button really pressed was not the
    // one "anticipated."
