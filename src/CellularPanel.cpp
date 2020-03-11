@@ -842,6 +842,11 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       else {
          Filter::spActivePanel = this;
 
+#if wxUSE_TOOLTIPS
+         // Remove any outstanding tooltip
+         UnsetToolTip();
+#endif
+
          if( !HasFocus() && AcceptsFocus() )
             SetFocusIgnoringChildren();
 
