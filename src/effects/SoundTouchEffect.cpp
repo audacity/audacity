@@ -189,7 +189,7 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
 {
    mSoundTouch->setSampleRate((unsigned int)(track->GetRate()+0.5));
 
-   auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(), track->GetRate());
+   auto outputTrack = track->EmptyCopy();
 
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
@@ -262,10 +262,8 @@ bool EffectSoundTouch::ProcessStereo(
 {
    mSoundTouch->setSampleRate((unsigned int)(leftTrack->GetRate() + 0.5));
 
-   auto outputLeftTrack = mFactory->NewWaveTrack(leftTrack->GetSampleFormat(),
-                                                       leftTrack->GetRate());
-   auto outputRightTrack = mFactory->NewWaveTrack(rightTrack->GetSampleFormat(),
-                                                        rightTrack->GetRate());
+   auto outputLeftTrack = leftTrack->EmptyCopy();
+   auto outputRightTrack = rightTrack->EmptyCopy();
 
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier

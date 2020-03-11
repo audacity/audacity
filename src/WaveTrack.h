@@ -158,6 +158,10 @@ private:
 
    Track::Holder Cut(double t0, double t1) override;
 
+   // Make another track copying format, rate, color, etc. but containing no
+   // clips
+   Holder EmptyCopy() const;
+
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
    // will contain a "placeholder" clip whose only purpose is to make

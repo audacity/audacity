@@ -1317,7 +1317,7 @@ bool EffectNoiseReduction::Worker::ProcessOne
 
    WaveTrack::Holder outputTrack;
    if(!mDoProfile)
-      outputTrack = factory.NewWaveTrack(track->GetSampleFormat(), track->GetRate());
+      outputTrack = track->EmptyCopy();
 
    auto bufferSize = track->GetMaxBlockSize();
    FloatVector buffer(bufferSize);

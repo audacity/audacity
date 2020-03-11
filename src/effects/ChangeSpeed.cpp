@@ -479,8 +479,8 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    // initialization, per examples of Mixer::Mixer and
    // EffectSoundTouch::ProcessOne
 
-   auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),
-                                                    track->GetRate());
+   
+   auto outputTrack = track->EmptyCopy();
 
    //Get the length of the selection (as double). len is
    //used simple to calculate a progress meter, so it is easier

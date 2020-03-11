@@ -65,10 +65,7 @@ bool Generator::Process()
          {
             auto pProject = FindProject();
             // Create a temporary track
-            WaveTrack::Holder tmp(
-               mFactory->NewWaveTrack(track->GetSampleFormat(),
-               track->GetRate())
-            );
+            auto tmp = track->EmptyCopy();
             BeforeTrack(*track);
             BeforeGenerate();
 

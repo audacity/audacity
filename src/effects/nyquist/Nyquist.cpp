@@ -1498,15 +1498,12 @@ bool NyquistEffect::ProcessOne()
 
    double rate = mCurTrack[0]->GetRate();
    for (int i = 0; i < outChannels; i++) {
-      sampleFormat format = mCurTrack[i]->GetSampleFormat();
-
       if (outChannels == (int)mCurNumChannels) {
          rate = mCurTrack[i]->GetRate();
       }
 
-      outputTrack[i] = mFactory->NewWaveTrack(format, rate);
-      if ( mCurTrack[i] )
-         outputTrack[i]->SetWaveColorIndex( mCurTrack[i]->GetWaveColorIndex() );
+      outputTrack[i] = mCurTrack[i]->EmptyCopy();
+      outputTrack[i]->SetRate( rate );
 
       // Clean the initial buffer states again for the get callbacks
       // -- is this really needed?

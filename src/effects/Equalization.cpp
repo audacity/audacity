@@ -1288,7 +1288,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                                     sampleCount start, sampleCount len)
 {
    // create a NEW WaveTrack to hold all of the output, including 'tails' each end
-   auto output = mFactory->NewWaveTrack(floatSample, t->GetRate());
+   auto output = t->EmptyCopy();
+   t->ConvertToSampleFormat( floatSample );
 
    wxASSERT(mM - 1 < windowSize);
    size_t L = windowSize - (mM - 1);   //Process L samples at a go

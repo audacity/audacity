@@ -336,7 +336,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
       (dlen - ((double)stretch_buf_size * 2.0));
    amount = 1.0 + (amount - 1.0) * adjust_amount;
 
-   auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),track->GetRate());
+   auto outputTrack = track->EmptyCopy();
 
    try {
       // This encloses all the allocations of buffers, including those in

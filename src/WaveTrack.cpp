@@ -530,15 +530,20 @@ void WaveTrack::Trim (double t0, double t1)
 
 
 
+WaveTrack::Holder WaveTrack::EmptyCopy() const
+{
+   auto result = std::make_shared<WaveTrack>( mDirManager, mFormat, mRate );
+   result->Init(*this);
+   return result;
+}
+
 Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   auto result = std::make_shared<WaveTrack>( mDirManager, mFormat, mRate );
+   auto result = EmptyCopy();
    WaveTrack *newTrack = result.get();
-
-   newTrack->Init(*this);
 
    // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know, but
    // that was the old behavior.  But this function is also used by the

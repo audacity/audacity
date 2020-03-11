@@ -101,8 +101,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
                   // Cause duplication of block files on disk, when copy is
                   // between projects
                   locker.emplace(wc);
-               uNewTrack = trackFactory.NewWaveTrack(
-                  wc->GetSampleFormat(), wc->GetRate()),
+               uNewTrack = wc->EmptyCopy();
                pNewTrack = uNewTrack.get();
             },
 #ifdef USE_MIDI
@@ -597,8 +596,7 @@ void OnPaste(const CommandContext &context)
                wt->ClearAndPaste(t0, t1, wc, true, true);
             }
             else {
-               auto tmp = trackFactory.NewWaveTrack(
-                  wt->GetSampleFormat(), wt->GetRate());
+               auto tmp = wt->EmptyCopy();
                tmp->InsertSilence( 0.0,
                   // MJS: Is this correct?
                   clipboard.Duration() );

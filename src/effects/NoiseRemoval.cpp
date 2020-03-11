@@ -534,8 +534,7 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
    StartNewTrack();
 
    if (!mDoProfile)
-      mOutputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),
-                                            track->GetRate());
+      mOutputTrack = track->EmptyCopy();
 
    auto bufferSize = track->GetMaxBlockSize();
    Floats buffer{ bufferSize };

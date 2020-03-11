@@ -139,8 +139,8 @@ bool EffectStereoToMono::ProcessOne(int count)
    Floats rightBuffer{ idealBlockLen };
    bool bResult = true;
 
-   auto outTrack =
-      mFactory->NewWaveTrack(floatSample, mLeftTrack->GetRate());
+   auto outTrack = mLeftTrack->EmptyCopy();
+   outTrack->ConvertToSampleFormat( floatSample );
 
    while (index < mEnd) {
       bResult &= mLeftTrack->Get((samplePtr)leftBuffer.get(), floatSample, index, idealBlockLen);

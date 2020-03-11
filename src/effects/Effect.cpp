@@ -1613,13 +1613,10 @@ bool Effect::ProcessTrack(int count,
       cleared = true;
 
       // Create temporary tracks
-      genLeft = mFactory->NewWaveTrack(left->GetSampleFormat(), left->GetRate());
-      genLeft->SetWaveColorIndex( left->GetWaveColorIndex() );
+      genLeft = left->EmptyCopy();
 
-      if (right) {
-         genRight = mFactory->NewWaveTrack(right->GetSampleFormat(), right->GetRate());
-         genRight->SetWaveColorIndex( right->GetWaveColorIndex() );
-      }
+      if (right)
+         genRight = right->EmptyCopy();
    }
 
    // Call the effect until we run out of input or delayed samples
