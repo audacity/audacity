@@ -1790,7 +1790,7 @@ void DirManager::FillBlockfilesCache()
             b->FillCache();
          }
 
-         if (!progress.Update(current, numNeed))
+         if (ProgressResult::Cancelled != progress.Update(current, numNeed))
             break; // user cancelled progress dialog, stop caching
          current++;
       }
