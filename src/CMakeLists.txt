@@ -1358,7 +1358,7 @@ source_group(
         ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.hxx
 )
 
-target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} ${_PRVDIR}/RevisionIdent.h)
+target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
