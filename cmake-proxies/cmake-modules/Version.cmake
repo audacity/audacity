@@ -4,12 +4,11 @@
 
 execute_process(
    COMMAND
-      ${GIT} show -s "--format=#define REV_LONG \"%H\"%n#define REV_TIME \"%cd\"%n%n"
+      ${GIT} show -s "--format=#define REV_LONG \"%H\"%n#define REV_TIME \"%cd\"%n"
    OUTPUT_FILE
       RevisionIdent.h.in
    OUTPUT_STRIP_TRAILING_WHITESPACE
    ERROR_QUIET
-   COMMAND_ECHO STDOUT
 )
 
 configure_file( RevisionIdent.h.in RevisionIdent.h COPYONLY )
