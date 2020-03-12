@@ -14,6 +14,21 @@ add_dependencies( ${TARGET} plug-ins )
 
 def_vars()
 
+# Add a target that will provide the git revision info
+# whenever it changes.  (Must be done at build time, not
+# configuration time.)
+if( GIT_FOUND )
+   add_custom_target(
+      version
+      COMMAND
+         ${CMAKE_COMMAND} -D GIT=${GIT_EXECUTABLE}
+                          -P ${CMAKE_MODULE_PATH}/Version.cmake
+      WORKING_DIRECTORY
+         ${_PRVDIR}
+   )
+   add_dependencies( ${TARGET} version )
+endif()
+
 # Handle Audio Units option
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    cmd_option(
@@ -1002,10 +1017,6 @@ list( APPEND DEFINES
       WXINTL_NO_GETTEXT_MACRO
       WXUSINGDLL
       CMAKE
-      $<$<BOOL:${GIT_FOUND}>:
-         REV_LONG="${GIT_COMMIT_LONG}"
-         REV_TIME="${GIT_COMMIT_TIME}"
-      >
       $<$<BOOL:${HAVE_LRINT}>:
          HAVE_LRINT
       >
@@ -1347,7 +1358,7 @@ source_group(
         ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.hxx
 )
 
-target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
+target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} ${_PRVDIR}/RevisionIdent.h)
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
