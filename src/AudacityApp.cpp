@@ -1928,9 +1928,9 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       Destroy_ptr<wxSocketClient> sock { safenew wxSocketClient() };
       sock->SetFlags(wxSOCKET_WAITALL);
 
-      // We try up to 50 times since there's a small window
+      // We try up to 20 times since there's a small window
       // where the server may not have been fully initialized.
-      for (int i = 0; i < 50; ++i)
+      for (int i = 0; i < 20; ++i)
       {
          // Attempt to connect to an active Audacity.
          sock->Connect(addr, true);
@@ -1970,6 +1970,11 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          }
 
          wxMilliSleep(100);
+
+         if (i == 0)
+         {
+            printf("Attempting to connect to Audacity failed...retrying\n");
+         }
       }
 
       // At this point, we've exhausted our connections attempts. So, we assume
