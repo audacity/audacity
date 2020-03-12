@@ -63,13 +63,13 @@ $control label-position (_ "Label placement (seconds before silence ends)") real
          (min-len (* min-silence srate)))
     (do ((val (snd-fetch sig) (snd-fetch sig)))
         ((not val) sil-count)
-      (incf sample-count)
       (cond
         ((< val threshold)
-            (setf sil-count (1+ sil-count)))
+            (incf sil-count))
         (t  (when (> sil-count min-len)
               (add-label sample-count srate label-position))
-            (setf sil-count 0))))
+            (setf sil-count 0)))
+      (incf sample-count))
     ;; If long trailing silence, add final label at 'min-silence' AFTER last sound.
     (when (> sil-count min-len)
       (setf final-silence (- sample-count sil-count))
