@@ -17,9 +17,9 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control threshold (_ "Treat audio below this level as silence (dB)") real "" -30 -100 0
-$control min-silence (_ "Minimum duration of silence (seconds)") real "" 1.0 0.1 5.0
-$control label-position (_ "Label placement (seconds before silence ends)") real "" 0.3 0.0 1.0
+$control threshold (_ "Treat audio below this level as silence (dB)") float "" -30 -100 0
+$control min-silence (_ "Minimum duration of silence (seconds)") float "" 1.0 0.1 5.0
+$control label-position (_ "Label placement (seconds before silence ends)") float "" 0.3 0.0 1.0
 
 (setf threshold (db-to-linear threshold))
 ; Label is usually offset to earlier time.
