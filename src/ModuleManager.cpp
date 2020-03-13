@@ -363,6 +363,9 @@ bool ModuleManager::DiscoverProviders()
 {
    InitializeBuiltins();
 
+// The commented out code loads modules whether or not they are enabled.
+// none of our modules is a 'provider' of effects, so this code commented out. 
+#if 0
    FilePaths provList;
    FilePaths pathList;
 
@@ -400,6 +403,7 @@ bool ModuleManager::DiscoverProviders()
          module->AutoRegisterPlugins(pm);
       }
    }
+#endif
 
    return true;
 }
