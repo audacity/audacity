@@ -20,6 +20,7 @@
 
 #include "Prefs.h"
 #include "../ShuttleGui.h"
+#include "../WaveTrack.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: i.e. the behaviors of tracks */
@@ -83,9 +84,9 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Enable &dragging selection edges"),
                     {wxT("/GUI/AdjustSelectionEdges"),
                      true});
-      S.TieCheckBox(XXO("Editing a clip can &move other clips"),
-                    {wxT("/GUI/EditClipCanMove"),
-                     false});
+      S
+         .TieCheckBox(XXO("Editing a clip can &move other clips"),
+            EditClipsCanMove);
       S.TieCheckBox(XXO("\"Move track focus\" c&ycles repeatedly through tracks"),
                     {wxT("/GUI/CircularTrackNavigation"),
                      false});
