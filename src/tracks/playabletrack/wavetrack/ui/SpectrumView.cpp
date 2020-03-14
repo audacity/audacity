@@ -319,10 +319,10 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    && fftYGrid==fftYGridOld
 #endif //EXPERIMENTAL_FFT_Y_GRID
 #ifdef EXPERIMENTAL_FIND_NOTES
-   && fftFindNotes==fftFindNotesOld
-   && findNotesMinA==findNotesMinAOld
-   && numberOfMaxima==findNotesNOld
-   && findNotesQuantize==findNotesQuantizeOld
+   && fftFindNotes == artist->fftFindNotesOld
+   && findNotesMinA == artist->findNotesMinAOld
+   && numberOfMaxima == artist->findNotesNOld
+   && findNotesQuantize == artist->findNotesQuantizeOld
 #endif
    ) {
       // Wave clip's spectrum cache is up to date,
@@ -338,10 +338,10 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       clip->mSpecPxCache->minFreq = minFreq;
       clip->mSpecPxCache->maxFreq = maxFreq;
 #ifdef EXPERIMENTAL_FIND_NOTES
-      fftFindNotesOld = fftFindNotes;
-      findNotesMinAOld = findNotesMinA;
-      findNotesNOld = numberOfMaxima;
-      findNotesQuantizeOld = findNotesQuantize;
+      artist->fftFindNotesOld = fftFindNotes;
+      artist->findNotesMinAOld = findNotesMinA;
+      artist->findNotesNOld = numberOfMaxima;
+      artist->findNotesQuantizeOld = findNotesQuantize;
 #endif
 
 #ifdef EXPERIMENTAL_FIND_NOTES
