@@ -342,8 +342,8 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef SHOW_PINNED_POSITION_IN_PREFS
          S.TieNumericTextBox(
             XO("Pinned &head position"),
-            PinnedHeadPositionPreferenceKey(),
-            PinnedHeadPositionPreferenceDefault(),
+            {PinnedHeadPositionPreferenceKey(),
+             PinnedHeadPositionPreferenceDefault()},
             30
          );
 #endif
