@@ -47,6 +47,7 @@ public:
    void CreateCocoa();
    void CreateGeneric();
    void CocoaViewResized();
+   void ForceRedraw();
 
    void OnSize(wxSizeEvent & evt);
 
@@ -55,8 +56,6 @@ public:
    void CreateCarbonOverlay();
    void CarbonViewResized();
    static pascal OSStatus ControlEventHandlerCallback(EventHandlerCallRef handler,
-                                                      EventRef event,
-                                                      void *data);
 #endif
 
 private:
