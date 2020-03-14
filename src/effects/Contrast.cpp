@@ -210,7 +210,6 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    mForegroundEndT = NULL;
    mBackgroundStartT = NULL;
    mBackgroundEndT = NULL;
-   wxTextValidator vld(wxFILTER_NUMERIC);
    wxString number;
 
    auto p = FindProjectFromWindow( this );
