@@ -8,28 +8,31 @@ msgstr ""
 "Project-Id-Version: audacity 2.3.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-09-07 14:02+0100\n"
-"PO-Revision-Date: 2005-11-08 10:53-0000\n"
+"PO-Revision-Date: 2020-03-15 18:43+0100\n"
 "Last-Translator: Riarthóir <micilsheainmhicil@eircom.net>\n"
 "Language-Team: Mícheál Mac Lochlainn <micilsheainmhicil@eircom.net>\n"
 "Language: ga\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Irish\n"
-"X-Poedit-Country: IRELAND\n"
+"Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n>=3 && n<=6 ? 2 : "
+"n>=7 && n<=10 ? 3 : 4);\n"
+"X-Generator: Poedit 2.3\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
 msgstr ""
+"Tá an comhad '%s' ann cheana. An bhfuil tú cinnte gur mian leat forscríobh "
+"air?"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/LangChoice.cpp
 msgid "Confirm"
-msgstr ""
+msgstr "Deimhnigh"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Please choose an existing file."
-msgstr ""
+msgstr "Roghnaigh comhad atá ann cheana."
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AdornedRulerPanel.cpp
 #: src/AudioIO.cpp src/AutoRecoveryDialog.cpp src/ProjectAudioManager.cpp
@@ -45,7 +48,7 @@ msgstr "Earráid"
 
 #: lib-src/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
-msgstr ""
+msgstr "Cineál comhaid:"
 
 #: lib-src/FileDialog/win/FileDialogPrivate.cpp
 #, c-format
@@ -54,41 +57,39 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
-msgstr ""
+msgstr "&Clár Oibre Maisiúchán Nyquist..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
-msgstr ""
+msgstr "&Cealaigh\tCtrl+Z"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Redo\tCtrl+Y"
-msgstr ""
+msgstr "&Athdhéan\tCtrl+Y"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Cu&t\tCtrl+X"
-msgstr ""
+msgstr "Gearr\tCtrl+X"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Copy\tCtrl+C"
-msgstr ""
+msgstr "&Cóipeáil\tCtrl+C"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "&Paste\tCtrl+V"
-msgstr "G&reamaigh"
+msgstr "G&reamaigh\tCtrl+V"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Cle&ar\tCtrl+L"
-msgstr ""
+msgstr "Glan\tCtrl+L"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Select A&ll\tCtrl+A"
-msgstr "Roghnaigh"
+msgstr "Roghnaigh Ui&le\tCtrl+A"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Find...\tCtrl+F"
-msgstr ""
+msgstr "&Aimsigh... Ctrl+F"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Matching Paren\tF8"
@@ -112,12 +113,11 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Go to"
-msgstr ""
+msgstr "Téi&gh chuig"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Select &Font..."
-msgstr "Cló..."
+msgstr "Roghnaigh Cló&fhoireann..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -131,53 +131,49 @@ msgstr "Défhónach Cothrománach"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Show S&cript"
-msgstr ""
+msgstr "Taispeáin s&cript"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Show &Output"
-msgstr ""
+msgstr "Taispeáin an tAschur"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Large Icons"
-msgstr ""
+msgstr "Deilbhíní móra"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Small Icons"
-msgstr ""
+msgstr "Deilbhíní beaga"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Toolbar"
-msgstr "Uirlis"
+msgstr "Barra Uirlisí"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Go\tF5"
-msgstr ""
+msgstr "&Téigh\tF5"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "&Stop\tF6"
-msgstr "Stad"
+msgstr "&Stad\tF6"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&About"
-msgstr ""
+msgstr "M&aidir leis"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Script"
-msgstr ""
+msgstr "Script"
 
 #. i18n-hint noun
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #: src/effects/BassTreble.cpp
-#, fuzzy
 msgid "Output"
-msgstr "Méadar Aschuir"
+msgstr "Aschur"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Load Nyquist script"
-msgstr "Leid Nyquist..."
+msgstr "Luchtaigh script Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
@@ -193,9 +189,8 @@ msgid "Warning"
 msgstr "Foláireamh"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Save Nyquist script"
-msgstr "Leid Nyquist..."
+msgstr "Taisc script Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Find dialog"
@@ -203,7 +198,7 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Harvey Lubin (logo)"
-msgstr ""
+msgstr "Harvey Lubin (lógó)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Tango Icon Gallery (toolbar icons)"
@@ -211,11 +206,11 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Leland Lucius"
-msgstr ""
+msgstr "Leland Lucius"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "(C) 2009 by Leland Lucius"
-msgstr ""
+msgstr "(C) 2009 le Leland Lucius"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid ""
@@ -233,11 +228,11 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Code has been modified. Are you sure?"
-msgstr ""
+msgstr "Athraíodh an cód. An bhfuil tú cinnte?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Untitled"
-msgstr ""
+msgstr "Gan teideal"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -246,22 +241,20 @@ msgstr "Maisiúchán Nyquist á Fhorchur..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid "New"
-msgstr "&Nua"
+msgstr "Nua"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "New script"
-msgstr ""
+msgstr "Script nua"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Open"
-msgstr "&Oscail..."
+msgstr "Oscail"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Open script"
-msgstr ""
+msgstr "Oscail script"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #, fuzzy
@@ -315,22 +308,19 @@ msgstr "Arna ghreamú ón ghearrathaisce"
 #. i18n-hint verb; to empty or erase
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 msgid "Clear"
-msgstr ""
+msgstr "Glan"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Clear selection"
-msgstr "Cuir an Rogha ina thost"
+msgstr "Glan an roghnúchán"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Select All"
-msgstr "Roghnaigh"
+msgstr "Roghnaigh Uile"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Select all text"
-msgstr "Roghnaigh"
+msgstr "Roghnaigh gach téacs"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
@@ -345,23 +335,23 @@ msgstr "Athrú Formáide"
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Redo"
-msgstr ""
+msgstr "Déan arís é"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Redo previous change"
-msgstr ""
+msgstr "Déan arís an t-athrú roimhe"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Find"
-msgstr ""
+msgstr "Aimsigh"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Find text"
-msgstr ""
+msgstr "Aimsigh téacs"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Match"
-msgstr ""
+msgstr "Comhoiriúnaigh"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Go to matching paren"
@@ -369,7 +359,7 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Top"
-msgstr ""
+msgstr "Go barr"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Go to top S-expr"
@@ -377,25 +367,23 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Up"
-msgstr ""
+msgstr "Suas"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Go to higher S-expr"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Previous"
-msgstr "Uirlis Dheireanach"
+msgstr "Roimhe"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Go to previous S-expr"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Next"
-msgstr "An Chéad Uirlis Eile"
+msgstr "Ar aghaidh"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
@@ -404,7 +392,7 @@ msgstr ""
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
-msgstr ""
+msgstr "Tosaigh"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -440,7 +428,7 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "quality assurance"
-msgstr ""
+msgstr "dearbhú cáilíochta"
 
 #: src/AboutDialog.cpp
 msgid "documentation and support, French"
@@ -456,7 +444,7 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "composer"
-msgstr ""
+msgstr "cumadóir"
 
 #: src/AboutDialog.cpp
 msgid "tester"
@@ -474,7 +462,7 @@ msgstr "Clúdach"
 
 #: src/AboutDialog.cpp
 msgid "graphics"
-msgstr ""
+msgstr "grafaicí"
 
 #: src/AboutDialog.cpp
 #, fuzzy
@@ -482,9 +470,8 @@ msgid "incorporating"
 msgstr "Earráid le linn iomportála"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "About Audacity"
-msgstr "&Mar Gheall ar Audacity"
+msgstr "Maidir le Audacity"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: src/AboutDialog.cpp src/effects/nyquist/Nyquist.cpp
@@ -518,9 +505,8 @@ msgid "translator_credits"
 msgstr "creidiúintí_aistritheora"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "<h3>Audacity "
-msgstr "Céad Mhúscailt Audacity"
+msgstr "<h3>Audacity "
 
 #: src/AboutDialog.cpp
 msgid ""
@@ -543,7 +529,7 @@ msgstr "Roghanna Audacity"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
-msgstr ""
+msgstr "Emeritus:"
 
 #: src/AboutDialog.cpp
 msgid "Distinguished Audacity Team members, not currently active"
@@ -551,20 +537,19 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
-msgstr ""
+msgstr "Rannchuiditheoirí"
 
 #: src/AboutDialog.cpp
 msgid "Website and Graphics"
-msgstr ""
+msgstr "Suíomh Gréasáin agus Grafaicí"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Translators"
-msgstr "creidiúintí_aistritheora"
+msgstr "Aistritheoirí"
 
 #: src/AboutDialog.cpp src/prefs/LibraryPrefs.cpp
 msgid "Libraries"
-msgstr ""
+msgstr "Leabharlanna"
 
 #: src/AboutDialog.cpp
 msgid "Audacity includes code from the following projects:"
@@ -572,12 +557,11 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
-msgstr "Baochas fé leith:"
+msgstr "Buíochas faoi leith:"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Audacity website: "
-msgstr "Céad Mhúscailt Audacity"
+msgstr "Suíomh gréasáin Audacity: "
 
 #: src/AboutDialog.cpp
 msgid ""
@@ -593,22 +577,21 @@ msgstr ""
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
-#, fuzzy
 msgid "Audacity"
-msgstr "Céad Mhúscailt Audacity"
+msgstr "Audacity"
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
-msgstr ""
+msgstr "Faisnéis na Tógála"
 
 #: src/AboutDialog.cpp src/PluginManager.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
-msgstr "Ceadaithe"
+msgstr "Cumasaithe"
 
 #: src/AboutDialog.cpp src/PluginManager.cpp src/prefs/ModulePrefs.cpp
 msgid "Disabled"
-msgstr ""
+msgstr "Díchumasaithe"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -651,7 +634,7 @@ msgstr "Iompórtáil Sonraí Loma"
 #. i18n-hint: Libraries that are essential to audacity
 #: src/AboutDialog.cpp
 msgid "Core Libraries"
-msgstr ""
+msgstr "Croíleabharlanna"
 
 #: src/AboutDialog.cpp
 msgid "Sample rate conversion"
@@ -667,7 +650,7 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Features"
-msgstr ""
+msgstr "Gnéithe"
 
 #: src/AboutDialog.cpp
 msgid "Dark Theme Extras"
@@ -712,7 +695,7 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Compiler:"
-msgstr ""
+msgstr "Tiomsaitheoir:"
 
 #: src/AboutDialog.cpp
 msgid "Installation Prefix: "
@@ -720,11 +703,11 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Settings folder: "
-msgstr ""
+msgstr "Fillteán na socruithe: "
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
-msgstr ""
+msgstr "Ceadúnas GPL"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -742,7 +725,7 @@ msgstr "Taifeadadh á dhéanamh"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline"
-msgstr ""
+msgstr "Líne Ama"
 
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
@@ -785,7 +768,7 @@ msgstr "(cosctha)"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play enabled"
-msgstr ""
+msgstr "Tá Quick-Play cumasaithe"
 
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
@@ -799,11 +782,11 @@ msgstr "Léim go dtí an Tosach"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Disable Quick-Play"
-msgstr ""
+msgstr "Díchumasaigh Quick-Play"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Enable Quick-Play"
-msgstr ""
+msgstr "Cumasaigh Quick-Play"
 
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
@@ -860,7 +843,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "Failed!"
-msgstr ""
+msgstr "Theip air!"
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -899,20 +882,19 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "Files Missing"
-msgstr ""
+msgstr "Tá Comhaid In Easnamh"
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
-msgstr ""
+msgstr "Ní mór do mhéid an chip a bheith idir 256 agus 100000000\n"
 
 #: src/AudacityApp.cpp
 msgid "File decoded successfully\n"
 msgstr ""
 
 #: src/AudacityApp.cpp
-#, fuzzy
 msgid "Audacity is starting up..."
-msgstr "Tá Audacity ar siúl cheana féin"
+msgstr "Tá Audacity ag tosú..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -926,15 +908,15 @@ msgstr "&Oscail..."
 
 #: src/AudacityApp.cpp
 msgid "Open &Recent..."
-msgstr ""
+msgstr "Oscail Le Déanaí..."
 
 #: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
-msgstr "&Mar Gheall ar Audacity"
+msgstr "&Mar Gheall ar Audacity..."
 
 #: src/AudacityApp.cpp
 msgid "&Preferences..."
-msgstr ""
+msgstr "&Sainroghanna..."
 
 #: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
@@ -1017,7 +999,7 @@ msgstr ""
 #. i18n-hint: This displays a list of available options
 #: src/AudacityApp.cpp
 msgid "this help message"
-msgstr ""
+msgstr "an teachtaireacht chabhrach seo"
 
 #. i18n-hint: This runs a set of automatic tests on Audacity itself
 #: src/AudacityApp.cpp
@@ -1026,9 +1008,8 @@ msgstr ""
 
 #. i18n-hint: This displays the Audacity version
 #: src/AudacityApp.cpp
-#, fuzzy
 msgid "display Audacity version"
-msgstr "Roghanna Audacity"
+msgstr "taispeáin an leagan Audacity"
 
 #. i18n-hint: This is a list of one or more files that Audacity
 #. *           should open upon startup
@@ -1058,7 +1039,7 @@ msgstr "Comhaid Tionscadail Audacity"
 #: src/AudacityException.h src/commands/MessageCommand.h
 #: src/widgets/AudacityMessageBox.cpp
 msgid "Message"
-msgstr ""
+msgstr "Teachtaireacht"
 
 #: src/AudacityLogger.cpp
 #, fuzzy
@@ -1067,11 +1048,11 @@ msgstr "Céad Mhúscailt Audacity"
 
 #: src/AudacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
-msgstr ""
+msgstr "&Taisc..."
 
 #: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
-msgstr ""
+msgstr "Glan"
 
 #: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
@@ -1080,7 +1061,7 @@ msgstr "&Dún"
 
 #: src/AudacityLogger.cpp
 msgid "log.txt"
-msgstr ""
+msgstr "log.txt"
 
 #: src/AudacityLogger.cpp
 msgid "Save log to:"
@@ -1105,7 +1086,7 @@ msgstr ""
 
 #: src/AudioIO.cpp
 msgid "Error: "
-msgstr "Earráid:"
+msgstr "Earráid: "
 
 #: src/AudioIO.cpp
 msgid "Error Initializing Audio"
@@ -1134,7 +1115,7 @@ msgstr ""
 
 #: src/AudioIO.cpp
 msgid "Out of memory!"
-msgstr ""
+msgstr "Gan chuimhne!"
 
 #: src/AudioIO.cpp
 msgid ""
@@ -1193,7 +1174,7 @@ msgstr ""
 
 #: src/AudioIOBase.cpp
 msgid "No devices found\n"
-msgstr ""
+msgstr "Níor aimsíodh aon ghléas\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
@@ -1287,12 +1268,12 @@ msgstr "Ní fhéidir a aithint"
 
 #: src/AudioIOBase.cpp
 msgid "Available mixers:\n"
-msgstr ""
+msgstr "Meascthóirí ar fáil:\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "%d - %s\n"
-msgstr ""
+msgstr "%d - %s\n"
 
 #: src/AudioIOBase.cpp
 #, fuzzy
@@ -1338,7 +1319,7 @@ msgstr ""
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Opened: %d\n"
-msgstr ""
+msgstr "Oscailte: %d\n"
 
 #: src/AudioIOBase.cpp
 #, fuzzy, c-format
@@ -1388,7 +1369,7 @@ msgstr ""
 #. i18n-hint: (noun).  It's the name of the project to recover.
 #: src/AutoRecoveryDialog.cpp src/PluginManager.cpp src/TrackInfo.cpp
 msgid "Name"
-msgstr ""
+msgstr "Ainm"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "After recovery, save the project to save the changes to disk."
@@ -1396,7 +1377,7 @@ msgstr ""
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Quit Audacity"
-msgstr ""
+msgstr "Scoir ó Audacity"
 
 #: src/AutoRecoveryDialog.cpp
 #, fuzzy
@@ -1424,27 +1405,27 @@ msgstr ""
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
-msgstr ""
+msgstr "Roghnaigh Ordú"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Command"
-msgstr ""
+msgstr "&Gníomh Ordaithe"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Edit Parameters"
-msgstr ""
+msgstr "&Cuir na Paraiméadair in Eagar"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Use Preset"
-msgstr ""
+msgstr "&Bain feidhm as an Réamhshocrú"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Parameters"
-msgstr ""
+msgstr "&Paraiméadair"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Details"
-msgstr ""
+msgstr "&Mionsonraí"
 
 #: src/BatchCommandDialog.cpp
 #, fuzzy
@@ -1452,9 +1433,8 @@ msgid "Choose command"
 msgstr "Gníomh Ordaithe"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "No Action"
-msgstr "Gníomh"
+msgstr "Gan Gníomh"
 
 #. i18n-hint: before is adverb; MP3 names an audio file format
 #: src/BatchCommands.cpp
@@ -1494,7 +1474,7 @@ msgstr "Easpórtáil Lipéid Mar:"
 
 #: src/BatchCommands.cpp
 msgid "MP3 Conversion"
-msgstr ""
+msgstr "Tiontú MP3"
 
 #: src/BatchCommands.cpp
 #, fuzzy
@@ -1512,9 +1492,8 @@ msgid "Special Command"
 msgstr "Baochas fé leith:"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Effect"
-msgstr "&Maisiúchán"
+msgstr "Maisiúchán"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (With Parameters)"
@@ -1597,7 +1576,7 @@ msgstr ""
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Apply %s"
-msgstr ""
+msgstr "Cuir %s i bhfeidhm"
 
 #: src/BatchProcessDialog.cpp
 msgid "Macros Palette"
@@ -1613,25 +1592,23 @@ msgstr "Roghnaigh"
 #. i18n-hint: This is the heading for a column in the edit macros dialog
 #: src/BatchProcessDialog.cpp
 msgid "Macro"
-msgstr ""
+msgstr "Maicrea"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply Macro to:"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "&Project"
-msgstr "&Sábháil Tionscadal"
+msgstr "&Tionscadal"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to project"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "&Files..."
-msgstr "&Comhad"
+msgstr "&Comhaid..."
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to files..."
@@ -1640,7 +1617,7 @@ msgstr ""
 #. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
 msgid "&Expand"
-msgstr ""
+msgstr "&Fairsingigh"
 
 #: src/BatchProcessDialog.cpp
 #, fuzzy
@@ -1667,32 +1644,31 @@ msgstr ""
 
 #: src/BatchProcessDialog.cpp
 msgid "Applying..."
-msgstr ""
+msgstr "Á gcur i bhfeidhm..."
 
 #: src/BatchProcessDialog.cpp
 msgid "File"
-msgstr ""
+msgstr "Comhad"
 
 #: src/BatchProcessDialog.cpp
 msgid "&Cancel"
-msgstr ""
+msgstr "&Cealaigh"
 
 #: src/BatchProcessDialog.cpp
 msgid "Manage Macros"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Remo&ve"
-msgstr "&Bain Amach Rianta"
+msgstr "Bain"
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "&Rename..."
-msgstr ""
+msgstr "&Athainmnigh..."
 
 #: src/BatchProcessDialog.cpp
 msgid "Re&store"
-msgstr ""
+msgstr "Cuir ar ais"
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
 msgid "I&mport..."
@@ -1705,12 +1681,12 @@ msgstr ""
 
 #: src/BatchProcessDialog.cpp
 msgid "Edit Steps"
-msgstr ""
+msgstr "Céimeanna Eagarthóireachta"
 
 #. i18n-hint: This is the number of the command in the list
 #: src/BatchProcessDialog.cpp
 msgid "Num"
-msgstr ""
+msgstr "Uimh"
 
 #: src/BatchProcessDialog.cpp
 #, fuzzy
@@ -1719,47 +1695,46 @@ msgstr "Gníomh Ordaithe"
 
 #: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
 msgid "Parameters"
-msgstr ""
+msgstr "Paraiméadair"
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "&Insert"
-msgstr ""
+msgstr "&Ionsáigh"
 
 #: src/BatchProcessDialog.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "&Edit..."
-msgstr "&Eagar"
+msgstr "&Eagar..."
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "De&lete"
-msgstr ""
+msgstr "Scrios"
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "Move &Up"
-msgstr ""
+msgstr "Bog S&uas"
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "Move &Down"
-msgstr ""
+msgstr "Bog Síos"
 
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
-msgstr ""
+msgstr "Crap"
 
 #. i18n-hint: This is the last item in a list.
 #: src/BatchProcessDialog.cpp
 msgid "- END -"
-msgstr ""
+msgstr "- CRÍOCH -"
 
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "%s changed"
-msgstr ""
+msgstr "Athraíodh %s"
 
 #: src/BatchProcessDialog.cpp
 msgid "Do you want to save the changes?"
-msgstr ""
+msgstr "An mian leat na hathruithe a choimeád?"
 
 #: src/BatchProcessDialog.cpp
 msgid "Enter name of new macro"
@@ -1808,7 +1783,7 @@ msgstr ""
 #. pseudorandom number generating algorithm
 #: src/Benchmark.cpp
 msgid "Random Seed:"
-msgstr ""
+msgstr "Síol Fánach:"
 
 #: src/Benchmark.cpp
 msgid "Show detailed info about each block file"
@@ -1820,7 +1795,7 @@ msgstr ""
 
 #: src/Benchmark.cpp
 msgid "Run"
-msgstr ""
+msgstr "Rith é"
 
 #. i18n-hint verb
 #: src/Benchmark.cpp src/tracks/ui/TrackButtonHandles.cpp
@@ -1859,7 +1834,7 @@ msgstr ""
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
-msgstr ""
+msgstr "Á ullmhú...\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1874,12 +1849,12 @@ msgstr "Athdhéanamh á Chur i gCrích"
 #: src/Benchmark.cpp
 #, c-format
 msgid "Cut: %d - %d \n"
-msgstr ""
+msgstr "Gearr: %d - %d\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Trial %d\n"
-msgstr ""
+msgstr "Féachaint %d\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1887,9 +1862,9 @@ msgid "Cut (%d, %d) failed.\n"
 msgstr ""
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Paste: %d\n"
-msgstr "Greamaigh"
+msgstr "Greamaigh %d\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -2073,7 +2048,7 @@ msgstr ""
 
 #: src/Dependencies.cpp
 msgid "Audio File"
-msgstr ""
+msgstr "Comhad Fuaime"
 
 #: src/Dependencies.cpp
 msgid "Disk Space"
@@ -2093,7 +2068,7 @@ msgstr ""
 
 #: src/Dependencies.cpp
 msgid "Do Not Copy"
-msgstr ""
+msgstr "Ná Cóipeáil"
 
 #: src/Dependencies.cpp
 msgid "Copy All Files (Safer)"
@@ -2103,7 +2078,7 @@ msgstr ""
 #. * Audacity finds a project depends on another file.
 #: src/Dependencies.cpp
 msgid "Ask me"
-msgstr ""
+msgstr "Iarr orm"
 
 #: src/Dependencies.cpp
 msgid "Always copy all files (safest)"
@@ -2120,7 +2095,7 @@ msgstr ""
 #: src/Dependencies.cpp
 #, c-format
 msgid "MISSING %s"
-msgstr ""
+msgstr "%s IN EASNAMH"
 
 #: src/Dependencies.cpp
 #, fuzzy
@@ -2220,7 +2195,7 @@ msgstr ""
 #: src/DirManager.cpp
 #, c-format
 msgid "Unable to remove '%s'."
-msgstr ""
+msgstr "Ní féidir '%s' a bhaint."
 
 #: src/DirManager.cpp
 #, c-format
@@ -2323,7 +2298,7 @@ msgstr ""
 
 #: src/FFmpeg.cpp
 msgid "Locate FFmpeg"
-msgstr ""
+msgstr "Aimsigh FFmpeg"
 
 #: src/FFmpeg.cpp
 #, c-format
@@ -2333,17 +2308,17 @@ msgstr ""
 #: src/FFmpeg.cpp
 #, c-format
 msgid "Location of '%s':"
-msgstr ""
+msgstr "Mar a bhfuil '%s':"
 
 #: src/FFmpeg.cpp
 #, c-format
 msgid "To find '%s', click here -->"
-msgstr ""
+msgstr "Chun '%s' a aimsiú, brúigh anseo -->"
 
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
-msgstr ""
+msgstr "Siortaigh..."
 
 #: src/FFmpeg.cpp
 msgid "To get a free copy of FFmpeg, click here -->"
@@ -2360,11 +2335,11 @@ msgstr ""
 #: src/FFmpeg.cpp
 #, c-format
 msgid "Where is '%s'?"
-msgstr ""
+msgstr "Cá bhfuil '%s'?"
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg not found"
-msgstr ""
+msgstr "Níor aimsíodh FFmpeg"
 
 #: src/FFmpeg.cpp
 msgid ""
@@ -2429,9 +2404,8 @@ msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
 
 #: src/FileException.h
-#, fuzzy
 msgid "File Error"
-msgstr "Earráid LOF"
+msgstr "Earráid Comhaid"
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp
@@ -2491,11 +2465,11 @@ msgstr "dB"
 
 #: src/FreqWindow.cpp
 msgid "Scroll"
-msgstr ""
+msgstr "Scrollaigh"
 
 #: src/FreqWindow.cpp src/prefs/MousePrefs.cpp
 msgid "Zoom"
-msgstr "Zúmáil"
+msgstr "Gluais"
 
 #. i18n-hint: This is the abbreviation for "Hertz", or
 #. cycles per second.
@@ -2506,13 +2480,12 @@ msgid "Hz"
 msgstr "Hz"
 
 #: src/FreqWindow.cpp
-#, fuzzy
 msgid "Cursor:"
-msgstr "Reathaí Clé"
+msgstr "Cúrsór:"
 
 #: src/FreqWindow.cpp
 msgid "Peak:"
-msgstr ""
+msgstr "Buaic:"
 
 #: src/FreqWindow.cpp
 msgid "&Grids"
@@ -2523,18 +2496,16 @@ msgid "&Algorithm:"
 msgstr ""
 
 #: src/FreqWindow.cpp
-#, fuzzy
 msgid "&Size:"
-msgstr "Méad"
+msgstr "&Méid:"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "&Export..."
 msgstr ""
 
 #: src/FreqWindow.cpp
-#, fuzzy
 msgid "&Function:"
-msgstr "Gníomh"
+msgstr "&Feidhm:"
 
 #: src/FreqWindow.cpp
 msgid "&Axis:"
@@ -2567,30 +2538,30 @@ msgstr "Níl dóthain sonraí roghnaithe."
 #. i18n-hint: short form of 'seconds'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp
 msgid "s"
-msgstr ""
+msgstr "s"
 
 #. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %d dB"
-msgstr ""
+msgstr "%d Hz (%s) = %d dB"
 
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
-msgstr ""
+msgstr "%d Hz (%s) = %.1f dB"
 
 #. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %f"
-msgstr ""
+msgstr "%.4f sec (%d Hz) (%s) = %f"
 
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %.3f"
-msgstr ""
+msgstr "%.4f sec (%d Hz) (%s) = %.3f"
 
 #: src/FreqWindow.cpp
 msgid "spectrum.txt"
@@ -2622,17 +2593,17 @@ msgstr "Moill (soicindí)\tMinicíocht (Hz)\tLeibhéal"
 
 #: src/HelpText.cpp
 msgid "Welcome!"
-msgstr ""
+msgstr "Fáilte!"
 
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
 msgid "Playing Audio"
-msgstr ""
+msgstr "Ag seinm Fuaime"
 
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
 msgid "Recording Audio"
-msgstr ""
+msgstr "Ag taifeadadh Fuaime"
 
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
@@ -2675,7 +2646,7 @@ msgstr ""
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
 msgid "Burn to CD"
-msgstr ""
+msgstr "Dóigh ar CD"
 
 #: src/HelpText.cpp
 msgid "No Local Help"
@@ -2710,11 +2681,11 @@ msgstr ""
 
 #: src/HelpText.cpp
 msgid "How to get help"
-msgstr ""
+msgstr "Conas cabhair a fháil"
 
 #: src/HelpText.cpp
 msgid "These are our support methods:"
-msgstr ""
+msgstr "Seo iad na modhanna tacaíochta atá againn:"
 
 #: src/HelpText.cpp
 msgid ""
@@ -2774,7 +2745,7 @@ msgstr ""
 
 #: src/HelpText.cpp
 msgid "Check Online"
-msgstr ""
+msgstr "Féach ar an ngréasán"
 
 #: src/HistoryWindow.cpp
 #, fuzzy
@@ -2792,11 +2763,11 @@ msgstr "Gníomh"
 
 #: src/HistoryWindow.cpp
 msgid "Reclaimable Space"
-msgstr ""
+msgstr "Slí In-athghafa"
 
 #: src/HistoryWindow.cpp
 msgid "&Total space used"
-msgstr ""
+msgstr "Méid iomlán na slí a baineadh feidhm aisti"
 
 #: src/HistoryWindow.cpp
 #, fuzzy
@@ -2805,25 +2776,24 @@ msgstr "(cosctha)"
 
 #: src/HistoryWindow.cpp
 msgid "&Levels to discard"
-msgstr ""
+msgstr "&Leibhéil le cuileáil"
 
 #. i18n-hint: (verb)
 #: src/HistoryWindow.cpp
 msgid "&Discard"
-msgstr ""
+msgstr "&Cuileáil"
 
 #: src/HistoryWindow.cpp
 msgid "Clipboard space used"
-msgstr ""
+msgstr "Slí sa ghearrthaisce a baineadh feidhm aisti"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "Discard"
-msgstr "&Sábháil Tionscadal"
+msgstr "Cuileáil"
 
 #: src/HistoryWindow.cpp src/export/ExportCL.cpp
 msgid "&OK"
-msgstr ""
+msgstr "&Tá go maith"
 
 #: src/InconsistencyException.cpp
 #, c-format
@@ -2841,7 +2811,7 @@ msgstr ""
 
 #: src/InconsistencyException.h
 msgid "Internal Error"
-msgstr ""
+msgstr "Earráid Inmheánach"
 
 #: src/Internat.cpp
 msgid "Unable to determine"
@@ -2854,26 +2824,26 @@ msgstr "beart"
 #. i18n-hint: Abbreviation for Kilo bytes
 #: src/Internat.cpp
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: src/Internat.cpp
 msgid "MB"
-msgstr ""
+msgstr "MB"
 
 #. i18n-hint: Abbreviation for Giga bytes
 #: src/Internat.cpp
 msgid "GB"
-msgstr ""
+msgstr "GB"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
-msgstr ""
+msgstr "Cuir Lipéid in Eagar"
 
 #. i18n-hint: (noun).  A track contains waves, audio etc.
 #: src/LabelDialog.cpp
 msgid "Track"
-msgstr ""
+msgstr "Rian"
 
 #. i18n-hint: (noun)
 #: src/LabelDialog.cpp src/menus/LabelMenus.cpp
@@ -2884,28 +2854,26 @@ msgstr "Lipéad"
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp src/TimerRecordDialog.cpp
 msgid "Start Time"
-msgstr ""
+msgstr "Am Tosaithe"
 
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp src/TimerRecordDialog.cpp
 msgid "End Time"
-msgstr ""
+msgstr "Am Críochnaithe"
 
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp src/toolbars/SpectralSelectionBar.cpp
-#, fuzzy
 msgid "Low Frequency"
-msgstr "Minicíocht log"
+msgstr "Minicíocht Íseal"
 
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp src/toolbars/SpectralSelectionBar.cpp
-#, fuzzy
 msgid "High Frequency"
-msgstr "Minicíocht (Hz):"
+msgstr "Ardmhinicíocht"
 
 #: src/LabelDialog.cpp
 msgid "New..."
-msgstr ""
+msgstr "Nua..."
 
 #: src/LabelDialog.cpp
 msgid "Press F2 or double click to edit cell contents."
@@ -2936,7 +2904,7 @@ msgstr "Rian Nua Li&péid"
 
 #: src/LabelDialog.cpp
 msgid "Enter track name"
-msgstr ""
+msgstr "Cuir isteach ainm an riain"
 
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
@@ -3017,7 +2985,7 @@ msgstr ""
 
 #: src/Menus.cpp
 msgid "Disallowed"
-msgstr ""
+msgstr "Dícheadaithe"
 
 #: src/Mix.cpp
 msgid "Mix"
@@ -3045,7 +3013,7 @@ msgstr "Neartúchán"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 msgid "Velocity"
-msgstr ""
+msgstr "Treoluas"
 
 #: src/MixerBoard.cpp
 msgid "Musical Instrument"
@@ -3129,7 +3097,7 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid "Module \"%s\" found."
-msgstr ""
+msgstr "Aimsíodh an modúl \"%s\"."
 
 #: src/ModuleManager.cpp
 msgid ""
@@ -3145,9 +3113,8 @@ msgstr ""
 
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
 #: plug-ins/equalabel.ny plug-ins/limiter.ny
-#, fuzzy
 msgid "No"
-msgstr "Faic"
+msgstr "Ná"
 
 #: src/ModuleManager.cpp
 #, fuzzy
@@ -3156,7 +3123,7 @@ msgstr "Céad Mhúscailt Audacity"
 
 #: src/ModuleManager.cpp
 msgid "Try and load this module?"
-msgstr ""
+msgstr "Féach an modúl seo a luchtú?"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3167,113 +3134,112 @@ msgstr "Rian Nótaí"
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C♯"
-msgstr ""
+msgstr "C♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D♯"
-msgstr ""
+msgstr "D♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "F"
-msgstr ""
+msgstr "F"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "F♯"
-msgstr ""
+msgstr "F♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G"
-msgstr ""
+msgstr "G"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G♯"
-msgstr ""
+msgstr "G♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♯"
-msgstr ""
+msgstr "A♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
-#, fuzzy
 msgid "B"
-msgstr "dB"
+msgstr "B"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D♭"
-msgstr ""
+msgstr "D♭"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "E♭"
-msgstr ""
+msgstr "E♭"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G♭"
-msgstr ""
+msgstr "G♭"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♭"
-msgstr ""
+msgstr "A♭"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "B♭"
-msgstr ""
+msgstr "B♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C♯/D♭"
-msgstr ""
+msgstr "C♯/D♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D♯/E♭"
-msgstr ""
+msgstr "D♯/E♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "F♯/G♭"
-msgstr ""
+msgstr "F♯/G♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G♯/A♭"
-msgstr ""
+msgstr "G♯/A♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♯/B♭"
-msgstr ""
+msgstr "A♯/B♭"
 
 #: src/PluginManager.cpp
 #, fuzzy
@@ -3287,7 +3253,7 @@ msgstr ""
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginManager.cpp
 msgid "Show:"
-msgstr ""
+msgstr "Taispeáin:"
 
 #. i18n-hint: Radio button to show all effects
 #: src/PluginManager.cpp src/menus/SelectMenus.cpp
@@ -3296,13 +3262,12 @@ msgstr "G&ach Éinní"
 
 #: src/PluginManager.cpp
 msgid "Show all"
-msgstr ""
+msgstr "Taispeáin uile"
 
 #. i18n-hint: Radio button to show just the currently disabled effects
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "D&isabled"
-msgstr "(cosctha)"
+msgstr "D&íchumasaithe"
 
 #: src/PluginManager.cpp
 #, fuzzy
@@ -3311,9 +3276,8 @@ msgstr "(cosctha)"
 
 #. i18n-hint: Radio button to show just the currently enabled effects
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "E&nabled"
-msgstr "Ceadaithe"
+msgstr "Cumasaithe"
 
 #: src/PluginManager.cpp
 #, fuzzy
@@ -3323,38 +3287,35 @@ msgstr "Ceadaithe"
 #. i18n-hint: Radio button to show just the newly discovered effects
 #: src/PluginManager.cpp
 msgid "Ne&w"
-msgstr ""
+msgstr "Nu&a"
 
 #: src/PluginManager.cpp
 msgid "Show new"
-msgstr ""
+msgstr "Taispeáin na cinn nua"
 
 #: src/PluginManager.cpp
 msgid "State"
-msgstr ""
+msgstr "Staid"
 
 #: src/PluginManager.cpp
 msgid "Path"
-msgstr ""
+msgstr "Conair"
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "&Select All"
-msgstr "Roghnaigh"
+msgstr "&Roghnaigh Uile"
 
 #: src/PluginManager.cpp
 msgid "C&lear All"
-msgstr ""
+msgstr "G&lan Uile"
 
 #: src/PluginManager.cpp src/effects/Effect.cpp src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "&Enable"
-msgstr "Ceadaithe"
+msgstr "&Cumasaigh"
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "&Disable"
-msgstr "(cosctha)"
+msgstr "&Díchumasaigh"
 
 #: src/PluginManager.cpp
 #, fuzzy, c-format
@@ -3397,7 +3358,7 @@ msgstr ""
 msgid ""
 "Failed to register:\n"
 "%s"
-msgstr ""
+msgstr "Theip ar chlárú: %s"
 
 #: src/PluginManager.cpp
 #, fuzzy
@@ -3405,6 +3366,9 @@ msgid "Enable this plug-in?"
 msgid_plural "Enable these plug-ins?"
 msgstr[0] "Ní fhéidir a aithint"
 msgstr[1] "Ní fhéidir a aithint"
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
 
 #: src/PluginManager.cpp
 #, fuzzy
@@ -3427,7 +3391,7 @@ msgstr "Priontáil"
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgid "Actual Rate: %d"
-msgstr ""
+msgstr "Luas Iarbhír: %d"
 
 #: src/ProjectAudioManager.cpp src/effects/Effect.cpp
 #, fuzzy
@@ -3445,7 +3409,7 @@ msgstr ""
 #. recording
 #: src/ProjectAudioManager.cpp
 msgid "Dropouts"
-msgstr ""
+msgstr "Dropouts"
 
 #: src/ProjectAudioManager.cpp
 msgid ""
@@ -3636,12 +3600,12 @@ msgstr ""
 
 #: src/ProjectFileIO.cpp
 msgid "<untitled>"
-msgstr ""
+msgstr "<gan teideal>"
 
 #. i18n-hint: E.g this is recovered audio that had been lost.
 #: src/ProjectFileIO.cpp
 msgid "(Recovered)"
-msgstr ""
+msgstr "(Athshlánaithe)"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3659,11 +3623,11 @@ msgstr ""
 
 #: src/ProjectFileIO.cpp
 msgid "1.0 or earlier"
-msgstr ""
+msgstr "1.0 nó níos luaithe"
 
 #: src/ProjectFileIO.cpp
 msgid "Warning - Opening Old Project File"
-msgstr ""
+msgstr "Rabhadh - Ag Oscailt Comhad Seanthionscadail"
 
 #: src/ProjectFileIO.cpp
 msgid "<unrecognized version -- possibly corrupt project file>"
@@ -3676,7 +3640,7 @@ msgstr "Ní bhfuarthas comhadlann sonraí an tionscadail: \"%s\""
 
 #: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
 msgid "Error Opening Project"
-msgstr ""
+msgstr "Tharla Earráid Fad Agus A Bhí an Tionscadal Á Oscailt"
 
 #. i18n-hint: %s will be replaced by the version number.
 #: src/ProjectFileIO.cpp
@@ -3720,7 +3684,7 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "Warning - Empty Project"
-msgstr ""
+msgstr "Rabhadh - Tionscadal Folamh"
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -3807,7 +3771,7 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp src/ProjectManager.cpp src/TimerRecordDialog.cpp
 msgid "Audacity projects"
-msgstr ""
+msgstr "Tionscadail Audacity"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -3893,11 +3857,11 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "Project was recovered"
-msgstr ""
+msgstr "Athshlánaíodh an tionscadal"
 
 #: src/ProjectFileManager.cpp
 msgid "Recover"
-msgstr ""
+msgstr "Athshlánaigh"
 
 #: src/ProjectFileManager.cpp
 msgid "Could not remove old auto save file"
@@ -3924,7 +3888,7 @@ msgstr "Tionscadal nua arna cheapadh"
 #: src/ProjectManager.cpp
 #, c-format
 msgid "Welcome to Audacity version %s"
-msgstr ""
+msgstr "Fáilte go leagan %s d'Audacity"
 
 #. i18n-hint: The first %s numbers the project, the second %s is the project name.
 #: src/ProjectManager.cpp
@@ -3971,7 +3935,7 @@ msgstr ""
 
 #: src/ProjectManager.cpp
 msgid "Less than 1 minute"
-msgstr ""
+msgstr "Níos lú ná 1 nóiméad amháin"
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -3979,6 +3943,9 @@ msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -3986,12 +3953,15 @@ msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%s and %s."
-msgstr ""
+msgstr "%s agus %s."
 
 #. i18n-hint: This is an experimental feature where the main panel in
 #. Audacity is put on a notebook tab, and this is the name on that tab.
@@ -4020,9 +3990,8 @@ msgid "Medium Quality"
 msgstr "Caighdeán"
 
 #: src/Resample.cpp
-#, fuzzy
 msgid "High Quality"
-msgstr "Caighdeán"
+msgstr "Ardcháilíocht"
 
 #: src/Resample.cpp
 msgid "Best Quality (Slowest)"
@@ -4031,12 +4000,12 @@ msgstr ""
 #. i18n-hint: Audio data bit depth (precision): 16-bit integers
 #: src/SampleFormat.cpp
 msgid "16-bit PCM"
-msgstr ""
+msgstr "16-bit PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 24-bit integers
 #: src/SampleFormat.cpp
 msgid "24-bit PCM"
-msgstr ""
+msgstr "24-bit PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
 #: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
@@ -4118,9 +4087,8 @@ msgid "All Scriptables"
 msgstr "Gach Comhad (*)|*"
 
 #: src/Screenshot.cpp
-#, fuzzy
 msgid "All Preferences"
-msgstr "Roghanna Audacity"
+msgstr "Gach sainrogha"
 
 #: src/Screenshot.cpp
 msgid "SelectionBar"
@@ -4135,23 +4103,23 @@ msgstr "Socraigh Pointe an Rogha"
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Tools"
-msgstr ""
+msgstr "Uirlisí"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/ControlToolBar.cpp
 msgid "Transport"
-msgstr ""
+msgstr "Iompar"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MixerToolBar.cpp
 msgid "Mixer"
-msgstr ""
+msgstr "Meascthóir"
 
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
 msgid "Meter"
-msgstr ""
+msgstr "Méadar"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
@@ -4168,12 +4136,12 @@ msgstr ""
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Edit"
-msgstr ""
+msgstr "Eagar"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
 msgid "Device"
-msgstr ""
+msgstr "Gléas"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/TranscriptionToolBar.cpp
@@ -4191,7 +4159,7 @@ msgstr ""
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "Ruler"
-msgstr ""
+msgstr "Rialóir"
 
 #. i18n-hint: "Tracks" include audio recordings but also other collections of
 #. * data associated with a time line, such as sequences of labels, and musical
@@ -4253,7 +4221,7 @@ msgstr ""
 
 #: src/Screenshot.cpp
 msgid "Capture failed!"
-msgstr ""
+msgstr "Theip ar an ngabháil!"
 
 #: src/Sequence.cpp
 #, c-format
@@ -4269,36 +4237,35 @@ msgstr ""
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
 #: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Help"
-msgstr ""
+msgstr "Cabhair"
 
 #: src/ShuttleGui.cpp src/effects/Effect.cpp
 msgid "&Preview"
-msgstr ""
+msgstr "&Réamhamharc"
 
 #: src/ShuttleGui.cpp
 msgid "Dry Previe&w"
 msgstr ""
 
 #: src/ShuttleGui.cpp
-#, fuzzy
 msgid "&Settings"
-msgstr "Socruithe Maisiúcháin"
+msgstr "&Socruithe"
 
 #: src/ShuttleGui.cpp
 msgid "Debu&g"
-msgstr ""
+msgstr "Dífhabhtai&gh"
 
 #: src/Snap.cpp
 msgid "Off"
-msgstr ""
+msgstr "As"
 
 #: src/Snap.cpp
 msgid "Nearest"
-msgstr ""
+msgstr "An ceann is neasa"
 
 #: src/Snap.cpp
 msgid "Prior"
-msgstr ""
+msgstr "Roimh"
 
 #: src/SoundActivatedRecord.cpp
 msgid "Sound Activated Record"
@@ -4310,7 +4277,7 @@ msgstr ""
 
 #: src/SplashDialog.cpp
 msgid "Welcome to Audacity!"
-msgstr ""
+msgstr "Fáilte go Audacity!"
 
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
@@ -4318,7 +4285,7 @@ msgstr ""
 
 #: src/Tags.cpp
 msgid "Artist Name"
-msgstr ""
+msgstr "Ainm an Ealaíontóra"
 
 #: src/Tags.cpp
 msgid "Track Title"
@@ -4351,31 +4318,31 @@ msgstr ""
 
 #: src/Tags.cpp
 msgid "Tag"
-msgstr ""
+msgstr "Clib"
 
 #: src/Tags.cpp
 msgid "Value"
-msgstr ""
+msgstr "Luach"
 
 #: src/Tags.cpp
 msgid "&Add"
-msgstr ""
+msgstr "&Cuir Leis"
 
 #: src/Tags.cpp
 msgid "&Remove"
-msgstr ""
+msgstr "&Bain"
 
 #: src/Tags.cpp
 msgid "Genres"
-msgstr ""
+msgstr "Seánraí"
 
 #: src/Tags.cpp
 msgid "E&dit..."
-msgstr ""
+msgstr "E&agar..."
 
 #: src/Tags.cpp
 msgid "Rese&t..."
-msgstr ""
+msgstr "Athshocraigh..."
 
 #: src/Tags.cpp
 msgid "Template"
@@ -4383,11 +4350,11 @@ msgstr ""
 
 #: src/Tags.cpp
 msgid "&Load..."
-msgstr ""
+msgstr "&Luchtaigh..."
 
 #: src/Tags.cpp
 msgid "Set De&fault"
-msgstr ""
+msgstr "Socraigh an Réamhshocrú"
 
 #: src/Tags.cpp
 #, fuzzy
@@ -4528,13 +4495,13 @@ msgstr ""
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Duration"
-msgstr ""
+msgstr "Aga"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Time track.
 #: src/TimeTrack.cpp src/TrackPanelAx.cpp
 msgid "Time Track"
-msgstr ""
+msgstr "Rian Ama"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
@@ -4562,7 +4529,7 @@ msgstr ""
 
 #: src/TimerRecordDialog.cpp
 msgid "Error in Duration"
-msgstr ""
+msgstr "Earráid san Aga"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Save path is invalid."
@@ -4610,7 +4577,7 @@ msgstr "Taifeadadh á dhéanamh"
 #: src/effects/Silence.cpp src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 msgid "Duration:"
-msgstr ""
+msgstr "Aga:"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -4704,23 +4671,23 @@ msgstr "Taifeadadh á dhéanamh"
 #.
 #: src/TimerRecordDialog.cpp
 msgid "099 h 060 m 060 s"
-msgstr ""
+msgstr "099 u 060 n 060 s"
 
 #: src/TimerRecordDialog.cpp
 msgid "Start Date and Time"
-msgstr ""
+msgstr "Dáta agus Am Tosaithe"
 
 #: src/TimerRecordDialog.cpp
 msgid "Start Date"
-msgstr ""
+msgstr "Dáta Tosaithe"
 
 #: src/TimerRecordDialog.cpp
 msgid "End Date and Time"
-msgstr ""
+msgstr "Dáta agus Am Críochnaithe"
 
 #: src/TimerRecordDialog.cpp
 msgid "End Date"
-msgstr ""
+msgstr "Dáta Críochnaithe"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -4732,7 +4699,7 @@ msgstr ""
 #.
 #: src/TimerRecordDialog.cpp
 msgid "099 days 024 h 060 m 060 s"
-msgstr ""
+msgstr "099 lá 024 u 060 n 060 s"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Save"
@@ -4748,9 +4715,8 @@ msgid "Save Project As:"
 msgstr "Sábháil Tionscadal M&ar..."
 
 #: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Select..."
-msgstr "Roghnaigh"
+msgstr "Roghnaigh..."
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
@@ -4767,13 +4733,12 @@ msgstr "Easpórtáil Lipéid Mar:"
 
 #: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Options"
-msgstr "Socruithe Maisiúcháin"
+msgstr "Roghanna"
 
 #: src/TimerRecordDialog.cpp
 msgid "Do nothing"
-msgstr ""
+msgstr "Ná déan faic"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -4782,11 +4747,11 @@ msgstr "Céad Mhúscailt Audacity"
 
 #: src/TimerRecordDialog.cpp
 msgid "Restart system"
-msgstr ""
+msgstr "Atosaigh an córas"
 
 #: src/TimerRecordDialog.cpp
 msgid "Shutdown system"
-msgstr ""
+msgstr "Múch an córas"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -4824,7 +4789,7 @@ msgstr "Taifeadadh á dhéanamh"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid "%s in:"
-msgstr ""
+msgstr "%s i gceann:"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -4842,7 +4807,7 @@ msgstr ""
 
 #: src/TrackInfo.cpp
 msgid "Stereo, 999999Hz"
-msgstr ""
+msgstr "Steiréó, 999999Hz"
 
 #: src/TrackInfo.cpp src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
 msgid "Select"
@@ -4851,7 +4816,7 @@ msgstr "Roghnaigh"
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
-msgstr ""
+msgstr "(Esc chun cealú)"
 
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
@@ -4862,14 +4827,13 @@ msgstr ""
 #: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
 #, c-format
 msgid "Track %d"
-msgstr ""
+msgstr "Rian %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
-#, fuzzy
 msgid " Muted"
-msgstr "Tost"
+msgstr " Balbhaithe"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is soloed. (The Solo button is on.)
@@ -4881,9 +4845,8 @@ msgstr "Aonar"
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is selected.
 #: src/TrackPanelAx.cpp
-#, fuzzy
 msgid " Selected"
-msgstr "Roghnaigh"
+msgstr " Roghnaithe"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
@@ -4903,7 +4866,7 @@ msgstr ""
 
 #: src/TrackPanelAx.cpp
 msgid " Select On"
-msgstr ""
+msgstr " Roghnaigh Ar"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -4985,13 +4948,13 @@ msgstr ""
 
 #: src/VoiceKey.cpp
 msgid "Calibration Results\n"
-msgstr ""
+msgstr "Torthaí na Tástála Cruinnis\n"
 
 #. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
-msgstr ""
+msgstr "Fuinneamh                  -- meánach: %1.4f  sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
 #, c-format
@@ -5005,7 +4968,7 @@ msgstr ""
 
 #: src/VoiceKey.cpp
 msgid "Calibration Complete"
-msgstr ""
+msgstr "Críochnaíodh an Tástáil Cruinnis"
 
 #: src/WaveClip.cpp
 #, fuzzy
@@ -5042,7 +5005,7 @@ msgstr "Phaser á Fhorchur"
 #: src/effects/vamp/VampEffect.cpp src/widgets/ASlider.cpp
 #, c-format
 msgid "%s: %s"
-msgstr ""
+msgstr "%s: %s"
 
 #: src/commands/BatchEvalCommand.cpp
 #, fuzzy
@@ -5076,11 +5039,10 @@ msgstr "Congair mhéarchláir á lódáil"
 
 #: src/commands/CommandTargets.cpp
 msgid "Long Message"
-msgstr ""
+msgstr "Teachtaireacht Fhada"
 
 #: src/commands/CompareAudioCommand.cpp src/effects/AutoDuck.cpp
 #: src/effects/Compressor.cpp src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Threshold:"
 msgstr "Tairseach:"
 
@@ -5119,14 +5081,12 @@ msgid "Application"
 msgstr "Phaser á Fhorchur"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "Track 0"
-msgstr "Rianta"
+msgstr "Rian 0"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "Track 1"
-msgstr "Rianta"
+msgstr "Rian 1"
 
 #. i18n-hint abbreviates "Identity" or "Identifier"
 #: src/commands/DragCommand.cpp
@@ -5140,28 +5100,27 @@ msgstr " - fuinneog"
 
 #: src/commands/DragCommand.cpp
 msgid "From X:"
-msgstr ""
+msgstr "Ó X:"
 
 #: src/commands/DragCommand.cpp
 msgid "From Y:"
-msgstr ""
+msgstr "Ó Y:"
 
 #: src/commands/DragCommand.cpp
 msgid "To X:"
-msgstr ""
+msgstr "Go X:"
 
 #: src/commands/DragCommand.cpp
 msgid "To Y:"
-msgstr ""
+msgstr "Go Y:"
 
 #: src/commands/DragCommand.cpp src/commands/SelectCommand.cpp
 msgid "Relative To:"
 msgstr ""
 
 #: src/commands/DragCommand.h
-#, fuzzy
 msgid "Drag"
-msgstr "Clétharraingt"
+msgstr "Tarraing"
 
 #: src/commands/DragCommand.h
 msgid "Drags mouse from one place to another."
@@ -5173,18 +5132,16 @@ msgid "Commands"
 msgstr "Gníomh Ordaithe"
 
 #: src/commands/GetInfoCommand.cpp
-#, fuzzy
 msgid "Menus"
-msgstr "Gach Comhad (*)|*"
+msgstr "Roghchláir"
 
 #: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Preferences"
-msgstr "Roghanna Audacity"
+msgstr "Sainroghanna"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 msgid "Clips"
-msgstr ""
+msgstr "Gearrthóga"
 
 #: src/commands/GetInfoCommand.cpp
 #, fuzzy
@@ -5198,17 +5155,17 @@ msgstr "Lipéid"
 
 #: src/commands/GetInfoCommand.cpp
 msgid "Boxes"
-msgstr ""
+msgstr "Boscaí"
 
 #. i18n-hint JavaScript Object Notation
 #: src/commands/GetInfoCommand.cpp
 msgid "JSON"
-msgstr ""
+msgstr "JSON"
 
 #. i18n-hint name of a computer programming language
 #: src/commands/GetInfoCommand.cpp
 msgid "LISP"
-msgstr ""
+msgstr "LISP"
 
 #: src/commands/GetInfoCommand.cpp
 msgid "Brief"
@@ -5216,7 +5173,7 @@ msgstr ""
 
 #: src/commands/GetInfoCommand.cpp src/effects/Effect.cpp
 msgid "Type:"
-msgstr ""
+msgstr "Cineál:"
 
 #: src/commands/GetInfoCommand.cpp src/export/ExportFFmpegDialogs.cpp
 #: src/export/ExportMultiple.cpp
@@ -5225,7 +5182,7 @@ msgstr ""
 
 #: src/commands/GetInfoCommand.h
 msgid "Get Info"
-msgstr ""
+msgstr "Faigh Eolas"
 
 #: src/commands/GetInfoCommand.h
 msgid "Gets information in JSON format."
@@ -5233,7 +5190,7 @@ msgstr ""
 
 #: src/commands/GetTrackInfoCommand.cpp
 msgid "Types:"
-msgstr ""
+msgstr "Cineálacha:"
 
 #: src/commands/GetTrackInfoCommand.h
 #, fuzzy
@@ -5289,9 +5246,8 @@ msgstr ""
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
 #: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
-#, fuzzy
 msgid "The Audacity Team"
-msgstr "Céad Mhúscailt Audacity"
+msgstr "Foireann Audacity"
 
 #: src/commands/LoadCommands.cpp
 msgid "Provides builtin commands to Audacity"
@@ -5303,7 +5259,7 @@ msgstr ""
 
 #: src/commands/MessageCommand.cpp src/commands/SetLabelCommand.cpp
 msgid "Text:"
-msgstr ""
+msgstr "Téacs:"
 
 #: src/commands/MessageCommand.h
 msgid "Echos a message."
@@ -5348,17 +5304,16 @@ msgstr "&Sábháil Tionscadal"
 #: src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
 #: src/tracks/ui/CommonTrackControls.cpp
-#, fuzzy
 msgid "Name:"
-msgstr "Ainm..."
+msgstr "Ainm:"
 
 #: src/commands/PreferenceCommands.cpp src/commands/SetEnvelopeCommand.cpp
 msgid "Value:"
-msgstr ""
+msgstr "Luach:"
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Reload:"
-msgstr ""
+msgstr "Athluchtaigh:"
 
 #: src/commands/PreferenceCommands.h
 #, fuzzy
@@ -5379,9 +5334,8 @@ msgid "Sets the value of a single preference."
 msgstr ""
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Window"
-msgstr " - fuinneog"
+msgstr "Fuinneog"
 
 #: src/commands/ScreenshotCommand.cpp
 #, fuzzy
@@ -5395,17 +5349,16 @@ msgstr " - fuinneog"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Fullscreen"
-msgstr ""
+msgstr "Lánscáileán"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Toolbars"
-msgstr "Uirlis"
+msgstr "Barraí uirlisí"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
 #: src/prefs/EffectsPrefs.h
 msgid "Effects"
-msgstr ""
+msgstr "Maisiúcháin"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Scriptables"
@@ -5458,27 +5411,27 @@ msgstr "Rian Ama"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Blue"
-msgstr ""
+msgstr "Gorm"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
 msgid "White"
-msgstr ""
+msgstr "Bán"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Path:"
-msgstr ""
+msgstr "Conair:"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Capture What:"
-msgstr ""
+msgstr "Céard ba cheart a ghabháil:"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Background:"
-msgstr ""
+msgstr "Cúlra:"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Bring To Top:"
-msgstr ""
+msgstr "Tabhair Chuig an mBarr:"
 
 #: src/commands/ScreenshotCommand.cpp
 #, fuzzy, c-format
@@ -5487,7 +5440,7 @@ msgstr "Theip ar scríobh sa chomhaid: "
 
 #: src/commands/ScreenshotCommand.h
 msgid "Screenshot"
-msgstr ""
+msgstr "Gabháil Scáileáin"
 
 #: src/commands/ScreenshotCommand.h
 msgid "Takes screenshots."
@@ -5499,9 +5452,8 @@ msgid "Project Start"
 msgstr "go Tosach an Rogha"
 
 #: src/commands/SelectCommand.cpp src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Project"
-msgstr "&Sábháil Tionscadal"
+msgstr "Tionscadal"
 
 #: src/commands/SelectCommand.cpp
 #, fuzzy
@@ -5515,7 +5467,7 @@ msgstr "go Tosach an Rogha"
 
 #: src/commands/SelectCommand.cpp src/toolbars/SelectionBar.cpp
 msgid "Selection"
-msgstr ""
+msgstr "Roghnú"
 
 #: src/commands/SelectCommand.cpp
 #, fuzzy
@@ -5529,30 +5481,29 @@ msgstr "Aga Ionsaithe:"
 
 #: src/commands/SelectCommand.cpp
 msgid "End Time:"
-msgstr ""
+msgstr "Am críochnaithe:"
 
 #: src/commands/SelectCommand.cpp
 msgid "High:"
-msgstr ""
+msgstr "Ard:"
 
 #: src/commands/SelectCommand.cpp
 msgid "Low:"
-msgstr ""
+msgstr "Íseal:"
 
 #. i18n-hint verb, imperative
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Set"
-msgstr "Roghnaigh"
+msgstr "Socraigh"
 
 #: src/commands/SelectCommand.cpp
 msgid "Add"
-msgstr ""
+msgstr "Cuir leis"
 
 #: src/commands/SelectCommand.cpp src/effects/EffectRack.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
-msgstr ""
+msgstr "Bain"
 
 #: src/commands/SelectCommand.cpp
 #, fuzzy
@@ -5566,7 +5517,7 @@ msgstr "Cló Rian Lipéid"
 
 #: src/commands/SelectCommand.cpp
 msgid "Mode:"
-msgstr ""
+msgstr "Mód:"
 
 #: src/commands/SelectCommand.h
 #, fuzzy
@@ -5604,32 +5555,31 @@ msgstr "Tost"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Color 0"
-msgstr ""
+msgstr "Dath 0"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Color 1"
-msgstr ""
+msgstr "Dath 1"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Color 2"
-msgstr ""
+msgstr "Dath 2"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Color 3"
-msgstr ""
+msgstr "Dath 3"
 
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
-msgstr ""
+msgstr "Ar:"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Colour:"
-msgstr ""
+msgstr "Dath:"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Start:"
-msgstr "Taobhrian tosaigh:"
+msgstr "Tosaigh:"
 
 #: src/commands/SetClipCommand.h
 #, fuzzy
@@ -5642,12 +5592,11 @@ msgstr ""
 
 #: src/commands/SetEnvelopeCommand.cpp
 msgid "Time:"
-msgstr ""
+msgstr "Am:"
 
 #: src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Delete:"
-msgstr "Scrios"
+msgstr "Scrios:"
 
 #: src/commands/SetEnvelopeCommand.h
 #, fuzzy
@@ -5665,12 +5614,11 @@ msgstr "Eag. Lipéid"
 
 #: src/commands/SetLabelCommand.cpp
 msgid "End:"
-msgstr ""
+msgstr "Críoch:"
 
 #: src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Selected:"
-msgstr "Roghnaigh"
+msgstr "Roghnaithe:"
 
 #: src/commands/SetLabelCommand.h
 #, fuzzy
@@ -5693,20 +5641,19 @@ msgstr "Méad"
 
 #: src/commands/SetProjectCommand.cpp
 msgid "X:"
-msgstr ""
+msgstr "X:"
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Y:"
-msgstr ""
+msgstr "Y:"
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Width:"
-msgstr ""
+msgstr "Leithead:"
 
 #: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Height:"
-msgstr "Deas"
+msgstr "Airde:"
 
 #: src/commands/SetProjectCommand.h
 #, fuzzy
@@ -5729,12 +5676,11 @@ msgstr "Cainéal"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Unnamed"
-msgstr ""
+msgstr "Gan ainm"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Selected"
-msgstr "Roghnaigh"
+msgstr "Roghnaithe"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -5742,9 +5688,8 @@ msgid "Focused"
 msgstr "Sos"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Gain:"
-msgstr "Neartúchán"
+msgstr "Neartúchán:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -5767,9 +5712,8 @@ msgid "Linear"
 msgstr "Líneach"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Reset"
-msgstr "Zúmáil Amach"
+msgstr "Athshocraigh é"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Times 2"
@@ -5781,11 +5725,11 @@ msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Display:"
-msgstr ""
+msgstr "Taispeáint:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Scale:"
-msgstr ""
+msgstr "Scála:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -5895,7 +5839,7 @@ msgstr ""
 #: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
 #: src/widgets/NumericTextCtrl.cpp
 msgid "seconds"
-msgstr ""
+msgstr "soicindí"
 
 #: src/effects/AutoDuck.cpp
 msgid "Outer fade down length:"
@@ -5950,15 +5894,15 @@ msgstr ""
 
 #: src/effects/BassTreble.cpp
 msgid "Treble"
-msgstr ""
+msgstr "Tribil"
 
 #: src/effects/BassTreble.cpp
 msgid "&Volume (dB):"
-msgstr ""
+msgstr "&Airde (dB):"
 
 #: src/effects/BassTreble.cpp
 msgid "Level"
-msgstr ""
+msgstr "Leibhéal"
 
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
@@ -5995,7 +5939,7 @@ msgstr "Airde (EAC)"
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
 msgid "from"
-msgstr ""
+msgstr "ó"
 
 #: src/effects/ChangePitch.cpp
 #, fuzzy
@@ -6022,17 +5966,16 @@ msgid "Semitones (half-steps)"
 msgstr "Leath-thoin (leath-chéimeanna):"
 
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgid "Frequency"
-msgstr "Minicíocht (Hz):"
+msgstr "Minicíocht"
 
 #: src/effects/ChangePitch.cpp
 msgid "from (Hz)"
-msgstr ""
+msgstr "ó (Hz)"
 
 #: src/effects/ChangePitch.cpp
 msgid "to (Hz)"
-msgstr ""
+msgstr "go (Hz)"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
@@ -6081,11 +6024,11 @@ msgstr ""
 
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
-msgstr ""
+msgstr "Ó rpm"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
-msgstr ""
+msgstr "Go rpm"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Selection Length"
@@ -6093,7 +6036,7 @@ msgstr ""
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Current Length:"
-msgstr ""
+msgstr "An Fad Reatha:"
 
 #: src/effects/ChangeSpeed.cpp
 #, fuzzy
@@ -6166,7 +6109,7 @@ msgstr ""
 
 #: src/effects/ClickRemoval.cpp src/effects/Compressor.cpp
 msgid "Threshold"
-msgstr ""
+msgstr "Tairseach"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Max Spike Width (higher is more sensitive):"
@@ -6238,7 +6181,7 @@ msgstr "Tairseach: %d dB"
 #: src/effects/Compressor.cpp
 #, c-format
 msgid "%3d dB"
-msgstr ""
+msgstr "%3d dB"
 
 #: src/effects/Compressor.cpp
 #, c-format
@@ -6255,7 +6198,7 @@ msgstr ""
 #: src/effects/Compressor.cpp
 #, c-format
 msgid "%.0f:1"
-msgstr ""
+msgstr "%.0f:1"
 
 #: src/effects/Compressor.cpp
 #, c-format
@@ -6267,7 +6210,7 @@ msgstr ""
 #: src/effects/Compressor.cpp
 #, c-format
 msgid "%.1f:1"
-msgstr ""
+msgstr "%.1f:1"
 
 #: src/effects/Compressor.cpp
 #, fuzzy, c-format
@@ -6324,15 +6267,15 @@ msgstr ""
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
 #: src/toolbars/SelectionBar.cpp
 msgid "End"
-msgstr ""
+msgstr "Críoch"
 
 #: src/effects/Contrast.cpp
 msgid "Volume    "
-msgstr ""
+msgstr "Airde   "
 
 #: src/effects/Contrast.cpp
 msgid "&Foreground:"
-msgstr ""
+msgstr "&Tulra:"
 
 #: src/effects/Contrast.cpp
 msgid "Foreground start time"
@@ -6349,7 +6292,7 @@ msgstr "Cuir an Rogha ina thost"
 
 #: src/effects/Contrast.cpp
 msgid "&Background:"
-msgstr ""
+msgstr "&Cúlra:"
 
 #: src/effects/Contrast.cpp
 msgid "Background start time"
@@ -6366,7 +6309,7 @@ msgstr "Cuir an Rogha ina thost"
 
 #: src/effects/Contrast.cpp
 msgid "Result"
-msgstr ""
+msgstr "Toradh"
 
 #: src/effects/Contrast.cpp
 msgid "Co&ntrast Result:"
@@ -6374,11 +6317,11 @@ msgstr ""
 
 #: src/effects/Contrast.cpp
 msgid "R&eset"
-msgstr ""
+msgstr "Athshocraigh"
 
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
-msgstr ""
+msgstr "&Difear:"
 
 #: src/effects/Contrast.cpp src/menus/HelpMenus.cpp
 msgid "&Help"
@@ -6388,22 +6331,22 @@ msgstr "Cab&hair"
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "RMS = %s."
-msgstr ""
+msgstr "RMS = %s."
 
 #. i18n-hint: dB abbreviates decibels
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%s dB"
-msgstr ""
+msgstr "%s dB"
 
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%.2f"
-msgstr ""
+msgstr "%.2f"
 
 #: src/effects/Contrast.cpp
 msgid "zero"
-msgstr ""
+msgstr "náid"
 
 #: src/effects/Contrast.cpp
 msgid "indeterminate"
@@ -6414,7 +6357,7 @@ msgstr ""
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%.2f dB RMS"
-msgstr ""
+msgstr "%.2f dB RMS"
 
 #. i18n-hint: dB abbreviates decibels
 #: src/effects/Contrast.cpp
@@ -6472,7 +6415,7 @@ msgstr ""
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%.2f dB"
-msgstr ""
+msgstr "%.2f dB"
 
 #: src/effects/Contrast.cpp
 msgid "No foreground measured"
@@ -6510,7 +6453,7 @@ msgstr ""
 
 #: src/effects/Contrast.cpp
 msgid "Foreground"
-msgstr ""
+msgstr "Tulra"
 
 #: src/effects/Contrast.cpp
 #, c-format
@@ -6524,11 +6467,11 @@ msgstr ""
 
 #: src/effects/Contrast.cpp
 msgid "Background"
-msgstr ""
+msgstr "An cúlra"
 
 #: src/effects/Contrast.cpp
 msgid "Results"
-msgstr ""
+msgstr "Torthaí"
 
 #: src/effects/Contrast.cpp
 msgid "Success Criteria 1.4.7 of WCAG 2.0: Pass"
@@ -6540,7 +6483,7 @@ msgstr ""
 
 #: src/effects/Contrast.cpp
 msgid "Data gathered"
-msgstr ""
+msgstr "Sonraí bailithe"
 
 #: src/effects/Distortion.cpp
 msgid "Hard Clipping"
@@ -6717,7 +6660,7 @@ msgstr "Phaser á Fhorchur"
 
 #: src/effects/Distortion.cpp
 msgid "Drive"
-msgstr ""
+msgstr "Tiomántán"
 
 #: src/effects/Distortion.cpp
 msgid "Make-up Gain"
@@ -6760,7 +6703,7 @@ msgstr ""
 
 #: src/effects/Distortion.cpp
 msgid "dB Limit"
-msgstr ""
+msgstr "Teorainn dB"
 
 #: src/effects/Distortion.cpp
 msgid "Wet level"
@@ -6777,22 +6720,22 @@ msgstr ""
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (-100 to 0 dB):"
-msgstr ""
+msgstr " (-100 go 0 dB):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (-80 to -20 dB):"
-msgstr ""
+msgstr " (-80 go -20 dB):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (0 to 100):"
-msgstr ""
+msgstr " (0 go 100):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (0 to 5):"
-msgstr ""
+msgstr " (0 go  5):"
 
 #: src/effects/Distortion.h
 msgid "Distortion"
@@ -6827,7 +6770,7 @@ msgstr ""
 
 #: src/effects/DtmfGen.cpp
 msgid "ms"
-msgstr ""
+msgstr "ms"
 
 #: src/effects/DtmfGen.cpp
 msgid "Silence duration:"
@@ -6836,7 +6779,7 @@ msgstr ""
 #: src/effects/DtmfGen.cpp
 #, c-format
 msgid "%.0f ms"
-msgstr ""
+msgstr "%.0f ms"
 
 #: src/effects/DtmfGen.h
 msgid "DTMF Tones"
@@ -6862,11 +6805,11 @@ msgstr ""
 
 #: src/effects/Effect.cpp
 msgid "Preparing preview"
-msgstr ""
+msgstr "Réamhamharc á ullmhú"
 
 #: src/effects/Effect.cpp
 msgid "Previewing"
-msgstr ""
+msgstr "Ag réamhamharc"
 
 #: src/effects/Effect.cpp
 #, fuzzy
@@ -6875,7 +6818,7 @@ msgstr "Gníomh Ordaithe"
 
 #: src/effects/Effect.cpp
 msgid "&Manage"
-msgstr ""
+msgstr "&Bainistigh"
 
 #: src/effects/Effect.cpp
 msgid "Manage presets and options"
@@ -6906,7 +6849,7 @@ msgstr ""
 
 #: src/effects/Effect.cpp
 msgid "Skip backward"
-msgstr ""
+msgstr "Léim siar"
 
 #: src/effects/Effect.cpp
 #, fuzzy
@@ -6938,9 +6881,8 @@ msgid "Delete Preset"
 msgstr ""
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Defaults"
-msgstr "256 - réamhshocrú"
+msgstr "Réamhshocruithe"
 
 #: src/effects/Effect.cpp
 msgid "Factory Presets"
@@ -6958,22 +6900,22 @@ msgstr "Easpórtáil &Iomadúil..."
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
-msgstr ""
+msgstr "Roghanna..."
 
 #: src/effects/Effect.cpp
 #, c-format
 msgid "Type: %s"
-msgstr ""
+msgstr "Cineál: %s"
 
 #: src/effects/Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Name: %s"
-msgstr "Comhaid ainmneacha:"
+msgstr "Ainm: %s"
 
 #: src/effects/Effect.cpp
 #, c-format
 msgid "Version: %s"
-msgstr ""
+msgstr "Leagan: %s"
 
 #: src/effects/Effect.cpp
 #, c-format
@@ -6983,11 +6925,11 @@ msgstr ""
 #: src/effects/Effect.cpp
 #, c-format
 msgid "Description: %s"
-msgstr ""
+msgstr "Cur síos: %s"
 
 #: src/effects/Effect.cpp
 msgid "About"
-msgstr ""
+msgstr "Maidir le"
 
 #: src/effects/Effect.cpp
 #, fuzzy, c-format
@@ -7024,7 +6966,7 @@ msgstr "Seinnt"
 
 #: src/effects/Effect.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
-msgstr ""
+msgstr "Seinn"
 
 #: src/effects/Effect.cpp
 #, fuzzy
@@ -7033,7 +6975,7 @@ msgstr "Roghnaigh"
 
 #: src/effects/Effect.cpp
 msgid "&Preset:"
-msgstr ""
+msgstr "&Réamhshocrú:"
 
 #: src/effects/Effect.cpp
 #, fuzzy
@@ -7105,7 +7047,7 @@ msgstr "&Maisiúchán"
 
 #: src/effects/EffectRack.cpp
 msgid "&Apply"
-msgstr ""
+msgstr "Cuir i bhfeidhm é"
 
 #: src/effects/EffectRack.cpp
 msgid "Latency: 0"
@@ -7125,16 +7067,15 @@ msgstr ""
 
 #: src/effects/EffectRack.cpp
 msgid "Show/Hide Editor"
-msgstr ""
+msgstr "Taispeáin/folaigh an tEagarthóir"
 
 #: src/effects/EffectRack.cpp
 msgid "Open/close effect editor"
 msgstr ""
 
 #: src/effects/EffectRack.cpp
-#, fuzzy
 msgid "Move Up"
-msgstr "Bog an Rian Suas"
+msgstr "Bog Suas"
 
 #: src/effects/EffectRack.cpp
 msgid "Move effect up in the rack"
@@ -7151,7 +7092,7 @@ msgstr ""
 
 #: src/effects/EffectRack.cpp
 msgid "Favorite"
-msgstr ""
+msgstr "Ceanán"
 
 #: src/effects/EffectRack.cpp
 msgid "Mark effect as a favorite"
@@ -7163,7 +7104,7 @@ msgstr ""
 
 #: src/effects/EffectRack.cpp
 msgid "Name of the effect"
-msgstr ""
+msgstr "Ainm an mhaisiúcháin"
 
 #: src/effects/EffectRack.cpp
 #, c-format
@@ -7173,7 +7114,7 @@ msgstr ""
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
 msgid "B-spline"
-msgstr ""
+msgstr "B-spline"
 
 #: src/effects/Equalization.cpp
 msgid "Cosine"
@@ -7193,7 +7134,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "AM Radio"
-msgstr ""
+msgstr "Raidió AM"
 
 #: src/effects/Equalization.cpp
 #, fuzzy
@@ -7210,11 +7151,11 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "RIAA"
-msgstr ""
+msgstr "RIAA"
 
 #: src/effects/Equalization.cpp
 msgid "Telephone"
-msgstr ""
+msgstr "Guthán"
 
 #: src/effects/Equalization.cpp
 msgid "Treble Boost"
@@ -7255,7 +7196,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "+ dB"
-msgstr ""
+msgstr "+ dB"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "Max dB"
@@ -7264,11 +7205,11 @@ msgstr ""
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 #, c-format
 msgid "%d dB"
-msgstr ""
+msgstr "%d dB"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "- dB"
-msgstr ""
+msgstr "- dB"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "Min dB"
@@ -7277,12 +7218,12 @@ msgstr ""
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%d Hz"
-msgstr ""
+msgstr "%d Hz"
 
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%g kHz"
-msgstr ""
+msgstr "%g kHz"
 
 #: src/effects/Equalization.cpp
 msgid "&EQ Type:"
@@ -7340,7 +7281,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "Fla&tten"
-msgstr ""
+msgstr "Leacaigh"
 
 #: src/effects/Equalization.cpp
 msgid "&Invert"
@@ -7360,11 +7301,11 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "D&efault"
-msgstr ""
+msgstr "Réamhshocrú"
 
 #: src/effects/Equalization.cpp
 msgid "&SSE"
-msgstr ""
+msgstr "&SSE"
 
 #: src/effects/Equalization.cpp
 msgid "SSE &Threaded"
@@ -7372,7 +7313,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "A&VX"
-msgstr ""
+msgstr "A&VX"
 
 #: src/effects/Equalization.cpp
 msgid "AV&X Threaded"
@@ -7385,7 +7326,7 @@ msgstr ""
 #. i18n-hint: name of the 'unnamed' custom curve
 #: src/effects/Equalization.cpp
 msgid "unnamed"
-msgstr ""
+msgstr "gan ainm"
 
 #. i18n-hint: EQ stands for 'Equalization'.
 #: src/effects/Equalization.cpp
@@ -7431,15 +7372,15 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "D&elete..."
-msgstr ""
+msgstr "Scrios..."
 
 #: src/effects/Equalization.cpp
 msgid "&Get More..."
-msgstr ""
+msgstr "Fai&gh Tuilleadh..."
 
 #: src/effects/Equalization.cpp
 msgid "De&faults"
-msgstr ""
+msgstr "Na Réamhshocruithe"
 
 #: src/effects/Equalization.cpp
 msgid ""
@@ -7462,7 +7403,7 @@ msgstr "'%s' arna athainmniú go '%s'"
 
 #: src/effects/Equalization.cpp
 msgid "Rename..."
-msgstr ""
+msgstr "Athainmnigh..."
 
 #: src/effects/Equalization.cpp
 #, fuzzy, c-format
@@ -7475,7 +7416,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "Same name"
-msgstr ""
+msgstr "An t-ainm céanna"
 
 #: src/effects/Equalization.cpp
 #, fuzzy, c-format
@@ -7501,7 +7442,7 @@ msgstr "Scrios"
 
 #: src/effects/Equalization.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "Deimhnigh an Scriosadh"
 
 #: src/effects/Equalization.cpp
 #, fuzzy, c-format
@@ -7518,7 +7459,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
-msgstr ""
+msgstr "comhaid xml (*.xml;*.XML)|*.xml;*.XML"
 
 #: src/effects/Equalization.cpp
 msgid "Export EQ curves as..."
@@ -7589,7 +7530,7 @@ msgstr ""
 
 #: src/effects/FindClipping.cpp
 msgid "Clipping"
-msgstr ""
+msgstr "Ag bearradh"
 
 #: src/effects/FindClipping.cpp
 msgid "Start threshold (samples):"
@@ -7629,7 +7570,7 @@ msgstr ""
 
 #: src/effects/Noise.cpp
 msgid "Pink"
-msgstr ""
+msgstr "Bán dearg"
 
 #: src/effects/Noise.cpp
 msgid "Brownian"
@@ -7645,7 +7586,7 @@ msgstr ""
 
 #: src/effects/Noise.h
 msgid "Noise"
-msgstr ""
+msgstr "Torainn"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
@@ -7699,11 +7640,11 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Sensitivity:"
-msgstr ""
+msgstr "&Íogaireacht:"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Sensitivity"
-msgstr ""
+msgstr "Íogaireacht"
 
 #: src/effects/NoiseReduction.cpp
 #, fuzzy
@@ -7773,11 +7714,11 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Noise:"
-msgstr ""
+msgstr "Torainn:"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Re&duce"
-msgstr ""
+msgstr "Laghdaigh"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "&Isolate"
@@ -7794,60 +7735,59 @@ msgstr "Socruithe Maisiúcháin"
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Window types"
-msgstr ""
+msgstr "Cineálacha fuinneoga"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Window si&ze"
-msgstr ""
+msgstr "Méid na fuinneoige"
 
 #: src/effects/NoiseReduction.cpp
 msgid "8"
-msgstr ""
+msgstr "8"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16"
-msgstr ""
+msgstr "16"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "32"
-msgstr ""
+msgstr "32"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "64"
-msgstr ""
+msgstr "64"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "128"
-msgstr ""
+msgstr "128"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "256"
-msgstr ""
+msgstr "256"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "512"
-msgstr ""
+msgstr "512"
 
 #: src/effects/NoiseReduction.cpp
 msgid "1024"
-msgstr ""
+msgstr "1024"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "2048 (default)"
-msgstr "256 - réamhshocrú"
+msgstr "2048 (réamhshocrú)"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "4096"
-msgstr ""
+msgstr "4096"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "8192"
-msgstr ""
+msgstr "8192"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16384"
-msgstr ""
+msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp
 msgid "S&teps per window"
@@ -7855,12 +7795,11 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFLAC.cpp
 msgid "2"
-msgstr ""
+msgstr "2"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "4 (default)"
-msgstr "256 - réamhshocrú"
+msgstr "4 (réamhshocrú)"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method"
@@ -7886,7 +7825,7 @@ msgstr ""
 
 #: src/effects/NoiseRemoval.cpp
 msgid "&Sensitivity (dB):"
-msgstr ""
+msgstr "&Íogaireacht (dB):"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Fr&equency smoothing (Hz):"
@@ -7902,7 +7841,7 @@ msgstr ""
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Re&move"
-msgstr ""
+msgstr "Bain"
 
 #: src/effects/Normalize.cpp
 msgid "Sets the peak amplitude or loudness of one or more tracks"
@@ -7927,7 +7866,7 @@ msgstr ""
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
-msgstr ""
+msgstr "Níl aon rud ag tarlú...\n"
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
@@ -7997,7 +7936,7 @@ msgstr ""
 
 #: src/effects/Normalize.cpp
 msgid "(Maximum 0dB)"
-msgstr ""
+msgstr "(0dB ar a mhéad)"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
@@ -8007,7 +7946,7 @@ msgstr ""
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "LUFS"
-msgstr ""
+msgstr "LUFS"
 
 #: src/effects/Normalize.h
 msgid "Normalize"
@@ -8075,11 +8014,11 @@ msgstr "Céimeanna:"
 
 #: src/effects/Phaser.cpp
 msgid "Stages"
-msgstr ""
+msgstr "Céimeanna"
 
 #: src/effects/Phaser.cpp
 msgid "&Dry/Wet:"
-msgstr ""
+msgstr "&Tirim/Fliuch:"
 
 #: src/effects/Phaser.cpp
 msgid "Dry Wet"
@@ -8156,7 +8095,7 @@ msgstr ""
 
 #: src/effects/Repair.h
 msgid "Repair"
-msgstr ""
+msgstr "Deisigh"
 
 #: src/effects/Repeat.cpp
 msgid "Repeats the selection the specified number of times"
@@ -8205,7 +8144,7 @@ msgstr ""
 
 #: src/effects/Reverb.cpp
 msgid "Bathroom"
-msgstr ""
+msgstr "Seomra Folctha"
 
 #: src/effects/Reverb.cpp
 msgid "Small Room Bright"
@@ -8217,11 +8156,11 @@ msgstr ""
 
 #: src/effects/Reverb.cpp
 msgid "Medium Room"
-msgstr ""
+msgstr "Seomra Meánach"
 
 #: src/effects/Reverb.cpp
 msgid "Large Room"
-msgstr ""
+msgstr "Seomra Mór"
 
 #: src/effects/Reverb.cpp
 msgid "Church Hall"
@@ -8229,7 +8168,7 @@ msgstr ""
 
 #: src/effects/Reverb.cpp
 msgid "Cathedral"
-msgstr ""
+msgstr "Ardeaglais"
 
 #: src/effects/Reverb.cpp
 msgid "Adds ambience or a \"hall effect\""
@@ -8297,7 +8236,7 @@ msgstr ""
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Butterworth"
-msgstr ""
+msgstr "Butterworth"
 
 #. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
@@ -8427,11 +8366,11 @@ msgstr ""
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Line Time:"
-msgstr ""
+msgstr "Líne Ama:"
 
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Line Time"
-msgstr ""
+msgstr "Líne Ama"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
 #. This is a NEW experimental effect, and until we have it documented in the user
@@ -8460,7 +8399,7 @@ msgstr "256 - réamhshocrú"
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
 msgid "%.3f"
-msgstr ""
+msgstr "%.3f"
 
 #: src/effects/Silence.cpp
 msgid "Creates audio of zero amplitude"
@@ -8501,7 +8440,7 @@ msgstr ""
 
 #: src/effects/TimeScale.cpp
 msgid "(%) [-50 to 100]:"
-msgstr ""
+msgstr "(%) [-50 go 100]:"
 
 #: src/effects/TimeScale.cpp
 msgid "Final Pitch Shift"
@@ -8546,9 +8485,8 @@ msgid "Waveform:"
 msgstr "Tonnchrot:"
 
 #: src/effects/ToneGen.cpp
-#, fuzzy
 msgid "Frequency (Hz):"
-msgstr "Minicíocht LFO (Hz):"
+msgstr "Minicíocht (Hz):"
 
 #: src/effects/ToneGen.cpp
 msgid "Frequency Hertz Start"
@@ -8614,7 +8552,7 @@ msgstr "Comhbhrúiteoir..."
 
 #: src/effects/TruncSilence.cpp src/import/ImportRaw.cpp
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: src/effects/TruncSilence.cpp
 msgid "Truncate tracks independently"
@@ -8626,7 +8564,7 @@ msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "VST Effects"
-msgstr ""
+msgstr "Maisiúcháin VST"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Adds the ability to use VST effects in Audacity."
@@ -8744,7 +8682,7 @@ msgstr ""
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
 msgid "Audio In: %d, Audio Out: %d"
-msgstr ""
+msgstr "Fuaim Isteach: %d, Fuaim Amach: %d"
 
 #: src/effects/VST/VSTEffect.cpp
 #, fuzzy
@@ -8814,7 +8752,7 @@ msgstr ""
 #. developed by Steinberg GmbH
 #: src/effects/VST/VSTEffect.h
 msgid "VST"
-msgstr ""
+msgstr "VST"
 
 #: src/effects/Wahwah.cpp
 msgid ""
@@ -8907,7 +8845,7 @@ msgstr "Crapadh an Rogha ón Taobh Clé"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Full"
-msgstr ""
+msgstr "Lán"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
@@ -8916,7 +8854,7 @@ msgstr "Cea&p"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Basic"
-msgstr ""
+msgstr "Bunúsach"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
@@ -8929,22 +8867,21 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp src/export/ExportMP3.cpp
 msgid "Preset"
-msgstr ""
+msgstr "Réamhshocrú"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Import Audio Unit Presets"
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Location"
-msgstr "Gníomh"
+msgstr "Suíomh"
 
 #. i18n-hint: the name of an Apple audio software protocol
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
 msgid "Audio Unit"
-msgstr ""
+msgstr "Aonad Fuaime"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
@@ -9016,17 +8953,17 @@ msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Generator"
-msgstr ""
+msgstr "Gineadóir"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "&Duration:"
-msgstr ""
+msgstr "&Aga:"
 
 #. i18n-hint: abbreviates
 #. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
 #: src/effects/lv2/LV2Effect.h
 msgid "LV2"
-msgstr ""
+msgstr "LV2"
 
 #: src/effects/lv2/LoadLV2.cpp
 #, fuzzy
@@ -9136,9 +9073,8 @@ msgid "nyx_error returned from %s.\n"
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "plug-in"
-msgstr "Aschur Nyquist:"
+msgstr "breiseán"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy, c-format
@@ -9234,7 +9170,7 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
-msgstr ""
+msgstr "&Luchtaigh"
 
 #: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
 #, fuzzy
@@ -9281,9 +9217,8 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Select a file"
-msgstr "Roghnaigh comhad MIDI..."
+msgstr "Roghnaigh comhad"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -9320,11 +9255,11 @@ msgstr ""
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Plugin Settings"
-msgstr ""
+msgstr "Socruithe an Bhreiseáin"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Program"
-msgstr ""
+msgstr "Ríomhchlár"
 
 #. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
@@ -9356,7 +9291,7 @@ msgstr ""
 
 #: src/export/Export.cpp src/export/ExportMultiple.cpp
 msgid "All audio is muted."
-msgstr ""
+msgstr "Tá an fhuaim balbhaithe."
 
 #: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
 #: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
@@ -9438,13 +9373,13 @@ msgstr ""
 #: src/export/Export.cpp
 #, c-format
 msgid "%s - L"
-msgstr ""
+msgstr "%s - C"
 
 #. i18n-hint: track name and R abbreviating Right channel
 #: src/export/Export.cpp
 #, c-format
 msgid "%s - R"
-msgstr ""
+msgstr "%s - D"
 
 #: src/export/Export.cpp
 msgid "Mixer Panel"
@@ -9457,7 +9392,7 @@ msgstr ""
 
 #: src/export/ExportCL.cpp
 msgid "Show output"
-msgstr ""
+msgstr "Taispeáin an t-aschur"
 
 #: src/export/ExportCL.cpp
 #, c-format
@@ -9472,7 +9407,7 @@ msgstr ""
 
 #: src/export/ExportCL.cpp
 msgid "(external program)"
-msgstr ""
+msgstr "(ríomhchlár seachtrach)"
 
 #: src/export/ExportCL.cpp src/export/ExportPCM.cpp
 #, c-format
@@ -9637,7 +9572,7 @@ msgstr ""
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
 #, c-format
 msgid "%i kbps"
-msgstr ""
+msgstr "%i kbps"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
 msgid "Bit Rate:"
@@ -9651,7 +9586,7 @@ msgstr "Caighdeán"
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
 msgid "%.2f kbps"
-msgstr ""
+msgstr "%.2f kbps"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Open custom FFmpeg format options"
@@ -9681,7 +9616,7 @@ msgstr ""
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
 msgid "Preset '%s' does not exist."
-msgstr ""
+msgstr "Ní ann don réamhshocrú '%s'."
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy, c-format
@@ -9690,23 +9625,23 @@ msgstr "'%s' arna athainmniú go '%s'"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "LC"
-msgstr ""
+msgstr "LC"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Main"
-msgstr ""
+msgstr "Príomh"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "LTP"
-msgstr ""
+msgstr "LTP"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "M4A (AAC) Files (FFmpeg)"
-msgstr ""
+msgstr "Comhaid M4A (AAC) (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "AC3 Files (FFmpeg)"
-msgstr ""
+msgstr "Comhaid AC3 (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
@@ -9722,7 +9657,7 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Estimate"
-msgstr ""
+msgstr "Meastúchán"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "2-level"
@@ -9738,7 +9673,7 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Full search"
-msgstr ""
+msgstr "Cuardach iomlán"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Log search"
@@ -9750,11 +9685,11 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Preset:"
-msgstr ""
+msgstr "Réamhshocrú:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Load Preset"
-msgstr ""
+msgstr "Luchtaigh Réamhshocrú"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Import Presets"
@@ -9784,7 +9719,7 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "General Options"
-msgstr ""
+msgstr "Roghanna Coiteann"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Language:"
@@ -9803,11 +9738,11 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VBL"
-msgstr ""
+msgstr "VBL"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Tag:"
-msgstr ""
+msgstr "Clib:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -9826,7 +9761,7 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportOGG.cpp
 msgid "Quality:"
-msgstr ""
+msgstr "Cáilíocht:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -9874,7 +9809,7 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Compression:"
-msgstr ""
+msgstr "Comhbhrú:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -9887,7 +9822,7 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Frame:"
-msgstr ""
+msgstr "Fráma:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -9900,7 +9835,7 @@ msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "LPC"
-msgstr ""
+msgstr "LPC"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -10061,47 +9996,47 @@ msgstr ""
 
 #: src/export/ExportFLAC.cpp
 msgid "0 (fastest)"
-msgstr ""
+msgstr "0 (is tapúla)"
 
 #: src/export/ExportFLAC.cpp
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #: src/export/ExportFLAC.cpp
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: src/export/ExportFLAC.cpp
 msgid "4"
-msgstr ""
+msgstr "4"
 
 #: src/export/ExportFLAC.cpp
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #: src/export/ExportFLAC.cpp
 msgid "6"
-msgstr ""
+msgstr "6"
 
 #: src/export/ExportFLAC.cpp
 msgid "7"
-msgstr ""
+msgstr "7"
 
 #: src/export/ExportFLAC.cpp
 msgid "8 (best)"
-msgstr ""
+msgstr "8 (is fearr)"
 
 #: src/export/ExportFLAC.cpp
 msgid "16 bit"
-msgstr ""
+msgstr "16 bheart"
 
 #: src/export/ExportFLAC.cpp
 msgid "24 bit"
-msgstr ""
+msgstr "24 bheart"
 
 #: src/export/ExportFLAC.cpp
 msgid "Level:"
-msgstr ""
+msgstr "Leibhéal:"
 
 #: src/export/ExportFLAC.cpp
 msgid "Bit depth:"
@@ -10134,7 +10069,7 @@ msgstr "Fuaim roghnaithe á heaspórtáil mar Ogg Vorbis"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
-msgstr ""
+msgstr "Comhaid MP2"
 
 #: src/export/ExportMP2.cpp
 msgid "Cannot export MP2 with this sample rate and bit rate"
@@ -10157,7 +10092,7 @@ msgstr "Fuaim roghnaithe á heaspórtáil mar Ogg Vorbis"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
-msgstr ""
+msgstr "%d kbps"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -10167,7 +10102,7 @@ msgstr ""
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "%s kbps"
-msgstr ""
+msgstr "%s kbps"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -10176,12 +10111,12 @@ msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "Fast"
-msgstr ""
+msgstr "Tapa"
 
 #: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Standard"
-msgstr ""
+msgstr "Caighdeánach"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
@@ -10210,7 +10145,7 @@ msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "Average"
-msgstr ""
+msgstr "Meánach"
 
 #: src/export/ExportMP3.cpp
 msgid "Constant"
@@ -10318,7 +10253,7 @@ msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 Files"
-msgstr ""
+msgstr "Comhaid MP3"
 
 #: src/export/ExportMP3.cpp
 msgid "Could not open MP3 encoding library!"
@@ -10417,16 +10352,15 @@ msgstr "Ionad easportála:"
 
 #: src/export/ExportMultiple.cpp
 msgid "Folder:"
-msgstr ""
+msgstr "Fillteán:"
 
 #: src/export/ExportMultiple.cpp
 msgid "Create"
-msgstr ""
+msgstr "Cruthaigh"
 
 #: src/export/ExportMultiple.cpp
-#, fuzzy
 msgid "Options:"
-msgstr "Socruithe Maisiúcháin"
+msgstr "Roghanna:"
 
 #: src/export/ExportMultiple.cpp
 msgid "Split files based on:"
@@ -10536,7 +10470,7 @@ msgstr ""
 
 #: src/export/ExportOGG.cpp
 msgid "Ogg Vorbis Files"
-msgstr ""
+msgstr "Comhaid Ogg Vorbis"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - rate or quality problem"
@@ -10590,7 +10524,7 @@ msgstr ""
 
 #: src/export/ExportPCM.cpp
 msgid "Header:"
-msgstr ""
+msgstr "Ceanntásc:"
 
 #: src/export/ExportPCM.cpp src/import/ImportRaw.cpp
 #, fuzzy
@@ -10795,7 +10729,7 @@ msgstr ""
 #: src/import/Import.cpp src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s, %s"
-msgstr ""
+msgstr "%s, %s"
 
 #: src/import/Import.cpp
 #, c-format
@@ -10823,7 +10757,7 @@ msgstr ""
 
 #: src/import/ImportFLAC.cpp src/ondemand/ODDecodeFlacTask.cpp
 msgid "FLAC files"
-msgstr ""
+msgstr "Comhaid FLAC"
 
 #: src/import/ImportGStreamer.cpp
 msgid "GStreamer-compatible files"
@@ -10913,11 +10847,11 @@ msgstr "Theip ar oscailt an chomhaid: \"%s\""
 
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
-msgstr ""
+msgstr "Comhaid MP3"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
-msgstr ""
+msgstr "Comhaid Ogg Vorbis"
 
 #: src/import/ImportOGG.cpp
 msgid "Media read error"
@@ -10992,7 +10926,7 @@ msgstr ""
 
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
-msgstr ""
+msgstr "Comhaid QuickTime"
 
 #: src/import/ImportQT.cpp
 msgid "Unable to start QuickTime extraction"
@@ -11070,7 +11004,7 @@ msgstr ""
 
 #: src/import/ImportRaw.cpp
 msgid "Channels:"
-msgstr ""
+msgstr "Bealaí:"
 
 #. i18n-hint: (noun)
 #: src/import/ImportRaw.cpp
@@ -11125,14 +11059,17 @@ msgid "%s %d of %d clip %s"
 msgid_plural "%s %d of %d clips %s"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
 
 #: src/menus/ClipMenus.cpp
 msgid "start"
-msgstr ""
+msgstr "tús"
 
 #: src/menus/ClipMenus.cpp
 msgid "end"
-msgstr ""
+msgstr "críoch"
 
 #. i18n-hint: in the string after this one,
 #. First two %s are each replaced with the noun "start"
@@ -11153,6 +11090,9 @@ msgid "%s %d and %s %d of %d clip %s"
 msgid_plural "%s %d and %s %d of %d clips %s"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
 
 #. i18n-hint: in the string after this one,
 #. first number identifies one of a sequence of clips,
@@ -11168,6 +11108,9 @@ msgid "%d of %d clip %s"
 msgid_plural "%d of %d clips %s"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
@@ -11430,7 +11373,7 @@ msgstr ""
 
 #: src/menus/EditMenus.cpp
 msgid "Pre&ferences..."
-msgstr ""
+msgstr "Sainroghanna..."
 
 #: src/menus/EditMenus.cpp
 #, fuzzy
@@ -11589,12 +11532,12 @@ msgstr "Sábháil Tionscadal M&ar..."
 #. i18n-hint: This is the name of the menu item on Mac OS X only
 #: src/menus/FileMenus.cpp
 msgid "Open Recent"
-msgstr ""
+msgstr "Oscail Le Déanaí"
 
 #. i18n-hint: This is the name of the menu item on Windows and Linux
 #: src/menus/FileMenus.cpp
 msgid "Recent &Files"
-msgstr ""
+msgstr "Comhaid Le Déanaí"
 
 #: src/menus/FileMenus.cpp
 msgid "&Save Project"
@@ -11658,15 +11601,15 @@ msgstr "Easpórtáil &Iomadúil..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Audio..."
-msgstr ""
+msgstr "&Fuaim..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Labels..."
-msgstr ""
+msgstr "&Lipéid..."
 
 #: src/menus/FileMenus.cpp
 msgid "&MIDI..."
-msgstr ""
+msgstr "&MIDI..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Raw Data..."
@@ -11680,12 +11623,12 @@ msgstr "Gléasadh Leathanaigh..."
 #. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
 msgid "&Print..."
-msgstr ""
+msgstr "&Clóbhuail..."
 
 #. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
 msgid "E&xit"
-msgstr ""
+msgstr "&Scoir"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy, c-format
@@ -11699,7 +11642,7 @@ msgstr "Ní fhéidir a aithint"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
-msgstr ""
+msgstr "An bhfuil na fadhbanna seo agat?"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -11736,7 +11679,7 @@ msgstr "Taifeadadh á dhéanamh"
 
 #: src/menus/HelpMenus.cpp
 msgid "Fixed"
-msgstr ""
+msgstr "Deisithe"
 
 #: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
@@ -11753,7 +11696,7 @@ msgstr "Cab&hair"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Getting Started"
-msgstr ""
+msgstr "&Ag tosú"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -11767,7 +11710,7 @@ msgstr "Cab&hair"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Manual..."
-msgstr ""
+msgstr "&Lámhleabhar..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -11795,7 +11738,7 @@ msgstr ""
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
-msgstr ""
+msgstr "&Lorg nuashonruithe..."
 
 #: src/menus/LabelMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "Added label"
@@ -11939,7 +11882,7 @@ msgstr "Fuaim Thaifeadta"
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "&Cut"
-msgstr ""
+msgstr "&Gearr"
 
 #: src/menus/LabelMenus.cpp
 #, fuzzy
@@ -11981,7 +11924,7 @@ msgstr "Tost"
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "Co&py"
-msgstr ""
+msgstr "Cói&peáil"
 
 #: src/menus/LabelMenus.cpp
 #, fuzzy
@@ -12076,7 +12019,7 @@ msgstr ""
 
 #: src/menus/PluginMenus.cpp
 msgid "Unknown"
-msgstr ""
+msgstr "Anaithnid"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy, c-format
@@ -12105,7 +12048,7 @@ msgstr "Déan &Anailís"
 
 #: src/menus/PluginMenus.cpp
 msgid "Contrast..."
-msgstr ""
+msgstr "Codarsnacht..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Plot Spectrum..."
@@ -12223,7 +12166,7 @@ msgstr "Rian Nótaí"
 
 #: src/menus/PluginMenus.cpp
 msgid "Get Info..."
-msgstr ""
+msgstr "Faigh Eolas..."
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
@@ -12266,7 +12209,7 @@ msgstr ""
 
 #: src/menus/SelectMenus.cpp
 msgid "Position"
-msgstr ""
+msgstr "Suíomh"
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Right Selection Boundary"
@@ -12275,11 +12218,11 @@ msgstr ""
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/menus/SelectMenus.cpp
 msgid "&Select"
-msgstr ""
+msgstr "&Roghnaigh"
 
 #: src/menus/SelectMenus.cpp
 msgid "&None"
-msgstr ""
+msgstr "&Dada"
 
 #: src/menus/SelectMenus.cpp
 #, fuzzy
@@ -12288,7 +12231,7 @@ msgstr "Uirlis an Roghnaithe"
 
 #: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
 msgid "&Tracks"
-msgstr ""
+msgstr "&Rianta"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Tracks"
@@ -12304,7 +12247,7 @@ msgstr ""
 
 #: src/menus/SelectMenus.cpp
 msgid "R&egion"
-msgstr ""
+msgstr "R&éigiún"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Left at Playback Position"
@@ -12583,7 +12526,7 @@ msgstr ""
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
-msgstr ""
+msgstr "&Barraí uirlisí"
 
 #. i18n-hint: (verb)
 #: src/menus/ToolbarMenus.cpp
@@ -13255,7 +13198,7 @@ msgstr "Phaser á Fhorchur"
 #. i18n-hint: (verb) Start or Stop audio playback
 #: src/menus/TransportMenus.cpp
 msgid "Pl&ay/Stop"
-msgstr ""
+msgstr "Seinn/Stad"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play/Stop and &Set Cursor"
@@ -13267,7 +13210,7 @@ msgstr ""
 
 #: src/menus/TransportMenus.cpp
 msgid "&Pause"
-msgstr ""
+msgstr "Cuir ar sos é"
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
@@ -13277,7 +13220,7 @@ msgstr "Taifeadadh á dhéanamh"
 #. i18n-hint: (verb)
 #: src/menus/TransportMenus.cpp
 msgid "&Record"
-msgstr ""
+msgstr "Déan Taifeadadh"
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
@@ -13303,11 +13246,11 @@ msgstr ""
 
 #: src/menus/TransportMenus.cpp
 msgid "&Lock"
-msgstr ""
+msgstr "Cuir glas air"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Unlock"
-msgstr ""
+msgstr "&Bain an glas de"
 
 #: src/menus/TransportMenus.cpp
 msgid "R&escan Audio Devices"
@@ -13349,12 +13292,12 @@ msgstr ""
 #. i18n-hint: (verb) Start playing audio
 #: src/menus/TransportMenus.cpp
 msgid "Pl&ay"
-msgstr ""
+msgstr "S&einn"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/menus/TransportMenus.cpp
 msgid "Sto&p"
-msgstr ""
+msgstr "Sta&d"
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
@@ -13492,7 +13435,7 @@ msgstr "Socraigh i bh&Fuinneog"
 
 #: src/menus/ViewMenus.cpp
 msgid "Fit to &Height"
-msgstr ""
+msgstr "Oiriúnaigh don Airde"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Collapse All Tracks"
@@ -13604,7 +13547,7 @@ msgstr ""
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
-msgstr ""
+msgstr "Gléasanna"
 
 #: src/prefs/DevicePrefs.cpp
 #, fuzzy
@@ -13619,7 +13562,7 @@ msgstr "Comhéadan"
 #. i18n-hint: (noun)
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "&Host:"
-msgstr ""
+msgstr "&Óstach:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Using:"
@@ -13653,7 +13596,7 @@ msgstr "Cainéal"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Latency"
-msgstr ""
+msgstr "Aga folaigh"
 
 #: src/prefs/DevicePrefs.cpp
 #, fuzzy
@@ -13676,7 +13619,7 @@ msgstr ""
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "No devices found"
-msgstr ""
+msgstr "Níor aimsíodh aon ghléas"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "1 (Mono)"
@@ -13693,7 +13636,7 @@ msgstr "Comhadlanna"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Preferences for Directories"
-msgstr ""
+msgstr "Sainroghanna do Chomhadlanna"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -13701,7 +13644,7 @@ msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Location:"
-msgstr ""
+msgstr "Suíomh:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Free Space:"
@@ -13709,11 +13652,11 @@ msgstr "Slí ar Fáil:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "C&hoose..."
-msgstr ""
+msgstr "Roghnaigh..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Audio cache"
-msgstr ""
+msgstr "Taisce fuaime"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Play and/or record using &RAM (useful for slow drives)"
@@ -13775,7 +13718,7 @@ msgstr "Roghanna Audacity"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
-msgstr ""
+msgstr "Cumasaigh Maisiúcháin"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
@@ -13789,7 +13732,7 @@ msgstr "&Maisiúchán"
 #. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
 #: src/prefs/EffectsPrefs.cpp
 msgid "LV&2"
-msgstr ""
+msgstr "LV&2"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
 #. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
@@ -13810,7 +13753,7 @@ msgstr ""
 #. developed by Steinberg GmbH
 #: src/prefs/EffectsPrefs.cpp
 msgid "V&ST"
-msgstr ""
+msgstr "V&ST"
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
@@ -13864,7 +13807,7 @@ msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Use SSE/SSE2/.../AVX"
-msgstr ""
+msgstr "&Bain feidhm as SSE/SSE2/.../AVX"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -13907,19 +13850,19 @@ msgstr ""
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Move f&ilter up"
-msgstr ""
+msgstr "Bog an scagaire suas"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Move &filter down"
-msgstr ""
+msgstr "Bog an scagaire síos"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "&Add new rule"
-msgstr ""
+msgstr "Cuir riail &nua leis"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "De&lete selected rule"
-msgstr ""
+msgstr "Scrios an riail roghnaithe"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Unused filters:"
@@ -13991,11 +13934,11 @@ msgstr "-145 dB (réimse PCM de shamplaí 24 giotán)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Local"
-msgstr ""
+msgstr "Logánta"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "From Internet"
-msgstr ""
+msgstr "Ón Idirlíon"
 
 #. i18n-hint: describing the "classic" or traditional appearance of older versions of Audacity
 #: src/prefs/GUIPrefs.cpp
@@ -14005,33 +13948,33 @@ msgstr ""
 #. i18n-hint: Light meaning opposite of dark
 #: src/prefs/GUIPrefs.cpp
 msgid "Light"
-msgstr ""
+msgstr "Geal"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Dark"
-msgstr ""
+msgstr "Dorcha"
 
 #. i18n-hint: greater difference between foreground and background colors
 #: src/prefs/GUIPrefs.cpp
 msgid "High Contrast"
-msgstr ""
+msgstr "Ardchodarsnacht"
 
 #. i18n-hint: user defined
 #: src/prefs/GUIPrefs.cpp
 msgid "Custom"
-msgstr ""
+msgstr "Saincheaptha"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
-msgstr ""
+msgstr "Taispeáin"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "&Language:"
-msgstr ""
+msgstr "&Teanga:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Location of &Manual:"
-msgstr ""
+msgstr "Mar a bhfuil an Lámhleabhar:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
@@ -14073,7 +14016,7 @@ msgstr ""
 #: src/prefs/GUIPrefs.cpp
 #, c-format
 msgid "Language \"%s\" is unknown"
-msgstr ""
+msgstr "Ní fios cé hí an teanga \"%s\""
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Master Gain Control"
@@ -14081,11 +14024,11 @@ msgstr "Rialthóir Máistreach Neartúcháin"
 
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
-msgstr ""
+msgstr "Comhéadan an Úsáideora"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
-msgstr ""
+msgstr "Tabhair isteach/bain amach"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Preferences for ImportExport"
@@ -14175,7 +14118,7 @@ msgstr "&Radharc"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Tree"
-msgstr ""
+msgstr "&Crann"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by tree"
@@ -14192,7 +14135,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Key"
-msgstr ""
+msgstr "&Eochair"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by key"
@@ -14200,7 +14143,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Searc&h:"
-msgstr ""
+msgstr "Cuardac&h:"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Bindings"
@@ -14208,12 +14151,12 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Short cut"
-msgstr ""
+msgstr "Aicearra"
 
 #. i18n-hint: (verb)
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Set"
-msgstr ""
+msgstr "&Socraigh"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
@@ -14225,7 +14168,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp src/prefs/ThemePrefs.cpp
 msgid "&Defaults"
-msgstr ""
+msgstr "Réamhshocruithe"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -14256,7 +14199,7 @@ msgstr ""
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid "%s - %s"
-msgstr ""
+msgstr "%s - %s"
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -14296,7 +14239,7 @@ msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
-msgstr ""
+msgstr "&Aimsigh..."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Download"
@@ -14316,11 +14259,11 @@ msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
-msgstr ""
+msgstr "Leabharlann FFmpeg:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Loca&te..."
-msgstr ""
+msgstr "Aimsigh..."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Dow&nload"
@@ -14338,7 +14281,7 @@ msgstr ""
 
 #: src/prefs/LibraryPrefs.h
 msgid "Library"
-msgstr ""
+msgstr "Leabharlann"
 
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
@@ -14368,7 +14311,7 @@ msgstr ""
 
 #: src/prefs/MidiIOPrefs.h
 msgid "Midi IO"
-msgstr ""
+msgstr "Midi IO"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
@@ -14409,11 +14352,11 @@ msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Ask"
-msgstr ""
+msgstr "Fiafraigh"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
-msgstr ""
+msgstr "Theip air"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "No modules were found"
@@ -14421,15 +14364,15 @@ msgstr ""
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
-msgstr ""
+msgstr "Modúl"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
-msgstr ""
+msgstr "Ctrl"
 
 #: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
 msgid "Mouse"
-msgstr "Luch"
+msgstr "Luchóg"
 
 #: src/prefs/MousePrefs.cpp
 #, fuzzy
@@ -14660,7 +14603,7 @@ msgstr "Fad roghnaithe nua:"
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Cut Preview"
-msgstr ""
+msgstr "Gearr an Réamhamharc"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
@@ -14700,16 +14643,16 @@ msgstr "Roghanna Audacity"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Category"
-msgstr ""
+msgstr "Aicme"
 
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
 msgid "Preferences: "
-msgstr ""
+msgstr "Sainroghanna: "
 
 #. i18n-hint: (noun) i.e Audacity projects.
 #: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
 msgid "Projects"
-msgstr ""
+msgstr "Tionscadail"
 
 #: src/prefs/ProjectsPrefs.cpp
 #, fuzzy
@@ -14730,15 +14673,15 @@ msgstr ""
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "As&k"
-msgstr ""
+msgstr "Fiafraigh"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "16-bit"
-msgstr ""
+msgstr "16-bheart"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "24-bit"
-msgstr ""
+msgstr "24-bheart"
 
 #: src/prefs/QualityPrefs.cpp
 #, fuzzy
@@ -14832,7 +14775,7 @@ msgstr "Rian nua défhónach fuaime arna cheapadh"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "With:"
-msgstr ""
+msgstr "Le:"
 
 #: src/prefs/RecordingPrefs.cpp
 #, fuzzy
@@ -14876,7 +14819,7 @@ msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Within:"
-msgstr ""
+msgstr "Laistigh de:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Analysis Time:"
@@ -14892,7 +14835,7 @@ msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "0 means endless"
-msgstr ""
+msgstr "Ciallaíonn 0 gan chríoch"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Punch and Roll Recording"
@@ -14927,9 +14870,8 @@ msgid "Period"
 msgstr ""
 
 #: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
 msgid "Frequencies"
-msgstr "Minicíocht (Hz):"
+msgstr "Minicíochtí"
 
 #. i18n-hint: the Reassignment algorithm for spectrograms
 #: src/prefs/SpectrogramSettings.cpp
@@ -15001,15 +14943,15 @@ msgstr "Uasmhinicíocht (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Colors"
-msgstr ""
+msgstr "Dathanna"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Gain (dB):"
-msgstr ""
+msgstr "&Neartúchán (dB):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Range (dB):"
-msgstr ""
+msgstr "&Réimse (dB):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
@@ -15021,7 +14963,7 @@ msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Algorithm"
-msgstr ""
+msgstr "&Algartam:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "A&lgorithm"
@@ -15036,13 +14978,12 @@ msgid "8 - most wideband"
 msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "1024 - default"
-msgstr "256 - réamhshocrú"
+msgstr "1024 - réamhshocrú"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "2048"
-msgstr ""
+msgstr "2048"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "32768 - most narrowband"
@@ -15134,7 +15075,7 @@ msgstr ""
 #. themes.
 #: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
-msgstr ""
+msgstr "Téama"
 
 #: src/prefs/ThemePrefs.cpp
 #, fuzzy
@@ -15143,7 +15084,7 @@ msgstr "Roghanna Audacity"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
-msgstr ""
+msgstr "Faisnéis"
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
@@ -15212,7 +15153,7 @@ msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Simple"
-msgstr ""
+msgstr "Simplí"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 #, fuzzy
@@ -15293,11 +15234,11 @@ msgstr "256 - réamhshocrú"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Minutes"
-msgstr ""
+msgstr "Nóiméid"
 
 #: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
 msgid "Seconds"
-msgstr ""
+msgstr "Soicindí"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "5ths of Seconds"
@@ -15328,9 +15269,8 @@ msgid "MilliSeconds"
 msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Samples"
-msgstr "Sampla Arna Bhogadh"
+msgstr "Samplaí"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "4 Pixels per Sample"
@@ -15378,7 +15318,7 @@ msgstr "Ráta Réamhshocraithe Samplaithe:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Display &samples:"
-msgstr ""
+msgstr "Taispeáin &samplaí:"
 
 #: src/prefs/TracksPrefs.cpp
 #, fuzzy
@@ -15407,7 +15347,7 @@ msgstr "Ainm an chéad chomhaid:"
 
 #: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
 msgid "Warnings"
-msgstr ""
+msgstr "Rabhaidh"
 
 #: src/prefs/WarningsPrefs.cpp
 #, fuzzy
@@ -15463,19 +15403,16 @@ msgid "Waveform dB &range"
 msgstr "Tonnchrot (dB)"
 
 #: src/toolbars/ControlToolBar.cpp
-#, fuzzy
 msgid "Playing"
-msgstr "Phaser á Fhorchur"
+msgstr "Ag seinm"
 
 #: src/toolbars/ControlToolBar.cpp
-#, fuzzy
 msgid "Stopped"
-msgstr "Stad"
+msgstr "Stadtha"
 
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
-#, fuzzy
 msgid "Paused"
-msgstr "Sos"
+msgstr "Curtha ar sos"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Pause"
@@ -15495,9 +15432,8 @@ msgid "Loop Play"
 msgstr "Seinnt"
 
 #: src/toolbars/ControlToolBar.cpp
-#, fuzzy
 msgid "Record New Track"
-msgstr "Rian Nua"
+msgstr "Taifead Rian Nua"
 
 #: src/toolbars/ControlToolBar.cpp
 #, fuzzy
@@ -15528,7 +15464,7 @@ msgstr "Taifeadadh á dhéanamh"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Audio Host"
-msgstr ""
+msgstr "Óstach Fuaime"
 
 #: src/toolbars/DeviceToolBar.cpp
 #, fuzzy
@@ -15767,7 +15703,7 @@ msgstr "Bearr comhad go dtí rogha"
 
 #: src/toolbars/SelectionBar.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "Show"
-msgstr ""
+msgstr "Taispeáin"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Snap To"
@@ -15775,7 +15711,7 @@ msgstr ""
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Length"
-msgstr ""
+msgstr "Fad"
 
 #: src/toolbars/SelectionBar.cpp src/widgets/ASlider.cpp
 msgid "Center"
@@ -15867,7 +15803,7 @@ msgstr ""
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Playback Speed"
-msgstr ""
+msgstr "Luas Athsheanma"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Looped-Play-at-Speed"
@@ -15897,9 +15833,8 @@ msgid "Click to edit label text"
 msgstr "Léim go dtí an Tosach"
 
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
-#, fuzzy
 msgid "&Font..."
-msgstr "Cló..."
+msgstr "&Clófhoireann..."
 
 #. i18n-hint: (noun) This is the font for the label track.
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
@@ -15917,9 +15852,8 @@ msgid "Face size"
 msgstr ""
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "&Delete Label"
-msgstr "Scri&os"
+msgstr "Scri&os an Lipéad"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
 #, fuzzy
@@ -16000,9 +15934,8 @@ msgstr "Rian Nótaí"
 #. or present tense is fine here.  If unsure, go for whichever is
 #. shorter.
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
-#, fuzzy
 msgid "Stretch"
-msgstr "Fachtóir meatha:"
+msgstr "Sín"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
@@ -16018,7 +15951,7 @@ msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Merge"
-msgstr ""
+msgstr "Cumaisc"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Expanded Cut Line"
@@ -16027,7 +15960,7 @@ msgstr ""
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Expand"
-msgstr ""
+msgstr "Fairsingigh"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
@@ -16081,56 +16014,55 @@ msgstr "Athrú Formáide"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "8000 Hz"
-msgstr ""
+msgstr "8000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "11025 Hz"
-msgstr ""
+msgstr "11025 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "16000 Hz"
-msgstr ""
+msgstr "16000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "22050 Hz"
-msgstr ""
+msgstr "22050 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "44100 Hz"
-msgstr ""
+msgstr "44100 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "48000 Hz"
-msgstr ""
+msgstr "48000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "88200 Hz"
-msgstr ""
+msgstr "88200 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "96000 Hz"
-msgstr ""
+msgstr "96000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "176400 Hz"
-msgstr ""
+msgstr "176400 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "192000 Hz"
-msgstr ""
+msgstr "192000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "352800 Hz"
-msgstr ""
+msgstr "352800 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "384000 Hz"
-msgstr ""
+msgstr "384000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid "&Other..."
-msgstr "Eile..."
+msgstr "&Eile..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
@@ -16196,9 +16128,8 @@ msgid "&Format"
 msgstr "Athrú Formáide"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid "Rat&e"
-msgstr "Socraigh Ráta"
+msgstr "Luas"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid ""
@@ -16208,7 +16139,7 @@ msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Stop the Audio First"
-msgstr ""
+msgstr "Stad an Fhuaim Ar dTús"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
@@ -16271,14 +16202,14 @@ msgid "Mono, %dHz"
 msgstr "Aonfh.,"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Left, %dHz"
-msgstr "Clé,"
+msgstr "Clé, %dHz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Right, %dHz"
-msgstr "Deas,"
+msgstr "Deas, %dHz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
@@ -16292,7 +16223,7 @@ msgstr "Zúmáil"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Half Wave"
-msgstr ""
+msgstr "Leath-thonn"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change lower speed limit (%) to:"
@@ -16326,7 +16257,7 @@ msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set Display"
-msgstr ""
+msgstr "Socraigh Taispeáint"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track display to logarithmic"
@@ -16355,9 +16286,8 @@ msgid "L&ogarithmic scale"
 msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "&Range..."
-msgstr "Socraigh Réimse..."
+msgstr "&Raon..."
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, fuzzy
@@ -16365,9 +16295,8 @@ msgid "Logarithmic &Interpolation"
 msgstr "Idirlonnú Sinc Thapaidh"
 
 #: src/tracks/ui/CommonTrackControls.cpp
-#, fuzzy
 msgid "&Name..."
-msgstr "Ainm..."
+msgstr "&Ainm..."
 
 #: src/tracks/ui/CommonTrackControls.cpp
 #, fuzzy
@@ -16488,9 +16417,8 @@ msgstr "Cnag is tarraing chun fuaim a roghnú"
 
 #. i18n-hint: These are the names of a menu and a command in that menu
 #: src/tracks/ui/SelectHandle.cpp
-#, fuzzy
 msgid "Edit, Preferences..."
-msgstr "Roghanna Audacity"
+msgstr "Eagar, Sainroghanna..."
 
 #: src/tracks/ui/SelectHandle.cpp
 #, fuzzy, c-format
@@ -16532,7 +16460,7 @@ msgstr "Rianta roghnaithe arna gcur ina dtost ar feadh %.2f soic. ag %.2f"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Collapse"
-msgstr ""
+msgstr "Leacaigh"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
@@ -16540,18 +16468,16 @@ msgid "Command+Click to Unselect"
 msgstr "Gníomh Ordaithe"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Select track"
-msgstr "Rian Nótaí"
+msgstr "Roghnaigh rian"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Ctrl+Click to Unselect"
 msgstr ""
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Open menu..."
-msgstr "&Oscail..."
+msgstr "&Oscail roghchlár..."
 
 #. i18n-hint: Command names a modifier key on Macintosh keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -16561,9 +16487,8 @@ msgstr "Gníomh Ordaithe"
 
 #. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
-#, fuzzy
 msgid "Ctrl-Click"
-msgstr "Cléchnagadh"
+msgstr "Ctrl-Click"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
@@ -16604,7 +16529,7 @@ msgstr "Clé=Zúmáil Isteach, Deas=Zúmáil Amach, Lár=Gnáth"
 
 #: src/widgets/AButton.cpp
 msgid " (disabled)"
-msgstr "(cosctha)"
+msgstr " (díchumasaithe)"
 
 #: src/widgets/AButton.cpp src/widgets/Meter.cpp
 msgid "Press"
@@ -16612,7 +16537,7 @@ msgstr ""
 
 #: src/widgets/AButton.cpp
 msgid "Button"
-msgstr ""
+msgstr "Cnaipe"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
@@ -16630,17 +16555,17 @@ msgstr "D"
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%.0f%% Left"
-msgstr ""
+msgstr "%.0f%% Clé"
 
 #. i18n-hint: Stereo pan setting
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%.0f%% Right"
-msgstr ""
+msgstr "%.0f%% Deas"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
-msgstr ""
+msgstr "&Glan"
 
 #. i18n-hint: A 'Grabber' is a region you can click and drag on
 #. It's used to drag a track around (when in multi-tool mode) rather
@@ -16652,31 +16577,31 @@ msgstr ""
 
 #: src/widgets/Grid.cpp
 msgid "Empty"
-msgstr ""
+msgstr "Folaigh"
 
 #: src/widgets/HelpSystem.cpp
 msgid "<"
-msgstr ""
+msgstr "<"
 
 #: src/widgets/HelpSystem.cpp
 msgid ">"
-msgstr ""
+msgstr ">"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Forwards"
-msgstr ""
+msgstr "Ar aghaidh"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Backwards"
-msgstr ""
+msgstr "Siar"
 
 #: src/widgets/HelpSystem.cpp
 msgid "Help on the Internet"
-msgstr ""
+msgstr "Cabhair ar an Idirlíon"
 
 #: src/widgets/KeyView.cpp
 msgid "Menu"
-msgstr ""
+msgstr "Roghchlár"
 
 #: src/widgets/Meter.cpp
 msgid "Click to Start Monitoring"
@@ -16687,22 +16612,20 @@ msgid "Click for Monitoring"
 msgstr ""
 
 #: src/widgets/Meter.cpp
-#, fuzzy
 msgid "Click to Start"
-msgstr "Léim go dtí an Tosach"
+msgstr "Brúigh chun Tosú"
 
 #: src/widgets/Meter.cpp
-#, fuzzy
 msgid "Click"
-msgstr "Cléchnagadh"
+msgstr "Brúigh"
 
 #: src/widgets/Meter.cpp
 msgid "Stop Monitoring"
-msgstr ""
+msgstr "Stad an Faireachán"
 
 #: src/widgets/Meter.cpp
 msgid "Start Monitoring"
-msgstr ""
+msgstr "Tosaigh an Faireachán"
 
 #: src/widgets/Meter.cpp
 #, fuzzy
@@ -16744,7 +16667,7 @@ msgstr ""
 
 #: src/widgets/Meter.cpp
 msgid "RMS"
-msgstr ""
+msgstr "RMS"
 
 #: src/widgets/Meter.cpp
 msgid "Meter Type"
@@ -16752,21 +16675,19 @@ msgstr ""
 
 #: src/widgets/Meter.cpp
 msgid "Orientation"
-msgstr ""
+msgstr "Treoshuíomh"
 
 #: src/widgets/Meter.cpp plug-ins/crossfadetracks.ny
 msgid "Automatic"
-msgstr ""
+msgstr "Uathoibríoch"
 
 #: src/widgets/Meter.cpp
-#, fuzzy
 msgid "Horizontal"
-msgstr "Défhónach Cothrománach"
+msgstr "Cothrománach"
 
 #: src/widgets/Meter.cpp
-#, fuzzy
 msgid "Vertical"
-msgstr "Socraigh go hIn&gearach"
+msgstr "Ingearach"
 
 #: src/widgets/Meter.cpp
 msgid " Monitoring "
@@ -16774,7 +16695,7 @@ msgstr ""
 
 #: src/widgets/Meter.cpp
 msgid " Active "
-msgstr ""
+msgstr " Gníomhach "
 
 #: src/widgets/Meter.cpp
 #, c-format
@@ -16809,7 +16730,7 @@ msgstr ""
 #. * and seconds
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss"
-msgstr ""
+msgstr "uu:nn:ss"
 
 #. i18n-hint: Format string for displaying time in hours, minutes and
 #. * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -16824,7 +16745,7 @@ msgstr ""
 #. * minutes and seconds
 #: src/widgets/NumericTextCtrl.cpp
 msgid "dd:hh:mm:ss"
-msgstr ""
+msgstr "ll:uu:nn:ss"
 
 #. i18n-hint: Format string for displaying time in days, hours, minutes and
 #. * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
@@ -16886,7 +16807,7 @@ msgstr ""
 #.
 #: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
 msgid "samples"
-msgstr ""
+msgstr "samplaí"
 
 #. i18n-hint: Format string for displaying time in samples (lots of samples).
 #. * Change the ',' to the 1000s separator for your locale, and translate
@@ -17031,17 +16952,17 @@ msgstr ""
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100000.0100 Hz"
-msgstr ""
+msgstr "0100000.0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "kHz"
-msgstr ""
+msgstr "kHz"
 
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000.01000 kHz|0.001"
-msgstr ""
+msgstr "01000.01000 kHz|0.001"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
@@ -17106,11 +17027,11 @@ msgstr ""
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
-msgstr ""
+msgstr "Am Fágtha:"
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Cancel"
-msgstr ""
+msgstr "Cealaigh"
 
 #: src/widgets/ProgressDialog.cpp
 #, fuzzy
@@ -17119,7 +17040,7 @@ msgstr "An bhfuil tú deimhnitheach gur mian leat an comhad a shábháil mar \""
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Confirm Cancel"
-msgstr ""
+msgstr "Deimhnigh an Cealú"
 
 #: src/widgets/ProgressDialog.cpp
 #, fuzzy
@@ -17145,7 +17066,7 @@ msgstr "Ná taispeáin an foláireamh seo arís"
 
 #: src/widgets/numformatter.cpp
 msgid "NaN"
-msgstr ""
+msgstr "NaN"
 
 #: src/widgets/numformatter.cpp
 msgid "Infinity"
@@ -17161,7 +17082,7 @@ msgstr ""
 
 #: src/widgets/valnum.cpp
 msgid "Empty value"
-msgstr ""
+msgstr "Luach folamh"
 
 #: src/widgets/valnum.cpp
 msgid "Malformed number"
@@ -17197,16 +17118,15 @@ msgstr ""
 
 #: src/widgets/valnum.cpp
 msgid "e"
-msgstr ""
+msgstr "e"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
 msgstr ""
 
 #: src/widgets/wxPanelWrapper.h
-#, fuzzy
 msgid "Select a directory"
-msgstr "Tionscadal nua arna cheapadh"
+msgstr "Roghnaigh comhadlann"
 
 #: src/widgets/wxPanelWrapper.h
 #, fuzzy
@@ -17225,7 +17145,7 @@ msgstr ""
 #: src/xml/XMLFileReader.cpp
 #, c-format
 msgid "Could not load file: \"%s\""
-msgstr ""
+msgstr "Níorbh fhéidir an comhad seo a luchtú: \"%s\""
 
 #: plug-ins/SilenceMarker.ny
 #, fuzzy
@@ -17239,7 +17159,7 @@ msgstr "Tost á cheapadh"
 
 #: plug-ins/SilenceMarker.ny
 msgid "Alex S. Brown"
-msgstr ""
+msgstr "Alex S. Brown"
 
 #: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
@@ -17274,9 +17194,8 @@ msgid ""
 msgstr ""
 
 #: plug-ins/SoundFinder.ny
-#, fuzzy
 msgid "Sound Finder"
-msgstr "Tost"
+msgstr "Scagaire Fuaime"
 
 #: plug-ins/SoundFinder.ny
 #, fuzzy
@@ -17285,7 +17204,7 @@ msgstr "Tost á cheapadh"
 
 #: plug-ins/SoundFinder.ny
 msgid "Jeremy R. Brown"
-msgstr ""
+msgstr "Jeremy R. Brown"
 
 #: plug-ins/SoundFinder.ny
 msgid "Minimum duration of silence between sounds [seconds]"
@@ -17321,14 +17240,13 @@ msgstr "Socraigh Pointe an Rogha"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
-#, fuzzy
 msgid "Filtering..."
-msgstr "Á normalú..."
+msgstr "Ag scagadh..."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
 msgid "Paul Licameli"
-msgstr ""
+msgstr "Paul Licameli"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -17487,9 +17405,8 @@ msgid "Handy Presets (override controls)"
 msgstr ""
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "None Selected"
-msgstr "Roghnaigh"
+msgstr "Faic Roghnaithe"
 
 #: plug-ins/adjustable-fade.ny
 #, fuzzy
@@ -17690,9 +17607,8 @@ msgid "Error.~%Select 2 (or more) tracks to crossfade."
 msgstr ""
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Delay"
-msgstr "Céimnigh Amach"
+msgstr "Moill"
 
 #: plug-ins/delay.ny
 #, fuzzy
@@ -17705,9 +17621,8 @@ msgid "Delay type"
 msgstr "Céimnigh Amach"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Regular"
-msgstr "Dronnuilleogach"
+msgstr "Rialta"
 
 #: plug-ins/delay.ny
 msgid "Bouncing Ball"
@@ -17848,7 +17763,7 @@ msgstr "Teaglaim Cnaipí"
 
 #: plug-ins/equalabel.ny
 msgid "Details"
-msgstr ""
+msgstr "Mionsonraí"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -17899,9 +17814,8 @@ msgstr "Asbhaint Fhothraim le Dominic Mazzoni"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
 #: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
-#, fuzzy
 msgid "Frequency (Hz)"
-msgstr "Minicíocht LFO (Hz):"
+msgstr "Minicíocht (Hz):"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "Roll-off (dB per octave)"
@@ -17909,23 +17823,23 @@ msgstr ""
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "6 dB"
-msgstr ""
+msgstr "6 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "12 dB"
-msgstr ""
+msgstr "12 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "24 dB"
-msgstr ""
+msgstr "24 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "36 dB"
-msgstr ""
+msgstr "36 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "48 dB"
-msgstr ""
+msgstr "48 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
 #, fuzzy
@@ -17950,9 +17864,8 @@ msgid "Limiting..."
 msgstr "Á normalú..."
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Type"
-msgstr "Céimnigh Isteach"
+msgstr "Cineál"
 
 #: plug-ins/limiter.ny
 #, fuzzy
@@ -18022,7 +17935,7 @@ msgstr "Phaser á Fhorchur"
 
 #: plug-ins/notch.ny
 msgid "Steve Daulton and Bill Wharrie"
-msgstr ""
+msgstr "Steve Daulton agus Bill Wharrie"
 
 #: plug-ins/notch.ny
 msgid "Q (higher value reduces width)"
@@ -18098,7 +18011,7 @@ msgstr ""
 
 #: plug-ins/pluck.ny
 msgid "David R.Sky"
-msgstr ""
+msgstr "David R.Sky"
 
 #: plug-ins/pluck.ny
 msgid "Pluck MIDI pitch"
@@ -18111,11 +18024,11 @@ msgstr "Céimnigh Amach"
 
 #: plug-ins/pluck.ny
 msgid "Abrupt"
-msgstr ""
+msgstr "Go grod"
 
 #: plug-ins/pluck.ny
 msgid "Gradual"
-msgstr ""
+msgstr "De réir a chéile"
 
 #: plug-ins/pluck.ny
 msgid "Duration (60s max)"
@@ -18153,7 +18066,7 @@ msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid "+/- 1"
-msgstr ""
+msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
@@ -18233,7 +18146,7 @@ msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid "18 - 116"
-msgstr ""
+msgstr "18 - 116"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of weak beat"
@@ -18329,9 +18242,8 @@ msgid "Minimal"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "All"
-msgstr "G&ach Éinní"
+msgstr "Uile"
 
 #: plug-ins/sample-data-export.ny
 msgid "Optional header text"
@@ -18369,7 +18281,7 @@ msgstr "Earráid:"
 #. i18n-hint abbreviates negative infinity
 #: plug-ins/sample-data-export.ny
 msgid "[-inf]"
-msgstr ""
+msgstr "[-inf]"
 
 #: plug-ins/sample-data-export.ny
 #, fuzzy, lisp-format
@@ -18487,9 +18399,8 @@ msgid "Value (linear)"
 msgstr "Líneach"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Value (dB)"
-msgstr "Tonnchrot (dB)"
+msgstr "Luach (dB)"
 
 #: plug-ins/sample-data-export.ny
 msgid "audio sample value analysis"
@@ -18506,14 +18417,12 @@ msgid "Right (linear)"
 msgstr "Líneach"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Left (dB)"
-msgstr "Tonnchrot (dB)"
+msgstr "Clé (dB)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Right (dB)"
-msgstr "Deas,"
+msgstr "Deas (dB)"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -18630,7 +18539,7 @@ msgstr "Earráid le linn oscailt an chomhaid"
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
-msgstr ""
+msgstr "Tremolo"
 
 #: plug-ins/tremolo.ny
 #, fuzzy
@@ -18667,7 +18576,7 @@ msgstr "Phaser á Fhorchur"
 
 #: plug-ins/vocalrediso.ny
 msgid "Robert Haenggi"
-msgstr ""
+msgstr "Robert Haenggi"
 
 #: plug-ins/vocalrediso.ny
 #, fuzzy
@@ -18715,14 +18624,12 @@ msgid "Remove Center Classic: Mono"
 msgstr "Bain Amach Rian"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Analyze"
-msgstr "Déan &Anailís"
+msgstr "Scrúdaigh"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Strength"
-msgstr "go Deireadh an Rogha"
+msgstr "Láidreacht"
 
 #: plug-ins/vocalrediso.ny
 msgid "Low Cut for Vocals (Hz)"
@@ -18814,26 +18721,23 @@ msgstr ""
 
 #: plug-ins/vocoder.ny
 msgid "Edgar-RFT"
-msgstr ""
+msgstr "Edgar-RFT"
 
 #: plug-ins/vocoder.ny
 msgid "Distance: (1 to 120, default = 20)"
 msgstr ""
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Output choice"
-msgstr "Méadar Aschuir"
+msgstr "Rogha aschuir"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Both Channels"
-msgstr "%d (g)C(h)ainéal"
+msgstr "An Dá Bhealach"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Right Only"
-msgstr "Cainéal Deas"
+msgstr "An Deas Amháin"
 
 #: plug-ins/vocoder.ny
 #, fuzzy
