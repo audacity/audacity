@@ -256,7 +256,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                      true});
       S.TieCheckBox(XO("Show Scrub Ruler"),
                     {wxT("/QuickPlay/ScrubbingEnabled"),
-                     true});
+                     false});
    }
    S.EndStatic();
 
