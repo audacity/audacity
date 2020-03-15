@@ -249,6 +249,17 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
+   S.StartStatic(XO("Timeline"));
+   {
+      S.TieCheckBox(XO("Show Timeline Tooltips"),
+                    {wxT("/QuickPlay/ToolTips"),
+                     true});
+      S.TieCheckBox(XO("Show Scrub Ruler"),
+                    {wxT("/QuickPlay/ScrubbingEnabled"),
+                     true});
+   }
+   S.EndStatic();
+
    S.EndScroller();
 }
 

@@ -73,7 +73,7 @@ public:
    void UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown);
 
    bool ShowingScrubRuler() const;
-   void OnToggleScrubRulerFromMenu(wxCommandEvent& );
+   //void OnToggleScrubRulerFromMenu(wxCommandEvent& );
    bool SetPanelSize();
    
    void DrawBothOverlays();
@@ -156,10 +156,11 @@ private:
    void HandleSnapping();
    void OnToggleQuickPlay(wxCommandEvent &evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
-   void OnTimelineToolTips(wxCommandEvent &evt);
+   //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
+   void OnPinnedButton(wxCommandEvent & event);
    void OnTogglePinnedState(wxCommandEvent & event);
 
    bool mPlayRegionDragsSelection;
