@@ -601,6 +601,9 @@ protected:
             // Do not start a drag
             RefreshCode::Cancelled;
       }
+      // Fix for Bug 2357
+      if (!event.event.LeftIsDown())
+         return RefreshCode::Cancelled;
 
       mOrigPreference = TracksPrefs::GetPinnedHeadPositionPreference();
       return 0;
@@ -609,6 +612,7 @@ protected:
    Result Drag
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override
    {
+
       auto value = GetPlayHeadFraction(pProject, event.event.m_x );
       TracksPrefs::SetPinnedHeadPositionPreference( value );
       return RefreshCode::DrawOverlays;
