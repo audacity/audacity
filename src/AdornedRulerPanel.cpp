@@ -1781,10 +1781,9 @@ void AdornedRulerPanel::UpdateButtonStates()
       auto gAudioIO = AudioIO::Get();
       pinButton->SetAlternateIdx(
          (gAudioIO->IsCapturing() ? 2 : 0) + (state ? 0 : 1));
-      // Bug 1584: Toltip now shows what clicking will do.
-      const auto label = state
-      ? XO("Click to unpin")
-      : XO("Click to pin");
+      // Bug 1584: Tooltip now shows what clicking will do.
+      // Bug 2357: Action of button (and hence tooltip wording) updated.
+      const auto label = XO("Timeline Options");
       common(*pinButton, wxT("PinnedHead"), label);
    }
 }
