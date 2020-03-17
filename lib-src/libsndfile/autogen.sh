@@ -147,13 +147,13 @@ fi
 echo "Generating configuration files for $package, please wait ... "
 
 echo "  $ACLOCAL $ACLOCAL_FLAGS"
-$ACLOCAL $ACLOCAL_FLAGS || exit 1
+$ACLOCAL $ACLOCAL_FLAGS -Im4 --install || exit 1
 echo "  $LIBTOOLIZE --automake --force"
-$LIBTOOLIZE --automake --force || exit 1
+$LIBTOOLIZE --automake --force --copy --install || exit 1
 echo "  autoheader"
 autoheader || exit 1
 echo "  $AUTOMAKE --add-missing $AUTOMAKE_FLAGS"
-$AUTOMAKE --add-missing $AUTOMAKE_FLAGS || exit 1
+$AUTOMAKE --add-missing $AUTOMAKE_FLAGS --copy || exit 1
 echo "  autoconf"
 autoconf || exit 1
 

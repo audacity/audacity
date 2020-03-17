@@ -33,6 +33,10 @@ AC_CONFIG_HEADERS([src/config.h])
 AM_INIT_AUTOMAKE([1.14 foreign dist-bzip2 no-dist-gzip serial-tests subdir-objects])
 AM_SILENT_RULES([yes])
 
+dnl Audacity policy: don't enable automatic rebuild of configure et al if 
+dnl sources change
+AM_MAINTAINER_MODE([disable])
+
 dnl ====================================================================================
 
 AC_PROG_CC
