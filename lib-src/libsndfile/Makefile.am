@@ -37,9 +37,9 @@ checkprograms: $(check_PROGRAMS)
 # src/ #
 ########
 
-BUILT_SOURCES = src/test_endswap.c
+#BUILT_SOURCES = src/test_endswap.c
 
-SYMBOL_FILES = src/Symbols.gnu-binutils src/Symbols.darwin src/libsndfile-1.def src/Symbols.os2 src/Symbols.static
+#SYMBOL_FILES = src/Symbols.gnu-binutils src/Symbols.darwin src/libsndfile-1.def src/Symbols.os2 src/Symbols.static
 
 EXTRA_DIST += src/sndfile.h.in src/config.h.in src/test_endswap.tpl src/test_endswap.def \
 	$(SYMBOL_FILES) src/create_symbols_file.py src/binheader_writef_check.py \
@@ -220,16 +220,16 @@ check_PROGRAMS += tests/sfversion tests/floating_point_test tests/write_read_tes
 	tests/channel_test tests/long_read_write_test tests/stdin_test tests/stdout_test \
 	tests/dither_test tests/fix_this tests/largefile_test tests/benchmark tests/ogg_opus_test
 
-BUILT_SOURCES += \
-	tests/write_read_test.c \
-	tests/pcm_test.c \
-	tests/header_test.c \
-	tests/utils.c \
-	tests/scale_clip_test.c \
-	tests/pipe_test.c \
-	tests/rdwr_test.c \
-	tests/floating_point_test.c \
-	tests/benchmark.c
+#BUILT_SOURCES += \
+#	tests/write_read_test.c \
+#	tests/pcm_test.c \
+#	tests/header_test.c \
+#	tests/utils.c \
+#	tests/scale_clip_test.c \
+#	tests/pipe_test.c \
+#	tests/rdwr_test.c \
+#	tests/floating_point_test.c \
+#	tests/benchmark.c
 
 EXTRA_DIST += $(BUILT_SOURCES) \
 	tests/write_read_test.tpl     tests/write_read_test.def \

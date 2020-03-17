@@ -523,10 +523,10 @@ AS_IF([test "x$ac_cv_sizeof_double" != "x8"], [
 		AC_MSG_WARN([[******************************************************************]])
 	])
 
-AS_IF([test "x$ac_cv_prog_HAVE_AUTOGEN" = "xno"], [
-		AC_MSG_WARN([[Touching files in directory tests/.]])
-		touch tests/*.c tests/*.h
-	])
+#AS_IF([test "x$ac_cv_prog_HAVE_AUTOGEN" = "xno"], [
+#		AC_MSG_WARN([[Touching files in directory tests/.]])
+#		touch tests/*.c tests/*.h
+#	])
 
 dnl ====================================================================================
 dnl  Settings for the HTML documentation.

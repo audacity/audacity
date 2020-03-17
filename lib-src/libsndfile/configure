@@ -23006,13 +23006,10 @@ $as_echo "$as_me: WARNING: *****************************************************
 
 fi
 
-if test "x$ac_cv_prog_HAVE_AUTOGEN" = "xno"; then :
-
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Touching files in directory tests/." >&5
-$as_echo "$as_me: WARNING: Touching files in directory tests/." >&2;}
-		touch tests/*.c tests/*.h
-
-fi
+#AS_IF([test "x$ac_cv_prog_HAVE_AUTOGEN" = "xno"], [
+#		AC_MSG_WARN([[Touching files in directory tests/.]])
+#		touch tests/*.c tests/*.h
+#	])
 
 
 if test "x$enable_bow_docs" = "xyes"; then :

@@ -1036,6 +1036,25 @@ AM_CPPFLAGS = -I$(top_srcdir)/src $(OS_SPECIFIC_CFLAGS)
 DISTCHECK_CONFIGURE_FLAGS = --enable-werror
 CLEANFILES = programs/*.wav octave-workspace
 @BUILD_OCTAVE_MOD_TRUE@@FULL_SUITE_TRUE@SUBDIRS = Octave
+
+########
+# src/ #
+########
+
+#BUILT_SOURCES = src/test_endswap.c
+
+#SYMBOL_FILES = src/Symbols.gnu-binutils src/Symbols.darwin src/libsndfile-1.def src/Symbols.os2 src/Symbols.static
+
+#BUILT_SOURCES += \
+#	tests/write_read_test.c \
+#	tests/pcm_test.c \
+#	tests/header_test.c \
+#	tests/utils.c \
+#	tests/scale_clip_test.c \
+#	tests/pipe_test.c \
+#	tests/rdwr_test.c \
+#	tests/floating_point_test.c \
+#	tests/benchmark.c
 EXTRA_DIST = libsndfile.spec.in sndfile.pc.in \
 	Scripts/android-configure.sh \
 	Scripts/linux-to-win-cross-configure.sh CMakeLists.txt \
@@ -1063,15 +1082,6 @@ cmake_files = cmake/ClipMode.cmake cmake/FindFLAC.cmake \
 	cmake/FindOpus.cmake cmake/SndFileConfig.cmake.in
 
 pkgconfig_DATA = sndfile.pc
-
-########
-# src/ #
-########
-BUILT_SOURCES = src/test_endswap.c tests/write_read_test.c \
-	tests/pcm_test.c tests/header_test.c tests/utils.c \
-	tests/scale_clip_test.c tests/pipe_test.c tests/rdwr_test.c \
-	tests/floating_point_test.c tests/benchmark.c
-SYMBOL_FILES = src/Symbols.gnu-binutils src/Symbols.darwin src/libsndfile-1.def src/Symbols.os2 src/Symbols.static
 @USE_WIN_VERSION_FILE_FALSE@WIN_VERSION_FILE = 
 @USE_WIN_VERSION_FILE_TRUE@WIN_VERSION_FILE = src/version-metadata.rc
 
@@ -1307,8 +1317,7 @@ programs_sndfile_salvage_LDADD = src/libsndfile.la
 regtest_sndfile_regtest_SOURCES = regtest/regtest.h regtest/sndfile-regtest.c regtest/database.c regtest/checksum.c
 regtest_sndfile_CPPFLAGS = -I$(top_srcdir)/src $(SQLITE3_CFLAGS) $(OS_SPECIFIC_CFLAGS)
 regtest_sndfile_regtest_LDADD = src/libsndfile.la $(SQLITE3_LIBS)
-all: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+all: all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .tpl .def .c .cc .lo .o .obj .rc
@@ -3338,8 +3347,7 @@ distcleancheck: distclean
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
-check: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) check-recursive
+check: check-recursive
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(MANS) $(DATA) $(HEADERS)
 install-binPROGRAMS: install-libLTLIBRARIES
 
@@ -3348,8 +3356,7 @@ installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(htmldir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(includedir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) install-recursive
+install: install-recursive
 install-exec: install-exec-recursive
 install-data: install-data-recursive
 uninstall: uninstall-recursive
@@ -3396,7 +3403,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 @LINUX_MINGW_CROSS_TEST_FALSE@clean-local:
 clean: clean-recursive
 
@@ -3480,8 +3486,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_htmlDATA \
 
 uninstall-man: uninstall-man1
 
-.MAKE: $(am__recursive_targets) all check check-am install install-am \
-	install-strip
+.MAKE: $(am__recursive_targets) check-am install-am install-strip
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
 	am--refresh check check-TESTS check-am clean clean-binPROGRAMS \
