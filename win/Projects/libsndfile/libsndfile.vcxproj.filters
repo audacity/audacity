@@ -13,6 +13,9 @@
     <Filter Include="GSM610">
       <UniqueIdentifier>{2cad7ca6-3c19-4826-92a6-85991bd4379a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ALAC">
+      <UniqueIdentifier>{b18afb64-0961-4ad3-8905-24326c58576b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\aiff.c">
@@ -93,9 +96,6 @@
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\ircam.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\libsndfile\src\macbinary3.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\macos.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -168,9 +168,6 @@
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\wav.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\libsndfile\src\wav_w64.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\wve.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -234,6 +231,63 @@
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\table.c">
       <Filter>GSM610</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\ag_dec.c">
+      <Filter>ALAC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\ag_enc.c">
+      <Filter>ALAC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\alac_decoder.c">
+      <Filter>ALAC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\alac_encoder.c">
+      <Filter>ALAC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\ALACBitUtilities.c">
+      <Filter>ALAC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\dp_dec.c">
+      <Filter>ALAC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\dp_enc.c">
+      <Filter>ALAC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\matrix_dec.c">
+      <Filter>ALAC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\matrix_enc.c">
+      <Filter>ALAC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\alac.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\cart.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\nms_adpcm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg_opus.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg_pcm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg_speex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg_vcomment.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg_vorbis.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\wavlike.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\windows.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib-src\libsndfile\src\chanmap.h">
@@ -277,6 +331,48 @@
     </ClInclude>
     <ClInclude Include="..\..\..\lib-src\libsndfile\src\GSM610\gsm610_priv.h">
       <Filter>GSM610</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\aglib.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\alac_codec.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\alac_decoder.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\ALACAudioTypes.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\ALACBitUtilities.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\ALACDecoder.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\ALACEncoder.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\dplib.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\EndianPortable.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\matrixlib.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\shift.h">
+      <Filter>ALAC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ogg.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ogg_vcomment.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\wavlike.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

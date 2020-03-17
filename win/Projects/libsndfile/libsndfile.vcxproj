@@ -78,12 +78,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\aiff.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\alac.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\ag_dec.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\ag_enc.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\ALACBitUtilities.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\alac_decoder.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\alac_encoder.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\dp_dec.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\dp_enc.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\matrix_dec.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ALAC\matrix_enc.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\alaw.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\au.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\audio_detect.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\avr.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\broadcast.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\caf.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\cart.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\chanmap.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\chunk.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\command.c" />
@@ -103,14 +114,19 @@
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\ima_oki_adpcm.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\interleave.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\ircam.c" />
-    <ClCompile Include="..\..\..\lib-src\libsndfile\src\macbinary3.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\macos.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\mat4.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\mat5.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\mpc2k.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\ms_adpcm.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\nist.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\nms_adpcm.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg_opus.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg_pcm.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg_speex.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg_vcomment.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg_vorbis.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\paf.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\pcm.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\pvf.c" />
@@ -128,7 +144,8 @@
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\vox_adpcm.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\w64.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\wav.c" />
-    <ClCompile Include="..\..\..\lib-src\libsndfile\src\wav_w64.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\wavlike.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\windows.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\wve.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\xi.c" />
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\G72x\g721.c" />
@@ -155,8 +172,22 @@
     <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\table.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\aglib.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\ALACAudioTypes.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\ALACBitUtilities.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\ALACDecoder.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\ALACEncoder.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\alac_codec.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\alac_decoder.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\dplib.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\EndianPortable.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\matrixlib.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ALAC\shift.h" />
     <ClInclude Include="..\..\..\lib-src\libsndfile\src\chanmap.h" />
     <ClInclude Include="..\..\..\lib-src\libsndfile\src\common.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ogg.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ogg_vcomment.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\wavlike.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="..\..\..\lib-src\libsndfile\src\ima_oki_adpcm.h" />
     <ClInclude Include="..\..\..\lib-src\libsndfile\src\sf_unistd.h" />
