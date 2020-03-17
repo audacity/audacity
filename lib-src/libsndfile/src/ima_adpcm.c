@@ -322,11 +322,10 @@ count ++ ;
 
 static int
 aiff_ima_encode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
-{	int		chan, k, step, diff, vpdiff, blockindx, indx, nib ;
+{	int		chan, k, step, diff, vpdiff, blockindx, indx ;
 	short	bytecode, mask ;
 
 	k = 0;
-	nib = 0;
 	for (chan = 0 ; chan < pima->channels ; chan ++)
 	{	blockindx = chan * pima->blocksize ;
 		/* Encode the block header. */
@@ -334,8 +333,8 @@ aiff_ima_encode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
 		pima->block [blockindx++] = (pima->previous [chan] & 0x80) + (pima->stepindx [chan] & 0x7F) ;
 
 		/* Encode the samples as 4 bit. */
-		for (indx = 0 ; indx < pima->samplesperblock ; indx ++)
-		{	diff = pima->samples [k++] - pima->previous [chan] ;
+		for (indx = chan ; indx < pima->samplesperblock * pima->channels ; indx += pima->channels)
+		{	diff = pima->samples [indx] - pima->previous [chan] ;
 
 			bytecode = 0 ;
 			step = ima_step_size [pima->stepindx [chan]] ;
@@ -367,9 +366,9 @@ aiff_ima_encode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
 			pima->stepindx [chan] += ima_indx_adjust [bytecode] ;
 
 			pima->stepindx [chan] = clamp_ima_step_index (pima->stepindx [chan]) ;
-			pima->block [blockindx] = (bytecode << (4 * nib)) | pima->block [blockindx];
-			blockindx += nib ;
-			nib = 1 - nib ;
+			pima->block [blockindx] = (bytecode << (4 * k)) | pima->block [blockindx];
+			blockindx += k ;
+			k = 1 - k ;
 			} ;
 		} ;
 
@@ -813,7 +812,7 @@ ima_writer_init (SF_PRIVATE *psf, int blockalign)
 				break ;
 
 		case SF_FORMAT_AIFF :
-				samplesperblock = 2 * (blockalign - 2 * psf->sf.channels) / psf->sf.channels ;
+				samplesperblock = 2 * ((blockalign - 2) * psf->sf.channels) / psf->sf.channels ;
 				break ;
 
 		default :
