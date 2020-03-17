@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -81,8 +81,8 @@ typedef	struct
 {	int		dataoffset ;
 	int		datasize ;
 	int		encoding ;
-    int		samplerate ;
-    int		channels ;
+	int		samplerate ;
+	int		channels ;
 } AU_FMT ;
 
 
@@ -211,8 +211,6 @@ au_write_header (SF_PRIVATE *psf, int calc_length)
 		psf->datalength = psf->filelength - psf->dataoffset ;
 		if (psf->dataend)
 			psf->datalength -= psf->filelength - psf->dataend ;
-
-		psf->sf.frames = psf->datalength / (psf->bytewidth * psf->sf.channels) ;
 		} ;
 
 	encoding = au_format_to_encoding (SF_CODEC (psf->sf.format)) ;
@@ -220,8 +218,8 @@ au_write_header (SF_PRIVATE *psf, int calc_length)
 		return (psf->error = SFE_BAD_OPEN_FORMAT) ;
 
 	/* Reset the current header length to zero. */
-	psf->header [0] = 0 ;
-	psf->headindex = 0 ;
+	psf->header.ptr [0] = 0 ;
+	psf->header.indx = 0 ;
 
 	/*
 	** Only attempt to seek if we are not writng to a pipe. If we are
@@ -241,23 +239,23 @@ au_write_header (SF_PRIVATE *psf, int calc_length)
 		datalength = (int) (psf->datalength & 0x7FFFFFFF) ;
 
 	if (psf->endian == SF_ENDIAN_BIG)
-	{	psf_binheader_writef (psf, "Em4", DOTSND_MARKER, AU_DATA_OFFSET) ;
-		psf_binheader_writef (psf, "E4444", datalength, encoding, psf->sf.samplerate, psf->sf.channels) ;
+	{	psf_binheader_writef (psf, "Em4", BHWm (DOTSND_MARKER), BHW4 (AU_DATA_OFFSET)) ;
+		psf_binheader_writef (psf, "E4444", BHW4 (datalength), BHW4 (encoding), BHW4 (psf->sf.samplerate), BHW4 (psf->sf.channels)) ;
 		}
 	else if (psf->endian == SF_ENDIAN_LITTLE)
-	{	psf_binheader_writef (psf, "em4", DNSDOT_MARKER, AU_DATA_OFFSET) ;
-		psf_binheader_writef (psf, "e4444", datalength, encoding, psf->sf.samplerate, psf->sf.channels) ;
+	{	psf_binheader_writef (psf, "em4", BHWm (DNSDOT_MARKER), BHW4 (AU_DATA_OFFSET)) ;
+		psf_binheader_writef (psf, "e4444", BHW4 (datalength), BHW4 (encoding), BHW4 (psf->sf.samplerate), BHW4 (psf->sf.channels)) ;
 		}
 	else
 		return (psf->error = SFE_BAD_OPEN_FORMAT) ;
 
 	/* Header construction complete so write it out. */
-	psf_fwrite (psf->header, psf->headindex, 1, psf) ;
+	psf_fwrite (psf->header.ptr, psf->header.indx, 1, psf) ;
 
 	if (psf->error)
 		return psf->error ;
 
-	psf->dataoffset = psf->headindex ;
+	psf->dataoffset = psf->header.indx ;
 
 	if (current > 0)
 		psf_fseek (psf, current, SEEK_SET) ;
@@ -439,8 +437,12 @@ au_read_header (SF_PRIVATE *psf)
 	{	psf_log_printf (psf, "  Channels    : %d  **** should be >= 1\n", au_fmt.channels) ;
 		return SFE_CHANNEL_COUNT_ZERO ;
 		}
-	else
-		psf_log_printf (psf, "  Channels    : %d\n", au_fmt.channels) ;
+	else if (au_fmt.channels > SF_MAX_CHANNELS)
+	{	psf_log_printf (psf, "  Channels    : %d  **** should be <= %d\n", au_fmt.channels, SF_MAX_CHANNELS) ;
+		return SFE_CHANNEL_COUNT ;
+		} ;
+
+	psf_log_printf (psf, "  Channels    : %d\n", au_fmt.channels) ;
 
 	psf->blockwidth = psf->sf.channels * psf->bytewidth ;
 

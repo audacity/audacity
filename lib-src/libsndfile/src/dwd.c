@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2012 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -69,7 +69,7 @@ static int	dwd_close		(SF_PRIVATE *psf) ;
 
 int
 dwd_open (SF_PRIVATE *psf)
-{	int	subformat, error = 0 ;
+{	int	error = 0 ;
 
 	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = dwd_read_header (psf)))
@@ -78,8 +78,6 @@ dwd_open (SF_PRIVATE *psf)
 
 	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_DWD)
 		return	SFE_BAD_OPEN_FORMAT ;
-
-	subformat = SF_CODEC (psf->sf.format) ;
 
 	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{
@@ -124,16 +122,17 @@ typedef struct
 
 static int
 dwd_read_header (SF_PRIVATE *psf)
-{	DWD_HEADER	dwdh ;
+{	BUF_UNION	ubuf ;
+	DWD_HEADER	dwdh ;
 
-	memset (psf->u.cbuf, 0, sizeof (psf->u.cbuf)) ;
+	memset (ubuf.cbuf, 0, sizeof (ubuf.cbuf)) ;
 	/* Set position to start of file to begin reading header. */
-	psf_binheader_readf (psf, "pb", 0, psf->u.cbuf, DWD_IDENTIFIER_LEN) ;
+	psf_binheader_readf (psf, "pb", 0, ubuf.cbuf, DWD_IDENTIFIER_LEN) ;
 
-	if (memcmp (psf->u.cbuf, DWD_IDENTIFIER, DWD_IDENTIFIER_LEN) != 0)
+	if (memcmp (ubuf.cbuf, DWD_IDENTIFIER, DWD_IDENTIFIER_LEN) != 0)
 		return SFE_DWD_NO_DWD ;
 
-	psf_log_printf (psf, "Read only : DiamondWare Digitized (.dwd)\n", psf->u.cbuf) ;
+	psf_log_printf (psf, "Read only : DiamondWare Digitized (.dwd)\n", ubuf.cbuf) ;
 
 	psf_binheader_readf (psf, "11", &dwdh.major, &dwdh.minor) ;
 	psf_binheader_readf (psf, "e4j1", &dwdh.id, 1, &dwdh.compression) ;
@@ -152,9 +151,9 @@ dwd_read_header (SF_PRIVATE *psf)
 	else
 		psf_log_printf (psf, "None\n") ;
 
-	psf_log_printf (psf, "  Sample Rate   : %d\n  Channels      : %d\n"
-						 "  Bit Width     : %d\n",
-						 dwdh.srate, dwdh.channels, dwdh.bitwidth) ;
+	psf_log_printf (psf,	"  Sample Rate   : %d\n  Channels      : %d\n"
+							"  Bit Width     : %d\n",
+						dwdh.srate, dwdh.channels, dwdh.bitwidth) ;
 
 	switch (dwdh.bitwidth)
 	{	case 8 :

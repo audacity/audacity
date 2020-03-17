@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2008-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2008-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -44,19 +44,19 @@ checksum_orig [] =
 {
 	{	SF_FORMAT_RAW | SF_FORMAT_ULAW,
 		"checksum.ulaw", "cksum_ulaw.pcm16",
-		0x33aefae029e0c888LL, 0x595cd6e47edd0cffLL
+		0xbd99d34ccbe2fLL, 0xda82168ed82e9LL
 		},
 	{	SF_FORMAT_RAW | SF_FORMAT_ALAW,
 		"checksum.alaw", "cksum_alaw.pcm16",
-		0x48c798da3572d468LL, 0x6837d74869af5bb6LL
+		0x0004afddc0fcf4bdLL, 0x2e7320230b88LL
 		},
 	{	SF_FORMAT_RAW | SF_FORMAT_GSM610,
 		"checksum.gsm", "cksum_gsm.pcm16",
-		0x1b1f64ff2acf858fLL, 0x504179dbadd4bce6LL
+		0xa06a3faaaf684LL, 0x2d7ff668efeb9LL
 		},
 	{	SF_FORMAT_RAW | SF_FORMAT_VOX_ADPCM,
 		"checksum.vox", "cksum_vox.pcm16",
-		0xf1147fb3a298f4dfLL, 0xfc9c0cb8b12cb0abLL
+		0x7c9d7afdb96a1LL, 0xe540df74a4b14LL
 		},
 } ;
 
@@ -87,6 +87,7 @@ checksum_test (const CHECKSUM * cksum)
 
 	print_test_name (__func__, cksum->enc_name) ;
 
+	memset (&info, 0, sizeof (info)) ;
 	info.format = cksum->enc_fmt ;
 	info.channels = 1 ;
 	info.samplerate	= SAMPLE_RATE ;

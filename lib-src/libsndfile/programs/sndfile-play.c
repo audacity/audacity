@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2018 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -39,6 +39,8 @@
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
+#else
+#include "sf_unistd.h"
 #endif
 
 #include <sndfile.h>
@@ -52,16 +54,14 @@
 	#include <sys/time.h>
 #endif
 
-#if defined (__linux__) || defined (__FreeBSD_kernel__) || defined (__FreeBSD__)
+#if defined (__ANDROID__)
+
+#elif defined (__linux__) || defined (__FreeBSD_kernel__) || defined (__FreeBSD__)
 	#include 	<fcntl.h>
 	#include 	<sys/ioctl.h>
 	#include 	<sys/soundcard.h>
 
-#elif (defined (__MACH__) && defined (__APPLE__))
-	#include <Carbon.h>
-	#include <CoreAudio/AudioHardware.h>
-
-#elif defined (HAVE_SNDIO_H)
+#elif HAVE_SNDIO_H
 	#include <sndio.h>
 
 #elif (defined (sun) && defined (unix))
@@ -119,10 +119,10 @@ alsa_play (int argc, char *argv [])
 			int 	m ;
 
 			sf_command (sndfile, SFC_CALC_SIGNAL_MAX, &scale, sizeof (scale)) ;
-			if (scale < 1e-10)
-				scale = 1.0 ;
+			if (scale > 1.0)
+				scale = 1.0 / scale ;
 			else
-				scale = 32700.0 / scale ;
+				scale = 1.0 ;
 
 			while ((readcount = sf_read_float (sndfile, buffer, BUFFER_LEN)))
 			{	for (m = 0 ; m < readcount ; m++)
@@ -353,11 +353,11 @@ alsa_write_float (snd_pcm_t *alsa_dev, float *data, int frames, int channels)
 **	Linux/OSS functions for playing a sound.
 */
 
-#if defined (__linux__) || defined (__FreeBSD_kernel__) || defined (__FreeBSD__)
+#if !defined (__ANDROID__) && (defined (__linux__) || defined (__FreeBSD_kernel__) || defined (__FreeBSD__))
 
 static	int	opensoundsys_open_device (int channels, int srate) ;
 
-static void
+static int
 opensoundsys_play (int argc, char *argv [])
 {	static short buffer [BUFFER_LEN] ;
 	SNDFILE *sndfile ;
@@ -415,7 +415,7 @@ opensoundsys_play (int argc, char *argv [])
 		sf_close (sndfile) ;
 		} ;
 
-	return ;
+	return writecount ;
 } /* opensoundsys_play */
 
 static int
@@ -444,7 +444,7 @@ opensoundsys_open_device (int channels, int srate)
 	if (ioctl (fd, SNDCTL_DSP_SETFMT, &fmt) != 0)
 	{	perror ("opensoundsys_open_device : set format ") ;
 		exit (1) ;
-  		} ;
+		} ;
 
 	if (ioctl (fd, SNDCTL_DSP_CHANNELS, &channels) != 0)
 	{	perror ("opensoundsys_open_device : channels ") ;
@@ -470,182 +470,19 @@ opensoundsys_open_device (int channels, int srate)
 **	Mac OS X functions for playing a sound.
 */
 
-#if (defined (__MACH__) && defined (__APPLE__)) /* MacOSX */
-
-typedef struct
-{	AudioStreamBasicDescription		format ;
-
-	UInt32 			buf_size ;
-	AudioDeviceID 	device ;
-
-	SNDFILE 		*sndfile ;
-	SF_INFO 		sfinfo ;
-
-	int				fake_stereo ;
-	int				done_playing ;
-} MacOSXAudioData ;
-
-#include <math.h>
-
-static OSStatus
-macosx_audio_out_callback (AudioDeviceID device, const AudioTimeStamp* current_time,
-	const AudioBufferList* data_in, const AudioTimeStamp* time_in,
-	AudioBufferList*	data_out, const AudioTimeStamp* time_out,
-	void* client_data)
-{	MacOSXAudioData	*audio_data ;
-	int		size, sample_count, read_count, k ;
-	float	*buffer ;
-
-	/* Prevent compiler warnings. */
-	device = device ;
-	current_time = current_time ;
-	data_in = data_in ;
-	time_in = time_in ;
-	time_out = time_out ;
-
-	audio_data = (MacOSXAudioData*) client_data ;
-
-	size = data_out->mBuffers [0].mDataByteSize ;
-	sample_count = size / sizeof (float) ;
-
-	buffer = (float*) data_out->mBuffers [0].mData ;
-
-	if (audio_data->fake_stereo != 0)
-	{	read_count = sf_read_float (audio_data->sndfile, buffer, sample_count / 2) ;
-
-		for (k = read_count - 1 ; k >= 0 ; k--)
-		{	buffer [2 * k	] = buffer [k] ;
-			buffer [2 * k + 1] = buffer [k] ;
-			} ;
-		read_count *= 2 ;
-		}
-	else
-		read_count = sf_read_float (audio_data->sndfile, buffer, sample_count) ;
-
-	/* Fill the remainder with zeroes. */
-	if (read_count < sample_count)
-	{	if (audio_data->fake_stereo == 0)
-			memset (&(buffer [read_count]), 0, (sample_count - read_count) * sizeof (float)) ;
-		/* Tell the main application to terminate. */
-		audio_data->done_playing = SF_TRUE ;
-		} ;
-
-	return noErr ;
-} /* macosx_audio_out_callback */
-
-static void
-macosx_play (int argc, char *argv [])
-{	MacOSXAudioData 	audio_data ;
-	OSStatus	err ;
-	UInt32		count, buffer_size ;
-	int 		k ;
-
-	audio_data.fake_stereo = 0 ;
-	audio_data.device = kAudioDeviceUnknown ;
-
-	/*  get the default output device for the HAL */
-	count = sizeof (AudioDeviceID) ;
-	if ((err = AudioHardwareGetProperty (kAudioHardwarePropertyDefaultOutputDevice,
-				&count, (void *) &(audio_data.device))) != noErr)
-	{	printf ("AudioHardwareGetProperty (kAudioDevicePropertyDefaultOutputDevice) failed.\n") ;
-		return ;
-		} ;
-
-	/*  get the buffersize that the default device uses for IO */
-	count = sizeof (UInt32) ;
-	if ((err = AudioDeviceGetProperty (audio_data.device, 0, false, kAudioDevicePropertyBufferSize,
-				&count, &buffer_size)) != noErr)
-	{	printf ("AudioDeviceGetProperty (kAudioDevicePropertyBufferSize) failed.\n") ;
-		return ;
-		} ;
-
-	/*  get a description of the data format used by the default device */
-	count = sizeof (AudioStreamBasicDescription) ;
-	if ((err = AudioDeviceGetProperty (audio_data.device, 0, false, kAudioDevicePropertyStreamFormat,
-				&count, &(audio_data.format))) != noErr)
-	{	printf ("AudioDeviceGetProperty (kAudioDevicePropertyStreamFormat) failed.\n") ;
-		return ;
-		} ;
-
-	/* Base setup completed. Now play files. */
-	for (k = 1 ; k < argc ; k++)
-	{	printf ("Playing %s\n", argv [k]) ;
-		if (! (audio_data.sndfile = sf_open (argv [k], SFM_READ, &(audio_data.sfinfo))))
-		{	puts (sf_strerror (NULL)) ;
-			continue ;
-			} ;
-
-		if (audio_data.sfinfo.channels < 1 || audio_data.sfinfo.channels > 2)
-		{	printf ("Error : channels = %d.\n", audio_data.sfinfo.channels) ;
-			continue ;
-			} ;
-
-		audio_data.format.mSampleRate = audio_data.sfinfo.samplerate ;
-
-		if (audio_data.sfinfo.channels == 1)
-		{	audio_data.format.mChannelsPerFrame = 2 ;
-			audio_data.fake_stereo = 1 ;
-			}
-		else
-		audio_data.format.mChannelsPerFrame = audio_data.sfinfo.channels ;
-
-		if ((err = AudioDeviceSetProperty (audio_data.device, NULL, 0, false, kAudioDevicePropertyStreamFormat,
-					sizeof (AudioStreamBasicDescription), &(audio_data.format))) != noErr)
-		{	printf ("AudioDeviceSetProperty (kAudioDevicePropertyStreamFormat) failed.\n") ;
-			return ;
-			} ;
-
-		/*  we want linear pcm */
-		if (audio_data.format.mFormatID != kAudioFormatLinearPCM)
-			return ;
-
-		/* Fire off the device. */
-		if ((err = AudioDeviceAddIOProc (audio_data.device, macosx_audio_out_callback,
-				(void *) &audio_data)) != noErr)
-		{	printf ("AudioDeviceAddIOProc failed.\n") ;
-			return ;
-			} ;
-
-		err = AudioDeviceStart (audio_data.device, macosx_audio_out_callback) ;
-		if	(err != noErr)
-			return ;
-
-		audio_data.done_playing = SF_FALSE ;
-
-		while (audio_data.done_playing == SF_FALSE)
-			usleep (10 * 1000) ; /* 10 000 milliseconds. */
-
-		if ((err = AudioDeviceStop (audio_data.device, macosx_audio_out_callback)) != noErr)
-		{	printf ("AudioDeviceStop failed.\n") ;
-			return ;
-			} ;
-
-		err = AudioDeviceRemoveIOProc (audio_data.device, macosx_audio_out_callback) ;
-		if (err != noErr)
-		{	printf ("AudioDeviceRemoveIOProc failed.\n") ;
-			return ;
-			} ;
-
-		sf_close (audio_data.sndfile) ;
-		} ;
-
-	return ;
-} /* macosx_play */
-
-#endif /* MacOSX */
-
+/* MacOSX 10.8 use a new Audio API. Someone needs to write some code for it. */
 
 /*------------------------------------------------------------------------------
 **	Win32 functions for playing a sound.
 **
 **	This API sucks. Its needlessly complicated and is *WAY* too loose with
-**	passing pointers arounf in integers and and using char* pointers to
+**	passing pointers around in integers and using char* pointers to
 **  point to data instead of short*. It plain sucks!
 */
 
 #if (OS_IS_WIN32 == 1)
 
-#define	WIN32_BUFFER_LEN	(1<<15)
+#define	WIN32_BUFFER_LEN	(1 << 15)
 
 typedef struct
 {	HWAVEOUT	hwave ;
@@ -701,8 +538,9 @@ win32_audio_out_callback (HWAVEOUT hwave, UINT msg, DWORD_PTR data, DWORD param1
 {	Win32_Audio_Data	*audio_data ;
 
 	/* Prevent compiler warnings. */
-	hwave = hwave ;
-	param1 = param2 ;
+	(void) hwave ;
+	(void) param1 ;
+	(void) param2 ;
 
 	if (data == 0)
 		return ;
@@ -825,16 +663,16 @@ win32_play (int argc, char *argv [])
 #endif /* Win32 */
 
 /*------------------------------------------------------------------------------
-**	OpenBDS's sndio.
+**	OpenBSD's sndio.
 */
 
-#if defined (HAVE_SNDIO_H)
+#if HAVE_SNDIO_H
 
 static void
 sndio_play (int argc, char *argv [])
 {	struct sio_hdl	*hdl ;
 	struct sio_par	par ;
-	short	 	buffer [BUFFER_LEN] ;
+	short buffer [BUFFER_LEN] ;
 	SNDFILE	*sndfile ;
 	SF_INFO	sfinfo ;
 	int		k, readcount ;
@@ -980,7 +818,7 @@ main (int argc, char *argv [])
 	if (argc < 2)
 	{
 		printf ("\nUsage : %s <input sound file>\n\n", program_name (argv [0])) ;
-		printf ("  Using %s.\n\n", sf_version_string ()) ;
+		printf ("Using %s.\n\n", sf_version_string ()) ;
 #if (OS_IS_WIN32 == 1)
 		printf ("This is a Unix style command line application which\n"
 				"should be run in a MSDOS box or Command Shell window.\n\n") ;
@@ -991,7 +829,11 @@ main (int argc, char *argv [])
 		return 1 ;
 		} ;
 
-#if defined (__linux__)
+#if defined (__ANDROID__)
+	puts ("*** Playing sound not yet supported on Android.") ;
+	puts ("*** Please feel free to submit a patch.") ;
+	return 1 ;
+#elif defined (__linux__)
 	#if HAVE_ALSA_ASOUNDLIB_H
 		if (access ("/proc/asound/cards", R_OK) == 0)
 			alsa_play (argc, argv) ;
@@ -1000,20 +842,14 @@ main (int argc, char *argv [])
 		opensoundsys_play (argc, argv) ;
 #elif defined (__FreeBSD_kernel__) || defined (__FreeBSD__)
 	opensoundsys_play (argc, argv) ;
-#elif (defined (__MACH__) && defined (__APPLE__))
-	macosx_play (argc, argv) ;
-#elif defined HAVE_SNDIO_H
+#elif HAVE_SNDIO_H
 	sndio_play (argc, argv) ;
 #elif (defined (sun) && defined (unix))
 	solaris_play (argc, argv) ;
 #elif (OS_IS_WIN32 == 1)
 	win32_play (argc, argv) ;
-#elif defined (__BEOS__)
-	printf ("This program cannot be compiled on BeOS.\n") ;
-	printf ("Instead, compile the file sfplay_beos.cpp.\n") ;
-	return 1 ;
 #else
-	puts ("*** Playing sound not yet supported on this platform.") ;
+	puts ("*** Playing sound not supported on this platform.") ;
 	puts ("*** Please feel free to submit a patch.") ;
 	return 1 ;
 #endif

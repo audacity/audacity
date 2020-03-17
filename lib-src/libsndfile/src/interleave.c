@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2013 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -287,9 +287,8 @@ interleave_read_double	(SF_PRIVATE *psf, double *ptr, sf_count_t len)
 */
 
 static sf_count_t
-interleave_seek	(SF_PRIVATE *psf, int mode, sf_count_t samples_from_start)
-{	psf = psf ;	mode = mode ;
-
+interleave_seek	(SF_PRIVATE * UNUSED (psf), int UNUSED (mode), sf_count_t samples_from_start)
+{
 	/*
 	** Do nothing here. This is a place holder to prevent the default
 	** seek function from being called.

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2019 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -47,13 +47,13 @@
 #include <windows.h>
 #endif
 
-static void print_version (void) ;
 static void usage_exit (const char *progname) ;
 
 static void info_dump (const char *filename) ;
 static int	instrument_dump (const char *filename) ;
 static int	broadcast_dump (const char *filename) ;
 static int	chanmap_dump (const char *filename) ;
+static int	cart_dump (const char *filename) ;
 static void total_dump (void) ;
 
 static double total_seconds = 0.0 ;
@@ -62,14 +62,10 @@ int
 main (int argc, char *argv [])
 {	int	k ;
 
-	print_version () ;
-
 	if (argc < 2 || strcmp (argv [1], "--help") == 0 || strcmp (argv [1], "-h") == 0)
-	{	usage_exit (program_name (argv [0])) ;
-		return 1 ;
-		} ;
+		usage_exit (program_name (argv [0])) ;
 
-	if (strcmp (argv [1], "-i") == 0)
+	if (strcmp (argv [1], "--instrument") == 0)
 	{	int error = 0 ;
 
 		for (k = 2 ; k < argc ; k++)
@@ -77,7 +73,7 @@ main (int argc, char *argv [])
 		return error ;
 		} ;
 
-	if (strcmp (argv [1], "-b") == 0)
+	if (strcmp (argv [1], "--broadcast") == 0)
 	{	int error = 0 ;
 
 		for (k = 2 ; k < argc ; k++)
@@ -85,11 +81,19 @@ main (int argc, char *argv [])
 		return error ;
 		} ;
 
-	if (strcmp (argv [1], "-c") == 0)
+	if (strcmp (argv [1], "--channel-map") == 0)
 	{	int error = 0 ;
 
 		for (k = 2 ; k < argc ; k++)
 			error += chanmap_dump (argv [k]) ;
+		return error ;
+		} ;
+
+	if (strcmp (argv [1], "--cart") == 0)
+	{	int error = 0 ;
+
+		for (k = 2 ; k < argc ; k++)
+			error += cart_dump (argv [k]) ;
 		return error ;
 		} ;
 
@@ -109,37 +113,28 @@ main (int argc, char *argv [])
 static double	data [BUFFER_LEN] ;
 
 static void
-print_version (void)
-{	char buffer [256] ;
-
-	sf_command (NULL, SFC_GET_LIB_VERSION, buffer, sizeof (buffer)) ;
-	printf ("\nVersion : %s\n\n", buffer) ;
-} /* print_version */
-
-
-static void
 usage_exit (const char *progname)
 {	printf ("Usage :\n  %s <file> ...\n", progname) ;
 	printf ("    Prints out information about one or more sound files.\n\n") ;
-	printf ("  %s -i <file>\n", progname) ;
+	printf ("  %s --instrument <file>\n", progname) ;
 	printf ("    Prints out the instrument data for the given file.\n\n") ;
-	printf ("  %s -b <file>\n", progname) ;
+	printf ("  %s --broadcast <file>\n", progname) ;
 	printf ("    Prints out the broadcast WAV info for the given file.\n\n") ;
+	printf ("  %s --channel-map <file>\n", progname) ;
+	printf ("    Prints out the channel map for the given file.\n\n") ;
+	printf ("  %s --cart <file>\n", progname) ;
+	printf ("    Prints out the cart chunk WAV info for the given file.\n\n") ;
+
+	printf ("Using %s.\n\n", sf_version_string ()) ;
 #if (defined (_WIN32) || defined (WIN32))
 		printf ("This is a Unix style command line application which\n"
 				"should be run in a MSDOS box or Command Shell window.\n\n") ;
 		printf ("Sleeping for 5 seconds before exiting.\n\n") ;
 		fflush (stdout) ;
 
-		/* This is the officially blessed by microsoft way but I can't get
-		** it to link.
-		**     Sleep (15) ;
-		** Instead, use this:
-		*/
 		Sleep (5 * 1000) ;
 #endif
-	printf ("Using %s.\n\n", sf_version_string ()) ;
-	exit (0) ;
+	exit (1) ;
 } /* usage_exit */
 
 /*==============================================================================
@@ -147,15 +142,6 @@ usage_exit (const char *progname)
 */
 
 static double	data [BUFFER_LEN] ;
-
-static double
-get_signal_max (SNDFILE *file)
-{	double	max ;
-
-	sf_command (file, SFC_CALC_SIGNAL_MAX, &max, sizeof (max)) ;
-
-	return max ;
-} /* get_signal_max */
 
 static double
 calc_decibels (SF_INFO * sfinfo, double max)
@@ -231,8 +217,8 @@ generate_duration_str (SF_INFO *sfinfo)
 static void
 info_dump (const char *filename)
 {	static	char	strbuffer [BUFFER_LEN] ;
-	SNDFILE	 	*file ;
-	SF_INFO	 	sfinfo ;
+	SNDFILE		*file ;
+	SF_INFO		sfinfo ;
 	double		signal_max, decibels ;
 
 	memset (&sfinfo, 0, sizeof (sfinfo)) ;
@@ -267,7 +253,7 @@ info_dump (const char *filename)
 
 	if (sfinfo.frames < 100 * 1024 * 1024)
 	{	/* Do not use sf_signal_max because it doesn't work for non-seekable files . */
-		signal_max = get_signal_max (file) ;
+		sf_command (file, SFC_CALC_SIGNAL_MAX, &signal_max, sizeof (signal_max)) ;
 		decibels = calc_decibels (&sfinfo, signal_max) ;
 		printf ("Signal Max  : %g (%4.2f dB)\n", signal_max, decibels) ;
 		} ;
@@ -296,8 +282,8 @@ str_of_type (int mode)
 
 static int
 instrument_dump (const char *filename)
-{	SNDFILE	 *file ;
-	SF_INFO	 sfinfo ;
+{	SNDFILE	*file ;
+	SF_INFO	sfinfo ;
 	SF_INSTRUMENT inst ;
 	int got_inst, k ;
 
@@ -335,8 +321,8 @@ instrument_dump (const char *filename)
 
 static int
 broadcast_dump (const char *filename)
-{	SNDFILE	 *file ;
-	SF_INFO	 sfinfo ;
+{	SNDFILE	*file ;
+	SF_INFO	sfinfo ;
 	SF_BROADCAST_INFO_2K bext ;
 	double time_ref_sec ;
 	int got_bext ;
@@ -371,28 +357,43 @@ broadcast_dump (const char *filename)
 
 	time_ref_sec = ((pow (2.0, 32) * bext.time_reference_high) + (1.0 * bext.time_reference_low)) / sfinfo.samplerate ;
 
-	printf ("Description      : %.*s\n", (int) sizeof (bext.description), bext.description) ;
-	printf ("Originator       : %.*s\n", (int) sizeof (bext.originator), bext.originator) ;
-	printf ("Origination ref  : %.*s\n", (int) sizeof (bext.originator_reference), bext.originator_reference) ;
-	printf ("Origination date : %.*s\n", (int) sizeof (bext.origination_date), bext.origination_date) ;
-	printf ("Origination time : %.*s\n", (int) sizeof (bext.origination_time), bext.origination_time) ;
+	printf ("Description              : %.*s\n", (int) sizeof (bext.description), bext.description) ;
+	printf ("Originator               : %.*s\n", (int) sizeof (bext.originator), bext.originator) ;
+	printf ("Origination ref          : %.*s\n", (int) sizeof (bext.originator_reference), bext.originator_reference) ;
+	printf ("Origination date         : %.*s\n", (int) sizeof (bext.origination_date), bext.origination_date) ;
+	printf ("Origination time         : %.*s\n", (int) sizeof (bext.origination_time), bext.origination_time) ;
 
 	if (bext.time_reference_high == 0 && bext.time_reference_low == 0)
-		printf ("Time ref         : 0\n") ;
+		printf ("Time ref                 : 0\n") ;
 	else
-		printf ("Time ref         : 0x%x%08x (%.6f seconds)\n", bext.time_reference_high, bext.time_reference_low, time_ref_sec) ;
+		printf ("Time ref                 : 0x%x%08x (%.6f seconds)\n", bext.time_reference_high, bext.time_reference_low, time_ref_sec) ;
 
-	printf ("BWF version      : %d\n", bext.version) ;
-	printf ("UMID             : %.*s\n", (int) sizeof (bext.umid), bext.umid) ;
-	printf ("Coding history   : %.*s\n", bext.coding_history_size, bext.coding_history) ;
+	printf ("BWF version              : %d\n", bext.version) ;
+
+	if (bext.version >= 1)
+		printf ("UMID                     : %.*s\n", (int) sizeof (bext.umid), bext.umid) ;
+
+	if (bext.version >= 2)
+	{	/* 0x7fff shall be used to designate an unused value */
+		/* valid range: -99.99 .. 99.99 */
+		printf ("Loudness value           : %6.2f LUFS\n", bext.loudness_value / 100.0) ;
+		/* valid range: 0.00 .. 99.99 */
+		printf ("Loudness range           : %6.2f LU\n", bext.loudness_range / 100.0) ;
+		/* valid range: -99.99 .. 99.99 */
+		printf ("Max. true peak level     : %6.2f dBTP\n", bext.max_true_peak_level / 100.0) ;
+		printf ("Max. momentary loudness  : %6.2f LUFS\n", bext.max_momentary_loudness / 100.0) ;
+		printf ("Max. short term loudness : %6.2f LUFS\n", bext.max_shortterm_loudness / 100.0) ;
+		} ;
+
+	printf ("Coding history           : %.*s\n", bext.coding_history_size, bext.coding_history) ;
 
 	return 0 ;
 } /* broadcast_dump */
 
 static int
 chanmap_dump (const char *filename)
-{	SNDFILE	 *file ;
-	SF_INFO	 sfinfo ;
+{	SNDFILE	*file ;
+	SF_INFO	sfinfo ;
 	int * channel_map ;
 	int got_chanmap, k ;
 
@@ -464,6 +465,60 @@ chanmap_dump (const char *filename)
 
 	return 0 ;
 } /* chanmap_dump */
+
+static int
+cart_dump (const char *filename)
+{	SNDFILE	*file ;
+	SF_INFO	sfinfo ;
+	SF_CART_INFO_VAR (1024) cart ;
+	int got_cart, k ;
+
+	memset (&sfinfo, 0, sizeof (sfinfo)) ;
+	memset (&cart, 0, sizeof (cart)) ;
+
+	if ((file = sf_open (filename, SFM_READ, &sfinfo)) == NULL)
+	{	printf ("Error : Not able to open input file %s.\n", filename) ;
+		fflush (stdout) ;
+		memset (data, 0, sizeof (data)) ;
+		puts (sf_strerror (NULL)) ;
+		return 1 ;
+		} ;
+
+	got_cart = sf_command (file, SFC_GET_CART_INFO, &cart, sizeof (cart)) ;
+	sf_close (file) ;
+
+	if (got_cart == SF_FALSE)
+	{	printf ("Error : File '%s' does not contain cart information.\n\n", filename) ;
+		return 1 ;
+		} ;
+
+	printf ("Version        : %.*s\n", (int) sizeof (cart.version), cart.version) ;
+	printf ("Title          : %.*s\n", (int) sizeof (cart.title), cart.title) ;
+	printf ("Artist         : %.*s\n", (int) sizeof (cart.artist), cart.artist) ;
+	printf ("Cut id         : %.*s\n", (int) sizeof (cart.cut_id), cart.cut_id) ;
+	printf ("Category       : %.*s\n", (int) sizeof (cart.category), cart.category) ;
+	printf ("Classification : %.*s\n", (int) sizeof (cart.classification), cart.classification) ;
+	printf ("Out cue        : %.*s\n", (int) sizeof (cart.out_cue), cart.out_cue) ;
+	printf ("Start date     : %.*s\n", (int) sizeof (cart.start_date), cart.start_date) ;
+	printf ("Start time     : %.*s\n", (int) sizeof (cart.start_time), cart.start_time) ;
+	printf ("End date       : %.*s\n", (int) sizeof (cart.end_date), cart.end_date) ;
+	printf ("End time       : %.*s\n", (int) sizeof (cart.end_time), cart.end_time) ;
+	printf ("App id         : %.*s\n", (int) sizeof (cart.producer_app_id), cart.producer_app_id) ;
+	printf ("App version    : %.*s\n", (int) sizeof (cart.producer_app_version), cart.producer_app_version) ;
+	printf ("User defined   : %.*s\n", (int) sizeof (cart.user_def), cart.user_def) ;
+	printf ("Level ref.     : %d\n", cart.level_reference) ;
+	printf ("Post timers    :\n") ;
+
+	for (k = 0 ; k < ARRAY_LEN (cart.post_timers) ; k++)
+		if (cart.post_timers [k].usage [0])
+			printf ("  %d   %.*s    %d\n", k, (int) sizeof (cart.post_timers [k].usage), cart.post_timers [k].usage, cart.post_timers [k].value) ;
+
+	printf ("Reserved       : %.*s\n", (int) sizeof (cart.reserved), cart.reserved) ;
+	printf ("Url            : %.*s\n", (int) sizeof (cart.url), cart.url) ;
+	printf ("Tag text       : %.*s\n", cart.tag_text_size, cart.tag_text) ;
+
+	return 0 ;
+} /* cart_dump */
 
 static void
 total_dump (void)

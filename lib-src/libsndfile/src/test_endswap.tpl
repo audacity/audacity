@@ -1,6 +1,6 @@
 [+ AutoGen5 template c +]
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2016 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -27,6 +27,8 @@
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
+#else
+#include "sf_unistd.h"
 #endif
 
 #include "common.h"
@@ -56,7 +58,7 @@ dump_[+ (get "name") +]_array (const char * name, [+ (get "name") +] * data, int
 static void
 test_endswap_[+ (get "name") +] (void)
 {	[+ (get "name") +] orig [4], first [4], second [4] ;
-	int k ;
+	int64_t k ;
 
 	printf ("    %-40s : ", "test_endswap_[+ (get "name") +]") ;
 	fflush (stdout) ;
@@ -105,6 +107,34 @@ test_endswap_[+ (get "name") +] (void)
 [+ ENDFOR int_type
 +]
 
+[+ FOR int_size +]
+static void
+test_psf_put_be[+ (get "name") +] (void)
+{	const char *test = "[+ (get "strval") +]" ;
+	uint8_t array [32] ;
+	int k ;
+
+	printf ("    %-40s : ", __func__) ;
+	fflush (stdout) ;
+
+	for (k = 0 ; k < 10 ; k++)
+	{	memset (array, 0, sizeof (array)) ;
+
+		psf_put_be[+ (get "name") +] (array, k, [+ (get "value") +]) ;
+		if (memcmp (array + k, test, sizeof ([+ (get "typename") +])) != 0)
+		{	printf ("\n\nLine %d : Put failed at index %d.\n", __LINE__, k) ;
+			exit (1) ;
+			} ;
+		if (psf_get_be[+ (get "name") +] (array, k) != [+ (get "value") +])
+		{	printf ("\n\nLine %d : Get failed at index %d.\n", __LINE__, k) ;
+			exit (1) ;
+			} ;
+		} ;
+
+	puts ("ok") ;
+} /* test_psf_put_be[+ (get "name") +] */
+[+ ENDFOR int_size
++]
 
 void
 test_endswap (void)
@@ -113,5 +143,11 @@ test_endswap (void)
 +]	test_endswap_[+ (get "name") +] () ;
 [+ ENDFOR int_type
 +]
+
+[+ FOR int_size
++]	test_psf_put_be[+ (get "name") +] () ;
+[+ ENDFOR int_size
++]
+
 } /* test_endswap */
 

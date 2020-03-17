@@ -10,7 +10,7 @@ Release: %{release}
 Copyright: LGPL
 Group: Libraries/Sound
 Source: http://www.mega-nerd.com/libsndfile/libsndfile-%{version}.tar.gz
-URL: http://www.mega-nerd.com/libsndfile/
+Url: http://www.mega-nerd.com/libsndfile/
 BuildRoot: /var/tmp/%{name}-%{version}
 
 %description

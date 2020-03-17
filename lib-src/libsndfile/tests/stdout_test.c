@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2014 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
+#else
+#include "sf_unistd.h"
 #endif
 
 #include <sndfile.h>
@@ -43,7 +45,7 @@ main (int argc, char *argv [])
 		exit (1) ;
 		} ;
 
-	do_all =! strcmp (argv [1], "all") ;
+	do_all = ! strcmp (argv [1], "all") ;
 
 	if (do_all || ! strcmp (argv [1], "raw"))
 	{	stdout_test	(SF_FORMAT_RAW, PIPE_TEST_LEN) ;
@@ -111,9 +113,9 @@ main (int argc, char *argv [])
 		} ;
 
 	if (test_count == 0)
-	{	fprintf (stderr, "************************************\n") ;
-		fprintf (stderr, "*  No '%s' test defined.\n", argv [1]) ;
-		fprintf (stderr, "************************************\n") ;
+	{	fprintf (stderr, "\n******************************************\n") ;
+		fprintf (stderr, "*  stdout_test : No '%s' test defined.\n", argv [1]) ;
+		fprintf (stderr, "******************************************\n") ;
 		return 1 ;
 		} ;
 
@@ -138,8 +140,14 @@ stdout_test	(int typemajor, int count)
 		data [k] = PIPE_INDEX (k) ;
 
 	if ((file = sf_open ("-", SFM_WRITE, &sfinfo)) == NULL)
-	{	fprintf (stderr, "sf_open_write failed with error : ") ;
-		fprintf (stderr, "%s\n", sf_strerror (NULL)) ;
+	{	fprintf (stderr, "%s % d: sf_open_write failed with error : %s\n",
+									__func__, __LINE__, sf_strerror (NULL)) ;
+		exit (1) ;
+		} ;
+
+	if (sfinfo.frames != 0)
+	{	fprintf (stderr, "%s % d: Frames is %d (should be 0).\n",
+									__func__, __LINE__, (int) sfinfo.frames) ;
 		exit (1) ;
 		} ;
 

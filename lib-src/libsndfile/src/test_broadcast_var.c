@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2010-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2010-2012 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -57,8 +57,8 @@ fill_coding_history (SF_BROADCAST_INFO_512 * bi)
 	return ;
 } /* fill_coding_listory */
 
-void
-test_broadcast_var (void)
+static void
+test_broadcast_var_set (void)
 {	SF_PRIVATE	sf_private, *psf ;
 	int k ;
 
@@ -84,4 +84,36 @@ test_broadcast_var (void)
 		free (psf->broadcast_16k) ;
 
 	puts ("ok") ;
+} /* test_broadcast_var_set */
+
+static void
+test_broadcast_var_zero (void)
+{	SF_PRIVATE	sf_private, *psf ;
+	SF_BROADCAST_INFO_VAR (0) bi ;
+
+	psf = &sf_private ;
+	memset (psf, 0, sizeof (sf_private)) ;
+	psf->file.mode = SFM_RDWR ;
+
+	print_test_name ("Testing broadcast_var_zero ") ;
+
+	memset (&bi, 0, sizeof (bi)) ;
+
+	broadcast_var_set (psf, (SF_BROADCAST_INFO*) &bi, sizeof (bi)) ;
+
+	if (psf->broadcast_16k->coding_history_size != 0)
+	{	printf ("\n\nLine %d: coding_history_size %d should be zero.\n\n", __LINE__, psf->broadcast_16k->coding_history_size) ;
+		exit (1) ;
+		} ;
+
+	if (psf->broadcast_16k != NULL)
+		free (psf->broadcast_16k) ;
+
+	puts ("ok") ;
+} /* test_broadcast_var_zero */
+
+void
+test_broadcast_var (void)
+{	test_broadcast_var_set () ;
+	test_broadcast_var_zero () ;
 } /* test_broadcast_var */

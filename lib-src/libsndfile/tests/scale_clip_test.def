@@ -19,13 +19,13 @@ float_type = {
 int_type = {
 	int_type_name	= "short" ;
 	int_short_name	= "s" ;
-	int_max_value	= 0x7FFFF ;
+	int_max_value	= "0x7FFFF" ;
 	} ;
 
 int_type = {
 	int_type_name	= "int" ;
 	int_short_name	= "i" ;
-	int_max_value	= 0x7FFFFFFF ;
+	int_max_value	= "0x7FFFFFFF" ;
 	} ;
 
 

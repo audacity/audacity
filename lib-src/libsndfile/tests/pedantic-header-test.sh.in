@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2010-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+# Copyright (C) 2010-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 #
 # All rights reserved.
 #
@@ -42,7 +42,7 @@ if test -n "@GCC_MAJOR_VERSION@" ; then
 
 	CC=`echo "@CC@" | sed "s/.*shave cc //"`
 	# Compile with -Werror and -pedantic.
-	$CC -std=c99 -Werror -pedantic -I@top_builddir@/src -c @top_srcdir@/tests/sfversion.c -o /dev/null
+	$CC -std=c99 -Werror -pedantic -I@top_srcdir@/src -I@abs_top_builddir@/src -c @top_srcdir@/tests/sfversion.c -o /dev/null
 
 	# Check compiler return status.
 	if test $? -ne 0 ; then

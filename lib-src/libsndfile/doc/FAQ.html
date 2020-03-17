@@ -26,7 +26,8 @@
 <A HREF="#Q006">Q6 : What's the best format for storing temporary files?</A><BR/>
 <A HREF="#Q007">Q7 : On Linux/Unix/MacOS X, what's the best way of detecting the
 	presence of libsndfile?</A><BR/>
-<A HREF="#Q008">Q8 : But I just want a simple Makefile! What do I do?</A><BR/>
+<A HREF="#Q008">Q8 : I have libsndfile installed and now I want to use it. I
+	just want a simple Makefile! What do I do?</A><BR/>
 <A HREF="#Q009">Q9 : How about adding the ability to write/read sound files to/from
 	memory buffers?</A><BR/>
 <A HREF="#Q010">Q10 : Reading a 16 bit PCM file as normalised floats and then
@@ -49,8 +50,7 @@
 <A HREF="#Q019">Q19 : I have project files for Visual Studio / XCode / Whatever. Why
 	don't you distribute them with libsndfile?
 	</A><BR/>
-<A HREF="#Q020">Q20 : Why doesn't libsndfile support MP3? Lots of other Open Source
-	projects support it!
+<A HREF="#Q020">Q20 : Why doesn't libsndfile support MP3?
 	</A><BR/>
 <A HREF="#Q021">Q21 : How do I use libsndfile in a closed source or commercial program
 	and comply with the license?
@@ -95,7 +95,7 @@ If you can't find either then the answer is no.
 </UL>
 <P>
 As documented
-    <A HREF="http://www.mega-nerd.com/libsndfile/api.html#note1">here</A>
+    <A HREF="api.html#note1">here</A>
 there is now a well defined behaviour which ensures that no matter what the
 bit width of the source file, the scaling always does something sensible.
 This makes it safe to read 8, 16, 24 and 32 bit PCM files using sf_read_short()
@@ -116,7 +116,7 @@ case.
 <P>
 To fix this I suggest that you install the GNU Bash shell, rename /bin/sh to
 /bin/sh.old and make a symlink from /bin/sh to the bash shell.
-Bash is designed to behave as a Bourne shell when is is called as /bin/sh.
+Bash is designed to behave as a Bourne shell when it is called as /bin/sh.
 </P>
 <P>
 When I did this on my iBook running MacOS X, compile times dropped from 13 minutes
@@ -133,7 +133,7 @@ It seems that the Solaris Bourne shell disagrees with GNU libtool.
 <P>
 To fix this I suggest that you install the GNU Bash shell, rename /bin/sh to
 /bin/sh.old and make a symlink from /bin/sh to the bash shell.
-Bash is designed to behave as a Bourne shell when is is called as /bin/sh.
+Bash is designed to behave as a Bourne shell when it is called as /bin/sh.
 </P>
 
 <!-- ========================================================================= -->
@@ -246,7 +246,8 @@ libsndfile configure process. For instance on my system I get this:
 <!-- ========================================================================= -->
 
 <A NAME="Q008"></A>
-<H2><BR/><B>Q8 : But I just want a simple Makefile! What do I do?</B></H2>
+<H2><BR/><B>Q8 : I have libsndfile installed and now I want to use it. I just want
+		a simple Makefile! What do I do?</B></H2>
 
 <P>
 The <B>pkg-config</B> program makes finding the correct compiler flag values and
@@ -339,7 +340,7 @@ other than normalized floats in the application.
 Alternatives to normalized floats are the <b>short</b> and <b>int</b> data
 types (ie using sf_read_short or sf_read_int) or using un-normalized floats
 (see
-	<a href="http://www.mega-nerd.com/libsndfile/command.html#SFC_SET_NORM_FLOAT">
+	<a href="command.html#SFC_SET_NORM_FLOAT">
 	SFC_SET_NORM_FLOAT</a>).
 </P>
 <P>
@@ -389,11 +390,12 @@ is the risk of breaking something that currently works.
 </B></H2>
 
 <P>
-An <tt>item</tt>tt> is a single sample of the data type you are reading; ie a
+An <tt>item</tt> is a single sample of the data type you are reading; ie a
 single <tt>short</tt> value for <tt>sf_read_short</tt> or a single <tt>float</tt>
 for <tt>sf_read_float</tt>.
 </P>
 
+<P>
 For a sound file with only one channel, a frame is the same as a item (ie a
 single sample) while for multi channel sound files, a single frame contains a
 single item for each channel.
@@ -412,7 +414,7 @@ on a stereo file, first using items:
 </PRE>
 
 <P>
-and now readng the exact same amount of data using frames:
+and now reading the exact same amount of data using frames:
 </P>
 
 <PRE>
@@ -640,7 +642,7 @@ CPU and run them on the other, the test suite will fail.
 </P>
 
 <P>
-Part of the problem is the the CPU endian-ness is detected at configure time.
+Part of the problem is that the CPU endian-ness is detected at configure time.
 Yes, I know the Apple compiler defines one of the macros __LITTLE_ENDIAN__
 and __BIG_ENDIAN__, but those macros are not part of the 1999 ISO C Standard
 and they are not portable.
@@ -726,41 +728,17 @@ Hence, I'm not willing to enter into an arrangement like that again.
 
 <!-- ========================================================================= -->
 <A NAME="Q020"></A>
-<H2><BR/><B>Q20 : Why doesn't libsndfile support MP3? Lots of other Open Source
-	projects support it!
+<H2><BR/><B>Q20 : Why doesn't libsndfile support MP3?
 </B></H2>
 
 <P>
-MP3 is not supported for one very good reason; doing so requires the payment
-of licensing fees.
-As can be seen from
-	<a href="http://www.mp3licensing.com/royalty/software.html">
-	mp3licensing.com</a>
-the required royalty payments are not cheap.
+In the past, MP3 was not supported because the technology behind MP3 was
+patented.
+Those patents have now expired and there is an
+	<a href="https://github.com/erikd/libsndfile/issues/258">
+	open ticket</a>
+to implement MP3 support.
 </P>
-
-<p>
-Yes, I know other libraries ignore the licensing requirements, but their legal
-status is extremely dubious.
-At any time, the body selling the licenses could go after the authors of those
-libraries.
-Some of those authors may be students and hence wouldn't be worth pursuing.
-</P>
-
-<p>
-However, libsndfile is released under the name of a company, Mega Nerd Pty Ltd;
-a company which has income from from libsamplerate licensing, libsndfile based
-consulting income and other unrelated consulting income.
-Adding MP3 support to libsndfile could place that income would be under legal
-threat.
-</p>
-
-<p>
-Fortunately, Ogg Vorbis exists as an alternative to MP3.
-Support for Ogg Vorbis was added to libsndfile (mostly due to the efforts of
-John ffitch of the Csound project) in version 1.0.18.
-</p>
-
 
 <!-- ========================================================================= -->
 <A NAME="Q021"></A>
@@ -842,7 +820,7 @@ the top level of the extracted tarball.
 		<A HREF="http://www.mega-nerd.com/libsndfile/">
 			http://www.mega-nerd.com/libsndfile/</A>.
 <BR/>
-Version : 1.0.24
+Version : 1.0.28
 </P>
 
 </BODY>

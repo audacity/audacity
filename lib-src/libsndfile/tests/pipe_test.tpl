@@ -1,6 +1,6 @@
 [+ AutoGen5 template c +]
 /*
-** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if (OS_IS_WIN32 || HAVE_PIPE == 0 || HAVE_WAITPID == 0)
+#if (OS_IS_WIN32 || defined __OS2__ || HAVE_PIPE == 0 || HAVE_WAITPID == 0)
 
 int
 main (void)
@@ -56,7 +56,6 @@ typedef struct
 	const char	*ext ;
 } FILETYPE ;
 
-static int		file_exists (const char *filename) ;
 static void		useek_pipe_rw_test (int filetype, const char *ext) ;
 static void		pipe_read_test (int filetype, const char *ext) ;
 static void		pipe_write_test (const char *ext) ;
@@ -95,9 +94,6 @@ int
 main (void)
 {	int k ;
 
-	if (file_exists ("libsndfile.spec.in"))
-		exit_if_true (chdir ("tests") != 0, "\n    Error : chdir ('tests') failed.\n") ;
-
 	for (k = 0 ; read_only_types [k].format ; k++)
 		pipe_read_test (read_only_types [k].format, read_only_types [k].ext) ;
 
@@ -129,6 +125,7 @@ pipe_read_test (int filetype, const char *ext)
 	snprintf (filename, sizeof (filename), "pipe_in.%s", ext) ;
 	print_test_name ("pipe_read_test", filename) ;
 
+	memset (&sfinfo, 0, sizeof (sfinfo)) ;
 	sfinfo.format = filetype | SF_FORMAT_PCM_16 ;
 	sfinfo.channels = 1 ;
 	sfinfo.samplerate = 44100 ;
@@ -140,7 +137,7 @@ pipe_read_test (int filetype, const char *ext)
 	test_writef_short_or_die (outfile, 0, data, PIPE_TEST_LEN, __LINE__) ;
 	sf_close (outfile) ;
 
-	snprintf (buffer, sizeof (buffer), "cat %s | ./stdin_test %s ", filename, ext) ;
+	snprintf (buffer, sizeof (buffer), "cat %s | ./tests/stdin_test %s ", filename, ext) ;
 	if ((retval = system (buffer)) != 0)
 	{	retval = WEXITSTATUS (retval) ;
 		printf ("\n\n    Line %d : pipe test returned error for file type \"%s\".\n\n", __LINE__, ext) ;
@@ -161,7 +158,7 @@ pipe_write_test (const char *ext)
 
 	print_test_name ("pipe_write_test", ext) ;
 
-	snprintf (buffer, sizeof (buffer), "./stdout_test %s | ./stdin_test %s ", ext, ext) ;
+	snprintf (buffer, sizeof (buffer), "./tests/stdout_test %s | ./tests/stdin_test %s ", ext, ext) ;
 	if ((retval = system (buffer)))
 	{	retval = WEXITSTATUS (retval) ;
 		printf ("\n\n     Line %d : pipe test returned error file type \"%s\".\n\n", __LINE__, ext) ;
@@ -331,6 +328,7 @@ pipe_test_others (FILETYPE* list1, FILETYPE* list2)
 			SF_INFO sfinfo ;
 			int retval ;
 
+			memset (&sfinfo, 0, sizeof (sfinfo)) ;
 			sfinfo.format = info.format | SF_FORMAT_PCM_16 ;
 			sfinfo.channels = 1 ;
 			sfinfo.samplerate = 44100 ;
@@ -339,7 +337,7 @@ pipe_test_others (FILETYPE* list1, FILETYPE* list2)
 			test_writef_short_or_die (outfile, 0, data, PIPE_TEST_LEN, __LINE__) ;
 			sf_close (outfile) ;
 
-			snprintf (buffer, sizeof (buffer), "cat %s | ./stdin_test %s %d ", filename, info.extension, PIPE_TEST_LEN) ;
+			snprintf (buffer, sizeof (buffer), "cat %s | ./tests/stdin_test %s %d ", filename, info.extension, PIPE_TEST_LEN) ;
 			if ((retval = system (buffer)) == 0)
 			{	retval = WEXITSTATUS (retval) ;
 				printf ("\n\n     Line %d : pipe test should have returned error file type \"%s\" but didn't.\n\n", __LINE__, info.name) ;
@@ -359,16 +357,6 @@ pipe_test_others (FILETYPE* list1, FILETYPE* list2)
 
 /*==============================================================================
 */
-
-static int
-file_exists (const char *filename)
-{	struct stat buf ;
-
-	if (stat (filename, &buf))
-		return 0 ;
-
-	return 1 ;
-} /* file_exists */
 
 #endif
 

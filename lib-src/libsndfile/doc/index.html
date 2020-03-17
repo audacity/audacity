@@ -6,7 +6,7 @@
 	libsndfile
 	</TITLE>
 	<META NAME="Author"      CONTENT="Erik de Castro Lopo (erikd AT mega-nerd DOT com)">
-    <META NAME="Version"     CONTENT="libsndfile-1.0.24">
+    <META NAME="Version"     CONTENT="libsndfile-1.0.28">
 	<META NAME="Description" CONTENT="The libsndfile Home Page">
 	<META NAME="Keywords"    CONTENT="WAV AIFF AU SVX PAF NIST W64 libsndfile sound audio dsp Linux">
 	<META NAME="ROBOTS" 	 CONTENT="NOFOLLOW">
@@ -68,7 +68,6 @@
 	<LI>Every platform supported by Debian GNU/Linux including x86_64-linux-gnu,
 		i486-linux-gnu, powerpc-linux-gnu, sparc-linux-gnu, alpha-linux-gnu,
 		mips-linux-gnu and armel-linux-gnu.</LI>
-	<LI>arm-linux-androideab (Android phones OS)</LI>
 	<LI>powerpc-apple-darwin7.0 (Mac OS X 10.3)</LI>
 	<LI>sparc-sun-solaris2.8 (using gcc)</LI>
 	<LI>mips-sgi-irix5.3 (using gcc)</LI>
@@ -163,7 +162,7 @@
 
 <TR><TD>Signed 24 bit PCM</TD>
 	<TD ALIGN="center">R/W</TD><TD ALIGN="center">R/W</TD><TD ALIGN="center">R/W</TD><TD ALIGN="center">R/W</TD>
-	<TD ALIGN="center">R/W</TD><TD>&nbsp;</TD><TD ALIGN="center">R/W</TD><TD ALIGN="center">R/W</TD>
+	<TD ALIGN="center">R/W</TD><TD>&nbsp;</TD><TD ALIGN="center">R/W</TD><TD>&nbsp;</TD>
 	<TD>&nbsp;</TD><TD ALIGN="center">R/W</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>&nbsp;</TD>
 	<TD>&nbsp;</TD><TD>&nbsp;</TD><TD ALIGN="center">R/W</TD><TD ALIGN="center">R/W</TD><TD ALIGN="center">R/W</TD>
 </TR>
@@ -293,7 +292,7 @@ and
 	I have decided that I will not be adding support for MPEG Layer 3 (commonly
 	known as MP3) due to the patent issues surrounding this file format.
 	See
-		<a href="http://www.mega-nerd.com/libsndfile/FAQ.html#Q020">
+		<a href="FAQ.html#Q020">
 		the FAQ</a>
 	for more.
 </P>
@@ -367,6 +366,14 @@ and
 	<LI>Version 1.0.22 (October 04 2010) Bunch of minor bug fixes.
 	<LI>Version 1.0.23 (October 10 2010) Minor bug fixes.
 	<LI>Version 1.0.24 (March 23 2011) Minor bug fixes.
+	<LI>Version 1.0.25 (July 13 2011) Fix for Secunia Advisory SA45125. Minor bug fixes and
+				improvements.
+	<LI>Version 1.0.26 (November 22 2015) Fix for CVE-2014-9496, CVE-2014-9756 and CVE-2015-7805.
+				Add ALAC/CAF support. Minor bug fixes and improvements.
+	<LI>Version 1.0.27 (June 19 2016) Fix a seek regression in 1.0.26. Add metadata read/write
+				for CAF and RF64. FIx PAF endian-ness issue.
+	<LI>Version 1.0.28 (April 2 2017) Fix buffer overruns in FLAC and ID3 handling code. Reduce default
+				header memory requirements. Fix detection of Large File Support for 32 bit systems.
 	</UL>
 
 <A NAME="Similar"></A>
@@ -428,22 +435,28 @@ and
 </P>
 	<UL>
 	<LI>Source code as a .tar.gz :
-			<A HREF="files/libsndfile-1.0.24.tar.gz">libsndfile-1.0.24.tar.gz</A>
+			<A HREF="files/libsndfile-1.0.28.tar.gz">libsndfile-1.0.28.tar.gz</A>
 			and
-			<A HREF="files/libsndfile-1.0.24.tar.gz.asc">(GPG signature)</A>.
+			<A HREF="files/libsndfile-1.0.28.tar.gz.asc">GPG signature</A>.
 	<LI>Win32 installer:
-			<A HREF="files/libsndfile-1.0.24-w32-setup.exe">
-			libsndfile-1.0.24-w32-setup.exe</A> (thoroughly tested under
-			<a href="http://www.winehq.com/">Wine</a> and Windows XP).
+			<A HREF="files/libsndfile-1.0.28-w32-setup.exe">
+			libsndfile-1.0.28-w32-setup.exe</A> (thoroughly tested under
+			<a href="http://www.winehq.com/">Wine</a>)
+			and
+			<A HREF="files/libsndfile-1.0.28-w32-setup.exe.asc">GPG signature</A>.
 	<LI>Win64 installer:
-			<A HREF="files/libsndfile-1.0.24-w64-setup.exe">
-			libsndfile-1.0.24-w64-setup.exe</A>
-			(thoroughly tested on 64 bit Windows 7).
+			<A HREF="files/libsndfile-1.0.28-w64-setup.exe">
+			libsndfile-1.0.28-w64-setup.exe</A> (thoroughly tested under
+			<a href="http://www.winehq.com/">Wine</a>)
+			and
+			<A HREF="files/libsndfile-1.0.28-w64-setup.exe.asc">GPG signature</A>.
 	</UL>
-
 <P>
-The Win32 installer was compiled for Windows XP but should also work on Windows
-2000, Vista and Windows 7.
+    The GPG signature can be validated at
+		<A HREF="https://keybase.io/erikd/">Keybase.IO</A>.
+</P>
+<P>
+The Win32 installer should work on Windows Vista or later.
 </p>
 
 <P>

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2014 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
+#else
+#include "sf_unistd.h"
 #endif
 
 #include <sndfile.h>
@@ -62,7 +64,7 @@ dwvw_test (const char *filename, int format, int bit_width)
 	srand (123456) ;
 
 	/* Only want to grab the top bit_width bits. */
-	bit_mask = (-1 << (32 - bit_width)) ;
+	bit_mask = arith_shift_left (-1, 32 - bit_width) ;
 
 	print_test_name ("dwvw_test", filename) ;
 
@@ -77,7 +79,7 @@ dwvw_test (const char *filename, int format, int bit_width)
 		} ;
 
 	for ( ; k < BUFFER_SIZE ; k++)
-		write_buf [k] = bit_mask & ((rand () << 11) ^ (rand () >> 11)) ;
+		write_buf [k] = bit_mask & (arith_shift_left (rand (), 11) ^ (rand () >> 11)) ;
 
 	sf_write_int (file, write_buf, BUFFER_SIZE) ;
 	sf_close (file) ;

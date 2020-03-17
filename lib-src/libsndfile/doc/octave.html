@@ -15,21 +15,21 @@
 <BR>
 <H1><B>libsndfile and GNU Octave</B></H1>
 <P>
-	<A HREF="http://www.octave.org/">GNU Octave</A> is a high-level interactive 
-	language for numerical computations. 
+	<A HREF="http://www.octave.org/">GNU Octave</A> is a high-level interactive
+	language for numerical computations.
 	There are currently two development streams, a stable 2.0.X series and a
 	development 2.1.X series.
 	Octave reads and writes data in binary formats that were originally developed
-	for 
+	for
 		<A HREF="http://www.mathworks.com/">MATLAB</A>.
 	Version 2.0.X of Octave uses binary data files compatible with MATLAB
 	version 4.2 while Octave 2.1.X uses binary data files compatible
-	with MATLAB version 5.0 as well as being able to read the older MATLAB 4.2 
+	with MATLAB version 5.0 as well as being able to read the older MATLAB 4.2
 	format.
 </P>
 <P>
-	From version 1.0.1 of libsndfile onwards, libsndfile has the ability of reading 
-	and writing a small subset of the binary data files used by both versions 
+	From version 1.0.1 of libsndfile onwards, libsndfile has the ability of reading
+	and writing a small subset of the binary data files used by both versions
 	of GNU Octave.
 	This gives people using GNU Octave for audio based work an easy method of
 	moving audio data between GNU Octave and other programs which use libsndfile.
@@ -37,22 +37,22 @@
 <P>
 	For instance it is now possible to do the following:
 </P>
-	
+
 	<UL>
-	<LI> Load a WAV file into a sound file editor such as 
+	<LI> Load a WAV file into a sound file editor such as
 		<A HREF="http://www.metadecks.org/software/sweep/">Sweep</A>.
 	<LI> Save it as a MAT4 file.
 	<LI> Load the data into Octave for manipulation.
-	<LI> Save the modified data. 
+	<LI> Save the modified data.
 	<LI> Reload it in Sweep.
 	</UL>
 <P>
 	Another example would be using the MAT4 or MAT5 file formats as a format which
-	can be easily loaded into Octave for viewing/analyzing as well as a format 
+	can be easily loaded into Octave for viewing/analyzing as well as a format
 	which can be played with command line players such as the one included with
 	libsndfile.
 </P>
-	
+
 <H2><B>Details</B></H2>
 <P>
 	Octave, like most programming languages, uses variables to store data, and
@@ -70,7 +70,7 @@
 <PRE>
         octave:1 > samplerate = 44100 ;
         octave:2 > wavedata = sin ((0:1023)*2*pi/1024) ;
-        octave:3 > save sine.mat samplerate wavedata 
+        octave:3 > save sine.mat samplerate wavedata
 </PRE>
 
 <P>
@@ -84,7 +84,7 @@
 <P>
 	In addition, libsndfile contains a command line program which which is able
 	to play the correct types of Octave files.
-	Using this command line player <B>sndfile-play</B> and a third Octave script 
+	Using this command line player <B>sndfile-play</B> and a third Octave script
 	file allows Octave data to be played from within Octave on any of the platforms
 	which <B>sndfile-play</B> supports (at the moment: Linux, MacOS X, Solaris and
 	Win32).
@@ -100,8 +100,8 @@
 </P>
 
 <P>
-	There are some other Octave scripts for audio to be found 
-		<A HREF="http://octave.sourceforge.net/index/audio.html">here</A>.
+	There are some other Octave scripts for audio to be found
+		<A HREF="http://octave.sourceforge.net/audio/index.html">here</A>.
 </P>
 
 <BR>
@@ -109,7 +109,7 @@
 
 <HR>
 <P>
-	The libsndfile home page is here : 
+	The libsndfile home page is here :
 		<A HREF="http://www.mega-nerd.com/libsndfile/">
 			http://www.mega-nerd.com/libsndfile/</A>.
 </P>

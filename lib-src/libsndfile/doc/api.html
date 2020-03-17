@@ -34,7 +34,7 @@
 	Every effort is made to keep these documents up-to-date, error free and
 	unambiguous.
 	However, since maintaining the documentation is the least fun part of working
-	on libsndfile, these docs can and do fall behind the behaviour of library.
+	on libsndfile, these docs can and do fall behind the behaviour of the library.
 	If any errors, omissions or ambiguities are found, please notify me (erikd)
 	at mega-nerd dot com.
 </P>
@@ -63,6 +63,7 @@ The functions of libsndfile are defined as follows:
       #include &lt;sndfile.h&gt;
 
       SNDFILE*    <A HREF="#open">sf_open</A>          (const char *path, int mode, SF_INFO *sfinfo) ;
+      SNDFILE*    <A HREF="#open">sf_wchar_open</A>    (LPCWSTR wpath, int mode, SF_INFO *sfinfo) ;
       SNDFILE*    <A HREF="#open_fd">sf_open_fd</A>       (int fd, int mode, SF_INFO *sfinfo, int close_desc) ;
       SNDFILE* 	  <A HREF="#open_virtual">sf_open_virtual</A>  (SF_VIRTUAL_IO *sfvirtual, int mode, SF_INFO *sfinfo, void *user_data) ;
       int         <A HREF="#check">sf_format_check</A>  (const SF_INFO *info) ;
@@ -119,6 +120,18 @@ SNDFILE* is an anonymous pointer to data which is private to the library.
 
 <PRE>
       SNDFILE*  sf_open    (const char *path, int mode, SF_INFO *sfinfo) ;
+</PRE>
+
+<P>
+The sf_open() function opens the sound file at the specified path.
+The filename is byte encoded, but may be utf-8 on Linux, while on Mac OS X it
+will use the filesystem character set.
+On Windows, there is also a Windows specific sf_wchar_open() that takes a
+UTF16_BE encoded filename.
+</P>
+
+<PRE>
+      SNDFILE*  sf_wchar_open (LPCWSTR wpath, int mode, SF_INFO *sfinfo) ;
 </PRE>
 
 <P>
@@ -524,7 +537,7 @@ SFM_READ no action is taken.
 
 
 <A NAME="read"></A>
-<H2><BR><B>File Read Functions (Items)</B></H2>
+<H2><BR><B>File Read Functions</B></H2>
 
 <PRE>
       sf_count_t  sf_read_short   (SNDFILE *sndfile, short *ptr, sf_count_t items) ;
@@ -533,32 +546,7 @@ SFM_READ no action is taken.
       sf_count_t  sf_read_double  (SNDFILE *sndfile, double *ptr, sf_count_t items) ;
 </PRE>
 
-<P>
-The file read items functions fill the array pointed to by ptr with the requested
-number of items. The items parameter must be an integer product of the number
-of channels or an error will occur.
-</P>
-<!-- pepper -->
-<P>
-It is important to note that the data type used by the calling program and the data
-format of the file do not need to be the same. For instance, it is possible to open
-a 16 bit PCM encoded WAV file and read the data using sf_read_float(). The library
-seamlessly converts between the two formats on-the-fly. See
-<A HREF="#note1">Note 1</A>.
-</P>
-<!-- pepper -->
-<P>
-The sf_read_XXXX functions return the number of items read.
-Unless the end of the file was reached during the read, the return value should
-equal the number of items requested.
-Attempts to read beyond the end of the file will not result in an error but will
-cause the sf_read_XXXX functions to return less than the number of items requested
-or 0 if already at the end of the file.
-</P>
-
 <A NAME="readf"></A>
-<H2><BR><B>File Read Functions (Frames)</B></H2>
-
 <PRE>
       sf_count_t  sf_readf_short   (SNDFILE *sndfile, short *ptr, sf_count_t frames) ;
       sf_count_t  sf_readf_int     (SNDFILE *sndfile, int *ptr, sf_count_t frames) ;
@@ -567,27 +555,55 @@ or 0 if already at the end of the file.
 </PRE>
 <!-- pepper -->
 <P>
-The file read frames functions fill the array pointed to by ptr with the requested
-number of frames of data. The array must be large enough to hold the product of
-frames and the number of channels.
+The file read functions fill the array pointed to by ptr with the
+requested number of items or frames.
 </P>
 
-<P><B>
-Care must be taken to ensure that there is enough space in the array pointed to by
-ptr, to take (frames * channels) number of items (shorts, ints, floats or doubles).
+<P>
+For the frames-count functions, the frames parameter specifies the number
+of frames. A frame is just a block of samples, one for each
+channel. <B>Care must be taken to ensure that there is enough space
+in the array pointed to by ptr, to take (frames * channels) number of
+items (shorts, ints, floats or doubles).
 </B></P>
 
 <P>
-The sf_readf_XXXX functions return the number of frames read.
-Unless the end of the file was reached during the read, the return value should equal
-the number of frames requested.
-Attempts to read beyond the end of the file will not result in an error but will cause
-the sf_readf_XXXX functions to return less than the number of frames requested or 0 if
-already at the end of the file.
+For the items-count functions, the items parameter must be an integer product
+of the number of channels or an error will occur. Here, an item is just a
+sample.
+</P>
+
+<P>
+Note: The only difference between the "items" and "frames" versions of
+each read function is the units in which the object count is specified
+- calling sf_readf_short with a count argument of N, on a SNDFILE with
+C channels, is the same as calling sf_read_short with a count argument
+of N*C. The buffer pointed to by "ptr" should be the same number of
+bytes in each case.
+</P>
+
+<!-- pepper -->
+<P>
+Note: The data type used by the calling program and the data format of
+the file do not need to be the same. For instance, it is possible to
+open a 16 bit PCM encoded WAV file and read the data using
+sf_read_float(). The library seamlessly converts between the two
+formats on-the-fly. See
+<A HREF="#note1">Note 1</A>.
+</P>
+<!-- pepper -->
+<P>
+The sf_read_XXXX and sf_readf_XXXX functions return the number of
+items or frames read, respectively. Unless the end of the file was
+reached during the read, the return value should equal the number of
+objects requested. Attempts to read beyond the end of the file will
+not result in an error but will cause the read functions to return
+less than the number of objects requested or 0 if already at the end
+of the file.
 </P>
 
 <A NAME="write"></A>
-<H2><BR><B>File Write Functions (Items)</B></H2>
+<H2><BR><B>File Write Functions</B></H2>
 
 <PRE>
       sf_count_t  sf_write_short   (SNDFILE *sndfile, short *ptr, sf_count_t items) ;
@@ -596,27 +612,7 @@ already at the end of the file.
       sf_count_t  sf_write_double  (SNDFILE *sndfile, double *ptr, sf_count_t items) ;
 </PRE>
 
-<P>
-The file write items functions write the data in the array pointed to by ptr to the file.
-The items parameter must be an integer product of the number of channels or an error
-will occur.
-</P>
-<!-- pepper -->
-<P>
-It is important to note that the data type used by the calling program and the data
-format of the file do not need to be the same. For instance, it is possible to open
-a 16 bit PCM encoded WAV file and write the data using sf_write_float(). The library
-seamlessly converts between the two formats on-the-fly. See
-<A HREF="#note1">Note 1</A>.
-</P>
-<P>
-The sf_write_XXXX functions return the number of items written (which should be the
-same as the items parameter).
-</P>
-
 <A NAME="writef"></A>
-<H2><BR><B>File Write Functions (Frames)</B></H2>
-
 <PRE>
       sf_count_t  sf_writef_short  (SNDFILE *sndfile, short *ptr, sf_count_t frames) ;
       sf_count_t  sf_writef_int    (SNDFILE *sndfile, int *ptr, sf_count_t frames) ;
@@ -625,13 +621,34 @@ same as the items parameter).
 </PRE>
 
 <P>
-The file write frames functions write the data in the array pointed to by ptr to the file.
-The array must be large enough to hold the product of frames and the number of channels.
+The file write functions write the data in the array pointed to by ptr to the file.
 </P>
+
 <P>
-The sf_writef_XXXX functions return the number of frames written (which should be the
-same as the frames parameter).
+For items-count functions, the items parameter specifies the size of
+the array and must be an integer product of the number of channels or
+an error will occur.
 </P>
+
+<P>
+For the frames-count functions, the array is expected to be large enough
+to hold a number of items equal to the product of frames and the
+number of channels.
+</P>
+
+<P>As with the read functions <A HREF="#read">above</A>, the only
+difference in the items and frames version of each write function is
+the units in which the buffer size is specified. Again, the data type
+used by the calling program and the data format of the file do not
+need to be the same (<A HREF="#note1">Note 1</A>).
+</P>
+
+<P>
+The sf_write_XXXX and sf_writef_XXXX functions respectively return the
+number of items or frames written (which should be the same as the
+items or frames parameter).
+</P>
+
 
 <A NAME="raw"></A>
 <H2><BR><B>Raw File Read and Write Functions</B></H2>
@@ -692,7 +709,11 @@ The <B>str_type</B> parameter can be any one of the following string types:
               SF_STR_SOFTWARE,
               SF_STR_ARTIST,
               SF_STR_COMMENT,
-              SF_STR_DATE
+              SF_STR_DATE,
+              SF_STR_ALBUM,
+              SF_STR_LICENSE,
+              SF_STR_TRACKNUMBER,
+              SF_STR_GENRE
           } ;
 </PRE>
 
@@ -710,9 +731,20 @@ It returns zero on success and non-zero on error.
 The error code can be converted to a string using sf_error_number().
 </P>
 
+<P>
+Strings passed to and retrieved from these two functions are assumed to be
+utf-8.
+However, while formats like Ogg/Vorbis and FLAC fully support utf-8, others
+like WAV and AIFF officially only support ASCII.
+Writing utf-8 strings to WAV and AIF files with libsndfile will work when read
+back with libsndfile, but may not work with other programs.
+</P>
 
 <P>
-
+The suggested method of dealing with tags retrived using sf_get_string() is to
+assume they are utf-8.
+Similarly if you have a string in some exotic format like utf-16, it should be
+encoded to utf-8 before being written using libsndfile.
 </P>
 
 <HR>
@@ -721,8 +753,9 @@ The error code can be converted to a string using sf_error_number().
 <H2><BR><B>Note 1</B></H2>
 <!-- pepper -->
 <P>
-When converting between integer PCM formats of differing size (ie using sf_read_int()
-to read a 16 bit PCM encoded WAV file) libsndfile obeys one simple rule:
+When converting between integer PCM formats of differing size
+(e.g. using sf_read_int() to read a 16 bit PCM encoded WAV file)
+libsndfile obeys one simple rule:
 </P>
 
 <P CLASS=indent_block>
@@ -766,7 +799,7 @@ and a parameter of SF_TRUE to force correct scaling.
 		<A HREF="http://www.mega-nerd.com/libsndfile/">here</A>.
 </P>
 <P>
-Version : 1.0.24
+Version : 1.0.28
 </P>
 <!-- pepper -->
 <!-- pepper -->

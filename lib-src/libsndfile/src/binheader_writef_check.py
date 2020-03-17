@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright (C) 2006-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+# Copyright (C) 2006-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 #
 # All rights reserved.
 #
@@ -42,75 +42,73 @@ import re, string, sys
 _whitespace_re = re.compile ("\s+", re.MULTILINE)
 
 def find_binheader_writefs (data):
-	lst = re.findall ('psf_binheader_writef\s*\(\s*[a-zA-Z_]+\s*,\s*\"[^;]+;', data, re.MULTILINE)
-	return [_whitespace_re.sub (" ", x) for x in lst]
+    lst = re.findall ('psf_binheader_writef\s*\(\s*[a-zA-Z_]+\s*,\s*\"[^;]+;', data, re.MULTILINE)
+    return [_whitespace_re.sub (" ", x) for x in lst]
 
 def find_format_string (s):
-	fmt = re.search ('"([^"]+)"', s)
-	if not fmt:
-		print "Bad format in :\n\n\t%s\n\n" % s
-		sys.exit (1)
-	fmt = fmt.groups ()
-	if len (fmt) != 1:
-		print "Bad format in :\n\n\t%s\n\n" % s
-		sys.exit (1)
-	return _whitespace_re.sub ("", fmt [0])
+    fmt = re.search ('"([^"]+)"', s)
+    if not fmt:
+        print ("Bad format in :\n\n\t%s\n\n" % s)
+        sys.exit (1)
+    fmt = fmt.groups ()
+    if len (fmt) != 1:
+        print ("Bad format in :\n\n\t%s\n\n" % s)
+        sys.exit (1)
+    return _whitespace_re.sub ("", fmt [0])
 
 def get_param_list (data):
-	dlist = re.search ("\((.+)\)\s*;", data)
-	dlist = dlist.groups ()[0]
-	dlist = string.split (dlist, ",")
-	dlist = [string.strip (x) for x in dlist]
-	return dlist [2:]
+    dlist = re.search ("\((.+)\)\s*;", data)
+    dlist = dlist.groups ()[0]
+    dlist = dlist.split(",")
+    dlist = [x.strip() for x in dlist]
+    return dlist [2:]
 
 def handle_file (fname):
-	errors = 0
-	data = open (fname, "r").read ()
+    errors = 0
+    data = open (fname, "r").read ()
 
-	writefs = find_binheader_writefs (data)
-	for item in writefs:
-		fmt = find_format_string (item)
-		params = get_param_list (item)
-		param_index = 0
+    # return errors
 
-		# print item
+    writefs = find_binheader_writefs (data)
+    for item in writefs:
+        fmt = find_format_string (item)
+        params = get_param_list (item)
+        param_index = 0
 
-		for ch in fmt:
-			if ch in 'Eet ':
-				continue
+        # print item
 
-			# print "    param [%d] %c : %s" % (param_index, ch, params [param_index])
+        for ch in fmt:
+            if ch in 'Eet ':
+                continue
 
-			if ch != 'b':
-				param_index += 1
-				continue
+            if ch == 'b':
+                if params [param_index][:4] == "BHWv" and params [param_index + 1][:4] == "BHWz":
+                    param_index += 2
+                    continue
 
-			# print item
-			# print "    param [%d] %c : %s <-> %s" % (param_index, ch, params [param_index], params [param_index + 1])
+            if "BHW" + ch == params [param_index][:4]:
+                param_index += 1
+                continue
 
-			if string.find (params [param_index + 1], "sizeof") < 0 \
-						and string.find (params [param_index + 1], "make_size_t") < 0 \
-						and string.find (params [param_index + 1], "strlen") < 0:
-				if errors == 0: print
-				print "\n%s :" % fname
-				print "    param [%d] %c : %s <-> %s" % (param_index, ch, params [param_index], params [param_index + 1])
-				print "    %s" % item
-				errors += 1
-			param_index += 2
+            if errors == 0: sys.stdout.write ("\n")
+            print ("\n%s: error for format specifier '%c' (index %d) in:\n    %s\n" % (fname, ch, param_index, item))
+            errors += 1
+            # Break out of 'for ch in fmt' loop
+            break
 
-	return errors
+    return errors
 
 #===============================================================================
 
 if len (sys.argv) > 1:
-	print "\n    binheader_writef_check                   :",
-	sys.stdout.flush ()
-	errors = 0
-	for fname in sys.argv [1:]:
-		errors += handle_file (fname)
-	if errors > 0:
-		print "\nErrors : %d\n" % errors
-		sys.exit (1)
+    sys.stdout.write ("\n    binheader_writef_check                   : ")
+    sys.stdout.flush ()
+    errors = 0
+    for fname in sys.argv [1:]:
+        errors += handle_file (fname)
+    if errors > 0:
+        print ("\nErrors : %d\n" % errors)
+        sys.exit (1)
 
-print "ok\n"
+print ("ok\n")
 

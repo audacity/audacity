@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2009-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2009-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -40,12 +40,11 @@ sf_wchar_open (LPCWSTR wpath, int mode, SF_INFO *sfinfo)
 {	SF_PRIVATE 	*psf ;
 	char utf8name [512] ;
 
-	if ((psf = calloc (1, sizeof (SF_PRIVATE))) == NULL)
+	if ((psf = psf_allocate ()) == NULL)
 	{	sf_errno = SFE_MALLOC_FAILED ;
 		return	NULL ;
 		} ;
 
-	memset (psf, 0, sizeof (SF_PRIVATE)) ;
 	psf_init_files (psf) ;
 
 	if (WideCharToMultiByte (CP_UTF8, 0, wpath, -1, utf8name, sizeof (utf8name), NULL, NULL) == 0)

@@ -1,36 +1,34 @@
-.de EX
-.ne 5
-.if n .sp 1
-.if t .sp .5
-.nf
-.in +.5i
-..
-.de EE
-.fi
-.in -.5i
-.if n .sp 1
-.if t .sp .5
-..
-.TH SNDFILE-PLAY 1 "July 28, 2002"
-.SH NAME
-sndfile-play \- play a sound file
-.SH SYNOPSIS
-.B sndfile-play
-.RI file
-.SH DESCRIPTION
-sndfile-play plays the specified sound file using :
-.EX
-ALSA on Linux
-/dev/dsp on systems supporting OSS (including Linux)
-/dev/audio on Sun Solaris
-CoreAudio on Apple MacOSX
-waveOut on Microsoft Win32
-.EE
-sndfile-play uses libsndfile (http://www.mega-nerd.com/libsndfile/)
-to read the file.
-.SH AUTHOR
-This manual page was originally written by Joshua Haberman 
-<joshua@debian.org>, for the Debian GNU/Linux system (but may be used by 
-others). Further additions have been made by Erik de Castro Lopo 
-<erikd@mega-nerd.com>.
-
+.Dd November 2, 2014
+.Dt SNDFILE-PLAY 1
+.Os
+.Sh NAME
+.Nm sndfile-play
+.Nd play a sound file
+.Sh SYNOPSIS
+.Nm sndfile-play
+.Ar
+.Sh DESCRIPTION
+.Nm
+plays one or more sound files on various operating systems using standard audio
+output APIs. The following table summarizes which audio API is used where:
+.Pp
+.Bl -tag -width MacOSX10XXX -compact
+.It Linux
+ALSA or OSS
+.It OpenBSD
+sndio
+.It FreeBSD
+/dev/dsp (OSS)
+.It Solaris
+/dev/audio
+.It MacOSX 10.6
+CoreAudio
+.It MacOSX 10.7
+AudioToolbox
+.It Win32
+waveOut
+.El
+.Sh SEE ALSO
+.Lk http://www.mega-nerd.com/libsndfile/
+.Sh AUTHORS
+.An Erik de Castro Lopo Aq Mt erikd@mega-nerd.com

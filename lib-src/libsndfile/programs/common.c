@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2019 Erik de Castro Lopo <erikd@mega-nerd.com>
 ** Copyright (C) 2008 George Blood Audio
 **
 ** All rights reserved.
@@ -36,26 +36,27 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdint.h>
+#include <math.h>
 
 #include <sndfile.h>
 
 #include "common.h"
 
-#define	 BUFFER_LEN	4096
+#define	BUFFER_LEN	4096
 
-#define	MIN(x,y)	((x) < (y) ? (x) : (y))
+#define	MIN(x, y)	((x) < (y) ? (x) : (y))
 
 void
-sfe_copy_data_fp (SNDFILE *outfile, SNDFILE *infile, int channels)
+sfe_copy_data_fp (SNDFILE *outfile, SNDFILE *infile, int channels, int normalize)
 {	static double	data [BUFFER_LEN], max ;
-	int		frames, readcount, k ;
+	sf_count_t		frames, readcount, k ;
 
 	frames = BUFFER_LEN / channels ;
 	readcount = frames ;
 
 	sf_command (infile, SFC_CALC_SIGNAL_MAX, &max, sizeof (max)) ;
 
-	if (max < 1.0)
+	if (!normalize && max < 1.0)
 	{	while (readcount > 0)
 		{	readcount = sf_readf_double (infile, data, frames) ;
 			sf_writef_double (outfile, data, readcount) ;
@@ -146,6 +147,18 @@ merge_broadcast_info (SNDFILE * infile, SNDFILE * outfile, int format, const MET
 	REPLACE_IF_NEW (origination_date) ;
 	REPLACE_IF_NEW (origination_time) ;
 	REPLACE_IF_NEW (umid) ;
+
+	/* Special case loudness values */
+#define REPLACE_IF_NEW_INT(x) \
+		if (info->x != NULL) \
+		{	binfo.x = round (atof (info->x) * 100.0) ; \
+			} ;
+
+	REPLACE_IF_NEW_INT (loudness_value) ;
+	REPLACE_IF_NEW_INT (loudness_range) ;
+	REPLACE_IF_NEW_INT (max_true_peak_level) ;
+	REPLACE_IF_NEW_INT (max_momentary_loudness) ;
+	REPLACE_IF_NEW_INT (max_shortterm_loudness) ;
 
 	/* Special case for Time Ref. */
 	if (info->time_ref != NULL)
@@ -252,7 +265,7 @@ sfe_apply_metadata_changes (const char * filenames [2], const METADATA_INFO * in
 
 		/* If the input file is not the same as the output file, copy the data. */
 		if ((infileminor == SF_FORMAT_DOUBLE) || (infileminor == SF_FORMAT_FLOAT))
-			sfe_copy_data_fp (outfile, infile, sfinfo.channels) ;
+			sfe_copy_data_fp (outfile, infile, sfinfo.channels, SF_FALSE) ;
 		else
 			sfe_copy_data_int (outfile, infile, sfinfo.channels) ;
 		} ;
@@ -282,35 +295,42 @@ typedef struct
 	int			format ;
 } OUTPUT_FORMAT_MAP ;
 
+/* Map a file name extension to a container format. */
 static OUTPUT_FORMAT_MAP format_map [] =
 {
-	{	"aif",		3,	SF_FORMAT_AIFF	},
 	{	"wav", 		0,	SF_FORMAT_WAV	},
+	{	"aif",		3,	SF_FORMAT_AIFF	},
 	{	"au",		0,	SF_FORMAT_AU	},
-	{	"caf",		0,	SF_FORMAT_CAF	},
-	{	"flac",		0,	SF_FORMAT_FLAC	},
 	{	"snd",		0,	SF_FORMAT_AU	},
-	{	"svx",		0,	SF_FORMAT_SVX	},
-	{	"paf",		0,	SF_ENDIAN_BIG | SF_FORMAT_PAF	},
-	{	"fap",		0,	SF_ENDIAN_LITTLE | SF_FORMAT_PAF	},
+	{	"raw",		0,	SF_FORMAT_RAW	},
 	{	"gsm",		0,	SF_FORMAT_RAW	},
+	{	"vox",		0, 	SF_FORMAT_RAW 	},
+	{	"paf",		0,	SF_FORMAT_PAF | SF_ENDIAN_BIG },
+	{	"fap",		0,	SF_FORMAT_PAF | SF_ENDIAN_LITTLE },
+	{	"svx",		0,	SF_FORMAT_SVX	},
 	{	"nist", 	0,	SF_FORMAT_NIST	},
-	{	"htk",		0,	SF_FORMAT_HTK	},
+	{	"sph",		0,	SF_FORMAT_NIST	},
+	{	"voc",		0, 	SF_FORMAT_VOC	},
 	{	"ircam",	0,	SF_FORMAT_IRCAM	},
 	{	"sf",		0, 	SF_FORMAT_IRCAM	},
-	{	"voc",		0, 	SF_FORMAT_VOC	},
 	{	"w64", 		0, 	SF_FORMAT_W64	},
-	{	"raw",		0,	SF_FORMAT_RAW	},
+	{	"mat",		0, 	SF_FORMAT_MAT4 	},
 	{	"mat4", 	0,	SF_FORMAT_MAT4	},
 	{	"mat5", 	0, 	SF_FORMAT_MAT5 	},
-	{	"mat",		0, 	SF_FORMAT_MAT4 	},
 	{	"pvf",		0, 	SF_FORMAT_PVF 	},
-	{	"sds",		0, 	SF_FORMAT_SDS 	},
-	{	"sd2",		0, 	SF_FORMAT_SD2 	},
-	{	"vox",		0, 	SF_FORMAT_RAW 	},
 	{	"xi",		0, 	SF_FORMAT_XI 	},
+	{	"htk",		0,	SF_FORMAT_HTK	},
+	{	"sds",		0, 	SF_FORMAT_SDS 	},
+	{	"avr",		0, 	SF_FORMAT_AVR 	},
+	{	"wavex",	0, 	SF_FORMAT_WAVEX },
+	{	"sd2",		0, 	SF_FORMAT_SD2 	},
+	{	"flac",		0,	SF_FORMAT_FLAC	},
+	{	"caf",		0,	SF_FORMAT_CAF	},
 	{	"wve",		0,	SF_FORMAT_WVE	},
+	{	"prc",		0,	SF_FORMAT_WVE	},
+	{	"ogg",		0,	SF_FORMAT_OGG	},
 	{	"oga",		0,	SF_FORMAT_OGG	},
+	{	"opus",		0,	SF_FORMAT_OGG	}, /*  Opus data in an Ogg container. */
 	{	"mpc",		0,	SF_FORMAT_MPC2K	},
 	{	"rf64",		0,	SF_FORMAT_RF64	},
 } ; /* format_map */
@@ -368,12 +388,95 @@ program_name (const char * argv0)
 	tmp = strrchr (argv0, '/') ;
 	argv0 = tmp ? tmp + 1 : argv0 ;
 
-	tmp = strrchr (argv0, '/') ;
-	argv0 = tmp ? tmp + 1 : argv0 ;
-
 	/* Remove leading libtool name mangling. */
 	if (strstr (argv0, "lt-") == argv0)
 		return argv0 + 3 ;
 
 	return argv0 ;
 } /* program_name */
+
+const char *
+sfe_endian_name (int format)
+{
+	switch (format & SF_FORMAT_ENDMASK)
+	{	case SF_ENDIAN_FILE : return "file" ;
+		case SF_ENDIAN_LITTLE : return "little" ;
+		case SF_ENDIAN_BIG : return "big" ;
+		case SF_ENDIAN_CPU : return "cpu" ;
+		default : break ;
+		} ;
+
+	return "unknown" ;
+} /* sfe_endian_name */
+
+const char *
+sfe_container_name (int format)
+{
+	switch (format & SF_FORMAT_TYPEMASK)
+	{	case SF_FORMAT_WAV : return "WAV" ;
+		case SF_FORMAT_AIFF : return "AIFF" ;
+		case SF_FORMAT_AU : return "AU" ;
+		case SF_FORMAT_RAW : return "RAW" ;
+		case SF_FORMAT_PAF : return "PAF" ;
+		case SF_FORMAT_SVX : return "SVX" ;
+		case SF_FORMAT_NIST : return "NIST" ;
+		case SF_FORMAT_VOC : return "VOC" ;
+		case SF_FORMAT_IRCAM : return "IRCAM" ;
+		case SF_FORMAT_W64 : return "W64" ;
+		case SF_FORMAT_MAT4 : return "MAT4" ;
+		case SF_FORMAT_MAT5 : return "MAT5" ;
+		case SF_FORMAT_PVF : return "PVF" ;
+		case SF_FORMAT_XI : return "XI" ;
+		case SF_FORMAT_HTK : return "HTK" ;
+		case SF_FORMAT_SDS : return "SDS" ;
+		case SF_FORMAT_AVR : return "AVR" ;
+		case SF_FORMAT_WAVEX : return "WAVEX" ;
+		case SF_FORMAT_SD2 : return "SD2" ;
+		case SF_FORMAT_FLAC : return "FLAC" ;
+		case SF_FORMAT_CAF : return "CAF" ;
+		case SF_FORMAT_WVE : return "WVE" ;
+		case SF_FORMAT_OGG : return "OGG" ;
+		case SF_FORMAT_MPC2K : return "MPC2K" ;
+		case SF_FORMAT_RF64 : return "RF64" ;
+		default : break ;
+		} ;
+
+	return "unknown" ;
+} /* sfe_container_name */
+
+const char *
+sfe_codec_name (int format)
+{
+	switch (format & SF_FORMAT_SUBMASK)
+	{	case SF_FORMAT_PCM_S8 : return "signed 8 bit PCM" ;
+		case SF_FORMAT_PCM_16 : return "16 bit PCM" ;
+		case SF_FORMAT_PCM_24 : return "24 bit PCM" ;
+		case SF_FORMAT_PCM_32 : return "32 bit PCM" ;
+		case SF_FORMAT_PCM_U8 : return "unsigned 8 bit PCM" ;
+		case SF_FORMAT_FLOAT : return "32 bit float" ;
+		case SF_FORMAT_DOUBLE : return "64 bit double" ;
+		case SF_FORMAT_ULAW : return "u-law" ;
+		case SF_FORMAT_ALAW : return "a-law" ;
+		case SF_FORMAT_IMA_ADPCM : return "IMA ADPCM" ;
+		case SF_FORMAT_MS_ADPCM : return "MS ADPCM" ;
+		case SF_FORMAT_GSM610 : return "gsm610" ;
+		case SF_FORMAT_VOX_ADPCM : return "Vox ADPCM" ;
+		case SF_FORMAT_G721_32 : return "g721 32kbps" ;
+		case SF_FORMAT_G723_24 : return "g723 24kbps" ;
+		case SF_FORMAT_G723_40 : return "g723 40kbps" ;
+		case SF_FORMAT_DWVW_12 : return "12 bit DWVW" ;
+		case SF_FORMAT_DWVW_16 : return "16 bit DWVW" ;
+		case SF_FORMAT_DWVW_24 : return "14 bit DWVW" ;
+		case SF_FORMAT_DWVW_N : return "DWVW" ;
+		case SF_FORMAT_DPCM_8 : return "8 bit DPCM" ;
+		case SF_FORMAT_DPCM_16 : return "16 bit DPCM" ;
+		case SF_FORMAT_VORBIS : return "Vorbis" ;
+		case SF_FORMAT_ALAC_16 : return "16 bit ALAC" ;
+		case SF_FORMAT_ALAC_20 : return "20 bit ALAC" ;
+		case SF_FORMAT_ALAC_24 : return "24 bit ALAC" ;
+		case SF_FORMAT_ALAC_32 : return "32 bit ALAC" ;
+		case SF_FORMAT_OPUS : return "Opus" ;
+		default : break ;
+		} ;
+	return "unknown" ;
+} /* sfe_codec_name */

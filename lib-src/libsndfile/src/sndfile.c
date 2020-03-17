@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2018 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,7 @@
 #include	<stdlib.h>
 #include	<string.h>
 #include	<ctype.h>
+#include	<assert.h>
 
 #include	"sndfile.h"
 #include	"sfendian.h"
@@ -64,7 +65,7 @@ ErrorStruct SndfileErrors [] =
 
 	/* Private error values and their associated strings. */
 	{	SFE_ZERO_MAJOR_FORMAT	, "Error : major format is 0." },
-	{	SFE_ZERO_MINOR_FORMAT	, "Error : major format is 0." },
+	{	SFE_ZERO_MINOR_FORMAT	, "Error : minor format is 0." },
 	{	SFE_BAD_FILE			, "File does not exist or is not a regular file (possibly a pipe?)." },
 	{	SFE_BAD_FILE_READ		, "File exists but no data could be read." },
 	{	SFE_OPEN_FAILED			, "Could not open file." },
@@ -74,12 +75,12 @@ ErrorStruct SndfileErrors [] =
 	{	SFE_BAD_FILE_PTR		, "Bad FILE pointer." },
 	{	SFE_BAD_INT_PTR			, "Internal error, Bad pointer." },
 	{	SFE_BAD_STAT_SIZE		, "Error : software was misconfigured at compile time (sizeof statbuf.st_size)." },
+	{	SFE_NO_TEMP_DIR			, "Error : Could not file temp dir." },
 
 	{	SFE_MALLOC_FAILED		, "Internal malloc () failed." },
 	{	SFE_UNIMPLEMENTED		, "File contains data in an unimplemented format." },
 	{	SFE_BAD_READ_ALIGN		, "Attempt to read a non-integer number of channels." },
 	{	SFE_BAD_WRITE_ALIGN 	, "Attempt to write a non-integer number of channels." },
-	{	SFE_UNKNOWN_FORMAT		, "File contains data in an unknown format." },
 	{	SFE_NOT_READMODE		, "Read attempted on file currently open for write." },
 	{	SFE_NOT_WRITEMODE		, "Write attempted on file currently open for read." },
 	{	SFE_BAD_MODE_RW			, "Error : This file format does not support read/write mode." },
@@ -90,10 +91,11 @@ ErrorStruct SndfileErrors [] =
 	{	SFE_NO_PIPE_WRITE		, "Error : this file format does not support pipe write." },
 	{	SFE_BAD_VIRTUAL_IO		, "Error : bad pointer on SF_VIRTUAL_IO struct." },
 	{	SFE_BAD_BROADCAST_INFO_SIZE
-								, "Error : bad size in SF_BROADCAST_INFO struct." },
+								, "Error : bad coding_history_size in SF_BROADCAST_INFO struct." },
 	{	SFE_BAD_BROADCAST_INFO_TOO_BIG
 								, "Error : SF_BROADCAST_INFO struct too large." },
-
+	{	SFE_BAD_CART_INFO_SIZE				, "Error: SF_CART_INFO struct too large." },
+	{	SFE_BAD_CART_INFO_TOO_BIG			, "Error: bad tag_text_size in SF_CART_INFO struct." },
 	{	SFE_INTERLEAVE_MODE		, "Attempt to write to file with non-interleaved data." },
 	{	SFE_INTERLEAVE_SEEK		, "Bad karma in seek during interleave read operation." },
 	{	SFE_INTERLEAVE_READ		, "Bad karma in read during interleave read operation." },
@@ -103,6 +105,7 @@ ErrorStruct SndfileErrors [] =
 	{	SFE_BAD_ENDIAN			, "Bad endian-ness. Try default endian-ness" },
 	{	SFE_CHANNEL_COUNT_ZERO	, "Channel count is zero." },
 	{	SFE_CHANNEL_COUNT		, "Too many channels specified." },
+	{	SFE_CHANNEL_COUNT_BAD	, "Bad channel count." },
 
 	{	SFE_BAD_SEEK			, "Internal psf_fseek() failed." },
 	{	SFE_NOT_SEEKABLE		, "Seek attempted on unseekable file type." },
@@ -144,7 +147,9 @@ ErrorStruct SndfileErrors [] =
 
 	{	SFE_WAV_ADPCM_NOT4BIT	, "Error in ADPCM WAV file. Invalid bit width." },
 	{	SFE_WAV_ADPCM_CHANNELS	, "Error in ADPCM WAV file. Invalid number of channels." },
+	{	SFE_WAV_ADPCM_SAMPLES	, "Error in ADPCM WAV file. Invalid number of samples per block." },
 	{	SFE_WAV_GSM610_FORMAT	, "Error in GSM610 WAV file. Invalid format chunk." },
+	{	SFE_WAV_NMS_FORMAT		, "Error in NMS ADPCM WAV file. Invalid format chunk." },
 
 	{	SFE_AIFF_NO_FORM		, "Error in AIFF file, bad 'FORM' marker." },
 	{	SFE_AIFF_AIFF_NO_FORM	, "Error in AIFF file, 'AIFF' marker without 'FORM'." },
@@ -164,15 +169,15 @@ ErrorStruct SndfileErrors [] =
 	{	SFE_AU_EMBED_BAD_LEN	, "Embedded AU file with unknown length." },
 
 	{	SFE_RAW_READ_BAD_SPEC	, "Error while opening RAW file for read. Must specify format and channels.\n"
-									"Possibly trying to open unsupported format."
-									 },
+									"Possibly trying to open unsupported format." },
 	{	SFE_RAW_BAD_BITWIDTH	, "Error. RAW file bitwidth must be a multiple of 8." },
-	{	SFE_RAW_BAD_FORMAT		, "Error. Bad format field in SF_INFO struct when openning a RAW file for read." },
+	{	SFE_RAW_BAD_FORMAT		, "Error. Bad format field in SF_INFO struct when opening a RAW file for read." },
 
 	{	SFE_PAF_NO_MARKER		, "Error in PAF file, no marker." },
 	{	SFE_PAF_VERSION			, "Error in PAF file, bad version." },
 	{	SFE_PAF_UNKNOWN_FORMAT	, "Error in PAF file, unknown format." },
 	{	SFE_PAF_SHORT_HEADER	, "Error in PAF file. File shorter than minimal header." },
+	{	SFE_PAF_BAD_CHANNELS	, "Error in PAF file. Bad channel count." },
 
 	{	SFE_SVX_NO_FORM			, "Error in 8SVX / 16SV file, no 'FORM' marker." },
 	{	SFE_SVX_NO_BODY			, "Error in 8SVX / 16SV file, no 'BODY' marker." },
@@ -197,7 +202,7 @@ ErrorStruct SndfileErrors [] =
 
 	{	SFE_IRCAM_NO_MARKER		, "Error in IRCAM file, bad IRCAM marker." },
 	{	SFE_IRCAM_BAD_CHANNELS	, "Error in IRCAM file, bad channel count." },
-	{	SFE_IRCAM_UNKNOWN_FORMAT, "Error in IRCAM file, unknow encoding format." },
+	{	SFE_IRCAM_UNKNOWN_FORMAT, "Error in IRCAM file, unknown encoding format." },
 
 	{	SFE_W64_64_BIT			, "Error in W64 file, file contains 64 bit offset." },
 	{	SFE_W64_NO_RIFF			, "Error in W64 file. No 'riff' chunk marker." },
@@ -237,9 +242,10 @@ ErrorStruct SndfileErrors [] =
 
 	{	SFE_FLAC_BAD_HEADER		, "Error : bad flac header." },
 	{	SFE_FLAC_NEW_DECODER	, "Error : problem while creating flac decoder." },
-	{	SFE_FLAC_INIT_DECODER	, "Error : problem while initialization of the flac decoder." },
+	{	SFE_FLAC_INIT_DECODER	, "Error : problem with initialization of the flac decoder." },
 	{	SFE_FLAC_LOST_SYNC		, "Error : flac decoder lost sync." },
 	{	SFE_FLAC_BAD_SAMPLE_RATE, "Error : flac does not support this sample rate." },
+	{	SFE_FLAC_CHANNEL_COUNT_CHANGED, "Error : flac channel changed mid stream." },
 	{	SFE_FLAC_UNKOWN_ERROR	, "Error : unknown error in flac decoder." },
 
 	{	SFE_WVE_NOT_WVE			, "Error : not a WVE file." },
@@ -247,10 +253,25 @@ ErrorStruct SndfileErrors [] =
 
 	{	SFE_DWVW_BAD_BITWIDTH	, "Error : Bad bit width for DWVW encoding. Must be 12, 16 or 24." },
 	{	SFE_G72X_NOT_MONO		, "Error : G72x encoding does not support more than 1 channel." },
+	{	SFE_NMS_ADPCM_NOT_MONO	, "Error : NMS ADPCM encoding does not support more than 1 channel." },
 
 	{	SFE_VORBIS_ENCODER_BUG	, "Error : Sample rate chosen is known to trigger a Vorbis encoder bug on this CPU." },
 
 	{	SFE_RF64_NOT_RF64		, "Error : Not an RF64 file." },
+	{	SFE_RF64_PEAK_B4_FMT	, "Error in RF64 file. 'PEAK' chunk found before 'fmt ' chunk." },
+	{	SFE_RF64_NO_DATA		, "Error in RF64 file. No 'data' chunk marker." },
+
+	{	SFE_ALAC_FAIL_TMPFILE	, "Error : Failed to open tmp file for ALAC encoding." },
+
+	{	SFE_BAD_CHUNK_PTR		, "Error : Bad SF_CHUNK_INFO pointer." },
+	{	SFE_UNKNOWN_CHUNK		, "Error : Unknown chunk marker." },
+	{	SFE_BAD_CHUNK_FORMAT	, "Error : Reading/writing chunks from this file format is not supported." },
+	{	SFE_BAD_CHUNK_MARKER	, "Error : Bad chunk marker." },
+	{	SFE_BAD_CHUNK_DATA_PTR	, "Error : Bad data pointer in SF_CHUNK_INFO struct." },
+	{	SFE_FILENAME_TOO_LONG	, "Error : Supplied filename too long." },
+	{	SFE_NEGATIVE_RW_LEN		, "Error : Length parameter passed to read/write is negative." },
+
+	{	SFE_OPUS_BAD_SAMPLERATE	, "Error : Opus only supports sample rates of 8000, 12000, 16000, 24000 and 48000." },
 
 	{	SFE_MAX_ERROR			, "Maximum error number." },
 	{	SFE_MAX_ERROR + 1		, NULL }
@@ -264,7 +285,7 @@ static int	guess_file_type (SF_PRIVATE *psf) ;
 static int	validate_sfinfo (SF_INFO *sfinfo) ;
 static int	validate_psf (SF_PRIVATE *psf) ;
 static void	save_header_info (SF_PRIVATE *psf) ;
-static void	copy_filename (SF_PRIVATE *psf, const char *path) ;
+static int	copy_filename (SF_PRIVATE *psf, const char *path) ;
 static int	psf_close (SF_PRIVATE *psf) ;
 
 static int	try_resource_fork (SF_PRIVATE * psf) ;
@@ -274,13 +295,13 @@ static int	try_resource_fork (SF_PRIVATE * psf) ;
 */
 
 int	sf_errno = 0 ;
-static char	sf_logbuffer [SF_BUFFER_LEN] = { 0 } ;
+static char	sf_parselog [SF_BUFFER_LEN] = { 0 } ;
 static char	sf_syserr [SF_SYSERR_LEN] = { 0 } ;
 
 /*------------------------------------------------------------------------------
 */
 
-#define	VALIDATE_SNDFILE_AND_ASSIGN_PSF(a,b,c)		\
+#define	VALIDATE_SNDFILE_AND_ASSIGN_PSF(a, b, c)	\
 		{	if ((a) == NULL)						\
 			{	sf_errno = SFE_BAD_SNDFILE_PTR ;	\
 				return 0 ;							\
@@ -307,19 +328,21 @@ sf_open	(const char *path, int mode, SF_INFO *sfinfo)
 {	SF_PRIVATE 	*psf ;
 
 	/* Ultimate sanity check. */
-	SF_ASSERT (sizeof (sf_count_t) == 8) ;
+	assert (sizeof (sf_count_t) == 8) ;
 
-	if ((psf = calloc (1, sizeof (SF_PRIVATE))) == NULL)
+	if ((psf = psf_allocate ()) == NULL)
 	{	sf_errno = SFE_MALLOC_FAILED ;
 		return	NULL ;
 		} ;
 
-	memset (psf, 0, sizeof (SF_PRIVATE)) ;
 	psf_init_files (psf) ;
 
 	psf_log_printf (psf, "File : %s\n", path) ;
 
-	copy_filename (psf, path) ;
+	if (copy_filename (psf, path) != 0)
+	{	sf_errno = psf->error ;
+		return	NULL ;
+		} ;
 
 	psf->file.mode = mode ;
 	if (strcmp (path, "-") == 0)
@@ -339,7 +362,7 @@ sf_open_fd	(int fd, int mode, SF_INFO *sfinfo, int close_desc)
 		return	NULL ;
 		} ;
 
-	if ((psf = calloc (1, sizeof (SF_PRIVATE))) == NULL)
+	if ((psf = psf_allocate ()) == NULL)
 	{	sf_errno = SFE_MALLOC_FAILED ;
 		return	NULL ;
 		} ;
@@ -363,25 +386,31 @@ sf_open_virtual	(SF_VIRTUAL_IO *sfvirtual, int mode, SF_INFO *sfinfo, void *user
 {	SF_PRIVATE 	*psf ;
 
 	/* Make sure we have a valid set ot virtual pointers. */
-	if (sfvirtual->get_filelen == NULL || sfvirtual->seek == NULL || sfvirtual->tell == NULL)
+	if (sfvirtual->get_filelen == NULL)
 	{	sf_errno = SFE_BAD_VIRTUAL_IO ;
-		snprintf (sf_logbuffer, sizeof (sf_logbuffer), "Bad vio_get_filelen / vio_seek / vio_tell in SF_VIRTUAL_IO struct.\n") ;
+		snprintf (sf_parselog, sizeof (sf_parselog), "Bad vio_get_filelen in SF_VIRTUAL_IO struct.\n") ;
+		return NULL ;
+		} ;
+
+	if ((sfvirtual->seek == NULL || sfvirtual->tell == NULL) && sfinfo->seekable)
+	{	sf_errno = SFE_BAD_VIRTUAL_IO ;
+		snprintf (sf_parselog, sizeof (sf_parselog), "Bad vio_seek / vio_tell in SF_VIRTUAL_IO struct.\n") ;
 		return NULL ;
 		} ;
 
 	if ((mode == SFM_READ || mode == SFM_RDWR) && sfvirtual->read == NULL)
 	{	sf_errno = SFE_BAD_VIRTUAL_IO ;
-		snprintf (sf_logbuffer, sizeof (sf_logbuffer), "Bad vio_read in SF_VIRTUAL_IO struct.\n") ;
+		snprintf (sf_parselog, sizeof (sf_parselog), "Bad vio_read in SF_VIRTUAL_IO struct.\n") ;
 		return NULL ;
 		} ;
 
 	if ((mode == SFM_WRITE || mode == SFM_RDWR) && sfvirtual->write == NULL)
 	{	sf_errno = SFE_BAD_VIRTUAL_IO ;
-		snprintf (sf_logbuffer, sizeof (sf_logbuffer), "Bad vio_write in SF_VIRTUAL_IO struct.\n") ;
+		snprintf (sf_parselog, sizeof (sf_parselog), "Bad vio_write in SF_VIRTUAL_IO struct.\n") ;
 		return NULL ;
 		} ;
 
-	if ((psf = calloc (1, sizeof (SF_PRIVATE))) == NULL)
+	if ((psf = psf_allocate ()) == NULL)
 	{	sf_errno = SFE_MALLOC_FAILED ;
 		return	NULL ;
 		} ;
@@ -553,7 +582,6 @@ sf_format_check	(const SF_INFO *info)
 
 	switch (SF_CONTAINER (info->format))
 	{	case SF_FORMAT_WAV :
-		case SF_FORMAT_WAVEX :
 				/* WAV now allows both endian, RIFF or RIFX (little or big respectively) */
 				if (subformat == SF_FORMAT_PCM_U8 || subformat == SF_FORMAT_PCM_16)
 					return 1 ;
@@ -569,14 +597,30 @@ sf_format_check	(const SF_INFO *info)
 					return 1 ;
 				if (subformat == SF_FORMAT_FLOAT || subformat == SF_FORMAT_DOUBLE)
 					return 1 ;
+				if ((subformat == SF_FORMAT_NMS_ADPCM_16 || subformat == SF_FORMAT_NMS_ADPCM_24 ||
+							subformat == SF_FORMAT_NMS_ADPCM_32) && info->channels == 1)
+					return 1 ;
+				break ;
+
+		case SF_FORMAT_WAVEX :
+				if (endian == SF_ENDIAN_BIG || endian == SF_ENDIAN_CPU)
+					return 0 ;
+				if (subformat == SF_FORMAT_PCM_U8 || subformat == SF_FORMAT_PCM_16)
+					return 1 ;
+				if (subformat == SF_FORMAT_PCM_24 || subformat == SF_FORMAT_PCM_32)
+					return 1 ;
+				if (subformat == SF_FORMAT_ULAW || subformat == SF_FORMAT_ALAW)
+					return 1 ;
+				if (subformat == SF_FORMAT_FLOAT || subformat == SF_FORMAT_DOUBLE)
+					return 1 ;
 				break ;
 
 		case SF_FORMAT_AIFF :
 				/* AIFF does allow both endian-nesses for PCM data.*/
 				if (subformat == SF_FORMAT_PCM_16 || subformat == SF_FORMAT_PCM_24 || subformat == SF_FORMAT_PCM_32)
 					return 1 ;
-				/* Other encodings. Check for endian-ness. */
-				if (endian == SF_ENDIAN_LITTLE || endian == SF_ENDIAN_CPU)
+				/* For other encodings reject any endian-ness setting. */
+				if (endian != 0)
 					return 0 ;
 				if (subformat == SF_FORMAT_PCM_U8 || subformat == SF_FORMAT_PCM_S8)
 					return 1 ;
@@ -617,6 +661,10 @@ sf_format_check	(const SF_INFO *info)
 					return 1 ;
 				if (subformat == SF_FORMAT_ULAW || subformat == SF_FORMAT_ALAW)
 					return 1 ;
+				if (subformat == SF_FORMAT_ALAC_16 || subformat == SF_FORMAT_ALAC_20)
+					return 1 ;
+				if (subformat == SF_FORMAT_ALAC_24 || subformat == SF_FORMAT_ALAC_32)
+					return 1 ;
 				if (subformat == SF_FORMAT_FLOAT || subformat == SF_FORMAT_DOUBLE)
 					return 1 ;
 				break ;
@@ -637,12 +685,13 @@ sf_format_check	(const SF_INFO *info)
 					return 1 ;
 				if (subformat == SF_FORMAT_VOX_ADPCM && info->channels == 1)
 					return 1 ;
+				if ((subformat == SF_FORMAT_NMS_ADPCM_16 || subformat == SF_FORMAT_NMS_ADPCM_24 ||
+							subformat == SF_FORMAT_NMS_ADPCM_32) && info->channels == 1)
+					return 1 ;
 				break ;
 
 		case SF_FORMAT_PAF :
-				if (subformat == SF_FORMAT_PCM_S8 || subformat == SF_FORMAT_PCM_16)
-					return 1 ;
-				if (subformat == SF_FORMAT_PCM_24 || subformat == SF_FORMAT_PCM_32)
+				if (subformat == SF_FORMAT_PCM_S8 || subformat == SF_FORMAT_PCM_16 || subformat == SF_FORMAT_PCM_24)
 					return 1 ;
 				break ;
 
@@ -668,13 +717,17 @@ sf_format_check	(const SF_INFO *info)
 				break ;
 
 		case SF_FORMAT_IRCAM :
-				if (subformat == SF_FORMAT_PCM_16 || subformat == SF_FORMAT_PCM_24 || subformat == SF_FORMAT_PCM_32)
+				if (info->channels > 256)
+					return 0 ;
+				if (subformat == SF_FORMAT_PCM_16 || subformat == SF_FORMAT_PCM_32)
 					return 1 ;
 				if (subformat == SF_FORMAT_ULAW || subformat == SF_FORMAT_ALAW || subformat == SF_FORMAT_FLOAT)
 					return 1 ;
 				break ;
 
 		case SF_FORMAT_VOC :
+				if (info->channels > 2)
+					return 0 ;
 				/* VOC is strictly little endian. */
 				if (endian == SF_ENDIAN_BIG || endian == SF_ENDIAN_CPU)
 					return 0 ;
@@ -729,30 +782,30 @@ sf_format_check	(const SF_INFO *info)
 				break ;
 
 		case SF_FORMAT_HTK :
+				if (info->channels != 1)
+					return 0 ;
 				/* HTK is strictly big endian. */
 				if (endian == SF_ENDIAN_LITTLE || endian == SF_ENDIAN_CPU)
-					return 0 ;
-				if (info->channels != 1)
 					return 0 ;
 				if (subformat == SF_FORMAT_PCM_16)
 					return 1 ;
 				break ;
 
 		case SF_FORMAT_SDS :
+				if (info->channels != 1)
+					return 0 ;
 				/* SDS is strictly big endian. */
 				if (endian == SF_ENDIAN_LITTLE || endian == SF_ENDIAN_CPU)
-					return 0 ;
-				if (info->channels != 1)
 					return 0 ;
 				if (subformat == SF_FORMAT_PCM_S8 || subformat == SF_FORMAT_PCM_16 || subformat == SF_FORMAT_PCM_24)
 					return 1 ;
 				break ;
 
 		case SF_FORMAT_AVR :
+				if (info->channels > 2)
+					return 0 ;
 				/* SDS is strictly big endian. */
 				if (endian == SF_ENDIAN_LITTLE || endian == SF_ENDIAN_CPU)
-					return 0 ;
-				if (info->channels > 2)
 					return 0 ;
 				if (subformat == SF_FORMAT_PCM_U8 || subformat == SF_FORMAT_PCM_S8 || subformat == SF_FORMAT_PCM_16)
 					return 1 ;
@@ -762,6 +815,8 @@ sf_format_check	(const SF_INFO *info)
 				/* FLAC can't do more than 8 channels. */
 				if (info->channels > 8)
 					return 0 ;
+				if (endian != SF_ENDIAN_FILE)
+					return 0 ;
 				if (subformat == SF_FORMAT_PCM_S8 || subformat == SF_FORMAT_PCM_16 || subformat == SF_FORMAT_PCM_24)
 					return 1 ;
 				break ;
@@ -770,30 +825,34 @@ sf_format_check	(const SF_INFO *info)
 				/* SD2 is strictly big endian. */
 				if (endian == SF_ENDIAN_LITTLE || endian == SF_ENDIAN_CPU)
 					return 0 ;
-				if (subformat == SF_FORMAT_PCM_S8 || subformat == SF_FORMAT_PCM_16 || subformat == SF_FORMAT_PCM_24)
+				if (subformat == SF_FORMAT_PCM_S8 || subformat == SF_FORMAT_PCM_16 || subformat == SF_FORMAT_PCM_24 || subformat == SF_FORMAT_PCM_32)
 					return 1 ;
 				break ;
 
 		case SF_FORMAT_WVE :
+				if (info->channels > 1)
+					return 0 ;
 				/* WVE is strictly big endian. */
 				if (endian == SF_ENDIAN_BIG || endian == SF_ENDIAN_CPU)
-					return 0 ;
-				if (info->channels > 1)
 					return 0 ;
 				if (subformat == SF_FORMAT_ALAW)
 					return 1 ;
 				break ;
 
 		case SF_FORMAT_OGG :
+				if (endian != SF_ENDIAN_FILE)
+					return 0 ;
 				if (subformat == SF_FORMAT_VORBIS)
+					return 1 ;
+				if (subformat == SF_FORMAT_OPUS)
 					return 1 ;
 				break ;
 
 		case SF_FORMAT_MPC2K :
+				if (info->channels > 2)
+					return 0 ;
 				/* MPC2000 is strictly little endian. */
 				if (endian == SF_ENDIAN_BIG || endian == SF_ENDIAN_CPU)
-					return 0 ;
-				if (info->channels > 2)
 					return 0 ;
 				if (subformat == SF_FORMAT_PCM_16)
 					return 1 ;
@@ -837,6 +896,7 @@ sf_version_string (void)
 int
 sf_command	(SNDFILE *sndfile, int command, void *data, int datasize)
 {	SF_PRIVATE *psf = (SF_PRIVATE *) sndfile ;
+	double quality ;
 	int old_value ;
 
 	/* This set of commands do not need the sndfile parameter. */
@@ -845,7 +905,7 @@ sf_command	(SNDFILE *sndfile, int command, void *data, int datasize)
 			if (data == NULL)
 			{	if (psf)
 					psf->error = SFE_BAD_COMMAND_PARAM ;
-				return SFE_BAD_COMMAND_PARAM ;
+				return 0 ;
 				} ;
 			snprintf (data, datasize, "%s", sf_version_string ()) ;
 			return strlen (data) ;
@@ -892,7 +952,7 @@ sf_command	(SNDFILE *sndfile, int command, void *data, int datasize)
 	if (sndfile == NULL && command == SFC_GET_LOG_INFO)
 	{	if (data == NULL)
 			return (sf_errno = SFE_BAD_COMMAND_PARAM) ;
-		snprintf (data, datasize, "%s", sf_logbuffer) ;
+		snprintf (data, datasize, "%s", sf_parselog) ;
 		return strlen (data) ;
 		} ;
 
@@ -926,7 +986,8 @@ sf_command	(SNDFILE *sndfile, int command, void *data, int datasize)
 
 			psf->float_int_mult = (datasize != 0) ? SF_TRUE : SF_FALSE ;
 			if (psf->float_int_mult && psf->float_max < 0.0)
-				psf->float_max = psf_calc_signal_max (psf, SF_FALSE) ;
+				/* Scale to prevent wrap-around distortion. */
+				psf->float_max = (32768.0 / 32767.0) * psf_calc_signal_max (psf, SF_FALSE) ;
 			return old_value ;
 
 		case SFC_SET_SCALE_INT_FLOAT_WRITE :
@@ -943,6 +1004,7 @@ sf_command	(SNDFILE *sndfile, int command, void *data, int datasize)
 					case SF_FORMAT_CAF :
 					case SF_FORMAT_WAV :
 					case SF_FORMAT_WAVEX :
+					case SF_FORMAT_RF64 :
 						break ;
 
 					default :
@@ -985,8 +1047,8 @@ sf_command	(SNDFILE *sndfile, int command, void *data, int datasize)
 		case SFC_GET_LOG_INFO :
 			if (data == NULL)
 				return SFE_BAD_COMMAND_PARAM ;
-			snprintf (data, datasize, "%s", psf->logbuffer) ;
-			break ;
+			snprintf (data, datasize, "%s", psf->parselog.buf) ;
+			return strlen (data) ;
 
 		case SFC_CALC_SIGNAL_MAX :
 			if (data == NULL || datasize != sizeof (double))
@@ -1149,15 +1211,8 @@ sf_command	(SNDFILE *sndfile, int command, void *data, int datasize)
 				return SF_FALSE ;
 				} ;
 
-#if 0
-			if (psf->broadcast_info == NULL)
-				psf->broadcast_info = broadcast_info_alloc () ;
-
-			broadcast_info_copy (psf->broadcast_info, data) ;
-			broadcast_add_coding_history (psf->broadcast_info, psf->sf.channels, psf->sf.samplerate, psf->sf.format) ;
-#else
-			broadcast_var_set (psf, data, datasize) ;
-#endif
+			if (NOT (broadcast_var_set (psf, data, datasize)))
+				return SF_FALSE ;
 
 			if (psf->write_header)
 				psf->write_header (psf, SF_TRUE) ;
@@ -1168,13 +1223,71 @@ sf_command	(SNDFILE *sndfile, int command, void *data, int datasize)
 			{	psf->error = SFE_BAD_COMMAND_PARAM ;
 				return SF_FALSE ;
 				} ;
-#if 0
-			if (psf->broadcast_info == NULL)
-				return SF_FALSE ;
-			return broadcast_info_copy (data, psf->broadcast_info) ;
-#else
 			return broadcast_var_get (psf, data, datasize) ;
-#endif
+
+		case SFC_SET_CART_INFO :
+			{	int format = SF_CONTAINER (psf->sf.format) ;
+				/* Only WAV and RF64 support cart chunk format */
+				if (format != SF_FORMAT_WAV && format != SF_FORMAT_RF64)
+					return SF_FALSE ;
+				} ;
+
+			/* Only makes sense in SFM_WRITE or SFM_RDWR mode */
+			if ((psf->file.mode != SFM_WRITE) && (psf->file.mode != SFM_RDWR))
+				return SF_FALSE ;
+			/* If data has already been written this must fail. */
+			if (psf->cart_16k == NULL && psf->have_written)
+			{	psf->error = SFE_CMD_HAS_DATA ;
+				return SF_FALSE ;
+				} ;
+			if (NOT (cart_var_set (psf, data, datasize)))
+				return SF_FALSE ;
+			if (psf->write_header)
+				psf->write_header (psf, SF_TRUE) ;
+			return SF_TRUE ;
+
+		case SFC_GET_CART_INFO :
+			if (data == NULL)
+			{	psf->error = SFE_BAD_COMMAND_PARAM ;
+				return SF_FALSE ;
+				} ;
+			return cart_var_get (psf, data, datasize) ;
+
+		case SFC_GET_CUE_COUNT :
+			if (datasize != sizeof (uint32_t) || data == NULL)
+			{	psf->error = SFE_BAD_COMMAND_PARAM ;
+				return SF_FALSE ;
+				} ;
+			if (psf->cues != NULL)
+			{	*((uint32_t *) data) = psf->cues->cue_count ;
+				return SF_TRUE ;
+				} ;
+			return SF_FALSE ;
+
+		case SFC_GET_CUE :
+			if (datasize < (int) sizeof (uint32_t) || data == NULL)
+			{	psf->error = SFE_BAD_COMMAND_PARAM ;
+				return SF_FALSE ;
+				} ;
+			if (psf->cues == NULL)
+				return SF_FALSE ;
+			psf_get_cues (psf, data, datasize) ;
+			return SF_TRUE ;
+
+		case SFC_SET_CUE :
+			if (psf->have_written)
+			{	psf->error = SFE_CMD_HAS_DATA ;
+				return SF_FALSE ;
+				} ;
+			if (datasize < (int) sizeof (uint32_t) || data == NULL)
+			{	psf->error = SFE_BAD_COMMAND_PARAM ;
+				return SF_FALSE ;
+				} ;
+			if (psf->cues == NULL && (psf->cues = psf_cues_dup (data, datasize)) == NULL)
+			{	psf->error = SFE_MALLOC_FAILED ;
+				return SF_FALSE ;
+				} ;
+			return SF_TRUE ;
 
 		case SFC_GET_INSTRUMENT :
 			if (datasize != sizeof (SF_INSTRUMENT) || data == NULL)
@@ -1254,6 +1367,15 @@ sf_command	(SNDFILE *sndfile, int command, void *data, int datasize)
 			if (psf->command)
 				return psf->command (psf, command, NULL, 0) ;
 			return SF_FALSE ;
+
+		case SFC_SET_VBR_ENCODING_QUALITY :
+			if (data == NULL || datasize != sizeof (double))
+				return SF_FALSE ;
+
+			quality = *((double *) data) ;
+			quality = 1.0 - SF_MAX (0.0, SF_MIN (1.0, quality)) ;
+			return sf_command (sndfile, SFC_SET_COMPRESSION_LEVEL, &quality, sizeof (quality)) ;
+
 
 		default :
 			/* Must be a file specific command. Pass it on. */
@@ -1409,6 +1531,59 @@ sf_set_string (SNDFILE *sndfile, int str_type, const char* str)
 	return psf_set_string (psf, str_type, str) ;
 } /* sf_get_string */
 
+/*------------------------------------------------------------------------------
+*/
+
+int
+sf_current_byterate (SNDFILE *sndfile)
+{	SF_PRIVATE 	*psf ;
+
+	if ((psf = (SF_PRIVATE*) sndfile) == NULL)
+		return -1 ;
+	if (psf->Magick != SNDFILE_MAGICK)
+		return -1 ;
+
+	/* This should cover all PCM and floating point formats. */
+	if (psf->bytewidth)
+		return psf->sf.samplerate * psf->sf.channels * psf->bytewidth ;
+
+	if (psf->byterate)
+		return psf->byterate (psf) ;
+
+	switch (SF_CODEC (psf->sf.format))
+	{	case SF_FORMAT_IMA_ADPCM :
+		case SF_FORMAT_MS_ADPCM :
+		case SF_FORMAT_VOX_ADPCM :
+			return (psf->sf.samplerate * psf->sf.channels) / 2 ;
+
+		case SF_FORMAT_GSM610 :
+			return (psf->sf.samplerate * psf->sf.channels * 13000) / 8000 ;
+
+		case SF_FORMAT_NMS_ADPCM_16:
+			return psf->sf.samplerate / 4 + 10 ;
+
+		case SF_FORMAT_NMS_ADPCM_24:
+			return psf->sf.samplerate * 3 / 8 + 10 ;
+
+		case SF_FORMAT_NMS_ADPCM_32:
+			return psf->sf.samplerate / 2 + 10 ;
+
+		case SF_FORMAT_G721_32 :	/* 32kbs G721 ADPCM encoding. */
+			return (psf->sf.samplerate * psf->sf.channels) / 2 ;
+
+		case SF_FORMAT_G723_24 :	/* 24kbs G723 ADPCM encoding. */
+			return (psf->sf.samplerate * psf->sf.channels * 3) / 8 ;
+
+		case SF_FORMAT_G723_40 :	/* 40kbs G723 ADPCM encoding. */
+			return (psf->sf.samplerate * psf->sf.channels * 5) / 8 ;
+
+		default :
+			break ;
+		} ;
+
+	return -1 ;
+} /* sf_current_byterate */
+
 /*==============================================================================
 */
 
@@ -1417,6 +1592,9 @@ sf_read_raw		(SNDFILE *sndfile, void *ptr, sf_count_t bytes)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count, extra ;
 	int			bytewidth, blockwidth ;
+
+	if (bytes == 0)
+		return 0 ;
 
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
 
@@ -1466,7 +1644,15 @@ sf_read_short	(SNDFILE *sndfile, short *ptr, sf_count_t len)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count, extra ;
 
+	if (len == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (len <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_WRITE)
 	{	psf->error = SFE_NOT_READMODE ;
@@ -1478,7 +1664,7 @@ sf_read_short	(SNDFILE *sndfile, short *ptr, sf_count_t len)
 		return 0 ;
 		} ;
 
-	if (len <= 0 || psf->read_current >= psf->sf.frames)
+	if (psf->read_current >= psf->sf.frames)
 	{	psf_memset (ptr, 0, len * sizeof (short)) ;
 		return 0 ; /* End of file. */
 		} ;
@@ -1513,14 +1699,22 @@ sf_readf_short		(SNDFILE *sndfile, short *ptr, sf_count_t frames)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count, extra ;
 
+	if (frames == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (frames <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_WRITE)
 	{	psf->error = SFE_NOT_READMODE ;
 		return 0 ;
 		} ;
 
-	if (frames <= 0 || psf->read_current >= psf->sf.frames)
+	if (psf->read_current >= psf->sf.frames)
 	{	psf_memset (ptr, 0, frames * psf->sf.channels * sizeof (short)) ;
 		return 0 ; /* End of file. */
 		} ;
@@ -1558,7 +1752,15 @@ sf_read_int		(SNDFILE *sndfile, int *ptr, sf_count_t len)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count, extra ;
 
+	if (len == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (len <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_WRITE)
 	{	psf->error = SFE_NOT_READMODE ;
@@ -1570,7 +1772,7 @@ sf_read_int		(SNDFILE *sndfile, int *ptr, sf_count_t len)
 		return 0 ;
 		} ;
 
-	if (len <= 0 || psf->read_current >= psf->sf.frames)
+	if (psf->read_current >= psf->sf.frames)
 	{	psf_memset (ptr, 0, len * sizeof (int)) ;
 		return 0 ;
 		} ;
@@ -1605,14 +1807,22 @@ sf_readf_int	(SNDFILE *sndfile, int *ptr, sf_count_t frames)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count, extra ;
 
+	if (frames == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (frames <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_WRITE)
 	{	psf->error = SFE_NOT_READMODE ;
 		return 0 ;
 		} ;
 
-	if (frames <= 0 || psf->read_current >= psf->sf.frames)
+	if (psf->read_current >= psf->sf.frames)
 	{	psf_memset (ptr, 0, frames * psf->sf.channels * sizeof (int)) ;
 		return 0 ;
 		} ;
@@ -1650,7 +1860,15 @@ sf_read_float	(SNDFILE *sndfile, float *ptr, sf_count_t len)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count, extra ;
 
+	if (len == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (len <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_WRITE)
 	{	psf->error = SFE_NOT_READMODE ;
@@ -1662,7 +1880,7 @@ sf_read_float	(SNDFILE *sndfile, float *ptr, sf_count_t len)
 		return 0 ;
 		} ;
 
-	if (len <= 0 || psf->read_current >= psf->sf.frames)
+	if (psf->read_current >= psf->sf.frames)
 	{	psf_memset (ptr, 0, len * sizeof (float)) ;
 		return 0 ;
 		} ;
@@ -1697,14 +1915,22 @@ sf_readf_float	(SNDFILE *sndfile, float *ptr, sf_count_t frames)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count, extra ;
 
+	if (frames == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (frames <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_WRITE)
 	{	psf->error = SFE_NOT_READMODE ;
 		return 0 ;
 		} ;
 
-	if (frames <= 0 || psf->read_current >= psf->sf.frames)
+	if (psf->read_current >= psf->sf.frames)
 	{	psf_memset (ptr, 0, frames * psf->sf.channels * sizeof (float)) ;
 		return 0 ;
 		} ;
@@ -1742,7 +1968,15 @@ sf_read_double	(SNDFILE *sndfile, double *ptr, sf_count_t len)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count, extra ;
 
+	if (len == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (len <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_WRITE)
 	{	psf->error = SFE_NOT_READMODE ;
@@ -1754,7 +1988,7 @@ sf_read_double	(SNDFILE *sndfile, double *ptr, sf_count_t len)
 		return 0 ;
 		} ;
 
-	if (len <= 0 || psf->read_current >= psf->sf.frames)
+	if (psf->read_current >= psf->sf.frames)
 	{	psf_memset (ptr, 0, len * sizeof (double)) ;
 		return 0 ;
 		} ;
@@ -1789,14 +2023,22 @@ sf_readf_double	(SNDFILE *sndfile, double *ptr, sf_count_t frames)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count, extra ;
 
+	if (frames == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (frames <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_WRITE)
 	{	psf->error = SFE_NOT_READMODE ;
 		return 0 ;
 		} ;
 
-	if (frames <= 0 || psf->read_current >= psf->sf.frames)
+	if (psf->read_current >= psf->sf.frames)
 	{	psf_memset (ptr, 0, frames * psf->sf.channels * sizeof (double)) ;
 		return 0 ;
 		} ;
@@ -1835,7 +2077,15 @@ sf_write_raw	(SNDFILE *sndfile, const void *ptr, sf_count_t len)
 	sf_count_t	count ;
 	int			bytewidth, blockwidth ;
 
+	if (len == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (len <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	bytewidth = (psf->bytewidth > 0) ? psf->bytewidth : 1 ;
 	blockwidth = (psf->blockwidth > 0) ? psf->blockwidth : 1 ;
@@ -1855,7 +2105,9 @@ sf_write_raw	(SNDFILE *sndfile, const void *ptr, sf_count_t len)
 			return 0 ;
 
 	if (psf->have_written == SF_FALSE && psf->write_header != NULL)
-		psf->write_header (psf, SF_FALSE) ;
+	{	if ((psf->error = psf->write_header (psf, SF_FALSE)))
+			return 0 ;
+		} ;
 	psf->have_written = SF_TRUE ;
 
 	count = psf_fwrite (ptr, 1, len, psf) ;
@@ -1864,11 +2116,13 @@ sf_write_raw	(SNDFILE *sndfile, const void *ptr, sf_count_t len)
 
 	psf->last_op = SFM_WRITE ;
 
+	if (psf->write_current > psf->sf.frames)
+	{	psf->sf.frames = psf->write_current ;
+		psf->dataend = 0 ;
+		} ;
+
 	if (psf->auto_header && psf->write_header != NULL)
 		psf->write_header (psf, SF_TRUE) ;
-
-	if (psf->write_current > psf->sf.frames)
-		psf->sf.frames = psf->write_current ;
 
 	return count ;
 } /* sf_write_raw */
@@ -1881,7 +2135,15 @@ sf_write_short	(SNDFILE *sndfile, const short *ptr, sf_count_t len)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count ;
 
+	if (len == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (len <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_READ)
 	{	psf->error = SFE_NOT_WRITEMODE ;
@@ -1903,7 +2165,9 @@ sf_write_short	(SNDFILE *sndfile, const short *ptr, sf_count_t len)
 			return 0 ;
 
 	if (psf->have_written == SF_FALSE && psf->write_header != NULL)
-		psf->write_header (psf, SF_FALSE) ;
+	{	if ((psf->error = psf->write_header (psf, SF_FALSE)))
+			return 0 ;
+		} ;
 	psf->have_written = SF_TRUE ;
 
 	count = psf->write_short (psf, ptr, len) ;
@@ -1912,11 +2176,13 @@ sf_write_short	(SNDFILE *sndfile, const short *ptr, sf_count_t len)
 
 	psf->last_op = SFM_WRITE ;
 
+	if (psf->write_current > psf->sf.frames)
+	{	psf->sf.frames = psf->write_current ;
+		psf->dataend = 0 ;
+		} ;
+
 	if (psf->auto_header && psf->write_header != NULL)
 		psf->write_header (psf, SF_TRUE) ;
-
-	if (psf->write_current > psf->sf.frames)
-		psf->sf.frames = psf->write_current ;
 
 	return count ;
 } /* sf_write_short */
@@ -1926,7 +2192,15 @@ sf_writef_short	(SNDFILE *sndfile, const short *ptr, sf_count_t frames)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count ;
 
+	if (frames == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (frames <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_READ)
 	{	psf->error = SFE_NOT_WRITEMODE ;
@@ -1943,7 +2217,9 @@ sf_writef_short	(SNDFILE *sndfile, const short *ptr, sf_count_t frames)
 			return 0 ;
 
 	if (psf->have_written == SF_FALSE && psf->write_header != NULL)
-		psf->write_header (psf, SF_FALSE) ;
+	{	if ((psf->error = psf->write_header (psf, SF_FALSE)))
+			return 0 ;
+		} ;
 	psf->have_written = SF_TRUE ;
 
 	count = psf->write_short (psf, ptr, frames * psf->sf.channels) ;
@@ -1952,11 +2228,13 @@ sf_writef_short	(SNDFILE *sndfile, const short *ptr, sf_count_t frames)
 
 	psf->last_op = SFM_WRITE ;
 
+	if (psf->write_current > psf->sf.frames)
+	{	psf->sf.frames = psf->write_current ;
+		psf->dataend = 0 ;
+		} ;
+
 	if (psf->auto_header && psf->write_header != NULL)
 		psf->write_header (psf, SF_TRUE) ;
-
-	if (psf->write_current > psf->sf.frames)
-		psf->sf.frames = psf->write_current ;
 
 	return count / psf->sf.channels ;
 } /* sf_writef_short */
@@ -1969,7 +2247,15 @@ sf_write_int	(SNDFILE *sndfile, const int *ptr, sf_count_t len)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count ;
 
+	if (len == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (len <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_READ)
 	{	psf->error = SFE_NOT_WRITEMODE ;
@@ -1991,7 +2277,9 @@ sf_write_int	(SNDFILE *sndfile, const int *ptr, sf_count_t len)
 			return 0 ;
 
 	if (psf->have_written == SF_FALSE && psf->write_header != NULL)
-		psf->write_header (psf, SF_FALSE) ;
+	{	if ((psf->error = psf->write_header (psf, SF_FALSE)))
+			return 0 ;
+		} ;
 	psf->have_written = SF_TRUE ;
 
 	count = psf->write_int (psf, ptr, len) ;
@@ -2000,11 +2288,13 @@ sf_write_int	(SNDFILE *sndfile, const int *ptr, sf_count_t len)
 
 	psf->last_op = SFM_WRITE ;
 
+	if (psf->write_current > psf->sf.frames)
+	{	psf->sf.frames = psf->write_current ;
+		psf->dataend = 0 ;
+		} ;
+
 	if (psf->auto_header && psf->write_header != NULL)
 		psf->write_header (psf, SF_TRUE) ;
-
-	if (psf->write_current > psf->sf.frames)
-		psf->sf.frames = psf->write_current ;
 
 	return count ;
 } /* sf_write_int */
@@ -2014,7 +2304,15 @@ sf_writef_int	(SNDFILE *sndfile, const int *ptr, sf_count_t frames)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count ;
 
+	if (frames == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (frames <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_READ)
 	{	psf->error = SFE_NOT_WRITEMODE ;
@@ -2031,7 +2329,9 @@ sf_writef_int	(SNDFILE *sndfile, const int *ptr, sf_count_t frames)
 			return 0 ;
 
 	if (psf->have_written == SF_FALSE && psf->write_header != NULL)
-		psf->write_header (psf, SF_FALSE) ;
+	{	if ((psf->error = psf->write_header (psf, SF_FALSE)))
+			return 0 ;
+		} ;
 	psf->have_written = SF_TRUE ;
 
 	count = psf->write_int (psf, ptr, frames * psf->sf.channels) ;
@@ -2040,11 +2340,13 @@ sf_writef_int	(SNDFILE *sndfile, const int *ptr, sf_count_t frames)
 
 	psf->last_op = SFM_WRITE ;
 
+	if (psf->write_current > psf->sf.frames)
+	{	psf->sf.frames = psf->write_current ;
+		psf->dataend = 0 ;
+		} ;
+
 	if (psf->auto_header && psf->write_header != NULL)
 		psf->write_header (psf, SF_TRUE) ;
-
-	if (psf->write_current > psf->sf.frames)
-		psf->sf.frames = psf->write_current ;
 
 	return count / psf->sf.channels ;
 } /* sf_writef_int */
@@ -2057,7 +2359,15 @@ sf_write_float	(SNDFILE *sndfile, const float *ptr, sf_count_t len)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count ;
 
+	if (len == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (len <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_READ)
 	{	psf->error = SFE_NOT_WRITEMODE ;
@@ -2079,7 +2389,9 @@ sf_write_float	(SNDFILE *sndfile, const float *ptr, sf_count_t len)
 			return 0 ;
 
 	if (psf->have_written == SF_FALSE && psf->write_header != NULL)
-		psf->write_header (psf, SF_FALSE) ;
+	{	if ((psf->error = psf->write_header (psf, SF_FALSE)))
+			return 0 ;
+		} ;
 	psf->have_written = SF_TRUE ;
 
 	count = psf->write_float (psf, ptr, len) ;
@@ -2088,11 +2400,13 @@ sf_write_float	(SNDFILE *sndfile, const float *ptr, sf_count_t len)
 
 	psf->last_op = SFM_WRITE ;
 
+	if (psf->write_current > psf->sf.frames)
+	{	psf->sf.frames = psf->write_current ;
+		psf->dataend = 0 ;
+		} ;
+
 	if (psf->auto_header && psf->write_header != NULL)
 		psf->write_header (psf, SF_TRUE) ;
-
-	if (psf->write_current > psf->sf.frames)
-		psf->sf.frames = psf->write_current ;
 
 	return count ;
 } /* sf_write_float */
@@ -2102,7 +2416,15 @@ sf_writef_float	(SNDFILE *sndfile, const float *ptr, sf_count_t frames)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count ;
 
+	if (frames == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (frames <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_READ)
 	{	psf->error = SFE_NOT_WRITEMODE ;
@@ -2119,7 +2441,9 @@ sf_writef_float	(SNDFILE *sndfile, const float *ptr, sf_count_t frames)
 			return 0 ;
 
 	if (psf->have_written == SF_FALSE && psf->write_header != NULL)
-		psf->write_header (psf, SF_FALSE) ;
+	{	if ((psf->error = psf->write_header (psf, SF_FALSE)))
+			return 0 ;
+		} ;
 	psf->have_written = SF_TRUE ;
 
 	count = psf->write_float (psf, ptr, frames * psf->sf.channels) ;
@@ -2128,11 +2452,13 @@ sf_writef_float	(SNDFILE *sndfile, const float *ptr, sf_count_t frames)
 
 	psf->last_op = SFM_WRITE ;
 
+	if (psf->write_current > psf->sf.frames)
+	{	psf->sf.frames = psf->write_current ;
+		psf->dataend = 0 ;
+		} ;
+
 	if (psf->auto_header && psf->write_header != NULL)
 		psf->write_header (psf, SF_TRUE) ;
-
-	if (psf->write_current > psf->sf.frames)
-		psf->sf.frames = psf->write_current ;
 
 	return count / psf->sf.channels ;
 } /* sf_writef_float */
@@ -2145,7 +2471,15 @@ sf_write_double	(SNDFILE *sndfile, const double *ptr, sf_count_t len)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count ;
 
+	if (len == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (len <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_READ)
 	{	psf->error = SFE_NOT_WRITEMODE ;
@@ -2167,7 +2501,9 @@ sf_write_double	(SNDFILE *sndfile, const double *ptr, sf_count_t len)
 			return 0 ;
 
 	if (psf->have_written == SF_FALSE && psf->write_header != NULL)
-		psf->write_header (psf, SF_FALSE) ;
+	{	if ((psf->error = psf->write_header (psf, SF_FALSE)))
+			return 0 ;
+		} ;
 	psf->have_written = SF_TRUE ;
 
 	count = psf->write_double (psf, ptr, len) ;
@@ -2176,11 +2512,13 @@ sf_write_double	(SNDFILE *sndfile, const double *ptr, sf_count_t len)
 
 	psf->last_op = SFM_WRITE ;
 
+	if (psf->write_current > psf->sf.frames)
+	{	psf->sf.frames = psf->write_current ;
+		psf->dataend = 0 ;
+		} ;
+
 	if (psf->auto_header && psf->write_header != NULL)
 		psf->write_header (psf, SF_TRUE) ;
-
-	if (psf->write_current > psf->sf.frames)
-		psf->sf.frames = psf->write_current ;
 
 	return count ;
 } /* sf_write_double */
@@ -2190,7 +2528,15 @@ sf_writef_double	(SNDFILE *sndfile, const double *ptr, sf_count_t frames)
 {	SF_PRIVATE 	*psf ;
 	sf_count_t	count ;
 
+	if (frames == 0)
+		return 0 ;
+
 	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (frames <= 0)
+	{	psf->error = SFE_NEGATIVE_RW_LEN ;
+		return 0 ;
+		} ;
 
 	if (psf->file.mode == SFM_READ)
 	{	psf->error = SFE_NOT_WRITEMODE ;
@@ -2207,7 +2553,9 @@ sf_writef_double	(SNDFILE *sndfile, const double *ptr, sf_count_t frames)
 			return 0 ;
 
 	if (psf->have_written == SF_FALSE && psf->write_header != NULL)
-		psf->write_header (psf, SF_FALSE) ;
+	{	if ((psf->error = psf->write_header (psf, SF_FALSE)))
+			return 0 ;
+		} ;
 	psf->have_written = SF_TRUE ;
 
 	count = psf->write_double (psf, ptr, frames * psf->sf.channels) ;
@@ -2216,11 +2564,13 @@ sf_writef_double	(SNDFILE *sndfile, const double *ptr, sf_count_t frames)
 
 	psf->last_op = SFM_WRITE ;
 
+	if (psf->write_current > psf->sf.frames)
+	{	psf->sf.frames = psf->write_current ;
+		psf->dataend = 0 ;
+		} ;
+
 	if (psf->auto_header && psf->write_header != NULL)
 		psf->write_header (psf, SF_TRUE) ;
-
-	if (psf->write_current > psf->sf.frames)
-		psf->sf.frames = psf->write_current ;
 
 	return count / psf->sf.channels ;
 } /* sf_writef_double */
@@ -2307,7 +2657,7 @@ format_from_extension (SF_PRIVATE *psf)
 
 static int
 guess_file_type (SF_PRIVATE *psf)
-{	int buffer [3], format ;
+{	uint32_t buffer [3], format ;
 
 	if (psf_binheader_readf (psf, "b", &buffer, SIGNED_SIZEOF (buffer)) != SIGNED_SIZEOF (buffer))
 	{	psf->error = SFE_BAD_FILE_READ ;
@@ -2393,7 +2743,7 @@ guess_file_type (SF_PRIVATE *psf)
 		return 0 /*-SF_FORMAT_WMA-*/ ;
 
 	/* HMM (Hidden Markov Model) Tool Kit. */
-	if (2 * BEI2H_INT (buffer [0]) + 12 == psf->filelength && buffer [2] == MAKE_MARKER (0, 2, 0, 0))
+	if (buffer [2] == MAKE_MARKER (0, 2, 0, 0) && 2 * ((int64_t) BE2H_32 (buffer [0])) + 12 == psf->filelength)
 		return SF_FORMAT_HTK ;
 
 	if (buffer [0] == MAKE_MARKER ('f', 'L', 'a', 'C'))
@@ -2469,13 +2819,18 @@ validate_psf (SF_PRIVATE *psf)
 
 static void
 save_header_info (SF_PRIVATE *psf)
-{	snprintf (sf_logbuffer, sizeof (sf_logbuffer), "%s", psf->logbuffer) ;
+{	snprintf (sf_parselog, sizeof (sf_parselog), "%s", psf->parselog.buf) ;
 } /* save_header_info */
 
-static void
+static int
 copy_filename (SF_PRIVATE *psf, const char *path)
 {	const char *ccptr ;
 	char *cptr ;
+
+	if (strlen (path) > 1 && strlen (path) - 1 >= sizeof (psf->file.path.c))
+	{	psf->error = SFE_FILENAME_TOO_LONG ;
+		return psf->error ;
+		} ;
 
 	snprintf (psf->file.path.c, sizeof (psf->file.path.c), "%s", path) ;
 	if ((ccptr = strrchr (path, '/')) || (ccptr = strrchr (path, '\\')))
@@ -2492,7 +2847,7 @@ copy_filename (SF_PRIVATE *psf, const char *path)
 	else
 		psf->file.dir.c [0] = 0 ;
 
-	return ;
+	return 0 ;
 } /* copy_filename */
 
 /*==============================================================================
@@ -2500,49 +2855,44 @@ copy_filename (SF_PRIVATE *psf, const char *path)
 
 static int
 psf_close (SF_PRIVATE *psf)
-{	int	error = 0 ;
+{	uint32_t k ;
+	int	error = 0 ;
 
 	if (psf->codec_close)
-		error = psf->codec_close (psf) ;
+	{	error = psf->codec_close (psf) ;
+		/* To prevent it being called in psf->container_close(). */
+		psf->codec_close = NULL ;
+		} ;
+
 	if (psf->container_close)
 		error = psf->container_close (psf) ;
 
 	error = psf_fclose (psf) ;
 	psf_close_rsrc (psf) ;
 
-	if (psf->container_data)
-		free (psf->container_data) ;
+	/* For an ISO C compliant implementation it is ok to free a NULL pointer. */
+	free (psf->header.ptr) ;
+	free (psf->container_data) ;
+	free (psf->codec_data) ;
+	free (psf->interleave) ;
+	free (psf->dither) ;
+	free (psf->peak_info) ;
+	free (psf->broadcast_16k) ;
+	free (psf->loop_info) ;
+	free (psf->instrument) ;
+	free (psf->cues) ;
+	free (psf->channel_map) ;
+	free (psf->format_desc) ;
+	free (psf->strings.storage) ;
 
-	if (psf->codec_data)
-		free (psf->codec_data) ;
+	if (psf->wchunks.chunks)
+		for (k = 0 ; k < psf->wchunks.used ; k++)
+			free (psf->wchunks.chunks [k].data) ;
+	free (psf->rchunks.chunks) ;
+	free (psf->wchunks.chunks) ;
+	free (psf->iterator) ;
+	free (psf->cart_16k) ;
 
-	if (psf->interleave)
-		free (psf->interleave) ;
-
-	if (psf->dither)
-		free (psf->dither) ;
-
-	if (psf->peak_info)
-		free (psf->peak_info) ;
-
-	if (psf->broadcast_16k)
-		free (psf->broadcast_16k) ;
-
-	if (psf->loop_info)
-		free (psf->loop_info) ;
-
-	if (psf->instrument)
-		free (psf->instrument) ;
-
-	if (psf->channel_map)
-		free (psf->channel_map) ;
-
-	if (psf->format_desc)
-	{	psf->format_desc [0] = 0 ;
-		free (psf->format_desc) ;
-		} ;
-
-	memset (psf, 0, sizeof (SF_PRIVATE)) ;
 	free (psf) ;
 
 	return error ;
@@ -2553,7 +2903,7 @@ psf_open_file (SF_PRIVATE *psf, SF_INFO *sfinfo)
 {	int		error, format ;
 
 	sf_errno = error = 0 ;
-	sf_logbuffer [0] = 0 ;
+	sf_parselog [0] = 0 ;
 
 	if (psf->error)
 	{	error = psf->error ;
@@ -2570,11 +2920,6 @@ psf_open_file (SF_PRIVATE *psf, SF_INFO *sfinfo)
 		goto error_exit ;
 		} ;
 
-	/* Zero out these fields. */
-	sfinfo->frames = 0 ;
-	sfinfo->sections = 0 ;
-	sfinfo->seekable = 0 ;
-
 	if (psf->file.mode == SFM_READ)
 	{	if ((SF_CONTAINER (sfinfo->format)) == SF_FORMAT_RAW)
 		{	if (sf_format_check (sfinfo) == 0)
@@ -2586,7 +2931,7 @@ psf_open_file (SF_PRIVATE *psf, SF_INFO *sfinfo)
 			memset (sfinfo, 0, sizeof (SF_INFO)) ;
 		} ;
 
-	memcpy (&(psf->sf), sfinfo, sizeof (SF_INFO)) ;
+	memcpy (&psf->sf, sfinfo, sizeof (SF_INFO)) ;
 
 	psf->Magick 		= SNDFILE_MAGICK ;
 	psf->norm_float 	= SF_TRUE ;
@@ -2661,7 +3006,7 @@ psf_open_file (SF_PRIVATE *psf, SF_INFO *sfinfo)
 			goto error_exit ;
 			} ;
 
-		if (sf_format_check (&(psf->sf)) == 0)
+		if (sf_format_check (&psf->sf) == 0)
 		{	error = SFE_BAD_OPEN_FORMAT ;
 			goto error_exit ;
 			} ;
@@ -2821,7 +3166,7 @@ psf_open_file (SF_PRIVATE *psf, SF_INFO *sfinfo)
 		/* Lite remove end */
 
 		default :
-				error = SFE_UNKNOWN_FORMAT ;
+				error = SF_ERR_UNRECOGNISED_FORMAT ;
 		} ;
 
 	if (error)
@@ -2851,12 +3196,12 @@ psf_open_file (SF_PRIVATE *psf, SF_INFO *sfinfo)
 	if (psf->fileoffset > 0)
 		psf_log_printf (psf, "Embedded file length : %D\n", psf->filelength) ;
 
-	if (psf->file.mode == SFM_RDWR && sf_format_check (&(psf->sf)) == 0)
+	if (psf->file.mode == SFM_RDWR && sf_format_check (&psf->sf) == 0)
 	{	error = SFE_BAD_MODE_RW ;
 		goto error_exit ;
 		} ;
 
-	if (validate_sfinfo (&(psf->sf)) == 0)
+	if (validate_sfinfo (&psf->sf) == 0)
 	{	psf_log_SF_INFO (psf) ;
 		save_header_info (psf) ;
 		error = SFE_BAD_SF_INFO ;
@@ -2876,9 +3221,14 @@ psf_open_file (SF_PRIVATE *psf, SF_INFO *sfinfo)
 		psf->have_written = psf->sf.frames > 0 ? SF_TRUE : SF_FALSE ;
 		} ;
 
-	memcpy (sfinfo, &(psf->sf), sizeof (SF_INFO)) ;
+	memcpy (sfinfo, &psf->sf, sizeof (SF_INFO)) ;
 
-	memcpy (sfinfo, &(psf->sf), sizeof (SF_INFO)) ;
+	if (psf->file.mode == SFM_WRITE)
+	{	/* Zero out these fields. */
+		sfinfo->frames = 0 ;
+		sfinfo->sections = 0 ;
+		sfinfo->seekable = 0 ;
+		} ;
 
 	return (SNDFILE *) psf ;
 
@@ -2887,7 +3237,7 @@ error_exit :
 
 	if (error == SFE_SYSTEM)
 		snprintf (sf_syserr, sizeof (sf_syserr), "%s", psf->syserr) ;
-	snprintf (sf_logbuffer, sizeof (sf_logbuffer), "%s", psf->logbuffer) ;
+	snprintf (sf_parselog, sizeof (sf_parselog), "%s", psf->parselog.buf) ;
 
 	switch (error)
 	{	case SF_ERR_SYSTEM :
@@ -2909,3 +3259,80 @@ error_exit :
 	return NULL ;
 } /* psf_open_file */
 
+/*==============================================================================
+** Chunk getting and setting.
+** This works for AIFF, CAF, RF64 and WAV.
+** It doesn't work for W64 because W64 uses weird GUID style chunk markers.
+*/
+
+int
+sf_set_chunk (SNDFILE * sndfile, const SF_CHUNK_INFO * chunk_info)
+{	SF_PRIVATE 	*psf ;
+
+	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (chunk_info == NULL || chunk_info->data == NULL)
+		return SFE_BAD_CHUNK_PTR ;
+
+	if (psf->set_chunk)
+		return psf->set_chunk (psf, chunk_info) ;
+
+	return SFE_BAD_CHUNK_FORMAT ;
+} /* sf_set_chunk */
+
+SF_CHUNK_ITERATOR *
+sf_get_chunk_iterator (SNDFILE * sndfile, const SF_CHUNK_INFO * chunk_info)
+{	SF_PRIVATE 	*psf ;
+
+	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (chunk_info)
+		return psf_get_chunk_iterator (psf, chunk_info->id) ;
+
+	return psf_get_chunk_iterator (psf, NULL) ;
+} /* sf_get_chunk_iterator */
+
+SF_CHUNK_ITERATOR *
+sf_next_chunk_iterator (SF_CHUNK_ITERATOR * iterator)
+{	SF_PRIVATE 	*psf ;
+	SNDFILE	*sndfile = iterator ? iterator->sndfile : NULL ;
+
+	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (psf->next_chunk_iterator)
+		return psf->next_chunk_iterator (psf, iterator) ;
+
+	return NULL ;
+} /* sf_get_chunk_iterator_next */
+
+int
+sf_get_chunk_size (const SF_CHUNK_ITERATOR * iterator, SF_CHUNK_INFO * chunk_info)
+{	SF_PRIVATE 	*psf ;
+	SNDFILE	*sndfile = iterator ? iterator->sndfile : NULL ;
+
+	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (chunk_info == NULL)
+		return SFE_BAD_CHUNK_PTR ;
+
+	if (psf->get_chunk_size)
+		return psf->get_chunk_size (psf, iterator, chunk_info) ;
+
+	return SFE_BAD_CHUNK_FORMAT ;
+} /* sf_get_chunk_size */
+
+int
+sf_get_chunk_data (const SF_CHUNK_ITERATOR * iterator, SF_CHUNK_INFO * chunk_info)
+{	SF_PRIVATE	*psf ;
+	SNDFILE	*sndfile = iterator ? iterator->sndfile : NULL ;
+
+	VALIDATE_SNDFILE_AND_ASSIGN_PSF (sndfile, psf, 1) ;
+
+	if (chunk_info == NULL || chunk_info->data == NULL)
+		return SFE_BAD_CHUNK_PTR ;
+
+	if (psf->get_chunk_data)
+		return psf->get_chunk_data (psf, iterator, chunk_info) ;
+
+	return SFE_BAD_CHUNK_FORMAT ;
+} /* sf_get_chunk_data */

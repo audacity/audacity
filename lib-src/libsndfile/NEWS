@@ -1,3 +1,32 @@
+Version 1.0.28 (2017-04-02)
+  * Fix buffer overruns in FLAC and ID3 handling code.
+  * Move to variable length header storage.
+  * Fix detection of Large File Support for 32 bit systems.
+  * Remove large stack allocations in ALAC handling code.
+  * Remove all use of Variable Length Arrays.
+  * Minor bug fixes and improvements.
+
+Version 1.0.27 (2016-06-19)
+  * Fix an SF_INFO seekable flag regression introduced in 1.0.26.
+  * Fix potential infinite loops on malformed input files.
+  * Add string metadata read/write for CAF and RF64.
+  * Add handling of CUE chunks.
+  * Fix endian-ness issues in PAF files.
+  * Minor bug fixes and improvements.
+
+Version 1.0.26 (2015-11-22)
+  * Fix for CVE-2014-9496, SD2 buffer read overflow.
+  * Fix for CVE-2014-9756, file_io.c divide by zero.
+  * Fix for CVE-2015-7805, AIFF heap write overflow.
+  * Add support for ALAC encoder in a CAF container.
+  * Add support for Cart chunks in WAV files.
+  * Minor bug fixes and improvements.
+
+Version 1.0.25 (2011-07-13)
+  * Fix for Secunia Advisory SA45125, heap overflow in PAF file handler.
+  * Accept broken WAV files with blockalign == 0.
+  * Minor bug fixes and improvements.
+
 Version 1.0.24 (2011-03-23)
   * WAV files now have an 18 byte u-law and A-law fmt chunk.
   * Document virtual I/O functionality.

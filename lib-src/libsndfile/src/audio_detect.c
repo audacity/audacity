@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2012 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -24,6 +24,8 @@
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
+#else
+#include "sf_unistd.h"
 #endif
 
 #include <string.h>
@@ -60,7 +62,7 @@ audio_detect (SF_PRIVATE * psf, AUDIO_DETECT *ad, const unsigned char * data, in
 			"    be_int_24_32 : %d\n",
 			vote.le_float, vote.be_float, vote.le_int_24_32, vote.be_int_24_32) ;
 
-	if (0) puts (psf->logbuffer) ;
+	if (0) puts (psf->parselog.buf) ;
 
 	if (ad->endianness == SF_ENDIAN_LITTLE && vote.le_float > (3 * datalen) / 4)
 	{	/* Almost certainly 32 bit floats. */

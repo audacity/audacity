@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 ** Copyright (C) 2007 Reuben Thomas
 **
 ** This program is free software; you can redistribute it and/or modify
@@ -168,15 +168,15 @@ wve_write_header (SF_PRIVATE *psf, int calc_length)
 		} ;
 
 	/* Reset the current header length to zero. */
-	psf->header [0] = 0 ;
-	psf->headindex = 0 ;
+	psf->header.ptr [0] = 0 ;
+	psf->header.indx = 0 ;
 	psf_fseek (psf, 0, SEEK_SET) ;
 
 	/* Write header. */
 	datalen = psf->datalength ;
-	psf_binheader_writef (psf, "Emmmm", ALAW_MARKER, SOUN_MARKER, DFIL_MARKER, ESSN_MARKER) ;
-	psf_binheader_writef (psf, "E2422222", PSION_VERSION, datalen, 0, 0, 0, 0, 0) ;
-	psf_fwrite (psf->header, psf->headindex, 1, psf) ;
+	psf_binheader_writef (psf, "Emmmm", BHWm (ALAW_MARKER), BHWm (SOUN_MARKER), BHWm (DFIL_MARKER), BHWm (ESSN_MARKER)) ;
+	psf_binheader_writef (psf, "E2422222", BHW2 (PSION_VERSION), BHW4 (datalen), BHW2 (0), BHW2 (0), BHW2 (0), BHW2 (0), BHW2 (0)) ;
+	psf_fwrite (psf->header.ptr, psf->header.indx, 1, psf) ;
 
 	if (psf->sf.channels != 1)
 		return SFE_CHANNEL_COUNT ;
@@ -184,7 +184,7 @@ wve_write_header (SF_PRIVATE *psf, int calc_length)
 	if (psf->error)
 		return psf->error ;
 
-	psf->dataoffset = psf->headindex ;
+	psf->dataoffset = psf->header.indx ;
 
 	if (current > 0)
 		psf_fseek (psf, current, SEEK_SET) ;

@@ -5,8 +5,8 @@ includedir=@includedir@
 
 Name: sndfile
 Description: A library for reading and writing audio files
-Requires: 
+Requires:
+Requires.private: @EXTERNAL_XIPH_REQUIRE@
 Version: @VERSION@
 Libs: -L${libdir} -lsndfile
-Libs.private: @EXTERNAL_LIBS@
-Cflags: -I${includedir} 
+Cflags: -I${includedir}

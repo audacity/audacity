@@ -10,57 +10,57 @@
 
 int gsm_option (gsm r, int opt, int * val)
 {
-	int 	result = -1;
+	int 	result = -1 ;
 
 	switch (opt) {
 	case GSM_OPT_LTP_CUT:
 #ifdef 	LTP_CUT
-		result = r->ltp_cut;
-		if (val) r->ltp_cut = *val;
+		result = r->ltp_cut ;
+		if (val) r->ltp_cut = *val ;
 #endif
-		break;
+		break ;
 
 	case GSM_OPT_VERBOSE:
 #ifndef	NDEBUG
-		result = r->verbose;
-		if (val) r->verbose = *val;
+		result = r->verbose ;
+		if (val) r->verbose = *val ;
 #endif
-		break;
+		break ;
 
 	case GSM_OPT_FAST:
 
-#if	defined(FAST) && defined(USE_FLOAT_MUL)
-		result = r->fast;
-		if (val) r->fast = !!*val;
+#if	defined (FAST) && defined (USE_FLOAT_MUL)
+		result = r->fast ;
+		if (val) r->fast = !!*val ;
 #endif
-		break;
+		break ;
 
 	case GSM_OPT_FRAME_CHAIN:
 
 #ifdef WAV49
-		result = r->frame_chain;
-		if (val) r->frame_chain = *val;
+		result = r->frame_chain ;
+		if (val) r->frame_chain = *val ;
 #endif
-		break;
+		break ;
 
 	case GSM_OPT_FRAME_INDEX:
 
 #ifdef WAV49
-		result = r->frame_index;
-		if (val) r->frame_index = *val;
+		result = r->frame_index ;
+		if (val) r->frame_index = *val ;
 #endif
-		break;
+		break ;
 
 	case GSM_OPT_WAV49:
 
-#ifdef WAV49 
-		result = r->wav_fmt;
-		if (val) r->wav_fmt = !!*val;
+#ifdef WAV49
+		result = r->wav_fmt ;
+		if (val) r->wav_fmt = !!*val ;
 #endif
-		break;
+		break ;
 
 	default:
-		break;
+		break ;
 	}
-	return result;
+	return result ;
 }

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2006-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2006-2016 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -33,7 +33,7 @@
 ** This is a bit rough, but it is the nicest way to do it.
 */
 
-#define cmp_test(line,ival,tval,str) \
+#define cmp_test(line, ival, tval, str) \
 	if (ival != tval) \
 	{	printf (str, line, ival, tval) ; \
 		exit (1) ; \
@@ -70,7 +70,8 @@ conversion_test (char endian)
 		} ;
 
 	psf_binheader_writef (psf, format_str, i8, i16, i24, i32, i64) ;
-	psf_fwrite (psf->header, 1, psf->headindex, psf) ;
+	psf_fwrite (psf->header.ptr, 1, psf->header.indx, psf) ;
+	free (psf->header.ptr) ;
 	psf_fclose (psf) ;
 
 	memset (psf, 0, sizeof (sf_private)) ;
@@ -84,6 +85,7 @@ conversion_test (char endian)
 		} ;
 
 	bytes = psf_binheader_readf (psf, format_str, &t8, &t16, &t24, &t32, &t64) ;
+	free (psf->header.ptr) ;
 	psf_fclose (psf) ;
 
 	if (bytes != 18)

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2016 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -106,24 +106,24 @@ pvf_write_header (SF_PRIVATE *psf, int UNUSED (calc_length))
 	current = psf_ftell (psf) ;
 
 	/* Reset the current header length to zero. */
-	psf->header [0] = 0 ;
-	psf->headindex = 0 ;
+	psf->header.ptr [0] = 0 ;
+	psf->header.indx = 0 ;
 
 	if (psf->is_pipe == SF_FALSE)
 		psf_fseek (psf, 0, SEEK_SET) ;
 
-	snprintf ((char*) psf->header, sizeof (psf->header), "PVF1\n%d %d %d\n",
+	snprintf ((char*) psf->header.ptr, psf->header.len, "PVF1\n%d %d %d\n",
 		psf->sf.channels, psf->sf.samplerate, psf->bytewidth * 8) ;
 
-	psf->headindex = strlen ((char*) psf->header) ;
+	psf->header.indx = strlen ((char*) psf->header.ptr) ;
 
 	/* Header construction complete so write it out. */
-	psf_fwrite (psf->header, psf->headindex, 1, psf) ;
+	psf_fwrite (psf->header.ptr, psf->header.indx, 1, psf) ;
 
 	if (psf->error)
 		return psf->error ;
 
-	psf->dataoffset = psf->headindex ;
+	psf->dataoffset = psf->header.indx ;
 
 	if (current > 0)
 		psf_fseek (psf, current, SEEK_SET) ;

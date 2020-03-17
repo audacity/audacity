@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2010-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2010-2012 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -40,11 +40,14 @@ test_psf_strlcpy_crlf (void)
 			exit (1) ;
 			} ;
 
-		dest [dest_len] = '\xea' ;
+		/* This value needs to be a in the [0, 127] range to avoid tripping up
+		** compiles like Sun Studio 12.*
+		*/
+		dest [dest_len] = '\x5a' ;
 
-		psf_strlcpy_crlf (dest, src, dest_len, sizeof (src)) ;
+		psf_strlcpy_crlf (dest, src, dest_len, sizeof (*src)) ;
 
-		if (dest [dest_len] != '\xea')
+		if (dest [dest_len] != '\x5a')
 		{	printf ("\n\nLine %d: buffer overrun for dest_len == %d\n\n", __LINE__, dest_len) ;
 			exit (1) ;
 			} ;

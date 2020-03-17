@@ -1,0 +1,38 @@
+Benchmarking libsndfile-1.0.18pre15
+-----------------------------------
+Each test takes a little over 5 seconds.
+
+    Raw write PCM_16  :  178237074 samples per sec
+    Raw read  PCM_16  :  368885269 samples per sec
+
+Native endian I/O :
+    Write short   to  PCM_16 :  98.84% of raw write
+    Read  short  from PCM_16 : 147.10% of raw read
+    Write int     to  PCM_24 :  33.74% of raw write
+    Read  int    from PCM_24 :  30.82% of raw read
+    Write int     to  PCM_32 :  48.34% of raw write
+    Read  int    from PCM_32 :  62.43% of raw read
+    Write float   to  PCM_16 :  41.86% of raw write
+    Read  float  from PCM_16 :  36.73% of raw read
+    Write float   to  PCM_24 :  28.38% of raw write
+    Read  float  from PCM_24 :  19.50% of raw read
+    Write float   to  PCM_32 :  23.68% of raw write
+    Read  float  from PCM_32 :  28.76% of raw read
+    Write float   to  FLOAT  :  47.21% of raw write
+    Read  float  from FLOAT  :  60.85% of raw read
+
+Endian swapped I/O :
+    Write short   to  PCM_16 :  54.94% of raw write
+    Read  short  from PCM_16 :  59.03% of raw read
+    Write int     to  PCM_24 :  33.40% of raw write
+    Read  int    from PCM_24 :  31.98% of raw read
+    Write int     to  PCM_32 :  30.89% of raw write
+    Read  int    from PCM_32 :  33.68% of raw read
+    Write float   to  PCM_16 :  41.61% of raw write
+    Read  float  from PCM_16 :  26.76% of raw read
+    Write float   to  PCM_24 :  25.75% of raw write
+    Read  float  from PCM_24 :  19.84% of raw read
+    Write float   to  PCM_32 :  21.29% of raw write
+    Read  float  from PCM_32 :  21.78% of raw read
+    Write float   to  FLOAT  :  30.82% of raw write
+    Read  float  from FLOAT  :  35.04% of raw read

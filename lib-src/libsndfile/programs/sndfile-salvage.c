@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2010-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2010-2014 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -30,6 +30,8 @@
 ** ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include	"sfconfig.h"
+
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	<string.h>
@@ -37,7 +39,11 @@
 #include	<ctype.h>
 #include	<math.h>
 #include	<errno.h>
+#if HAVE_UNISTD_H
 #include	<unistd.h>
+#else
+#include	"sf_unistd.h"
+#endif
 #include	<fcntl.h>
 #include	<sys/stat.h>
 #include	<sys/types.h>
@@ -79,7 +85,7 @@ usage_exit (const char *progname)
 {	printf ("Usage :\n\n  %s <broken wav file> <fixed w64 file>\n\n", progname) ;
 	puts ("Salvages the audio data from WAV files which are more than 4G in length.\n") ;
 	printf ("Using %s.\n\n", sf_version_string ()) ;
-	exit (0) ;
+	exit (1) ;
 } /* usage_exit */
 
 static void
@@ -157,7 +163,7 @@ salvage_file (const char * broken_wav, const char * fixed_w64)
 	read_size *= sfinfo.channels ;
 
 	if ((sndfile = sf_open (fixed_w64, SFM_WRITE, &sfinfo)) == NULL)
-	{	printf ("sf_open ('%s') failed : %s\n", broken_wav, sf_strerror (NULL)) ;
+	{	printf ("sf_open ('%s') failed : %s\n", fixed_w64, sf_strerror (NULL)) ;
 		exit (1) ;
 		} ;
 
@@ -240,7 +246,7 @@ find_data_offset (int fd, int format)
 
 	cptr = memchr (buffer, target [0], rlen - slen) ;
 	if (cptr && memcmp (cptr, target, slen) == 0)
-		offset = cptr - buffer  ;
+		offset = cptr - buffer ;
 	else
 	{	printf ("Error : Could not find data offset.\n") ;
 		exit (1) ;

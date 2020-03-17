@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2008-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2008-2016 Erik de Castro Lopo <erikd@mega-nerd.com>
 ** Copyright (C) 2008-2010 George Blood Audio
 **
 ** All rights reserved.
@@ -57,6 +57,7 @@ main (int argc, char *argv [])
 	struct tm timedata ;
 	const char *progname ;
 	const char * filenames [2] = { NULL, NULL } ;
+	char date [128], time [128] ;
 	int	k ;
 
 	/* Store the program name. */
@@ -66,16 +67,14 @@ main (int argc, char *argv [])
 	if (argc < 3 || strcmp (argv [1], "--help") == 0 || strcmp (argv [1], "-h") == 0)
 		usage_exit (progname, 0) ;
 
-	/* Clear set all fields of the struct to zero bytes. */
+	/* Set all fields of the struct to zero bytes. */
 	memset (&info, 0, sizeof (info)) ;
 
 	/* Get the time in case we need it later. */
 	read_localtime (&timedata) ;
 
 	for (k = 1 ; k < argc ; k++)
-	{	char tmp [20] ;
-
-		if (argv [k][0] != '-')
+	{	if (argv [k][0] != '-')
 		{	if (filenames [0] == NULL)
 				filenames [0] = argv [k] ;
 			else if (filenames [1] == NULL)
@@ -87,7 +86,7 @@ main (int argc, char *argv [])
 			continue ;
 			} ;
 
-#define HANDLE_BEXT_ARG(cmd,field) \
+#define HANDLE_BEXT_ARG(cmd, field) \
 		if (strcmp (argv [k], cmd) == 0) \
 		{	k ++ ; \
 			if (k == argc) missing_param (argv [k - 1]) ; \
@@ -101,10 +100,15 @@ main (int argc, char *argv [])
 		HANDLE_BEXT_ARG ("--bext-umid", umid) ;
 		HANDLE_BEXT_ARG ("--bext-orig-date", origination_date) ;
 		HANDLE_BEXT_ARG ("--bext-orig-time", origination_time) ;
+		HANDLE_BEXT_ARG ("--bext-loudness-value", loudness_value) ;
+		HANDLE_BEXT_ARG ("--bext-loudness-range", loudness_range) ;
+		HANDLE_BEXT_ARG ("--bext-max-truepeak", max_true_peak_level) ;
+		HANDLE_BEXT_ARG ("--bext-max-momentary", max_momentary_loudness) ;
+		HANDLE_BEXT_ARG ("--bext-max-shortterm", max_shortterm_loudness) ;
 		HANDLE_BEXT_ARG ("--bext-coding-hist", coding_history) ;
 		HANDLE_BEXT_ARG ("--bext-time-ref", time_ref) ;
 
-#define HANDLE_STR_ARG(cmd,field) \
+#define HANDLE_STR_ARG(cmd, field) \
 	if (strcmp (argv [k], cmd) == 0) \
 	{	k ++ ; \
 		if (k == argc) missing_param (argv [k - 1]) ; \
@@ -122,30 +126,30 @@ main (int argc, char *argv [])
 
 		/* Following options do not take an argument. */
 		if (strcmp (argv [k], "--bext-auto-time-date") == 0)
-		{	snprintf (tmp, sizeof (tmp), "%02d:%02d:%02d", timedata.tm_hour, timedata.tm_min, timedata.tm_sec) ;
-			info.origination_time = strdup (tmp) ;
+		{	snprintf (time, sizeof (time), "%02d:%02d:%02d", timedata.tm_hour, timedata.tm_min, timedata.tm_sec) ;
+			info.origination_time = time ;
 
-			snprintf (tmp, sizeof (tmp), "%04d-%02d-%02d", timedata.tm_year + 1900, timedata.tm_mon + 1, timedata.tm_mday) ;
-			info.origination_date = strdup (tmp) ;
+			snprintf (date, sizeof (date), "%04d-%02d-%02d", timedata.tm_year + 1900, timedata.tm_mon + 1, timedata.tm_mday) ;
+			info.origination_date = date ;
 			continue ;
 			} ;
 
 		if (strcmp (argv [k], "--bext-auto-time") == 0)
-		{	snprintf (tmp, sizeof (tmp), "%02d:%02d:%02d", timedata.tm_hour, timedata.tm_min, timedata.tm_sec) ;
-			info.origination_time = strdup (tmp) ;
+		{	snprintf (time, sizeof (time), "%02d:%02d:%02d", timedata.tm_hour, timedata.tm_min, timedata.tm_sec) ;
+			info.origination_time = time ;
 			continue ;
 			} ;
 
 		if (strcmp (argv [k], "--bext-auto-date") == 0)
-		{	snprintf (tmp, sizeof (tmp), "%04d-%02d-%02d", timedata.tm_year + 1900, timedata.tm_mon + 1, timedata.tm_mday) ;
-			info.origination_date = strdup (tmp) ;
+		{	snprintf (date, sizeof (date), "%04d-%02d-%02d", timedata.tm_year + 1900, timedata.tm_mon + 1, timedata.tm_mday) ;
+			info.origination_date = strdup (date) ;
 			continue ;
 			} ;
 
 		if (strcmp (argv [k], "--str-auto-date") == 0)
-		{	snprintf (tmp, sizeof (tmp), "%04d-%02d-%02d", timedata.tm_year + 1900, timedata.tm_mon + 1, timedata.tm_mday) ;
+		{	snprintf (date, sizeof (date), "%04d-%02d-%02d", timedata.tm_year + 1900, timedata.tm_mon + 1, timedata.tm_mday) ;
 
-			info.date = strdup (tmp) ;
+			info.date = strdup (date) ;
 			continue ;
 			} ;
 
@@ -207,8 +211,13 @@ usage_exit (const char *progname, int exit_code)
 		"    --bext-umid              Set the 'bext' UMID.\n"
 		"    --bext-orig-date         Set the 'bext' origination date.\n"
 		"    --bext-orig-time         Set the 'bext' origination time.\n"
+		"    --bext-loudness-value    Set the 'bext' loudness value.\n"
+		"    --bext-loudness-range    Set the 'bext' loudness range.\n"
+		"    --bext-max-truepeak      Set the 'bext' max. true peak level\n"
+		"    --bext-max-momentary     Set the 'bext' max. momentary loudness\n"
+		"    --bext-max-shortterm     Set the 'bext' max. short term loudness\n"
 		"    --bext-coding-hist       Set the 'bext' coding history.\n"
-		"    --bext-time-raf          Set the 'bext' Time ref.\n"
+		"    --bext-time-ref          Set the 'bext' Time ref.\n"
 		"\n"
 		"    --str-comment            Set the metadata comment.\n"
 		"    --str-title              Set the metadata title.\n"
@@ -257,6 +266,9 @@ has_bext_fields_set (const METADATA_INFO * info)
 	if (info->origination_date || info->origination_time || info->umid || info->coding_history || info->time_ref)
 		return 1 ;
 
+	if (info->loudness_value || info->loudness_range || info->max_true_peak_level || info->max_momentary_loudness || info->max_shortterm_loudness)
+		return 1 ;
+
 	return 0 ;
 } /* has_bext_fields_set */
 
@@ -281,4 +293,3 @@ read_localtime (struct tm * timedata)
 
 	return ;
 } /* read_localtime */
-

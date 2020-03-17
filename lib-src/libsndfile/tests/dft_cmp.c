@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2015 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
 ** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
+
+#include	"sfconfig.h"
 
 #include	<stdio.h>
 #include	<stdlib.h>
@@ -123,9 +125,9 @@ dft_magnitude (const double *data, double *spectrum)
 		spectrum [k] = sqrt (real_part * real_part + imag_part * imag_part) ;
 		} ;
 
-	spectrum [k] = 0.0 ;
+	spectrum [DFT_SPEC_LENGTH - 1] = 0.0 ;
 
-	spectrum [0] = spectrum [1] = spectrum [2] = spectrum [3] = spectrum [4] = 0.0 ;
+	spectrum [0] = spectrum [1] = spectrum [2] = 0.0 ;
 
 	return ;
 } /* dft_magnitude */
