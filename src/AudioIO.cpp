@@ -990,6 +990,7 @@ AudioIO::AudioIO()
    mLastRecordingOffset = 0.0;
    mNumCaptureChannels = 0;
    mPaused = false;
+   mSilenceLevel = 0.0;
 
    mUpdateMeters = false;
    mUpdatingMeters = false;
