@@ -924,25 +924,52 @@ bool MacroCommands::ApplyMacro(
    // Check for reentrant ApplyMacro commands.
    // We'll allow 1 level of reentry, but not more.
    // And we treat ignoring deeper levels as a success.
-   if( MacroReentryCount > 1 )
+   if (MacroReentryCount > 1) {
       return true;
+   }
 
    // Restore the reentry counter (to zero) when we exit.
-   auto cleanup1 = valueRestorer( MacroReentryCount);
+   auto cleanup1 = valueRestorer(MacroReentryCount);
    MacroReentryCount++;
-
-   mFileName = filename;
 
    AudacityProject *proj = &mProject;
    bool res = false;
-   auto cleanup2 = finally( [&] {
-      if (!res) {
-         if(proj) {
-            // Macro failed or was cancelled; revert to the previous state
-            ProjectHistory::Get( *proj ).RollbackState();
-         }
+
+   // Only perform this group on initial entry.  They should not be done
+   // while recursing.
+   if (MacroReentryCount == 1) {
+      mFileName = filename;
+
+      TranslatableString longDesc, shortDesc;
+      wxString name = gPrefs->Read(wxT("/Batch/ActiveMacro"), wxEmptyString);
+      if (name.empty()) {
+         /* i18n-hint: active verb in past tense */
+         longDesc = XO("Applied Macro");
+         shortDesc = XO("Apply Macro");
       }
-   } );
+      else {
+         /* i18n-hint: active verb in past tense */
+         longDesc = XO("Applied Macro '%s'").Format(name);
+         shortDesc = XO("Apply '%s'").Format(name);
+      }
+
+      // Save the project state before making any changes.  It will be rolled
+      // back if an error occurs.
+      if (proj) {
+         ProjectHistory::Get(*proj).PushState(longDesc, shortDesc);
+      }
+
+      // Upon exit of the top level apply, roll back the state if
+      // an error occurs.
+      auto cleanup2 = finally([&] {
+         if (!res) {
+            if (proj) {
+               // Macro failed or was cancelled; revert to the previous state
+               ProjectHistory::Get(*proj).RollbackState();
+            }
+         }
+         });
+   }
 
    mAbort = false;
 
@@ -964,28 +991,13 @@ bool MacroCommands::ApplyMacro(
    if (!res)
       return false;
 
-   mFileName.Empty();
+   if (MacroReentryCount == 1) {
+      mFileName.Empty();
 
-   // Macro was successfully applied; save the NEW project state
-   TranslatableString longDesc, shortDesc;
-   wxString name = gPrefs->Read(wxT("/Batch/ActiveMacro"), wxEmptyString);
-   if (name.empty())
-   {
-      /* i18n-hint: active verb in past tense */
-      longDesc = XO("Applied Macro");
-      shortDesc = XO("Apply Macro");
-   }
-   else
-   {
-      /* i18n-hint: active verb in past tense */
-      longDesc = XO("Applied Macro '%s'").Format( name );
-      shortDesc = XO("Apply '%s'").Format( name );
+      if (proj)
+         ProjectHistory::Get(*proj).ModifyState(true);
    }
 
-   if (!proj)
-      return false;
-   if( MacroReentryCount <= 1 )
-      ProjectHistory::Get( *proj ).PushState(longDesc, shortDesc);
    return true;
 }
 
