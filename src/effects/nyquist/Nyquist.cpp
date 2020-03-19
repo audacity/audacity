@@ -2727,7 +2727,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                                           .MenuEnabled(true)
                                           .ReadOnly(false);
 
-                  NumericTextCtrl *time = new
+                  NumericTextCtrl *time = safenew
                      NumericTextCtrl(S.GetParent(), (ID_Time + i),
                                      NumericConverter::TIME,
                                      GetSelectionFormat(),
