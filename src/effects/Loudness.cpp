@@ -492,7 +492,7 @@ bool EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
                    fillZero, true, &read_size);
       // WaveTrack::Get returns the amount of read samples excluding zero
       // filled samples from clip gaps. But in case of stereo tracks with
-      // assymetric gaps it still returns the same number for both channels.
+      // asymmetric gaps it still returns the same number for both channels.
       //
       // Fail if we read different sample count from stereo pair tracks.
       // Ignore this check during first iteration (last_read_size == -1).
