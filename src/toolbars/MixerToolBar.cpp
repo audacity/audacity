@@ -60,6 +60,7 @@ MixerToolBar::MixerToolBar( AudacityProject &project )
 {
    mInputSliderVolume = 0.0;
    mOutputSliderVolume = 0.0;
+   mEnabled = true;
 }
 
 MixerToolBar::~MixerToolBar()
@@ -121,13 +122,15 @@ void MixerToolBar::Populate()
                  this);
    // Show or hide the input slider based on whether it works
    auto gAudioIO = AudioIO::Get();
-   mInputSlider->Enable(gAudioIO->InputMixerWorks());
+   mInputSlider->Enable(mEnabled && gAudioIO->InputMixerWorks());
+   mOutputSlider->Enable(mEnabled);
 
    UpdateControls();
 
    // Add a little space
    Add(2, -1);
 
+   // Listen for capture events
    wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
                   &MixerToolBar::OnAudioCapture,
                   this);
@@ -135,11 +138,14 @@ void MixerToolBar::Populate()
 
 void MixerToolBar::OnAudioCapture(wxCommandEvent & event)
 {
+   event.Skip();
+
    AudacityProject *p = &mProject;
-   if (event.GetEventObject() != p)
+   if ((AudacityProject *) event.GetEventObject() != p)
    {
-      mInputSlider->Enable(!event.GetInt());
-      mOutputSlider->Enable(!event.GetInt());
+      mEnabled = !event.GetInt();
+      mInputSlider->Enable(mEnabled);
+      mOutputSlider->Enable(mEnabled);
    }
 }
 
@@ -183,7 +189,7 @@ void MixerToolBar::UpdatePrefs()
    gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
 
    // Show or hide the input slider based on whether it works
-   mInputSlider->Enable(gAudioIO->InputMixerWorks());
+   mInputSlider->Enable(mEnabled && gAudioIO->InputMixerWorks());
    Layout();
 
 // This code is from before the mixer toolbar was resizable.
@@ -227,6 +233,7 @@ void MixerToolBar::UpdateControls()
 
    // Show or hide the input slider based on whether it works
    auto gAudioIO = AudioIO::Get();
+   mInputSlider->Enable(mEnabled && gAudioIO->InputMixerWorks());
 
    gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
 

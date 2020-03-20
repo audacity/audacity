@@ -67,6 +67,7 @@ class MixerToolBar final : public ToolBar {
 
    ASlider *mInputSlider;
    ASlider *mOutputSlider;
+   bool mEnabled;
 
  public:
 
