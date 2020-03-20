@@ -378,7 +378,7 @@ bool IntegerValidatorBase::DoValidateNumber(TranslatableString * errMsg) const
    }
 
    // Can it be converted to a value?
-   LongestValueType value;
+   LongestValueType value = 0;
    bool res = FromString(s, &value);
    if ( !res )
       *errMsg = XO("Malformed number");
@@ -499,7 +499,7 @@ bool FloatingPointValidatorBase::DoValidateNumber(TranslatableString * errMsg) c
       }
    }
 
-   LongestValueType value;
+   LongestValueType value = 0;
    bool res = FromString(s, &value); // Can it be converted to a value?
    if ( !res )
       *errMsg = XO("Value overflow");
