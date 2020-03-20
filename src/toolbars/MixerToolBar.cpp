@@ -127,6 +127,20 @@ void MixerToolBar::Populate()
 
    // Add a little space
    Add(2, -1);
+
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                  &MixerToolBar::OnAudioCapture,
+                  this);
+}
+
+void MixerToolBar::OnAudioCapture(wxCommandEvent & event)
+{
+   AudacityProject *p = &mProject;
+   if (event.GetEventObject() != p)
+   {
+      mInputSlider->Enable(!event.GetInt());
+      mOutputSlider->Enable(!event.GetInt());
+   }
 }
 
 //Also from SelectionBar;
@@ -213,7 +227,6 @@ void MixerToolBar::UpdateControls()
 
    // Show or hide the input slider based on whether it works
    auto gAudioIO = AudioIO::Get();
-   mInputSlider->Enable(gAudioIO->InputMixerWorks());
 
    gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
 

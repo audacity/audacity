@@ -46,6 +46,8 @@ class MixerToolBar final : public ToolBar {
 
    void OnSlider(wxCommandEvent & event);
 
+   void OnAudioCapture(wxCommandEvent & event);
+
    void ShowOutputGainDialog();
    void ShowInputGainDialog();
 
