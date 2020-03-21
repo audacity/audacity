@@ -231,6 +231,7 @@ public:
    bool WithinClip(double t) const;
    bool BeforeClip(double t) const;
    bool AfterClip(double t) const;
+   bool IsClipStartAfterClip(double t) const;
 
    bool GetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
