@@ -247,7 +247,7 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
 
    // Take the output track and insert it in place of the original
    // sample data
-   track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), true, false, &warper);
+   track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), false, true, &warper);
 
    double newLength = outputTrack->GetEndTime();
    m_maxNewLength = wxMax(m_maxNewLength, newLength);
