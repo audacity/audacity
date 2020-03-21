@@ -1858,7 +1858,7 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
 
 bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
                     sampleCount start, size_t len, fillFormat fill,
-                    bool mayThrow, sampleCount * pNumCopied) const
+                    bool mayThrow, sampleCount * pNumWithinClips) const
 {
    // Simple optimization: When this buffer is completely contained within one clip,
    // don't clear anything (because we won't have to). Otherwise, just clear
@@ -1893,6 +1893,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
       }
    }
 
+   // Iterate the clips.  They are not necessarily sorted by time.
    for (const auto &clip: mClips)
    {
       auto clipStart = clip->GetStartSample();
@@ -1932,8 +1933,8 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
             samplesCopied += samplesToCopy;
       }
    }
-   if( pNumCopied )
-      *pNumCopied = samplesCopied;
+   if( pNumWithinClips )
+      *pNumWithinClips = samplesCopied;
    return result;
 }
 
