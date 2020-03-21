@@ -64,7 +64,7 @@ private:
    void FreeBuffers();
    bool GetTrackRMS(WaveTrack* track, float& rms);
    bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);
-   bool LoadBufferBlock(TrackIterRange<WaveTrack> range,
+   void LoadBufferBlock(TrackIterRange<WaveTrack> range,
                         sampleCount pos, size_t len);
    bool AnalyseBufferBlock();
    bool ProcessBufferBlock();

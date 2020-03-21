@@ -455,8 +455,7 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
 
       const size_t remainingLen = (end - s).as_size_t();
       blockLen = blockLen > remainingLen ? remainingLen : blockLen;
-      if(!LoadBufferBlock(range, s, blockLen))
-         return false;
+      LoadBufferBlock(range, s, blockLen);
 
       // Process the buffer.
       if(analyse)
@@ -479,29 +478,17 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
    return true;
 }
 
-bool EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
+void EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
                                      sampleCount pos, size_t len)
 {
-   sampleCount read_size = -1;
-   sampleCount last_read_size = -1;
    // Get the samples from the track and put them in the buffer
    int idx = 0;
    for(auto channel : range)
    {
-      channel->Get((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len,
-                   fillZero, true, &read_size);
-      // WaveTrack::Get returns the amount of read samples excluding zero
-      // filled samples from clip gaps. But in case of stereo tracks with
-      // asymmetric gaps it still returns the same number for both channels.
-      //
-      // Fail if we read different sample count from stereo pair tracks.
-      // Ignore this check during first iteration (last_read_size == -1).
-      if(read_size != last_read_size && last_read_size.as_long_long() != -1)
-         return false;
+      channel->Get((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len );
       ++idx;
    }
    mTrackBufferLen = len;
-   return true;
 }
 
 /// Calculates sample sum (for DC) and EBU R128 weighted square sum
