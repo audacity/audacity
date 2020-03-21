@@ -432,7 +432,6 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
    Floats buffer{ track->GetMaxBlockSize() };
 
    mSum   = 0.0; // dc offset inits
-   mCount = 0;
 
    sampleCount blockSamples;
    sampleCount totalSamples = 0;
@@ -538,7 +537,6 @@ void EffectNormalize::AnalyseDataDC(float *buffer, size_t len)
 {
    for(decltype(len) i = 0; i < len; i++)
       mSum += (double)buffer[i];
-   mCount += len;
 }
 
 void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)

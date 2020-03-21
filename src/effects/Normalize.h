@@ -80,7 +80,6 @@ private:
    double mCurT1;
    float  mMult;
    double mSum;
-   sampleCount    mCount;
 
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mDCCheckBox;
