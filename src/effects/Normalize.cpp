@@ -388,7 +388,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
 
       if(mDC)
       {
-         result = AnalyseTrackData(track, msg, progress, ANALYSE_DC, offset);
+         result = AnalyseTrackData(track, msg, progress, offset);
          min += offset;
          max += offset;
       }
@@ -396,7 +396,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
    else if(mDC)
    {
       min = -1.0, max = 1.0;   // sensible defaults?
-      result = AnalyseTrackData(track, msg, progress, ANALYSE_DC, offset);
+      result = AnalyseTrackData(track, msg, progress, offset);
       min += offset;
       max += offset;
    }
@@ -414,7 +414,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
 //AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 //and executes selected AnalyseOperation on it...
 bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const TranslatableString &msg,
-                                double &progress, AnalyseOperation op, float &offset)
+                                double &progress, float &offset)
 {
    bool rc = true;
 
@@ -453,8 +453,7 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
       totalSamples += blockSamples;
 
       //Process the buffer.
-      if(op == ANALYSE_DC)
-         AnalyseDataDC(buffer.get(), block);
+      AnalyseDataDC(buffer.get(), block);
 
       //Increment s one blockfull of samples
       s += block;

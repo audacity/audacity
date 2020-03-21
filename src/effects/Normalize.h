@@ -58,17 +58,12 @@ public:
 private:
    // EffectNormalize implementation
 
-   enum AnalyseOperation
-   {
-      ANALYSE_DC, ANALYSE_LOUDNESS, ANALYSE_LOUDNESS_DC
-   };
-
    bool ProcessOne(
       WaveTrack * t, const TranslatableString &msg, double& progress, float offset);
    bool AnalyseTrack(const WaveTrack * track, const TranslatableString &msg,
                      double &progress, float &offset, float &extent);
    bool AnalyseTrackData(const WaveTrack * track, const TranslatableString &msg, double &progress,
-                     AnalyseOperation op, float &offset);
+                     float &offset);
    void AnalyseDataDC(float *buffer, size_t len);
    void ProcessData(float *buffer, size_t len, float offset);
 
