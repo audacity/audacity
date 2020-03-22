@@ -1906,8 +1906,8 @@ bool Effect::ProcessTrack(int count,
       if (genRight)
       {
          genRight->Flush();
-         right->ClearAndPaste(mT0, mT1, genRight.get(), true, true,
-                              nullptr /* &warper */);
+         right->ClearAndPaste(mT0, selectedRegion.t1(),
+            genRight.get(), true, true, nullptr /* &warper */);
       }
    }
 
