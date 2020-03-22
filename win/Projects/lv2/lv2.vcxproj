@@ -5,14 +5,23 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}</ProjectGuid>
     <RootNamespace>lv2</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -20,7 +29,17 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -31,7 +50,13 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
@@ -49,6 +74,13 @@
     <IntDir>$(Configuration)\</IntDir>
     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -61,6 +93,41 @@
       <WarningLevel>Level3</WarningLevel>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>echo "$(OutDir)\include\lv2"
+ECHO ON
+IF EXIST "$(OutDir)\include\lv2" GOTO done
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\ext"
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\extensions"
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\lv2core"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2" "$(OutDir)\include\lv2"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\lv2.h" "$(OutDir)\include\lv2"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2" "$(OutDir)\include\lv2\lv2plug.in\ns\ext"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\ui\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\extensions\ui"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\units\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\extensions\units"
+XCOPY /IE "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\lv2core"
+:done
+</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\include;..\..\..\lib-src\lv2\sord\src;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lilv\src;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\suil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;$(AudacityConditionalSnprintf);HAVE_FMAX;LILV_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <PreBuildEvent>
       <Command>echo "$(OutDir)\include\lv2"
@@ -121,16 +188,63 @@ XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\*.h" "$(OutDir)\inclu
       <Message>Performing Custom Clean Step</Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(OutDir)\include;..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\sord\src;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lilv\src;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\suil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;$(AudacityConditionalSnprintf);HAVE_FMAX;LILV_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+    </Lib>
+    <PreBuildEvent>
+      <Command>IF EXIST "$(OutDir)\include\lv2" GOTO done
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\ext"
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\extensions"
+MKDIR "$(OutDir)\include\lv2\lv2plug.in\ns\lv2core"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2" "$(OutDir)\include\lv2"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\lv2.h" "$(OutDir)\include"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2" "$(OutDir)\include\lv2\lv2plug.in\ns\ext"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\ui\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\extensions\ui"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\units\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\extensions\units"
+XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\*.h" "$(OutDir)\include\lv2\lv2plug.in\ns\lv2core"
+:done
+</Command>
+      <Message>Performing Custom Build Step</Message>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>RD /S /Q "$(OutDir)/include"</Command>
+      <Outputs>dummy</Outputs>
+      <Message>Performing Custom Clean Step</Message>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\collections.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\instance.c">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\lilv_instance.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\lilv_instance.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\lilv_instance.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\lilv_instance.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\lib.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\node.c">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\lilv_node.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\lilv_node.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\lilv_node.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\lilv_node.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\plugin.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\pluginclass.c" />
@@ -147,7 +261,9 @@ XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\*.h" "$(OutDir)\inclu
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\n3.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\node.c">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\serd_node.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\serd_node.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\serd_node.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\serd_node.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\reader.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\serdi.c" />
@@ -165,7 +281,9 @@ XCOPY /I /E /Q "$(SolutionDir)\..\lib-src\lv2\lv2\lv2\core\*.h" "$(OutDir)\inclu
     <ClCompile Include="..\..\..\lib-src\lv2\suil\src\host.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\suil\src\instance.c">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\suil_instance.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\suil_instance.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\suil_instance.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\suil_instance.obj</ObjectFileName>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

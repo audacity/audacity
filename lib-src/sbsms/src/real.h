@@ -86,7 +86,7 @@
 	**	Win32 doesn't seem to have these functions.
 	**	Therefore implement inline versions of these functions here.
 	*/
-
+#if 0
 	__inline long int
 	lrint (double flt)
 	{	int intgr ;
@@ -110,6 +110,7 @@
 
 		return intgr ;
 	}
+#endif
 
 #elif (defined (__MWERKS__) && defined (macintosh))
 

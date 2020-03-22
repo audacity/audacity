@@ -220,6 +220,10 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
       Verbatim( "16384" ) ,
       Verbatim( "32768" ) ,
       Verbatim( "65536" ) ,
+      Verbatim( "131072" ) ,
+      Verbatim( "262144" ) ,
+      Verbatim( "524288" ) ,
+      Verbatim( "1048576" ) ,
    };
 
    TranslatableStrings funcChoices;
@@ -584,9 +588,9 @@ void FrequencyPlotDialog::GetAudio()
          auto start = track->TimeToLongSamples(selectedRegion.t0());
          auto end = track->TimeToLongSamples(selectedRegion.t1());
          auto dataLen = end - start;
-         if (dataLen > 10485760) {
+         if (dataLen > 104857600) {
             warning = true;
-            mDataLen = 10485760;
+            mDataLen = 104857600;
          }
          else
             // dataLen is not more than 10 * 2 ^ 20

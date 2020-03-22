@@ -142,6 +142,7 @@ typedef mad_fixed_t mad_sample_t;
 #  if defined(_MSC_VER)
 #   pragma warning(push)
 #   pragma warning(disable: 4035)  /* no return value */
+#if 0
 static __forceinline
 mad_fixed_t mad_f_mul_inline(mad_fixed_t x, mad_fixed_t y)
 {
@@ -157,6 +158,17 @@ mad_fixed_t mad_f_mul_inline(mad_fixed_t x, mad_fixed_t y)
 
   /* implicit return of eax */
 }
+#endif
+
+static __forceinline
+mad_fixed_t mad_f_mul_inline(mad_fixed_t x, mad_fixed_t y)
+{
+	enum {
+		fracbits = MAD_F_FRACBITS
+	};
+	return (mad_fixed_t)(((mad_fixed64_t)x * (mad_fixed64_t)y) >> fracbits);
+}
+
 #   pragma warning(pop)
 
 #   define mad_f_mul		mad_f_mul_inline

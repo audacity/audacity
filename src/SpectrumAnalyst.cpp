@@ -104,7 +104,7 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
    // Validate inputs
    int f = NumWindowFuncs();
 
-   if (!(windowSize >= 32 && windowSize <= 65536 &&
+   if (!(windowSize >= 32 && windowSize <= 1048576 &&
          alg >= SpectrumAnalyst::Spectrum &&
          alg < SpectrumAnalyst::NumAlgorithms &&
          windowFunc >= 0 && windowFunc < f)) {
