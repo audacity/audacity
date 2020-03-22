@@ -459,7 +459,7 @@ sampleCount WaveClip::GetNumSamples() const
 bool WaveClip::WithinClip(double t) const
 {
    auto ts = (sampleCount)floor(t * mRate + 0.5);
-   return ts > GetStartSample() && ts <= GetEndSample() + mAppendBufferLen;
+   return ts > GetStartSample() && ts < GetEndSample() + mAppendBufferLen;
 }
 
 bool WaveClip::BeforeClip(double t) const
@@ -471,7 +471,7 @@ bool WaveClip::BeforeClip(double t) const
 bool WaveClip::AfterClip(double t) const
 {
    auto ts = (sampleCount)floor(t * mRate + 0.5);
-   return ts > GetEndSample() + mAppendBufferLen;
+   return ts >= GetEndSample() + mAppendBufferLen;
 }
 
 // A sample at time t could be in the clip, but 
