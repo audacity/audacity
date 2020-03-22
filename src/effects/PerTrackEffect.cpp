@@ -79,6 +79,10 @@ bool PerTrackEffect::Process(
    return bGoodResult;
 }
 
+namespace {
+   inline void ClearBuffer(float *p, size_t n) { std::fill(p, p + n, 0); }
+}
+
 bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 {
    const auto duration = settings.extra.GetDuration();
@@ -162,8 +166,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
             // We won't be using more than the first 2 buffers, so clear the rest (if any)
             for (size_t i = 2; i < numAudioIn; i++)
-               for (size_t j = 0; j < bufferSize; j++)
-                  inBuffer[i][j] = 0.0;
+               ClearBuffer(&inBuffer[i][0], bufferSize);
 
             // Always create the number of output buffers the client expects even if we don't have
             // the same number of channels.
@@ -183,8 +186,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
          // Clear unused input buffers
          if (!right && !clear && numAudioIn > 1) {
-            for (size_t j = 0; j < bufferSize; j++)
-               inBuffer[1][j] = 0.0;
+            ClearBuffer(&inBuffer[1][0], bufferSize);
             clear = true;
          }
 
@@ -312,8 +314,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             // to the effect
             auto cnt = blockSize - curBlockSize;
             for (size_t i = 0; i < numChannels; i++)
-               for (decltype(cnt) j = 0 ; j < cnt; j++)
-                  inBufPos[i][j + curBlockSize] = 0.0;
+               ClearBuffer(&inBufPos[i][curBlockSize], cnt);
 
             // Might be able to use up some of the delayed samples
             if (delayRemaining != 0) {
@@ -332,13 +333,9 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
          // From this point on, we only want to feed zeros to the plugin
          if (!cleared) {
-            // Reset the input buffer positions
-            for (size_t i = 0; i < numChannels; i++) {
-               inBufPos[i] = inBuffer[i].get();
-               // And clear
-               for (size_t j = 0; j < blockSize; j++)
-                  inBuffer[i][j] = 0.0;
-            }
+            // Reset the input buffer positions and clear
+            for (size_t i = 0; i < numChannels; i++)
+               ClearBuffer((inBufPos[i] = inBuffer[i].get()), blockSize);
             cleared = true;
          }
       }
