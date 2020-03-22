@@ -108,13 +108,13 @@ namespace
    void AddClipsToCaptured
       ( ClipMoveState &state, Track *t, double t0, double t1 )
    {
-      bool exclude = true;
+      bool exclude = true; // to exclude a whole track.
       auto &clips = state.capturedClipArray;
       t->TypeSwitch(
          [&](WaveTrack *wt) {
             exclude = false;
             for(const auto &clip: wt->GetClips())
-               if ( ! clip->AfterClip(t0) && ! clip->BeforeClip(t1) &&
+               if ( ! clip->IsClipStartAfterClip(t0) && ! clip->BeforeClip(t1) &&
                   // Avoid getting clips that were already captured
                     ! std::any_of( clips.begin(), clips.end(),
                        [&](const TrackClip &c) { return c.clip == clip.get(); } ) )

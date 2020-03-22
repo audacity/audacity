@@ -369,20 +369,17 @@ bool VampEffect::Process()
       auto channelGroup = TrackList::Channels(leader);
       auto left = *channelGroup.first++;
 
-      sampleCount lstart, rstart = 0;
-      sampleCount len;
-      GetSamples(left, &lstart, &len);
-
       unsigned channels = 1;
 
       // channelGroup now contains all but the first channel
       const WaveTrack *right =
          channelGroup.size() ? *channelGroup.first++ : nullptr;
       if (right)
-      {
          channels = 2;
-         GetSamples(right, &rstart, &len);
-      }
+
+      sampleCount start = 0;
+      sampleCount len = 0;
+      GetBounds(*left, right, &start, &len);
 
       // TODO: more-than-two-channels
 
@@ -447,8 +444,8 @@ bool VampEffect::Process()
       FloatBuffers data{ channels, block };
 
       auto originalLen = len;
-      auto ls = lstart;
-      auto rs = rstart;
+
+      auto pos = start;
 
       while (len != 0)
       {
@@ -456,12 +453,12 @@ bool VampEffect::Process()
 
          if (left)
          {
-            left->Get((samplePtr)data[0].get(), floatSample, ls, request);
+            left->Get((samplePtr)data[0].get(), floatSample, pos, request);
          }
 
          if (right)
          {
-            right->Get((samplePtr)data[1].get(), floatSample, rs, request);
+            right->Get((samplePtr)data[1].get(), floatSample, pos, request);
          }
 
          if (request < block)
@@ -478,7 +475,7 @@ bool VampEffect::Process()
          // UNSAFE_SAMPLE_COUNT_TRUNCATION
          // Truncation in case of very long tracks!
          Vamp::RealTime timestamp = Vamp::RealTime::frame2RealTime(
-            long( ls.as_long_long() ),
+            long( pos.as_long_long() ),
             (int)(mRate + 0.5)
          );
 
@@ -495,13 +492,12 @@ bool VampEffect::Process()
             len = 0;
          }
 
-         ls += step;
-         rs += step;
+         pos += step;
 
          if (channels > 1)
          {
             if (TrackGroupProgress(count,
-                  (ls - lstart).as_double() /
+                  (pos - start).as_double() /
                   originalLen.as_double() ))
             {
                return false;
@@ -510,7 +506,7 @@ bool VampEffect::Process()
          else
          {
             if (TrackProgress(count,
-                  (ls - lstart).as_double() /
+                  (pos - start).as_double() /
                   originalLen.as_double() ))
             {
                return false;

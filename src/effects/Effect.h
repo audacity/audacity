@@ -343,9 +343,10 @@ protected:
    int GetNumWaveTracks() { return mNumTracks; }
    int GetNumWaveGroups() { return mNumGroups; }
 
-   // Calculates the start time and selection length in samples
-   void GetSamples(
-      const WaveTrack *track, sampleCount *start, sampleCount *len);
+   // Calculates the start time and length in samples for one or two channels
+   void GetBounds(
+      const WaveTrack &track, const WaveTrack *pRight,
+      sampleCount *start, sampleCount *len);
 
    // Previewing linear effect can be optimised by pre-mixing. However this
    // should not be used for non-linear effects such as dynamic processors
@@ -487,8 +488,7 @@ protected:
                      ChannelNames map,
                      WaveTrack *left,
                      WaveTrack *right,
-                     sampleCount leftStart,
-                     sampleCount rightStart,
+                     sampleCount start,
                      sampleCount len,
                      FloatBuffers &inBuffer,
                      FloatBuffers &outBuffer,

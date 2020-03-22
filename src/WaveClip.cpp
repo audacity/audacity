@@ -474,6 +474,16 @@ bool WaveClip::AfterClip(double t) const
    return ts > GetEndSample() + mAppendBufferLen;
 }
 
+// A sample at time t could be in the clip, but 
+// a clip start at time t still be from a clip 
+// not overlapping this one, with this test.
+bool WaveClip::IsClipStartAfterClip(double t) const
+{
+   auto ts = (sampleCount)floor(t * mRate + 0.5);
+   return ts >= GetEndSample() + mAppendBufferLen;
+}
+
+
 ///Delete the wave cache - force redraw.  Thread-safe
 void WaveClip::ClearWaveCache()
 {

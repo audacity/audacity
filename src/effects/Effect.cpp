@@ -1403,21 +1403,8 @@ bool Effect::ProcessPass()
          if (!left->GetSelected())
             return fallthrough();
 
-         sampleCount len;
-         sampleCount leftStart;
-         sampleCount rightStart = 0;
-
-         if (!isGenerator)
-         {
-            GetSamples(left, &leftStart, &len);
-            mSampleCnt = len;
-         }
-         else
-         {
-            len = 0;
-            leftStart = 0;
-            mSampleCnt = left->TimeToLongSamples(mDuration);
-         }
+         sampleCount len = 0;
+         sampleCount start = 0;
 
          mNumChannels = 0;
          WaveTrack *right{};
@@ -1444,13 +1431,18 @@ bool Effect::ProcessPass()
                // TODO: more-than-two-channels
                right = channel;
                clear = false;
-               if (!isGenerator)
-                  GetSamples(right, &rightStart, &len);
-
                // Ignore other channels
                break;
             }
          }
+
+         if (!isGenerator)
+         {
+            GetBounds(*left, right, &start, &len);
+            mSampleCnt = len;
+         }
+         else
+            mSampleCnt = left->TimeToLongSamples(mDuration);
 
          // Let the client know the sample rate
          SetSampleRate(left->GetRate());
@@ -1513,7 +1505,7 @@ bool Effect::ProcessPass()
 
          // Go process the track(s)
          bGoodResult = ProcessTrack(
-            count, map, left, right, leftStart, rightStart, len,
+            count, map, left, right, start, len,
             inBuffer, outBuffer, inBufPos, outBufPos);
          if (!bGoodResult)
             return;
@@ -1538,8 +1530,7 @@ bool Effect::ProcessTrack(int count,
                           ChannelNames map,
                           WaveTrack *left,
                           WaveTrack *right,
-                          sampleCount leftStart,
-                          sampleCount rightStart,
+                          sampleCount start,
                           sampleCount len,
                           FloatBuffers &inBuffer,
                           FloatBuffers &outBuffer,
@@ -1577,10 +1568,8 @@ bool Effect::ProcessTrack(int count,
    // there is no further input data to process, the loop continues to call the
    // effect with an empty input buffer until the effect has had a chance to
    // return all of the remaining delayed samples.
-   auto inLeftPos = leftStart;
-   auto inRightPos = rightStart;
-   auto outLeftPos = leftStart;
-   auto outRightPos = rightStart;
+   auto inPos = start;
+   auto outPos = start;
 
    auto inputRemaining = len;
    decltype(GetLatency()) curDelay = 0, delayRemaining = 0;
@@ -1633,10 +1622,10 @@ bool Effect::ProcessTrack(int count,
                limitSampleBufferSize( mBufferSize, inputRemaining );
 
             // Fill the input buffers
-            left->Get((samplePtr) inBuffer[0].get(), floatSample, inLeftPos, inputBufferCnt);
+            left->Get((samplePtr) inBuffer[0].get(), floatSample, inPos, inputBufferCnt);
             if (right)
             {
-               right->Get((samplePtr) inBuffer[1].get(), floatSample, inRightPos, inputBufferCnt);
+               right->Get((samplePtr) inBuffer[1].get(), floatSample, inPos, inputBufferCnt);
             }
 
             // Reset the input buffer positions
@@ -1739,8 +1728,7 @@ bool Effect::ProcessTrack(int count,
       // right channels when processing the input samples.  If we flip
       // over to processing delayed samples, they simply become counters
       // for the progress display.
-      inLeftPos += curBlockSize;
-      inRightPos += curBlockSize;
+      inPos += curBlockSize;
 
       // Get the current number of delayed samples and accumulate
       if (isProcessor)
@@ -1792,16 +1780,16 @@ bool Effect::ProcessTrack(int count,
          if (isProcessor)
          {
             // Write them out
-            left->Set((samplePtr) outBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
+            left->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
             if (right)
             {
                if (chans >= 2)
                {
-                  right->Set((samplePtr) outBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
+                  right->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
                }
                else
                {
-                  right->Set((samplePtr) outBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
+                  right->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
                }
             }
          }
@@ -1821,15 +1809,14 @@ bool Effect::ProcessTrack(int count,
          }
 
          // Bump to the next track position
-         outLeftPos += outputBufferCnt;
-         outRightPos += outputBufferCnt;
+         outPos += outputBufferCnt;
          outputBufferCnt = 0;
       }
 
       if (mNumChannels > 1)
       {
          if (TrackGroupProgress(count,
-               (inLeftPos - leftStart).as_double() /
+               (inPos - start).as_double() /
                (isGenerator ? genLength : len).as_double()))
          {
             rc = false;
@@ -1839,7 +1826,7 @@ bool Effect::ProcessTrack(int count,
       else
       {
          if (TrackProgress(count,
-               (inLeftPos - leftStart).as_double() /
+               (inPos - start).as_double() /
                (isGenerator ? genLength : len).as_double()))
          {
             rc = false;
@@ -1853,16 +1840,16 @@ bool Effect::ProcessTrack(int count,
    {
       if (isProcessor)
       {
-         left->Set((samplePtr) outBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
+         left->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
          if (right)
          {
             if (chans >= 2)
             {
-               right->Set((samplePtr) outBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
+               right->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
             }
             else
             {
-               right->Set((samplePtr) outBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
+               right->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
             }
          }
       }
@@ -1906,8 +1893,8 @@ bool Effect::ProcessTrack(int count,
       if (genRight)
       {
          genRight->Flush();
-         right->ClearAndPaste(mT0, mT1, genRight.get(), true, true,
-                              nullptr /* &warper */);
+         right->ClearAndPaste(mT0, selectedRegion.t1(),
+            genRight.get(), true, true, nullptr /* &warper */);
       }
    }
 
@@ -2049,32 +2036,26 @@ bool Effect::TrackGroupProgress(int whichGroup, double frac, const TranslatableS
    return (updateResult != ProgressResult::Success);
 }
 
-void Effect::GetSamples(
-   const WaveTrack *track, sampleCount *start, sampleCount *len)
+void Effect::GetBounds(
+   const WaveTrack &track, const WaveTrack *pRight,
+   sampleCount *start, sampleCount *len)
 {
-   double trackStart = track->GetStartTime();
-   double trackEnd = track->GetEndTime();
-   double t0 = mT0 < trackStart ? trackStart : mT0;
-   double t1 = mT1 > trackEnd ? trackEnd : mT1;
+   auto t0 = std::max( mT0, track.GetStartTime() );
+   auto t1 = std::min( mT1, track.GetEndTime() );
 
-#if 0
-   if (GetType() & INSERT_EFFECT) {
-      t1 = t0 + mDuration;
-      if (mT0 == mT1) {
-         // Not really part of the calculation, but convenient to put here
-         track->InsertSilence(t0, t1);
-      }
+   if ( pRight ) {
+      t0 = std::min( t0, std::max( mT0, pRight->GetStartTime() ) );
+      t1 = std::max( t1, std::min( mT1, pRight->GetEndTime() ) );
    }
-#endif
 
    if (t1 > t0) {
-      *start = track->TimeToLongSamples(t0);
-      auto end = track->TimeToLongSamples(t1);
+      *start = track.TimeToLongSamples(t0);
+      auto end = track.TimeToLongSamples(t1);
       *len = end - *start;
    }
    else {
       *start = 0;
-      *len  = 0;
+      *len = 0;
    }
 }
 

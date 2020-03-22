@@ -239,8 +239,13 @@ private:
    /// guaranteed that the same samples are affected.
    ///
    bool Get(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len,
-                   fillFormat fill = fillZero, bool mayThrow = true, sampleCount * pNumCopied = nullptr) const;
+      sampleCount start, size_t len,
+      fillFormat fill = fillZero,
+      bool mayThrow = true,
+      // Report how many samples were copied from within clips, rather than
+      // filled according to fillFormat; but these were not necessarily one
+      // contiguous range.
+      sampleCount * pNumWithinClips = nullptr) const;
    void Set(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
