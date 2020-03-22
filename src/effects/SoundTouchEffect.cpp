@@ -343,9 +343,9 @@ bool EffectSoundTouch::ProcessStereo(
    // Take the output tracks and insert in place of the original
    // sample data.
    leftTrack->ClearAndPaste(
-      mCurT0, mCurT1, outputLeftTrack.get(), true, false, &warper);
+      mCurT0, mCurT1, outputLeftTrack.get(), false, true, &warper);
    rightTrack->ClearAndPaste(
-      mCurT0, mCurT1, outputRightTrack.get(), true, false, &warper);
+      mCurT0, mCurT1, outputRightTrack.get(), false, true, &warper);
 
    // Track the longest result length
    double newLength = outputLeftTrack->GetEndTime();
