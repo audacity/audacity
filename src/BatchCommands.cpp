@@ -364,6 +364,13 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
             // prefers slightly different parenthesis characters
             label.Join( XO("(%s)").Format( mNames[i].GET() ), wxT(" ") );
 
+         // Bug 2294.  The Close command pulls the rug out from under
+         // batch processing, because it destroys the project.
+         // So it is UNSAFE for scripting, and therefore excluded from
+         // the catalog.
+         if (mNames[i] == "Close")
+            continue;
+
          commands.push_back(
             {
                {
