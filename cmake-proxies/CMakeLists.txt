@@ -145,7 +145,7 @@ endfunction()
 #       directory          option      symbol      req   chk   version
 addlib( wxWidgets          wxwidgets   WX          YES   NO    "" ) # must be first
 addlib( FileDialog         FileDialog  FILEDIALOG  YES   YES   "" )
-addlib( expat              expat       EXPAT       YES   YES   "" )
+addlib( expat              expat       EXPAT       YES   YES   "expat >= 2.1.0" )
 addlib( lame               lame        LAME        YES   YES   "lame >= 3.100" )
 addlib( lib-widget-extra   libextra    EXTRA       YES   YES   "" )
 addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.28" )
