@@ -103,6 +103,8 @@ class AUDACITY_DLL_API Tags final
    void LoadDefaultGenres();
    void LoadGenres();
 
+   void LoadDefaults();
+
    int GetNumUserGenres();
    wxString GetUserGenre(int value);
 
@@ -124,8 +126,6 @@ class AUDACITY_DLL_API Tags final
    friend bool operator == (const Tags &lhs, const Tags &rhs);
 
  private:
-   void LoadDefaults();
-
    TagMap mXref;
    TagMap mMap;
 
@@ -146,7 +146,7 @@ class TagsEditorDialog final : public wxDialogWrapper
               const TranslatableString &title,
               Tags * tags,
               bool editTitle,
-              bool editTrackNumber);
+              bool editTrack);
 
    virtual ~TagsEditorDialog();
 
