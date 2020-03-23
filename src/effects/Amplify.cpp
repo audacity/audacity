@@ -150,11 +150,11 @@ bool EffectAmplify::GetAutomationParameters(CommandParameters & parms) const
 
 bool EffectAmplify::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyFloat(Ratio);
+   ReadParam(Ratio);
    mRatio = Ratio;
 
    if (!IsBatchProcessing()){
-      ReadAndVerifyBool(Clipping);
+      ReadParam(Clipping);
       mCanClip = Clipping;
    } else {
       mCanClip = true;

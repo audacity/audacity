@@ -174,8 +174,9 @@ size_t EffectNoise::ProcessBlock(EffectSettings &,
 
    return size;
 }
+
 bool EffectNoise::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_ENUM_PARAM( mType, Type, kTypeStrings, nTypes );
+   S.SHUTTLE_PARAM( mType, Type );
    S.SHUTTLE_PARAM( mAmp, Amp );
    return true;
 }
@@ -191,7 +192,7 @@ bool EffectNoise::GetAutomationParameters(CommandParameters & parms) const
 bool EffectNoise::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
-   ReadAndVerifyDouble(Amp);
+   ReadParam(Amp);
 
    mType = Type;
    mAmp = Amp;

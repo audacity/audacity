@@ -234,13 +234,14 @@ public:
       return (*val >= min && *val <= max);
    }
 
-   bool ReadAndVerify(const wxString & key, bool *val, bool defVal) const
+   bool ReadAndVerify(const wxString & key, bool *val, bool defVal, bool = false, bool = false) const
    {
       Read(key, val, defVal);
       return true;
    }
 
-   bool ReadAndVerify(const wxString & key, wxString *val, const wxString & defVal) const
+   bool ReadAndVerify(const wxString & key, wxString *val, const wxString & defVal,
+      const wxString& = {}, const wxString& = {} ) const
    {
       Read(key, val, defVal);
       return true;

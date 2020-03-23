@@ -238,8 +238,8 @@ size_t EffectScienFilter::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 bool EffectScienFilter::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_ENUM_PARAM( mFilterType, Type, kTypeStrings, nTypes );
-   S.SHUTTLE_ENUM_PARAM( mFilterSubtype, Subtype, kSubTypeStrings, nSubTypes );
+   S.SHUTTLE_PARAM( mFilterType, Type );
+   S.SHUTTLE_PARAM( mFilterSubtype, Subtype );
    S.SHUTTLE_PARAM( mOrder, Order );
    S.SHUTTLE_PARAM( mCutoff, Cutoff );
    S.SHUTTLE_PARAM( mRipple, Passband );
@@ -263,10 +263,10 @@ bool EffectScienFilter::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
    ReadAndVerifyEnum(Subtype, kSubTypeStrings, nSubTypes);
-   ReadAndVerifyInt(Order);
-   ReadAndVerifyFloat(Cutoff);
-   ReadAndVerifyFloat(Passband);
-   ReadAndVerifyFloat(Stopband);
+   ReadParam(Order);
+   ReadParam(Cutoff);
+   ReadParam(Passband);
+   ReadParam(Stopband);
 
    mFilterType = Type;
    mFilterSubtype = Subtype;

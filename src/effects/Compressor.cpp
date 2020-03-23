@@ -153,13 +153,13 @@ bool EffectCompressor::GetAutomationParameters(CommandParameters & parms) const
 
 bool EffectCompressor::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyDouble(Threshold);
-   ReadAndVerifyDouble(NoiseFloor);
-   ReadAndVerifyDouble(Ratio);
-   ReadAndVerifyDouble(AttackTime);
-   ReadAndVerifyDouble(ReleaseTime);
-   ReadAndVerifyBool(Normalize);
-   ReadAndVerifyBool(UsePeak);
+   ReadParam(Threshold);
+   ReadParam(NoiseFloor);
+   ReadParam(Ratio);
+   ReadParam(AttackTime);
+   ReadParam(ReleaseTime);
+   ReadParam(Normalize);
+   ReadParam(UsePeak);
 
    mThresholdDB = Threshold;
    mNoiseFloorDB = NoiseFloor;

@@ -195,10 +195,10 @@ bool EffectBassTreble::GetAutomationParameters(CommandParameters & parms) const
 
 bool EffectBassTreble::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyDouble(Bass);
-   ReadAndVerifyDouble(Treble);
-   ReadAndVerifyDouble(Gain);
-   ReadAndVerifyBool(Link);
+   ReadParam(Bass);
+   ReadParam(Treble);
+   ReadParam(Gain);
+   ReadParam(Link);
 
    mBass = Bass;
    mTreble = Treble;

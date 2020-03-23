@@ -248,9 +248,9 @@ bool EffectDtmf::SetAutomationParameters(const CommandParameters & parms)
 {
    auto &dtmfSettings = mSettings;
 
-   ReadAndVerifyDouble(DutyCycle);
-   ReadAndVerifyDouble(Amplitude);
-   ReadAndVerifyString(Sequence);
+   ReadParam(DutyCycle);
+   ReadParam(Amplitude);
+   ReadParam(Sequence);
 
    wxString symbols;
    for (unsigned int i = 0; i < WXSIZEOF(kSymbols); i++)

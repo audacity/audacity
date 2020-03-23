@@ -211,12 +211,12 @@ bool EffectWahwah::GetAutomationParameters(CommandParameters & parms) const
 
 bool EffectWahwah::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyDouble(Freq);
-   ReadAndVerifyDouble(Phase);
-   ReadAndVerifyInt(Depth);
-   ReadAndVerifyDouble(Res);
-   ReadAndVerifyInt(FreqOfs);
-   ReadAndVerifyDouble(OutGain);
+   ReadParam(Freq);
+   ReadParam(Phase);
+   ReadParam(Depth);
+   ReadParam(Res);
+   ReadParam(FreqOfs);
+   ReadParam(OutGain);
 
    mFreq = Freq;
    mPhase = Phase;

@@ -311,16 +311,16 @@ bool EffectReverb::GetAutomationParameters(CommandParameters & parms) const
 
 bool EffectReverb::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyDouble(RoomSize);
-   ReadAndVerifyDouble(PreDelay);
-   ReadAndVerifyDouble(Reverberance);
-   ReadAndVerifyDouble(HfDamping);
-   ReadAndVerifyDouble(ToneLow);
-   ReadAndVerifyDouble(ToneHigh);
-   ReadAndVerifyDouble(WetGain);
-   ReadAndVerifyDouble(DryGain);
-   ReadAndVerifyDouble(StereoWidth);
-   ReadAndVerifyBool(WetOnly);
+   ReadParam(RoomSize);
+   ReadParam(PreDelay);
+   ReadParam(Reverberance);
+   ReadParam(HfDamping);
+   ReadParam(ToneLow);
+   ReadParam(ToneHigh);
+   ReadParam(WetGain);
+   ReadParam(DryGain);
+   ReadParam(StereoWidth);
+   ReadParam(WetOnly);
 
    mParams.mRoomSize = RoomSize;
    mParams.mPreDelay = PreDelay;

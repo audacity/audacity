@@ -96,8 +96,8 @@ bool EffectFindClipping::GetAutomationParameters(CommandParameters & parms) cons
 
 bool EffectFindClipping::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyInt(Start);
-   ReadAndVerifyInt(Stop);
+   ReadParam(Start);
+   ReadParam(Stop);
 
    mStart = Start;
    mStop = Stop;

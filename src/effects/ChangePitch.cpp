@@ -180,13 +180,13 @@ bool EffectChangePitch::SetAutomationParameters(const CommandParameters & parms)
 {
    // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled.
    // Only m_dSemitonesChange is used in Process().
-   ReadAndVerifyDouble(Percentage);
+   ReadParam(Percentage);
 
    m_dPercentChange = Percentage;
    Calc_SemitonesChange_fromPercentChange();
 
 #if USE_SBSMS
-   ReadAndVerifyBool(UseSBSMS);
+   ReadParam(UseSBSMS);
    mUseSBSMS = UseSBSMS;
 #else
    mUseSBSMS = false;

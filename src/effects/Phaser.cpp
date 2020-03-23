@@ -221,13 +221,13 @@ bool EffectPhaser::GetAutomationParameters(CommandParameters & parms) const
 
 bool EffectPhaser::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyInt(Stages);
-   ReadAndVerifyInt(DryWet);
-   ReadAndVerifyDouble(Freq);
-   ReadAndVerifyDouble(Phase);
-   ReadAndVerifyInt(Depth);
-   ReadAndVerifyInt(Feedback);
-   ReadAndVerifyDouble(OutGain);
+   ReadParam(Stages);
+   ReadParam(DryWet);
+   ReadParam(Freq);
+   ReadParam(Phase);
+   ReadParam(Depth);
+   ReadParam(Feedback);
+   ReadParam(OutGain);
 
    if (Stages & 1)    // must be even, but don't complain about it
    {

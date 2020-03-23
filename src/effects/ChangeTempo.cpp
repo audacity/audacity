@@ -157,11 +157,11 @@ bool EffectChangeTempo::GetAutomationParameters(CommandParameters & parms) const
 
 bool EffectChangeTempo::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyDouble(Percentage);
+   ReadParam(Percentage);
    m_PercentChange = Percentage;
 
 #if USE_SBSMS
-   ReadAndVerifyBool(UseSBSMS);
+   ReadParam(UseSBSMS);
    mUseSBSMS = UseSBSMS;
 #else
    mUseSBSMS = false;

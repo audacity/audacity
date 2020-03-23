@@ -110,10 +110,10 @@ bool EffectNormalize::GetAutomationParameters(CommandParameters & parms) const
 
 bool EffectNormalize::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyDouble(PeakLevel);
-   ReadAndVerifyBool(ApplyGain);
-   ReadAndVerifyBool(RemoveDC);
-   ReadAndVerifyBool(StereoInd);
+   ReadParam(PeakLevel);
+   ReadParam(ApplyGain);
+   ReadParam(RemoveDC);
+   ReadParam(StereoInd);
 
    mPeakLevel = PeakLevel;
    mGain = ApplyGain;

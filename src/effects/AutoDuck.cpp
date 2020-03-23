@@ -156,13 +156,13 @@ bool EffectAutoDuck::GetAutomationParameters(CommandParameters & parms) const
 
 bool EffectAutoDuck::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyDouble(DuckAmountDb);
-   ReadAndVerifyDouble(InnerFadeDownLen);
-   ReadAndVerifyDouble(InnerFadeUpLen);
-   ReadAndVerifyDouble(OuterFadeDownLen);
-   ReadAndVerifyDouble(OuterFadeUpLen);
-   ReadAndVerifyDouble(ThresholdDb);
-   ReadAndVerifyDouble(MaximumPause);
+   ReadParam(DuckAmountDb);
+   ReadParam(InnerFadeDownLen);
+   ReadParam(InnerFadeUpLen);
+   ReadParam(OuterFadeDownLen);
+   ReadParam(OuterFadeUpLen);
+   ReadParam(ThresholdDb);
+   ReadParam(MaximumPause);
 
    mDuckAmountDb = DuckAmountDb;
    mInnerFadeDownLen = InnerFadeDownLen;

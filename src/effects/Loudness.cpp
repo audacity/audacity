@@ -129,11 +129,11 @@ bool EffectLoudness::GetAutomationParameters(CommandParameters & parms) const
 
 bool EffectLoudness::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadAndVerifyBool(StereoInd);
-   ReadAndVerifyDouble(LUFSLevel);
-   ReadAndVerifyDouble(RMSLevel);
-   ReadAndVerifyBool(DualMono);
-   ReadAndVerifyInt(NormalizeTo);
+   ReadParam(StereoInd);
+   ReadParam(LUFSLevel);
+   ReadParam(RMSLevel);
+   ReadParam(DualMono);
+   ReadParam(NormalizeTo);
 
    mStereoInd = StereoInd;
    mLUFSLevel = LUFSLevel;
