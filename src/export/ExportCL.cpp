@@ -407,7 +407,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    int rate = lrint( ProjectSettings::Get( *project ).GetRate());
    const size_t maxBlockLen = 44100 * 5;
    unsigned long totalSamples = lrint((t1 - t0) * rate);
-   unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(int16Sample);
+   unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(floatSample);
 
    // fill up the wav header
    wav_header header;
@@ -426,10 +426,10 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    header.fmtID[2]         = 't';
    header.fmtID[3]         = ' ';
    header.formatChunkLen   = wxUINT32_SWAP_ON_BE(16);
-   header.formatTag        = wxUINT16_SWAP_ON_BE(1);
+   header.formatTag        = wxUINT16_SWAP_ON_BE(3);
    header.channels         = wxUINT16_SWAP_ON_BE(channels);
    header.sampleRate       = wxUINT32_SWAP_ON_BE(rate);
-   header.bitsPerSample    = wxUINT16_SWAP_ON_BE(SAMPLE_SIZE(int16Sample) * 8);
+   header.bitsPerSample    = wxUINT16_SWAP_ON_BE(SAMPLE_SIZE(floatSample) * 8);
    header.blockAlign       = wxUINT16_SWAP_ON_BE(header.bitsPerSample * header.channels / 8);
    header.avgBytesPerSec   = wxUINT32_SWAP_ON_BE(header.sampleRate * header.blockAlign);
    header.dataID[0]        = 'd';
@@ -453,7 +453,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
                             maxBlockLen,
                             true,
                             rate,
-                            int16Sample,
+                            floatSample,
                             true,
                             mixerSpec);
 
@@ -493,12 +493,12 @@ ProgressResult ExportCL::Export(AudacityProject *project,
             // Byte-swapping is neccesary on big-endian machines, since
             // WAV files are little-endian
 #if wxBYTE_ORDER == wxBIG_ENDIAN
-            wxUint16 *buffer = (wxUint16 *) mixed;
+            float *buffer = (float *) mixed;
             for (int i = 0; i < numBytes; i++) {
-               buffer[i] = wxUINT16_SWAP_ON_BE(buffer[i]);
+               buffer[i] = wxUINT32_SWAP_ON_BE(buffer[i]);
             }
 #endif
-            numBytes *= SAMPLE_SIZE(int16Sample);
+            numBytes *= SAMPLE_SIZE(floatSample);
          }
 
          // Don't write too much at once...pipes may not be able to handle it
