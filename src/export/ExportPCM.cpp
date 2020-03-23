@@ -83,7 +83,8 @@ enum
 
 static int LoadOtherFormat(int def = 0)
 {
-   return gPrefs->Read(wxString::Format(wxT("/FileFormats/ExportFormat_SF1")), def);
+   return gPrefs->Read(wxString::Format(wxT("/FileFormats/ExportFormat_SF1")),
+                       kFormats[0].format & SF_FORMAT_TYPEMASK);
 }
 
 static void SaveOtherFormat(int val)
@@ -92,12 +93,11 @@ static void SaveOtherFormat(int val)
    gPrefs->Flush();
 }
 
-static int LoadEncoding(int type, int def = 0)
+static int LoadEncoding(int type)
 {
    return gPrefs->Read(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
-                                        sf_header_shortname(type), type), def);
+                                        sf_header_shortname(type), type), (long int) 0);
 }
-
 static void SaveEncoding(int type, int val)
 {
    gPrefs->Write(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
