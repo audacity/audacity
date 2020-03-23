@@ -472,6 +472,35 @@ int FileDialog::ShowModal()
     return wxDialog::ShowModal();
 }
 
+// Change the currently displayed extension
+void FileDialog::SetFileExtension(const wxString& extension)
+{
+    wxString filename;
+
+#if defined(__WXGTK3__)
+    filename = wxString::FromUTF8(gtk_file_chooser_get_current_name(m_fc));
+#else
+    GtkWidget *entry = find_widget(m_widget, "GtkFileChooserEntry", 0);
+    if (entry)
+    {
+        filename = wxString::FromUTF8(gtk_entry_get_text(GTK_ENTRY(entry)));
+    }
+#endif
+
+    if (filename == wxEmptyString)
+    {
+        filename = m_fc.GetFilename();
+    }
+
+    if (filename != wxEmptyString)
+    {
+        wxFileName fn(filename);
+        fn.SetExt(extension);
+
+        gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(m_widget), fn.GetFullName().utf8_str());
+    }
+}
+
 void FileDialog::DoSetSize(int WXUNUSED(x), int WXUNUSED(y),
                              int WXUNUSED(width), int WXUNUSED(height),
                              int WXUNUSED(sizeFlags))
@@ -571,7 +600,7 @@ void FileDialog::SetWildcard(const wxString& wildCard)
 
 void FileDialog::SetFilterIndex(int filterIndex)
 {
-    m_fc.SetFilterIndex( filterIndex);
+    m_fc.SetFilterIndex( filterIndex );
 }
 
 int FileDialog::GetFilterIndex() const

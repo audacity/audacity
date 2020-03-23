@@ -25,23 +25,23 @@ public:
     FileDialog() { }
 
     FileDialog(wxWindow *parent,
-                 const wxString& message = wxFileSelectorPromptStr,
-                 const wxString& defaultDir = wxEmptyString,
-                 const wxString& defaultFile = wxEmptyString,
-                 const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
-                 long style = wxFD_DEFAULT_STYLE,
-                 const wxPoint& pos = wxDefaultPosition,
-                 const wxSize& sz = wxDefaultSize,
-                 const wxString& name = wxFileDialogNameStr);
+               const wxString& message = wxFileSelectorPromptStr,
+               const wxString& defaultDir = wxEmptyString,
+               const wxString& defaultFile = wxEmptyString,
+               const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+               long style = wxFD_DEFAULT_STYLE,
+               const wxPoint& pos = wxDefaultPosition,
+               const wxSize& sz = wxDefaultSize,
+               const wxString& name = wxFileDialogNameStr);
     bool Create(wxWindow *parent,
-                 const wxString& message = wxFileSelectorPromptStr,
-                 const wxString& defaultDir = wxEmptyString,
-                 const wxString& defaultFile = wxEmptyString,
-                 const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
-                 long style = wxFD_DEFAULT_STYLE,
-                 const wxPoint& pos = wxDefaultPosition,
-                 const wxSize& sz = wxDefaultSize,
-                 const wxString& name = wxFileDialogNameStr);
+                const wxString& message = wxFileSelectorPromptStr,
+                const wxString& defaultDir = wxEmptyString,
+                const wxString& defaultFile = wxEmptyString,
+                const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+                long style = wxFD_DEFAULT_STYLE,
+                const wxPoint& pos = wxDefaultPosition,
+                const wxSize& sz = wxDefaultSize,
+                const wxString& name = wxFileDialogNameStr);
     virtual ~FileDialog();
 
     virtual wxString GetPath() const;
@@ -60,6 +60,8 @@ public:
     virtual int ShowModal();
 
     virtual bool SupportsExtraControl() const { return true; }
+
+    virtual void SetFileExtension(const wxString& extension);
 
     // Implementation only.
     void GTKSelectionChanged(const wxString& filename);

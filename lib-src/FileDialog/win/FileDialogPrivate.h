@@ -24,21 +24,23 @@
 
 class AUDACITY_DLL_API FileDialog : public FileDialogBase
 {
- public:
-    FileDialog();
-    FileDialog(wxWindow *parent,
-               const wxString& message = wxFileSelectorPromptStr,
-               const wxString& defaultDir = wxEmptyString,
-               const wxString& defaultFile = wxEmptyString,
-               const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
-               long style = wxFD_DEFAULT_STYLE,
-               const wxPoint& pos = wxDefaultPosition,
-               const wxSize& sz = wxDefaultSize,
-               const wxString& name = wxFileDialogNameStr);
+public:
+   FileDialog();
+   FileDialog(wxWindow *parent,
+      const wxString& message = wxFileSelectorPromptStr,
+      const wxString& defaultDir = wxEmptyString,
+      const wxString& defaultFile = wxEmptyString,
+      const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+      long style = wxFD_DEFAULT_STYLE,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& sz = wxDefaultSize,
+      const wxString& name = wxFileDialogNameStr);
 
    virtual void GetPaths(wxArrayString& paths) const;
    virtual void GetFilenames(wxArrayString& files) const;
    virtual int ShowModal();
+
+   virtual void SetFileExtension(const wxString& extension);
 
 protected:
    // -----------------------------------------
@@ -89,9 +91,7 @@ private:
 
    wxArrayString m_FilterGroups;
    wxArrayString m_Filters;
-   wxChar *m_NameBuf;
-   int m_NameBufLen;
-   
+
    HWND mParentDlg;
    HWND mChildDlg;
    WNDPROC mParentProc;

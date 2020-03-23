@@ -278,7 +278,7 @@ wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
    EVT_FILECTRL_FILTERCHANGED(wxID_ANY, Exporter::OnFilterChanged)
    EVT_BUTTON(wxID_HELP, Exporter::OnHelp)
-   EVT_COMMAND( wxID_ANY, AUDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
+   EVT_COMMAND(wxID_ANY, AUDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
 END_EVENT_TABLE()
 
 namespace {
@@ -361,21 +361,9 @@ Exporter::~Exporter()
 {
 }
 
-// Beginnings of a fix for bug 1355.
-// 'Other Uncompressed Files' Header option updates do not update
-// the extension shown in the file dialog.
-// Unfortunately, although we get the new extension here, we
-// can't do anything with it as the FileDialog does not provide
-// methods for setting its standard controls.
-// We would need OS specific code that 'knows' about the system 
-// dialogs.
-void Exporter::OnExtensionChanged(wxCommandEvent &evt) {
-   wxString ext = evt.GetString();
-   ext = ext.BeforeFirst(' ').Lower();
-   wxLogDebug("Extension changed to '.%s'", ext);
-//   wxString Name = mDialog->GetFilename();
-//   Name = Name.BeforeLast('.')+ext;
-//   mDialog->SetFilename(Name);
+void Exporter::OnExtensionChanged(wxCommandEvent &evt)
+{
+   mDialog->SetFileExtension(evt.GetString().BeforeFirst(' ').Lower());
 }
 
 void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
@@ -644,7 +632,7 @@ bool Exporter::GetFilename()
    }
    wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
 
-//Bug 1304: Set a default path if none was given.  For Export.
+   //Bug 1304: Set a default path if none was given.  For Export.
    mFilename = FileNames::DefaultToDocumentsFolder(wxT("/Export/Path"));
    mFilename.SetName(mProject->GetProjectName());
    if (mFilename.GetName().empty())
@@ -1050,6 +1038,31 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
    {
       return;
    }
+
+#if defined(__WXGTK__)
+   // On Windows and MacOS, changing the filter in the dialog
+   // automatically changes the extension of the current file
+   // name. GTK doesn't, so do it here.
+   {
+      FileNames::FileTypes fileTypes;
+
+      int i = -1;
+      for (const auto &pPlugin : mPlugins)
+      {
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
+         {
+            auto mask = pPlugin->GetMask(j);
+            fileTypes.insert( fileTypes.end(), mask.begin(), mask.end() );
+         }
+      }
+
+      if (index < fileTypes.size())
+      {
+         mDialog->SetFileExtension(fileTypes[index].extensions[0].Lower());
+      }
+   }
+#endif
 
    mBook->ChangeSelection(index);
 }

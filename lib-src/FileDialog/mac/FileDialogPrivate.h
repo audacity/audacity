@@ -66,6 +66,8 @@ public:
 #endif
 
     virtual bool SupportsExtraControl() const;
+
+    virtual void SetFileExtension(const wxString& extension);
     
     // implementation only
     

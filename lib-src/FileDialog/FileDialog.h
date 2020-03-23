@@ -36,6 +36,8 @@ public:
    virtual bool HasUserPaneCreator() const;
    virtual void SetUserPaneCreator(UserPaneCreatorFunction creator, wxUIntPtr userdata);
 
+   virtual void SetFileExtension(const wxString& extension) {};
+
 protected:
    void CreateUserPane(wxWindow *parent);
 

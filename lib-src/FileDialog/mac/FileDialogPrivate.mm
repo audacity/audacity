@@ -793,3 +793,13 @@ void FileDialog::ModalFinishedCallback(void* panel, int returnCode)
         UnsubclassWin();
     [(NSSavePanel*) panel setAccessoryView:nil];
 }
+
+// Change the currently displayed extension
+void FileDialog::SetFileExtension(const wxString& extension)
+{
+    NSSavePanel* sPanel = (NSSavePanel*) GetWXWindow();
+    m_filterExtensions[m_filterIndex] = extension;
+    NSArray* types = GetTypesFromExtension(m_filterExtensions[m_filterIndex],m_currentExtensions);
+    [sPanel setAllowedFileTypes:types];
+}
+
