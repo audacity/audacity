@@ -529,11 +529,21 @@ bool ScreenshotBigDialog::ProcessEvent(wxEvent & e)
 
 void ScreenshotBigDialog::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
 {
+   if (mDirectoryTextBox->IsModified()) {
+      gPrefs->Write(wxT("/ScreenshotPath"), mDirectoryTextBox->GetValue());
+      gPrefs->Flush();
+   }
+
    Destroy();
 }
 
 void ScreenshotBigDialog::OnClose(wxCommandEvent &  WXUNUSED(event))
 {
+   if (mDirectoryTextBox->IsModified()) {
+      gPrefs->Write(wxT("/ScreenshotPath"), mDirectoryTextBox->GetValue());
+      gPrefs->Flush();
+   }
+
    Destroy();
 }
 
