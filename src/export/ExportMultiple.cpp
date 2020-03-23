@@ -865,7 +865,18 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
       // Export it
       ok = DoExport(pDialog, channels, activeSetting.destfile, false,
          activeSetting.t0, activeSetting.t1, activeSetting.filetags);
-      if (ok != ProgressResult::Success && ok != ProgressResult::Stopped) {
+      if (ok == ProgressResult::Stopped) {
+         AudacityMessageDialog dlgMessage(
+            nullptr,
+            XO("Continue to export remaining files?"),
+            XO("Export"),
+            wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);
+         if (dlgMessage.ShowModal() != wxID_YES ) {
+            // User decided not to continue - bail out!
+            break;
+         }
+      }
+      else if (ok != ProgressResult::Success) {
          break;
       }
    }
@@ -1000,9 +1011,18 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
       ok = DoExport(pDialog,
          activeSetting.channels, activeSetting.destfile, true,
          activeSetting.t0, activeSetting.t1, activeSetting.filetags);
-
-      // Stop if an error occurred
-      if (ok != ProgressResult::Success && ok != ProgressResult::Stopped) {
+      if (ok == ProgressResult::Stopped) {
+         AudacityMessageDialog dlgMessage(
+            nullptr,
+            XO("Continue to export remaining files?"),
+            XO("Export"),
+            wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);
+         if (dlgMessage.ShowModal() != wxID_YES ) {
+            // User decided not to continue - bail out!
+            break;
+         }
+      }
+      else if (ok != ProgressResult::Success) {
          break;
       }
       // increment export counter
