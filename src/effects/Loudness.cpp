@@ -132,7 +132,7 @@ bool EffectLoudness::SetAutomationParameters(CommandParameters & parms)
    ReadAndVerifyDouble(LUFSLevel);
    ReadAndVerifyDouble(RMSLevel);
    ReadAndVerifyBool(DualMono);
-   ReadAndVerifyBool(NormalizeTo);
+   ReadAndVerifyInt(NormalizeTo);
 
    mStereoInd = StereoInd;
    mLUFSLevel = LUFSLevel;
