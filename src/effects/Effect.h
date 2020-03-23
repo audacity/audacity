@@ -522,42 +522,16 @@ inline long TrapLong(long x, long min, long max)
 
 // Helper macros for defining, reading and verifying effect parameters
 
-#define Param(name, type, key, def, min, max, scale) \
-   static const wxChar * KEY_ ## name = (key); \
-   static const type DEF_ ## name = (def); \
-   static const type MIN_ ## name = (min); \
-   static const type MAX_ ## name = (max); \
-   static const type SCL_ ## name = (scale);
-
-#define PBasic(name, type, key, def) \
-   static const wxChar * KEY_ ## name = (key); \
-   static const type DEF_ ## name = (def);
-
-#define PRange(name, type, key, def, min, max) \
-   PBasic(name, type, key, def); \
-   static const type MIN_ ## name = (min); \
-   static const type MAX_ ## name = (max);
-
-#define PScale(name, type, key, def, min, max, scale) \
-   PRange(name, type, key, def, min, max); \
-   static const type SCL_ ## name = (scale);
-
 #define ReadParam(type, name) \
-   type name = DEF_ ## name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, MIN_ ## name, MAX_ ## name)) \
+   if (!parms.ReadAndVerify(name.key, &name.cache, name.def, name.min, name.max)) \
       return false;
 
 #define ReadBasic(type, name) \
-   type name; \
-   wxUnusedVar(MIN_ ##name); \
-   wxUnusedVar(MAX_ ##name); \
-   wxUnusedVar(SCL_ ##name); \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name)) \
+   if (!parms.ReadAndVerify(name.key, &name.cache, name.def)) \
       return false;
 
 #define ReadAndVerifyEnum(name, list, listSize) \
-   int name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, list, listSize)) \
+   if (!parms.ReadAndVerify(name.key, &name.cache, name.def, list, listSize)) \
       return false;
 
 #define ReadAndVerifyInt(name) ReadParam(int, name)

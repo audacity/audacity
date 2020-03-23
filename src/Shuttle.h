@@ -18,6 +18,43 @@
 class ComponentInterfaceSymbol;
 class WrappedType;
 
+template<typename Type> struct EffectParameter {
+   const wxChar *const key{}; //!< Identifier in configuration file
+   const Type def{};          //!< Default value
+   const Type min{};          //!< Minimum value
+   const Type max{};          //!< Maximum value
+   const Type scale{};        //!< Scaling factor, for slider control
+   mutable Type cache{};      //!< Holds the value in preferences
+
+   //! Allows this object on the right hand side of an assignment to a variable
+   //! of type Type
+   inline operator const Type& () const { return cache; }
+};
+
+// Deduction guides
+// Type of def chooses the parameter type; others just need to be convertible
+template<typename Type, typename... Args>
+EffectParameter(const wxChar *key, const Type &def, Args...)
+   -> EffectParameter<Type>;
+// Deduce string type from string literal
+template<typename Char, size_t N, typename... Args>
+EffectParameter(const wxChar *key, const Char (&def)[N], Args...)
+   -> EffectParameter<wxString>;
+
+struct EnumParameter : EffectParameter<int>
+{
+   EnumParameter(
+      const wxChar *key, int def, int min, int max, int scale,
+      const EnumValueSymbol *symbols_, size_t nSymbols_ )
+      : EffectParameter{ key, def, min, max, scale, {} }
+      , symbols{ symbols_ }
+      , nSymbols{ nSymbols_ }
+   {}
+
+   const EnumValueSymbol *const symbols;
+   const size_t nSymbols;
+};
+
 class Shuttle /* not final */ {
  public:
    // constructors and destructors
@@ -99,6 +136,15 @@ public:
       wxString vscl = {} );
    virtual void DefineEnum( Arg<int> var, const wxChar * key, int vdefault,
       const EnumValueSymbol strings[], size_t nStrings );
+
+   template< typename Var, typename Type >
+   void SHUTTLE_PARAM( Var &var, const EffectParameter< Type > &name )
+   { Define( var, name.key, name.def, name.min, name.max, name.scale ); }
+
+   void SHUTTLE_ENUM_PARAM(
+      int &var, const EffectParameter< int > &name,
+      const EnumValueSymbol strings[], size_t nStrings )
+   { DefineEnum( var, name.key, name.def, strings, nStrings ); }
 };
 
 extern template class AUDACITY_DLL_API SettingsVisitorBase<false>;
@@ -106,11 +152,5 @@ extern template class AUDACITY_DLL_API SettingsVisitorBase<true>;
 
 using SettingsVisitor = SettingsVisitorBase<false>;
 using ConstSettingsVisitor = SettingsVisitorBase<true>;
-
-#define SHUTTLE_PARAM( var, name ) \
-  Define( var, KEY_ ## name, DEF_ ## name, MIN_ ## name, MAX_ ## name, SCL_ ## name )
-
-#define SHUTTLE_ENUM_PARAM( var, name, strings, nStrings ) \
-  DefineEnum( var, KEY_ ## name, DEF_ ## name, strings, nStrings )
 
 #endif

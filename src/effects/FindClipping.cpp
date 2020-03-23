@@ -35,11 +35,10 @@
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name    Type  Key                     Def   Min   Max      Scale
-Param( Start,  int,  wxT("Duty Cycle Start"), 3,    1,    INT_MAX, 1   );
-Param( Stop,   int,  wxT("Duty Cycle End"),   3,    1,    INT_MAX, 1   );
+namespace {
+EffectParameter Start{ L"Duty Cycle Start",  3,    1,    INT_MAX, 1   };
+EffectParameter Stop{  L"Duty Cycle End",    3,    1,    INT_MAX, 1   };
+}
 
 const ComponentInterfaceSymbol EffectFindClipping::Symbol
 { XO("Find Clipping") };
@@ -48,8 +47,8 @@ namespace{ BuiltinEffectsModule::Registration< EffectFindClipping > reg; }
 
 EffectFindClipping::EffectFindClipping()
 {
-   mStart = DEF_Start;
-   mStop = DEF_Stop;
+   mStart = Start.def;
+   mStop = Stop.def;
 }
 
 EffectFindClipping::~EffectFindClipping()
@@ -89,8 +88,8 @@ bool EffectFindClipping::VisitSettings( SettingsVisitor & S ){
 
 bool EffectFindClipping::GetAutomationParameters(CommandParameters & parms) const
 {
-   parms.Write(KEY_Start, mStart);
-   parms.Write(KEY_Stop, mStop);
+   parms.Write(Start.key, mStart);
+   parms.Write(Stop.key, mStop);
 
    return true;
 }
@@ -254,12 +253,14 @@ void EffectFindClipping::DoPopulateOrExchange(
    mpAccess = access.shared_from_this();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.Validator<IntegerValidator<int>>(
-            &mStart, NumValidatorStyle::DEFAULT, MIN_Start)
+      S
+         .Validator<IntegerValidator<int>>(
+            &mStart, NumValidatorStyle::DEFAULT, Start.min)
          .TieTextBox(XXO("&Start threshold (samples):"), mStart, 10);
 
-      S.Validator<IntegerValidator<int>>(
-            &mStop, NumValidatorStyle::DEFAULT, MIN_Stop)
+      S
+         .Validator<IntegerValidator<int>>(
+            &mStop, NumValidatorStyle::DEFAULT, Stop.min)
          .TieTextBox(XXO("St&op threshold (samples):"), mStop, 10);
    }
    S.EndMultiColumn();

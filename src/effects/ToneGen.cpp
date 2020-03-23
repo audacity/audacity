@@ -69,17 +69,16 @@ static const EnumValueSymbol kWaveStrings[nWaveforms] =
    { XC("Triangle", "waveform") }
 };
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name       Type     Key                  Def      Min      Max                     Scale
-Param( StartFreq, double,  wxT("StartFreq"),     440.0,   1.0,     DBL_MAX,                1  );
-Param( EndFreq,   double,  wxT("EndFreq"),       1320.0,  1.0,     DBL_MAX,                1  );
-Param( StartAmp,  double,  wxT("StartAmp"),      0.8,     0.0,     1.0,                    1  );
-Param( EndAmp,    double,  wxT("EndAmp"),        0.1,     0.0,     1.0,                    1  );
-Param( Frequency, double,  wxT("Frequency"),     440.0,   1.0,     DBL_MAX,                1  );
-Param( Amplitude, double,  wxT("Amplitude"),     0.8,     0.0,     1.0,                    1  );
-Param( Waveform,  int,     wxT("Waveform"),      0,       0,       nWaveforms - 1,      1  );
-Param( Interp,    int,     wxT("Interpolation"), 0,       0,       nInterpolations - 1, 1  );
+namespace {
+EffectParameter StartFreq{ L"StartFreq",     440.0,   1.0,     DBL_MAX,                1  };
+EffectParameter EndFreq{   L"EndFreq",       1320.0,  1.0,     DBL_MAX,                1  };
+EffectParameter StartAmp{  L"StartAmp",      0.8,     0.0,     1.0,                    1  };
+EffectParameter EndAmp{    L"EndAmp",        0.1,     0.0,     1.0,                    1  };
+EffectParameter Frequency{ L"Frequency",     440.0,   1.0,     DBL_MAX,                1  };
+EffectParameter Amplitude{ L"Amplitude",     0.8,     0.0,     1.0,                    1  };
+EnumParameter Waveform{     L"Waveform",      0,       0,       nWaveforms - 1,      1, kWaveStrings, nWaveforms  };
+EnumParameter Interp{       L"Interpolation", 0,       0,       nInterpolations - 1, 1, kInterStrings, nInterpolations  };
+}
 
 //
 // EffectToneGen
@@ -106,12 +105,12 @@ EffectToneGen::EffectToneGen(bool isChirp)
 
    mChirp = isChirp;
 
-   mWaveform = DEF_Waveform;
-   mFrequency0 = DEF_StartFreq;
-   mFrequency1 = DEF_EndFreq;
-   mAmplitude0 = DEF_StartAmp;
-   mAmplitude1 = DEF_EndAmp;
-   mInterpolation = DEF_Interp;
+   mWaveform = Waveform.def;
+   mFrequency0 = StartFreq.def;
+   mFrequency1 = EndFreq.def;
+   mAmplitude0 = StartAmp.def;
+   mAmplitude1 = EndAmp.def;
+   mInterpolation = Interp.def;
 
    // Chirp varies over time so must use selected duration.
    // TODO: When previewing, calculate only the first 'preview length'.
@@ -292,7 +291,7 @@ bool EffectToneGen::VisitSettings( SettingsVisitor & S ){
 
 
 //   double freqMax = (FindProject() ? FindProject()->GetRate() : 44100.0) / 2.0;
-//   mFrequency1 = std::clamp<double>(mFrequency[1], MIN_EndFreq, freqMax);
+//   mFrequency1 = std::clamp<double>(mFrequency[1], EndFreq.min, freqMax);
 
 
    return true;
@@ -302,19 +301,19 @@ bool EffectToneGen::GetAutomationParameters(CommandParameters & parms) const
 {
    if (mChirp)
    {
-      parms.Write(KEY_StartFreq, mFrequency0);
-      parms.Write(KEY_EndFreq, mFrequency1);
-      parms.Write(KEY_StartAmp, mAmplitude0);
-      parms.Write(KEY_EndAmp, mAmplitude1);
+      parms.Write(StartFreq.key, mFrequency0);
+      parms.Write(EndFreq.key, mFrequency1);
+      parms.Write(StartAmp.key, mAmplitude0);
+      parms.Write(EndAmp.key, mAmplitude1);
    }
    else
    {
-      parms.Write(KEY_Frequency, mFrequency0);
-      parms.Write(KEY_Amplitude, mAmplitude0);
+      parms.Write(Frequency.key, mFrequency0);
+      parms.Write(Amplitude.key, mAmplitude0);
    }
 
-   parms.Write(KEY_Waveform, kWaveStrings[mWaveform].Internal());
-   parms.Write(KEY_Interp, kInterStrings[mInterpolation].Internal());
+   parms.Write(Waveform.key, kWaveStrings[mWaveform].Internal());
+   parms.Write(Interp.key, kInterStrings[mInterpolation].Internal());
 
    return true;
 }
@@ -352,7 +351,7 @@ bool EffectToneGen::SetAutomationParameters(const CommandParameters & parms)
          ? ProjectRate::Get( *FindProject() ).GetRate()
          : 44100.0)
       / 2.0;
-   mFrequency1 = std::clamp<double>(mFrequency1, MIN_EndFreq, freqMax);
+   mFrequency1 = std::clamp<double>(mFrequency1, EndFreq.min, freqMax);
 
    return true;
 }
@@ -398,10 +397,9 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
                   .Validator<FloatingPointValidator<double>>(
                      6, &mFrequency0,
                      NumValidatorStyle::NO_TRAILING_ZEROES,
-                     MIN_StartFreq,
-                     mProjectRate / 2.0
-                  )
-                  .AddTextBox( {}, wxT(""), 12);
+                     StartFreq.min,
+                     mProjectRate / 2.0 )
+                  .AddTextBox( {}, L"", 12);
             }
             S.EndHorizontalLay();
 
@@ -411,10 +409,9 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
                   .Validator<FloatingPointValidator<double>>(
                      6, &mFrequency1,
                      NumValidatorStyle::NO_TRAILING_ZEROES,
-                     MIN_EndFreq,
-                     mProjectRate / 2.0
-                  )
-                  .AddTextBox( {}, wxT(""), 12);
+                     EndFreq.min,
+                     mProjectRate / 2.0 )
+                  .AddTextBox( {}, L"", 12);
             }
             S.EndHorizontalLay();
          }
@@ -428,9 +425,8 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
                t = S.Name(XO("Amplitude Start"))
                   .Validator<FloatingPointValidator<double>>(
                      6, &mAmplitude0, NumValidatorStyle::NO_TRAILING_ZEROES,
-                     MIN_StartAmp, MAX_StartAmp
-                  )
-                  .AddTextBox( {}, wxT(""), 12);
+                     StartAmp.min, StartAmp.max )
+                  .AddTextBox( {}, L"", 12);
             }
             S.EndHorizontalLay();
 
@@ -439,9 +435,8 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
                t = S.Name(XO("Amplitude End"))
                   .Validator<FloatingPointValidator<double>>(
                      6, &mAmplitude1, NumValidatorStyle::NO_TRAILING_ZEROES,
-                     MIN_EndAmp, MAX_EndAmp
-                  )
-                  .AddTextBox( {}, wxT(""), 12);
+                     EndAmp.min, EndAmp.max )
+                  .AddTextBox( {}, L"", 12);
             }
             S.EndHorizontalLay();
          }
@@ -455,16 +450,14 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
       {
          t = S.Validator<FloatingPointValidator<double>>(
                6, &mFrequency0, NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_Frequency,
-               mProjectRate / 2.0
-            )
-            .AddTextBox(XXO("&Frequency (Hz):"), wxT(""), 12);
+               Frequency.min,
+               mProjectRate / 2.0 )
+            .AddTextBox(XXO("&Frequency (Hz):"), L"", 12);
 
          t = S.Validator<FloatingPointValidator<double>>(
                6, &mAmplitude0, NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_Amplitude, MAX_Amplitude
-            )
-            .AddTextBox(XXO("&Amplitude (0-1):"), wxT(""), 12);
+               Amplitude.min, Amplitude.max )
+            .AddTextBox(XXO("&Amplitude (0-1):"), L"", 12);
       }
 
       S.AddPrompt(XXO("&Duration:"));

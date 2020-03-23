@@ -39,10 +39,9 @@
 
 #include "LoadEffects.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name    Type  Key             Def  Min   Max      Scale
-Param( Count,  int,  wxT("Count"),    1,  1,    INT_MAX, 1  );
+namespace {
+EffectParameter Count{L"Count",       1,  1,    INT_MAX,  1  };
+}
 
 const ComponentInterfaceSymbol EffectRepeat::Symbol
 { XO("Repeat") };
@@ -55,7 +54,7 @@ END_EVENT_TABLE()
 
 EffectRepeat::EffectRepeat()
 {
-   repeatCount = DEF_Count;
+   repeatCount = Count.def;
 
    SetLinearEffectFlag(true);
 }
@@ -96,7 +95,7 @@ bool EffectRepeat::VisitSettings( SettingsVisitor & S ){
 
 bool EffectRepeat::GetAutomationParameters(CommandParameters & parms) const
 {
-   parms.Write(KEY_Count, repeatCount);
+   parms.Write(Count.key, repeatCount);
 
    return true;
 }
@@ -183,9 +182,8 @@ EffectRepeat::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    {
       mRepeatCount = S.Validator<IntegerValidator<int>>(
             &repeatCount, NumValidatorStyle::DEFAULT,
-            MIN_Count, 2147483647 / mProjectRate
-         )
-         .AddTextBox(XXO("&Number of repeats to add:"), wxT(""), 12);
+            Count.min, 2147483647 / mProjectRate )
+         .AddTextBox(XXO("&Number of repeats to add:"), L"", 12);
    }
    S.EndHorizontalLay();
 

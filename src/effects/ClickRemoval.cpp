@@ -48,11 +48,10 @@ enum
    ID_Width
 };
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name       Type     Key               Def      Min      Max      Scale
-Param( Threshold, int,     wxT("Threshold"),  200,     0,       900,     1  );
-Param( Width,     int,     wxT("Width"),      20,      0,       40,      1  );
+namespace {
+EffectParameter Threshold{ L"Threshold",  200,     0,       900,     1  };
+EffectParameter Width{     L"Width",      20,      0,       40,      1  };
+}
 
 const ComponentInterfaceSymbol EffectClickRemoval::Symbol
 { XO("Click Removal") };
@@ -68,8 +67,8 @@ END_EVENT_TABLE()
 
 EffectClickRemoval::EffectClickRemoval()
 {
-   mThresholdLevel = DEF_Threshold;
-   mClickWidth = DEF_Width;
+   mThresholdLevel = Threshold.def;
+   mClickWidth = Width.def;
 
    SetLinearEffectFlag(false);
 
@@ -114,8 +113,8 @@ bool EffectClickRemoval::VisitSettings( SettingsVisitor & S ){
 
 bool EffectClickRemoval::GetAutomationParameters(CommandParameters & parms) const
 {
-   parms.Write(KEY_Threshold, mThresholdLevel);
-   parms.Write(KEY_Width, mClickWidth);
+   parms.Write(Threshold.key, mThresholdLevel);
+   parms.Write(Width.key, mClickWidth);
 
    return true;
 }
@@ -312,8 +311,7 @@ EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       mThreshT = S.Id(ID_Thresh)
          .Validator<IntegerValidator<int>>(
             &mThresholdLevel, NumValidatorStyle::DEFAULT,
-            MIN_Threshold, MAX_Threshold
-         )
+            Threshold.min, Threshold.max )
          .AddTextBox(XXO("&Threshold (lower is more sensitive):"),
                      wxT(""),
                      10);
@@ -323,12 +321,12 @@ EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          .Style(wxSL_HORIZONTAL)
          .Validator<wxGenericValidator>(&mThresholdLevel)
          .MinSize( { 150, -1 } )
-         .AddSlider( {}, mThresholdLevel, MAX_Threshold, MIN_Threshold);
+         .AddSlider( {}, mThresholdLevel, Threshold.max, Threshold.min);
 
       // Click width
       mWidthT = S.Id(ID_Width)
          .Validator<IntegerValidator<int>>(
-            &mClickWidth, NumValidatorStyle::DEFAULT, MIN_Width, MAX_Width)
+            &mClickWidth, NumValidatorStyle::DEFAULT, Width.min, Width.max)
          .AddTextBox(XXO("Max &Spike Width (higher is more sensitive):"),
                      wxT(""),
                      10);
@@ -338,7 +336,7 @@ EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          .Style(wxSL_HORIZONTAL)
          .Validator<wxGenericValidator>(&mClickWidth)
          .MinSize( { 150, -1 } )
-         .AddSlider( {}, mClickWidth, MAX_Width, MIN_Width);
+         .AddSlider( {}, mClickWidth, Width.max, Width.min);
    }
    S.EndMultiColumn();
 

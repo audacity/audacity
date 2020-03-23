@@ -76,7 +76,7 @@ private:
 
 public:
    struct Settings {
-      static constexpr auto DefaultSequence = "audacity";
+      static constexpr wchar_t DefaultSequence[] = L"audacity";
       static constexpr double DefaultDutyCycle = 55.0;
       static constexpr double DefaultAmplitude = 0.8;
 

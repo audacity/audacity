@@ -46,14 +46,14 @@ static const EnumValueSymbol kNormalizeTargetStrings[nAlgos] =
    { XO("perceived loudness") },
    { XO("RMS") }
 };
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name         Type     Key                        Def         Min      Max       Scale
-Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,      false,   true,     1  );
-Param( LUFSLevel,   double,  wxT("LUFSLevel"),           -23.0,      -145.0,  0.0,      1  );
-Param( RMSLevel,    double,  wxT("RMSLevel"),            -20.0,      -145.0,  0.0,      1  );
-Param( DualMono,    bool,    wxT("DualMono"),            true,       false,   true,     1  );
-Param( NormalizeTo, int,     wxT("NormalizeTo"),         kLoudness , 0    ,   nAlgos-1, 1  );
+
+namespace {
+EffectParameter StereoInd{   L"StereoIndependent",   false,      false,   true,     1  };
+EffectParameter LUFSLevel{   L"LUFSLevel",           -23.0,      -145.0,  0.0,      1  };
+EffectParameter RMSLevel{    L"RMSLevel",            -20.0,      -145.0,  0.0,      1  };
+EffectParameter DualMono{    L"DualMono",            true,       false,   true,     1  };
+EffectParameter NormalizeTo{ L"NormalizeTo",         (int)kLoudness , 0    ,   nAlgos-1, 1  };
+}
 
 BEGIN_EVENT_TABLE(EffectLoudness, wxEvtHandler)
    EVT_CHOICE(wxID_ANY, EffectLoudness::OnChoice)
@@ -68,11 +68,11 @@ namespace{ BuiltinEffectsModule::Registration< EffectLoudness > reg; }
 
 EffectLoudness::EffectLoudness()
 {
-   mStereoInd = DEF_StereoInd;
-   mLUFSLevel = DEF_LUFSLevel;
-   mRMSLevel = DEF_RMSLevel;
-   mDualMono = DEF_DualMono;
-   mNormalizeTo = DEF_NormalizeTo;
+   mStereoInd = StereoInd.def;
+   mLUFSLevel = LUFSLevel.def;
+   mRMSLevel = RMSLevel.def;
+   mDualMono = DualMono.def;
+   mNormalizeTo = NormalizeTo.def;
 
    SetLinearEffectFlag(false);
 }
@@ -118,11 +118,11 @@ bool EffectLoudness::VisitSettings( SettingsVisitor & S )
 
 bool EffectLoudness::GetAutomationParameters(CommandParameters & parms) const
 {
-   parms.Write(KEY_StereoInd, mStereoInd);
-   parms.Write(KEY_LUFSLevel, mLUFSLevel);
-   parms.Write(KEY_RMSLevel, mRMSLevel);
-   parms.Write(KEY_DualMono, mDualMono);
-   parms.Write(KEY_NormalizeTo, mNormalizeTo);
+   parms.Write(StereoInd.key, mStereoInd);
+   parms.Write(LUFSLevel.key, mLUFSLevel);
+   parms.Write(RMSLevel.key, mRMSLevel);
+   parms.Write(DualMono.key, mDualMono);
+   parms.Write(NormalizeTo.key, mNormalizeTo);
 
    return true;
 }
@@ -156,11 +156,9 @@ bool EffectLoudness::Process(EffectSettings &)
    if(mNormalizeTo == kLoudness)
       // LU use 10*log10(...) instead of 20*log10(...)
       // so multiply level by 2 and use standard DB_TO_LINEAR macro.
-      mRatio = DB_TO_LINEAR(std::clamp<double>(
-         mLUFSLevel*2, MIN_LUFSLevel, MAX_LUFSLevel));
+      mRatio = DB_TO_LINEAR(std::clamp<double>(mLUFSLevel*2, LUFSLevel.min, LUFSLevel.max));
    else // RMS
-      mRatio = DB_TO_LINEAR(std::clamp<double>(
-         mRMSLevel, MIN_RMSLevel, MAX_RMSLevel));
+      mRatio = DB_TO_LINEAR(std::clamp<double>(mRMSLevel, RMSLevel.min, RMSLevel.max));
 
    // Iterate over each track
    this->CopyInputTracks(); // Set up mOutputTracks.
@@ -310,8 +308,8 @@ EffectLoudness::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
                            .Validator<FloatingPointValidator<double>>(
                               2, &mLUFSLevel,
                               NumValidatorStyle::ONE_TRAILING_ZERO,
-                              MIN_LUFSLevel, MAX_LUFSLevel )
-                           .AddTextBox( {}, wxT(""), 10);
+                              LUFSLevel.min, LUFSLevel.max )
+                           .AddTextBox( {}, L"", 10);
 
                         /* i18n-hint: LUFS is a particular method for measuring loudnesss */
                         S
@@ -331,8 +329,8 @@ EffectLoudness::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
                            .Validator<FloatingPointValidator<double>>(
                               2, &mRMSLevel,
                               NumValidatorStyle::ONE_TRAILING_ZERO,
-                              MIN_RMSLevel, MAX_RMSLevel )
-                           .AddTextBox( {}, wxT(""), 10);
+                              RMSLevel.min, RMSLevel.max )
+                           .AddTextBox( {}, L"", 10);
 
                         S
                            .AddVariableText(XO("dB"), false,

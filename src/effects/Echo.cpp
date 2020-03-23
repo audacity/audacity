@@ -32,11 +32,10 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name    Type     Key            Def   Min      Max      Scale
-Param( Delay,  float,   wxT("Delay"),   1.0f, 0.001f,  FLT_MAX, 1.0f );
-Param( Decay,  float,   wxT("Decay"),   0.5f, 0.0f,    FLT_MAX, 1.0f );
+namespace {
+EffectParameter Delay{  L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f };
+EffectParameter Decay{  L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
+}
 
 const ComponentInterfaceSymbol EffectEcho::Symbol
 { XO("Echo") };
@@ -45,8 +44,8 @@ namespace{ BuiltinEffectsModule::Registration< EffectEcho > reg; }
 
 EffectEcho::EffectEcho()
 {
-   delay = DEF_Delay;
-   decay = DEF_Decay;
+   delay = Delay.def;
+   decay = Decay.def;
 
    SetLinearEffectFlag(true);
 }
@@ -152,8 +151,8 @@ bool EffectEcho::VisitSettings( SettingsVisitor & S ){
 
 bool EffectEcho::GetAutomationParameters(CommandParameters & parms) const
 {
-   parms.WriteFloat(KEY_Delay, delay);
-   parms.WriteFloat(KEY_Decay, decay);
+   parms.WriteFloat(Delay.key, delay);
+   parms.WriteFloat(Decay.key, decay);
 
    return true;
 }
@@ -178,14 +177,13 @@ EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    {
       S.Validator<FloatingPointValidator<double>>(
             3, &delay, NumValidatorStyle::NO_TRAILING_ZEROES,
-            MIN_Delay, MAX_Delay
-         )
-         .AddTextBox(XXO("&Delay time (seconds):"), wxT(""), 10);
+            Delay.min, Delay.max )
+         .AddTextBox(XXO("&Delay time (seconds):"), L"", 10);
 
       S.Validator<FloatingPointValidator<double>>(
             3, &decay, NumValidatorStyle::NO_TRAILING_ZEROES,
-            MIN_Decay, MAX_Decay)
-         .AddTextBox(XXO("D&ecay factor:"), wxT(""), 10);
+            Decay.min, Decay.max)
+         .AddTextBox(XXO("D&ecay factor:"), L"", 10);
    }
    S.EndMultiColumn();
    return nullptr;

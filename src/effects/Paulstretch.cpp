@@ -35,11 +35,10 @@
 
 #include "../WaveTrack.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name    Type     Key                     Def      Min      Max      Scale
-Param( Amount, float,   wxT("Stretch Factor"),   10.0,    1.0,     FLT_MAX, 1   );
-Param( Time,   float,   wxT("Time Resolution"),  0.25f,   0.00099f,  FLT_MAX, 1   );
+namespace {
+EffectParameter Amount{ L"Stretch Factor",   10.0f,    1.0,     FLT_MAX, 1   };
+EffectParameter Time{   L"Time Resolution",  0.25f,   0.00099f,  FLT_MAX, 1   };
+}
 
 /// \brief Class that helps EffectPaulStretch.  It does the FFTs and inner loop 
 /// of the effect.
@@ -95,8 +94,8 @@ END_EVENT_TABLE()
 
 EffectPaulstretch::EffectPaulstretch()
 {
-   mAmount = DEF_Amount;
-   mTime_resolution = DEF_Time;
+   mAmount = Amount.def;
+   mTime_resolution = Time.def;
 
    SetLinearEffectFlag(true);
 }
@@ -138,8 +137,8 @@ bool EffectPaulstretch::VisitSettings( SettingsVisitor & S ){
 
 bool EffectPaulstretch::GetAutomationParameters(CommandParameters & parms) const
 {
-   parms.WriteFloat(KEY_Amount, mAmount);
-   parms.WriteFloat(KEY_Time, mTime_resolution);
+   parms.WriteFloat(Amount.key, mAmount);
+   parms.WriteFloat(Time.key, mTime_resolution);
 
    return true;
 }
@@ -202,17 +201,19 @@ EffectPaulstretch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.Validator<FloatingPointValidator<float>>(
-            1, &mAmount, NumValidatorStyle::DEFAULT, MIN_Amount)
+      S
+         .Validator<FloatingPointValidator<float>>(
+            1, &mAmount, NumValidatorStyle::DEFAULT, Amount.min)
          /* i18n-hint: This is how many times longer the sound will be, e.g. applying
           * the effect to a 1-second sample, with the default Stretch Factor of 10.0
           * will give an (approximately) 10 second sound
           */
          .AddTextBox(XXO("&Stretch Factor:"), wxT(""), 10);
 
-      S.Validator<FloatingPointValidator<float>>(
-            3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Time)
-         .AddTextBox(XXO("&Time Resolution (seconds):"), wxT(""), 10);
+      S
+         .Validator<FloatingPointValidator<float>>(
+            3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO, Time.min)
+         .AddTextBox(XXO("&Time Resolution (seconds):"), L"", 10);
    }
    S.EndMultiColumn();
    return nullptr;

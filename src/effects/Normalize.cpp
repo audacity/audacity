@@ -34,13 +34,12 @@
 #include "../widgets/valnum.h"
 #include "../widgets/ProgressDialog.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name         Type     Key                        Def      Min      Max   Scale
-Param( PeakLevel,   double,  wxT("PeakLevel"),           -1.0,    -145.0,  0.0,  1  );
-Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,    false,   true, 1  );
-Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,    false,   true, 1  );
-Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,   false,   true, 1  );
+namespace {
+EffectParameter PeakLevel{   L"PeakLevel",           -1.0,    -145.0,  0.0,  1  };
+EffectParameter RemoveDC{    L"RemoveDcOffset",      true,    false,   true, 1  };
+EffectParameter ApplyGain{   L"ApplyGain",           true,    false,   true, 1  };
+EffectParameter StereoInd{   L"StereoIndependent",   false,   false,   true, 1  };
+}
 
 const ComponentInterfaceSymbol EffectNormalize::Symbol
 { XO("Normalize") };
@@ -54,10 +53,10 @@ END_EVENT_TABLE()
 
 EffectNormalize::EffectNormalize()
 {
-   mPeakLevel = DEF_PeakLevel;
-   mDC = DEF_RemoveDC;
-   mGain = DEF_ApplyGain;
-   mStereoInd = DEF_StereoInd;
+   mPeakLevel = PeakLevel.def;
+   mDC = RemoveDC.def;
+   mGain = ApplyGain.def;
+   mStereoInd = StereoInd.def;
 
    SetLinearEffectFlag(false);
 }
@@ -101,10 +100,10 @@ bool EffectNormalize::VisitSettings( SettingsVisitor & S ){
 
 bool EffectNormalize::GetAutomationParameters(CommandParameters & parms) const
 {
-   parms.Write(KEY_PeakLevel, mPeakLevel);
-   parms.Write(KEY_ApplyGain, mGain);
-   parms.Write(KEY_RemoveDC, mDC);
-   parms.Write(KEY_StereoInd, mStereoInd);
+   parms.Write(PeakLevel.key, mPeakLevel);
+   parms.Write(ApplyGain.key, mGain);
+   parms.Write(RemoveDC.key, mDC);
+   parms.Write(StereoInd.key, mStereoInd);
 
    return true;
 }
@@ -140,8 +139,7 @@ bool EffectNormalize::Process(EffectSettings &)
    if( mGain )
    {
       // same value used for all tracks
-      ratio = DB_TO_LINEAR(std::clamp<double>(
-         mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
+      ratio = DB_TO_LINEAR(std::clamp<double>(mPeakLevel, PeakLevel.min, PeakLevel.max));
    }
    else {
       ratio = 1.0;
@@ -280,10 +278,9 @@ EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
                      2,
                      &mPeakLevel,
                      NumValidatorStyle::ONE_TRAILING_ZERO,
-                     MIN_PeakLevel,
-                     MAX_PeakLevel
-                  )
-                  .AddTextBox( {}, wxT(""), 10);
+                     PeakLevel.min,
+                     PeakLevel.max )
+                  .AddTextBox( {}, L"", 10);
                mLeveldB = S.AddVariableText(XO("dB"), false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,

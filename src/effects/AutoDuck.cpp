@@ -38,16 +38,15 @@
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name                Type     Key                     Def      Min      Max      Scale
-Param( DuckAmountDb,       double,  wxT("DuckAmountDb"),     -12.0,   -24.0,   0.0,     1  );
-Param( InnerFadeDownLen,   double,  wxT("InnerFadeDownLen"), 0.0,     0.0,     3.0,     1  );
-Param( InnerFadeUpLen,     double,  wxT("InnerFadeUpLen"),   0.0,     0.0,     3.0,     1  );
-Param( OuterFadeDownLen,   double,  wxT("OuterFadeDownLen"), 0.5,     0.0,     3.0,     1  );
-Param( OuterFadeUpLen,     double,  wxT("OuterFadeUpLen"),   0.5,     0.0,     3.0,     1  );
-Param( ThresholdDb,        double,  wxT("ThresholdDb"),      -30.0,   -100.0,  0.0,     1  );
-Param( MaximumPause,       double,  wxT("MaximumPause"),     1.0,     0.0,     DBL_MAX, 1  );
+namespace {
+EffectParameter DuckAmountDb{       L"DuckAmountDb",     -12.0,   -24.0,   0.0,     1  };
+EffectParameter InnerFadeDownLen{   L"InnerFadeDownLen", 0.0,     0.0,     3.0,     1  };
+EffectParameter InnerFadeUpLen{     L"InnerFadeUpLen",   0.0,     0.0,     3.0,     1  };
+EffectParameter OuterFadeDownLen{   L"OuterFadeDownLen", 0.5,     0.0,     3.0,     1  };
+EffectParameter OuterFadeUpLen{     L"OuterFadeUpLen",   0.5,     0.0,     3.0,     1  };
+EffectParameter ThresholdDb{        L"ThresholdDb",      -30.0,   -100.0,  0.0,     1  };
+EffectParameter MaximumPause{       L"MaximumPause",     1.0,     0.0,     DBL_MAX, 1  };
+}
 
 /*
  * Common constants
@@ -87,13 +86,13 @@ END_EVENT_TABLE()
 
 EffectAutoDuck::EffectAutoDuck()
 {
-   mDuckAmountDb = DEF_DuckAmountDb;
-   mInnerFadeDownLen = DEF_InnerFadeDownLen;
-   mInnerFadeUpLen = DEF_InnerFadeUpLen;
-   mOuterFadeDownLen = DEF_OuterFadeDownLen;
-   mOuterFadeUpLen = DEF_OuterFadeUpLen;
-   mThresholdDb = DEF_ThresholdDb;
-   mMaximumPause = DEF_MaximumPause;
+   mDuckAmountDb = DuckAmountDb.def;
+   mInnerFadeDownLen = InnerFadeDownLen.def;
+   mInnerFadeUpLen = InnerFadeUpLen.def;
+   mOuterFadeDownLen = OuterFadeDownLen.def;
+   mOuterFadeUpLen = OuterFadeUpLen.def;
+   mThresholdDb = ThresholdDb.def;
+   mMaximumPause = MaximumPause.def;
 
    SetLinearEffectFlag(true);
 
@@ -144,13 +143,13 @@ bool EffectAutoDuck::VisitSettings( SettingsVisitor & S ){
 
 bool EffectAutoDuck::GetAutomationParameters(CommandParameters & parms) const
 {
-   parms.Write(KEY_DuckAmountDb, mDuckAmountDb);
-   parms.Write(KEY_InnerFadeDownLen, mInnerFadeDownLen);
-   parms.Write(KEY_InnerFadeUpLen, mInnerFadeUpLen);
-   parms.Write(KEY_OuterFadeDownLen, mOuterFadeDownLen);
-   parms.Write(KEY_OuterFadeUpLen, mOuterFadeUpLen);
-   parms.Write(KEY_ThresholdDb, mThresholdDb);
-   parms.Write(KEY_MaximumPause, mMaximumPause);
+   parms.Write(DuckAmountDb.key, mDuckAmountDb);
+   parms.Write(InnerFadeDownLen.key, mInnerFadeDownLen);
+   parms.Write(InnerFadeUpLen.key, mInnerFadeUpLen);
+   parms.Write(OuterFadeDownLen.key, mOuterFadeDownLen);
+   parms.Write(OuterFadeUpLen.key, mOuterFadeUpLen);
+   parms.Write(ThresholdDb.key, mThresholdDb);
+   parms.Write(MaximumPause.key, mMaximumPause);
 
    return true;
 }
@@ -408,48 +407,42 @@ EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       {
          mDuckAmountDbBox = S.Validator<FloatingPointValidator<double>>(
                1, &mDuckAmountDb, NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_DuckAmountDb, MAX_DuckAmountDb
-            )
+               DuckAmountDb.min, DuckAmountDb.max )
             .NameSuffix(XO("db"))
             .AddTextBox(XXO("Duck &amount:"), wxT(""), 10);
          S.AddUnits(XO("dB"));
 
          mMaximumPauseBox = S.Validator<FloatingPointValidator<double>>(
                2, &mMaximumPause, NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_MaximumPause, MAX_MaximumPause
-            )
+               MaximumPause.min, MaximumPause.max )
             .NameSuffix(XO("seconds"))
             .AddTextBox(XXO("Ma&ximum pause:"), wxT(""), 10);
          S.AddUnits(XO("seconds"));
 
          mOuterFadeDownLenBox = S.Validator<FloatingPointValidator<double>>(
                2, &mOuterFadeDownLen, NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_OuterFadeDownLen, MAX_OuterFadeDownLen
-            )
+               OuterFadeDownLen.min, OuterFadeDownLen.max )
             .NameSuffix(XO("seconds"))
             .AddTextBox(XXO("Outer fade &down length:"), wxT(""), 10);
          S.AddUnits(XO("seconds"));
 
          mOuterFadeUpLenBox = S.Validator<FloatingPointValidator<double>>(
                2, &mOuterFadeUpLen, NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_OuterFadeUpLen, MAX_OuterFadeUpLen
-            )
+               OuterFadeUpLen.min, OuterFadeUpLen.max )
             .NameSuffix(XO("seconds"))
             .AddTextBox(XXO("Outer fade &up length:"), wxT(""), 10);
          S.AddUnits(XO("seconds"));
 
          mInnerFadeDownLenBox = S.Validator<FloatingPointValidator<double>>(
                2, &mInnerFadeDownLen, NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_InnerFadeDownLen, MAX_InnerFadeDownLen
-            )
+               InnerFadeDownLen.min, InnerFadeDownLen.max )
             .NameSuffix(XO("seconds"))
             .AddTextBox(XXO("Inner fade d&own length:"), wxT(""), 10);
          S.AddUnits(XO("seconds"));
 
          mInnerFadeUpLenBox = S.Validator<FloatingPointValidator<double>>(
                2, &mInnerFadeUpLen, NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_InnerFadeUpLen, MAX_InnerFadeUpLen
-            )
+               InnerFadeUpLen.min, InnerFadeUpLen.max )
             .NameSuffix(XO("seconds"))
             .AddTextBox(XXO("Inner &fade up length:"), wxT(""), 10);
          S.AddUnits(XO("seconds"));
@@ -460,8 +453,7 @@ EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       {
          mThresholdDbBox = S.Validator<FloatingPointValidator<double>>(
                2, &mThresholdDb, NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_ThresholdDb, MAX_ThresholdDb
-            )
+               ThresholdDb.min, ThresholdDb.max )
             .NameSuffix(XO("db"))
             .AddTextBox(XXO("&Threshold:"), wxT(""), 10);
          S.AddUnits(XO("dB"));
@@ -653,11 +645,11 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    mEffect->mOuterFadeDownLenBox->GetValue().ToDouble(&outerFadeDownLen);
    mEffect->mOuterFadeUpLenBox->GetValue().ToDouble(&outerFadeUpLen);
 
-   if (innerFadeDownLen < MIN_InnerFadeDownLen || innerFadeDownLen > MAX_InnerFadeDownLen ||
-       innerFadeUpLen < MIN_InnerFadeUpLen     || innerFadeUpLen > MAX_InnerFadeUpLen     ||
-       outerFadeDownLen < MIN_OuterFadeDownLen || outerFadeDownLen > MAX_OuterFadeDownLen ||
-       outerFadeUpLen < MIN_OuterFadeUpLen     || outerFadeUpLen > MAX_OuterFadeUpLen     ||
-       duckAmountDb < MIN_DuckAmountDb         || duckAmountDb > MAX_DuckAmountDb)
+   if (innerFadeDownLen < InnerFadeDownLen.min || innerFadeDownLen > InnerFadeDownLen.max ||
+       innerFadeUpLen < InnerFadeUpLen.min     || innerFadeUpLen > InnerFadeUpLen.max     ||
+       outerFadeDownLen < OuterFadeDownLen.min || outerFadeDownLen > OuterFadeDownLen.max ||
+       outerFadeUpLen < OuterFadeUpLen.min     || outerFadeUpLen > OuterFadeUpLen.max     ||
+       duckAmountDb < DuckAmountDb.min         || duckAmountDb > DuckAmountDb.max)
    {
       // values are out of range, no preview available
       wxString message = _("Preview not available");
@@ -890,28 +882,23 @@ void EffectAutoDuckPanel::OnMotion(wxMouseEvent & evt)
          {
          case outerFadeDown:
             newValue = ((double)(FADE_DOWN_START - evt.GetX())) / FADE_SCALE;
-            mEffect->mOuterFadeDownLen =
-               std::clamp<double>(newValue, MIN_OuterFadeDownLen, MAX_OuterFadeDownLen);
+            mEffect->mOuterFadeDownLen = std::clamp<double>(newValue, OuterFadeDownLen.min, OuterFadeDownLen.max);
             break;
          case outerFadeUp:
             newValue = ((double)(evt.GetX() - FADE_UP_START)) / FADE_SCALE;
-            mEffect->mOuterFadeUpLen =
-               std::clamp<double>(newValue, MIN_OuterFadeUpLen, MAX_OuterFadeUpLen);
+            mEffect->mOuterFadeUpLen = std::clamp<double>(newValue, OuterFadeUpLen.min, OuterFadeUpLen.max);
             break;
          case innerFadeDown:
             newValue = ((double)(evt.GetX() - FADE_DOWN_START)) / FADE_SCALE;
-            mEffect->mInnerFadeDownLen =
-               std::clamp<double>(newValue, MIN_InnerFadeDownLen, MAX_InnerFadeDownLen);
+            mEffect->mInnerFadeDownLen = std::clamp<double>(newValue, InnerFadeDownLen.min, InnerFadeDownLen.max);
             break;
          case innerFadeUp:
             newValue = ((double)(FADE_UP_START - evt.GetX())) / FADE_SCALE;
-            mEffect->mInnerFadeUpLen =
-               std::clamp<double>(newValue, MIN_InnerFadeUpLen, MAX_InnerFadeUpLen);
+            mEffect->mInnerFadeUpLen = std::clamp<double>(newValue, InnerFadeUpLen.min, InnerFadeUpLen.max);
             break;
          case duckAmount:
             newValue = ((double)(DUCK_AMOUNT_START - evt.GetY())) / DUCK_AMOUNT_SCALE;
-            mEffect->mDuckAmountDb =
-               std::clamp<double>(newValue, MIN_DuckAmountDb, MAX_DuckAmountDb);
+            mEffect->mDuckAmountDb = std::clamp<double>(newValue, DuckAmountDb.min, DuckAmountDb.max);
             break;
          case none:
             wxASSERT(false); // should not happen

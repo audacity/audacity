@@ -94,22 +94,14 @@ static CommandParameters::ObsoleteMap kObsoleteActions[] = {
 
 static const size_t nObsoleteActions = WXSIZEOF( kObsoleteActions );
 
-// Define defaults, minimums, and maximums for each parameter
-#define DefaultAndLimits(name, def, min, max) \
-   static const double DEF_ ## name = (def); \
-   static const double MIN_ ## name = (min); \
-   static const double MAX_ ## name = (max);
-
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name       Type     Key               Def         Min      Max                        Scale
-
-Param( Threshold, double,  wxT("Threshold"),  -20.0,      -80.0,   -20.0,                     1  );
-Param( ActIndex,  int,     wxT("Action"),     kTruncate,  0,       nActions - 1,           1  );
-Param( Minimum,   double,  wxT("Minimum"),    0.5,        0.001,   10000.0,                   1  );
-Param( Truncate,  double,  wxT("Truncate"),   0.5,        0.0,     10000.0,                   1  );
-Param( Compress,  double,  wxT("Compress"),   50.0,       0.0,     99.9,                      1  );
-Param( Independent, bool,  wxT("Independent"), false,     false,   true,                      1  );
+namespace {
+EffectParameter Threshold{ L"Threshold",  -20.0,      -80.0,   -20.0,                     1  };
+EnumParameter ActIndex{    L"Action",     (int)kTruncate,  0,       nActions - 1,           1, kActionStrings, nActions };
+EffectParameter Minimum{   L"Minimum",    0.5,        0.001,   10000.0,                   1  };
+EffectParameter Truncate{  L"Truncate",   0.5,        0.0,     10000.0,                   1  };
+EffectParameter Compress{  L"Compress",   50.0,       0.0,     99.9,                      1  };
+EffectParameter Independent{L"Independent", false,     false,   true,                      1  };
+}
 
 static const size_t DEF_BlendFrameCount = 100;
 
@@ -132,12 +124,12 @@ END_EVENT_TABLE()
 
 EffectTruncSilence::EffectTruncSilence()
 {
-   mInitialAllowedSilence = DEF_Minimum;
-   mTruncLongestAllowedSilence = DEF_Truncate;
-   mSilenceCompressPercent = DEF_Compress;
-   mThresholdDB = DEF_Threshold;
-   mActionIndex = DEF_ActIndex;
-   mbIndependent = DEF_Independent;
+   mInitialAllowedSilence = Minimum.def;
+   mTruncLongestAllowedSilence = Truncate.def;
+   mSilenceCompressPercent = Compress.def;
+   mThresholdDB = Threshold.def;
+   mActionIndex = ActIndex.def;
+   mbIndependent = Independent.def;
 
    SetLinearEffectFlag(false);
 
@@ -194,12 +186,12 @@ bool EffectTruncSilence::VisitSettings( SettingsVisitor & S ){
 
 bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms) const
 {
-   parms.Write(KEY_Threshold, mThresholdDB);
-   parms.Write(KEY_ActIndex, kActionStrings[mActionIndex].Internal());
-   parms.Write(KEY_Minimum, mInitialAllowedSilence);
-   parms.Write(KEY_Truncate, mTruncLongestAllowedSilence);
-   parms.Write(KEY_Compress, mSilenceCompressPercent);
-   parms.Write(KEY_Independent, mbIndependent);
+   parms.Write(Threshold.key, mThresholdDB);
+   parms.Write(ActIndex.key, kActionStrings[mActionIndex].Internal());
+   parms.Write(Minimum.key, mInitialAllowedSilence);
+   parms.Write(Truncate.key, mTruncLongestAllowedSilence);
+   parms.Write(Compress.key, mSilenceCompressPercent);
+   parms.Write(Independent.key, mbIndependent);
 
    return true;
 }
@@ -229,7 +221,7 @@ bool EffectTruncSilence::SetAutomationParameters(const CommandParameters & parms
 
    {
       int temp;
-      if (!parms.ReadAndVerify( KEY_ActIndex, &temp, DEF_ActIndex,
+      if (!parms.ReadAndVerify( ActIndex.key, &temp, ActIndex.def,
          kActionStrings, nActions, kObsoleteActions, nObsoleteActions))
          return false;
       mActionIndex = temp;
@@ -723,8 +715,7 @@ EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          mThresholdText = S
             .Validator<FloatingPointValidator<double>>(
                3, &mThresholdDB, NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_Threshold, MAX_Threshold
-            )
+               Threshold.min, Threshold.max )
             .NameSuffix(XO("db"))
             .AddTextBox(XXO("&Threshold:"), wxT(""), 0);
          S.AddUnits(XO("dB"));
@@ -733,7 +724,7 @@ EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          mInitialAllowedSilenceT = S.Validator<FloatingPointValidator<double>>(
                3, &mInitialAllowedSilence,
                NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_Minimum, MAX_Minimum)
+               Minimum.min, Minimum.max)
             .NameSuffix(XO("seconds"))
             .AddTextBox(XXO("&Duration:"), wxT(""), 12);
          S.AddUnits(XO("seconds"));
@@ -761,8 +752,7 @@ EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          mTruncLongestAllowedSilenceT = S.Validator<FloatingPointValidator<double>>(
                3, &mTruncLongestAllowedSilence,
                NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_Truncate, MAX_Truncate
-            )
+               Truncate.min, Truncate.max )
             .NameSuffix(XO("seconds"))
             .AddTextBox(XXO("Tr&uncate to:"), wxT(""), 12);
          S.AddUnits(XO("seconds"));
@@ -770,8 +760,7 @@ EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          mSilenceCompressPercentT = S.Validator<FloatingPointValidator<double>>(
                3, &mSilenceCompressPercent,
                NumValidatorStyle::NO_TRAILING_ZEROES,
-               MIN_Compress, MAX_Compress
-            )
+               Compress.min, Compress.max )
             .NameSuffix(XO("%"))
             .AddTextBox(XXO("C&ompress to:"), wxT(""), 12);
          S.AddUnits(XO("%"));
