@@ -18,6 +18,7 @@ Vaughan Johnson (Preview)
 #include "Biquad.h"
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxBitmap;
 class wxChoice;
@@ -32,6 +33,8 @@ class EffectScienFilterPanel;
 class EffectScienFilter final : public Effect
 {
 public:
+   static inline EffectScienFilter *
+   FetchParameters(EffectScienFilter &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectScienFilter();
@@ -46,8 +49,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // EffectProcessor implementation
 
@@ -58,7 +59,6 @@ public:
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -127,6 +127,7 @@ public: // TODO remove
    RulerPanel *mdBRuler;
    RulerPanel *mfreqRuler;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 
    friend class EffectScienFilterPanel;

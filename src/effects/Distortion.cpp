@@ -41,7 +41,6 @@
 #include <wx/stattext.h>
 
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
@@ -92,6 +91,18 @@ EffectParameter Param2{ &EffectDistortion::Params::mParam2,
    L"Parameter 2",    50.0,    0.0,   100.0,                1    };
 EffectParameter Repeats{ &EffectDistortion::Params::mRepeats,
    L"Repeats",        1,       0,       5,                  1    };
+}
+const EffectParameterMethods& EffectDistortion::Parameters() const
+{
+   static CapturedParameters<EffectDistortion> parameters{
+      [](EffectDistortion &e, Params &p, bool updating) {
+         if (!updating)
+            e.mThreshold = DB_TO_LINEAR(p.mThreshold_dB);
+         return true;
+      },
+      TableTypeIndx, DCBlock, Threshold_dB, NoiseFloor, Param1, Param2, Repeats
+   };
+   return parameters;
 }
 
 // How many samples are processed before recomputing the lookup table again
@@ -172,16 +183,8 @@ END_EVENT_TABLE()
 
 EffectDistortion::EffectDistortion()
 {
+   Parameters().Reset(*this);
    wxASSERT(nTableTypes == WXSIZEOF(kTableTypeStrings));
-
-   mParams.mTableChoiceIndx = TableTypeIndx.def;
-   mParams.mDCBlock = DCBlock.def;
-   mParams.mThreshold_dB = Threshold_dB.def;
-   mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
-   mParams.mNoiseFloor = NoiseFloor.def;
-   mParams.mParam1 = Param1.def;
-   mParams.mParam2 = Param2.def;
-   mParams.mRepeats = Repeats.def;
    mMakeupGain = 1.0;
    mbSavedFilterState = DCBlock.def;
 
@@ -278,52 +281,6 @@ size_t EffectDistortion::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
-}
-
-bool EffectDistortion::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mParams.mTableChoiceIndx, TableTypeIndx );
-   S.SHUTTLE_PARAM( mParams.mDCBlock,       DCBlock       );
-   S.SHUTTLE_PARAM( mParams.mThreshold_dB,  Threshold_dB  );
-   S.SHUTTLE_PARAM( mParams.mNoiseFloor,    NoiseFloor    );
-   S.SHUTTLE_PARAM( mParams.mParam1,        Param1        );
-   S.SHUTTLE_PARAM( mParams.mParam2,        Param2        );
-   S.SHUTTLE_PARAM( mParams.mRepeats,       Repeats       );
-   return true;
-}
-
-bool EffectDistortion::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(TableTypeIndx.key,
-               kTableTypeStrings[mParams.mTableChoiceIndx].Internal());
-   parms.Write(DCBlock.key, mParams.mDCBlock);
-   parms.Write(Threshold_dB.key, mParams.mThreshold_dB);
-   parms.Write(NoiseFloor.key, mParams.mNoiseFloor);
-   parms.Write(Param1.key, mParams.mParam1);
-   parms.Write(Param2.key, mParams.mParam2);
-   parms.Write(Repeats.key, mParams.mRepeats);
-
-   return true;
-}
-
-bool EffectDistortion::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadAndVerifyEnum(TableTypeIndx, kTableTypeStrings, nTableTypes);
-   ReadParam(DCBlock);
-   ReadParam(Threshold_dB);
-   ReadParam(NoiseFloor);
-   ReadParam(Param1);
-   ReadParam(Param2);
-   ReadParam(Repeats);
-
-   mParams.mTableChoiceIndx = TableTypeIndx;
-   mParams.mDCBlock = DCBlock;
-   mParams.mThreshold_dB = Threshold_dB;
-   mParams.mNoiseFloor = NoiseFloor;
-   mParams.mParam1 = Param1;
-   mParams.mParam2 = Param2;
-   mParams.mRepeats = Repeats;
-
-   return true;
 }
 
 RegistryPaths EffectDistortion::GetFactoryPresets() const

@@ -24,7 +24,6 @@
 #include <wx/intl.h>
 #include <wx/slider.h>
 
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
@@ -52,6 +51,14 @@ EffectParameter PitchPercentStart{ &EffectTimeScale::m_PitchPercentChangeStart,
 EffectParameter PitchPercentEnd{ &EffectTimeScale::m_PitchPercentChangeEnd,
    L"PitchPercentChangeEnd",   0.0,  -50.0,   100.0, 1  };
 }
+const EffectParameterMethods& EffectTimeScale::Parameters() const
+{
+   static CapturedParameters<EffectTimeScale> parameters{
+      RatePercentStart, RatePercentEnd, HalfStepsStart, HalfStepsEnd,
+      PitchPercentStart, PitchPercentEnd
+   };
+   return parameters;
+}
 
 //
 // EffectTimeScale
@@ -75,12 +82,7 @@ END_EVENT_TABLE()
 
 EffectTimeScale::EffectTimeScale()
 {
-   m_RatePercentChangeStart = RatePercentStart.def;
-   m_RatePercentChangeEnd = RatePercentEnd.def;
-   m_PitchHalfStepsStart = HalfStepsStart.def;
-   m_PitchHalfStepsEnd = HalfStepsEnd.def;
-   m_PitchPercentChangeStart = PitchPercentStart.def;
-   m_PitchPercentChangeEnd = PitchPercentEnd.def;
+   Parameters().Reset(*this);
 
    slideTypeRate = SlideLinearOutputRate;
    slideTypePitch = SlideLinearOutputRate;
@@ -116,48 +118,6 @@ ManualPageID EffectTimeScale::ManualPage() const
 EffectType EffectTimeScale::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectTimeScale::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( m_RatePercentChangeStart,  RatePercentStart );
-   S.SHUTTLE_PARAM( m_RatePercentChangeEnd,    RatePercentEnd );
-   S.SHUTTLE_PARAM( m_PitchHalfStepsStart,     HalfStepsStart );
-   S.SHUTTLE_PARAM( m_PitchHalfStepsEnd,       HalfStepsEnd );
-   S.SHUTTLE_PARAM( m_PitchPercentChangeStart, PitchPercentStart );
-   S.SHUTTLE_PARAM( m_PitchPercentChangeEnd,   PitchPercentEnd );
-   return true;
-}
-
-bool EffectTimeScale::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(RatePercentStart.key, m_RatePercentChangeStart);
-   parms.Write(RatePercentEnd.key, m_RatePercentChangeEnd);
-   parms.Write(HalfStepsStart.key, m_PitchHalfStepsStart);
-   parms.Write(HalfStepsEnd.key, m_PitchHalfStepsEnd);
-   parms.Write(PitchPercentStart.key, m_PitchPercentChangeStart);
-   parms.Write(PitchPercentEnd.key, m_PitchPercentChangeEnd);
-
-   return true;
-}
-
-bool EffectTimeScale::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(RatePercentStart);
-   ReadParam(RatePercentEnd);
-   ReadParam(HalfStepsStart);
-   ReadParam(HalfStepsEnd);
-   ReadParam(PitchPercentStart);
-   ReadParam(PitchPercentEnd);
-
-   m_RatePercentChangeStart = RatePercentStart;
-   m_RatePercentChangeEnd = RatePercentEnd;
-   m_PitchHalfStepsStart = HalfStepsStart;
-   m_PitchHalfStepsEnd = HalfStepsEnd;
-   m_PitchPercentChangeStart = PitchPercentStart;
-   m_PitchPercentChangeEnd = PitchPercentEnd;
-   
-   return true;
 }
 
 // Effect implementation

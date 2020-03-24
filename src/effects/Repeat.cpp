@@ -30,7 +30,6 @@
 #include <wx/stattext.h>
 
 #include "../LabelTrack.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
 #include "../WaveTrack.h"
@@ -42,6 +41,13 @@
 namespace {
 EffectParameter Count{ &EffectRepeat::repeatCount,
    L"Count",1,  1,    INT_MAX,  1  };
+}
+const EffectParameterMethods& EffectRepeat::Parameters() const
+{
+   static CapturedParameters<EffectRepeat> parameters{
+      Count
+   };
+   return parameters;
 }
 
 const ComponentInterfaceSymbol EffectRepeat::Symbol
@@ -55,8 +61,7 @@ END_EVENT_TABLE()
 
 EffectRepeat::EffectRepeat()
 {
-   repeatCount = Count.def;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 }
 
@@ -86,28 +91,6 @@ ManualPageID EffectRepeat::ManualPage() const
 EffectType EffectRepeat::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectRepeat::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( repeatCount, Count );
-   return true;
-}
-
-bool EffectRepeat::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(Count.key, repeatCount);
-
-   return true;
-}
-
-bool EffectRepeat::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(Count);
-
-   repeatCount = Count;
-
-   return true;
 }
 
 // Effect implementation

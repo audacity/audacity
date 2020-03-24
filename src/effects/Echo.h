@@ -13,6 +13,7 @@
 #define __AUDACITY_EFFECT_ECHO__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class ShuttleGui;
 
@@ -21,6 +22,8 @@ using Floats = ArrayOf<float>;
 class EffectEcho final : public Effect
 {
 public:
+   static inline EffectEcho *
+   FetchParameters(EffectEcho &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectEcho();
@@ -35,8 +38,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // EffectProcessor implementation
 
@@ -48,7 +49,6 @@ public:
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
@@ -63,6 +63,8 @@ public: // TODO remove
    Floats history;
    size_t histPos;
    size_t histLen;
+
+   const EffectParameterMethods& Parameters() const override;
 };
 
 #endif // __AUDACITY_EFFECT_ECHO__

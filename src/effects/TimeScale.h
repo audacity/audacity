@@ -16,6 +16,7 @@
 #if USE_SBSMS
 
 #include "SBSMSEffect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxTextCtrl;
@@ -24,6 +25,8 @@ class ShuttleGui;
 class EffectTimeScale final : public EffectSBSMS
 {
 public:
+   static inline EffectTimeScale *
+   FetchParameters(EffectTimeScale &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectTimeScale();
@@ -38,12 +41,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -103,6 +100,7 @@ public: // TODO remove
    wxTextCtrl *m_pTextCtrl_PitchPercentChangeStart;
    wxTextCtrl *m_pTextCtrl_PitchPercentChangeEnd;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 };
 

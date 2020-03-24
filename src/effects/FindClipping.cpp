@@ -27,7 +27,6 @@
 
 #include <wx/intl.h>
 
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -41,6 +40,13 @@ EffectParameter Start{ &EffectFindClipping::mStart,
 EffectParameter Stop{ &EffectFindClipping::mStop,
    L"Duty Cycle End",    3,    1,    INT_MAX, 1   };
 }
+const EffectParameterMethods& EffectFindClipping::Parameters() const
+{
+   static CapturedParameters<EffectFindClipping> parameters{
+      Start, Stop
+   };
+   return parameters;
+}
 
 const ComponentInterfaceSymbol EffectFindClipping::Symbol
 { XO("Find Clipping") };
@@ -49,8 +55,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectFindClipping > reg; }
 
 EffectFindClipping::EffectFindClipping()
 {
-   mStart = Start.def;
-   mStop = Stop.def;
+   Parameters().Reset(*this);
 }
 
 EffectFindClipping::~EffectFindClipping()
@@ -79,32 +84,6 @@ ManualPageID EffectFindClipping::ManualPage() const
 EffectType EffectFindClipping::GetType() const
 {
    return EffectTypeAnalyze;
-}
-
-// EffectProcessor implementation
-bool EffectFindClipping::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mStart, Start );
-   S.SHUTTLE_PARAM( mStop, Stop );
-   return true;
-}
-
-bool EffectFindClipping::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(Start.key, mStart);
-   parms.Write(Stop.key, mStop);
-
-   return true;
-}
-
-bool EffectFindClipping::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(Start);
-   ReadParam(Stop);
-
-   mStart = Start;
-   mStop = Stop;
-
-   return true;
 }
 
 // Effect implementation

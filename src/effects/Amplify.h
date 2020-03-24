@@ -16,6 +16,7 @@
 #define __AUDACITY_EFFECT_AMPLIFY__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 
 class wxSlider;
@@ -26,6 +27,8 @@ class ShuttleGui;
 class EffectAmplify final : public Effect
 {
 public:
+   static inline EffectAmplify *
+   FetchParameters(EffectAmplify &e, EffectSettings &){ return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectAmplify();
@@ -40,8 +43,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
    // EffectProcessor implementation
@@ -51,7 +52,6 @@ public:
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -87,6 +87,8 @@ public: // TODO remove
    wxTextCtrl *mAmpT;
    wxTextCtrl *mNewPeakT;
    wxCheckBox *mClip;
+
+   const EffectParameterMethods& Parameters() const override;
 
    DECLARE_EVENT_TABLE()
 };

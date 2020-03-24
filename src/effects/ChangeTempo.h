@@ -22,6 +22,7 @@
 #endif
 
 #include "SoundTouchEffect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxCheckBox;
@@ -31,6 +32,8 @@ class ShuttleGui;
 class EffectChangeTempo final : public EffectSoundTouch
 {
 public:
+   static inline EffectChangeTempo *
+   FetchParameters(EffectChangeTempo &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectChangeTempo();
@@ -46,12 +49,6 @@ public:
 
    EffectType GetType() const override;
    bool SupportsAutomation() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -104,6 +101,7 @@ public: // TODO remove
    wxCheckBox *   mUseSBSMSCheckBox;
 #endif
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 };
 

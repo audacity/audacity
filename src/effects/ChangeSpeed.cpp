@@ -26,7 +26,6 @@
 #include "../LabelTrack.h"
 #include "Prefs.h"
 #include "Resample.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -69,6 +68,13 @@ namespace {
 EffectParameter Percentage{ &EffectChangeSpeed::m_PercentChange,
    L"Percentage",    0.0,  -99.0,   4900.0,  1  };
 }
+const EffectParameterMethods& EffectChangeSpeed::Parameters() const
+{
+   static CapturedParameters<EffectChangeSpeed> parameters{
+      Percentage
+   };
+   return parameters;
+}
 
 // We warp the slider to go up to 400%, but user can enter higher values
 static const double kSliderMax = 100.0;         // warped above zero to actually go up to 400%
@@ -95,8 +101,7 @@ END_EVENT_TABLE()
 
 EffectChangeSpeed::EffectChangeSpeed()
 {
-   // effect parameters
-   m_PercentChange = Percentage.def;
+   Parameters().Reset(*this);
 
    mFromVinyl = kVinyl_33AndAThird;
    mToVinyl = kVinyl_33AndAThird;
@@ -135,28 +140,6 @@ ManualPageID EffectChangeSpeed::ManualPage() const
 EffectType EffectChangeSpeed::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectChangeSpeed::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( m_PercentChange, Percentage );
-   return true;
-}
-
-bool EffectChangeSpeed::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(Percentage.key, m_PercentChange);
-
-   return true;
-}
-
-bool EffectChangeSpeed::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(Percentage);
-
-   m_PercentChange = Percentage;
-
-   return true;
 }
 
 bool EffectChangeSpeed::LoadFactoryDefaults()

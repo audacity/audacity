@@ -57,7 +57,6 @@ a graph for EffectScienFilter.
 #include "PlatformCompatibility.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "Theme.h"
 #include "../WaveTrack.h"
@@ -134,6 +133,20 @@ EffectParameter Passband{ &EffectScienFilter::mRipple,
 EffectParameter Stopband{ &EffectScienFilter::mStopbandRipple,
    L"StopbandRipple",   30.0f,          0.0,  100.0,            1  };
 }
+const EffectParameterMethods& EffectScienFilter::Parameters() const
+{
+   static CapturedParameters<EffectScienFilter> parameters{
+      [](EffectScienFilter &, EffectScienFilter &e, bool updating){
+         if (updating) {
+            e.mOrderIndex = e.mOrder - 1;
+            e.CalcFilter();
+         }
+         return true;
+      },
+      Type, Subtype, Order, Cutoff, Passband, Stopband
+   };
+   return parameters;
+}
 
 //----------------------------------------------------------------------------
 // EffectScienFilter
@@ -162,13 +175,7 @@ END_EVENT_TABLE()
 
 EffectScienFilter::EffectScienFilter()
 {
-   mOrder = Order.def;
-   mFilterType = Type.def;
-   mFilterSubtype = Subtype.def;
-   mCutoff = Cutoff.def;
-   mRipple = Passband.def;
-   mStopbandRipple = Stopband.def;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 
    mOrderIndex = mOrder - 1;
@@ -242,50 +249,6 @@ size_t EffectScienFilter::ProcessBlock(EffectSettings &,
    }
 
    return blockLen;
-}
-bool EffectScienFilter::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mFilterType, Type );
-   S.SHUTTLE_PARAM( mFilterSubtype, Subtype );
-   S.SHUTTLE_PARAM( mOrder, Order );
-   S.SHUTTLE_PARAM( mCutoff, Cutoff );
-   S.SHUTTLE_PARAM( mRipple, Passband );
-   S.SHUTTLE_PARAM( mStopbandRipple, Stopband );
-   return true;
-}
-
-bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(Type.key, kTypeStrings[mFilterType].Internal());
-   parms.Write(Subtype.key, kSubTypeStrings[mFilterSubtype].Internal());
-   parms.Write(Order.key, mOrder);
-   parms.WriteFloat(Cutoff.key, mCutoff);
-   parms.WriteFloat(Passband.key, mRipple);
-   parms.WriteFloat(Stopband.key, mStopbandRipple);
-
-   return true;
-}
-
-bool EffectScienFilter::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
-   ReadAndVerifyEnum(Subtype, kSubTypeStrings, nSubTypes);
-   ReadParam(Order);
-   ReadParam(Cutoff);
-   ReadParam(Passband);
-   ReadParam(Stopband);
-
-   mFilterType = Type;
-   mFilterSubtype = Subtype;
-   mOrder = Order;
-   mCutoff = Cutoff;
-   mRipple = Passband;
-   mStopbandRipple = Stopband;
-
-   mOrderIndex = mOrder - 1;
-
-   CalcFilter();
-
-   return true;
 }
 
 // Effect implementation

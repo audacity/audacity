@@ -21,6 +21,7 @@
 #include "Effect.h"
 #include "Biquad.h"
 #include "EBUR128.h"
+#include "../ShuttleAutomation.h"
 
 class wxChoice;
 class wxSimplebook;
@@ -29,6 +30,8 @@ class ShuttleGui;
 class EffectLoudness final : public Effect
 {
 public:
+   static inline EffectLoudness *
+   FetchParameters(EffectLoudness &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectLoudness();
@@ -43,12 +46,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -109,6 +106,7 @@ public: // TODO remove
    size_t mTrackBufferCapacity;
    bool   mProcStereo;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 };
 

@@ -39,7 +39,6 @@
 
 #include "AColor.h"
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "Theme.h"
 #include "float_cast.h"
@@ -73,6 +72,16 @@ EffectParameter Normalize{ &EffectCompressor::mNormalize,
 EffectParameter UsePeak{ &EffectCompressor::mUsePeak,
    L"UsePeak",       false,   false,   true,    1   };
 }
+const EffectParameterMethods& EffectCompressor::Parameters() const
+{
+   static CapturedParameters<EffectCompressor> parameters{
+      Threshold, NoiseFloor, Ratio, // positive number > 1.0
+      AttackTime, // seconds
+      ReleaseTime, // seconds
+      Normalize, UsePeak
+   };
+   return parameters;
+}
 
 //----------------------------------------------------------------------------
 // EffectCompressor
@@ -89,13 +98,7 @@ END_EVENT_TABLE()
 
 EffectCompressor::EffectCompressor()
 {
-   mThresholdDB = Threshold.def;
-   mNoiseFloorDB = NoiseFloor.def;
-   mAttackTime = AttackTime.def;          // seconds
-   mDecayTime = ReleaseTime.def;          // seconds
-   mRatio = Ratio.def;                    // positive number > 1.0
-   mNormalize = Normalize.def;
-   mUsePeak = UsePeak.def;
+   Parameters().Reset(*this);
 
    mThreshold = 0.25;
    mNoiseFloor = 0.01;
@@ -131,52 +134,6 @@ ManualPageID EffectCompressor::ManualPage() const
 EffectType EffectCompressor::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectCompressor::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mThresholdDB, Threshold );
-   S.SHUTTLE_PARAM( mNoiseFloorDB, NoiseFloor );
-   S.SHUTTLE_PARAM( mRatio, Ratio);
-   S.SHUTTLE_PARAM( mAttackTime, AttackTime);
-   S.SHUTTLE_PARAM( mDecayTime, ReleaseTime);
-   S.SHUTTLE_PARAM( mNormalize, Normalize);
-   S.SHUTTLE_PARAM( mUsePeak, UsePeak);
-   return true;
-}
-
-bool EffectCompressor::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(Threshold.key, mThresholdDB);
-   parms.Write(NoiseFloor.key, mNoiseFloorDB);
-   parms.Write(Ratio.key, mRatio);
-   parms.Write(AttackTime.key, mAttackTime);
-   parms.Write(ReleaseTime.key, mDecayTime);
-   parms.Write(Normalize.key, mNormalize);
-   parms.Write(UsePeak.key, mUsePeak);
-
-   return true;
-}
-
-bool EffectCompressor::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(Threshold);
-   ReadParam(NoiseFloor);
-   ReadParam(Ratio);
-   ReadParam(AttackTime);
-   ReadParam(ReleaseTime);
-   ReadParam(Normalize);
-   ReadParam(UsePeak);
-
-   mThresholdDB = Threshold;
-   mNoiseFloorDB = NoiseFloor;
-   mRatio = Ratio;
-   mAttackTime = AttackTime;
-   mDecayTime = ReleaseTime;
-   mNormalize = Normalize;
-   mUsePeak = UsePeak;
-
-   return true;
 }
 
 // Effect Implementation

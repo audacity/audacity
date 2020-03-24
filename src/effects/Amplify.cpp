@@ -35,7 +35,6 @@
 #include <wx/valtext.h>
 #include <wx/log.h>
 
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
@@ -51,10 +50,35 @@ enum
 namespace {
 EffectParameter Ratio{ &EffectAmplify::mRatio,
    L"Ratio",            0.9f,       0.003162f,  316.227766f,   1.0f  };
+// Amp is not saved in settings!
 EffectParameter Amp{ &EffectAmplify::mAmp,
    L"",                -0.91515f,  -50.0f,     50.0f,         10.0f };
 EffectParameter Clipping{ &EffectAmplify::mCanClip,
    L"AllowClipping",    false,    false,  true,    1  };
+}
+const EffectParameterMethods& EffectAmplify::Parameters() const
+{
+   static CapturedParameters<EffectAmplify> parameters{
+      // Interactive case
+      Ratio, Clipping
+   };
+
+   static CapturedParameters<EffectAmplify> batchParameters{
+      // If invoking Amplify from a macro, mCanClip is not a parameter
+      // but is always true
+      [](EffectAmplify &, EffectAmplify &e, bool) {
+         e.mCanClip = true;
+         return true;
+      },
+      Ratio
+   };
+
+   // Parameters differ depending on batch mode.  Option to disable clipping
+   // is interactive only.
+   if (IsBatchProcessing())
+      return parameters;
+   else
+      return batchParameters;
 }
 
 //
@@ -76,9 +100,9 @@ END_EVENT_TABLE()
 EffectAmplify::EffectAmplify()
 {
    mAmp = Amp.def;
-   mRatio = DB_TO_LINEAR(mAmp);
+   // Ratio.def == DB_TO_LINEAR(Amp.def)
+   Parameters().Reset(*this);
    mRatioClip = 0.0;
-   mCanClip = false;
    mPeak = 0.0;
 
    SetLinearEffectFlag(true);
@@ -134,36 +158,6 @@ size_t EffectAmplify::ProcessBlock(EffectSettings &,
    }
 
    return blockLen;
-}
-bool EffectAmplify::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mRatio, Ratio );
-   if (!IsBatchProcessing())
-      S.SHUTTLE_PARAM( mCanClip, Clipping );
-   return true;
-}
-
-bool EffectAmplify::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.WriteFloat(Ratio.key, mRatio);
-   if (!IsBatchProcessing())
-      parms.WriteFloat(Clipping.key, mCanClip);
-
-   return true;
-}
-
-bool EffectAmplify::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(Ratio);
-   mRatio = Ratio;
-
-   if (!IsBatchProcessing()){
-      ReadParam(Clipping);
-      mCanClip = Clipping;
-   } else {
-      mCanClip = true;
-   }
-
-   return true;
 }
 
 bool EffectAmplify::LoadFactoryDefaults()

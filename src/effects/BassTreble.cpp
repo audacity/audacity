@@ -29,7 +29,6 @@
 #include <wx/slider.h>
 
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
@@ -51,6 +50,13 @@ EffectParameter Gain{ &EffectBassTreble::mGain,
    L"Gain",          0.0,     -30.0,   30.0,    1  };
 EffectParameter Link{ &EffectBassTreble::mLink,
    L"Link Sliders",  false,    false,  true,    1  };
+}
+const EffectParameterMethods& EffectBassTreble::Parameters() const
+{
+   static CapturedParameters<EffectBassTreble> parameters{
+      Bass, Treble, Gain, Link
+   };
+   return parameters;
 }
 
 // Used to communicate the type of the filter.
@@ -77,10 +83,7 @@ END_EVENT_TABLE()
 
 EffectBassTreble::EffectBassTreble()
 {
-   mBass = Bass.def;
-   mTreble = Treble.def;
-   mGain = Gain.def;
-   mLink = Link.def;
+   Parameters().Reset(*this);
 
    SetLinearEffectFlag(true);
 }
@@ -177,39 +180,6 @@ size_t EffectBassTreble::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
-}
-
-bool EffectBassTreble::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mBass, Bass );
-   S.SHUTTLE_PARAM( mTreble, Treble );
-   S.SHUTTLE_PARAM( mGain, Gain );
-   S.SHUTTLE_PARAM( mLink, Link );
-   return true;
-}
-
-bool EffectBassTreble::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(Bass.key, mBass);
-   parms.Write(Treble.key, mTreble);
-   parms.Write(Gain.key, mGain);
-   parms.Write(Link.key, mLink);
-
-   return true;
-}
-
-bool EffectBassTreble::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(Bass);
-   ReadParam(Treble);
-   ReadParam(Gain);
-   ReadParam(Link);
-
-   mBass = Bass;
-   mTreble = Treble;
-   mGain = Gain;
-   mLink = Link;
-
-   return true;
 }
 
 bool EffectBassTreble::CheckWhetherSkipEffect()

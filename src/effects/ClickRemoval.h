@@ -17,6 +17,7 @@
 #define __AUDACITY_EFFECT_CLICK_REMOVAL__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxTextCtrl;
@@ -26,6 +27,8 @@ class ShuttleGui;
 class EffectClickRemoval final : public Effect
 {
 public:
+   static inline EffectClickRemoval *
+   FetchParameters(EffectClickRemoval &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectClickRemoval();
@@ -40,12 +43,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -80,6 +77,7 @@ public: // TODO remove
    wxTextCtrl *mWidthT;
    wxTextCtrl *mThreshT;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 };
 

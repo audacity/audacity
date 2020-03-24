@@ -26,7 +26,6 @@
 #include <wx/intl.h>
 #include <wx/valgen.h>
 
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "FFT.h"
 #include "../widgets/valnum.h"
@@ -40,6 +39,13 @@ EffectParameter Amount{ &EffectPaulstretch::mAmount,
    L"Stretch Factor",   10.0f,    1.0,     FLT_MAX, 1   };
 EffectParameter Time{ &EffectPaulstretch::mTime_resolution,
    L"Time Resolution",  0.25f,   0.00099f,  FLT_MAX, 1   };
+}
+const EffectParameterMethods& EffectPaulstretch::Parameters() const
+{
+   static CapturedParameters<EffectPaulstretch> parameters{
+      Amount, Time
+   };
+   return parameters;
 }
 
 /// \brief Class that helps EffectPaulStretch.  It does the FFTs and inner loop 
@@ -96,8 +102,7 @@ END_EVENT_TABLE()
 
 EffectPaulstretch::EffectPaulstretch()
 {
-   mAmount = Amount.def;
-   mTime_resolution = Time.def;
+   Parameters().Reset(*this);
 
    SetLinearEffectFlag(true);
 }
@@ -128,32 +133,6 @@ ManualPageID EffectPaulstretch::ManualPage() const
 EffectType EffectPaulstretch::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectPaulstretch::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mAmount, Amount );
-   S.SHUTTLE_PARAM( mTime_resolution, Time );
-   return true;
-}
-
-bool EffectPaulstretch::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.WriteFloat(Amount.key, mAmount);
-   parms.WriteFloat(Time.key, mTime_resolution);
-
-   return true;
-}
-
-bool EffectPaulstretch::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(Amount);
-   ReadParam(Time);
-
-   mAmount = Amount;
-   mTime_resolution = Time;
-
-   return true;
 }
 
 // Effect implementation

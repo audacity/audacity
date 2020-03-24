@@ -15,6 +15,7 @@
 #define __AUDACITY_EFFECT_DTMF__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxStaticText;
@@ -25,6 +26,9 @@ class ShuttleGui;
 class EffectDtmf final : public Effect
 {
 public:
+   struct Settings;
+   static inline Settings *
+   FetchParameters(EffectDtmf &e, EffectSettings &) { return &e.mSettings; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectDtmf();
@@ -39,8 +43,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // EffectProcessor implementation
 
@@ -50,7 +52,6 @@ public:
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -92,6 +93,7 @@ public:
 
 private:
    Settings mSettings;
+   const EffectParameterMethods& Parameters() const override;
 };
 
 #endif

@@ -24,19 +24,36 @@
 #include <wx/stattext.h>
 
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/valnum.h"
 
 
 namespace {
+wxString AllSymbols();
+
 EffectParameter Sequence{ &EffectDtmf::Settings::dtmfSequence,
    L"Sequence",   EffectDtmf::Settings::DefaultSequence, L"", L"", L""};
 EffectParameter DutyCycle{ &EffectDtmf::Settings::dtmfDutyCycle,
    L"Duty Cycle", EffectDtmf::Settings::DefaultDutyCycle, 0.0,     100.0,   10.0   };
 EffectParameter Amplitude{ &EffectDtmf::Settings::dtmfAmplitude,
    L"Amplitude",  EffectDtmf::Settings::DefaultAmplitude, 0.001,   1.0,     1      };
+}
+const EffectParameterMethods& EffectDtmf::Parameters() const
+{
+   static CapturedParameters<EffectDtmf> parameters{
+      [](EffectDtmf &effect, Settings &s, bool updating){
+         if (updating) {
+            if (s.dtmfSequence.find_first_not_of(AllSymbols())
+                != wxString::npos)
+               return false;
+            s.Recalculate(effect);
+         }
+         return true;
+      },
+      Sequence, DutyCycle, Amplitude
+   };
+   return parameters;
 }
 
 static const double kFadeInOut = 250.0; // used for fadein/out needed to remove clicking noise
@@ -56,6 +73,16 @@ const static wxChar *kSymbols[] =
    wxT("y"), wxT("z")
 };
 
+namespace {
+wxString AllSymbols()
+{
+   wxString symbols;
+   for (unsigned int i = 0; i < WXSIZEOF(kSymbols); ++i)
+      symbols += kSymbols[i];
+   return symbols;
+}
+}
+
 //
 // EffectDtmf
 //
@@ -67,6 +94,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectDtmf > reg; }
 
 EffectDtmf::EffectDtmf()
 {
+   Parameters().Reset(*this);
 }
 
 EffectDtmf::~EffectDtmf()
@@ -227,52 +255,6 @@ size_t EffectDtmf::ProcessBlock(EffectSettings &,
    }
 
    return processed;
-}
-bool EffectDtmf::VisitSettings( SettingsVisitor & S ){
-   auto &dtmfSettings = mSettings;
-
-   S.SHUTTLE_PARAM( dtmfSettings.dtmfSequence, Sequence );
-   S.SHUTTLE_PARAM( dtmfSettings.dtmfDutyCycle, DutyCycle );
-   S.SHUTTLE_PARAM( dtmfSettings.dtmfAmplitude, Amplitude );
-   return true;
-}
-
-bool EffectDtmf::GetAutomationParameters(CommandParameters & parms) const
-{
-   auto &dtmfSettings = mSettings;
-
-   parms.Write(Sequence.key, dtmfSettings.dtmfSequence);
-   parms.Write(DutyCycle.key, dtmfSettings.dtmfDutyCycle);
-   parms.Write(Amplitude.key, dtmfSettings.dtmfAmplitude);
-   return true;
-}
-
-bool EffectDtmf::SetAutomationParameters(const CommandParameters & parms)
-{
-   auto &dtmfSettings = mSettings;
-
-   ReadParam(DutyCycle);
-   ReadParam(Amplitude);
-   ReadParam(Sequence);
-
-   wxString symbols;
-   for (unsigned int i = 0; i < WXSIZEOF(kSymbols); i++)
-   {
-      symbols += kSymbols[i];
-   }
-
-   if (Sequence.cache.find_first_not_of(symbols) != wxString::npos)
-   {
-      return false;
-   }
-
-   dtmfSettings.dtmfDutyCycle = DutyCycle;
-   dtmfSettings.dtmfAmplitude = Amplitude;
-   dtmfSettings.dtmfSequence = Sequence;
-   
-   dtmfSettings.Recalculate(*this);
-
-   return true;
 }
 
 namespace {

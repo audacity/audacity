@@ -25,7 +25,6 @@
 #include <wx/valgen.h>
 
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -56,6 +55,13 @@ EnumParameter Type{ &EffectNoise::mType,
 EffectParameter Amp{ &EffectNoise::mAmp,
    L"Amplitude",  0.8,     0.0,  1.0,           1  };
 }
+const EffectParameterMethods& EffectNoise::Parameters() const
+{
+   static CapturedParameters<EffectNoise> parameters{
+      Type, Amp
+   };
+   return parameters;
+}
 
 //
 // EffectNoise
@@ -66,10 +72,10 @@ const ComponentInterfaceSymbol EffectNoise::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectNoise > reg; }
 
+
 EffectNoise::EffectNoise()
 {
-   mType = Type.def;
-   mAmp = Amp.def;
+   Parameters().Reset(*this);
 
    SetLinearEffectFlag(true);
 
@@ -175,31 +181,6 @@ size_t EffectNoise::ProcessBlock(EffectSettings &,
    }
 
    return size;
-}
-
-bool EffectNoise::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mType, Type );
-   S.SHUTTLE_PARAM( mAmp, Amp );
-   return true;
-}
-
-bool EffectNoise::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(Type.key, kTypeStrings[mType].Internal());
-   parms.Write(Amp.key, mAmp);
-
-   return true;
-}
-
-bool EffectNoise::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
-   ReadParam(Amp);
-
-   mType = Type;
-   mAmp = Amp;
-
-   return true;
 }
 
 // Effect implementation

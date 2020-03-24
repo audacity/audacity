@@ -28,7 +28,6 @@
 #include <wx/intl.h>
 
 #include "../ShuttleGui.h"
-#include "../Shuttle.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 
@@ -38,6 +37,13 @@ EffectParameter Delay{ &EffectEcho::delay,
 EffectParameter Decay{ &EffectEcho::decay,
    L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
 }
+const EffectParameterMethods& EffectEcho::Parameters() const
+{
+   static CapturedParameters<EffectEcho> parameters{
+      Delay, Decay
+   };
+   return parameters;
+}
 
 const ComponentInterfaceSymbol EffectEcho::Symbol
 { XO("Echo") };
@@ -46,9 +52,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectEcho > reg; }
 
 EffectEcho::EffectEcho()
 {
-   delay = Delay.def;
-   decay = Decay.def;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 }
 
@@ -142,32 +146,6 @@ size_t EffectEcho::ProcessBlock(EffectSettings &,
    }
 
    return blockLen;
-}
-
-bool EffectEcho::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( delay, Delay );
-   S.SHUTTLE_PARAM( decay, Decay );
-   return true;
-}
-
-
-bool EffectEcho::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.WriteFloat(Delay.key, delay);
-   parms.WriteFloat(Decay.key, decay);
-
-   return true;
-}
-
-bool EffectEcho::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(Delay);
-   ReadParam(Decay);
-
-   delay = Delay;
-   decay = Decay;
-
-   return true;
 }
 
 std::unique_ptr<EffectUIValidator>

@@ -11,12 +11,15 @@
 #define __AUDACITY_EFFECT_PAULSTRETCH__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class ShuttleGui;
 
 class EffectPaulstretch final : public Effect
 {
 public:
+   static inline EffectPaulstretch *
+   FetchParameters(EffectPaulstretch &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectPaulstretch();
@@ -31,12 +34,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -59,6 +56,7 @@ public: // TODO remove
    float mTime_resolution;  //seconds
    double m_t1;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 };
 

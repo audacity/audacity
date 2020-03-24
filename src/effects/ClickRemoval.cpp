@@ -35,7 +35,6 @@
 #include <wx/valgen.h>
 
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
@@ -54,6 +53,13 @@ EffectParameter Threshold{ &EffectClickRemoval::mThresholdLevel,
 EffectParameter Width{ &EffectClickRemoval::mClickWidth,
    L"Width",      20,      0,       40,      1  };
 }
+const EffectParameterMethods& EffectClickRemoval::Parameters() const
+{
+   static CapturedParameters<EffectClickRemoval> parameters{
+      Threshold, Width
+   };
+   return parameters;
+}
 
 const ComponentInterfaceSymbol EffectClickRemoval::Symbol
 { XO("Click Removal") };
@@ -69,8 +75,7 @@ END_EVENT_TABLE()
 
 EffectClickRemoval::EffectClickRemoval()
 {
-   mThresholdLevel = Threshold.def;
-   mClickWidth = Width.def;
+   Parameters().Reset(*this);
 
    SetLinearEffectFlag(false);
 
@@ -104,32 +109,6 @@ ManualPageID EffectClickRemoval::ManualPage() const
 EffectType EffectClickRemoval::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectClickRemoval::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mThresholdLevel, Threshold );
-   S.SHUTTLE_PARAM( mClickWidth, Width );
-   return true;
-}
-
-bool EffectClickRemoval::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(Threshold.key, mThresholdLevel);
-   parms.Write(Width.key, mClickWidth);
-
-   return true;
-}
-
-bool EffectClickRemoval::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(Threshold);
-   ReadParam(Width);
-
-   mThresholdLevel = Threshold;
-   mClickWidth = Width;
-
-   return true;
 }
 
 // Effect implementation

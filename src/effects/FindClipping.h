@@ -17,10 +17,13 @@ class wxString;
 class LabelTrack;
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class EffectFindClipping final : public Effect
 {
 public:
+   static inline EffectFindClipping *
+   FetchParameters(EffectFindClipping &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectFindClipping();
@@ -35,12 +38,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-
-   // EffectProcessor implementation
-
-   bool VisitSettings( SettingsVisitor & S ) override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // Effect implementation
 
@@ -63,6 +60,8 @@ public: // TODO remove
    int mStop;    ///< Using int rather than sampleCount because values are only ever small numbers
    // To do: eliminate this
    EffectSettingsAccessPtr mpAccess;
+
+   const EffectParameterMethods& Parameters() const override;
 };
 
 #endif // __AUDACITY_EFFECT_FINDCLIPPING__

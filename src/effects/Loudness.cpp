@@ -26,7 +26,6 @@
 #include "Internat.h"
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
@@ -59,6 +58,13 @@ EffectParameter DualMono{ &EffectLoudness::mDualMono,
 EffectParameter NormalizeTo{ &EffectLoudness::mNormalizeTo,
    L"NormalizeTo",         (int)kLoudness , 0    ,   nAlgos-1, 1  };
 }
+const EffectParameterMethods& EffectLoudness::Parameters() const
+{
+   static CapturedParameters<EffectLoudness> parameters{
+      StereoInd, LUFSLevel, RMSLevel, DualMono, NormalizeTo
+   };
+   return parameters;
+}
 
 BEGIN_EVENT_TABLE(EffectLoudness, wxEvtHandler)
    EVT_CHOICE(wxID_ANY, EffectLoudness::OnChoice)
@@ -73,12 +79,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectLoudness > reg; }
 
 EffectLoudness::EffectLoudness()
 {
-   mStereoInd = StereoInd.def;
-   mLUFSLevel = LUFSLevel.def;
-   mRMSLevel = RMSLevel.def;
-   mDualMono = DualMono.def;
-   mNormalizeTo = NormalizeTo.def;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(false);
 }
 
@@ -108,45 +109,6 @@ ManualPageID EffectLoudness::ManualPage() const
 EffectType EffectLoudness::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectLoudness::VisitSettings( SettingsVisitor & S )
-{
-   S.SHUTTLE_PARAM( mStereoInd, StereoInd );
-   S.SHUTTLE_PARAM( mLUFSLevel, LUFSLevel );
-   S.SHUTTLE_PARAM( mRMSLevel, RMSLevel );
-   S.SHUTTLE_PARAM( mDualMono, DualMono );
-   S.SHUTTLE_PARAM( mNormalizeTo, NormalizeTo );
-   return true;
-}
-
-bool EffectLoudness::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(StereoInd.key, mStereoInd);
-   parms.Write(LUFSLevel.key, mLUFSLevel);
-   parms.Write(RMSLevel.key, mRMSLevel);
-   parms.Write(DualMono.key, mDualMono);
-   parms.Write(NormalizeTo.key, mNormalizeTo);
-
-   return true;
-}
-
-bool EffectLoudness::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(StereoInd);
-   ReadParam(LUFSLevel);
-   ReadParam(RMSLevel);
-   ReadParam(DualMono);
-   ReadParam(NormalizeTo);
-
-   mStereoInd = StereoInd;
-   mLUFSLevel = LUFSLevel;
-   mRMSLevel = RMSLevel;
-   mDualMono = DualMono;
-   mNormalizeTo = NormalizeTo;
-
-   return true;
 }
 
 // Effect implementation

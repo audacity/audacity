@@ -13,6 +13,7 @@
 #define __AUDACITY_EFFECT_REVERB__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxCheckBox;
 class wxSlider;
@@ -24,6 +25,9 @@ struct Reverb_priv_t;
 class EffectReverb final : public Effect
 {
 public:
+   struct Params;
+   static inline Params *
+   FetchParameters(EffectReverb &e, EffectSettings &) { return &e.mParams; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectReverb();
@@ -52,8 +56,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
 
@@ -67,7 +69,6 @@ public:
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -121,6 +122,7 @@ private:
 
    wxCheckBox  *mWetOnlyC;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 };
 

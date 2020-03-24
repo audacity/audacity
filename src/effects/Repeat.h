@@ -12,6 +12,7 @@
 #define __AUDACITY_EFFECT_REPEAT__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxTextCtrl;
 class ShuttleGui;
@@ -21,6 +22,8 @@ class wxStaticText;
 class EffectRepeat final : public Effect
 {
 public:
+   static inline EffectRepeat *
+   FetchParameters(EffectRepeat &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectRepeat();
@@ -35,12 +38,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -63,6 +60,7 @@ public: // TODO remove
    wxStaticText *mCurrentTime;
    wxStaticText *mTotalTime;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 };
 

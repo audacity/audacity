@@ -28,7 +28,6 @@
 
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
@@ -44,6 +43,13 @@ EffectParameter ApplyGain{ &EffectNormalize::mGain,
 EffectParameter StereoInd{ &EffectNormalize::mStereoInd,
    L"StereoIndependent",   false,   false,   true, 1  };
 }
+const EffectParameterMethods& EffectNormalize::Parameters() const
+{
+   static CapturedParameters<EffectNormalize> parameters{
+      PeakLevel, ApplyGain, RemoveDC, StereoInd
+   };
+   return parameters;
+}
 
 const ComponentInterfaceSymbol EffectNormalize::Symbol
 { XO("Normalize") };
@@ -57,11 +63,7 @@ END_EVENT_TABLE()
 
 EffectNormalize::EffectNormalize()
 {
-   mPeakLevel = PeakLevel.def;
-   mDC = RemoveDC.def;
-   mGain = ApplyGain.def;
-   mStereoInd = StereoInd.def;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(false);
 }
 
@@ -91,40 +93,6 @@ ManualPageID EffectNormalize::ManualPage() const
 EffectType EffectNormalize::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectNormalize::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mPeakLevel, PeakLevel );
-   S.SHUTTLE_PARAM( mGain, ApplyGain );
-   S.SHUTTLE_PARAM( mDC, RemoveDC );
-   S.SHUTTLE_PARAM( mStereoInd, StereoInd );
-   return true;
-}
-
-bool EffectNormalize::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(PeakLevel.key, mPeakLevel);
-   parms.Write(ApplyGain.key, mGain);
-   parms.Write(RemoveDC.key, mDC);
-   parms.Write(StereoInd.key, mStereoInd);
-
-   return true;
-}
-
-bool EffectNormalize::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(PeakLevel);
-   ReadParam(ApplyGain);
-   ReadParam(RemoveDC);
-   ReadParam(StereoInd);
-
-   mPeakLevel = PeakLevel;
-   mGain = ApplyGain;
-   mDC = RemoveDC;
-   mStereoInd = StereoInd;
-
-   return true;
 }
 
 // Effect implementation

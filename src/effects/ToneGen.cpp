@@ -31,7 +31,6 @@ frequency changes smoothly during the tone.
 
 #include "Project.h"
 #include "ProjectRate.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -88,6 +87,27 @@ EnumParameter Waveform{ &EffectToneGen::mWaveform,
 EnumParameter Interp{ &EffectToneGen::mInterpolation,
    L"Interpolation", 0,       0,       nInterpolations - 1, 1, kInterStrings, nInterpolations  };
 }
+const EffectParameterMethods& EffectToneGen::Parameters() const
+{
+   static const auto postSet =
+   [](EffectToneGen &, EffectToneGen &e, bool updating) {
+      if (updating)
+         e.PostSet();
+      return true;
+   };
+   static CapturedParameters<EffectToneGen> chirpParameters{
+      postSet,
+      StartFreq, EndFreq, StartAmp, EndAmp, Waveform, Interp
+   };
+   static CapturedParameters<EffectToneGen> toneParameters{
+      postSet,
+      Frequency, Amplitude, Waveform, Interp
+   };
+   if (mChirp)
+      return chirpParameters;
+   else
+      return toneParameters;
+}
 
 //
 // EffectToneGen
@@ -108,18 +128,12 @@ BEGIN_EVENT_TABLE(EffectToneGen, wxEvtHandler)
 END_EVENT_TABLE();
 
 EffectToneGen::EffectToneGen(bool isChirp)
+   : mChirp{ isChirp }
 {
+   Parameters().Reset(*this);
+
    wxASSERT(nWaveforms == WXSIZEOF(kWaveStrings));
    wxASSERT(nInterpolations == WXSIZEOF(kInterStrings));
-
-   mChirp = isChirp;
-
-   mWaveform = Waveform.def;
-   mFrequency0 = StartFreq.def;
-   mFrequency1 = EndFreq.def;
-   mAmplitude0 = StartAmp.def;
-   mAmplitude1 = EndAmp.def;
-   mInterpolation = Interp.def;
 
    // Chirp varies over time so must use selected duration.
    // TODO: When previewing, calculate only the first 'preview length'.
@@ -281,88 +295,18 @@ size_t EffectToneGen::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool EffectToneGen::VisitSettings( SettingsVisitor & S ){
-   if( mChirp ){
-      S.SHUTTLE_PARAM( mFrequency0, StartFreq  );
-      S.SHUTTLE_PARAM( mFrequency1, EndFreq  );
-      S.SHUTTLE_PARAM( mAmplitude0, StartAmp  );
-      S.SHUTTLE_PARAM( mAmplitude1, EndAmp  );
-   } else {
-      S.SHUTTLE_PARAM( mFrequency0, Frequency  );
-      S.SHUTTLE_PARAM( mAmplitude0, Amplitude );
-      // Slightly hacky way to set freq and ampl
-      // since we do this whatever query to params was made.
+void EffectToneGen::PostSet()
+{
+   if (!mChirp) {
       mFrequency1 = mFrequency0;
       mAmplitude1 = mAmplitude0;
    }
-   S.SHUTTLE_PARAM( mWaveform, Waveform );
-   S.SHUTTLE_PARAM( mInterpolation, Interp );
-
-
-//   double freqMax = (FindProject() ? FindProject()->GetRate() : 44100.0) / 2.0;
-//   mFrequency1 = std::clamp<double>(mFrequency[1], EndFreq.min, freqMax);
-
-
-   return true;
-}
-
-bool EffectToneGen::GetAutomationParameters(CommandParameters & parms) const
-{
-   if (mChirp)
-   {
-      parms.Write(StartFreq.key, mFrequency0);
-      parms.Write(EndFreq.key, mFrequency1);
-      parms.Write(StartAmp.key, mAmplitude0);
-      parms.Write(EndAmp.key, mAmplitude1);
-   }
-   else
-   {
-      parms.Write(Frequency.key, mFrequency0);
-      parms.Write(Amplitude.key, mAmplitude0);
-   }
-
-   parms.Write(Waveform.key, kWaveStrings[mWaveform].Internal());
-   parms.Write(Interp.key, kInterStrings[mInterpolation].Internal());
-
-   return true;
-}
-
-bool EffectToneGen::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadAndVerifyEnum(Waveform,  kWaveStrings, nWaveforms);
-   ReadAndVerifyEnum(Interp, kInterStrings, nInterpolations);
-   if (mChirp)
-   {
-      ReadParam(StartFreq);
-      ReadParam(EndFreq);
-      ReadParam(StartAmp);
-      ReadParam(EndAmp);
-      mFrequency0 = StartFreq;
-      mFrequency1 = EndFreq;
-      mAmplitude0 = StartAmp;
-      mAmplitude1 = EndAmp;
-   }
-   else
-   {
-      ReadParam(Frequency);
-      ReadParam(Amplitude);
-      mFrequency0 = Frequency;
-      mFrequency1 = Frequency;
-      mAmplitude0 = Amplitude;
-      mAmplitude1 = Amplitude;
-   }
-
-   mWaveform = Waveform;
-   mInterpolation = Interp;
-
-   double freqMax =
-      (FindProject()
-         ? ProjectRate::Get( *FindProject() ).GetRate()
-         : 44100.0)
-      / 2.0;
-   mFrequency1 = std::clamp<double>(mFrequency1, EndFreq.min, freqMax);
-
-   return true;
+//   double freqMax =
+//      (FindProject()
+//         ? ProjectRate::Get( *FindProject() ).GetRate()
+//         : 44100.0)
+//      / 2.0;
+//   mFrequency1 = std::clamp<double>(mFrequency1, EndFreq.min, freqMax);
 }
 
 // Effect implementation

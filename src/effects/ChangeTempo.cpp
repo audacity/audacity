@@ -30,7 +30,6 @@
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "TimeWarper.h"
@@ -68,6 +67,13 @@ EffectParameter Percentage{ &EffectChangeTempo::m_PercentChange,
 EffectParameter UseSBSMS{ &EffectChangeTempo::mUseSBSMS,
    L"SBSMS",     false, false,   true,    1  };
 }
+const EffectParameterMethods& EffectChangeTempo::Parameters() const
+{
+   static CapturedParameters<EffectChangeTempo> parameters{
+      Percentage, UseSBSMS
+   };
+   return parameters;
+}
 
 // We warp the slider to go up to 400%, but user can enter higher values.
 static const double kSliderMax = 100.0;         // warped above zero to actually go up to 400%
@@ -92,19 +98,15 @@ END_EVENT_TABLE()
 
 EffectChangeTempo::EffectChangeTempo()
 {
-   m_PercentChange = Percentage.def;
+   // mUseSBSMS always defaults to false and its value is used only if USE_SBSMS
+   // is defined
+   Parameters().Reset(*this);
    m_FromBPM = 0.0; // indicates not yet set
    m_ToBPM = 0.0; // indicates not yet set
    m_FromLength = 0.0;
    m_ToLength = 0.0;
 
    m_bLoopDetect = false;
-
-#if USE_SBSMS
-   mUseSBSMS = UseSBSMS.def;
-#else
-   mUseSBSMS = false;
-#endif
 
    SetLinearEffectFlag(true);
 }
@@ -139,36 +141,6 @@ EffectType EffectChangeTempo::GetType() const
 
 bool EffectChangeTempo::SupportsAutomation() const
 {
-   return true;
-}
-
-// EffectProcessor implementation
-bool EffectChangeTempo::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( m_PercentChange, Percentage );
-   S.SHUTTLE_PARAM( mUseSBSMS, UseSBSMS );
-   return true;
-}
-
-bool EffectChangeTempo::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(Percentage.key, m_PercentChange);
-   parms.Write(UseSBSMS.key, mUseSBSMS);
-
-   return true;
-}
-
-bool EffectChangeTempo::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(Percentage);
-   m_PercentChange = Percentage;
-
-#if USE_SBSMS
-   ReadParam(UseSBSMS);
-   mUseSBSMS = UseSBSMS;
-#else
-   mUseSBSMS = false;
-#endif
-
    return true;
 }
 

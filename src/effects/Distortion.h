@@ -14,6 +14,7 @@
 #include <queue>
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxStaticText;
@@ -45,6 +46,9 @@ public:
 class EffectDistortion final : public Effect
 {
 public:
+   struct Params;
+   static inline Params *
+   FetchParameters(EffectDistortion &e, EffectSettings &) { return &e.mParams; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectDistortion();
@@ -71,8 +75,6 @@ public:
 
    EffectType GetType() const override;
    bool SupportsRealtime() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
 
@@ -92,7 +94,6 @@ public:
    size_t RealtimeProcess(int group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -213,6 +214,7 @@ private:
 
    Params mParams;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 };
 

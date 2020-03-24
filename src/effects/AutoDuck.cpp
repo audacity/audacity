@@ -30,7 +30,6 @@
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "Theme.h"
 #include "../widgets/valnum.h"
@@ -53,6 +52,14 @@ EffectParameter ThresholdDb{ &EffectAutoDuck::mThresholdDb,
    L"ThresholdDb",      -30.0,   -100.0,  0.0,     1  };
 EffectParameter MaximumPause{ &EffectAutoDuck::mMaximumPause,
    L"MaximumPause",     1.0,     0.0,     DBL_MAX, 1  };
+}
+const EffectParameterMethods& EffectAutoDuck::Parameters() const
+{
+   static CapturedParameters<EffectAutoDuck> parameters{
+      DuckAmountDb, InnerFadeDownLen, InnerFadeUpLen, OuterFadeDownLen,
+      OuterFadeUpLen, ThresholdDb, MaximumPause
+   };
+   return parameters;
 }
 
 /*
@@ -93,13 +100,7 @@ END_EVENT_TABLE()
 
 EffectAutoDuck::EffectAutoDuck()
 {
-   mDuckAmountDb = DuckAmountDb.def;
-   mInnerFadeDownLen = InnerFadeDownLen.def;
-   mInnerFadeUpLen = InnerFadeUpLen.def;
-   mOuterFadeDownLen = OuterFadeDownLen.def;
-   mOuterFadeUpLen = OuterFadeUpLen.def;
-   mThresholdDb = ThresholdDb.def;
-   mMaximumPause = MaximumPause.def;
+   Parameters().Reset(*this);
 
    SetLinearEffectFlag(true);
 
@@ -134,52 +135,6 @@ ManualPageID EffectAutoDuck::ManualPage() const
 EffectType EffectAutoDuck::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectAutoDuck::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM(  mDuckAmountDb, DuckAmountDb);
-   S.SHUTTLE_PARAM(  mInnerFadeDownLen, InnerFadeDownLen);
-   S.SHUTTLE_PARAM(  mInnerFadeUpLen, InnerFadeUpLen);
-   S.SHUTTLE_PARAM(  mOuterFadeDownLen, OuterFadeDownLen);
-   S.SHUTTLE_PARAM(  mOuterFadeUpLen, OuterFadeUpLen);
-   S.SHUTTLE_PARAM(  mThresholdDb, ThresholdDb);
-   S.SHUTTLE_PARAM(  mMaximumPause, MaximumPause);
-   return true;
-}
-
-bool EffectAutoDuck::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(DuckAmountDb.key, mDuckAmountDb);
-   parms.Write(InnerFadeDownLen.key, mInnerFadeDownLen);
-   parms.Write(InnerFadeUpLen.key, mInnerFadeUpLen);
-   parms.Write(OuterFadeDownLen.key, mOuterFadeDownLen);
-   parms.Write(OuterFadeUpLen.key, mOuterFadeUpLen);
-   parms.Write(ThresholdDb.key, mThresholdDb);
-   parms.Write(MaximumPause.key, mMaximumPause);
-
-   return true;
-}
-
-bool EffectAutoDuck::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadParam(DuckAmountDb);
-   ReadParam(InnerFadeDownLen);
-   ReadParam(InnerFadeUpLen);
-   ReadParam(OuterFadeDownLen);
-   ReadParam(OuterFadeUpLen);
-   ReadParam(ThresholdDb);
-   ReadParam(MaximumPause);
-
-   mDuckAmountDb = DuckAmountDb;
-   mInnerFadeDownLen = InnerFadeDownLen;
-   mInnerFadeUpLen = InnerFadeUpLen;
-   mOuterFadeDownLen = OuterFadeDownLen;
-   mOuterFadeUpLen = OuterFadeUpLen;
-   mThresholdDb = ThresholdDb;
-   mMaximumPause = MaximumPause;
-
-   return true;
 }
 
 // Effect implementation
