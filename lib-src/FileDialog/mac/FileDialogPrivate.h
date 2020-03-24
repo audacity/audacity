@@ -99,7 +99,6 @@ protected:
     wxArrayString m_currentExtensions;
     WX_NSObject m_delegate;
     WX_NSObject m_sheetDelegate;
-    wxString m_noOverwritePromptFilename;
 #endif
 
 private:

@@ -64,7 +64,6 @@
 
 - (void)panel:(id)sender didChangeToDirectoryURL:(NSURL *)url AVAILABLE_MAC_OS_X_VERSION_10_6_AND_LATER;
 - (void)panelSelectionDidChange:(id)sender AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER;
-- (NSString *)panel:(id)sender userEnteredFilename:(NSString *)filename confirmed:(BOOL)okFlag;
 
 - (void)viewResized:(NSNotification *)notification;
 
@@ -103,20 +102,6 @@
 - (void)panelSelectionDidChange:(id)sender AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER
 {
     _dialog->DoSendSelectionChangedEvent(sender);
-}
-
-- (NSString *)panel:(id)sender userEnteredFilename:(NSString *)filename confirmed:(BOOL)okFlag;
-{
-    if (okFlag == YES)
-    {
-        wxString name = wxCFStringRef::AsStringWithNormalizationFormC( filename );
-
-        wxCFStringRef cfname( _dialog->DoCaptureFilename( sender, name ) );
-
-        return [[NSString alloc] initWithString:cfname.AsNSString()];
-    }
-
-    return filename;
 }
 @end
 
@@ -284,7 +269,6 @@ void FileDialog::ShowWindowModal()
     wxCFStringRef dir( m_dir );
     wxCFStringRef file( m_fileName );
 
-    m_noOverwritePromptFilename = wxEmptyString;
     m_path = wxEmptyString;
     m_fileNames.Clear();
     m_paths.Clear();
@@ -425,32 +409,6 @@ void FileDialog::DoSendSelectionChangedEvent(void* panel)
     GetEventHandler()->ProcessEvent( event );
 }
 
-wxString FileDialog::DoCaptureFilename(void* panel, const wxString & name)
-{
-    if ( HasFlag( wxFD_SAVE ) )
-    {
-        if ( !HasFlag(wxFD_OVERWRITE_PROMPT) )
-        {
-            NSSavePanel* sPanel = (NSSavePanel*) panel;
-            NSString* dir = [[sPanel directoryURL] path];
-   
-            wxFileName fn;
-            fn.SetPath(wxCFStringRef::AsStringWithNormalizationFormC( dir ));
-            fn.SetFullName(name);
-   
-            m_currentlySelectedFilename = fn.GetFullPath();
-
-            fn.SetName(wxT("NoOverwritePrompt"));
-            fn.AssignTempFileName(fn.GetFullPath());
-            m_noOverwritePromptFilename = fn.GetFullPath();
- 
-            return fn.GetFullName();
-        }
-    }
-
-    return name;
-}
-
 void FileDialog::SetupExtraControls(WXWindow nativeWindow)
 {
     NSSavePanel* panel = (NSSavePanel*) nativeWindow;
@@ -544,7 +502,6 @@ int FileDialog::ShowModal()
     wxCFStringRef dir( m_dir );
     wxCFStringRef file( m_fileName );
 
-    m_noOverwritePromptFilename = wxEmptyString;
     m_path = wxEmptyString;
     m_fileNames.Clear();
     m_paths.Clear();
@@ -733,15 +690,6 @@ void FileDialog::ModalFinishedCallback(void* panel, int returnCode)
             result = wxID_OK;
 
             m_path = wxCFStringRef::AsStringWithNormalizationFormC([sPanel filename]);
-            if (!HasFlag(wxFD_OVERWRITE_PROMPT))
-            {
-                wxASSERT(!m_noOverwritePromptFilename.IsEmpty());
-                if (!m_noOverwritePromptFilename.IsEmpty())
-                {
-                    wxRemoveFile(m_noOverwritePromptFilename);
-                    m_path = m_currentlySelectedFilename;
-                }
-            }
             m_fileName = wxFileNameFromPath(m_path);
             m_dir = wxPathOnly( m_path );
             if (m_filterChoice)

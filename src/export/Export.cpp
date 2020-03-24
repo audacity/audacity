@@ -770,6 +770,8 @@ If you still wish to export, please choose a different filename or folder."));
       if (overwritingMissingAliasFiles)
          continue;
 
+// For Mac, it's handled by the FileDialog
+#if !defined(__WXMAC__)
       if (mFilename.FileExists()) {
          auto prompt = XO("A file named \"%s\" already exists. Replace?")
             .Format( mFilename.GetFullPath() );
@@ -782,6 +784,7 @@ If you still wish to export, please choose a different filename or folder."));
             continue;
          }
       }
+#endif
 
       break;
    }
