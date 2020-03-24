@@ -47,6 +47,7 @@ class AudacityCommand;
 namespace BasicUI { class ProgressDialog; }
 
 class AudacityProject;
+class EffectParameterMethods;
 class LabelTrack;
 class NotifyingSelectedRegion;
 class SelectedRegion;
@@ -81,6 +82,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
  // apply the effect to one or more tracks.
  //
  public:
+   static inline Effect *FetchParameters(Effect &e, EffectSettings &)
+   { return &e; }
+
    // The constructor is called once by each subclass at the beginning of the program.
    // Avoid allocating memory or doing time-consuming processing here.
    Effect();
@@ -89,6 +93,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // ComponentInterface implementation
 
    PluginPath GetPath() const override;
+   bool VisitSettings( SettingsVisitor & ) override;
 
    ComponentInterfaceSymbol GetSymbol() const override;
 
@@ -132,6 +137,11 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
+
+   // VisitSettings(), GetAutomationParameters(), and SetAutomationParameters()
+   // use the functions of EffectParameterMethods.  By default, this function
+   // defines an empty list of parameters.
+   virtual const EffectParameterMethods &Parameters() const;
 
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;

@@ -312,6 +312,12 @@ size_t Effect::GetTailSize()
    return 0;
 }
 
+const EffectParameterMethods &Effect::Parameters() const
+{
+   static const CapturedParameters<Effect> empty;
+   return empty;
+}
+
 bool Effect::ProcessInitialize(
    EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
 {
@@ -477,24 +483,27 @@ int Effect::ShowHostInterface(wxWindow &parent,
    return result;
 }
 
+bool Effect::VisitSettings( SettingsVisitor &S )
+{
+   if (mClient)
+      return mClient->VisitSettings( S );
+   Parameters().Visit( *this, S );
+   return true;
+}
+
 bool Effect::GetAutomationParameters(CommandParameters & parms) const
 {
    if (mClient)
-   {
       return mClient->GetAutomationParameters(parms);
-   }
-
+   Parameters().Get( *this, parms );
    return true;
 }
 
 bool Effect::SetAutomationParameters(const CommandParameters & parms)
 {
    if (mClient)
-   {
       return mClient->SetAutomationParameters(parms);
-   }
-
-   return true;
+   return Parameters().Set( *this, parms );
 }
 
 bool Effect::LoadUserPreset(const RegistryPath & name)
