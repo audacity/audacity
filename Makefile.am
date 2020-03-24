@@ -71,6 +71,7 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/crossfadeclips.ny \
    plug-ins/crossfadetracks.ny \
    plug-ins/delay.ny \
+   plug-ins/eq-xml-to-txt-converter.ny \
    plug-ins/equalabel.ny \
    plug-ins/highpass.ny \
    plug-ins/limiter.ny \
