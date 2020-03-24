@@ -37,7 +37,6 @@ list( APPEND SOURCES
       # sord
 
       ${TARGET_ROOT}/sord/src/sord.c
-      ${TARGET_ROOT}/sord/src/sord_validate.c
       ${TARGET_ROOT}/sord/src/syntax.c
       ${TARGET_ROOT}/sord/src/zix/btree.c
       ${TARGET_ROOT}/sord/src/zix/digest.c
