@@ -53,6 +53,12 @@ list( APPEND DEFINES
       HAVE_CONFIG_H
 )
 
+list( APPEND OPTIONS
+   PRIVATE
+      ${MMX_FLAG}
+      ${SSE_FLAG}
+)
+
 set( HAVE_INT8_T SIZEOF_INT8_T )
 set( HAVE_INT16_T SIZEOF_INT16_T )
 set( HAVE_INT32_T SIZEOF_INT32_T )
@@ -92,5 +98,6 @@ configure_file( lame.h.in public/lame/lame.h )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 
