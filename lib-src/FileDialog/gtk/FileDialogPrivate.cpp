@@ -478,7 +478,7 @@ void FileDialog::SetFileExtension(const wxString& extension)
     wxString filename;
 
 #if defined(__WXGTK3__)
-    filename = wxString::FromUTF8(gtk_file_chooser_get_current_name(m_fc));
+    filename = wxString::FromUTF8(gtk_file_chooser_get_current_name(GTK_FILE_CHOOSER(m_widget)));
 #else
     GtkWidget *entry = find_widget(m_widget, "GtkFileChooserEntry", 0);
     if (entry)
