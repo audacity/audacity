@@ -19,6 +19,7 @@ list( APPEND SOURCES
    crossfadeclips.ny
    crossfadetracks.ny
    delay.ny
+   eq-xml-to-txt-converter.ny
    equalabel.ny
    highpass.ny
    limiter.ny
