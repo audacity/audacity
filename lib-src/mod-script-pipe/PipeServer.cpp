@@ -15,7 +15,7 @@ void PipeServer()
    HANDLE hPipeToSrv;
    HANDLE hPipeFromSrv;
 
-   LPTSTR pipeNameToSrv= _T("\\\\.\\pipe\\ToSrvPipe");
+   static const TCHAR pipeNameToSrv[] = _T("\\\\.\\pipe\\ToSrvPipe");
 
    hPipeToSrv = CreateNamedPipe( 
       pipeNameToSrv ,
@@ -29,7 +29,7 @@ void PipeServer()
    if( hPipeToSrv == INVALID_HANDLE_VALUE)
       return;
 
-   LPTSTR pipeNameFromSrv= __T("\\\\.\\pipe\\FromSrvPipe");
+   static const TCHAR pipeNameFromSrv[] = __T("\\\\.\\pipe\\FromSrvPipe");
 
    hPipeFromSrv = CreateNamedPipe( 
       pipeNameFromSrv ,
