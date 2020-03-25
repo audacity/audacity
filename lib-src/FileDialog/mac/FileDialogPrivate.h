@@ -61,7 +61,6 @@ public:
     virtual int ShowModal();
 
 #if wxOSX_USE_COCOA
-    virtual void ShowWindowModal();
     virtual void ModalFinishedCallback(void* panel, int resultCode);
 #endif
 
@@ -75,7 +74,7 @@ public:
     void DoViewResized(void* object);
     void DoSendFolderChangedEvent(void* panel, const wxString& path);
     void DoSendSelectionChangedEvent(void* panel);
-    wxString DoCaptureFilename(void* panel, const wxString& name);
+    void DoCaptureFilename(void* panel, const wxString& name);
 #endif
 
 protected:
