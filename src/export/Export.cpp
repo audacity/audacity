@@ -720,7 +720,8 @@ bool Exporter::GetFilename()
 
          mFilename.SetExt(defext);
       }
-      else if (!mPlugins[mFormat]->CheckFileName(mFilename, mSubFormat))
+
+      if (!mPlugins[mFormat]->CheckFileName(mFilename, mSubFormat))
       {
          continue;
       }
