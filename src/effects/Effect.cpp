@@ -2345,6 +2345,10 @@ void Effect::Preview(bool dryOnly)
          End();
          GuardedCall( [&]{ Init(); } );
       }
+
+      // In case any dialog control depends on mT1 or mDuration:
+      if ( mUIDialog )
+         mUIDialog->TransferDataToWindow();
    } );
 
    auto vr0 = valueRestorer( mT0 );
@@ -2352,6 +2356,11 @@ void Effect::Preview(bool dryOnly)
    // Most effects should stop at t1.
    if (!mPreviewFullSelection)
       mT1 = t1;
+
+   // In case any dialog control depends on mT1 or mDuration:
+   if ( mUIDialog ) {
+      mUIDialog->TransferDataToWindow();
+   }
 
    // Save the original track list
    TrackList *saveTracks = mTracks;
