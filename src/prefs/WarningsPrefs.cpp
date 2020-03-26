@@ -87,6 +87,9 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XO("Mixing down on export (&Custom FFmpeg or external program)"),
                     {wxT("/Warnings/MixUnknownChannels"),
                      true});
+      S.TieCheckBox(XO("Missing file &name extension during export"),
+                    {wxT("/Warnings/MissingExtension"),
+                     true});
 #ifdef EXPERIMENTAL_OD_DATA
       S.TieCheckBox(XO("&Importing uncompressed audio files"),
                     {wxT("/Warnings/CopyOrEditUncompressedDataAsk"),

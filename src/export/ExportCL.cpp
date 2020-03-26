@@ -17,6 +17,7 @@
 
 #include <wx/app.h>
 #include <wx/button.h>
+#include <wx/cmdline.h>
 #include <wx/combobox.h>
 #include <wx/filedlg.h>
 #include <wx/log.h>
@@ -39,6 +40,7 @@
 #include "../widgets/FileHistory.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
+#include "../widgets/Warning.h"
 #include "../wxFileNameWrapper.h"
 
 #ifdef USE_LIBID3TAG
@@ -294,9 +296,16 @@ public:
                          MixerSpec *mixerSpec = NULL,
                          const Tags *metadata = NULL,
                          int subformat = 0) override;
+
+   // Optional   
+   bool CheckFileName(wxFileName &filename, int format = 0) override;
+
 private:
+   void GetSettings();
 
    std::vector<char> GetMetaChunk(const Tags *metadata);
+   wxString mCmd;
+   bool mShow;
 };
 
 ExportCL::ExportCL()
@@ -322,21 +331,18 @@ ProgressResult ExportCL::Export(AudacityProject *project,
                                 int WXUNUSED(subformat))
 {
    wxString output;
-   wxString cmd;
-   bool show;
    long rc;
 
    const auto path = fName.GetFullPath();
 
-   // Retrieve settings
-   gPrefs->Read(wxT("/FileFormats/ExternalProgramShowOutput"), &show, false);
-   cmd = gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"), wxT("lame - \"%f.mp3\""));
+   GetSettings();
+
    // Bug 2178 - users who don't know what they are doing will 
    // now get a file extension of .wav appended to their ffmpeg filename
    // and therefore ffmpeg will be able to choose a file type.
-   if( cmd == wxT("ffmpeg -i - \"%f\"") && !fName.HasExt())
-      cmd.Replace( "%f", "%f.wav" );
-   cmd.Replace(wxT("%f"), path);
+   if( mCmd == wxT("ffmpeg -i - \"%f\"") && !fName.HasExt())
+      mCmd.Replace( "%f", "%f.wav" );
+   mCmd.Replace(wxT("%f"), path);
 
 #if defined(__WXMSW__)
    // Give Windows a chance at finding lame command in the default location.
@@ -376,7 +382,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       } );
 #endif
 
-      rc = wxExecute(cmd, wxEXEC_ASYNC, &process);
+      rc = wxExecute(mCmd, wxEXEC_ASYNC, &process);
    }
 
    if (!rc) {
@@ -572,7 +578,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    }
 
    // Display output on error or if the user wants to see it
-   if (process.GetStatus() != 0 || show) {
+   if (process.GetStatus() != 0 || mShow) {
       // TODO use ShowInfoDialog() instead.
       wxDialogWrapper dlg(nullptr,
                    wxID_ANY,
@@ -585,7 +591,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       ShuttleGui S(&dlg, eIsCreating);
       S
          .Style( wxTE_MULTILINE | wxTE_READONLY )
-         .AddTextWindow(cmd + wxT("\n\n") + output);
+         .AddTextWindow(mCmd + wxT("\n\n") + output);
       S.StartHorizontalLay(wxALIGN_CENTER, false);
       {
          S.Id(wxID_OK).AddButton(XO("&OK"), wxALIGN_CENTER, true);
@@ -710,6 +716,63 @@ std::vector<char> ExportCL::GetMetaChunk(const Tags *tags)
 void ExportCL::OptionsCreate(ShuttleGui &S, int format)
 {
    S.AddWindow( safenew ExportCLOptions{ S.GetParent(), format } );
+}
+
+bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
+{
+   if (ShowWarningDialog(NULL,
+                         wxT("MissingExtension"),
+                         XO("You've specified a file name without an extension. Are you sure?"),
+                         true) == wxID_CANCEL) {
+      return false;
+   }
+
+   GetSettings();
+
+   wxArrayString argv = wxCmdLineParser::ConvertStringToArgs(mCmd,
+#if defined(__WXMSW__)
+      wxCMD_LINE_SPLIT_DOS
+#else
+      wxCMD_LINE_SPLIT_UNIX
+#endif
+   );
+
+   if (argv.size() == 0) {
+      AudacityMessageBox(
+         XO("Program name appears to be missing."),
+         XO("Unable to export"),
+         wxOK | wxICON_INFORMATION);
+      return false;
+   }
+      
+   // Normalize the path (makes absolute and resolves variables)   
+   wxFileName cmd(argv[0]);
+   cmd.Normalize();
+
+   // Search for the command in the PATH list
+   wxPathList pathlist;
+   pathlist.AddEnvList(wxT("PATH"));
+   wxString path = pathlist.FindAbsoluteValidPath(cmd.GetFullPath());
+   if (path.empty()) {
+      auto prompt = XO("Unable to locate \"%s\" in your path.\n\nWould you like to continue anyway?")
+            .Format(cmd.GetFullPath());
+
+      int action = AudacityMessageBox(
+         prompt,
+         XO("Warning"),
+         wxYES_NO | wxICON_EXCLAMATION);
+
+      return action == wxYES;
+   }
+
+   return true;
+}
+
+void ExportCL::GetSettings()
+{
+   // Retrieve settings
+   gPrefs->Read(wxT("/FileFormats/ExternalProgramShowOutput"), &mShow, false);
+   mCmd = gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"), wxT("lame - \"%f.mp3\""));
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "CommandLine",
