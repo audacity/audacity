@@ -33,6 +33,7 @@
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../Tags.h"
 #include "../Track.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
@@ -40,6 +41,12 @@
 #include "../widgets/ProgressDialog.h"
 #include "../wxFileNameWrapper.h"
 
+#ifdef USE_LIBID3TAG
+   #include <id3tag.h>
+   extern "C" {
+      struct id3_frame *id3_frame_new(char const *);
+   }
+#endif
 
 //----------------------------------------------------------------------------
 // ExportCLOptions
@@ -268,29 +275,6 @@ private:
 // ExportCL
 //----------------------------------------------------------------------------
 
-/* this structure combines the RIFF header, the format chunk, and the data
- * chunk header */
-struct wav_header {
-   /* RIFF header */
-   char riffID[4];            /* "RIFF" */
-   wxUint32 lenAfterRiff;     /* basically the file len - 8, or samples len + 36 */
-   char riffType[4];          /* "WAVE" */
-
-   /* format chunk */
-   char fmtID[4];             /* "fmt " */
-   wxUint32 formatChunkLen;   /* (format chunk len - first two fields) 16 in our case */
-   wxUint16 formatTag;        /* 1 for PCM */
-   wxUint16 channels;
-   wxUint32 sampleRate;
-   wxUint32 avgBytesPerSec;   /* sampleRate * blockAlign */
-   wxUint16 blockAlign;       /* bitsPerSample * channels (assume bps % 8 = 0) */
-   wxUint16 bitsPerSample;
-
-   /* data chunk header */
-   char dataID[4];            /* "data" */
-   wxUint32 dataLen;          /* length of all samples in bytes */
-};
-
 class ExportCL final : public ExportPlugin
 {
 public:
@@ -301,15 +285,18 @@ public:
    void OptionsCreate(ShuttleGui &S, int format) override;
 
    ProgressResult Export(AudacityProject *project,
-               std::unique_ptr<ProgressDialog> &pDialog,
-               unsigned channels,
-               const wxFileNameWrapper &fName,
-               bool selectedOnly,
-               double t0,
-               double t1,
-               MixerSpec *mixerSpec = NULL,
-               const Tags *metadata = NULL,
-               int subformat = 0) override;
+                         std::unique_ptr<ProgressDialog> &pDialog,
+                         unsigned channels,
+                         const wxFileNameWrapper &fName,
+                         bool selectedOnly,
+                         double t0,
+                         double t1,
+                         MixerSpec *mixerSpec = NULL,
+                         const Tags *metadata = NULL,
+                         int subformat = 0) override;
+private:
+
+   std::vector<char> GetMetaChunk(const Tags *metadata);
 };
 
 ExportCL::ExportCL()
@@ -319,20 +306,20 @@ ExportCL::ExportCL()
    SetFormat(wxT("CL"),0);
    AddExtension(wxT(""),0);
    SetMaxChannels(255,0);
-   SetCanMetaData(false,0);
+   SetCanMetaData(true,0);
    SetDescription(XO("(external program)"),0);
 }
 
 ProgressResult ExportCL::Export(AudacityProject *project,
-                      std::unique_ptr<ProgressDialog> &pDialog,
-                      unsigned channels,
-                      const wxFileNameWrapper &fName,
-                      bool selectionOnly,
-                      double t0,
-                      double t1,
-                      MixerSpec *mixerSpec,
-                      const Tags *WXUNUSED(metadata),
-                      int WXUNUSED(subformat))
+                                std::unique_ptr<ProgressDialog> &pDialog,
+                                unsigned channels,
+                                const wxFileNameWrapper &fName,
+                                bool selectionOnly,
+                                double t0,
+                                double t1,
+                                MixerSpec *mixerSpec,
+                                const Tags *metadata,
+                                int WXUNUSED(subformat))
 {
    wxString output;
    wxString cmd;
@@ -409,38 +396,95 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    unsigned long totalSamples = lrint((t1 - t0) * rate);
    unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(floatSample);
 
-   // fill up the wav header
-   wav_header header;
-   header.riffID[0]        = 'R';
-   header.riffID[1]        = 'I';
-   header.riffID[2]        = 'F';
-   header.riffID[3]        = 'F';
-   header.lenAfterRiff     = wxUINT32_SWAP_ON_BE(sampleBytes + 36);
-   header.riffType[0]      = 'W';
-   header.riffType[1]      = 'A';
-   header.riffType[2]      = 'V';
-   header.riffType[3]      = 'E';
-
-   header.fmtID[0]         = 'f';
-   header.fmtID[1]         = 'm';
-   header.fmtID[2]         = 't';
-   header.fmtID[3]         = ' ';
-   header.formatChunkLen   = wxUINT32_SWAP_ON_BE(16);
-   header.formatTag        = wxUINT16_SWAP_ON_BE(3);
-   header.channels         = wxUINT16_SWAP_ON_BE(channels);
-   header.sampleRate       = wxUINT32_SWAP_ON_BE(rate);
-   header.bitsPerSample    = wxUINT16_SWAP_ON_BE(SAMPLE_SIZE(floatSample) * 8);
-   header.blockAlign       = wxUINT16_SWAP_ON_BE(header.bitsPerSample * header.channels / 8);
-   header.avgBytesPerSec   = wxUINT32_SWAP_ON_BE(header.sampleRate * header.blockAlign);
-   header.dataID[0]        = 'd';
-   header.dataID[1]        = 'a';
-   header.dataID[2]        = 't';
-   header.dataID[3]        = 'a';
-   header.dataLen          = wxUINT32_SWAP_ON_BE(sampleBytes);
-
-   // write the header
    wxOutputStream *os = process.GetOutputStream();
-   os->Write(&header, sizeof(wav_header));
+
+   // RIFF header
+   struct {
+      char riffID[4];            // "RIFF"
+      wxUint32 riffLen;          // basically the file len - 8
+      char riffType[4];          // "WAVE"
+   } riff;
+
+   // format chunk */
+   struct {
+      char fmtID[4];             // "fmt " */
+      wxUint32 formatChunkLen;   // (format chunk len - first two fields) 16 in our case
+      wxUint16 formatTag;        // 1 for PCM
+      wxUint16 channels;
+      wxUint32 sampleRate;
+      wxUint32 avgBytesPerSec;   // sampleRate * blockAlign
+      wxUint16 blockAlign;       // bitsPerSample * channels (assume bps % 8 = 0)
+      wxUint16 bitsPerSample;
+   } fmt;
+
+   // id3 chunk header
+   struct {
+      char id3ID[4];             // "id3 "
+      wxUint32 id3Len;           // length of metadata in bytes
+   } id3;
+
+   // data chunk header
+   struct {
+      char dataID[4];            // "data"
+      wxUint32 dataLen;          // length of all samples in bytes
+   } data;
+
+   riff.riffID[0] = 'R';
+   riff.riffID[1] = 'I';
+   riff.riffID[2] = 'F';
+   riff.riffID[3] = 'F';
+   riff.riffLen   = wxUINT32_SWAP_ON_BE(sizeof(riff) +
+                                        sizeof(fmt) +
+                                        sizeof(data) +
+                                        sampleBytes -
+                                        8);
+   riff.riffType[0]  = 'W';
+   riff.riffType[1]  = 'A';
+   riff.riffType[2]  = 'V';
+   riff.riffType[3]  = 'E';
+
+   fmt.fmtID[0]        = 'f';
+   fmt.fmtID[1]        = 'm';
+   fmt.fmtID[2]        = 't';
+   fmt.fmtID[3]        = ' ';
+   fmt.formatChunkLen  = wxUINT32_SWAP_ON_BE(16);
+   fmt.formatTag       = wxUINT16_SWAP_ON_BE(3);
+   fmt.channels        = wxUINT16_SWAP_ON_BE(channels);
+   fmt.sampleRate      = wxUINT32_SWAP_ON_BE(rate);
+   fmt.bitsPerSample   = wxUINT16_SWAP_ON_BE(SAMPLE_SIZE(floatSample) * 8);
+   fmt.blockAlign      = wxUINT16_SWAP_ON_BE(fmt.bitsPerSample * fmt.channels / 8);
+   fmt.avgBytesPerSec  = wxUINT32_SWAP_ON_BE(fmt.sampleRate * fmt.blockAlign);
+
+   // Retrieve tags if not given a set
+   if (metadata == NULL) {
+      metadata = &Tags::Get(*project);
+   }
+   auto metachunk = GetMetaChunk(metadata);
+
+   if (metachunk.size()) {
+
+      id3.id3ID[0] = 'i';
+      id3.id3ID[1] = 'd';
+      id3.id3ID[2] = '3';
+      id3.id3ID[3] = ' ';
+      id3.id3Len   = wxUINT32_SWAP_ON_BE(metachunk.size());
+      riff.riffLen += sizeof(id3) + metachunk.size();
+   }
+
+   data.dataID[0] = 'd';
+   data.dataID[1] = 'a';
+   data.dataID[2] = 't';
+   data.dataID[3] = 'a';
+   data.dataLen   = wxUINT32_SWAP_ON_BE(sampleBytes);
+
+   // write the headers and metadata
+   os->Write(&riff, sizeof(riff));
+   os->Write(&fmt, sizeof(fmt));
+   if (metachunk.size()) {
+      os->Write(&id3, sizeof(id3));
+      os->Write(metachunk.data(), metachunk.size());
+   }
+   os->Write(&data, sizeof(data));
 
    // Mix 'em up
    const auto &tracks = TrackList::Get( *project );
@@ -558,6 +602,109 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    }
 
    return updateResult;
+}
+
+std::vector<char> ExportCL::GetMetaChunk(const Tags *tags)
+{
+   std::vector<char> buffer;
+
+#ifdef USE_LIBID3TAG
+   struct id3_tag_deleter {
+      void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
+   };
+
+   std::unique_ptr<id3_tag, id3_tag_deleter> tp { id3_tag_new() };
+
+   for (const auto &pair : tags->GetRange()) {
+      const auto &n = pair.first;
+      const auto &v = pair.second;
+      const char *name = "TXXX";
+
+      if (n.CmpNoCase(TAG_TITLE) == 0) {
+         name = ID3_FRAME_TITLE;
+      }
+      else if (n.CmpNoCase(TAG_ARTIST) == 0) {
+         name = ID3_FRAME_ARTIST;
+      }
+      else if (n.CmpNoCase(TAG_ALBUM) == 0) {
+         name = ID3_FRAME_ALBUM;
+      }
+      else if (n.CmpNoCase(TAG_YEAR) == 0) {
+         name = ID3_FRAME_YEAR;
+      }
+      else if (n.CmpNoCase(TAG_GENRE) == 0) {
+         name = ID3_FRAME_GENRE;
+      }
+      else if (n.CmpNoCase(TAG_COMMENTS) == 0) {
+         name = ID3_FRAME_COMMENT;
+      }
+      else if (n.CmpNoCase(TAG_TRACK) == 0) {
+         name = ID3_FRAME_TRACK;
+      }
+      else if (n.CmpNoCase(wxT("composer")) == 0) {
+         name = "TCOM";
+      }
+
+      struct id3_frame *frame = id3_frame_new(name);
+
+      if (!n.IsAscii() || !v.IsAscii()) {
+         id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_UTF_16);
+      }
+      else {
+         id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_ISO_8859_1);
+      }
+
+      MallocString<id3_ucs4_t> ucs4{
+         id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8)) };
+
+      if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
+         // A hack to get around iTunes not recognizing the comment.  The
+         // language defaults to XXX and, since it's not a valid language,
+         // iTunes just ignores the tag.  So, either set it to a valid language
+         // (which one???) or just clear it.  Unfortunately, there's no supported
+         // way of clearing the field, so do it directly.
+         id3_field *f = id3_frame_field(frame, 1);
+         memset(f->immediate.value, 0, sizeof(f->immediate.value));
+         id3_field_setfullstring(id3_frame_field(frame, 3), ucs4.get());
+      }
+      else if (strcmp(name, "TXXX") == 0) {
+         id3_field_setstring(id3_frame_field(frame, 2), ucs4.get());
+
+         ucs4.reset(id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8)));
+
+         id3_field_setstring(id3_frame_field(frame, 1), ucs4.get());
+      }
+      else {
+         auto addr = ucs4.get();
+         id3_field_setstrings(id3_frame_field(frame, 1), 1, &addr);
+      }
+
+      id3_tag_attachframe(tp.get(), frame);
+   }
+
+   tp->options &= (~ID3_TAG_OPTION_COMPRESSION); // No compression
+
+   // If this version of libid3tag supports it, use v2.3 ID3
+   // tags instead of the newer, but less well supported, v2.4
+   // that libid3tag uses by default.
+#ifdef ID3_TAG_HAS_TAG_OPTION_ID3V2_3
+   tp->options |= ID3_TAG_OPTION_ID3V2_3;
+#endif
+
+   id3_length_t len;
+
+   len = id3_tag_render(tp.get(), 0);
+   if ((len % 2) != 0) {
+      len++;   // Length must be even.
+   }
+
+   if (len > 0) {
+      buffer.resize(len);
+      id3_tag_render(tp.get(), (id3_byte_t *) buffer.data());
+   }
+#endif
+
+   return buffer;
 }
 
 void ExportCL::OptionsCreate(ShuttleGui &S, int format)
