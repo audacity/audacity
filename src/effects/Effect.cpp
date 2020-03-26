@@ -2070,7 +2070,9 @@ void Effect::CopyInputTracks(bool allSyncLockSelected)
    mIMap.clear();
    mOMap.clear();
 
-   mOutputTracks = TrackList::Create( nullptr );
+   mOutputTracks = TrackList::Create(
+      const_cast<AudacityProject*>( FindProject() ) // how to remove this const_cast?
+  );
 
    auto trackRange = mTracks->Any() +
       [&] (const Track *pTrack) {
