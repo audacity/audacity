@@ -508,7 +508,6 @@ private:
    bool mPreviewWithNotSelected;
    bool mPreviewFullSelection;
 
-   bool mIsSelection;
    double mDuration;
    NumericFormatSymbol mDurationFormat;
 

@@ -849,8 +849,6 @@ void Effect::SetDuration(double seconds)
 
    mDuration = seconds;
 
-   mIsSelection = false;
-
    return;
 }
 
