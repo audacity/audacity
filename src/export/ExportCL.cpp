@@ -306,6 +306,47 @@ private:
    std::vector<char> GetMetaChunk(const Tags *metadata);
    wxString mCmd;
    bool mShow;
+
+   struct ExtendPath
+   {
+#if defined(__WXMSW__)
+      wxString opath;
+
+      ExtendPath()
+      {
+         // Give Windows a chance at finding lame command in the default location.
+         wxString paths[] = {wxT("HKEY_LOCAL_MACHINE\\Software\\Lame for Audacity"),
+                             wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg for Audacity")};
+         wxString npath;
+         wxRegKey reg;
+
+         wxGetEnv(wxT("PATH"), &opath);
+         npath = opath;
+
+         for (int i = 0; i < WXSIZEOF(paths); i++) {
+            reg.SetName(paths[i]);
+
+            if (reg.Exists()) {
+               wxString ipath;
+               reg.QueryValue(wxT("InstallPath"), ipath);
+               if (!ipath.empty()) {
+                  npath += wxPATH_SEP + ipath;
+               }
+            }
+         }
+
+         wxSetEnv(wxT("PATH"),npath);
+      };
+
+      ~ExtendPath()
+      {
+         if (!opath.empty())
+         {
+            wxSetEnv(wxT("PATH"),opath);
+         }
+      }
+#endif
+   };
 };
 
 ExportCL::ExportCL()
@@ -330,6 +371,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
                                 const Tags *metadata,
                                 int WXUNUSED(subformat))
 {
+   ExtendPath ep;
    wxString output;
    long rc;
 
@@ -344,47 +386,10 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       mCmd.Replace( "%f", "%f.wav" );
    mCmd.Replace(wxT("%f"), path);
 
-#if defined(__WXMSW__)
-   // Give Windows a chance at finding lame command in the default location.
-   wxString paths[] = {wxT("HKEY_LOCAL_MACHINE\\Software\\Lame for Audacity"),
-                       wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg for Audacity")};
-   wxString opath;
-   wxString npath;
-   wxRegKey reg;
-
-   wxGetEnv(wxT("PATH"), &opath);
-   npath = opath;
-
-   for (int i = 0; i < WXSIZEOF(paths); i++) {
-      reg.SetName(paths[i]);
-
-      if (reg.Exists()) {
-         wxString ipath;
-         reg.QueryValue(wxT("InstallPath"), ipath);
-         if (!ipath.empty()) {
-            npath += wxPATH_SEP + ipath;
-         }
-      }
-   }
-
-   wxSetEnv(wxT("PATH"),npath);
-#endif
-
    // Kick off the command
    ExportCLProcess process(&output);
 
-   {
-#if defined(__WXMSW__)
-      auto cleanup = finally( [&] {
-         if (!opath.empty()) {
-            wxSetEnv(wxT("PATH"),opath);
-         }
-      } );
-#endif
-
-      rc = wxExecute(mCmd, wxEXEC_ASYNC, &process);
-   }
-
+   rc = wxExecute(mCmd, wxEXEC_ASYNC, &process);
    if (!rc) {
       AudacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
       process.Detach();
@@ -720,11 +725,15 @@ void ExportCL::OptionsCreate(ShuttleGui &S, int format)
 
 bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
 {
-   if (ShowWarningDialog(NULL,
-                         wxT("MissingExtension"),
-                         XO("You've specified a file name without an extension. Are you sure?"),
-                         true) == wxID_CANCEL) {
-      return false;
+   ExtendPath ep;
+
+   if (filename.GetExt().empty()) {
+      if (ShowWarningDialog(NULL,
+                            wxT("MissingExtension"),
+                            XO("You've specified a file name without an extension. Are you sure?"),
+                            true) == wxID_CANCEL) {
+         return false;
+      }
    }
 
    GetSettings();
@@ -747,12 +756,19 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
       
    // Normalize the path (makes absolute and resolves variables)   
    wxFileName cmd(argv[0]);
-   cmd.Normalize();
+   cmd.Normalize(wxPATH_NORM_ALL & ~wxPATH_NORM_ABSOLUTE);
 
    // Search for the command in the PATH list
    wxPathList pathlist;
    pathlist.AddEnvList(wxT("PATH"));
-   wxString path = pathlist.FindAbsoluteValidPath(cmd.GetFullPath());
+   wxString path = pathlist.FindAbsoluteValidPath(argv[0]);
+
+#if defined(__WXMSW__)
+   if (path.empty()) {
+      path = pathlist.FindAbsoluteValidPath(argv[0] + wxT(".exe"));
+   }
+#endif
+
    if (path.empty()) {
       auto prompt = XO("Unable to locate \"%s\" in your path.\n\nWould you like to continue anyway?")
             .Format(cmd.GetFullPath());
