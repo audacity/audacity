@@ -759,16 +759,17 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
    cmd.Normalize(wxPATH_NORM_ALL & ~wxPATH_NORM_ABSOLUTE);
 
    // Just verify the given path exists if it is absolute.
-   if (cmd.IsAbsolute() && !cmd.Exists()) {
-      auto prompt = XO("\"%s\" couldn't be found.\n\nWould you like to continue anyway?")
-            .Format(cmd.GetFullPath());
+   if (cmd.IsAbsolute()) {
+      if (!cmd.Exists()) {
+         AudacityMessageBox(
+            XO("\"%s\" couldn't be found.").Format(cmd.GetFullPath()),
+            XO("Warning"),
+            wxOK | wxICON_EXCLAMATION);
 
-      int action = AudacityMessageBox(
-         prompt,
-         XO("Warning"),
-         wxYES_NO | wxICON_EXCLAMATION);
+         return false;
+      }
 
-      return action == wxYES;
+      return true;
    }
  
    // Search for the command in the PATH list
@@ -783,15 +784,12 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
 #endif
 
    if (path.empty()) {
-      auto prompt = XO("Unable to locate \"%s\" in your path.\n\nWould you like to continue anyway?")
-            .Format(cmd.GetFullPath());
-
       int action = AudacityMessageBox(
-         prompt,
+         XO("Unable to locate \"%s\" in your path.").Format(cmd.GetFullPath()),
          XO("Warning"),
-         wxYES_NO | wxICON_EXCLAMATION);
+         wxOK | wxICON_EXCLAMATION);
 
-      return action == wxYES;
+      return false;
    }
 
    return true;
