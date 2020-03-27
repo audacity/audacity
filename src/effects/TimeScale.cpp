@@ -265,7 +265,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   MIN_HalfStepsStart, MAX_HalfStepsStart
                )
-               .AddTextBox(XO("(semitones) [-12 to 12]:"), wxT(""), 12);
+               .AddTextBox(XO("(&semitones) [-12 to 12]:"), wxT(""), 12);
 
 
             m_pTextCtrl_PitchPercentChangeStart = S.Id(ID_PitchPercentChangeStart)
@@ -291,7 +291,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   MIN_HalfStepsEnd, MAX_HalfStepsEnd
                )
-               .AddTextBox(XO("(semitones) [-12 to 12]:"), wxT(""), 12);
+               .AddTextBox(XO("(s&emitones) [-12 to 12]:"), wxT(""), 12);
 
             m_pTextCtrl_PitchPercentChangeEnd = S.Id(ID_PitchPercentChangeEnd)
                .Validator<FloatingPointValidator<double>>(

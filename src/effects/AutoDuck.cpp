@@ -442,7 +442,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
                MIN_DuckAmountDb, MAX_DuckAmountDb
             )
             .NameSuffix(XO("db"))
-            .AddTextBox(XO("Duck amount:"), wxT(""), 10);
+            .AddTextBox(XO("Duck &amount:"), wxT(""), 10);
          S.AddUnits(XO("dB"));
 
          mMaximumPauseBox = S.Validator<FloatingPointValidator<double>>(
@@ -450,7 +450,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
                MIN_MaximumPause, MAX_MaximumPause
             )
             .NameSuffix(XO("seconds"))
-            .AddTextBox(XO("Maximum pause:"), wxT(""), 10);
+            .AddTextBox(XO("Ma&ximum pause:"), wxT(""), 10);
          S.AddUnits(XO("seconds"));
 
          mOuterFadeDownLenBox = S.Validator<FloatingPointValidator<double>>(
@@ -458,7 +458,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
                MIN_OuterFadeDownLen, MAX_OuterFadeDownLen
             )
             .NameSuffix(XO("seconds"))
-            .AddTextBox(XO("Outer fade down length:"), wxT(""), 10);
+            .AddTextBox(XO("Outer fade &down length:"), wxT(""), 10);
          S.AddUnits(XO("seconds"));
 
          mOuterFadeUpLenBox = S.Validator<FloatingPointValidator<double>>(
@@ -466,7 +466,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
                MIN_OuterFadeUpLen, MAX_OuterFadeUpLen
             )
             .NameSuffix(XO("seconds"))
-            .AddTextBox(XO("Outer fade up length:"), wxT(""), 10);
+            .AddTextBox(XO("Outer fade &up length:"), wxT(""), 10);
          S.AddUnits(XO("seconds"));
 
          mInnerFadeDownLenBox = S.Validator<FloatingPointValidator<double>>(
@@ -474,7 +474,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
                MIN_InnerFadeDownLen, MAX_InnerFadeDownLen
             )
             .NameSuffix(XO("seconds"))
-            .AddTextBox(XO("Inner fade down length:"), wxT(""), 10);
+            .AddTextBox(XO("Inner fade d&own length:"), wxT(""), 10);
          S.AddUnits(XO("seconds"));
 
          mInnerFadeUpLenBox = S.Validator<FloatingPointValidator<double>>(
@@ -482,7 +482,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
                MIN_InnerFadeUpLen, MAX_InnerFadeUpLen
             )
             .NameSuffix(XO("seconds"))
-            .AddTextBox(XO("Inner fade up length:"), wxT(""), 10);
+            .AddTextBox(XO("Inner &fade up length:"), wxT(""), 10);
          S.AddUnits(XO("seconds"));
       }
       S.EndMultiColumn();
@@ -494,7 +494,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
                MIN_ThresholdDb, MAX_ThresholdDb
             )
             .NameSuffix(XO("db"))
-            .AddTextBox(XO("Threshold:"), wxT(""), 10);
+            .AddTextBox(XO("&Threshold:"), wxT(""), 10);
          S.AddUnits(XO("dB"));
       }
       S.EndMultiColumn();

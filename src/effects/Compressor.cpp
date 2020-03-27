@@ -266,7 +266,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxEXPAND);
       {
          S.SetStretchyCol(1);
-         mThresholdLabel = S.AddVariableText(XO("Threshold:"), true,
+         mThresholdLabel = S.AddVariableText(XO("&Threshold:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          mThresholdSlider = S.Id(ID_Threshold)
             .Name(XO("Threshold"))
@@ -278,7 +278,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
          mThresholdText = S.AddVariableText(ThresholdFormat(999), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-         mNoiseFloorLabel = S.AddVariableText(XO("Noise Floor:"), true,
+         mNoiseFloorLabel = S.AddVariableText(XO("&Noise Floor:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          mNoiseFloorSlider = S.Id(ID_NoiseFloor)
             .Name(XO("Noise Floor"))
@@ -290,7 +290,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
          mNoiseFloorText = S.AddVariableText(ThresholdFormat(999),
             true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-         mRatioLabel = S.AddVariableText(XO("Ratio:"), true,
+         mRatioLabel = S.AddVariableText(XO("&Ratio:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          mRatioSlider = S.Id(ID_Ratio)
             .Name(XO("Ratio"))
@@ -306,7 +306,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
          /* i18n-hint: Particularly in percussion, sounds can be regarded as having
           * an 'attack' phase where the sound builds up and a 'decay' where the
           * sound dies away.  So this means 'onset duration'.  */
-         mAttackLabel = S.AddVariableText(XO("Attack Time:"), true,
+         mAttackLabel = S.AddVariableText(XO("&Attack Time:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          mAttackSlider = S.Id(ID_Attack)
             .Name(XO("Attack Time"))
@@ -319,7 +319,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
             AttackTimeFormat(9.99),
             true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-         mDecayLabel = S.AddVariableText(XO("Release Time:"), true,
+         mDecayLabel = S.AddVariableText(XO("R&elease Time:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          mDecaySlider = S.Id(ID_Decay)
             .Name(XO("Release Time"))
@@ -340,9 +340,9 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxCENTER, false);
    {
       /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
-      mGainCheckBox = S.AddCheckBox(XO("Make-up gain for 0 dB after compressing"),
+      mGainCheckBox = S.AddCheckBox(XO("Ma&ke-up gain for 0 dB after compressing"),
                                     DEF_Normalize);
-      mPeakCheckBox = S.AddCheckBox(XO("Compress based on Peaks"),
+      mPeakCheckBox = S.AddCheckBox(XO("C&ompress based on Peaks"),
                                     DEF_UsePeak);
    }
    S.EndHorizontalLay();

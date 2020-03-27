@@ -244,7 +244,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
                3, &m_PercentChange, NumValidatorStyle::THREE_TRAILING_ZEROES,
                MIN_Percentage, MAX_Percentage
             )
-            .AddTextBox(XO("Percent Change:"), wxT(""), 12);
+            .AddTextBox(XO("Percent C&hange:"), wxT(""), 12);
       }
       S.EndMultiColumn();
 
@@ -270,7 +270,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::THREE_TRAILING_ZEROES
                      | NumValidatorStyle::ZERO_AS_BLANK)
                /* i18n-hint: changing a quantity "from" one value "to" another */
-               .AddTextBox(XO("from"), wxT(""), 12);
+               .AddTextBox(XO("&from"), wxT(""), 12);
 
             m_pTextCtrl_ToBPM = S.Id(ID_ToBPM)
                /* i18n-hint: changing a quantity "from" one value "to" another */
@@ -280,7 +280,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::THREE_TRAILING_ZEROES
                      | NumValidatorStyle::ZERO_AS_BLANK)
                /* i18n-hint: changing a quantity "from" one value "to" another */
-               .AddTextBox(XO("to"), wxT(""), 12);
+               .AddTextBox(XO("&to"), wxT(""), 12);
          }
          S.EndHorizontalLay();
       }
@@ -309,7 +309,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
                      (m_FromLength * 100.0) / (100.0 + MIN_Percentage) )
                )
                /* i18n-hint: changing a quantity "from" one value "to" another */
-               .AddTextBox(XO("to"), wxT(""), 12);
+               .AddTextBox(XO("t&o"), wxT(""), 12);
          }
          S.EndHorizontalLay();
       }
@@ -319,7 +319,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          mUseSBSMSCheckBox = S.Validator<wxGenericValidator>(&mUseSBSMS)
-            .AddCheckBox(XO("Use high quality stretching (slow)"),
+            .AddCheckBox(XO("&Use high quality stretching (slow)"),
                                              mUseSBSMS);
       }
       S.EndMultiColumn();

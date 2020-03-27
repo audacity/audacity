@@ -285,7 +285,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .Name(XO("from"))
                .MinSize( { 80, -1 } )
-               .AddChoice(XO("from"), pitch);
+               .AddChoice(XO("&from"), pitch);
 
             m_pSpin_FromOctave = S.Id(ID_FromOctave)
                .Name(XO("from Octave"))
@@ -296,7 +296,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .Name(XO("to"))
                .MinSize( { 80, -1 } )
-               .AddChoice(XO("to"), pitch);
+               .AddChoice(XO("&to"), pitch);
 
             m_pSpin_ToOctave = S.Id(ID_ToOctave)
                .Name(XO("to Octave"))
@@ -313,7 +313,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                   2, &m_dSemitonesChange,
                   NumValidatorStyle::TWO_TRAILING_ZEROES
                )
-               .AddTextBox(XO("Semitones (half-steps):"), wxT(""), 12);
+               .AddTextBox(XO("&Semitones (half-steps):"), wxT(""), 12);
          }
          S.EndHorizontalLay();
       }
@@ -330,7 +330,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::THREE_TRAILING_ZEROES,
                   0.0
                )
-               .AddTextBox(XO("from"), wxT(""), 12);
+               .AddTextBox(XO("f&rom"), wxT(""), 12);
 
             m_pTextCtrl_ToFrequency = S.Id(ID_ToFrequency)
                .Name(XO("to (Hz)"))
@@ -339,7 +339,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::THREE_TRAILING_ZEROES,
                   0.0
                )
-               .AddTextBox(XO("to"), wxT(""), 12);
+               .AddTextBox(XO("t&o"), wxT(""), 12);
 
             S.AddUnits(XO("Hz"));
          }
@@ -353,7 +353,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                   NumValidatorStyle::THREE_TRAILING_ZEROES,
                   MIN_Percentage, MAX_Percentage
                )
-               .AddTextBox(XO("Percent Change:"), wxT(""), 12);
+               .AddTextBox(XO("Percent C&hange:"), wxT(""), 12);
          }
          S.EndHorizontalLay();
 
@@ -372,7 +372,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          mUseSBSMSCheckBox = S.Validator<wxGenericValidator>(&mUseSBSMS)
-            .AddCheckBox(XO("Use high quality stretching (slow)"),
+            .AddCheckBox(XO("&Use high quality stretching (slow)"),
                                              mUseSBSMS);
       }
       S.EndMultiColumn();

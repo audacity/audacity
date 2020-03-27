@@ -297,7 +297,7 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartHorizontalLay(wxALIGN_LEFT, false);
             {
-               S.AddVariableText(XO("Normalize"), false,
+               S.AddVariableText(XO("&Normalize"), false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
                S
@@ -306,7 +306,7 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
                      Msgids(kNormalizeTargetStrings, nAlgos),
                      mNormalizeTo
                );
-               S.AddVariableText(XO("to"), false,
+               S.AddVariableText(XO("t&o"), false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
                mLevelTextCtrl = S
@@ -328,12 +328,12 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
 
             mStereoIndCheckBox = S
                .Validator<wxGenericValidator>( &mStereoInd )
-               .AddCheckBox(XO("Normalize stereo channels independently"),
+               .AddCheckBox(XO("Normalize &stereo channels independently"),
                   mStereoInd );
 
             mDualMonoCheckBox = S
                .Validator<wxGenericValidator>( &mDualMono )
-               .AddCheckBox(XO("Treat mono as dual-mono (recommended)"),
+               .AddCheckBox(XO("&Treat mono as dual-mono (recommended)"),
                   mDualMono );
          }
          S.EndVerticalLay();
