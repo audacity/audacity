@@ -352,7 +352,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxCENTER);
    {
       S.Validator<wxGenericValidator>(&mWaveform)
-         .AddChoice(XO("Waveform:"),
+         .AddChoice(XO("&Waveform:"),
             Msgids( kWaveStrings, nWaveforms ) );
 
       if (mChirp)
@@ -374,7 +374,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         S.AddPrompt(XO("Frequency (Hz):"));
+         S.AddPrompt(XO("&Frequency (Hz):"));
          S.StartHorizontalLay(wxEXPAND);
          {
             S.StartHorizontalLay(wxLEFT, 50);
@@ -405,7 +405,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         S.AddPrompt(XO("Amplitude (0-1):"));
+         S.AddPrompt(XO("&Amplitude (0-1):"));
          S.StartHorizontalLay(wxEXPAND);
          {
             S.StartHorizontalLay(wxLEFT, 50);
@@ -433,7 +433,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          S.EndHorizontalLay();
 
          S.Validator<wxGenericValidator>(&mInterpolation)
-            .AddChoice(XO("Interpolation:"),
+            .AddChoice(XO("I&nterpolation:"),
                Msgids( kInterStrings, nInterpolations ) );
       }
       else
@@ -443,16 +443,16 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
                MIN_Frequency,
                mProjectRate / 2.0
             )
-            .AddTextBox(XO("Frequency (Hz):"), wxT(""), 12);
+            .AddTextBox(XO("&Frequency (Hz):"), wxT(""), 12);
 
          t = S.Validator<FloatingPointValidator<double>>(
                6, &mAmplitude[0], NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Amplitude, MAX_Amplitude
             )
-            .AddTextBox(XO("Amplitude (0-1):"), wxT(""), 12);
+            .AddTextBox(XO("&Amplitude (0-1):"), wxT(""), 12);
       }
 
-      S.AddPrompt(XO("Duration:"));
+      S.AddPrompt(XO("&Duration:"));
       mToneDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
