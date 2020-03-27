@@ -758,6 +758,19 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
    wxFileName cmd(argv[0]);
    cmd.Normalize(wxPATH_NORM_ALL & ~wxPATH_NORM_ABSOLUTE);
 
+   // Just verify the given path exists if it is absolute.
+   if (cmd.IsAbsolute() && !cmd.Exists()) {
+      auto prompt = XO("\"%s\" couldn't be found.\n\nWould you like to continue anyway?")
+            .Format(cmd.GetFullPath());
+
+      int action = AudacityMessageBox(
+         prompt,
+         XO("Warning"),
+         wxYES_NO | wxICON_EXCLAMATION);
+
+      return action == wxYES;
+   }
+ 
    // Search for the command in the PATH list
    wxPathList pathlist;
    pathlist.AddEnvList(wxT("PATH"));
