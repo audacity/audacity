@@ -110,7 +110,7 @@ bool Module::Load()
    auto ShortName = wxFileName(mName).GetName();
 
    if (!mLib->Load(mName, wxDL_LAZY | wxDL_QUIET)) {
-      auto Error = wxSysErrorMsgStr();
+      auto Error = wxString(wxSysErrorMsg());
       AudacityMessageBox(XO("Unable to load the \"%s\" module.\n\nError: %s").Format(ShortName, Error),
                          XO("Module Unsuitable"));
       wxLogMessage(_("Unable to load the module \"%s\". Error: %s").Format(mName, Error));
