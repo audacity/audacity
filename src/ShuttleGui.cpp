@@ -617,7 +617,9 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(
    wxSize Size(wxDefaultSize);
    if( nChars > 0 )
    {
-      Size.SetWidth( nChars *5 );
+      int width;
+      mpDlg->GetTextExtent( wxT("9"), &width, nullptr );
+      Size.SetWidth( nChars * width );
    }
    miProp=0;
 
