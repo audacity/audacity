@@ -544,7 +544,9 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
             S.AddVariableText( XO(
 "Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
 " Select \"Generic\" to use the system supplied generic interface."
+#if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
 " Select \"Basic\" for a basic text-only interface."
+#endif
 " Reopen the effect for this to take effect."),
                false, 0, 650);
 
@@ -552,7 +554,13 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
             {
                S.TieChoice(XO("Select &interface"),
                   mUIType,
-                  { XO("Full"), XO("Generic"), XO("Basic") });
+                  {
+                     XO("Full"),
+                     XO("Generic"),
+#if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
+                     XO("Basic")
+#endif
+                  });
             }
             S.EndHorizontalLay();
          }
@@ -795,6 +803,7 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
    mComponent = component;
    mMaster = master;
 
+   mpControl = NULL;
    mUnit = NULL;
    
    mBlockSize = 0.0;
@@ -1643,6 +1652,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
    auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParent = parent;
+   mpControl = NULL;
 
    wxPanel *container;
    {
@@ -1655,6 +1665,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
       mParent->SetSizer(mainSizer.release());
    }
 
+#if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
    if (mUIType == wxT("Basic"))
    {
       if (!CreatePlain(mParent))
@@ -1663,6 +1674,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
       }
    }
    else
+#endif
    {
       auto pControl = Destroy_ptr<AUControl>( safenew AUControl );
       if (!pControl)
@@ -1691,7 +1703,10 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
 #endif
    }
 
-   mParent->PushEventHandler(this);
+   if (mpControl)
+   {
+      mParent->PushEventHandler(this);
+   }
 
    return true;
 }
@@ -1717,11 +1732,13 @@ bool AudioUnitEffect::ValidateUI()
    return true;
 }
 
+#if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
 bool AudioUnitEffect::CreatePlain(wxWindow *parent)
 {
    // TODO???  Never implemented...
    return false;
 }
+#endif
 
 bool AudioUnitEffect::HideUI()
 {
@@ -1742,12 +1759,12 @@ bool AudioUnitEffect::CloseUI()
 #endif
    if (mpControl)
    {
+      mParent->RemoveEventHandler(this);
+
       mpControl->Close();
       mpControl = nullptr;
    }
 #endif
-
-   mParent->RemoveEventHandler(this);
 
    mUIHost = NULL;
    mParent = NULL;

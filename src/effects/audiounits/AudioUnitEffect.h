@@ -169,8 +169,9 @@ private:
    bool LoadPreset(const RegistryPath & group);
    bool SavePreset(const RegistryPath & group);
 
-
+#if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
    bool CreatePlain(wxWindow *parent);
+#endif
 
 private:
 
