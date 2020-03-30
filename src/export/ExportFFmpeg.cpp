@@ -420,12 +420,20 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    AVDictionary *options = NULL;
    AVDictionaryCleanup cleanup{ &options };
 
+   // Get the sample rate from the passed settings if we haven't set it before.
+   // Doing this only when not set allows us to carry the sample rate from one
+   // iteration of ExportMultiple to the next.  This prevents multiple resampling
+   // dialogs in the event the codec can't support the specified rate.
+   if (!mSampleRate)
+   {
+      mSampleRate = (int)settings.GetRate();
+   }
+
    // Configure the audio stream's codec context.
 
    mEncAudioCodecCtx->codec_id = ExportFFmpegOptions::fmts[mSubFormat].codecid;
    mEncAudioCodecCtx->codec_type = AVMEDIA_TYPE_AUDIO;
    mEncAudioCodecCtx->codec_tag = av_codec_get_tag(mEncFormatCtx->oformat->codec_tag,mEncAudioCodecCtx->codec_id);
-   mSampleRate = (int)settings.GetRate();
    mEncAudioCodecCtx->global_quality = -99999; //quality mode is off by default;
 
    // Each export type has its own settings
