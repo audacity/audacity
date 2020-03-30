@@ -36,6 +36,7 @@ enum FFmpegExposedFormat
    FMT_M4A,
    FMT_AC3,
    FMT_AMRNB,
+   FMT_OPUS,
    FMT_WMA2,
    FMT_OTHER,
    FMT_LAST
@@ -120,6 +121,40 @@ private:
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
+};
+
+class ExportFFmpegOPUSOptions final : public wxPanelWrapper
+{
+public:
+
+   ExportFFmpegOPUSOptions(wxWindow *parent, int format);
+   ~ExportFFmpegOPUSOptions();
+
+   void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
+
+   static const int iOPUSSampleRates[];
+
+private:
+
+   wxSlider *mBitRateSlider;
+   int mBitRateFromSlider;
+
+   wxChoice *mVbrChoice;
+   int mVbrFromChoice;
+
+   wxSlider *mComplexitySlider;
+   int mComplexityFromSlider;
+
+   wxChoice *mFramesizeChoice;
+   int mFramesizeFromChoice;
+
+   wxChoice *mApplicationChoice;
+   int mApplicationFromChoice;
+
+   wxChoice *mCuttoffChoice;
+   int mCutoffFromChoice;
 };
 
 class ExportFFmpegWMAOptions final : public wxPanelWrapper

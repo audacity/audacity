@@ -26,6 +26,11 @@
 
 *//***************************************************************//**
 
+\class ExportFFmpegOPUSOptions
+\brief Options dialog for FFmpeg exporting of OPUS format.
+
+*//***************************************************************//**
+
 \class ExportFFmpegWMAOptions
 \brief Options dialog for FFmpeg exporting of WMA format.
 
@@ -391,6 +396,266 @@ bool ExportFFmpegAMRNBOptions::TransferDataToWindow()
 ///
 ///
 bool ExportFFmpegAMRNBOptions::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   gPrefs->Flush();
+
+   return true;
+}
+
+//----------------------------------------------------------------------------
+// ExportFFmpegOPUSOptions Class
+//----------------------------------------------------------------------------
+
+const int ExportFFmpegOPUSOptions::iOPUSSampleRates[] =
+{ 48000, 24000, 16000, 12000, 8000, 0 };
+
+namespace {
+
+   /// Bit Rates supported by OPUS encoder. Setting bit rate to other values will not result in different file size.
+   ChoiceSetting OPUSBitrate
+   {
+      wxT("/FileFormats/OPUSBitrate"),
+      {
+         ByColumns,
+         {
+            // i18n-hint kbps abbreviates "thousands of bits per second"
+            XO("24 kbps"),
+            XO("32 kbps"),
+            XO("40 kbps"),
+            XO("48 kbps"),
+            XO("64 kbps"),
+            XO("80 kbps"),
+            XO("96 kbps"),
+            XO("128 kbps"),
+            XO("160 kbps"),
+            XO("192 kbps"),
+            XO("256 kbps"),
+            XO("320 kbps"),
+            XO("510 kbps"),
+         },
+         {
+            wxT("24000"),
+            wxT("32000"),
+            wxT("40000"),
+            wxT("48000"),
+            wxT("64000"),
+            wxT("80000"),
+            wxT("96000"),
+            wxT("128000"),
+            wxT("160000"),
+            wxT("192000"),
+            wxT("256000"),
+            wxT("320000"),
+            wxT("510000"),
+         }
+      },
+      7 // "128 kbps"
+   };
+
+   ChoiceSetting OPUSCompression
+   {
+      wxT("/FileFormats/OPUSCompression"),
+      {
+         ByColumns,
+         {
+            XO("0"),
+            XO("1"),
+            XO("2"),
+            XO("3"),
+            XO("4"),
+            XO("5"),
+            XO("6"),
+            XO("7"),
+            XO("8"),
+            XO("9"),
+            XO("10"), 
+         },
+         {
+            wxT("0"),
+            wxT("1"),
+            wxT("2"),
+            wxT("3"),
+            wxT("4"),
+            wxT("5"),
+            wxT("67"),
+            wxT("7"),
+            wxT("8"),
+            wxT("9"),
+            wxT("10"),
+         }
+      },
+      10 // "10"
+   };
+
+
+   ChoiceSetting OPUSVbrMode
+   {
+      wxT("/FileFormats/OPUSVbrMode"),
+      {
+         ByColumns,
+         {
+            XO("Off"),
+            XO("On"),
+            XO("Constrained"),
+         },
+         {
+            wxT("off"),
+            wxT("on"),
+            wxT("constrained"),
+         }
+      },
+      1 // "On"
+   };
+
+   ChoiceSetting OPUSApplication
+   {
+      wxT("/FileFormats/OPUSApplication"),
+      {
+         ByColumns,
+         {
+            XO("VOIP"),
+            XO("Audio"),
+            XO("Low Delay"),
+         },
+         {
+            wxT("voip"),
+            wxT("audio"),
+            wxT("lowdelay"),
+         }
+      },
+      1 // "Audio"
+   };
+
+   ChoiceSetting OPUSFrameDuration
+   {
+      wxT("/FileFormats/OPUSFrameDuration"),
+      {
+         ByColumns,
+         {
+            XO("2.5 ms"),
+            XO("5 ms"),
+            XO("10 ms"),
+            XO("20 ms"),
+            XO("40 ms"),
+            XO("60 ms"),
+         },
+         {
+            wxT("2.5"),
+            wxT("5"),
+            wxT("10"),
+            wxT("20"),
+            wxT("40"),
+            wxT("60"),
+         }
+      },
+      3 // "20"
+   };
+
+   ChoiceSetting OPUSCutoff
+   {
+      wxT("/FileFormats/OPUSCutoff"),
+      {
+         ByColumns,
+         {
+            XO("Disabled"),
+            XO("Narrowband"),
+            XO("Mediumband"),
+            XO("Wideband"),
+            XO("Super Wideband"),
+            XO("Fullband"),
+         },
+         {
+            wxT("0"),
+            wxT("4000"),
+            wxT("6000"),
+            wxT("8000"),
+            wxT("12000"),
+            wxT("20000"),
+         }
+      },
+      0 // "Disabled"
+   };
+}
+
+ExportFFmpegOPUSOptions::ExportFFmpegOPUSOptions(wxWindow *parent, int WXUNUSED(format))
+:  wxPanelWrapper(parent, wxID_ANY)
+{
+   ShuttleGui S(this, eIsCreatingFromPrefs);
+   PopulateOrExchange(S);
+
+   TransferDataToWindow();
+}
+
+ExportFFmpegOPUSOptions::~ExportFFmpegOPUSOptions()
+{
+   TransferDataFromWindow();
+}
+
+///
+///
+void ExportFFmpegOPUSOptions::PopulateOrExchange(ShuttleGui & S)
+{
+   S.SetSizerProportion(1);
+   S.SetBorder(4);
+   S.StartVerticalLay();
+   {
+      S.StartHorizontalLay(wxCENTER);
+      {
+         S.StartMultiColumn(2, wxCENTER);
+         {
+            S.StartMultiColumn(2, wxCENTER);
+            {
+               S.TieChoice(
+                  XO("Bit Rate:"),
+                  OPUSBitrate);
+
+               S.TieChoice(
+                  XO("Compression"),
+                  OPUSCompression);
+
+               S.TieChoice(
+                  XO("Frame Duration:"),
+                  OPUSFrameDuration);
+            }
+            S.EndMultiColumn();
+
+            S.StartMultiColumn(2, wxCENTER);
+            {
+               S.TieChoice(
+                  XO("Vbr Mode:"),
+                  OPUSVbrMode);
+
+               S.TieChoice(
+                  XO("Application:"),
+                  OPUSApplication);
+
+               S.TieChoice(
+                  XO("Cutoff:"),
+                  OPUSCutoff);
+
+            }
+            S.EndMultiColumn();
+         }
+         S.EndMultiColumn();
+      }
+      S.EndHorizontalLay();
+   }
+   S.EndVerticalLay();
+}
+
+///
+///
+bool ExportFFmpegOPUSOptions::TransferDataToWindow()
+{
+   return true;
+}
+
+///
+///
+bool ExportFFmpegOPUSOptions::TransferDataFromWindow()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
@@ -1340,11 +1605,12 @@ ChoiceSetting AACProfiles { wxT("/FileFormats/FFmpegAACProfile"),
 /// List of export types
 ExposedFormat ExportFFmpegOptions::fmts[] =
 {
-   {FMT_M4A,   wxT("M4A"),    wxT("m4a"), wxT("ipod"), 48,  AV_CANMETA,              true,  XO("M4A (AAC) Files (FFmpeg)"),         AV_CODEC_ID_AAC,    true},
-   {FMT_AC3,   wxT("AC3"),    wxT("ac3"), wxT("ac3"),  7,   AV_VERSION_INT(0,0,0),    false, XO("AC3 Files (FFmpeg)"),               AV_CODEC_ID_AC3,    true},
-   {FMT_AMRNB, wxT("AMRNB"),  wxT("amr"), wxT("amr"),  1,   AV_VERSION_INT(0,0,0),    false, XO("AMR (narrow band) Files (FFmpeg)"), AV_CODEC_ID_AMR_NB, true},
-   {FMT_WMA2,  wxT("WMA"),    wxT("wma"), wxT("asf"),  2,   AV_VERSION_INT(52,53,0),  false, XO("WMA (version 2) Files (FFmpeg)"),   AV_CODEC_ID_WMAV2,  true},
-   {FMT_OTHER, wxT("FFMPEG"), wxT(""),    wxT(""),     255, AV_CANMETA,             true,  XO("Custom FFmpeg Export"),             AV_CODEC_ID_NONE,   true}
+   {FMT_M4A,   wxT("M4A"),    wxT("m4a"),  wxT("ipod"), 48,  AV_CANMETA,              true,  XO("M4A (AAC) Files (FFmpeg)"),         AV_CODEC_ID_AAC,    true},
+   {FMT_AC3,   wxT("AC3"),    wxT("ac3"),  wxT("ac3"),  7,   AV_VERSION_INT(0,0,0),   false, XO("AC3 Files (FFmpeg)"),               AV_CODEC_ID_AC3,    true},
+   {FMT_AMRNB, wxT("AMRNB"),  wxT("amr"),  wxT("amr"),  1,   AV_VERSION_INT(0,0,0),   false, XO("AMR (narrow band) Files (FFmpeg)"), AV_CODEC_ID_AMR_NB, true},
+   {FMT_OPUS,  wxT("OPUS"),   wxT("opus"), wxT("opus"), 255, AV_CANMETA,              true,  XO("OPUS (OggOpus) Files (FFmpeg)"),    AV_CODEC_ID_OPUS,   true},
+   {FMT_WMA2,  wxT("WMA"),    wxT("wma"),  wxT("asf"),  2,   AV_VERSION_INT(52,53,0), false, XO("WMA (version 2) Files (FFmpeg)"),   AV_CODEC_ID_WMAV2,  true},
+   {FMT_OTHER, wxT("FFMPEG"), wxT(""),     wxT(""),     255, AV_CANMETA,              true,  XO("Custom FFmpeg Export"),             AV_CODEC_ID_NONE,   true}
 };
 
 /// Sample rates supported by AAC encoder (must end with zero-element)

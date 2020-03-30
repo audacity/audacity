@@ -52,6 +52,7 @@ extern "C" {
 
    #include <libavcodec/avcodec.h>
    #include <libavformat/avformat.h>
+   #include <libavutil/error.h>
    #include <libavutil/fifo.h>
    #include <libavutil/mathematics.h>
 
@@ -526,6 +527,12 @@ extern "C" {
       av_get_default_channel_layout,
       (int nb_channels),
       (nb_channels)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_strerror,
+      (int errnum, char *errbuf, size_t errbuf_size),
+      (errnum, errbuf, errbuf_size)
    );
 
    //

@@ -445,6 +445,20 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
       mSampleRate = 8000;
       mEncAudioCodecCtx->bit_rate = gPrefs->Read(wxT("/FileFormats/AMRNBBitRate"), 12200);
       break;
+   case FMT_OPUS:
+      av_dict_set(&options, "b", gPrefs->Read(wxT("/FileFormats/OPUSBitRate"), wxT("128000")).ToUTF8(), 0);
+      av_dict_set(&options, "vbr", gPrefs->Read(wxT("/FileFormats/OPUSVbrMode"), wxT("on")).ToUTF8(), 0);
+      av_dict_set(&options, "compression_level", gPrefs->Read(wxT("/FileFormats/OPUSCompression"), wxT("10")).ToUTF8(), 0);
+      av_dict_set(&options, "frame_duration", gPrefs->Read(wxT("/FileFormats/OPUSFrameDuration"), wxT("20")).ToUTF8(), 0);
+      av_dict_set(&options, "application", gPrefs->Read(wxT("/FileFormats/OPUSApplication"), wxT("audio")).ToUTF8(), 0);
+      av_dict_set(&options, "cutoff", gPrefs->Read(wxT("/FileFormats/OPUSCutoff"), wxT("0")).ToUTF8(), 0);
+      av_dict_set(&options, "mapping_family", mChannels <= 2 ? "0" : "255", 0);
+      if (!CheckSampleRate(mSampleRate, ExportFFmpegOPUSOptions::iOPUSSampleRates[4], ExportFFmpegOPUSOptions::iOPUSSampleRates[0], &ExportFFmpegOPUSOptions::iOPUSSampleRates[0]))
+      {
+         int bitrate = gPrefs->Read(wxT("/FileFormats/OPUSBitRate"), 128000);
+         mSampleRate = AskResample(bitrate, mSampleRate, ExportFFmpegOPUSOptions::iOPUSSampleRates[4], ExportFFmpegOPUSOptions::iOPUSSampleRates[0], &ExportFFmpegOPUSOptions::iOPUSSampleRates[0]);
+      }
+      break;
    case FMT_WMA2:
       mEncAudioCodecCtx->bit_rate = gPrefs->Read(wxT("/FileFormats/WMABitRate"), 198000);
       if (!CheckSampleRate(mSampleRate,ExportFFmpegWMAOptions::iWMASampleRates[0], ExportFFmpegWMAOptions::iWMASampleRates[4], &ExportFFmpegWMAOptions::iWMASampleRates[0]))
@@ -552,12 +566,15 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    }
 
    // Open the codec.
-   if (avcodec_open2(mEncAudioCodecCtx.get(), codec, &options) < 0)
+   int rc = avcodec_open2(mEncAudioCodecCtx.get(), codec, &options);
+   if (rc < 0)
    {
+      char buf[AV_ERROR_MAX_STRING_SIZE];
+      av_strerror(rc, buf, sizeof(buf));
       AudacityMessageBox(
          /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-         XO("FFmpeg : ERROR - Can't open audio codec 0x%x.")
-            .Format( mEncAudioCodecCtx->codec_id ),
+         XO("FFmpeg : ERROR - Can't open audio codec 0x%x\n\n%s")
+            .Format(mEncAudioCodecCtx->codec_id, wxString(buf)),
          XO("FFmpeg Error"),
          wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
@@ -1054,7 +1071,7 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
                        .Format( rate )
                   : XO(
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. ")
-                       .Format( rate, bitrate/1024))
+                       .Format( rate, bitrate/1000))
                + XO("You may resample to one of the rates below.")
             );
          }
@@ -1121,6 +1138,12 @@ void ExportFFmpeg::OptionsCreate(ShuttleGui &S, int format)
    {
       S.AddWindow(
          safenew ExportFFmpegAMRNBOptions{ S.GetParent(), format } );
+      return;
+   }
+   else if (mSubFormat == FMT_OPUS)
+   {
+      S.AddWindow(
+         safenew ExportFFmpegOPUSOptions{ S.GetParent(), format });
       return;
    }
    else if (mSubFormat == FMT_WMA2)
