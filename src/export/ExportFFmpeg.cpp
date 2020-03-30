@@ -384,9 +384,25 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
 
 bool ExportFFmpeg::CheckSampleRate(int rate, int lowrate, int highrate, const int *sampRates)
 {
-   if (rate < lowrate || rate > highrate) return false;
-   for (int i = 0; sampRates[i] > 0; i++)
-      if (rate == sampRates[i]) return true;
+   if (lowrate && highrate)
+   {
+      if (rate < lowrate || rate > highrate)
+      {
+         return false;
+      }
+   }
+
+   if (sampRates)
+   {
+      for (int i = 0; sampRates[i] > 0; i++)
+      {
+         if (rate == sampRates[i])
+         {
+            return true;
+         }
+      }
+   }
+
    return false;
 }
 
@@ -559,6 +575,20 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
       }
    }
 
+   if (codec->supported_samplerates)
+   {
+      if (!CheckSampleRate(mSampleRate, 0, 0, codec->supported_samplerates))
+      {
+         mEncAudioCodecCtx->sample_rate = mSampleRate = AskResample(0, mSampleRate, 0, 0, codec->supported_samplerates);
+
+         // This happens if user refused to resample the project
+         if (mSampleRate == 0)
+         {
+            return false;
+         }
+      }
+   }
+
    if (mEncFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
    {
       mEncAudioCodecCtx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
@@ -569,12 +599,26 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    int rc = avcodec_open2(mEncAudioCodecCtx.get(), codec, &options);
    if (rc < 0)
    {
-      char buf[AV_ERROR_MAX_STRING_SIZE];
-      av_strerror(rc, buf, sizeof(buf));
+      TranslatableString errmsg;
+
+      switch (rc)
+      {
+      case -EPERM:
+         errmsg = XO("The codec reported a generic error (EPERM)");
+         break;
+      case -EINVAL:
+         errmsg = XO("The codec reported an invalid parameter (EINVAL)");
+         break;
+      default:
+         char buf[AV_ERROR_MAX_STRING_SIZE];
+         av_strerror(rc, buf, sizeof(buf));
+         errmsg = Verbatim(buf);
+      }
+
       AudacityMessageBox(
          /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-         XO("FFmpeg : ERROR - Can't open audio codec 0x%x\n\n%s")
-            .Format(mEncAudioCodecCtx->codec_id, wxString(buf)),
+         XO("Can't open audio codec \"%s\" (0x%x)\n\n%s")
+         .Format(codec->name, mEncAudioCodecCtx->codec_id, errmsg),
          XO("FFmpeg Error"),
          wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
@@ -1085,7 +1129,7 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
                   for (int i = 0; sampRates[i] > 0; i++)
                   {
                      int label = sampRates[i];
-                     if (label >= lowrate && label <= highrate)
+                     if ((!lowrate || label >= lowrate) && (!highrate || label <= highrate))
                      {
                         wxString name = wxString::Format(wxT("%d"),label);
                         choices.push_back( Verbatim( name ) );
