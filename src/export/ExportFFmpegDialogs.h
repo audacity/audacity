@@ -190,6 +190,8 @@ public:
    void OnOpen(wxCommandEvent & evt);
 
 private:
+   wxTextCtrl *mFormat;
+   wxTextCtrl *mCodec;
 
    DECLARE_EVENT_TABLE()
 };

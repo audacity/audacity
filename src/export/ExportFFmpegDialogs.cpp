@@ -778,7 +778,9 @@ BEGIN_EVENT_TABLE(ExportFFmpegCustomOptions, wxPanelWrapper)
 END_EVENT_TABLE()
 
 ExportFFmpegCustomOptions::ExportFFmpegCustomOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanelWrapper(parent, wxID_ANY)
+:  wxPanelWrapper(parent, wxID_ANY),
+   mFormat(NULL),
+   mCodec(NULL)
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -797,10 +799,19 @@ void ExportFFmpegCustomOptions::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxCENTER);
    {
-      S.StartHorizontalLay(wxCENTER, 0);
+      S.StartVerticalLay(wxCENTER, 0);
       {
          S.Id(OpenID).AddButton(XO("Open custom FFmpeg format options"));
+         S.StartMultiColumn(2, wxCENTER);
+         {
+            S.AddPrompt(XO("Current Format:"));
+            mFormat = S.Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
+            S.AddPrompt(XO("Current Codec:"));
+            mCodec = S.Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
+         }
+         S.EndMultiColumn();
       }
+#
       S.EndHorizontalLay();
    }
    S.EndHorizontalLay();
@@ -810,6 +821,11 @@ void ExportFFmpegCustomOptions::PopulateOrExchange(ShuttleGui & S)
 ///
 bool ExportFFmpegCustomOptions::TransferDataToWindow()
 {
+   if (mFormat)
+   {
+      mFormat->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegFormat"), wxT("")));
+      mCodec->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegCodec"), wxT("")));
+   }
    return true;
 }
 
@@ -847,6 +863,8 @@ void ExportFFmpegCustomOptions::OnOpen(wxCommandEvent & WXUNUSED(evt))
 
    ExportFFmpegOptions od(pWin);
    od.ShowModal();
+
+   TransferDataToWindow();
 }
 
 FFmpegPreset::FFmpegPreset()
