@@ -841,7 +841,7 @@ void MacrosWindow::OnListSelected(wxListEvent & WXUNUSED(event))
 /// The window has been resized.
 void MacrosWindow::OnSize(wxSizeEvent & WXUNUSED(event))
 {
-   // Refrsh the layout and re-fit the columns.
+   // Refresh the layout and re-fit the columns.
    Layout();
    if( !mbExpanded )
       return;
