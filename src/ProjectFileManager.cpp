@@ -625,18 +625,34 @@ bool ProjectFileManager::SaveCopyWaveTracks(const FilePath & strProjectPathName,
    auto &trackFactory = TrackFactory::Get( project );
 
    wxString extension, fileFormat;
-#ifdef USE_LIBVORBIS
-   if (bLossless) {
-      extension = wxT("wav");
-      fileFormat = wxT("WAVFLT");
-   } else {
+   bool haveVorbis =
+#if defined(USE_LIBVORBIS)
+      true;
+#else
+      false;
+#endif
+   if (!bLossless && haveVorbis) {
       extension = wxT("ogg");
       fileFormat = wxT("OGG");
+   } else{
+      extension = wxT("wav");
+      fileFormat = wxT("WAV");
+
+      // LLL: Temporary hack until I can figure out how to add an "ExportPCMCommand"
+      //      to create a 32-bit float WAV file.  It tells the ExportPCM exporter
+      //      to use float when exporting the next WAV file.
+      //
+      //      This was done as part of the resolution for bug #2062.
+      //
+      // See: ExportPCM.cpp, LoadEncoding()
+      auto cleanup = finally([&] {
+         gPrefs->DeleteEntry(wxT("/FileFormats/ExportFormat_SF1_ForceFloat"));
+         gPrefs->Flush();
+      });
+      gPrefs->Write(wxT("/FileFormats/ExportFormat_SF1_ForceFloat"), true);
+      gPrefs->Flush();
    }
-#else
-   extension = wxT("wav");
-   fileFormat = wxT("WAVFLT");
-#endif
+
    // Some of this is similar to code in ExportMultipleDialog::ExportMultipleByTrack
    // but that code is really tied into the dialogs.
 

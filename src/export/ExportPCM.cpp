@@ -62,8 +62,6 @@ static const kFormats[] =
    {SF_FORMAT_AIFF | SF_FORMAT_PCM_16, wxT("AIFF"),   XO("AIFF (Apple/SGI)")},
 #endif
    {SF_FORMAT_WAV | SF_FORMAT_PCM_16,  wxT("WAV"),    XO("WAV (Microsoft)")},
-   {SF_FORMAT_WAV | SF_FORMAT_PCM_24,  wxT("WAV24"),  XO("WAV (Microsoft) signed 24-bit PCM")},
-   {SF_FORMAT_WAV | SF_FORMAT_FLOAT,   wxT("WAVFLT"), XO("WAV (Microsoft) 32-bit float PCM")},
 };
 
 enum
@@ -72,8 +70,6 @@ enum
    FMT_AIFF,
 #endif
    FMT_WAV,
-   FMT_WAV24,
-   FMT_WAVFLT,
    FMT_OTHER
 };
 
@@ -83,18 +79,33 @@ enum
 
 static int LoadOtherFormat(int def = 0)
 {
-   return gPrefs->Read(wxString::Format(wxT("/FileFormats/ExportFormat_SF1")),
+   return gPrefs->Read(wxT("/FileFormats/ExportFormat_SF1"),
                        kFormats[0].format & SF_FORMAT_TYPEMASK);
 }
 
 static void SaveOtherFormat(int val)
 {
-   gPrefs->Write(wxString::Format(wxT("/FileFormats/ExportFormat_SF1")), val);
+   gPrefs->Write(wxT("/FileFormats/ExportFormat_SF1"), val);
    gPrefs->Flush();
 }
 
 static int LoadEncoding(int type)
 {
+   // LLL: Temporary hack until I can figure out how to add an "ExportPCMCommand"
+   //      to create a 32-bit float WAV file.  It tells the ExportPCM exporter
+   //      to use float when exporting the next WAV file.
+   //
+   //      This was done as part of the resolution for bug #2062.
+   //
+   // See: ProjectFileManager.cpp, ProjectFileManager::SaveCopyWaveTracks()
+   if (gPrefs->HasEntry(wxT("/FileFormats/ExportFormat_SF1_ForceFloat")))
+   {
+      gPrefs->DeleteEntry(wxT("/FileFormats/ExportFormat_SF1_ForceFloat"));
+      gPrefs->Flush();
+
+      return SF_FORMAT_FLOAT;
+   }
+
    return gPrefs->Read(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
                                         sf_header_shortname(type), type), (long int) 0);
 }
@@ -490,11 +501,6 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
       case FMT_WAV:
          sf_format = SF_FORMAT_WAV;
-      break;
-
-      case FMT_WAV24:
-      case FMT_WAVFLT:
-         sf_format = kFormats[subformat].format;
       break;
 
       default:
