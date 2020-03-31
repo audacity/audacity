@@ -1001,7 +1001,7 @@ bool EffectUIHost::Initialize()
       auto gAudioIO = AudioIO::Get();
       mDisableTransport = !gAudioIO->IsAvailable(mProject);
       mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
-      mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
+      mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
    }
 
    EffectPanel *w {};
@@ -1704,7 +1704,7 @@ void EffectUIHost::UpdateControls()
    {
       return;
    }
-   
+
    if (mCapturing || mDisableTransport)
    {
       // Don't allow focus to get trapped
