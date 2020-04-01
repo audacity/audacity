@@ -72,7 +72,7 @@ set( WITH_VR32 YES )
 find_package( SIMD32 )
 if( SIMD32_FOUND )
    set( WITH_CR32S ON )
-   string( STRIP "${SIMD32_C_FLAGS}" SIMD32_C_FLAGS )
+   string( STRIP ${SIMD32_C_FLAGS} SIMD32_C_FLAGS )
    list( APPEND OPTIONS ${SIMD32_C_FLAGS} )
 endif()
 
