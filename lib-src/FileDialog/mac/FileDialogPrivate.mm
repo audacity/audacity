@@ -153,6 +153,7 @@ void FileDialog::Create(
     const wxString& defaultDir, const wxString& defaultFileName, const wxString& wildCard,
     long style, const wxPoint& pos, const wxSize& sz, const wxString& name)
 {
+
     FileDialogBase::Create(parent, message, defaultDir, defaultFileName, wildCard, style, pos, sz, name);
 
 //    m_sheetDelegate = [[ModalDialogDelegate alloc] init];
@@ -300,7 +301,7 @@ void FileDialog::DoViewResized(void* object)
 
 void FileDialog::DoSendFolderChangedEvent(void* panel, const wxString & path)
 {
-    m_dir = wxPathOnly( path );
+    m_dir = path;
 
     wxFileCtrlEvent event( wxEVT_FILECTRL_FOLDERCHANGED, this, GetId() );
 
@@ -315,12 +316,15 @@ void FileDialog::DoSendSelectionChangedEvent(void* panel)
     {
         NSSavePanel* sPanel = (NSSavePanel*) panel;
         NSString* path = [[sPanel URL] path];
-
-        m_path = wxCFStringRef::AsStringWithNormalizationFormC( path );
-        m_fileName = wxFileNameFromPath( m_path );
-        m_dir = wxPathOnly( m_path );
-        m_fileNames.Clear();
-        m_fileNames.Add( m_fileName );
+        wxFileName fn(wxCFStringRef::AsStringWithNormalizationFormC( path ));
+        if (!fn.GetFullPath().empty())
+        {
+            m_path = fn.GetFullPath();
+            m_dir = fn.GetPath();
+            m_fileName = fn.GetFullName();
+            m_fileNames.Clear();
+            m_fileNames.Add( m_fileName );
+        }
     }
     else
     {
