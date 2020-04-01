@@ -79,7 +79,7 @@ endif()
 find_package( SIMD64 )
 if( SIMD64_FOUND )
    set( WITH_CR64S ON )
-   string( STRIP "${SIMD64_C_FLAGS}" SIMD64_C_FLAGS )
+   string( STRIP ${SIMD64_C_FLAGS} SIMD64_C_FLAGS )
    list( APPEND OPTIONS ${SIMD64_C_FLAGS} )
 endif()
 
