@@ -301,7 +301,7 @@ XMLFileWriter::XMLFileWriter(
 {
    auto tempPath = wxFileName::CreateTempFileName( outputPath );
    if (!wxFFile::Open(tempPath, wxT("wb")) || !IsOpened())
-      ThrowException( tempPath, mCaption );
+      ThrowException( outputPath, mCaption );
 
    if (mKeepBackup) {
       int index = 0;
