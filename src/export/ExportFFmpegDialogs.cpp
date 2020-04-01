@@ -422,6 +422,9 @@ namespace {
          ByColumns,
          {
             // i18n-hint kbps abbreviates "thousands of bits per second"
+            XO("6 kbps"),
+            XO("8 kbps"),
+            XO("16 kbps"),
             XO("24 kbps"),
             XO("32 kbps"),
             XO("40 kbps"),
@@ -433,10 +436,11 @@ namespace {
             XO("160 kbps"),
             XO("192 kbps"),
             XO("256 kbps"),
-            XO("320 kbps"),
-            XO("510 kbps"),
          },
          {
+            wxT("6000"),
+            wxT("8000"),
+            wxT("16000"),
             wxT("24000"),
             wxT("32000"),
             wxT("40000"),
@@ -448,8 +452,6 @@ namespace {
             wxT("160000"),
             wxT("192000"),
             wxT("256000"),
-            wxT("320000"),
-            wxT("510000"),
          }
       },
       7 // "128 kbps"
