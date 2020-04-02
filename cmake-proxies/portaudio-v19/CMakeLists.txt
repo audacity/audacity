@@ -104,7 +104,9 @@ list( APPEND SOURCES
          ${TARGET_ROOT}/src/os/win/pa_win_util.c
          ${TARGET_ROOT}/src/os/win/pa_win_waveformat.c
          ${TARGET_ROOT}/src/os/win/pa_win_wdmks_utils.c
-         ${TARGET_ROOT}/src/os/win/pa_x86_plain_converters.c
+         $<$<C_COMPILER_ID:MSVC>:
+            ${TARGET_ROOT}/src/os/win/pa_x86_plain_converters.c
+         >
       >
 
       $<$<PLATFORM_ID:Darwin>:
