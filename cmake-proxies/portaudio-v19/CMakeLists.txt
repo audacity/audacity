@@ -29,6 +29,27 @@ else()
       "Use the OSS audio interface if available"
       YES
    )
+
+   if( ${_OPT}use_pa_oss )
+      find_path( OSS_INCLUDE NAMES sys/soundcard.h )
+      mark_as_advanced( FORCE OSS_INCLUDE )
+
+      if( OSS_INCLUDE )
+         set( OSS_INCLUDE_DIRS ${OSS_INCLUDE} )
+      endif()
+
+      find_library( OSS_LIBRARY NAMES ossaudio )
+      mark_as_advanced( FORCE OSS_LIBRARY )
+
+      if( OSS_LIBRARY )
+         set( OSS_LIBRARIES ${OSS_LIBRARY} )
+      endif()
+
+      if( NOT OSS_INCLUDE_DIRS )
+         set_cache_value( ${_OPT}use_pa_oss NO )
+      endif()
+   endif()
+
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       cmd_option(
          ${_OPT}use_pa_coreaudio
@@ -48,26 +69,6 @@ else()
             set_cache_value( ${_OPT}use_pa_alsa NO )
          endif()
       endif()
-   endif()
-endif()
-
-if( ${_OPT}use_pa_oss )
-   find_path( OSS_INCLUDE NAMES sys/soundcard.h )
-   mark_as_advanced( FORCE OSS_INCLUDE )
-
-   if( OSS_INCLUDE )
-      set( OSS_INCLUDE_DIRS ${OSS_INCLUDE} )
-   endif()
-
-   find_library( OSS_LIBRARY NAMES ossaudio )
-   mark_as_advanced( FORCE OSS_LIBRARY )
-
-   if( OSS_LIBRARY )
-      set( OSS_LIBRARIES ${OSS_LIBRARY} )
-   endif()
-
-   if( NOT OSS_INCLUDE_DIRS )
-      set_cache_value( ${_OPT}use_pa_oss NO )
    endif()
 endif()
 
