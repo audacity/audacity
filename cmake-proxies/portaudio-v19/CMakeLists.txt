@@ -22,50 +22,53 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       "Use the portaudio WMME interface if available"
       YES
    )
-elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+else()
+   # Look for OSS if the user wants it
    cmd_option(
-      ${_OPT}use_pa_coreaudio
-      "Use the portaudio CoreAudio interface if available"
-      YES
-   )
-elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
-   cmd_option(
-      ${_OPT}use_pa_alsa
-      "Use the portaudio ALSA interface if available"
+      ${_OPT}use_pa_oss
+      "Use the OSS audio interface if available"
       YES
    )
 
-   if( ${_OPT}use_pa_alsa )
-      find_package( ALSA )
-      if( NOT ALSA_FOUND )
-         set_cache_value( ${_OPT}use_pa_alsa NO )
+   if( ${_OPT}use_pa_oss )
+      find_path( OSS_INCLUDE NAMES sys/soundcard.h )
+      mark_as_advanced( FORCE OSS_INCLUDE )
+
+      if( OSS_INCLUDE )
+         set( OSS_INCLUDE_DIRS ${OSS_INCLUDE} )
+      endif()
+
+      find_library( OSS_LIBRARY NAMES ossaudio )
+      mark_as_advanced( FORCE OSS_LIBRARY )
+
+      if( OSS_LIBRARY )
+         set( OSS_LIBRARIES ${OSS_LIBRARY} )
+      endif()
+
+      if( NOT OSS_INCLUDE_DIRS )
+         set_cache_value( ${_OPT}use_pa_oss NO )
       endif()
    endif()
-endif()
 
-# Look for OSS if the user wants it
-cmd_option(
-   ${_OPT}use_pa_oss
-   "Use the OSS audio interface if available"
-   YES
-)
-if( ${_OPT}use_pa_oss )
-   find_path( OSS_INCLUDE NAMES sys/soundcard.h )
-   mark_as_advanced( FORCE OSS_INCLUDE )
+   if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+      cmd_option(
+         ${_OPT}use_pa_coreaudio
+         "Use the portaudio CoreAudio interface if available"
+         YES
+      )
+   elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
+      cmd_option(
+         ${_OPT}use_pa_alsa
+         "Use the portaudio ALSA interface if available"
+         YES
+      )
 
-   if( OSS_INCLUDE )
-      set( OSS_INCLUDE_DIRS ${OSS_INCLUDE} )
-   endif()
-
-   find_library( OSS_LIBRARY NAMES ossaudio )
-   mark_as_advanced( FORCE OSS_LIBRARY )
-
-   if( OSS_LIBRARY )
-      set( OSS_LIBRARIES ${OSS_LIBRARY} )
-   endif()
-
-   if( NOT OSS_INCLUDE_DIRS )
-      set_cache_value( ${_OPT}use_pa_oss NO )
+      if( ${_OPT}use_pa_alsa )
+         find_package( ALSA )
+         if( NOT ALSA_FOUND )
+            set_cache_value( ${_OPT}use_pa_alsa NO )
+         endif()
+      endif()
    endif()
 endif()
 
