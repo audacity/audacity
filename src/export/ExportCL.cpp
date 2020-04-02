@@ -305,6 +305,8 @@ public:
    // Optional   
    bool CheckFileName(wxFileName &filename, int format = 0) override;
 
+   FileExtension GetExtension(int index) override;
+
 private:
    void GetSettings();
 
@@ -801,6 +803,13 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
    }
 
    return true;
+}
+
+FileExtension ExportCL::GetExtension(int index)
+{
+   GetSettings();
+
+   return mExt;
 }
 
 void ExportCL::GetSettings()
