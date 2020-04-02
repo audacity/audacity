@@ -87,6 +87,7 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/sample-data-import.ny \
    plug-ins/SilenceMarker.ny \
    plug-ins/SoundFinder.ny \
+   plug-ins/spectral-delete.ny \
    plug-ins/SpectralEditMulti.ny \
    plug-ins/SpectralEditParametricEQ.ny \
    plug-ins/SpectralEditShelves.ny \

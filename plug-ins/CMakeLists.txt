@@ -33,6 +33,7 @@ list( APPEND SOURCES
    rms.ny
    sample-data-export.ny
    sample-data-import.ny
+   spectral-delete.ny
    tremolo.ny
    vocalrediso.ny
    vocoder.ny

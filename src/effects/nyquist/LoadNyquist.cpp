@@ -43,6 +43,7 @@ const static wxChar *kShippedEffects[] =
    wxT("sample-data-import.ny"),
    wxT("SilenceMarker.ny"),
    wxT("SoundFinder.ny"),
+   wxT("spectral-delete.ny"),
    wxT("SpectralEditMulti.ny"),
    wxT("SpectralEditParametricEQ.ny"),
    wxT("SpectralEditShelves.ny"),
