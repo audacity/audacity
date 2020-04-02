@@ -22,33 +22,35 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       "Use the portaudio WMME interface if available"
       YES
    )
-elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+else()
+   # Look for OSS if the user wants it
    cmd_option(
-      ${_OPT}use_pa_coreaudio
-      "Use the portaudio CoreAudio interface if available"
+      ${_OPT}use_pa_oss
+      "Use the OSS audio interface if available"
       YES
    )
-elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
-   cmd_option(
-      ${_OPT}use_pa_alsa
-      "Use the portaudio ALSA interface if available"
-      YES
-   )
+   if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+      cmd_option(
+         ${_OPT}use_pa_coreaudio
+         "Use the portaudio CoreAudio interface if available"
+         YES
+      )
+   elseif( CMAKE_SYSTEM_NAME MATCHES "Linux|FreeBSD" )
+      cmd_option(
+         ${_OPT}use_pa_alsa
+         "Use the portaudio ALSA interface if available"
+         YES
+      )
 
-   if( ${_OPT}use_pa_alsa )
-      find_package( ALSA )
-      if( NOT ALSA_FOUND )
-         set_cache_value( ${_OPT}use_pa_alsa NO )
+      if( ${_OPT}use_pa_alsa )
+         find_package( ALSA )
+         if( NOT ALSA_FOUND )
+            set_cache_value( ${_OPT}use_pa_alsa NO )
+         endif()
       endif()
    endif()
 endif()
 
-# Look for OSS if the user wants it
-cmd_option(
-   ${_OPT}use_pa_oss
-   "Use the OSS audio interface if available"
-   YES
-)
 if( ${_OPT}use_pa_oss )
    find_path( OSS_INCLUDE NAMES sys/soundcard.h )
    mark_as_advanced( FORCE OSS_INCLUDE )
