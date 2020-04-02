@@ -1087,7 +1087,7 @@ static EWindowsVersion GetWindowsVersion()
 		// by GetVersion API)
 		if ((fnRtlGetVersion = (LPFN_RTLGETVERSION)GetProcAddress(GetModuleHandleA("ntdll"), "RtlGetVersion")) != NULL)
 		{
-			OSVERSIONINFOW ver = { sizeof(OSVERSIONINFOW), 0, 0, 0, {0} };
+         OSVERSIONINFOW ver = { sizeof(OSVERSIONINFOW), 0, 0, 0, 0, {0} };
 
 			PRINT(("WASAPI: getting Windows version with RtlGetVersion()\n"));
 
