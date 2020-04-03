@@ -942,6 +942,7 @@
     <copy Include="..\..\..\plug-ins\sample-data-import.ny" />
     <copy Include="..\..\..\plug-ins\SilenceMarker.ny" />
     <copy Include="..\..\..\plug-ins\SoundFinder.ny" />
+    <copy Include="..\..\..\plug-ins\spectral-delete.ny" />
     <copy Include="..\..\..\plug-ins\SpectralEditMulti.ny" />
     <copy Include="..\..\..\plug-ins\SpectralEditParametricEQ.ny" />
     <copy Include="..\..\..\plug-ins\SpectralEditShelves.ny" />
