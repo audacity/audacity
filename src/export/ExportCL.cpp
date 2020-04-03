@@ -134,15 +134,10 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
                               cmds);
             S.Id(ID_BROWSE).AddButton(XO("Browse..."),
                                       wxALIGN_CENTER_VERTICAL);
-            S.TieTextBox(XO("Extension:"),
-               { wxT("/FileFormats/ExternalProgramExtension"), wxT("wav") },
-               30);
-            S.AddFixedText( {} );
             S.AddFixedText( {} );
             S.TieCheckBox(XO("Show output"),
                           {wxT("/FileFormats/ExternalProgramShowOutput"),
                            false});
-            S.AddFixedText({});
          }
          S.EndMultiColumn();
       }
@@ -305,14 +300,11 @@ public:
    // Optional   
    bool CheckFileName(wxFileName &filename, int format = 0) override;
 
-   FileExtension GetExtension(int index) override;
-
 private:
    void GetSettings();
 
    std::vector<char> GetMetaChunk(const Tags *metadata);
    wxString mCmd;
-   wxString mExt;
    bool mShow;
 
    struct ExtendPath
@@ -383,17 +375,15 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    wxString output;
    long rc;
 
+   const auto path = fName.GetFullPath();
+
    GetSettings();
 
-   wxFileName fn = fName;
-   if (!fn.HasExt()) {
-      if (mCmd.find(wxT("%f.")) == wxNOT_FOUND) {
-         fn.SetExt(mExt);
-      }
-   }
-
-   const auto path = fn.GetFullPath();
-
+   // Bug 2178 - users who don't know what they are doing will 
+   // now get a file extension of .wav appended to their ffmpeg filename
+   // and therefore ffmpeg will be able to choose a file type.
+   if( mCmd == wxT("ffmpeg -i - \"%f\"") && !fName.HasExt())
+      mCmd.Replace( "%f", "%f.wav" );
    mCmd.Replace(wxT("%f"), path);
 
    // Kick off the command
@@ -805,19 +795,11 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
    return true;
 }
 
-FileExtension ExportCL::GetExtension(int index)
-{
-   GetSettings();
-
-   return mExt;
-}
-
 void ExportCL::GetSettings()
 {
    // Retrieve settings
    gPrefs->Read(wxT("/FileFormats/ExternalProgramShowOutput"), &mShow, false);
    mCmd = gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"), wxT("lame - \"%f.mp3\""));
-   mExt = gPrefs->Read(wxT("/FileFormats/ExternalProgramExtension"), wxT("wav"));
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "CommandLine",
