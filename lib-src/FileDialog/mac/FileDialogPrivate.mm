@@ -61,7 +61,7 @@
 
 - (void)panel:(id)sender didChangeToDirectoryURL:(NSURL *)url;
 - (void)panelSelectionDidChange:(id)sender;
-- (NSString *)panel:(id)sender userEnteredFilename:(NSString *)filename confirmed:(BOOL)okFlag;
+- (BOOL)panel:(id)sender validateURL:(NSURL *)url error:(NSError * _Nullable *)outError;
 
 - (void)viewResized:(NSNotification *)notification;
 
@@ -104,15 +104,16 @@
     _dialog->DoSendSelectionChangedEvent(sender);
 }
 
-- (NSString *)panel:(id)sender userEnteredFilename:(NSString *)filename confirmed:(BOOL)okFlag;
+// Do NOT remove this method.  For an explanation, refer to:
+//
+//    http://bugzilla.audacityteam.org/show_bug.cgi?id=2371
+//
+- (BOOL)panel:(id)sender validateURL:(NSURL *)url error:(NSError * _Nullable *)outError;
 {
-    if (okFlag == YES)
-    {
-        _dialog->DoCaptureFilename(sender, wxCFStringRef::AsStringWithNormalizationFormC(filename));
-    }
-
-    return filename;
+   // We handle filename validation after the panel closes
+   return YES;
 }
+
 @end
 
 wxIMPLEMENT_CLASS(FileDialog, FileDialogBase)
@@ -143,7 +144,6 @@ void FileDialog::Init()
 {
     m_filterIndex = -1;
     m_delegate = nil;
-    m_sheetDelegate = nil;
     m_filterPanel = NULL;
     m_filterChoice = NULL;
 }
@@ -155,14 +155,10 @@ void FileDialog::Create(
 {
 
     FileDialogBase::Create(parent, message, defaultDir, defaultFileName, wildCard, style, pos, sz, name);
-
-//    m_sheetDelegate = [[ModalDialogDelegate alloc] init];
-//    [(ModalDialogDelegate*)m_sheetDelegate setImplementation: this];
 }
 
 FileDialog::~FileDialog()
 {
-    [m_sheetDelegate release];
 }
 
 bool FileDialog::SupportsExtraControl() const
@@ -354,23 +350,6 @@ void FileDialog::DoSendSelectionChangedEvent(void* panel)
     event.SetFiles( m_fileNames );
 
     GetEventHandler()->ProcessEvent( event );
-}
-
-void FileDialog::DoCaptureFilename(void* panel, const wxString & name)
-{
-    // Bug 2371:
-    // This is here solely to get around a crash when accessing the URL after
-    // the dialog ends.  If multiple filters are passed in and the initial filter
-    // has an "*" or "*.*" entry (nothing filtered) and the users switches to
-    // another filter that does have specific extensions, a crash will occur if
-    // the file previously existed and the URL method is used after the dialog
-    // returns.
-    //
-    // So, to get around it, we just capture the filename prior to the dialog
-    // ending.
-    m_fileName = name;
-
-    return;
 }
 
 void FileDialog::SetupExtraControls(WXWindow nativeWindow)
@@ -586,8 +565,9 @@ int FileDialog::ShowModal()
         // be able to pass this in
         [sPanel setTreatsFilePackagesAsDirectories:NO];
         [sPanel setCanSelectHiddenExtension:YES];
+        [sPanel setExtensionHidden:NO];
         [sPanel setAllowedFileTypes:types];
-        [sPanel setAllowsOtherFileTypes:NO];
+        [sPanel setAllowsOtherFileTypes:YES];
 
         if ( HasFlag(wxFD_OVERWRITE_PROMPT) )
         {
@@ -669,7 +649,12 @@ void FileDialog::ModalFinishedCallback(void* panel, int returnCode)
         {
             result = wxID_OK;
 
-            m_path = m_dir + wxT("/") + m_fileName;
+            NSString* path = [[sPanel URL] path];
+            wxFileName fn(wxCFStringRef::AsStringWithNormalizationFormC( path ));
+            m_dir = fn.GetPath();
+            m_fileName = fn.GetFullName();
+            m_path = fn.GetFullPath();
+
             if (m_filterChoice)
             {
                 m_filterIndex = m_filterChoice->GetSelection();

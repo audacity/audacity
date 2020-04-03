@@ -74,7 +74,6 @@ public:
     void DoViewResized(void* object);
     void DoSendFolderChangedEvent(void* panel, const wxString& path);
     void DoSendSelectionChangedEvent(void* panel);
-    void DoCaptureFilename(void* panel, const wxString& name);
 #endif
 
 protected:
