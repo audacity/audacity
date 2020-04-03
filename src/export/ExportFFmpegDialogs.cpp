@@ -482,7 +482,7 @@ namespace {
             wxT("3"),
             wxT("4"),
             wxT("5"),
-            wxT("67"),
+            wxT("6"),
             wxT("7"),
             wxT("8"),
             wxT("9"),
