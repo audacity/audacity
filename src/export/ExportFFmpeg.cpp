@@ -585,15 +585,35 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 
    if (codec->supported_samplerates)
    {
-      if (!CheckSampleRate(mSampleRate, 0, 0, codec->supported_samplerates))
+      // Workaround for crash in bug #2378.  Proper fix is to get a newer version of FFmpeg.
+      if (codec->id == AV_CODEC_ID_AAC)
       {
-         mEncAudioCodecCtx->sample_rate = mSampleRate = AskResample(0, mSampleRate, 0, 0, codec->supported_samplerates);
+         std::vector<int> rates;
+         int i = 0;
 
-         // This happens if user refused to resample the project
-         if (mSampleRate == 0)
+         while (codec->supported_samplerates[i] && codec->supported_samplerates[i] != 7350)
          {
-            return false;
+            rates.push_back(codec->supported_samplerates[i++]);
          }
+         rates.push_back(0);
+
+         if (!CheckSampleRate(mSampleRate, 0, 0, rates.data()))
+         {
+            mEncAudioCodecCtx->sample_rate = mSampleRate = AskResample(0, mSampleRate, 0, 0, rates.data());
+         }
+      }
+      else
+      {
+         if (!CheckSampleRate(mSampleRate, 0, 0, codec->supported_samplerates))
+         {
+            mEncAudioCodecCtx->sample_rate = mSampleRate = AskResample(0, mSampleRate, 0, 0, codec->supported_samplerates);
+         }
+      }
+
+      // This happens if user refused to resample the project
+      if (mSampleRate == 0)
+      {
+         return false;
       }
    }
 
