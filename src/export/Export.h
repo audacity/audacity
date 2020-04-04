@@ -221,7 +221,7 @@ private:
    bool ExamineTracks();
    bool GetFilename();
    bool CheckFilename();
-   bool CheckMix();
+   bool CheckMix(bool prompt = true);
    bool ExportTracks();
 
    static void CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata);

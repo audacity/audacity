@@ -863,7 +863,7 @@ void Exporter::DisplayOptions(int index)
 #endif
 }
 
-bool Exporter::CheckMix()
+bool Exporter::CheckMix(bool prompt /*= true*/ )
 {
    // Clean up ... should never happen
    mMixerSpec.reset();
@@ -892,27 +892,29 @@ bool Exporter::CheckMix()
          if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
             exportedChannels = mChannels;
 
-         auto pWindow = ProjectWindow::Find( mProject );
-         if (exportedChannels == 1) {
-            if (ShowWarningDialog(pWindow,
-                                  wxT("MixMono"),
-                                  XO("Your tracks will be mixed down and exported as one mono file."),
-                                  true) == wxID_CANCEL)
-               return false;
-         }
-         else if (exportedChannels == 2) {
-            if (ShowWarningDialog(pWindow,
-                                  wxT("MixStereo"),
-                                  XO("Your tracks will be mixed down and exported as one stereo file."),
-                                  true) == wxID_CANCEL)
-               return false;
-         }
-         else {
-            if (ShowWarningDialog(pWindow,
-                                  wxT("MixUnknownChannels"),
-                                  XO("Your tracks will be mixed down to one exported file according to the encoder settings."),
-                                  true) == wxID_CANCEL)
-               return false;
+         if (prompt) {
+            auto pWindow = ProjectWindow::Find(mProject);
+            if (exportedChannels == 1) {
+               if (ShowWarningDialog(pWindow,
+                  wxT("MixMono"),
+                  XO("Your tracks will be mixed down and exported as one mono file."),
+                  true) == wxID_CANCEL)
+                  return false;
+            }
+            else if (exportedChannels == 2) {
+               if (ShowWarningDialog(pWindow,
+                  wxT("MixStereo"),
+                  XO("Your tracks will be mixed down and exported as one stereo file."),
+                  true) == wxID_CANCEL)
+                  return false;
+            }
+            else {
+               if (ShowWarningDialog(pWindow,
+                  wxT("MixUnknownChannels"),
+                  XO("Your tracks will be mixed down to one exported file according to the encoder settings."),
+                  true) == wxID_CANCEL)
+                  return false;
+            }
          }
       }
    }
@@ -927,9 +929,10 @@ bool Exporter::CheckMix()
                            NULL,
                            1,
                            XO("Advanced Mixing Options"));
-
-      if (md.ShowModal() != wxID_OK) {
-         return false;
+      if (prompt) {
+         if (md.ShowModal() != wxID_OK) {
+            return false;
+         }
       }
 
       mMixerSpec = std::make_unique<MixerSpec>(*(md.GetMixerSpec()));
@@ -1096,7 +1099,7 @@ bool Exporter::ProcessFromTimerRecording(bool selectedOnly,
    }
 
    // Check for down mixing
-   if (!CheckMix()) {
+   if (!CheckMix(false)) {
       return false;
    }
 
