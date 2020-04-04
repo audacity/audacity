@@ -25,6 +25,8 @@
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
+#include <wx/filename.h>
+
 const ComponentInterfaceSymbol ImportCommand::Symbol
 { XO("Import2") };
 
