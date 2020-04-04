@@ -1582,7 +1582,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    (void)fileName;
    (void)append;
    mCurves.clear();
-   mCurves.push_back( _("unnamed") );   // we still need a default curve to use
+   mCurves.push_back( wxT("unnamed") );   // we still need a default curve to use
 #else
    // Construct normal curve filename
    //
@@ -1678,7 +1678,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
       return;
 
    /* i18n-hint: name of the 'unnamed' custom curve */
-   wxString unnamed = _("unnamed");
+   wxString unnamed = wxT("unnamed");
 
    // Save the "unnamed" curve and remove it so we can add it back as the final curve.
    EQCurve userUnnamed(wxT("temp"));
