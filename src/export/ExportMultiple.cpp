@@ -905,7 +905,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    wxString name;    // used to hold file name whilst we mess with it
    wxString title;   // un-messed-with title of file for tagging with
 
-   /* Remember which tracks were selected, and set them to unselected */
+   /* Remember which tracks were selected, and set them to deselected */
    SelectionStateChanger changer{ mSelectionState, *mTracks };
    for (auto tr : mTracks->Selected<WaveTrack>())
       tr->SetSelected(false);

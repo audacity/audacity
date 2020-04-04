@@ -1687,11 +1687,11 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
             OnContextMenu( project, event ); }
       );
 
-      menu.Append(OnCutSelectedTextID, _("Cu&t label text"));
-      menu.Append(OnCopySelectedTextID, _("&Copy label text"));
+      menu.Append(OnCutSelectedTextID, _("Cu&t Label text"));
+      menu.Append(OnCopySelectedTextID, _("&Copy Label text"));
       menu.Append(OnPasteSelectedTextID, _("&Paste"));
       menu.Append(OnDeleteSelectedLabelID, _("&Delete Label"));
-      menu.Append(OnEditSelectedLabelID, _("&Edit label..."));
+      menu.Append(OnEditSelectedLabelID, _("&Edit Label..."));
 
       menu.Enable(OnCutSelectedTextID, IsTextSelected( project ));
       menu.Enable(OnCopySelectedTextID, IsTextSelected( project ));

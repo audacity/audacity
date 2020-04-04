@@ -48,7 +48,7 @@ Paul Licameli split from TrackPanel.cpp
 enum {
    // PRL:
    // Mouse must move at least this far to distinguish ctrl-drag to scrub
-   // from ctrl-click for playback.
+   // from ctrl+click for playback.
    SCRUBBING_PIXEL_TOLERANCE = 10,
 
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
