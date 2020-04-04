@@ -53,7 +53,9 @@ bool ImportCommand::Apply(const CommandContext & context){
 
 
 bool ExportCommand::DefineParams( ShuttleParams & S ){
-   S.Define( mFileName, wxT("Filename"),  "exported.wav" );
+   wxFileName fn = FileNames::DefaultToDocumentsFolder(wxT("/Export/Path"));
+   fn.SetName("exported.wav");
+   S.Define(mFileName, wxT("Filename"), fn.GetFullPath());
    S.Define( mnChannels, wxT("NumChannels"),  1 );
    return true;
 }
