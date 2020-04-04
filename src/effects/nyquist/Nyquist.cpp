@@ -420,15 +420,12 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
 
 bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
 {
-   if (mExternal)
-   {
-      return true;
-   }
-
    if (mIsPrompt)
    {
       parms.Read(KEY_Command, &mInputCmd, wxEmptyString);
       parms.Read(KEY_Version, &mVersion, mVersion);
+
+      SetCommand(mInputCmd);
 
       return true;
    }
@@ -1645,7 +1642,9 @@ void NyquistEffect::SetCommand(const wxString &cmd)
 {
    mExternal = true;
 
-   ParseCommand(cmd);
+   if (cmd.size()) {
+      ParseCommand(cmd);
+   }
 }
 
 void NyquistEffect::Break()
