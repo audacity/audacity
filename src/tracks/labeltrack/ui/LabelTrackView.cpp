@@ -1120,8 +1120,8 @@ void LabelTrackView::OverGlyph(
          {
             result |= 4;
             // If left and right co-incident at this resolution, then we drag both.
-            // We could be a little less stringent about co-incidence here if we liked.
-            if( abs(labelStruct.x1-labelStruct.x) < 1.0 )
+            // We were more stringent about co-incidence here in the past.
+            if( abs(labelStruct.x1-labelStruct.x) < 5.0 )
             {
                result |=1;
                hit.mMouseOverLabelLeft = i;

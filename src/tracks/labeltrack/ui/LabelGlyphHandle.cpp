@@ -140,6 +140,10 @@ void LabelGlyphHandle::HandleGlyphClick
          // We move if we hit the centre, we adjust one edge if we hit a chevron.
          // This is if we are moving just one edge.
          hit.mbIsMoving = (hit.mEdge & 4)!=0;
+
+         // No to the above!  We initially expect to be moving just one edge.
+         hit.mbIsMoving = false;
+
          // When we start dragging the label(s) we don't want them to jump.
          // so we calculate the displacement of the mouse from the drag center
          // and use that in subsequent dragging calculations.  The mouse stays
@@ -160,11 +164,15 @@ void LabelGlyphHandle::HandleGlyphClick
          {
             t = (mLabels[ hit.mMouseOverLabelRight ].getT1() +
                  mLabels[ hit.mMouseOverLabelLeft ].getT0()) / 2.0f;
-            // If we're moving two edges, then it's a move (label size preserved)
-            // if both edges are the same label, and it's an adjust (label sizes change)
-            // if we're on a boundary between two different labels.
-            hit.mbIsMoving =
-               ( hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight );
+
+            // If we're moving two edges of same label then it's a move 
+            // (label is shrunk to zero and size of zero is preserved)
+            // If we're on a boundary between two different labels, 
+            // then it's an adjust.
+            // In both cases the two points coallesce.
+            hit.mbIsMoving = (hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight);
+            MayAdjustLabel(hit, hit.mMouseOverLabelLeft, -1, false, t );
+            MayAdjustLabel(hit, hit.mMouseOverLabelRight, 1, false, t );
          }
          else if( hit.mMouseOverLabelRight >=0)
          {
@@ -321,7 +329,7 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
       // and if both edges the same, then we're always moving the label.
       bool bLabelMoving = hit.mbIsMoving;
       bLabelMoving ^= evt.ShiftDown();
-      bLabelMoving |= ( hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight );
+      //bLabelMoving |= ( hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight );
       double fNewX = zoomInfo.PositionToTime(x, 0);
       if( bLabelMoving )
       {
