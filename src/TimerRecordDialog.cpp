@@ -899,6 +899,13 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
          S.StartStatic(XO("Duration"), true);
          {
+            m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
+               S.GetParent(), ID_TIMETEXT_DURATION, NumericConverter::TIME,
+               {}, 0, 44100,
+               Options{}
+                  .MenuEnabled(false)
+                  .Format(strFormat1)
+                  .Value(true, m_TimeSpan_Duration.GetSeconds().ToDouble()));
             /* i18n-hint: This string is used to configure the controls which shows the recording
             * duration. As such it is important that only the alphabetic parts of the string
             * are translated, with the numbers left exactly as they are.
@@ -907,13 +914,6 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             * number displayed is minutes, and the 's' indicates that the fourth number displayed is
             * seconds.
             */
-            m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
-               S.GetParent(), ID_TIMETEXT_DURATION, NumericConverter::TIME,
-               {}, 0, 44100,
-               Options{}
-                  .MenuEnabled(false)
-                  .Format(strFormat1)
-                  .Value(true, m_TimeSpan_Duration.GetSeconds().ToDouble()));
             S.Name(XO("Duration"))
                .AddWindow(m_pTimeTextCtrl_Duration);
          }

@@ -341,8 +341,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             }
             else
             {
-               /* i18n-hint: You do not need to translate "LOF" */
                AudacityMessageBox(
+                  /* i18n-hint: You do not need to translate "LOF" */
                   XO("Invalid window offset in LOF file."),
                   /* i18n-hint: You do not need to translate "LOF" */
                   XO("LOF Error"),
@@ -364,8 +364,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             }
             else
             {
-               /* i18n-hint: You do not need to translate "LOF" */
                AudacityMessageBox(
+                  /* i18n-hint: You do not need to translate "LOF" */
                   XO("Invalid duration in LOF file."),
                   /* i18n-hint: You do not need to translate "LOF" */
                   XO("LOF Error"),
@@ -476,9 +476,10 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             } // end of converting "offset" argument
             else
             {
-               /* i18n-hint: You do not need to translate "LOF" */
                AudacityMessageBox(
+                  /* i18n-hint: You do not need to translate "LOF" */
                   XO("Invalid track offset in LOF file."),
+                  /* i18n-hint: You do not need to translate "LOF" */
                   XO("LOF Error"),
                   wxOK | wxCENTRE);
             }

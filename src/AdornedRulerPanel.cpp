@@ -1071,16 +1071,24 @@ void AdornedRulerPanel::InvalidateRuler()
 namespace {
    const TranslatableString StartScrubbingMessage(const Scrubber &/*scrubber*/)
    {
+#if 0
+      if(scrubber.Seeks())
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
        "Scrubbing" is variable-speed playback, ...
        "Seeking" is normal speed playback but with skips
        */
-#if 0
-      if(scrubber.Seeks())
          return XO("Click or drag to begin Seek");
       else
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+       "Scrubbing" is variable-speed playback, ...
+       "Seeking" is normal speed playback but with skips
+       */
          return XO("Click or drag to begin Scrub");
 #else
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+       "Scrubbing" is variable-speed playback, ...
+       "Seeking" is normal speed playback but with skips
+       */
       return XO("Click & move to Scrub. Click & drag to Seek.");
 #endif
    }
@@ -1088,14 +1096,18 @@ namespace {
    const TranslatableString ContinueScrubbingMessage(
       const Scrubber &scrubber, bool clicked)
    {
+#if 0
+      if(scrubber.Seeks())
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
        "Scrubbing" is variable-speed playback, ...
        "Seeking" is normal speed playback but with skips
        */
-#if 0
-      if(scrubber.Seeks())
          return XO("Move to Seek");
       else
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+       "Scrubbing" is variable-speed playback, ...
+       "Seeking" is normal speed playback but with skips
+       */
          return XO("Move to Scrub");
 #else
       if( clicked ) {

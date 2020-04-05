@@ -189,7 +189,6 @@ void ContrastDialog::OnChar(wxKeyEvent &event)
    return;
 }
 
-/* i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/ */
 ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                            const TranslatableString & title,
                            const wxPoint & pos):
@@ -226,9 +225,9 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    S.SetBorder(5);
    S.StartHorizontalLay(wxCENTER, false);
    {
-      /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
-      S.AddTitle(XO(
-"Contrast Analyzer, for measuring RMS volume differences between two selections of audio."));
+      S.AddTitle(
+         /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
+         XO("Contrast Analyzer, for measuring RMS volume differences between two selections of audio."));
    }
    S.EndHorizontalLay();
    S.StartStatic( XO("Parameters") );
@@ -442,8 +441,8 @@ namespace {
          return _("indeterminate");
       else {
          if( diffdB != std::numeric_limits<float>::infinity() )
-            /* i18n-hint: dB abbreviates decibels */
-            /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
+            /* i18n-hint: dB abbreviates decibels
+             * RMS abbreviates root mean square, a certain averaging method */
             return wxString::Format(_("%.2f dB RMS"), diffdB);
          else
             /* i18n-hint: dB abbreviates decibels */
@@ -457,12 +456,12 @@ namespace {
          return XO("Difference is indeterminate.");
       else
          if( fabs(diffdB) != std::numeric_limits<float>::infinity() )
-            /* i18n-hint: dB abbreviates decibels */
-            /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
+            /* i18n-hint: dB abbreviates decibels
+               RMS abbreviates root mean square, a certain averaging method */
             return XO("Difference = %.2f RMS dB.").Format( diffdB );
          else
-            /* i18n-hint: dB abbreviates decibels */
-            /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
+            /* i18n-hint: dB abbreviates decibels
+               RMS abbreviates root mean square, a certain averaging method */
             return XO("Difference = infinite RMS dB.");
    }
 }
@@ -486,7 +485,7 @@ void ContrastDialog::results()
          mPassFailText->ChangeValue(_("Background higher than foreground"));
       }
       else if(diffdB > WCAG2_PASS) {
-         /* i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines */
+         /* i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/ */
          mPassFailText->ChangeValue(_("WCAG2 Pass"));
       }
       else {
@@ -504,7 +503,8 @@ void ContrastDialog::results()
       if(std::isinf(- foregrounddB))
          mForegroundRMSText->ChangeValue(_("zero"));
       else
-         mForegroundRMSText->ChangeValue(wxString::Format(_("%.2f dB"), foregrounddB));   // i18n-hint: short form of 'decibels'        
+         // i18n-hint: short form of 'decibels'
+         mForegroundRMSText->ChangeValue(wxString::Format(_("%.2f dB"), foregrounddB));
    }
    else {
       mForegroundRMSText->SetName(_("No foreground measured"));   // Read by screen-readers

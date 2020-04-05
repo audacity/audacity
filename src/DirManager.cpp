@@ -1474,9 +1474,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    if ( !make_iterator_range( aliasList ).contains( fullPath ) )
       return true;
 
-   /* i18n-hint: 'old' is part of a filename used when a file is renamed. */
    // Figure out what the NEW name for the existing file would be.
-   /* i18n-hint: e.g. Try to go from "mysong.wav" to "mysong-old1.wav". */
    // Keep trying until we find a filename that doesn't exist.
 
    wxFileNameWrapper renamedFileName{ fName };
@@ -1485,7 +1483,9 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
       i++;
       /* i18n-hint: This is the pattern for filenames that are created
        * when a file needs to be backed up to a different name.  For
-       * example, mysong would become mysong-old1, mysong-old2, etc. */
+       * example, mysong would become mysong-old1, mysong-old2, etc.
+       * 'old' is part of a filename used when a file is renamed.
+       * e.g. Try to go from "mysong.wav" to "mysong-old1.wav". */
       renamedFileName.SetName(wxString::Format(_("%s-old%d"), fName.GetName(), i));
    } while (renamedFileName.FileExists());
 
@@ -1506,8 +1506,8 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    testFile.Close();
 
    if (!wxRemoveFile(renamedFullPath)) {
-      /* i18n-hint: %s is the name of a file.*/
       { // need braces to avoid compiler warning about ambiguous else, see the macro
+         /* i18n-hint: %s is the name of a file.*/
          wxLogSysError(_("Unable to remove '%s'."),
             renamedFullPath);
       }

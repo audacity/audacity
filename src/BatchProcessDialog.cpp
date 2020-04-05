@@ -962,8 +962,8 @@ void MacrosWindow::OnAdd(wxCommandEvent & WXUNUSED(event))
 
       if (name.Contains(wxFILE_SEP_PATH) ||
           name.Contains(wxFILE_SEP_PATH_UNIX)) {
-         /*i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.*/
          AudacityMessageBox(
+            /*i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.*/
             XO("Names may not contain '%c' and '%c'")
                .Format(wxFILE_SEP_PATH, wxFILE_SEP_PATH_UNIX),
             WindowTitle(),

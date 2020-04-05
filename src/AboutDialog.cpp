@@ -336,13 +336,13 @@ visit our [[https://forum.audacityteam.org/|forum]].");
    if( par2StrTranslated == par2Str.MSGID().GET() )
       par2StrTranslated.Replace( wxT(", in English,"), wxT("") );
 
-   auto translatorCreditsMsgid = XO("translator_credits");
-   auto translatorCredits = translatorCreditsMsgid.Translation();
    /* i18n-hint: The translation of "translator_credits" will appear
     *  in the credits in the About Audacity window.  Use this to add
     *  your own name(s) to the credits.
     *
     *  For example:  "English translation by Dominic Mazzoni." */
+   auto translatorCreditsMsgid = XO("translator_credits");
+   auto translatorCredits = translatorCreditsMsgid.Translation();
    if ( translatorCredits == translatorCreditsMsgid.MSGID().GET() )
       // We're in an English locale
       translatorCredits.clear();
@@ -537,10 +537,10 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), disabled);
    #endif
 
-   /* i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-    * Both are proper nouns and shouldn't be translated */
    #ifdef USE_LIBVORBIS
    AddBuildinfoRow(&informationStr, wxT("libvorbis"),
+   /* i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+    * Both are proper nouns and shouldn't be translated */
          XO("Ogg Vorbis Import and Export"), enabled);
    #else
    AddBuildinfoRow(&informationStr, wxT("libvorbis"),
@@ -555,9 +555,9 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
          disabled);
    #endif
 
+   # if USE_LIBFLAC
    /* i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
     * a proper noun and so shouldn't be translated */
-   # if USE_LIBFLAC
    AddBuildinfoRow(&informationStr, wxT("libflac"), XO("FLAC import and export"),
          enabled);
    # else
@@ -740,8 +740,8 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 #endif
 
    // Install prefix
-   /* i18n-hint: The directory audacity is installed into (on *nix systems) */
 #ifdef __WXGTK__
+   /* i18n-hint: The directory audacity is installed into (on *nix systems) */
    AddBuildinfoRow(&informationStr, XO("Installation Prefix:"), \
          wxT(INSTALL_PREFIX));
 #endif

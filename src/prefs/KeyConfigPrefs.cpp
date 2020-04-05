@@ -291,6 +291,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
          /* i18n-hint: (verb)*/
          mSet = S.Id(SetButtonID).AddButton(XO("&Set"));
+         /* i18n-hint: (verb)*/
          mClear = S.Id(ClearButtonID).AddButton(XO("Cl&ear"));
       }
       S.EndThreeColumn();

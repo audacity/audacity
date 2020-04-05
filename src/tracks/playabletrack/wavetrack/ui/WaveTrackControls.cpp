@@ -257,8 +257,8 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
    for (auto channel : TrackList::Channels(pTrack))
       channel->ConvertToSampleFormat(newFormat);
 
-   /* i18n-hint: The strings name a track and a format */
    ProjectHistory::Get( *project )
+   /* i18n-hint: The strings name a track and a format */
       .PushState(XO("Changed '%s' to %s")
          .Format( pTrack->GetName(), GetSampleFormatStr(newFormat) ),
       XO("Format Change"));
@@ -359,8 +359,8 @@ void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
 
    // Separate conversion of "rate" enables changing the decimals without affecting i18n
    wxString rateString = wxString::Format(wxT("%.3f"), rate);
-   /* i18n-hint: The string names a track */
    ProjectHistory::Get( *project )
+   /* i18n-hint: The string names a track */
       .PushState(XO("Changed '%s' to %s Hz")
          .Format( pTrack->GetName(), rateString),
       XO("Rate Change"));
@@ -777,9 +777,9 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
    }
    pTrack->SetChannel(channel);
    AudacityProject *const project = &mpData->project;
-   /* i18n-hint: The strings name a track and a channel choice (mono, left, or right) */
    ProjectHistory::Get( *project )
       .PushState(
+/* i18n-hint: The strings name a track and a channel choice (mono, left, or right) */
          XO("Changed '%s' to %s").Format( pTrack->GetName(), channelmsg ),
          XO("Channel"));
    mpData->result = RefreshCode::RefreshAll;
@@ -837,8 +837,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
          //we will need to display this to the user.
       }
 
-   /* i18n-hint: The string names a track */
    ProjectHistory::Get( *project ).PushState(
+      /* i18n-hint: The string names a track */
       XO("Made '%s' a stereo track").Format( pTrack->GetName() ),
       XO("Make Stereo"));
 
@@ -907,8 +907,8 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    if (hasFocus)
       trackFocus.Set(partner);
 
-   /* i18n-hint: The string names a track  */
    ProjectHistory::Get( *project ).PushState(
+      /* i18n-hint: The string names a track  */
       XO("Swapped Channels in '%s'").Format( pTrack->GetName() ),
       XO("Swap Channels"));
 
@@ -921,8 +921,8 @@ void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
    SplitStereo(true);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    AudacityProject *const project = &mpData->project;
-   /* i18n-hint: The string names a track  */
    ProjectHistory::Get( *project ).PushState(
+   /* i18n-hint: The string names a track  */
       XO("Split stereo track '%s'").Format( pTrack->GetName() ),
       XO("Split"));
 
@@ -936,8 +936,8 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
    SplitStereo(false);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    AudacityProject *const project = &mpData->project;
-   /* i18n-hint: The string names a track  */
    ProjectHistory::Get( *project ).PushState(
+   /* i18n-hint: The string names a track  */
       XO("Split Stereo to Mono '%s'").Format( pTrack->GetName() ),
       XO("Split to Mono"));
 

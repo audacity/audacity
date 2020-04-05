@@ -1376,8 +1376,8 @@ bool NyquistEffect::ProcessOne()
 
    if ((rval == nyx_audio) && (GetType() == EffectTypeTool)) {
       // Catch this first so that we can also handle other errors.
-      /* i18n-hint: Don't translate ';type tool'.  */
       mDebugOutput =
+         /* i18n-hint: Don't translate ';type tool'.  */
          XO("';type tool' effects cannot return audio from Nyquist.\n")
          + mDebugOutput;
       rval = nyx_error;
@@ -1385,8 +1385,8 @@ bool NyquistEffect::ProcessOne()
 
    if ((rval == nyx_labels) && (GetType() == EffectTypeTool)) {
       // Catch this first so that we can also handle other errors.
-      /* i18n-hint: Don't translate ';type tool'.  */
       mDebugOutput =
+         /* i18n-hint: Don't translate ';type tool'.  */
          XO("';type tool' effects cannot return labels from Nyquist.\n")
          + mDebugOutput;
       rval = nyx_error;
@@ -2555,8 +2555,8 @@ bool NyquistEffect::TransferDataFromEffectWindow()
             }
             else
             {
-               /* i18n-hint: Warning that there is one quotation mark rather than a pair.*/
                const auto message =
+                  /* i18n-hint: Warning that there is one quotation mark rather than a pair.*/
                   XO("Mismatched quotes in\n%s").Format( ctrl->valStr );
                Effect::MessageBox(
                   message,

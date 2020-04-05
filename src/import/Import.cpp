@@ -701,8 +701,8 @@ bool Importer::Import( AudacityProject &project,
    {
       // if someone has sent us a .cda file, send them away
       if (extension.IsSameAs(wxT("cda"), false)) {
-         /* i18n-hint: %s will be the filename */
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is an audio CD track. \nAudacity cannot open audio CDs directly. \nExtract (rip) the CD tracks to an audio format that \nAudacity can import, such as WAV or AIFF.")
             .Format( fName );
          return false;
@@ -711,6 +711,7 @@ bool Importer::Import( AudacityProject &project,
       // playlist type files
       if ((extension.IsSameAs(wxT("m3u"), false))||(extension.IsSameAs(wxT("ram"), false))||(extension.IsSameAs(wxT("pls"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is a playlist file. \nAudacity cannot open this file because it only contains links to other files. \nYou may be able to open it in a text editor and download the actual audio files.")
             .Format( fName );
          return false;
@@ -718,6 +719,7 @@ bool Importer::Import( AudacityProject &project,
       //WMA files of various forms
       if ((extension.IsSameAs(wxT("wma"), false))||(extension.IsSameAs(wxT("asf"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is a Windows Media Audio file. \nAudacity cannot open this type of file due to patent restrictions. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
          return false;
@@ -725,6 +727,7 @@ bool Importer::Import( AudacityProject &project,
       //AAC files of various forms (probably not encrypted)
       if ((extension.IsSameAs(wxT("aac"), false))||(extension.IsSameAs(wxT("m4a"), false))||(extension.IsSameAs(wxT("m4r"), false))||(extension.IsSameAs(wxT("mp4"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is an Advanced Audio Coding file.\nWithout the optional FFmpeg library, Audacity cannot open this type of file.\nOtherwise, you need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
          return false;
@@ -732,6 +735,7 @@ bool Importer::Import( AudacityProject &project,
       // encrypted itunes files
       if ((extension.IsSameAs(wxT("m4p"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is an encrypted audio file. \nThese typically are from an online music store. \nAudacity cannot open this type of file due to the encryption. \nTry recording the file into Audacity, or burn it to audio CD then \nextract the CD track to a supported audio format such as WAV or AIFF.")
             .Format( fName );
          return false;
@@ -739,6 +743,7 @@ bool Importer::Import( AudacityProject &project,
       // Real Inc. files of various sorts
       if ((extension.IsSameAs(wxT("ra"), false))||(extension.IsSameAs(wxT("rm"), false))||(extension.IsSameAs(wxT("rpm"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is a RealPlayer media file. \nAudacity cannot open this proprietary format. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
          return false;
@@ -747,6 +752,7 @@ bool Importer::Import( AudacityProject &project,
       // Other notes-based formats
       if ((extension.IsSameAs(wxT("kar"), false))||(extension.IsSameAs(wxT("mod"), false))||(extension.IsSameAs(wxT("rmi"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is a notes-based file, not an audio file. \nAudacity cannot open this type of file. \nTry converting it to an audio file such as WAV or AIFF and \nthen import it, or record it into Audacity.")
             .Format( fName );
          return false;
@@ -755,6 +761,7 @@ bool Importer::Import( AudacityProject &project,
       // MusePack files
       if ((extension.IsSameAs(wxT("mp+"), false))||(extension.IsSameAs(wxT("mpc"), false))||(extension.IsSameAs(wxT("mpp"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is a Musepack audio file. \nAudacity cannot open this type of file. \nIf you think it might be an mp3 file, rename it to end with \".mp3\" \nand try importing it again. Otherwise you need to convert it to a supported audio \nformat, such as WAV or AIFF.")
             .Format( fName );
          return false;
@@ -763,6 +770,7 @@ bool Importer::Import( AudacityProject &project,
       // WavPack files
       if ((extension.IsSameAs(wxT("wv"), false))||(extension.IsSameAs(wxT("wvc"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is a Wavpack audio file. \nAudacity cannot open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
          return false;
@@ -771,6 +779,7 @@ bool Importer::Import( AudacityProject &project,
       // AC3 files
       if ((extension.IsSameAs(wxT("ac3"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is a Dolby Digital audio file. \nAudacity cannot currently open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
          return false;
@@ -779,6 +788,7 @@ bool Importer::Import( AudacityProject &project,
       // Speex files
       if ((extension.IsSameAs(wxT("spx"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is an Ogg Speex audio file. \nAudacity cannot currently open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
          return false;
@@ -787,6 +797,7 @@ bool Importer::Import( AudacityProject &project,
       // Video files of various forms
       if ((extension.IsSameAs(wxT("mpg"), false))||(extension.IsSameAs(wxT("mpeg"), false))||(extension.IsSameAs(wxT("avi"), false))||(extension.IsSameAs(wxT("wmv"), false))||(extension.IsSameAs(wxT("rv"), false))) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is a video file. \nAudacity cannot currently open this type of file. \nYou need to extract the audio to a supported format, such as WAV or AIFF.")
             .Format( fName );
          return false;
@@ -795,6 +806,7 @@ bool Importer::Import( AudacityProject &project,
       // Audacity project
       if (extension.IsSameAs(wxT("aup"), false)) {
          errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "\"%s\" is an Audacity Project file. \nUse the 'File > Open' command to open Audacity Projects.")
             .Format( fName );
          return false;
@@ -807,6 +819,7 @@ bool Importer::Import( AudacityProject &project,
 
       // we were not able to recognize the file type
       errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "Audacity did not recognize the type of the file '%s'.\nTry installing FFmpeg. For uncompressed files, also try File > Import > Raw Data.")
          .Format( fName );
    }
@@ -825,6 +838,7 @@ bool Importer::Import( AudacityProject &project,
       }
 
       errorMessage = XO(
+/* i18n-hint: %s will be the filename */
 "Audacity recognized the type of the file '%s'.\nImporters supposedly supporting such files are:\n%s,\nbut none of them understood this file format.")
          .Format( fName, pluglist );
    }

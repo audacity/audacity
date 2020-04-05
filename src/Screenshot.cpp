@@ -362,16 +362,16 @@ void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.Id(IdMainWindowSmall).AddButton(XO("Resize Small"));
             S.Id(IdMainWindowLarge).AddButton(XO("Resize Large"));
-            /* i18n-hint: Bkgnd is short for background and appears on a small button
-             * It is OK to just translate this item as if it said 'Blue' */
             mBlue = safenew wxToggleButton(S.GetParent(),
                                        IdToggleBackgroundBlue,
+            /* i18n-hint: Bkgnd is short for background and appears on a small button
+             * It is OK to just translate this item as if it said 'Blue' */
                                        _("Blue Bkgnd"));
             S.AddWindow(mBlue);
-            /* i18n-hint: Bkgnd is short for background and appears on a small button
-             * It is OK to just translate this item as if it said 'White' */
             mWhite = safenew wxToggleButton(S.GetParent(),
                                         IdToggleBackgroundWhite,
+            /* i18n-hint: Bkgnd is short for background and appears on a small button
+             * It is OK to just translate this item as if it said 'White' */
                                         _("White Bkgnd"));
             S.AddWindow(mWhite);
          }

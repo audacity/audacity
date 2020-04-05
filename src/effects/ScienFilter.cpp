@@ -479,8 +479,8 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
          mFilterOrderCtl = S.Id(ID_Order)
             .Validator<wxGenericValidator>(&mOrderIndex)
-            /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
             .MinSize( { -1, -1 } )
+            /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
             .AddChoice(XO("O&rder:"),
                []{
                   TranslatableStrings orders;

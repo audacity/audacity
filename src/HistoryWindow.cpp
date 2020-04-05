@@ -391,9 +391,9 @@ AttachedItem sAttachment{ wxT("View/Windows"),
    // FOR REDESIGN,
    // clearly there are some limitations with the flags/mask bitmaps.
 
+   ( FinderScope{ findCommandHandler },
    /* i18n-hint: Clicking this menu item shows the various editing steps
       that have been taken.*/
-   ( FinderScope{ findCommandHandler },
       Command( wxT("UndoHistory"), XXO("&History..."), &Handler::OnHistory,
          AudioIONotBusyFlag() ) )
 };

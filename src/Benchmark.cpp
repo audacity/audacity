@@ -134,7 +134,7 @@ END_EVENT_TABLE()
 BenchmarkDialog::BenchmarkDialog(
    wxWindow *parent, const ProjectSettings &settings)
    :
-/* i18n-hint: Benchmark means a software speed test */
+      /* i18n-hint: Benchmark means a software speed test */
       wxDialogWrapper( parent, 0, XO("Benchmark"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE |

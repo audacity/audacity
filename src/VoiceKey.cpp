@@ -820,8 +820,8 @@ void VoiceKey::CalibrateNoise(const WaveTrack & t, sampleCount start, sampleCoun
    mDirectionChangesSD =sqrt(sumdc2 / samples - mDirectionChangesMean * mDirectionChangesMean) ;
 
    auto text = XO("Calibration Results\n");
-   /* i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'*/
    text +=
+   /* i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'*/
       XO("Energy                  -- mean: %1.4f  sd: (%1.4f)\n")
          .Format( mEnergyMean, mEnergySD );
    text +=

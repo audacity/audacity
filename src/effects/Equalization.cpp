@@ -1613,6 +1613,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    // If requested file doesn't exist...
    if( !fn.FileExists() && !GetDefaultFileName(fn) ) {
       mCurves.clear();
+      /* i18n-hint: name of the 'unnamed' custom curve */
       mCurves.push_back( _("unnamed") );   // we still need a default curve to use
       return;
    }
@@ -1632,8 +1633,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    if( !reader.Parse( this, fullPath ) )
    {
       /* i18n-hint: EQ stands for 'Equalization'.*/
-      auto msg = XO(
-"Error Loading EQ Curves from file:\n%s\nError message says:\n%s")
+      auto msg = XO("Error Loading EQ Curves from file:\n%s\nError message says:\n%s")
          .Format( fullPath, reader.GetErrorStr() );
       // Inform user of load failure
       Effect::MessageBox(
@@ -1677,7 +1677,6 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
    if (mCurves.size() == 0)
       return;
 
-   /* i18n-hint: name of the 'unnamed' custom curve */
    wxString unnamed = wxT("unnamed");
 
    // Save the "unnamed" curve and remove it so we can add it back as the final curve.

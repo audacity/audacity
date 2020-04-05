@@ -607,16 +607,16 @@ public:
          S.SetStretchyCol(0);
          {
             if (mLibPath.GetFullPath().empty()) {
-               /* i18n-hint: There is a  button to the right of the arrow.*/
                mPathText = S.AddTextBox( {},
+                  /* i18n-hint: There is a  button to the right of the arrow.*/
                   wxString::Format(_("To find %s, click here -->"), mName), 0);
             }
             else {
                mPathText = S.AddTextBox( {}, mLibPath.GetFullPath(), 0);
             }
             S.Id(ID_BROWSE).AddButton(XO("Browse..."), wxALIGN_RIGHT);
-            /* i18n-hint: There is a  button to the right of the arrow.*/
             S.AddVariableText(
+               /* i18n-hint: There is a  button to the right of the arrow.*/
                XO("To get a free copy of LAME, click here -->"), true);
             /* i18n-hint: (verb)*/
             S.Id(ID_DLOAD).AddButton(XO("Download"), wxALIGN_RIGHT);

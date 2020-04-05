@@ -557,8 +557,8 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
 static const BuiltinFormatString FrequencyConverterFormats_[] = {
-   /* i18n-hint: Name of display format that shows frequency in hertz */
    {
+      /* i18n-hint: Name of display format that shows frequency in hertz */
       { XO("Hz") },
          /* i18n-hint: Format string for displaying frequency in hertz. Change 
          * the decimal point for your locale. Don't change the numbers. */

@@ -329,7 +329,7 @@ int SFFileCloser::operator() (SNDFILE *sf) const
       char buffer[1000];
       sf_error_str(sf, buffer, 1000);
       AudacityMessageBox(
-         /* i18n-hint: %s will be the error message from libsndfile */
+         /* i18n-hint: %s will be the error message from the libsndfile software library */
          XO( "Error (file may not have been written): %s" )
             // Not attempting to localize error messages
             // from the library

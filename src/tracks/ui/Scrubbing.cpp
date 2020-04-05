@@ -282,11 +282,19 @@ namespace {
          &Scrubber::OnScrub,       false,      &Scrubber::Scrubs,
       },
 
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+         "Scrubbing" is variable-speed playback, ...
+         "Seeking" is normal speed playback but with skips, ...
+       */
       { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
          CaptureNotBusyFlag() | HasWaveDataFlag(),
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
 
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+         "Scrubbing" is variable-speed playback, ...
+         "Seeking" is normal speed playback but with skips, ...
+       */
       { wxT("ToggleScrubRuler"),            XO("Scrub &Ruler"),   {},
          AlwaysEnabledFlag,
          &Scrubber::OnToggleScrubRuler, false,    &Scrubber::ShowsBar,

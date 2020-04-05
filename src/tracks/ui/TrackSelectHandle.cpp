@@ -37,8 +37,8 @@ Paul Licameli split from TrackPanel.cpp
 namespace {
    TranslatableString Message(unsigned trackCount) {
       if (trackCount > 1)
-         // i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
          return XO(
+// i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 "%s to select or deselect track. Drag up or down to change track order.")
             .Format( CTRL_CLICK );
       else

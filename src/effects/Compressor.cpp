@@ -210,8 +210,8 @@ bool EffectCompressor::Startup()
 
 namespace {
 
-/* i18n-hint: usually leave this as is as dB doesn't get translated*/
 TranslatableString ThresholdFormat( int value )
+   /* i18n-hint: usually leave this as is as dB doesn't get translated*/
 { return XO("%3d dB").Format(value); }
 
 TranslatableString AttackTimeFormat( double value )
@@ -309,6 +309,9 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
          mAttackLabel = S.AddVariableText(XO("&Attack Time:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          mAttackSlider = S.Id(ID_Attack)
+         /* i18n-hint: Particularly in percussion, sounds can be regarded as having
+          * an 'attack' phase where the sound builds up and a 'decay' where the
+          * sound dies away.  So this means 'onset duration'.  */
             .Name(XO("Attack Time"))
             .Style(wxSL_HORIZONTAL)
             .AddSlider( {},
@@ -319,9 +322,15 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
             AttackTimeFormat(9.99),
             true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
+         /* i18n-hint: Particularly in percussion, sounds can be regarded as having
+          * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+          * sound dies away.  */
          mDecayLabel = S.AddVariableText(XO("R&elease Time:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          mDecaySlider = S.Id(ID_Decay)
+         /* i18n-hint: Particularly in percussion, sounds can be regarded as having
+          * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+          * sound dies away.  */
             .Name(XO("Release Time"))
             .Style(wxSL_HORIZONTAL)
             .AddSlider( {},
@@ -342,6 +351,8 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
       /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
       mGainCheckBox = S.AddCheckBox(XO("Ma&ke-up gain for 0 dB after compressing"),
                                     DEF_Normalize);
+      /* i18n-hint: "Compress" here means reduce variations of sound volume,
+       NOT related to file-size compression; Peaks means extremes in volume */
       mPeakCheckBox = S.AddCheckBox(XO("C&ompress based on Peaks"),
                                     DEF_UsePeak);
    }

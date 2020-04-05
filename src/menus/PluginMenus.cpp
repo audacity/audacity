@@ -976,6 +976,7 @@ BaseItemSharedPtr ExtraScriptablesIIMenu()
    // Less useful to VI users.
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
+   // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables2"), XO("Scripta&bles II"),
       Command( wxT("Select"), XXO("Select..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag() ),

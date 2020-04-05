@@ -342,7 +342,8 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       // Vinyl rpm controls.
       S.StartMultiColumn(5, wxCENTER);
       {
-         /* i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute". */
+         /* i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
+            "vinyl" refers to old-fashioned phonograph records */
          S.AddUnits(XO("Standard Vinyl rpm:"));
 
          mpChoice_FromVinyl = S.Id(ID_FromVinyl)
@@ -355,6 +356,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
             /* i18n-hint: changing a quantity "from" one value "to" another */
             .Name(XO("To rpm"))
             .MinSize( { 100, -1 } )
+            /* i18n-hint: changing a quantity "from" one value "to" another */
             .AddChoice(XO("&to"), kVinylStrings);
       }
       S.EndMultiColumn();

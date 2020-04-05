@@ -1753,14 +1753,16 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       {
          S.AddPrompt(XO("Noise:"));
          mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)
-               .AddRadioButton(XO("Re&duce")); /* i18n-hint: Translate differently from "Residue" ! */
+               /* i18n-hint: Translate differently from "Residue" ! */
+               .AddRadioButton(XO("Re&duce"));
 #ifdef ISOLATE_CHOICE
          mKeepNoise = S.Id(ID_RADIOBUTTON_KEEPNOISE)
                .AddRadioButtonToGroup(XO("&Isolate"));
 #endif
 #ifdef RESIDUE_CHOICE
          mResidue = S.Id(ID_RADIOBUTTON_RESIDUE)
-               .AddRadioButtonToGroup(XO("Resid&ue")); /* i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" ! */
+               /* i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" ! */
+               .AddRadioButtonToGroup(XO("Resid&ue"));
 #endif
       }
       S.EndMultiColumn();

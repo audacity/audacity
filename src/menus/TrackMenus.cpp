@@ -171,8 +171,8 @@ void DoPanTracks(AudacityProject &project, float PanValue)
       left->SetPan( PanValue );
 
    auto flags = UndoPush::AUTOSAVE;
-   /*i18n-hint: One or more audio tracks have been panned*/
    ProjectHistory::Get( project )
+      /*i18n-hint: One or more audio tracks have been panned*/
       .PushState(XO("Panned audio track(s)"), XO("Pan Track"), flags);
          flags = flags | UndoPush::CONSOLIDATE;
 }
@@ -236,9 +236,9 @@ void DoAlign
             an implied preposition "from"). */
          ? XO("Aligned/Moved start to zero")
          : XO("Aligned start to zero");
+      shortAction = moveSel
          /* i18n-hint: This and similar messages give shorter descriptions of
             the aligning and moving editing actions */
-      shortAction = moveSel
          ? XO("Align/Move Start")
          : XO("Align Start");
       break;
