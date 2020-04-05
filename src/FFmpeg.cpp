@@ -202,7 +202,12 @@ int ufile_close(AVIOContext *pb)
 
    bool success = true;
    if (f) {
-      success = f->Flush() && f->Close();
+      if (pb->write_flag) {
+         success = f->Flush();
+      }
+      if (success) {
+         success = f->Close();
+      }
       pb->opaque = nullptr;
    }
 
