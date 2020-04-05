@@ -145,27 +145,29 @@ static const wxChar *FFmpegExportCtrlIDNames[] = {
 namespace
 {
 
+// i18n-hint kbps abbreviates "thousands of bits per second"
+inline TranslatableString n_kbps(int n) { return XO("%d kbps").Format( n ); }
+
 const TranslatableStrings AC3BitRateNames{
-   // i18n-hint kbps abbreviates "thousands of bits per second"
-   XO("32 kbps"),
-   XO("40 kbps"),
-   XO("48 kbps"),
-   XO("56 kbps"),
-   XO("64 kbps"),
-   XO("80 kbps"),
-   XO("96 kbps"),
-   XO("112 kbps"),
-   XO("128 kbps"),
-   XO("160 kbps"),
-   XO("192 kbps"),
-   XO("224 kbps"),
-   XO("256 kbps"),
-   XO("320 kbps"),
-   XO("384 kbps"),
-   XO("448 kbps"),
-   XO("512 kbps"),
-   XO("576 kbps"),
-   XO("640 kbps"),
+   n_kbps( 32 ),
+   n_kbps( 40 ),
+   n_kbps( 48 ),
+   n_kbps( 56 ),
+   n_kbps( 64 ),
+   n_kbps( 80 ),
+   n_kbps( 96 ),
+   n_kbps( 112 ),
+   n_kbps( 128 ),
+   n_kbps( 160 ),
+   n_kbps( 192 ),
+   n_kbps( 224 ),
+   n_kbps( 256 ),
+   n_kbps( 320 ),
+   n_kbps( 384 ),
+   n_kbps( 448 ),
+   n_kbps( 512 ),
+   n_kbps( 576 ),
+   n_kbps( 640 ),
 };
 
 const std::vector< int > AC3BitRateValues{
@@ -318,19 +320,21 @@ bool ExportFFmpegAACOptions::TransferDataFromWindow()
 
 namespace {
 
+// i18n-hint kbps abbreviates "thousands of bits per second"
+inline TranslatableString f_kbps( double d ) { return XO("%.2f kbps").Format( d ); }
+
 /// Bit Rates supported by libAMR-NB encoder
 /// Sample Rate is always 8 kHz
 const TranslatableStrings AMRNBBitRateNames
 {
-   // i18n-hint kbps abbreviates "thousands of bits per second"
-   XO("4.75 kbps"),
-   XO("5.15 kbps"),
-   XO("5.90 kbps"),
-   XO("6.70 kbps"),
-   XO("7.40 kbps"),
-   XO("7.95 kbps"),
-   XO("10.20 kbps"),
-   XO("12.20 kbps"),
+   f_kbps( 4.75 ),
+   f_kbps( 5.15 ),
+   f_kbps( 5.90 ),
+   f_kbps( 6.70 ),
+   f_kbps( 7.40 ),
+   f_kbps( 7.95 ),
+   f_kbps( 10.20 ),
+   f_kbps( 12.20 ),
 };
 
 const std::vector< int > AMRNBBitRateValues
@@ -421,21 +425,20 @@ namespace {
       {
          ByColumns,
          {
-            // i18n-hint kbps abbreviates "thousands of bits per second"
-            XO("6 kbps"),
-            XO("8 kbps"),
-            XO("16 kbps"),
-            XO("24 kbps"),
-            XO("32 kbps"),
-            XO("40 kbps"),
-            XO("48 kbps"),
-            XO("64 kbps"),
-            XO("80 kbps"),
-            XO("96 kbps"),
-            XO("128 kbps"),
-            XO("160 kbps"),
-            XO("192 kbps"),
-            XO("256 kbps"),
+            n_kbps( 6 ),
+            n_kbps( 8 ),
+            n_kbps( 16 ),
+            n_kbps( 24 ),
+            n_kbps( 32 ),
+            n_kbps( 40 ),
+            n_kbps( 48 ),
+            n_kbps( 64 ),
+            n_kbps( 80 ),
+            n_kbps( 96 ),
+            n_kbps( 128 ),
+            n_kbps( 160 ),
+            n_kbps( 192 ),
+            n_kbps( 256 ),
          },
          {
             wxT("6000"),
@@ -679,19 +682,18 @@ namespace {
 /// Bit Rates supported by WMA encoder. Setting bit rate to other values will not result in different file size.
 const TranslatableStrings WMABitRateNames
 {
-   // i18n-hint kbps abbreviates "thousands of bits per second"
-   XO("24 kbps"),
-   XO("32 kbps"),
-   XO("40 kbps"),
-   XO("48 kbps"),
-   XO("64 kbps"),
-   XO("80 kbps"),
-   XO("96 kbps"),
-   XO("128 kbps"),
-   XO("160 kbps"),
-   XO("192 kbps"),
-   XO("256 kbps"),
-   XO("320 kbps"),
+   n_kbps(24),
+   n_kbps(32),
+   n_kbps(40),
+   n_kbps(48),
+   n_kbps(64),
+   n_kbps(80),
+   n_kbps(96),
+   n_kbps(128),
+   n_kbps(160),
+   n_kbps(192),
+   n_kbps(256),
+   n_kbps(320),
 };
 
 const std::vector< int > WMABitRateValues{

@@ -124,26 +124,28 @@ enum : int {
    PRESET_MEDIUM = 3,
 };
 
+/* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
+inline TranslatableString n_kbps( int n ){ return XO("%d kbps").Format( n ); }
+
 static const TranslatableStrings fixRateNames {
-   /* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
-   XO("320 kbps"),
-   XO("256 kbps"),
-   XO("224 kbps"),
-   XO("192 kbps"),
-   XO("160 kbps"),
-   XO("144 kbps"),
-   XO("128 kbps"),
-   XO("112 kbps"),
-   XO("96 kbps"),
-   XO("80 kbps"),
-   XO("64 kbps"),
-   XO("56 kbps"),
-   XO("48 kbps"),
-   XO("40 kbps"),
-   XO("32 kbps"),
-   XO("24 kbps"),
-   XO("16 kbps"),
-   XO("8 kbps"),
+   n_kbps(320),
+   n_kbps(256),
+   n_kbps(224),
+   n_kbps(192),
+   n_kbps(160),
+   n_kbps(144),
+   n_kbps(128),
+   n_kbps(112),
+   n_kbps(96),
+   n_kbps(80),
+   n_kbps(64),
+   n_kbps(56),
+   n_kbps(48),
+   n_kbps(40),
+   n_kbps(32),
+   n_kbps(24),
+   n_kbps(16),
+   n_kbps(8),
 };
 
 static const std::vector<int> fixRateValues {
