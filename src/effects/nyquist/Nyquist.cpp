@@ -309,6 +309,9 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
    auto pSa = dynamic_cast<ShuttleSetAutomation*>(&S);
    if( pSa ){
       SetAutomationParameters( *(pSa->mpEap) );
+      if (pSa->bWrite && !mInputCmd.empty()) {
+         ParseCommand(mInputCmd);
+      }
       return true;
    }
    auto pSd  = dynamic_cast<ShuttleGetDefinition*>(&S);
@@ -420,12 +423,15 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
 
 bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
 {
+   if (mExternal)
+   {
+      return true;
+   }
+
    if (mIsPrompt)
    {
       parms.Read(KEY_Command, &mInputCmd, wxEmptyString);
       parms.Read(KEY_Version, &mVersion, mVersion);
-
-      SetCommand(mInputCmd);
 
       return true;
    }
