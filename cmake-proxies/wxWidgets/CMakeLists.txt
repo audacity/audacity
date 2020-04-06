@@ -13,7 +13,10 @@ cmd_option( ${_OPT}use_wxwidgets
 )
 
 if( ${_OPT}use_wxwidgets STREQUAL "system" )
+   # Make sure shared libs are preferred over static
+   set( BUILD_SHARED_LIBS YES )
    find_package(wxWidgets)
+   unset( BUILD_SHARED_LIBS )
 endif()
 
 if( wxWidgets_FOUND )
