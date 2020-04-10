@@ -61,7 +61,7 @@ enum
 //
 //     Name          Type     Key                  Def      Min      Max      Scale
 Param( Threshold,    double,  wxT("Threshold"),     -12.0,   -60.0,   -1.0,    1   );
-Param( NoiseFloor,   double,  wxT("NoiseFloor"),    -40.0,   -80.0,   -20.0,   5   );
+Param( NoiseFloor,   double,  wxT("NoiseFloor"),    -40.0,   -80.0,   -20.0,   0.2   );
 Param( Ratio,        double,  wxT("Ratio"),         2.0,     1.1,     10.0,    10  );
 Param( AttackTime,   double,  wxT("AttackTime"),    0.2,     0.1,     5.0,     100 );
 Param( ReleaseTime,  double,  wxT("ReleaseTime"),   1.0,     1.0,     30.0,    10  );
@@ -284,9 +284,9 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
             .Name(XO("Noise Floor"))
             .Style(wxSL_HORIZONTAL)
             .AddSlider( {},
-               DEF_NoiseFloor / SCL_NoiseFloor,
-               MAX_NoiseFloor / SCL_NoiseFloor,
-               MIN_NoiseFloor / SCL_NoiseFloor);
+               DEF_NoiseFloor * SCL_NoiseFloor,
+               MAX_NoiseFloor * SCL_NoiseFloor,
+               MIN_NoiseFloor * SCL_NoiseFloor);
          mNoiseFloorText = S.AddVariableText(ThresholdFormat(999),
             true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -362,7 +362,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
 bool EffectCompressor::TransferDataToWindow()
 {
    mThresholdSlider->SetValue(lrint(mThresholdDB));
-   mNoiseFloorSlider->SetValue(lrint(mNoiseFloorDB / SCL_NoiseFloor));
+   mNoiseFloorSlider->SetValue(lrint(mNoiseFloorDB * SCL_NoiseFloor));
    mRatioSlider->SetValue(lrint(mRatio * SCL_Ratio));
    mAttackSlider->SetValue(lrint(mAttackTime * SCL_AttackTime));
    mDecaySlider->SetValue(lrint(mDecayTime * SCL_ReleaseTime));
@@ -382,7 +382,7 @@ bool EffectCompressor::TransferDataFromWindow()
    }
 
    mThresholdDB = (double) mThresholdSlider->GetValue();
-   mNoiseFloorDB = (double) mNoiseFloorSlider->GetValue() * SCL_NoiseFloor;
+   mNoiseFloorDB = (double) mNoiseFloorSlider->GetValue() / SCL_NoiseFloor;
    mRatio = (double) mRatioSlider->GetValue() / SCL_Ratio;
    mAttackTime = (double) mAttackSlider->GetValue() / 100.0; //SCL_AttackTime;
    mDecayTime = (double) mDecaySlider->GetValue() / SCL_ReleaseTime;
