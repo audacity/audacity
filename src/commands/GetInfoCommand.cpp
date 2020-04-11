@@ -209,6 +209,10 @@ public:
       const TranslatableString &Prompt,
       const SettingSpec< bool > &Setting) override;
 
+   wxChoice *TieChoice(
+      const TranslatableString &Prompt,
+      const ChoiceSetting &choiceSetting ) override;
+
    wxChoice * TieNumberAsChoice(
       const TranslatableString &Prompt,
       const SettingSpec< int > &Setting,
@@ -262,6 +266,7 @@ wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
    EndStruct();
    return ShuttleGui::TieCheckBox( Prompt, Setting );
 }
+
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
    const TranslatableString &Prompt,
    const SettingSpec< bool > &Setting)
@@ -274,6 +279,26 @@ wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
    EndStruct();
    return ShuttleGui::TieCheckBoxOnRight( Prompt, Setting );
 }
+
+wxChoice * ShuttleGuiGetDefinition::TieChoice(
+   const TranslatableString &Prompt,
+   const ChoiceSetting &choiceSetting  )
+{
+   StartStruct();
+   AddItem( choiceSetting.Key(), "id" );
+   AddItem( Prompt.Translation(), "prompt" );
+   AddItem( "enum", "type" );
+   AddItem( choiceSetting.Default().Internal(), "default"  );
+   StartField( "enum" );
+   StartArray();
+   for ( const auto &choice : choiceSetting.GetSymbols().GetInternals() )
+      AddItem( choice );
+   EndArray();
+   EndField();
+   EndStruct();
+   return ShuttleGui::TieChoice( Prompt, choiceSetting );
+}
+
 wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    const TranslatableString &Prompt,
    const SettingSpec< int > &Setting,
@@ -292,6 +317,7 @@ wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    return ShuttleGui::TieNumberAsChoice(
       Prompt, Setting, Choices, pInternalChoices, iNoMatchSelector );
 }
+
 wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    const TranslatableString &Prompt,
    const SettingSpec< wxString > &Setting,
@@ -305,6 +331,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    EndStruct();
    return ShuttleGui::TieTextBox( Prompt, Setting, nChars );
 }
+
 wxTextCtrl * ShuttleGuiGetDefinition::TieIntegerTextBox(
    const TranslatableString & Prompt,
    const SettingSpec< int > &Setting,
@@ -318,6 +345,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieIntegerTextBox(
    EndStruct();
    return ShuttleGui::TieIntegerTextBox( Prompt, Setting, nChars );
 }
+
 wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
    const TranslatableString & Prompt,
    const SettingSpec< double > &Setting,
@@ -331,6 +359,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
    EndStruct();
    return ShuttleGui::TieNumericTextBox( Prompt, Setting, nChars );
 }
+
 wxSlider * ShuttleGuiGetDefinition::TieSlider(
    const TranslatableString & Prompt,
    const SettingSpec< int > &Setting,
@@ -345,6 +374,7 @@ wxSlider * ShuttleGuiGetDefinition::TieSlider(
    EndStruct();
    return ShuttleGui::TieSlider( Prompt, Setting, max, min );
 }
+
 wxSpinCtrl * ShuttleGuiGetDefinition::TieSpinCtrl(
    const TranslatableString &Prompt,
    const SettingSpec< int > &Setting,
