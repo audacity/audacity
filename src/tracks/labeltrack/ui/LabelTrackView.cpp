@@ -458,6 +458,15 @@ void LabelTrackView::DrawLines(
    auto &x1 = ls.x1;
    auto &y = ls.y;
 
+   // Bug 2388 - Point label and range label can appear identical
+   // If the start and end times are not actually the same, but they 
+   // would appear so when drawn as lines at current zoom, be sure to draw 
+   // two lines - i.e. displace the second line slightly.
+   if (ls.getT0() != ls.getT1()) {
+      if (x == x1)
+         x1++;
+   }
+
    // How far out from the centre line should the vertical lines
    // start, i.e. what is the y position of the icon?
    // We adjust this so that the line encroaches on the icon
