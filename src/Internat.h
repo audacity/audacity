@@ -65,7 +65,7 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 #endif
 
 
-// The two string arugments will go to the .pot file, as
+// The two string arguments will go to the .pot file, as
 // msgid sing
 // msgid_plural plural
 //
@@ -135,7 +135,7 @@ public:
     */
    static bool SanitiseFilename(wxString &name, const wxString &sub);
 
-   /** \brief Remove accelerator charactors from strings
+   /** \brief Remove accelerator characters from strings
     *
     * Utility function - takes a translatable string to be used as a menu item,
     * for example _("&Splash...\tAlt+S"), and strips all of the menu

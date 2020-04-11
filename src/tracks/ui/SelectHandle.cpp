@@ -912,7 +912,7 @@ HitTestPreview SelectHandle::Preview
    TranslatableString tip;
    wxCursor *pCursor = SelectCursor();
    if ( IsClicked() )
-      // Use same cursor as at the clck
+      // Use same cursor as at the click
       SetTipAndCursorForBoundary
          (SelectionBoundary(mSelectionBoundary),
           (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER),

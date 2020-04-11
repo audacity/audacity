@@ -169,7 +169,7 @@ void LabelGlyphHandle::HandleGlyphClick
             // (label is shrunk to zero and size of zero is preserved)
             // If we're on a boundary between two different labels, 
             // then it's an adjust.
-            // In both cases the two points coallesce.
+            // In both cases the two points coalesce.
             hit.mbIsMoving = (hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight);
             MayAdjustLabel(hit, hit.mMouseOverLabelLeft, -1, false, t );
             MayAdjustLabel(hit, hit.mMouseOverLabelRight, 1, false, t );

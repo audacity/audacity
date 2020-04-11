@@ -150,7 +150,7 @@ void      ReverseSamples(samplePtr buffer, sampleFormat format,
 void      InitDitherers();
 
 // These are so commonly done for processing samples in floating point form in memory,
-// let's have abbeviations.
+// let's have abbreviations.
 using Floats = ArrayOf<float>;
 using FloatBuffers = ArraysOf<float>;
 using Doubles = ArrayOf<double>;

@@ -76,7 +76,7 @@ public:
    virtual ~ToolBarResizer();
 
    // We don't need or want to accept focus.
-   // Note that AcceptsFocusFromKeyboard() is overriden rather than
+   // Note that AcceptsFocusFromKeyboard() is overridden rather than
    // AcceptsFocus(), so that resize can be cancelled by ESC
    bool AcceptsFocusFromKeyboard() const override {return false;}
 
@@ -643,7 +643,7 @@ void ToolBar::Updated()
       // Bug 2120.  Changing the choice also changes the size of the toolbar so
       // we need to update the client size, even if undocked.
       // If modifying/improving this, remember to test both changing the choice,
-      // and clciking on the choice but not actually changing it.
+      // and clicking on the choice but not actually changing it.
       GetParent()->SetClientSize( GetSize() + wxSize( 2,2));
    //wxCommandEvent e( EVT_TOOLBAR_UPDATED, GetId() );
    //GetParent()->GetEventHandler()->AddPendingEvent( e );
@@ -808,7 +808,7 @@ void ToolBar::MakeButtonBackgroundsSmall()
 /// @param eDown             Background for when button is Down.
 /// @param eHilite           Background for when button is Hilit.
 /// @param eStandardUp       Foreground when enabled, up.
-/// @param eStandardDown     Foregrounde when enabled, down.
+/// @param eStandardDown     Foreground when enabled, down.
 /// @param eDisabled         Foreground when disabled.
 /// @param id                Windows Id.
 /// @param placement         Placement position

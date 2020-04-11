@@ -268,7 +268,7 @@ END_POPUP_MENU()
 
 where OnCutSelectedText is a (maybe private) member function of MyTable.
 
-Elswhere,
+Elsewhere,
 
 MyTable myTable;
 MyData data;

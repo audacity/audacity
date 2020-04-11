@@ -896,7 +896,7 @@ bool DirManager::AssignFile(wxFileNameWrapper &fileName,
       wxDir checkit(dir.GetFullPath());
       if(!checkit.IsOpened()) return FALSE;
 
-      // this code is only valid if 'value' has no extention; that
+      // this code is only valid if 'value' has no extension; that
       // means, effectively, AssignFile may be called with 'diskcheck'
       // set to true only if called from MakeFileBlockName().
 
@@ -1105,7 +1105,7 @@ wxFileNameWrapper DirManager::MakeBlockFileName()
 
    while(1){
 
-      /* blockfiles are divided up into heirarchical directories.
+      /* blockfiles are divided up into hierarchical directories.
          Each toplevel directory is represented by "e" + two unique
          hexadecimal digits, for a total possible number of 256
          toplevels.  Each toplevel contains up to 256 subdirs named

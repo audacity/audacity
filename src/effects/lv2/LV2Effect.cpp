@@ -261,7 +261,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
             {
                wxTextCtrl *t;
                t = S.TieNumericTextBox(
-                  XO("&Buffer Size (8 to %d) samples):")
+                  XO("&Buffer Size (8 to %d samples):")
                      .Format( DEFAULT_BLOCKSIZE ),
                   mBufferSize,
                   12);

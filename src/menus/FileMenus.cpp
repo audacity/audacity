@@ -123,8 +123,8 @@ void OnOpen(const CommandContext &context )
    ProjectManager::OpenFiles(&project);
 }
 
-// JKC: This is like OnClose, except it emptys the project in place,
-// rather than createing a new empty project (with new toolbars etc).
+// JKC: This is like OnClose, except it empties the project in place,
+// rather than creating a new empty project (with new toolbars etc).
 // It does not test for unsaved changes.
 // It is not in the menus by default.  Its main purpose is/was for 
 // developers checking functionality of ResetProjectToEmpty().

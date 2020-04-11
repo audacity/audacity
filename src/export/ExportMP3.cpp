@@ -11,7 +11,7 @@
 
   The difficulty in our approach is that we are attempting to use LAME
   in a way it was not designed to be used. LAME's API is reasonably
-  consistant, so if we were linking directly against it we could expect
+  consistent, so if we were linking directly against it we could expect
   this code to work with a variety of different LAME versions. However,
   the data structures change from version to version, and so linking
   with one version of the header and dynamically linking against a

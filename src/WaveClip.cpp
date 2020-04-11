@@ -1048,7 +1048,7 @@ bool SpecCache::CalculateOneSpectrum
          ComputeSpectrumUsingRealFFTf
             (useBuffer, settings.hFFT.get(), settings.window.get(), fftLen, results);
          if (!gainFactors.empty()) {
-            // Apply a frequency-dependant gain factor
+            // Apply a frequency-dependent gain factor
             for (size_t ii = 0; ii < nBins; ++ii)
                results[ii] += gainFactors[ii];
          }
@@ -1201,7 +1201,7 @@ void SpecCache::Populate
                   power = 10.0*log10f(power);
             }
             if (!gainFactors.empty()) {
-               // Apply a frequency-dependant gain factor
+               // Apply a frequency-dependent gain factor
                for (size_t ii = 0; ii < nBins; ++ii)
                   results[ii] += gainFactors[ii];
             }

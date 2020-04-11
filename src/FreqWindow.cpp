@@ -1012,7 +1012,7 @@ void FrequencyPlotDialog::Recalc()
    // In wxMac, the skipped window MUST be a top level window.  I'd originally made it
    // just the mProgress window with the idea of preventing user interaction with the
    // controls while the plot was being recalculated.  This doesn't appear to be necessary
-   // so just use the the top level window instead.
+   // so just use the top level window instead.
    {
       Optional<wxWindowDisabler> blocker;
       if (IsShown())

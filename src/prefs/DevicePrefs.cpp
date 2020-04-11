@@ -347,7 +347,7 @@ void DevicePrefs::OnDevice(wxCommandEvent & WXUNUSED(event))
       cnt = 16;
    }
 
-   // Place an artifical limit on the number of channels to prevent an
+   // Place an artificial limit on the number of channels to prevent an
    // outrageous number.  I don't know if this is really necessary, but
    // it doesn't hurt.
    if (cnt > 256) {

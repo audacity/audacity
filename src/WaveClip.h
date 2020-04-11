@@ -322,7 +322,7 @@ public:
                     double *cutLineEnd = NULL) const;
 
    /** Expand cut line (that is, re-insert audio, then DELETE audio saved in
-    * cut line). Returns true if a cut line could be found and sucessfully
+    * cut line). Returns true if a cut line could be found and successfully
     * expanded, false otherwise */
    void ExpandCutLine(double cutLinePosition);
 

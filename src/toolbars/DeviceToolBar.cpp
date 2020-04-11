@@ -71,7 +71,7 @@ static int DeviceToolbarPrefsID()
    return value;
 }
 
-//Standard contructor
+//Standard constructor
 DeviceToolBar::DeviceToolBar( AudacityProject &project )
 : ToolBar( project, DeviceBarID, XO("Device"), wxT("Device"), true )
 {
@@ -469,7 +469,7 @@ void DeviceToolBar::RepositionCombos()
          int w1, h1;
          pParent->GetSize( &w1, &h1 );
          // This Resizer is considerably bigger than the 4px docked version.
-         // It's the diagonal striped resizer, not the veertical bars.
+         // It's the diagonal striped resizer, not the vertical bars.
          int kStripyResizerSize = 15;
          // Grabber AND resizer included.
          w = w1- (kStripyResizerSize + grabberWidth );
@@ -506,7 +506,7 @@ void DeviceToolBar::RepositionCombos()
 
    ratioUnused = 0.995f - (kHostWidthRatio + kInputWidthRatio + kOutputWidthRatio + kChannelsWidthRatio);
    int i = 0;
-   // limit the amount of times we solve contraints to 5
+   // limit the amount of times we solve constraints to 5
    // As we now ask for more than is available, we only do this iteration once.
    while (constrained && ratioUnused > 0.01f && i < 5) {
       i++;

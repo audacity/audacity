@@ -323,7 +323,7 @@ void ODManager::Init()
 
    //   wxLogDebug(wxT("Initializing ODManager...Creating manager thread"));
    // This is a detached thread, so it deletes itself when it finishes
-   // ... except on Mac where we we don't use wxThread for reasons unexplained
+   // ... except on Mac where we don't use wxThread for reasons unexplained
    ODManagerHelperThread* startThread = safenew ODManagerHelperThread;
 
 //   startThread->SetPriority(0);//default of 50.
@@ -384,7 +384,7 @@ void ODManager::Start()
          mTasksMutex.Lock();
          //detach a NEW thread.
          // This is a detached thread, so it deletes itself when it finishes
-         // ... except on Mac where we we don't use wxThread for reasons unexplained
+         // ... except on Mac where we don't use wxThread for reasons unexplained
          auto thread = safenew ODTaskThread(mTasks[0]);//task);
          //thread->SetPriority(10);//default is 50.
          thread->Create();
@@ -398,7 +398,7 @@ void ODManager::Start()
       }
 
       mCurrentThreadsMutex.Unlock();
-      //use a conditon variable to block here instead of a sleep.
+      //use a condition variable to block here instead of a sleep.
 
       // JKC: If there are no tasks ready to run, or we're paused then
       // we wait for there to be tasks in the queue.
@@ -542,7 +542,7 @@ bool ODManager::MakeWaveTrackDependent(
       return false;
    }
    //then we add dependentTrack to the masterTrack's queue - this will allow future ODScheduling to affect them together.
-   //this sets the NeedODUpdateFlag since we don't want the head task to finish without haven't dealt with the depednent
+   //this sets the NeedODUpdateFlag since we don't want the head task to finish without haven't dealt with the dependent
    masterQueue->MergeWaveTrack(dependentTrack);
 
    //finally remove the dependent track

@@ -826,7 +826,7 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
    mButtons[TTB_SelectSilence]->Enable();
    mButtons[TTB_AutomateSelection]->Enable();
 
-   //Make the sensititivy slider set the sensitivity by processing an event.
+   //Make the sensitivity slider set the sensitivity by processing an event.
    wxCommandEvent dummy;
    OnSensitivitySlider(dummy);
 
@@ -865,7 +865,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
       sampleCount lastlen = 0;
       double newStartPos, newEndPos;
 
-      //This is the minumum word size in samples (.05 is 50 ms)
+      //This is the minimum word size in samples (.05 is 50 ms)
       int minWordSize = (int)(wt->GetRate() * .05);
 
       //Continue until we have processed the entire

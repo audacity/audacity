@@ -101,10 +101,10 @@ public:
    /// Callback, called from GetFilename
    bool CheckFileName(wxFileName &filename, int format = 0) override;
 
-   /// Format intialization
+   /// Format initialization
    bool Init(const char *shortname, AudacityProject *project, const Tags *metadata, int subformat);
 
-   /// Codec intialization
+   /// Codec initialization
    bool InitCodecs(AudacityProject *project);
 
    /// Writes metadata
@@ -140,7 +140,7 @@ public:
    ///\param mixerSpec mixer
    ///\param metadata tags to write into file
    ///\param subformat index of export type
-   ///\return true if export succeded
+   ///\return true if export succeeded
    ProgressResult Export(AudacityProject *project,
       std::unique_ptr<ProgressDialog> &pDialog,
       unsigned channels,
@@ -503,7 +503,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
       mEncAudioCodecCtx->compression_level = gPrefs->Read(wxT("/FileFormats/FFmpegCompLevel"),-1);
       mEncAudioCodecCtx->frame_size = gPrefs->Read(wxT("/FileFormats/FFmpegFrameSize"),(long)0);
 
-//FIXME The list of supported options for the seleced encoder should be extracted instead of a few hardcoded
+//FIXME The list of supported options for the selected encoder should be extracted instead of a few hardcoded
       set_dict_int(&options, "lpc_coeff_precision",     gPrefs->Read(wxT("/FileFormats/FFmpegLPCCoefPrec"),(long)0));
       set_dict_int(&options, "min_prediction_order",    gPrefs->Read(wxT("/FileFormats/FFmpegMinPredOrder"),(long)-1));
       set_dict_int(&options, "max_prediction_order",    gPrefs->Read(wxT("/FileFormats/FFmpegMaxPredOrder"),(long)-1));

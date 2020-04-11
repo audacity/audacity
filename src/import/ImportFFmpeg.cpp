@@ -187,7 +187,7 @@ public:
       const FilePath &Filename, AudacityProject*) override;
 };
 
-///! Does acual import, returned by FFmpegImportPlugin::Open
+///! Does actual import, returned by FFmpegImportPlugin::Open
 class FFmpegImportFileHandle final : public ImportFileHandle
 {
 
@@ -430,7 +430,7 @@ bool FFmpegImportFileHandle::InitCodecs()
             continue;
          }
 
-         // Stream is decodeable and it is audio. Add it and its decription to the arrays
+         // Stream is decodeable and it is audio. Add it and its description to the arrays
          int duration = 0;
          if (sc->m_stream->duration > 0)
             duration = sc->m_stream->duration * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
@@ -463,7 +463,7 @@ bool FFmpegImportFileHandle::InitCodecs()
       }
       //for video and unknown streams do nothing
    }
-   //It doesn't really returns false, but GetStreamCount() will return 0 if file is composed entierly of unreadable streams
+   //It doesn't really returns false, but GetStreamCount() will return 0 if file is composed entirely of unreadable streams
    return true;
 }
 
@@ -560,7 +560,7 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       }
    }
    // This is the heart of the importing process
-   // The result of Import() to be returend. It will be something other than zero if user canceled or some error appears.
+   // The result of Import() to be returned. It will be something other than zero if user canceled or some error appears.
    auto res = ProgressResult::Success;
 
 #ifdef EXPERIMENTAL_OD_FFMPEG

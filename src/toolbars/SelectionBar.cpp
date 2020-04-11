@@ -246,7 +246,7 @@ void SelectionBar::Populate()
       mainSizer->Add(mChoice, 0, wxALIGN_TOP | wxEXPAND | wxRIGHT, 6);
    }
 
-   // Botton row, (mostly time controls)
+   // Button row, (mostly time controls)
    mRateBox = safenew wxComboBox(this, RateID,
                              wxT(""),
                              wxDefaultPosition, wxSize(80, -1));

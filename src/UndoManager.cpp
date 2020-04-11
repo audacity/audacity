@@ -309,7 +309,7 @@ void UndoManager::PushState(const TrackList * l,
       RemoveStateAt(i);
    }
 
-   // Assume tags was duplicted before any changes.
+   // Assume tags was duplicated before any changes.
    // Just save a NEW shared_ptr to it.
    stack.push_back(
       std::make_unique<UndoStackElem>

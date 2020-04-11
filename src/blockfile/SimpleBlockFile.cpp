@@ -334,7 +334,7 @@ void SimpleBlockFile::FillCache()
    mCache.active = true;
    mCache.needWrite = false;
 
-   //wxLogDebug("SimpleBlockFile::FillCache(): Succesfully read simple block file into cache.");
+   //wxLogDebug("SimpleBlockFile::FillCache(): Successfully read simple block file into cache.");
 }
 
 /// Read the summary section of the disk file.

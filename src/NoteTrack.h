@@ -138,7 +138,7 @@ public:
 
    /// Zooms out a constant factor (subject to zoom limits)
    void ZoomOut(const wxRect &rect, int y) { Zoom(rect, y, 1.0f / ZoomStep, true); }
-   /// Zooms in a contant factor (subject to zoom limits)
+   /// Zooms in a constant factor (subject to zoom limits)
    void ZoomIn(const wxRect &rect, int y) { Zoom(rect, y, ZoomStep, true); }
    /// Zoom the note track around y.
    /// If center is true, the result will be centered at y.

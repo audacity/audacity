@@ -17,8 +17,8 @@
 \class Shuttle
 \brief Moves data from one place to another, converting it as required.
 
-  Shuttle provides a base class for transfering parameter data into and
-  out of clasess into some other structure.  This is a common
+  Shuttle provides a base class for transferring parameter data into and
+  out of classes into some other structure.  This is a common
   requirement and is needed for:
     - Prefs data
     - Command line parameter data

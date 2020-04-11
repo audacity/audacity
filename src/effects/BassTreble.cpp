@@ -372,13 +372,13 @@ size_t EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
 
    data.gain = DB_TO_LINEAR(mGain);
 
-   // Compute coefficents of the low shelf biquand IIR filter
+   // Compute coefficients of the low shelf biquand IIR filter
    if (data.bass != oldBass)
       Coefficents(data.hzBass, data.slope, mBass, data.samplerate, kBass,
                   data.a0Bass, data.a1Bass, data.a2Bass,
                   data.b0Bass, data.b1Bass, data.b2Bass);
 
-   // Compute coefficents of the high shelf biquand IIR filter
+   // Compute coefficients of the high shelf biquand IIR filter
    if (data.treble != oldTreble)
       Coefficents(data.hzTreble, data.slope, mTreble, data.samplerate, kTreble,
                   data.a0Treble, data.a1Treble, data.a2Treble,

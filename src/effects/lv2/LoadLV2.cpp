@@ -138,7 +138,7 @@ bool LV2EffectsModule::Initialize()
    #define NODE(n, u) LV2Effect::node_##n = lilv_new_uri(gWorld, u);
    NODELIST
 
-   // Generatre URIDs
+   // Generate URIDs
    #undef URID
    #define URID(n, u) LV2Effect::urid_##n = LV2Effect::Lookup_URI(LV2Effect::gURIDMap, u);
       URIDLIST

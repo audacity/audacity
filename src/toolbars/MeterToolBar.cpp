@@ -47,7 +47,7 @@ BEGIN_EVENT_TABLE( MeterToolBar, ToolBar )
    EVT_SIZE( MeterToolBar::OnSize )
 END_EVENT_TABLE()
 
-//Standard contructor
+//Standard constructor
 MeterToolBar::MeterToolBar(AudacityProject &project, int type)
 : ToolBar(project, type, XO("Combined Meter"), wxT("CombinedMeter"), true)
 {

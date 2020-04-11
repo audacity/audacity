@@ -13,7 +13,7 @@
 \brief Contains definitions for CommandContext
 
 \class CommandContext
-\brief CommandContext provides addiitonal information to an
+\brief CommandContext provides additional information to an
 'Apply()' command.  It provides the project, and provides output
 channels for Error, Progress and Status.  Status is used for general
 messaging from a command back to its invoker.

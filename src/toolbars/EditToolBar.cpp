@@ -76,7 +76,7 @@ BEGIN_EVENT_TABLE( EditToolBar, ToolBar )
                       EditToolBar::OnButton )
 END_EVENT_TABLE()
 
-//Standard contructor
+//Standard constructor
 EditToolBar::EditToolBar( AudacityProject &project )
 : ToolBar(project, EditBarID, XO("Edit"), wxT("Edit"))
 {

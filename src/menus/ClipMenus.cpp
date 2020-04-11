@@ -344,7 +344,7 @@ TranslatableString ClipBoundaryMessage(
                First two %s are each replaced with the noun "start"
                or with "end", identifying and end of a clip,
                first and second numbers give the position of those clips in
-               a seqeunce of clips,
+               a sequence of clips,
                last number counts all clips,
                and the last string is the name of the track containing the
                clips.

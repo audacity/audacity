@@ -2433,7 +2433,7 @@ void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
    }
    else
    {
-      // We're the master, so propogate 
+      // We're the master, so propagate 
       for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
       {
          mSlaves[i]->EventListener(inEvent, inParameterValue);

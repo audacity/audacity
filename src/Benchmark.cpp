@@ -352,7 +352,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    gPrefs->Write(wxT("/GUI/EditClipCanMove"), false);
    gPrefs->Flush();
 
-   // Rememebr the old blocksize, so that we can restore it later.
+   // Remember the old blocksize, so that we can restore it later.
    auto oldBlockSize = Sequence::GetMaxDiskBlockSize();
    Sequence::SetMaxDiskBlockSize(blockSize * 1024);
 

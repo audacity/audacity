@@ -60,7 +60,7 @@ class ODWaveTrackTaskQueue final
    void MergeWaveTrack( const std::shared_ptr< WaveTrack > &track);
 
 
-   //returns true if the agrument is in the WaveTrack list.
+   //returns true if the argument is in the WaveTrack list.
    bool ContainsWaveTrack(const WaveTrack* track);
 
    ///returns the number of wavetracks in this queue.

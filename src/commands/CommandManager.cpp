@@ -977,7 +977,7 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
       // If RTL, then the control character forces right-to-left sequencing of
       // "/" -separated command names, and puts any "(...)" shortcuts to the
       // left, consistently with accelerators in menus (assuming matching
-      // operating system prefernces for language), even if the command name
+      // operating system preferences for language), even if the command name
       // was missing from the translation file and defaulted to the English.
 
       // Note: not putting this and other short format strings in the
@@ -1177,7 +1177,7 @@ bool CommandManager::HandleMenuID(
    return HandleCommandEntry( project, entry, flags, alwaysEnabled );
 }
 
-/// HandleTextualCommand() allows us a limitted version of script/batch
+/// HandleTextualCommand() allows us a limited version of script/batch
 /// behavior, since we can get from a string command name to the actual
 /// code to run.
 CommandManager::TextualCommandResult

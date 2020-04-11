@@ -203,7 +203,7 @@ public:
    void UpdatePrefs() override;
 
    // Add clusters for any tracks we're not yet showing.
-   // Update pointers for tracks we're aleady showing.
+   // Update pointers for tracks we're already showing.
    void UpdateTrackClusters();
 
    int GetTrackClustersWidth();

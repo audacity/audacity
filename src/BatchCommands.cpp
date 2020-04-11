@@ -187,7 +187,7 @@ bool MacroCommands::ReadMacro(const wxString & macro)
    if (lines > 0) {
       for (int i = 0; i < lines; i++) {
 
-         // Find the command name terminator...ingore line if not found
+         // Find the command name terminator...ignore line if not found
          int splitAt = tf[i].Find(wxT(':'));
          if (splitAt < 0) {
             continue;
@@ -722,7 +722,7 @@ bool MacroCommands::ApplySpecialCommand(
 }
 // end CLEANSPEECH remnant
 
-/// DoAudacityCommand() takes a PluginID and executes the assocated command.
+/// DoAudacityCommand() takes a PluginID and executes the associated command.
 ///
 /// At the moment flags are used only to indicate whether to prompt for
 /// parameters

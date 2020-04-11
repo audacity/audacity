@@ -72,7 +72,7 @@ wxString sf_header_shortname(int format);
 /** @brief Get the most common file extension for the given format
  *
  * AND the given format with SF_FORMAT_TYPEMASK to get just the container
- * format, then retreive the most common extension using SFC_GET_FORMAT_INFO.
+ * format, then retrieve the most common extension using SFC_GET_FORMAT_INFO.
  * @param format the libsndfile format to get the name for (only the container
  * part is used) */
 wxString sf_header_extension(int format);

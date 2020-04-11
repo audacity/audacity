@@ -1069,7 +1069,7 @@ void NoteTrack::ZoomAllNotes()
    }
 
    if (!hasNotes) {
-      // Semi-arbitary default values:
+      // Semi-arbitrary default values:
       minPitch = 48;
       maxPitch = 72;
    }
@@ -1102,7 +1102,7 @@ NoteTrackDisplayData::NoteTrackDisplayData(const NoteTrack* track, const wxRect 
    }
    // Effective space, excluding the margins and the lines between some notes
    auto effectiveHeight = r.height - (2 * (mMargin + 1)) - numC - numF;
-   // Guarenteed that both the bottom and top notes will be visible
+   // Guaranteed that both the bottom and top notes will be visible
    // (assuming that the clamping below does not happen)
    mPitchHeight = effectiveHeight / ((float) span);
 

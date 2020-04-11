@@ -444,7 +444,7 @@ unsigned operator()
 
 // Disabled this code to fix Bug 1923 (tricky to wheel-zoom right of waveform).
 #if 0
-      // When zooming in in empty space, it's easy to 'lose' the waveform.
+      // When zooming in empty space, it's easy to 'lose' the waveform.
       // This prevents it.
       // IF zooming in
       if (steps > 0)
@@ -574,7 +574,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mNextWindowID = NextID;
 
    // Two sub-windows need to be made before Init(),
-   // so that this construcator can complete, and then TrackPanel and
+   // so that this constructor can complete, and then TrackPanel and
    // AdornedRulerPanel can retrieve those windows from this in their
    // factory functions
 
@@ -609,7 +609,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    pPage = Factory.AddPage( pNotebook, _("Main Mix"));
 #else
    // Not using a notebook, so we place the track panel inside another panel,
-   // this keeps the notebook code and normal code consistant and also
+   // this keeps the notebook code and normal code consistent and also
    // paves the way for adding additional windows inside the track panel.
    mMainPanel = safenew wxPanelWrapper(this, -1,
       wxDefaultPosition,
@@ -843,7 +843,7 @@ void ProjectWindow::OnScrollRight()
 
 
 ///
-///  This handles the event when the left direction button on the scrollbar is depresssed
+///  This handles the event when the left direction button on the scrollbar is depressed
 ///
 void ProjectWindow::OnScrollLeftButton(wxScrollEvent & /*event*/)
 {
@@ -864,7 +864,7 @@ void ProjectWindow::OnScrollLeftButton(wxScrollEvent & /*event*/)
 }
 
 ///
-///  This handles  the event when the right direction button on the scrollbar is depresssed
+///  This handles  the event when the right direction button on the scrollbar is depressed
 ///
 void ProjectWindow::OnScrollRightButton(wxScrollEvent & /*event*/)
 {
@@ -1010,7 +1010,7 @@ void ProjectWindow::FixScrollbars()
    auto panelWidth = viewInfo.GetTracksUsableWidth();
    auto panelHeight = viewInfo.GetHeight();
 
-   // (From Debian...at least I think this is the change cooresponding
+   // (From Debian...at least I think this is the change corresponding
    // to this comment)
    //
    // (2.) GTK critical warning "IA__gtk_range_set_range: assertion
