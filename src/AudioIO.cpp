@@ -1115,10 +1115,8 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
 {
    mMixerOutputVol = playbackVolume;
    if (mEmulateMixerOutputVol) {
-       if (mMixerOutputVol != 1.0) {
-	   gPrefs->Write(wxT("/AudioIO/PlaybackEmulatedVolume"), mMixerOutputVol);
-	   gPrefs->Flush();
-       }
+       gPrefs->Write(wxT("/AudioIO/PlaybackEmulatedVolume"), mMixerOutputVol);
+       gPrefs->Flush();
    }
 
 
