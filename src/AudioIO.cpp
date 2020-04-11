@@ -1154,7 +1154,7 @@ void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
 	      gPrefs->Flush();
 	  }
 	  else {
-	      gPrefs->Read(wxT("/AudioIO/PlaybackEmulatedVolume"), playbackVolume);
+	      gPrefs->Read(wxT("/AudioIO/PlaybackEmulatedVolume"), playbackVolume, DEFAULT_PLAYBACK_EMULATED_VOLUME);
 	  }
       }
       else

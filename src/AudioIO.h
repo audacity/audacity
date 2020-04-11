@@ -64,6 +64,7 @@ bool ValidateDeviceNames();
 
 #define MAX_MIDI_BUFFER_SIZE 5000
 #define DEFAULT_SYNTH_LATENCY 5
+#define DEFAULT_PLAYBACK_EMULATED_VOLUME 1.0
 
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_AUDIOIO_PLAYBACK, wxCommandEvent);
