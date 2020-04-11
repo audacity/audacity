@@ -12,6 +12,8 @@
 #ifndef __AUDACITY_PLAYBACK_PREFS__
 #define __AUDACITY_PLAYBACK_PREFS__
 
+#define DEFAULT_PLAYBACK_VOLUME 0.5
+
 #include <wx/defs.h>
 
 #include "PrefsPanel.h"
