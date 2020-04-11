@@ -55,7 +55,7 @@ EVT_COMMAND_RANGE( STBFirstButton,
 EVT_IDLE( ScrubbingToolBar::OnIdle )
 END_EVENT_TABLE()
 
-//Standard contructor
+//Standard constructor
 ScrubbingToolBar::ScrubbingToolBar( AudacityProject &project )
 : ToolBar(project, ScrubbingBarID, XO("Scrub"), wxT("Scrub"))
 {

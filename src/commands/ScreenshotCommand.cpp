@@ -426,7 +426,7 @@ void ScreenshotCommand::CaptureWindowOnIdle(
    wxString Title = pDlg->GetTitle();
 
    // Remove '/' from "Sliding Time Scale/Pitch Shift..."
-   // and any other effects that have illegal filename chanracters.
+   // and any other effects that have illegal filename characters.
    Title.Replace( "/", "" );
    Title.Replace( ":", "" );
    wxString Name = mDirToWriteTo + Title + ".png";

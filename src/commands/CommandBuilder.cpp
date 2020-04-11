@@ -157,7 +157,7 @@ void CommandBuilder::BuildCommand(AudacityProject *project,
          Failure(wxT("Unrecognized parameter: '") + paramName + wxT("'"));
          return;
       }
-      // Handling of quoted strings is quite limitted.
+      // Handling of quoted strings is quite limited.
       // You start and end with a " or a '.
       // There is no escaping in the string.
       cmdParams = cmdParams.Mid(splitAt+1);

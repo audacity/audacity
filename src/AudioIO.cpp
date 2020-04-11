@@ -2054,7 +2054,7 @@ void AudioIO::PrepareMidiIterator(bool send, double offset)
    // instead of initializing with an Alg_seq, we use begin_seq()
    // below to add ALL Alg_seq's.
    mIterator = std::make_unique<Alg_iterator>(nullptr, false);
-   // Iterator not yet intialized, must add each track...
+   // Iterator not yet initialized, must add each track...
    for (i = 0; i < nTracks; i++) {
       const auto t = mMidiPlaybackTracks[i].get();
       Alg_seq_ptr seq = &t->GetSeq();
@@ -4389,7 +4389,7 @@ int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
 
    // ------ MEMORY ALLOCATIONS -----------------------------------------------
-   // tempFloats will be a resusable scratch pad for (possibly format converted)
+   // tempFloats will be a reusable scratch pad for (possibly format converted)
    // audio data.  One temporary use is for the InputMeter data.
    const auto numPlaybackChannels = mNumPlaybackChannels;
    const auto numCaptureChannels = mNumCaptureChannels;

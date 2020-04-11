@@ -368,7 +368,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
             s += nget;
 
-            if (first_time){//blend the the start of the selection
+            if (first_time){//blend the start of the selection
                track->Get((samplePtr)fade_track_smps.get(), floatSample, start, fade_len);
                first_time = false;
                for (size_t i = 0; i < fade_len; i++){

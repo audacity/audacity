@@ -59,7 +59,7 @@ class Resample final
     @param inBufferLen Length of the input buffer, in samples.
     @param lastFlag Flag to indicate this is the last lot of input samples and
     the buffer needs to be emptied out into the rate converter.
-    (unless lastFlag is true, we don't garuntee to process all the samples in
+    (unless lastFlag is true, we don't guarantee to process all the samples in
     the input this time, we may leave some for next time)
     @param outBuffer Buffer to write output (converted) samples to.
     @param outBufferLen How big outBuffer is.

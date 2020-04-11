@@ -588,7 +588,7 @@ size_t BlockFile::CommonReadData(
              format == int16Sample &&
              sf_subtype_is_integer(info.format)) {
             // If both the src and dest formats are integer formats,
-            // read integers directly from the file, comversions not needed
+            // read integers directly from the file, conversions not needed
             framesRead = SFCall<sf_count_t>(
                sf_readf_short, sf.get(), (short *)data, len);
          }

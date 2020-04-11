@@ -1187,7 +1187,7 @@ ClipParameters::ClipParameters
       hiddenMid.width -= hiddenLeftOffset;
    }
 
-   // If the right edge of the track is to the left of the the right
+   // If the right edge of the track is to the left of the right
    // edge of the display, then there's some unused area to the right
    // of the track.  Reduce the "hiddenMid" rect by the
    // size of the blank area.
@@ -1218,7 +1218,7 @@ ClipParameters::ClipParameters
       mid.width -= leftOffset;
    }
 
-   // If the right edge of the track is to the left of the the right
+   // If the right edge of the track is to the left of the right
    // edge of the display, then there's some unused area to the right
    // of the track.  Reduce the "mid" rect by the
    // size of the blank area.

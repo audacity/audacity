@@ -334,7 +334,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    if (!bFileVersionFound ||
          (fileVersion.length() != 5) || // expecting '1.1.0', for example
-         // JKC: I commentted out next line.  IsGoodInt is not for
+         // JKC: I commented out next line.  IsGoodInt is not for
          // checking dotted numbers.
          //!XMLValueChecker::IsGoodInt(fileVersion) ||
          (fileVersion > wxT(AUDACITY_FILE_FORMAT_VERSION)))
@@ -358,7 +358,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // KLUDGE: guess the true 'fileversion' by stripping away any '-beta-Rc' stuff on
    // audacityVersion.
    // It's fairly safe to do this as it has already been established that the
-   // puported file version was five chars long.
+   // supported file version was five chars long.
    fileVersion = audacityVersion.Mid(0,5);
 
    bool bIsOld = fileVersion < wxT(AUDACITY_FILE_FORMAT_VERSION);
@@ -459,7 +459,7 @@ void ProjectFileIO::WriteXML(
       xmlFile.WriteAttr(wxT("datadir"), dirManager.GetDataFilesDir());
 
       // Note that the code at the start assumes that if mFileName has a value
-      // then the file has been saved.  This is not neccessarily true when
+      // then the file has been saved.  This is not necessarily true when
       // autosaving as it gets set by AddImportedTracks (presumably as a proposal).
       // I don't think that mDirManager.projName gets set without a save so check that.
       if( !IsProjectSaved() )

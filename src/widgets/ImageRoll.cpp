@@ -266,7 +266,7 @@ void ImageRoll::Init(RollType type, const wxImage &src, wxColour magicColor)
       break;
 
    /* Adding these shuts up some GCC warnings. It is functionally what was
-    * implict here before - Richard */
+    * implicit here before - Richard */
    case Uninitialized:
    break;
 

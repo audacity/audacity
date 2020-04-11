@@ -521,7 +521,7 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
    double startT = t->LongSamplesToTime(start);
 
    //output has one waveclip for the total length, even though 
-   //t might have whitespace seperating multiple clips
+   //t might have whitespace separating multiple clips
    //we want to maintain the original clip structure, so
    //only paste the intersections of the NEW clip.
 

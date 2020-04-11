@@ -592,7 +592,7 @@ void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))
          {
             if ((size_t)mFilterIndex == c)
             {  // this is the selected format. Store the plug-in and sub-format
-               // needed to acheive it.
+               // needed to achieve it.
                mPluginIndex = i;
                mSubFormatIndex = j;
                mBook->GetPage(mFilterIndex)->TransferDataFromWindow();
@@ -854,7 +854,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
    }
 
    auto ok = ProgressResult::Success;   // did it work?
-   int count = 0; // count the number of sucessful runs
+   int count = 0; // count the number of successful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
    /* Go round again and do the exporting (so this run is slow but
     * non-interactive) */
@@ -994,7 +994,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    }
    // end of user-interactive data gathering loop, start of export processing
    // loop
-   int count = 0; // count the number of sucessful runs
+   int count = 0; // count the number of successful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
    std::unique_ptr<ProgressDialog> pDialog;
 

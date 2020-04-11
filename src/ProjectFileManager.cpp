@@ -360,7 +360,7 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
    auto &projectFileIO = ProjectFileIO::Get( proj );
    const auto &settings = ProjectSettings::Get( proj );
 
-   wxASSERT_MSG(!bWantSaveCopy || fromSaveAs, "Copy Project SHOULD only be availabele from SaveAs");
+   wxASSERT_MSG(!bWantSaveCopy || fromSaveAs, "Copy Project SHOULD only be available from SaveAs");
 
    // Some confirmation dialogs
    if (!bWantSaveCopy)
@@ -931,7 +931,7 @@ will be irreversibly overwritten.").Format( fName, fName );
       }
       else
       {
-         // Overwrite disalowed. The destination project is open in another window.
+         // Overwrite disallowed. The destination project is open in another window.
          AudacityMessageDialog m(
             nullptr,
             XO("The project will not saved because the selected project is open in another window.\nPlease try again and select an original name."),
@@ -1226,7 +1226,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    auto &window = ProjectWindow::Get( project );
 
    // On Win32, we may be given a short (DOS-compatible) file name on rare
-   // occassions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
+   // occasions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
    // convert these to long file name first.
    auto fileName = PlatformCompatibility::ConvertSlashInFileName(
       PlatformCompatibility::GetLongFileName(fileNameArg));
@@ -1444,7 +1444,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
             // Going through OnClose() may be overkill, but it's safe.
             /*
                // There was an error in the load/check and the user
-               // explictly opted to close the project.
+               // explicitly opted to close the project.
                mTracks->Clear(true);
                mFileName = wxT("");
                SetProjectTitle();
@@ -1598,7 +1598,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    // See bug #1224
    // The track panel hasn't we been fully created, so the DoZoomFit() will not give
    // expected results due to a window width of zero.  Should be safe to yield here to
-   // allow the creattion to complete.  If this becomes a problem, it "might" be possible
+   // allow the creation to complete.  If this becomes a problem, it "might" be possible
    // to queue a dummy event to trigger the DoZoomFit().
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
 #endif

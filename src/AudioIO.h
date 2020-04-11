@@ -700,7 +700,7 @@ public:
    * audacity actually runs the audio I/O stream at. if there is no suitable
    * rate available from the hardware, it returns 0.
    * The sampleRate argument gives the desired sample rate (the rate of the
-   * audio to be handeled, i.e. the currently Project Rate).
+   * audio to be handled, i.e. the currently Project Rate).
    * capturing is true if the stream is capturing one or more audio channels,
    * and playing is true if one or more channels are being played. */
    double GetBestRate(bool capturing, bool playing, double sampleRate);
@@ -730,7 +730,7 @@ private:
     * currently in use (for many reasons). The number of Capture and Playback
     * channels requested includes an allocation for doing software playthrough
     * if necessary. The captureFormat is used for recording only, the playback
-    * being floating point always. Returns true if the stream opened sucessfully
+    * being floating point always. Returns true if the stream opened successfully
     * and false if it did not. */
    bool StartPortAudioStream(const AudioIOStartStreamOptions &options,
                              unsigned int numPlaybackChannels,

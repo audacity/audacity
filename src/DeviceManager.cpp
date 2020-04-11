@@ -213,8 +213,8 @@ static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap> *
    // If the device is for input, open a stream so we can use portmixer to query
    // the number of inputs.  We skip this for outputs because there are no 'sources'
    // and some platforms (e.g. XP) have the same device for input and output, (while
-   // Vista/Win7 seperate these into two devices with the same names (but different
-   // portaudio indecies)
+   // Vista/Win7 separate these into two devices with the same names (but different
+   // portaudio indices)
    // Also, for mapper devices we don't want to keep any sources, so check for it here
    if (isInput && !IsInputDeviceAMapperDevice(info)) {
       if (info)
@@ -279,7 +279,7 @@ void DeviceManager::Rescan()
    // FIXME: TRAP_ERR PaErrorCode not handled in ReScan()
    int nDevices = Pa_GetDeviceCount();
 
-   //The heirarchy for devices is Host/device/source.
+   //The hierarchy for devices is Host/device/source.
    //Some newer systems aggregate this.
    //So we need to call port mixer for every device to get the sources
    for (int i = 0; i < nDevices; i++) {

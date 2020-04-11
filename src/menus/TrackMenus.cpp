@@ -407,7 +407,7 @@ class ASAProgress final : public SAProgress {
          mTotalCells = mFrames[0] * mFrames[1];
          work2 = mTotalCells * MATRIX_WORK_UNIT;
          mTotalWork += work2;
-         // arbitarily assume 60 iterations to fit smooth segments and
+         // arbitrarily assume 60 iterations to fit smooth segments and
          // per frame per iteration is SMOOTHING_WORK_UNIT
          if (smoothing) {
             work3 =

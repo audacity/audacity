@@ -264,7 +264,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
       return ProgressResult::Cancelled;
    }
 
-   // Flushing these headers now guarentees that audio data will
+   // Flushing these headers now guarantees that audio data will
    // start on a NEW page, which apparently makes streaming easier
    while (ogg_stream_flush(&stream, &page)) {
       if ( outFile.Write(page.header, page.header_len).GetLastError() ||

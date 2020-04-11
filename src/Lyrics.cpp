@@ -222,7 +222,7 @@ void LyricsPanel::Finish(double finalT)
    mHighlightTextCtrl->ShowPosition(0);
 }
 
-// Binary-search for the syllable syllable whose char0 <= startChar <= char1.
+// Binary-search for the syllable whose char0 <= startChar <= char1.
 int LyricsPanel::FindSyllable(long startChar)
 {
    int i1, i2;

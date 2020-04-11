@@ -157,7 +157,7 @@ public:
 static const long MIN_REFRESH_RATE = 1;
 static const long MAX_REFRESH_RATE = 100;
 
-/* Updates to the meter are passed accross via meter updates, each contained in
+/* Updates to the meter are passed across via meter updates, each contained in
  * a MeterUpdateMsg object */
 wxString MeterUpdateMsg::toString()
 {

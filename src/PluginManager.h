@@ -124,7 +124,7 @@ private:
 
    // Common
 
-   // Among other purposes, PluginDescriptor acts as the resouce handle,
+   // Among other purposes, PluginDescriptor acts as the resource handle,
    // or smart pointer, to a resource created in a plugin library, and is responsible
    // for a cleanup of this pointer.
    ComponentInterface *mInstance;

@@ -560,7 +560,7 @@ namespace Registry {
       // allows implicit conversions to type Factory.
       // (Thus, a lambda can return a unique_ptr<BaseItem> rvalue even though
       // Factory's return type is shared_ptr, and the needed conversion is
-      // appled implicitly.)
+      // applied implicitly.)
       void AppendOne( const ComputedItem::Factory<VisitorType> &factory )
       {
          auto adaptedFactory = [factory]( Registry::Visitor &visitor ){

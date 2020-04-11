@@ -54,7 +54,7 @@ BEGIN_EVENT_TABLE(MixerToolBar, ToolBar)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, MixerToolBar::OnCaptureKey)
 END_EVENT_TABLE()
 
-//Standard contructor
+//Standard constructor
 MixerToolBar::MixerToolBar( AudacityProject &project )
 : ToolBar(project, MixerBarID, XO("Mixer"), wxT("Mixer"), true)
 {

@@ -282,7 +282,7 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
    // between B and C, hence the offset of 2 for two line thicknesses
    int eOffset = data.GetPitchHeight(5) + 2;
    while (obottom > rect.y + data.GetNoteMargin() + 3) {
-      // draw a black line separating octaves if this octave botton is visible
+      // draw a black line separating octaves if this octave bottom is visible
       if (obottom < rect.y + rect.height - data.GetNoteMargin()) {
          dc.SetPen(*wxBLACK_PEN);
          // obottom - 1 because obottom is at the bottom of the line

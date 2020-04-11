@@ -545,7 +545,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
             mixed = mixer->GetBuffer();
             numBytes = numSamples * channels;
 
-            // Byte-swapping is neccesary on big-endian machines, since
+            // Byte-swapping is necessary on big-endian machines, since
             // WAV files are little-endian
 #if wxBYTE_ORDER == wxBIG_ENDIAN
             float *buffer = (float *) mixed;

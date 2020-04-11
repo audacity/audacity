@@ -625,7 +625,7 @@ void ToolManager::Reset()
          )
          expose = false;
 
-      // Next condition will alwys (?) be true, as the reset configuration is
+      // Next condition will always (?) be true, as the reset configuration is
       // with no floating toolbars.
       if( dock != NULL )
       {

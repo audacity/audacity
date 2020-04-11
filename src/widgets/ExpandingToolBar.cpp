@@ -51,7 +51,7 @@ modeless presentation.
 *//****************************************************************//**
 
 \class ToolBarArea
-\brief An alterantive to ToolBarFrame which can contain an
+\brief An alternative to ToolBarFrame which can contain an
 ExpandingToolBar.  ToolBarArea is used for a 'docked' ToolBar,
 ToolBarFrame for a floating one.
 
@@ -694,7 +694,7 @@ void ToolBarGrabber::OnMouse(wxMouseEvent &event)
 {
    int prevState = mState;
 
-   // Handle hilighting the image if the mouse is over it
+   // Handle highlighting the image if the mouse is over it
 
    if (event.Entering())
       mState = 1;

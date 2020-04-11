@@ -209,7 +209,7 @@ class wxWindow;
 
 // These macros are used widely, so declared here.
 #define QUANTIZED_TIME(time, rate) (floor(((double)(time) * (rate)) + 0.5) / (rate))
-// dB - linear amplitude convesions
+// dB - linear amplitude conversions
 #define DB_TO_LINEAR(x) (pow(10.0, (x) / 20.0))
 #define LINEAR_TO_DB(x) (20.0 * log10(x))
 

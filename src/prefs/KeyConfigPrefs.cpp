@@ -411,7 +411,7 @@ bool KeyConfigPrefs::ContainsIllegalDups(
 // This function tries to add the given shortcuts(keys) "toAdd" 
 // to the already existing shortcuts(keys). Shortcuts are added only if 
 //      1. the shortcut for the operation isn't defined already
-//      2. the added shortcut doesn't create illigal shortcut dublicate
+//      2. the added shortcut doesn't create illegal shortcut duplicate
 // The names of operations for which the second condition was violated 
 // are returned in a single wxString
 TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
@@ -850,7 +850,7 @@ void KeyConfigPrefs::OnViewBy(wxCommandEvent & e)
 bool KeyConfigPrefs::Commit()
 {
    // On the Mac, preferences may be changed without any active
-   // projects.  This means that the CommandManager isn't availabe
+   // projects.  This means that the CommandManager isn't available
    // either.  So we can't attempt to save preferences, otherwise
    // NULL ptr dereferences will happen in ShuttleGui because the
    // radio buttons are never created.  (See Populate() above.)

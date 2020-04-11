@@ -43,7 +43,7 @@ namespace TrackArt {
       TrackPanelDrawingContext &context, const wxRect &rect );
 
    // Helper: draws background with selection rect
-   void DrawBackgroundWithSelection(TrackPanelDrawingContext &contex,
+   void DrawBackgroundWithSelection(TrackPanelDrawingContext &context,
          const wxRect &rect, const Track *track,
          const wxBrush &selBrush, const wxBrush &unselBrush,
          bool useSelection = true);

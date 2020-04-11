@@ -50,7 +50,7 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
    // Uh oh, I need to build a catalog, expensively
    // Maybe it can be built in one long-lived place and shared among command
    // objects instead?
-   // The catolog though may change during a session, as it includes the 
+   // The catalog though may change during a session, as it includes the 
    // names of macro commands - so the long-lived copy will need to 
    // be refreshed after macros are added/deleted.
    MacroCommandsCatalog catalog(&context.project);

@@ -283,7 +283,7 @@ void Envelope::CopyRange(const Envelope &orig, size_t begin, size_t end)
    }
 
    // Create the final point if it needs interpolated representation
-   // If the last point of e was exatly at t1, this effectively copies it too.
+   // If the last point of e was exactly at t1, this effectively copies it too.
    if (mTrackLen > 0 && i < len)
       AddPointAtEnd( mTrackLen, orig.GetValue(mOffset + mTrackLen));
 }

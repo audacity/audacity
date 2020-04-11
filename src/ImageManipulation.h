@@ -63,5 +63,5 @@ std::unique_ptr<wxImage> CreateSysBackground(int width, int height, int offset,
 // Pastes one image into another at specified location.
 void PasteSubImage( wxImage * pDest, wxImage * pSrc, int x, int y );
 
-// Gets a rectangle from within anothe rimage, INCLUDING the alpha channel
+// Gets a rectangle from within another image, INCLUDING the alpha channel
 wxImage GetSubImageWithAlpha( const wxImage & Src,  const wxRect &rect );

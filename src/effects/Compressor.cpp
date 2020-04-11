@@ -173,7 +173,7 @@ bool EffectCompressor::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-// Effect Implemenration
+// Effect Implementation
 
 bool EffectCompressor::Startup()
 {

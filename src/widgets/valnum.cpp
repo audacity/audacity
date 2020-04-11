@@ -529,7 +529,7 @@ bool FloatingPointValidatorBase::DoValidateNumber(TranslatableString * errMsg) c
             }
             else if (m_maxSet)
             {
-               *errMsg = XO("Value must not be greather than %s")
+               *errMsg = XO("Value must not be greater than %s")
                   .Format( strMax );
             }
          }

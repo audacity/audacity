@@ -1042,7 +1042,7 @@ wxString AudioIOBase::GetDeviceInfo()
          s << XO("%d - %s\n").Format( i, name );
       }
 
-      // Determine mixer capabilities - it it doesn't support either
+      // Determine mixer capabilities - if it doesn't support either
       // input or output, we emulate them (by multiplying this value
       // by all incoming/outgoing samples)
 

@@ -141,7 +141,7 @@ EffectTruncSilence::EffectTruncSilence()
 
    SetLinearEffectFlag(false);
 
-   // This used to be changeable via the audacity.cfg/registery.  Doubtful that was
+   // This used to be changeable via the audacity.cfg/registry.  Doubtful that was
    // ever done.
    //
    // Original comment:

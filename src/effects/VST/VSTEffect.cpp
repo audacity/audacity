@@ -171,7 +171,7 @@ public:
       if (wxTheApp && wxTheApp->argc == 3 && wxStrcmp(wxTheApp->argv[1], VSTCMDKEY) == 0)
       {
          // NOTE:  This can really hide failures, which is what we want for those pesky
-         //        VSTs that are bad or that our support isn't currect.  But, it can also
+         //        VSTs that are bad or that our support isn't correct.  But, it can also
          //        hide Audacity failures in the subprocess, so if you're having an unruley
          //        VST or odd Audacity failures, comment it out and you might get more info.
          //wxHandleFatalExceptions();
@@ -2244,7 +2244,7 @@ bool VSTEffect::Load()
          mMidiIns = 0;
          mMidiOuts = 0;
 
-         // Check to see if parameters can be automated.  This isn't a gaurantee
+         // Check to see if parameters can be automated.  This isn't a guarantee
          // since it could be that the effect simply doesn't support the opcode.
          mAutomatable = false;
          for (int i = 0; i < mAEffect->numParams; i++)

@@ -1694,7 +1694,7 @@ ProgressResult TimerProgressDialog::UpdateProgress()
    // wxASSERT((nGaugeValue >= 0) && (nGaugeValue <= 1010));
    //
    // stf. Update was being called after wxMilliSleep(<ms>), which could be up to <ms>
-   // beyond the completion time. My gusess is that the microsleep in RunWaitDialog was originally 10 ms
+   // beyond the completion time. My guess is that the microsleep in RunWaitDialog was originally 10 ms
    // (same as other uses of Update) but was updated to kTimerInterval = 50 ms, thus triggering
    // the Assert (Bug 1367). By calling Update() before sleeping then I think nGaugeValue <= 1000 should work.
    wxASSERT((nGaugeValue >= 0) && (nGaugeValue <= 1000));

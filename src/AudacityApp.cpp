@@ -22,7 +22,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #if 0
 // This may be used to debug memory leaks.
-// See: Visual Leak Dectector @ http://vld.codeplex.com/
+// See: Visual Leak Detector @ http://vld.codeplex.com/
 #include <vld.h>
 #endif
 
@@ -1384,7 +1384,7 @@ bool AudacityApp::OnInit()
    std::shared_ptr< wxCmdLineParser > parser{ ParseCommandLine().release() };
    if (!parser)
    {
-      // Either user requested help or a parsing error occured
+      // Either user requested help or a parsing error occurred
       exit(1);
    }
 
@@ -1886,7 +1886,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 
    mIPCServ.reset();
 
-   // Try twice to either become the server or make a connnection to one.  If
+   // Try twice to either become the server or make a connection to one.  If
    // both attempts fail, then there's something wrong that we can't deal with,
    // like insufficient access to create the socket, no memory, etc.
    for (int attempts = 0; attempts < 2; ++attempts)

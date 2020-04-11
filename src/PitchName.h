@@ -50,7 +50,7 @@ TranslatableString PitchName(
 
 // PitchName_Absolute does the same thing as PitchName, but appends
 // the octave number, e.g., instead of "C" it will return "C4"
-// if the dMIDInote corresonds to middle C, i.e., is 60.
+// if the dMIDInote corresponds to middle C, i.e., is 60.
 TranslatableString PitchName_Absolute(
    const double dMIDInote,
    const PitchNameChoice choice = PitchNameChoice::Sharps);

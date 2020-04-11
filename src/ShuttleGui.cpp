@@ -327,7 +327,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const TranslatableString &Prompt, bool
    return pCheckBox;
 }
 
-/// For a consistant two-column layout we want labels on the left and
+/// For a consistent two-column layout we want labels on the left and
 /// controls on the right.  CheckBoxes break that rule, so we fake it by
 /// placing a static text label and then a tick box with an empty label.
 wxCheckBox * ShuttleGuiBase::AddCheckBoxOnRight( const TranslatableString &Prompt, bool Selected)
@@ -1967,7 +1967,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
 /// between gui and stack variable and stack variable and shuttle.
 /// The Translated choices and default are integers, not Strings.
 /// Behaves identically to the previous, but is meant for use when the choices
-/// are non-exhaustive and there is a companion control for abitrary entry.
+/// are non-exhaustive and there is a companion control for arbitrary entry.
 ///   @param Prompt             The prompt shown beside the control.
 ///   @param SettingName        The setting name as stored in gPrefs
 ///   @param Default            The default integer value for this control

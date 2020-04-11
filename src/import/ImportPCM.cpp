@@ -144,7 +144,7 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(
       // still has this bug.
       // This happens in sf_open_fd, which is the very first point of
       // interaction with libsndfile, so the only workaround is to hardcode
-      // ImportPCM to not handle .mp3.  Of couse, this will still fail for mp3s
+      // ImportPCM to not handle .mp3.  Of course, this will still fail for mp3s
       // that are mislabeled with a .wav or other extension.
       // So, in the future we may want to write a simple parser to detect mp3s here.
       return NULL;
@@ -505,7 +505,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
             computeTask->AddWaveTrack(channel);
             if(moreThanStereo)
             {
-               //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.
+               //if we have 3 more channels, they get imported on separate tracks, so we add individual tasks for each.
                ODManager::Instance()->AddNewTask(std::move(computeTask));
                computeTask = std::make_unique<ODComputeSummaryTask>();
             }

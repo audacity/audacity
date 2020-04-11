@@ -970,7 +970,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
 
       if (mFields[i].frac) {
          // JKC: This old code looks bogus to me.
-         // The rounding is not propogating to earlier fields in the frac case.
+         // The rounding is not propagating to earlier fields in the frac case.
          //value = (int)(t_frac * mFields[i].base + 0.5);  // +0.5 as rounding required
          // I did the rounding earlier.
          if (t_frac >= 0)

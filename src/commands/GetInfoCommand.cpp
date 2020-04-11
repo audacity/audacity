@@ -715,7 +715,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
          for (Overlay * pOverlay : pTP->mOverlays) {
             auto R2(pOverlay->GetRectangle(trackRect.GetSize()).first);
             context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
-               depth, R2.GetLeft(), R2.GetTop(), R2.GetRight(), R2.GetBottom(), "Overthing" )); 
+               depth, R2.GetLeft(), R2.GetTop(), R2.GetRight(), R2.GetBottom(), "Otherthing" )); 
          }
       }
 #endif

@@ -1382,7 +1382,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       double startT = t->LongSamplesToTime(start);
 
       //output has one waveclip for the total length, even though
-      //t might have whitespace seperating multiple clips
+      //t might have whitespace separating multiple clips
       //we want to maintain the original clip structure, so
       //only paste the intersections of the NEW clip.
 
@@ -1723,7 +1723,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
       for (int curveCount = 0; curveCount < numUserCurves; curveCount++) {
          bool isCustom = true;
          tempCurve = userCurves[curveCount];
-         // is the name in the dfault set?
+         // is the name in the default set?
          for (int defCurveCount = 0; defCurveCount < numDefaultCurves; defCurveCount++) {
             if (tempCurve.Name == mCurves[defCurveCount].Name) {
                isCustom = false;
@@ -2296,7 +2296,7 @@ XMLTagHandler *EffectEqualization::HandleXMLChild(const wxChar *tag)
 void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
-   // Start our heirarchy
+   // Start our hierarchy
    xmlFile.StartTag( wxT( "equalizationeffect" ) );
 
    // Write all curves
@@ -2324,7 +2324,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
       xmlFile.EndTag( wxT( "curve" ) );
    }
 
-   // Terminate our heirarchy
+   // Terminate our hierarchy
    xmlFile.EndTag( wxT( "equalizationeffect" ) );
 }
 
@@ -2525,7 +2525,7 @@ void EffectEqualization::EnvLinToLog(void)
    {
       if( when[i]*mHiFreq >= 20 )
       {
-         // Caution: on Linux, when when == 20, the log calulation rounds
+         // Caution: on Linux, when when == 20, the log calculation rounds
          // to just under zero, which causes an assert error.
          double flog = (log10(when[i]*mHiFreq)-loLog)/denom;
          mLogEnvelope->Insert(std::max(0.0, flog) , value[i]);
@@ -3218,7 +3218,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
       freq = lin ? step*i : pow(10., loLog + i*step);   //Hz
       if( ( lin ? step : (pow(10., loLog + (i+1)*step)-freq) ) < delta)
       {   //not enough resolution in FFT
-         // set up for calculating cos using recurrance - faster than calculating it directly each time
+         // set up for calculating cos using recurrence - faster than calculating it directly each time
          double theta = M_PI*freq/mEffect->mHiFreq;   //radians, normalized
          double wtemp = sin(0.5 * theta);
          double wpr = -2.0 * wtemp * wtemp;
@@ -3230,7 +3230,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
          for(int j=0;j<halfM;j++)
          {
             yF += 2. * mOutr[j] * wr;  // This works for me, compared to the previous version.  Compare wr to cos(theta*(halfM-j)).  Works for me.  Keep everything as doubles though.
-            // do recurrance
+            // do recurrence
             wr = (wtemp = wr) * wpr - wi * wpi + wr;
             wi = wi * wpr + wtemp * wpi + wi;
          }
@@ -3632,7 +3632,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
 // Delete curve/curves
 void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 {
-   // We could could count them here
+   // We could count them here
    // And then put in a 'Delete N items?' prompt.
 
 #if 0 // 'one at a time' prompt code

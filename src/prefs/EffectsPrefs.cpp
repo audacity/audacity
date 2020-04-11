@@ -13,7 +13,7 @@
 *******************************************************************//**
 
 \class EffectsPrefs
-\brief A PrefsPanel for general GUI prefernces.
+\brief A PrefsPanel for general GUI preferences.
 
 *//*******************************************************************/
 

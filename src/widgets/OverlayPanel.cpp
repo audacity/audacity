@@ -82,7 +82,7 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
 
    if (!repaint_all) {
       // For each overlay that needs update, any other overlay whose
-      // rectangle instersects it will also need update.
+      // rectangle intersects it will also need update.
       bool done;
       do {
          done = true;
