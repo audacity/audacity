@@ -1137,9 +1137,6 @@ void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
 #if defined(USE_PORTMIXER)
 
    PxMixer *mixer = mPortMixer;
-   std::cout << "mMixerOutputVol  = " << mMixerOutputVol << std::endl;
-   gPrefs->Write(wxT("/AudioIO/PlaybackVolume"), mMixerOutputVol);
-   gPrefs->Flush();
 
    if( mixer )
    {
@@ -1150,8 +1147,16 @@ void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
       else
          *recordVolume = 1.0f;
 
-      if (mEmulateMixerOutputVol)
-	  gPrefs->Read(wxT("/AudioIO/PlaybackVolume"), playbackVolume);
+      if (mEmulateMixerOutputVol) {
+	  if (mMixerOutputVol != 1.0) {
+	      std::cout << "mMixerOutputVol  = " << mMixerOutputVol << std::endl;
+	      gPrefs->Write(wxT("/AudioIO/PlaybackEmulatedVolume"), mMixerOutputVol);
+	      gPrefs->Flush();
+	  }
+	  else {
+	      gPrefs->Read(wxT("/AudioIO/PlaybackEmulatedVolume"), playbackVolume);
+	  }
+      }
       else
          *playbackVolume = Px_GetPCMOutputVolume(mixer);
 
@@ -3446,7 +3451,6 @@ void AudioIO::AllNotesOff(bool looping)
 
 void AudioIO::AILAInitialize() {
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mAILAActive,         false);
-   gPrefs->Read(wxT("/AudioIO/PlaybackVolume"),        &playbackVolume,      DEFAULT_PLAYBACK_VOLUME);
    gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mAILAGoalPoint,      AILA_DEF_TARGET_PEAK);
    gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"),       &mAILAGoalDelta,      AILA_DEF_DELTA_PEAK);
    gPrefs->Read(wxT("/AudioIO/AnalysisTime"),          &mAILAAnalysisTime,   AILA_DEF_ANALYSIS_TIME);
