@@ -136,7 +136,7 @@ void LabelGlyphHandle::HandleGlyphClick
 
       if (hit.mIsAdjustingLabel)
       {
-         float t = 0.0;
+         double t = 0.0;
          // We move if we hit the centre, we adjust one edge if we hit a chevron.
          // This is if we are moving just one edge.
          hit.mbIsMoving = (hit.mEdge & 4)!=0;
@@ -173,6 +173,8 @@ void LabelGlyphHandle::HandleGlyphClick
             hit.mbIsMoving = (hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight);
             MayAdjustLabel(hit, hit.mMouseOverLabelLeft, -1, false, t );
             MayAdjustLabel(hit, hit.mMouseOverLabelRight, 1, false, t );
+            wxASSERT(mLabels[hit.mMouseOverLabelRight].getT1() ==
+               mLabels[hit.mMouseOverLabelLeft].getT0());
          }
          else if( hit.mMouseOverLabelRight >=0)
          {
