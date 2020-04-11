@@ -1114,6 +1114,14 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
                        float playbackVolume)
 {
    mMixerOutputVol = playbackVolume;
+   if (mEmulateMixerOutputVol) {
+       if (mMixerOutputVol != 1.0) {
+	   gPrefs->Write(wxT("/AudioIO/PlaybackEmulatedVolume"), mMixerOutputVol);
+	   gPrefs->Flush();
+       }
+   }
+
+
 #if defined(USE_PORTMIXER)
    PxMixer *mixer = mPortMixer;
    if( !mixer )
@@ -1150,11 +1158,10 @@ void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
       if (mEmulateMixerOutputVol) {
 	  if (mMixerOutputVol != 1.0) {
 	      *playbackVolume = mMixerOutputVol;
-	      gPrefs->Write(wxT("/AudioIO/PlaybackEmulatedVolume"), mMixerOutputVol);
-	      gPrefs->Flush();
 	  }
 	  else {
 	      gPrefs->Read(wxT("/AudioIO/PlaybackEmulatedVolume"), playbackVolume, DEFAULT_PLAYBACK_EMULATED_VOLUME);
+	      mMixerOutputVol = *playbackVolume;
 	  }
       }
       else
