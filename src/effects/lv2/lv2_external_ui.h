@@ -40,7 +40,7 @@ extern "C" {
  */
 typedef struct _LV2_External_UI_Widget {
   /**
-   * Host calls this function regularily. UI library implementing the
+   * Host calls this function regularly. UI library implementing the
    * callback may do IPC or redraw the UI.
    *
    * @param _this_ the UI context

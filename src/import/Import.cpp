@@ -27,7 +27,7 @@ It's defined in Import.h
 *//***************************************************************//**
 
 \class Importer
-\brief Class which actualy imports the auido, using functions defined
+\brief Class which actually imports the auido, using functions defined
 in ImportPCM.cpp, ImportMP3.cpp, ImportOGG.cpp, ImportRawData.cpp,
 and ImportLOF.cpp.
 
