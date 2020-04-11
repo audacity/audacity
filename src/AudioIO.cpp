@@ -1149,7 +1149,7 @@ void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
 
       if (mEmulateMixerOutputVol) {
 	  if (mMixerOutputVol != 1.0) {
-	      std::cout << "mMixerOutputVol  = " << mMixerOutputVol << std::endl;
+	      *playbackVolume = mMixerOutputVol;
 	      gPrefs->Write(wxT("/AudioIO/PlaybackEmulatedVolume"), mMixerOutputVol);
 	      gPrefs->Flush();
 	  }
