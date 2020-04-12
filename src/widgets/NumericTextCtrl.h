@@ -192,8 +192,8 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    // Hide the inherited function that takes wxString
    void SetName( const TranslatableString &name );
 
+   wxSize ComputeSizing(bool update = true, wxCoord digitW = 0, wxCoord digitH = 0);
    bool Layout() override;
-   void ComputeSizing();
    void Fit() override;
 
    void SetSampleRate(double sampleRate);
@@ -207,6 +207,8 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
    void SetFieldFocus(int /* digit */);
 
+   wxSize GetDimensions() { return wxSize(mWidth + mButtonWidth, mHeight); }
+   wxSize GetDigitSize() { return wxSize(mDigitBoxW, mDigitBoxH); }
    void SetDigitSize(int width, int height);
    void SetReadOnly(bool readOnly = true);
    void EnableMenu(bool enable = true);
@@ -219,11 +221,6 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
    int GetFocusedField() { return mLastField; }
    int GetFocusedDigit() { return mFocusedDigit; }
-   // give a sane aspect ratio even if zero height.
-   bool IsTooBig(int width, int height) {
-      ComputeSizing();
-      return (mWidth > width) || (mHeight > height);
-   }
 
 private:
 

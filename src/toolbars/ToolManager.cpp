@@ -231,6 +231,21 @@ void ToolFrame::OnMotion( wxMouseEvent & event )
       wxRect rect = GetRect();
 
       rect.SetBottomRight( pos );
+
+      // Keep it within max size, if specificed
+      wxSize maxsz = mBar->GetMaxSize();
+      if (maxsz != wxDefaultSize)
+      {
+         if (maxsz.x != wxDefaultCoord && rect.width > maxsz.x)
+         {
+            rect.width = maxsz.x;
+         }
+         if (maxsz.y != wxDefaultCoord && rect.height > maxsz.y)
+         {
+            rect.height = maxsz.y;
+         }
+      }
+
       if( rect.width < mMinSize.x )
       {
          rect.width = mMinSize.x;

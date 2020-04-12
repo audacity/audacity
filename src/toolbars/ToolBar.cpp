@@ -228,17 +228,31 @@ void ToolBarResizer::OnMotion( wxMouseEvent & event )
       wxPoint pos = wxGetMousePosition();
 
       wxRect r = mBar->GetRect();
-      wxSize msz = mBar->GetMinSize();
+      wxSize minsz = mBar->GetMinSize();
+      wxSize maxsz = mBar->GetMaxSize();
       wxSize psz = mBar->GetParent()->GetClientSize();
 
       // Adjust the size based on updated mouse position.
       r.width = ( pos.x - mResizeOffset.x ) - r.x;
 
+      // Keep it within max size, if specificed
+      if( maxsz != wxDefaultSize )
+      {
+         if( r.width > maxsz.x )
+         {
+            r.width = maxsz.x;
+         }
+         if( r.height > maxsz.y )
+         {
+            r.height = maxsz.y;
+         }
+      }
+
       // Constrain
-      if( r.width < msz.x )
+      if( r.width < minsz.x )
       {
          // Don't allow resizing to go too small
-         r.width = msz.x;
+         r.width = minsz.x;
       }
       else if( r.GetRight() > psz.x - 3 )
       {
@@ -538,6 +552,7 @@ void ToolBar::ReCreateButtons()
       // Set dock after possibly creating resizer.
       // (Re)Establish dock state
       SetDocked(GetDock(), false);
+
       // Set the sizer
       SetSizerAndFit(ms.release());
    }

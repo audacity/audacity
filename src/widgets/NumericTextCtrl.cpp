@@ -1318,12 +1318,17 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
 {
    mAllowInvalidValue = false;
 
-   mDigitBoxW = 10;
-   mDigitBoxH = 16;
+   mDigitBoxW = 11;
+   mDigitBoxH = 19;
+
+   mBorderLeft = 1;
+   mBorderTop = 1;
+   mBorderRight = 1;
+   mBorderBottom = 1;
 
    mReadOnly = options.readOnly;
    mMenuEnabled = options.menuEnabled;
-   mButtonWidth = 9;
+   mButtonWidth = mMenuEnabled ? 9 : 0;
 
    SetLayoutDirection(wxLayout_LeftToRight);
    Layout();
@@ -1458,78 +1463,119 @@ void NumericTextCtrl::SetInvalidValue(double invalidValue)
       SetValue(invalidValue);
 }
 
-
-void NumericTextCtrl::ComputeSizing()
+wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
 {
-   unsigned int i, j;
-   int x, pos;
+   // Get current box size
+   if (boxW == 0) {
+      boxW = mDigitBoxW;
+   }
 
-   wxMemoryDC memDC;
+   if (boxH == 0) {
+      boxH = mDigitBoxH;
+   }
+   boxH -= (mBorderTop + mBorderBottom);
 
-   // Placeholder bitmap so the memDC has something to reference
-   mBackgroundBitmap = std::make_unique<wxBitmap>(1, 1, 24);
-   memDC.SelectObject(*mBackgroundBitmap);
+   // We can use the screen device context since we're not drawing to it
+   wxScreenDC dc;
 
-   mDigits.clear();
+   // First calculate a rough point size
+   wxFont pf(wxSize(boxW, boxH), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   int fontSize = pf.GetPointSize();
+   wxCoord strW;
+   wxCoord strH;
 
-   mBorderLeft = 1;
-   mBorderTop = 1;
-   mBorderRight = 1;
-   mBorderBottom = 1;
-
-   int fontSize = 4;
-   wxCoord strW, strH;
-   wxString exampleText = wxT("0");
-
-   // Keep making the font bigger until it's too big, then subtract one.
-   memDC.SetFont(wxFont(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-   memDC.GetTextExtent(exampleText, &strW, &strH);
-   while (strW <= mDigitBoxW && strH <= mDigitBoxH) {
-      fontSize++;
-      memDC.SetFont(wxFont(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-      memDC.GetTextExtent(exampleText, &strW, &strH);
+   // Now decrease it until we fit within our digit box
+   dc.SetFont(pf);
+   dc.GetTextExtent(wxT("0"), &strW, &strH);
+   while (strW > boxW || strH > boxH) {
+      dc.SetFont(wxFont(--fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+      dc.GetTextExtent(wxT("0"), &strW, &strH);
    }
    fontSize--;
 
-   mDigitFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   memDC.SetFont(*mDigitFont);
-   memDC.GetTextExtent(exampleText, &strW, &strH);
-   mDigitW = strW;
-   mDigitH = strH;
+   // Create the digit font with the new point size
+   if (update) {
+      mDigitFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+      dc.SetFont(*mDigitFont);
+
+      // Remember the actual digit width and height using the new font
+      dc.GetTextExtent(wxT("0"), &mDigitW, &mDigitH);
+   }
 
    // The label font should be a little smaller
-   fontSize--;
-   mLabelFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   std::unique_ptr<wxFont> labelFont = std::make_unique<wxFont>(fontSize - 1, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-   // Figure out the x-position of each field and label in the box
-   x = mBorderLeft;
-   pos = 0;
-
-   memDC.SetFont(*mLabelFont);
-   memDC.GetTextExtent(mPrefix, &strW, &strH);
-   x += strW;
-   pos += mPrefix.length();
-
-   for(i = 0; i < mFields.size(); i++) {
-      mFields[i].fieldX = x;
-      for(j=0; j<(unsigned int)mFields[i].digits; j++) {
-         mDigits.push_back(DigitInfo(i, j, pos, wxRect(x, mBorderTop,
-                                                 mDigitBoxW, mDigitBoxH)));
-         x += mDigitBoxW;
-         pos++;
-      }
-
-      mFields[i].labelX = x;
-      memDC.GetTextExtent(mFields[i].label, &strW, &strH);
-      pos += mFields[i].label.length();
-      x += strW;
-      mFields[i].fieldW = x;
+   // Use the label font for all remaining measurements since only non-digit text is left
+   dc.SetFont(*labelFont);
+ 
+   // Remember the pointer if updating
+   if (update) {
+      mLabelFont = std::move(labelFont);
    }
 
-   mWidth = x + mBorderRight;
-   mHeight = mDigitBoxH + mBorderTop + mBorderBottom;
-}
+   // Get the width of the prefix, if any
+   dc.GetTextExtent(mPrefix, &strW, &strH);
 
+   // Bump x-position to the end of the prefix
+   int x = mBorderLeft + strW;
+
+   if (update) {
+      // Set the character position past the prefix
+      int pos = mPrefix.length();
+
+      // Reset digits array
+      mDigits.clear();
+
+      // Figure out the x-position of each field and label in the box
+      for (int i = 0, fcnt = mFields.size(); i < fcnt; ++i) {
+         // Get the size of the label
+         dc.GetTextExtent(mFields[i].label, &strW, &strH);
+
+         // Remember this field's x-position
+         mFields[i].fieldX = x;
+
+         // Remember metrics for each digit
+         for (int j = 0, dcnt = mFields[i].digits; j < dcnt; ++j) {
+            mDigits.push_back(DigitInfo(i, j, pos, wxRect(x, mBorderTop, boxW, boxH)));
+            x += boxW;
+            pos++;
+         }
+
+         // Remember the label's x-position
+         mFields[i].labelX = x;
+
+         // Bump to end of label
+         x += strW;
+
+         // Remember the label's width
+         mFields[i].fieldW = x;
+
+         // Bump character position to end of label
+         pos += mFields[i].label.length();
+      }
+   }
+   else {
+      // Determine the maximum x-position (length) of the remaining fields
+      for (int i = 0, fcnt = mFields.size(); i < fcnt; ++i) {
+         // Get the size of the label
+         dc.GetTextExtent(mFields[i].label, &strW, &strH);
+
+         // Just bump to next field
+         x += (boxW * mFields[i].digits) + strW;
+      }
+   }
+
+   // Calculate the maximum dimensions
+   wxSize dim(x + mBorderRight, boxH + mBorderTop + mBorderBottom);
+
+   // Save maximumFinally, calculate the minimum dimensions
+   if (update) {
+      mWidth = dim.x;
+      mHeight = dim.y;
+   }
+
+   return wxSize(dim.x + mButtonWidth, dim.y);
+}
 
 bool NumericTextCtrl::Layout()
 {
