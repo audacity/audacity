@@ -34,7 +34,7 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_FREQUENCYTEXTCTRL_UPDATED, -1)
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_BANDWIDTHTEXTCTRL_UPDATED,
                             -1);
 
-/** \brief struct to hold a formatting control string and it's user facing name
+/** \brief struct to hold a formatting control string and its user facing name
  * Used in an array to hold the built-in time formats that are always available
  * to the user */
 struct BuiltinFormatString;

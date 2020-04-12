@@ -2015,7 +2015,7 @@ void ExportFFmpegOptions::FindSelectedFormat(wxString **name, wxString **longnam
    // Get selected format short name
    wxString selfmt = mFormatList->GetString(selections[0]);
 
-   // Find it's index
+   // Find its index
    int nFormat = make_iterator_range( mFormatNames ).index( selfmt );
    if (nFormat == wxNOT_FOUND) return;
 
@@ -2036,7 +2036,7 @@ void ExportFFmpegOptions::FindSelectedCodec(wxString **name, wxString **longname
    // Get selected codec short name
    wxString selcdc = mCodecList->GetString(selections[0]);
 
-   // Find it's index
+   // Find its index
    int nCodec = make_iterator_range( mCodecNames ).index( selcdc );
    if (nCodec == wxNOT_FOUND) return;
 
@@ -2076,7 +2076,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
          // If it exists, is audio and has encoder
          if (codec != NULL && (codec->type == AVMEDIA_TYPE_AUDIO) && av_codec_is_encoder(codec))
          {
-            // If it was selected - remember it's NEW index
+            // If it was selected - remember its NEW index
             if ((id >= 0) && codec->id == id) index = mShownCodecNames.size();
             mShownCodecNames.push_back(wxString::FromUTF8(codec->name));
             mShownCodecLongNames.push_back(wxString::Format(wxT("%s - %s"),mShownCodecNames.back(),wxString::FromUTF8(codec->long_name)));
@@ -2104,7 +2104,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
          }
       }
    }
-   // Format is not found - find format in libavformat and add it's default audio codec
+   // Format is not found - find format in libavformat and add its default audio codec
    // This allows us to provide limited support for NEW formats without modifying the compatibility list
    else if (found == 0)
    {

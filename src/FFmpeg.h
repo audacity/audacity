@@ -375,7 +375,7 @@ private:
 FFmpegLibs *PickFFmpegLibs();
 
 ///! Helper function - destroys FFmpegLibs object if there is no need for it
-///! anymore, or just decrements it's reference count
+///! anymore, or just decrements its reference count
 void        DropFFmpegLibs();
 
 // This object allows access to the AVFormatContext,

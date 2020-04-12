@@ -992,7 +992,7 @@ KeyView::RefreshLines(bool bSort)
             node.line = linecnt++;
             mLines.push_back(&node);
 
-            // If this node is not open, then skip all of it's decendants
+            // If this node is not open, then skip all of its decendants
             if (!node.isopen)
             {
                bool iscat = node.iscat;
@@ -1678,7 +1678,7 @@ KeyView::OnLeftDown(wxMouseEvent & event)
 // order as they appear in the menus.  But, we want to sort the
 // "command" nodes.
 //
-// To accomplish this, we prepend each label with it's line number
+// To accomplish this, we prepend each label with its line number
 // (in hex) for "menu" nodes.  This ensures they will remain in
 // their original order.
 //

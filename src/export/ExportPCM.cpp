@@ -365,7 +365,7 @@ void ExportPCMOptions::GetEncodings(int enc)
       if (sf_format_check(&info))
       {
          // If this subtype matches our last saved encoding, remember
-         // it's index so we can set it in the dialog.
+         // its index so we can set it in the dialog.
          if (sub == enc)
          {
             mEncodingFromChoice = mEncodingIndexes.size();

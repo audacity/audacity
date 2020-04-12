@@ -294,10 +294,10 @@ private:
 
    wxArrayStringEx mPresetNames;
 
-   /// Finds the format currently selected and returns it's name and description
+   /// Finds the format currently selected and returns its name and description
    void FindSelectedFormat(wxString **name, wxString **longname);
 
-   /// Finds the codec currently selected and returns it's name and description
+   /// Finds the codec currently selected and returns its name and description
    void FindSelectedCodec(wxString **name, wxString **longname);
 
    /// Retrieves format list from libavformat
