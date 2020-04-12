@@ -413,9 +413,6 @@ bool ExportFFmpegAMRNBOptions::TransferDataFromWindow()
 // ExportFFmpegOPUSOptions Class
 //----------------------------------------------------------------------------
 
-const int ExportFFmpegOPUSOptions::iOPUSSampleRates[] =
-{ 48000, 24000, 16000, 12000, 8000, 0 };
-
 namespace {
 
    /// Bit Rates supported by OPUS encoder. Setting bit rate to other values will not result in different file size.
@@ -1634,9 +1631,6 @@ ExposedFormat ExportFFmpegOptions::fmts[] =
    {FMT_WMA2,  wxT("WMA"),    wxT("wma"),  wxT("asf"),  2,   AV_VERSION_INT(52,53,0), false, XO("WMA (version 2) Files (FFmpeg)"),   AV_CODEC_ID_WMAV2,  true},
    {FMT_OTHER, wxT("FFMPEG"), wxT(""),     wxT(""),     255, AV_CANMETA,              true,  XO("Custom FFmpeg Export"),             AV_CODEC_ID_NONE,   true}
 };
-
-/// Sample rates supported by AAC encoder (must end with zero-element)
-const int ExportFFmpegOptions::iAACSampleRates[] = { 7350, 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 64000, 88200, 0 };
 
 /// Some controls (parameters they represent) are only applicable to a number
 /// of codecs and/or formats.
