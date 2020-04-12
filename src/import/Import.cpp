@@ -870,16 +870,16 @@ wxDialogWrapper( parent, id, title, position, size, style | wxRESIZE_BORDER )
    {
       S.SetBorder( 5 );
 
-      StreamList = S
+      StreamList =
+      S
+         .Prop(1)
+         .Position(wxEXPAND | wxALIGN_LEFT | wxALL)
          .Style(wxLB_EXTENDED | wxLB_ALWAYS_SB)
          .AddListBox(
             transform_container<wxArrayStringEx>(
                mFile->GetStreamInfo(),
                std::mem_fn( &TranslatableString::Translation ) ) );
 
-      S.Prop(1)
-         .Position(wxEXPAND | wxALIGN_LEFT | wxALL)
-         .AddWindow(StreamList);
       S.AddStandardButtons();
    }
 
