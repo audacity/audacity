@@ -67,6 +67,25 @@
 #define PRESET_LOCAL_PATH wxT("/Library/Audio/Presets")
 #define PRESET_USER_PATH wxT("~/Library/Audio/Presets")
 
+static const struct
+{
+   OSType componentManufacturer;
+   OSType componentType;
+   OSType componentSubType;
+}
+BlackList[] =
+{
+   { 'appl', 'augn', 'afpl' },   // Apple: AUAudioFilePlayer
+   { 'appl', 'augn', 'sspl' },   // Apple: AUScheduledSoundPlayer
+   { 'appl', 'augn', 'ttsp' },   // Apple: AUSpeechSynthesis
+   { 'appl', 'augn', 'nrcv' },   // Apple: AUNetReceive
+   { 'appl', 'aumx', '3dmx' },   // Apple: AUMixer3D
+   { 'appl', 'aumx', 'mspl' },   // Apple: AUMultiSplitter
+   { 'appl', 'aumx', 'mxcm' },   // Apple: AUMultiChannelMixer
+   { 'appl', 'aumx', 'mxmx' },   // Apple: AUMatrixMixer
+   { 'appl', 'aumx', 'smxr' },   // Apple: AUMixer
+};
+
 struct CFReleaser
    { void operator () (const void *p) const { if (p) CFRelease(p); } };
 template <typename T>
@@ -312,10 +331,10 @@ PluginPaths AudioUnitEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 
    LoadAudioUnitsOfType(kAudioUnitType_Effect, effects);
    LoadAudioUnitsOfType(kAudioUnitType_Generator, effects);
-   LoadAudioUnitsOfType(kAudioUnitType_MusicEffect, effects);
    LoadAudioUnitsOfType(kAudioUnitType_Mixer, effects);
+   LoadAudioUnitsOfType(kAudioUnitType_MusicEffect, effects);
    LoadAudioUnitsOfType(kAudioUnitType_Panner, effects);
-   
+
    return effects;
 }
 
@@ -408,13 +427,30 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
 
          if (result == noErr)
          {
-            wxString name = wxCFStringRef::AsString(cfName);
-      
-            effects.push_back(wxString::Format(wxT("%-4.4s/%-4.4s/%-4.4s/%s"),
+            wxString path;
+
+            path.Printf(wxT("%-4.4s/%-4.4s/%-4.4s/%s"),
                         FromOSType(found.componentManufacturer),
                         FromOSType(found.componentType),
                         FromOSType(found.componentSubType),
-                        name));
+                        wxCFStringRef::AsString(cfName));
+
+            for (int i = 0; i < WXSIZEOF(BlackList); ++i)
+            {
+               if (BlackList[i].componentType == found.componentType &&
+                   BlackList[i].componentSubType == found.componentSubType &&
+                   BlackList[i].componentManufacturer == found.componentManufacturer)
+               {
+                  wxLogDebug(wxT("Blacklisted AU skipped: %s"), path);
+                  result = !noErr;
+                  break;
+               }
+            }
+
+            if (result == noErr)
+            {
+               effects.push_back(path);
+            }
          }
       }
 
