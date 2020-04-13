@@ -149,7 +149,7 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
    and "standard in" means the default input stream that the external program,
    named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
    in the program as a format string.  Keep %f unchanged. */
-"Data will be piped to standard in. \"%f\" uses the file name in the export window."));
+"Data will be piped to standard in. \"%f\" uses the file name in the export window."), 250);
    }
    S.EndVerticalLay();
 }
