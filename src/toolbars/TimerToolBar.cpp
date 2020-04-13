@@ -82,6 +82,11 @@ void TimerToolBar::Populate()
    wxSize digitSize = mAudioTime->GetDigitSize();
    mDigitRatio = (float)digitSize.x / digitSize.y;
 
+   // During initialization, we need to bypass some resizing to prevent the "best size"
+   // from being used as we want to ensure the saved size is used instead. See SetDocked()
+   // and OnUpdate() for more info.
+   mSettingInitialSize = true;
+
    // Establish initial resizing limits
 //   SetResizingLimits();
 }
@@ -146,11 +151,15 @@ void TimerToolBar::SetDocked(ToolDock *dock, bool pushed)
    // When moving from floater to dock, fit to toolbar since the resizer will
    // be mispositioned
    if (dock) {
-      // Fit() while retaining height
-      SetSize(GetBestSize().x, GetSize().y);
+      // During initialization, the desired size is already set, so do not
+      // override it with the "best size". See OnUpdate for further info.
+      if (!mSettingInitialSize) {
+         // Fit() while retaining height
+         SetSize(GetBestSize().x, GetSize().y);
 
-      // Inform others the toolbar has changed
-      Updated();
+         // Inform others the toolbar has changed
+         Updated();
+      }
    }
 }
 
@@ -196,7 +205,7 @@ void TimerToolBar::SetResizingLimits()
    int minH = IsDocked() ? GetSize().y : toolbarSingle;
 
    // Get the content size given the smallest digit height we allow
-   wxSize minSize = ComputeSizing(17);
+   wxSize minSize = ComputeSizing(minDigitH);
 
    // Account for any borders added by the window manager
    minSize.x += (mAudioTime->GetSize().x - mAudioTime->GetClientSize().x);
@@ -216,7 +225,7 @@ void TimerToolBar::SetResizingLimits()
 
    // Get the content size using the digit height, if docked. Otherwise use the
    // maximum digit height we allow.
-   wxSize maxSize = ComputeSizing(IsDocked() ? digH : 100);
+   wxSize maxSize = ComputeSizing(IsDocked() ? digH : maxDigitH);
 
    // Account for the other controls and sizer borders within this toolbar
    maxSize.x += outer.x;
@@ -248,11 +257,21 @@ void TimerToolBar::OnUpdate(wxCommandEvent &evt)
       mListener->TT_SetAudioTimeFormat(mAudioTime->GetBuiltinName(evt.GetInt()));
    }
 
+   // During initialization, the desired size will have already been set at this point
+   // and the "best" size" would override it, so we simply send a size event to force
+   // the content to fit inside the toolbar.
+   if (mSettingInitialSize) {
+      mSettingInitialSize = false;
+      SendSizeEvent();
+   }
+   // Otherwise we want the toolbar to resize to fit around the content
+   else {
+      // Fit() while retaining height
+      SetSize(GetBestSize().x, GetSize().y);
+   }
+
    // Go set the new size limits
    SetResizingLimits();
-
-   // Fit() while retaining height
-   SetSize(GetBestSize().x, GetSize().y);
 
    // Inform others the toobar has changed
    Updated();
@@ -281,11 +300,11 @@ void TimerToolBar::OnSize(wxSizeEvent &evt)
    int h = mAudioTime->GetDigitSize().y;
 
    // Increase current size to find the best fit within the new size
-   if (sizerBR.x > timeBR.x && sizerBR.y > timeBR.y) {
+   if (sizerBR.x >= timeBR.x && sizerBR.y >= timeBR.y) {
       do {
          h++;
          timeBR = ComputeSizing(h);
-      } while (h < 150 && sizerBR.x > timeBR.x && sizerBR.y > timeBR.y);
+      } while (h < maxDigitH && sizerBR.x >= timeBR.x && sizerBR.y >= timeBR.y);
       h--;
    }
    // In all other cases, we need to decrease current size to fit within new size
@@ -293,7 +312,7 @@ void TimerToolBar::OnSize(wxSizeEvent &evt)
       do {
          h--;
          timeBR = ComputeSizing(h);
-      } while (h > 8 && (sizerBR.x < timeBR.x || sizerBR.y < timeBR.y));
+      } while (h >= minDigitH && (sizerBR.x < timeBR.x || sizerBR.y < timeBR.y));
    }
 
    if (h != mAudioTime->GetDigitSize().y) {

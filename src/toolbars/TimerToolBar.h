@@ -53,6 +53,10 @@ private:
    TimerToolBarListener *mListener;
    NumericTextCtrl *mAudioTime;
    float mDigitRatio;
+   bool mSettingInitialSize;
+
+   static const int minDigitH = 17;
+   static const int maxDigitH = 100;
 
 public:
    
