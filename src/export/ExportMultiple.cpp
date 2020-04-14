@@ -912,13 +912,16 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
 
    bool anySolo = !(( mTracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
 
+   bool skipSilenceAtBeginning;
+   gPrefs->Read(wxT("/AudioFiles/SkipSilenceAtBeginning"), &skipSilenceAtBeginning, false);
+
    /* Examine all tracks in turn, collecting export information */
    for (auto tr : mTracks->Leaders<WaveTrack>() - 
       (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)) {
 
       // Get the times for the track
       auto channels = TrackList::Channels(tr);
-      setting.t0 = channels.min( &Track::GetStartTime );
+      setting.t0 = skipSilenceAtBeginning ? channels.min(&Track::GetStartTime) : 0;
       setting.t1 = channels.max( &Track::GetEndTime );
 
       // number of export channels?
