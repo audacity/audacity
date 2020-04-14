@@ -170,7 +170,15 @@ void TimerToolBar::SetListener(TimerToolBarListener *l)
 
    // Get (and set) the saved time format
    SetAudioTimeFormat(mListener->TT_GetAudioTimeFormat());
-};
+
+   // During initialization, if the saved format is the same as the default,
+   // OnUpdate() will not be called and need it to set the initial size.
+   if (mSettingInitialSize) {
+      wxCommandEvent e;
+      e.SetInt(mAudioTime->GetFormatIndex());
+      OnUpdate(e);
+   }
+}
 
 void TimerToolBar::SetAudioTimeFormat(const NumericFormatSymbol & format)
 {
