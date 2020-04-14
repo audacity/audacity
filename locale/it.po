@@ -412,7 +412,7 @@ msgstr "%s, cofondatore e sviluppatore"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer"
-msgstr "%, sviluppatore"
+msgstr "%s, sviluppatore"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
