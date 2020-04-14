@@ -309,9 +309,6 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
    auto pSa = dynamic_cast<ShuttleSetAutomation*>(&S);
    if( pSa ){
       SetAutomationParameters( *(pSa->mpEap) );
-      if (pSa->bWrite && !mInputCmd.empty()) {
-         ParseCommand(mInputCmd);
-      }
       return true;
    }
    auto pSd  = dynamic_cast<ShuttleGetDefinition*>(&S);
@@ -369,8 +366,11 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
 
 bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
 {
-   if (mExternal)
+   if (IsBatchProcessing())
    {
+      parms.Write(KEY_Command, mInputCmd);
+      parms.Write(KEY_Version, mVersion);
+
       return true;
    }
 
@@ -423,8 +423,18 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
 
 bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
 {
-   if (mExternal)
+   if (IsBatchProcessing())
    {
+      parms.Read(KEY_Command, &mInputCmd, wxEmptyString);
+      parms.Read(KEY_Version, &mVersion, mVersion);
+
+      if (!mInputCmd.empty()) {
+         ParseCommand(mInputCmd);
+      }
+      mPromptType = mType;
+      mIsTool = (GetType() == EffectTypeTool);
+      mExternal = true;
+
       return true;
    }
 
@@ -432,6 +442,14 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
    {
       parms.Read(KEY_Command, &mInputCmd, wxEmptyString);
       parms.Read(KEY_Version, &mVersion, mVersion);
+
+      if (!mInputCmd.empty()) {
+         ParseCommand(mInputCmd);
+      }
+      mType = EffectTypeTool;
+      mPromptType = mType;
+      mIsTool = true;
+      mExternal = true;
 
       return true;
    }
