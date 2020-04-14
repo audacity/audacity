@@ -100,10 +100,6 @@ public:
    void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
-
-private:
-
-   wxSpinCtrl *mQualitySpin;
 };
 
 class ExportFFmpegAMRNBOptions final : public wxPanelWrapper
@@ -248,44 +244,13 @@ private:
    wxArrayStringEx mCodecNames;
    wxArrayString mCodecLongNames;
 
-   wxChoice *mFormatChoice;
-   wxChoice *mCodecChoice;
-
    wxListBox *mFormatList;
    wxListBox *mCodecList;
 
    wxStaticText *mFormatName;
    wxStaticText *mCodecName;
 
-   wxChoice *mPresetChoice;
    wxComboBox *mPresetCombo;
-   wxSpinCtrl *mBitrateSpin;
-   wxSpinCtrl *mQualitySpin;
-   wxSpinCtrl *mSampleRateSpin;
-   wxTextCtrl *mLanguageText;
-   wxTextCtrl *mTag;
-   wxSpinCtrl *mCutoffSpin;
-   wxCheckBox *mBitReservoirCheck;
-   wxChoice *mProfileChoice;
-   //wxSpinCtrl *mTrellisSpin; //trellis is only applicable for ADPCM...scrap it.
-   wxSpinCtrl *mCompressionLevelSpin;
-   wxSpinCtrl *mFrameSizeSpin;
-   wxCheckBox *mUseLPCCheck;
-   wxSpinCtrl *mLPCCoeffsPrecisionSpin;
-   wxSpinCtrl *mMinPredictionOrderSpin;
-   wxSpinCtrl *mMaxPredictionOrderSpin;
-   wxChoice *mPredictionOrderMethodChoice;
-   wxSpinCtrl *mMinPartitionOrderSpin;
-   wxSpinCtrl *mMaxPartitionOrderSpin;
-   wxSpinCtrl *mMuxRate;
-   wxSpinCtrl *mPacketSize;
-
-   wxButton *mOk;
-   wxButton *mSavePreset;
-   wxButton *mLoadPreset;
-   wxButton *mDeletePreset;
-   wxButton *mImportPresets;
-   wxButton *mExportPresets;
 
    int mBitRateFromChoice;
    int mSampleRateFromChoice;
