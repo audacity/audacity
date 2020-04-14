@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-04-08 19:39+0100\n"
-"PO-Revision-Date: 2020-03-24 11:14+0100\n"
+"PO-Revision-Date: 2020-04-11 12:53+0200\n"
 "Last-Translator: Jozef Matta <jozef.m923@gmail.com>\n"
 "Language-Team: jozefM\n"
 "Language: sk\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 "X-Poedit-Bookmarks: -1,3893,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -399,90 +399,90 @@ msgstr "Zastaví skript"
 
 #: src/AboutDialog.cpp
 msgid "No revision identifier was provided"
-msgstr ""
+msgstr "Nebol poskytnutý žiadny identifikátor revízie"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, system administration"
-msgstr "správa systému"
+msgstr "%s, správa systému"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, co-founder and developer"
-msgstr "spoluzakladateľ a vývojár"
+msgstr "%s, spoluzakladateľ a vývojár"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, developer"
-msgstr "vývojár"
+msgstr "%s, vývojár"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, documentation and support"
-msgstr "dokumentácia a podpora"
+msgstr "%s, dokumentácia a podpora"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, documentation and support, French"
-msgstr "dokumentácia a podpora, francúzština"
+msgstr "%s, dokumentácia a podpora, francúzština"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, quality assurance"
-msgstr "testovanie kvality"
+msgstr "%s, zabezpečenie kvality"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, accessibility advisor"
-msgstr "poradca pre prístupnosť"
+msgstr "%s, poradca prístupnosti"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, graphic artist"
-msgstr "grafický umelec"
+msgstr "%s, grafik"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, composer"
-msgstr "skladateľ"
+msgstr "%s, skladateľ"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, tester"
-msgstr "tester"
+msgstr "%s, testovací technik"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, Nyquist plug-ins"
-msgstr "rozšírenia Nyquist"
+msgstr "%s, rozšírenia Nyquist"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, web developer"
-msgstr "webový vývojár"
+msgstr "%s, vývojár webu"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, graphics"
-msgstr "grafik"
+msgstr "%s, grafika"
 
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s (incorporating %s, %s, %s, %s and %s)"
-msgstr ""
+msgstr "%s (začlenené %s, %s, %s, %s a %s)"
 
 #: src/AboutDialog.cpp
 msgid "About Audacity"
@@ -705,9 +705,8 @@ msgid "Extreme Pitch and Tempo Change support"
 msgstr "Podpora zmeny extrémnych výšok a tempa"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Program build date:"
-msgstr "Dátum zostavy programu: "
+msgstr "Dátum zostavy programu:"
 
 #: src/AboutDialog.cpp
 msgid "Commit Id:"
@@ -724,7 +723,7 @@ msgstr "Uvoľnená zostava"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, 64 bits"
-msgstr ""
+msgstr "%s, 64 bitov"
 
 #: src/AboutDialog.cpp
 msgid "Build type:"
@@ -736,14 +735,12 @@ msgstr "Kompilátor:"
 
 #. i18n-hint: The directory audacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Installation Prefix:"
-msgstr "Predčíslie inštalácie: "
+msgstr "Predčíslie inštalácie:"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Settings folder:"
-msgstr "Nastavenia priečinka: "
+msgstr "Nastavenia priečinka:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -827,9 +824,8 @@ msgid "Quick-Play enabled"
 msgstr "Rýchle prehranie povolené"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Timeline Options"
-msgstr "Nastavenie rozšírení"
+msgstr "Možnosti časovej osi"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Enable Quick-Play"
@@ -848,9 +844,8 @@ msgid "Lock Play Region"
 msgstr "Zamknúť oblasť prehrávania"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Pinned Play Head"
-msgstr "Pripnutá snímacia &hlava (zap/vyp)"
+msgstr "Pripnutá snímacia &hlava"
 
 #: src/AdornedRulerPanel.cpp
 msgid ""
@@ -1032,12 +1027,11 @@ msgstr "Audacity je už spustené"
 
 #: src/AudacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
-msgstr ""
+msgstr "Počas spúšťania sa vyskytla neodstrániteľná chyba"
 
 #: src/AudacityApp.cpp
-#, fuzzy
 msgid "Audacity Startup Failure"
-msgstr "Projektové súbory Audacity"
+msgstr "Zlyhanie pri spustení Audacity"
 
 #. i18n-hint: This controls the number of bytes that Audacity will
 #. *           use when writing files to the disk
@@ -1136,9 +1130,9 @@ msgstr ""
 "\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s"
-msgstr "Chyba: "
+msgstr "Chyba: %s"
 
 #: src/AudioIO.cpp
 msgid "Error Initializing Audio"
@@ -1161,9 +1155,8 @@ msgid "Error Initializing Midi"
 msgstr "Chyba pri inicializácii Midi"
 
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "Audacity Audio"
-msgstr "Záznamy Audacity"
+msgstr "Audacity Audio"
 
 #: src/AudioIO.cpp src/ProjectAudioManager.cpp
 #, c-format
@@ -1566,20 +1559,23 @@ msgstr "Ponuka Príkaz (s parametrami)"
 #: src/BatchCommands.cpp src/FileNames.cpp
 #, c-format
 msgid "(%s)"
-msgstr ""
+msgstr "(%s)"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (No Parameters)"
 msgstr "Ponuka Príkaz (bez parametrov)"
 
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
+#, c-format
+#| msgid ""
+#| "Export recording to %s\n"
+#| "/%s/%s%s"
 msgid ""
 "Export recording to %s\n"
 "/%s/%s.%s"
 msgstr ""
 "Exportovať nahrávku do %s\n"
-"/%s/%s%s"
+"/%s/%s.%s"
 
 #: src/BatchCommands.cpp
 msgid "Export recording"
@@ -1890,18 +1886,18 @@ msgid "Test data size should be in the range 1 - 2000 MB."
 msgstr "Testovacie údaje by mali byť v rozmedzí 1 - 2000MB."
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Using %ld chunks of %ld samples each, for a total of %.1f MB.\n"
-msgstr "Použitie %d kusov zo %d vzoriek celkom, pre celkovo %.1f MB.\n"
+msgstr "Použitých %ld kusov z každých %ld vzoriek, pre celkovo %.1f MB.\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
 msgstr "Príprava...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Expected len %ld, track len %lld.\n"
-msgstr "Očakávaných len %d, stôp o dĺžke %lld.\n"
+msgstr "Očakávaných len %ld, stôp dĺžky %lld.\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1909,9 +1905,9 @@ msgid "Performing %d edits...\n"
 msgstr "Vykonávaných %d úprav...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cut: %ld - %ld \n"
-msgstr "Vystrihnúť: %d - %d \n"
+msgstr "Vystrihnúť: %ld - %ld \n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1919,14 +1915,14 @@ msgid "Trial %d\n"
 msgstr "Skúšobne %d\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cut (%ld, %ld) failed.\n"
-msgstr "Vystrihnutie (%d, %d) zlyhalo.\n"
+msgstr "Vystrihnutie (%ld, %ld) zlyhalo.\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Paste: %ld\n"
-msgstr "Vložiť: %d\n"
+msgstr "Prilepiť: %ld\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1947,9 +1943,9 @@ msgid "Checking file pointer leaks:\n"
 msgstr "Kontrola ukazovateľa pretečenia súborov:\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Track # blocks: %ld\n"
-msgstr "Stopa # bloky: %d\n"
+msgstr "Stopa # bloky: %ld\n"
 
 #: src/Benchmark.cpp
 msgid "Disk # blocks: \n"
@@ -1960,19 +1956,19 @@ msgid "Doing correctness check...\n"
 msgstr "Prebieha kontrola správnosti...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Bad: chunk %ld sample %ld\n"
-msgstr "Zlý: kus %d vzorka %d\n"
+msgstr "Zlý: kus %ld snímka %ld\n"
 
 #: src/Benchmark.cpp
 msgid "Passed correctness check!\n"
 msgstr "Prešlo kontrolou správnosti!\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Errors in %d/%ld chunks\n"
 msgstr ""
-"Chyby v %d/%d kusov\n"
+"Chyby v %d/%ld kusov\n"
 "\n"
 
 #: src/Benchmark.cpp
@@ -2391,65 +2387,62 @@ msgstr "Obdĺžnikový"
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Bartlett"
-msgstr ""
+msgstr "Bartlett"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Hamming"
-msgstr ""
+msgstr "Hamming"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Hann"
-msgstr ""
+msgstr "Hann"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Blackman"
-msgstr ""
+msgstr "Blackman"
 
 #. i18n-hint two proper names
 #: src/FFT.cpp
 msgid "Blackman-Harris"
-msgstr ""
+msgstr "Blackman-Harris"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
-#, fuzzy
+#| msgid "Welcome!"
 msgid "Welch"
-msgstr "Vitajte!"
+msgstr "Welch"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: src/FFT.cpp
 msgid "Gaussian(a=2.5)"
-msgstr ""
+msgstr "Gaussova(a=2.5)"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: src/FFT.cpp
 msgid "Gaussian(a=3.5)"
-msgstr ""
+msgstr "Gaussova(a=3.5)"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: src/FFT.cpp
 msgid "Gaussian(a=4.5)"
-msgstr ""
+msgstr "Gaussova(a=4.5)"
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
 msgstr "Podpora FFmpeg nebola skompilovaná do"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid ""
 "FFmpeg was configured in Preferences and successfully loaded before, \n"
 "but this time Audacity failed to load it at startup. \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
-"FFmpeg bol nastavený v predvoľbách a úspešne sa predtým "
-"načítal,                         \n"
-"ale tentoraz Audacity ho nemohlo pri štarte "
-"načítať.                          \n"
+"FFmpeg bol nakonfigurovaný v ponuke Predvoľby a úspešne sa predtým načítal,\n"
+"ale tentoraz Audacity ho nemohlo pri štarte načítať.\n"
 "\n"
 "Vráťte sa do ponuky Predvoľby/Knižnice a konfiguráciu upravte."
 
@@ -2532,11 +2525,11 @@ msgstr "Nepodarilo sa nájsť kompatibilné FFmpeg knižnice."
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
 #: src/FFmpeg.h
 msgid "Only avformat.dll"
-msgstr ""
+msgstr "Len avformat.dll"
 
 #: src/FFmpeg.h
 msgid "Only libavformat.so"
-msgstr ""
+msgstr "Len libavformat.so"
 
 #: src/FileException.cpp
 #, c-format
@@ -2594,9 +2587,8 @@ msgid "As&k"
 msgstr "Sp&ýtať sa"
 
 #: src/FileNames.cpp
-#, fuzzy
 msgid "All files"
-msgstr "Všetky súbory|*"
+msgstr "Všetky súbory"
 
 #. i18n-hint an Audacity project is the state of the program, stored as
 #. files that can be reopened to resume the session later
@@ -2606,33 +2598,30 @@ msgstr "Projekty Audacity"
 
 #: src/FileNames.cpp
 msgid "Dynamically Linked Libraries"
-msgstr ""
+msgstr "Dynamicky prepojené knižnice"
 
 #: src/FileNames.cpp
-#, fuzzy
 msgid "Dynamic Libraries"
-msgstr "Knižnice"
+msgstr "Dynamické knižnice"
 
 #: src/FileNames.cpp
-#, fuzzy
 msgid "Text files"
-msgstr "Názvy súborov:"
+msgstr "Textové súbory"
 
 #: src/FileNames.cpp
-#, fuzzy
 msgid "XML files"
-msgstr "Súbory MP3"
+msgstr "Súbory XML"
 
 #: src/FileNames.cpp
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #. i18n-hint a type or types such as "txt" or "txt, xml" will be
 #. substituted for %s
 #: src/FileNames.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s files"
-msgstr "Súbory MP3"
+msgstr "Súbory %s"
 
 #: src/FileNames.cpp
 msgid ""
@@ -2672,9 +2661,9 @@ msgstr "Cepstrum"
 #. * such as Hann or Rectangular, used in the
 #. * Frequency analyze dialog box.
 #: src/FreqWindow.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s window"
-msgstr "okno"
+msgstr "%s okno"
 
 #: src/FreqWindow.cpp
 msgid "Linear frequency"
@@ -3210,14 +3199,12 @@ msgstr ""
 "Jazyk, ktorý ste zvolili, %s (%s), sa odlišuje od jazyka systému, %s (%s)."
 
 #: src/Languages.cpp
-#, fuzzy
 msgid "Simplified"
-msgstr "!Zjednodušený pohľad"
+msgstr "Zjednodušený"
 
 #: src/Languages.cpp
-#, fuzzy
 msgid "System"
-msgstr "Systémový &dátum"
+msgstr "Systém"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3248,18 +3235,20 @@ msgstr "&Karaoke..."
 #: src/Menus.cpp
 #, c-format
 msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr ""
+msgstr "Skupina rozšírení v %s bola zlúčená s predtým definovanou skupinou"
 
 #: src/Menus.cpp
 #, c-format
 msgid ""
 "Plug-in item at %s conflicts with a previously defined item and was discarded"
 msgstr ""
+"Položka rozšírenia v %s je v konflikte s predtým definovanou položkou a bola "
+"zahodená"
 
 #: src/Menus.cpp
 #, c-format
 msgid "Plug-in items at %s specify conflicting placements"
-msgstr ""
+msgstr "Položky rozšírení v %s určujú konfliktné umiestnenia"
 
 #: src/Menus.cpp
 #, c-format
@@ -3373,12 +3362,15 @@ msgid "&Mixer Board..."
 msgstr "Panel &zmiešavača..."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to load the \"%s\" module.\n"
 "\n"
 "Error: %s"
-msgstr "Nemožno načítať súbor predvolieb."
+msgstr ""
+"Nemožno načítať modul \"%s\".\n"
+"\n"
+"Chyba: %s"
 
 #: src/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -3387,59 +3379,65 @@ msgstr "Modul je nevhodný"
 #: src/ModuleManager.cpp
 #, c-format
 msgid "Unable to load the module \"%s\". Error: %s"
-msgstr ""
+msgstr "Nemožno načítať modul \" %s\". Chyba: %s"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide a version string.\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"Modul %s neobsahuje reťazec verzie.\n"
+"Modul \"%s\" neobsahuje reťazec verzie.\n"
 "Nebude načítaný."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide a version string. It will not be loaded."
-msgstr "Modul %s neobsahuje reťazec verzie. Nebude načítaný."
+msgstr ""
+"Modul \"%s\" neobsahuje reťazec verzie.\n"
+"Nebude načítaný."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" is matched with Audacity version \"%s\".\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"Modul %s sa zhoduje s verziou Audacity %s.\n"
+"Modul \"%s\" sa zhoduje s verziou Audacity \"%s\".\n"
 "\n"
 "Nebude načítaný."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
 "loaded."
-msgstr "Modul %s sa zhoduje s verziou Audacity %s. Nebude načítaný."
+msgstr ""
+"Modul \"%s\" sa zhoduje s verziou Audacity \"%s\".\n"
+"\n"
+"Nebude načítaný."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" failed to initialize.\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"Modul %s neobsahuje reťazec verzie.\n"
+"Nepodarilo sa inicializovať modul \"%s\".\n"
+"\n"
 "Nebude načítaný."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" failed to initialize.\n"
 "It will not be loaded."
 msgstr ""
-"Modul %s neobsahuje reťazec verzie.\n"
+"Nepodarilo sa inicializovať modul \"%s\".\n"
 "Nebude načítaný."
 
 #: src/ModuleManager.cpp
@@ -3476,21 +3474,25 @@ msgid "Try and load this module?"
 msgstr "Vyskúšať a načítať tento modul?"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide any of the required functions.\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"Modul %s neobsahuje reťazec verzie.\n"
+"Modul \"%s\" neposkytuje žiadnu z požadovaných funkcií.\n"
+"\n"
 "Nebude načítaný."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide any of the required functions. It will "
 "not be loaded."
-msgstr "Modul %s neobsahuje reťazec verzie. Nebude načítaný."
+msgstr ""
+"Modul \"%s\" neposkytuje žiadnu z požadovaných funkcií.\n"
+"\n"
+"Nebude načítaný."
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3741,12 +3743,11 @@ msgstr ""
 "%s"
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
-msgstr[0] "Povoliť toto rozšírenie?"
-msgstr[1] "Povoliť tieto rozšírenia?"
-msgstr[2] "Povoliť tieto rozšírenia?"
+msgstr[0] "Povoliť toto rozšírenie?\n"
+msgstr[1] "Povoliť tieto rozšírenia?\n"
+msgstr[2] "Povoliť tieto rozšírenia?\n"
 
 #: src/PluginManager.cpp
 msgid "Enable new plug-ins"
@@ -4036,7 +4037,7 @@ msgstr "<nepomenovaný>"
 #: src/ProjectFileIO.cpp
 #, c-format
 msgid "[Project %02i] Audacity \"%s\""
-msgstr ""
+msgstr "[Projekt %02i] Audacity „%s“"
 
 #. i18n-hint: E.g this is recovered audio that had been lost.
 #: src/ProjectFileIO.cpp
@@ -4506,9 +4507,8 @@ msgstr ""
 "pohyblivej čiarke"
 
 #: src/SampleFormat.cpp
-#, fuzzy
 msgid "Unknown format"
-msgstr "Neznáme"
+msgstr "Neznámy formát"
 
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
@@ -4600,9 +4600,8 @@ msgid "Spectral Selection"
 msgstr "Spektrálny výber"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Timer"
-msgstr "Čas:"
+msgstr "Časovač"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/ToolsToolBar.cpp
@@ -5416,11 +5415,12 @@ msgid " Select On"
 msgstr " Výber zapnutý"
 
 #: src/TrackPanelResizeHandle.cpp
-#, fuzzy
 msgid ""
 "Click and drag to adjust relative size of stereo tracks, double-click to "
 "make heights equal"
-msgstr "Kliknúť a ťahať pre nastavenie relatívnej veľkosti stereo stôp."
+msgstr ""
+"Kliknutím a potiahnutím upravíte relatívnu veľkosť stereo stôp, dvojitým "
+"kliknutím upravíte výšky"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -5562,7 +5562,7 @@ msgstr "%s: %s"
 
 #: src/commands/AudacityCommand.h
 msgid "FAIL"
-msgstr ""
+msgstr "Zlyhanie"
 
 #: src/commands/BatchEvalCommand.cpp
 msgid "Batch Command"
@@ -5589,6 +5589,8 @@ msgid ""
 "\n"
 "* %s, because you have assigned the shortcut %s to %s"
 msgstr ""
+"\n"
+"* %s, pretože ste priradili skratku %s k %s"
 
 #: src/commands/CommandManager.cpp
 msgid ""
@@ -5596,10 +5598,13 @@ msgid ""
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
 msgstr ""
+"Nasledujúce príkazy majú odstránené svoje skratky, pretože ich predvolená "
+"skratka je nová alebo zmenená a je rovnakou skratkou, ktorú ste priradili "
+"inému príkazu."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
-msgstr ""
+msgstr "Skratky boli odstránené"
 
 #: src/commands/CommandTargets.cpp
 msgid "Long Message"
@@ -5830,9 +5835,8 @@ msgid "Save Project2"
 msgstr "Uložiť projekt2"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Compress"
-msgstr "Komprimovať:"
+msgstr "Komprimovať"
 
 #: src/commands/OpenSaveCommands.h
 msgid "Opens a project."
@@ -5862,9 +5866,8 @@ msgid "Value:"
 msgstr "Hodnota:"
 
 #: src/commands/PreferenceCommands.cpp
-#, fuzzy
 msgid "Reload"
-msgstr "Znovu načítať:"
+msgstr "Znovu načítať"
 
 #: src/commands/PreferenceCommands.h
 msgid "Gets the value of a single preference."
@@ -5964,9 +5967,8 @@ msgid "Background:"
 msgstr "Pozadie:"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Bring To Top"
-msgstr "Vynesť navrch:"
+msgstr "Vyniesť na vrchol"
 
 #: src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -6096,7 +6098,6 @@ msgid "At:"
 msgstr "Pri:"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color:"
 msgstr "Farba:"
 
@@ -6280,23 +6281,20 @@ msgid "Increases or decreases the volume of the audio you have selected"
 msgstr "Zvýši alebo zníži hlasitosť audia, ktoré ste vybrali"
 
 #: src/effects/Amplify.cpp
-#, fuzzy
 msgid "&Amplification (dB):"
-msgstr "Zosilnenie (dB):"
+msgstr "&Zosilnenie (dB):"
 
 #: src/effects/Amplify.cpp
 msgid "Amplification dB"
 msgstr "Zosilnenie dB"
 
 #: src/effects/Amplify.cpp
-#, fuzzy
 msgid "&New Peak Amplitude (dB):"
-msgstr "Nová amplitúda spičky (dB):"
+msgstr "Nová amplitúda špičky (dB):"
 
 #: src/effects/Amplify.cpp
-#, fuzzy
 msgid "Allo&w clipping"
-msgstr "Povoliť orezávanie"
+msgstr "Povoliť &orezávanie"
 
 #: src/effects/AutoDuck.cpp
 msgid "Auto Duck"
@@ -6334,12 +6332,11 @@ msgstr ""
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
-msgstr ""
+msgstr "dB"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Duck &amount:"
-msgstr "Miera zoslabovania:"
+msgstr "&Množstvo ponorenia:"
 
 #. i18n-hint: Name of time display format that shows time in seconds
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
@@ -6349,35 +6346,29 @@ msgid "seconds"
 msgstr "sekúnd"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Ma&ximum pause:"
-msgstr "Maximálna pauza:"
+msgstr "Ma&ximálna pauza:"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Outer fade &down length:"
-msgstr "Vonkajšia dĺžka zoslabovania:"
+msgstr "Vonkajšia dĺžka zosla&bovania:"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Outer fade &up length:"
-msgstr "Vonkajšia dĺžka zosilňovania:"
+msgstr "Vonkajšia dĺžka zosi&lňovania:"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Inner fade d&own length:"
-msgstr "Vnútorná dĺžka zoslabovania:"
+msgstr "Vnútorná dĺžka zosl&abovania:"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Inner &fade up length:"
-msgstr "Vnútorná dĺžka zosilňovania:"
+msgstr "Vnútorná dĺžka zo&silňovania:"
 
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "&Threshold:"
-msgstr "Prah:"
+msgstr "&Prah:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
@@ -6462,9 +6453,8 @@ msgstr "z"
 #. i18n-hint: changing a quantity "from" one value "to" another
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "&from"
-msgstr "z"
+msgstr "&z"
 
 #: src/effects/ChangePitch.cpp
 msgid "from Octave"
@@ -6478,9 +6468,8 @@ msgstr "na"
 #. i18n-hint: changing a quantity "from" one value "to" another
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "&to"
-msgstr "na"
+msgstr "&do"
 
 #: src/effects/ChangePitch.cpp
 msgid "to Octave"
@@ -6491,9 +6480,8 @@ msgid "Semitones (half-steps)"
 msgstr "Poltóny (polokroky)"
 
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgid "&Semitones (half-steps):"
-msgstr "Poltóny (polokroky):"
+msgstr "Poltóny (pol-kroky):"
 
 #: src/effects/ChangePitch.cpp
 msgid "Frequency"
@@ -6505,7 +6493,7 @@ msgstr "z (Hz)"
 
 #: src/effects/ChangePitch.cpp
 msgid "f&rom"
-msgstr ""
+msgstr "&z"
 
 #: src/effects/ChangePitch.cpp
 msgid "to (Hz)"
@@ -6514,15 +6502,13 @@ msgstr "na (Hz)"
 #. i18n-hint: changing a quantity "from" one value "to" another
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "t&o"
-msgstr "na"
+msgstr "d&o"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "Percent C&hange:"
-msgstr "Zmena v percentách:"
+msgstr "&Percentuálna zmena:"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
@@ -6530,23 +6516,22 @@ msgid "Percent Change"
 msgstr "Percentuálna zmena"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "&Use high quality stretching (slow)"
-msgstr "Použiť napínanie vysokej kvality (pomalé)"
+msgstr "Použiť &napínanie vysokej kvality (pomalé)"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "33⅓"
-msgstr ""
+msgstr "33⅓"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
+#| msgid "145"
 msgid "45"
-msgstr "145"
+msgstr "45"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
+#| msgid "8"
 msgid "78"
-msgstr "8"
+msgstr "78"
 
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
@@ -6569,9 +6554,8 @@ msgid "Change Speed, affecting both Tempo and Pitch"
 msgstr "Zmení rýchlosť a ovplyvní tempo a výšku tónu"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "&Speed Multiplier:"
-msgstr "Násobič rýchlosti:"
+msgstr "&Násobič rýchlosti:"
 
 #. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
 #. "vinyl" refers to old-fashioned phonograph records
@@ -6593,18 +6577,16 @@ msgid "Selection Length"
 msgstr "Dĺžka výberu"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "C&urrent Length:"
-msgstr "Aktuálna dĺžka:"
+msgstr "&Aktuálna dĺžka:"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Current length of selection."
 msgstr "Aktuálna dĺžka výberu."
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "&New Length:"
-msgstr "Nová dĺžka:"
+msgstr "&Nová dĺžka:"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo"
@@ -6664,18 +6646,16 @@ msgid "Selection must be larger than %d samples."
 msgstr "Výber musí byť väčší ako %d vzorky."
 
 #: src/effects/ClickRemoval.cpp
-#, fuzzy
 msgid "&Threshold (lower is more sensitive):"
-msgstr "Prah (nižší znamená citlivejší):"
+msgstr "&Prah (nižší znamená citlivejší):"
 
 #: src/effects/ClickRemoval.cpp src/effects/Compressor.cpp
 msgid "Threshold"
 msgstr "Prah"
 
 #: src/effects/ClickRemoval.cpp
-#, fuzzy
 msgid "Max &Spike Width (higher is more sensitive):"
-msgstr "Maximálna šírka špičky (vyššia znamená citlivejšia):"
+msgstr "Maximálna šírka š&pičky (vyššia znamená citlivejšia):"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Max Spike Width"
@@ -6730,18 +6710,16 @@ msgid "Ratio %.1f to 1"
 msgstr "Pomer %.1f do 1"
 
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "&Noise Floor:"
-msgstr "Dno šumu:"
+msgstr "&Dno šumu:"
 
 #: src/effects/Compressor.cpp src/effects/Distortion.cpp
 msgid "Noise Floor"
 msgstr "Dno šumu"
 
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "&Ratio:"
-msgstr "Pomer:"
+msgstr "&Pomer:"
 
 #: src/effects/Compressor.cpp
 msgid "Ratio"
@@ -6751,9 +6729,8 @@ msgstr "Pomer"
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "&Attack Time:"
-msgstr "Čas nábehu:"
+msgstr "Čas ná&behu:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
@@ -6766,9 +6743,8 @@ msgstr "Čas nábehu"
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "R&elease Time:"
-msgstr "Čas uvoľnenia:"
+msgstr "Čas &uvoľnenia (sekundy):"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
@@ -6779,16 +6755,14 @@ msgstr "Čas uvoľnenia"
 
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr "Vylepšenie zisku pre 0 dB po kompresii"
+msgstr "&Vylepšenie zisku pre 0 dB po kompresii"
 
 #. i18n-hint: "Compress" here means reduce variations of sound volume,
 #. NOT related to file-size compression; Peaks means extremes in volume
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "C&ompress based on Peaks"
-msgstr "Kompresia založená na špičkách"
+msgstr "&Kompresia založená na špičkách"
 
 #: src/effects/Compressor.cpp
 #, c-format
@@ -7063,7 +7037,7 @@ msgstr "Zhromaždené údaje"
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%d %s %02d %02dh %02dm %02ds"
-msgstr ""
+msgstr "%d %s %02d %02dh %02dm %02ds"
 
 #: src/effects/Contrast.cpp
 msgid "Contrast Analysis (WCAG 2 compliance)"
@@ -7296,33 +7270,28 @@ msgid "Residual level"
 msgstr "Zvyšková úroveň"
 
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "(Not Used):"
-msgstr " (nepoužité):"
+msgstr "(nepoužité):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "(-100 to 0 dB):"
-msgstr " (-100 do 0 dB):"
+msgstr "(-100 do 0 dB):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "(-80 to -20 dB):"
-msgstr " (-80 do -20 dB):"
+msgstr "(-80 do -20 dB):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "(0 to 100):"
-msgstr " (0 do100):"
+msgstr "(0 do100):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "(0 to 5):"
-msgstr " (0 do 5):"
+msgstr "(0 do 5):"
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF Tones"
@@ -7341,16 +7310,16 @@ msgid ""
 "DTMF sequence empty.\n"
 "Check ALL settings for this effect."
 msgstr ""
+"Sekvencia DTMF je prázdna.\n"
+"Skontrolujte VŠETKY nastavenia tohto efektu."
 
 #: src/effects/DtmfGen.cpp
-#, fuzzy
 msgid "DTMF &sequence:"
-msgstr "Sekvencia DTMF:"
+msgstr "Sekvencia &DTMF:"
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/ToneGen.cpp
-#, fuzzy
 msgid "&Amplitude (0-1):"
-msgstr "Amplitúda (0-1):"
+msgstr "&Amplitúda (0-1):"
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
 #: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
@@ -7359,18 +7328,18 @@ msgid "&Duration:"
 msgstr "Trvanie:"
 
 #: src/effects/DtmfGen.cpp
-#, fuzzy
 msgid "&Tone/silence ratio:"
-msgstr "Pomer tón/ticho:"
+msgstr "&Pomer tón/ticho:"
 
 #: src/effects/DtmfGen.cpp
 msgid "Duty cycle:"
 msgstr "Pracovný cyklus:"
 
 #: src/effects/DtmfGen.cpp
-#, fuzzy, c-format
+#, c-format
+#| msgid "%.1f secs"
 msgid "%.1f %%"
-msgstr "%.1f sekúnd"
+msgstr "%.1f %%"
 
 #: src/effects/DtmfGen.cpp
 msgid "Tone duration:"
@@ -7388,9 +7357,10 @@ msgstr "Trvanie ticha:"
 
 #. i18n-hint milliseconds
 #: src/effects/DtmfGen.cpp
-#, fuzzy, c-format
+#, c-format
+#| msgid "%.0f ms"
 msgid "%0.f ms"
-msgstr "%.0f ms"
+msgstr "%0.f ms"
 
 #: src/effects/Echo.cpp
 msgid "Echo"
@@ -7406,28 +7376,24 @@ msgid "Requested value exceeds memory capacity."
 msgstr "Požadovaná hodnota presahuje kapacitu pamäte."
 
 #: src/effects/Echo.cpp
-#, fuzzy
 msgid "&Delay time (seconds):"
-msgstr "Čas oneskorenia (sekundy):"
+msgstr "Čas &oneskorenia (sekundy):"
 
 #: src/effects/Echo.cpp
-#, fuzzy
 msgid "D&ecay factor:"
-msgstr "Faktor rozkladu:"
+msgstr "Faktor &rozkladu:"
 
 #: src/effects/Effect.cpp
 msgid "Built-in"
 msgstr "Vstavané"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Export Effect Parameters"
-msgstr "&Upraviť parametre"
+msgstr "Exportovať parametre efektu"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Presets (*.txt)|*.txt|All files|*"
-msgstr "Textové súbory (*.txt)|*.txt|Všetky súbory|*"
+msgstr "Predvoľby (*.txt)|*.txt|Všetky súbory|*"
 
 #: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
 #: src/xml/XMLFileReader.cpp
@@ -7445,21 +7411,20 @@ msgid "Error writing to file: \"%s\""
 msgstr "Chyba zápisu do súboru: \"%s\""
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Import Effect Parameters"
-msgstr "&Upraviť parametre"
+msgstr "Importovať parametre efektu"
 
 #. i18n-hint %s will be replaced by a file name
 #: src/effects/Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s: is not a valid presets file.\n"
-msgstr "\"%s\" nie je platná cesta súboru."
+msgstr "%s: nie je platná cesta súboru.\n"
 
 #. i18n-hint %s will be replaced by a file name
 #: src/effects/Effect.cpp
 #, c-format
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
-msgstr ""
+msgstr "%s: je pre iný efekt, generátor alebo analyzátor.\n"
 
 #: src/effects/Effect.cpp
 msgid "Preparing preview"
@@ -7785,9 +7750,8 @@ msgid "Equalization"
 msgstr "Ekvalizácia"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Filter Curve EQ"
-msgstr "Krivka filtra"
+msgstr "Filtračná krivka EQ"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 msgid "Graphic EQ"
@@ -7844,9 +7808,8 @@ msgstr ""
 "„nepomenované“ a potom ju použite."
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Filter Curve EQ needs a different name"
-msgstr "Krivka filtra vyžaduje iný názov"
+msgstr "Filtračná krivka ekvalizéra vyžaduje iný názov"
 
 #: src/effects/Equalization.cpp
 msgid ""
@@ -7896,9 +7859,10 @@ msgstr "%g kHz"
 
 #. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
+#| msgid "%g kHz"
 msgid "%gk"
-msgstr "%g kHz"
+msgstr "%gk"
 
 #: src/effects/Equalization.cpp
 msgid "&EQ Type:"
@@ -8203,14 +8167,12 @@ msgid "Clipping"
 msgstr "Orezávanie"
 
 #: src/effects/FindClipping.cpp
-#, fuzzy
 msgid "&Start threshold (samples):"
-msgstr "Počiatočný prah (vzorky):"
+msgstr "&Počiatočný prah (snímky):"
 
 #: src/effects/FindClipping.cpp
-#, fuzzy
 msgid "St&op threshold (samples):"
-msgstr "Koncový prah (vzorky):"
+msgstr "&Koncový prah (snímky):"
 
 #: src/effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
@@ -8237,9 +8199,8 @@ msgid "Unknown built-in effect name"
 msgstr "Neznámy názov vstavaného efektu"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "perceived loudness"
-msgstr "Normalizovať hlučnosť na"
+msgstr "vnímaná hlasitosť"
 
 #: src/effects/Loudness.cpp src/widgets/Meter.cpp
 msgid "RMS"
@@ -8247,17 +8208,15 @@ msgstr "RMS"
 
 #: src/effects/Loudness.cpp
 msgid "Loudness Normalization"
-msgstr ""
+msgstr "Normalizácia hlasitosti"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "Sets the loudness of one or more tracks"
-msgstr "Nastaví amplitúdu špičky jednej alebo viacerých stôp"
+msgstr "Nastavuje hlasitosť jednej alebo viacerých stôp"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "Normalizing Loudness...\n"
-msgstr "Normalizovať hlučnosť na"
+msgstr "Normalizácia hlasitosti...\n"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 #, c-format
@@ -8270,9 +8229,8 @@ msgid "Processing: %s"
 msgstr "Spracovávanie: %s"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "&Normalize"
-msgstr "Normalizovať"
+msgstr "&Normalizovať"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Loudness.cpp
@@ -8285,13 +8243,12 @@ msgid "LUFS"
 msgstr "LUFS"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "Normalize &stereo channels independently"
-msgstr "Nezávisle normalizovať stereo kanály"
+msgstr "Nezávisle normalizovať &stereo kanály"
 
 #: src/effects/Loudness.cpp
 msgid "&Treat mono as dual-mono (recommended)"
-msgstr ""
+msgstr "&Zaobchádzať s mono ako s dvojitým mono (odporúčané)"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 msgid "Waiting for waveform to finish computing..."
@@ -8303,7 +8260,7 @@ msgstr "(Maximum 0dB)"
 
 #: src/effects/Loudness.cpp
 msgid "RMS dB"
-msgstr ""
+msgstr "RMS dB"
 
 #: src/effects/Noise.cpp
 msgid "Pink"
@@ -8322,52 +8279,48 @@ msgid "Generates one of three different types of noise"
 msgstr "Vygeneruje jeden z troch rôznych typov šumu"
 
 #: src/effects/Noise.cpp
-#, fuzzy
 msgid "&Noise type:"
-msgstr "Typ šumu:"
+msgstr "&Typ šumu:"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Median"
-msgstr "Stredný"
+msgstr "Medián"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Second greatest"
-msgstr "Druhá stopa"
+msgstr "Druhý najväčší"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Old"
-msgstr ""
+msgstr "Stará"
 
 #: src/effects/NoiseReduction.cpp
 msgid "none, Hann (2.0.6 behavior)"
-msgstr ""
+msgstr "žiadne, Hann (správanie 2.0.6)"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hann, none"
-msgstr ""
+msgstr "Hann, žiadny"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Hann, Hann (default)"
-msgstr "4 (predvolené)"
+msgstr "Hann, Hann (predvolené)"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Blackman, Hann"
-msgstr ""
+msgstr "Blackman, Hann"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hamming, none"
-msgstr ""
+msgstr "Hamming, žiadny"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hamming, Hann"
-msgstr ""
+msgstr "Hamming, Hann"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hamming, Reciprocal Hamming"
-msgstr ""
+msgstr "Hamming, recipročný Hamming"
 
 #: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
 msgid "Noise Reduction"
@@ -8515,14 +8468,12 @@ msgid "Advanced Settings"
 msgstr "Rozšírené nastavenia"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "&Window types:"
-msgstr "Typy &okna"
+msgstr "Typy &okna:"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Window si&ze:"
-msgstr "Ve&ľkosť okna"
+msgstr "Veľ&kosť okna:"
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "8"
@@ -8573,9 +8524,8 @@ msgid "16384"
 msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "S&teps per window:"
-msgstr "K&rokov na okno"
+msgstr "K&rokov na okno:"
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFFmpegDialogs.cpp
 #: src/export/ExportFLAC.cpp
@@ -8587,9 +8537,8 @@ msgid "4 (default)"
 msgstr "4 (predvolené)"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Discrimination &method:"
-msgstr "&Metóda diskriminácie"
+msgstr "&Metóda diskriminácie:"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Noise Removal"
@@ -8683,23 +8632,20 @@ msgid "Processing second track of stereo pair: %s"
 msgstr "Spracovanie druhej stopy stereo páru: %s"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "&Remove DC offset (center on 0.0 vertically)"
-msgstr "Odstrániť jednosmerný posuv (stred na 0,0 vertikálne)"
+msgstr "Odstrániť &jednosmerný posuv (stred na 0,0 vertikálne)"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "&Normalize peak amplitude to   "
-msgstr "Normalizovať amplitúdu špičky na"
+msgstr "Normalizovať &amplitúdu špičky na   "
 
 #: src/effects/Normalize.cpp
 msgid "Peak amplitude dB"
 msgstr "Amplitúda špičky dB"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "N&ormalize stereo channels independently"
-msgstr "Nezávisle normalizovať stereo kanály"
+msgstr "&Nezávisle normalizovať stereo kanály"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch"
@@ -8715,14 +8661,12 @@ msgstr ""
 #. * will give an (approximately) 10 second sound
 #.
 #: src/effects/Paulstretch.cpp
-#, fuzzy
 msgid "&Stretch Factor:"
-msgstr "Faktor napnutia:"
+msgstr "Faktor na&pnutia:"
 
 #: src/effects/Paulstretch.cpp
-#, fuzzy
 msgid "&Time Resolution (seconds):"
-msgstr "Časové rozlíšenie (sekundy):"
+msgstr "Časové &rozlíšenie (sekundy):"
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
 #: src/effects/Paulstretch.cpp
@@ -8873,9 +8817,8 @@ msgid "Repeats the selection the specified number of times"
 msgstr "Opakuje výber viackrát"
 
 #: src/effects/Repeat.cpp
-#, fuzzy
 msgid "&Number of repeats to add:"
-msgstr "Počet opakovaní na pridanie:"
+msgstr "Počet &opakovaní na pridanie:"
 
 #: src/effects/Repeat.cpp
 msgid "Current selection length: dd:hh:mm:ss"
@@ -8937,7 +8880,7 @@ msgstr "Katedrála"
 
 #: src/effects/Reverb.cpp
 msgid "Reverb"
-msgstr "Ozvena"
+msgstr "Dozvuk"
 
 #: src/effects/Reverb.cpp
 msgid "Adds ambience or a \"hall effect\""
@@ -8953,7 +8896,7 @@ msgstr "Predbežné &oneskorenie (ms):"
 
 #: src/effects/Reverb.cpp
 msgid "Rever&berance (%):"
-msgstr "Oz&vena (%):"
+msgstr "Doz&vuk (%):"
 
 #: src/effects/Reverb.cpp
 msgid "Da&mping (%):"
@@ -8984,13 +8927,13 @@ msgid "Wet O&nly"
 msgstr "I&ba mokrý"
 
 #: src/effects/Reverb.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Reverb: %s"
-msgstr "Ozvena"
+msgstr "Dozvuk: %s"
 
 #: src/effects/Reverse.cpp
 msgid "Reverse"
-msgstr "Obrátiť"
+msgstr "Preklopiť"
 
 #: src/effects/Reverse.cpp
 msgid "Reverses the selected audio"
@@ -9205,9 +9148,8 @@ msgid "Initial Pitch Shift"
 msgstr "Počiatočná zmena výšok"
 
 #: src/effects/TimeScale.cpp
-#, fuzzy
 msgid "(&semitones) [-12 to 12]:"
-msgstr "(poltóny) [-12 do 12]:"
+msgstr "(&poltóny) [-12 do 12]:"
 
 #: src/effects/TimeScale.cpp
 msgid "(%) [-50 to 100]:"
@@ -9218,9 +9160,8 @@ msgid "Final Pitch Shift"
 msgstr "Koncová zmena výšok"
 
 #: src/effects/TimeScale.cpp
-#, fuzzy
 msgid "(s&emitones) [-12 to 12]:"
-msgstr "(poltóny) [-12 do 12]:"
+msgstr "(p&oltóny) [-12 do 12]:"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 msgid "Logarithmic"
@@ -9259,14 +9200,12 @@ msgid "Generates a constant frequency tone of one of four types"
 msgstr "Vygeneruje konštantný frekvenčný tón jedného zo štyroch typov"
 
 #: src/effects/ToneGen.cpp
-#, fuzzy
 msgid "&Waveform:"
-msgstr "Krivka:"
+msgstr "&Tvarová vlna:"
 
 #: src/effects/ToneGen.cpp
-#, fuzzy
 msgid "&Frequency (Hz):"
-msgstr "Frekvencia (Hz):"
+msgstr "&Frekvencia (Hz):"
 
 #: src/effects/ToneGen.cpp
 msgid "Frequency Hertz Start"
@@ -9285,9 +9224,8 @@ msgid "Amplitude End"
 msgstr "Koncová amplitúda"
 
 #: src/effects/ToneGen.cpp
-#, fuzzy
 msgid "I&nterpolation:"
-msgstr "Interpolácia:"
+msgstr "&Interpolácia:"
 
 #: src/effects/TruncSilence.cpp
 msgid "Truncate Detected Silence"
@@ -9321,23 +9259,20 @@ msgid "Detect Silence"
 msgstr "Zistiť ticho"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Tr&uncate to:"
-msgstr "Skrátiť na:"
+msgstr "S&krátiť na:"
 
 #: src/effects/TruncSilence.cpp src/import/ImportRaw.cpp
 msgid "%"
 msgstr "%"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "C&ompress to:"
-msgstr "Komprimovať na:"
+msgstr "Ko&mprimovať na:"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Trunc&ate tracks independently"
-msgstr "Osekať stopy samostatne"
+msgstr "Stopy skracovať &nezávisle"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "VST Effects"
@@ -9381,6 +9316,10 @@ msgid ""
 "require 8192 samples or less to work properly. However most effects can "
 "accept large buffers and using them will greatly reduce processing time."
 msgstr ""
+"Veľkosť zásobníka riadi počet snímok odoslaných s efektom na každú iteráciu. "
+"Nižšie hodnoty spôsobia pomalšie spracovanie a niektoré efekty vyžadujú 8192 "
+"snímok alebo menej, aby fungovali správne. Väčšina efektov však dokáže "
+"akceptovať veľké zásobníky a ich použitie výrazne skráti čas spracovania."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
@@ -9398,6 +9337,10 @@ msgid ""
 "silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all VST effects."
 msgstr ""
+"V rámci spracovania musia niektoré efekty VST oneskoriť návrat zvuku do "
+"Audacity. Ak toto oneskorenie nevykompenzujete, všimnite si, že do audia "
+"bude vložené krátke ticho. Povolenie tejto možnosti zabezpečí túto "
+"kompenzáciu, ale nemusí fungovať pre všetky efekty VST."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -9409,13 +9352,14 @@ msgid "Graphical Mode"
 msgstr "Grafický režim"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy
 msgid ""
 "Most VST effects have a graphical interface for setting parameter values. A "
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
 msgstr ""
-"Veľa efektov VST má grafické rozhranie pre nastavenie hodnoty parametrov."
+"Väčšina efektov VST má grafické rozhranie na nastavenie hodnôt parametrov. K "
+"dispozícii je aj základná len textová metóda.  Znovu otvorte efekt, aby sa "
+"tento účinok prejavil."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid "Enable &graphical interface"
@@ -9432,17 +9376,15 @@ msgstr "Uložiť predvoľbu VST ako:"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Standard VST bank file"
-msgstr ""
+msgstr "Štandardný súbor VST banky"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy
 msgid "Standard VST program file"
-msgstr "Načítať VST program:"
+msgstr "Štandardný programový súbor VST"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy
 msgid "Audacity VST preset file"
-msgstr "Projektové súbory Audacity"
+msgstr "Súbor predvolieb Audacity VST"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unrecognized file extension."
@@ -9457,9 +9399,8 @@ msgid "Load VST Preset:"
 msgstr "Načítať predvoľbu VST:"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy
 msgid "VST preset files"
-msgstr "Vybrať súbor"
+msgstr "Súbory predvolieb VST"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Error Loading VST Presets"
@@ -9558,6 +9499,10 @@ msgid ""
 "will provide that compensation, but it may not work for all Audio Unit "
 "effects."
 msgstr ""
+"V rámci spracovania musia niektoré efekty audio zariadení oneskoriť návrat "
+"zvuku do Audacity. Ak toto oneskorenie nevykompenzujete, všimnite si, že do "
+"audia bolo vložené krátke ticho. Povolenie tejto možnosti zabezpečí túto "
+"kompenzáciu, ale nemusí fungovať pre všetky efekty audio zariadení."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -9570,6 +9515,10 @@ msgid ""
 "Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
 "to take effect."
 msgstr ""
+"Vyberte „Plné“, ak chcete použiť grafické rozhranie, ak je dodané audio "
+"zariadením. Ak chcete použiť generické rozhranie dodané so systémom, vyberte "
+"možnosť „Generické“. Vyberte \"Základné\" pre základné textové rozhranie. "
+"Znovu otvorte pre prejavenie tohto účinku."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -9604,111 +9553,102 @@ msgid "Location"
 msgstr "Umiestnenie"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't open \"%s\""
-msgstr "Nemožno otvoriť súbor: \"%s\""
+msgstr "Nepodarilo sa otvoriť \"%s“"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to read the preset from \"%s\""
-msgstr "Nemožno čítať súbor predvolieb."
+msgstr "Nemožno čítať súbor predvolieb z \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to encode preset from \"%s\""
-msgstr ""
-"Zlyhala registrácia:\n"
-"%s"
+msgstr "Nepodarilo sa zakódovať predvoľbu z \"%s“"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Unable to store preset in config file"
-msgstr "Nemožno čítať súbor predvolieb."
+msgstr "Nemožno uložiť predvoľbu do konfiguračného súboru"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not import \"%s\" preset\n"
 "\n"
 "%s"
 msgstr ""
-"Nedajú sa nastaviť parametre efektu %s\n"
-" na %s."
+"Nepodarilo sa importovať predvoľbu \"%s“\n"
+"\n"
+" %s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't create the \"%s\" directory"
-msgstr ""
-"Nie je možné vytvoriť priečinok:\n"
-"  %s"
+msgstr "Nemožno vytvoriť priečinok \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Export Audio Unit Preset As %s:"
-msgstr "Export predvolieb zvukových jednotiek"
+msgstr "Exportovať predvoľbu audio zariadenia ako %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Standard Audio Unit preset file"
-msgstr "Export predvolieb zvukových jednotiek"
+msgstr "Štandardný súbor predvolieb audio zariadenia"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not export \"%s\" preset\n"
 "\n"
 "%s"
 msgstr ""
-"Nedajú sa nastaviť parametre efektu %s\n"
-" na %s."
+"Nepodarilo sa exportovať predvoľbu \"%s“\n"
+"\n"
+" %s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
 msgstr "Export predvolieb zvukových jednotiek"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Import Audio Unit Preset As %s:"
-msgstr "Import predvolieb zvukových jednotiek"
+msgstr "Importovať predvoľbu audio zariadenia ako %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Failed to set preset name"
-msgstr "Nemožno čítať súbor predvolieb."
+msgstr "Nepodarilo sa nastaviť názov predvoľby"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Failed to retrieve preset content"
-msgstr "Nemožno načítať popis toku"
+msgstr "Zlyhalo obnovenie obsahu predvoľby"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to convert property list to XML data"
-msgstr ""
+msgstr "Zlyhala konverzia zoznamu vlastností na údaje XML"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "XML data is empty after conversion"
-msgstr "Prevod vzorkovacej rýchlosti"
+msgstr "Po konverzii sú údaje XML prázdne"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write XML preset to \"%s\""
-msgstr ""
-"Zlyhala registrácia:\n"
-"%s"
+msgstr "Zlyhal zápis predvoľby XML do \"%s“"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to convert preset to internal format"
-msgstr ""
+msgstr "Zlyhala konverzia predvoľby na interný formát"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to create property list for preset"
-msgstr ""
+msgstr "Zlyhalo vytvorenie zoznamu vlastností pre predvoľbu"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Failed to set class info for \"%s\" preset"
-msgstr ""
+msgstr "Zlyhala informácia nastavenia triedy pre predvoľbu „%s“"
 
 #. i18n-hint: the name of an Apple audio software protocol
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
@@ -9742,15 +9682,20 @@ msgid ""
 "small silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
+"V rámci spracovania musia niektoré efekty LADSPA oneskoriť návrat audia do "
+"Audacity. Ak toto oneskorenie nevykompenzujete, všimnete si, že do audia "
+"bude vložené krátke ticho. Povolenie tejto možnosti zabezpečí túto "
+"kompenzáciu, ale nemusí fungovať pre všetky efekty LADSPA."
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
 #. appears in a following text box window; translate with appropriate punctuation
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/nyquist/Nyquist.cpp
 #: src/effects/vamp/VampEffect.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
-#, fuzzy, c-format
+#, c-format
+#| msgid "%s in:"
 msgid "%s:"
-msgstr "%s v:"
+msgstr "%s:"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Effect Output"
@@ -9768,9 +9713,9 @@ msgid "LV2 Effect Settings"
 msgstr "Nastavenia efektu LV2"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "&Buffer Size (8 to %d) samples):"
-msgstr "Veľkosť &zásobníka (8 do 1 048 576 vzoriek):"
+msgstr "&Veľkosť zásobníka (8 až %d) snímok):"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
@@ -9779,43 +9724,48 @@ msgid ""
 "silences have been inserted into the audio. Enabling this setting will "
 "provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
+"V rámci spracovania musia niektoré efekty LV2 oneskoriť návrat audia do "
+"Audacity. Ak toto oneskorenie nevykompenzujete, všimnete si, že do zvuku "
+"bude vložené krátke ticho. Povolenie tohto nastavenia poskytne túto "
+"kompenzáciu, ale nemusí fungovať pre všetky efekty LV2."
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy
 msgid ""
 "LV2 effects can have a graphical interface for setting parameter values. A "
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
 msgstr ""
-"Efekty LV2 môžu mať grafické rozhranie na nastavenie hodnôt parametrov."
+"Efekty LV2 môžu mať grafické rozhranie na nastavenie hodnôt parametrov. K "
+"dispozícii je aj základná textová metóda. Znovu otvorte efekt, aby sa jeho "
+"účinok prejavil."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "LV2 sequence buffer overflow"
-msgstr ""
+msgstr "Pretečenie zásobníka LV2"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr "Nepodarilo sa vytvoriť inštanciu efekt"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires unsupported feature %s"
-msgstr "%d krivky exportované do %s"
+msgstr "%s vyžaduje nepodporovanú funkciu %s"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires unsupported feature %s\n"
-msgstr "%d krivky exportované do %s"
+msgstr "%s vyžaduje nepodporovanú funkciu %s\n"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires unsupported option %s"
-msgstr "%d krivky exportované do %s"
+msgstr "%s vyžaduje nepodporovanú voľbu %s"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires unsupported option %s\n"
-msgstr "%d krivky exportované do %s"
+msgstr "%s vyžaduje nepodporovanú voľbu %s\n"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Generator"
@@ -9942,9 +9892,8 @@ msgid "plug-in"
 msgstr "rozšírenie"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Nyquist returned a list."
-msgstr "Nyquist nevrátil žiadne audio.\n"
+msgstr "Nyquist vrátil zoznam."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10054,15 +10003,13 @@ msgstr "&Uložiť"
 
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Nyquist scripts"
-msgstr "Načítať Nyquist skript"
+msgstr "Nyquist skripty"
 
 #. i18n-hint: Lisp is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Lisp scripts"
-msgstr "Zastaví skript"
+msgstr "Lisp skripty"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -10209,7 +10156,6 @@ msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr "Prepáčte, názvy ciest dlhšie ako 256 znakov nie sú podporované."
 
 #: src/export/Export.cpp
-#, fuzzy
 msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "The file cannot be written because the path is needed to restore the "
@@ -10219,12 +10165,11 @@ msgid ""
 "If you still wish to export, please choose a different filename or folder."
 msgstr ""
 "Pokúsili ste sa prepísať neexistujúci náhradný súbor.\n"
-"               Súbor nemožno zapísať, lebo cesta je potrebná na obnovenie "
-"originálneho audia do projektu.\n"
-"               Na zobrazenie pozície všetkých chýbajúcich súborov zvoľte "
-"Nápoveda/Diagnostika/Kontrola závislosti.\n"
-"               Ak stále chcete exportovať, prosím zvoľte iný názov súboru "
-"alebo priečinok."
+"Súbor nemožno zapísať, lebo cesta je potrebná na obnovenie originálneho "
+"audia do projektu.\n"
+"Na zobrazenie pozície všetkých chýbajúcich súborov zvoľte Nápoveda/"
+"Diagnostika/Kontrola závislosti.\n"
+"Ak stále chcete exportovať, prosím zvoľte iný názov súboru alebo priečinok."
 
 #: src/export/Export.cpp
 #, c-format
@@ -10301,9 +10246,8 @@ msgstr ""
 
 #. i18n-hint files that can be run as programs
 #: src/export/ExportCL.cpp
-#, fuzzy
 msgid "Executables"
-msgstr "Tabuľky skriptov"
+msgstr "Spustiteľné"
 
 #: src/export/ExportCL.cpp
 msgid "Find path to command"
@@ -10335,25 +10279,22 @@ msgid "Command Output"
 msgstr "Výstupný príkaz"
 
 #: src/export/ExportCL.cpp
-#, fuzzy
 msgid "You've specified a file name without an extension. Are you sure?"
-msgstr ""
-"Vybrali ste názov súboru s neznámou príponou súboru. \n"
-"Chcete pokračovať?"
+msgstr "Zadali ste názov súboru bez prípony. Si si istý?"
 
 #: src/export/ExportCL.cpp
 msgid "Program name appears to be missing."
-msgstr ""
+msgstr "Zdá sa, že chýba názov programu."
 
 #: src/export/ExportCL.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "\"%s\" couldn't be found."
-msgstr "Súbor \"%s\" nenájdený."
+msgstr "\"%s“ sa nepodarilo nájsť."
 
 #: src/export/ExportCL.cpp
 #, c-format
 msgid "Unable to locate \"%s\" in your path."
-msgstr ""
+msgstr "Na vašej ceste sa nepodarilo nájsť „%s“."
 
 #: src/export/ExportFFmpeg.cpp
 msgid ""
@@ -10409,20 +10350,23 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "The codec reported a generic error (EPERM)"
-msgstr ""
+msgstr "Kodek nahlásil generickú chybu (EPERM)"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "The codec reported an invalid parameter (EINVAL)"
-msgstr ""
+msgstr "Kodek nahlásil neplatný parameter (EINVAL)"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Can't open audio codec \"%s\" (0x%x)\n"
 "\n"
 "%s"
-msgstr "FFmpeg : CHYBA - Nemožno otvoriť audio kodek 0x%x."
+msgstr ""
+"Nemožno otvoriť audio kodek \"%s“ (0x%x)\n"
+"\n"
+" %s"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
@@ -10542,9 +10486,9 @@ msgid "%.2f kbps"
 msgstr "%.2f kbit/s"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
+#| msgid "60"
 msgid "0"
-msgstr "60"
+msgstr "0"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportFLAC.cpp
 msgid "1"
@@ -10571,104 +10515,95 @@ msgid "7"
 msgstr "7"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
+#| msgid "96"
 msgid "9"
-msgstr "96"
+msgstr "9"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
+#| msgid "120"
 msgid "10"
-msgstr "120"
+msgstr "10"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "On"
-msgstr "Otvoriť"
+msgstr "Zapnúť"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Constrained"
-msgstr "Konštantná"
+msgstr "Vynútené"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VOIP"
-msgstr ""
+msgstr "VOIP"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
+#| msgid "&Audio..."
 msgid "Audio"
-msgstr "&Audio..."
+msgstr "Audio"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Low Delay"
-msgstr "Oneskorenie"
+msgstr "Nízke oneskorenie"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "2.5 ms"
-msgstr ""
+msgstr "2,5 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "5 ms"
-msgstr ""
+msgstr "5 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "10 ms"
-msgstr ""
+msgstr "10 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "20 ms"
-msgstr ""
+msgstr "20 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "40 ms"
-msgstr ""
+msgstr "40 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "60 ms"
-msgstr ""
+msgstr "60 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Narrowband"
-msgstr ""
+msgstr "Úzkopásmové"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Mediumband"
-msgstr "Stredný"
+msgstr "Stredné pásmo"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Wideband"
-msgstr ""
+msgstr "Širokopásmové"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Super Wideband"
-msgstr ""
+msgstr "Extra širokopásmové"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Fullband"
-msgstr "Viacpásmový"
+msgstr "Celé pásmo"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Compression"
-msgstr "Kompresia:"
+msgstr "Kompresia"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Frame Duration:"
-msgstr "Trvanie:"
+msgstr "Trvanie snímky:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Vbr Mode:"
-msgstr "Režim:"
+msgstr "Režim Vbr:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Application:"
-msgstr "Aplikácia"
+msgstr "Aplikácia:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Cutoff:"
@@ -10679,14 +10614,12 @@ msgid "Open custom FFmpeg format options"
 msgstr "Otvoriť vlastné možnosti formátovania FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Current Format:"
-msgstr "Súčasný projekt"
+msgstr "Súčasný formát:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Current Codec:"
-msgstr "Súčasný projekt"
+msgstr "Súčasný kodek:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Error Saving FFmpeg Presets"
@@ -10745,9 +10678,9 @@ msgid "AMR (narrow band) Files (FFmpeg)"
 msgstr "AMR (úzke pásmo) súbory (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
+#| msgid "M4A (AAC) Files (FFmpeg)"
 msgid "Opus (OggOpus) Files (FFmpeg)"
-msgstr "M4A (AAC) súbory (FFmpeg)"
+msgstr "Opus (OggOpus) súbory (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
@@ -11216,9 +11149,10 @@ msgstr "Exportovanie audia ako FLAC"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
-#, fuzzy, c-format
+#, c-format
+#| msgid "%d kbps"
 msgid "%d kpbs"
-msgstr "%d kbit/s"
+msgstr "%d kb/s"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -11244,51 +11178,45 @@ msgid "Exporting the audio at %ld kbps"
 msgstr "Exportovanie audia pri %ld kbit/s"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
+#| msgid "%s kbps (Best Quality)"
 msgid "220-260 kbps (Best Quality)"
-msgstr "%s kbit/s (najlepšia kvalita)"
+msgstr "220-260 kbps (najlepšia kvalita)"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "200-250 kbps"
-msgstr "Extrémna, 220-260 kbit/s"
+msgstr "200 - 250 kb/s"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "170-210 kbps"
-msgstr "Štandardná, 170-210 kbit/s"
+msgstr "170-210 kb/s"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "155-195 kbps"
-msgstr "Stredná, 145-185 kbit/s"
+msgstr "145-185 kb/s"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "145-185 kbps"
-msgstr "Stredná, 145-185 kbit/s"
+msgstr "145-185 kb/s"
 
 #: src/export/ExportMP3.cpp
 msgid "110-150 kbps"
-msgstr ""
+msgstr "110-150 kb/s"
 
 #: src/export/ExportMP3.cpp
 msgid "95-135 kbps"
-msgstr ""
+msgstr "95-135 kb/s"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "80-120 kbps"
-msgstr "%.2f kbit/s"
+msgstr "80-120 kb/s"
 
 #: src/export/ExportMP3.cpp
 msgid "65-105 kbps"
-msgstr ""
+msgstr "65-105 kb/s"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "45-85 kbps (Smaller files)"
-msgstr "%s kbit/s (menšie súbory)"
+msgstr "45-85 kb/s (menšie súbory)"
 
 #: src/export/ExportMP3.cpp
 msgid "Fast"
@@ -11417,28 +11345,27 @@ msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "Only lame_enc.dll"
-msgstr ""
+msgstr "Iba lame_enc.dll"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame64bit.dylib"
-msgstr ""
+msgstr "Iba libmp3lame64bit.dylib"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame.dylib"
-msgstr ""
+msgstr "Iba libmp3lame.dylib"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame.so.0"
-msgstr ""
+msgstr "Iba libmp3lame.so.0"
 
 #: src/export/ExportMP3.cpp
 msgid "Primary shared object files"
-msgstr ""
+msgstr "Súbory primárne zdieľaných objektov"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "Extended libraries"
-msgstr "Základné knižnice"
+msgstr "Rozšírené knižnice"
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 Files"
@@ -11645,9 +11572,8 @@ msgstr ""
 "Chcete ho vytvoriť?"
 
 #: src/export/ExportMultiple.cpp
-#, fuzzy
 msgid "Continue to export remaining files?"
-msgstr "Nemožno exportovať - problém so súborom"
+msgstr "Chcete pokračovať v exporte zostávajúcich súborov?"
 
 #. i18n-hint: The second %s gives some letters that can't be used.
 #: src/export/ExportMultiple.cpp
@@ -11713,12 +11639,11 @@ msgstr "Exportovanie audia ako Ogg Vorbis"
 
 #: src/export/ExportPCM.cpp src/import/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
-msgstr ""
+msgstr "AIFF (Apple/SGI)"
 
 #: src/export/ExportPCM.cpp src/import/ImportPCM.cpp
-#, fuzzy
 msgid "WAV (Microsoft)"
-msgstr "WAV (Microsoft) 32-bit float PCM"
+msgstr "WAV (Microsoft)"
 
 #: src/export/ExportPCM.cpp
 msgid "Header:"
@@ -11784,9 +11709,8 @@ msgstr ""
 "Oznam knižnice libsndfile: \"%s\""
 
 #: src/import/Import.cpp
-#, fuzzy
 msgid "All supported files"
-msgstr "Všetky súbory|*|Všetky podporované súbory|"
+msgstr "Všetky podporované súbory"
 
 #: src/import/Import.cpp
 #, c-format
@@ -12066,11 +11990,9 @@ msgid "Unable to set stream state to paused."
 msgstr "Nemožno nastaviť tok na pozastavený stav."
 
 #: src/import/ImportGStreamer.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
-msgstr ""
-"Index[%02x] kodek[%s], jazyk[%s], bitová rýchlosť[%s], kanály[%d], "
-"trvanie[%d]"
+msgstr "Index [%02d], typ [%s], kanály [%d], rýchlosť [%d]"
 
 #: src/import/ImportGStreamer.cpp
 msgid "File doesn't contain any audio streams."
@@ -12146,11 +12068,9 @@ msgid "Ogg Vorbis files"
 msgstr "Súbory Ogg Vorbis"
 
 #: src/import/ImportOGG.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Index[%02x] Version[%d], Channels[%d], Rate[%ld]"
-msgstr ""
-"Index[%02x] kodek[%s], jazyk[%s], bitová rýchlosť[%s], kanály[%d], "
-"trvanie[%d]"
+msgstr "Index [%02x] verzia [%d], kanály [%d], frekvencia [%ld]"
 
 #: src/import/ImportOGG.cpp
 msgid "Media read error"
@@ -12178,193 +12098,184 @@ msgstr "WAV, AIFF a ďalšie nekomprimované typy"
 
 #: src/import/ImportPCM.cpp
 msgid "AU (Sun/NeXT)"
-msgstr ""
+msgstr "AU (Sun/NeXT)"
 
 #: src/import/ImportPCM.cpp
 msgid "AVR (Audio Visual Research)"
-msgstr ""
+msgstr "AVR (Audio Visual Research)"
 
 #: src/import/ImportPCM.cpp
 msgid "CAF (Apple Core Audio File)"
-msgstr ""
+msgstr "CAF (Apple Core Audio File)"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportPCM.cpp
 msgid "FLAC (FLAC Lossless Audio Codec)"
-msgstr ""
+msgstr "FLAC (FLAC Lossless Audio Codec)"
 
 #: src/import/ImportPCM.cpp
 msgid "HTK (HMM Tool Kit)"
-msgstr ""
+msgstr "HTK (HMM Tool Kit)"
 
 #: src/import/ImportPCM.cpp
 msgid "IFF (Amiga IFF/SVX8/SV16)"
-msgstr ""
+msgstr "IFF (Amiga IFF/SVX8/SV16)"
 
 #: src/import/ImportPCM.cpp
 msgid "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
-msgstr ""
+msgstr "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
 
 #: src/import/ImportPCM.cpp
 msgid "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
-msgstr ""
+msgstr "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
 
 #: src/import/ImportPCM.cpp
 msgid "MPC (Akai MPC 2k)"
-msgstr ""
+msgstr "MPC (Akai MPC 2k)"
 
 #: src/import/ImportPCM.cpp
 msgid "OGG (OGG Container format)"
-msgstr ""
+msgstr "OGG (OGG Container format)"
 
 #: src/import/ImportPCM.cpp
 msgid "PAF (Ensoniq PARIS)"
-msgstr ""
+msgstr "PAF (Ensoniq PARIS)"
 
 #: src/import/ImportPCM.cpp
 msgid "PVF (Portable Voice Format)"
-msgstr ""
+msgstr "PVF (Portable Voice Format)"
 
 #: src/import/ImportPCM.cpp
 msgid "RAW (header-less)"
-msgstr ""
+msgstr "RAW (header-less)"
 
 #: src/import/ImportPCM.cpp
 msgid "RF64 (RIFF 64)"
-msgstr ""
+msgstr "RF64 (RIFF 64)"
 
 #: src/import/ImportPCM.cpp
 msgid "SD2 (Sound Designer II)"
-msgstr ""
+msgstr "SD2 (Sound Designer II)"
 
 #: src/import/ImportPCM.cpp
 msgid "SDS (Midi Sample Dump Standard)"
-msgstr ""
+msgstr "SDS (Midi Sample Dump Standard)"
 
 #: src/import/ImportPCM.cpp
 msgid "SF (Berkeley/IRCAM/CARL)"
-msgstr ""
+msgstr "SF (Berkeley/IRCAM/CARL)"
 
 #: src/import/ImportPCM.cpp
 msgid "VOC (Creative Labs)"
-msgstr ""
+msgstr "VOC (Creative Labs)"
 
 #: src/import/ImportPCM.cpp
 msgid "W64 (SoundFoundry WAVE 64)"
-msgstr ""
+msgstr "W64 (SoundFoundry WAVE 64)"
 
 #: src/import/ImportPCM.cpp
 msgid "WAV (NIST Sphere)"
-msgstr ""
+msgstr "WAV (NIST Sphere)"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "WAVEX (Microsoft)"
-msgstr "WAV (Microsoft) 32-bit float PCM"
+msgstr "WAVEX (Microsoft)"
 
 #: src/import/ImportPCM.cpp
 msgid "WVE (Psion Series 3)"
-msgstr ""
+msgstr "WVE (Psion Series 3)"
 
 #: src/import/ImportPCM.cpp
 msgid "XI (FastTracker 2)"
-msgstr ""
+msgstr "XI (FastTracker 2)"
 
 #: src/import/ImportPCM.cpp
 msgid "Signed 8 bit PCM"
-msgstr ""
+msgstr "Podpísaná 8 bitová PCM"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "Signed 16 bit PCM"
-msgstr "16-bit PCM"
+msgstr "Podpísané 16-bitové PCM"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "Signed 24 bit PCM"
-msgstr "24-bit PCM"
+msgstr "Podpísaná 24 bitová PCM"
 
 #: src/import/ImportPCM.cpp
 msgid "Signed 32 bit PCM"
-msgstr ""
+msgstr "Podpísaná 32 bitová PCM"
 
 #: src/import/ImportPCM.cpp
 msgid "Unsigned 8 bit PCM"
-msgstr ""
+msgstr "Nepodpísaná 8-bitová PCM"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "32 bit float"
-msgstr ""
-"32-bitové na \n"
-"pohyblivej čiarke"
+msgstr "32 bitové na pohyblivej čiarke"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "64 bit float"
-msgstr ""
-"32-bitové na \n"
-"pohyblivej čiarke"
+msgstr "64 bitové na pohyblivej čiarke"
 
 #: src/import/ImportPCM.cpp
 msgid "U-Law"
-msgstr ""
+msgstr "U-Law"
 
 #: src/import/ImportPCM.cpp
 msgid "A-Law"
-msgstr ""
+msgstr "A-Law"
 
 #: src/import/ImportPCM.cpp
 msgid "IMA ADPCM"
-msgstr ""
+msgstr "IMA ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "Microsoft ADPCM"
-msgstr ""
+msgstr "Microsoft ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "GSM 6.10"
-msgstr ""
+msgstr "GSM 6.10"
 
 #: src/import/ImportPCM.cpp
 msgid "32kbs G721 ADPCM"
-msgstr ""
+msgstr "32kbs G721 ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "24kbs G723 ADPCM"
-msgstr ""
+msgstr "24kbs G723 ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "12 bit DWVW"
-msgstr ""
+msgstr "12 bit DWVW"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
+#| msgid "16 bit"
 msgid "16 bit DWVW"
-msgstr "16 bit"
+msgstr "16 bit DWVW"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
+#| msgid "24 bit"
 msgid "24 bit DWVW"
-msgstr "24 bit"
+msgstr "24 bit DWVW"
 
 #: src/import/ImportPCM.cpp
 msgid "VOX ADPCM"
-msgstr ""
+msgstr "VOX ADPCM"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
+#| msgid "16-bit PCM"
 msgid "16 bit DPCM"
-msgstr "16-bit PCM"
+msgstr "16 bit DPCM"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
+#| msgid "16-bit PCM"
 msgid "8 bit DPCM"
-msgstr "16-bit PCM"
+msgstr "8 bit DPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "Vorbis"
-msgstr ""
+msgstr "Vorbis"
 
 #: src/import/ImportPCM.cpp
 msgid ""
@@ -12954,14 +12865,12 @@ msgid "Export MIDI As:"
 msgstr "Exportovať MIDI ako:"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "MIDI file"
-msgstr "Vyberať súbor MIDI"
+msgstr "Súbor MIDI"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Allegro file"
-msgstr "Všetky súbory|*"
+msgstr "Súbor Allegro"
 
 #: src/menus/FileMenus.cpp
 msgid ""
@@ -12989,19 +12898,16 @@ msgid "Select a MIDI file"
 msgstr "Vyberať súbor MIDI"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "MIDI and Allegro files"
-msgstr "Chyba pri načítaní  Allegro súboru."
+msgstr "MIDI a Allegro súbory"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "MIDI files"
-msgstr "Súbory MP3"
+msgstr "Súbory MIDI"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Allegro files"
-msgstr "Všetky súbory|*"
+msgstr "Súbory Allegro"
 
 #: src/menus/FileMenus.cpp
 msgid "Select any uncompressed audio file"
@@ -13158,9 +13064,8 @@ msgid "MIDI Device Info"
 msgstr "Informácie o MIDI zariadení"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "Menu Tree"
-msgstr "Ponuka"
+msgstr "Strom ponuky"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
@@ -13208,7 +13113,7 @@ msgstr "Skontrolo&vať závislosti..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Menu Tree..."
-msgstr ""
+msgstr "Strom ponuky..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
@@ -13417,7 +13322,7 @@ msgstr "Posúvať naprieč aktívnymi oknami dopredu"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Foc&us"
-msgstr ""
+msgstr "Za&meranie"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move &Backward from Toolbars to Tracks"
@@ -13464,9 +13369,8 @@ msgid "Uncategorized"
 msgstr "Nekategorizované"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "..."
-msgstr "Nový..."
+msgstr "..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Unknown"
@@ -14231,14 +14135,12 @@ msgid "&Unmute All Tracks"
 msgstr "&Zrušiť stlmenie všetkých stôp"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Mut&e Tracks"
-msgstr "&Stlmiť všetky stopy"
+msgstr "&Stlmiť stopy"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "U&nmute Tracks"
-msgstr "&Zrušiť stlmenie všetkých stôp"
+msgstr "&Zrušiť stlmenie stôp"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Pan"
@@ -14373,9 +14275,11 @@ msgid "no label track at or below focused track"
 msgstr "žiadna stopa s návesťou tu alebo nižšie pod zameranou stopou"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy, c-format
+#, c-format
+#| msgid "%s %d of %d clip %s"
+#| msgid_plural "%s %d of %d clips %s"
 msgid "%s %d of %d"
-msgstr "%s %d z %d strihu %s"
+msgstr "%s %d of %d"
 
 #: src/menus/TransportMenus.cpp
 msgid "no labels in label track"
@@ -15196,9 +15100,8 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Používať väčšinou rozloženia zľava doprava v jazykoch RTL"
 
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgid "Show Timeline Tooltips"
-msgstr "Povoliť popisy časovej osi"
+msgstr "Zobraziť popisy časovej osi"
 
 #: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
 msgid "Show Scrub Ruler"
@@ -15354,18 +15257,20 @@ msgid ""
 "\n"
 "   *   \""
 msgstr ""
+"\n"
+"   *   \""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\"  (because the shortcut '"
-msgstr ""
+msgstr "\"  (pre skratku '"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "' is used by \""
-msgstr ""
+msgstr "' je použitý na \""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\")\n"
-msgstr ""
+msgstr "\")\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -15377,18 +15282,19 @@ msgstr "Chyba importu klávesových skratiek"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "The file with the shortcuts contains illegal shortcut duplicates for \""
-msgstr ""
+msgstr "Súbor so skratkami obsahuje nelegálne kópie skratiek pre \""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\" and \""
-msgstr ""
+msgstr "\" a \""
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
 msgid ""
 "\".\n"
 "Nothing is imported."
-msgstr "Nič na vpred"
+msgstr ""
+"\".\n"
+"Nič nie je importované."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15401,6 +15307,9 @@ msgid ""
 "The following commands are not mentioned in the imported file, but have "
 "their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
+"\n"
+"V importovanom súbore nie sú uvedené nasledujúce príkazy, ale ich skratky sa "
+"odstránia z dôvodu konfliktu s inými novými skratkami:\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -15486,9 +15395,8 @@ msgid "No compatible FFmpeg library was found"
 msgstr "Žiadna kompatibilná knižnica FFmpeg nebola nájdená"
 
 #: src/prefs/LibraryPrefs.cpp
-#, fuzzy
 msgid "FFmpeg support is not compiled in"
-msgstr "Podpora FFmpeg nebola skompilovaná do"
+msgstr "Podpora FFmpeg nie je kompilovaná do"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -15516,7 +15424,7 @@ msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Success"
-msgstr ""
+msgstr "Úspešne"
 
 #: src/prefs/LibraryPrefs.h
 msgid "Library"
@@ -15572,26 +15480,24 @@ msgstr ""
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid ""
 "  'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
 msgstr ""
-"'Spýtať sa' znamená, že sa Audacity spýta, či chcete načítať modul vždy pri "
-"štarte."
+"  'Spýtať sa' znamená, že sa Audacity spýta, či chcete načítať modul vždy "
+"pri štarte."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
 msgstr ""
-"'Zlyhal' znamená, že si Audacity myslí, že modul je zničený a nebude bežať."
+"  'Zlyhal' znamená, že si Audacity myslí, že modul je poškodený a nebude "
+"bežať."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid "  'New' means no choice has been made yet."
-msgstr "'Nový' znamená, že žiadny výber zatiaľ nebol vykonaný."
+msgstr "  'Nový' znamená, že žiadny výber zatiaľ nebol vykonaný."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when Audacity starts up."
@@ -15881,9 +15787,8 @@ msgid "Category"
 msgstr "Kategória"
 
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
-#, fuzzy
 msgid "Preferences:"
-msgstr "Predvoľby: "
+msgstr "Predvoľby:"
 
 #. i18n-hint: (noun) i.e Audacity projects.
 #: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
@@ -15913,7 +15818,7 @@ msgstr "Predvoľby kvality"
 #: src/prefs/QualityPrefs.cpp
 #, c-format
 msgid "%i Hz"
-msgstr ""
+msgstr "%i Hz"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
@@ -16145,9 +16050,8 @@ msgid "&Use Preferences"
 msgstr "&Použiť predvoľby"
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
-#, fuzzy
 msgid "S&cale:"
-msgstr "M&ierka"
+msgstr "M&ierka:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Mi&n Frequency (Hz):"
@@ -16182,9 +16086,8 @@ msgid "Algorithm"
 msgstr "Algoritmus"
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "A&lgorithm:"
-msgstr "A&lgoritmus"
+msgstr "A&lgoritmus:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
@@ -16211,9 +16114,8 @@ msgid "Window &type:"
 msgstr "&Typ okna:"
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "&Zero padding factor:"
-msgstr "&Nulový faktor výplne"
+msgstr "&Nulový faktor výplne:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble Spectral Selection"
@@ -16424,9 +16326,8 @@ msgid "Solo &Button:"
 msgstr "Sólo &tlačidlo:"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Logarithmic (dB)"
-msgstr "Logaritmická"
+msgstr "Logaritmická (dB)"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -16514,9 +16415,8 @@ msgid "Auto-&fit track height"
 msgstr "Automaticky &prispôsobiť výšku stopy"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Sho&w track name as overlay"
-msgstr "Zobra&ziť názov audio stopy ako vrstvenie"
+msgstr "Zobra&ziť názov stopy ako prekrytý"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
@@ -16539,9 +16439,8 @@ msgid "Default &view mode:"
 msgstr "Predvolený režim &zobrazovania:"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Default Waveform scale:"
-msgstr "Predvolený snímací &formát:"
+msgstr "Predvolená mierka &tvarovej vlny:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Display &samples:"
@@ -16605,9 +16504,8 @@ msgid "Mixing down on export (&Custom FFmpeg or external program)"
 msgstr "Zmiešavaní pri exporte(&vlastný FFmpeg alebo externý program)"
 
 #: src/prefs/WarningsPrefs.cpp
-#, fuzzy
 msgid "Missing file &name extension during export"
-msgstr "Zmiešavaní do &mono pri exporte"
+msgstr "Počas exportu chýba &prípona názvu súboru"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "&Importing uncompressed audio files"
@@ -16623,9 +16521,8 @@ msgid "Preferences for Waveforms"
 msgstr "Predvoľby zvukovej vlny"
 
 #: src/prefs/WaveformPrefs.cpp
-#, fuzzy
 msgid "Waveform dB &range:"
-msgstr "Zvuková vlna &rozsah dB"
+msgstr "Rozsah dB tvarovej &vlny:"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
@@ -16674,14 +16571,14 @@ msgstr "Vybrať po začiatok"
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s Paused."
-msgstr "Pozastavené"
+msgstr "%s pozastavené."
 
 #: src/toolbars/ControlToolBar.cpp
 #, c-format
 msgid "%s."
-msgstr ""
+msgstr "%s."
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the big buttons on it (play record etc)
@@ -16850,14 +16747,14 @@ msgid "Recording Volume (Unavailable; use system mixer.)"
 msgstr "Hlasitosť nahrávania (nedostupná; použite systémový zmiešavač.)"
 
 #: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f (emulated)"
-msgstr "Hlasitosť prehrávania: %s (emulovaná)"
+msgstr "Hlasitosť prehrávania: %.2f (emulovaná)"
 
 #: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f"
-msgstr "Hlasitosť prehrávania : %s"
+msgstr "Hlasitosť prehrávania : %.2f"
 
 #: src/toolbars/MixerToolBar.cpp
 msgid "Playback Volume (Unavailable; use system mixer.)"
@@ -17018,16 +16915,14 @@ msgid "Spe&ctral Selection Toolbar"
 msgstr "Panel nástrojov spek&trálneho výberu"
 
 #: src/toolbars/TimerToolBar.cpp
-#, fuzzy
 msgid "Time"
-msgstr "Čas:"
+msgstr "Čas"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for viewing actual time of the cursor
 #: src/toolbars/TimerToolBar.cpp
-#, fuzzy
 msgid "&Time Toolbar"
-msgstr "Panel nástrojov zaria&denia"
+msgstr "Č&asová lišta"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -17065,7 +16960,6 @@ msgid "Draw Tool"
 msgstr "Nástroj kreslenia"
 
 #: src/toolbars/ToolsToolBar.cpp
-#, fuzzy
 msgid "Multi-Tool"
 msgstr "Viacúčelový nástroj"
 
@@ -17171,23 +17065,20 @@ msgid "Face size"
 msgstr "Veľkosť plôšky"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "Cu&t Label text"
-msgstr "Text návesti"
+msgstr "Vy&strihnúť text návesti"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "&Copy Label text"
-msgstr "Text návesti"
+msgstr "&Kopírovať text návesti"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "&Delete Label"
 msgstr "&Zmazať návesť"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "&Edit Label..."
-msgstr "&Upraviť návesti..."
+msgstr "&Upraviť návesť..."
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "Deleted Label"
@@ -17309,7 +17200,7 @@ msgstr "Úprava vzoriek"
 #. i18n-hint k abbreviating kilo meaning thousands
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
 msgid "k"
-msgstr ""
+msgstr "k"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 msgid "Zoom Reset"
@@ -17324,7 +17215,6 @@ msgid "&Spectrogram"
 msgstr "&Spektrogram"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
-#, fuzzy
 msgid ""
 "To change Spectrogram Settings, stop any\n"
 " playing or recording first."
@@ -17427,9 +17317,8 @@ msgid "Set Rate"
 msgstr "Nastaviť frekvenciu"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid "&Multi-view"
-msgstr "Viac"
+msgstr "&Viacnásobné zobrazenie"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Ma&ke Stereo Track"
@@ -17522,9 +17411,10 @@ msgstr "Pravý, %dHz"
 #. i18n-hint dB abbreviates decibels
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
+#| msgid "%.2f dB"
 msgid "%+.1f dB"
-msgstr "%.2f dB"
+msgstr "%+.1f dB"
 
 #. i18n-hint: Stereo pan setting
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -17541,23 +17431,23 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% pravé"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid ""
 "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "Kliknite a ťahajte pre prispôsobenie, dvojklik pre vynulovanie"
+msgstr ""
+"Kliknutím a ťahaním upravíte veľkosť čiastkových zobrazení, dvojitým "
+"kliknutím ich rovnomerne rozdelíte"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Click and drag to rearrange sub-views"
-msgstr "Kliknite a ťahajte pre posunutie stopy v čase"
+msgstr "Kliknutím a ťahaním zmeníte usporiadanie čiastkových zobrazení"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Rearrange sub-views"
-msgstr ""
+msgstr "Usporiadať čiastkové zobrazenia"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Close sub-view"
-msgstr ""
+msgstr "Zatvoriť čiastkové zobrazenie"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -17737,14 +17627,12 @@ msgid "Scru&bbing"
 msgstr "S&nímanie"
 
 #: src/tracks/ui/Scrubbing.cpp
-#, fuzzy
 msgid "Scrub Bac&kwards"
-msgstr "Dozadu"
+msgstr "Snímať do&zadu"
 
 #: src/tracks/ui/Scrubbing.cpp
-#, fuzzy
 msgid "Scrub For&wards"
-msgstr "Dopredu"
+msgstr "Snímať do&predu"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
@@ -17823,18 +17711,16 @@ msgid "Collapse"
 msgstr "Zbaliť"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Command+Click to deselect"
-msgstr "Príkaz+kliknúť pre zrušenie výberu"
+msgstr "Príkaz+klik zruší výber"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Select track"
 msgstr "Vybrať stopu"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Ctrl+Click to deselect"
-msgstr "Ctrl+kliknúť pre zrušenie výberu"
+msgstr "Ctrl+klik pre zrušenie"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -17842,15 +17728,13 @@ msgstr "Otvoriť ponuku..."
 
 #. i18n-hint: Command names a modifier key on Macintosh keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
-#, fuzzy
 msgid "Command+Click"
-msgstr "Príkaz+kliknúť"
+msgstr "Príkaz+klik"
 
 #. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
-#, fuzzy
 msgid "Ctrl+Click"
-msgstr "Ctrl+kliknúť"
+msgstr "Ctrl+klik"
 
 #. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -17894,9 +17778,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Ľavé=priblížiť, pravé=oddialiť, stredné=normálne"
 
 #: src/widgets/AButton.cpp
-#, fuzzy
 msgid "(disabled)"
-msgstr " (zakázané)"
+msgstr "(zakázané)"
 
 #: src/widgets/AButton.cpp src/widgets/Meter.cpp
 msgid "Press"
@@ -17920,9 +17803,10 @@ msgstr "P"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
+#| msgid "%.2f"
 msgid "%.2fx"
-msgstr "%.2f"
+msgstr "%.2fx"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -18492,9 +18376,10 @@ msgid "File Dialog"
 msgstr "Dialóg súboru"
 
 #: src/xml/XMLFileReader.cpp
-#, fuzzy, c-format
+#, c-format
+#| msgid "Error: %hs at line %lu"
 msgid "Error: %s at line %lu"
-msgstr "Chyba: %hs na riadku %lu"
+msgstr "Chyba: %s na riadku %lu"
 
 #: src/xml/XMLFileReader.cpp
 #, c-format
@@ -18532,40 +18417,38 @@ msgid "Released under terms of the GNU General Public License version 2"
 msgstr "Vydané pod podmienkami GNU Všeobecná verejná licencia verzia 2"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Treat audio below this level as silence (dB)"
-msgstr "Zaobchádzať s audiom nižšie pod túto úroveň ako s tichom [ -dB]"
+msgstr "Zaobchádzať s audiom pod touto úrovňou ako s tichom (dB)"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Minimum duration of silence (seconds)"
-msgstr "Minimálna dĺžka ticha [sekundy]"
+msgstr "Minimálne trvanie ticha (sekundy)"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Label placement (seconds before silence ends)"
-msgstr "Umiestnenie návesti [sekúnd pred koncom ticha]"
+msgstr "Umiestnenie návesti (sekúnd pred koncom ticha)"
 
+# ticho
 #. i18n-hint: Abbreviation of "Silence".
 #: plug-ins/SilenceMarker.ny
 msgid "S"
-msgstr ""
+msgstr "T"
 
 #. i18n-hint: hours minutes and seconds. Do not translate "~a".
 #: plug-ins/SilenceMarker.ny
 #, lisp-format
 msgid "~ah ~am ~as"
-msgstr ""
+msgstr "~ah ~am ~as"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid ""
 "No silences found.\n"
 "Try reducing the silence level and\n"
 "the minimum silence duration."
 msgstr ""
-"Nenájdené žiadne ticho. Skúste znížiť úroveň~%ticha a minimálne trvanie "
-"ticha."
+"Nenájdené žiadne ticho.\n"
+"Skúste znížiť úroveň ticha\n"
+"a minimálne trvanie ticha."
 
 #: plug-ins/SoundFinder.ny
 msgid "Sound Finder"
@@ -19019,47 +18902,43 @@ msgstr "Povoliť zmenu trvania"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "EQ XML to TXT Converter"
-msgstr ""
+msgstr "Konvertor EQ XML na TXT"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Select target EQ effect"
-msgstr "Opakovať posledný efekt"
+msgstr "Vyberte cieľový efekt EQ"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Equalization XML file"
-msgstr "Ekvalizácia"
+msgstr "Súbor XML ekvalizácie"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
-msgstr ""
+msgstr "Ak existuje výstupný textový súbor"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Append number"
-msgstr "Pripojiť nahrávku"
+msgstr "Pripojiť číslo"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Overwrite"
-msgstr "Potvrdiť prepísanie"
+msgstr "Prepísať"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Unable to open file~%~s"
-msgstr "Chyba.~%Nemožno otvoriť súbor"
+msgstr "Chyba. ~%Nemožno otvoriť súbor~%~s"
 
 #. i18n-hint: Do not translate "~a".txt
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, lisp-format
 msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr ""
+msgstr "Chyba.~%Nepovolené prepísanie súboru:~%\"~a.txt\""
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "Chyba.~%~s nemôže byť zapísaný.~%"
+msgstr "Chyba.~%Nemožno zapísať súbor:~%\"~a.txt\""
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
@@ -19302,76 +19181,64 @@ msgid "Performing Low-Pass Filter..."
 msgstr "Vykonávanie dolnopriepustného filtra..."
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Noise Gate"
-msgstr "Typ šumu:"
+msgstr "Hradlo šumu"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Gating audio..."
-msgstr "Uskladnenie audia"
+msgstr "Hradlovanie audia..."
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Select Function"
-msgstr "Výber"
+msgstr "Vybrať funkciu"
 
 #: plug-ins/noisegate.ny
 msgid "Gate"
 msgstr "Hradlo"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Analyse Noise Level"
-msgstr "Čas analýzy:"
+msgstr "Analyzovať úroveň šumu"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Stereo Linking"
-msgstr "Vyhľadávanie"
+msgstr "Stereo prepájanie"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Link Stereo Tracks"
-msgstr "Vy&tvoriť stereo stopu"
+msgstr "Prepojiť stereo stopy"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Don't Link Stereo"
-msgstr "Spojené stereo"
+msgstr "Neprepojené stereo"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Apply Low-Cut filter"
-msgstr "Aplikovanie filtra zárezu..."
+msgstr "Použiť dolnopriepustný filter"
 
 #: plug-ins/noisegate.ny
 msgid "10Hz 6dB/octave"
-msgstr ""
+msgstr "10Hz 6dB/oktáva"
 
 #: plug-ins/noisegate.ny
 msgid "20Hz 6dB/octave"
-msgstr ""
+msgstr "20Hz 6dB/oktáva"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Gate frequencies above (kHz)"
-msgstr "~aStredová frekvencia musí byť nad 0 Hz."
+msgstr "Vyššie frekvencie hradla (kHz)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Level reduction (dB)"
-msgstr "&Redukcia šumu (dB):"
+msgstr "Zníženie úrovne (dB)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Gate threshold (dB)"
-msgstr "Prahová hodnota %d dB"
+msgstr "Prah hradla (dB)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Attack/Decay (ms)"
-msgstr "Čas nábehu/rozkladu"
+msgstr "Nábeh/rozklad (ms)"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19381,6 +19248,10 @@ msgid ""
 "is too high for selected track.\n"
 "Set the control below ~a kHz."
 msgstr ""
+"Chyba.\n"
+"\"Vyššia frekvenčná brána: ~s kHz\"\n"
+"je príliš vysoká pre vybranú stopu.\n"
+"Nastavte ovládač nižšie ~a kHz."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19388,6 +19259,8 @@ msgid ""
 "~%Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
 msgstr ""
+"~%Nedostatočný výber audia.\n"
+"Vytvorte väčší výber ako ~a ms."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19395,6 +19268,8 @@ msgid ""
 "Peak based on first ~a seconds ~a dB~%\n"
 "Suggested Threshold Setting ~a dB."
 msgstr ""
+"Špička založená na prvých ~a sekundách ~a dB~%\n"
+"Navrhované nastavenie prahu ~a dB."
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
@@ -19430,77 +19305,67 @@ msgstr "Inštalátor rozšírenia Nyquist"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Select file(s) to install"
-msgstr "Vybrať tok(y) na importovanie"
+msgstr "Vybrať súbor(y) na inštaláciu"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Allow overwriting"
-msgstr "Povoliť orezávanie"
+msgstr "Povoliť prepísanie"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Disallow"
-msgstr "Nepovolený"
+msgstr "Zakázať"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Allow"
-msgstr ""
+msgstr "Povoliť"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Error.n"
-msgstr "Chyba"
+msgstr "Chyba.n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
-msgstr ""
+msgstr "Úspech.~%súbory zapísané do:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Warning.nFailed to copy some files:n"
-msgstr ""
+msgstr "Varovanie.nZlyhalo skopírovanie do niektorých súborov:n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"~s inštalovaný do:~%\"~a\"~%~%~\n"
-"            Použite Správcu rozšírení pre povolenie efektu."
+"Nainštalované rozšírenia.n (na povolenie efektov použite Správcu rozšírení):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-ins updated:"
-msgstr "Podporné rozšírenie"
+msgstr "Aktualizované rozšírenia:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Files copied to plug-ins folder:"
-msgstr "Vybrať súbor rozšírenia"
+msgstr "Súbory skopírované do priečinka rozšírení:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Not found or cannot be read:"
-msgstr "Chyba.~%~s nenájdený alebo nemožno prečítať.~%"
+msgstr "Nenašli sa alebo ich nemožno prečítať:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Unsupported file type:"
-msgstr "Nepoužité filtre:"
+msgstr "Nepodporovaný typ súboru:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Files already installed ('Allow Overwriting' disabled):"
-msgstr ""
+msgstr "Súbory už nainštalované (možnosť Povoliť prepísanie je zakázaná):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Cannot be written to plug-ins folder:"
-msgstr ""
+msgstr "Nemožno zapisovať do priečinka rozšírení:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%No file selected."
-msgstr "Chyba.~%~s je už nainštalovaný.~%"
+msgstr "Chyba.~%Nebol vybraný žiadny súbor."
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
@@ -20031,14 +19896,13 @@ msgid "Error.~%Unable to open file"
 msgstr "Chyba.~%Nemožno otvoriť súbor"
 
 #: plug-ins/spectral-delete.ny
-#, fuzzy
 msgid "Spectral Delete"
-msgstr "Výber spektra"
+msgstr "Spektrálne odstránenie"
 
 #: plug-ins/spectral-delete.ny
 #, lisp-format
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
-msgstr ""
+msgstr "Chyba.~%Snímková frekvencia stopy pod 100 Hz nie je podporovaná."
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
@@ -20125,7 +19989,7 @@ msgid "High Cut for Vocals (Hz)"
 msgstr "Vysoký strih pre spev (Hz)"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Average x: ~a, y: ~a\n"
 "                    Covariance x y: ~a\n"
@@ -20155,25 +20019,24 @@ msgstr ""
 "znamená:~%~a~%"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - The two channels are identical, i.e. dual mono.\n"
 "                The center can't be removed.\n"
 "                Any remaining difference may be caused by lossy encoding."
 msgstr ""
 " - Dve kanály sú identické, napr. dvojité mono.\n"
-"   Stred nemôže byť odstránený.\n"
-"      Akýkoľvek zostávajúci rozdiel môže byť spôsobený stratovým kódovaním."
+"                Stred nemôže byť odstránený.\n"
+"                Akýkoľvek zostávajúci rozdiel môže byť spôsobený stratovým "
+"kódovaním."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - The two Channels are strongly related, i.e. nearly mono or extremely "
 "panned.\n"
 "                Most likely, the center extraction will be poor."
 msgstr ""
 " - Dva kanály sú úzko prepojené, napr. blízke mono alebo extrémne vyvážené.\n"
-"   Najpravdepodobnejšie bude stredná extrakcia slabá."
+"                Najpravdepodobnejšie bude stredná extrakcia slabá."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20181,17 +20044,16 @@ msgid ""
 msgstr " - Pomerne dobrá hodnota, v priemere aspoň stereo a nie príliš široké."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - An ideal value for Stereo.\n"
 "                However, the center extraction depends also on the used "
 "reverb."
 msgstr ""
 " - Ideálna hodnota pre stereo.\n"
-"  Akokoľvek, stredná extrakcia záleží taktiež na použitom obrátení."
+"                Akokoľvek, stredná extrakcia záleží taktiež na použitom "
+"obrátení."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - The two channels are almost not related.\n"
 "                Either you have only noise or the piece is mastered in a "
@@ -20199,22 +20061,21 @@ msgid ""
 "                The center extraction can still be good though."
 msgstr ""
 " - Dva kanály takmer spolu nesúvisia.\n"
-"   Buď máte iba šum alebo časť je zriadená v nevyváženým spôsobom.\n"
-"   Aj tak môže byť stredná výťažnosť stále dobrá."
+"                Buď máte iba šum alebo časť je zriadená v nevyváženým "
+"spôsobom.\n"
+"                Aj tak môže byť stredná výťažnosť stále dobrá."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - Although the Track is stereo, the field is obviously extra wide.\n"
 "                This can cause strange effects.\n"
 "                Especially when played by only one speaker."
 msgstr ""
 " - Aj keď stopa je stereo, pole je zreteľne extra široké.\n"
-"   Toto môže spôsobovať čudné efekty.\n"
-"   Obzvlášť pri prehrávaní jedným reproduktorom."
+"                Toto môže spôsobovať čudné efekty.\n"
+"                Obzvlášť pri prehrávaní jedným reproduktorom."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - The two channels are nearly identical.\n"
 "                  Obviously, a pseudo stereo effect has been used\n"
@@ -20223,9 +20084,10 @@ msgid ""
 "                  Don't expect good results from a center removal."
 msgstr ""
 " - Dva kanály sú takmer identické.\n"
-"   Je zrejmé, že bol použitý pseudo stereo efekt\n"
-"   pre rozšírenie signálu nad fyzickú vzdialenosť medzi reproduktormi.\n"
-"Neočakávajte dobré výsledky od strednej výťažnosti."
+"                Je zrejmé, že bol použitý pseudo stereo efekt\n"
+"                pre rozšírenie signálu nad fyzickú vzdialenosť medzi "
+"reproduktormi.\n"
+"                Neočakávajte dobré výsledky od strednej výťažnosti."
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
@@ -20442,12 +20304,14 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ "Nyquist skripty (*.ny)|*.ny|Lisp skripty (*.lsp)|*.lsp|Textové súbory (*."
 #~ "txt)|*.txt|Všetky súbory|*"
 
+#, c-format
 #~ msgid "%i kbps"
 #~ msgstr "%i kbit/s"
 
 #~ msgid "XML files (*.xml)|*.xml|All files|*"
 #~ msgstr "XML súbory (*.xml)|*.xml|Všetky súbory|*"
 
+#, c-format
 #~ msgid "%s kbps"
 #~ msgstr "%s kbit/s"
 
@@ -20501,6 +20365,7 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ msgid "F&ocus"
 #~ msgstr "Za&merať"
 
+#, c-format
 #~ msgid "%s - %s"
 #~ msgstr "%s - %s"
 
@@ -20525,9 +20390,11 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ msgid "Alex S. Brown"
 #~ msgstr "Alex S. Brown"
 
+#, lisp-format
 #~ msgid "Error.~%~s is not a supported plug-in.~%"
 #~ msgstr "Chyba.~%~s nie je podporované rozšírenie.~%"
 
+#, lisp-format
 #~ msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
 #~ msgstr "Chyba.~%~s nie je správne rozšírenie Nyquist.~%"
 
