@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-04-08 19:39+0100\n"
-"PO-Revision-Date: 2019-09-08 17:21+0200\n"
+"PO-Revision-Date: 2020-04-11 12:14+0200\n"
 "Last-Translator: Joachim Huffer <joachim.huffer@gmail.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.3\n"
 "X-Poedit-Bookmarks: -1,243,-1,-1,-1,-1,-1,-1,-1,-1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -68,7 +68,7 @@ msgstr "Dateidialog fehlgeschlagen mit Fehlercode %0lx."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
-msgstr "&Nyquist-Werkbank …"
+msgstr "&Nyquist-Werkbank..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
@@ -100,7 +100,7 @@ msgstr "A&lle auswählen\tStrg+A"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Find...\tCtrl+F"
-msgstr "&Suchen …\tStrg+F"
+msgstr "&Suchen...\tStrg+F"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Matching Paren\tF8"
@@ -128,7 +128,7 @@ msgstr "&Gehe zu"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Select &Font..."
-msgstr "Schrif&tart auswählen …"
+msgstr "Schrif&tart auswählen..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Split &Vertically"
@@ -280,7 +280,7 @@ msgstr "Speichern unter"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Save script as..."
-msgstr "Skript speichern unter …"
+msgstr "Skript speichern unter..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 msgid "Copy"
@@ -412,90 +412,90 @@ msgstr "Skript stoppen"
 
 #: src/AboutDialog.cpp
 msgid "No revision identifier was provided"
-msgstr ""
+msgstr "Es wurde keine Revisionskennung angegeben"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, system administration"
-msgstr "System-Verwaltung"
+msgstr "%s, Systemverwaltung"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, co-founder and developer"
-msgstr "Mitgründer und Entwickler"
+msgstr "%s, Mitgründer und Entwickler"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, developer"
-msgstr "Entwickler"
+msgstr "%s, Entwickler"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, documentation and support"
-msgstr "Dokumentation und Unterstützung"
+msgstr "%s, Dokumentation und Unterstützung"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, documentation and support, French"
-msgstr "Dokumentation und Unterstützung, Französisch"
+msgstr "%s, Dokumentation und Unterstützung, Französisch"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, quality assurance"
-msgstr "Qualitätssicherung"
+msgstr "%s, Qualitätssicherung"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, accessibility advisor"
-msgstr "Ratgeber Barrierefreiheit"
+msgstr "%s, Ratgeber Barrierefreiheit"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, graphic artist"
-msgstr "Grafikkünstler"
+msgstr "%s, Grafikkünstler"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, composer"
-msgstr "Komponist"
+msgstr "%s, Komponist"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, tester"
-msgstr "Tester"
+msgstr "%s, Tester"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, Nyquist plug-ins"
-msgstr "Nyquist-Erweiterungen"
+msgstr "%s, Nyquist-Erweiterungen"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, web developer"
-msgstr "Webentwickler"
+msgstr "%s, Webentwickler"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, graphics"
-msgstr "Grafiken"
+msgstr "%s, Grafiken"
 
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s (incorporating %s, %s, %s, %s and %s)"
-msgstr ""
+msgstr "%s (bindet %s, %s, %s, %s und %s ein)"
 
 #: src/AboutDialog.cpp
 msgid "About Audacity"
@@ -609,7 +609,7 @@ msgid ""
 "&copy; 1999-2018 Audacity Team.<br>"
 msgstr ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> Software unterliegt dem "
-"Urheberrecht &copy; 1999-2018 Audacity-Team.<br>"
+"Urheberrecht &copy; 1999-2020 Audacity-Team.<br>"
 
 #: src/AboutDialog.cpp
 msgid ""
@@ -721,9 +721,8 @@ msgid "Extreme Pitch and Tempo Change support"
 msgstr "Unterstützung für extreme Änderung von Tonhöhe und Tempo"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Program build date:"
-msgstr "Erstellung des Programmes: "
+msgstr "Erstellung des Programmes:"
 
 #: src/AboutDialog.cpp
 msgid "Commit Id:"
@@ -740,7 +739,7 @@ msgstr "Release-Version"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, 64 bits"
-msgstr ""
+msgstr "%s, 64 bits"
 
 #: src/AboutDialog.cpp
 msgid "Build type:"
@@ -752,14 +751,12 @@ msgstr "Compiler:"
 
 #. i18n-hint: The directory audacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Installation Prefix:"
-msgstr "Installation Präfix: "
+msgstr "%s, Installation Präfix:"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Settings folder:"
-msgstr "Einstellungen-Ordner: "
+msgstr "Einstellungen-Ordner:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -842,9 +839,8 @@ msgid "Quick-Play enabled"
 msgstr "Schnelle Wiedergabe aktiviert"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Timeline Options"
-msgstr "Erweiterung-Optionen"
+msgstr "Zeitleisten-Optionen"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Enable Quick-Play"
@@ -863,9 +859,8 @@ msgid "Lock Play Region"
 msgstr "Wiedergabebereich sperren"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Pinned Play Head"
-msgstr "Aufnahme-/Wiedergabekopf nicht angeheftet"
+msgstr "Aufnahme-/Wiedergabekopf angeheftet"
 
 #: src/AdornedRulerPanel.cpp
 msgid ""
@@ -948,7 +943,7 @@ msgstr "Datei erfolgreich dekodiert\n"
 
 #: src/AudacityApp.cpp
 msgid "Audacity is starting up..."
-msgstr "Audacity startet …"
+msgstr "Audacity startet..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -958,19 +953,19 @@ msgstr "&Neu"
 #. i18n-hint: (verb)
 #: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
-msgstr "&Öffnen …"
+msgstr "&Öffnen..."
 
 #: src/AudacityApp.cpp
 msgid "Open &Recent..."
-msgstr "Zuletzt ge&öffnete Dateien …"
+msgstr "Zuletzt ge&öffnet..."
 
 #: src/AudacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Audacity..."
-msgstr "&Über Audacity …"
+msgstr "&Über Audacity..."
 
 #: src/AudacityApp.cpp
 msgid "&Preferences..."
-msgstr "&Einstellungen …"
+msgstr "&Einstellungen..."
 
 #: src/AudacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
@@ -1050,12 +1045,11 @@ msgstr "Audacity ist bereits gestartet"
 
 #: src/AudacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
-msgstr ""
+msgstr "Ein nicht behebbarer Fehler ist während des Starts aufgetreten"
 
 #: src/AudacityApp.cpp
-#, fuzzy
 msgid "Audacity Startup Failure"
-msgstr "Audacity-Projektdateien"
+msgstr "Audacity-Startfehler"
 
 #. i18n-hint: This controls the number of bytes that Audacity will
 #. *           use when writing files to the disk
@@ -1117,7 +1111,7 @@ msgstr "Audacity-Protokoll"
 
 #: src/AudacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
-msgstr "&Speichern …"
+msgstr "&Speichern..."
 
 #. i18n-hint: (verb)
 #: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
@@ -1155,9 +1149,9 @@ msgstr ""
 "\n"
 
 #: src/AudioIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s"
-msgstr "Fehler: "
+msgstr "Fehler: %s"
 
 #: src/AudioIO.cpp
 msgid "Error Initializing Audio"
@@ -1180,9 +1174,8 @@ msgid "Error Initializing Midi"
 msgstr "Fehler bei MIDI-Initialisierung"
 
 #: src/AudioIO.cpp
-#, fuzzy
 msgid "Audacity Audio"
-msgstr "Audacity-Protokoll"
+msgstr "Audacity-Audio"
 
 #: src/AudioIO.cpp src/ProjectAudioManager.cpp
 #, c-format
@@ -1597,20 +1590,20 @@ msgstr "Menübefehl (mit Parametern)"
 #: src/BatchCommands.cpp src/FileNames.cpp
 #, c-format
 msgid "(%s)"
-msgstr ""
+msgstr "(%s)"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (No Parameters)"
 msgstr "Menübefehl (ohne Parameter)"
 
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Export recording to %s\n"
 "/%s/%s.%s"
 msgstr ""
 "Aufnahme exportieren nach %s\n"
-"/%s/%s%s"
+"/%s/%s.%s"
 
 #: src/BatchCommands.cpp
 msgid "Export recording"
@@ -1739,11 +1732,11 @@ msgstr "Bitte speichern und schließen Sie zunächst das Projekt."
 
 #: src/BatchProcessDialog.cpp
 msgid "Select file(s) for batch processing..."
-msgstr "Datei(en) für Stapelverarbeitung auswählen …"
+msgstr "Datei(en) für Stapelverarbeitung auswählen..."
 
 #: src/BatchProcessDialog.cpp
 msgid "Applying..."
-msgstr "Wird angewendet …"
+msgstr "Wird angewendet..."
 
 #: src/BatchProcessDialog.cpp
 msgid "File"
@@ -1759,7 +1752,7 @@ msgstr "Ent&fernen"
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "&Rename..."
-msgstr "&Umbenennen …"
+msgstr "&Umbenennen..."
 
 #: src/BatchProcessDialog.cpp
 msgid "Re&store"
@@ -1767,12 +1760,12 @@ msgstr "&Wiederherstellen"
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
 msgid "I&mport..."
-msgstr "&Import …"
+msgstr "&Import..."
 
 #: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
 #: src/effects/Equalization.cpp
 msgid "E&xport..."
-msgstr "&Export …"
+msgstr "&Export..."
 
 #: src/BatchProcessDialog.cpp
 msgid "Edit Steps"
@@ -1797,7 +1790,7 @@ msgstr "&Einfügen"
 
 #: src/BatchProcessDialog.cpp
 msgid "&Edit..."
-msgstr "Be&arbeiten …"
+msgstr "Be&arbeiten..."
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "De&lete"
@@ -1922,18 +1915,18 @@ msgid "Test data size should be in the range 1 - 2000 MB."
 msgstr "Test-Datengröße sollte im Bereich von 1 - 2000 MB liegen."
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Using %ld chunks of %ld samples each, for a total of %.1f MB.\n"
-msgstr "Nutze %d Stücke à %d Samples, für eine Gesamtgröße von %.1f MB.\n"
+msgstr "Nutze %ld Stücke à %ld Samples, für eine Gesamtgröße von %.1f MB.\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
 msgstr "Vorbereitung...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Expected len %ld, track len %lld.\n"
-msgstr "Erwartete Länge %d, Spur Länge %lld.\n"
+msgstr "Erwartete Länge %ld, Spurlänge %lld.\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1941,9 +1934,9 @@ msgid "Performing %d edits...\n"
 msgstr "Führe %d Bearbeitungen durch...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cut: %ld - %ld \n"
-msgstr "Schnitt: %d - %d \n"
+msgstr "Schnitt: %ld - %ld \n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1951,14 +1944,14 @@ msgid "Trial %d\n"
 msgstr "Versuch %d\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cut (%ld, %ld) failed.\n"
-msgstr "Schnitt (%d, %d) fehlgeschlagen.\n"
+msgstr "Schnitt (%ld, %ld) fehlgeschlagen.\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Paste: %ld\n"
-msgstr "Einfügen: %d\n"
+msgstr "Einfügen: %ld\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1979,9 +1972,9 @@ msgid "Checking file pointer leaks:\n"
 msgstr "Überprüfe Dateizeiger-Lecks:\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Track # blocks: %ld\n"
-msgstr "Spur # Blöcke: %d\n"
+msgstr "Spur # Blöcke: %ld\n"
 
 #: src/Benchmark.cpp
 msgid "Disk # blocks: \n"
@@ -1992,18 +1985,18 @@ msgid "Doing correctness check...\n"
 msgstr "Prüfe auf Korrektheit...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Bad: chunk %ld sample %ld\n"
-msgstr "Fehler: Stück %d Sample %d\n"
+msgstr "Fehler: Stück %ld Sample %ld\n"
 
 #: src/Benchmark.cpp
 msgid "Passed correctness check!\n"
 msgstr "Korrektheit erfolgreich geprüft!\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Errors in %d/%ld chunks\n"
-msgstr "Fehler in %d/%d Stücken\n"
+msgstr "Fehler in %d/%ld Stücken\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -2025,7 +2018,7 @@ msgid ""
 "At 44100 Hz, 16-bits per sample, the estimated number of\n"
 " simultaneous tracks that could be played at once: %.1f\n"
 msgstr ""
-"Bei 44100 Hz, 16-Bits pro Sample, beträgt die geschätzte Anzahl\n"
+"Bei 44100 Hz, 16 Bits pro Sample, beträgt die geschätzte Anzahl\n"
 " von Spuren, die gleichzeitig gespielt werden könnten: %.1f\n"
 
 #: src/Benchmark.cpp
@@ -2138,7 +2131,7 @@ msgstr "Abhängigkeiten werden entfernt"
 
 #: src/Dependencies.cpp
 msgid "Copying audio data into project..."
-msgstr "Audiodaten werden ins Projekt kopiert …"
+msgstr "Audiodaten werden ins Projekt kopiert..."
 
 #: src/Dependencies.cpp
 msgid "Project Depends on Other Audio Files"
@@ -2422,70 +2415,65 @@ msgstr "Rechteck"
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Bartlett"
-msgstr ""
+msgstr "Bartlett"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
-#, fuzzy
 msgid "Hamming"
-msgstr "Hamming, keine"
+msgstr "Hamming"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Hann"
-msgstr ""
+msgstr "Hann"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
-#, fuzzy
 msgid "Blackman"
-msgstr "Blackman, Hann"
+msgstr "Blackman"
 
 #. i18n-hint two proper names
 #: src/FFT.cpp
-#, fuzzy
 msgid "Blackman-Harris"
-msgstr "Blackman, Hann"
+msgstr "Blackman-Harris"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
-#, fuzzy
 msgid "Welch"
-msgstr "Willkommen!"
+msgstr "Welch"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: src/FFT.cpp
 msgid "Gaussian(a=2.5)"
-msgstr ""
+msgstr "Gauß (a=2,5)"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: src/FFT.cpp
 msgid "Gaussian(a=3.5)"
-msgstr ""
+msgstr "Gauß (a=3,5)"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: src/FFT.cpp
 msgid "Gaussian(a=4.5)"
-msgstr ""
+msgstr "Gauß (a=4,5)"
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
 msgstr "FFmpeg-Unterstützung wurde nicht mit kompiliert"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid ""
 "FFmpeg was configured in Preferences and successfully loaded before, \n"
 "but this time Audacity failed to load it at startup. \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
-"FFmpeg wurde bereits in den Einstellungen konfiguriert und war auch schon "
+"FFmpeg wurde in den Einstellungen konfiguriert und wurde auch bereits "
 "erfolgreich geladen,\n"
 "aber dieses Mal konnte Audacity es beim Start nicht laden. \n"
 "\n"
-"Sie können zu „Einstellungen“ > „Bibliotheken“ gehen, um es erneut zu "
-"konfigurieren."
+"Sie können zu „Einstellungen“ > „Bibliotheken“ gehen und es "
+"nachkonfigurieren."
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg startup failed"
@@ -2518,7 +2506,7 @@ msgstr "Um „%s“ zu suchen, klicken Sie hier -->"
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
-msgstr "Durchsuchen …"
+msgstr "Durchsuchen..."
 
 #: src/FFmpeg.cpp
 msgid "To get a free copy of FFmpeg, click here -->"
@@ -2567,11 +2555,11 @@ msgstr "Es wurden keine kompatiblen FFmpeg-Bibliotheken gefunden."
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
 #: src/FFmpeg.h
 msgid "Only avformat.dll"
-msgstr ""
+msgstr "Nur avformat.dll"
 
 #: src/FFmpeg.h
 msgid "Only libavformat.so"
-msgstr ""
+msgstr "Nur libavformat.so"
 
 #: src/FileException.cpp
 #, c-format
@@ -2630,9 +2618,8 @@ msgid "As&k"
 msgstr "&Fragen"
 
 #: src/FileNames.cpp
-#, fuzzy
 msgid "All files"
-msgstr "Alle Dateien|*"
+msgstr "Alle Dateien"
 
 #. i18n-hint an Audacity project is the state of the program, stored as
 #. files that can be reopened to resume the session later
@@ -2642,33 +2629,30 @@ msgstr "Audacity-Projekte"
 
 #: src/FileNames.cpp
 msgid "Dynamically Linked Libraries"
-msgstr ""
+msgstr "Dynamically Linked Libraries"
 
 #: src/FileNames.cpp
-#, fuzzy
 msgid "Dynamic Libraries"
-msgstr "Bibliotheken"
+msgstr "Dynamische Bibliotheken"
 
 #: src/FileNames.cpp
-#, fuzzy
 msgid "Text files"
-msgstr "Dateien benennen:"
+msgstr "Textdateien"
 
 #: src/FileNames.cpp
-#, fuzzy
 msgid "XML files"
-msgstr "MP3-Dateien"
+msgstr "XML-Dateien"
 
 #: src/FileNames.cpp
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #. i18n-hint a type or types such as "txt" or "txt, xml" will be
 #. substituted for %s
 #: src/FileNames.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s files"
-msgstr "MP3-Dateien"
+msgstr "%s-Dateien"
 
 #: src/FileNames.cpp
 msgid ""
@@ -2708,9 +2692,9 @@ msgstr "Cepstrum"
 #. * such as Hann or Rectangular, used in the
 #. * Frequency analyze dialog box.
 #: src/FreqWindow.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s window"
-msgstr "Fenster"
+msgstr "%s-Fenster"
 
 #: src/FreqWindow.cpp
 msgid "Linear frequency"
@@ -2770,7 +2754,7 @@ msgstr "&Größe:"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "&Export..."
-msgstr "&Export …"
+msgstr "&Export..."
 
 #: src/FreqWindow.cpp
 msgid "&Function:"
@@ -2782,7 +2766,7 @@ msgstr "&Achse:"
 
 #: src/FreqWindow.cpp
 msgid "&Replot..."
-msgstr "&Neu zeichnen …"
+msgstr "&Neu zeichnen..."
 
 #: src/FreqWindow.cpp
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
@@ -2862,7 +2846,7 @@ msgstr "Frequenzanalyse"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
-msgstr "Spektrum zeichnen ..."
+msgstr "Spektrum zeichnen..."
 
 #: src/HelpText.cpp
 msgid "Welcome!"
@@ -3103,7 +3087,7 @@ msgstr "&OK"
 #. that have been taken.
 #: src/HistoryWindow.cpp
 msgid "&History..."
-msgstr "&Verlauf …"
+msgstr "&Verlauf..."
 
 #: src/InconsistencyException.cpp
 #, c-format
@@ -3152,7 +3136,7 @@ msgstr "GB"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
-msgstr "Textmarken bearbeiten"
+msgstr "Beschritftungen bearbeiten"
 
 #. i18n-hint: (noun).  A track contains waves, audio etc.
 #: src/LabelDialog.cpp
@@ -3187,7 +3171,7 @@ msgstr "Hohe Frequenz"
 
 #: src/LabelDialog.cpp
 msgid "New..."
-msgstr "Neu …"
+msgstr "Neu..."
 
 #: src/LabelDialog.cpp
 msgid "Press F2 or double click to edit cell contents."
@@ -3253,14 +3237,12 @@ msgstr ""
 "ab: %s (%s)."
 
 #: src/Languages.cpp
-#, fuzzy
 msgid "Simplified"
-msgstr "Einfach"
+msgstr "Vereinfacht"
 
 #: src/Languages.cpp
-#, fuzzy
 msgid "System"
-msgstr "System&datum"
+msgstr "System"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3286,23 +3268,27 @@ msgstr "Audacity-Karaoke%s"
 
 #: src/LyricsWindow.cpp
 msgid "&Karaoke..."
-msgstr "&Karaoke …"
+msgstr "&Karaoke..."
 
 #: src/Menus.cpp
 #, c-format
 msgid "Plug-in group at %s was merged with a previously defined group"
 msgstr ""
+"Erweiterungsgruppe bei %s wurde mit einer zuvor definierten Gruppe "
+"zusammengeführt"
 
 #: src/Menus.cpp
 #, c-format
 msgid ""
 "Plug-in item at %s conflicts with a previously defined item and was discarded"
 msgstr ""
+"Erweiterung bei %s ist mit einer zuvor definierten Erweiterung in Konflikt "
+"und wurde verworfen"
 
 #: src/Menus.cpp
 #, c-format
 msgid "Plug-in items at %s specify conflicting placements"
-msgstr ""
+msgstr "Erweiterungen bei %s spezifizieren widersprüchliche Platzierungen"
 
 #: src/Menus.cpp
 #, c-format
@@ -3414,15 +3400,18 @@ msgstr "Audacity-Mixer%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
-msgstr "&Mixer ..."
+msgstr "&Mixer..."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to load the \"%s\" module.\n"
 "\n"
 "Error: %s"
-msgstr "Voreinstellungsdatei konnte nicht geladen werden."
+msgstr ""
+"Das Modul \"%s\" konnte nicht geladen werden.\n"
+"\n"
+"Fehler: %s"
 
 #: src/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -3431,60 +3420,63 @@ msgstr "Modul unpassend"
 #: src/ModuleManager.cpp
 #, c-format
 msgid "Unable to load the module \"%s\". Error: %s"
-msgstr ""
+msgstr "Kann das Modul \"%s\" nicht laden. Fehler: %s"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide a version string.\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"Das Modul %s enthält keinen Versionsstring.\n"
+"Das Modul \"%s\" stellt keinen Versionsstring bereit.\n"
+"\n"
 "Es wird nicht geladen."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide a version string. It will not be loaded."
 msgstr ""
-"Das Modul %s stellt keinen Versionsstring bereit. Es wird nicht geladen."
+"Das Modul \"%s\" stellt keinen Versionsstring bereit. Es wird nicht geladen."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" is matched with Audacity version \"%s\".\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"Das Modul %s ist für Audacity Version %s.\n"
+"Das Modul \"%s\" passt zu Audacity-Version \"%s\".\n"
 "\n"
 "Es wird nicht geladen."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
 "loaded."
-msgstr "Das Modul %s passt zu Audacity Version %s. Es wird nicht geladen."
+msgstr ""
+"Das Modul \"%s\" passt zu Audacity-Version \"%s\". Es wird nicht geladen."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" failed to initialize.\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"Das Modul %s enthält keinen Versionsstring.\n"
+"Das Modul \"%s\" konnte nicht initialisiert werden.\n"
+"\n"
 "Es wird nicht geladen."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" failed to initialize.\n"
 "It will not be loaded."
 msgstr ""
-"Das Modul %s enthält keinen Versionsstring.\n"
+"Das Modul \"%s\" konnte nicht initialisiert werden.\n"
 "Es wird nicht geladen."
 
 #: src/ModuleManager.cpp
@@ -3521,22 +3513,24 @@ msgid "Try and load this module?"
 msgstr "Versuchen, dieses Modul zu laden?"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide any of the required functions.\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"Das Modul %s enthält keinen Versionsstring.\n"
+"Das Modul \"%s\" stellt keine der benötigten Funktionen bereit.\n"
+"\n"
 "Es wird nicht geladen."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide any of the required functions. It will "
 "not be loaded."
 msgstr ""
-"Das Modul %s stellt keinen Versionsstring bereit. Es wird nicht geladen."
+"Das Modul \"%s\" stellt keine der benötigten Funktionen bereit. Es wird "
+"nicht geladen."
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3787,11 +3781,10 @@ msgstr ""
 "%s"
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
-msgstr[0] "Diese Erweiterung aktivieren?"
-msgstr[1] "Diese Erweiterungen aktivieren?"
+msgstr[0] "Diese Erweiterung aktivieren?\n"
+msgstr[1] "Diese Erweiterungen aktivieren?\n"
 
 #: src/PluginManager.cpp
 msgid "Enable new plug-ins"
@@ -4092,7 +4085,7 @@ msgstr "<unbenannt>"
 #: src/ProjectFileIO.cpp
 #, c-format
 msgid "[Project %02i] Audacity \"%s\""
-msgstr ""
+msgstr "[Projekt %02i] Audacity \"%s\""
 
 #. i18n-hint: E.g this is recovered audio that had been lost.
 #: src/ProjectFileIO.cpp
@@ -4297,7 +4290,7 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid "%sSave Project \"%s\" As..."
-msgstr "%sProjekt „%s“ speichern unter …"
+msgstr "%sProjekt \"%s\" speichern unter..."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4553,7 +4546,7 @@ msgstr "Beste Qualität (am langsamsten)"
 #. i18n-hint: Audio data bit depth (precision): 16-bit integers
 #: src/SampleFormat.cpp
 msgid "16-bit PCM"
-msgstr "16-bit PCM"
+msgstr "16-Bit-PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 24-bit integers
 #: src/SampleFormat.cpp
@@ -4566,9 +4559,8 @@ msgid "32-bit float"
 msgstr "32-bit Fließkomma"
 
 #: src/SampleFormat.cpp
-#, fuzzy
 msgid "Unknown format"
-msgstr "Unbekannt"
+msgstr "Unbekanntes Format"
 
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
@@ -4584,7 +4576,7 @@ msgstr "Bilder speichern in:"
 
 #: src/Screenshot.cpp src/export/ExportMultiple.cpp
 msgid "Choose..."
-msgstr "Auswählen …"
+msgstr "Auswählen..."
 
 #: src/Screenshot.cpp
 msgid "Capture entire window or screen"
@@ -4660,9 +4652,8 @@ msgid "Spectral Selection"
 msgstr "Spektralauswahl"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Timer"
-msgstr "Zeit:"
+msgstr "Timer"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/ToolsToolBar.cpp
@@ -4906,11 +4897,11 @@ msgstr "Genres"
 
 #: src/Tags.cpp
 msgid "E&dit..."
-msgstr "Be&arbeiten …"
+msgstr "Be&arbeiten..."
 
 #: src/Tags.cpp
 msgid "Rese&t..."
-msgstr "Zurückse&tzen …"
+msgstr "Zurückse&tzen..."
 
 #: src/Tags.cpp
 msgid "Template"
@@ -4918,7 +4909,7 @@ msgstr "Vorlage"
 
 #: src/Tags.cpp
 msgid "&Load..."
-msgstr "&Laden …"
+msgstr "&Laden..."
 
 #: src/Tags.cpp
 msgid "Set De&fault"
@@ -5480,11 +5471,12 @@ msgid " Select On"
 msgstr " Auswählen An"
 
 #: src/TrackPanelResizeHandle.cpp
-#, fuzzy
 msgid ""
 "Click and drag to adjust relative size of stereo tracks, double-click to "
 "make heights equal"
-msgstr "Klicken und Ziehen um die relative Größe von Stereospuren zu ändern."
+msgstr ""
+"Klicken und Ziehen um die relative Größe von Stereospuren zu ändern, "
+"Doppelklicken um die Höhen anzugleichen"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -5614,7 +5606,7 @@ msgstr ""
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid "Applying %s..."
-msgstr "Wende %s an …"
+msgstr "Wende %s an..."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -5628,7 +5620,7 @@ msgstr "%s: %s"
 
 #: src/commands/AudacityCommand.h
 msgid "FAIL"
-msgstr ""
+msgstr "FEHLER"
 
 #: src/commands/BatchEvalCommand.cpp
 msgid "Batch Command"
@@ -5655,6 +5647,8 @@ msgid ""
 "\n"
 "* %s, because you have assigned the shortcut %s to %s"
 msgstr ""
+"\n"
+"* %s, weil Sie die Verknüpfung %s %s zugewiesen haben"
 
 #: src/commands/CommandManager.cpp
 msgid ""
@@ -5662,10 +5656,13 @@ msgid ""
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
 msgstr ""
+"Die Verknüpfungen der folgenden Befehle wurden entfernt, weil Ihre "
+"Standardverknüpfung neu oder verändert ist. Sie haben dieselbe Verknüpfung "
+"ebenfalls bereits einem anderem Befehl zugewiesen."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
-msgstr ""
+msgstr "Verknüpfungen wurden entfernt"
 
 #: src/commands/CommandTargets.cpp
 msgid "Long Message"
@@ -5677,7 +5674,7 @@ msgstr "Audio vergleichen"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Threshold:"
-msgstr "Grenzwert:"
+msgstr "Schwellenwert:"
 
 #: src/commands/CompareAudioCommand.h
 msgid "Compares a range on two tracks."
@@ -5927,9 +5924,8 @@ msgid "Value:"
 msgstr "Wert:"
 
 #: src/commands/PreferenceCommands.cpp
-#, fuzzy
 msgid "Reload"
-msgstr "Neuladen:"
+msgstr "Neuladen"
 
 #: src/commands/PreferenceCommands.h
 msgid "Gets the value of a single preference."
@@ -6029,9 +6025,8 @@ msgid "Background:"
 msgstr "Hintergrund:"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Bring To Top"
-msgstr "Nach vorne bringen:"
+msgstr "Nach vorne bringen"
 
 #: src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -6161,7 +6156,6 @@ msgid "At:"
 msgstr "Bei:"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color:"
 msgstr "Farbe:"
 
@@ -6345,23 +6339,20 @@ msgid "Increases or decreases the volume of the audio you have selected"
 msgstr "Erhöht oder verringert die Lautstärke des ausgewählten Audios"
 
 #: src/effects/Amplify.cpp
-#, fuzzy
 msgid "&Amplification (dB):"
-msgstr "Verstärkung (dB):"
+msgstr "&Verstärkung (dB):"
 
 #: src/effects/Amplify.cpp
 msgid "Amplification dB"
 msgstr "Verstärkung dB"
 
 #: src/effects/Amplify.cpp
-#, fuzzy
 msgid "&New Peak Amplitude (dB):"
-msgstr "Neue Spitzenamplitude (dB):"
+msgstr "&Neue Spitzenamplitude (dB):"
 
 #: src/effects/Amplify.cpp
-#, fuzzy
 msgid "Allo&w clipping"
-msgstr "Übersteuerungen erlauben"
+msgstr "Übersteue&rungen erlauben"
 
 #: src/effects/AutoDuck.cpp
 msgid "Auto Duck"
@@ -6399,12 +6390,11 @@ msgstr ""
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
-msgstr ""
+msgstr "db"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Duck &amount:"
-msgstr "Lautstärke-Absenkung:"
+msgstr "Lautstärke-&Absenkung:"
 
 #. i18n-hint: Name of time display format that shows time in seconds
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
@@ -6414,35 +6404,29 @@ msgid "seconds"
 msgstr "Sekunden"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Ma&ximum pause:"
-msgstr "Maximale Pause:"
+msgstr "Ma&ximale Pause:"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Outer fade &down length:"
-msgstr "Äußeres abblenden-Länge:"
+msgstr "Äußeres Abbl&enden-Länge:"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Outer fade &up length:"
-msgstr "Äußeres aufblenden-Länge:"
+msgstr "Äußeres A&ufblenden-Länge:"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Inner fade d&own length:"
-msgstr "Inneres abblenden-Länge:"
+msgstr "Inneres Abblenden-L&änge:"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Inner &fade up length:"
-msgstr "Inneres aufblenden-Länge:"
+msgstr "Inneres Au&fblenden-Länge:"
 
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "&Threshold:"
-msgstr "Grenzwert:"
+msgstr "Schwellenwer&t:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
@@ -6527,9 +6511,8 @@ msgstr "von"
 #. i18n-hint: changing a quantity "from" one value "to" another
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "&from"
-msgstr "von"
+msgstr "&von"
 
 #: src/effects/ChangePitch.cpp
 msgid "from Octave"
@@ -6543,9 +6526,8 @@ msgstr "bis"
 #. i18n-hint: changing a quantity "from" one value "to" another
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "&to"
-msgstr "bis"
+msgstr "&bis"
 
 #: src/effects/ChangePitch.cpp
 msgid "to Octave"
@@ -6556,9 +6538,8 @@ msgid "Semitones (half-steps)"
 msgstr "Halbtöne (in Halbschritten)"
 
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgid "&Semitones (half-steps):"
-msgstr "Halbtöne (in Halbschritten):"
+msgstr "&Halbtöne (in Halbschritten):"
 
 #: src/effects/ChangePitch.cpp
 msgid "Frequency"
@@ -6570,7 +6551,7 @@ msgstr "von (Hz)"
 
 #: src/effects/ChangePitch.cpp
 msgid "f&rom"
-msgstr ""
+msgstr "&von"
 
 #: src/effects/ChangePitch.cpp
 msgid "to (Hz)"
@@ -6579,15 +6560,13 @@ msgstr "bis (Hz)"
 #. i18n-hint: changing a quantity "from" one value "to" another
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "t&o"
-msgstr "bis"
+msgstr "&bis"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "Percent C&hange:"
-msgstr "Änderung in Prozent:"
+msgstr "Änderung in &Prozent:"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
@@ -6595,23 +6574,20 @@ msgid "Percent Change"
 msgstr "Änderung in Prozent"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "&Use high quality stretching (slow)"
-msgstr "Dehnung mit hoher Qualität verwenden (langsam)"
+msgstr "Dehn&ung mit hoher Qualität verwenden (langsam)"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "33⅓"
-msgstr ""
+msgstr "33⅓"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "45"
-msgstr "4"
+msgstr "45"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "78"
-msgstr "8"
+msgstr "78"
 
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
@@ -6634,9 +6610,8 @@ msgid "Change Speed, affecting both Tempo and Pitch"
 msgstr "Geschwindigkeit ändern, beeinflusst Tempo und Tonhöhe"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "&Speed Multiplier:"
-msgstr "Geschwindigkeitsmultiplikator:"
+msgstr "Ge&schwindigkeitsmultiplikator:"
 
 #. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
 #. "vinyl" refers to old-fashioned phonograph records
@@ -6658,18 +6633,16 @@ msgid "Selection Length"
 msgstr "Auswahllänge"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "C&urrent Length:"
-msgstr "Aktuelle Länge:"
+msgstr "Akt&uelle Länge:"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Current length of selection."
 msgstr "Aktuelle Auswahllänge."
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "&New Length:"
-msgstr "Neue Länge:"
+msgstr "&Neue Länge:"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo"
@@ -6730,18 +6703,16 @@ msgid "Selection must be larger than %d samples."
 msgstr "Auswahl muss größer als %d Samples sein."
 
 #: src/effects/ClickRemoval.cpp
-#, fuzzy
 msgid "&Threshold (lower is more sensitive):"
-msgstr "Schwellenwert (niedriger bedeutet empfindlicher):"
+msgstr "Schwellenwer&t (niedriger bedeutet empfindlicher):"
 
 #: src/effects/ClickRemoval.cpp src/effects/Compressor.cpp
 msgid "Threshold"
 msgstr "Schwellenwert"
 
 #: src/effects/ClickRemoval.cpp
-#, fuzzy
 msgid "Max &Spike Width (higher is more sensitive):"
-msgstr "Maximale Spitzenbreite (höher bedeutet empfindlicher):"
+msgstr "Max. &Spitzenbreite (höher bedeutet empfindlicher):"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Max Spike Width"
@@ -6796,18 +6767,16 @@ msgid "Ratio %.1f to 1"
 msgstr "Verhältnis %.1f zu 1"
 
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "&Noise Floor:"
-msgstr "Grundrauschen:"
+msgstr "Gru&ndrauschen:"
 
 #: src/effects/Compressor.cpp src/effects/Distortion.cpp
 msgid "Noise Floor"
 msgstr "Grundrauschen"
 
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "&Ratio:"
-msgstr "Verhältnis:"
+msgstr "&Verhältnis:"
 
 #: src/effects/Compressor.cpp
 msgid "Ratio"
@@ -6817,9 +6786,8 @@ msgstr "Verhältnis"
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "&Attack Time:"
-msgstr "Ansprechzeit:"
+msgstr "&Ansprechzeit:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
@@ -6832,9 +6800,8 @@ msgstr "Ansprechzeit"
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "R&elease Time:"
-msgstr "Abklingzeit:"
+msgstr "Abklingz&eit:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
@@ -6845,16 +6812,14 @@ msgstr "Abklingzeit"
 
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr "Anhebung auf 0 dB nach dem Komprimieren"
+msgstr "Ma&ke-up Verstärkung auf 0 dB nach dem Komprimieren"
 
 #. i18n-hint: "Compress" here means reduce variations of sound volume,
 #. NOT related to file-size compression; Peaks means extremes in volume
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "C&ompress based on Peaks"
-msgstr "Kurze Spitzen berücksichtigen"
+msgstr "Basierend auf Spitzen k&omprimieren"
 
 #: src/effects/Compressor.cpp
 #, c-format
@@ -7129,7 +7094,7 @@ msgstr "Daten gesammelt"
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%d %s %02d %02dh %02dm %02ds"
-msgstr ""
+msgstr "%d %s %02d %02dh %02dm %02ds"
 
 #: src/effects/Contrast.cpp
 msgid "Contrast Analysis (WCAG 2 compliance)"
@@ -7137,7 +7102,7 @@ msgstr "Kontrast-Analyse (nach WCAG 2)"
 
 #: src/effects/Contrast.cpp
 msgid "Contrast..."
-msgstr "Kontrast …"
+msgstr "Kontrast..."
 
 #: src/effects/Distortion.cpp
 msgid "Hard Clipping"
@@ -7362,33 +7327,28 @@ msgid "Residual level"
 msgstr "Restmenge"
 
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "(Not Used):"
-msgstr " (Nicht verwendet):"
+msgstr "(Nicht verwendet):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "(-100 to 0 dB):"
-msgstr " (-100 bis 0 dB):"
+msgstr "(-100 bis 0 dB):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "(-80 to -20 dB):"
-msgstr " (-80 bis -20 dB):"
+msgstr "(-80 bis -20 dB):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "(0 to 100):"
-msgstr " (0 bis 100):"
+msgstr "(0 bis 100):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "(0 to 5):"
-msgstr " (0 bis 5):"
+msgstr "(0 bis 5):"
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF Tones"
@@ -7407,16 +7367,16 @@ msgid ""
 "DTMF sequence empty.\n"
 "Check ALL settings for this effect."
 msgstr ""
+"DTMF Sequenz leer.\n"
+"Prüfen Sie für diesen Effekt ALLE Einstellungen."
 
 #: src/effects/DtmfGen.cpp
-#, fuzzy
 msgid "DTMF &sequence:"
-msgstr "DTMF-Abfolge:"
+msgstr "DTMF-&Abfolge:"
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/ToneGen.cpp
-#, fuzzy
 msgid "&Amplitude (0-1):"
-msgstr "Amplitude (0-1):"
+msgstr "&Amplitude (0-1):"
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
 #: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
@@ -7425,18 +7385,17 @@ msgid "&Duration:"
 msgstr "&Dauer:"
 
 #: src/effects/DtmfGen.cpp
-#, fuzzy
 msgid "&Tone/silence ratio:"
-msgstr "Ton/Stille-Verhältnis:"
+msgstr "&Ton/Stille-Verhältnis:"
 
 #: src/effects/DtmfGen.cpp
 msgid "Duty cycle:"
 msgstr "Aufgabenablauf:"
 
 #: src/effects/DtmfGen.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.1f %%"
-msgstr "%.1f Sekunden"
+msgstr "%.1f %%"
 
 #: src/effects/DtmfGen.cpp
 msgid "Tone duration:"
@@ -7454,9 +7413,9 @@ msgstr "Dauer der Stille:"
 
 #. i18n-hint milliseconds
 #: src/effects/DtmfGen.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%0.f ms"
-msgstr "%.0f ms"
+msgstr "%0.f ms"
 
 #: src/effects/Echo.cpp
 msgid "Echo"
@@ -7472,28 +7431,24 @@ msgid "Requested value exceeds memory capacity."
 msgstr "Geforderter Wert übersteigt die Speicherkapazität."
 
 #: src/effects/Echo.cpp
-#, fuzzy
 msgid "&Delay time (seconds):"
-msgstr "Verzögerung (Sekunden):"
+msgstr "&Verzögerungszeit (Sekunden):"
 
 #: src/effects/Echo.cpp
-#, fuzzy
 msgid "D&ecay factor:"
-msgstr "Abklingfaktor:"
+msgstr "Abkl&ingfaktor:"
 
 #: src/effects/Effect.cpp
 msgid "Built-in"
 msgstr "Integriert"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Export Effect Parameters"
-msgstr "&Parameter ändern"
+msgstr "Effektparameter exportieren"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Presets (*.txt)|*.txt|All files|*"
-msgstr "Textdateien (*.txt)|*.txt|Alle Dateien|*"
+msgstr "Voreinstellungen (*.txt)|*.txt|Alle Dateien|*"
 
 #: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
 #: src/xml/XMLFileReader.cpp
@@ -7511,21 +7466,20 @@ msgid "Error writing to file: \"%s\""
 msgstr "Fehler beim Schreiben in Datei: „%s“"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Import Effect Parameters"
-msgstr "&Parameter ändern"
+msgstr "Effektparameter importieren"
 
 #. i18n-hint %s will be replaced by a file name
 #: src/effects/Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s: is not a valid presets file.\n"
-msgstr "\"%s\" ist kein gültiger Pfad."
+msgstr "%s: ist keine gültige Voreinstellungendatei.\n"
 
 #. i18n-hint %s will be replaced by a file name
 #: src/effects/Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
-msgstr "Erweiterungs-Manager: Effekte, Generatoren und Analysewerkzeuge"
+msgstr "%s: ist für einen anderen Effekt, Generator oder Analysewerkzeug\n"
 
 #: src/effects/Effect.cpp
 msgid "Preparing preview"
@@ -7738,7 +7692,7 @@ msgstr "Aktivieren"
 
 #: src/effects/EffectUI.cpp
 msgid "Save Preset..."
-msgstr "Voreinstellung speichern …"
+msgstr "Voreinstellung speichern..."
 
 #: src/effects/EffectUI.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "Delete Preset"
@@ -7750,15 +7704,15 @@ msgstr "Standards"
 
 #: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
 msgid "Import..."
-msgstr "Import …"
+msgstr "Import..."
 
 #: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
 msgid "Export..."
-msgstr "Exportieren …"
+msgstr "Exportieren..."
 
 #: src/effects/EffectUI.cpp src/widgets/Meter.cpp
 msgid "Options..."
-msgstr "Optionen …"
+msgstr "Optionen..."
 
 #: src/effects/EffectUI.cpp
 #, c-format
@@ -7851,9 +7805,8 @@ msgid "Equalization"
 msgstr "Equalizer"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Filter Curve EQ"
-msgstr "Filterkurve"
+msgstr "Filterkurve-EQ"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 msgid "Graphic EQ"
@@ -7911,9 +7864,8 @@ msgstr ""
 "'unbenannte' Kurve um. Danach verwenden Sie diese."
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Filter Curve EQ needs a different name"
-msgstr "Filter-Kurve braucht einen anderen Namen"
+msgstr "Filterkurve-EQ braucht einen anderen Namen"
 
 #: src/effects/Equalization.cpp
 msgid ""
@@ -7963,9 +7915,9 @@ msgstr "%g kHz"
 
 #. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%gk"
-msgstr "%g kHz"
+msgstr "%gk"
 
 #: src/effects/Equalization.cpp
 msgid "&EQ Type:"
@@ -8013,7 +7965,7 @@ msgstr "Kurve wählen"
 
 #: src/effects/Equalization.cpp
 msgid "S&ave/Manage Curves..."
-msgstr "Kurven &verwalten/speichern …"
+msgstr "Kurven &verwalten/speichern..."
 
 #: src/effects/Equalization.cpp
 msgid "Fla&tten"
@@ -8112,11 +8064,11 @@ msgstr "Kurvenname"
 
 #: src/effects/Equalization.cpp
 msgid "D&elete..."
-msgstr "&Löschen …"
+msgstr "&Löschen..."
 
 #: src/effects/Equalization.cpp
 msgid "&Get More..."
-msgstr "&Mehr herunterladen …"
+msgstr "&Mehr herunterladen..."
 
 #: src/effects/Equalization.cpp
 msgid "De&faults"
@@ -8145,7 +8097,7 @@ msgstr "'%s' umbenennen zu..."
 
 #: src/effects/Equalization.cpp
 msgid "Rename..."
-msgstr "Umbenennen …"
+msgstr "Umbenennen..."
 
 #: src/effects/Equalization.cpp
 #, c-format
@@ -8202,7 +8154,7 @@ msgstr "Wählen Sie eine EQ-Kurvendatei"
 
 #: src/effects/Equalization.cpp
 msgid "Export EQ curves as..."
-msgstr "EQ-Kurven exportieren als …"
+msgstr "EQ-Kurven exportieren als..."
 
 #: src/effects/Equalization.cpp
 msgid "You cannot export 'unnamed' curve, it is special."
@@ -8273,14 +8225,12 @@ msgid "Clipping"
 msgstr "Übersteuerungen"
 
 #: src/effects/FindClipping.cpp
-#, fuzzy
 msgid "&Start threshold (samples):"
-msgstr "Mindest-Wert (Samples):"
+msgstr "&Start-Schwellenwert (Samples):"
 
 #: src/effects/FindClipping.cpp
-#, fuzzy
 msgid "St&op threshold (samples):"
-msgstr "Maximal-Wert (Samples):"
+msgstr "St&op-Schwellenwert (Samples):"
 
 #: src/effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
@@ -8308,9 +8258,8 @@ msgid "Unknown built-in effect name"
 msgstr "Unbekannter Name von integriertem Effekt"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "perceived loudness"
-msgstr "Lautheit normalisieren auf"
+msgstr "Wahrgenommene Lautheit"
 
 #: src/effects/Loudness.cpp src/widgets/Meter.cpp
 msgid "RMS"
@@ -8318,17 +8267,15 @@ msgstr "Effektivwert"
 
 #: src/effects/Loudness.cpp
 msgid "Loudness Normalization"
-msgstr ""
+msgstr "Lautheit-Normalisierung"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "Sets the loudness of one or more tracks"
-msgstr "Legt die Spitzen-Amplitude von einer oder mehreren Spuren fest"
+msgstr "Legt die Lautheit von einer oder mehreren Spuren fest"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "Normalizing Loudness...\n"
-msgstr "Lautheit normalisieren auf"
+msgstr "Normalisiere Lautheit...\n"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 #, c-format
@@ -8341,9 +8288,8 @@ msgid "Processing: %s"
 msgstr "Bearbeite: %s"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "&Normalize"
-msgstr "Normalisieren"
+msgstr "&Normalisieren"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Loudness.cpp
@@ -8356,13 +8302,12 @@ msgid "LUFS"
 msgstr "LUFS"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "Normalize &stereo channels independently"
-msgstr "Stereokanäle unabhängig voneinander normalisieren"
+msgstr "&Stereokanäle unabhängig voneinander normalisieren"
 
 #: src/effects/Loudness.cpp
 msgid "&Treat mono as dual-mono (recommended)"
-msgstr ""
+msgstr "&Mono als Dual-Mono behandeln (empfohlen)"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 msgid "Waiting for waveform to finish computing..."
@@ -8374,7 +8319,7 @@ msgstr "(Maximal 0dB)"
 
 #: src/effects/Loudness.cpp
 msgid "RMS dB"
-msgstr ""
+msgstr "RMS dB"
 
 #: src/effects/Noise.cpp
 msgid "Pink"
@@ -8393,9 +8338,8 @@ msgid "Generates one of three different types of noise"
 msgstr "Erzeugt eine von drei unterschiedlichen Geräuscharten"
 
 #: src/effects/Noise.cpp
-#, fuzzy
 msgid "&Noise type:"
-msgstr "Rausch-Art:"
+msgstr "&Rausch-Art:"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Median"
@@ -8587,14 +8531,12 @@ msgid "Advanced Settings"
 msgstr "Erweiterte Einstellungen"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "&Window types:"
-msgstr "Fenstert&ypen"
+msgstr "Fenstert&ypen:"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Window si&ze:"
-msgstr "Fenstergr&öße"
+msgstr "Fenstergr&öße:"
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "8"
@@ -8645,9 +8587,8 @@ msgid "16384"
 msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "S&teps per window:"
-msgstr "Schri&tte pro Fenster"
+msgstr "Schri&tte pro Fenster:"
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFFmpegDialogs.cpp
 #: src/export/ExportFLAC.cpp
@@ -8659,9 +8600,8 @@ msgid "4 (default)"
 msgstr "4 (Standard)"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Discrimination &method:"
-msgstr "Differenzierungs&methode"
+msgstr "Differenzierungs&methode:"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Noise Removal"
@@ -8757,23 +8697,20 @@ msgid "Processing second track of stereo pair: %s"
 msgstr "Bearbeite zweite Spur von Stereopaar: %s"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "&Remove DC offset (center on 0.0 vertically)"
-msgstr "Gleichspannung entfernen (vertikal auf 0.0 zentrieren)"
+msgstr "Gleichspannungsversatz entfe&rnen (vertikal auf 0.0 zentrieren)"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "&Normalize peak amplitude to   "
-msgstr "Spitzenamplitude normalisieren auf"
+msgstr "Spitzenamplitude &normalisieren auf   "
 
 #: src/effects/Normalize.cpp
 msgid "Peak amplitude dB"
 msgstr "Spitzenamplitude dB"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "N&ormalize stereo channels independently"
-msgstr "Stereokanäle unabhängig voneinander normalisieren"
+msgstr "Stereokanäle unabhängig voneinander n&ormalisieren"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch"
@@ -8790,14 +8727,12 @@ msgstr ""
 #. * will give an (approximately) 10 second sound
 #.
 #: src/effects/Paulstretch.cpp
-#, fuzzy
 msgid "&Stretch Factor:"
-msgstr "Dehnungs-Faktor:"
+msgstr "Dehnung&s-Faktor:"
 
 #: src/effects/Paulstretch.cpp
-#, fuzzy
 msgid "&Time Resolution (seconds):"
-msgstr "Zeitauflösung (Sekunden):"
+msgstr "Zei&tauflösung (Sekunden):"
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
 #: src/effects/Paulstretch.cpp
@@ -8950,9 +8885,8 @@ msgid "Repeats the selection the specified number of times"
 msgstr "Wiederholt die Auswahl so oft wie angegeben"
 
 #: src/effects/Repeat.cpp
-#, fuzzy
 msgid "&Number of repeats to add:"
-msgstr "Anzahl der hinzuzufügenden Wiederholungen:"
+msgstr "A&nzahl der hinzuzufügenden Wiederholungen:"
 
 #: src/effects/Repeat.cpp
 msgid "Current selection length: dd:hh:mm:ss"
@@ -9061,9 +8995,9 @@ msgid "Wet O&nly"
 msgstr "Nur &nass"
 
 #: src/effects/Reverb.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Reverb: %s"
-msgstr "Echo"
+msgstr "Echo: %s"
 
 #: src/effects/Reverse.cpp
 msgid "Reverse"
@@ -9282,9 +9216,8 @@ msgid "Initial Pitch Shift"
 msgstr "Erste Tonhöhenverschiebung"
 
 #: src/effects/TimeScale.cpp
-#, fuzzy
 msgid "(&semitones) [-12 to 12]:"
-msgstr "(Halbtöne) [-12 bis 12]:"
+msgstr "(Halbtöne) [-12 bi&s 12]:"
 
 #: src/effects/TimeScale.cpp
 msgid "(%) [-50 to 100]:"
@@ -9295,9 +9228,8 @@ msgid "Final Pitch Shift"
 msgstr "Letzte Tonhöhenänderung"
 
 #: src/effects/TimeScale.cpp
-#, fuzzy
 msgid "(s&emitones) [-12 to 12]:"
-msgstr "(Halbtöne) [-12 bis 12]:"
+msgstr "(Halbtön&e) [-12 bis 12]:"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 msgid "Logarithmic"
@@ -9337,14 +9269,12 @@ msgid "Generates a constant frequency tone of one of four types"
 msgstr "Erzeugt einen konstanten Frequenzton aus einem von vier Typen"
 
 #: src/effects/ToneGen.cpp
-#, fuzzy
 msgid "&Waveform:"
-msgstr "Wellenform:"
+msgstr "&Wellenform:"
 
 #: src/effects/ToneGen.cpp
-#, fuzzy
 msgid "&Frequency (Hz):"
-msgstr "Frequenz (Hz):"
+msgstr "&Frequenz (Hz):"
 
 #: src/effects/ToneGen.cpp
 msgid "Frequency Hertz Start"
@@ -9363,9 +9293,8 @@ msgid "Amplitude End"
 msgstr "End-Amplitude"
 
 #: src/effects/ToneGen.cpp
-#, fuzzy
 msgid "I&nterpolation:"
-msgstr "Interpolation:"
+msgstr "I&nterpolation:"
 
 #: src/effects/TruncSilence.cpp
 msgid "Truncate Detected Silence"
@@ -9400,23 +9329,20 @@ msgid "Detect Silence"
 msgstr "Stille erkennen"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Tr&uncate to:"
-msgstr "Kürzen bis:"
+msgstr "K&ürzen bis:"
 
 #: src/effects/TruncSilence.cpp src/import/ImportRaw.cpp
 msgid "%"
 msgstr "%"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "C&ompress to:"
-msgstr "Komprimieren bis:"
+msgstr "K&omprimieren bis:"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Trunc&ate tracks independently"
-msgstr "Spuren unabhängig kürzen"
+msgstr "Spuren un&abhängig kürzen"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "VST Effects"
@@ -9460,6 +9386,12 @@ msgid ""
 "require 8192 samples or less to work properly. However most effects can "
 "accept large buffers and using them will greatly reduce processing time."
 msgstr ""
+"Die Puffergröße steuert die Sampleanzahl, die an den Effekt bei jedem "
+"Durchgang geschickt wird. Kleinere Werte führen zu einer langsameren "
+"Verarbeitung und einige Effekte erfordern 8192 Samples oder weniger, um "
+"ordnungsgemäß zu funktionieren. Die meisten Effekte können jedoch große "
+"Puffer akzeptieren, und ihre Verwendung verkürzt die Verarbeitungszeit "
+"erheblich."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
@@ -9477,6 +9409,12 @@ msgid ""
 "silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all VST effects."
 msgstr ""
+"Einige VST-Effekte müssen im Rahmen ihrer Verarbeitung die Rückgabe von "
+"Audio an Audacity verzögern. Wenn Sie diese Verzögerung nicht kompensieren, "
+"werden Sie feststellen, dass kleine Stummschaltungen in das Audio eingefügt "
+"wurden. Durch Aktivieren dieser Option wird diese Kompensation "
+"bereitgestellt, sie funktioniert jedoch möglicherweise nicht für alle VST-"
+"Effekte."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -9488,14 +9426,14 @@ msgid "Graphical Mode"
 msgstr "Grafischer Modus"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy
 msgid ""
 "Most VST effects have a graphical interface for setting parameter values. A "
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
 msgstr ""
-"Die meisten VST-Effekte haben eine grafische Oberfläche zur Einstellung von "
-"Parameterwerten."
+"Die meisten VST-Effekte verfügen über eine grafische Oberfläche zum "
+"Einstellen von Parameterwerten. Eine grundlegende Nur-Text-Methode ist "
+"ebenfalls verfügbar.  Öffnen Sie den Effekt erneut, damit dies wirksam wird."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid "Enable &graphical interface"
@@ -9512,16 +9450,15 @@ msgstr "VST-Voreinstellung speichern unter:"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Standard VST bank file"
-msgstr ""
+msgstr "Standard-VST-Bankdatei"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Standard VST program file"
-msgstr ""
+msgstr "Standard-VST-Programmdatei"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy
 msgid "Audacity VST preset file"
-msgstr "Audacity-Projektdateien"
+msgstr "Audacity-VST-Voreinstellungsdatei"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unrecognized file extension."
@@ -9536,9 +9473,8 @@ msgid "Load VST Preset:"
 msgstr "VST-Voreinstellung laden:"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy
 msgid "VST preset files"
-msgstr "Datei auswählen"
+msgstr "VST-Voreinstellungsdateien"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Error Loading VST Presets"
@@ -9612,11 +9548,11 @@ msgstr "Wah-Frequenzverschiebung in Prozent"
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
-msgstr "Audio-Einheit-Effekte"
+msgstr "Audio-Unit-Effekte"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Provides Audio Unit Effects support to Audacity"
-msgstr "Stellt Unterstützung für Audio-Einheit-Effekte für Audacity bereit"
+msgstr "Stellt Unterstützung für Audio-Unit-Effekte für Audacity bereit"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Could not find component"
@@ -9628,7 +9564,7 @@ msgstr "Konnte Komponente nicht initialisieren"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effect Options"
-msgstr "Audio-Einheit-Effektoptionen"
+msgstr "Audio-Unit-Effektoptionen"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
@@ -9638,6 +9574,12 @@ msgid ""
 "will provide that compensation, but it may not work for all Audio Unit "
 "effects."
 msgstr ""
+"Einige Audio-Unit-Effekte müssen im Rahmen ihrer Verarbeitung die Rückgabe "
+"von Audio an Audacity verzögern. Wenn Sie diese Verzögerung nicht "
+"kompensieren, werden Sie feststellen, dass kleine Stummschaltungen in das "
+"Audio eingefügt wurden. Durch Aktivieren dieser Option wird diese "
+"Kompensation bereitgestellt, sie funktioniert jedoch möglicherweise nicht "
+"für alle Audio-Unit-Effekte."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -9650,6 +9592,11 @@ msgid ""
 "Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
 "to take effect."
 msgstr ""
+"Wählen Sie \"Voll\", um die grafische Oberfläche zu verwenden, sofern diese "
+"von der Audio-Unit bereitgestellt wird. Wählen Sie \"Generisch\", um die vom "
+"System bereitgestellte generische Schnittstelle zu verwenden. Wählen Sie "
+"\"Einfach\" für eine einfache Nur-Text-Oberfläche. Öffnen Sie den Effekt "
+"erneut, damit dies wirksam wird."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -9669,7 +9616,7 @@ msgstr "Einfach"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Import Audio Unit Presets"
-msgstr "Audio-Einheit Voreinstellungen importieren"
+msgstr "Audio-Unit Voreinstellungen importieren"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Presets (may select multiple)"
@@ -9684,117 +9631,109 @@ msgid "Location"
 msgstr "Ort"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't open \"%s\""
-msgstr "Konnte Datei nicht öffnen: „%s“"
+msgstr "Konnte „%s“ nicht öffnen"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to read the preset from \"%s\""
-msgstr "Konnte die Voreinstellungsdatei nicht lesen."
+msgstr "Konnte die Voreinstellung von \"%s\" nicht lesen"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to encode preset from \"%s\""
-msgstr ""
-"Konnte nicht registriert werden:\n"
-"%s"
+msgstr "Voreinstellung von \"%s\" konnte nicht encodiert werden"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Unable to store preset in config file"
-msgstr "Konnte die Voreinstellungsdatei nicht lesen."
+msgstr "Voreinstellung konnte nicht in Konfigurationsdatei gespeichert werden"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not import \"%s\" preset\n"
 "\n"
 "%s"
 msgstr ""
-"Effekt „%s“ konnte nicht aktualisiert werden mit:\n"
+"\"%s\" Voreinstellung konnte nicht importiert werden\n"
+"\n"
 "%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't create the \"%s\" directory"
-msgstr ""
-"Das Verzeichnis konnte nicht erstellt werden:\n"
-"  %s"
+msgstr "Das Verzeichnis \"%s\" konnte nicht erstellt werden"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Export Audio Unit Preset As %s:"
-msgstr "Audio-Einheit Voreinstellungen exportieren"
+msgstr "Audio-Unit Voreinstellungen exportieren als %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Standard Audio Unit preset file"
-msgstr "Audio-Einheit Voreinstellungen exportieren"
+msgstr "Standard Audio-Unit Voreinstellungsdatei"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not export \"%s\" preset\n"
 "\n"
 "%s"
 msgstr ""
-"Effekt „%s“ konnte nicht aktualisiert werden mit:\n"
+"\"%s\" Voreinstellung konnte nicht exportiert werden\n"
+"\n"
 "%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
-msgstr "Audio-Einheit Voreinstellungen exportieren"
+msgstr "Audio-Unit Voreinstellungen exportieren"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Import Audio Unit Preset As %s:"
-msgstr "Audio-Einheit Voreinstellungen importieren"
+msgstr "Audio-Unit Voreinstellungen importieren als %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Failed to set preset name"
-msgstr "Konnte die Voreinstellungsdatei nicht lesen."
+msgstr "Voreinstellungsname konnte nicht geschrieben werden"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Failed to retrieve preset content"
-msgstr "Stream-Beschreibung konnte nicht empfangen werden"
+msgstr "Voreinstellungsinhalt konnte nicht empfangen werden"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to convert property list to XML data"
-msgstr ""
+msgstr "Konvertierung der Eigenschaftsliste zu XML-Daten fehlgeschlagen"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "XML data is empty after conversion"
-msgstr "Abtastratenumwandlung"
+msgstr "XML-Daten sind nach Umwandlung leer"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write XML preset to \"%s\""
-msgstr ""
-"Konnte nicht registriert werden:\n"
-"%s"
+msgstr "XML-Voreinstellung konnte nicht nach \"%s\" geschrieben werden"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to convert preset to internal format"
-msgstr ""
+msgstr "Konvertierung der Voreinstellung in das interne Format fehlgeschlagen"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to create property list for preset"
-msgstr ""
+msgstr "Fehler beim Erstellen der Eigenschaftsliste für die Voreinstellung"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Failed to set class info for \"%s\" preset"
 msgstr ""
+"Fehler beim Festlegen der Klasseninformationen für die Voreinstellung \"%s\""
 
 #. i18n-hint: the name of an Apple audio software protocol
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
 msgid "Audio Unit"
-msgstr "Audio-Einheit"
+msgstr "Audio-Unit"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
@@ -9822,15 +9761,21 @@ msgid ""
 "small silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
+"Einige LADSPA-Effekte müssen im Rahmen ihrer Verarbeitung die Rückgabe von "
+"Audio an Audacity verzögern. Wenn Sie diese Verzögerung nicht kompensieren, "
+"werden Sie feststellen, dass kleine Stummschaltungen in das Audio eingefügt "
+"wurden. Durch Aktivieren dieser Option wird diese Kompensation "
+"bereitgestellt, sie funktioniert jedoch möglicherweise nicht für alle LADSPA-"
+"Effekte."
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
 #. appears in a following text box window; translate with appropriate punctuation
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/nyquist/Nyquist.cpp
 #: src/effects/vamp/VampEffect.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s:"
-msgstr "%s nach:"
+msgstr "%s:"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Effect Output"
@@ -9848,9 +9793,9 @@ msgid "LV2 Effect Settings"
 msgstr "LV2-Effekt-Einstellungen"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "&Buffer Size (8 to %d) samples):"
-msgstr "&Puffergröße (8 bis 1048576 Samples):"
+msgstr "&Puffergröße (8 bis %d Samples):"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
@@ -9859,44 +9804,50 @@ msgid ""
 "silences have been inserted into the audio. Enabling this setting will "
 "provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
+"Einige LV2-Effekte müssen im Rahmen ihrer Verarbeitung die Rückgabe von "
+"Audio an Audacity verzögern. Wenn Sie diese Verzögerung nicht kompensieren, "
+"werden Sie feststellen, dass kleine Stummschaltungen in das Audio eingefügt "
+"wurden. Durch Aktivieren dieser Einstellung wird diese Kompensation "
+"bereitgestellt, sie funktioniert jedoch möglicherweise nicht für alle LV2-"
+"Effekte."
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy
 msgid ""
 "LV2 effects can have a graphical interface for setting parameter values. A "
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
 msgstr ""
-"LV2-Effekte können eine grafische Oberfläche zur Einstellung von "
-"Parameterwerten haben."
+"LV2-Effekte können eine grafische Oberfläche zum Einstellen von "
+"Parameterwerten haben. Eine grundlegende Nur-Text-Methode ist ebenfalls "
+"verfügbar.  Öffnen Sie den Effekt erneut, damit dies wirksam wird."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "LV2 sequence buffer overflow"
-msgstr ""
+msgstr "LV2-Sequenzpufferüberlauf"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr "Effekt konnte nicht erzeugt werden"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires unsupported feature %s"
-msgstr "%d Kurven exportiert nach %s"
+msgstr "%s erfordert die nicht unterstützte Funktion %s"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires unsupported feature %s\n"
-msgstr "%d Kurven exportiert nach %s"
+msgstr "%s erfordert die nicht unterstützte Funktion %s\n"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires unsupported option %s"
-msgstr "%d Kurven exportiert nach %s"
+msgstr "%s erfordert die nicht unterstützte Option %s"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s requires unsupported option %s\n"
-msgstr "%d Kurven exportiert nach %s"
+msgstr "%s erfordert die nicht unterstützte Option %s\n"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Generator"
@@ -9926,7 +9877,7 @@ msgstr "Stellt Unterstützung für Nyquist-Effekte für Audacity bereit"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
-msgstr "Nyquist-Effekt anwenden …"
+msgstr "Wende Nyquist-Effekt an..."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Prompt"
@@ -10011,7 +9962,7 @@ msgstr "';type tool' Effekte können von Nyquist keinen Ton zurückgeben.\n"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
 msgstr ""
-"';type tool' Effekte können von Nyquist keine Textmarken zurückgeben.\n"
+"';type tool' Effekte können aus Nyquist keine Textmarken zurückgeben.\n"
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: src/effects/nyquist/Nyquist.cpp
@@ -10024,9 +9975,8 @@ msgid "plug-in"
 msgstr "Erweiterung"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Nyquist returned a list."
-msgstr "Nyquist gab keine Audiodaten zurück.\n"
+msgstr "Nyquist gab eine Liste zurück."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10139,15 +10089,13 @@ msgstr "&Speichern"
 
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Nyquist scripts"
-msgstr "Nyquist-Skript laden"
+msgstr "Nyquist-Skripte"
 
 #. i18n-hint: Lisp is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Lisp scripts"
-msgstr "Skript stoppen"
+msgstr "Lisp-Skripte"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -10295,7 +10243,6 @@ msgstr ""
 "Leider werden Verzeichnisnamen mit mehr als 256 Zeichen nicht unterstützt."
 
 #: src/export/Export.cpp
-#, fuzzy
 msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "The file cannot be written because the path is needed to restore the "
@@ -10304,13 +10251,13 @@ msgid ""
 "missing files.\n"
 "If you still wish to export, please choose a different filename or folder."
 msgstr ""
-"Sie versuchen, eine verknüpfte Datei zu überschreiben, die fehlt.\n"
-"               Die Datei kann nicht geschrieben werden, weil der Pfad "
-"benötigt wird, um das Original-Audio im Projekt wiederherzustellen.\n"
-"               Wählen Sie Hilfe > Diagnose > Abhängigkeiten überprüfen, um "
-"sich die Orte von allen fehlenden Dateien anzeigen zu lassen.\n"
-"               Wenn Sie trotzdem exportieren möchten, wählen Sie bitte einen "
-"anderen Dateinamen oder Ordner."
+"Sie versuchen, eine fehlende Alias-Datei zu überschreiben.\n"
+"Die Datei kann nicht geschrieben werden, da der Pfad zum Wiederherstellen "
+"des ursprünglichen Audios im Projekt benötigt wird.\n"
+"Wählen Sie \"Hilfe\"> \"Diagnose\"> \"Abhängigkeiten prüfen\", um die "
+"Speicherorte aller fehlenden Dateien anzuzeigen.\n"
+"Wenn Sie dennoch exportieren möchten, wählen Sie bitte einen anderen "
+"Dateinamen oder Ordner."
 
 #: src/export/Export.cpp
 #, c-format
@@ -10388,9 +10335,8 @@ msgstr ""
 
 #. i18n-hint files that can be run as programs
 #: src/export/ExportCL.cpp
-#, fuzzy
 msgid "Executables"
-msgstr "Skriptfähiges"
+msgstr "Ausführbares"
 
 #: src/export/ExportCL.cpp
 msgid "Find path to command"
@@ -10416,32 +10362,29 @@ msgstr ""
 
 #: src/export/ExportCL.cpp
 msgid "Exporting the audio using command-line encoder"
-msgstr "Exportiere Audio mit Kommandozeilen-Encoder"
+msgstr "Exportiere Audio mit Befehlszeilen-Encoder"
 
 #: src/export/ExportCL.cpp
 msgid "Command Output"
 msgstr "Befehlsausgabe"
 
 #: src/export/ExportCL.cpp
-#, fuzzy
 msgid "You've specified a file name without an extension. Are you sure?"
-msgstr ""
-"Sie haben einen Dateinamen mit unbekannter Dateiendung ausgewählt.\n"
-"Wollen Sie fortfahren?"
+msgstr "Sie haben einen Dateinamen ohne Endung angegeben. Sind Sie sicher?"
 
 #: src/export/ExportCL.cpp
 msgid "Program name appears to be missing."
-msgstr ""
+msgstr "Programmname scheint zu fehlen."
 
 #: src/export/ExportCL.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "\"%s\" couldn't be found."
-msgstr "Datei \"%s\" nicht gefunden."
+msgstr "\"%s\" konnte nicht gefunden werden."
 
 #: src/export/ExportCL.cpp
 #, c-format
 msgid "Unable to locate \"%s\" in your path."
-msgstr ""
+msgstr "\"%s\" konnte in Ihrem Pfad nicht gefunden werden."
 
 #: src/export/ExportFFmpeg.cpp
 msgid ""
@@ -10500,20 +10443,23 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "The codec reported a generic error (EPERM)"
-msgstr ""
+msgstr "Der Codec hat einen generischen Fehler gemeldet (EPERM)"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "The codec reported an invalid parameter (EINVAL)"
-msgstr ""
+msgstr "Der Codec hat einen ungültigen Parameter gemeldet (EINVAL)"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Can't open audio codec \"%s\" (0x%x)\n"
 "\n"
 "%s"
-msgstr "FFmpeg : FEHLER - Kann Audiocodec  0x%x nicht öffnen."
+msgstr ""
+"Kann Audiocodec \"%s\" nicht öffnen (0x%x)\n"
+"\n"
+"%s"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
@@ -10633,7 +10579,7 @@ msgstr "%.2f kbit/s"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportFLAC.cpp
 msgid "1"
@@ -10661,102 +10607,91 @@ msgstr "7"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "9"
-msgstr ""
+msgstr "9"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "10"
-msgstr "1"
+msgstr "10"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "On"
-msgstr "Öffnen"
+msgstr "An"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Constrained"
-msgstr "Konstant"
+msgstr "Beschränkt"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VOIP"
-msgstr ""
+msgstr "VOIP"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Audio"
-msgstr "&Audio …"
+msgstr "Audio"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Low Delay"
-msgstr "Verzögerung"
+msgstr "Geringe Verzögerung"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "2.5 ms"
-msgstr ""
+msgstr "2,5 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "5 ms"
-msgstr ""
+msgstr "5 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "10 ms"
-msgstr ""
+msgstr "10 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "20 ms"
-msgstr ""
+msgstr "20 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "40 ms"
-msgstr ""
+msgstr "40 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "60 ms"
-msgstr ""
+msgstr "60 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Narrowband"
-msgstr ""
+msgstr "Schmalband"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Mediumband"
-msgstr "Mittel"
+msgstr "Mittelband"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Wideband"
-msgstr ""
+msgstr "Breitband"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Super Wideband"
-msgstr ""
+msgstr "Super-Breitband"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Fullband"
-msgstr "Vollständig"
+msgstr "Vollband"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Compression"
-msgstr "Kompression:"
+msgstr "Kompression"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Frame Duration:"
-msgstr "Dauer:"
+msgstr "Frame-Dauer:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Vbr Mode:"
-msgstr "Modus:"
+msgstr "VBR-Modus:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Application:"
-msgstr "Anwendung"
+msgstr "Anwendung:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Cutoff:"
@@ -10767,14 +10702,12 @@ msgid "Open custom FFmpeg format options"
 msgstr "Benutzerdefinierte FFmpeg-Formatoptionen öffnen"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Current Format:"
-msgstr "Aktuelles Projekt"
+msgstr "Aktuelles Format:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Current Codec:"
-msgstr "Aktuelles Projekt"
+msgstr "Aktueller Codec:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Error Saving FFmpeg Presets"
@@ -10833,9 +10766,8 @@ msgid "AMR (narrow band) Files (FFmpeg)"
 msgstr "AMR (Schmalband)-Dateien (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Opus (OggOpus) Files (FFmpeg)"
-msgstr "M4A (AAC)-Dateien (FFmpeg)"
+msgstr "Opus (OggOpus) Dateien (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
@@ -11303,7 +11235,7 @@ msgstr "Exportiere Audio als FLAC"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%d kpbs"
 msgstr "%d kbps"
 
@@ -11330,51 +11262,44 @@ msgid "Exporting the audio at %ld kbps"
 msgstr "Exportiere Audio mit %ld kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "220-260 kbps (Best Quality)"
-msgstr "%s kbps (Beste Qualität)"
+msgstr "220-260 kbps (Beste Qualität)"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "200-250 kbps"
-msgstr "Extrem, 220-260 kbps"
+msgstr "200-250 kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "170-210 kbps"
-msgstr "Standard, 170-210 kbps"
+msgstr "170-210 kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "155-195 kbps"
-msgstr "Mittel, 145-185 kbps"
+msgstr "155-195 kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "145-185 kbps"
-msgstr "Mittel, 145-185 kbps"
+msgstr "145-185 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "110-150 kbps"
-msgstr ""
+msgstr "110-150 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "95-135 kbps"
-msgstr ""
+msgstr "95-135 kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "80-120 kbps"
-msgstr "%.2f kbit/s"
+msgstr "80-120 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "65-105 kbps"
-msgstr ""
+msgstr "65-105 kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "45-85 kbps (Smaller files)"
-msgstr "%s kbps (Kleinere Dateien)"
+msgstr "45-85 kbps (Kleinere Dateien)"
 
 #: src/export/ExportMP3.cpp
 msgid "Fast"
@@ -11503,28 +11428,27 @@ msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "Only lame_enc.dll"
-msgstr ""
+msgstr "Nur lame_enc.dll"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame64bit.dylib"
-msgstr ""
+msgstr "Nur libmp3lame64bit.dylib"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame.dylib"
-msgstr ""
+msgstr "Nur ibmp3lame.dylib"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame.so.0"
-msgstr ""
+msgstr "Nur libmp3lame.so.0"
 
 #: src/export/ExportMP3.cpp
 msgid "Primary shared object files"
-msgstr ""
+msgstr "Primäre geteilte Objektdateien"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy
 msgid "Extended libraries"
-msgstr "Kern-Bibliotheken"
+msgstr "Erweiterte Bibliotheken"
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 Files"
@@ -11569,12 +11493,12 @@ msgstr "Exportiere Audio mit VBR-Qualität %s"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
-msgstr "Ausgewähltes Audio wird mit %d kbit/s exportiert"
+msgstr "Ausgewähltes Audio wird mit %d kbps exportiert"
 
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio at %d Kbps"
-msgstr "Exportiere Audio mit %d Kbps"
+msgstr "Exportiere Audio mit %d kbps"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11662,7 +11586,7 @@ msgstr "Dateien benennen:"
 
 #: src/export/ExportMultiple.cpp
 msgid "Using Label/Track Name"
-msgstr "Textmarken bzw. Spurnamen verwnden"
+msgstr "Textmarken bzw. Spurnamen verwenden"
 
 #: src/export/ExportMultiple.cpp
 msgid "Numbering before Label/Track Name"
@@ -11732,9 +11656,8 @@ msgstr ""
 "Möchten Sie sie erstellen?"
 
 #: src/export/ExportMultiple.cpp
-#, fuzzy
 msgid "Continue to export remaining files?"
-msgstr "Exportieren nicht möglich - Problem mit Datei"
+msgstr "Fortsetzen und verbleibende Dateien exportieren?"
 
 #. i18n-hint: The second %s gives some letters that can't be used.
 #: src/export/ExportMultiple.cpp
@@ -11760,7 +11683,7 @@ msgstr ""
 
 #: src/export/ExportMultiple.cpp
 msgid "Save As..."
-msgstr "Speichern unter …"
+msgstr "Speichern unter..."
 
 #: src/export/ExportOGG.cpp
 msgid "Ogg Vorbis Files"
@@ -11800,12 +11723,11 @@ msgstr "Exportiere Audio als Ogg-Vorbis"
 
 #: src/export/ExportPCM.cpp src/import/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
-msgstr ""
+msgstr "AIFF (Apple/SGI)"
 
 #: src/export/ExportPCM.cpp src/import/ImportPCM.cpp
-#, fuzzy
 msgid "WAV (Microsoft)"
-msgstr "WAV (Microsoft) 32-bit Fließkomma PCM"
+msgstr "WAV (Microsoft)"
 
 #: src/export/ExportPCM.cpp
 msgid "Header:"
@@ -11872,9 +11794,8 @@ msgstr ""
 "Libsndfile sagt „%s“"
 
 #: src/import/Import.cpp
-#, fuzzy
 msgid "All supported files"
-msgstr "Alle Dateien|*|Alle unterstützten Dateien|"
+msgstr "Alle unterstützten Dateien"
 
 #: src/import/Import.cpp
 #, c-format
@@ -12155,9 +12076,9 @@ msgid "Unable to set stream state to paused."
 msgstr "Strom-Zustand kann nicht auf Pausiert gestellt werden."
 
 #: src/import/ImportGStreamer.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
-msgstr "Index[%02x] Codec[%s], Sprache[%s], Bitrate[%s], Kanäle[%d], Dauer[%d]"
+msgstr "Index[%02d], Typ[%s], Kanäle[%d], Rate[%d]"
 
 #: src/import/ImportGStreamer.cpp
 msgid "File doesn't contain any audio streams."
@@ -12235,9 +12156,9 @@ msgid "Ogg Vorbis files"
 msgstr "Ogg-Vorbis-Dateien"
 
 #: src/import/ImportOGG.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Index[%02x] Version[%d], Channels[%d], Rate[%ld]"
-msgstr "Index[%02x] Codec[%s], Sprache[%s], Bitrate[%s], Kanäle[%d], Dauer[%d]"
+msgstr "Index[%02x] Version[%d], Kanäle[%d], Rate[%ld]"
 
 #: src/import/ImportOGG.cpp
 msgid "Media read error"
@@ -12265,189 +12186,180 @@ msgstr "WAV, AIFF und andere unkomprimierte Typen"
 
 #: src/import/ImportPCM.cpp
 msgid "AU (Sun/NeXT)"
-msgstr ""
+msgstr "AU (Sun/NeXT)"
 
 #: src/import/ImportPCM.cpp
 msgid "AVR (Audio Visual Research)"
-msgstr ""
+msgstr "AVR (Audio Visual Research)"
 
 #: src/import/ImportPCM.cpp
 msgid "CAF (Apple Core Audio File)"
-msgstr ""
+msgstr "CAF (Apple Core Audiodatei)"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportPCM.cpp
 msgid "FLAC (FLAC Lossless Audio Codec)"
-msgstr ""
+msgstr "FLAC (FLAC Verlustfreier Audiocodec)"
 
 #: src/import/ImportPCM.cpp
 msgid "HTK (HMM Tool Kit)"
-msgstr ""
+msgstr "HTK (HMM Tool Kit)"
 
 #: src/import/ImportPCM.cpp
 msgid "IFF (Amiga IFF/SVX8/SV16)"
-msgstr ""
+msgstr "IFF (Amiga IFF/SVX8/SV16)"
 
 #: src/import/ImportPCM.cpp
 msgid "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
-msgstr ""
+msgstr "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
 
 #: src/import/ImportPCM.cpp
 msgid "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
-msgstr ""
+msgstr "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
 
 #: src/import/ImportPCM.cpp
 msgid "MPC (Akai MPC 2k)"
-msgstr ""
+msgstr "MPC (Akai MPC 2k)"
 
 #: src/import/ImportPCM.cpp
 msgid "OGG (OGG Container format)"
-msgstr ""
+msgstr "OGG (OGG Containerformat)"
 
 #: src/import/ImportPCM.cpp
 msgid "PAF (Ensoniq PARIS)"
-msgstr ""
+msgstr "PAF (Ensoniq PARIS)"
 
 #: src/import/ImportPCM.cpp
 msgid "PVF (Portable Voice Format)"
-msgstr ""
+msgstr "PVF (Portable Voice Format)"
 
 #: src/import/ImportPCM.cpp
 msgid "RAW (header-less)"
-msgstr ""
+msgstr "RAW (ohne Header)"
 
 #: src/import/ImportPCM.cpp
 msgid "RF64 (RIFF 64)"
-msgstr ""
+msgstr "RF64 (RIFF 64)"
 
 #: src/import/ImportPCM.cpp
 msgid "SD2 (Sound Designer II)"
-msgstr ""
+msgstr "SD2 (Sound Designer II)"
 
 #: src/import/ImportPCM.cpp
 msgid "SDS (Midi Sample Dump Standard)"
-msgstr ""
+msgstr "SDS (Midi Sample Dump Standard)"
 
 #: src/import/ImportPCM.cpp
 msgid "SF (Berkeley/IRCAM/CARL)"
-msgstr ""
+msgstr "SF (Berkeley/IRCAM/CARL)"
 
 #: src/import/ImportPCM.cpp
 msgid "VOC (Creative Labs)"
-msgstr ""
+msgstr "VOC (Creative Labs)"
 
 #: src/import/ImportPCM.cpp
 msgid "W64 (SoundFoundry WAVE 64)"
-msgstr ""
+msgstr "W64 (SoundFoundry WAVE 64)"
 
 #: src/import/ImportPCM.cpp
 msgid "WAV (NIST Sphere)"
-msgstr ""
+msgstr "WAV (NIST Sphere)"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "WAVEX (Microsoft)"
-msgstr "WAV (Microsoft) 32-bit Fließkomma PCM"
+msgstr "WAVEX (Microsoft)"
 
 #: src/import/ImportPCM.cpp
 msgid "WVE (Psion Series 3)"
-msgstr ""
+msgstr "WVE (Psion Series 3)"
 
 #: src/import/ImportPCM.cpp
 msgid "XI (FastTracker 2)"
-msgstr ""
+msgstr "XI (FastTracker 2)"
 
 #: src/import/ImportPCM.cpp
 msgid "Signed 8 bit PCM"
-msgstr ""
+msgstr "Signiertes 8-bit PCM"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "Signed 16 bit PCM"
-msgstr "16-bit PCM"
+msgstr "16-Bit-PCM signiert"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "Signed 24 bit PCM"
-msgstr "24-bit PCM"
+msgstr "24-Bit-PCM signiert"
 
 #: src/import/ImportPCM.cpp
 msgid "Signed 32 bit PCM"
-msgstr ""
+msgstr "Signiertes 32-bit PCM"
 
 #: src/import/ImportPCM.cpp
 msgid "Unsigned 8 bit PCM"
-msgstr ""
+msgstr "Unsigniertes 8-bit PCM"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "32 bit float"
-msgstr "32-bit Fließkomma"
+msgstr "32-Bit-Fließkomma"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "64 bit float"
-msgstr "32-bit Fließkomma"
+msgstr "64-Bit-Fließkomma"
 
 #: src/import/ImportPCM.cpp
 msgid "U-Law"
-msgstr ""
+msgstr "U-Law"
 
 #: src/import/ImportPCM.cpp
 msgid "A-Law"
-msgstr ""
+msgstr "A-Law"
 
 #: src/import/ImportPCM.cpp
 msgid "IMA ADPCM"
-msgstr ""
+msgstr "IMA ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "Microsoft ADPCM"
-msgstr ""
+msgstr "Microsoft ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "GSM 6.10"
-msgstr ""
+msgstr "GSM 6.10"
 
 #: src/import/ImportPCM.cpp
 msgid "32kbs G721 ADPCM"
-msgstr ""
+msgstr "32kbs G721 ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "24kbs G723 ADPCM"
-msgstr ""
+msgstr "24kbs G723 ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "12 bit DWVW"
-msgstr ""
+msgstr "12-Bit-DWVW"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "16 bit DWVW"
-msgstr "16 Bit"
+msgstr "16-Bit-DWVW"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "24 bit DWVW"
-msgstr "24 Bit"
+msgstr "24-Bit-DWVW"
 
 #: src/import/ImportPCM.cpp
 msgid "VOX ADPCM"
-msgstr ""
+msgstr "VOX ADPCM"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "16 bit DPCM"
-msgstr "16-bit PCM"
+msgstr "16-Bit-DPCM"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid "8 bit DPCM"
-msgstr "16-bit PCM"
+msgstr "8-Bit-DPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "Vorbis"
-msgstr ""
+msgstr "Vorbis"
 
 #: src/import/ImportPCM.cpp
 msgid ""
@@ -12940,11 +12852,11 @@ msgstr "&Bei Stille abtrennen"
 
 #: src/menus/EditMenus.cpp
 msgid "&Metadata..."
-msgstr "Me&tadaten …"
+msgstr "Me&tadaten..."
 
 #: src/menus/EditMenus.cpp
 msgid "Pre&ferences..."
-msgstr "Ein&stellungen …"
+msgstr "Ein&stellungen..."
 
 #: src/menus/EditMenus.cpp
 msgid "&Delete Key"
@@ -12964,7 +12876,7 @@ msgstr "Mi&xer"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Ad&just Playback Volume..."
-msgstr "Wiedergabe&lautstärke einstellen …"
+msgstr "Wiedergabe&lautstärke einstellen..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "&Increase Playback Volume"
@@ -12976,7 +12888,7 @@ msgstr "Wiedergabelautstär&ke reduzieren"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Adj&ust Recording Volume..."
-msgstr "Aufnahmela&utstärke einstellen …"
+msgstr "Aufnahmela&utstärke einstellen..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "I&ncrease Recording Volume"
@@ -12992,19 +12904,19 @@ msgstr "Ge&rät"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change &Recording Device..."
-msgstr "Aufnahmege&rät ändern …"
+msgstr "Aufnahmege&rät ändern..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change &Playback Device..."
-msgstr "Wiedergabegerät &ändern …"
+msgstr "Wiedergabegerät &ändern..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change Audio &Host..."
-msgstr "Audiohost &ändern …"
+msgstr "Audiohost &ändern..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change Recording Cha&nnels..."
-msgstr "Aufnahmeka&näle ändern …"
+msgstr "Aufnahmeka&näle ändern..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "&Full Screen (on/off)"
@@ -13036,14 +12948,12 @@ msgid "Export MIDI As:"
 msgstr "MIDI exportieren als:"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "MIDI file"
-msgstr "Eine MIDI-Datei wählen"
+msgstr "MIDI-Datei"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Allegro file"
-msgstr "Alle Dateien|*"
+msgstr "Allegrodatei"
 
 #: src/menus/FileMenus.cpp
 msgid ""
@@ -13072,17 +12982,15 @@ msgstr "Eine MIDI-Datei wählen"
 
 #: src/menus/FileMenus.cpp
 msgid "MIDI and Allegro files"
-msgstr ""
+msgstr "MIDI und Allegrodateien"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "MIDI files"
-msgstr "MP3-Dateien"
+msgstr "MIDI-Dateien"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Allegro files"
-msgstr "Alle Dateien|*"
+msgstr "Allegrodateien"
 
 #: src/menus/FileMenus.cpp
 msgid "Select any uncompressed audio file"
@@ -13090,7 +12998,7 @@ msgstr "Beliebige unkomprimierte Audiodatei wählen"
 
 #: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
-msgstr "&Gefährliches Zurücksetzen …"
+msgstr "&Gefährlich zurücksetzen..."
 
 #. i18n-hint: This is the name of the menu item on Mac OS X only
 #: src/menus/FileMenus.cpp
@@ -13108,7 +13016,7 @@ msgstr "Projekt &speichern"
 
 #: src/menus/FileMenus.cpp
 msgid "Save Project &As..."
-msgstr "Projekt speichern &unter …"
+msgstr "Projekt speichern &unter..."
 
 #: src/menus/FileMenus.cpp
 msgid "Save Lossless Copy of Project..."
@@ -13116,7 +13024,7 @@ msgstr "Verlustfreie Kopie des Projektes speichern..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Save Compressed Copy of Project..."
-msgstr "Komprimierte Kopie des Projektes &speichern …"
+msgstr "Komprimierte Kopie des Projektes &speichern..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export"
@@ -13136,48 +13044,48 @@ msgstr "Als &OGG exportieren"
 
 #: src/menus/FileMenus.cpp
 msgid "&Export Audio..."
-msgstr "Audio &exportieren …"
+msgstr "Audio &exportieren..."
 
 #: src/menus/FileMenus.cpp
 msgid "Expo&rt Selected Audio..."
-msgstr "Ausgewähltes Audio expo&rtieren …"
+msgstr "Ausgewähltes Audio expo&rtieren..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
-msgstr "&Textmarken exportieren …"
+msgstr "&Textmarken exportieren..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Multiple..."
-msgstr "Mehrere ex&portieren …"
+msgstr "Mehrere ex&portieren..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export MI&DI..."
-msgstr "MI&DI exportieren …"
+msgstr "MI&DI exportieren..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Audio..."
-msgstr "&Audio …"
+msgstr "&Audio..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Labels..."
-msgstr "&Textmarken …"
+msgstr "&Textmarken..."
 
 #: src/menus/FileMenus.cpp
 msgid "&MIDI..."
-msgstr "&MIDI …"
+msgstr "&MIDI..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Raw Data..."
-msgstr "&Rohdaten …"
+msgstr "&Rohdaten..."
 
 #: src/menus/FileMenus.cpp
 msgid "Pa&ge Setup..."
-msgstr "Seite ein&richten …"
+msgstr "Seite ein&richten..."
 
 #. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
 msgid "&Print..."
-msgstr "&Drucken …"
+msgstr "&Drucken..."
 
 #. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
@@ -13239,13 +13147,12 @@ msgid "MIDI Device Info"
 msgstr "MIDI-Geräteinfo"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "Menu Tree"
-msgstr "Menü"
+msgstr "Menübaum"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
-msgstr "&Schnellkorrektur …"
+msgstr "&Schnellkorrektur..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Getting Started"
@@ -13257,11 +13164,11 @@ msgstr "Audacity-&Handbuch"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
-msgstr "&Schnellhilfe …"
+msgstr "&Schnellhilfe..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Manual..."
-msgstr "&Handbuch …"
+msgstr "&Handbuch..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -13269,31 +13176,31 @@ msgstr "&Diagnose"
 
 #: src/menus/HelpMenus.cpp
 msgid "Au&dio Device Info..."
-msgstr "&Audio-Geräteinfo …"
+msgstr "&Audio-Geräteinfo..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&MIDI Device Info..."
-msgstr "&MIDI-Geräteinfo …"
+msgstr "&MIDI-Geräteinfo..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Show &Log..."
-msgstr "&Protokoll anzeigen …"
+msgstr "&Protokoll anzeigen..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
-msgstr "&Unterstützungsdaten erzeugen ..."
+msgstr "&Unterstützungsdaten erzeugen..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Chec&k Dependencies..."
-msgstr "Abhängigkeiten &überprüfen …"
+msgstr "Abhängigkeiten &überprüfen..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Menu Tree..."
-msgstr ""
+msgstr "Menübaum..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
-msgstr "Auf Aktualisierungen &prüfen …"
+msgstr "Auf Aktualisierungen &prüfen..."
 
 #: src/menus/LabelMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "Added label"
@@ -13408,7 +13315,7 @@ msgstr "&Textmarken"
 
 #: src/menus/LabelMenus.cpp
 msgid "&Edit Labels..."
-msgstr "Te&xtmarken bearbeiten …"
+msgstr "B&eschriftungen bearbeiten..."
 
 #: src/menus/LabelMenus.cpp
 msgid "Add Label at &Selection"
@@ -13424,11 +13331,11 @@ msgstr "Te&xt in neue Textmarke einfügen"
 
 #: src/menus/LabelMenus.cpp
 msgid "&Type to Create a Label (on/off)"
-msgstr "&Tippen um eine Textmarke zu erstellen (an/aus)"
+msgstr "&Tippen, um eine Textmarke zu erstellen (an/aus)"
 
 #: src/menus/LabelMenus.cpp
 msgid "La&beled Audio"
-msgstr "Audio mit Textmar&ke"
+msgstr "Audio mit &Textmarke"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -13437,11 +13344,11 @@ msgstr "&Ausschneiden"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Cut"
-msgstr "Textmarke Ausschneiden"
+msgstr "Textmarke-Ausschneiden"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Delete"
-msgstr "Textmarke Löschen"
+msgstr "Textmarke-Löschen"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
@@ -13450,7 +13357,7 @@ msgstr "A&usschneiden und trennen"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Split Cut"
-msgstr "Textmarke Trennen Ausschneiden"
+msgstr "Textmarke-Trennen-Ausschneiden"
 
 #: src/menus/LabelMenus.cpp
 msgid "Sp&lit Delete"
@@ -13458,7 +13365,7 @@ msgstr "&Trennen und löschen"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Split Delete"
-msgstr "Textmarke Trennen Löschen"
+msgstr "Textmarke-Trennen-Löschen"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -13466,7 +13373,7 @@ msgstr "&Audio zu Stille"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Silence"
-msgstr "Textmarke Stille"
+msgstr "Textmarke-Stille"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -13475,7 +13382,7 @@ msgstr "Ko&pieren"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Copy"
-msgstr "Textmarke Kopieren"
+msgstr "Textmarke-Kopieren"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -13484,11 +13391,11 @@ msgstr "&Trennen"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Split"
-msgstr "Textmarke Trennen"
+msgstr "Textmarke-Trennen"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Join"
-msgstr "Textmarke Verbinden"
+msgstr "Textmarke-Verbinden"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Backward Through Active Windows"
@@ -13500,7 +13407,7 @@ msgstr "Vorwärts durch aktive Fenster bewegen"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Foc&us"
-msgstr ""
+msgstr "Fok&ussieren"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move &Backward from Toolbars to Tracks"
@@ -13547,9 +13454,8 @@ msgid "Uncategorized"
 msgstr "Unkategorisiert"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "..."
-msgstr "Neu …"
+msgstr "..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Unknown"
@@ -13566,7 +13472,7 @@ msgstr "Er&zeugen"
 
 #: src/menus/PluginMenus.cpp
 msgid "Add / Remove Plug-ins..."
-msgstr "Erweiterungen hinzufügen / entfernen …"
+msgstr "Erweiterungen hinzufügen / entfernen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
@@ -13586,7 +13492,7 @@ msgstr "&Werkzeuge"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Macros..."
-msgstr "&Makros …"
+msgstr "&Makros..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Apply Macro"
@@ -13594,15 +13500,15 @@ msgstr "Makro &anwenden"
 
 #: src/menus/PluginMenus.cpp
 msgid "Palette..."
-msgstr "Palette ..."
+msgstr "Palette..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Screenshot..."
-msgstr "&Screenshot ..."
+msgstr "&Screenshot..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Run Benchmark..."
-msgstr "&Benchmark starten …"
+msgstr "&Benchmark starten..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Simulate Recording Errors"
@@ -13619,51 +13525,51 @@ msgstr "&Skriptfähiges I"
 
 #: src/menus/PluginMenus.cpp
 msgid "Select Time..."
-msgstr "Zeit wählen ..."
+msgstr "Zeit wählen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Select Frequencies..."
-msgstr "Frequenzen wählen ..."
+msgstr "Frequenzen wählen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Select Tracks..."
-msgstr "Spuren wählen ..."
+msgstr "Spuren wählen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Track Status..."
-msgstr "Spurstatus einstellen ..."
+msgstr "Spurstatus einstellen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Track Audio..."
-msgstr "Spuraudio einstellen ..."
+msgstr "Spuraudio einstellen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Track Visuals..."
-msgstr "Spurvisualisierung einstellen ..."
+msgstr "Spurvisualisierung einstellen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Get Preference..."
-msgstr "Einstellung erhalten …"
+msgstr "Einstellung erhalten..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Preference..."
-msgstr "Einstellung setzen …"
+msgstr "Einstellung setzen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Clip..."
-msgstr "Clip setzen …"
+msgstr "Clip setzen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Envelope..."
-msgstr "Hüllkurve setzen …"
+msgstr "Hüllkurve setzen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Label..."
-msgstr "Textmarke setzen …"
+msgstr "Textmarke setzen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Project..."
-msgstr "Projekt setzen …"
+msgstr "Projekt setzen..."
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/menus/PluginMenus.cpp
@@ -13672,40 +13578,40 @@ msgstr "Skriptf&ähiges II"
 
 #: src/menus/PluginMenus.cpp
 msgid "Set Track..."
-msgstr "Spur setzen …"
+msgstr "Spur setzen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Get Info..."
-msgstr "Info erhalten …"
+msgstr "Info erhalten..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Message..."
-msgstr "Nachricht …"
+msgstr "Nachricht..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Help..."
-msgstr "Hilfe …"
+msgstr "Hilfe..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Open Project..."
-msgstr "Projekt öffnen …"
+msgstr "Projekt öffnen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Save Project..."
-msgstr "Projekt speichern …"
+msgstr "Projekt speichern..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Move Mouse..."
-msgstr "Maus bewegen …"
+msgstr "Maus bewegen..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Compare Audio..."
-msgstr "Audio vergleichen …"
+msgstr "Audio vergleichen..."
 
 #. i18n-hint: Screenshot in the help menu has a much bigger dialog.
 #: src/menus/PluginMenus.cpp
 msgid "Screenshot (short format)..."
-msgstr "Screenshot (Schnellformat) …"
+msgstr "Screenshot (Schnellformat)..."
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Left Selection Boundary"
@@ -14295,7 +14201,7 @@ msgstr "In ne&ue Spur mischen und rendern"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Resample..."
-msgstr "&Abtastrate …"
+msgstr "&Abtastrate..."
 
 #: src/menus/TrackMenus.cpp
 msgid "Remo&ve Tracks"
@@ -14314,14 +14220,12 @@ msgid "&Unmute All Tracks"
 msgstr "Alle Spuren wieder &laut stellen"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Mut&e Tracks"
-msgstr "Alle Spuren &stummstellen"
+msgstr "Spuren &stummschalten"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "U&nmute Tracks"
-msgstr "Alle Spuren wieder &laut stellen"
+msgstr "Stummschaltung der Spuren &aufheben"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Pan"
@@ -14393,7 +14297,7 @@ msgstr "&Spur"
 
 #: src/menus/TrackMenus.cpp
 msgid "Change P&an on Focused Track..."
-msgstr "P&anorama der fokussierten Spur ändern ..."
+msgstr "P&anorama der fokussierten Spur ändern..."
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan &Left on Focused Track"
@@ -14405,7 +14309,7 @@ msgstr "Panorama der fokussierten Spur nach &rechts schieben"
 
 #: src/menus/TrackMenus.cpp
 msgid "Change Gai&n on Focused Track..."
-msgstr "Verstärku&ng der fokussierten Spur ändern ..."
+msgstr "Verstärku&ng der fokussierten Spur ändern..."
 
 #: src/menus/TrackMenus.cpp
 msgid "&Increase Gain on Focused Track"
@@ -14417,7 +14321,7 @@ msgstr "Verstärkung der fokussierten Spur verr&ingern"
 
 #: src/menus/TrackMenus.cpp
 msgid "Op&en Menu on Focused Track..."
-msgstr "M&enü für fokussierte Spur öffnen ..."
+msgstr "M&enü für fokussierte Spur öffnen..."
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute Focused Track"
@@ -14456,9 +14360,9 @@ msgid "no label track at or below focused track"
 msgstr "keine Textspur bei oder unter der ausgewählten Spur"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %d of %d"
-msgstr "%s %d von %d Clip %s"
+msgstr "%s %d von %d"
 
 #: src/menus/TransportMenus.cpp
 msgid "no labels in label track"
@@ -14550,7 +14454,7 @@ msgstr "&Neue Spur aufzeichnen"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Timer Record..."
-msgstr "&Zeitgesteuerte Aufnahme …"
+msgstr "&Zeitgesteuerte Aufnahme..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Punch and Rol&l Record"
@@ -14578,7 +14482,7 @@ msgstr "Transport-&Optionen"
 
 #: src/menus/TransportMenus.cpp
 msgid "Sound Activation Le&vel..."
-msgstr "Geräuschaktivierungsstufe …"
+msgstr "Geräuschaktivierungsstufe..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Sound A&ctivated Recording (on/off)"
@@ -14669,7 +14573,7 @@ msgstr "Schnitt-Vorschau mit Geschwindig&keit wiedergeben"
 
 #: src/menus/TransportMenus.cpp
 msgid "Ad&just Playback Speed..."
-msgstr "Wiedergabe&geschwindigkeit einstellen …"
+msgstr "Wiedergabe&geschwindigkeit einstellen..."
 
 #: src/menus/TransportMenus.cpp
 msgid "&Increase Playback Speed"
@@ -14923,7 +14827,7 @@ msgstr "Freier Platz:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "C&hoose..."
-msgstr "Auswählen …"
+msgstr "Auswählen..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Audio cache"
@@ -15176,31 +15080,31 @@ msgstr "-36 dB (flache Dynamik zur Bearbeitung von hohen Amplituden)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-48 dB (PCM range of 8 bit samples)"
-msgstr "-48 dB (PCM Bereich von 8-Bit Samples)"
+msgstr "-48 dB (PCM-Bereich von 8-Bit-Samples)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 dB (PCM Bereich von 10-Bit Samples)"
+msgstr "-60 dB (PCM-Bereich von 10-Bit-Samples)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-72 dB (PCM Bereich von 12-Bit Samples)"
+msgstr "-72 dB (PCM-Bereich von 12-Bit-Samples)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-84 dB (PCM Bereich von 14-Bit Samples)"
+msgstr "-84 dB (PCM-Bereich von 14-Bit-Samples)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 dB (PCM Bereich von 16-Bit Samples „CD-Qualität“)"
+msgstr "-96 dB (PCM-Bereich von 16-Bit-Samples „CD-Qualität“)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-120 dB (approximate limit of human hearing)"
-msgstr "-120 dB (ungefähre Grenze des menschliches Gehörs)"
+msgstr "-120 dB (ungefähre Grenze des menschlichen Gehörs)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 dB (PCM Bereich von 24-Bit Samples)"
+msgstr "-145 dB (PCM-Bereich von 24-Bit-Samples)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Local"
@@ -15288,9 +15192,8 @@ msgstr ""
 "Sprachen (RTL-Sprachen)"
 
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgid "Show Timeline Tooltips"
-msgstr "Zeitleisten-Tooltips aktivieren"
+msgstr "Zeitleisten-Tooltips anzeigen"
 
 #: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
 msgid "Show Scrub Ruler"
@@ -15436,7 +15339,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
-msgstr "&Import …"
+msgstr "&Import..."
 
 #: src/prefs/KeyConfigPrefs.cpp src/prefs/ThemePrefs.cpp
 msgid "&Defaults"
@@ -15447,22 +15350,24 @@ msgid ""
 "\n"
 "   *   \""
 msgstr ""
+"\n"
+"   *   \""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\"  (because the shortcut '"
-msgstr ""
+msgstr "\"  (weil die Verknüpfung '"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "' is used by \""
-msgstr ""
+msgstr "' verwendet wird von \""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\")\n"
-msgstr ""
+msgstr "\")\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr "Wählen Sie eine XML-Datei mit Audacity-Tastaturkürzeln aus …"
+msgstr "Wählen Sie eine XML-Datei mit Audacity-Tastaturkürzeln aus..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -15471,17 +15376,20 @@ msgstr "Fehler beim Importieren der Tastaturkürzel"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "The file with the shortcuts contains illegal shortcut duplicates for \""
 msgstr ""
+"Die Datei mit den Verknüpfungen enthält ungültige Verknüpfungsduplikate für "
+"\""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\" and \""
-msgstr ""
+msgstr "\" und \""
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
 msgid ""
 "\".\n"
 "Nothing is imported."
-msgstr "Nichts zum Wiederholen"
+msgstr ""
+"\".\n"
+"Nichts wird importiert."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15494,6 +15402,10 @@ msgid ""
 "The following commands are not mentioned in the imported file, but have "
 "their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
+"\n"
+"Die folgenden Befehle werden in der importierten Datei nicht erwähnt, ihre "
+"Verknüpfungen wurden wegen des Konfliktes mit weiteren neuen Verknüpfungen "
+"dennoch entfernt:\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -15560,7 +15472,7 @@ msgstr "LAME MP3-Bibliothek:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
-msgstr "&Suchen …"
+msgstr "&Suchen..."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Download"
@@ -15579,9 +15491,8 @@ msgid "No compatible FFmpeg library was found"
 msgstr "Keine kompatible FFmpeg-Bibliothek gefunden"
 
 #: src/prefs/LibraryPrefs.cpp
-#, fuzzy
 msgid "FFmpeg support is not compiled in"
-msgstr "FFmpeg-Unterstützung wurde nicht mit kompiliert"
+msgstr "FFmpeg-Unterstützung wird nicht mit kompiliert"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -15589,7 +15500,7 @@ msgstr "FFmpeg-Bibliothek:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Loca&te..."
-msgstr "S&uchen …"
+msgstr "S&uchen..."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Dow&nload"
@@ -15609,7 +15520,7 @@ msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Success"
-msgstr ""
+msgstr "Erfolg"
 
 #: src/prefs/LibraryPrefs.h
 msgid "Library"
@@ -15665,27 +15576,24 @@ msgstr ""
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid ""
 "  'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
 msgstr ""
-"„Fragen“ bedeutet, dass Audacity Sie bei jedem Start fragt, ob das Modul "
+"  \"Fragen\" bedeutet, dass Audacity Sie bei jedem Start fragt, ob das Modul "
 "geladen werden soll."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
 msgstr ""
-"„Fehlgeschlagen“ bedeutet, dass Audacity annimmt, dass dieses Modul defekt "
-"ist und es nicht ausführen wird."
+"  \"Fehlgeschlagen\" bedeutet, dass Audacity annimmt, dass dieses Modul "
+"defekt ist und es nicht ausführen wird."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid "  'New' means no choice has been made yet."
-msgstr "„Neu“ bedeutet, dass noch keine Auswahl getroffen wurde."
+msgstr "  \"Neu\" bedeutet, dass noch keine Auswahl getroffen wurde."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when Audacity starts up."
@@ -15977,9 +15885,8 @@ msgid "Category"
 msgstr "Kategorie"
 
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
-#, fuzzy
 msgid "Preferences:"
-msgstr "Einstellungen: "
+msgstr "Einstellungen:"
 
 #. i18n-hint: (noun) i.e Audacity projects.
 #: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
@@ -15996,11 +15903,11 @@ msgstr "Beim Speichern eines Projekts, das von anderen Audiodateien abhängt"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "16-bit"
-msgstr "16-bit"
+msgstr "16 Bit"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "24-bit"
-msgstr "24-bit"
+msgstr "24 Bit"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
@@ -16009,11 +15916,11 @@ msgstr "Einstellungen für Qualität"
 #: src/prefs/QualityPrefs.cpp
 #, c-format
 msgid "%i Hz"
-msgstr ""
+msgstr "%i Hz"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
-msgstr "Andere …"
+msgstr "Andere..."
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Sampling"
@@ -16241,9 +16148,8 @@ msgid "&Use Preferences"
 msgstr "Einstellungen &verwenden"
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
-#, fuzzy
 msgid "S&cale:"
-msgstr "S&kalieren"
+msgstr "S&kalieren:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Mi&n Frequency (Hz):"
@@ -16278,9 +16184,8 @@ msgid "Algorithm"
 msgstr "Algorithmus"
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "A&lgorithm:"
-msgstr "A&lgorithmus"
+msgstr "A&lgorithmus:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
@@ -16307,9 +16212,8 @@ msgid "Window &type:"
 msgstr "Fenster&typ:"
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "&Zero padding factor:"
-msgstr "&Null-Abstandsfaktor"
+msgstr "&Null-Abstandsfaktor:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble Spectral Selection"
@@ -16519,9 +16423,8 @@ msgid "Solo &Button:"
 msgstr "Alleine-&Knopf:"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Logarithmic (dB)"
-msgstr "Logarithmisch"
+msgstr "Logarithmisch (dB)"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -16609,9 +16512,8 @@ msgid "Auto-&fit track height"
 msgstr "Spurhöhe automatisch ein&passen"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Sho&w track name as overlay"
-msgstr "Audiospurname als &Überlagerung anzeigen"
+msgstr "Sp&urname als Overlay anzeigen"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
@@ -16634,9 +16536,8 @@ msgid "Default &view mode:"
 msgstr "Standard-&Anzeigemodus:"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Default Waveform scale:"
-msgstr "Standard-Abtast&format:"
+msgstr "Standard-Wellenformskala:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Display &samples:"
@@ -16701,9 +16602,8 @@ msgstr ""
 "Heruntermischen beim Exportieren (&Eigenes FFmpeg oder externes Programm)"
 
 #: src/prefs/WarningsPrefs.cpp
-#, fuzzy
 msgid "Missing file &name extension during export"
-msgstr "In Mono zusammenmischen beim Exportieren"
+msgstr "Fehlende Datei&namenserweiterung während des Exports"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "&Importing uncompressed audio files"
@@ -16719,9 +16619,8 @@ msgid "Preferences for Waveforms"
 msgstr "Einstellungen für Wellenformen"
 
 #: src/prefs/WaveformPrefs.cpp
-#, fuzzy
 msgid "Waveform dB &range:"
-msgstr "Wellenform dB-&Bereich"
+msgstr "Wellenfo&rm dB-Bereich:"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
@@ -16770,14 +16669,14 @@ msgstr "Auswahl auf Anfang"
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s Paused."
-msgstr "Pausiert"
+msgstr "%s pausiert."
 
 #: src/toolbars/ControlToolBar.cpp
 #, c-format
 msgid "%s."
-msgstr ""
+msgstr "%s."
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the big buttons on it (play record etc)
@@ -16946,14 +16845,14 @@ msgid "Recording Volume (Unavailable; use system mixer.)"
 msgstr "Aufnahmelautstärke (Nicht verfügbar; Systemmixer verwenden.)"
 
 #: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f (emulated)"
-msgstr "Wiedergabelautstärke: %s (emuliert)"
+msgstr "Wiedergabelautstärke: %.2f (emuliert)"
 
 #: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f"
-msgstr "Wiedergabelautstärke: %%.2f%s"
+msgstr "Wiedergabelautstärke: %.2f"
 
 #: src/toolbars/MixerToolBar.cpp
 msgid "Playback Volume (Unavailable; use system mixer.)"
@@ -17114,16 +17013,14 @@ msgid "Spe&ctral Selection Toolbar"
 msgstr "&Spektralauswahl-Werkzeugleiste"
 
 #: src/toolbars/TimerToolBar.cpp
-#, fuzzy
 msgid "Time"
-msgstr "Zeit:"
+msgstr "Zeit"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for viewing actual time of the cursor
 #: src/toolbars/TimerToolBar.cpp
-#, fuzzy
 msgid "&Time Toolbar"
-msgstr "&Gerät-Werkzeugleiste"
+msgstr "&Zeit-Werkzeugleiste"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -17161,9 +17058,8 @@ msgid "Draw Tool"
 msgstr "Zeichenwerkzeug"
 
 #: src/toolbars/ToolsToolBar.cpp
-#, fuzzy
 msgid "Multi-Tool"
-msgstr "Multifunktionswerkzeug"
+msgstr "Mehrfachwerkzeug"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Slide Tool"
@@ -17249,7 +17145,7 @@ msgstr "Klicken um Textmarke zu bearbeiten"
 
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
 msgid "&Font..."
-msgstr "&Schrift …"
+msgstr "&Schrift..."
 
 #. i18n-hint: (noun) This is the font for the label track.
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
@@ -17267,23 +17163,20 @@ msgid "Face size"
 msgstr "Schriftgröße"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "Cu&t Label text"
-msgstr "Textmarken-Text"
+msgstr "Textmarken&text ausschneiden"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "&Copy Label text"
-msgstr "Textmarken-Text"
+msgstr "Textmarkentext einf&ügen"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "&Delete Label"
 msgstr "Textmarke &löschen"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "&Edit Label..."
-msgstr "Te&xtmarken bearbeiten …"
+msgstr "Te&xtmarke bearbeiten..."
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "Deleted Label"
@@ -17405,7 +17298,7 @@ msgstr "Sample bearbeiten"
 #. i18n-hint k abbreviating kilo meaning thousands
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
 msgid "k"
-msgstr ""
+msgstr "k"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 msgid "Zoom Reset"
@@ -17420,13 +17313,12 @@ msgid "&Spectrogram"
 msgstr "&Spektrogramm"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
-#, fuzzy
 msgid ""
 "To change Spectrogram Settings, stop any\n"
 " playing or recording first."
 msgstr ""
 "Um Spektrogramm-Einstellungen zu ändern, stoppen Sie\n"
-"zuerst sämtliche Wiedergaben oder Aufnahmen."
+"zuerst jegliche Wiedergabe und Aufnahmen."
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Stop the Audio First"
@@ -17434,7 +17326,7 @@ msgstr "Audio zuerst stoppen"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "S&pectrogram Settings..."
-msgstr "S&pektrogramm-Einstellungen …"
+msgstr "S&pektrogramm-Einstellungen..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -17506,7 +17398,7 @@ msgstr "352800 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Other..."
-msgstr "&Andere …"
+msgstr "&Andere..."
 
 #. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -17523,9 +17415,8 @@ msgid "Set Rate"
 msgstr "Rate einstellen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid "&Multi-view"
-msgstr "Multi"
+msgstr "&Mehrfachansicht"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Ma&ke Stereo Track"
@@ -17618,9 +17509,9 @@ msgstr "Rechts, %dHz"
 #. i18n-hint dB abbreviates decibels
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%+.1f dB"
-msgstr "%.2f dB"
+msgstr "%+.1f dB"
 
 #. i18n-hint: Stereo pan setting
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -17637,23 +17528,23 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% Rechts"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid ""
 "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "Klicken und Ziehen zum anpassen, Doppelklicken um zurückzusetzen"
+msgstr ""
+"Klicken und Ziehen, um Größen von Unteransichten anzupassen; doppelklicken, "
+"um sie gleichmäßig zu teilen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Click and drag to rearrange sub-views"
-msgstr "Klicken und Ziehen, um eine Spur auf der Zeitachse zu verschieben"
+msgstr "Klicken und Ziehen, um Unteransichten neu anzuordnen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Rearrange sub-views"
-msgstr ""
+msgstr "Unteransichten neu anordnen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Close sub-view"
-msgstr ""
+msgstr "Unteransicht schließen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -17744,7 +17635,7 @@ msgstr "L&ogarithmischer Maßstab"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "&Range..."
-msgstr "&Bereich …"
+msgstr "&Bereich..."
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
@@ -17752,7 +17643,7 @@ msgstr "Logarithmische &Interpolation"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "&Name..."
-msgstr "&Name …"
+msgstr "&Name..."
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
@@ -17833,14 +17724,12 @@ msgid "Scru&bbing"
 msgstr "Schru&bben"
 
 #: src/tracks/ui/Scrubbing.cpp
-#, fuzzy
 msgid "Scrub Bac&kwards"
-msgstr "Rückwärts"
+msgstr "Rüc&kwärts schrubben"
 
 #: src/tracks/ui/Scrubbing.cpp
-#, fuzzy
 msgid "Scrub For&wards"
-msgstr "Vorwärts"
+msgstr "Vor&wärts schrubben"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
@@ -17875,7 +17764,7 @@ msgstr "Klicken und Ziehen um die Frequenzbandbreite anzupassen."
 #. i18n-hint: These are the names of a menu and a command in that menu
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Edit, Preferences..."
-msgstr "Bearbeiten, Einstellungen …"
+msgstr "Bearbeiten, Einstellungen..."
 
 #. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac
 #: src/tracks/ui/SelectHandle.cpp
@@ -17920,7 +17809,6 @@ msgid "Collapse"
 msgstr "Zusammenklappen"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Command+Click to deselect"
 msgstr "Befehl+Klick zum abwählen"
 
@@ -17929,25 +17817,22 @@ msgid "Select track"
 msgstr "Spur wählen"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Ctrl+Click to deselect"
-msgstr "Strg-Klick zum abwählen"
+msgstr "Strg+Klick zum abwählen"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
-msgstr "Menü öffnen ..."
+msgstr "Menü öffnen..."
 
 #. i18n-hint: Command names a modifier key on Macintosh keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
-#, fuzzy
 msgid "Command+Click"
-msgstr "Befehl-Klick"
+msgstr "Befehl+Klick"
 
 #. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
-#, fuzzy
 msgid "Ctrl+Click"
-msgstr "Strg-Klick"
+msgstr "Strg+Klick"
 
 #. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -17992,9 +17877,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Links=Heranzoomen, Rechts=Herauszoomen, Mitte=Normal"
 
 #: src/widgets/AButton.cpp
-#, fuzzy
 msgid "(disabled)"
-msgstr " (deaktiviert)"
+msgstr "(deaktiviert)"
 
 #: src/widgets/AButton.cpp src/widgets/Meter.cpp
 msgid "Press"
@@ -18018,9 +17902,9 @@ msgstr "R"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.2fx"
-msgstr "%.2f"
+msgstr "%.2fx"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -18591,9 +18475,9 @@ msgid "File Dialog"
 msgstr "Dateidialog"
 
 #: src/xml/XMLFileReader.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s at line %lu"
-msgstr "Fehler: %hs in Zeile %lu"
+msgstr "Fehler: %s in Zeile %lu"
 
 #: src/xml/XMLFileReader.cpp
 #, c-format
@@ -18632,40 +18516,37 @@ msgstr ""
 "Veröffentlicht unter den Bedingungen der GNU General Public Lizenz Version 2"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Treat audio below this level as silence (dB)"
-msgstr "Audio unter diesem Pegel als Stille behandeln [-dB]"
+msgstr "Audio unter diesem Pegel als Stille behandeln (dB)"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Minimum duration of silence (seconds)"
-msgstr "Minimale Dauer der Stille [Sekunden]"
+msgstr "Minimale Dauer der Stille (Sekunden)"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Label placement (seconds before silence ends)"
-msgstr "Markierungsplatzierung [Sekunden bevor Stille endet]"
+msgstr "Textmarkenplatzierung (Sekunden bevor Stille endet)"
 
 #. i18n-hint: Abbreviation of "Silence".
 #: plug-ins/SilenceMarker.ny
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #. i18n-hint: hours minutes and seconds. Do not translate "~a".
 #: plug-ins/SilenceMarker.ny
 #, lisp-format
 msgid "~ah ~am ~as"
-msgstr ""
+msgstr "~ah ~am ~as"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid ""
 "No silences found.\n"
 "Try reducing the silence level and\n"
 "the minimum silence duration."
 msgstr ""
-"Keine Stille gefunden. Versuchen Sie den Stillepegel~% und die minimale "
-"Stilledauer zu reduzieren."
+"Keine Stille gefunden.\n"
+"Versuchen Sie den Stillepegel und\n"
+"die minimale Stilledauer zu reduzieren."
 
 #: plug-ins/SoundFinder.ny
 msgid "Sound Finder"
@@ -18714,7 +18595,7 @@ msgstr "[Ende]"
 
 #: plug-ins/SpectralEditMulti.ny
 msgid "Spectral edit multi tool"
-msgstr "Spektralbearbeitung - Multiwerkzeug"
+msgstr "Spektralbearbeitung - Mehrfachwerkzeug"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -19120,47 +19001,43 @@ msgstr "Änderung der Dauer erlauben"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "EQ XML to TXT Converter"
-msgstr ""
+msgstr "EQ XML zu TXT Konverter"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Select target EQ effect"
-msgstr "Letzten Effekt wiederholen"
+msgstr "Ziel EQ-Effekt auswählen"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Equalization XML file"
-msgstr "Equalizer"
+msgstr "XML-Equalizerdatei"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
-msgstr ""
+msgstr "Wenn Ausgabetextdatei existiert"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Append number"
-msgstr "Aufnahme anhängen"
+msgstr "Nummer anhängen"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Overwrite"
-msgstr "Überschreiben bestätigen"
+msgstr "Überschreiben"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Unable to open file~%~s"
-msgstr "Fehler.~%Kann Datei nicht öffnen"
+msgstr "Fehler.~%Kann Datei nicht öffnen~%~s"
 
 #. i18n-hint: Do not translate "~a".txt
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, lisp-format
 msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr ""
+msgstr "Fehler.~%Datei überschreiben verweigert:~%\"~a.txt\""
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "Fehler.~%~s kann nicht geschrieben werden.~%"
+msgstr "Fehler.~%Datei kann nicht geschrieben werden:~%\"~a.txt\""
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
@@ -19402,76 +19279,64 @@ msgid "Performing Low-Pass Filter..."
 msgstr "Wende Tiefpassfilter an..."
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Noise Gate"
-msgstr "Rausch-Art:"
+msgstr "Noise-Gate"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Gating audio..."
-msgstr "Audio wird zwischengespeichert"
+msgstr "Audio wird gegated..."
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Select Function"
-msgstr "Auswahl"
+msgstr "Funktion wählen"
 
 #: plug-ins/noisegate.ny
 msgid "Gate"
-msgstr ""
+msgstr "Gate"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Analyse Noise Level"
-msgstr "Analysezeit:"
+msgstr "Analysiere Rauschpegel"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Stereo Linking"
-msgstr "Suchen"
+msgstr "Stereo-Verknüpfung"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Link Stereo Tracks"
-msgstr "&Stereospur erstellen"
+msgstr "Stereospuren verknüpfen"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Don't Link Stereo"
-msgstr "Kanalkopplung"
+msgstr "Stereo nicht verknüpfen"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Apply Low-Cut filter"
-msgstr "Wende Kerbfilter an..."
+msgstr "Tiefschnitt-Filter anwenden"
 
 #: plug-ins/noisegate.ny
 msgid "10Hz 6dB/octave"
-msgstr ""
+msgstr "10Hz 6dB/Oktave"
 
 #: plug-ins/noisegate.ny
 msgid "20Hz 6dB/octave"
-msgstr ""
+msgstr "20Hz 6dB/Oktave"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Gate frequencies above (kHz)"
-msgstr "~aMittlere Frequenz muss größer als 0 Hz sein."
+msgstr "Gate-Frequenzen über (kHz)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Level reduction (dB)"
-msgstr "Rausch-Vermi&nderung (dB):"
+msgstr "Pegel-Reduktion (dB)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Gate threshold (dB)"
-msgstr "Grenzwert dB"
+msgstr "Gate-Schwellenwert (dB)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Attack/Decay (ms)"
-msgstr "Ansprech-/Abklingzeit"
+msgstr "Ansprech-/Abklingzeit (ms)"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19481,6 +19346,10 @@ msgid ""
 "is too high for selected track.\n"
 "Set the control below ~a kHz."
 msgstr ""
+"Fehler.\n"
+"\"Gatefrequenzen über: ~s kHz\"\n"
+"ist zu hoch für ausgewählte Spur.\n"
+"Stellen Sie das Steuerelement unter ~a kHz."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19488,6 +19357,8 @@ msgid ""
 "~%Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
 msgstr ""
+"~%Nicht genügend Audio ausgewählt.\n"
+"Wählen Sie mehr als ~a ms aus."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19495,6 +19366,8 @@ msgid ""
 "Peak based on first ~a seconds ~a dB~%\n"
 "Suggested Threshold Setting ~a dB."
 msgstr ""
+"Peak basierend auf ersten ~a Sekunden ~a dB~%\n"
+"Vorgeschlagene Schwellenwerteinstellung ~a dB."
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
@@ -19529,78 +19402,68 @@ msgstr "Nyquist-Erweiterung-Installer"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Select file(s) to install"
-msgstr "Stream(s) für den Import auswählen"
+msgstr "Datei(en) zum Installieren wählen"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Allow overwriting"
-msgstr "Übersteuerungen erlauben"
+msgstr "Überschreiben erlauben"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Disallow"
-msgstr "Nicht erlaubt"
+msgstr "Verweigern"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Allow"
-msgstr ""
+msgstr "Erlauben"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Error.n"
-msgstr "Fehler"
+msgstr "Fehler.n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
-msgstr ""
+msgstr "Erfolg.~%Dateien geschrieben nach:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Warning.nFailed to copy some files:n"
-msgstr ""
+msgstr "Warnung.nEinige Dateien konnten nicht kopiert werden:n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"~s installiert nach:~%\"~a\"~%~%~\n"
-"            Verwenden Sie den Erweiterungs-Manager um den Effekt zu "
-"erweitern."
+"Erweiterungen installiert.n(Verwenden Sie den Erweiterungs-Manager um "
+"Effekte zu aktivieren):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-ins updated:"
-msgstr "Erweiterungsunterstützung"
+msgstr "Erweiterungen aktualisiert:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Files copied to plug-ins folder:"
-msgstr "Erweiterungsdatei wählen"
+msgstr "Dateien in Erweiterungsordner kopiert:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Not found or cannot be read:"
-msgstr "Fehler.~%~s nicht gefunden oder kann nicht gelesen werden.~%"
+msgstr "Nicht gefunden oder kann nicht gelesen werden:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Unsupported file type:"
-msgstr "Unbenutzte Filter:"
+msgstr "Nicht unterstützter Dateityp:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Files already installed ('Allow Overwriting' disabled):"
-msgstr ""
+msgstr "Bereits installierte Dateien ('Überschreiben erlauben' deaktiviert):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Cannot be written to plug-ins folder:"
-msgstr ""
+msgstr "Kann nicht in Erweiterungen-Ordner geschrieben werden:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%No file selected."
-msgstr "Keine Kette ausgewählt"
+msgstr "Fehler.~%Keine Datei gewählt."
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
@@ -20130,14 +19993,13 @@ msgid "Error.~%Unable to open file"
 msgstr "Fehler.~%Kann Datei nicht öffnen"
 
 #: plug-ins/spectral-delete.ny
-#, fuzzy
 msgid "Spectral Delete"
-msgstr "Spektralauswahl"
+msgstr "Spektral löschen"
 
 #: plug-ins/spectral-delete.ny
 #, lisp-format
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
-msgstr ""
+msgstr "Fehler.~%Spur-Abtastrate unter 100 Hz wird nicht unterstützt."
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
@@ -20224,7 +20086,7 @@ msgid "High Cut for Vocals (Hz)"
 msgstr "Höhensperre für Gesang (Hz)"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Average x: ~a, y: ~a\n"
 "                    Covariance x y: ~a\n"
@@ -20236,13 +20098,13 @@ msgid ""
 "                    y equals ~a plus ~a times x~%"
 msgstr ""
 "Durchschnitt x: ~a, y: ~a\n"
-"Kovarianz x y: ~a\n"
-"Durchschnitt Varianz x: ~a, y: ~a\n"
-"Standard Abweichung x: ~a, y: ~a\n"
-"Korrelationskoeffizient: ~a\n"
-"Bestimmtheitsmaß: ~a\n"
-"Variation der Rückstände: ~a\n"
-"y gleich ~a plus ~a mal x~%"
+"                    Kovarianz x y: ~a\n"
+"                    Durchschnitt Varianz x: ~a, y: ~a\n"
+"                    Standard Abweichung x: ~a, y: ~a\n"
+"                    Korrelationskoeffizient: ~a\n"
+"                    Bestimmtheitsmaß: ~a\n"
+"                    Variation der Rückstände: ~a\n"
+"                    y gleich ~a plus ~a mal x~%"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -20254,19 +20116,17 @@ msgstr ""
 "etwa ~a %. Das bedeutet:~%~a~%"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - The two channels are identical, i.e. dual mono.\n"
 "                The center can't be removed.\n"
 "                Any remaining difference may be caused by lossy encoding."
 msgstr ""
 " - Die beiden Kanäle sind identisch, z. B. duales Mono.\n"
-"   Die Mitte kann nicht entfernt werden.\n"
-"      Jeglicher verbleibender Unterschied kann durch verlustbehaftete "
-"Enkodierung bedingt sein."
+"                Die Mitte kann nicht entfernt werden.\n"
+"                Jeglicher verbleibender Unterschied kann durch "
+"verlustbehaftete Enkodierung bedingt sein."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - The two Channels are strongly related, i.e. nearly mono or extremely "
 "panned.\n"
@@ -20274,7 +20134,7 @@ msgid ""
 msgstr ""
 " - Die beiden Kanäle sind stark verwandt, z. B. beinahe Mono oder extrem "
 "geschwenkt.\n"
-"   Wahrscheinlich gelingt die Mittenextraktion nur schlecht."
+"                Wahrscheinlich gelingt die Mittenextraktion nur schlecht."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20284,17 +20144,16 @@ msgstr ""
 "weit verteilt."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - An ideal value for Stereo.\n"
 "                However, the center extraction depends also on the used "
 "reverb."
 msgstr ""
 " - Ein idealer Wert für Stereo.\n"
-"   Die Mittenextraktion hängt jedoch auch vom eingesetzten Hall ab."
+"                Die Mittenextraktion hängt jedoch auch vom eingesetzten Hall "
+"ab."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - The two channels are almost not related.\n"
 "                Either you have only noise or the piece is mastered in a "
@@ -20302,23 +20161,22 @@ msgid ""
 "                The center extraction can still be good though."
 msgstr ""
 " - Die beiden Kanäle sind fast nicht verwandt.\n"
-"   Entweder haben Sie nur Lärm oder das Stück ist auf unausgeglichene Weise "
-"gemastert.\n"
-"   Die Mittenextraktion kann jedoch noch gut werden."
+"                Entweder haben Sie nur Lärm oder das Stück ist auf "
+"unausgeglichene Weise gemastert.\n"
+"                Die Mittenextraktion kann jedoch noch gut werden."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - Although the Track is stereo, the field is obviously extra wide.\n"
 "                This can cause strange effects.\n"
 "                Especially when played by only one speaker."
 msgstr ""
-" - Obwohl die Spur Stereo ist, ist das Feld offenbar sehr breit.\n"
-"   Dies kann seltsame Effekte erzeugen.\n"
-"   Besonders wenn die Wiedergabe über nur einen Lautsprecher erfolgt."
+" - Obwohl dies eine Stereospur ist, ist das Feld offenbar sehr breit.\n"
+"                Dies kann seltsame Effekte erzeugen.\n"
+"                Besonders wenn die Wiedergabe über nur einen Lautsprecher "
+"erfolgt."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - The two channels are nearly identical.\n"
 "                  Obviously, a pseudo stereo effect has been used\n"
@@ -20327,10 +20185,11 @@ msgid ""
 "                  Don't expect good results from a center removal."
 msgstr ""
 " - Die beiden Kanäle sind fast identisch.\n"
-"   Offenbar wurde ein Pseudo-Stereoeffekt verwendet,\n"
-"   um das Signal über die physische Distanz zwischen den Lautsprechern zu "
-"verteilen.\n"
-"Erwarten Sie von einer Mittenentfernung keine guten Resultate."
+"                  Offenbar wurde ein Pseudo-Stereoeffekt verwendet,\n"
+"                  um das Signal über die physische Distanz zwischen den "
+"Lautsprechern zu verteilen.\n"
+"                  Erwarten Sie von einer Mittenentfernung keine guten "
+"Resultate."
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
