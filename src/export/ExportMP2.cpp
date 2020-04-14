@@ -77,8 +77,10 @@
 
 namespace {
 
+// Typo fix of kpbs to be removed after 2.4.0
 // i18n-hint kbps abbreviates "thousands of bits per second"
-inline TranslatableString n_kbps( int n ) { return XO("%d kpbs").Format( n ); }
+inline TranslatableString n_kbps( int n ) { return 
+   ((XO("%d kpbs").Translation()=="%d kpbs")?XO("%d kbps"):XO("%d kpbs")).Format( n ); }
 
 const TranslatableStrings BitRateNames {
    n_kbps(16),
