@@ -3256,7 +3256,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
       S.Prop( 1 )
          .Position(wxEXPAND | wxALL)
          .MinSize( { 480, 250 } )
-         .Style(wxTE_MULTILINE | wxTE_READONLY)
+         .Style(wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH)
          .AddTextWindow( message.Translation() );
 
       S.SetBorder( 5 );

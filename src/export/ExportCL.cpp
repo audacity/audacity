@@ -597,7 +597,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
       ShuttleGui S(&dlg, eIsCreating);
       S
-         .Style( wxTE_MULTILINE | wxTE_READONLY )
+         .Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH )
          .AddTextWindow(mCmd + wxT("\n\n") + output);
       S.StartHorizontalLay(wxALIGN_CENTER, false);
       {

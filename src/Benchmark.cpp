@@ -222,7 +222,7 @@ void BenchmarkDialog::MakeBenchmarkDialog()
       mText = S.Id(StaticTextID)
          /* i18n-hint noun */
          .Name(XO("Output"))
-         .Style( wxTE_MULTILINE | wxTE_READONLY )
+         .Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH )
          .MinSize( { 500, 200 } )
          .AddTextWindow(wxT(""));
 

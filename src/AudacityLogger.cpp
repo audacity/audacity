@@ -160,7 +160,7 @@ void AudacityLogger::Show(bool show)
    {
       S.StartVerticalLay(true);
       {
-         mText = S.Style(wxTE_MULTILINE | wxHSCROLL | wxTE_READONLY)
+         mText = S.Style(wxTE_MULTILINE | wxHSCROLL | wxTE_READONLY | wxTE_RICH)
             .AddTextWindow(mBuffer);
 
          S.AddSpace(0, 5);
