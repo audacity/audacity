@@ -53,7 +53,7 @@ TitleRestorer::TitleRestorer(
       );
       if ( UnnamedCount > 1 ) {
          sProjNumber.Printf(
-            "[Project %02i] ", project.GetProjectNumber() + 1 );
+            _("[Project %02i] "), project.GetProjectNumber() + 1 );
          RefreshAllTitles( true );
       } 
    }
