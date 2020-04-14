@@ -519,7 +519,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
    // If subtype is still not specified, supply a default.
    if (!(sf_format & SF_FORMAT_SUBMASK))
    {
-      sf_format |= SF_FORMAT_FLOAT;
+      sf_format |= SF_FORMAT_PCM_16;
    }
 
    int fileFormat = sf_format & SF_FORMAT_TYPEMASK;
