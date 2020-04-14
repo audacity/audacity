@@ -87,6 +87,8 @@ ExportCLOptions::ExportCLOptions(wxWindow *parent, int WXUNUSED(format))
    mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 
    if (mHistory.GetCount() == 0) {
+      mHistory.AddFileToHistory(wxT("ffmpeg -i - \"%f.opus\""), false);
+      mHistory.AddFileToHistory(wxT("ffmpeg -i - \"%f.wav\""), false);
       mHistory.AddFileToHistory(wxT("ffmpeg -i - \"%f\""), false);
       mHistory.AddFileToHistory(wxT("lame - \"%f\""), false);
    }
