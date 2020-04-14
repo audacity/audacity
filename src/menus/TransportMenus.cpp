@@ -299,6 +299,9 @@ void OnTimerRecord(const CommandContext &context)
    }
    else
    {
+      // Bug #2382
+      // Allow recording to start at current cursor position.
+      #if 0
       // Timer Record should not record into a selection.
       bool bPreferNewTrack;
       gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
@@ -307,6 +310,7 @@ void OnTimerRecord(const CommandContext &context)
       } else {
          window.SkipEnd(false);
       }
+      #endif
 
       int iTimerRecordingOutcome = dialog.RunWaitDialog();
       switch (iTimerRecordingOutcome) {
