@@ -1448,10 +1448,14 @@ bool NyquistEffect::ProcessOne()
       // if necessary, by gettext or ngettext defined below, before it is
       // communicated back to C++
       auto msg = Verbatim( NyquistToWxString(nyx_get_string()) );
-      if (!msg.empty())  // Empty string may be used as a No-Op return value.
-         Effect::MessageBox( msg );
-      else
+      if (!msg.empty()) { // Empty string may be used as a No-Op return value.
+         if (!mExternal) {
+            Effect::MessageBox( msg );
+         }
+      }
+      else {
          return true;
+      }
 
       // True if not process type.
       // If not returning audio from process effect,

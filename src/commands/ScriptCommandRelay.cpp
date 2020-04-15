@@ -128,6 +128,11 @@ int ExecCommand2(wxString *pIn, wxString *pOut)
 
    // Wait until all responses from the command have been received.
    // The last response is signalled by an empty line.
+   //
+   // LLL: Allow ExecCommand() to process the responses, otherwise
+   //      it will hang waiting for more responses that will not be
+   //      forthcoming.
+   #if 0
    wxString msg = ScriptCommandRelay::ReceiveResponse().GetMessage();
    while (msg != wxT("\n"))
    {
@@ -135,6 +140,7 @@ int ExecCommand2(wxString *pIn, wxString *pOut)
       *pOut += msg + wxT("\n");
       msg = ScriptCommandRelay::ReceiveResponse().GetMessage();
    }
+   #endif
 
    return 0;
 }
