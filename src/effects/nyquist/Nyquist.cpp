@@ -544,8 +544,6 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
 
 bool NyquistEffect::Init()
 {
-   mDelegate.reset();
-
    // When Nyquist Prompt spawns an effect GUI, Init() is called for Nyquist Prompt,
    // and then again for the spawned (mExternal) effect.
 
@@ -620,21 +618,17 @@ bool NyquistEffect::Init()
    return true;
 }
 
+bool NyquistEffect::CheckWhetherSkipEffect()
+{
+   // If we're a prompt and we have controls, then we've already processed
+   // the audio, so skip further processing.
+   return (mIsPrompt && mControls.size() > 0);
+}
+
 static void RegisterFunctions();
 
 bool NyquistEffect::Process()
 {
-   if (mDelegate)
-   {
-      mProgress->Hide();
-      auto &effect = *mDelegate;
-      auto result = Delegate( effect );
-      mT0 = effect.mT0;
-      mT1 = effect.mT1;
-      mDelegate.reset();
-      return result;
-   }
-
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
    // they are skipped.  The reason is that when Nyquist calls out to a chain,
@@ -653,6 +647,10 @@ bool NyquistEffect::Process()
    mProjectChanged = false;
    EffectManager & em = EffectManager::Get();
    em.SetSkipStateFlag(false);
+
+   if (mExternal) {
+      mProgress->Hide();
+   }
 
    mOutputTime = 0;
    mCount = 0;
@@ -1016,14 +1014,14 @@ bool NyquistEffect::ShowInterface(
       return res;
    }
 
-   // Come here only in case the user entered a script into the Nyquist
-   // prompt window that included the magic comments that specify controls.
-   // Interpret those comments and put up a second dialog.
-   mDelegate = std::make_unique< NyquistEffect >( NYQUIST_WORKER_ID );
-   auto &effect = *mDelegate;
+   NyquistEffect effect(NYQUIST_WORKER_ID);
+
    effect.SetCommand(mInputCmd);
    effect.mDebug = (mUIResultID == eDebugID);
-   return effect.ShowInterface( parent, factory, forceModal );
+   bool result = Delegate(effect, parent, factory);
+   mT0 = effect.mT0;
+   mT1 = effect.mT1;
+   return result;
 }
 
 void NyquistEffect::PopulateOrExchange(ShuttleGui & S)

@@ -207,7 +207,7 @@ bool EffectChangeTempo::Process()
       EffectSBSMS proxy;
       proxy.mProxyEffectName = XO("High Quality Tempo Change");
       proxy.setParameters(tempoRatio, 1.0);
-      success = Delegate( proxy );
+      success = Delegate(proxy, *mUIParent, nullptr);
    }
    else
 #endif

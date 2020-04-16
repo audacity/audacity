@@ -221,7 +221,7 @@ bool EffectChangePitch::Process()
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
 
-      return Delegate( proxy );
+      return Delegate(proxy, *mUIParent, nullptr);
    }
    else
 #endif
