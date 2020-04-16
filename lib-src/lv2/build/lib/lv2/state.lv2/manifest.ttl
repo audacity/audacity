@@ -1,8 +1,0 @@
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-
-<http://lv2plug.in/ns/ext/state>
-	a lv2:Specification ;
-	lv2:minorVersion 2 ;
-	lv2:microVersion 4 ;
-	rdfs:seeAlso <state.ttl> .
