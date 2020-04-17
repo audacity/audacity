@@ -1146,7 +1146,7 @@ bool MP3Exporter::InitLibraryExternal(wxString libpath)
    lame_encode_buffer_ieee_float = (lame_encode_buffer_ieee_float_t *)
       lame_lib.GetSymbol(wxT("lame_encode_buffer_ieee_float"));
    lame_encode_buffer_interleaved_ieee_float = (lame_encode_buffer_interleaved_ieee_float_t *)
-      lame_lib.GetSymbol(wxT("lame_encode_buffer_interleaved_ieee_float_t"));
+      lame_lib.GetSymbol(wxT("lame_encode_buffer_interleaved_ieee_float"));
    lame_encode_flush = (lame_encode_flush_t *)
       lame_lib.GetSymbol(wxT("lame_encode_flush"));
    lame_close = (lame_close_t *)
