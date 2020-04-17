@@ -35,8 +35,8 @@ void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
             ? wxNavigationKeyEvent::IsBackward
             :  wxNavigationKeyEvent::IsForward
          );
+         return;
       }
-      return;
    }
 #endif
 
