@@ -734,7 +734,6 @@ typedef int lame_set_mode_t(lame_global_flags *, MPEG_mode);
 typedef int lame_set_preset_t(lame_global_flags *, int);
 typedef int lame_set_error_protection_t(lame_global_flags *, int);
 typedef int lame_set_disable_reservoir_t(lame_global_flags *, int);
-typedef int lame_set_padding_type_t(lame_global_flags *, Padding_type);
 typedef int lame_set_bWriteVbrTag_t(lame_global_flags *, int);
 typedef size_t lame_get_lametag_frame_t(const lame_global_flags *, unsigned char* buffer, size_t size);
 typedef void lame_mp3_tags_fid_t(lame_global_flags *, FILE *);
@@ -881,7 +880,6 @@ private:
    lame_set_preset_t* lame_set_preset;
    lame_set_error_protection_t* lame_set_error_protection;
    lame_set_disable_reservoir_t *lame_set_disable_reservoir;
-   lame_set_padding_type_t *lame_set_padding_type;
    lame_set_bWriteVbrTag_t *lame_set_bWriteVbrTag;
    lame_get_lametag_frame_t *lame_get_lametag_frame;
    lame_mp3_tags_fid_t *lame_mp3_tags_fid;
@@ -1102,7 +1100,6 @@ bool MP3Exporter::InitLibraryInternal()
    lame_set_preset = ::lame_set_preset;
    lame_set_error_protection = ::lame_set_error_protection;
    lame_set_disable_reservoir = ::lame_set_disable_reservoir;
-   lame_set_padding_type = ::lame_set_padding_type;
    lame_set_bWriteVbrTag = ::lame_set_bWriteVbrTag;
 
    // These are optional
@@ -1179,8 +1176,6 @@ bool MP3Exporter::InitLibraryExternal(wxString libpath)
        lame_lib.GetSymbol(wxT("lame_set_error_protection"));
    lame_set_disable_reservoir = (lame_set_disable_reservoir_t *)
        lame_lib.GetSymbol(wxT("lame_set_disable_reservoir"));
-   lame_set_padding_type = (lame_set_padding_type_t *)
-       lame_lib.GetSymbol(wxT("lame_set_padding_type"));
    lame_set_bWriteVbrTag = (lame_set_bWriteVbrTag_t *)
        lame_lib.GetSymbol(wxT("lame_set_bWriteVbrTag"));
 
@@ -1214,7 +1209,6 @@ bool MP3Exporter::InitLibraryExternal(wxString libpath)
       !lame_set_preset ||
       !lame_set_error_protection ||
       !lame_set_disable_reservoir ||
-      !lame_set_padding_type ||
       !lame_set_bWriteVbrTag)
    {
       wxLogMessage(wxT("Failed to find a required symbol in the LAME library."));
@@ -1289,11 +1283,6 @@ int MP3Exporter::InitializeStream(unsigned channels, int sampleRate)
    lame_set_in_samplerate(mGF, sampleRate);
    lame_set_out_samplerate(mGF, sampleRate);
    lame_set_disable_reservoir(mGF, false);
-#ifndef DISABLE_DYNAMIC_LOADING_LAME
-// TODO: Make this configurable (detect the existance of this function)
-   lame_set_padding_type(mGF, PAD_NO);
-#endif // DISABLE_DYNAMIC_LOADING_LAME
-
    // Add the VbrTag for all types.  For ABR/VBR, a Xing tag will be created.
    // For CBR, it will be a Lame Info tag.
    lame_set_bWriteVbrTag(mGF, true);
