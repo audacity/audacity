@@ -92,7 +92,7 @@ if( ${CMakeDetermineASM_NASMCompiler} )
 endif()
 
 configure_file( config.h.in private/config.h )
-configure_file( lame.h.in public/lame/lame.h )
+configure_file( ${TARGET_ROOT}/../libmp3lame/lame.h public/lame/lame.h )
 
 #organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
