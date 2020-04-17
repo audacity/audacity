@@ -32,7 +32,6 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "PluginManager.h"
 
 #include "commands/ScriptCommandRelay.h"
-#include <NonGuiThread.h>  // header from libwidgetextra
 
 #include "audacity/PluginInterface.h"
 
@@ -362,9 +361,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
    // After loading all the modules, we may have a registered scripting function.
    if(scriptFn)
    {
-      ScriptCommandRelay::SetCommandHandler(cmdHandler);
-      ScriptCommandRelay::SetRegScriptServerFunc(scriptFn);
-      NonGuiThread::StartChild(&ScriptCommandRelay::Run);
+      ScriptCommandRelay::StartScriptServer(scriptFn);
    }
 }
 

@@ -1449,9 +1449,7 @@ bool NyquistEffect::ProcessOne()
       // communicated back to C++
       auto msg = Verbatim( NyquistToWxString(nyx_get_string()) );
       if (!msg.empty()) { // Empty string may be used as a No-Op return value.
-         if (!mExternal) {
-            Effect::MessageBox( msg );
-         }
+         Effect::MessageBox( msg );
       }
       else {
          return true;

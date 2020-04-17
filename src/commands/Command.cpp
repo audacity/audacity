@@ -165,7 +165,7 @@ bool ApplyAndSendResponse::Apply()
    {
       response += wxT("Failed!");
    }
-   mCtx->Status(response);
+   mCtx->Status(response, true);
    return result;
 }
 
