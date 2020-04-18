@@ -7,12 +7,16 @@
 
 #ifdef __WXMAC__
 
+#include "WindowMenus.h"
+
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
 #include "../Project.h"
 #include "../commands/CommandContext.h"
 
 #include <wx/frame.h>
+#include <wx/menu.h>
+#include <wx/menuitem.h>
 
 #undef USE_COCOA
 
@@ -57,7 +61,68 @@ void DoMacMinimize(AudacityProject *project)
 namespace WindowActions {
 
 // exported helper functions
-// none
+
+// Refreshes the Window menu in all projects
+void Refresh()
+{
+   // Must do it in all projects
+   for (auto thisProject : AllProjects{})
+   {
+      // Need the projects frame, but this should always be successful
+      wxFrame *frame = thisProject->GetFrame();
+      wxASSERT(frame != NULL);
+      if (!frame)
+      {
+         continue;
+      }
+
+      // This can happen if we are called before the menubar is set in the frame
+      wxMenuBar *bar = frame->GetMenuBar();
+      if (!bar)
+      {
+         continue;
+      }
+
+      // Should always find the Window menu
+      int pos = bar->FindMenu(wxT("Window"));
+      wxASSERT(pos != wxNOT_FOUND);
+      if (pos == wxNOT_FOUND)
+      {
+         continue;
+      }
+
+      // We can not get the menu proper
+      wxMenu *menu = bar->GetMenu(pos);
+
+      // Remove all existing window items
+      for (auto item : menu->GetMenuItems())
+      {
+         if (item->GetId() >= WindowActions::ID_BASE)
+         {
+            menu->Destroy(item);
+         }
+      }
+
+      // Add all projects to this project's Window menu
+      for (auto project : AllProjects{})
+      {
+         int itemId = WindowActions::ID_BASE + project->GetProjectNumber();
+         wxString itemName = project->GetFrame()->GetTitle();
+         bool isActive = (GetActiveProject() == project.get());
+
+         // This should never really happen, but a menu item must have a name
+         if (itemName.empty())
+         {
+            itemName = _("<untitled>");
+         }
+
+         // Add it to the menu and check it if it's the active project
+         wxMenuItem *item = menu->Append(itemId, itemName);
+         item->SetCheckable(true);
+         item->Check(isActive);
+      }
+   }
+}
 
 // Menu handler functions
 
@@ -122,9 +187,9 @@ namespace {
 using namespace MenuTable;
 BaseItemSharedPtr WindowMenu()
 {
-      //////////////////////////////////////////////////////////////////////////
-      // poor imitation of the Mac Windows Menu
-      //////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////
+   // poor imitation of the Mac Windows Menu
+   //////////////////////////////////////////////////////////////////////////
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Window"), XO("&Window"),
@@ -144,7 +209,16 @@ BaseItemSharedPtr WindowMenu()
           * windows un-hidden */
          Command( wxT("MacBringAllToFront"), XXO("&Bring All to Front"),
             FN(OnMacBringAllToFront), AlwaysEnabledFlag )
+      ),
+
+      Section( "",
+         Special( wxT("PopulateWindowsStep"),
+         [](AudacityProject &, wxMenu &theMenu)
+         {
+            // Should something be done here???
+         } )
       )
+
    ) ) };
    return menu;
 }
