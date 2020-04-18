@@ -1601,7 +1601,7 @@ void ASlider::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
-   wxPaintDC dc(this);
+   wxBufferedPaintDC dc(this);
 
    bool highlighted =
       GetClientRect().Contains(
