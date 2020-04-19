@@ -638,8 +638,8 @@ wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, 
       
       if (dlg.ShowModal())
          preset = dlg.GetSelected();
-      
-      preset = wxEmptyString;
+      else
+         preset = wxEmptyString;
    }
 
    if (preset.empty())
