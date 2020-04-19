@@ -41,6 +41,9 @@ cmake_policy( SET CMP0075 NEW )
 # Definitions that must happen before the project() command
 if( APPLE )
 
+   # Generate schema files
+   set( CMAKE_XCODE_GENERATE_SCHEME ON )
+
    # Define the OSX compatibility parameters
    set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
    set( CMAKE_OSX_DEPLOYMENT_TARGET 10.7 CACHE INTERNAL "" )

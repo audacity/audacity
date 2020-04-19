@@ -1258,7 +1258,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( WRAPPER_SOURCES "${WRAPPER_ROOT}/Wrapper.c" )
 
    add_executable( Wrapper "${WRAPPER_SOURCES}" )
-   add_dependencies( Wrapper "${TARGET}" )
+   add_dependencies( "${TARGET}" Wrapper )
 
    set_target_property_all( "Wrapper" RUNTIME_OUTPUT_DIRECTORY "${_EXEDIR}" )
    organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
