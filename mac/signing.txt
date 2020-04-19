@@ -1,13 +1,13 @@
-To sign, notarize, and build the distribution DMG, you need to have an Apple
-Developer ID and a certificate. Once you have obtained these, proceed with
-the following:
+To sign, notarize, staple, and build the distribution DMG, you need to have
+an Apple Developer ID and a certificate. Once you have obtained these, proceed
+with the following:
 
 1) Create a file in your home directory called ".audacity_signing" and add
    the following three lines. Ensure you put in the email address you used
    for your Apple Developer account:
 
       NOTARIZE_USERNAME="specify your Apple developer email address"
-      NOTARIZE_PASSWORD="@keychain:APP_PASSWORD"
+      NOTARIZE_PASSWORD="@keychain:AUDACITY_PASSWORD"
       CODESIGN_APP_IDENTITY="Developer ID Application:"
 
 2) You need to create an application specific password in your Developer
@@ -21,7 +21,7 @@ the following:
 
       https://support.apple.com/guide/keychain-access/add-a-password-to-a-keychain-kyca1120/mac
 
-   Use "APP_PASSWORD" for the name as it must match the NOTARIZE_PASSWORD 
+   Use "AUDACITY_PASSWORD" for the name as it must match the NOTARIZE_PASSWORD 
    value above. Storing the password in your keychain protects it from curious
    eyes.
 
@@ -31,7 +31,9 @@ the following:
 
       audacity/bld/bin/Release
 
-5) Open a terminal and change to that directory.
+5) Open a terminal and change to the CMake build directory:
+
+      audacity/bld
 
 6) Run this script to sign, notarize, staple and create the distribution DMG:
 
@@ -39,7 +41,7 @@ the following:
 
 As it goes through the notarization process twice, once for the app bundle
 and again for the DMG, it will take awhile to run and you will see progress
-while waiting. If it is successful, you will find the audacity DMG in
+while waiting. If it is successful, you will find the Audacity DMG in
 "audacity/bld/bin" and you will receive an email confirming it was notarized.
 
 In the event of a failure, you will find a URL in the output messages
