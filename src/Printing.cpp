@@ -97,21 +97,39 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    int y = rulerPageHeight;
 
    for (auto n : mTracks->Any()) {
+      auto &view = TrackView::Get( *n );
       wxRect r;
       r.x = 0;
-      r.y = y;
+      r.y = 0;
       r.width = width;
-      r.height = (int)(TrackView::Get( *n ).GetHeight() * scale);
+      auto trackHeight = (int)(view.GetHeight() * scale);
+      r.height = trackHeight;
 
-      TrackPanelDrawingContext context{
-         *dc, {}, {}, &artist
-      };
-      TrackView::Get( *n ).Draw( context, r, TrackArtist::PassTracks );
+      const auto subViews = view.GetSubViews( r );
+      if (subViews.empty())
+         continue;
+   
+      auto iter = subViews.begin(), end = subViews.end(), next = iter;
+      auto yy = iter->first;
+      for ( ; iter != end; iter = next ) {
+         ++next;
+         auto nextY = ( next == end )
+            ? trackHeight
+            : next->first;
+         r.y = y + yy;
+         r.SetHeight( nextY - yy );
+         yy = nextY;
+
+         TrackPanelDrawingContext context{
+            *dc, {}, {}, &artist
+         };
+         iter->second->Draw( context, r, TrackArtist::PassTracks );
+      }
 
       dc->SetPen(*wxBLACK_PEN);
-      AColor::Line(*dc, 0, r.y, width, r.y);
+      AColor::Line(*dc, 0, y, width, y);
 
-      y += r.height;
+      y += trackHeight;
    };
 
    return true;
