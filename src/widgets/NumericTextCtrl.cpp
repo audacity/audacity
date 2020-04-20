@@ -733,6 +733,8 @@ void NumericConverter::ParseFormatString(
 
       if (format[i] == '|') {
          wxString remainder = format.Right(format.length() - i - 1);
+         // For languages which use , as a separator.
+         remainder.Replace(wxT(","), wxT("."));
 
          if (remainder == wxT("#"))
             mScalingFactor = mSampleRate;
@@ -740,7 +742,7 @@ void NumericConverter::ParseFormatString(
             mNtscDrop = true;
          }
          else
-            remainder.ToDouble(&mScalingFactor);
+            remainder.ToCDouble(&mScalingFactor);
          i = format.length()-1; // force break out of loop
          if (!delimStr.empty())
             handleDelim = true;
@@ -804,6 +806,13 @@ void NumericConverter::ParseFormatString(
             goToFrac = true;
             if (delimStr.length() > 1)
                delimStr = delimStr.BeforeLast('.');
+         }
+         // Bug 2241 - Also handle , as decimal point
+         // for languages like French and German.
+         else if (!inFrac && delimStr[delimStr.length()-1]==',') {
+            goToFrac = true;
+            if (delimStr.length() > 1)
+               delimStr = delimStr.BeforeLast(',');
          }
 
          if (inFrac) {
