@@ -274,7 +274,7 @@ void AudioIOBase::HandleDeviceChange()
    // samples)
 
    mMixerOutputVol = Px_GetPCMOutputVolume(mPortMixer);
-   mEmulateMixerOutputVol = false;
+   mEmulateMixerOutputVol = true;
    Px_SetPCMOutputVolume(mPortMixer, 0.0);
    if (Px_GetPCMOutputVolume(mPortMixer) > 0.1)
       mEmulateMixerOutputVol = true;
