@@ -293,9 +293,9 @@ void OnTimerRecord(const CommandContext &context)
    const bool allSameRate{ selectedTracks.allSameRate };
 
    if (!allSameRate) {
-      AudacityMessageBox(XO("TRACK SELECTION PROBLEM:\nthe tracks selected "
+      AudacityMessageBox(XO("The tracks selected "
          "for recording must all have the same sampling rate"),
-         XO("Unfitting track selection"),
+         XO("Mismatched Sampling Rates"),
          wxICON_ERROR | wxCENTRE);
 
       return;
@@ -413,9 +413,9 @@ void OnPunchAndRoll(const CommandContext &context)
    const bool allSameRate{ selectedTracks.allSameRate };
 
    if (!allSameRate) {
-      AudacityMessageBox(XO("TRACK SELECTION PROBLEM:\nthe tracks selected "
+      AudacityMessageBox(XO("The tracks selected "
          "for recording must all have the same sampling rate"),
-         XO("Unfitting track selection"),
+         XO("Mismatched Sampling Rates"),
          wxICON_ERROR | wxCENTRE);
 
       return;
