@@ -69,10 +69,6 @@ class AudacityApp final : public wxApp {
    // A wrapper of the above that does not throw
    bool SafeMRUOpen(const wxString &fileName);
 
-#if defined(__WXMAC__)
-   void OnWindow(wxCommandEvent &event);
-#endif
-
    void OnReceiveCommand(AppCommandEvent &event);
 
    void OnKeyDown(wxKeyEvent &event);

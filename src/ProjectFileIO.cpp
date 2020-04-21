@@ -24,10 +24,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/NumericTextCtrl.h"
 
-#if defined(__WXMAC__)
-#include "menus/WindowMenus.h"
-#endif
-
 static void RefreshAllTitles(bool bShowProjectNumbers )
 {
    for ( auto pProject : AllProjects{} ) {
@@ -136,11 +132,6 @@ void ProjectFileIO::SetProjectTitle( int number)
 
    window.SetTitle( name );
    window.SetName(name);       // to make the nvda screen reader read the correct title
-
-#if defined(__WXMAC__)
-   // Refresh the Window menu
-   WindowActions::Refresh();
-#endif
 }
 
 // Most of this string was duplicated 3 places. Made the warning consistent in this global.

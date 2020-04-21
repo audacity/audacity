@@ -15,10 +15,6 @@
 #include "KeyboardCapture.h"
 #include "ondemand/ODTaskThread.h"
 
-#if defined(__WXMAC__)
-#include "menus/WindowMenus.h"
-#endif
-
 #include <wx/display.h>
 #include <wx/frame.h>
 
@@ -117,11 +113,6 @@ void SetActiveProject(AudacityProject * project)
       KeyboardCapture::Capture( nullptr );
    }
    wxTheApp->SetTopWindow( FindProjectFrame( project ) );
-
-#if defined(__WXMAC__)
-   // Refresh the Window menu
-   WindowActions::Refresh();
-#endif
 }
 
 AudacityProject::AudacityProject()
