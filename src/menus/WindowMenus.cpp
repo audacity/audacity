@@ -55,6 +55,8 @@ void DoMacMinimize(AudacityProject *project)
    }
 }
 
+const auto menuTitle = XO("&Window");
+
 }
 
 /// Namespace for functions for window management (mac only?)
@@ -84,7 +86,7 @@ void Refresh()
       }
 
       // Should always find the Window menu
-      int pos = bar->FindMenu(wxT("Window"));
+      int pos = bar->FindMenu( menuTitle.Translation() );
       wxASSERT(pos != wxNOT_FOUND);
       if (pos == wxNOT_FOUND)
       {
@@ -192,7 +194,7 @@ BaseItemSharedPtr WindowMenu()
    //////////////////////////////////////////////////////////////////////////
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Window"), XO("&Window"),
+   Menu( wxT("Window"), menuTitle,
       Section( "",
          /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
           * window) shrink to an icon on the dock */
