@@ -180,6 +180,9 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
    dc.SetBrush(blankBrush);
    dc.DrawRectangle(rect);
 
+   // Bug 2389 - always draw at least one pixel of selection.
+   int selectedX = zoomInfo.TimeToPosition(t0, -leftOffset);
+
    double time = zoomInfo.PositionToTime(0, -leftOffset), nextTime;
    for (xx = 0; xx < rect.width; ++xx, time = nextTime) {
       nextTime = zoomInfo.PositionToTime(xx + 1, -leftOffset);
@@ -207,8 +210,10 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
          mintop = halfHeight;
       }
 
+      sel = (t0 <= time && nextTime < t1);
+      sel = sel || (xx == selectedX);
       // We don't draw selection color for sync-lock selected tracks.
-      sel = (t0 <= time && nextTime < t1) && !bIsSyncLockSelected;
+      sel = sel && !bIsSyncLockSelected;
 
       if (lmaxtop == maxtop &&
           lmintop == mintop &&

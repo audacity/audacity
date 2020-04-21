@@ -428,6 +428,13 @@ void TrackArt::DrawBackgroundWithSelection(
          within.width = 1 + rect.GetRight() - within.x;
       }
 
+      // Bug 2389 - Selection can disappear
+      // This handles case where no waveform is visible.
+      if (within.width < 1)
+      {
+         within.width = 1;
+      }
+
       if (within.width > 0) {
          if (track->GetSelected()) {
             dc->SetBrush(selBrush);
