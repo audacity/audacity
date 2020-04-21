@@ -24,7 +24,9 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/NumericTextCtrl.h"
 
-wxDEFINE_EVENT(EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
+#if defined(__WXMAC__)
+#include "menus/WindowMenus.h"
+#endif
 
 static void RefreshAllTitles(bool bShowProjectNumbers )
 {
@@ -132,13 +134,13 @@ void ProjectFileIO::SetProjectTitle( int number)
       name += _("(Recovered)");
    }
 
-   if ( name != window.GetTitle() ) {
-      window.SetTitle( name );
-      window.SetName(name);       // to make the nvda screen reader read the correct title
+   window.SetTitle( name );
+   window.SetName(name);       // to make the nvda screen reader read the correct title
 
-      project.QueueEvent(
-         safenew wxCommandEvent{ EVT_PROJECT_TITLE_CHANGE } );
-   }
+#if defined(__WXMAC__)
+   // Refresh the Window menu
+   WindowActions::Refresh();
+#endif
 }
 
 // Most of this string was duplicated 3 places. Made the warning consistent in this global.

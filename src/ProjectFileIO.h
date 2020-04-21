@@ -96,9 +96,4 @@ public:
    size_t UnnamedCount;
 };
 
-// This event is emitted by the project when there is a change
-// in its title
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
-
 #endif
