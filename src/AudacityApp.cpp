@@ -109,10 +109,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "tracks/ui/Scrubbing.h"
 #include "widgets/FileHistory.h"
 
-#if defined(__WXMAC__)
-#include "menus/WindowMenus.h"
-#endif
-
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
 #include "prefs/KeyConfigPrefs.h"
 #endif
@@ -889,11 +885,6 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_MENU_RANGE(FileHistory::ID_RECENT_FIRST, FileHistory::ID_RECENT_LAST,
       AudacityApp::OnMRUFile)
 
-#if defined(__WXMAC__)
-   // Window menu event handlers.
-   EVT_MENU_RANGE(WindowActions::ID_BASE, WindowActions::ID_LAST, AudacityApp::OnWindow)
-#endif
-
    // Handle AppCommandEvents (usually from a script)
    EVT_APP_COMMAND(wxID_ANY, AudacityApp::OnReceiveCommand)
 
@@ -986,35 +977,6 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    if (!ProjectFileManager::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
       history.RemoveFileFromHistory(n);
 }
-
-#if defined(__WXMAC__)
-// Handles switching projects when an item in the Window menu is selected
-void AudacityApp::OnWindow(wxCommandEvent& event)
-{
-   // Get the project's number
-   int projectNumber = event.GetId() - WindowActions::ID_BASE;
-
-   // Search for it
-   for (auto project : AllProjects{})
-   {
-      if (project->GetProjectNumber() == projectNumber)
-      {
-         // Make it the active project
-         SetActiveProject(project.get());
-
-         // And ensure it's visible
-         wxFrame *frame = project->GetFrame();
-         if (frame->IsIconized())
-         {
-            frame->Restore();
-         }
-         frame->Raise();
-
-         break;
-      }
-   }
-}
-#endif
 
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
 {

@@ -7,16 +7,14 @@
 
 #ifdef __WXMAC__
 
-#include "WindowMenus.h"
-
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
 #include "../Project.h"
+#include "../ProjectFileIO.h"
 #include "../commands/CommandContext.h"
 
 #include <wx/frame.h>
 #include <wx/menu.h>
-#include <wx/menuitem.h>
 
 #undef USE_COCOA
 
@@ -55,76 +53,69 @@ void DoMacMinimize(AudacityProject *project)
    }
 }
 
-const auto menuTitle = XO("&Window");
+std::vector< wxWindowID > sReservedIds;
+std::vector< std::weak_ptr< AudacityProject > > sProjects;
 
+void RebuildMenu(wxCommandEvent &evt)
+{
+   // Let other listeners hear it too
+   evt.Skip();
+   
+   // This is a big hammer.
+   // Really we just need to recreate just the Window menu.
+   // This causes the checkmark to be put in the right place for the
+   // currently active project
+   MenuCreator::RebuildAllMenuBars();
 }
+
+wxWindowID ReservedID(
+   size_t index, const std::shared_ptr< AudacityProject > &pProject )
+{
+   if ( sReservedIds.empty() ) {
+      // Do this once only per session, and don't worry about unbinding
+      wxTheApp->Bind( EVT_PROJECT_ACTIVATION, RebuildMenu );
+      wxTheApp->Bind( EVT_PROJECT_TITLE_CHANGE, RebuildMenu );
+   }
+
+   while ( sReservedIds.size() <= index )
+      sReservedIds.emplace_back( wxIdManager::ReserveId() );
+
+   if ( sProjects.size() < sReservedIds.size() )
+      sProjects.resize( sReservedIds.size() );
+   sProjects[ index ] = pProject;
+
+   return sReservedIds[ index ];
+}
+
+void OnWindow( wxCommandEvent &evt )
+{
+   const auto begin = sReservedIds.begin(), end = sReservedIds.end(),
+      iter = std::find( begin, end, evt.GetId() );
+   size_t index = iter - begin;
+   if ( index < sProjects.size() ) {
+      auto pProject = sProjects[ index ].lock();
+      if ( pProject ) {
+         // Make it the active project
+         SetActiveProject(pProject.get());
+
+         // And ensure it's visible
+         wxFrame *frame = pProject->GetFrame();
+         if (frame->IsIconized())
+         {
+            frame->Restore();
+         }
+         frame->Raise();
+      }
+   }
+}
+
+} // namespace
 
 /// Namespace for functions for window management (mac only?)
 namespace WindowActions {
 
 // exported helper functions
-
-// Refreshes the Window menu in all projects
-void Refresh()
-{
-   // Must do it in all projects
-   for (auto thisProject : AllProjects{})
-   {
-      // Need the projects frame, but this should always be successful
-      wxFrame *frame = thisProject->GetFrame();
-      wxASSERT(frame != NULL);
-      if (!frame)
-      {
-         continue;
-      }
-
-      // This can happen if we are called before the menubar is set in the frame
-      wxMenuBar *bar = frame->GetMenuBar();
-      if (!bar)
-      {
-         continue;
-      }
-
-      // Should always find the Window menu
-      int pos = bar->FindMenu( menuTitle.Translation() );
-      wxASSERT(pos != wxNOT_FOUND);
-      if (pos == wxNOT_FOUND)
-      {
-         continue;
-      }
-
-      // We can not get the menu proper
-      wxMenu *menu = bar->GetMenu(pos);
-
-      // Remove all existing window items
-      for (auto item : menu->GetMenuItems())
-      {
-         if (item->GetId() >= WindowActions::ID_BASE)
-         {
-            menu->Destroy(item);
-         }
-      }
-
-      // Add all projects to this project's Window menu
-      for (auto project : AllProjects{})
-      {
-         int itemId = WindowActions::ID_BASE + project->GetProjectNumber();
-         wxString itemName = project->GetFrame()->GetTitle();
-         bool isActive = (GetActiveProject() == project.get());
-
-         // This should never really happen, but a menu item must have a name
-         if (itemName.empty())
-         {
-            itemName = _("<untitled>");
-         }
-
-         // Add it to the menu and check it if it's the active project
-         wxMenuItem *item = menu->Append(itemId, itemName);
-         item->SetCheckable(true);
-         item->Check(isActive);
-      }
-   }
-}
+// none
 
 // Menu handler functions
 
@@ -189,12 +180,12 @@ namespace {
 using namespace MenuTable;
 BaseItemSharedPtr WindowMenu()
 {
-   //////////////////////////////////////////////////////////////////////////
-   // poor imitation of the Mac Windows Menu
-   //////////////////////////////////////////////////////////////////////////
+      //////////////////////////////////////////////////////////////////////////
+      // poor imitation of the Mac Windows Menu
+      //////////////////////////////////////////////////////////////////////////
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Window"), menuTitle,
+   Menu( wxT("Window"), XO("&Window"),
       Section( "",
          /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
           * window) shrink to an icon on the dock */
@@ -217,10 +208,34 @@ BaseItemSharedPtr WindowMenu()
          Special( wxT("PopulateWindowsStep"),
          [](AudacityProject &, wxMenu &theMenu)
          {
-            // Should something be done here???
+            // Undo previous bindings
+            for ( auto id : sReservedIds )
+               wxTheApp->Unbind( wxEVT_MENU, OnWindow, id );
+
+            // Add all projects to this project's Window menu
+            size_t ii = 0;
+            for (auto project : AllProjects{})
+            {
+               int itemId = ReservedID( ii++, project );
+               wxString itemName = project->GetFrame()->GetTitle();
+               bool isActive = (GetActiveProject() == project.get());
+
+               // This should never really happen, but a menu item must have a name
+               if (itemName.empty())
+               {
+                  itemName = _("<untitled>");
+               }
+
+               // Add it to the menu and check it if it's the active project
+               wxMenuItem *item = theMenu.Append(itemId, itemName);
+               item->SetCheckable(true);
+               item->Check(isActive);
+
+               // Bind the callback
+               wxTheApp->Bind( wxEVT_MENU, OnWindow, itemId );
+            }
          } )
       )
-
    ) ) };
    return menu;
 }

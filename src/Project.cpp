@@ -15,14 +15,11 @@
 #include "KeyboardCapture.h"
 #include "ondemand/ODTaskThread.h"
 
-#if defined(__WXMAC__)
-#include "menus/WindowMenus.h"
-#endif
-
 #include <wx/display.h>
 #include <wx/frame.h>
 
 wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
+wxDEFINE_EVENT(EVT_PROJECT_ACTIVATION, wxCommandEvent);
 
 size_t AllProjects::size() const
 {
@@ -115,13 +112,9 @@ void SetActiveProject(AudacityProject * project)
    if ( gActiveProject != project ) {
       gActiveProject = project;
       KeyboardCapture::Capture( nullptr );
+      wxTheApp->QueueEvent( safenew wxCommandEvent{ EVT_PROJECT_ACTIVATION } );
    }
    wxTheApp->SetTopWindow( FindProjectFrame( project ) );
-
-#if defined(__WXMAC__)
-   // Refresh the Window menu
-   WindowActions::Refresh();
-#endif
 }
 
 AudacityProject::AudacityProject()
