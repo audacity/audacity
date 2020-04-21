@@ -452,6 +452,10 @@ bool ToolBar::Expose( bool show )
    if( IsDocked() )
    {
       Show( show );
+      if( show )
+      {
+         Refresh();
+      }
    }
    else
    {
