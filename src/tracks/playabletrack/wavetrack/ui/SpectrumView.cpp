@@ -528,6 +528,9 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    // left pixel column of the fisheye
    int fisheyeLeft = zoomInfo.GetFisheyeLeftBoundary(-leftOffset);
 
+   // Bug 2389 - always draw at least one pixel of selection.
+   int selectedX = zoomInfo.TimeToPosition(selectedRegion.t0(), -leftOffset);
+
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
@@ -556,6 +559,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
                     (zoomInfo.PositionToTime(xx+1, -leftOffset) - tOffset));
 
       bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
+      maybeSelected = maybeSelected || (xx == selectedX);
 
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
          const float bin     = bins[yy];
