@@ -103,7 +103,6 @@ Source: "..\..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; Don't use the WXWIN environment variable, because...
 ; 1) Can't get the documented {%WXWIN|default dir} parsing to work.
 ; 2) Need the DLL's in the release dir for testing, anyway.
-Source: "..\release\wxbase311u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\release\wxbase311u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\release\wxbase311u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\release\wxmsw311u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -116,11 +115,14 @@ Source: "..\release\wxmsw311u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignore
 ; This is not an ideal solution, but should need the least tech support.
 ; We'll know we have the right version, don't step on anybody else's older version, and
 ; it's easy to make the zip (and they match better).
-; Copy the two required DLL's from 
+; Copy the several required DLL's from 
 ; "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
 ; or "C:\Program Files\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
 ; according to your system 
+Source: "..\release\concrt140.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\release\msvcp140.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\msvcp140_1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\msvcp140_2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\release\vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "..\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
