@@ -1,6 +1,36 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
 
+2. Changes in version 2.3.3
+
+Improvements
+
+ * Equalization effect now split into two effects, Filter Curve and Graphic EQ.
+   * Presets (using manage button) now active/working.
+   * Can now have two points at same frequency for steep steps.
+ * 'What you hear is what you get' for exports.  Formerly the solo button 
+   preferences could lead to differences in which tracks were exported.
+ * Leading silence (blank space) not skipped over in exports.
+ * Quality setting on AAC/M4A exports.
+ * Some confusing functionality removed (better achieved in other ways)
+   * Removed Nyquist Workbench (use built-in nyquist features)
+   * Removed Vocal Remover (use Vocal Reduction)
+   * Removed On-Demand aliased files (copy files instead)
+   * Removed 'Normalize on Load' (Normalize as needed on export, instead)
+
+
+Bug Fixes
+
+ Over 150 bugs in 2.3.2 fixed, including:
+
+ * 2112 - Crash when opening Equalization settings in a Macro
+ * 2127 - Crash deleting a track while in Record/Pause state
+ * 2176 - Crash when attempting to time shift multiple tracks
+ * 2141 - Tabbing between labels stopped working
+ * 2200 - Refusal to export some large (4GB) files on size grounds
+
+
+
 Changes in version 2.3.2: 
 
 Improvements
