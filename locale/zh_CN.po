@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2019-09-10 22:44+0900\n"
 "Last-Translator: mkpoli <snowwolf1001@gmail.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
@@ -3734,6 +3734,26 @@ msgstr ""
 "打开声音设备出错。\n"
 "请检查音频主机、播放设备的以及项目采样率。"
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr "如果想应用过滤器，所有选择的轨道必须拥有相同的采样率。"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -3973,9 +3993,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "警告：自动恢复时发生问题"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<untitled>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "项目"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -9660,6 +9685,11 @@ msgid "&Buffer Size (8 to %d) samples):"
 msgstr "缓冲大小（8 到 1048576 个采样）(&B)："
 
 #: src/effects/lv2/LV2Effect.cpp
+#, fuzzy, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr "缓冲大小（8 到 1048576 个采样）(&B)："
+
+#: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
 "Audacity. When not compensating for this delay, you will notice that small "
@@ -10393,7 +10423,8 @@ msgstr "采样率"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbps"
@@ -11074,7 +11105,6 @@ msgstr "正把选中的音频导出为FLAC文件"
 msgid "Exporting the audio as FLAC"
 msgstr "正在导出音频为 FLAC 格式"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, fuzzy, c-format
 msgid "%d kpbs"
@@ -12403,7 +12433,7 @@ msgstr "终点"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14213,11 +14243,24 @@ msgid ""
 msgstr "在保存更改时，无法使用定时录音。请保存或关闭此项目，然后重试。"
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Insufficient track selection"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
 msgstr "请选择一个单声道音轨。"
 
 #: src/menus/TransportMenus.cpp
-msgid "Please select in a stereo track."
+#, fuzzy
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "请选择一个双声道音轨。"
 
 #: src/menus/TransportMenus.cpp
@@ -18258,8 +18301,8 @@ msgid "Value must not be less than %s"
 msgstr "值不能小于 %s"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "值不能大于 %s"
 
 #: src/widgets/valnum.cpp
@@ -20058,6 +20101,21 @@ msgstr "脉冲列频率（Hz）"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "错误.~%需要立体声轨"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "显示/隐藏编辑器"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "当导入音频文件时"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
+msgstr ""
 
 #~ msgid "incorporating"
 #~ msgstr "包含"

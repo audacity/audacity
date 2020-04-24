@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2008-07-09 13:48+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <en@li.org>\n"
@@ -3741,6 +3741,26 @@ msgid ""
 "Try changing the audio host, playback device and the project sample rate."
 msgstr "កំហុស​​ពេល​​កំពុង​​បើក​​ឧបករណ៍​សំឡេង។ សូម​ត្រួតពិនិត្យ​មើល​ការ​កំណត់​ឧបករណ៍​លទ្ធផល និង​​អត្រា​​គំរូ​​គម្រោង"
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr "ដើម្បី​​គ្រោង​​វិសាលគម បទ​​ដែល​​ជ្រើស​​ទាំងអស់​ត្រូវ​តែ​មាន​អត្រា​​គំរូ​​ដូច​គ្នា ។"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -3938,9 +3958,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr ""
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "ធ្វើ​ឲ្យ​សម​នឹង​​​​គម្រោង"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -9774,6 +9799,11 @@ msgid "&Buffer Size (8 to %d) samples):"
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
+#, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr ""
+
+#: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
 "Audacity. When not compensating for this delay, you will notice that small "
@@ -10491,7 +10521,8 @@ msgstr "អត្រា​គំរូ"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "%d kbps"
 msgstr "kbps"
@@ -11111,7 +11142,6 @@ msgstr "កំពុង​នាំ​អូឌីយ៉ូ​ដែល​បា
 msgid "Exporting the audio as FLAC"
 msgstr "កំពុង​នាំ​អូឌីយ៉ូ​ដែល​បាន​ជ្រើស​ចេញ​ជា FLAC"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, fuzzy, c-format
 msgid "%d kpbs"
@@ -12365,7 +12395,7 @@ msgstr "ចុង"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14408,13 +14438,25 @@ msgid ""
 msgstr ""
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Insufficient track selection"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "Please select in a mono track."
 msgstr "បង្កើត​​បទ​​អូឌីយ៉ូ​​ថ្មី"
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
-msgid "Please select in a stereo track."
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "បង្កើត​​បទ​​អូឌីយ៉ូ​​ថ្មី"
 
 #: src/menus/TransportMenus.cpp
@@ -18724,7 +18766,7 @@ msgstr "ឈ្មោះ​មិន​អាច​ទទេ​បាន​ទេ
 
 #: src/widgets/valnum.cpp
 #, fuzzy, c-format
-msgid "Value must not be greather than %s"
+msgid "Value must not be greater than %s"
 msgstr "ឈ្មោះ​មិន​អាច​ទទេ​បាន​ទេ"
 
 #: src/widgets/valnum.cpp
@@ -20589,6 +20631,21 @@ msgstr "ប្រេកង់ (Hz)"
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%Stereo track required."
+msgstr ""
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "កម្មវិធី​បង្កើត​ស្ងាត់ៗ"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "មិន​អាច​យក​ចេញ​ឯកសារ​រក្សា​ទុក​ស្វ័យ​ប្រវត្តិ​ចាស់"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
 msgstr ""
 
 #, fuzzy

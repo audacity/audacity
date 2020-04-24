@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2018-01-18 06:39+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/klyok/audacity/"
@@ -3817,6 +3817,28 @@ msgstr ""
 "Ses sunucusunu, oynatma aygıtını ve proje örnekleme hızını değiştirmeyi "
 "deneyin."
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"Bir süzgeç uygulayabilmek için, tüm seçili izler aynı örnek hızında "
+"olmalıdır."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -4065,9 +4087,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Dikkat: Otomatik Kurtarma Sırasında Sorun Çıktı"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<adsız>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "Projeler"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -9936,6 +9963,11 @@ msgid "&Buffer Size (8 to %d) samples):"
 msgstr "&Arabellek Boyutu (8 - 1048576 örnek):"
 
 #: src/effects/lv2/LV2Effect.cpp
+#, fuzzy, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr "&Arabellek Boyutu (8 - 1048576 örnek):"
+
+#: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
 "Audacity. When not compensating for this delay, you will notice that small "
@@ -10686,7 +10718,8 @@ msgstr "Örnekleme Hızları"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "%d kbps"
 msgstr "%i kbps"
@@ -11378,7 +11411,6 @@ msgstr "Seçili ses FLAC olarak dışa aktarılıyor"
 msgid "Exporting the audio as FLAC"
 msgstr "Ses FLAC olarak dışa aktarılıyor"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, fuzzy, c-format
 msgid "%d kpbs"
@@ -12729,7 +12761,7 @@ msgstr "bitiş"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14667,13 +14699,25 @@ msgstr ""
 "Lütfen bu projeyi kaydettikten ya da kapattıktan sonra yeniden deneyin."
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Insufficient track selection"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "Please select in a mono track."
 msgstr "Lütfen bir ses izi seçin."
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
-msgid "Please select in a stereo track."
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Lütfen bir ses izi seçin."
 
 #: src/menus/TransportMenus.cpp
@@ -18803,8 +18847,8 @@ msgid "Value must not be less than %s"
 msgstr "%s değerinden küçük olamaz"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "%s değerinden büyük olamaz"
 
 #: src/widgets/valnum.cpp
@@ -20677,6 +20721,21 @@ msgstr "Frekans (Hz):"
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%Stereo track required."
+msgstr ""
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "Düzenleyiciyi Görüntüle/Gizle"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "Ses dosyaları içe aktarılırken"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
 msgstr ""
 
 #~ msgid "incorporating"

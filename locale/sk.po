@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2020-04-11 12:53+0200\n"
 "Last-Translator: Jozef Matta <jozef.m923@gmail.com>\n"
 "Language-Team: jozefM\n"
@@ -1567,9 +1567,6 @@ msgstr "Ponuka Príkaz (bez parametrov)"
 
 #: src/BatchCommands.cpp
 #, c-format
-#| msgid ""
-#| "Export recording to %s\n"
-#| "/%s/%s%s"
 msgid ""
 "Export recording to %s\n"
 "/%s/%s.%s"
@@ -2411,7 +2408,6 @@ msgstr "Blackman-Harris"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
-#| msgid "Welcome!"
 msgid "Welch"
 msgstr "Welch"
 
@@ -3781,6 +3777,28 @@ msgstr ""
 "Skúste zmeniť hostiteľa audia, prehrávacie zariadenie a vzorkovaciu "
 "frekvenciu projektu."
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"Pre aplikovanie filtra, všetky vybrané stopy musia mať rovnakú vzorkovaciu "
+"rýchlosť."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -4029,9 +4047,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Upozornenie: problémy pri automatickej obnove"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<nepomenovaný>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "[Projekt %02i] Audacity „%s“"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -6524,12 +6547,10 @@ msgid "33⅓"
 msgstr "33⅓"
 
 #: src/effects/ChangeSpeed.cpp
-#| msgid "145"
 msgid "45"
 msgstr "45"
 
 #: src/effects/ChangeSpeed.cpp
-#| msgid "8"
 msgid "78"
 msgstr "78"
 
@@ -7337,7 +7358,6 @@ msgstr "Pracovný cyklus:"
 
 #: src/effects/DtmfGen.cpp
 #, c-format
-#| msgid "%.1f secs"
 msgid "%.1f %%"
 msgstr "%.1f %%"
 
@@ -7358,7 +7378,6 @@ msgstr "Trvanie ticha:"
 #. i18n-hint milliseconds
 #: src/effects/DtmfGen.cpp
 #, c-format
-#| msgid "%.0f ms"
 msgid "%0.f ms"
 msgstr "%0.f ms"
 
@@ -7860,7 +7879,6 @@ msgstr "%g kHz"
 #. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
 #: src/effects/Equalization.cpp
 #, c-format
-#| msgid "%g kHz"
 msgid "%gk"
 msgstr "%gk"
 
@@ -9693,7 +9711,6 @@ msgstr ""
 #: src/effects/vamp/VampEffect.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 #, c-format
-#| msgid "%s in:"
 msgid "%s:"
 msgstr "%s:"
 
@@ -9715,6 +9732,11 @@ msgstr "Nastavenia efektu LV2"
 #: src/effects/lv2/LV2Effect.cpp
 #, c-format
 msgid "&Buffer Size (8 to %d) samples):"
+msgstr "&Veľkosť zásobníka (8 až %d) snímok):"
+
+#: src/effects/lv2/LV2Effect.cpp
+#, fuzzy, c-format
+msgid "&Buffer Size (8 to %d samples):"
 msgstr "&Veľkosť zásobníka (8 až %d) snímok):"
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -10466,7 +10488,8 @@ msgstr "Vzorkovacie frekvencie"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbit/s"
@@ -10486,7 +10509,6 @@ msgid "%.2f kbps"
 msgstr "%.2f kbit/s"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#| msgid "60"
 msgid "0"
 msgstr "0"
 
@@ -10515,12 +10537,10 @@ msgid "7"
 msgstr "7"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#| msgid "96"
 msgid "9"
 msgstr "9"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#| msgid "120"
 msgid "10"
 msgstr "10"
 
@@ -10537,7 +10557,6 @@ msgid "VOIP"
 msgstr "VOIP"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#| msgid "&Audio..."
 msgid "Audio"
 msgstr "Audio"
 
@@ -10678,7 +10697,6 @@ msgid "AMR (narrow band) Files (FFmpeg)"
 msgstr "AMR (úzke pásmo) súbory (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#| msgid "M4A (AAC) Files (FFmpeg)"
 msgid "Opus (OggOpus) Files (FFmpeg)"
 msgstr "Opus (OggOpus) súbory (FFmpeg)"
 
@@ -11147,10 +11165,8 @@ msgstr "Exportovanie vybraného audio ako FLAC"
 msgid "Exporting the audio as FLAC"
 msgstr "Exportovanie audia ako FLAC"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, c-format
-#| msgid "%d kbps"
 msgid "%d kpbs"
 msgstr "%d kb/s"
 
@@ -11178,7 +11194,6 @@ msgid "Exporting the audio at %ld kbps"
 msgstr "Exportovanie audia pri %ld kbit/s"
 
 #: src/export/ExportMP3.cpp
-#| msgid "%s kbps (Best Quality)"
 msgid "220-260 kbps (Best Quality)"
 msgstr "220-260 kbps (najlepšia kvalita)"
 
@@ -12250,12 +12265,10 @@ msgid "12 bit DWVW"
 msgstr "12 bit DWVW"
 
 #: src/import/ImportPCM.cpp
-#| msgid "16 bit"
 msgid "16 bit DWVW"
 msgstr "16 bit DWVW"
 
 #: src/import/ImportPCM.cpp
-#| msgid "24 bit"
 msgid "24 bit DWVW"
 msgstr "24 bit DWVW"
 
@@ -12264,12 +12277,10 @@ msgid "VOX ADPCM"
 msgstr "VOX ADPCM"
 
 #: src/import/ImportPCM.cpp
-#| msgid "16-bit PCM"
 msgid "16 bit DPCM"
 msgstr "16 bit DPCM"
 
 #: src/import/ImportPCM.cpp
-#| msgid "16-bit PCM"
 msgid "8 bit DPCM"
 msgstr "8 bit DPCM"
 
@@ -12488,7 +12499,7 @@ msgstr "koniec"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14276,8 +14287,6 @@ msgstr "žiadna stopa s návesťou tu alebo nižšie pod zameranou stopou"
 
 #: src/menus/TransportMenus.cpp
 #, c-format
-#| msgid "%s %d of %d clip %s"
-#| msgid_plural "%s %d of %d clips %s"
 msgid "%s %d of %d"
 msgstr "%s %d of %d"
 
@@ -14306,11 +14315,24 @@ msgstr ""
 "Uložte, prosím, alebo zavrite tento projekt a skúste to znova."
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Insufficient track selection"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
 msgstr "Vyberte, prosím, vnútri mono stopy."
 
 #: src/menus/TransportMenus.cpp
-msgid "Please select in a stereo track."
+#, fuzzy
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Vyberte, prosím, vnútri stereo stopy."
 
 #: src/menus/TransportMenus.cpp
@@ -17412,7 +17434,6 @@ msgstr "Pravý, %dHz"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
 #, c-format
-#| msgid "%.2f dB"
 msgid "%+.1f dB"
 msgstr "%+.1f dB"
 
@@ -17804,7 +17825,6 @@ msgstr "P"
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
 #, c-format
-#| msgid "%.2f"
 msgid "%.2fx"
 msgstr "%.2fx"
 
@@ -18351,8 +18371,8 @@ msgid "Value must not be less than %s"
 msgstr "Hodnota nesmie byť menej než %s"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "Hodnota nesmie byť väčšia než %s"
 
 #: src/widgets/valnum.cpp
@@ -18377,7 +18397,6 @@ msgstr "Dialóg súboru"
 
 #: src/xml/XMLFileReader.cpp
 #, c-format
-#| msgid "Error: %hs at line %lu"
 msgid "Error: %s at line %lu"
 msgstr "Chyba: %s na riadku %lu"
 
@@ -20146,6 +20165,21 @@ msgstr "Frekvencia radarových ihlíc (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Chyba.~%Požadovaná stereo stopa."
 
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "Zobraziť/skryť editor"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "Pri importe audio súborov"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
+msgstr ""
+
 #~ msgid "incorporating"
 #~ msgstr "začlenenie"
 
@@ -20304,14 +20338,12 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ "Nyquist skripty (*.ny)|*.ny|Lisp skripty (*.lsp)|*.lsp|Textové súbory (*."
 #~ "txt)|*.txt|Všetky súbory|*"
 
-#, c-format
 #~ msgid "%i kbps"
 #~ msgstr "%i kbit/s"
 
 #~ msgid "XML files (*.xml)|*.xml|All files|*"
 #~ msgstr "XML súbory (*.xml)|*.xml|Všetky súbory|*"
 
-#, c-format
 #~ msgid "%s kbps"
 #~ msgstr "%s kbit/s"
 
@@ -20365,7 +20397,6 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ msgid "F&ocus"
 #~ msgstr "Za&merať"
 
-#, c-format
 #~ msgid "%s - %s"
 #~ msgstr "%s - %s"
 
@@ -20390,11 +20421,9 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ msgid "Alex S. Brown"
 #~ msgstr "Alex S. Brown"
 
-#, lisp-format
 #~ msgid "Error.~%~s is not a supported plug-in.~%"
 #~ msgstr "Chyba.~%~s nie je podporované rozšírenie.~%"
 
-#, lisp-format
 #~ msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
 #~ msgstr "Chyba.~%~s nie je správne rozšírenie Nyquist.~%"
 

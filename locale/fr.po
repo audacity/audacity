@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2020-04-09 18:02+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
@@ -3484,7 +3484,7 @@ msgid ""
 "Unable to load the \"%s\" module.\n"
 "\n"
 "Error: %s"
-msgstr 
+msgstr ""
 "Incapable de charger le module \"%s\".\n"
 "\n"
 "Erreur : %s"
@@ -3904,6 +3904,28 @@ msgstr ""
 "Essayez de changer l’hôte audio, le périphérique de lecture, et le taux "
 "d’échantillonnage du projet."
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"Pour appliquer un filtre, toutes les pistes sélectionnées doivent avoir le "
+"même taux d’échantillonnage."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -4165,9 +4187,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Attention : problèmes lors de la récupération automatique"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<sans titre>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "[Projet %02i] Audacity \"%s\""
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -5745,9 +5772,9 @@ msgid ""
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
 msgstr ""
-"Les commandes suivantes ont vu leurs raccourcis supprimés, car leur raccourci "
-"par défaut est nouveau ou modifié, et est le même que celui que vous avez "
-"attribué à une autre commande."
+"Les commandes suivantes ont vu leurs raccourcis supprimés, car leur "
+"raccourci par défaut est nouveau ou modifié, et est le même que celui que "
+"vous avez attribué à une autre commande."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -9747,11 +9774,11 @@ msgid ""
 "will provide that compensation, but it may not work for all Audio Unit "
 "effects."
 msgstr ""
-"Dans le cadre de leur traitement, certains effets Audio Unit doivent retarder "
-"le retour audio à Audacity. Lorsque vous ne compensez pas ce retard, vous "
-"remarquerez que de petits silences ont été insérés dans l’audio. En activant "
-"cette option, vous obtiendrez cette compensation, mais il se peut qu'elle ne "
-"fonctionne pas pour tous les effets Audio Unit."
+"Dans le cadre de leur traitement, certains effets Audio Unit doivent "
+"retarder le retour audio à Audacity. Lorsque vous ne compensez pas ce "
+"retard, vous remarquerez que de petits silences ont été insérés dans "
+"l’audio. En activant cette option, vous obtiendrez cette compensation, mais "
+"il se peut qu'elle ne fonctionne pas pour tous les effets Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -9764,11 +9791,11 @@ msgid ""
 "Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
 "to take effect."
 msgstr ""
-"Sélectionner \"Complet\" pour utiliser l’interface graphique si elle est fournie "
-"par l’Audio Unit. Sélectionnez \"Générique\" pour utiliser l’interface "
-"générique fournie par le système. Sélectionnez \"Basique\" pour utiliser "
-"l’interface de base en mode texte uniquement. Réouvrez l’effet pour que cela "
-"soit pris en compte."
+"Sélectionner \"Complet\" pour utiliser l’interface graphique si elle est "
+"fournie par l’Audio Unit. Sélectionnez \"Générique\" pour utiliser "
+"l’interface générique fournie par le système. Sélectionnez \"Basique\" pour "
+"utiliser l’interface de base en mode texte uniquement. Réouvrez l’effet pour "
+"que cela soit pris en compte."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -9969,6 +9996,12 @@ msgstr "Paramètres d’effet LV2"
 msgid "&Buffer Size (8 to %d) samples):"
 msgstr "Taille du tampon (8 à %d échantillons) (&b) :"
 
+# trebmuh to check (accélérateur)
+#: src/effects/lv2/LV2Effect.cpp
+#, fuzzy, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr "Taille du tampon (8 à %d échantillons) (&b) :"
+
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
@@ -10006,7 +10039,7 @@ msgid "%s requires unsupported feature %s"
 msgstr "%s nécessite une fonction non-supportée %s"
 
 #: src/effects/lv2/LV2Effect.cpp
-#,  c-format
+#, c-format
 msgid "%s requires unsupported feature %s\n"
 msgstr "%s nécessite une fonction non-supportée %s\n"
 
@@ -10126,9 +10159,10 @@ msgstr ""
 msgid "Processing complete."
 msgstr "Traitement terminé."
 
-#. i18n-hint: Don't translate ';type tool’.
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool’ effects cannot return audio from Nyquist.\n"
+#, fuzzy
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
 msgstr ""
 "effets de ';type tool' ne peuvent pas retourner de l’audio depuis Nyquist.\n"
 
@@ -10435,8 +10469,8 @@ msgstr ""
 "restaurer l’audio originel dans le projet.\n"
 "Choisissez Aide > Diagnostiques > Vérifier les Dépendances pour voir les "
 "emplacements de tous les fichiers manquants.\n"
-"Si vous souhaitez toujours exporter, veuillez choisir un nom de répertoire ou "
-"de fichier différent."
+"Si vous souhaitez toujours exporter, veuillez choisir un nom de répertoire "
+"ou de fichier différent."
 
 #: src/export/Export.cpp
 #, c-format
@@ -10744,7 +10778,8 @@ msgstr "Taux d’échantillonnage"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbps"
@@ -11424,7 +11459,6 @@ msgstr "Exportation de la sélection audio en FLAC"
 msgid "Exporting the audio as FLAC"
 msgstr "Exportation de l’audio en FLAC"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, c-format
 msgid "%d kpbs"
@@ -12766,7 +12800,7 @@ msgstr "fin"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14669,11 +14703,24 @@ msgstr ""
 "Veuillez sauvegarder ou fermer ce projet et réessayer."
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Insufficient track selection"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
 msgstr "Veuillez sélectionner une piste mono."
 
 #: src/menus/TransportMenus.cpp
-msgid "Please select in a stereo track."
+#, fuzzy
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Veuillez sélectionner une piste stéréo."
 
 #: src/menus/TransportMenus.cpp
@@ -15723,9 +15770,9 @@ msgid ""
 "their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 "\n"
-"Les commandes suivantes ne sont pas mentionnées dans le fichier importé, mais "
-"leurs raccourcis sont supprimés en raison du conflit avec d’autres nouveaux "
-"raccourcis :\n"
+"Les commandes suivantes ne sont pas mentionnées dans le fichier importé, "
+"mais leurs raccourcis sont supprimés en raison du conflit avec d’autres "
+"nouveaux raccourcis :\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -15902,8 +15949,8 @@ msgid ""
 "  'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
 msgstr ""
-"  'Demander' signifie qu’Audacity vous demandera si vous souhaitez charger le "
-"module à chaque fois qu’il démarre."
+"  'Demander' signifie qu’Audacity vous demandera si vous souhaitez charger "
+"le module à chaque fois qu’il démarre."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
@@ -17905,8 +17952,8 @@ msgstr "%.0f%% droite"
 msgid ""
 "Click and drag to adjust sizes of sub-views, double-click to split evenly"
 msgstr ""
-"Cliquer et glisser pour ajuster la taille des vues secondaires, "
-"double-cliquer pour diviser en deux parties égales"
+"Cliquer et glisser pour ajuster la taille des vues secondaires, double-"
+"cliquer pour diviser en deux parties égales"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -18846,8 +18893,8 @@ msgid "Value must not be less than %s"
 msgstr "La valeur ne doit pas être moindre que %s"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "La valeur ne doit pas être supérieure à %s"
 
 #: src/widgets/valnum.cpp
@@ -19852,8 +19899,8 @@ msgstr "Attention.nÉchec de la copie de certains fichiers:n"
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"Greffons installés.n (Utilisez le gestionnaire de greffon pour activer les"
-" effets) :"
+"Greffons installés.n (Utilisez le gestionnaire de greffon pour activer les "
+"effets) :"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -20605,7 +20652,8 @@ msgid ""
 msgstr ""
 " - Bien que la piste soit stéréo, le champ est évidemment très large.\n"
 "                Ceci peut provoquer des effets étranges.\n"
-"                Spécialement lorsqu’il est joué par seulement un haut-parleur."
+"                Spécialement lorsqu’il est joué par seulement un haut-"
+"parleur."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20617,9 +20665,10 @@ msgid ""
 msgstr ""
 " - Les deux canaux sont presque identiques.\n"
 "                  Évidemment, un effet de pseudo stéréo a été utilisé\n"
-"                  pour étaler le signal sur la distance physique entre les "
-"                  haut-parleurs.\n"
-"                  N’espérez pas de bons résultats d’une suppression de centre."
+"                  pour étaler le signal sur la distance physique entre "
+"les                   haut-parleurs.\n"
+"                  N’espérez pas de bons résultats d’une suppression de "
+"centre."
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
@@ -20677,6 +20726,21 @@ msgstr "Fréquence des aiguilles de radar (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Erreur.~%Piste stéréo nécessaire."
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "Afficher/Cacher l’éditeur"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "À l’importation de fichiers audio"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
+msgstr ""
 
 #~ msgid "incorporating"
 #~ msgstr "incorporation"

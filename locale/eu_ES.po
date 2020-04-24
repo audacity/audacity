@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2017-07-29 09:39+0100E\n"
 "Last-Translator: Osoitz Elkorobarrutia <oelkoro@gmail.com>, 2017\n"
 "Language-Team: Basque (https://www.transifex.com/librezale/teams/76773/eu/)\n"
@@ -3854,6 +3854,28 @@ msgstr ""
 "Saiatu aldatzen audioaren ostalaria, erreprodukzio-gailua eta proiektuaren "
 "lagin-maiztasuna."
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"Iragazki bat aplikatzeko, hautatutako pista guztiek lagin-maiztasun bera "
+"izan behar dute."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -4103,9 +4125,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Kontuz: arazoak berreskuratze automatikoan"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<untitled>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "Proiektuak"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -10000,6 +10027,11 @@ msgid "&Buffer Size (8 to %d) samples):"
 msgstr "&Bufferraren tamaina (8tik 1048576 laginetara):"
 
 #: src/effects/lv2/LV2Effect.cpp
+#, fuzzy, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr "&Bufferraren tamaina (8tik 1048576 laginetara):"
+
+#: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
 "Audacity. When not compensating for this delay, you will notice that small "
@@ -10760,7 +10792,8 @@ msgstr "Lagin-maiztasunak"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "%d kbps"
 msgstr "%i kbps"
@@ -11454,7 +11487,6 @@ msgstr "Hautatutako audioa FLAC gisa esportatzen"
 msgid "Exporting the audio as FLAC"
 msgstr "Hautatutako audioa FLAC gisa esportatzen"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, fuzzy, c-format
 msgid "%d kpbs"
@@ -12813,7 +12845,7 @@ msgstr "amaiera"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14777,13 +14809,25 @@ msgstr ""
 "Gorde edo itxi proiektu hau eta saiatu berriro."
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Insufficient track selection"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "Please select in a mono track."
 msgstr "Hautatu audio-pista bat."
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
-msgid "Please select in a stereo track."
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Hautatu audio-pista bat."
 
 #: src/menus/TransportMenus.cpp
@@ -18942,8 +18986,8 @@ msgid "Value must not be less than %s"
 msgstr "Balioa ez da %s baino txikiagoa izan behar"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "Balioa ez da %s baino handiagoa izan behar"
 
 #: src/widgets/valnum.cpp
@@ -20817,6 +20861,21 @@ msgstr "Maiztasuna (Hz):"
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%Stereo track required."
+msgstr ""
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "Erakutsi/ezkutatu editorea"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "Audio-fitxategiak inportatzean"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
 msgstr ""
 
 #~ msgid "incorporating"

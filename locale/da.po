@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2020-04-13 11:38+0200\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -2937,8 +2937,7 @@ msgid ""
 " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
 msgstr ""
-" [[https://forum.audacityteam.org/|Forum]] - stil dit spørgsmål "
-"online."
+" [[https://forum.audacityteam.org/|Forum]] - stil dit spørgsmål online."
 
 #: src/HelpText.cpp
 msgid ""
@@ -3415,7 +3414,8 @@ msgid ""
 "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
 "loaded."
 msgstr ""
-"Modulet \"%s\" passer til Audacity-versionen \"%s\". Det vil ikke blive indlæst."
+"Modulet \"%s\" passer til Audacity-versionen \"%s\". Det vil ikke blive "
+"indlæst."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3775,6 +3775,28 @@ msgstr ""
 "Fejl ved åbning af lydenhed.\n"
 "Prøv at ændre lydværten, afspilningsenheden og projektets samplingshastighed."
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"For at kunne bruge et filter skal alle markerede spor have samme "
+"samplingshastighed."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -4021,9 +4043,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Advarsel: der er problemer med automatisk gendannelse"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<uden titel>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "[Projekt %02i] Audacity \"%s\""
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -9500,9 +9527,9 @@ msgid ""
 "to take effect."
 msgstr ""
 "Vælg \"Fuld\" for at bruge den grafiske brugerflade hvis lydenheden har en. "
-"Vælg \"Generisk\" for at bruge systemets generiske brugerflade. Vælg \"Enkel\" "
-"for en grundlæggende brugerflade kun med tekst. Åbn effekten igen for at det "
-"skal træde i kraft."
+"Vælg \"Generisk\" for at bruge systemets generiske brugerflade. Vælg \"Enkel"
+"\" for en grundlæggende brugerflade kun med tekst. Åbn effekten igen for at "
+"det skal træde i kraft."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -9699,6 +9726,11 @@ msgstr "LV2-effektindstillinger"
 #: src/effects/lv2/LV2Effect.cpp
 #, c-format
 msgid "&Buffer Size (8 to %d) samples):"
+msgstr "&Bufferstørrelse (8 til %d datapunkter):"
+
+#: src/effects/lv2/LV2Effect.cpp
+#, fuzzy, c-format
+msgid "&Buffer Size (8 to %d samples):"
 msgstr "&Bufferstørrelse (8 til %d datapunkter):"
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -10153,8 +10185,8 @@ msgstr ""
 "Du forsøger at overskrive en aliasfil, som mangler.\n"
 "Filen kan ikke skrives, fordi stien er nødvendig for at genskabe den "
 "originale lyd i projektet.\n"
-"Vælg Hjælp > Diagnostik > Afhængighedskontrol for at se placeringerne, af alle "
-"manglende filer.\n"
+"Vælg Hjælp > Diagnostik > Afhængighedskontrol for at se placeringerne, af "
+"alle manglende filer.\n"
 "Hvis du stadig ønsker at eksportere, så vælg venligst et andet filnavn eller "
 "en anden mappe."
 
@@ -10451,7 +10483,8 @@ msgstr "Samplingshastigheder"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbps"
@@ -11126,7 +11159,6 @@ msgstr "Eksporterer den markerede lyd som FLAC"
 msgid "Exporting the audio as FLAC"
 msgstr "Eksporterer lyden som FLAC"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, c-format
 msgid "%d kpbs"
@@ -11936,8 +11968,8 @@ msgstr "FFmpeg-kompatible filer"
 msgid ""
 "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
-"Indeks[%02x] Codec[%s], Sprog[%s], Bithastighed[%s], Kanaler[%d], Varighed[%"
-"d]"
+"Indeks[%02x] Codec[%s], Sprog[%s], Bithastighed[%s], Kanaler[%d], "
+"Varighed[%d]"
 
 #: src/import/ImportFLAC.cpp
 msgid "FLAC files"
@@ -12457,7 +12489,7 @@ msgstr "slutning"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14272,11 +14304,24 @@ msgstr ""
 "Gem venligst eller luk dette projektet og prøv igen."
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Insufficient track selection"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
 msgstr "Vælg venligst i et monospor."
 
 #: src/menus/TransportMenus.cpp
-msgid "Please select in a stereo track."
+#, fuzzy
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Vælg venligst i et stereospor."
 
 #: src/menus/TransportMenus.cpp
@@ -16205,7 +16250,8 @@ msgid ""
 "image, but is\n"
 "otherwise the same idea."
 msgstr ""
-"At gemme og indlæse særskilte temafiler sker ved at bruge en separat fil for\n"
+"At gemme og indlæse særskilte temafiler sker ved at bruge en separat fil "
+"for\n"
 "hvert billede men er ellers samme ide."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
@@ -17862,7 +17908,8 @@ msgid ""
 "the meter affecting audio quality on slower machines."
 msgstr ""
 "Højere opdateringshastigheder får måleren til at vise ændringer hyppigere.\n"
-"En hastighed på 30 i sekundet eller mindre burde hindre måleren i at påvirke\n"
+"En hastighed på 30 i sekundet eller mindre burde hindre måleren i at "
+"påvirke\n"
 "lydkvaliteten på langsomme maskiner."
 
 #: src/widgets/Meter.cpp
@@ -18320,8 +18367,8 @@ msgid "Value must not be less than %s"
 msgstr "Værdien må ikke være mindre end %s"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "Værdien må ikke være større end %s"
 
 #: src/widgets/valnum.cpp
@@ -20115,3 +20162,18 @@ msgstr "Frekvens af radarnåle (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Fejl.~%Stereospor kræves."
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "Vis/skjul redigeringsprogram"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "Når lydfiler importeres"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
+msgstr ""

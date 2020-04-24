@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2019-04-10 10:36+0200\n"
 "Last-Translator: Michele Locati <michele@locati.it>\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
@@ -960,9 +960,11 @@ msgid ""
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Non è stato possibile trovare una posizione sicura dove salvare i file "
-"temporanei.\nAudacity ha bisogno di una posizione in cui i programmi "
-"automatici di pulizia non eliminano i file temporanei.\nSpecificare "
-"un'appropriata cartella nella finestra di dialogo delle preferenze."
+"temporanei.\n"
+"Audacity ha bisogno di una posizione in cui i programmi automatici di "
+"pulizia non eliminano i file temporanei.\n"
+"Specificare un'appropriata cartella nella finestra di dialogo delle "
+"preferenze."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1577,7 +1579,9 @@ msgstr "Comando di menu (senza parametri)"
 msgid ""
 "Export recording to %s\n"
 "/%s/%s.%s"
-msgstr "Esporta registrazione su %s\n/%s/%s.%s"
+msgstr ""
+"Esporta registrazione su %s\n"
+"/%s/%s.%s"
 
 #: src/BatchCommands.cpp
 msgid "Export recording"
@@ -2447,8 +2451,11 @@ msgid ""
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
 "FFmpeg era già stato configurato nelle preferenze e precedentemente è stato "
-"caricato \ncon successo, tuttavia questa volta Audacity non è riuscito a "
-"caricarlo all'avvio. \n\nTornare in Preferenze > Librerie per riconfigurarlo."
+"caricato \n"
+"con successo, tuttavia questa volta Audacity non è riuscito a caricarlo "
+"all'avvio. \n"
+"\n"
+"Tornare in Preferenze > Librerie per riconfigurarlo."
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg startup failed"
@@ -3252,7 +3259,8 @@ msgstr "&Karaoke..."
 #, c-format
 msgid "Plug-in group at %s was merged with a previously defined group"
 msgstr ""
-"Il gruppo di estensioni in %s è stato unito a un gruppo definito in precedenza"
+"Il gruppo di estensioni in %s è stato unito a un gruppo definito in "
+"precedenza"
 
 #: src/Menus.cpp
 #, c-format
@@ -3384,7 +3392,10 @@ msgid ""
 "Unable to load the \"%s\" module.\n"
 "\n"
 "Error: %s"
-msgstr "Impossibile caricare il modulo \"%s\".\n\nErrore: %s"
+msgstr ""
+"Impossibile caricare il modulo \"%s\".\n"
+"\n"
+"Errore: %s"
 
 #: src/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -3402,7 +3413,9 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"Il modulo \"%s\" non fornisce una stringa di versione.\n\nNon verrà caricato."
+"Il modulo \"%s\" non fornisce una stringa di versione.\n"
+"\n"
+"Non verrà caricato."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3418,8 +3431,9 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"Il modulo \"%s\" è abbinato con la versione \"%s\" di Audacity.\n\nNon verrà "
-"caricato."
+"Il modulo \"%s\" è abbinato con la versione \"%s\" di Audacity.\n"
+"\n"
+"Non verrà caricato."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3437,8 +3451,9 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"Si è verificato un problema durante l'inizializzazione del modulo "
-"\"%s\".\n\nNon verrà caricato."
+"Si è verificato un problema durante l'inizializzazione del modulo \"%s\".\n"
+"\n"
+"Non verrà caricato."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3446,8 +3461,8 @@ msgid ""
 "The module \"%s\" failed to initialize.\n"
 "It will not be loaded."
 msgstr ""
-"Si è verificato un problema durante l'inizializzazione del modulo "
-"\"%s\".\nNon verrà caricato."
+"Si è verificato un problema durante l'inizializzazione del modulo \"%s\".\n"
+"Non verrà caricato."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3489,8 +3504,9 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"Il modulo \"%s\" non fornisce alcuna delle funzionalità richieste.\n\nNon "
-"verrà caricato."
+"Il modulo \"%s\" non fornisce alcuna delle funzionalità richieste.\n"
+"\n"
+"Non verrà caricato."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3788,6 +3804,28 @@ msgstr ""
 "Provare a cambiare il sistema audio, il dispositivo di riproduzione e la "
 "frequenza di campionamento del progetto."
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"Per applicare un filtro, tutte le tracce selezionate devono avere la stessa "
+"frequenza di campionamento."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -4047,9 +4085,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Attenzione: problemi nel recupero automatico"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<senza titolo>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "[Progetto %02i] Audacity \"%s\""
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -5614,7 +5657,9 @@ msgstr "Comando"
 msgid ""
 "\n"
 "* %s, because you have assigned the shortcut %s to %s"
-msgstr "\n* %s, in quanto hai assegnato la combinazione di tasti %s a %s"
+msgstr ""
+"\n"
+"* %s, in quanto hai assegnato la combinazione di tasti %s a %s"
 
 #: src/commands/CommandManager.cpp
 msgid ""
@@ -7331,7 +7376,8 @@ msgid ""
 "DTMF sequence empty.\n"
 "Check ALL settings for this effect."
 msgstr ""
-"Sequenza DTMF vuota.\nVerificate TUTTE le impostazioni di questo effetto."
+"Sequenza DTMF vuota.\n"
+"Verificate TUTTE le impostazioni di questo effetto."
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF &sequence:"
@@ -9366,11 +9412,11 @@ msgid ""
 "silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all VST effects."
 msgstr ""
-"Come parte del loro processo, alcuni effetti VST ritardano l'audio restituito "
-"ad Audacity. Quando questo ritardo non è compensato verranno inseriti dei "
-"silenzi di breve durata nell'audio. Abilitare questa opzione per fornire "
-"questa compensazione; notare che tuttavia potrebbe non funzionare con tutti "
-"gli effetti VST."
+"Come parte del loro processo, alcuni effetti VST ritardano l'audio "
+"restituito ad Audacity. Quando questo ritardo non è compensato verranno "
+"inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione "
+"per fornire questa compensazione; notare che tuttavia potrebbe non "
+"funzionare con tutti gli effetti VST."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -9533,9 +9579,9 @@ msgid ""
 msgstr ""
 "Come parte del loro processo, alcuni effetti Audio Unit ritardano l'audio "
 "restituito ad Audacity. Quando questo ritardo non è compensato verranno "
-"inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione per "
-"fornire questa compensazione; notare che tuttavia potrebbe non funzionare con "
-"tutti gli effetti Audio Unit."
+"inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione "
+"per fornire questa compensazione; notare che tuttavia potrebbe non "
+"funzionare con tutti gli effetti Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -9611,7 +9657,10 @@ msgid ""
 "Could not import \"%s\" preset\n"
 "\n"
 "%s"
-msgstr "Non è stato pissibile importare la combinazione \"%s\"\n\n%s"
+msgstr ""
+"Non è stato pissibile importare la combinazione \"%s\"\n"
+"\n"
+"%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -9633,7 +9682,10 @@ msgid ""
 "Could not export \"%s\" preset\n"
 "\n"
 "%s"
-msgstr "Non è stato possibile esportare la combinazione \"%s\"\n\n%s"
+msgstr ""
+"Non è stato possibile esportare la combinazione \"%s\"\n"
+"\n"
+"%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
@@ -9715,9 +9767,9 @@ msgid ""
 msgstr ""
 "Come parte del loro processo, alcuni effetti LADSPA ritardano l'audio "
 "restituito ad Audacity. Quando questo ritardo non è compensato verranno "
-"inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione per "
-"fornire questa compensazione; notare che tuttavia potrebbe non funzionare con "
-"tutti gli effetti LADSPA."
+"inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione "
+"per fornire questa compensazione; notare che tuttavia potrebbe non "
+"funzionare con tutti gli effetti LADSPA."
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
 #. appears in a following text box window; translate with appropriate punctuation
@@ -9749,17 +9801,22 @@ msgid "&Buffer Size (8 to %d) samples):"
 msgstr "Dimensione &buffer (da 8 a %d) campioni):"
 
 #: src/effects/lv2/LV2Effect.cpp
+#, fuzzy, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr "Dimensione &buffer (da 8 a %d) campioni):"
+
+#: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
 "Audacity. When not compensating for this delay, you will notice that small "
 "silences have been inserted into the audio. Enabling this setting will "
 "provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
-"Come parte del loro processo, alcuni effetti LV2 ritardano l'audio restituito "
-"ad Audacity. Quando questo ritardo non è compensato verranno inseriti dei "
-"silenzi di breve durata nell'audio. Abilitare questa opzione per fornire "
-"questa compensazione; notare che tuttavia potrebbe non funzionare con tutti "
-"gli effetti LV2."
+"Come parte del loro processo, alcuni effetti LV2 ritardano l'audio "
+"restituito ad Audacity. Quando questo ritardo non è compensato verranno "
+"inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione "
+"per fornire questa compensazione; notare che tuttavia potrebbe non "
+"funzionare con tutti gli effetti LV2."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
@@ -10202,12 +10259,13 @@ msgid ""
 "missing files.\n"
 "If you still wish to export, please choose a different filename or folder."
 msgstr ""
-"Si sta cercando di sovrascrivere un file con alias mancante.\nIl file non può "
-"essere scritto perché il percorso è necessario per ripristinare l'audio "
-"originale nel progetto.\nSelezionare Aiuto > Diagnostica > Controlla "
-"dipendenze per vedere la posizione di tutti i file mancanti.\nPer procedere "
-"comunque con l'esportazione, selezionare un altro nome di file o un'altra "
-"cartella."
+"Si sta cercando di sovrascrivere un file con alias mancante.\n"
+"Il file non può essere scritto perché il percorso è necessario per "
+"ripristinare l'audio originale nel progetto.\n"
+"Selezionare Aiuto > Diagnostica > Controlla dipendenze per vedere la "
+"posizione di tutti i file mancanti.\n"
+"Per procedere comunque con l'esportazione, selezionare un altro nome di file "
+"o un'altra cartella."
 
 #: src/export/Export.cpp
 #, c-format
@@ -10407,7 +10465,10 @@ msgid ""
 "Can't open audio codec \"%s\" (0x%x)\n"
 "\n"
 "%s"
-msgstr "Non è possibile aprire il codec audio \"%s\" (0x%x)\n\n%s"
+msgstr ""
+"Non è possibile aprire il codec audio \"%s\" (0x%x)\n"
+"\n"
+"%s"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
@@ -10512,7 +10573,8 @@ msgstr "Frequenze di campionamento"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbps"
@@ -11189,7 +11251,6 @@ msgstr "Esportazione dell'audio selezionato come FLAC"
 msgid "Exporting the audio as FLAC"
 msgstr "Esportazione dell'audio come FLAC"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, c-format
 msgid "%d kpbs"
@@ -12524,7 +12585,7 @@ msgstr "fine"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14341,11 +14402,25 @@ msgstr ""
 "Salvare o chiudere questo progetto e riprovare."
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Insufficient track selection"
+msgstr "Ritaglia il file nella selezione"
+
+#: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
 msgstr "Selezionare in una traccia audio."
 
 #: src/menus/TransportMenus.cpp
-msgid "Please select in a stereo track."
+#, fuzzy
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Selezionare in una traccia stereo."
 
 #: src/menus/TransportMenus.cpp
@@ -15297,7 +15372,9 @@ msgstr "Pre&definiti"
 msgid ""
 "\n"
 "   *   \""
-msgstr "\n   *   \""
+msgstr ""
+"\n"
+"   *   \""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\"  (because the shortcut '"
@@ -15333,7 +15410,9 @@ msgstr "\" e \""
 msgid ""
 "\".\n"
 "Nothing is imported."
-msgstr "\".\nNon è stato importato nulla."
+msgstr ""
+"\".\n"
+"Non è stato importato nulla."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15346,7 +15425,8 @@ msgid ""
 "The following commands are not mentioned in the imported file, but have "
 "their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
-"\nI comandi seguenti non sono menzionati nel file importato, ma le loro "
+"\n"
+"I comandi seguenti non sono menzionati nel file importato, ma le loro "
 "combinazioni di tasti sono state rimosse in quanto in conflitto con altre "
 "nuove combinazioni di tasti:\n"
 
@@ -17260,8 +17340,8 @@ msgid ""
 "To change Spectrogram Settings, stop any\n"
 " playing or recording first."
 msgstr ""
-"Arrestare la riproduzione e la registrazione prima\ndi cambiare le "
-"impostazioni dello spettrogramma,"
+"Arrestare la riproduzione e la registrazione prima\n"
+"di cambiare le impostazioni dello spettrogramma,"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Stop the Audio First"
@@ -18399,8 +18479,8 @@ msgid "Value must not be less than %s"
 msgstr "Il valore non deve essere minore di %s"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "Il valore non deve essere maggiore di %s"
 
 #: src/widgets/valnum.cpp
@@ -18492,8 +18572,9 @@ msgid ""
 "Try reducing the silence level and\n"
 "the minimum silence duration."
 msgstr ""
-"Nessun silenzio trovato.\nProvare a ridurre il livello di silenzio\ne la "
-"durata minima del silenzio."
+"Nessun silenzio trovato.\n"
+"Provare a ridurre il livello di silenzio\n"
+"e la durata minima del silenzio."
 
 #: plug-ins/SoundFinder.ny
 msgid "Sound Finder"
@@ -19299,8 +19380,10 @@ msgid ""
 "is too high for selected track.\n"
 "Set the control below ~a kHz."
 msgstr ""
-"Error.\n\"Frequenze del gate superiori: ~s kHz\"\ntroppo elevate per la "
-"traccia selezionata.\nImpostare il controllo sotto ~a kHz."
+"Error.\n"
+"\"Frequenze del gate superiori: ~s kHz\"\n"
+"troppo elevate per la traccia selezionata.\n"
+"Impostare il controllo sotto ~a kHz."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19308,8 +19391,8 @@ msgid ""
 "~%Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
 msgstr ""
-"~%Audio selezionato non sufficiente.\nLa seelzione deve essere più lunga di "
-"~a ms."
+"~%Audio selezionato non sufficiente.\n"
+"La seelzione deve essere più lunga di ~a ms."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19317,8 +19400,8 @@ msgid ""
 "Peak based on first ~a seconds ~a dB~%\n"
 "Suggested Threshold Setting ~a dB."
 msgstr ""
-"Picco basato sui primi ~a secondi ~a dB~%\nImpostazione soglia suggerita ~a "
-"dB."
+"Picco basato sui primi ~a secondi ~a dB~%\n"
+"Impostazione soglia suggerita ~a dB."
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
@@ -20054,11 +20137,14 @@ msgid ""
 "                    Variation of residuals: ~a\n"
 "                    y equals ~a plus ~a times x~%"
 msgstr ""
-"Media x: ~a, y: ~a\n                    Covarianza x y: ~a\n                  "
-"  Varianza media x: ~a, y: ~a\n                    Deviazione standard x: ~a, "
-"y: ~a\n                    Coefficiente di correlazione: ~a\n                 "
-"   Coefficiente di determinazione: ~a\n                    Variazione dei "
-"residui: ~a\n                    y uguale ~a più ~a volta x~%"
+"Media x: ~a, y: ~a\n"
+"                    Covarianza x y: ~a\n"
+"                    Varianza media x: ~a, y: ~a\n"
+"                    Deviazione standard x: ~a, y: ~a\n"
+"                    Coefficiente di correlazione: ~a\n"
+"                    Coefficiente di determinazione: ~a\n"
+"                    Variazione dei residui: ~a\n"
+"                    y uguale ~a più ~a volta x~%"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -20075,9 +20161,10 @@ msgid ""
 "                The center can't be removed.\n"
 "                Any remaining difference may be caused by lossy encoding."
 msgstr ""
-" - I due canali sono identici, cioè doppio mono.\n                Il centro "
-"non può essere rimosso.\n                Qualsiasi differenza residua può "
-"essere causata da una codifica con perdita."
+" - I due canali sono identici, cioè doppio mono.\n"
+"                Il centro non può essere rimosso.\n"
+"                Qualsiasi differenza residua può essere causata da una "
+"codifica con perdita."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20086,8 +20173,8 @@ msgid ""
 "                Most likely, the center extraction will be poor."
 msgstr ""
 " - I due canali sono fortemente correlati, ovvero quasi mono o estremamente "
-"bilanciati.\n                Molto probabilmente, l'estrazione centrale sarà "
-"scarsa."
+"bilanciati.\n"
+"                Molto probabilmente, l'estrazione centrale sarà scarsa."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20101,8 +20188,9 @@ msgid ""
 "                However, the center extraction depends also on the used "
 "reverb."
 msgstr ""
-" - Un valore ideale per lo stereo.\n                Tuttavia, l'estrazione "
-"centrale dipende anche dal riverbero usato."
+" - Un valore ideale per lo stereo.\n"
+"                Tuttavia, l'estrazione centrale dipende anche dal riverbero "
+"usato."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20111,9 +20199,10 @@ msgid ""
 "unbalanced manner.\n"
 "                The center extraction can still be good though."
 msgstr ""
-" - I due canali sono quasi non correlati.\n                Si ha solo rumore "
-"o il pezzo è stato masterizzato in modo sbilanciato.\n                "
-"L'estrazione centrale può comunque essere abbastanza buona."
+" - I due canali sono quasi non correlati.\n"
+"                Si ha solo rumore o il pezzo è stato masterizzato in modo "
+"sbilanciato.\n"
+"                L'estrazione centrale può comunque essere abbastanza buona."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20121,9 +20210,9 @@ msgid ""
 "                This can cause strange effects.\n"
 "                Especially when played by only one speaker."
 msgstr ""
-" - Sebbene la traccia sia stereo, il campo è evidentemente molto ampio.\n     "
-"           Questo può causare strani effetti.\n                Soprattutto se "
-"riprodotto da un solo altoparlante."
+" - Sebbene la traccia sia stereo, il campo è evidentemente molto ampio.\n"
+"                Questo può causare strani effetti.\n"
+"                Soprattutto se riprodotto da un solo altoparlante."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20133,10 +20222,12 @@ msgid ""
 "the speakers.\n"
 "                  Don't expect good results from a center removal."
 msgstr ""
-" - I due canali sono quasi identici.\n                  Ovviamente, è stato "
-"usato un effetto pseudo-stereo\n                  per diffondere il segnale "
-"sulla distanza fisica tra gli altoparlanti.\n                  Non sono "
-"attesi buoni risultati da una rimozione del centro."
+" - I due canali sono quasi identici.\n"
+"                  Ovviamente, è stato usato un effetto pseudo-stereo\n"
+"                  per diffondere il segnale sulla distanza fisica tra gli "
+"altoparlanti.\n"
+"                  Non sono attesi buoni risultati da una rimozione del "
+"centro."
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
@@ -20194,6 +20285,21 @@ msgstr "Frequenza degli aghi radar (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Errore.~%Richiesta traccia stereo."
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "Mostra/nascondi editor"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "Quando si importano file audio"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
+msgstr ""
 
 #~ msgid "incorporating"
 #~ msgstr "incorporamento"
@@ -23237,6 +23343,3 @@ msgstr "Errore.~%Richiesta traccia stereo."
 
 #~ msgid "Trim"
 #~ msgstr "Ritaglia"
-
-#~ msgid "Trim file to selection"
-#~ msgstr "Ritaglia il file nella selezione"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2014-09-16 07:40-0000\n"
 "Last-Translator: Arun Kumar\n"
 "Language-Team: தமிழா!-ThamiZha!(www.thamizha.org)\n"
@@ -3839,6 +3839,28 @@ msgid ""
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"வர்ணப்பட்டையை வரைவதற்கு தெரிவு செய்யப்பட்ட ஒலித்துண்டுகள் அனைத்தும் ஒரே மாதிரி அளவை "
+"கொண்டிருக்க வேண்டும். "
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -4075,10 +4097,15 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "எச்சரிக்கை: தானியக்க மீட்பில் பிரச்சினைகள்"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 #, fuzzy
 msgid "<untitled>"
 msgstr "பெயரிடப்படாத"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "திட்டங்கள்"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -10019,6 +10046,11 @@ msgid "&Buffer Size (8 to %d) samples):"
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
+#, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr ""
+
+#: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
 "Audacity. When not compensating for this delay, you will notice that small "
@@ -10723,7 +10755,8 @@ msgstr "மாதிரி அளவுகள்"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "%d kbps"
 msgstr "%i kbps"
@@ -11349,7 +11382,6 @@ msgstr "தெரிவு செய்யப்பட்ட ஒலி FLAC ஆ�
 msgid "Exporting the audio as FLAC"
 msgstr "தெரிவு செய்யப்பட்ட ஒலி FLAC ஆக ஏற்றுமதிசெய்கிறது"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, fuzzy, c-format
 msgid "%d kpbs"
@@ -12608,7 +12640,7 @@ msgstr "முடிவு"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14626,13 +14658,25 @@ msgid ""
 msgstr ""
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Insufficient track selection"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "Please select in a mono track."
 msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
-msgid "Please select in a stereo track."
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
 
 #: src/menus/TransportMenus.cpp
@@ -18991,7 +19035,7 @@ msgstr "பெயரானது காலியாக இருக்க கூ
 
 #: src/widgets/valnum.cpp
 #, fuzzy, c-format
-msgid "Value must not be greather than %s"
+msgid "Value must not be greater than %s"
 msgstr "ஆரம்பமும் நிறுத்தமும் 0 இனை விட பெரியதாக இருக்க வேண்டும்."
 
 #: src/widgets/valnum.cpp
@@ -20860,6 +20904,21 @@ msgstr "அதிர்வெண் (hz)"
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%Stereo track required."
+msgstr ""
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "அமைதி பிறப்பாக்கி"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "ஒலி அமைவுகளை இறக்கும் போது"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
 msgstr ""
 
 #, fuzzy

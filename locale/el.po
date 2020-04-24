@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2020-04-11 12:30+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
@@ -3817,6 +3817,28 @@ msgstr ""
 "Δοκιμάστε να αλλάξετε τον δέκτη του ήχου, τη συσκευή αναπαραγωγής και τον "
 "ρυθμό δειγματοληψίας του έργου."
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"Για να εφαρμοστεί ένα φίλτρο, όλα τα επιλεγμένα κομμάτια πρέπει να έχουν τον "
+"ίδιο ρυθμό δειγματοληψίας."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -4071,9 +4093,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Προειδοποίηση: Προβλήματα στην αυτόματη ανάκτηση"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<χωρίς όνομα>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "[Έργο %02i] Audacity \"%s\""
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -9799,6 +9826,11 @@ msgid "&Buffer Size (8 to %d) samples):"
 msgstr "Μέγεθος ε&νδιάμεσης μνήμης (8 έως %d δείγματα):"
 
 #: src/effects/lv2/LV2Effect.cpp
+#, fuzzy, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr "Μέγεθος ε&νδιάμεσης μνήμης (8 έως %d δείγματα):"
+
+#: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
 "Audacity. When not compensating for this delay, you will notice that small "
@@ -10570,7 +10602,8 @@ msgstr "Ρυθμοί δειγματοληψίας"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbps"
@@ -11247,7 +11280,6 @@ msgstr "Εξαγωγή του επιλεγμένου ήχου ως FLAC"
 msgid "Exporting the audio as FLAC"
 msgstr "Εξαγωγή του ήχου ως FLAC"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, c-format
 msgid "%d kpbs"
@@ -12605,7 +12637,7 @@ msgstr "τέλος"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14427,11 +14459,24 @@ msgstr ""
 "Παρακαλούμε, αποθηκεύστε ή κλείστε αυτό το έργο και ξαναδοκιμάστε."
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Insufficient track selection"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
 msgstr "Παρακαλούμε, επιλέξτε μονοφωνικό κομμάτι."
 
 #: src/menus/TransportMenus.cpp
-msgid "Please select in a stereo track."
+#, fuzzy
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Παρακαλούμε, επιλέξτε στερεοφωνικό κομμάτι."
 
 #: src/menus/TransportMenus.cpp
@@ -18498,8 +18543,8 @@ msgid "Value must not be less than %s"
 msgstr "Η τιμή δεν πρέπει να είναι μικρότερη από %s"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "Η τιμή δεν πρέπει να είναι μεγαλύτερη από %s"
 
 #: src/widgets/valnum.cpp
@@ -20305,6 +20350,21 @@ msgstr "Συχνότητα βελονών ραντάρ (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "Εμφάνιση/Απόκρυψη επεξεργαστή"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "Κατά την εισαγωγή αρχείων ακουστικού σήματος"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
+msgstr ""
 
 #~ msgid "incorporating"
 #~ msgstr "ενσωμάτωση"

@@ -27,6 +27,20 @@ xargs xgettext \
 --package-version='2.4.0' \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L Lisp -j -o audacity.pot 
+echo ";; Adding .desktop file to audacity.pot"
+find ../src -name \*desktop.in | LANG=c sort | \
+sed -E 's/\.\.\///g' |\
+xargs xgettext \
+--default-domain=audacity \
+--directory=.. \
+--keyword --keyword=GenericName --keyword=Comment --keyword=Keywords \
+--add-comments=" i18n" \
+--add-location=file  \
+--copyright-holder='Audacity Team' \
+--package-name="audacity" \
+--package-version='2.4.0' \
+--msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
+--add-location=file -j -o audacity.pot
 echo ";; Updating the .po files - Updating Project-Id-Version"
 for i in *.po; do
     sed -i '/^"Project-Id-Version:/c\"Project-Id-Version: audacity 2.4.0\\n"' $i

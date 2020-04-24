@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-04-24 11:45-0600\n"
 "PO-Revision-Date: 2020-04-09 14:02+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -16,10 +16,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11"
-" ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 >"
-" 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n %"
-" 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Lokalize 20.07.70\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -2463,8 +2463,7 @@ msgid ""
 msgstr ""
 "FFmpeg було налаштовано у «Параметрах», бібліотека успішно завантажувалася "
 "раніше, \n"
-"але цього разу Audacity не вдалося завантажити її під час "
-"запуску. \n"
+"але цього разу Audacity не вдалося завантажити її під час запуску. \n"
 "\n"
 "Можливо, вам слід повернутися до сторінки «Параметри > Бібліотеки» і "
 "повторно налаштувати параметри бібліотеки."
@@ -3279,8 +3278,8 @@ msgstr "Групу додатків у %s було об'єднано із ран
 msgid ""
 "Plug-in item at %s conflicts with a previously defined item and was discarded"
 msgstr ""
-"Запис додатка у %s конфліктує із попередньо визначеним записом. Його буде"
-" відкинуто."
+"Запис додатка у %s конфліктує із попередньо визначеним записом. Його буде "
+"відкинуто."
 
 #: src/Menus.cpp
 #, c-format
@@ -3526,8 +3525,7 @@ msgid ""
 "The module \"%s\" does not provide any of the required functions. It will "
 "not be loaded."
 msgstr ""
-"Модуль %s не надає жодної з обов'язкових функцій. Його не буде "
-"завантажено."
+"Модуль %s не надає жодної з обов'язкових функцій. Його не буде завантажено."
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3818,6 +3816,28 @@ msgstr ""
 "Спробуйте змінити джерело звуку, пристрій відтворення або частоту "
 "дискретизації проєкту."
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"Для застосування фільтра усі позначені доріжки повинні мати однакову частоту "
+"дискретизації."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -4070,9 +4090,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Попередження: проблеми з автоматичним відновленням"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<без назви>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "[Проєкт %02i] Audacity «%s»"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -5653,9 +5678,9 @@ msgid ""
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
 msgstr ""
-"Клавіатурні скорочення для вказаних нижче команд було вилучено, оскільки їхнє"
-" типове клавіатурне скорочення є новим або зміненим, і ви призначили те саме"
-" скорочення для іншої команди."
+"Клавіатурні скорочення для вказаних нижче команд було вилучено, оскільки "
+"їхнє типове клавіатурне скорочення є новим або зміненим, і ви призначили те "
+"саме скорочення для іншої команди."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -9377,11 +9402,11 @@ msgid ""
 "require 8192 samples or less to work properly. However most effects can "
 "accept large buffers and using them will greatly reduce processing time."
 msgstr ""
-"Розмір буфера керує кількістю фрагментів, які буде надіслано до ефекту на"
-" кожній ітерації. Менші значення уповільнять обробку, а деякі ефекти"
-" вимагають надсилання не більше 8192 фрагментів для належної роботи. Втім,"
-" більшість ефектів здатні обробляти великі буфери даних, а використання таких"
-" буферів значно зменшує час, потрібний для обробки даних."
+"Розмір буфера керує кількістю фрагментів, які буде надіслано до ефекту на "
+"кожній ітерації. Менші значення уповільнять обробку, а деякі ефекти "
+"вимагають надсилання не більше 8192 фрагментів для належної роботи. Втім, "
+"більшість ефектів здатні обробляти великі буфери даних, а використання таких "
+"буферів значно зменшує час, потрібний для обробки даних."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
@@ -9399,11 +9424,11 @@ msgid ""
 "silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all VST effects."
 msgstr ""
-"У межах частини процедури обробки, деякі ефекти VST мають затримати"
-" повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите,"
-" що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього"
-" пункту надасть змогу компенсувати затримку, але таке компенсування працює не"
-" для усіх ефектів VST."
+"У межах частини процедури обробки, деякі ефекти VST мають затримати "
+"повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите, "
+"що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього "
+"пункту надасть змогу компенсувати затримку, але таке компенсування працює не "
+"для усіх ефектів VST."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -9421,8 +9446,8 @@ msgid ""
 "take effect."
 msgstr ""
 "У більшості ефектів VST для встановлення значень параметрів передбачено "
-"графічний інтерфейс. Також можна скористатися базовим текстовим методом. Для"
-" застосування змін слід закрити вікно ефекту, а потім знову його відкрити."
+"графічний інтерфейс. Також можна скористатися базовим текстовим методом. Для "
+"застосування змін слід закрити вікно ефекту, а потім знову його відкрити."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid "Enable &graphical interface"
@@ -9563,11 +9588,11 @@ msgid ""
 "will provide that compensation, but it may not work for all Audio Unit "
 "effects."
 msgstr ""
-"У межах частини процедури обробки, деякі ефекти Audio Unit мають затримати"
-" повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите,"
-" що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього"
-" пункту надасть змогу компенсувати затримку, але таке компенсування працює не"
-" для усіх ефектів Audio Unit."
+"У межах частини процедури обробки, деякі ефекти Audio Unit мають затримати "
+"повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите, "
+"що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього "
+"пункту надасть змогу компенсувати затримку, але таке компенсування працює не "
+"для усіх ефектів Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -9580,11 +9605,11 @@ msgid ""
 "Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
 "to take effect."
 msgstr ""
-"Виберіть «Повний», щоб скористатися графічним інтерфейсом, якщо такий"
-" надається Audio Unit. Виберіть «Типовий», щоб скористатися інтерфейсом, який"
-" надає система. Виберіть «Базовий», щоб скористатися базовим текстовим"
-" інтерфейсом. Щоб внесені вами зміни набули чинності, вікно ефекту слід"
-" закрити і відкрити знову."
+"Виберіть «Повний», щоб скористатися графічним інтерфейсом, якщо такий "
+"надається Audio Unit. Виберіть «Типовий», щоб скористатися інтерфейсом, який "
+"надає система. Виберіть «Базовий», щоб скористатися базовим текстовим "
+"інтерфейсом. Щоб внесені вами зміни набули чинності, вікно ефекту слід "
+"закрити і відкрити знову."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -9748,11 +9773,11 @@ msgid ""
 "small silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
-"У межах частини процедури обробки, деякі ефекти LADSPA мають затримати"
-" повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите,"
-" що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього"
-" пункту надасть змогу компенсувати затримку, але таке компенсування працює не"
-" для усіх ефектів LADSPA."
+"У межах частини процедури обробки, деякі ефекти LADSPA мають затримати "
+"повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите, "
+"що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього "
+"пункту надасть змогу компенсувати затримку, але таке компенсування працює не "
+"для усіх ефектів LADSPA."
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
 #. appears in a following text box window; translate with appropriate punctuation
@@ -9784,17 +9809,22 @@ msgid "&Buffer Size (8 to %d) samples):"
 msgstr "Розмір &буфера (від 8 до %d семплів):"
 
 #: src/effects/lv2/LV2Effect.cpp
+#, fuzzy, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr "Розмір &буфера (від 8 до %d семплів):"
+
+#: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
 "Audacity. When not compensating for this delay, you will notice that small "
 "silences have been inserted into the audio. Enabling this setting will "
 "provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
-"У межах частини процедури обробки, деякі ефекти LV2 мають затримати"
-" повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите,"
-" що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього"
-" пункту надасть змогу компенсувати затримку, але таке компенсування працює не"
-" для усіх ефектів LV2."
+"У межах частини процедури обробки, деякі ефекти LV2 мають затримати "
+"повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите, "
+"що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього "
+"пункту надасть змогу компенсувати затримку, але таке компенсування працює не "
+"для усіх ефектів LV2."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
@@ -9802,9 +9832,9 @@ msgid ""
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
 msgstr ""
-"У ефектів LV2 може для встановлення значень параметрів передбачено "
-"графічний інтерфейс. Також можна скористатися базовим текстовим методом. Для"
-" застосування змін слід закрити вікно ефекту, а потім знову його відкрити."
+"У ефектів LV2 може для встановлення значень параметрів передбачено графічний "
+"інтерфейс. Також можна скористатися базовим текстовим методом. Для "
+"застосування змін слід закрити вікно ефекту, а потім знову його відкрити."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "LV2 sequence buffer overflow"
@@ -10547,7 +10577,8 @@ msgstr "Частоти дискретизації"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d кбіт/с"
@@ -11224,7 +11255,6 @@ msgstr "Експорт вибраного аудіо як FLAC"
 msgid "Exporting the audio as FLAC"
 msgstr "Експорт звукових даних у форматі FLAC"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, c-format
 msgid "%d kpbs"
@@ -12573,7 +12603,7 @@ msgstr "кінець"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -14395,11 +14425,24 @@ msgstr ""
 "Будь ласка, збережіть або закрийте цей проєкт і повторіть спробу."
 
 #: src/menus/TransportMenus.cpp
+msgid ""
+"TRACK SELECTION PROBLEM:\n"
+"Not enough tracks are selected for recording on non-project rate.\n"
+"(keep in mind that Audacity doesn't allow using only one channel of a stereo "
+"track)"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
+msgid "Insufficient track selection"
+msgstr ""
+
+#: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
 msgstr "Будь ласка, виберіть звукову доріжку моно."
 
 #: src/menus/TransportMenus.cpp
-msgid "Please select in a stereo track."
+#, fuzzy
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Будь ласка, виберіть звукову доріжку стерео."
 
 #: src/menus/TransportMenus.cpp
@@ -15402,9 +15445,9 @@ msgid ""
 "their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 "\n"
-"У імпортованому файлів не міститься згадок вказаних нижче команд, але їхні"
-" скорочення було вилучено, оскільки вони конфліктують із іншими новими"
-" скороченнями:\n"
+"У імпортованому файлів не міститься згадок вказаних нижче команд, але їхні "
+"скорочення було вилучено, оскільки вони конфліктують із іншими новими "
+"скороченнями:\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -17530,8 +17573,8 @@ msgstr "%.0f%% правий"
 msgid ""
 "Click and drag to adjust sizes of sub-views, double-click to split evenly"
 msgstr ""
-"Клацніть і перетягніть для коригування розмірів підпанелей, двічі клацніть,"
-" щоб поділити рівномірно"
+"Клацніть і перетягніть для коригування розмірів підпанелей, двічі клацніть, "
+"щоб поділити рівномірно"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -18457,8 +18500,8 @@ msgid "Value must not be less than %s"
 msgstr "Значення має бути не меншим за %s"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "Значення має бути не більшим за %s"
 
 #: src/widgets/valnum.cpp
@@ -19445,8 +19488,8 @@ msgstr "Увага.nНе вдалося скопіювати деякі файл
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"Встановлено додатки.n(Скористайтеся керуванням додатками, щоб увімкнути"
-" ефекти):"
+"Встановлено додатки.n(Скористайтеся керуванням додатками, щоб увімкнути "
+"ефекти):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -20014,8 +20057,8 @@ msgstr "Спектральне вилучення"
 #, lisp-format
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
 msgstr ""
-"Помилка.~%Підтримки частот дискретизації доріжки, які є нижчими за 100 Гц, не"
-" передбачено."
+"Помилка.~%Підтримки частот дискретизації доріжки, які є нижчими за 100 Гц, "
+"не передбачено."
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
@@ -20258,3 +20301,18 @@ msgstr "Частота голок радару (у Гц)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Помилка.~%Потрібна стереодоріжка."
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Sound Editor"
+msgstr "Показати або приховати редактор"
+
+#: src/audacity.desktop.in
+#, fuzzy
+msgid "Record and edit audio files"
+msgstr "Під час імпорту аудіофайлів"
+
+#: src/audacity.desktop.in
+msgid ""
+"audio;editing;recorder;digital effects;plug-ins;mixing;spectrum analysis;"
+msgstr ""
