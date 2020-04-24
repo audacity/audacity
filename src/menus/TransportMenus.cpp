@@ -304,11 +304,11 @@ void OnTimerRecord(const CommandContext &context)
    const auto existingTracks{ ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected) };
    if (existingTracks.empty()) {
       if (numberOfSelected > 0 && rateOfSelected != settings.GetRate()) {
-         AudacityMessageBox(XO("TRACK SELECTION PROBLEM:\n"
-            "Not enough tracks are selected for recording on non-project rate.\n"
-            "(keep in mind that Audacity doesn\'t allow "
-            "using only one channel of a stereo track)"),
-            XO("Insufficient track selection"),
+         AudacityMessageBox(XO(
+            "Too few tracks are selected for recording at this sample rate.\n"
+            "(Audacity requires two channels at the same sample rate for\n"
+            "each stereo track)"),
+            XO("Too Few Compatible Tracks Selected"),
             wxICON_ERROR | wxCENTRE);
 
          return;
