@@ -162,7 +162,7 @@ macro( bld name packages define sources )
 
       set_target_properties( ${name}
          PROPERTIES
-            LIBRARY_OUTPUT_DIRECTORY "${_LIBDIR}"
+            LIBRARY_OUTPUT_DIRECTORY "${_DESTDIR}/${_LIBDIR}"
             PREFIX ""
       )
 

@@ -1372,10 +1372,14 @@ if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
    else()
       install( PROGRAMS "${_EXEDIR}/${AUDACITY_NAME}"
                TYPE BIN )
+      install( DIRECTORY "${_DESTDIR}/${_LIBDIR}/"
+               DESTINATION "${_LIBDIR}"
+               USE_SOURCE_PERMISSIONS
+               FILES_MATCHING PATTERN "*.so" )
       install( FILES "${_INTDIR}/audacity.desktop"
                DESTINATION "${_DATADIR}/applications" )
       install( FILES "${topdir}/LICENSE.txt" "${topdir}/README.txt"
-               DESTINATION "${_DATADIR}/doc" )
+               DESTINATION "${_DATADIR}/doc/${AUDACITY_NAME}" )
       install( FILES "${_SRCDIR}/audacity.xml"
                DESTINATION "${_DATADIR}/mime/packages" )
       install( FILES "${topdir}/presets/EQDefaultCurves.xml"
