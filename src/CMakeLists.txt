@@ -22,9 +22,10 @@ if( GIT_FOUND )
       version
       COMMAND
          ${CMAKE_COMMAND} -D GIT=${GIT_EXECUTABLE}
+                          -D _PRVDIR=${_PRVDIR}
                           -P ${CMAKE_MODULE_PATH}/Version.cmake
       WORKING_DIRECTORY
-         ${_PRVDIR}
+         ${topdir}
    )
    add_dependencies( ${TARGET} version )
 endif()

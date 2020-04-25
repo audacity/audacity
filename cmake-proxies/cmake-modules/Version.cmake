@@ -6,10 +6,10 @@ execute_process(
    COMMAND
       ${GIT} show -s "--format=#define REV_LONG \"%H\"%n#define REV_TIME \"%cd\"%n"
    OUTPUT_FILE
-      RevisionIdent.h.in
+      ${_PRVDIR}/RevisionIdent.h.in
    OUTPUT_STRIP_TRAILING_WHITESPACE
    ERROR_QUIET
 )
 
-configure_file( RevisionIdent.h.in RevisionIdent.h COPYONLY )
+configure_file( ${_PRVDIR}/RevisionIdent.h.in ${_PRVDIR}/RevisionIdent.h COPYONLY )
 
