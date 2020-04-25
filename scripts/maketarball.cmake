@@ -35,7 +35,10 @@ string( REPLACE "\n" ";" output "${output}" )
 string( REPLACE " " ".*$|^" EXCLUDES "${EXCLUDES}" )
 
 # Remove unwanted files from the list
-list( FILTER output EXCLUDE REGEX "^${EXCLUDES}.*$" )
+list( FILTER output EXCLUDE REGEX "^${EXCLUDES}.*$|^$" )
+
+# Add our TLD to each filename
+list( TRANSFORM output PREPEND "${TLD}/" )
 
 message( STATUS "Creating the minsrc archive at:" )
 message( STATUS )
@@ -47,11 +50,15 @@ set( filelist "${CMAKE_CURRENT_BINARY_DIR}/filelist" )
 string( REPLACE ";" "\n" output "${output}" )
 file( WRITE "${filelist}" ${output} )
 
+# Create a symlink to provide a TLD
+execute_process(
+   COMMAND
+      ${CMAKE_COMMAND} -E create_symlink ${TARGET_ROOT} ${TLD}
+)
+
 # Create the tarball
 execute_process(
    COMMAND
       ${CMAKE_COMMAND} -E tar cfJ ${TARBALL} --files-from=${filelist}
-   WORKING_DIRECTORY
-      ${TARGET_ROOT}
 )
 

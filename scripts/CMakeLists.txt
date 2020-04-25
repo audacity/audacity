@@ -12,12 +12,19 @@ def_vars()
 list( APPEND EXCLUDES
    .git
    .gitattributes
+   .github
    .gitignore
-   lib-src/expat
-   lib-src/libid3tag
-   lib-src/libmad
-   lib-src/libogg
-   lib-src/libscorealign
+   .travis.yml
+   appveyor.yml
+   autotools
+   configure
+   configure.ac
+#   lib-src/expat
+#   lib-src/libid3tag
+#   lib-src/libmad
+#   lib-src/libogg
+#   lib-src/libscorealign
+#   lib-src/libvorbis
    lib-src/portaudio-v19/bindings
    lib-src/portaudio-v19/doc
    lib-src/portaudio-v19/testcvs
@@ -29,21 +36,21 @@ list( APPEND EXCLUDES
    lib-src/portmidi/pm_qt
    lib-src/portmidi/pm_test
    lib-src/portmidi/portmidi_cdt.zip
-   lib-src/soundtouch
-   lib-src/libvorbis
+#   lib-src/soundtouch
+   m4
    mac
    plug-ins/analyze.ny
    plug-ins/fadein.ny
    plug-ins/fadeout.ny
    plug-ins/undcbias.ny
    qa
-   scripts
    tests/ProjectCheckTests
    todo.txt
    win
 )
 
-set( TARBALL "${PROJECT_BINARY_DIR}/audacity-minsrc-${AUDACITY_DIST_VERSION}${AUDACITY_SUFFIX}.tar.xz" )
+set( TLD "audacity-minsrc-${AUDACITY_DIST_VERSION}${AUDACITY_SUFFIX}" )
+set( TARBALL "${PROJECT_BINARY_DIR}/${TLD}.tar.xz" )
    
 add_custom_target( ${TARGET}
    COMMAND
@@ -51,6 +58,7 @@ add_custom_target( ${TARGET}
                        -D TARGET_ROOT="${TARGET_ROOT}"
                        -D EXCLUDES="${EXCLUDES}"
                        -D TARBALL="${TARBALL}"
+                       -D TLD="${TLD}"
                        -P "${_SRCDIR}/maketarball.cmake"
 )
 
