@@ -379,6 +379,13 @@ if( NOT CMAKE_INSTALL_LIBDIR STREQUAL "lib" AND NOT EXISTS "${CMAKE_BINARY_DIR}/
    file( CREATE_LINK "${CMAKE_BINARY_DIR}/lib" "${CMAKE_BINARY_DIR}/lib64" SYMBOLIC )
 endif()
 
+# Define Audacity's name
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows" )
+   set( AUDACITY_NAME "Audacity" )
+else()
+   set( AUDACITY_NAME "audacity" )
+endif()
+
 # Extract the Audacity version information
 file(
    STRINGS

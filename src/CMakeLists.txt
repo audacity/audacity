@@ -1101,7 +1101,6 @@ if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
    set( PRECOMP AudacityHeaders.h )
 endif()
 
-set( AUDACITY_NAME "Audacity" )
 set( BUILDING_AUDACITY YES )
 set( INSTALL_PREFIX "${_PREFIX}" )
 set( PKGLIBDIR "${_LIBDIR}" )
@@ -1122,8 +1121,6 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
 endif()
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   set( _EXE "Audacity" )
-
    set_target_properties(
       ${TARGET}
       PROPERTIES
@@ -1177,7 +1174,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       TARGET
          ${TARGET}
       COMMAND
-         ${_INTDIR}/copy_libs.bat ${exedir} ${_EXE}.exe
+         ${_INTDIR}/copy_libs.bat ${exedir} ${AUDACITY_NAME}.exe
       POST_BUILD
    )
 
@@ -1190,8 +1187,6 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       POST_BUILD
    )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   set( _EXE "Audacity" )
-
    # Define Mac specific resources
    list( APPEND MAC_RESOURCES
       ../mac/Resources/Audacity.icns
@@ -1249,7 +1244,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          TARGET
             ${TARGET}
          COMMAND
-            sh -c "TARGET_BUILD_DIR=${_DEST} EXECUTABLE_PATH=MacOS/${_EXE} FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
+            sh -c "TARGET_BUILD_DIR=${_DEST} EXECUTABLE_PATH=MacOS/${AUDACITY_NAME} FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
          POST_BUILD
       )
    endif()
@@ -1265,8 +1260,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
 
 else()
-   set( _EXE "audacity" )
-
    set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}" )
 
    # Create the config file
@@ -1312,13 +1305,12 @@ else()
    endif()
 
    # Create the desktop file
-   set( AUDACITY_NAME "${_EXE}" )
    configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
 
    # Create the script to copy required wxWidgets libraries
    if( ${_OPT}use_wxwidgets STREQUAL "local" )
       file( WRITE "${_INTDIR}/copy_libs.sh"
-         "for lib in \$(ldd ${_EXEDIR}/${_EXE} | awk '/libwx/{print \$1}')
+         "for lib in \$(ldd ${_EXEDIR}/${AUDACITY_NAME} | awk '/libwx/{print \$1}')
           do
              echo \${lib}
              ldd ${WXWIN}/lib/\${lib} | awk '/libwx/{print \$1}'
@@ -1339,7 +1331,7 @@ else()
    endif()
 endif()
 
-set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${_EXE} )
+set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${AUDACITY_NAME} )
 
 organize_source( "${TARGET_ROOT}/.." "include" "${HEADERS}" )
 organize_source( "${TARGET_ROOT}/../presets" "presets" "${RESOURCES}" )
@@ -1375,10 +1367,10 @@ if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       install( FILES "${_DEST}/Info.plist"
                DESTINATION "${CMAKE_INSTALL_BINDIR}/Audacity.app/Contents" )
-      install( PROGRAMS "${_EXEDIR}/${_EXE}" "${_EXEDIR}/Wrapper"
+      install( PROGRAMS "${_EXEDIR}/${AUDACITY_NAME}" "${_EXEDIR}/Wrapper"
                DESTINATION "${CMAKE_INSTALL_BINDIR}/Audacity.app/Contents/MacOS" )
    else()
-      install( PROGRAMS "${_EXEDIR}/${_EXE}"
+      install( PROGRAMS "${_EXEDIR}/${AUDACITY_NAME}"
                TYPE BIN )
       install( FILES "${_INTDIR}/audacity.desktop"
                DESTINATION "${_DATADIR}/applications" )
