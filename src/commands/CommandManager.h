@@ -286,7 +286,7 @@ class AUDACITY_DLL_API CommandManager final
    bool GetEnabled(const CommandID &name);
    int GetNumberOfKeysRead() const;
 
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
    void CheckDups();
 #endif
    void RemoveDuplicateShortcuts();

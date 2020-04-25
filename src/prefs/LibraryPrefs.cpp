@@ -214,7 +214,7 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 #ifdef USE_FFMPEG
    FFmpegLibs* FFmpegLibsPtr = PickFFmpegLibs();
    bool showerrs =
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
       true;
 #else
       false;

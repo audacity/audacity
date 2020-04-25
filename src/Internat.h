@@ -38,7 +38,7 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
    #undef _
 #endif
 
-#if defined( __WXDEBUG__ )
+#if defined( _DEBUG )
    // Force a crash if you misuse _ in a static initializer, so that translation
    // is looked up too early and not found.
 

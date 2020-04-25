@@ -706,10 +706,10 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    AddBuildinfoRow(&informationStr, XO("Commit Id:"), REV_IDENT );
 
    auto buildType =
-#ifdef __WXDEBUG__
-      XO("Debug build")
+#ifdef _DEBUG
+      XO("Debug build (debug level %d)").Format(wxDEBUG_LEVEL);
 #else
-      XO("Release build")
+      XO("Release build (debug level %d)").Format(wxDEBUG_LEVEL);
 #endif
    ;
    if( (sizeof(void*) == 8) )

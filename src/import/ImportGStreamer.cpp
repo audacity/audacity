@@ -1177,7 +1177,7 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
       return cont;
    }
 
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
    {
       GstString objname;
       if (msg->src != NULL)

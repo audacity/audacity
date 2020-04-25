@@ -1220,7 +1220,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
    mLastFlags = AlwaysEnabledFlag;
 
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
 //   c->CheckDups();
 #endif
 }
@@ -1277,7 +1277,7 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    // On OSX, we can't rebuild the menus while a modal dialog is being shown
    // since the enabled state for menus like Quit and Preference gets out of
    // sync with wxWidgets idea of what it should be.
-#if defined(__WXMAC__) && defined(__WXDEBUG__)
+#if defined(__WXMAC__) && defined(_DEBUG)
    {
       wxDialog *dlg =
          wxDynamicCast(wxGetTopLevelParent(wxWindow::FindFocus()), wxDialog);

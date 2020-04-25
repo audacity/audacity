@@ -726,7 +726,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    CommandListEntry *entry = &*mCommandList.back();
    mCommandNumericIDHash[entry->id] = entry;
 
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
    prev = mCommandNameHash[entry->name];
    if (prev) {
       // Under Linux it looks as if we may ask for a newID for the same command
@@ -1476,7 +1476,7 @@ void CommandManager::SetCommandFlags(const CommandID &name,
       entry->flags = flags;
 }
 
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
 void CommandManager::CheckDups()
 {
    int cnt = mCommandList.size();

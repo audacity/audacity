@@ -236,5 +236,11 @@ class wxWindow;
    #define RTL_WORKAROUND( pWnd ) 
 #endif
 
+// Define/undefine _DEBUG based on the (CMake provided) NDEBUG symbol
+#if defined(NDEBUG)
+   #undef _DEBUG
+#else
+   #define _DEBUG 1
+#endif
 
 #endif // __AUDACITY_H__

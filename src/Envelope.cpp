@@ -725,7 +725,7 @@ void Envelope::Cap( double sampleDur )
  */
 int Envelope::InsertOrReplaceRelative(double when, double value)
 {
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
    // in debug builds, do a spot of argument checking
    if(when > mTrackLen + 0.0000001)
    {
