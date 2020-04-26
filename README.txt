@@ -143,6 +143,9 @@ GPL-compatible license.  Specifically:
   libmad: GPL
     Decodes MP3 files.  Optional separate download.
 
+  libmp3lame: LGPL
+    Encodes MP3 files.
+
   libnyquist: BSD-like license.
     Functional language for manipulating audio; available
     within Audacity for effects processing.
