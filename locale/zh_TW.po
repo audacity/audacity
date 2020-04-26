@@ -11044,7 +11044,7 @@ msgstr "標準"
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
-msgstr "瘋的，320 kbps"
+msgstr "最高，320 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
