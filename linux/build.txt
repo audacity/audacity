@@ -5,6 +5,10 @@ Fuller instructions that cover:
     * Optional libraries
 can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Linux.
 
+In fact for Audacity 2.4.0 you should read those
+instructions rather than these ones, since we switched to 
+CMake for building Audacity itself for 2.4.0
+
 Some prerequisites:
 
 - Audacity requires gcc 4.9 or later to build.
@@ -61,6 +65,9 @@ wxWidgets:
     examples to confirm that building has worked OK
 
 Audacity:
+
+These are old instructions.  See our wiki and use 
+CMake for 2.4.0 and later, rather than as here automake.
 
   1) Create a 'build' subdirectory under Audacity and change to it.
 
