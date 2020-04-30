@@ -578,24 +578,6 @@ bool Importer::Import( AudacityProject &project,
       {
          if (plugin->SupportsExtension(extension))
          {
-            // If libmad is accidentally fed a wav file which has been incorrectly
-            // given an .mp3 extension then it can choke on the contents and crash.
-            // To avoid this, put libsndfile ahead of libmad in the lists created for
-            // mp3 files, or for any of the extensions supported by libmad.
-            // A genuine .mp3 file will first fail an attempted import with libsndfile
-            // but then get processed as desired by libmad.
-            // But a wav file which bears an incorrect .mp3 extension will be successfully
-            // processed by libsndfile and thus avoid being submitted to libmad.
-            if (plugin->GetPluginStringID() == wxT("libmad"))
-            {
-               // Make sure libsndfile is not already in the list
-               if (importPlugins.end() ==
-                   std::find(importPlugins.begin(), importPlugins.end(), libsndfilePlugin))
-               {
-                  wxLogDebug(wxT("Appending %s"),libsndfilePlugin->GetPluginStringID());
-                  importPlugins.push_back(libsndfilePlugin);
-               }
-            }
             wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID());
             importPlugins.push_back(plugin);
          }
@@ -608,15 +590,12 @@ bool Importer::Import( AudacityProject &project,
    // formats unsuitable for it, and produce distorted results.
    for (const auto &plugin : sImportPluginList())
    {
-      if (!(plugin->GetPluginStringID() == wxT("libmad")))
+      // Make sure its not already in the list
+      if (importPlugins.end() ==
+            std::find(importPlugins.begin(), importPlugins.end(), plugin))
       {
-         // Make sure its not already in the list
-         if (importPlugins.end() ==
-             std::find(importPlugins.begin(), importPlugins.end(), plugin))
-         {
-            wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID());
-            importPlugins.push_back(plugin);
-         }
+         wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID());
+         importPlugins.push_back(plugin);
       }
    }
 
