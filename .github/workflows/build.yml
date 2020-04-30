@@ -32,8 +32,6 @@ jobs:
     # =========================================================================
     - name: Checkout
       uses: actions/checkout@v2
-      with:
-        ref: master
 
     # =========================================================================
     # SHARED: Retrieve the commit hash and generate revision header

@@ -63,8 +63,6 @@ jobs:
     # =========================================================================
     - name: Checkout
       uses: actions/checkout@v2
-      with:
-        ref: master
 
     # =========================================================================
     # SHARED: Retrieve git hashes and set up for cache
