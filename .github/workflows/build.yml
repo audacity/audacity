@@ -3,12 +3,12 @@ name: Build Audacity
 on:
   push:
     # Remove the "#" from the next 2 lines if you need to disable this action
-    #branches:
-    #  - disable
+    branches:
+      - disable
   pull_request:
     # Remove the "#" from the next 2 lines if you need to disable this action
-    #branches:
-    #  - disable
+    branches:
+      - disable
 
 jobs:
   build:
