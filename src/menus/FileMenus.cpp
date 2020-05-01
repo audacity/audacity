@@ -89,7 +89,7 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
    }
    else
    {
-      FileHistory::Global().AddFileToHistory(filename);
+      FileHistory::Global().Append(filename);
       // We're in batch mode, the file does not exist already.
       // We really can proceed without prompting.
       int nChannels = MacroCommands::IsMono( &project ) ? 1 : 2;
@@ -595,7 +595,6 @@ BaseItemSharedPtr FileMenu()
                // Recent Files and Recent Projects menus
                auto &history = FileHistory::Global();
                history.UseMenu( &theMenu );
-               history.AddFilesToMenu( &theMenu );
 
                wxWeakRef<wxMenu> recentFilesMenu{ &theMenu };
                wxTheApp->CallAfter( [=] {

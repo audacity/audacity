@@ -49,7 +49,7 @@ bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
          );
       
       ProjectWindow::Get( project ).ZoomAfterImport(pTrack);
-      FileHistory::Global().AddFileToHistory(fileName);
+      FileHistory::Global().Append(fileName);
       return true;
    }
    else

@@ -85,16 +85,15 @@ ExportCLOptions::ExportCLOptions(wxWindow *parent, int WXUNUSED(format))
 {
    mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 
-   if (mHistory.GetCount() == 0) {
-      mHistory.AddFileToHistory(wxT("ffmpeg -i - \"%f.opus\""), false);
-      mHistory.AddFileToHistory(wxT("ffmpeg -i - \"%f.wav\""), false);
-      mHistory.AddFileToHistory(wxT("ffmpeg -i - \"%f\""), false);
-      mHistory.AddFileToHistory(wxT("lame - \"%f\""), false);
+   if (mHistory.empty()) {
+      mHistory.Append(wxT("ffmpeg -i - \"%f.opus\""));
+      mHistory.Append(wxT("ffmpeg -i - \"%f.wav\""));
+      mHistory.Append(wxT("ffmpeg -i - \"%f\""));
+      mHistory.Append(wxT("lame - \"%f\""));
    }
 
-   mHistory.AddFileToHistory(gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"),
-                                          mHistory.GetHistoryFile(0)),
-                             false);
+   mHistory.Append(gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"),
+                                          mHistory[ 0 ]));
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -113,14 +112,8 @@ ExportCLOptions::~ExportCLOptions()
 ///
 void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayStringEx cmds;
-   wxString cmd;
-
-   for (size_t i = 0; i < mHistory.GetCount(); i++) {
-      cmd = mHistory.GetHistoryFile(i);
-      cmds.push_back(mHistory.GetHistoryFile(i));
-   }
-   cmd = cmds[0];
+   wxArrayStringEx cmds( mHistory.begin(), mHistory.end() );
+   auto cmd = cmds[0];
 
    S.StartVerticalLay();
    {
@@ -171,7 +164,7 @@ bool ExportCLOptions::TransferDataFromWindow()
 
    wxString cmd = mCmd->GetValue();
 
-   mHistory.AddFileToHistory(cmd, false);
+   mHistory.Append(cmd);
    mHistory.Save(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 
    gPrefs->Write(wxT("/FileFormats/ExternalProgramExportCommand"), cmd);

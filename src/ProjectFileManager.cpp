@@ -778,7 +778,7 @@ bool ProjectFileManager::SaveAs(const wxString & newFileName, bool bWantSaveCopy
    success = DoSave(!bOwnsNewAupName || bWantSaveCopy, bWantSaveCopy);
 
    if (success && addToHistory) {
-      FileHistory::Global().AddFileToHistory( project.GetFileName() );
+      FileHistory::Global().Append( project.GetFileName() );
    }
    if (!success || bWantSaveCopy) // bWantSaveCopy doesn't actually change current project.
    {
@@ -954,7 +954,7 @@ will be irreversibly overwritten.").Format( fName, fName );
    success = DoSave(!bOwnsNewAupName || bWantSaveCopy, bWantSaveCopy, bLossless);
 
    if (success) {
-      FileHistory::Global().AddFileToHistory( project.GetFileName() );
+      FileHistory::Global().Append( project.GetFileName() );
       if( !bHasPath )
       {
          gPrefs->Write( wxT("/SaveAs/Path"), filename.GetPath());
@@ -1020,7 +1020,7 @@ bool ProjectFileManager::SaveFromTimerRecording(wxFileName fnFile)
    bSuccess = DoSave(true, false);
 
    if (bSuccess) {
-      FileHistory::Global().AddFileToHistory( project.GetFileName() );
+      FileHistory::Global().Append( project.GetFileName() );
       projectFileIO.SetLoadedFromAup( true );
       projectFileIO.SetProjectTitle();
    }
@@ -1385,7 +1385,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       // finished logging errors (if any) before the call to ProjectFSCK()
 
       if (addtohistory)
-         FileHistory::Global().AddFileToHistory(fileName);
+         FileHistory::Global().Append(fileName);
    }
 
    // Use a finally block here, because there are calls to Save() below which
@@ -1652,7 +1652,7 @@ bool ProjectFileManager::Import(
       if (!success)
          return false;
 
-      FileHistory::Global().AddFileToHistory(fileName);
+      FileHistory::Global().Append(fileName);
 
       // no more errors, commit
       committed = true;

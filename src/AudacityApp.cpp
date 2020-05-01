@@ -863,18 +863,18 @@ void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    int n = event.GetId() - FileHistory::ID_RECENT_FIRST;
    auto &history = FileHistory::Global();
-   const auto &fullPathStr = history.GetHistoryFile(n);
+   const auto &fullPathStr = history[ n ];
 
    // Try to open only if not already open.
    // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks,
-   // because we don't want to RemoveFileFromHistory() just because it already exists,
+   // because we don't want to Remove() just because it already exists,
    // and AudacityApp::OnMacOpenFile() calls MRUOpen() directly.
    // that method does not return the bad result.
    // PRL: Don't call SafeMRUOpen
    // -- if open fails for some exceptional reason of resource exhaustion that
    // the user can correct, leave the file in history.
    if (!ProjectFileManager::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
-      history.RemoveFileFromHistory(n);
+      history.Remove(n);
 }
 
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
@@ -1415,7 +1415,6 @@ bool AudacityApp::OnInit()
 
       auto &recentFiles = FileHistory::Global();
       recentFiles.UseMenu(recentMenu);
-      recentFiles.AddFilesToMenu(recentMenu);
 
       SetExitOnFrameDelete(false);
 
