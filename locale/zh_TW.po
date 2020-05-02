@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
-"PO-Revision-Date: 2020-04-25 20:03+0800\n"
+"POT-Creation-Date: 2020-05-03 01:59+0800\n"
+"PO-Revision-Date: 2020-05-03 02:15+0800\n"
 "Last-Translator: pan93412 <pan93412@gmail.com>\n"
 "Language-Team: Chinese <zh-l10n@lists.linux.org.tw>\n"
 "Language: zh_TW\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr "已有「%s」檔案，真的要覆寫嗎？"
+msgstr "已有「%s」檔案，是否覆寫？"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/LangChoice.cpp
 #: src/effects/VST/VSTEffect.cpp
@@ -719,12 +719,14 @@ msgid "Commit Id:"
 msgstr "Github 提交 ID："
 
 #: src/AboutDialog.cpp
-msgid "Debug build"
-msgstr "除錯版本"
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "除錯組建 (除錯等級 %d)"
 
 #: src/AboutDialog.cpp
-msgid "Release build"
-msgstr "正式發佈版本"
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "發行組建 (除錯等級 %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -3724,6 +3726,28 @@ msgstr ""
 "開啟聲音裝置時發生錯誤。\n"
 "請試著變更音訊主機、播放裝置和專案的取樣頻率。"
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr "選擇要錄製的軌道必須具有相同的取樣頻率。"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr "取樣速率不符"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+"選取的音軌過少，以致無法以此取樣速率錄製。\n"
+"(Audacity 每個立體聲音軌皆需要兩個在\n"
+"相同取樣速率的聲道)"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr "選取的相容音軌過少"
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -3964,9 +3988,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "警告：自動復原時發生問題"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<未命名>"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid "[Project %02i] "
+msgstr "[專案 %02i] "
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -5506,6 +5535,8 @@ msgid ""
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
 msgstr ""
+"下列命令的快捷鍵已被移除，因為其預設快捷鍵被新增或變更，且跟您先前指派至其他"
+"命令的快捷鍵相同。"
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -8146,7 +8177,7 @@ msgstr "(最大 0 分貝)"
 
 #: src/effects/Loudness.cpp
 msgid "RMS dB"
-msgstr ""
+msgstr "RMS dB"
 
 #: src/effects/Noise.cpp
 msgid "Pink"
@@ -8174,9 +8205,8 @@ msgid "Median"
 msgstr "中等"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Second greatest"
-msgstr "第二個軌道"
+msgstr "第二最佳"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Old"
@@ -9571,6 +9601,11 @@ msgid "&Buffer Size (8 to %d) samples):"
 msgstr "緩衝區大小 (8 到 %d 取樣點)(&B)："
 
 #: src/effects/lv2/LV2Effect.cpp
+#, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr "緩衝區大小 (8 到 %d 取樣點)(&B)："
+
+#: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
 "Audacity. When not compensating for this delay, you will notice that small "
@@ -10288,7 +10323,8 @@ msgstr "取樣頻率"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbps"
@@ -10340,7 +10376,6 @@ msgid "9"
 msgstr "9"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#| msgid "1"
 msgid "10"
 msgstr "10"
 
@@ -10963,10 +10998,8 @@ msgstr "正在將選擇的音訊匯出為 FLAC"
 msgid "Exporting the audio as FLAC"
 msgstr "正在將音訊匯出為 FLAC"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
 #, c-format
-#| msgid "%d kbps"
 msgid "%d kpbs"
 msgstr "%d kpbs"
 
@@ -12273,7 +12306,7 @@ msgstr "終點"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -13104,7 +13137,7 @@ msgstr "切換至活躍視窗之前"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Foc&us"
-msgstr ""
+msgstr "設為焦點(&U)"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move &Backward from Toolbars to Tracks"
@@ -14080,8 +14113,8 @@ msgid "Please select in a mono track."
 msgstr "請在單聲道軌道內選擇"
 
 #: src/menus/TransportMenus.cpp
-msgid "Please select in a stereo track."
-msgstr "請在立體聲軌道內選擇"
+msgid "Please select in a stereo track or two mono tracks."
+msgstr "請在立體聲或兩個單聲道內選擇"
 
 #: src/menus/TransportMenus.cpp
 #, c-format
@@ -17482,7 +17515,6 @@ msgstr "開啟選單..."
 
 #. i18n-hint: Command names a modifier key on Macintosh keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
-#| msgid "Command-Click"
 msgid "Command+Click"
 msgstr "Command 鍵 + 按一下"
 
@@ -18104,8 +18136,8 @@ msgstr "值不可小於 %s"
 
 #: src/widgets/valnum.cpp
 #, c-format
-msgid "Value must not be greather than %s"
-msgstr "值不可大於 %s"
+msgid "Value must not be greater than %s"
+msgstr "數值不可大於 %s"
 
 #: src/widgets/valnum.cpp
 msgid "e"
@@ -18192,12 +18224,12 @@ msgstr "~ah ~am ~as"
 
 #: plug-ins/SilenceMarker.ny
 msgid ""
-"No silences found.\n"
-"Try reducing the silence level and\n"
+"No silences found.\r\n"
+"Try reducing the silence level and\r\n"
 "the minimum silence duration."
 msgstr ""
-"找不到靜音。\n"
-"請試試降低靜音等級，及\n"
+"找不到靜音。\r\n"
+"請試試降低靜音等級，及\r\n"
 "最小靜音持續時間。"
 
 #: plug-ins/SoundFinder.ny
@@ -18264,21 +18296,19 @@ msgid "~aPlease select frequencies."
 msgstr "~a請選擇頻率"
 
 #: plug-ins/SpectralEditMulti.ny
-#, lisp-format
 msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                       frequencies are both ~a Hz).~%~\n"
+"~aBandwidth is zero (the upper and lower~%~\r\n"
+"                       frequencies are both ~a Hz).~%~\r\n"
 "                       Please select a frequency range."
 msgstr ""
-"~a頻寬為零 (上下~%~\n"
-"                       頻率皆為 ~a Hz)~%~\n"
+"~a頻寬為零 (上下~%~\r\n"
+"                       頻率皆為 ~a Hz)~%~\r\n"
 "                       請選擇頻率範圍"
 
 #: plug-ins/SpectralEditMulti.ny
-#, lisp-format
 msgid ""
-"~aNotch filter parameters cannot be applied.~%~\n"
-"                      Try increasing the low frequency bound~%~\n"
+"~aNotch filter parameters cannot be applied.~%~\r\n"
+"                      Try increasing the low frequency bound~%~\r\n"
 "                      or reduce the filter 'Width'."
 msgstr ""
 
@@ -18313,26 +18343,24 @@ msgid "~aCenter frequency must be above 0 Hz."
 msgstr "~a中心頻率必須高於 0 Hz"
 
 #: plug-ins/SpectralEditParametricEQ.ny
-#, lisp-format
 msgid ""
-"~aFrequency selection is too high for track sample rate.~%~\n"
+"~aFrequency selection is too high for track sample rate.~%~\r\n"
 "                        For the current track, the high frequency setting "
-"cannot~%~\n"
+"cannot~%~\r\n"
 "                        be greater than ~a Hz"
 msgstr ""
-"~a頻率選取部分對於軌道取樣率來說太高。~%~\n"
-"                        對於目前的軌道，高頻設定不能~%~\n"
+"~a頻率選取部分對於軌道取樣率來說太高。~%~\r\n"
+"                        對於目前的軌道，高頻設定不能~%~\r\n"
 "                        高於 ~a Hz"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#, lisp-format
 msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                         frequencies are both ~a Hz).~%~\n"
+"~aBandwidth is zero (the upper and lower~%~\r\n"
+"                         frequencies are both ~a Hz).~%~\r\n"
 "                         Please select a frequency range."
 msgstr ""
-"~a頻寬為零 (高低~%~\n"
-"                         頻率皆為 ~a Hz)。~%~\n"
+"~a頻寬為零 (高低~%~\r\n"
+"                         頻率皆為 ~a Hz)。~%~\r\n"
 "                         請選擇頻率範圍。"
 
 #: plug-ins/SpectralEditShelves.ny
@@ -18475,14 +18503,13 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~a百分比值不能大於 1000 %"
 
 #: plug-ins/adjustable-fade.ny
-#, lisp-format
 msgid ""
-"~adB values cannot be more than +100 dB.~%~%~\n"
-"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"~adB values cannot be more than +100 dB.~%~%~\r\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\r\n"
 "                                 \t-6 dB halves the amplitude."
 msgstr ""
-"~adB 值不能多於 +100 dB~%~%~\n"
-"                                 提示：6 dB 代表將振幅加倍~%~\n"
+"~adB 值不能多於 +100 dB~%~%~\r\n"
+"                                 提示：6 dB 代表將振幅加倍~%~\r\n"
 "                                 \t-6 dB 代表將振幅減半"
 
 #: plug-ins/beat.ny
@@ -18850,14 +18877,13 @@ msgid "Frequency must be at least 0.1 Hz."
 msgstr "頻率必須至少是 0.1 赫茲"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
-#, lisp-format
 msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                   Track sample rate is ~a Hz~%~\n"
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\r\n"
+"                   Track sample rate is ~a Hz~%~\r\n"
 "                   Frequency must be less than ~a Hz."
 msgstr ""
-"Error:~%~%頻率 (~a Hz) 對於軌道的取樣率太高。~%~%~\n"
-"                   軌道取樣率是 ~a Hz~%~\n"
+"錯誤：~%~%頻率 (~a Hz) 對於軌道的取樣率太高。~%~%~\r\n"
+"                   軌道取樣率是 ~a Hz~%~\r\n"
 "                   頻率必須少於 ~a Hz"
 
 #: plug-ins/limiter.ny
@@ -18891,18 +18917,18 @@ msgstr "硬剪輯"
 
 #: plug-ins/limiter.ny
 msgid ""
-"Input Gain (dB)\n"
+"Input Gain (dB)\r\n"
 "mono/Left"
 msgstr ""
-"輸入增益 (dB)\n"
+"輸入增益 (dB)\r\n"
 "單聲道/左聲道"
 
 #: plug-ins/limiter.ny
 msgid ""
-"Input Gain (dB)\n"
+"Input Gain (dB)\r\n"
 "Right channel"
 msgstr ""
-"輸入增益 (dB)\n"
+"輸入增益 (dB)\r\n"
 "右聲道"
 
 #: plug-ins/limiter.ny
@@ -18992,23 +19018,25 @@ msgstr "起音/衰減 (ms)"
 #: plug-ins/noisegate.ny
 #, lisp-format
 msgid ""
-"Error.\n"
-"\"Gate frequencies above: ~s kHz\"\n"
-"is too high for selected track.\n"
+"Error.\r\n"
+"\"Gate frequencies above: ~s kHz\"\r\n"
+"is too high for selected track.\r\n"
 "Set the control below ~a kHz."
 msgstr ""
 
 #: plug-ins/noisegate.ny
 #, lisp-format
 msgid ""
-"~%Insufficient audio selected.\n"
+"~%Insufficient audio selected.\r\n"
 "Make the selection longer than ~a ms."
 msgstr ""
+"~%選取的音訊區域過短。\r\n"
+"選取區域必須長於 ~a 毫秒。"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
 msgid ""
-"Peak based on first ~a seconds ~a dB~%\n"
+"Peak based on first ~a seconds ~a dB~%\r\n"
 "Suggested Threshold Setting ~a dB."
 msgstr ""
 
@@ -19031,14 +19059,13 @@ msgid "Q (higher value reduces width)"
 msgstr "Q (較高的值會減少寬度)"
 
 #: plug-ins/notch.ny
-#, lisp-format
 msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                 Track sample rate is ~a Hz.~%~\n"
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\r\n"
+"                 Track sample rate is ~a Hz.~%~\r\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"錯誤：~%~%頻率 (~a Hz) 對於軌道的取樣率太高~%~%~\n"
-"                 軌道取樣率是 ~a Hz~%~\n"
+"錯誤：~%~%頻率 (~a Hz) 對於軌道的取樣率太高~%~%~\r\n"
+"                 軌道取樣率是 ~a Hz~%~\r\n"
 "                 頻率必須少於 ~a Hz"
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -19076,9 +19103,6 @@ msgid "Warning.nFailed to copy some files:n"
 msgstr "警告.n無法複製部分檔案：n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#| msgid ""
-#| "~s installed to:~%\"~a\"~%~%~\n"
-#| "            Use the Plug-in Manager to enable the effect."
 msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
 msgstr "安裝的外掛程式.n(使用外掛程式管理工具啟用效果)："
 
@@ -19259,10 +19283,10 @@ msgstr "弱拍的 MIDI 音高"
 
 #: plug-ins/rhythmtrack.ny
 msgid ""
-"Set either 'Number of bars' or\n"
+"Set either 'Number of bars' or\r\n"
 "'Rhythm track duration' to greater than zero."
 msgstr ""
-"將「小節數目」或「旋律軌道持續時間」\n"
+"將「小節數目」或「旋律軌道持續時間」\r\n"
 "設定為大於零。"
 
 #: plug-ins/rissetdrum.ny
@@ -19403,26 +19427,24 @@ msgid ""
 msgstr "~a   ~a~%~a取樣率：~a Hz.~%已處理長度：~a 個樣本 ~a 秒~a"
 
 #: plug-ins/sample-data-export.ny
-#, lisp-format
 msgid ""
-"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
+"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\r\n"
 "                     Length processed: ~a samples ~a seconds.~a"
 msgstr ""
-"~a   ~a~%~a取樣率：~a Hz。樣本值按 ~a 比例。~%~\n"
+"~a   ~a~%~a取樣率：~a Hz。樣本值按 ~a 比例。~%~\r\n"
 "                     已處理長度：~a 個樣本 ~a 秒。~a"
 
 #: plug-ins/sample-data-export.ny
-#, lisp-format
 msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
-"~a ~\n"
+"~a ~\r\n"
 "                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
-"Unweighted RMS: ~a dB.~%~\n"
+"Unweighted RMS: ~a dB.~%~\r\n"
 "                  DC offset: ~a~a"
 msgstr ""
-"~a~%取樣率：~a Hz。樣本值按 ~a 比例。~a。~%~a已處理長度：~a ~\n"
+"~a~%取樣率：~a Hz。樣本值按 ~a 比例。~a。~%~a已處理長度：~a ~\r\n"
 "                  個樣本，~a 秒。~%峰值振幅：~a (線性) ~a dB。  未加權 RMS："
-"~a dB。~%~\n"
+"~a dB。~%~\r\n"
 "                  直流偏移：~a~a"
 
 #: plug-ins/sample-data-export.ny
@@ -19521,8 +19543,8 @@ msgstr "右 (分貝)"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
-"Produced with <span>Sample Data Export</span> for\n"
-"<a href=\"~a\">Audacity</a> by Steve\n"
+"Produced with <span>Sample Data Export</span> for\r\n"
+"<a href=\"~a\">Audacity</a> by Steve\r\n"
 "Daulton"
 msgstr ""
 
@@ -19597,36 +19619,33 @@ msgid "Read as Zero"
 msgstr "視為零值讀取"
 
 #: plug-ins/sample-data-import.ny
-#, lisp-format
 msgid ""
-"Error~%~\n"
-"                        '~a' could not be opened.~%~\n"
+"Error~%~\r\n"
+"                        '~a' could not be opened.~%~\r\n"
 "                        Check that file exists."
 msgstr ""
-"錯誤~%~\n"
-"                        無法開啟「~a」~%~\n"
+"錯誤~%~\r\n"
+"                        無法開啟「~a」~%~\r\n"
 "                        請檢查清楚該檔案是否存在"
 
 #: plug-ins/sample-data-import.ny
-#, lisp-format
 msgid ""
-"Error:~%~\n"
-"              The file must contain only plain ASCII text.~%~\n"
+"Error:~%~\r\n"
+"              The file must contain only plain ASCII text.~%~\r\n"
 "              (Invalid byte '~a' at byte number: ~a)"
 msgstr ""
-"錯誤：~%~\n"
-"              檔案只能有 ASCII 文字。~%~\n"
+"錯誤：~%~\r\n"
+"              檔案只能有 ASCII 文字。~%~\r\n"
 "              (無效位元組「~a」位於位元組編號：~a)"
 
 #: plug-ins/sample-data-import.ny
-#, lisp-format
 msgid ""
-"Error~%~\n"
-"              Data must be numbers in plain ASCII text.~%~\n"
+"Error~%~\r\n"
+"              Data must be numbers in plain ASCII text.~%~\r\n"
 "              '~a' is not a numeric value."
 msgstr ""
-"錯誤：~%~\n"
-"              檔案只能有 ASCII 數字。~%~\n"
+"錯誤：~%~\r\n"
+"              檔案只能有 ASCII 數字。~%~\r\n"
 "              (「~a」不是數值)"
 
 #: plug-ins/sample-data-import.ny
@@ -19732,13 +19751,13 @@ msgstr "人聲最高剪點 (High Cut) (Hz)"
 #: plug-ins/vocalrediso.ny
 #, lisp-format
 msgid ""
-"Average x: ~a, y: ~a\n"
-"                    Covariance x y: ~a\n"
-"                    Average variance x: ~a, y: ~a\n"
-"                    Standard deviation x: ~a, y: ~a\n"
-"                    Coefficient of correlation: ~a\n"
-"                    Coefficient of determination: ~a\n"
-"                    Variation of residuals: ~a\n"
+"Average x: ~a, y: ~a\r\n"
+"                    Covariance x y: ~a\r\n"
+"                    Average variance x: ~a, y: ~a\r\n"
+"                    Standard deviation x: ~a, y: ~a\r\n"
+"                    Coefficient of correlation: ~a\r\n"
+"                    Coefficient of determination: ~a\r\n"
+"                    Variation of residuals: ~a\r\n"
 "                    y equals ~a plus ~a times x~%"
 msgstr ""
 
@@ -19751,15 +19770,15 @@ msgstr "平移位置：~a~%左右聲道有 ~a % 相關。代表：~%~a~%"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two channels are identical, i.e. dual mono.\n"
-"                The center can't be removed.\n"
+" - The two channels are identical, i.e. dual mono.\r\n"
+"                The center can't be removed.\r\n"
 "                Any remaining difference may be caused by lossy encoding."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - The two Channels are strongly related, i.e. nearly mono or extremely "
-"panned.\n"
+"panned.\r\n"
 "                Most likely, the center extraction will be poor."
 msgstr ""
 
@@ -19770,32 +19789,32 @@ msgstr " - 不錯，至少平均來說是立體聲，不是隔得很遠。"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - An ideal value for Stereo.\n"
+" - An ideal value for Stereo.\r\n"
 "                However, the center extraction depends also on the used "
 "reverb."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two channels are almost not related.\n"
+" - The two channels are almost not related.\r\n"
 "                Either you have only noise or the piece is mastered in a "
-"unbalanced manner.\n"
+"unbalanced manner.\r\n"
 "                The center extraction can still be good though."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - Although the Track is stereo, the field is obviously extra wide.\n"
-"                This can cause strange effects.\n"
+" - Although the Track is stereo, the field is obviously extra wide.\r\n"
+"                This can cause strange effects.\r\n"
 "                Especially when played by only one speaker."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two channels are nearly identical.\n"
-"                  Obviously, a pseudo stereo effect has been used\n"
+" - The two channels are nearly identical.\r\n"
+"                  Obviously, a pseudo stereo effect has been used\r\n"
 "                  to spread the signal over the physical distance between "
-"the speakers.\n"
+"the speakers.\r\n"
 "                  Don't expect good results from a center removal."
 msgstr ""
 
@@ -19855,3 +19874,6 @@ msgstr "Radar Needles 頻率 (赫茲)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "錯誤。~%必須是立體聲"
+
+#~ msgid "Debug build"
+#~ msgstr "除錯版本"
