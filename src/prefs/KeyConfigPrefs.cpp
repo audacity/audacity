@@ -450,11 +450,13 @@ TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
          {
             TranslatableString name{ mManager->GetKeyFromName(mNames[sRes]).GET(), {} };
             
-            disabledShortcuts += XO("\n   *   \"") +
-               mManager->GetPrefixedLabelFromName(mNames[i]) + 
-               XO("\"  (because the shortcut \'") + name + 
-               XO("\' is used by \"") + mManager->GetPrefixedLabelFromName(mNames[sRes])
-               +XO("\")\n");
+            disabledShortcuts +=
+               XO(
+"\n   *   \"%s\"  (because the shortcut \'%s\' is used by \"%s\")\n")
+                  .Format(
+                     mManager->GetPrefixedLabelFromName(mNames[i]),
+                     name,
+                     mManager->GetPrefixedLabelFromName(mNames[sRes]) );
             
             mManager->SetKeyFromIndex(i, noKey);
          }
@@ -528,8 +530,10 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
       mKeys = oldKeys;
 
       // output an error message
-      AudacityMessageBox(XO("The file with the shortcuts contains illegal shortcut duplicates for \"") +
-         fMatching + XO("\" and \"") + sMatching + XO("\".\nNothing is imported."),
+      AudacityMessageBox(
+         XO(
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\nNothing is imported.")
+            .Format( fMatching, sMatching ),
          XO("Error Importing Keyboard Shortcuts"),
          wxICON_ERROR | wxCENTRE, this);
 
