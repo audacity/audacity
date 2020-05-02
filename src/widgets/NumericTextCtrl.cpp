@@ -718,6 +718,7 @@ void NumericConverter::ParseFormatString(
    mDigits.clear();
    mScalingFactor = 1.0;
 
+   // We will change inFrac to true when we hit our first decimal point.
    bool inFrac = false;
    int fracMult = 1;
    int numWholeFields = 0;
@@ -725,6 +726,60 @@ void NumericConverter::ParseFormatString(
    wxString numStr;
    wxString delimStr;
    unsigned int i;
+
+   // Bug 2241 concerns ',' and '.' when translated.
+   // Here's a thorny example from French, 
+   // where in translation one of the ',' is to be used
+   // as a separator and the other as a decimal point.
+   //
+   // msgid "01000,01000 frames|29.97002997"  <- Original English
+   // msgstr "01000,01000 images|29,97002997"  <- Translated
+
+   // Some other examples:
+   //
+   // msgid "0100000.0100 Hz"
+   // msgstr "0100000,0100 Hz"
+
+   // msgid "01000.01000 kHz|0.001"
+   // msgstr "01000,01000 kHz|0.001"
+
+   // In the French translation '.' is not always translated
+   // to ','.
+   //
+   // msgid "0100 h 060 m 060.0100 s"
+   // msgstr "0100 h 060 m 060.0100 s"
+
+   // The comma fix code below is specifically for bug 2241.
+   // It is a fixup, not a proper full fix.
+
+   // A correct fix would require changing all the format 
+   // strings to make it explicit when ',' is a thousands separator 
+   // and when ',' is a decimal separator
+   // A slightly better fix than now would derive bCommaIsDecimalPoint 
+   // from the untranslated strings, true if and only if the
+   // untranslated string is free of commas.
+   // Within this function we only see the translated format strings,
+   // so that is what we use.
+
+   // Normally bCommaIsDecimalPoint will be false and code will work
+   // 'as before'.
+   bool bCommaIsDecimalPoint = false;
+   // We look in the translated string for "Hz" as that is in the
+   // two problematic translated strings.
+   if (format.Contains("Hz"))
+      bCommaIsDecimalPoint = true;
+   // None of the format strings with 060 in them have a comma in them too.
+   if (format.Contains("060"))
+      bCommaIsDecimalPoint = true;
+   // 0.4342 is in the 'decades' format string.
+   if (format.Contains("4342"))
+      bCommaIsDecimalPoint = true;
+   // 1.4426 is in the 'octaves' format string
+   if (format.Contains("4426"))
+      bCommaIsDecimalPoint = true;
+   // 17.3123 is in 'semitones' format string
+   if (format.Contains("3123"))
+      bCommaIsDecimalPoint = true;
 
    mNtscDrop = false;
    for(i=0; i<format.length(); i++) {
@@ -742,6 +797,10 @@ void NumericConverter::ParseFormatString(
             mNtscDrop = true;
          }
          else
+            // Use the C locale here for string to number.
+            // Translations are often incomplete.
+            // We can't rely on the correct ',' or '.' in the 
+            // translation, so we work based on '.' for decimal point.
             remainder.ToCDouble(&mScalingFactor);
          i = format.length()-1; // force break out of loop
          if (!delimStr.empty())
@@ -807,9 +866,10 @@ void NumericConverter::ParseFormatString(
             if (delimStr.length() > 1)
                delimStr = delimStr.BeforeLast('.');
          }
-         // Bug 2241 - Also handle , as decimal point
+         // Bug 2241 - Also handle ',' as decimal point
          // for languages like French and German.
-         else if (!inFrac && delimStr[delimStr.length()-1]==',') {
+         // Translators may or may not have translated the '.'.
+         else if (bCommaIsDecimalPoint && !inFrac && delimStr[delimStr.length()-1]==',') {
             goToFrac = true;
             if (delimStr.length() > 1)
                delimStr = delimStr.BeforeLast(',');

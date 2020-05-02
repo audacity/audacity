@@ -1022,7 +1022,7 @@ template <
       return {
          { newBegin.mIter, newBegin.mIter,    this->second.mEnd,
            this->first.GetPredicate() },
-         { newBegin.mIter, this->second.mEnd, this->second.mEnd,
+         { newBegin.mIter, this->second.mIter, this->second.mEnd,
            this->second.GetPredicate() }
       };
    }

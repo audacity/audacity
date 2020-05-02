@@ -300,7 +300,6 @@ wxString GUIPrefs::InitLang( wxString langCode )
    return SetLang(langCode);
 }
 
-#define IPC_APPL wxT("audacity")
 static std::unique_ptr<wxLocale> sLocale;
 
 wxString GUIPrefs::SetLang( const wxString & lang )
@@ -344,12 +343,8 @@ wxString GUIPrefs::SetLang( const wxString & lang )
    //      catalogs are search in LIFO order, so add wxstd first.
    sLocale->AddCatalog(wxT("wxstd"));
 
-// AUDACITY_NAME is legitimately used on some *nix configurations.
-#ifdef AUDACITY_NAME
-   sLocale->AddCatalog(wxT(AUDACITY_NAME));
-#else
-   sLocale->AddCatalog(IPC_APPL);
-#endif
+   // Must match TranslationExists() in Languages.cpp
+   sLocale->AddCatalog("audacity");
 
    // Initialize internationalisation (number formats etc.)
    //
