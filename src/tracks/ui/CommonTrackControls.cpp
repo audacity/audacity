@@ -137,43 +137,27 @@ BEGIN_POPUP_MENU(TrackMenuTable)
          // wxWidgets will apply its equivalent to the key names passed to menu
          // functions.
          OnMoveUpID,
-         XXO("Move Track &Up").Join(
-            Verbatim(
-               CommandManager::Get( mpData->project ).
-                   // using GET to compose menu item name for wxWidgets
-                   GetKeyFromName(wxT("TrackMoveUp")).GET() ),
-             wxT("\t")
-         ),
+         { XXO("Move Track &Up"),
+            CommandManager::Get( mpData->project ).
+               GetKeyFromName(L"TrackMoveUp") },
          POPUP_MENU_FN( OnMoveTrack ), canMove(true) );
       AppendItem( "Down",
          OnMoveDownID,
-         XXO("Move Track &Down").Join(
-            Verbatim(
-               CommandManager::Get( mpData->project ).
-                  // using GET to compose menu item name for wxWidgets
-                  GetKeyFromName(wxT("TrackMoveDown")).GET() ),
-             wxT("\t")
-         ),
+         { XXO("Move Track &Down"),
+            CommandManager::Get( mpData->project ).
+               GetKeyFromName(L"TrackMoveDown") },
          POPUP_MENU_FN( OnMoveTrack ), canMove(false) );
       AppendItem( "Top",
          OnMoveTopID,
-         XXO("Move Track to &Top").Join(
-            Verbatim(
-               CommandManager::Get( mpData->project ).
-                   // using GET to compose menu item name for wxWidgets
-                   GetKeyFromName(wxT("TrackMoveTop")).GET() ),
-             wxT("\t")
-         ),
+         { XXO("Move Track to &Top"),
+            CommandManager::Get( mpData->project ).
+               GetKeyFromName(L"TrackMoveTop") },
          POPUP_MENU_FN( OnMoveTrack ), canMove(true) );
       AppendItem( "Bottom",
          OnMoveBottomID,
-         XXO("Move Track to &Bottom").Join(
-            Verbatim(
-               CommandManager::Get( mpData->project ).
-                  // using GET to compose menu item name for wxWidgets
-                  GetKeyFromName(wxT("TrackMoveBottom")).GET() ),
-             wxT("\t")
-         ),
+         { XXO("Move Track to &Bottom"),
+            CommandManager::Get( mpData->project ).
+               GetKeyFromName(L"TrackMoveBottom") },
          POPUP_MENU_FN( OnMoveTrack ), canMove(false) );
    EndSection();
 END_POPUP_MENU()
