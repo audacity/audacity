@@ -43,7 +43,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 namespace{
 using namespace MenuTable;
 
-auto ToolbarCheckFn( int toolbarId ) -> CommandListEntry::CheckFn
+auto ToolbarCheckFn( int toolbarId ) -> CommandManager::CheckFn
 {
    return [toolbarId](AudacityProject &project){
       auto &toolManager = ToolManager::Get( project );

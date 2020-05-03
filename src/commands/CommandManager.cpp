@@ -115,6 +115,59 @@ CommandManager.  It holds the callback for one command.
 #define COMMAND XO("Command")
 
 
+struct MenuBarListEntry
+{
+   MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_);
+   ~MenuBarListEntry();
+
+   wxString name;
+   wxWeakRef<wxMenuBar> menubar; // This structure does not assume memory ownership!
+};
+
+struct SubMenuListEntry
+{
+   SubMenuListEntry( const TranslatableString &name_ );
+   SubMenuListEntry( SubMenuListEntry&& ) = default;
+   ~SubMenuListEntry();
+
+   TranslatableString name;
+   std::unique_ptr<wxMenu> menu;
+};
+
+struct CommandListEntry
+{
+   int id;
+   CommandID name;
+   TranslatableString longLabel;
+   NormalizedKeyString key;
+   NormalizedKeyString defaultKey;
+   TranslatableString label;
+   TranslatableString labelPrefix;
+   TranslatableString labelTop;
+   wxMenu *menu;
+   CommandHandlerFinder finder;
+   CommandFunctorPointer callback;
+   CommandParameter parameter;
+
+   // type of a function that determines checkmark state
+   using CheckFn = std::function< bool(AudacityProject&) >;
+   CheckFn checkmarkFn;
+
+   bool multi;
+   int index;
+   int count;
+   bool enabled;
+   bool skipKeydown;
+   bool wantKeyup;
+   bool allowDup;
+   bool isGlobal;
+   bool isOccult;
+   bool isEffect;
+   bool excludeFromMacros;
+   CommandFlag flags;
+   bool useStrictFlags{ false };
+};
+
 NonKeystrokeInterceptingWindow::~NonKeystrokeInterceptingWindow()
 {
 }
@@ -132,9 +185,8 @@ MenuBarListEntry::~MenuBarListEntry()
 {
 }
 
-SubMenuListEntry::SubMenuListEntry(
-   const TranslatableString &name_, std::unique_ptr<wxMenu> menu_ )
-   : name(name_), menu( std::move(menu_) )
+SubMenuListEntry::SubMenuListEntry( const TranslatableString &name_ )
+   : name(name_), menu( std::make_unique< wxMenu >() )
 {
 }
 
@@ -420,10 +472,9 @@ void CommandManager::EndMainMenu()
 /// the function's argument.
 wxMenu* CommandManager::BeginSubMenu(const TranslatableString & tName)
 {
-   mSubMenuList.push_back
-      (std::make_unique< SubMenuListEntry > ( tName, std::make_unique<wxMenu>() ));
+   mSubMenuList.emplace_back( tName );
    mbSeparatorAllowed = false;
-   return mSubMenuList.back()->menu.get();
+   return mSubMenuList.back().menu.get();
 }
 
 
@@ -434,7 +485,7 @@ wxMenu* CommandManager::BeginSubMenu(const TranslatableString & tName)
 void CommandManager::EndSubMenu()
 {
    //Save the submenu's information
-   SubMenuListEntry tmpSubMenu { std::move( *mSubMenuList.back() ) };
+   SubMenuListEntry tmpSubMenu{ std::move( mSubMenuList.back() ) };
 
    //Pop off the NEW submenu so CurrentMenu returns the parent of the submenu
    mSubMenuList.pop_back();
@@ -455,7 +506,7 @@ wxMenu * CommandManager::CurrentSubMenu() const
    if(mSubMenuList.empty())
       return NULL;
 
-   return mSubMenuList.back()->menu.get();
+   return mSubMenuList.back().menu.get();
 }
 
 ///
@@ -531,7 +582,7 @@ void CommandManager::AddItem(AudacityProject &project,
 }
 
 auto CommandManager::Options::MakeCheckFn(
-   const wxString key, bool defaultValue ) -> CommandListEntry::CheckFn
+   const wxString key, bool defaultValue ) -> CheckFn
 {
    return [=](AudacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
 }
@@ -642,9 +693,8 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       auto entry = std::make_unique<CommandListEntry>();
 
       TranslatableString labelPrefix;
-      if (!mSubMenuList.empty()) {
-         labelPrefix = mSubMenuList.back()->name.Stripped();
-      }
+      if (!mSubMenuList.empty())
+         labelPrefix = mSubMenuList.back().name.Stripped();
 
       // For key bindings for commands with a list, such as align,
       // the name in prefs is the category name plus the effect name.

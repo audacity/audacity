@@ -34,67 +34,14 @@
 
 class wxMenu;
 class wxMenuBar;
-class wxMenu;
-class wxMenuBar;
 using CommandParameter = CommandID;
 
-struct MenuBarListEntry
-{
-   MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_);
-   ~MenuBarListEntry();
-
-   wxString name;
-   wxWeakRef<wxMenuBar> menubar; // This structure does not assume memory ownership!
-};
-
-struct SubMenuListEntry
-{
-   SubMenuListEntry(const TranslatableString &name_, std::unique_ptr<wxMenu> menu_);
-   SubMenuListEntry( SubMenuListEntry&& ) = default;
-   ~SubMenuListEntry();
-
-   TranslatableString name;
-   std::unique_ptr<wxMenu> menu;
-};
-
-struct CommandListEntry
-{
-   int id;
-   CommandID name;
-   TranslatableString longLabel;
-   NormalizedKeyString key;
-   NormalizedKeyString defaultKey;
-   TranslatableString label;
-   TranslatableString labelPrefix;
-   TranslatableString labelTop;
-   wxMenu *menu;
-   CommandHandlerFinder finder;
-   CommandFunctorPointer callback;
-   CommandParameter parameter;
-
-   // type of a function that determines checkmark state
-   using CheckFn = std::function< bool(AudacityProject&) >;
-   CheckFn checkmarkFn;
-
-   bool multi;
-   int index;
-   int count;
-   bool enabled;
-   bool skipKeydown;
-   bool wantKeyup;
-   bool allowDup;
-   bool isGlobal;
-   bool isOccult;
-   bool isEffect;
-   bool excludeFromMacros;
-   CommandFlag flags;
-   bool useStrictFlags{ false };
-};
+struct MenuBarListEntry;
+struct SubMenuListEntry;
+struct CommandListEntry;
 
 using MenuBarList = std::vector < MenuBarListEntry >;
-
-// to do: remove the extra indirection when Mac compiler moves to newer version
-using SubMenuList = std::vector < std::unique_ptr<SubMenuListEntry> >;
+using SubMenuList = std::vector < SubMenuListEntry >;
 
 // This is an array of pointers, not structures, because the hash maps also point to them,
 // so we don't want the structures to relocate with vector operations.
@@ -144,6 +91,9 @@ class AUDACITY_DLL_API CommandManager final
    wxMenu *BeginMenu(const TranslatableString & tName);
    void EndMenu();
 
+   // type of a function that determines checkmark state
+   using CheckFn = std::function< bool(AudacityProject&) >;
+
    // For specifying unusual arguments in AddItem
    struct Options
    {
@@ -183,7 +133,7 @@ class AUDACITY_DLL_API CommandManager final
 
       // CheckTest is overloaded
       // Take arbitrary predicate
-      Options &&CheckTest (const CommandListEntry::CheckFn &fn) &&
+      Options &&CheckTest (const CheckFn &fn) &&
          { checker = fn; return std::move(*this); }
       // Take a preference path
       Options &&CheckTest (const wxChar *key, bool defaultValue) && {
@@ -192,7 +142,7 @@ class AUDACITY_DLL_API CommandManager final
       }
 
       const wxChar *accel{ wxT("") };
-      CommandListEntry::CheckFn checker; // default value means it's not a check item
+      CheckFn checker; // default value means it's not a check item
       bool bIsEffect{ false };
       CommandParameter parameter{};
       TranslatableString longName{};
@@ -204,7 +154,7 @@ class AUDACITY_DLL_API CommandManager final
       int allowInMacros{ -1 }; // 0 = never, 1 = always, -1 = deduce from label
 
    private:
-      static CommandListEntry::CheckFn
+      static CheckFn
          MakeCheckFn( const wxString key, bool defaultValue );
    };
 
