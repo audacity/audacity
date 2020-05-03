@@ -45,7 +45,6 @@ effects from this one class.
 #include <wx/dcclient.h>
 #include <wx/filename.h>
 #include <wx/log.h>
-#include <wx/menu.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/statbox.h>

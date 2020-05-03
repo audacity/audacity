@@ -26,8 +26,6 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/ffile.h>
-#include <wx/intl.h>
-#include <wx/menu.h>
 #include <wx/button.h>
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
@@ -598,12 +596,11 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
 // so we just do what it needs.
 void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))
 {
-   BasicMenu::Handle handle( BasicMenu::FreshMenu );
-   auto &Menu = *handle.GetWxMenu();
-   Menu.Append( 1, _("Standard") );
-   Menu.Append( 2, _("Full") );
-   Menu.Bind( wxEVT_COMMAND_MENU_SELECTED, &KeyConfigPrefs::OnImportDefaults, this );
-   handle.Popup( wxWidgetsWindowPlacement{ this } );
+   BasicMenu::Handle menu{ BasicMenu::FreshMenu };
+   menu.Append( XXO("Standard"), [this]{ OnImportDefaults(1); } );
+   menu.Append( XXO("Full"), [this]{ OnImportDefaults(2); } );
+   // Pop it up where the mouse is.
+   menu.Popup( wxWidgetsWindowPlacement{ this } );
 }
 
 void KeyConfigPrefs::FilterKeys( std::vector<NormalizedKeyString> & arr )
@@ -617,13 +614,13 @@ void KeyConfigPrefs::FilterKeys( std::vector<NormalizedKeyString> & arr )
    }
 }
 
-void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
+void KeyConfigPrefs::OnImportDefaults( int id )
 {
    gPrefs->DeleteEntry(wxT("/GUI/Shortcuts/FullDefaults"));
    gPrefs->Flush();
 
    mNewKeys = mDefaultKeys;
-   if( event.GetId() == 1 )
+   if( id == 1 )
       FilterKeys( mNewKeys );
 
    for (size_t i = 0; i < mNewKeys.size(); i++) {

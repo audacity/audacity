@@ -28,6 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ToolManager.h"
+#include "../../widgets/BasicMenu.h"
 
 #undef USE_TRANSCRIPTION_TOOLBAR
 
@@ -35,7 +36,6 @@ Paul Licameli split from TrackPanel.cpp
 #include <algorithm>
 
 #include <wx/app.h>
-#include <wx/menu.h>
 
 // Yet another experimental scrub would drag the track under a
 // stationary play head
@@ -976,16 +976,6 @@ void Scrubber::OnToggleScrubRuler(const CommandContext&)
    CheckMenuItems();
 }
 
-enum { CMD_ID = 8000 };
-
-#define THUNK(Name) Scrubber::Thunk<&Scrubber::Name>
-
-BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
-   EVT_MENU(CMD_ID,     THUNK(OnScrub))
-   EVT_MENU(CMD_ID + 1, THUNK(OnSeek))
-   EVT_MENU(CMD_ID + 2, THUNK(OnToggleScrubRuler))
-END_EVENT_TABLE()
-
 //static_assert(menuItems().size() == 3, "wrong number of items");
 
 static auto sPlayAtSpeedStatus = XO("Playing at Speed");
@@ -1194,19 +1184,21 @@ AttachedItem sAttachment2{
 
 }
 
-void Scrubber::PopulatePopupMenu(wxMenu &menu)
+void Scrubber::PopulatePopupMenu(BasicMenu::Handle &menu)
 {
-   int id = CMD_ID;
    auto &cm = CommandManager::Get( *mProject );
    for (const auto &item : menuItems()) {
       if (cm.GetEnabled(item.name)) {
+         auto action = [this, memFn = item.memFn] {
+            (this->*memFn)(*mProject);
+         };
          auto test = item.StatusTest;
-         menu.Append(id, item.label.Translation(), wxString{},
-                     test ? wxITEM_CHECK : wxITEM_NORMAL);
-         if(test && (this->*test)())
-            menu.FindItem(id)->Check();
+         if ( test )
+            menu.AppendCheckItem(
+               item.label, action, { true, (this->*test)() } );
+         else
+            menu.Append( item.label, action  );
       }
-      ++id;
    }
 }
 

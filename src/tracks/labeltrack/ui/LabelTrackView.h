@@ -181,7 +181,11 @@ public:
    void ShowContextMenu( AudacityProject &project );
 
 private:
-   void OnContextMenu( AudacityProject &project, wxCommandEvent & evt);
+   void OnCut( AudacityProject &project );
+   void OnCopy( AudacityProject &project );
+   void OnPaste( AudacityProject &project );
+   void OnDelete( AudacityProject &project );
+   void OnEdit( AudacityProject &project );
 
    /// Keeps track of the currently selected label (not same as selection region)
    /// used for navigation between labels

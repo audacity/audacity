@@ -24,7 +24,6 @@
 #include "../commands/CommandManager.h"
 
 #include <wx/dc.h>
-#include <wx/menu.h>
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

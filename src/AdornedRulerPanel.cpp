@@ -58,7 +58,6 @@
 #include "widgets/wxWidgetsWindowPlacement.h"
 
 #include <wx/dcclient.h>
-#include <wx/menu.h>
 
 using std::min;
 using std::max;
@@ -666,12 +665,7 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
 **********************************************************************/
 
 enum {
-   OnSyncQuickPlaySelID = 7000,
-   OnAutoScrollID,
-   OnTogglePlayRegionID,
-   OnClearPlayRegionID,
-   OnSetPlayRegionToSelectionID,
-   OnTogglePinnedStateID,
+   OnTogglePinnedStateID = 7000,
 };
 
 BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
@@ -679,15 +673,6 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
    EVT_LEAVE_WINDOW(AdornedRulerPanel::OnLeave)
-
-   // Context menu commands
-   EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
-   EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
-   EVT_MENU(OnTogglePlayRegionID, AdornedRulerPanel::OnTogglePlayRegion)
-   EVT_MENU(OnClearPlayRegionID, AdornedRulerPanel::OnClearPlayRegion)
-   EVT_MENU(OnSetPlayRegionToSelectionID,
-      AdornedRulerPanel::OnSetPlayRegionToSelection)
-   EVT_MENU( OnTogglePinnedStateID, AdornedRulerPanel::OnTogglePinnedState )
 
    EVT_COMMAND( OnTogglePinnedStateID,
                wxEVT_COMMAND_BUTTON_CLICKED,
@@ -2196,7 +2181,7 @@ void AdornedRulerPanel::OnPinnedButton(wxCommandEvent & /*event*/)
    ShowContextMenu(MenuChoice::QuickPlay, NULL);
 }
 
-void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
+void AdornedRulerPanel::OnTogglePinnedState()
 {
    TogglePinnedHead();
    UpdateButtonStates();
@@ -2228,38 +2213,33 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
 {
    const auto &viewInfo = ViewInfo::Get( *GetProject() );
    const auto &playRegion = viewInfo.playRegion;
-   BasicMenu::Handle handle{ BasicMenu::FreshMenu };
-   auto &rulerMenu = *handle.GetWxMenu();
+   BasicMenu::Handle rulerMenu{ BasicMenu::FreshMenu };
 
-   auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Enable dragging selection"));
-   pDrag->Check(mPlayRegionDragsSelection && playRegion.Active());
-   pDrag->Enable(playRegion.Active());
+   rulerMenu.AppendCheckItem( XXO("Enable dragging selection"),
+      [this]{ OnSyncSelToQuickPlay(); },
+      { playRegion.Active(),
+        mPlayRegionDragsSelection && playRegion.Active() } );
 
-   rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
-      Check(mViewInfo->bUpdateTrackIndicator);
+   rulerMenu.AppendCheckItem( XXO("Update display while playing"),
+      [this]{ OnAutoScroll(); },
+      { true, mViewInfo->bUpdateTrackIndicator } );
 
-   {
-      auto item = rulerMenu.AppendCheckItem(OnTogglePlayRegionID,
-         LoopToggleText.Stripped().Translation());
-      item->Check(playRegion.Active());
-   }
+   rulerMenu.AppendCheckItem( LoopToggleText.Stripped(),
+      [this]{ OnTogglePlayRegion(); },
+      { true, playRegion.Active() } );
 
-   {
-      auto item = rulerMenu.Append(OnClearPlayRegionID,
-         /* i18n-hint Clear is a verb */
-         _("Clear Loop"));
-   }
+   rulerMenu.Append( XXO("Clear Loop"), [this]{ OnClearPlayRegion(); } );
 
-   {
-      auto item = rulerMenu.Append(OnSetPlayRegionToSelectionID,
-         _("Set Loop To Selection"));
-   }
+   rulerMenu.Append( XXO("Set Loop To Selection"),
+      [this]{ OnSetPlayRegionToSelection(); } );
 
    rulerMenu.AppendSeparator();
-   rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Pinned Play Head"))->
-      Check(TracksPrefs::GetPinnedHeadPreference());
 
-   handle.Popup(
+   rulerMenu.AppendCheckItem(
+      XXO("Pinned Play Head"), { [this]{ OnTogglePinnedState(); } },
+      { true, TracksPrefs::GetPinnedHeadPreference() } );
+
+   rulerMenu.Popup(
       wxWidgetsWindowPlacement{ this },
       { pos.x, pos.y }
    );
@@ -2271,16 +2251,15 @@ void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
    PushEventHandler(&scrubber);
    auto cleanup = finally([this]{ PopEventHandler(); });
 
-   BasicMenu::Handle handle{ BasicMenu::FreshMenu };
-   auto &rulerMenu = *handle.GetWxMenu();
+   BasicMenu::Handle rulerMenu{ BasicMenu::FreshMenu };
    scrubber.PopulatePopupMenu(rulerMenu);
-   handle.Popup(
+   rulerMenu.Popup(
       wxWidgetsWindowPlacement{ this },
       { pos.x, pos.y }
    );
 }
 
-void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
+void AdornedRulerPanel::OnSyncSelToQuickPlay()
 {
    mPlayRegionDragsSelection = (mPlayRegionDragsSelection)? false : true;
    gPrefs->Write(wxT("/QuickPlay/DragSelection"), mPlayRegionDragsSelection);
@@ -2321,7 +2300,7 @@ void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
 }
 #endif
 
-void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
+void AdornedRulerPanel::OnAutoScroll()
 {
    if (mViewInfo->bUpdateTrackIndicator)
       gPrefs->Write(wxT("/GUI/AutoScroll"), false);
@@ -2334,17 +2313,17 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 }
 
 
-void AdornedRulerPanel::OnTogglePlayRegion(wxCommandEvent&)
+void AdornedRulerPanel::OnTogglePlayRegion()
 {
    SelectUtilities::TogglePlayRegion(*mProject);
 }
 
-void AdornedRulerPanel::OnClearPlayRegion(wxCommandEvent&)
+void AdornedRulerPanel::OnClearPlayRegion()
 {
    SelectUtilities::ClearPlayRegion(*mProject);
 }
 
-void AdornedRulerPanel::OnSetPlayRegionToSelection(wxCommandEvent&)
+void AdornedRulerPanel::OnSetPlayRegionToSelection()
 {
    SelectUtilities::SetPlayRegionToSelection(*mProject);
 }

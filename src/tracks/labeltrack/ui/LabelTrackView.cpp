@@ -44,7 +44,6 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/dcclient.h>
 #include <wx/font.h>
 #include <wx/frame.h>
-#include <wx/menu.h>
 
 LabelTrackView::Index::Index()
 :  mIndex(-1),
@@ -1686,6 +1685,7 @@ bool LabelTrackView::DoKeyDown(
                XO("Label Edit"),
                mTextEditIndex.IsModified() ? UndoPush::CONSOLIDATE : UndoPush::NONE);
          }
+         [[fallthrough]];
 
       case WXK_RETURN:
       case WXK_NUMPAD_ENTER:
@@ -1901,15 +1901,6 @@ bool LabelTrackView::DoChar(
    return true;
 }
 
-enum
-{
-   OnCutSelectedTextID = 1,      // OSX doesn't like a 0 menu id
-   OnCopySelectedTextID,
-   OnPasteSelectedTextID,
-   OnDeleteSelectedLabelID,
-   OnEditSelectedLabelID,
-};
-
 void LabelTrackView::ShowContextMenu( AudacityProject &project )
 {
    wxWindow *parent = wxWindow::FindFocus();
@@ -1920,24 +1911,26 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
 
    if( parent )
    {
-      BasicMenu::Handle handle{ BasicMenu::FreshMenu };
-      auto &menu = *handle.GetWxMenu();
-      menu.Bind(wxEVT_MENU,
-         [this, &project]( wxCommandEvent &event ){
-            OnContextMenu( project, event ); }
-      );
+      BasicMenu::Handle menu{ BasicMenu::FreshMenu };
 
-      menu.Append(OnCutSelectedTextID, _("Cu&t Label text"));
-      menu.Append(OnCopySelectedTextID, _("&Copy Label text"));
-      menu.Append(OnPasteSelectedTextID, _("&Paste"));
-      menu.Append(OnDeleteSelectedLabelID, _("&Delete Label"));
-      menu.Append(OnEditSelectedLabelID, _("&Edit Label..."));
-
-      menu.Enable(OnCutSelectedTextID, IsTextSelected( project ));
-      menu.Enable(OnCopySelectedTextID, IsTextSelected( project ));
-      menu.Enable(OnPasteSelectedTextID, IsTextClipSupported());
-      menu.Enable(OnDeleteSelectedLabelID, true);
-      menu.Enable(OnEditSelectedLabelID, true);
+      menu.Append(
+         XXO("Cu&t Label text"),
+         [ this, &project ]{ OnCut( project ); },
+         { IsTextSelected( project ) } );
+      menu.Append(
+         XXO("&Copy Label text"),
+         [ this, &project ]{ OnCopy( project ); },
+         { IsTextSelected( project ) } );
+      menu.Append(
+         XXO("&Paste"),
+         [ this, &project ]{ OnPaste( project ); },
+         { IsTextClipSupported() } );
+      menu.Append(
+         XXO("&Delete Label"),
+         [ this, &project ]{ OnDelete( project ); } );
+      menu.Append(
+         XXO("&Edit Label..."),
+         [ this, &project ]{ OnEdit( project ); } );
 
       if(!IsValidIndex(mTextEditIndex, project)) {
          return;
@@ -1963,7 +1956,7 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
       // So, workaround it by editing the label AFTER the popup menu is
       // closed. It's really ugly, but it works.  :-(
       mEditIndex = -1;
-      handle.Popup(
+      menu.Popup(
          wxWidgetsWindowPlacement{ parent },
          { x, ls->y + (mIconHeight / 2) - 1 }
       );
@@ -1974,59 +1967,50 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
    }
 }
 
-void LabelTrackView::OnContextMenu(
-   AudacityProject &project, wxCommandEvent & evt )
+void LabelTrackView::OnCut( AudacityProject &project )
+{
+   if (CutSelectedText( project ))
+   {
+      ProjectHistory::Get( project ).PushState(XO("Modified Label"),
+         XO("Label Edit"),
+         mTextEditIndex.IsModified() ? UndoPush::CONSOLIDATE : UndoPush::NONE);
+   }
+}
+ 
+void LabelTrackView::OnCopy( AudacityProject &project )
+{
+   CopySelectedText( project );
+}
+ 
+void LabelTrackView::OnPaste( AudacityProject &project )
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-
-   switch (evt.GetId())
+   if (PasteSelectedText(
+      project, selectedRegion.t0(), selectedRegion.t1() ))
    {
-   /// Cut selected text if cut menu item is selected
-   case OnCutSelectedTextID:
-      if (CutSelectedText( project ))
-      {
-         ProjectHistory::Get( project ).PushState(XO("Modified Label"),
-                      XO("Label Edit"),
-                      mTextEditIndex.IsModified() ? UndoPush::CONSOLIDATE : UndoPush::NONE);
-      }
-      break;
+      ProjectHistory::Get( project ).PushState(XO("Modified Label"),
+         XO("Label Edit"),
+         mTextEditIndex.IsModified() ? UndoPush::CONSOLIDATE : UndoPush::NONE);
+    }
+}
 
-   /// Copy selected text if copy menu item is selected
-   case OnCopySelectedTextID:
-      CopySelectedText( project );
-      break;
-
-   /// paste selected text if paste menu item is selected
-   case OnPasteSelectedTextID:
-      if (PasteSelectedText(
-         project, selectedRegion.t0(), selectedRegion.t1() ))
-      {
-         ProjectHistory::Get( project ).PushState(XO("Modified Label"),
-                      XO("Label Edit"),
-                      mTextEditIndex.IsModified() ? UndoPush::CONSOLIDATE : UndoPush::NONE);
-      }
-      break;
-
-   /// DELETE selected label
-   case OnDeleteSelectedLabelID: {
-      if (IsValidIndex(mTextEditIndex, project))
-      {
-         const auto pTrack = FindLabelTrack();
-         pTrack->DeleteLabel(mTextEditIndex);
-         ProjectHistory::Get( project ).PushState(XO("Deleted Label"),
-                      XO("Label Edit"),
-                      UndoPush::CONSOLIDATE);
-      }
+void LabelTrackView::OnDelete( AudacityProject &project )
+{
+   if (IsValidIndex(mTextEditIndex, project))
+   {
+      const auto pTrack = FindLabelTrack();
+      pTrack->DeleteLabel(mTextEditIndex);
+      ProjectHistory::Get( project ).PushState(XO("Deleted Label"),
+                   XO("Label Edit"),
+                   UndoPush::CONSOLIDATE);
    }
-      break;
-
-   case OnEditSelectedLabelID: {
-      // Bug #2571: See above
-      if (IsValidIndex(mTextEditIndex, project))
-         mEditIndex = mTextEditIndex;
-   }
-      break;
-   }
+}
+ 
+void LabelTrackView::OnEdit( AudacityProject &project )
+{
+   // Bug #2571: See above
+   if (IsValidIndex(mTextEditIndex, project))
+      mEditIndex = mTextEditIndex;
 }
 
 void LabelTrackView::RemoveSelectedText()

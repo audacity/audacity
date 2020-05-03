@@ -91,14 +91,14 @@ private:
    void OnPlay(wxCommandEvent & evt);
    void OnPlayback(AudioIOEvent);
    void OnCapture(AudioIOEvent);
-   void OnUserPreset(wxCommandEvent & evt);
-   void OnFactoryPreset(wxCommandEvent & evt);
-   void OnDeletePreset(wxCommandEvent & evt);
-   void OnSaveAs(wxCommandEvent & evt);
-   void OnImport(wxCommandEvent & evt);
-   void OnExport(wxCommandEvent & evt);
-   void OnOptions(wxCommandEvent & evt);
-   void OnDefaults(wxCommandEvent & evt);
+   void OnUserPreset(size_t preset);
+   void OnFactoryPreset(size_t preset);
+   void OnDeletePreset(size_t preset);
+   void OnSaveAs();
+   void OnImport();
+   void OnExport();
+   void OnOptions();
+   void OnDefaults();
    void OnIdle(wxIdleEvent &evt);
    void OnCharHook(wxKeyEvent& evt);
 
