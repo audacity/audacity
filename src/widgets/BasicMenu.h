@@ -73,16 +73,34 @@ struct AUDACITY_DLL_API Label {
    TranslatableString Full() const;
 };
 
-//! Full menu texts
+//! Full menu texts including an optional help string
 struct Text {
    Label label;
-   // More fields in future
+   std::optional<TranslatableString> pHelp;
 
    Text() = default;
    Text( const TranslatableString &main,
       const NormalizedKeyString &accel = {} )
       : label{ main, accel }
    {}
+   Text( const TranslatableString &main,
+      const NormalizedKeyString &accel,
+      const TranslatableString &help )
+      : label{ main, accel }
+      , pHelp{ help }
+   {}
+   Text( const Label &label)
+      : label{ label }
+   {}
+   Text( const Label &label, const TranslatableString &help )
+      : label{ label }
+      , pHelp{ help }
+   {}
+
+   TranslatableString GetHelp() const
+   {
+      return pHelp ? *pHelp : label.main.Stripped();
+   }
 };
 
 //! Callback to associate with a menu item
