@@ -398,19 +398,6 @@ void TrackPanel::OnIdle(wxIdleEvent& event)
 /// AS: This gets called on our wx timer events.
 void TrackPanel::OnTimer(wxTimerEvent& )
 {
-#ifdef __WXMAC__
-   // Unfortunate part of fix for bug 1431
-   // Without this, the toolbars hide only every other time that you press
-   // the yellow title bar button.  For some reason, not every press sends
-   // us a deactivate event for the application.
-   {
-      auto project = GetProject();
-      auto &window = ProjectWindow::Get( *project );
-      if (window.IsIconized())
-         window.MacShowUndockedToolbars(false);
-   }
-#endif
-
    mTimeCount++;
 
    AudacityProject *const p = GetProject();

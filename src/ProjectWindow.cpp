@@ -1233,6 +1233,38 @@ void ProjectWindow::UpdateStatusWidths()
    statusBar->SetStatusWidths( nWidths, widths );
 }
 
+void ProjectWindow::MacShowUndockedToolbars(bool show)
+{
+   (void)show;//compiler food
+#ifdef __WXMAC__
+   // Save the focus so we can restore it to whatever had it before since
+   // showing a previously hidden toolbar will cause the focus to be set to
+   // its frame.  If this is not done it will appear that activation events
+   // aren't being sent to the project window since they are actually being
+   // delivered to the last tool frame shown.
+   wxWindow *focused = FindFocus();
+
+   // Find all the floating toolbars, and show or hide them
+   const auto &children = GetChildren();
+   for(const auto &child : children) {
+      if (auto frame = dynamic_cast<ToolFrame*>(child)) {
+         if (!show) {
+            frame->Hide();
+         }
+         else if (frame->GetBar() &&
+                  frame->GetBar()->IsVisible() ) {
+            frame->Show();
+         }
+      }
+   }
+
+   // Restore the focus if needed
+   if (focused) {
+      focused->SetFocus();
+   }
+#endif
+}
+
 void ProjectWindow::OnIconize(wxIconizeEvent &event)
 {
    //JKC: On Iconizing we get called twice.  Don't know
@@ -1240,6 +1272,16 @@ void ProjectWindow::OnIconize(wxIconizeEvent &event)
    // Should we be returning true/false rather than
    // void return?  I don't know.
    mIconized = event.IsIconized();
+
+#if defined(__WXMAC__)
+   // Readdresses bug 1431 since a crash could occur when restoring iconized
+   // floating toolbars due to recursion (bug 2411).
+   MacShowUndockedToolbars(!mIconized);
+   if( !mIconized )
+   {
+      Raise();
+   }
+#endif
 
    // VisibileProjectCount seems to be just a counter for debugging.
    // It's not used outside this function.
@@ -1440,24 +1482,6 @@ void ProjectWindow::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
    MenuManager::Get( project ).UpdateMenus();
 }
 
-void ProjectWindow::MacShowUndockedToolbars(bool show)
-{
-   (void)show;//compiler food
-#ifdef __WXMAC__
-   // Find all the floating toolbars, and show or hide them
-   const auto &children = GetChildren();
-   for(const auto &child : children) {
-      if (auto frame = dynamic_cast<ToolFrame*>(child)) {
-         if (!show)
-            frame->Hide();
-         else if (frame->GetBar() &&
-                  frame->GetBar()->IsVisible())
-            frame->Show();
-      }
-   }
-#endif
-}
-
 void ProjectWindow::OnActivate(wxActivateEvent & event)
 {
    // Activate events can fire during window teardown, so just
@@ -1467,7 +1491,7 @@ void ProjectWindow::OnActivate(wxActivateEvent & event)
    }
 
    auto &project = mProject;
-   
+
    mActive = event.GetActive();
 
    // Under Windows, focus can be "lost" when returning to
@@ -1481,21 +1505,11 @@ void ProjectWindow::OnActivate(wxActivateEvent & event)
    // Then, when we receive the
    // activate event, we restore that focus to the child or the track
    // panel if no child had the focus (which probably should never happen).
-   if (!mActive) {
-#ifdef __WXMAC__
-      if (IsIconized())
-         MacShowUndockedToolbars(false);
-#endif
-   }
-   else {
+   if (mActive) {
       auto &toolManager = ToolManager::Get( project );
       SetActiveProject( &project );
       if ( ! toolManager.RestoreFocus() )
          GetProjectPanel( project ).SetFocus();
-
-#ifdef __WXMAC__
-      MacShowUndockedToolbars(true);
-#endif
    }
    event.Skip();
 }
