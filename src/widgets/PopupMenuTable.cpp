@@ -31,7 +31,7 @@ PopupSubMenu::PopupSubMenu( const Identifier &stringId,
 PopupMenu::~PopupMenu() = default;
 
 namespace {
-struct PopupMenuImpl : PopupMenu, wxMenu
+struct PopupMenuImpl : PopupMenu
 {
    PopupMenuImpl(void *pUserData_)
       : pUserData{ pUserData_ } {}
@@ -43,6 +43,7 @@ struct PopupMenuImpl : PopupMenu, wxMenu
    void Extend(PopupMenuTable *pTable);
 
    void *pUserData;
+   BasicMenu::Handle mHandle{ BasicMenu::FreshMenu };
 };
 
 class PopupMenuBuilder : public PopupMenuVisitor {
@@ -84,7 +85,8 @@ void PopupMenuBuilder::DoEndGroup( Registry::GroupItem &item, const Path &path )
          auto subMenu = std::move( mMenus.back() );
          mMenus.pop_back();
          mMenu = mMenus.empty() ? mRoot : mMenus.back().get();
-         mMenu->AppendSubMenu( subMenu.release(), pItem->caption.Translation());
+         mMenu->mHandle.AppendSubMenu(
+            std::move(subMenu->mHandle), { pItem->caption } );
       }
    }
 }
@@ -95,17 +97,20 @@ void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
    switch (pEntry->type) {
       case PopupMenuTable::Entry::Item:
       {
-         mMenu->Append(pEntry->id, pEntry->caption.Translation());
+         mMenu->mHandle.Append(
+            { pEntry->caption }, {}, {}, pEntry->id );
          break;
       }
       case PopupMenuTable::Entry::RadioItem:
       {
-         mMenu->AppendRadioItem(pEntry->id, pEntry->caption.Translation());
+         mMenu->mHandle.AppendRadioItem(
+            { pEntry->caption }, {}, {}, pEntry->id );
          break;
       }
       case PopupMenuTable::Entry::CheckItem:
       {
-         mMenu->AppendCheckItem(pEntry->id, pEntry->caption.Translation());
+         mMenu->mHandle.AppendCheckItem(
+            { pEntry->caption }, {}, {}, pEntry->id );
          break;
       }
       default:
@@ -119,32 +124,30 @@ void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
 
    if ( pEntry->stateFn ) {
       const auto state = pEntry->stateFn();
-      if ( auto pItem = mMenu->FindItem( pEntry->id ) ) {
+      if ( auto pItem = mMenu->mHandle.GetWxMenu()->FindItem( pEntry->id ) ) {
          pItem->Enable( state.enabled );
          if ( pItem->IsCheckable() )
             pItem->Check( state.checked );
       }
    }
 
-   mMenu->Bind(
+   mMenu->mHandle.GetWxMenu()->Bind(
       wxEVT_COMMAND_MENU_SELECTED, pEntry->func, &pEntry->handler, pEntry->id);
 }
 
 void PopupMenuBuilder::DoSeparator()
 {
-   mMenu->AppendSeparator();
+   mMenu->mHandle.GetWxMenu()->AppendSeparator();
 }
 
 PopupMenuImpl::~PopupMenuImpl()
 {
-   // Event connections between the parent window and the singleton table
-   // object must be broken when this menu is destroyed.
-   Disconnect();
 }
+
 
 void PopupMenuImpl::Popup( wxWindow &window, const wxPoint &pos )
 {
-   BasicMenu::Handle{ this }.Popup(
+   mHandle.Popup(
       wxWidgetsWindowPlacement{ &window }, { pos.x, pos.y }
    );
 }

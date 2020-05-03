@@ -58,7 +58,6 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
       , handler( handler_ )
       , stateFn( move(stateFn) )
    {
-      wxASSERT(func);
    }
 
    ~PopupMenuTableEntry() override;

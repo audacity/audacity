@@ -1946,7 +1946,8 @@ void MeterPanel::RestoreState(const State &state)
 
 void MeterPanel::ShowMenu(const wxPoint & pos)
 {
-   wxMenu menu;
+   BasicMenu::Handle handle{ BasicMenu::FreshMenu };
+   auto &menu = *handle.GetWxMenu();
    // Note: these should be kept in the same order as the enum
    if (mIsInput) {
       wxMenuItem *mi;
@@ -1959,7 +1960,7 @@ void MeterPanel::ShowMenu(const wxPoint & pos)
 
    menu.Append(OnPreferencesID, _("Options..."));
 
-   BasicMenu::Handle{ &menu }.Popup(
+   handle.Popup(
       wxWidgetsWindowPlacement{ this },
       { pos.x, pos.y }
    );

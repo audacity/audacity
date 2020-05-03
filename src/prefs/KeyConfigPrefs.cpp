@@ -598,11 +598,12 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
 // so we just do what it needs.
 void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))
 {
-   wxMenu Menu;
+   BasicMenu::Handle handle( BasicMenu::FreshMenu );
+   auto &Menu = *handle.GetWxMenu();
    Menu.Append( 1, _("Standard") );
    Menu.Append( 2, _("Full") );
    Menu.Bind( wxEVT_COMMAND_MENU_SELECTED, &KeyConfigPrefs::OnImportDefaults, this );
-   BasicMenu::Handle( &Menu ).Popup( wxWidgetsWindowPlacement{ this } );
+   handle.Popup( wxWidgetsWindowPlacement{ this } );
 }
 
 void KeyConfigPrefs::FilterKeys( std::vector<NormalizedKeyString> & arr )

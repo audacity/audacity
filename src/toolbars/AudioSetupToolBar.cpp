@@ -225,7 +225,8 @@ void AudioSetupToolBar::OnFocus(wxFocusEvent &event)
 
 void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
 {
-   wxMenu menu;
+   BasicMenu::Handle handle{ BasicMenu::FreshMenu };
+   auto &menu = *handle.GetWxMenu();
 
    //i18n-hint: Audio setup menu
    AppendSubMenu(menu, mHost, _("&Host"));
@@ -249,7 +250,7 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
 
    wxWindow* btn = FindWindow(ID_AUDIO_SETUP_BUTTON);
    wxRect r = btn->GetRect();
-   BasicMenu::Handle{ &menu }.Popup(
+   handle.Popup(
       wxWidgetsWindowPlacement{ btn },
       { r.GetLeft(), r.GetBottom() }
    );
