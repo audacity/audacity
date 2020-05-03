@@ -24,6 +24,19 @@ Paul Licameli
 
 namespace BasicMenu {
 
+namespace Item {
+
+TranslatableString Label::Full() const
+{
+   return accel.empty()
+      ? main
+      : TranslatableString{ main }
+         .Join( Verbatim( accel.GET() ), L"\t" );
+}
+
+}
+
+
 namespace {
 
 const auto JournalCode = L"PopupMenu";
