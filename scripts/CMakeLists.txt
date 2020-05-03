@@ -45,6 +45,7 @@ list( APPEND EXCLUDES
    plug-ins/undcbias.ny
    qa
    tests/ProjectCheckTests
+   tests/samples
    todo.txt
    win
 )
