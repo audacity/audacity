@@ -23,6 +23,7 @@ This class now lists
 
 #include "GetInfoCommand.h"
 
+#include "BasicUI.h"
 #include "LoadCommands.h"
 #include "Project.h"
 #include "../ProjectWindows.h"
@@ -49,10 +50,10 @@ This class now lists
 #include "PluginManager.h"
 #include "../tracks/ui/TrackView.h"
 #include "../ShuttleGui.h"
+#include "../widgets/BasicMenu.h"
 
 #include <wx/frame.h>
 #include <wx/log.h>
-#include <wx/menu.h>
 
 const ComponentInterfaceSymbol GetInfoCommand::Symbol
 { XO("Get Info") };
@@ -175,26 +176,25 @@ bool GetInfoCommand::ApplyInner(const CommandContext &context)
 
 bool GetInfoCommand::SendMenus(const CommandContext &context)
 {
-   wxMenuBar * pBar = GetProjectFrame( context.project ).GetMenuBar();
+   auto pBar =
+      BasicMenu::BarHandle( *ProjectFramePlacement( &context.project ) );
    if(!pBar ){
       wxLogDebug("No menus");
       return false;
    }
 
-   size_t cnt = pBar->GetMenuCount();
-   size_t i;
-   wxString Label;
-   context.StartArray();
-   for(i=0;i<cnt;i++)
+   for( const auto &item : pBar )
    {
-      Label = pBar->GetMenuLabelText( i );
+      // PRL:  Are you sure you want the translation?
+      auto Label = item.title.Stripped().Translation();
+
       context.StartStruct();
       context.AddItem( 0, "depth" );
       context.AddItem( 0, "flags" );
       context.AddItem( Label, "label" );
       context.AddItem( "", "accel" );
       context.EndStruct();
-      ExploreMenu( context, pBar->GetMenu( i ), pBar->GetId(), 1 );
+      ExploreMenu( context, item.pSubMenu, 1 );
    }
    context.EndArray();
    return true;
@@ -623,36 +623,35 @@ The various Explore functions are called from the Send functions,
 and may be recursive.  'Send' is the top level.
 *******************************************************************/
 
-void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu, int Id, int depth ){
-   static_cast<void>(Id);//compiler food.
+void GetInfoCommand::ExploreMenu(
+   const CommandContext &context, BasicMenu::Handle pMenu, int depth ){
    if( !pMenu )
       return;
 
    auto &commandManager = CommandManager::Get( context.project );
 
-   wxMenuItemList list = pMenu->GetMenuItems();
-   size_t lcnt = list.size();
-   wxMenuItem * item;
-   wxString Label;
-   wxString Accel;
-   CommandID Name;
-
-   for (size_t lndx = 0; lndx < lcnt; lndx++) {
-      item = list.Item(lndx)->GetData();
-      Label = item->GetItemLabelText();
-      Name = commandManager.GetNameFromNumericID( item->GetId() );
-      Accel = item->GetItemLabel();
-      if( Accel.Contains("\t") )
-         Accel = Accel.AfterLast('\t');
-      else
-         Accel = "";
-      if( item->IsSeparator() )
-         Label = "----";
+   for ( const auto &item : pMenu ) {
+      // PRL:  Are you sure you want the translation?
+      auto Label = item.label.Stripped().Translation();
+      auto Name = commandManager.GetNameFromNumericID( item.id );
+      auto Accel = item.accel;
       int flags = 0;
-      if (item->IsSubMenu())
-         flags +=1;
-      if (item->IsCheck() && item->IsChecked())
+      switch ( item.type ) {
+      case BasicMenu::Item::Type::Separator:
+         Label = "----";
+         break;
+      case BasicMenu::Item::Type::Check:
+      if ( item.state.checked )
          flags +=2;
+         break;
+      case BasicMenu::Item::Type::Normal:
+      case BasicMenu::Item::Type::Radio:
+      case BasicMenu::Item::Type::SubMenu:
+      default:
+         break;
+      }
+      if ( item.pSubMenu )
+         flags +=1;
 
       context.StartStruct();
       context.AddItem( depth, "depth" );
@@ -665,19 +664,17 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
          context.AddItem( Name.GET(), "id" );// It is called Scripting ID outside Audacity.
       context.EndStruct();
 
-      if (item->IsSubMenu()) {
-         pMenu = item->GetSubMenu();
-         ExploreMenu( context, pMenu, item->GetId(), depth+1 );
-      }
+      if ( item.pSubMenu )
+         ExploreMenu( context, item.pSubMenu, depth + 1 );
    }
 }
 
 void GetInfoCommand::ExploreAdornments( const CommandContext &context,
    wxPoint WXUNUSED(P), wxWindow * pWin, int WXUNUSED(Id), int depth )
 {
-   // Dang! wxMenuBar returns bogus screen rect.
+   // Dang! MenuBar returns bogus screen rect.
    // We're going to have to fake it instead.
-   //wxMenuBar * pBar = context.GetProject()->GetMenuBar();
+   //auto pBar = context.GetProject()->GetMenuBar();
    //wxRect R = pBar->GetScreenRect();
    //R.SetPosition( R.GetPosition() - P );
 
