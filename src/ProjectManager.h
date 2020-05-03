@@ -25,9 +25,12 @@ class wxTimerEvent;
 class AudacityProject;
 struct AudioIOStartStreamOptions;
 
+
 struct ProjectStatusEvent;
 
 enum StatusBarField : int;
+
+namespace BasicMenu { class Handle; }
 
 ///\brief Object associated with a project for high-level management of the
 /// project's lifetime, including creation, destruction, opening from file,
@@ -119,11 +122,11 @@ public:
 
    // Causes this menu to reflect the contents of the global FileHistory,
    // now and also whenever the history changes.
-   static void UseMenu(wxMenu *menu);
+   static void UseMenu(BasicMenu::Handle menu);
 
    // Most Recently Used File support (for all platforms).
-   static void OnMRUClear(wxCommandEvent &event);
-   static void OnMRUFile(wxCommandEvent &event);
+   static void OnMRUClear();
+   static void OnMRUFile(size_t nn);
    // Backend for above - returns true for success, false for failure
    static bool MRUOpen(const FilePath &fileName);
    // A wrapper of the above that does not throw
@@ -133,7 +136,6 @@ private:
    class FileHistoryMenus {
    private:
       FileHistoryMenus();
-
    public:
       static FileHistoryMenus &Instance();
 
@@ -145,12 +147,12 @@ private:
 
       // Make the menu reflect the contents of the global FileHistory,
       // now and also whenever the history changes.
-      void UseMenu(wxMenu *menu);
+      void UseMenu(BasicMenu::Handle menu);
       
    private:
       void OnChangedHistory(Observer::Message);
-      void NotifyMenu(wxMenu *menu);
-      std::vector< wxWeakRef< wxMenu > > mMenus;
+      void NotifyMenu(BasicMenu::Handle menu);
+      std::vector< BasicMenu::Handle > mMenus;
       Observer::Subscription mSubscription;
 
       void Compress();

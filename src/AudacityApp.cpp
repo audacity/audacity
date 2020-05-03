@@ -36,8 +36,6 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/event.h>
 #include <wx/ipc.h>
 #include <wx/window.h>
-#include <wx/intl.h>
-#include <wx/menu.h>
 #include <wx/snglinst.h>
 #include <wx/splash.h>
 #include <wx/stdpaths.h>
@@ -118,6 +116,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "tracks/ui/Scrubbing.h"
 #include "FileConfig.h"
 #include "widgets/FileHistory.h"
+#include "widgets/BasicMenu.h"
 #include "widgets/wxWidgetsBasicUI.h"
 #include "LogWindow.h"
 #include "FrameStatisticsDialog.h"
@@ -1418,22 +1417,21 @@ bool AudacityApp::InitPart2()
       // On the Mac, users don't expect a program to quit when you close the last window.
       // Create a menubar that will show when all project windows are closed.
 
-      auto fileMenu = std::make_unique<wxMenu>();
-      auto urecentMenu = std::make_unique<wxMenu>();
-      auto recentMenu = urecentMenu.get();
-      fileMenu->Append(wxID_NEW, wxString(_("&New")) + wxT("\tCtrl+N"));
-      fileMenu->Append(wxID_OPEN, wxString(_("&Open...")) + wxT("\tCtrl+O"));
-      fileMenu->AppendSubMenu(urecentMenu.release(), _("Open &Recent..."));
-      fileMenu->Append(wxID_ABOUT, _("&About Audacity..."));
-      fileMenu->Append(wxID_PREFERENCES, wxString(_("&Preferences...")) + wxT("\tCtrl+,"));
+      BasicMenu::Handle fileMenu{ BasicMenu::FreshMenu };
+      BasicMenu::Handle recentMenu{ BasicMenu::FreshMenu };
+      fileMenu.Append({ XXO("&New"), "Ctrl+N" }, {}, {}, wxID_NEW );
+      fileMenu.Append({ XXO("&Open..."), "Ctrl+O" }, {}, {}, wxID_OPEN );
+      fileMenu.AppendSubMenu(std::move( recentMenu ), XXO("Open &Recent..."));
+      fileMenu.Append(XXO("&About Audacity..."), {}, {}, wxID_ABOUT);
+      fileMenu.Append({ XXO("&Preferences..."), "Ctrl+," }, {}, {}, wxID_PREFERENCES );
 
       {
-         auto menuBar = std::make_unique<wxMenuBar>();
-         menuBar->Append(fileMenu.release(), _("&File"));
+         BasicMenu::BarHandle menuBar{ BasicMenu::FreshMenu };
+         menuBar.Append( std::move( fileMenu ), XXO("&File"));
 
          // PRL:  Are we sure wxWindows will not leak this menuBar?
          // The online documentation is not explicit.
-         wxMenuBar::MacSetCommonMenuBar(menuBar.release());
+         BasicMenu::BarHandle::MacSetCommonMenuBar( std::move( menuBar ) );
       }
 
       ProjectManager::UseMenu(recentMenu);

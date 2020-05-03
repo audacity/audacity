@@ -86,7 +86,7 @@ unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
          // menu, and as determined by keyboard preferences
          auto label =
             commandManager.FormatLabelForMenu( commandID, &item.symbol.Msgid() );
-         menu.Append( ii, label );
+         menu.Append( ii, label.Full().Translation() );
          menu.Bind( wxEVT_COMMAND_MENU_SELECTED, dispatcher );
          bool enabled = item.enabled &&
             (item.action || commandManager.GetEnabled( commandID ));

@@ -50,7 +50,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/WindowAccessible.h"
 
 #include <wx/app.h>
-#include <wx/menu.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
@@ -917,7 +916,7 @@ int ProjectManager::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
    return iRecMins;
 }
 
-void ProjectManager::UseMenu(wxMenu *menu)
+void ProjectManager::UseMenu(BasicMenu::Handle menu)
 {
    FileHistoryMenus::Instance().UseMenu(menu);
 }
@@ -925,10 +924,9 @@ void ProjectManager::UseMenu(wxMenu *menu)
 //vvv Basically, anything from Recent Files is treated as a .aup3, until proven otherwise,
 // then it tries to Import(). Very questionable handling, imo.
 // Better, for example, to check the file type early on.
-void ProjectManager::OnMRUFile(wxCommandEvent& event) {
-   int n = event.GetId() - FileHistoryMenus::ID_RECENT_FIRST;
+void ProjectManager::OnMRUFile(size_t nn) {
    auto &history = FileHistory::Global();
-   const auto &fullPathStr = history[ n ];
+   const auto &fullPathStr = history[ nn ];
 
    // Try to open only if not already open.
    // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks,
@@ -939,7 +937,7 @@ void ProjectManager::OnMRUFile(wxCommandEvent& event) {
    // -- if open fails for some exceptional reason of resource exhaustion that
    // the user can correct, leave the file in history.
    if (!ProjectFileManager::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
-      history.Remove(n);
+      history.Remove(nn);
 }
 
 // backend for OnMRUFile
@@ -988,12 +986,12 @@ bool ProjectManager::SafeMRUOpen(const wxString &fullPathStr)
    return GuardedCall< bool >( [&]{ return MRUOpen( fullPathStr ); } );
 }
 
-void ProjectManager::OnMRUClear(wxCommandEvent& WXUNUSED(event))
+void ProjectManager::OnMRUClear()
 {
    FileHistory::Global().Clear();
 }
 
-void ProjectManager::FileHistoryMenus::UseMenu(wxMenu *menu)
+void ProjectManager::FileHistoryMenus::UseMenu(BasicMenu::Handle menu)
 {
    Compress();
 
@@ -1025,33 +1023,28 @@ ProjectManager::FileHistoryMenus &ProjectManager::FileHistoryMenus::Instance()
 void ProjectManager::FileHistoryMenus::OnChangedHistory(Observer::Message)
 {
    Compress();
-   for (auto pMenu : mMenus)
+   for (auto &pMenu : mMenus)
       if (pMenu)
          NotifyMenu(pMenu);
 }
 
-void ProjectManager::FileHistoryMenus::NotifyMenu(wxMenu *menu)
+void ProjectManager::FileHistoryMenus::NotifyMenu(BasicMenu::Handle menu)
 {
-   wxMenuItemList items = menu->GetMenuItems();
-   for (auto end = items.end(), iter = items.begin(); iter != end;)
-      menu->Destroy(*iter++);
+   menu.Clear();
 
    const auto &history = FileHistory::Global();
-   int mIDBase = ID_RECENT_CLEAR;
-   int i = 0;
+   int ii = 0;
    for (auto item : history) {
       item.Replace( "&", "&&" );
-      auto id = mIDBase + 1 + i++;
-      menu->Append(id, item);
-      menu->Bind(wxEVT_MENU, ProjectManager::OnMRUFile, id);
+      menu.Append( Verbatim( item ), [ii]{ ProjectManager::OnMRUFile(ii); } );
+      ++ii;
    }
 
-   if (history.size() > 0) {
-      menu->AppendSeparator();
-   }
-   menu->Append(mIDBase, _("&Clear"));
-   menu->Enable(mIDBase, history.size() > 0);
-   menu->Bind(wxEVT_MENU, ProjectManager::OnMRUClear, mIDBase);
+   if (history.size() > 0)
+      menu.AppendSeparator();
+
+   menu.Append( XXO("&Clear"),
+      &ProjectManager::OnMRUClear, history.size() > 0 );
 }
 
 void ProjectManager::FileHistoryMenus::Compress()
@@ -1060,7 +1053,7 @@ void ProjectManager::FileHistoryMenus::Compress()
    auto end = mMenus.end();
    mMenus.erase(
      std::remove_if( mMenus.begin(), end,
-        [](wxWeakRef<wxMenu> &pMenu){ return !pMenu; } ),
+        [](auto &pMenu){ return !pMenu; } ),
      end
    );
 }
