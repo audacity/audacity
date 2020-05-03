@@ -13,6 +13,10 @@ Paul Licameli
 #define __AUDACITY_BASIC_MENU__
 
 #include "BasicUIPoint.h"
+#include <functional>
+#include <optional>
+#include "Internat.h"
+#include "../commands/Keyboard.h"
 
 namespace BasicUI{ class WindowPlacement; }
 
@@ -21,6 +25,70 @@ class wxMenu; // To be removed
 namespace BasicMenu {
 
 using Point = BasicUI::Point;
+
+namespace Item {
+
+//! Identifies menu items
+using ID = int;
+static constexpr ID InvalidID = -1;
+
+   //! Types of menu items
+enum class Type {
+    Separator = -1,
+    Normal,
+    Check,
+    Radio,
+    SubMenu,
+};
+
+//! Describes actual or requested state of a menu item
+struct State {
+   //! Mask bits to specify a subset of state
+   enum : unsigned {
+      Enable = 0x01,
+      Check = 0x02,
+   };
+
+   //! Implicitly constructible from one bool, just for enabled state
+   State( bool enable = true, bool check = false )
+      : enabled{ enable }, checked{ check }
+   {}
+
+   bool enabled;
+   bool checked;
+};
+   
+//! Determines user-visible text on the menu button
+struct AUDACITY_DLL_API Label {
+   TranslatableString main;
+   NormalizedKeyString accel;
+
+   Label() = default;
+   Label( const TranslatableString &main,
+      const NormalizedKeyString &accel = {} )
+      : main{ main }, accel{ accel }
+   {}
+
+   //! Computes the full label text
+   TranslatableString Full() const;
+};
+
+//! Full menu texts
+struct Text {
+   Label label;
+   // More fields in future
+
+   Text() = default;
+   Text( const TranslatableString &main,
+      const NormalizedKeyString &accel = {} )
+      : label{ main, accel }
+   {}
+};
+
+//! Callback to associate with a menu item
+using Action = std::function< void() >;
+
+}
 
 class AUDACITY_DLL_API Handle
 {
