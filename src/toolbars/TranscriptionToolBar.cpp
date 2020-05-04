@@ -50,6 +50,7 @@
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
 #include "../VoiceKey.h"
+#include "../ProjectWindow.h"
 #endif
 
 IMPLEMENT_CLASS(TranscriptionToolBar, ToolBar);
@@ -237,52 +238,52 @@ void TranscriptionToolBar::Populate()
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
 // If we need these strings translated, then search and replace
-// TRANSLATBLE by _ and remove this #define.
-#define TRANSLATABLE( x ) Verbatim( x )
+// YO by XO and remove this #define.
+#define YO( x ) Verbatim( x )
    AddButton(this, bmpTnStartOn,     bmpTnStartOnDisabled,  TTB_StartOn,
-      TRANSLATABLE("Adjust left selection to next onset"));
+      YO("Adjust left selection to next onset"));
    AddButton(this, bmpTnEndOn,       bmpTnEndOnDisabled,   TTB_EndOn,
-      TRANSLATABLE("Adjust right selection to previous offset"));
+      YO("Adjust right selection to previous offset"));
    AddButton(this, bmpTnStartOff,    bmpTnStartOffDisabled,  TTB_StartOff,
-      TRANSLATABLE("Adjust left selection to next offset"));
+      YO("Adjust left selection to next offset"));
    AddButton(this, bmpTnEndOff,      bmpTnEndOffDisabled,    TTB_EndOff,
-      TRANSLATABLE("Adjust right selection to previous onset"));
+      YO("Adjust right selection to previous onset"));
    AddButton(this, bmpTnSelectSound, bmpTnSelectSoundDisabled, TTB_SelectSound,
-      TRANSLATABLE("Select region of sound around cursor"));
+      YO("Select region of sound around cursor"));
    AddButton(this, bmpTnSelectSilence, bmpTnSelectSilenceDisabled, TTB_SelectSilence,
-      TRANSLATABLE("Select region of silence around cursor"));
+      YO("Select region of silence around cursor"));
    AddButton(this, bmpTnAutomateSelection,   bmpTnAutomateSelectionDisabled,  TTB_AutomateSelection,
-      TRANSLATABLE("Automatically make labels from words"));
+      YO("Automatically make labels from words"));
    AddButton(this, bmpTnMakeTag, bmpTnMakeTagDisabled,  TTB_MakeLabel,
-      TRANSLATABLE("Add label at selection"));
+      YO("Add label at selection"));
    AddButton(this, bmpTnCalibrate, bmpTnCalibrateDisabled, TTB_Calibrate,
-      TRANSLATABLE("Calibrate voicekey"));
+      YO("Calibrate voicekey"));
 
    mSensitivitySlider = safenew ASlider(this,
                                     TTB_SensitivitySlider,
-                                    TRANSLATABLE("Adjust Sensitivity"),
+                                    YO("Adjust Sensitivity"),
                                     wxDefaultPosition,
                                     wxSize(SliderWidth,25),
-                                    SPEED_SLIDER);
+                                    ASlider::Options{}
+                                       .Style( SPEED_SLIDER ));
    mSensitivitySlider->Set(.5);
-   mSensitivitySlider->SetLabel(TRANSLATABLE("Sensitivity"));
+   mSensitivitySlider->SetLabel(YO("Sensitivity").Translation());
    Add( mSensitivitySlider, 0, wxALIGN_CENTER );
 
-   wxString choices[] =
-   {
-      TRANSLATABLE("Energy"),
-      TRANSLATABLE("Sign Changes (Low Threshold)"),
-      TRANSLATABLE("Sign Changes (High Threshold)"),
-      TRANSLATABLE("Direction Changes (Low Threshold)"),
-      TRANSLATABLE("Direction Changes (High Threshold)")
+   TranslatableStrings choices {
+      YO("Energy"),
+      YO("Sign Changes (Low Threshold)"),
+      YO("Sign Changes (High Threshold)"),
+      YO("Direction Changes (Low Threshold)"),
+      YO("Direction Changes (High Threshold)")
    };
 
    mKeyTypeChoice = safenew wxChoice(this, TTB_KeyType,
-                                 wxDefaultPosition,
-                                 wxDefaultSize,
-                                 5,
-                                 choices );
-   mKeyTypeChoice->SetName(TRANSLATABLE("Key type"));
+      wxDefaultPosition,
+      wxDefaultSize,
+      transform_container<wxArrayStringEx>( choices,
+         std::mem_fn( &TranslatableString::Translation ) ) );
+   mKeyTypeChoice->SetName(YO("Key type").Translation());
    mKeyTypeChoice->SetSelection(0);
    Add( mKeyTypeChoice, 0, wxALIGN_CENTER );
 #endif
@@ -308,10 +309,12 @@ void TranscriptionToolBar::EnableDisableButtons()
    SetEnabled( canStopAudioStream && tracks && !recording );
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
-   AudacityProject *p = &mProject;
-   if (!p) return;
+   if (!p)
+      return;
    // Is anything selected?
-   auto selection = p->GetSel0() < p->GetSel1() && p->GetTracks()->Selected();
+   const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
+   auto selection = !selectedRegion.isPoint() &&
+      !TrackList::Get( *p ).Selected().empty();
 
    mButtons[TTB_Calibrate]->SetEnabled(selection);
 #endif
@@ -355,18 +358,18 @@ void TranscriptionToolBar::RegenerateTooltips()
    }
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
-   mButtons[TTB_StartOn]->SetToolTip(TRANSLATABLE("Left-to-On"));
-   mButtons[TTB_EndOn]->SetToolTip(   TRANSLATABLE("Right-to-Off"));
-   mButtons[TTB_StartOff]->SetToolTip(   TRANSLATABLE("Left-to-Off"));
-   mButtons[TTB_EndOff]->SetToolTip(   TRANSLATABLE("Right-to-On"));
-   mButtons[TTB_SelectSound]->SetToolTip(   TRANSLATABLE("Select-Sound"));
-   mButtons[TTB_SelectSilence]->SetToolTip(   TRANSLATABLE("Select-Silence"));
-   mButtons[TTB_AutomateSelection]->SetToolTip(   TRANSLATABLE("Make Labels"));
-   mButtons[TTB_MakeLabel]->SetToolTip(   TRANSLATABLE("Add Label"));
-   mButtons[TTB_Calibrate]->SetToolTip(   TRANSLATABLE("Calibrate"));
+   mButtons[TTB_StartOn]->SetToolTip(YO("Left-to-On"));
+   mButtons[TTB_EndOn]->SetToolTip(   YO("Right-to-Off"));
+   mButtons[TTB_StartOff]->SetToolTip(   YO("Left-to-Off"));
+   mButtons[TTB_EndOff]->SetToolTip(   YO("Right-to-On"));
+   mButtons[TTB_SelectSound]->SetToolTip(   YO("Select-Sound"));
+   mButtons[TTB_SelectSilence]->SetToolTip(   YO("Select-Silence"));
+   mButtons[TTB_AutomateSelection]->SetToolTip(   YO("Make Labels"));
+   mButtons[TTB_MakeLabel]->SetToolTip(   YO("Add Label"));
+   mButtons[TTB_Calibrate]->SetToolTip(   YO("Calibrate"));
 
-   mSensitivitySlider->SetToolTip(TRANSLATABLE("Sensitivity"));
-   mKeyTypeChoice->SetToolTip(TRANSLATABLE("Key type"));
+   mSensitivitySlider->SetToolTip(YO("Sensitivity").Translation());
+   mKeyTypeChoice->SetToolTip(YO("Key type").Translation());
 #endif
 }
 
@@ -582,9 +585,8 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
    }
 
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = &mProject;
 
-   auto t = *p->GetTracks()->Any< const WaveTrack >().begin();
+   auto t = *TrackList::Get( mProject ).Any< const WaveTrack >().begin();
    if(t ) {
       auto wt = static_cast<const WaveTrack*>(t);
       sampleCount start, len;
@@ -597,9 +599,9 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
       auto newstart = mVk->OnForward(*wt, start, len);
       double newpos = newstart.as_double() / wt->GetRate();
 
-      auto &selectedRegion = p->GetViewInfo().selectedRegion;
+      auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setT0( newpos );
-      p->RedrawProject();
+      ProjectWindow::Get( mProject ).RedrawProject();
 
       SetButton(false, mButtons[TTB_StartOn]);
    }
@@ -617,7 +619,7 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
    AudacityProject *p = &mProject;
 
    SetButton(false, mButtons[TTB_StartOff]);
-   auto t = *p->GetTracks()->Any< const WaveTrack >().begin();
+   auto t = *TrackList::Get( mProject ).Any< const WaveTrack >().begin();
    if(t) {
       auto wt = static_cast<const WaveTrack*>(t);
       sampleCount start, len;
@@ -630,9 +632,9 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
       auto newstart = mVk->OffForward(*wt, start, len);
       double newpos = newstart.as_double() / wt->GetRate();
 
-      auto &selectedRegion = p->GetViewInfo().selectedRegion;
+      auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setT0( newpos );
-      p->RedrawProject();
+      ProjectWindow::Get( mProject ).RedrawProject();
 
       SetButton(false, mButtons[TTB_StartOn]);
    }
@@ -650,7 +652,7 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
 
    mVk->AdjustThreshold(GetSensitivity());
    AudacityProject *p = &mProject;
-   auto t = *p->GetTracks()->Any< const WaveTrack >().begin();
+   auto t = *TrackList::Get( mProject ).Any< const WaveTrack >().begin();
    if(t) {
       auto wt = static_cast<const WaveTrack*>(t);
       sampleCount start, len;
@@ -665,8 +667,9 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
       auto newEnd = mVk->OnBackward(*wt, start + len, len);
       double newpos = newEnd.as_double() / wt->GetRate();
 
-      p->SetSel1(newpos);
-      p->RedrawProject();
+      auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
+      selectedRegion.setT1( newpos );
+      ProjectWindow::Get( mProject ).RedrawProject();
 
       SetButton(false, mButtons[TTB_EndOn]);
    }
@@ -686,7 +689,7 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
    mVk->AdjustThreshold(GetSensitivity());
    AudacityProject *p = &mProject;
 
-   auto t = *p->GetTracks()->Any< const WaveTrack >().begin();
+   auto t = *TrackList::Get( mProject ).Any< const WaveTrack >().begin();
    if(t) {
       auto wt = static_cast<const WaveTrack*>(t);
       sampleCount start, len;
@@ -700,8 +703,9 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
       auto newEnd = mVk->OffBackward(*wt, start + len, len);
       double newpos = newEnd.as_double() / wt->GetRate();
 
-      p->SetSel1(newpos);
-      p->RedrawProject();
+      auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
+      selectedRegion.setT1( newpos );
+      ProjectWindow::Get( mProject ).RedrawProject();
 
       SetButton(false, mButtons[TTB_EndOff]);
    }
@@ -721,10 +725,9 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
 
 
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = &mProject;
 
 
-   TrackList *tl = p->GetTracks();
+   TrackList *tl = &TrackList::Get( mProject );
    if(auto wt = *tl->Any<const WaveTrack>().begin()) {
       sampleCount start, len;
       GetSamples(wt, &start, &len);
@@ -739,10 +742,10 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
       mVk->OffForward(*wt, start + len, (int)(tl->GetEndTime() * rate));
 
       //reset the selection bounds.
-      auto &selectedRegion = p->GetViewInfo().selectedRegion;
+      auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setTimes(
          newstart.as_double() / rate, newend.as_double() /  rate );
-      p->RedrawProject();
+      ProjectWindow::Get( mProject ).RedrawProject();
 
    }
 
@@ -760,10 +763,9 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
    }
 
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = &mProject;
 
 
-   TrackList *tl = p->GetTracks();
+   TrackList *tl = &TrackList::Get( mProject );
    if(auto wt = *tl->Any<const WaveTrack>().begin()) {
       sampleCount start, len;
       GetSamples(wt, &start, &len);
@@ -777,9 +779,10 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
       mVk->OnForward(*wt, start + len, (int)(tl->GetEndTime() * rate));
 
       //reset the selection bounds.
-      p->SetSel0(newstart.as_double() /  rate);
-      p->SetSel1(newend.as_double() / rate);
-      p->RedrawProject();
+      auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
+      selectedRegion.setTimes(
+         newstart.as_double() / rate, newend.as_double() / rate);
+      ProjectWindow::Get( mProject ).RedrawProject();
 
    }
 
@@ -799,9 +802,7 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
    }
 
 
-   AudacityProject *p = &mProject;
-
-   TrackList *tl = p->GetTracks();
+   TrackList *tl = &TrackList::Get( mProject );
    if(auto wt = *tl->Any<const WaveTrack>().begin()) {
       sampleCount start, len;
       GetSamples(wt, &start, &len);
@@ -832,6 +833,61 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
 
 }
 
+#include "../LabelTrack.h"
+#include "../ProjectHistory.h"
+#include "../TrackPanel.h"
+#include "../TrackPanelAx.h"
+#include "../tracks/labeltrack/ui/LabelTrackView.h"
+namespace {
+int DoAddLabel(
+   AudacityProject &project, const SelectedRegion &region )
+{
+   auto &tracks = TrackList::Get( project );
+   auto &trackFocus = TrackFocus::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
+   auto &trackFactory = TrackFactory::Get( project );
+   auto &window = ProjectWindow::Get( project );
+
+   wxString title;      // of label
+
+   // If the focused track is a label track, use that
+   const auto pFocusedTrack = trackFocus.Get();
+
+   // Look for a label track at or after the focused track
+   auto iter = pFocusedTrack
+      ? tracks.Find(pFocusedTrack)
+      : tracks.Any().begin();
+   auto lt = * iter.Filter< LabelTrack >();
+
+   // If none found, start a NEW label track and use it
+   if (!lt)
+      lt = tracks.Add( trackFactory.NewLabelTrack() );
+
+// LLL: Commented as it seemed a little forceful to remove users
+//      selection when adding the label.  This does not happen if
+//      you select several tracks and the last one of those is a
+//      label track...typing a label will not clear the selections.
+//
+//   SelectNone();
+   lt->SetSelected(true);
+
+   int index;
+   int focusTrackNumber = -1;
+   index =
+      LabelTrackView::Get( *lt ).AddLabel(region, title, focusTrackNumber);
+
+   ProjectHistory::Get( project )
+      .PushState(XO("Added label"), XO("Label"));
+
+   TrackFocus::Get(project).Set(lt);
+   lt->EnsureVisible();
+
+   trackPanel.SetFocus();
+
+   return index;
+}
+}
+
 //This automates selection through a selected region,
 //selecting its best guess for words and creating labels at those points.
 
@@ -850,8 +906,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
    wxBusyCursor busy;
 
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = &mProject;
-   TrackList *tl = p->GetTracks();
+   TrackList *tl = &TrackList::Get( mProject );
    if(auto wt = *tl->Any<const WaveTrack>().begin()) {
       sampleCount start, len;
       GetSamples(wt, &start, &len);
@@ -912,8 +967,8 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
          //Increment
          start = newEnd;
 
-         p->DoAddLabel(SelectedRegion(newStartPos, newEndPos));
-         p->RedrawProject();
+         DoAddLabel(mProject, SelectedRegion(newStartPos, newEndPos));
+      ProjectWindow::Get( mProject ).RedrawProject();
       }
       SetButton(false, mButtons[TTB_AutomateSelection]);
    }
@@ -921,9 +976,8 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 
 void TranscriptionToolBar::OnMakeLabel(wxCommandEvent & WXUNUSED(event))
 {
-   AudacityProject *p = &mProject;
    SetButton(false, mButtons[TTB_MakeLabel]);
-   p->DoAddLabel(SelectedRegion(p->GetSel0(),  p->GetSel1()));
+   DoAddLabel( mProject, ViewInfo::Get( mProject ).selectedRegion );
 }
 
 //This returns a double z-score between 0 and 10.
