@@ -452,33 +452,31 @@ BaseItemSharedPtr FileMenu()
    /////////////////////////////////////////////////////////////////////////////
 
          Menu( wxT("Recent"),
+            {
    #ifdef __WXMAC__
-            /* i18n-hint: This is the name of the menu item on Mac OS X only */
-            XXO("Open Recent")
+               /* i18n-hint: This is the name of the menu item on Mac OS X only */
+               XXO("Open Recent")
    #else
-            /* i18n-hint: This is the name of the menu item on Windows and Linux */
-            XXO("Recent &Files")
+               /* i18n-hint: This is the name of the menu item on Windows and Linux */
+               XXO("Recent &Files")
    #endif
+               , {}, // empty accelerator
+
+               // Bug 143 workaround.
+               // For a menu that has scrollers,
+               // the scrollers have an ID of 0 (not wxID_NONE which is -3).
+               // Therefore wxWidgets attempts to find a help string. See
+               // wxFrameBase::ShowMenuHelp(int menuId)
+               // Don't find a bogus automatic help string of "Recent &Files"
+               // from the submenu.
+               Verbatim("")
+            }
             ,
             Special( wxT("PopulateRecentFilesStep"),
             [](AudacityProject &, wxMenu &theMenu){
                // Recent Files and Recent Projects menus
                auto &history = FileHistory::Global();
                history.UseMenu( &theMenu );
-
-               wxWeakRef<wxMenu> recentFilesMenu{ &theMenu };
-               wxTheApp->CallAfter( [=] {
-                  // Bug 143 workaround.
-                  // The bug is in wxWidgets.  For a menu that has scrollers,
-                  // the scrollers have an ID of 0 (not wxID_NONE which is -3).
-                  // Therefore wxWidgets attempts to find a help string. See
-                  // wxFrameBase::ShowMenuHelp(int menuId)
-                  // It finds a bogus automatic help string of "Recent &Files"
-                  // from that submenu.
-                  // So we set the help string for command with Id 0 to empty.
-                  if ( recentFilesMenu )
-                     recentFilesMenu->GetParent()->SetHelpString( 0, "" );
-               } );
             } )
          ),
 
