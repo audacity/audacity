@@ -63,7 +63,7 @@ struct CommandListEntry
    NormalizedKeyString defaultKey;
    TranslatableString label;
    TranslatableString labelPrefix;
-   wxString labelTop;
+   TranslatableString labelTop;
    wxMenu *menu;
    CommandHandlerFinder finder;
    CommandFunctorPointer callback;
@@ -270,7 +270,7 @@ class AUDACITY_DLL_API CommandManager final
    // Accessing
    //
 
-   void GetCategories(wxArrayString &cats, AudacityProject *);
+   TranslatableStrings GetCategories( AudacityProject& );
    void GetAllCommandNames(CommandIDs &names, bool includeMultis) const;
    void GetAllCommandLabels(
       TranslatableStrings &labels, std::vector<bool> &vExcludeFromMacros,
@@ -279,7 +279,7 @@ class AUDACITY_DLL_API CommandManager final
       CommandIDs &names,
       std::vector<NormalizedKeyString> &keys,
       std::vector<NormalizedKeyString> &default_keys,
-      TranslatableStrings &labels, wxArrayString &categories,
+      TranslatableStrings &labels, TranslatableStrings &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
       TranslatableStrings &prefixes,
 #endif
@@ -291,7 +291,7 @@ class AUDACITY_DLL_API CommandManager final
 
    TranslatableString GetLabelFromName(const CommandID &name);
    TranslatableString GetPrefixedLabelFromName(const CommandID &name);
-   wxString GetCategoryFromName(const CommandID &name);
+   TranslatableString GetCategoryFromName(const CommandID &name);
    NormalizedKeyString GetKeyFromName(const CommandID &name) const;
    NormalizedKeyString GetDefaultKeyFromName(const CommandID &name);
 

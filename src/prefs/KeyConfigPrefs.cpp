@@ -318,7 +318,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 void KeyConfigPrefs::RefreshBindings(bool bSort)
 {
    TranslatableStrings Labels;
-   wxArrayString Categories;
+   TranslatableStrings Categories;
    TranslatableStrings Prefixes;
 
    mNames.clear();

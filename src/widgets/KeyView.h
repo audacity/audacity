@@ -80,7 +80,7 @@ public:
    wxString GetName() const override; // Gets the control name from the base class
 
    void RefreshBindings(const CommandIDs & names,
-                        const wxArrayString & categories,
+                        const TranslatableStrings & categories,
                         const TranslatableStrings & prefixes,
                         const TranslatableStrings & labels,
                         const std::vector<NormalizedKeyString> & keys,

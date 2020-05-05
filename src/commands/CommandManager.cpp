@@ -643,7 +643,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
 
       TranslatableString labelPrefix;
       if (!mSubMenuList.empty()) {
-         labelPrefix = mSubMenuList.back()->name;
+         labelPrefix = mSubMenuList.back()->name.Stripped();
       }
 
       // For key bindings for commands with a list, such as align,
@@ -684,7 +684,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
       entry->labelPrefix = labelPrefix;
-      entry->labelTop = wxMenuItem::GetLabelText(mCurrentMenuName.Translation());
+      entry->labelTop = mCurrentMenuName.Stripped();
       entry->menu = menu;
       entry->finder = finder;
       entry->callback = callback;
@@ -1218,13 +1218,12 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
    return CommandNotFound;
 }
 
-void CommandManager::GetCategories(
-   wxArrayString &cats, AudacityProject * /* p */)
+TranslatableStrings CommandManager::GetCategories( AudacityProject& )
 {
-   cats.clear();
+   TranslatableStrings cats;
 
    for (const auto &entry : mCommandList) {
-      wxString cat = entry->labelTop;
+      auto &cat = entry->labelTop;
       if ( ! make_iterator_range( cats ).contains(cat) ) {
          cats.push_back(cat);
       }
@@ -1247,6 +1246,8 @@ void CommandManager::GetCategories(
 
    cats.push_back(COMMAND);
 #endif
+
+   return cats;
 }
 
 void CommandManager::GetAllCommandNames(CommandIDs &names,
@@ -1286,7 +1287,7 @@ void CommandManager::GetAllCommandData(
    std::vector<NormalizedKeyString> &keys,
    std::vector<NormalizedKeyString> &default_keys,
    TranslatableStrings &labels,
-   wxArrayString &categories,
+   TranslatableStrings &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
    TranslatableStrings &prefixes,
 #endif
@@ -1297,18 +1298,7 @@ void CommandManager::GetAllCommandData(
       // It does need the effects.
       //if ( entry->isEffect )
       //   continue;
-      if (!entry->multi)
-      {
-         names.push_back(entry->name);
-         keys.push_back(entry->key);
-         default_keys.push_back(entry->defaultKey);
-         labels.push_back(entry->label);
-         categories.push_back(entry->labelTop);
-#if defined(EXPERIMENTAL_KEY_VIEW)
-         prefixes.push_back(entry->labelPrefix);
-#endif
-      }
-      else if( includeMultis )
+      if ( !entry->multi || includeMultis )
       {
          names.push_back(entry->name);
          keys.push_back(entry->key);
@@ -1352,11 +1342,11 @@ TranslatableString CommandManager::GetPrefixedLabelFromName(const CommandID &nam
       return entry->label;
 }
 
-wxString CommandManager::GetCategoryFromName(const CommandID &name)
+TranslatableString CommandManager::GetCategoryFromName(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
-      return wxT("");
+      return {};
 
    return entry->labelTop;
 }
