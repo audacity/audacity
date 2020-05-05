@@ -1463,6 +1463,7 @@ AttachedItem sAttachment1{
 
 BaseItemSharedPtr ExtraTrackMenu()
 {
+   using Options = CommandManager::Options;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Track"), XXO("&Track"),
@@ -1486,7 +1487,8 @@ BaseItemSharedPtr ExtraTrackMenu()
          TrackPanelHasFocus() | TracksExistFlag(), wxT("Alt+Shift+Down") ),
       Command( wxT("TrackMenu"), XXO("Op&en Menu on Focused Track..."),
          FN(OnTrackMenu),
-         TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+M\tskipKeydown") ),
+         TracksExistFlag() | TrackPanelHasFocus(),
+         Options{ wxT("Shift+M") }.SkipKeyDown() ),
       Command( wxT("TrackMute"), XXO("M&ute/Unmute Focused Track"),
          FN(OnTrackMute),
          TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+U") ),

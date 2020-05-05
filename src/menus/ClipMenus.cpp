@@ -882,13 +882,14 @@ AttachedItem sAttachment2{
 
 BaseItemSharedPtr ExtraClipCursorItems()
 {
+   using Options = CommandManager::Options;
    static BaseItemSharedPtr items{
    ( FinderScope{ findCommandHandler },
    Items( wxT("Clip"),
       Command( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
-         TracksExistFlag() | TrackPanelHasFocus(), wxT("\twantKeyup") ),
+         TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() ),
       Command( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),
-         TracksExistFlag() | TrackPanelHasFocus(), wxT("\twantKeyup") )
+         TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() )
    ) ) };
    return items;
 }

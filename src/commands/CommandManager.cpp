@@ -694,8 +694,9 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->count = count;
       entry->flags = AlwaysEnabledFlag;
       entry->enabled = true;
-      entry->skipKeydown = (accel.Find(wxT("\tskipKeydown")) != wxNOT_FOUND);
-      entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
+      entry->skipKeydown = options.skipKeyDown;
+      entry->wantKeyup = options.wantKeyUp || entry->skipKeydown;
+      entry->allowDup = options.allowDup;
       entry->isGlobal = false;
       entry->isOccult = bMakingOccultCommands;
       entry->checkmarkFn = options.checker;
@@ -1484,6 +1485,9 @@ void CommandManager::CheckDups()
       if (mCommandList[j]->key.empty()) {
          continue;
       }
+      
+      if (mCommandList[j]->allowDup)
+         continue;
 
       for (size_t i = 0; (int)i < cnt; i++) {
          if (i == j) {

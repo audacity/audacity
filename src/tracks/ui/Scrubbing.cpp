@@ -1259,10 +1259,12 @@ BaseItemSharedPtr KeyboardScrubbingItems()
    Items( wxT("KeyboardScrubbing"),
       Command(wxT("KeyboardScrubBackwards"), XXO("Scrub Bac&kwards"),
          &Scrubber::OnKeyboardScrubBackwards,
-         CaptureNotBusyFlag() | CanStopAudioStreamFlag(), wxT("U\twantKeyup")),
+         CaptureNotBusyFlag() | CanStopAudioStreamFlag(),
+         Options{ wxT("U") }.WantKeyUp() ),
       Command(wxT("KeyboardScrubForwards"), XXO("Scrub For&wards"),
          &Scrubber::OnKeyboardScrubForwards,
-         CaptureNotBusyFlag() | CanStopAudioStreamFlag(), wxT("I\twantKeyup"))
+         CaptureNotBusyFlag() | CanStopAudioStreamFlag(),
+         Options{ wxT("I") }.WantKeyUp() )
    ) ) };
    return items;
 }

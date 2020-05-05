@@ -79,6 +79,7 @@ struct CommandListEntry
    bool enabled;
    bool skipKeydown;
    bool wantKeyup;
+   bool allowDup;
    bool isGlobal;
    bool isOccult;
    bool isEffect;
@@ -165,6 +166,15 @@ class AUDACITY_DLL_API CommandManager final
          { global = true; return std::move(*this); }
       Options &&UseStrictFlags () &&
          { useStrictFlags = true; return std::move(*this); }
+      Options &&WantKeyUp () &&
+         { wantKeyUp = true; return std::move(*this); }
+      Options &&SkipKeyDown () &&
+         { skipKeyDown = true; return std::move(*this); }
+
+      // This option affects debugging only:
+      Options &&AllowDup () &&
+         { allowDup = true; return std::move(*this); }
+
       Options &&AllowInMacros ( int value = 1 ) &&
          { allowInMacros = value; return std::move(*this); }
 
@@ -185,6 +195,9 @@ class AUDACITY_DLL_API CommandManager final
       TranslatableString longName{};
       bool global{ false };
       bool useStrictFlags{ false };
+      bool wantKeyUp{ false };
+      bool skipKeyDown{ false };
+      bool allowDup{ false };
       int allowInMacros{ -1 }; // 0 = never, 1 = always, -1 = deduce from label
 
    private:
