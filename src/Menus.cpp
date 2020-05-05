@@ -185,11 +185,11 @@ void MenuVisitor::DoSeparator()
 namespace MenuTable {
 
 MenuItem::MenuItem( const Identifier &internalName,
-   const TranslatableString &title_, BaseItemPtrs &&items_ )
+   const BasicMenu::Item::Text &text, BaseItemPtrs &&items_ )
 : ConcreteGroupItem< false, ToolbarMenuVisitor >{
-   internalName, std::move( items_ ) }, title{ title_ }
+   internalName, std::move( items_ ) }, text{ text }
 {
-   wxASSERT( !title.empty() );
+   wxASSERT( !text.label.main.empty() );
 }
 MenuItem::~MenuItem() {}
 
@@ -202,12 +202,12 @@ ConditionalGroupItem::ConditionalGroupItem(
 ConditionalGroupItem::~ConditionalGroupItem() {}
 
 CommandItem::CommandItem(const CommandID &name_,
-         const TranslatableString &label_in_,
+         const BasicMenu::Item::Text &text,
          CommandFunctorPointer callback_,
          CommandFlag flags_,
          const CommandManager::Options &options_,
          CommandHandlerFinder finder_)
-: SingleItem{ name_ }, label_in{ label_in_ }
+: SingleItem{ name_ }, text{ text }
 , finder{ finder_ }, callback{ callback_ }
 , flags{ flags_ }, options{ options_ }
 {}
@@ -283,7 +283,7 @@ struct MenuItemVisitor : ToolbarMenuVisitor
       auto pItem = &item;
       if (const auto pMenu =
           dynamic_cast<MenuItem*>( pItem )) {
-         manager.BeginMenu( pMenu->title );
+         manager.BeginMenu( pMenu->text );
       }
       else
       if (const auto pConditionalGroup =
@@ -342,7 +342,7 @@ struct MenuItemVisitor : ToolbarMenuVisitor
       if (const auto pCommand =
           dynamic_cast<CommandItem*>( pItem )) {
          manager.AddItem( project,
-            pCommand->name, pCommand->label_in,
+            pCommand->name, pCommand->text,
             pCommand->finder, pCommand->callback,
             pCommand->flags, pCommand->options
          );
