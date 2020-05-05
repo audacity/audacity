@@ -27,6 +27,7 @@ class wxCommandEvent;
 
 #include "Internat.h"
 #include "../commands/CommandManager.h"
+#include "BasicMenu.h"
 
 class PopupMenuHandler;
 class PopupMenuTable;
@@ -34,28 +35,28 @@ class PopupMenuTable;
 struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
 {
    enum Type { Item, RadioItem, CheckItem };
-   using InitFunction =
-      std::function< void( PopupMenuHandler &handler, wxMenu &menu, int id ) >;
+   //! Function to determine whether a menu item should be enabled and checked
+   using StateFunction = std::function< BasicMenu::Item::State() >;
 
    Type type;
    int id;
    TranslatableString caption;
    wxCommandEventFunction func;
    PopupMenuHandler &handler;
-   InitFunction init;
+   StateFunction stateFn;
 
    //! @pre func is not null
    PopupMenuTableEntry( const Identifier &stringId,
       Type type_, int id_, const TranslatableString &caption_,
       wxCommandEventFunction func_, PopupMenuHandler &handler_,
-      InitFunction init_ = {} )
+      StateFunction stateFn = {} )
       : SingleItem{ stringId }
       , type(type_)
       , id(id_)
       , caption(caption_)
       , func(func_)
       , handler( handler_ )
-      , init( init_ )
+      , stateFn( move(stateFn) )
    {
       wxASSERT(func);
    }
@@ -196,25 +197,22 @@ protected:
    void Append(
       const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
       const TranslatableString &string, wxCommandEventFunction memFn,
-      // This callback might check or disable a menu item:
-      const PopupMenuTableEntry::InitFunction &init );
+      const PopupMenuTableEntry::StateFunction &stateFn );
 
    void AppendItem( const Identifier &stringId, int id,
       const TranslatableString &string, wxCommandEventFunction memFn,
-      // This callback might check or disable a menu item:
-      const PopupMenuTableEntry::InitFunction &init = {} )
-   { Append( stringId, PopupMenuTableEntry::Item, id, string, memFn, init ); }
+      const PopupMenuTableEntry::StateFunction &stateFn = {} )
+   { Append( stringId, PopupMenuTableEntry::Item, id, string, memFn, stateFn ); }
 
    void AppendRadioItem( const Identifier &stringId, int id,
       const TranslatableString &string, wxCommandEventFunction memFn,
-      // This callback might check or disable a menu item:
-      const PopupMenuTableEntry::InitFunction &init = {} )
-   { Append( stringId, PopupMenuTableEntry::RadioItem, id, string, memFn, init ); }
+      const PopupMenuTableEntry::StateFunction &stateFn = {} )
+   { Append( stringId, PopupMenuTableEntry::RadioItem, id, string, memFn, stateFn ); }
 
-   void AppendCheckItem( const Identifier &stringId, int id,
+    void AppendCheckItem( const Identifier &stringId, int id,
       const TranslatableString &string, wxCommandEventFunction memFn,
-      const PopupMenuTableEntry::InitFunction &init = {} )
-   { Append( stringId, PopupMenuTableEntry::CheckItem, id, string, memFn, init ); }
+      const PopupMenuTableEntry::StateFunction &stateFn = {} )
+   { Append( stringId, PopupMenuTableEntry::CheckItem, id, string, memFn, stateFn ); }
 
    void BeginSection( const Identifier &name );
    void EndSection();

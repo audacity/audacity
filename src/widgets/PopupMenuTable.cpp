@@ -117,8 +117,14 @@ void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
    // redundant
    pEntry->handler.InitUserData( mpUserData );
 
-   if ( pEntry->init )
-      pEntry->init( pEntry->handler, *mMenu, pEntry->id );
+   if ( pEntry->stateFn ) {
+      const auto state = pEntry->stateFn();
+      if ( auto pItem = mMenu->FindItem( pEntry->id ) ) {
+         pItem->Enable( state.enabled );
+         if ( pItem->IsCheckable() )
+            pItem->Check( state.checked );
+      }
+   }
 
    mMenu->Bind(
       wxEVT_COMMAND_MENU_SELECTED, pEntry->func, &pEntry->handler, pEntry->id);
@@ -167,10 +173,10 @@ void PopupMenuTable::Append( Registry::BaseItemPtr pItem )
 void PopupMenuTable::Append(
    const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
    const TranslatableString &string, wxCommandEventFunction memFn,
-   const PopupMenuTableEntry::InitFunction &init )
+   const PopupMenuTableEntry::StateFunction &stateFn )
 {
    Append( std::make_unique<Entry>(
-      stringId, type, id, string, memFn, *this, init ) );
+      stringId, type, id, string, memFn, *this, stateFn ) );
 }
 
 void PopupMenuTable::BeginSection( const Identifier &name )
