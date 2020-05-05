@@ -361,7 +361,7 @@ public:
    // TranslatableStrings
    friend bool operator == (
       const TranslatableString &x, const TranslatableString &y)
-   { return (const wxString&)x == (const wxString&)y; }
+   { return x.mMsgid == y.mMsgid; }
 
    friend bool operator != (
       const TranslatableString &x, const TranslatableString &y)
