@@ -279,14 +279,11 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
          AppendRadioItem( names[ii].Internal(),
             OnFirstWaveformScaleID + ii, names[ii].Msgid(),
             POPUP_MENU_FN( OnWaveformScaleType ),
-            []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-               const auto pData =
-                  static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
-               WaveTrack *const wt = pData->pTrack;
-               if ( id ==
-                  OnFirstWaveformScaleID +
-                  (int)(wt->GetWaveformSettings().scaleType) )
-                  menu.Check(id, true);
+            [this, ii]() -> BasicMenu::Item::State {
+               WaveTrack *const wt = mpData->pTrack;
+               return { true,
+                  ii == static_cast<int>(wt->GetWaveformSettings().scaleType)
+               };
             }
           );
       }

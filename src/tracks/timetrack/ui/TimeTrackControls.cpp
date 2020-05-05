@@ -129,21 +129,20 @@ void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 }
 
 BEGIN_POPUP_MENU(TimeTrackMenuTable)
-   static const auto findTrack = []( PopupMenuHandler &handler ){
-      return static_cast<TimeTrack*>(
-         static_cast<TimeTrackMenuTable&>( handler ).mpData->pTrack );
+   static const auto findTrack = []( TimeTrackMenuTable &handler ){
+      return static_cast<TimeTrack*>( handler.mpData->pTrack );
    };
 
    BeginSection( "Scales" );
       AppendRadioItem( "Linear", OnTimeTrackLinID, XXO("&Linear scale"),
          POPUP_MENU_FN( OnTimeTrackLin ),
-         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-            menu.Check( id, !findTrack(handler)->GetDisplayLog() );
+         [this]() -> BasicMenu::Item::State {
+            return { true, !findTrack(*this)->GetDisplayLog() };
          } );
       AppendRadioItem( "Log", OnTimeTrackLogID, XXO("L&ogarithmic scale"),
          POPUP_MENU_FN( OnTimeTrackLog ),
-         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-            menu.Check( id, findTrack(handler)->GetDisplayLog() );
+         [this]() -> BasicMenu::Item::State {
+            return { true, findTrack(*this)->GetDisplayLog() };
          } );
    EndSection();
 
@@ -152,8 +151,8 @@ BEGIN_POPUP_MENU(TimeTrackMenuTable)
          POPUP_MENU_FN( OnSetTimeTrackRange ) );
       AppendCheckItem( "LogInterp", OnTimeTrackLogIntID,
          XXO("Logarithmic &Interpolation"), POPUP_MENU_FN( OnTimeTrackLogInt),
-         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-            menu.Check( id, findTrack(handler)->GetInterpolateLog() );
+         [this]() -> BasicMenu::Item::State {
+            return { true, findTrack(*this)->GetInterpolateLog() };
          } );
    EndSection();
 
