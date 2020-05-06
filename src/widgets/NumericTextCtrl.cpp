@@ -585,8 +585,7 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
    { XO("octaves") },
    /* i18n-hint: Format string for displaying log of frequency in octaves.
     * Change the decimal points for your locale. Don't change the numbers. */
-   // Scale factor is 1 / ln (2)
-   XO("100.01000 octaves|1.442695041")
+   XO("100.01000 octaves|1.442695041"),    // Scale factor is 1 / ln (2)
    },
 
    {
@@ -596,8 +595,7 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
    /* i18n-hint: Format string for displaying log of frequency in semitones
     * and cents.
     * Change the decimal points for your locale. Don't change the numbers. */
-   // Scale factor is 12 / ln (2)
-   XO("1000 semitones .0100 cents|17.312340491")
+   XO("1000 semitones .0100 cents|17.312340491"),   // Scale factor is 12 / ln (2)
    },
    
    {
@@ -606,8 +604,7 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
    { XO("decades") },
    /* i18n-hint: Format string for displaying log of frequency in decades.
     * Change the decimal points for your locale. Don't change the numbers. */
-   // Scale factor is 1 / ln (10)
-   XO("10.01000 decades|0.434294482")
+   XO("10.01000 decades|0.434294482"),   // Scale factor is 1 / ln (10)
    },
 };
 
