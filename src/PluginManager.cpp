@@ -430,6 +430,7 @@ private:
 
    void OnChangedVisibility(wxCommandEvent & evt);
    void OnSort(wxListEvent & evt);
+   void DoSort( int col );
    void OnListChar(wxKeyEvent & evt);
    void OnOK(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);
@@ -492,6 +493,8 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType 
    mSortDirection = 1;
 
    Populate();
+
+   DoSort( mSortColumn );
 }
 
 void PluginRegistrationDialog::Populate()
@@ -867,7 +870,11 @@ void PluginRegistrationDialog::OnChangedVisibility(wxCommandEvent & evt)
 void PluginRegistrationDialog::OnSort(wxListEvent & evt)
 {
    int col = evt.GetColumn();
+   DoSort( col );
+}
 
+void PluginRegistrationDialog::DoSort( int col )
+{
    if (col != mSortColumn)
    {
       mSortDirection = 1;
