@@ -300,8 +300,10 @@ void SelectionBar::Populate()
    AddVLine( mainSizer );
 
    mSnapTo = safenew wxChoice(this, SnapToID,
-                          wxDefaultPosition, wxDefaultSize,
-                          SnapManager::GetSnapLabels());
+      wxDefaultPosition, wxDefaultSize,
+      transform_container< wxArrayStringEx >(
+         SnapManager::GetSnapLabels(),
+         std::mem_fn( &TranslatableString::Translation ) ) );
 
 #ifdef __WXGTK__
    // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will

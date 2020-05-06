@@ -360,13 +360,14 @@ SnapResults SnapManager::Snap
    return results;
 }
 
-/* static */ wxArrayStringEx SnapManager::GetSnapLabels()
+/* static */ const TranslatableStrings &SnapManager::GetSnapLabels()
 {
-   return wxArrayStringEx{
-      _("Off") ,
-      _("Nearest") ,
-      _("Prior") ,
+   static const TranslatableStrings result{
+      XO("Off") ,
+      XO("Nearest") ,
+      XO("Prior") ,
    };
+   return result;
 }
 
 #include "AColor.h"

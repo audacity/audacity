@@ -508,8 +508,8 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
                            wxSize(ABOUT_DIALOG_WIDTH, 264),
                            wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
    // create a html pane in it to put the content in.
-   wxString enabled = _("Enabled");
-   wxString disabled = _("Disabled");
+   auto enabled = XO("Enabled");
+   auto disabled = XO("Disabled");
    wxString blank;
 
    /* this builds up the list of information to go in the window in the string
@@ -604,10 +604,10 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
          XO("Sample rate conversion"), enabled);
 
    AddBuildinfoRow(&informationStr, wxT("PortAudio"),
-         XO("Audio playback and recording"), wxString(wxT("v19")));
+         XO("Audio playback and recording"), Verbatim(wxT("v19")));
 
    AddBuildinfoRow(&informationStr, wxT("wxWidgets"),
-         XO("Cross-platform GUI library"), wxVERSION_NUM_DOT_STRING_T);
+         XO("Cross-platform GUI library"), Verbatim(wxVERSION_NUM_DOT_STRING_T));
 
    informationStr
       << wxT("</table>\n")  //end table of libraries
@@ -1111,7 +1111,7 @@ wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)
  * library is enabled or not, and what it does */
 void AboutDialog::AddBuildinfoRow(
    wxTextOutputStream *str, const wxChar * libname,
-   const TranslatableString &libdesc, const wxString &status)
+   const TranslatableString &libdesc, const TranslatableString &status)
 {
    *str
       << wxT("<tr><td>")

@@ -66,7 +66,7 @@ class AboutDialog final : public wxDialogWrapper {
    wxString GetCreditsByRole(AboutDialog::Role role);
 
    void AddBuildinfoRow( wxTextOutputStream *str, const wxChar * libname,
-      const TranslatableString &libdesc, const wxString &status);
+      const TranslatableString &libdesc, const TranslatableString &status);
    void AddBuildinfoRow( wxTextOutputStream *str,
       const TranslatableString &description, const wxChar *spec);
 };

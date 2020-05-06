@@ -135,8 +135,8 @@ private:
    bool SetRateAndChannels();
 
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
-   wxString Export(const wxString & path);
-   wxString Import(const wxString & path);
+   TranslatableString Export(const wxString & path);
+   TranslatableString Import(const wxString & path);
    void Notify(AudioUnit unit, AudioUnitParameterID parm);
 
    // Realtime
