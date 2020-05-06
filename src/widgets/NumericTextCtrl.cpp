@@ -285,7 +285,7 @@ private:
 struct BuiltinFormatString
 {
    NumericFormatSymbol name;
-   TranslatableString formatStr;
+   NumericConverter::FormatStrings formatStrings;
 
    friend inline bool operator ==
       (const BuiltinFormatString &a, const BuiltinFormatString &b)
@@ -561,16 +561,23 @@ static const BuiltinFormatString FrequencyConverterFormats_[] = {
    {
       /* i18n-hint: Name of display format that shows frequency in hertz */
       { XO("Hz") },
-         /* i18n-hint: Format string for displaying frequency in hertz. Change 
+      {
+         /* i18n-hint: Format string for displaying frequency in hertz. Change
          * the decimal point for your locale. Don't change the numbers. */
          XO("0100000.0100 Hz")
+         , XO("centihertz")
+      }
    },
 
    {
+      /* i18n-hint: Name of display format that shows frequency in kilohertz */
       { XO("kHz") },
-         /* i18n-hint: Format string for displaying frequency in kilohertz. Change 
+      {
+         /* i18n-hint: Format string for displaying frequency in kilohertz. Change
          * the decimal point for your locale. Don't change the numbers. */
          XO("01000.01000 kHz|0.001")
+         , XO("hertz")
+      }
    },
 };
 
@@ -583,28 +590,40 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
    /* i18n-hint: Name of display format that shows log of frequency
     * in octaves */
    { XO("octaves") },
+   {
    /* i18n-hint: Format string for displaying log of frequency in octaves.
     * Change the decimal points for your locale. Don't change the numbers. */
-   XO("100.01000 octaves|1.442695041"),    // Scale factor is 1 / ln (2)
+      XO("100.01000 octaves|1.442695041"),    // Scale factor is 1 / ln (2)
+      /* i18n-hint: an octave is a doubling of frequency */
+      XO("thousandths of octaves")
+   }
    },
 
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in semitones and cents */
    { XO("semitones + cents") },
-   /* i18n-hint: Format string for displaying log of frequency in semitones
-    * and cents.
-    * Change the decimal points for your locale. Don't change the numbers. */
-   XO("1000 semitones .0100 cents|17.312340491"),   // Scale factor is 12 / ln (2)
+   {
+      /* i18n-hint: Format string for displaying log of frequency in semitones
+       * and cents.
+       * Change the decimal points for your locale. Don't change the numbers. */
+      XO("1000 semitones .0100 cents|17.312340491"),   // Scale factor is 12 / ln (2)
+      /* i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave) */
+      XO("hundredths of cents")
+   }
    },
    
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in decades */
    { XO("decades") },
-   /* i18n-hint: Format string for displaying log of frequency in decades.
-    * Change the decimal points for your locale. Don't change the numbers. */
-   XO("10.01000 decades|0.434294482"),   // Scale factor is 1 / ln (10)
+   {
+      /* i18n-hint: Format string for displaying log of frequency in decades.
+       * Change the decimal points for your locale. Don't change the numbers. */
+      XO("10.01000 decades|0.434294482"),   // Scale factor is 1 / ln (10)
+      /* i18n-hint: a decade is a tenfold increase of frequency */
+      XO("thousandths of decades")
+   }
    },
 };
 
@@ -1126,11 +1145,11 @@ bool NumericConverter::SetFormatName(const NumericFormatSymbol & formatName)
       SetFormatString(GetBuiltinFormat(formatName));
 }
 
-bool NumericConverter::SetFormatString(const TranslatableString & formatString)
+bool NumericConverter::SetFormatString(const FormatStrings & formatString)
 {
    if (mFormatString != formatString) {
       mFormatString = formatString;
-      ParseFormatString(mFormatString);
+      ParseFormatString(mFormatString.formatStr);
       ValueToControls();
       ControlsToValue();
       return true;
@@ -1142,7 +1161,7 @@ bool NumericConverter::SetFormatString(const TranslatableString & formatString)
 void NumericConverter::SetSampleRate(double sampleRate)
 {
    mSampleRate = sampleRate;
-   ParseFormatString(mFormatString);
+   ParseFormatString(mFormatString.formatStr);
    ValueToControls();
    ControlsToValue();
 }
@@ -1218,16 +1237,16 @@ NumericFormatSymbol NumericConverter::GetBuiltinName(const int index)
    return {};
 }
 
-TranslatableString NumericConverter::GetBuiltinFormat(const int index)
+auto NumericConverter::GetBuiltinFormat(const int index) -> FormatStrings
 {
    if (index >= 0 && index < GetNumBuiltins())
-      return mBuiltinFormatStrings[index].formatStr;
+      return mBuiltinFormatStrings[index].formatStrings;
 
    return {};
 }
 
-TranslatableString NumericConverter::GetBuiltinFormat(
-   const NumericFormatSymbol &name)
+auto NumericConverter::GetBuiltinFormat(
+   const NumericFormatSymbol &name) -> FormatStrings
 {
    int ndx =
       std::find( mBuiltinFormatStrings, mBuiltinFormatStrings + mNBuiltins,
@@ -1419,7 +1438,7 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
    if (options.hasInvalidValue)
       SetInvalidValue( options.invalidValue );
 
-   if (!options.format.empty())
+   if (!options.format.formatStr.empty())
       SetFormatString( options.format );
 
    if (options.hasValue)
@@ -1460,7 +1479,7 @@ bool NumericTextCtrl::SetFormatName(const NumericFormatSymbol & formatName)
       SetFormatString(GetBuiltinFormat(formatName));
 }
 
-bool NumericTextCtrl::SetFormatString(const TranslatableString & formatString)
+bool NumericTextCtrl::SetFormatString(const FormatStrings & formatString)
 {
    auto result =
       NumericConverter::SetFormatString(formatString);
@@ -2255,6 +2274,22 @@ wxAccStatus NumericTextCtrlAx::GetLocation(wxRect & rect, int elementId)
    return wxACC_OK;
 }
 
+static void GetFraction( wxString &label,
+   const NumericConverter::FormatStrings &formatStrings,
+   bool isTime, int digits )
+{
+   TranslatableString tr = formatStrings.fraction;
+   if ( tr.empty() ) {
+      wxASSERT( isTime );
+      if (digits == 2)
+         tr = XO("centiseconds");
+      else if (digits == 3)
+         tr = XO("milliseconds");
+   }
+   if (!tr.empty())
+      label = tr.Translation();
+}
+
 // Gets the name of the specified object.
 wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
 {
@@ -2306,26 +2341,8 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
          if (field > 1 && field == cnt) {
             if (mFields[field - 2].label == decimal) {
                int digits = mFields[field - 1].digits;
-               if (digits == 2) {
-                  if (isTime)
-                     label = _("centiseconds");
-                  else {
-                     // other units
-                     // PRL:  does this create translation problems?
-                     label = _("hundredths of ");
-                     label += mFields[field - 1].label;
-                  }
-               }
-               else if (digits == 3) {
-                  if (isTime)
-                     label = _("milliseconds");
-                  else {
-                     // other units
-                     // PRL:  does this create translation problems?
-                     label = _("thousandths of ");
-                     label += mFields[field - 1].label;
-                  }
-               }
+               GetFraction( label, mCtrl->mFormatString,
+                  isTime, digits );
             }
          }
          // If the field following this one represents fractions of a

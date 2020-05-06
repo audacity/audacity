@@ -54,6 +54,24 @@ public:
       BANDWIDTH,
    };
 
+   struct FormatStrings {
+      TranslatableString formatStr;
+      // How to name the fraction of the unit; not necessary for time formats
+      // or when the format string has no decimal point
+      TranslatableString fraction;
+
+      FormatStrings(
+         const TranslatableString &format = {},
+         const TranslatableString &fraction = {})
+         : formatStr{ format }, fraction{ fraction }
+      {}
+
+      friend bool operator == ( const FormatStrings &x, const FormatStrings &y )
+         { return x.formatStr == y.formatStr && x.fraction == y.fraction; }
+      friend bool operator != ( const FormatStrings &x, const FormatStrings &y )
+         { return !(x == y); }
+   };
+
    static NumericFormatSymbol DefaultSelectionFormat();
    static NumericFormatSymbol TimeAndSampleFormat();
    static NumericFormatSymbol SecondsFormat();
@@ -90,7 +108,7 @@ public:
    bool SetFormatName(const NumericFormatSymbol & formatName);
 
    // returns true iff the format string really changed:
-   bool SetFormatString(const TranslatableString & formatString);
+   bool SetFormatString(const FormatStrings & formatString);
 
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
@@ -107,8 +125,8 @@ public:
 
    int GetNumBuiltins();
    NumericFormatSymbol GetBuiltinName(const int index);
-   TranslatableString GetBuiltinFormat(const int index);
-   TranslatableString GetBuiltinFormat(const NumericFormatSymbol & name);
+   FormatStrings GetBuiltinFormat(const int index);
+   FormatStrings GetBuiltinFormat(const NumericFormatSymbol & name);
 
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
@@ -126,7 +144,7 @@ protected:
    double         mMaxValue;
    double         mInvalidValue;
 
-   TranslatableString mFormatString;
+   FormatStrings mFormatString;
 
    std::vector<NumericField> mFields;
    wxString       mPrefix;
@@ -160,7 +178,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
       bool menuEnabled { true };
       bool hasInvalidValue { false };
       double invalidValue { -1.0 };
-      TranslatableString format {};
+      FormatStrings format {};
       bool hasValue { false };
       double value{ -1.0 };
 
@@ -172,7 +190,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
       Options &InvalidValue (bool has, double v = -1.0)
          { hasInvalidValue = has, invalidValue = v; return *this; }
       // use a custom format not in the tables:
-      Options &Format (const TranslatableString &f)
+      Options &Format (const FormatStrings &f)
          { format = f; return *this; }
       Options &Value (bool has, double v)
          { hasValue = has, value = v; return *this; }
@@ -200,7 +218,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    void SetValue(double newValue);
 
    // returns true iff the format string really changed:
-   bool SetFormatString(const TranslatableString & formatString);
+   bool SetFormatString(const FormatStrings & formatString);
 
    // returns true iff the format name really changed:
    bool SetFormatName(const NumericFormatSymbol & formatName);
