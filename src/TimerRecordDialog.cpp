@@ -35,7 +35,6 @@
 #include <wx/datectrl.h>
 #include <wx/datetime.h>
 #include <wx/intl.h>
-#include <wx/progdlg.h>
 #include <wx/sizer.h>
 #include <wx/string.h>
 #include <wx/timer.h>

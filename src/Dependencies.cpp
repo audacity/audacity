@@ -43,7 +43,6 @@ AliasedFile s.
 #include <wx/filename.h>
 #include <wx/listctrl.h>
 #include <wx/menu.h>
-#include <wx/progdlg.h>
 #include <wx/choice.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>

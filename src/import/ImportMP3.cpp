@@ -65,7 +65,6 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include <wx/textctrl.h>
 #include <wx/file.h>
 #include <wx/thread.h>
-#include <wx/progdlg.h>
 #include <wx/string.h>
 #include <wx/timer.h>
 #include <wx/intl.h>

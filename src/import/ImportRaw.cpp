@@ -44,7 +44,6 @@ and sample size to help you importing data of an unknown format.
 #include <wx/choice.h>
 #include <wx/intl.h>
 #include <wx/panel.h>
-#include <wx/progdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
