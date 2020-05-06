@@ -123,7 +123,7 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
       /* i18n-hint: The %s's are replaced by translated and untranslated
        * versions of language names. */
       auto msg = XO("The language you have chosen, %s (%s), is not the same as the system language, %s (%s).")
-         .Format(mLangNames[ndx].Translation(),
+         .Format(mLangNames[ndx],
                  mLang,
                  sname,
                  slang);
