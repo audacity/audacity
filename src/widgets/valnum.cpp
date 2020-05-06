@@ -547,7 +547,10 @@ bool FloatingPointValidatorBase::ValidatePrecision(const wxString& s) const
 
    // If user typed exponent 'e' the number of decimal digits is not
    // important at all. But we must know that 'e' position.
-   size_t posExp = s.Lower().Find(_("e"));
+   // PRL:  I can't find anything in lconv or std::numpunct that describes
+   // alternatives to e.  So just use a plain string literal.  Don't trouble
+   // with i18n.
+   size_t posExp = s.Lower().Find("e");
    if ( posExp == wxString::npos )
       posExp = s.length();
 
