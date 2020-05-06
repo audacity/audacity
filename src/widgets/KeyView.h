@@ -133,7 +133,6 @@ private:
    void OnLeftDown(wxMouseEvent & event);
 
 
-   static wxString CommandTranslated;
    static bool CmpKeyNodeByTree(KeyNode *n1, KeyNode *n2);
    static bool CmpKeyNodeByName(KeyNode *n1, KeyNode *n2);
    static bool CmpKeyNodeByKey(KeyNode *n1, KeyNode *n2);
