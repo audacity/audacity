@@ -31,11 +31,14 @@ else()
    # Let the Audacity target know that this library will be used.
    set( USE_${symbol} ON CACHE INTERNAL "" )
 
-   # Only need to look up the package if we're linking to it
-   set( isdyn YES )
-   if( ${_OPT}use_ffmpeg STREQUAL "linked" )
-      pkg_check_modules( ${TARGET} ${packages} )
+   # Check for system package
+   pkg_check_modules( ${TARGET} ${packages} )
 
+   # Default to dynamically loaded
+   set( isdyn YES )
+
+   # Does the user want to link to it instead?
+   if( ${_OPT}use_ffmpeg STREQUAL "linked" )
       # Set up for link if it was found
       if( ${TARGET}_FOUND )
          message( STATUS "Linking '${name}' library during build" )
@@ -52,10 +55,24 @@ else()
    if( isdyn )
       message( STATUS "Will dynamically load '${name}' library at runtime" )
 
-      list( APPEND INCLUDES
-         INTERFACE
-            ${TARGET_ROOT}
-      )
+      # Use the system includes if they are available
+      if( ${TARGET}_FOUND )
+         message( STATUS "Using '${name}' system includes" )
+
+         # Only pull in the includes, don't need the libraries
+         list( APPEND INCLUDES
+            INTERFACE
+               ${${TARGET}_INCLUDE_DIRS}
+         )
+      else()
+         message( STATUS "Using '${name}' local includes" )
+
+         # Use the local ffmpeg includes
+         list( APPEND INCLUDES
+            INTERFACE
+               ${TARGET_ROOT}
+         )
+      endif()
    endif()
 endif()
 
