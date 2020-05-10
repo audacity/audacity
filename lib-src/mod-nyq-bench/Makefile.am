@@ -1,5 +1,7 @@
 pkglib_LTLIBRARIES = mod-nyq-bench.la
 
+CXXFLAGS = -std=gnu++14
+
 ACLOCAL_AMFLAGS = ${ACLOCAL_AMFLAGS} -I m4
 
 mod_nyq_bench_la_CPPFLAGS = $(WX_CXXFLAGS) -I$(top_srcdir)/../../include -I$(top_srcdir)/../../src -I$(top_builddir)/../../src -I$(top_srcdir)/../portaudio-v19/include -I$(top_srcdir)/../portmixer/include -I$(top_srcdir)/../libnyquist

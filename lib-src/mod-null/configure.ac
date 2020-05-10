@@ -6,7 +6,7 @@ AC_PREREQ([2.59])
 AC_INIT([mod-null],[1.0],[feedback@audacityteam.org],[mod-null])
 AC_CONFIG_AUX_DIR([autotools])
 AC_CONFIG_MACRO_DIR([m4])
-AX_CXX_COMPILE_STDCXX(11)
+AX_CXX_COMPILE_STDCXX(14)
 
 AM_INIT_AUTOMAKE([1.11 dist-xz foreign no-dist-gzip subdir-objects -Wall])
 AM_MAINTAINER_MODE([disable])

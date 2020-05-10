@@ -240,7 +240,7 @@ dnl Solaris builds, by defining HAVE_ALLOCA_H
 AC_CHECK_HEADERS_ONCE(alloca.h)
 
 
-dnl Enable C++ 11 support. Use gnu++11 on GCC since wxWidgets uses extensions
+dnl Enable C++ 14 support. Use gnu++14 on GCC since wxWidgets uses extensions
 if "${CXX}" -v 2>&1 | grep -q '^gcc version'; then
 
     dnl GCC < 4.9 has known bugs (#1397) and can't be used
@@ -249,9 +249,9 @@ if "${CXX}" -v 2>&1 | grep -q '^gcc version'; then
         AC_MSG_ERROR([Audacity requires at least GCC 4.9])
     fi
 
-    CXXFLAGS="${CXXFLAGS} --std=gnu++11"
+    CXXFLAGS="${CXXFLAGS} --std=gnu++14"
 else
-    CXXFLAGS="${CXXFLAGS} --std=c++11"
+    CXXFLAGS="${CXXFLAGS} --std=c++14"
 fi
 
 dnl --------------------------------------------------------------------------
