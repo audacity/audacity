@@ -1187,6 +1187,23 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       POST_BUILD
    )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   # Bug 2400 workaround
+   #
+   # Replaces the SDK version in the built executable with 10.13 to
+   # prevent high CPU usage and slow drawing on Mojave or newer
+   check_for_platform_version()
+   if( PLATFORM_VERSION_SUPPORTED )
+      list( APPEND LDFLAGS
+         PRIVATE
+            -Wl,-platform_version,macos,10.7,10.13
+      )
+   else()
+      list( APPEND LDFLAGS
+         PRIVATE
+            -Wl,-sdk_version,10.13
+      )
+   endif()
+
    # Define Mac specific resources
    list( APPEND MAC_RESOURCES
       ../mac/Resources/Audacity.icns
@@ -1356,7 +1373,7 @@ target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOU
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
-target_link_options( "${TARGET}" PRIVATE ${LDFLAGS} )
+target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 
 if( PRECOMP )

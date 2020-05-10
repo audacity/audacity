@@ -184,3 +184,23 @@ function( nuget_package dir name version )
    # Return the package directory name to the caller
    set( ${dir} "${pkgdir}" PARENT_SCOPE )
 endfunction()
+
+# Determines if the linker supports the "-platform_version" argument
+# on macOS.
+macro( check_for_platform_version )
+   if( NOT DEFINED LINKER_SUPPORTS_PLATFORM_VERSION )
+      execute_process(
+         COMMAND
+            ld -platform_version macos 1.1 1.1
+         ERROR_VARIABLE
+            error
+      )
+
+      if( error MATCHES ".*unknown option.*" )
+         set( PLATFORM_VERSION_SUPPORTED no CACHE INTERNAL "" )
+      else()
+         set( PLATFORM_VERSION_SUPPORTED yes CACHE INTERNAL "" )
+      endif()
+   endif()
+endmacro()
+
