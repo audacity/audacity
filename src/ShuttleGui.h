@@ -176,10 +176,9 @@ struct Item {
       wxEventTypeTag<Tag> eventType,
       void (Handler::*func)(Argument&)
    ) &&
-        -> typename std::enable_if<
-            std::is_base_of<Argument, Tag>::value,
-            Item&&
-        >::type
+        -> std::enable_if_t<
+            std::is_base_of_v<Argument, Tag>,
+            Item&& >
    {
       mRootConnections.push_back({
          eventType,
@@ -701,10 +700,9 @@ public:
       wxEventTypeTag<Tag> eventType,
       void (Handler::*func)(Argument&)
    )
-        -> typename std::enable_if<
-            std::is_base_of<Argument, Tag>::value,
-            ShuttleGui&
-        >::type
+        -> std::enable_if_t<
+            std::is_base_of_v<Argument, Tag>,
+            ShuttleGui& >
    {
       std::move( mItem ).ConnectRoot( eventType, func );
       return *this;
