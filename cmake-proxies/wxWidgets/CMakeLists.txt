@@ -122,17 +122,30 @@ else()
       WXUSINGDLL
    )
 
+   # For all required libs, gather all of the interface target
+   # properties and merge them into the wxWidgets target
+   foreach( lib adv base core html net qa xml )
+      get_target_property( value ${lib} INTERFACE_INCLUDE_DIRECTORIES )
+      list( APPEND INCLUDES ${value} )
+      list( REMOVE_DUPLICATES INCLUDES )
+
+      get_target_property( value ${lib} INTERFACE_COMPILE_DEFINITIONS )
+      list( APPEND DEFINES ${value} )
+      list( REMOVE_DUPLICATES DEFINES )
+
+      get_target_property( value ${lib} INTERFACE_COMPILE_OPTIONS )
+      list( APPEND COPTS ${value} )
+      list( REMOVE_DUPLICATES COPTS )
+
+      get_target_property( value ${lib} INTERFACE_LINK_LIBRARIES )
+      list( APPEND LIBRARIES ${lib} ${value} )
+      list( REMOVE_DUPLICATES LIBRARIES )
+   endforeach()
+
    # Do NOT split the generator expressions across multiple lines here.
    # CMake appears to have a bug and doesn't seem to handle it correctly
    # for target link libraries.
-   set( LIBRARIES
-      adv
-      base
-      core
-      html
-      net
-      qa
-      xml
+   list( APPEND LIBRARIES
       $<$<STREQUAL:"${wxUSE_EXPAT}","builtin">:wxexpat>
       $<$<STREQUAL:"${wxUSE_LIBJPEG}","builtin">:wxjpeg>
       $<$<STREQUAL:"${wxUSE_LIBPNG}","builtin">:wxpng>
@@ -184,7 +197,9 @@ endif()
 
 target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
 target_compile_definitions( ${TARGET} INTERFACE ${DEFINES} )
+target_compile_options( ${TARGET} INTERFACE ${COPTS} )
 target_link_directories( ${TARGET} INTERFACE ${LINKDIRS} )
 target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
 
-INSTALL( TARGETS ${TARGET} DESTINATION ${_LIBDIR} )
+install( TARGETS ${TARGET} DESTINATION ${_LIBDIR} )
+

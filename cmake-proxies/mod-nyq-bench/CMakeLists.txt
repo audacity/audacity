@@ -14,11 +14,18 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/NyqBench.h
 )
 
+get_target_property( wx_INCLUDES wxWidgets INTERFACE_INCLUDE_DIRECTORIES )
+get_target_property( pa_INCLUDES portaudio-v19 INTERFACE_INCLUDE_DIRECTORIES )
+get_target_property( ny_INCLUDES libnyquist INTERFACE_INCLUDE_DIRECTORIES )
 list( APPEND INCLUDES
    PUBLIC
+      ${wx_INCLUDES}
+      ${pa_INCLUDES}
+      ${ny_INCLUDES}
       ${TARGET_ROOT}
 )
 
+get_target_property( DEFINES wxWidgets INTERFACE_COMPILE_DEFINITIONS )
 list( APPEND DEFINES
    PRIVATE
       # This is needed until the transition to cmake is complete and
@@ -29,12 +36,14 @@ list( APPEND DEFINES
       wxDEBUG_LEVEL=0
 )
 
+list( APPEND LOPTS
+   PRIVATE
+      $<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>
+)
+
 list( APPEND LIBRARIES
    PRIVATE
       Audacity
-      libnyquist
-      portaudio-v19
-      wxWidgets
 )
 
 set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_DEST}/modules" )
@@ -48,5 +57,6 @@ organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_link_options( ${TARGET} PRIVATE ${LOPTS} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 
