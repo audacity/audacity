@@ -44,6 +44,8 @@ list( APPEND LOPTS
 list( APPEND LIBRARIES
    PRIVATE
       Audacity
+      $<$<PLATFORM_ID:Windows>:wxWidgets>
+      $<$<PLATFORM_ID:Windows>:FileDialog>
 )
 
 set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_DEST}/modules" )
