@@ -58,7 +58,7 @@ BaseItemSharedPtr ToolbarsMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Section( wxT("Toolbars"),
-      Menu( wxT("Toolbars"), XO("&Toolbars"),
+      Menu( wxT("Toolbars"), XXO("&Toolbars"),
          Section( "Reset",
             /* i18n-hint: (verb)*/
             Command( wxT("ResetToolbars"), XXO("Reset Toolb&ars"),

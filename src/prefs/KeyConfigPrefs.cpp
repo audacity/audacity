@@ -187,9 +187,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             S.StartRadioButtonGroup({
                wxT("/Prefs/KeyConfig/ViewBy"),
                {
-                  { wxT("tree"), XO("&Tree") },
-                  { wxT("name"), XO("&Name") },
-                  { wxT("key"), XO("&Key") },
+                  { wxT("tree"), XXO("&Tree") },
+                  { wxT("name"), XXO("&Name") },
+                  { wxT("key"), XXO("&Key") },
                },
                0 // tree
             });
@@ -290,9 +290,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             .AddWindow(mKey);
 
          /* i18n-hint: (verb)*/
-         mSet = S.Id(SetButtonID).AddButton(XO("&Set"));
+         mSet = S.Id(SetButtonID).AddButton(XXO("&Set"));
          /* i18n-hint: (verb)*/
-         mClear = S.Id(ClearButtonID).AddButton(XO("Cl&ear"));
+         mClear = S.Id(ClearButtonID).AddButton(XXO("Cl&ear"));
       }
       S.EndThreeColumn();
 
@@ -302,9 +302,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartThreeColumn();
       {
-         S.Id(ImportButtonID).AddButton(XO("&Import..."));
-         S.Id(ExportButtonID).AddButton(XO("&Export..."));
-         S.Id(AssignDefaultsButtonID).AddButton(XO("&Defaults"));
+         S.Id(ImportButtonID).AddButton(XXO("&Import..."));
+         S.Id(ExportButtonID).AddButton(XXO("&Export..."));
+         S.Id(AssignDefaultsButtonID).AddButton(XXO("&Defaults"));
       }
       S.EndThreeColumn();
    }

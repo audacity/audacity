@@ -315,23 +315,23 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Display"));
    {
-      S.TieCheckBox(XO("Auto-&fit track height"),
+      S.TieCheckBox(XXO("Auto-&fit track height"),
                     {wxT("/GUI/TracksFitVerticallyZoomed"),
                      false});
-      S.TieCheckBox(XO("Sho&w track name as overlay"),
+      S.TieCheckBox(XXO("Sho&w track name as overlay"),
                   {wxT("/GUI/ShowTrackNameInWaveform"),
                    false});
 #ifdef EXPERIMENTAL_HALF_WAVE
-      S.TieCheckBox(XO("Use &half-wave display when collapsed"),
+      S.TieCheckBox(XXO("Use &half-wave display when collapsed"),
                   {wxT("/GUI/CollapseToHalfWave"),
                    false});
 #endif
 #ifdef SHOW_PINNED_UNPINNED_IN_PREFS
-      S.TieCheckBox(XO("&Pinned Recording/Playback head"),
+      S.TieCheckBox(XXO("&Pinned Recording/Playback head"),
          {PinnedHeadPreferenceKey(),
           PinnedHeadPreferenceDefault()});
 #endif
-      S.TieCheckBox(XO("A&uto-scroll if head unpinned"),
+      S.TieCheckBox(XXO("A&uto-scroll if head unpinned"),
          {wxT("/GUI/AutoScroll"),
           true});
 
@@ -341,23 +341,23 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       {
 #ifdef SHOW_PINNED_POSITION_IN_PREFS
          S.TieNumericTextBox(
-            XO("Pinned &head position"),
+            XXO("Pinned &head position"),
             {PinnedHeadPositionPreferenceKey(),
              PinnedHeadPositionPreferenceDefault()},
             30
          );
 #endif
 
-         S.TieChoice(XO("Default &view mode:"),
+         S.TieChoice(XXO("Default &view mode:"),
                      viewModeSetting() );
 
-         S.TieChoice(XO("Default Waveform scale:"),
+         S.TieChoice(XXO("Default Waveform scale:"),
                      waveformScaleSetting );
 
-         S.TieChoice(XO("Display &samples:"),
+         S.TieChoice(XXO("Display &samples:"),
                      sampleDisplaySetting );
 
-         S.TieTextBox(XO("Default audio track &name:"),
+         S.TieTextBox(XXO("Default audio track &name:"),
                       {wxT("/GUI/TrackNames/DefaultTrackName"),
                        _("Audio Track")},
                       30);
@@ -370,10 +370,10 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(4);
       {
-         S.TieChoice(XO("Preset 1:"),
+         S.TieChoice(XXO("Preset 1:"),
                      zoom1Setting );
 
-         S.TieChoice(XO("Preset 2:"),
+         S.TieChoice(XXO("Preset 2:"),
                      zoom2Setting );
       }
    }

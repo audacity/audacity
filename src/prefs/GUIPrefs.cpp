@@ -185,18 +185,18 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
 
-         S.TieChoice( XO("&Language:"),
+         S.TieChoice( XXO("&Language:"),
             {
                wxT("/Locale/Language"),
                { ByColumns, mLangNames, mLangCodes }
             }
          );
 
-         S.TieChoice( XO("Location of &Manual:"), GUIManualLocation);
+         S.TieChoice( XXO("Location of &Manual:"), GUIManualLocation);
 
-         S.TieChoice( XO("Th&eme:"), GUITheme);
+         S.TieChoice( XXO("Th&eme:"), GUITheme);
 
-         S.TieChoice( XO("Meter dB &range:"),
+         S.TieChoice( XXO("Meter dB &range:"),
             {
                ENV_DB_KEY,
                { ByColumns, mRangeChoices, mRangeCodes },
@@ -208,7 +208,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 //      S.AddSpace(10);
 // JKC: This is a silly preference.  Kept here as a reminder that we may
 // later want to have configurable button order.
-//      S.TieCheckBox(XO("&Ergonomic order of Transport Toolbar buttons"),
+//      S.TieCheckBox(XXO("&Ergonomic order of Transport Toolbar buttons"),
 //                    wxT("/GUI/ErgonomicTransportButtons"),
 //                    true);
 
@@ -218,31 +218,31 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(XO("Options"));
    {
       // Start wording of options with a verb, if possible.
-      S.TieCheckBox(XO("Show 'How to Get &Help' at launch"),
+      S.TieCheckBox(XXO("Show 'How to Get &Help' at launch"),
                     {wxT("/GUI/ShowSplashScreen"),
                      true});
-      S.TieCheckBox(XO("Show e&xtra menus"),
+      S.TieCheckBox(XXO("Show e&xtra menus"),
                     {wxT("/GUI/ShowExtraMenus"),
                      false});
 #ifdef EXPERIMENTAL_THEME_PREFS
       // We do not want to make this option mainstream.  It's a 
       // convenience for developers.
-      S.TieCheckBox(XO("Show alternative &styling (Mac vs PC)"),
+      S.TieCheckBox(XXO("Show alternative &styling (Mac vs PC)"),
                     {wxT("/GUI/ShowMac"),
                      false});
 #endif
-      S.TieCheckBox(XO("&Beep on completion of longer activities"),
+      S.TieCheckBox(XXO("&Beep on completion of longer activities"),
                     {wxT("/GUI/BeepOnCompletion"),
                      false});
-      S.TieCheckBox(XO("Re&tain labels if selection snaps to a label"),
+      S.TieCheckBox(XXO("Re&tain labels if selection snaps to a label"),
                     {wxT("/GUI/RetainLabels"),
                      false});
-      S.TieCheckBox(XO("B&lend system and Audacity theme"),
+      S.TieCheckBox(XXO("B&lend system and Audacity theme"),
                     {wxT("/GUI/BlendThemes"),
                      true});
 #ifndef __WXMAC__
       /* i18n-hint: RTL stands for 'Right to Left'  */
-      S.TieCheckBox(XO("Use mostly Left-to-Right layouts in RTL languages"),
+      S.TieCheckBox(XXO("Use mostly Left-to-Right layouts in RTL languages"),
          {"/GUI/RtlWorkaround",
           true});
 #endif
@@ -251,10 +251,10 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Timeline"));
    {
-      S.TieCheckBox(XO("Show Timeline Tooltips"),
+      S.TieCheckBox(XXO("Show Timeline Tooltips"),
                     {wxT("/QuickPlay/ToolTips"),
                      true});
-      S.TieCheckBox(XO("Show Scrub Ruler"),
+      S.TieCheckBox(XXO("Show Scrub Ruler"),
                     {wxT("/QuickPlay/ScrubbingEnabled"),
                      false});
    }

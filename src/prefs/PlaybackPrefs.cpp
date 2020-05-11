@@ -87,7 +87,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          S.NameSuffix(suffix)
-            .TieNumericTextBox(XO("&Length:"),
+            .TieNumericTextBox(XXO("&Length:"),
                                  {wxT("/AudioIO/EffectsPreviewLen"),
                                   6.0},
                                  9);
@@ -103,14 +103,14 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          S.NameSuffix(suffix)
-            .TieNumericTextBox(XO("&Before cut region:"),
+            .TieNumericTextBox(XXO("&Before cut region:"),
                                  {wxT("/AudioIO/CutPreviewBeforeLen"),
                                   2.0},
                                  9);
          S.AddUnits(XO("seconds"));
 
          S.NameSuffix(suffix)
-            .TieNumericTextBox(XO("&After cut region:"),
+            .TieNumericTextBox(XXO("&After cut region:"),
                                  {wxT("/AudioIO/CutPreviewAfterLen"),
                                   1.0},
                                  9);
@@ -125,14 +125,14 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          S.NameSuffix(suffix)
-            .TieNumericTextBox(XO("&Short period:"),
+            .TieNumericTextBox(XXO("&Short period:"),
                                  {wxT("/AudioIO/SeekShortPeriod"),
                                   1.0},
                                  9);
          S.AddUnits(XO("seconds"));
 
          S.NameSuffix(suffix)
-            .TieNumericTextBox(XO("Lo&ng period:"),
+            .TieNumericTextBox(XXO("Lo&ng period:"),
                                  {wxT("/AudioIO/SeekLongPeriod"),
                                   15.0},
                                  9);
@@ -146,9 +146,9 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay();
       {
-         S.TieCheckBox(XO("&Vari-Speed Play"), {"/AudioIO/VariSpeedPlay", true});
-         S.TieCheckBox(XO("&Micro-fades"), {"/AudioIO/Microfades", false});
-         S.TieCheckBox(XO("Always scrub un&pinned"),
+         S.TieCheckBox(XXO("&Vari-Speed Play"), {"/AudioIO/VariSpeedPlay", true});
+         S.TieCheckBox(XXO("&Micro-fades"), {"/AudioIO/Microfades", false});
+         S.TieCheckBox(XXO("Always scrub un&pinned"),
             {UnpinnedScrubbingPreferenceKey(),
              UnpinnedScrubbingPreferenceDefault()});
       }

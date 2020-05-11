@@ -2675,7 +2675,7 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
 
          S.AddSpace(1, 1);
 
-         mVersionCheckBox = S.AddCheckBox(XO("&Use legacy (version 3) syntax."),
+         mVersionCheckBox = S.AddCheckBox(XXO("&Use legacy (version 3) syntax."),
                                           (mVersion == 3));
       }
       S.EndMultiColumn();
@@ -2690,8 +2690,8 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
 
       S.StartHorizontalLay(wxALIGN_CENTER, 0);
       {
-         S.Id(ID_Load).AddButton(XO("&Load"));
-         S.Id(ID_Save).AddButton(XO("&Save"));
+         S.Id(ID_Load).AddButton(XXO("&Load"));
+         S.Id(ID_Save).AddButton(XXO("&Save"));
       }
       S.EndHorizontalLay();
    }
@@ -2722,7 +2722,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             }
             else
             {
-               auto prompt = XO("%s:").Format( ctrl.name );
+               auto prompt = XXO("%s:").Format( ctrl.name );
                S.AddPrompt( prompt );
 
                if (ctrl.type == NYQ_CTRL_STRING)
@@ -3264,7 +3264,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
       S.StartHorizontalLay(wxALIGN_CENTRE | wxLEFT | wxBOTTOM | wxRIGHT, 0 );
       {
          /* i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.*/
-         S.Id(wxID_OK).AddButton( XO("OK"), wxALIGN_CENTRE, true );
+         S.Id(wxID_OK).AddButton( XXO("OK"), wxALIGN_CENTRE, true );
       }
       S.EndHorizontalLay();
 

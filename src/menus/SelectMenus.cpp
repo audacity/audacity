@@ -1036,7 +1036,7 @@ BaseItemSharedPtr SelectMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    /* i18n-hint: (verb) It's an item on a menu. */
-   Menu( wxT("Select"), XO("&Select"),
+   Menu( wxT("Select"), XXO("&Select"),
       Section( "Basic",
          Command( wxT("SelectAll"), XXO("&All"), FN(OnSelectAll),
             TracksExistFlag(),
@@ -1047,7 +1047,7 @@ BaseItemSharedPtr SelectMenu()
 
          //////////////////////////////////////////////////////////////////////////
 
-         Menu( wxT("Tracks"), XO("&Tracks"),
+         Menu( wxT("Tracks"), XXO("&Tracks"),
             Command( wxT("SelAllTracks"), XXO("In All &Tracks"),
                FN(OnSelectAllTracks),
                TracksExistFlag(),
@@ -1064,7 +1064,7 @@ BaseItemSharedPtr SelectMenu()
 
          //////////////////////////////////////////////////////////////////////////
 
-         Menu( wxT("Region"), XO("R&egion"),
+         Menu( wxT("Region"), XXO("R&egion"),
             Section( "",
                Command( wxT("SetLeftSelection"), XXO("&Left at Playback Position"),
                   FN(OnSetLeftSelection), TracksExistFlag(),
@@ -1100,7 +1100,7 @@ BaseItemSharedPtr SelectMenu()
          //////////////////////////////////////////////////////////////////////////
 
    #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         Menu( wxT("Spectral"), XO("S&pectral"),
+         Menu( wxT("Spectral"), XXO("S&pectral"),
             Command( wxT("ToggleSpectralSelection"),
                XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection),
                TracksExistFlag(), wxT("Q") ),
@@ -1145,7 +1145,7 @@ BaseItemSharedPtr ExtraSelectionMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Select"), XO("&Selection"),
+   Menu( wxT("Select"), XXO("&Selection"),
       Command( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
          AlwaysEnabledFlag ),
       Command( wxT("SnapToNearest"), XXO("Snap-To &Nearest"),
@@ -1201,7 +1201,7 @@ BaseItemSharedPtr CursorMenu()
    // than 'Skip'.
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Cursor"), XO("&Cursor to"),
+   Menu( wxT("Cursor"), XXO("&Cursor to"),
       Command( wxT("CursSelStart"), XXO("Selection Star&t"),
          FN(OnCursorSelStart),
          TimeSelectedFlag(),
@@ -1240,7 +1240,7 @@ BaseItemSharedPtr ExtraCursorMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Cursor"), XO("&Cursor"),
+   Menu( wxT("Cursor"), XXO("&Cursor"),
       Command( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
          TracksExistFlag() | TrackPanelHasFocus(),
          wxT("Left\twantKeyup\tallowDup") ),
@@ -1272,7 +1272,7 @@ BaseItemSharedPtr ExtraSeekMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Seek"), XO("See&k"),
+   Menu( wxT("Seek"), XXO("See&k"),
       Command( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
          FN(OnSeekLeftShort), AudioIOBusyFlag(), wxT("Left\tallowDup") ),
       Command( wxT("SeekRightShort"),

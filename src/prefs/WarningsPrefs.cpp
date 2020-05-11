@@ -69,29 +69,29 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Show Warnings/Prompts for"));
    {
-      S.TieCheckBox(XO("Saving &projects"),
+      S.TieCheckBox(XXO("Saving &projects"),
                     {wxT("/Warnings/FirstProjectSave"),
                      true});
-      S.TieCheckBox(XO("Saving &empty project"),
+      S.TieCheckBox(XXO("Saving &empty project"),
                     {wxT("/GUI/EmptyCanBeDirty"),
                      true});
-      S.TieCheckBox(XO("&Low disk space at launch or new project"),
+      S.TieCheckBox(XXO("&Low disk space at launch or new project"),
                     {wxT("/Warnings/DiskSpaceWarning"),
                      true});
-      S.TieCheckBox(XO("Mixing down to &mono during export"),
+      S.TieCheckBox(XXO("Mixing down to &mono during export"),
                     {wxT("/Warnings/MixMono"),
                      true});
-      S.TieCheckBox(XO("Mixing down to &stereo during export"),
+      S.TieCheckBox(XXO("Mixing down to &stereo during export"),
                     {wxT("/Warnings/MixStereo"),
                      true});
-      S.TieCheckBox(XO("Mixing down on export (&Custom FFmpeg or external program)"),
+      S.TieCheckBox(XXO("Mixing down on export (&Custom FFmpeg or external program)"),
                     {wxT("/Warnings/MixUnknownChannels"),
                      true});
-      S.TieCheckBox(XO("Missing file &name extension during export"),
+      S.TieCheckBox(XXO("Missing file &name extension during export"),
                     {wxT("/Warnings/MissingExtension"),
                      true});
 #ifdef EXPERIMENTAL_OD_DATA
-      S.TieCheckBox(XO("&Importing uncompressed audio files"),
+      S.TieCheckBox(XXO("&Importing uncompressed audio files"),
                     {wxT("/Warnings/CopyOrEditUncompressedDataAsk"),
                      true});
 #endif

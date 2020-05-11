@@ -317,7 +317,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::THREE_TRAILING_ZEROES,
                MIN_Percentage / 100.0, ((MAX_Percentage / 100.0) + 1)
             )
-            .AddTextBox(XO("&Speed Multiplier:"), wxT(""), 12);
+            .AddTextBox(XXO("&Speed Multiplier:"), wxT(""), 12);
 
          mpTextCtrl_PercentChange = S.Id(ID_PercentChange)
             .Validator<FloatingPointValidator<double>>(
@@ -325,7 +325,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::THREE_TRAILING_ZEROES,
                MIN_Percentage, MAX_Percentage
             )
-            .AddTextBox(XO("Percent C&hange:"), wxT(""), 12);
+            .AddTextBox(XXO("Percent C&hange:"), wxT(""), 12);
       }
       S.EndMultiColumn();
 
@@ -350,14 +350,14 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
             .Name(XO("From rpm"))
             .MinSize( { 100, -1 } )
             /* i18n-hint: changing a quantity "from" one value "to" another */
-            .AddChoice(XO("&from"), kVinylStrings);
+            .AddChoice(XXO("&from"), kVinylStrings);
 
          mpChoice_ToVinyl = S.Id(ID_ToVinyl)
             /* i18n-hint: changing a quantity "from" one value "to" another */
             .Name(XO("To rpm"))
             .MinSize( { 100, -1 } )
             /* i18n-hint: changing a quantity "from" one value "to" another */
-            .AddChoice(XO("&to"), kVinylStrings);
+            .AddChoice(XXO("&to"), kVinylStrings);
       }
       S.EndMultiColumn();
 
@@ -366,7 +366,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(2, wxALIGN_LEFT);
          {
-            S.AddPrompt(XO("C&urrent Length:"));
+            S.AddPrompt(XXO("C&urrent Length:"));
 
             mpFromLengthCtrl = safenew
                   NumericTextCtrl(S.GetParent(), wxID_ANY,
@@ -384,7 +384,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                .Position(wxALIGN_LEFT)
                .AddWindow(mpFromLengthCtrl);
 
-            S.AddPrompt(XO("&New Length:"));
+            S.AddPrompt(XXO("&New Length:"));
 
             mpToLengthCtrl = safenew
                   NumericTextCtrl(S.GetParent(), ID_ToLength,

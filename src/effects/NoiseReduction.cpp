@@ -1487,26 +1487,26 @@ const ControlInfo *controlInfo() {
    static const ControlInfo table[] = {
          ControlInfo(&EffectNoiseReduction::Settings::mNoiseGain,
          0.0, 48.0, 48, wxT("%d"), true,
-         XO("&Noise reduction (dB):"), XO("Noise reduction")),
+         XXO("&Noise reduction (dB):"), XO("Noise reduction")),
          ControlInfo(&EffectNoiseReduction::Settings::mNewSensitivity,
          0.0, 24.0, 48, wxT("%.2f"), false,
-         XO("&Sensitivity:"), XO("Sensitivity")),
+         XXO("&Sensitivity:"), XO("Sensitivity")),
 #ifdef ATTACK_AND_RELEASE
          ControlInfo(&EffectNoiseReduction::Settings::mAttackTime,
          0, 1.0, 100, wxT("%.2f"), false,
-         XO("Attac&k time (secs):"), XO("Attack time")),
+         XXO("Attac&k time (secs):"), XO("Attack time")),
          ControlInfo(&EffectNoiseReduction::Settings::mReleaseTime,
          0, 1.0, 100, wxT("%.2f"), false,
-         XO("R&elease time (secs):"), XO("Release time")),
+         XXO("R&elease time (secs):"), XO("Release time")),
 #endif
          ControlInfo(&EffectNoiseReduction::Settings::mFreqSmoothingBands,
          0, 12, 12, wxT("%d"), true,
-         XO("&Frequency smoothing (bands):"), XO("Frequency smoothing")),
+         XXO("&Frequency smoothing (bands):"), XO("Frequency smoothing")),
 
 #ifdef ADVANCED_SETTINGS
          ControlInfo(&EffectNoiseReduction::Settings::mOldSensitivity,
          -20.0, 20.0, 4000, wxT("%.2f"), false,
-         XO("Sensiti&vity (dB):"), XO("Old Sensitivity")),
+         XXO("Sensiti&vity (dB):"), XO("Old Sensitivity")),
          // add here
 #endif
    };
@@ -1721,7 +1721,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.AddVariableText(XO(
 "Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:"));
       //m_pButton_GetProfile =
-      S.Id(ID_BUTTON_GETPROFILE).AddButton(XO("&Get Noise Profile"));
+      S.Id(ID_BUTTON_GETPROFILE).AddButton(XXO("&Get Noise Profile"));
    }
    S.EndStatic();
 
@@ -1751,18 +1751,18 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          ,
          wxALIGN_CENTER_HORIZONTAL);
       {
-         S.AddPrompt(XO("Noise:"));
+         S.AddPrompt(XXO("Noise:"));
          mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)
                /* i18n-hint: Translate differently from "Residue" ! */
-               .AddRadioButton(XO("Re&duce"));
+               .AddRadioButton(XXO("Re&duce"));
 #ifdef ISOLATE_CHOICE
          mKeepNoise = S.Id(ID_RADIOBUTTON_KEEPNOISE)
-               .AddRadioButtonToGroup(XO("&Isolate"));
+               .AddRadioButtonToGroup(XXO("&Isolate"));
 #endif
 #ifdef RESIDUE_CHOICE
          mResidue = S.Id(ID_RADIOBUTTON_RESIDUE)
                /* i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" ! */
-               .AddRadioButtonToGroup(XO("Resid&ue"));
+               .AddRadioButtonToGroup(XXO("Resid&ue"));
 #endif
       }
       S.EndMultiColumn();
@@ -1775,7 +1775,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         S.TieChoice(XO("&Window types:"),
+         S.TieChoice(XXO("&Window types:"),
             mTempSettings.mWindowTypes,
             []{
                TranslatableStrings windowTypeChoices;
@@ -1785,7 +1785,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
             }()
          );
 
-         S.TieChoice(XO("Window si&ze:"),
+         S.TieChoice(XXO("Window si&ze:"),
             mTempSettings.mWindowSizeChoice,
             {
                XO("8") ,
@@ -1803,7 +1803,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
             }
          );
 
-         S.TieChoice(XO("S&teps per window:"),
+         S.TieChoice(XXO("S&teps per window:"),
             mTempSettings.mStepsPerWindowChoice,
             {
                XO("2") ,
@@ -1816,7 +1816,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          );
 
          S.Id(ID_CHOICE_METHOD)
-         .TieChoice(XO("Discrimination &method:"),
+         .TieChoice(XXO("Discrimination &method:"),
             mTempSettings.mMethod,
             []{
                TranslatableStrings methodChoices;

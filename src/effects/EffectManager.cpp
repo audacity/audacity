@@ -405,10 +405,10 @@ EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
       S.StartTwoColumn();
       S.SetStretchyCol(1);
       {
-         S.AddPrompt(XO("Type:"));
+         S.AddPrompt(XXO("Type:"));
          mType = S.Id(ID_Type).AddChoice( {}, {}, 0 );
 
-         S.AddPrompt(XO("&Preset:"));
+         S.AddPrompt(XXO("&Preset:"));
          mPresets = S
             .Style( wxLB_SINGLE | wxLB_NEEDED_SB )
             .AddListBox( {} );

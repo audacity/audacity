@@ -261,7 +261,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
             {
                wxTextCtrl *t;
                t = S.TieNumericTextBox(
-                  XO("&Buffer Size (8 to %d) samples:")
+                  XXO("&Buffer Size (8 to %d) samples:")
                      .Format( DEFAULT_BLOCKSIZE ),
                   mBufferSize,
                   12);
@@ -284,7 +284,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(XO("Enable &compensation"),
+               S.TieCheckBox(XXO("Enable &compensation"),
                              mUseLatency);
             }
             S.EndHorizontalLay();
@@ -298,7 +298,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
 " A basic text-only method is also available. "
 " Reopen the effect for this to take effect."),
                false, 0, 650);
-            S.TieCheckBox(XO("Enable &graphical interface"),
+            S.TieCheckBox(XXO("Enable &graphical interface"),
                           mUseGUI);
          }
          S.EndStatic();

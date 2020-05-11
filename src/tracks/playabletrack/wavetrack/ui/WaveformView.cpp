@@ -38,7 +38,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Waveform,
-   { wxT("Waveform"), XO("Wa&veform") }
+   { wxT("Waveform"), XXO("Wa&veform") }
 };
 
 static WaveTrackSubViewType::RegisteredType reg{ sType };
@@ -1096,7 +1096,7 @@ using ValueFinder = std::function< int( WaveTrack& ) >;
 
 const TranslatableString GetWaveColorStr(int colorIndex)
 {
-   return XO("Instrument %i").Format( colorIndex+1 );
+   return XXO("Instrument %i").Format( colorIndex+1 );
 }
 }
 

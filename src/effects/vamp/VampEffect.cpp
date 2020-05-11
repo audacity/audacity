@@ -558,7 +558,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
             if (!programs.empty())
             {
-               S.AddPrompt(XO("Program"));
+               S.AddPrompt(XXO("Program"));
 
                S.Id(ID_Program);
                mProgram = S.Name(XO("Program"))
@@ -600,7 +600,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                }
                /* i18n-hint: An item name introducing a value, which is not part of the string but
                appears in a following text box window; translate with appropriate punctuation */
-               S.AddPrompt(XO("%s:").Format( labelText ));
+               S.AddPrompt(XXO("%s:").Format( labelText ));
 
                if (mParameters[p].isQuantized &&
                    mParameters[p].quantizeStep == 1.0 &&

@@ -152,7 +152,7 @@ void RegisterMenuItems()
    using namespace MenuTable;
    static AttachedItem sAttachment{ wxT("Tools"),
       ( FinderScope( findme ), Section( wxT("NyquistWorkBench"),
-         Command( wxT("NyqBench"), XO("&Nyquist Workbench..."),
+         Command( wxT("NyqBench"), XXO("&Nyquist Workbench..."),
             static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench),
             AudioIONotBusyFlag())
       ) )

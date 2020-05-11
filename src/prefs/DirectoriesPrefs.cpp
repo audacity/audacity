@@ -103,7 +103,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
          S.SetStretchyCol(1);
 
          S.Id(TempDirID);
-         mTempDir = S.TieTextBox(XO("&Location:"),
+         mTempDir = S.TieTextBox(XXO("&Location:"),
                                  {wxT("/Directories/TempDir"),
                                   wxT("")},
                                  30);
@@ -114,7 +114,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
          S.Prop(0).AddFixedText(XO("Free Space:"));
          mFreeSpace = S.Prop(0).AddVariableText( {} );
          S.Prop(10).AddSpace( 10 );
-         S.Id(ChooseButtonID).Prop(0).AddButton(XO("C&hoose..."));
+         S.Id(ChooseButtonID).Prop(0).AddButton(XXO("C&hoose..."));
       }
 
    }

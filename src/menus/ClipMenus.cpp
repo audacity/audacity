@@ -831,7 +831,7 @@ BaseItemSharedPtr ClipSelectMenu()
 
    static BaseItemSharedPtr menu {
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Clip"), XO("Clip B&oundaries"),
+   Menu( wxT("Clip"), XXO("Clip B&oundaries"),
       Command( wxT("SelPrevClipBoundaryToCursor"),
          XXO("Pre&vious Clip Boundary to Cursor"),
          FN(OnSelectPrevClipBoundaryToCursor),

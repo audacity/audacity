@@ -768,7 +768,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                MIN_Threshold, MAX_Threshold
             )
             .NameSuffix(XO("db"))
-            .AddTextBox(XO("&Threshold:"), wxT(""), 0);
+            .AddTextBox(XXO("&Threshold:"), wxT(""), 0);
          S.AddUnits(XO("dB"));
 
          // Ignored silence
@@ -777,7 +777,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Minimum, MAX_Minimum)
             .NameSuffix(XO("seconds"))
-            .AddTextBox(XO("&Duration:"), wxT(""), 12);
+            .AddTextBox(XXO("&Duration:"), wxT(""), 12);
          S.AddUnits(XO("seconds"));
       }
       S.EndMultiColumn();
@@ -806,7 +806,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                MIN_Truncate, MAX_Truncate
             )
             .NameSuffix(XO("seconds"))
-            .AddTextBox(XO("Tr&uncate to:"), wxT(""), 12);
+            .AddTextBox(XXO("Tr&uncate to:"), wxT(""), 12);
          S.AddUnits(XO("seconds"));
 
          mSilenceCompressPercentT = S.Validator<FloatingPointValidator<double>>(
@@ -815,14 +815,14 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
                MIN_Compress, MAX_Compress
             )
             .NameSuffix(XO("%"))
-            .AddTextBox(XO("C&ompress to:"), wxT(""), 12);
+            .AddTextBox(XXO("C&ompress to:"), wxT(""), 12);
          S.AddUnits(XO("%"));
       }
       S.EndMultiColumn();
 
       S.StartMultiColumn(2, wxALIGN_CENTER_HORIZONTAL);
       {
-         mIndependent = S.AddCheckBox(XO("Trunc&ate tracks independently"),
+         mIndependent = S.AddCheckBox(XXO("Trunc&ate tracks independently"),
             mbIndependent);
       }
    S.EndMultiColumn();

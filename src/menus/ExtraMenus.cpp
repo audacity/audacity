@@ -160,7 +160,7 @@ BaseItemSharedPtr ExtraMenu()
       []{ return gPrefs->ReadBool(wxT("/GUI/ShowExtraMenus"), false); };
    static BaseItemSharedPtr menu{
       ConditionalItems( wxT("Optional"),
-         pred, Menu( wxT("Extra"), XO("Ext&ra"), extraItems ) )
+         pred, Menu( wxT("Extra"), XXO("Ext&ra"), extraItems ) )
    };
    return menu;
 }
@@ -175,7 +175,7 @@ BaseItemSharedPtr ExtraMixerMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Mixer"), XO("Mi&xer"),
+   Menu( wxT("Mixer"), XXO("Mi&xer"),
       Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
          FN(OnOutputGain), AlwaysEnabledFlag ),
       Command( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
@@ -197,7 +197,7 @@ BaseItemSharedPtr ExtraDeviceMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Device"), XO("De&vice"),
+   Menu( wxT("Device"), XXO("De&vice"),
       Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
          FN(OnInputDevice),
          AudioIONotBusyFlag(), wxT("Shift+I") ),

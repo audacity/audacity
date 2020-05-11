@@ -1242,25 +1242,27 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
    if (undoManager.UndoAvailable()) {
       undoManager.GetShortDescription(cur, &desc);
       commandManager.Modify(wxT("Undo"),
-                             XO("&Undo %s").Format( desc ));
+         XXO("&Undo %s")
+            .Format( desc ));
       commandManager.Enable(wxT("Undo"),
          ProjectHistory::Get( project ).UndoAvailable());
    }
    else {
       commandManager.Modify(wxT("Undo"),
-                            XO("&Undo"));
+                            XXO("&Undo"));
    }
 
    if (undoManager.RedoAvailable()) {
       undoManager.GetShortDescription(cur+1, &desc);
       commandManager.Modify(wxT("Redo"),
-                             XO("&Redo %s").Format( desc));
+         XXO("&Redo %s")
+            .Format( desc ));
       commandManager.Enable(wxT("Redo"),
          ProjectHistory::Get( project ).RedoAvailable());
    }
    else {
       commandManager.Modify(wxT("Redo"),
-                            XO("&Redo"));
+                            XXO("&Redo"));
       commandManager.Enable(wxT("Redo"), false);
    }
 }

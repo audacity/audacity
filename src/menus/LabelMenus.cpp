@@ -602,7 +602,7 @@ BaseItemSharedPtr LabelEditMenus()
    ( FinderScope{ findCommandHandler },
    Items( wxT("LabelEditMenus"),
    
-   Menu( wxT("Labels"), XO("&Labels"),
+   Menu( wxT("Labels"), XXO("&Labels"),
       Section( "",
          Command( wxT("EditLabels"), XXO("&Edit Labels..."), FN(OnEditLabels),
                     AudioIONotBusyFlag() )
@@ -635,7 +635,7 @@ BaseItemSharedPtr LabelEditMenus()
 
    /////////////////////////////////////////////////////////////////////////////
 
-   Menu( wxT("Labeled"), XO("La&beled Audio"),
+   Menu( wxT("Labeled"), XXO("La&beled Audio"),
       Section( "",
          /* i18n-hint: (verb)*/
          Command( wxT("CutLabels"), XXO("&Cut"), FN(OnCutLabels),

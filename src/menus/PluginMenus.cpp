@@ -663,7 +663,7 @@ void AddEffectMenuItemGroup(
             }
             // Done collecting
             table.push_back( Menu( wxEmptyString,
-               XO("Plug-in %d to %d").Format( groupNdx + 1, end ),
+               XXO("Plug-in %d to %d").Format( groupNdx + 1, end ),
                std::move( temp1 )
             ) );
             items = max;
@@ -711,7 +711,7 @@ BaseItemSharedPtr GenerateMenu()
 
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Generate"), XO("&Generate"),
+   Menu( wxT("Generate"), XXO("&Generate"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Section( "Manage",
          Command( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
@@ -751,7 +751,7 @@ BaseItemSharedPtr EffectMenu()
 
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Effect"), XO("Effe&ct"),
+   Menu( wxT("Effect"), XXO("Effe&ct"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Section( "Manage",
          Command( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."),
@@ -804,7 +804,7 @@ BaseItemSharedPtr AnalyzeMenu()
 
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Analyze"), XO("&Analyze"),
+   Menu( wxT("Analyze"), XXO("&Analyze"),
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Section( "Manage",
          Command( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
@@ -838,7 +838,7 @@ BaseItemSharedPtr ToolsMenu()
 
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Tools"), XO("T&ools"),
+   Menu( wxT("Tools"), XXO("T&ools"),
       Section( "Manage",
    #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
          Command( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."),
@@ -851,7 +851,7 @@ BaseItemSharedPtr ToolsMenu()
          Command( wxT("ManageMacros"), XXO("&Macros..."),
             FN(OnManageMacros), AudioIONotBusyFlag() ),
 
-         Menu( wxT("Macros"), XO("&Apply Macro"),
+         Menu( wxT("Macros"), XXO("&Apply Macro"),
             // Palette has no access key to ensure first letter navigation of
             // sub menu
             Section( "",
@@ -925,7 +925,7 @@ BaseItemSharedPtr ExtraScriptablesIMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-   Menu( wxT("Scriptables1"), XO("Script&ables I"),
+   Menu( wxT("Scriptables1"), XXO("Script&ables I"),
       // Note that the PLUGIN_SYMBOL must have a space between words,
       // whereas the short-form used here must not.
       // (So if you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
@@ -977,7 +977,7 @@ BaseItemSharedPtr ExtraScriptablesIIMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-   Menu( wxT("Scriptables2"), XO("Scripta&bles II"),
+   Menu( wxT("Scriptables2"), XXO("Scripta&bles II"),
       Command( wxT("Select"), XXO("Select..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("SetTrack"), XXO("Set Track..."), FN(OnAudacityCommand),

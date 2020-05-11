@@ -393,9 +393,9 @@ BaseItemSharedPtr ViewMenu()
 
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("View"), XO("&View"),
+   Menu( wxT("View"), XXO("&View"),
       Section( "Basic",
-         Menu( wxT("Zoom"), XO("&Zoom"),
+         Menu( wxT("Zoom"), XXO("&Zoom"),
             Section( "",
                Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
                   ZoomInAvailableFlag(), wxT("Ctrl+1") ),
@@ -415,7 +415,7 @@ BaseItemSharedPtr ViewMenu()
             )
          ),
 
-         Menu( wxT("TrackSize"), XO("T&rack Size"),
+         Menu( wxT("TrackSize"), XXO("T&rack Size"),
             Command( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
                TracksExistFlag(), wxT("Ctrl+F") ),
             Command( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
@@ -426,7 +426,7 @@ BaseItemSharedPtr ViewMenu()
                FN(OnExpandAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+X") )
          ),
 
-         Menu( wxT("SkipTo"), XO("Sk&ip to"),
+         Menu( wxT("SkipTo"), XXO("Sk&ip to"),
             Command( wxT("SkipSelStart"), XXO("Selection Sta&rt"),
                FN(OnGoSelStart), TimeSelectedFlag(),
                Options{ wxT("Ctrl+["), XO("Skip to Selection Start") } ),

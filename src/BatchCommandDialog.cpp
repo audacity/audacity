@@ -88,23 +88,23 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
       S.StartMultiColumn(4, wxEXPAND);
       {
          S.SetStretchyCol(1);
-         mCommand = S.AddTextBox(XO("&Command"), wxT(""), 20);
+         mCommand = S.AddTextBox(XXO("&Command"), wxT(""), 20);
          mCommand->SetEditable(false);
          mEditParams = S.Id(EditParamsButtonID)
             .Disable() // disable button as box is empty
-            .AddButton(XO("&Edit Parameters"));
+            .AddButton(XXO("&Edit Parameters"));
          mUsePreset = S.Id(UsePresetButtonID)
             .Disable() // disable button as box is empty
-            .AddButton(XO("&Use Preset"));
+            .AddButton(XXO("&Use Preset"));
       }
       S.EndMultiColumn();
 
       S.StartMultiColumn(2, wxEXPAND);
       {
          S.SetStretchyCol(1);
-         mParameters = S.AddTextBox(XO("&Parameters"), wxT(""), 0);
+         mParameters = S.AddTextBox(XXO("&Parameters"), wxT(""), 0);
          mParameters->SetEditable(false);
-         auto prompt = XO("&Details");
+         auto prompt = XXO("&Details");
          S.Prop(0).AddPrompt(prompt);
          mDetails = S
             .Name( prompt )

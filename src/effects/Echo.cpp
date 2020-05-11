@@ -177,12 +177,12 @@ void EffectEcho::PopulateOrExchange(ShuttleGui & S)
             3, &delay, NumValidatorStyle::NO_TRAILING_ZEROES,
             MIN_Delay, MAX_Delay
          )
-         .AddTextBox(XO("&Delay time (seconds):"), wxT(""), 10);
+         .AddTextBox(XXO("&Delay time (seconds):"), wxT(""), 10);
 
       S.Validator<FloatingPointValidator<double>>(
             3, &decay, NumValidatorStyle::NO_TRAILING_ZEROES,
             MIN_Decay, MAX_Decay)
-         .AddTextBox(XO("D&ecay factor:"), wxT(""), 10);
+         .AddTextBox(XXO("D&ecay factor:"), wxT(""), 10);
    }
    S.EndMultiColumn();
 }

@@ -328,12 +328,12 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
 
             mStereoIndCheckBox = S
                .Validator<wxGenericValidator>( &mStereoInd )
-               .AddCheckBox(XO("Normalize &stereo channels independently"),
+               .AddCheckBox(XXO("Normalize &stereo channels independently"),
                   mStereoInd );
 
             mDualMonoCheckBox = S
                .Validator<wxGenericValidator>( &mDualMono )
-               .AddCheckBox(XO("&Treat mono as dual-mono (recommended)"),
+               .AddCheckBox(XXO("&Treat mono as dual-mono (recommended)"),
                   mDualMono );
          }
          S.EndVerticalLay();

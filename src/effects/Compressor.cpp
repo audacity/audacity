@@ -349,11 +349,11 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxCENTER, false);
    {
       /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
-      mGainCheckBox = S.AddCheckBox(XO("Ma&ke-up gain for 0 dB after compressing"),
+      mGainCheckBox = S.AddCheckBox(XXO("Ma&ke-up gain for 0 dB after compressing"),
                                     DEF_Normalize);
       /* i18n-hint: "Compress" here means reduce variations of sound volume,
        NOT related to file-size compression; Peaks means extremes in volume */
-      mPeakCheckBox = S.AddCheckBox(XO("C&ompress based on Peaks"),
+      mPeakCheckBox = S.AddCheckBox(XXO("C&ompress based on Peaks"),
                                     DEF_UsePeak);
    }
    S.EndHorizontalLay();

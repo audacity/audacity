@@ -183,7 +183,7 @@ void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
             &repeatCount, NumValidatorStyle::DEFAULT,
             MIN_Count, 2147483647 / mProjectRate
          )
-         .AddTextBox(XO("&Number of repeats to add:"), wxT(""), 12);
+         .AddTextBox(XXO("&Number of repeats to add:"), wxT(""), 12);
    }
    S.EndHorizontalLay();
 

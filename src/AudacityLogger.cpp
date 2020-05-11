@@ -167,9 +167,9 @@ void AudacityLogger::Show(bool show)
          S.StartHorizontalLay(wxALIGN_CENTER, 0);
          {
             S.AddSpace(10, 0);
-            S.Id(LoggerID_Save).AddButton(XO("&Save..."));
-            S.Id(LoggerID_Clear).AddButton(XO("Cl&ear"));
-            S.Id(LoggerID_Close).AddButton(XO("&Close"));
+            S.Id(LoggerID_Save).AddButton(XXO("&Save..."));
+            S.Id(LoggerID_Clear).AddButton(XXO("Cl&ear"));
+            S.Id(LoggerID_Close).AddButton(XXO("&Close"));
             S.AddSpace(10, 0);
          }
          S.EndHorizontalLay();

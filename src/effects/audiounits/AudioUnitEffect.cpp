@@ -568,7 +568,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(XO("Enable &compensation"),
+               S.TieCheckBox(XXO("Enable &compensation"),
                              mUseLatency);
             }
             S.EndHorizontalLay();
@@ -588,7 +588,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieChoice(XO("Select &interface"),
+               S.TieChoice(XXO("Select &interface"),
                   mUIType,
                   {
                      XO("Full"),

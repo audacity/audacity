@@ -343,11 +343,11 @@ ChoiceSetting FileFormatsCopyOrEditSetting{
    {
       EnumValueSymbol{
          wxT("copy"),
-         XO("&Copy uncompressed files into the project (safer)")
+         XXO("&Copy uncompressed files into the project (safer)")
       },
       EnumValueSymbol{
          wxT("edit"),
-         XO("&Read uncompressed files from original location (faster)")
+         XXO("&Read uncompressed files from original location (faster)")
       },
    },
    0 // copy
@@ -356,9 +356,9 @@ ChoiceSetting FileFormatsCopyOrEditSetting{
 ChoiceSetting FileFormatsSaveWithDependenciesSetting{
    wxT("/FileFormats/SaveProjectWithDependencies"),
    {
-      { wxT("copy"), XO("&Copy all audio into project (safest)") },
-      { wxT("never"), XO("Do &not copy any audio") },
-      { wxT("ask"), XO("As&k") },
+      { wxT("copy"), XXO("&Copy all audio into project (safest)") },
+      { wxT("never"), XXO("Do &not copy any audio") },
+      { wxT("ask"), XXO("As&k") },
    },
    2 // ask
 };

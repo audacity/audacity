@@ -316,19 +316,19 @@ BEGIN_POPUP_MENU(RateMenuTable)
       }
    );
 
-   AppendCheckItem( "8000", OnRate8ID, XO("8000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "11025", OnRate11ID, XO("11025 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "16000", OnRate16ID, XO("16000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "22050", OnRate22ID, XO("22050 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "44100", OnRate44ID, XO("44100 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "48000", OnRate48ID, XO("48000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "88200", OnRate88ID, XO("88200 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "96000", OnRate96ID, XO("96000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "176400", OnRate176ID, XO("176400 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "192000", OnRate192ID, XO("192000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "352800", OnRate352ID, XO("352800 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "384000", OnRate384ID, XO("384000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
-   AppendCheckItem( "Other", OnRateOtherID, XO("&Other..."), POPUP_MENU_FN( OnRateOther ), fn );
+   AppendCheckItem( "8000", OnRate8ID, XXO("8000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "11025", OnRate11ID, XXO("11025 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "16000", OnRate16ID, XXO("16000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "22050", OnRate22ID, XXO("22050 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "44100", OnRate44ID, XXO("44100 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "48000", OnRate48ID, XXO("48000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "88200", OnRate88ID, XXO("88200 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "96000", OnRate96ID, XXO("96000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "176400", OnRate176ID, XXO("176400 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "192000", OnRate192ID, XXO("192000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "352800", OnRate352ID, XXO("352800 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "384000", OnRate384ID, XXO("384000 Hz"), POPUP_MENU_FN( OnRateChange ), fn );
+   AppendCheckItem( "Other", OnRateOtherID, XXO("&Other..."), POPUP_MENU_FN( OnRateOther ), fn );
 
 END_POPUP_MENU()
 
@@ -418,7 +418,7 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
          S.SetBorder(10);
          S.StartHorizontalLay(wxEXPAND, false);
          {
-            cb = S.AddCombo(XO("New sample rate (Hz):"),
+            cb = S.AddCombo(XXO("New sample rate (Hz):"),
                rate,
                rates);
 #if defined(__WXMAC__)
@@ -544,7 +544,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       Append( []( My &table ) -> Registry::BaseItemPtr {
          if ( WaveTrackSubViews::slots() > 1 )
             return std::make_unique<Entry>(
-               "MultiView", Entry::CheckItem, OnMultiViewID, XO("&Multi-view"),
+               "MultiView", Entry::CheckItem, OnMultiViewID, XXO("&Multi-view"),
                POPUP_MENU_FN( OnMultiView ),
                table,
                []( PopupMenuHandler &handler, wxMenu &menu, int id ){
@@ -612,28 +612,28 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    BeginSection( "Channels" );
    // If these are enabled again, choose a hot key for Mono that does not conflict
    // with Multi View
-   //   AppendRadioItem(OnChannelMonoID, XO("&Mono"),
+   //   AppendRadioItem(OnChannelMonoID, XXO("&Mono"),
    //      POPUP_MENU_FN( OnChannelChange ),
    //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
    //         menu.Enable( id, isMono( handler ) );
    //         menu.Check( id, findTrack( handler ).GetChannel() == Track::MonoChannel );
    //      }
    //   );
-   //   AppendRadioItem(OnChannelLeftID, XO("&Left Channel"),
+   //   AppendRadioItem(OnChannelLeftID, XXO("&Left Channel"),
    //      POPUP_MENU_FN( OnChannelChange ),
    //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
    //         menu.Enable( id, isMono( handler ) );
    //         menu.Check( id, findTrack( handler ).GetChannel() == Track::LeftChannel );
    //      }
    //   );
-   //   AppendRadioItem(OnChannelRightID, XO("R&ight Channel"),
+   //   AppendRadioItem(OnChannelRightID, XXO("R&ight Channel"),
    //      POPUP_MENU_FN( OnChannelChange ),
    //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
    //         menu.Enable( id, isMono( handler ) );
    //         menu.Check( id, findTrack( handler ).GetChannel() == Track::RightChannel );
    //      }
    //   );
-      AppendItem( "MakeStereo", OnMergeStereoID, XO("Ma&ke Stereo Track"),
+      AppendItem( "MakeStereo", OnMergeStereoID, XXO("Ma&ke Stereo Track"),
          POPUP_MENU_FN( OnMergeStereo ),
          []( PopupMenuHandler &handler, wxMenu &menu, int id ){
             bool canMakeStereo = !isUnsafe( handler ) && isMono( handler );
@@ -653,7 +653,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          }
       );
 
-      AppendItem( "Swap", OnSwapChannelsID, XO("Swap Stereo &Channels"),
+      AppendItem( "Swap", OnSwapChannelsID, XXO("Swap Stereo &Channels"),
          POPUP_MENU_FN( OnSwapChannels ),
          []( PopupMenuHandler &handler, wxMenu &menu, int id ){
             auto &track =
@@ -669,12 +669,12 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          menu.Enable( id, !isMono( handler ) && !isUnsafe( handler ) );
       };
 
-      AppendItem( "Split", OnSplitStereoID, XO("Spl&it Stereo Track"),
+      AppendItem( "Split", OnSplitStereoID, XXO("Spl&it Stereo Track"),
          POPUP_MENU_FN( OnSplitStereo ), enableSplitStereo );
    // DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
    #ifndef EXPERIMENTAL_DA
       AppendItem( "SplitToMono", OnSplitStereoMonoID,
-         XO("Split Stereo to Mo&no"), POPUP_MENU_FN( OnSplitStereoMono ),
+         XXO("Split Stereo to Mo&no"), POPUP_MENU_FN( OnSplitStereoMono ),
          enableSplitStereo );
    #endif
    EndSection();

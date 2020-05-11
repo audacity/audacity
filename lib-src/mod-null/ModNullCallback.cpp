@@ -146,12 +146,12 @@ void RegisterMenuItems()
       ( FinderScope( ident ), Section( wxT("NullModule"),
          Command(
             _T("A New Command"), // internal name
-            XO("1st Experimental Command..."), //displayed name
+            XXO("1st Experimental Command..."), //displayed name
             ModNullFN( OnFuncFirst ),
             AudioIONotBusyFlag() ),
          Command(
             _T("Another New Command"),
-            XO("2nd Experimental Command"),
+            XXO("2nd Experimental Command"),
             ModNullFN( OnFuncSecond ),
             AudioIONotBusyFlag() )
       ) )

@@ -29,9 +29,13 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 #define _TS( s ) GetCustomSubstitution( s )
 
 // Marks strings for extraction only... use .Translate() to translate.
+// '&', preceding menu accelerators, should NOT occur in the argument.
 #define XO(s)  (TranslatableString{ wxT(s), {} })
-// XXO is used instead of XO in some places, for reasons that are
-// no longer important.  The two are equivalent now.
+
+// Marks strings for extraction only, where '&', preceding men accelerators, MAY
+// occur.
+// For now, expands eactly as macro XO does, but in future there will be a
+// type distinction.
 #define XXO(s)  XO(s)
 
 #ifdef _

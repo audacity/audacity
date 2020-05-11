@@ -80,34 +80,34 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Behaviors"));
    {
-      S.TieCheckBox(XO("&Select all audio, if selection required"),
+      S.TieCheckBox(XXO("&Select all audio, if selection required"),
                     {wxT("/GUI/SelectAllOnNone"),
                      false});
       /* i18n-hint: Cut-lines are lines that can expand to show the cut audio.*/
-      S.TieCheckBox(XO("Enable cut &lines"),
+      S.TieCheckBox(XXO("Enable cut &lines"),
                     {wxT("/GUI/EnableCutLines"),
                      false});
-      S.TieCheckBox(XO("Enable &dragging selection edges"),
+      S.TieCheckBox(XXO("Enable &dragging selection edges"),
                     {wxT("/GUI/AdjustSelectionEdges"),
                      true});
-      S.TieCheckBox(XO("Editing a clip can &move other clips"),
+      S.TieCheckBox(XXO("Editing a clip can &move other clips"),
                     {wxT("/GUI/EditClipCanMove"),
                      true});
-      S.TieCheckBox(XO("\"Move track focus\" c&ycles repeatedly through tracks"),
+      S.TieCheckBox(XXO("\"Move track focus\" c&ycles repeatedly through tracks"),
                     {wxT("/GUI/CircularTrackNavigation"),
                      false});
-      S.TieCheckBox(XO("&Type to create a label"),
+      S.TieCheckBox(XXO("&Type to create a label"),
                     {wxT("/GUI/TypeToCreateLabel"),
                      false});
-      S.TieCheckBox(XO("Use dialog for the &name of a new label"),
+      S.TieCheckBox(XXO("Use dialog for the &name of a new label"),
                     {wxT("/GUI/DialogForNameNewLabel"),
                      false});
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
-      S.TieCheckBox(XO("Enable scrolling left of &zero"),
+      S.TieCheckBox(XXO("Enable scrolling left of &zero"),
                     {ScrollingPreferenceKey(),
                      ScrollingPreferenceDefault()});
 #endif
-      S.TieCheckBox(XO("Advanced &vertical zooming"),
+      S.TieCheckBox(XXO("Advanced &vertical zooming"),
                     {wxT("/GUI/VerticalZooming"),
                      false});
 
@@ -115,7 +115,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(2);
       {
-         S.TieChoice( XO("Solo &Button:"), TracksBehaviorsSolo);
+         S.TieChoice( XXO("Solo &Button:"), TracksBehaviorsSolo);
       }
       S.EndMultiColumn();
    }

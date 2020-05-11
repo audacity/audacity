@@ -102,30 +102,30 @@ namespace {
 const std::map< wxString, TranslatableString > SuggestedPrompts{
 
 /* i18n-hint: Audio Unit is the name of an Apple audio software protocol */
-   { wxT("AudioUnit"), XO("Audio Unit") },
+   { wxT("AudioUnit"), XXO("Audio Unit") },
 
 /* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
    (Application programming interface)
  */
-   { wxT("LADSPA"),    XO("&LADSPA") },
+   { wxT("LADSPA"),    XXO("&LADSPA") },
 
 /* i18n-hint: abbreviates
    "Linux Audio Developer's Simple Plugin API (LADSPA) version 2" */
-   { wxT("LV2"),       XO("LV&2") },
+   { wxT("LV2"),       XXO("LV&2") },
 
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
  Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
  In the translations of this and other strings, you may transliterate the
  name into another alphabet.  */
-   { wxT("Nyquist"),   XO("N&yquist") },
+   { wxT("Nyquist"),   XXO("N&yquist") },
 
 /* i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
    It is not an abbreviation for anything.  See http://vamp-plugins.org */
-   { wxT("Vamp"),      XO("&Vamp") },
+   { wxT("Vamp"),      XXO("&Vamp") },
 
 /* i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
    developed by Steinberg GmbH */
-   { wxT("VST"),       XO("V&ST") },
+   { wxT("VST"),       XXO("V&ST") },
 
 };
 
@@ -201,9 +201,9 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          wxChoice *c = S
             .MinSize()
-            .TieChoice( XO("S&ort or Group:"), EffectsGroupBy);
+            .TieChoice( XXO("S&ort or Group:"), EffectsGroupBy);
 
-         S.TieIntegerTextBox(XO("&Maximum effects per group (0 to disable):"),
+         S.TieIntegerTextBox(XXO("&Maximum effects per group (0 to disable):"),
                              {wxT("/Effects/MaxPerGroup"),
 #if defined(__WXGTK__)
                               15
@@ -220,10 +220,10 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifndef EXPERIMENTAL_EFFECT_MANAGEMENT
    S.StartStatic(XO("Plugin Options"));
    {
-      S.TieCheckBox(XO("Check for updated plugins when Audacity starts"),
+      S.TieCheckBox(XXO("Check for updated plugins when Audacity starts"),
                      wxT("/Plugins/CheckForUpdates"),
                      true);
-      S.TieCheckBox(XO("Rescan plugins next time Audacity is started"),
+      S.TieCheckBox(XXO("Rescan plugins next time Audacity is started"),
                      wxT("/Plugins/Rescan"),
                      false);
    }
@@ -233,7 +233,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    S.StartStatic(XO("Instruction Set"));
    {
-      S.TieCheckBox(XO("&Use SSE/SSE2/.../AVX"),
+      S.TieCheckBox(XXO("&Use SSE/SSE2/.../AVX"),
                     wxT("/SSE/GUI"),
                     true);
    }

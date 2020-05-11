@@ -1053,7 +1053,7 @@ BaseItemSharedPtr EditMenu()
 
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Edit"), XO("&Edit"),
+   Menu( wxT("Edit"), XXO("&Edit"),
       Section( "UndoRedo",
          Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
             AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
@@ -1088,7 +1088,7 @@ BaseItemSharedPtr EditMenu()
             NotBusyTimeAndTracksFlags, wxT("Ctrl+D") ),
 
          Section( "",
-            Menu( wxT("RemoveSpecial"), XO("R&emove Special"),
+            Menu( wxT("RemoveSpecial"), XXO("R&emove Special"),
                Section( "",
                   /* i18n-hint: (verb) Do a special kind of cut*/
                   Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
@@ -1118,7 +1118,7 @@ BaseItemSharedPtr EditMenu()
       Section( "Other",
       //////////////////////////////////////////////////////////////////////////
 
-         Menu( wxT("Clip"), XO("Clip B&oundaries"),
+         Menu( wxT("Clip"), XXO("Clip B&oundaries"),
             Section( "",
                /* i18n-hint: (verb) It's an item on a menu. */
                Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
@@ -1173,7 +1173,7 @@ BaseItemSharedPtr ExtraEditMenu()
       AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag();
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Edit"), XO("&Edit"),
+   Menu( wxT("Edit"), XXO("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          (flags | NoAutoSelect()),
          wxT("Backspace") ),

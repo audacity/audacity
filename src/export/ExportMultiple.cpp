@@ -276,15 +276,15 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartMultiColumn(4, true);
          {
             mDir = S.Id(DirID)
-               .TieTextBox(XO("Folder:"),
+               .TieTextBox(XXO("Folder:"),
                            {wxT("/Export/MultiplePath"),
                             DefaultPath},
                            64);
-            S.Id(ChooseID).AddButton(XO("Choose..."));
-            S.Id(CreateID).AddButton(XO("Create"));
+            S.Id(ChooseID).AddButton(XXO("Choose..."));
+            S.Id(CreateID).AddButton(XXO("Create"));
 
             mFormat = S.Id(FormatID)
-               .TieChoice( XO("Format:"),
+               .TieChoice( XXO("Format:"),
                {
                   wxT("/Export/MultipleFormat"),
                   {
@@ -298,7 +298,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
             S.AddVariableText( {}, false);
             S.AddVariableText( {}, false);
 
-            S.AddPrompt(XO("Options:"));
+            S.AddPrompt(XXO("Options:"));
 
             mBook = S.Id(OptionsID)
                .Style(wxBORDER_STATIC)
@@ -335,12 +335,12 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          // Row 1
          S.SetBorder(1);
          mTrack = S.Id(TrackID)
-            .AddRadioButton(XO("Tracks"));
+            .AddRadioButton(XXO("Tracks"));
 
          // Row 2
          S.SetBorder(1);
          mLabel = S.Id(LabelID)
-            .AddRadioButtonToGroup(XO("Labels"));
+            .AddRadioButtonToGroup(XXO("Labels"));
          S.SetBorder(3);
 
          S.StartMultiColumn(2, wxEXPAND);
@@ -349,7 +349,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
             // Row 3 (indented)
             S.AddVariableText(Verbatim("   "), false);
             mFirst = S.Id(FirstID)
-               .AddCheckBox(XO("Include audio before first label"), false);
+               .AddCheckBox(XXO("Include audio before first label"), false);
 
             // Row 4
             S.AddVariableText( {}, false);
@@ -380,9 +380,9 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartRadioButtonGroup({
             wxT("/Export/TrackNameWithOrWithoutNumbers"),
             {
-               { wxT("labelTrack"), XO("Using Label/Track Name") },
-               { wxT("numberBefore"), XO("Numbering before Label/Track Name") },
-               { wxT("numberAfter"), XO("Numbering after File name prefix") },
+               { wxT("labelTrack"), XXO("Using Label/Track Name") },
+               { wxT("numberBefore"), XXO("Numbering before Label/Track Name") },
+               { wxT("numberAfter"), XXO("Numbering after File name prefix") },
             },
             0 // labelTrack
          });
@@ -416,7 +416,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartHorizontalLay(wxEXPAND, false);
    {
-      mOverwrite = S.Id(OverwriteID).TieCheckBox(XO("Overwrite existing files"),
+      mOverwrite = S.Id(OverwriteID).TieCheckBox(XXO("Overwrite existing files"),
                                                  {wxT("/Export/OverwriteExisting"),
                                                   false});
    }

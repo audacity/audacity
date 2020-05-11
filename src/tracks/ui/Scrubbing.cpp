@@ -277,7 +277,7 @@ namespace {
          "Scrubbing" is variable-speed playback, ...
          "Seeking" is normal speed playback but with skips, ...
        */
-      { wxT("Scrub"),       XO("&Scrub"),           XO("Scrubbing"),
+      { wxT("Scrub"),       XXO("&Scrub"),           XO("Scrubbing"),
          CaptureNotBusyFlag() | HasWaveDataFlag(),
          &Scrubber::OnScrub,       false,      &Scrubber::Scrubs,
       },
@@ -286,7 +286,7 @@ namespace {
          "Scrubbing" is variable-speed playback, ...
          "Seeking" is normal speed playback but with skips, ...
        */
-      { wxT("Seek"),        XO("See&k"),            XO("Seeking"),
+      { wxT("Seek"),        XXO("See&k"),            XO("Seeking"),
          CaptureNotBusyFlag() | HasWaveDataFlag(),
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
@@ -295,7 +295,7 @@ namespace {
          "Scrubbing" is variable-speed playback, ...
          "Seeking" is normal speed playback but with skips, ...
        */
-      { wxT("ToggleScrubRuler"),            XO("Scrub &Ruler"),   {},
+      { wxT("ToggleScrubRuler"),            XXO("Scrub &Ruler"),   {},
          AlwaysEnabledFlag,
          &Scrubber::OnToggleScrubRuler, false,    &Scrubber::ShowsBar,
       },
@@ -1223,7 +1223,7 @@ BaseItemSharedPtr ToolbarMenu()
    static BaseItemSharedPtr menu { (
    FinderScope{ finder },
    Menu( wxT("Scrubbing"),
-      XO("Scru&bbing"),
+      XXO("Scru&bbing"),
       []{
          BaseItemPtrs ptrs;
          for (const auto &item : menuItems()) {

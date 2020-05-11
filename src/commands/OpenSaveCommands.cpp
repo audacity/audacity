@@ -44,8 +44,8 @@ void OpenProjectCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(XO("File Name:"),mFileName);
-      S.TieCheckBox(XO("Add to History"), mbAddToHistory );
+      S.TieTextBox(XXO("File Name:"),mFileName);
+      S.TieCheckBox(XXO("Add to History"), mbAddToHistory );
    }
    S.EndMultiColumn();
 }
@@ -89,9 +89,9 @@ void SaveProjectCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(XO("File Name:"),mFileName);
-      S.TieCheckBox(XO("Add to History"), mbAddToHistory );
-      S.TieCheckBox(XO("Compress"), mbCompress );
+      S.TieTextBox(XXO("File Name:"),mFileName);
+      S.TieCheckBox(XXO("Add to History"), mbAddToHistory );
+      S.TieCheckBox(XXO("Compress"), mbCompress );
    }
    S.EndMultiColumn();
 }

@@ -349,7 +349,7 @@ void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
             &mThresholdLevel, NumValidatorStyle::DEFAULT,
             MIN_Threshold, MAX_Threshold
          )
-         .AddTextBox(XO("&Threshold (lower is more sensitive):"),
+         .AddTextBox(XXO("&Threshold (lower is more sensitive):"),
                      wxT(""),
                      10);
 
@@ -364,7 +364,7 @@ void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
       mWidthT = S.Id(ID_Width)
          .Validator<IntegerValidator<int>>(
             &mClickWidth, NumValidatorStyle::DEFAULT, MIN_Width, MAX_Width)
-         .AddTextBox(XO("Max &Spike Width (higher is more sensitive):"),
+         .AddTextBox(XXO("Max &Spike Width (higher is more sensitive):"),
                      wxT(""),
                      10);
 

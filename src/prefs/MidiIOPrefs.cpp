@@ -139,14 +139,14 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       {
          S.Id(HostID);
          /* i18n-hint: (noun) */
-         mHost = S.TieChoice( XO("&Host:"),
+         mHost = S.TieChoice( XXO("&Host:"),
             {
                wxT("/MidiIO/Host"),
                { ByColumns, mHostNames, mHostLabels }
             }
          );
 
-         S.AddPrompt(XO("Using: PortMidi"));
+         S.AddPrompt(XXO("Using: PortMidi"));
       }
       S.EndMultiColumn();
    }
@@ -157,9 +157,9 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       S.StartMultiColumn(2);
       {
          S.Id(PlayID);
-         mPlay = S.AddChoice(XO("&Device:"),
+         mPlay = S.AddChoice(XXO("&Device:"),
                              {} );
-         mLatency = S.TieIntegerTextBox(XO("MIDI Synth L&atency (ms):"),
+         mLatency = S.TieIntegerTextBox(XXO("MIDI Synth L&atency (ms):"),
                                         {wxT("/MidiIO/SynthLatency"),
                                          DEFAULT_SYNTH_LATENCY}, 3);
       }
