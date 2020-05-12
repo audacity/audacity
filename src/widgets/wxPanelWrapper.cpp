@@ -13,8 +13,7 @@
 
 void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
 {
-//#ifdef __WXMAC__
-#if defined(__WXMAC__) || defined(__WXGTK__)
+#if defined(__WXMAC__) || defined(__WXGTK__) // gtk3/wx313 verified
    // Compensate for the regressions in TAB key navigation
    // due to the switch to wxWidgets 3.0.2
    if (event.GetKeyCode() == WXK_TAB) {

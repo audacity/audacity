@@ -228,8 +228,6 @@
 	<string>public.app-category.music</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
-   <key>NSRequiresAquaSystemAppearance</key>
-   <true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Audacity version ${AUDACITY_INFO_VERSION}</string>
 	<key>NSMicrophoneUsageDescription</key>

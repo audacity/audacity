@@ -195,6 +195,31 @@ if( "${wxTOOLKIT}" MATCHES "GTK." )
    pkg_check_modules( GLIB REQUIRED IMPORTED_TARGET GLOBAL ${glib} )
 endif()
 
+# Find the wx version.h header
+find_file( ver wx/version.h PATHS ${INCLUDES} NO_DEFAULT_PATH )
+if( NOT ver )
+   message( FATAL_ERROR "Unable to detect wxWidgets version" )
+endif()
+
+# Extract the version information
+file(
+   STRINGS
+      ${ver} output
+   REGEX
+      "^#define *(wxMAJOR_VERSION|wxMINOR_VERSION|wxRELEASE_NUMBER) *"
+)
+
+# And store as variables
+foreach( line ${output} )
+   string( REGEX MATCHALL "[A-Za-z0-9_]+" line "${line}" )
+   list( GET line 1 name )
+   list( GET line 2 value )
+   set( ${name} ${value} )
+endforeach()
+
+# Create version string
+set( wxVersion ${wxMAJOR_VERSION}.${wxMINOR_VERSION}.${wxRELEASE_NUMBER} CACHE INTERNAL "" )
+
 target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
 target_compile_definitions( ${TARGET} INTERFACE ${DEFINES} )
 target_compile_options( ${TARGET} INTERFACE ${COPTS} )

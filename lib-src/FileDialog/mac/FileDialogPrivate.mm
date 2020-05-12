@@ -11,7 +11,6 @@
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-#define OSFILENAME(X) ((char *) (const char *)(X).fn_str())
 // ============================================================================
 // declarations
 // ============================================================================
@@ -41,11 +40,11 @@
 #include <wx/tokenzr.h>
 #include <wx/evtloop.h>
 
-#include <wx/osx/private.h>
+#include <wx/osx/core/private.h>
 #include <wx/sysopt.h>
 #include <wx/modalhook.h>
 
-#include <mach-o/dyld.h>
+#include <AppKit/AppKit.h>
 
 // ============================================================================
 // implementation

@@ -145,12 +145,6 @@ void ToolBarResizer::OnPaint( wxPaintEvent & event )
    wxPaintDC dc( (wxWindow *) event.GetEventObject() );
 
    // Start with a clean background
-   //
-   // Under GTK, we specifically set the toolbar background to the background
-   // colour in the system theme.
-#if defined( __WXGTK__ )
-//   dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
-#endif
    dc.SetBackground( wxBrush( theTheme.Colour( clrMedium  ) ) );
    dc.Clear();
 
@@ -936,12 +930,6 @@ void ToolBar::OnPaint( wxPaintEvent & event )
    //wxPaintDC dc( (wxWindow *) event.GetEventObject() );
    wxPaintDC dc( this );
    // Start with a clean background
-   //
-   // Under GTK, we specifically set the toolbar background to the background
-   // colour in the system theme.
-#if defined( __WXGTK__ )
-   //dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
-#endif
 
    // Themed background colour.
    dc.SetBackground( wxBrush( theTheme.Colour( clrMedium  ) ) );

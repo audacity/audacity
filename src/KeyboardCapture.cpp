@@ -13,7 +13,8 @@
 #if defined(__WXMAC__)
 #include <wx/textctrl.h>
 #include <AppKit/AppKit.h>
-#include <wx/osx/private.h>
+#include <wx/osx/core/private.h>
+#include <wx/osx/cocoa/private.h>
 #elif defined(__WXGTK__)
 #include <gtk/gtk.h>
 #endif
