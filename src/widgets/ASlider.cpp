@@ -171,6 +171,7 @@ private:
    TranslatableString mLabel;
    int mWidth;
    int mHeight;
+   wxFont mFont;
 
    DECLARE_EVENT_TABLE()
 };
@@ -180,26 +181,46 @@ BEGIN_EVENT_TABLE(TipWindow, wxFrame)
 END_EVENT_TABLE()
 
 TipWindow::TipWindow(wxWindow *parent, const TranslatableStrings & labels)
-:  wxFrame(parent, wxID_ANY, wxString{}, wxDefaultPosition, wxDefaultSize,
-           wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT )
+:  wxFrame(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
+           wxFRAME_SHAPED | wxNO_BORDER | wxFRAME_NO_TASKBAR | wxFRAME_FLOAT_ON_PARENT )
 {
    SetBackgroundStyle(wxBG_STYLE_PAINT);
+   SetBackgroundColour(wxTransparentColour);
 
-   wxFont labelFont(sliderFontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mFont.SetPointSize(sliderFontSize);
+   mFont.SetFamily(wxFONTFAMILY_SWISS);
+   mFont.SetStyle(wxFONTSTYLE_NORMAL);
+   mFont.SetWeight(wxFONTWEIGHT_NORMAL);
+
    mWidth = mHeight = 0;
    for ( const auto &label : labels ) {
       int width, height;
-      GetTextExtent(label.Translation(), &width, &height, NULL, NULL, &labelFont);
-      mWidth =  std::max( mWidth,  width );
-      mHeight = std::max( mHeight, height );
+      GetTextExtent(label.Translation(), &width, &height, NULL, NULL, &mFont);
+      mWidth =  std::max(mWidth,  width);
+      mHeight = std::max(mHeight, height);
    }
 
+   // Pad to allow for curved corners
    mWidth += 8;
    mHeight += 8;
 
+#if defined(__WXMAC__)
+   // Use a bitmap region to set the shape since just adding an unfilled path
+   // will make the window transparent
+   wxBitmap shape(mWidth, mHeight);
+   wxMemoryDC dc(shape);
+
+   dc.SetPen(*wxBLACK_PEN);
+   dc.SetBrush(*wxBLACK_BRUSH);
+   dc.DrawRoundedRectangle(0, 0, mWidth, mHeight, 5);
+   dc.SelectObject(wxNullBitmap);
+
+   SetShape(wxRegion(shape, *wxWHITE));
+#else
    wxGraphicsPath path = wxGraphicsRenderer::GetDefaultRenderer()->CreatePath();
    path.AddRoundedRectangle(0, 0, mWidth, mHeight, 5);
    SetShape(path);
+#endif
 }
 
 wxSize TipWindow::GetSize() const
@@ -225,7 +246,7 @@ void TipWindow::OnPaint(wxPaintEvent & WXUNUSED(event))
    dc.SetBrush(AColor::tooltipBrush);
    dc.DrawRoundedRectangle(0, 0, mWidth, mHeight, 5);
 
-   dc.SetFont(wxFont(sliderFontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+   dc.SetFont(mFont);
    dc.SetTextForeground(AColor::tooltipPen.GetColour());
 
    int textWidth, textHeight;
@@ -639,7 +660,6 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
    // Draw the background.
    // If we are lightweight, this has already been done for us.
    if( mHW ){
-      //dc.SetBackground( wxBrush(mParent->GetBackgroundColour()) );
       dc.SetBackground( *wxTRANSPARENT_BRUSH );
       dc.Clear();
    }
@@ -697,8 +717,7 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
    wxMemoryDC dc;
    dc.SelectObject(*mBitmap);
 
-   wxColour backgroundColor = mParent->GetBackgroundColour();
-   dc.SetBackground(wxBrush(backgroundColor));
+   dc.SetBackground(wxBrush(mParent->GetBackgroundColour()));
    dc.Clear();
 
    // Draw the line along which the thumb moves.
@@ -722,11 +741,12 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
 
       // sliderFontSize is for the tooltip.
       // we need something smaller here...
-      wxFont labelFont(7, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MEDIUM);
+      wxFont labelFont(7, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
       dc.SetFont(labelFont);
 
       // Color
       dc.SetTextForeground(theTheme.Colour( clrTrackPanelText));
+//      dc.SetTextBackground(wxTransparentColour);
 
       /* i18n-hint: One-letter abbreviation for Left, in the Pan slider */
       dc.DrawText(_("L"), mLeftX, 0);
@@ -737,7 +757,7 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
    else
    {
       // draw the '-' and the '+'
-      // These are drawn with lines, rather tha nwith a font.
+      // These are drawn with lines, rather than with a font.
       AColor::UseThemeColour(&dc, clrTrackPanelText );
 
       if (mOrientation == wxHORIZONTAL)
@@ -975,17 +995,19 @@ TranslatableStrings LWSlider::GetWidestTips() const
       {
       case FRAC_SLIDER:
          results.push_back( GetTip( -1.99f ) );
+         results.push_back( GetTip( +1.99f ) );
          break;
 
       case DB_SLIDER:
          results.push_back( GetTip( -99.9f ) );
+         results.push_back( GetTip( +99.9f ) );
          break;
 
       case PAN_SLIDER:
          // Don't assume we know which of "Left", "Right", or "Center"
          // is the longest string, when localized
          results.push_back( GetTip(  0.f ) );
-         results.push_back( GetTip(  1.f ) );
+         results.push_back( GetTip( +1.f ) );
          results.push_back( GetTip( -1.f ) );
          break;
 
