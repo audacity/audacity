@@ -23,7 +23,11 @@ using NormalizedKeyStringBase = TaggedIdentifier<NormalizedKeyStringTag, false>;
 struct AUDACITY_DLL_API NormalizedKeyString : NormalizedKeyStringBase
 {
    NormalizedKeyString() = default;
-   explicit NormalizedKeyString( const wxString &key );
+   NormalizedKeyString( const wxString &key );
+   NormalizedKeyString( const char *const key )
+      : NormalizedKeyString{ wxString{ key } } {}
+   NormalizedKeyString( const wxChar *const key )
+      : NormalizedKeyString{ wxString{ key } } {}
 
    wxString Display(bool usesSpecialChars = false) const;
 };
