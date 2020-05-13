@@ -357,7 +357,7 @@ static wxString AskCopyOrEdit()
 
          dontAskNextTimeBox = S.AddCheckBox(
             XXO("Don't &warn again and always use my choice above"),
-            wxT("false"));
+            false);
       }
       S.EndStatic();
 
