@@ -141,9 +141,6 @@ std::unique_ptr<ODManager> ODManager::pMan{};
 typedef  ODManager* (*pfodman)();
 pfodman ODManager::Instance = &(ODManager::InstanceFirstTime);
 
-//libsndfile is not threadsafe - this deals with it
-static ODLock sLibSndFileMutex;
-
 wxDEFINE_EVENT(EVT_ODTASK_UPDATE, wxCommandEvent);
 
 //using this with wxStringArray::Sort will give you a list that
