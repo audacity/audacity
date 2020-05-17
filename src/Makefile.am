@@ -61,7 +61,6 @@ audacity_CPPFLAGS = \
 	$(PORTMIXER_CFLAGS) \
 	$(SNDFILE_CFLAGS) \
 	$(SOXR_CFLAGS) \
-	$(WIDGETEXTRA_CFLAGS) \
 	$(WX_CXXFLAGS) \
 	$(NULL)
 
@@ -91,7 +90,6 @@ audacity_LDADD = \
 	$(PORTMIXER_LIBS) \
 	$(SNDFILE_LIBS) \
 	$(SOXR_LIBS) \
-	$(WIDGETEXTRA_LIBS) \
 	$(WX_LIBS) \
 	$(NULL)
 

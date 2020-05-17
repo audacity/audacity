@@ -90,7 +90,6 @@ DIST_SUBDIRS = \
 	FileDialog \
 	libnyquist \
 	libsoxr \
-	lib-widget-extra \
 	lv2 \
 	portmixer \
 	portsmf \
@@ -173,10 +172,6 @@ endif
 
 if USE_LOCAL_VAMP
 SUBDIRS += libvamp
-endif
-
-if USE_LOCAL_WIDGETEXTRA
-SUBDIRS += lib-widget-extra
 endif
 
 # Note: These optional libraries will not be distributed in the source tarball.

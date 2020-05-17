@@ -14,8 +14,6 @@ lib-src/FileDialog/mac/FileDialogPrivate.h
 lib-src/FileDialog/mac/FileDialogPrivate.mm
 lib-src/FileDialog/win/FileDialogPrivate.cpp
 lib-src/FileDialog/win/FileDialogPrivate.h
-lib-src/lib-widget-extra/NonGuiThread.cpp
-lib-src/lib-widget-extra/NonGuiThread.h
 lib-src/mod-null/ModNullCallback.cpp
 lib-src/mod-null/ModNullCallback.h
 lib-src/mod-nyq-bench/NyqBench.cpp

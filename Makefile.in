@@ -112,7 +112,6 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/audacity_checklib_portaudio.m4 \
 	$(top_srcdir)/m4/audacity_checklib_portmidi.m4 \
 	$(top_srcdir)/m4/audacity_checklib_portsmf.m4 \
-	$(top_srcdir)/m4/audacity_checklib_widgetextra.m4 \
 	$(top_srcdir)/m4/ax_cflags_strict_prototypes.m4 \
 	$(top_srcdir)/m4/ax_cflags_warn_all.m4 \
 	$(top_srcdir)/m4/ax_check_compiler_flags.m4 \
@@ -459,8 +458,6 @@ USE_NLS = @USE_NLS@
 VAMP_CFLAGS = @VAMP_CFLAGS@
 VAMP_LIBS = @VAMP_LIBS@
 VERSION = @VERSION@
-WIDGETEXTRA_CFLAGS = @WIDGETEXTRA_CFLAGS@
-WIDGETEXTRA_LIBS = @WIDGETEXTRA_LIBS@
 WX_CONFIG = @WX_CONFIG@
 WX_CXXFLAGS = @WX_CXXFLAGS@
 WX_LIBS = @WX_LIBS@

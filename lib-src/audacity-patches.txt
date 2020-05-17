@@ -103,9 +103,6 @@ Patches: autotools.patch: Fix all autotools warnings.
 Upstream Version: 1.3.3
 
 
-lib-widget-extra
-----------------
-
 lv2
 ---------
 A merging of the lilv, lv2, msinttypes, serd, sord, sratom, and suil libraries to support

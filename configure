@@ -652,8 +652,6 @@ GTK_CFLAGS
 HAVE_GTK
 USE_LADSPA_FALSE
 USE_LADSPA_TRUE
-USE_LOCAL_WIDGETEXTRA_FALSE
-USE_LOCAL_WIDGETEXTRA_TRUE
 USE_LOCAL_PORTMIDI_FALSE
 USE_LOCAL_PORTMIDI_TRUE
 USE_PORTMIDI_FALSE
@@ -728,8 +726,6 @@ FFMPEG_LIBS
 FFMPEG_CFLAGS
 USE_LOCAL_EXPAT_FALSE
 USE_LOCAL_EXPAT_TRUE
-WIDGETEXTRA_LIBS
-WIDGETEXTRA_CFLAGS
 PORTMIDI_LIBS
 PORTMIDI_CFLAGS
 PORTSMF_LIBS
@@ -965,7 +961,6 @@ with_lv2
 with_portaudio
 with_midi
 with_portmidi
-with_widgetextra
 enable_audiounits
 enable_ladspa
 enable_quicktime
@@ -1024,8 +1019,6 @@ PORTSMF_CFLAGS
 PORTSMF_LIBS
 PORTMIDI_CFLAGS
 PORTMIDI_LIBS
-WIDGETEXTRA_CFLAGS
-WIDGETEXTRA_LIBS
 GTK_CFLAGS
 GTK_LIBS
 JACK_CFLAGS
@@ -1047,7 +1040,6 @@ lib-src/lv2
 lib-src/portaudio-v19
 lib-src/portsmf
 lib-src/portmidi
-lib-src/lib-widget-extra
 lib-src/portmixer'
 
 # Initialize some variables set by options.
@@ -1733,8 +1725,6 @@ Optional Packages:
   --with-portaudio        use portaudio19
   --with-midi             use portSMF for Midi support
   --with-portmidi         use PortMIDI for MIDI playback support
-  --with-widgetextra      which libwidgetextra to use (required):
-                          [system,local]
   --with-portmixer        compile with PortMixer [default=yes]
   --with-mod-script-pipe  compile with mod-script-pipe [default=no]
   --with-mod-nyq-bench    compile with mod-nyq-bench [default=no]
@@ -1811,10 +1801,6 @@ Some influential environment variables:
               C compiler flags for PORTMIDI, overriding pkg-config
   PORTMIDI_LIBS
               linker flags for PORTMIDI, overriding pkg-config
-  WIDGETEXTRA_CFLAGS
-              C compiler flags for WIDGETEXTRA, overriding pkg-config
-  WIDGETEXTRA_LIBS
-              linker flags for WIDGETEXTRA, overriding pkg-config
   GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
   GTK_LIBS    linker flags for GTK, overriding pkg-config
   JACK_CFLAGS C compiler flags for JACK, overriding pkg-config
@@ -19940,7 +19926,7 @@ CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 FILEDIALOG_LIBS='$(top_builddir)/lib-src/FileDialog/libFileDialog.la'
 
 
-LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF PORTMIDI WIDGETEXTRA"
+LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF PORTMIDI"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
 $as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
@@ -22717,126 +22703,6 @@ $as_echo "$as_me: portmidi library is NOT available in the local tree" >&6;}
 
 
 
-# Check whether --with-widgetextra was given.
-if test "${with_widgetextra+set}" = set; then :
-  withval=$with_widgetextra; WIDGETEXTRA_ARGUMENT=$withval
-else
-  WIDGETEXTRA_ARGUMENT="unspecified"
-fi
-
-
-
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for WIDGETEXTRA" >&5
-$as_echo_n "checking for WIDGETEXTRA... " >&6; }
-
-if test -n "$WIDGETEXTRA_CFLAGS"; then
-    pkg_cv_WIDGETEXTRA_CFLAGS="$WIDGETEXTRA_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libwidgetextra\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libwidgetextra") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_WIDGETEXTRA_CFLAGS=`$PKG_CONFIG --cflags "libwidgetextra" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$WIDGETEXTRA_LIBS"; then
-    pkg_cv_WIDGETEXTRA_LIBS="$WIDGETEXTRA_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libwidgetextra\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libwidgetextra") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_WIDGETEXTRA_LIBS=`$PKG_CONFIG --libs "libwidgetextra" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        WIDGETEXTRA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libwidgetextra" 2>&1`
-        else
-	        WIDGETEXTRA_PKG_ERRORS=`$PKG_CONFIG --print-errors "libwidgetextra" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$WIDGETEXTRA_PKG_ERRORS" >&5
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-                WIDGETEXTRA_SYSTEM_AVAILABLE="no"
-elif test $pkg_failed = untried; then
-	WIDGETEXTRA_SYSTEM_AVAILABLE="no"
-else
-	WIDGETEXTRA_CFLAGS=$pkg_cv_WIDGETEXTRA_CFLAGS
-	WIDGETEXTRA_LIBS=$pkg_cv_WIDGETEXTRA_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-	WIDGETEXTRA_SYSTEM_AVAILABLE="yes"
-fi
-
-   if test "$WIDGETEXTRA_SYSTEM_AVAILABLE" = "yes"; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: libwidgetextra library is available as system library." >&5
-$as_echo "$as_me: libwidgetextra library is available as system library." >&6;}
-   else
-      { $as_echo "$as_me:${as_lineno-$LINENO}: libwidgetextra library is NOT available as system library." >&5
-$as_echo "$as_me: libwidgetextra library is NOT available as system library." >&6;}
-   fi
-
-
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  WIDGETEXTRA_LOCAL_AVAILABLE="yes"
-else
-  WIDGETEXTRA_LOCAL_AVAILABLE="no"
-fi
-
-
-   if test "$WIDGETEXTRA_LOCAL_AVAILABLE" = "yes"; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: libwidgetextra library is available in the local tree" >&5
-$as_echo "$as_me: libwidgetextra library is available in the local tree" >&6;}
-   else
-      { $as_echo "$as_me:${as_lineno-$LINENO}: libwidgetextra library is NOT available in the local tree" >&5
-$as_echo "$as_me: libwidgetextra library is NOT available in the local tree" >&6;}
-   fi
-
-
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: Figuring out what libraries to enable" >&5
 $as_echo "$as_me: Figuring out what libraries to enable" >&6;}
 
@@ -22891,17 +22757,12 @@ done
 
 # In some cases the choices made above might be inappropriate.
 #   * we need to have expat one way or another
-#   * we need to have libwidgetextra one way or another
 #   * we need to have libsndfile one way or another
 #   * we need to have portaudio way or another
 #   * we need to have libsoxr
 
 if test "$EXPAT_USE_LOCAL" != "yes" -a "$EXPAT_USE_SYSTEM" != "yes"; then
    as_fn_error $? "Audacity requires expat to be enabled." "$LINENO" 5
-fi
-
-if test "$WIDGETEXTRA_USE_LOCAL" != "yes" -a "$WIDGETEXTRA_USE_SYSTEM" != "yes"; then
-   as_fn_error $? "Audacity requires libwidgetextra to be enabled." "$LINENO" 5
 fi
 
 if test "$LIBSNDFILE_USE_LOCAL" != "yes" && test "$LIBSNDFILE_USE_SYSTEM" != "yes" ; then
@@ -23540,26 +23401,6 @@ fi
 $as_echo "#define USE_PORTMIDI 1" >>confdefs.h
 
    fi
-
-
-   if test "$WIDGETEXTRA_USE_LOCAL" = yes; then
-      WIDGETEXTRA_CFLAGS='-I$(top_srcdir)/lib-src/lib-widget-extra'
-      WIDGETEXTRA_LIBS='$(top_builddir)/lib-src/lib-widget-extra/libwidgetextra.la'
-      subdirs="$subdirs lib-src/lib-widget-extra"
-
-   fi
-
-
-
-
-    if test "$WIDGETEXTRA_USE_LOCAL" = yes; then
-  USE_LOCAL_WIDGETEXTRA_TRUE=
-  USE_LOCAL_WIDGETEXTRA_FALSE='#'
-else
-  USE_LOCAL_WIDGETEXTRA_TRUE='#'
-  USE_LOCAL_WIDGETEXTRA_FALSE=
-fi
-
 
 
 
@@ -24560,10 +24401,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_LOCAL_PORTMIDI_TRUE}" && test -z "${USE_LOCAL_PORTMIDI_FALSE}"; then
   as_fn_error $? "conditional \"USE_LOCAL_PORTMIDI\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${USE_LOCAL_WIDGETEXTRA_TRUE}" && test -z "${USE_LOCAL_WIDGETEXTRA_FALSE}"; then
-  as_fn_error $? "conditional \"USE_LOCAL_WIDGETEXTRA\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_LADSPA_TRUE}" && test -z "${USE_LADSPA_FALSE}"; then

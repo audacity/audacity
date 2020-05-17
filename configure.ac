@@ -355,7 +355,7 @@ dnl Optional library support. Lots of things we could use, but
 dnl can do without if they aren't available.
 dnl-------------------------------------------------------------
 dnl GSTREAMER removed for 2.0.6 release
-LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF PORTMIDI WIDGETEXTRA"
+LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF PORTMIDI"
 
 AC_MSG_NOTICE([Determining what libraries are available in this tree and on the system])
 
@@ -378,7 +378,6 @@ AUDACITY_CHECKLIB_LV2
 AUDACITY_CHECKLIB_PORTAUDIO
 AUDACITY_CHECKLIB_PORTSMF
 AUDACITY_CHECKLIB_PORTMIDI
-AUDACITY_CHECKLIB_WIDGETEXTRA
 
 dnl Decide what libraries to build with, and whether to use system or local libraries
 dnl Set variables based on choices.
@@ -432,17 +431,12 @@ done
 
 # In some cases the choices made above might be inappropriate.
 #   * we need to have expat one way or another
-#   * we need to have libwidgetextra one way or another
 #   * we need to have libsndfile one way or another
 #   * we need to have portaudio way or another
 #   * we need to have libsoxr
 
 if test "$EXPAT_USE_LOCAL" != "yes" -a "$EXPAT_USE_SYSTEM" != "yes"; then
    AC_MSG_ERROR([Audacity requires expat to be enabled.])
-fi
-
-if test "$WIDGETEXTRA_USE_LOCAL" != "yes" -a "$WIDGETEXTRA_USE_SYSTEM" != "yes"; then
-   AC_MSG_ERROR([Audacity requires libwidgetextra to be enabled.])
 fi
 
 if test "$LIBSNDFILE_USE_LOCAL" != "yes" && test "$LIBSNDFILE_USE_SYSTEM" != "yes" ; then
@@ -507,7 +501,6 @@ AUDACITY_CONFIG_LV2
 AUDACITY_CONFIG_PORTAUDIO
 AUDACITY_CONFIG_PORTSMF
 AUDACITY_CONFIG_PORTMIDI
-AUDACITY_CONFIG_WIDGETEXTRA
 
 dnl--------------------------------------------------------------------------
 dnl Optional features (which don't use libraries - just compile-time on/off)

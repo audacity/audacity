@@ -997,7 +997,6 @@ list( APPEND HEADERS
 list( APPEND INCLUDES
    PUBLIC
       ${_PRVDIR}
-      ${topdir}/lib-src/lib-widget-extra
       ${topdir}/include
       ${TARGET_ROOT}
 )
@@ -1058,7 +1057,6 @@ list( APPEND LIBRARIES
       lame
       libsndfile
       libsoxr
-      lib-widget-extra
       portaudio-v19
 #      $<$<BOOL:${USE_FFMPEG}>:ibavcodec>
 #      $<$<BOOL:${USE_FFMPEG}>:libavformat>

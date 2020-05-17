@@ -245,9 +245,6 @@
     <ClCompile Include="..\..\..\src\MixerBoard.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\NoteTrack.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1412,9 +1409,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\MixerBoard.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\NoteTrack.h">

@@ -771,7 +771,6 @@
 		287F9F3D0A69748F00F025FA /* TimeDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 287F9F3C0A69748F00F025FA /* TimeDialog.cpp */; };
 		288052870DEA69C900671EA4 /* PipeServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 288052840DEA69C900671EA4 /* PipeServer.cpp */; };
 		288052880DEA69C900671EA4 /* ScripterCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 288052850DEA69C900671EA4 /* ScripterCallback.cpp */; };
-		288052C20DEA73F500671EA4 /* NonGuiThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 288052BC0DEA72F300671EA4 /* NonGuiThread.cpp */; };
 		288053740DEA9E4C00671EA4 /* ScripterCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 288052860DEA69C900671EA4 /* ScripterCallback.h */; };
 		2882177B0A35D8730029AF41 /* ShuttlePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 288217790A35D8730029AF41 /* ShuttlePrefs.cpp */; };
 		28851FAB1027F16500152EE1 /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28851F9C1027F16400152EE1 /* Command.cpp */; };
@@ -1522,8 +1521,6 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.po";
 			fileType = pattern.proxy;
-			inputFiles = (
-			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).mo",
@@ -2756,8 +2753,6 @@
 		288052840DEA69C900671EA4 /* PipeServer.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = PipeServer.cpp; path = "mod-script-pipe/PipeServer.cpp"; sourceTree = "<group>"; tabWidth = 3; };
 		288052850DEA69C900671EA4 /* ScripterCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = ScripterCallback.cpp; path = "mod-script-pipe/ScripterCallback.cpp"; sourceTree = "<group>"; tabWidth = 3; };
 		288052860DEA69C900671EA4 /* ScripterCallback.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = ScripterCallback.h; path = "mod-script-pipe/ScripterCallback.h"; sourceTree = "<group>"; tabWidth = 3; };
-		2880529C0DEA720100671EA4 /* NonGuiThread.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = NonGuiThread.h; path = "lib-widget-extra/NonGuiThread.h"; sourceTree = "<group>"; tabWidth = 3; };
-		288052BC0DEA72F300671EA4 /* NonGuiThread.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = NonGuiThread.cpp; path = "lib-widget-extra/NonGuiThread.cpp"; sourceTree = "<group>"; tabWidth = 3; };
 		288217790A35D8730029AF41 /* ShuttlePrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ShuttlePrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2882177A0A35D8730029AF41 /* ShuttlePrefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ShuttlePrefs.h; sourceTree = "<group>"; tabWidth = 3; };
 		28851F9C1027F16400152EE1 /* Command.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Command.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -3844,7 +3839,6 @@
 				283B3D3E0BC21EBE00FA01D5 /* FileDialog */,
 				28FADDC71833C38F00BA4141 /* expat */,
 				280380FC18313AE40078452A /* lame */,
-				2880529A0DEA71B000671EA4 /* lib-widget-extra */,
 				176EE9E209A2EF1000188F3B /* libflac */,
 				17072F6A0988D6A9008541CC /* libid3tag */,
 				17072FD10988D6A9008541CC /* libmad */,
@@ -6062,15 +6056,6 @@
 				2812A5BD0DF6400E00576305 /* Release.xcconfig */,
 			);
 			name = "Xcode Settings";
-			sourceTree = "<group>";
-		};
-		2880529A0DEA71B000671EA4 /* lib-widget-extra */ = {
-			isa = PBXGroup;
-			children = (
-				288052BC0DEA72F300671EA4 /* NonGuiThread.cpp */,
-				2880529C0DEA720100671EA4 /* NonGuiThread.h */,
-			);
-			name = "lib-widget-extra";
 			sourceTree = "<group>";
 		};
 		2897F6DB0AB3DB5A003C20C5 /* toolbars */ = {
@@ -9028,7 +9013,6 @@
 				5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */,
 				28501EAB0CEED0680029ABAA /* VampEffect.cpp in Sources */,
 				5E7396561DAFDA0000BA0A4D /* WaveTrackSliderHandles.cpp in Sources */,
-				288052C20DEA73F500671EA4 /* NonGuiThread.cpp in Sources */,
 				28530C4C0DF2105200555C94 /* HtmlWindow.cpp in Sources */,
 				28530C4D0DF2105200555C94 /* ProgressDialog.cpp in Sources */,
 				ED3D7FF10DF73889000F43E3 /* EffectManager.cpp in Sources */,
@@ -9811,7 +9795,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				WARNING_CFLAGS = "-Wno-nonnull";
 			};
 			name = Debug;
@@ -10030,7 +10014,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-script-pipe";
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				ZERO_LINK = YES;
 			};
 			name = Debug;
@@ -10148,7 +10132,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				WARNING_CFLAGS = "-Wno-nonnull";
 			};
 			name = Release;
@@ -10367,7 +10351,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-script-pipe";
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				ZERO_LINK = YES;
 			};
 			name = Release;
@@ -10576,7 +10560,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				WARNING_CFLAGS = "-Wno-nonnull";
 			};
 			name = Debug64;
@@ -10780,7 +10764,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				ZERO_LINK = YES;
 			};
 			name = Debug64;
@@ -10812,7 +10796,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-script-pipe";
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				ZERO_LINK = YES;
 			};
 			name = Debug64;
@@ -11037,7 +11021,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				WARNING_CFLAGS = "-Wno-nonnull";
 			};
 			name = Release64;
@@ -11241,7 +11225,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				ZERO_LINK = YES;
 			};
 			name = Release64;
@@ -11273,7 +11257,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-script-pipe";
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				ZERO_LINK = YES;
 			};
 			name = Release64;
@@ -11583,7 +11567,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				ZERO_LINK = YES;
 			};
 			name = Debug;
@@ -11613,7 +11597,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/** $(TOPLEVEL)/lib-src/lib-widget-extra/";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portmixer/include $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 				ZERO_LINK = YES;
 			};
 			name = Release;

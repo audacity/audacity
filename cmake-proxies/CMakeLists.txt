@@ -147,7 +147,6 @@ addlib( wxWidgets          wxwidgets   WX          YES   NO    "" ) # must be fi
 addlib( FileDialog         FileDialog  FILEDIALOG  YES   YES   "" )
 addlib( expat              expat       EXPAT       YES   YES   "expat >= 2.1.0" )
 addlib( lame               lame        LAME        YES   YES   "lame >= 3.100" )
-addlib( lib-widget-extra   libextra    EXTRA       YES   YES   "" )
 addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.28" )
 addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
 addlib( portaudio-v19      portaudio   PORTAUDIO   YES   YES   "" )
