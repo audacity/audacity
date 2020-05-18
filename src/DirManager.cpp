@@ -400,7 +400,7 @@ DirManager::DirManager()
    srand(time(NULL));
 
    // Set up local temp subdir
-   // Previously, Audacity just na med project temp directories "project0",
+   // Previously, Audacity just named project temp directories "project0",
    // "project1" and so on. But with the advent of recovery code, we need a
    // unique name even after a crash. So we create a random project index
    // and make sure it is not used already. This will not pose any performance
