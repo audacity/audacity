@@ -29,7 +29,7 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 2.4.0
+Version 2.4.1
 
 Contents of this README:
 
@@ -66,6 +66,11 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 2. Changes since version 2.3.3: 
 
+Critical Bug Fix:
+ * Audacity 2.4.0 was released with a critical bug, (Bug 2436), which is
+   fixed in 2.4.1.  The bug caused loss of data when using two projects 
+   at the same time.
+
 Improvements
 
  * Audacity now runs on Mac Catalina.
@@ -101,7 +106,7 @@ See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.4.0
 -------------------------------------------------------------------------------
 
 
-3. Some Known Issues in 2.4.0:
+3. Some Known Issues in 2.4.1:
 
  *  208 - Some effects (including equalization effects) delete Envelope Control Points, or do not move them when timeline changes
  * 2212 - Mac: Keyboard tabbing in Timer Record stuck in left hand panel.

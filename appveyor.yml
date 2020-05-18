@@ -2,7 +2,7 @@
 #if you want to work on this, please talk with us on
 # https://lists.sourceforge.net/lists/listinfo/audacity-devel
 #build time is circa 7 mins.
-version: 2.4.0-alpha-{build}
+version: 2.4.1-alpha-{build}
 image: Visual Studio 2017
 shallow_clone: true # reduce traffic
 install:
