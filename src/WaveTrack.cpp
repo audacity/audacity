@@ -530,10 +530,12 @@ void WaveTrack::Trim (double t0, double t1)
 
 
 
-WaveTrack::Holder WaveTrack::EmptyCopy() const
+WaveTrack::Holder WaveTrack::EmptyCopy(
+   const std::shared_ptr<DirManager> &pDirManager ) const
 {
    auto result = std::make_shared<WaveTrack>( mDirManager, mFormat, mRate );
    result->Init(*this);
+   result->mDirManager = pDirManager ? pDirManager : mDirManager;
    return result;
 }
 
