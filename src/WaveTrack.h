@@ -160,7 +160,8 @@ private:
 
    // Make another track copying format, rate, color, etc. but containing no
    // clips
-   Holder EmptyCopy() const;
+   Holder EmptyCopy(
+      const std::shared_ptr<DirManager> &pDirManager = {} ) const;
 
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
