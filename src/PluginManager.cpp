@@ -1897,7 +1897,7 @@ bool PluginManager::DropFile(const wxString &fileName)
 
             // Ask whether to enable the plug-ins
             if (auto nIds = ids.size()) {
-               auto message = wxPLURAL(
+               auto message = XP(
                   "Enable this plug-in?\n",
                   "Enable these plug-ins?\n",
                   0

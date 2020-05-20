@@ -328,7 +328,7 @@ TranslatableString ClipBoundaryMessage(
                clips.
              */
          XO("dummyStringClipBoundaryMessage");
-         str = wxPLURAL(
+         str = XP(
             "%s %d of %d clip %s",
             "%s %d of %d clips %s",
             2
@@ -350,7 +350,7 @@ TranslatableString ClipBoundaryMessage(
                clips.
              */
          XO("dummyStringClipBoundaryMessageLong");
-         str = wxPLURAL(
+         str = XP(
             "%s %d and %s %d of %d clip %s",
             "%s %d and %s %d of %d clips %s",
             4
@@ -586,7 +586,7 @@ void DoSelectClip(AudacityProject &project, bool next)
                last number counts the clips,
                string names a track */
          XO("dummyStringOnSelectClip");
-         auto str = wxPLURAL(
+         auto str = XP(
             "%d of %d clip %s",
             "%d of %d clips %s",
             1

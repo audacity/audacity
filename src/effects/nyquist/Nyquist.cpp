@@ -3371,6 +3371,7 @@ static void RegisterFunctions()
       // All function names must be UP-CASED
       static const FUNDEF functions[] = {
          { "_", SUBR, gettext },
+         // to do: more i18n functions, for contexts and plurals
          { "NGETTEXT", SUBR, ngettext },
          { "AUD-DO",  SUBR, xlc_aud_do },
        };

@@ -441,7 +441,7 @@ public:
       return *this;
    }
 
-   // Implements the wxPLURAL macro, which specifies a second msgid, a list
+   // Implements the XP macro, which specifies a second msgid, a list
    // of format arguments, and which of those format arguments selects among
    // messages; the translated strings to select among, depending on language,
    // might actually be more or fewer than two.  See Internat.h.

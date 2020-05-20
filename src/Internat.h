@@ -60,8 +60,8 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
    #define _(s) GetCustomTranslation((s))
 #endif
 
-#ifdef wxPLURAL
-   #undef wxPLURAL
+#ifdef XP
+   #undef XP
 #endif
 
 
@@ -73,7 +73,7 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 //  which (intentionally) will fail to compile.  The macro inserts wxT).
 //
 // Note too:  it seems an i18n-hint comment is not extracted if it precedes
-// wxPLURAL directly.  A workaround:  after the comment, insert a line
+// XP directly.  A workaround:  after the comment, insert a line
 // _("dummyStringXXXX");
 // where for XXXX subsitute something making this dummy string unique in the
 // program.  Then check in your generated audacity.pot that the dummy is
@@ -85,7 +85,7 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 // The macro call is then followed by a sequence of format arguments in
 // parentheses.  The third argument of the macro call is the zero-based index
 // of the format argument that selects singular or plural
-#define wxPLURAL(sing, plur, n) \
+#define XP(sing, plur, n) \
    TranslatableString{ wxT(sing), {} }.Plural<(n)>( wxT(plur) )
 
 #endif
