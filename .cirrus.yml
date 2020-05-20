@@ -5,7 +5,7 @@ freebsd_12_task:
   freebsd_instance:
     image: freebsd-12-1-release-amd64
   install_script:
-    pkg install -y gettext gmake cmake wx31-gtk3 gtk3
+    pkg install -y gettext gmake cmake wx31-gtk3 gtk3 git
 #  create_user_script:
 #    - pw useradd git
 #    - chown -R git:git .
