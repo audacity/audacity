@@ -5,7 +5,7 @@ sed -E 's/\.\.\///g' |\
 xargs xgettext \
 --default-domain=audacity \
 --directory=.. \
---keyword=_ --keyword=XO --keyword=XXO --keyword=XP:1,2 \
+--keyword=_ --keyword=XO --keyword=XC:1,2c --keyword=XXO --keyword=XP:1,2 --keyword=XPC:1,2,4c \
 --add-comments=" i18n" \
 --add-location=file  \
 --copyright-holder='Audacity Team' \
