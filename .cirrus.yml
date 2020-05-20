@@ -10,7 +10,8 @@ freebsd_12_task:
     - pw useradd git
     - chown -R git:git .
   build_script:
-    - su git -c gmake
-  test_script:
-    - su git -c 'gmake test'
+    - su ls -la
+    - su set
+    - su env
+
 
