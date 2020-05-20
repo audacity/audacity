@@ -376,8 +376,10 @@ wxString TranslatableString::DoChooseFormat(
       ? ( nn == 1 ? singular : plural )
       : wxGetTranslation(
             singular, plural, nn
-            // , wxString{}
-            // , context
+#if wxCHECK_VERSION(3, 1, 3)
+            , wxString{} // domain
+            , context
+#endif
          );
 }
 
