@@ -10,13 +10,16 @@ freebsd_12_task:
 #    - pw useradd git
 #    - chown -R git:git .
   build_script:
-    - ls -la
-    - set
-    - env
-    - cd audacity
-    - cat | bash
-      echo "inside script"
-      exit 0
+    - cat <<EOF | bash
+        ls -la
+        set
+        env
+        mkdir bld
+        cd bld
+        cmake ..
+        make -j2
+        exit 0
+      EOF
 
 
 
