@@ -72,15 +72,8 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 // (You must use plain string literals.  Do not use _() or wxT() or L prefix,
 //  which (intentionally) will fail to compile.  The macro inserts wxT).
 //
-// Note too:  it seems an i18n-hint comment is not extracted if it precedes
-// XP directly.  A workaround:  after the comment, insert a line
-// _("dummyStringXXXX");
-// where for XXXX subsitute something making this dummy string unique in the
-// program.  Then check in your generated audacity.pot that the dummy is
-// immediately before the singular/plural entry.
-//
-// Your i18n-comment should therefore say something like,
-// "In the string after this one, ..."
+// Note too:  The i18n-hint comment must be on the line preceding the first
+// string.  That might be inside the parentheses of the macro call.
 //
 // The macro call is then followed by a sequence of format arguments in
 // parentheses.  The third argument of the macro call is the zero-based index
