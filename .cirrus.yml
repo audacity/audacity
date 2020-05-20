@@ -10,16 +10,14 @@ freebsd_12_task:
 #    - pw useradd git
 #    - chown -R git:git .
   build_script:
-    - cat <<EOF | bash
-        ls -la
-        set
-        env
-        mkdir bld
-        cd bld
-        cmake ..
-        make -j2
-        exit 0
-      EOF
+    -  ls -la
+       set
+       env
+       mkdir bld
+       cd bld
+       cmake ..
+       make -j2
+       exit 0
 
 
 
