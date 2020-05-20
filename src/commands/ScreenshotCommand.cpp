@@ -94,7 +94,8 @@ kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Blue") },
-   { XO("White") },
+   /* i18n-hint:  This really means the color, not as in "white noise" */
+   { XC("White", "color") },
    { XO("None") },
 };
 
