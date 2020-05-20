@@ -5,13 +5,18 @@ freebsd_12_task:
   freebsd_instance:
     image: freebsd-12-1-release-amd64
   install_script:
-    pkg install -y gettext gmake perl5
-  create_user_script:
-    - pw useradd git
-    - chown -R git:git .
+    pkg install -y gettext gmake cmake wxgtk31 
+#  create_user_script:
+#    - pw useradd git
+#    - chown -R git:git .
   build_script:
-    - su ls -la
-    - su set
-    - su env
+    - ls -la
+    - set
+    - env
+    - cd audacity
+    - cat | bash
+      echo "inside script"
+      exit 0
+
 
 
