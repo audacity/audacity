@@ -34,6 +34,10 @@
 #include <wx/tooltip.h>
 #endif
 
+#if defined(__WXGTK__)
+#include <gtk/gtk.h>
+#endif
+
 #include "ToolDock.h"
 #include "../TrackPanel.h"
 
@@ -116,11 +120,31 @@ void DeviceToolBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    DeinitChildren();
+
+   // Some GTK themes produce larger combo boxes that make them taller
+   // than our single toolbar height restriction.  This will remove some
+   // of the extra space those themes add.
+   //
+   // NOTE: It's important that the widgets are created with an initial
+   //       size, otherwise this override will not work.
+#if defined(__WXGTK3__)
+   // LLL:  I've been unsuccessful at overriding GTK3 styles :-(
+#elif defined(__WXGTK__)
+   gtk_rc_parse_string("style \"device_combo\" {\n"
+                       " GtkButton::inner_border = { 0, 0, 0, 0 }\n"
+                       " xthickness = 4\n"
+                       " ythickness = 0\n"
+                       "}\n"
+                       "widget \"*device_bar.GtkCombo*\" style \"device_combo\"");
+
+   gtk_widget_set_name(GetHandle(), "device_bar");
+#endif
+
    // Hosts
    mHost = safenew wxChoice(this,
                         wxID_ANY,
                         wxDefaultPosition,
-                        wxDefaultSize);
+                        wxSize(50, toolbarSingle));
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    mHost->SetAccessible(safenew WindowAccessible(mHost));
@@ -423,7 +447,7 @@ static bool RepositionCombo(wxWindow *combo, int toolbarWidth, wxSize desiredSiz
    // pop the margin pixels
    desiredSize.x -= marginPixels;
 
-   combo->SetMinSize(desiredSize);
+   combo->SetMinSize(wxSize(desiredSize.x, wxDefaultCoord));
 
    return constrained;
 }
@@ -495,15 +519,6 @@ void DeviceToolBar::RepositionCombos()
    desiredChannels.x = mInputChannels->GetBestSize().x *4;
    desiredChannels.y = mInputChannels->GetSize().y;
 
-   // wxGtk (Gnome) has larger comboboxes than the other platforms.  For DeviceToolBar this prevents
-   // the toolbar docking on a single height row. So we shrink it to prevent this.
-#ifdef __WXGTK__
-   desiredHost.SetHeight(mHost->GetBestSize().y -4);
-   desiredInput.SetHeight(desiredHost.GetHeight());
-   desiredOutput.SetHeight(desiredHost.GetHeight());
-   desiredChannels.SetHeight(desiredHost.GetHeight());
-#endif
-
    ratioUnused = 0.995f - (kHostWidthRatio + kInputWidthRatio + kOutputWidthRatio + kChannelsWidthRatio);
    int i = 0;
    // limit the amount of times we solve constraints to 5
@@ -541,7 +556,7 @@ void DeviceToolBar::FillHosts()
       mHost->Enable(false);
 
    mHost->InvalidateBestSize();
-   mHost->SetMaxSize(mHost->GetBestSize()*4);
+   mHost->SetMaxSize(wxSize(mHost->GetBestSize().x*4, toolbarSingle));
 }
 
 void DeviceToolBar::FillHostDevices()
@@ -605,7 +620,7 @@ void DeviceToolBar::FillHostDevices()
    mInput->Enable(mInput->GetCount() ? true : false);
 
    mInput->InvalidateBestSize();
-   mInput->SetMaxSize(mInput->GetBestSize()*4);
+   mInput->SetMaxSize(wxSize(mInput->GetBestSize().x*4, toolbarSingle));
 
    for (i = 0; i < outMaps.size(); i++) {
       if (foundHostIndex == outMaps[i].hostIndex) {
@@ -621,7 +636,7 @@ void DeviceToolBar::FillHostDevices()
    mOutput->Enable(mOutput->GetCount() ? true : false);
 
    mOutput->InvalidateBestSize();
-   mOutput->SetMaxSize(mOutput->GetBestSize()*4);
+   mOutput->SetMaxSize(wxSize(mOutput->GetBestSize().x*4, toolbarSingle));
 
    // The setting of the Device is left up to OnChoice
 }
@@ -703,7 +718,7 @@ void DeviceToolBar::FillInputChannels()
       mInputChannels->Enable(false);
 
    mInputChannels->InvalidateBestSize();
-   mInputChannels->SetMaxSize(mInputChannels->GetBestSize()*4);
+   mInputChannels->SetMaxSize(wxSize(mInputChannels->GetBestSize().x*4, toolbarSingle));
 }
 
 void DeviceToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out)
@@ -848,6 +863,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const TranslatableString &t
          c = S.AddChoice( Verbatim( combo->GetName() ),
             transform_container<TranslatableStrings>( inputSources, Verbatim ),
             combo->GetSelection());
+         c->SetMinSize(c->GetBestSize());
       }
       S.EndHorizontalLay();
    }
