@@ -15503,7 +15503,7 @@ msgstr "Mé&langer les thèmes Audacity et système"
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
-"Utiliser principalement des affichage gauche-vers-droite dans les langues RTL"
+"Utiliser principalement des affichages gauche-vers-droite dans les langues RTL"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
