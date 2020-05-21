@@ -11,11 +11,9 @@ freebsd_12_task:
 #    - chown -R git:git .
   build_script:
     -  ls -la ;
+       ln -s /usr/local/bin/wxgtk3u-3.1-config /usr/local/bin/wx-config ;
        ls -la /usr/local/bin ;
-       export WX_CONFIG=/usr/local/bin/wx-config ;
-       find / -name wx-config ;
        set ;
-       env ;
        mkdir bld ;
        cd bld ;
        cmake .. ;
