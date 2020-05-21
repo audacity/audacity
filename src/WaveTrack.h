@@ -160,7 +160,12 @@ private:
 
    // Make another track copying format, rate, color, etc. but containing no
    // clips
-   Holder EmptyCopy() const;
+   // It is important to pass the correct DirManager (that for the project
+   // which will own the copy) in the unusual case that a track is copied from
+   // another project or the clipboard.  For copies within one project, the
+   // default will do.
+   Holder EmptyCopy(
+      const std::shared_ptr<DirManager> &pDirManager = {} ) const;
 
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result

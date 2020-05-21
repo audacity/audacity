@@ -210,14 +210,6 @@ list( APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS} )
 # Make sure they're used during the link steps
 set( CMAKE_LINK_INTERFACE_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} )
 
-# May be a misconfiguration in my system, but CMake doesn't want to look
-# in /usr/local/lib by default...so force the issue
-if( CMAKE_SYSTEM_NAME MATCHES "FreeBSD" )
-   list( APPEND CMAKE_EXE_LINKER_FLAGS -L/usr/local/lib )
-   list( APPEND CMAKE_MODULE_LINKER_FLAGS -L/usr/local/lib )
-   list( APPEND CMAKE_SHARED_LINKER_FLAGS -L/usr/local/lib )
-endif()
-
 # Various common checks whose results are used by the different targets
 test_big_endian( WORDS_BIGENDIAN )
 
@@ -249,13 +241,18 @@ endif()
 check_include_files( "float.h;stdarg.h;stdlib.h;string.h" STDC_HEADERS )
 
 check_include_file( "assert.h" HAVE_ASSERT_H )
-check_include_file( "byteswap.h" HAVE_BYTESWAP_H )
 check_include_file( "errno.h" HAVE_ERRNO_H )
 check_include_file( "fcntl.h" HAVE_FCNTL_H )
 check_include_file( "fenv.h" HAVE_FENV_H )
 check_include_file( "inttypes.h" HAVE_INTTYPES_H )
 check_include_file( "limits.h" HAVE_LIMITS_H )
-check_include_file( "malloc.h" HAVE_MALLOC_H )
+if( CMAKE_SYSTEM_NAME MATCHES "FreeBSD" )
+  check_include_file( "stdlib.h" HAVE_MALLOC_H )
+  check_include_file( "sys/endian.h" HAVE_ENDIAN_H )
+else()
+  check_include_file( "malloc.h" HAVE_MALLOC_H )
+  check_include_file( "byteswap.h" HAVE_BYTESWAP_H )
+endif()
 check_include_file( "memory.h" HAVE_MEMORY_H )
 check_include_file( "stdbool.h" HAVE_STDBOOL_H )
 check_include_file( "stdint.h" HAVE_STDINT_H )
