@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use strict 'vars';
+use File::Spec;
 
 my $traceLevel = 3;
 
@@ -10,9 +11,13 @@ my $clustering = 0;
 # whether to prune redundant arcs implied in transitive closure
 my $pruning = 1;
 
+# whether to insert hyperlinks
+my $links = 1;
+
 # Step 1: collect short names and paths to .cpp files
 # We assume that final path components uniquely identify the files!
 my $dir = "../src";
+
 my %names; # string to string
 foreach my $file (`find $dir -name '*.cpp'`) {
    my $short = $file;
@@ -21,6 +26,10 @@ foreach my $file (`find $dir -name '*.cpp'`) {
    my $shorter = ($short =~ s|^.*/||r);
    $names{$shorter} = $short;
 }
+
+#my $linkroot = "https://github.com/audacity/audacity/tree/master/src";
+my $linkroot = "file://" . File::Spec->rel2abs( $dir );
+
 
 print STDERR "Found ", scalar( keys %names ), " .cpp file(s)\n" if $traceLevel >= 1;
 
@@ -312,6 +321,7 @@ sub subgraph{
       my $label = SCCLabel( $scc );
       print "   \"${id}\" [label=\"$label\"";
       # insert other node attributes here as key=value pairs,
+      print " URL=\"${linkroot}${foldername}/${id}.cpp\"" if $links;
       # separated by spaces
       print"]\n";
    }
@@ -347,5 +357,5 @@ print "}\n";
 # Step 5: generate image
 print STDERR "Generating image...\n" if $traceLevel >= 1;
 my $verbosity = ($traceLevel >= 2) ? "-v" : "";
-`dot $verbosity -O -Tgif $fname`;
+`dot $verbosity -O -Tsvg $fname`;
 print STDERR "done\n" if $traceLevel >= 1;
