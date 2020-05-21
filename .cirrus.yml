@@ -5,12 +5,15 @@ freebsd_12_task:
   freebsd_instance:
     image: freebsd-12-1-release-amd64
   install_script:
-    pkg install -y gettext gmake cmake wx31-gtk3 gtk3 git alsa-lib
+    pkg install -y gettext gmake cmake wx31-gtk3 gtk3 git alsa-lib pkgconf
 #  create_user_script:
 #    - pw useradd git
 #    - chown -R git:git .
   build_script:
     -  ls -la ;
+       ls -la /usr/local/bin ;
+       export WX_CONFIG=/usr/local/bin/wx-config ;
+       find / -name wx-config ;
        set ;
        env ;
        mkdir bld ;
