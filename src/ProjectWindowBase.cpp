@@ -19,6 +19,10 @@ ProjectWindowBase::ProjectWindowBase(wxWindow * parent, wxWindowID id,
    , mProject{ project }
 {
    project.SetFrame( this );
+
+   // Ensure a unique name of this window for journalling purposes
+   SetName(
+      wxString::Format( L"AudacityProject %d", project.GetProjectNumber() ) );
 };
 
 ProjectWindowBase::~ProjectWindowBase()
