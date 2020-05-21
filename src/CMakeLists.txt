@@ -154,6 +154,8 @@ list( APPEND SOURCES
       ImageManipulation.h
       Journal.cpp
       Journal.h
+      JournalEvents.cpp
+      JournalEvents.h
       JournalOutput.cpp
       JournalOutput.h
       JournalRegistry.cpp
