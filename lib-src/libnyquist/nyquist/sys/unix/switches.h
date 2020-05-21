@@ -41,6 +41,8 @@
 
 #if __APPLE__ && __GNUC__ /* Mac OS X */
 #define NEED_ULONG 1
+#elif __FreeBSD__
+#define NEED_ULONG 1
 #else
 #include <sys/types.h>
 #undef NEED_ULONG
