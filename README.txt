@@ -29,12 +29,12 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 2.4.1
+Version 2.4.2
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.3.3
+2.  Changes since version 2.4.1
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -64,55 +64,35 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 --------------------------------------------------------------------------------
 
-2. Changes since version 2.3.3: 
+2. Changes since version 2.4.1: 
 
-Critical Bug Fix:
- * Audacity 2.4.0 was released with a critical bug, (Bug 2436), which is
-   fixed in 2.4.1.  The bug caused loss of data when using two projects 
-   at the same time.
 
 Improvements
 
- * Audacity now runs on Mac Catalina.
- * A new Time Toolbar showing current record/playback time has been
-   split from the Selection Toolbar.  It can be resized large.
- * Presets for more effects can be imported and exported.
- * A new Multi-View mode for tracks.  In this mode both 
-   spectrogram and waveform views are shown at the same time.
- * Opus available as a new audio export format on Windows and Linux.
- * Easier to convert labels between point labels and range labels.
- * New Loudness Normalization effect.
- * New RMS measurement analyzer.
- * New Noise Gate effect.
- * New Spectral Delete effect.
+ * To be written... wx3.1.3 etc...
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.4.0
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.4.2
 
 
 Bug Fixes
 
- Over 100 bugs in 2.3.3 fixed, including:
+ Over nnn bugs in 2.4.1 fixed, including:
 
- * 2237 - Equalization effects have no Import or Export for curves
- * 2261 - Graphic EQ sliders have no frequency labels
- * 2265 - Track heights are reset to default on project re-opening
- * 2303 - Playback does not start at the saved cursor position on reopening a saved project.
- * 2314 - Zoom in fail when playing
+ * To be written
 
 
-See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.4.0
+See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2
 
 
 -------------------------------------------------------------------------------
 
 
-3. Some Known Issues in 2.4.1:
+3. Some Known Issues in 2.4.2:
 
- *  208 - Some effects (including equalization effects) delete Envelope Control Points, or do not move them when timeline changes
- * 2212 - Mac: Keyboard tabbing in Timer Record stuck in left hand panel.
+ * TBW
 
-For best workarounds and other known issues in 2.4.0, please see:
-  https://wiki.audacityteam.org/wiki/Release_Notes_2.4.0/Issues 
+For best workarounds and other known issues in 2.4.2, please see:
+  https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2/Issues 
 
 
 -------------------------------------------------------------------------------

@@ -1,7 +1,42 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
 
-2. Changes in version 2.3.3
+Changes in version 2.4.1:
+
+Critical Bug Fix:
+ * Audacity 2.4.0 was released with a critical bug, (Bug 2436),
+   which is fixed in 2.4.1.  The bug caused loss of data when using two projects at the same time.
+
+Improvements
+
+ * Audacity now runs on Mac Catalina.
+ * A new Time Toolbar showing current record/playback time has been
+   split from the Selection Toolbar.  It can be resized large.
+ * Presets for more effects can be imported and exported.
+ * A new Multi-View mode for tracks.  In this mode both 
+   spectrogram and waveform views are shown at the same time.
+ * Opus available as a new audio export format on Windows and Linux.
+ * Easier to convert labels between point labels and range labels.
+ * New Loudness Normalization effect.
+ * New RMS measurement analyzer.
+ * New Noise Gate effect.
+ * New Spectral Delete effect.
+
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.4.1
+
+
+Bug Fixes
+
+ Over 100 bugs in 2.3.3 fixed, including:
+
+ * 2237 - Equalization effects have no Import or Export for curves
+ * 2261 - Graphic EQ sliders have no frequency labels
+ * 2265 - Track heights are reset to default on project re-opening
+ * 2303 - Playback does not start at the saved cursor position on reopening a saved project.
+ * 2314 - Zoom in fail when playing
+
+
+Changes in version 2.3.3:
 
 Improvements
 
