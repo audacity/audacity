@@ -79,11 +79,11 @@ void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasT0 ).TieTextBox(XO("Start Time:"), mT0);
-      S.Optional( bHasT1 ).TieTextBox(XO("End Time:"),   mT1);
+      S.Optional( bHasT0 ).TieTextBox(XXO("Start Time:"), mT0);
+      S.Optional( bHasT1 ).TieTextBox(XXO("End Time:"),   mT1);
       // Chooses what time is relative to.
       S.Optional( bHasRelativeSpec ).TieChoice(
-         XO("Relative To:"),
+         XXO("Relative To:"),
          mRelativeTo, Msgids( kRelativeTo, nRelativeTos ));
    }
    S.EndMultiColumn();
@@ -160,8 +160,8 @@ void SelectFrequenciesCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasTop    ).TieTextBox(XO("High:"), mTop);
-      S.Optional( bHasBottom ).TieTextBox(XO("Low:"),  mBottom);
+      S.Optional( bHasTop    ).TieTextBox(XXO("High:"), mTop);
+      S.Optional( bHasBottom ).TieTextBox(XXO("Low:"),  mBottom);
    }
    S.EndMultiColumn();
 }
@@ -212,14 +212,14 @@ void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasFirstTrack).TieTextBox(XO("First Track:"),mFirstTrack);
-      S.Optional( bHasNumTracks).TieTextBox(XO("Track Count:"),mNumTracks);
+      S.Optional( bHasFirstTrack).TieTextBox(XXO("First Track:"),mFirstTrack);
+      S.Optional( bHasNumTracks).TieTextBox(XXO("Track Count:"),mNumTracks);
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       // Always used, so no check box.
-      S.TieChoice( XO("Mode:"), mMode, Msgids( kModes, nModes ));
+      S.TieChoice( XXO("Mode:"), mMode, Msgids( kModes, nModes ));
    }
    S.EndMultiColumn();
 }

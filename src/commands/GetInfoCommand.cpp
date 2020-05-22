@@ -112,9 +112,9 @@ void GetInfoCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieChoice( XO("Type:"),
+      S.TieChoice( XXO("Type:"),
          mInfoType, Msgids( kTypes, nTypes ));
-      S.TieChoice( XO("Format:"),
+      S.TieChoice( XXO("Format:"),
          mFormat, Msgids( kFormats, nFormats ));
    }
    S.EndMultiColumn();

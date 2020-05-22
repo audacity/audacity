@@ -825,7 +825,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
                t = S.Validator<IntegerValidator<int>>(
                      &mBufferSize, NumValidatorStyle::DEFAULT, 8, 1048576 * 1)
                   .MinSize( { 100, -1 } )
-                  .TieNumericTextBox(XO("&Buffer Size (8 to 1048576 samples):"),
+                  .TieNumericTextBox(XXO("&Buffer Size (8 to 1048576 samples):"),
                                        mBufferSize,
                                        12);
             }
@@ -845,7 +845,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(XO("Enable &compensation"),
+               S.TieCheckBox(XXO("Enable &compensation"),
                              mUseLatency);
             }
             S.EndHorizontalLay();
@@ -859,7 +859,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 " A basic text-only method is also available. "
 " Reopen the effect for this to take effect."),
                false, 0, 650);
-            S.TieCheckBox(XO("Enable &graphical interface"),
+            S.TieCheckBox(XXO("Enable &graphical interface"),
                           mUseGUI);
          }
          S.EndStatic();

@@ -318,7 +318,8 @@ TranslatableString ClipBoundaryMessage(
       TranslatableString str;
       auto nClips = result.waveTrack->GetNumClips();
       if (result.nFound < 2) {
-            /* i18n-hint: in the string after this one,
+         str = XP(
+            /* i18n-hint:
                First %s is replaced with the noun "start" or "end"
                identifying one end of a clip,
                first number gives the position of that clip in a sequence
@@ -327,8 +328,6 @@ TranslatableString ClipBoundaryMessage(
                and the last string is the name of the track containing the
                clips.
              */
-         XO("dummyStringClipBoundaryMessage");
-         str = wxPLURAL(
             "%s %d of %d clip %s",
             "%s %d of %d clips %s",
             2
@@ -340,7 +339,8 @@ TranslatableString ClipBoundaryMessage(
          );
       }
       else {
-            /* i18n-hint: in the string after this one,
+         str = XP(
+            /* i18n-hint:
                First two %s are each replaced with the noun "start"
                or with "end", identifying and end of a clip,
                first and second numbers give the position of those clips in
@@ -349,8 +349,6 @@ TranslatableString ClipBoundaryMessage(
                and the last string is the name of the track containing the
                clips.
              */
-         XO("dummyStringClipBoundaryMessageLong");
-         str = wxPLURAL(
             "%s %d and %s %d of %d clip %s",
             "%s %d and %s %d of %d clips %s",
             4
@@ -581,12 +579,11 @@ void DoSelectClip(AudacityProject &project, bool next)
       for (auto& result : results) {
          auto longName = result.ComposeTrackName();
          auto nClips = result.waveTrack->GetNumClips();
-            /* i18n-hint: in the string after this one,
+         auto str = XP(
+            /* i18n-hint:
                first number identifies one of a sequence of clips,
                last number counts the clips,
                string names a track */
-         XO("dummyStringOnSelectClip");
-         auto str = wxPLURAL(
             "%d of %d clip %s",
             "%d of %d clips %s",
             1
@@ -834,7 +831,7 @@ BaseItemSharedPtr ClipSelectMenu()
 
    static BaseItemSharedPtr menu {
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Clip"), XO("Clip B&oundaries"),
+   Menu( wxT("Clip"), XXO("Clip B&oundaries"),
       Command( wxT("SelPrevClipBoundaryToCursor"),
          XXO("Pre&vious Clip Boundary to Cursor"),
          FN(OnSelectPrevClipBoundaryToCursor),

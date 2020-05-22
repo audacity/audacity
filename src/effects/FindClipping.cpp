@@ -246,11 +246,11 @@ void EffectFindClipping::PopulateOrExchange(ShuttleGui & S)
    {
       S.Validator<IntegerValidator<int>>(
             &mStart, NumValidatorStyle::DEFAULT, MIN_Start)
-         .TieTextBox(XO("&Start threshold (samples):"), mStart, 10);
+         .TieTextBox(XXO("&Start threshold (samples):"), mStart, 10);
 
       S.Validator<IntegerValidator<int>>(
             &mStop, NumValidatorStyle::DEFAULT, MIN_Stop)
-         .TieTextBox(XO("St&op threshold (samples):"), mStop, 10);
+         .TieTextBox(XXO("St&op threshold (samples):"), mStop, 10);
    }
    S.EndMultiColumn();
 }

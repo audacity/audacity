@@ -345,15 +345,15 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
             vldDtmf.SetIncludes(wxArrayString(WXSIZEOF(kSymbols), kSymbols));
             return vldDtmf;
          })
-         .AddTextBox(XO("DTMF &sequence:"), wxT(""), 10);
+         .AddTextBox(XXO("DTMF &sequence:"), wxT(""), 10);
 
       S.Id(ID_Amplitude)
          .Validator<FloatingPointValidator<double>>(
             3, &dtmfAmplitude, NumValidatorStyle::NO_TRAILING_ZEROES,
             MIN_Amplitude, MAX_Amplitude)
-         .AddTextBox(XO("&Amplitude (0-1):"), wxT(""), 10);
+         .AddTextBox(XXO("&Amplitude (0-1):"), wxT(""), 10);
 
-      S.AddPrompt(XO("&Duration:"));
+      S.AddPrompt(XXO("&Duration:"));
       mDtmfDurationT = safenew
          NumericTextCtrl(S.GetParent(), ID_Duration,
                          NumericConverter::TIME,

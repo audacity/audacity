@@ -190,11 +190,11 @@ enum {
 
 static const std::vector< ComponentInterfaceSymbol >
 &alignLabels() { static std::vector< ComponentInterfaceSymbol > symbols{
-   { wxT("StartToZero"),     XO("Start to &Zero") },
-   { wxT("StartToSelStart"), XO("Start to &Cursor/Selection Start") },
-   { wxT("StartToSelEnd"),   XO("Start to Selection &End") },
-   { wxT("EndToSelStart"),   XO("End to Cu&rsor/Selection Start") },
-   { wxT("EndToSelEnd"),     XO("End to Selection En&d") },
+   { wxT("StartToZero"),     XXO("Start to &Zero") },
+   { wxT("StartToSelStart"), XXO("Start to &Cursor/Selection Start") },
+   { wxT("StartToSelEnd"),   XXO("Start to Selection &End") },
+   { wxT("EndToSelStart"),   XXO("End to Cu&rsor/Selection Start") },
+   { wxT("EndToSelEnd"),     XXO("End to Selection En&d") },
 }; return symbols; }
 
 const size_t kAlignLabelsCount(){ return alignLabels().size(); }
@@ -765,7 +765,7 @@ void OnResample(const CommandContext &context)
 
          S.StartHorizontalLay(wxCENTER, false);
          {
-            cb = S.AddCombo(XO("New sample rate (Hz):"),
+            cb = S.AddCombo(XXO("New sample rate (Hz):"),
                             rate,
                             rates);
          }
@@ -1301,9 +1301,9 @@ BaseItemSharedPtr TracksMenu()
    
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Tracks"), XO("&Tracks"),
+   Menu( wxT("Tracks"), XXO("&Tracks"),
       Section( "Add",
-         Menu( wxT("Add"), XO("Add &New"),
+         Menu( wxT("Add"), XXO("Add &New"),
             Command( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
                AudioIONotBusyFlag(), wxT("Ctrl+Shift+N") ),
             Command( wxT("NewStereoTrack"), XXO("&Stereo Track"),
@@ -1318,7 +1318,7 @@ BaseItemSharedPtr TracksMenu()
       //////////////////////////////////////////////////////////////////////////
 
       Section( "",
-         Menu( wxT("Mix"), XO("Mi&x"),
+         Menu( wxT("Mix"), XXO("Mi&x"),
             // Delayed evaluation
             // Stereo to Mono is an oddball command that is also subject to control
             // by the plug-in manager, as if an effect.  Decide whether to show or
@@ -1354,7 +1354,7 @@ BaseItemSharedPtr TracksMenu()
       ),
 
       Section( "",
-         Menu( wxT("Mute"), XO("M&ute/Unmute"),
+         Menu( wxT("Mute"), XXO("M&ute/Unmute"),
             Command( wxT("MuteAllTracks"), XXO("&Mute All Tracks"),
                FN(OnMuteAllTracks), TracksExistFlag(), wxT("Ctrl+U") ),
             Command( wxT("UnmuteAllTracks"), XXO("&Unmute All Tracks"),
@@ -1365,7 +1365,7 @@ BaseItemSharedPtr TracksMenu()
                FN(OnUnmuteSelectedTracks), TracksSelectedFlag(), wxT("Ctrl+Alt+Shift+U") )
          ),
 
-         Menu( wxT("Pan"), XO("&Pan"),
+         Menu( wxT("Pan"), XXO("&Pan"),
             // As Pan changes are not saved on Undo stack,
             // pan settings for all tracks
             // in the project could very easily be lost unless we
@@ -1383,13 +1383,13 @@ BaseItemSharedPtr TracksMenu()
       ),
 
       Section( "",
-         Menu( wxT("Align"), XO("&Align Tracks"), // XO("Just Move Tracks"),
+         Menu( wxT("Align"), XXO("&Align Tracks"), // XO("Just Move Tracks"),
             Section( "",
                // Mutual alignment of tracks independent of selection or zero
                CommandGroup(wxT("Align"),
                   {
-                     { wxT("EndToEnd"),     XO("&Align End to End") },
-                     { wxT("Together"),     XO("Align &Together") },
+                     { wxT("EndToEnd"),     XXO("&Align End to End") },
+                     { wxT("Together"),     XXO("Align &Together") },
                   },
                   FN(OnAlignNoSync), AudioIONotBusyFlag() | TracksSelectedFlag())
             ),
@@ -1429,7 +1429,7 @@ BaseItemSharedPtr TracksMenu()
 
          //////////////////////////////////////////////////////////////////////////
 
-         Menu( wxT("Sort"), XO("S&ort Tracks"),
+         Menu( wxT("Sort"), XXO("S&ort Tracks"),
             Command( wxT("SortByTime"), XXO("By &Start Time"), FN(OnSortTime),
                TracksExistFlag(),
                Options{}.LongName( XO("Sort by Time") ) ),
@@ -1465,7 +1465,7 @@ BaseItemSharedPtr ExtraTrackMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Track"), XO("&Track"),
+   Menu( wxT("Track"), XXO("&Track"),
       Command( wxT("TrackPan"), XXO("Change P&an on Focused Track..."),
          FN(OnTrackPan),
          TrackPanelHasFocus() | TracksExistFlag(), wxT("Shift+P") ),

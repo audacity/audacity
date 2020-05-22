@@ -100,15 +100,15 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
          {
             mTotal = S.Id(ID_TOTAL)
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
-               .AddTextBox(XO("&Total space used"), wxT("0"), 10);
+               .AddTextBox(XXO("&Total space used"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
             mAvail = S.Id(ID_AVAIL)
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
-               .AddTextBox(XO("&Undo levels available"), wxT("0"), 10);
+               .AddTextBox(XXO("&Undo levels available"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
-            S.AddPrompt(XO("&Levels to discard"));
+            S.AddPrompt(XXO("&Levels to discard"));
             mLevels = safenew wxSpinCtrl(S.GetParent(),
                                      ID_LEVELS,
                                      wxT("1"),
@@ -120,12 +120,12 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
                                      0);
             S.AddWindow(mLevels);
             /* i18n-hint: (verb)*/
-            mDiscard = S.Id(ID_DISCARD).AddButton(XO("&Discard"));
+            mDiscard = S.Id(ID_DISCARD).AddButton(XXO("&Discard"));
 
             mClipboard = S
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
-               .AddTextBox(XO("Clipboard space used"), wxT("0"), 10);
-            S.Id(ID_DISCARD_CLIPBOARD).AddButton(XO("Discard"));
+               .AddTextBox(XXO("Clipboard space used"), wxT("0"), 10);
+            S.Id(ID_DISCARD_CLIPBOARD).AddButton(XXO("Discard"));
          }
          S.EndMultiColumn();
       }
@@ -134,7 +134,7 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
       S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
          S.SetBorder(10);
-         S.Id(wxID_OK).AddButton(XO("&OK"), wxALIGN_CENTER, true);
+         S.Id(wxID_OK).AddButton(XXO("&OK"), wxALIGN_CENTER, true);
       }
       S.EndHorizontalLay();
    }

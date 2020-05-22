@@ -900,7 +900,7 @@ You are saving directly to a slow external storage device\n\
 "
          ),
          false,
-         XO("Turn off dropout detection"));
+         XXO("Turn off dropout detection"));
       }
 
       auto &history = ProjectHistory::Get( project );

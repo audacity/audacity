@@ -586,7 +586,7 @@ BaseItemSharedPtr ExtraFocusMenu()
 
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Focus"), XO("Foc&us"),
+   Menu( wxT("Focus"), XXO("Foc&us"),
       Command( wxT("PrevFrame"),
          XXO("Move &Backward from Toolbars to Tracks"), FN(OnPrevFrame),
          AlwaysEnabledFlag, wxT("Ctrl+Shift+F6") ),

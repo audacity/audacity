@@ -126,12 +126,12 @@ void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(  XO("Path:"), mPath);
-      S.TieChoice(   XO("Capture What:"),
+      S.TieTextBox(  XXO("Path:"), mPath);
+      S.TieChoice(   XXO("Capture What:"),
          mWhat, Msgids(kCaptureWhatStrings, nCaptureWhats));
-      S.TieChoice(   XO("Background:"),
+      S.TieChoice(   XXO("Background:"),
          mBack, Msgids(kBackgroundStrings, nBackgrounds));
-      S.TieCheckBox( XO("Bring To Top"), mbBringToTop);
+      S.TieCheckBox( XXO("Bring To Top"), mbBringToTop);
    }
    S.EndMultiColumn();
 }

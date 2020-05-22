@@ -60,8 +60,8 @@ void HelpCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(XO("Command:"),mCommandName);
-      S.TieChoice( XO("Format:"),
+      S.TieTextBox(XXO("Command:"),mCommandName);
+      S.TieChoice( XXO("Format:"),
          mFormat, Msgids( kFormats, nFormats ));
    }
    S.EndMultiColumn();

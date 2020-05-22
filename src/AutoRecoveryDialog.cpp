@@ -88,9 +88,9 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
 
       S.StartHorizontalLay();
       {
-         S.Id(ID_QUIT_AUDACITY).AddButton(XO("Quit Audacity"));
-         S.Id(ID_RECOVER_NONE).AddButton(XO("Discard Projects"));
-         S.Id(ID_RECOVER_ALL).AddButton(XO("Recover Projects"));
+         S.Id(ID_QUIT_AUDACITY).AddButton(XXO("Quit Audacity"));
+         S.Id(ID_RECOVER_NONE).AddButton(XXO("Discard Projects"));
+         S.Id(ID_RECOVER_ALL).AddButton(XXO("Recover Projects"));
       }
       S.EndHorizontalLay();
    }

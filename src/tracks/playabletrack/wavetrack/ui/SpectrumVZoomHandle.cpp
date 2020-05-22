@@ -290,13 +290,13 @@ EndSection();
 
 
 BeginSection( "Zoom" );
-   AppendItem( "Reset", OnZoomResetID,         XO("Zoom Reset"),
+   AppendItem( "Reset", OnZoomResetID,         XXO("Zoom Reset"),
               POPUP_MENU_FN( OnZoomReset ) );
-   AppendItem( "Fit", OnZoomFitVerticalID,   XO("Zoom to Fit\tShift-Right-Click"),
+   AppendItem( "Fit", OnZoomFitVerticalID,   XXO("Zoom to Fit\tShift-Right-Click"),
               POPUP_MENU_FN( OnZoomFitVertical ) );
-   AppendItem( "In", OnZoomInVerticalID,    XO("Zoom In\tLeft-Click/Left-Drag"),
+   AppendItem( "In", OnZoomInVerticalID,    XXO("Zoom In\tLeft-Click/Left-Drag"),
               POPUP_MENU_FN( OnZoomInVertical ) );
-   AppendItem( "Out", OnZoomOutVerticalID,   XO("Zoom Out\tShift-Left-Click"),
+   AppendItem( "Out", OnZoomOutVerticalID,   XXO("Zoom Out\tShift-Left-Click"),
               POPUP_MENU_FN( OnZoomOutVertical ) );
 EndSection();
 

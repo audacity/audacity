@@ -185,7 +185,7 @@ BaseItemSharedPtr WindowMenu()
       //////////////////////////////////////////////////////////////////////////
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Window"), XO("&Window"),
+   Menu( wxT("Window"), XXO("&Window"),
       Section( "",
          /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
           * window) shrink to an icon on the dock */

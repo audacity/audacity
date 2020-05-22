@@ -142,12 +142,12 @@ void SplashDialog::Populate( ShuttleGui & S )
    S.SetStretchyCol( 1 );// Column 1 is stretchy...
    {
       S.SetBorder( 5 );
-      S.Id( DontShowID).AddCheckBox( XO("Don't show this again at start up"), !bShow );
+      S.Id( DontShowID).AddCheckBox( XXO("Don't show this again at start up"), !bShow );
       S.SetBorder( 5 );
 
       S.Id(wxID_OK)
          .Prop(0)
-         .AddButton(XO("OK"), wxALIGN_RIGHT| wxALL, true);
+         .AddButton(XXO("OK"), wxALIGN_RIGHT| wxALL, true);
    }
    S.EndVerticalLay();
 }

@@ -146,7 +146,7 @@ BEGIN_EVENT_TABLE(KeyView, wxVListBox)
    EVT_SCROLLWIN(KeyView::OnScroll)
 END_EVENT_TABLE();
 
-wxString    KeyView::CommandTranslated="Command";
+static wxString CommandTranslated = "Command";
 
 
 // ============================================================================
@@ -656,6 +656,9 @@ KeyView::RefreshBindings(const CommandIDs & names,
    bool incat = false;
    bool inpfx = false;
 
+   // lookup translation once only
+   CommandTranslated = _("Command");
+
    // Examine all names...all arrays passed have the same indexes
    int cnt = (int) names.size();
    for (int i = 0; i < cnt; i++)
@@ -668,7 +671,7 @@ KeyView::RefreshBindings(const CommandIDs & names,
       wxString pfx = wxMenuItem::GetLabelText(prefixes[i].Translation());
 
       // Append "Menu" this node is for a menu title
-      if (cat != wxT("Command"))
+      if (cat != CommandTranslated)
       {
          cat.Append(wxT(" "));
          cat += _("Menu");

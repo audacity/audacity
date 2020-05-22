@@ -350,13 +350,13 @@ static wxString AskCopyOrEdit()
          S.SetBorder(0);
 
          copyRadio = S.AddRadioButton(
-            XO("Make a &copy of the files before editing (safer)") );
+            XXO("Make a &copy of the files before editing (safer)") );
 
          aliasRadio = S.AddRadioButtonToGroup(
-            XO("Read the files &directly from the original (faster)") );
+            XXO("Read the files &directly from the original (faster)") );
 
          dontAskNextTimeBox = S.AddCheckBox(
-            XO("Don't &warn again and always use my choice above"),
+            XXO("Don't &warn again and always use my choice above"),
             wxT("false"));
       }
       S.EndStatic();

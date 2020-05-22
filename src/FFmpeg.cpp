@@ -497,10 +497,10 @@ public:
             else {
                mPathText = S.AddTextBox( {}, mLibPath.GetFullPath(), 0);
             }
-            S.Id(ID_FFMPEG_BROWSE).AddButton(XO("Browse..."), wxALIGN_RIGHT);
+            S.Id(ID_FFMPEG_BROWSE).AddButton(XXO("Browse..."), wxALIGN_RIGHT);
             S.AddVariableText(
                XO("To get a free copy of FFmpeg, click here -->"), true);
-            S.Id(ID_FFMPEG_DLOAD).AddButton(XO("Download"), wxALIGN_RIGHT);
+            S.Id(ID_FFMPEG_DLOAD).AddButton(XXO("Download"), wxALIGN_RIGHT);
          }
          S.EndMultiColumn();
 
@@ -593,7 +593,7 @@ to download or locate the FFmpeg libraries."
       ));
 
       mDontShow = S
-         .AddCheckBox(XO("Do not show this warning again"),
+         .AddCheckBox(XXO("Do not show this warning again"),
             gPrefs->ReadBool(wxT("/FFmpeg/NotFoundDontShow"), false) );
 
       S.AddStandardButtons(eOkButton);

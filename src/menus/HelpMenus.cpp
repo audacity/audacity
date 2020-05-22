@@ -168,7 +168,7 @@ void QuickFixDialog::AddStuck(
    if( !bBool)
       return;
    S.AddFixedText( Prompt );
-   S.Id(FixButtonID + mItem).AddButton( XO("Fix") )->SetClientObject(
+   S.Id(FixButtonID + mItem).AddButton( XXO("Fix") )->SetClientObject(
       safenew wxStringClientData(Pref));
 
    {
@@ -494,7 +494,7 @@ BaseItemSharedPtr HelpMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Help"), XO("&Help"),
+   Menu( wxT("Help"), XXO("&Help"),
       Section( "Basic",
          // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
    #ifdef EXPERIMENTAL_DA
@@ -522,7 +522,7 @@ BaseItemSharedPtr HelpMenu()
       Section
    #endif
       ( "Other",
-         Menu( wxT("Diagnostics"), XO("&Diagnostics"),
+         Menu( wxT("Diagnostics"), XXO("&Diagnostics"),
             Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
                FN(OnAudioDeviceInfo),
                AudioIONotBusyFlag() ),

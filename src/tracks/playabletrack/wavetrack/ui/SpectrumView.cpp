@@ -32,7 +32,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Spectrum,
-   { wxT("Spectrogram"), XO("&Spectrogram") }
+   { wxT("Spectrogram"), XXO("&Spectrogram") }
 };
 
 static WaveTrackSubViewType::RegisteredType reg{ sType };
@@ -794,7 +794,7 @@ PopupMenuTable::AttachedItem sAttachment{
                return std::make_unique<Entry>( "SpectrogramSettings",
                   Entry::Item,
                   OnSpectrogramSettingsID,
-                  XO("S&pectrogram Settings..."),
+                  XXO("S&pectrogram Settings..."),
                   (wxCommandEventFunction)
                      (&SpectrogramSettingsHandler::OnSpectrogramSettings),
                   SpectrogramSettingsHandler::Instance(),

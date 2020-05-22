@@ -29,9 +29,13 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 #define _TS( s ) GetCustomSubstitution( s )
 
 // Marks strings for extraction only... use .Translate() to translate.
+// '&', preceding menu accelerators, should NOT occur in the argument.
 #define XO(s)  (TranslatableString{ wxT(s), {} })
-// XXO is used instead of XO in some places, for reasons that are
-// no longer important.  The two are equivalent now.
+
+// Marks strings for extraction only, where '&', preceding men accelerators, MAY
+// occur.
+// For now, expands eactly as macro XO does, but in future there will be a
+// type distinction.
 #define XXO(s)  XO(s)
 
 #ifdef _
@@ -60,8 +64,8 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
    #define _(s) GetCustomTranslation((s))
 #endif
 
-#ifdef wxPLURAL
-   #undef wxPLURAL
+#ifdef XP
+   #undef XP
 #endif
 
 
@@ -72,20 +76,13 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 // (You must use plain string literals.  Do not use _() or wxT() or L prefix,
 //  which (intentionally) will fail to compile.  The macro inserts wxT).
 //
-// Note too:  it seems an i18n-hint comment is not extracted if it precedes
-// wxPLURAL directly.  A workaround:  after the comment, insert a line
-// _("dummyStringXXXX");
-// where for XXXX subsitute something making this dummy string unique in the
-// program.  Then check in your generated audacity.pot that the dummy is
-// immediately before the singular/plural entry.
-//
-// Your i18n-comment should therefore say something like,
-// "In the string after this one, ..."
+// Note too:  The i18n-hint comment must be on the line preceding the first
+// string.  That might be inside the parentheses of the macro call.
 //
 // The macro call is then followed by a sequence of format arguments in
 // parentheses.  The third argument of the macro call is the zero-based index
 // of the format argument that selects singular or plural
-#define wxPLURAL(sing, plur, n) \
+#define XP(sing, plur, n) \
    TranslatableString{ wxT(sing), {} }.Plural<(n)>( wxT(plur) )
 
 #endif

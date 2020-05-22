@@ -568,7 +568,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(XO("Enable &compensation"),
+               S.TieCheckBox(XXO("Enable &compensation"),
                              mUseLatency);
             }
             S.EndHorizontalLay();
@@ -588,7 +588,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieChoice(XO("Select &interface"),
+               S.TieChoice(XXO("Select &interface"),
                   mUIType,
                   {
                      XO("Full"),
@@ -646,7 +646,7 @@ public:
 
    void PopulateOrExchange(ShuttleGui & S);
    bool HasPresets();
-   wxString Import(const wxString & path, const wxString & name);
+   TranslatableString Import(const wxString & path, const wxString & name);
 
    void OnOk(wxCommandEvent & evt);
 
@@ -751,7 +751,8 @@ bool AudioUnitEffectImportDialog::HasPresets()
    return mList->GetItemCount() > 0;
 }
 
-wxString AudioUnitEffectImportDialog::Import(const wxString & path, const wxString & name)
+TranslatableString AudioUnitEffectImportDialog::Import(
+   const wxString & path, const wxString & name)
 {
    // Generate the path
    wxString fullPath;
@@ -763,7 +764,7 @@ wxString AudioUnitEffectImportDialog::Import(const wxString & path, const wxStri
    wxFFile f(fullPath, wxT("r"));
    if (!f.IsOpened())
    {
-      return wxString::Format(_("Couldn't open \"%s\""), fullPath);
+      return XO("Couldn't open \"%s\"").Format( fullPath );
    }
 
    // Load it into the buffer
@@ -771,23 +772,23 @@ wxString AudioUnitEffectImportDialog::Import(const wxString & path, const wxStri
    wxMemoryBuffer buf(len);
    if (f.Read(buf.GetData(), len) != len || f.Error())
    {
-      return wxString::Format(_("Unable to read the preset from \"%s\""), fullPath);
+      return XO("Unable to read the preset from \"%s\"").Format( fullPath );
    }
 
    wxString parms = wxBase64Encode(buf.GetData(), len);
    if (parms.IsEmpty())
    {
-      return wxString::Format(_("Failed to encode preset from \"%s\""), fullPath);
+      return XO("Failed to encode preset from \"%s\"").Format( fullPath );
    }
 
    // And write it to the config
    wxString group = mEffect->mHost->GetUserPresetsGroup(name);
    if (!mEffect->mHost->SetPrivateConfig(group, PRESET_KEY, parms))
    {
-      return wxString::Format(_("Unable to store preset in config file"));
+      return XO("Unable to store preset in config file");
    }
 
-   return wxEmptyString;
+   return {};
 }
 
 void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & evt)
@@ -806,9 +807,9 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & evt)
 
       wxString path = item.GetText();
       wxString name = mList->GetItemText(sel);
-      wxString msg = Import(path, name);
+      auto msg = Import(path, name);
 
-      if (!msg.IsEmpty())
+      if (!msg.empty())
       {
          AudacityMessageBox(
             XO("Could not import \"%s\" preset\n\n%s").Format( name, msg ),
@@ -1851,8 +1852,8 @@ void AudioUnitEffect::ExportPresets()
       return;
    }
 
-   wxString msg = Export(path);
-   if (!msg.IsEmpty())
+   auto msg = Export(path);
+   if (!msg.empty())
    {
       AudacityMessageBox(
          XO("Could not export \"%s\" preset\n\n%s").Format( path, msg ),
@@ -1893,8 +1894,8 @@ void AudioUnitEffect::ImportPresets()
       return;
    }
 
-   wxString msg = Import(path);
-   if (!msg.IsEmpty())
+   auto msg = Import(path);
+   if (!msg.empty())
    {
       AudacityMessageBox(
          XO("Could not import \"%s\" preset\n\n%s").Format( path, msg ),
@@ -2260,13 +2261,13 @@ void AudioUnitEffect::SetChannelCount(unsigned numChannels)
    mNumChannels = numChannels;
 }
 
-wxString AudioUnitEffect::Export(const wxString & path)
+TranslatableString AudioUnitEffect::Export(const wxString & path)
 {
    // Create the file
    wxFFile f(path, wxT("wb"));
    if (!f.IsOpened())
    {
-      return _("Couldn't open \"%s\"").Format(path);
+      return XO("Couldn't open \"%s\"").Format(path);
    }
 
    // First set the name of the preset
@@ -2287,7 +2288,7 @@ wxString AudioUnitEffect::Export(const wxString & path)
                                  sizeof(preset));
    if (result != noErr)
    {
-      return _("Failed to set preset name");
+      return XO("Failed to set preset name");
    }
 
    // Now retrieve the preset content
@@ -2302,7 +2303,7 @@ wxString AudioUnitEffect::Export(const wxString & path)
    CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
    if (result != noErr)
    {
-      return _("Failed to retrieve preset content");
+      return XO("Failed to retrieve preset content");
    }
 
    // And convert it to serialized XML data
@@ -2316,34 +2317,34 @@ wxString AudioUnitEffect::Export(const wxString & path)
    };
    if (!data)
    {
-      return _("Failed to convert property list to XML data");
+      return XO("Failed to convert property list to XML data");
    }
 
    // Nothing to do if we don't have any data
    SInt32 length = CFDataGetLength(data.get());
    if (!length)
    {
-      return _("XML data is empty after conversion");
+      return XO("XML data is empty after conversion");
    }
 
    // Write XML data
    if (f.Write(CFDataGetBytePtr(data.get()), length) != length || f.Error())
    {
-      return _("Failed to write XML preset to \"%s\"").Format(path);
+      return XO("Failed to write XML preset to \"%s\"").Format(path);
    }
 
    f.Close();
 
-   return wxEmptyString;
+   return {};
 }
 
-wxString AudioUnitEffect::Import(const wxString & path)
+TranslatableString AudioUnitEffect::Import(const wxString & path)
 {
    // Open the preset
    wxFFile f(path, wxT("r"));
    if (!f.IsOpened())
    {
-      return _("Couldn't open \"%s\"").Format(path);
+      return XO("Couldn't open \"%s\"").Format(path);
    }
 
    // Load it into the buffer
@@ -2351,7 +2352,7 @@ wxString AudioUnitEffect::Import(const wxString & path)
    wxMemoryBuffer buf(len);
    if (f.Read(buf.GetData(), len) != len || f.Error())
    {
-      return _("Unable to read the preset from \"%s\"").Format(path);
+      return XO("Unable to read the preset from \"%s\"").Format(path);
    }
 
    // Create a CFData object that references the decoded preset
@@ -2364,7 +2365,7 @@ wxString AudioUnitEffect::Import(const wxString & path)
    };
    if (!data)
    {
-      return _("Failed to convert preset to internal format");
+      return XO("Failed to convert preset to internal format");
    }
 
    // Convert it back to a property list.
@@ -2378,7 +2379,7 @@ wxString AudioUnitEffect::Import(const wxString & path)
    };
    if (!content)
    {
-      return _("Failed to create property list for preset");
+      return XO("Failed to create property list for preset");
    }
    CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
 
@@ -2392,13 +2393,13 @@ wxString AudioUnitEffect::Import(const wxString & path)
                                  sizeof(content));
    if (result != noErr)
    {
-      return _("Failed to set class info for \"%s\" preset");
+      return XO("Failed to set class info for \"%s\" preset");
    }
 
    // Notify interested parties of change and propagate to slaves
    Notify(mUnit, kAUParameterListener_AnyParameter);
 
-   return wxEmptyString;
+   return {};
 }
 
 void AudioUnitEffect::Notify(AudioUnit unit, AudioUnitParameterID parm)

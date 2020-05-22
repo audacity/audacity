@@ -73,13 +73,13 @@ void DragCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
       /* i18n-hint abbreviates "Identity" or "Identifier" */
-      S.Optional( bHasId         ).TieNumericTextBox(  XO("Id:"),          mId );
-      S.Optional( bHasWinName    ).TieTextBox(         XO("Window Name:"), mWinName );
-      S.Optional( bHasFromX      ).TieNumericTextBox(  XO("From X:"),      mFromX );
-      S.Optional( bHasFromY      ).TieNumericTextBox(  XO("From Y:"),      mFromY );
-      S.Optional( bHasToX        ).TieNumericTextBox(  XO("To X:"),        mToX );
-      S.Optional( bHasToY        ).TieNumericTextBox(  XO("To Y:"),        mToY );
-      S.Optional( bHasRelativeTo ).TieChoice(          XO("Relative To:"), mRelativeTo,
+      S.Optional( bHasId         ).TieNumericTextBox(  XXO("Id:"),          mId );
+      S.Optional( bHasWinName    ).TieTextBox(         XXO("Window Name:"), mWinName );
+      S.Optional( bHasFromX      ).TieNumericTextBox(  XXO("From X:"),      mFromX );
+      S.Optional( bHasFromY      ).TieNumericTextBox(  XXO("From Y:"),      mFromY );
+      S.Optional( bHasToX        ).TieNumericTextBox(  XXO("To X:"),        mToX );
+      S.Optional( bHasToY        ).TieNumericTextBox(  XXO("To Y:"),        mToY );
+      S.Optional( bHasRelativeTo ).TieChoice(          XXO("Relative To:"), mRelativeTo,
          Msgids( kCoordTypeStrings, nCoordTypes ) );
    }
    S.EndMultiColumn();

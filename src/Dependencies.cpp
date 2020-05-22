@@ -365,7 +365,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
                .Focus()
                .Disable(mFileListCtrl->GetSelectedItemCount() <= 0)
                .AddButton(
-                  XO("Copy Selected Files"),
+                  XXO("Copy Selected Files"),
                   wxALIGN_LEFT, true);
       }
       S.EndStatic();
@@ -373,18 +373,18 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
       S.StartHorizontalLay(wxALIGN_CENTRE,0);
       {
          if (mIsSaving) {
-            S.Id(wxID_CANCEL).AddButton(XO("Cancel Save"));
-            S.Id(wxID_NO).AddButton(XO("Save Without Copying"));
+            S.Id(wxID_CANCEL).AddButton(XXO("Cancel Save"));
+            S.Id(wxID_NO).AddButton(XXO("Save Without Copying"));
          }
          else
-            S.Id(wxID_NO).AddButton(XO("Do Not Copy"));
+            S.Id(wxID_NO).AddButton(XXO("Do Not Copy"));
 
          mCopyAllFilesButton =
             S.Id(wxID_YES)
                // Enabling mCopyAllFilesButton is also done in PopulateList,
                // but at its call above, mCopyAllFilesButton does not yet exist.
                .Disable(mHasMissingFiles)
-               .AddButton(XO("Copy All Files (Safer)"));
+               .AddButton(XXO("Copy All Files (Safer)"));
 
       }
       S.EndHorizontalLay();
@@ -395,7 +395,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
          {
             mFutureActionChoice =
                S.Id(FutureActionChoiceID).AddChoice(
-                  XO("Whenever a project depends on other files:"),
+                  XXO("Whenever a project depends on other files:"),
                   {
                      /*i18n-hint: One of the choices of what you want Audacity to do when
                      * Audacity finds a project depends on another file.*/

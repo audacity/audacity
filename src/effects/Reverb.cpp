@@ -450,15 +450,15 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S)
          .Style(wxSL_HORIZONTAL) \
          .AddSlider( {}, DEF_ ## n, MAX_ ## n, MIN_ ## n);
 
-      SpinSlider(RoomSize,       XO("&Room Size (%):"))
-      SpinSlider(PreDelay,       XO("&Pre-delay (ms):"))
-      SpinSlider(Reverberance,   XO("Rever&berance (%):"))
-      SpinSlider(HfDamping,      XO("Da&mping (%):"))
-      SpinSlider(ToneLow,        XO("Tone &Low (%):"))
-      SpinSlider(ToneHigh,       XO("Tone &High (%):"))
-      SpinSlider(WetGain,        XO("Wet &Gain (dB):"))
-      SpinSlider(DryGain,        XO("Dr&y Gain (dB):"))
-      SpinSlider(StereoWidth,    XO("Stereo Wid&th (%):"))
+      SpinSlider(RoomSize,       XXO("&Room Size (%):"))
+      SpinSlider(PreDelay,       XXO("&Pre-delay (ms):"))
+      SpinSlider(Reverberance,   XXO("Rever&berance (%):"))
+      SpinSlider(HfDamping,      XXO("Da&mping (%):"))
+      SpinSlider(ToneLow,        XXO("Tone &Low (%):"))
+      SpinSlider(ToneHigh,       XXO("Tone &High (%):"))
+      SpinSlider(WetGain,        XXO("Wet &Gain (dB):"))
+      SpinSlider(DryGain,        XXO("Dr&y Gain (dB):"))
+      SpinSlider(StereoWidth,    XXO("Stereo Wid&th (%):"))
 
 #undef SpinSlider
 
@@ -468,7 +468,7 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxCENTER, false);
    {
       mWetOnlyC = S.Id(ID_WetOnly).
-         AddCheckBox(XO("Wet O&nly"), DEF_WetOnly);
+         AddCheckBox(XXO("Wet O&nly"), DEF_WetOnly);
    }
    S.EndHorizontalLay();
 

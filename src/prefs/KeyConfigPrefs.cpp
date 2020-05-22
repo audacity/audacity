@@ -187,9 +187,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             S.StartRadioButtonGroup({
                wxT("/Prefs/KeyConfig/ViewBy"),
                {
-                  { wxT("tree"), XO("&Tree") },
-                  { wxT("name"), XO("&Name") },
-                  { wxT("key"), XO("&Key") },
+                  { wxT("tree"), XXO("&Tree") },
+                  { wxT("name"), XXO("&Name") },
+                  { wxT("key"), XXO("&Key") },
                },
                0 // tree
             });
@@ -290,9 +290,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             .AddWindow(mKey);
 
          /* i18n-hint: (verb)*/
-         mSet = S.Id(SetButtonID).AddButton(XO("&Set"));
+         mSet = S.Id(SetButtonID).AddButton(XXO("&Set"));
          /* i18n-hint: (verb)*/
-         mClear = S.Id(ClearButtonID).AddButton(XO("Cl&ear"));
+         mClear = S.Id(ClearButtonID).AddButton(XXO("Cl&ear"));
       }
       S.EndThreeColumn();
 
@@ -302,9 +302,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartThreeColumn();
       {
-         S.Id(ImportButtonID).AddButton(XO("&Import..."));
-         S.Id(ExportButtonID).AddButton(XO("&Export..."));
-         S.Id(AssignDefaultsButtonID).AddButton(XO("&Defaults"));
+         S.Id(ImportButtonID).AddButton(XXO("&Import..."));
+         S.Id(ExportButtonID).AddButton(XXO("&Export..."));
+         S.Id(AssignDefaultsButtonID).AddButton(XXO("&Defaults"));
       }
       S.EndThreeColumn();
    }
@@ -450,11 +450,13 @@ TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
          {
             TranslatableString name{ mManager->GetKeyFromName(mNames[sRes]).GET(), {} };
             
-            disabledShortcuts += XO("\n   *   \"") +
-               mManager->GetPrefixedLabelFromName(mNames[i]) + 
-               XO("\"  (because the shortcut \'") + name + 
-               XO("\' is used by \"") + mManager->GetPrefixedLabelFromName(mNames[sRes])
-               +XO("\")\n");
+            disabledShortcuts +=
+               XO(
+"\n   *   \"%s\"  (because the shortcut \'%s\' is used by \"%s\")\n")
+                  .Format(
+                     mManager->GetPrefixedLabelFromName(mNames[i]),
+                     name,
+                     mManager->GetPrefixedLabelFromName(mNames[sRes]) );
             
             mManager->SetKeyFromIndex(i, noKey);
          }
@@ -528,8 +530,10 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
       mKeys = oldKeys;
 
       // output an error message
-      AudacityMessageBox(XO("The file with the shortcuts contains illegal shortcut duplicates for \"") +
-         fMatching + XO("\" and \"") + sMatching + XO("\".\nNothing is imported."),
+      AudacityMessageBox(
+         XO(
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\nNothing is imported.")
+            .Format( fMatching, sMatching ),
          XO("Error Importing Keyboard Shortcuts"),
          wxICON_ERROR | wxCENTRE, this);
 

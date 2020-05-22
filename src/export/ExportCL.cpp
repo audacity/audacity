@@ -131,13 +131,13 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(3, wxEXPAND);
          {
             S.SetStretchyCol(1);
-            mCmd = S.AddCombo(XO("Command:"),
+            mCmd = S.AddCombo(XXO("Command:"),
                               cmd,
                               cmds);
-            S.Id(ID_BROWSE).AddButton(XO("Browse..."),
+            S.Id(ID_BROWSE).AddButton(XXO("Browse..."),
                                       wxALIGN_CENTER_VERTICAL);
             S.AddFixedText( {} );
-            S.TieCheckBox(XO("Show output"),
+            S.TieCheckBox(XXO("Show output"),
                           {wxT("/FileFormats/ExternalProgramShowOutput"),
                            false});
          }
@@ -601,7 +601,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
          .AddTextWindow(mCmd + wxT("\n\n") + output);
       S.StartHorizontalLay(wxALIGN_CENTER, false);
       {
-         S.Id(wxID_OK).AddButton(XO("&OK"), wxALIGN_CENTER, true);
+         S.Id(wxID_OK).AddButton(XXO("&OK"), wxALIGN_CENTER, true);
       }
       dlg.GetSizer()->AddSpacer(5);
       dlg.Layout();

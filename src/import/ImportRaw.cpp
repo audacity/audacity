@@ -391,13 +391,13 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
       S.SetBorder(5);
       S.StartTwoColumn();
       {
-         mEncodingChoice = S.Id(ChoiceID).AddChoice(XO("Encoding:"),
+         mEncodingChoice = S.Id(ChoiceID).AddChoice(XXO("Encoding:"),
                                                     encodings,
                                                     selection);
-         mEndianChoice = S.Id(ChoiceID).AddChoice(XO("Byte order:"),
+         mEndianChoice = S.Id(ChoiceID).AddChoice(XXO("Byte order:"),
                                                   endians,
                                                   endian);
-         mChannelChoice = S.Id(ChoiceID).AddChoice(XO("Channels:"),
+         mChannelChoice = S.Id(ChoiceID).AddChoice(XXO("Channels:"),
                                                    chans,
                                                    mChannels - 1);
       }
@@ -408,20 +408,20 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
       {
          // Offset text
          /* i18n-hint: (noun)*/
-         mOffsetText = S.AddTextBox(XO("Start offset:"),
+         mOffsetText = S.AddTextBox(XXO("Start offset:"),
                                     wxString::Format(wxT("%d"), mOffset),
                                     12);
          S.AddUnits(XO("bytes"));
 
          // Percent text
-         mPercentText = S.AddTextBox(XO("Amount to import:"),
+         mPercentText = S.AddTextBox(XXO("Amount to import:"),
                                      wxT("100"),
                                      12);
          S.AddUnits(XO("%"));
 
          // Rate text
          /* i18n-hint: (noun)*/
-         mRateText = S.AddTextBox(XO("Sample rate:"),
+         mRateText = S.AddTextBox(XXO("Sample rate:"),
                                   wxString::Format(wxT("%d"), (int)mRate),
                                   12);
          /* i18n-hint: This is the abbreviation for "Hertz", or

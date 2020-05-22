@@ -115,7 +115,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
              .Disable()
 #endif
-            .AddButton(XO("&Locate..."),
+            .AddButton(XXO("&Locate..."),
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
          S.AddVariableText(XO("LAME MP3 Library:"),
             true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
@@ -123,7 +123,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
              .Disable()
 #endif
-            .AddButton(XO("&Download"),
+            .AddButton(XXO("&Download"),
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
 
 #endif
@@ -154,7 +154,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
             .Disable()
 #endif
-            .AddButton(XO("Loca&te..."),
+            .AddButton(XXO("Loca&te..."),
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
          S.AddVariableText(XO("FFmpeg Library:"),
             true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
@@ -163,7 +163,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
             .Disable()
 #endif
-            .AddButton(XO("Dow&nload"),
+            .AddButton(XXO("Dow&nload"),
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
       }
       S.EndTwoColumn();
@@ -172,7 +172,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #if !defined(USE_FFMPEG)
          .Disable()
 #endif
-         .TieCheckBox(XO("Allow &background on-demand loading"),
+         .TieCheckBox(XXO("Allow &background on-demand loading"),
                     {wxT("/Library/FFmpegOnDemand"), false});
 #endif
    }
