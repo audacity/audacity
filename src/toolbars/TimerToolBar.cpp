@@ -33,8 +33,15 @@
 
 IMPLEMENT_CLASS(TimerToolBar, ToolBar);
 
+// Having a fixed ID for the Audio Position is helpful for
+// the Jaws screen reader script for Audacity.
+enum {
+   TimeBarFirstID = 2800,
+   AudioPositionID
+};
+
 BEGIN_EVENT_TABLE(TimerToolBar, ToolBar)
-   EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, TimerToolBar::OnUpdate)
+   EVT_COMMAND(AudioPositionID, EVT_TIMETEXTCTRL_UPDATED, TimerToolBar::OnUpdate)
    EVT_SIZE(TimerToolBar::OnSize)
    EVT_IDLE(TimerToolBar::OnIdle)
 END_EVENT_TABLE()
@@ -71,7 +78,7 @@ void TimerToolBar::Populate()
    auto format = NumericConverter::HoursMinsSecondsFormat();
 
    // Create the read-only time control
-   mAudioTime = safenew NumericTextCtrl(this, wxID_ANY, NumericConverter::TIME, format, 0.0, rate);
+   mAudioTime = safenew NumericTextCtrl(this, AudioPositionID, NumericConverter::TIME, format, 0.0, rate);
    mAudioTime->SetName(XO("Audio Position"));
    mAudioTime->SetReadOnly(true);
 
