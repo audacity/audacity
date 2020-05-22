@@ -14983,7 +14983,7 @@ msgstr "Afficher le rack d’effets"
 # trebmuh to check (accélérateur)
 #: src/menus/WindowMenus.cpp
 msgid "&Window"
-msgstr "fenêtre (&w)"
+msgstr "Fenêtre (&w)"
 
 #. i18n-hint: Standard Macintosh Window menu item:  Make (the current
 #. * window) shrink to an icon on the dock
