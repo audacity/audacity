@@ -34,8 +34,9 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 
 // Marks strings for extraction only, where '&', preceding men accelerators, MAY
 // occur.
-// For now, expands eactly as macro XO does, but in future there will be a
-// type distinction.
+// For now, expands exactly as macro XO does, but in future there will be a
+// type distinction - for example XXO should be used for menu item names that
+// might use the & character for shortcuts.
 #define XXO(s)  XO(s)
 
 #ifdef _
