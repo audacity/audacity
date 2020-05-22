@@ -48,7 +48,6 @@ the mouse around.
 #include <wx/font.h>
 #include <wx/image.h>
 #include <wx/file.h>
-#include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>

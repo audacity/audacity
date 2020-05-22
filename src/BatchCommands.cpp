@@ -21,7 +21,6 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 
 #include <wx/defs.h>
 #include <wx/dir.h>
-#include <wx/filedlg.h>
 #include <wx/textfile.h>
 
 #include "Project.h"

@@ -25,7 +25,6 @@ of the BlockFile system.
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/dialog.h>
-#include <wx/filedlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/timer.h>
