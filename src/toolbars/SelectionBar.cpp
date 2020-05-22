@@ -153,11 +153,13 @@ void SelectionBar::Create(wxWindow * parent)
 }
 
 
-auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer ){
-   auStaticText * pTitle = safenew auStaticText(this, Title );
+auStaticText * SelectionBar::AddTitle(
+   const TranslatableString & Title, wxSizer * pSizer ){
+   const auto translated = Title.Translation();
+   auStaticText * pTitle = safenew auStaticText(this, translated );
    pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
-   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.length() == 1 ) ? 0:5);
+   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (translated.length() == 1 ) ? 0:5);
    return pTitle;
 }
 
@@ -212,12 +214,12 @@ void SelectionBar::Populate()
    // Top row (mostly labels)
    wxColour clrText =  theTheme.Colour( clrTrackPanelText );
    wxColour clrText2 = *wxBLUE;
-   AddTitle( _("Project Rate (Hz)"), mainSizer );
+   AddTitle( XO("Project Rate (Hz)"), mainSizer );
    AddVLine( mainSizer );
-   AddTitle( _("Snap-To"), mainSizer );
+   AddTitle( XO("Snap-To"), mainSizer );
    AddVLine( mainSizer );
 #ifdef TIME_IN_SELECT_TOOLBAR
-   AddTitle( _("Audio Position"), mainSizer );
+   AddTitle( XO("Audio Position"), mainSizer );
    AddVLine( mainSizer );
 #endif
 

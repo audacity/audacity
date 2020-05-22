@@ -28,10 +28,10 @@ Paul Licameli split from TrackPanel.cpp
 
 #if defined(__WXMAC__)
 /* i18n-hint: Command names a modifier key on Macintosh keyboards */
-#define CTRL_CLICK _("Command+Click")
+#define CTRL_CLICK XO("Command+Click")
 #else
 /* i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards */
-#define CTRL_CLICK _("Ctrl+Click")
+#define CTRL_CLICK XO("Ctrl+Click")
 #endif
 
 namespace {
