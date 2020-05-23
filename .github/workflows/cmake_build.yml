@@ -21,6 +21,7 @@ on:
 #
 env:
   WXURL: https://github.com/audacity/wxWidgets
+  WXREF: audacity-fixes-3.1.3
   WXWIN: ${{ github.workspace }}/wxwin
 
 #
@@ -75,7 +76,7 @@ jobs:
         set -x
 
         # Get latest wxWidgets commit hash
-        wxhash=$(git ls-remote ${WXURL} HEAD | awk 'NR==1 {print $1}')
+        wxhash=$(git ls-remote "${WXURL}" "${WXREF}" | awk 'NR==1 {print $1}')
 
         # Build the cache key
         wxhash="wx_${wxhash}_${RUNNER_OS}_${{matrix.config.platform}}"
@@ -116,7 +117,7 @@ jobs:
         if [ ! -e "${WXWIN}" ]
         then
           # Clone the wxWidgets repo
-          git clone --depth 1 --recurse-submodules "${WXURL}" "wxroot"
+          git clone --depth 1 --recurse-submodules -b "${WXREF}" "${WXURL}" "wxroot"
 
           # Use cmake since it defines the MSVC enviornment for us
           cmake -S "wxroot" \
@@ -186,7 +187,7 @@ jobs:
         if [ ! -e "${WXWIN}" ]
         then
           # Clone the wxWidgets repo
-          git clone --depth 1 --recurse-submodules "${WXURL}" "wxroot"
+          git clone --depth 1 --recurse-submodules -b "${WXREF}" "${WXURL}" "wxroot"
 
           # Make sure our flags are included
           export CXX="g++ -std=c++1z -stdlib=libc++"
@@ -261,7 +262,7 @@ jobs:
         if [ ! -e "${WXWIN}" ]
         then
           # Clone the wxWidgets repo
-          git clone --depth 1 --recurse-submodules "${WXURL}" "wxroot"
+          git clone --depth 1 --recurse-submodules -b "${WXREF}" "${WXURL}" "wxroot"
 
           # Install additional required package
           sudo apt-get install -y autoconf automake
