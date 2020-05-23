@@ -1379,7 +1379,7 @@ bool NyquistEffect::ProcessOne()
    const auto output = mDebugOutput.Translation();
    if (!output.empty() && !mDebug && !mTrace) {
       /* i18n-hint: An effect "returned" a message.*/
-      wxLogMessage(_("\'%s\' returned:\n%s"),
+      wxLogMessage(wxT("\'%s\' returned:\n%s"),
          mName.Translation(), output);
    }
 
@@ -2166,7 +2166,7 @@ bool NyquistEffect::Parse(
             else
             {
                wxString str;
-               str.Printf(_("Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
+               str.Printf(wxT("Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
                         tokens[3], mFileName.GetFullPath());
 
                // Too disturbing to show alert before Audacity frame is up.

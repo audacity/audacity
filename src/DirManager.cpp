@@ -875,7 +875,7 @@ wxFileNameWrapper DirManager::MakeBlockFilePath(const wxString &value) {
 
       if(!dir.DirExists() && !dir.Mkdir(0777,wxPATH_MKDIR_FULL))
       { // need braces to avoid compiler warning about ambiguous else, see the macro
-         wxLogSysError(_("mkdir in DirManager::MakeBlockFilePath failed."));
+         wxLogSysError(wxT("mkdir in DirManager::MakeBlockFilePath failed."));
       }
    }
    return dir;
@@ -906,7 +906,7 @@ bool DirManager::AssignFile(wxFileNameWrapper &fileName,
          wxString collision;
          checkit.GetFirst(&collision,filespec);
 
-         wxLogWarning(_("Audacity found an orphan block file: %s. \nPlease consider saving and reloading the project to perform a complete project check."),
+         wxLogWarning(wxT("Audacity found an orphan block file: %s. \nPlease consider saving and reloading the project to perform a complete project check."),
                       collision);
 
          return FALSE;
@@ -1495,7 +1495,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    wxFile testFile(renamedFullPath, wxFile::write);
    if (!testFile.IsOpened()) {
       { // need braces to avoid compiler warning about ambiguous else, see the macro
-         wxLogSysError(_("Unable to open/create test file."),
+         wxLogSysError(wxT("Unable to open/create test file."),
                renamedFullPath);
       }
       return false;
@@ -1507,7 +1507,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    if (!wxRemoveFile(renamedFullPath)) {
       { // need braces to avoid compiler warning about ambiguous else, see the macro
          /* i18n-hint: %s is the name of a file.*/
-         wxLogSysError(_("Unable to remove '%s'."),
+         wxLogSysError(wxT("Unable to remove '%s'."),
             renamedFullPath);
       }
       return false;
@@ -1548,7 +1548,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          // just in case!!!
 
          // Print error message and cancel the export
-         wxLogSysError(_("Unable to rename '%s' to '%s'."),
+         wxLogSysError(wxT("Unable to rename '%s' to '%s'."),
                        fullPath,
                        renamedFullPath);
 
@@ -1619,7 +1619,7 @@ void DirManager::FindMissingAliasFiles(
    iter = missingAliasFilesPathHash.begin();
    while (iter != missingAliasFilesPathHash.end())
    {
-      wxLogWarning(_("Missing aliased audio file: '%s'"), iter->first);
+      wxLogWarning(wxT("Missing aliased audio file: '%s'"), iter->first);
       ++iter;
    }
 }
@@ -1643,7 +1643,7 @@ void DirManager::FindMissingAUFs(
             if (!fileName.FileExists())
             {
                missingAUFHash[key] = b;
-               wxLogWarning(_("Missing alias (.auf) block file: '%s'"),
+               wxLogWarning(wxT("Missing alias (.auf) block file: '%s'"),
                             fileName.GetFullPath());
             }
          }
@@ -1673,7 +1673,7 @@ void DirManager::FindMissingAUs(
                 wxFile{ path }.Length() == 0)
             {
                missingAUHash[key] = b;
-               wxLogWarning(_("Missing data block file: '%s'"), path);
+               wxLogWarning(wxT("Missing data block file: '%s'"), path);
             }
          }
       }
@@ -1716,7 +1716,7 @@ void DirManager::FindOrphanBlockFiles(
       }
    }
    for ( const auto &orphan : orphanFilePathArray )
-      wxLogWarning(_("Orphan block file: '%s'"), orphan);
+      wxLogWarning(wxT("Orphan block file: '%s'"), orphan);
 }
 
 

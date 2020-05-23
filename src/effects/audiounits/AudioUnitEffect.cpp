@@ -1827,7 +1827,7 @@ void AudioUnitEffect::ExportPresets()
 
    if (!fn.Mkdir(fn.GetFullPath(), 0755, wxPATH_MKDIR_FULL))
    {
-      wxLogError(_("Couldn't create the \"%s\" directory").Format(fn.GetPath()));
+      wxLogError(wxT("Couldn't create the \"%s\" directory"), fn.GetPath());
       return;
    }
 

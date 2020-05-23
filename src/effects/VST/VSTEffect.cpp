@@ -542,7 +542,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
       }
       catch (...)
       {
-         wxLogMessage(_("VST plugin registration failed for %s\n"), path);
+         wxLogMessage(wxT("VST plugin registration failed for %s\n"), path);
          error = true;
       }
 
@@ -2176,7 +2176,7 @@ bool VSTEffect::Load()
    }
    catch (...)
    {
-      wxLogMessage(_("VST plugin initialization failed\n"));
+      wxLogMessage(wxT("VST plugin initialization failed\n"));
       mAEffect = NULL;
    }
 
