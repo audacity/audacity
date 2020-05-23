@@ -176,7 +176,7 @@ endmacro()
 if( WIN32 )
    set( LILV_PATH_SEP ";" )
    set( LILV_DIR_SEP "\\\\" )
-   set( LILV_DEFAULT_LV2_PATH "%APPDATA%\\LV2;%COMMONPROGRAMFILES%\\LV2" )
+   set( LILV_DEFAULT_LV2_PATH "%APPDATA%\\\\LV2;%COMMONPROGRAMFILES%\\\\LV2" )
 
    set( SUIL_MODULE_DIR "" )
    set( SUIL_DIR_SEP "" )
