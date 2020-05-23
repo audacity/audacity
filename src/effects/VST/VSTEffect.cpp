@@ -27,6 +27,8 @@
 #include "../../Audacity.h" // for USE_* macros
 #include "VSTEffect.h"
 
+#include "../../widgets/ProgressDialog.h"
+
 #if 0
 #if defined(BUILDING_AUDACITY)
 #include "../../PlatformCompatibility.h"
@@ -58,7 +60,6 @@
 #include <wx/log.h>
 #include <wx/module.h>
 #include <wx/process.h>
-#include <wx/progdlg.h>
 #include <wx/recguard.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
@@ -517,7 +518,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    wxString effectIDs = wxT("0;");
    wxStringTokenizer effectTzr(effectIDs, wxT(";"));
 
-   Optional<wxProgressDialog> progress{};
+   Optional<ProgressDialog> progress{};
    size_t idCnt = 0;
    size_t idNdx = 0;
 
@@ -577,17 +578,18 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
                idCnt = effectTzr.CountTokens();
                if (idCnt > 3)
                {
-                  progress.emplace( _("Scanning Shell VST"),
-                        wxString::Format(_("Registering %d of %d: %-64.64s"), 0, idCnt,
-                                         proc.GetSymbol().Translation()),
-                        static_cast<int>(idCnt),
-                        nullptr,
-                        wxPD_APP_MODAL |
+                  progress.emplace( XO("Scanning Shell VST"),
+                        XO("Registering %d of %d: %-64.64s")
+                           .Format( 0, idCnt, proc.GetSymbol().Translation())
+                                   /*
+                        , wxPD_APP_MODAL |
                            wxPD_AUTO_HIDE |
                            wxPD_CAN_ABORT |
                            wxPD_ELAPSED_TIME |
                            wxPD_ESTIMATED_TIME |
-                           wxPD_REMAINING_TIME );
+                           wxPD_REMAINING_TIME
+                                    */
+                  );
                   progress->Show();
                }
             break;
@@ -652,9 +654,10 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
                if (progress)
                {
                   idNdx++;
-                  cont = progress->Update(idNdx,
-                     wxString::Format(_("Registering %d of %d: %-64.64s"), idNdx, idCnt,
-                        proc.GetSymbol().Translation() ));
+                  auto result = progress->Update((int)idNdx, (int)idCnt,
+                     XO("Registering %d of %d: %-64.64s")
+                        .Format( idNdx, idCnt, proc.GetSymbol().Translation() ));
+                  cont = (result == ProgressResult::Success);
                }
 
                if (!skip && cont)

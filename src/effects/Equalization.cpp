@@ -3721,16 +3721,20 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 #endif
 }
 
-static const auto XMLtypes = FileNames::FileTypes{
-   FileNames::XMLFiles
-};
+static const FileNames::FileTypes &XMLtypes()
+{
+   static const FileNames::FileTypes results{
+      FileNames::XMLFiles
+   };
+   return results;
+}
 
 void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 {
    FileDialogWrapper filePicker(
       this,
       XO("Choose an EQ curve file"), FileNames::DataDir(), wxT(""),
-      XMLtypes );
+      XMLtypes() );
    wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
@@ -3752,7 +3756,7 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {
    FileDialogWrapper filePicker(this, XO("Export EQ curves as..."),
       FileNames::DataDir(), wxT(""),
-      XMLtypes,
+      XMLtypes(),
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER); // wxFD_CHANGE_DIR?
    wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)

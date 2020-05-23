@@ -69,7 +69,6 @@
 #include <wx/checkbox.h>
 #include <wx/dynlib.h>
 #include <wx/ffile.h>
-#include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/mimetype.h>

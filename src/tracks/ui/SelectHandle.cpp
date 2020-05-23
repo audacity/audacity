@@ -357,7 +357,7 @@ namespace
          shiftDown;
 
          tip =
-            _("Click and drag to move center selection frequency.");
+            XO("Click and drag to move center selection frequency.");
 
 #endif
 

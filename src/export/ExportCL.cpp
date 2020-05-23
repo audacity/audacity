@@ -19,7 +19,6 @@
 #include <wx/button.h>
 #include <wx/cmdline.h>
 #include <wx/combobox.h>
-#include <wx/filedlg.h>
 #include <wx/log.h>
 #include <wx/process.h>
 #include <wx/sizer.h>

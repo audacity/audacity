@@ -72,7 +72,6 @@
 #include <wx/log.h>
 #include <wx/filefn.h>
 #include <wx/hash.h>
-#include <wx/progdlg.h>
 #include <wx/timer.h>
 #include <wx/intl.h>
 #include <wx/file.h>

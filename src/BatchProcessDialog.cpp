@@ -26,7 +26,6 @@
 #include <wx/defs.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>

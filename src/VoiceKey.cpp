@@ -25,7 +25,6 @@ or "OFF" point
 #include <math.h>
 #include <stdio.h>
 
-#include <wx/filedlg.h>
 #include <wx/textfile.h>
 #include <wx/intl.h>
 #include <iostream>

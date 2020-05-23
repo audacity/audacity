@@ -35,7 +35,6 @@
 #endif
 
 #include <wx/button.h>
-#include <wx/filedlg.h>
 #include <wx/valtext.h>
 #include <wx/log.h>
 #include <wx/wfstream.h>

@@ -55,7 +55,6 @@
 
 #include <wx/button.h>
 #include <wx/choice.h>
-#include <wx/filedlg.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/listctrl.h>

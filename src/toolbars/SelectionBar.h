@@ -66,7 +66,7 @@ class SelectionBar final : public ToolBar {
    void RegenerateTooltips() override;
 
  private:
-   auStaticText * AddTitle( const wxString & Title, 
+   auStaticText * AddTitle( const TranslatableString & Title,
       wxSizer * pSizer );
    NumericTextCtrl * AddTime( const TranslatableString &Name, int id, wxSizer * pSizer );
    void AddVLine(  wxSizer * pSizer );

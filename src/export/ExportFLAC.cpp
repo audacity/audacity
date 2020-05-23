@@ -24,7 +24,6 @@ and libvorbis examples, Monty <monty@xiph.org>
 
 #include "Export.h"
 
-#include <wx/progdlg.h>
 #include <wx/ffile.h>
 #include <wx/log.h>
 

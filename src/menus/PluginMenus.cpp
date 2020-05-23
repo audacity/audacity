@@ -41,121 +41,90 @@ void DoManagePluginsMenu(AudacityProject &project, EffectType type)
 
 bool CompareEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   auto akey = a->GetSymbol().Translation();
-   auto bkey = b->GetSymbol().Translation();
-
-   akey += a->GetPath();
-   bkey += b->GetPath();
-
-   return akey.CmpNoCase(bkey) < 0;
+   return
+      std::make_pair( a->GetSymbol().Translation(), a->GetPath() ) <
+      std::make_pair( b->GetSymbol().Translation(), b->GetPath() );
 }
 
 bool CompareEffectsByPublisher(
    const PluginDescriptor *a, const PluginDescriptor *b)
 {
    auto &em = EffectManager::Get();
-   auto akey = em.GetVendorName(a->GetID()).Translation();
-   auto bkey = em.GetVendorName(b->GetID()).Translation();
+   
+   auto akey = em.GetVendorName(a->GetID());
+   auto bkey = em.GetVendorName(b->GetID());
 
    if (akey.empty())
-   {
-      akey = _("Uncategorized");
-   }
+      akey = XO("Uncategorized");
    if (bkey.empty())
-   {
-      bkey = _("Uncategorized");
-   }
+      bkey = XO("Uncategorized");
 
-   akey += a->GetSymbol().Translation();
-   bkey += b->GetSymbol().Translation();
-
-   akey += a->GetPath();
-   bkey += b->GetPath();
-
-   return akey.CmpNoCase(bkey) < 0;
+   return
+      std::make_tuple(
+         akey.Translation(), a->GetSymbol().Translation(), a->GetPath() ) <
+      std::make_tuple(
+         bkey.Translation(), b->GetSymbol().Translation(), b->GetPath() );
 }
 
 bool CompareEffectsByPublisherAndName(
    const PluginDescriptor *a, const PluginDescriptor *b)
 {
    auto &em = EffectManager::Get();
-   auto akey = em.GetVendorName(a->GetID()).Translation();
-   auto bkey = em.GetVendorName(b->GetID()).Translation();
+   auto akey = em.GetVendorName(a->GetID());
+   auto bkey = em.GetVendorName(b->GetID());
 
    if (a->IsEffectDefault())
-   {
-      akey = wxEmptyString;
-   }
+      akey = {};
    if (b->IsEffectDefault())
-   {
-      bkey = wxEmptyString;
-   }
+      bkey = {};
 
-   akey += a->GetSymbol().Translation();
-   bkey += b->GetSymbol().Translation();
-
-   akey += a->GetPath();
-   bkey += b->GetPath();
-
-   return akey.CmpNoCase(bkey) < 0;
+   return
+      std::make_tuple(
+         akey.Translation(), a->GetSymbol().Translation(), a->GetPath() ) <
+      std::make_tuple(
+         bkey.Translation(), b->GetSymbol().Translation(), b->GetPath() );
 }
 
 bool CompareEffectsByTypeAndName(
    const PluginDescriptor *a, const PluginDescriptor *b)
 {
    auto &em = EffectManager::Get();
-   auto akey = em.GetEffectFamilyName(a->GetID()).Translation();
-   auto bkey = em.GetEffectFamilyName(b->GetID()).Translation();
+   auto akey = em.GetEffectFamilyName(a->GetID());
+   auto bkey = em.GetEffectFamilyName(b->GetID());
 
    if (akey.empty())
-   {
-      akey = _("Uncategorized");
-   }
+      akey = XO("Uncategorized");
    if (bkey.empty())
-   {
-      bkey = _("Uncategorized");
-   }
+      bkey = XO("Uncategorized");
 
    if (a->IsEffectDefault())
-   {
-      akey = wxEmptyString;
-   }
+      akey = {};
    if (b->IsEffectDefault())
-   {
-      bkey = wxEmptyString;
-   }
+      bkey = {};
 
-   akey += a->GetSymbol().Translation();
-   bkey += b->GetSymbol().Translation();
-
-   akey += a->GetPath();
-   bkey += b->GetPath();
-
-   return akey.CmpNoCase(bkey) < 0;
+   return
+      std::make_tuple(
+         akey.Translation(), a->GetSymbol().Translation(), a->GetPath() ) <
+      std::make_tuple(
+         bkey.Translation(), b->GetSymbol().Translation(), b->GetPath() );
 }
 
 bool CompareEffectsByType(const PluginDescriptor *a, const PluginDescriptor *b)
 {
    auto &em = EffectManager::Get();
-   auto akey = em.GetEffectFamilyName(a->GetID()).Translation();
-   auto bkey = em.GetEffectFamilyName(b->GetID()).Translation();
+   auto akey = em.GetEffectFamilyName(a->GetID());
+   auto bkey = em.GetEffectFamilyName(b->GetID());
 
    if (akey.empty())
-   {
-      akey = _("Uncategorized");
-   }
+      akey = XO("Uncategorized");
    if (bkey.empty())
-   {
-      bkey = _("Uncategorized");
-   }
+      bkey = XO("Uncategorized");
 
-   akey += a->GetSymbol().Translation();
-   bkey += b->GetSymbol().Translation();
-
-   akey += a->GetPath();
-   bkey += b->GetPath();
-
-   return akey.CmpNoCase(bkey) < 0;
+   return
+      std::make_tuple(
+         akey.Translation(), a->GetSymbol().Translation(), a->GetPath() ) <
+      std::make_tuple(
+         bkey.Translation(), b->GetSymbol().Translation(), b->GetPath() );
 }
 
 // Forward-declared function has its definition below with OnEffect in view
