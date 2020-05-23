@@ -30,8 +30,6 @@ class NumericTextCtrl;
 class ShuttleGui;
 class TimerRecordPathCtrl;
 
-class wxArrayStringEx;
-
 enum TimerRecordCompletedActions {
    TR_ACTION_NOTHING = 0x00000000,
    TR_ACTION_SAVED = 0x00000001,

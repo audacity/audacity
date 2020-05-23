@@ -18,7 +18,6 @@
 
 class wxChoice;
 class ShuttleGui;
-class wxArrayStringEx;
 
 #define DEVICE_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Device") }
 

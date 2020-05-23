@@ -19,7 +19,6 @@
 
 class ChoiceSetting;
 class ShuttleGui;
-class wxArrayStringEx;
 
 #define GUI_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("GUI") }
 

@@ -51,7 +51,6 @@ with changes in the SelectionBar.
 #include <wx/statline.h>
 
 
-#include "../widgets/AButton.h"
 #include "../AudioIOBase.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
