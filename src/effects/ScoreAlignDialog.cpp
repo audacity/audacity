@@ -37,7 +37,6 @@ It \TODO: description
 #include <wx/image.h>
 #include <wx/dcmemory.h>
 #include <wx/file.h>
-#include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>

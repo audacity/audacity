@@ -1657,6 +1657,48 @@ std::vector<EnumValueSymbol> NyquistEffect::ParseChoice(const wxString & text)
    return results;
 }
 
+FileExtensions NyquistEffect::ParseFileExtensions(const wxString & text)
+{
+   // todo: error handling
+   FileExtensions results;
+   if (text[0] == wxT('(')) {
+      Tokenizer tzer;
+      tzer.Tokenize(text, true, 1, 1);
+      for (const auto &token : tzer.tokens)
+         results.push_back( UnQuote( token ) );
+   }
+   return results;
+}
+
+FileNames::FileType NyquistEffect::ParseFileType(const wxString & text)
+{
+   // todo: error handling
+   FileNames::FileType result;
+   if (text[0] == wxT('(')) {
+      Tokenizer tzer;
+      tzer.Tokenize(text, true, 1, 1);
+      auto &tokens = tzer.tokens;
+      if ( tokens.size() == 2 )
+         result =
+            { UnQuoteMsgid( tokens[0] ), ParseFileExtensions( tokens[1] ) };
+   }
+   return result;
+}
+
+FileNames::FileTypes NyquistEffect::ParseFileTypes(const wxString & text)
+{
+   // todo: error handling
+   FileNames::FileTypes results;
+   if (text[0] == wxT('(')) {
+      Tokenizer tzer;
+      tzer.Tokenize(text, true, 1, 1);
+      auto &types = tzer.tokens;
+      for (auto &type : types)
+         results.push_back( ParseFileType( type ) );
+   }
+   return results;
+}
+
 void NyquistEffect::RedirectOutput()
 {
    mRedirectOutput = true;
@@ -1686,7 +1728,7 @@ void NyquistEffect::Stop()
    mStop = true;
 }
 
-wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
+TranslatableString NyquistEffect::UnQuoteMsgid(const wxString &s, bool allowParens,
                                 wxString *pExtraString)
 {
    if (pExtraString)
@@ -1695,7 +1737,8 @@ wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
    int len = s.length();
    if (len >= 2 && s[0] == wxT('\"') && s[len - 1] == wxT('\"')) {
       auto unquoted = s.Mid(1, len - 2);
-      return wxGetTranslation( unquoted );
+      // Sorry, no context strings, yet
+      return TranslatableString{ unquoted, {} };
    }
    else if (allowParens &&
             len >= 2 && s[0] == wxT('(') && s[len - 1] == wxT(')')) {
@@ -1708,12 +1751,13 @@ wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
             // ("InternalString" (_ "Visible string"))
             // Recur to find the two strings
             *pExtraString = UnQuote(tokens[0], false);
-            return UnQuote(tokens[1]);
+            return UnQuoteMsgid(tokens[1]);
          }
          else {
             // Assume the first token was _ -- we don't check that
             // And the second is the string, which is internationalized
-            return UnQuote( tokens[1], false );
+            // Sorry, no context strings, yet
+            return UnQuoteMsgid( tokens[1], false );
          }
       }
       else
@@ -1721,7 +1765,13 @@ wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
    }
    else
       // If string was not quoted, assume no translation exists
-      return s;
+      return Verbatim( s );
+}
+
+wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
+                                wxString *pExtraString)
+{
+   return UnQuoteMsgid( s, allowParens, pExtraString ).Translation();
 }
 
 double NyquistEffect::GetCtrlValue(const wxString &s)
@@ -2088,6 +2138,13 @@ bool NyquistEffect::Parse(
             ctrl.choices = ParseChoice(ctrl.label);
             ctrl.label = wxT("");
          }
+         else if (tokens[3] == wxT("file")) {
+            ctrl.type = NYQ_CTRL_FILE;
+            ctrl.fileTypes = ParseFileTypes(tokens[6]);
+            // will determine file dialog styles:
+            ctrl.highStr = UnQuote( tokens[7] );
+            ctrl.label = wxT("");
+         }
          else {
             ctrl.label = UnQuote( ctrl.label );
 
@@ -2106,8 +2163,6 @@ bool NyquistEffect::Parse(
                ctrl.type = NYQ_CTRL_INT_TEXT;
             else if (tokens[3] == wxT("time"))
                 ctrl.type = NYQ_CTRL_TIME;
-            else if (tokens[3] == wxT("file"))
-               ctrl.type = NYQ_CTRL_FILE;
             else
             {
                wxString str;
@@ -2767,18 +2822,11 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   S.AddSpace(10, 10);
 
                   // Get default file extension if specified in wildcards
-                  wxString defaultExtension;
-                  size_t len = ctrl.lowStr.length();
-                  int characters = ctrl.lowStr.Find("*");
-
-                  if (characters != wxNOT_FOUND)
-                  {
-                     if (static_cast<int>(ctrl.lowStr.find("|", characters)) != wxNOT_FOUND)
-                        len = ctrl.lowStr.find("|", characters) - 1;
-                     if (static_cast<int>(ctrl.lowStr.find(";", characters)) != wxNOT_FOUND)
-                        len = std::min(static_cast<int>(len), static_cast<int>(ctrl.lowStr.find(";", characters)) - 1);
-
-                     defaultExtension = ctrl.lowStr.wxString::Mid(characters + 1, len - characters);
+                  FileExtension defaultExtension;
+                  if (!ctrl.fileTypes.empty()) {
+                     const auto &type = ctrl.fileTypes[0];
+                     if ( !type.extensions.empty() )
+                        defaultExtension = type.extensions[0];
                   }
                   resolveFilePath(ctrl.valStr, defaultExtension);
 
@@ -3014,36 +3062,6 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
 {
    int i = evt.GetId() - ID_FILE;
    NyqControl & ctrl = mControls[i];
-   ctrl.lowStr.Trim(true).Trim(false); // Wildcard filter.
-
-   // Basic sanity check of wildcard flags so that we
-   // don't show scary wxFAIL_MSG from wxParseCommonDialogsFilter.
-   if (!ctrl.lowStr.empty())
-   {
-      bool validWildcards = true;
-      size_t wildcards = 0;
-      wxStringTokenizer tokenizer(ctrl.lowStr, "|");
-      while (tokenizer.HasMoreTokens())
-      {
-         wxString token = tokenizer.GetNextToken().Trim(true).Trim(false);
-         if (token.empty())
-         {
-            validWildcards = false;
-            break;
-         }
-         wildcards += 1;
-      }
-      // Users should not normally see this, unless they are writing Nyquist plug-ins.
-      if (wildcards % 2 != 0 || !validWildcards || ctrl.lowStr.EndsWith("|"))
-      {
-         Effect::MessageBox(
-            XO("Invalid wildcard string in 'path' control.'\n"
-               "Using empty string instead."),
-            wxOK | wxICON_EXCLAMATION | wxCENTRE,
-            XO("Error") );
-         ctrl.lowStr = "";
-      }
-   }
 
    // Get style flags:
    // Ensure legal combinations so that wxWidgets does not throw an assert error.
@@ -3087,18 +3105,18 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
    wxFileName fname = ctrl.valStr;
    wxString defaultDir = fname.GetPath();
    wxString defaultFile = fname.GetName();
-   wxString message = _("Select a file");
+   auto message = XO("Select a file");
 
    if (flags & wxFD_MULTIPLE)
-      message = _("Select one or more files");
+      message = XO("Select one or more files");
    else if (flags & wxFD_SAVE)
-      message = _("Save file as");
+      message = XO("Save file as");
 
-   wxFileDialog openFileDialog(mUIParent->FindWindow(ID_FILE + i),
+   FileDialogWrapper openFileDialog(mUIParent->FindWindow(ID_FILE + i),
                                message,
                                defaultDir,
                                defaultFile,
-                               ctrl.lowStr,  // wildcard filter
+                               ctrl.fileTypes,
                                flags);       // styles
 
    if (openFileDialog.ShowModal() == wxID_CANCEL)
@@ -3128,7 +3146,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
    mUIParent->FindWindow(ID_Text + i)->GetValidator()->TransferToWindow();
 }
 
-void NyquistEffect::resolveFilePath(wxString& path, wxString extension /* empty string */)
+void NyquistEffect::resolveFilePath(wxString& path, FileExtension extension /* empty string */)
 {
 #if defined(__WXMSW__)
    path.Replace("/", wxFileName::GetPathSeparator());
@@ -3181,7 +3199,7 @@ void NyquistEffect::resolveFilePath(wxString& path, wxString extension /* empty 
    {
       path = fname.GetPathWithSep() + _("untitled");
       if (!extension.empty())
-         path = path + extension;
+         path = path + '.' + extension;
    }
 }
 

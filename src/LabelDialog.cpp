@@ -21,7 +21,6 @@
 #include <wx/choice.h>
 #include <wx/dc.h>
 #include <wx/dialog.h>
-#include <wx/filedlg.h>
 #include <wx/grid.h>
 #include <wx/intl.h>
 #include <wx/scrolbar.h>

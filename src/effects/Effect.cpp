@@ -663,6 +663,15 @@ bool Effect::CanExportPresets()
    return true;
 }
 
+static const FileNames::FileTypes &PresetTypes()
+{
+   static const FileNames::FileTypes result {
+      { XO("Presets"), { wxT("txt") }, true },
+      FileNames::AllFiles
+   };
+   return result;
+};
+
 void Effect::ExportPresets()
 {
    wxString params;
@@ -672,11 +681,11 @@ void Effect::ExportPresets()
 
    auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
 
-   wxFileDialog dlog(NULL,
-                     _("Export Effect Parameters"),
+   FileDialogWrapper dlog(nullptr,
+                     XO("Export Effect Parameters"),
                      path.GetFullPath(),
                      wxEmptyString,
-                     _("Presets (*.txt)|*.txt|All files|*"),
+                     PresetTypes(),
                      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
  
    if (dlog.ShowModal() != wxID_OK) {
@@ -721,11 +730,11 @@ void Effect::ImportPresets()
 
    auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
 
-   wxFileDialog dlog(NULL,
-                     _("Import Effect Parameters"),
+   FileDialogWrapper dlog(nullptr,
+                     XO("Import Effect Parameters"),
                      path.GetPath(),
                      wxEmptyString,
-                     _("Presets (*.txt)|*.txt|All files|*"),
+                     PresetTypes(),
                      wxFD_OPEN | wxRESIZE_BORDER);
  
    if (dlog.ShowModal() != wxID_OK) {

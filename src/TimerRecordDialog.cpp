@@ -34,7 +34,6 @@
 #include <wx/dir.h>
 #include <wx/datectrl.h>
 #include <wx/datetime.h>
-#include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/progdlg.h>
 #include <wx/sizer.h>

@@ -8,7 +8,8 @@ $author (_ "Steve Daulton")
 $release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
-$control filename (_ "Select file") file "" "*default*/sample-data.txt" "Text file|*.txt;*.TXT|All files|*.*;*" "open,exists"
+$control filename (_ "Select file") file "" "*default*/sample-data.txt" (((_ "Text file") (txt TXT))
+									 ((_ "All files") (""))) "open,exists"
 $control bad-data (_ "Invalid data handling") choice (("ThrowError" (_ "Throw Error"))
                                                       ("ReadAsZero" (_ "Read as Zero"))) 0
 
