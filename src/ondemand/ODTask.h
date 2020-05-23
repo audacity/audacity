@@ -131,7 +131,7 @@ class ODTask /* not final */
    virtual void CalculatePercentComplete() = 0;
 
    ///pure virtual function that does some part of the task this object represents.
-   ///this function is meant to be called repeatedly until the IsComplete is true.
+   ///this function is meant to be called repeatedly until IsComplete is true.
    ///Does the smallest unit of work for this task.
    virtual void DoSomeInternal() = 0;
 

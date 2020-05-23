@@ -122,7 +122,7 @@ class AUDACITY_DLL_API Ruler {
    // useful the definition of a label array and label step by
    // the user.
    void SetCustomMode(bool value);
-   // If this is the case, you should provide a wxString array of labels, start
+   // If this is the case, you should provide an array of labels, start
    // label position, and labels step. The range eventually specified will be
    // ignored.
    void SetCustomMajorLabels(

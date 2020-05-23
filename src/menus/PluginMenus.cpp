@@ -537,6 +537,7 @@ void AddEffectMenuItemGroup(
    int groupCnt = namesCnt;
    for (int i = 0; i < namesCnt; i++)
    {
+      // compare full translations not msgids!
       while (i + 1 < namesCnt && names[i].Translation() == names[i + 1].Translation())
       {
          i++;
@@ -573,12 +574,14 @@ void AddEffectMenuItemGroup(
          pTable = &temp1;
       }
 
+      // compare full translations not msgids!
       if (i + 1 < namesCnt && names[i].Translation() == names[i + 1].Translation())
       {
          // collect a sub-menu for like-named items
          const auto name = names[i];
          const auto translation = name.Translation();
          BaseItemPtrs temp2;
+         // compare full translations not msgids!
          while (i < namesCnt && names[i].Translation() == translation)
          {
             const PluginDescriptor *plug =

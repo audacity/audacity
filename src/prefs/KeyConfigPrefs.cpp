@@ -412,7 +412,7 @@ bool KeyConfigPrefs::ContainsIllegalDups(
 //      1. the shortcut for the operation isn't defined already
 //      2. the added shortcut doesn't create illegal shortcut duplicate
 // The names of operations for which the second condition was violated 
-// are returned in a single wxString
+// are returned in a single error message
 TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
    const std::vector<NormalizedKeyString> &toAdd)
 {

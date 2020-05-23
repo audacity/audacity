@@ -189,7 +189,7 @@ ODManager::~ODManager()
    }
    mTerminatedMutex.Unlock();
 
-   //get rid of all the queues.  The queues get rid of the tasks, so we don't worry abut them.
+   //get rid of all the queues.  The queues get rid of the tasks, so we don't worry about them.
    //nothing else should be running on OD related threads at this point, so we don't lock.
    mQueues.clear();
 }
