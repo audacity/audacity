@@ -78,7 +78,9 @@ enum
    OnMoveBottomID,
 };
 
-class TrackMenuTable : public PopupMenuTable
+class TrackMenuTable
+   : public PopupMenuTable
+   , private PrefsListener
 {
    TrackMenuTable()
       : PopupMenuTable{ "Track" }
@@ -100,6 +102,12 @@ private:
    }
 
    CommonTrackControls::InitMenuData *mpData{};
+
+   void UpdatePrefs() override
+   {
+      // Because labels depend on keyboard preferences
+      PopupMenuTable::Clear();
+   }
 };
 
 TrackMenuTable &TrackMenuTable::Instance()

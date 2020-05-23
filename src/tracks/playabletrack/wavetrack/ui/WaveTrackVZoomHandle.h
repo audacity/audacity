@@ -16,7 +16,7 @@ class PopupMenuTable;
 class WaveTrack;
 #include "WaveTrackViewConstants.h"
 #include "../../../../UIHandle.h"
-
+#include "../../../../Prefs.h"
 
 namespace WaveTrackVZoomHandle
 {
@@ -53,7 +53,9 @@ namespace WaveTrackVZoomHandle
 
 #include "../../../../widgets/PopupMenuTable.h" // to inherit
 
-class WaveTrackVRulerMenuTable : public PopupMenuTable
+class WaveTrackVRulerMenuTable
+   : public PopupMenuTable
+   , private PrefsListener
 {
 public:
    struct InitMenuData
@@ -98,6 +100,8 @@ protected:
       { OnZoom( WaveTrackViewConstants::kZoomIn );};
    void OnZoomOutVertical(wxCommandEvent&)
       { OnZoom( WaveTrackViewConstants::kZoomOut );};
+
+   void UpdatePrefs() override;
 };
 
 enum {

@@ -20,6 +20,7 @@
 #include <math.h>
 
 #include <wx/intl.h>
+#include <wx/simplebook.h>
 #include <wx/valgen.h>
 
 #include "../Internat.h"
@@ -55,7 +56,7 @@ Param( DualMono,    bool,    wxT("DualMono"),            true,       false,   tr
 Param( NormalizeTo, int,     wxT("NormalizeTo"),         kLoudness , 0    ,   nAlgos-1, 1  );
 
 BEGIN_EVENT_TABLE(EffectLoudness, wxEvtHandler)
-   EVT_CHOICE(wxID_ANY, EffectLoudness::OnUpdateUI)
+   EVT_CHOICE(wxID_ANY, EffectLoudness::OnChoice)
    EVT_CHECKBOX(wxID_ANY, EffectLoudness::OnUpdateUI)
    EVT_TEXT(wxID_ANY, EffectLoudness::OnUpdateUI)
 END_EVENT_TABLE()
@@ -300,29 +301,69 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
                S.AddVariableText(XO("&Normalize"), false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
-               S
+               mChoice = S
                   .Validator<wxGenericValidator>( &mNormalizeTo )
                   .AddChoice( {},
                      Msgids(kNormalizeTargetStrings, nAlgos),
-                     mNormalizeTo
-               );
-               S.AddVariableText(XO("t&o"), false,
-                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                     mNormalizeTo );
+               S
+                  .AddVariableText(XO("t&o"), false,
+                     wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
-               mLevelTextCtrl = S
-                  /* i18n-hint: LUFS is a particular method for measuring loudnesss */
-                  .Name( XO("Loudness LUFS") )
-                  .Validator<FloatingPointValidator<double>>(
-                     2, &mLUFSLevel,
-                     NumValidatorStyle::ONE_TRAILING_ZERO,
-                     MIN_LUFSLevel, MAX_LUFSLevel
-                  )
-                  .AddTextBox( {}, wxT(""), 10);
-               /* i18n-hint: LUFS is a particular method for measuring loudnesss */
-               mLeveldB = S.AddVariableText(XO("LUFS"), false,
-                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-               mWarning = S.AddVariableText( {}, false,
-                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               // Use a notebook so we can have two controls but show only one
+               // They target different variables with their validators
+               mBook =
+               S
+                  .StartSimplebook();
+               {
+                  S.StartNotebookPage({});
+                  {
+                     S.StartHorizontalLay(wxALIGN_LEFT, false);
+                     {
+                        S
+                           /* i18n-hint: LUFS is a particular method for measuring loudnesss */
+                           .Name( XO("Loudness LUFS") )
+                           .Validator<FloatingPointValidator<double>>(
+                              2, &mLUFSLevel,
+                              NumValidatorStyle::ONE_TRAILING_ZERO,
+                              MIN_LUFSLevel, MAX_LUFSLevel )
+                           .AddTextBox( {}, wxT(""), 10);
+
+                        /* i18n-hint: LUFS is a particular method for measuring loudnesss */
+                        S
+                           .AddVariableText(XO("LUFS"), false,
+                              wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                     }
+                     S.EndHorizontalLay();
+                  }
+                  S.EndNotebookPage();
+
+                  S.StartNotebookPage({});
+                  {
+                     S.StartHorizontalLay(wxALIGN_LEFT, false);
+                     {
+                        S
+                           .Name( XO("RMS dB") )
+                           .Validator<FloatingPointValidator<double>>(
+                              2, &mRMSLevel,
+                              NumValidatorStyle::ONE_TRAILING_ZERO,
+                              MIN_RMSLevel, MAX_RMSLevel )
+                           .AddTextBox( {}, wxT(""), 10);
+
+                        S
+                           .AddVariableText(XO("dB"), false,
+                              wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                     }
+                     S.EndHorizontalLay();
+                  }
+                  S.EndNotebookPage();
+               }
+               S.EndSimplebook();
+
+               mWarning =
+               S
+                  .AddVariableText( {}, false,
+                     wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             }
             S.EndHorizontalLay();
 
@@ -341,8 +382,6 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
    }
    S.EndVerticalLay();
-   // To ensure that the UpdateUI on creation sets the prompts correctly.
-   mGUINormalizeTo = !mNormalizeTo;
 }
 
 bool EffectLoudness::TransferDataToWindow()
@@ -541,6 +580,14 @@ bool EffectLoudness::UpdateProgress()
    return !TotalProgress(mProgressVal, mProgressMsg);
 }
 
+void EffectLoudness::OnChoice(wxCommandEvent & WXUNUSED(evt))
+{
+   mChoice->GetValidator()->TransferFromWindow();
+   mBook->SetSelection( mNormalizeTo );
+   UpdateUI();
+   mDualMonoCheckBox->Enable(mNormalizeTo == kLoudness);
+}
+
 void EffectLoudness::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 {
    UpdateUI();
@@ -557,33 +604,4 @@ void EffectLoudness::UpdateUI()
    }
    mWarning->SetLabel(wxT(""));
    EnableApply(true);
-
-   // Changing the prompts causes an unwanted UpdateUI event.
-   // This 'guard' stops that becoming an infinite recursion.
-   if (mNormalizeTo != mGUINormalizeTo)
-   {
-      mGUINormalizeTo = mNormalizeTo;
-      if(mNormalizeTo == kLoudness)
-      {
-         FloatingPointValidator<double> vldLevel(2, &mLUFSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
-         vldLevel.SetRange(MIN_LUFSLevel, MAX_LUFSLevel);
-         mLevelTextCtrl->SetValidator(vldLevel);
-         /* i18n-hint: LUFS is a particular method for measuring loudnesss */
-         mLevelTextCtrl->SetName(_("Loudness LUFS"));
-         mLevelTextCtrl->SetValue(wxString::FromDouble(mLUFSLevel));
-         /* i18n-hint: LUFS is a particular method for measuring loudnesss */
-         mLeveldB->SetLabel(_("LUFS"));
-      }
-      else // RMS
-      {
-         FloatingPointValidator<double> vldLevel(2, &mRMSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
-         vldLevel.SetRange(MIN_RMSLevel, MAX_RMSLevel);
-         mLevelTextCtrl->SetValidator(vldLevel);
-         mLevelTextCtrl->SetName(_("RMS dB"));
-         mLevelTextCtrl->SetValue(wxString::FromDouble(mRMSLevel));
-         mLeveldB->SetLabel(_("dB"));
-      }
-   }
-
-   mDualMonoCheckBox->Enable(mNormalizeTo == kLoudness);
 }

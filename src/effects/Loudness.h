@@ -22,6 +22,8 @@
 #include "Biquad.h"
 #include "EBUR128.h"
 
+class wxChoice;
+class wxSimplebook;
 class ShuttleGui;
 
 class EffectLoudness final : public Effect
@@ -72,6 +74,7 @@ private:
                          sampleCount pos, size_t len);
 
    bool UpdateProgress();
+   void OnChoice(wxCommandEvent & evt);
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
 
@@ -81,7 +84,6 @@ private:
    double mRMSLevel;
    bool   mDualMono;
    int    mNormalizeTo;
-   int    mGUINormalizeTo;
 
    double mCurT0;
    double mCurT1;
@@ -96,8 +98,8 @@ private:
    float  mRMS[2];
    std::unique_ptr<EBUR128> mLoudnessProcessor;
 
-   wxTextCtrl *mLevelTextCtrl;
-   wxStaticText *mLeveldB;
+   wxSimplebook *mBook;
+   wxChoice *mChoice;
    wxStaticText *mWarning;
    wxCheckBox *mStereoIndCheckBox;
    wxCheckBox *mDualMonoCheckBox;

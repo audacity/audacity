@@ -52,6 +52,12 @@ void WaveTrackVRulerMenuTable::OnZoom(
    mpData->result = UpdateVRuler | RefreshAll;
 }
 
+void WaveTrackVRulerMenuTable::UpdatePrefs()
+{
+   // Because labels depend on advanced vertical zoom setting
+   PopupMenuTable::Clear();
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 HitTestPreview WaveTrackVZoomHandle::HitPreview(const wxMouseState &state)
@@ -105,10 +111,7 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
    const bool rightUp = event.RightUp();
 
 
-   bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
-
-   // Popup menu... 
+   // Popup menu...
    using namespace WaveTrackViewConstants;
    if (
        rightUp &&
@@ -119,27 +122,13 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
          pTrack, rect, RefreshCode::RefreshNone, event.m_y, doZoom };
 
       auto pMenu = PopupMenuTable::BuildMenu(pParent, &table, &data);
-
-      // Accelerators only if zooming enabled.
-      if( !bVZoom )
-      {
-         wxMenuItemList & L = pMenu->GetMenuItems();
-         // let's iterate over the list in STL syntax
-         wxMenuItemList::iterator iter;
-         for (iter = L.begin(); iter != L.end(); ++iter)
-         {
-             wxMenuItem *pItem = *iter;
-             // Remove accelerator, if any.
-             pItem->SetItemLabel( (pItem->GetItemLabel() + "\t" ).BeforeFirst('\t') );
-         }
-      }
-
-
       pParent->PopupMenu(pMenu.get(), event.m_x, event.m_y);
 
       return data.result;
    }
    else{
+      bool bVZoom;
+      gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
       // Ignore Capture Lost event 
       bVZoom &= event.GetId() != kCaptureLostEventId;
       // shiftDown | rightUp | ZoomKind
