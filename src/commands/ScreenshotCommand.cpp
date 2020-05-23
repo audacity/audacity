@@ -27,7 +27,6 @@ small calculations of rectangles.
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
 #include <wx/dcmemory.h>
-#include <wx/menu.h>
 #include <wx/settings.h>
 #include <wx/bitmap.h>
 #include <wx/valgen.h>
@@ -361,43 +360,6 @@ bool ScreenshotCommand::CaptureDock(
    win->GetClientSize(&width, &height);
 
    return Capture(context, FileName, win, wxRect(x, y, width, height));
-}
-
-void ExploreMenu(
-   const CommandContext & context,
-   wxMenu * pMenu, int Id, int depth ){
-   static_cast<void>(Id);//compiler food.
-
-   if( !pMenu )
-      return;
-
-   wxMenuItemList list = pMenu->GetMenuItems();
-   size_t lcnt = list.size();
-   wxMenuItem * item;
-   wxString Label;
-   wxString Accel;
-
-   for (size_t lndx = 0; lndx < lcnt; lndx++) {
-      item = list.Item(lndx)->GetData();
-      Label = item->GetItemLabelText();
-      Accel = item->GetItemLabel();
-      if( Accel.Contains("\t") )
-         Accel = Accel.AfterLast('\t');
-      else
-         Accel = "";
-      if( item->IsSeparator() )
-         Label = "----";
-      int flags = 0;
-      if (item->IsSubMenu())
-         flags +=1;
-      if (item->IsCheck() && item->IsChecked())
-         flags +=2;
-
-      if (item->IsSubMenu()) {
-         pMenu = item->GetSubMenu();
-         ExploreMenu( context, pMenu, item->GetId(), depth+1 );
-      }
-   }
 }
 
 // Handed a dialog, which it is given the option to capture.

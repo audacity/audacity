@@ -71,18 +71,6 @@ bool MakeReadyToPlay(AudacityProject &project)
    return true;
 }
 
-// Post Timer Recording Actions
-// Ensure this matches the enum in TimerRecordDialog.cpp
-enum {
-   POST_TIMER_RECORD_STOPPED = -3,
-   POST_TIMER_RECORD_CANCEL_WAIT,
-   POST_TIMER_RECORD_CANCEL,
-   POST_TIMER_RECORD_NOTHING,
-   POST_TIMER_RECORD_CLOSE,
-   POST_TIMER_RECORD_RESTART,
-   POST_TIMER_RECORD_SHUTDOWN
-};
-
 // Returns true if this project was stopped, otherwise false.
 // (it may though have stopped another project playing)
 bool DoStopPlaying(const CommandContext &context)
@@ -371,20 +359,19 @@ void OnTimerRecord(const CommandContext &context)
          } );
          ProjectManager::Get(project).SetSkipSavePrompt(true);
          break;
+
+#ifdef __WINDOWS__
       case POST_TIMER_RECORD_RESTART:
          // Restart System
          ProjectManager::Get(project).SetSkipSavePrompt(true);
-#ifdef __WINDOWS__
          system("shutdown /r /f /t 30");
-#endif
          break;
       case POST_TIMER_RECORD_SHUTDOWN:
          // Shutdown System
          ProjectManager::Get(project).SetSkipSavePrompt(true);
-#ifdef __WINDOWS__
          system("shutdown /s /f /t 30");
-#endif
          break;
+#endif
       }
    }
 }

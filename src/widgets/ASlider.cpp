@@ -148,8 +148,6 @@ const int sliderFontSize = 12;
 #define OPTIONAL_SLIDER_TICKS
 #endif
 
-class wxArrayString;
-
 //
 // TipWindow
 //

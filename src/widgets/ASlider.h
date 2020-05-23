@@ -18,7 +18,6 @@
 #include <wx/timer.h> // member variable
 #include "wxPanelWrapper.h" // to inherit
 
-class wxArrayString;
 class wxBitmap;
 class wxSize;
 class wxPoint;

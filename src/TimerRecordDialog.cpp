@@ -80,18 +80,6 @@ enum {
    CONTROL_GROUP_EXPORT
 };
 
-// Post Timer Recording Actions
-// Ensure this matches the enum in Menus.cpp
-enum {
-   POST_TIMER_RECORD_STOPPED = -3,
-   POST_TIMER_RECORD_CANCEL_WAIT,
-   POST_TIMER_RECORD_CANCEL,
-   POST_TIMER_RECORD_NOTHING,
-   POST_TIMER_RECORD_CLOSE,
-   POST_TIMER_RECORD_RESTART,
-   POST_TIMER_RECORD_SHUTDOWN
-};
-
 // The slow timer interval is used to update the start and end times, which only show
 // time to the nearest second.  So we only need an update once a second.
 const int kSlowTimerInterval = 1000; // ms

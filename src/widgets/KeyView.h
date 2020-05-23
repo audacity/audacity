@@ -19,8 +19,6 @@
 
 #include "../commands/Keyboard.h"
 
-class wxArrayString;
-
 // Class holding all information about a node.  Rather than a real tree
 // we store these in an array and simulate a tree.
 class KeyNode

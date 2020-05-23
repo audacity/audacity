@@ -18,7 +18,6 @@ Paul Licameli
 #include "ClientData.h" // to inherit
 
 class AudacityProject;
-class wxString;
 class wxWindow;
 
 enum StatusBarField : int {

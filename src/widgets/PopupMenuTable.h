@@ -19,7 +19,7 @@ tables, and automatically attaches and detaches the event handlers.
 #define __AUDACITY_POPUP_MENU_TABLE__
 
 class wxCommandEvent;
-class wxString;
+
 #include <functional>
 #include <vector>
 #include <wx/menu.h> // to inherit wxMenu

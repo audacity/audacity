@@ -23,7 +23,6 @@ into a NoteTrack.
 
 #if defined(USE_MIDI)
 
-class wxString;
 class AudacityProject;
 class NoteTrack;
 

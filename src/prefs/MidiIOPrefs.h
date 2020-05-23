@@ -24,8 +24,6 @@ class ShuttleGui;
 
 #include "PrefsPanel.h"
 
-class wxArrayStringEx;
-
 #define MIDI_IO_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Midi IO") }
 
 class MidiIOPrefs final : public PrefsPanel

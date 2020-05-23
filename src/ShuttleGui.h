@@ -66,8 +66,6 @@ class wxPanel;
 class wxSizer;
 class wxSizerItem;
 class wxStaticBox;
-class wxMenuBar;
-class wxMenu;
 class wxSpinCtrl;
 class wxListBox;
 class wxGrid;
@@ -348,8 +346,6 @@ public:
       const TranslatableStrings &choices, int Selected = -1 );
    wxChoice   * AddChoice( const TranslatableString &Prompt,
       const TranslatableStrings &choices, const TranslatableString &selected );
-   wxMenuBar  * AddMenuBar( );
-   wxMenu     * AddMenu( const TranslatableString & Title );
    void AddIcon( wxBitmap * pBmp);
    void AddFixedText(
       const TranslatableString & Str, bool bCenter = false, int wrapWidth = 0 );
@@ -558,8 +554,6 @@ protected:
    wxSizer * mpSizer;
    wxWindow * mpParent;
    wxWindow * mpWind;
-   wxMenuBar * mpMenuBar;
-   wxMenu * mpMenu;
 
 private:
    void DoDataShuttle( const wxString &Name, WrappedType & WrappedRef );
@@ -740,9 +734,6 @@ public:
       { std::move( mItem ).MinSize(); return *this; }
    ShuttleGui &MinSize( wxSize sz )
       { std::move( mItem ).MinSize( sz ); return *this; }
-
-   GuiWaveTrack * AddGuiWaveTrack( const wxString & Name);
-   AttachableScrollBar * AddAttachableScrollBar( long style = wxSB_HORIZONTAL );
 
    // The first of these buttons, if any, that is included will be default:
    // Apply, Yes, OK

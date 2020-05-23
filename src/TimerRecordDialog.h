@@ -30,12 +30,24 @@ class NumericTextCtrl;
 class ShuttleGui;
 class TimerRecordPathCtrl;
 
-class wxArrayStringEx;
-
 enum TimerRecordCompletedActions {
    TR_ACTION_NOTHING = 0x00000000,
    TR_ACTION_SAVED = 0x00000001,
    TR_ACTION_EXPORTED = 0x00000002
+};
+
+enum {
+   POST_TIMER_RECORD_STOPPED = -3,
+   POST_TIMER_RECORD_CANCEL_WAIT,
+   POST_TIMER_RECORD_CANCEL,
+
+   POST_TIMER_RECORD_NOTHING = 0,
+   POST_TIMER_RECORD_CLOSE,
+
+#ifdef __WINDOWS__
+   POST_TIMER_RECORD_RESTART,
+   POST_TIMER_RECORD_SHUTDOWN
+#endif
 };
 
 class AudacityProject;

@@ -41,19 +41,6 @@ class AButton final : public wxWindow {
            ImageRoll dis,
            bool toggle);
 
-    // Construct button, specifying images (button up, highlight, button down,
-    // and disabled) for the default state
-   AButton(wxWindow * parent,
-           wxWindowID id,
-           const wxPoint & pos,
-           const wxSize & size,
-           wxImage up,
-           wxImage over,
-           wxImage down,
-           wxImage overDown,
-           wxImage dis,
-           bool toggle);
-
    virtual ~ AButton();
 
    // hide the inherited function that takes naked wxString:
