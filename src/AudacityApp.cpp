@@ -52,6 +52,9 @@ It handles initialization and termination by subclassing wxApp.
 
 #ifdef __WXGTK__
 #include <unistd.h>
+#ifdef HAVE_GTK
+#include <gtk/gtk.h>
+#endif
 #endif
 
 // chmod, lstat, geteuid
@@ -1180,6 +1183,24 @@ bool AudacityApp::OnInit()
 #if defined(__WXMAC__)
    // Disable window animation
    wxSystemOptions::SetOption(wxMAC_WINDOW_PLAIN_TRANSITION, 1);
+#endif
+
+   // Some GTK themes produce larger combo boxes that make them taller
+   // than our single toolbar height restriction.  This will remove some
+   // of the extra space themes add.
+   //
+   // NOTE: It's important that the widgets are created with an initial
+   //       size, otherwise this override will not work.
+#if defined(__WXGTK3__) && defined(HAVE_GTK)
+   // LLL:  I've been unsuccessful at overriding GTK3 styles :-(
+#elif defined(__WXGTK__) && defined(HAVE_GTK)
+   gtk_rc_parse_string("style \"audacity\" {\n"
+                       " GtkButton::inner_border = { 0, 0, 0, 0 }\n"
+                       " xthickness = 4\n"
+                       " ythickness = 0\n"
+                       "}\n"
+                       "widget_class \"*GtkCombo*\" style \"audacity\"");
+
 #endif
 
    // Don't use AUDACITY_NAME here.
