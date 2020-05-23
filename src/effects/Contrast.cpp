@@ -434,18 +434,18 @@ namespace {
       return format0.Format( value );
    }
 
-   wxString FormatDifference( float diffdB )
+   TranslatableString FormatDifference( float diffdB )
    {
       if( diffdB != diffdB )   // test for NaN, reliant on IEEE implementation
-         return _("indeterminate");
+         return XO("indeterminate");
       else {
          if( diffdB != std::numeric_limits<float>::infinity() )
             /* i18n-hint: dB abbreviates decibels
              * RMS abbreviates root mean square, a certain averaging method */
-            return wxString::Format(_("%.2f dB RMS"), diffdB);
+            return XO("%.2f dB RMS").Format( diffdB );
          else
             /* i18n-hint: dB abbreviates decibels */
-            return _("Infinite dB difference");
+            return XO("Infinite dB difference");
       }
    }
 
@@ -494,7 +494,7 @@ void ContrastDialog::results()
 
       /* i18n-hint: i.e. difference in loudness at the moment. */
       mDiffText->SetName(_("Current difference"));
-      mDiffText->ChangeValue( FormatDifference( diffdB ) );
+      mDiffText->ChangeValue( FormatDifference( diffdB ).Translation() );
    }
 
    if (mForegroundIsDefined) {

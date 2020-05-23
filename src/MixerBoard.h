@@ -224,7 +224,7 @@ private:
    void ResetMeters(const bool bResetClipping);   
    void RemoveTrackCluster(size_t nIndex);
    void MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap,
-      wxRect & bev, const wxString & str, bool up );
+      wxRect & bev, const TranslatableString & str, bool up );
    void CreateMuteSoloImages();
    int FindMixerTrackCluster(const PlayableTrack* pTrack,
                               MixerTrackCluster** hMixerTrackCluster) const;

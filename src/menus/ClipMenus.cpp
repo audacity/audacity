@@ -19,22 +19,22 @@ struct FoundTrack {
    int trackNum{};
    bool channel{};
 
-   wxString ComposeTrackName() const
+   TranslatableString ComposeTrackName() const
    {
       auto name = waveTrack->GetName();
       auto shortName = name == waveTrack->GetDefaultName()
          /* i18n-hint: compose a name identifying an unnamed track by number */
-         ? wxString::Format( _("Track %d"), trackNum )
-         : name;
+         ? XO("Track %d").Format( trackNum )
+         : Verbatim(name);
       auto longName = shortName;
       if (channel) {
          // TODO: more-than-two-channels-message
          if ( waveTrack->IsLeader() )
          /* i18n-hint: given the name of a track, specify its left channel */
-            longName = wxString::Format(_("%s left"), shortName);
+            longName = XO("%s left").Format(shortName);
          else
          /* i18n-hint: given the name of a track, specify its right channel */
-            longName = wxString::Format(_("%s right"), shortName);
+            longName = XO("%s right").Format(shortName);
       }
       return longName;
    }

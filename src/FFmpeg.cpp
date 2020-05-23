@@ -33,9 +33,9 @@ License: GPL v2.  See License.txt.
 #if !defined(USE_FFMPEG)
 /// FFmpeg support may or may not be compiled in,
 /// but Preferences dialog requires this function nevertheless
-wxString GetFFmpegVersion(wxWindow *parent)
+TranslatableString GetFFmpegVersion()
 {
-   return wxString(_("FFmpeg support not compiled in"));
+   return XO("FFmpeg support not compiled in");
 }
 
 #else
@@ -110,14 +110,14 @@ void FFmpegStartup()
    }
 }
 
-wxString GetFFmpegVersion(wxWindow * WXUNUSED(parent))
+TranslatableString GetFFmpegVersion()
 {
    PickFFmpegLibs();
 
-   wxString versionString = _("FFmpeg library not found");
+   auto versionString = XO("FFmpeg library not found");
 
    if (FFmpegLibsInst()->ValidLibsLoaded()) {
-      versionString = FFmpegLibsInst()->GetLibraryVersion();
+      versionString = Verbatim( FFmpegLibsInst()->GetLibraryVersion() );
    }
 
    DropFFmpegLibs();

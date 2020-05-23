@@ -449,7 +449,7 @@ void DependencyDialog::PopulateList()
          mFileListCtrl->SetItemState(i, 0, wxLIST_STATE_SELECTED); // Deselect.
          mFileListCtrl->SetItemTextColour(i, *wxRED);
       }
-      mFileListCtrl->SetItem(i, 1, Internat::FormatSize(byteCount));
+      mFileListCtrl->SetItem(i, 1, Internat::FormatSize(byteCount).Translation());
       mFileListCtrl->SetItemData(i, long(bOriginalExists));
 
       ++i;
@@ -541,25 +541,24 @@ void DependencyDialog::OnRightClick( wxListEvent& event)
    PopupMenu(&menu);
 }
 
-void DependencyDialog::OnCopyToClipboard( wxCommandEvent& evt )
+void DependencyDialog::OnCopyToClipboard( wxCommandEvent& )
 {
-   static_cast<void>(evt);
-   wxString Files;
+   TranslatableString Files;
    for (const auto &aliasedFile : mAliasedFiles) {
       const wxFileName & fileName = aliasedFile.mFileName;
       wxLongLong byteCount = (aliasedFile.mByteCount * 124) / 100;
       bool bOriginalExists = aliasedFile.mbOriginalExists;
       // All fields quoted, as e.g. size may contain a comma in the number.
-      Files += wxString::Format( "\"%s\", \"%s\", \"%s\"\n",
+      Files += XO( "\"%s\", \"%s\", \"%s\"\n").Format(
          fileName.GetFullPath(), 
-         Internat::FormatSize( byteCount), 
-         bOriginalExists ? "OK":"Missing" );
+         Internat::FormatSize( byteCount),
+         bOriginalExists ? XO("OK") : XO("Missing") );
    }
 
    // copy data onto clipboard
    if (wxTheClipboard->Open()) {
       // Clipboard owns the data you give it
-      wxTheClipboard->SetData(safenew wxTextDataObject(Files));
+      wxTheClipboard->SetData(safenew wxTextDataObject(Files.Translation()));
       wxTheClipboard->Close();
    }
 }

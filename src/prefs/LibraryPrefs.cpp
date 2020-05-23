@@ -185,7 +185,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 /// of the MP3 Library version.
 void LibraryPrefs::SetMP3VersionText(bool prompt)
 {
-   mMP3Version->SetLabel(GetMP3Version(this, prompt));
+   mMP3Version->SetLabel(GetMP3Version(this, prompt).Translation());
    mMP3Version->SetName(mMP3Version->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
@@ -205,7 +205,7 @@ void LibraryPrefs::OnMP3DownButton(wxCommandEvent & WXUNUSED(event))
 
 void LibraryPrefs::SetFFmpegVersionText()
 {
-   mFFmpegVersion->SetLabel(GetFFmpegVersion(this));
+   mFFmpegVersion->SetLabel(GetFFmpegVersion().Translation());
    mFFmpegVersion->SetName(mFFmpegVersion->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 

@@ -112,7 +112,7 @@ bool Module::Load()
       auto Error = wxString(wxSysErrorMsg());
       AudacityMessageBox(XO("Unable to load the \"%s\" module.\n\nError: %s").Format(ShortName, Error),
                          XO("Module Unsuitable"));
-      wxLogMessage(_("Unable to load the module \"%s\". Error: %s").Format(mName, Error));
+      wxLogMessage(wxT("Unable to load the module \"%s\". Error: %s"), mName, Error);
       return false;
    }
 
@@ -123,7 +123,7 @@ bool Module::Load()
          XO("The module \"%s\" does not provide a version string.\n\nIt will not be loaded.")
             .Format( ShortName),
          XO("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module \"%s\" does not provide a version string. It will not be loaded."), mName));
+      wxLogMessage(wxT("The module \"%s\" does not provide a version string. It will not be loaded."), mName);
       mLib->Unload();
       return false;
    }
@@ -134,7 +134,7 @@ bool Module::Load()
          XO("The module \"%s\" is matched with Audacity version \"%s\".\n\nIt will not be loaded.")
             .Format(ShortName, moduleVersion),
          XO("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module \"%s\" is matched with Audacity version \"%s\". It will not be loaded."), mName, moduleVersion));
+      wxLogMessage(wxT("The module \"%s\" is matched with Audacity version \"%s\". It will not be loaded."), mName, moduleVersion);
       mLib->Unload();
       return false;
    }
@@ -159,7 +159,7 @@ bool Module::Load()
    AudacityMessageBox(
       XO("The module \"%s\" failed to initialize.\n\nIt will not be loaded.").Format(ShortName),
       XO("Module Unsuitable"));
-   wxLogMessage(wxString::Format(_("The module \"%s\" failed to initialize.\nIt will not be loaded."), mName));
+   wxLogMessage(wxT("The module \"%s\" failed to initialize.\nIt will not be loaded."), mName);
    mLib->Unload();
 
    return false;
@@ -342,7 +342,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
             AudacityMessageBox(
                XO("The module \"%s\" does not provide any of the required functions.\n\nIt will not be loaded.").Format(ShortName),
                XO("Module Unsuitable"));
-            wxLogMessage(wxString::Format(_("The module \"%s\" does not provide any of the required functions. It will not be loaded."), files[i]));
+            wxLogMessage(wxT("The module \"%s\" does not provide any of the required functions. It will not be loaded."), files[i]);
             module->Unload();
          }
          else

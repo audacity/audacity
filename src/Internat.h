@@ -123,8 +123,8 @@ public:
 
    /** \brief Convert a number to a string while formatting it in bytes, KB,
     * MB, GB */
-   static wxString FormatSize(wxLongLong size);
-   static wxString FormatSize(double size);
+   static TranslatableString FormatSize(wxLongLong size);
+   static TranslatableString FormatSize(double size);
 
    /** \brief Check a proposed file name string for illegal characters and
     * remove them
@@ -132,15 +132,6 @@ public:
     * character-wise changed)
     */
    static bool SanitiseFilename(wxString &name, const wxString &sub);
-
-   /** \brief Remove accelerator characters from strings
-    *
-    * Utility function - takes a translatable string to be used as a menu item,
-    * for example _("&Splash...\tAlt+S"), and strips all of the menu
-    * accelerator stuff from it, to make "Splash".  That way the same
-    * translatable string can be used both when accelerators are needed and
-    * when they aren't, saving translators effort. */
-   static wxString StripAccelerators(const wxString& str);
 
    static const wxArrayString &GetExcludedCharacters()
    { return exclude; }
@@ -150,8 +141,6 @@ private:
 
    static wxArrayString exclude;
 };
-
-#define _NoAcc(X) Internat::StripAccelerators(_(X))
 
 // Convert C strings to wxString
 #define UTF8CTOWX(X) wxString((X), wxConvUTF8)

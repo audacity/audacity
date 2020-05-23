@@ -2211,10 +2211,10 @@ static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "MP3",
 // Return library version
 //----------------------------------------------------------------------------
 
-wxString GetMP3Version(wxWindow *parent, bool prompt)
+TranslatableString GetMP3Version(wxWindow *parent, bool prompt)
 {
    MP3Exporter exporter;
-   wxString versionString = _("MP3 export library not found");
+   auto versionString = XO("MP3 export library not found");
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    if (prompt) {
@@ -2223,10 +2223,9 @@ wxString GetMP3Version(wxWindow *parent, bool prompt)
 
    if (exporter.LoadLibrary(parent, prompt ? MP3Exporter::Yes : MP3Exporter::No)) {
 #endif // DISABLE_DYNAMIC_LOADING_LAME
-      versionString = exporter.GetLibraryVersion();
+      versionString = Verbatim( exporter.GetLibraryVersion() );
 #ifdef MP3_EXPORT_BUILT_IN
-      versionString += " ";
-      versionString += _("(Built-in)");
+      versionString.Join( XO("(Built-in)"), " " );
 #endif
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
