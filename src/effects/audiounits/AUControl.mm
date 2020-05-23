@@ -104,7 +104,7 @@
 @end
 
 AUControlImpl::AUControlImpl(wxWindowMac *peer, NSView *view)
-:  wxWidgetCocoaImpl(peer, view, false, false)
+:  wxWidgetCocoaImpl(peer, view)
 {
 }
 
