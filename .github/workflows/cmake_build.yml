@@ -76,7 +76,7 @@ jobs:
         set -x
 
         # Get latest wxWidgets commit hash
-        wxhash=$(git ls-remote "${WXURL}" "${WXREF}" HEAD | awk 'NR==1 {print $1}')
+        wxhash=$(git ls-remote "${WXURL}" "${WXREF}" | awk 'NR==1 {print $1}')
 
         # Build the cache key
         wxhash="wx_${wxhash}_${RUNNER_OS}_${{matrix.config.platform}}"
