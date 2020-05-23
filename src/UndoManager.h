@@ -141,7 +141,7 @@ class AUDACITY_DLL_API UndoManager final
    void GetShortDescription(unsigned int n, TranslatableString *desc);
    // Return value must first be calculated by CalculateSpaceUsage():
    wxLongLong_t GetLongDescription(
-      unsigned int n, TranslatableString *desc, wxString *size);
+      unsigned int n, TranslatableString *desc, TranslatableString *size);
    void SetLongDescription(unsigned int n, const TranslatableString &desc);
 
    // These functions accept a callback that uses the state,

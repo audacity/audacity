@@ -165,7 +165,7 @@ void UndoManager::CalculateSpaceUsage()
 }
 
 wxLongLong_t UndoManager::GetLongDescription(
-   unsigned int n, TranslatableString *desc, wxString *size)
+   unsigned int n, TranslatableString *desc, TranslatableString *size)
 {
    n -= 1; // 1 based to zero based
 

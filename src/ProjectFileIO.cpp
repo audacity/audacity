@@ -177,7 +177,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    auto &dirManager = DirManager::Get( project );
    auto &settings = ProjectSettings::Get( project );
    bool bFileVersionFound = false;
-   wxString fileVersion = _("<unrecognized version -- possibly corrupt project file>");
+   wxString fileVersion;
    wxString audacityVersion = _("<unrecognized version -- possibly corrupt project file>");
    int requiredTags = 0;
    long longVpos = 0;

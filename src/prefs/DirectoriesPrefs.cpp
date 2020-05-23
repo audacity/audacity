@@ -200,7 +200,7 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
 void DirectoriesPrefs::UpdateFreeSpace(wxCommandEvent & WXUNUSED(event))
 {
    wxString tempDir;
-   wxString label;
+   TranslatableString label;
 
    if (mTempDir != NULL) {
       tempDir = mTempDir->GetValue();
@@ -212,12 +212,12 @@ void DirectoriesPrefs::UpdateFreeSpace(wxCommandEvent & WXUNUSED(event))
       label = Internat::FormatSize(space);
    }
    else {
-      label = _("unavailable - above location doesn't exist");
+      label = XO("unavailable - above location doesn't exist");
    }
 
    if( mFreeSpace != NULL ) {
-      mFreeSpace->SetLabel(label);
-      mFreeSpace->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      mFreeSpace->SetLabel(label.Translation());
+      mFreeSpace->SetName(label.Translation()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    }
 }
 

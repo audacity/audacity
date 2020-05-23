@@ -204,18 +204,17 @@ void HistoryDialog::DoUpdate()
    wxLongLong_t total = 0;
    mSelected = mManager->GetCurrentState() - 1;
    for (i = 0; i < (int)mManager->GetNumStates(); i++) {
-      TranslatableString desc;
-      wxString size;
+      TranslatableString desc, size;
 
       total += mManager->GetLongDescription(i + 1, &desc, &size);
       mList->InsertItem(i, desc.Translation(), i == mSelected ? 1 : 0);
-      mList->SetItem(i, 1, size);
+      mList->SetItem(i, 1, size.Translation());
    }
 
-   mTotal->SetValue(Internat::FormatSize(total));
+   mTotal->SetValue(Internat::FormatSize(total).Translation());
 
    auto clipboardUsage = mManager->GetClipboardSpaceUsage();
-   mClipboard->SetValue(Internat::FormatSize(clipboardUsage));
+   mClipboard->SetValue(Internat::FormatSize(clipboardUsage).Translation());
    FindWindowById(ID_DISCARD_CLIPBOARD)->Enable(clipboardUsage > 0);
 
    mList->EnsureVisible(mSelected);
