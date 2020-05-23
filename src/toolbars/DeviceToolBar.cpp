@@ -116,64 +116,63 @@ void DeviceToolBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    DeinitChildren();
+
    // Hosts
    mHost = safenew wxChoice(this,
-                        wxID_ANY,
-                        wxDefaultPosition,
-                        wxDefaultSize);
+                            wxID_ANY,
+                            wxDefaultPosition,
+                            wxDefaultSize);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    mHost->SetAccessible(safenew WindowAccessible(mHost));
 #endif
-   Add(mHost, 0, wxALIGN_CENTER);
+   Add(mHost, 15, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 1);
 
    // Input device
    Add(safenew AStaticBitmap(this,
-                          wxID_ANY,
-                          theTheme.Bitmap(bmpMic)), 0, wxALIGN_CENTER);
+                             wxID_ANY,
+                             theTheme.Bitmap(bmpMic)), 0, wxALIGN_CENTER_VERTICAL);
    mInput = safenew wxChoice(this,
-                         wxID_ANY,
-                         wxDefaultPosition,
-                         wxDefaultSize);
+                             wxID_ANY,
+                             wxDefaultPosition,
+                             wxDefaultSize);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    mInput->SetAccessible(safenew WindowAccessible(mInput));
 #endif
+   Add(mInput, 30, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 1);
+
    // Input channels
-   Add(mInput, 0, wxALIGN_CENTER);
    mInputChannels = safenew wxChoice(this,
-                         wxID_ANY,
-                         wxDefaultPosition,
-                         wxDefaultSize);
+                                     wxID_ANY,
+                                     wxDefaultPosition,
+                                     wxDefaultSize);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    mInputChannels->SetAccessible(safenew WindowAccessible(mInputChannels));
 #endif
-   Add(mInputChannels, 0, wxALIGN_CENTER);
+   Add(mInputChannels, 20, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 1);
 
    // Output device
    Add(safenew AStaticBitmap(this,
-                          wxID_ANY,
-                          theTheme.Bitmap(bmpSpeaker)), 0, wxALIGN_CENTER);
+                             wxID_ANY,
+                             theTheme.Bitmap(bmpSpeaker)), 0, wxALIGN_CENTER_VERTICAL);
    mOutput = safenew wxChoice(this,
-                               wxID_ANY,
-                               wxDefaultPosition,
-                               wxDefaultSize);
+                              wxID_ANY,
+                              wxDefaultPosition,
+                              wxDefaultSize);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    mOutput->SetAccessible(safenew WindowAccessible(mOutput));
 #endif
-   Add(mOutput, 0, wxALIGN_CENTER);
-
-
-
+   Add(mOutput, 30, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 1);
 
    mHost->Bind(wxEVT_SET_FOCUS,
-                 &DeviceToolBar::OnFocus,
-                 this);
+               &DeviceToolBar::OnFocus,
+               this);
    mHost->Bind(wxEVT_KILL_FOCUS,
-                 &DeviceToolBar::OnFocus,
-                 this);
+               &DeviceToolBar::OnFocus,
+               this);
    mOutput->Bind(wxEVT_SET_FOCUS,
                  &DeviceToolBar::OnFocus,
                  this);
@@ -196,15 +195,6 @@ void DeviceToolBar::Populate()
    SetNames();
 
    RefillCombos();
-}
-
-void DeviceToolBar::RefillCombos()
-{
-   FillHosts();
-   FillHostDevices();
-   FillInputChannels();
-   // make the device display selection reflect the prefs if they exist
-   UpdatePrefs();
 }
 
 void DeviceToolBar::OnFocus(wxFocusEvent &event)
@@ -383,165 +373,47 @@ void DeviceToolBar::RegenerateTooltips()
 #endif
 }
 
-bool DeviceToolBar::Layout()
+void DeviceToolBar::RefillCombos()
 {
-   bool ret;
-   ret = ToolBar::Layout();
-   RepositionCombos();
-   return ret;
-}
-
-// returns true if the combo is constrained and false otherwise
-// @param toolbarWidth the width of the toolbar in pixels
-// @param ratio an in/out for the desired and resultant width ratio.
-// @param flex the amount of extra space allowed to have past the available.
-//             the amount used is subtracted.
-static bool RepositionCombo(wxWindow *combo, int toolbarWidth, wxSize desiredSize,
-                            float &ratio, float &flex, int marginPixels, bool changesRatio)
-{
-   float ratioChange;
-   bool constrained = false;
-
-   // push margin pixels
-   desiredSize.x += marginPixels;
-
-   // truncate the window size if necessary
-   if (desiredSize.x > toolbarWidth * (flex + ratio)) {
-      constrained = true;
-      desiredSize.SetWidth(toolbarWidth * (flex + ratio));
-      if (desiredSize.GetWidth() - marginPixels < 0)
-         desiredSize.SetWidth(marginPixels);
-   }
-
-   // keep track of how much space gained or lost so it can be used by other combos.
-   if (changesRatio) {
-      ratioChange = (desiredSize.x / ((float) toolbarWidth)) - ratio;
-      ratio += ratioChange;
-      flex  -= ratioChange;
-   }
-
-   // pop the margin pixels
-   desiredSize.x -= marginPixels;
-
-   combo->SetMinSize(desiredSize);
-
-   return constrained;
-}
-
-//These don't add up to 1 because there is a bit of margin that we allow
-//the layout sizer to handle.
-#define kHostWidthRatio 0.13f
-#define kInputWidthRatio 0.32f
-#define kOutputWidthRatio 0.32f
-#define kChannelsWidthRatio 0.18f
-
-void DeviceToolBar::RepositionCombos()
-{
-   int w, h, dockw, dockh;
-   float ratioUnused;
-   bool constrained = true;
-   wxWindow *window;
-   wxSize desiredInput, desiredOutput, desiredHost, desiredChannels;
-   float hostRatio, outputRatio, inputRatio, channelsRatio;
-   // if the toolbar is docked then the width we should use is the project width.
-   // as the toolbar's width can extend past this.
-   GetClientSize(&w, &h);
-
-   // FIXME: Note that there's some bug in here, in that even if the prefs show the toolbar
-   // docked, on initialization, this call to IsDocked() returns false.
-   if (IsDocked()) {
-      // If the toolbar is docked its width can be larger than what is actually viewable
-      // So take the min.  We don't need to worry about having another toolbar to the left off us
-      // because if we are larger than the dock size we always get our own row.
-      // and if smaller then we don't use the dock size (because we take the min).
-      window = GetDock();
-      window->GetClientSize(&dockw, &dockh);
-      // The fudge factor here is because the docked toolbar is 2 pixels smaller.
-      int kFudge1 = -2;
-      // Grabber is Included, but not resizer if docked.
-      w-= grabberWidth + kFudge1; 
-      if (dockw < w)
-         w = dockw;
-   } else {
-      // If not docked, we have a holding window.
-      wxWindow *pParent = GetParent();
-      if( pParent ){
-         int w1, h1;
-         pParent->GetSize( &w1, &h1 );
-         // This Resizer is considerably bigger than the 4px docked version.
-         // It's the diagonal striped resizer, not the vertical bars.
-         int kStripyResizerSize = 15;
-         // Grabber AND resizer included.
-         w = w1- (kStripyResizerSize + grabberWidth );
-      }
-   }
-   if (w <= 0)
-      return;
-
-   // set up initial sizes and ratios
-   // Note that the y values of the desired sizes are not changed, so that the height
-   // of the toolbar is not changed
-   hostRatio     = kHostWidthRatio;
-   inputRatio    = kInputWidthRatio;
-   outputRatio   = kOutputWidthRatio;
-   channelsRatio = kChannelsWidthRatio;
-
-   desiredHost.x     = mHost->GetBestSize().x *4;
-   desiredHost.y     = mHost->GetSize().y;
-   desiredInput.x    = mInput->GetBestSize().x *4;
-   desiredInput.y    = mInput->GetSize().y;
-   desiredOutput.x   = mOutput->GetBestSize().x *4;
-   desiredOutput.y   = mOutput->GetSize().y;
-   desiredChannels.x = mInputChannels->GetBestSize().x *4;
-   desiredChannels.y = mInputChannels->GetSize().y;
-
-   // wxGtk (Gnome) has larger comboboxes than the other platforms.  For DeviceToolBar this prevents
-   // the toolbar docking on a single height row. So we shrink it to prevent this.
-#ifdef __WXGTK__
-   desiredHost.SetHeight(mHost->GetBestSize().y -4);
-   desiredInput.SetHeight(desiredHost.GetHeight());
-   desiredOutput.SetHeight(desiredHost.GetHeight());
-   desiredChannels.SetHeight(desiredHost.GetHeight());
-#endif
-
-   ratioUnused = 0.995f - (kHostWidthRatio + kInputWidthRatio + kOutputWidthRatio + kChannelsWidthRatio);
-   int i = 0;
-   // limit the amount of times we solve constraints to 5
-   // As we now ask for more than is available, we only do this iteration once.
-   while (constrained && ratioUnused > 0.01f && i < 5) {
-      i++;
-      constrained = RepositionCombo(mHost,   w,   desiredHost,   hostRatio, ratioUnused, 0, true);
-      constrained |= RepositionCombo(mInput,  w,  desiredInput,  inputRatio, ratioUnused, theTheme.Bitmap(bmpMic).GetWidth(), true);
-      constrained |= RepositionCombo(mOutput, w, desiredOutput, outputRatio, ratioUnused, theTheme.Bitmap(bmpSpeaker).GetWidth(), true);
-      constrained |= RepositionCombo(mInputChannels, w, desiredChannels, channelsRatio, ratioUnused, 0, true);
-   }
-
-   Update();
+   FillHosts();
+   FillHostDevices();
+   FillInputChannels();
+   // make the device display selection reflect the prefs if they exist
+   UpdatePrefs();
 }
 
 void DeviceToolBar::FillHosts()
 {
-   wxArrayString hosts;
-   size_t i;
-
-   const std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
+   const std::vector<DeviceSourceMap> &inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
    const std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+
+   wxArrayString hosts;
+
    // go over our lists add the host to the list if it isn't there yet
-   for (i = 0; i < inMaps.size(); i++)
-      if ( ! make_iterator_range( hosts ).contains( inMaps[i].hostString ) )
-         hosts.push_back(inMaps[i].hostString);
-   for (i = 0; i < outMaps.size(); i++)
-      if ( ! make_iterator_range( hosts ).contains( outMaps[i].hostString ) )
-         hosts.push_back(outMaps[i].hostString);
+
+   for (auto & device : inMaps) {
+      if (!make_iterator_range(hosts).contains(device.hostString)) {
+         hosts.push_back(device.hostString);
+      }
+   }
+
+   for (auto & device : outMaps) {
+      if (!make_iterator_range(hosts).contains(device.hostString)) {
+         hosts.push_back(device.hostString);
+      }
+   }
 
    mHost->Clear();
    mHost->Append(hosts);
 
-   if (hosts.size() == 0)
+   if (hosts.size() == 0) {
       mHost->Enable(false);
+   }
 
-   mHost->InvalidateBestSize();
-   mHost->SetMaxSize(mHost->GetBestSize()*4);
+//   mHost->InvalidateBestSize();
+   mHost->SetMinSize(wxSize(50, wxDefaultCoord));
+//   mHost->SetMaxSize(wxDefaultSize);
+//   mHost->SetMaxSize(wxSize(mHost->GetBestSize().x, wxDefaultCoord));
 }
 
 void DeviceToolBar::FillHostDevices()
@@ -551,25 +423,25 @@ void DeviceToolBar::FillHostDevices()
 
    //read what is in the prefs
    wxString host = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
-   size_t i;
    int foundHostIndex = -1;
 
    // if the host is not in the hosts combo then we rescanned.
    // set it to blank so we search for another host.
-   if (mHost->FindString(host) == wxNOT_FOUND)
+   if (mHost->FindString(host) == wxNOT_FOUND) {
       host = wxT("");
+   }
 
-   for (i = 0; i < outMaps.size(); i++) {
-      if (outMaps[i].hostString == host) {
-         foundHostIndex = outMaps[i].hostIndex;
+   for (auto & device : outMaps) {
+      if (device.hostString == host) {
+         foundHostIndex = device.hostIndex;
          break;
       }
    }
 
    if (foundHostIndex == -1) {
-      for (i = 0; i < inMaps.size(); i++) {
-         if (inMaps[i].hostString == host) {
-            foundHostIndex = inMaps[i].hostIndex;
+      for (auto & device : inMaps) {
+         if (device.hostString == host) {
+            foundHostIndex = device.hostIndex;
             break;
          }
       }
@@ -577,10 +449,12 @@ void DeviceToolBar::FillHostDevices()
 
    // If no host was found based on the prefs device host, load the first available one
    if (foundHostIndex == -1) {
-      if (outMaps.size())
+      if (outMaps.size()) {
          foundHostIndex = outMaps[0].hostIndex;
-      else if (inMaps.size())
+      }
+      else if (inMaps.size()) {
          foundHostIndex = inMaps[0].hostIndex;
+      }
    }
 
    // Make sure in/out are clear in case no host was found
@@ -588,15 +462,16 @@ void DeviceToolBar::FillHostDevices()
    mOutput->Clear();
 
    // If we still have no host it means no devices, in which case do nothing.
-   if (foundHostIndex == -1)
+   if (foundHostIndex == -1) {
       return;
+   }
 
    // Repopulate the Input/Output device list available to the user
-   for (i = 0; i < inMaps.size(); i++) {
-      if (foundHostIndex == inMaps[i].hostIndex) {
-         mInput->Append(MakeDeviceSourceString(&inMaps[i]));
+   for (auto & device : inMaps) {
+      if (foundHostIndex == device.hostIndex) {
+         mInput->Append(MakeDeviceSourceString(&device));
          if (host.empty()) {
-            host = inMaps[i].hostString;
+            host = device.hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
             mHost->SetStringSelection(host);
          }
@@ -604,14 +479,16 @@ void DeviceToolBar::FillHostDevices()
    }
    mInput->Enable(mInput->GetCount() ? true : false);
 
-   mInput->InvalidateBestSize();
-   mInput->SetMaxSize(mInput->GetBestSize()*4);
+//   mInput->InvalidateBestSize();
+   mInput->SetMinSize(wxSize(50, wxDefaultCoord));
+//   mInput->SetMaxSize(wxDefaultSize);
+//   mInput->SetMaxSize(wxSize(mInput->GetBestSize().x, wxDefaultCoord));
 
-   for (i = 0; i < outMaps.size(); i++) {
-      if (foundHostIndex == outMaps[i].hostIndex) {
-         mOutput->Append(MakeDeviceSourceString(&outMaps[i]));
+   for (auto & device : outMaps) {
+      if (foundHostIndex == device.hostIndex) {
+         mOutput->Append(MakeDeviceSourceString(&device));
          if (host.empty()) {
-            host = outMaps[i].hostString;
+            host = device.hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
             gPrefs->Flush();
             mHost->SetStringSelection(host);
@@ -620,10 +497,61 @@ void DeviceToolBar::FillHostDevices()
    }
    mOutput->Enable(mOutput->GetCount() ? true : false);
 
-   mOutput->InvalidateBestSize();
-   mOutput->SetMaxSize(mOutput->GetBestSize()*4);
+//   mOutput->InvalidateBestSize();
+   mOutput->SetMinSize(wxSize(50, wxDefaultCoord));
+//   mOutput->SetMaxSize(wxDefaultSize);
+//   mOutput->SetMaxSize(wxSize(mOutput->GetBestSize().x, wxDefaultCoord));
 
    // The setting of the Device is left up to OnChoice
+}
+
+void DeviceToolBar::FillInputChannels()
+{
+   const std::vector<DeviceSourceMap> &inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+   wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+   wxString device   = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
+   wxString source   = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
+   long oldChannels = 2, newChannels;
+
+   gPrefs->Read(wxT("/AudioIO/RecordChannels"), &oldChannels);
+   mInputChannels->Clear();
+   for (auto & dev: inMaps) {
+      if (source == dev.sourceString &&
+          device == dev.deviceString &&
+          host   == dev.hostString) {
+
+         // add one selection for each channel of this source
+         for (size_t j = 0; j < (unsigned int) dev.numChannels; j++) {
+            wxString name;
+
+            if (j == 0) {
+               name = _("1 (Mono) Recording Channel");
+            }
+            else if (j == 1) {
+               name = _("2 (Stereo) Recording Channels");
+            }
+            else {
+               name = wxString::Format(wxT("%d"), (int) j + 1);
+            }
+            mInputChannels->Append(name);
+         }
+         newChannels = dev.numChannels;
+         if (oldChannels <= newChannels && oldChannels >= 1) {
+            newChannels = oldChannels;
+         }
+         if (newChannels >= 1) {
+            mInputChannels->SetSelection(newChannels - 1);
+         }
+         gPrefs->Write(wxT("/AudioIO/RecordChannels"), newChannels);
+         break;
+      }
+   }
+   mInputChannels->Enable(mInputChannels->GetCount() ? true : false);
+
+//   mInputChannels->InvalidateBestSize();
+   mInputChannels->SetMinSize(wxSize(50, wxDefaultCoord));
+//   mInputChannels->SetMaxSize(wxDefaultSize);
+//   mInputChannels->SetMaxSize(wxSize(mInputChannels->GetBestSize().x, wxDefaultCoord));
 }
 
 void DeviceToolBar::OnRescannedDevices( wxCommandEvent &event )
@@ -654,56 +582,6 @@ int DeviceToolBar::ChangeHost()
    FillHostDevices();
 
    return 1;
-}
-
-void DeviceToolBar::FillInputChannels()
-{
-   const std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
-   wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
-   wxString device   = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
-   wxString source   = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
-   long oldChannels = 2, newChannels;
-
-   gPrefs->Read(wxT("/AudioIO/RecordChannels"), &oldChannels);
-   int index = -1;
-   size_t i, j;
-   mInputChannels->Clear();
-   for (i = 0; i < inMaps.size(); i++) {
-      if (source == inMaps[i].sourceString &&
-          device == inMaps[i].deviceString &&
-          host   == inMaps[i].hostString) {
-
-         // add one selection for each channel of this source
-         for (j = 0; j < (unsigned int) inMaps[i].numChannels; j++) {
-            wxString name;
-
-            if (j == 0) {
-               name = _("1 (Mono) Recording Channel");
-            }
-            else if (j == 1) {
-               name = _("2 (Stereo) Recording Channels");
-            }
-            else {
-               name = wxString::Format(wxT("%d"), (int) j + 1);
-            }
-            mInputChannels->Append(name);
-         }
-         newChannels = inMaps[i].numChannels;
-         if (oldChannels <= newChannels && oldChannels >= 1)
-            newChannels = oldChannels;
-         if (newChannels >= 1)
-            mInputChannels->SetSelection(newChannels - 1);
-         gPrefs->Write(wxT("/AudioIO/RecordChannels"), newChannels);
-         mInputChannels->Enable(mInputChannels->GetCount() ? true : false);
-         index = i;
-         break;
-      }
-   }
-   if (index == -1)
-      mInputChannels->Enable(false);
-
-   mInputChannels->InvalidateBestSize();
-   mInputChannels->SetMaxSize(mInputChannels->GetBestSize()*4);
 }
 
 void DeviceToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out)
@@ -848,6 +726,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const TranslatableString &t
          c = S.AddChoice( Verbatim( combo->GetName() ),
             transform_container<TranslatableStrings>( inputSources, Verbatim ),
             combo->GetSelection());
+         c->SetMinSize(c->GetBestSize());
       }
       S.EndHorizontalLay();
    }
