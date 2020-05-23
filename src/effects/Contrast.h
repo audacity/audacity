@@ -12,7 +12,6 @@
 #include "../widgets/wxPanelWrapper.h" // to inherit
 
 class wxButton;
-class wxString;
 class wxTextCtrl;
 
 class Envelope;

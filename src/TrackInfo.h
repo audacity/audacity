@@ -19,7 +19,6 @@ Paul Licameli split from TrackPanel.cpp
 class wxDC;
 class wxPoint;
 class wxRect;
-class wxString;
 class wxWindow;
 
 class ButtonHandle;

@@ -55,7 +55,6 @@ extern int scorealign(
 
 class wxButton;
 class wxCheckBox;
-class wxString;
 class wxSlider;
 class wxStaticText;
 

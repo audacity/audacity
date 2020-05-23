@@ -22,8 +22,6 @@
 
 #include "Internat.h"
 
-class wxString;
-
 class AudacityException /* not final */
 {
 public:

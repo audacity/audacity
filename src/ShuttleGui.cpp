@@ -851,25 +851,6 @@ ShuttleGuiBase & ShuttleGuiBase::Prop( int iProp )
    return *this;
 }
 
-wxMenuBar * ShuttleGuiBase::AddMenuBar( )
-{
-   auto menuBar = std::make_unique<wxMenuBar>();
-   mpMenuBar = menuBar.get();
-
-   wxFrame * pFrame = (wxFrame*)mpParent;
-   pFrame->SetThemeEnabled( true );
-   mpMenuBar->SetThemeEnabled( true );
-   pFrame->SetMenuBar(menuBar.release());
-
-   return mpMenuBar;
-}
-
-wxMenu * ShuttleGuiBase::AddMenu( const TranslatableString & Title )
-{
-   mpMenuBar->Append( (mpMenu = safenew wxMenu), Title.Translation() );
-   return mpMenu;
-}
-
 /// Starts a static box around a number of controls.
 ///  @param Str   The text of the title for the box.
 ///  @param iProp The resizing proportion value.
@@ -2238,47 +2219,6 @@ ShuttleGui & ShuttleGui::Optional( bool &bVar ){
    return *this;
 };
 
-
-GuiWaveTrack * ShuttleGui::AddGuiWaveTrack( const wxString & WXUNUSED(Name))
-{
-#ifdef EXPERIMENTAL_TRACK_PANEL
-   UseUpId();
-   if( mShuttleMode != eIsCreating )
-      return (GuiWaveTrack*)NULL;
-//      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), GuiWaveTrack);
-   GuiWaveTrack * pGuiWaveTrack;
-   miProp=1;
-   mpWind = pGuiWaveTrack = safenew GuiWaveTrack(mpParent, miId, Name);
-   mpWind->SetMinSize(wxSize(100,50));
-   UpdateSizers();
-   return pGuiWaveTrack;
-#else
-   return NULL;
-#endif
-}
-
-//#include "./widgets/AttachableScrollBar.h"
-#if 0
-AttachableScrollBar * ShuttleGui::AddAttachableScrollBar( long style )
-{
-   UseUpId();
-   if( mShuttleMode != eIsCreating )
-      return (AttachableScrollBar*)NULL;
-//      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), AttachableScrollBar);
-   AttachableScrollBar * pAttachableScrollBar;
-   miProp=0;
-   mpWind = pAttachableScrollBar = safenew AttachableScrollBar(
-      mpParent,
-      miId,
-      wxDefaultPosition,
-      wxDefaultSize,
-      style
-      );
-   mpWind->SetMinSize(wxSize(10,20));
-   UpdateSizers();
-   return pAttachableScrollBar;
-}
-#endif
 
 std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
 {
