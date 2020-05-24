@@ -342,15 +342,36 @@ void BlockFile::FixSummary(void *data)
        mSummaryInfo.fields != 3)
       return;
 
+   // These pointers point into extra 'unused' preamble space in the
+   // .au file.  WE are using that space for summary data.
    float *summary64K = (float *)((char *)data + mSummaryInfo.offset64K);
    float *summary256 = (float *)((char *)data + mSummaryInfo.offset256);
 
    float min, max;
    int bad;
 
+   // Bug 2433 fix
+   // Previosuly we computed min and max, and a discrepancy between 64K
+   // summary and 256 sample summary contributed towards indicating an 
+   // error (a byte swapped .au file, probably from a machine
+   // with the opposite architecture).
+   //
+   // However, that min-max test was incorrect on two counts:
+   //  1. Both the 256 and 64K data streams are byte-swapped or not
+   //     together - so a consistency check served no useful purpose.
+   //  2. On 64 bit architecture with function inlining, calculations
+   //     could end up being done at higher precision on one variable,
+   //     resulting in a spurious mismatch.  Exact comparison of floats
+   //     can be problematic.
+   // 
+   // Point 2 led to bug 2433 when functions were inlined, and .au 
+   // files not being byte swapped when they should be.
+   //
+   // The fix is to not use the min max in the consistency test, and just
+   // use the 'bad' count which is an integer.  We aim for no bad samples.
    ComputeMinMax256(summary256, &min, &max, &bad);
 
-   if (min != summary64K[0] || max != summary64K[1] || bad > 0) {
+   if ( bad > 0) {
       unsigned int *buffer = (unsigned int *)data;
       auto len = mSummaryInfo.totalSummaryBytes / 4;
 
@@ -358,7 +379,7 @@ void BlockFile::FixSummary(void *data)
          buffer[i] = wxUINT32_SWAP_ALWAYS(buffer[i]);
 
       ComputeMinMax256(summary256, &min, &max, &bad);
-      if (min == summary64K[0] && max == summary64K[1] && bad == 0) {
+      if ( bad == 0) {
          // The byte-swapping worked!
          return;
       }
