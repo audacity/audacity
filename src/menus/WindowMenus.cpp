@@ -5,7 +5,8 @@
 // This file collects a few things specific to Mac and requiring some
 // Objective-C++ .  Avoid mixing languages elsewhere.
 
-#ifdef __WXMAC__
+// Only needed when using wxWidgets < 3.1.3
+#if defined(__WXMAC__) && !wxCHECK_VERSION(3,1,3)
 
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
