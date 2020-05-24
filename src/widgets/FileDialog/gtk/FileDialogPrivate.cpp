@@ -180,7 +180,7 @@ static GtkWidget* find_widget(GtkWidget* parent, const gchar* name, int depth)
     // printf("%*.*c%s\n", depth, depth, ' ', gtk_widget_get_name(parent));
    
     GtkWidget *widget = NULL;
-    if (g_strcasecmp(gtk_widget_get_name(parent), name) == 0)
+    if (g_ascii_strncasecmp(gtk_widget_get_name(parent), name, strlen(name)) == 0)
     {
         return parent;
     }
