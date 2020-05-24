@@ -319,18 +319,39 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 "Audacity, which this is a customised version of, is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
 Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
 #else
+/* Do the i18n of a string with markup carefully with hints.
+ (Remember languages with cases.) */
       XO(
-"Audacity is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
+/* i18n-hint: First %s will be "volunteers", second "available" */
+"Audacity is a free program written by a worldwide team of %s. \
+Audacity is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
+         .Format(
+            Verbatim("[[https://www.audacityteam.org/about/credits|%s]]")
+               /* i18n-hint: substitutes into "a worldwide team of %s" */
+               .Format( XO("volunteers") ),
+            Verbatim("[[https://www.audacityteam.org/download|%s]]")
+               /* i18n-hint: substitutes into "Audacity is %s" */
+               .Format( XO("available") ) )
 #endif
    ;
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
    auto par2Str = XO(
-"If you find a bug or have a suggestion for us, please write, in English, to our [[https://forum.audacityteam.org/|forum]]. \
-For help, view the tips and tricks on our [[https://wiki.audacityteam.org/|wiki]] or \
-visit our [[https://forum.audacityteam.org/|forum]].");
+/* i18n-hint first and third %s will be "forum", second "wiki" */
+"If you find a bug or have a suggestion for us, please write, in English, to our %s. \
+For help, view the tips and tricks on our %s or \
+visit our %s.")
+      .Format(
+         Verbatim("[[https://forum.audacityteam.org/|%s]]")
+            /* i18n-hint substitutes into "write to our %s" */
+            .Format( XC("forum", "dative") ),
+         Verbatim("[[https://wiki.audacityteam.org/|%s]]")
+            /* i18n-hint substitutes into "view the tips and tricks on our %s" */
+            .Format( XO("wiki") ),
+         Verbatim("[[https://forum.audacityteam.org/|%s]]")
+            /* i18n-hint substitutes into "visit our %s" */
+            .Format( XC("forum", "accusative") ) );
    auto par2StrTranslated = par2Str.Translation();
 
    if( par2StrTranslated == par2Str.MSGID().GET() )
@@ -366,7 +387,9 @@ visit our [[https://forum.audacityteam.org/|forum]].");
       << wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>")
 
 #else
-      << XO("<h3>Audacity ")
+      << XO("<h3>")
+      << XO("Audacity")
+      << wxT(" ")
       << wxString(AUDACITY_VERSION_STRING)
       << wxT("</center></h3>")
       << XO("Audacity the free, open source, cross-platform software for recording and editing sounds.")
@@ -440,9 +463,19 @@ visit our [[https://forum.audacityteam.org/|forum]].");
 #ifdef EXPERIMENTAL_DA
       << wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|https://www.darkaudacity.com/]]")
 #else
-      << XO("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>")
+      << wxT("<p><br>&nbsp; &nbsp; ")
+      /* i18n-hint Audacity's name substitutes for first %s */
+      << XO("%s software is copyright %s 1999-2018 Audacity Team.")
+         .Format(
+            Verbatim("<b>%s<sup>&reg;</sup></b>").Format( XO("Audacity") ),
+            wxT("&copy;") )
+      << wxT("<br>")
 
-      << XO("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>")
+      << wxT("&nbsp; &nbsp; ")
+      /* i18n-hint Audacity's name substitutes for %s */
+      << XO("The name %s is a registered trademark of Dominic Mazzoni.")
+         .Format( Verbatim("<b>%s</b>").Format( XO("Audacity") ) )
+      << wxT("<br><br>")
 #endif
 
       << wxT("</center>")
