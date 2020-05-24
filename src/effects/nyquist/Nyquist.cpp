@@ -1693,8 +1693,32 @@ FileNames::FileTypes NyquistEffect::ParseFileTypes(const wxString & text)
       Tokenizer tzer;
       tzer.Tokenize(text, true, 1, 1);
       auto &types = tzer.tokens;
-      for (auto &type : types)
-         results.push_back( ParseFileType( type ) );
+      if ( !types.empty() && types[0][0] == wxT('(') )
+         for (auto &type : types)
+            results.push_back( ParseFileType( type ) );
+   }
+   if ( results.empty() ) {
+      // Old-style is a specially formatted string, maybe translated
+      // Parse it for compatibility
+      auto str = UnQuote( text );
+      auto pieces = wxSplit( str, '|' );
+      // Should have an even number
+      auto size = pieces.size();
+      if ( size % 2 == 1 )
+         --size, pieces.pop_back();
+      for ( size_t ii = 0; ii < size; ii += 2 ) {
+         FileExtensions extensions;
+         auto extensionStrings = wxSplit( pieces[ii + 1], ';' );
+         for ( const auto &extensionString : extensionStrings )
+            if ( extensionString.StartsWith( wxT("*.") ) ) {
+               auto ext = extensionString.substr( 2 );
+               if (ext == wxT("*"))
+                  // "*.*" to match all
+                  ext.clear();
+               extensions.push_back( ext );
+            }
+         results.push_back( { Verbatim( pieces[ii] ), extensions } );
+      }
    }
    return results;
 }
