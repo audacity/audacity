@@ -1897,10 +1897,13 @@ bool PluginManager::DropFile(const wxString &fileName)
 
             // Ask whether to enable the plug-ins
             if (auto nIds = ids.size()) {
-               auto message = XP(
+               auto message = XPC(
+               /* i18n-hint A plug-in is an optional added program for a sound
+                effect, or generator, or analyzer */
                   "Enable this plug-in?\n",
                   "Enable these plug-ins?\n",
-                  0
+                  0,
+                  "plug-ins"
                )( nIds );
                for (const auto &name : names)
                   message.Join( Verbatim( name ), wxT("\n") );

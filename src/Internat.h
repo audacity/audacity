@@ -32,7 +32,13 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 // '&', preceding menu accelerators, should NOT occur in the argument.
 #define XO(s)  (TranslatableString{ wxT(s), {} })
 
-// Marks strings for extraction only, where '&', preceding men accelerators, MAY
+// Alternative taking a second context argument.  A context is a string literal,
+// which is not translated, but serves to disambiguate uses of the first string
+// that might need differing translations, such as "Light" meaning not-heavy in
+// one place but not-dark elsewhere.
+#define XC(s, c)  (TranslatableString{ wxT(s), {} }.Context(c))
+
+// Marks strings for extraction only, where '&', preceding menu accelerators, MAY
 // occur.
 // For now, expands exactly as macro XO does, but in future there will be a
 // type distinction - for example XXO should be used for menu item names that
@@ -85,6 +91,10 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 // of the format argument that selects singular or plural
 #define XP(sing, plur, n) \
    TranslatableString{ wxT(sing), {} }.Plural<(n)>( wxT(plur) )
+
+// Like XP but with an additional context argument, as for XC
+#define XPC(sing, plur, n, c) \
+   TranslatableString{ wxT(sing), {} }.Context(c).Plural<(n)>( wxT(plur) )
 
 #endif
 
@@ -150,5 +160,10 @@ class ComponentInterfaceSymbol;
 TranslatableStrings Msgids(
    const EnumValueSymbol strings[], size_t nStrings);
 TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
+
+// Whether disambiguationg contexts are supported
+// If not, then the program builds and runs, but strings in the catalog with
+// contexts will fail to translate
+#define HAS_I18N_CONTEXTS wxCHECK_VERSION(3, 1, 1)
 
 #endif

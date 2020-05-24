@@ -363,7 +363,7 @@ wxString TranslatableString::DoChooseFormat(
       ? ( nn == 1 ? singular : plural )
       : wxGetTranslation(
             singular, plural, nn
-#if wxCHECK_VERSION(3, 1, 3)
+#if HAS_I18N_CONTEXTS
             , wxString{} // domain
             , context
 #endif

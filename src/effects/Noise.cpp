@@ -41,9 +41,13 @@ enum kTypes
 static const EnumValueSymbol kTypeStrings[nTypes] =
 {
    // These are acceptable dual purpose internal/visible names
-   { XO("White") },
-   { XO("Pink") },
-   { XO("Brownian") }
+   /* i18n-hint: not a color, but "white noise" having a uniform spectrum  */
+   { XC("White", "noise") },
+   /* i18n-hint: not a color, but "pink noise" having a spectrum with more power
+    in low frequencies */
+   { XC("Pink", "noise") },
+   /* i18n-hint: a kind of noise spectrum also known as "red" or "brown" */
+   { XC("Brownian", "noise") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters

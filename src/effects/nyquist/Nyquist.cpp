@@ -1443,8 +1443,8 @@ bool NyquistEffect::ProcessOne()
 
    if (rval == nyx_string) {
       // Assume the string has already been translated within the Lisp runtime
-      // if necessary, by gettext or ngettext defined below, before it is
-      // communicated back to C++
+      // if necessary, by one of the gettext functions defined below, before it
+      // is communicated back to C++
       auto msg = Verbatim( NyquistToWxString(nyx_get_string()) );
       if (!msg.empty()) { // Empty string may be used as a No-Op return value.
          Effect::MessageBox( msg );
@@ -3332,8 +3332,26 @@ void NyquistOutputDialog::OnOk(wxCommandEvent & /* event */)
 static LVAL gettext()
 {
    auto string = UTF8CTOWX(getstring(xlgastring()));
+#if !HAS_I18N_CONTEXTS
+   // allow ignored context argument
+   if ( moreargs() )
+      nextarg();
+#endif
    xllastarg();
    return cvstring(GetCustomTranslation(string).mb_str(wxConvUTF8));
+}
+
+static LVAL gettextc()
+{
+#if HAS_I18N_CONTEXTS
+   auto string = UTF8CTOWX(getstring(xlgastring()));
+   auto context = UTF8CTOWX(getstring(xlgastring()));
+   xllastarg();
+   return cvstring(wxGetTranslation( string, "", 0, "", context )
+      .mb_str(wxConvUTF8));
+#else
+   return gettext();
+#endif
 }
 
 static LVAL ngettext()
@@ -3341,9 +3359,29 @@ static LVAL ngettext()
    auto string1 = UTF8CTOWX(getstring(xlgastring()));
    auto string2 = UTF8CTOWX(getstring(xlgastring()));
    auto number = getfixnum(xlgafixnum());
+#if !HAS_I18N_CONTEXTS
+   // allow ignored context argument
+   if ( moreargs() )
+      nextarg();
+#endif
    xllastarg();
    return cvstring(
       wxGetTranslation(string1, string2, number).mb_str(wxConvUTF8));
+}
+
+static LVAL ngettextc()
+{
+#if HAS_I18N_CONTEXTS
+   auto string1 = UTF8CTOWX(getstring(xlgastring()));
+   auto string2 = UTF8CTOWX(getstring(xlgastring()));
+   auto number = getfixnum(xlgafixnum());
+   auto context = UTF8CTOWX(getstring(xlgastring()));
+   xllastarg();
+   return cvstring(wxGetTranslation( string1, string2, number, "", context )
+      .mb_str(wxConvUTF8));
+#else
+   return ngettext();
+#endif
 }
 
 /*--------------------Audacity Automation -------------------------*/
@@ -3413,8 +3451,9 @@ static void RegisterFunctions()
       // All function names must be UP-CASED
       static const FUNDEF functions[] = {
          { "_", SUBR, gettext },
-         // to do: more i18n functions, for contexts and plurals
+         { "_C", SUBR, gettextc },
          { "NGETTEXT", SUBR, ngettext },
+         { "NGETTEXTC", SUBR, ngettextc },
          { "AUD-DO",  SUBR, xlc_aud_do },
        };
 
