@@ -2275,21 +2275,21 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mFoundType = false;
    while (!stream.Eof() && stream.IsOk())
    {
-      bool dollar = false;
       wxString line = pgm.ReadLine();
       if (line.length() > 1 &&
           // New in 2.3.0:  allow magic comment lines to start with $
           // The trick is that xgettext will not consider such lines comments
           // and will extract the strings they contain
-          (line[0] == wxT(';') ||
-           ((dollar = (line[0] == wxT('$'))))))
+          (line[0] == wxT(';') || line[0] == wxT('$')) )
       {
          Tokenizer tzer;
          unsigned nLines = 1;
          bool done;
+         // Allow continuations within control lines.
+         bool control =
+            line[0] == wxT('$') || line.StartsWith( wxT(";control") );
          do
-            // Allow run-ons only for new $ format header lines
-            done = Parse(tzer, line, !dollar || stream.Eof(), nLines == 1);
+            done = Parse(tzer, line, !control || stream.Eof(), nLines == 1);
          while(!done &&
             (line = pgm.ReadLine(), ++nLines, true));
 
