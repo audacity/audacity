@@ -1,9 +1,0 @@
-<Project>
-  <Import Project="..\..\..\Directory.Build.props" />
-  <ItemDefinitionGroup>
-    <ClCompile>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
-</Project>

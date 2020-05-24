@@ -15,7 +15,11 @@ cmd_option( ${_OPT}use_wxwidgets
 if( ${_OPT}use_wxwidgets STREQUAL "system" )
    # Make sure shared libs are preferred over static
    set( BUILD_SHARED_LIBS YES )
-   find_package(wxWidgets)
+
+   # Specify all of the components we'll need since "html" and "qa" aren't
+   # included in the default list
+   find_package(wxWidgets REQUIRED COMPONENTS base core html net qa)
+
    unset( BUILD_SHARED_LIBS )
 endif()
 

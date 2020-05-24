@@ -1,3 +1,0 @@
-<Project>
-  <Import Project="..\Audacity\Directory.Build.props" />
-</Project>

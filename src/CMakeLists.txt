@@ -172,8 +172,6 @@ list( APPEND SOURCES
       LyricsWindow.cpp
       LyricsWindow.h
       MacroMagic.h
-      Makefile.am
-      Makefile.in
       Matrix.cpp
       Matrix.h
       MemoryX.h
@@ -238,7 +236,6 @@ list( APPEND SOURCES
       Registrar.h
       Resample.cpp
       Resample.h
-      RevisionIdent.h
       RingBuffer.cpp
       RingBuffer.h
       SampleFormat.cpp

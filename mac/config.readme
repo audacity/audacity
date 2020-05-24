@@ -1,6 +1,0 @@
-The headers located in the config directory are updated
-when libraries are added or updated in lib-src.
-
-Simply (re)run configure in the new/updated library directory
-and copy any generated header files into the corresponding
-directory in mac/config/<arch>/lib-src.

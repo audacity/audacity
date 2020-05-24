@@ -17,36 +17,6 @@
 #include "ScripterCallback.h"
 #include "../../src/Audacity.h"
 
-#if defined(__WXMSW__)
-#include <wx/init.h>
-#  if defined(__WXDEBUG__)
-#     define D "d"
-#  else
-#     define D ""
-#  endif
-#  if wxCHECK_VERSION(3, 1, 0)
-#     define V "31"
-#  elif wxCHECK_VERSION(3, 0, 0)
-#     define V "30"
-#  else
-#     define V "28"
-#  endif
-
-#  pragma comment(lib, "wxbase" V "u" D)
-#  pragma comment(lib, "wxbase" V "u" D "_net")
-#  pragma comment(lib, "wxmsw"  V "u" D "_adv")
-#  pragma comment(lib, "wxmsw"  V "u" D "_core")
-#  pragma comment(lib, "wxmsw"  V "u" D "_html")
-#  pragma comment(lib, "wxpng"        D)
-#  pragma comment(lib, "wxzlib"       D)
-#  pragma comment(lib, "wxjpeg"       D)
-#  pragma comment(lib, "wxtiff"       D)
-
-#  undef V
-#  undef D
-
-#endif //(__WXMSW__)
-
 /*
 There are several functions that can be used in a GUI module.
 
