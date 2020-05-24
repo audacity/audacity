@@ -151,4 +151,9 @@ TranslatableStrings Msgids(
    const EnumValueSymbol strings[], size_t nStrings);
 TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
 
+// Whether disambiguationg contexts are supported
+// If not, then the program builds and runs, but strings in the catalog with
+// contexts will fail to translate
+#define HAS_I18N_CONTEXTS wxCHECK_VERSION(3, 1, 1)
+
 #endif
