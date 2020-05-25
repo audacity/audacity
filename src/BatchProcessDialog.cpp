@@ -362,13 +362,15 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialogWrapper activityWin(this, wxID_ANY, Verbatim( GetTitle() ) );
+   wxDialogWrapper activityWin(this, wxID_ANY, Verbatim( GetTitle() ),
+      wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER
+      );
    activityWin.SetName();
    ShuttleGui S(&activityWin, eIsCreating);
 
    wxListCtrl * fileList = NULL;
 
-   S.StartVerticalLay(false);
+   S.StartVerticalLay(1);
    {
       S.StartStatic(XO("Applying..."), 1);
       {
@@ -385,7 +387,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       }
       S.EndStatic();
 
-      S.StartHorizontalLay(wxCENTER, false);
+      S.StartHorizontalLay(wxCENTER, 0);
       {
          S.Id(wxID_CANCEL).AddButton(XXO("&Cancel"));
       }
@@ -401,10 +403,12 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    // Set the column size for the files list.
    fileList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
-   int width = fileList->GetColumnWidth(0);
+   int width = wxMin( fileList->GetColumnWidth(0), 1000);
    wxSize sz = fileList->GetClientSize();
-   if (width > sz.GetWidth() && width < 500) {
+   if (sz.GetWidth() < width ) {
       sz.SetWidth(width);
+      if (sz.GetHeight() < width *0.7)
+         sz.SetHeight(width * 0.7);
       fileList->SetInitialSize(sz);
    }
 
@@ -423,33 +427,35 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    // and hiding this one temporarily has some advantages.
    Hide();
 
-   mMacroCommands.ReadMacro(name);
-   for (i = 0; i < (int)files.size(); i++) {
+   mMacroCommands.ReadMacro(name); 
+   {
       wxWindowDisabler wd(&activityWin);
-      if (i > 0) {
-         //Clear the arrow in previous item.
-         fileList->SetItemImage(i - 1, 0, 0);
+      for (i = 0; i < (int)files.size(); i++) {
+         if (i > 0) {
+            //Clear the arrow in previous item.
+            fileList->SetItemImage(i - 1, 0, 0);
+         }
+         fileList->SetItemImage(i, 1, 1);
+         fileList->EnsureVisible(i);
+
+         auto success = GuardedCall< bool >([&] {
+            ProjectFileManager::Get(*project).Import(files[i]);
+            ProjectWindow::Get(*project).ZoomAfterImport(nullptr);
+            SelectUtilities::DoSelectAll(*project);
+            if (!mMacroCommands.ApplyMacro(mCatalog))
+               return false;
+
+            if (!activityWin.IsShown() || mAbort)
+               return false;
+
+            return true;
+         });
+
+         if (!success)
+            break;
+
+         ProjectManager::Get(*project).ResetProjectToEmpty();
       }
-      fileList->SetItemImage(i, 1, 1);
-      fileList->EnsureVisible(i);
-
-      auto success = GuardedCall< bool >( [&] {
-         ProjectFileManager::Get( *project ).Import(files[i]);
-         ProjectWindow::Get( *project ).ZoomAfterImport(nullptr);
-         SelectUtilities::DoSelectAll(*project);
-         if (!mMacroCommands.ApplyMacro(mCatalog))
-            return false;
-
-         if (!activityWin.IsShown() || mAbort)
-            return false;
-
-         return true;
-      } );
-
-      if (!success)
-         break;
-      
-      ProjectManager::Get( *project ).ResetProjectToEmpty();
    }
 
    Show();
