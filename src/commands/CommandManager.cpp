@@ -1337,9 +1337,10 @@ TranslatableString CommandManager::GetPrefixedLabelFromName(const CommandID &nam
 
    if (!entry->labelPrefix.empty())
       return Verbatim( wxT("%s - %s") )
-         .Format(entry->labelPrefix, entry->label);
+         .Format(entry->labelPrefix, entry->label)
+            .Stripped();
    else
-      return entry->label;
+      return entry->label.Stripped();
 }
 
 TranslatableString CommandManager::GetCategoryFromName(const CommandID &name)
