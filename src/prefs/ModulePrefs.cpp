@@ -62,7 +62,6 @@ void ModulePrefs::GetAllModuleStatuses(){
    // Modules could for example be:
    //    mod-script-pipe
    //    mod-nyq-bench
-   //    mod-track-panel
    //    mod-menu-munger
    //    mod-theming
 

@@ -48,7 +48,7 @@
 
 #include "sndfile.h"
 
-#include "FileDialog.h"
+#include "../widgets/FileDialog/FileDialog.h"
 
 #include "../DirManager.h"
 #include "../FileFormats.h"

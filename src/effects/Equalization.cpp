@@ -112,7 +112,7 @@
 #include "../widgets/WindowAccessible.h"
 #endif
 
-#include "FileDialog.h"
+#include "../widgets/FileDialog/FileDialog.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "Equalization48x.h"

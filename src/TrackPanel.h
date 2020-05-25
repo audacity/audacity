@@ -154,7 +154,7 @@ protected:
    std::shared_ptr<TrackPanelNode> Root() override;
 
 public:
-// JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
+// JKC Nov-2011: These four functions only used from within a dll
 // They work around some messy problems with constructors.
    const TrackList * GetTracks() const { return mTracks.get(); }
    TrackList * GetTracks() { return mTracks.get(); }

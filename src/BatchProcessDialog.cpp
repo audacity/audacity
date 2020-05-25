@@ -54,7 +54,7 @@
 
 #include "AllThemeResources.h"
 
-#include "FileDialog.h"
+#include "widgets/FileDialog/FileDialog.h"
 #include "FileNames.h"
 #include "import/Import.h"
 #include "widgets/ErrorDialog.h"

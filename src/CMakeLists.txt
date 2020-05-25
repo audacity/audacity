@@ -921,6 +921,20 @@ list( APPEND SOURCES
       widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp
       widgets/ExpandingToolBar.h
+      widgets/FileDialog/FileDialog.cpp
+      widgets/FileDialog/FileDialog.h
+      $<$<BOOL:${wxIS_WIN}>:
+	widgets/FileDialog/win/FileDialogPrivate.cpp
+	widgets/FileDialog/win/FileDialogPrivate.h
+      >
+      $<$<BOOL:${wxIS_MAC}>:
+	widgets/FileDialog/mac/FileDialogPrivate.mm
+	widgets/FileDialog/mac/FileDialogPrivate.h
+      >
+      $<$<BOOL:${wxIS_GTK}>:
+	widgets/FileDialog/gtk/FileDialogPrivate.cpp
+	widgets/FileDialog/gtk/FileDialogPrivate.h
+      >
       widgets/FileHistory.cpp
       widgets/FileHistory.h
       widgets/Grabber.cpp
@@ -1049,7 +1063,6 @@ list( APPEND LIBRARIES
    PRIVATE
       ${CMAKE_REQUIRED_LIBRARIES}
       wxWidgets
-      FileDialog
       expat
       lame
       libsndfile
@@ -1084,6 +1097,7 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_VAMP}>:libvamp>
 #      $<$<BOOL:${USE_VAMP}>:libvamp-hostsdk>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GLIB>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GTK>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:z>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:pthread>
 )
