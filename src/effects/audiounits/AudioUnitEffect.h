@@ -172,6 +172,8 @@ private:
    bool CreatePlain(wxWindow *parent);
 #endif
 
+   bool BypassEffect(bool bypass);
+
 private:
 
    PluginPath mPath;

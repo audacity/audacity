@@ -87,9 +87,13 @@ BlackList[] =
 };
 
 struct CFReleaser
-   { void operator () (const void *p) const { if (p) CFRelease(p); } };
-template <typename T>
-   using CFunique_ptr = std::unique_ptr<T, CFReleaser>;
+{
+   void operator () (const void *p) const
+   {
+      if (p) CFRelease(p);
+   }
+};
+template <typename T> using CFunique_ptr = std::unique_ptr<T, CFReleaser>;
 
 // Uncomment to include parameter IDs in the final name.  Only needed if it's
 // discovered that many effects have duplicate names.  It could even be done
@@ -360,17 +364,21 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
       return 0;
    }
 
-   if(callback)
+   if (callback)
+   {
       callback(this, &effect);
+   }
 
    return 1;
 }
 
-bool AudioUnitEffectsModule::IsPluginValid(
-   const PluginPath & path, bool bFast)
+bool AudioUnitEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
-   if( bFast )
+   if (bFast)
+   {
       return true;
+   }
+
    wxString name;
    return FindAudioUnit(path, name) != NULL;
 }
@@ -558,13 +566,13 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartStatic(XO("Latency Compensation"));
          {
-            S.AddVariableText( XO(
+            S.AddVariableText(XO(
 "As part of their processing, some Audio Unit effects must delay returning "
 "audio to Audacity. When not compensating for this delay, you will "
 "notice that small silences have been inserted into the audio. "
 "Enabling this option will provide that compensation, but it may "
 "not work for all Audio Unit effects."),
-               false, 0, 650 );
+               false, 0, 650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
@@ -577,7 +585,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
          S.StartStatic(XO("User Interface"));
          {
-            S.AddVariableText( XO(
+            S.AddVariableText(XO(
 "Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
 " Select \"Generic\" to use the system supplied generic interface."
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
@@ -687,7 +695,7 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
          {
             mList = S.Style(wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                        wxLC_NO_SORT_HEADER)
-               .AddListControlReportMode( { XO("Preset"), XO("Location") } );
+               .AddListControlReportMode({ XO("Preset"), XO("Location") });
          }
          S.EndStatic();
       }
@@ -764,7 +772,7 @@ TranslatableString AudioUnitEffectImportDialog::Import(
    wxFFile f(fullPath, wxT("r"));
    if (!f.IsOpened())
    {
-      return XO("Couldn't open \"%s\"").Format( fullPath );
+      return XO("Couldn't open \"%s\"").Format(fullPath);
    }
 
    // Load it into the buffer
@@ -772,13 +780,13 @@ TranslatableString AudioUnitEffectImportDialog::Import(
    wxMemoryBuffer buf(len);
    if (f.Read(buf.GetData(), len) != len || f.Error())
    {
-      return XO("Unable to read the preset from \"%s\"").Format( fullPath );
+      return XO("Unable to read the preset from \"%s\"").Format(fullPath);
    }
 
    wxString parms = wxBase64Encode(buf.GetData(), len);
    if (parms.IsEmpty())
    {
-      return XO("Failed to encode preset from \"%s\"").Format( fullPath );
+      return XO("Failed to encode preset from \"%s\"").Format(fullPath);
    }
 
    // And write it to the config
@@ -812,7 +820,7 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & evt)
       if (!msg.empty())
       {
          AudacityMessageBox(
-            XO("Could not import \"%s\" preset\n\n%s").Format( name, msg ),
+            XO("Could not import \"%s\" preset\n\n%s").Format(name, msg),
             XO("Import Audio Unit Presets"),
             wxOK | wxCENTRE,
             this);
@@ -854,6 +862,8 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
    mUnitInitialized = false;
 
    mEventListenerRef = NULL;
+
+   mReady = false;
 }
 
 AudioUnitEffect::~AudioUnitEffect()
@@ -1218,7 +1228,7 @@ sampleCount AudioUnitEffect::GetLatency()
                            &latency,
                            &dataSize);  
 
-      return sampleCount( latency * mSampleRate );
+      return sampleCount(latency * mSampleRate);
    }
 
    return 0;
@@ -1248,10 +1258,10 @@ bool AudioUnitEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelN
 {
    OSStatus result;
 
-   mInputList.reinit( mAudioIns );
+   mInputList.reinit(mAudioIns);
    mInputList[0].mNumberBuffers = mAudioIns;
    
-   mOutputList.reinit( mAudioOuts );
+   mOutputList.reinit(mAudioOuts);
    mOutputList[0].mNumberBuffers = mAudioOuts;
 
    memset(&mTimeStamp, 0, sizeof(AudioTimeStamp));
@@ -1341,7 +1351,7 @@ size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t b
 bool AudioUnitEffect::RealtimeInitialize()
 {
    mMasterIn.reinit(mAudioIns, mBlockSize, true);
-   mMasterOut.reinit( mAudioOuts, mBlockSize );
+   mMasterOut.reinit(mAudioOuts, mBlockSize);
    return ProcessInitialize(0);
 }
 
@@ -1349,14 +1359,18 @@ bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRat
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
    if (!slave->SetHost(NULL))
+   {
       return false;
+   }
 
    slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
    slave->SetSampleRate(sampleRate);
 
    if (!CopyParameters(mUnit, slave->mUnit))
+   {
       return false;
+   }
 
    auto pSlave = slave.get();
    mSlaves.push_back(std::move(slave));
@@ -1367,7 +1381,9 @@ bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRat
 bool AudioUnitEffect::RealtimeFinalize()
 {
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
+   {
       mSlaves[i]->ProcessFinalize();
+   }
    mSlaves.clear();
 
    mMasterIn.reset();
@@ -1378,17 +1394,35 @@ bool AudioUnitEffect::RealtimeFinalize()
 
 bool AudioUnitEffect::RealtimeSuspend()
 {
+   if (!BypassEffect(true))
+   {
+      return false;
+   }
+
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
+   {
+      if (!mSlaves[i]->BypassEffect(true))
+      {
+         return false;
+      }
+   }
+
    return true;
 }
 
 bool AudioUnitEffect::RealtimeResume()
 {
-   OSStatus result;
-
-   result = AudioUnitReset(mUnit, kAudioUnitScope_Global, 0);
-   if (result != noErr)
+   if (!BypassEffect(false))
    {
       return false;
+   }
+
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
+   {
+      if (!mSlaves[i]->BypassEffect(false))
+      {
+         return false;
+      }
    }
 
    return true;
@@ -1397,7 +1431,9 @@ bool AudioUnitEffect::RealtimeResume()
 bool AudioUnitEffect::RealtimeProcessStart()
 {
    for (size_t i = 0; i < mAudioIns; i++)
+   {
       memset(mMasterIn[i].get(), 0, mBlockSize * sizeof(float));
+   }
 
    mNumSamples = 0;
 
@@ -1425,29 +1461,34 @@ size_t AudioUnitEffect::RealtimeProcess(int group,
 
 bool AudioUnitEffect::RealtimeProcessEnd()
 {
-   ProcessBlock(
-      reinterpret_cast<float**>(mMasterIn.get()),
-      reinterpret_cast<float**>(mMasterOut.get()),
-      mNumSamples);
+   ProcessBlock(reinterpret_cast<float**>(mMasterIn.get()),
+                reinterpret_cast<float**>(mMasterOut.get()),
+                mNumSamples);
 
    return true;
 }
 
-bool AudioUnitEffect::ShowInterface(
-   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
+bool AudioUnitEffect::ShowInterface(wxWindow &parent,
+                                    const EffectDialogFactory &factory,
+                                    bool forceModal)
 {
    if (mDialog)
    {
-      if( mDialog->Close(true) )
+      if (mDialog->Close(true))
+      {
          mDialog = nullptr;
+      }
       return false;
    }
 
    // mDialog is null
-   auto cleanup = valueRestorer( mDialog );
+   auto cleanup = valueRestorer(mDialog);
 
-   if ( factory )
+   if (factory)
+   {
       mDialog = factory(parent, mHost, this);
+   }
+
    if (!mDialog)
    {
       return false;
@@ -1713,7 +1754,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
    else
 #endif
    {
-      auto pControl = Destroy_ptr<AUControl>( safenew AUControl );
+      auto pControl = Destroy_ptr<AUControl>(safenew AUControl);
       if (!pControl)
       {
          return false;
@@ -1856,7 +1897,7 @@ void AudioUnitEffect::ExportPresets()
    if (!msg.empty())
    {
       AudacityMessageBox(
-         XO("Could not export \"%s\" preset\n\n%s").Format( path, msg ),
+         XO("Could not export \"%s\" preset\n\n%s").Format(path, msg),
          XO("Export Audio Unit Presets"),
          wxOK | wxCENTRE,
          mParent);
@@ -1898,7 +1939,7 @@ void AudioUnitEffect::ImportPresets()
    if (!msg.empty())
    {
       AudacityMessageBox(
-         XO("Could not import \"%s\" preset\n\n%s").Format( path, msg ),
+         XO("Could not import \"%s\" preset\n\n%s").Format(path, msg),
          XO("Import Audio Unit Presets"),
          wxOK | wxCENTRE,
          mParent);
@@ -2477,7 +2518,7 @@ void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
       }
    }
 }
-                           
+
 // static
 void AudioUnitEffect::EventListenerCallback(void *inCallbackRefCon,
                                             void *inObject,
@@ -2647,6 +2688,26 @@ void AudioUnitEffect::GetChannelCounts()
    }
 
    return;
+}
+
+bool AudioUnitEffect::BypassEffect(bool bypass)
+{
+   OSStatus result;
+
+   UInt32 value = (bypass ? 1 : 0);
+
+   result = AudioUnitSetProperty(mUnit,
+                                 kAudioUnitProperty_BypassEffect,
+                                 kAudioUnitScope_Global,
+                                 0,
+                                 &value,
+                                 sizeof(value));
+   if (result != noErr)
+   {
+      return false;
+   }
+
+   return true;
 }
 
 #endif
