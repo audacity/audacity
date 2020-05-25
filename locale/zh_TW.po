@@ -11,15 +11,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
-"PO-Revision-Date: 2020-01-01 21:55+0800\n"
+"POT-Creation-Date: 2020-05-03 01:59+0800\n"
+"PO-Revision-Date: 2020-05-03 02:15+0800\n"
 "Last-Translator: pan93412 <pan93412@gmail.com>\n"
 "Language-Team: Chinese <zh-l10n@lists.linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 19.12.0\n"
+"X-Generator: Poedit 2.3\n"
 "X-ZhConverter: 繁化姬 dict-7640c40e-r920 @ 2020/01/01 01:04:23 | https://"
 "zhconvert.org\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr "已有「%s」檔案，真的要覆寫嗎？"
+msgstr "已有「%s」檔案，是否覆寫？"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/LangChoice.cpp
 #: src/effects/VST/VSTEffect.cpp
@@ -719,12 +719,14 @@ msgid "Commit Id:"
 msgstr "Github 提交 ID："
 
 #: src/AboutDialog.cpp
-msgid "Debug build"
-msgstr "除錯版本"
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "除錯組建 (除錯等級 %d)"
 
 #: src/AboutDialog.cpp
-msgid "Release build"
-msgstr "正式發佈版本"
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "發行組建 (除錯等級 %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -829,9 +831,8 @@ msgid "Quick-Play enabled"
 msgstr "快速播放已啟用"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Timeline Options"
-msgstr "外掛程式選項"
+msgstr "時間軸選項"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Enable Quick-Play"
@@ -850,9 +851,8 @@ msgid "Lock Play Region"
 msgstr "鎖定播放區域"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Pinned Play Head"
-msgstr "固定播放/錄製頭 (開啟/關閉)(&H)"
+msgstr "固定播放頭"
 
 #: src/AdornedRulerPanel.cpp
 msgid ""
@@ -1029,12 +1029,11 @@ msgstr "Audacity 已在執行"
 
 #: src/AudacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
-msgstr ""
+msgstr "啟動時發生無法復原的錯誤"
 
 #: src/AudacityApp.cpp
-#, fuzzy
 msgid "Audacity Startup Failure"
-msgstr "Audacity 專案檔案"
+msgstr "Audacity 啟動失敗"
 
 #. i18n-hint: This controls the number of bytes that Audacity will
 #. *           use when writing files to the disk
@@ -2384,6 +2383,7 @@ msgstr ""
 #. i18n-hint a proper name
 #: src/FFT.cpp
 #, fuzzy
+#| msgid "Welcome!"
 msgid "Welch"
 msgstr "歡迎！"
 
@@ -3195,13 +3195,13 @@ msgstr "卡拉O&K..."
 #: src/Menus.cpp
 #, c-format
 msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr ""
+msgstr "位於 %s 的外掛程式群組已與先前定義的群組合併"
 
 #: src/Menus.cpp
 #, c-format
 msgid ""
 "Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr ""
+msgstr "位於 %s 的外掛程式項目與先前定義的項目衝突，且已捨棄"
 
 #: src/Menus.cpp
 #, c-format
@@ -3320,12 +3320,15 @@ msgid "&Mixer Board..."
 msgstr "混音器面板(&M)..."
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to load the \"%s\" module.\n"
 "\n"
 "Error: %s"
-msgstr "無法載入預設集檔案。"
+msgstr ""
+"無法載入「%s」模組。\n"
+"\n"
+"錯誤：%s"
 
 #: src/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -3334,60 +3337,62 @@ msgstr "模組不合適"
 #: src/ModuleManager.cpp
 #, c-format
 msgid "Unable to load the module \"%s\". Error: %s"
-msgstr ""
+msgstr "無法載入「%s」模組。錯誤：%s"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide a version string.\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"模組 %s 未提供版本字串。\n"
+"模組「%s」未提供版本字串。\n"
+"\n"
 "不會載入該模組。"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide a version string. It will not be loaded."
-msgstr "模組 %s 未提供版本字串。不會載入該模組。"
+msgstr "模組「%s」未提供版本字串。不會載入該模組。"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" is matched with Audacity version \"%s\".\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"模組 %s 與 Audacity 版本 %s 相符。\n"
+"模組「%s」與 Audacity 版本「%s」相符。\n"
 "\n"
 "不會載入該模組。"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
 "loaded."
-msgstr "模組 %s 與 Audacity 版本 %s 相符。不會載入該模組。"
+msgstr "模組「%s」與 Audacity 版本「%s」相符。不會載入該模組。"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" failed to initialize.\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"模組 %s 未提供版本字串。\n"
-"不會載入該模組。"
+"模組「%s」無法初始化。\n"
+"\n"
+"不會載入此模組。"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" failed to initialize.\n"
 "It will not be loaded."
 msgstr ""
-"模組 %s 未提供版本字串。\n"
-"不會載入該模組。"
+"模組「%s」無法初始化。\n"
+"不會載入此模組。"
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3423,21 +3428,22 @@ msgid "Try and load this module?"
 msgstr "是否試著載入此模組？"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide any of the required functions.\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"模組 %s 未提供版本字串。\n"
-"不會載入該模組。"
+"模組「%s」未提供任何所需函式。\n"
+"\n"
+"不會載入此模組。"
 
 #: src/ModuleManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The module \"%s\" does not provide any of the required functions. It will "
 "not be loaded."
-msgstr "模組 %s 未提供版本字串。不會載入該模組。"
+msgstr "模組「%s」未提供任何所需函式。不會載入此模組。"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3720,6 +3726,28 @@ msgstr ""
 "開啟聲音裝置時發生錯誤。\n"
 "請試著變更音訊主機、播放裝置和專案的取樣頻率。"
 
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr "選擇要錄製的軌道必須具有相同的取樣頻率。"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr "取樣速率不符"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+"選取的音軌過少，以致無法以此取樣速率錄製。\n"
+"(Audacity 每個立體聲音軌皆需要兩個在\n"
+"相同取樣速率的聲道)"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr "選取的相容音軌過少"
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -3960,15 +3988,20 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "警告：自動復原時發生問題"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<未命名>"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid "[Project %02i] "
+msgstr "[專案 %02i] "
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
 #, c-format
 msgid "[Project %02i] Audacity \"%s\""
-msgstr ""
+msgstr "[專案 %02i] Audacity \"%s\""
 
 #. i18n-hint: E.g this is recovered audio that had been lost.
 #: src/ProjectFileIO.cpp
@@ -4514,9 +4547,8 @@ msgid "Spectral Selection"
 msgstr "頻譜選取範圍"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Timer"
-msgstr "時間："
+msgstr "預約"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/ToolsToolBar.cpp
@@ -5323,11 +5355,10 @@ msgid " Select On"
 msgstr " 選擇開啟"
 
 #: src/TrackPanelResizeHandle.cpp
-#, fuzzy
 msgid ""
 "Click and drag to adjust relative size of stereo tracks, double-click to "
 "make heights equal"
-msgstr "點選並拖動以調整立體聲軌道的相對大小。"
+msgstr "按一下拖曳以調整立體聲軌道的相對大小，按兩下則使軌道高度相同"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -5495,6 +5526,8 @@ msgid ""
 "\n"
 "* %s, because you have assigned the shortcut %s to %s"
 msgstr ""
+"\n"
+"* %s，因為您已指定 %s 快捷鍵為 %s"
 
 #: src/commands/CommandManager.cpp
 msgid ""
@@ -5502,10 +5535,12 @@ msgid ""
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
 msgstr ""
+"下列命令的快捷鍵已被移除，因為其預設快捷鍵被新增或變更，且跟您先前指派至其他"
+"命令的快捷鍵相同。"
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
-msgstr ""
+msgstr "已移除快捷鍵"
 
 #: src/commands/CommandTargets.cpp
 msgid "Long Message"
@@ -5736,9 +5771,8 @@ msgid "Save Project2"
 msgstr "儲存專案到"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Compress"
-msgstr "壓縮："
+msgstr "壓縮"
 
 #: src/commands/OpenSaveCommands.h
 msgid "Opens a project."
@@ -5768,9 +5802,8 @@ msgid "Value:"
 msgstr "值："
 
 #: src/commands/PreferenceCommands.cpp
-#, fuzzy
 msgid "Reload"
-msgstr "重新載入："
+msgstr "重新載入"
 
 #: src/commands/PreferenceCommands.h
 msgid "Gets the value of a single preference."
@@ -5870,9 +5903,8 @@ msgid "Background:"
 msgstr "背景："
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Bring To Top"
-msgstr "移到頂端："
+msgstr "移到頂端"
 
 #: src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -6002,7 +6034,6 @@ msgid "At:"
 msgstr "於："
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color:"
 msgstr "色彩："
 
@@ -6186,23 +6217,20 @@ msgid "Increases or decreases the volume of the audio you have selected"
 msgstr "提高或降低您所選擇的音訊的音量"
 
 #: src/effects/Amplify.cpp
-#, fuzzy
 msgid "&Amplification (dB):"
-msgstr "增幅 (分貝)："
+msgstr "增幅 (分貝)(&A)："
 
 #: src/effects/Amplify.cpp
 msgid "Amplification dB"
 msgstr "增幅分貝"
 
 #: src/effects/Amplify.cpp
-#, fuzzy
 msgid "&New Peak Amplitude (dB):"
-msgstr "新增峰值振幅 (分貝)："
+msgstr "新增峰值振幅 (分貝)(&N)："
 
 #: src/effects/Amplify.cpp
-#, fuzzy
 msgid "Allo&w clipping"
-msgstr "允許削波"
+msgstr "允許削波(&W)"
 
 #: src/effects/AutoDuck.cpp
 msgid "Auto Duck"
@@ -6236,12 +6264,11 @@ msgstr "自動閃避需要在選擇的軌道下方有一個控制軌道。"
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
-msgstr ""
+msgstr "分貝"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Duck &amount:"
-msgstr "閃避總量："
+msgstr "閃避總量(&A)："
 
 #. i18n-hint: Name of time display format that shows time in seconds
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
@@ -6251,35 +6278,29 @@ msgid "seconds"
 msgstr "秒"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Ma&ximum pause:"
-msgstr "最大暫停："
+msgstr "最大暫停(&X)："
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Outer fade &down length:"
-msgstr "向外漸弱長度："
+msgstr "向外漸弱長度(&D)："
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Outer fade &up length:"
-msgstr "向外漸強長度："
+msgstr "向外漸強長度(&U)："
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Inner fade d&own length:"
-msgstr "向內漸弱長度："
+msgstr "向內漸弱長度(&O)："
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Inner &fade up length:"
-msgstr "向內漸強長度："
+msgstr "向內漸強長度(&F)："
 
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "&Threshold:"
-msgstr "臨界值："
+msgstr "臨界值(&T)："
 
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
@@ -6364,9 +6385,8 @@ msgstr "從"
 #. i18n-hint: changing a quantity "from" one value "to" another
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "&from"
-msgstr "從"
+msgstr "從(&F)"
 
 #: src/effects/ChangePitch.cpp
 msgid "from Octave"
@@ -6380,9 +6400,8 @@ msgstr "到"
 #. i18n-hint: changing a quantity "from" one value "to" another
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "&to"
-msgstr "到"
+msgstr "至(&T)"
 
 #: src/effects/ChangePitch.cpp
 msgid "to Octave"
@@ -6393,9 +6412,8 @@ msgid "Semitones (half-steps)"
 msgstr "半音"
 
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgid "&Semitones (half-steps):"
-msgstr "半音："
+msgstr "半音(&S)："
 
 #: src/effects/ChangePitch.cpp
 msgid "Frequency"
@@ -6407,7 +6425,7 @@ msgstr "從 (Hz)"
 
 #: src/effects/ChangePitch.cpp
 msgid "f&rom"
-msgstr ""
+msgstr "從(&R)"
 
 #: src/effects/ChangePitch.cpp
 msgid "to (Hz)"
@@ -6416,15 +6434,13 @@ msgstr "到 (Hz)"
 #. i18n-hint: changing a quantity "from" one value "to" another
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "t&o"
-msgstr "到"
+msgstr "至(&O)"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "Percent C&hange:"
-msgstr "百分比變更："
+msgstr "百分比變更(&H)："
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
@@ -6432,9 +6448,8 @@ msgid "Percent Change"
 msgstr "百分比變更"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "&Use high quality stretching (slow)"
-msgstr "使用高品質拉伸（慢）"
+msgstr "使用高品質拉伸 (慢)(&U)"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "33⅓"
@@ -6469,9 +6484,8 @@ msgid "Change Speed, affecting both Tempo and Pitch"
 msgstr "變更速率，同時影響拍速和音高"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "&Speed Multiplier:"
-msgstr "速率倍數："
+msgstr "速度倍數(&S)："
 
 #. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
 #. "vinyl" refers to old-fashioned phonograph records
@@ -6493,18 +6507,16 @@ msgid "Selection Length"
 msgstr "選取範圍長度"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "C&urrent Length:"
-msgstr "目前長度："
+msgstr "目前長度(&U)："
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Current length of selection."
 msgstr "目前選取範圍長度。"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "&New Length:"
-msgstr "新的長度："
+msgstr "新長度(&N)："
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo"
@@ -6563,18 +6575,16 @@ msgid "Selection must be larger than %d samples."
 msgstr "選取範圍必須大於 %d 個取樣。"
 
 #: src/effects/ClickRemoval.cpp
-#, fuzzy
 msgid "&Threshold (lower is more sensitive):"
-msgstr "臨界值 (越低則越靈敏)："
+msgstr "臨界值 (越低則越靈敏)(&T)："
 
 #: src/effects/ClickRemoval.cpp src/effects/Compressor.cpp
 msgid "Threshold"
 msgstr "臨界值"
 
 #: src/effects/ClickRemoval.cpp
-#, fuzzy
 msgid "Max &Spike Width (higher is more sensitive):"
-msgstr "最大尖波寬度 (越高則越靈敏)："
+msgstr "最大尖波寬度 (越高則越靈敏)(&S)："
 
 #: src/effects/ClickRemoval.cpp
 msgid "Max Spike Width"
@@ -6629,18 +6639,16 @@ msgid "Ratio %.1f to 1"
 msgstr "比率為 %.1f：1"
 
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "&Noise Floor:"
-msgstr "底噪："
+msgstr "底噪(&N)："
 
 #: src/effects/Compressor.cpp src/effects/Distortion.cpp
 msgid "Noise Floor"
 msgstr "底噪"
 
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "&Ratio:"
-msgstr "比率："
+msgstr "比率(&R)："
 
 #: src/effects/Compressor.cpp
 msgid "Ratio"
@@ -6650,9 +6658,8 @@ msgstr "比率"
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "&Attack Time:"
-msgstr "起音時間："
+msgstr "起音時間(&A)："
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
@@ -6665,9 +6672,8 @@ msgstr "起音時間"
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "R&elease Time:"
-msgstr "釋放時間："
+msgstr "釋放時間(&E)："
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
@@ -6678,16 +6684,14 @@ msgstr "釋放時間"
 
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr "壓縮後增益補償 0 分貝"
+msgstr "壓縮後增益補償 0 分貝(&K)"
 
 #. i18n-hint: "Compress" here means reduce variations of sound volume,
 #. NOT related to file-size compression; Peaks means extremes in volume
 #: src/effects/Compressor.cpp
-#, fuzzy
 msgid "C&ompress based on Peaks"
-msgstr "基於峰值進行壓縮"
+msgstr "基於峰值進行壓縮(&O)"
 
 #: src/effects/Compressor.cpp
 #, c-format
@@ -7231,16 +7235,16 @@ msgid ""
 "DTMF sequence empty.\n"
 "Check ALL settings for this effect."
 msgstr ""
+"DTMF 序列空白。\n"
+"請檢查此特效的「所有」設定。"
 
 #: src/effects/DtmfGen.cpp
-#, fuzzy
 msgid "DTMF &sequence:"
-msgstr "雙音多頻序列："
+msgstr "雙音多頻序列(&S)："
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/ToneGen.cpp
-#, fuzzy
 msgid "&Amplitude (0-1):"
-msgstr "振幅 (0 至 1)："
+msgstr "振幅 (0 至 1)(&A)："
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
 #: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
@@ -7249,9 +7253,8 @@ msgid "&Duration:"
 msgstr "持續時間(&D)："
 
 #: src/effects/DtmfGen.cpp
-#, fuzzy
 msgid "&Tone/silence ratio:"
-msgstr "單音/靜音比率："
+msgstr "單音/靜音比率(&T)："
 
 #: src/effects/DtmfGen.cpp
 msgid "Duty cycle:"
@@ -7296,28 +7299,24 @@ msgid "Requested value exceeds memory capacity."
 msgstr "要求值超過記憶體容量。"
 
 #: src/effects/Echo.cpp
-#, fuzzy
 msgid "&Delay time (seconds):"
-msgstr "延遲時間 (秒)："
+msgstr "延遲時間 (秒)(&D)："
 
 #: src/effects/Echo.cpp
-#, fuzzy
 msgid "D&ecay factor:"
-msgstr "衰減係數："
+msgstr "衰減係數(&E)："
 
 #: src/effects/Effect.cpp
 msgid "Built-in"
 msgstr "內嵌"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Export Effect Parameters"
-msgstr "編輯參數(&E)"
+msgstr "匯出效果參數"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Presets (*.txt)|*.txt|All files|*"
-msgstr "文字檔案 (*.txt)|*.txt|所有檔案|*"
+msgstr "預設集 (*.txt)|*.txt|所有檔案|*"
 
 #: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
 #: src/xml/XMLFileReader.cpp
@@ -7335,21 +7334,20 @@ msgid "Error writing to file: \"%s\""
 msgstr "寫入檔案時發生錯誤：%s"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Import Effect Parameters"
-msgstr "編輯參數(&E)"
+msgstr "匯入效果參數"
 
 #. i18n-hint %s will be replaced by a file name
 #: src/effects/Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s: is not a valid presets file.\n"
-msgstr "「%s」不是有效的檔案路徑"
+msgstr "%s：不是有效的預設集檔案。\n"
 
 #. i18n-hint %s will be replaced by a file name
 #: src/effects/Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
-msgstr "外掛程式管理器：效果器，生成器和分析器"
+msgstr "%s：適用的效果器、生成器及分析器不同。\n"
 
 #: src/effects/Effect.cpp
 msgid "Preparing preview"
@@ -7670,9 +7668,8 @@ msgid "Equalization"
 msgstr "等化"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Filter Curve EQ"
-msgstr "過濾曲線"
+msgstr "過濾器曲線 EQ"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 msgid "Graphic EQ"
@@ -7728,9 +7725,8 @@ msgstr ""
 "選擇「儲存/管理曲線...」按鈕並重新命名「未命名」曲線，接著便可使用該曲線。"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid "Filter Curve EQ needs a different name"
-msgstr "過濾器曲線需要不同的名稱"
+msgstr "過濾器曲線 EQ 需要不同的名稱"
 
 #: src/effects/Equalization.cpp
 msgid ""
@@ -7778,9 +7774,9 @@ msgstr "%g kHz"
 
 #. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%gk"
-msgstr "%g kHz"
+msgstr "%gk"
 
 #: src/effects/Equalization.cpp
 msgid "&EQ Type:"
@@ -8086,14 +8082,12 @@ msgid "Clipping"
 msgstr "削波"
 
 #: src/effects/FindClipping.cpp
-#, fuzzy
 msgid "&Start threshold (samples):"
-msgstr "開始臨界值 (取樣點)："
+msgstr "開始臨界值 (取樣點)(&S)："
 
 #: src/effects/FindClipping.cpp
-#, fuzzy
 msgid "St&op threshold (samples):"
-msgstr "停止臨界值 (取樣點)："
+msgstr "停止臨界值 (取樣點)(&O)："
 
 #: src/effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
@@ -8121,6 +8115,7 @@ msgstr "未知內建效果名稱"
 
 #: src/effects/Loudness.cpp
 #, fuzzy
+#| msgid "Normalize loudness to"
 msgid "perceived loudness"
 msgstr "將響度正規化為"
 
@@ -8130,17 +8125,15 @@ msgstr "均方根"
 
 #: src/effects/Loudness.cpp
 msgid "Loudness Normalization"
-msgstr ""
+msgstr "響度正規化"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "Sets the loudness of one or more tracks"
-msgstr "設定一個或多個軌道的峰值振幅"
+msgstr "設定一或多個軌道的響度"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "Normalizing Loudness...\n"
-msgstr "將響度正規化為"
+msgstr "正在正規化響度…\n"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 #, c-format
@@ -8153,9 +8146,8 @@ msgid "Processing: %s"
 msgstr "正在處理：%s"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "&Normalize"
-msgstr "正規化"
+msgstr "正規化(&N)"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Loudness.cpp
@@ -8168,14 +8160,12 @@ msgid "LUFS"
 msgstr "LUFS"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "Normalize &stereo channels independently"
-msgstr "個別正規化立體聲聲道"
+msgstr "個別正規化立體聲聲道(&S)"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "&Treat mono as dual-mono (recommended)"
-msgstr "將單聲道視為雙單聲道（建議）"
+msgstr "將單聲道視為雙單聲道 (建議)(&T)"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 msgid "Waiting for waveform to finish computing..."
@@ -8187,7 +8177,7 @@ msgstr "(最大 0 分貝)"
 
 #: src/effects/Loudness.cpp
 msgid "RMS dB"
-msgstr ""
+msgstr "RMS dB"
 
 #: src/effects/Noise.cpp
 msgid "Pink"
@@ -8206,9 +8196,8 @@ msgid "Generates one of three different types of noise"
 msgstr "生成三種之一的噪音"
 
 #: src/effects/Noise.cpp
-#, fuzzy
 msgid "&Noise type:"
-msgstr "噪音類型："
+msgstr "噪音類型(&N)："
 
 #: src/effects/NoiseReduction.cpp
 #, fuzzy
@@ -8216,13 +8205,12 @@ msgid "Median"
 msgstr "中等"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Second greatest"
-msgstr "第二個軌道"
+msgstr "第二最佳"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Old"
-msgstr ""
+msgstr "舊的"
 
 #: src/effects/NoiseReduction.cpp
 msgid "none, Hann (2.0.6 behavior)"
@@ -8234,6 +8222,7 @@ msgstr ""
 
 #: src/effects/NoiseReduction.cpp
 #, fuzzy
+#| msgid "4 (default)"
 msgid "Hann, Hann (default)"
 msgstr "4（預設值）"
 
@@ -8556,23 +8545,20 @@ msgid "Processing second track of stereo pair: %s"
 msgstr "正在處理立體聲對的第二個軌道：%s"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "&Remove DC offset (center on 0.0 vertically)"
-msgstr "移除直流偏移 (垂直置中於 0.0)"
+msgstr "移除直流偏移 (垂直置中於 0.0)(&R)"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "&Normalize peak amplitude to   "
-msgstr "將峰值振幅正規化為 "
+msgstr "將峰值振幅正規化為(&N) "
 
 #: src/effects/Normalize.cpp
 msgid "Peak amplitude dB"
 msgstr "峰值振幅 (分貝)"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "N&ormalize stereo channels independently"
-msgstr "個別正規化立體聲聲道"
+msgstr "個別正規化立體聲聲道(&O)"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch"
@@ -8588,14 +8574,12 @@ msgstr "使用 Paulstretch 僅在極端的時間拉伸或者「停滯」效果"
 #. * will give an (approximately) 10 second sound
 #.
 #: src/effects/Paulstretch.cpp
-#, fuzzy
 msgid "&Stretch Factor:"
-msgstr "拉伸係數："
+msgstr "拉伸係數(&S)："
 
 #: src/effects/Paulstretch.cpp
-#, fuzzy
 msgid "&Time Resolution (seconds):"
-msgstr "時間解析度 (秒)："
+msgstr "時間解析度 (秒)(&T)："
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
 #: src/effects/Paulstretch.cpp
@@ -8745,9 +8729,8 @@ msgid "Repeats the selection the specified number of times"
 msgstr "將選取部分重複指定的次數"
 
 #: src/effects/Repeat.cpp
-#, fuzzy
 msgid "&Number of repeats to add:"
-msgstr "重複次數："
+msgstr "重複次數(&N)："
 
 #: src/effects/Repeat.cpp
 msgid "Current selection length: dd:hh:mm:ss"
@@ -9075,9 +9058,8 @@ msgid "Initial Pitch Shift"
 msgstr "初始音高位移"
 
 #: src/effects/TimeScale.cpp
-#, fuzzy
 msgid "(&semitones) [-12 to 12]:"
-msgstr "(半音) [-12 到 12]:"
+msgstr "(半音 [&S]) [-12 到 12]:"
 
 #: src/effects/TimeScale.cpp
 msgid "(%) [-50 to 100]:"
@@ -9088,9 +9070,8 @@ msgid "Final Pitch Shift"
 msgstr "最終音高位移"
 
 #: src/effects/TimeScale.cpp
-#, fuzzy
 msgid "(s&emitones) [-12 to 12]:"
-msgstr "(半音) [-12 到 12]:"
+msgstr "(半音 [&E]) [-12 到 12]:"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 msgid "Logarithmic"
@@ -9129,14 +9110,12 @@ msgid "Generates a constant frequency tone of one of four types"
 msgstr "生成四種之一的固定頻率音"
 
 #: src/effects/ToneGen.cpp
-#, fuzzy
 msgid "&Waveform:"
-msgstr "波形："
+msgstr "波形(&W)："
 
 #: src/effects/ToneGen.cpp
-#, fuzzy
 msgid "&Frequency (Hz):"
-msgstr "頻率 (赫茲)："
+msgstr "頻率 (赫茲)(&F)："
 
 #: src/effects/ToneGen.cpp
 msgid "Frequency Hertz Start"
@@ -9155,9 +9134,8 @@ msgid "Amplitude End"
 msgstr "振幅終點"
 
 #: src/effects/ToneGen.cpp
-#, fuzzy
 msgid "I&nterpolation:"
-msgstr "內插："
+msgstr "內插(&N)："
 
 #: src/effects/TruncSilence.cpp
 msgid "Truncate Detected Silence"
@@ -9188,23 +9166,20 @@ msgid "Detect Silence"
 msgstr "偵測靜音"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Tr&uncate to:"
-msgstr "截斷至："
+msgstr "截斷至(&U)："
 
 #: src/effects/TruncSilence.cpp src/import/ImportRaw.cpp
 msgid "%"
 msgstr "%"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "C&ompress to:"
-msgstr "壓縮為："
+msgstr "壓縮為(&O)："
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Trunc&ate tracks independently"
-msgstr "個別截斷軌道"
+msgstr "個別截斷軌道(&A)"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "VST Effects"
@@ -9276,12 +9251,13 @@ msgid "Graphical Mode"
 msgstr "圖形模式"
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy
 msgid ""
 "Most VST effects have a graphical interface for setting parameter values. A "
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
-msgstr "大多數 VST 效果都有提供圖形介面可用於設定"
+msgstr ""
+"大多數 VST 效果都有提供圖形介面可用於設定。也能使用基本的純文字方法。重新開啟"
+"效果以生效。"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid "Enable &graphical interface"
@@ -9465,111 +9441,102 @@ msgid "Location"
 msgstr "位置"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't open \"%s\""
-msgstr "無法開啟檔案：\"%s\""
+msgstr "無法開啟「%s」"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to read the preset from \"%s\""
-msgstr "無法讀取預設集檔案。"
+msgstr "無法從「%s」讀取預設集"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to encode preset from \"%s\""
-msgstr ""
-"未能註冊：\n"
-"%s"
+msgstr "無法從「%s」編碼預設集"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Unable to store preset in config file"
-msgstr "無法讀取預設集檔案。"
+msgstr "無法在設定檔儲存預設集"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not import \"%s\" preset\n"
 "\n"
 "%s"
 msgstr ""
-"無法將效果 %s 的參數\n"
-"設定為 %s。"
+"無法匯入「%s」預設集\n"
+"\n"
+"%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't create the \"%s\" directory"
-msgstr ""
-"無法建立目錄：\n"
-"  %s"
+msgstr "無法建立「%s」目錄"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Export Audio Unit Preset As %s:"
-msgstr "匯出 Audio Unit 預設集"
+msgstr "匯出 %s 格式的 Audio Unit 預設集："
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Standard Audio Unit preset file"
-msgstr "匯出 Audio Unit 預設集"
+msgstr "標準 Audio Unit 預設集檔案"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not export \"%s\" preset\n"
 "\n"
 "%s"
 msgstr ""
-"無法將效果 %s 的參數\n"
-"設定為 %s。"
+"無法匯出「%s」預設集\n"
+"\n"
+"%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
 msgstr "匯出 Audio Unit 預設集"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Import Audio Unit Preset As %s:"
-msgstr "匯入 Audio Unit 預設集"
+msgstr "匯入 %s 格式的 Audio Unit 預設集："
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Failed to set preset name"
-msgstr "無法讀取預設集檔案。"
+msgstr "無法設定預設集名稱"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Failed to retrieve preset content"
-msgstr "無法取得串流描述"
+msgstr "無法取得預設集內容"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to convert property list to XML data"
-msgstr ""
+msgstr "無法將屬性列表轉換為 XML 資料"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "XML data is empty after conversion"
-msgstr "取樣頻率轉換"
+msgstr "轉換後的 XML 資料是空白的"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write XML preset to \"%s\""
-msgstr ""
-"未能註冊：\n"
-"%s"
+msgstr "無法寫入 XML 預設集至「%s」"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to convert preset to internal format"
-msgstr ""
+msgstr "無法將預設集轉換為內部格式"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to create property list for preset"
-msgstr ""
+msgstr "無法建立預設集的屬性列表"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Failed to set class info for \"%s\" preset"
-msgstr ""
+msgstr "無法設定「%s」預設集的類別資訊"
 
 #. i18n-hint: the name of an Apple audio software protocol
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
@@ -9634,6 +9601,11 @@ msgid "&Buffer Size (8 to %d) samples):"
 msgstr "緩衝區大小 (8 到 %d 取樣點)(&B)："
 
 #: src/effects/lv2/LV2Effect.cpp
+#, c-format
+msgid "&Buffer Size (8 to %d samples):"
+msgstr "緩衝區大小 (8 到 %d 取樣點)(&B)："
+
+#: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
 "Audacity. When not compensating for this delay, you will notice that small "
@@ -9642,16 +9614,17 @@ msgid ""
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy
 msgid ""
 "LV2 effects can have a graphical interface for setting parameter values. A "
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
-msgstr "大多數 LV2 效果都有提供圖形介面可用於設定"
+msgstr ""
+"大多數 LV2 效果都能有提供圖形介面可用於設定。也能使用基本的純文字方法。重新開"
+"啟此效果以生效。"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "LV2 sequence buffer overflow"
-msgstr ""
+msgstr "LV2 序列緩衝區溢出"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -9797,9 +9770,8 @@ msgid "plug-in"
 msgstr "外掛程式"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Nyquist returned a list."
-msgstr "Nyquist 未傳回音訊。\n"
+msgstr "Nyquist 傳回了列表。"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10175,25 +10147,22 @@ msgid "Command Output"
 msgstr "指令輸出"
 
 #: src/export/ExportCL.cpp
-#, fuzzy
 msgid "You've specified a file name without an extension. Are you sure?"
-msgstr ""
-"所選的檔案無法識別其副檔名。\n"
-"要繼續嗎？"
+msgstr "您指定的檔案名稱沒有副檔名。確定嗎？"
 
 #: src/export/ExportCL.cpp
 msgid "Program name appears to be missing."
-msgstr ""
+msgstr "程式名稱似乎遺失。"
 
 #: src/export/ExportCL.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "\"%s\" couldn't be found."
-msgstr "找不到「%s」檔案。"
+msgstr "找不到「%s」。"
 
 #: src/export/ExportCL.cpp
 #, c-format
 msgid "Unable to locate \"%s\" in your path."
-msgstr ""
+msgstr "無法在路徑定位「%s」。"
 
 #: src/export/ExportFFmpeg.cpp
 msgid ""
@@ -10245,20 +10214,23 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "The codec reported a generic error (EPERM)"
-msgstr ""
+msgstr "編碼器回傳了一般性錯誤 (EPERM)"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "The codec reported an invalid parameter (EINVAL)"
-msgstr ""
+msgstr "編碼器回傳參數無效 (EINVAL)"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Can't open audio codec \"%s\" (0x%x)\n"
 "\n"
 "%s"
-msgstr "FFmpeg：錯誤 - 無法開啟音訊編碼器 0x%x。"
+msgstr ""
+"無法開啟「%s」(0x%x) 音訊編碼器\n"
+"\n"
+"%s"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
@@ -10351,7 +10323,8 @@ msgstr "取樣頻率"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbps"
@@ -10366,13 +10339,13 @@ msgstr "品質 (kbps)："
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.2f kbps"
-msgstr "32 kbps"
+msgstr "%.2f kbps"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportFLAC.cpp
 msgid "1"
@@ -10400,69 +10373,63 @@ msgstr "7"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "9"
-msgstr ""
+msgstr "9"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "10"
-msgstr "1"
+msgstr "10"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "On"
-msgstr "開啟"
+msgstr "開"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Constrained"
-msgstr "固定"
+msgstr "強制"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VOIP"
-msgstr ""
+msgstr "VOIP"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Audio"
-msgstr "音訊(&A)..."
+msgstr "音訊"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Low Delay"
-msgstr "延遲"
+msgstr "低延遲"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "2.5 ms"
-msgstr ""
+msgstr "2.5 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "5 ms"
-msgstr ""
+msgstr "5 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "10 ms"
-msgstr ""
+msgstr "10 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "20 ms"
-msgstr ""
+msgstr "20 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "40 ms"
-msgstr ""
+msgstr "40 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "60 ms"
-msgstr ""
+msgstr "60 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Narrowband"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Mediumband"
-msgstr "中等"
+msgstr "中頻"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Wideband"
@@ -10473,29 +10440,24 @@ msgid "Super Wideband"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Fullband"
-msgstr "多頻"
+msgstr "全頻"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Compression"
-msgstr "壓縮："
+msgstr "壓縮方式"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Frame Duration:"
-msgstr "持續時間："
+msgstr "影格持續時間："
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Vbr Mode:"
-msgstr "模式："
+msgstr "VBR 模式："
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Application:"
-msgstr "應用"
+msgstr "應用程式："
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Cutoff:"
@@ -10506,14 +10468,12 @@ msgid "Open custom FFmpeg format options"
 msgstr "開啟自訂 FFmpeg 格式選項"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Current Format:"
-msgstr "目前專案"
+msgstr "目前格式："
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Current Codec:"
-msgstr "目前專案"
+msgstr "目前編碼器："
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Error Saving FFmpeg Presets"
@@ -10572,9 +10532,8 @@ msgid "AMR (narrow band) Files (FFmpeg)"
 msgstr "AMR (窄頻) 檔案 (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Opus (OggOpus) Files (FFmpeg)"
-msgstr "M4A (AAC) 檔案 (FFmpeg)"
+msgstr "Opus (OggOpus) 檔案 (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
@@ -11039,11 +10998,10 @@ msgstr "正在將選擇的音訊匯出為 FLAC"
 msgid "Exporting the audio as FLAC"
 msgstr "正在將音訊匯出為 FLAC"
 
-#. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%d kpbs"
-msgstr "%d kbps"
+msgstr "%d kpbs"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -11119,7 +11077,7 @@ msgstr "標準"
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
-msgstr "瘋的，320 kbps"
+msgstr "最高，320 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -11454,9 +11412,8 @@ msgstr ""
 "要建立嗎？"
 
 #: src/export/ExportMultiple.cpp
-#, fuzzy
 msgid "Continue to export remaining files?"
-msgstr "無法匯出 - 檔案有問題"
+msgstr "是否繼續匯出剩餘檔案？"
 
 #. i18n-hint: The second %s gives some letters that can't be used.
 #: src/export/ExportMultiple.cpp
@@ -12169,7 +12126,6 @@ msgstr ""
 "\n"
 
 #: src/import/ImportPCM.cpp
-#, fuzzy
 msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately. This is less safe than copying in, because you must retain the "
@@ -12179,17 +12135,13 @@ msgid ""
 "\n"
 "How do you want to import the current file(s)?"
 msgstr ""
-"當匯入非壓縮格式音訊檔案時，您可以選擇將其複製到專案中，也可以選擇從目前位置"
-"直接讀取 (但不複製)。\n"
+"直接讀取檔案讓你能夠用幾乎立即的時間播放或編輯。因為您需要保留原始路徑中原始"
+"檔名的檔案，所以比複製更危險。\n"
 "\n"
-"目前的偏好設定為 %s。\n"
+"「說明」>「診斷」>「檢查依存關係...」會顯示任何您正在直接讀取之檔案的原始名稱"
+"及路徑。\n"
 "\n"
-"直接讀取檔案讓您幾乎是即時的播放或編輯它們。這種方式比將其複製到專案中安全性"
-"稍差，因為您必須在其原始位置、以其原始檔案名稱保留它們。 \n"
-"點選「說明」>「診斷」>「檢查依存關係...」將顯示所有直接讀取檔案的原始名稱及位"
-"置。\n"
-"\n"
-"要以何種方式來匯入目前的檔案？"
+"您想要怎麼匯入目前的檔案？"
 
 #: src/import/ImportPCM.cpp
 msgid "Choose an import method"
@@ -12354,7 +12306,7 @@ msgstr "終點"
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
@@ -12927,9 +12879,8 @@ msgid "MIDI Device Info"
 msgstr "MIDI 裝置資訊"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "Menu Tree"
-msgstr "選單"
+msgstr "選單樹"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
@@ -12976,9 +12927,8 @@ msgid "Chec&k Dependencies..."
 msgstr "檢查依存關係(&K)..."
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "Menu Tree..."
-msgstr "低音和高音..."
+msgstr "選單樹…"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
@@ -13187,7 +13137,7 @@ msgstr "切換至活躍視窗之前"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Foc&us"
-msgstr ""
+msgstr "設為焦點(&U)"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move &Backward from Toolbars to Tracks"
@@ -13995,14 +13945,12 @@ msgid "&Unmute All Tracks"
 msgstr "取消所有軌道靜音(&U)"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Mut&e Tracks"
-msgstr "所有軌道靜音(&M)"
+msgstr "靜音軌道(&E)"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "U&nmute Tracks"
-msgstr "取消所有軌道靜音(&U)"
+msgstr "取消靜音軌道(&N)"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Pan"
@@ -14165,8 +14113,8 @@ msgid "Please select in a mono track."
 msgstr "請在單聲道軌道內選擇"
 
 #: src/menus/TransportMenus.cpp
-msgid "Please select in a stereo track."
-msgstr "請在立體聲軌道內選擇"
+msgid "Please select in a stereo track or two mono tracks."
+msgstr "請在立體聲或兩個單聲道內選擇"
 
 #: src/menus/TransportMenus.cpp
 #, c-format
@@ -14953,9 +14901,8 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "主要使用由右向左的文字（例如阿拉伯文和希伯來文）"
 
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgid "Show Timeline Tooltips"
-msgstr "啟用時間軸工具提示"
+msgstr "顯示時間軸工具提示"
 
 #: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
 msgid "Show Scrub Ruler"
@@ -15110,18 +15057,20 @@ msgid ""
 "\n"
 "   *   \""
 msgstr ""
+"\n"
+"   *   「"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\"  (because the shortcut '"
-msgstr ""
+msgstr "\"  (因為快捷鍵『"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "' is used by \""
-msgstr ""
+msgstr "』被「"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\")\n"
-msgstr ""
+msgstr "」使用)\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -15140,11 +15089,12 @@ msgid "\" and \""
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
 msgid ""
 "\".\n"
 "Nothing is imported."
-msgstr "沒有可以重做的操作"
+msgstr ""
+"\"。\n"
+"未匯入任何項目。"
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15959,9 +15909,8 @@ msgid "Window &type:"
 msgstr "視窗類型(&T)："
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "&Zero padding factor:"
-msgstr "補零因子(&Z)"
+msgstr "補零因子(&Z)："
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble Spectral Selection"
@@ -16167,9 +16116,8 @@ msgid "Solo &Button:"
 msgstr "獨奏按鈕(&B)："
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Logarithmic (dB)"
-msgstr "對數"
+msgstr "對數 (dB)"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -16257,7 +16205,6 @@ msgid "Auto-&fit track height"
 msgstr "自動適合軌道高度(&F)"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Sho&w track name as overlay"
 msgstr "在波形中顯示軌道名稱(&W)"
 
@@ -16282,9 +16229,8 @@ msgid "Default &view mode:"
 msgstr "預設檢視模式(&V)："
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Default Waveform scale:"
-msgstr "預設取樣格式(&F)："
+msgstr "預設波形比例："
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Display &samples:"
@@ -16348,9 +16294,8 @@ msgid "Mixing down on export (&Custom FFmpeg or external program)"
 msgstr "匯出時混音（自訂 FFmpeg 或 外部程式）(&C)"
 
 #: src/prefs/WarningsPrefs.cpp
-#, fuzzy
 msgid "Missing file &name extension during export"
-msgstr "匯出時混音為單聲道(&M)"
+msgstr "匯出時省略副檔名(&N)"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "&Importing uncompressed audio files"
@@ -16366,7 +16311,6 @@ msgid "Preferences for Waveforms"
 msgstr "波形偏好設定"
 
 #: src/prefs/WaveformPrefs.cpp
-#, fuzzy
 msgid "Waveform dB &range:"
 msgstr "波形分貝範圍(&R)："
 
@@ -16761,16 +16705,14 @@ msgid "Spe&ctral Selection Toolbar"
 msgstr "頻譜選擇工具列(&C)"
 
 #: src/toolbars/TimerToolBar.cpp
-#, fuzzy
 msgid "Time"
-msgstr "時間："
+msgstr "時間"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for viewing actual time of the cursor
 #: src/toolbars/TimerToolBar.cpp
-#, fuzzy
 msgid "&Time Toolbar"
-msgstr "裝置工具列(&D)"
+msgstr "時間工具列(&T)"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -16808,7 +16750,6 @@ msgid "Draw Tool"
 msgstr "繪製工具"
 
 #: src/toolbars/ToolsToolBar.cpp
-#, fuzzy
 msgid "Multi-Tool"
 msgstr "多重工具"
 
@@ -16914,21 +16855,18 @@ msgid "Face size"
 msgstr "字型大小"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "Cu&t Label text"
-msgstr "標籤文字"
+msgstr "剪下標籤文字(&T)"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "&Copy Label text"
-msgstr "標籤文字"
+msgstr "複製標籤文字(&C)"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "&Delete Label"
 msgstr "刪除標籤(&D)"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
-#, fuzzy
 msgid "&Edit Label..."
 msgstr "編輯標籤(&E)..."
 
@@ -17166,9 +17104,8 @@ msgid "Set Rate"
 msgstr "設定頻率"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid "&Multi-view"
-msgstr "多重"
+msgstr "多重檢視(&M)"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Ma&ke Stereo Track"
@@ -17280,23 +17217,21 @@ msgid "%.0f%% Right"
 msgstr "向右 %.0f%%"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid ""
 "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "按下並拖曳調整，按兩下重設"
+msgstr "按一下拖曳以調整子檢視的大小，按兩下以切成正好兩半"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Click and drag to rearrange sub-views"
-msgstr "點選並拖動以移動在時間範圍內的軌道"
+msgstr "按一下拖曳以重排子檢視的大小。"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Rearrange sub-views"
-msgstr ""
+msgstr "重排子檢視"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Close sub-view"
-msgstr ""
+msgstr "關閉子檢視"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -17477,11 +17412,13 @@ msgstr "跟隨播放(&B)"
 
 #: src/tracks/ui/Scrubbing.cpp
 #, fuzzy
+#| msgid "Backwards"
 msgid "Scrub Bac&kwards"
 msgstr "後退"
 
 #: src/tracks/ui/Scrubbing.cpp
 #, fuzzy
+#| msgid "Forwards"
 msgid "Scrub For&wards"
 msgstr "前進"
 
@@ -17561,18 +17498,16 @@ msgid "Collapse"
 msgstr "收摺"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Command+Click to deselect"
-msgstr "「Command+點擊」以取消選擇"
+msgstr "Command 鍵 + 按一下 以取消選擇"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Select track"
 msgstr "選擇軌道"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Ctrl+Click to deselect"
-msgstr "「Ctrl+點擊」以取消選擇"
+msgstr "Ctrl 鍵 + 按一下 以取消選擇"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -17580,15 +17515,13 @@ msgstr "開啟選單..."
 
 #. i18n-hint: Command names a modifier key on Macintosh keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
-#, fuzzy
 msgid "Command+Click"
-msgstr "Cmd + 左鍵點選"
+msgstr "Command 鍵 + 按一下"
 
 #. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
-#, fuzzy
 msgid "Ctrl+Click"
-msgstr "Ctrl + 左鍵點選"
+msgstr "Ctrl + 按一下"
 
 #. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -18203,8 +18136,8 @@ msgstr "值不可小於 %s"
 
 #: src/widgets/valnum.cpp
 #, c-format
-msgid "Value must not be greather than %s"
-msgstr "值不可大於 %s"
+msgid "Value must not be greater than %s"
+msgstr "數值不可大於 %s"
 
 #: src/widgets/valnum.cpp
 msgid "e"
@@ -18267,38 +18200,37 @@ msgid "Released under terms of the GNU General Public License version 2"
 msgstr "按 GNU General Public License version 2 釋出"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Treat audio below this level as silence (dB)"
-msgstr "將低於此水平的音訊視為靜音 [ -dB]"
+msgstr "將低於此等級的音訊視為靜音 (dB)"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Minimum duration of silence (seconds)"
-msgstr "靜音的最小持續時間 [秒]"
+msgstr "靜音的最小持續時間 (秒)"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Label placement (seconds before silence ends)"
-msgstr "標籤結束點 [聲音結束後的秒數]"
+msgstr "標籤置放點 (聲音結束後的秒數)"
 
 #. i18n-hint: Abbreviation of "Silence".
 #: plug-ins/SilenceMarker.ny
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #. i18n-hint: hours minutes and seconds. Do not translate "~a".
 #: plug-ins/SilenceMarker.ny
 #, lisp-format
 msgid "~ah ~am ~as"
-msgstr ""
+msgstr "~ah ~am ~as"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid ""
-"No silences found.\n"
-"Try reducing the silence level and\n"
+"No silences found.\r\n"
+"Try reducing the silence level and\r\n"
 "the minimum silence duration."
-msgstr "找不到靜音。請嘗試減少靜音~%水平及最小靜音持續時間。"
+msgstr ""
+"找不到靜音。\r\n"
+"請試試降低靜音等級，及\r\n"
+"最小靜音持續時間。"
 
 #: plug-ins/SoundFinder.ny
 msgid "Sound Finder"
@@ -18364,21 +18296,19 @@ msgid "~aPlease select frequencies."
 msgstr "~a請選擇頻率"
 
 #: plug-ins/SpectralEditMulti.ny
-#, lisp-format
 msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                       frequencies are both ~a Hz).~%~\n"
+"~aBandwidth is zero (the upper and lower~%~\r\n"
+"                       frequencies are both ~a Hz).~%~\r\n"
 "                       Please select a frequency range."
 msgstr ""
-"~a頻寬為零 (上下~%~\n"
-"                       頻率皆為 ~a Hz)~%~\n"
+"~a頻寬為零 (上下~%~\r\n"
+"                       頻率皆為 ~a Hz)~%~\r\n"
 "                       請選擇頻率範圍"
 
 #: plug-ins/SpectralEditMulti.ny
-#, lisp-format
 msgid ""
-"~aNotch filter parameters cannot be applied.~%~\n"
-"                      Try increasing the low frequency bound~%~\n"
+"~aNotch filter parameters cannot be applied.~%~\r\n"
+"                      Try increasing the low frequency bound~%~\r\n"
 "                      or reduce the filter 'Width'."
 msgstr ""
 
@@ -18413,26 +18343,24 @@ msgid "~aCenter frequency must be above 0 Hz."
 msgstr "~a中心頻率必須高於 0 Hz"
 
 #: plug-ins/SpectralEditParametricEQ.ny
-#, lisp-format
 msgid ""
-"~aFrequency selection is too high for track sample rate.~%~\n"
+"~aFrequency selection is too high for track sample rate.~%~\r\n"
 "                        For the current track, the high frequency setting "
-"cannot~%~\n"
+"cannot~%~\r\n"
 "                        be greater than ~a Hz"
 msgstr ""
-"~a頻率選取部分對於軌道取樣率來說太高。~%~\n"
-"                        對於目前的軌道，高頻設定不能~%~\n"
+"~a頻率選取部分對於軌道取樣率來說太高。~%~\r\n"
+"                        對於目前的軌道，高頻設定不能~%~\r\n"
 "                        高於 ~a Hz"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#, lisp-format
 msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                         frequencies are both ~a Hz).~%~\n"
+"~aBandwidth is zero (the upper and lower~%~\r\n"
+"                         frequencies are both ~a Hz).~%~\r\n"
 "                         Please select a frequency range."
 msgstr ""
-"~a頻寬為零 (高低~%~\n"
-"                         頻率皆為 ~a Hz)。~%~\n"
+"~a頻寬為零 (高低~%~\r\n"
+"                         頻率皆為 ~a Hz)。~%~\r\n"
 "                         請選擇頻率範圍。"
 
 #: plug-ins/SpectralEditShelves.ny
@@ -18575,14 +18503,13 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~a百分比值不能大於 1000 %"
 
 #: plug-ins/adjustable-fade.ny
-#, lisp-format
 msgid ""
-"~adB values cannot be more than +100 dB.~%~%~\n"
-"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"~adB values cannot be more than +100 dB.~%~%~\r\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\r\n"
 "                                 \t-6 dB halves the amplitude."
 msgstr ""
-"~adB 值不能多於 +100 dB~%~%~\n"
-"                                 提示：6 dB 代表將振幅加倍~%~\n"
+"~adB 值不能多於 +100 dB~%~%~\r\n"
+"                                 提示：6 dB 代表將振幅加倍~%~\r\n"
 "                                 \t-6 dB 代表將振幅減半"
 
 #: plug-ins/beat.ny
@@ -18748,47 +18675,43 @@ msgstr "允許變更持續時間"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "EQ XML to TXT Converter"
-msgstr ""
+msgstr "EQ XML 至 TXT 轉換工具"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Select target EQ effect"
-msgstr "重複上次的效果"
+msgstr "選擇目標 EQ 效果"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Equalization XML file"
-msgstr "等化"
+msgstr "等化 XML 檔案"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
-msgstr ""
+msgstr "如果輸出文字檔案存在"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Append number"
-msgstr "附加錄製"
+msgstr "加上數字"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "Overwrite"
-msgstr "確認覆寫"
+msgstr "覆蓋"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Unable to open file~%~s"
-msgstr "錯誤。~%無法開啟檔案"
+msgstr "錯誤。~%無法開啟檔案~%~s"
 
 #. i18n-hint: Do not translate "~a".txt
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, lisp-format
 msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr ""
+msgstr "錯誤。~%不允許覆寫檔案：~%「~a.txt」"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "錯誤。無法寫入 ~%~s。~%"
+msgstr "錯誤。~%無法寫入檔案：~%「~a.txt」"
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
@@ -18829,7 +18752,7 @@ msgstr "標籤區域長度 (秒)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
-msgstr ""
+msgstr "將標籤間隔調整至符合長度"
 
 #: plug-ins/equalabel.ny
 msgid "Label text"
@@ -18954,14 +18877,13 @@ msgid "Frequency must be at least 0.1 Hz."
 msgstr "頻率必須至少是 0.1 赫茲"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
-#, lisp-format
 msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                   Track sample rate is ~a Hz~%~\n"
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\r\n"
+"                   Track sample rate is ~a Hz~%~\r\n"
 "                   Frequency must be less than ~a Hz."
 msgstr ""
-"Error:~%~%頻率 (~a Hz) 對於軌道的取樣率太高。~%~%~\n"
-"                   軌道取樣率是 ~a Hz~%~\n"
+"錯誤：~%~%頻率 (~a Hz) 對於軌道的取樣率太高。~%~%~\r\n"
+"                   軌道取樣率是 ~a Hz~%~\r\n"
 "                   頻率必須少於 ~a Hz"
 
 #: plug-ins/limiter.ny
@@ -18995,18 +18917,18 @@ msgstr "硬剪輯"
 
 #: plug-ins/limiter.ny
 msgid ""
-"Input Gain (dB)\n"
+"Input Gain (dB)\r\n"
 "mono/Left"
 msgstr ""
-"輸入增益 (dB)\n"
+"輸入增益 (dB)\r\n"
 "單聲道/左聲道"
 
 #: plug-ins/limiter.ny
 msgid ""
-"Input Gain (dB)\n"
+"Input Gain (dB)\r\n"
 "Right channel"
 msgstr ""
-"輸入增益 (dB)\n"
+"輸入增益 (dB)\r\n"
 "右聲道"
 
 #: plug-ins/limiter.ny
@@ -19030,14 +18952,12 @@ msgid "Performing Low-Pass Filter..."
 msgstr "正在執行低頻通過過濾器..."
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Noise Gate"
-msgstr "噪音類型："
+msgstr "噪音門"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Gating audio..."
-msgstr "正在快取音訊"
+msgstr "正在阻擋音訊..."
 
 #: plug-ins/noisegate.ny
 msgid "Select Function"
@@ -19048,24 +18968,20 @@ msgid "Gate"
 msgstr "閘門"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Analyse Noise Level"
-msgstr "分析時間："
+msgstr "分析噪音等級"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Stereo Linking"
-msgstr "定位播放"
+msgstr "立體聲連結"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Link Stereo Tracks"
-msgstr "生成立體聲軌道(&K)"
+msgstr "連結立體聲軌道"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Don't Link Stereo"
-msgstr "聯合立體聲"
+msgstr "不要連結立體聲"
 
 #: plug-ins/noisegate.ny
 #, fuzzy
@@ -19082,6 +18998,7 @@ msgstr ""
 
 #: plug-ins/noisegate.ny
 #, fuzzy
+#| msgid "~aCenter frequency must be above 0 Hz."
 msgid "Gate frequencies above (kHz)"
 msgstr "~a中心頻率必須高於 0 Hz"
 
@@ -19091,35 +19008,35 @@ msgid "Level reduction (dB)"
 msgstr "噪音抑制"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Gate threshold (dB)"
-msgstr "臨界值"
+msgstr "閘門臨界值 (dB)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Attack/Decay (ms)"
-msgstr "起音/衰減時間"
+msgstr "起音/衰減 (ms)"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
 msgid ""
-"Error.\n"
-"\"Gate frequencies above: ~s kHz\"\n"
-"is too high for selected track.\n"
+"Error.\r\n"
+"\"Gate frequencies above: ~s kHz\"\r\n"
+"is too high for selected track.\r\n"
 "Set the control below ~a kHz."
 msgstr ""
 
 #: plug-ins/noisegate.ny
 #, lisp-format
 msgid ""
-"~%Insufficient audio selected.\n"
+"~%Insufficient audio selected.\r\n"
 "Make the selection longer than ~a ms."
 msgstr ""
+"~%選取的音訊區域過短。\r\n"
+"選取區域必須長於 ~a 毫秒。"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
 msgid ""
-"Peak based on first ~a seconds ~a dB~%\n"
+"Peak based on first ~a seconds ~a dB~%\r\n"
 "Suggested Threshold Setting ~a dB."
 msgstr ""
 
@@ -19142,14 +19059,13 @@ msgid "Q (higher value reduces width)"
 msgstr "Q (較高的值會減少寬度)"
 
 #: plug-ins/notch.ny
-#, lisp-format
 msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                 Track sample rate is ~a Hz.~%~\n"
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\r\n"
+"                 Track sample rate is ~a Hz.~%~\r\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"錯誤：~%~%頻率 (~a Hz) 對於軌道的取樣率太高~%~%~\n"
-"                 軌道取樣率是 ~a Hz~%~\n"
+"錯誤：~%~%頻率 (~a Hz) 對於軌道的取樣率太高~%~%~\r\n"
+"                 軌道取樣率是 ~a Hz~%~\r\n"
 "                 頻率必須少於 ~a Hz"
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -19158,77 +19074,66 @@ msgstr "Nyquist 外掛安裝程式"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Select file(s) to install"
-msgstr "選擇要匯入的串流"
+msgstr "選擇要安裝的檔案"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Allow overwriting"
-msgstr "允許削波"
+msgstr "允許覆寫"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Disallow"
 msgstr "不允許"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Allow"
-msgstr ""
+msgstr "允許"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Error.n"
-msgstr "錯誤"
+msgstr "錯誤.n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
-msgstr ""
+msgstr "成功。~%檔案已寫入至：~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Warning.nFailed to copy some files:n"
-msgstr ""
+msgstr "警告.n無法複製部分檔案：n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
-msgstr ""
-"~s 已安裝到：~%\"~a\"~%~%~\n"
-"            請用外掛管理員啟用該外掛。"
+msgstr "安裝的外掛程式.n(使用外掛程式管理工具啟用效果)："
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-ins updated:"
-msgstr "外掛程式支援"
+msgstr "更新的外掛程式："
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Files copied to plug-ins folder:"
-msgstr "選擇外掛檔案"
+msgstr "已複製至外掛程式資料夾的檔案："
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Not found or cannot be read:"
-msgstr "錯誤。找不到 ~%~s 或無法讀取。~%"
+msgstr "找不到或無法讀取："
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Unsupported file type:"
-msgstr "所有支援檔案"
+msgstr "不支援的檔案類型："
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Files already installed ('Allow Overwriting' disabled):"
-msgstr ""
+msgstr "已安裝檔案 (已停用「允許覆寫」)："
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Cannot be written to plug-ins folder:"
-msgstr ""
+msgstr "無法寫入外掛程式資料夾："
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%No file selected."
-msgstr "錯誤。~%~s 已經安裝。~%"
+msgstr "錯誤。~%未選擇檔案。"
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
@@ -19378,10 +19283,10 @@ msgstr "弱拍的 MIDI 音高"
 
 #: plug-ins/rhythmtrack.ny
 msgid ""
-"Set either 'Number of bars' or\n"
+"Set either 'Number of bars' or\r\n"
 "'Rhythm track duration' to greater than zero."
 msgstr ""
-"將「小節數目」或「旋律軌道持續時間」\n"
+"將「小節數目」或「旋律軌道持續時間」\r\n"
 "設定為大於零。"
 
 #: plug-ins/rissetdrum.ny
@@ -19522,26 +19427,24 @@ msgid ""
 msgstr "~a   ~a~%~a取樣率：~a Hz.~%已處理長度：~a 個樣本 ~a 秒~a"
 
 #: plug-ins/sample-data-export.ny
-#, lisp-format
 msgid ""
-"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
+"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\r\n"
 "                     Length processed: ~a samples ~a seconds.~a"
 msgstr ""
-"~a   ~a~%~a取樣率：~a Hz。樣本值按 ~a 比例。~%~\n"
+"~a   ~a~%~a取樣率：~a Hz。樣本值按 ~a 比例。~%~\r\n"
 "                     已處理長度：~a 個樣本 ~a 秒。~a"
 
 #: plug-ins/sample-data-export.ny
-#, lisp-format
 msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
-"~a ~\n"
+"~a ~\r\n"
 "                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
-"Unweighted RMS: ~a dB.~%~\n"
+"Unweighted RMS: ~a dB.~%~\r\n"
 "                  DC offset: ~a~a"
 msgstr ""
-"~a~%取樣率：~a Hz。樣本值按 ~a 比例。~a。~%~a已處理長度：~a ~\n"
+"~a~%取樣率：~a Hz。樣本值按 ~a 比例。~a。~%~a已處理長度：~a ~\r\n"
 "                  個樣本，~a 秒。~%峰值振幅：~a (線性) ~a dB。  未加權 RMS："
-"~a dB。~%~\n"
+"~a dB。~%~\r\n"
 "                  直流偏移：~a~a"
 
 #: plug-ins/sample-data-export.ny
@@ -19640,8 +19543,8 @@ msgstr "右 (分貝)"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
-"Produced with <span>Sample Data Export</span> for\n"
-"<a href=\"~a\">Audacity</a> by Steve\n"
+"Produced with <span>Sample Data Export</span> for\r\n"
+"<a href=\"~a\">Audacity</a> by Steve\r\n"
 "Daulton"
 msgstr ""
 
@@ -19660,12 +19563,12 @@ msgstr "1 聲道 (單聲道)"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "One column per channel.~%"
-msgstr ""
+msgstr "一欄一個聲道。~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "One row per channel.~%"
-msgstr ""
+msgstr "一行一個聲道。~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -19716,36 +19619,33 @@ msgid "Read as Zero"
 msgstr "視為零值讀取"
 
 #: plug-ins/sample-data-import.ny
-#, lisp-format
 msgid ""
-"Error~%~\n"
-"                        '~a' could not be opened.~%~\n"
+"Error~%~\r\n"
+"                        '~a' could not be opened.~%~\r\n"
 "                        Check that file exists."
 msgstr ""
-"錯誤~%~\n"
-"                        無法開啟「~a」~%~\n"
+"錯誤~%~\r\n"
+"                        無法開啟「~a」~%~\r\n"
 "                        請檢查清楚該檔案是否存在"
 
 #: plug-ins/sample-data-import.ny
-#, lisp-format
 msgid ""
-"Error:~%~\n"
-"              The file must contain only plain ASCII text.~%~\n"
+"Error:~%~\r\n"
+"              The file must contain only plain ASCII text.~%~\r\n"
 "              (Invalid byte '~a' at byte number: ~a)"
 msgstr ""
-"錯誤：~%~\n"
-"              檔案只能有 ASCII 文字。~%~\n"
+"錯誤：~%~\r\n"
+"              檔案只能有 ASCII 文字。~%~\r\n"
 "              (無效位元組「~a」位於位元組編號：~a)"
 
 #: plug-ins/sample-data-import.ny
-#, lisp-format
 msgid ""
-"Error~%~\n"
-"              Data must be numbers in plain ASCII text.~%~\n"
+"Error~%~\r\n"
+"              Data must be numbers in plain ASCII text.~%~\r\n"
 "              '~a' is not a numeric value."
 msgstr ""
-"錯誤：~%~\n"
-"              檔案只能有 ASCII 數字。~%~\n"
+"錯誤：~%~\r\n"
+"              檔案只能有 ASCII 數字。~%~\r\n"
 "              (「~a」不是數值)"
 
 #: plug-ins/sample-data-import.ny
@@ -19755,13 +19655,14 @@ msgstr "錯誤。~%無法開啟檔案"
 
 #: plug-ins/spectral-delete.ny
 #, fuzzy
+#| msgid "Spectral Select"
 msgid "Spectral Delete"
 msgstr "頻譜選擇"
 
 #: plug-ins/spectral-delete.ny
 #, lisp-format
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
-msgstr ""
+msgstr "錯誤。~%不支援低於 100Hz 的軌道取樣速率。"
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
@@ -19850,13 +19751,13 @@ msgstr "人聲最高剪點 (High Cut) (Hz)"
 #: plug-ins/vocalrediso.ny
 #, lisp-format
 msgid ""
-"Average x: ~a, y: ~a\n"
-"                    Covariance x y: ~a\n"
-"                    Average variance x: ~a, y: ~a\n"
-"                    Standard deviation x: ~a, y: ~a\n"
-"                    Coefficient of correlation: ~a\n"
-"                    Coefficient of determination: ~a\n"
-"                    Variation of residuals: ~a\n"
+"Average x: ~a, y: ~a\r\n"
+"                    Covariance x y: ~a\r\n"
+"                    Average variance x: ~a, y: ~a\r\n"
+"                    Standard deviation x: ~a, y: ~a\r\n"
+"                    Coefficient of correlation: ~a\r\n"
+"                    Coefficient of determination: ~a\r\n"
+"                    Variation of residuals: ~a\r\n"
 "                    y equals ~a plus ~a times x~%"
 msgstr ""
 
@@ -19869,15 +19770,15 @@ msgstr "平移位置：~a~%左右聲道有 ~a % 相關。代表：~%~a~%"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two channels are identical, i.e. dual mono.\n"
-"                The center can't be removed.\n"
+" - The two channels are identical, i.e. dual mono.\r\n"
+"                The center can't be removed.\r\n"
 "                Any remaining difference may be caused by lossy encoding."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - The two Channels are strongly related, i.e. nearly mono or extremely "
-"panned.\n"
+"panned.\r\n"
 "                Most likely, the center extraction will be poor."
 msgstr ""
 
@@ -19888,32 +19789,32 @@ msgstr " - 不錯，至少平均來說是立體聲，不是隔得很遠。"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - An ideal value for Stereo.\n"
+" - An ideal value for Stereo.\r\n"
 "                However, the center extraction depends also on the used "
 "reverb."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two channels are almost not related.\n"
+" - The two channels are almost not related.\r\n"
 "                Either you have only noise or the piece is mastered in a "
-"unbalanced manner.\n"
+"unbalanced manner.\r\n"
 "                The center extraction can still be good though."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - Although the Track is stereo, the field is obviously extra wide.\n"
-"                This can cause strange effects.\n"
+" - Although the Track is stereo, the field is obviously extra wide.\r\n"
+"                This can cause strange effects.\r\n"
 "                Especially when played by only one speaker."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two channels are nearly identical.\n"
-"                  Obviously, a pseudo stereo effect has been used\n"
+" - The two channels are nearly identical.\r\n"
+"                  Obviously, a pseudo stereo effect has been used\r\n"
 "                  to spread the signal over the physical distance between "
-"the speakers.\n"
+"the speakers.\r\n"
 "                  Don't expect good results from a center removal."
 msgstr ""
 
@@ -19974,2245 +19875,5 @@ msgstr "Radar Needles 頻率 (赫茲)"
 msgid "Error.~%Stereo track required."
 msgstr "錯誤。~%必須是立體聲"
 
-#~ msgid "Click to unpin"
-#~ msgstr "點選以取消固定"
-
-#~ msgid "Click to pin"
-#~ msgstr "點選以固定"
-
-#~ msgid "Disable Quick-Play"
-#~ msgstr "停用快速播放"
-
-#~ msgid "Disable dragging selection"
-#~ msgstr "停用拖動選取"
-
-#~ msgid "Disable Timeline Tooltips"
-#~ msgstr "停用時間軸工具提示"
-
-#~ msgid "Do not scroll while playing"
-#~ msgstr "播放時不要滾動"
-
-#~ msgid "Unlock Play Region"
-#~ msgstr "解鎖播放區域"
-
-#~ msgid "Disable Scrub Ruler"
-#~ msgstr "停用跟隨播放尺標"
-
-#~ msgid "Enable Scrub Ruler"
-#~ msgstr "啟用跟隨播放尺標"
-
-#~ msgid ""
-#~ "If you're sure another copy of Audacity isn't\n"
-#~ "running, Audacity can skip the test for\n"
-#~ "'Audacity already running' next time\n"
-#~ "by removing the lock file:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "Do you want to do that?"
-#~ msgstr ""
-#~ "如果您確定 Audacity 的另一個複本未在運作中，\n"
-#~ "Audacity 可透過移除鎖定檔案來在下次執行時\n"
-#~ "跳過「Audacity 已在運作中」檢查：\n"
-#~ "%s\n"
-#~ "\n"
-#~ "確定這麼做？"
-
-#~ msgid "Possible Lock File Problem"
-#~ msgstr "可能的鎖定檔問題"
-
-#~ msgid "Add to History:"
-#~ msgstr "加到歷史記錄："
-
-#~ msgid "Delete:"
-#~ msgstr "刪除："
-
-#~ msgid "Selected:"
-#~ msgstr "已選擇："
-
-#~ msgid "XXXX:1"
-#~ msgstr "XXXX:1"
-
-#~ msgid "40 kbps"
-#~ msgstr "40 kbps"
-
-#~ msgid "48 kbps"
-#~ msgstr "48 kbps"
-
-#~ msgid "56 kbps"
-#~ msgstr "56 kbps"
-
-#~ msgid "64 kbps"
-#~ msgstr "64 kbps"
-
-#~ msgid "80 kbps"
-#~ msgstr "80 kbps"
-
-#~ msgid "96 kbps"
-#~ msgstr "96 kbps"
-
-#~ msgid "112 kbps"
-#~ msgstr "112 kbps"
-
-#~ msgid "128 kbps"
-#~ msgstr "128 kbps"
-
-#~ msgid "160 kbps"
-#~ msgstr "160 kbps"
-
-#~ msgid "192 kbps"
-#~ msgstr "192 kbps"
-
-#~ msgid "224 kbps"
-#~ msgstr "224 kbps"
-
-#~ msgid "256 kbps"
-#~ msgstr "256 kbps"
-
-#~ msgid "320 kbps"
-#~ msgstr "320 kbps"
-
-#~ msgid "384 kbps"
-#~ msgstr "384 kbps"
-
-#~ msgid "448 kbps"
-#~ msgstr "448 kbps"
-
-#~ msgid "512 kbps"
-#~ msgstr "512 kbps"
-
-#~ msgid "576 kbps"
-#~ msgstr "576 kbps"
-
-#~ msgid "640 kbps"
-#~ msgstr "640 kbps"
-
-#~ msgid "4.75 kbps"
-#~ msgstr "4.75 kbps"
-
-#~ msgid "5.15 kbps"
-#~ msgstr "5.15 kbps"
-
-#~ msgid "5.90 kbps"
-#~ msgstr "5.90 kbps"
-
-#~ msgid "6.70 kbps"
-#~ msgstr "6.70 kbps"
-
-#~ msgid "7.40 kbps"
-#~ msgstr "7.40 kbps"
-
-#~ msgid "7.95 kbps"
-#~ msgstr "7.95 kbps"
-
-#~ msgid "10.20 kbps"
-#~ msgstr "10.20 kbps"
-
-#~ msgid "12.20 kbps"
-#~ msgstr "12.20 kbps"
-
-#~ msgid "24 kbps"
-#~ msgstr "24 kbps"
-
-#~ msgid "16 kbps"
-#~ msgstr "16 kbps"
-
-#~ msgid "144 kbps"
-#~ msgstr "144 kbps"
-
-#~ msgid "8 kbps"
-#~ msgstr "8 kbps"
-
-#~ msgid "AIFF (Apple) signed 16-bit PCM"
-#~ msgstr "AIFF (蘋果) 簽章的 16 位元 PCM"
-
-#~ msgid "WAV (Microsoft) signed 16-bit PCM"
-#~ msgstr "WAV (微軟) 簽章的 16 位元 PCM"
-
-#~ msgid "WAV (Microsoft) signed 24-bit PCM"
-#~ msgstr "WAV (微軟) 簽章的 24 位元 PCM"
-
-#~ msgid "WAV (Microsoft) 32-bit float PCM"
-#~ msgstr "WAV (微軟) 簽章的 32 浮點 PCM"
-
-#~ msgid "F&ocus"
-#~ msgstr "焦點(&O)"
-
-#~ msgid "Waveform (dB)"
-#~ msgstr "波形（分貝）"
-
-#~ msgid "&Waveform (dB)"
-#~ msgstr "波形（分貝）(&W)"
-
-#~ msgid "Finding silence..."
-#~ msgstr "正在尋找靜音..."
-
-#~ msgid "Alex S. Brown"
-#~ msgstr "Alex S. Brown"
-
-#~ msgid "Error.~%~s is not a supported plug-in.~%"
-#~ msgstr "錯誤。~%~s 不是支援的外掛程式。~%"
-
-#~ msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
-#~ msgstr "錯誤。~%~s 不是有效的 Nyquist 外掛程式。~%"
-
-#~ msgid "This plug-in requires Audacity 2.3.1 or later."
-#~ msgstr "本外掛必需 Audacity 2.3.1 或以版本"
-
-#~ msgid "incorporating"
-#~ msgstr "包含"
-
-#~ msgid ""
-#~ "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*."
-#~ "dll|All Files|*"
-#~ msgstr ""
-#~ "僅 avformat.dll|*avformat*.dll|動態連結函式庫 (*.dll)|*.dll|所有檔案|*"
-
-#~ msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-#~ msgstr "動態函式庫 (*.dylib)|*.dylib|所有檔案 (*)|*"
-
-#~ msgid ""
-#~ "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|"
-#~ "*.so*|All Files (*)|*"
-#~ msgstr ""
-#~ "僅 libavformat.so|libavformat*.so*|動態連結函式庫 (*.so*)|*.so*|所有檔案 "
-#~ "(*)|*"
-
-#~ msgid "ms"
-#~ msgstr "毫秒"
-
-#~ msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
-#~ msgstr "xml 檔案 (*.xml;*.XML)|*.xml;*.XML"
-
-#~ msgid "Sets the peak amplitude or loudness of one or more tracks"
-#~ msgstr "設定一個或多個軌道的峰值振幅或響度"
-
-#~ msgid "Use loudness instead of peak amplitude"
-#~ msgstr "使用響度而非峰值振幅"
-
-#~ msgid "The buffer size controls the number of samples sent to the effect "
-#~ msgstr "緩衝區大小用來控制每次疊代時傳送到效果"
-
-#~ msgid "on each iteration. Smaller values will cause slower processing and "
-#~ msgstr "的取樣數。其值越小，處理速度就越慢，且"
-
-#~ msgid "some effects require 8192 samples or less to work properly. However "
-#~ msgstr "某些效果需要 8192 或更少的取樣數方能正常"
-
-#~ msgid "most effects can accept large buffers and using them will greatly "
-#~ msgstr "工作。然而，大多數效果可以接受大型緩衝區"
-
-#~ msgid "reduce processing time."
-#~ msgstr "並將大幅降低處理時間。"
-
-#~ msgid "As part of their processing, some VST effects must delay returning "
-#~ msgstr "作為其處理的一部分，某些 VST 效果必須延遲傳回"
-
-#~ msgid "audio to Audacity. When not compensating for this delay, you will "
-#~ msgstr "音訊給 Audacity。當不補償此延遲時，您需注意，"
-
-#~ msgid "notice that small silences have been inserted into the audio. "
-#~ msgstr "有一小段靜音已被插入到音訊中。"
-
-#~ msgid "Enabling this option will provide that compensation, but it may "
-#~ msgstr "啟用本設定將提供補償，但是本設定並不適用於所有"
-
-#~ msgid "not work for all VST effects."
-#~ msgstr "的 VST 效果。"
-
-#~ msgid " A basic text-only method is also available. "
-#~ msgstr "參數數值。然而，也可使用只有基本文字的方法。"
-
-#~ msgid " Reopen the effect for this to take effect."
-#~ msgstr "如要使此功能生效請重新開啟效果。"
-
-#~ msgid ""
-#~ "As part of their processing, some Audio Unit effects must delay returning "
-#~ msgstr "作為其處理的一部分，某些 VST 效果必須延遲傳回"
-
-#~ msgid "not work for all Audio Unit effects."
-#~ msgstr "的 VST 效果。"
-
-#~ msgid ""
-#~ "Select \"Full\" to use the graphical interface if supplied by the Audio "
-#~ "Unit."
-#~ msgstr "選擇「完整」以使用 Audio Unit 支援的圖形介面。"
-
-#~ msgid " Select \"Generic\" to use the system supplied generic interface."
-#~ msgstr "選擇「一般」以使用系統支援的通用介面。"
-
-#~ msgid " Select \"Basic\" for a basic text-only interface."
-#~ msgstr "選擇「基本」以使用基本文字介面。"
-
-#~ msgid ""
-#~ "As part of their processing, some LADSPA effects must delay returning "
-#~ msgstr "作為其處理的一部分，某些 LADSPA 效果必須延遲傳回"
-
-#~ msgid "not work for all LADSPA effects."
-#~ msgstr "的 LADSPA 效果。"
-
-#~ msgid "As part of their processing, some LV2 effects must delay returning "
-#~ msgstr "作為其處理的一部分，某些 LV2 效果必須延遲傳回"
-
-#~ msgid "Enabling this setting will provide that compensation, but it may "
-#~ msgstr "啟用本設定將提供補償，但是本設定並不適用於所有"
-
-#~ msgid "not work for all LV2 effects."
-#~ msgstr "的 LV2 效果。"
-
-#~ msgid ""
-#~ "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|"
-#~ "*.txt|All files|*"
-#~ msgstr ""
-#~ "Nyquist 腳本 (*.ny)|*.ny|Lisp 腳本 (*.lsp)|*.lsp|文字檔案 (*.txt)|*.txt|所"
-#~ "有檔案|*"
-
-#~ msgid "XML files (*.xml)|*.xml|All files|*"
-#~ msgstr "XML 檔案 (*.xml)|*.xml|所有檔案|*.*"
-
-#~ msgid "%s kbps"
-#~ msgstr "%s kbps"
-
-#~ msgid ""
-#~ "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-#~ "All Files|*"
-#~ msgstr ""
-#~ "僅 lame_enc.dll|lame_enc.dll|動態連結函式庫 (*.dll)|*.dll|所有檔案|*"
-
-#~ msgid ""
-#~ "Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*."
-#~ "dylib)|*.dylib|All Files (*)|*"
-#~ msgstr ""
-#~ "僅 libmp3lame64bit.dylib|libmp3lame64bit.dylib|動態函式庫 (*.dylib)|*."
-#~ "dylib|所有檔案 (*)|*"
-
-#~ msgid ""
-#~ "Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*."
-#~ "dylib|All Files (*)|*"
-#~ msgstr ""
-#~ "僅 libmp3lame.dylib|libmp3lame.dylib|動態函式庫 (*.dylib)|*.dylib|所有檔"
-#~ "案 (*)|*"
-
-#~ msgid ""
-#~ "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*."
-#~ "so|Extended Libraries (*.so*)|*.so*|All Files (*)|*"
-#~ msgstr ""
-#~ "僅 libmp3lame.so.0|libmp3lame.so.0|主要共享物件檔案 (*.so)|*.so|延伸函式"
-#~ "庫 (*.so*)|*.so*|所有檔案 (*)|*"
-
-#~ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-#~ msgstr "MIDI 檔案 (*.mid)|*.mid|Allegro 檔案 (*.gro)|*.gro"
-
-#~ msgid ""
-#~ "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files "
-#~ "(*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-#~ msgstr ""
-#~ "MIDI 和 Allegro 檔案 (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI 檔案 (*."
-#~ "mid;*.midi)|*.mid;*.midi|Allegro 檔案 (*.gro)|*.gro|所有檔案|*"
-
-#~ msgid "%s - %s"
-#~ msgstr "%s - %s"
-
-#~ msgid ""
-#~ "This is a debug version of Audacity, with an extra button, 'Output "
-#~ "Sourcery'. This will save a\n"
-#~ "C version of the image cache that can be compiled in as a default."
-#~ msgstr ""
-#~ "此為除錯版本的 Audacity，有個額外的「Output Sourcery」按鈕，它會將\n"
-#~ "影像快取儲存為 C 程式碼，以便將其編譯為預設值。"
-
-#, fuzzy
-#~ msgid "Remove Center Classic: Mono"
-#~ msgstr "移除中間部分經典：單聲道"
-
-#~ msgid "Decoding failed\n"
-#~ msgstr "解碼失敗\n"
-
-#, fuzzy
-#~ msgid "Could not decode file: %s"
-#~ msgstr "無法解碼檔案："
-
-#, fuzzy
-#~ msgid "Could not create safety file: %s"
-#~ msgstr "無法建立安全檔案："
-
-#~ msgid "&Normalize all tracks in project"
-#~ msgstr "將專案中的所有軌道正規化(&N)"
-
-#~ msgid "&Use custom mix"
-#~ msgstr "使用自訂混音(&U)"
-
-#~ msgid ""
-#~ "To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown "
-#~ "Menu."
-#~ msgstr ""
-#~ "如要使用「繪製」，請選擇軌道下拉式選單中的 「波形」或「波形（分貝）」。"
-
-#, fuzzy
-#~ msgid "Vocal Remover"
-#~ msgstr "軌道移除"
-
-#, fuzzy
-#~ msgid "Removing center-panned audio..."
-#~ msgstr "正在移除喀嚦聲和劈啪聲..."
-
-#, fuzzy
-#~ msgid "Remove vocals or view Help"
-#~ msgstr "特殊移除(&E)"
-
-#, fuzzy
-#~ msgid "View Help"
-#~ msgstr "說明"
-
-#, fuzzy
-#~ msgid "Removal choice"
-#~ msgstr "正在移除噪音"
-
-#, fuzzy
-#~ msgid "Remove Frequency Band"
-#~ msgstr "中心頻率："
-
-#, fuzzy
-#~ msgid "Retain Frequency Band"
-#~ msgstr "線性頻率標度"
-
-#, fuzzy
-#~ msgid "Frequency band from (Hz)"
-#~ msgstr "頻率 (赫茲)："
-
-#, fuzzy
-#~ msgid "Frequency band to (Hz)"
-#~ msgstr "頻率 (赫茲)："
-
-#, fuzzy
-#~ msgid "Current settings returned the original audio."
-#~ msgstr "Nyquist 未傳回音訊。\n"
-
-#~ msgid "cleaned"
-#~ msgstr "已清理"
-
-#~ msgid "false"
-#~ msgstr "偽"
-
-#, fuzzy
-#~ msgid "AudioUnit"
-#~ msgstr "Audio Unit"
-
-#, fuzzy
-#~ msgid "Nyquist Effects Prompt"
-#~ msgstr "Nyquist 效果"
-
-#~ msgid "Save Device Info"
-#~ msgstr "儲存音訊裝置資訊"
-
-#~ msgid "Unable to save device info"
-#~ msgstr "無法儲存音訊裝置資訊"
-
-#~ msgid "Save MIDI Device Info"
-#~ msgstr "儲存 MIDI 裝置資訊"
-
-#~ msgid "Unable to save MIDI device info"
-#~ msgstr "無法儲存 MIDI 裝置資訊"
-
-#~ msgid "MP3 Library:"
-#~ msgstr "MP3 函式庫："
-
-#, fuzzy
-#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-#~ msgstr "編輯次數應在 1 至 10000 之間。"
-
-#, fuzzy
-#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-#~ msgstr "編輯次數應在 1 至 10000 之間。"
-
-#, fuzzy
-#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-#~ msgstr "編輯次數應在 1 至 10000 之間。"
-
-#, fuzzy
-#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-#~ msgstr "編輯次數應在 1 至 10000 之間。"
-
-#, fuzzy
-#~ msgid "Error.~%~a"
-#~ msgstr "錯誤"
-
-#, fuzzy
-#~ msgid "Left"
-#~ msgstr "左(&L)"
-
-#, fuzzy
-#~ msgid "Right"
-#~ msgstr "右(&R)"
-
-#~ msgid ""
-#~ "Latency Correction setting has caused the recorded audio to be hidden "
-#~ "before zero.\n"
-#~ "Audacity has brought it back to start at zero.\n"
-#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track "
-#~ "to the right place."
-#~ msgstr ""
-#~ "遲滯修正設定導致錄製的音訊被隱藏在原點之前。\n"
-#~ "Audacity 已經將其置回從原點開始。\n"
-#~ "您可以使用「時間位移工具 (<---> 或 F5)」將軌道拖動到正確的位置。"
-
-#~ msgid "Latency problem"
-#~ msgstr "遲滯問題"
-
-#~ msgid "Apply Chain"
-#~ msgstr "套用連鎖指令"
-
-#~ msgid "&Select Chain"
-#~ msgstr "選擇連鎖指令(&S)"
-
-#~ msgid "Chain"
-#~ msgstr "連鎖指令"
-
-#~ msgid "Edit Chains"
-#~ msgstr "編輯連鎖指令"
-
-#~ msgid "&Chains"
-#~ msgstr "連鎖指令(&C)"
-
-#~ msgid "Re&name"
-#~ msgstr "重新命名(&N)"
-
-#~ msgid "C&hain (Double-Click or press SPACE to edit)"
-#~ msgstr "連鎖指令 (連按兩下或按下空白鍵進行編輯)(&H)"
-
-#~ msgid "<br><br>DarkAudacity is based on Audacity:"
-#~ msgstr "<br><br>DarkAudacity 基於 Audacity："
-
-#~ msgid ""
-#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
-#~ "between them."
-#~ msgstr ""
-#~ " 訪問 [[http://www.darkaudacity.com|www.darkaudacity.com]] 以了解他們的區"
-#~ "別。"
-
-#~ msgid ""
-#~ " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
-#~ "help using DarkAudacity."
-#~ msgstr ""
-#~ " 撰寫郵件至 [[mailto:james@audacityteam.org|james@audacityteam.org]] 以獲"
-#~ "得 DarkAudacity 的幫助。"
-
-#~ msgid ""
-#~ " [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting "
-#~ "started with DarkAudacity."
-#~ msgstr ""
-#~ " 訪問 [[http://www.darkaudacity.com/video.html|Tutorials]] 以入門 "
-#~ "DarkAudacity。"
-
-#~ msgid "Insert &After"
-#~ msgstr "後插入(&A)"
-
-#~ msgid "Insert &Before"
-#~ msgstr "前插入(&B)"
-
-#~ msgid "C&hains"
-#~ msgstr "連鎖指令(&H)"
-
-#~ msgid "Appl&y Chain..."
-#~ msgstr "套用連鎖指令(&Y)..."
-
-#~ msgid "Edit C&hains..."
-#~ msgstr "編輯連鎖指令(&H)..."
-
-#~ msgid "Tra&nscription Toolbar"
-#~ msgstr "轉錄工具列(&N)"
-
-#~ msgid "&Tools"
-#~ msgstr "工具(&T)"
-
-#, fuzzy
-#~ msgid "E&xtra"
-#~ msgstr "額外選單(&X)"
-
-#, fuzzy
-#~ msgid "Transcri&ption"
-#~ msgstr "轉錄"
-
-#~ msgid "All Menus"
-#~ msgstr "所有選單"
-
-#~ msgid "Transcription"
-#~ msgstr "轉錄"
-
-#~ msgid "'?"
-#~ msgstr "'？"
-
-#~ msgid "' ?"
-#~ msgstr "' ？"
-
-#~ msgid "Delete "
-#~ msgstr "刪除"
-
-#~ msgid "items?"
-#~ msgstr "項目？"
-
-#~ msgid "Maximum amplitude dB"
-#~ msgstr "最大振幅分貝"
-
-#~ msgid "Sliding Time Scale/Pitch Shift"
-#~ msgstr "滑動時間標度/音高位移"
-
-#~ msgid "Time Scale"
-#~ msgstr "時間比例"
-
-#~ msgid ""
-#~ "Your tracks will be mixed down to a single mono channel in the exported "
-#~ "file."
-#~ msgstr "您的軌道將在匯出檔案中被混音為單聲道。"
-
-#~ msgid "Track &shift after record:"
-#~ msgstr "錄製後軌道位移(&S)："
-
-#~ msgid "Playthrough"
-#~ msgstr "監播"
-
-#~ msgid "&Hardware Playthrough of input"
-#~ msgstr "硬體監播(&H)"
-
-#~ msgid "Frequency g&ain (dB/dec):"
-#~ msgstr "頻率增益 (分貝/十倍頻)(&A)："
-
-#~ msgid ""
-#~ "Error opening sound device.\n"
-#~ "Try changing the audio host, recording device and the project sample rate."
-#~ msgstr ""
-#~ "開啟聲音裝置時發生錯誤。\n"
-#~ "請嘗試變更音訊主機、輸入裝置和專案取樣頻率。"
-
-#~ msgid "Slider Recording"
-#~ msgstr "錄製滑桿"
-
-#~ msgid "Slider Playback"
-#~ msgstr "播放滑桿"
-
-#~ msgid "Start - Length"
-#~ msgstr "起點 - 長度"
-
-#~ msgid "Length - End"
-#~ msgstr "長度 - 終點"
-
-#~ msgid "Length - Center"
-#~ msgstr "長度 - 中心"
-
-#~ msgid "Low Frequency:"
-#~ msgstr "低頻率："
-
-#~ msgid "High Frequency:"
-#~ msgstr "高頻率："
-
-#~ msgid "Change track name to:"
-#~ msgstr "將軌道名稱變更為："
-
-#~ msgid "In Memoriam"
-#~ msgstr "紀念"
-
-#~ msgid "Audacity failed to write to a file in %s."
-#~ msgstr ""
-#~ "Audacity 無法寫入檔案：\n"
-#~ "  %s。"
-
-#~ msgid "Could not open file: "
-#~ msgstr "無法開啟檔案："
-
-#~ msgid "Save Othe&r"
-#~ msgstr "儲存其它(&R)"
-
-#~ msgid "Ext-&Bar"
-#~ msgstr "擴充列(&B)"
-
-#~ msgid "Trans&cription"
-#~ msgstr "轉錄(&C)"
-
-#~ msgid "Scru&b"
-#~ msgstr "跟隨播放(&B)"
-
-#~ msgid "Ext-Co&mmand"
-#~ msgstr "擴充指令(&M)"
-
-#~ msgid "to Top"
-#~ msgstr "到最上方"
-
-#~ msgid "Down"
-#~ msgstr "下"
-
-#~ msgid "Moved"
-#~ msgstr "已移動"
-
-#~ msgid "of"
-#~ msgstr "的"
-
-#~ msgid "clip"
-#~ msgstr "剪輯"
-
-#~ msgid "and"
-#~ msgstr "和"
-
-#~ msgid "end to end"
-#~ msgstr "首尾相接"
-
-#~ msgid "End to End"
-#~ msgstr "首尾相接"
-
-#~ msgid "together"
-#~ msgstr "相同起點"
-
-#~ msgid "Together"
-#~ msgstr "相同起點"
-
-#~ msgid "Aligned %s"
-#~ msgstr "已對齊 %s"
-
-#~ msgid "Duration:\n"
-#~ msgstr "持續時間：\n"
-
-#~ msgid ""
-#~ "Timer Recording completed.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "預約錄製完成。\n"
-#~ "\n"
-
-#~ msgid "Saved "
-#~ msgstr "已儲存 "
-
-#~ msgid "Skip &Foreward"
-#~ msgstr "前進(&F)"
-
-#~ msgid "' to..."
-#~ msgstr "' 為..."
-
-#~ msgid "Audio In: "
-#~ msgstr "音訊輸入："
-
-#~ msgid "Exporting the entire project using command-line encoder"
-#~ msgstr "使用命令列編碼器匯出整個專案"
-
-#~ msgid "Exporting entire file as %s"
-#~ msgstr "正在將整個檔案匯出為 %s"
-
-#~ msgid "Exporting the entire project as FLAC"
-#~ msgstr "正在將整個專案匯出為 FLAC"
-
-#~ msgid "Exporting entire file at %ld kbps"
-#~ msgstr "正在以 %ld kbps 匯出整個檔案"
-
-#~ msgid "Exporting entire file with %s preset"
-#~ msgstr "正在以 %s 預設集匯出整個檔案"
-
-#~ msgid "Exporting entire file with VBR quality %s"
-#~ msgstr "正在以 VBR 品質 %s 匯出整個檔案"
-
-#~ msgid "Exporting entire file at %d Kbps"
-#~ msgstr "正在以 %d Kbps 匯出整個檔案"
-
-#~ msgid "Exporting the entire project as Ogg Vorbis"
-#~ msgstr "正在將整個專案匯出為 Ogg Vorbis"
-
-#~ msgid "Exporting the entire project as %s"
-#~ msgstr "正在將整個專案匯出為 %s"
-
-#~ msgid "copy in"
-#~ msgstr "複製到"
-
-#~ msgid "&Display a mono channel as virtual stereo"
-#~ msgstr "將單聲道聲道顯示為虛擬立體聲(&D)"
-
-#~ msgid " (emulated)"
-#~ msgstr " (模擬)"
-
-#~ msgid "Length-End"
-#~ msgstr "長度-終點"
-
-#~ msgid "Length-Center"
-#~ msgstr "長度-中心"
-
-#~ msgid "Selection options"
-#~ msgstr "選取部分選項"
-
-#~ msgid "Start - Length - End"
-#~ msgstr "起點 - 長度 - 終點"
-
-#~ msgid "Start - Center - Length"
-#~ msgstr "起點 - 中心 - 長度"
-
-#~ msgid "Start - Center - End"
-#~ msgstr "起點 - 中心 - 終點"
-
-#~ msgid "Start - Length - Center - End"
-#~ msgstr "起點 - 長度 - 中心 - 終點"
-
-#~ msgid "S-E"
-#~ msgstr "起點-終點"
-
-#~ msgid "S-L"
-#~ msgstr "起點-長度"
-
-#~ msgid "L-E"
-#~ msgstr "長度-終點"
-
-#~ msgid "L-C"
-#~ msgstr "長度-中心"
-
-#~ msgid "Show start time and end time"
-#~ msgstr "顯示起始時間和結束時間"
-
-#~ msgid "Show start time and length"
-#~ msgstr "顯示起始時間和長度"
-
-#~ msgid "Show length and end time"
-#~ msgstr "顯示長度和結束時間"
-
-#~ msgid "Show length and center"
-#~ msgstr "顯示長度和中心"
-
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr "點選以垂直放大，Shift-點選以縮小，拖動以建立一個特定的縮放區域。"
-
-#~ msgid "up"
-#~ msgstr "上"
-
-#~ msgid "down"
-#~ msgstr "下"
-
-#~ msgid "+"
-#~ msgstr "+"
-
-#, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (本消息)"
-
-#, fuzzy
-#~ msgid "DuckAmountDb"
-#~ msgstr "閃避總量："
-
-#, fuzzy
-#~ msgid "InnerFadeDownLen"
-#~ msgstr "向內漸弱長度："
-
-#, fuzzy
-#~ msgid "InnerFadeUpLen"
-#~ msgstr "向內漸強長度："
-
-#, fuzzy
-#~ msgid "OuterFadeDownLen"
-#~ msgstr "向外漸弱長度："
-
-#, fuzzy
-#~ msgid "OuterFadeUpLen"
-#~ msgstr "向外漸強長度："
-
-#, fuzzy
-#~ msgid "ThresholdDb"
-#~ msgstr "臨界值"
-
-#, fuzzy
-#~ msgid "MaximumPause"
-#~ msgstr "最大暫停："
-
-#, fuzzy
-#~ msgid "Percentage"
-#~ msgstr "百分比變更"
-
-#, fuzzy
-#~ msgid "NoiseFloor"
-#~ msgstr "底噪"
-
-#, fuzzy
-#~ msgid "AttackTime"
-#~ msgstr "起音時間"
-
-#, fuzzy
-#~ msgid "ReleaseTime"
-#~ msgstr "釋放時間"
-
-#, fuzzy
-#~ msgid "Threshold dB"
-#~ msgstr "臨界值 %d 分貝"
-
-#, fuzzy
-#~ msgid "Repeats"
-#~ msgstr "重複"
-
-#, fuzzy
-#~ msgid "Sequence"
-#~ msgstr "頻率"
-
-#, fuzzy
-#~ msgid "Duty Cycle"
-#~ msgstr "工作週期："
-
-#, fuzzy
-#~ msgid "Amplitude"
-#~ msgstr "振幅終點"
-
-#, fuzzy
-#~ msgid "Decay"
-#~ msgstr "衰減時間："
-
-#, fuzzy
-#~ msgid "CurveName"
-#~ msgstr "曲線名稱"
-
-#, fuzzy
-#~ msgid "InterpolateLin"
-#~ msgstr "內插："
-
-#, fuzzy
-#~ msgid "InterpolationMethod"
-#~ msgstr "內插："
-
-#~ msgid "Heavy"
-#~ msgstr "重"
-
-#~ msgid "Heavier"
-#~ msgstr "較重"
-
-#~ msgid "Heaviest"
-#~ msgstr "最重"
-
-#~ msgid "Degree of Leveling:"
-#~ msgstr "校平程度："
-
-#~ msgid "Noise Threshold:"
-#~ msgstr "噪音臨界值："
-
-#, fuzzy
-#~ msgid "RemoveDcOffset"
-#~ msgstr "正在移除直流偏移...\n"
-
-#, fuzzy
-#~ msgid "ApplyGain"
-#~ msgstr "套用連鎖指令"
-
-#, fuzzy
-#~ msgid "Stretch Factor"
-#~ msgstr "拉伸係數： "
-
-#, fuzzy
-#~ msgid "Time Resolution"
-#~ msgstr "時間解析度 (秒)："
-
-#, fuzzy
-#~ msgid "Freq"
-#~ msgstr "頻率"
-
-#, fuzzy
-#~ msgid "Phase"
-#~ msgstr "相位器"
-
-#, fuzzy
-#~ msgid "Depth"
-#~ msgstr "深度："
-
-#, fuzzy
-#~ msgid "Feedback"
-#~ msgstr "回授 (%)："
-
-#, fuzzy
-#~ msgid "RoomSize"
-#~ msgstr "空間大小 (%)："
-
-#, fuzzy
-#~ msgid "Reverberance"
-#~ msgstr "殘響 (%)："
-
-#, fuzzy
-#~ msgid "HfDamping"
-#~ msgstr "制音 (%)："
-
-#, fuzzy
-#~ msgid "ToneLow"
-#~ msgstr "低頻音 (%)："
-
-#, fuzzy
-#~ msgid "ToneHigh"
-#~ msgstr "高頻音 (%)："
-
-#, fuzzy
-#~ msgid "WetGain"
-#~ msgstr "增益"
-
-#, fuzzy
-#~ msgid "DryGain"
-#~ msgstr "增益"
-
-#, fuzzy
-#~ msgid "StereoWidth"
-#~ msgstr "立體聲寬度 (%)："
-
-#, fuzzy
-#~ msgid "WetOnly"
-#~ msgstr "僅效果音"
-
-#, fuzzy
-#~ msgid "FilterType"
-#~ msgstr "過濾器類型(&F)："
-
-#, fuzzy
-#~ msgid "FilterSubtype"
-#~ msgstr "過濾器類型(&F)："
-
-#, fuzzy
-#~ msgid "Order"
-#~ msgstr "順序(&R)："
-
-#, fuzzy
-#~ msgid "Cutoff"
-#~ msgstr "截止："
-
-#, fuzzy
-#~ msgid "PassbandRipple"
-#~ msgstr "通帶漣波(&P)："
-
-#, fuzzy
-#~ msgid "StopbandRipple"
-#~ msgstr "通帶漣波(&P)："
-
-#, fuzzy
-#~ msgid "RatePercentChangeStart"
-#~ msgstr "百分比變更"
-
-#, fuzzy
-#~ msgid "RatePercentChangeEnd"
-#~ msgstr "百分比變更"
-
-#, fuzzy
-#~ msgid "PitchPercentChangeStart"
-#~ msgstr "百分比變更"
-
-#, fuzzy
-#~ msgid "PitchPercentChangeEnd"
-#~ msgstr "百分比變更"
-
-#, fuzzy
-#~ msgid "StartFreq"
-#~ msgstr "起點"
-
-#, fuzzy
-#~ msgid "StartAmp"
-#~ msgstr "起點"
-
-#, fuzzy
-#~ msgid "Interpolation"
-#~ msgstr "內插："
-
-#, fuzzy
-#~ msgid "Truncate"
-#~ msgstr "截斷至："
-
-#, fuzzy
-#~ msgid "Version"
-#~ msgstr "正在反轉"
-
-#~ msgid "C&ategory:"
-#~ msgstr "類別(&A)："
-
-#~ msgid ""
-#~ "The keyboard shortcut '%s' is already assigned to:\n"
-#~ "\n"
-#~ "'%s'"
-#~ msgstr ""
-#~ "該鍵盤快速鍵 '%s' 已被指定給：\n"
-#~ "\n"
-#~ "'%s'"
-
-#, fuzzy
-#~ msgid "clang "
-#~ msgstr "鑲邊器"
-
-#~ msgid "Size"
-#~ msgstr "大小"
-
-#, fuzzy
-#~ msgid "Edit Me&tadata Tags..."
-#~ msgstr "編輯後設資料標籤"
-
-#~ msgid "Mo&ve Cursor"
-#~ msgstr "移動游標(&V)"
-
-#~ msgid "Fit &Vertically"
-#~ msgstr "適合垂直大小(&V)"
-
-#, fuzzy
-#~ msgid "Co&mbined Meter Toolbar"
-#~ msgstr "計量表工具列(&M)"
-
-#~ msgid "S&kip to Start"
-#~ msgstr "移到起點(&K)"
-
-#~ msgid "Skip to E&nd"
-#~ msgstr "移到終點(&N)"
-
-#~ msgid "Appen&d Record"
-#~ msgstr "附加錄製(&D)"
-
-#~ msgid "Stereo Trac&k to Mono"
-#~ msgstr "立體聲軌道轉為單聲道(&K)"
-
-#~ msgid "Move Sele&ction when Aligning"
-#~ msgstr "當對齊時移動選取部分(&C)"
-
-#~ msgid "&Mono"
-#~ msgstr "單聲道(&M)"
-
-#~ msgid "&Left Channel"
-#~ msgstr "左聲道(&L)"
-
-#~ msgid "&Right Channel"
-#~ msgstr "右聲道(&R)"
-
-#~ msgid "Click and drag to stretch within selected region."
-#~ msgstr "點選並拖動以在選擇區域內進行拉伸。"
-
-#, fuzzy
-#~ msgid "Click to move selection boundary to cursor."
-#~ msgstr "點選並拖動以移動選取部分左邊界。"
-
-#~ msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
-#~ msgstr "如要使用繪製，請選擇軌道下拉式選單中的 '波形'。"
-
-#, fuzzy
-#~ msgid "%.2f dB Average RMS"
-#~ msgstr "%.1f 分貝平均均方根"
-
-#, fuzzy
-#~ msgid "Average RMS = %.2f dB."
-#~ msgstr "平均均方根 = %.1f 分貝。"
-
-#, fuzzy
-#~ msgid "Average RMS = zero."
-#~ msgstr "平均均方根 = 零。"
-
-#, fuzzy
-#~ msgid "Average RMS =  dB."
-#~ msgstr "平均均方根 =  分貝。"
-
-#, fuzzy
-#~ msgid "You must select audio in the project window."
-#~ msgstr "您必須先選擇一個軌道。"
-
-#~ msgid "&Ergonomic order of Transport Toolbar buttons"
-#~ msgstr "播錄工具列按鈕以符合人體工學的方式排列(&E)"
-
-#~ msgid "S&how 'How to Get Help' dialog box at program start up"
-#~ msgstr "程式啟動時顯示「如何取得說明」對話框(&H)"
-
-#~ msgid "&Always mix all tracks down to Stereo or Mono channel(s)"
-#~ msgstr "始終將所有軌道混音為立體聲或單聲道"
-
-#~ msgid "&Use custom mix (for example to export a 5.1 multichannel file)"
-#~ msgstr "使用自訂混音 (例如：匯出一個 5.1 聲道檔案)(&U)"
-
-#~ msgid "When exporting track to an Allegro (.gro) file"
-#~ msgstr "當匯出軌道為 Allegro (.gro) 檔案時"
-
-#~ msgid "Represent times and durations in &seconds"
-#~ msgstr "以秒數為單位表示時間和持續時間(&S)"
-
-#~ msgid "Represent times and durations in &beats"
-#~ msgstr "以拍數為單位表示時間和持續時間(&B)"
-
-#, fuzzy
-#~ msgid "Host:"
-#~ msgstr "主機(&H)"
-
-#~ msgid "&Length of preview:"
-#~ msgstr "預覽長度(&L)："
-
-#, fuzzy
-#~ msgid "&Hardware Playthrough: Listen to input while recording or monitoring"
-#~ msgstr "硬體監播：當錄製或監聽新的軌道時可以同時收聽(&H)"
-
-#, fuzzy
-#~ msgid "&Software Playthrough: Listen to input while recording or monitoring"
-#~ msgstr "軟體監播：當錄製或監聽新的軌道時可以同時收聽(&S)"
-
-#, fuzzy
-#~ msgid "(uncheck when recording computer playback)"
-#~ msgstr "(當錄製「立體聲混音」時請取消勾選本選項)"
-
-#~ msgid "Audio to &buffer:"
-#~ msgstr "緩衝音訊(&B)："
-
-#~ msgid "milliseconds (higher = more latency)"
-#~ msgstr "毫秒 (越大 = 遲滯越久)"
-
-#~ msgid "L&atency correction:"
-#~ msgstr "遲滯修正(&A)："
-
-#~ msgid "milliseconds (negative = backwards)"
-#~ msgstr "毫秒 (負數 = 反向)"
-
-#~ msgid "Sound Activated &Recording"
-#~ msgstr "聲控啟動錄製(&R)"
-
-#~ msgid "Sound Activation Le&vel (dB):"
-#~ msgstr "聲控啟動強度 (分貝)(&V)："
-
-#, fuzzy
-#~ msgid "Add &Track Number"
-#~ msgstr "軌道編號"
-
-#~ msgid "S&how the spectrum using grayscale colors"
-#~ msgstr "使用灰階色彩來顯示頻譜(&H)"
-
-#~ msgid ""
-#~ "If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be "
-#~ "loaded\n"
-#~ "when the program starts up."
-#~ msgstr ""
-#~ "如果勾選「啟動時載入佈景主題快取」，佈景主題快取\n"
-#~ "將會在程式啟動時被載入。"
-
-#~ msgid "Load Theme Cache At Startup"
-#~ msgstr "啟動時載入佈景主題快取"
-
-#, fuzzy
-#~ msgid "&Update display when Recording/Playback head unpinned"
-#~ msgstr "當播放時更新顯示(&U)"
-
-#~ msgid "Automatically &fit tracks vertically zoomed"
-#~ msgstr "自動垂直縮放為適合軌道大小(&F)"
-
-#, fuzzy
-#~ msgid "&Select then act on entire project, if no audio selected"
-#~ msgstr "若未選擇任何音訊時，自動選擇專案內的所有音訊(&S)"
-
-#~ msgid "Enable &dragging of left and right selection edges"
-#~ msgstr "允許拖動選取部分左右兩側邊緣(&D)"
-
-#, fuzzy
-#~ msgid "Record Below"
-#~ msgstr "錄製計量表"
-
-#~ msgid "Fit Selection"
-#~ msgstr "適合選取部分"
-
-#~ msgid "Fit Project"
-#~ msgstr "適合專案"
-
-#~ msgid "Snap To:"
-#~ msgstr "貼齊："
-
-#~ msgid "hidden"
-#~ msgstr "隱藏"
-
-#~ msgid "Selection "
-#~ msgstr "選取部分"
-
-#~ msgid "Couldn't write to file \"%s\": %s"
-#~ msgstr "無法寫入到檔案 \"%s\"：%s"
-
-#~ msgid "Error Writing Autosave File"
-#~ msgstr "寫入自動儲存檔案時發生錯誤"
-
-#, fuzzy
-#~ msgid "Edit Metadata Tags for Export"
-#~ msgstr "編輯後設資料標籤"
-
-#~ msgid "Error Flushing File"
-#~ msgstr "清空檔案時發生錯誤"
-
-#~ msgid "Error Closing File"
-#~ msgstr "關閉檔案時發生錯誤"
-
-#~ msgid "OK... Audacious!"
-#~ msgstr "確定... 點此處！"
-
-#~ msgid "co-founder"
-#~ msgstr "共同建立者"
-
-#~ msgid "Audacity Support Team"
-#~ msgstr "Audacity 支援團隊"
-
-#~ msgid "Emeritus Developers"
-#~ msgstr "榮譽開發者"
-
-#~ msgid " Emeritus Team Members"
-#~ msgstr " 榮譽團隊成員"
-
-#~ msgid "<center><h3>How to Get Help</h3></center>"
-#~ msgstr "<center><h3>如何取得說明</h3></center>"
-
-#~ msgid "Welcome to Audacity "
-#~ msgstr "歡迎使用 Audacity "
-
-#~ msgid ""
-#~ " For even quicker answers, all the online resources above are "
-#~ "<b>searchable</b>."
-#~ msgstr "以上所有線上資源都是<b>可搜尋的</b>，可以使用搜尋引擎更快找到答案。"
-
-#~ msgid "Edit Metadata"
-#~ msgstr "編輯後設資料"
-
-#~ msgid "Disk space remains for recording %d hours and %d minutes."
-#~ msgstr "磁碟剩餘空間還可以錄製 %d 時 %d 分。"
-
-#~ msgid "Disk space remains for recording 1 hour and %d minutes."
-#~ msgstr "磁碟剩餘空間還可以錄製 1 時 %d 分。"
-
-#~ msgid "Disk space remains for recording %d seconds."
-#~ msgstr "磁碟剩餘空間還可以錄製 %d 秒。"
-
-#~ msgid "Out of disk space"
-#~ msgstr "磁碟空間不足"
-
-#~ msgid "Warning - Length in Writing Sequence"
-#~ msgstr "警告 - 在寫入序列中的長度"
-
-#~ msgid "Memory allocation failed -- NewSamples"
-#~ msgstr "憶體分配失敗 -- NewSamples"
-
-#~ msgid "Pre&view"
-#~ msgstr "預覽(&V)"
-
-#, fuzzy
-#~ msgid "R&ight Channel"
-#~ msgstr "右聲道"
-
-#~ msgid "Drag the track vertically to change the order of the tracks."
-#~ msgstr "垂直拖動軌道以變更軌道的順序。"
-
-#~ msgid "&Bass (dB):"
-#~ msgstr "低音 (分貝)(&B)："
-
-#~ msgid "&Enable level control"
-#~ msgstr "啟用強度控制(&E)"
-
-#~ msgid "    No change to apply."
-#~ msgstr "    無可套用的變更。"
-
-#~ msgid ":   Maximum 0 dB."
-#~ msgstr "：   最大 0 分貝。"
-
-#~ msgid "From beats per minute"
-#~ msgstr "從每分鐘拍數"
-
-#~ msgid "Length (seconds):"
-#~ msgstr "長度 (秒)："
-
-#, fuzzy
-#~ msgid "No wave tracks exist."
-#~ msgstr "已移除軌道 '%s'。"
-
-#~ msgid ""
-#~ "Start time after end time!\n"
-#~ "Please enter reasonable times."
-#~ msgstr ""
-#~ "起始時間位於結束時間之後！\n"
-#~ "請輸入合理的時間。"
-
-#~ msgid ""
-#~ "Times are not reasonable!\n"
-#~ "Please enter reasonable times."
-#~ msgstr ""
-#~ "時間不合理！\n"
-#~ "請輸入合理的時間。"
-
-#~ msgid "Please select something to be measured."
-#~ msgstr "請選擇要量測的目標。"
-
-#~ msgid "Please enter valid times."
-#~ msgstr "請輸入有效次數。"
-
-#~ msgid ""
-#~ "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
-#~ "Please press 'help' to visit the download page.\n"
-#~ "\n"
-#~ "Save the curves at %s"
-#~ msgstr ""
-#~ "在您的系統中找不到 EQCurves.xml 和 EQDefaultCurves.xml。\n"
-#~ "請按下 '說明' 來訪問下載頁面。\n"
-#~ "\n"
-#~ "將曲線儲存於 %s"
-
-#~ msgid "EQCurves.xml and EQDefaultCurves.xml missing"
-#~ msgstr "遺失 EQCurves.xml 和 EQDefaultCurves.xml"
-
-#~ msgid ""
-#~ "Error in Paulstretch:\n"
-#~ "The selection is too short.\n"
-#~ " It must be much longer than the Time Resolution."
-#~ msgstr ""
-#~ "Paulstretch 發生錯誤：\n"
-#~ "選取部分的時間太短。\n"
-#~ "選取部分的時間必須大於時間解析度。"
-
-#~ msgid "Host"
-#~ msgstr "主機"
-
-#, fuzzy
-#~ msgid "-Left-Click"
-#~ msgstr "左鍵點選"
-
-#, fuzzy
-#~ msgid "-Left-Double-Click"
-#~ msgstr "左鍵連點兩下"
-
-#~ msgid "Time shift clip or move up/down between tracks"
-#~ msgstr "剪輯進行時間位移或在軌道之間上下移動"
-
-#~ msgid "Zoom in or out on Mouse Pointer"
-#~ msgstr "在滑鼠指標處放大或縮小"
-
-#~ msgid ") / Loop Play ("
-#~ msgstr ") / 循環播放 ("
-
-#~ msgid ") / Append Record ("
-#~ msgstr ") / 附加錄製 ("
-
-#~ msgid "Multi-Tool Mode"
-#~ msgstr "多重工具模式"
-
-#, fuzzy
-#~ msgid "Recording Meter Preferences"
-#~ msgstr "計量表偏好設定"
-
-#, fuzzy
-#~ msgid "Playback Meter Preferences"
-#~ msgstr "計量表偏好設定"
-
-#, fuzzy
-#~ msgid "%ld bytes"
-#~ msgstr "位元組"
-
-#, fuzzy
-#~ msgid "Modified"
-#~ msgstr "已修改標籤"
-
-#, fuzzy
-#~ msgid "NewName"
-#~ msgstr "名稱"
-
-#, fuzzy
-#~ msgid "Go to parent directory"
-#~ msgstr ""
-#~ "無法建立目錄：\n"
-#~ "  %s"
-
-#, fuzzy
-#~ msgid "Current directory:"
-#~ msgstr "目前差異"
-
-#, fuzzy
-#~ msgid "Illegal file specification."
-#~ msgstr "緩衝區規格"
-
-#, fuzzy
-#~ msgid "Directory doesn't exist."
-#~ msgstr "%s 目錄不存在。是否建立？"
-
-#~ msgid "Spectrogram l&og(f)"
-#~ msgstr "頻譜圖對數(&O)"
-
-#, fuzzy
-#~ msgid "Spectral Selection lo&g(f)"
-#~ msgstr "選取部分"
-
-#~ msgid "Pitc&h (EAC)"
-#~ msgstr "音高 (EAC)(&H)"
-
-#~ msgid "Set Sample &Format"
-#~ msgstr "設定取樣格式(&F)"
-
-#~ msgid "Set Ra&nge..."
-#~ msgstr "設定範圍(&N)..."
-
-#~ msgid "Plug-ins %i to %i"
-#~ msgstr "外掛程式 %i 到 %i"
-
-#~ msgid "&Draw Curves"
-#~ msgstr "繪製曲線(&D)"
-
-#~ msgid "Save and Manage Curves"
-#~ msgstr "儲存和管理曲線"
-
-#~ msgid "G&rids"
-#~ msgstr "網格(&R)"
-
-#~ msgid "Grids"
-#~ msgstr "網格"
-
-#~ msgid "Default"
-#~ msgstr "預設值"
-
-#~ msgid "AVX"
-#~ msgstr "AVX"
-
-#~ msgid "AVX Threaded"
-#~ msgstr "AVX 執行緒"
-
-#, fuzzy
-#~ msgid ""
-#~ "Most Audio Unit effects have a graphical interface for setting parameter "
-#~ "values."
-#~ msgstr "大多數 VST 效果都有提供圖形介面可用於設定"
-
-#, fuzzy
-#~ msgid "LV2 Effects Module"
-#~ msgstr "VST 效果"
-
-#~ msgid "&Options..."
-#~ msgstr "選項(&O)..."
-
-#~ msgid "Specify Command Line Encoder"
-#~ msgstr "指定命令列編碼器"
-
-#~ msgid "Command Line Export Setup"
-#~ msgstr "命令列匯出設定"
-
-#~ msgid "Specify AC3 Options"
-#~ msgstr "指定 AC3 選項"
-
-#~ msgid "AC3 Export Setup"
-#~ msgstr "AC3 匯出設定"
-
-#~ msgid "Specify AAC Options"
-#~ msgstr "指定 AAC 選項"
-
-#~ msgid "AAC Export Setup"
-#~ msgstr "AAC 匯出設定"
-
-#~ msgid "Specify AMR-NB Options"
-#~ msgstr "指定 AMR-NB 選項"
-
-#~ msgid "AMR-NB Export Setup"
-#~ msgstr "AMR-NB 匯出設定"
-
-#~ msgid "Specify WMA Options"
-#~ msgstr "指定 WMA 選項"
-
-#~ msgid "WMA Export Setup"
-#~ msgstr "WMA 匯出設定"
-
-#~ msgid "Specify Other Options"
-#~ msgstr "指定其它選項"
-
-#~ msgid "Specify FLAC Options"
-#~ msgstr "指定 FLAC 選項"
-
-#~ msgid "FLAC Export Setup"
-#~ msgstr "FLAC 匯出設定"
-
-#~ msgid "Specify MP2 Options"
-#~ msgstr "指定 MP2 選項"
-
-#~ msgid "MP2 Export Setup"
-#~ msgstr "MP2 匯出設定"
-
-#~ msgid "Specify MP3 Options"
-#~ msgstr "指定 MP3 選項"
-
-#~ msgid "MP3 Export Setup"
-#~ msgstr "MP3 匯出設定"
-
-#~ msgid "Export format:"
-#~ msgstr "匯出格式："
-
-#~ msgid "Specify Ogg Vorbis Options"
-#~ msgstr "指定 Ogg Vorbis 選項"
-
-#~ msgid "Ogg Vorbis Export Setup"
-#~ msgstr "Ogg Vorbis 匯出設定"
-
-#~ msgid "Specify Uncompressed Options"
-#~ msgstr "指定非壓縮格式選項"
-
-#~ msgid "Uncompressed Export Setup"
-#~ msgstr "非壓縮格式匯出設定"
-
-#~ msgid "(Not all combinations of headers and encodings are possible.)"
-#~ msgstr "(並非所有的標頭與編碼的組合都是可行的。)"
-
-#~ msgid "There are no options for this format.\n"
-#~ msgstr "此格式沒有選項可以設定。\n"
-
-#, fuzzy
-#~ msgid "Your file will be exported as a \"%s\" file\n"
-#~ msgstr "您的檔案將會匯出為 GSM 6.10 WAV 檔案。\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "If you need more control over the export format please use the \"%s\" "
-#~ "format."
-#~ msgstr "如果你需要控制更多匯出格式的參數，請使用「其它非壓縮格式檔案」。"
-
-#~ msgid "Ctrl-Left-Drag"
-#~ msgstr "Ctrl-左鍵拖動"
-
-#, fuzzy
-#~ msgid "Ctrl-Left-Double-Click"
-#~ msgstr "左鍵連點兩下"
-
-#~ msgid "Ctrl-Wheel-Rotate"
-#~ msgstr "Ctrl-滾動滾輪"
-
-#~ msgid "Spectrogram log(f)"
-#~ msgstr "頻譜圖對數"
-
-#, fuzzy
-#~ msgid "Spectral Selection log(f)"
-#~ msgstr "選取部分"
-
-#~ msgid "Using block size of %ld\n"
-#~ msgstr "使用區塊大小 %ld\n"
-
-#~ msgid "Unknown command line option: %s\n"
-#~ msgstr "未知命令列選項：%s\n"
-
-#~ msgid "Command-line options supported:"
-#~ msgstr "支援的命令列選項："
-
-#~ msgid ""
-#~ "In addition, specify the name of an audio file or Audacity project to "
-#~ "open it."
-#~ msgstr "此外，請指定想要開啟的音訊檔案或 Audacity 專案名稱。"
-
-#~ msgid "Stereo to Mono Effect not found"
-#~ msgstr "找不到立體聲轉為單聲道的效果"
-
-#~ msgid "Cursor: %d Hz (%s) = %d dB    Peak: %d Hz (%s) = %.1f dB"
-#~ msgstr "游標位置：%d 赫茲 (%s) = %d 分貝    峰值：%d 赫茲 (%s) = %.1f 分貝"
-
-#~ msgid ""
-#~ "Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"
-#~ msgstr ""
-#~ "游標位置：%.4f 秒 (%d 赫茲) (%s) = %f，   峰值：%.4f 秒 (%d 赫茲) (%s) = "
-#~ "%.3f"
-
-#~ msgid "Plot Spectrum"
-#~ msgstr "描繪頻譜"
-
-#~ msgid "Drawing Spectrum"
-#~ msgstr "正在繪製頻譜"
-
-#~ msgid "&Audio Track"
-#~ msgstr "音訊軌道(&A)"
-
-#~ msgid "Unsorted"
-#~ msgstr "未排序"
-
-#~ msgid "&Select Plug-ins to Install or press ENTER to Install All"
-#~ msgstr "選擇想要安裝的外掛程式或是按下 Enter 鍵來安裝所有外掛程式(&S)"
-
-#~ msgid "High-quality Sinc Interpolation"
-#~ msgstr "高品質正弦內插"
-
-#~ msgid "Fast Sinc Interpolation"
-#~ msgstr "快速正弦內插"
-
-#~ msgid "Libsamplerate error: %d\n"
-#~ msgstr "Libsamplerate 錯誤：%d\n"
-
-#~ msgid "Applied effect: %s %.1f dB"
-#~ msgstr "套用的效果：%s %.1f 分貝"
-
-#~ msgid "Amplify..."
-#~ msgstr "增幅..."
-
-#~ msgid "Amplifying"
-#~ msgstr "正在增幅"
-
-#~ msgid "Please enter valid values."
-#~ msgstr "請輸入有效數值。"
-
-#~ msgid "Auto Duck..."
-#~ msgstr "自動閃避..."
-
-#~ msgid "Processing Auto Duck..."
-#~ msgstr "正在處理自動閃避..."
-
-#~ msgid "Applied effect: %s bass = %.1f dB, treble = %.1f dB"
-#~ msgstr "套用的效果：%s 低音 = %.1f 分貝，高音 = %.1f 分貝"
-
-#~ msgid ", level enabled at = %.1f dB"
-#~ msgstr "，強度已啟用 (位置 = %.1f 分貝)"
-
-#~ msgid ", level disabled"
-#~ msgstr "，強度已停用"
-
-#~ msgid "Adjusting Bass and Treble"
-#~ msgstr "正在調整低音和高音"
-
-#~ msgid "Applied effect: %s %.2f semitones"
-#~ msgstr "套用的效果：%s %.2f 半音"
-
-#~ msgid "Change Pitch..."
-#~ msgstr "變更音高..."
-
-#~ msgid "Changing Pitch"
-#~ msgstr "正在變更音高"
-
-#~ msgid "Applied effect: %s %.1f%%"
-#~ msgstr "套用的效果：%s %.1f%%"
-
-#~ msgid "Change Speed..."
-#~ msgstr "變更速度..."
-
-#~ msgid "Changing Speed"
-#~ msgstr "正在變更速度"
-
-#~ msgid "Change Tempo..."
-#~ msgstr "變更拍速..."
-
-#~ msgid "Changing Tempo"
-#~ msgstr "正在變更拍速"
-
-#~ msgid "Click Removal..."
-#~ msgstr "喀嚦聲移除..."
-
-#~ msgid "Applying Dynamic Range Compression..."
-#~ msgstr "正在套用動態範圍壓縮..."
-
-#~ msgid "DTMF Tone Generator"
-#~ msgstr "雙音多頻音建立器"
-
-#~ msgid "Applied effect: Generate DTMF tones, %.6lf seconds"
-#~ msgstr "套用的效果：建立雙音多頻音，%.6lf 秒"
-
-#~ msgid "Generating DTMF tones"
-#~ msgstr "正在建立雙音多頻音"
-
-#~ msgid "Applied effect: %s delay = %f seconds, decay factor = %f"
-#~ msgstr "套用的效果：%s 延遲 = %f 秒，衰減係數 = %f"
-
-#~ msgid "Echo..."
-#~ msgstr "回音..."
-
-#~ msgid "Performing Echo"
-#~ msgstr "正在執行回音"
-
-#, fuzzy
-#~ msgid "Applying "
-#~ msgstr "正在套用"
-
-#~ msgid "Oscillator"
-#~ msgstr "振盪器"
-
-#~ msgid "Utility"
-#~ msgstr "工具"
-
-#~ msgid "Converter"
-#~ msgstr "轉換器"
-
-#~ msgid "Analyser"
-#~ msgstr "分析器"
-
-#~ msgid "Simulator"
-#~ msgstr "模擬器"
-
-#~ msgid "Modulator"
-#~ msgstr "調變器"
-
-#~ msgid "Chorus"
-#~ msgstr "合聲"
-
-#~ msgid "Bandpass"
-#~ msgstr "帶通"
-
-#~ msgid "Comb"
-#~ msgstr "梳形"
-
-#~ msgid "Allpass"
-#~ msgstr "全通"
-
-#~ msgid "Equaliser"
-#~ msgstr "等化器"
-
-#~ msgid "Parametric"
-#~ msgstr "參數型"
-
-#~ msgid "Pitch Shifter"
-#~ msgstr "音高位移器"
-
-#~ msgid "Amplifier"
-#~ msgstr "增幅器"
-
-#~ msgid "Waveshaper"
-#~ msgstr "波形成形器"
-
-#~ msgid "Dynamics Processor"
-#~ msgstr "動態處理器"
-
-#~ msgid "Expander"
-#~ msgstr "擴展器"
-
-#~ msgid "Onsets"
-#~ msgstr "音首"
-
-#~ msgid "Equalization..."
-#~ msgstr "等化..."
-
-#~ msgid "Performing Equalization"
-#~ msgstr "正在執行等化..."
-
-#~ msgid "Fading In"
-#~ msgstr "正在淡入"
-
-#~ msgid "Fading Out"
-#~ msgstr "正在淡出"
-
-#~ msgid "Detect clipping"
-#~ msgstr "偵測削波"
-
-#~ msgid "Detecting clipping"
-#~ msgstr "正在偵測削波"
-
-#~ msgid "Inverting"
-#~ msgstr "正在倒轉"
-
-#~ msgid "Leveler..."
-#~ msgstr "校平器..."
-
-#~ msgid "Noise Generator"
-#~ msgstr "噪音建立器"
-
-#~ msgid "Noise..."
-#~ msgstr "噪音..."
-
-#~ msgid "Applied effect: Generate Noise, %.6lf seconds"
-#~ msgstr "套用的效果：建立噪音，%.6lf 秒"
-
-#~ msgid "Noise Removal..."
-#~ msgstr "噪音移除..."
-
-#~ msgid "Creating Noise Profile"
-#~ msgstr "正在建立噪音設定檔"
-
-#~ msgid ""
-#~ "Applied effect: %s remove dc offset = %s, normalize amplitude = %s, "
-#~ "stereo independent %s"
-#~ msgstr ""
-#~ "套用的效果：%s 移除直流偏移 = %s，正規化振幅 = %s，立體聲個別編碼 %s"
-
-#~ msgid "true"
-#~ msgstr "真"
-
-#~ msgid ", maximum amplitude = %.1f dB"
-#~ msgstr "，最大振幅 = %.1f 分貝"
-
-#~ msgid "Normalize..."
-#~ msgstr "正規化..."
-
-#~ msgid ""
-#~ "Applied effect: %s stretch factor = %f times, time resolution = %f seconds"
-#~ msgstr "套用的效果：%s 拉伸係數 = %f 倍，時間解析度 = %f 秒"
-
-#~ msgid "Stretching with Paulstretch"
-#~ msgstr "正在使用 Paulstretch 拉伸"
-
-#~ msgid ""
-#~ "Applied effect: %s %d stages, %.0f%% wet, frequency = %.1f Hz, start "
-#~ "phase = %.0f deg, depth = %d, feedback = %.0f%%"
-#~ msgstr ""
-#~ "套用的效果：%s %d 階段，%.0f%% 效果音，頻率 = %.1f 赫茲，起始相位 = %.0f "
-#~ "度，深度 = %d，回授 = %.0f%%"
-
-#~ msgid "Phaser..."
-#~ msgstr "相位器..."
-
-#~ msgid "Applying Phaser"
-#~ msgstr "正在套用相位器"
-
-#~ msgid "Repairing damaged audio"
-#~ msgstr "正在修復損壞的音訊"
-
-#~ msgid "Repeat..."
-#~ msgstr "重複..."
-
-#~ msgid ", Room Size = %.0f"
-#~ msgstr "，空間大小 = %.0f"
-
-#~ msgid ", Delay = %.0fms"
-#~ msgstr "，延遲 = %.0fms"
-
-#~ msgid ", Reverberance = %.0f%%"
-#~ msgstr "，殘響 = %.0f%%"
-
-#~ msgid ", Damping = %.0f%%"
-#~ msgstr "，制音 = %.0f%%"
-
-#~ msgid ", Tone Low = %.0f%%"
-#~ msgstr "，低頻音 = %.0f%%"
-
-#~ msgid ", Tone High = %.0f%%"
-#~ msgstr "，高頻音 = %.0f%%"
-
-#~ msgid ", Wet Gain = %.0fdB"
-#~ msgstr "，效果音增益 = %.0f 分貝"
-
-#~ msgid ", Dry Gain Size = %.0fdB"
-#~ msgstr "，原音增益大小 = %.0f 分貝"
-
-#~ msgid ", Stereo Width = %.0f%%"
-#~ msgstr "，立體聲寬度 = %.0f%%"
-
-#~ msgid ", Wet Only = %s"
-#~ msgstr "，僅效果音 = %s"
-
-#~ msgid "Presets:"
-#~ msgstr "預設集："
-
-#~ msgid "Lo&ad"
-#~ msgstr "載入(&A)"
-
-#~ msgid "User settings:"
-#~ msgstr "使用者設定："
-
-#~ msgid "Loa&d"
-#~ msgstr "載入(&D)"
-
-#~ msgid "R&ename"
-#~ msgstr "重新命名(&E)"
-
-#~ msgid "Reverb settings"
-#~ msgstr "殘響設定"
-
-#~ msgid "Load preset:"
-#~ msgstr "載入預設集："
-
-#~ msgid "Save current settings as:"
-#~ msgstr "目前設定另存為："
-
-#~ msgid "Rename settings:"
-#~ msgstr "重新命名設定："
-
-#~ msgid "Change name to:"
-#~ msgstr "將名稱變更為："
-
-#~ msgid "Reverb..."
-#~ msgstr "殘響..."
-
-#~ msgid "Applying Reverb"
-#~ msgstr "正在套用殘響"
-
-#~ msgid "Maximum passband attenuation (dB):"
-#~ msgstr "最大通帶衰減 (分貝)："
-
-#~ msgid "Classic Filters..."
-#~ msgstr "傳統過濾器..."
-
-#~ msgid "Silence..."
-#~ msgstr "靜音..."
-
-#~ msgid "Generating Silence"
-#~ msgstr "正在建立靜音"
-
-#~ msgid "Applied effect: Generate Silence, %.6lf seconds"
-#~ msgstr "套用的效果：建立靜音，%.6lf 秒"
-
-#~ msgid "Applying Stereo to Mono"
-#~ msgstr "正在套用立體聲轉為單聲道"
-
-#~ msgid "Sliding Time Scale/Pitch Shift..."
-#~ msgstr "滑動時間標度/音高位移..."
-
-#~ msgid "Changing Tempo/Pitch"
-#~ msgstr "正在變更拍速/音高"
-
-#~ msgid ""
-#~ "Applied effect: Generate %s wave %s, frequency = %.2f Hz, amplitude = "
-#~ "%.2f, %.6lf seconds"
-#~ msgstr "套用的效果：建立 %s 波 %s，頻率 = %.2f 赫茲，振幅 = %.2f，%.6lf 秒"
-
-#~ msgid "Chirp Generator"
-#~ msgstr "啁啾聲建立器"
-
-#~ msgid "Tone Generator"
-#~ msgstr "單音建立器"
-
-#~ msgid "Maximum detection duration: 10000 seconds."
-#~ msgstr "最大偵測持續時間：10,000 秒。"
-
-#~ msgid "Cannot truncate to less than 0 seconds."
-#~ msgstr "無法截斷至小於 0 秒。"
-
-#~ msgid "Maximum truncation length is 10000 seconds."
-#~ msgstr "最大截斷長度為 10,000 秒。"
-
-#~ msgid "Compression cannot be less than 0 percent."
-#~ msgstr "壓縮率不能小於 0 %。"
-
-#~ msgid "Compression must be less than 100 percent"
-#~ msgstr "壓縮率必須小於 100 %。"
-
-#~ msgid "Truncate Silence..."
-#~ msgstr "截斷靜音..."
-
-#~ msgid "Buffer Delay Compensation"
-#~ msgstr "緩衝區延遲補償"
-
-#, fuzzy
-#~ msgid "Rescan Effects"
-#~ msgstr "效果"
-
-#~ msgid "To improve Audacity startup, a search for VST effects is performed "
-#~ msgstr "為了提升 Audacity 啟動速度，已執行一次 VST 效果"
-
-#~ msgid "once and relevant information is recorded. When you add VST effects "
-#~ msgstr "搜尋，相關資訊也已被記錄。當要再加入 VST 效果"
-
-#~ msgid "to your system, you need to tell Audacity to rescan so the new "
-#~ msgstr "到您的系統時，您需要讓 Audacity 重新掃描，如此，"
-
-#~ msgid "&Rescan effects on next launch"
-#~ msgstr "下次執行時重新掃描效果(&R)"
-
-#~ msgid "VST Effect"
-#~ msgstr "VST 效果"
-
-#~ msgid ""
-#~ "Applied effect: %s frequency = %.1f Hz, start phase = %.0f deg, depth = "
-#~ "%.0f%%, resonance = %.1f, frequency offset = %.0f%%"
-#~ msgstr ""
-#~ "套用的效果：%s 頻率 = %.1f 赫茲，起始相位 = %.0f 度，深度 = %.0f%%，共鳴 "
-#~ "= %.1f，頻率偏移 = %.0f%%"
-
-#~ msgid "Wahwah..."
-#~ msgstr "哇音..."
-
-#~ msgid "Applying Wahwah"
-#~ msgstr "正在套用哇音"
-
-#~ msgid "Performing Effect: %s"
-#~ msgstr "正在執行效果：%s"
-
-#~ msgid "Author: "
-#~ msgstr "作者："
-
-#~ msgid ""
-#~ "Sorry, Plug-in Effects cannot be performed on stereo tracks where the "
-#~ "individual channels of the track do not match."
-#~ msgstr "抱歉，當立體聲軌道的軌道個別聲道不相符時無法執行外掛程式效果。"
-
-#~ msgid "Note length (seconds)"
-#~ msgstr "音符長度 (秒)"
-
-#~ msgid "Note velocity"
-#~ msgstr "音符力度"
-
-#~ msgid "Note key"
-#~ msgstr "音符音階"
-
-#~ msgid "Extracting features: %s"
-#~ msgstr "正在提取功能：%s"
-
-#~ msgid " - Vamp audio analysis plugin"
-#~ msgstr " - Vamp 音訊分析外掛程式"
-
-#~ msgid "GSM 6.10 WAV (mobile)"
-#~ msgstr "GSM 6.10 WAV (移動裝置)"
-
-#~ msgid "Your file will be exported as a 16-bit AIFF (Apple/SGI) file.\n"
-#~ msgstr "您的檔案將會匯出為 16 位元 AIFF (蘋果/SGI) 檔案。\n"
-
-#~ msgid "Your file will be exported as a 16-bit WAV (Microsoft) file.\n"
-#~ msgstr "您的檔案將會匯出為 16 位元 WAV (微軟) 檔案。\n"
-
-#~ msgid "Restart Audacity to apply changes."
-#~ msgstr "需要重新啟動 Audacity 才能套用變更。"
-
-#, fuzzy
-#~ msgid "Display effects in graphical mode when supported"
-#~ msgstr "使用圖形模式顯示 VST 效果(&D)"
-
-#, fuzzy
-#~ msgid "Recording Level (Click to monitor.)"
-#~ msgstr "輸入強度 (點選進行監聽。)"
-
-#, fuzzy
-#~ msgid "Spectral Selection Specifications"
-#~ msgstr "設定選取部分起點"
-
-#~ msgid "Enable Meter"
-#~ msgstr "啟用計量表"
-
-#, fuzzy
-#~ msgid "Stop Automated Recording Level Adjustment"
-#~ msgstr "停止輸入強度自動調整"
-
-#, fuzzy
-#~ msgid "Start Automated Recording Level Adjustment"
-#~ msgstr "開始輸入強度自動調整"
-
-#, fuzzy
-#~ msgid "Automated Recording Level Adjustment stopped as requested by user."
-#~ msgstr "輸入強度自動調整已依使用者要求停止。"
-
-#~ msgid "Vertical Ruler"
-#~ msgstr "垂直尺標"
-
-#~ msgid "&Quick Help (in web browser)"
-#~ msgstr "快速說明 (在網頁瀏覽器中開啟)(&Q)"
-
-#~ msgid "&Manual (in web browser)"
-#~ msgstr "使用手冊 (在網頁瀏覽器中開啟)(&M)"
-
-#~ msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
-#~ msgstr "多重工具模式：Ctrl-P，滑鼠和鍵盤偏好設定"
-
-#~ msgid "To RPM"
-#~ msgstr "到 RPM"
-
-#~ msgid "Install VST Effects"
-#~ msgstr "安裝 VST 效果"
-
-#~ msgid "VST GUI interfaces are currently unsupported on Linux"
-#~ msgstr "Linux 系統目前不支援 VST 圖形使用者介面"
-
-#~ msgid "Performing Effect: "
-#~ msgstr "正在執行效果："
-
-#~ msgid "Both channels of a stereo track must be the same sample rate."
-#~ msgstr "立體聲軌道的左右聲道必須具有相同的取樣頻率。"
-
-#~ msgid "Both channels of a stereo track must be the same length."
-#~ msgstr "立體聲軌道的左右聲道必須具有相同的長度。"
-
-#, fuzzy
-#~ msgid "Display Audio Unit effects in Graphical Mode"
-#~ msgstr "使用圖形模式顯示 Audio Unit 效果"
-
-#~ msgid "&Rescan VST effects next time Audacity is started"
-#~ msgstr "下一次 Audacity 啟動時重新掃描 VST 效果(&R)"
-
-#~ msgid "'New' is like 'Ask', but asks just once."
-#~ msgstr "'新增' 類似 '詢問'，但是只會詢問一次。"
-
-#~ msgid "Input Meter"
-#~ msgstr "輸入計量表"
-
-#~ msgid ""
-#~ "Recovering a project will not change any files on disk before you save it."
-#~ msgstr "復原一個專案在您將其儲存之前並不會變更磁碟上的任何檔案。"
-
-#~ msgid "Do Not Recover"
-#~ msgstr "不要復原"
-
-#~ msgid "Confirm?"
-#~ msgstr "是否確定？"
-
-#~ msgid "Change output device"
-#~ msgstr "變更輸出裝置"
-
-#~ msgid "Adjust output gain"
-#~ msgstr "調整輸出增益"
-
-#~ msgid "Increase output gain"
-#~ msgstr "提高輸出增益"
-
-#~ msgid "Decrease output gain"
-#~ msgstr "降低輸出增益"
-
-#~ msgid "Adjust input gain"
-#~ msgstr "調整輸入增益"
-
-#~ msgid "Increase input gain"
-#~ msgstr "提高輸入增益"
-
-#~ msgid "Decrease input gain"
-#~ msgstr "降低輸入增益"
-
-#~ msgid "Effect Refresh"
-#~ msgstr "效果重新整理"
-
-#~ msgid "Input Device"
-#~ msgstr "輸入裝置"
-
-#~ msgid "Input Channels"
-#~ msgstr "輸入聲道"
-
-#~ msgid "Select Output Device"
-#~ msgstr "選擇輸出裝置"
-
-#~ msgid "Output Volume"
-#~ msgstr "輸出音量"
-
-#~ msgid "Slider Output"
-#~ msgstr "輸出滑桿"
-
-#~ msgid "Input Volume"
-#~ msgstr "輸入音量"
-
-#~ msgid "Slider Input"
-#~ msgstr "輸入滑桿"
-
-#~ msgid "Output Volume (Unavailable; use system mixer.)"
-#~ msgstr "輸出音量 (不可用；使用系統混音器。)"
-
-#~ msgid "R&emove Audio or Labels"
-#~ msgstr "移除音訊或標籤(&E)"
-
-#~ msgid "Expo&rt Selection..."
-#~ msgstr "匯出選取部分(&R)..."
-
-#~ msgid "Foreground:"
-#~ msgstr "前景："
-
-#~ msgid "Contrast Result:"
-#~ msgstr "對比結果："
-
-#~ msgid "Difference:"
-#~ msgstr "差異："
-
-#~ msgid "WCAG 2 Help"
-#~ msgstr "WCAG 2 說明"
-
-#~ msgid "Waveform (d&B)"
-#~ msgstr "波形 (分貝)(&B)"
-
-#~ msgid "Spli&t Stereo Track"
-#~ msgstr "分割立體聲軌道(&T)"
-
-#~ msgid "Pre-delay (ms):"
-#~ msgstr "前置延遲 (毫秒)："
-
-#~ msgid "Dry Gain (dB):"
-#~ msgstr "原音增益 (分貝)："
-
-#~ msgid "Load"
-#~ msgstr "載入"
-
-#~ msgid "Rename"
-#~ msgstr "重新命名"
-
-#~ msgid "Percent Change: "
-#~ msgstr "百分比變更："
-
-#~ msgid "Make-up gain for 0dB after compressing"
-#~ msgstr "壓縮後增益補償 0 分貝"
-
-#~ msgid "Min silence duration:"
-#~ msgstr "最小靜音持續時間："
-
-#~ msgid "Max silence duration:"
-#~ msgstr "最大靜音持續時間："
-
-#~ msgid "Silence compression:"
-#~ msgstr "靜音壓縮："
-
-#~ msgid "Threshold for silence:"
-#~ msgstr "靜音臨界值："
-
-#~ msgid "About Audacity..."
-#~ msgstr "關於 Audacity..."
-
-#~ msgid ""
-#~ "If you find a bug or have a suggestion for us, please write to our <a "
-#~ "href=\"mailto:feedback@audacityteam.org\">feedback address</a>. For help, "
-#~ "view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/"
-#~ "\">wiki</a> or visit our <a href=\"http://forum.audacityteam.org/"
-#~ "\">forum</a>."
-#~ msgstr ""
-#~ "如果您發現程式臭蟲或是有任何建議，請撰寫電子郵件後\n"
-#~ "寄到<a href=\"mailto:feedback@audacityteam.org\">回饋信箱</a>。如要取得協"
-#~ "助，可以前往我們的 <a href=\"http://wiki.audacityteam.org/\">wiki</a> 或 "
-#~ "<a href=\"http://forum.audacityteam.org/\">論壇</a> \n"
-#~ "參閱提示和技巧。"
+#~ msgid "Debug build"
+#~ msgstr "除錯版本"
