@@ -306,6 +306,18 @@ namespace HelpActions {
 
 struct Handler : CommandHandlerObject {
 
+void OnResetConfig(const CommandContext &context)
+{
+   auto &project = context.project;
+   wxString dir = gPrefs->Read(wxT("/Directories/TempDir"));
+   gPrefs->DeleteAll();
+   gPrefs->Write(wxT("/Directories/TempDir"), dir);
+   // Code needed here to re-instate default menus.
+   gPrefs->Flush();
+   DoReloadPreferences(project);
+}
+
+
 void OnQuickFix(const CommandContext &context)
 {
    auto &project = context.project;
@@ -506,14 +518,17 @@ BaseItemSharedPtr HelpMenu()
             AlwaysEnabledFlag ),
          // DA: Emphasise it is the Audacity Manual (No separate DA manual).
          Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual),
-            AlwaysEnabledFlag )
+            AlwaysEnabledFlag ),
 
    #else
          Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
             AlwaysEnabledFlag ),
          Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
-            AlwaysEnabledFlag )
+            AlwaysEnabledFlag ),
    #endif
+         Command( wxT("ConfigReset"), XXO("Reset Configuration"),
+            FN(OnResetConfig),
+            AudioIONotBusyFlag() )
       ),
 
    #ifdef __WXMAC__
