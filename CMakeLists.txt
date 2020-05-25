@@ -430,9 +430,6 @@ add_subdirectory( "locale" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
 add_subdirectory( "src" )
-add_subdirectory( "cmake-proxies/mod-null" )
-add_subdirectory( "cmake-proxies/mod-nyq-bench" )
-add_subdirectory( "cmake-proxies/mod-script-pipe" )
 add_subdirectory( "scripts" )
 
 # Uncomment what follows for symbol values.

@@ -12,12 +12,6 @@ Version in Audacity SVN: 2.1.0
 Patches: None
 Upstream version: 2.1.0
 
-FileDialog
-----------
-The customised file saving dialogs for wxwidgets to provide the options
-button for format preferences. This is written and maintained by us so doesn't
-have an upstream at the moment.
-
 libflac
 -------
 http://flac.sourceforge.net/
@@ -114,9 +108,6 @@ Versions in Audacity SVN:
    sord-0.16.4
    sratom-0.6.4
    suil-0.10.6
-
-mod-script-pipe
----------------
 
 portaudio-v19
 -------------
