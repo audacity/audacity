@@ -236,13 +236,6 @@ void TrackArt::DrawNegativeOffsetTrackArrows(
 }
 
 
-#ifdef __GNUC__
-#define CONST
-#else
-#define CONST const
-#endif
-
-
 #ifdef USE_MIDI
 #endif // USE_MIDI
 
