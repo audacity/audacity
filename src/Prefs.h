@@ -272,4 +272,16 @@ private:
 /// becomes false.
 wxString WarningDialogKey(const wxString &internalDialogName);
 
+/*
+ Meant to be statically constructed.  A callback to repopulate configuration
+ files after a reset.
+ */
+struct PreferenceInitializer {
+   PreferenceInitializer();
+   virtual ~PreferenceInitializer();
+   virtual void operator () () = 0;
+
+   static void ReinitializeAll();
+};
+
 #endif

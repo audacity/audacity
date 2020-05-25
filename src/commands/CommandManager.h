@@ -21,6 +21,9 @@
 #include "CommandFlag.h"
 
 #include "Keyboard.h"
+
+#include "../Prefs.h"
+
 #include <vector>
 
 #include "../xml/XMLTagHandler.h"
@@ -663,7 +666,7 @@ namespace Registry {
    // registry of plug-ins, and something must be done to preserve old
    // behavior.  It can be done in the central place using string literal
    // identifiers only, not requiring static compilation or linkage dependency.
-   struct OrderingPreferenceInitializer {
+   struct OrderingPreferenceInitializer : PreferenceInitializer {
       using Literal = const wxChar *;
       using Pair = std::pair< Literal, Literal >;
       using Pairs = std::vector< Pair >;
@@ -674,7 +677,13 @@ namespace Registry {
          // (these should be blank or start with / and not end with /),
          // each with a ,-separated sequence of identifiers, which specify a
          // desired ordering at one node of the tree:
-         const Pairs &pairs );
+         Pairs pairs );
+
+      void operator () () override;
+
+   private:
+      Pairs mPairs;
+      Literal mRoot;
    };
 }
 

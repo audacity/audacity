@@ -966,6 +966,8 @@ wxString PrefsPanel::HelpPageName()
 
 void DoReloadPreferences( AudacityProject &project )
 {
+   PreferenceInitializer::ReinitializeAll();
+
    {
       GlobalPrefsDialog dialog(
          &GetProjectFrame( project ) /* parent */, &project );

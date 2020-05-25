@@ -1024,11 +1024,18 @@ void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItem *pRegistry )
 }
 
 OrderingPreferenceInitializer::OrderingPreferenceInitializer(
-   Literal root, const Pairs &pairs )
+   Literal root, Pairs pairs )
+   : mPairs{ std::move( pairs ) }
+   , mRoot{ root }
+{
+   (*this)();
+}
+
+void OrderingPreferenceInitializer::operator () ()
 {
    bool doFlush = false;
-   for (const auto &pair : pairs) {
-      const auto key = wxString{'/'} + root + pair.first;
+   for (const auto &pair : mPairs) {
+      const auto key = wxString{'/'} + mRoot + pair.first;
       if ( gPrefs->Read(key).empty() ) {
          gPrefs->Write( key, pair.second );
          doFlush = true;

@@ -407,3 +407,30 @@ wxString WarningDialogKey(const wxString &internalDialogName)
 }
 
 ByColumns_t ByColumns{};
+
+#include <set>
+
+namespace {
+   using PreferenceInitializers = std::set< PreferenceInitializer* >;
+   PreferenceInitializers &allInitializers()
+   {
+      static PreferenceInitializers theSet;
+      return theSet;
+   }
+}
+
+PreferenceInitializer::PreferenceInitializer()
+{
+   allInitializers().insert( this );
+}
+
+PreferenceInitializer::~PreferenceInitializer()
+{
+   allInitializers().erase( this );
+}
+
+void PreferenceInitializer::ReinitializeAll()
+{
+   for ( auto pInitializer : allInitializers() )
+      (*pInitializer)();
+}
