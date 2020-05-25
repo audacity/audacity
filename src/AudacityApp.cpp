@@ -2261,7 +2261,7 @@ void AudacityApp::AssociateFileTypes()
                associateFileTypes.SetName(root_key + wxT("Audacity.Project\\shell\\open\\command"));
                wxString tmpRegAudPath;
                if(associateFileTypes.Exists()) {
-                  tmpRegAudPath = wxString(associateFileTypes).Lower();
+                  tmpRegAudPath = associateFileTypes.QueryDefaultValue().Lower();
                }
                if (!associateFileTypes.Exists() ||
                      (tmpRegAudPath.Find(wxT("audacity.exe")) >= 0)) {
