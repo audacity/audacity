@@ -2059,7 +2059,7 @@ void ShuttleGuiBase::ApplyItem( int step, const DialogDefinition::Item &item,
          pWind->SetName( item.mName.Stripped().Translation() );
 #ifndef __WXMAC__
          if (auto pButton = dynamic_cast< wxBitmapButton* >( pWind ))
-            pButton->SetLabel(  item.mText.mName.Translation() );
+            pButton->SetLabel(  item.mName.Translation() );
 #endif
       }
 
