@@ -1084,6 +1084,7 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_VAMP}>:libvamp>
 #      $<$<BOOL:${USE_VAMP}>:libvamp-hostsdk>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GLIB>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GTK>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:z>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:pthread>
 )
