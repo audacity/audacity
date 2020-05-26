@@ -297,7 +297,7 @@ def main():
         print('No output file given', file=sys.stderr)
         sys.exit(1)
 
-    with open(opts[0][1], "w") as mo:
+    with open(opts[0][1], "wb") as mo:
         mo.write(Msgfmt(args[0]).get())
 
 if __name__ == '__main__':
