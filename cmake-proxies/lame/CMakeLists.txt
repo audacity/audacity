@@ -34,7 +34,7 @@ list( APPEND INCLUDES
       ${TARGET_ROOT}/lame
       ${TARGET_ROOT}/libmp3lame
    PUBLIC
-      ${TARGET}
+      ${TARGET_ROOT}
 )
 
 list( APPEND DEFINES
