@@ -234,6 +234,8 @@ list( APPEND SOURCES
       RealFFTf48x.h
       RefreshCode.h
       Registrar.h
+      Registry.cpp
+      Registry.h
       Resample.cpp
       Resample.h
       RingBuffer.cpp
