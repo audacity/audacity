@@ -1,8 +1,5 @@
 
-# FIXME:  Once switch to cmake is made, remove Windows pragmas
-#         from AudacityApp.cpp and change target name to "flac/flac++"
 add_library( ${TARGET} STATIC )
-add_library( ${TARGET}++ STATIC )
 
 def_vars()
 
@@ -41,9 +38,7 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/src/libFLAC/ogg_helper.c
       ${TARGET_ROOT}/src/libFLAC/ogg_mapping.c
       $<$<BOOL:${WIN32}>:${TARGET_ROOT}/src/share/win_utf8_io/win_utf8_io.c>
-)
 
-list( APPEND SOURCES++ 
       # libflac++
       ${TARGET_ROOT}/src/libFLAC++/metadata.cpp
       ${TARGET_ROOT}/src/libFLAC++/stream_decoder.cpp
@@ -68,12 +63,6 @@ list( APPEND DEFINES
 list( APPEND LIBRARIES
    PUBLIC
       libogg
-      libflac++
-)
-
-list( APPEND LIBRARIES++
-   PRIVATE
-      libflac
 )
 
 set( CPU_IS_BIG_ENDIAN ${WORDS_BIGENDIAN} )
@@ -90,10 +79,4 @@ target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
-
-organize_source( "${TARGET_ROOT}" "" "${SOURCES++}" )
-target_sources( ${TARGET}++ PRIVATE ${SOURCES++} )
-target_compile_definitions( ${TARGET}++ PRIVATE ${DEFINES} )
-target_include_directories( ${TARGET}++ PRIVATE ${INCLUDES} )
-target_link_libraries( ${TARGET}++ PRIVATE ${LIBRARIES++} )
 

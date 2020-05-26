@@ -1,7 +1,5 @@
 
 add_library( ${TARGET} STATIC )
-add_library( ${TARGET}enc ALIAS ${TARGET} )
-add_library( ${TARGET}file ALIAS ${TARGET} )
 
 def_vars()
 

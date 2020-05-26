@@ -1068,24 +1068,12 @@ list( APPEND LIBRARIES
       libsndfile
       libsoxr
       portaudio-v19
-#      $<$<BOOL:${USE_FFMPEG}>:ibavcodec>
-#      $<$<BOOL:${USE_FFMPEG}>:libavformat>
-#      $<$<BOOL:${USE_FFMPEG}>:libavutil>
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
-
-      # This flac mess can be resolved by removing the Windows pragmas
-      # in AudacityApp.cpp.
-      $<$<BOOL:${USE_LIBFLAC}>:flac>
-      $<$<BOOL:${USE_LIBFLAC}>:flac++>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
-
       $<$<BOOL:${USE_LIBMAD}>:libmad>
       $<$<BOOL:${USE_LIBOGG}>:libogg>
       $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
-#      $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
-#      $<$<BOOL:${USE_LIBVORBIS}>:libvorbisenc>
-#      $<$<BOOL:${USE_LIBVORBIS}>:libvorbisfile>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_LV2}>:lv2>
       $<$<BOOL:${USE_MIDI}>:portmidi>
@@ -1095,7 +1083,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_SBSMS}>:sbsms>
       $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
       $<$<BOOL:${USE_VAMP}>:libvamp>
-#      $<$<BOOL:${USE_VAMP}>:libvamp-hostsdk>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GLIB>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GTK>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:z>
