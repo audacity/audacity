@@ -27,6 +27,8 @@ class wxFont;
 class wxImage;
 class wxPen;
 
+class ChoiceSetting;
+
 // JKC: will probably change name from 'teBmps' to 'tIndexBmp';
 using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 
@@ -190,5 +192,9 @@ public:
 };
 
 extern AUDACITY_DLL_API Theme theTheme;
+
+extern ChoiceSetting
+     GUITheme
+;
 
 #endif // __AUDACITY_THEME__
