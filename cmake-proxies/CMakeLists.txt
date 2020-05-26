@@ -122,22 +122,6 @@ function( addlib dir name symbol required check )
          endif()
       endforeach()
    endif()
-
-   # Define a library alias for each of the packages
-   foreach( package ${packages} )
-      # Convert the package spec to a list
-      string( REPLACE " " ";" package "${package}" )
-
-      # And extract just the package name
-      list( GET package 0 package )
-
-      # But only if the package name doesn't conflict with the
-      # target name.
-      if( NOT TARGET ${package} )
-         # Create the alias
-         add_library( "${package}" ALIAS ${TARGET} )
-      endif()
-   endforeach()
 endfunction()
 
 # Required libraries
