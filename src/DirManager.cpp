@@ -1283,7 +1283,7 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
       //a summary file, so we should check before we copy.
       if(b->IsSummaryAvailable())
       {
-         if( !FileNames::CopyFile(fn.GetFullPath(),
+         if( !FileNames::DoCopyFile(fn.GetFullPath(),
                   newFile.GetFullPath()) )
             // Disk space exhaustion, maybe
             throw FileException{
@@ -1423,7 +1423,7 @@ std::pair<bool, FilePath> DirManager::LinkOrCopyToNewProjectDirectory(
             success = FileNames::HardLinkFile( oldPath, newPath );
          if (!success)
              link = false,
-             success = FileNames::CopyFile( oldPath, newPath );
+             success = FileNames::DoCopyFile( oldPath, newPath );
          if (!success)
             return { false, {} };
       }
@@ -1454,7 +1454,7 @@ std::pair<bool, FilePath> DirManager::LinkOrCopyToNewProjectDirectory(
          //if it doesn't, we can assume it was written to the NEW name, which is fine.
          if (oldFileName.FileExists())
          {
-            bool ok = FileNames::CopyFile(oldPath, newPath);
+            bool ok = FileNames::DoCopyFile(oldPath, newPath);
             if (!ok)
                return { false, {} };
          }

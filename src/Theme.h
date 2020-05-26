@@ -97,6 +97,8 @@ class AUDACITY_DLL_API ThemeBase /* not final */
 {
 public:
    ThemeBase(void);
+   ThemeBase ( const ThemeBase & ) = delete;
+   ThemeBase &operator =( const ThemeBase & ) = delete;
 public:
    virtual ~ThemeBase(void);
 

@@ -16,6 +16,8 @@
 
 #include "../Experimental.h"
 
+#include <wx/bitmap.h> // member variables
+
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
 #include <vector>

@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <wx/weakref.h> // member variable
+#include <wx/window.h> // MSVC wants this
 
 class wxFrame;
 class wxWindow;

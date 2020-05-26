@@ -1859,7 +1859,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             auto dstPath = dst.GetFullPath();
             if ( src.FileExists() )
                // A simple one-file plug-in
-               copied = FileNames::CopyFile(
+               copied = FileNames::DoCopyFile(
                   src.GetFullPath(), dstPath, true );
             else {
                // A sub-folder

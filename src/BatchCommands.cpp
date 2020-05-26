@@ -1097,7 +1097,7 @@ void MacroCommands::MigrateLegacyChains()
          newDir.SetFullName(name);
          const auto newPath = newDir.GetFullPath();
          if (!wxFileExists(newPath))
-            FileNames::CopyFile(file, newPath);
+            FileNames::DoCopyFile(file, newPath);
       }
       done = true;
    }

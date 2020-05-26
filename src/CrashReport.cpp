@@ -12,6 +12,10 @@
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 
+#if defined(__WXMSW__)
+#include <wx/evtloop.h>
+#endif
+
 #include "wxFileNameWrapper.h"
 #include "AudacityLogger.h"
 #include "AudioIOBase.h"

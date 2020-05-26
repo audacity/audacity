@@ -27,6 +27,8 @@ class AUDACITY_DLL_API FileHistory
  public:
    FileHistory(size_t maxfiles = 12, wxWindowID idbase = wxID_FILE);
    virtual ~FileHistory();
+   FileHistory( const FileHistory& ) = delete;
+   FileHistory &operator =( const FileHistory & ) = delete;
 
    // These constants define the range of IDs reserved by the global file history
    enum {
