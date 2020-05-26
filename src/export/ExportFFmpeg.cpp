@@ -55,8 +55,6 @@ function.
 // Define this to automatically resample audio to the nearest supported sample rate
 #define FFMPEG_AUTO_RESAMPLE 1
 
-extern FFmpegLibs *FFmpegLibsInst();
-
 static bool CheckFFmpegPresence(bool quiet = false)
 {
    bool result = true;
