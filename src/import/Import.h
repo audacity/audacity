@@ -20,7 +20,7 @@
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include "../FileNames.h" // for FileType
 
-#include "../commands/CommandManager.h" // for Registry::Placement
+#include "../Registry.h"
 
 class wxArrayString;
 class wxListBox;
