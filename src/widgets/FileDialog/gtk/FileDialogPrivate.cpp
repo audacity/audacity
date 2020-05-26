@@ -11,8 +11,6 @@
 
 #include <gtk/gtk.h>
 
-#include "../FileDialog.h"
-
 #include "wx/intl.h"
 #include "wx/msgdlg.h"
 

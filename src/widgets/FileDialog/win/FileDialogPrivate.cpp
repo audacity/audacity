@@ -49,8 +49,6 @@
 #include <wx/modalhook.h>
 #include <wx/filectrl.h>
 
-#include "../FileDialog.h"
-
 #include <shlobj.h>
 
 // ----------------------------------------------------------------------------
