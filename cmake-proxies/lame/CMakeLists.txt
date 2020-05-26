@@ -12,7 +12,6 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/../libmp3lame/gain_analysis.c
       ${TARGET_ROOT}/../libmp3lame/id3tag.c
       ${TARGET_ROOT}/../libmp3lame/lame.c
-      ${TARGET_ROOT}/../libmp3lame/mpglib_interface.c
       ${TARGET_ROOT}/../libmp3lame/newmdct.c
       ${TARGET_ROOT}/../libmp3lame/presets.c
       ${TARGET_ROOT}/../libmp3lame/psymodel.c
@@ -27,23 +26,12 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/../libmp3lame/VbrTag.c
       ${TARGET_ROOT}/../libmp3lame/version.c
       ${TARGET_ROOT}/../libmp3lame/vector/xmm_quantize_sub.c
-
-      # mpglib
-      ${TARGET_ROOT}/../mpglib/common.c
-      ${TARGET_ROOT}/../mpglib/dct64_i386.c
-      ${TARGET_ROOT}/../mpglib/decode_i386.c
-      ${TARGET_ROOT}/../mpglib/interface.c
-      ${TARGET_ROOT}/../mpglib/layer1.c
-      ${TARGET_ROOT}/../mpglib/layer2.c
-      ${TARGET_ROOT}/../mpglib/layer3.c
-      ${TARGET_ROOT}/../mpglib/tabinit.c
 )
 
 list( APPEND INCLUDES
    PRIVATE
       ${_PRVDIR}
       ${TARGET_ROOT}/../libmp3lame
-      ${TARGET_ROOT}/../mpglib
    PUBLIC
       ${_PUBDIR}
 )
@@ -83,8 +71,6 @@ elseif( SIZEOF_LONG_LONG EQUAL 8 )
    set( A_INT64_T long long )
 endif()
 
-set( DECODE_ON_THE_FLY 1 )
-set( HAVE_MPGLIB 1 )
 set( TAKEHIRO_IEEE754_HACK 1 )
 set( USE_FAST_LOG 1 )
 if( ${CMakeDetermineASM_NASMCompiler} )
