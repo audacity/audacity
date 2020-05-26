@@ -1221,20 +1221,19 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    )
    set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}" )
 
-   # These sources must be compiled as Objective C++
+   # These sources must be compiled as Objective C++ and excluded
+   # from precompiled header usage
    set_source_files_properties(
       KeyboardCapture.cpp
       effects/EffectUI.cpp
+      effects/VST/VSTControlOSX.mm
+      effects/audiounits/AUControl.mm
       menus/WindowMenus.cpp
+      widgets/FileDialog/mac/FileDialogPrivate.mm
       PROPERTIES
          COMPILE_FLAGS "-x objective-c++"
+         SKIP_PRECOMPILE_HEADERS YES
    )
-
-   # Because of the "misidentified" Objective C++ sources listed above,
-   # we can only use precompiled headers if also using Xcode.
-   if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode" )
-      set( PRECOMP )
-   endif()
 
    # Add our required frameworks
    list( APPEND LIBRARIES
