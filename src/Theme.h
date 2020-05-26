@@ -28,7 +28,7 @@ class wxImage;
 class wxPen;
 
 // JKC: will probably change name from 'teBmps' to 'tIndexBmp';
-typedef int teBmps; /// The index of a bitmap resource in Theme Resources.
+using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 
 enum teResourceType
 {

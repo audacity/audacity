@@ -25,6 +25,7 @@
 #include "FileNames.h"
 #include "Internat.h"
 #include "AllThemeResources.h"
+#include "Theme.h"
 
 
 wxString HtmlColourOfIndex( int i ){

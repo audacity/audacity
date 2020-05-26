@@ -46,6 +46,7 @@ audio tracks.
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "prefs/GUIPrefs.h"
+#include "Theme.h"
 #include "Track.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"

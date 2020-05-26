@@ -43,6 +43,7 @@
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
+#include "Theme.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "TrackUtilities.h"
 #include "UndoManager.h"

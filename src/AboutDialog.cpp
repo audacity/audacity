@@ -46,6 +46,7 @@ hold information about one contributor to Audacity.
 #include "widgets/HelpSystem.h"
 
 #include "AllThemeResources.h"
+#include "Theme.h"
 
 // DA: Logo for About box.
 #ifdef EXPERIMENTAL_DA

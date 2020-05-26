@@ -64,6 +64,7 @@ or ASlider.
 #include "../ProjectStatus.h"
 #include "../ProjectWindowBase.h"
 #include "../ShuttleGui.h"
+#include "../Theme.h"
 
 #include "../AllThemeResources.h"
 

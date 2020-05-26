@@ -67,6 +67,7 @@ list( APPEND SOURCES
       AboutDialog.h
       AdornedRulerPanel.cpp
       AdornedRulerPanel.h
+      AllThemeResources.cpp
       AllThemeResources.h
       AttachedVirtualFunction.h
       Audacity.h
