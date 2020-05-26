@@ -20,7 +20,7 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Window
 
 3. wxWidgets:
 
- 1) Clone wxWidgets and checkout 3.1.1 from the Audacity fork of the 
+ 1) Clone wxWidgets and checkout 3.1.3 from the Audacity fork of the 
     wxWidgets project: 
        https://github.com/audacity/wxWidgets/
 
@@ -33,12 +33,18 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Window
       git submodule update --init
 
   2) Follow instructions for building at 
-    https://github.com/audacity/wxWidgets/blob/v3.1.1/README-GIT.md
-    https://github.com/audacity/wxWidgets/blob/v3.1.1/docs/msw/install.txt
+    https://github.com/audacity/wxWidgets/blob/audacity-fixes-3.1.3/README-GIT.md
+    https://github.com/audacity/wxWidgets/blob/audacity-fixes-3.1.3/docs/msw/install.md
 
-    DO set WXWIN to the appropriate directory where you installed wxWidgets.
-    To do that, open a cmd.exe window, and type: 
-       set WXWIN=C:\wxWidgets-3.1.1
+    Set WXWIN environment variable to the appropriate directory where you installed 
+    wxWidgets. This will tell CMake where to find wxWidgets later.
+
+    To set WXWIN, click on Settings (the cogwheel icon from the start menu)
+    Then in the 'find settings' search box type 'env'.
+    Choose 'Edit the system environment variables'
+    Then the 'Environment Variables' button 
+    Then in system variables, for variable and value,  add (for example)     
+        WXWIN         C:\wxWidgets-3.1.3
 
     You will be building a dll version with MSVC2017 IDE, so...
 
@@ -60,6 +66,21 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Window
 
     Audacity itself does not use/need git submodules.
 
-  2) in MSVC 2017 open audacity.sln
+
+ 2) Open the CMake GUI.
+     Set the 'Where is the source code' location to where your copy of the git repo is.
+     Set the 'Where to build the binaries' to where you want the results.
+
+    Click on configure.
+    (notice where it found / did not find wxWidgets if it did not find wxwidgets check 
+    that you set WXWIN coreectly )
+
+ 3) Click on Generate.
+
+ 4) Click on Open Project.
+
+    From here on you should be able to use the project.
+
+ 5)
     Choose Release or Debug.
     Click compile.
