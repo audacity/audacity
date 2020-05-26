@@ -147,16 +147,16 @@ wxString EffectManager::GetCommandUrl(const PluginID & ID)
    return wxEmptyString;
 }
 
-wxString EffectManager::GetCommandTip(const PluginID & ID)
+TranslatableString EffectManager::GetCommandTip(const PluginID & ID)
 {
    Effect* pEff = GetEffect(ID);
    if( pEff )
-      return pEff->GetDescription().Translation();
+      return pEff->GetDescription();
    AudacityCommand * pCom = GetAudacityCommand(ID);
    if( pCom )
-      return pCom->GetDescription().Translation();
+      return pCom->GetDescription();
 
-   return wxEmptyString;
+   return {};
 }
 
 
@@ -192,7 +192,7 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
    }
    S.AddItem( GetCommandUrl( ID ), "url" );
    // The tip is a translated string!
-   S.AddItem( GetCommandTip( ID ), "tip" );
+   S.AddItem( GetCommandTip( ID ).Translation(), "tip" );
    S.EndStruct();
 }
 
