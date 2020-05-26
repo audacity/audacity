@@ -6,34 +6,35 @@ def_vars()
 list( APPEND SOURCES
    PRIVATE
       # libmp3lame
-      ${TARGET_ROOT}/../libmp3lame/bitstream.c
-      ${TARGET_ROOT}/../libmp3lame/encoder.c
-      ${TARGET_ROOT}/../libmp3lame/fft.c
-      ${TARGET_ROOT}/../libmp3lame/gain_analysis.c
-      ${TARGET_ROOT}/../libmp3lame/id3tag.c
-      ${TARGET_ROOT}/../libmp3lame/lame.c
-      ${TARGET_ROOT}/../libmp3lame/newmdct.c
-      ${TARGET_ROOT}/../libmp3lame/presets.c
-      ${TARGET_ROOT}/../libmp3lame/psymodel.c
-      ${TARGET_ROOT}/../libmp3lame/quantize.c
-      ${TARGET_ROOT}/../libmp3lame/quantize_pvt.c
-      ${TARGET_ROOT}/../libmp3lame/reservoir.c
-      ${TARGET_ROOT}/../libmp3lame/set_get.c
-      ${TARGET_ROOT}/../libmp3lame/tables.c
-      ${TARGET_ROOT}/../libmp3lame/takehiro.c
-      ${TARGET_ROOT}/../libmp3lame/util.c
-      ${TARGET_ROOT}/../libmp3lame/vbrquantize.c
-      ${TARGET_ROOT}/../libmp3lame/VbrTag.c
-      ${TARGET_ROOT}/../libmp3lame/version.c
-      ${TARGET_ROOT}/../libmp3lame/vector/xmm_quantize_sub.c
+      ${TARGET_ROOT}/libmp3lame/bitstream.c
+      ${TARGET_ROOT}/libmp3lame/encoder.c
+      ${TARGET_ROOT}/libmp3lame/fft.c
+      ${TARGET_ROOT}/libmp3lame/gain_analysis.c
+      ${TARGET_ROOT}/libmp3lame/id3tag.c
+      ${TARGET_ROOT}/libmp3lame/lame.c
+      ${TARGET_ROOT}/libmp3lame/newmdct.c
+      ${TARGET_ROOT}/libmp3lame/presets.c
+      ${TARGET_ROOT}/libmp3lame/psymodel.c
+      ${TARGET_ROOT}/libmp3lame/quantize.c
+      ${TARGET_ROOT}/libmp3lame/quantize_pvt.c
+      ${TARGET_ROOT}/libmp3lame/reservoir.c
+      ${TARGET_ROOT}/libmp3lame/set_get.c
+      ${TARGET_ROOT}/libmp3lame/tables.c
+      ${TARGET_ROOT}/libmp3lame/takehiro.c
+      ${TARGET_ROOT}/libmp3lame/util.c
+      ${TARGET_ROOT}/libmp3lame/vbrquantize.c
+      ${TARGET_ROOT}/libmp3lame/VbrTag.c
+      ${TARGET_ROOT}/libmp3lame/version.c
+      ${TARGET_ROOT}/libmp3lame/vector/xmm_quantize_sub.c
 )
 
 list( APPEND INCLUDES
    PRIVATE
       ${_PRVDIR}
-      ${TARGET_ROOT}/../libmp3lame
+      ${TARGET_ROOT}/lame
+      ${TARGET_ROOT}/libmp3lame
    PUBLIC
-      ${_PUBDIR}
+      ${TARGET}
 )
 
 list( APPEND DEFINES
@@ -78,7 +79,6 @@ if( ${CMakeDetermineASM_NASMCompiler} )
 endif()
 
 configure_file( config.h.in private/config.h )
-configure_file( ${TARGET_ROOT}/../libmp3lame/lame.h public/lame/lame.h )
 
 #organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
