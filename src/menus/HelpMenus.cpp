@@ -311,10 +311,14 @@ void OnResetConfig(const CommandContext &context)
    auto &project = context.project;
    wxString dir = gPrefs->Read(wxT("/Directories/TempDir"));
    gPrefs->DeleteAll();
+   // This stops ReloadPreferences warning about directory change
+   // on next restart.
    gPrefs->Write(wxT("/Directories/TempDir"), dir);
-   // Code needed here to re-instate default menus.
    gPrefs->Flush();
    DoReloadPreferences(project);
+   // OnResetToolBars(context);
+   gPrefs->Flush();
+
 }
 
 
