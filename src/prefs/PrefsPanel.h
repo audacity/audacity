@@ -30,7 +30,7 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 #include <functional>
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include "../include/audacity/ComponentInterface.h"
-#include "../commands/CommandManager.h"
+#include "../Registry.h"
 
 /* A few constants for an attempt at semi-uniformity */
 #define PREFS_FONT_SIZE     8
