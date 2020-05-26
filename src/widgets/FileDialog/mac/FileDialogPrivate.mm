@@ -24,6 +24,8 @@
 // For compilers that support precompilation, includes "wx.h".
 #include <wx/wxprec.h>
 
+#include "../FileDialog.h"
+
 #ifndef WX_PRECOMP
     #include <wx/msgdlg.h>
     #include <wx/app.h>
