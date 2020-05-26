@@ -183,11 +183,6 @@ can't be.
 #endif
 
 
-// This declares the variables such as
-// int BmpRecordButton = -1;
-#define THEME_DECLARATIONS
-#include "AllThemeResources.h"
-
 // Include the ImageCache...
 
 static const unsigned char DarkImageCacheAsData[] = {

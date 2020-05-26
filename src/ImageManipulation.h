@@ -41,7 +41,7 @@ std::unique_ptr<wxImage> OverlayImage(wxImage * background, wxImage * foreground
 
 
 // JKC: will probably change name from 'teBmps' to 'tIndexBmp';
-typedef int teBmps; /// The index of a bitmap resource in Theme Resources.
+using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 
 // Same idea, but this time the mask is an alpha channel in
 // the foreground bitmap, and it's all retrieved from Themes.
