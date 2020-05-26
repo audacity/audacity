@@ -881,7 +881,7 @@ static bool ShowCommFileDialog(OPENFILENAME *of, long style)
       // common dialog failed - why?
       if (errCode != 0)
       {
-         wxLogError(_("File dialog failed with error code %0lx."), errCode);
+         wxLogError(wxT("File dialog failed with error code %0lx."), errCode);
       }
       //else: it was just cancelled
 

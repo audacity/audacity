@@ -26,6 +26,8 @@
 #include <wx/modalhook.h>
 #include <wx/sizer.h>
 
+#include "../../../Internat.h" // For macro _
+
 #define wxGTK_CONV(s) (s).utf8_str()
 #define wxGTK_CONV_FN(s) (s).fn_str()
 
