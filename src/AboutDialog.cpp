@@ -80,8 +80,6 @@ static const auto ProgramName =
    //XO("Audacity");
    Verbatim("Audacity");
 
-extern wxString FormatHtmlText( const wxString & Text );
-
 void AboutDialog::CreateCreditsList()
 {
    const auto sysAdminFormat =

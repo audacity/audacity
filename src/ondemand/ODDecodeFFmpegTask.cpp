@@ -32,9 +32,6 @@
 #include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
 
 
-extern FFmpegLibs *FFmpegLibsInst();
-
-
 #define ODFFMPEG_SEEKING_TEST_UNKNOWN 0
 #define ODFFMPEG_SEEKING_TEST_FAILED -1
 #define ODFFMPEG_SEEKING_TEST_SUCCESS 1

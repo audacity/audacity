@@ -163,8 +163,6 @@ static const auto exts = {
 #include "../ondemand/ODDecodeFFmpegTask.h"
 #endif
 
-extern FFmpegLibs *FFmpegLibsInst();
-
 class FFmpegImportFileHandle;
 
 /// A representative of FFmpeg loader in
