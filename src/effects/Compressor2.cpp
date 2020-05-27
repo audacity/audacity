@@ -166,7 +166,7 @@ SlidingMaxPreprocessor::SlidingMaxPreprocessor(size_t windowSize)
 
 float SlidingMaxPreprocessor::ProcessSample(float value)
 {
-   return DoProcessSample(value);
+   return DoProcessSample(fabs(value));
 }
 
 float SlidingMaxPreprocessor::ProcessSample(float valueL, float valueR)
@@ -226,8 +226,8 @@ size_t EnvelopeDetector::GetBlockSize() const
 }
 
 ExpFitEnvelopeDetector::ExpFitEnvelopeDetector(
-   float rate, float attackTime, float releaseTime)
-   : EnvelopeDetector(TAU_FACTOR * (attackTime + 1.0) * rate)
+   float rate, float attackTime, float releaseTime, size_t bufferSize)
+   : EnvelopeDetector(bufferSize)
 {
    mAttackFactor = exp(-1.0 / (rate * attackTime));
    mReleaseFactor = exp(-1.0 / (rate * releaseTime));
@@ -316,8 +316,9 @@ void ExpFitEnvelopeDetector::Follow()
 }
 
 Pt1EnvelopeDetector::Pt1EnvelopeDetector(
-   float rate, float attackTime, float releaseTime, bool correctGain)
-   : EnvelopeDetector(TAU_FACTOR * (attackTime + 1.0) * rate)
+   float rate, float attackTime, float releaseTime, size_t bufferSize,
+   bool correctGain)
+   : EnvelopeDetector(bufferSize)
 {
    // Approximate peak amplitude correction factor.
    if(correctGain)
@@ -345,6 +346,49 @@ void Pt1EnvelopeDetector::Follow()
          level += mReleaseFactor * (mProcessingBuffer[i] - level);
       mProcessingBuffer[i] = level * mGainCorrection;
    }
+}
+
+void PipelineBuffer::pad_to(size_t len, float value, bool stereo)
+{
+   if(size < len)
+   {
+      size = len;
+      std::fill(mBlockBuffer[0].get() + trackSize,
+         mBlockBuffer[0].get() + size, value);
+      if(stereo)
+         std::fill(mBlockBuffer[1].get() + trackSize,
+            mBlockBuffer[1].get() + size, value);
+   }
+}
+
+void PipelineBuffer::swap(PipelineBuffer& other)
+{
+   std::swap(trackPos, other.trackPos);
+   std::swap(trackSize, other.trackSize);
+   std::swap(size, other.size);
+   std::swap(mBlockBuffer[0], other.mBlockBuffer[0]);
+   std::swap(mBlockBuffer[1], other.mBlockBuffer[1]);
+}
+
+void PipelineBuffer::init(size_t capacity, bool stereo)
+{
+   trackPos = 0;
+   trackSize = 0;
+   size = 0;
+   mCapacity = capacity;
+   mBlockBuffer[0].reinit(capacity);
+   std::fill(mBlockBuffer[0].get(), mBlockBuffer[0].get() + capacity, 0);
+   if(stereo)
+   {
+      mBlockBuffer[1].reinit(capacity);
+      std::fill(mBlockBuffer[1].get(), mBlockBuffer[1].get() + capacity, 0);
+   }
+}
+
+void PipelineBuffer::free()
+{
+   mBlockBuffer[0].reset();
+   mBlockBuffer[1].reset();
 }
 
 EffectCompressor2::EffectCompressor2()
@@ -503,7 +547,52 @@ bool EffectCompressor2::Startup()
 
 bool EffectCompressor2::Process()
 {
-   return false;
+   // Iterate over each track
+   this->CopyInputTracks(); // Set up mOutputTracks.
+   bool bGoodResult = true;
+
+   AllocPipeline();
+   mProgressVal = 0;
+
+   for(auto track : mOutputTracks->Selected<WaveTrack>()
+      + (mStereoInd ? &Track::Any : &Track::IsLeader))
+   {
+      // Get start and end times from track
+      // PRL: No accounting for multiple channels ?
+      double trackStart = track->GetStartTime();
+      double trackEnd = track->GetEndTime();
+
+      // Set the current bounds to whichever left marker is
+      // greater and whichever right marker is less:
+      mCurT0 = mT0 < trackStart? trackStart: mT0;
+      mCurT1 = mT1 > trackEnd? trackEnd: mT1;
+
+      // Get the track rate
+      mSampleRate = track->GetRate();
+
+      auto range = mStereoInd
+         ? TrackList::SingletonRange(track)
+         : TrackList::Channels(track);
+
+      mProcStereo = range.size() > 1;
+
+      InitGainCalculation();
+      mPreproc = InitPreprocessor(mSampleRate);
+      mEnvelope = InitEnvelope(mSampleRate, mPipeline[0].capacity());
+
+      if(!ProcessOne(range))
+      {
+         // Processing failed -> abort
+         bGoodResult = false;
+         break;
+      }
+   }
+
+   this->ReplaceProcessedTracks(bGoodResult);
+   mPreproc.reset(nullptr);
+   mEnvelope.reset(nullptr);
+   FreePipeline();
+   return bGoodResult;
 }
 
 void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
@@ -726,6 +815,7 @@ bool EffectCompressor2::TransferDataFromWindow()
 
 void EffectCompressor2::InitGainCalculation()
 {
+   mDryWet = mDryWetPct / 100.0;
    mMakeupGainDB = mMakeupGainPct / 100.0 *
       -(mThresholdDB * (1.0 - 1.0 / mRatio));
    mMakeupGain = DB_TO_LINEAR(mMakeupGainDB);
@@ -761,6 +851,282 @@ double EffectCompressor2::CompressorGain(double env)
          * pow(envDB - mThresholdDB + mKneeWidthDB / 2.0, 2)
          / (2.0 * mKneeWidthDB) + mMakeupGainDB);
    }
+}
+
+std::unique_ptr<SamplePreprocessor> EffectCompressor2::InitPreprocessor(
+   double rate, bool preview)
+{
+   size_t window_size =
+      std::max(1, int(round((mLookaheadTime + mLookbehindTime) * rate)));
+
+   if(mCompressBy == kAmplitude)
+      return std::unique_ptr<SamplePreprocessor>(safenew
+         SlidingMaxPreprocessor(window_size));
+   else
+      return std::unique_ptr<SamplePreprocessor>(safenew
+         SlidingRmsPreprocessor(window_size, preview ? 1.0 : 2.0));
+}
+
+std::unique_ptr<EnvelopeDetector> EffectCompressor2::InitEnvelope(
+   double rate, size_t blockSize, bool preview)
+{
+   if(mAlgorithm == kExpFit)
+      return std::unique_ptr<EnvelopeDetector>(safenew
+         ExpFitEnvelopeDetector(rate, mAttackTime, mReleaseTime, blockSize));
+   else
+      return std::unique_ptr<EnvelopeDetector>(safenew
+         Pt1EnvelopeDetector(rate, mAttackTime, mReleaseTime, blockSize,
+            !preview && mCompressBy != kAmplitude));
+}
+
+size_t EffectCompressor2::CalcBufferSize(size_t sampleRate)
+{
+   size_t capacity;
+
+   mLookaheadLength =
+      std::max(0, int(round(mLookaheadTime * sampleRate)));
+   capacity = mLookaheadLength +
+      size_t(float(TAU_FACTOR) * (1.0 + mAttackTime) * sampleRate);
+   if(capacity < MIN_BUFFER_CAPACITY)
+      capacity = MIN_BUFFER_CAPACITY;
+   return capacity;
+}
+
+/// Get required buffer size for the largest whole track and allocate buffers.
+/// This reduces the amount of allocations required.
+void EffectCompressor2::AllocPipeline()
+{
+   bool stereoTrackFound = false;
+   double maxSampleRate = 0;
+   size_t capacity;
+
+   mProcStereo = false;
+
+   for(auto track : mOutputTracks->Selected<WaveTrack>() + &Track::Any)
+   {
+      maxSampleRate = std::max(maxSampleRate, track->GetRate());
+
+      // There is a stereo track
+      if(track->IsLeader())
+         stereoTrackFound = true;
+   }
+
+   // Initiate a processing quad-buffer. This buffer will (most likely)
+   // be shorter than the length of the track being processed.
+   stereoTrackFound = stereoTrackFound && !mStereoInd;
+   capacity = CalcBufferSize(maxSampleRate);
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+      mPipeline[i].init(capacity, stereoTrackFound);
+}
+
+void EffectCompressor2::FreePipeline()
+{
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+      mPipeline[i].free();
+}
+
+void EffectCompressor2::SwapPipeline()
+{
+   ++mProgressVal;
+   for(size_t i = 0; i < PIPELINE_DEPTH-1; ++i)
+      mPipeline[i].swap(mPipeline[i+1]);
+   std::cerr << "\n";
+}
+
+/// ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
+/// and executes ProcessData, on it...
+bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
+{
+   WaveTrack* track = *range.begin();
+
+   // Transform the marker timepoints to samples
+   const auto start = track->TimeToLongSamples(mCurT0);
+   const auto end   = track->TimeToLongSamples(mCurT1);
+
+   // Get the length of the buffer (as double). len is
+   // used simply to calculate a progress meter, so it is easier
+   // to make it a double now than it is to do it later
+   mTrackLen = (end - start).as_double();
+
+   // Abort if the right marker is not to the right of the left marker
+   if(mCurT1 <= mCurT0)
+      return false;
+
+   // Go through the track one buffer at a time. s counts which
+   // sample the current buffer starts at.
+   auto pos = start;
+
+   mProgressVal = 0;
+   while(pos < end)
+   {
+      StorePipeline(range);
+      SwapPipeline();
+
+      const size_t remainingLen = (end - pos).as_size_t();
+
+      // Get a block of samples (smaller than the size of the buffer)
+      // Adjust the block size if it is the final block in the track
+      const auto blockLen = limitSampleBufferSize(
+         remainingLen, mPipeline[PIPELINE_DEPTH-1].capacity());
+
+      mPipeline[PIPELINE_DEPTH-1].trackPos = pos;
+      if(!LoadPipeline(range, blockLen))
+         return false;
+
+      if(mPipeline[0].size == 0)
+         FillPipeline();
+      else
+         ProcessPipeline();
+
+      // Increment s one blockfull of samples
+      pos += blockLen;
+   }
+
+   // Handle short selections
+   while(mPipeline[1].size == 0)
+   {
+      SwapPipeline();
+      FillPipeline();
+   }
+
+   while(PipelineHasData())
+   {
+      StorePipeline(range);
+      SwapPipeline();
+      DrainPipeline();
+   }
+   StorePipeline(range);
+
+   // Return true because the effect processing succeeded ... unless cancelled
+   return true;
+}
+
+bool EffectCompressor2::LoadPipeline(
+   TrackIterRange<WaveTrack> range, size_t len)
+{
+   sampleCount read_size = -1;
+   sampleCount last_read_size = -1;
+   // Get the samples from the track and put them in the buffer
+   int idx = 0;
+   for(auto channel : range)
+   {
+      channel->Get((samplePtr) mPipeline[PIPELINE_DEPTH-1][idx],
+         floatSample, mPipeline[PIPELINE_DEPTH-1].trackPos, len,
+         fillZero, true, &read_size);
+      // WaveTrack::Get returns the amount of read samples excluding zero
+      // filled samples from clip gaps. But in case of stereo tracks with
+      // assymetric gaps it still returns the same number for both channels.
+      //
+      // Fail if we read different sample count from stereo pair tracks.
+      // Ignore this check during first iteration (last_read_size == -1).
+      if(read_size != last_read_size && last_read_size.as_long_long() != -1)
+         return false;
+      mPipeline[PIPELINE_DEPTH-1].trackSize = read_size.as_size_t();
+      mPipeline[PIPELINE_DEPTH-1].size = read_size.as_size_t();
+      ++idx;
+   }
+
+   wxASSERT(mPipeline[PIPELINE_DEPTH-2].trackSize == 0 ||
+      mPipeline[PIPELINE_DEPTH-2].trackSize >=
+      mPipeline[PIPELINE_DEPTH-1].trackSize);
+   return true;
+}
+
+void EffectCompressor2::FillPipeline()
+{
+   // TODO: correct end conditions
+   mPipeline[PIPELINE_DEPTH-1].pad_to(mEnvelope->GetBlockSize(), 0, mProcStereo);
+
+   size_t length = mPipeline[PIPELINE_DEPTH-1].size;
+   for(size_t rp = mLookaheadLength, wp = 0; wp < length; ++rp, ++wp)
+   {
+      // TODO: correct initial conditions
+      if(rp < length)
+         EnvelopeSample(mPipeline[PIPELINE_DEPTH-2], rp);
+      else
+         EnvelopeSample(mPipeline[PIPELINE_DEPTH-1], rp % length);
+   }
+}
+
+void EffectCompressor2::ProcessPipeline()
+{
+   float env;
+   size_t length = mPipeline[0].size;
+
+   for(size_t i = 0; i < PIPELINE_DEPTH-2; ++i)
+      { wxASSERT(mPipeline[0].size == mPipeline[i+1].size); }
+
+   for(size_t rp = mLookaheadLength, wp = 0; wp < length; ++rp, ++wp)
+   {
+      if(rp < length)
+         env = EnvelopeSample(mPipeline[PIPELINE_DEPTH-2], rp);
+      else if((rp % length) < mPipeline[PIPELINE_DEPTH-1].size)
+         env = EnvelopeSample(mPipeline[PIPELINE_DEPTH-1], rp % length);
+      else
+         // TODO: correct end condition
+         env = mEnvelope->ProcessSample(mPreproc->ProcessSample(0.0));
+      CompressSample(env, wp);
+   }
+}
+
+inline float EffectCompressor2::EnvelopeSample(PipelineBuffer& pbuf, size_t rp)
+{
+   float preprocessed;
+   if(mProcStereo)
+      preprocessed = mPreproc->ProcessSample(pbuf[0][rp], pbuf[1][rp]);
+   else
+      preprocessed = mPreproc->ProcessSample(pbuf[0][rp]);
+   return mEnvelope->ProcessSample(preprocessed);
+}
+
+inline void EffectCompressor2::CompressSample(float env, size_t wp)
+{
+   float gain = (1.0 - mDryWet) + CompressorGain(env) * mDryWet;
+   mPipeline[0][0][wp] = mPipeline[0][0][wp] * gain;
+   if(mProcStereo)
+      mPipeline[0][1][wp] = mPipeline[0][1][wp] * gain;
+}
+
+bool EffectCompressor2::PipelineHasData()
+{
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+   {
+      if(mPipeline[i].size != 0)
+         return true;
+   }
+   return false;
+}
+
+void EffectCompressor2::DrainPipeline()
+{
+   float env;
+   size_t length = mPipeline[0].size;
+   size_t length2 = mPipeline[PIPELINE_DEPTH-2].size;
+   for(size_t rp = mLookaheadLength, wp = 0; wp < length; ++rp, ++wp)
+   {
+      if(rp < length2 && mPipeline[PIPELINE_DEPTH-2].size != 0)
+      {
+         env = EnvelopeSample(mPipeline[PIPELINE_DEPTH-2], rp);
+      }
+      else
+         // TODO: correct end condition
+         env = mEnvelope->ProcessSample(mPreproc->ProcessSample(0.0));
+      CompressSample(env, wp);
+   }
+}
+
+void EffectCompressor2::StorePipeline(TrackIterRange<WaveTrack> range)
+{
+   int idx = 0;
+   for(auto channel : range)
+   {
+      // Copy the newly-changed samples back onto the track.
+      channel->Set((samplePtr) mPipeline[0][idx],
+         floatSample, mPipeline[0].trackPos, mPipeline[0].trackSize);
+      ++idx;
+   }
+   mPipeline[0].trackSize = 0;
+   mPipeline[0].size = 0;
 }
 
 void EffectCompressor2::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
@@ -804,30 +1170,17 @@ void EffectCompressor2::UpdateResponsePlot()
    std::unique_ptr<EnvelopeDetector> envelope;
    float plot_rate = RESPONSE_PLOT_SAMPLES / RESPONSE_PLOT_TIME;
 
-   size_t window_size =
-      std::max(1, int(round((mLookaheadTime + mLookbehindTime) * plot_rate)));
    size_t lookahead_size =
       std::max(0, int(round(mLookaheadTime * plot_rate)));
+   ssize_t block_size = float(TAU_FACTOR) * (mAttackTime + 1.0) * plot_rate;
 
-   if(mCompressBy == kRMS)
-      preproc = std::unique_ptr<SamplePreprocessor>(
-         safenew SlidingRmsPreprocessor(window_size, 1.0));
-   else
-      preproc = std::unique_ptr<SamplePreprocessor>(
-         safenew SlidingMaxPreprocessor(window_size));
-
-   if(mAlgorithm == kExpFit)
-      envelope = std::unique_ptr<EnvelopeDetector>(
-         safenew ExpFitEnvelopeDetector(plot_rate, mAttackTime, mReleaseTime));
-   else
-      envelope = std::unique_ptr<EnvelopeDetector>(
-         safenew Pt1EnvelopeDetector(plot_rate, mAttackTime, mReleaseTime, false));
+   preproc = InitPreprocessor(plot_rate, true);
+   envelope = InitEnvelope(plot_rate, block_size, true);
 
    ssize_t step_start = RESPONSE_PLOT_STEP_START * plot_rate - lookahead_size;
    ssize_t step_stop = RESPONSE_PLOT_STEP_STOP * plot_rate - lookahead_size;
 
    ssize_t xsize = plot->xdata.size();
-   ssize_t block_size = envelope->GetBlockSize();
    for(ssize_t i = -lookahead_size; i < 2*block_size; ++i)
    {
       if(i < step_start || i > step_stop)

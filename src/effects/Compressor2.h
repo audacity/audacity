@@ -75,8 +75,6 @@ class EnvelopeDetector
       float ProcessSample(float value);
       size_t GetBlockSize() const;
    protected:
-      static const int TAU_FACTOR = 5;
-
       size_t mPos;
       std::vector<float> mLookaheadBuffer;
       std::vector<float> mProcessingBuffer;
@@ -88,7 +86,8 @@ class EnvelopeDetector
 class ExpFitEnvelopeDetector : public EnvelopeDetector
 {
    public:
-      ExpFitEnvelopeDetector(float rate, float attackTime, float releaseTime);
+      ExpFitEnvelopeDetector(float rate, float attackTime, float releaseTime,
+         size_t buffer_size = 0);
 
    private:
       double mAttackFactor;
@@ -101,7 +100,7 @@ class Pt1EnvelopeDetector : public EnvelopeDetector
 {
    public:
       Pt1EnvelopeDetector(float rate, float attackTime, float releaseTime,
-         bool correctGain = true);
+         size_t buffer_size = 0, bool correctGain = true);
 
    private:
       double mGainCorrection;
@@ -109,6 +108,27 @@ class Pt1EnvelopeDetector : public EnvelopeDetector
       double mReleaseFactor;
 
       virtual void Follow();
+};
+
+struct PipelineBuffer
+{
+   public:
+      sampleCount trackPos;
+      size_t trackSize;
+      size_t size;
+
+      inline float* operator[](size_t idx)
+         { return mBlockBuffer[idx].get(); }
+
+      void pad_to(size_t len, float value, bool stereo);
+      void swap(PipelineBuffer& other);
+      void init(size_t size, bool stereo);
+      inline size_t capacity() const { return mCapacity; }
+      void free();
+
+   private:
+      size_t mCapacity;
+      Floats mBlockBuffer[2];
 };
 
 class EffectCompressor2 final : public Effect
@@ -148,12 +168,45 @@ private:
    // EffectCompressor2 implementation
    void InitGainCalculation();
    double CompressorGain(double env);
+   std::unique_ptr<SamplePreprocessor> InitPreprocessor(
+      double rate, bool preview = false);
+   std::unique_ptr<EnvelopeDetector> InitEnvelope(
+      double rate, size_t blockSize = 0, bool preview = false);
+   size_t CalcBufferSize(size_t sampleRate);
+
+   void AllocPipeline();
+   void FreePipeline();
+   void SwapPipeline();
+   bool ProcessOne(TrackIterRange<WaveTrack> range);
+   bool LoadPipeline(TrackIterRange<WaveTrack> range, size_t len);
+   void FillPipeline();
+   void ProcessPipeline();
+   inline float EnvelopeSample(PipelineBuffer& pbuf, size_t rp);
+   inline void CompressSample(float env, size_t wp);
+   bool PipelineHasData();
+   void DrainPipeline();
+   void StorePipeline(TrackIterRange<WaveTrack> range);
 
    bool UpdateProgress();
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
    void UpdateCompressorPlot();
    void UpdateResponsePlot();
+
+   static const int TAU_FACTOR = 5;
+   static const size_t MIN_BUFFER_CAPACITY = 1048576; // 1MB
+
+   static const size_t PIPELINE_DEPTH = 4;
+   PipelineBuffer mPipeline[PIPELINE_DEPTH];
+
+   double mCurT0;
+   double mCurT1;
+   double mProgressVal;
+   double mTrackLen;
+   bool mProcStereo;
+
+   std::unique_ptr<SamplePreprocessor> mPreproc;
+   std::unique_ptr<EnvelopeDetector> mEnvelope;
 
    int    mAlgorithm;
    int    mCompressBy;
@@ -170,8 +223,10 @@ private:
    double    mDryWetPct;
 
    // cached intermediate values
+   double mDryWet;
    double mMakeupGain;
    double mMakeupGainDB;
+   size_t mLookaheadLength;
 
    static const size_t RESPONSE_PLOT_SAMPLES = 200;
    static const size_t RESPONSE_PLOT_TIME = 5;
