@@ -116,13 +116,20 @@ list( APPEND OPTIONS
 )
 
 if( CMAKE_C_COMPILER_ID MATCHES "MSVC" )
-    cmake_push_check_state( RESET )
-    set( CMAKE_EXTRA_INCLUDE_FILES "BaseTsd.h" )
-    check_type_size( "SSIZE_T" SIZEOF_SSIZE LANGUAGE C )
-    list( APPEND DEFINES ssize_t=SSIZE_T )
-    cmake_pop_check_state()
+   cmake_push_check_state( RESET )
+   set( CMAKE_EXTRA_INCLUDE_FILES "BaseTsd.h" )
+   check_type_size( "SSIZE_T" SIZEOF_SSIZE_T LANGUAGE C )
+   cmake_pop_check_state()
+
+   if( HAVE_SIZEOF_SSIZE_T )
+      list( APPEND DEFINES ssize_t=SSIZE_T )
+   endif()
 else()
-    check_type_size( "ssize_t" SIZEOF_SSIZE LANGUAGE C )
+   check_type_size( "ssize_t" SIZEOF_SSIZE_T LANGUAGE C )
+endif()
+
+if( HAVE_SIZEOF_SSIZE_T )
+   set( HAVE_SSIZE_T YES )
 endif()
 
 set( TYPEOF_SF_COUNT_T "int64_t" )
