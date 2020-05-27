@@ -11,21 +11,18 @@ Features:
    This allows you to read and write HTML documents
    programmably, with much flexibility.
  - Extract and modify URLs in an HTML document.
- - Compatible with Python 2.0 - 2.5.
+ - Compatible with Python 3+
 
 See the L{examples} for a quick start.
 
+Moved to Python3 by Jack Thomson May 2020
+
 """
 
-__version__ = '1.1.1'
+__version__ = '1.1.2'
 
 __all__ = ['examples', 'tagextract', 'tagjoin', 'urlextract',
            'urljoin', 'URLMatch']
-
-# Define True and False for Python < 2.2.
-import sys
-if sys.version_info[:3] < (2, 2, 0):
-    exec "True = 1; False = 0"
 
 # -------------------------------------------------------------------
 # Globals
@@ -34,8 +31,8 @@ if sys.version_info[:3] < (2, 2, 0):
 import re
 import shlex
 import string
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 import types
 
 # Translate text between these strings as plain text (not HTML).
@@ -164,7 +161,7 @@ def tagjoin(L):
             else:
                 rslash = ''
             tag_items = []
-            items = d.items()
+            items = list(d.items())
             items.sort()
             for (key, value) in items:
                 if value != None:
@@ -189,7 +186,7 @@ def _enumerate(L):
 
     Returns a list instead of an iterator.
     """
-    return zip(range(len(L)), L)
+    return list(zip(list(range(len(L))), L))
 
 def _ignore_tag_index(s, i):
     """
@@ -261,7 +258,7 @@ def _html_split(s):
                 found = False
                 in_quot1 = False
                 in_quot2 = False
-                for i2 in xrange(i + 1, len(s)):
+                for i2 in range(i + 1, len(s)):
                     c2 = s[i2]
                     if c2 == '"' and not in_quot1:
                         in_quot2 = not in_quot2
@@ -521,7 +518,7 @@ def _test_tag_dict():
     s = ' \r\nbg = val text \t= "hi you" name\t e="5"\t\t\t\n'
     (a, b, c) = _tag_dict(s)
     assert a == {'text': 'hi you', 'bg': 'val', 'e': '5', 'name': None}
-    for key in a.keys():
+    for key in list(a.keys()):
         assert s[b[key][0]:b[key][1]] == key
         if a[key] != None:
             assert s[c[key][0]:c[key][1]] == a[key]
@@ -609,7 +606,7 @@ def _full_tag_extract(s):
 
                 (attrs, key_pos, value_pos) = _tag_dict(dtext)
                 # Correct offsets in key_pos and value_pos.
-                for key in attrs.keys():
+                for key in list(attrs.keys()):
                     key_pos[key] = (key_pos[key][0] + Lstart[i] + dtext_offset,
                                       key_pos[key][1] + Lstart[i] + dtext_offset)
                     value_pos[key] = (value_pos[key][0] + Lstart[i] + dtext_offset,
@@ -720,7 +717,7 @@ _URL_TAGS = ['a href', 'applet archive', 'applet code',
             'script src', 'table background', 'tbody background',
             'td background', 'tfoot background', 'th background',
             'thead background', 'tr background']
-_URL_TAGS = map(lambda s: tuple(s.split()), _URL_TAGS)
+_URL_TAGS = [tuple(s.split()) for s in _URL_TAGS]
 
 
 def _finditer(pattern, string):
@@ -862,7 +859,7 @@ def urlextract(doc, siteurl=None, mimetype='text/html'):
                     pass
             else:
                 # Current item is a tag.
-                if item.attrs.has_key('style'):
+                if 'style' in item.attrs:
                     # Process a stylesheet embedded in the 'style' attribute.
                     temp = urlextract(item.attrs['style'], siteurl, 'text/css')
                     # Offset indices and add to ans.
@@ -872,7 +869,7 @@ def urlextract(doc, siteurl=None, mimetype='text/html'):
                     ans += temp
 
                 for (a, b) in _URL_TAGS:
-                    if item.name.startswith(a) and b in item.attrs.keys():
+                    if item.name.startswith(a) and b in list(item.attrs.keys()):
                         # Got one URL.
                         url = item.attrs[b]
                         # FIXME: Some HTML tag wants a URL list, look up which
@@ -893,7 +890,7 @@ def urlextract(doc, siteurl=None, mimetype='text/html'):
     start_end_map = {}
     filtered_ans = []
     for item in ans:
-        if not start_end_map.has_key((item.start, item.end)):
+        if (item.start, item.end) not in start_end_map:
             start_end_map[(item.start, item.end)] = None
             filtered_ans.append(item)
     return filtered_ans
@@ -1090,7 +1087,7 @@ def examples():
     the offending IP address.
 
     """
-    print examples.__doc__
+    print(examples.__doc__)
 
 class URLMatch:
     """
@@ -1137,7 +1134,7 @@ class URLMatch:
         self.in_css = in_css
 
         if siteurl != None:
-            self.url = urlparse.urljoin(siteurl, self.url)
+            self.url = urllib.parse.urljoin(siteurl, self.url)
 
         self.tag_attr = tag_attr
         self.tag_attrs = tag_attrs
@@ -1154,15 +1151,15 @@ def _cast_to_str(arg, str_class):
     """
     if _is_str(arg):
         return str_class(arg)
-    elif isinstance(arg, types.ListType):
+    elif isinstance(arg, list):
         ans = []
         for item in arg:
             if _is_str(item):
                 ans.append(str_class(item))
-            elif isinstance(item, types.TupleType) and len(item) == 2:
+            elif isinstance(item, tuple) and len(item) == 2:
                 (a, b) = item
                 b_prime = {}
-                for (b_key, b_value) in b.items():
+                for (b_key, b_value) in list(b.items()):
                     if b_value is None:
                         b_prime[str_class(b_key)] = None
                     else:
@@ -1321,7 +1318,7 @@ def _test_tagextract(str_class=str):
         L = _full_tag_extract(s)
         for (i, item) in _enumerate(L):
             if isinstance(item, _HTMLTag):
-                for key in item.attrs.keys():
+                for key in list(item.attrs.keys()):
                     assert s[item.key_pos[key][0]:item.key_pos[key][1]].lower()\
                            == key
                     if item.attrs[key] != None:
@@ -1460,7 +1457,7 @@ def _test_urlextract(str_class=str):
     base = f('http://www.python.org/~guido/')
     L = urlextract(s, base)
     L2 = [x.url for x in L]
-    assert L2 == [urlparse.urljoin(base, x) for x in ans]
+    assert L2 == [urllib.parse.urljoin(base, x) for x in ans]
 
     # Test urljoin().
     assert urljoin(doc1, urlextract(doc1, mimetype='text/css')) == doc1
@@ -1485,17 +1482,6 @@ def _test_urlextract(str_class=str):
     assert L2 == f(['foo', 'a.gif', 'bar.css', 'b.html'])
     assert [s[x.start:x.end] == x.url for x in L].count(False) == 0
 
-def _python_has_unicode():
-    """
-    True iff Python was compiled with unicode().
-    """
-    try:
-        unicode
-        return True
-    except:
-        return False
-
-
 # -------------------------------------------------------------------
 # Unit Test Main Routine
 # -------------------------------------------------------------------
@@ -1504,32 +1490,30 @@ def _test():
     """
     Unit test main routine.
     """
-    print 'Unit tests:'
+    print('Unit tests:')
     _test_remove_comments()
-    print '  _remove_comments:       OK'
+    print('  _remove_comments:       OK')
     _test_shlex_split()
-    print '  _shlex_split:           OK'
+    print('  _shlex_split:           OK')
     _test_tag_dict()
-    print '  _tag_dict:              OK'
+    print('  _tag_dict:              OK')
     _test_tuple_replace()
-    print '  _tuple_replace:         OK'
+    print('  _tuple_replace:         OK')
 
     _test_tagextract()
-    print '  tagextract*:            OK'
+    print('  tagextract*:            OK')
 
-    if _python_has_unicode():
-        _test_tagextract(unicode)
-        print '  tagextract (unicode)*:  OK'
+    _test_tagextract(str)
+    print('  tagextract (unicode)*:  OK')
 
     _test_urlextract()
-    print '  urlextract*:            OK'
+    print('  urlextract*:            OK')
 
-    if _python_has_unicode():
-        _test_urlextract(unicode)
-        print '  urlextract (unicode)*:  OK'
+    _test_urlextract(str)
+    print('  urlextract (unicode)*:  OK')
 
-    print
-    print '* The corresponding join method has been tested as well.'
+    print()
+    print('* The corresponding join method has been tested as well.')
 
 
 if __name__ == '__main__':
