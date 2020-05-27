@@ -70,7 +70,6 @@ int ShowClippingPrefsID();
 
 extern ChoiceSetting
      GUIManualLocation
-   , GUITheme
 ;
 
 #endif

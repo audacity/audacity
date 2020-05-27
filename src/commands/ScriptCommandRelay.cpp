@@ -89,11 +89,6 @@ void ScriptCommandRelay::StartScriptServer(tpRegScriptServerFunc scriptFn)
    std::thread(server, scriptFn).detach();
 }
 
-// The void * return is actually a Lisp LVAL and will be cast to such as needed.
-extern void * ExecForLisp( char * pIn );
-extern void * nyq_make_opaque_string( int size, unsigned char *src );
-extern void * nyq_reformat_aud_do_response(const wxString & Str);
-
 void * ExecForLisp( char * pIn )
 {
    wxString Str1(pIn);

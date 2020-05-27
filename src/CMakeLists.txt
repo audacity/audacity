@@ -67,6 +67,7 @@ list( APPEND SOURCES
       AboutDialog.h
       AdornedRulerPanel.cpp
       AdornedRulerPanel.h
+      AllThemeResources.cpp
       AllThemeResources.h
       AttachedVirtualFunction.h
       Audacity.h
@@ -234,6 +235,8 @@ list( APPEND SOURCES
       RealFFTf48x.h
       RefreshCode.h
       Registrar.h
+      Registry.cpp
+      Registry.h
       Resample.cpp
       Resample.h
       RingBuffer.cpp
@@ -291,7 +294,9 @@ list( APPEND SOURCES
       TrackPanel.h
       TrackPanelAx.cpp
       TrackPanelAx.h
+      TrackPanelCell.cpp
       TrackPanelCell.h
+      TrackPanelDrawable.cpp
       TrackPanelDrawable.h
       TrackPanelDrawingContext.h
       TrackPanelListener.h
@@ -643,6 +648,7 @@ list( APPEND SOURCES
       import/ImportLOF.cpp
       import/ImportPCM.cpp
       import/ImportPlugin.h
+      import/ImportPlugin.cpp
       import/ImportRaw.cpp
       import/ImportRaw.h
 
@@ -740,6 +746,7 @@ list( APPEND SOURCES
       prefs/PlaybackPrefs.h
       prefs/PrefsDialog.cpp
       prefs/PrefsDialog.h
+      prefs/PrefsPanel.cpp
       prefs/PrefsPanel.h
       prefs/ProjectsPrefs.cpp
       prefs/ProjectsPrefs.h

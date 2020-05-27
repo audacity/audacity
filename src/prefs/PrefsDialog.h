@@ -15,11 +15,11 @@
 #include <functional>
 #include <vector>
 #include "../widgets/wxPanelWrapper.h" // to inherit
+#include "PrefsPanel.h"
 
 class AudacityProject;
 class wxTreebook;
 class wxTreeEvent;
-class PrefsPanel;
 class ShuttleGui;
 
 #ifdef __GNUC__
@@ -33,28 +33,11 @@ class AudacityProject;
 class PrefsDialog /* not final */ : public wxDialogWrapper
 {
  public:
-    // An array of PrefsNode specifies the tree of pages in pre-order traversal.
-    struct PrefsNode {
-       using Factory =
-         std::function< PrefsPanel * (
-            wxWindow *parent, wxWindowID winid, AudacityProject *) >;
-       Factory factory;
-       size_t nChildren{ 0 };
-       bool expanded{ false };
-
-       PrefsNode(const Factory &factory_,
-          unsigned nChildren_ = 0,
-          bool expanded_ = true)
-          : factory(factory_), nChildren(nChildren_), expanded(expanded_)
-       {}
-    };
-   typedef std::vector<PrefsNode> Factories;
-   static Factories &DefaultFactories();
-
    PrefsDialog(wxWindow * parent,
       AudacityProject *pProject, // may be null
       const TranslatableString &titlePrefix = XO("Preferences:"),
-      Factories &factories = DefaultFactories());
+      PrefsPanel::Factories &factories =
+         PrefsPanel::DefaultFactories());
    virtual ~PrefsDialog();
 
    // Defined this so a protected virtual can be invoked after the constructor
@@ -86,7 +69,7 @@ private:
    PrefsPanel * GetCurrentPanel();
    wxTreebook *mCategories{};
    PrefsPanel *mUniquePage{};
-   Factories &mFactories;
+   PrefsPanel::Factories &mFactories;
    const TranslatableString mTitlePrefix;
 
    DECLARE_EVENT_TABLE()
@@ -99,7 +82,8 @@ class GlobalPrefsDialog final : public PrefsDialog
 public:
    GlobalPrefsDialog(
       wxWindow * parent, AudacityProject *pProject,
-      Factories &factories = DefaultFactories());
+      PrefsPanel::Factories &factories =
+         PrefsPanel::DefaultFactories());
    virtual ~GlobalPrefsDialog();
    long GetPreferredPage() override;
    void SavePreferredPage() override;
