@@ -73,6 +73,7 @@ the mouse around.
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindow.h"
+#include "Theme.h"
 #include "WaveClip.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"

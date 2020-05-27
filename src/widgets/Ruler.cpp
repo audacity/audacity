@@ -66,6 +66,7 @@ array of Ruler::Label.
 #include "../AllThemeResources.h"
 #include "../Envelope.h"
 #include "../NumberScale.h"
+#include "../Theme.h"
 #include "../ViewInfo.h"
 
 using std::min;

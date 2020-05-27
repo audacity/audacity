@@ -100,6 +100,7 @@ for registering for changes.
 
 #include "Prefs.h"
 #include "ShuttlePrefs.h"
+#include "Theme.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wx.h>

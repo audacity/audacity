@@ -11,6 +11,10 @@ Paul Licameli
 #ifndef __AUDACITY_TRACK_PANEL_DRAWABLE__
 #define __AUDACITY_TRACK_PANEL_DRAWABLE__
 
+#include "Audacity.h"
+
+#include <wx/gdicmn.h> // for wxRect
+
 struct TrackPanelDrawingContext;
 class wxRect;
 
@@ -50,8 +54,5 @@ public:
       return { rect.x, panelRect.y, rect.width, panelRect.height };
    }
 };
-
-// Unnecessary #include to indicate otherwise hidden link dependencies
-#include "TrackPanel.h"
 
 #endif

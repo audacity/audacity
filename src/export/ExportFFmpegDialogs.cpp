@@ -70,8 +70,6 @@
 
 #if defined(USE_FFMPEG)
 
-extern FFmpegLibs *FFmpegLibsInst();
-
 /// This construction defines a enumeration of UI element IDs, and a static
 /// array of their string representations (this way they're always synchronized).
 /// Do not store the enumerated values in external files, as they may change;

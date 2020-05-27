@@ -42,6 +42,7 @@
 #include "tracks/ui/TrackControls.h"
 
 #include "AllThemeResources.h"
+#include "Theme.h"
 
 #ifdef SONIFY
 #include "../lib-src/portmidi/pm_common/portmidi.h"

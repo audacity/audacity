@@ -172,6 +172,7 @@ different formats.
 #include "../AllThemeResources.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
+#include "../Theme.h"
 
 #include <algorithm>
 #include <math.h>

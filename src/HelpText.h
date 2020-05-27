@@ -20,5 +20,6 @@ TranslatableString TitleText( const wxString & Key );
 extern const wxString VerCheckArgs();
 extern const wxString VerCheckUrl();
 extern const wxString VerCheckHtml();
+extern wxString FormatHtmlText( const wxString & Text );
 
 #endif
