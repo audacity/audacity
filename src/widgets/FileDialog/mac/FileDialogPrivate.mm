@@ -19,34 +19,24 @@
 // headers
 // ----------------------------------------------------------------------------
 
-#undef WXINTL_NO_GETTEXT_MACRO
-
-// For compilers that support precompilation, includes "wx.h".
-#include <wx/wxprec.h>
-
+#include "Internat.h"
 #include "../FileDialog.h"
 
-#ifndef WX_PRECOMP
-    #include <wx/msgdlg.h>
-    #include <wx/app.h>
-    #include <wx/sizer.h>
-    #include <wx/stattext.h>
-    #include <wx/choice.h>
-#endif
-
+#include <wx/app.h>
+#include <wx/choice.h>
 #include <wx/clipbrd.h>
+#include <wx/evtloop.h>
 #include <wx/filectrl.h>
 #include <wx/filename.h>
+#include <wx/modalhook.h>
+#include <wx/sizer.h>
+#include <wx/sysopt.h>
+#include <wx/stattext.h>
 #include <wx/tokenzr.h>
-#include <wx/evtloop.h>
 
 #include <wx/osx/core/private.h>
-#include <wx/sysopt.h>
-#include <wx/modalhook.h>
 
 #include <AppKit/AppKit.h>
-
-#include "../../../Internat.h" // For macro _
 
 // ============================================================================
 // implementation
@@ -390,7 +380,7 @@ void FileDialog::SetupExtraControls(WXWindow nativeWindow)
         {
             wxBoxSizer *horizontalSizer = new wxBoxSizer( wxHORIZONTAL );
 
-            wxStaticText *stattext = new wxStaticText( m_filterPanel, wxID_ANY, _("File type:") );
+            wxStaticText *stattext = new wxStaticText( m_filterPanel, wxID_ANY, XO("File type:") .Translation());
             horizontalSizer->Add( stattext, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
             m_filterChoice = new wxChoice( m_filterPanel, wxID_ANY );

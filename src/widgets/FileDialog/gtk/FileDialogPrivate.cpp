@@ -11,10 +11,9 @@
 
 #include <gtk/gtk.h>
 
+#include "Internat.h"
+#include "widgets/AudacityMessageBox.h"
 #include "../FileDialog.h"
-
-#include "wx/intl.h"
-#include "wx/msgdlg.h"
 
 #ifdef __UNIX__
 #include <unistd.h> // chdir
@@ -25,8 +24,6 @@
 #include <wx/filefn.h> // ::wxGetCwd
 #include <wx/modalhook.h>
 #include <wx/sizer.h>
-
-#include "../../../Internat.h" // For macro _
 
 #define wxGTK_CONV(s) (s).utf8_str()
 #define wxGTK_CONV_FN(s) (s).fn_str()
@@ -71,16 +68,15 @@ static void gtk_filedialog_ok_callback(GtkWidget *widget, FileDialog *dialog)
         {
             if ( g_file_test(filename, G_FILE_TEST_EXISTS) )
             {
-                wxString msg;
-
-                msg.Printf(
-                    _("File '%s' already exists, do you really want to overwrite it?"),
-                    wxString::FromUTF8(filename));
-
-                wxMessageDialog dlg(dialog, msg, _("Confirm"),
-                                   wxYES_NO | wxICON_QUESTION);
-                if (dlg.ShowModal() != wxID_YES)
+                int result = AudacityMessageBox(
+                  XO("File '%s' already exists, do you really want to overwrite it?")
+                     .Format(wxString::FromUTF8(filename)),
+                  XO("Confirm"),
+                  wxYES_NO | wxICON_QUESTION);
+                if (result != wxID_YES)
+                {
                     return;
+                }
             }
         }
     }
@@ -90,9 +86,9 @@ static void gtk_filedialog_ok_callback(GtkWidget *widget, FileDialog *dialog)
     {
         if ( !g_file_test(filename, G_FILE_TEST_EXISTS) )
         {
-            wxMessageDialog dlg( dialog, _("Please choose an existing file."),
-                                 _("Error"), wxOK| wxICON_ERROR);
-            dlg.ShowModal();
+            AudacityMessageBox(XO("Please choose an existing file."),
+                               XO("Error"),
+                               wxOK | wxICON_ERROR);
             return;
         }
     }
