@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 mw2html - Mediawiki to static HTML
@@ -15,37 +15,34 @@ Improved filtering.
 Improved usability.
 Customized for Audacity's manual wiki.
 Minor tweaks (for Audacity) By James Crook, Nov 2009.
+Moved to Python3 by Jack Thomson, May 2020
 ...
 """
 
-__version__ = '0.1.0.2'
+__version__ = '0.1.0.3'
 
 import re
 import sys
 import getopt
 import random
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import textwrap
-import urlparse
+import urllib.parse
 import os, os.path
+
+import htmldata
 
 import errno
 import hashlib
-import httplib
-#import pdb
+import http.client
 from time import strftime
 from shutil import copyfile
 
 try:
-    set
-except:
-    from sets import Set as set
-
-try:
     import htmldata
 except:
-    print 'Requires Python htmldata module:'
-    print '  http://www.connellybarnes.com/code/htmldata/'
+    print('Requires Python3 htmldata module:')
+    print(' https://github.com/audacity/audacity/blob/master/scripts/mw2html_audacity/htmldata.py')
     sys.exit()
 
 
@@ -111,7 +108,7 @@ def get_domain(u):
     url = normalize_url(u)
 
     #ParseResult(scheme='http', netloc='www.cwi.nl:80', path='/%7Eguido/Python.html', params='', query='', fragment='')
-    L = list(urlparse.urlparse(url))
+    L = list(urllib.parse.urlparse(url))
 
     return L[1]
 
@@ -135,7 +132,7 @@ def normalize_url(url, lower=True):
 
     url = 'https://' + url
 
-    urlparse.urljoin(config.rooturl, url)
+    urllib.parse.urljoin(config.rooturl, url)
 
     return url
 
@@ -283,7 +280,7 @@ def pos_html_transform(doc, url,filename):
 
     # Add sidebar.html
     if config.sidebar != None and sidebar_html == '':
-        f = open(config.sidebar, 'rU')
+        f = open(config.sidebar, 'r')
         sidebar_html = f.read()
         f.close()
 
@@ -328,7 +325,7 @@ def pos_html_transform(doc, url,filename):
         return doc
 
     if footer_text == '':
-        f = open(config.footer, 'rU')
+        f = open(config.footer, 'r')
         footer_text = f.read()
         f.close()
 
@@ -567,14 +564,14 @@ def url_open(url):
     while redirect != '':
         l_redir += [url]
 
-        L = urlparse.urlparse(url)
+        L = urllib.parse.urlparse(url)
         if L[1] != domain:
             conn.close()
             if L[1] == '': return(['',''])
-            print "connection to", domain, "closed."
-            conn = httplib.HTTPSConnection(L[1])
+            print("connection to", domain, "closed.")
+            conn = http.client.HTTPSConnection(L[1])
             domain = L[1]
-            print "connection to", domain, "opened."
+            print("connection to", domain, "opened.")
 
         rel_url = url
         pos = url.find(domain)
@@ -593,47 +590,47 @@ def url_open(url):
             try:
                 conn.request("GET", rel_url,headers=headers)
                 r = conn.getresponse()
-                print 'Status', r.status, r.reason, 'accessing', rel_url
+                print('Status', r.status, r.reason, 'accessing', rel_url)
                 if r.status == 404:
-                    print "   it's not possible to recover this error."
+                    print("   it's not possible to recover this error.")
                     errors += 1
                     return ('', '')
                 if r.status == 500:
-                    print "   eventually this error might be recovered. let's try again."
-                    print '   reconnecting...'
-                    conn = httplib.HTTPSConnection(domain)
+                    print("   eventually this error might be recovered. let's try again.")
+                    print('   reconnecting...')
+                    conn = http.client.HTTPSConnection(domain)
                     attempts += 1
                     continue
                 if r.status == 403:
-                    print "   that shouldn't happen, but let's try again anyway."
-                    print '   reconnecting...'
-                    conn = httplib.HTTPSConnection(domain)
+                    print("   that shouldn't happen, but let's try again anyway.")
+                    print('   reconnecting...')
+                    conn = http.client.HTTPSConnection(domain)
                     attempts += 1
                     continue
                 if attempts != 0:
                     recovered = True
                 if r.status != 200:
-                    print "      Status other than 200, 404, 500, 403. It is: ", r.status
+                    print("      Status other than 200, 404, 500, 403. It is: ", r.status)
                 success = True
 
-            except httplib.HTTPException, e:
-                print 'ERROR', e.__class__.__name__, 'while retrieving', url
+            except http.client.HTTPException as e:
+                print('ERROR', e.__class__.__name__, 'while retrieving', url)
                 conn.close
                 if e.__class__.__name__ in ['BadStatusLine', 'ImproperConnectionState', 'NotConnected', 'IncompleteRead', 'ResponseNotReady']:
-                    print "eventually this error might be recovered. let's try again."
-                    print 'reconnecting...'
-                    conn = httplib.HTTPSConnection(domain)
+                    print("eventually this error might be recovered. let's try again.")
+                    print('reconnecting...')
+                    conn = http.client.HTTPSConnection(domain)
                     attempts += 1
                 else:
-                    print "it's not possible to recover this error."
+                    print("it's not possible to recover this error.")
                     errors += 1
                     return ('', '')
 
         if recovered:
-            print "error recovered"
+            print("error recovered")
 
         if not success:
-            print "it was not possible to recover this error."
+            print("it was not possible to recover this error.")
             errors += 1
             return ('', '')
 
@@ -666,7 +663,7 @@ def url_to_filename(url):
     #ParseResult(scheme='http', netloc='www.cwi.nl:80', path='/%7Eguido/Python.html', params='', query='', fragment='')
     turl = re.sub(r'm/index.php\?title=', r'man/', nurl)
     turl = re.sub(r'.css&[\S\s]+', r'.css', turl)
-    L = list(urlparse.urlparse(turl))
+    L = list(urllib.parse.urlparse(turl))
 
     #this way the url will not create a folder outside of the maindomain
     droot = get_domain(config.rooturl)
@@ -697,10 +694,10 @@ def url_to_filename(url):
 
     #don't sanitize / for path
     L[0] = ''
-    L[2] = urllib.quote_plus(L[2],'/')
-    L[3] = urllib.quote_plus(L[3])
-    L[4] = urllib.quote_plus(L[4])
-    L[5] = urllib.quote_plus(L[5])
+    L[2] = urllib.parse.quote_plus(L[2],'/')
+    L[3] = urllib.parse.quote_plus(L[3])
+    L[4] = urllib.parse.quote_plus(L[4])
+    L[5] = urllib.parse.quote_plus(L[5])
 
     # Local filename relative to outdir
     # os.sep - O.S. directory separator
@@ -750,12 +747,11 @@ def url_to_filename(url):
     wrote_file_set.add(os.path.normcase(os.path.normpath(ans)))
     url_filename_cache[nurl] = ans
 
-    mode = ['wb', 'w'][mimetype.startswith('text')]
 
     # Make parent directory if it doesn't exist.
     try:
         os.makedirs(os.path.split(ans)[0])
-    except OSError, e:
+    except OSError as e:
         if e.errno != errno.EEXIST:
             raise
 
@@ -765,7 +761,12 @@ def url_to_filename(url):
         out.write('File already exists: ' + str(ans)) #@UndefinedVariable
         sys.exit(1)
 
-    f = open(ans, mode)
+    if mimetype.startswith('text'):
+        f = open(ans, 'w', encoding='utf8')
+        doc = str(doc)
+    else:
+        f = open(ans, 'wb')
+
     f.write(doc)
     f.close()
 
@@ -790,7 +791,7 @@ def url_to_relative(url, cururl):
         L1 = L1[1:]
         L2 = L2[1:]
 
-    rel_url = urllib.quote('../' * (len(L2) - 1) + '/'.join(L1)) + section
+    rel_url = urllib.parse.quote('../' * (len(L2) - 1) + '/'.join(L1)) + section
     if rel_url == '':
         return '#'
     else:
@@ -842,28 +843,28 @@ def should_follow(url):
     #if droot != dn and not (dn.endswith(droot) or droot.endswith(dn)):
     if droot != dn:
         if config.debug:
-            print url, 'not in the same domain'
+            print(url, 'not in the same domain')
         return False
 
     # False if multiple query fields or parameters found
     if (url.count('&') >= 1 or url.count(';') > 0) and not any(x in url for x in ('.css', 'gen=css')):
         if config.debug:
-            print url, 'with multiple query fields'
+            print(url, 'with multiple query fields')
         return False
 
     if any(x in url for x in ('Special:', 'Image:', 'Talk:', 'User:', 'Help:', 'User_talk:', 'MediaWiki_talk:', 'File:', 'action=edit', 'title=-')):
         if config.debug:
-            print url, 'is a forbidden wiki page'
+            print(url, 'is a forbidden wiki page')
         return False
 
     if config.no_images and any(url.strip().lower().endswith(suffix) for suffix in ('.jpg', '.gif', '.png', '.ico')):
         if config.debug:
-            print url, 'is a image and you are in no-images mode'
+            print(url, 'is a image and you are in no-images mode')
         return False
 
     if any(url.strip().lower().endswith(suffix) for suffix in ('.zip', '.7z')):
         if config.debug:
-            print url, 'is a compressed file'
+            print(url, 'is a compressed file')
         return False
 
 
@@ -874,7 +875,7 @@ def should_follow(url):
         L = nurl.split('/')
         if ('.' not in L[-1]):
             if config.debug:
-                print url, 'is a file outside of scope with unknown extension'
+                print(url, 'is a file outside of scope with unknown extension')
             return False
 
         # JKC: we do allow css from 'strange' places.
@@ -885,7 +886,7 @@ def should_follow(url):
         for fp in forbidden_parents:
             if fp in L[-1]:
                 if config.debug:
-                    print url, 'is a page outside of scope'
+                    print(url, 'is a page outside of scope')
                 return False
 
     return True
@@ -921,7 +922,7 @@ def parse_html(doc, url, filename):
         follow = should_follow(u) #and (counter < 10)
         if follow:
             if config.debug:
-                print 'ACCEPTED   - ', u
+                print('ACCEPTED   - ', u)
             # Store url locally.
             new_urls += [u]
             item.url = url_to_relative(u, url)
@@ -930,7 +931,7 @@ def parse_html(doc, url, filename):
             # if not any( license in u for license in ('creativecommons.org', 'wxwidgets.org', 'gnu.org', 'mediawiki.org') ):
             #  item.url = ''
             if config.debug:
-                print 'NOT INCLUDED     - ', u
+                print('NOT INCLUDED     - ', u)
 
     newdoc = htmldata.urljoin(doc, L)
     newdoc = newdoc.replace(BEGIN_COMMENT_REPLACE, '<!--')
@@ -938,13 +939,19 @@ def parse_html(doc, url, filename):
 
     newdoc = pos_html_transform(newdoc, url,filename)
 
+    # Remove byte artifacts in string
+    newdoc = newdoc.replace('\\n','\n')
+    newdoc = newdoc.replace('\\t', '\t')
+    newdoc = newdoc.strip('b')
+    newdoc = newdoc.strip('')
+
     return (newdoc, new_urls)
 
 def deploy_file( src, dest ):
     src_dir = os.path.dirname(os.path.realpath(__file__))
     src = os.path.join(src_dir, src)
     dest = os.path.join(config.outdir, dest)
-    print "copying from", src, "to", dest
+    print("copying from", src, "to", dest)
     directory = os.path.dirname(dest)
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -957,7 +964,7 @@ def run(out=sys.stdout):
     """
     global conn, domain, counter, redir_cache, config, headers
 
-    if urlparse.urlparse(config.rooturl)[1].lower().endswith('wikipedia.org'):
+    if urllib.parse.urlparse(config.rooturl)[1].lower().endswith('wikipedia.org'):
         out.write('Please do not use robots with the Wikipedia site.\n')
         out.write('Instead, install the Wikipedia database locally and use mw2html on\n')
         out.write('your local installation.  See the Mediawiki site for more information.\n')
@@ -971,8 +978,8 @@ def run(out=sys.stdout):
         sys.exit(1)
 
     domain = get_domain(config.rooturl)
-    conn = httplib.HTTPSConnection(domain)
-    print 'connection established to:', domain
+    conn = http.client.HTTPSConnection(domain)
+    print('connection established to:', domain)
     complete = set()
     pending = set([config.rooturl])
 
@@ -986,7 +993,7 @@ def run(out=sys.stdout):
 
         if nurl in complete:
             if config.debug:
-                print url, 'already processed'
+                print(url, 'already processed')
             continue
 
         complete.add(nurl)
@@ -997,7 +1004,7 @@ def run(out=sys.stdout):
         if start:
             start = False
             aux_url = ''
-            for redir in redir_cache.iterkeys():
+            for redir in redir_cache.keys():
                 aux_url = normalize_url(redir)
                 url_filename_cache[aux_url] = filename
                 if aux_url not in complete:
@@ -1009,10 +1016,16 @@ def run(out=sys.stdout):
             continue
 
         if not os.path.exists(filename):
-            print "ERROR: ", url, '\n'
+            print("ERROR: ", url, '\n')
             continue
 
-        f = open(filename, 'r')
+        # These formats are encoded as text. Everything else is read as bytes
+        text_ext = ('txt', 'html', 'rtf', 'css', 'sgml', 'xml')
+
+        if not filename.endswith(text_ext):
+            f = open(filename, 'rb')
+        else:
+            f = open(filename, 'r')
         doc = f.read()
         f.close()
         new_urls = []
@@ -1025,7 +1038,6 @@ def run(out=sys.stdout):
         # Save document changes to disk
         # The unmodified file already exists on disk.
         update = False
-        text_ext = ('txt', 'html', 'rtf', 'css', 'sgml', 'xml')
         for ext in text_ext:
             if filename.endswith(ext):
                 update = True
@@ -1049,10 +1061,10 @@ def run(out=sys.stdout):
                 pending.add(u)        
 
     conn.close()
-    print "connection to", domain, "closed."
+    print("connection to", domain, "closed.")
     out.write(str(n) + ' files saved\n')
-    print counter, "httplib requests done"
-    print errors, "errors not recovered"
+    print(counter, "httplib requests done")
+    print(errors, "errors not recovered")
 
     # use / not \ so as to work on both windows and mac.
     deploy_file( "AudacityLogo.png", r"alphamanual.audacityteam.org/m/resources/assets/AudacityLogo.png")
@@ -1118,7 +1130,7 @@ def usage():
 
     """
 
-    print textwrap.dedent(usage_str.strip('\n'))
+    print(textwrap.dedent(usage_str.strip('\n')))
     sys.exit(1)
 
 
