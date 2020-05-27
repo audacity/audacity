@@ -374,11 +374,10 @@ bool EffectSBSMS::Process()
 
             auto warper = createTimeWarper(mCurT0,mCurT1,maxDuration,rateStart,rateEnd,rateSlideType);
 
-            rb.outputLeftTrack = mFactory->NewWaveTrack(leftTrack->GetSampleFormat(),
-                                                        leftTrack->GetRate());
+            rb.outputLeftTrack = leftTrack->EmptyCopy();
             if(rightTrack)
-               rb.outputRightTrack = mFactory->NewWaveTrack(rightTrack->GetSampleFormat(),
-                                                            rightTrack->GetRate());
+               rb.outputRightTrack = rightTrack->EmptyCopy();
+   
             long pos = 0;
             long outputCount = -1;
 

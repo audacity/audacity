@@ -34,9 +34,7 @@
 #include <wx/dir.h>
 #include <wx/datectrl.h>
 #include <wx/datetime.h>
-#include <wx/filedlg.h>
 #include <wx/intl.h>
-#include <wx/progdlg.h>
 #include <wx/sizer.h>
 #include <wx/string.h>
 #include <wx/timer.h>
@@ -80,18 +78,6 @@ enum { // control IDs
 enum {
    CONTROL_GROUP_SAVE,
    CONTROL_GROUP_EXPORT
-};
-
-// Post Timer Recording Actions
-// Ensure this matches the enum in Menus.cpp
-enum {
-   POST_TIMER_RECORD_STOPPED = -3,
-   POST_TIMER_RECORD_CANCEL_WAIT,
-   POST_TIMER_RECORD_CANCEL,
-   POST_TIMER_RECORD_NOTHING,
-   POST_TIMER_RECORD_CLOSE,
-   POST_TIMER_RECORD_RESTART,
-   POST_TIMER_RECORD_SHUTDOWN
 };
 
 // The slow timer interval is used to update the start and end times, which only show
@@ -899,6 +885,13 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
          S.StartStatic(XO("Duration"), true);
          {
+            m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
+               S.GetParent(), ID_TIMETEXT_DURATION, NumericConverter::TIME,
+               {}, 0, 44100,
+               Options{}
+                  .MenuEnabled(false)
+                  .Format(strFormat1)
+                  .Value(true, m_TimeSpan_Duration.GetSeconds().ToDouble()));
             /* i18n-hint: This string is used to configure the controls which shows the recording
             * duration. As such it is important that only the alphabetic parts of the string
             * are translated, with the numbers left exactly as they are.
@@ -907,13 +900,6 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             * number displayed is minutes, and the 's' indicates that the fourth number displayed is
             * seconds.
             */
-            m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
-               S.GetParent(), ID_TIMETEXT_DURATION, NumericConverter::TIME,
-               {}, 0, 44100,
-               Options{}
-                  .MenuEnabled(false)
-                  .Format(strFormat1)
-                  .Value(true, m_TimeSpan_Duration.GetSeconds().ToDouble()));
             S.Name(XO("Duration"))
                .AddWindow(m_pTimeTextCtrl_Duration);
          }
@@ -926,7 +912,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartStatic(XO("Automatic Save"), true);
          {
             // If checked, the project will be saved when the recording is completed
-            m_pTimerAutoSaveCheckBoxCtrl = S.Id(ID_AUTOSAVE_CHECKBOX).AddCheckBox(XO("Enable &Automatic Save?"),
+            m_pTimerAutoSaveCheckBoxCtrl = S.Id(ID_AUTOSAVE_CHECKBOX).AddCheckBox(XXO("Enable &Automatic Save?"),
                                                                                     bAutoSave);
             S.StartMultiColumn(3, wxEXPAND);
             {
@@ -937,13 +923,13 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                   m_fnAutoSaveFile.Assign(sSaveValue);
                   sInitialValue = XO("Current Project");
                }
-               S.AddPrompt(XO("Save Project As:"));
+               S.AddPrompt(XXO("Save Project As:"));
                m_pTimerSavePathTextCtrl = NewPathControl(
                   S.GetParent(), ID_AUTOSAVEPATH_TEXT,
                   XO("Save Project As:"), sInitialValue);
                m_pTimerSavePathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerSavePathTextCtrl);
-               m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(XO("Select..."));
+               m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(XXO("Select..."));
                }
             S.EndMultiColumn();
          }
@@ -951,16 +937,16 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
          S.StartStatic(XO("Automatic Export"), true);
          {
-            m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(XO("Enable Automatic &Export?"), bAutoExport);
+            m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(XXO("Enable Automatic &Export?"), bAutoExport);
             S.StartMultiColumn(3, wxEXPAND);
             {
-               S.AddPrompt(XO("Export Project As:"));
+               S.AddPrompt(XXO("Export Project As:"));
                m_pTimerExportPathTextCtrl = NewPathControl(
                   S.GetParent(), ID_AUTOEXPORTPATH_TEXT,
                   XO("Export Project As:"), {});
                m_pTimerExportPathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerExportPathTextCtrl);
-               m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(XO("Select..."));
+               m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(XXO("Select..."));
             }
             S.EndMultiColumn();
          }
@@ -972,7 +958,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.StartMultiColumn(1, wxEXPAND);
             {
                S.SetStretchyCol( 0 );
-               m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(XO("After Recording completes:"),
+               m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(XXO("After Recording completes:"),
                      {
                         XO("Do nothing") ,
                         XO("Exit Audacity") ,

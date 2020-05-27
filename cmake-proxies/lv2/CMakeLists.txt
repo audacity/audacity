@@ -37,7 +37,6 @@ list( APPEND SOURCES
       # sord
 
       ${TARGET_ROOT}/sord/src/sord.c
-      ${TARGET_ROOT}/sord/src/sord_validate.c
       ${TARGET_ROOT}/sord/src/syntax.c
       ${TARGET_ROOT}/sord/src/zix/btree.c
       ${TARGET_ROOT}/sord/src/zix/digest.c
@@ -163,7 +162,7 @@ macro( bld name packages define sources )
 
       set_target_properties( ${name}
          PROPERTIES
-            LIBRARY_OUTPUT_DIRECTORY "${_LIBDIR}"
+            LIBRARY_OUTPUT_DIRECTORY "${_DESTDIR}/${_LIBDIR}"
             PREFIX ""
       )
 
@@ -177,7 +176,7 @@ endmacro()
 if( WIN32 )
    set( LILV_PATH_SEP ";" )
    set( LILV_DIR_SEP "\\\\" )
-   set( LILV_DEFAULT_LV2_PATH "%APPDATA%\\LV2;%COMMONPROGRAMFILES%\\LV2" )
+   set( LILV_DEFAULT_LV2_PATH "%APPDATA%\\\\LV2;%COMMONPROGRAMFILES%\\\\LV2" )
 
    set( SUIL_MODULE_DIR "" )
    set( SUIL_DIR_SEP "" )

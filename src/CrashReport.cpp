@@ -25,7 +25,7 @@ namespace CrashReport {
 void Generate(wxDebugReport::Context ctx)
 {
    wxDebugReportCompress rpt;
-   //rpt.AddAll(ctx);
+   rpt.AddAll(ctx);
    
    wxFileNameWrapper fn{ FileNames::DataDir(), wxT("audacity.cfg") };
    rpt.AddFile(fn.GetFullPath(), _TS("Audacity Configuration"));

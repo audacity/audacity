@@ -41,6 +41,9 @@ cmake_policy( SET CMP0075 NEW )
 # Definitions that must happen before the project() command
 if( APPLE )
 
+   # Generate schema files
+   set( CMAKE_XCODE_GENERATE_SCHEME ON )
+
    # Define the OSX compatibility parameters
    set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
    set( CMAKE_OSX_DEPLOYMENT_TARGET 10.7 CACHE INTERNAL "" )
@@ -111,7 +114,7 @@ if( CMAKE_GENERATOR MATCHES "Visual Studio" )
    message( STATUS "  MSVC Toolset: ${MSVC_TOOLSET_VERSION}" )
    message( STATUS ) 
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   if( CMAKE_GENERATOR MATCHES "Visual Studio" )
+   if( CMAKE_GENERATOR MATCHES "Xcode" )
       message( STATUS "  Xcode Version: ${XCODE_VERSION}" )
    endif()
    message( STATUS "  MacOS SDK: ${CMAKE_OSX_SYSROOT}" )
@@ -207,16 +210,21 @@ list( APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS} )
 # Make sure they're used during the link steps
 set( CMAKE_LINK_INTERFACE_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} )
 
-# May be a misconfiguration in my system, but CMake doesn't want to look
-# in /usr/local/lib by default...so force the issue
-if( CMAKE_SYSTEM_NAME MATCHES "FreeBSD" )
-   list( APPEND CMAKE_EXE_LINKER_FLAGS -L/usr/local/lib )
-   list( APPEND CMAKE_MODULE_LINKER_FLAGS -L/usr/local/lib )
-   list( APPEND CMAKE_SHARED_LINKER_FLAGS -L/usr/local/lib )
-endif()
-
 # Various common checks whose results are used by the different targets
 test_big_endian( WORDS_BIGENDIAN )
+
+# Determine 32-bit or 64-bit target
+if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
+   set( IS_64BIT ON )
+elseif( NOT CMAKE_SIZEOF_VOID_P STREQUAL "4" )
+   set( IS_64BIT ON )
+endif()
+
+if( IS_64BIT )
+   message( STATUS "Building for 64-bit target" )
+else()
+   message( STATUS "Building for 32-bit target" )
+endif()
 
 # Check for compiler flags
 if( CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang|GNU" )
@@ -236,23 +244,33 @@ if( CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang|GNU" )
    endif()
 elseif( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
    set( HAVE_MMX ON )
-   set( MMX_FLAG "" )
    set( HAVE_SSE ON )
-   set( SSE_FLAG "/arch:SSE" )
    set( HAVE_SSE2 ON )
-   set( SSE2_FLAG "/arch:SSE2" )
+   set( MMX_FLAG "" )
+   if( IS_64BIT )
+      set( SSE_FLAG "" )
+      set( SSE2_FLAG "" )
+   else()
+      set( SSE_FLAG "/arch:SSE" )
+      set( SSE2_FLAG "/arch:SSE2" )
+   endif()
 endif()
 
 check_include_files( "float.h;stdarg.h;stdlib.h;string.h" STDC_HEADERS )
 
 check_include_file( "assert.h" HAVE_ASSERT_H )
-check_include_file( "byteswap.h" HAVE_BYTESWAP_H )
 check_include_file( "errno.h" HAVE_ERRNO_H )
 check_include_file( "fcntl.h" HAVE_FCNTL_H )
 check_include_file( "fenv.h" HAVE_FENV_H )
 check_include_file( "inttypes.h" HAVE_INTTYPES_H )
 check_include_file( "limits.h" HAVE_LIMITS_H )
-check_include_file( "malloc.h" HAVE_MALLOC_H )
+if( CMAKE_SYSTEM_NAME MATCHES "FreeBSD" )
+  check_include_file( "stdlib.h" HAVE_MALLOC_H )
+  check_include_file( "sys/endian.h" HAVE_ENDIAN_H )
+else()
+  check_include_file( "malloc.h" HAVE_MALLOC_H )
+  check_include_file( "byteswap.h" HAVE_BYTESWAP_H )
+endif()
 check_include_file( "memory.h" HAVE_MEMORY_H )
 check_include_file( "stdbool.h" HAVE_STDBOOL_H )
 check_include_file( "stdint.h" HAVE_STDINT_H )
@@ -347,14 +365,15 @@ find_package( OpenGL QUIET )
 #     .../bin/Debug//
 # or:
 #     .../bin//Debug
-set( _DEST "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${CMAKE_BUILD_TYPE}" )
+set( _DESTDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${CMAKE_BUILD_TYPE}" )
+set( _DEST "${_DESTDIR}" )
 set( _EXEDIR "${_DEST}" )
 string( REGEX REPLACE "/+$" "" _EXEDIR "${_EXEDIR}" )
 
 # Adjust them for the Mac
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( _DEST "${_DEST}/Audacity.app/Contents" )
-   set( _EXEDIR "${_DEST}/Macos" )
+   set( _EXEDIR "${_DEST}/MacOS" )
 endif()
 
 set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
@@ -373,6 +392,13 @@ endif()
 # may not work due to insufficient privileges
 if( NOT CMAKE_INSTALL_LIBDIR STREQUAL "lib" AND NOT EXISTS "${CMAKE_BINARY_DIR}/lib64" )
    file( CREATE_LINK "${CMAKE_BINARY_DIR}/lib" "${CMAKE_BINARY_DIR}/lib64" SYMBOLIC )
+endif()
+
+# Define Audacity's name
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows" )
+   set( AUDACITY_NAME "Audacity" )
+else()
+   set( AUDACITY_NAME "audacity" )
 endif()
 
 # Extract the Audacity version information
@@ -422,9 +448,6 @@ add_subdirectory( "locale" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
 add_subdirectory( "src" )
-add_subdirectory( "cmake-proxies/mod-null" )
-add_subdirectory( "cmake-proxies/mod-nyq-bench" )
-add_subdirectory( "cmake-proxies/mod-script-pipe" )
 add_subdirectory( "scripts" )
 
 # Uncomment what follows for symbol values.

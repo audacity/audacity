@@ -57,7 +57,7 @@ and sends it to that message target.
 
 #include "../MemoryX.h"
 #include <vector>
-#include "../commands/ResponseQueue.h"
+#include <wx/thread.h>
 
 class wxStatusBar;
 
@@ -221,33 +221,35 @@ public:
    void Update(const wxString &message) override;
 };
 
-/// Adds messages to the global response queue (to be sent back to a script)
-class ResponseQueueTarget final : public CommandMessageTarget
+/// Constructs a response (to be sent back to a script)
+class ResponseTarget final : public CommandMessageTarget
 {
 private:
+   wxSemaphore mSemaphore;
    wxString mBuffer;
 public:
-   static ResponseQueue &sResponseQueue();
-
-   ResponseQueueTarget()
-      : mBuffer( wxEmptyString )
+   ResponseTarget()
+      : mBuffer(wxEmptyString),
+        mSemaphore(0, 1)
    { 
       // Cater for handling long responses quickly.
       mBuffer.Alloc(40000);
    }
-   virtual ~ResponseQueueTarget()
+   virtual ~ResponseTarget()
    {
-      if( mBuffer.StartsWith("\n" ) )
-         mBuffer = mBuffer.Mid( 1 );
-      sResponseQueue().AddResponse( mBuffer  );
-      sResponseQueue().AddResponse(wxString(wxT("\n")));
    }
    void Update(const wxString &message) override
    {
       mBuffer += message;
-#if 0
-         mResponseQueue.AddResponse(message);
-#endif
+   }
+   virtual void Flush() override
+   {
+      mSemaphore.Post();
+   }
+   wxString GetResponse()
+   {
+      mSemaphore.Wait();
+      return mBuffer;
    }
 };
 

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -83,6 +83,7 @@ static sf_count_t sds_write_f (SF_PRIVATE *psf, const float *ptr, sf_count_t len
 static sf_count_t sds_write_d (SF_PRIVATE *psf, const double *ptr, sf_count_t len) ;
 
 static sf_count_t sds_seek (SF_PRIVATE *psf, int mode, sf_count_t offset) ;
+static int sds_byterate (SF_PRIVATE * psf) ;
 
 static int sds_2byte_read (SF_PRIVATE *psf, SDS_PRIVATE *psds) ;
 static int sds_3byte_read (SF_PRIVATE *psf, SDS_PRIVATE *psds) ;
@@ -132,8 +133,9 @@ sds_open	(SF_PRIVATE *psf)
 	if ((error = sds_init (psf, psds)) != 0)
 		return error ;
 
-	psf->seek = sds_seek ;
 	psf->container_close = sds_close ;
+	psf->seek = sds_seek ;
+	psf->byterate = sds_byterate ;
 
 	psf->blockwidth = 0 ;
 
@@ -364,13 +366,13 @@ sds_write_header (SF_PRIVATE *psf, int calc_length)
 		} ;
 
 	/* Reset the current header length to zero. */
-	psf->header [0] = 0 ;
-	psf->headindex = 0 ;
+	psf->header.ptr [0] = 0 ;
+	psf->header.indx = 0 ;
 
 	if (psf->is_pipe == SF_FALSE)
 		psf_fseek (psf, 0, SEEK_SET) ;
 
-	psf_binheader_writef (psf, "E211", 0xF07E, 0, 1) ;
+	psf_binheader_writef (psf, "E211", BHW2 (0xF07E), BHW1 (0), BHW1 (1)) ;
 
 	switch (SF_CODEC (psf->sf.format))
 	{	case SF_FORMAT_PCM_S8 :
@@ -388,21 +390,21 @@ sds_write_header (SF_PRIVATE *psf, int calc_length)
 
 	samp_period = SDS_INT_TO_3BYTE_ENCODE (1000000000 / psf->sf.samplerate) ;
 
-	psf_binheader_writef (psf, "e213", 0, psds->bitwidth, samp_period) ;
+	psf_binheader_writef (psf, "e213", BHW2 (0), BHW1 (psds->bitwidth), BHW3 (samp_period)) ;
 
 	data_length			= SDS_INT_TO_3BYTE_ENCODE (psds->total_written) ;
 	sustain_loop_start	= SDS_INT_TO_3BYTE_ENCODE (0) ;
 	sustain_loop_end	= SDS_INT_TO_3BYTE_ENCODE (0) ;
 
-	psf_binheader_writef (psf, "e33311", data_length, sustain_loop_start, sustain_loop_end, loop_type, 0xF7) ;
+	psf_binheader_writef (psf, "e33311", BHW3 (data_length), BHW3 (sustain_loop_start), BHW3 (sustain_loop_end), BHW1 (loop_type), BHW1 (0xF7)) ;
 
 	/* Header construction complete so write it out. */
-	psf_fwrite (psf->header, psf->headindex, 1, psf) ;
+	psf_fwrite (psf->header.ptr, psf->header.indx, 1, psf) ;
 
 	if (psf->error)
 		return psf->error ;
 
-	psf->dataoffset = psf->headindex ;
+	psf->dataoffset = psf->header.indx ;
 	psf->datalength = psds->write_block * SDS_BLOCK_SIZE ;
 
 	if (current > 0)
@@ -452,7 +454,7 @@ sds_2byte_read (SF_PRIVATE *psf, SDS_PRIVATE *psds)
 
 	ucptr = psds->read_data + 5 ;
 	for (k = 0 ; k < 120 ; k += 2)
-	{	sample = (ucptr [k] << 25) + (ucptr [k + 1] << 18) ;
+	{	sample = arith_shift_left (ucptr [k], 25) + arith_shift_left (ucptr [k + 1], 18) ;
 		psds->read_samples [k / 2] = (int) (sample - 0x80000000) ;
 		} ;
 
@@ -496,7 +498,7 @@ sds_3byte_read (SF_PRIVATE *psf, SDS_PRIVATE *psds)
 
 	ucptr = psds->read_data + 5 ;
 	for (k = 0 ; k < 120 ; k += 3)
-	{	sample = (ucptr [k] << 25) + (ucptr [k + 1] << 18) + (ucptr [k + 2] << 11) ;
+	{	sample = (((uint32_t) ucptr [k]) << 25) + (ucptr [k + 1] << 18) + (ucptr [k + 2] << 11) ;
 		psds->read_samples [k / 3] = (int) (sample - 0x80000000) ;
 		} ;
 
@@ -506,7 +508,7 @@ sds_3byte_read (SF_PRIVATE *psf, SDS_PRIVATE *psds)
 static int
 sds_4byte_read (SF_PRIVATE *psf, SDS_PRIVATE *psds)
 {	unsigned char *ucptr, checksum ;
-	unsigned int sample ;
+	uint32_t sample ;
 	int 	k ;
 
 	psds->read_block ++ ;
@@ -540,7 +542,7 @@ sds_4byte_read (SF_PRIVATE *psf, SDS_PRIVATE *psds)
 
 	ucptr = psds->read_data + 5 ;
 	for (k = 0 ; k < 120 ; k += 4)
-	{	sample = (ucptr [k] << 25) + (ucptr [k + 1] << 18) + (ucptr [k + 2] << 11) + (ucptr [k + 3] << 4) ;
+	{	sample = (((uint32_t) ucptr [k]) << 25) + (ucptr [k + 1] << 18) + (ucptr [k + 2] << 11) + (ucptr [k + 3] << 4) ;
 		psds->read_samples [k / 4] = (int) (sample - 0x80000000) ;
 		} ;
 
@@ -550,7 +552,8 @@ sds_4byte_read (SF_PRIVATE *psf, SDS_PRIVATE *psds)
 
 static sf_count_t
 sds_read_s (SF_PRIVATE *psf, short *ptr, sf_count_t len)
-{	SDS_PRIVATE	*psds ;
+{	BUF_UNION	ubuf ;
+	SDS_PRIVATE	*psds ;
 	int			*iptr ;
 	int			k, bufferlen, readcount, count ;
 	sf_count_t	total = 0 ;
@@ -559,8 +562,8 @@ sds_read_s (SF_PRIVATE *psf, short *ptr, sf_count_t len)
 		return 0 ;
 	psds = (SDS_PRIVATE*) psf->codec_data ;
 
-	iptr = psf->u.ibuf ;
-	bufferlen = ARRAY_LEN (psf->u.ibuf) ;
+	iptr = ubuf.ibuf ;
+	bufferlen = ARRAY_LEN (ubuf.ibuf) ;
 	while (len > 0)
 	{	readcount = (len >= bufferlen) ? bufferlen : len ;
 		count = sds_read (psf, psds, iptr, readcount) ;
@@ -589,7 +592,8 @@ sds_read_i (SF_PRIVATE *psf, int *ptr, sf_count_t len)
 
 static sf_count_t
 sds_read_f (SF_PRIVATE *psf, float *ptr, sf_count_t len)
-{	SDS_PRIVATE	*psds ;
+{	BUF_UNION	ubuf ;
+	SDS_PRIVATE	*psds ;
 	int			*iptr ;
 	int			k, bufferlen, readcount, count ;
 	sf_count_t	total = 0 ;
@@ -604,8 +608,8 @@ sds_read_f (SF_PRIVATE *psf, float *ptr, sf_count_t len)
 	else
 		normfact = 1.0 / (1 << psds->bitwidth) ;
 
-	iptr = psf->u.ibuf ;
-	bufferlen = ARRAY_LEN (psf->u.ibuf) ;
+	iptr = ubuf.ibuf ;
+	bufferlen = ARRAY_LEN (ubuf.ibuf) ;
 	while (len > 0)
 	{	readcount = (len >= bufferlen) ? bufferlen : len ;
 		count = sds_read (psf, psds, iptr, readcount) ;
@@ -620,7 +624,8 @@ sds_read_f (SF_PRIVATE *psf, float *ptr, sf_count_t len)
 
 static sf_count_t
 sds_read_d (SF_PRIVATE *psf, double *ptr, sf_count_t len)
-{	SDS_PRIVATE	*psds ;
+{	BUF_UNION	ubuf ;
+	SDS_PRIVATE	*psds ;
 	int			*iptr ;
 	int			k, bufferlen, readcount, count ;
 	sf_count_t	total = 0 ;
@@ -635,8 +640,8 @@ sds_read_d (SF_PRIVATE *psf, double *ptr, sf_count_t len)
 	else
 		normfact = 1.0 / (1 << psds->bitwidth) ;
 
-	iptr = psf->u.ibuf ;
-	bufferlen = ARRAY_LEN (psf->u.ibuf) ;
+	iptr = ubuf.ibuf ;
+	bufferlen = ARRAY_LEN (ubuf.ibuf) ;
 	while (len > 0)
 	{	readcount = (len >= bufferlen) ? bufferlen : len ;
 		count = sds_read (psf, psds, iptr, readcount) ;
@@ -748,6 +753,15 @@ sds_seek (SF_PRIVATE *psf, int mode, sf_count_t seek_from_start)
 
 	return seek_from_start ;
 } /* sds_seek */
+
+static int
+sds_byterate (SF_PRIVATE * psf)
+{
+	if (psf->file.mode == SFM_READ)
+		return (psf->datalength * psf->sf.samplerate) / psf->sf.frames ;
+
+	return -1 ;
+} /* sds_byterate */
 
 /*==============================================================================
 */
@@ -880,7 +894,8 @@ sds_4byte_write (SF_PRIVATE *psf, SDS_PRIVATE *psds)
 
 static sf_count_t
 sds_write_s (SF_PRIVATE *psf, const short *ptr, sf_count_t len)
-{	SDS_PRIVATE	*psds ;
+{	BUF_UNION	ubuf ;
+	SDS_PRIVATE	*psds ;
 	int			*iptr ;
 	int			k, bufferlen, writecount, count ;
 	sf_count_t	total = 0 ;
@@ -890,12 +905,12 @@ sds_write_s (SF_PRIVATE *psf, const short *ptr, sf_count_t len)
 	psds = (SDS_PRIVATE*) psf->codec_data ;
 	psds->total_written += len ;
 
-	iptr = psf->u.ibuf ;
-	bufferlen = ARRAY_LEN (psf->u.ibuf) ;
+	iptr = ubuf.ibuf ;
+	bufferlen = ARRAY_LEN (ubuf.ibuf) ;
 	while (len > 0)
 	{	writecount = (len >= bufferlen) ? bufferlen : len ;
 		for (k = 0 ; k < writecount ; k++)
-			iptr [k] = ptr [total + k] << 16 ;
+			iptr [k] = arith_shift_left (ptr [total + k], 16) ;
 		count = sds_write (psf, psds, iptr, writecount) ;
 		total += count ;
 		len -= writecount ;
@@ -921,7 +936,8 @@ sds_write_i (SF_PRIVATE *psf, const int *ptr, sf_count_t len)
 
 static sf_count_t
 sds_write_f (SF_PRIVATE *psf, const float *ptr, sf_count_t len)
-{	SDS_PRIVATE	*psds ;
+{	BUF_UNION	ubuf ;
+	SDS_PRIVATE	*psds ;
 	int			*iptr ;
 	int			k, bufferlen, writecount, count ;
 	sf_count_t	total = 0 ;
@@ -937,8 +953,8 @@ sds_write_f (SF_PRIVATE *psf, const float *ptr, sf_count_t len)
 	else
 		normfact = 1.0 * (1 << psds->bitwidth) ;
 
-	iptr = psf->u.ibuf ;
-	bufferlen = ARRAY_LEN (psf->u.ibuf) ;
+	iptr = ubuf.ibuf ;
+	bufferlen = ARRAY_LEN (ubuf.ibuf) ;
 	while (len > 0)
 	{	writecount = (len >= bufferlen) ? bufferlen : len ;
 		for (k = 0 ; k < writecount ; k++)
@@ -953,7 +969,8 @@ sds_write_f (SF_PRIVATE *psf, const float *ptr, sf_count_t len)
 
 static sf_count_t
 sds_write_d (SF_PRIVATE *psf, const double *ptr, sf_count_t len)
-{	SDS_PRIVATE	*psds ;
+{	BUF_UNION	ubuf ;
+	SDS_PRIVATE	*psds ;
 	int			*iptr ;
 	int			k, bufferlen, writecount, count ;
 	sf_count_t	total = 0 ;
@@ -969,8 +986,8 @@ sds_write_d (SF_PRIVATE *psf, const double *ptr, sf_count_t len)
 	else
 		normfact = 1.0 * (1 << psds->bitwidth) ;
 
-	iptr = psf->u.ibuf ;
-	bufferlen = ARRAY_LEN (psf->u.ibuf) ;
+	iptr = ubuf.ibuf ;
+	bufferlen = ARRAY_LEN (ubuf.ibuf) ;
 	while (len > 0)
 	{	writecount = (len >= bufferlen) ? bufferlen : len ;
 		for (k = 0 ; k < writecount ; k++)

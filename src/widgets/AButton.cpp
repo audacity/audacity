@@ -197,24 +197,6 @@ AButton::AButton(wxWindow * parent,
                  wxWindowID id,
                  const wxPoint & pos,
                  const wxSize & size,
-                 wxImage up,
-                 wxImage over,
-                 wxImage down,
-                 wxImage overDown,
-                 wxImage dis,
-                 bool toggle):
-   wxWindow()
-{
-   Init(parent, id, pos, size,
-        ImageRoll(up), ImageRoll(over),
-        ImageRoll(down), ImageRoll(overDown), ImageRoll(dis),
-        toggle);
-}
-
-AButton::AButton(wxWindow * parent,
-                 wxWindowID id,
-                 const wxPoint & pos,
-                 const wxSize & size,
                  ImageRoll up,
                  ImageRoll over,
                  ImageRoll down,

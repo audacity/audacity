@@ -290,14 +290,21 @@ EndSection();
 
 
 BeginSection( "Zoom" );
-   AppendItem( "Reset", OnZoomResetID,         XO("Zoom Reset"),
+   // Accelerators only if zooming enabled.
+   bool bVZoom;
+   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
+
+   AppendItem( "Reset", OnZoomResetID,         XXO("Zoom Reset"),
               POPUP_MENU_FN( OnZoomReset ) );
-   AppendItem( "Fit", OnZoomFitVerticalID,   XO("Zoom to Fit\tShift-Right-Click"),
-              POPUP_MENU_FN( OnZoomFitVertical ) );
-   AppendItem( "In", OnZoomInVerticalID,    XO("Zoom In\tLeft-Click/Left-Drag"),
-              POPUP_MENU_FN( OnZoomInVertical ) );
-   AppendItem( "Out", OnZoomOutVerticalID,   XO("Zoom Out\tShift-Left-Click"),
-              POPUP_MENU_FN( OnZoomOutVertical ) );
+   AppendItem( "Fit", OnZoomFitVerticalID,
+      MakeLabel( XXO("Zoom to Fit"), bVZoom, XXO("Shift-Right-Click") ),
+      POPUP_MENU_FN( OnZoomFitVertical ) );
+   AppendItem( "In", OnZoomInVerticalID,
+      MakeLabel( XXO("Zoom In"), bVZoom, XXO("Left-Click/Left-Drag") ),
+      POPUP_MENU_FN( OnZoomInVertical ) );
+   AppendItem( "Out", OnZoomOutVerticalID,
+      MakeLabel( XXO("Zoom Out"), bVZoom, XXO("Shift-Left-Click") ),
+      POPUP_MENU_FN( OnZoomOutVertical ) );
 EndSection();
 
 END_POPUP_MENU()

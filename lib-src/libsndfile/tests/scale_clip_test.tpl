@@ -1,6 +1,6 @@
 [+ AutoGen5 template c +]
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2012 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -22,12 +22,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <inttypes.h>
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
+#else
+#include "sf_unistd.h"
 #endif
-
-#include <math.h>
 
 #include <sndfile.h>
 
@@ -167,7 +169,7 @@ main (void)
 		} ;
 
 	if (sfinfo.frames != BUFFER_SIZE)
-	{	printf ("\n\nLine %d: Incorrect number of frames in file (%d => %ld).\n\n", __LINE__, BUFFER_SIZE, SF_COUNT_TO_LONG (sfinfo.frames)) ;
+	{	printf ("\n\nLine %d: Incorrect number of frames in file (%d => %" PRId64 ").\n\n", __LINE__, BUFFER_SIZE, sfinfo.frames) ;
 		exit (1) ;
 		} ;
 
@@ -301,7 +303,7 @@ main (void)
 		} ;
 
 	if (sfinfo.frames != BUFFER_SIZE)
-	{	printf ("\n\nLine %d: Incorrect number of frames in file (%d => %ld).\n\n", __LINE__, BUFFER_SIZE, SF_COUNT_TO_LONG (sfinfo.frames)) ;
+	{	printf ("\n\nLine %d: Incorrect number of frames in file (%d => %" PRId64 ").\n\n", __LINE__, BUFFER_SIZE, sfinfo.frames) ;
 		exit (1) ;
 		} ;
 
@@ -380,7 +382,7 @@ main (void)
 		} ;
 
 	if (sfinfo.frames != 3 * BUFFER_SIZE)
-	{	printf ("\n\nLine %d: Incorrect number of frames in file (%d => %ld).\n\n", __LINE__, 3 * BUFFER_SIZE, SF_COUNT_TO_LONG (sfinfo.frames)) ;
+	{	printf ("\n\nLine %d: Incorrect number of frames in file (%d => %" PRId64 ").\n\n", __LINE__, 3 * BUFFER_SIZE, sfinfo.frames) ;
 		exit (1) ;
 		} ;
 

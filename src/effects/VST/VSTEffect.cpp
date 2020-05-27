@@ -27,6 +27,8 @@
 #include "../../Audacity.h" // for USE_* macros
 #include "VSTEffect.h"
 
+#include "../../widgets/ProgressDialog.h"
+
 #if 0
 #if defined(BUILDING_AUDACITY)
 #include "../../PlatformCompatibility.h"
@@ -58,7 +60,6 @@
 #include <wx/log.h>
 #include <wx/module.h>
 #include <wx/process.h>
-#include <wx/progdlg.h>
 #include <wx/recguard.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
@@ -171,7 +172,7 @@ public:
       if (wxTheApp && wxTheApp->argc == 3 && wxStrcmp(wxTheApp->argv[1], VSTCMDKEY) == 0)
       {
          // NOTE:  This can really hide failures, which is what we want for those pesky
-         //        VSTs that are bad or that our support isn't currect.  But, it can also
+         //        VSTs that are bad or that our support isn't correct.  But, it can also
          //        hide Audacity failures in the subprocess, so if you're having an unruley
          //        VST or odd Audacity failures, comment it out and you might get more info.
          //wxHandleFatalExceptions();
@@ -517,7 +518,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    wxString effectIDs = wxT("0;");
    wxStringTokenizer effectTzr(effectIDs, wxT(";"));
 
-   Optional<wxProgressDialog> progress{};
+   Optional<ProgressDialog> progress{};
    size_t idCnt = 0;
    size_t idNdx = 0;
 
@@ -541,7 +542,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
       }
       catch (...)
       {
-         wxLogMessage(_("VST plugin registration failed for %s\n"), path);
+         wxLogMessage(wxT("VST plugin registration failed for %s\n"), path);
          error = true;
       }
 
@@ -577,17 +578,18 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
                idCnt = effectTzr.CountTokens();
                if (idCnt > 3)
                {
-                  progress.emplace( _("Scanning Shell VST"),
-                        wxString::Format(_("Registering %d of %d: %-64.64s"), 0, idCnt,
-                                         proc.GetSymbol().Translation()),
-                        static_cast<int>(idCnt),
-                        nullptr,
-                        wxPD_APP_MODAL |
+                  progress.emplace( XO("Scanning Shell VST"),
+                        XO("Registering %d of %d: %-64.64s")
+                           .Format( 0, idCnt, proc.GetSymbol().Translation())
+                                   /*
+                        , wxPD_APP_MODAL |
                            wxPD_AUTO_HIDE |
                            wxPD_CAN_ABORT |
                            wxPD_ELAPSED_TIME |
                            wxPD_ESTIMATED_TIME |
-                           wxPD_REMAINING_TIME );
+                           wxPD_REMAINING_TIME
+                                    */
+                  );
                   progress->Show();
                }
             break;
@@ -652,9 +654,10 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
                if (progress)
                {
                   idNdx++;
-                  cont = progress->Update(idNdx,
-                     wxString::Format(_("Registering %d of %d: %-64.64s"), idNdx, idCnt,
-                        proc.GetSymbol().Translation() ));
+                  auto result = progress->Update((int)idNdx, (int)idCnt,
+                     XO("Registering %d of %d: %-64.64s")
+                        .Format( idNdx, idCnt, proc.GetSymbol().Translation() ));
+                  cont = (result == ProgressResult::Success);
                }
 
                if (!skip && cont)
@@ -825,7 +828,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
                t = S.Validator<IntegerValidator<int>>(
                      &mBufferSize, NumValidatorStyle::DEFAULT, 8, 1048576 * 1)
                   .MinSize( { 100, -1 } )
-                  .TieNumericTextBox(XO("&Buffer Size (8 to 1048576 samples):"),
+                  .TieNumericTextBox(XXO("&Buffer Size (8 to 1048576 samples):"),
                                        mBufferSize,
                                        12);
             }
@@ -845,7 +848,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(XO("Enable &compensation"),
+               S.TieCheckBox(XXO("Enable &compensation"),
                              mUseLatency);
             }
             S.EndHorizontalLay();
@@ -859,7 +862,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 " A basic text-only method is also available. "
 " Reopen the effect for this to take effect."),
                false, 0, 650);
-            S.TieCheckBox(XO("Enable &graphical interface"),
+            S.TieCheckBox(XXO("Enable &graphical interface"),
                           mUseGUI);
          }
          S.EndStatic();
@@ -2173,7 +2176,7 @@ bool VSTEffect::Load()
    }
    catch (...)
    {
-      wxLogMessage(_("VST plugin initialization failed\n"));
+      wxLogMessage(wxT("VST plugin initialization failed\n"));
       mAEffect = NULL;
    }
 
@@ -2244,7 +2247,7 @@ bool VSTEffect::Load()
          mMidiIns = 0;
          mMidiOuts = 0;
 
-         // Check to see if parameters can be automated.  This isn't a gaurantee
+         // Check to see if parameters can be automated.  This isn't a guarantee
          // since it could be that the effect simply doesn't support the opcode.
          mAutomatable = false;
          for (int i = 0; i < mAEffect->numParams; i++)

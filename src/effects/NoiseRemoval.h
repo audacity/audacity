@@ -24,7 +24,6 @@
 class wxButton;
 class wxSizer;
 class wxSlider;
-class wxString;
 
 class Envelope;
 class WaveTrack;

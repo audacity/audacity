@@ -148,8 +148,6 @@ const int sliderFontSize = 12;
 #define OPTIONAL_SLIDER_TICKS
 #endif
 
-class wxArrayString;
-
 //
 // TipWindow
 //
@@ -166,44 +164,57 @@ class TipWindow final : public wxFrame
 
 private:
    void OnPaint(wxPaintEvent & event);
-#if defined(__WXGTK__)
-   void OnCreate(wxWindowCreateEvent & event);
-#endif
 
 private:
    TranslatableString mLabel;
    int mWidth;
    int mHeight;
+   wxFont mFont;
 
    DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(TipWindow, wxFrame)
    EVT_PAINT(TipWindow::OnPaint)
-#if defined(__WXGTK__)
-   EVT_WINDOW_CREATE(TipWindow::OnCreate)
-#endif
 END_EVENT_TABLE()
 
 TipWindow::TipWindow(wxWindow *parent, const TranslatableStrings & labels)
-:  wxFrame(parent, wxID_ANY, wxString{}, wxDefaultPosition, wxDefaultSize,
-           wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT)
+:  wxFrame(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
+           wxFRAME_SHAPED | wxNO_BORDER | wxFRAME_NO_TASKBAR | wxFRAME_FLOAT_ON_PARENT )
 {
    SetBackgroundStyle(wxBG_STYLE_PAINT);
+   SetBackgroundColour(wxTransparentColour);
 
-   wxFont labelFont(sliderFontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mFont.SetPointSize(sliderFontSize);
+   mFont.SetFamily(wxFONTFAMILY_SWISS);
+   mFont.SetStyle(wxFONTSTYLE_NORMAL);
+   mFont.SetWeight(wxFONTWEIGHT_NORMAL);
+
    mWidth = mHeight = 0;
    for ( const auto &label : labels ) {
       int width, height;
-      GetTextExtent(label.Translation(), &width, &height, NULL, NULL, &labelFont);
+      GetTextExtent(label.Translation(), &width, &height, NULL, NULL, &mFont);
       mWidth =  std::max( mWidth,  width );
       mHeight = std::max( mHeight, height );
    }
 
+   // Pad to allow for curved corners
    mWidth += 8;
    mHeight += 8;
 
-#if defined(__WXMSW__) || defined(__WXMAC__)
+#if defined(__WXMAC__)
+   // Use a bitmap region to set the shape since just adding an unfilled path
+   // will make the window transparent
+   wxBitmap shape(mWidth, mHeight);
+   wxMemoryDC dc(shape);
+
+   dc.SetPen(*wxBLACK_PEN);
+   dc.SetBrush(*wxBLACK_BRUSH);
+   dc.DrawRoundedRectangle(0, 0, mWidth, mHeight, 5);
+   dc.SelectObject(wxNullBitmap);
+
+   SetShape(wxRegion(shape, *wxWHITE));
+#else
    wxGraphicsPath path = wxGraphicsRenderer::GetDefaultRenderer()->CreatePath();
    path.AddRoundedRectangle(0, 0, mWidth, mHeight, 5);
    SetShape(path);
@@ -217,11 +228,7 @@ wxSize TipWindow::GetSize() const
 
 void TipWindow::SetPos(const wxPoint & pos)
 {
-#if defined(__WXGTK__)
-   SetSize(pos.x, pos.y, wxDefaultCoord, wxDefaultCoord);
-#else
    SetSize(pos.x, pos.y, mWidth, mHeight);
-#endif
 }
 
 void TipWindow::SetLabel(const TranslatableString & label)
@@ -237,7 +244,7 @@ void TipWindow::OnPaint(wxPaintEvent & WXUNUSED(event))
    dc.SetBrush(AColor::tooltipBrush);
    dc.DrawRoundedRectangle(0, 0, mWidth, mHeight, 5);
 
-   dc.SetFont(wxFont(sliderFontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+   dc.SetFont(mFont);
    dc.SetTextForeground(AColor::tooltipPen.GetColour());
 
    int textWidth, textHeight;
@@ -245,15 +252,6 @@ void TipWindow::OnPaint(wxPaintEvent & WXUNUSED(event))
    dc.GetTextExtent(visibleLabel, &textWidth, &textHeight);
    dc.DrawText(visibleLabel, (mWidth - textWidth) / 2, (mHeight - textHeight) / 2);
 }
-
-#if defined(__WXGTK__)
-void TipWindow::OnCreate(wxWindowCreateEvent & WXUNUSED(event))
-{
-   wxGraphicsPath path = wxGraphicsRenderer::GetDefaultRenderer()->CreatePath();
-   path.AddRoundedRectangle(0, 0, mWidth, mHeight, 5);
-   SetShape(path);
-}
-#endif
 
 //
 // SliderDialog
@@ -660,7 +658,7 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
    // Draw the background.
    // If we are lightweight, this has already been done for us.
    if( mHW ){
-      dc.SetBackground( wxBrush(mParent->GetBackgroundColour()) );
+      dc.SetBackground( *wxTRANSPARENT_BRUSH );
       dc.Clear();
    }
 
@@ -708,29 +706,16 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
    mBitmap = std::make_unique<wxBitmap>();
    mBitmap->Create(mWidth, mHeight, paintDC);
 
+#if defined(__WXMAC__)
+   mBitmap->UseAlpha();
+#endif
+
    // Set up the memory DC
    // We draw to it, not the paintDC.
    wxMemoryDC dc;
    dc.SelectObject(*mBitmap);
 
-
-   // The backgroundColour is the expected background colour.
-   // This bitmap is masked, so the colour affects anti-aliassing
-   // at the edges.  
-   wxColour backgroundColour = theTheme.Colour(clrTrackInfo);
-   if( mHW )
-      backgroundColour = mParent->GetBackgroundColour();
-
-   // Bug 1981 workaround.
-   // On Mac the colour may end up being the system background colour.
-   // For some reason (not yet known) the mask does not work in that case.
-   // So perturb the colour very slightly to work around that.
-   // (we can actually perterb it a lot before the anti-aliassing starts 
-   // to look bad)
-   backgroundColour = wxColour( backgroundColour.Red(), 
-      backgroundColour.Green(), 
-      backgroundColour.Blue() ^1 );
-   dc.SetBackground(wxBrush(backgroundColour));
+   dc.SetBackground(wxBrush(mParent->GetBackgroundColour()));
    dc.Clear();
 
    // Draw the line along which the thumb moves.
@@ -754,22 +739,17 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
 
       // sliderFontSize is for the tooltip.
       // we need something smaller here...
-      int fontSize = 7;
-      wxFont labelFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+      wxFont labelFont(7, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
       dc.SetFont(labelFont);
 
-      // Colors
+      // Color
       dc.SetTextForeground( theTheme.Colour( clrTrackPanelText ));
-      dc.SetTextBackground( backgroundColour );
-      // Used to use wxSOLID here, but wxTRANSPARENT is better for mac, and 
-      // works fine on windows.
-      dc.SetBackgroundMode( wxTRANSPARENT );
 
       /* i18n-hint: One-letter abbreviation for Left, in the Pan slider */
       dc.DrawText(_("L"), mLeftX, 0);
 
       /* i18n-hint: One-letter abbreviation for Right, in the Pan slider */
-      dc.DrawText(_("R"), mRightX-6,0);
+      dc.DrawText(_("R"), mRightX - dc.GetTextExtent(_("R")).GetWidth(), 0);
    }
    else
    {
@@ -857,7 +837,10 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
    // safenew, because SetMask takes ownership
    // We always mask.  If we are HeavyWeight, the ASlider draws the
    // background.
-   mBitmap->SetMask(safenew wxMask(*mBitmap, backgroundColour));
+   if( !mHW )
+   {
+      mBitmap->SetMask(safenew wxMask(*mBitmap, dc.GetBackground().GetColour()));
+   }
 }
 
 void LWSlider::SetToolTipTemplate(const TranslatableString & tip)
@@ -943,7 +926,7 @@ TranslatableString LWSlider::GetTip(float value) const
       switch(mStyle)
       {
       case FRAC_SLIDER:
-         Verbatim("%.2f").Format( value );
+         val = Verbatim("%.2f").Format( value );
          break;
 
       case DB_SLIDER:
@@ -977,10 +960,10 @@ TranslatableString LWSlider::GetTip(float value) const
       case VEL_SLIDER:
          if (value > 0.0f)
             // Signed
-            Verbatim("%+d").Format( (int) value );
+            val = Verbatim("%+d").Format( (int) value );
          else
             // Zero, or signed negative
-            Verbatim("%d").Format( (int) value );
+            val = Verbatim("%d").Format( (int) value );
          break;
 #endif
       }
@@ -1009,17 +992,19 @@ TranslatableStrings LWSlider::GetWidestTips() const
       {
       case FRAC_SLIDER:
          results.push_back( GetTip( -1.99f ) );
+         results.push_back( GetTip( +1.99f ) );
          break;
 
       case DB_SLIDER:
          results.push_back( GetTip( -99.9f ) );
+         results.push_back( GetTip( +99.9f ) );
          break;
 
       case PAN_SLIDER:
          // Don't assume we know which of "Left", "Right", or "Center"
          // is the longest string, when localized
          results.push_back( GetTip(  0.f ) );
-         results.push_back( GetTip(  1.f ) );
+         results.push_back( GetTip( +1.f ) );
          results.push_back( GetTip( -1.f ) );
          break;
 
@@ -1601,7 +1586,7 @@ void ASlider::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
-   wxPaintDC dc(this);
+   wxBufferedPaintDC dc(this);
 
    bool highlighted =
       GetClientRect().Contains(

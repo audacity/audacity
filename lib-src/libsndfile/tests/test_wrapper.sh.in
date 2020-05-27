@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
-# Copyright (C) 2008-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+# Copyright (C) 2008-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 #
 # All rights reserved.
 #
@@ -33,29 +33,13 @@
 
 HOST_TRIPLET=@HOST_TRIPLET@
 PACKAGE_VERSION=@PACKAGE_VERSION@
-LIB_VERSION=`echo $PACKAGE_VERSION | sed "s/[a-z].*//"`
+LIB_VERSION=$(echo $PACKAGE_VERSION | sed "s/[a-z].*//")
+ABS_TOP_SRCDIR=@abs_top_srcdir@
+PYTHON=@PYTHON@
 
-if test -f tests/sfversion@EXEEXT@ ; then
-	cd tests
-	fi
+sfversion=$(./tests/sfversion@EXEEXT@ | grep libsndfile | sed "s/-exp$//")
 
-if test ! -f sfversion@EXEEXT@ ; then
-	echo "Not able to find test executables."
-	exit 1
-	fi
-
-if test -f libsndfile.so.$LIB_VERSION ; then
-	# This will work on Linux, but not on Mac.
-	# Windows is already sorted out.
-	export LD_LIBRARY_PATH=`pwd`
-	if test ! -f libsndfile.so.1 ; then
-		ln -s libsndfile.so.$LIB_VERSION libsndfile.so.1
-		fi
-	fi
-
-sfversion=`./sfversion@EXEEXT@`
-
-if test $sfversion != libsndfile-$PACKAGE_VERSION ; then
+if test "$sfversion" != libsndfile-$PACKAGE_VERSION ; then
 	echo "Error : sfversion ($sfversion) and PACKAGE_VERSION ($PACKAGE_VERSION) don't match."
 	exit 1
 	fi
@@ -63,44 +47,44 @@ if test $sfversion != libsndfile-$PACKAGE_VERSION ; then
 # Force exit on errors.
 set -e
 
-# Generic-tests
-uname -a
-
 # Check the header file.
-sh pedantic-header-test.sh
+/usr/bin/env sh tests/pedantic-header-test.sh
 
 # Need this for when we're running from files collected into the
 # libsndfile-testsuite-@PACKAGE_VERSION@ tarball.
-if test -x test_main@EXEEXT@ ; then
-	echo "Running unit tests from src/ directory of source code tree."
-	./test_main@EXEEXT@
-	echo
-	echo "Running end-to-end tests from tests/ directory."
-	fi
+echo "Running unit tests from src/ directory of source code tree."
+./src/test_main@EXEEXT@
 
-./error_test@EXEEXT@
-./pcm_test@EXEEXT@
-./ulaw_test@EXEEXT@
-./alaw_test@EXEEXT@
-./dwvw_test@EXEEXT@
-./command_test@EXEEXT@ ver
-./command_test@EXEEXT@ norm
-./command_test@EXEEXT@ format
-./command_test@EXEEXT@ peak
-./command_test@EXEEXT@ trunc
-./command_test@EXEEXT@ inst
-./command_test@EXEEXT@ current_sf_info
-./command_test@EXEEXT@ bext
-./command_test@EXEEXT@ bextch
-./command_test@EXEEXT@ chanmap
-./floating_point_test@EXEEXT@
-./checksum_test@EXEEXT@
-./scale_clip_test@EXEEXT@
-./headerless_test@EXEEXT@
-./rdwr_test@EXEEXT@
-./locale_test@EXEEXT@
-./win32_ordinal_test@EXEEXT@
-./external_libs_test@EXEEXT@
+echo
+echo "Running end-to-end tests from tests/ directory."
+
+./tests/error_test@EXEEXT@
+./tests/pcm_test@EXEEXT@
+./tests/ulaw_test@EXEEXT@
+./tests/alaw_test@EXEEXT@
+./tests/dwvw_test@EXEEXT@
+./tests/command_test@EXEEXT@ ver
+./tests/command_test@EXEEXT@ norm
+./tests/command_test@EXEEXT@ format
+./tests/command_test@EXEEXT@ peak
+./tests/command_test@EXEEXT@ trunc
+./tests/command_test@EXEEXT@ inst
+./tests/command_test@EXEEXT@ cue
+./tests/command_test@EXEEXT@ current_sf_info
+./tests/command_test@EXEEXT@ bext
+./tests/command_test@EXEEXT@ bextch
+./tests/command_test@EXEEXT@ chanmap
+./tests/command_test@EXEEXT@ cart
+./tests/floating_point_test@EXEEXT@
+./tests/checksum_test@EXEEXT@
+./tests/scale_clip_test@EXEEXT@
+./tests/headerless_test@EXEEXT@
+./tests/rdwr_test@EXEEXT@
+./tests/locale_test@EXEEXT@
+./tests/win32_ordinal_test@EXEEXT@
+./tests/external_libs_test@EXEEXT@
+./tests/format_check_test@EXEEXT@
+./tests/channel_test@EXEEXT@
 
 # The w64 G++ compiler requires an extra runtime DLL which we don't have,
 # so skip this test.
@@ -110,7 +94,7 @@ case "$HOST_TRIPLET" in
 	i686-w64-mingw32)
 		;;
 	*)
-		./cpp_test@EXEEXT@
+		./tests/cpp_test@EXEEXT@
 		;;
 	esac
 
@@ -119,240 +103,269 @@ echo "  $sfversion passed common tests."
 echo "----------------------------------------------------------------------"
 
 # aiff-tests
-./write_read_test@EXEEXT@ aiff
-./lossy_comp_test@EXEEXT@ aiff_ulaw
-./lossy_comp_test@EXEEXT@ aiff_alaw
-./lossy_comp_test@EXEEXT@ aiff_gsm610
-echo "=========================="
-echo "./lossy_comp_test@EXEEXT@ aiff_ima"
-echo "=========================="
-./peak_chunk_test@EXEEXT@ aiff
-./header_test@EXEEXT@ aiff
-./misc_test@EXEEXT@ aiff
-./string_test@EXEEXT@ aiff
-./multi_file_test@EXEEXT@ aiff
-./aiff_rw_test@EXEEXT@
+./tests/write_read_test@EXEEXT@ aiff
+./tests/lossy_comp_test@EXEEXT@ aiff_ulaw
+./tests/lossy_comp_test@EXEEXT@ aiff_alaw
+./tests/lossy_comp_test@EXEEXT@ aiff_gsm610
+echo "----------------------------------------------------------------------"
+echo "  lossy_comp_test@EXEEXT@ aiff_ima"
+echo "----------------------------------------------------------------------"
+
+./tests/peak_chunk_test@EXEEXT@ aiff
+./tests/header_test@EXEEXT@ aiff
+./tests/misc_test@EXEEXT@ aiff
+./tests/string_test@EXEEXT@ aiff
+./tests/multi_file_test@EXEEXT@ aiff
+./tests/aiff_rw_test@EXEEXT@
+./tests/chunk_test@EXEEXT@ aiff
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on AIFF files."
 echo "----------------------------------------------------------------------"
 
 # au-tests
-./write_read_test@EXEEXT@ au
-./lossy_comp_test@EXEEXT@ au_ulaw
-./lossy_comp_test@EXEEXT@ au_alaw
-./lossy_comp_test@EXEEXT@ au_g721
-./lossy_comp_test@EXEEXT@ au_g723
-./header_test@EXEEXT@ au
-./misc_test@EXEEXT@ au
-./multi_file_test@EXEEXT@ au
+./tests/write_read_test@EXEEXT@ au
+./tests/lossy_comp_test@EXEEXT@ au_ulaw
+./tests/lossy_comp_test@EXEEXT@ au_alaw
+./tests/lossy_comp_test@EXEEXT@ au_g721
+./tests/lossy_comp_test@EXEEXT@ au_g723
+./tests/header_test@EXEEXT@ au
+./tests/misc_test@EXEEXT@ au
+./tests/multi_file_test@EXEEXT@ au
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on AU files."
 echo "----------------------------------------------------------------------"
 
 # caf-tests
-./write_read_test@EXEEXT@ caf
-./lossy_comp_test@EXEEXT@ caf_ulaw
-./lossy_comp_test@EXEEXT@ caf_alaw
-./header_test@EXEEXT@ caf
-./peak_chunk_test@EXEEXT@ caf
-./misc_test@EXEEXT@ caf
+./tests/write_read_test@EXEEXT@ caf
+./tests/lossy_comp_test@EXEEXT@ caf_ulaw
+./tests/lossy_comp_test@EXEEXT@ caf_alaw
+./tests/header_test@EXEEXT@ caf
+./tests/peak_chunk_test@EXEEXT@ caf
+./tests/misc_test@EXEEXT@ caf
+./tests/chunk_test@EXEEXT@ caf
+./tests/string_test@EXEEXT@ caf
+./tests/long_read_write_test@EXEEXT@ alac
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on CAF files."
 echo "----------------------------------------------------------------------"
 
 # wav-tests
-./write_read_test@EXEEXT@ wav
-./lossy_comp_test@EXEEXT@ wav_pcm
-./lossy_comp_test@EXEEXT@ wav_ima
-./lossy_comp_test@EXEEXT@ wav_msadpcm
-./lossy_comp_test@EXEEXT@ wav_ulaw
-./lossy_comp_test@EXEEXT@ wav_alaw
-./lossy_comp_test@EXEEXT@ wav_gsm610
-./lossy_comp_test@EXEEXT@ wav_g721
-./peak_chunk_test@EXEEXT@ wav
-./header_test@EXEEXT@ wav
-./misc_test@EXEEXT@ wav
-./string_test@EXEEXT@ wav
-./multi_file_test@EXEEXT@ wav
+./tests/write_read_test@EXEEXT@ wav
+./tests/lossy_comp_test@EXEEXT@ wav_pcm
+./tests/lossy_comp_test@EXEEXT@ wav_ima
+./tests/lossy_comp_test@EXEEXT@ wav_msadpcm
+./tests/lossy_comp_test@EXEEXT@ wav_ulaw
+./tests/lossy_comp_test@EXEEXT@ wav_alaw
+./tests/lossy_comp_test@EXEEXT@ wav_gsm610
+./tests/lossy_comp_test@EXEEXT@ wav_g721
+./tests/peak_chunk_test@EXEEXT@ wav
+./tests/header_test@EXEEXT@ wav
+./tests/misc_test@EXEEXT@ wav
+./tests/string_test@EXEEXT@ wav
+./tests/multi_file_test@EXEEXT@ wav
+./tests/chunk_test@EXEEXT@ wav
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on WAV files."
 echo "----------------------------------------------------------------------"
 
 # w64-tests
-./write_read_test@EXEEXT@ w64
-./lossy_comp_test@EXEEXT@ w64_ima
-./lossy_comp_test@EXEEXT@ w64_msadpcm
-./lossy_comp_test@EXEEXT@ w64_ulaw
-./lossy_comp_test@EXEEXT@ w64_alaw
-./lossy_comp_test@EXEEXT@ w64_gsm610
-./header_test@EXEEXT@ w64
-./misc_test@EXEEXT@ w64
+./tests/write_read_test@EXEEXT@ w64
+./tests/lossy_comp_test@EXEEXT@ w64_ima
+./tests/lossy_comp_test@EXEEXT@ w64_msadpcm
+./tests/lossy_comp_test@EXEEXT@ w64_ulaw
+./tests/lossy_comp_test@EXEEXT@ w64_alaw
+./tests/lossy_comp_test@EXEEXT@ w64_gsm610
+./tests/header_test@EXEEXT@ w64
+./tests/misc_test@EXEEXT@ w64
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on W64 files."
 echo "----------------------------------------------------------------------"
 
 # rf64-tests
-./write_read_test@EXEEXT@ rf64
-./header_test@EXEEXT@ rf64
-./misc_test@EXEEXT@ rf64
+./tests/write_read_test@EXEEXT@ rf64
+./tests/header_test@EXEEXT@ rf64
+./tests/misc_test@EXEEXT@ rf64
+./tests/string_test@EXEEXT@ rf64
+./tests/peak_chunk_test@EXEEXT@ rf64
+./tests/chunk_test@EXEEXT@ rf64
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on RF64 files."
 echo "----------------------------------------------------------------------"
 
 # raw-tests
-./write_read_test@EXEEXT@ raw
-./lossy_comp_test@EXEEXT@ raw_ulaw
-./lossy_comp_test@EXEEXT@ raw_alaw
-./lossy_comp_test@EXEEXT@ raw_gsm610
-./lossy_comp_test@EXEEXT@ vox_adpcm
-./raw_test@EXEEXT@
+./tests/write_read_test@EXEEXT@ raw
+./tests/lossy_comp_test@EXEEXT@ raw_ulaw
+./tests/lossy_comp_test@EXEEXT@ raw_alaw
+./tests/lossy_comp_test@EXEEXT@ raw_gsm610
+./tests/lossy_comp_test@EXEEXT@ vox_adpcm
+./tests/raw_test@EXEEXT@
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on RAW (header-less) files."
 echo "----------------------------------------------------------------------"
 
 # paf-tests
-./write_read_test@EXEEXT@ paf
-./header_test@EXEEXT@ paf
-./misc_test@EXEEXT@ paf
+./tests/write_read_test@EXEEXT@ paf
+./tests/header_test@EXEEXT@ paf
+./tests/misc_test@EXEEXT@ paf
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on PAF files."
 echo "----------------------------------------------------------------------"
 
 # svx-tests
-./write_read_test@EXEEXT@ svx
-./header_test@EXEEXT@ svx
-./misc_test@EXEEXT@ svx
+./tests/write_read_test@EXEEXT@ svx
+./tests/header_test@EXEEXT@ svx
+./tests/misc_test@EXEEXT@ svx
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on SVX files."
 echo "----------------------------------------------------------------------"
 
 # nist-tests
-./write_read_test@EXEEXT@ nist
-./lossy_comp_test@EXEEXT@ nist_ulaw
-./lossy_comp_test@EXEEXT@ nist_alaw
-./header_test@EXEEXT@ nist
-./misc_test@EXEEXT@ nist
+./tests/write_read_test@EXEEXT@ nist
+./tests/lossy_comp_test@EXEEXT@ nist_ulaw
+./tests/lossy_comp_test@EXEEXT@ nist_alaw
+./tests/header_test@EXEEXT@ nist
+./tests/misc_test@EXEEXT@ nist
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on NIST files."
 echo "----------------------------------------------------------------------"
 
 # ircam-tests
-./write_read_test@EXEEXT@ ircam
-./lossy_comp_test@EXEEXT@ ircam_ulaw
-./lossy_comp_test@EXEEXT@ ircam_alaw
-./header_test@EXEEXT@ ircam
-./misc_test@EXEEXT@ ircam
+./tests/write_read_test@EXEEXT@ ircam
+./tests/lossy_comp_test@EXEEXT@ ircam_ulaw
+./tests/lossy_comp_test@EXEEXT@ ircam_alaw
+./tests/header_test@EXEEXT@ ircam
+./tests/misc_test@EXEEXT@ ircam
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on IRCAM files."
 echo "----------------------------------------------------------------------"
 
 # voc-tests
-./write_read_test@EXEEXT@ voc
-./lossy_comp_test@EXEEXT@ voc_ulaw
-./lossy_comp_test@EXEEXT@ voc_alaw
-./header_test@EXEEXT@ voc
-./misc_test@EXEEXT@ voc
+./tests/write_read_test@EXEEXT@ voc
+./tests/lossy_comp_test@EXEEXT@ voc_ulaw
+./tests/lossy_comp_test@EXEEXT@ voc_alaw
+./tests/header_test@EXEEXT@ voc
+./tests/misc_test@EXEEXT@ voc
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on VOC files."
 echo "----------------------------------------------------------------------"
 
 # mat4-tests
-./write_read_test@EXEEXT@ mat4
-./header_test@EXEEXT@ mat4
-./misc_test@EXEEXT@ mat4
+./tests/write_read_test@EXEEXT@ mat4
+./tests/header_test@EXEEXT@ mat4
+./tests/misc_test@EXEEXT@ mat4
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on MAT4 files."
 echo "----------------------------------------------------------------------"
 
 # mat5-tests
-./write_read_test@EXEEXT@ mat5
-./header_test@EXEEXT@ mat5
-./misc_test@EXEEXT@ mat5
+./tests/write_read_test@EXEEXT@ mat5
+./tests/header_test@EXEEXT@ mat5
+./tests/misc_test@EXEEXT@ mat5
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on MAT5 files."
 echo "----------------------------------------------------------------------"
 
 # pvf-tests
-./write_read_test@EXEEXT@ pvf
-./header_test@EXEEXT@ pvf
-./misc_test@EXEEXT@ pvf
+./tests/write_read_test@EXEEXT@ pvf
+./tests/header_test@EXEEXT@ pvf
+./tests/misc_test@EXEEXT@ pvf
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on PVF files."
 echo "----------------------------------------------------------------------"
 
 # xi-tests
-./lossy_comp_test@EXEEXT@ xi_dpcm
+./tests/lossy_comp_test@EXEEXT@ xi_dpcm
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on XI files."
 echo "----------------------------------------------------------------------"
 
 # htk-tests
-./write_read_test@EXEEXT@ htk
-./header_test@EXEEXT@ htk
-./misc_test@EXEEXT@ htk
+./tests/write_read_test@EXEEXT@ htk
+./tests/header_test@EXEEXT@ htk
+./tests/misc_test@EXEEXT@ htk
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on HTK files."
 echo "----------------------------------------------------------------------"
 
 # avr-tests
-./write_read_test@EXEEXT@ avr
-./header_test@EXEEXT@ avr
-./misc_test@EXEEXT@ avr
+./tests/write_read_test@EXEEXT@ avr
+./tests/header_test@EXEEXT@ avr
+./tests/misc_test@EXEEXT@ avr
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on AVR files."
 echo "----------------------------------------------------------------------"
 
 # sds-tests
-./write_read_test@EXEEXT@ sds
-./header_test@EXEEXT@ sds
-./misc_test@EXEEXT@ sds
+./tests/write_read_test@EXEEXT@ sds
+./tests/header_test@EXEEXT@ sds
+./tests/misc_test@EXEEXT@ sds
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on SDS files."
 echo "----------------------------------------------------------------------"
 
 # sd2-tests
-./write_read_test@EXEEXT@ sd2
+./tests/write_read_test@EXEEXT@ sd2
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on SD2 files."
 echo "----------------------------------------------------------------------"
 
 # wve-tests
-./lossy_comp_test@EXEEXT@ wve
+./tests/lossy_comp_test@EXEEXT@ wve
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on WVE files."
 echo "----------------------------------------------------------------------"
 
 # mpc2k-tests
-./write_read_test@EXEEXT@ mpc2k
-./header_test@EXEEXT@ mpc2k
-./misc_test@EXEEXT@ mpc2k
+./tests/write_read_test@EXEEXT@ mpc2k
+./tests/header_test@EXEEXT@ mpc2k
+./tests/misc_test@EXEEXT@ mpc2k
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on MPC 2000 files."
 echo "----------------------------------------------------------------------"
 
 # flac-tests
-./write_read_test@EXEEXT@ flac
-./string_test@EXEEXT@ flac
+./tests/write_read_test@EXEEXT@ flac
+./tests/compression_size_test@EXEEXT@ flac
+./tests/string_test@EXEEXT@ flac
+./tests/header_test@EXEEXT@ flac
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on FLAC files."
 echo "----------------------------------------------------------------------"
 
 # vorbis-tests
-./ogg_test@EXEEXT@
-./vorbis_test@EXEEXT@
-./lossy_comp_test@EXEEXT@ ogg_vorbis
-./string_test@EXEEXT@ ogg
-./misc_test@EXEEXT@ ogg
+./tests/ogg_test@EXEEXT@
+./tests/compression_size_test@EXEEXT@ vorbis
+./tests/lossy_comp_test@EXEEXT@ ogg_vorbis
+./tests/string_test@EXEEXT@ ogg
+./tests/misc_test@EXEEXT@ ogg
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed tests on OGG/VORBIS files."
 echo "----------------------------------------------------------------------"
 
+# opus-tests
+./tests/ogg_opus_test@EXEEXT@
+./tests/compression_size_test@EXEEXT@ opus
+./tests/lossy_comp_test@EXEEXT@ ogg_opus
+./tests/string_test@EXEEXT@ opus
+
+echo "----------------------------------------------------------------------"
+echo "  $sfversion passed tests on OPUS files."
+echo "----------------------------------------------------------------------"
+
 # io-tests
-./stdio_test@EXEEXT@
-./pipe_test@EXEEXT@
-./virtual_io_test@EXEEXT@
+./tests/stdio_test@EXEEXT@
+./tests/pipe_test@EXEEXT@
+./tests/virtual_io_test@EXEEXT@
 echo "----------------------------------------------------------------------"
 echo "  $sfversion passed stdio/pipe/vio tests."
 echo "----------------------------------------------------------------------"
 
+"${PYTHON}" "${ABS_TOP_SRCDIR}/src/binheader_writef_check.py" "${ABS_TOP_SRCDIR}/src"/*.c
+echo "----------------------------------------------------------------------"
+echo "  $sfversion passed binary header tests."
+echo "----------------------------------------------------------------------"
 
+"${PYTHON}" "${ABS_TOP_SRCDIR}/programs/test-sndfile-metadata-set.py" "${HOST_TRIPLET}"
+echo "----------------------------------------------------------------------"
+echo "  $sfversion passed sndfile metadata tests."
+echo "----------------------------------------------------------------------"

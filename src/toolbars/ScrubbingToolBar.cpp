@@ -55,7 +55,7 @@ EVT_COMMAND_RANGE( STBFirstButton,
 EVT_IDLE( ScrubbingToolBar::OnIdle )
 END_EVENT_TABLE()
 
-//Standard contructor
+//Standard constructor
 ScrubbingToolBar::ScrubbingToolBar( AudacityProject &project )
 : ToolBar(project, ScrubbingBarID, XO("Scrub"), wxT("Scrub"))
 {
@@ -173,6 +173,10 @@ void ScrubbingToolBar::DoRegenerateTooltips( bool force )
                    "Seeking" is normal speed playback but with skips
                    */
                   ? XO("Stop Scrubbing")
+                  /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+                   "Scrubbing" is variable-speed playback, ...
+                   "Seeking" is normal speed playback but with skips
+                   */
                   : XO("Start Scrubbing")
                   );
          fn(*scrubButton, label, wxT("Scrub"));
@@ -188,6 +192,10 @@ void ScrubbingToolBar::DoRegenerateTooltips( bool force )
                    "Seeking" is normal speed playback but with skips
                    */
                   ? XO("Stop Seeking")
+                  /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+                   "Scrubbing" is variable-speed playback, ...
+                   "Seeking" is normal speed playback but with skips
+                   */
                   : XO("Start Seeking")
                   );
          fn(*seekButton, label, wxT("Seek"));

@@ -1422,7 +1422,7 @@ static int osdir_list_status = OSDIR_LIST_READY;
 static char osdir_path[OSDIR_MAX_PATH];
 
 // osdir_list_start -- prepare to list a directory
-int osdir_list_start(char *path)
+int osdir_list_start(const char *path)
 {
    if (strlen(path) >= OSDIR_MAX_PATH - 2) {
       xlcerror("LISTDIR path too big", "return nil", NULL);

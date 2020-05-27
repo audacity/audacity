@@ -28,21 +28,21 @@ Paul Licameli split from TrackPanel.cpp
 
 #if defined(__WXMAC__)
 /* i18n-hint: Command names a modifier key on Macintosh keyboards */
-#define CTRL_CLICK _("Command-Click")
+#define CTRL_CLICK XO("Command+Click")
 #else
 /* i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards */
-#define CTRL_CLICK _("Ctrl-Click")
+#define CTRL_CLICK XO("Ctrl+Click")
 #endif
 
 namespace {
    TranslatableString Message(unsigned trackCount) {
       if (trackCount > 1)
-         // i18n-hint: %s is replaced by (translation of) 'Ctrl-Click' on windows, 'Command-Click' on Mac
          return XO(
+// i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 "%s to select or deselect track. Drag up or down to change track order.")
             .Format( CTRL_CLICK );
       else
-         // i18n-hint: %s is replaced by (translation of) 'Ctrl-Click' on windows, 'Command-Click' on Mac
+         // i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
          return XO("%s to select or deselect track.")
             .Format( CTRL_CLICK );
    }

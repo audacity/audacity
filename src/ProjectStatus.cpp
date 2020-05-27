@@ -66,6 +66,7 @@ void ProjectStatus::Set(const TranslatableString &msg, StatusBarField field )
 {
    auto &project = mProject;
    auto &lastMessage = mLastStatusMessages[ field - 1 ];
+   // compare full translations not msgids!
    if ( msg.Translation() != lastMessage.Translation() ) {
       lastMessage = msg;
       wxCommandEvent evt{ EVT_PROJECT_STATUS_UPDATE };

@@ -73,21 +73,18 @@ void FileHistory::AddFileToHistory(const FilePath & file, bool update)
 
    mHistory.insert(mHistory.begin(), file);
 
-   if (update) {
-      AddFilesToMenu();
-   }
+   if (update)
+      NotifyMenus();
 }
 
-void FileHistory::RemoveFileFromHistory(size_t i, bool update)
+void FileHistory::Remove( size_t i )
 {
    wxASSERT(i < mHistory.size());
 
    if (i < mHistory.size()) {
       mHistory.erase( mHistory.begin() + i );
 
-      if (update) {
-         AddFilesToMenu();
-      }
+      NotifyMenus();
    }
 }
 
@@ -95,24 +92,7 @@ void FileHistory::Clear()
 {
    mHistory.clear();
 
-   AddFilesToMenu();
-}
-
-const FilePath &FileHistory::GetHistoryFile(size_t i) const
-{
-   wxASSERT(i < mHistory.size());
-
-   if (i < mHistory.size()) {
-      return mHistory[i];
-   }
-
-   static const FilePath empty{};
-   return empty;
-}
-
-size_t FileHistory::GetCount()
-{
-   return mHistory.size();
+   NotifyMenus();
 }
 
 void FileHistory::UseMenu(wxMenu *menu)
@@ -128,6 +108,8 @@ void FileHistory::UseMenu(wxMenu *menu)
    else {
       wxASSERT(false);
    }
+
+   NotifyMenu( menu );
 }
 
 void FileHistory::Load(wxConfigBase & config, const wxString & group)
@@ -146,7 +128,7 @@ void FileHistory::Load(wxConfigBase & config, const wxString & group)
 
    config.SetPath(wxT(".."));
 
-   AddFilesToMenu();
+   NotifyMenus();
 }
 
 void FileHistory::Save(wxConfigBase & config, const wxString & group)
@@ -164,15 +146,15 @@ void FileHistory::Save(wxConfigBase & config, const wxString & group)
    config.SetPath(wxT(""));
 }
 
-void FileHistory::AddFilesToMenu()
+void FileHistory::NotifyMenus()
 {
    Compress();
    for (auto pMenu : mMenus)
       if (pMenu)
-         AddFilesToMenu(pMenu);
+         NotifyMenu(pMenu);
 }
 
-void FileHistory::AddFilesToMenu(wxMenu *menu)
+void FileHistory::NotifyMenu(wxMenu *menu)
 {
    wxMenuItemList items = menu->GetMenuItems();
    for (auto end = items.end(), iter = items.begin(); iter != end;)

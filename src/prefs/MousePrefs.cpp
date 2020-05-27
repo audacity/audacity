@@ -161,6 +161,7 @@ void MousePrefs::CreateList()
    AddItem(XO("Left-Drag"),
    /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
       XO("Envelope"),
+   /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
       XO("Change Amplification Envelope"));
 
    AddItem(XO("Left-Click"),       XO("Pencil"),    XO("Change Sample"));
@@ -221,7 +222,10 @@ void MousePrefs::OnShow(wxShowEvent &event)
 {
    event.Skip();
 
-   mList->Refresh();
+   if (event.IsShown())
+   {
+      mList->Refresh();
+   }
 }
 
 /// Update the preferences stored on disk.

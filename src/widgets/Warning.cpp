@@ -53,7 +53,7 @@ END_EVENT_TABLE()
 
 const TranslatableString &DefaultWarningFooter()
 {
-   static auto result = XO("Don't show this warning again");
+   static auto result = XXO("Don't show this warning again");
    return result;
 }
 

@@ -1,6 +1,5 @@
 
 add_library( ${TARGET} STATIC )
-add_library( ${TARGET}-hostsdk ALIAS ${TARGET} )
 
 def_vars()
 

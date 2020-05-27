@@ -17,6 +17,8 @@ Paul Licameli split from ProjectManager.h
 #include "AudioIOListener.h" // to inherit
 #include "ClientData.h" // to inherit
 
+constexpr int RATE_NOT_SELECTED{ -1 };
+
 class AudacityProject;
 struct AudioIOStartStreamOptions;
 class TrackList;
@@ -47,7 +49,8 @@ public:
 
    // Find suitable tracks to record into, or return an empty array.
    static WaveTrackArray ChooseExistingRecordingTracks(
-      AudacityProject &proj, bool selectedOnly);
+      AudacityProject &proj, bool selectedOnly,
+      double targetRate = RATE_NOT_SELECTED);
 
    static bool UseDuplex();
 
@@ -160,6 +163,15 @@ private:
 
 AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
+
+struct PropertiesOfSelected
+{
+   bool allSameRate{ false };
+   int rateOfSelected{ RATE_NOT_SELECTED };
+   int numberOfSelected{ 0 };
+};
+
+PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject &proj);
 
 #include "commands/CommandFlag.h"
 

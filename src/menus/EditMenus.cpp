@@ -2,6 +2,7 @@
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
+#include "../DirManager.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
@@ -75,6 +76,7 @@ bool DoPasteText(AudacityProject &project)
 bool DoPasteNothingSelected(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
+   auto &dirManager = DirManager::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
@@ -101,8 +103,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
                   // Cause duplication of block files on disk, when copy is
                   // between projects
                   locker.emplace(wc);
-               uNewTrack = trackFactory.NewWaveTrack(
-                  wc->GetSampleFormat(), wc->GetRate()),
+               uNewTrack = wc->EmptyCopy( dirManager.shared_from_this() );
                pNewTrack = uNewTrack.get();
             },
 #ifdef USE_MIDI
@@ -380,6 +381,7 @@ void OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
+   auto &dirManager = DirManager::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
@@ -597,8 +599,7 @@ void OnPaste(const CommandContext &context)
                wt->ClearAndPaste(t0, t1, wc, true, true);
             }
             else {
-               auto tmp = trackFactory.NewWaveTrack(
-                  wt->GetSampleFormat(), wt->GetRate());
+               auto tmp = wt->EmptyCopy( dirManager.shared_from_this() );
                tmp->InsertSilence( 0.0,
                   // MJS: Is this correct?
                   clipboard.Duration() );
@@ -1052,7 +1053,7 @@ BaseItemSharedPtr EditMenu()
 
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Edit"), XO("&Edit"),
+   Menu( wxT("Edit"), XXO("&Edit"),
       Section( "UndoRedo",
          Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
             AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
@@ -1087,7 +1088,7 @@ BaseItemSharedPtr EditMenu()
             NotBusyTimeAndTracksFlags, wxT("Ctrl+D") ),
 
          Section( "",
-            Menu( wxT("RemoveSpecial"), XO("R&emove Special"),
+            Menu( wxT("RemoveSpecial"), XXO("R&emove Special"),
                Section( "",
                   /* i18n-hint: (verb) Do a special kind of cut*/
                   Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
@@ -1117,7 +1118,7 @@ BaseItemSharedPtr EditMenu()
       Section( "Other",
       //////////////////////////////////////////////////////////////////////////
 
-         Menu( wxT("Clip"), XO("Clip B&oundaries"),
+         Menu( wxT("Clip"), XXO("Clip B&oundaries"),
             Section( "",
                /* i18n-hint: (verb) It's an item on a menu. */
                Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
@@ -1172,7 +1173,7 @@ BaseItemSharedPtr ExtraEditMenu()
       AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag();
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Edit"), XO("&Edit"),
+   Menu( wxT("Edit"), XXO("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          (flags | NoAutoSelect()),
          wxT("Backspace") ),

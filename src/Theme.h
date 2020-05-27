@@ -140,7 +140,7 @@ public:
 
    // Utility function that combines a bitmap and a mask, both in XPM format.
    wxImage MaskedImage( char const ** pXpm, char const ** pMask );
-   // Utility functiuon that takes a 32 bit bitmap and makes it into an image.
+   // Utility function that takes a 32 bit bitmap and makes it into an image.
    wxImage MakeImageWithAlpha( wxBitmap & Bmp );
 
 protected:

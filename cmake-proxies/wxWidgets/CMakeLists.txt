@@ -13,7 +13,14 @@ cmd_option( ${_OPT}use_wxwidgets
 )
 
 if( ${_OPT}use_wxwidgets STREQUAL "system" )
-   find_package(wxWidgets)
+   # Make sure shared libs are preferred over static
+   set( BUILD_SHARED_LIBS YES )
+
+   # Specify all of the components we'll need since "html" and "qa" aren't
+   # included in the default list
+   find_package(wxWidgets REQUIRED COMPONENTS adv base core html net qa)
+
+   unset( BUILD_SHARED_LIBS )
 endif()
 
 if( wxWidgets_FOUND )
@@ -119,17 +126,38 @@ else()
       WXUSINGDLL
    )
 
+   # For all required libs, gather all of the interface target
+   # properties and merge them into the wxWidgets target
+   foreach( lib adv base core html net qa xml )
+      get_target_property( value ${lib} INTERFACE_INCLUDE_DIRECTORIES )
+      if( value )
+         list( APPEND INCLUDES ${value} )
+         list( REMOVE_DUPLICATES INCLUDES )
+      endif()
+
+      get_target_property( value ${lib} INTERFACE_COMPILE_DEFINITIONS )
+      if( value )
+         list( APPEND DEFINES ${value} )
+         list( REMOVE_DUPLICATES DEFINES )
+      endif()
+
+      get_target_property( value ${lib} INTERFACE_COMPILE_OPTIONS )
+      if( value )
+         list( APPEND COPTS ${value} )
+         list( REMOVE_DUPLICATES COPTS )
+      endif()
+
+      get_target_property( value ${lib} INTERFACE_LINK_LIBRARIES )
+      if( value)
+         list( APPEND LIBRARIES ${lib} ${value} )
+         list( REMOVE_DUPLICATES LIBRARIES )
+      endif()
+   endforeach()
+
    # Do NOT split the generator expressions across multiple lines here.
    # CMake appears to have a bug and doesn't seem to handle it correctly
    # for target link libraries.
-   set( LIBRARIES
-      adv
-      base
-      core
-      html
-      net
-      qa
-      xml
+   list( APPEND LIBRARIES
       $<$<STREQUAL:"${wxUSE_EXPAT}","builtin">:wxexpat>
       $<$<STREQUAL:"${wxUSE_LIBJPEG}","builtin">:wxjpeg>
       $<$<STREQUAL:"${wxUSE_LIBPNG}","builtin">:wxpng>
@@ -181,7 +209,9 @@ endif()
 
 target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
 target_compile_definitions( ${TARGET} INTERFACE ${DEFINES} )
+target_compile_options( ${TARGET} INTERFACE ${COPTS} )
 target_link_directories( ${TARGET} INTERFACE ${LINKDIRS} )
 target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
 
-INSTALL( TARGETS ${TARGET} DESTINATION ${_LIBDIR} )
+install( TARGETS ${TARGET} DESTINATION ${_LIBDIR} )
+

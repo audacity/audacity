@@ -43,7 +43,6 @@ AliasedFile s.
 #include <wx/filename.h>
 #include <wx/listctrl.h>
 #include <wx/menu.h>
-#include <wx/progdlg.h>
 #include <wx/choice.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
@@ -365,7 +364,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
                .Focus()
                .Disable(mFileListCtrl->GetSelectedItemCount() <= 0)
                .AddButton(
-                  XO("Copy Selected Files"),
+                  XXO("Copy Selected Files"),
                   wxALIGN_LEFT, true);
       }
       S.EndStatic();
@@ -373,18 +372,18 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
       S.StartHorizontalLay(wxALIGN_CENTRE,0);
       {
          if (mIsSaving) {
-            S.Id(wxID_CANCEL).AddButton(XO("Cancel Save"));
-            S.Id(wxID_NO).AddButton(XO("Save Without Copying"));
+            S.Id(wxID_CANCEL).AddButton(XXO("Cancel Save"));
+            S.Id(wxID_NO).AddButton(XXO("Save Without Copying"));
          }
          else
-            S.Id(wxID_NO).AddButton(XO("Do Not Copy"));
+            S.Id(wxID_NO).AddButton(XXO("Do Not Copy"));
 
          mCopyAllFilesButton =
             S.Id(wxID_YES)
                // Enabling mCopyAllFilesButton is also done in PopulateList,
                // but at its call above, mCopyAllFilesButton does not yet exist.
                .Disable(mHasMissingFiles)
-               .AddButton(XO("Copy All Files (Safer)"));
+               .AddButton(XXO("Copy All Files (Safer)"));
 
       }
       S.EndHorizontalLay();
@@ -395,12 +394,16 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
          {
             mFutureActionChoice =
                S.Id(FutureActionChoiceID).AddChoice(
-                  XO("Whenever a project depends on other files:"),
+                  XXO("Whenever a project depends on other files:"),
                   {
                      /*i18n-hint: One of the choices of what you want Audacity to do when
                      * Audacity finds a project depends on another file.*/
                      XO("Ask me") ,
+                     /*i18n-hint: One of the choices of what you want Audacity to do when
+                     * Audacity finds a project depends on another file.*/
                      XO("Always copy all files (safest)") ,
+                     /*i18n-hint: One of the choices of what you want Audacity to do when
+                     * Audacity finds a project depends on another file.*/
                      XO("Never copy any files") ,
                   },
                   0 // "Ask me"
@@ -446,7 +449,7 @@ void DependencyDialog::PopulateList()
          mFileListCtrl->SetItemState(i, 0, wxLIST_STATE_SELECTED); // Deselect.
          mFileListCtrl->SetItemTextColour(i, *wxRED);
       }
-      mFileListCtrl->SetItem(i, 1, Internat::FormatSize(byteCount));
+      mFileListCtrl->SetItem(i, 1, Internat::FormatSize(byteCount).Translation());
       mFileListCtrl->SetItemData(i, long(bOriginalExists));
 
       ++i;
@@ -538,25 +541,24 @@ void DependencyDialog::OnRightClick( wxListEvent& event)
    PopupMenu(&menu);
 }
 
-void DependencyDialog::OnCopyToClipboard( wxCommandEvent& evt )
+void DependencyDialog::OnCopyToClipboard( wxCommandEvent& )
 {
-   static_cast<void>(evt);
-   wxString Files;
+   TranslatableString Files;
    for (const auto &aliasedFile : mAliasedFiles) {
       const wxFileName & fileName = aliasedFile.mFileName;
       wxLongLong byteCount = (aliasedFile.mByteCount * 124) / 100;
       bool bOriginalExists = aliasedFile.mbOriginalExists;
       // All fields quoted, as e.g. size may contain a comma in the number.
-      Files += wxString::Format( "\"%s\", \"%s\", \"%s\"\n",
+      Files += XO( "\"%s\", \"%s\", \"%s\"\n").Format(
          fileName.GetFullPath(), 
-         Internat::FormatSize( byteCount), 
-         bOriginalExists ? "OK":"Missing" );
+         Internat::FormatSize( byteCount),
+         bOriginalExists ? XO("OK") : XO("Missing") );
    }
 
    // copy data onto clipboard
    if (wxTheClipboard->Open()) {
       // Clipboard owns the data you give it
-      wxTheClipboard->SetData(safenew wxTextDataObject(Files));
+      wxTheClipboard->SetData(safenew wxTextDataObject(Files.Translation()));
       wxTheClipboard->Close();
    }
 }

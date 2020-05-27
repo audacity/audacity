@@ -17,8 +17,8 @@
 
 #include <wx/app.h>
 #include <wx/button.h>
+#include <wx/cmdline.h>
 #include <wx/combobox.h>
-#include <wx/filedlg.h>
 #include <wx/log.h>
 #include <wx/process.h>
 #include <wx/sizer.h>
@@ -33,13 +33,21 @@
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../Tags.h"
 #include "../Track.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
+#include "../widgets/Warning.h"
 #include "../wxFileNameWrapper.h"
 
+#ifdef USE_LIBID3TAG
+   #include <id3tag.h>
+   extern "C" {
+      struct id3_frame *id3_frame_new(char const *);
+   }
+#endif
 
 //----------------------------------------------------------------------------
 // ExportCLOptions
@@ -77,14 +85,15 @@ ExportCLOptions::ExportCLOptions(wxWindow *parent, int WXUNUSED(format))
 {
    mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 
-   if (mHistory.GetCount() == 0) {
-      mHistory.AddFileToHistory(wxT("ffmpeg -i - \"%f\""), false);
-      mHistory.AddFileToHistory(wxT("lame - \"%f\""), false);
+   if (mHistory.empty()) {
+      mHistory.Append(wxT("ffmpeg -i - \"%f.opus\""));
+      mHistory.Append(wxT("ffmpeg -i - \"%f.wav\""));
+      mHistory.Append(wxT("ffmpeg -i - \"%f\""));
+      mHistory.Append(wxT("lame - \"%f\""));
    }
 
-   mHistory.AddFileToHistory(gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"),
-                                          mHistory.GetHistoryFile(0)),
-                             false);
+   mHistory.Append(gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"),
+                                          mHistory[ 0 ]));
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -103,14 +112,8 @@ ExportCLOptions::~ExportCLOptions()
 ///
 void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayStringEx cmds;
-   wxString cmd;
-
-   for (size_t i = 0; i < mHistory.GetCount(); i++) {
-      cmd = mHistory.GetHistoryFile(i);
-      cmds.push_back(mHistory.GetHistoryFile(i));
-   }
-   cmd = cmds[0];
+   wxArrayStringEx cmds( mHistory.begin(), mHistory.end() );
+   auto cmd = cmds[0];
 
    S.StartVerticalLay();
    {
@@ -120,13 +123,13 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(3, wxEXPAND);
          {
             S.SetStretchyCol(1);
-            mCmd = S.AddCombo(XO("Command:"),
+            mCmd = S.AddCombo(XXO("Command:"),
                               cmd,
                               cmds);
-            S.Id(ID_BROWSE).AddButton(XO("Browse..."),
+            S.Id(ID_BROWSE).AddButton(XXO("Browse..."),
                                       wxALIGN_CENTER_VERTICAL);
             S.AddFixedText( {} );
-            S.TieCheckBox(XO("Show output"),
+            S.TieCheckBox(XXO("Show output"),
                           {wxT("/FileFormats/ExternalProgramShowOutput"),
                            false});
          }
@@ -140,7 +143,7 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
    and "standard in" means the default input stream that the external program,
    named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
    in the program as a format string.  Keep %f unchanged. */
-"Data will be piped to standard in. \"%f\" uses the file name in the export window."));
+"Data will be piped to standard in. \"%f\" uses the file name in the export window."), 250);
    }
    S.EndVerticalLay();
 }
@@ -161,7 +164,7 @@ bool ExportCLOptions::TransferDataFromWindow()
 
    wxString cmd = mCmd->GetValue();
 
-   mHistory.AddFileToHistory(cmd, false);
+   mHistory.Append(cmd);
    mHistory.Save(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 
    gPrefs->Write(wxT("/FileFormats/ExternalProgramExportCommand"), cmd);
@@ -268,29 +271,6 @@ private:
 // ExportCL
 //----------------------------------------------------------------------------
 
-/* this structure combines the RIFF header, the format chunk, and the data
- * chunk header */
-struct wav_header {
-   /* RIFF header */
-   char riffID[4];            /* "RIFF" */
-   wxUint32 lenAfterRiff;     /* basically the file len - 8, or samples len + 36 */
-   char riffType[4];          /* "WAVE" */
-
-   /* format chunk */
-   char fmtID[4];             /* "fmt " */
-   wxUint32 formatChunkLen;   /* (format chunk len - first two fields) 16 in our case */
-   wxUint16 formatTag;        /* 1 for PCM */
-   wxUint16 channels;
-   wxUint32 sampleRate;
-   wxUint32 avgBytesPerSec;   /* sampleRate * blockAlign */
-   wxUint16 blockAlign;       /* bitsPerSample * channels (assume bps % 8 = 0) */
-   wxUint16 bitsPerSample;
-
-   /* data chunk header */
-   char dataID[4];            /* "data" */
-   wxUint32 dataLen;          /* length of all samples in bytes */
-};
-
 class ExportCL final : public ExportPlugin
 {
 public:
@@ -301,15 +281,66 @@ public:
    void OptionsCreate(ShuttleGui &S, int format) override;
 
    ProgressResult Export(AudacityProject *project,
-               std::unique_ptr<ProgressDialog> &pDialog,
-               unsigned channels,
-               const wxFileNameWrapper &fName,
-               bool selectedOnly,
-               double t0,
-               double t1,
-               MixerSpec *mixerSpec = NULL,
-               const Tags *metadata = NULL,
-               int subformat = 0) override;
+                         std::unique_ptr<ProgressDialog> &pDialog,
+                         unsigned channels,
+                         const wxFileNameWrapper &fName,
+                         bool selectedOnly,
+                         double t0,
+                         double t1,
+                         MixerSpec *mixerSpec = NULL,
+                         const Tags *metadata = NULL,
+                         int subformat = 0) override;
+
+   // Optional   
+   bool CheckFileName(wxFileName &filename, int format = 0) override;
+
+private:
+   void GetSettings();
+
+   std::vector<char> GetMetaChunk(const Tags *metadata);
+   wxString mCmd;
+   bool mShow;
+
+   struct ExtendPath
+   {
+#if defined(__WXMSW__)
+      wxString opath;
+
+      ExtendPath()
+      {
+         // Give Windows a chance at finding lame command in the default location.
+         wxString paths[] = {wxT("HKEY_LOCAL_MACHINE\\Software\\Lame for Audacity"),
+                             wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg for Audacity")};
+         wxString npath;
+         wxRegKey reg;
+
+         wxGetEnv(wxT("PATH"), &opath);
+         npath = opath;
+
+         for (int i = 0; i < WXSIZEOF(paths); i++) {
+            reg.SetName(paths[i]);
+
+            if (reg.Exists()) {
+               wxString ipath;
+               reg.QueryValue(wxT("InstallPath"), ipath);
+               if (!ipath.empty()) {
+                  npath += wxPATH_SEP + ipath;
+               }
+            }
+         }
+
+         wxSetEnv(wxT("PATH"),npath);
+      };
+
+      ~ExtendPath()
+      {
+         if (!opath.empty())
+         {
+            wxSetEnv(wxT("PATH"),opath);
+         }
+      }
+#endif
+   };
 };
 
 ExportCL::ExportCL()
@@ -324,74 +355,35 @@ ExportCL::ExportCL()
 }
 
 ProgressResult ExportCL::Export(AudacityProject *project,
-                      std::unique_ptr<ProgressDialog> &pDialog,
-                      unsigned channels,
-                      const wxFileNameWrapper &fName,
-                      bool selectionOnly,
-                      double t0,
-                      double t1,
-                      MixerSpec *mixerSpec,
-                      const Tags *WXUNUSED(metadata),
-                      int WXUNUSED(subformat))
+                                std::unique_ptr<ProgressDialog> &pDialog,
+                                unsigned channels,
+                                const wxFileNameWrapper &fName,
+                                bool selectionOnly,
+                                double t0,
+                                double t1,
+                                MixerSpec *mixerSpec,
+                                const Tags *metadata,
+                                int WXUNUSED(subformat))
 {
+   ExtendPath ep;
    wxString output;
-   wxString cmd;
-   bool show;
    long rc;
 
    const auto path = fName.GetFullPath();
 
-   // Retrieve settings
-   gPrefs->Read(wxT("/FileFormats/ExternalProgramShowOutput"), &show, false);
-   cmd = gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"), wxT("lame - \"%f.mp3\""));
+   GetSettings();
+
    // Bug 2178 - users who don't know what they are doing will 
    // now get a file extension of .wav appended to their ffmpeg filename
    // and therefore ffmpeg will be able to choose a file type.
-   if( cmd == wxT("ffmpeg -i - \"%f\"") && !fName.HasExt())
-      cmd.Replace( "%f", "%f.wav" );
-   cmd.Replace(wxT("%f"), path);
-
-#if defined(__WXMSW__)
-   // Give Windows a chance at finding lame command in the default location.
-   wxString paths[] = {wxT("HKEY_LOCAL_MACHINE\\Software\\Lame for Audacity"),
-                       wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg for Audacity")};
-   wxString opath;
-   wxString npath;
-   wxRegKey reg;
-
-   wxGetEnv(wxT("PATH"), &opath);
-   npath = opath;
-
-   for (int i = 0; i < WXSIZEOF(paths); i++) {
-      reg.SetName(paths[i]);
-
-      if (reg.Exists()) {
-         wxString ipath;
-         reg.QueryValue(wxT("InstallPath"), ipath);
-         if (!ipath.empty()) {
-            npath += wxPATH_SEP + ipath;
-         }
-      }
-   }
-
-   wxSetEnv(wxT("PATH"),npath);
-#endif
+   if( mCmd == wxT("ffmpeg -i - \"%f\"") && !fName.HasExt())
+      mCmd.Replace( "%f", "%f.wav" );
+   mCmd.Replace(wxT("%f"), path);
 
    // Kick off the command
    ExportCLProcess process(&output);
 
-   {
-#if defined(__WXMSW__)
-      auto cleanup = finally( [&] {
-         if (!opath.empty()) {
-            wxSetEnv(wxT("PATH"),opath);
-         }
-      } );
-#endif
-
-      rc = wxExecute(cmd, wxEXEC_ASYNC, &process);
-   }
-
+   rc = wxExecute(mCmd, wxEXEC_ASYNC, &process);
    if (!rc) {
       AudacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
       process.Detach();
@@ -407,40 +399,97 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    int rate = lrint( ProjectSettings::Get( *project ).GetRate());
    const size_t maxBlockLen = 44100 * 5;
    unsigned long totalSamples = lrint((t1 - t0) * rate);
-   unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(int16Sample);
+   unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(floatSample);
 
-   // fill up the wav header
-   wav_header header;
-   header.riffID[0]        = 'R';
-   header.riffID[1]        = 'I';
-   header.riffID[2]        = 'F';
-   header.riffID[3]        = 'F';
-   header.lenAfterRiff     = wxUINT32_SWAP_ON_BE(sampleBytes + 36);
-   header.riffType[0]      = 'W';
-   header.riffType[1]      = 'A';
-   header.riffType[2]      = 'V';
-   header.riffType[3]      = 'E';
-
-   header.fmtID[0]         = 'f';
-   header.fmtID[1]         = 'm';
-   header.fmtID[2]         = 't';
-   header.fmtID[3]         = ' ';
-   header.formatChunkLen   = wxUINT32_SWAP_ON_BE(16);
-   header.formatTag        = wxUINT16_SWAP_ON_BE(1);
-   header.channels         = wxUINT16_SWAP_ON_BE(channels);
-   header.sampleRate       = wxUINT32_SWAP_ON_BE(rate);
-   header.bitsPerSample    = wxUINT16_SWAP_ON_BE(SAMPLE_SIZE(int16Sample) * 8);
-   header.blockAlign       = wxUINT16_SWAP_ON_BE(header.bitsPerSample * header.channels / 8);
-   header.avgBytesPerSec   = wxUINT32_SWAP_ON_BE(header.sampleRate * header.blockAlign);
-   header.dataID[0]        = 'd';
-   header.dataID[1]        = 'a';
-   header.dataID[2]        = 't';
-   header.dataID[3]        = 'a';
-   header.dataLen          = wxUINT32_SWAP_ON_BE(sampleBytes);
-
-   // write the header
    wxOutputStream *os = process.GetOutputStream();
-   os->Write(&header, sizeof(wav_header));
+
+   // RIFF header
+   struct {
+      char riffID[4];            // "RIFF"
+      wxUint32 riffLen;          // basically the file len - 8
+      char riffType[4];          // "WAVE"
+   } riff;
+
+   // format chunk */
+   struct {
+      char fmtID[4];             // "fmt " */
+      wxUint32 formatChunkLen;   // (format chunk len - first two fields) 16 in our case
+      wxUint16 formatTag;        // 1 for PCM
+      wxUint16 channels;
+      wxUint32 sampleRate;
+      wxUint32 avgBytesPerSec;   // sampleRate * blockAlign
+      wxUint16 blockAlign;       // bitsPerSample * channels (assume bps % 8 = 0)
+      wxUint16 bitsPerSample;
+   } fmt;
+
+   // id3 chunk header
+   struct {
+      char id3ID[4];             // "id3 "
+      wxUint32 id3Len;           // length of metadata in bytes
+   } id3;
+
+   // data chunk header
+   struct {
+      char dataID[4];            // "data"
+      wxUint32 dataLen;          // length of all samples in bytes
+   } data;
+
+   riff.riffID[0] = 'R';
+   riff.riffID[1] = 'I';
+   riff.riffID[2] = 'F';
+   riff.riffID[3] = 'F';
+   riff.riffLen   = wxUINT32_SWAP_ON_BE(sizeof(riff) +
+                                        sizeof(fmt) +
+                                        sizeof(data) +
+                                        sampleBytes -
+                                        8);
+   riff.riffType[0]  = 'W';
+   riff.riffType[1]  = 'A';
+   riff.riffType[2]  = 'V';
+   riff.riffType[3]  = 'E';
+
+   fmt.fmtID[0]        = 'f';
+   fmt.fmtID[1]        = 'm';
+   fmt.fmtID[2]        = 't';
+   fmt.fmtID[3]        = ' ';
+   fmt.formatChunkLen  = wxUINT32_SWAP_ON_BE(16);
+   fmt.formatTag       = wxUINT16_SWAP_ON_BE(3);
+   fmt.channels        = wxUINT16_SWAP_ON_BE(channels);
+   fmt.sampleRate      = wxUINT32_SWAP_ON_BE(rate);
+   fmt.bitsPerSample   = wxUINT16_SWAP_ON_BE(SAMPLE_SIZE(floatSample) * 8);
+   fmt.blockAlign      = wxUINT16_SWAP_ON_BE(fmt.bitsPerSample * fmt.channels / 8);
+   fmt.avgBytesPerSec  = wxUINT32_SWAP_ON_BE(fmt.sampleRate * fmt.blockAlign);
+
+   // Retrieve tags if not given a set
+   if (metadata == NULL) {
+      metadata = &Tags::Get(*project);
+   }
+   auto metachunk = GetMetaChunk(metadata);
+
+   if (metachunk.size()) {
+
+      id3.id3ID[0] = 'i';
+      id3.id3ID[1] = 'd';
+      id3.id3ID[2] = '3';
+      id3.id3ID[3] = ' ';
+      id3.id3Len   = wxUINT32_SWAP_ON_BE(metachunk.size());
+      riff.riffLen += sizeof(id3) + metachunk.size();
+   }
+
+   data.dataID[0] = 'd';
+   data.dataID[1] = 'a';
+   data.dataID[2] = 't';
+   data.dataID[3] = 'a';
+   data.dataLen   = wxUINT32_SWAP_ON_BE(sampleBytes);
+
+   // write the headers and metadata
+   os->Write(&riff, sizeof(riff));
+   os->Write(&fmt, sizeof(fmt));
+   if (metachunk.size()) {
+      os->Write(&id3, sizeof(id3));
+      os->Write(metachunk.data(), metachunk.size());
+   }
+   os->Write(&data, sizeof(data));
 
    // Mix 'em up
    const auto &tracks = TrackList::Get( *project );
@@ -453,7 +502,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
                             maxBlockLen,
                             true,
                             rate,
-                            int16Sample,
+                            floatSample,
                             true,
                             mixerSpec);
 
@@ -490,15 +539,15 @@ ProgressResult ExportCL::Export(AudacityProject *project,
             mixed = mixer->GetBuffer();
             numBytes = numSamples * channels;
 
-            // Byte-swapping is neccesary on big-endian machines, since
+            // Byte-swapping is necessary on big-endian machines, since
             // WAV files are little-endian
 #if wxBYTE_ORDER == wxBIG_ENDIAN
-            wxUint16 *buffer = (wxUint16 *) mixed;
+            float *buffer = (float *) mixed;
             for (int i = 0; i < numBytes; i++) {
-               buffer[i] = wxUINT16_SWAP_ON_BE(buffer[i]);
+               buffer[i] = wxUINT32_SWAP_ON_BE(buffer[i]);
             }
 #endif
-            numBytes *= SAMPLE_SIZE(int16Sample);
+            numBytes *= SAMPLE_SIZE(floatSample);
          }
 
          // Don't write too much at once...pipes may not be able to handle it
@@ -528,7 +577,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    }
 
    // Display output on error or if the user wants to see it
-   if (process.GetStatus() != 0 || show) {
+   if (process.GetStatus() != 0 || mShow) {
       // TODO use ShowInfoDialog() instead.
       wxDialogWrapper dlg(nullptr,
                    wxID_ANY,
@@ -540,11 +589,11 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
       ShuttleGui S(&dlg, eIsCreating);
       S
-         .Style( wxTE_MULTILINE | wxTE_READONLY )
-         .AddTextWindow(cmd + wxT("\n\n") + output);
+         .Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH )
+         .AddTextWindow(mCmd + wxT("\n\n") + output);
       S.StartHorizontalLay(wxALIGN_CENTER, false);
       {
-         S.Id(wxID_OK).AddButton(XO("&OK"), wxALIGN_CENTER, true);
+         S.Id(wxID_OK).AddButton(XXO("&OK"), wxALIGN_CENTER, true);
       }
       dlg.GetSizer()->AddSpacer(5);
       dlg.Layout();
@@ -560,9 +609,191 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    return updateResult;
 }
 
+std::vector<char> ExportCL::GetMetaChunk(const Tags *tags)
+{
+   std::vector<char> buffer;
+
+#ifdef USE_LIBID3TAG
+   struct id3_tag_deleter {
+      void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
+   };
+
+   std::unique_ptr<id3_tag, id3_tag_deleter> tp { id3_tag_new() };
+
+   for (const auto &pair : tags->GetRange()) {
+      const auto &n = pair.first;
+      const auto &v = pair.second;
+      const char *name = "TXXX";
+
+      if (n.CmpNoCase(TAG_TITLE) == 0) {
+         name = ID3_FRAME_TITLE;
+      }
+      else if (n.CmpNoCase(TAG_ARTIST) == 0) {
+         name = ID3_FRAME_ARTIST;
+      }
+      else if (n.CmpNoCase(TAG_ALBUM) == 0) {
+         name = ID3_FRAME_ALBUM;
+      }
+      else if (n.CmpNoCase(TAG_YEAR) == 0) {
+         name = ID3_FRAME_YEAR;
+      }
+      else if (n.CmpNoCase(TAG_GENRE) == 0) {
+         name = ID3_FRAME_GENRE;
+      }
+      else if (n.CmpNoCase(TAG_COMMENTS) == 0) {
+         name = ID3_FRAME_COMMENT;
+      }
+      else if (n.CmpNoCase(TAG_TRACK) == 0) {
+         name = ID3_FRAME_TRACK;
+      }
+      else if (n.CmpNoCase(wxT("composer")) == 0) {
+         name = "TCOM";
+      }
+
+      struct id3_frame *frame = id3_frame_new(name);
+
+      if (!n.IsAscii() || !v.IsAscii()) {
+         id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_UTF_16);
+      }
+      else {
+         id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_ISO_8859_1);
+      }
+
+      MallocString<id3_ucs4_t> ucs4{
+         id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8)) };
+
+      if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
+         // A hack to get around iTunes not recognizing the comment.  The
+         // language defaults to XXX and, since it's not a valid language,
+         // iTunes just ignores the tag.  So, either set it to a valid language
+         // (which one???) or just clear it.  Unfortunately, there's no supported
+         // way of clearing the field, so do it directly.
+         id3_field *f = id3_frame_field(frame, 1);
+         memset(f->immediate.value, 0, sizeof(f->immediate.value));
+         id3_field_setfullstring(id3_frame_field(frame, 3), ucs4.get());
+      }
+      else if (strcmp(name, "TXXX") == 0) {
+         id3_field_setstring(id3_frame_field(frame, 2), ucs4.get());
+
+         ucs4.reset(id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8)));
+
+         id3_field_setstring(id3_frame_field(frame, 1), ucs4.get());
+      }
+      else {
+         auto addr = ucs4.get();
+         id3_field_setstrings(id3_frame_field(frame, 1), 1, &addr);
+      }
+
+      id3_tag_attachframe(tp.get(), frame);
+   }
+
+   tp->options &= (~ID3_TAG_OPTION_COMPRESSION); // No compression
+
+   // If this version of libid3tag supports it, use v2.3 ID3
+   // tags instead of the newer, but less well supported, v2.4
+   // that libid3tag uses by default.
+#ifdef ID3_TAG_HAS_TAG_OPTION_ID3V2_3
+   tp->options |= ID3_TAG_OPTION_ID3V2_3;
+#endif
+
+   id3_length_t len;
+
+   len = id3_tag_render(tp.get(), 0);
+   if ((len % 2) != 0) {
+      len++;   // Length must be even.
+   }
+
+   if (len > 0) {
+      buffer.resize(len);
+      id3_tag_render(tp.get(), (id3_byte_t *) buffer.data());
+   }
+#endif
+
+   return buffer;
+}
+
 void ExportCL::OptionsCreate(ShuttleGui &S, int format)
 {
    S.AddWindow( safenew ExportCLOptions{ S.GetParent(), format } );
+}
+
+bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
+{
+   ExtendPath ep;
+
+   if (filename.GetExt().empty()) {
+      if (ShowWarningDialog(NULL,
+                            wxT("MissingExtension"),
+                            XO("You've specified a file name without an extension. Are you sure?"),
+                            true) == wxID_CANCEL) {
+         return false;
+      }
+   }
+
+   GetSettings();
+
+   wxArrayString argv = wxCmdLineParser::ConvertStringToArgs(mCmd,
+#if defined(__WXMSW__)
+      wxCMD_LINE_SPLIT_DOS
+#else
+      wxCMD_LINE_SPLIT_UNIX
+#endif
+   );
+
+   if (argv.size() == 0) {
+      AudacityMessageBox(
+         XO("Program name appears to be missing."),
+         XO("Unable to export"),
+         wxOK | wxICON_INFORMATION);
+      return false;
+   }
+      
+   // Normalize the path (makes absolute and resolves variables)   
+   wxFileName cmd(argv[0]);
+   cmd.Normalize(wxPATH_NORM_ALL & ~wxPATH_NORM_ABSOLUTE);
+
+   // Just verify the given path exists if it is absolute.
+   if (cmd.IsAbsolute()) {
+      if (!cmd.Exists()) {
+         AudacityMessageBox(
+            XO("\"%s\" couldn't be found.").Format(cmd.GetFullPath()),
+            XO("Warning"),
+            wxOK | wxICON_EXCLAMATION);
+
+         return false;
+      }
+
+      return true;
+   }
+ 
+   // Search for the command in the PATH list
+   wxPathList pathlist;
+   pathlist.AddEnvList(wxT("PATH"));
+   wxString path = pathlist.FindAbsoluteValidPath(argv[0]);
+
+#if defined(__WXMSW__)
+   if (path.empty()) {
+      path = pathlist.FindAbsoluteValidPath(argv[0] + wxT(".exe"));
+   }
+#endif
+
+   if (path.empty()) {
+      int action = AudacityMessageBox(
+         XO("Unable to locate \"%s\" in your path.").Format(cmd.GetFullPath()),
+         XO("Warning"),
+         wxOK | wxICON_EXCLAMATION);
+
+      return false;
+   }
+
+   return true;
+}
+
+void ExportCL::GetSettings()
+{
+   // Retrieve settings
+   gPrefs->Read(wxT("/FileFormats/ExternalProgramShowOutput"), &mShow, false);
+   mCmd = gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"), wxT("lame - \"%f.mp3\""));
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "CommandLine",

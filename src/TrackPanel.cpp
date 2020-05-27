@@ -99,7 +99,7 @@ is time to refresh some aspect of the screen.
 
 This is a diagram of TrackPanel's division of one (non-stereo) track rectangle.
 Total height equals TrackView::GetHeight()'s value.  Total width is the wxWindow's
-width.  Each charater that is not . represents one pixel.
+width.  Each character that is not . represents one pixel.
 
 Inset space of this track, and top inset of the next track, are used to draw the
 focus highlight.
@@ -398,19 +398,6 @@ void TrackPanel::OnIdle(wxIdleEvent& event)
 /// AS: This gets called on our wx timer events.
 void TrackPanel::OnTimer(wxTimerEvent& )
 {
-#ifdef __WXMAC__
-   // Unfortunate part of fix for bug 1431
-   // Without this, the toolbars hide only every other time that you press
-   // the yellow title bar button.  For some reason, not every press sends
-   // us a deactivate event for the application.
-   {
-      auto project = GetProject();
-      auto &window = ProjectWindow::Get( *project );
-      if (window.IsIconized())
-         window.MacShowUndockedToolbars(false);
-   }
-#endif
-
    mTimeCount++;
 
    AudacityProject *const p = GetProject();
@@ -814,7 +801,7 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 
 
 /// This method overrides Refresh() of wxWindow so that the
-/// boolean play indictaor can be set to false, so that an old play indicator that is
+/// boolean play indicator can be set to false, so that an old play indicator that is
 /// no longer there won't get  XORed (to erase it), thus redrawing it on the
 /// TrackPanel
 void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
@@ -1164,7 +1151,7 @@ void DrawTrackName(
 /*
 
   The following classes define the subdivision of the area of the TrackPanel
-  into cells with differing reponses to mouse, keyboard, and scroll wheel
+  into cells with differing responses to mouse, keyboard, and scroll wheel
   events.
   
   The classes defining the less inclusive areas are earlier, while those
@@ -1240,7 +1227,7 @@ struct VRulerAndChannel final : TrackPanelGroup {
    wxCoord mLeftOffset;
 };
 
-// One or more sub-views of one channel, stacked vertically, each contianing
+// One or more sub-views of one channel, stacked vertically, each containing
 // a vertical ruler and a channel
 struct VRulersAndChannels final : TrackPanelGroup {
    VRulersAndChannels(
@@ -1360,7 +1347,7 @@ struct LabeledChannelGroup final : TrackPanelGroup {
         std::make_shared< ChannelGroup >( mpTrack, mLeftOffset ) }
    } }; }
 
-   // TrackPanelDrawable impementation
+   // TrackPanelDrawable implementation
    void Draw( TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override
    {

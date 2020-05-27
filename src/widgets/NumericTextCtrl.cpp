@@ -180,6 +180,7 @@ different formats.
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include <wx/wx.h>
+#include <wx/dcbuffer.h>
 #include <wx/dcmemory.h>
 #include <wx/font.h>
 #include <wx/intl.h>
@@ -284,7 +285,7 @@ private:
 struct BuiltinFormatString
 {
    NumericFormatSymbol name;
-   TranslatableString formatStr;
+   NumericConverter::FormatStrings formatStrings;
 
    friend inline bool operator ==
       (const BuiltinFormatString &a, const BuiltinFormatString &b)
@@ -557,19 +558,26 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
 static const BuiltinFormatString FrequencyConverterFormats_[] = {
-   /* i18n-hint: Name of display format that shows frequency in hertz */
    {
+      /* i18n-hint: Name of display format that shows frequency in hertz */
       { XO("Hz") },
-         /* i18n-hint: Format string for displaying frequency in hertz. Change 
+      {
+         /* i18n-hint: Format string for displaying frequency in hertz. Change
          * the decimal point for your locale. Don't change the numbers. */
          XO("0100000.0100 Hz")
+         , XO("centihertz")
+      }
    },
 
    {
+      /* i18n-hint: Name of display format that shows frequency in kilohertz */
       { XO("kHz") },
-         /* i18n-hint: Format string for displaying frequency in kilohertz. Change 
+      {
+         /* i18n-hint: Format string for displaying frequency in kilohertz. Change
          * the decimal point for your locale. Don't change the numbers. */
          XO("01000.01000 kHz|0.001")
+         , XO("hertz")
+      }
    },
 };
 
@@ -582,31 +590,40 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
    /* i18n-hint: Name of display format that shows log of frequency
     * in octaves */
    { XO("octaves") },
+   {
    /* i18n-hint: Format string for displaying log of frequency in octaves.
     * Change the decimal points for your locale. Don't change the numbers. */
-   // Scale factor is 1 / ln (2)
-   XO("100.01000 octaves|1.442695041")
+      XO("100.01000 octaves|1.442695041"),    // Scale factor is 1 / ln (2)
+      /* i18n-hint: an octave is a doubling of frequency */
+      XO("thousandths of octaves")
+   }
    },
 
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in semitones and cents */
    { XO("semitones + cents") },
-   /* i18n-hint: Format string for displaying log of frequency in semitones
-    * and cents.
-    * Change the decimal points for your locale. Don't change the numbers. */
-   // Scale factor is 12 / ln (2)
-   XO("1000 semitones .0100 cents|17.312340491")
+   {
+      /* i18n-hint: Format string for displaying log of frequency in semitones
+       * and cents.
+       * Change the decimal points for your locale. Don't change the numbers. */
+      XO("1000 semitones .0100 cents|17.312340491"),   // Scale factor is 12 / ln (2)
+      /* i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave) */
+      XO("hundredths of cents")
+   }
    },
    
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in decades */
    { XO("decades") },
-   /* i18n-hint: Format string for displaying log of frequency in decades.
-    * Change the decimal points for your locale. Don't change the numbers. */
-   // Scale factor is 1 / ln (10)
-   XO("10.01000 decades|0.434294482")
+   {
+      /* i18n-hint: Format string for displaying log of frequency in decades.
+       * Change the decimal points for your locale. Don't change the numbers. */
+      XO("10.01000 decades|0.434294482"),   // Scale factor is 1 / ln (10)
+      /* i18n-hint: a decade is a tenfold increase of frequency */
+      XO("thousandths of decades")
+   }
    },
 };
 
@@ -717,6 +734,7 @@ void NumericConverter::ParseFormatString(
    mDigits.clear();
    mScalingFactor = 1.0;
 
+   // We will change inFrac to true when we hit our first decimal point.
    bool inFrac = false;
    int fracMult = 1;
    int numWholeFields = 0;
@@ -725,6 +743,60 @@ void NumericConverter::ParseFormatString(
    wxString delimStr;
    unsigned int i;
 
+   // Bug 2241 concerns ',' and '.' when translated.
+   // Here's a thorny example from French, 
+   // where in translation one of the ',' is to be used
+   // as a separator and the other as a decimal point.
+   //
+   // msgid "01000,01000 frames|29.97002997"  <- Original English
+   // msgstr "01000,01000 images|29,97002997"  <- Translated
+
+   // Some other examples:
+   //
+   // msgid "0100000.0100 Hz"
+   // msgstr "0100000,0100 Hz"
+
+   // msgid "01000.01000 kHz|0.001"
+   // msgstr "01000,01000 kHz|0.001"
+
+   // In the French translation '.' is not always translated
+   // to ','.
+   //
+   // msgid "0100 h 060 m 060.0100 s"
+   // msgstr "0100 h 060 m 060.0100 s"
+
+   // The comma fix code below is specifically for bug 2241.
+   // It is a fixup, not a proper full fix.
+
+   // A correct fix would require changing all the format 
+   // strings to make it explicit when ',' is a thousands separator 
+   // and when ',' is a decimal separator
+   // A slightly better fix than now would derive bCommaIsDecimalPoint 
+   // from the untranslated strings, true if and only if the
+   // untranslated string is free of commas.
+   // Within this function we only see the translated format strings,
+   // so that is what we use.
+
+   // Normally bCommaIsDecimalPoint will be false and code will work
+   // 'as before'.
+   bool bCommaIsDecimalPoint = false;
+   // We look in the translated string for "Hz" as that is in the
+   // two problematic translated strings.
+   if (format.Contains("Hz"))
+      bCommaIsDecimalPoint = true;
+   // None of the format strings with 060 in them have a comma in them too.
+   if (format.Contains("060"))
+      bCommaIsDecimalPoint = true;
+   // 0.4342 is in the 'decades' format string.
+   if (format.Contains("4342"))
+      bCommaIsDecimalPoint = true;
+   // 1.4426 is in the 'octaves' format string
+   if (format.Contains("4426"))
+      bCommaIsDecimalPoint = true;
+   // 17.3123 is in 'semitones' format string
+   if (format.Contains("3123"))
+      bCommaIsDecimalPoint = true;
+
    mNtscDrop = false;
    for(i=0; i<format.length(); i++) {
       bool handleDelim = false;
@@ -732,6 +804,8 @@ void NumericConverter::ParseFormatString(
 
       if (format[i] == '|') {
          wxString remainder = format.Right(format.length() - i - 1);
+         // For languages which use , as a separator.
+         remainder.Replace(wxT(","), wxT("."));
 
          if (remainder == wxT("#"))
             mScalingFactor = mSampleRate;
@@ -739,7 +813,11 @@ void NumericConverter::ParseFormatString(
             mNtscDrop = true;
          }
          else
-            remainder.ToDouble(&mScalingFactor);
+            // Use the C locale here for string to number.
+            // Translations are often incomplete.
+            // We can't rely on the correct ',' or '.' in the 
+            // translation, so we work based on '.' for decimal point.
+            remainder.ToCDouble(&mScalingFactor);
          i = format.length()-1; // force break out of loop
          if (!delimStr.empty())
             handleDelim = true;
@@ -803,6 +881,14 @@ void NumericConverter::ParseFormatString(
             goToFrac = true;
             if (delimStr.length() > 1)
                delimStr = delimStr.BeforeLast('.');
+         }
+         // Bug 2241 - Also handle ',' as decimal point
+         // for languages like French and German.
+         // Translators may or may not have translated the '.'.
+         else if (bCommaIsDecimalPoint && !inFrac && delimStr[delimStr.length()-1]==',') {
+            goToFrac = true;
+            if (delimStr.length() > 1)
+               delimStr = delimStr.BeforeLast(',');
          }
 
          if (inFrac) {
@@ -970,7 +1056,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
 
       if (mFields[i].frac) {
          // JKC: This old code looks bogus to me.
-         // The rounding is not propogating to earlier fields in the frac case.
+         // The rounding is not propagating to earlier fields in the frac case.
          //value = (int)(t_frac * mFields[i].base + 0.5);  // +0.5 as rounding required
          // I did the rounding earlier.
          if (t_frac >= 0)
@@ -1059,11 +1145,11 @@ bool NumericConverter::SetFormatName(const NumericFormatSymbol & formatName)
       SetFormatString(GetBuiltinFormat(formatName));
 }
 
-bool NumericConverter::SetFormatString(const TranslatableString & formatString)
+bool NumericConverter::SetFormatString(const FormatStrings & formatString)
 {
    if (mFormatString != formatString) {
       mFormatString = formatString;
-      ParseFormatString(mFormatString);
+      ParseFormatString(mFormatString.formatStr);
       ValueToControls();
       ControlsToValue();
       return true;
@@ -1075,7 +1161,7 @@ bool NumericConverter::SetFormatString(const TranslatableString & formatString)
 void NumericConverter::SetSampleRate(double sampleRate)
 {
    mSampleRate = sampleRate;
-   ParseFormatString(mFormatString);
+   ParseFormatString(mFormatString.formatStr);
    ValueToControls();
    ControlsToValue();
 }
@@ -1151,16 +1237,16 @@ NumericFormatSymbol NumericConverter::GetBuiltinName(const int index)
    return {};
 }
 
-TranslatableString NumericConverter::GetBuiltinFormat(const int index)
+auto NumericConverter::GetBuiltinFormat(const int index) -> FormatStrings
 {
    if (index >= 0 && index < GetNumBuiltins())
-      return mBuiltinFormatStrings[index].formatStr;
+      return mBuiltinFormatStrings[index].formatStrings;
 
    return {};
 }
 
-TranslatableString NumericConverter::GetBuiltinFormat(
-   const NumericFormatSymbol &name)
+auto NumericConverter::GetBuiltinFormat(
+   const NumericFormatSymbol &name) -> FormatStrings
 {
    int ndx =
       std::find( mBuiltinFormatStrings, mBuiltinFormatStrings + mNBuiltins,
@@ -1318,12 +1404,17 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
 {
    mAllowInvalidValue = false;
 
-   mDigitBoxW = 10;
-   mDigitBoxH = 16;
+   mDigitBoxW = 11;
+   mDigitBoxH = 19;
+
+   mBorderLeft = 1;
+   mBorderTop = 1;
+   mBorderRight = 1;
+   mBorderBottom = 1;
 
    mReadOnly = options.readOnly;
    mMenuEnabled = options.menuEnabled;
-   mButtonWidth = 9;
+   mButtonWidth = mMenuEnabled ? 9 : 0;
 
    SetLayoutDirection(wxLayout_LeftToRight);
    Layout();
@@ -1347,7 +1438,7 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
    if (options.hasInvalidValue)
       SetInvalidValue( options.invalidValue );
 
-   if (!options.format.empty())
+   if (!options.format.formatStr.empty())
       SetFormatString( options.format );
 
    if (options.hasValue)
@@ -1388,7 +1479,7 @@ bool NumericTextCtrl::SetFormatName(const NumericFormatSymbol & formatName)
       SetFormatString(GetBuiltinFormat(formatName));
 }
 
-bool NumericTextCtrl::SetFormatString(const TranslatableString & formatString)
+bool NumericTextCtrl::SetFormatString(const FormatStrings & formatString)
 {
    auto result =
       NumericConverter::SetFormatString(formatString);
@@ -1458,78 +1549,119 @@ void NumericTextCtrl::SetInvalidValue(double invalidValue)
       SetValue(invalidValue);
 }
 
-
-void NumericTextCtrl::ComputeSizing()
+wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
 {
-   unsigned int i, j;
-   int x, pos;
+   // Get current box size
+   if (boxW == 0) {
+      boxW = mDigitBoxW;
+   }
 
-   wxMemoryDC memDC;
+   if (boxH == 0) {
+      boxH = mDigitBoxH;
+   }
+   boxH -= (mBorderTop + mBorderBottom);
 
-   // Placeholder bitmap so the memDC has something to reference
-   mBackgroundBitmap = std::make_unique<wxBitmap>(1, 1, 24);
-   memDC.SelectObject(*mBackgroundBitmap);
+   // We can use the screen device context since we're not drawing to it
+   wxScreenDC dc;
 
-   mDigits.clear();
+   // First calculate a rough point size
+   wxFont pf(wxSize(boxW, boxH), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   int fontSize = pf.GetPointSize();
+   wxCoord strW;
+   wxCoord strH;
 
-   mBorderLeft = 1;
-   mBorderTop = 1;
-   mBorderRight = 1;
-   mBorderBottom = 1;
-
-   int fontSize = 4;
-   wxCoord strW, strH;
-   wxString exampleText = wxT("0");
-
-   // Keep making the font bigger until it's too big, then subtract one.
-   memDC.SetFont(wxFont(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-   memDC.GetTextExtent(exampleText, &strW, &strH);
-   while (strW <= mDigitBoxW && strH <= mDigitBoxH) {
-      fontSize++;
-      memDC.SetFont(wxFont(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-      memDC.GetTextExtent(exampleText, &strW, &strH);
+   // Now decrease it until we fit within our digit box
+   dc.SetFont(pf);
+   dc.GetTextExtent(wxT("0"), &strW, &strH);
+   while (strW > boxW || strH > boxH) {
+      dc.SetFont(wxFont(--fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+      dc.GetTextExtent(wxT("0"), &strW, &strH);
    }
    fontSize--;
 
-   mDigitFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   memDC.SetFont(*mDigitFont);
-   memDC.GetTextExtent(exampleText, &strW, &strH);
-   mDigitW = strW;
-   mDigitH = strH;
+   // Create the digit font with the new point size
+   if (update) {
+      mDigitFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+      dc.SetFont(*mDigitFont);
+
+      // Remember the actual digit width and height using the new font
+      dc.GetTextExtent(wxT("0"), &mDigitW, &mDigitH);
+   }
 
    // The label font should be a little smaller
-   fontSize--;
-   mLabelFont = std::make_unique<wxFont>(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   std::unique_ptr<wxFont> labelFont = std::make_unique<wxFont>(fontSize - 1, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-   // Figure out the x-position of each field and label in the box
-   x = mBorderLeft;
-   pos = 0;
-
-   memDC.SetFont(*mLabelFont);
-   memDC.GetTextExtent(mPrefix, &strW, &strH);
-   x += strW;
-   pos += mPrefix.length();
-
-   for(i = 0; i < mFields.size(); i++) {
-      mFields[i].fieldX = x;
-      for(j=0; j<(unsigned int)mFields[i].digits; j++) {
-         mDigits.push_back(DigitInfo(i, j, pos, wxRect(x, mBorderTop,
-                                                 mDigitBoxW, mDigitBoxH)));
-         x += mDigitBoxW;
-         pos++;
-      }
-
-      mFields[i].labelX = x;
-      memDC.GetTextExtent(mFields[i].label, &strW, &strH);
-      pos += mFields[i].label.length();
-      x += strW;
-      mFields[i].fieldW = x;
+   // Use the label font for all remaining measurements since only non-digit text is left
+   dc.SetFont(*labelFont);
+ 
+   // Remember the pointer if updating
+   if (update) {
+      mLabelFont = std::move(labelFont);
    }
 
-   mWidth = x + mBorderRight;
-   mHeight = mDigitBoxH + mBorderTop + mBorderBottom;
-}
+   // Get the width of the prefix, if any
+   dc.GetTextExtent(mPrefix, &strW, &strH);
 
+   // Bump x-position to the end of the prefix
+   int x = mBorderLeft + strW;
+
+   if (update) {
+      // Set the character position past the prefix
+      int pos = mPrefix.length();
+
+      // Reset digits array
+      mDigits.clear();
+
+      // Figure out the x-position of each field and label in the box
+      for (int i = 0, fcnt = mFields.size(); i < fcnt; ++i) {
+         // Get the size of the label
+         dc.GetTextExtent(mFields[i].label, &strW, &strH);
+
+         // Remember this field's x-position
+         mFields[i].fieldX = x;
+
+         // Remember metrics for each digit
+         for (int j = 0, dcnt = mFields[i].digits; j < dcnt; ++j) {
+            mDigits.push_back(DigitInfo(i, j, pos, wxRect(x, mBorderTop, boxW, boxH)));
+            x += boxW;
+            pos++;
+         }
+
+         // Remember the label's x-position
+         mFields[i].labelX = x;
+
+         // Bump to end of label
+         x += strW;
+
+         // Remember the label's width
+         mFields[i].fieldW = x;
+
+         // Bump character position to end of label
+         pos += mFields[i].label.length();
+      }
+   }
+   else {
+      // Determine the maximum x-position (length) of the remaining fields
+      for (int i = 0, fcnt = mFields.size(); i < fcnt; ++i) {
+         // Get the size of the label
+         dc.GetTextExtent(mFields[i].label, &strW, &strH);
+
+         // Just bump to next field
+         x += (boxW * mFields[i].digits) + strW;
+      }
+   }
+
+   // Calculate the maximum dimensions
+   wxSize dim(x + mBorderRight, boxH + mBorderTop + mBorderBottom);
+
+   // Save maximumFinally, calculate the minimum dimensions
+   if (update) {
+      mWidth = dim.x;
+      mHeight = dim.y;
+   }
+
+   return wxSize(dim.x + mButtonWidth, dim.y);
+}
 
 bool NumericTextCtrl::Layout()
 {
@@ -1606,7 +1738,7 @@ void NumericTextCtrl::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void NumericTextCtrl::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
-   wxPaintDC dc(this);
+   wxBufferedPaintDC dc(this);
    bool focused = (FindFocus() == this);
 
    dc.DrawBitmap(*mBackgroundBitmap, 0, 0);
@@ -2142,6 +2274,22 @@ wxAccStatus NumericTextCtrlAx::GetLocation(wxRect & rect, int elementId)
    return wxACC_OK;
 }
 
+static void GetFraction( wxString &label,
+   const NumericConverter::FormatStrings &formatStrings,
+   bool isTime, int digits )
+{
+   TranslatableString tr = formatStrings.fraction;
+   if ( tr.empty() ) {
+      wxASSERT( isTime );
+      if (digits == 2)
+         tr = XO("centiseconds");
+      else if (digits == 3)
+         tr = XO("milliseconds");
+   }
+   if (!tr.empty())
+      label = tr.Translation();
+}
+
 // Gets the name of the specified object.
 wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
 {
@@ -2193,26 +2341,8 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
          if (field > 1 && field == cnt) {
             if (mFields[field - 2].label == decimal) {
                int digits = mFields[field - 1].digits;
-               if (digits == 2) {
-                  if (isTime)
-                     label = _("centiseconds");
-                  else {
-                     // other units
-                     // PRL:  does this create translation problems?
-                     label = _("hundredths of ");
-                     label += mFields[field - 1].label;
-                  }
-               }
-               else if (digits == 3) {
-                  if (isTime)
-                     label = _("milliseconds");
-                  else {
-                     // other units
-                     // PRL:  does this create translation problems?
-                     label = _("thousandths of ");
-                     label += mFields[field - 1].label;
-                  }
-               }
+               GetFraction( label, mCtrl->mFormatString,
+                  isTime, digits );
             }
          }
          // If the field following this one represents fractions of a

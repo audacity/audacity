@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2009-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2009-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -89,10 +89,21 @@ main (int argc, char **argv)
 		exit (1) ;
 		} ;
 
+	if (sfinfo.channels > MAX_CHANNELS)
+	{	printf ("\nError : Input file '%s' has too many (%d) channels. Limit is %d.\n",
+			argv [1], sfinfo.channels, MAX_CHANNELS) ;
+		exit (1) ;
+		} ;
+
+
 	state.channels = sfinfo.channels ;
 	sfinfo.channels = 1 ;
 
-	snprintf (pathname, sizeof (pathname), "%s", argv [1]) ;
+	if (snprintf (pathname, sizeof (pathname), "%s", argv [1]) > (int) sizeof (pathname))
+	{	printf ("\nError : Length of provided filename '%s' exceeds MAX_PATH (%d).\n", argv [1], (int) sizeof (pathname)) ;
+		exit (1) ;
+		} ;
+
 	if ((cptr = strrchr (pathname, '.')) == NULL)
 		ext [0] = 0 ;
 	else
@@ -105,8 +116,13 @@ main (int argc, char **argv)
 
 	for (ch = 0 ; ch < state.channels ; ch++)
 	{	char filename [520] ;
+		size_t count ;
 
-		snprintf (filename, sizeof (filename), "%s_%02d%s", pathname, ch, ext) ;
+		count = snprintf (filename, sizeof (filename), "%s_%02d%s", pathname, ch, ext) ;
+
+		if (count >= sizeof (filename))
+		{	printf ("File name truncated to %s\n", filename) ;
+			} ;
 
 		if ((state.outfile [ch] = sf_open (filename, SFM_WRITE, &sfinfo)) == NULL)
 		{	printf ("Not able to open output file '%s'\n%s\n", filename, sf_strerror (NULL)) ;
@@ -154,7 +170,7 @@ usage_exit (void)
 		"a_00.wav, a_01.wav and so on.\n"
 		) ;
 	printf ("Using %s.\n\n", sf_version_string ()) ;
-	exit (0) ;
+	exit (1) ;
 } /* usage_exit */
 
 static void

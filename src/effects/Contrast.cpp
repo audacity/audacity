@@ -35,7 +35,6 @@
 #endif
 
 #include <wx/button.h>
-#include <wx/filedlg.h>
 #include <wx/valtext.h>
 #include <wx/log.h>
 #include <wx/wfstream.h>
@@ -189,7 +188,6 @@ void ContrastDialog::OnChar(wxKeyEvent &event)
    return;
 }
 
-/* i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/ */
 ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                            const TranslatableString & title,
                            const wxPoint & pos):
@@ -210,7 +208,6 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    mForegroundEndT = NULL;
    mBackgroundStartT = NULL;
    mBackgroundEndT = NULL;
-   wxTextValidator vld(wxFILTER_NUMERIC);
    wxString number;
 
    auto p = FindProjectFromWindow( this );
@@ -227,9 +224,9 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    S.SetBorder(5);
    S.StartHorizontalLay(wxCENTER, false);
    {
-      /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
-      S.AddTitle(XO(
-"Contrast Analyzer, for measuring RMS volume differences between two selections of audio."));
+      S.AddTitle(
+         /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
+         XO("Contrast Analyzer, for measuring RMS volume differences between two selections of audio."));
    }
    S.EndHorizontalLay();
    S.StartStatic( XO("Parameters") );
@@ -272,7 +269,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.Name(XO("Foreground end time"))
             .AddWindow(mForegroundEndT);
 
-         m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(XO("&Measure selection"));
+         m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(XXO("&Measure selection"));
          mForegroundRMSText = S.Id(ID_FOREGROUNDDB_TEXT)
             .ConnectRoot(wxEVT_KEY_DOWN,
                          &ContrastDialog::OnChar)
@@ -306,7 +303,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.Name(XO("Background end time"))
             .AddWindow(mBackgroundEndT);
 
-         m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(XO("Mea&sure selection"));
+         m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(XXO("Mea&sure selection"));
          mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT)
             .ConnectRoot(wxEVT_KEY_DOWN,
                          &ContrastDialog::OnChar)
@@ -328,7 +325,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             .ConnectRoot(wxEVT_KEY_DOWN,
                          &ContrastDialog::OnChar)
             .AddTextBox( {}, wxT(""), 50);
-         m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(XO("R&eset"));
+         m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(XXO("R&eset"));
 
          label = XO("&Difference:");
          S.AddFixedText(label);
@@ -337,7 +334,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             .ConnectRoot(wxEVT_KEY_DOWN,
                          &ContrastDialog::OnChar)
             .AddTextBox( {}, wxT(""), 50);
-         m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(XO("E&xport..."));
+         m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(XXO("E&xport..."));
       }
       S.EndMultiColumn();
    }
@@ -437,18 +434,18 @@ namespace {
       return format0.Format( value );
    }
 
-   wxString FormatDifference( float diffdB )
+   TranslatableString FormatDifference( float diffdB )
    {
       if( diffdB != diffdB )   // test for NaN, reliant on IEEE implementation
-         return _("indeterminate");
+         return XO("indeterminate");
       else {
          if( diffdB != std::numeric_limits<float>::infinity() )
-            /* i18n-hint: dB abbreviates decibels */
-            /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
-            return wxString::Format(_("%.2f dB RMS"), diffdB);
+            /* i18n-hint: dB abbreviates decibels
+             * RMS abbreviates root mean square, a certain averaging method */
+            return XO("%.2f dB RMS").Format( diffdB );
          else
             /* i18n-hint: dB abbreviates decibels */
-            return _("Infinite dB difference");
+            return XO("Infinite dB difference");
       }
    }
 
@@ -458,12 +455,12 @@ namespace {
          return XO("Difference is indeterminate.");
       else
          if( fabs(diffdB) != std::numeric_limits<float>::infinity() )
-            /* i18n-hint: dB abbreviates decibels */
-            /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
+            /* i18n-hint: dB abbreviates decibels
+               RMS abbreviates root mean square, a certain averaging method */
             return XO("Difference = %.2f RMS dB.").Format( diffdB );
          else
-            /* i18n-hint: dB abbreviates decibels */
-            /* i18n-hint: RMS abbreviates root mean square, a certain averaging method */
+            /* i18n-hint: dB abbreviates decibels
+               RMS abbreviates root mean square, a certain averaging method */
             return XO("Difference = infinite RMS dB.");
    }
 }
@@ -487,7 +484,7 @@ void ContrastDialog::results()
          mPassFailText->ChangeValue(_("Background higher than foreground"));
       }
       else if(diffdB > WCAG2_PASS) {
-         /* i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines */
+         /* i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/ */
          mPassFailText->ChangeValue(_("WCAG2 Pass"));
       }
       else {
@@ -497,7 +494,7 @@ void ContrastDialog::results()
 
       /* i18n-hint: i.e. difference in loudness at the moment. */
       mDiffText->SetName(_("Current difference"));
-      mDiffText->ChangeValue( FormatDifference( diffdB ) );
+      mDiffText->ChangeValue( FormatDifference( diffdB ).Translation() );
    }
 
    if (mForegroundIsDefined) {
@@ -505,7 +502,8 @@ void ContrastDialog::results()
       if(std::isinf(- foregrounddB))
          mForegroundRMSText->ChangeValue(_("zero"));
       else
-         mForegroundRMSText->ChangeValue(wxString::Format(_("%.2f dB"), foregrounddB));   // i18n-hint: short form of 'decibels'        
+         // i18n-hint: short form of 'decibels'
+         mForegroundRMSText->ChangeValue(wxString::Format(_("%.2f dB"), foregrounddB));
    }
    else {
       mForegroundRMSText->SetName(_("No foreground measured"));   // Read by screen-readers

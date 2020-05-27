@@ -7,6 +7,3 @@ the CMakeList.txt files.  We did try bundling several libraries under one
 CMakeList.txt without using subdirectories.  However, we were then fighting 
 CMake too much - and did not have a clean separation of information between sub 
 projects.
-
-We don't need the proxies for our own 'lib_src' such as mod-script-pipe and 
-FileDialog, where we 'own' the CMakeList.txt file.

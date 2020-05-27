@@ -19,8 +19,6 @@
 
 #include "../commands/Keyboard.h"
 
-class wxArrayString;
-
 // Class holding all information about a node.  Rather than a real tree
 // we store these in an array and simulate a tree.
 class KeyNode
@@ -82,7 +80,7 @@ public:
    wxString GetName() const override; // Gets the control name from the base class
 
    void RefreshBindings(const CommandIDs & names,
-                        const wxArrayString & categories,
+                        const TranslatableStrings & categories,
                         const TranslatableStrings & prefixes,
                         const TranslatableStrings & labels,
                         const std::vector<NormalizedKeyString> & keys,
@@ -133,7 +131,6 @@ private:
    void OnLeftDown(wxMouseEvent & event);
 
 
-   static wxString CommandTranslated;
    static bool CmpKeyNodeByTree(KeyNode *n1, KeyNode *n2);
    static bool CmpKeyNodeByName(KeyNode *n1, KeyNode *n2);
    static bool CmpKeyNodeByKey(KeyNode *n1, KeyNode *n2);

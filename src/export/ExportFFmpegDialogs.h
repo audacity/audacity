@@ -36,6 +36,7 @@ enum FFmpegExposedFormat
    FMT_M4A,
    FMT_AC3,
    FMT_AMRNB,
+   FMT_OPUS,
    FMT_WMA2,
    FMT_OTHER,
    FMT_LAST
@@ -99,10 +100,6 @@ public:
    void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
-
-private:
-
-   wxSpinCtrl *mQualitySpin;
 };
 
 class ExportFFmpegAMRNBOptions final : public wxPanelWrapper
@@ -120,6 +117,40 @@ private:
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
+};
+
+class ExportFFmpegOPUSOptions final : public wxPanelWrapper
+{
+public:
+
+   ExportFFmpegOPUSOptions(wxWindow *parent, int format);
+   ~ExportFFmpegOPUSOptions();
+
+   void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
+
+   static const int iOPUSSampleRates[];
+
+private:
+
+   wxSlider *mBitRateSlider;
+   int mBitRateFromSlider;
+
+   wxChoice *mVbrChoice;
+   int mVbrFromChoice;
+
+   wxSlider *mComplexitySlider;
+   int mComplexityFromSlider;
+
+   wxChoice *mFramesizeChoice;
+   int mFramesizeFromChoice;
+
+   wxChoice *mApplicationChoice;
+   int mApplicationFromChoice;
+
+   wxChoice *mCuttoffChoice;
+   int mCutoffFromChoice;
 };
 
 class ExportFFmpegWMAOptions final : public wxPanelWrapper
@@ -155,6 +186,8 @@ public:
    void OnOpen(wxCommandEvent & evt);
 
 private:
+   wxTextCtrl *mFormat;
+   wxTextCtrl *mCodec;
 
    DECLARE_EVENT_TABLE()
 };
@@ -211,44 +244,13 @@ private:
    wxArrayStringEx mCodecNames;
    wxArrayString mCodecLongNames;
 
-   wxChoice *mFormatChoice;
-   wxChoice *mCodecChoice;
-
    wxListBox *mFormatList;
    wxListBox *mCodecList;
 
    wxStaticText *mFormatName;
    wxStaticText *mCodecName;
 
-   wxChoice *mPresetChoice;
    wxComboBox *mPresetCombo;
-   wxSpinCtrl *mBitrateSpin;
-   wxSpinCtrl *mQualitySpin;
-   wxSpinCtrl *mSampleRateSpin;
-   wxTextCtrl *mLanguageText;
-   wxTextCtrl *mTag;
-   wxSpinCtrl *mCutoffSpin;
-   wxCheckBox *mBitReservoirCheck;
-   wxChoice *mProfileChoice;
-   //wxSpinCtrl *mTrellisSpin; //trellis is only applicable for ADPCM...scrap it.
-   wxSpinCtrl *mCompressionLevelSpin;
-   wxSpinCtrl *mFrameSizeSpin;
-   wxCheckBox *mUseLPCCheck;
-   wxSpinCtrl *mLPCCoeffsPrecisionSpin;
-   wxSpinCtrl *mMinPredictionOrderSpin;
-   wxSpinCtrl *mMaxPredictionOrderSpin;
-   wxChoice *mPredictionOrderMethodChoice;
-   wxSpinCtrl *mMinPartitionOrderSpin;
-   wxSpinCtrl *mMaxPartitionOrderSpin;
-   wxSpinCtrl *mMuxRate;
-   wxSpinCtrl *mPacketSize;
-
-   wxButton *mOk;
-   wxButton *mSavePreset;
-   wxButton *mLoadPreset;
-   wxButton *mDeletePreset;
-   wxButton *mImportPresets;
-   wxButton *mExportPresets;
 
    int mBitRateFromChoice;
    int mSampleRateFromChoice;
@@ -257,31 +259,31 @@ private:
 
    wxArrayStringEx mPresetNames;
 
-   /// Finds the format currently selected and returns it's name and description
+   /// Finds the format currently selected and returns its name and description
    void FindSelectedFormat(wxString **name, wxString **longname);
 
-   /// Finds the codec currently selected and returns it's name and description
+   /// Finds the codec currently selected and returns its name and description
    void FindSelectedCodec(wxString **name, wxString **longname);
 
-   /// Retreives format list from libavformat
+   /// Retrieves format list from libavformat
    void FetchFormatList();
 
-   /// Retreives a list of formats compatible to codec
+   /// Retrieves a list of formats compatible to codec
    ///\param id Codec ID
    ///\param selfmt format selected at the moment
    ///\return index of the selfmt in NEW format list or -1 if it is not in the list
    int FetchCompatibleFormatList(AVCodecID id, wxString *selfmt);
 
-   /// Retreives codec list from libavcodec
+   /// Retrieves codec list from libavcodec
    void FetchCodecList();
 
-   /// Retreives a list of codecs compatible to format
+   /// Retrieves a list of codecs compatible to format
    ///\param fmt Format short name
    ///\param id id of the codec selected at the moment
    ///\return index of the id in NEW codec list or -1 if it is not in the list
    int FetchCompatibleCodecList(const wxChar *fmt, AVCodecID id);
 
-   /// Retreives list of presets from configuration file
+   /// Retrieves list of presets from configuration file
    void FetchPresetList();
 
    bool ReportIfBadCombination();

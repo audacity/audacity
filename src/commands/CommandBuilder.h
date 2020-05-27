@@ -19,6 +19,8 @@
 #include "../MemoryX.h"
 
 class AudacityProject;
+class ResponseTarget;
+using ResponseTargetPointer = std::shared_ptr<ResponseTarget>;
 class OldStyleCommand;
 using OldStyleCommandPointer = std::shared_ptr<OldStyleCommand>;
 class wxString;
@@ -30,6 +32,7 @@ class CommandBuilder
 {
    private:
       bool mValid;
+      ResponseTargetPointer mResponse;
       OldStyleCommandPointer mCommand;
       wxString mError;
 
@@ -45,6 +48,6 @@ class CommandBuilder
       ~CommandBuilder();
       bool WasValid();
       OldStyleCommandPointer GetCommand();
-      const wxString &GetErrorMessage();
+      wxString GetResponse();
 };
 #endif /* End of include guard: __COMMANDBUILDER__ */

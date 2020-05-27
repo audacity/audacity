@@ -98,19 +98,20 @@ void ShowDiagnostics(
  */
 class QuickFixDialog : public wxDialogWrapper
 {
-public: 
+public:
+   using PrefSetter = std::function< void() > ;
+
    QuickFixDialog(wxWindow * pParent, AudacityProject &project);
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
-   void AddStuck( ShuttleGui & S, bool & bBool, wxString Pref,
+   void AddStuck( ShuttleGui & S, bool & bBool,
+      const PrefSetter &prefSetter,
       const TranslatableString &Prompt, wxString Help );
 
    void OnOk(wxCommandEvent &event);
    void OnCancel(wxCommandEvent &event);
-   void OnHelp(wxCommandEvent &event);
-   void OnFix(wxCommandEvent &event);
-
-   wxString StringFromEvent( wxCommandEvent &event );
+   void OnHelp(const wxString &Str);
+   void OnFix(const PrefSetter &setter, wxWindowID id);
 
    AudacityProject &mProject;
 
@@ -121,16 +122,13 @@ public:
    DECLARE_EVENT_TABLE()
 };
 
+
 #define FixButtonID           7001
 #define HelpButtonID          7011
-#define FakeButtonID          7021
 
 BEGIN_EVENT_TABLE(QuickFixDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK,                                            QuickFixDialog::OnOk)
    EVT_BUTTON(wxID_CANCEL,                                        QuickFixDialog::OnCancel)
-   EVT_BUTTON(wxID_HELP,                                          QuickFixDialog::OnHelp)
-   EVT_COMMAND_RANGE(FixButtonID,  HelpButtonID-1, wxEVT_BUTTON,  QuickFixDialog::OnFix)
-   EVT_COMMAND_RANGE(HelpButtonID, FakeButtonID-1, wxEVT_BUTTON,  QuickFixDialog::OnHelp)
 END_EVENT_TABLE();
 
 QuickFixDialog::QuickFixDialog(wxWindow * pParent, AudacityProject &project) :
@@ -160,16 +158,24 @@ QuickFixDialog::QuickFixDialog(wxWindow * pParent, AudacityProject &project) :
    Center();
 }
 
-void QuickFixDialog::AddStuck(
-   ShuttleGui & S, bool & bBool, wxString Pref,
+void QuickFixDialog::AddStuck( ShuttleGui & S, bool & bBool,
+   const PrefSetter &prefSetter,
    const TranslatableString &Prompt, wxString Help )
 {
    mItem++;
+   wxWindowID id = FixButtonID + mItem;
    if( !bBool)
       return;
-   S.AddFixedText( Prompt );
-   S.Id(FixButtonID + mItem).AddButton( XO("Fix") )->SetClientObject(
-      safenew wxStringClientData(Pref));
+
+   S
+      .AddFixedText( Prompt );
+
+   S
+      .Id( id )
+      .AddButton( XXO("Fix") )
+         ->Bind( wxEVT_BUTTON, [this, prefSetter, id](wxCommandEvent&){
+            OnFix( prefSetter, id );
+         } );
 
    {
      // Replace standard Help button with smaller icon button.
@@ -177,7 +183,9 @@ void QuickFixDialog::AddStuck(
       auto b = safenew wxBitmapButton(S.GetParent(), HelpButtonID+mItem, theTheme.Bitmap( bmpHelpIcon ));
       b->SetToolTip( _("Help") );
       b->SetLabel(_("Help"));       // for screen readers
-      b->SetClientObject( safenew wxStringClientData( Help ));
+      b->Bind( wxEVT_BUTTON, [this, Help](const wxCommandEvent&){
+         OnHelp( Help );
+      } );
       S.AddWindow( b );
    }
 }
@@ -200,13 +208,38 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
       {
          mItem = -1;
 
+         auto defaultAction =
+         [](AudacityProject *pProject, const wxString &path){ return
+            [pProject, path]{
+               gPrefs->Write(path, 0);
+               gPrefs->Flush();
+               // This is overkill (aka slow), as all preferences are
+               // reloaded and all
+               // toolbars recreated.
+               // Overkill probably doesn't matter, as this command is
+               // infrequently used.
+               DoReloadPreferences( *pProject );
+            };
+         };
+
          // Use # in the URLs to ensure we go to the online version of help.
          // Local help may well not be installed.
-         AddStuck( S, mbSyncLocked, "/GUI/SyncLockTracks",
+         auto pProject = &mProject;
+         AddStuck( S, mbSyncLocked,
+            defaultAction( pProject, "/GUI/SyncLockTracks" ),
             XO("Clocks on the Tracks"), "Quick_Fix#sync_lock" );
-         AddStuck( S, mbInSnapTo, "/SnapTo",
+         AddStuck( S, mbInSnapTo,
+            [pProject] {
+               gPrefs->Write( "/SnapTo", 0 );
+               gPrefs->Flush();
+               // Sadly SnapTo has to be handled specially,
+               // as it is not part of the standard
+               // preference dialogs.
+               ProjectSelectionManager::Get( *pProject ).AS_SetSnapTo( 0 );
+            },
             XO("Can't select precisely"), "Quick_Fix#snap_to" );
-         AddStuck( S, mbSoundActivated, "/AudioIO/SoundActivatedRecord",
+         AddStuck( S, mbSoundActivated,
+            defaultAction( pProject, "/AudioIO/SoundActivatedRecord" ),
             XO("Recording stops and starts"),
             "Quick_Fix#sound_activated_recording" );
       }
@@ -222,8 +255,9 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
 
    wxButton * pBtn = (wxButton*)FindWindowById( wxID_HELP );
    if( pBtn )
-      pBtn->SetClientObject( safenew wxStringClientData( "Quick_Fix#" ));
-
+      pBtn->Bind( wxEVT_BUTTON, [this]( const wxCommandEvent & ){
+         OnHelp( "Quick_Fix#" );
+      } );
 }
 
 void QuickFixDialog::OnOk(wxCommandEvent &event)
@@ -238,55 +272,18 @@ void QuickFixDialog::OnCancel(wxCommandEvent &event)
    EndModal(wxID_CANCEL);
 }
 
-wxString QuickFixDialog::StringFromEvent( wxCommandEvent &event )
+void QuickFixDialog::OnHelp(const wxString &Str)
 {
-   wxButton * pBtn = (wxButton*)event.GetEventObject();
-   if( !pBtn ){
-      wxFAIL_MSG( "Event Object not found");
-      return "";
-   }
-   wxStringClientData * pStrCd = (wxStringClientData*)(pBtn->GetClientObject());
-   if( !pStrCd ){
-      wxFAIL_MSG( "Client Data not found");
-      return "";
-   }
-   wxString Str = pStrCd->GetData();
-   if( Str.empty()){
-      wxFAIL_MSG( "String data empty");
-      return "";
-   }
-   return Str;
+   HelpSystem::ShowHelp(this, Str, true);
 }
 
-void QuickFixDialog::OnHelp(wxCommandEvent &event)
+void QuickFixDialog::OnFix(const PrefSetter &setter, wxWindowID id)
 {
-   HelpSystem::ShowHelp(this, StringFromEvent( event ), true);
-}
-
-void QuickFixDialog::OnFix(wxCommandEvent &event)
-{
-   wxString Str = StringFromEvent( event );
-   gPrefs->Write( Str, 0);
-   gPrefs->Flush();
-
-   {
-      // Sadly SnapTo has to be handled specially, as it is not part of the standard
-      // preference dialogs.
-      if( Str == "/SnapTo" )
-      {
-         ProjectSelectionManager::Get( mProject ).AS_SetSnapTo( 0 );
-      }
-      else
-      {
-         // This is overkill (aka slow), as all preferences are reloaded and all 
-         // toolbars recreated.
-         // Overkill probably doesn't matter, as this command is infrequently used.
-         DoReloadPreferences( mProject );
-      }
-   }
+   if ( setter )
+      setter();
    
    // Change the label after doing the fix, as the fix may take a second or two.
-   wxButton * pBtn = (wxButton*)event.GetEventObject();
+   auto pBtn = FindWindow(id);
    if( pBtn )
       pBtn->SetLabel( _("Fixed") );
 
@@ -305,6 +302,22 @@ namespace HelpActions {
 // Menu handler functions
 
 struct Handler : CommandHandlerObject {
+
+void OnResetConfig(const CommandContext &context)
+{
+   auto &project = context.project;
+   wxString dir = gPrefs->Read(wxT("/Directories/TempDir"));
+   gPrefs->DeleteAll();
+   // This stops ReloadPreferences warning about directory change
+   // on next restart.
+   gPrefs->Write(wxT("/Directories/TempDir"), dir);
+   gPrefs->Flush();
+   DoReloadPreferences(project);
+   // OnResetToolBars(context);
+   gPrefs->Flush();
+
+}
+
 
 void OnQuickFix(const CommandContext &context)
 {
@@ -494,7 +507,7 @@ BaseItemSharedPtr HelpMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Help"), XO("&Help"),
+   Menu( wxT("Help"), XXO("&Help"),
       Section( "Basic",
          // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
    #ifdef EXPERIMENTAL_DA
@@ -502,15 +515,21 @@ BaseItemSharedPtr HelpMenu()
          Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
             AlwaysEnabledFlag ),
          // DA: 'Getting Started' rather than 'Quick Help'.
-         Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) ),
+         Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp),
+            AlwaysEnabledFlag ),
          // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-         Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) )
+         Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual),
+            AlwaysEnabledFlag ),
+
    #else
          Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
             AlwaysEnabledFlag ),
          Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
-            AlwaysEnabledFlag )
+            AlwaysEnabledFlag ),
    #endif
+         Command( wxT("ConfigReset"), XXO("Reset Configuration"),
+            FN(OnResetConfig),
+            AudioIONotBusyFlag() )
       ),
 
    #ifdef __WXMAC__
@@ -519,7 +538,7 @@ BaseItemSharedPtr HelpMenu()
       Section
    #endif
       ( "Other",
-         Menu( wxT("Diagnostics"), XO("&Diagnostics"),
+         Menu( wxT("Diagnostics"), XXO("&Diagnostics"),
             Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
                FN(OnAudioDeviceInfo),
                AudioIONotBusyFlag() ),

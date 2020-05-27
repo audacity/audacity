@@ -37,7 +37,7 @@ used throughout Audacity into this one place.
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"
 #include "widgets/AudacityMessageBox.h"
-#include "../lib-src/FileDialog/FileDialog.h"
+#include "widgets/FileDialog/FileDialog.h"
 
 #if defined(__WXMAC__) || defined(__WXGTK__)
 #include <dlfcn.h>

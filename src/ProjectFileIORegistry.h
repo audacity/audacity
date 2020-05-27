@@ -19,7 +19,7 @@ class wxString;
 
 namespace ProjectFileIORegistry {
 
-// Type of functions returning objects that intepret a part of the saved XML
+// Type of functions returning objects that interpret a part of the saved XML
 using TagHandlerFactory =
    std::function< XMLTagHandler *( AudacityProject & ) >;
 

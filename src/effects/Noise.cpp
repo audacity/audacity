@@ -41,9 +41,13 @@ enum kTypes
 static const EnumValueSymbol kTypeStrings[nTypes] =
 {
    // These are acceptable dual purpose internal/visible names
-   { XO("White") },
-   { XO("Pink") },
-   { XO("Brownian") }
+   /* i18n-hint: not a color, but "white noise" having a uniform spectrum  */
+   { XC("White", "noise") },
+   /* i18n-hint: not a color, but "pink noise" having a spectrum with more power
+    in low frequencies */
+   { XC("Pink", "noise") },
+   /* i18n-hint: a kind of noise spectrum also known as "red" or "brown" */
+   { XC("Brownian", "noise") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -232,14 +236,14 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxCENTER);
    {
       S.Validator<wxGenericValidator>(&mType)
-         .AddChoice(XO("Noise type:"), Msgids(kTypeStrings, nTypes));
+         .AddChoice(XXO("&Noise type:"), Msgids(kTypeStrings, nTypes));
 
       S.Validator<FloatingPointValidator<double>>(
             6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES, MIN_Amp, MAX_Amp
          )
-         .AddTextBox(XO("Amplitude (0-1):"), wxT(""), 12);
+         .AddTextBox(XXO("&Amplitude (0-1):"), wxT(""), 12);
 
-      S.AddPrompt(XO("Duration:"));
+      S.AddPrompt(XXO("&Duration:"));
       mNoiseDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,

@@ -534,8 +534,7 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
    StartNewTrack();
 
    if (!mDoProfile)
-      mOutputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),
-                                            track->GetRate());
+      mOutputTrack = track->EmptyCopy();
 
    auto bufferSize = track->GetMaxBlockSize();
    Floats buffer{ bufferSize };
@@ -715,7 +714,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.AddVariableText(XO(
 "Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:"));
-      m_pButton_GetProfile = S.Id(ID_BUTTON_GETPROFILE).AddButton(XO("&Get Noise Profile"));
+      m_pButton_GetProfile = S.Id(ID_BUTTON_GETPROFILE).AddButton(XXO("&Get Noise Profile"));
    }
    S.EndStatic();
 
@@ -729,7 +728,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
       {
          mGainT = S.Id(ID_GAIN_TEXT)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC)
-            .AddTextBox(XO("Noise re&duction (dB):"), wxT(""), 0);
+            .AddTextBox(XXO("Noise re&duction (dB):"), wxT(""), 0);
 
          mGainS = S.Id(ID_GAIN_SLIDER)
             .Name(XO("Noise reduction"))
@@ -739,7 +738,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 
          mSensitivityT = S.Id(ID_SENSITIVITY_TEXT)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC)
-            .AddTextBox(XO("&Sensitivity (dB):"), wxT(""), 0);
+            .AddTextBox(XXO("&Sensitivity (dB):"), wxT(""), 0);
          mSensitivityS = S.Id(ID_SENSITIVITY_SLIDER)
             .Name(XO("Sensitivity"))
             .Style(wxSL_HORIZONTAL)
@@ -748,7 +747,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 
          mFreqT = S.Id(ID_FREQ_TEXT)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC)
-            .AddTextBox(XO("Fr&equency smoothing (Hz):"), wxT(""), 0);
+            .AddTextBox(XXO("Fr&equency smoothing (Hz):"), wxT(""), 0);
          mFreqS = S.Id(ID_FREQ_SLIDER)
             .Name(XO("Frequency smoothing"))
             .Style(wxSL_HORIZONTAL)
@@ -757,18 +756,18 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 
          mTimeT = S.Id(ID_TIME_TEXT)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC)
-            .AddTextBox(XO("Attac&k/decay time (secs):"), wxT(""), 0);
+            .AddTextBox(XXO("Attac&k/decay time (secs):"), wxT(""), 0);
          mTimeS = S.Id(ID_TIME_SLIDER)
             .Name(XO("Attack/decay time"))
             .Style(wxSL_HORIZONTAL)
             .MinSize( { 150, -1 } )
             .AddSlider( {}, 0, TIME_MAX, TIME_MIN);
 
-         S.AddPrompt(XO("Noise:"));
+         S.AddPrompt(XXO("Noise:"));
          mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)
-               .AddRadioButton(XO("Re&move"));
+               .AddRadioButton(XXO("Re&move"));
          mKeepNoise = S.Id(ID_RADIOBUTTON_KEEPNOISE)
-               .AddRadioButtonToGroup(XO("&Isolate"));
+               .AddRadioButtonToGroup(XXO("&Isolate"));
       }
       S.EndMultiColumn();
    }

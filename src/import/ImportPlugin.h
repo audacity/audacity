@@ -53,7 +53,6 @@ but little else.
 #include "ImportRaw.h" // defines TrackHolders
 
 class AudacityProject;
-class wxArrayString;
 class ProgressDialog;
 enum class ProgressResult : unsigned;
 class TrackFactory;

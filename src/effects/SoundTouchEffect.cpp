@@ -189,7 +189,7 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
 {
    mSoundTouch->setSampleRate((unsigned int)(track->GetRate()+0.5));
 
-   auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(), track->GetRate());
+   auto outputTrack = track->EmptyCopy();
 
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
@@ -247,7 +247,7 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
 
    // Take the output track and insert it in place of the original
    // sample data
-   track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), true, false, &warper);
+   track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), false, true, &warper);
 
    double newLength = outputTrack->GetEndTime();
    m_maxNewLength = wxMax(m_maxNewLength, newLength);
@@ -262,10 +262,8 @@ bool EffectSoundTouch::ProcessStereo(
 {
    mSoundTouch->setSampleRate((unsigned int)(leftTrack->GetRate() + 0.5));
 
-   auto outputLeftTrack = mFactory->NewWaveTrack(leftTrack->GetSampleFormat(),
-                                                       leftTrack->GetRate());
-   auto outputRightTrack = mFactory->NewWaveTrack(rightTrack->GetSampleFormat(),
-                                                        rightTrack->GetRate());
+   auto outputLeftTrack = leftTrack->EmptyCopy();
+   auto outputRightTrack = rightTrack->EmptyCopy();
 
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
@@ -345,9 +343,9 @@ bool EffectSoundTouch::ProcessStereo(
    // Take the output tracks and insert in place of the original
    // sample data.
    leftTrack->ClearAndPaste(
-      mCurT0, mCurT1, outputLeftTrack.get(), true, false, &warper);
+      mCurT0, mCurT1, outputLeftTrack.get(), false, true, &warper);
    rightTrack->ClearAndPaste(
-      mCurT0, mCurT1, outputRightTrack.get(), true, false, &warper);
+      mCurT0, mCurT1, outputRightTrack.get(), false, true, &warper);
 
    // Track the longest result length
    double newLength = outputLeftTrack->GetEndTime();

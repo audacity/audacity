@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2016 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -37,11 +37,7 @@ typedef struct IMA_ADPCM_PRIVATE_tag
 	int				stepindx [2] ;
 	unsigned char	*block ;
 	short			*samples ;
-#if HAVE_FLEXIBLE_ARRAY
 	short			data	[] ; /* ISO C99 struct flexible array. */
-#else
-	short			data	[0] ; /* This is a hack and might not work. */
-#endif
 } IMA_ADPCM_PRIVATE ;
 
 /*============================================================================================
@@ -50,9 +46,9 @@ typedef struct IMA_ADPCM_PRIVATE_tag
 
 static int ima_indx_adjust [16] =
 {	-1, -1, -1, -1,		/* +0 - +3, decrease the step size */
-     2,  4,  6,  8,     /* +4 - +7, increase the step size */
-    -1, -1, -1, -1,		/* -0 - -3, decrease the step size */
-     2,  4,  6,  8,		/* -4 - -7, increase the step size */
+	+2, +4, +6, +8,		/* +4 - +7, increase the step size */
+	-1, -1, -1, -1,		/* -0 - -3, decrease the step size */
+	+2, +4, +6, +8,		/* -4 - -7, increase the step size */
 } ;
 
 static int ima_step_size [89] =
@@ -81,12 +77,13 @@ static sf_count_t ima_write_i (SF_PRIVATE *psf, const int *ptr, sf_count_t len) 
 static sf_count_t ima_write_f (SF_PRIVATE *psf, const float *ptr, sf_count_t len) ;
 static sf_count_t ima_write_d (SF_PRIVATE *psf, const double *ptr, sf_count_t len) ;
 
-static sf_count_t	ima_seek	(SF_PRIVATE *psf, int mode, sf_count_t offset) ;
+static sf_count_t aiff_ima_seek		(SF_PRIVATE *psf, int mode, sf_count_t offset) ;
+static sf_count_t wavlike_ima_seek	(SF_PRIVATE *psf, int mode, sf_count_t offset) ;
 
 static int	ima_close	(SF_PRIVATE *psf) ;
 
-static int wav_w64_ima_decode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima) ;
-static int wav_w64_ima_encode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima) ;
+static int wavlike_ima_decode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima) ;
+static int wavlike_ima_encode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima) ;
 
 /*-static int aiff_ima_reader_init (SF_PRIVATE *psf, int blockalign, int samplesperblock) ;-*/
 static int aiff_ima_decode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima) ;
@@ -108,7 +105,7 @@ clamp_ima_step_index (int indx)
 */
 
 int
-wav_w64_ima_init (SF_PRIVATE *psf, int blockalign, int samplesperblock)
+wavlike_ima_init (SF_PRIVATE *psf, int blockalign, int samplesperblock)
 {	int error ;
 
 	if (psf->codec_data != NULL)
@@ -128,10 +125,10 @@ wav_w64_ima_init (SF_PRIVATE *psf, int blockalign, int samplesperblock)
 			return error ;
 
 	psf->codec_close = ima_close ;
-	psf->seek = ima_seek ;
+	psf->seek = wavlike_ima_seek ;
 
 	return 0 ;
-} /* wav_w64_ima_init */
+} /* wavlike_ima_init */
 
 int
 aiff_ima_init (SF_PRIVATE *psf, int blockalign, int samplesperblock)
@@ -149,6 +146,7 @@ aiff_ima_init (SF_PRIVATE *psf, int blockalign, int samplesperblock)
 			return error ;
 
 	psf->codec_close = ima_close ;
+	psf->seek = aiff_ima_seek ;
 
 	return 0 ;
 } /* aiff_ima_init */
@@ -186,12 +184,10 @@ ima_reader_init (SF_PRIVATE *psf, int blockalign, int samplesperblock)
 
 	pimasize = sizeof (IMA_ADPCM_PRIVATE) + blockalign * psf->sf.channels + 3 * psf->sf.channels * samplesperblock ;
 
-	if (! (pima = malloc (pimasize)))
+	if (! (pima = calloc (1, pimasize)))
 		return SFE_MALLOC_FAILED ;
 
 	psf->codec_data = (void*) pima ;
-
-	memset (pima, 0, pimasize) ;
 
 	pima->samples	= pima->data ;
 	pima->block		= (unsigned char*) (pima->data + samplesperblock * psf->sf.channels) ;
@@ -204,8 +200,13 @@ ima_reader_init (SF_PRIVATE *psf, int blockalign, int samplesperblock)
 	psf->datalength = (psf->dataend) ? psf->dataend - psf->dataoffset :
 							psf->filelength - psf->dataoffset ;
 
-    if (pima->blocksize == 0)
-	{	psf_log_printf (psf, "*** Error : pima->blocksize should not be zero.\n") ;
+	if (pima->blocksize <= 0)
+	{	psf_log_printf (psf, "*** Error : pima->blocksize should be > 0.\n") ;
+		return SFE_INTERNAL ;
+		} ;
+
+	if (pima->samplesperblock <= 0)
+	{	psf_log_printf (psf, "*** Error : pima->samplesperblock should be > 0.\n") ;
 		return SFE_INTERNAL ;
 		} ;
 
@@ -224,7 +225,7 @@ ima_reader_init (SF_PRIVATE *psf, int blockalign, int samplesperblock)
 					return SFE_INTERNAL ;
 					} ;
 
-				pima->decode_block = wav_w64_ima_decode_block ;
+				pima->decode_block = wavlike_ima_decode_block ;
 
 				psf->sf.frames = pima->samplesperblock * pima->blocks ;
 				break ;
@@ -275,7 +276,8 @@ count ++ ;
 	{	blockdata = pima->block + chan * 34 ;
 		sampledata = pima->samples + chan ;
 
-		predictor = (blockdata [0] << 8) | (blockdata [1] & 0x80) ;
+		/* Sign-extend from 16 bits to 32. */
+		predictor = (int) ((short) ((blockdata [0] << 8) | (blockdata [1] & 0x80))) ;
 
 		stepindx = blockdata [1] & 0x7F ;
 		stepindx = clamp_ima_step_index (stepindx) ;
@@ -323,73 +325,58 @@ aiff_ima_encode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
 {	int		chan, k, step, diff, vpdiff, blockindx, indx ;
 	short	bytecode, mask ;
 
-	/* Encode the block header. */
+	k = 0;
 	for (chan = 0 ; chan < pima->channels ; chan ++)
 	{	blockindx = chan * pima->blocksize ;
+		/* Encode the block header. */
+		pima->block [blockindx++] = (pima->previous [chan] >> 8) & 0xFF ;
+		pima->block [blockindx++] = (pima->previous [chan] & 0x80) + (pima->stepindx [chan] & 0x7F) ;
 
-		pima->block [blockindx] = (pima->samples [chan] >> 8) & 0xFF ;
-		pima->block [blockindx + 1] = (pima->samples [chan] & 0x80) + (pima->stepindx [chan] & 0x7F) ;
+		/* Encode the samples as 4 bit. */
+		for (indx = chan ; indx < pima->samplesperblock * pima->channels ; indx += pima->channels)
+		{	diff = pima->samples [indx] - pima->previous [chan] ;
 
-		pima->previous [chan] = pima->samples [chan] ;
-		} ;
-
-	/* Encode second and later samples for every block as a 4 bit value. */
-	for (k = pima->channels ; k < (pima->samplesperblock * pima->channels) ; k ++)
-	{	chan = (pima->channels > 1) ? (k % 2) : 0 ;
-
-		diff = pima->samples [k] - pima->previous [chan] ;
-
-		bytecode = 0 ;
-		step = ima_step_size [pima->stepindx [chan]] ;
-		vpdiff = step >> 3 ;
-		if (diff < 0)
-		{	bytecode = 8 ;
-			diff = -diff ;
-			} ;
-		mask = 4 ;
-		while (mask)
-		{	if (diff >= step)
-			{	bytecode |= mask ;
-				diff -= step ;
-				vpdiff += step ;
+			bytecode = 0 ;
+			step = ima_step_size [pima->stepindx [chan]] ;
+			vpdiff = step >> 3 ;
+			if (diff < 0)
+			{	bytecode = 8 ;
+				diff = -diff ;
 				} ;
-			step >>= 1 ;
-			mask >>= 1 ;
-			} ;
+			mask = 4 ;
+			while (mask)
+			{	if (diff >= step)
+				{	bytecode |= mask ;
+					diff -= step ;
+					vpdiff += step ;
+					} ;
+				step >>= 1 ;
+				mask >>= 1 ;
+				} ;
 
-		if (bytecode & 8)
-			pima->previous [chan] -= vpdiff ;
-		else
+			if (bytecode & 8)
+				vpdiff = -vpdiff ;
 			pima->previous [chan] += vpdiff ;
 
-		if (pima->previous [chan] > 32767)
-			pima->previous [chan] = 32767 ;
-		else if (pima->previous [chan] < -32768)
-			pima->previous [chan] = -32768 ;
+			if (pima->previous [chan] > 32767)
+				pima->previous [chan] = 32767 ;
+			else if (pima->previous [chan] < -32768)
+				pima->previous [chan] = -32768 ;
 
-		pima->stepindx [chan] += ima_indx_adjust [bytecode] ;
+			pima->stepindx [chan] += ima_indx_adjust [bytecode] ;
 
-		pima->stepindx [chan] = clamp_ima_step_index (pima->stepindx [chan]) ;
-		pima->samples [k] = bytecode ;
-		} ;
-
-	/* Pack the 4 bit encoded samples. */
-
-	for (chan = 0 ; chan < pima->channels ; chan ++)
-	{	for (indx = pima->channels ; indx < pima->channels * pima->samplesperblock ; indx += 2 * pima->channels)
-		{	blockindx = chan * pima->blocksize + 2 + indx / 2 ;
-
-			pima->block [blockindx] = pima->samples [indx] & 0x0F ;
-			pima->block [blockindx] |= (pima->samples [indx + chan] << 4) & 0xF0 ;
+			pima->stepindx [chan] = clamp_ima_step_index (pima->stepindx [chan]) ;
+			pima->block [blockindx] = (bytecode << (4 * k)) | pima->block [blockindx];
+			blockindx += k ;
+			k = 1 - k ;
 			} ;
 		} ;
 
 	/* Write the block to disk. */
-
 	if ((k = psf_fwrite (pima->block, 1, pima->channels * pima->blocksize, psf)) != pima->channels * pima->blocksize)
 		psf_log_printf (psf, "*** Warning : short write (%d != %d).\n", k, pima->channels * pima->blocksize) ;
 
-	memset (pima->samples, 0, pima->channels * pima->samplesperblock * sizeof (short)) ;
+	memset (pima->block, 0, pima->channels * pima->blocksize) ;
 	pima->samplecount = 0 ;
 	pima->blockcount ++ ;
 
@@ -397,7 +384,7 @@ aiff_ima_encode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
 } /* aiff_ima_encode_block */
 
 static int
-wav_w64_ima_decode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
+wavlike_ima_decode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
 {	int		chan, k, predictor, blockindx, indx, indxstart, diff ;
 	short	step, bytecode, stepindx [2] ;
 
@@ -485,10 +472,10 @@ wav_w64_ima_decode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
 		} ;
 
 	return 1 ;
-} /* wav_w64_ima_decode_block */
+} /* wavlike_ima_decode_block */
 
 static int
-wav_w64_ima_encode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
+wavlike_ima_encode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
 {	int		chan, k, step, diff, vpdiff, blockindx, indx, indxstart ;
 	short	bytecode, mask ;
 
@@ -573,7 +560,7 @@ wav_w64_ima_encode_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima)
 	pima->blockcount ++ ;
 
 	return 1 ;
-} /* wav_w64_ima_encode_block */
+} /* wavlike_ima_encode_block */
 
 static int
 ima_read_block (SF_PRIVATE *psf, IMA_ADPCM_PRIVATE *pima, short *ptr, int len)
@@ -627,6 +614,7 @@ ima_read_s (SF_PRIVATE *psf, short *ptr, sf_count_t len)
 static sf_count_t
 ima_read_i (SF_PRIVATE *psf, int *ptr, sf_count_t len)
 {	IMA_ADPCM_PRIVATE *pima ;
+	BUF_UNION	ubuf ;
 	short		*sptr ;
 	int			k, bufferlen, readcount, count ;
 	sf_count_t	total = 0 ;
@@ -635,13 +623,13 @@ ima_read_i (SF_PRIVATE *psf, int *ptr, sf_count_t len)
 		return 0 ;
 	pima = (IMA_ADPCM_PRIVATE*) psf->codec_data ;
 
-	sptr = psf->u.sbuf ;
-	bufferlen = ARRAY_LEN (psf->u.sbuf) ;
+	sptr = ubuf.sbuf ;
+	bufferlen = ARRAY_LEN (ubuf.sbuf) ;
 	while (len > 0)
 	{	readcount = (len >= bufferlen) ? bufferlen : (int) len ;
 		count = ima_read_block (psf, pima, sptr, readcount) ;
 		for (k = 0 ; k < readcount ; k++)
-			ptr [total + k] = ((int) sptr [k]) << 16 ;
+			ptr [total + k] = arith_shift_left (sptr [k], 16) ;
 		total += count ;
 		len -= readcount ;
 		if (count != readcount)
@@ -654,6 +642,7 @@ ima_read_i (SF_PRIVATE *psf, int *ptr, sf_count_t len)
 static sf_count_t
 ima_read_f (SF_PRIVATE *psf, float *ptr, sf_count_t len)
 {	IMA_ADPCM_PRIVATE *pima ;
+	BUF_UNION	ubuf ;
 	short		*sptr ;
 	int			k, bufferlen, readcount, count ;
 	sf_count_t	total = 0 ;
@@ -665,8 +654,8 @@ ima_read_f (SF_PRIVATE *psf, float *ptr, sf_count_t len)
 
 	normfact = (psf->norm_float == SF_TRUE) ? 1.0 / ((float) 0x8000) : 1.0 ;
 
-	sptr = psf->u.sbuf ;
-	bufferlen = ARRAY_LEN (psf->u.sbuf) ;
+	sptr = ubuf.sbuf ;
+	bufferlen = ARRAY_LEN (ubuf.sbuf) ;
 	while (len > 0)
 	{	readcount = (len >= bufferlen) ? bufferlen : (int) len ;
 		count = ima_read_block (psf, pima, sptr, readcount) ;
@@ -684,6 +673,7 @@ ima_read_f (SF_PRIVATE *psf, float *ptr, sf_count_t len)
 static sf_count_t
 ima_read_d (SF_PRIVATE *psf, double *ptr, sf_count_t len)
 {	IMA_ADPCM_PRIVATE *pima ;
+	BUF_UNION	ubuf ;
 	short		*sptr ;
 	int			k, bufferlen, readcount, count ;
 	sf_count_t	total = 0 ;
@@ -695,8 +685,8 @@ ima_read_d (SF_PRIVATE *psf, double *ptr, sf_count_t len)
 
 	normfact = (psf->norm_double == SF_TRUE) ? 1.0 / ((double) 0x8000) : 1.0 ;
 
-	sptr = psf->u.sbuf ;
-	bufferlen = ARRAY_LEN (psf->u.sbuf) ;
+	sptr = ubuf.sbuf ;
+	bufferlen = ARRAY_LEN (ubuf.sbuf) ;
 	while (len > 0)
 	{	readcount = (len >= bufferlen) ? bufferlen : (int) len ;
 		count = ima_read_block (psf, pima, sptr, readcount) ;
@@ -712,7 +702,53 @@ ima_read_d (SF_PRIVATE *psf, double *ptr, sf_count_t len)
 } /* ima_read_d */
 
 static sf_count_t
-ima_seek (SF_PRIVATE *psf, int mode, sf_count_t offset)
+aiff_ima_seek (SF_PRIVATE *psf, int mode, sf_count_t offset)
+{	IMA_ADPCM_PRIVATE *pima ;
+	int			newblock, newsample, newblockaiff ;
+
+	if (! psf->codec_data)
+		return 0 ;
+	pima = (IMA_ADPCM_PRIVATE*) psf->codec_data ;
+
+	if (psf->datalength < 0 || psf->dataoffset < 0)
+	{	psf->error = SFE_BAD_SEEK ;
+		return PSF_SEEK_ERROR ;
+		} ;
+
+	if (offset == 0)
+	{	psf_fseek (psf, psf->dataoffset, SEEK_SET) ;
+		pima->blockcount = 0 ;
+		pima->decode_block (psf, pima) ;
+		pima->samplecount = 0 ;
+		return 0 ;
+		} ;
+
+	if (offset < 0 || offset > pima->blocks * pima->samplesperblock)
+	{	psf->error = SFE_BAD_SEEK ;
+		return	PSF_SEEK_ERROR ;
+		} ;
+
+	newblock		= offset / pima->samplesperblock ;
+	newsample		= offset % pima->samplesperblock ;
+	newblockaiff	= newblock * psf->sf.channels ;
+
+	if (mode == SFM_READ)
+	{	psf_fseek (psf, psf->dataoffset + newblockaiff * pima->blocksize, SEEK_SET) ;
+		pima->blockcount = newblockaiff ;
+		pima->decode_block (psf, pima) ;
+		pima->samplecount = newsample ;
+		}
+	else
+	{	/* What to do about write??? */
+		psf->error = SFE_BAD_SEEK ;
+		return	PSF_SEEK_ERROR ;
+		} ;
+
+	return newblock * pima->samplesperblock + newsample ;
+} /* aiff_ima_seek */
+
+static sf_count_t
+wavlike_ima_seek (SF_PRIVATE *psf, int mode, sf_count_t offset)
 {	IMA_ADPCM_PRIVATE *pima ;
 	int			newblock, newsample ;
 
@@ -754,7 +790,7 @@ ima_seek (SF_PRIVATE *psf, int mode, sf_count_t offset)
 		} ;
 
 	return newblock * pima->samplesperblock + newsample ;
-} /* ima_seek */
+} /* wavlike_ima_seek */
 
 /*==========================================================================================
 ** IMA ADPCM Write Functions.
@@ -769,7 +805,20 @@ ima_writer_init (SF_PRIVATE *psf, int blockalign)
 	if (psf->file.mode != SFM_WRITE)
 		return SFE_BAD_MODE_RW ;
 
-	samplesperblock = 2 * (blockalign - 4 * psf->sf.channels) / psf->sf.channels + 1 ;
+	switch (SF_CONTAINER (psf->sf.format))
+	{	case SF_FORMAT_WAV :
+		case SF_FORMAT_W64 :
+				samplesperblock = 2 * (blockalign - 4 * psf->sf.channels) / psf->sf.channels + 1 ;
+				break ;
+
+		case SF_FORMAT_AIFF :
+				samplesperblock = 2 * ((blockalign - 2) * psf->sf.channels) / psf->sf.channels ;
+				break ;
+
+		default :
+				psf_log_printf (psf, "ima_reader_init: bad psf->sf.format\n") ;
+				return SFE_INTERNAL ;
+		} ;
 
 	pimasize = sizeof (IMA_ADPCM_PRIVATE) + blockalign + 3 * psf->sf.channels * samplesperblock ;
 
@@ -790,7 +839,7 @@ ima_writer_init (SF_PRIVATE *psf, int blockalign)
 	switch (SF_CONTAINER (psf->sf.format))
 	{	case SF_FORMAT_WAV :
 		case SF_FORMAT_W64 :
-				pima->encode_block = wav_w64_ima_encode_block ;
+				pima->encode_block = wavlike_ima_encode_block ;
 				break ;
 
 		case SF_FORMAT_AIFF :
@@ -862,6 +911,7 @@ ima_write_s (SF_PRIVATE *psf, const short *ptr, sf_count_t len)
 static sf_count_t
 ima_write_i (SF_PRIVATE *psf, const int *ptr, sf_count_t len)
 {	IMA_ADPCM_PRIVATE *pima ;
+	BUF_UNION	ubuf ;
 	short		*sptr ;
 	int			k, bufferlen, writecount, count ;
 	sf_count_t	total = 0 ;
@@ -870,8 +920,8 @@ ima_write_i (SF_PRIVATE *psf, const int *ptr, sf_count_t len)
 		return 0 ;
 	pima = (IMA_ADPCM_PRIVATE*) psf->codec_data ;
 
-	sptr = psf->u.sbuf ;
-	bufferlen = ARRAY_LEN (psf->u.sbuf) ;
+	sptr = ubuf.sbuf ;
+	bufferlen = ARRAY_LEN (ubuf.sbuf) ;
 	while (len > 0)
 	{	writecount = (len >= bufferlen) ? bufferlen : (int) len ;
 		for (k = 0 ; k < writecount ; k++)
@@ -889,6 +939,7 @@ ima_write_i (SF_PRIVATE *psf, const int *ptr, sf_count_t len)
 static sf_count_t
 ima_write_f (SF_PRIVATE *psf, const float *ptr, sf_count_t len)
 {	IMA_ADPCM_PRIVATE *pima ;
+	BUF_UNION	ubuf ;
 	short		*sptr ;
 	int			k, bufferlen, writecount, count ;
 	sf_count_t	total = 0 ;
@@ -900,8 +951,8 @@ ima_write_f (SF_PRIVATE *psf, const float *ptr, sf_count_t len)
 
 	normfact = (psf->norm_float == SF_TRUE) ? (1.0 * 0x7FFF) : 1.0 ;
 
-	sptr = psf->u.sbuf ;
-	bufferlen = ARRAY_LEN (psf->u.sbuf) ;
+	sptr = ubuf.sbuf ;
+	bufferlen = ARRAY_LEN (ubuf.sbuf) ;
 	while (len > 0)
 	{	writecount = (len >= bufferlen) ? bufferlen : (int) len ;
 		for (k = 0 ; k < writecount ; k++)
@@ -919,6 +970,7 @@ ima_write_f (SF_PRIVATE *psf, const float *ptr, sf_count_t len)
 static sf_count_t
 ima_write_d (SF_PRIVATE *psf, const double *ptr, sf_count_t len)
 {	IMA_ADPCM_PRIVATE *pima ;
+	BUF_UNION	ubuf ;
 	short		*sptr ;
 	int			k, bufferlen, writecount, count ;
 	sf_count_t	total = 0 ;
@@ -930,8 +982,8 @@ ima_write_d (SF_PRIVATE *psf, const double *ptr, sf_count_t len)
 
 	normfact = (psf->norm_double == SF_TRUE) ? (1.0 * 0x7FFF) : 1.0 ;
 
-	sptr = psf->u.sbuf ;
-	bufferlen = ARRAY_LEN (psf->u.sbuf) ;
+	sptr = ubuf.sbuf ;
+	bufferlen = ARRAY_LEN (ubuf.sbuf) ;
 	while (len > 0)
 	{	writecount = (len >= bufferlen) ? bufferlen : (int) len ;
 		for (k = 0 ; k < writecount ; k++)

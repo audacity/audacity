@@ -136,10 +136,14 @@ void LabelGlyphHandle::HandleGlyphClick
 
       if (hit.mIsAdjustingLabel)
       {
-         float t = 0.0;
+         double t = 0.0;
          // We move if we hit the centre, we adjust one edge if we hit a chevron.
          // This is if we are moving just one edge.
          hit.mbIsMoving = (hit.mEdge & 4)!=0;
+
+         // No to the above!  We initially expect to be moving just one edge.
+         hit.mbIsMoving = false;
+
          // When we start dragging the label(s) we don't want them to jump.
          // so we calculate the displacement of the mouse from the drag center
          // and use that in subsequent dragging calculations.  The mouse stays
@@ -160,11 +164,23 @@ void LabelGlyphHandle::HandleGlyphClick
          {
             t = (mLabels[ hit.mMouseOverLabelRight ].getT1() +
                  mLabels[ hit.mMouseOverLabelLeft ].getT0()) / 2.0f;
-            // If we're moving two edges, then it's a move (label size preserved)
-            // if both edges are the same label, and it's an adjust (label sizes change)
-            // if we're on a boundary between two different labels.
-            hit.mbIsMoving =
-               ( hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight );
+
+            // If we're moving two edges of same label then it's a move 
+            // (label is shrunk to zero and size of zero is preserved)
+            // If we're on a boundary between two different labels, 
+            // then it's an adjust.
+            // In both cases the two points coalesce.
+            hit.mbIsMoving = (hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight);
+
+            // Except!  We don't coalesce if both ends are from the same label and
+            // we have deliberately chosen to preserve length, by holding shift down.
+            if (!(hit.mbIsMoving && evt.ShiftDown()))
+            {
+               MayAdjustLabel(hit, hit.mMouseOverLabelLeft, -1, false, t);
+               MayAdjustLabel(hit, hit.mMouseOverLabelRight, 1, false, t);
+               wxASSERT(mLabels[hit.mMouseOverLabelRight].getT1() ==
+                  mLabels[hit.mMouseOverLabelLeft].getT0());
+            }
          }
          else if( hit.mMouseOverLabelRight >=0)
          {

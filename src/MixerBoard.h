@@ -203,7 +203,7 @@ public:
    void UpdatePrefs() override;
 
    // Add clusters for any tracks we're not yet showing.
-   // Update pointers for tracks we're aleady showing.
+   // Update pointers for tracks we're already showing.
    void UpdateTrackClusters();
 
    int GetTrackClustersWidth();
@@ -224,7 +224,7 @@ private:
    void ResetMeters(const bool bResetClipping);   
    void RemoveTrackCluster(size_t nIndex);
    void MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap,
-      wxRect & bev, const wxString & str, bool up );
+      wxRect & bev, const TranslatableString & str, bool up );
    void CreateMuteSoloImages();
    int FindMixerTrackCluster(const PlayableTrack* pTrack,
                               MixerTrackCluster** hMixerTrackCluster) const;

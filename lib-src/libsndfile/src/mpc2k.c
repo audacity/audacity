@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2008-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2008-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -63,8 +63,7 @@ static int		mpc2k_read_header (SF_PRIVATE *psf) ;
 
 int
 mpc2k_open	(SF_PRIVATE *psf)
-{	int		subformat ;
-	int		error = 0 ;
+{	int		error = 0 ;
 
 	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = mpc2k_read_header (psf)))
@@ -73,8 +72,6 @@ mpc2k_open	(SF_PRIVATE *psf)
 
 	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_MPC2K)
 		return	SFE_BAD_OPEN_FORMAT ;
-
-	subformat = SF_CODEC (psf->sf.format) ;
 
 	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if (mpc2k_write_header (psf, SF_FALSE))
@@ -124,8 +121,8 @@ mpc2k_write_header (SF_PRIVATE *psf, int calc_length)
 		} ;
 
 	/* Reset the current header length to zero. */
-	psf->header [0] = 0 ;
-	psf->headindex = 0 ;
+	psf->header.ptr [0] = 0 ;
+	psf->header.indx = 0 ;
 
 	/*
 	** Only attempt to seek if we are not writng to a pipe. If we are
@@ -134,23 +131,23 @@ mpc2k_write_header (SF_PRIVATE *psf, int calc_length)
 	if (psf->is_pipe == SF_FALSE)
 		psf_fseek (psf, 0, SEEK_SET) ;
 
-	snprintf (sample_name, sizeof (sample_name), "%s                    ", psf->file.name.c) ;
+	snprintf (sample_name, sizeof (sample_name), "%-*.*s", HEADER_NAME_LEN, HEADER_NAME_LEN, psf->file.name.c) ;
 
-	psf_binheader_writef (psf, "e11b", 1, 4, sample_name, make_size_t (HEADER_NAME_LEN)) ;
-	psf_binheader_writef (psf, "e111", 100, 0, (psf->sf.channels - 1) & 1) ;
-	psf_binheader_writef (psf, "et4888", 0, psf->sf.frames, psf->sf.frames, psf->sf.frames) ;
-	psf_binheader_writef (psf, "e112", 0, 1, (uint16_t) psf->sf.samplerate) ;
+	psf_binheader_writef (psf, "e11b", BHW1 (1), BHW1 (4), BHWv (sample_name), BHWz (HEADER_NAME_LEN)) ;
+	psf_binheader_writef (psf, "e111", BHW1 (100), BHW1 (0), BHW1 ((psf->sf.channels - 1) & 1)) ;
+	psf_binheader_writef (psf, "et4888", BHW4 (0), BHW8 (psf->sf.frames), BHW8 (psf->sf.frames), BHW8 (psf->sf.frames)) ;
+	psf_binheader_writef (psf, "e112", BHW1 (0), BHW1 (1), BHW2 ((uint16_t) psf->sf.samplerate)) ;
 
 	/* Always 16 bit little endian data. */
 	psf->bytewidth = 2 ;
 	psf->endian = SF_ENDIAN_LITTLE ;
 
-	psf_fwrite (psf->header, psf->headindex, 1, psf) ;
+	psf_fwrite (psf->header.ptr, psf->header.indx, 1, psf) ;
 
 	if (psf->error)
 		return psf->error ;
 
-	psf->dataoffset = psf->headindex ;
+	psf->dataoffset = psf->header.indx ;
 
 	if (current > 0)
 		psf_fseek (psf, current, SEEK_SET) ;

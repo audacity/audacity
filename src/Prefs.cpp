@@ -189,21 +189,6 @@ AudacityPrefs::AudacityPrefs(const wxString& appName,
 
 
 
-// Bug 825 is essentially that SyncLock requires EditClipsCanMove.
-// SyncLock needs rethinking, but meanwhile this function 
-// fixes the issues of Bug 825 by allowing clips to move when in 
-// SyncLock.
-bool AudacityPrefs::GetEditClipsCanMove()
-{
-   bool mIsSyncLocked;
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
-   if( mIsSyncLocked )
-      return true;
-   bool editClipsCanMove;
-   Read(wxT("/GUI/EditClipCanMove"), &editClipsCanMove, true);
-   return editClipsCanMove;
-}
-
 void InitPreferences( const wxFileName &configFileName )
 {
    wxString appName = wxTheApp->GetAppName();
@@ -422,3 +407,30 @@ wxString WarningDialogKey(const wxString &internalDialogName)
 }
 
 ByColumns_t ByColumns{};
+
+#include <set>
+
+namespace {
+   using PreferenceInitializers = std::set< PreferenceInitializer* >;
+   PreferenceInitializers &allInitializers()
+   {
+      static PreferenceInitializers theSet;
+      return theSet;
+   }
+}
+
+PreferenceInitializer::PreferenceInitializer()
+{
+   allInitializers().insert( this );
+}
+
+PreferenceInitializer::~PreferenceInitializer()
+{
+   allInitializers().erase( this );
+}
+
+void PreferenceInitializer::ReinitializeAll()
+{
+   for ( auto pInitializer : allInitializers() )
+      (*pInitializer)();
+}

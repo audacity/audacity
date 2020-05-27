@@ -27,16 +27,15 @@ License: GPL v2.  See License.txt.
 #include <wx/checkbox.h>
 #include <wx/dynlib.h>
 #include <wx/file.h>
-#include <wx/filedlg.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
 
 #if !defined(USE_FFMPEG)
 /// FFmpeg support may or may not be compiled in,
 /// but Preferences dialog requires this function nevertheless
-wxString GetFFmpegVersion(wxWindow *parent)
+TranslatableString GetFFmpegVersion()
 {
-   return wxString(_("FFmpeg support not compiled in"));
+   return XO("FFmpeg support not compiled in");
 }
 
 #else
@@ -111,14 +110,14 @@ void FFmpegStartup()
    }
 }
 
-wxString GetFFmpegVersion(wxWindow * WXUNUSED(parent))
+TranslatableString GetFFmpegVersion()
 {
    PickFFmpegLibs();
 
-   wxString versionString = _("FFmpeg library not found");
+   auto versionString = XO("FFmpeg library not found");
 
    if (FFmpegLibsInst()->ValidLibsLoaded()) {
-      versionString = FFmpegLibsInst()->GetLibraryVersion();
+      versionString = Verbatim( FFmpegLibsInst()->GetLibraryVersion() );
    }
 
    DropFFmpegLibs();
@@ -202,7 +201,12 @@ int ufile_close(AVIOContext *pb)
 
    bool success = true;
    if (f) {
-      success = f->Flush() && f->Close();
+      if (pb->write_flag) {
+         success = f->Flush();
+      }
+      if (success) {
+         success = f->Close();
+      }
       pb->opaque = nullptr;
    }
 
@@ -492,10 +496,10 @@ public:
             else {
                mPathText = S.AddTextBox( {}, mLibPath.GetFullPath(), 0);
             }
-            S.Id(ID_FFMPEG_BROWSE).AddButton(XO("Browse..."), wxALIGN_RIGHT);
+            S.Id(ID_FFMPEG_BROWSE).AddButton(XXO("Browse..."), wxALIGN_RIGHT);
             S.AddVariableText(
                XO("To get a free copy of FFmpeg, click here -->"), true);
-            S.Id(ID_FFMPEG_DLOAD).AddButton(XO("Download"), wxALIGN_RIGHT);
+            S.Id(ID_FFMPEG_DLOAD).AddButton(XXO("Download"), wxALIGN_RIGHT);
          }
          S.EndMultiColumn();
 
@@ -588,7 +592,7 @@ to download or locate the FFmpeg libraries."
       ));
 
       mDontShow = S
-         .AddCheckBox(XO("Do not show this warning again"),
+         .AddCheckBox(XXO("Do not show this warning again"),
             gPrefs->ReadBool(wxT("/FFmpeg/NotFoundDontShow"), false) );
 
       S.AddStandardButtons(eOkButton);
@@ -967,6 +971,7 @@ bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr)
    FFMPEG_INITALT(avutil, av_frame_free, avcodec, avcodec_free_frame);
    FFMPEG_INITDYN(avutil, av_samples_get_buffer_size);
    FFMPEG_INITDYN(avutil, av_get_default_channel_layout);
+   FFMPEG_INITDYN(avutil, av_strerror);
 
    wxLogMessage(wxT("All symbols loaded successfully. Initializing the library."));
 #endif

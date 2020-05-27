@@ -53,7 +53,7 @@ to create messages for forwarding.
 \brief Abstract base class for command interface.  This is the version
 created by Dan Horgan.  It was previously a factory for other command classes.
 It created a separation between the type of a command and the command itself, 
-which is being removed.  These Cmmands were managed by CommandDirectory.
+which is being removed.  These Commands were managed by CommandDirectory.
 
 \class OldStyleCommandPointer
 \brief OldStyleCommandPointer is a unique_ptr to an OldStyleCommand.
@@ -165,7 +165,7 @@ bool ApplyAndSendResponse::Apply()
    {
       response += wxT("Failed!");
    }
-   mCtx->Status(response);
+   mCtx->Status(response, true);
    return result;
 }
 

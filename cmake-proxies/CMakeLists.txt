@@ -122,33 +122,15 @@ function( addlib dir name symbol required check )
          endif()
       endforeach()
    endif()
-
-   # Define a library alias for each of the packages
-   foreach( package ${packages} )
-      # Convert the package spec to a list
-      string( REPLACE " " ";" package "${package}" )
-
-      # And extract just the package name
-      list( GET package 0 package )
-
-      # But only if the package name doesn't conflict with the
-      # target name.
-      if( NOT TARGET ${package} )
-         # Create the alias
-         add_library( "${package}" ALIAS ${TARGET} )
-      endif()
-   endforeach()
 endfunction()
 
 # Required libraries
 #
 #       directory          option      symbol      req   chk   version
 addlib( wxWidgets          wxwidgets   WX          YES   NO    "" ) # must be first
-addlib( FileDialog         FileDialog  FILEDIALOG  YES   YES   "" )
-addlib( expat              expat       EXPAT       YES   YES   "" )
+addlib( expat              expat       EXPAT       YES   YES   "expat >= 2.1.0" )
 addlib( lame               lame        LAME        YES   YES   "lame >= 3.100" )
-addlib( lib-widget-extra   libextra    EXTRA       YES   YES   "" )
-addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.24" )
+addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.28" )
 addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
 addlib( portaudio-v19      portaudio   PORTAUDIO   YES   YES   "" )
 
@@ -166,7 +148,7 @@ addlib( libflac            flac        LIBFLAC     NO    YES   "flac >= 1.3.1" "
 addlib( lv2                lv2         LV2         NO    YES   "lilv-0 >= 0.24.6" "lv2 >= 1.16.0" "serd-0 >= 0.30.2" "sord-0 >= 0.16.4" "sratom-0 >= 0.6.4" "suil-0 >= 0.10.6" )
 addlib( portmidi           midi        MIDI        NO    YES   "portmidi >= 0.1" )
 addlib( portmixer          portmixer   PORTMIXER   NO    YES   "" )
-addlib( portsmf            portsmf     PORTSMF     NO    YES   "portsmf >= 0.1" )
+addlib( portsmf            portsmf     PORTSMF     NO    YES   "portSMF >= 0.1" )
 addlib( sbsms              sbsms       SBSMS       NO    YES   "" )
 addlib( soundtouch         soundtouch  SOUNDTOUCH  NO    YES   "soundtouch >= 1.7.1" )
 addlib( twolame            twolame     LIBTWOLAME  NO    YES   "twolame >= 0.3.13" )

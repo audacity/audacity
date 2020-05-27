@@ -12,12 +12,6 @@ Version in Audacity SVN: 2.1.0
 Patches: None
 Upstream version: 2.1.0
 
-FileDialog
-----------
-The customised file saving dialogs for wxwidgets to provide the options
-button for format preferences. This is written and maintained by us so doesn't
-have an upstream at the moment.
-
 libflac
 -------
 http://flac.sourceforge.net/
@@ -70,21 +64,8 @@ Upstream Version: 1.3.1
 
 libsndfile
 ----------
-Erik de Castro Lopo's uncompressed audio file I/O library. Core and essential
-to Audacity.
-Version in Audacity SVN: 1.0.24
-Patches: maintainer-mode.patch: AM_MAINTAINER_MODE added to configure.ac
-         id3.patch: already in upstream 1.0.26 (git 41da64d9270b2fa10c93ce74dea014fe8f0bd303)
-                    fixes crash when importing mp3s that have duplicated tags
-         libsndfile-ppc-crash-on-some-id3-mp3s.patch - submitted to libsndfile
-                    list on may 22 2012 (mchinen)
-         Add-support-for-Album-and-Track-tags-in-RIFF-files.patch 
-                    Add support for Album and Track tags in RIFF files in the LIST chunk of WAV files.
-                    0001-Add-support-for-Album-and-Track-tags-in-RIFF-files-for-libsndfile-1.0.24.patch for libsndfile 1.0.24, and
-                    0001-Add-support-for-Album-and-Track-tags-in-RIFF-files-for-libsndfile-1.0.25.patch for libsndfile 1.0.25,
-                    submitted to libsndfile list on August 19 2012.
-         autotools.patch: Fix all autotools warnings.
-Upstream Version: 1.0.26
+Erik de Castro Lopo's audio file I/O library. Core and essential to Audacity.
+Version in Audacity GIT: 1.0.29rc2+git4bdd741
 
 libsoxr
 -------
@@ -116,9 +97,6 @@ Patches: autotools.patch: Fix all autotools warnings.
 Upstream Version: 1.3.3
 
 
-lib-widget-extra
-----------------
-
 lv2
 ---------
 A merging of the lilv, lv2, msinttypes, serd, sord, sratom, and suil libraries to support
@@ -130,9 +108,6 @@ Versions in Audacity SVN:
    sord-0.16.4
    sratom-0.6.4
    suil-0.10.6
-
-mod-script-pipe
----------------
 
 portaudio-v19
 -------------

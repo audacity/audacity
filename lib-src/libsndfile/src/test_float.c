@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2006-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2006-2012 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -48,7 +48,7 @@ test_float_convert (void)
 		test = float32_le_read (bytes) ;
 
 		if (fabs (data [k] - test) > 1e-20)
-		{	printf ("\n\nLine %d : Test %d, little endian error %.15g -> %.15g.\n\n", __LINE__, k, data [k], test ) ;
+		{	printf ("\n\nLine %d : Test %d, little endian error %.15g -> %.15g.\n\n", __LINE__, k, data [k], test) ;
 			exit (1) ;
 			} ;
 
@@ -85,7 +85,7 @@ test_double_convert (void)
 		test = double64_le_read (bytes) ;
 
 		if (fabs (data [k] - test) > 1e-20)
-		{	printf ("\n\nLine %d : Test %d, little endian error %.15g -> %.15g.\n\n", __LINE__, k, data [k], test ) ;
+		{	printf ("\n\nLine %d : Test %d, little endian error %.15g -> %.15g.\n\n", __LINE__, k, data [k], test) ;
 			exit (1) ;
 			} ;
 

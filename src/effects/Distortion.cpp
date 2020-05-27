@@ -369,10 +369,10 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
          mTypeChoiceCtrl = S.Id(ID_Type)
             .MinSize( { -1, -1 } )
             .Validator<wxGenericValidator>(&mParams.mTableChoiceIndx)
-            .AddChoice(XO("Distortion type:"),
+            .AddChoice(XXO("Distortion type:"),
                Msgids(kTableTypeStrings, nTableTypes));
 
-         mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(XO("DC blocking filter"),
+         mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(XXO("DC blocking filter"),
                                        DEF_DCBlock);
       }
       S.EndMultiColumn();

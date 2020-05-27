@@ -20,6 +20,7 @@
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackInfo.h"
 #include "../../../../TrackPanel.h"
+#include "../../../../TrackPanelAx.h"
 #include "../../../../UndoManager.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../ViewInfo.h"
@@ -34,7 +35,7 @@ VelocitySliderHandle::~VelocitySliderHandle()
 {
 }
 
-std::shared_ptr<NoteTrack> VelocitySliderHandle::GetNoteTrack()
+std::shared_ptr<NoteTrack> VelocitySliderHandle::GetNoteTrack() const
 {
    return std::static_pointer_cast<NoteTrack>(mpTrack.lock());
 }
@@ -69,7 +70,29 @@ UIHandle::Result VelocitySliderHandle::CommitChanges
    return RefreshCode::RefreshCell;
 }
 
+TranslatableString VelocitySliderHandle::Tip(
+   const wxMouseState &, AudacityProject &project) const
+{
+   TranslatableString val;
+   float value = 0;
 
+   auto pTrack = GetNoteTrack();
+   if (pTrack)
+      value = pTrack->GetVelocity();
+
+   // LLL: Can't access the slider since Tip() is a const method and getting the slider
+   //      is not, so duplicate what LWSlider does.
+
+   if (value > 0.0f)
+      // Signed
+      val = Verbatim("%+d").Format((int)value);
+   else
+      // Zero, or signed negative
+      val = Verbatim("%d").Format((int)value);
+
+   /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
+   return XO("%s: %s").Format(XO("Velocity"), val);
+}
 
 UIHandlePtr VelocitySliderHandle::HitTest
 (std::weak_ptr<VelocitySliderHandle> &holder,

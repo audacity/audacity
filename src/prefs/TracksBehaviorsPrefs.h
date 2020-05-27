@@ -18,7 +18,6 @@
 
 class ChoiceSetting;
 class ShuttleGui;
-class wxArrayStringEx;
 
 #define TRACKS_BEHAVIORS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Tracks Behaviors") }
 
@@ -42,4 +41,7 @@ class TracksBehaviorsPrefs final : public PrefsPanel
 };
 
 extern ChoiceSetting TracksBehaviorsSolo;
+
+bool GetEditClipsCanMove();
+
 #endif

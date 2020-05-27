@@ -40,7 +40,7 @@ extern "C" {
  */
 typedef struct _LV2_External_UI_Widget {
   /**
-   * Host calls this function regulary. UI library implementing the
+   * Host calls this function regularly. UI library implementing the
    * callback may do IPC or redraw the UI.
    *
    * @param _this_ the UI context
@@ -80,7 +80,7 @@ typedef struct _LV2_External_UI_Host {
    * After this callback is called, UI is defunct. Host must call LV2UI_Descriptor::cleanup().
    * If host wants to make the UI visible again, the UI must be reinstantiated.
    *
-   * @note When using the depreated URI LV2_EXTERNAL_UI_DEPRECATED_URI,
+   * @note When using the deprecated URI LV2_EXTERNAL_UI_DEPRECATED_URI,
    *       some hosts will not call LV2UI_Descriptor::cleanup() as they should,
    *       and may call show() again without re-initialization.
    *

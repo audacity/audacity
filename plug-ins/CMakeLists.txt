@@ -19,6 +19,7 @@ list( APPEND SOURCES
    crossfadeclips.ny
    crossfadetracks.ny
    delay.ny
+   eq-xml-to-txt-converter.ny
    equalabel.ny
    highpass.ny
    limiter.ny
@@ -32,6 +33,7 @@ list( APPEND SOURCES
    rms.ny
    sample-data-export.ny
    sample-data-import.ny
+   spectral-delete.ny
    tremolo.ny
    vocalrediso.ny
    vocoder.ny

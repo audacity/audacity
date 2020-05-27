@@ -236,13 +236,6 @@ void TrackArt::DrawNegativeOffsetTrackArrows(
 }
 
 
-#ifdef __GNUC__
-#define CONST
-#else
-#define CONST const
-#endif
-
-
 #ifdef USE_MIDI
 #endif // USE_MIDI
 
@@ -272,7 +265,7 @@ void TrackArtist::UpdatePrefs()
 // two steps down for every one across. This creates a pattern that repeats in
 // 5-step by 5-step boxes. Because we're only drawing in 5/25 possible positions
 // we have a grid spacing somewhat smaller than the image dimensions. Thus we
-// acheive lower density than with a square grid and eliminate edge cases where
+// achieve lower density than with a square grid and eliminate edge cases where
 // no tiles are displayed.
 //
 // The pattern draws in tiles at (0,0), (2,1), (4,2), (1,3), and (3,4) in each
@@ -406,7 +399,7 @@ void TrackArt::DrawBackgroundWithSelection(
    dc->SetPen(*wxTRANSPARENT_PEN);
    if (track->GetSelected() || track->IsSyncLockSelected())
    {
-      // Rectangles before, within, after the selction
+      // Rectangles before, within, after the selection
       wxRect before = rect;
       wxRect within = rect;
       wxRect after = rect;
@@ -426,6 +419,13 @@ void TrackArt::DrawBackgroundWithSelection(
 
       if (within.GetRight() > rect.GetRight()) {
          within.width = 1 + rect.GetRight() - within.x;
+      }
+
+      // Bug 2389 - Selection can disappear
+      // This handles case where no waveform is visible.
+      if (within.width < 1)
+      {
+         within.width = 1;
       }
 
       if (within.width > 0) {

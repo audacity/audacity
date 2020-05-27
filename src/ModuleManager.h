@@ -51,6 +51,7 @@ public:
 
    bool Load();
    void Unload();
+   bool HasDispatch() { return mDispatch != NULL; };
    int Dispatch(ModuleDispatchTypes type);
    void * GetSymbol(const wxString &name);
 

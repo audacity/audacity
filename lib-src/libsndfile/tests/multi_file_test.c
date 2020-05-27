@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2012 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -20,6 +20,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <inttypes.h>
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -30,8 +33,6 @@
 #endif
 
 #include <fcntl.h>
-#include <math.h>
-#include <string.h>
 #include <errno.h>
 #include <sys/stat.h>
 
@@ -157,7 +158,7 @@ multi_file_test (const char *filename, int *formats, int format_count)
 	{
 		if (verbose)
 		{	puts ("\n------------------------------------") ;
-			printf ("This offset : %ld\n", SF_COUNT_TO_LONG (embed_info.offset + embed_info.length)) ;
+			printf ("This offset : %" PRId64 "\n", embed_info.offset + embed_info.length) ;
 			} ;
 
 		if (lseek (fd, embed_info.offset + embed_info.length, SEEK_SET) < 0)
@@ -168,7 +169,7 @@ multi_file_test (const char *filename, int *formats, int format_count)
 		memset (&sfinfo, 0, sizeof (sfinfo)) ;
 		if ((sndfile = sf_open_fd (fd, SFM_READ, &sfinfo, SF_FALSE)) == NULL)
 		{	printf ("\n\nLine %d: sf_open_fd failed\n", __LINE__) ;
-			printf ("Embedded file number : %d   offset : %ld\n", file_count, SF_COUNT_TO_LONG (embed_info.offset)) ;
+			printf ("Embedded file number : %d   offset : %" PRId64 "\n", file_count, embed_info.offset) ;
 			puts (sf_strerror (sndfile)) ;
 			dump_log_buffer (sndfile) ;
 			exit (1) ;
@@ -179,7 +180,7 @@ multi_file_test (const char *filename, int *formats, int format_count)
 		sf_close (sndfile) ;
 
 		if (verbose)
-			printf ("\nNext offset : %ld\nNext length : %ld\n", SF_COUNT_TO_LONG (embed_info.offset), SF_COUNT_TO_LONG (embed_info.length)) ;
+			printf ("\nNext offset : %" PRId64 "\nNext length : %" PRId64 "\n", embed_info.offset, embed_info.length) ;
 		} ;
 
 	file_count -- ;

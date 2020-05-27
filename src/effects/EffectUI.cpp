@@ -885,7 +885,7 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
       {
          mMenuBtn = S.Id( kMenuID )
             .ToolTip(XO("Manage presets and options"))
-            .AddButton( XO("&Manage"), wxALIGN_CENTER | wxTOP | wxBOTTOM );
+            .AddButton( XXO("&Manage"), wxALIGN_CENTER | wxTOP | wxBOTTOM );
       }
       else
       {
@@ -906,7 +906,7 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
             {
                mPlayToggleBtn = S.Id( kPlayID )
                   .ToolTip(XO("Start and stop playback"))
-                  .AddButton( XO("Start &Playback"),
+                  .AddButton( XXO("Start &Playback"),
                               wxALIGN_CENTER | wxTOP | wxBOTTOM );
             }
             else if (mEffect &&
@@ -915,7 +915,7 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
             {
                mPlayToggleBtn = S.Id( kPlayID )
                   .ToolTip(XO("Preview effect"))
-                  .AddButton( XO("&Preview"),
+                  .AddButton( XXO("&Preview"),
                               wxALIGN_CENTER | wxTOP | wxBOTTOM );
             }
          }
@@ -945,7 +945,7 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
             {
                mRewindBtn = S.Id( kRewindID )
                   .ToolTip(XO("Skip backward"))
-                  .AddButton( XO("Skip &Backward"),
+                  .AddButton( XXO("Skip &Backward"),
                               wxALIGN_CENTER | wxTOP | wxBOTTOM );
             }
             else
@@ -964,7 +964,7 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
             {
                mFFwdBtn = S.Id( kFFwdID )
                   .ToolTip(XO("Skip forward"))
-                  .AddButton( XO("Skip &Forward"),
+                  .AddButton( XXO("Skip &Forward"),
                      wxALIGN_CENTER | wxTOP | wxBOTTOM );
             }
             else
@@ -984,7 +984,7 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
             mEnableCb = S.Id( kEnableID )
                .Position(wxALIGN_CENTER | wxTOP | wxBOTTOM)
                .Name(XO("Enable"))
-               .AddCheckBox( XO("&Enable"), mEnabled );
+               .AddCheckBox( XXO("&Enable"), mEnabled );
             //
          }
       }
@@ -1001,7 +1001,7 @@ bool EffectUIHost::Initialize()
       auto gAudioIO = AudioIO::Get();
       mDisableTransport = !gAudioIO->IsAvailable(mProject);
       mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
-      mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
+      mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
    }
 
    EffectPanel *w {};
@@ -1569,7 +1569,7 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
       {
          S.StartHorizontalLay(wxALIGN_LEFT, 0);
          {
-            text = S.AddTextBox(XO("Preset name:"), name, 30);
+            text = S.AddTextBox(XXO("Preset name:"), name, 30);
          }
          S.EndHorizontalLay();
          S.SetBorder(10);
@@ -1704,7 +1704,7 @@ void EffectUIHost::UpdateControls()
    {
       return;
    }
-   
+
    if (mCapturing || mDisableTransport)
    {
       // Don't allow focus to get trapped

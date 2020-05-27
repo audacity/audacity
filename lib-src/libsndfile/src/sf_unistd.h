@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,33 @@
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
+/* Microsoft declares some 'unistd.h' functions in 'io.h'. */
+
+#ifdef HAVE_IO_H
+#include <io.h>
+#endif
+
 /* Some defines that microsoft 'forgot' to implement. */
+
+#ifndef R_OK
+#define R_OK	4		/* Test for read permission.  */
+#endif
+
+#ifndef W_OK
+#define W_OK	2		/* Test for write permission.  */
+#endif
+
+#ifndef X_OK
+#ifdef WIN32
+#define	X_OK	0
+#else
+#define	X_OK	1		/* execute permission - unsupported in windows*/
+#endif
+#endif
+
+#ifndef F_OK
+#define	F_OK	0		/* Test for existence.  */
+#endif
 
 #ifndef S_IRWXU
 #define	S_IRWXU 	0000700	/* rwx, owner */

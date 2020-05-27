@@ -589,7 +589,7 @@ public:
    // If no function accepts the track, do nothing and return R{}
    // if R is not void.
    // If one of the functions invokes the call-through, then the next following
-   // applicable funtion is called.
+   // applicable function is called.
    template< typename R = void, typename ...Functions >
    R TypeSwitch(const Functions &...functions)
    {
@@ -1022,7 +1022,7 @@ template <
       return {
          { newBegin.mIter, newBegin.mIter,    this->second.mEnd,
            this->first.GetPredicate() },
-         { newBegin.mIter, this->second.mEnd, this->second.mEnd,
+         { newBegin.mIter, this->second.mIter, this->second.mEnd,
            this->second.GetPredicate() }
       };
    }

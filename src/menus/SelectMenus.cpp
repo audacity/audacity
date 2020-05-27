@@ -1036,7 +1036,7 @@ BaseItemSharedPtr SelectMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    /* i18n-hint: (verb) It's an item on a menu. */
-   Menu( wxT("Select"), XO("&Select"),
+   Menu( wxT("Select"), XXO("&Select"),
       Section( "Basic",
          Command( wxT("SelectAll"), XXO("&All"), FN(OnSelectAll),
             TracksExistFlag(),
@@ -1047,7 +1047,7 @@ BaseItemSharedPtr SelectMenu()
 
          //////////////////////////////////////////////////////////////////////////
 
-         Menu( wxT("Tracks"), XO("&Tracks"),
+         Menu( wxT("Tracks"), XXO("&Tracks"),
             Command( wxT("SelAllTracks"), XXO("In All &Tracks"),
                FN(OnSelectAllTracks),
                TracksExistFlag(),
@@ -1064,7 +1064,7 @@ BaseItemSharedPtr SelectMenu()
 
          //////////////////////////////////////////////////////////////////////////
 
-         Menu( wxT("Region"), XO("R&egion"),
+         Menu( wxT("Region"), XXO("R&egion"),
             Section( "",
                Command( wxT("SetLeftSelection"), XXO("&Left at Playback Position"),
                   FN(OnSetLeftSelection), TracksExistFlag(),
@@ -1100,7 +1100,7 @@ BaseItemSharedPtr SelectMenu()
          //////////////////////////////////////////////////////////////////////////
 
    #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         Menu( wxT("Spectral"), XO("S&pectral"),
+         Menu( wxT("Spectral"), XXO("S&pectral"),
             Command( wxT("ToggleSpectralSelection"),
                XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection),
                TracksExistFlag(), wxT("Q") ),
@@ -1143,9 +1143,10 @@ AttachedItem sAttachment1{
 
 BaseItemSharedPtr ExtraSelectionMenu()
 {
+   using Options = CommandManager::Options;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Select"), XO("&Selection"),
+   Menu( wxT("Select"), XXO("&Selection"),
       Command( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
          AlwaysEnabledFlag ),
       Command( wxT("SnapToNearest"), XXO("Snap-To &Nearest"),
@@ -1159,11 +1160,11 @@ BaseItemSharedPtr ExtraSelectionMenu()
       Command( wxT("SelExtLeft"), XXO("Selection Extend &Left"),
          FN(OnSelExtendLeft),
          TracksExistFlag() | TrackPanelHasFocus(),
-         wxT("Shift+Left\twantKeyup\tallowDup") ),
+         Options{ wxT("Shift+Left") }.WantKeyUp().AllowDup() ),
       Command( wxT("SelExtRight"), XXO("Selection Extend &Right"),
          FN(OnSelExtendRight),
          TracksExistFlag() | TrackPanelHasFocus(),
-         wxT("Shift+Right\twantKeyup\tallowDup") ),
+         Options{ wxT("Shift+Right") }.WantKeyUp().AllowDup() ),
       Command( wxT("SelSetExtLeft"), XXO("Set (or Extend) Le&ft Selection"),
          FN(OnSelSetExtendLeft),
          TracksExistFlag() | TrackPanelHasFocus() ),
@@ -1173,11 +1174,11 @@ BaseItemSharedPtr ExtraSelectionMenu()
       Command( wxT("SelCntrLeft"), XXO("Selection Contract L&eft"),
          FN(OnSelContractLeft),
          TracksExistFlag() | TrackPanelHasFocus(),
-         wxT("Ctrl+Shift+Right\twantKeyup") ),
+         Options{ wxT("Ctrl+Shift+Right") }.WantKeyUp() ),
       Command( wxT("SelCntrRight"), XXO("Selection Contract R&ight"),
          FN(OnSelContractRight),
          TracksExistFlag() | TrackPanelHasFocus(),
-         wxT("Ctrl+Shift+Left\twantKeyup") )
+         Options{ wxT("Ctrl+Shift+Left") }.WantKeyUp() )
    ) ) };
    return menu;
 }
@@ -1201,7 +1202,7 @@ BaseItemSharedPtr CursorMenu()
    // than 'Skip'.
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Cursor"), XO("&Cursor to"),
+   Menu( wxT("Cursor"), XXO("&Cursor to"),
       Command( wxT("CursSelStart"), XXO("Selection Star&t"),
          FN(OnCursorSelStart),
          TimeSelectedFlag(),
@@ -1238,15 +1239,16 @@ AttachedItem sAttachment0{
 
 BaseItemSharedPtr ExtraCursorMenu()
 {
+   using Options = CommandManager::Options;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Cursor"), XO("&Cursor"),
+   Menu( wxT("Cursor"), XXO("&Cursor"),
       Command( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
          TracksExistFlag() | TrackPanelHasFocus(),
-         wxT("Left\twantKeyup\tallowDup") ),
+         Options{ wxT("Left") }.WantKeyUp().AllowDup() ),
       Command( wxT("CursorRight"), XXO("Cursor &Right"), FN(OnCursorRight),
          TracksExistFlag() | TrackPanelHasFocus(),
-         wxT("Right\twantKeyup\tallowDup") ),
+         Options{ wxT("Right") }.WantKeyUp().AllowDup() ),
       Command( wxT("CursorShortJumpLeft"), XXO("Cursor Sh&ort Jump Left"),
          FN(OnCursorShortJumpLeft),
          TracksExistFlag() | TrackPanelHasFocus(), wxT(",") ),
@@ -1270,18 +1272,23 @@ AttachedItem sAttachment4{
 
 BaseItemSharedPtr ExtraSeekMenu()
 {
+   using Options = CommandManager::Options;
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Seek"), XO("See&k"),
+   Menu( wxT("Seek"), XXO("See&k"),
       Command( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
-         FN(OnSeekLeftShort), AudioIOBusyFlag(), wxT("Left\tallowDup") ),
+         FN(OnSeekLeftShort), AudioIOBusyFlag(),
+         Options{ wxT("Left") }.AllowDup() ),
       Command( wxT("SeekRightShort"),
          XXO("Short Seek &Right During Playback"), FN(OnSeekRightShort),
-         AudioIOBusyFlag(), wxT("Right\tallowDup") ),
+         AudioIOBusyFlag(),
+         Options{ wxT("Right") }.AllowDup() ),
       Command( wxT("SeekLeftLong"), XXO("Long Seek Le&ft During Playback"),
-         FN(OnSeekLeftLong), AudioIOBusyFlag(), wxT("Shift+Left\tallowDup") ),
+         FN(OnSeekLeftLong), AudioIOBusyFlag(),
+         Options{ wxT("Shift+Left") }.AllowDup() ),
       Command( wxT("SeekRightLong"), XXO("Long Seek Rig&ht During Playback"),
-         FN(OnSeekRightLong), AudioIOBusyFlag(), wxT("Shift+Right\tallowDup") )
+         FN(OnSeekRightLong), AudioIOBusyFlag(),
+         Options{ wxT("Shift+Right") }.AllowDup() )
    ) ) };
    return menu;
 }

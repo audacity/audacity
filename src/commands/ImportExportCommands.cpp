@@ -23,6 +23,7 @@
 #include "../export/Export.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
+#include "../wxFileNameWrapper.h"
 #include "CommandContext.h"
 
 const ComponentInterfaceSymbol ImportCommand::Symbol
@@ -41,7 +42,7 @@ void ImportCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(XO("File Name:"),mFileName);
+      S.TieTextBox(XXO("File Name:"),mFileName);
    }
    S.EndMultiColumn();
 }
@@ -53,7 +54,9 @@ bool ImportCommand::Apply(const CommandContext & context){
 
 
 bool ExportCommand::DefineParams( ShuttleParams & S ){
-   S.Define( mFileName, wxT("Filename"),  "exported.wav" );
+   wxFileName fn = FileNames::DefaultToDocumentsFolder(wxT("/Export/Path"));
+   fn.SetName("exported.wav");
+   S.Define(mFileName, wxT("Filename"), fn.GetFullPath());
    S.Define( mnChannels, wxT("NumChannels"),  1 );
    return true;
 }
@@ -69,8 +72,8 @@ void ExportCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(XO("File Name:"),mFileName);
-      S.TieTextBox(XO("Number of Channels:"),mnChannels);
+      S.TieTextBox(XXO("File Name:"),mFileName);
+      S.TieTextBox(XXO("Number of Channels:"),mnChannels);
    }
    S.EndMultiColumn();
 }

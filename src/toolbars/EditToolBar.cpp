@@ -76,7 +76,7 @@ BEGIN_EVENT_TABLE( EditToolBar, ToolBar )
                       EditToolBar::OnButton )
 END_EVENT_TABLE()
 
-//Standard contructor
+//Standard constructor
 EditToolBar::EditToolBar( AudacityProject &project )
 : ToolBar(project, EditBarID, XO("Edit"), wxT("Edit"))
 {
@@ -302,6 +302,16 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    const CommandContext context( *p );
    MacroCommands::HandleTextualCommand( cm,
       EditToolbarButtonList[id].commandName, context, flags, false);
+
+#if defined(__WXMAC__)
+   // Bug 2402
+   // LLL: It seems that on the Mac the IDLE events are processed
+   //      differently than on Windows/GTK and the AdornedRulerPanel's
+   //      OnPaint() method gets called sooner that expected. This is
+   //      evident when zooming from this toolbar only. When zooming from
+   //      the Menu or from keyboard ommand, the zooming works correctly.
+   wxTheApp->ProcessIdle();
+#endif
 }
 
 static RegisteredToolbarFactory factory{ EditBarID,

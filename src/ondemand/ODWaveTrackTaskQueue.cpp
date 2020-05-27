@@ -61,7 +61,7 @@ bool ODWaveTrackTaskQueue::CanMergeWith(ODWaveTrackTaskQueue* otherQueue)
 }
 
 ///add track to the masterTrack's queue - this will allow future ODScheduling to affect them together.
-/// sets the NeedODUpdateFlag since we don't want the head task to finish without haven't dealt with the depednent
+/// sets the NeedODUpdateFlag since we don't want the head task to finish without haven't dealt with the dependent
 ///
 ///@param track the track to bring into the tasks AND tracklist for this queue
 void ODWaveTrackTaskQueue::MergeWaveTrack(

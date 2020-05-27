@@ -83,6 +83,8 @@ h4 {
 pre {
 	font-family : courier, monospace ;
 	font-size : medium ;
+	margin-left : 6% ;
+	margin-right : 6% ;
 }
 a:link { color : #9090FF ; }
 a:visited { color : #5050FF ; }

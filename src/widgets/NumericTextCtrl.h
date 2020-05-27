@@ -34,7 +34,7 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_FREQUENCYTEXTCTRL_UPDATED, -1)
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_BANDWIDTHTEXTCTRL_UPDATED,
                             -1);
 
-/** \brief struct to hold a formatting control string and it's user facing name
+/** \brief struct to hold a formatting control string and its user facing name
  * Used in an array to hold the built-in time formats that are always available
  * to the user */
 struct BuiltinFormatString;
@@ -52,6 +52,24 @@ public:
       ATIME, // for Audio time control.
       FREQUENCY,
       BANDWIDTH,
+   };
+
+   struct FormatStrings {
+      TranslatableString formatStr;
+      // How to name the fraction of the unit; not necessary for time formats
+      // or when the format string has no decimal point
+      TranslatableString fraction;
+
+      FormatStrings(
+         const TranslatableString &format = {},
+         const TranslatableString &fraction = {})
+         : formatStr{ format }, fraction{ fraction }
+      {}
+
+      friend bool operator == ( const FormatStrings &x, const FormatStrings &y )
+         { return x.formatStr == y.formatStr && x.fraction == y.fraction; }
+      friend bool operator != ( const FormatStrings &x, const FormatStrings &y )
+         { return !(x == y); }
    };
 
    static NumericFormatSymbol DefaultSelectionFormat();
@@ -90,7 +108,7 @@ public:
    bool SetFormatName(const NumericFormatSymbol & formatName);
 
    // returns true iff the format string really changed:
-   bool SetFormatString(const TranslatableString & formatString);
+   bool SetFormatString(const FormatStrings & formatString);
 
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
@@ -107,8 +125,8 @@ public:
 
    int GetNumBuiltins();
    NumericFormatSymbol GetBuiltinName(const int index);
-   TranslatableString GetBuiltinFormat(const int index);
-   TranslatableString GetBuiltinFormat(const NumericFormatSymbol & name);
+   FormatStrings GetBuiltinFormat(const int index);
+   FormatStrings GetBuiltinFormat(const NumericFormatSymbol & name);
 
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
@@ -126,7 +144,7 @@ protected:
    double         mMaxValue;
    double         mInvalidValue;
 
-   TranslatableString mFormatString;
+   FormatStrings mFormatString;
 
    std::vector<NumericField> mFields;
    wxString       mPrefix;
@@ -160,7 +178,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
       bool menuEnabled { true };
       bool hasInvalidValue { false };
       double invalidValue { -1.0 };
-      TranslatableString format {};
+      FormatStrings format {};
       bool hasValue { false };
       double value{ -1.0 };
 
@@ -172,7 +190,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
       Options &InvalidValue (bool has, double v = -1.0)
          { hasInvalidValue = has, invalidValue = v; return *this; }
       // use a custom format not in the tables:
-      Options &Format (const TranslatableString &f)
+      Options &Format (const FormatStrings &f)
          { format = f; return *this; }
       Options &Value (bool has, double v)
          { hasValue = has, value = v; return *this; }
@@ -192,21 +210,23 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    // Hide the inherited function that takes wxString
    void SetName( const TranslatableString &name );
 
+   wxSize ComputeSizing(bool update = true, wxCoord digitW = 0, wxCoord digitH = 0);
    bool Layout() override;
-   void ComputeSizing();
    void Fit() override;
 
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
 
    // returns true iff the format string really changed:
-   bool SetFormatString(const TranslatableString & formatString);
+   bool SetFormatString(const FormatStrings & formatString);
 
    // returns true iff the format name really changed:
    bool SetFormatName(const NumericFormatSymbol & formatName);
 
    void SetFieldFocus(int /* digit */);
 
+   wxSize GetDimensions() { return wxSize(mWidth + mButtonWidth, mHeight); }
+   wxSize GetDigitSize() { return wxSize(mDigitBoxW, mDigitBoxH); }
    void SetDigitSize(int width, int height);
    void SetReadOnly(bool readOnly = true);
    void EnableMenu(bool enable = true);
@@ -219,11 +239,6 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
    int GetFocusedField() { return mLastField; }
    int GetFocusedDigit() { return mFocusedDigit; }
-   // give a sane aspect ratio even if zero height.
-   bool IsTooBig(int width, int height) {
-      ComputeSizing();
-      return (mWidth > width) || (mHeight > height);
-   }
 
 private:
 

@@ -20,7 +20,7 @@ class GainSliderHandle final : public SliderHandle
 {
    GainSliderHandle(const GainSliderHandle&) = delete;
 
-   std::shared_ptr<WaveTrack> GetWaveTrack();
+   std::shared_ptr<WaveTrack> GetWaveTrack() const;
 
 public:
    explicit GainSliderHandle
@@ -38,6 +38,9 @@ protected:
    Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject) override;
 
+   TranslatableString Tip(
+      const wxMouseState &state, AudacityProject &) const override;
+
    bool StopsOnKeystroke () override { return true; }
 
 public:
@@ -53,7 +56,7 @@ class PanSliderHandle final : public SliderHandle
 {
    PanSliderHandle(const PanSliderHandle&) = delete;
 
-   std::shared_ptr<WaveTrack> GetWaveTrack();
+   std::shared_ptr<WaveTrack> GetWaveTrack() const;
 
 public:
    explicit PanSliderHandle
@@ -69,6 +72,9 @@ protected:
    Result SetValue(AudacityProject *pProject, float newValue) override;
    Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject) override;
+
+   TranslatableString Tip(
+      const wxMouseState &state, AudacityProject &) const override;
 
    bool StopsOnKeystroke () override { return true; }
 

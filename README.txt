@@ -29,12 +29,12 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 2.3.3
+Version 2.4.2
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.3.2
+2.  Changes since version 2.4.1
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -64,50 +64,35 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 --------------------------------------------------------------------------------
 
-2. Changes since version 2.3.2: 
+2. Changes since version 2.4.1: 
+
 
 Improvements
 
- * Equalization effect now split into two effects, Filter Curve and Graphic EQ.
-   * Presets (using manage button) now active/working.
-   * Can now have two points at same frequency for steep steps.
- * 'What you hear is what you get' for exports.  Formerly the solo button 
-   preferences could lead to differences in which tracks were exported.
- * Leading silence (blank space) not skipped over in exports.
- * Quality setting on AAC/M4A exports.
- * Some confusing functionality removed (better achieved in other ways)
-   * Removed Nyquist Workbench (use built-in nyquist features)
-   * Removed Vocal Remover (use Vocal Reduction)
-   * Removed On-Demand aliased files (copy files instead)
-   * Removed 'Normalize on Load' (Normalize as needed on export, instead)
+ * To be written... wx3.1.3 etc...
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.3.3
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.4.2
 
 
 Bug Fixes
 
- Over 150 bugs in 2.3.2 fixed, including:
+ Over nnn bugs in 2.4.1 fixed, including:
 
- * 2112 - Crash when opening Equalization settings in a Macro
- * 2127 - Crash deleting a track while in Record/Pause state
- * 2176 - Crash when attempting to time shift multiple tracks
- * 2141 - Tabbing between labels stopped working
- * 2200 - Refusal to export some large (4GB) files on size grounds
+ * To be written
 
-See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.3.3
+
+See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2
 
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.3.3:
 
-Audacity 2.3.3 does not properly support macOS Catalina.  There are new
-security restrictions in Catalina on using the microphone. For example, 
-Audacity may run, but fail to record.  Catalina was released towards the end 
-of 2.3.2 development.
+3. Some Known Issues in 2.4.2:
 
-For best workarounds and other known issues in 2.3.2, please see:
-  https://wiki.audacityteam.org/wiki/Release_Notes_2.3.2/Issues 
+ * TBW
+
+For best workarounds and other known issues in 2.4.2, please see:
+  https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2/Issues 
 
 
 -------------------------------------------------------------------------------
@@ -142,6 +127,9 @@ GPL-compatible license.  Specifically:
 
   libmad: GPL
     Decodes MP3 files.  Optional separate download.
+
+  libmp3lame: LGPL
+    Encodes MP3 files.
 
   libnyquist: BSD-like license.
     Functional language for manipulating audio; available

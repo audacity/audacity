@@ -139,7 +139,7 @@ TrackNodePointer Track::GetNode() const
 void Track::SetOwner
 (const std::weak_ptr<TrackList> &list, TrackNodePointer node)
 {
-   // BUG: When using this function to clear an owner, we may need to clear 
+   // BUG: When using this function to clear an owner, we may need to clear
    // focussed track too.  Otherwise focus could remain on an invisible (or deleted) track.
    mList = list;
    mNode = node;
@@ -259,7 +259,7 @@ bool Track::IsSyncLockSelected() const
    auto shTrack = this->SubstituteOriginalTrack();
    if (!shTrack)
       return false;
-   
+
    const auto pTrack = shTrack.get();
    auto trackRange = TrackList::SyncLockGroup( pTrack );
 
@@ -710,8 +710,7 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
 void TrackList::GroupChannels(
    Track &track, size_t groupSize, bool resetChannels )
 {
-   // If group size is more than two, for now only the first two channels
-   // are grouped as stereo, and any others remain mono
+   // If group size is exactly two, group as stereo, else mono (bug 2195).
    auto list = track.mList.lock();
    if ( groupSize > 0 && list.get() == this  ) {
       auto iter = track.mNode.first;
@@ -738,16 +737,16 @@ void TrackList::GroupChannels(
          auto pLeader = this->FindLeader( &track );
          if ( *pLeader && *pLeader != &track )
             unlink( **pLeader );
-         
+
          // First disassociate given and later tracks, then reassociate them
          for ( auto iter2 = iter; iter2 != after; ++iter2 )
              unlink( **iter2 );
 
          if ( groupSize > 1 ) {
             const auto channel = *iter++;
-            channel->SetLinked( true );
-            channel->SetChannel( Track::LeftChannel );
-            (*iter++)->SetChannel( Track::RightChannel );
+            channel->SetLinked( groupSize == 2 );
+            channel->SetChannel( groupSize == 2? Track::LeftChannel : Track::MonoChannel );
+            (*iter++)->SetChannel( groupSize == 2? Track::RightChannel : Track::MonoChannel );
             while (iter != after)
                (*iter++)->SetChannel( Track::MonoChannel );
          }

@@ -55,8 +55,9 @@ class CommandParameters;
 /**************************************************************************//**
 \brief Shuttle that deals with parameters.  This is a base class with lots of
 virtual functions that do nothing by default.
+Unrelated to class Shuttle.
 ********************************************************************************/
-class ShuttleParams : public Shuttle
+class ShuttleParams /* not final */
 {
 public:
    wxString mParams;
@@ -64,7 +65,6 @@ public:
    CommandParameters * mpEap;
    ShuttleParams() { mpEap = NULL; pOptionalFlag = NULL; }
    virtual ~ShuttleParams() {}
-   bool ExchangeWithMaster(const wxString & Name) override;
    bool ShouldSet();
    virtual ShuttleParams & Optional( bool & WXUNUSED(var) ){ pOptionalFlag = NULL;return *this;};
    virtual ShuttleParams & OptionalY( bool & var ){ return Optional( var );};
@@ -83,7 +83,7 @@ public:
 /**************************************************************************//**
 \brief Shuttle that gets parameter values into a string.
 ********************************************************************************/
-class ShuttleGetAutomation : public ShuttleParams
+class ShuttleGetAutomation final : public ShuttleParams
 {
 public:
    ShuttleParams & Optional( bool & var ) override;
@@ -101,7 +101,7 @@ public:
 /**************************************************************************//**
 \brief Shuttle that sets parameters to a value (from a string)
 ********************************************************************************/
-class ShuttleSetAutomation : public ShuttleParams
+class ShuttleSetAutomation final : public ShuttleParams
 {
 public:
    ShuttleSetAutomation(){ bWrite = false; bOK = false;};
@@ -126,7 +126,7 @@ public:
 /**************************************************************************//**
 \brief Shuttle that sets parameters to their default values.
 ********************************************************************************/
-class ShuttleDefaults : public ShuttleParams
+class ShuttleDefaults final : public ShuttleParams
 {
 public:
    wxString Result;

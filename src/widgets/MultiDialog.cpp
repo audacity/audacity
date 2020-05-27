@@ -135,7 +135,7 @@ MultiDialog::MultiDialog(wxWindow * pParent,
                S
                   .Id(ID_SHOW_LOG_BUTTON)
                   .AddButton(
-                     XO("Show Log for Details"), wxALIGN_LEFT | wxALL,
+                     XXO("Show Log for Details"), wxALIGN_LEFT | wxALL,
                      // set default to encourage user to look at files.
                      true);
 
@@ -143,7 +143,7 @@ MultiDialog::MultiDialog(wxWindow * pParent,
             }
 
             auto pButton = S.Id(wxID_OK)
-               .AddButton(XO("OK"), wxALIGN_CENTER, !log);
+               .AddButton(XXO("OK"), wxALIGN_CENTER, !log);
 
             if (!mHelpPage.IsEmpty()) {
                auto pHelpBtn = S.Id(wxID_HELP)

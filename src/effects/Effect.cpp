@@ -17,7 +17,6 @@
 
 #include "../Audacity.h"
 #include "Effect.h"
-#include "EffectManager.h"
 
 #include "../Experimental.h"
 
@@ -25,6 +24,7 @@
 
 #include <wx/defs.h>
 #include <wx/sizer.h>
+#include <wx/tokenzr.h>
 
 #include "../AudioIO.h"
 #include "../LabelTrack.h"
@@ -663,21 +663,29 @@ bool Effect::CanExportPresets()
    return true;
 }
 
+static const FileNames::FileTypes &PresetTypes()
+{
+   static const FileNames::FileTypes result {
+      { XO("Presets"), { wxT("txt") }, true },
+      FileNames::AllFiles
+   };
+   return result;
+};
+
 void Effect::ExportPresets()
 {
    wxString params;
    GetAutomationParameters(params);
-   EffectManager & em = EffectManager::Get();
-   wxString commandId = em.GetSquashedName(GetSymbol().Internal()).GET();
+   wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
    params =  commandId + ":" + params;
 
    auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
 
-   wxFileDialog dlog(NULL,
-                     _("Export Effect Parameters"),
+   FileDialogWrapper dlog(nullptr,
+                     XO("Export Effect Parameters"),
                      path.GetFullPath(),
                      wxEmptyString,
-                     _("Presets (*.txt)|*.txt|All files|*"),
+                     PresetTypes(),
                      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
  
    if (dlog.ShowModal() != wxID_OK) {
@@ -722,11 +730,11 @@ void Effect::ImportPresets()
 
    auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
 
-   wxFileDialog dlog(NULL,
-                     _("Import Effect Parameters"),
+   FileDialogWrapper dlog(nullptr,
+                     XO("Import Effect Parameters"),
                      path.GetPath(),
                      wxEmptyString,
-                     _("Presets (*.txt)|*.txt|All files|*"),
+                     PresetTypes(),
                      wxFD_OPEN | wxRESIZE_BORDER);
  
    if (dlog.ShowModal() != wxID_OK) {
@@ -745,8 +753,7 @@ void Effect::ImportPresets()
          wxString ident = params.BeforeFirst(':');
          params = params.AfterFirst(':');
 
-         EffectManager & em = EffectManager::Get();
-         wxString commandId = em.GetSquashedName(GetSymbol().Internal()).GET();
+         wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
 
          if (ident != commandId) {
             // effect identifiers are a sensible length!
@@ -773,6 +780,30 @@ void Effect::ImportPresets()
 
    //SetWindowTitle();
 
+}
+
+CommandID Effect::GetSquashedName(wxString name)
+{
+   // Get rid of leading and trailing white space
+   name.Trim(true).Trim(false);
+
+   if (name.empty())
+   {
+      return name;
+   }
+
+   wxStringTokenizer st(name, wxT(" "));
+   wxString id;
+
+   // CamelCase the name
+   while (st.HasMoreTokens())
+   {
+      wxString tok = st.GetNextToken();
+
+      id += tok.Left(1).MakeUpper() + tok.Mid(1).MakeLower();
+   }
+
+   return id;
 }
 
 bool Effect::HasOptions()
@@ -826,8 +857,6 @@ void Effect::SetDuration(double seconds)
    }
 
    mDuration = seconds;
-
-   mIsSelection = false;
 
    return;
 }
@@ -1300,13 +1329,14 @@ bool Effect::DoEffect(double projectRate,
    return returnVal;
 }
 
-bool Effect::Delegate( Effect &delegate )
+bool Effect::Delegate(
+   Effect &delegate, wxWindow &parent, const EffectDialogFactory &factory )
 {
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
-   return delegate.DoEffect(
-      mProjectRate, mTracks, mFactory, region );
+   return delegate.DoEffect( mProjectRate, mTracks, mFactory,
+      region, &parent, factory );
 }
 
 // All legacy effects should have this overridden
@@ -1381,21 +1411,8 @@ bool Effect::ProcessPass()
          if (!left->GetSelected())
             return fallthrough();
 
-         sampleCount len;
-         sampleCount leftStart;
-         sampleCount rightStart = 0;
-
-         if (!isGenerator)
-         {
-            GetSamples(left, &leftStart, &len);
-            mSampleCnt = len;
-         }
-         else
-         {
-            len = 0;
-            leftStart = 0;
-            mSampleCnt = left->TimeToLongSamples(mDuration);
-         }
+         sampleCount len = 0;
+         sampleCount start = 0;
 
          mNumChannels = 0;
          WaveTrack *right{};
@@ -1422,13 +1439,18 @@ bool Effect::ProcessPass()
                // TODO: more-than-two-channels
                right = channel;
                clear = false;
-               if (!isGenerator)
-                  GetSamples(right, &rightStart, &len);
-
                // Ignore other channels
                break;
             }
          }
+
+         if (!isGenerator)
+         {
+            GetBounds(*left, right, &start, &len);
+            mSampleCnt = len;
+         }
+         else
+            mSampleCnt = left->TimeToLongSamples(mDuration);
 
          // Let the client know the sample rate
          SetSampleRate(left->GetRate());
@@ -1491,7 +1513,7 @@ bool Effect::ProcessPass()
 
          // Go process the track(s)
          bGoodResult = ProcessTrack(
-            count, map, left, right, leftStart, rightStart, len,
+            count, map, left, right, start, len,
             inBuffer, outBuffer, inBufPos, outBufPos);
          if (!bGoodResult)
             return;
@@ -1516,8 +1538,7 @@ bool Effect::ProcessTrack(int count,
                           ChannelNames map,
                           WaveTrack *left,
                           WaveTrack *right,
-                          sampleCount leftStart,
-                          sampleCount rightStart,
+                          sampleCount start,
                           sampleCount len,
                           FloatBuffers &inBuffer,
                           FloatBuffers &outBuffer,
@@ -1555,10 +1576,8 @@ bool Effect::ProcessTrack(int count,
    // there is no further input data to process, the loop continues to call the
    // effect with an empty input buffer until the effect has had a chance to
    // return all of the remaining delayed samples.
-   auto inLeftPos = leftStart;
-   auto inRightPos = rightStart;
-   auto outLeftPos = leftStart;
-   auto outRightPos = rightStart;
+   auto inPos = start;
+   auto outPos = start;
 
    auto inputRemaining = len;
    decltype(GetLatency()) curDelay = 0, delayRemaining = 0;
@@ -1591,13 +1610,10 @@ bool Effect::ProcessTrack(int count,
       cleared = true;
 
       // Create temporary tracks
-      genLeft = mFactory->NewWaveTrack(left->GetSampleFormat(), left->GetRate());
-      genLeft->SetWaveColorIndex( left->GetWaveColorIndex() );
+      genLeft = left->EmptyCopy();
 
-      if (right) {
-         genRight = mFactory->NewWaveTrack(right->GetSampleFormat(), right->GetRate());
-         genRight->SetWaveColorIndex( right->GetWaveColorIndex() );
-      }
+      if (right)
+         genRight = right->EmptyCopy();
    }
 
    // Call the effect until we run out of input or delayed samples
@@ -1614,10 +1630,10 @@ bool Effect::ProcessTrack(int count,
                limitSampleBufferSize( mBufferSize, inputRemaining );
 
             // Fill the input buffers
-            left->Get((samplePtr) inBuffer[0].get(), floatSample, inLeftPos, inputBufferCnt);
+            left->Get((samplePtr) inBuffer[0].get(), floatSample, inPos, inputBufferCnt);
             if (right)
             {
-               right->Get((samplePtr) inBuffer[1].get(), floatSample, inRightPos, inputBufferCnt);
+               right->Get((samplePtr) inBuffer[1].get(), floatSample, inPos, inputBufferCnt);
             }
 
             // Reset the input buffer positions
@@ -1720,8 +1736,7 @@ bool Effect::ProcessTrack(int count,
       // right channels when processing the input samples.  If we flip
       // over to processing delayed samples, they simply become counters
       // for the progress display.
-      inLeftPos += curBlockSize;
-      inRightPos += curBlockSize;
+      inPos += curBlockSize;
 
       // Get the current number of delayed samples and accumulate
       if (isProcessor)
@@ -1773,16 +1788,16 @@ bool Effect::ProcessTrack(int count,
          if (isProcessor)
          {
             // Write them out
-            left->Set((samplePtr) outBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
+            left->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
             if (right)
             {
                if (chans >= 2)
                {
-                  right->Set((samplePtr) outBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
+                  right->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
                }
                else
                {
-                  right->Set((samplePtr) outBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
+                  right->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
                }
             }
          }
@@ -1802,15 +1817,14 @@ bool Effect::ProcessTrack(int count,
          }
 
          // Bump to the next track position
-         outLeftPos += outputBufferCnt;
-         outRightPos += outputBufferCnt;
+         outPos += outputBufferCnt;
          outputBufferCnt = 0;
       }
 
       if (mNumChannels > 1)
       {
          if (TrackGroupProgress(count,
-               (inLeftPos - leftStart).as_double() /
+               (inPos - start).as_double() /
                (isGenerator ? genLength : len).as_double()))
          {
             rc = false;
@@ -1820,7 +1834,7 @@ bool Effect::ProcessTrack(int count,
       else
       {
          if (TrackProgress(count,
-               (inLeftPos - leftStart).as_double() /
+               (inPos - start).as_double() /
                (isGenerator ? genLength : len).as_double()))
          {
             rc = false;
@@ -1834,16 +1848,16 @@ bool Effect::ProcessTrack(int count,
    {
       if (isProcessor)
       {
-         left->Set((samplePtr) outBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
+         left->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
          if (right)
          {
             if (chans >= 2)
             {
-               right->Set((samplePtr) outBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
+               right->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
             }
             else
             {
-               right->Set((samplePtr) outBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
+               right->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
             }
          }
       }
@@ -1887,8 +1901,8 @@ bool Effect::ProcessTrack(int count,
       if (genRight)
       {
          genRight->Flush();
-         right->ClearAndPaste(mT0, mT1, genRight.get(), true, true,
-                              nullptr /* &warper */);
+         right->ClearAndPaste(mT0, selectedRegion.t1(),
+            genRight.get(), true, true, nullptr /* &warper */);
       }
    }
 
@@ -2030,32 +2044,26 @@ bool Effect::TrackGroupProgress(int whichGroup, double frac, const TranslatableS
    return (updateResult != ProgressResult::Success);
 }
 
-void Effect::GetSamples(
-   const WaveTrack *track, sampleCount *start, sampleCount *len)
+void Effect::GetBounds(
+   const WaveTrack &track, const WaveTrack *pRight,
+   sampleCount *start, sampleCount *len)
 {
-   double trackStart = track->GetStartTime();
-   double trackEnd = track->GetEndTime();
-   double t0 = mT0 < trackStart ? trackStart : mT0;
-   double t1 = mT1 > trackEnd ? trackEnd : mT1;
+   auto t0 = std::max( mT0, track.GetStartTime() );
+   auto t1 = std::min( mT1, track.GetEndTime() );
 
-#if 0
-   if (GetType() & INSERT_EFFECT) {
-      t1 = t0 + mDuration;
-      if (mT0 == mT1) {
-         // Not really part of the calculation, but convenient to put here
-         track->InsertSilence(t0, t1);
-      }
+   if ( pRight ) {
+      t0 = std::min( t0, std::max( mT0, pRight->GetStartTime() ) );
+      t1 = std::max( t1, std::min( mT1, pRight->GetEndTime() ) );
    }
-#endif
 
    if (t1 > t0) {
-      *start = track->TimeToLongSamples(t0);
-      auto end = track->TimeToLongSamples(t1);
+      *start = track.TimeToLongSamples(t0);
+      auto end = track.TimeToLongSamples(t1);
       *len = end - *start;
    }
    else {
       *start = 0;
-      *len  = 0;
+      *len = 0;
    }
 }
 
@@ -2072,7 +2080,9 @@ void Effect::CopyInputTracks(bool allSyncLockSelected)
    mIMap.clear();
    mOMap.clear();
 
-   mOutputTracks = TrackList::Create( nullptr );
+   mOutputTracks = TrackList::Create(
+      const_cast<AudacityProject*>( FindProject() ) // how to remove this const_cast?
+  );
 
    auto trackRange = mTracks->Any() +
       [&] (const Track *pTrack) {
@@ -2345,6 +2355,10 @@ void Effect::Preview(bool dryOnly)
          End();
          GuardedCall( [&]{ Init(); } );
       }
+
+      // In case any dialog control depends on mT1 or mDuration:
+      if ( mUIDialog )
+         mUIDialog->TransferDataToWindow();
    } );
 
    auto vr0 = valueRestorer( mT0 );
@@ -2352,6 +2366,11 @@ void Effect::Preview(bool dryOnly)
    // Most effects should stop at t1.
    if (!mPreviewFullSelection)
       mT1 = t1;
+
+   // In case any dialog control depends on mT1 or mDuration:
+   if ( mUIDialog ) {
+      mUIDialog->TransferDataToWindow();
+   }
 
    // Save the original track list
    TrackList *saveTracks = mTracks;

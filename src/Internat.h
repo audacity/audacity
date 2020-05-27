@@ -29,20 +29,31 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 #define _TS( s ) GetCustomSubstitution( s )
 
 // Marks strings for extraction only... use .Translate() to translate.
+// '&', preceding menu accelerators, should NOT occur in the argument.
 #define XO(s)  (TranslatableString{ wxT(s), {} })
-// XXO is used instead of XO in some places, for reasons that are
-// no longer important.  The two are equivalent now.
+
+// Alternative taking a second context argument.  A context is a string literal,
+// which is not translated, but serves to disambiguate uses of the first string
+// that might need differing translations, such as "Light" meaning not-heavy in
+// one place but not-dark elsewhere.
+#define XC(s, c)  (TranslatableString{ wxT(s), {} }.Context(c))
+
+// Marks strings for extraction only, where '&', preceding menu accelerators, MAY
+// occur.
+// For now, expands exactly as macro XO does, but in future there will be a
+// type distinction - for example XXO should be used for menu item names that
+// might use the & character for shortcuts.
 #define XXO(s)  XO(s)
 
 #ifdef _
    #undef _
 #endif
 
-#if defined( __WXDEBUG__ )
+#if defined( _DEBUG )
    // Force a crash if you misuse _ in a static initializer, so that translation
    // is looked up too early and not found.
 
-   #ifdef _MSC_VER
+   #ifdef __WXMSW__
 
    #define _(s) ((wxTranslations::Get() || (DebugBreak(), true)), \
                 GetCustomTranslation((s)))
@@ -60,33 +71,30 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
    #define _(s) GetCustomTranslation((s))
 #endif
 
-#ifdef wxPLURAL
-   #undef wxPLURAL
+#ifdef XP
+   #undef XP
 #endif
 
 
-// The two string arugments will go to the .pot file, as
+// The two string arguments will go to the .pot file, as
 // msgid sing
 // msgid_plural plural
 //
 // (You must use plain string literals.  Do not use _() or wxT() or L prefix,
 //  which (intentionally) will fail to compile.  The macro inserts wxT).
 //
-// Note too:  it seems an i18n-hint comment is not extracted if it precedes
-// wxPLURAL directly.  A workaround:  after the comment, insert a line
-// _("dummyStringXXXX");
-// where for XXXX subsitute something making this dummy string unique in the
-// program.  Then check in your generated audacity.pot that the dummy is
-// immediately before the singular/plural entry.
-//
-// Your i18n-comment should therefore say something like,
-// "In the string after this one, ..."
+// Note too:  The i18n-hint comment must be on the line preceding the first
+// string.  That might be inside the parentheses of the macro call.
 //
 // The macro call is then followed by a sequence of format arguments in
 // parentheses.  The third argument of the macro call is the zero-based index
 // of the format argument that selects singular or plural
-#define wxPLURAL(sing, plur, n) \
+#define XP(sing, plur, n) \
    TranslatableString{ wxT(sing), {} }.Plural<(n)>( wxT(plur) )
+
+// Like XP but with an additional context argument, as for XC
+#define XPC(sing, plur, n, c) \
+   TranslatableString{ wxT(sing), {} }.Context(c).Plural<(n)>( wxT(plur) )
 
 #endif
 
@@ -125,8 +133,8 @@ public:
 
    /** \brief Convert a number to a string while formatting it in bytes, KB,
     * MB, GB */
-   static wxString FormatSize(wxLongLong size);
-   static wxString FormatSize(double size);
+   static TranslatableString FormatSize(wxLongLong size);
+   static TranslatableString FormatSize(double size);
 
    /** \brief Check a proposed file name string for illegal characters and
     * remove them
@@ -134,15 +142,6 @@ public:
     * character-wise changed)
     */
    static bool SanitiseFilename(wxString &name, const wxString &sub);
-
-   /** \brief Remove accelerator charactors from strings
-    *
-    * Utility function - takes a translatable string to be used as a menu item,
-    * for example _("&Splash...\tAlt+S"), and strips all of the menu
-    * accelerator stuff from it, to make "Splash".  That way the same
-    * translatable string can be used both when accelerators are needed and
-    * when they aren't, saving translators effort. */
-   static wxString StripAccelerators(const wxString& str);
 
    static const wxArrayString &GetExcludedCharacters()
    { return exclude; }
@@ -153,8 +152,6 @@ private:
    static wxArrayString exclude;
 };
 
-#define _NoAcc(X) Internat::StripAccelerators(_(X))
-
 // Convert C strings to wxString
 #define UTF8CTOWX(X) wxString((X), wxConvUTF8)
 #define LAT1CTOWX(X) wxString((X), wxConvISO8859_1)
@@ -163,5 +160,10 @@ class ComponentInterfaceSymbol;
 TranslatableStrings Msgids(
    const EnumValueSymbol strings[], size_t nStrings);
 TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
+
+// Whether disambiguationg contexts are supported
+// If not, then the program builds and runs, but strings in the catalog with
+// contexts will fail to translate
+#define HAS_I18N_CONTEXTS wxCHECK_VERSION(3, 1, 1)
 
 #endif

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2014 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -39,7 +39,7 @@
 
 #include	"common.h"
 
-#define		BUFFER_LEN	(1<<16)
+#define		BUFFER_LEN	(1 << 16)
 
 
 static void concat_data_fp (SNDFILE *wfile, SNDFILE *rofile, int channels) ;
@@ -61,14 +61,14 @@ usage_exit (const char *progname)
 		"    number of channels.\n"
 		) ;
 
-	exit (0) ;
+	exit (1) ;
 } /* usage_exit */
 
 int
 main (int argc, char *argv [])
 {	const char	*progname, *outfilename ;
-	SNDFILE	 	*outfile, **infiles ;
-	SF_INFO	 	sfinfo_out, sfinfo_in ;
+	SNDFILE		*outfile, **infiles ;
+	SF_INFO		sfinfo_out, sfinfo_in ;
 	void 		(*func) (SNDFILE*, SNDFILE*, int) ;
 	int			k ;
 
@@ -127,6 +127,7 @@ main (int argc, char *argv [])
 		} ;
 
 	sf_close (outfile) ;
+	free (infiles) ;
 
 	return 0 ;
 } /* main */

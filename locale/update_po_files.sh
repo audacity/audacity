@@ -5,12 +5,12 @@ sed -E 's/\.\.\///g' |\
 xargs xgettext \
 --default-domain=audacity \
 --directory=.. \
---keyword=_ --keyword=N_ --keyword=XO --keyword=XXO --keyword=wxPLURAL:1,2 \
+--keyword=_ --keyword=XO --keyword=XC:1,2c --keyword=XXO --keyword=XP:1,2 --keyword=XPC:1,2,4c \
 --add-comments=" i18n" \
 --add-location=file  \
 --copyright-holder='Audacity Team' \
 --package-name="audacity" \
---package-version='2.3.3' \
+--package-version='2.4.0' \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L C -o audacity.pot 
 echo ";; Adding nyquist files to audacity.pot"
@@ -19,17 +19,17 @@ sed -E 's/\.\.\///g' |\
 xargs xgettext \
 --default-domain=audacity \
 --directory=.. \
---keyword=_ --keyword=N_ --keyword=XO --keyword=XXO --keyword=wxPLURAL:1,2 \
+--keyword=_ --keyword=_C:1,2c --keyword=ngettext:1,2 --keyword=ngettextc:1,2,4c \
 --add-comments=" i18n" \
 --add-location=file  \
 --copyright-holder='Audacity Team' \
 --package-name="audacity" \
---package-version='2.3.3' \
+--package-version='2.4.0' \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L Lisp -j -o audacity.pot 
 echo ";; Updating the .po files - Updating Project-Id-Version"
 for i in *.po; do
-    sed -i '/^"Project-Id-Version:/c\"Project-Id-Version: audacity 2.3.3\\n"' $i
+    sed -i '/^"Project-Id-Version:/c\"Project-Id-Version: audacity 2.4.0\\n"' $i
 done
 echo ";; Updating the .po files"
 sed 's/.*/echo "msgmerge --lang=& &.po audacity.pot -o &.po";\

@@ -666,7 +666,7 @@ GStreamerImportFileHandle::OnPadAdded(GstPad *pad)
    // Link them together
    if (!gst_element_link(c->mConv, c->mSink))
    {
-      WARN(mPipeline.get(), ("OnPadAdded: failed to link autioconvert and appsink"));
+      WARN(mPipeline.get(), ("OnPadAdded: failed to link audioconvert and appsink"));
       return;
    }
 
@@ -1023,7 +1023,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    // Save track factory pointer
    mTrackFactory = trackFactory;
 
-   // Create the progrress dialog
+   // Create the progress dialog
    CreateProgress();
 
    // Block streams that are to be bypassed
@@ -1177,7 +1177,7 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
       return cont;
    }
 
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
    {
       GstString objname;
       if (msg->src != NULL)

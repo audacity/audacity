@@ -17,7 +17,6 @@
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/timer.h>
-#include <wx/progdlg.h>
 #include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/window.h>
@@ -59,32 +58,60 @@ struct
 static const kFormats[] =
 {
 #if defined(__WXMAC__)
-   { SF_FORMAT_AIFF | SF_FORMAT_PCM_16,   wxT("AIFF"),   XO("AIFF (Apple) signed 16-bit PCM")    },
+   {SF_FORMAT_AIFF | SF_FORMAT_PCM_16, wxT("AIFF"),   XO("AIFF (Apple/SGI)")},
 #endif
-   { SF_FORMAT_WAV | SF_FORMAT_PCM_16,    wxT("WAV"),    XO("WAV (Microsoft) signed 16-bit PCM") },
-   { SF_FORMAT_WAV | SF_FORMAT_PCM_24,    wxT("WAV24"),  XO("WAV (Microsoft) signed 24-bit PCM") },
-   { SF_FORMAT_WAV | SF_FORMAT_FLOAT,     wxT("WAVFLT"), XO("WAV (Microsoft) 32-bit float PCM")  },
-// { SF_FORMAT_WAV | SF_FORMAT_GSM610,    wxT("GSM610"), XO("GSM 6.10 WAV (mobile)")             },
+   {SF_FORMAT_WAV | SF_FORMAT_PCM_16,  wxT("WAV"),    XO("WAV (Microsoft)")},
+};
+
+enum
+{
+#if defined(__WXMAC__)
+   FMT_AIFF,
+#endif
+   FMT_WAV,
+   FMT_OTHER
 };
 
 //----------------------------------------------------------------------------
 // Statics
 //----------------------------------------------------------------------------
 
-static int ReadExportFormatPref()
+static int LoadOtherFormat(int def = 0)
 {
-#if defined(__WXMAC__)
    return gPrefs->Read(wxT("/FileFormats/ExportFormat_SF1"),
-                       (long int)(SF_FORMAT_AIFF | SF_FORMAT_PCM_16));
-#else
-   return gPrefs->Read(wxT("/FileFormats/ExportFormat_SF1"),
-                       (long int)(SF_FORMAT_WAV | SF_FORMAT_PCM_16));
-#endif
+                       kFormats[0].format & SF_FORMAT_TYPEMASK);
 }
 
-static void WriteExportFormatPref(int format)
+static void SaveOtherFormat(int val)
 {
-   gPrefs->Write(wxT("/FileFormats/ExportFormat_SF1"), (long int)format);
+   gPrefs->Write(wxT("/FileFormats/ExportFormat_SF1"), val);
+   gPrefs->Flush();
+}
+
+static int LoadEncoding(int type)
+{
+   // LLL: Temporary hack until I can figure out how to add an "ExportPCMCommand"
+   //      to create a 32-bit float WAV file.  It tells the ExportPCM exporter
+   //      to use float when exporting the next WAV file.
+   //
+   //      This was done as part of the resolution for bug #2062.
+   //
+   // See: ProjectFileManager.cpp, ProjectFileManager::SaveCopyWaveTracks()
+   if (gPrefs->HasEntry(wxT("/FileFormats/ExportFormat_SF1_ForceFloat")))
+   {
+      gPrefs->DeleteEntry(wxT("/FileFormats/ExportFormat_SF1_ForceFloat"));
+      gPrefs->Flush();
+
+      return SF_FORMAT_FLOAT;
+   }
+
+   return gPrefs->Read(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
+                                        sf_header_shortname(type), type), (long int) 0);
+}
+static void SaveEncoding(int type, int val)
+{
+   gPrefs->Write(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
+                                  sf_header_shortname(type), type), val);
    gPrefs->Flush();
 }
 
@@ -103,80 +130,71 @@ public:
    virtual ~ExportPCMOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
 
+   void OnShow(wxShowEvent & evt);
    void OnHeaderChoice(wxCommandEvent & evt);
+   void OnEncodingChoice(wxCommandEvent & evt);
 
 private:
 
-   bool ValidatePair(int format);
-   int GetFormat();
+   void GetTypes();
+   void GetEncodings(int enc = 0);
+   void SendSuffixEvent();
 
 private:
 
+   std::vector<int> mHeaderIndexes;
    TranslatableStrings mHeaderNames;
-   TranslatableStrings mEncodingNames;
    wxChoice *mHeaderChoice;
-   wxChoice *mEncodingChoice;
    int mHeaderFromChoice;
+
+   std::vector<int> mEncodingIndexes;
+   TranslatableStrings mEncodingNames;
+   wxChoice *mEncodingChoice;
    int mEncodingFromChoice;
-   std::vector<int> mEncodingFormats;
+
+   int mSelFormat;
+   int mType;
 
    DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(ExportPCMOptions, wxPanelWrapper)
    EVT_CHOICE(ID_HEADER_CHOICE, ExportPCMOptions::OnHeaderChoice)
+   EVT_CHOICE(ID_ENCODING_CHOICE, ExportPCMOptions::OnEncodingChoice)
 END_EVENT_TABLE()
 
 ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
 :  wxPanelWrapper(parent, wxID_ANY)
 {
-   int format;
+   // Remember the selection format
+   mSelFormat = selformat;
 
-   if (selformat < 0 || static_cast<unsigned int>(selformat) >= WXSIZEOF(kFormats))
+   // Init choices
+   mHeaderFromChoice = 0;
+   mEncodingFromChoice = 0;
+
+   if (mSelFormat < FMT_OTHER)
    {
-      format = ReadExportFormatPref();
+      mType = kFormats[selformat].format & SF_FORMAT_TYPEMASK;
+      GetEncodings(mType & SF_FORMAT_SUBMASK);   
    }
    else
    {
-      format = kFormats[selformat].format;
-   }
-
-   mHeaderFromChoice = 0;
-   for (int i = 0, num = sf_num_headers(); i < num; i++) {
-      mHeaderNames.push_back( Verbatim( sf_header_index_name(i) ) );
-      if ((format & SF_FORMAT_TYPEMASK) == (int)sf_header_index_to_type(i))
-         mHeaderFromChoice = i;
-   }
-
-   mEncodingFromChoice = 0;
-   for (int i = 0, sel = 0, num = sf_num_encodings(); i < num; i++) {
-      int enc = sf_encoding_index_to_subtype(i);
-      int fmt = (format & SF_FORMAT_TYPEMASK) | enc;
-      bool valid = ValidatePair(fmt);
-      if (valid)
-      {
-         mEncodingNames.push_back( Verbatim( sf_encoding_index_name(i) ) );
-         mEncodingFormats.push_back(enc);
-         if ((format & SF_FORMAT_SUBMASK) == (int)sf_encoding_index_to_subtype(i))
-            mEncodingFromChoice = sel;
-         else
-            sel++;
-      }
+      GetTypes();
+      GetEncodings();
    }
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
 
-   TransferDataToWindow();
-   TransferDataFromWindow();
+   parent->Bind(wxEVT_SHOW, &ExportPCMOptions::OnShow, this);
 }
 
 ExportPCMOptions::~ExportPCMOptions()
 {
-   TransferDataFromWindow();
+   // Save the encoding
+   SaveEncoding(mType, sf_encoding_index_to_subtype(mEncodingIndexes[mEncodingFromChoice]));
 }
 
 void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)
@@ -188,12 +206,15 @@ void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.SetStretchyCol(1);
-            mHeaderChoice = S.Id(ID_HEADER_CHOICE)
-               .AddChoice(XO("Header:"),
-                          mHeaderNames,
-                          mHeaderFromChoice);
+            if (mSelFormat == FMT_OTHER)
+            {
+               mHeaderChoice = S.Id(ID_HEADER_CHOICE)
+                  .AddChoice(XXO("Header:"),
+                             mHeaderNames,
+                             mHeaderFromChoice);
+            }
             mEncodingChoice = S.Id(ID_ENCODING_CHOICE)
-               .AddChoice(XO("Encoding:"),
+               .AddChoice(XXO("Encoding:"),
                           mEncodingNames,
                           mEncodingFromChoice);
          }
@@ -206,113 +227,163 @@ void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)
    return;
 }
 
-///
-///
-bool ExportPCMOptions::TransferDataToWindow()
+void ExportPCMOptions::OnShow(wxShowEvent & evt)
 {
-   return true;
-}
+   evt.Skip();
 
-///
-///
-bool ExportPCMOptions::TransferDataFromWindow()
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   gPrefs->Flush();
-
-   WriteExportFormatPref(GetFormat());
-
-   return true;
-}
-
-void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
-{
-   int format = sf_header_index_to_type(mHeaderChoice->GetSelection());
-   // Fix for Bug 1218 - AIFF with no option should default to 16 bit.
-   if( format == SF_FORMAT_AIFF )
-      format = SF_FORMAT_AIFF | SF_FORMAT_PCM_16;
-
-   mEncodingNames.clear();
-   mEncodingChoice->Clear();
-   mEncodingFormats.clear();
-   int sel = wxNOT_FOUND;
-   int i,j;
-
-   int sfnum = sf_num_simple_formats();
-   std::vector<int> sfs;
-
-   for (i = 0; i < sfnum; i++)
+   // Since the initial file name may not have the "correct" extension,
+   // send off an event to have it changed.  Note that this will be
+   // done every time a user changes filters in the dialog.
+   if (evt.IsShown())
    {
-      SF_FORMAT_INFO *fi = sf_simple_format(i);
-      sfs.push_back(fi->format);
+      SendSuffixEvent();
+   }
+}
+
+void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & evt)
+{
+   evt.Skip();
+
+   // Remember new selection
+   mHeaderFromChoice = evt.GetInt();
+
+   // Get the type for this selection
+   mType = sf_header_index_to_type(mHeaderIndexes[mHeaderFromChoice]);
+
+   // Save the newly selected type
+   SaveOtherFormat(mType);
+
+   // Reload the encodings valid for this new type
+   GetEncodings();
+
+   // Repopulate the encoding choices
+   mEncodingChoice->Clear();
+   for (int i = 0, num = mEncodingNames.size(); i < num; ++i)
+   {
+      mEncodingChoice->AppendString(mEncodingNames[i].StrippedTranslation());
    }
 
-   int num = sf_num_encodings();
-   for (i = 0; i < num; i++)
+   // Select the desired encoding
+   mEncodingChoice->SetSelection(mEncodingFromChoice);
+
+   // Send the event indicating a file suffix change.
+   SendSuffixEvent();
+}
+
+void ExportPCMOptions::OnEncodingChoice(wxCommandEvent & evt)
+{
+   evt.Skip();
+
+   // Remember new selection
+   mEncodingFromChoice = evt.GetInt();
+
+   // And save it
+   SaveEncoding(mType, sf_encoding_index_to_subtype(mEncodingIndexes[mEncodingFromChoice]));
+}
+ 
+void ExportPCMOptions::GetTypes()
+{
+   // Reset arrays
+   mHeaderIndexes.clear();
+   mHeaderNames.clear();
+
+   // Get the previously saved type. Note that this is ONLY used for
+   // the FMT_OTHER ("Other uncompressed files") types.
+   int typ = LoadOtherFormat() & SF_FORMAT_TYPEMASK;
+
+   // Rebuild the arrays
+   mHeaderFromChoice = 0;
+   for (int i = 0, num = sf_num_headers(); i < num; ++i)
    {
-      int encSubtype = sf_encoding_index_to_subtype(i);
-      int fmt = format | encSubtype;
-      bool valid  = ValidatePair(fmt);
-      if (valid)
+      int type = sf_header_index_to_type(i);
+
+      switch (type)
       {
-         const auto name = sf_encoding_index_name(i);
-         mEncodingNames.push_back( Verbatim( name ) );
-         mEncodingChoice->Append(name);
-         mEncodingFormats.push_back(encSubtype);
-         for (j = 0; j < sfnum; j++)
-         {
-            int enc = sfs[j];
-            if ((sel == wxNOT_FOUND) && (fmt == enc))
+         // On the Mac, do not include in header list
+#if defined(__WXMAC__)
+         case SF_FORMAT_AIFF:
+         break;
+#endif
+
+         // Do not include in header list
+         case SF_FORMAT_WAV:
+         break;
+
+         default:
+            // Remember the index if this is the desired type
+            if (type == typ)
             {
-               sel = mEncodingFormats.size() - 1;
-               break;
+               mHeaderFromChoice = mHeaderIndexes.size();
             }
-         }
+
+            // Store index and name
+            mHeaderIndexes.push_back(i);
+            mHeaderNames.push_back(Verbatim(sf_header_index_name(i)));
+         break;
       }
    }
 
-   if (sel == wxNOT_FOUND) sel = 0;
-   mEncodingFromChoice = sel;
-   mEncodingChoice->SetSelection(sel);
-   ValidatePair(GetFormat());
-
-   TransferDataFromWindow();
-
-   // Send the event indicating a file suffix change.
-   // We pass the entire header string, which starts with the suffix.
-   wxCommandEvent event(AUDACITY_FILE_SUFFIX_EVENT, GetId());
-   event.SetEventObject(this);
-   event.SetString(mHeaderChoice->GetString(mHeaderChoice->GetSelection()));
-   ProcessWindowEvent(event);
-
+   // Refresh the current type
+   mType = sf_header_index_to_type(mHeaderIndexes[mHeaderFromChoice]);
 }
-
-int ExportPCMOptions::GetFormat()
+ 
+void ExportPCMOptions::GetEncodings(int enc)
 {
-   int hdr = sf_header_index_to_type(mHeaderChoice->GetSelection());
-   int sel = mEncodingChoice->GetSelection();
-   int enc = mEncodingFormats[sel];
-   return hdr | enc;
-}
-
-/// Calls a libsndfile library function to determine whether the user's
-/// choice of sample encoding (e.g. pcm 16-bit or GSM 6.10 compression)
-/// is compatible with their choice of file format (e.g. WAV, AIFF)
-/// and enables/disables the OK button accordingly.
-bool ExportPCMOptions::ValidatePair(int format)
-{
-   SF_INFO info;
-   memset(&info, 0, sizeof(info));
-   info.frames = 0;
+   // Setup for queries
+   SF_INFO info = {};
    info.samplerate = 44100;
    info.channels = 1;
-   info.format = format;
    info.sections = 1;
-   info.seekable = 0;
 
-   return sf_format_check(&info) != 0 ? true : false;
+   // Reset arrays
+   mEncodingIndexes.clear();
+   mEncodingNames.clear();
+
+   // If the encoding wasn't supplied, look it up
+   if (!(enc & SF_FORMAT_SUBMASK))
+   {
+      enc = LoadEncoding(mType);
+   }
+   enc &= SF_FORMAT_SUBMASK;
+
+   // Fix for Bug 1218 - AIFF with no encoding should default to 16 bit.
+   if (mType == SF_FORMAT_AIFF && enc == 0)
+   {
+      enc = SF_FORMAT_PCM_16;
+   }
+
+   // Rebuild the arrays
+   mEncodingFromChoice = 0;
+   for (int i = 0, num = sf_num_encodings(); i < num; ++i)
+   {
+      int sub = sf_encoding_index_to_subtype(i);
+
+      // Since we're traversing the subtypes linearly, we have to
+      // make sure it can be paired with our current type.
+      info.format = mType | sub;
+      if (sf_format_check(&info))
+      {
+         // If this subtype matches our last saved encoding, remember
+         // its index so we can set it in the dialog.
+         if (sub == enc)
+         {
+            mEncodingFromChoice = mEncodingIndexes.size();
+         }
+
+         // Store index and name
+         mEncodingIndexes.push_back(i);
+         mEncodingNames.push_back(Verbatim(sf_encoding_index_name(i)));
+      }
+   }
+}
+
+void ExportPCMOptions::SendSuffixEvent()
+{
+   // Synchronously process a change in suffix.
+   wxCommandEvent evt(AUDACITY_FILE_SUFFIX_EVENT, GetId());
+   evt.SetEventObject(this);
+   evt.SetString(sf_header_extension(mType));
+   ProcessWindowEvent(evt);
 }
 
 //----------------------------------------------------------------------------
@@ -329,18 +400,19 @@ public:
 
    void OptionsCreate(ShuttleGui &S, int format) override;
    ProgressResult Export(AudacityProject *project,
-               std::unique_ptr<ProgressDialog> &pDialog,
-               unsigned channels,
-               const wxFileNameWrapper &fName,
-               bool selectedOnly,
-               double t0,
-               double t1,
-               MixerSpec *mixerSpec = NULL,
-               const Tags *metadata = NULL,
-               int subformat = 0) override;
+                         std::unique_ptr<ProgressDialog> &pDialog,
+                         unsigned channels,
+                         const wxFileNameWrapper &fName,
+                         bool selectedOnly,
+                         double t0,
+                         double t1,
+                         MixerSpec *mixerSpec = NULL,
+                         const Tags *metadata = NULL,
+                         int subformat = 0) override;
    // optional
+   wxString GetFormat(int index) override;
    FileExtension GetExtension(int index) override;
-   bool CheckFileName(wxFileName &filename, int format) override;
+   unsigned GetMaxChannels(int index) override;
 
 private:
    void ReportTooBigError(wxWindow * pParent);
@@ -352,48 +424,28 @@ private:
 };
 
 ExportPCM::ExportPCM()
-:  ExportPlugin()
+   : ExportPlugin()
 {
-
-   SF_INFO si;
-
-   si.samplerate = 0;
-   si.channels = 0;
-
-   int format; // the index of the format we are setting up at the moment
+   int selformat; // the index of the format we are setting up at the moment
 
    // Add the "special" formats first
-   for (size_t i = 0; i < WXSIZEOF(kFormats); i++)
+   for (size_t i = 0; i < WXSIZEOF(kFormats); ++i)
    {
-      format = AddFormat() - 1;
-
-      si.format = kFormats[i].format;
-      for (si.channels = 1; sf_format_check(&si); si.channels++)
-         ;
-      auto ext = sf_header_extension(si.format);
-
-      SetFormat(kFormats[i].name, format);
-      SetCanMetaData(true, format);
-      SetDescription(kFormats[i].desc, format);
-      AddExtension(ext, format);
-      SetMaxChannels(si.channels - 1, format);
+      selformat = AddFormat() - 1;
+      AddExtension(sf_header_extension(kFormats[i].format), selformat);
+      SetFormat(kFormats[i].name, selformat);
+      SetDescription(kFormats[i].desc, selformat);
+      SetCanMetaData(true, selformat);
+      SetMaxChannels(255, selformat);
    }
 
-   // Then add the generic libsndfile formats
-   format = AddFormat() - 1;  // store the index = 1 less than the count
-   SetFormat(wxT("LIBSNDFILE"), format);
-   SetCanMetaData(true, format);
-   SetDescription(XO("Other uncompressed files"), format);
-   auto allext = sf_get_all_extensions();
-   wxString wavext = sf_header_extension(SF_FORMAT_WAV);   // get WAV ext.
-#if defined(wxMSW)
-   // On Windows make sure WAV is at the beginning of the list of all possible
-   // extensions for this format
-   allext.erase( std::find( allext.begin(), allext.end(), wavext ) );
-   allext.insert(allext.begin(), wavext);
-#endif
-   SetExtensions(allext, format);
-   SetMaxChannels(255, format);
+   // Then add the generic libsndfile "format"
+   selformat = AddFormat() - 1;     // Matches FMT_OTHER
+   SetExtensions(sf_get_all_extensions(), selformat);
+   SetFormat(wxT("LIBSNDFILE"), selformat);
+   SetDescription(XO("Other uncompressed files"), selformat);
+   SetCanMetaData(true, selformat);
+   SetMaxChannels(255, selformat);
 }
 
 void ExportPCM::ReportTooBigError(wxWindow * pParent)
@@ -422,29 +474,52 @@ void ExportPCM::ReportTooBigError(wxWindow * pParent)
  * file type, or giving the user full control over libsndfile.
  */
 ProgressResult ExportPCM::Export(AudacityProject *project,
-                       std::unique_ptr<ProgressDialog> &pDialog,
-                       unsigned numChannels,
-                       const wxFileNameWrapper &fName,
-                       bool selectionOnly,
-                       double t0,
-                       double t1,
-                       MixerSpec *mixerSpec,
-                       const Tags *metadata,
-                       int subformat)
+                                 std::unique_ptr<ProgressDialog> &pDialog,
+                                 unsigned numChannels,
+                                 const wxFileNameWrapper &fName,
+                                 bool selectionOnly,
+                                 double t0,
+                                 double t1,
+                                 MixerSpec *mixerSpec,
+                                 const Tags *metadata,
+                                 int subformat)
 {
-   double       rate = ProjectSettings::Get( *project ).GetRate();
+   double rate = ProjectSettings::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );
+
+   // Set a default in case the settings aren't found
    int sf_format;
 
-   if (subformat < 0 || static_cast<unsigned int>(subformat) >= WXSIZEOF(kFormats))
+   switch (subformat)
    {
-      sf_format = ReadExportFormatPref();
-   }
-   else
-   {
-      sf_format = kFormats[subformat].format;
+#if defined(__WXMAC__)
+      case FMT_AIFF:
+         sf_format = SF_FORMAT_AIFF;
+      break;
+#endif
+
+      case FMT_WAV:
+         sf_format = SF_FORMAT_WAV;
+      break;
+
+      default:
+         // Retrieve the current format.
+         sf_format = LoadOtherFormat();
+      break;
    }
 
+   // Prior to v2.4.0, sf_format will include the subtype. If not present,
+   // check for the format specific preference.
+   if (!(sf_format & SF_FORMAT_SUBMASK))
+   {
+      sf_format |= LoadEncoding(sf_format);
+   }
+
+   // If subtype is still not specified, supply a default.
+   if (!(sf_format & SF_FORMAT_SUBMASK))
+   {
+      sf_format |= SF_FORMAT_PCM_16;
+   }
 
    int fileFormat = sf_format & SF_FORMAT_TYPEMASK;
    
@@ -478,7 +553,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
          return ProgressResult::Cancelled;
       }
 
-      if( sf_format == SF_FORMAT_WAVEX + SF_FORMAT_GSM610){
+      if (sf_format == SF_FORMAT_WAVEX + SF_FORMAT_GSM610) {
          AudacityMessageBox(
             XO("WAVEX and GSM 6.10 formats are not compatible") );
          return ProgressResult::Cancelled;
@@ -486,13 +561,16 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
       // If we can't export exactly the format they requested,
       // try the default format for that header type...
+      // 
+      // LLL: I don't think this is valid since libsndfile checks
+      // for all allowed subtypes explicitly and doesn't provide
+      // for an unspecified subtype.
       if (!sf_format_check(&info))
          info.format = (info.format & SF_FORMAT_TYPEMASK);
       if (!sf_format_check(&info)) {
          AudacityMessageBox( XO("Cannot export audio in this format.") );
          return ProgressResult::Cancelled;
       }
-
       const auto path = fName.GetFullPath();
       if (f.Open(path, wxFile::write)) {
          // Even though there is an sf_open() that takes a filename, use the one that
@@ -929,44 +1007,72 @@ bool ExportPCM::AddID3Chunk(
 
 void ExportPCM::OptionsCreate(ShuttleGui &S, int format)
 {
-   // default, full user control
-   if (format < 0 || static_cast<unsigned int>(format) >= WXSIZEOF(kFormats))
+   switch (format)
    {
-      S.AddWindow( safenew ExportPCMOptions{ S.GetParent(), format } );
-      return;
+#if defined(__WXMAC__)
+      case FMT_AIFF:
+#endif
+      case FMT_WAV:
+      case FMT_OTHER:
+         S.AddWindow(safenew ExportPCMOptions{ S.GetParent(), format });
+      break;
+
+      default:
+         ExportPlugin::OptionsCreate(S, format);
+      break;
+   }
+}
+
+wxString ExportPCM::GetFormat(int index)
+{
+   if (index != FMT_OTHER)
+   {
+      return ExportPlugin::GetFormat(index);
    }
 
-   ExportPlugin::OptionsCreate(S, format);
+   // Get the saved type
+   int typ = LoadOtherFormat() & SF_FORMAT_TYPEMASK;
+
+   // Return the format name for that type
+   return sf_header_shortname(typ);
 }
 
 FileExtension ExportPCM::GetExtension(int index)
 {
-   if (index == WXSIZEOF(kFormats)) {
-      // get extension libsndfile thinks is correct for currently selected format
-      return sf_header_extension(ReadExportFormatPref());
-   }
-   else {
-      // return the default
+   if (index != FMT_OTHER)
+   {
       return ExportPlugin::GetExtension(index);
    }
+
+   // Get the saved type
+   int typ = LoadOtherFormat() & SF_FORMAT_TYPEMASK;
+
+   // Return the extension for that type
+   return sf_header_extension(typ);
 }
 
-bool ExportPCM::CheckFileName(wxFileName &filename, int format)
+unsigned ExportPCM::GetMaxChannels(int index)
 {
-   if (format == WXSIZEOF(kFormats) &&
-       IsExtension(filename.GetExt(), format)) {
-      // PRL:  Bug1217
-      // If the user left the extension blank, then the
-      // file dialog will have defaulted the extension, beyond our control,
-      // to the first in the wildcard list or (Linux) the last-saved extension,
-      // ignoring what we try to do with the additional drop-down mHeaderChoice.
-      // Here we can intercept file name processing and impose the correct default.
-      // However this has the consequence that in case an explicit extension was typed,
-      // we override it without asking.
-      filename.SetExt(GetExtension(format));
+   SF_INFO si = {};
+
+   if (index < FMT_OTHER)
+   {
+      si.format = kFormats[index].format;
+   }
+   else
+   {
+      // Get the saved type
+      si.format = LoadOtherFormat() & SF_FORMAT_TYPEMASK;
+      si.format |= LoadEncoding(si.format);
    }
 
-   return ExportPlugin::CheckFileName(filename, format);
+   for (si.channels = 1; sf_format_check(&si); si.channels++)
+   {
+      // just counting
+   }
+
+   // Return the max number of channels
+   return si.channels - 1;
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "PCM",

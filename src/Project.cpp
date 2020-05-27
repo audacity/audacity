@@ -19,6 +19,7 @@
 #include <wx/frame.h>
 
 wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
+wxDEFINE_EVENT(EVT_PROJECT_ACTIVATION, wxCommandEvent);
 
 size_t AllProjects::size() const
 {
@@ -111,6 +112,7 @@ void SetActiveProject(AudacityProject * project)
    if ( gActiveProject != project ) {
       gActiveProject = project;
       KeyboardCapture::Capture( nullptr );
+      wxTheApp->QueueEvent( safenew wxCommandEvent{ EVT_PROJECT_ACTIVATION } );
    }
    wxTheApp->SetTopWindow( FindProjectFrame( project ) );
 }

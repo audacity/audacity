@@ -32,7 +32,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Spectrum,
-   { wxT("Spectrogram"), XO("&Spectrogram") }
+   { wxT("Spectrogram"), XXO("&Spectrogram") }
 };
 
 static WaveTrackSubViewType::RegisteredType reg{ sType };
@@ -319,10 +319,10 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    && fftYGrid==fftYGridOld
 #endif //EXPERIMENTAL_FFT_Y_GRID
 #ifdef EXPERIMENTAL_FIND_NOTES
-   && fftFindNotes==fftFindNotesOld
-   && findNotesMinA==findNotesMinAOld
-   && numberOfMaxima==findNotesNOld
-   && findNotesQuantize==findNotesQuantizeOld
+   && fftFindNotes == artist->fftFindNotesOld
+   && findNotesMinA == artist->findNotesMinAOld
+   && numberOfMaxima == artist->findNotesNOld
+   && findNotesQuantize == artist->findNotesQuantizeOld
 #endif
    ) {
       // Wave clip's spectrum cache is up to date,
@@ -338,10 +338,10 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       clip->mSpecPxCache->minFreq = minFreq;
       clip->mSpecPxCache->maxFreq = maxFreq;
 #ifdef EXPERIMENTAL_FIND_NOTES
-      fftFindNotesOld = fftFindNotes;
-      findNotesMinAOld = findNotesMinA;
-      findNotesNOld = numberOfMaxima;
-      findNotesQuantizeOld = findNotesQuantize;
+      artist->fftFindNotesOld = fftFindNotes;
+      artist->findNotesMinAOld = findNotesMinA;
+      artist->findNotesNOld = numberOfMaxima;
+      artist->findNotesQuantizeOld = findNotesQuantize;
 #endif
 
 #ifdef EXPERIMENTAL_FIND_NOTES
@@ -528,6 +528,9 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    // left pixel column of the fisheye
    int fisheyeLeft = zoomInfo.GetFisheyeLeftBoundary(-leftOffset);
 
+   // Bug 2389 - always draw at least one pixel of selection.
+   int selectedX = zoomInfo.TimeToPosition(selectedRegion.t0(), -leftOffset);
+
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
@@ -556,6 +559,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
                     (zoomInfo.PositionToTime(xx+1, -leftOffset) - tOffset));
 
       bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
+      maybeSelected = maybeSelected || (xx == selectedX);
 
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
          const float bin     = bins[yy];
@@ -790,7 +794,7 @@ PopupMenuTable::AttachedItem sAttachment{
                return std::make_unique<Entry>( "SpectrogramSettings",
                   Entry::Item,
                   OnSpectrogramSettingsID,
-                  XO("S&pectrogram Settings..."),
+                  XXO("S&pectrogram Settings..."),
                   (wxCommandEventFunction)
                      (&SpectrogramSettingsHandler::OnSpectrogramSettings),
                   SpectrogramSettingsHandler::Instance(),

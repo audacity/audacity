@@ -206,11 +206,11 @@ void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S)
           * the effect to a 1-second sample, with the default Stretch Factor of 10.0
           * will give an (approximately) 10 second sound
           */
-         .AddTextBox(XO("Stretch Factor:"), wxT(""), 10);
+         .AddTextBox(XXO("&Stretch Factor:"), wxT(""), 10);
 
       S.Validator<FloatingPointValidator<float>>(
             3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Time)
-         .AddTextBox(XO("Time Resolution (seconds):"), wxT(""), 10);
+         .AddTextBox(XXO("&Time Resolution (seconds):"), wxT(""), 10);
    }
    S.EndMultiColumn();
 };
@@ -294,9 +294,9 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
          double defaultPreviewLen;
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &defaultPreviewLen, 6.0);
 
-         /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
          if ((minDuration / mProjectRate) < defaultPreviewLen) {
             ::Effect::MessageBox(
+               /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
                XO("Audio selection too short to preview.\n\n"
                   "Try increasing the audio selection to at least %.1f seconds,\n"
                   "or reducing the 'Time Resolution' to less than %.1f seconds.")
@@ -306,8 +306,8 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
                wxOK | wxICON_EXCLAMATION );
          }
          else {
-            /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
             ::Effect::MessageBox(
+               /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
                XO("Unable to Preview.\n\n"
                   "For the current audio selection, the maximum\n"
                   "'Time Resolution' is %.1f seconds.")
@@ -316,8 +316,8 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
          }
       }
       else {
-         /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
          ::Effect::MessageBox(
+            /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
             XO("The 'Time Resolution' is too long for the selection.\n\n"
                "Try increasing the audio selection to at least %.1f seconds,\n"
                "or reducing the 'Time Resolution' to less than %.1f seconds.")
@@ -336,7 +336,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
       (dlen - ((double)stretch_buf_size * 2.0));
    amount = 1.0 + (amount - 1.0) * adjust_amount;
 
-   auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),track->GetRate());
+   auto outputTrack = track->EmptyCopy();
 
    try {
       // This encloses all the allocations of buffers, including those in
@@ -368,7 +368,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
             s += nget;
 
-            if (first_time){//blend the the start of the selection
+            if (first_time){//blend the start of the selection
                track->Get((samplePtr)fade_track_smps.get(), floatSample, start, fade_len);
                first_time = false;
                for (size_t i = 0; i < fade_len; i++){

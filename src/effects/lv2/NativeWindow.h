@@ -17,7 +17,8 @@
 #if defined(__WXMSW__)
 #include <wx/msw/private.h>
 #elif defined(__WXMAC__)
-#include <wx/osx/private.h>
+#include <wx/osx/core/private.h>
+#include <wx/osx/cocoa/private.h>
 #elif defined(__WXGTK__)
 #include <gtk/gtk.h>
 #endif

@@ -459,7 +459,7 @@ sampleCount WaveClip::GetNumSamples() const
 bool WaveClip::WithinClip(double t) const
 {
    auto ts = (sampleCount)floor(t * mRate + 0.5);
-   return ts > GetStartSample() && ts <= GetEndSample() + mAppendBufferLen;
+   return ts > GetStartSample() && ts < GetEndSample() + mAppendBufferLen;
 }
 
 bool WaveClip::BeforeClip(double t) const
@@ -471,8 +471,18 @@ bool WaveClip::BeforeClip(double t) const
 bool WaveClip::AfterClip(double t) const
 {
    auto ts = (sampleCount)floor(t * mRate + 0.5);
-   return ts > GetEndSample() + mAppendBufferLen;
+   return ts >= GetEndSample() + mAppendBufferLen;
 }
+
+// A sample at time t could be in the clip, but 
+// a clip start at time t still be from a clip 
+// not overlapping this one, with this test.
+bool WaveClip::IsClipStartAfterClip(double t) const
+{
+   auto ts = (sampleCount)floor(t * mRate + 0.5);
+   return ts >= GetEndSample() + mAppendBufferLen;
+}
+
 
 ///Delete the wave cache - force redraw.  Thread-safe
 void WaveClip::ClearWaveCache()
@@ -1038,7 +1048,7 @@ bool SpecCache::CalculateOneSpectrum
          ComputeSpectrumUsingRealFFTf
             (useBuffer, settings.hFFT.get(), settings.window.get(), fftLen, results);
          if (!gainFactors.empty()) {
-            // Apply a frequency-dependant gain factor
+            // Apply a frequency-dependent gain factor
             for (size_t ii = 0; ii < nBins; ++ii)
                results[ii] += gainFactors[ii];
          }
@@ -1191,7 +1201,7 @@ void SpecCache::Populate
                   power = 10.0*log10f(power);
             }
             if (!gainFactors.empty()) {
-               // Apply a frequency-dependant gain factor
+               // Apply a frequency-dependent gain factor
                for (size_t ii = 0; ii < nBins; ++ii)
                   results[ii] += gainFactors[ii];
             }

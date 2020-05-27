@@ -27,7 +27,6 @@ small calculations of rectangles.
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
 #include <wx/dcmemory.h>
-#include <wx/menu.h>
 #include <wx/settings.h>
 #include <wx/bitmap.h>
 #include <wx/valgen.h>
@@ -95,7 +94,8 @@ kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Blue") },
-   { XO("White") },
+   /* i18n-hint:  This really means the color, not as in "white noise" */
+   { XC("White", "color") },
    { XO("None") },
 };
 
@@ -126,12 +126,12 @@ void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(  XO("Path:"), mPath);
-      S.TieChoice(   XO("Capture What:"),
+      S.TieTextBox(  XXO("Path:"), mPath);
+      S.TieChoice(   XXO("Capture What:"),
          mWhat, Msgids(kCaptureWhatStrings, nCaptureWhats));
-      S.TieChoice(   XO("Background:"),
+      S.TieChoice(   XXO("Background:"),
          mBack, Msgids(kBackgroundStrings, nBackgrounds));
-      S.TieCheckBox( XO("Bring To Top"), mbBringToTop);
+      S.TieCheckBox( XXO("Bring To Top"), mbBringToTop);
    }
    S.EndMultiColumn();
 }
@@ -363,43 +363,6 @@ bool ScreenshotCommand::CaptureDock(
    return Capture(context, FileName, win, wxRect(x, y, width, height));
 }
 
-void ExploreMenu(
-   const CommandContext & context,
-   wxMenu * pMenu, int Id, int depth ){
-   static_cast<void>(Id);//compiler food.
-
-   if( !pMenu )
-      return;
-
-   wxMenuItemList list = pMenu->GetMenuItems();
-   size_t lcnt = list.size();
-   wxMenuItem * item;
-   wxString Label;
-   wxString Accel;
-
-   for (size_t lndx = 0; lndx < lcnt; lndx++) {
-      item = list.Item(lndx)->GetData();
-      Label = item->GetItemLabelText();
-      Accel = item->GetItemLabel();
-      if( Accel.Contains("\t") )
-         Accel = Accel.AfterLast('\t');
-      else
-         Accel = "";
-      if( item->IsSeparator() )
-         Label = "----";
-      int flags = 0;
-      if (item->IsSubMenu())
-         flags +=1;
-      if (item->IsCheck() && item->IsChecked())
-         flags +=2;
-
-      if (item->IsSubMenu()) {
-         pMenu = item->GetSubMenu();
-         ExploreMenu( context, pMenu, item->GetId(), depth+1 );
-      }
-   }
-}
-
 // Handed a dialog, which it is given the option to capture.
 bool ScreenshotCommand::MayCapture( wxDialog * pDlg )
 {
@@ -426,7 +389,7 @@ void ScreenshotCommand::CaptureWindowOnIdle(
    wxString Title = pDlg->GetTitle();
 
    // Remove '/' from "Sliding Time Scale/Pitch Shift..."
-   // and any other effects that have illegal filename chanracters.
+   // and any other effects that have illegal filename characters.
    Title.Replace( "/", "" );
    Title.Replace( ":", "" );
    wxString Name = mDirToWriteTo + Title + ".png";

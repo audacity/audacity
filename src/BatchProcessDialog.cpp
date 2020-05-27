@@ -26,7 +26,6 @@
 #include <wx/defs.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
@@ -55,7 +54,7 @@
 
 #include "AllThemeResources.h"
 
-#include "FileDialog.h"
+#include "widgets/FileDialog/FileDialog.h"
 #include "FileNames.h"
 #include "import/Import.h"
 #include "widgets/ErrorDialog.h"
@@ -147,10 +146,10 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 
    S.StartHorizontalLay(wxEXPAND, 0);
    {
-      S.AddPrompt( XO("Apply Macro to:") );
+      S.AddPrompt( XXO("Apply Macro to:") );
       wxButton* btn = S.Id(ApplyToProjectID)
          .Name(XO("Apply macro to project"))
-         .AddButton(XO("&Project"));
+         .AddButton(XXO("&Project"));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
@@ -158,7 +157,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 
       btn = S.Id(ApplyToFilesID)
          .Name(XO("Apply macro to files..."))
-         .AddButton(XO("&Files..."));
+         .AddButton(XXO("&Files..."));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
@@ -169,7 +168,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
    S.StartHorizontalLay(wxEXPAND, 0);
    {
       /* i18n-hint: The Expand button makes the dialog bigger, with more in it */
-      mResize = S.Id(ExpandID).AddButton(XO("&Expand"));
+      mResize = S.Id(ExpandID).AddButton(XXO("&Expand"));
       S.Prop(1).AddSpace( 10 );
       S.AddStandardButtons( eCancelButton | eHelpButton);
    }
@@ -363,13 +362,15 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialogWrapper activityWin(this, wxID_ANY, Verbatim( GetTitle() ) );
+   wxDialogWrapper activityWin(this, wxID_ANY, Verbatim( GetTitle() ),
+      wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER
+      );
    activityWin.SetName();
    ShuttleGui S(&activityWin, eIsCreating);
 
    wxListCtrl * fileList = NULL;
 
-   S.StartVerticalLay(false);
+   S.StartVerticalLay(1);
    {
       S.StartStatic(XO("Applying..."), 1);
       {
@@ -386,9 +387,9 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       }
       S.EndStatic();
 
-      S.StartHorizontalLay(wxCENTER, false);
+      S.StartHorizontalLay(wxCENTER, 0);
       {
-         S.Id(wxID_CANCEL).AddButton(XO("&Cancel"));
+         S.Id(wxID_CANCEL).AddButton(XXO("&Cancel"));
       }
       S.EndHorizontalLay();
    }
@@ -402,10 +403,12 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    // Set the column size for the files list.
    fileList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
-   int width = fileList->GetColumnWidth(0);
+   int width = wxMin( fileList->GetColumnWidth(0), 1000);
    wxSize sz = fileList->GetClientSize();
-   if (width > sz.GetWidth() && width < 500) {
+   if (sz.GetWidth() < width ) {
       sz.SetWidth(width);
+      if (sz.GetHeight() < width *0.7)
+         sz.SetHeight(width * 0.7);
       fileList->SetInitialSize(sz);
    }
 
@@ -424,33 +427,35 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    // and hiding this one temporarily has some advantages.
    Hide();
 
-   mMacroCommands.ReadMacro(name);
-   for (i = 0; i < (int)files.size(); i++) {
+   mMacroCommands.ReadMacro(name); 
+   {
       wxWindowDisabler wd(&activityWin);
-      if (i > 0) {
-         //Clear the arrow in previous item.
-         fileList->SetItemImage(i - 1, 0, 0);
+      for (i = 0; i < (int)files.size(); i++) {
+         if (i > 0) {
+            //Clear the arrow in previous item.
+            fileList->SetItemImage(i - 1, 0, 0);
+         }
+         fileList->SetItemImage(i, 1, 1);
+         fileList->EnsureVisible(i);
+
+         auto success = GuardedCall< bool >([&] {
+            ProjectFileManager::Get(*project).Import(files[i]);
+            ProjectWindow::Get(*project).ZoomAfterImport(nullptr);
+            SelectUtilities::DoSelectAll(*project);
+            if (!mMacroCommands.ApplyMacro(mCatalog))
+               return false;
+
+            if (!activityWin.IsShown() || mAbort)
+               return false;
+
+            return true;
+         });
+
+         if (!success)
+            break;
+
+         ProjectManager::Get(*project).ResetProjectToEmpty();
       }
-      fileList->SetItemImage(i, 1, 1);
-      fileList->EnsureVisible(i);
-
-      auto success = GuardedCall< bool >( [&] {
-         ProjectFileManager::Get( *project ).Import(files[i]);
-         ProjectWindow::Get( *project ).ZoomAfterImport(nullptr);
-         SelectUtilities::DoSelectAll(*project);
-         if (!mMacroCommands.ApplyMacro(mCatalog))
-            return false;
-
-         if (!activityWin.IsShown() || mAbort)
-            return false;
-
-         return true;
-      } );
-
-      if (!success)
-         break;
-      
-      ProjectManager::Get( *project ).ResetProjectToEmpty();
    }
 
    Show();
@@ -594,10 +599,10 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
               .AddListControlReportMode( { XO("Macro") } );
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {
-               S.Id(AddButtonID).AddButton(XO("&New"));
-               mRemove = S.Id(RemoveButtonID).AddButton(XO("Remo&ve"));
-               mRename = S.Id(RenameButtonID).AddButton(XO("&Rename..."));
-               mRestore = S.Id(RestoreButtonID).AddButton(XO("Re&store"));
+               S.Id(AddButtonID).AddButton(XXO("&New"));
+               mRemove = S.Id(RemoveButtonID).AddButton(XXO("Remo&ve"));
+               mRename = S.Id(RenameButtonID).AddButton(XXO("&Rename..."));
+               mRestore = S.Id(RestoreButtonID).AddButton(XXO("Re&store"));
 // Not yet ready for prime time.
 #if 0
                S.Id(ImportButtonID)
@@ -631,11 +636,11 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {
-               S.Id(InsertButtonID).AddButton(XO("&Insert"), wxALIGN_LEFT);
-               S.Id(EditButtonID).AddButton(XO("&Edit..."), wxALIGN_LEFT);
-               S.Id(DeleteButtonID).AddButton(XO("De&lete"), wxALIGN_LEFT);
-               S.Id(UpButtonID).AddButton(XO("Move &Up"), wxALIGN_LEFT);
-               S.Id(DownButtonID).AddButton(XO("Move &Down"), wxALIGN_LEFT);
+               S.Id(InsertButtonID).AddButton(XXO("&Insert"), wxALIGN_LEFT);
+               S.Id(EditButtonID).AddButton(XXO("&Edit..."), wxALIGN_LEFT);
+               S.Id(DeleteButtonID).AddButton(XXO("De&lete"), wxALIGN_LEFT);
+               S.Id(UpButtonID).AddButton(XXO("Move &Up"), wxALIGN_LEFT);
+               S.Id(DownButtonID).AddButton(XXO("Move &Down"), wxALIGN_LEFT);
             }
             S.EndVerticalLay();
          }
@@ -648,13 +653,13 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxEXPAND, 0);
    {  
       /* i18n-hint: The Shrink button makes the dialog smaller, with less in it */
-      mResize = S.Id(ShrinkID).AddButton(XO("Shrin&k"));
+      mResize = S.Id(ShrinkID).AddButton(XXO("Shrin&k"));
       // Using variable text just to get the positioning options.
       S.Prop(0).AddVariableText(
          XO("Apply Macro to:"), false, wxALL | wxALIGN_CENTRE_VERTICAL );
       wxButton* btn = S.Id(ApplyToProjectID)
          .Name(XO("Apply macro to project"))
-         .AddButton(XO("&Project"));
+         .AddButton(XXO("&Project"));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
@@ -662,7 +667,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 
       btn = S.Id(ApplyToFilesID)
          .Name(XO("Apply macro to files..."))
-         .AddButton(XO("&Files..."));
+         .AddButton(XXO("&Files..."));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
@@ -841,7 +846,7 @@ void MacrosWindow::OnListSelected(wxListEvent & WXUNUSED(event))
 /// The window has been resized.
 void MacrosWindow::OnSize(wxSizeEvent & WXUNUSED(event))
 {
-   // Refrsh the layout and re-fit the columns.
+   // Refresh the layout and re-fit the columns.
    Layout();
    if( !mbExpanded )
       return;
@@ -962,8 +967,8 @@ void MacrosWindow::OnAdd(wxCommandEvent & WXUNUSED(event))
 
       if (name.Contains(wxFILE_SEP_PATH) ||
           name.Contains(wxFILE_SEP_PATH_UNIX)) {
-         /*i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.*/
          AudacityMessageBox(
+            /*i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.*/
             XO("Names may not contain '%c' and '%c'")
                .Format(wxFILE_SEP_PATH, wxFILE_SEP_PATH_UNIX),
             WindowTitle(),

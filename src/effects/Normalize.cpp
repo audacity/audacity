@@ -298,7 +298,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
          S.StartVerticalLay(false);
          {
             mDCCheckBox = S.Validator<wxGenericValidator>(&mDC)
-               .AddCheckBox(XO("Remove DC offset (center on 0.0 vertically)"),
+               .AddCheckBox(XXO("&Remove DC offset (center on 0.0 vertically)"),
                                         mDC);
 
             S.StartHorizontalLay(wxALIGN_LEFT, false);
@@ -306,7 +306,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                mGainCheckBox = S
                   .MinSize()
                   .Validator<wxGenericValidator>(&mGain)
-                  .AddCheckBox(XO("Normalize peak amplitude to   "),
+                  .AddCheckBox(XXO("&Normalize peak amplitude to   "),
                      mGain);
 
                mLevelTextCtrl = S
@@ -328,7 +328,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
 
             mStereoIndCheckBox = S
                .Validator<wxGenericValidator>(&mStereoInd)
-               .AddCheckBox(XO("Normalize stereo channels independently"),
+               .AddCheckBox(XXO("N&ormalize stereo channels independently"),
                                                mStereoInd);
          }
          S.EndVerticalLay();
@@ -388,7 +388,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
 
       if(mDC)
       {
-         result = AnalyseTrackData(track, msg, progress, ANALYSE_DC, offset);
+         result = AnalyseTrackData(track, msg, progress, offset);
          min += offset;
          max += offset;
       }
@@ -396,7 +396,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
    else if(mDC)
    {
       min = -1.0, max = 1.0;   // sensible defaults?
-      result = AnalyseTrackData(track, msg, progress, ANALYSE_DC, offset);
+      result = AnalyseTrackData(track, msg, progress, offset);
       min += offset;
       max += offset;
    }
@@ -414,7 +414,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
 //AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 //and executes selected AnalyseOperation on it...
 bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const TranslatableString &msg,
-                                double &progress, AnalyseOperation op, float &offset)
+                                double &progress, float &offset)
 {
    bool rc = true;
 
@@ -432,7 +432,6 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
    Floats buffer{ track->GetMaxBlockSize() };
 
    mSum   = 0.0; // dc offset inits
-   mCount = 0;
 
    sampleCount blockSamples;
    sampleCount totalSamples = 0;
@@ -453,8 +452,7 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
       totalSamples += blockSamples;
 
       //Process the buffer.
-      if(op == ANALYSE_DC)
-         AnalyseDataDC(buffer.get(), block);
+      AnalyseDataDC(buffer.get(), block);
 
       //Increment s one blockfull of samples
       s += block;
@@ -539,7 +537,6 @@ void EffectNormalize::AnalyseDataDC(float *buffer, size_t len)
 {
    for(decltype(len) i = 0; i < len; i++)
       mSum += (double)buffer[i];
-   mCount += len;
 }
 
 void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)

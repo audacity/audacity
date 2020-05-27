@@ -229,7 +229,7 @@ void TrackPanelAx::MessageForScreenReader(const TranslatableString& message)
 
       mMessage = message.Translation();
 
-      // append \a alernatively, so that the string is never the same as the previous string.
+      // append \a alternatively, so that the string is never the same as the previous string.
       // This ensures that screen readers read it.
       if (mMessageCount % 2 == 0)
          mMessage.Append('\a');

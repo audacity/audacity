@@ -22,11 +22,11 @@ float_type = {
 
 int_type = {
 	int_name		= short ;
-	int_max			= 0x7FFF ;
+	int_max			= "0x7FFF" ;
 	} ;
 
 int_type = {
 	int_name		= int ;
-	int_max			= 0x7FFFFFFF ;
+	int_max			= "0x7FFFFFFF" ;
 	} ;
 

@@ -200,7 +200,6 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          // PRL: and not scrolling with play/record head fixed
          auto mode = ProjectAudioManager::Get( *mProject ).GetLastPlayMode();
          if (!pinned &&
-             mode != PlayMode::loopedPlay &&
              mode != PlayMode::oneSecondPlay &&
              !gAudioIO->IsPaused())
          {

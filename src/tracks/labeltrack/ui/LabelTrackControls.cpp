@@ -73,7 +73,7 @@ enum
 
 BEGIN_POPUP_MENU(LabelTrackMenuTable)
    BeginSection( "Basic" );
-      AppendItem( "Font", OnSetFontID, XO("&Font..."), POPUP_MENU_FN( OnSetFont ) );
+      AppendItem( "Font", OnSetFontID, XXO("&Font..."), POPUP_MENU_FN( OnSetFont ) );
    EndSection();
 END_POPUP_MENU()
 
@@ -127,7 +127,7 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
          S.SetStretchyCol(1);
 
          /* i18n-hint: (noun) The name of the typeface*/
-         S.AddPrompt(XO("Face name"));
+         S.AddPrompt(XXO("Face name"));
          lb = safenew wxListBox(S.GetParent(), wxID_ANY,
             wxDefaultPosition,
             wxDefaultSize,
@@ -141,7 +141,7 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
             .AddWindow(lb);
 
          /* i18n-hint: (noun) The size of the typeface*/
-         S.AddPrompt(XO("Face size"));
+         S.AddPrompt(XXO("Face size"));
          sc = safenew wxSpinCtrl(S.GetParent(), wxID_ANY,
             wxString::Format(wxT("%ld"), fontsize),
             wxDefaultPosition,

@@ -168,6 +168,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    void ExportPresets() override;
    void ImportPresets() override;
 
+   static CommandID GetSquashedName(wxString name);
+
    bool HasOptions() override;
    void ShowOptions() override;
 
@@ -260,7 +262,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       wxWindow *pParent = nullptr,
       const EffectDialogFactory &dialogFactory = {} );
 
-   bool Delegate( Effect &delegate );
+   bool Delegate( Effect &delegate,
+      wxWindow &parent, const EffectDialogFactory &factory );
 
    virtual bool IsHidden();
 
@@ -341,9 +344,10 @@ protected:
    int GetNumWaveTracks() { return mNumTracks; }
    int GetNumWaveGroups() { return mNumGroups; }
 
-   // Calculates the start time and selection length in samples
-   void GetSamples(
-      const WaveTrack *track, sampleCount *start, sampleCount *len);
+   // Calculates the start time and length in samples for one or two channels
+   void GetBounds(
+      const WaveTrack &track, const WaveTrack *pRight,
+      sampleCount *start, sampleCount *len);
 
    // Previewing linear effect can be optimised by pre-mixing. However this
    // should not be used for non-linear effects such as dynamic processors
@@ -485,8 +489,7 @@ protected:
                      ChannelNames map,
                      WaveTrack *left,
                      WaveTrack *right,
-                     sampleCount leftStart,
-                     sampleCount rightStart,
+                     sampleCount start,
                      sampleCount len,
                      FloatBuffers &inBuffer,
                      FloatBuffers &outBuffer,
@@ -506,7 +509,6 @@ private:
    bool mPreviewWithNotSelected;
    bool mPreviewFullSelection;
 
-   bool mIsSelection;
    double mDuration;
    NumericFormatSymbol mDurationFormat;
 

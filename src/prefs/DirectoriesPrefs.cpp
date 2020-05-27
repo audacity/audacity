@@ -103,7 +103,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
          S.SetStretchyCol(1);
 
          S.Id(TempDirID);
-         mTempDir = S.TieTextBox(XO("&Location:"),
+         mTempDir = S.TieTextBox(XXO("&Location:"),
                                  {wxT("/Directories/TempDir"),
                                   wxT("")},
                                  30);
@@ -114,7 +114,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
          S.Prop(0).AddFixedText(XO("Free Space:"));
          mFreeSpace = S.Prop(0).AddVariableText( {} );
          S.Prop(10).AddSpace( 10 );
-         S.Id(ChooseButtonID).Prop(0).AddButton(XO("C&hoose..."));
+         S.Id(ChooseButtonID).Prop(0).AddButton(XXO("C&hoose..."));
       }
 
    }
@@ -131,8 +131,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartTwoColumn();
       {
          S.TieIntegerTextBox(XO("Mi&nimum Free Memory (MB):"),
-                             wxT("/Directories/CacheLowMem"),
-                             16,
+                             {wxT("/Directories/CacheLowMem"), 16},
                              9);
       }
       S.EndTwoColumn();
@@ -201,7 +200,7 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
 void DirectoriesPrefs::UpdateFreeSpace(wxCommandEvent & WXUNUSED(event))
 {
    wxString tempDir;
-   wxString label;
+   TranslatableString label;
 
    if (mTempDir != NULL) {
       tempDir = mTempDir->GetValue();
@@ -213,12 +212,12 @@ void DirectoriesPrefs::UpdateFreeSpace(wxCommandEvent & WXUNUSED(event))
       label = Internat::FormatSize(space);
    }
    else {
-      label = _("unavailable - above location doesn't exist");
+      label = XO("unavailable - above location doesn't exist");
    }
 
    if( mFreeSpace != NULL ) {
-      mFreeSpace->SetLabel(label);
-      mFreeSpace->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      mFreeSpace->SetLabel(label.Translation());
+      mFreeSpace->SetName(label.Translation()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    }
 }
 

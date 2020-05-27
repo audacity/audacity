@@ -334,7 +334,7 @@ size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float *
 
    // Once we're done, we might wind up with the last effect storing its results
    // in the temporary buffers.  If that's the case, we need to copy it over to
-   // the caller's buffers.  This happens when the number of effects proccessed
+   // the caller's buffers.  This happens when the number of effects processed
    // is odd.
    if (called & 1)
    {
@@ -430,7 +430,7 @@ bool RealtimeEffectState::RealtimeAddProcessor(int group, unsigned chans, float 
    // Call the client until we run out of input or output channels
    while (ichans > 0 && ochans > 0)
    {
-      // If we don't have enough input channels to accomodate the client's
+      // If we don't have enough input channels to accommodate the client's
       // requirements, then we replicate the input channels until the
       // client's needs are met.
       if (ichans < numAudioIn)
@@ -438,7 +438,7 @@ bool RealtimeEffectState::RealtimeAddProcessor(int group, unsigned chans, float 
          // All input channels have been consumed
          ichans = 0;
       }
-      // Otherwise fullfil the client's needs with as many input channels as possible.
+      // Otherwise fulfill the client's needs with as many input channels as possible.
       // After calling the client with this set, we will loop back up to process more
       // of the input/output channels.
       else if (ichans >= numAudioIn)
@@ -447,7 +447,7 @@ bool RealtimeEffectState::RealtimeAddProcessor(int group, unsigned chans, float 
          ichans -= gchans;
       }
 
-      // If we don't have enough output channels to accomodate the client's
+      // If we don't have enough output channels to accommodate the client's
       // requirements, then we provide all of the output channels and fulfill
       // the client's needs with dummy buffers.  These will just get tossed.
       if (ochans < numAudioOut)
@@ -455,7 +455,7 @@ bool RealtimeEffectState::RealtimeAddProcessor(int group, unsigned chans, float 
          // All output channels have been consumed
          ochans = 0;
       }
-      // Otherwise fullfil the client's needs with as many output channels as possible.
+      // Otherwise fulfill the client's needs with as many output channels as possible.
       // After calling the client with this set, we will loop back up to process more
       // of the input/output channels.
       else if (ochans >= numAudioOut)
@@ -488,7 +488,7 @@ size_t RealtimeEffectState::RealtimeProcess(int group,
    // same number of output buffers as there are input buffers.
    //
    // Effects always require a certain number of input and output buffers,
-   // so if the number of channels we're curently processing are different
+   // so if the number of channels we're currently processing are different
    // than what the effect expects, then we use a few methods of satisfying
    // the effects requirements.
    const auto numAudioIn = mEffect.GetAudioInCount();

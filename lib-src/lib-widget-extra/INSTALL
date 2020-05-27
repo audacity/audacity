@@ -1,9 +1,0 @@
-This file contains extra notes on compiling and installing lib-widget-extra on
-*nix platforms using the Autotools build system.
-
-Additional macros needed by the configure script can be found in the m4
-directory. Thus if you run aclocal manually, you need to do so as 
-$ aclocal -I m4
-If you use autoreconf, then you can ignore this because it reads the relevant
-line from configure.in which tells it to include the content of the m4
-directory.

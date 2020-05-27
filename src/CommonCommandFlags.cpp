@@ -95,8 +95,8 @@ static CommandFlagOptions result{
       // "\n\nClick the Help button to learn more about selection methods."
       );
 #endif
-      return format.Format( Name );
 #endif
+      return format.Format( Name );
    },
    "Selecting_Audio_-_the_basics",
    XO("No Audio Selected")

@@ -18,6 +18,7 @@ list( APPEND RUNTIME
    nyinit-dbg.lsp
    nyinit.lsp
    nyqmisc.lsp
+   nyquist-plot.txt
    nyquist.lsp
    printrec.lsp
    profile.lsp

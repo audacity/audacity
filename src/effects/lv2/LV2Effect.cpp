@@ -261,7 +261,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
             {
                wxTextCtrl *t;
                t = S.TieNumericTextBox(
-                  XO("&Buffer Size (8 to %d) samples):")
+                  XXO("&Buffer Size (8 to %d) samples:")
                      .Format( DEFAULT_BLOCKSIZE ),
                   mBufferSize,
                   12);
@@ -284,7 +284,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(XO("Enable &compensation"),
+               S.TieCheckBox(XXO("Enable &compensation"),
                              mUseLatency);
             }
             S.EndHorizontalLay();
@@ -298,7 +298,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
 " A basic text-only method is also available. "
 " Reopen the effect for this to take effect."),
                false, 0, 650);
-            S.TieCheckBox(XO("Enable &graphical interface"),
+            S.TieCheckBox(XXO("Enable &graphical interface"),
                           mUseGUI);
          }
          S.EndStatic();
@@ -1131,7 +1131,7 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
             else
             {
                zix_ring_skip(ring, atom.size);
-               wxLogError(_("LV2 sequence buffer overflow"));
+               wxLogError(wxT("LV2 sequence buffer overflow"));
             }
          }
 
@@ -1303,7 +1303,7 @@ bool LV2Effect::RealtimeProcessStart()
             else
             {
                zix_ring_skip(ring, atom.size);
-               wxLogError(_("LV2 sequence buffer overflow"));
+               wxLogError(wxT("LV2 sequence buffer overflow"));
             }
          }
          lv2_atom_forge_pop(&mForge, &seqFrame);
@@ -1911,7 +1911,7 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, const LilvNode *predicate
             {
                if (required)
                {
-                  wxLogError(_("%s requires unsupported feature %s"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
+                  wxLogError(wxT("%s requires unsupported feature %s"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
                   printf(_("%s requires unsupported feature %s\n"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
                   break;
                }
@@ -1975,7 +1975,7 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, const LilvNode *predicate,
             {
                if (required)
                {
-                  wxLogError(_("%s requires unsupported option %s"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
+                  wxLogError(wxT("%s requires unsupported option %s"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
                   printf(_("%s requires unsupported option %s\n"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
                   break;
                }
@@ -2823,7 +2823,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
             else
             {
                zix_ring_skip(ring, atom->size);
-               wxLogError(_("LV2 sequence buffer overflow"));
+               wxLogError(wxT("LV2 sequence buffer overflow"));
             }
          }
          free(atom);

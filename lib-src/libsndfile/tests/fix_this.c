@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2014 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -16,17 +16,24 @@
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#include	<stdio.h>
-#include	<stdlib.h>
-#include	<string.h>
-#include	<unistd.h>
-#include	<math.h>
+#include "sfconfig.h"
 
-#include	<sndfile.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#else
+#include "sf_unistd.h"
+#endif
+#include <math.h>
+#include <inttypes.h>
 
-#include	"utils.h"
+#include <sndfile.h>
 
-#define		BUFFER_SIZE		(1<<14) /* Should be (1<<14) */
+#include "utils.h"
+
+#define		BUFFER_SIZE		(1 << 14)
 #define		SAMPLE_RATE		(11025)
 
 #ifndef		M_PI
@@ -69,8 +76,9 @@ static void
 lcomp_test_int (const char *str, const char *filename, int filetype, double margin)
 {	SNDFILE		*file ;
 	SF_INFO		sfinfo ;
-	int			k, m, *orig, *data, sum_abs ;
-	long		datalen, seekpos ;
+	int			k, m, *orig, *data ;
+	sf_count_t	datalen, seekpos ;
+	int64_t		sum_abs ;
 	double		scale ;
 
 	printf ("\nThis is program is not part of the libsndfile test suite.\n\n") ;
@@ -102,7 +110,7 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 		} ;
 
 	if ((k = sf_writef_int (file, orig, datalen)) != datalen)
-	{	printf ("sf_writef_int failed with short write (%ld => %d).\n", datalen, k) ;
+	{	printf ("sf_writef_int failed with short write (%" PRId64 " => %d).\n", datalen, k) ;
 		exit (1) ;
 		} ;
 	sf_close (file) ;
@@ -124,12 +132,12 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 		} ;
 
 	if (sfinfo.frames < datalen)
-	{	printf ("Too few.frames in file. (%ld should be a little more than %ld)\n", datalen, SF_COUNT_TO_LONG (sfinfo.frames)) ;
+	{	printf ("Too few.frames in file. (%" PRId64 " should be a little more than %" PRId64 ")\n", datalen, sfinfo.frames) ;
 		exit (1) ;
 		} ;
 
 	if (sfinfo.frames > (datalen + datalen / 2))
-	{	printf ("Too many.frames in file. (%ld should be a little more than %ld)\n", datalen, SF_COUNT_TO_LONG (sfinfo.frames)) ;
+	{	printf ("Too many.frames in file. (%" PRId64 " should be a little more than %" PRId64 ")\n", datalen, sfinfo.frames) ;
 		exit (1) ;
 		} ;
 
@@ -141,7 +149,7 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 	check_log_buffer_or_die (file, __LINE__) ;
 
 	if ((k = sf_readf_int (file, data, datalen)) != datalen)
-	{	printf ("Line %d: short read (%d should be %ld).\n", __LINE__, k, datalen) ;
+	{	printf ("Line %d: short read (%d should be %" PRId64 ").\n", __LINE__, k, datalen) ;
 		exit (1) ;
 		} ;
 
@@ -152,7 +160,7 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 			oct_save_int (orig, data, datalen) ;
 			exit (1) ;
 			} ;
-		sum_abs = abs (sum_abs + abs (data [k])) ;
+		sum_abs += abs (data [k]) ;
 		} ;
 
 	if (sum_abs < 1.0)
@@ -161,7 +169,7 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 		} ;
 
 	if ((k = sf_readf_int (file, data, datalen)) != sfinfo.frames - datalen)
-	{	printf ("Line %d: Incorrect read length (%ld should be %d).\n", __LINE__, SF_COUNT_TO_LONG (sfinfo.frames - datalen), k) ;
+	{	printf ("Line %d: Incorrect read length (%" PRId64 " should be %d).\n", __LINE__, sfinfo.frames - datalen, k) ;
 		exit (1) ;
 		} ;
 
@@ -170,7 +178,7 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 	*/
 	if ((sfinfo.format & SF_FORMAT_SUBMASK) != SF_FORMAT_MS_ADPCM)
 		for (k = 0 ; k < sfinfo.frames - datalen ; k++)
-			if (abs (data [k] / scale) > decay_response (k))
+			if (ABS (data [k] / scale) > decay_response (k))
 			{	printf ("Line %d : Incorrect sample B (#%d : abs (%d) should be < %d).\n", __LINE__, k, data [k], decay_response (k)) ;
 				exit (1) ;
 				} ;
@@ -209,7 +217,7 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 
 	/* Check seek from start of file. */
 	if ((k = sf_seek (file, seekpos, SEEK_SET)) != seekpos)
-	{	printf ("Seek to start of file + %ld failed (%d).\n", seekpos, k) ;
+	{	printf ("Seek to start of file + %" PRId64 " failed (%d).\n", seekpos, k) ;
 		exit (1) ;
 		} ;
 
@@ -224,7 +232,7 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 		} ;
 
 	if ((k = sf_seek (file, 0, SEEK_CUR)) != seekpos + 1)
-	{	printf ("Line %d: sf_seek (SEEK_CUR) with 0 offset failed (%d should be %ld)\n", __LINE__, k, seekpos + 1) ;
+	{	printf ("Line %d: sf_seek (SEEK_CUR) with 0 offset failed (%d should be %" PRId64 ")\n", __LINE__, k, seekpos + 1) ;
 		exit (1) ;
 		} ;
 
@@ -232,7 +240,7 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 	k = sf_seek (file, BUFFER_SIZE / 5, SEEK_CUR) ;
 	sf_readf_int (file, data, 1) ;
 	if (error_function ((double) data [0], (double) orig [seekpos], margin) || k != seekpos)
-	{	printf ("Line %d: sf_seek (forwards, SEEK_CUR) followed by sf_readf_int failed (%d, %d) (%d, %ld).\n", __LINE__, data [0], orig [seekpos], k, seekpos + 1) ;
+	{	printf ("Line %d: sf_seek (forwards, SEEK_CUR) followed by sf_readf_int failed (%d, %d) (%d, %" PRId64 ").\n", __LINE__, data [0], orig [seekpos], k, seekpos + 1) ;
 		exit (1) ;
 		} ;
 
@@ -241,7 +249,7 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 	k = sf_seek (file, -20, SEEK_CUR) ;
 	sf_readf_int (file, data, 1) ;
 	if (error_function ((double) data [0], (double) orig [seekpos], margin) || k != seekpos)
-	{	printf ("sf_seek (backwards, SEEK_CUR) followed by sf_readf_int failed (%d, %d) (%d, %ld).\n", data [0], orig [seekpos], k, seekpos) ;
+	{	printf ("sf_seek (backwards, SEEK_CUR) followed by sf_readf_int failed (%d, %d) (%d, %" PRId64 ").\n", data [0], orig [seekpos], k, seekpos) ;
 		exit (1) ;
 		} ;
 

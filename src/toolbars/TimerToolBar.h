@@ -2,26 +2,25 @@
 
   Audacity: A Digital Audio Editor
 
-  TimerToolBar.h
+  TimeToolBar.h
 
   Jonatã Bolzan Loss
 
 **********************************************************************/
 
-#ifndef __AUDACITY_BIG_COUNTER__
-#define __AUDACITY_BIG_COUNTER__
+#ifndef __AUDACITY_TIME_TOOLBAR__
+#define __AUDACITY_TIME_TOOLBAR__
 
 #include <wx/defs.h>
 
 #include "ToolBar.h"
-#include "ToolManager.h"
+#include "../widgets/NumericTextCtrl.h"
 
-class SelectionBarListener;
 class NumericTextCtrl;
-class wxSize;
+class TimerToolBarListener;
 
-class TimerToolBar final : public ToolBar {
-   
+class TimerToolBar final : public ToolBar
+{
 public:
    TimerToolBar(AudacityProject &project);
    virtual ~TimerToolBar();
@@ -29,56 +28,45 @@ public:
    static TimerToolBar &Get(AudacityProject &project);
    static const TimerToolBar &Get(const AudacityProject &project);
    
-   void Create(wxWindow *parent) override;
-   
    void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};
    void EnableDisableButtons() override {};
    void UpdatePrefs() override;
-   void OnUpdate(wxCommandEvent &evt);
-   void SetTimes(double audio);
-
+   void RegenerateTooltips() override {};
+   int GetInitialWidth() override {return 250;} 
+   int GetMinToolbarWidth() override {return 50;}
+   void SetToDefaultSize() override;
+   wxSize GetDockedSize() override;
+   void SetDocked(ToolDock *dock, bool pushed) override;
    void SetListener(TimerToolBarListener *l);
    void SetAudioTimeFormat(const NumericFormatSymbol & format);
-   void RegenerateTooltips() override {};
-
-   int GetInitialWidth() override {return 250;} 
-   int GetMinToolbarWidth()  override { return mMinWidth; }
-   void SetToDefaultSize() override;
-   wxSize GetDockedSize() override {
-      return GetSmartDockedSize();
-   };
-   void SetDocked(ToolDock *dock, bool pushed) override;
-   void ResizeTime( const wxSize & sz );
-   void SetResizingLimits();
    void ResizingDone() override;
 
 private:
-   NumericTextCtrl * AddTime( const TranslatableString &Name, int id, 
-      wxSizer * pSizer);
-   
-   void OnFocus(wxFocusEvent &event);
-   void OnCaptureKey(wxCommandEvent &event);
+   void SetResizingLimits();
+   wxSize ComputeSizing(int digitH);
+
+   void OnUpdate(wxCommandEvent &evt);
    void OnSize(wxSizeEvent &evt);
-   void OnIdle( wxIdleEvent &evt );
-   
-   TimerToolBarListener * mListener;
-   double mRate;
-   double mAudio;
-   int mMinWidth;
-   int mDigitHeight;
-   bool mbReady;
-   bool mbIsCreating;
-   bool mbPreserveWidth;
-   bool mbPreserveHeight;
-   
-   NumericTextCtrl   *mAudioTime;
-   wxChoice          *mSnapTo;
-   
+   void OnIdle(wxIdleEvent &evt);
+
+   TimerToolBarListener *mListener;
+   NumericTextCtrl *mAudioTime;
+   float mDigitRatio;
+   bool mSettingInitialSize;
+
+   static const int minDigitH = 17;
+   static const int maxDigitH = 100;
+
 public:
    
    DECLARE_CLASS(TimerToolBar)
    DECLARE_EVENT_TABLE()
 };
+
+inline wxSize TimerToolBar::ComputeSizing(int digitH)
+{
+   return mAudioTime->ComputeSizing(false, digitH * mDigitRatio, digitH);
+}
 
 #endif

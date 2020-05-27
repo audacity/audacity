@@ -147,7 +147,7 @@ public:
    /**
     * Helper function - uses wxStringTokenizer to tokenize
     * @str string and appends string-tokens to a list @list.
-    * @mod deifines tokenizer's behaviour.
+    * @mod defines tokenizer's behaviour.
     */
    void StringToList(wxString &str, wxString &delims, wxArrayString &list, wxStringTokenizerMode mod = wxTOKEN_RET_EMPTY_ALL);
 

@@ -32,7 +32,6 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "PluginManager.h"
 
 #include "commands/ScriptCommandRelay.h"
-#include <NonGuiThread.h>  // header from libwidgetextra
 
 #include "audacity/PluginInterface.h"
 
@@ -97,48 +96,54 @@ Module::~Module()
 
 bool Module::Load()
 {
+   // Will this ever happen???
    if (mLib->IsLoaded()) {
       if (mDispatch) {
          return true;
       }
+
+      // Any messages should have already been generated the first time it was loaded.
       return false;
    }
 
-   if (!mLib->Load(mName, wxDL_LAZY)) {
+   auto ShortName = wxFileName(mName).GetName();
+
+   if (!mLib->Load(mName, wxDL_LAZY | wxDL_QUIET)) {
+      auto Error = wxString(wxSysErrorMsg());
+      AudacityMessageBox(XO("Unable to load the \"%s\" module.\n\nError: %s").Format(ShortName, Error),
+                         XO("Module Unsuitable"));
+      wxLogMessage(wxT("Unable to load the module \"%s\". Error: %s"), mName, Error);
       return false;
    }
 
    // Check version string matches.  (For now, they must match exactly)
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
-      wxString ShortName = wxFileName( mName ).GetName();
       AudacityMessageBox(
-         XO(
-"The module %s does not provide a version string.\nIt will not be loaded.")
+         XO("The module \"%s\" does not provide a version string.\n\nIt will not be loaded.")
             .Format( ShortName),
          XO("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s does not provide a version string. It will not be loaded."), mName));
+      wxLogMessage(wxT("The module \"%s\" does not provide a version string. It will not be loaded."), mName);
       mLib->Unload();
       return false;
    }
 
    wxString moduleVersion = versionFn();
    if( moduleVersion != AUDACITY_VERSION_STRING) {
-      wxString ShortName = wxFileName( mName ).GetName();
       AudacityMessageBox(
-         XO(
-"The module %s is matched with Audacity version %s.\n\nIt will not be loaded.")
-            .Format( ShortName, moduleVersion),
+         XO("The module \"%s\" is matched with Audacity version \"%s\".\n\nIt will not be loaded.")
+            .Format(ShortName, moduleVersion),
          XO("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s. It will not be loaded."), mName, moduleVersion));
+      wxLogMessage(wxT("The module \"%s\" is matched with Audacity version \"%s\". It will not be loaded."), mName, moduleVersion);
       mLib->Unload();
       return false;
    }
 
    mDispatch = (fnModuleDispatch) mLib->GetSymbol(wxT(ModuleDispatchName));
    if (!mDispatch) {
-      // Module does not provide a dispatch function...
-      // That can be OK, as long as we never try to call it.
+      // Module does not provide a dispatch function. Special case modules like this could be:
+      // (a) for scripting (RegScriptServerFunc entry point)
+      // (b) for hijacking the entire Audacity panel (MainPanelFunc entry point)
       return true;
    }
 
@@ -150,6 +155,13 @@ bool Module::Load()
    }
 
    mDispatch = NULL;
+
+   AudacityMessageBox(
+      XO("The module \"%s\" failed to initialize.\n\nIt will not be loaded.").Format(ShortName),
+      XO("Module Unsuitable"));
+   wxLogMessage(wxT("The module \"%s\" failed to initialize.\nIt will not be loaded."), mName);
+   mLib->Unload();
+
    return false;
 }
 
@@ -305,22 +317,43 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       if (umodule->Load())   // it will get rejected if there  are version problems
       {
          auto module = umodule.get();
-         Get().mModules.push_back(std::move(umodule));
-         // We've loaded and initialised OK.
-         // So look for special case functions:
-         wxLogNull logNo; // Don't show wxWidgets errors if we can't do these. (Was: Fix bug 544.)
-         // (a) for scripting.
-         if( scriptFn == NULL )
-            scriptFn = (tpRegScriptServerFunc)(module->GetSymbol(wxT(scriptFnName)));
-         // (b) for hijacking the entire Audacity panel.
-         if( pPanelHijack==NULL )
+
          {
-            pPanelHijack = (tPanelFn)(module->GetSymbol(wxT(mainPanelFnName)));
+            // We've loaded and initialised OK.
+            // So look for special case functions:
+            wxLogNull logNo; // Don't show wxWidgets errors if we can't do these. (Was: Fix bug 544.)
+
+            // (a) for scripting.
+            if (scriptFn == NULL)
+            {
+               scriptFn = (tpRegScriptServerFunc)(module->GetSymbol(wxT(scriptFnName)));
+            }
+
+            // (b) for hijacking the entire Audacity panel.
+            if (pPanelHijack == NULL)
+            {
+               pPanelHijack = (tPanelFn)(module->GetSymbol(wxT(mainPanelFnName)));
+            }
          }
+
+         if (!module->HasDispatch() && !scriptFn && !pPanelHijack)
+         {
+            auto ShortName = wxFileName(files[i]).GetName();
+            AudacityMessageBox(
+               XO("The module \"%s\" does not provide any of the required functions.\n\nIt will not be loaded.").Format(ShortName),
+               XO("Module Unsuitable"));
+            wxLogMessage(wxT("The module \"%s\" does not provide any of the required functions. It will not be loaded."), files[i]);
+            module->Unload();
+         }
+         else
+         {
+            Get().mModules.push_back(std::move(umodule));
+
 #ifdef EXPERIMENTAL_MODULE_PREFS
-         // Loaded successfully, restore the status.
-         ModulePrefs::SetModuleStatus( files[i], iModuleStatus);
+            // Loaded successfully, restore the status.
+            ModulePrefs::SetModuleStatus(files[i], iModuleStatus);
 #endif
+         }
       }
    }
    ::wxSetWorkingDirectory(saveOldCWD);
@@ -328,9 +361,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
    // After loading all the modules, we may have a registered scripting function.
    if(scriptFn)
    {
-      ScriptCommandRelay::SetCommandHandler(cmdHandler);
-      ScriptCommandRelay::SetRegScriptServerFunc(scriptFn);
-      NonGuiThread::StartChild(&ScriptCommandRelay::Run);
+      ScriptCommandRelay::StartScriptServer(scriptFn);
    }
 }
 
@@ -363,6 +394,9 @@ bool ModuleManager::DiscoverProviders()
 {
    InitializeBuiltins();
 
+// The commented out code loads modules whether or not they are enabled.
+// none of our modules is a 'provider' of effects, so this code commented out. 
+#if 0
    FilePaths provList;
    FilePaths pathList;
 
@@ -400,6 +434,7 @@ bool ModuleManager::DiscoverProviders()
          module->AutoRegisterPlugins(pm);
       }
    }
+#endif
 
    return true;
 }

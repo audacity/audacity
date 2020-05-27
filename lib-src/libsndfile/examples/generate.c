@@ -30,8 +30,6 @@
 ** ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "sfconfig.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -97,6 +95,8 @@ encode_file (const char *infilename, const char *outfilename, int filetype)
 
 	k = 16 - strlen (outfilename) ;
 	PUT_DOTS (k) ;
+
+	memset (&sfinfo, 0, sizeof (sfinfo)) ;
 
 	if (! (infile = sf_open (infilename, SFM_READ, &sfinfo)))
 	{	printf ("Error : could not open file : %s\n", infilename) ;

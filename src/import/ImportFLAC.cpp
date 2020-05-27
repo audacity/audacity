@@ -503,7 +503,7 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
          mDecoderTask->AddWaveTrack(channel);
          if(moreThanStereo)
          {
-            //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.
+            //if we have 3 more channels, they get imported on separate tracks, so we add individual tasks for each.
             ODManager::Instance()->AddNewTask(std::move(mDecoderTask));
             mDecoderTask = std::make_unique<ODDecodeFlacTask>(); //TODO: see if we need to use clone to keep the metadata.
          }

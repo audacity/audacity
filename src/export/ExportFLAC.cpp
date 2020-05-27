@@ -24,7 +24,6 @@ and libvorbis examples, Monty <monty@xiph.org>
 
 #include "Export.h"
 
-#include <wx/progdlg.h>
 #include <wx/ffile.h>
 #include <wx/log.h>
 
@@ -127,8 +126,8 @@ void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(2, wxCENTER);
          {
-            S.TieChoice( XO("Level:"), FLACLevel);
-            S.TieChoice( XO("Bit depth:"), FLACBitDepth);
+            S.TieChoice( XXO("Level:"), FLACLevel);
+            S.TieChoice( XXO("Bit depth:"), FLACBitDepth);
          }
          S.EndMultiColumn();
       }

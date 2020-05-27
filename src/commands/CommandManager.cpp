@@ -115,6 +115,59 @@ CommandManager.  It holds the callback for one command.
 #define COMMAND XO("Command")
 
 
+struct MenuBarListEntry
+{
+   MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_);
+   ~MenuBarListEntry();
+
+   wxString name;
+   wxWeakRef<wxMenuBar> menubar; // This structure does not assume memory ownership!
+};
+
+struct SubMenuListEntry
+{
+   SubMenuListEntry( const TranslatableString &name_ );
+   SubMenuListEntry( SubMenuListEntry&& ) = default;
+   ~SubMenuListEntry();
+
+   TranslatableString name;
+   std::unique_ptr<wxMenu> menu;
+};
+
+struct CommandListEntry
+{
+   int id;
+   CommandID name;
+   TranslatableString longLabel;
+   NormalizedKeyString key;
+   NormalizedKeyString defaultKey;
+   TranslatableString label;
+   TranslatableString labelPrefix;
+   TranslatableString labelTop;
+   wxMenu *menu;
+   CommandHandlerFinder finder;
+   CommandFunctorPointer callback;
+   CommandParameter parameter;
+
+   // type of a function that determines checkmark state
+   using CheckFn = std::function< bool(AudacityProject&) >;
+   CheckFn checkmarkFn;
+
+   bool multi;
+   int index;
+   int count;
+   bool enabled;
+   bool skipKeydown;
+   bool wantKeyup;
+   bool allowDup;
+   bool isGlobal;
+   bool isOccult;
+   bool isEffect;
+   bool excludeFromMacros;
+   CommandFlag flags;
+   bool useStrictFlags{ false };
+};
+
 NonKeystrokeInterceptingWindow::~NonKeystrokeInterceptingWindow()
 {
 }
@@ -132,9 +185,8 @@ MenuBarListEntry::~MenuBarListEntry()
 {
 }
 
-SubMenuListEntry::SubMenuListEntry(
-   const TranslatableString &name_, std::unique_ptr<wxMenu> menu_ )
-   : name(name_), menu( std::move(menu_) )
+SubMenuListEntry::SubMenuListEntry( const TranslatableString &name_ )
+   : name(name_), menu( std::make_unique< wxMenu >() )
 {
 }
 
@@ -420,10 +472,9 @@ void CommandManager::EndMainMenu()
 /// the function's argument.
 wxMenu* CommandManager::BeginSubMenu(const TranslatableString & tName)
 {
-   mSubMenuList.push_back
-      (std::make_unique< SubMenuListEntry > ( tName, std::make_unique<wxMenu>() ));
+   mSubMenuList.emplace_back( tName );
    mbSeparatorAllowed = false;
-   return mSubMenuList.back()->menu.get();
+   return mSubMenuList.back().menu.get();
 }
 
 
@@ -434,7 +485,7 @@ wxMenu* CommandManager::BeginSubMenu(const TranslatableString & tName)
 void CommandManager::EndSubMenu()
 {
    //Save the submenu's information
-   SubMenuListEntry tmpSubMenu { std::move( *mSubMenuList.back() ) };
+   SubMenuListEntry tmpSubMenu{ std::move( mSubMenuList.back() ) };
 
    //Pop off the NEW submenu so CurrentMenu returns the parent of the submenu
    mSubMenuList.pop_back();
@@ -455,7 +506,7 @@ wxMenu * CommandManager::CurrentSubMenu() const
    if(mSubMenuList.empty())
       return NULL;
 
-   return mSubMenuList.back()->menu.get();
+   return mSubMenuList.back().menu.get();
 }
 
 ///
@@ -531,7 +582,7 @@ void CommandManager::AddItem(AudacityProject &project,
 }
 
 auto CommandManager::Options::MakeCheckFn(
-   const wxString key, bool defaultValue ) -> CommandListEntry::CheckFn
+   const wxString key, bool defaultValue ) -> CheckFn
 {
    return [=](AudacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
 }
@@ -642,9 +693,8 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       auto entry = std::make_unique<CommandListEntry>();
 
       TranslatableString labelPrefix;
-      if (!mSubMenuList.empty()) {
-         labelPrefix = mSubMenuList.back()->name;
-      }
+      if (!mSubMenuList.empty())
+         labelPrefix = mSubMenuList.back().name.Stripped();
 
       // For key bindings for commands with a list, such as align,
       // the name in prefs is the category name plus the effect name.
@@ -684,7 +734,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
       entry->labelPrefix = labelPrefix;
-      entry->labelTop = wxMenuItem::GetLabelText(mCurrentMenuName.Translation());
+      entry->labelTop = mCurrentMenuName.Stripped();
       entry->menu = menu;
       entry->finder = finder;
       entry->callback = callback;
@@ -694,8 +744,9 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->count = count;
       entry->flags = AlwaysEnabledFlag;
       entry->enabled = true;
-      entry->skipKeydown = (accel.Find(wxT("\tskipKeydown")) != wxNOT_FOUND);
-      entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
+      entry->skipKeydown = options.skipKeyDown;
+      entry->wantKeyup = options.wantKeyUp || entry->skipKeydown;
+      entry->allowDup = options.allowDup;
       entry->isGlobal = false;
       entry->isOccult = bMakingOccultCommands;
       entry->checkmarkFn = options.checker;
@@ -726,7 +777,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    CommandListEntry *entry = &*mCommandList.back();
    mCommandNumericIDHash[entry->id] = entry;
 
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
    prev = mCommandNameHash[entry->name];
    if (prev) {
       // Under Linux it looks as if we may ask for a newID for the same command
@@ -977,7 +1028,7 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
       // If RTL, then the control character forces right-to-left sequencing of
       // "/" -separated command names, and puts any "(...)" shortcuts to the
       // left, consistently with accelerators in menus (assuming matching
-      // operating system prefernces for language), even if the command name
+      // operating system preferences for language), even if the command name
       // was missing from the translation file and defaulted to the English.
 
       // Note: not putting this and other short format strings in the
@@ -1177,7 +1228,7 @@ bool CommandManager::HandleMenuID(
    return HandleCommandEntry( project, entry, flags, alwaysEnabled );
 }
 
-/// HandleTextualCommand() allows us a limitted version of script/batch
+/// HandleTextualCommand() allows us a limited version of script/batch
 /// behavior, since we can get from a string command name to the actual
 /// code to run.
 CommandManager::TextualCommandResult
@@ -1217,13 +1268,12 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
    return CommandNotFound;
 }
 
-void CommandManager::GetCategories(
-   wxArrayString &cats, AudacityProject * /* p */)
+TranslatableStrings CommandManager::GetCategories( AudacityProject& )
 {
-   cats.clear();
+   TranslatableStrings cats;
 
    for (const auto &entry : mCommandList) {
-      wxString cat = entry->labelTop;
+      auto &cat = entry->labelTop;
       if ( ! make_iterator_range( cats ).contains(cat) ) {
          cats.push_back(cat);
       }
@@ -1246,6 +1296,8 @@ void CommandManager::GetCategories(
 
    cats.push_back(COMMAND);
 #endif
+
+   return cats;
 }
 
 void CommandManager::GetAllCommandNames(CommandIDs &names,
@@ -1285,7 +1337,7 @@ void CommandManager::GetAllCommandData(
    std::vector<NormalizedKeyString> &keys,
    std::vector<NormalizedKeyString> &default_keys,
    TranslatableStrings &labels,
-   wxArrayString &categories,
+   TranslatableStrings &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
    TranslatableStrings &prefixes,
 #endif
@@ -1296,18 +1348,7 @@ void CommandManager::GetAllCommandData(
       // It does need the effects.
       //if ( entry->isEffect )
       //   continue;
-      if (!entry->multi)
-      {
-         names.push_back(entry->name);
-         keys.push_back(entry->key);
-         default_keys.push_back(entry->defaultKey);
-         labels.push_back(entry->label);
-         categories.push_back(entry->labelTop);
-#if defined(EXPERIMENTAL_KEY_VIEW)
-         prefixes.push_back(entry->labelPrefix);
-#endif
-      }
-      else if( includeMultis )
+      if ( !entry->multi || includeMultis )
       {
          names.push_back(entry->name);
          keys.push_back(entry->key);
@@ -1346,16 +1387,17 @@ TranslatableString CommandManager::GetPrefixedLabelFromName(const CommandID &nam
 
    if (!entry->labelPrefix.empty())
       return Verbatim( wxT("%s - %s") )
-         .Format(entry->labelPrefix, entry->label);
+         .Format(entry->labelPrefix, entry->label)
+            .Stripped();
    else
-      return entry->label;
+      return entry->label.Stripped();
 }
 
-wxString CommandManager::GetCategoryFromName(const CommandID &name)
+TranslatableString CommandManager::GetCategoryFromName(const CommandID &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
-      return wxT("");
+      return {};
 
    return entry->labelTop;
 }
@@ -1476,7 +1518,7 @@ void CommandManager::SetCommandFlags(const CommandID &name,
       entry->flags = flags;
 }
 
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
 void CommandManager::CheckDups()
 {
    int cnt = mCommandList.size();
@@ -1484,6 +1526,9 @@ void CommandManager::CheckDups()
       if (mCommandList[j]->key.empty()) {
          continue;
       }
+      
+      if (mCommandList[j]->allowDup)
+         continue;
 
       for (size_t i = 0; (int)i < cnt; i++) {
          if (i == j) {

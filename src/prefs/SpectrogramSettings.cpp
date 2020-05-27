@@ -462,11 +462,11 @@ float SpectrogramSettings::findBin( float frequency, float binUnit ) const
 
 size_t SpectrogramSettings::GetFFTLength() const
 {
-   return windowSize
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-      * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
+#ifndef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   return windowSize;
+#else
+   return windowSize * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
 #endif
-   ;
 }
 
 size_t SpectrogramSettings::NBins() const

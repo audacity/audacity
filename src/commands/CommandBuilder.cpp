@@ -53,11 +53,6 @@ bool CommandBuilder::WasValid()
    return mValid;
 }
 
-const wxString &CommandBuilder::GetErrorMessage()
-{
-   return mError;
-}
-
 OldStyleCommandPointer CommandBuilder::GetCommand()
 {
    wxASSERT(mValid);
@@ -65,6 +60,14 @@ OldStyleCommandPointer CommandBuilder::GetCommand()
    auto result = mCommand;
    mCommand.reset();
    return result;
+}
+
+wxString CommandBuilder::GetResponse()
+{
+   if (!mValid && !mError.empty()) {
+      return mError + wxT("\n");
+   }
+   return mResponse->GetResponse() + wxT("\n");
 }
 
 void CommandBuilder::Failure(const wxString &msg)
@@ -85,11 +88,11 @@ void CommandBuilder::BuildCommand(AudacityProject *project,
 {
    // Stage 1: create a Command object of the right type
 
-   auto scriptOutput = std::make_shared< ResponseQueueTarget >();
+   mResponse = std::make_shared< ResponseTarget >();
    auto output
       = std::make_unique<CommandOutputTargets>(std::make_unique<NullProgressTarget>(),
-                                scriptOutput,
-                                scriptOutput);
+                                mResponse,
+                                mResponse);
 
 #ifdef OLD_BATCH_SYSTEM
    OldStyleCommandType *factory = CommandDirectory::Get()->LookUp(cmdName);
@@ -157,7 +160,7 @@ void CommandBuilder::BuildCommand(AudacityProject *project,
          Failure(wxT("Unrecognized parameter: '") + paramName + wxT("'"));
          return;
       }
-      // Handling of quoted strings is quite limitted.
+      // Handling of quoted strings is quite limited.
       // You start and end with a " or a '.
       // There is no escaping in the string.
       cmdParams = cmdParams.Mid(splitAt+1);
@@ -194,10 +197,7 @@ void CommandBuilder::BuildCommand(
    cmdString.Trim(true); cmdString.Trim(false);
    int splitAt = cmdString.Find(wxT(':'));
    if (splitAt < 0 && cmdString.Find(wxT(' ')) >= 0) {
-      mError = wxT("Command is missing ':'");
-      ResponseQueueTarget::sResponseQueue().AddResponse(
-         Response{wxT("\n")});
-      mValid = false;
+      Failure(wxT("Syntax error!\nCommand is missing ':'"));
       return;
    }
 

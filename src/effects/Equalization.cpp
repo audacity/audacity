@@ -112,7 +112,7 @@
 #include "../widgets/WindowAccessible.h"
 #endif
 
-#include "FileDialog.h"
+#include "../widgets/FileDialog/FileDialog.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "Equalization48x.h"
@@ -944,7 +944,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
             {
-               S.AddPrompt(XO("&EQ Type:"));
+               S.AddPrompt(XXO("&EQ Type:"));
             }
             S.EndHorizontalLay();
 
@@ -954,11 +954,11 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                {
                   mDraw = S.Id(ID_Draw)
                      .Name(XO("Draw Curves"))
-                     .AddRadioButton(XO("&Draw"));
+                     .AddRadioButton(XXO("&Draw"));
 
                   mGraphic = S.Id(ID_Graphic)
                      .Name(XO("Graphic EQ"))
-                     .AddRadioButtonToGroup(XO("&Graphic"));
+                     .AddRadioButtonToGroup(XXO("&Graphic"));
                }
                S.EndHorizontalLay();
             }
@@ -990,7 +990,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
                mLinFreq = S.Id(ID_Linear)
                   .Name(XO("Linear Frequency Scale"))
-                  .AddCheckBox(XO("Li&near Frequency Scale"), false);
+                  .AddCheckBox(XXO("Li&near Frequency Scale"), false);
             }
             S.EndHorizontalLay();
          }
@@ -1005,7 +1005,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
                {
-                  S.AddPrompt(XO("Length of &Filter:"));
+                  S.AddPrompt(XXO("Length of &Filter:"));
                }
                S.EndHorizontalLay();
 
@@ -1040,7 +1040,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.AddSpace(5, 5);
             S.StartHorizontalLay(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
             {
-               S.AddPrompt(XO("&Select Curve:"));
+               S.AddPrompt(XXO("&Select Curve:"));
             }
             S.EndHorizontalLay();
 
@@ -1063,17 +1063,17 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             }
             S.EndHorizontalLay();
 
-            S.Id(ID_Manage).AddButton(XO("S&ave/Manage Curves..."));
+            S.Id(ID_Manage).AddButton(XXO("S&ave/Manage Curves..."));
          }
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
          {
-            S.Id(ID_Clear).AddButton(XO("Fla&tten"));
-            S.Id(ID_Invert).AddButton(XO("&Invert"));
+            S.Id(ID_Clear).AddButton(XXO("Fla&tten"));
+            S.Id(ID_Invert).AddButton(XXO("&Invert"));
 
             mGridOnOff = S.Id(ID_Grid)
                .Name(XO("Show grid lines"))
-               .AddCheckBox(XO("Show g&rid lines"), false);
+               .AddCheckBox(XXO("Show g&rid lines"), false);
          }
          S.EndHorizontalLay();
 
@@ -1111,27 +1111,27 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                : 0;
 
          mMathProcessingType[0] = S.Id(ID_DefaultMath)
-            .AddRadioButton(XO("D&efault"),
+            .AddRadioButton(XXO("D&efault"),
                             0, value);
          mMathProcessingType[1] = S.Id(ID_SSE)
             .Disable(!EffectEqualization48x::GetMathCaps()->SSE)
-            .AddRadioButtonToGroup(XO("&SSE"),
+            .AddRadioButtonToGroup(XXO("&SSE"),
                                    1, value);
          mMathProcessingType[2] = S.Id(ID_SSEThreaded)
             .Disable(!EffectEqualization48x::GetMathCaps()->SSE)
-            .AddRadioButtonToGroup(XO("SSE &Threaded"),
+            .AddRadioButtonToGroup(XXO("SSE &Threaded"),
                                    2, value);
          mMathProcessingType[3] = S.Id(ID_AVX)
             // not implemented
             .Disable(true /* !EffectEqualization48x::GetMathCaps()->AVX */)
-            .AddRadioButtonToGroup(XO("A&VX"),
+            .AddRadioButtonToGroup(XXO("A&VX"),
                                    3, value);
          mMathProcessingType[4] = S.Id(ID_AVXThreaded)
             // not implemented
             .Disable(true /* !EffectEqualization48x::GetMathCaps()->AVX */)
-            .AddRadioButtonToGroup(XO("AV&X Threaded"),
+            .AddRadioButtonToGroup(XXO("AV&X Threaded"),
                                    4, value);
-         S.Id(ID_Bench).AddButton(XO("&Bench"));
+         S.Id(ID_Bench).AddButton(XXO("&Bench"));
       }
       S.EndHorizontalLay();
 
@@ -1288,7 +1288,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                                     sampleCount start, sampleCount len)
 {
    // create a NEW WaveTrack to hold all of the output, including 'tails' each end
-   auto output = mFactory->NewWaveTrack(floatSample, t->GetRate());
+   auto output = t->EmptyCopy();
+   t->ConvertToSampleFormat( floatSample );
 
    wxASSERT(mM - 1 < windowSize);
    size_t L = windowSize - (mM - 1);   //Process L samples at a go
@@ -1381,7 +1382,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       double startT = t->LongSamplesToTime(start);
 
       //output has one waveclip for the total length, even though
-      //t might have whitespace seperating multiple clips
+      //t might have whitespace separating multiple clips
       //we want to maintain the original clip structure, so
       //only paste the intersections of the NEW clip.
 
@@ -1581,7 +1582,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    (void)fileName;
    (void)append;
    mCurves.clear();
-   mCurves.push_back( _("unnamed") );   // we still need a default curve to use
+   mCurves.push_back( wxT("unnamed") );   // we still need a default curve to use
 #else
    // Construct normal curve filename
    //
@@ -1612,6 +1613,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    // If requested file doesn't exist...
    if( !fn.FileExists() && !GetDefaultFileName(fn) ) {
       mCurves.clear();
+      /* i18n-hint: name of the 'unnamed' custom curve */
       mCurves.push_back( _("unnamed") );   // we still need a default curve to use
       return;
    }
@@ -1631,8 +1633,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    if( !reader.Parse( this, fullPath ) )
    {
       /* i18n-hint: EQ stands for 'Equalization'.*/
-      auto msg = XO(
-"Error Loading EQ Curves from file:\n%s\nError message says:\n%s")
+      auto msg = XO("Error Loading EQ Curves from file:\n%s\nError message says:\n%s")
          .Format( fullPath, reader.GetErrorStr() );
       // Inform user of load failure
       Effect::MessageBox(
@@ -1676,8 +1677,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
    if (mCurves.size() == 0)
       return;
 
-   /* i18n-hint: name of the 'unnamed' custom curve */
-   wxString unnamed = _("unnamed");
+   wxString unnamed = wxT("unnamed");
 
    // Save the "unnamed" curve and remove it so we can add it back as the final curve.
    EQCurve userUnnamed(wxT("temp"));
@@ -1723,7 +1723,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
       for (int curveCount = 0; curveCount < numUserCurves; curveCount++) {
          bool isCustom = true;
          tempCurve = userCurves[curveCount];
-         // is the name in the dfault set?
+         // is the name in the default set?
          for (int defCurveCount = 0; defCurveCount < numDefaultCurves; defCurveCount++) {
             if (tempCurve.Name == mCurves[defCurveCount].Name) {
                isCustom = false;
@@ -2296,7 +2296,7 @@ XMLTagHandler *EffectEqualization::HandleXMLChild(const wxChar *tag)
 void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
-   // Start our heirarchy
+   // Start our hierarchy
    xmlFile.StartTag( wxT( "equalizationeffect" ) );
 
    // Write all curves
@@ -2324,7 +2324,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
       xmlFile.EndTag( wxT( "curve" ) );
    }
 
-   // Terminate our heirarchy
+   // Terminate our hierarchy
    xmlFile.EndTag( wxT( "equalizationeffect" ) );
 }
 
@@ -2525,7 +2525,7 @@ void EffectEqualization::EnvLinToLog(void)
    {
       if( when[i]*mHiFreq >= 20 )
       {
-         // Caution: on Linux, when when == 20, the log calulation rounds
+         // Caution: on Linux, when when == 20, the log calculation rounds
          // to just under zero, which causes an assert error.
          double flog = (log10(when[i]*mHiFreq)-loLog)/denom;
          mLogEnvelope->Insert(std::max(0.0, flog) , value[i]);
@@ -3218,7 +3218,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
       freq = lin ? step*i : pow(10., loLog + i*step);   //Hz
       if( ( lin ? step : (pow(10., loLog + (i+1)*step)-freq) ) < delta)
       {   //not enough resolution in FFT
-         // set up for calculating cos using recurrance - faster than calculating it directly each time
+         // set up for calculating cos using recurrence - faster than calculating it directly each time
          double theta = M_PI*freq/mEffect->mHiFreq;   //radians, normalized
          double wtemp = sin(0.5 * theta);
          double wpr = -2.0 * wtemp * wtemp;
@@ -3230,7 +3230,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
          for(int j=0;j<halfM;j++)
          {
             yF += 2. * mOutr[j] * wr;  // This works for me, compared to the previous version.  Compare wr to cos(theta*(halfM-j)).  Works for me.  Keep everything as doubles though.
-            // do recurrance
+            // do recurrence
             wr = (wtemp = wr) * wpr - wi * wpi + wr;
             wi = wi * wpr + wtemp * wpi + wi;
          }
@@ -3394,14 +3394,14 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
       S.StartVerticalLay(0);
       {
-         S.Id(UpButtonID).AddButton(XO("Move &Up"), wxALIGN_LEFT);
-         S.Id(DownButtonID).AddButton(XO("Move &Down"), wxALIGN_LEFT);
-         S.Id(RenameButtonID).AddButton(XO("&Rename..."), wxALIGN_LEFT);
-         S.Id(DeleteButtonID).AddButton(XO("D&elete..."), wxALIGN_LEFT);
-         S.Id(ImportButtonID).AddButton(XO("I&mport..."), wxALIGN_LEFT);
-         S.Id(ExportButtonID).AddButton(XO("E&xport..."), wxALIGN_LEFT);
-         S.Id(LibraryButtonID).AddButton(XO("&Get More..."), wxALIGN_LEFT);
-         S.Id(DefaultsButtonID).AddButton(XO("De&faults"), wxALIGN_LEFT);
+         S.Id(UpButtonID).AddButton(XXO("Move &Up"), wxALIGN_LEFT);
+         S.Id(DownButtonID).AddButton(XXO("Move &Down"), wxALIGN_LEFT);
+         S.Id(RenameButtonID).AddButton(XXO("&Rename..."), wxALIGN_LEFT);
+         S.Id(DeleteButtonID).AddButton(XXO("D&elete..."), wxALIGN_LEFT);
+         S.Id(ImportButtonID).AddButton(XXO("I&mport..."), wxALIGN_LEFT);
+         S.Id(ExportButtonID).AddButton(XXO("E&xport..."), wxALIGN_LEFT);
+         S.Id(LibraryButtonID).AddButton(XXO("&Get More..."), wxALIGN_LEFT);
+         S.Id(DefaultsButtonID).AddButton(XXO("De&faults"), wxALIGN_LEFT);
       }
       S.EndVerticalLay();
    }
@@ -3632,7 +3632,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
 // Delete curve/curves
 void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 {
-   // We could could count them here
+   // We could count them here
    // And then put in a 'Delete N items?' prompt.
 
 #if 0 // 'one at a time' prompt code
@@ -3721,16 +3721,20 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 #endif
 }
 
-static const auto XMLtypes = FileNames::FileTypes{
-   FileNames::XMLFiles
-};
+static const FileNames::FileTypes &XMLtypes()
+{
+   static const FileNames::FileTypes results{
+      FileNames::XMLFiles
+   };
+   return results;
+}
 
 void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 {
    FileDialogWrapper filePicker(
       this,
       XO("Choose an EQ curve file"), FileNames::DataDir(), wxT(""),
-      XMLtypes );
+      XMLtypes() );
    wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
@@ -3752,7 +3756,7 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {
    FileDialogWrapper filePicker(this, XO("Export EQ curves as..."),
       FileNames::DataDir(), wxT(""),
-      XMLtypes,
+      XMLtypes(),
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER); // wxFD_CHANGE_DIR?
    wxString fileName;
    if( filePicker.ShowModal() == wxID_CANCEL)

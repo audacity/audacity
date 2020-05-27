@@ -52,6 +52,7 @@ extern "C" {
 
    #include <libavcodec/avcodec.h>
    #include <libavformat/avformat.h>
+   #include <libavutil/error.h>
    #include <libavutil/fifo.h>
    #include <libavutil/mathematics.h>
 
@@ -167,7 +168,7 @@ void av_log_wx_callback(void* ptr, int level, const char* fmt, va_list vl);
 //----------------------------------------------------------------------------
 // Get FFmpeg library version
 //----------------------------------------------------------------------------
-wxString GetFFmpegVersion(wxWindow *parent);
+TranslatableString GetFFmpegVersion();
 
 /* from here on in, this stuff only applies when ffmpeg is available */
 #if defined(USE_FFMPEG)
@@ -374,7 +375,7 @@ private:
 FFmpegLibs *PickFFmpegLibs();
 
 ///! Helper function - destroys FFmpegLibs object if there is no need for it
-///! anymore, or just decrements it's reference count
+///! anymore, or just decrements its reference count
 void        DropFFmpegLibs();
 
 // This object allows access to the AVFormatContext,
@@ -429,12 +430,12 @@ extern "C" {
    //
    // The FFMPEG_FUNCTION_WITH_RETURN takes 4 arguments:
    // 1)  The return type           <---|
-   // 2)  The function name             | Taken from the FFmpeg funciton prototype
+   // 2)  The function name             | Taken from the FFmpeg function prototype
    // 3)  The function arguments    <---|
    // 4)  The argument list to pass to the real function
    //
    // The FFMPEG_FUNCTION_NO_RETURN takes 3 arguments:
-   // 1)  The function name         <---| Taken from the FFmpeg funciton prototype
+   // 1)  The function name         <---| Taken from the FFmpeg function prototype
    // 2)  The function arguments    <---|
    // 3)  The argument list to pass to the real function
    //
@@ -526,6 +527,12 @@ extern "C" {
       av_get_default_channel_layout,
       (int nb_channels),
       (nb_channels)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_strerror,
+      (int errnum, char *errbuf, size_t errbuf_size),
+      (errnum, errbuf, errbuf_size)
    );
 
    //

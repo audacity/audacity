@@ -1024,11 +1024,18 @@ void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItem *pRegistry )
 }
 
 OrderingPreferenceInitializer::OrderingPreferenceInitializer(
-   Literal root, const Pairs &pairs )
+   Literal root, Pairs pairs )
+   : mPairs{ std::move( pairs ) }
+   , mRoot{ root }
+{
+   (*this)();
+}
+
+void OrderingPreferenceInitializer::operator () ()
 {
    bool doFlush = false;
-   for (const auto &pair : pairs) {
-      const auto key = wxString{'/'} + root + pair.first;
+   for (const auto &pair : mPairs) {
+      const auto key = wxString{'/'} + mRoot + pair.first;
       if ( gPrefs->Read(key).empty() ) {
          gPrefs->Write( key, pair.second );
          doFlush = true;
@@ -1220,7 +1227,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
    mLastFlags = AlwaysEnabledFlag;
 
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
 //   c->CheckDups();
 #endif
 }
@@ -1242,25 +1249,27 @@ void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
    if (undoManager.UndoAvailable()) {
       undoManager.GetShortDescription(cur, &desc);
       commandManager.Modify(wxT("Undo"),
-                             XO("&Undo %s").Format( desc ));
+         XXO("&Undo %s")
+            .Format( desc ));
       commandManager.Enable(wxT("Undo"),
          ProjectHistory::Get( project ).UndoAvailable());
    }
    else {
       commandManager.Modify(wxT("Undo"),
-                            XO("&Undo"));
+                            XXO("&Undo"));
    }
 
    if (undoManager.RedoAvailable()) {
       undoManager.GetShortDescription(cur+1, &desc);
       commandManager.Modify(wxT("Redo"),
-                             XO("&Redo %s").Format( desc));
+         XXO("&Redo %s")
+            .Format( desc ));
       commandManager.Enable(wxT("Redo"),
          ProjectHistory::Get( project ).RedoAvailable());
    }
    else {
       commandManager.Modify(wxT("Redo"),
-                            XO("&Redo"));
+                            XXO("&Redo"));
       commandManager.Enable(wxT("Redo"), false);
    }
 }
@@ -1277,7 +1286,7 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    // On OSX, we can't rebuild the menus while a modal dialog is being shown
    // since the enabled state for menus like Quit and Preference gets out of
    // sync with wxWidgets idea of what it should be.
-#if defined(__WXMAC__) && defined(__WXDEBUG__)
+#if defined(__WXMAC__) && defined(_DEBUG)
    {
       wxDialog *dlg =
          wxDynamicCast(wxGetTopLevelParent(wxWindow::FindFocus()), wxDialog);

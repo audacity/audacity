@@ -1042,7 +1042,7 @@ wxString AudioIOBase::GetDeviceInfo()
          s << XO("%d - %s\n").Format( i, name );
       }
 
-      // Determine mixer capabilities - it it doesn't support either
+      // Determine mixer capabilities - if it doesn't support either
       // input or output, we emulate them (by multiplying this value
       // by all incoming/outgoing samples)
 
@@ -1136,6 +1136,7 @@ wxString AudioIOBase::GetMidiDeviceInfo()
       s << XO("Host name: %s\n").Format( hostName );
       /* i18n-hint: Supported, meaning made available by the system */
       s << XO("Supports output: %d\n").Format( info->output );
+      /* i18n-hint: Supported, meaning made available by the system */
       s << XO("Supports input: %d\n").Format( info->input );
       s << XO("Opened: %d\n").Format( info->opened );
 

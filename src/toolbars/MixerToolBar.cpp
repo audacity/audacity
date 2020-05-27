@@ -54,12 +54,13 @@ BEGIN_EVENT_TABLE(MixerToolBar, ToolBar)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, MixerToolBar::OnCaptureKey)
 END_EVENT_TABLE()
 
-//Standard contructor
+//Standard constructor
 MixerToolBar::MixerToolBar( AudacityProject &project )
 : ToolBar(project, MixerBarID, XO("Mixer"), wxT("Mixer"), true)
 {
    mInputSliderVolume = 0.0;
    mOutputSliderVolume = 0.0;
+   mEnabled = true;
 }
 
 MixerToolBar::~MixerToolBar()
@@ -121,12 +122,31 @@ void MixerToolBar::Populate()
                  this);
    // Show or hide the input slider based on whether it works
    auto gAudioIO = AudioIO::Get();
-   mInputSlider->Enable(gAudioIO->InputMixerWorks());
+   mInputSlider->Enable(mEnabled && gAudioIO->InputMixerWorks());
+   mOutputSlider->Enable(mEnabled);
 
    UpdateControls();
 
    // Add a little space
    Add(2, -1);
+
+   // Listen for capture events
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                  &MixerToolBar::OnAudioCapture,
+                  this);
+}
+
+void MixerToolBar::OnAudioCapture(wxCommandEvent & event)
+{
+   event.Skip();
+
+   AudacityProject *p = &mProject;
+   if ((AudacityProject *) event.GetEventObject() != p)
+   {
+      mEnabled = !event.GetInt();
+      mInputSlider->Enable(mEnabled);
+      mOutputSlider->Enable(mEnabled);
+   }
 }
 
 //Also from SelectionBar;
@@ -169,7 +189,7 @@ void MixerToolBar::UpdatePrefs()
    gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
 
    // Show or hide the input slider based on whether it works
-   mInputSlider->Enable(gAudioIO->InputMixerWorks());
+   mInputSlider->Enable(mEnabled && gAudioIO->InputMixerWorks());
    Layout();
 
 // This code is from before the mixer toolbar was resizable.
@@ -213,7 +233,7 @@ void MixerToolBar::UpdateControls()
 
    // Show or hide the input slider based on whether it works
    auto gAudioIO = AudioIO::Get();
-   mInputSlider->Enable(gAudioIO->InputMixerWorks());
+   mInputSlider->Enable(mEnabled && gAudioIO->InputMixerWorks());
 
    gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
 

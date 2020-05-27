@@ -19,7 +19,7 @@ tables, and automatically attaches and detaches the event handlers.
 #define __AUDACITY_POPUP_MENU_TABLE__
 
 class wxCommandEvent;
-class wxString;
+
 #include <functional>
 #include <vector>
 #include <wx/menu.h> // to inherit wxMenu
@@ -141,6 +141,11 @@ public:
       return mTop;
    }
 
+   void Clear()
+   {
+      mTop.reset();
+   }
+
    // Forms a computed item, which may be omitted when function returns null
    // and thus can be a conditional item
    template< typename Table >
@@ -162,6 +167,16 @@ private:
       const Registry::Placement &placement, Registry::BaseItemPtr pItem );
 
 protected:
+   // This convenience function composes a label, with the following optional
+   // part put in parentheses if useExtra is true
+   static TranslatableString MakeLabel( const TranslatableString &label,
+      bool useExtra, const TranslatableString &extra )
+   {
+      return useExtra
+         ? XXO("%s (%s)").Format( label, extra )
+         : label;
+   }
+
    virtual void Populate() = 0;
 
    // To be used in implementations of Populate():
@@ -268,7 +283,7 @@ END_POPUP_MENU()
 
 where OnCutSelectedText is a (maybe private) member function of MyTable.
 
-Elswhere,
+Elsewhere,
 
 MyTable myTable;
 MyData data;

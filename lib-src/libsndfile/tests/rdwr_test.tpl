@@ -1,6 +1,6 @@
 [+ AutoGen5 template c +]
 /*
-** Copyright (C) 2010-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2010-2012 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software ; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -70,8 +70,8 @@ main (void)
 rdwr_[+ (get "name") +]_test	(const char *filename)
 {	SNDFILE *file ;
 	SF_INFO sfinfo ;
-    sf_count_t frames ;
-    [+ (get "type") +] buffer [160] ;
+	sf_count_t frames ;
+	[+ (get "type") +] buffer [160] ;
 
 	print_test_name ("rdwr_[+ (get "name") +]_test", filename) ;
 

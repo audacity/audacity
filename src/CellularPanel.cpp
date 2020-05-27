@@ -83,7 +83,7 @@ struct CellularPanel::State
    std::vector<UIHandlePtr> mTargets;
    size_t mTarget {};
    unsigned mMouseOverUpdateFlags{};
-   
+
    int mMouseMostRecentX;
    int mMouseMostRecentY;
    
@@ -274,7 +274,6 @@ void CellularPanel::HandleMotion
    TranslatableString status, tooltip;
    wxCursor *pCursor{};
    unsigned refreshCode = 0;
-
    if ( ! doHit ) {
       // Dragging or not
       handle = Target();
@@ -376,7 +375,8 @@ void CellularPanel::HandleMotion
       if (tooltip.Translation() != GetToolTipText()) {
          // Unset first, by analogy with AButton
          UnsetToolTip();
-         SetToolTip(tooltip);
+         if (handle != oldHandle)
+            SetToolTip(tooltip);
       }
 #endif
 
@@ -816,7 +816,6 @@ catch( ... )
 void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
 {
    auto pCell = tpmEvent.pCell;
-
    // Do hit test once more, in case the button really pressed was not the
    // one "anticipated."
    {
@@ -842,6 +841,11 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
          state.mUIHandle.reset(), handle.reset(), ClearTargets();
       else {
          Filter::spActivePanel = this;
+
+#if wxUSE_TOOLTIPS
+         // Remove any outstanding tooltip
+         UnsetToolTip();
+#endif
 
          if( !HasFocus() && AcceptsFocus() )
             SetFocusIgnoringChildren();

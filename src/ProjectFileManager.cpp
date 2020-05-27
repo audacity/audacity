@@ -360,7 +360,7 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
    auto &projectFileIO = ProjectFileIO::Get( proj );
    const auto &settings = ProjectSettings::Get( proj );
 
-   wxASSERT_MSG(!bWantSaveCopy || fromSaveAs, "Copy Project SHOULD only be availabele from SaveAs");
+   wxASSERT_MSG(!bWantSaveCopy || fromSaveAs, "Copy Project SHOULD only be available from SaveAs");
 
    // Some confirmation dialogs
    if (!bWantSaveCopy)
@@ -625,18 +625,34 @@ bool ProjectFileManager::SaveCopyWaveTracks(const FilePath & strProjectPathName,
    auto &trackFactory = TrackFactory::Get( project );
 
    wxString extension, fileFormat;
-#ifdef USE_LIBVORBIS
-   if (bLossless) {
-      extension = wxT("wav");
-      fileFormat = wxT("WAVFLT");
-   } else {
+   bool haveVorbis =
+#if defined(USE_LIBVORBIS)
+      true;
+#else
+      false;
+#endif
+   if (!bLossless && haveVorbis) {
       extension = wxT("ogg");
       fileFormat = wxT("OGG");
+   } else{
+      extension = wxT("wav");
+      fileFormat = wxT("WAV");
+
+      // LLL: Temporary hack until I can figure out how to add an "ExportPCMCommand"
+      //      to create a 32-bit float WAV file.  It tells the ExportPCM exporter
+      //      to use float when exporting the next WAV file.
+      //
+      //      This was done as part of the resolution for bug #2062.
+      //
+      // See: ExportPCM.cpp, LoadEncoding()
+      auto cleanup = finally([&] {
+         gPrefs->DeleteEntry(wxT("/FileFormats/ExportFormat_SF1_ForceFloat"));
+         gPrefs->Flush();
+      });
+      gPrefs->Write(wxT("/FileFormats/ExportFormat_SF1_ForceFloat"), true);
+      gPrefs->Flush();
    }
-#else
-   extension = wxT("wav");
-   fileFormat = wxT("WAVFLT");
-#endif
+
    // Some of this is similar to code in ExportMultipleDialog::ExportMultipleByTrack
    // but that code is really tied into the dialogs.
 
@@ -762,7 +778,7 @@ bool ProjectFileManager::SaveAs(const wxString & newFileName, bool bWantSaveCopy
    success = DoSave(!bOwnsNewAupName || bWantSaveCopy, bWantSaveCopy);
 
    if (success && addToHistory) {
-      FileHistory::Global().AddFileToHistory( project.GetFileName() );
+      FileHistory::Global().Append( project.GetFileName() );
    }
    if (!success || bWantSaveCopy) // bWantSaveCopy doesn't actually change current project.
    {
@@ -915,7 +931,7 @@ will be irreversibly overwritten.").Format( fName, fName );
       }
       else
       {
-         // Overwrite disalowed. The destination project is open in another window.
+         // Overwrite disallowed. The destination project is open in another window.
          AudacityMessageDialog m(
             nullptr,
             XO("The project will not saved because the selected project is open in another window.\nPlease try again and select an original name."),
@@ -938,7 +954,7 @@ will be irreversibly overwritten.").Format( fName, fName );
    success = DoSave(!bOwnsNewAupName || bWantSaveCopy, bWantSaveCopy, bLossless);
 
    if (success) {
-      FileHistory::Global().AddFileToHistory( project.GetFileName() );
+      FileHistory::Global().Append( project.GetFileName() );
       if( !bHasPath )
       {
          gPrefs->Write( wxT("/SaveAs/Path"), filename.GetPath());
@@ -1004,7 +1020,7 @@ bool ProjectFileManager::SaveFromTimerRecording(wxFileName fnFile)
    bSuccess = DoSave(true, false);
 
    if (bSuccess) {
-      FileHistory::Global().AddFileToHistory( project.GetFileName() );
+      FileHistory::Global().Append( project.GetFileName() );
       projectFileIO.SetLoadedFromAup( true );
       projectFileIO.SetProjectTitle();
    }
@@ -1210,7 +1226,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    auto &window = ProjectWindow::Get( project );
 
    // On Win32, we may be given a short (DOS-compatible) file name on rare
-   // occassions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
+   // occasions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
    // convert these to long file name first.
    auto fileName = PlatformCompatibility::ConvertSlashInFileName(
       PlatformCompatibility::GetLongFileName(fileNameArg));
@@ -1369,7 +1385,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       // finished logging errors (if any) before the call to ProjectFSCK()
 
       if (addtohistory)
-         FileHistory::Global().AddFileToHistory(fileName);
+         FileHistory::Global().Append(fileName);
    }
 
    // Use a finally block here, because there are calls to Save() below which
@@ -1428,7 +1444,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
             // Going through OnClose() may be overkill, but it's safe.
             /*
                // There was an error in the load/check and the user
-               // explictly opted to close the project.
+               // explicitly opted to close the project.
                mTracks->Clear(true);
                mFileName = wxT("");
                SetProjectTitle();
@@ -1582,7 +1598,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    // See bug #1224
    // The track panel hasn't we been fully created, so the DoZoomFit() will not give
    // expected results due to a window width of zero.  Should be safe to yield here to
-   // allow the creattion to complete.  If this becomes a problem, it "might" be possible
+   // allow the creation to complete.  If this becomes a problem, it "might" be possible
    // to queue a dummy event to trigger the DoZoomFit().
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
 #endif
@@ -1636,7 +1652,7 @@ bool ProjectFileManager::Import(
       if (!success)
          return false;
 
-      FileHistory::Global().AddFileToHistory(fileName);
+      FileHistory::Global().Append(fileName);
 
       // no more errors, commit
       committed = true;

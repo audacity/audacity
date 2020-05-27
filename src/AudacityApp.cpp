@@ -22,7 +22,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #if 0
 // This may be used to debug memory leaks.
-// See: Visual Leak Dectector @ http://vld.codeplex.com/
+// See: Visual Leak Detector @ http://vld.codeplex.com/
 #include <vld.h>
 #endif
 
@@ -52,6 +52,9 @@ It handles initialization and termination by subclassing wxApp.
 
 #ifdef __WXGTK__
 #include <unistd.h>
+#ifdef HAVE_GTK
+#include <gtk/gtk.h>
+#endif
 #endif
 
 // chmod, lstat, geteuid
@@ -139,110 +142,6 @@ It handles initialization and termination by subclassing wxApp.
     #endif
 #endif
 #endif
-
-// Windows specific linker control...only needed once so
-// this is a good place (unless we want to add another file).
-#if defined(__WXMSW__)
-//#if wxCHECK_VERSION(3, 0, 2) && !wxCHECK_VERSION(3, 1, 0)
-#include <wx/init.h>
-//#endif
-// These lines ensure that Audacity gets WindowsXP themes.
-// Without them we get the old-style Windows98/2000 look under XP.
-#  if !defined(__WXWINCE__)
-#     pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#  endif
-
-// These lines allows conditional inclusion of the various libraries
-// that Audacity can use.
-
-#  if defined(USE_LIBFLAC)
-#     pragma comment(lib, "libflac++")
-#     pragma comment(lib, "libflac")
-#  endif
-
-#  if defined(USE_LIBID3TAG)
-#     pragma comment(lib, "libid3tag")
-#  endif
-
-#  if defined(USE_LIBMAD)
-#     pragma comment(lib, "libmad")
-#  endif
-
-#  if defined(USE_LIBTWOLAME)
-#     pragma comment(lib, "twolame")
-#  endif
-
-#  if defined(USE_LIBVORBIS)
-#     pragma comment(lib, "libogg")
-#     pragma comment(lib, "libvorbis")
-#  endif
-
-#  if defined(USE_LV2)
-#     pragma comment(lib, "lv2")
-#  endif
-
-#  if defined(USE_MIDI)
-#     pragma comment(lib, "portsmf")
-#     endif
-
-#  if defined(EXPERIMENTAL_MIDI_OUT)
-#     pragma comment(lib, "portmidi")
-#  endif
-
-#  if defined(EXPERIMENTAL_SCOREALIGN)
-#     pragma comment(lib, "libscorealign")
-#  endif
-
-#  if defined(USE_NYQUIST)
-#     pragma comment(lib, "libnyquist")
-#  endif
-
-#  if defined(USE_PORTMIXER)
-#     pragma comment(lib, "portmixer")
-#  endif
-
-#  if defined(USE_SBSMS)
-#     pragma comment(lib, "sbsms")
-#  endif
-
-#  if defined(USE_SOUNDTOUCH)
-#     pragma comment(lib, "soundtouch")
-#  endif
-
-#  if defined(USE_VAMP)
-#     pragma comment(lib, "libvamp")
-#  endif
-
-#  if defined(_DEBUG)
-#     define D "d"
-#  else
-#     define D ""
-#  endif
-#  if wxCHECK_VERSION(3, 1, 0)
-#     define V "31"
-#  elif wxCHECK_VERSION(3, 0, 0)
-#     define V "30"
-#  else
-#     define V "28"
-#  endif
-
-#  if defined(EXPERIMENTAL_CRASH_REPORT)
-#     pragma comment(lib, "wxmsw" V "u" D "_qa")
-#  endif
-#  pragma comment(lib, "wxbase" V "u" D)
-#  pragma comment(lib, "wxbase" V "u" D "_net")
-#  pragma comment(lib, "wxmsw"  V "u" D "_adv")
-#  pragma comment(lib, "wxmsw"  V "u" D "_core")
-#  pragma comment(lib, "wxmsw"  V "u" D "_html")
-#  pragma comment(lib, "wxpng"        D)
-#  pragma comment(lib, "wxzlib"       D)
-#  pragma comment(lib, "wxjpeg"       D)
-#  pragma comment(lib, "wxtiff"       D)
-
-#  undef V
-#  undef D
-
-#endif //(__WXMSW__)
 
 // DA: Logo for Splash Screen
 #ifdef EXPERIMENTAL_DA
@@ -460,14 +359,14 @@ void PopulatePreferences()
        (vMajor == 2 && vMinor < 4))
    {
       gPrefs->Write(wxT("/GUI/Toolbars/Selection/W"),"");
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/X"),-1);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Y"),-1);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/H"),55);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/W"),251);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/DockV2"),2);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Dock"),2);
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Path"),"0,0");
-      gPrefs->Write(wxT("/GUI/Toolbars/TimeToolBar/Show"),1);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/X"),-1);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/Y"),-1);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/H"),55);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/W"),251);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/DockV2"),2);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/Dock"),2);
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/Path"),"0,0");
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/Show"),1);
    }
 
    // write out the version numbers to the prefs file for future checking
@@ -964,18 +863,18 @@ void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    int n = event.GetId() - FileHistory::ID_RECENT_FIRST;
    auto &history = FileHistory::Global();
-   const auto &fullPathStr = history.GetHistoryFile(n);
+   const auto &fullPathStr = history[ n ];
 
    // Try to open only if not already open.
    // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks,
-   // because we don't want to RemoveFileFromHistory() just because it already exists,
+   // because we don't want to Remove() just because it already exists,
    // and AudacityApp::OnMacOpenFile() calls MRUOpen() directly.
    // that method does not return the bad result.
    // PRL: Don't call SafeMRUOpen
    // -- if open fails for some exceptional reason of resource exhaustion that
    // the user can correct, leave the file in history.
    if (!ProjectFileManager::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
-      history.RemoveFileFromHistory(n);
+      history.Remove(n);
 }
 
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
@@ -1141,54 +1040,10 @@ bool AudacityApp::OnExceptionInMainLoop()
 #pragma warning( pop )
 #endif //_MSC_VER
 
-int AudacityApp::FilterEvent(wxEvent & event)
-{
-   (void)event;// compiler food (stops unused parameter warning)
-#if !wxCHECK_VERSION(3, 0, 0) && defined(__WXGTK__)
-   // On wxGTK, there's a focus issue where dialogs do not automatically pass focus
-   // to the first child.  This means that you can use the keyboard to navigate within
-   // the dialog.  Watching for the ACTIVATE event allows us to set the focus ourselves
-   // when each dialog opens.
-   //
-   // See bug #57
-   //
-   if (event.GetEventType() == wxEVT_ACTIVATE)
-   {
-      wxActivateEvent & e = (wxActivateEvent &) event;
-
-      if (e.GetEventObject() && e.GetActive() && e.GetEventObject()->IsKindOf(CLASSINFO(wxDialog)))
-      {
-         ((wxWindow *)e.GetEventObject())->SetFocus();
-      }
-   }
-#endif
-
-
-#if defined(__WXMAC__) || defined(__WXGTK__)
-   if (event.GetEventType() == wxEVT_ACTIVATE)
-   {
-      wxActivateEvent & e = static_cast<wxActivateEvent &>(event);
-
-      const auto object = e.GetEventObject();
-      if (object && e.GetActive() &&
-          object->IsKindOf(CLASSINFO(wxWindow)))
-      {
-         const auto window = ((wxWindow *)e.GetEventObject());
-         window->SetFocus();
-#if defined(__WXMAC__)
-         window->NavigateIn();
-#endif
-      }
-   }
-#endif
-
-   return Event_Skip;
-}
-
 AudacityApp::AudacityApp()
 {
 // Do not capture crashes in debug builds
-#if !defined(__WXDEBUG__)
+#if !defined(_DEBUG)
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
    wxHandleFatalExceptions();
@@ -1224,6 +1079,24 @@ bool AudacityApp::OnInit()
 #if defined(__WXMAC__)
    // Disable window animation
    wxSystemOptions::SetOption(wxMAC_WINDOW_PLAIN_TRANSITION, 1);
+#endif
+
+   // Some GTK themes produce larger combo boxes that make them taller
+   // than our single toolbar height restriction.  This will remove some
+   // of the extra space themes add.
+   //
+   // NOTE: It's important that the widgets are created with an initial
+   //       size, otherwise this override will not work.
+#if defined(__WXGTK3__) && defined(HAVE_GTK)
+   // LLL:  I've been unsuccessful at overriding GTK3 styles :-(
+#elif defined(__WXGTK__) && defined(HAVE_GTK)
+   gtk_rc_parse_string("style \"audacity\" {\n"
+                       " GtkButton::inner_border = { 0, 0, 0, 0 }\n"
+                       " xthickness = 4\n"
+                       " ythickness = 0\n"
+                       "}\n"
+                       "widget_class \"*GtkCombo*\" style \"audacity\"");
+
 #endif
 
    // Don't use AUDACITY_NAME here.
@@ -1428,7 +1301,7 @@ bool AudacityApp::OnInit()
    std::shared_ptr< wxCmdLineParser > parser{ ParseCommandLine().release() };
    if (!parser)
    {
-      // Either user requested help or a parsing error occured
+      // Either user requested help or a parsing error occurred
       exit(1);
    }
 
@@ -1542,7 +1415,6 @@ bool AudacityApp::OnInit()
 
       auto &recentFiles = FileHistory::Global();
       recentFiles.UseMenu(recentMenu);
-      recentFiles.AddFilesToMenu(recentMenu);
 
       SetExitOnFrameDelete(false);
 
@@ -1930,7 +1802,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 
    mIPCServ.reset();
 
-   // Try twice to either become the server or make a connnection to one.  If
+   // Try twice to either become the server or make a connection to one.  If
    // both attempts fail, then there's something wrong that we can't deal with,
    // like insufficient access to create the socket, no memory, etc.
    for (int attempts = 0; attempts < 2; ++attempts)
@@ -1972,9 +1844,9 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       Destroy_ptr<wxSocketClient> sock { safenew wxSocketClient() };
       sock->SetFlags(wxSOCKET_WAITALL);
 
-      // We try up to 50 times since there's a small window
+      // We try up to 20 times since there's a small window
       // where the server may not have been fully initialized.
-      for (int i = 0; i < 50; ++i)
+      for (int i = 0; i < 20; ++i)
       {
          // Attempt to connect to an active Audacity.
          sock->Connect(addr, true);
@@ -2014,6 +1886,11 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          }
 
          wxMilliSleep(100);
+
+         if (i == 0)
+         {
+            printf("Attempting to connect to Audacity failed...retrying\n");
+         }
       }
 
       // At this point, we've exhausted our connections attempts. So, we assume
@@ -2383,7 +2260,7 @@ void AudacityApp::AssociateFileTypes()
                associateFileTypes.SetName(root_key + wxT("Audacity.Project\\shell\\open\\command"));
                wxString tmpRegAudPath;
                if(associateFileTypes.Exists()) {
-                  tmpRegAudPath = wxString(associateFileTypes).Lower();
+                  tmpRegAudPath = associateFileTypes.QueryDefaultValue().Lower();
                }
                if (!associateFileTypes.Exists() ||
                      (tmpRegAudPath.Find(wxT("audacity.exe")) >= 0)) {

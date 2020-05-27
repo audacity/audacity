@@ -57,6 +57,7 @@ Track classes.
 #include "prefs/QualityPrefs.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
+#include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/WaveformSettings.h"
 
 #include "InconsistencyException.h"
@@ -529,15 +530,22 @@ void WaveTrack::Trim (double t0, double t1)
 
 
 
+WaveTrack::Holder WaveTrack::EmptyCopy(
+   const std::shared_ptr<DirManager> &pDirManager ) const
+{
+   auto result = std::make_shared<WaveTrack>( mDirManager, mFormat, mRate );
+   result->Init(*this);
+   result->mDirManager = pDirManager ? pDirManager : mDirManager;
+   return result;
+}
+
 Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   auto result = std::make_shared<WaveTrack>( mDirManager, mFormat, mRate );
+   auto result = EmptyCopy();
    WaveTrack *newTrack = result.get();
-
-   newTrack->Init(*this);
 
    // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know, but
    // that was the old behavior.  But this function is also used by the
@@ -696,7 +704,7 @@ void WaveTrack::SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSetting
 // followed by Paste() and is used mostly by effects that
 // can't replace track data directly using Get()/Set().
 //
-// HandleClear() removes any cut/split lines lines with the
+// HandleClear() removes any cut/split lines with the
 // cleared range, but, in most cases, effects want to preserve
 // the existing cut/split lines, so they are saved before the
 // HandleClear()/Paste() and restored after.
@@ -940,7 +948,7 @@ void WaveTrack::HandleClear(double t0, double t1,
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   bool editClipCanMove = gPrefs->GetEditClipsCanMove();
+   bool editClipCanMove = GetEditClipsCanMove();
 
    WaveClipPointers clipsToDelete;
    WaveClipHolders clipsToAdd;
@@ -1113,7 +1121,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
 void WaveTrack::Paste(double t0, const Track *src)
 // WEAK-GUARANTEE
 {
-   bool editClipCanMove = gPrefs->GetEditClipsCanMove();
+   bool editClipCanMove = GetEditClipsCanMove();
 
    bool bOk = src && src->TypeSwitch< bool >( [&](const WaveTrack *other) {
 
@@ -1852,7 +1860,7 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
 
 bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
                     sampleCount start, size_t len, fillFormat fill,
-                    bool mayThrow, sampleCount * pNumCopied) const
+                    bool mayThrow, sampleCount * pNumWithinClips) const
 {
    // Simple optimization: When this buffer is completely contained within one clip,
    // don't clear anything (because we won't have to). Otherwise, just clear
@@ -1887,6 +1895,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
       }
    }
 
+   // Iterate the clips.  They are not necessarily sorted by time.
    for (const auto &clip: mClips)
    {
       auto clipStart = clip->GetStartSample();
@@ -1912,7 +1921,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
             // startDelta is zero
          }
          else {
-            // startDelta is nonnegative and less than than len
+            // startDelta is nonnegative and less than len
             // samplesToCopy is positive and not more than len
          }
 
@@ -1926,8 +1935,8 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
             samplesCopied += samplesToCopy;
       }
    }
-   if( pNumCopied )
-      *pNumCopied = samplesCopied;
+   if( pNumWithinClips )
+      *pNumWithinClips = samplesCopied;
    return result;
 }
 
@@ -1960,7 +1969,7 @@ void WaveTrack::Set(samplePtr buffer, sampleFormat format,
             // startDelta is zero
          }
          else {
-            // startDelta is nonnegative and less than than len
+            // startDelta is nonnegative and less than len
             // samplesToCopy is positive and not more than len
          }
 
@@ -2356,7 +2365,7 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                               double* cutlineEnd)
 // STRONG-GUARANTEE
 {
-   bool editClipCanMove = gPrefs->GetEditClipsCanMove();
+   bool editClipCanMove = GetEditClipsCanMove();
 
    // Find clip which contains this cut line
    double start = 0, end = 0;

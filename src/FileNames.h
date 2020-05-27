@@ -90,7 +90,7 @@ namespace FileNames
    wxString LowerCaseAppNameInPath( const wxString & dirIn);
    /** \brief Audacity user data directory
     *
-    * Where audacity keeps it's settings and other user data squirreled away,
+    * Where audacity keeps its settings and other user data squirreled away,
     * by default ~/.audacity-data/ on Unix, Application Data/Audacity on
     * windows system */
    FilePath DataDir();

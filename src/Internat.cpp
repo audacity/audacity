@@ -188,7 +188,7 @@ wxString Internat::ToDisplayString(double numberToConvert,
    return result;
 }
 
-wxString Internat::FormatSize(wxLongLong size)
+TranslatableString Internat::FormatSize(wxLongLong size)
 {
    /* wxLongLong contains no built-in conversion to double */
    double dSize = size.GetHi() * pow(2.0, 32);  // 2 ^ 32
@@ -197,27 +197,27 @@ wxString Internat::FormatSize(wxLongLong size)
    return FormatSize(dSize);
 }
 
-wxString Internat::FormatSize(double size)
+TranslatableString Internat::FormatSize(double size)
 {
-   wxString sizeStr;
+   TranslatableString sizeStr;
 
    if (size == -1)
-      sizeStr = _("Unable to determine");
+      sizeStr = XO("Unable to determine");
    else {
       /* make it look nice, by formatting into k, MB, etc */
       if (size < 1024.0)
-         sizeStr = ToDisplayString(size) + wxT(" ") + _("bytes");
+         sizeStr = XO("%s bytes").Format( ToDisplayString(size) );
       else if (size < 1024.0 * 1024.0) {
          /* i18n-hint: Abbreviation for Kilo bytes */
-         sizeStr = ToDisplayString(size / 1024.0, 1) + wxT(" ") + _("KB");
+         sizeStr = XO("%s KB").Format( ToDisplayString(size / 1024.0, 1) );
       }
       else if (size < 1024.0 * 1024.0 * 1024.0) {
          /* i18n-hint: Abbreviation for Mega bytes */
-         sizeStr = ToDisplayString(size / (1024.0 * 1024.0), 1) + wxT(" ") + _("MB");
+         sizeStr = XO("%s MB").Format( ToDisplayString(size / (1024.0 * 1024.0), 1) );
       }
       else {
          /* i18n-hint: Abbreviation for Giga bytes */
-         sizeStr = ToDisplayString(size / (1024.0 * 1024.0 * 1024.0), 1) + wxT(" ") + _("GB");
+         sizeStr = XO("%s GB").Format( ToDisplayString(size / (1024.0 * 1024.0 * 1024.0), 1) );
       }
    }
 
@@ -244,19 +244,6 @@ bool Internat::SanitiseFilename(wxString &name, const wxString &sub)
    name.Replace(wxT("/"), wxT(":"));
 #endif
 
-   return result;
-}
-
-wxString Internat::StripAccelerators(const wxString &s)
-{
-   wxString result;
-   result.reserve(s.length());
-   for(size_t i = 0; i < s.length(); i++) {
-      if (s[i] == '\t')
-         break;
-      if (s[i] != '&' && s[i] != '.')
-         result += s[i];
-   }
    return result;
 }
 
@@ -376,8 +363,10 @@ wxString TranslatableString::DoChooseFormat(
       ? ( nn == 1 ? singular : plural )
       : wxGetTranslation(
             singular, plural, nn
-            // , wxString{}
-            // , context
+#if HAS_I18N_CONTEXTS
+            , wxString{} // domain
+            , context
+#endif
          );
 }
 

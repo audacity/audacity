@@ -237,7 +237,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
             .Name(XO("Bass (dB):"))
             .Validator<FloatingPointValidator<double>>(
                1, &mBass, NumValidatorStyle::DEFAULT, MIN_Bass, MAX_Bass)
-            .AddTextBox(XO("Ba&ss (dB):"), wxT(""), 10);
+            .AddTextBox(XXO("Ba&ss (dB):"), wxT(""), 10);
 
          mBassS = S.Id(ID_Bass)
             .Name(XO("Bass"))
@@ -248,7 +248,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
          mTrebleT = S.Id(ID_Treble)
             .Validator<FloatingPointValidator<double>>(
                1, &mTreble, NumValidatorStyle::DEFAULT, MIN_Treble, MAX_Treble)
-            .AddTextBox(XO("&Treble (dB):"), wxT(""), 10);
+            .AddTextBox(XXO("&Treble (dB):"), wxT(""), 10);
 
          mTrebleS = S.Id(ID_Treble)
             .Name(XO("Treble"))
@@ -269,7 +269,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
          mGainT = S.Id(ID_Gain)
             .Validator<FloatingPointValidator<double>>(
                1, &mGain, NumValidatorStyle::DEFAULT, MIN_Gain, MAX_Gain)
-            .AddTextBox(XO("&Volume (dB):"), wxT(""), 10);
+            .AddTextBox(XXO("&Volume (dB):"), wxT(""), 10);
 
          mGainS = S.Id(ID_Gain)
             .Name(XO("Level"))
@@ -281,7 +281,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2, wxCENTER);
       {
          // Link checkbox
-         mLinkCheckBox = S.Id(ID_Link).AddCheckBox(XO("&Link Volume control to Tone controls"),
+         mLinkCheckBox = S.Id(ID_Link).AddCheckBox(XXO("&Link Volume control to Tone controls"),
                                           DEF_Link);
       }
       S.EndMultiColumn();
@@ -372,13 +372,13 @@ size_t EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
 
    data.gain = DB_TO_LINEAR(mGain);
 
-   // Compute coefficents of the low shelf biquand IIR filter
+   // Compute coefficients of the low shelf biquand IIR filter
    if (data.bass != oldBass)
       Coefficents(data.hzBass, data.slope, mBass, data.samplerate, kBass,
                   data.a0Bass, data.a1Bass, data.a2Bass,
                   data.b0Bass, data.b1Bass, data.b2Bass);
 
-   // Compute coefficents of the high shelf biquand IIR filter
+   // Compute coefficients of the high shelf biquand IIR filter
    if (data.treble != oldTreble)
       Coefficents(data.hzTreble, data.slope, mTreble, data.samplerate, kTreble,
                   data.a0Treble, data.a1Treble, data.a2Treble,

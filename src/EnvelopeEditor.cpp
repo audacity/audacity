@@ -316,7 +316,7 @@ bool EnvelopeEditor::HandleDragging(const wxMouseEvent & event, wxRect & r,
    return true;
 }
 
-// Exit dragging mode and delete dragged point if neccessary.
+// Exit dragging mode and delete dragged point if necessary.
 bool EnvelopeEditor::HandleMouseButtonUp()
 {
    mEnvelope.ClearDragPoint();

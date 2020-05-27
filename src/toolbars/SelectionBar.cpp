@@ -51,7 +51,6 @@ with changes in the SelectionBar.
 #include <wx/statline.h>
 
 
-#include "../widgets/AButton.h"
 #include "../AudioIOBase.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
@@ -153,11 +152,14 @@ void SelectionBar::Create(wxWindow * parent)
 }
 
 
-auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer ){
-   auStaticText * pTitle = safenew auStaticText(this, Title );
+auStaticText * SelectionBar::AddTitle(
+   const TranslatableString & Title, wxSizer * pSizer ){
+   const auto translated = Title.Translation();
+   auStaticText * pTitle = safenew auStaticText(this, translated );
    pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
-   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.length() == 1 ) ? 0:5);
+   pSizer->Add( pTitle, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxRIGHT, 5 );
+
    return pTitle;
 }
 
@@ -186,38 +188,22 @@ void SelectionBar::Populate()
 
    mStartTime = mEndTime = mLengthTime = mCenterTime = mAudioTime = nullptr;
 
-   // This will be inherited by all children:
-   SetFont(wxFont(
-#ifdef __WXMAC__
-                  12
-#else
-                  9
-#endif
-                  ,
-                  wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-
-   wxFlexGridSizer *mainSizer;
-
-   /* we don't actually need a control yet, but we want to use its methods
-    * to do some look-ups, so we'll have to create one. We can't make the
-    * look-ups static because they depend on translations which are done at
-    * runtime */
-
    // Outer sizer has space top and left.
    // Inner sizers have space on right only.
    // This choice makes for a nice border and internal spacing and places clear responsibility
    // on each sizer as to what spacings it creates.
-   Add((mainSizer = safenew wxFlexGridSizer(SIZER_COLS, 1, 1)), 0, wxALIGN_TOP | wxLEFT | wxTOP, 5);
+   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(SIZER_COLS, 1, 1);
+   Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
    // Top row (mostly labels)
    wxColour clrText =  theTheme.Colour( clrTrackPanelText );
    wxColour clrText2 = *wxBLUE;
-   AddTitle( _("Project Rate (Hz)"), mainSizer );
+   AddTitle( XO("Project Rate (Hz)"), mainSizer );
    AddVLine( mainSizer );
-   AddTitle( _("Snap-To"), mainSizer );
+   AddTitle( XO("Snap-To"), mainSizer );
    AddVLine( mainSizer );
 #ifdef TIME_IN_SELECT_TOOLBAR
-   AddTitle( _("Audio Position"), mainSizer );
+   AddTitle( XO("Audio Position"), mainSizer );
    AddVLine( mainSizer );
 #endif
 
@@ -236,20 +222,13 @@ void SelectionBar::Populate()
       // so that name can be set on a standard control
       mChoice->SetAccessible(safenew WindowAccessible(mChoice));
 #endif
-#ifdef __WXGTK__
-      // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
-      // be three units high.
-      wxSize sz = mChoice->GetBestSize();
-      sz.SetHeight( sz.y-4);
-      mChoice->SetMinSize( sz );
-#endif
-      mainSizer->Add(mChoice, 0, wxALIGN_TOP | wxEXPAND | wxRIGHT, 6);
+      mainSizer->Add(mChoice, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 6);
    }
 
-   // Botton row, (mostly time controls)
+   // Bottom row, (mostly time controls)
    mRateBox = safenew wxComboBox(this, RateID,
                              wxT(""),
-                             wxDefaultPosition, wxSize(80, -1));
+                             wxDefaultPosition, wxDefaultSize);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    mRateBox->SetAccessible(safenew WindowAccessible(mRateBox));
@@ -288,31 +267,16 @@ void SelectionBar::Populate()
                       &SelectionBar::OnFocus,
                       this);
 
-#ifdef __WXGTK__
-   // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
-   // be three units high.
-   wxSize sz = mRateBox->GetBestSize();
-   sz.SetHeight( sz.y-4);
-   mRateBox->SetMinSize( sz );
-#endif
+   mainSizer->Add(mRateBox, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 5);
 
-   mainSizer->Add(mRateBox, 0, wxALIGN_TOP | wxRIGHT, 5);
    AddVLine( mainSizer );
 
    mSnapTo = safenew wxChoice(this, SnapToID,
-                          wxDefaultPosition, wxDefaultSize,
-                          SnapManager::GetSnapLabels());
+      wxDefaultPosition, wxDefaultSize,
+      transform_container< wxArrayStringEx >(
+         SnapManager::GetSnapLabels(),
+         std::mem_fn( &TranslatableString::Translation ) ) );
 
-#ifdef __WXGTK__
-   // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
-   // be three units high.
-   sz = mSnapTo->GetBestSize();
-   sz.SetHeight( sz.y-4);
-   mSnapTo->SetMinSize( sz );
-#endif
-
-   mainSizer->Add(mSnapTo,
-                  0, wxALIGN_TOP | wxRIGHT, 5);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    mSnapTo->SetAccessible(safenew WindowAccessible(mSnapTo));
@@ -327,6 +291,8 @@ void SelectionBar::Populate()
    mSnapTo->Bind(wxEVT_KILL_FOCUS,
                     &SelectionBar::OnFocus,
                     this);
+
+   mainSizer->Add(mSnapTo, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 5);
 
    AddVLine( mainSizer );
 
@@ -353,6 +319,17 @@ void SelectionBar::Populate()
       mainSizer->Add(hSizer.release(), 0, wxALIGN_TOP | wxRIGHT, 0);
    }
 
+   // Make sure they are fully expanded to the longest item
+#if defined(__WXGTK3__)
+   mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, toolbarSingle));
+   mRateBox->SetMinSize(wxSize(mRateBox->GetBestSize().x, toolbarSingle));
+   mSnapTo->SetMinSize(wxSize(mSnapTo->GetBestSize().x, toolbarSingle));
+#else
+   mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, wxDefaultCoord));
+   mRateBox->SetMinSize(wxSize(mRateBox->GetBestSize().x, wxDefaultCoord));
+   mSnapTo->SetMinSize(wxSize(mSnapTo->GetBestSize().x, wxDefaultCoord));
+#endif
+
    mChoice->MoveBeforeInTabOrder( mStartTime );
    // This shows/hides controls.
    // Do this before layout so that we are sized right.
@@ -360,8 +337,6 @@ void SelectionBar::Populate()
    mainSizer->Layout();
    RegenerateTooltips();
    Layout();
-
-   SetMinSize( GetSizer()->GetMinSize() );
 }
 
 void SelectionBar::UpdatePrefs()
@@ -525,23 +500,24 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    evt.Skip(false);
 
    // Save format name before recreating the controls so they resize properly
+   if (mStartTime)
    {
       auto format = mStartTime->GetBuiltinName(index);
       if (mListener)
          mListener->AS_SetSelectionFormat(format);
    }
 
-   RegenerateTooltips();
-
    // ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.
    for( i=0;i<5;i++)
       *Ctrls[i]=NULL;
 
+   mChoice = NULL;
    mRateBox = NULL;
    mRateText = NULL;
+   mSnapTo = NULL;
 
-   ReCreateButtons();
+   ToolBar::ReCreateButtons();
 
    ValuesToControls();
 
@@ -553,6 +529,9 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    if( iFocus >=0 )
       if( *Ctrls[iFocus] )
          (*Ctrls[iFocus])->SetFocus();
+
+   RegenerateTooltips();
+
    Updated();
 }
 
@@ -677,8 +656,10 @@ void SelectionBar::ShowHideControls(int mode)
 
    NumericTextCtrl ** Ctrls[4]  = { &mStartTime,  &mCenterTime,  &mLengthTime,  &mEndTime};
    for(int i=0;i<4;i++){
-      if( *Ctrls[i]) 
+      if( *Ctrls[i]){ 
          (*Ctrls[i])->Show( (mask & (1<<i))!=0 );
+         (*Ctrls[i])->Refresh();
+      }
    }
 }
 

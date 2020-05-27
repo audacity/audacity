@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackInfo.h"
 #include "../../../../TrackPanel.h"
+#include "../../../../TrackPanelAx.h"
 #include "../../../../UndoManager.h"
 #include "../../../../WaveTrack.h"
 
@@ -28,7 +29,7 @@ GainSliderHandle::~GainSliderHandle()
 {
 }
 
-std::shared_ptr<WaveTrack> GainSliderHandle::GetWaveTrack()
+std::shared_ptr<WaveTrack> GainSliderHandle::GetWaveTrack() const
 {
    return std::static_pointer_cast<WaveTrack>(mpTrack.lock());
 }
@@ -62,6 +63,26 @@ UIHandle::Result GainSliderHandle::CommitChanges
    ProjectHistory::Get( *pProject )
       .PushState(XO("Moved gain slider"), XO("Gain"), UndoPush::CONSOLIDATE);
    return RefreshCode::RefreshCell;
+}
+
+TranslatableString GainSliderHandle::Tip(
+   const wxMouseState &, AudacityProject &project) const
+{
+   TranslatableString val;
+   float value = 0;
+
+   auto pTrack = GetWaveTrack();
+   if (pTrack)
+      value = pTrack->GetGain();
+
+   // LLL: Can't access the slider since Tip() is a const method and getting the slider
+   //      is not, so duplicate what LWSlider does.
+
+   /* i18n-hint dB abbreviates decibels */
+   val = XO("%+.1f dB").Format(LINEAR_TO_DB(value));
+
+   /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
+   return XO("%s: %s").Format(XO("Gain"), val);
 }
 
 UIHandlePtr GainSliderHandle::HitTest
@@ -106,7 +127,7 @@ PanSliderHandle::~PanSliderHandle()
 {
 }
 
-std::shared_ptr<WaveTrack> PanSliderHandle::GetWaveTrack()
+std::shared_ptr<WaveTrack> PanSliderHandle::GetWaveTrack() const
 {
    return std::static_pointer_cast<WaveTrack>(mpTrack.lock());
 }
@@ -141,6 +162,38 @@ UIHandle::Result PanSliderHandle::CommitChanges
    ProjectHistory::Get( *pProject )
       .PushState(XO("Moved pan slider"), XO("Pan"), UndoPush::CONSOLIDATE);
    return RefreshCode::RefreshCell;
+}
+
+TranslatableString PanSliderHandle::Tip(
+   const wxMouseState &, AudacityProject &project) const
+{
+   TranslatableString val;
+   float value = 0.0;
+
+   auto pTrack = GetWaveTrack();
+   if (pTrack)
+      value = pTrack->GetPan();
+
+   // LLL: Can't access the slider since Tip() is a const method and getting the slider
+   //      is not, so duplicate what LWSlider does.
+
+   if (value == 0.0)
+   {
+      val = XO("Center");
+   }
+   else
+   {
+      const auto v = 100.0f * fabsf(value);
+      if (value < 0.0)
+         /* i18n-hint: Stereo pan setting */
+         val = XO("%.0f%% Left").Format(v);
+      else
+         /* i18n-hint: Stereo pan setting */
+         val = XO("%.0f%% Right").Format(v);
+   }
+
+   /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
+   return XO("%s: %s").Format(XO("Pan"), val);
 }
 
 UIHandlePtr PanSliderHandle::HitTest

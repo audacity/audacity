@@ -35,7 +35,6 @@
 #include <wx/file.h>
 #include <wx/filectrl.h>
 #include <wx/filename.h>
-#include <wx/progdlg.h>
 #include <wx/simplebook.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
@@ -49,7 +48,7 @@
 
 #include "sndfile.h"
 
-#include "FileDialog.h"
+#include "../widgets/FileDialog/FileDialog.h"
 
 #include "../DirManager.h"
 #include "../FileFormats.h"
@@ -278,7 +277,7 @@ wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
    EVT_FILECTRL_FILTERCHANGED(wxID_ANY, Exporter::OnFilterChanged)
    EVT_BUTTON(wxID_HELP, Exporter::OnHelp)
-   EVT_COMMAND( wxID_ANY, AUDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
+   EVT_COMMAND(wxID_ANY, AUDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
 END_EVENT_TABLE()
 
 namespace {
@@ -361,21 +360,9 @@ Exporter::~Exporter()
 {
 }
 
-// Beginnings of a fix for bug 1355.
-// 'Other Uncompressed Files' Header option updates do not update
-// the extension shown in the file dialog.
-// Unfortunately, although we get the new extension here, we
-// can't do anything with it as the FileDialog does not provide
-// methods for setting its standard controls.
-// We would need OS specific code that 'knows' about the system 
-// dialogs.
-void Exporter::OnExtensionChanged(wxCommandEvent &evt) {
-   wxString ext = evt.GetString();
-   ext = ext.BeforeFirst(' ').Lower();
-   wxLogDebug("Extension changed to '.%s'", ext);
-//   wxString Name = mDialog->GetFilename();
-//   Name = Name.BeforeLast('.')+ext;
-//   mDialog->SetFilename(Name);
+void Exporter::OnExtensionChanged(wxCommandEvent &evt)
+{
+   mDialog->SetFileExtension(evt.GetString().BeforeFirst(' ').Lower());
 }
 
 void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
@@ -644,7 +631,7 @@ bool Exporter::GetFilename()
    }
    wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
 
-//Bug 1304: Set a default path if none was given.  For Export.
+   //Bug 1304: Set a default path if none was given.  For Export.
    mFilename = FileNames::DefaultToDocumentsFolder(wxT("/Export/Path"));
    mFilename.SetName(mProject->GetProjectName());
    if (mFilename.GetName().empty())
@@ -732,7 +719,8 @@ bool Exporter::GetFilename()
 
          mFilename.SetExt(defext);
       }
-      else if (!mPlugins[mFormat]->CheckFileName(mFilename, mSubFormat))
+
+      if (!mPlugins[mFormat]->CheckFileName(mFilename, mSubFormat))
       {
          continue;
       }
@@ -782,6 +770,8 @@ If you still wish to export, please choose a different filename or folder."));
       if (overwritingMissingAliasFiles)
          continue;
 
+// For Mac, it's handled by the FileDialog
+#if !defined(__WXMAC__)
       if (mFilename.FileExists()) {
          auto prompt = XO("A file named \"%s\" already exists. Replace?")
             .Format( mFilename.GetFullPath() );
@@ -794,6 +784,7 @@ If you still wish to export, please choose a different filename or folder."));
             continue;
          }
       }
+#endif
 
       break;
    }
@@ -871,7 +862,7 @@ void Exporter::DisplayOptions(int index)
 #endif
 }
 
-bool Exporter::CheckMix()
+bool Exporter::CheckMix(bool prompt /*= true*/ )
 {
    // Clean up ... should never happen
    mMixerSpec.reset();
@@ -900,27 +891,29 @@ bool Exporter::CheckMix()
          if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
             exportedChannels = mChannels;
 
-         auto pWindow = ProjectWindow::Find( mProject );
-         if (exportedChannels == 1) {
-            if (ShowWarningDialog(pWindow,
-                                  wxT("MixMono"),
-                                  XO("Your tracks will be mixed down and exported as one mono file."),
-                                  true) == wxID_CANCEL)
-               return false;
-         }
-         else if (exportedChannels == 2) {
-            if (ShowWarningDialog(pWindow,
-                                  wxT("MixStereo"),
-                                  XO("Your tracks will be mixed down and exported as one stereo file."),
-                                  true) == wxID_CANCEL)
-               return false;
-         }
-         else {
-            if (ShowWarningDialog(pWindow,
-                                  wxT("MixUnknownChannels"),
-                                  XO("Your tracks will be mixed down to one exported file according to the encoder settings."),
-                                  true) == wxID_CANCEL)
-               return false;
+         if (prompt) {
+            auto pWindow = ProjectWindow::Find(mProject);
+            if (exportedChannels == 1) {
+               if (ShowWarningDialog(pWindow,
+                  wxT("MixMono"),
+                  XO("Your tracks will be mixed down and exported as one mono file."),
+                  true) == wxID_CANCEL)
+                  return false;
+            }
+            else if (exportedChannels == 2) {
+               if (ShowWarningDialog(pWindow,
+                  wxT("MixStereo"),
+                  XO("Your tracks will be mixed down and exported as one stereo file."),
+                  true) == wxID_CANCEL)
+                  return false;
+            }
+            else {
+               if (ShowWarningDialog(pWindow,
+                  wxT("MixUnknownChannels"),
+                  XO("Your tracks will be mixed down to one exported file according to the encoder settings."),
+                  true) == wxID_CANCEL)
+                  return false;
+            }
          }
       }
    }
@@ -935,9 +928,10 @@ bool Exporter::CheckMix()
                            NULL,
                            1,
                            XO("Advanced Mixing Options"));
-
-      if (md.ShowModal() != wxID_OK) {
-         return false;
+      if (prompt) {
+         if (md.ShowModal() != wxID_OK) {
+            return false;
+         }
       }
 
       mMixerSpec = std::make_unique<MixerSpec>(*(md.GetMixerSpec()));
@@ -1051,6 +1045,31 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
       return;
    }
 
+#if defined(__WXGTK__)
+   // On Windows and MacOS, changing the filter in the dialog
+   // automatically changes the extension of the current file
+   // name. GTK doesn't, so do it here.
+   {
+      FileNames::FileTypes fileTypes;
+
+      int i = -1;
+      for (const auto &pPlugin : mPlugins)
+      {
+         ++i;
+         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
+         {
+            auto mask = pPlugin->GetMask(j);
+            fileTypes.insert( fileTypes.end(), mask.begin(), mask.end() );
+         }
+      }
+
+      if (index < fileTypes.size())
+      {
+         mDialog->SetFileExtension(fileTypes[index].extensions[0].Lower());
+      }
+   }
+#endif
+
    mBook->ChangeSelection(index);
 }
 
@@ -1079,7 +1098,7 @@ bool Exporter::ProcessFromTimerRecording(bool selectedOnly,
    }
 
    // Check for down mixing
-   if (!CheckMix()) {
+   if (!CheckMix(false)) {
       return false;
    }
 

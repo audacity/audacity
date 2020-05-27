@@ -231,6 +231,21 @@ void ToolFrame::OnMotion( wxMouseEvent & event )
       wxRect rect = GetRect();
 
       rect.SetBottomRight( pos );
+
+      // Keep it within max size, if specificed
+      wxSize maxsz = mBar->GetMaxSize();
+      if (maxsz != wxDefaultSize)
+      {
+         if (maxsz.x != wxDefaultCoord && rect.width > maxsz.x)
+         {
+            rect.width = maxsz.x;
+         }
+         if (maxsz.y != wxDefaultCoord && rect.height > maxsz.y)
+         {
+            rect.height = maxsz.y;
+         }
+      }
+
       if( rect.width < mMinSize.x )
       {
          rect.width = mMinSize.x;
@@ -625,7 +640,7 @@ void ToolManager::Reset()
          )
          expose = false;
 
-      // Next condition will alwys (?) be true, as the reset configuration is
+      // Next condition will always (?) be true, as the reset configuration is
       // with no floating toolbars.
       if( dock != NULL )
       {

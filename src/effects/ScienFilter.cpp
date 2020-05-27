@@ -473,15 +473,15 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .Focus()
             .Validator<wxGenericValidator>(&mFilterType)
             .MinSize( { -1, -1 } )
-            .AddChoice(XO("&Filter Type:"),
+            .AddChoice(XXO("&Filter Type:"),
                Msgids(kTypeStrings, nTypes)
             );
 
          mFilterOrderCtl = S.Id(ID_Order)
             .Validator<wxGenericValidator>(&mOrderIndex)
-            /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
             .MinSize( { -1, -1 } )
-            .AddChoice(XO("O&rder:"),
+            /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
+            .AddChoice(XXO("O&rder:"),
                []{
                   TranslatableStrings orders;
                   for (int i = 1; i <= 10; i++)
@@ -505,7 +505,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          mFilterSubTypeCtl = S.Id(ID_SubType)
             .Validator<wxGenericValidator>(&mFilterSubtype)
             .MinSize( { -1, -1 } )
-            .AddChoice(XO("&Subtype:"),
+            .AddChoice(XXO("&Subtype:"),
                Msgids(kSubTypeStrings, nSubTypes)
             );
 
@@ -514,7 +514,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .Validator<FloatingPointValidator<float>>(
                1, &mCutoff, NumValidatorStyle::DEFAULT,
                MIN_Cutoff, mNyquist - 1)
-            .AddTextBox(XO("C&utoff:"), wxT(""), 10);
+            .AddTextBox(XXO("C&utoff:"), wxT(""), 10);
          S.AddUnits(XO("Hz"));
 
          mStopbandRippleCtlP =

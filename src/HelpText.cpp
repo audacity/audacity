@@ -215,8 +215,6 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 
    if (Key == wxT("welcome"))
    {
-      /* i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.*/
-      /* i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.*/
       wxStringOutputStream o;
       wxTextOutputStream s(o);
       s
@@ -267,9 +265,11 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          << wxT("</h3></center>")
          << XO("These are our support methods:")
          << wxT("<p><ul><li>")
+         /* i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.*/
          << XO("[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]")
          << wxT("</li><li>")
          << XO(
+/* i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.*/
 " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]")
          << wxT("</li><li>")
          << XO(

@@ -37,7 +37,6 @@ It \TODO: description
 #include <wx/image.h>
 #include <wx/dcmemory.h>
 #include <wx/file.h>
-#include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -141,13 +140,17 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
       SA_DFT_SILENCE_THRESHOLD_TEXT,
       true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
+   mPresmoothLabel = S.AddVariableText(
    /* i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
       This is a NEW experimental effect, and until we have it documented in the user
       manual we don't have a clear description of what this parameter does.
       It is OK to leave it in English. */
-   mPresmoothLabel = S.AddVariableText(
       XO("Presmooth Time:"), true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    mPresmoothSlider = S.Id(ID_PRESMOOTH)
+   /* i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+      This is a NEW experimental effect, and until we have it documented in the user
+      manual we don't have a clear description of what this parameter does.
+      It is OK to leave it in English. */
       .Name(XO("Presmooth Time"))
       .Style(wxSL_HORIZONTAL)
       .AddSlider( {},
@@ -162,6 +165,10 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mLineTimeLabel = S.AddVariableText(XO("Line Time:"), true,
       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    mLineTimeSlider = S.Id(ID_LINETIME)
+   /* i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+      This is a NEW experimental effect, and until we have it documented in the user
+      manual we don't have a clear description of what this parameter does.
+      It is OK to leave it in English. */
       .Name(XO("Line Time"))
       .Style(wxSL_HORIZONTAL)
       .AddSlider( {},
@@ -176,6 +183,10 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mSmoothTimeLabel = S.AddVariableText(
       XO("Smooth Time:"), true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    mSmoothTimeSlider = S.Id(ID_SMOOTHTIME)
+   /* i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+      This is a NEW experimental effect, and until we have it documented in the user
+      manual we don't have a clear description of what this parameter does.
+      It is OK to leave it in English. */
       .Name(XO("Smooth Time"))
       .Style(wxSL_HORIZONTAL)
       .AddSlider( {},

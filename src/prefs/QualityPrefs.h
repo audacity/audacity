@@ -23,8 +23,6 @@ class ShuttleGui;
 enum sampleFormat : unsigned;
 enum DitherType : unsigned;
 
-class wxArrayStringEx;
-
 #define QUALITY_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Quality") }
 
 class QualityPrefs final : public PrefsPanel

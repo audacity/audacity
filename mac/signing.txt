@@ -1,0 +1,51 @@
+To sign, notarize, staple, and build the distribution DMG, you need to have
+an Apple Developer ID and a certificate. Once you have obtained these, proceed
+with the following:
+
+1) Create a file in your home directory called ".audacity_signing" and add
+   the following three lines. Ensure you put in the email address you used
+   for your Apple Developer account:
+
+      NOTARIZE_USERNAME="specify your Apple developer email address"
+      NOTARIZE_PASSWORD="@keychain:AUDACITY_PASSWORD"
+      CODESIGN_APP_IDENTITY="Developer ID Application:"
+
+2) You need to create an application specific password in your Developer
+   account. Make sure you use "org.audacityteam.audacity" as the app ID
+   when following these instructions:
+
+      https://support.apple.com/en-us/HT204397
+
+3) Now that you have the app password, use the following instructions to add
+   that password to the keychain on your Mac:
+
+      https://support.apple.com/guide/keychain-access/add-a-password-to-a-keychain-kyca1120/mac
+
+   Use "AUDACITY_PASSWORD" for the name as it must match the NOTARIZE_PASSWORD 
+   value above. Storing the password in your keychain protects it from curious
+   eyes.
+
+4) Build the Release version of Audacity. You can follow the cmake_build.txt
+   instructions in this folder. Once complete, you should find "Audacity.app"
+   in:
+
+      audacity/bld/bin/Release
+
+5) Open a terminal and change to the CMake build directory:
+
+      audacity/bld
+
+6) Run this script to sign, notarize, staple and create the distribution DMG:
+
+      ../mac/scripts/build_dist.sh ../mac bin/Release
+
+As it goes through the notarization process twice, once for the app bundle
+and again for the DMG, it will take awhile to run and you will see progress
+while waiting. If it is successful, you will find the Audacity DMG in
+"audacity/bld/bin" and you will receive an email confirming it was notarized.
+
+In the event of a failure, you will find a URL in the output messages
+displayed in the terminal. Paste that into a browser for information as
+to why it failed.
+
+

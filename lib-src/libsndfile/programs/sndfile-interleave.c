@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2009-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2009-2015 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -82,7 +82,7 @@ main (int argc, char **argv)
 		usage_exit () ;
 		} ;
 
-	if (argc - 2 > MAX_INPUTS)
+	if (argc - 3 > MAX_INPUTS)
 	{	printf ("\nError : Cannot handle more than %d input channels.\n\n", MAX_INPUTS) ;
 		exit (1) ;
 		} ;
@@ -146,7 +146,7 @@ usage_exit (void)
 {	puts ("\nUsage : sndfile-interleave <input 1> <input 2> ... -o <output file>\n") ;
 	puts ("Merge two or more mono files into a single multi-channel file.\n") ;
 	printf ("Using %s.\n\n", sf_version_string ()) ;
-	exit (0) ;
+	exit (1) ;
 } /* usage_exit */
 
 
@@ -163,7 +163,7 @@ interleave_int (STATE * state)
 			if (read_len < BUFFER_LEN)
 				memset (state->din.i + read_len, 0, sizeof (state->din.i [0]) * (BUFFER_LEN - read_len)) ;
 
-			for (k = 0 ; k < read_len ; k++)
+			for (k = 0 ; k < BUFFER_LEN ; k++)
 				state->dout.i [k * state->channels + ch] = state->din.i [k] ;
 
 			max_read_len = MAX (max_read_len, read_len) ;
@@ -189,7 +189,7 @@ interleave_double (STATE * state)
 			if (read_len < BUFFER_LEN)
 				memset (state->din.d + read_len, 0, sizeof (state->din.d [0]) * (BUFFER_LEN - read_len)) ;
 
-			for (k = 0 ; k < read_len ; k++)
+			for (k = 0 ; k < BUFFER_LEN ; k++)
 				state->dout.d [k * state->channels + ch] = state->din.d [k] ;
 
 			max_read_len = MAX (max_read_len, read_len) ;

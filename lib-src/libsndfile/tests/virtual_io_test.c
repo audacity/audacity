@@ -87,7 +87,7 @@ vfread (void *ptr, sf_count_t count, void *user_data)
 {	VIO_DATA *vf = (VIO_DATA *) user_data ;
 
 	/*
-	**	This will brack badly for files over 2Gig in length, but
+	**	This will break badly for files over 2Gig in length, but
 	**	is sufficient for testing.
 	*/
 	if (vf->offset + count > vf->length)

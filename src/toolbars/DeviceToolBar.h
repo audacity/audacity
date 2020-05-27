@@ -40,7 +40,6 @@ class DeviceToolBar final : public ToolBar {
    void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};
    void EnableDisableButtons() override;
-   bool Layout() override;
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
 
@@ -56,18 +55,16 @@ class DeviceToolBar final : public ToolBar {
    void ShowHostDialog();
    void ShowChannelsDialog();
 
-   void RefillCombos();
-
  private:
    void OnRescannedDevices( wxCommandEvent& );
 
    int  ChangeHost();
    void ChangeDevice(bool isInput);
+   void RefillCombos();
    void FillHosts();
    void FillHostDevices();
    void FillInputChannels();
    void SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out);
-   void RepositionCombos();
    void SetNames();
    void RegenerateTooltips() override;
    void ShowComboDialog(wxChoice *combo, const TranslatableString &title);

@@ -64,8 +64,8 @@ void ImportExportPrefs::Populate()
 EnumSetting< bool > ImportExportPrefs::ExportDownMixSetting{
    wxT("/FileFormats/ExportDownMixChoice"),
    {
-      EnumValueSymbol{ wxT("MixDown"), XO("&Mix down to Stereo or Mono") },
-      EnumValueSymbol{ wxT("Custom"), XO("&Use Advanced Mixing Options") },
+      EnumValueSymbol{ wxT("MixDown"), XXO("&Mix down to Stereo or Mono") },
+      EnumValueSymbol{ wxT("Custom"), XXO("&Use Advanced Mixing Options") },
    },
    0, // true
 
@@ -79,8 +79,8 @@ EnumSetting< bool > ImportExportPrefs::ExportDownMixSetting{
 EnumSetting< bool > ImportExportPrefs::AllegroStyleSetting{
    wxT("/FileFormats/AllegroStyleChoice"),
    {
-      EnumValueSymbol{ wxT("Seconds"), XO("&Seconds") },
-      EnumValueSymbol{ wxT("Beats"), XO("&Beats") },
+      EnumValueSymbol{ wxT("Seconds"), XXO("&Seconds") },
+      EnumValueSymbol{ wxT("Beats"), XXO("&Beats") },
    },
    0, // true
 
@@ -117,11 +117,11 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndRadioButtonGroup();
 
-      S.TieCheckBox(XO("S&how Metadata Tags editor before export"),
+      S.TieCheckBox(XXO("S&how Metadata Tags editor before export"),
                     {wxT("/AudioFiles/ShowId3Dialog"),
                      true});
       /* i18n-hint 'blank space' is space on the tracks with no audio in it*/
-      S.TieCheckBox(XO("&Ignore blank space at the beginning"),
+      S.TieCheckBox(XXO("&Ignore blank space at the beginning"),
                     {wxT("/AudioFiles/SkipSilenceAtBeginning"),
                      false});
    }

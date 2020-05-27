@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -16,8 +16,14 @@
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
+#include "sfconfig.h"
+
 #include <stdio.h>
+#if HAVE_UNISTD_H
 #include <unistd.h>
+#else
+#include "sf_unistd.h"
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -29,7 +35,7 @@
 #define		M_PI		3.14159265358979323846264338
 #endif
 
-#define		BUFFER_SIZE		(1<<14) /* Should be (1<<14) */
+#define		BUFFER_SIZE		(1 << 14)
 #define		SAMPLE_RATE		11025
 
 
@@ -55,7 +61,7 @@ main (int argc, char *argv [])
 		exit (1) ;
 		} ;
 
-	bDoAll=!strcmp (argv [1], "all");
+	bDoAll = !strcmp (argv [1], "all") ;
 
 	if (bDoAll || ! strcmp (argv [1], "g721"))
 	{	g721_test	() ;
@@ -169,7 +175,7 @@ error_function (double data, double orig, double margin)
 {	double error ;
 
 	if (fabs (orig) <= 500.0)
-		error = fabs (fabs (data) - fabs(orig)) / 2000.0 ;
+		error = fabs (fabs (data) - fabs (orig)) / 2000.0 ;
 	else if (fabs (orig) <= 1000.0)
 		error = fabs (data - orig) / 3000.0 ;
 	else

@@ -72,7 +72,6 @@
 #include <wx/log.h>
 #include <wx/filefn.h>
 #include <wx/hash.h>
-#include <wx/progdlg.h>
 #include <wx/timer.h>
 #include <wx/intl.h>
 #include <wx/file.h>
@@ -876,7 +875,7 @@ wxFileNameWrapper DirManager::MakeBlockFilePath(const wxString &value) {
 
       if(!dir.DirExists() && !dir.Mkdir(0777,wxPATH_MKDIR_FULL))
       { // need braces to avoid compiler warning about ambiguous else, see the macro
-         wxLogSysError(_("mkdir in DirManager::MakeBlockFilePath failed."));
+         wxLogSysError(wxT("mkdir in DirManager::MakeBlockFilePath failed."));
       }
    }
    return dir;
@@ -896,7 +895,7 @@ bool DirManager::AssignFile(wxFileNameWrapper &fileName,
       wxDir checkit(dir.GetFullPath());
       if(!checkit.IsOpened()) return FALSE;
 
-      // this code is only valid if 'value' has no extention; that
+      // this code is only valid if 'value' has no extension; that
       // means, effectively, AssignFile may be called with 'diskcheck'
       // set to true only if called from MakeFileBlockName().
 
@@ -907,7 +906,7 @@ bool DirManager::AssignFile(wxFileNameWrapper &fileName,
          wxString collision;
          checkit.GetFirst(&collision,filespec);
 
-         wxLogWarning(_("Audacity found an orphan block file: %s. \nPlease consider saving and reloading the project to perform a complete project check."),
+         wxLogWarning(wxT("Audacity found an orphan block file: %s. \nPlease consider saving and reloading the project to perform a complete project check."),
                       collision);
 
          return FALSE;
@@ -1105,7 +1104,7 @@ wxFileNameWrapper DirManager::MakeBlockFileName()
 
    while(1){
 
-      /* blockfiles are divided up into heirarchical directories.
+      /* blockfiles are divided up into hierarchical directories.
          Each toplevel directory is represented by "e" + two unique
          hexadecimal digits, for a total possible number of 256
          toplevels.  Each toplevel contains up to 256 subdirs named
@@ -1474,9 +1473,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    if ( !make_iterator_range( aliasList ).contains( fullPath ) )
       return true;
 
-   /* i18n-hint: 'old' is part of a filename used when a file is renamed. */
    // Figure out what the NEW name for the existing file would be.
-   /* i18n-hint: e.g. Try to go from "mysong.wav" to "mysong-old1.wav". */
    // Keep trying until we find a filename that doesn't exist.
 
    wxFileNameWrapper renamedFileName{ fName };
@@ -1485,7 +1482,9 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
       i++;
       /* i18n-hint: This is the pattern for filenames that are created
        * when a file needs to be backed up to a different name.  For
-       * example, mysong would become mysong-old1, mysong-old2, etc. */
+       * example, mysong would become mysong-old1, mysong-old2, etc.
+       * 'old' is part of a filename used when a file is renamed.
+       * e.g. Try to go from "mysong.wav" to "mysong-old1.wav". */
       renamedFileName.SetName(wxString::Format(_("%s-old%d"), fName.GetName(), i));
    } while (renamedFileName.FileExists());
 
@@ -1496,7 +1495,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    wxFile testFile(renamedFullPath, wxFile::write);
    if (!testFile.IsOpened()) {
       { // need braces to avoid compiler warning about ambiguous else, see the macro
-         wxLogSysError(_("Unable to open/create test file."),
+         wxLogSysError(wxT("Unable to open/create test file."),
                renamedFullPath);
       }
       return false;
@@ -1506,9 +1505,9 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    testFile.Close();
 
    if (!wxRemoveFile(renamedFullPath)) {
-      /* i18n-hint: %s is the name of a file.*/
       { // need braces to avoid compiler warning about ambiguous else, see the macro
-         wxLogSysError(_("Unable to remove '%s'."),
+         /* i18n-hint: %s is the name of a file.*/
+         wxLogSysError(wxT("Unable to remove '%s'."),
             renamedFullPath);
       }
       return false;
@@ -1549,7 +1548,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          // just in case!!!
 
          // Print error message and cancel the export
-         wxLogSysError(_("Unable to rename '%s' to '%s'."),
+         wxLogSysError(wxT("Unable to rename '%s' to '%s'."),
                        fullPath,
                        renamedFullPath);
 
@@ -1620,7 +1619,7 @@ void DirManager::FindMissingAliasFiles(
    iter = missingAliasFilesPathHash.begin();
    while (iter != missingAliasFilesPathHash.end())
    {
-      wxLogWarning(_("Missing aliased audio file: '%s'"), iter->first);
+      wxLogWarning(wxT("Missing aliased audio file: '%s'"), iter->first);
       ++iter;
    }
 }
@@ -1644,7 +1643,7 @@ void DirManager::FindMissingAUFs(
             if (!fileName.FileExists())
             {
                missingAUFHash[key] = b;
-               wxLogWarning(_("Missing alias (.auf) block file: '%s'"),
+               wxLogWarning(wxT("Missing alias (.auf) block file: '%s'"),
                             fileName.GetFullPath());
             }
          }
@@ -1674,7 +1673,7 @@ void DirManager::FindMissingAUs(
                 wxFile{ path }.Length() == 0)
             {
                missingAUHash[key] = b;
-               wxLogWarning(_("Missing data block file: '%s'"), path);
+               wxLogWarning(wxT("Missing data block file: '%s'"), path);
             }
          }
       }
@@ -1717,7 +1716,7 @@ void DirManager::FindOrphanBlockFiles(
       }
    }
    for ( const auto &orphan : orphanFilePathArray )
-      wxLogWarning(_("Orphan block file: '%s'"), orphan);
+      wxLogWarning(wxT("Orphan block file: '%s'"), orphan);
 }
 
 
@@ -1790,7 +1789,7 @@ void DirManager::FillBlockfilesCache()
             b->FillCache();
          }
 
-         if (!progress.Update(current, numNeed))
+         if (ProgressResult::Cancelled != progress.Update(current, numNeed))
             break; // user cancelled progress dialog, stop caching
          current++;
       }

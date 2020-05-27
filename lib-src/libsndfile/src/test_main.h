@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2008-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2008-2016 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -27,6 +27,7 @@ print_test_name (const char * name)
 void test_conversions (void) ;
 void test_endswap (void) ;
 void test_log_printf (void) ;
+void test_binheader_writef (void) ;
 void test_file_io (void) ;
 
 void test_float_convert (void) ;
@@ -37,3 +38,7 @@ void test_ima_oki_adpcm (void) ;
 
 void test_psf_strlcpy_crlf (void) ;
 void test_broadcast_var (void) ;
+
+void test_cart_var (void) ;
+
+void test_nms_adpcm (void) ;

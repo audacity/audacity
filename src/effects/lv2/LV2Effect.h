@@ -48,6 +48,10 @@ class wxArrayString;
 
 #include <unordered_map>
 
+// We use deprecated LV2 interfaces to remain compatible with older
+// plug-ins, so disable warnings
+LV2_DISABLE_DEPRECATION_WARNINGS
+
 class wxSlider;
 class wxTextCtrl;
 class NumericTextCtrl;

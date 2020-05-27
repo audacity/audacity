@@ -38,7 +38,7 @@ public:
    bool Process() override;
 
 private:
-   // EffectRepair implementaion
+   // EffectRepair implementation
 
    bool ProcessOne(int count, WaveTrack * track,
                    sampleCount start,

@@ -13,7 +13,8 @@
 
 void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
 {
-#ifdef __WXMAC__
+//#ifdef __WXMAC__
+#if defined(__WXMAC__) || defined(__WXGTK__)
    // Compensate for the regressions in TAB key navigation
    // due to the switch to wxWidgets 3.0.2
    if (event.GetKeyCode() == WXK_TAB) {
@@ -26,12 +27,16 @@ void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
          event.Skip();
          return;
       }
-      focus->Navigate(
-         event.ShiftDown()
-         ? wxNavigationKeyEvent::IsBackward
-         :  wxNavigationKeyEvent::IsForward
-      );
-      return;
+      // Apparently, on wxGTK, FindFocus can return NULL
+      if (focus)
+      {
+         focus->Navigate(
+            event.ShiftDown()
+            ? wxNavigationKeyEvent::IsBackward
+            :  wxNavigationKeyEvent::IsForward
+         );
+         return;
+      }
    }
 #endif
 

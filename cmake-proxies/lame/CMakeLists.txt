@@ -6,51 +6,46 @@ def_vars()
 list( APPEND SOURCES
    PRIVATE
       # libmp3lame
-      ${TARGET_ROOT}/../libmp3lame/bitstream.c
-      ${TARGET_ROOT}/../libmp3lame/encoder.c
-      ${TARGET_ROOT}/../libmp3lame/fft.c
-      ${TARGET_ROOT}/../libmp3lame/gain_analysis.c
-      ${TARGET_ROOT}/../libmp3lame/id3tag.c
-      ${TARGET_ROOT}/../libmp3lame/lame.c
-      ${TARGET_ROOT}/../libmp3lame/mpglib_interface.c
-      ${TARGET_ROOT}/../libmp3lame/newmdct.c
-      ${TARGET_ROOT}/../libmp3lame/presets.c
-      ${TARGET_ROOT}/../libmp3lame/psymodel.c
-      ${TARGET_ROOT}/../libmp3lame/quantize.c
-      ${TARGET_ROOT}/../libmp3lame/quantize_pvt.c
-      ${TARGET_ROOT}/../libmp3lame/reservoir.c
-      ${TARGET_ROOT}/../libmp3lame/set_get.c
-      ${TARGET_ROOT}/../libmp3lame/tables.c
-      ${TARGET_ROOT}/../libmp3lame/takehiro.c
-      ${TARGET_ROOT}/../libmp3lame/util.c
-      ${TARGET_ROOT}/../libmp3lame/vbrquantize.c
-      ${TARGET_ROOT}/../libmp3lame/VbrTag.c
-      ${TARGET_ROOT}/../libmp3lame/version.c
-      ${TARGET_ROOT}/../libmp3lame/vector/xmm_quantize_sub.c
-
-      # mpglib
-      ${TARGET_ROOT}/../mpglib/common.c
-      ${TARGET_ROOT}/../mpglib/dct64_i386.c
-      ${TARGET_ROOT}/../mpglib/decode_i386.c
-      ${TARGET_ROOT}/../mpglib/interface.c
-      ${TARGET_ROOT}/../mpglib/layer1.c
-      ${TARGET_ROOT}/../mpglib/layer2.c
-      ${TARGET_ROOT}/../mpglib/layer3.c
-      ${TARGET_ROOT}/../mpglib/tabinit.c
+      ${TARGET_ROOT}/libmp3lame/bitstream.c
+      ${TARGET_ROOT}/libmp3lame/encoder.c
+      ${TARGET_ROOT}/libmp3lame/fft.c
+      ${TARGET_ROOT}/libmp3lame/gain_analysis.c
+      ${TARGET_ROOT}/libmp3lame/id3tag.c
+      ${TARGET_ROOT}/libmp3lame/lame.c
+      ${TARGET_ROOT}/libmp3lame/newmdct.c
+      ${TARGET_ROOT}/libmp3lame/presets.c
+      ${TARGET_ROOT}/libmp3lame/psymodel.c
+      ${TARGET_ROOT}/libmp3lame/quantize.c
+      ${TARGET_ROOT}/libmp3lame/quantize_pvt.c
+      ${TARGET_ROOT}/libmp3lame/reservoir.c
+      ${TARGET_ROOT}/libmp3lame/set_get.c
+      ${TARGET_ROOT}/libmp3lame/tables.c
+      ${TARGET_ROOT}/libmp3lame/takehiro.c
+      ${TARGET_ROOT}/libmp3lame/util.c
+      ${TARGET_ROOT}/libmp3lame/vbrquantize.c
+      ${TARGET_ROOT}/libmp3lame/VbrTag.c
+      ${TARGET_ROOT}/libmp3lame/version.c
+      ${TARGET_ROOT}/libmp3lame/vector/xmm_quantize_sub.c
 )
 
 list( APPEND INCLUDES
    PRIVATE
       ${_PRVDIR}
-      ${TARGET_ROOT}/../libmp3lame
-      ${TARGET_ROOT}/../mpglib
+      ${TARGET_ROOT}/lame
+      ${TARGET_ROOT}/libmp3lame
    PUBLIC
-      ${_PUBDIR}
+      ${TARGET_ROOT}
 )
 
 list( APPEND DEFINES
    PRIVATE
       HAVE_CONFIG_H
+)
+
+list( APPEND OPTIONS
+   PRIVATE
+      ${MMX_FLAG}
+      ${SSE_FLAG}
 )
 
 set( HAVE_INT8_T SIZEOF_INT8_T )
@@ -77,8 +72,6 @@ elseif( SIZEOF_LONG_LONG EQUAL 8 )
    set( A_INT64_T long long )
 endif()
 
-set( DECODE_ON_THE_FLY 1 )
-set( HAVE_MPGLIB 1 )
 set( TAKEHIRO_IEEE754_HACK 1 )
 set( USE_FAST_LOG 1 )
 if( ${CMakeDetermineASM_NASMCompiler} )
@@ -86,11 +79,11 @@ if( ${CMakeDetermineASM_NASMCompiler} )
 endif()
 
 configure_file( config.h.in private/config.h )
-configure_file( lame.h.in public/lame/lame.h )
 
 #organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 

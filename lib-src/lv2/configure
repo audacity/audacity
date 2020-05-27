@@ -46,7 +46,7 @@ function waf
       [ ! -e "${f##*/}" ] && ln -s "${f}"
    done
 
-   export CFLAGS="${CFLAGS/++11/11}" # Circumvent travis setting
+   export CFLAGS="${CFLAGS/++14/11}" # Circumvent travis setting
    export PKG_CONFIG_PATH="${prefix}/lib/pkgconfig"
    export LDFLAGS="${LDFLAGS} -ldl -lm"
 

@@ -21,7 +21,6 @@
 #include <wx/choice.h>
 #include <wx/dc.h>
 #include <wx/dialog.h>
-#include <wx/filedlg.h>
 #include <wx/grid.h>
 #include <wx/intl.h>
 #include <wx/scrolbar.h>
@@ -134,18 +133,22 @@ void LabelDialog::PopulateLabels()
    mGrid->CreateGrid(0, Col_Max);
    mGrid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
 
-   /* i18n-hint: (noun).  A track contains waves, audio etc.*/
-   mGrid->SetColLabelValue(0,_("Track"));
-   /* i18n-hint: (noun)*/
-   mGrid->SetColLabelValue(1,_("Label"));
-   /* i18n-hint: (noun) of a label*/
-   mGrid->SetColLabelValue(2,_("Start Time"));
-   /* i18n-hint: (noun) of a label*/
-   mGrid->SetColLabelValue(3,_("End Time"));
-   /* i18n-hint: (noun) of a label*/
-   mGrid->SetColLabelValue(4,_("Low Frequency"));
-   /* i18n-hint: (noun) of a label*/
-   mGrid->SetColLabelValue(5,_("High Frequency"));
+   size_t ii = 0;
+   for ( const auto &label : {
+      /* i18n-hint: (noun).  A track contains waves, audio etc.*/
+      XO("Track"),
+      /* i18n-hint: (noun)*/
+      XO("Label"),
+      /* i18n-hint: (noun) of a label*/
+      XO("Start Time"),
+      /* i18n-hint: (noun) of a label*/
+      XO("End Time"),
+      /* i18n-hint: (noun) of a label*/
+      XO("Low Frequency"),
+      /* i18n-hint: (noun) of a label*/
+      XO("High Frequency"),
+   })
+      mGrid->SetColLabelValue( ii++, label.Translation() );
 
    // Create and remember editors.  No need to DELETE these as the wxGrid will
    // do it for us.  (The DecRef() that is needed after GetDefaultEditorForType
@@ -264,11 +267,11 @@ void LabelDialog::PopulateOrExchange( ShuttleGui & S )
       S.StartVerticalLay(0);
       {
          //S.Id(ID_INSERTA).AddButton(XO("&Insert"), wxALIGN_LEFT);
-         S.Id(ID_INSERTB).AddButton(XO("&Insert"), wxALIGN_LEFT);
+         S.Id(ID_INSERTB).AddButton(XXO("&Insert"), wxALIGN_LEFT);
          //S.Id(EditButtonID).AddButton(XO("&Edit"), wxALIGN_LEFT);
-         S.Id(ID_REMOVE).AddButton(XO("De&lete"), wxALIGN_LEFT);
-         S.Id(ID_IMPORT).AddButton(XO("I&mport..."), wxALIGN_LEFT);
-         S.Id(ID_EXPORT).AddButton(XO("&Export..."), wxALIGN_LEFT);
+         S.Id(ID_REMOVE).AddButton(XXO("De&lete"), wxALIGN_LEFT);
+         S.Id(ID_IMPORT).AddButton(XXO("I&mport..."), wxALIGN_LEFT);
+         S.Id(ID_EXPORT).AddButton(XXO("&Export..."), wxALIGN_LEFT);
       }
       S.EndVerticalLay();
    }

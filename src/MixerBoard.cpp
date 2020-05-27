@@ -1187,9 +1187,10 @@ void MixerBoard::UpdateWidth()
 //
 
 
-void MixerBoard::MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & WXUNUSED(bitmap), wxRect & bev, const wxString & str, bool up )
+void MixerBoard::MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & WXUNUSED(bitmap), wxRect & bev, const TranslatableString & str, bool up )
 {
 
+   const auto translation = str.Translation();
    int textWidth, textHeight;
 
    int fontSize = 10;
@@ -1197,7 +1198,7 @@ void MixerBoard::MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & WXUNUSED(bitmap),
       fontSize = 8;
    #endif
    wxFont font(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   GetTextExtent(str, &textWidth, &textHeight, NULL, NULL, &font);
+   GetTextExtent(translation, &textWidth, &textHeight, NULL, NULL, &font);
 
    AColor::UseThemeColour( &dc, clrMedium );
    dc.DrawRectangle(bev);
@@ -1209,15 +1210,15 @@ void MixerBoard::MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & WXUNUSED(bitmap),
    dc.SetFont(font);
    dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
    dc.SetBackgroundMode(wxTRANSPARENT);
-   dc.DrawText(str, x, y);
-//   dc.DrawText(str, 0, 0);
+   dc.DrawText(translation, x, y);
+//   dc.DrawText(translation, 0, 0);
 }
 
 void MixerBoard::CreateMuteSoloImages()
 {
    // Much of this is similar to TrackInfo::MuteOrSoloDrawFunction.
    wxMemoryDC dc;
-   wxString str = _("Mute");
+   auto str = XO("Mute");
 
    //mMuteSoloWidth = textWidth + kQuadrupleInset;
    //if (mMuteSoloWidth < kRightSideStackWidth - kInset)
@@ -1243,7 +1244,7 @@ void MixerBoard::CreateMuteSoloImages()
 
    mImageMuteDisabled = std::make_unique<wxImage>(mMuteSoloWidth, MUTE_SOLO_HEIGHT); // Leave empty because unused.
 
-   str = _("Solo");
+   str = XO("Solo");
    MakeButtonBitmap( dc, bitmap, bev, str, up );
    mImageSoloUp = std::make_unique<wxImage>(bitmap.ConvertToImage());
    mImageSoloOver = std::make_unique<wxImage>(bitmap.ConvertToImage()); // Same as up, for now.

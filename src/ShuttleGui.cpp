@@ -327,7 +327,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const TranslatableString &Prompt, bool
    return pCheckBox;
 }
 
-/// For a consistant two-column layout we want labels on the left and
+/// For a consistent two-column layout we want labels on the left and
 /// controls on the right.  CheckBoxes break that rule, so we fake it by
 /// placing a static text label and then a tick box with an empty label.
 wxCheckBox * ShuttleGuiBase::AddCheckBoxOnRight( const TranslatableString &Prompt, bool Selected)
@@ -617,7 +617,9 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(
    wxSize Size(wxDefaultSize);
    if( nChars > 0 )
    {
-      Size.SetWidth( nChars *5 );
+      int width;
+      mpDlg->GetTextExtent( wxT("9"), &width, nullptr );
+      Size.SetWidth( nChars * width );
    }
    miProp=0;
 
@@ -849,25 +851,6 @@ ShuttleGuiBase & ShuttleGuiBase::Prop( int iProp )
 {
    miPropSetByUser = iProp;
    return *this;
-}
-
-wxMenuBar * ShuttleGuiBase::AddMenuBar( )
-{
-   auto menuBar = std::make_unique<wxMenuBar>();
-   mpMenuBar = menuBar.get();
-
-   wxFrame * pFrame = (wxFrame*)mpParent;
-   pFrame->SetThemeEnabled( true );
-   mpMenuBar->SetThemeEnabled( true );
-   pFrame->SetMenuBar(menuBar.release());
-
-   return mpMenuBar;
-}
-
-wxMenu * ShuttleGuiBase::AddMenu( const TranslatableString & Title )
-{
-   mpMenuBar->Append( (mpMenu = safenew wxMenu), Title.Translation() );
-   return mpMenu;
 }
 
 /// Starts a static box around a number of controls.
@@ -1967,7 +1950,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
 /// between gui and stack variable and stack variable and shuttle.
 /// The Translated choices and default are integers, not Strings.
 /// Behaves identically to the previous, but is meant for use when the choices
-/// are non-exhaustive and there is a companion control for abitrary entry.
+/// are non-exhaustive and there is a companion control for arbitrary entry.
 ///   @param Prompt             The prompt shown beside the control.
 ///   @param SettingName        The setting name as stored in gPrefs
 ///   @param Default            The default integer value for this control
@@ -2050,6 +2033,52 @@ void ShuttleGuiBase::SetProportions( int Default )
 }
 
 
+void ShuttleGuiBase::ApplyItem( int step, const DialogDefinition::Item &item,
+   wxWindow *pWind, wxWindow *pDlg )
+{  
+   if ( step == 0 ) {
+      // Do these steps before adding the window to the sizer
+      if( item.mUseBestSize )
+         pWind->SetMinSize( pWind->GetBestSize() );
+      else if( item.mHasMinSize )
+         pWind->SetMinSize( item.mMinSize );
+
+      if ( item.mWindowSize != wxSize{} )
+         pWind->SetSize( item.mWindowSize );
+   }
+   else if ( step == 1) {
+      // Apply certain other optional window attributes here
+
+      if ( item.mValidatorSetter )
+         item.mValidatorSetter( pWind );
+
+      if ( !item.mToolTip.empty() )
+         pWind->SetToolTip( item.mToolTip.Translation() );
+
+      if ( !item.mName.empty() ) {
+         pWind->SetName( item.mName.Stripped().Translation() );
+#ifndef __WXMAC__
+         if (auto pButton = dynamic_cast< wxBitmapButton* >( pWind ))
+            pButton->SetLabel(  item.mName.Translation() );
+#endif
+      }
+
+      if ( !item.mNameSuffix.empty() )
+         pWind->SetName(
+            pWind->GetName() + " " + item.mNameSuffix.Translation() );
+
+      if (item.mFocused)
+         pWind->SetFocus();
+
+      if (item.mDisabled)
+         pWind->Enable( false );
+
+      for (auto &pair : item.mRootConnections)
+         pWind->Connect( pair.first, pair.second, nullptr, pDlg );
+   }
+}
+
+
 void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
 {
    if( mpWind && mpParent )
@@ -2060,16 +2089,8 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
          // override the given Flags
          useFlags = mItem.mWindowPositionFlags;
 
-      if (!prompt) {
-         // Do these steps before adding the window to the sizer
-         if( mItem.mUseBestSize )
-            mpWind->SetMinSize( mpWind->GetBestSize() );
-         else if( mItem.mHasMinSize )
-            mpWind->SetMinSize( mItem.mMinSize );
-
-         if ( mItem.mWindowSize != wxSize{} )
-            mpWind->SetSize( mItem.mWindowSize );
-      }
+      if (!prompt)
+         ApplyItem( 0, mItem, mpWind, mpDlg );
 
       if( mpSizer){
          if( bPrepend )
@@ -2083,35 +2104,7 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
       }
 
       if (!prompt) {
-         // Apply certain other optional window attributes here
-
-         if ( mItem.mValidatorSetter )
-            mItem.mValidatorSetter( mpWind );
-
-         if ( !mItem.mToolTip.empty() )
-            mpWind->SetToolTip( mItem.mToolTip.Translation() );
-
-         if ( !mItem.mName.empty() ) {
-            mpWind->SetName( mItem.mName.Stripped().Translation() );
-#ifndef __WXMAC__
-            if (auto pButton = dynamic_cast< wxBitmapButton* >( mpWind ))
-               pButton->SetLabel(  mItem.mName.Translation() );
-#endif
-         }
-
-         if ( !mItem.mNameSuffix.empty() )
-            mpWind->SetName(
-               mpWind->GetName() + " " + mItem.mNameSuffix.Translation() );
-
-         if (mItem.mFocused)
-            mpWind->SetFocus();
-
-         if (mItem.mDisabled)
-            mpWind->Enable( false );
-
-         for (auto &pair : mItem.mRootConnections)
-            mpWind->Connect( pair.first, pair.second, nullptr, mpDlg );
-
+         ApplyItem( 1, mItem, mpWind, mpDlg );
          // Reset to defaults
          mItem = {};
       }
@@ -2238,47 +2231,6 @@ ShuttleGui & ShuttleGui::Optional( bool &bVar ){
    return *this;
 };
 
-
-GuiWaveTrack * ShuttleGui::AddGuiWaveTrack( const wxString & WXUNUSED(Name))
-{
-#ifdef EXPERIMENTAL_TRACK_PANEL
-   UseUpId();
-   if( mShuttleMode != eIsCreating )
-      return (GuiWaveTrack*)NULL;
-//      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), GuiWaveTrack);
-   GuiWaveTrack * pGuiWaveTrack;
-   miProp=1;
-   mpWind = pGuiWaveTrack = safenew GuiWaveTrack(mpParent, miId, Name);
-   mpWind->SetMinSize(wxSize(100,50));
-   UpdateSizers();
-   return pGuiWaveTrack;
-#else
-   return NULL;
-#endif
-}
-
-//#include "./widgets/AttachableScrollBar.h"
-#if 0
-AttachableScrollBar * ShuttleGui::AddAttachableScrollBar( long style )
-{
-   UseUpId();
-   if( mShuttleMode != eIsCreating )
-      return (AttachableScrollBar*)NULL;
-//      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), AttachableScrollBar);
-   AttachableScrollBar * pAttachableScrollBar;
-   miProp=0;
-   mpWind = pAttachableScrollBar = safenew AttachableScrollBar(
-      mpParent,
-      miId,
-      wxDefaultPosition,
-      wxDefaultSize,
-      style
-      );
-   mpWind->SetMinSize(wxSize(10,20));
-   UpdateSizers();
-   return pAttachableScrollBar;
-}
-#endif
 
 std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
 {

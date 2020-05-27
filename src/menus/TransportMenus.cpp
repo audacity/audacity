@@ -71,66 +71,60 @@ bool MakeReadyToPlay(AudacityProject &project)
    return true;
 }
 
-// Post Timer Recording Actions
-// Ensure this matches the enum in TimerRecordDialog.cpp
-enum {
-   POST_TIMER_RECORD_STOPPED = -3,
-   POST_TIMER_RECORD_CANCEL_WAIT,
-   POST_TIMER_RECORD_CANCEL,
-   POST_TIMER_RECORD_NOTHING,
-   POST_TIMER_RECORD_CLOSE,
-   POST_TIMER_RECORD_RESTART,
-   POST_TIMER_RECORD_SHUTDOWN
-};
-
-void DoPlayStop(const CommandContext &context)
+// Returns true if this project was stopped, otherwise false.
+// (it may though have stopped another project playing)
+bool DoStopPlaying(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &projectAudioManager = ProjectAudioManager::Get( project );
-   auto &toolbar = ControlToolBar::Get( project );
-   auto &window = ProjectWindow::Get( project );
-   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
+   auto &projectAudioManager = ProjectAudioManager::Get(project);
+   auto gAudioIO = AudioIOBase::Get();
+   auto &toolbar = ControlToolBar::Get(project);
+   auto &window = ProjectWindow::Get(project);
+   auto token = ProjectAudioIO::Get(project).GetAudioIOToken();
 
    //If this project is playing, stop playing, make sure everything is unpaused.
-   auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsStreamActive(token)) {
       toolbar.SetStop();         //Pushes stop down
       projectAudioManager.Stop();
+      // Playing project was stopped.  All done.
+      return true;
    }
-   else if (gAudioIO->IsStreamActive()) {
-      // If this project isn't playing, but another one is, stop playing the
-      // old and start the NEW.
+
+   // This project isn't playing.
+   // If some other project is playing, stop playing it
+   if (gAudioIO->IsStreamActive()) {
 
       //find out which project we need;
       auto start = AllProjects{}.begin(), finish = AllProjects{}.end(),
-         iter = std::find_if( start, finish,
-            [&]( const AllProjects::value_type &ptr ){
-               return gAudioIO->IsStreamActive(
-                  ProjectAudioIO::Get( *ptr ).GetAudioIOToken()); } );
+         iter = std::find_if(start, finish,
+            [&](const AllProjects::value_type &ptr) {
+         return gAudioIO->IsStreamActive(
+            ProjectAudioIO::Get(*ptr).GetAudioIOToken()); });
 
       //stop playing the other project
-      if(iter != finish) {
+      if (iter != finish) {
          auto otherProject = *iter;
-         auto &otherToolbar = ControlToolBar::Get( *otherProject );
+         auto &otherToolbar = ControlToolBar::Get(*otherProject);
          auto &otherProjectAudioManager =
-            ProjectAudioManager::Get( *otherProject );
+            ProjectAudioManager::Get(*otherProject);
          otherToolbar.SetStop();         //Pushes stop down
          otherProjectAudioManager.Stop();
       }
-
-      //play the front project
-      if (!gAudioIO->IsBusy()) {
-         //Otherwise, start playing (assuming audio I/O isn't busy)
-
-         // Will automatically set mLastPlayMode
-         projectAudioManager.PlayCurrentRegion(false);
-      }
    }
-   else if (!gAudioIO->IsBusy()) {
+   return false;
+}
+
+void DoStartPlaying(const CommandContext &context, bool looping = false)
+{
+   auto &project = context.project;
+   auto &projectAudioManager = ProjectAudioManager::Get(project);
+   auto gAudioIO = AudioIOBase::Get();
+   //play the front project
+   if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
 
       // Will automatically set mLastPlayMode
-      projectAudioManager.PlayCurrentRegion(false);
+      projectAudioManager.PlayCurrentRegion(looping);
    }
 }
 
@@ -139,6 +133,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    auto &tracks = TrackList::Get( project );
    auto &trackFocus = TrackFocus::Get( project );
    auto &window = ProjectWindow::Get( project );
+   auto &projectAudioManager = ProjectAudioManager::Get(project);
 
    // Find the number of label tracks, and ptr to last track found
    auto trackRange = tracks.Any<LabelTrack>();
@@ -169,18 +164,18 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 
       if (i >= 0) {
          const LabelStruct* label = lt->GetLabel(i);
+         bool looping = projectAudioManager.Looping();
          if (ProjectAudioIO::Get( project ).IsAudioActive()) {
-            DoPlayStop(project);     // stop
+            DoStopPlaying(project);
             selectedRegion = label->selectedRegion;
             window.RedrawProject();
-            DoPlayStop(project);     // play
+            DoStartPlaying(project, looping);
          }
          else {
             selectedRegion = label->selectedRegion;
             window.ScrollIntoView(selectedRegion.t0());
             window.RedrawProject();
          }
-
          auto message = XO("%s %d of %d")
             .Format( label->title, i + 1, lt->GetNumLabels() );
          trackFocus.MessageForScreenReader(message);
@@ -199,9 +194,13 @@ namespace TransportActions {
 
 struct Handler : CommandHandlerObject {
 
+// This Plays OR Stops audio.  It's a toggle.
+// It is usually bound to the SPACE key.
 void OnPlayStop(const CommandContext &context)
 {
-   DoPlayStop( context.project );
+   if (DoStopPlaying(context.project))
+      return;
+   DoStartPlaying(context.project);
 }
 
 void OnPlayStopSelect(const CommandContext &context)
@@ -271,6 +270,39 @@ void OnTimerRecord(const CommandContext &context)
          wxICON_INFORMATION | wxOK);
       return;
    }
+
+   // We check the selected tracks to see if there is enough of them to accomodate
+   // all input channels and all of them have the same sampling rate.
+   // Those checks will be later performed by recording function anyway,
+   // but we want to warn the user about potential problems from the very start.
+   const auto selectedTracks{ GetPropertiesOfSelected(project) };
+   const int rateOfSelected{ selectedTracks.rateOfSelected };
+   const int numberOfSelected{ selectedTracks.numberOfSelected };
+   const bool allSameRate{ selectedTracks.allSameRate };
+
+   if (!allSameRate) {
+      AudacityMessageBox(XO("The tracks selected "
+         "for recording must all have the same sampling rate"),
+         XO("Mismatched Sampling Rates"),
+         wxICON_ERROR | wxCENTRE);
+
+      return;
+   }
+
+   const auto existingTracks{ ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected) };
+   if (existingTracks.empty()) {
+      if (numberOfSelected > 0 && rateOfSelected != settings.GetRate()) {
+         AudacityMessageBox(XO(
+            "Too few tracks are selected for recording at this sample rate.\n"
+            "(Audacity requires two channels at the same sample rate for\n"
+            "each stereo track)"),
+            XO("Too Few Compatible Tracks Selected"),
+            wxICON_ERROR | wxCENTRE);
+
+         return;
+      }
+   }
+   
    // We use this variable to display "Current Project" in the Timer Recording
    // save project field
    bool bProjectSaved = ProjectFileIO::Get( project ).IsProjectSaved();
@@ -288,6 +320,9 @@ void OnTimerRecord(const CommandContext &context)
    }
    else
    {
+      // Bug #2382
+      // Allow recording to start at current cursor position.
+      #if 0
       // Timer Record should not record into a selection.
       bool bPreferNewTrack;
       gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
@@ -296,6 +331,7 @@ void OnTimerRecord(const CommandContext &context)
       } else {
          window.SkipEnd(false);
       }
+      #endif
 
       int iTimerRecordingOutcome = dialog.RunWaitDialog();
       switch (iTimerRecordingOutcome) {
@@ -323,20 +359,19 @@ void OnTimerRecord(const CommandContext &context)
          } );
          ProjectManager::Get(project).SetSkipSavePrompt(true);
          break;
+
+#ifdef __WINDOWS__
       case POST_TIMER_RECORD_RESTART:
          // Restart System
          ProjectManager::Get(project).SetSkipSavePrompt(true);
-#ifdef __WINDOWS__
          system("shutdown /r /f /t 30");
-#endif
          break;
       case POST_TIMER_RECORD_SHUTDOWN:
          // Shutdown System
          ProjectManager::Get(project).SetSkipSavePrompt(true);
-#ifdef __WINDOWS__
          system("shutdown /s /f /t 30");
-#endif
          break;
+#endif
       }
    }
 }
@@ -359,9 +394,23 @@ void OnPunchAndRoll(const CommandContext &context)
    viewInfo.selectedRegion.collapseToT0();
    double t1 = std::max(0.0, viewInfo.selectedRegion.t1());
 
+   // Checking the selected tracks: making sure they all have the same rate
+   const auto selectedTracks{ GetPropertiesOfSelected(project) };
+   const int rateOfSelected{ selectedTracks.rateOfSelected };
+   const bool allSameRate{ selectedTracks.allSameRate };
+
+   if (!allSameRate) {
+      AudacityMessageBox(XO("The tracks selected "
+         "for recording must all have the same sampling rate"),
+         XO("Mismatched Sampling Rates"),
+         wxICON_ERROR | wxCENTRE);
+
+      return;
+   }
+
    // Decide which tracks to record in.
    auto tracks =
-      ProjectAudioManager::ChooseExistingRecordingTracks(project, true);
+      ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected);
    if (tracks.empty()) {
       int recordingChannels =
          std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
@@ -369,7 +418,7 @@ void OnPunchAndRoll(const CommandContext &context)
          (recordingChannels == 1)
          ? XO("Please select in a mono track.")
          : (recordingChannels == 2)
-         ? XO("Please select in a stereo track.")
+         ? XO("Please select in a stereo track or two mono tracks.")
          : XO("Please select at least %d channels.").Format( recordingChannels );
       ShowErrorDialog(&window, XO("Error"), message, url);
       return;
@@ -456,6 +505,7 @@ void OnPunchAndRoll(const CommandContext &context)
 
    // Try to start recording
    auto options = DefaultPlayOptions( project );
+   options.rate = rateOfSelected;
    options.preRoll = std::max(0L,
       gPrefs->Read(AUDIO_PRE_ROLL_KEY, DEFAULT_PRE_ROLL_SECONDS));
    options.pCrossfadeData = &crossfadeData;
@@ -908,9 +958,9 @@ BaseItemSharedPtr TransportMenu()
    ( FinderScope{ findCommandHandler },
    /* i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */
-   Menu( wxT("Transport"), XO("Tra&nsport"),
+   Menu( wxT("Transport"), XXO("Tra&nsport"),
       Section( "Basic",
-         Menu( wxT("Play"), XO("Pl&aying"),
+         Menu( wxT("Play"), XXO("Pl&aying"),
             /* i18n-hint: (verb) Start or Stop audio playback*/
             Command( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
                CanStopAudioStreamFlag(), wxT("Space") ),
@@ -922,7 +972,7 @@ BaseItemSharedPtr TransportMenu()
                CanStopAudioStreamFlag(), wxT("P") )
          ),
 
-         Menu( wxT("Record"), XO("&Recording"),
+         Menu( wxT("Record"), XXO("&Recording"),
             /* i18n-hint: (verb)*/
             Command( wxT("Record1stChoice"), XXO("&Record"), FN(OnRecord),
                CanStopFlags, wxT("R") ),
@@ -938,7 +988,7 @@ BaseItemSharedPtr TransportMenu()
                // We supply the name for the 'other one' here.
                // It should be bound to Shift+R
                (gPrefs->ReadBool("/GUI/PreferNewTrackRecord", false)
-                ? XO("&Append Record") : XO("Record &New Track")),
+                ? XXO("&Append Record") : XXO("Record &New Track")),
                FN(OnRecord2ndChoice), CanStopFlags,
                wxT("Shift+R"),
                findCommandHandler
@@ -964,7 +1014,7 @@ BaseItemSharedPtr TransportMenu()
 
       Section( "Other",
          Section( "",
-            Menu( wxT("PlayRegion"), XO("Pla&y Region"),
+            Menu( wxT("PlayRegion"), XXO("Pla&y Region"),
                Command( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
                   PlayRegionNotLockedFlag() ),
                Command( wxT("UnlockPlayRegion"), XXO("&Unlock"),
@@ -975,7 +1025,7 @@ BaseItemSharedPtr TransportMenu()
          Command( wxT("RescanDevices"), XXO("R&escan Audio Devices"),
             FN(OnRescanDevices), AudioIONotBusyFlag() | CanStopAudioStreamFlag() ),
 
-         Menu( wxT("Options"), XO("Transport &Options"),
+         Menu( wxT("Options"), XXO("Transport &Options"),
             Section( "",
                // Sound Activated recording options
                Command( wxT("SoundActivationLevel"),
@@ -1038,7 +1088,7 @@ BaseItemSharedPtr ExtraTransportMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("Transport"), XO("T&ransport"),
+   Menu( wxT("Transport"), XXO("T&ransport"),
       // PlayStop is already in the menus.
       /* i18n-hint: (verb) Start playing audio*/
       Command( wxT("Play"), XXO("Pl&ay"), FN(OnPlayStop),
@@ -1087,7 +1137,7 @@ BaseItemSharedPtr ExtraPlayAtSpeedMenu()
 {
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
-   Menu( wxT("PlayAtSpeed"), XO("&Play-at-Speed"),
+   Menu( wxT("PlayAtSpeed"), XXO("&Play-at-Speed"),
       /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
       Command( wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"),
          FN(OnPlayAtSpeed), CaptureNotBusyFlag() ),

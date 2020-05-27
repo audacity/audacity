@@ -444,7 +444,7 @@ unsigned operator()
 
 // Disabled this code to fix Bug 1923 (tricky to wheel-zoom right of waveform).
 #if 0
-      // When zooming in in empty space, it's easy to 'lose' the waveform.
+      // When zooming in empty space, it's easy to 'lose' the waveform.
       // This prevents it.
       // IF zooming in
       if (steps > 0)
@@ -574,7 +574,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mNextWindowID = NextID;
 
    // Two sub-windows need to be made before Init(),
-   // so that this construcator can complete, and then TrackPanel and
+   // so that this constructor can complete, and then TrackPanel and
    // AdornedRulerPanel can retrieve those windows from this in their
    // factory functions
 
@@ -609,7 +609,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    pPage = Factory.AddPage( pNotebook, _("Main Mix"));
 #else
    // Not using a notebook, so we place the track panel inside another panel,
-   // this keeps the notebook code and normal code consistant and also
+   // this keeps the notebook code and normal code consistent and also
    // paves the way for adding additional windows inside the track panel.
    mMainPanel = safenew wxPanelWrapper(this, -1,
       wxDefaultPosition,
@@ -843,7 +843,7 @@ void ProjectWindow::OnScrollRight()
 
 
 ///
-///  This handles the event when the left direction button on the scrollbar is depresssed
+///  This handles the event when the left direction button on the scrollbar is depressed
 ///
 void ProjectWindow::OnScrollLeftButton(wxScrollEvent & /*event*/)
 {
@@ -864,7 +864,7 @@ void ProjectWindow::OnScrollLeftButton(wxScrollEvent & /*event*/)
 }
 
 ///
-///  This handles  the event when the right direction button on the scrollbar is depresssed
+///  This handles  the event when the right direction button on the scrollbar is depressed
 ///
 void ProjectWindow::OnScrollRightButton(wxScrollEvent & /*event*/)
 {
@@ -1010,7 +1010,7 @@ void ProjectWindow::FixScrollbars()
    auto panelWidth = viewInfo.GetTracksUsableWidth();
    auto panelHeight = viewInfo.GetHeight();
 
-   // (From Debian...at least I think this is the change cooresponding
+   // (From Debian...at least I think this is the change corresponding
    // to this comment)
    //
    // (2.) GTK critical warning "IA__gtk_range_set_range: assertion
@@ -1233,6 +1233,38 @@ void ProjectWindow::UpdateStatusWidths()
    statusBar->SetStatusWidths( nWidths, widths );
 }
 
+void ProjectWindow::MacShowUndockedToolbars(bool show)
+{
+   (void)show;//compiler food
+#ifdef __WXMAC__
+   // Save the focus so we can restore it to whatever had it before since
+   // showing a previously hidden toolbar will cause the focus to be set to
+   // its frame.  If this is not done it will appear that activation events
+   // aren't being sent to the project window since they are actually being
+   // delivered to the last tool frame shown.
+   wxWindow *focused = FindFocus();
+
+   // Find all the floating toolbars, and show or hide them
+   const auto &children = GetChildren();
+   for(const auto &child : children) {
+      if (auto frame = dynamic_cast<ToolFrame*>(child)) {
+         if (!show) {
+            frame->Hide();
+         }
+         else if (frame->GetBar() &&
+                  frame->GetBar()->IsVisible() ) {
+            frame->Show();
+         }
+      }
+   }
+
+   // Restore the focus if needed
+   if (focused) {
+      focused->SetFocus();
+   }
+#endif
+}
+
 void ProjectWindow::OnIconize(wxIconizeEvent &event)
 {
    //JKC: On Iconizing we get called twice.  Don't know
@@ -1240,6 +1272,16 @@ void ProjectWindow::OnIconize(wxIconizeEvent &event)
    // Should we be returning true/false rather than
    // void return?  I don't know.
    mIconized = event.IsIconized();
+
+#if defined(__WXMAC__)
+   // Readdresses bug 1431 since a crash could occur when restoring iconized
+   // floating toolbars due to recursion (bug 2411).
+   MacShowUndockedToolbars(!mIconized);
+   if( !mIconized )
+   {
+      Raise();
+   }
+#endif
 
    // VisibileProjectCount seems to be just a counter for debugging.
    // It's not used outside this function.
@@ -1440,24 +1482,6 @@ void ProjectWindow::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
    MenuManager::Get( project ).UpdateMenus();
 }
 
-void ProjectWindow::MacShowUndockedToolbars(bool show)
-{
-   (void)show;//compiler food
-#ifdef __WXMAC__
-   // Find all the floating toolbars, and show or hide them
-   const auto &children = GetChildren();
-   for(const auto &child : children) {
-      if (auto frame = dynamic_cast<ToolFrame*>(child)) {
-         if (!show)
-            frame->Hide();
-         else if (frame->GetBar() &&
-                  frame->GetBar()->IsVisible())
-            frame->Show();
-      }
-   }
-#endif
-}
-
 void ProjectWindow::OnActivate(wxActivateEvent & event)
 {
    // Activate events can fire during window teardown, so just
@@ -1467,7 +1491,7 @@ void ProjectWindow::OnActivate(wxActivateEvent & event)
    }
 
    auto &project = mProject;
-   
+
    mActive = event.GetActive();
 
    // Under Windows, focus can be "lost" when returning to
@@ -1481,21 +1505,11 @@ void ProjectWindow::OnActivate(wxActivateEvent & event)
    // Then, when we receive the
    // activate event, we restore that focus to the child or the track
    // panel if no child had the focus (which probably should never happen).
-   if (!mActive) {
-#ifdef __WXMAC__
-      if (IsIconized())
-         MacShowUndockedToolbars(false);
-#endif
-   }
-   else {
+   if (mActive) {
       auto &toolManager = ToolManager::Get( project );
       SetActiveProject( &project );
       if ( ! toolManager.RestoreFocus() )
          GetProjectPanel( project ).SetFocus();
-
-#ifdef __WXMAC__
-      MacShowUndockedToolbars(true);
-#endif
    }
    event.Skip();
 }

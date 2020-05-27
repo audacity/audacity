@@ -93,8 +93,14 @@ BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
 END_EVENT_TABLE()
 
 static const TranslatableString
+   /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
+   is playing or recording or stopped, and whether it is paused. */
      sStatePlay = XO("Playing")
+   /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
+   is playing or recording or stopped, and whether it is paused. */
    , sStateStop = XO("Stopped")
+   /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
+   is playing or recording or stopped, and whether it is paused. */
    , sStateRecord = XO("Recording")
 ;
 
@@ -110,9 +116,6 @@ ControlToolBar::ControlToolBar( AudacityProject &project )
    mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
 
    mSizer = NULL;
-
-   /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
-   is playing or recording or stopped, and whether it is paused. */
 }
 
 ControlToolBar::~ControlToolBar()
@@ -691,6 +694,8 @@ registeredStatusWidthFunction{
             { &sStatePlay, &sStateStop, &sStateRecord } )
          {
             strings.push_back(
+   /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
+   is playing or recording or stopped, and whether it is paused. */
                XO("%s Paused.").Format(*pString) );
          }
 

@@ -31,7 +31,6 @@
 #include "PrefsPanel.h"
 #include "SpectrogramSettings.h"
 
-class wxArrayStringEx;
 class wxChoice;
 class wxCheckBox;
 class wxTextCtrl;

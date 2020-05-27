@@ -177,7 +177,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    mDefaultsCheckbox = 0;
    if (mWt) {
       /* i18n-hint: use is a verb */
-      mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(XO("&Use Preferences"), mDefaulted);
+      mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(XXO("&Use Preferences"), mDefaulted);
    }
 
    S.StartMultiColumn(2,wxEXPAND);
@@ -190,15 +190,15 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStretchyCol( 0 );
             S.SetStretchyCol( 1 );
-            S.Id(ID_SCALE).TieChoice(XO("S&cale:"),
+            S.Id(ID_SCALE).TieChoice(XXO("S&cale:"),
                mTempSettings.scaleType,
                Msgids( SpectrogramSettings::GetScaleNames() ) );
             mMinFreq =
-               S.Id(ID_MINIMUM).TieNumericTextBox(XO("Mi&n Frequency (Hz):"),
+               S.Id(ID_MINIMUM).TieNumericTextBox(XXO("Mi&n Frequency (Hz):"),
                mTempSettings.minFreq,
                12);
             mMaxFreq =
-               S.Id(ID_MAXIMUM).TieNumericTextBox(XO("Ma&x Frequency (Hz):"),
+               S.Id(ID_MAXIMUM).TieNumericTextBox(XXO("Ma&x Frequency (Hz):"),
                mTempSettings.maxFreq,
                12);
          }
@@ -213,22 +213,22 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol( 0 );
             S.SetStretchyCol( 1 );
             mGain =
-               S.Id(ID_GAIN).TieNumericTextBox(XO("&Gain (dB):"),
+               S.Id(ID_GAIN).TieNumericTextBox(XXO("&Gain (dB):"),
                mTempSettings.gain,
                8);
             mRange =
-               S.Id(ID_RANGE).TieNumericTextBox(XO("&Range (dB):"),
+               S.Id(ID_RANGE).TieNumericTextBox(XXO("&Range (dB):"),
                mTempSettings.range,
                8);
 
             mFrequencyGain =
-               S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(XO("High &boost (dB/dec):"),
+               S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(XXO("High &boost (dB/dec):"),
                mTempSettings.frequencyGain,
                8);
          }
          S.EndMultiColumn();
 
-         S.Id(ID_GRAYSCALE).TieCheckBox(XO("Gra&yscale"),
+         S.Id(ID_GRAYSCALE).TieCheckBox(XXO("Gra&yscale"),
             mTempSettings.isGrayscale);
       }
       S.EndStatic();
@@ -240,11 +240,11 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          mAlgorithmChoice =
-            S.Id(ID_ALGORITHM).TieChoice(XO("A&lgorithm:"),
+            S.Id(ID_ALGORITHM).TieChoice(XXO("A&lgorithm:"),
             mTempSettings.algorithm,
             SpectrogramSettings::GetAlgorithmNames() );
 
-         S.Id(ID_WINDOW_SIZE).TieChoice(XO("Window &size:"),
+         S.Id(ID_WINDOW_SIZE).TieChoice(XXO("Window &size:"),
             mTempSettings.windowSize,
             {
                XO("8 - most wideband"),
@@ -263,13 +263,13 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             }
          );
 
-         S.Id(ID_WINDOW_TYPE).TieChoice(XO("Window &type:"),
+         S.Id(ID_WINDOW_TYPE).TieChoice(XXO("Window &type:"),
             mTempSettings.windowType,
             mTypeChoices);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
          mZeroPaddingChoiceCtrl =
-            S.Id(ID_PADDING_SIZE).TieChoice(XO("&Zero padding factor:"),
+            S.Id(ID_PADDING_SIZE).TieChoice(XXO("&Zero padding factor:"),
             mTempSettings.zeroPaddingFactor,
             mZeroPaddingChoices);
 #endif
@@ -279,7 +279,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-   S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(XO("Ena&ble Spectral Selection"),
+   S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(XXO("Ena&ble Spectral Selection"),
       mTempSettings.spectralSelection);
 #endif
 
@@ -295,21 +295,21 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          S.StartTwoColumn();
          {
             mFindNotesMinA =
-               S.TieNumericTextBox(XO("Minimum Amplitude (dB):"),
+               S.TieNumericTextBox(XXO("Minimum Amplitude (dB):"),
                mTempSettings.findNotesMinA,
                8);
 
             mFindNotesN =
-               S.TieNumericTextBox(XO("Max. Number of Notes (1..128):"),
+               S.TieNumericTextBox(XXO("Max. Number of Notes (1..128):"),
                mTempSettings.numberOfMaxima,
                8);
          }
          S.EndTwoColumn();
 
-         S.TieCheckBox(XO("&Find Notes"),
+         S.TieCheckBox(XXO("&Find Notes"),
             mTempSettings.fftFindNotes);
 
-         S.TieCheckBox(XO("&Quantize Notes"),
+         S.TieCheckBox(XXO("&Quantize Notes"),
             mTempSettings.findNotesQuantize);
       }
       S.EndStatic();
@@ -319,7 +319,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
    S.StartStatic(XO("Global settings"));
    {
-      S.TieCheckBox(XO("Ena&ble spectral selection"),
+      S.TieCheckBox(XXO("Ena&ble spectral selection"),
          SpectrogramSettings::Globals::Get().spectralSelection);
    }
    S.EndStatic();

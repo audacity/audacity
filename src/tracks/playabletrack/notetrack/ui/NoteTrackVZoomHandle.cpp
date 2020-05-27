@@ -157,7 +157,9 @@ enum {
 ///////////////////////////////////////////////////////////////////////////////
 // Table class
 
-class NoteTrackVRulerMenuTable : public PopupMenuTable
+class NoteTrackVRulerMenuTable
+  : public PopupMenuTable
+  , private PrefsListener
 {
    NoteTrackVRulerMenuTable()
       : PopupMenuTable{ "NoteTrackVRuler" }
@@ -205,6 +207,12 @@ private:
    }
 
    void InitUserData(void *pUserData) override;
+
+   void UpdatePrefs() override
+   {
+      // Because labels depend on advanced vertical zoom setting
+      PopupMenuTable::Clear();
+   }
 };
 
 NoteTrackVRulerMenuTable &NoteTrackVRulerMenuTable::Instance()
@@ -248,22 +256,32 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
 
 BEGIN_POPUP_MENU(NoteTrackVRulerMenuTable)
 
+   // Accelerators only if zooming enabled.
+   bool bVZoom;
+   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
+
    BeginSection( "Zoom" );
       BeginSection( "Basic" );
-         AppendItem( "Reset", OnZoomResetID,      XO("Zoom Reset\tShift-Right-Click"), POPUP_MENU_FN( OnZoomReset ) );
-         AppendItem( "Max", OnZoomMaxID,        XO("Max Zoom"), POPUP_MENU_FN( OnZoomMax ) );
+         AppendItem( "Reset", OnZoomResetID,
+            MakeLabel( XXO("Zoom Reset"), bVZoom, XXO("Shift-Right-Click")),
+            POPUP_MENU_FN( OnZoomReset ) );
+         AppendItem( "Max", OnZoomMaxID,        XXO("Max Zoom"), POPUP_MENU_FN( OnZoomMax ) );
       EndSection();
 
       BeginSection( "InOut" );
-         AppendItem( "In", OnZoomInVerticalID,  XO("Zoom In\tLeft-Click/Left-Drag"),  POPUP_MENU_FN( OnZoomInVertical ) );
-         AppendItem( "Out", OnZoomOutVerticalID, XO("Zoom Out\tShift-Left-Click"),     POPUP_MENU_FN( OnZoomOutVertical ) );
+         AppendItem( "In", OnZoomInVerticalID,
+            MakeLabel( XXO("Zoom In"), bVZoom, XXO("Left-Click/Left-Drag") ),
+            POPUP_MENU_FN( OnZoomInVertical ) );
+         AppendItem( "Out", OnZoomOutVerticalID,
+            MakeLabel( XXO("Zoom Out"), bVZoom, XXO("Shift-Left-Click") ),
+            POPUP_MENU_FN( OnZoomOutVertical ) );
       EndSection();
    EndSection();
 
    BeginSection( "Pan" );
       BeginSection( "Octaves" );
-         AppendItem( "Up", OnUpOctaveID,   XO("Up &Octave"),   POPUP_MENU_FN( OnUpOctave) );
-         AppendItem( "Down", OnDownOctaveID, XO("Down Octa&ve"), POPUP_MENU_FN( OnDownOctave ) );
+         AppendItem( "Up", OnUpOctaveID,   XXO("Up &Octave"),   POPUP_MENU_FN( OnUpOctave) );
+         AppendItem( "Down", OnDownOctaveID, XXO("Down Octa&ve"), POPUP_MENU_FN( OnDownOctave ) );
       EndSection();
    EndSection();
 
@@ -285,9 +303,6 @@ UIHandle::Result NoteTrackVZoomHandle::Release
    const bool rightUp = event.RightUp();
 
 
-   bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
-
    // Popup menu... 
    if (
        rightUp &&
@@ -301,25 +316,13 @@ UIHandle::Result NoteTrackVZoomHandle::Release
           (PopupMenuTable *) &NoteTrackVRulerMenuTable::Instance();
       auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
 
-      // Accelerators only if zooming enabled.
-      if( !bVZoom )
-      {
-         wxMenuItemList & L = pMenu->GetMenuItems();
-         // let's iterate over the list in STL syntax
-         wxMenuItemList::iterator iter;
-         for (iter = L.begin(); iter != L.end(); ++iter)
-         {
-             wxMenuItem *pItem = *iter;
-             // Remove accelerator, if any.
-             pItem->SetItemLabel( (pItem->GetItemLabel() + "\t" ).BeforeFirst('\t') );
-         }
-      }
-
       pParent->PopupMenu(pMenu.get(), event.m_x, event.m_y);
 
       return data.result;
    }
 
+   bool bVZoom;
+   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
    bVZoom &= event.GetId() != kCaptureLostEventId;
    if( !bVZoom )
       return RefreshAll;

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2019 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -54,27 +54,42 @@ usage_exit (const char *progname)
 	puts ("\n"
 		"    where [option] may be:\n\n"
 		"        -override-sample-rate=X  : force sample rate of input to X\n"
+		"        -endian=little           : force output file to little endian data\n"
+		"        -endian=big              : force output file to big endian data\n"
+		"        -endian=cpu              : force output file same endian-ness as the CPU\n"
+		"        -normalize               : normalize the data in the output file\n"
 		) ;
 
 	puts (
 		"    where [encoding] may be one of the following:\n\n"
-		"        -pcms8     : force the output to signed 8 bit pcm\n"
-		"        -pcmu8     : force the output to unsigned 8 bit pcm\n"
-		"        -pcm16     : force the output to 16 bit pcm\n"
-		"        -pcm24     : force the output to 24 bit pcm\n"
-		"        -pcm32     : force the output to 32 bit pcm\n"
-		"        -float32   : force the output to 32 bit floating point"
+		"        -pcms8     : signed 8 bit pcm\n"
+		"        -pcmu8     : unsigned 8 bit pcm\n"
+		"        -pcm16     : 16 bit pcm\n"
+		"        -pcm24     : 24 bit pcm\n"
+		"        -pcm32     : 32 bit pcm\n"
+		"        -float32   : 32 bit floating point\n"
+		"        -float64   : 64 bit floating point\n"
+		"        -ulaw      : ULAW\n"
+		"        -alaw      : ALAW\n"
+		"        -alac16    : 16 bit ALAC (CAF only)\n"
+		"        -alac20    : 20 bit ALAC (CAF only)\n"
+		"        -alac24    : 24 bit ALAC (CAF only)\n"
+		"        -alac32    : 32 bit ALAC (CAF only)\n"
+		"        -ima-adpcm : IMA ADPCM (WAV only)\n"
+		"        -ms-adpcm  : MS ADPCM (WAV only)\n"
+		"        -gsm610    : GSM6.10 (WAV only)\n"
+		"        -dwvw12    : 12 bit DWVW (AIFF only)\n"
+		"        -dwvw16    : 16 bit DWVW (AIFF only)\n"
+		"        -dwvw24    : 24 bit DWVW (AIFF only)\n"
+		"        -vorbis    : Vorbis (OGG only)\n"
+		"        -opus      : Opus (OGG only)\n"
 		) ;
+
 	puts (
-		"        -ulaw      : force the output ULAW\n"
-		"        -alaw      : force the output ALAW\n"
-		"        -ima-adpcm : force the output to IMA ADPCM (WAV only)\n"
-		"        -ms-adpcm  : force the output to MS ADPCM (WAV only)\n"
-		"        -gsm610    : force the GSM6.10 (WAV only)\n"
-		"        -dwvw12    : force the output to 12 bit DWVW (AIFF only)\n"
-		"        -dwvw16    : force the output to 16 bit DWVW (AIFF only)\n"
-		"        -dwvw24    : force the output to 24 bit DWVW (AIFF only)\n"
-		"        -vorbis    : force the output to Vorbis (OGG only)\n"
+		"    If no encoding is specified, the program will try to use the encoding\n"
+		"    of the input file in the output file. This will not always work as\n"
+		"    most container formats (eg WAV, AIFF etc) only support a small subset\n"
+		"    of codec formats (eg 16 bit PCM, a-law, Vorbis etc).\n"
 		) ;
 
 	puts (
@@ -85,23 +100,49 @@ usage_exit (const char *progname)
 	sfe_dump_format_map () ;
 
 	puts ("") ;
-	exit (0) ;
+	exit (1) ;
 } /* usage_exit */
+
+static void
+report_format_error_exit (const char * argv0, SF_INFO * sfinfo)
+{	int old_format = sfinfo->format ;
+	int endian = sfinfo->format & SF_FORMAT_ENDMASK ;
+	int channels = sfinfo->channels ;
+
+	sfinfo->format = old_format & (SF_FORMAT_TYPEMASK | SF_FORMAT_SUBMASK) ;
+
+	if (endian && sf_format_check (sfinfo))
+	{	printf ("Error : output file format does not support %s endian-ness.\n", sfe_endian_name (endian)) ;
+		exit (1) ;
+		} ;
+
+	sfinfo->channels = 1 ;
+	if (sf_format_check (sfinfo))
+	{	printf ("Error : output file format does not support %d channels.\n", channels) ;
+		exit (1) ;
+		} ;
+
+	printf ("\n"
+			"Error : output file format is invalid.\n"
+			"The '%s' container does not support '%s' codec data.\n"
+			"Run '%s --help' for clues.\n\n",
+			sfe_container_name (sfinfo->format), sfe_codec_name (sfinfo->format), program_name (argv0)) ;
+	exit (1) ;
+} /* report_format_error_exit */
 
 int
 main (int argc, char * argv [])
 {	const char	*progname, *infilename, *outfilename ;
-	SNDFILE	 	*infile = NULL, *outfile = NULL ;
-	SF_INFO	 	sfinfo ;
+	SNDFILE		*infile = NULL, *outfile = NULL ;
+	SF_INFO		sfinfo ;
 	int			k, outfilemajor, outfileminor = 0, infileminor ;
 	int			override_sample_rate = 0 ; /* assume no sample rate override. */
+	int			endian = SF_ENDIAN_FILE, normalize = SF_FALSE ;
 
 	progname = program_name (argv [0]) ;
 
 	if (argc < 3 || argc > 5)
-	{	usage_exit (progname) ;
-		return 1 ;
-		} ;
+		usage_exit (progname) ;
 
 	infilename = argv [argc-2] ;
 	outfilename = argv [argc-1] ;
@@ -109,19 +150,16 @@ main (int argc, char * argv [])
 	if (strcmp (infilename, outfilename) == 0)
 	{	printf ("Error : Input and output filenames are the same.\n\n") ;
 		usage_exit (progname) ;
-		return 1 ;
 		} ;
 
 	if (strlen (infilename) > 1 && infilename [0] == '-')
 	{	printf ("Error : Input filename (%s) looks like an option.\n\n", infilename) ;
 		usage_exit (progname) ;
-		return 1 ;
 		} ;
 
 	if (outfilename [0] == '-')
 	{	printf ("Error : Output filename (%s) looks like an option.\n\n", outfilename) ;
 		usage_exit (progname) ;
-		return 1 ;
 		} ;
 
 	for (k = 1 ; k < argc - 2 ; k++)
@@ -149,12 +187,32 @@ main (int argc, char * argv [])
 		{	outfileminor = SF_FORMAT_FLOAT ;
 			continue ;
 			} ;
+		if (! strcmp (argv [k], "-float64"))
+		{	outfileminor = SF_FORMAT_DOUBLE ;
+			continue ;
+			} ;
 		if (! strcmp (argv [k], "-ulaw"))
 		{	outfileminor = SF_FORMAT_ULAW ;
 			continue ;
 			} ;
 		if (! strcmp (argv [k], "-alaw"))
 		{	outfileminor = SF_FORMAT_ALAW ;
+			continue ;
+			} ;
+		if (! strcmp (argv [k], "-alac16"))
+		{	outfileminor = SF_FORMAT_ALAC_16 ;
+			continue ;
+			} ;
+		if (! strcmp (argv [k], "-alac20"))
+		{	outfileminor = SF_FORMAT_ALAC_20 ;
+			continue ;
+			} ;
+		if (! strcmp (argv [k], "-alac24"))
+		{	outfileminor = SF_FORMAT_ALAC_24 ;
+			continue ;
+			} ;
+		if (! strcmp (argv [k], "-alac32"))
+		{	outfileminor = SF_FORMAT_ALAC_32 ;
 			continue ;
 			} ;
 		if (! strcmp (argv [k], "-ima-adpcm"))
@@ -185,12 +243,41 @@ main (int argc, char * argv [])
 		{	outfileminor = SF_FORMAT_VORBIS ;
 			continue ;
 			} ;
+		if (! strcmp (argv [k], "-opus"))
+		{	outfileminor = SF_FORMAT_OPUS ;
+			continue ;
+			} ;
 
 		if (strstr (argv [k], "-override-sample-rate=") == argv [k])
 		{	const char *ptr ;
 
 			ptr = argv [k] + strlen ("-override-sample-rate=") ;
 			override_sample_rate = atoi (ptr) ;
+			continue ;
+			} ;
+
+		if (! strcmp (argv [k], "-endian=little"))
+		{	endian = SF_ENDIAN_LITTLE ;
+			continue ;
+			} ;
+
+		if (! strcmp (argv [k], "-endian=big"))
+		{	endian = SF_ENDIAN_BIG ;
+			continue ;
+			} ;
+
+		if (! strcmp (argv [k], "-endian=cpu"))
+		{	endian = SF_ENDIAN_CPU ;
+			continue ;
+			} ;
+
+		if (! strcmp (argv [k], "-endian=file"))
+		{	endian = SF_ENDIAN_FILE ;
+			continue ;
+			} ;
+
+		if (! strcmp (argv [k], "-normalize"))
+		{	normalize = SF_TRUE ;
 			continue ;
 			} ;
 
@@ -227,6 +314,8 @@ main (int argc, char * argv [])
 	else
 		sfinfo.format = outfilemajor | (sfinfo.format & SF_FORMAT_SUBMASK) ;
 
+	sfinfo.format |= endian ;
+
 	if ((sfinfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_XI)
 		switch (sfinfo.format & SF_FORMAT_SUBMASK)
 		{	case SF_FORMAT_PCM_16 :
@@ -240,8 +329,16 @@ main (int argc, char * argv [])
 			} ;
 
 	if (sf_format_check (&sfinfo) == 0)
-	{	printf ("Error : output file format is invalid (0x%08X).\n", sfinfo.format) ;
-		return 1 ;
+	{	sf_close (infile) ;
+		report_format_error_exit (argv [0], &sfinfo) ;
+		} ;
+
+	if ((sfinfo.format & SF_FORMAT_SUBMASK) == SF_FORMAT_GSM610 && sfinfo.samplerate != 8000)
+	{	printf (
+			"WARNING: GSM 6.10 data format only supports 8kHz sample rate. The converted\n"
+			"ouput file will contain the input data converted to the GSM 6.10 data format\n"
+			"but not re-sampled.\n"
+			) ;
 		} ;
 
 	/* Open the output file. */
@@ -253,10 +350,12 @@ main (int argc, char * argv [])
 	/* Copy the metadata */
 	copy_metadata (outfile, infile, sfinfo.channels) ;
 
-	if ((outfileminor == SF_FORMAT_DOUBLE) || (outfileminor == SF_FORMAT_FLOAT)
+	if (normalize
+			|| (outfileminor == SF_FORMAT_DOUBLE) || (outfileminor == SF_FORMAT_FLOAT)
 			|| (infileminor == SF_FORMAT_DOUBLE) || (infileminor == SF_FORMAT_FLOAT)
+			|| (infileminor == SF_FORMAT_OPUS) || (outfileminor == SF_FORMAT_OPUS)
 			|| (infileminor == SF_FORMAT_VORBIS) || (outfileminor == SF_FORMAT_VORBIS))
-		sfe_copy_data_fp (outfile, infile, sfinfo.channels) ;
+		sfe_copy_data_fp (outfile, infile, sfinfo.channels, normalize) ;
 	else
 		sfe_copy_data_int (outfile, infile, sfinfo.channels) ;
 
@@ -269,17 +368,19 @@ main (int argc, char * argv [])
 static void
 copy_metadata (SNDFILE *outfile, SNDFILE *infile, int channels)
 {	SF_INSTRUMENT inst ;
+	SF_CUES cues ;
 	SF_BROADCAST_INFO_2K binfo ;
 	const char *str ;
-	int k, err = 0, chanmap [256] ;
+	int k, chanmap [256] ;
 
 	for (k = SF_STR_FIRST ; k <= SF_STR_LAST ; k++)
 	{	str = sf_get_string (infile, k) ;
 		if (str != NULL)
-			err = sf_set_string (outfile, k, str) ;
+			sf_set_string (outfile, k, str) ;
 		} ;
 
 	memset (&inst, 0, sizeof (inst)) ;
+	memset (&cues, 0, sizeof (cues)) ;
 	memset (&binfo, 0, sizeof (binfo)) ;
 
 	if (channels < ARRAY_LEN (chanmap))
@@ -288,6 +389,9 @@ copy_metadata (SNDFILE *outfile, SNDFILE *infile, int channels)
 		if (sf_command (infile, SFC_GET_CHANNEL_MAP_INFO, chanmap, size) == SF_TRUE)
 			sf_command (outfile, SFC_SET_CHANNEL_MAP_INFO, chanmap, size) ;
 		} ;
+
+	if (sf_command (infile, SFC_GET_CUE, &cues, sizeof (cues)) == SF_TRUE)
+		sf_command (outfile, SFC_SET_CUE, &cues, sizeof (cues)) ;
 
 	if (sf_command (infile, SFC_GET_INSTRUMENT, &inst, sizeof (inst)) == SF_TRUE)
 		sf_command (outfile, SFC_SET_INSTRUMENT, &inst, sizeof (inst)) ;

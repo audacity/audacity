@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2012 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -22,9 +22,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <inttypes.h>
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
+#else
+#include "sf_unistd.h"
 #endif
 
 #include <sndfile.h>
@@ -93,7 +96,7 @@ headerless_test (const char * filename, int format, int expected)
 		} ;
 
 	if (sfinfo.frames < BUFFER_SIZE)
-	{	printf ("Line %d: Incorrect number of.frames in file. (%d => %ld)\n", __LINE__, BUFFER_SIZE, SF_COUNT_TO_LONG (sfinfo.frames)) ;
+	{	printf ("Line %d: Incorrect number of.frames in file. (%d => %" PRId64 ")\n", __LINE__, BUFFER_SIZE, sfinfo.frames) ;
 		exit (1) ;
 		} ;
 
@@ -154,7 +157,7 @@ old_test (void)
 		} ;
 
 	if (sfinfo.frames < BUFFER_SIZE)
-	{	printf ("Line %d: Incorrect number of.frames in file. (%d => %ld)\n", __LINE__, BUFFER_SIZE, SF_COUNT_TO_LONG (sfinfo.frames)) ;
+	{	printf ("Line %d: Incorrect number of.frames in file. (%d => %" PRId64 ")\n", __LINE__, BUFFER_SIZE, sfinfo.frames) ;
 		exit (1) ;
 		} ;
 

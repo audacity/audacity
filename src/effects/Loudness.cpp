@@ -20,6 +20,7 @@
 #include <math.h>
 
 #include <wx/intl.h>
+#include <wx/simplebook.h>
 #include <wx/valgen.h>
 
 #include "../Internat.h"
@@ -55,7 +56,7 @@ Param( DualMono,    bool,    wxT("DualMono"),            true,       false,   tr
 Param( NormalizeTo, int,     wxT("NormalizeTo"),         kLoudness , 0    ,   nAlgos-1, 1  );
 
 BEGIN_EVENT_TABLE(EffectLoudness, wxEvtHandler)
-   EVT_CHOICE(wxID_ANY, EffectLoudness::OnUpdateUI)
+   EVT_CHOICE(wxID_ANY, EffectLoudness::OnChoice)
    EVT_CHECKBOX(wxID_ANY, EffectLoudness::OnUpdateUI)
    EVT_TEXT(wxID_ANY, EffectLoudness::OnUpdateUI)
 END_EVENT_TABLE()
@@ -132,7 +133,7 @@ bool EffectLoudness::SetAutomationParameters(CommandParameters & parms)
    ReadAndVerifyDouble(LUFSLevel);
    ReadAndVerifyDouble(RMSLevel);
    ReadAndVerifyBool(DualMono);
-   ReadAndVerifyBool(NormalizeTo);
+   ReadAndVerifyInt(NormalizeTo);
 
    mStereoInd = StereoInd;
    mLUFSLevel = LUFSLevel;
@@ -217,7 +218,7 @@ bool EffectLoudness::Process()
 
       if(mNormalizeTo == kLoudness)
       {
-         mLoudnessProcessor.reset(new EBUR128(mCurRate, range.size()));
+         mLoudnessProcessor.reset(safenew EBUR128(mCurRate, range.size()));
          mLoudnessProcessor->Initialize();
          if(!ProcessOne(range, true))
          {
@@ -297,43 +298,83 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartHorizontalLay(wxALIGN_LEFT, false);
             {
-               S.AddVariableText(XO("Normalize"), false,
+               S.AddVariableText(XO("&Normalize"), false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
-               S
+               mChoice = S
                   .Validator<wxGenericValidator>( &mNormalizeTo )
                   .AddChoice( {},
                      Msgids(kNormalizeTargetStrings, nAlgos),
-                     mNormalizeTo
-               );
-               S.AddVariableText(XO("to"), false,
-                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                     mNormalizeTo );
+               S
+                  .AddVariableText(XO("t&o"), false,
+                     wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
-               mLevelTextCtrl = S
-                  /* i18n-hint: LUFS is a particular method for measuring loudnesss */
-                  .Name( XO("Loudness LUFS") )
-                  .Validator<FloatingPointValidator<double>>(
-                     2, &mLUFSLevel,
-                     NumValidatorStyle::ONE_TRAILING_ZERO,
-                     MIN_LUFSLevel, MAX_LUFSLevel
-                  )
-                  .AddTextBox( {}, wxT(""), 10);
-               /* i18n-hint: LUFS is a particular method for measuring loudnesss */
-               mLeveldB = S.AddVariableText(XO("LUFS"), false,
-                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-               mWarning = S.AddVariableText( {}, false,
-                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               // Use a notebook so we can have two controls but show only one
+               // They target different variables with their validators
+               mBook =
+               S
+                  .StartSimplebook();
+               {
+                  S.StartNotebookPage({});
+                  {
+                     S.StartHorizontalLay(wxALIGN_LEFT, false);
+                     {
+                        S
+                           /* i18n-hint: LUFS is a particular method for measuring loudnesss */
+                           .Name( XO("Loudness LUFS") )
+                           .Validator<FloatingPointValidator<double>>(
+                              2, &mLUFSLevel,
+                              NumValidatorStyle::ONE_TRAILING_ZERO,
+                              MIN_LUFSLevel, MAX_LUFSLevel )
+                           .AddTextBox( {}, wxT(""), 10);
+
+                        /* i18n-hint: LUFS is a particular method for measuring loudnesss */
+                        S
+                           .AddVariableText(XO("LUFS"), false,
+                              wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                     }
+                     S.EndHorizontalLay();
+                  }
+                  S.EndNotebookPage();
+
+                  S.StartNotebookPage({});
+                  {
+                     S.StartHorizontalLay(wxALIGN_LEFT, false);
+                     {
+                        S
+                           .Name( XO("RMS dB") )
+                           .Validator<FloatingPointValidator<double>>(
+                              2, &mRMSLevel,
+                              NumValidatorStyle::ONE_TRAILING_ZERO,
+                              MIN_RMSLevel, MAX_RMSLevel )
+                           .AddTextBox( {}, wxT(""), 10);
+
+                        S
+                           .AddVariableText(XO("dB"), false,
+                              wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                     }
+                     S.EndHorizontalLay();
+                  }
+                  S.EndNotebookPage();
+               }
+               S.EndSimplebook();
+
+               mWarning =
+               S
+                  .AddVariableText( {}, false,
+                     wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             }
             S.EndHorizontalLay();
 
             mStereoIndCheckBox = S
                .Validator<wxGenericValidator>( &mStereoInd )
-               .AddCheckBox(XO("Normalize stereo channels independently"),
+               .AddCheckBox(XXO("Normalize &stereo channels independently"),
                   mStereoInd );
 
             mDualMonoCheckBox = S
                .Validator<wxGenericValidator>( &mDualMono )
-               .AddCheckBox(XO("Treat mono as dual-mono (recommended)"),
+               .AddCheckBox(XXO("&Treat mono as dual-mono (recommended)"),
                   mDualMono );
          }
          S.EndVerticalLay();
@@ -341,8 +382,6 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
    }
    S.EndVerticalLay();
-   // To ensure that the UpdateUI on creation sets the prompts correctly.
-   mGUINormalizeTo = !mNormalizeTo;
 }
 
 bool EffectLoudness::TransferDataToWindow()
@@ -455,8 +494,7 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
 
       const size_t remainingLen = (end - s).as_size_t();
       blockLen = blockLen > remainingLen ? remainingLen : blockLen;
-      if(!LoadBufferBlock(range, s, blockLen))
-         return false;
+      LoadBufferBlock(range, s, blockLen);
 
       // Process the buffer.
       if(analyse)
@@ -479,29 +517,17 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
    return true;
 }
 
-bool EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
+void EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
                                      sampleCount pos, size_t len)
 {
-   sampleCount read_size = -1;
-   sampleCount last_read_size = -1;
    // Get the samples from the track and put them in the buffer
    int idx = 0;
    for(auto channel : range)
    {
-      channel->Get((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len,
-                   fillZero, true, &read_size);
-      // WaveTrack::Get returns the amount of read samples excluding zero
-      // filled samples from clip gaps. But in case of stereo tracks with
-      // assymetric gaps it still returns the same number for both channels.
-      //
-      // Fail if we read different sample count from stereo pair tracks.
-      // Ignore this check during first iteration (last_read_size == -1).
-      if(read_size != last_read_size && last_read_size.as_long_long() != -1)
-         return false;
+      channel->Get((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len );
       ++idx;
    }
    mTrackBufferLen = len;
-   return true;
 }
 
 /// Calculates sample sum (for DC) and EBU R128 weighted square sum
@@ -554,6 +580,14 @@ bool EffectLoudness::UpdateProgress()
    return !TotalProgress(mProgressVal, mProgressMsg);
 }
 
+void EffectLoudness::OnChoice(wxCommandEvent & WXUNUSED(evt))
+{
+   mChoice->GetValidator()->TransferFromWindow();
+   mBook->SetSelection( mNormalizeTo );
+   UpdateUI();
+   mDualMonoCheckBox->Enable(mNormalizeTo == kLoudness);
+}
+
 void EffectLoudness::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 {
    UpdateUI();
@@ -570,33 +604,4 @@ void EffectLoudness::UpdateUI()
    }
    mWarning->SetLabel(wxT(""));
    EnableApply(true);
-
-   // Changing the prompts causes an unwanted UpdateUI event.
-   // This 'guard' stops that becoming an infinite recursion.
-   if (mNormalizeTo != mGUINormalizeTo)
-   {
-      mGUINormalizeTo = mNormalizeTo;
-      if(mNormalizeTo == kLoudness)
-      {
-         FloatingPointValidator<double> vldLevel(2, &mLUFSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
-         vldLevel.SetRange(MIN_LUFSLevel, MAX_LUFSLevel);
-         mLevelTextCtrl->SetValidator(vldLevel);
-         /* i18n-hint: LUFS is a particular method for measuring loudnesss */
-         mLevelTextCtrl->SetName(_("Loudness LUFS"));
-         mLevelTextCtrl->SetValue(wxString::FromDouble(mLUFSLevel));
-         /* i18n-hint: LUFS is a particular method for measuring loudnesss */
-         mLeveldB->SetLabel(_("LUFS"));
-      }
-      else // RMS
-      {
-         FloatingPointValidator<double> vldLevel(2, &mRMSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
-         vldLevel.SetRange(MIN_RMSLevel, MAX_RMSLevel);
-         mLevelTextCtrl->SetValidator(vldLevel);
-         mLevelTextCtrl->SetName(_("RMS dB"));
-         mLevelTextCtrl->SetValue(wxString::FromDouble(mRMSLevel));
-         mLeveldB->SetLabel(_("dB"));
-      }
-   }
-
-   mDualMonoCheckBox->Enable(mNormalizeTo == kLoudness);
 }

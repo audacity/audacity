@@ -38,7 +38,7 @@ typedef struct {
    size_t allocation;   /* Number of bytes allocated for data. */
    size_t item_size;    /* Size of each item in data */
    size_t begin;        /* Offset of the first byte to read. */
-   size_t end;          /* 1 + Offset of the last byte byte to read. */
+   size_t end;          /* 1 + Offset of the last byte to read. */
 } fifo_t;
 
 static void fifo_clear(fifo_t * f)

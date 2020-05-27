@@ -165,7 +165,7 @@ void UndoManager::CalculateSpaceUsage()
 }
 
 wxLongLong_t UndoManager::GetLongDescription(
-   unsigned int n, TranslatableString *desc, wxString *size)
+   unsigned int n, TranslatableString *desc, TranslatableString *size)
 {
    n -= 1; // 1 based to zero based
 
@@ -283,6 +283,7 @@ void UndoManager::PushState(const TrackList * l,
    unsigned int i;
 
    if ( ((flags & UndoPush::CONSOLIDATE) != UndoPush::MINIMAL) &&
+       // compare full translations not msgids!
        lastAction.Translation() == longDescription.Translation() &&
        mayConsolidate ) {
       ModifyState(l, selectedRegion, tags);
@@ -309,7 +310,7 @@ void UndoManager::PushState(const TrackList * l,
       RemoveStateAt(i);
    }
 
-   // Assume tags was duplicted before any changes.
+   // Assume tags was duplicated before any changes.
    // Just save a NEW shared_ptr to it.
    stack.push_back(
       std::make_unique<UndoStackElem>

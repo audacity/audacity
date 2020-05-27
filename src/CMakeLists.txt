@@ -14,6 +14,22 @@ add_dependencies( ${TARGET} plug-ins )
 
 def_vars()
 
+# Add a target that will provide the git revision info
+# whenever it changes.  (Must be done at build time, not
+# configuration time.)
+if( GIT_FOUND )
+   add_custom_target(
+      version
+      COMMAND
+         ${CMAKE_COMMAND} -D GIT=${GIT_EXECUTABLE}
+                          -D _PRVDIR=${_PRVDIR}
+                          -P ${CMAKE_MODULE_PATH}/Version.cmake
+      WORKING_DIRECTORY
+         ${topdir}
+   )
+   add_dependencies( ${TARGET} version )
+endif()
+
 # Handle Audio Units option
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    cmd_option(
@@ -156,8 +172,6 @@ list( APPEND SOURCES
       LyricsWindow.cpp
       LyricsWindow.h
       MacroMagic.h
-      Makefile.am
-      Makefile.in
       Matrix.cpp
       Matrix.h
       MemoryX.h
@@ -222,7 +236,6 @@ list( APPEND SOURCES
       Registrar.h
       Resample.cpp
       Resample.h
-      RevisionIdent.h
       RingBuffer.cpp
       RingBuffer.h
       SampleFormat.cpp
@@ -908,6 +921,20 @@ list( APPEND SOURCES
       widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp
       widgets/ExpandingToolBar.h
+      widgets/FileDialog/FileDialog.cpp
+      widgets/FileDialog/FileDialog.h
+      $<$<BOOL:${wxIS_WIN}>:
+	widgets/FileDialog/win/FileDialogPrivate.cpp
+	widgets/FileDialog/win/FileDialogPrivate.h
+      >
+      $<$<BOOL:${wxIS_MAC}>:
+	widgets/FileDialog/mac/FileDialogPrivate.mm
+	widgets/FileDialog/mac/FileDialogPrivate.h
+      >
+      $<$<BOOL:${wxIS_GTK}>:
+	widgets/FileDialog/gtk/FileDialogPrivate.cpp
+	widgets/FileDialog/gtk/FileDialogPrivate.h
+      >
       widgets/FileHistory.cpp
       widgets/FileHistory.h
       widgets/Grabber.cpp
@@ -981,7 +1008,6 @@ list( APPEND HEADERS
 list( APPEND INCLUDES
    PUBLIC
       ${_PRVDIR}
-      ${topdir}/lib-src/lib-widget-extra
       ${topdir}/include
       ${TARGET_ROOT}
 )
@@ -1002,10 +1028,6 @@ list( APPEND DEFINES
       WXINTL_NO_GETTEXT_MACRO
       WXUSINGDLL
       CMAKE
-      $<$<BOOL:${GIT_FOUND}>:
-         REV_LONG="${GIT_COMMIT_LONG}"
-         REV_TIME="${GIT_COMMIT_TIME}"
-      >
       $<$<BOOL:${HAVE_LRINT}>:
          HAVE_LRINT
       >
@@ -1025,12 +1047,13 @@ list( APPEND DEFINES
 list( APPEND OPTIONS
    PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/permissive->
+      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
 #      $<$<CXX_COMPILER_ID:GNU>:-Wl,-rpath -Wl,${_RPATH}>
 )
 
 list( APPEND LDFLAGS
    PRIVATE
-      $<$<PLATFORM_ID:Windows>:/MANIFEST:NO>
+      $<$<CXX_COMPILER_ID:MSVC>:/MANIFEST:NO>
 )
 
 #
@@ -1040,31 +1063,17 @@ list( APPEND LIBRARIES
    PRIVATE
       ${CMAKE_REQUIRED_LIBRARIES}
       wxWidgets
-      FileDialog
       expat
       lame
       libsndfile
       libsoxr
-      lib-widget-extra
       portaudio-v19
-#      $<$<BOOL:${USE_FFMPEG}>:ibavcodec>
-#      $<$<BOOL:${USE_FFMPEG}>:libavformat>
-#      $<$<BOOL:${USE_FFMPEG}>:libavutil>
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
-
-      # This flac mess can be resolved by removing the Windows pragmas
-      # in AudacityApp.cpp.
-      $<$<BOOL:${USE_LIBFLAC}>:flac>
-      $<$<BOOL:${USE_LIBFLAC}>:flac++>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
-
       $<$<BOOL:${USE_LIBMAD}>:libmad>
       $<$<BOOL:${USE_LIBOGG}>:libogg>
       $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
-#      $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
-#      $<$<BOOL:${USE_LIBVORBIS}>:libvorbisenc>
-#      $<$<BOOL:${USE_LIBVORBIS}>:libvorbisfile>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_LV2}>:lv2>
       $<$<BOOL:${USE_MIDI}>:portmidi>
@@ -1074,21 +1083,12 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_SBSMS}>:sbsms>
       $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
       $<$<BOOL:${USE_VAMP}>:libvamp>
-#      $<$<BOOL:${USE_VAMP}>:libvamp-hostsdk>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GLIB>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GTK>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:z>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:pthread>
 )
 
-#
-# If was have cmake 3.16 or higher, we can use precompiled headers, but
-# only use them if ccache is not available
-#
-if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
-   set( PRECOMP AudacityHeaders.h )
-endif()
-
-set( AUDACITY_NAME "Audacity" )
 set( BUILDING_AUDACITY YES )
 set( INSTALL_PREFIX "${_PREFIX}" )
 set( PKGLIBDIR "${_LIBDIR}" )
@@ -1109,8 +1109,6 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
 endif()
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   set( _EXE "Audacity" )
-
    set_target_properties(
       ${TARGET}
       PROPERTIES
@@ -1164,7 +1162,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       TARGET
          ${TARGET}
       COMMAND
-         ${_INTDIR}/copy_libs.bat ${exedir} ${_EXE}.exe
+         ${_INTDIR}/copy_libs.bat ${exedir} ${AUDACITY_NAME}.exe
       POST_BUILD
    )
 
@@ -1177,7 +1175,22 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       POST_BUILD
    )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   set( _EXE "Audacity" )
+   # Bug 2400 workaround
+   #
+   # Replaces the SDK version in the built executable with 10.13 to
+   # prevent high CPU usage and slow drawing on Mojave or newer
+   check_for_platform_version()
+   if( PLATFORM_VERSION_SUPPORTED )
+      list( APPEND LDFLAGS
+         PRIVATE
+            -Wl,-platform_version,macos,10.7,10.13
+      )
+   else()
+      list( APPEND LDFLAGS
+         PRIVATE
+            -Wl,-sdk_version,10.13
+      )
+   endif()
 
    # Define Mac specific resources
    list( APPEND MAC_RESOURCES
@@ -1198,21 +1211,21 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          # Add the resources
          RESOURCE "${MAC_RESOURCES};${RESOURCES}"
    )
+   set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}" )
 
-   # These sources must be compiled as Objective C++
+   # These sources must be compiled as Objective C++ and excluded
+   # from precompiled header usage
    set_source_files_properties(
       KeyboardCapture.cpp
       effects/EffectUI.cpp
+      effects/VST/VSTControlOSX.mm
+      effects/audiounits/AUControl.mm
       menus/WindowMenus.cpp
+      widgets/FileDialog/mac/FileDialogPrivate.mm
       PROPERTIES
          COMPILE_FLAGS "-x objective-c++"
+         SKIP_PRECOMPILE_HEADERS YES
    )
-
-   # Because of the "misidentified" Objective C++ sources listed above,
-   # we can only use precompiled headers if also using Xcode.
-   if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode" )
-      set( PRECOMP )
-   endif()
 
    # Add our required frameworks
    list( APPEND LIBRARIES
@@ -1235,7 +1248,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          TARGET
             ${TARGET}
          COMMAND
-            sh -c "TARGET_BUILD_DIR=${_DEST} EXECUTABLE_PATH=Macos/${_EXE} FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
+            sh -c "TARGET_BUILD_DIR=${_DEST} EXECUTABLE_PATH=MacOS/${AUDACITY_NAME} FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
          POST_BUILD
       )
    endif()
@@ -1245,13 +1258,13 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( WRAPPER_SOURCES "${WRAPPER_ROOT}/Wrapper.c" )
 
    add_executable( Wrapper "${WRAPPER_SOURCES}" )
-   add_dependencies( Wrapper "${TARGET}" )
+   add_dependencies( "${TARGET}" Wrapper )
 
    set_target_property_all( "Wrapper" RUNTIME_OUTPUT_DIRECTORY "${_EXEDIR}" )
    organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
 
 else()
-   set( _EXE "audacity" )
+   set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}" )
 
    # Create the config file
    set( HAVE_VISIBILITY 1 )
@@ -1296,13 +1309,12 @@ else()
    endif()
 
    # Create the desktop file
-   set( AUDACITY_NAME "${_EXE}" )
    configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
 
    # Create the script to copy required wxWidgets libraries
    if( ${_OPT}use_wxwidgets STREQUAL "local" )
       file( WRITE "${_INTDIR}/copy_libs.sh"
-         "for lib in \$(ldd ${_EXEDIR}/${_EXE} | awk '/libwx/{print \$1}')
+         "for lib in \$(ldd ${_EXEDIR}/${AUDACITY_NAME} | awk '/libwx/{print \$1}')
           do
              echo \${lib}
              ldd ${WXWIN}/lib/\${lib} | awk '/libwx/{print \$1}'
@@ -1323,7 +1335,7 @@ else()
    endif()
 endif()
 
-set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${_EXE} )
+set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${AUDACITY_NAME} )
 
 organize_source( "${TARGET_ROOT}/.." "include" "${HEADERS}" )
 organize_source( "${TARGET_ROOT}/../presets" "presets" "${RESOURCES}" )
@@ -1348,26 +1360,44 @@ target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOU
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
-target_link_options( "${TARGET}" PRIVATE ${LDFLAGS} )
+target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 
-if( PRECOMP )
-   target_precompile_headers( ${TARGET} PRIVATE ${PRECOMP} )
+# If was have cmake 3.16 or higher, we can use precompiled headers, but
+# only use them if ccache is not available and the user hasn't disabled
+# it.
+if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
+   cmd_option(
+      ${_OPT}use_pch
+      "Use precompiled headers [yes, no]"
+      YES
+   )
+
+   if( ${_OPT}use_pch )
+      message( STATUS "Using precompiled headers" )
+      target_precompile_headers( ${TARGET} PRIVATE AudacityHeaders.h )
+   else()
+      message( STATUS "Not using precompiled headers" )
+   endif()
 endif()
 
 if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       install( FILES "${_DEST}/Info.plist"
                DESTINATION "${CMAKE_INSTALL_BINDIR}/Audacity.app/Contents" )
-      install( PROGRAMS "${_EXEDIR}/${_EXE}" "${_EXEDIR}/Wrapper"
+      install( PROGRAMS "${_EXEDIR}/${AUDACITY_NAME}" "${_EXEDIR}/Wrapper"
                DESTINATION "${CMAKE_INSTALL_BINDIR}/Audacity.app/Contents/MacOS" )
    else()
-      install( PROGRAMS "${_EXEDIR}/${_EXE}"
+      install( PROGRAMS "${_EXEDIR}/${AUDACITY_NAME}"
                TYPE BIN )
+      install( DIRECTORY "${_DESTDIR}/${_LIBDIR}/"
+               DESTINATION "${_LIBDIR}"
+               USE_SOURCE_PERMISSIONS
+               FILES_MATCHING PATTERN "*.so" )
       install( FILES "${_INTDIR}/audacity.desktop"
                DESTINATION "${_DATADIR}/applications" )
       install( FILES "${topdir}/LICENSE.txt" "${topdir}/README.txt"
-               DESTINATION "${_DATADIR}/doc" )
+               DESTINATION "${_DATADIR}/doc/${AUDACITY_NAME}" )
       install( FILES "${_SRCDIR}/audacity.xml"
                DESTINATION "${_DATADIR}/mime/packages" )
       install( FILES "${topdir}/presets/EQDefaultCurves.xml"

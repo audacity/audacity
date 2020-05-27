@@ -372,11 +372,8 @@ void AdornedRulerPanel::QuickPlayIndicatorOverlay::Draw(
 enum {
    OnToggleQuickPlayID = 7000,
    OnSyncQuickPlaySelID,
-   OnTimelineToolTipID,
    OnAutoScrollID,
    OnLockPlayRegionID,
-   OnScrubRulerID,
-
    OnTogglePinnedStateID,
 };
 
@@ -388,14 +385,13 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    // Context menu commands
    EVT_MENU(OnToggleQuickPlayID, AdornedRulerPanel::OnToggleQuickPlay)
    EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
-   EVT_MENU(OnTimelineToolTipID, AdornedRulerPanel::OnTimelineToolTips)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
-   EVT_MENU(OnScrubRulerID, AdornedRulerPanel::OnToggleScrubRulerFromMenu)
+   EVT_MENU( OnTogglePinnedStateID, AdornedRulerPanel::OnTogglePinnedState )
 
    EVT_COMMAND( OnTogglePinnedStateID,
                wxEVT_COMMAND_BUTTON_CLICKED,
-               AdornedRulerPanel::OnTogglePinnedState )
+               AdornedRulerPanel::OnPinnedButton )
 
 END_EVENT_TABLE()
 
@@ -605,6 +601,9 @@ protected:
             // Do not start a drag
             RefreshCode::Cancelled;
       }
+      // Fix for Bug 2357
+      if (!event.event.LeftIsDown())
+         return RefreshCode::Cancelled;
 
       mOrigPreference = TracksPrefs::GetPinnedHeadPositionPreference();
       return 0;
@@ -613,6 +612,7 @@ protected:
    Result Drag
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override
    {
+
       auto value = GetPlayHeadFraction(pProject, event.event.m_x );
       TracksPrefs::SetPinnedHeadPositionPreference( value );
       return RefreshCode::DrawOverlays;
@@ -974,6 +974,8 @@ void AdornedRulerPanel::UpdatePrefs()
    // Update button texts for language change
    UpdateButtonStates();
 
+   mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
+
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
 #ifdef EXPERIMENTAL_TWO_TONE_TIME_RULER
    {
@@ -1069,16 +1071,24 @@ void AdornedRulerPanel::InvalidateRuler()
 namespace {
    const TranslatableString StartScrubbingMessage(const Scrubber &/*scrubber*/)
    {
+#if 0
+      if(scrubber.Seeks())
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
        "Scrubbing" is variable-speed playback, ...
        "Seeking" is normal speed playback but with skips
        */
-#if 0
-      if(scrubber.Seeks())
          return XO("Click or drag to begin Seek");
       else
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+       "Scrubbing" is variable-speed playback, ...
+       "Seeking" is normal speed playback but with skips
+       */
          return XO("Click or drag to begin Scrub");
 #else
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+       "Scrubbing" is variable-speed playback, ...
+       "Seeking" is normal speed playback but with skips
+       */
       return XO("Click & move to Scrub. Click & drag to Seek.");
 #endif
    }
@@ -1086,14 +1096,18 @@ namespace {
    const TranslatableString ContinueScrubbingMessage(
       const Scrubber &scrubber, bool clicked)
    {
+#if 0
+      if(scrubber.Seeks())
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
        "Scrubbing" is variable-speed playback, ...
        "Seeking" is normal speed playback but with skips
        */
-#if 0
-      if(scrubber.Seeks())
          return XO("Move to Seek");
       else
+      /* i18n-hint: These commands assist the user in finding a sound by ear. ...
+       "Scrubbing" is variable-speed playback, ...
+       "Seeking" is normal speed playback but with skips
+       */
          return XO("Move to Scrub");
 #else
       if( clicked ) {
@@ -1718,6 +1732,7 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
    }
 }
 
+#if 0
 // This version toggles ruler state indirectly via the scrubber
 // to ensure that all the places where the state is shown update.
 // For example buttons and menus must update.
@@ -1726,6 +1741,8 @@ void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent&)
    auto &scrubber = Scrubber::Get( *mProject );
    scrubber.OnToggleScrubRuler(*mProject);
 }
+#endif
+
 
 bool AdornedRulerPanel::SetPanelSize()
 {
@@ -1776,12 +1793,16 @@ void AdornedRulerPanel::UpdateButtonStates()
       auto gAudioIO = AudioIO::Get();
       pinButton->SetAlternateIdx(
          (gAudioIO->IsCapturing() ? 2 : 0) + (state ? 0 : 1));
-      // Bug 1584: Toltip now shows what clicking will do.
-      const auto label = state
-      ? XO("Click to unpin")
-      : XO("Click to pin");
+      // Bug 1584: Tooltip now shows what clicking will do.
+      // Bug 2357: Action of button (and hence tooltip wording) updated.
+      const auto label = XO("Timeline Options");
       common(*pinButton, wxT("PinnedHead"), label);
    }
+}
+
+void AdornedRulerPanel::OnPinnedButton(wxCommandEvent & /*event*/)
+{
+   ShowContextMenu(MenuChoice::QuickPlay, NULL);
 }
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
@@ -1817,42 +1838,24 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    const auto &playRegion = viewInfo.playRegion;
    wxMenu rulerMenu;
 
-   if (mQuickPlayEnabled)
-      rulerMenu.Append(OnToggleQuickPlayID, _("Disable Quick-Play"));
-   else
-      rulerMenu.Append(OnToggleQuickPlayID, _("Enable Quick-Play"));
+   rulerMenu.AppendCheckItem(OnToggleQuickPlayID, _("Enable Quick-Play"))->
+      Check(mQuickPlayEnabled);
 
-   wxMenuItem *dragitem;
-   if (mPlayRegionDragsSelection && !playRegion.Locked())
-      dragitem = rulerMenu.Append(OnSyncQuickPlaySelID, _("Disable dragging selection"));
-   else
-      dragitem = rulerMenu.Append(OnSyncQuickPlaySelID, _("Enable dragging selection"));
-   dragitem->Enable(mQuickPlayEnabled && !playRegion.Locked());
+   auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Enable dragging selection"));
+   pDrag->Check(mPlayRegionDragsSelection && !playRegion.Locked());
+   pDrag->Enable(mQuickPlayEnabled && !playRegion.Locked());
 
-#if wxUSE_TOOLTIPS
-   if (mTimelineToolTip)
-      rulerMenu.Append(OnTimelineToolTipID, _("Disable Timeline Tooltips"));
-   else
-      rulerMenu.Append(OnTimelineToolTipID, _("Enable Timeline Tooltips"));
-#endif
+   rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
+      Check(mViewInfo->bUpdateTrackIndicator);
 
-   if (mViewInfo->bUpdateTrackIndicator)
-      rulerMenu.Append(OnAutoScrollID, _("Do not scroll while playing"));
-   else
-      rulerMenu.Append(OnAutoScrollID, _("Update display while playing"));
+   auto pLock = rulerMenu.AppendCheckItem(OnLockPlayRegionID, _("Lock Play Region"));
+   pLock->Check(playRegion.Locked());
+   pLock->Enable( playRegion.Locked() || !playRegion.Empty() );
 
-   wxMenuItem *prlitem;
-   if (!playRegion.Locked())
-      prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Lock Play Region"));
-   else
-      prlitem = rulerMenu.Append(OnLockPlayRegionID, _("Unlock Play Region"));
-   prlitem->Enable( playRegion.Locked() || !playRegion.Empty() );
 
-   wxMenuItem *ruleritem;
-   if (ShowingScrubRuler())
-      ruleritem = rulerMenu.Append(OnScrubRulerID, _("Disable Scrub Ruler"));
-   else
-      ruleritem = rulerMenu.Append(OnScrubRulerID, _("Enable Scrub Ruler"));
+   rulerMenu.AppendSeparator();
+   rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Pinned Play Head"))->
+      Check(TracksPrefs::GetPinnedHeadPreference());
 
    PopupMenu(&rulerMenu, pos);
 }
@@ -1905,12 +1908,14 @@ void AdornedRulerPanel::HandleSnapping()
    }
 }
 
+#if 0
 void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
 {
    mTimelineToolTip = (mTimelineToolTip)? false : true;
    gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip);
    gPrefs->Flush();
 }
+#endif
 
 void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 {
@@ -2004,12 +2009,21 @@ void AdornedRulerPanel::ShowContextMenu( MenuChoice choice, const wxPoint *pPosi
    else
    {
       auto rect = GetRect();
-      position = { rect.GetLeft() + 1, rect.GetBottom() + 1 };
+      //Old code put menu too low down.  y position applied twice.
+      //position = { rect.GetLeft() + 1, rect.GetBottom() + 1 };
+
+      // The cell does not pass in the mouse or button position.
+      // We happen to know this is the pin/unpin button
+      // so these magic values 'fix a bug' - but really the cell should
+      // pass more information to work with in.
+      position = { rect.GetLeft() + 38, rect.GetHeight()/2 + 1 };
    }
 
    switch (choice) {
       case MenuChoice::QuickPlay:
-         ShowMenu(position); break;
+         ShowMenu(position); 
+         UpdateButtonStates();
+         break;
       case MenuChoice::Scrub:
          ShowScrubMenu(position); break;
       default:

@@ -71,8 +71,8 @@ void BatchPrefs::PopulateOrExchange( ShuttleGui & S )
 
    S.StartStatic( XO("Behaviors"),1 );
    {
-#ifdef __WXDEBUG__
-      S.TieCheckBox( XO("&Don't apply effects in batch mode"),
+#ifdef _DEBUG
+      S.TieCheckBox( XXO("&Don't apply effects in batch mode"),
          {wxT("/Batch/Debug"), false});
 #endif
    }

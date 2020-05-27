@@ -67,7 +67,6 @@ Grabber::Grabber(wxWindow * parent, wxWindowID id)
    It's used to drag a track around (when in multi-tool mode) rather
    than requiring that you use the drag tool.  It's shown as a series
    of horizontal bumps */
-
    SetLabel(_("Grabber"));
    SetName(_("Grabber"));
 }

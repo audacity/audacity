@@ -76,7 +76,7 @@ public:
    virtual ~ToolBarResizer();
 
    // We don't need or want to accept focus.
-   // Note that AcceptsFocusFromKeyboard() is overriden rather than
+   // Note that AcceptsFocusFromKeyboard() is overridden rather than
    // AcceptsFocus(), so that resize can be cancelled by ESC
    bool AcceptsFocusFromKeyboard() const override {return false;}
 
@@ -228,17 +228,31 @@ void ToolBarResizer::OnMotion( wxMouseEvent & event )
       wxPoint pos = wxGetMousePosition();
 
       wxRect r = mBar->GetRect();
-      wxSize msz = mBar->GetMinSize();
+      wxSize minsz = mBar->GetMinSize();
+      wxSize maxsz = mBar->GetMaxSize();
       wxSize psz = mBar->GetParent()->GetClientSize();
 
       // Adjust the size based on updated mouse position.
       r.width = ( pos.x - mResizeOffset.x ) - r.x;
 
+      // Keep it within max size, if specificed
+      if( maxsz != wxDefaultSize )
+      {
+         if( r.width > maxsz.x )
+         {
+            r.width = maxsz.x;
+         }
+         if( r.height > maxsz.y )
+         {
+            r.height = maxsz.y;
+         }
+      }
+
       // Constrain
-      if( r.width < msz.x )
+      if( r.width < minsz.x )
       {
          // Don't allow resizing to go too small
-         r.width = msz.x;
+         r.width = minsz.x;
       }
       else if( r.GetRight() > psz.x - 3 )
       {
@@ -438,6 +452,10 @@ bool ToolBar::Expose( bool show )
    if( IsDocked() )
    {
       Show( show );
+      if( show )
+      {
+         Refresh();
+      }
    }
    else
    {
@@ -538,6 +556,7 @@ void ToolBar::ReCreateButtons()
       // Set dock after possibly creating resizer.
       // (Re)Establish dock state
       SetDocked(GetDock(), false);
+
       // Set the sizer
       SetSizerAndFit(ms.release());
    }
@@ -553,7 +572,7 @@ void ToolBar::ReCreateButtons()
       // JKC we're going to allow all resizable toolbars to be resized
       // to 1 unit high, typically 27 pixels.
       wxSize sz2 = sz;
-      sz2.SetWidth(wxMax( sz2.GetX(), GetMinToolbarWidth()));
+      sz2.SetWidth(GetMinToolbarWidth());
       sz2.y = tbs -1;
       SetMinSize(sz2);
       
@@ -643,7 +662,7 @@ void ToolBar::Updated()
       // Bug 2120.  Changing the choice also changes the size of the toolbar so
       // we need to update the client size, even if undocked.
       // If modifying/improving this, remember to test both changing the choice,
-      // and clciking on the choice but not actually changing it.
+      // and clicking on the choice but not actually changing it.
       GetParent()->SetClientSize( GetSize() + wxSize( 2,2));
    //wxCommandEvent e( EVT_TOOLBAR_UPDATED, GetId() );
    //GetParent()->GetEventHandler()->AddPendingEvent( e );
@@ -808,7 +827,7 @@ void ToolBar::MakeButtonBackgroundsSmall()
 /// @param eDown             Background for when button is Down.
 /// @param eHilite           Background for when button is Hilit.
 /// @param eStandardUp       Foreground when enabled, up.
-/// @param eStandardDown     Foregrounde when enabled, down.
+/// @param eStandardDown     Foreground when enabled, down.
 /// @param eDisabled         Foreground when disabled.
 /// @param id                Windows Id.
 /// @param placement         Placement position

@@ -13,12 +13,13 @@
 #	ifdef	HAS_MALLOC_H
 #		include 	<malloc.h>
 #	else
-		extern void free();
+		extern void free () ;
 #	endif
 #endif
 
 void gsm_destroy (gsm S)
 {
-	if (S) free((char *)S);
+	if (S)
+		free ((char *) S) ;
 }
 

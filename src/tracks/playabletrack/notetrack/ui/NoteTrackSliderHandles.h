@@ -24,7 +24,7 @@ class VelocitySliderHandle final : public SliderHandle
 {
    VelocitySliderHandle(const VelocitySliderHandle&) = delete;
 
-   std::shared_ptr<NoteTrack> GetNoteTrack();
+   std::shared_ptr<NoteTrack> GetNoteTrack() const;
 
 public:
    explicit VelocitySliderHandle
@@ -41,6 +41,9 @@ protected:
    (AudacityProject *pProject, float newValue) override;
    Result CommitChanges
    (const wxMouseEvent &event, AudacityProject *pProject) override;
+
+   TranslatableString Tip(
+      const wxMouseState &state, AudacityProject &) const override;
 
    bool StopsOnKeystroke () override { return true; }
 

@@ -105,14 +105,14 @@ int open_mixers(px_mixer *Px, UINT deviceIn, UINT deviceOut)
       return open_ep_mixers(Px, deviceIn, deviceOut);
    }
 
-   res = mixerGetID((HMIXEROBJ) (deviceIn == WAVE_MAPPER ? 0 : deviceIn),
+   res = mixerGetID((HMIXEROBJ) (UINT_PTR) (deviceIn == WAVE_MAPPER ? 0 : deviceIn),
                     &deviceIn,
                     MIXER_OBJECTF_WAVEIN);
    if (res != MMSYSERR_NOERROR) {
       return FALSE;
    }
 
-   res = mixerGetID((HMIXEROBJ) (deviceOut == WAVE_MAPPER ? 0 : deviceOut),
+   res = mixerGetID((HMIXEROBJ) (UINT_PTR) (deviceOut == WAVE_MAPPER ? 0 : deviceOut),
                     &deviceOut,
                     MIXER_OBJECTF_WAVEOUT);
    if (res != MMSYSERR_NOERROR) {
@@ -426,7 +426,7 @@ static const char *get_mixer_name(px_mixer *Px, int i)
 
    if (i == 0) {
       if (!info->inName) {
-         res = mixerGetDevCaps((UINT) info->hInputMixer, &caps, sizeof(caps));
+         res = mixerGetDevCaps((UINT_PTR) info->hInputMixer, &caps, sizeof(caps));
          if (res == MMSYSERR_NOERROR) {
             info->inName = strdup(caps.szPname);
          }
@@ -435,7 +435,7 @@ static const char *get_mixer_name(px_mixer *Px, int i)
    }
 
    if (!info->outName) {
-      res = mixerGetDevCaps((UINT) info->hOutputMixer, &caps, sizeof(caps));
+      res = mixerGetDevCaps((UINT_PTR) info->hOutputMixer, &caps, sizeof(caps));
       if (res == MMSYSERR_NOERROR) {
          info->outName = strdup(caps.szPname);
       }

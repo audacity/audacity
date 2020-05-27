@@ -22,8 +22,9 @@
 #include <Carbon/Carbon.h>
 #endif
 
-#include <wx/osx/private.h> // to inherit wxWidgetCocoaImpl
-#include <wx/control.h> // to inherit
+#include <wx/osx/core/private.h>
+#include <wx/osx/cocoa/private.h>
+#include <wx/control.h>
 
 #include <AudioUnit/AudioComponent.h>
 #include <AudioUnit/AudioUnit.h>
@@ -47,6 +48,7 @@ public:
    void CreateCocoa();
    void CreateGeneric();
    void CocoaViewResized();
+   void ForceRedraw();
 
    void OnSize(wxSizeEvent & evt);
 
@@ -55,8 +57,6 @@ public:
    void CreateCarbonOverlay();
    void CarbonViewResized();
    static pascal OSStatus ControlEventHandlerCallback(EventHandlerCallRef handler,
-                                                      EventRef event,
-                                                      void *data);
 #endif
 
 private:

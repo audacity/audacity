@@ -106,7 +106,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.TieCheckBox(XO("A&ttempt to use filter in OpenFile dialog first"),
+   S.TieCheckBox(XXO("A&ttempt to use filter in OpenFile dialog first"),
          {wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"),
           true});
    S.StartStatic(XO("Rules to choose import filters"), 1);
@@ -184,19 +184,19 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
       S.StartHorizontalLay (wxSHRINK, 0);
       {
-          MoveRuleUp = S.Id (EIPMoveRuleUp).AddButton(XO("Move rule &up"));
+          MoveRuleUp = S.Id (EIPMoveRuleUp).AddButton(XXO("Move rule &up"));
           MoveRuleDown = S.Id (EIPMoveRuleDown).AddButton(
-             XO("Move rule &down"));
+             XXO("Move rule &down"));
           MoveFilterUp = S.Id (EIPMoveFilterUp).AddButton(
-             XO("Move f&ilter up"));
+             XXO("Move f&ilter up"));
           MoveFilterDown = S.Id (EIPMoveFilterDown).AddButton(
-             XO("Move &filter down"));
+             XXO("Move &filter down"));
       }
       S.EndHorizontalLay();
       S.StartHorizontalLay (wxSHRINK, 0);
       {
-          AddRule = S.Id (EIPAddRule).AddButton(XO("&Add new rule"));
-          DelRule = S.Id (EIPDelRule).AddButton(XO("De&lete selected rule"));
+          AddRule = S.Id (EIPAddRule).AddButton(XXO("&Add new rule"));
+          DelRule = S.Id (EIPDelRule).AddButton(XXO("De&lete selected rule"));
       }
       S.EndHorizontalLay();
    }
@@ -221,9 +221,11 @@ bool ExtImportPrefs::Commit()
 void ExtImportPrefs::OnShow(wxShowEvent &event)
 {
    event.Skip();
-
-   RuleTable->Refresh();
-   PluginList->Refresh();
+   if (event.IsShown())
+   {
+      RuleTable->Refresh();
+      PluginList->Refresh();
+   }
 }
 
 void ExtImportPrefs::OnPluginKeyDown(wxListEvent& event)

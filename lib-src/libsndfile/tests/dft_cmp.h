@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2015 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 */
 
 
-#define		DFT_DATA_LENGTH		(2048)
+#define		DFT_DATA_LENGTH		(8192)
 
 double	dft_cmp_float (int linenum, const float *orig, const float *test, int len, double tolerance, int allow_exit) ;
 

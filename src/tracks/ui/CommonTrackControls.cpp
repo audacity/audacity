@@ -78,7 +78,9 @@ enum
    OnMoveBottomID,
 };
 
-class TrackMenuTable : public PopupMenuTable
+class TrackMenuTable
+   : public PopupMenuTable
+   , private PrefsListener
 {
    TrackMenuTable()
       : PopupMenuTable{ "Track" }
@@ -100,6 +102,12 @@ private:
    }
 
    CommonTrackControls::InitMenuData *mpData{};
+
+   void UpdatePrefs() override
+   {
+      // Because labels depend on keyboard preferences
+      PopupMenuTable::Clear();
+   }
 };
 
 TrackMenuTable &TrackMenuTable::Instance()
@@ -125,7 +133,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
    };
 
    BeginSection( "Basic" );
-      AppendItem( "Name", OnSetNameID, XO("&Name..."), POPUP_MENU_FN( OnSetName ) );
+      AppendItem( "Name", OnSetNameID, XXO("&Name..."), POPUP_MENU_FN( OnSetName ) );
    EndSection();
    BeginSection( "Move" );
       AppendItem( "Up",
@@ -133,7 +141,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
          // wxWidgets will apply its equivalent to the key names passed to menu
          // functions.
          OnMoveUpID,
-         XO("Move Track &Up").Join(
+         XXO("Move Track &Up").Join(
             Verbatim(
                CommandManager::Get( mpData->project ).
                    // using GET to compose menu item name for wxWidgets
@@ -143,7 +151,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
          POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(true) );
       AppendItem( "Down",
          OnMoveDownID,
-         XO("Move Track &Down").Join(
+         XXO("Move Track &Down").Join(
             Verbatim(
                CommandManager::Get( mpData->project ).
                   // using GET to compose menu item name for wxWidgets
@@ -153,7 +161,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
          POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(false) );
       AppendItem( "Top",
          OnMoveTopID,
-         XO("Move Track to &Top").Join(
+         XXO("Move Track to &Top").Join(
             Verbatim(
                CommandManager::Get( mpData->project ).
                    // using GET to compose menu item name for wxWidgets
@@ -163,7 +171,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
          POPUP_MENU_FN( OnMoveTrack ), enableIfCanMove(true) );
       AppendItem( "Bottom",
          OnMoveBottomID,
-         XO("Move Track to &Bottom").Join(
+         XXO("Move Track to &Bottom").Join(
             Verbatim(
                CommandManager::Get( mpData->project ).
                   // using GET to compose menu item name for wxWidgets
@@ -209,7 +217,7 @@ void SetTrackNameCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(XO("Name:"),mName,60);
+      S.TieTextBox(XXO("Name:"),mName,60);
    }
    S.EndMultiColumn();
 }

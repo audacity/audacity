@@ -21,6 +21,9 @@
 #include "CommandFlag.h"
 
 #include "Keyboard.h"
+
+#include "../Prefs.h"
+
 #include <vector>
 
 #include "../xml/XMLTagHandler.h"
@@ -31,67 +34,14 @@
 
 class wxMenu;
 class wxMenuBar;
-class wxArrayString;
-class wxMenu;
-class wxMenuBar;
 using CommandParameter = CommandID;
 
-struct MenuBarListEntry
-{
-   MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_);
-   ~MenuBarListEntry();
-
-   wxString name;
-   wxWeakRef<wxMenuBar> menubar; // This structure does not assume memory ownership!
-};
-
-struct SubMenuListEntry
-{
-   SubMenuListEntry(const TranslatableString &name_, std::unique_ptr<wxMenu> menu_);
-   SubMenuListEntry( SubMenuListEntry&& ) = default;
-   ~SubMenuListEntry();
-
-   TranslatableString name;
-   std::unique_ptr<wxMenu> menu;
-};
-
-struct CommandListEntry
-{
-   int id;
-   CommandID name;
-   TranslatableString longLabel;
-   NormalizedKeyString key;
-   NormalizedKeyString defaultKey;
-   TranslatableString label;
-   TranslatableString labelPrefix;
-   wxString labelTop;
-   wxMenu *menu;
-   CommandHandlerFinder finder;
-   CommandFunctorPointer callback;
-   CommandParameter parameter;
-
-   // type of a function that determines checkmark state
-   using CheckFn = std::function< bool(AudacityProject&) >;
-   CheckFn checkmarkFn;
-
-   bool multi;
-   int index;
-   int count;
-   bool enabled;
-   bool skipKeydown;
-   bool wantKeyup;
-   bool isGlobal;
-   bool isOccult;
-   bool isEffect;
-   bool excludeFromMacros;
-   CommandFlag flags;
-   bool useStrictFlags{ false };
-};
+struct MenuBarListEntry;
+struct SubMenuListEntry;
+struct CommandListEntry;
 
 using MenuBarList = std::vector < MenuBarListEntry >;
-
-// to do: remove the extra indirection when Mac compiler moves to newer version
-using SubMenuList = std::vector < std::unique_ptr<SubMenuListEntry> >;
+using SubMenuList = std::vector < SubMenuListEntry >;
 
 // This is an array of pointers, not structures, because the hash maps also point to them,
 // so we don't want the structures to relocate with vector operations.
@@ -141,6 +91,9 @@ class AUDACITY_DLL_API CommandManager final
    wxMenu *BeginMenu(const TranslatableString & tName);
    void EndMenu();
 
+   // type of a function that determines checkmark state
+   using CheckFn = std::function< bool(AudacityProject&) >;
+
    // For specifying unusual arguments in AddItem
    struct Options
    {
@@ -166,12 +119,21 @@ class AUDACITY_DLL_API CommandManager final
          { global = true; return std::move(*this); }
       Options &&UseStrictFlags () &&
          { useStrictFlags = true; return std::move(*this); }
+      Options &&WantKeyUp () &&
+         { wantKeyUp = true; return std::move(*this); }
+      Options &&SkipKeyDown () &&
+         { skipKeyDown = true; return std::move(*this); }
+
+      // This option affects debugging only:
+      Options &&AllowDup () &&
+         { allowDup = true; return std::move(*this); }
+
       Options &&AllowInMacros ( int value = 1 ) &&
          { allowInMacros = value; return std::move(*this); }
 
       // CheckTest is overloaded
       // Take arbitrary predicate
-      Options &&CheckTest (const CommandListEntry::CheckFn &fn) &&
+      Options &&CheckTest (const CheckFn &fn) &&
          { checker = fn; return std::move(*this); }
       // Take a preference path
       Options &&CheckTest (const wxChar *key, bool defaultValue) && {
@@ -180,16 +142,19 @@ class AUDACITY_DLL_API CommandManager final
       }
 
       const wxChar *accel{ wxT("") };
-      CommandListEntry::CheckFn checker; // default value means it's not a check item
+      CheckFn checker; // default value means it's not a check item
       bool bIsEffect{ false };
       CommandParameter parameter{};
       TranslatableString longName{};
       bool global{ false };
       bool useStrictFlags{ false };
+      bool wantKeyUp{ false };
+      bool skipKeyDown{ false };
+      bool allowDup{ false };
       int allowInMacros{ -1 }; // 0 = never, 1 = always, -1 = deduce from label
 
    private:
-      static CommandListEntry::CheckFn
+      static CheckFn
          MakeCheckFn( const wxString key, bool defaultValue );
    };
 
@@ -258,7 +223,7 @@ class AUDACITY_DLL_API CommandManager final
    // Accessing
    //
 
-   void GetCategories(wxArrayString &cats, AudacityProject *);
+   TranslatableStrings GetCategories( AudacityProject& );
    void GetAllCommandNames(CommandIDs &names, bool includeMultis) const;
    void GetAllCommandLabels(
       TranslatableStrings &labels, std::vector<bool> &vExcludeFromMacros,
@@ -267,7 +232,7 @@ class AUDACITY_DLL_API CommandManager final
       CommandIDs &names,
       std::vector<NormalizedKeyString> &keys,
       std::vector<NormalizedKeyString> &default_keys,
-      TranslatableStrings &labels, wxArrayString &categories,
+      TranslatableStrings &labels, TranslatableStrings &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
       TranslatableStrings &prefixes,
 #endif
@@ -279,14 +244,14 @@ class AUDACITY_DLL_API CommandManager final
 
    TranslatableString GetLabelFromName(const CommandID &name);
    TranslatableString GetPrefixedLabelFromName(const CommandID &name);
-   wxString GetCategoryFromName(const CommandID &name);
+   TranslatableString GetCategoryFromName(const CommandID &name);
    NormalizedKeyString GetKeyFromName(const CommandID &name) const;
    NormalizedKeyString GetDefaultKeyFromName(const CommandID &name);
 
    bool GetEnabled(const CommandID &name);
    int GetNumberOfKeysRead() const;
 
-#if defined(__WXDEBUG__)
+#if defined(_DEBUG)
    void CheckDups();
 #endif
    void RemoveDuplicateShortcuts();
@@ -560,7 +525,7 @@ namespace Registry {
       // allows implicit conversions to type Factory.
       // (Thus, a lambda can return a unique_ptr<BaseItem> rvalue even though
       // Factory's return type is shared_ptr, and the needed conversion is
-      // appled implicitly.)
+      // applied implicitly.)
       void AppendOne( const ComputedItem::Factory<VisitorType> &factory )
       {
          auto adaptedFactory = [factory]( Registry::Visitor &visitor ){
@@ -651,7 +616,7 @@ namespace Registry {
    // registry of plug-ins, and something must be done to preserve old
    // behavior.  It can be done in the central place using string literal
    // identifiers only, not requiring static compilation or linkage dependency.
-   struct OrderingPreferenceInitializer {
+   struct OrderingPreferenceInitializer : PreferenceInitializer {
       using Literal = const wxChar *;
       using Pair = std::pair< Literal, Literal >;
       using Pairs = std::vector< Pair >;
@@ -662,7 +627,13 @@ namespace Registry {
          // (these should be blank or start with / and not end with /),
          // each with a ,-separated sequence of identifiers, which specify a
          // desired ordering at one node of the tree:
-         const Pairs &pairs );
+         Pairs pairs );
+
+      void operator () () override;
+
+   private:
+      Pairs mPairs;
+      Literal mRoot;
    };
 }
 

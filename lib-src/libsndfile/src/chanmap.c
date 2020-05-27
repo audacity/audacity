@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2009-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2009-2014 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -228,7 +228,7 @@ aiff_caf_find_channel_layout_tag (const int *chan_map, int channels)
 {	const AIFF_CAF_CHANNEL_MAP * curr_map ;
 	unsigned k, len ;
 
-	if (channels < 1 || channels > ARRAY_LEN (map))
+	if (channels < 1 || channels >= ARRAY_LEN (map))
 		return 0 ;
 
 	curr_map = map [channels].map ;
@@ -248,7 +248,7 @@ aiff_caf_of_channel_layout_tag (int tag)
 	unsigned k, len ;
 	int channels = tag & 0xffff ;
 
-	if (channels < 0 || channels > ARRAY_LEN (map))
+	if (channels < 0 || channels >= ARRAY_LEN (map))
 		return NULL ;
 
 	curr_map = map [channels].map ;

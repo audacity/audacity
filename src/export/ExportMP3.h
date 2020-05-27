@@ -29,13 +29,13 @@ extern EnumSetting< MP3RateMode > MP3RateModeSetting;
 #define MP3_EXPORT_BUILT_IN 1
 #endif
 
-class wxString;
+class TranslatableString;
 class wxWindow;
 
 //----------------------------------------------------------------------------
 // Get MP3 library version
 //----------------------------------------------------------------------------
-wxString GetMP3Version(wxWindow *parent, bool prompt);
+TranslatableString GetMP3Version(wxWindow *parent, bool prompt);
 
 #endif
 

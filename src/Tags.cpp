@@ -55,7 +55,6 @@
 
 #include <wx/button.h>
 #include <wx/choice.h>
-#include <wx/filedlg.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/listctrl.h>
@@ -913,10 +912,10 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(4, wxALIGN_CENTER);
       {
-         S.Id(AddID).AddButton(XO("&Add"));
-         S.Id(RemoveID).AddButton(XO("&Remove"));
+         S.Id(AddID).AddButton(XXO("&Add"));
+         S.Id(RemoveID).AddButton(XXO("&Remove"));
          S.AddTitle( {} );
-         S.Id(ClearID).AddButton(XO("Cl&ear"));
+         S.Id(ClearID).AddButton(XXO("Cl&ear"));
       }
       S.EndMultiColumn();
 
@@ -926,8 +925,8 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartMultiColumn(4, wxALIGN_CENTER);
             {
-               S.Id(EditID).AddButton(XO("E&dit..."));
-               S.Id(ResetID).AddButton(XO("Rese&t..."));
+               S.Id(EditID).AddButton(XXO("E&dit..."));
+               S.Id(ResetID).AddButton(XXO("Rese&t..."));
             }
             S.EndMultiColumn();
          }
@@ -936,10 +935,10 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartMultiColumn(4, wxALIGN_CENTER);
             {
-               S.Id(LoadID).AddButton(XO("&Load..."));
-               S.Id(SaveID).AddButton(XO("&Save..."));
+               S.Id(LoadID).AddButton(XXO("&Load..."));
+               S.Id(SaveID).AddButton(XXO("&Save..."));
                S.AddTitle( {} );
-               S.Id(SaveDefaultsID).AddButton(XO("Set De&fault"));
+               S.Id(SaveDefaultsID).AddButton(XXO("Set De&fault"));
             }
             S.EndMultiColumn();
          }
@@ -948,7 +947,7 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
       S.StartHorizontalLay(wxALIGN_LEFT, 0);
       {
-         S.Id( DontShowID ).AddCheckBox( XO("Don't show this when exporting audio"), !bShow );
+         S.Id( DontShowID ).AddCheckBox( XXO("Don't show this when exporting audio"), !bShow );
       }
       S.EndHorizontalLay();
    }

@@ -146,7 +146,7 @@ namespace Private
 // variable.
 //
 // The template argument B is the name of the base class which must derive from
-// wxNumValidatorBase and define LongestValueType type and {To,As}String()
+// NumValidatorBase and define LongestValueType type and {To,As}String()
 // methods i.e. basically be one of {Integer,Number}ValidatorBase classes.
 //
 // The template argument T is just the type handled by the validator that will

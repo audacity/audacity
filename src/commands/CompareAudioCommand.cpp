@@ -58,7 +58,7 @@ void CompareAudioCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(XO("Threshold:"),errorThreshold);
+      S.TieTextBox(XXO("Threshold:"),errorThreshold);
    }
    S.EndMultiColumn();
 }

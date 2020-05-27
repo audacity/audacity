@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2014 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -41,17 +41,10 @@ int
 main (void)
 {	SF_FORMAT_INFO	info ;
 	SF_INFO 		sfinfo ;
-	char buffer [128] ;
 	int format, major_count, subtype_count, m, s ;
 
 	memset (&sfinfo, 0, sizeof (sfinfo)) ;
-	buffer [0] = 0 ;
-	sf_command (NULL, SFC_GET_LIB_VERSION, buffer, sizeof (buffer)) ;
-	if (strlen (buffer) < 1)
-	{	printf ("Line %d: could not retrieve lib version.\n", __LINE__) ;
-		exit (1) ;
-		} ;
-	printf ("Version : %s\n\n", buffer) ;
+	printf ("Version : %s\n\n", sf_version_string ()) ;
 
 	sf_command (NULL, SFC_GET_FORMAT_MAJOR_COUNT, &major_count, sizeof (int)) ;
 	sf_command (NULL, SFC_GET_FORMAT_SUBTYPE_COUNT, &subtype_count, sizeof (int)) ;

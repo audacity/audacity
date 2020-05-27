@@ -39,10 +39,10 @@ QUIET_GEN = $(Q:@=@echo '  GEN   '$@;)
 # Use Octave's mkoctfile to do all the heavy lifting. Unfortunately, its
 # a little dumb so we need to guide it carefully.
 sndfile.oct : sndfile.o
-	$(QUIET_GEN) $(MKOCTFILE) -v $(AM_CPPFLAGS) $(top_builddir)/Octave/$+ -L$(SNDFILEDIR)/.libs -L$(SNDFILEDIR) -lsndfile -o $(top_builddir)/Octave/$@ > /dev/null
+	$(QUIET_GEN) $(MKOCTFILE) -v $(INCLUDES) $(top_builddir)/Octave/$+ -L$(SNDFILEDIR)/.libs -L$(SNDFILEDIR) -lsndfile -o $(top_builddir)/Octave/$@ > /dev/null
 
 sndfile.o : sndfile.cc
-	$(QUIET_GEN) $(MKOCTFILE) -v $(AM_CPPFLAGS) -c $+ -o $(top_builddir)/Octave/$@ > /dev/null
+	$(QUIET_GEN) $(MKOCTFILE) -v $(INCLUDES) -c $+ -o $(top_builddir)/Octave/$@ > /dev/null
 
 # Allow for the test being run in the build dir, but the test script
 # being located in the source dir.
@@ -76,3 +76,4 @@ uninstall-local :
 
 clean-local :
 	rm -f sndfile.o sndfile.oct
+	@if test $(abs_builddir) != $(abs_srcdir) ; then rm -f PKG_ADD ; fi

@@ -48,7 +48,6 @@ the mouse around.
 #include <wx/font.h>
 #include <wx/image.h>
 #include <wx/file.h>
-#include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
@@ -403,18 +402,18 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
          S.SetStretchyCol(1);
          S.SetStretchyCol(3);
          {
-            S.AddPrompt(XO("Cursor:"));
+            S.AddPrompt(XXO("Cursor:"));
 
             mCursorText = S.Style(wxTE_READONLY)
                .AddTextBox( {}, wxT(""), 10);
 
-            S.AddPrompt(XO("Peak:"));
+            S.AddPrompt(XXO("Peak:"));
 
             mPeakText = S.Style(wxTE_READONLY)
                .AddTextBox( {}, wxT(""), 10);
             S.AddSpace(5);
 
-            mGridOnOff = S.Id(GridOnOffID).AddCheckBox(XO("&Grids"), mDrawGrid);
+            mGridOnOff = S.Id(GridOnOffID).AddCheckBox(XXO("&Grids"), mDrawGrid);
          }
          S.EndMultiColumn();
       }
@@ -442,17 +441,17 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 
       mAlgChoice = S.Id(FreqAlgChoiceID).Focus()
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(XO("&Algorithm:"), algChoices, mAlg);
+         .AddChoice(XXO("&Algorithm:"), algChoices, mAlg);
 
       S.AddSpace(5);
 
       mSizeChoice = S.Id(FreqSizeChoiceID)
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(XO("&Size:"), sizeChoices, mSize);
+         .AddChoice(XXO("&Size:"), sizeChoices, mSize);
 
       S.AddSpace(5);
 
-      mExportButton = S.Id(FreqExportButtonID).AddButton(XO("&Export..."));
+      mExportButton = S.Id(FreqExportButtonID).AddButton(XXO("&Export..."));
 
       S.AddSpace(5);
 
@@ -465,19 +464,19 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 
       mFuncChoice = S.Id(FreqFuncChoiceID)
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(XO("&Function:"), funcChoices, mFunc);
+         .AddChoice(XXO("&Function:"), funcChoices, mFunc);
       mFuncChoice->MoveAfterInTabOrder(mSizeChoice);
 
       S.AddSpace(5);
 
       mAxisChoice = S.Id(FreqAxisChoiceID)
          .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-         .AddChoice(XO("&Axis:"), axisChoices, mAxis);
+         .AddChoice(XXO("&Axis:"), axisChoices, mAxis);
       mAxisChoice->MoveAfterInTabOrder(mFuncChoice);
 
       S.AddSpace(5);
 
-      mReplotButton = S.Id(ReplotButtonID).AddButton(XO("&Replot..."));
+      mReplotButton = S.Id(ReplotButtonID).AddButton(XXO("&Replot..."));
 
       S.AddSpace(5);
 
@@ -1012,7 +1011,7 @@ void FrequencyPlotDialog::Recalc()
    // In wxMac, the skipped window MUST be a top level window.  I'd originally made it
    // just the mProgress window with the idea of preventing user interaction with the
    // controls while the plot was being recalculated.  This doesn't appear to be necessary
-   // so just use the the top level window instead.
+   // so just use the top level window instead.
    {
       Optional<wxWindowDisabler> blocker;
       if (IsShown())

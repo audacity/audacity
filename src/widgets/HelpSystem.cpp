@@ -172,14 +172,14 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
             .ToolTip( XO("Backwards" ) )
 #endif
             /* i18n-hint arrowhead meaning backward movement */
-            .AddButton( XO("<") );
+            .AddButton( XXO("<") );
          S.Id( wxID_FORWARD  )
             .Disable()
 #if wxUSE_TOOLTIPS
             .ToolTip( XO("Forwards" ) )
 #endif
             /* i18n-hint arrowhead meaning forward movement */
-            .AddButton( XO(">") );
+            .AddButton( XXO(">") );
       }
       S.EndHorizontalLay();
 
@@ -197,7 +197,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
       S.Prop(1).Focus().Position( wxEXPAND )
          .AddWindow( html );
 
-      S.Id( wxID_CANCEL ).AddButton( XO("Close"), wxALIGN_CENTER, true );
+      S.Id( wxID_CANCEL ).AddButton( XXO("Close"), wxALIGN_CENTER, true );
    }
    S.EndPanel();
 

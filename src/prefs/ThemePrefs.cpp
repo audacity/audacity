@@ -116,7 +116,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 "Themability is an experimental feature.\n\nTo try it out, click \"Save Theme Cache\" then find and modify the images and colors in\nImageCacheVxx.png using an image editor such as the Gimp.\n\nClick \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n\n(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\nthough the image file shows other icons too.)")
          );
 
-#ifdef __WXDEBUG__
+#ifdef _DEBUG
       S.AddFixedText(
          Verbatim(
 "This is a debug version of Audacity, with an extra button, 'Output Sourcery'. This will save a\nC version of the image cache that can be compiled in as a default.")
@@ -136,17 +136,17 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartHorizontalLay(wxALIGN_LEFT);
       {
-         S.Id(idSaveThemeCache).AddButton(XO("Save Theme Cache"));
-         S.Id(idLoadThemeCache).AddButton(XO("Load Theme Cache"));
+         S.Id(idSaveThemeCache).AddButton(XXO("Save Theme Cache"));
+         S.Id(idLoadThemeCache).AddButton(XXO("Load Theme Cache"));
 
          // This next button is only provided in Debug mode.
          // It is for developers who are compiling Audacity themselves
-         // and who who wish to generate a NEW ThemeAsCeeCode.h and compile it in.
-#ifdef __WXDEBUG__
+         // and who wish to generate a NEW ThemeAsCeeCode.h and compile it in.
+#ifdef _DEBUG
          S.Id(idSaveThemeAsCode).AddButton(Verbatim("Output Sourcery"));
 #endif
 
-         S.Id(idReadThemeInternal).AddButton(XO("&Defaults"));
+         S.Id(idReadThemeInternal).AddButton(XXO("&Defaults"));
       }
       S.EndHorizontalLay();
    }
@@ -163,8 +163,8 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartHorizontalLay(wxALIGN_LEFT);
       {
-         S.Id(idSaveThemeComponents).AddButton( XO("Save Files"));
-         S.Id(idLoadThemeComponents).AddButton( XO("Load Files"));
+         S.Id(idSaveThemeComponents).AddButton( XXO("Save Files"));
+         S.Id(idLoadThemeComponents).AddButton( XXO("Load Files"));
       }
       S.EndHorizontalLay();
    }

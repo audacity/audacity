@@ -952,8 +952,8 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       }
       if( !ImageCache.LoadFile( FileName, wxBITMAP_TYPE_PNG ))
       {
-         /* i18n-hint: Do not translate png.  It is the name of a file format.*/
          AudacityMessageBox(
+            /* i18n-hint: Do not translate png.  It is the name of a file format.*/
             XO("Audacity could not load file:\n  %s.\nBad png format perhaps?")
                .Format( FileName ));
          return false;
@@ -1076,9 +1076,9 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
          {
             if( !mImages[i].LoadFile( FileName, wxBITMAP_TYPE_PNG ))
             {
-               /* i18n-hint: Do not translate png.  It is the name of a file format.*/
                AudacityMessageBox(
                   XO(
+               /* i18n-hint: Do not translate png.  It is the name of a file format.*/
 "Audacity could not load file:\n  %s.\nBad png format perhaps?")
                      .Format( FileName ));
                return;

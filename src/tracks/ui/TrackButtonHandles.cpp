@@ -114,9 +114,9 @@ TranslatableString SelectButtonHandle::Tip(
 {
    auto pTrack = GetTrack();
 #if defined(__WXMAC__)
-   return pTrack->GetSelected() ? XO("Command+Click to Unselect") : XO("Select track");
+   return pTrack->GetSelected() ? XO("Command+Click to deselect") : XO("Select track");
 #else
-   return pTrack->GetSelected() ? XO("Ctrl+Click to Unselect") : XO("Select track");
+   return pTrack->GetSelected() ? XO("Ctrl+Click to deselect") : XO("Select track");
 #endif
 }
 

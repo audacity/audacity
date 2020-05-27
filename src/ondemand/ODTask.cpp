@@ -65,7 +65,7 @@ void ODTask::TerminateAndBlock()
 }
 
 ///Do a modular part of the task.  For example, if the task is to load the entire file, load one BlockFile.
-///Relies on DoSomeInternal(), which is the subclasses must implement.
+///Relies on DoSomeInternal(), which the subclasses must implement.
 ///@param amountWork the percent amount of the total job to do.  1.0 represents the entire job.  the default of 0.0
 /// will do the smallest unit of work possible
 void ODTask::DoSome(float amountWork)

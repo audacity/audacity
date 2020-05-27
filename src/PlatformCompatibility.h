@@ -41,7 +41,7 @@ public:
    static const FilePath &GetExecutablePath();
 
    //
-   // Audacity treats the / as a file seperator always for Mac OS,
+   // Audacity treats the / as a file separator always for Mac OS,
    // however /'s are allowed in the filename. In order for /'s to
    // work they muse be treated as :'s. To facilitate this, this
    // function should be called when opening or saving a file on

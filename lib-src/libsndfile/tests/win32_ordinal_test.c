@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2006-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2006-2017 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 */
 
 #include "sfconfig.h"
-#include "sndfile.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,6 +31,9 @@
 
 #include <string.h>
 #include <fcntl.h>
+#ifdef HAVE_DIRECT_H
+#include <direct.h>
+#endif
 #include <sys/types.h>
 
 #include "utils.h"
@@ -106,7 +108,7 @@ win32_ordinal_test (void)
 		} ;
 
 	if (hmod == NULL)
-	{	puts ("\n\nError : cannot load DLL.\n") ;
+	{	printf ("\n\nError : cannot load DLL (cwd is %s).\n", getcwd (buffer, sizeof (buffer))) ;
 		exit (1) ;
 		} ;
 

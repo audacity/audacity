@@ -1,6 +1,6 @@
 [+ AutoGen5 template h c +]
 /*
-** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2018 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -31,12 +31,15 @@
 extern "C" {
 #endif	/* __cplusplus */
 
+#include "sfconfig.h"
+
 #include <stdint.h>
 #include <stdarg.h>
 
-#define SF_COUNT_TO_LONG(x)	((long) (x))
 #define	ARRAY_LEN(x)		((int) (sizeof (x)) / (sizeof ((x) [0])))
 #define SIGNED_SIZEOF(x)	((int64_t) (sizeof (x)))
+#define	NOT(x)				(! (x))
+#define	ABS(x)				((x) >= 0 ? (x) : - (x))
 
 #define	PIPE_INDEX(x)	((x) + 500)
 #define	PIPE_TEST_LEN	12345
@@ -57,6 +60,16 @@ void	dump_data_to_file (const char *filename, const void *data, unsigned int dat
 
 void	write_mono_file (const char * filename, int format, int srate, float * output, int len) ;
 
+#ifdef __GNUC__
+static inline void
+exit_if_true (int test, const char *format, ...)
+#if (defined (__USE_MINGW_ANSI_STDIO) && __USE_MINGW_ANSI_STDIO)
+	__attribute__ ((format (gnu_printf, 2, 3))) ;
+#else
+	__attribute__ ((format (printf, 2, 3))) ;
+#endif
+#endif
+
 static inline void
 exit_if_true (int test, const char *format, ...)
 {	if (test)
@@ -67,6 +80,11 @@ exit_if_true (int test, const char *format, ...)
 		exit (1) ;
 		} ;
 } /* exit_if_true */
+
+static inline int32_t
+arith_shift_left (int32_t x, int shift)
+{	return (int32_t) (((uint32_t) x) << shift) ;
+} /* arith_shift_left */
 
 /*
 **	Functions for saving two vectors of data in an ascii text file which
@@ -79,6 +97,8 @@ exit_if_true (int test, const char *format, ...)
 +]
 
 void	delete_file (int format, const char *filename) ;
+
+int		truncate_file_to_zero (const char *fname) ;
 
 void	count_open_files (void) ;
 void	increment_open_file_count (void) ;
@@ -106,6 +126,7 @@ void 	check_log_buffer_or_die (SNDFILE *file, int line_num) ;
 int 	string_in_log_buffer (SNDFILE *file, const char *s) ;
 void	hexdump_file (const char * filename, sf_count_t offset, sf_count_t length) ;
 
+void	test_sf_format_or_die	(const SF_INFO *info, int line_num) ;
 
 SNDFILE *test_open_file_or_die
 			(const char *filename, int mode, SF_INFO *sfinfo, int allow_fd, int line_num) ;
@@ -135,11 +156,11 @@ void
 test_write_raw_or_die (SNDFILE *file, int pass, const void *test, sf_count_t items, int line_num) ;
 
 [+ FOR io_type
-+]void compare_[+ (get "io_element") +]_or_die (const [+ (get "io_element") +] *left, const [+ (get "io_element") +] *right, unsigned count, int line_num) ;
++]void compare_[+ (get "io_element") +]_or_die (const [+ (get "io_element") +] *expected, const [+ (get "io_element") +] *actual, unsigned count, int line_num) ;
 [+ ENDFOR io_type +]
 
 
-void	gen_lowpass_noise_float (float *data, int len) ;
+void	gen_lowpass_signal_float (float *data, int len) ;
 
 sf_count_t		file_length (const char * fname) ;
 sf_count_t		file_length_fd (int fd) ;
@@ -181,7 +202,7 @@ sf_count_t		file_length_fd (int fd) ;
 #define	M_PI		3.14159265358979323846264338
 #endif
 
-#define	LOG_BUFFER_SIZE		2048
+#define	LOG_BUFFER_SIZE		4096
 
 /*
 **	Neat solution to the Win32/OS2 binary file flage requirement.
@@ -198,13 +219,8 @@ gen_windowed_sine_[+ (get "name") +] ([+ (get "name") +] *data, int len, double 
 {	int k ;
 
 	memset (data, 0, len * sizeof ([+ (get "name") +])) ;
-	/*
-	**	Choose a frequency of 1/32 so that it aligns perfectly with a DFT
-	**	bucket to minimise spreading of energy over more than one bucket.
-	**	Also do not want to make the frequency too high as some of the
-	**	codecs (ie gsm610) have a quite severe high frequency roll off.
-	*/
-	len /= 2 ;
+
+	len = (5 * len) / 6 ;
 
 	for (k = 0 ; k < len ; k++)
 	{	data [k] = sin (2.0 * k * M_PI * 1.0 / 32.0 + 0.4) ;
@@ -223,6 +239,7 @@ create_short_sndfile (const char *filename, int format, int channels)
 	SNDFILE *file ;
 	SF_INFO sfinfo ;
 
+	memset (&sfinfo, 0, sizeof (sfinfo)) ;
 	sfinfo.samplerate = 44100 ;
 	sfinfo.channels = channels ;
 	sfinfo.format = format ;
@@ -256,17 +273,17 @@ check_file_hash_or_die (const char *filename, uint64_t target_hash, int line_num
 
 	while ((read_count = fread (buf, 1, sizeof (buf), file)))
 		for (k = 0 ; k < read_count ; k++)
-			cksum = cksum * 511 + buf [k] ;
+			cksum = (cksum * 511 + buf [k]) & 0xfffffffffffff ;
 
 	fclose (file) ;
 
 	if (target_hash == 0)
-	{	printf (" 0x%016" PRIx64 "\n", cksum) ;
+	{	printf (" 0x%" PRIx64 "\n", cksum) ;
 		return ;
 		} ;
 
 	if (cksum != target_hash)
-	{	printf ("\n\nLine %d: incorrect hash value 0x%016" PRIx64 " should be 0x%016" PRIx64 ".\n\n", line_num, cksum, target_hash) ;
+	{	printf ("\n\nLine %d: incorrect hash value 0x%" PRIx64 " should be 0x%" PRIx64 ".\n\n", line_num, cksum, target_hash) ;
 		exit (1) ;
 		} ;
 
@@ -359,7 +376,7 @@ check_log_buffer_or_die (SNDFILE *file, int line_num)
 {	static char	buffer [LOG_BUFFER_SIZE] ;
 	int			count ;
 
-	memset (buffer, 0, LOG_BUFFER_SIZE) ;
+	memset (buffer, 0, sizeof (buffer)) ;
 
 	/* Get the log buffer data. */
 	count = sf_command	(file, SFC_GET_LOG_INFO, buffer, LOG_BUFFER_SIZE) ;
@@ -398,7 +415,7 @@ string_in_log_buffer (SNDFILE *file, const char *s)
 {	static char	buffer [LOG_BUFFER_SIZE] ;
 	int			count ;
 
-	memset (buffer, 0, LOG_BUFFER_SIZE) ;
+	memset (buffer, 0, sizeof (buffer)) ;
 
 	/* Get the log buffer data. */
 	count = sf_command	(file, SFC_GET_LOG_INFO, buffer, LOG_BUFFER_SIZE) ;
@@ -420,7 +437,7 @@ hexdump_file (const char * filename, sf_count_t offset, sf_count_t length)
 	int k, m, ch, readcount ;
 
 	if (length > 1000000)
-	{	printf ("\n\nError : length (%ld) too long.\n\n", SF_COUNT_TO_LONG (offset)) ;
+	{	printf ("\n\nError : length (%" PRId64 ") too long.\n\n", offset) ;
 		exit (1) ;
 		} ;
 
@@ -430,7 +447,7 @@ hexdump_file (const char * filename, sf_count_t offset, sf_count_t length)
 		} ;
 
 	if (fseek (file, offset, SEEK_SET) != 0)
-	{	printf ("\n\nError : fseek(file, %ld, SEEK_SET) failed : %s\n\n", SF_COUNT_TO_LONG (offset), strerror (errno)) ;
+	{	printf ("\n\nError : fseek(file, %" PRId64 ", SEEK_SET) failed : %s\n\n", offset, strerror (errno)) ;
 		exit (1) ;
 		} ;
 
@@ -439,7 +456,7 @@ hexdump_file (const char * filename, sf_count_t offset, sf_count_t length)
 	for (k = 0 ; k < length ; k+= sizeof (buffer))
 	{	readcount = fread (buffer, 1, sizeof (buffer), file) ;
 
-		printf ("%08lx : ", SF_COUNT_TO_LONG (offset + k)) ;
+		printf ("%08" PRIx64 " : ", offset + k) ;
 
 		for (m = 0 ; m < readcount ; m++)
 			printf ("%02x ", buffer [m] & 0xFF) ;
@@ -467,12 +484,11 @@ hexdump_file (const char * filename, sf_count_t offset, sf_count_t length)
 void
 dump_log_buffer (SNDFILE *file)
 {	static char	buffer [LOG_BUFFER_SIZE] ;
-	int			count ;
 
-	memset (buffer, 0, LOG_BUFFER_SIZE) ;
+	memset (buffer, 0, sizeof (buffer)) ;
 
 	/* Get the log buffer data. */
-	count = sf_command	(file, SFC_GET_LOG_INFO, buffer, LOG_BUFFER_SIZE) ;
+	sf_command	(file, SFC_GET_LOG_INFO, buffer, LOG_BUFFER_SIZE) ;
 
 	if (strlen (buffer) < 1)
 		puts ("Log buffer empty.\n") ;
@@ -481,6 +497,18 @@ dump_log_buffer (SNDFILE *file)
 
 	return ;
 } /* dump_log_buffer */
+
+void
+test_sf_format_or_die (const SF_INFO *info, int line_num)
+{	int res ;
+
+	if ((res = sf_format_check (info)) != 1)
+	{	printf ("\n\nLine %d : sf_format_check returned error (%d)\n\n", line_num, res) ;
+		exit (1) ;
+		} ;
+
+	return ;
+} /* test_sf_format_or_die */
 
 SNDFILE *
 test_open_file_or_die (const char *filename, int mode, SF_INFO *sfinfo, int allow_fd, int line_num)
@@ -569,7 +597,7 @@ test_read_write_position_or_die (SNDFILE *file, int line_num, int pass, sf_count
 	{	printf ("\n\nLine %d ", line_num) ;
 		if (pass > 0)
 			printf ("(pass %d): ", pass) ;
-		printf ("Read position (%ld) should be %ld.\n", SF_COUNT_TO_LONG (pos), SF_COUNT_TO_LONG (read_pos)) ;
+		printf ("Read position (%" PRId64 ") should be %" PRId64 ".\n", pos, read_pos) ;
 		exit (1) ;
 		} ;
 
@@ -578,8 +606,7 @@ test_read_write_position_or_die (SNDFILE *file, int line_num, int pass, sf_count
 	{	printf ("\n\nLine %d", line_num) ;
 		if (pass > 0)
 			printf (" (pass %d)", pass) ;
-		printf (" : Write position (%ld) should be %ld.\n",
-						SF_COUNT_TO_LONG (pos), SF_COUNT_TO_LONG (write_pos)) ;
+		printf (" : Write position (%" PRId64 ") should be %" PRId64 ".\n", pos, write_pos) ;
 		exit (1) ;
 		} ;
 
@@ -632,9 +659,8 @@ test_seek_or_die (SNDFILE *file, sf_count_t offset, int whence, sf_count_t new_p
 	channel_name = (channels == 1) ? "Mono" : "Stereo" ;
 
 	if ((position = sf_seek (file, offset, whence)) != new_pos)
-	{	printf ("\n\nLine %d : %s : sf_seek (file, %ld, %s) returned %ld (should be %ld).\n\n",
-					line_num, channel_name, SF_COUNT_TO_LONG (offset), whence_name,
-					SF_COUNT_TO_LONG (position), SF_COUNT_TO_LONG (new_pos)) ;
+	{	printf ("\n\nLine %d : %s : sf_seek (file, %" PRId64 ", %s) returned %" PRId64 " (should be %" PRId64 ").\n\n",
+					line_num, channel_name, offset, whence_name, position, new_pos) ;
 		exit (1) ;
 		} ;
 
@@ -650,8 +676,8 @@ test_[+ (get "op_element") +]_[+ (get "io_element") +]_or_die (SNDFILE *file, in
 	{	printf ("\n\nLine %d", line_num) ;
 		if (pass > 0)
 			printf (" (pass %d)", pass) ;
-		printf (" : sf_[+ (get "op_element") +]_[+ (get "io_element") +] failed with short [+ (get "op_element") +] (%ld => %ld).\n",
-						SF_COUNT_TO_LONG ([+ (get "count_name") +]), SF_COUNT_TO_LONG (count)) ;
+		printf (" : sf_[+ (get "op_element") +]_[+ (get "io_element") +] failed with short [+ (get "op_element") +] (%" PRId64 " => %" PRId64 ").\n",
+						[+ (get "count_name") +], count) ;
 		fflush (stdout) ;
 		puts (sf_strerror (file)) ;
 		exit (1) ;
@@ -669,8 +695,7 @@ test_read_raw_or_die (SNDFILE *file, int pass, void *test, sf_count_t items, int
 	{	printf ("\n\nLine %d", line_num) ;
 		if (pass > 0)
 			printf (" (pass %d)", pass) ;
-		printf (" : sf_read_raw failed with short read (%ld => %ld).\n",
-						SF_COUNT_TO_LONG (items), SF_COUNT_TO_LONG (count)) ;
+		printf (" : sf_read_raw failed with short read (%" PRId64 " => %" PRId64 ").\n", items, count) ;
 		fflush (stdout) ;
 		puts (sf_strerror (file)) ;
 		exit (1) ;
@@ -689,8 +714,8 @@ test_[+ (get "op_element") +]_[+ (get "io_element") +]_or_die (SNDFILE *file, in
 	{	printf ("\n\nLine %d", line_num) ;
 		if (pass > 0)
 			printf (" (pass %d)", pass) ;
-		printf (" : sf_[+ (get "op_element") +]_[+ (get "io_element") +] failed with short [+ (get "op_element") +] (%ld => %ld).\n",
-						SF_COUNT_TO_LONG ([+ (get "count_name") +]), SF_COUNT_TO_LONG (count)) ;
+		printf (" : sf_[+ (get "op_element") +]_[+ (get "io_element") +] failed with short [+ (get "op_element") +] (%" PRId64 " => %" PRId64 ").\n",
+						[+ (get "count_name") +], count) ;
 		fflush (stdout) ;
 		puts (sf_strerror (file)) ;
 		exit (1) ;
@@ -708,8 +733,7 @@ test_write_raw_or_die (SNDFILE *file, int pass, const void *test, sf_count_t ite
 	{	printf ("\n\nLine %d", line_num) ;
 		if (pass > 0)
 			printf (" (pass %d)", pass) ;
-		printf (" : sf_write_raw failed with short write (%ld => %ld).\n",
-						SF_COUNT_TO_LONG (items), SF_COUNT_TO_LONG (count)) ;
+		printf (" : sf_write_raw failed with short write (%" PRId64 " => %" PRId64 ").\n", items, count) ;
 		fflush (stdout) ;
 		puts (sf_strerror (file)) ;
 		exit (1) ;
@@ -721,13 +745,13 @@ test_write_raw_or_die (SNDFILE *file, int pass, const void *test, sf_count_t ite
 
 [+ FOR io_type
 +]void
-compare_[+ (get "io_element") +]_or_die (const [+ (get "io_element") +] *left, const [+ (get "io_element") +] *right, unsigned count, int line_num)
+compare_[+ (get "io_element") +]_or_die (const [+ (get "io_element") +] *expected, const [+ (get "io_element") +] *actual, unsigned count, int line_num)
 {
 	unsigned k ;
 
-	for (k = 0 ; k < count ;k++)
-		if (left [k] != right [k])
-		{	printf ("\n\nLine %d : Error at index %d, " [+ (get "format_str") +] " should be " [+ (get "format_str") +] ".\n\n", line_num, k, left [k], right [k]) ;
+	for (k = 0 ; k < count ; k++)
+		if (expected [k] != actual [k])
+		{	printf ("\n\nLine %d : Error at index %d, got " [+ (get "format_str") +] ", should be " [+ (get "format_str") +] ".\n\n", line_num, k, actual [k], expected [k]) ;
 			exit (1) ;
 			} ;
 
@@ -765,6 +789,17 @@ delete_file (int format, const char *filename)
 	unlink (rsrc_name) ;
 } /* delete_file */
 
+int
+truncate_file_to_zero (const char * fname)
+{	FILE * file ;
+
+	if ((file = fopen (fname, "w")) == NULL)
+		return errno ;
+	fclose (file) ;
+
+	return 0 ;
+} /* truncate_file_to_zero */
+
 static int allowed_open_files = -1 ;
 
 void
@@ -796,7 +831,7 @@ void
 check_open_file_count_or_die (int lineno)
 {
 #if OS_IS_WIN32
-	lineno = 0 ;
+	(void) lineno ;
 	return ;
 #else
 	int k, count = 0 ;
@@ -838,24 +873,26 @@ write_mono_file (const char * filename, int format, int srate, float * output, i
 } /* write_mono_file */
 
 void
-gen_lowpass_noise_float (float *data, int len)
-{	int32_t value = 0x1243456 ;
+gen_lowpass_signal_float (float *data, int len)
+{	int64_t value = 0x1243456 ;
 	double sample, last_val = 0.0 ;
 	int k ;
 
 	for (k = 0 ; k < len ; k++)
 	{	/* Not a crypto quality RNG. */
-		value = 11117 * value + 211231 ;
-		value = 11117 * value + 211231 ;
-		value = 11117 * value + 211231 ;
+		value = (11117 * value + 211231) & 0xffffffff ;
+		value = (11117 * value + 211231) & 0xffffffff ;
+		value = (11117 * value + 211231) & 0xffffffff ;
 
 		sample = value / (0x7fffffff * 1.000001) ;
 		sample = 0.2 * sample - 0.9 * last_val ;
 
-		data [k] = last_val = sample ;
+		last_val = sample ;
+
+		data [k] = 0.5 * (sample + sin (2.0 * k * M_PI * 1.0 / 32.0)) ;
 		} ;
 
-} /* gen_lowpass_noise_float */
+} /* gen_lowpass_signal_float */
 
 
 /*

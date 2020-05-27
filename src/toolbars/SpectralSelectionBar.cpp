@@ -133,21 +133,6 @@ void SpectralSelectionBar::Populate()
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    gPrefs->Read(preferencePath, &mbCenterAndWidth, true);
 
-   // This will be inherited by all children:
-   SetFont(wxFont(
-#ifdef __WXMAC__
-                  12
-#else
-                  9
-#endif
-                  ,
-                  wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-
-   /* we don't actually need a control yet, but we want to use its methods
-   * to do some look-ups, so we'll have to create one. We can't make the
-   * look-ups static because they depend on translations which are done at
-   * runtime */
-
    auto frequencyFormatName = mListener
       ? mListener->SSBL_GetFrequencySelectionFormatName()
       : NumericFormatSymbol{};
@@ -155,8 +140,8 @@ void SpectralSelectionBar::Populate()
       ? mListener->SSBL_GetBandwidthSelectionFormatName()
       : NumericFormatSymbol{};
 
-   wxFlexGridSizer *mainSizer;
-   Add((mainSizer = safenew wxFlexGridSizer(1, 1, 1)), 0,wxALIGN_TOP | wxLEFT | wxTOP, 5);
+   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(1, 1, 1);
+   Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
    //
    // Top row, choice box
@@ -174,15 +159,8 @@ void SpectralSelectionBar::Populate()
    // so that name can be set on a standard control
    mChoice->SetAccessible(safenew WindowAccessible(mChoice));
 #endif
-#ifdef __WXGTK__
-   // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
-   // be three units high.
-   wxSize sz = mChoice->GetBestSize();
-   sz.SetHeight( sz.y-4);
-   mChoice->SetMinSize( sz );
-#endif
 
-   mainSizer->Add(mChoice, 0, wxALIGN_TOP | wxEXPAND |wxRIGHT, 6);
+   mainSizer->Add(mChoice, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 6);
 
    //
    // Bottom row, split into two columns, each with one control
@@ -232,14 +210,12 @@ void SpectralSelectionBar::Populate()
       mLowCtrl->Show(!mbCenterAndWidth);
       mHighCtrl->Show(!mbCenterAndWidth);
 
-      mainSizer->Add(subSizer.release(), 0, wxALIGN_CENTER_VERTICAL, 0);
+      mainSizer->Add(subSizer.release(), 0, wxALIGN_TOP, 0);
    }
 
    mainSizer->Layout();
 
    Layout();
-
-   SetMinSize(GetSizer()->GetMinSize());
 }
 
 void SpectralSelectionBar::UpdatePrefs()
@@ -367,8 +343,6 @@ void SpectralSelectionBar::OnChoice(wxCommandEvent &)
 
    ValuesToControls();
    GetSizer()->Layout();   // Required so that the layout does not mess up on Windows when changing the format.
-   wxWindowBase::GetSizer()->SetMinSize(wxSize(0, mHeight));   // so that height of toolbar does not change
-   wxWindowBase::GetSizer()->SetSizeHints(this);
    Updated();
 }
 

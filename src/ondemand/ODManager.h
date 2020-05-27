@@ -84,7 +84,7 @@ class ODManager final
    void ReplaceWaveTrack(Track *oldTrack,
       const std::shared_ptr< Track > &newTrack);
 
-   ///Adds a task to the running queue.  Threas-safe.
+   ///Adds a task to the running queue.  Thread-safe.
    void AddTask(ODTask* task);
 
    void RemoveTaskIfInQueue(ODTask* task);
