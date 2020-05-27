@@ -102,4 +102,7 @@ class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
    virtual void Cancel();
 };
 
+// Unnecessary #include to indicate otherwise hidden link dependencies
+#include "PrefsDialog.h"
+
 #endif

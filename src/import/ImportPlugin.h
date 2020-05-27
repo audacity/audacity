@@ -182,4 +182,7 @@ private:
    const FileExtensions mExtensions;
 };
 
+// Unnecessary #include to indicate otherwise hidden link dependencies
+#include "Import.h"
+
 #endif
