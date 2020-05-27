@@ -228,7 +228,8 @@ jobs:
         # Configure Audacity
         cmake -S . \
               -B build \
-              -G "${{matrix.config.generator}}"
+              -G "${{matrix.config.generator}}" \
+              -D audacity_use_pch=no
 
         # Build Audacity
         cmake --build build --config Release
@@ -283,7 +284,8 @@ jobs:
         # Configure Audacity
         cmake -S . \
               -B build \
-              -G "${{matrix.config.generator}}"
+              -G "${{matrix.config.generator}}" \
+              -D audacity_use_pch=no
 
         # Build Audacity
         cmake --build build --config Release
