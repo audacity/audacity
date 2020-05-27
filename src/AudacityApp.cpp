@@ -1512,7 +1512,7 @@ bool AudacityApp::OnInit()
    CommandManager::SetMenuHook( [](const CommandID &id){
       if (::wxGetMouseState().ShiftDown()) {
          // Only want one page of the preferences
-         PrefsDialog::Factories factories;
+         PrefsPanel::Factories factories;
          factories.push_back(KeyConfigPrefsFactory( id ));
          const auto pProject = GetActiveProject();
          auto pWindow = FindProjectFrame( pProject );
@@ -1651,7 +1651,7 @@ bool AudacityApp::InitTempDir()
       }
 
       // Only want one page of the preferences
-      PrefsDialog::Factories factories;
+      PrefsPanel::Factories factories;
       factories.push_back(DirectoriesPrefsFactory());
       GlobalPrefsDialog dialog(nullptr, nullptr, factories);
       dialog.ShowModal();
