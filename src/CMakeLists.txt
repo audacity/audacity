@@ -1089,14 +1089,6 @@ list( APPEND LIBRARIES
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:pthread>
 )
 
-#
-# If was have cmake 3.16 or higher, we can use precompiled headers, but
-# only use them if ccache is not available
-#
-if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
-   set( PRECOMP AudacityHeaders.h )
-endif()
-
 set( BUILDING_AUDACITY YES )
 set( INSTALL_PREFIX "${_PREFIX}" )
 set( PKGLIBDIR "${_LIBDIR}" )
@@ -1371,8 +1363,22 @@ target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 
-if( PRECOMP )
-   target_precompile_headers( ${TARGET} PRIVATE ${PRECOMP} )
+# If was have cmake 3.16 or higher, we can use precompiled headers, but
+# only use them if ccache is not available and the user hasn't disabled
+# it.
+if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
+   cmd_option(
+      ${_OPT}use_pch
+      "Use precompiled headers [yes, no]"
+      YES
+   )
+
+   if( ${_OPT}use_pch )
+      message( STATUS "Using precompiled headers" )
+      target_precompile_headers( ${TARGET} PRIVATE AudacityHeaders.h )
+   else()
+      message( STATUS "Not using precompiled headers" )
+   endif()
 endif()
 
 if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
