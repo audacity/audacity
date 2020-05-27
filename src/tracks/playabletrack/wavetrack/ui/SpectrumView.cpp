@@ -712,7 +712,7 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
    {
    public:
       ViewSettingsDialog(wxWindow *parent, AudacityProject &project,
-         const TranslatableString &title, PrefsDialog::Factories &factories,
+         const TranslatableString &title, PrefsPanel::Factories &factories,
          int page)
          : PrefsDialog(parent, &project, title, factories)
          , mPage(page)
@@ -744,7 +744,7 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
-   PrefsDialog::Factories factories;
+   PrefsPanel::Factories factories;
    // factories.push_back(WaveformPrefsFactory( pTrack ));
    factories.push_back(SpectrumPrefsFactory( pTrack ));
    const int page =

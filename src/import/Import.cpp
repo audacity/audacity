@@ -886,22 +886,3 @@ void ImportStreamDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal( wxID_CANCEL );
 }
-
-ImportFileHandle::ImportFileHandle(const FilePath & filename)
-:  mFilename(filename)
-{
-}
-
-ImportFileHandle::~ImportFileHandle()
-{
-}
-
-void ImportFileHandle::CreateProgress()
-{
-   wxFileName ff( mFilename );
-
-   auto title = XO("Importing %s").Format( GetFileDescription() );
-   mProgress = std::make_unique< ProgressDialog >(
-      title, Verbatim( ff.GetFullName() ) );
-}
-
