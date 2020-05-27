@@ -74,6 +74,7 @@ class EnvelopeDetector
 
       float ProcessSample(float value);
       size_t GetBlockSize() const;
+      const float* GetBuffer(int idx) const;
    protected:
       size_t mPos;
       std::vector<float> mLookaheadBuffer;

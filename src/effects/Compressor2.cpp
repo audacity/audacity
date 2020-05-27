@@ -38,6 +38,15 @@
 
 #include "LoadEffects.h"
 
+//#define DEBUG_COMPRESSOR2_DUMP_BUFFERS
+//#define DEBUG_COMPRESSOR2_ENV
+//#define DEBUG_COMPRESSOR2_TRACE
+
+#ifdef DEBUG_COMPRESSOR2_DUMP_BUFFERS
+#include <fstream>
+int buf_num;
+#endif
+
 enum kAlgorithms
 {
    kExpFit,
@@ -223,6 +232,19 @@ size_t EnvelopeDetector::GetBlockSize() const
    wxASSERT(mProcessedBuffer.size() == mProcessingBuffer.size());
    wxASSERT(mProcessedBuffer.size() == mLookaheadBuffer.size());
    return mLookaheadBuffer.size();
+}
+
+const float* EnvelopeDetector::GetBuffer(int idx) const
+{
+   if(idx == 0)
+      return mProcessedBuffer.data();
+   else if(idx == 1)
+      return mProcessingBuffer.data();
+   else if(idx == 2)
+      return mLookaheadBuffer.data();
+   else
+      wxASSERT(false);
+   return nullptr;
 }
 
 ExpFitEnvelopeDetector::ExpFitEnvelopeDetector(
@@ -927,10 +949,58 @@ void EffectCompressor2::FreePipeline()
 
 void EffectCompressor2::SwapPipeline()
 {
+#ifdef DEBUG_COMPRESSOR2_DUMP_BUFFERS
+   wxString blockname = wxString::Format("/tmp/blockbuf.%d.bin", buf_num);
+   std::cerr << "Writing to " << blockname << "\n" << std::flush;
+   std::fstream blockbuffer = std::fstream();
+   blockbuffer.open(blockname, std::ios::binary | std::ios::out);
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i) {
+      float val = mPipeline[i].trackSize;
+      blockbuffer.write((char*)&val, sizeof(float));
+      val = mPipeline[i].size;
+      blockbuffer.write((char*)&val, sizeof(float));
+      val = mPipeline[i].capacity();
+      blockbuffer.write((char*)&val, sizeof(float));
+   }
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+      blockbuffer.write((char*)mPipeline[i][0], mPipeline[i].capacity() * sizeof(float));
+
+   wxString envname = wxString::Format("/tmp/envbuf.%d.bin", buf_num++);
+   std::cerr << "Writing to " << envname << "\n" << std::flush;
+   std::fstream envbuffer = std::fstream();
+   envbuffer.open(envname, std::ios::binary | std::ios::out);
+   envbuffer.write((char*)mEnvelope->GetBuffer(0),
+      mEnvelope->GetBlockSize() * sizeof(float));
+   envbuffer.write((char*)mEnvelope->GetBuffer(1),
+      mEnvelope->GetBlockSize() * sizeof(float));
+   envbuffer.write((char*)mEnvelope->GetBuffer(2),
+      mEnvelope->GetBlockSize() * sizeof(float));
+
+   std::cerr << "PipelineState: ";
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+      std::cerr << !!mPipeline[i].size;
+   std::cerr << " ";
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+      std::cerr << !!mPipeline[i].trackSize;
+
+   std::cerr << "\ntrackSize: ";
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+      std::cerr << mPipeline[i].trackSize << " ";
+   std::cerr << "\ntrackPos: ";
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+      std::cerr << mPipeline[i].trackPos.as_size_t() << " ";
+   std::cerr << "\nsize: ";
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+      std::cerr << mPipeline[i].size << " ";
+   std::cerr << "\n" << std::flush;
+#endif
+
    ++mProgressVal;
    for(size_t i = 0; i < PIPELINE_DEPTH-1; ++i)
       mPipeline[i].swap(mPipeline[i+1]);
+#ifdef DEBUG_COMPRESSOR2_TRACE
    std::cerr << "\n";
+#endif
 }
 
 /// ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
@@ -956,9 +1026,22 @@ bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
    // sample the current buffer starts at.
    auto pos = start;
 
+#ifdef DEBUG_COMPRESSOR2_TRACE
+   std::cerr << "ProcLen: " << (end - start).as_size_t() << "\n" << std::flush;
+   std::cerr << "EnvBlockLen: " << mEnvelope->GetBlockSize() << "\n" << std::flush;
+   std::cerr << "PipeBlockLen: " << mPipeline[0].capacity() << "\n" << std::flush;
+   std::cerr << "LookaheadLen: " << mLookaheadLength << "\n" << std::flush;
+#endif
+
    mProgressVal = 0;
+#ifdef DEBUG_COMPRESSOR2_DUMP_BUFFERS
+   buf_num = 0;
+#endif
    while(pos < end)
    {
+#ifdef DEBUG_COMPRESSOR2_TRACE
+      std::cerr << "ProcessBlock at: " << pos.as_size_t() << "\n" << std::flush;
+#endif
       StorePipeline(range);
       SwapPipeline();
 
@@ -985,6 +1068,15 @@ bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
    // Handle short selections
    while(mPipeline[1].size == 0)
    {
+#ifdef DEBUG_COMPRESSOR2_TRACE
+      std::cerr << "PaddingLoop: ";
+      for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+         std::cerr << !!mPipeline[i].size;
+      std::cerr << " ";
+      for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+         std::cerr << !!mPipeline[i].trackSize;
+      std::cerr << "\n" << std::flush;
+#endif
       SwapPipeline();
       FillPipeline();
    }
@@ -995,6 +1087,9 @@ bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
       SwapPipeline();
       DrainPipeline();
    }
+#ifdef DEBUG_COMPRESSOR2_TRACE
+   std::cerr << "StoreLastBlock\n" << std::flush;
+#endif
    StorePipeline(range);
 
    // Return true because the effect processing succeeded ... unless cancelled
@@ -1006,6 +1101,11 @@ bool EffectCompressor2::LoadPipeline(
 {
    sampleCount read_size = -1;
    sampleCount last_read_size = -1;
+#ifdef DEBUG_COMPRESSOR2_TRACE
+   std::cerr << "LoadBlock at: " <<
+      mPipeline[PIPELINE_DEPTH-1].trackPos.as_size_t() <<
+      " with len: " << len << "\n" << std::flush;
+#endif
    // Get the samples from the track and put them in the buffer
    int idx = 0;
    for(auto channel : range)
@@ -1034,6 +1134,16 @@ bool EffectCompressor2::LoadPipeline(
 
 void EffectCompressor2::FillPipeline()
 {
+#ifdef DEBUG_COMPRESSOR2_TRACE
+   std::cerr << "FillBlock: " <<
+      !!mPipeline[0].size << !!mPipeline[1].size <<
+      !!mPipeline[2].size << !!mPipeline[3].size <<
+      "\n" << std::flush;
+   std::cerr << "  from " << -int(mLookaheadLength)
+      << " to " << mPipeline[PIPELINE_DEPTH-1].size - mLookaheadLength << "\n" << std::flush;
+   std::cerr << "Padding from " << mPipeline[PIPELINE_DEPTH-1].trackSize
+      << " to " << mEnvelope->GetBlockSize() << "\n" << std::flush;
+#endif
    // TODO: correct end conditions
    mPipeline[PIPELINE_DEPTH-1].pad_to(mEnvelope->GetBlockSize(), 0, mProcStereo);
 
@@ -1050,11 +1160,25 @@ void EffectCompressor2::FillPipeline()
 
 void EffectCompressor2::ProcessPipeline()
 {
+#ifdef DEBUG_COMPRESSOR2_TRACE
+   std::cerr << "ProcessBlock: " <<
+      !!mPipeline[0].size << !!mPipeline[1].size <<
+      !!mPipeline[2].size << !!mPipeline[3].size <<
+      "\n" << std::flush;
+#endif
    float env;
    size_t length = mPipeline[0].size;
 
    for(size_t i = 0; i < PIPELINE_DEPTH-2; ++i)
       { wxASSERT(mPipeline[0].size == mPipeline[i+1].size); }
+
+#ifdef DEBUG_COMPRESSOR2_TRACE
+   std::cerr << "LookaheadLen: " << mLookaheadLength << "\n" << std::flush;
+   std::cerr << "PipeLength: " <<
+      mPipeline[0].size << " " << mPipeline[1].size << " " <<
+      mPipeline[2].size << " " << mPipeline[3].size <<
+      "\n" << std::flush;
+#endif
 
    for(size_t rp = mLookaheadLength, wp = 0; wp < length; ++rp, ++wp)
    {
@@ -1082,7 +1206,14 @@ inline float EffectCompressor2::EnvelopeSample(PipelineBuffer& pbuf, size_t rp)
 inline void EffectCompressor2::CompressSample(float env, size_t wp)
 {
    float gain = (1.0 - mDryWet) + CompressorGain(env) * mDryWet;
+#ifdef DEBUG_COMPRESSOR2_ENV
+   if(wp < 100)
+      mPipeline[0][0][wp] = 0;
+   else
+      mPipeline[0][0][wp] = env;
+#else
    mPipeline[0][0][wp] = mPipeline[0][0][wp] * gain;
+#endif
    if(mProcStereo)
       mPipeline[0][1][wp] = mPipeline[0][1][wp] * gain;
 }
@@ -1099,13 +1230,37 @@ bool EffectCompressor2::PipelineHasData()
 
 void EffectCompressor2::DrainPipeline()
 {
+#ifdef DEBUG_COMPRESSOR2_TRACE
+   std::cerr << "DrainBlock: " <<
+      !!mPipeline[0].size << !!mPipeline[1].size <<
+      !!mPipeline[2].size << !!mPipeline[3].size <<
+      "\n" << std::flush;
+   bool once = false;
+#endif
+
    float env;
    size_t length = mPipeline[0].size;
    size_t length2 = mPipeline[PIPELINE_DEPTH-2].size;
+
+#ifdef DEBUG_COMPRESSOR2_TRACE
+   std::cerr << "LookaheadLen: " << mLookaheadLength << "\n" << std::flush;
+   std::cerr << "PipeLength: " <<
+      mPipeline[0].size << " " << mPipeline[1].size << " " <<
+      mPipeline[2].size << " " << mPipeline[3].size <<
+      "\n" << std::flush;
+#endif
+
    for(size_t rp = mLookaheadLength, wp = 0; wp < length; ++rp, ++wp)
    {
       if(rp < length2 && mPipeline[PIPELINE_DEPTH-2].size != 0)
       {
+#ifdef DEBUG_COMPRESSOR2_TRACE
+         if(!once)
+         {
+            once = true;
+            std::cerr << "Draining overlapping buffer\n" << std::flush;
+         }
+#endif
          env = EnvelopeSample(mPipeline[PIPELINE_DEPTH-2], rp);
       }
       else
@@ -1117,6 +1272,11 @@ void EffectCompressor2::DrainPipeline()
 
 void EffectCompressor2::StorePipeline(TrackIterRange<WaveTrack> range)
 {
+#ifdef DEBUG_COMPRESSOR2_TRACE
+   std::cerr << "StoreBlock at: " << mPipeline[0].trackPos.as_size_t() <<
+      " with len: " << mPipeline[0].trackSize << "\n" << std::flush;
+#endif
+
    int idx = 0;
    for(auto channel : range)
    {
