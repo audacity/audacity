@@ -41,10 +41,12 @@
 //#define DEBUG_COMPRESSOR2_DUMP_BUFFERS
 //#define DEBUG_COMPRESSOR2_ENV
 //#define DEBUG_COMPRESSOR2_TRACE
+//#define DEBUG_COMPRESSOR2_TRACE2
 
-#ifdef DEBUG_COMPRESSOR2_DUMP_BUFFERS
+#if defined(DEBUG_COMPRESSOR2_DUMP_BUFFERS) or defined(DEBUG_COMPRESSOR2_TRACE2)
 #include <fstream>
 int buf_num;
+std::fstream debugfile;
 #endif
 
 enum kAlgorithms
@@ -243,6 +245,15 @@ EnvelopeDetector::EnvelopeDetector(size_t buffer_size)
 {
 }
 
+float EnvelopeDetector::AttackFactor()
+{
+   return 0;
+}
+float EnvelopeDetector::DecayFactor()
+{
+   return 0;
+}
+
 float EnvelopeDetector::ProcessSample(float value)
 {
    float retval = mProcessedBuffer[mPos];
@@ -384,6 +395,15 @@ Pt1EnvelopeDetector::Pt1EnvelopeDetector(
    mCorrectGain(correctGain)
 {
    SetParams(rate, attackTime, releaseTime);
+}
+
+float Pt1EnvelopeDetector::AttackFactor()
+{
+   return mAttackFactor;
+}
+float Pt1EnvelopeDetector::DecayFactor()
+{
+   return mReleaseFactor;
 }
 
 void Pt1EnvelopeDetector::SetParams(
@@ -577,6 +597,12 @@ bool EffectCompressor2::RealtimeAddProcessor(
    mPreproc = InitPreprocessor(mSampleRate);
    mEnvelope = InitEnvelope(mSampleRate, mPipeline[0].size);
 
+   mProgressVal = 0;
+#ifdef DEBUG_COMPRESSOR2_TRACE2
+   debugfile.close();
+   debugfile.open("/tmp/audio.out", std::ios::trunc | std::ios::out);
+#endif
+
    return true;
 }
 
@@ -590,6 +616,9 @@ bool EffectCompressor2::RealtimeFinalize()
    mLookaheadTimeCtrl->Enable(true);
    if(mAlgorithm == kExpFit)
       mAttackTimeCtrl->Enable(true);
+#ifdef DEBUG_COMPRESSOR2_TRACE2
+   debugfile.close();
+#endif
    return true;
 }
 
@@ -731,6 +760,11 @@ bool EffectCompressor2::Process()
    AllocPipeline();
    mProgressVal = 0;
 
+#ifdef DEBUG_COMPRESSOR2_TRACE2
+   debugfile.close();
+   debugfile.open("/tmp/audio.out", std::ios::trunc | std::ios::out);
+#endif
+
    for(auto track : mOutputTracks->Selected<WaveTrack>()
       + (mStereoInd ? &Track::Any : &Track::IsLeader))
    {
@@ -769,6 +803,9 @@ bool EffectCompressor2::Process()
    mPreproc.reset(nullptr);
    mEnvelope.reset(nullptr);
    FreePipeline();
+#ifdef DEBUG_COMPRESSOR2_TRACE2
+   debugfile.close();
+#endif
    return bGoodResult;
 }
 
@@ -1401,6 +1438,34 @@ inline float EffectCompressor2::EnvelopeSample(PipelineBuffer& pbuf, size_t rp)
 inline void EffectCompressor2::CompressSample(float env, size_t wp)
 {
    float gain = (1.0 - mDryWet) + CompressorGain(env) * mDryWet;
+
+#ifdef DEBUG_COMPRESSOR2_TRACE2
+   float ThresholdDB = mThresholdDB;
+   float Ratio = mRatio;
+   float KneeWidthDB = mKneeWidthDB;
+   float AttackTime = mAttackTime;
+   float ReleaseTime = mReleaseTime;
+   float LookaheadTime = mLookaheadTime;
+   float LookbehindTime = mLookbehindTime;
+   float MakeupGainPct = mMakeupGainPct;
+   float DryWetPct = mDryWetPct;
+
+   debugfile.write((char*)&ThresholdDB, sizeof(float));
+   debugfile.write((char*)&Ratio, sizeof(float));
+   debugfile.write((char*)&KneeWidthDB, sizeof(float));
+   debugfile.write((char*)&AttackTime, sizeof(float));
+   debugfile.write((char*)&ReleaseTime, sizeof(float));
+   debugfile.write((char*)&LookaheadTime, sizeof(float));
+   debugfile.write((char*)&LookbehindTime, sizeof(float));
+   debugfile.write((char*)&MakeupGainPct, sizeof(float));
+   debugfile.write((char*)&DryWetPct, sizeof(float));
+   debugfile.write((char*)&mPipeline[0][0][wp], sizeof(float));
+   if(mProcStereo)
+      debugfile.write((char*)&mPipeline[0][1][wp], sizeof(float));
+   debugfile.write((char*)&env, sizeof(float));
+   debugfile.write((char*)&gain, sizeof(float));
+#endif
+
 #ifdef DEBUG_COMPRESSOR2_ENV
    if(wp < 100)
       mPipeline[0][0][wp] = 0;
@@ -1411,6 +1476,12 @@ inline void EffectCompressor2::CompressSample(float env, size_t wp)
 #endif
    if(mProcStereo)
       mPipeline[0][1][wp] = mPipeline[0][1][wp] * gain;
+
+#ifdef DEBUG_COMPRESSOR2_TRACE2
+   debugfile.write((char*)&mPipeline[0][0][wp], sizeof(float));
+   if(mProcStereo)
+      debugfile.write((char*)&mPipeline[0][1][wp], sizeof(float));
+#endif
 }
 
 bool EffectCompressor2::PipelineHasData()

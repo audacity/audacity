@@ -90,6 +90,9 @@ class EnvelopeDetector
       virtual void SetParams(float sampleRate, float attackTime,
          float releaseTime) = 0;
 
+      virtual float AttackFactor();
+      virtual float DecayFactor();
+
    protected:
       size_t mPos;
       float mInitialCondition;
@@ -126,6 +129,8 @@ class Pt1EnvelopeDetector : public EnvelopeDetector
 
       virtual void SetParams(float sampleRate, float attackTime,
          float releaseTime);
+      virtual float AttackFactor();
+      virtual float DecayFactor();
 
    private:
       bool mCorrectGain;
