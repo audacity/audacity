@@ -125,6 +125,14 @@ float SlidingRmsPreprocessor::ProcessSample(float valueL, float valueR)
    return DoProcessSample((valueL * valueL + valueR * valueR) / 2.0);
 }
 
+void SlidingRmsPreprocessor::Reset()
+{
+   mSum = 0;
+   mPos = 0;
+   mInsertCount = 0;
+   std::fill(mWindow.begin(), mWindow.end(), 0);
+}
+
 float SlidingRmsPreprocessor::DoProcessSample(float value)
 {
    if(mInsertCount > REFRESH_WINDOW_EVERY)
@@ -183,6 +191,13 @@ float SlidingMaxPreprocessor::ProcessSample(float valueL, float valueR)
    return DoProcessSample((fabs(valueL) + fabs(valueR)) / 2.0);
 }
 
+void SlidingMaxPreprocessor::Reset()
+{
+   mPos = 0;
+   std::fill(mWindow.begin(), mWindow.end(), 0);
+   std::fill(mMaxes.begin(), mMaxes.end(), 0);
+}
+
 float SlidingMaxPreprocessor::DoProcessSample(float value)
 {
    size_t oldHead     = (mPos-1) % mWindow.size();
@@ -207,6 +222,8 @@ float SlidingMaxPreprocessor::DoProcessSample(float value)
 
 EnvelopeDetector::EnvelopeDetector(size_t buffer_size)
    : mPos(0),
+   mInitialCondition(0),
+   mInitialBlockSize(0),
    mLookaheadBuffer(buffer_size, 0),
    mProcessingBuffer(buffer_size, 0),
    mProcessedBuffer(buffer_size, 0)
@@ -225,6 +242,10 @@ float EnvelopeDetector::ProcessSample(float value)
       mLookaheadBuffer.swap(mProcessingBuffer);
    }
    return retval;
+}
+
+void EnvelopeDetector::CalcInitialCondition(float value)
+{
 }
 
 size_t EnvelopeDetector::GetBlockSize() const
@@ -350,6 +371,28 @@ Pt1EnvelopeDetector::Pt1EnvelopeDetector(
 
    mAttackFactor = 1.0 / (attackTime * rate);
    mReleaseFactor  = 1.0 / (releaseTime  * rate);
+   mInitialBlockSize = std::min(size_t(rate * sqrt(attackTime)), bufferSize);
+}
+
+void Pt1EnvelopeDetector::CalcInitialCondition(float value)
+{
+   mLookaheadBuffer[mPos++] = value;
+   if(mPos == mInitialBlockSize)
+   {
+      float level = 0;
+      for(size_t i = 0; i < mPos; ++i)
+      {
+         if(mLookaheadBuffer[i] >= level)
+            if(i < mInitialBlockSize / 5)
+               level += 5 * mAttackFactor * (mLookaheadBuffer[i] - level);
+            else
+               level += mAttackFactor * (mLookaheadBuffer[i] - level);
+         else
+            level += mReleaseFactor * (mLookaheadBuffer[i] - level);
+      }
+      mInitialCondition = level;
+      mPos = 0;
+   }
 }
 
 void Pt1EnvelopeDetector::Follow()
@@ -399,12 +442,16 @@ void PipelineBuffer::init(size_t capacity, bool stereo)
    size = 0;
    mCapacity = capacity;
    mBlockBuffer[0].reinit(capacity);
-   std::fill(mBlockBuffer[0].get(), mBlockBuffer[0].get() + capacity, 0);
    if(stereo)
-   {
       mBlockBuffer[1].reinit(capacity);
-      std::fill(mBlockBuffer[1].get(), mBlockBuffer[1].get() + capacity, 0);
-   }
+   fill(0, stereo);
+}
+
+void PipelineBuffer::fill(float value, bool stereo)
+{
+   std::fill(mBlockBuffer[0].get(), mBlockBuffer[0].get() + mCapacity, value);
+   if(stereo)
+      std::fill(mBlockBuffer[1].get(), mBlockBuffer[1].get() + mCapacity, value);
 }
 
 void PipelineBuffer::free()
@@ -1032,6 +1079,7 @@ bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
    std::cerr << "LookaheadLen: " << mLookaheadLength << "\n" << std::flush;
 #endif
 
+   bool first = true;
    mProgressVal = 0;
 #ifdef DEBUG_COMPRESSOR2_DUMP_BUFFERS
    buf_num = 0;
@@ -1054,6 +1102,21 @@ bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
       mPipeline[PIPELINE_DEPTH-1].trackPos = pos;
       if(!LoadPipeline(range, blockLen))
          return false;
+
+      if(first)
+      {
+         first = false;
+         size_t sampleCount = mEnvelope->InitialConditionSize();
+         for(size_t i = 0; i < sampleCount; ++i)
+         {
+            size_t rp = i % mPipeline[PIPELINE_DEPTH-1].trackSize;
+            mEnvelope->CalcInitialCondition(
+               PreprocSample(mPipeline[PIPELINE_DEPTH-1], rp));
+         }
+         mPipeline[PIPELINE_DEPTH-2].fill(
+            mEnvelope->InitialCondition(), mProcStereo);
+         mPreproc->Reset();
+      }
 
       if(mPipeline[0].size == 0)
          FillPipeline();
@@ -1156,7 +1219,6 @@ void EffectCompressor2::FillPipeline()
    size_t length = mPipeline[PIPELINE_DEPTH-1].size;
    for(size_t rp = mLookaheadLength, wp = 0; wp < length; ++rp, ++wp)
    {
-      // TODO: correct initial conditions
       if(rp < length)
          EnvelopeSample(mPipeline[PIPELINE_DEPTH-2], rp);
       else
@@ -1199,14 +1261,17 @@ void EffectCompressor2::ProcessPipeline()
    }
 }
 
+inline float EffectCompressor2::PreprocSample(PipelineBuffer& pbuf, size_t rp)
+{
+   if(mProcStereo)
+      return mPreproc->ProcessSample(pbuf[0][rp], pbuf[1][rp]);
+   else
+      return mPreproc->ProcessSample(pbuf[0][rp]);
+}
+
 inline float EffectCompressor2::EnvelopeSample(PipelineBuffer& pbuf, size_t rp)
 {
-   float preprocessed;
-   if(mProcStereo)
-      preprocessed = mPreproc->ProcessSample(pbuf[0][rp], pbuf[1][rp]);
-   else
-      preprocessed = mPreproc->ProcessSample(pbuf[0][rp]);
-   return mEnvelope->ProcessSample(preprocessed);
+   return mEnvelope->ProcessSample(PreprocSample(pbuf, rp));
 }
 
 inline void EffectCompressor2::CompressSample(float env, size_t wp)
