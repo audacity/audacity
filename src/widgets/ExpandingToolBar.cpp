@@ -83,7 +83,7 @@ ExpandingToolBar.
 #include "../AllThemeResources.h"
 
 const int kToggleButtonHeight = 8;
-const int kTimerInterval = 50; // every 50 ms -> ~20 updates per second
+// const int kTimerInterval = 50; // every 50 ms -> ~20 updates per second
 const wxRect kDummyRect = wxRect(-9999, -9999, 0, 0);
 
 enum {
