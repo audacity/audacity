@@ -136,4 +136,7 @@ public:
        AudacityProject *project);
 };
 
+// Unnecessary #include to indicate otherwise hidden link dependencies
+#include "TrackPanel.h"
+
 #endif

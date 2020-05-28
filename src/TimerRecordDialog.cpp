@@ -85,7 +85,7 @@ enum {
 const int kSlowTimerInterval = 1000; // ms
 
 // This timer interval is used in some busy-wait loops and is much shorter.
-const int kTimerInterval = 50; // ms
+// const int kTimerInterval = 50; // ms
 
 static double wxDateTime_to_AudacityTime(wxDateTime& dateTime)
 {
