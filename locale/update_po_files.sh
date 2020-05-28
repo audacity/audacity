@@ -1,11 +1,11 @@
 #!/bin/sh
 echo ";; Recreating audacity.pot using .h, .cpp and .mm files"
-for path in ../lib-src/FileDialog ../lib-src/mod-script* ../lib-src/mod-nyq* ../include ../src ; do find $path -name \*.h -o -name \*.cpp -o -name \*.mm ; done | LANG=c sort | \
+for path in ../lib-src/mod-script* ../lib-src/mod-nyq* ../include ../src ; do find $path -name \*.h -o -name \*.cpp -o -name \*.mm ; done | LANG=c sort | \
 sed -E 's/\.\.\///g' |\
 xargs xgettext \
 --default-domain=audacity \
 --directory=.. \
---keyword=_ --keyword=XO --keyword=XC:1,2c --keyword=XXO --keyword-XXC:1,2c --keyword=XP:1,2 --keyword=XPC:1,2,4c \
+--keyword=_ --keyword=XO --keyword=XC:1,2c --keyword=XXO --keyword=XXC:1,2c --keyword=XP:1,2 --keyword=XPC:1,2,4c \
 --add-comments=" i18n" \
 --add-location=file  \
 --copyright-holder='Audacity Team' \
