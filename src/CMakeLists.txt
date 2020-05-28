@@ -1090,10 +1090,10 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_SBSMS}>:sbsms>
       $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
       $<$<BOOL:${USE_VAMP}>:libvamp>
-      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GLIB>
-      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:PkgConfig::GTK>
-      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:z>
-      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD>:pthread>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:z>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:pthread>
 )
 
 set( BUILDING_AUDACITY YES )
