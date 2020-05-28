@@ -45,6 +45,9 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 // might use the & character for shortcuts.
 #define XXO(s)  XO(s)
 
+// Corresponds to XC as XXO does to XO
+#define XXC(s, c) XC(s, c)
+
 #ifdef _
    #undef _
 #endif
