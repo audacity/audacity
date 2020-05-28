@@ -242,6 +242,8 @@ CommandHandlerFinder FinderScope::sFinder =
 
 namespace {
 
+using namespace Registry;
+
 const auto MenuPathStart = wxT("MenuBar");
 
 static Registry::GroupItem &sRegistry()
