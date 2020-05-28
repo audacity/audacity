@@ -129,7 +129,8 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(XO("Interface"));
+   /* i18n-hint Software interface to audio devices */
+   S.StartStatic(XC("Interface", "device"));
    {
       S.StartMultiColumn(2);
       {

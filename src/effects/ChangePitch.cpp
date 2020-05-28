@@ -282,10 +282,11 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(6, wxALIGN_CENTER); // 6 controls, because each AddChoice adds a wxStaticText and a wxChoice.
          {
             m_pChoice_FromPitch = S.Id(ID_FromPitch)
-               /* i18n-hint: changing a quantity "from" one value "to" another */
-               .Name(XO("from"))
+               /* i18n-hint: changing musical pitch "from" one value "to" another */
+               .Name(XC("from", "change pitch"))
                .MinSize( { 80, -1 } )
-               .AddChoice(XXO("&from"), pitch);
+            /* i18n-hint: changing musical pitch "from" one value "to" another */
+               .AddChoice(XXC("&from", "change pitch"), pitch);
 
             m_pSpin_FromOctave = S.Id(ID_FromOctave)
                .Name(XO("from Octave"))
@@ -293,10 +294,11 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
                .AddSpinCtrl( {}, m_nFromOctave, INT_MAX, INT_MIN);
 
             m_pChoice_ToPitch = S.Id(ID_ToPitch)
-               /* i18n-hint: changing a quantity "from" one value "to" another */
-               .Name(XO("to"))
+               /* i18n-hint: changing musical pitch "from" one value "to" another */
+               .Name(XC("to", "change pitch"))
                .MinSize( { 80, -1 } )
-               .AddChoice(XXO("&to"), pitch);
+               /* i18n-hint: changing musical pitch "from" one value "to" another */
+               .AddChoice(XXC("&to", "change pitch"), pitch);
 
             m_pSpin_ToOctave = S.Id(ID_ToOctave)
                .Name(XO("to Octave"))

@@ -347,17 +347,22 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
          S.AddUnits(XO("Standard Vinyl rpm:"));
 
          mpChoice_FromVinyl = S.Id(ID_FromVinyl)
+            /* i18n-hint: changing speed of audio "from" one value "to" another
+             "rpm" means "revolutions per minute" as on a vinyl record turntable
+             */
             .Name(XO("From rpm"))
             .MinSize( { 100, -1 } )
-            /* i18n-hint: changing a quantity "from" one value "to" another */
-            .AddChoice(XXO("&from"), kVinylStrings);
+            /* i18n-hint: changing speed of audio "from" one value "to" another */
+            .AddChoice(XXC("&from", "change speed"), kVinylStrings);
 
          mpChoice_ToVinyl = S.Id(ID_ToVinyl)
-            /* i18n-hint: changing a quantity "from" one value "to" another */
+            /* i18n-hint: changing speed of audio "from" one value "to" another
+             "rpm" means "revolutions per minute" as on a vinyl record turntable
+             */
             .Name(XO("To rpm"))
             .MinSize( { 100, -1 } )
-            /* i18n-hint: changing a quantity "from" one value "to" another */
-            .AddChoice(XXO("&to"), kVinylStrings);
+            /* i18n-hint: changing speed of audio "from" one value "to" another */
+            .AddChoice(XXC("&to", "change speed"), kVinylStrings);
       }
       S.EndMultiColumn();
 
@@ -379,8 +384,8 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                                   .MenuEnabled(false));
 
             S.ToolTip(XO("Current length of selection."))
-               /* i18n-hint: changing a quantity "from" one value "to" another */
-               .Name(XO("from"))
+               /* i18n-hint: changing speed of audio "from" one value "to" another */
+               .Name(XC("from", "change speed"))
                .Position(wxALIGN_LEFT)
                .AddWindow(mpFromLengthCtrl);
 
@@ -393,8 +398,8 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                                  mToLength,
                                  mProjectRate);
 
-            /* i18n-hint: changing a quantity "from" one value "to" another */
-            S.Name(XO("to"))
+            /* i18n-hint: changing speed of audio "from" one value "to" another */
+            S.Name(XC("to", "change speed"))
                .Position(wxALIGN_LEFT)
                .AddWindow(mpToLengthCtrl);
          }

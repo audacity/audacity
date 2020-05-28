@@ -263,24 +263,24 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
             m_pTextCtrl_FromBPM = S.Id(ID_FromBPM)
-               /* i18n-hint: changing a quantity "from" one value "to" another */
+               /* i18n-hint: changing tempo "from" one value "to" another */
                .Name(XO("Beats per minute, from"))
                .Validator<FloatingPointValidator<double>>(
                   3, &m_FromBPM,
                   NumValidatorStyle::THREE_TRAILING_ZEROES
                      | NumValidatorStyle::ZERO_AS_BLANK)
-               /* i18n-hint: changing a quantity "from" one value "to" another */
-               .AddTextBox(XXO("&from"), wxT(""), 12);
+               /* i18n-hint: changing tempo "from" one value "to" another */
+               .AddTextBox(XXC("&from", "change tempo"), wxT(""), 12);
 
             m_pTextCtrl_ToBPM = S.Id(ID_ToBPM)
-               /* i18n-hint: changing a quantity "from" one value "to" another */
+               /* i18n-hint: changing tempo "from" one value "to" another */
                .Name(XO("Beats per minute, to"))
                .Validator<FloatingPointValidator<double>>(
                   3, &m_ToBPM,
                   NumValidatorStyle::THREE_TRAILING_ZEROES
                      | NumValidatorStyle::ZERO_AS_BLANK)
-               /* i18n-hint: changing a quantity "from" one value "to" another */
-               .AddTextBox(XXO("&to"), wxT(""), 12);
+               /* i18n-hint: changing tempo "from" one value "to" another */
+               .AddTextBox(XXC("&to", "change tempo"), wxT(""), 12);
          }
          S.EndHorizontalLay();
       }
@@ -297,8 +297,8 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
                .Validator<FloatingPointValidator<double>>(
                   precision, &m_FromLength,
                   NumValidatorStyle::TWO_TRAILING_ZEROES)
-               /* i18n-hint: changing a quantity "from" one value "to" another */
-               .AddTextBox(XXO("from"), wxT(""), 12);
+               /* i18n-hint: changing tempo "from" one value "to" another */
+               .AddTextBox(XXC("from", "change tempo"), wxT(""), 12);
             m_pTextCtrl_ToLength = S.Id(ID_ToLength)
                .Validator<FloatingPointValidator<double>>(
                   2, &m_ToLength, NumValidatorStyle::TWO_TRAILING_ZEROES,
@@ -308,8 +308,8 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
                   RoundValue( precision,
                      (m_FromLength * 100.0) / (100.0 + MIN_Percentage) )
                )
-               /* i18n-hint: changing a quantity "from" one value "to" another */
-               .AddTextBox(XXO("t&o"), wxT(""), 12);
+               /* i18n-hint: changing tempo "from" one value "to" another */
+               .AddTextBox(XXC("t&o", "change tempo"), wxT(""), 12);
          }
          S.EndHorizontalLay();
       }

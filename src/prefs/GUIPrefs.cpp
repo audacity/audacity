@@ -39,7 +39,7 @@
 
 GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: refers to Audacity's user interface settings */
-:  PrefsPanel(parent, winid, XO("Interface"))
+:  PrefsPanel(parent, winid, XC("Interface", "GUI"))
 {
    Populate();
 }
