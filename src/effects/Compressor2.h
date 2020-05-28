@@ -28,6 +28,7 @@ class SamplePreprocessor
    public:
       virtual float ProcessSample(float value) = 0;
       virtual float ProcessSample(float valueL, float valueR) = 0;
+      virtual void Reset() = 0;
 };
 
 class SlidingRmsPreprocessor : public SamplePreprocessor
@@ -37,6 +38,7 @@ class SlidingRmsPreprocessor : public SamplePreprocessor
 
       virtual float ProcessSample(float value);
       virtual float ProcessSample(float valueL, float valueR);
+      virtual void Reset();
 
       static const size_t REFRESH_WINDOW_EVERY = 1048576; // 1 MB
 
@@ -58,6 +60,7 @@ class SlidingMaxPreprocessor : public SamplePreprocessor
 
       virtual float ProcessSample(float value);
       virtual float ProcessSample(float valueL, float valueR);
+      virtual void Reset();
 
    private:
       std::vector<float> mWindow;
@@ -75,8 +78,14 @@ class EnvelopeDetector
       float ProcessSample(float value);
       size_t GetBlockSize() const;
       const float* GetBuffer(int idx) const;
+
+      virtual void CalcInitialCondition(float value);
+      inline float InitialCondition() const { return mInitialCondition; }
+      inline size_t InitialConditionSize() const { return mInitialBlockSize; }
    protected:
       size_t mPos;
+      float mInitialCondition;
+      size_t mInitialBlockSize;
       std::vector<float> mLookaheadBuffer;
       std::vector<float> mProcessingBuffer;
       std::vector<float> mProcessedBuffer;
@@ -102,6 +111,7 @@ class Pt1EnvelopeDetector : public EnvelopeDetector
    public:
       Pt1EnvelopeDetector(float rate, float attackTime, float releaseTime,
          size_t buffer_size = 0, bool correctGain = true);
+      virtual void CalcInitialCondition(float value);
 
    private:
       double mGainCorrection;
@@ -124,6 +134,7 @@ struct PipelineBuffer
       void pad_to(size_t len, float value, bool stereo);
       void swap(PipelineBuffer& other);
       void init(size_t size, bool stereo);
+      void fill(float value, bool stereo);
       inline size_t capacity() const { return mCapacity; }
       void free();
 
@@ -182,6 +193,7 @@ private:
    bool LoadPipeline(TrackIterRange<WaveTrack> range, size_t len);
    void FillPipeline();
    void ProcessPipeline();
+   inline float PreprocSample(PipelineBuffer& pbuf, size_t rp);
    inline float EnvelopeSample(PipelineBuffer& pbuf, size_t rp);
    inline void CompressSample(float env, size_t wp);
    bool PipelineHasData();
