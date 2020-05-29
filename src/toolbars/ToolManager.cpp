@@ -86,23 +86,7 @@ ToolFrame::ToolFrame
    , mParent{ parent }
 {
    int width = bar->GetSize().x;
-   int border;
-
-   // OSX doesn't need a border, but Windows and Linux do
-   border = 1;
-#if defined(__WXMAC__)
-   border = 0;
-
-   // WXMAC doesn't support wxFRAME_FLOAT_ON_PARENT, so we do
-   //
-   // LL:  I've commented this out because if you have, for instance, the meter
-   //      toolbar undocked and large and then you open a dialog like an effect,
-   //      the dialog may appear behind the dialog and you can't move either one.
-   //
-   //      However, I'm leaving it here because I don't remember why I'd included
-   //      it in the first place.
-   // SetWindowClass((WindowRef)d.MacGetWindowRef(), kFloatingWindowClass);
-#endif
+   int border = 1;
 
    // Save parameters
    mManager = manager;
@@ -192,14 +176,11 @@ void ToolFrame::OnPaint( wxPaintEvent & WXUNUSED(event) )
    wxSize sz = GetSize();
    wxRect r;
 
-   dc.SetPen( theTheme.Colour( clrTrackPanelText) );
-#if !defined(__WXMAC__)
-   wxBrush clearer( theTheme.Colour( clrMedium ));
-   dc.SetBackground( clearer );
+   dc.SetPen( theTheme.Colour( clrTrackPanelText ) );
+   dc.SetBackground( wxBrush( theTheme.Colour( clrMedium ) ) );
    dc.Clear();
    dc.SetBrush( *wxTRANSPARENT_BRUSH );
    dc.DrawRectangle( 0, 0, sz.GetWidth(), sz.GetHeight() );
-#endif
 
    if( mBar && mBar->IsResizable() )
    {
