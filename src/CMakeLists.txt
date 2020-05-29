@@ -1128,6 +1128,10 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       ../win/audacity.rc
    )
 
+   # Force use of our versions
+   set( HAVE_LRINT NO )
+   set( HAVE_LRINTF NO )
+
    # Create the config file
    configure_file( audacity_config.h.in private/configwin.h )
 
