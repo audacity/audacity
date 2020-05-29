@@ -530,6 +530,12 @@ void ToolBar::ReCreateButtons()
    mResizer = NULL;
    SetLayoutDirection(wxLayout_LeftToRight);
 
+   // Refresh the background before populating
+   if (!IsDocked())
+   {
+      GetParent()->Refresh();
+   }
+
    {
       // Create the main sizer
       auto ms = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
@@ -930,26 +936,15 @@ void ToolBar::OnErase( wxEraseEvent & WXUNUSED(event) )
 //
 // This draws the background of a toolbar
 //
-void ToolBar::OnPaint( wxPaintEvent & event )
+void ToolBar::OnPaint( wxPaintEvent & WXUNUSED(event) )
 {
-   (void)event;// compiler food.
-   //wxPaintDC dc( (wxWindow *) event.GetEventObject() );
    wxPaintDC dc( this );
-   // Start with a clean background
-   //
-   // Under GTK, we specifically set the toolbar background to the background
-   // colour in the system theme.
-#if defined( __WXGTK__ )
-   //dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
-#endif
 
    // Themed background colour.
    dc.SetBackground( wxBrush( theTheme.Colour( clrMedium  ) ) );
    dc.Clear();
 
-#ifdef USE_AQUA_THEME
    Repaint( &dc );
-#endif
 }
 
 void ToolBar::OnMouseEvents(wxMouseEvent &event)
