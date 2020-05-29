@@ -42,24 +42,7 @@
 **	the config.h file.
 */
 
-#if (HAVE_LRINT && HAVE_LRINTF)
-
-	/*	These defines enable functionality introduced with the 1999 ISO C
-	**	standard. They must be defined before the inclusion of math.h to
-	**	engage them. If optimisation is enabled, these functions will be
-	**	inlined. With optimisation switched off, you have to link in the
-	**	maths library using -lm.
-	*/
-
-	#define	_ISOC9X_SOURCE 1
-	#define  _ISOC99_SOURCE 1
-
-	#define	__USE_ISOC9X   1
-	#define	__USE_ISOC99   1
-
-	#include	<math.h>
-
-#elif (defined (WIN32) || defined (_WIN32))
+#if (defined (WIN32) || defined (_WIN32))
 
    // Including math.h allows us to use the inline assembler versions without
    // producing errors in newer Visual Studio versions.
@@ -120,7 +103,22 @@
 
 		return intgr ;
 	}
+#elif (HAVE_LRINT && HAVE_LRINTF)
 
+	/*	These defines enable functionality introduced with the 1999 ISO C
+	**	standard. They must be defined before the inclusion of math.h to
+	**	engage them. If optimisation is enabled, these functions will be
+	**	inlined. With optimisation switched off, you have to link in the
+	**	maths library using -lm.
+	*/
+
+	#define	_ISOC9X_SOURCE 1
+	#define  _ISOC99_SOURCE 1
+
+	#define	__USE_ISOC9X   1
+	#define	__USE_ISOC99   1
+
+	#include	<math.h>
 #else
 
    /* dmazzoni: modified these to do a proper rounding, even though
