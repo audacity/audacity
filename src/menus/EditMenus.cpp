@@ -610,7 +610,7 @@ void OnPaste(const CommandContext &context)
             }
          },
          [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
-            if (!lt->GetSelected())
+            if (!lt->GetSelected() && !isSyncLocked)
                return fallthrough();
 
             lt->Clear(t0, t1);
