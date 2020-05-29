@@ -103,6 +103,17 @@
 
 		return intgr ;
 	}
+#elif (defined (WIN32) || defined (_WIN32)) && defined(_M_3X64)
+
+	#include <math.h>
+	#include <immintrin.h>
+
+	__inline long int
+	lrintf (float flt)
+	{
+		return _mm_cvt_ss2si(_mm_set_ss(flt));
+	}
+
 #elif (HAVE_LRINT && HAVE_LRINTF)
 
 	/*	These defines enable functionality introduced with the 1999 ISO C
