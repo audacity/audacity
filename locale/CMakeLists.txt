@@ -6,63 +6,9 @@ message( STATUS "========== Configuring ${TARGET} ==========" )
 
 def_vars()
 
-list( APPEND SOURCES
-   af.po
-   ar.po
-   be.po
-   bg.po
-   bn.po
-   bs.po
-   ca.po
-   ca_ES@valencia.po
-   cs.po
-   cy.po
-   da.po
-   de.po
-   el.po
-   es.po
-   eu.po
-   eu_ES.po
-   fa.po
-   fi.po
-   fr.po
-   ga.po
-   gl.po
-   he.po
-   hi.po
-   hr.po
-   hu.po
-   hy.po
-   id.po
-   it.po
-   ja.po
-   ka.po
-   km.po
-   ko.po
-   lt.po
-   mk.po
-   my.po
-   nb.po
-   nl.po
-   oc.po
-   pl.po
-   pt_BR.po
-   pt_PT.po
-   ro.po
-   ru.po
-   sk.po
-   sl.po
-   sr_RS.po
-   sr_RS@latin.po
-   sv.po
-   ta.po
-   tg.po
-   tr.po
-   uk.po
-   vi.po
-   zh_CN.po
-   zh_TW.po
-)
+# Load the list of catalogs
+file( STRINGS ${TARGET_ROOT}/LINGUAS SOURCES )
+list( TRANSFORM SOURCES APPEND ".po" )
 
 # Look for gettext
 find_package( Gettext QUIET )
