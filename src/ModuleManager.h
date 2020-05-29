@@ -16,11 +16,13 @@
 #include <map>
 #include <vector>
 
-#include "audacity/ModuleInterface.h"
+#include "audacity/Types.h"
 
 class wxArrayString;
 class wxDynamicLibrary;
 class CommandHandler;
+class ComponentInterface;
+class ModuleInterface;
 
 wxWindow *  MakeHijackPanel();
 

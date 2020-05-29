@@ -40,6 +40,7 @@ for shared and private configs - which need to move out.
 #include <wx/utils.h>
 
 #include "audacity/EffectInterface.h"
+#include "audacity/ModuleInterface.h"
 
 #include "FileNames.h"
 #include "ModuleManager.h"

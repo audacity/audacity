@@ -20,6 +20,7 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "Audacity.h"
 #include "ModuleManager.h"
+#include "audacity/ModuleInterface.h"
 
 #include "Experimental.h"
 
