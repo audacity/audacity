@@ -359,13 +359,14 @@ void PopulatePreferences()
        (vMajor == 2 && vMinor < 4))
    {
       gPrefs->Write(wxT("/GUI/Toolbars/Selection/W"),"");
+      gPrefs->Write(wxT("/GUI/Toolbars/SpectralSelection/W"),"");
       gPrefs->Write(wxT("/GUI/Toolbars/Time/X"),-1);
       gPrefs->Write(wxT("/GUI/Toolbars/Time/Y"),-1);
       gPrefs->Write(wxT("/GUI/Toolbars/Time/H"),55);
       gPrefs->Write(wxT("/GUI/Toolbars/Time/W"),251);
       gPrefs->Write(wxT("/GUI/Toolbars/Time/DockV2"),2);
       gPrefs->Write(wxT("/GUI/Toolbars/Time/Dock"),2);
-      gPrefs->Write(wxT("/GUI/Toolbars/Time/Path"),"0,0");
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/Path"),"0,1");
       gPrefs->Write(wxT("/GUI/Toolbars/Time/Show"),1);
    }
 
