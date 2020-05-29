@@ -527,7 +527,7 @@ BaseItemSharedPtr HelpMenu()
          Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
             AlwaysEnabledFlag ),
    #endif
-         Command( wxT("ConfigReset"), XXO("Reset Configuration"),
+         Command( wxT("ConfigReset"), XXO("&Reset Configuration"),
             FN(OnResetConfig),
             AudioIONotBusyFlag() )
       ),
