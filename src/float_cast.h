@@ -42,7 +42,7 @@
 **	the config.h file.
 */
 
-#if (defined (WIN32) || defined (_WIN32))
+#if (defined (WIN32) || defined (_WIN32)) && defined(_M_IX86)
 
    // Including math.h allows us to use the inline assembler versions without
    // producing errors in newer Visual Studio versions.
