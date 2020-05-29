@@ -46,7 +46,6 @@
 #include "audacity/EffectInterface.h"
 #include "audacity/ComponentInterface.h"
 #include "audacity/ImporterInterface.h"
-#include "audacity/ModuleInterface.h"
 
 
 class ModuleInterface;

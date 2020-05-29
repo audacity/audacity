@@ -85,7 +85,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew LadspaEffectsModule(moduleManager, path);
+   return safenew LadspaEffectsModule(path);
 }
 
 // ============================================================================
@@ -99,10 +99,8 @@ DECLARE_BUILTIN_MODULE(LadspaBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-LadspaEffectsModule::LadspaEffectsModule(ModuleManagerInterface *moduleManager,
-                                     const wxString *path)
+LadspaEffectsModule::LadspaEffectsModule(const wxString *path)
 {
-   mModMan = moduleManager;
    if (path)
    {
       mPath = *path;

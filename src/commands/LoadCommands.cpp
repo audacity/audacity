@@ -55,7 +55,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew BuiltinCommandsModule(moduleManager, path);
+   return safenew BuiltinCommandsModule(path);
 }
 
 // ============================================================================
@@ -69,10 +69,8 @@ DECLARE_BUILTIN_MODULE(BuiltinsCommandBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-BuiltinCommandsModule::BuiltinCommandsModule(ModuleManagerInterface *moduleManager,
-                                           const wxString *path)
+BuiltinCommandsModule::BuiltinCommandsModule(const wxString *path)
 {
-   mModMan = moduleManager;
    if (path)
    {
       mPath = *path;

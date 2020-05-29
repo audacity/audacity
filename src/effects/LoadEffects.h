@@ -26,7 +26,7 @@ class Effect;
 class BuiltinEffectsModule final : public ModuleInterface
 {
 public:
-   BuiltinEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
+   BuiltinEffectsModule(const wxString *path);
    virtual ~BuiltinEffectsModule();
 
    using Factory = std::function< std::unique_ptr<Effect> () >;
@@ -79,7 +79,6 @@ private:
       const ComponentInterfaceSymbol &name, const Factory &factory,
       bool excluded );
 
-   ModuleManagerInterface *mModMan;
    PluginPath mPath;
 
    struct Entry;
