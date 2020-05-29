@@ -648,9 +648,11 @@ bool NyquistEffect::Process()
    EffectManager & em = EffectManager::Get();
    em.SetSkipStateFlag(false);
 
-   if (mExternal) {
-      mProgress->Hide();
-   }
+   // This code was added in a fix for bug 2392 (no preview for Nyquist)
+   // It was commented out in a fix for bug 2428 (no progress dialog from a macro)
+   //if (mExternal) {
+   //  mProgress->Hide();
+   //}
 
    mOutputTime = 0;
    mCount = 0;
