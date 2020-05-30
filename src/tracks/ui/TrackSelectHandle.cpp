@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/cursor.h>
 #include <wx/translation.h>
 
-#include "../../../images/Cursors.h"
+#include "images/Cursors.h"
 
 #if defined(__WXMAC__)
 /* i18n-hint: Command names a modifier key on Macintosh keyboards */

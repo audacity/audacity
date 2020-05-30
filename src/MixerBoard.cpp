@@ -53,11 +53,11 @@
 #include "widgets/Meter.h"
 
 
-#include "../images/MusicalInstruments.h"
+#include "images/MusicalInstruments.h"
 #ifdef __WXMSW__
-   #include "../images/AudacityLogo.xpm"
+   #include "images/AudacityLogo.xpm"
 #else
-   #include "../images/AudacityLogo48x48.xpm"
+   #include "images/AudacityLogo48x48.xpm"
 #endif
 
 #include "commands/CommandManager.h"

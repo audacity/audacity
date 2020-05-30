@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../widgets/PopupMenuTable.h"
-#include "../../../../../images/Cursors.h"
+#include "images/Cursors.h"
 #include "../../../../Prefs.h"
 
 #include <wx/event.h>

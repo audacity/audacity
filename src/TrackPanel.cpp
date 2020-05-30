@@ -86,7 +86,7 @@ is time to refresh some aspect of the screen.
 #include "tracks/ui/TrackVRulerControls.h"
 
 //This loads the appropriate set of cursors, depending on platform.
-#include "../images/Cursors.h"
+#include "images/Cursors.h"
 
 #include <algorithm>
 

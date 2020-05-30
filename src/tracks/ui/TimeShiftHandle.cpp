@@ -28,7 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../WaveClip.h"
 #include "../../ViewInfo.h"
 #include "../../WaveTrack.h"
-#include "../../../images/Cursors.h"
+#include "images/Cursors.h"
 
 TimeShiftHandle::TimeShiftHandle
 ( const std::shared_ptr<Track> &pTrack, bool gripHit )

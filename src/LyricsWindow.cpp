@@ -23,9 +23,9 @@
 #include <wx/settings.h>
 
 #ifdef __WXMSW__
-   #include "../images/AudacityLogo.xpm"
+   #include "images/AudacityLogo.xpm"
 #else
-   #include "../images/AudacityLogo48x48.xpm"
+   #include "images/AudacityLogo48x48.xpm"
 #endif
 
 #ifdef __WXMAC__
