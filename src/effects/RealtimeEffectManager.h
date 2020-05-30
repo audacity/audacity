@@ -36,7 +36,9 @@ public:
    void RealtimeAddProcessor(int group, unsigned chans, float rate);
    void RealtimeFinalize();
    void RealtimeSuspend();
+   void RealtimeSuspendOne( EffectClientInterface &effect );
    void RealtimeResume();
+   void RealtimeResumeOne( EffectClientInterface &effect );
    void RealtimeProcessStart();
    size_t RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples);
    void RealtimeProcessEnd();
