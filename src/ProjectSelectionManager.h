@@ -21,7 +21,7 @@ class ProjectSelectionManager final
    : public ClientData::Base
    , public SelectionBarListener
    , public SpectralSelectionBarListener
-   , public TimerToolBarListener
+   , public TimeToolBarListener
 {
 public:
    static ProjectSelectionManager &Get( AudacityProject &project );

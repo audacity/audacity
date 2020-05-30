@@ -791,8 +791,8 @@ list( APPEND SOURCES
       toolbars/SpectralSelectionBar.cpp
       toolbars/SpectralSelectionBar.h
       toolbars/SpectralSelectionBarListener.h
-      toolbars/TimerToolBar.cpp
-      toolbars/TimerToolBar.h
+      toolbars/TimeToolBar.cpp
+      toolbars/TimeToolBar.h
       toolbars/ToolBar.cpp
       toolbars/ToolBar.h
       toolbars/ToolDock.cpp

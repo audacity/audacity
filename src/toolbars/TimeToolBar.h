@@ -17,16 +17,16 @@
 #include "../widgets/NumericTextCtrl.h"
 
 class NumericTextCtrl;
-class TimerToolBarListener;
+class TimeToolBarListener;
 
-class TimerToolBar final : public ToolBar
+class TimeToolBar final : public ToolBar
 {
 public:
-   TimerToolBar(AudacityProject &project);
-   virtual ~TimerToolBar();
+   TimeToolBar(AudacityProject &project);
+   virtual ~TimeToolBar();
    
-   static TimerToolBar &Get(AudacityProject &project);
-   static const TimerToolBar &Get(const AudacityProject &project);
+   static TimeToolBar &Get(AudacityProject &project);
+   static const TimeToolBar &Get(const AudacityProject &project);
    
    void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};
@@ -38,7 +38,7 @@ public:
    void SetToDefaultSize() override;
    wxSize GetDockedSize() override;
    void SetDocked(ToolDock *dock, bool pushed) override;
-   void SetListener(TimerToolBarListener *l);
+   void SetListener(TimeToolBarListener *l);
    void SetAudioTimeFormat(const NumericFormatSymbol & format);
    void ResizingDone() override;
 
@@ -50,7 +50,7 @@ private:
    void OnSize(wxSizeEvent &evt);
    void OnIdle(wxIdleEvent &evt);
 
-   TimerToolBarListener *mListener;
+   TimeToolBarListener *mListener;
    NumericTextCtrl *mAudioTime;
    float mDigitRatio;
    bool mSettingInitialSize;
@@ -60,11 +60,11 @@ private:
 
 public:
    
-   DECLARE_CLASS(TimerToolBar)
+   DECLARE_CLASS(TimeToolBar)
    DECLARE_EVENT_TABLE()
 };
 
-inline wxSize TimerToolBar::ComputeSizing(int digitH)
+inline wxSize TimeToolBar::ComputeSizing(int digitH)
 {
    return mAudioTime->ComputeSizing(false, digitH * mDigitRatio, digitH);
 }

@@ -23,7 +23,7 @@
 #include <wx/sizer.h>
 #endif
 
-#include "TimerToolBar.h"
+#include "TimeToolBar.h"
 #include "ToolManager.h"
 #include "SelectionBarListener.h"
 
@@ -31,7 +31,7 @@
 #include "../ProjectAudioIO.h"
 #include "../ViewInfo.h"
 
-IMPLEMENT_CLASS(TimerToolBar, ToolBar);
+IMPLEMENT_CLASS(TimeToolBar, ToolBar);
 
 // Having a fixed ID for the Audio Position is helpful for
 // the Jaws screen reader script for Audacity.
@@ -40,35 +40,35 @@ enum {
    AudioPositionID
 };
 
-BEGIN_EVENT_TABLE(TimerToolBar, ToolBar)
-   EVT_COMMAND(AudioPositionID, EVT_TIMETEXTCTRL_UPDATED, TimerToolBar::OnUpdate)
-   EVT_SIZE(TimerToolBar::OnSize)
-   EVT_IDLE(TimerToolBar::OnIdle)
+BEGIN_EVENT_TABLE(TimeToolBar, ToolBar)
+   EVT_COMMAND(AudioPositionID, EVT_TIMETEXTCTRL_UPDATED, TimeToolBar::OnUpdate)
+   EVT_SIZE(TimeToolBar::OnSize)
+   EVT_IDLE(TimeToolBar::OnIdle)
 END_EVENT_TABLE()
 
-TimerToolBar::TimerToolBar(AudacityProject &project)
+TimeToolBar::TimeToolBar(AudacityProject &project)
 :  ToolBar(project, TimeBarID, XO("Time"), wxT("Time"), true),
    mListener(NULL),
    mAudioTime(NULL)
 {
 }
 
-TimerToolBar::~TimerToolBar()
+TimeToolBar::~TimeToolBar()
 {
 }
 
-TimerToolBar &TimerToolBar::Get(AudacityProject &project)
+TimeToolBar &TimeToolBar::Get(AudacityProject &project)
 {
    auto &toolManager = ToolManager::Get(project);
-   return *static_cast<TimerToolBar*>(toolManager.GetToolBar(TimeBarID));
+   return *static_cast<TimeToolBar*>(toolManager.GetToolBar(TimeBarID));
 }
 
-const TimerToolBar &TimerToolBar::Get(const AudacityProject &project)
+const TimeToolBar &TimeToolBar::Get(const AudacityProject &project)
 {
    return Get(const_cast<AudacityProject&>(project)) ;
 }
 
-void TimerToolBar::Populate()
+void TimeToolBar::Populate()
 {
    // Get the default sample rate
    auto rate = gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
@@ -98,7 +98,7 @@ void TimerToolBar::Populate()
 //   SetResizingLimits();
 }
 
-void TimerToolBar::UpdatePrefs()
+void TimeToolBar::UpdatePrefs()
 {
    // Since the language may have changed, we need to force an update to accommodate
    // different length text
@@ -113,7 +113,7 @@ void TimerToolBar::UpdatePrefs()
    ToolBar::UpdatePrefs();
 }
 
-void TimerToolBar::SetToDefaultSize()
+void TimeToolBar::SetToDefaultSize()
 {
    // Reset 
    SetMaxSize(wxDefaultSize);
@@ -129,7 +129,7 @@ void TimerToolBar::SetToDefaultSize()
    Updated();
 }
 
-wxSize TimerToolBar::GetDockedSize()
+wxSize TimeToolBar::GetDockedSize()
 {
    wxSize sz = GetSize();
 
@@ -145,7 +145,7 @@ wxSize TimerToolBar::GetDockedSize()
    return sz;
 }
 
-void TimerToolBar::SetDocked(ToolDock *dock, bool pushed)
+void TimeToolBar::SetDocked(ToolDock *dock, bool pushed)
 {
    // It's important to call this FIRST since it unhides the resizer control.
    // Not doing so causes the calculated best size to be off by the width
@@ -170,7 +170,7 @@ void TimerToolBar::SetDocked(ToolDock *dock, bool pushed)
    }
 }
 
-void TimerToolBar::SetListener(TimerToolBarListener *l)
+void TimeToolBar::SetListener(TimeToolBarListener *l)
 {
    // Remember the listener
    mListener = l;
@@ -187,7 +187,7 @@ void TimerToolBar::SetListener(TimerToolBarListener *l)
    }
 }
 
-void TimerToolBar::SetAudioTimeFormat(const NumericFormatSymbol & format)
+void TimeToolBar::SetAudioTimeFormat(const NumericFormatSymbol & format)
 {
    // Set the format if it's different from previous
    if (mAudioTime->SetFormatString(mAudioTime->GetBuiltinFormat(format))) {
@@ -200,7 +200,7 @@ void TimerToolBar::SetAudioTimeFormat(const NumericFormatSymbol & format)
 
 // The intention of this is to get the resize handle in the
 // correct position, after we've let go in dragging.
-void TimerToolBar::ResizingDone()
+void TimeToolBar::ResizingDone()
 {
    // Fit() while retaining height
    SetSize(GetBestSize().x, GetSize().y);
@@ -209,7 +209,7 @@ void TimerToolBar::ResizingDone()
    Updated();
 }
 
-void TimerToolBar::SetResizingLimits()
+void TimeToolBar::SetResizingLimits()
 {
    // Reset limits
    SetMinSize(wxDefaultSize);
@@ -259,7 +259,7 @@ void TimerToolBar::SetResizingLimits()
 
 // Called when the format drop downs is changed.
 // This causes recreation of the toolbar contents.
-void TimerToolBar::OnUpdate(wxCommandEvent &evt)
+void TimeToolBar::OnUpdate(wxCommandEvent &evt)
 {
    evt.Skip(false);
 
@@ -292,7 +292,7 @@ void TimerToolBar::OnUpdate(wxCommandEvent &evt)
    Updated();
 }
 
-void TimerToolBar::OnSize(wxSizeEvent &evt)
+void TimeToolBar::OnSize(wxSizeEvent &evt)
 {
    evt.Skip();
 
@@ -338,7 +338,7 @@ void TimerToolBar::OnSize(wxSizeEvent &evt)
    Update();
 }
 
-void TimerToolBar::OnIdle(wxIdleEvent &evt)
+void TimeToolBar::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
 
@@ -362,7 +362,7 @@ static RegisteredToolbarFactory factory
    TimeBarID,
    []( AudacityProject &project )
    {
-      return ToolBar::Holder{ safenew TimerToolBar{ project } };
+      return ToolBar::Holder{ safenew TimeToolBar{ project } };
    }
 };
 

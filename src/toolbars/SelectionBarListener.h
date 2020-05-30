@@ -31,12 +31,12 @@ class AUDACITY_DLL_API SelectionBarListener /* not final */ {
    virtual void AS_ModifySelection(double &start, double &end, bool done) = 0;
 };
 
-class AUDACITY_DLL_API TimerToolBarListener /* not final */ {
+class AUDACITY_DLL_API TimeToolBarListener /* not final */ {
 
  public:
 
-   TimerToolBarListener(){};
-   virtual ~TimerToolBarListener(){};
+   TimeToolBarListener(){};
+   virtual ~TimeToolBarListener(){};
 
    virtual const NumericFormatSymbol & TT_GetAudioTimeFormat() = 0;
    virtual void TT_SetAudioTimeFormat(const NumericFormatSymbol & format) = 0;
