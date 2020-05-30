@@ -852,6 +852,8 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
    mUnitInitialized = false;
 
    mEventListenerRef = NULL;
+
+   mReady = false;
 }
 
 AudioUnitEffect::~AudioUnitEffect()
