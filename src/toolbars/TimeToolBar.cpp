@@ -76,6 +76,10 @@ void TimeToolBar::Populate()
 
    // Get the default time format
    auto format = NumericConverter::HoursMinsSecondsFormat();
+   if (mListener)
+   {
+      format = mListener->TT_GetAudioTimeFormat();
+   }
 
    // Create the read-only time control
    mAudioTime = safenew NumericTextCtrl(this, AudioPositionID, NumericConverter::TIME, format, 0.0, rate);
