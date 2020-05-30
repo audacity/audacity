@@ -32,7 +32,7 @@ and on Mac OS X for the filesystem.
 #include <locale.h>
 #include <math.h> // for pow()
 
-#include "../include/audacity/ComponentInterface.h"
+#include "audacity/ComponentInterface.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.
