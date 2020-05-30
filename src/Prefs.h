@@ -31,7 +31,7 @@
 
 #include "Audacity.h"
 
-#include "../include/audacity/ComponentInterface.h"
+#include "audacity/ComponentInterface.h"
 #include "MemoryX.h" // for wxArrayStringEx
 
 #include <memory>
