@@ -1166,6 +1166,14 @@ void ProjectWindow::UpdateLayout()
    // of any empty docks, or increasing the height of docks that need it.
    Layout();
 
+   // Bug 2455
+   // The commented out code below is to calculate a nice minimum size for 
+   // the window.  However on Ubuntu when the window is minimised it leads to 
+   // an insanely tall window.
+   // Using a fixed min size fixes that.
+   // However there is still something strange when minimised, as once 
+   // UpdateLayout is called once, when minimised, it gets called repeatedly.
+#if 0
    // Retrieve size of this projects window
    wxSize mainsz = GetSize();
 
@@ -1178,7 +1186,10 @@ void ProjectWindow::UpdateLayout()
    wxPoint sbpos = ClientToScreen(toolManager.GetBotDock()->GetPosition());
 
    // The "+ 50" is the minimum height of the TrackPanel
-   SetSizeHints(250, (mainsz.y - sbpos.y) + tppos.y + 50, 20000, 20000);
+   SetMinSize( wxSize(250, (mainsz.y - sbpos.y) + tppos.y + 50));
+#endif
+   SetMinSize( wxSize(250, 250));
+   SetMaxSize( wxSize(20000, 20000));
 }
 
 void ProjectWindow::HandleResize()
