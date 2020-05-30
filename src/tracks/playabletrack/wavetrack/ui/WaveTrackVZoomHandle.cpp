@@ -21,7 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"
-#include "../../../../../images/Cursors.h"
+#include "images/Cursors.h"
 
 bool WaveTrackVZoomHandle::IsDragZooming(int zoomStart, int zoomEnd)
 {

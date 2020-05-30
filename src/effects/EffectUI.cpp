@@ -46,7 +46,7 @@
 #include "../Project.h"
 #include "../widgets/wxPanelWrapper.h"
 
-#include "../../images/EffectRack/EffectRack.h"
+#include "images/EffectRack/EffectRack.h"
 
 #define COL_POWER    0
 #define COL_EDITOR   1
@@ -647,7 +647,7 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "../../images/Effect.h"
+#include "images/Effect.h"
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"

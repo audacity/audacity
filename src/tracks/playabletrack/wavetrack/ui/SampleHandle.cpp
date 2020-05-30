@@ -27,7 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../UndoManager.h"
 #include "../../../../ViewInfo.h"
 #include "../../../../WaveTrack.h"
-#include "../../../../../images/Cursors.h"
+#include "images/Cursors.h"
 #include "../../../../widgets/AudacityMessageBox.h"
 
 

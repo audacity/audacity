@@ -145,9 +145,9 @@ It handles initialization and termination by subclassing wxApp.
 
 // DA: Logo for Splash Screen
 #ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
+#include "images/DarkAudacityLogoWithName.xpm"
 #else
-#include "../images/AudacityLogoWithName.xpm"
+#include "images/AudacityLogoWithName.xpm"
 #endif
 
 

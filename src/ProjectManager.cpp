@@ -58,7 +58,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/sizer.h>
 
 #ifdef __WXGTK__
-#include "../images/AudacityLogoAlpha.xpm"
+#include "images/AudacityLogoAlpha.xpm"
 #endif
 
 const int AudacityProjectTimerID = 5200;

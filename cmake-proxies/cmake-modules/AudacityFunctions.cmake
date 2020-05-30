@@ -254,6 +254,7 @@ function( audacity_target_options target private_libraries public_libraries )
 
          "${CMAKE_SOURCE_DIR}/include"
          "${CMAKE_SOURCE_DIR}/src"
+         "${CMAKE_SOURCE_DIR}"
    )
    target_include_directories( ${target} PRIVATE ${INCLUDES} )
 

@@ -50,9 +50,9 @@ hold information about one contributor to Audacity.
 
 // DA: Logo for About box.
 #ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
+#include "images/DarkAudacityLogoWithName.xpm"
 #else
-#include "../images/AudacityLogoWithName.xpm"
+#include "images/AudacityLogoWithName.xpm"
 #endif
 
 // Notice this is a "system include".  This is on purpose and only until

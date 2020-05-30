@@ -251,8 +251,8 @@ bool MeterUpdateQueue::Get(MeterUpdateMsg &msg)
 // MeterPanel class
 //
 
-#include "../../images/SpeakerMenu.xpm"
-#include "../../images/MicMenu.xpm"
+#include "images/SpeakerMenu.xpm"
+#include "images/MicMenu.xpm"
 
 // How many pixels between items?
 const static int gap = 2;

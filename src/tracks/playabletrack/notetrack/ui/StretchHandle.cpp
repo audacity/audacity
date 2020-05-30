@@ -25,7 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../UndoManager.h"
 #include "../../../../ViewInfo.h"
-#include "../../../../../images/Cursors.h"
+#include "images/Cursors.h"
 
 #include <algorithm>
 
