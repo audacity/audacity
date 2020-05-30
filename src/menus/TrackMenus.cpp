@@ -107,10 +107,10 @@ void DoMixAndRender
       // Bug 2218, remember more things...
       if (selectedCount>=1) {
          pNewLeft->SetWaveColorIndex(firstColour);
-         pNewLeft->SetSelected(true);
+         pNewLeft->SetSelected(!toNewTrack);
          if (pNewRight) {
             pNewRight->SetWaveColorIndex(firstColour);
-            pNewRight->SetSelected(true);
+            pNewRight->SetSelected(!toNewTrack);
          }
       }
 
