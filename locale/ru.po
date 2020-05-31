@@ -11,13 +11,14 @@
 # Yan  Pas, 2015
 # Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2002-2018
 # Дмитрий Шатера <mr.bobsans@gmail.com>, 2015
+# Mikhail Novosyolov <mikhailnov@nixtux.ru>, 2019-2020
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-05-31 03:14+0300\n"
-"PO-Revision-Date: 2020-04-16 07:50+0500\n"
-"Last-Translator: Alexander Kovalenko <nktch@yandex.ru>\n"
+"PO-Revision-Date: 2020-05-31 03:14+0300\n"
+"Last-Translator: Mikhail Novosyolov <mikhailnov@nixtux.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -116,9 +117,9 @@ msgstr "%s (включая %s, %s, %s, %s и %s)"
 
 #. i18n-hint: information about the program
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "About %s"
-msgstr "О программе"
+msgstr "О программе %s"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
@@ -129,55 +130,51 @@ msgstr "OK"
 #. i18n-hint: First and third %s will be the program's name,
 #. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"Audacity - это свободная программа, созданная командой <a href=\"http://"
-"audacityteam.org/about/credits\">разработчиков</a> со всего мира на "
-"добровольной основе. Audacity <a href=\"http://audacityteam.org/download"
-"\">доступна</a> для Windows, Mac и GNU/Linux (и других Unix-подобных систем)."
+"%s — это свободная программа, созданная международной командой %s.%s %s для "
+"Windows, Mac, GNU/Linux и других Unix-подобных систем."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
 msgid "volunteers"
-msgstr ""
+msgstr "добровольных участников"
 
 #. i18n-hint: substitutes into "Audacity is %s"
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "available"
-msgstr "Переменный"
+msgstr "доступна"
 
 #. i18n-hint first and third %s will be "forum", second "wiki"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our %s. For help, view the tips and tricks on our %s or visit our %s."
 msgstr ""
-"Сообщения об ошибках и свои предложения вы можете разместить на нашем "
-"[[https://forum.audacityteam.org/|форуме]] (на английском языке). Справка и "
-"советы доступны на нашем [[https://wiki.audacityteam.org/|вики-сайте]] и "
-"[[https://forum.audacityteam.org/|форуме]]."
+"Сообщения об ошибках и свои предложения вы можете разместить на нашем %s. "
+"Справку, советы и помощь можно найти на наших %s и %s"
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
 msgctxt "dative"
 msgid "forum"
-msgstr ""
+msgstr "форуме"
 
 #. i18n-hint substitutes into "view the tips and tricks on our %s"
 #: src/AboutDialog.cpp
 msgid "wiki"
-msgstr ""
+msgstr "вики-сайте"
 
+# В русском переводе предложение перефразировано, падеж другой
 #. i18n-hint substitutes into "visit our %s"
 #: src/AboutDialog.cpp
 msgctxt "accusative"
 msgid "forum"
-msgstr ""
+msgstr "форуме"
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -198,13 +195,13 @@ msgstr ""
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
 msgstr ""
-"Audacity - бесплатное, открытое, кроссплатформенное программное обеспечение "
-"для записи и редактирования звука."
+"%s — бесплатное, открытое, кроссплатформенное программное обеспечение для "
+"записи и редактирования звука."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -216,9 +213,9 @@ msgstr "Настройка DarkAudacity"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s Team Members"
-msgstr "Участники команды Audacity"
+msgstr "Участники команды %s"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -226,9 +223,9 @@ msgstr "Почётные участники:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Distinguished %s Team members, not currently active"
-msgstr "Участники команды разработчиков, которые в настоящее время неактивны"
+msgstr "Участники команды %s, которые в настоящее время неактивны"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -248,9 +245,9 @@ msgstr "Библиотеки"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s includes code from the following projects:"
-msgstr "Audacity включает код следующих проектов:"
+msgstr "%s включает код следующих проектов:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
@@ -258,9 +255,9 @@ msgstr "Особая благодарность:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s website: "
-msgstr "Веб-сайт Audacity: "
+msgstr "Веб-сайт %s: "
 
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
@@ -271,11 +268,11 @@ msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr ""
-"&nbsp; &nbsp; Имя <b>Audacity</b> зарегистрировано под товарным знаком "
-"Dominic Mazzoni.<br><br>"
+"%s является зарегистрированным товарным знаком, принадлежащим Dominic "
+"Mazzoni."
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
@@ -384,12 +381,12 @@ msgstr "Код фиксации:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Debug build (debug level %d)"
-msgstr ""
+msgstr "Отладочная сборка (debug level %d)"
 
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Release build (debug level %d)"
-msgstr "Рабочая сборка"
+msgstr "Релизная сборка (уровень отладки %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -1896,9 +1893,8 @@ msgid "\"%s\", \"%s\", \"%s\"\n"
 msgstr ""
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid "Missing"
-msgstr "Недостающие файлы"
+msgstr "Недостающие"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2732,9 +2728,9 @@ msgid "Unable to determine"
 msgstr "Невозможно определить"
 
 #: src/Internat.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s bytes"
-msgstr "байт"
+msgstr "%s байт(-ов)"
 
 #. i18n-hint: Abbreviation for Kilo bytes
 #: src/Internat.cpp
@@ -3348,7 +3344,6 @@ msgstr ""
 #. i18n-hint A plug-in is an optional added program for a sound
 #. effect, or generator, or analyzer
 #: src/PluginManager.cpp
-#, fuzzy
 msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
@@ -3390,7 +3385,6 @@ msgstr ""
 "дискретизации проекта."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "The tracks selected for recording must all have the same sampling rate"
 msgstr ""
 "Для применения фильтра все выбранные треки должны иметь одну частоту "
@@ -3635,9 +3629,9 @@ msgid "<untitled>"
 msgstr "<без названия>"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "[Project %02i] "
-msgstr "[Проект %02i] Audacity \"%s\""
+msgstr "[Проект %02i] "
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -3722,7 +3716,6 @@ msgid "Could not remove old autosave file: %s"
 msgstr "Не удалось удалить старый файл автосохранения: %s"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Error decoding file"
 msgstr "Ошибка декодирования файла"
 
@@ -3927,7 +3920,6 @@ msgid "Warning - Backup File Detected"
 msgstr "Внимание - обнаружен файл резервной копии"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Error Opening File"
 msgstr "Ошибка открытия файла"
 
@@ -5567,7 +5559,6 @@ msgid "Scriptables"
 msgstr "Сценарии"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Selectionbar"
 msgstr "Панель выбора"
 
@@ -5609,7 +5600,6 @@ msgstr "Синий"
 
 #. i18n-hint:  This really means the color, not as in "white noise"
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgctxt "color"
 msgid "White"
 msgstr "Белый"
@@ -5993,7 +5983,6 @@ msgstr ""
 "ниже выбранных треков."
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "db"
 msgstr "дБ"
 
@@ -6109,14 +6098,12 @@ msgstr "Высота тона"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "from"
 msgstr "от"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&from"
 msgstr "&от"
@@ -6127,14 +6114,12 @@ msgstr "от Октавы"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "to"
 msgstr "до"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&to"
 msgstr "&до"
@@ -6236,7 +6221,6 @@ msgstr "От об/м"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "&from"
 msgstr "&от"
@@ -6250,7 +6234,6 @@ msgstr "До об/мин"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "&to"
 msgstr "&до"
@@ -6269,7 +6252,6 @@ msgstr "Текущая длительность выделения."
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "from"
 msgstr "от"
@@ -6280,7 +6262,6 @@ msgstr "&Новая длина:"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "to"
 msgstr "до"
@@ -6312,7 +6293,6 @@ msgstr "Долей в минуту, от"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "&from"
 msgstr "&от"
@@ -6324,7 +6304,6 @@ msgstr "Долей в минуту, до"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "&to"
 msgstr "&до"
@@ -6335,14 +6314,12 @@ msgstr "Длина (секунд):"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "from"
 msgstr "от"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "t&o"
 msgstr "д&о"
@@ -7119,9 +7096,8 @@ msgid "Built-in"
 msgstr "Встроен"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Presets"
-msgstr "Пресет"
+msgstr "Предустановки"
 
 #: src/effects/Effect.cpp
 msgid "Export Effect Parameters"
@@ -7996,7 +7972,6 @@ msgstr "(Максимум 0дБ)"
 
 #. i18n-hint: not a color, but "white noise" having a uniform spectrum
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "White"
 msgstr "Белый"
@@ -8004,14 +7979,12 @@ msgstr "Белый"
 #. i18n-hint: not a color, but "pink noise" having a spectrum with more power
 #. in low frequencies
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "Pink"
 msgstr "Розовый"
 
 #. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "Brownian"
 msgstr "Коричневый"
@@ -8069,7 +8042,6 @@ msgid "Hamming, Reciprocal Hamming"
 msgstr "Хэмминга, Двусторонний Хэмминг"
 
 #: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Noise Reduction"
 msgstr "Подавление шума"
 
@@ -8135,7 +8107,6 @@ msgid "Attac&k time (secs):"
 msgstr "Время &атаки (сек.):"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Attack time"
 msgstr "Время атаки"
 
@@ -8144,7 +8115,6 @@ msgid "R&elease time (secs):"
 msgstr "Время &затухания (сек.)"
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Release time"
 msgstr "Время затухания"
 
@@ -9444,9 +9414,9 @@ msgid "LV2 Effect Settings"
 msgstr "Настройки LV2-эффекта"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "&Buffer Size (8 to %d) samples:"
-msgstr "&Размер буфера (8 - %d сэмплов):"
+msgstr "&Размер буфера (от 8 до %d сэмплов):"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
@@ -10304,14 +10274,12 @@ msgid "Open custom FFmpeg format options"
 msgstr "Открыть настраиваемые параметры формата FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Current Format:"
-msgstr "Формат:"
+msgstr "Текущий формат:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Current Codec:"
-msgstr "Кодек:"
+msgstr "Текущий кодек:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Error Saving FFmpeg Presets"
@@ -11371,7 +11339,7 @@ msgid "Cannot export audio in this format."
 msgstr "Невозможен экспорт аудиоданных в этот формат."
 
 #: src/export/ExportPCM.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Exporting the selected audio as %s"
 msgstr "Экспорт выделенного аудио в %s"
 
@@ -11733,12 +11701,14 @@ msgid "MP3 files"
 msgstr "MP3"
 
 #: src/import/ImportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "MP3 Decoding Failed:\n"
 "\n"
 "%s"
-msgstr "Ошибка декодирования файла"
+msgstr ""
+"Ошибка декодирования MP3:\n"
+"%s"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12113,7 +12083,6 @@ msgstr "Сколько импортировать:"
 
 #. i18n-hint: (noun)
 #: src/import/ImportRaw.cpp
-#, fuzzy
 msgid "Sample rate:"
 msgstr "Частота дискретизации:"
 
@@ -12281,7 +12250,6 @@ msgid "Nothing to redo"
 msgstr "Нечего повторить"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Cut to the clipboard"
 msgstr "Вырезать в буфер обмена"
 
@@ -12767,9 +12735,8 @@ msgid "&Manual..."
 msgstr "&Руководство..."
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Reset Configuration"
-msgstr "Подтверждение удаления правила"
+msgstr "&Сбросить настройки"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -13997,10 +13964,10 @@ msgstr ""
 msgid "Please select in a mono track."
 msgstr "Выберите в монотреке."
 
+# XXX странная формулировка
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Please select in a stereo track or two mono tracks."
-msgstr "Выберите в стереотреке."
+msgstr "Выберите в стереотреке или 2 моно трека."
 
 #: src/menus/TransportMenus.cpp
 #, c-format
@@ -14337,7 +14304,6 @@ msgstr "Настройки для устройства"
 
 #. i18n-hint Software interface to audio devices
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgctxt "device"
 msgid "Interface"
 msgstr "Интерфейс"
@@ -14673,7 +14639,6 @@ msgstr "Расш. импорт"
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgctxt "GUI"
 msgid "Interface"
 msgstr "Интерфейс"
@@ -14772,9 +14737,8 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "В RTL-языках в основном использовать макеты слева направо"
 
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgid "Show Timeline Tooltips"
-msgstr "Включить подсказки шкалы времени"
+msgstr "Включить подсказки на шкале времени"
 
 #: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
 msgid "Show Scrub Ruler"
@@ -14927,11 +14891,13 @@ msgid "&Defaults"
 msgstr "&По умолчанию"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
-msgstr "\"  (т.к. ярлык '"
+msgstr ""
+"\n"
+"   *   \"%s\"  (т.к. ярлык '%s' уже используется \"%s\")\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -14942,12 +14908,15 @@ msgid "Error Importing Keyboard Shortcuts"
 msgstr "Ошибка загрузки сочетаний клавиш"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
 "and \"%s\".\n"
 "Nothing is imported."
-msgstr "Файл с ярлыками содержит недопустимые дубликаты ярлыков для \""
+msgstr ""
+"Файл с ярлыками содержит недопустимые дубликаты ярлыков для \"%s\" and \"%s"
+"\".\n"
+"Nothing is imported."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15048,7 +15017,6 @@ msgid "No compatible FFmpeg library was found"
 msgstr "Совместимая библиотека FFmpeg не найдена"
 
 #: src/prefs/LibraryPrefs.cpp
-#, fuzzy
 msgid "FFmpeg support is not compiled in"
 msgstr "Программа собрана без поддержки FFmpeg"
 
@@ -15095,7 +15063,6 @@ msgstr "Настройки для MidiIO"
 
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
-#, fuzzy
 msgctxt "MIDI"
 msgid "Interface"
 msgstr "Интерфейс"
@@ -15140,7 +15107,6 @@ msgstr ""
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid ""
 "  'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
@@ -15148,13 +15114,11 @@ msgstr "'Запрос' - Audacity будет запрашивать каждый
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
 msgstr "'Неудачно' - Audacity посчитает модуль нерабочим и не запустит его."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid "  'New' means no choice has been made yet."
 msgstr "'Новый' - не выбран ещё ни один вариант."
 
@@ -15449,9 +15413,8 @@ msgid "Category"
 msgstr "Категория"
 
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
-#, fuzzy
 msgid "Preferences:"
-msgstr "Настройки: "
+msgstr "Настройки:"
 
 #. i18n-hint: (noun) i.e Audacity projects.
 #: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
@@ -16016,7 +15979,6 @@ msgid "Zoom to Selection"
 msgstr "Масштаб по выделению"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "Zoom Default"
 msgstr "Масштаб по умолчанию"
 
@@ -16220,9 +16182,8 @@ msgid "Record New Track"
 msgstr "Записать новый трек"
 
 #: src/toolbars/ControlToolBar.cpp
-#, fuzzy
 msgid "Append Record"
-msgstr "Дописать в конец"
+msgstr "Дописать в конец записи"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Select to End"
@@ -16642,7 +16603,6 @@ msgid "Draw Tool"
 msgstr "Отрисовка"
 
 #: src/toolbars/ToolsToolBar.cpp
-#, fuzzy
 msgid "Multi-Tool"
 msgstr "Мульти-инструмент"
 
@@ -16808,16 +16768,14 @@ msgstr "Сбросить масштаб"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Shift-Right-Click"
-msgstr "Shift+щелчок ЛКМ"
+msgstr "Shift+щелчок ПКМ"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Left-Click/Left-Drag"
-msgstr "Увеличить\tщелчок ЛКМ/перетащить влево"
+msgstr "Щелчок ЛКМ/Перетащить влево"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -16888,9 +16846,8 @@ msgid "k"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#, fuzzy
 msgid "Zoom to Fit"
-msgstr "Увеличить в точке"
+msgstr "Увеличить, чтобы вместилось"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -17392,9 +17349,8 @@ msgid "Collapse"
 msgstr "Свернуть"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Command+Click to deselect"
-msgstr "Command+Click для сброса"
+msgstr "Command+Нажатие для отмены выделения"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Select track"
@@ -17411,7 +17367,7 @@ msgstr "Открыть меню..."
 #. i18n-hint: Command names a modifier key on Macintosh keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "Command+Click"
-msgstr ""
+msgstr "Command+Нажатие"
 
 #. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -17924,9 +17880,8 @@ msgstr "100.01000 октав|1.442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "thousandths of octaves"
-msgstr "тысячные "
+msgstr "тысячные октав"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in semitones and cents
@@ -17943,9 +17898,8 @@ msgstr "1000 полутонов .0100 центов|17.312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "hundredths of cents"
-msgstr "сотые "
+msgstr "сотые центов"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in decades
@@ -17961,9 +17915,8 @@ msgstr "10.01000 декад|0.434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "thousandths of decades"
-msgstr "тысячные "
+msgstr "тысячные декад"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -17974,9 +17927,9 @@ msgid "centiseconds"
 msgstr "сотые секунды"
 
 #: src/widgets/PopupMenuTable.h
-#, fuzzy, c-format
+#, c-format
 msgid "%s (%s)"
-msgstr "(%s)"
+msgstr "%s (%s)"
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
@@ -18066,7 +18019,7 @@ msgid "Value must not be less than %s"
 msgstr "Значение не должно быть менее %s"
 
 #: src/widgets/valnum.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Value must not be greater than %s"
 msgstr "Значение не должно быть более %s"
 
@@ -18511,7 +18464,6 @@ msgid "Crossfade Tracks"
 msgstr "Кроссфейд треков"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Fade type"
 msgstr "Тип фейда"
 
@@ -18532,9 +18484,8 @@ msgid "Custom Curve"
 msgstr "Задать кривую"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Custom curve"
-msgstr "Задать кривую"
+msgstr "Произвольная кривая"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade direction"
@@ -18622,9 +18573,8 @@ msgid "Equalization XML file"
 msgstr "Выравнивание XML-файла"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "XML file"
-msgstr "XML файлы"
+msgstr "XML файл"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
@@ -19023,30 +18973,25 @@ msgid "Select file(s) to install"
 msgstr "Выберите файлы для установки"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-in"
-msgstr "плагин"
+msgstr "Плагин"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Lisp file"
-msgstr "%s файлов"
+msgstr "Файл Lisp"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "HTML file"
-msgstr "XML файлы"
+msgstr "Файл HTML"
 
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Text file"
-msgstr "Текстовые файлы"
+msgstr "Текстовыq файл"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "All supported"
-msgstr "Все поддерживаемые файлы"
+msgstr "Все поддерживаемые"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Allow overwriting"
@@ -19314,14 +19259,12 @@ msgid "Export data to"
 msgstr "Экспорт данных в"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "CSV files"
-msgstr "Файлы FLAC"
+msgstr "Файлы CSV"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "HTML files"
-msgstr "XML файлы"
+msgstr "Файлы HTML"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
@@ -19543,12 +19486,10 @@ msgid "linear"
 msgstr "линейная"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "2 channels (stereo)"
 msgstr "2 канала (стерео)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "1 channel (mono)"
 msgstr "1 канал (моно)"
 
