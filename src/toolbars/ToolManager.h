@@ -23,6 +23,10 @@
 #include "../ClientData.h"
 #include "ToolDock.h"
 
+#include "../commands/CommandFunctors.h"
+#include "../commands/CommandManager.h"
+
+
 class wxCommandEvent;
 class wxFrame;
 class wxMouseEvent;
@@ -80,6 +84,8 @@ class ToolManager final
    const ToolDock *GetBotDock() const;
 
    void Reset();
+   static void OnResetToolBars(const CommandContext &context);
+
    void Destroy();
    void RegenerateTooltips();
 
@@ -210,8 +216,6 @@ public:
 };
 
 
-#include "../commands/CommandFunctors.h"
-#include "../commands/CommandManager.h"
 
 // Construct a static instance of this class to add a menu item that shows and
 // hides a toolbar

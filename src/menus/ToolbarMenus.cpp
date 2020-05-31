@@ -18,14 +18,11 @@ struct Handler : CommandHandlerObject {
 
 void OnResetToolBars(const CommandContext &context)
 {
-   auto &project = context.project;
-   auto &toolManager = ToolManager::Get( project );
-
-   toolManager.Reset();
-   MenuManager::Get(project).ModifyToolbarMenus(project);
+   ToolManager::OnResetToolBars(context);
 }
 
 }; // struct Handler
+
 
 } // namespace
 

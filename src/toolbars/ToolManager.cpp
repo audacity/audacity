@@ -28,6 +28,7 @@
 #include "ToolManager.h"
 
 #include "../Experimental.h"
+#include "../commands/CommandContext.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -546,6 +547,17 @@ static struct DefaultConfigEntry {
    // Hidden by default in bottom dock
    { SpectralSelectionBarID, NoBarID,                NoBarID                },
 };
+
+// Static member function.
+void ToolManager::OnResetToolBars(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &toolManager = ToolManager::Get( project );
+
+   toolManager.Reset();
+   MenuManager::Get(project).ModifyToolbarMenus(project);
+}
+
 
 void ToolManager::Reset()
 {

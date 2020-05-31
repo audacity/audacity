@@ -21,6 +21,7 @@
 #include "../ShuttleGui.h"
 #include "../SplashDialog.h"
 #include "../Theme.h"
+#include "../toolbars/ToolManager.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../prefs/PrefsDialog.h"
@@ -306,14 +307,29 @@ struct Handler : CommandHandlerObject {
 void OnResetConfig(const CommandContext &context)
 {
    auto &project = context.project;
-   wxString dir = gPrefs->Read(wxT("/Directories/TempDir"));
+   wxString dir = gPrefs->Read("/Directories/TempDir");
    gPrefs->DeleteAll();
    // This stops ReloadPreferences warning about directory change
    // on next restart.
-   gPrefs->Write(wxT("/Directories/TempDir"), dir);
+   gPrefs->Write("/Directories/TempDir", dir);
+   gPrefs->Write("/GUI/SyncLockTracks", 0);
+   gPrefs->Write("/SnapTo", 0 );
+   ProjectSelectionManager::Get( project ).AS_SetSnapTo( 0 );
+   // There are many more things we could reset here.
+   // Beeds discussion as to which make sense to.
+   // Maybe in future versions?
+   // - Reset Effects
+   // - Reset Recording and Playback volumes
+   // - Reset Selection formats (and for spectral too)
+   // - Reset Play-at-speed speed to x1
+   // - Reset Selected tool to cursor.
+   // - Stop playback/recording and unapply pause.
+   // - Set Zoom sensibly.
+   //ProjectSelectionManager::Get(project).AS_SetRate(44100.0);
+   gPrefs->Write("/AudioIO/SoundActivatedRecord", 0);
    gPrefs->Flush();
    DoReloadPreferences(project);
-   // OnResetToolBars(context);
+   ToolManager::OnResetToolBars(context);
    gPrefs->Flush();
 
 }
