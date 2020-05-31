@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-31 03:14+0300\n"
+"POT-Creation-Date: 2020-05-31 05:06+0300\n"
 "PO-Revision-Date: 2008-07-09 13:48+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <en@li.org>\n"
@@ -7468,7 +7468,7 @@ msgstr "អេហ្គុយ"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 #, fuzzy
-msgid "Filter Curve EQ"
+msgid "Filter Curve"
 msgstr "ការ​​កំណត់ជា​​ស្រេច"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
@@ -7525,7 +7525,7 @@ msgid ""
 msgstr ""
 
 #: src/effects/Equalization.cpp
-msgid "Filter Curve EQ needs a different name"
+msgid "Filter Curve needs a different name"
 msgstr ""
 
 #: src/effects/Equalization.cpp

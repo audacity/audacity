@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-31 03:14+0300\n"
+"POT-Creation-Date: 2020-05-31 05:06+0300\n"
 "PO-Revision-Date: 2019-09-10 22:44+0900\n"
 "Last-Translator: mkpoli <snowwolf1001@gmail.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
@@ -7443,7 +7443,7 @@ msgstr "均衡器（EQ）"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 #, fuzzy
-msgid "Filter Curve EQ"
+msgid "Filter Curve"
 msgstr "过滤曲线"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
@@ -7501,7 +7501,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 #, fuzzy
-msgid "Filter Curve EQ needs a different name"
+msgid "Filter Curve needs a different name"
 msgstr "均衡曲线需要一个不同的名字"
 
 #: src/effects/Equalization.cpp

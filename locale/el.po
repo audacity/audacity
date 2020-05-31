@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-31 03:14+0300\n"
+"POT-Creation-Date: 2020-05-31 05:06+0300\n"
 "PO-Revision-Date: 2020-04-11 12:30+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
@@ -7550,7 +7550,7 @@ msgid "Equalization"
 msgstr "Εξισορρόπηση"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-msgid "Filter Curve EQ"
+msgid "Filter Curve"
 msgstr "Φιλτράρισμα καμπύλης EQ"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
@@ -7609,7 +7609,8 @@ msgstr ""
 "'ανώνυμη' καμπύλη, έπειτα χρησιμοποιήστε την."
 
 #: src/effects/Equalization.cpp
-msgid "Filter Curve EQ needs a different name"
+#, fuzzy
+msgid "Filter Curve needs a different name"
 msgstr "Η καμπύλη φίλτρου EQ χρειάζεται διαφορετικό όνομα"
 
 #: src/effects/Equalization.cpp

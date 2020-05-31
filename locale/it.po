@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-31 03:14+0300\n"
+"POT-Creation-Date: 2020-05-31 05:06+0300\n"
 "PO-Revision-Date: 2019-04-10 10:36+0200\n"
 "Last-Translator: Michele Locati <michele@locati.it>\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
@@ -7521,7 +7521,7 @@ msgid "Equalization"
 msgstr "Equalizzazione"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-msgid "Filter Curve EQ"
+msgid "Filter Curve"
 msgstr "EQ curva del filtro"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
@@ -7580,7 +7580,8 @@ msgstr ""
 "'senza nome', quindi usarla."
 
 #: src/effects/Equalization.cpp
-msgid "Filter Curve EQ needs a different name"
+#, fuzzy
+msgid "Filter Curve needs a different name"
 msgstr "EQ curva del filtro richiede di un nome diverso"
 
 #: src/effects/Equalization.cpp

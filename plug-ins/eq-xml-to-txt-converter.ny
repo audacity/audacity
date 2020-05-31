@@ -18,7 +18,7 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 
 
 $control fxname (_ "Select target EQ effect") choice (("Graphic" (_ "Graphic EQ"))
-                                                      ("FilterCurve" (_ "Filter Curve EQ"))) 0
+                                                      ("FilterCurve" (_ "Filter Curve"))) 0
 
 $control infile (_ "Equalization XML file") file "" "*default*/EQCurves.xml" (((_ "XML file") (xml XML))
 									      ((_ "All files") ("")))  "open,exists"

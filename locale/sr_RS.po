@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-31 03:14+0300\n"
+"POT-Creation-Date: 2020-05-31 05:06+0300\n"
 "PO-Revision-Date: 2016-11-27 20:07+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: српски <gnome-sr@googlegroups.org>\n"
@@ -7716,7 +7716,7 @@ msgstr "Уједначавање"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 #, fuzzy
-msgid "Filter Curve EQ"
+msgid "Filter Curve"
 msgstr "Изабери криву"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
@@ -7780,7 +7780,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 #, fuzzy
-msgid "Filter Curve EQ needs a different name"
+msgid "Filter Curve needs a different name"
 msgstr "ЕКу крива захтева другачији назив"
 
 #: src/effects/Equalization.cpp

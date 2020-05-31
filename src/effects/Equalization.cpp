@@ -198,10 +198,8 @@ const ComponentInterfaceSymbol EffectEqualization::Symbol
 
 // namespace{ BuiltinEffectsModule::Registration< EffectEqualization > reg; }
 
-// "Filter Curve EQ" in the user-facing string, but preserve the old
-// internal string
 const ComponentInterfaceSymbol EffectEqualizationCurve::Symbol
-{ wxT("Filter Curve"), XO("Filter Curve EQ") };
+{ wxT("Filter Curve"), XO("Filter Curve") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectEqualizationCurve > reg2; }
 
@@ -550,7 +548,7 @@ bool EffectEqualization::ValidateUI()
       Effect::MessageBox(
          XO("To use this filter curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
          wxOK | wxCENTRE,
-         XO("Filter Curve EQ needs a different name") );
+         XO("Filter Curve needs a different name") );
       return false;
    }
 

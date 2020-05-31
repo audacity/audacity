@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-31 03:14+0300\n"
+"POT-Creation-Date: 2020-05-31 05:06+0300\n"
 "PO-Revision-Date: 2018-11-29 22:46+0900\n"
 "Last-Translator: Phroneris <phroneris@gmail.com>\n"
 "Language-Team: Atsushi YOSHIDA, Phroneris\n"
@@ -7568,7 +7568,7 @@ msgstr "イコライザー (EQ) (&Q)"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 #, fuzzy
-msgid "Filter Curve EQ"
+msgid "Filter Curve"
 msgstr "曲線を選択"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
@@ -7632,7 +7632,7 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 #, fuzzy
-msgid "Filter Curve EQ needs a different name"
+msgid "Filter Curve needs a different name"
 msgstr "EQ 曲線には別の名前が必要です"
 
 #: src/effects/Equalization.cpp

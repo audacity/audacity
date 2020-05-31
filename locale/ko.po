@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-31 03:14+0300\n"
+"POT-Creation-Date: 2020-05-31 05:06+0300\n"
 "PO-Revision-Date: 2020-04-21 15:25+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (http://www.transifex.com/klyok/audacity/language/"
@@ -7427,7 +7427,7 @@ msgid "Equalization"
 msgstr "이퀄라이제이션"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-msgid "Filter Curve EQ"
+msgid "Filter Curve"
 msgstr "필터 곡선 EQ"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
@@ -7485,7 +7485,8 @@ msgstr ""
 "선을사용합니다."
 
 #: src/effects/Equalization.cpp
-msgid "Filter Curve EQ needs a different name"
+#, fuzzy
+msgid "Filter Curve needs a different name"
 msgstr "필터 곡선 EQ는 다른 이름이 필요합니다"
 
 #: src/effects/Equalization.cpp

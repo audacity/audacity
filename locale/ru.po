@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-31 03:14+0300\n"
+"POT-Creation-Date: 2020-05-31 05:06+0300\n"
 "PO-Revision-Date: 2020-05-31 03:14+0300\n"
 "Last-Translator: Mikhail Novosyolov <mikhailnov@nixtux.ru>\n"
 "Language-Team: \n"
@@ -7461,8 +7461,8 @@ msgid "Equalization"
 msgstr "EQ (эквалайзер)"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-msgid "Filter Curve EQ"
-msgstr "Кривая EQ"
+msgid "Filter Curve"
+msgstr "Кривая эквализации"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 msgid "Graphic EQ"
@@ -7520,13 +7520,14 @@ msgstr ""
 "и используйте её."
 
 #: src/effects/Equalization.cpp
-msgid "Filter Curve EQ needs a different name"
-msgstr "Кривой EQ нужно другое имя"
+msgid "Filter Curve needs a different name"
+msgstr "Фильтру 'Кривая эквализации' нужно другое имя"
 
 #: src/effects/Equalization.cpp
 msgid ""
 "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "Для применения EQ все выбранные треки должны иметь одну частоту."
+msgstr ""
+"Для применения эквализации все выбранные треки должны иметь одну частоту."
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
@@ -7679,18 +7680,18 @@ msgid ""
 "Error message says:\n"
 "%s"
 msgstr ""
-"Ошибка загрузки кривых EQ из файла:\n"
+"Ошибка загрузки кривых эквализации из файла:\n"
 "%s\n"
 "Сообщение об ошибке:\n"
 "%s"
 
 #: src/effects/Equalization.cpp
 msgid "Error Loading EQ Curves"
-msgstr "Ошибка загрузки кривых EQ"
+msgstr "Ошибка загрузки кривых эквализации"
 
 #: src/effects/Equalization.cpp
 msgid "Error Saving Equalization Curves"
-msgstr "Ошибка сохранения кривых EQ"
+msgstr "Ошибка сохранения кривых эквализации"
 
 #: src/effects/Equalization.cpp
 msgid "Requested curve not found, using 'unnamed'"
@@ -7803,11 +7804,11 @@ msgstr "Нельзя удалить кривую 'без_названия', он
 
 #: src/effects/Equalization.cpp
 msgid "Choose an EQ curve file"
-msgstr "Выберите файл кривой EQ"
+msgstr "Выберите файл кривой эквализации"
 
 #: src/effects/Equalization.cpp
 msgid "Export EQ curves as..."
-msgstr "Экспорт кривых EQ как..."
+msgstr "Экспорт кривых эквализации как..."
 
 #: src/effects/Equalization.cpp
 msgid "You cannot export 'unnamed' curve, it is special."
