@@ -23,8 +23,8 @@
 #include <wx/sizer.h>
 #endif
 
-#include "SelectionBarListener.h"
 #include "TimeToolBar.h"
+#include "SelectionBarListener.h"
 #include "ToolManager.h"
 
 #include "../AudioIO.h"
