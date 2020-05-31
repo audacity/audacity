@@ -31,7 +31,7 @@
 
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../wavetrack/WaveTrackView.h"
 
 #include <algorithm>
 

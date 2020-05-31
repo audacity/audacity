@@ -27,8 +27,8 @@ Paul Licameli
 #include "../TrackPanel.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "../wavetrack/WaveTrackView.h"
+#include "../wavetrack/WaveTrackViewConstants.h"
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid,
    AudacityProject *pProject, WaveTrack *wt)

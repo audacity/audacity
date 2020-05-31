@@ -31,8 +31,8 @@ for drawing different aspects of the label and its text box.
 #include "Audacity.h" // for HAVE_GTK
 #include "LabelTrack.h"
 
-#include "tracks/ui/TrackView.h"
-#include "tracks/ui/TrackControls.h"
+#include "track/TrackView.h"
+#include "track/TrackControls.h"
 
 #include "Experimental.h"
 

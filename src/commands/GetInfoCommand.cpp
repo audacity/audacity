@@ -44,7 +44,7 @@ This class now lists
 #include "../prefs/PrefsDialog.h"
 #include "../Shuttle.h"
 #include "../PluginManager.h"
-#include "../tracks/ui/TrackView.h"
+#include "../track/TrackView.h"
 #include "../ShuttleGui.h"
 
 #include <wx/frame.h>

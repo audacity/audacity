@@ -13,7 +13,7 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
-#include "../tracks/labeltrack/ui/LabelTrackView.h"
+#include "../labeltrack/LabelTrackView.h"
 
 // private helper classes and functions
 namespace {

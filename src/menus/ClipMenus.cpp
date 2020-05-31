@@ -9,7 +9,7 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
-#include "../tracks/ui/TimeShiftHandle.h"
+#include "../track/TimeShiftHandle.h"
 
 // private helper classes and functions
 namespace {

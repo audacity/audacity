@@ -81,9 +81,9 @@ is time to refresh some aspect of the screen.
 #include "ondemand/ODManager.h"
 #include "ondemand/ODTask.h"
 
-#include "tracks/ui/TrackControls.h"
-#include "tracks/ui/TrackView.h"
-#include "tracks/ui/TrackVRulerControls.h"
+#include "track/TrackControls.h"
+#include "track/TrackView.h"
+#include "track/TrackVRulerControls.h"
 
 //This loads the appropriate set of cursors, depending on platform.
 #include "images/Cursors.h"
