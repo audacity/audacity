@@ -23,7 +23,7 @@
 #include "../commands/ScreenshotCommand.h"
 #include "../export/Export.h"
 #include "../prefs/PrefsDialog.h"
-#include "../tracks/labeltrack/ui/LabelTrackView.h"
+#include "../labeltrack/LabelTrackView.h"
 #include "../widgets/AudacityMessageBox.h"
 
 // private helper classes and functions

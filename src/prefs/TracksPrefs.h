@@ -17,7 +17,7 @@
 
 #include <vector>
 #include "PrefsPanel.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "../wavetrack/WaveTrackViewConstants.h"
 #include "WaveformSettings.h" // for ScaleTypeValues
 
 class ShuttleGui;

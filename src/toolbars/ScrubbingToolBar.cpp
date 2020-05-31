@@ -36,7 +36,7 @@
 #include "../Prefs.h"
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
-#include "../tracks/ui/Scrubbing.h"
+#include "../track/Scrubbing.h"
 
 IMPLEMENT_CLASS(ScrubbingToolBar, ToolBar);
 
