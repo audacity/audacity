@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h"
+#include "Audacity.h"
 
 #include "LoadNyquist.h"
 
@@ -16,7 +16,7 @@
 
 #include "Nyquist.h"
 
-#include "../../FileNames.h"
+#include "FileNames.h"
 
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.

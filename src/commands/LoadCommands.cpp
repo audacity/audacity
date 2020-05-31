@@ -13,11 +13,11 @@
 modelled on BuiltinEffectsModule
 *****************************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "LoadCommands.h"
 #include "AudacityCommand.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 
 namespace {
 bool sInitialized = false;

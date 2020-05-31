@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
@@ -41,10 +41,10 @@
 #include <wx/textctrl.h>
 #include <wx/tokenzr.h>
 
-#include "../../ShuttleGui.h"
-#include "../../widgets/AudacityMessageBox.h"
-#include "../../widgets/valnum.h"
-#include "../../widgets/wxPanelWrapper.h"
+#include "ShuttleGui.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/valnum.h"
+#include "widgets/wxPanelWrapper.h"
 
 //
 // When a plug-ins state is saved to the settings file (as a preset),

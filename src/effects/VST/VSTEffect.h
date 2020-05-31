@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #if USE_VST
 
@@ -16,8 +16,8 @@
 #include "audacity/ModuleInterface.h"
 #include "audacity/PluginInterface.h"
 
-#include "../../SampleFormat.h"
-#include "../../xml/XMLTagHandler.h"
+#include "SampleFormat.h"
+#include "xml/XMLTagHandler.h"
 
 class wxSizerItem;
 class wxSlider;

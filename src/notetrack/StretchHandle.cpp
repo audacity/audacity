@@ -8,23 +8,23 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #ifdef USE_MIDI
 #include "allegro.h"
 
 #include "StretchHandle.h"
 
-#include "../track/CommonTrackPanelCell.h"
-#include "../HitTestResult.h"
-#include "../NoteTrack.h"
-#include "../ProjectAudioIO.h"
-#include "../ProjectHistory.h"
-#include "../ProjectSettings.h"
-#include "../RefreshCode.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../UndoManager.h"
-#include "../ViewInfo.h"
+#include "track/CommonTrackPanelCell.h"
+#include "HitTestResult.h"
+#include "NoteTrack.h"
+#include "ProjectAudioIO.h"
+#include "ProjectHistory.h"
+#include "ProjectSettings.h"
+#include "RefreshCode.h"
+#include "TrackPanelMouseEvent.h"
+#include "UndoManager.h"
+#include "ViewInfo.h"
 #include "images/Cursors.h"
 
 #include <algorithm>

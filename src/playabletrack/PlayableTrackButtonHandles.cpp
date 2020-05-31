@@ -8,19 +8,19 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "PlayableTrackButtonHandles.h"
 
 #include "PlayableTrackControls.h"
-#include "../commands/CommandManager.h"
-#include "../Project.h"
-#include "../ProjectSettings.h"
-#include "../RefreshCode.h"
-#include "../Track.h"
-#include "../TrackPanelAx.h"
-#include "../TrackInfo.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../TrackUtilities.h"
+#include "commands/CommandManager.h"
+#include "Project.h"
+#include "ProjectSettings.h"
+#include "RefreshCode.h"
+#include "Track.h"
+#include "TrackPanelAx.h"
+#include "TrackInfo.h"
+#include "TrackPanelMouseEvent.h"
+#include "TrackUtilities.h"
 
 MuteButtonHandle::MuteButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )

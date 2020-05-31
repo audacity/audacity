@@ -14,12 +14,12 @@ ODTask requests and internals.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ODManager.h"
 
 #include "ODTask.h"
 #include "ODWaveTrackTaskQueue.h"
-#include "../Project.h"
+#include "Project.h"
 #include <wx/utils.h>
 #include <wx/wx.h>
 #include <wx/thread.h>

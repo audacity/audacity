@@ -8,12 +8,12 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "SilentBlockFile.h"
 
-#include "../FileFormats.h"
-#include "../DirManager.h"
-#include "../xml/XMLTagHandler.h"
+#include "FileFormats.h"
+#include "DirManager.h"
+#include "xml/XMLTagHandler.h"
 
 SilentBlockFile::SilentBlockFile(size_t sampleLen):
 BlockFile{ wxFileNameWrapper{}, sampleLen }

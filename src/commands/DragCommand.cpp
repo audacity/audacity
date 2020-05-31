@@ -16,14 +16,14 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "DragCommand.h"
 
 #include "LoadCommands.h"
-#include "../Project.h"
-#include "../WaveTrack.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "Project.h"
+#include "WaveTrack.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
 #include "CommandContext.h"
 
 #include <wx/frame.h>

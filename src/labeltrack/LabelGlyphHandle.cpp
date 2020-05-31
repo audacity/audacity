@@ -8,17 +8,17 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "LabelGlyphHandle.h"
 
 #include "LabelTrackView.h"
-#include "../HitTestResult.h"
-#include "../LabelTrack.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../UndoManager.h"
-#include "../ViewInfo.h"
+#include "HitTestResult.h"
+#include "LabelTrack.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
+#include "TrackPanelMouseEvent.h"
+#include "UndoManager.h"
+#include "ViewInfo.h"
 
 #include <wx/cursor.h>
 #include <wx/translation.h>

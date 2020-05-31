@@ -8,27 +8,27 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #ifdef USE_MIDI
 #include "NoteTrackControls.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include "NoteTrackButtonHandle.h"
 
-#include "../playabletrack/PlayableTrackButtonHandles.h"
+#include "playabletrack/PlayableTrackButtonHandles.h"
 #include "NoteTrackSliderHandles.h"
 
-#include "../HitTestResult.h"
-#include "../TrackArtist.h"
-#include "../TrackPanel.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../NoteTrack.h"
-#include "../widgets/PopupMenuTable.h"
-#include "../Project.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
-#include "../prefs/ThemePrefs.h"
+#include "HitTestResult.h"
+#include "TrackArtist.h"
+#include "TrackPanel.h"
+#include "TrackPanelMouseEvent.h"
+#include "NoteTrack.h"
+#include "widgets/PopupMenuTable.h"
+#include "Project.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
+#include "prefs/ThemePrefs.h"
 
 #include <mutex>
 #include <wx/frame.h>
@@ -147,10 +147,10 @@ PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
 }
 
 // drawing related
-#include "../widgets/ASlider.h"
-#include "../TrackInfo.h"
-#include "../TrackPanelDrawingContext.h"
-#include "../ViewInfo.h"
+#include "widgets/ASlider.h"
+#include "TrackInfo.h"
+#include "TrackPanelDrawingContext.h"
+#include "ViewInfo.h"
 
 using TCPLine = TrackInfo::TCPLine;
 
@@ -327,7 +327,7 @@ template<> template<> auto DoGetNoteTrackControls::Implementation() -> Function 
 }
 static DoGetNoteTrackControls registerDoGetNoteTrackControls;
 
-#include "../track/TrackView.h"
+#include "track/TrackView.h"
 
 using GetDefaultNoteTrackHeight = GetDefaultTrackHeight::Override< NoteTrack >;
 template<> template<>

@@ -10,11 +10,11 @@
 **********************************************************************/
 #ifndef AUDACITY_AUDIOUNIT_EFFECT_H
 
-#include "../../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #if USE_AUDIO_UNITS
 
-#include "../../MemoryX.h"
+#include "MemoryX.h"
 #include <vector>
 
 #include <AudioToolbox/AudioUnitUtilities.h>

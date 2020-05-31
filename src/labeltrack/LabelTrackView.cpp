@@ -8,33 +8,33 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "LabelTrackView.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include "LabelTrackVRulerControls.h"
 #include "LabelGlyphHandle.h"
 #include "LabelTextHandle.h"
 
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
-#include "../HitTestResult.h"
-#include "../Project.h"
-#include "../ProjectHistory.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "../RefreshCode.h"
-#include "../Theme.h"
-#include "../TrackArtist.h"
-#include "../TrackPanelAx.h"
-#include "../TrackPanel.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../UndoManager.h"
-#include "../ViewInfo.h"
-#include "../widgets/ErrorDialog.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
+#include "HitTestResult.h"
+#include "Project.h"
+#include "ProjectHistory.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
+#include "RefreshCode.h"
+#include "Theme.h"
+#include "TrackArtist.h"
+#include "TrackPanelAx.h"
+#include "TrackPanel.h"
+#include "TrackPanelMouseEvent.h"
+#include "UndoManager.h"
+#include "ViewInfo.h"
+#include "widgets/ErrorDialog.h"
 
 #include <wx/clipbrd.h>
 #include <wx/dcclient.h>
@@ -702,7 +702,7 @@ namespace {
    }
 }
 
-#include "../TrackPanelDrawingContext.h"
+#include "TrackPanelDrawingContext.h"
 #include "LabelTextHandle.h"
 
 /// Draw calls other functions to draw the LabelTrack.
@@ -2045,7 +2045,7 @@ void LabelTrackView::CreateCustomGlyphs()
    mbGlyphsReady=true;
 }
 
-#include "../LabelDialog.h"
+#include "LabelDialog.h"
 
 void LabelTrackView::DoEditLabels
 (AudacityProject &project, LabelTrack *lt, int index)

@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_SIMPLE_BLOCKFILE__
 #define __AUDACITY_SIMPLE_BLOCKFILE__
 
-#include "../BlockFile.h"
+#include "BlockFile.h"
 
 class DirManager;
 

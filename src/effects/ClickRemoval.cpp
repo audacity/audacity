@@ -24,7 +24,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ClickRemoval.h"
 #include "LoadEffects.h"
 
@@ -34,13 +34,13 @@
 #include <wx/slider.h>
 #include <wx/valgen.h>
 
-#include "../Prefs.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/valnum.h"
+#include "Prefs.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/valnum.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 enum
 {

@@ -13,17 +13,17 @@
 
 *//****************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "Equalization48x.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
-#include "../Project.h"
+#include "Project.h"
 #include "Equalization.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
-#include "../float_cast.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "float_cast.h"
 #include <vector>
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -39,7 +39,7 @@
 
 #include <math.h>
 
-#include "../RealFFTf48x.h"
+#include "RealFFTf48x.h"
 
 #ifndef USE_SSE2
 #define	USE_SSE2

@@ -16,14 +16,14 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "SetClipCommand.h"
 
 #include "LoadCommands.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
 
 const ComponentInterfaceSymbol SetClipCommand::Symbol
 { XO("Set Clip") };

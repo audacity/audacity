@@ -23,7 +23,7 @@ in a background thread.
 #ifndef __AUDACITY_ODTASK__
 #define __AUDACITY_ODTASK__
 
-#include "../BlockFile.h"
+#include "BlockFile.h"
 
 #include <vector>
 #include <wx/event.h> // to declare custom event type

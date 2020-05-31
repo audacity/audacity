@@ -13,16 +13,16 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "StereoToMono.h"
 #include "LoadEffects.h"
 
 #include <wx/intl.h>
 
-#include "../Mix.h"
-#include "../Project.h"
-#include "../TimeTrack.h"
-#include "../WaveTrack.h"
+#include "Mix.h"
+#include "Project.h"
+#include "TimeTrack.h"
+#include "WaveTrack.h"
 
 const ComponentInterfaceSymbol EffectStereoToMono::Symbol
 { XO("Stereo To Mono") };

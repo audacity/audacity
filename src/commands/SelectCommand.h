@@ -22,7 +22,7 @@
 #include "CommandType.h"
 #include "Command.h"
 
-//#include "../commands/AudacityCommand.h"
+//#include "commands/AudacityCommand.h"
 
 class SelectTimeCommand : public AudacityCommand
 {

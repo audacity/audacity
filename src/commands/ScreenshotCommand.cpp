@@ -17,13 +17,13 @@ small calculations of rectangles.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ScreenshotCommand.h"
 
 #include <mutex>
 
 #include "LoadCommands.h"
-#include "../Project.h"
+#include "Project.h"
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
 #include <wx/dcmemory.h>
@@ -31,16 +31,16 @@ small calculations of rectangles.
 #include <wx/bitmap.h>
 #include <wx/valgen.h>
 
-#include "../AdornedRulerPanel.h"
-#include "../BatchCommands.h"
-#include "../TrackPanel.h"
-#include "../effects/Effect.h"
-#include "../toolbars/ToolManager.h"
-#include "../Prefs.h"
-#include "../ProjectWindow.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../Track.h"
+#include "AdornedRulerPanel.h"
+#include "BatchCommands.h"
+#include "TrackPanel.h"
+#include "effects/Effect.h"
+#include "toolbars/ToolManager.h"
+#include "Prefs.h"
+#include "ProjectWindow.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "Track.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
 

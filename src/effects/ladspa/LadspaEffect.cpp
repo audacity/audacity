@@ -22,7 +22,7 @@ effects from this one class.
 *//*******************************************************************/
 
 
-#include "../../Audacity.h"
+#include "Audacity.h"
 #include "LadspaEffect.h"       // This class's header file
 
 #include <float.h>
@@ -54,14 +54,14 @@ effects from this one class.
 #include <wx/scrolwin.h>
 #include <wx/version.h>
 
-#include "../../FileNames.h"
-#include "../../ShuttleGui.h"
-#include "../../widgets/NumericTextCtrl.h"
-#include "../../widgets/valnum.h"
-#include "../../widgets/wxPanelWrapper.h"
+#include "FileNames.h"
+#include "ShuttleGui.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/valnum.h"
+#include "widgets/wxPanelWrapper.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../../widgets/WindowAccessible.h"
+#include "widgets/WindowAccessible.h"
 #endif
 
 // ============================================================================

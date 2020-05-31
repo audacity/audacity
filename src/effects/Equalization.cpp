@@ -52,11 +52,11 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Equalization.h"
 #include "LoadEffects.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <math.h>
 #include <vector>
@@ -88,32 +88,32 @@
 #include <wx/tooltip.h>
 #include <wx/utils.h>
 
-#include "../AColor.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../PlatformCompatibility.h"
-#include "../FileNames.h"
-#include "../Envelope.h"
-#include "../EnvelopeEditor.h"
-#include "../widgets/ErrorDialog.h"
-#include "../FFT.h"
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../Theme.h"
-#include "../TrackArtist.h"
-#include "../WaveClip.h"
-#include "../ViewInfo.h"
-#include "../WaveTrack.h"
-#include "../widgets/Ruler.h"
-#include "../xml/XMLFileReader.h"
-#include "../AllThemeResources.h"
-#include "../float_cast.h"
+#include "AColor.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "PlatformCompatibility.h"
+#include "FileNames.h"
+#include "Envelope.h"
+#include "EnvelopeEditor.h"
+#include "widgets/ErrorDialog.h"
+#include "FFT.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "Theme.h"
+#include "TrackArtist.h"
+#include "WaveClip.h"
+#include "ViewInfo.h"
+#include "WaveTrack.h"
+#include "widgets/Ruler.h"
+#include "xml/XMLFileReader.h"
+#include "AllThemeResources.h"
+#include "float_cast.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "widgets/WindowAccessible.h"
 #endif
 
-#include "../widgets/FileDialog/FileDialog.h"
+#include "widgets/FileDialog/FileDialog.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "Equalization48x.h"
@@ -3102,7 +3102,7 @@ void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
    Refresh( false );
 }
 
-#include "../TrackPanelDrawingContext.h"
+#include "TrackPanelDrawingContext.h"
 void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 {
    wxPaintDC dc(this);

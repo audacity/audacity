@@ -75,9 +75,9 @@ CommandManager.  It holds the callback for one command.
 
 *//******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include "CommandManager.h"
 
@@ -93,11 +93,11 @@ CommandManager.  It holds the callback for one command.
 #include <wx/menu.h>
 #include <wx/tokenzr.h>
 
-#include "../Menus.h"
+#include "Menus.h"
 
-#include "../Project.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/HelpSystem.h"
+#include "Project.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/HelpSystem.h"
 
 
 // On wxGTK, there may be many many many plugins, but the menus don't automatically
@@ -1597,7 +1597,7 @@ void CommandManager::RemoveDuplicateShortcuts()
    }
 }
 
-#include "../KeyboardCapture.h"
+#include "KeyboardCapture.h"
 
 static struct InstallHandlers
 {
