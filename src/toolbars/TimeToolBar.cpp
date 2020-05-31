@@ -28,6 +28,7 @@
 #include "ToolManager.h"
 
 #include "../AudioIO.h"
+#include "../Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectSettings.h"
 #include "../ViewInfo.h"
