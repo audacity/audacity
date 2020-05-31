@@ -45,11 +45,11 @@ but little else.
 #ifndef __AUDACITY_IMPORTER__
 #define __AUDACITY_IMPORTER__
 
-#include "../Audacity.h"
+#include "Audacity.h"
 
 #include "audacity/Types.h"
-#include "../Internat.h"
-#include "../MemoryX.h"
+#include "Internat.h"
+#include "MemoryX.h"
 
 class AudacityProject;
 class ProgressDialog;

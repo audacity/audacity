@@ -20,7 +20,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Repeat.h"
 
 
@@ -29,12 +29,12 @@
 #include <wx/intl.h>
 #include <wx/stattext.h>
 
-#include "../LabelTrack.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/valnum.h"
+#include "LabelTrack.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/valnum.h"
 
 #include "LoadEffects.h"
 

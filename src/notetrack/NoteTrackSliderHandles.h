@@ -11,11 +11,11 @@
 #ifndef __AUDACITY_NOTE_TRACK_SLIDER_HANDLES__
 #define __AUDACITY_NOTE_TRACK_SLIDER_HANDLES__
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
-#include "../track/SliderHandle.h"
+#include "track/SliderHandle.h"
 
 class NoteTrack;
 class wxMouseState;

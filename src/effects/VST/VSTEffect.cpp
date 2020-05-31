@@ -24,14 +24,14 @@
 // WARNING:  This is NOT 64-bit safe
 // *******************************************************************
 
-#include "../../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "VSTEffect.h"
 
-#include "../../widgets/ProgressDialog.h"
+#include "widgets/ProgressDialog.h"
 
 #if 0
 #if defined(BUILDING_AUDACITY)
-#include "../../PlatformCompatibility.h"
+#include "PlatformCompatibility.h"
 
 // Make the main function private
 #else
@@ -81,17 +81,17 @@
 // TODO:  Unfortunately we have some dependencies on Audacity provided 
 //        dialogs, widgets and other stuff.  This will need to be cleaned up.
 
-#include "../../FileNames.h"
-#include "../../PlatformCompatibility.h"
-#include "../../ShuttleGui.h"
-#include "../../effects/Effect.h"
-#include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
-#include "../../widgets/NumericTextCtrl.h"
-#include "../../xml/XMLFileReader.h"
+#include "FileNames.h"
+#include "PlatformCompatibility.h"
+#include "ShuttleGui.h"
+#include "effects/Effect.h"
+#include "widgets/valnum.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/NumericTextCtrl.h"
+#include "xml/XMLFileReader.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../../widgets/WindowAccessible.h"
+#include "widgets/WindowAccessible.h"
 #endif
 
 #include "audacity/ConfigInterface.h"

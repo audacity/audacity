@@ -16,7 +16,7 @@
 #ifndef __COMMANDBUILDER__
 #define __COMMANDBUILDER__
 
-#include "../MemoryX.h"
+#include "MemoryX.h"
 
 class AudacityProject;
 class ResponseTarget;

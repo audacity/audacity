@@ -24,10 +24,10 @@ effects from this one class.
 
 *//*******************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "Nyquist.h"
 
-#include "../../Experimental.h"
+#include "Experimental.h"
 
 #include <algorithm>
 #include <cmath>
@@ -53,32 +53,32 @@ effects from this one class.
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 
-#include "../../effects/EffectManager.h"
-#include "../../DirManager.h"
-#include "../../FileNames.h"
-#include "../../LabelTrack.h"
-#include "../../NoteTrack.h"
-#include "../../TimeTrack.h"
-#include "../../prefs/SpectrogramSettings.h"
-#include "../../Project.h"
-#include "../../ProjectSettings.h"
-#include "../../ShuttleGetDefinition.h"
-#include "../../ShuttleGui.h"
-#include "../../ViewInfo.h"
-#include "../../WaveClip.h"
-#include "../../WaveTrack.h"
-#include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
-#include "../../Prefs.h"
-#include "../../wxFileNameWrapper.h"
-#include "../../prefs/GUIPrefs.h"
-#include "../../prefs/WaveformSettings.h"
-#include "../../wavetrack/WaveTrackView.h"
-#include "../../wavetrack/WaveTrackViewConstants.h"
-#include "../../widgets/NumericTextCtrl.h"
-#include "../../widgets/ProgressDialog.h"
+#include "effects/EffectManager.h"
+#include "DirManager.h"
+#include "FileNames.h"
+#include "LabelTrack.h"
+#include "NoteTrack.h"
+#include "TimeTrack.h"
+#include "prefs/SpectrogramSettings.h"
+#include "Project.h"
+#include "ProjectSettings.h"
+#include "ShuttleGetDefinition.h"
+#include "ShuttleGui.h"
+#include "ViewInfo.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "widgets/valnum.h"
+#include "widgets/AudacityMessageBox.h"
+#include "Prefs.h"
+#include "wxFileNameWrapper.h"
+#include "prefs/GUIPrefs.h"
+#include "prefs/WaveformSettings.h"
+#include "wavetrack/WaveTrackView.h"
+#include "wavetrack/WaveTrackViewConstants.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/ProgressDialog.h"
 
-#include "../../widgets/FileDialog/FileDialog.h"
+#include "widgets/FileDialog/FileDialog.h"
 
 #ifndef nyx_returns_start_and_end_time
 #error You need to update lib-src/libnyquist
@@ -3439,7 +3439,7 @@ void * nyq_reformat_aud_do_response(const wxString & Str) {
    return (void *)dst;
 }
 
-#include "../../commands/ScriptCommandRelay.h"
+#include "commands/ScriptCommandRelay.h"
 
 
 /* xlc_aud_do -- interface to C routine aud_do */

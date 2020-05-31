@@ -15,10 +15,10 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Effect.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <algorithm>
 
@@ -26,24 +26,24 @@
 #include <wx/sizer.h>
 #include <wx/tokenzr.h>
 
-#include "../AudioIO.h"
-#include "../LabelTrack.h"
-#include "../Mix.h"
-#include "../PluginManager.h"
-#include "../ProjectAudioManager.h"
-#include "../ProjectSettings.h"
-#include "../ShuttleGui.h"
-#include "../Shuttle.h"
-#include "../ViewInfo.h"
-#include "../WaveTrack.h"
-#include "../wxFileNameWrapper.h"
-#include "../widgets/ProgressDialog.h"
-#include "../ondemand/ODManager.h"
-#include "../wavetrack/WaveTrackView.h"
-#include "../wavetrack/WaveTrackViewConstants.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
+#include "AudioIO.h"
+#include "LabelTrack.h"
+#include "Mix.h"
+#include "PluginManager.h"
+#include "ProjectAudioManager.h"
+#include "ProjectSettings.h"
+#include "ShuttleGui.h"
+#include "Shuttle.h"
+#include "ViewInfo.h"
+#include "WaveTrack.h"
+#include "wxFileNameWrapper.h"
+#include "widgets/ProgressDialog.h"
+#include "ondemand/ODManager.h"
+#include "wavetrack/WaveTrackView.h"
+#include "wavetrack/WaveTrackViewConstants.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/ErrorDialog.h"
 
 #include <unordered_map>
 

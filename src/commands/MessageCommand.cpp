@@ -13,13 +13,13 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "MessageCommand.h"
 
 #include "LoadCommands.h"
 #include "CommandContext.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
 
 const ComponentInterfaceSymbol MessageCommand::Symbol
 { XO("Message") };

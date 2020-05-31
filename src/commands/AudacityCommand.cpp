@@ -19,7 +19,7 @@ ShuttleGui.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "AudacityCommand.h"
 
 #include "CommandContext.h"
@@ -37,11 +37,11 @@ ShuttleGui.
 
 #include "audacity/ConfigInterface.h"
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/ProgressDialog.h"
-#include "../widgets/HelpSystem.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/ProgressDialog.h"
+#include "widgets/HelpSystem.h"
+#include "widgets/AudacityMessageBox.h"
 
 #include <unordered_map>
 

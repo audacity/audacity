@@ -24,7 +24,7 @@ tasks associated with a WaveTrack.
 
 #include <vector>
 #include "ODTaskThread.h"
-#include "../Internat.h" // for TranslatableString
+#include "Internat.h" // for TranslatableString
 class Track;
 class WaveTrack;
 class ODTask;

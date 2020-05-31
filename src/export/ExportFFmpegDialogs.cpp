@@ -41,10 +41,10 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
+#include "Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
 #include "ExportFFmpegDialogs.h"
 
-#include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
+#include "FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -58,13 +58,13 @@
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 
-#include "../widgets/FileDialog/FileDialog.h"
+#include "widgets/FileDialog/FileDialog.h"
 
-#include "../FileFormats.h"
-#include "../Mix.h"
-#include "../Tags.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/HelpSystem.h"
+#include "FileFormats.h"
+#include "Mix.h"
+#include "Tags.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/HelpSystem.h"
 
 #include "Export.h"
 

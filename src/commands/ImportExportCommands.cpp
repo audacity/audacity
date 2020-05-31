@@ -14,16 +14,16 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ImportExportCommands.h"
 
 #include "LoadCommands.h"
-#include "../ProjectFileManager.h"
-#include "../ViewInfo.h"
-#include "../export/Export.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../wxFileNameWrapper.h"
+#include "ProjectFileManager.h"
+#include "ViewInfo.h"
+#include "export/Export.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "wxFileNameWrapper.h"
 #include "CommandContext.h"
 
 const ComponentInterfaceSymbol ImportCommand::Symbol

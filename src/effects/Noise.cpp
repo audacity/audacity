@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Noise.h"
 #include "LoadEffects.h"
 
@@ -24,11 +24,11 @@
 #include <wx/textctrl.h>
 #include <wx/valgen.h>
 
-#include "../Prefs.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/valnum.h"
-#include "../widgets/NumericTextCtrl.h"
+#include "Prefs.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/valnum.h"
+#include "widgets/NumericTextCtrl.h"
 
 enum kTypes
 {

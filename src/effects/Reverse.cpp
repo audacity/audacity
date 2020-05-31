@@ -14,7 +14,7 @@
 *//********************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Reverse.h"
 #include "LoadEffects.h"
 
@@ -22,9 +22,9 @@
 
 #include <wx/intl.h>
 
-#include "../LabelTrack.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "LabelTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 
 //
 // EffectReverse

@@ -13,11 +13,11 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "DtmfGen.h"
 #include "LoadEffects.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <wx/intl.h>
 #include <wx/slider.h>
@@ -25,11 +25,11 @@
 #include <wx/valtext.h>
 #include <wx/stattext.h>
 
-#include "../Prefs.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/valnum.h"
+#include "Prefs.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/valnum.h"
 
 
 enum

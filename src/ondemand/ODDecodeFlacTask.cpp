@@ -7,10 +7,10 @@
  *
  */
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "ODDecodeFlacTask.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include <wx/string.h>
 #include <wx/utils.h>
 #include <wx/file.h>
@@ -23,7 +23,7 @@ extern "C" {
 }
 #endif
 
-#include "../Tags.h"
+#include "Tags.h"
 
 #define FLAC_HEADER "fLaC"
 

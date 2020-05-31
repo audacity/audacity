@@ -11,15 +11,15 @@ effect that uses SBSMS to do its processing (TimeScale)
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #if USE_SBSMS
 #include "SBSMSEffect.h"
 
 #include <math.h>
 
-#include "../LabelTrack.h"
-#include "../WaveTrack.h"
+#include "LabelTrack.h"
+#include "WaveTrack.h"
 #include "TimeWarper.h"
 
 enum {

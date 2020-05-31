@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_EFFECTUI_H__
 #define __AUDACITY_EFFECTUI_H__
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <wx/bitmap.h> // member variables
 
@@ -105,9 +105,9 @@ private:
 #endif
 
 #include "audacity/EffectInterface.h"
-#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "widgets/wxPanelWrapper.h" // to inherit
 
-#include "../SelectedRegion.h"
+#include "SelectedRegion.h"
 
 class AudacityCommand;
 class AudacityProject;

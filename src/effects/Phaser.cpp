@@ -19,20 +19,20 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Phaser.h"
 #include "LoadEffects.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <math.h>
 
 #include <wx/intl.h>
 #include <wx/slider.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/valnum.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/valnum.h"
 
 enum
 {

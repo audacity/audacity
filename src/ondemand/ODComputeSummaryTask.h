@@ -21,7 +21,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 #include <vector>
 #include "ODTask.h"
-#include "../Internat.h"
+#include "Internat.h"
 class ODPCMAliasBlockFile;
 class WaveTrack;
 
