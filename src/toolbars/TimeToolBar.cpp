@@ -23,12 +23,13 @@
 #include <wx/sizer.h>
 #endif
 
+#include "SelectionBarListener.h"
 #include "TimeToolBar.h"
 #include "ToolManager.h"
-#include "SelectionBarListener.h"
 
 #include "../AudioIO.h"
 #include "../ProjectAudioIO.h"
+#include "../ProjectSettings.h"
 #include "../ViewInfo.h"
 
 IMPLEMENT_CLASS(TimeToolBar, ToolBar);
@@ -51,6 +52,7 @@ TimeToolBar::TimeToolBar(AudacityProject &project)
    mListener(NULL),
    mAudioTime(NULL)
 {
+   project.Bind(EVT_PROJECT_SETTINGS_CHANGE, &TimeToolBar::OnSettingsChanged, this);
 }
 
 TimeToolBar::~TimeToolBar()
@@ -70,16 +72,13 @@ const TimeToolBar &TimeToolBar::Get(const AudacityProject &project)
 
 void TimeToolBar::Populate()
 {
+   const auto &settings = ProjectSettings::Get(mProject);
+
    // Get the default sample rate
-   auto rate = gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
-                            AudioIO::GetOptimalSupportedSampleRate());
+   auto rate = settings.GetRate();
 
    // Get the default time format
-   auto format = NumericConverter::HoursMinsSecondsFormat();
-   if (mListener)
-   {
-      format = mListener->TT_GetAudioTimeFormat();
-   }
+   auto format = settings.GetAudioTimeFormat();
 
    // Create the read-only time control
    mAudioTime = safenew NumericTextCtrl(this, AudioPositionID, NumericConverter::TIME, format, 0.0, rate);
@@ -259,6 +258,18 @@ void TimeToolBar::SetResizingLimits()
    // And finally set them both
    SetMinSize(minSize);
    SetMaxSize(maxSize);
+}
+
+// Called when the project settings change
+void TimeToolBar::OnSettingsChanged(wxCommandEvent &evt)
+{
+   evt.Skip(false);
+
+   if (evt.GetInt() == ProjectSettings::ChangedProjectRate && mAudioTime)
+   {
+      const auto &settings = ProjectSettings::Get(mProject);
+      mAudioTime->SetSampleRate(settings.GetRate());
+   }
 }
 
 // Called when the format drop downs is changed.
