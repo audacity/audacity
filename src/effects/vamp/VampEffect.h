@@ -17,7 +17,7 @@
 
 #include <vamp-hostsdk/PluginLoader.h>
 
-#include "../Effect.h"
+#include "../../effects/Effect.h"
 
 class wxStaticText;
 class wxSlider;
