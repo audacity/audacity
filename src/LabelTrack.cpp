@@ -846,6 +846,24 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
    return true;
 }
 
+void LabelTrack::SyncLockAdjust(double oldT1, double newT1)
+{
+   if (newT1 > oldT1) {
+      // Insert space within the track
+
+      if (oldT1 > GetEndTime())
+         return;
+
+      //Clear(oldT1, newT1);
+      ShiftLabelsOnInsert(newT1 - oldT1, oldT1);
+   }
+   else if (newT1 < oldT1) {
+      // Remove from the track
+      Clear(newT1, oldT1);
+   }
+}
+
+
 void LabelTrack::Silence(double t0, double t1)
 {
    int len = mLabels.size();
