@@ -736,6 +736,7 @@ void MeterPanel::OnSize(wxSizeEvent & WXUNUSED(event))
    GetClientSize(&mWidth, &mHeight);
 
    mLayoutValid = false;
+   Refresh();
 }
 
 bool MeterPanel::InIcon(wxMouseEvent *pEvent) const
