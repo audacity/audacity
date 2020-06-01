@@ -159,6 +159,7 @@ void SpectralSelectionBar::Populate()
    // so that name can be set on a standard control
    mChoice->SetAccessible(safenew WindowAccessible(mChoice));
 #endif
+   mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, toolbarSingle));
 
    mainSizer->Add(mChoice, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 6);
 

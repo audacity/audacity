@@ -320,15 +320,9 @@ void SelectionBar::Populate()
    }
 
    // Make sure they are fully expanded to the longest item
-#if defined(__WXGTK3__)
    mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, toolbarSingle));
    mRateBox->SetMinSize(wxSize(mRateBox->GetBestSize().x, toolbarSingle));
    mSnapTo->SetMinSize(wxSize(mSnapTo->GetBestSize().x, toolbarSingle));
-#else
-   mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, wxDefaultCoord));
-   mRateBox->SetMinSize(wxSize(mRateBox->GetBestSize().x, wxDefaultCoord));
-   mSnapTo->SetMinSize(wxSize(mSnapTo->GetBestSize().x, wxDefaultCoord));
-#endif
 
    mChoice->MoveBeforeInTabOrder( mStartTime );
    // This shows/hides controls.
