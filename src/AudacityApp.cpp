@@ -1155,6 +1155,9 @@ bool AudacityApp::OnInit()
       FileNames::AddMultiPathsToPathList(pathVar, audacityPathList);
    FileNames::AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
 
+   wxString progPath = wxPathOnly(argv[0]);
+   FileNames::AddUniquePathToPathList(progPath, audacityPathList);
+
 #ifdef AUDACITY_NAME
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
       home, wxT(AUDACITY_NAME)),
