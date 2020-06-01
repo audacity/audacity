@@ -1180,6 +1180,10 @@ bool AudacityApp::OnInit()
       audacityPathList);
 #endif //AUDACITY_NAME
 
+   FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/locale"),
+      progPath),
+      audacityPathList);
+
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/locale"),
       wxT(INSTALL_PREFIX)),
       audacityPathList);
