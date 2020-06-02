@@ -304,37 +304,6 @@ namespace HelpActions {
 
 struct Handler : CommandHandlerObject {
 
-void OnResetConfig(const CommandContext &context)
-{
-   auto &project = context.project;
-   wxString dir = gPrefs->Read("/Directories/TempDir");
-   gPrefs->DeleteAll();
-   // This stops ReloadPreferences warning about directory change
-   // on next restart.
-   gPrefs->Write("/Directories/TempDir", dir);
-   gPrefs->Write("/GUI/SyncLockTracks", 0);
-   gPrefs->Write("/SnapTo", 0 );
-   ProjectSelectionManager::Get( project ).AS_SetSnapTo( 0 );
-   // There are many more things we could reset here.
-   // Beeds discussion as to which make sense to.
-   // Maybe in future versions?
-   // - Reset Effects
-   // - Reset Recording and Playback volumes
-   // - Reset Selection formats (and for spectral too)
-   // - Reset Play-at-speed speed to x1
-   // - Reset Selected tool to cursor.
-   // - Stop playback/recording and unapply pause.
-   // - Set Zoom sensibly.
-   //ProjectSelectionManager::Get(project).AS_SetRate(44100.0);
-   gPrefs->Write("/AudioIO/SoundActivatedRecord", 0);
-   gPrefs->Flush();
-   DoReloadPreferences(project);
-   ToolManager::OnResetToolBars(context);
-   gPrefs->Flush();
-
-}
-
-
 void OnQuickFix(const CommandContext &context)
 {
    auto &project = context.project;
@@ -535,17 +504,14 @@ BaseItemSharedPtr HelpMenu()
             AlwaysEnabledFlag ),
          // DA: Emphasise it is the Audacity Manual (No separate DA manual).
          Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual),
-            AlwaysEnabledFlag ),
+            AlwaysEnabledFlag )
 
    #else
          Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
             AlwaysEnabledFlag ),
          Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
-            AlwaysEnabledFlag ),
+            AlwaysEnabledFlag )
    #endif
-         Command( wxT("ConfigReset"), XXO("&Reset Configuration"),
-            FN(OnResetConfig),
-            AudioIONotBusyFlag() )
       ),
 
    #ifdef __WXMAC__
