@@ -161,12 +161,11 @@ LVAL snd_make_read(
         /* write the code so it will only compile if one and only one 
            ENDIAN setting is defined */
 #ifdef XL_LITTLE_ENDIAN
-        long format = SF_ENDIAN_BIG;
+        susp->sf_info.format |= SF_ENDIAN_BIG;
 #endif
 #ifdef XL_BIG_ENDIAN
-        long format = SF_ENDIAN_LITTLE;
+        susp->sf_info.format |= SF_ENDIAN_LITTLE;
 #endif
-        susp->sf_info.format |= format;
     }
 
     susp->sndfile = NULL;
