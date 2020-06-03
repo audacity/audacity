@@ -375,10 +375,11 @@ struct Handler : CommandHandlerObject {
 void OnResetConfig(const CommandContext &context)
 {
    auto &project = context.project;
-   wxString dir = gPrefs->Read("/Directories/TempDir");
+   //wxString dir = gPrefs->Read("/Directories/TempDir");
    gPrefs->DeleteAll();
-   // This stops ReloadPreferences warning about directory change
-   // on next restart.
+
+   // Directory will be reset on next restart.
+   wxString dir = FileNames::DefaultTempDir();
    gPrefs->Write("/Directories/TempDir", dir);
    gPrefs->Write("/GUI/SyncLockTracks", 0);
    gPrefs->Write("/SnapTo", 0 );
@@ -390,7 +391,6 @@ void OnResetConfig(const CommandContext &context)
    // - Reset Recording and Playback volumes
    // - Reset Selection formats (and for spectral too)
    // - Reset Play-at-speed speed to x1
-   // - Reset Selected tool to cursor.
    // - Stop playback/recording and unapply pause.
    // - Set Zoom sensibly.
    //ProjectSelectionManager::Get(project).AS_SetRate(44100.0);
