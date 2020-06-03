@@ -113,6 +113,7 @@ enum
 
 static const wxChar *KEY_Version = wxT("Version");
 static const wxChar *KEY_Command = wxT("Command");
+static const wxChar *KEY_Parameters = wxT("Parameters");
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -323,6 +324,7 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
    {
       S.Define( mInputCmd, KEY_Command, "" );
       S.Define( mVersion, KEY_Version, 3 );
+      S.Define( mParameters, KEY_Parameters, "" );
       return true;
    }
 
@@ -366,18 +368,11 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
 
 bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
 {
-   if (IsBatchProcessing())
-   {
-      parms.Write(KEY_Command, mInputCmd);
-      parms.Write(KEY_Version, mVersion);
-
-      return true;
-   }
-
    if (mIsPrompt)
    {
       parms.Write(KEY_Command, mInputCmd);
       parms.Write(KEY_Version, mVersion);
+      parms.Write(KEY_Parameters, mParameters);
 
       return true;
    }
@@ -423,125 +418,135 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
 
 bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
 {
-   if (IsBatchProcessing())
-   {
-      parms.Read(KEY_Command, &mInputCmd, wxEmptyString);
-      parms.Read(KEY_Version, &mVersion, mVersion);
-
-      if (!mInputCmd.empty()) {
-         ParseCommand(mInputCmd);
-      }
-      mPromptType = mType;
-      mIsTool = (GetType() == EffectTypeTool);
-      mExternal = true;
-
-      return true;
-   }
-
    if (mIsPrompt)
    {
       parms.Read(KEY_Command, &mInputCmd, wxEmptyString);
       parms.Read(KEY_Version, &mVersion, mVersion);
+      parms.Read(KEY_Parameters, &mParameters, wxEmptyString);
 
-      if (!mInputCmd.empty()) {
+      if (!mInputCmd.empty())
+      {
          ParseCommand(mInputCmd);
       }
-      mType = EffectTypeTool;
+
+      if (!mParameters.empty())
+      {
+         parms.SetParameters(mParameters);
+      }
+
+      if (!IsBatchProcessing())
+      {
+         mType = EffectTypeTool;
+      }
+
       mPromptType = mType;
-      mIsTool = true;
+      mIsTool = (mPromptType == EffectTypeTool);
       mExternal = true;
 
-      return true;
+      if (!IsBatchProcessing())
+      {
+         return true;
+      }
    }
 
+   // Constants to document what the true/false values mean.
+   const auto kTestOnly = true;
+   const auto kTestAndSet = false;
+
+   // badCount will encompass both actual bad values and missing values.
+   // We probably never actually have bad values when using the dialogs
+   // since the dialog validation will catch them.
+   int badCount;
+   // When batch processing, we just ignore missing/bad parameters.
+   // We'll end up using defaults in those cases.
+   if (!IsBatchProcessing()) {
+      badCount = SetLispVarsFromParameters(parms, kTestOnly);
+      if (badCount > 0)
+         return false;
+   }
+
+   badCount = SetLispVarsFromParameters(parms, kTestAndSet);
+   // We never do anything with badCount here.
+   // It might be non zero, for missing parameters, and we allow that,
+   // and don't distinguish that from an out-of-range value.
+   return true;
+}
+
+// Sets the lisp variables form the parameters.
+// returns the number of bad settings.
+// We can run this just testing for bad values, or actually setting when
+// the values are good.
+int NyquistEffect::SetLispVarsFromParameters(CommandParameters & parms, bool bTestOnly)
+{
+   int badCount = 0;
    // First pass verifies values
    for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
    {
       NyqControl & ctrl = mControls[c];
       bool good = false;
 
+      // This GetCtrlValue code is preserved from former code,
+      // but probably is pointless.  The value d isn't used later,
+      // and GetCtrlValue does not appear to have important needed
+      // side effects.
+      if (!bTestOnly) {
+         double d = ctrl.val;
+         if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
+         {
+            d = GetCtrlValue(ctrl.valStr);
+         }
+      }
+
       if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
-          ctrl.type == NYQ_CTRL_TIME)
+         ctrl.type == NYQ_CTRL_TIME)
       {
          double val;
          good = parms.Read(ctrl.var, &val) &&
-                val >= ctrl.low &&
-                val <= ctrl.high;
+            val >= ctrl.low &&
+            val <= ctrl.high;
+         if (good && !bTestOnly)
+            ctrl.val = val;
       }
       else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT)
       {
          int val;
          good = parms.Read(ctrl.var, &val) &&
-                val >= ctrl.low &&
-                val <= ctrl.high;
+            val >= ctrl.low &&
+            val <= ctrl.high;
+         if (good && !bTestOnly)
+            ctrl.val = (double)val;
       }
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          int val;
          // untranslated
          good = parms.ReadEnum(ctrl.var, &val,
-                               ctrl.choices.data(), ctrl.choices.size()) &&
-                val != wxNOT_FOUND;
+            ctrl.choices.data(), ctrl.choices.size()) &&
+            val != wxNOT_FOUND;
+         if (good && !bTestOnly)
+            ctrl.val = (double)val;
       }
       else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE)
       {
          wxString val;
          good = parms.Read(ctrl.var, &val);
+         if (good && !bTestOnly)
+            ctrl.valStr = val;
       }
+/*
       else if (ctrl.type == NYQ_CTRL_TEXT)
       {
          // This "control" is just fixed text (nothing to save or restore),
-         // so control is always "good".
+         // Does not count for good/bad counting.
          good = true;
       }
-
-      if (!good)
-      {
-         return false;
-      }
+*/
+      badCount += !good ? 1 : 0;
    }
-
-   // Second pass sets the variables
-   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
-   {
-      NyqControl & ctrl = mControls[c];
-
-      double d = ctrl.val;
-      if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
-      {
-         d = GetCtrlValue(ctrl.valStr);
-      }
-
-      if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
-          ctrl.type == NYQ_CTRL_TIME)
-      {
-         parms.Read(ctrl.var, &ctrl.val);
-      }
-      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT)
-      {
-         int val;
-         parms.Read(ctrl.var, &val);
-         ctrl.val = (double) val;
-      }
-      else if (ctrl.type == NYQ_CTRL_CHOICE)
-      {
-         int val {0};
-         // untranslated
-         parms.ReadEnum(ctrl.var, &val,
-                        ctrl.choices.data(), ctrl.choices.size());
-         ctrl.val = (double) val;
-      }
-      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE)
-      {
-         parms.Read(ctrl.var, &ctrl.valStr);
-      }
-   }
-
-   return true;
+   return badCount;
 }
 
 // Effect Implementation
-
 bool NyquistEffect::Init()
 {
    // When Nyquist Prompt spawns an effect GUI, Init() is called for Nyquist Prompt,
@@ -622,7 +627,7 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 {
    // If we're a prompt and we have controls, then we've already processed
    // the audio, so skip further processing.
-   return (mIsPrompt && mControls.size() > 0);
+   return (mIsPrompt && mControls.size() > 0 && !IsBatchProcessing());
 }
 
 static void RegisterFunctions();
@@ -1018,12 +1023,34 @@ bool NyquistEffect::ShowInterface(
 
    NyquistEffect effect(NYQUIST_WORKER_ID);
 
-   effect.SetCommand(mInputCmd);
-   effect.mDebug = (mUIResultID == eDebugID);
-   bool result = Delegate(effect, parent, factory);
-   mT0 = effect.mT0;
-   mT1 = effect.mT1;
-   return result;
+   if (IsBatchProcessing())
+   {
+      effect.SetBatchProcessing(true);
+      effect.SetCommand(mInputCmd);
+
+      CommandParameters cp;
+      cp.SetParameters(mParameters);
+      effect.SetAutomationParameters(cp);
+
+      // Show the normal (prompt or effect) interface
+      res = effect.ShowInterface(parent, factory, forceModal);
+      if (res)
+      {
+         CommandParameters cp;
+         effect.GetAutomationParameters(cp);
+         cp.GetParameters(mParameters);
+      }
+   }
+   else
+   {
+      effect.SetCommand(mInputCmd);
+      effect.mDebug = (mUIResultID == eDebugID);
+      res = Delegate(effect, parent, factory);
+      mT0 = effect.mT0;
+      mT1 = effect.mT1;
+   }
+
+   return res;
 }
 
 void NyquistEffect::PopulateOrExchange(ShuttleGui & S)

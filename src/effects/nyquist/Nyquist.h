@@ -95,6 +95,7 @@ public:
    bool DefineParams( ShuttleParams & S ) override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
+   int SetLispVarsFromParameters(CommandParameters & parms, bool bTestOnly);
 
    // Effect implementation
 
@@ -221,6 +222,7 @@ private:
    bool              mOK;
    TranslatableString mInitError;
    wxString          mInputCmd; // history: exactly what the user typed
+   wxString          mParameters; // The parameters of to be fed to a nested prompt
    wxString          mCmd;      // the command to be processed
    TranslatableString mName;   ///< Name of the Effect (untranslated)
    TranslatableString mPromptName; // If a prompt, we need to remember original name.
