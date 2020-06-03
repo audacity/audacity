@@ -161,7 +161,7 @@ extern long ptrtoabs();
 #endif
 
 /* Linux on Pentium */
-#if defined(__linux__) || defined(__GLIBC__)
+#if defined(__linux__) || defined(__GLIBC__) || defined(__CYGWIN__)
 #define AFMT            "%p"
 #include <inttypes.h>
 #include <endian.h>
