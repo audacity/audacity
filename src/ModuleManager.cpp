@@ -249,6 +249,9 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
       FileNames::AddUniquePathToPathList(prefix + wxT("modules"),
                                          pathList);
+      if (files.size()) {
+         break;
+      }
    }
 
    #if defined(__WXMSW__)
