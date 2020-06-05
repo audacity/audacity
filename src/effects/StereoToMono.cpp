@@ -98,7 +98,7 @@ bool EffectStereoToMono::Process()
          {
             auto start = wxMin(left->TimeToLongSamples(left->GetStartTime()),
                                right->TimeToLongSamples(right->GetStartTime()));
-            auto end = wxMin(left->TimeToLongSamples(left->GetEndTime()),
+            auto end = wxMax(left->TimeToLongSamples(left->GetEndTime()),
                                right->TimeToLongSamples(right->GetEndTime()));
 
             totalTime += (end - start);
@@ -155,10 +155,8 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    bool bResult = true;
    sampleCount processed = 0;
 
-   auto start = wxMin(left->TimeToLongSamples(left->GetStartTime()),
-                      right->TimeToLongSamples(right->GetStartTime()));
-   auto end = wxMin(left->TimeToLongSamples(left->GetEndTime()),
-                    right->TimeToLongSamples(right->GetEndTime()));
+   auto start = wxMin(left->GetStartTime(), right->GetStartTime());
+   auto end = wxMax(left->GetEndTime(), right->GetEndTime());
 
    WaveTrackConstArray tracks;
    tracks.push_back(left->SharedPointer< const WaveTrack >());
@@ -169,8 +167,8 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    Mixer mixer(tracks,
                true,                // Throw to abort mix-and-render if read fails:
                Mixer::WarpOptions(timeTrack ? timeTrack->GetEnvelope() : nullptr),
-               start.as_double(),
-               end.as_double(),
+               start,
+               end,
                1,
                idealBlockLen,
                false,               // Not interleaved
