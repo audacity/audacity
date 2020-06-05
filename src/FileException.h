@@ -25,8 +25,8 @@ public:
    , cause{ cause_ }, fileName{ fileName_ }, renameTarget{ renameTarget_ }
    {}
 
-   FileException(FileException&& that)
-      : MessageBoxException(std::move(that))
+   FileException( const FileException &that )
+      : MessageBoxException( that )
       , cause{ that.cause }
       , fileName{ that.fileName }
       , renameTarget{ that.renameTarget }
