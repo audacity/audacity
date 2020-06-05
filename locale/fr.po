@@ -5924,7 +5924,7 @@ msgstr "Importer2"
 
 #: src/commands/ImportExportCommands.cpp src/commands/OpenSaveCommands.cpp
 msgid "File Name:"
-msgstr "Nom du filtre :"
+msgstr "Nom de fichier :"
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Export2"
