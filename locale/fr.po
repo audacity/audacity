@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-04-08 19:39+0100\n"
-"PO-Revision-Date: 2020-04-09 18:02+0100\n"
+"PO-Revision-Date: 2020-06-05 21:51+0200\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -27,6 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.3.1\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -1621,7 +1622,7 @@ msgstr "Menu de commandes (avec paramètres)"
 #: src/BatchCommands.cpp src/FileNames.cpp
 #, c-format
 msgid "(%s)"
-msgstr ""
+msgstr "(%s)"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (No Parameters)"
@@ -1752,7 +1753,7 @@ msgstr "Ét&endre"
 
 #: src/BatchProcessDialog.cpp
 msgid "No macro selected"
-msgstr "Aucune macro sélectionnée"
+msgstr "Pas de macro sélectionnée"
 
 #: src/BatchProcessDialog.cpp
 #, c-format
@@ -2474,32 +2475,32 @@ msgstr "Rectangulaire"
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Bartlett"
-msgstr ""
+msgstr "Bartlett"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Hamming"
-msgstr ""
+msgstr "Hamming"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Hann"
-msgstr ""
+msgstr "Hann"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Blackman"
-msgstr ""
+msgstr "Blackman"
 
 #. i18n-hint two proper names
 #: src/FFT.cpp
 msgid "Blackman-Harris"
-msgstr ""
+msgstr "Blackman-Harris"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Welch"
-msgstr ""
+msgstr "Welch"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: src/FFT.cpp
@@ -2709,7 +2710,7 @@ msgstr "Fichiers XML"
 
 #: src/FileNames.cpp
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #. i18n-hint a type or types such as "txt" or "txt, xml" will be
 #. substituted for %s
@@ -3484,10 +3485,10 @@ msgid ""
 "Unable to load the \"%s\" module.\n"
 "\n"
 "Error: %s"
-msgstr 
-"Incapable de charger le module \"%s\".\n"
+msgstr ""
+"Impossible de charger le module \"%s\".\n"
 "\n"
-"Erreur : %s"
+"Erreur : %s"
 
 #: src/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -4654,7 +4655,7 @@ msgstr "Outil de capture d’écran"
 
 #: src/Screenshot.cpp
 msgid "Choose location to save files"
-msgstr "Choisir un emplacement pour sauvegarder les fichiers"
+msgstr "Choisissez un emplacement pour sauvegarder les fichiers"
 
 #: src/Screenshot.cpp
 msgid "Save images to:"
@@ -5745,9 +5746,9 @@ msgid ""
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
 msgstr ""
-"Les commandes suivantes ont vu leurs raccourcis supprimés, car leur raccourci "
-"par défaut est nouveau ou modifié, et est le même que celui que vous avez "
-"attribué à une autre commande."
+"Les commandes suivantes ont vu leurs raccourcis supprimés, car leur "
+"raccourci par défaut est nouveau ou modifié, et est le même que celui que "
+"vous avez attribué à une autre commande."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -5924,7 +5925,7 @@ msgstr "Importer2"
 
 #: src/commands/ImportExportCommands.cpp src/commands/OpenSaveCommands.cpp
 msgid "File Name:"
-msgstr "Nom du filtre :"
+msgstr "Nom du fichier :"
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Export2"
@@ -6489,7 +6490,7 @@ msgstr ""
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
-msgstr ""
+msgstr "db"
 
 # trebmuh to check
 #: src/effects/AutoDuck.cpp
@@ -6689,7 +6690,7 @@ msgstr "&Utilise un étirement de haute-qualité (lent)"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "33⅓"
-msgstr ""
+msgstr "331/3"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "45"
@@ -7048,7 +7049,7 @@ msgstr "&Différence :"
 # trebmuh to check (accélérateur)
 #: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUIPrefs.cpp
 msgid "&Help"
-msgstr "&Aide"
+msgstr "A&ide"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -7208,7 +7209,7 @@ msgstr "Données réunies le"
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%d %s %02d %02dh %02dm %02ds"
-msgstr ""
+msgstr "%d %s %02d %02dh %02dm %02ds"
 
 #: src/effects/Contrast.cpp
 msgid "Contrast Analysis (WCAG 2 compliance)"
@@ -7428,6 +7429,8 @@ msgid "Distortion amount"
 msgstr "Quantité de distorsion"
 
 #: src/effects/Distortion.cpp
+#, fuzzy
+#| msgid "Output level"
 msgid "Output level"
 msgstr "Niveau de sortie"
 
@@ -7531,7 +7534,7 @@ msgstr "Cycle d’activité :"
 #: src/effects/DtmfGen.cpp
 #, c-format
 msgid "%.1f %%"
-msgstr ""
+msgstr "%.1f %%"
 
 #: src/effects/DtmfGen.cpp
 msgid "Tone duration:"
@@ -7551,7 +7554,7 @@ msgstr "Durée du silence :"
 #: src/effects/DtmfGen.cpp
 #, c-format
 msgid "%0.f ms"
-msgstr ""
+msgstr "%0.f ms"
 
 #: src/effects/Echo.cpp
 msgid "Echo"
@@ -8062,7 +8065,7 @@ msgstr "%g kHz"
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%gk"
-msgstr ""
+msgstr "%gk"
 
 #: src/effects/Equalization.cpp
 msgid "&EQ Type:"
@@ -8464,7 +8467,7 @@ msgstr "(Maximum 0dB)"
 
 #: src/effects/Loudness.cpp
 msgid "RMS dB"
-msgstr ""
+msgstr "RMS dB"
 
 #: src/effects/Noise.cpp
 msgid "Pink"
@@ -8513,7 +8516,7 @@ msgstr "Hann, Hann (défaut)"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Blackman, Hann"
-msgstr ""
+msgstr "Blackman, Hann"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hamming, none"
@@ -8521,7 +8524,7 @@ msgstr "Hamming, aucun"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hamming, Hann"
-msgstr ""
+msgstr "Hamming, Hann"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hamming, Reciprocal Hamming"
@@ -8696,35 +8699,35 @@ msgstr "Taille de la fenêtre (&z) :"
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "8"
-msgstr ""
+msgstr "8"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16"
-msgstr ""
+msgstr "16"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "32"
-msgstr ""
+msgstr "32"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "64"
-msgstr ""
+msgstr "64"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "128"
-msgstr ""
+msgstr "128"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "256"
-msgstr ""
+msgstr "256"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "512"
-msgstr ""
+msgstr "512"
 
 #: src/effects/NoiseReduction.cpp
 msgid "1024"
-msgstr ""
+msgstr "1024"
 
 #: src/effects/NoiseReduction.cpp
 msgid "2048 (default)"
@@ -8732,15 +8735,15 @@ msgstr "2048 (défaut)"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "4096"
-msgstr ""
+msgstr "4096"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "8192"
-msgstr ""
+msgstr "8192"
 
 #: src/effects/NoiseReduction.cpp src/prefs/SpectrumPrefs.cpp
 msgid "16384"
-msgstr ""
+msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp
 msgid "S&teps per window:"
@@ -9747,11 +9750,11 @@ msgid ""
 "will provide that compensation, but it may not work for all Audio Unit "
 "effects."
 msgstr ""
-"Dans le cadre de leur traitement, certains effets Audio Unit doivent retarder "
-"le retour audio à Audacity. Lorsque vous ne compensez pas ce retard, vous "
-"remarquerez que de petits silences ont été insérés dans l’audio. En activant "
-"cette option, vous obtiendrez cette compensation, mais il se peut qu'elle ne "
-"fonctionne pas pour tous les effets Audio Unit."
+"Dans le cadre de leur traitement, certains effets Audio Unit doivent "
+"retarder le retour audio à Audacity. Lorsque vous ne compensez pas ce "
+"retard, vous remarquerez que de petits silences ont été insérés dans "
+"l’audio. En activant cette option, vous obtiendrez cette compensation, mais "
+"il se peut qu'elle ne fonctionne pas pour tous les effets Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -9764,11 +9767,11 @@ msgid ""
 "Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
 "to take effect."
 msgstr ""
-"Sélectionner \"Complet\" pour utiliser l’interface graphique si elle est fournie "
-"par l’Audio Unit. Sélectionnez \"Générique\" pour utiliser l’interface "
-"générique fournie par le système. Sélectionnez \"Basique\" pour utiliser "
-"l’interface de base en mode texte uniquement. Réouvrez l’effet pour que cela "
-"soit pris en compte."
+"Sélectionner \"Complet\" pour utiliser l’interface graphique si elle est "
+"fournie par l’Audio Unit. Sélectionnez \"Générique\" pour utiliser "
+"l’interface générique fournie par le système. Sélectionnez \"Basique\" pour "
+"utiliser l’interface de base en mode texte uniquement. Réouvrez l’effet pour "
+"que cela soit pris en compte."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -10006,7 +10009,7 @@ msgid "%s requires unsupported feature %s"
 msgstr "%s nécessite une fonction non-supportée %s"
 
 #: src/effects/lv2/LV2Effect.cpp
-#,  c-format
+#, c-format
 msgid "%s requires unsupported feature %s\n"
 msgstr "%s nécessite une fonction non-supportée %s\n"
 
@@ -10126,11 +10129,11 @@ msgstr ""
 msgid "Processing complete."
 msgstr "Traitement terminé."
 
-#. i18n-hint: Don't translate ';type tool’.
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool’ effects cannot return audio from Nyquist.\n"
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
 msgstr ""
-"effets de ';type tool' ne peuvent pas retourner de l’audio depuis Nyquist.\n"
+"Les effets de ';type tool' ne peuvent pas retourner d’audio depuis Nyquist.\n"
 
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
@@ -10435,8 +10438,8 @@ msgstr ""
 "restaurer l’audio originel dans le projet.\n"
 "Choisissez Aide > Diagnostiques > Vérifier les Dépendances pour voir les "
 "emplacements de tous les fichiers manquants.\n"
-"Si vous souhaitez toujours exporter, veuillez choisir un nom de répertoire ou "
-"de fichier différent."
+"Si vous souhaitez toujours exporter, veuillez choisir un nom de répertoire "
+"ou de fichier différent."
 
 #: src/export/Export.cpp
 #, c-format
@@ -10765,39 +10768,39 @@ msgstr "%.2f kbps"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportFLAC.cpp
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportFLAC.cpp
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportFLAC.cpp
 msgid "4"
-msgstr ""
+msgstr "4"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportFLAC.cpp
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportFLAC.cpp
 msgid "6"
-msgstr ""
+msgstr "6"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportFLAC.cpp
 msgid "7"
-msgstr ""
+msgstr "7"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "9"
-msgstr ""
+msgstr "9"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "10"
-msgstr ""
+msgstr "10"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "On"
@@ -10809,7 +10812,7 @@ msgstr "Contraint"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VOIP"
-msgstr ""
+msgstr "VOIP"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Audio"
@@ -10821,27 +10824,27 @@ msgstr "Délai faible"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "2.5 ms"
-msgstr ""
+msgstr "2,5 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "5 ms"
-msgstr ""
+msgstr "5 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "10 ms"
-msgstr ""
+msgstr "10 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "20 ms"
-msgstr ""
+msgstr "20 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "40 ms"
-msgstr ""
+msgstr "40 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "60 ms"
-msgstr ""
+msgstr "60 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Narrowband"
@@ -11366,6 +11369,8 @@ msgid "Incompatible format and codec"
 msgstr "Format et codec incompatible"
 
 #: src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
+#| msgid "Failed to guess format"
 msgid "Failed to guess format"
 msgstr "Impossible de reconnaître le format"
 
@@ -11426,9 +11431,10 @@ msgstr "Exportation de l’audio en FLAC"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportMP2.cpp
-#, c-format
+#, fuzzy, c-format
+#| msgid "%d kbps"
 msgid "%d kpbs"
-msgstr ""
+msgstr "%d kbps"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -11459,35 +11465,35 @@ msgstr "220-260 kbps (meilleure qualité)"
 
 #: src/export/ExportMP3.cpp
 msgid "200-250 kbps"
-msgstr ""
+msgstr "200-250 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "170-210 kbps"
-msgstr ""
+msgstr "170-210 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "155-195 kbps"
-msgstr ""
+msgstr "155-195 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "145-185 kbps"
-msgstr ""
+msgstr "145-185 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "110-150 kbps"
-msgstr ""
+msgstr "110-150 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "95-135 kbps"
-msgstr ""
+msgstr "95-135 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "80-120 kbps"
-msgstr ""
+msgstr "80-120 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "65-105 kbps"
-msgstr ""
+msgstr "65-105 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "45-85 kbps (Smaller files)"
@@ -11918,11 +11924,11 @@ msgstr "Exportation de l’audio en Ogg Vorbis"
 
 #: src/export/ExportPCM.cpp src/import/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
-msgstr ""
+msgstr "AIFF (Apple/SGI)"
 
 #: src/export/ExportPCM.cpp src/import/ImportPCM.cpp
 msgid "WAV (Microsoft)"
-msgstr ""
+msgstr "WAV (Microsoft)"
 
 #: src/export/ExportPCM.cpp
 msgid "Header:"
@@ -12380,96 +12386,96 @@ msgstr "WAV, AIFF, et autres formats non-compressés"
 
 #: src/import/ImportPCM.cpp
 msgid "AU (Sun/NeXT)"
-msgstr ""
+msgstr "AU (Sun/NeXT)"
 
 #: src/import/ImportPCM.cpp
 msgid "AVR (Audio Visual Research)"
-msgstr ""
+msgstr "AVR (Audio Visual Research)"
 
 #: src/import/ImportPCM.cpp
 msgid "CAF (Apple Core Audio File)"
-msgstr ""
+msgstr "CAF (Apple Core Audio File)"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportPCM.cpp
 msgid "FLAC (FLAC Lossless Audio Codec)"
-msgstr ""
+msgstr "FLAC (FLAC Lossless Audio Codec)"
 
 #: src/import/ImportPCM.cpp
 msgid "HTK (HMM Tool Kit)"
-msgstr ""
+msgstr "HTK (HMM Tool Kit)"
 
 #: src/import/ImportPCM.cpp
 msgid "IFF (Amiga IFF/SVX8/SV16)"
-msgstr ""
+msgstr "IFF (Amiga IFF/SVX8/SV16)"
 
 #: src/import/ImportPCM.cpp
 msgid "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
-msgstr ""
+msgstr "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
 
 #: src/import/ImportPCM.cpp
 msgid "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
-msgstr ""
+msgstr "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
 
 #: src/import/ImportPCM.cpp
 msgid "MPC (Akai MPC 2k)"
-msgstr ""
+msgstr "MPC (Akai MPC 2k)"
 
 #: src/import/ImportPCM.cpp
 msgid "OGG (OGG Container format)"
-msgstr ""
+msgstr "OGG (OGG Container format)"
 
 #: src/import/ImportPCM.cpp
 msgid "PAF (Ensoniq PARIS)"
-msgstr ""
+msgstr "PAF (Ensoniq PARIS)"
 
 #: src/import/ImportPCM.cpp
 msgid "PVF (Portable Voice Format)"
-msgstr ""
+msgstr "PVF (Portable Voice Format)"
 
 #: src/import/ImportPCM.cpp
 msgid "RAW (header-less)"
-msgstr ""
+msgstr "RAW (header-less)"
 
 #: src/import/ImportPCM.cpp
 msgid "RF64 (RIFF 64)"
-msgstr ""
+msgstr "RF64 (RIFF 64)"
 
 #: src/import/ImportPCM.cpp
 msgid "SD2 (Sound Designer II)"
-msgstr ""
+msgstr "SD2 (Sound Designer II)"
 
 #: src/import/ImportPCM.cpp
 msgid "SDS (Midi Sample Dump Standard)"
-msgstr ""
+msgstr "SDS (Midi Sample Dump Standard)"
 
 #: src/import/ImportPCM.cpp
 msgid "SF (Berkeley/IRCAM/CARL)"
-msgstr ""
+msgstr "SF (Berkeley/IRCAM/CARL)"
 
 #: src/import/ImportPCM.cpp
 msgid "VOC (Creative Labs)"
-msgstr ""
+msgstr "VOC (Creative Labs)"
 
 #: src/import/ImportPCM.cpp
 msgid "W64 (SoundFoundry WAVE 64)"
-msgstr ""
+msgstr "W64 (SoundFoundry WAVE 64)"
 
 #: src/import/ImportPCM.cpp
 msgid "WAV (NIST Sphere)"
-msgstr ""
+msgstr "WAV (NIST Sphere)"
 
 #: src/import/ImportPCM.cpp
 msgid "WAVEX (Microsoft)"
-msgstr ""
+msgstr "WAVEX (Microsoft)"
 
 #: src/import/ImportPCM.cpp
 msgid "WVE (Psion Series 3)"
-msgstr ""
+msgstr "WVE (Psion Series 3)"
 
 #: src/import/ImportPCM.cpp
 msgid "XI (FastTracker 2)"
-msgstr ""
+msgstr "XI (FastTracker 2)"
 
 #: src/import/ImportPCM.cpp
 msgid "Signed 8 bit PCM"
@@ -12501,59 +12507,59 @@ msgstr "64 bits flottant"
 
 #: src/import/ImportPCM.cpp
 msgid "U-Law"
-msgstr ""
+msgstr "U-Law"
 
 #: src/import/ImportPCM.cpp
 msgid "A-Law"
-msgstr ""
+msgstr "A-Law"
 
 #: src/import/ImportPCM.cpp
 msgid "IMA ADPCM"
-msgstr ""
+msgstr "IMA ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "Microsoft ADPCM"
-msgstr ""
+msgstr "Microsoft ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "GSM 6.10"
-msgstr ""
+msgstr "GSM 6.10"
 
 #: src/import/ImportPCM.cpp
 msgid "32kbs G721 ADPCM"
-msgstr ""
+msgstr "32kbs G721 ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "24kbs G723 ADPCM"
-msgstr ""
+msgstr "24kbs G723 ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "12 bit DWVW"
-msgstr ""
+msgstr "12 bit DWVW"
 
 #: src/import/ImportPCM.cpp
 msgid "16 bit DWVW"
-msgstr ""
+msgstr "16 bit DWVW"
 
 #: src/import/ImportPCM.cpp
 msgid "24 bit DWVW"
-msgstr ""
+msgstr "24 bit DWVW"
 
 #: src/import/ImportPCM.cpp
 msgid "VOX ADPCM"
-msgstr ""
+msgstr "VOX ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "16 bit DPCM"
-msgstr ""
+msgstr "16 bit DPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "8 bit DPCM"
-msgstr ""
+msgstr "8 bit DPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "Vorbis"
-msgstr ""
+msgstr "Vorbis"
 
 #: src/import/ImportPCM.cpp
 msgid ""
@@ -13644,7 +13650,7 @@ msgstr "Mettre en avant de la fenêtre active"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Foc&us"
-msgstr ""
+msgstr "Foc&us"
 
 # trebmuh to check
 #: src/menus/NavigationMenus.cpp
@@ -13717,7 +13723,7 @@ msgstr "Ajouter / supprimer des greffons…"
 # trebmuh to check (accélérateur)
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
-msgstr "E&ffets"
+msgstr "&Effets"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -13725,7 +13731,7 @@ msgstr "Répéter le dernier effet"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Analyze"
-msgstr "&Analyse"
+msgstr "A&nalyse"
 
 #: src/menus/PluginMenus.cpp src/toolbars/ToolsToolBar.cpp
 msgid "T&ools"
@@ -13884,7 +13890,7 @@ msgstr "Ne rien sélectionner"
 
 #: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
 msgid "&Tracks"
-msgstr "Pis&tes"
+msgstr "&Pistes"
 
 # trebmuh to check (vérifier dans un contexte graphique)
 #: src/menus/SelectMenus.cpp
@@ -14690,7 +14696,7 @@ msgstr "Veuillez sélectionner un temps compris dans un clip."
 #. play, record, pause etc.
 #: src/menus/TransportMenus.cpp
 msgid "Tra&nsport"
-msgstr "Tra&nsport"
+msgstr "&Transport"
 
 # trebmuh to check (accélérateur)
 #: src/menus/TransportMenus.cpp
@@ -15503,7 +15509,8 @@ msgstr "Mé&langer les thèmes Audacity et système"
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
-"Utiliser principalement des affichages gauche-vers-droite dans les langues RTL"
+"Utiliser principalement des affichages gauche-vers-droite dans les langues "
+"RTL"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
@@ -15672,6 +15679,8 @@ msgid ""
 "\n"
 "   *   \""
 msgstr ""
+"\n"
+"   *   \""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\"  (because the shortcut '"
@@ -15683,7 +15692,7 @@ msgstr "' est utilisé par \""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "\")\n"
-msgstr ""
+msgstr "\")\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -15723,9 +15732,9 @@ msgid ""
 "their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 "\n"
-"Les commandes suivantes ne sont pas mentionnées dans le fichier importé, mais "
-"leurs raccourcis sont supprimés en raison du conflit avec d’autres nouveaux "
-"raccourcis :\n"
+"Les commandes suivantes ne sont pas mentionnées dans le fichier importé, "
+"mais leurs raccourcis sont supprimés en raison du conflit avec d’autres "
+"nouveaux raccourcis :\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -15902,8 +15911,8 @@ msgid ""
 "  'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
 msgstr ""
-"  'Demander' signifie qu’Audacity vous demandera si vous souhaitez charger le "
-"module à chaque fois qu’il démarre."
+"  'Demander' signifie qu’Audacity vous demandera si vous souhaitez charger "
+"le module à chaque fois qu’il démarre."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
@@ -16249,7 +16258,7 @@ msgstr "Préférences pour la qualité"
 #: src/prefs/QualityPrefs.cpp
 #, c-format
 msgid "%i Hz"
-msgstr ""
+msgstr "%i Hz"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
@@ -17034,7 +17043,7 @@ msgstr "%s en pause."
 #: src/toolbars/ControlToolBar.cpp
 #, c-format
 msgid "%s."
-msgstr ""
+msgstr "%s."
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the big buttons on it (play record etc)
@@ -17665,12 +17674,12 @@ msgstr "Échantillons déplacés"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Sample Edit"
-msgstr "Édition d’échantillon"
+msgstr "Exemple d'édition"
 
 #. i18n-hint k abbreviating kilo meaning thousands
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
 msgid "k"
-msgstr ""
+msgstr "k"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 msgid "Zoom Reset"
@@ -17885,7 +17894,7 @@ msgstr "Droit, %dHz"
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%+.1f dB"
-msgstr ""
+msgstr "%+.1f dB"
 
 #. i18n-hint: Stereo pan setting
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -17905,8 +17914,8 @@ msgstr "%.0f%% droite"
 msgid ""
 "Click and drag to adjust sizes of sub-views, double-click to split evenly"
 msgstr ""
-"Cliquer et glisser pour ajuster la taille des vues secondaires, "
-"double-cliquer pour diviser en deux parties égales"
+"Cliquer et glisser pour ajuster la taille des vues secondaires, double-"
+"cliquer pour diviser en deux parties égales"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -18296,7 +18305,7 @@ msgstr "D"
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%.2fx"
-msgstr ""
+msgstr "%.2fx"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -18860,7 +18869,7 @@ msgstr "Dialogue"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Select a directory"
-msgstr "Sélectionner un répertoire"
+msgstr "Sélectionner un dossier"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Directory Dialog"
@@ -18916,22 +18925,24 @@ msgstr "Traite l’audio en dessous de ce niveau comme du silence (dB)"
 
 #: plug-ins/SilenceMarker.ny
 msgid "Minimum duration of silence (seconds)"
-msgstr "Durée minimum de silence (secondes)"
+msgstr "Durée minimum du silence (en secondes)"
 
 #: plug-ins/SilenceMarker.ny
+#, fuzzy
+#| msgid "Label placement (seconds before silence ends)"
 msgid "Label placement (seconds before silence ends)"
 msgstr "Placement de marqueur (secondes avant que le silence ne finisse)"
 
 #. i18n-hint: Abbreviation of "Silence".
 #: plug-ins/SilenceMarker.ny
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #. i18n-hint: hours minutes and seconds. Do not translate "~a".
 #: plug-ins/SilenceMarker.ny
 #, lisp-format
 msgid "~ah ~am ~as"
-msgstr ""
+msgstr "~ah ~am ~as"
 
 #: plug-ins/SilenceMarker.ny
 msgid ""
@@ -19226,7 +19237,11 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~aLes valeurs de pourcentage ne peuvent pas être à plus de 1000 %."
 
 #: plug-ins/adjustable-fade.ny
-#, lisp-format
+#, fuzzy, lisp-format
+#| msgid ""
+#| "~adB values cannot be more than +100 dB.~%~%~\n"
+#| "                                 Hint: 6 dB doubles the amplitude~%~\n"
+#| "                                 \t-6 dB halves the amplitude."
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
@@ -19732,11 +19747,11 @@ msgstr "Appliquer un filtre coupe-bas"
 
 #: plug-ins/noisegate.ny
 msgid "10Hz 6dB/octave"
-msgstr ""
+msgstr "10Hz 6dB/octave"
 
 #: plug-ins/noisegate.ny
 msgid "20Hz 6dB/octave"
-msgstr ""
+msgstr "20Hz 6dB/octave"
 
 #: plug-ins/noisegate.ny
 msgid "Gate frequencies above (kHz)"
@@ -19824,6 +19839,8 @@ msgid "Select file(s) to install"
 msgstr "Sélectionner un(des) fichier(s) à installer"
 
 #: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+#| msgid "Allow overwriting"
 msgid "Allow overwriting"
 msgstr "Autoriser l’écrasement"
 
@@ -19852,8 +19869,8 @@ msgstr "Attention.nÉchec de la copie de certains fichiers:n"
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"Greffons installés.n (Utilisez le gestionnaire de greffon pour activer les"
-" effets) :"
+"Greffons installés.n (Utilisez le gestionnaire de greffon pour activer les "
+"effets) :"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -19880,14 +19897,15 @@ msgid "Cannot be written to plug-ins folder:"
 msgstr "Ne peut pas être écrit dans le dossier des greffons :"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, lisp-format
+#, fuzzy, lisp-format
+#| msgid "Error.~%No file selected."
 msgid "Error.~%No file selected."
 msgstr "Erreur.~%Aucun fichier sélectionné."
 
 # trebmuh : à vérifier
 #: plug-ins/pluck.ny
 msgid "Pluck"
-msgstr ""
+msgstr "Pluck"
 
 # trebmuh : à vérifier
 #: plug-ins/pluck.ny
@@ -20104,6 +20122,8 @@ msgid "Sample Count"
 msgstr "Compteur d’échantillon"
 
 #: plug-ins/sample-data-export.ny
+#, fuzzy
+#| msgid "Time Indexed"
 msgid "Time Indexed"
 msgstr "Temps indexé"
 
@@ -20165,7 +20185,8 @@ msgid "~%~%Right Channel.~%~%"
 msgstr "~%~%Canal droit.~%~%"
 
 #: plug-ins/sample-data-export.ny
-#, lisp-format
+#, fuzzy, lisp-format
+#| msgid "~aData written to:~%~a"
 msgid "~aData written to:~%~a"
 msgstr "~aDonnées écrites sur :~%~a"
 
@@ -20185,7 +20206,10 @@ msgstr ""
 "échantillonns ~a secondes.~a"
 
 #: plug-ins/sample-data-export.ny
-#, lisp-format
+#, fuzzy, lisp-format
+#| msgid ""
+#| "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
+#| "                     Length processed: ~a samples ~a seconds.~a"
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
 "                     Length processed: ~a samples ~a seconds.~a"
@@ -20195,7 +20219,13 @@ msgstr ""
 "                     Longueur traitée : ~a échantillons ~a secondes.~a"
 
 #: plug-ins/sample-data-export.ny
-#, lisp-format
+#, fuzzy, lisp-format
+#| msgid ""
+#| "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength "
+#| "processed: ~a ~\n"
+#| "                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a "
+#| "dB.  Unweighted RMS: ~a dB.~%~\n"
+#| "                  DC offset: ~a~a"
 msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
 "~a ~\n"
@@ -20240,7 +20270,8 @@ msgstr "<b>Taux d’échantillonnage :</b> &nbsp;&nbsp;~a Hz."
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
-#, lisp-format
+#, fuzzy, lisp-format
+#| msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr ""
 "<b>Amplitude de crête :</b> &nbsp;&nbsp;~a (linéaire) &nbsp;&nbsp;~a dB."
@@ -20357,7 +20388,8 @@ msgid "Unspecified channel order"
 msgstr "Ordre de canaux non-spécifié"
 
 #: plug-ins/sample-data-export.ny
-#, lisp-format
+#, fuzzy, lisp-format
+#| msgid "Error.~%\"~a\" cannot be written."
 msgid "Error.~%\"~a\" cannot be written."
 msgstr "Erreur.~%\"~a\" ne peut pas être écrit."
 
@@ -20386,7 +20418,11 @@ msgid "Read as Zero"
 msgstr "Lire en tant que zéro"
 
 #: plug-ins/sample-data-import.ny
-#, lisp-format
+#, fuzzy, lisp-format
+#| msgid ""
+#| "Error~%~\n"
+#| "                        '~a' could not be opened.~%~\n"
+#| "                        Check that file exists."
 msgid ""
 "Error~%~\n"
 "                        '~a' could not be opened.~%~\n"
@@ -20397,7 +20433,11 @@ msgstr ""
 "                        Vérifiez que ce fichier existe."
 
 #: plug-ins/sample-data-import.ny
-#, lisp-format
+#, fuzzy, lisp-format
+#| msgid ""
+#| "Error:~%~\n"
+#| "              The file must contain only plain ASCII text.~%~\n"
+#| "              (Invalid byte '~a' at byte number: ~a)"
 msgid ""
 "Error:~%~\n"
 "              The file must contain only plain ASCII text.~%~\n"
@@ -20519,7 +20559,16 @@ msgid "High Cut for Vocals (Hz)"
 msgstr "Coupe-haut pour les voix (Hz)"
 
 #: plug-ins/vocalrediso.ny
-#, lisp-format
+#, fuzzy, lisp-format
+#| msgid ""
+#| "Average x: ~a, y: ~a\n"
+#| "                    Covariance x y: ~a\n"
+#| "                    Average variance x: ~a, y: ~a\n"
+#| "                    Standard deviation x: ~a, y: ~a\n"
+#| "                    Coefficient of correlation: ~a\n"
+#| "                    Coefficient of determination: ~a\n"
+#| "                    Variation of residuals: ~a\n"
+#| "                    y equals ~a plus ~a times x~%"
 msgid ""
 "Average x: ~a, y: ~a\n"
 "                    Covariance x y: ~a\n"
@@ -20549,6 +20598,11 @@ msgstr ""
 "environ ~a %. Ceci signifie :~%~a~%"
 
 #: plug-ins/vocalrediso.ny
+#, fuzzy
+#| msgid ""
+#| " - The two channels are identical, i.e. dual mono.\n"
+#| "                The center can't be removed.\n"
+#| "                Any remaining difference may be caused by lossy encoding."
 msgid ""
 " - The two channels are identical, i.e. dual mono.\n"
 "                The center can't be removed.\n"
@@ -20560,6 +20614,11 @@ msgstr ""
 "encodage avec perte."
 
 #: plug-ins/vocalrediso.ny
+#, fuzzy
+#| msgid ""
+#| " - The two Channels are strongly related, i.e. nearly mono or extremely "
+#| "panned.\n"
+#| "                Most likely, the center extraction will be poor."
 msgid ""
 " - The two Channels are strongly related, i.e. nearly mono or extremely "
 "panned.\n"
@@ -20576,6 +20635,11 @@ msgstr ""
 " - Une valeur plutôt bonne, au moins stéréo en moyenne, et pas trop étalée."
 
 #: plug-ins/vocalrediso.ny
+#, fuzzy
+#| msgid ""
+#| " - An ideal value for Stereo.\n"
+#| "                However, the center extraction depends also on the used "
+#| "reverb."
 msgid ""
 " - An ideal value for Stereo.\n"
 "                However, the center extraction depends also on the used "
@@ -20586,6 +20650,12 @@ msgstr ""
 "réverb utilisée."
 
 #: plug-ins/vocalrediso.ny
+#, fuzzy
+#| msgid ""
+#| " - The two channels are almost not related.\n"
+#| "                Either you have only noise or the piece is mastered in a "
+#| "unbalanced manner.\n"
+#| "                The center extraction can still be good though."
 msgid ""
 " - The two channels are almost not related.\n"
 "                Either you have only noise or the piece is mastered in a "
@@ -20598,6 +20668,11 @@ msgstr ""
 "                L’extraction du centre peut quand même être bon ceci dit."
 
 #: plug-ins/vocalrediso.ny
+#, fuzzy
+#| msgid ""
+#| " - Although the Track is stereo, the field is obviously extra wide.\n"
+#| "                This can cause strange effects.\n"
+#| "                Especially when played by only one speaker."
 msgid ""
 " - Although the Track is stereo, the field is obviously extra wide.\n"
 "                This can cause strange effects.\n"
@@ -20605,9 +20680,17 @@ msgid ""
 msgstr ""
 " - Bien que la piste soit stéréo, le champ est évidemment très large.\n"
 "                Ceci peut provoquer des effets étranges.\n"
-"                Spécialement lorsqu’il est joué par seulement un haut-parleur."
+"                Spécialement lorsqu’il est joué par seulement un haut-"
+"parleur."
 
 #: plug-ins/vocalrediso.ny
+#, fuzzy
+#| msgid ""
+#| " - The two channels are nearly identical.\n"
+#| "                  Obviously, a pseudo stereo effect has been used\n"
+#| "                  to spread the signal over the physical distance between "
+#| "the speakers.\n"
+#| "                  Don't expect good results from a center removal."
 msgid ""
 " - The two channels are nearly identical.\n"
 "                  Obviously, a pseudo stereo effect has been used\n"
@@ -20617,9 +20700,10 @@ msgid ""
 msgstr ""
 " - Les deux canaux sont presque identiques.\n"
 "                  Évidemment, un effet de pseudo stéréo a été utilisé\n"
-"                  pour étaler le signal sur la distance physique entre les "
-"                  haut-parleurs.\n"
-"                  N’espérez pas de bons résultats d’une suppression de centre."
+"                  pour étaler le signal sur la distance physique entre "
+"les                   haut-parleurs.\n"
+"                  N’espérez pas de bons résultats d’une suppression de "
+"centre."
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
@@ -20677,6 +20761,220 @@ msgstr "Fréquence des aiguilles de radar (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Erreur.~%Piste stéréo nécessaire."
+
+#~ msgid "Finding silence..."
+#~ msgstr "Recherche de silence…"
+
+#~ msgid "Alex S. Brown"
+#~ msgstr "Alex S. Brown"
+
+#, fuzzy, lisp-format
+#~| msgid ""
+#~| "No sounds found. Try reducing the silence~%level and minimum silence "
+#~| "duration."
+#~ msgid ""
+#~ "No silences found. Try reducing the silence~%level and minimum silence "
+#~ "duration."
+#~ msgstr ""
+#~ "Aucun son trouvé. Essayez de réduire le niveau~%du silence et la durée de "
+#~ "silence minimum "
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#, lisp-format
+#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+#~ msgstr ""
+#~ "Nombre maximal d’échos '~a' en dehors de la plage valide de 1 à 50.~%~a"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#, lisp-format
+#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+#~ msgstr ""
+#~ "Modification de hauteur '~a' en dehors de la plage valide de -12 à "
+#~ "+12demi-tons.~%~a"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#, lisp-format
+#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+#~ msgstr ""
+#~ "Temps de délai '~a' en dehors de la plage valide de 0 à +10 secondes.~%~a"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#, lisp-format
+#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+#~ msgstr ""
+#~ "Niveau de délai '~a' en dehors de la plage valide de -30 à +6dB.~%~a"
+
+#, lisp-format
+#~ msgid "Error.~%~a"
+#~ msgstr "Erreur.~%~a"
+
+#~ msgid "Use 'Number of labels' OR 'Label interval'"
+#~ msgstr "Utilise le 'nombre de marqueurs' OU 'l’intervalle de marqueur'"
+
+#, fuzzy
+#~| msgid "Sample Edit"
+#~ msgid "Sample List (txt)"
+#~ msgstr "Édition d’échantillon"
+
+#, fuzzy
+#~| msgid "sample data"
+#~ msgid "sample-data"
+#~ msgstr "données d’échantillon"
+
+#, fuzzy
+#~| msgid "Select a directory"
+#~ msgid "Home directory"
+#~ msgstr "Sélectionner un répertoire"
+
+#, fuzzy
+#~| msgid "No macro selected"
+#~ msgid "No samples selected."
+#~ msgstr "Aucune macro sélectionnée"
+
+#, fuzzy
+#~| msgid "Choose location to save files"
+#~ msgid "File location (path to file)"
+#~ msgstr "Choisir un emplacement pour sauvegarder les fichiers"
+
+#, fuzzy, lisp-format
+#~| msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
+#~ msgid "Error~%'~~/' is not valid on Windows"
+#~ msgstr "Erreur.~%~s n’est pas un greffon Nyquist valide.~%"
+
+#, fuzzy, lisp-format
+#~| msgid ""
+#~| "Error~%~\n"
+#~| "                        '~a' could not be opened.~%~\n"
+#~| "                        Check that file exists."
+#~ msgid ""
+#~ "Error~%~\n"
+#~ "                          Directory '~a' could not be opened."
+#~ msgstr ""
+#~ "Erreur~%~\n"
+#~ "                        '~a' n’a pas pu être ouvert.~%~\n"
+#~ "                        Vérifiez que ce fichier existe."
+
+#~ msgid "Remove Center Classic: Mono"
+#~ msgstr "Supprimer le centre classique : mono"
+
+#~ msgid "Vocal Remover"
+#~ msgstr "Supprimeur de voix"
+
+#~ msgid "Removing center-panned audio..."
+#~ msgstr "Suppression de l’audio centré…"
+
+#~ msgid "Remove vocals or view Help"
+#~ msgstr "Suppression de voix ou affichage de l’aide"
+
+#~ msgid "View Help"
+#~ msgstr "Affichage de l’aide"
+
+#~ msgid "Removal choice"
+#~ msgstr "Choix de suppression"
+
+#~ msgid "Simple (Entire Spectrum)"
+#~ msgstr "Simple (spectre entier)"
+
+#~ msgid "Remove Frequency Band"
+#~ msgstr "Suppression d’une bande de fréquence"
+
+#~ msgid "Retain Frequency Band"
+#~ msgstr "Conservation d’une bande de fréquence"
+
+#~ msgid "Frequency band from (Hz)"
+#~ msgstr "Bande de fréquence à partir de (Hz)"
+
+#~ msgid "Frequency band to (Hz)"
+#~ msgstr "Bande de fréquence jusqu’à (Hz)"
+
+#, lisp-format
+#~ msgid ""
+#~ "Vocal Remover requires a stereo track. It works best with\n"
+#~ "lossless files like WAV or AIFF, rather than MP3 or\n"
+#~ "other compressed formats. It only removes vocals or other\n"
+#~ "audio that is panned to center (sounds equally loud in left\n"
+#~ "and right). Vocals may be mixed this way. Inverting one\n"
+#~ "channel then panning both to center cancels out any audio\n"
+#~ "which was originally center-panned, making it inaudible.\n"
+#~ "This can remove some parts of the audio you may want to\n"
+#~ "keep, such as drums, which are also often mixed to center.\n"
+#~ "If the vocals and other centered parts differ in pitch,\n"
+#~ "this can be solved by removing only selected frequencies.~%\n"
+#~ "Vocal Remover thus has three choices of removal method.\n"
+#~ "'Simple' inverts the entire frequency spectrum of one\n"
+#~ "channel. This may remove too much music if other parts of\n"
+#~ "the audio are centered as well as the vocals. In that case,\n"
+#~ "try the other choices. If the vocals are at a different\n"
+#~ "pitch than the other audio (such as a high female voice),\n"
+#~ "try 'Remove frequency band'. This only removes frequencies\n"
+#~ "between a lower and upper limit which you can enter in the\n"
+#~ "'Frequency band...' boxes. Experiment by entering what\n"
+#~ "sounds like the most significant frequency range of the\n"
+#~ "original vocals. If the other choices remove too much\n"
+#~ "audio in a particular frequency range (such as low drums\n"
+#~ "or bass), try 'Retain frequency band'. This only removes\n"
+#~ "frequencies outside the limits, retaining the others."
+#~ msgstr ""
+#~ "La suppression de voix ('Vocal Remover') nécessite une piste\n"
+#~ "Elle fonctionne mieux avec des fichiers sans-perte comme\n"
+#~ "les WAV ou AIFF, plutôt qu’avec des MP3 ou d’autres formats\n"
+#~ "compressés. Elle supprime uniquement les voix ou autre\n"
+#~ "audio panoramisé au centre (qui sonne avec la même puissance\n"
+#~ "à gauche et à droite. Les voix peuvent être mixées de cette\n"
+#~ "manière. Inverser un canal puis panoramiser les deux au\n"
+#~ "centre annule tout audio ayant été panoramisé-centré à\n"
+#~ "l’origine, le rendant inaudible. Ceci peut également supprimer\n"
+#~ "certaines parties de l’audio que vous voudriez conserver,\n"
+#~ "comme la batterie, étant aussi souvent mixé au centre.\n"
+#~ "Si les voix et les autres parties centrées différent en\n"
+#~ "hauteur, ceci peut être solutionné en supprimant uniquement\n"
+#~ "des fréquences sélectionnées.~%\n"
+#~ "La suppression de voix possède ainsi trois choix de méthode\n"
+#~ "de suppression. 'Simple' inverse le spectre de fréquence entier\n"
+#~ "d’un canal. Ceci pourrait supprimer trop de musique si d’autres\n"
+#~ "parties de l’audio sont également centrée comme les voix. Dans\n"
+#~ "ce cas,essayez les autres choix. Si les voix sont à une\n"
+#~ "hauteur différente du reste de l’audio (comme une voix\n"
+#~ "féminine haute), essayez 'Suppression de bande de fréquence'.\n"
+#~ "Ceci supprime seulement les fréquences entre une limite haute\n"
+#~ "et une limite basse que vous pouvez entrer dans les boîtes\n"
+#~ "'Bande de fréquence…'. Expérimenter en entrant ce qui vous\n"
+#~ "semble être la plage de fréquence signifiante des voix\n"
+#~ "originales. Si les autres choix supprime trop d’audio d’une\n"
+#~ "plage de fréquence particulière (comme les basses de batterie\n"
+#~ "ou les basses), essayez 'Conserver la bande de fréquence'.\n"
+#~ "Ceci supprime uniquement les fréquences en dehors des\n"
+#~ "limites, conservant les autres."
+
+#, lisp-format
+#~ msgid ""
+#~ "~%Vocal Remover requires an unsplit, stereo track.~%~\n"
+#~ "If you have a stereo track split into left and right~%~\n"
+#~ "channels, use 'Make Stereo Track' on the Track~%~\n"
+#~ "Drop-Down Menu, then run Vocal Remover again.~%"
+#~ msgstr ""
+#~ "~%La suppression de voix nécessite une piste stéréo non-séparée.~%~\n"
+#~ "Si vous avez une piste stéréo séparée en canaux droit et gauche,~%~\n"
+#~ "utilisez 'Faire une piste stéréo' sur le menu déroulant de la piste,~%~\n"
+#~ "puis lancez la suppression de voix à nouveau.~%"
+
+#, lisp-format
+#~ msgid ""
+#~ "Warning:~%~\n"
+#~ "              Selected band-stop filter is~%~\n"
+#~ "              ~a Hz to ~a Hz.~%~\n"
+#~ "              A very narrow stop-band filter may have~%~\n"
+#~ "              unexpected results.~%~%"
+#~ msgstr ""
+#~ "Attention :~%~\n"
+#~ "              Un filtre stop-bande sélectionné est~%~\n"
+#~ "              ~a Hz à ~a Hz.~%~\n"
+#~ "              Un filtre stop-bande très proche pourrait avoir~%~\n"
+#~ "              des résultats inattendus.~%~%"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#~ msgid "Current settings returned the original audio."
+#~ msgstr "Les paramètres actuels ont rendus l’audio originel."
 
 #~ msgid "incorporating"
 #~ msgstr "incorporation"
@@ -20893,9 +21191,6 @@ msgstr "Erreur.~%Piste stéréo nécessaire."
 #~ msgid "AIFF (Apple) signed 16-bit PCM"
 #~ msgstr "AIFF (Apple) 16-bits PCM signé"
 
-#~ msgid "WAV (Microsoft) signed 16-bit PCM"
-#~ msgstr "WAV (Microsoft) 16-bits PCM signé"
-
 #~ msgid "WAV (Microsoft) signed 24-bit PCM"
 #~ msgstr "WAV (Microsoft) 24-bits PCM signé"
 
@@ -20931,23 +21226,11 @@ msgstr "Erreur.~%Piste stéréo nécessaire."
 #~ msgid "&Waveform (dB)"
 #~ msgstr "Forme d’onde (dB)"
 
-#~ msgid "Finding silence..."
-#~ msgstr "Recherche de silence…"
-
-#~ msgid "Alex S. Brown"
-#~ msgstr "Alex S. Brown"
-
 #~ msgid "Error.~%~s is not a supported plug-in.~%"
 #~ msgstr "Erreur.~%~s n’est pas un greffon supporté.~%"
 
-#~ msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
-#~ msgstr "Erreur.~%~s n’est pas un greffon Nyquist valide.~%"
-
 #~ msgid "This plug-in requires Audacity 2.3.1 or later."
 #~ msgstr "Ce greffon nécessite Audacity 2.3.1 ou ultérieur."
-
-#~ msgid "Remove Center Classic: Mono"
-#~ msgstr "Supprimer le centre classique : mono"
 
 #~ msgid "Decoding failed\n"
 #~ msgstr "Échec du décodage\n"
@@ -20971,122 +21254,6 @@ msgstr "Erreur.~%Piste stéréo nécessaire."
 #~ msgstr ""
 #~ "Pour utiliser Retouche, choisir 'Forme d’onde' ou 'Forme d’onde (dB)' "
 #~ "dans le menu déroulant de la piste."
-
-#~ msgid "Vocal Remover"
-#~ msgstr "Supprimeur de voix"
-
-#~ msgid "Removing center-panned audio..."
-#~ msgstr "Suppression de l’audio centré…"
-
-#~ msgid "Remove vocals or view Help"
-#~ msgstr "Suppression de voix ou affichage de l’aide"
-
-#~ msgid "View Help"
-#~ msgstr "Affichage de l’aide"
-
-#~ msgid "Removal choice"
-#~ msgstr "Choix de suppression"
-
-#~ msgid "Simple (Entire Spectrum)"
-#~ msgstr "Simple (spectre entier)"
-
-#~ msgid "Remove Frequency Band"
-#~ msgstr "Suppression d’une bande de fréquence"
-
-#~ msgid "Retain Frequency Band"
-#~ msgstr "Conservation d’une bande de fréquence"
-
-#~ msgid "Frequency band from (Hz)"
-#~ msgstr "Bande de fréquence à partir de (Hz)"
-
-#~ msgid "Frequency band to (Hz)"
-#~ msgstr "Bande de fréquence jusqu’à (Hz)"
-
-#~ msgid ""
-#~ "Vocal Remover requires a stereo track. It works best with\n"
-#~ "lossless files like WAV or AIFF, rather than MP3 or\n"
-#~ "other compressed formats. It only removes vocals or other\n"
-#~ "audio that is panned to center (sounds equally loud in left\n"
-#~ "and right). Vocals may be mixed this way. Inverting one\n"
-#~ "channel then panning both to center cancels out any audio\n"
-#~ "which was originally center-panned, making it inaudible.\n"
-#~ "This can remove some parts of the audio you may want to\n"
-#~ "keep, such as drums, which are also often mixed to center.\n"
-#~ "If the vocals and other centered parts differ in pitch,\n"
-#~ "this can be solved by removing only selected frequencies.~%\n"
-#~ "Vocal Remover thus has three choices of removal method.\n"
-#~ "'Simple' inverts the entire frequency spectrum of one\n"
-#~ "channel. This may remove too much music if other parts of\n"
-#~ "the audio are centered as well as the vocals. In that case,\n"
-#~ "try the other choices. If the vocals are at a different\n"
-#~ "pitch than the other audio (such as a high female voice),\n"
-#~ "try 'Remove frequency band'. This only removes frequencies\n"
-#~ "between a lower and upper limit which you can enter in the\n"
-#~ "'Frequency band...' boxes. Experiment by entering what\n"
-#~ "sounds like the most significant frequency range of the\n"
-#~ "original vocals. If the other choices remove too much\n"
-#~ "audio in a particular frequency range (such as low drums\n"
-#~ "or bass), try 'Retain frequency band'. This only removes\n"
-#~ "frequencies outside the limits, retaining the others."
-#~ msgstr ""
-#~ "La suppression de voix ('Vocal Remover') nécessite une piste\n"
-#~ "Elle fonctionne mieux avec des fichiers sans-perte comme\n"
-#~ "les WAV ou AIFF, plutôt qu’avec des MP3 ou d’autres formats\n"
-#~ "compressés. Elle supprime uniquement les voix ou autre\n"
-#~ "audio panoramisé au centre (qui sonne avec la même puissance\n"
-#~ "à gauche et à droite. Les voix peuvent être mixées de cette\n"
-#~ "manière. Inverser un canal puis panoramiser les deux au\n"
-#~ "centre annule tout audio ayant été panoramisé-centré à\n"
-#~ "l’origine, le rendant inaudible. Ceci peut également supprimer\n"
-#~ "certaines parties de l’audio que vous voudriez conserver,\n"
-#~ "comme la batterie, étant aussi souvent mixé au centre.\n"
-#~ "Si les voix et les autres parties centrées différent en\n"
-#~ "hauteur, ceci peut être solutionné en supprimant uniquement\n"
-#~ "des fréquences sélectionnées.~%\n"
-#~ "La suppression de voix possède ainsi trois choix de méthode\n"
-#~ "de suppression. 'Simple' inverse le spectre de fréquence entier\n"
-#~ "d’un canal. Ceci pourrait supprimer trop de musique si d’autres\n"
-#~ "parties de l’audio sont également centrée comme les voix. Dans\n"
-#~ "ce cas,essayez les autres choix. Si les voix sont à une\n"
-#~ "hauteur différente du reste de l’audio (comme une voix\n"
-#~ "féminine haute), essayez 'Suppression de bande de fréquence'.\n"
-#~ "Ceci supprime seulement les fréquences entre une limite haute\n"
-#~ "et une limite basse que vous pouvez entrer dans les boîtes\n"
-#~ "'Bande de fréquence…'. Expérimenter en entrant ce qui vous\n"
-#~ "semble être la plage de fréquence signifiante des voix\n"
-#~ "originales. Si les autres choix supprime trop d’audio d’une\n"
-#~ "plage de fréquence particulière (comme les basses de batterie\n"
-#~ "ou les basses), essayez 'Conserver la bande de fréquence'.\n"
-#~ "Ceci supprime uniquement les fréquences en dehors des\n"
-#~ "limites, conservant les autres."
-
-#~ msgid ""
-#~ "~%Vocal Remover requires an unsplit, stereo track.~%~\n"
-#~ "If you have a stereo track split into left and right~%~\n"
-#~ "channels, use 'Make Stereo Track' on the Track~%~\n"
-#~ "Drop-Down Menu, then run Vocal Remover again.~%"
-#~ msgstr ""
-#~ "~%La suppression de voix nécessite une piste stéréo non-séparée.~%~\n"
-#~ "Si vous avez une piste stéréo séparée en canaux droit et gauche,~%~\n"
-#~ "utilisez 'Faire une piste stéréo' sur le menu déroulant de la piste,~%~\n"
-#~ "puis lancez la suppression de voix à nouveau.~%"
-
-#~ msgid ""
-#~ "Warning:~%~\n"
-#~ "              Selected band-stop filter is~%~\n"
-#~ "              ~a Hz to ~a Hz.~%~\n"
-#~ "              A very narrow stop-band filter may have~%~\n"
-#~ "              unexpected results.~%~%"
-#~ msgstr ""
-#~ "Attention :~%~\n"
-#~ "              Un filtre stop-bande sélectionné est~%~\n"
-#~ "              ~a Hz à ~a Hz.~%~\n"
-#~ "              Un filtre stop-bande très proche pourrait avoir~%~\n"
-#~ "              des résultats inattendus.~%~%"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#~ msgid "Current settings returned the original audio."
-#~ msgstr "Les paramètres actuels ont rendus l’audio originel."
 
 #~ msgid "cleaned"
 #~ msgstr "nettoyé"
@@ -21114,33 +21281,6 @@ msgstr "Erreur.~%Piste stéréo nécessaire."
 
 #~ msgid "MP3 Library:"
 #~ msgstr "Bibliothèque MP3 :"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-#~ msgstr ""
-#~ "Nombre maximal d’échos '~a' en dehors de la plage valide de 1 à 50.~%~a"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-#~ msgstr ""
-#~ "Modification de hauteur '~a' en dehors de la plage valide de -12 à "
-#~ "+12demi-tons.~%~a"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-#~ msgstr ""
-#~ "Temps de délai '~a' en dehors de la plage valide de 0 à +10 secondes.~%~a"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-#~ msgstr ""
-#~ "Niveau de délai '~a' en dehors de la plage valide de -30 à +6dB.~%~a"
-
-#~ msgid "Error.~%~a"
-#~ msgstr "Erreur.~%~a"
-
-#~ msgid "Use 'Number of labels' OR 'Label interval'"
-#~ msgstr "Utilise le 'nombre de marqueurs' OU 'l’intervalle de marqueur'"
 
 #~ msgid "Left"
 #~ msgstr "Gauche"
