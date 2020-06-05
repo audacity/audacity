@@ -1835,39 +1835,38 @@ void Sequence::ConsistencyCheck
     sampleCount mNumSamples, const wxChar *whereStr,
     bool WXUNUSED(mayThrow))
 {
-   bool bError = false;
    // Construction of the exception at the appropriate line of the function
    // gives a little more discrimination
-   InconsistencyException ex;
+   Optional<InconsistencyException> ex;
 
    unsigned int numBlocks = mBlock.size();
 
    unsigned int i;
    sampleCount pos = from < numBlocks ? mBlock[from].start : mNumSamples;
    if ( from == 0 && pos != 0 )
-      ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
+      ex.emplace( CONSTRUCT_INCONSISTENCY_EXCEPTION );
 
-   for (i = from; !bError && i < numBlocks; i++) {
+   for (i = from; !ex && i < numBlocks; i++) {
       const SeqBlock &seqBlock = mBlock[i];
       if (pos != seqBlock.start)
-         ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
+         ex.emplace( CONSTRUCT_INCONSISTENCY_EXCEPTION );
 
       if ( seqBlock.f ) {
          const auto length = seqBlock.f->GetLength();
          if (length > maxSamples)
-            ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
+            ex.emplace( CONSTRUCT_INCONSISTENCY_EXCEPTION );
          pos += length;
       }
       else
-         ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
+         ex.emplace( CONSTRUCT_INCONSISTENCY_EXCEPTION );
    }
-   if ( !bError && pos != mNumSamples )
-      ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
+   if ( !ex && pos != mNumSamples )
+      ex.emplace( CONSTRUCT_INCONSISTENCY_EXCEPTION );
 
-   if ( bError )
+   if ( ex )
    {
       wxLogError(wxT("*** Consistency check failed at %d after %s. ***"),
-                 ex.GetLine(), whereStr);
+                 ex->GetLine(), whereStr);
       wxString str;
       DebugPrintf(mBlock, mNumSamples, &str);
       wxLogError(wxT("%s"), str);
@@ -1876,7 +1875,7 @@ void Sequence::ConsistencyCheck
                  wxT("Undo the failed operation(s), then export or save your work and quit."));
 
       //if (mayThrow)
-         //throw ex;
+         //throw *ex;
       //else
          wxASSERT(false);
    }
