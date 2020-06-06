@@ -7045,10 +7045,9 @@ msgstr "Réinitialis&er"
 msgid "&Difference:"
 msgstr "&Différence :"
 
-# trebmuh to check (accélérateur)
 #: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUIPrefs.cpp
 msgid "&Help"
-msgstr "&Aide"
+msgstr "A&ide"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -13714,10 +13713,9 @@ msgstr "&Générer"
 msgid "Add / Remove Plug-ins..."
 msgstr "Ajouter / supprimer des greffons…"
 
-# trebmuh to check (accélérateur)
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
-msgstr "E&ffets"
+msgstr "&Effets"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -13725,7 +13723,7 @@ msgstr "Répéter le dernier effet"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Analyze"
-msgstr "&Analyse"
+msgstr "Anal&yse"
 
 #: src/menus/PluginMenus.cpp src/toolbars/ToolsToolBar.cpp
 msgid "T&ools"
@@ -13884,7 +13882,7 @@ msgstr "Ne rien sélectionner"
 
 #: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
 msgid "&Tracks"
-msgstr "Pis&tes"
+msgstr "&Pistes"
 
 # trebmuh to check (vérifier dans un contexte graphique)
 #: src/menus/SelectMenus.cpp
