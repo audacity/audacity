@@ -7048,7 +7048,7 @@ msgstr "&Différence :"
 # trebmuh to check (accélérateur)
 #: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUIPrefs.cpp
 msgid "&Help"
-msgstr "&Aide"
+msgstr "A&ide"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
