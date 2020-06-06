@@ -7045,7 +7045,6 @@ msgstr "Réinitialis&er"
 msgid "&Difference:"
 msgstr "&Différence :"
 
-# trebmuh to check (accélérateur)
 #: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUIPrefs.cpp
 msgid "&Help"
 msgstr "A&ide"
@@ -13714,7 +13713,6 @@ msgstr "&Générer"
 msgid "Add / Remove Plug-ins..."
 msgstr "Ajouter / supprimer des greffons…"
 
-# trebmuh to check (accélérateur)
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
 msgstr "&Effets"
