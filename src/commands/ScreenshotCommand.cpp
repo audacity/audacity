@@ -309,16 +309,14 @@ bool ScreenshotCommand::Capture(
    wxImage image = part.ConvertToImage();
    ::wxBell();
 
-   if (image.SaveFile(filename)) {
-      // flush
-      context.Status( wxString::Format( _("Saved %s"), filename ), true );
-   }
-   else {
+   if (!image.SaveFile(filename)) {
       context.Error(
          wxString::Format( _("Error trying to save file: %s"), filename ) );
       return false;
    }
-   return true;
+   else {
+     return true;
+   }
 }
 
 bool ScreenshotCommand::CaptureToolbar(
