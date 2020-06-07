@@ -58,14 +58,13 @@ public:
    // Values retrievable from GetInt() of the event for settings change
    enum EventCode : int {
       ChangedSyncLock,
+      ChangedProjectRate
    };
 
    explicit ProjectSettings( AudacityProject &project );
    ProjectSettings( const ProjectSettings & ) PROHIBITED;
    ProjectSettings &operator=( const ProjectSettings & ) PROHIBITED;
 
-   double GetRate() const { return mRate; }
-   void SetRate( double value ) { mRate = value; }
 
    bool GetTracksFitVerticallyZoomed() const { return mTracksFitVerticallyZoomed; } //lda
    void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
@@ -76,6 +75,11 @@ public:
    bool IsSyncLocked() const;
    void SetSyncLock(bool flag);
    
+   // Rate
+
+   void SetRate(double rate);
+   double GetRate() const;
+
    // Snap To
 
    void SetSnapTo(int snap);

@@ -20,6 +20,7 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "Audacity.h"
 #include "ModuleManager.h"
+#include "audacity/ModuleInterface.h"
 
 #include "Experimental.h"
 
@@ -248,6 +249,9 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
       FileNames::AddUniquePathToPathList(prefix + wxT("modules"),
                                          pathList);
+      if (files.size()) {
+         break;
+      }
    }
 
    #if defined(__WXMSW__)
@@ -446,7 +450,7 @@ void ModuleManager::InitializeBuiltins()
    for (auto moduleMain : builtinModuleList())
    {
       ModuleInterfaceHandle module {
-         moduleMain(this, NULL), ModuleInterfaceDeleter{}
+         moduleMain(nullptr), ModuleInterfaceDeleter{}
       };
 
       if (module->Initialize())
@@ -480,7 +484,7 @@ ModuleInterface *ModuleManager::LoadModule(const PluginPath & path)
       if (success && audacityMain)
       {
          ModuleInterfaceHandle handle {
-            audacityMain(this, &path), ModuleInterfaceDeleter{}
+            audacityMain(&path), ModuleInterfaceDeleter{}
          };
          if (handle)
          {
@@ -515,59 +519,6 @@ void ModuleInterfaceDeleter::operator() (ModuleInterface *pInterface) const
          libs.erase(iter); // This causes unloading in ~wxDynamicLibrary
 
       std::unique_ptr < ModuleInterface > { pInterface }; // DELETE it
-   }
-}
-
-void ModuleManager::RegisterModule(ModuleInterface *inModule)
-{
-   std::unique_ptr<ModuleInterface> module{ inModule };
-
-   PluginID id = PluginManager::GetID(module.get());
-
-   if (mDynModules.find(id) != mDynModules.end())
-   {
-      // TODO:  Should we complain about a duplicate registration????
-      // PRL:  Don't leak resources!
-      module->Terminate();
-      return;
-   }
-
-   mDynModules[id] = ModuleInterfaceHandle {
-      module.release(), ModuleInterfaceDeleter{}
-   };
-
-   PluginManager::Get().RegisterPlugin(inModule);
-}
-
-void ModuleManager::FindAllPlugins(PluginIDs & providers, PluginPaths & paths)
-{
-   PluginManager & pm = PluginManager::Get();
-
-   wxArrayString modIDs;
-   PluginPaths modPaths;
-   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeModule);
-   while (plug)
-   {
-      modIDs.push_back(plug->GetID());
-      modPaths.push_back(plug->GetPath());
-      plug = pm.GetNextPlugin(PluginTypeModule);
-   }
-
-   for (size_t i = 0, cntIds = modIDs.size(); i < cntIds; i++)
-   {
-      PluginID providerID = modIDs[i];
-
-      auto module = CreateProviderInstance(providerID, modPaths[i]);
-
-      if (!module)
-         continue;
-
-      auto newpaths = module->FindPluginPaths(pm);
-      for (size_t j = 0, cntPaths = newpaths.size(); j < cntPaths; j++)
-      {
-         providers.push_back(providerID);
-         paths.push_back(newpaths[j]);
-      }
    }
 }
 

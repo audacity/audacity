@@ -167,6 +167,20 @@ void DeviceToolBar::Populate()
 #endif
    Add(mOutput, 30, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 1);
 
+#if defined(__WXGTK3__)
+   // Nothing special
+#elif defined(__WXGTK__)
+   // Scale the font to fit inside (hopefully)
+   wxFont font = mHost->GetFont();
+   font.Scale((double) toolbarSingle / mHost->GetSize().GetHeight());
+
+   // Set it
+   mHost->SetFont(font);
+   mInput->SetFont(font);
+   mInputChannels->SetFont(font);
+   mOutput->SetFont(font);
+#endif
+
    mHost->Bind(wxEVT_SET_FOCUS,
                &DeviceToolBar::OnFocus,
                this);
@@ -410,10 +424,7 @@ void DeviceToolBar::FillHosts()
       mHost->Enable(false);
    }
 
-//   mHost->InvalidateBestSize();
    mHost->SetMinSize(wxSize(50, wxDefaultCoord));
-//   mHost->SetMaxSize(wxDefaultSize);
-//   mHost->SetMaxSize(wxSize(mHost->GetBestSize().x, wxDefaultCoord));
 }
 
 void DeviceToolBar::FillHostDevices()
@@ -479,10 +490,7 @@ void DeviceToolBar::FillHostDevices()
    }
    mInput->Enable(mInput->GetCount() ? true : false);
 
-//   mInput->InvalidateBestSize();
    mInput->SetMinSize(wxSize(50, wxDefaultCoord));
-//   mInput->SetMaxSize(wxDefaultSize);
-//   mInput->SetMaxSize(wxSize(mInput->GetBestSize().x, wxDefaultCoord));
 
    for (auto & device : outMaps) {
       if (foundHostIndex == device.hostIndex) {
@@ -497,10 +505,7 @@ void DeviceToolBar::FillHostDevices()
    }
    mOutput->Enable(mOutput->GetCount() ? true : false);
 
-//   mOutput->InvalidateBestSize();
    mOutput->SetMinSize(wxSize(50, wxDefaultCoord));
-//   mOutput->SetMaxSize(wxDefaultSize);
-//   mOutput->SetMaxSize(wxSize(mOutput->GetBestSize().x, wxDefaultCoord));
 
    // The setting of the Device is left up to OnChoice
 }
@@ -548,10 +553,7 @@ void DeviceToolBar::FillInputChannels()
    }
    mInputChannels->Enable(mInputChannels->GetCount() ? true : false);
 
-//   mInputChannels->InvalidateBestSize();
    mInputChannels->SetMinSize(wxSize(50, wxDefaultCoord));
-//   mInputChannels->SetMaxSize(wxDefaultSize);
-//   mInputChannels->SetMaxSize(wxSize(mInputChannels->GetBestSize().x, wxDefaultCoord));
 }
 
 void DeviceToolBar::OnRescannedDevices( wxCommandEvent &event )

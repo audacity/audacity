@@ -72,6 +72,7 @@
 #include "../ProjectStatus.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../Theme.h"
 
 #include "../AllThemeResources.h"
 #include "../widgets/valnum.h"
@@ -735,6 +736,7 @@ void MeterPanel::OnSize(wxSizeEvent & WXUNUSED(event))
    GetClientSize(&mWidth, &mHeight);
 
    mLayoutValid = false;
+   Refresh();
 }
 
 bool MeterPanel::InIcon(wxMouseEvent *pEvent) const

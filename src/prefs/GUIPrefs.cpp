@@ -39,7 +39,7 @@
 
 GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: refers to Audacity's user interface settings */
-:  PrefsPanel(parent, winid, XO("Interface"))
+:  PrefsPanel(parent, winid, XC("Interface", "GUI"))
 {
    Populate();
 }
@@ -137,42 +137,6 @@ ChoiceSetting GUIManualLocation{
       { wxT("Local") , wxT("FromInternet") , }
    },
    0 // "Local"
-};
-
-constexpr int defaultTheme =
-#ifdef EXPERIMENTAL_DA
-   2 // "dark"
-#else
-   1 // "light"
-#endif
-;
-
-ChoiceSetting GUITheme{
-   wxT("/GUI/Theme"),
-   {
-      ByColumns,
-      {
-         /* i18n-hint: describing the "classic" or traditional
-            appearance of older versions of Audacity */
-         XO("Classic")  ,
-         /* i18n-hint: Light meaning opposite of dark */
-         XO("Light")  ,
-         XO("Dark")  ,
-         /* i18n-hint: greater difference between foreground and
-            background colors */
-         XO("High Contrast")  ,
-         /* i18n-hint: user defined */
-         XO("Custom")  ,
-      },
-      {
-         wxT("classic")  ,
-         wxT("light")  ,
-         wxT("dark")  ,
-         wxT("high-contrast")  ,
-         wxT("custom")  ,
-      }
-   },
-   defaultTheme
 };
 
 void GUIPrefs::PopulateOrExchange(ShuttleGui & S)

@@ -37,6 +37,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "AllThemeResources.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "Theme.h"
 #include "Track.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"

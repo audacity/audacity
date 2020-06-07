@@ -29,7 +29,7 @@
 class VampEffectsModule final : public ModuleInterface
 {
 public:
-   VampEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
+   VampEffectsModule(const wxString *path);
    virtual ~VampEffectsModule();
 
    // ComponentInterface implementation
@@ -69,7 +69,6 @@ private:
                             bool & hasParameters);
 
 private:
-   ModuleManagerInterface *mModMan;
    PluginPath mPath;
 };
 

@@ -163,6 +163,20 @@ const NumericFormatSymbol & ProjectSettings::GetAudioTimeFormat() const
    return mAudioTimeFormat;
 }
 
+double ProjectSettings::GetRate() const
+{
+   return mRate;
+}
+
+void ProjectSettings::SetRate(double rate)
+{
+   auto &project = mProject;
+   if (rate != mRate) {
+      mRate = rate;
+      Notify( project, ChangedProjectRate );
+   }
+}
+
 void ProjectSettings::SetSnapTo(int snap)
 {
    mSnapTo = snap;

@@ -120,4 +120,7 @@ struct RegisteredMenuItemEnabler{
    RegisteredMenuItemEnabler( const MenuItemEnabler &enabler );
 };
 
+// Unnecessary #include to indicate otherwise hidden link dependencies
+#include "Menus.h"
+
 #endif

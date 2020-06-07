@@ -23,6 +23,7 @@
 
 #include <wx/log.h>
 #include <wx/slider.h>
+#include <wx/stream.h>
  
 #include <vorbis/vorbisenc.h>
 

@@ -83,7 +83,7 @@ ExpandingToolBar.
 #include "../AllThemeResources.h"
 
 const int kToggleButtonHeight = 8;
-const int kTimerInterval = 50; // every 50 ms -> ~20 updates per second
+const int kMyTimerInterval = 50; // every 50 ms -> ~20 updates per second
 const wxRect kDummyRect = wxRect(-9999, -9999, 0, 0);
 
 enum {
@@ -388,7 +388,7 @@ void ExpandingToolBar::Fit()
    // wxTimers seem to be a little unreliable - sometimes they stop for
    // no good reason, so this "primes" it every now and then...
    mTimer.Stop();
-   mTimer.Start(kTimerInterval);
+   mTimer.Start(kMyTimerInterval);
 }
 
 bool ExpandingToolBar::IsCursorInWindow()
@@ -649,7 +649,7 @@ void ExpandingToolBar::FinishMoving()
 
    mTopLevelParent->Refresh(true);
 
-   mTimer.Start(kTimerInterval);
+   mTimer.Start(kMyTimerInterval);
 }
 
 //

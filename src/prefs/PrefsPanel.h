@@ -30,7 +30,7 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 #include <functional>
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include "../include/audacity/ComponentInterface.h"
-#include "../commands/CommandManager.h"
+#include "../Registry.h"
 
 /* A few constants for an attempt at semi-uniformity */
 #define PREFS_FONT_SIZE     8
@@ -49,6 +49,25 @@ class ShuttleGui;
 class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
 {
  public:
+    // An array of PrefsNode specifies the tree of pages in pre-order traversal.
+    struct PrefsNode {
+       using Factory =
+         std::function< PrefsPanel * (
+            wxWindow *parent, wxWindowID winid, AudacityProject *) >;
+       Factory factory;
+       size_t nChildren{ 0 };
+       bool expanded{ false };
+
+       PrefsNode(const Factory &factory_,
+          unsigned nChildren_ = 0,
+          bool expanded_ = true)
+          : factory(factory_), nChildren(nChildren_), expanded(expanded_)
+       {}
+    };
+
+   using Factories = std::vector<PrefsPanel::PrefsNode>;
+   static Factories &DefaultFactories();
+
    // \brief Type alias for factories such as GUIPrefsFactory that produce a
    // PrefsPanel, used by the Preferences dialog in a treebook.
    // The project pointer may be null.  Usually it's not needed because

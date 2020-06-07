@@ -6,7 +6,22 @@ use File::Spec;
 my $traceLevel = 3;
 
 # whether to box the clusters by sub-folder, but always color nodes regardless
-my $clustering = 0;
+my @clusterlist = qw(
+   /xml
+   /export
+   /menus
+   /effects/VST
+   /effects/ladspa
+   /effects/lv2
+   /effects/nyquist
+   /effects/vamp
+);
+my %clusters;
+@clusters{@clusterlist} = ();
+sub clustering
+{
+   return exists( $clusters{ $_[0] } );
+}
 
 # whether to prune redundant arcs implied in transitive closure
 my $pruning = 1;
@@ -285,9 +300,14 @@ open my $fh, ">", $fname or die "Can't open file";
 *STDOUT = $fh;
 
 # header
-my $graphAttr = $clustering ? "labeljust=l labelloc=b" : "";
+my $graphAttr =
+   # $clustering ?
+   "labeljust=l labelloc=b"
+   # : ""
+   ;
 print "strict digraph{ graph [";
 print $graphAttr;
+print " newrank=true";
 #print " mclimit=0.01";
 #print " nslimit=1";
 #print " rank=max";
@@ -303,10 +323,11 @@ print "// Nodes\n";
 my $hue = 0;
 my $saturation = 1.0;
 my $huestep = 1.0 / $nFolders;
-my $cluster = $clustering ? "cluster" : "";
-my $clusterAttr = $clustering ? "style=dashed " : "";
 sub subgraph{
    my ($foldername, $hashref) = @_;
+   my $clustered = clustering( $foldername );
+   my $cluster = $clustered ? "cluster" : "";
+   my $clusterAttr = $clustered ? "style=bold color=\"blue\"" : "";
    print STDERR "subgraph \"$foldername\"\n" if $traceLevel >= 3;
    my $color = "${hue},${saturation},1.0";
    $hue += $huestep;
@@ -347,6 +368,7 @@ while( my ($head, $data) = each( %quotientGraph ) ) {
    foreach my $tail ( @{$$data[0]} ) {
       print "   \"$head\" -> \"$tail\" [";
       # insert arc attributes here as key=value pairs,
+      print "penwidth=2.0";
       # separated by spaces
       print"]\n";
    }

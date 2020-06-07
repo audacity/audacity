@@ -33,10 +33,14 @@ public:
 
 protected:
    // Make this protected to prevent slicing copies
-   AudacityException( AudacityException&& ) {}
    AudacityException( const AudacityException& ) = default;
-   AudacityException &operator = (AudacityException &&) { return *this;}
-   AudacityException &operator = ( const AudacityException & ) PROHIBITED;
+
+   // Don't allow moves of this class or subclasses
+   // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2442
+   AudacityException( AudacityException&& ) = delete;
+
+   // Disallow assignment
+   AudacityException &operator = ( const AudacityException & ) = delete;
 };
 
 /// \brief A subclass of AudacityException whose delayed handler action displays
@@ -56,7 +60,6 @@ protected:
    ~MessageBoxException() override;
 
    MessageBoxException( const MessageBoxException& );
-   MessageBoxException &operator = ( MessageBoxException && );
 
    // Format a default error message for this exception.
    virtual TranslatableString ErrorMessage() const = 0;

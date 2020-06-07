@@ -64,6 +64,7 @@ or ASlider.
 #include "../ProjectStatus.h"
 #include "../ProjectWindowBase.h"
 #include "../ShuttleGui.h"
+#include "../Theme.h"
 
 #include "../AllThemeResources.h"
 
@@ -321,16 +322,25 @@ bool SliderDialog::TransferDataToWindow()
 
 bool SliderDialog::TransferDataFromWindow()
 {
-   double value;
+   // Bug #2458
+   //
+   // If the user clears the text control, the ToDouble below will NOT set "value"
+   // since it checks the length of the incoming string and bypasses setting it if
+   // it's empty. So initialize "value" for good measure and check the return value
+   // of ToDouble for success before using "value".
+   double value = 0.0;
 
-   mTextCtrl->GetValue().ToDouble(&value);
-   if (mStyle == DB_SLIDER)
-      value = DB_TO_LINEAR(value);
-   mSlider->Set(value);
-   if (mpOrigin) {
-      mpOrigin->Set(value);
-      mpOrigin->SendUpdate(value);
+   if (mTextCtrl->GetValue().ToDouble(&value))
+   {
+      if (mStyle == DB_SLIDER)
+         value = DB_TO_LINEAR(value);
+      mSlider->Set(value);
+      if (mpOrigin) {
+         mpOrigin->Set(value);
+         mpOrigin->SendUpdate(value);
+      }
    }
+
    return true;
 }
 

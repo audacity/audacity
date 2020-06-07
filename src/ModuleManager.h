@@ -16,11 +16,13 @@
 #include <map>
 #include <vector>
 
-#include "audacity/ModuleInterface.h"
+#include "audacity/Types.h"
 
 class wxArrayString;
 class wxDynamicLibrary;
 class CommandHandler;
+class ComponentInterface;
+class ModuleInterface;
 
 wxWindow *  MakeHijackPanel();
 
@@ -69,19 +71,13 @@ using ModuleInterfaceHandle = std::unique_ptr<
    ModuleInterface, ModuleInterfaceDeleter
 >;
 
-typedef std::map<wxString, ModuleMain *> ModuleMainMap;
 typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
 using PluginIDs = wxArrayString;
 
-class ModuleManager final : public ModuleManagerInterface
+class ModuleManager final
 {
 public:
-   // -------------------------------------------------------------------------
-   // ModuleManagerInterface implementation
-   // -------------------------------------------------------------------------
-
-   void RegisterModule(ModuleInterface *module) override;
 
    // -------------------------------------------------------------------------
    // ModuleManager implementation
@@ -95,9 +91,6 @@ public:
    // PluginManager use
    // Can be called before Initialize()
    bool DiscoverProviders();
-
-   // Seems we don't currently use FindAllPlugins
-   void FindAllPlugins(PluginIDs & providers, PluginPaths & paths);
 
    PluginPaths FindPluginsForProvider(const PluginID & provider, const PluginPath & path);
    bool RegisterEffectPlugin(const PluginID & provider, const PluginPath & path,
@@ -122,8 +115,6 @@ private:
    friend ModuleInterfaceDeleter;
    friend std::default_delete<ModuleManager>;
    static std::unique_ptr<ModuleManager> mInstance;
-
-   ModuleMainMap mModuleMains;
 
    // Module objects, also called Providers, can each report availability of any
    // number of Plug-Ins identified by "paths", and are also factories of

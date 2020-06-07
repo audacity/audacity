@@ -169,13 +169,28 @@ int ModulePrefs::GetModuleStatus(const FilePath &fname){
    // Default status is NEW module, and we will ask once.
    int iStatus = kModuleNew;
 
-   wxString ShortName = wxFileName( fname ).GetName();
-   wxString PrefName = wxString( wxT("/Module/") ) + ShortName.Lower();
+   wxString ShortName = wxFileName( fname ).GetName().Lower();
+   wxString PathPref = wxString( wxT("/ModulePath/") ) + ShortName;
+   wxString StatusPref = wxString( wxT("/Module/") ) + ShortName;
 
-   gPrefs->Read( PrefName, &iStatus, kModuleNew );
-   // fix up a bad status.
-   if( iStatus > kModuleNew )
-      iStatus=kModuleNew;
+   wxString ModulePath = gPrefs->Read( PathPref, wxEmptyString );
+   if( ModulePath.IsSameAs( fname ) )
+   {
+      gPrefs->Read( StatusPref, &iStatus, kModuleNew );
+
+      // fix up a bad status.
+      if( iStatus > kModuleNew )
+      {
+         iStatus=kModuleNew;
+      }
+   }
+   else
+   {
+      // Remove previously saved since it's no longer valid
+      gPrefs->DeleteEntry( PathPref );
+      gPrefs->DeleteEntry( StatusPref );
+   }
+
    return iStatus;
 }
 

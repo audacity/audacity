@@ -40,6 +40,7 @@ for shared and private configs - which need to move out.
 #include <wx/utils.h>
 
 #include "audacity/EffectInterface.h"
+#include "audacity/ModuleInterface.h"
 
 #include "FileNames.h"
 #include "ModuleManager.h"
@@ -1859,7 +1860,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             auto dstPath = dst.GetFullPath();
             if ( src.FileExists() )
                // A simple one-file plug-in
-               copied = FileNames::CopyFile(
+               copied = FileNames::DoCopyFile(
                   src.GetFullPath(), dstPath, true );
             else {
                // A sub-folder

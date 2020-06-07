@@ -19,7 +19,7 @@
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include "../FileNames.h" // for FileTypes
 
-#include "../commands/CommandManager.h" // for Registry::Placement
+#include "../Registry.h"
 
 class wxArrayString;
 class FileDialogWrapper;

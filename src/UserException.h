@@ -21,12 +21,6 @@ class UserException final : public AudacityException
 public:
    UserException() {}
 
-   UserException(UserException &&that)
-      : AudacityException{ std::move( that ) }
-   {}
-
-   UserException& operator= (UserException&&) PROHIBITED;
-
    ~UserException() override;
 
    void DelayedHandlerAction() override;

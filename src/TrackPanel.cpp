@@ -59,6 +59,7 @@ is time to refresh some aspect of the screen.
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
+#include "Theme.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
 //#define DEBUG_DRAW_TIMING 1
@@ -1547,88 +1548,6 @@ void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
    if (cell) {
       Refresh( false );
    }
-}
-
-TrackPanelDrawable::~TrackPanelDrawable()
-{
-}
-
-void TrackPanelDrawable::Draw(
-   TrackPanelDrawingContext &, const wxRect &, unsigned )
-{
-}
-
-wxRect TrackPanelDrawable::DrawingArea(
-   TrackPanelDrawingContext &,
-   const wxRect &rect, const wxRect &, unsigned )
-{
-   return rect;
-}
-
-TrackPanelNode::TrackPanelNode()
-{
-}
-
-TrackPanelNode::~TrackPanelNode()
-{
-}
-
-TrackPanelGroup::TrackPanelGroup()
-{
-}
-
-TrackPanelGroup::~TrackPanelGroup()
-{
-}
-
-TrackPanelCell::~TrackPanelCell()
-{
-}
-
-HitTestPreview TrackPanelCell::DefaultPreview
-(const TrackPanelMouseState &, const AudacityProject *)
-{
-   return {};
-}
-
-unsigned TrackPanelCell::HandleWheelRotation
-(const TrackPanelMouseEvent &, AudacityProject *)
-{
-   return RefreshCode::Cancelled;
-}
-
-unsigned TrackPanelCell::DoContextMenu
-   (const wxRect &, wxWindow*, wxPoint *, AudacityProject*)
-{
-   return RefreshCode::RefreshNone;
-}
-
-unsigned TrackPanelCell::CaptureKey(
-   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
-{
-   event.Skip();
-   return RefreshCode::RefreshNone;
-}
-
-unsigned TrackPanelCell::KeyDown(
-   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
-{
-   event.Skip();
-   return RefreshCode::RefreshNone;
-}
-
-unsigned TrackPanelCell::KeyUp(
-   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
-{
-   event.Skip();
-   return RefreshCode::RefreshNone;
-}
-
-unsigned TrackPanelCell::Char(
-   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
-{
-   event.Skip();
-   return RefreshCode::RefreshNone;
 }
 
 IsVisibleTrack::IsVisibleTrack(AudacityProject *project)

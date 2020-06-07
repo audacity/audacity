@@ -610,7 +610,7 @@ void OnPaste(const CommandContext &context)
             }
          },
          [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
-            if (!lt->GetSelected())
+            if (!lt->GetSelected() && !lt->IsSyncLockSelected())
                return fallthrough();
 
             lt->Clear(t0, t1);
@@ -747,7 +747,8 @@ void OnSilence(const CommandContext &context)
    ProjectHistory::Get( project ).PushState(
       XO("Silenced selected tracks for %.2f seconds at %.2f")
          .Format( selectedRegion.duration(), selectedRegion.t0() ),
-      XO("Silence"));
+      /* i18n-hint: verb */
+      XC("Silence", "command"));
 }
 
 void OnTrim(const CommandContext &context)

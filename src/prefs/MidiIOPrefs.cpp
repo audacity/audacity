@@ -133,7 +133,8 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(XO("Interface"));
+   /* i18n-hint Software interface to MIDI */
+   S.StartStatic(XC("Interface", "MIDI"));
    {
       S.StartMultiColumn(2);
       {

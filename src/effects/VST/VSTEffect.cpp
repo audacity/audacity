@@ -143,7 +143,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
-   return safenew VSTEffectsModule(moduleManager, path);
+   return safenew VSTEffectsModule(path);
 }
 
 // ============================================================================
@@ -306,10 +306,8 @@ public:
 // VSTEffectsModule
 //
 // ============================================================================
-VSTEffectsModule::VSTEffectsModule(ModuleManagerInterface *moduleManager,
-                                   const wxString *path)
+VSTEffectsModule::VSTEffectsModule(const wxString *path)
 {
-   mModMan = moduleManager;
    if (path)
    {
       mPath = *path;

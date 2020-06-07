@@ -27,8 +27,10 @@ class wxFont;
 class wxImage;
 class wxPen;
 
+class ChoiceSetting;
+
 // JKC: will probably change name from 'teBmps' to 'tIndexBmp';
-typedef int teBmps; /// The index of a bitmap resource in Theme Resources.
+using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 
 enum teResourceType
 {
@@ -97,6 +99,8 @@ class AUDACITY_DLL_API ThemeBase /* not final */
 {
 public:
    ThemeBase(void);
+   ThemeBase ( const ThemeBase & ) = delete;
+   ThemeBase &operator =( const ThemeBase & ) = delete;
 public:
    virtual ~ThemeBase(void);
 
@@ -188,5 +192,9 @@ public:
 };
 
 extern AUDACITY_DLL_API Theme theTheme;
+
+extern ChoiceSetting
+     GUITheme
+;
 
 #endif // __AUDACITY_THEME__

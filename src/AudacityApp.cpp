@@ -359,13 +359,14 @@ void PopulatePreferences()
        (vMajor == 2 && vMinor < 4))
    {
       gPrefs->Write(wxT("/GUI/Toolbars/Selection/W"),"");
+      gPrefs->Write(wxT("/GUI/Toolbars/SpectralSelection/W"),"");
       gPrefs->Write(wxT("/GUI/Toolbars/Time/X"),-1);
       gPrefs->Write(wxT("/GUI/Toolbars/Time/Y"),-1);
       gPrefs->Write(wxT("/GUI/Toolbars/Time/H"),55);
       gPrefs->Write(wxT("/GUI/Toolbars/Time/W"),251);
       gPrefs->Write(wxT("/GUI/Toolbars/Time/DockV2"),2);
       gPrefs->Write(wxT("/GUI/Toolbars/Time/Dock"),2);
-      gPrefs->Write(wxT("/GUI/Toolbars/Time/Path"),"0,0");
+      gPrefs->Write(wxT("/GUI/Toolbars/Time/Path"),"0,1");
       gPrefs->Write(wxT("/GUI/Toolbars/Time/Show"),1);
    }
 
@@ -1084,19 +1085,37 @@ bool AudacityApp::OnInit()
    // Some GTK themes produce larger combo boxes that make them taller
    // than our single toolbar height restriction.  This will remove some
    // of the extra space themes add.
-   //
-   // NOTE: It's important that the widgets are created with an initial
-   //       size, otherwise this override will not work.
 #if defined(__WXGTK3__) && defined(HAVE_GTK)
-   // LLL:  I've been unsuccessful at overriding GTK3 styles :-(
+   GtkWidget *combo = gtk_combo_box_new();
+   GtkCssProvider *provider = gtk_css_provider_new();
+   gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(provider),
+                                   ".linked entry,\n"
+                                   ".linked button,\n"
+                                   ".linked combobox box.linked button,\n"
+                                   ".horizontal.linked entry,\n"
+                                   ".horizontal.linked button,\n"
+                                   ".horizontal.linked combobox box.linked button,\n"
+                                   "combobox {\n"
+                                   "   padding-top: 0px;\n"
+                                   "   padding-bottom: 0px;\n"
+                                   "   padding-left: 4px;\n"
+                                   "   padding-right: 4px;\n"
+                                   "   margin: 0px;\n"
+                                   "   font-size: 95%;\n"
+                                   "}", -1, NULL);
+   gtk_style_context_add_provider_for_screen(gtk_widget_get_screen(combo),
+                                             GTK_STYLE_PROVIDER (provider),
+                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+   g_object_unref(provider);
+   g_object_unref(combo);
 #elif defined(__WXGTK__) && defined(HAVE_GTK)
    gtk_rc_parse_string("style \"audacity\" {\n"
                        " GtkButton::inner_border = { 0, 0, 0, 0 }\n"
+                       " GtkEntry::inner_border = { 0, 0, 0, 0 }\n"
                        " xthickness = 4\n"
                        " ythickness = 0\n"
                        "}\n"
                        "widget_class \"*GtkCombo*\" style \"audacity\"");
-
 #endif
 
    // Don't use AUDACITY_NAME here.
@@ -1153,6 +1172,9 @@ bool AudacityApp::OnInit()
    if (!pathVar.empty())
       FileNames::AddMultiPathsToPathList(pathVar, audacityPathList);
    FileNames::AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
+
+   wxString progPath = wxPathOnly(argv[0]);
+   FileNames::AddUniquePathToPathList(progPath, audacityPathList);
 
 #ifdef AUDACITY_NAME
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
@@ -1512,7 +1534,7 @@ bool AudacityApp::OnInit()
    CommandManager::SetMenuHook( [](const CommandID &id){
       if (::wxGetMouseState().ShiftDown()) {
          // Only want one page of the preferences
-         PrefsDialog::Factories factories;
+         PrefsPanel::Factories factories;
          factories.push_back(KeyConfigPrefsFactory( id ));
          const auto pProject = GetActiveProject();
          auto pWindow = FindProjectFrame( pProject );
@@ -1651,7 +1673,7 @@ bool AudacityApp::InitTempDir()
       }
 
       // Only want one page of the preferences
-      PrefsDialog::Factories factories;
+      PrefsPanel::Factories factories;
       factories.push_back(DirectoriesPrefsFactory());
       GlobalPrefsDialog dialog(nullptr, nullptr, factories);
       dialog.ShowModal();

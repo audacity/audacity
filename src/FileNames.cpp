@@ -145,7 +145,7 @@ wxString FileNames::FormatWildcard( const FileTypes &fileTypes )
    }
 }
 
-bool FileNames::CopyFile(
+bool FileNames::DoCopyFile(
    const FilePath& file1, const FilePath& file2, bool overwrite)
 {
 #ifdef __WXMSW__

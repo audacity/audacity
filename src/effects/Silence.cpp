@@ -24,7 +24,8 @@
 #include "../widgets/NumericTextCtrl.h"
 
 const ComponentInterfaceSymbol EffectSilence::Symbol
-{ XO("Silence") };
+/* i18n-hint: noun */
+{ XC("Silence", "generator") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectSilence > reg; }
 

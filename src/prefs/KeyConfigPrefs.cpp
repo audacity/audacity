@@ -757,47 +757,70 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   NormalizedKeyString key { mKey->GetValue() };
-   auto oldname = mView->GetNameByKey(key);
-   auto newname = mView->GetName(mCommandSelected);
+   CommandID newCommand{ mView->GetName(mCommandSelected) };
+   NormalizedKeyString enteredKey{ mKey->GetValue() };
+   NormalizedKeyString newComDefaultKey{ 
+      mManager->GetDefaultKeyFromName(newCommand) };
+   CommandIDs oldCommands;
 
-   // Just ignore it if they are the same
-   if (oldname == newname) {
-      return;
+   // collecting commands competing for the same shortcut
+   for (size_t i{ 0 }; i < mNames.size(); i++)
+   {
+      if (mNewKeys[i] == enteredKey)
+      {
+         // ignore the Set button if the same shortcut is used
+         if (mNames[i] == newCommand)
+            return;
+
+         if (newComDefaultKey == EMPTY_SHORTCUT ||
+            mDefaultKeys[i] != newComDefaultKey)
+         {
+            oldCommands.push_back(mNames[i]);
+         }
+      }
    }
 
    // Prevent same hotkey combination being used twice.
-   if (!oldname.empty()) {
-      auto oldlabel = Verbatim( wxT("%s - %s") )
+   if (!oldCommands.empty()) {
+      auto newlabel = Verbatim( wxT("'%s - %s'") )
          .Format(
-            mManager->GetCategoryFromName(oldname),
-            mManager->GetPrefixedLabelFromName(oldname) );
-      auto newlabel = Verbatim( wxT("%s - %s") )
+            mManager->GetCategoryFromName(newCommand),
+            mManager->GetPrefixedLabelFromName(newCommand) );
+      auto oldlabel = Verbatim(wxT("'%s - %s'"))
          .Format(
-            mManager->GetCategoryFromName(newname),
-            mManager->GetPrefixedLabelFromName(newname) );
+            mManager->GetCategoryFromName(oldCommands[0]),
+            mManager->GetPrefixedLabelFromName(oldCommands[0]));
+
+      for (size_t i{ 1 }; i < oldCommands.size(); i++)
+         oldlabel += XO("\n\n\t and\n\n\t") +
+         Verbatim(wxT("'%s - %s'")).Format(
+            mManager->GetCategoryFromName(oldCommands[i]),
+            mManager->GetPrefixedLabelFromName(oldCommands[i]));
+      
       if (wxCANCEL == AudacityMessageBox(
             XO(
-"The keyboard shortcut '%s' is already assigned to:\n\n\t'%s'\n\nClick OK to assign the shortcut to\n\n\t'%s'\n\ninstead. Otherwise, click Cancel.")
+"The keyboard shortcut '%s' is already assigned to:\n\n\t%s\n\n\nClick OK to assign the shortcut to\n\n\t%s\n\ninstead. Otherwise, click Cancel.")
                .Format(
                   mKey->GetValue(),
                   oldlabel,
                   newlabel
                ),
-            XO("Error"),
+            XO("Warning"),
             wxOK | wxCANCEL | wxICON_STOP | wxCENTRE,
             this))
       {
          return;
       }
-
-      mView->SetKeyByName(oldname, {});
-      mManager->SetKeyFromName(oldname, {});
-      mNewKeys[ make_iterator_range( mNames ).index( oldname ) ] = {};
-
+      
+      for (const auto & command : oldCommands)
+      {
+         mView->SetKeyByName(command, {});
+         mManager->SetKeyFromName(command, {});
+         mNewKeys[make_iterator_range(mNames).index(command)] = {};
+      }
    }
 
-   SetKeyForSelected(key);
+   SetKeyForSelected(enteredKey);
 }
 
 void KeyConfigPrefs::OnClear(wxCommandEvent& WXUNUSED(event))

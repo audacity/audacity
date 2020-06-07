@@ -237,6 +237,18 @@ void RealtimeEffectManager::RealtimeSuspend()
    mRealtimeLock.Leave();
 }
 
+void RealtimeEffectManager::RealtimeSuspendOne( EffectClientInterface &effect )
+{
+   auto begin = mStates.begin(), end = mStates.end();
+   auto found = std::find_if( begin, end,
+      [&effect]( const decltype( mStates )::value_type &state ){
+         return state && &state->GetEffect() == &effect;
+      }
+   );
+   if ( found != end )
+      (*found)->RealtimeSuspend();
+}
+
 void RealtimeEffectManager::RealtimeResume()
 {
    mRealtimeLock.Enter();
@@ -256,6 +268,18 @@ void RealtimeEffectManager::RealtimeResume()
    mRealtimeSuspended = false;
 
    mRealtimeLock.Leave();
+}
+
+void RealtimeEffectManager::RealtimeResumeOne( EffectClientInterface &effect )
+{
+   auto begin = mStates.begin(), end = mStates.end();
+   auto found = std::find_if( begin, end,
+      [&effect]( const decltype( mStates )::value_type &state ){
+         return state && &state->GetEffect() == &effect;
+      }
+   );
+   if ( found != end )
+      (*found)->RealtimeResume();
 }
 
 //

@@ -123,6 +123,7 @@ public:
    void Clear(double t0, double t1) override;
    void Paste(double t, const Track * src) override;
    bool Repeat(double t0, double t1, int n);
+   void SyncLockAdjust(double oldT1, double newT1) override;
 
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;

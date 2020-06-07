@@ -44,6 +44,7 @@
 #include <wx/window.h>
 #include <wx/log.h>
 #include <wx/intl.h>
+#include <wx/stream.h>
 
 #include "Export.h"
 #include "../FileIO.h"

@@ -1351,7 +1351,7 @@ void EffectUIHost::Resume()
       mEnableCb->SetValue(mEnabled);
       return;
    }
-   mEffect->RealtimeResume();
+   RealtimeEffectManager::Get().RealtimeResumeOne( *mEffect );
 }
 
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
@@ -1364,7 +1364,7 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
    }
    else
    {
-      mEffect->RealtimeSuspend();
+      RealtimeEffectManager::Get().RealtimeSuspendOne( *mEffect );
       mNeedsResume = true;
    }
    

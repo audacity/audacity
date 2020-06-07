@@ -55,7 +55,7 @@ namespace FileNames
    wxString FormatWildcard( const FileTypes &fileTypes );
 
    // This exists to compensate for bugs in wxCopyFile:
-   bool CopyFile(
+   bool DoCopyFile(
       const FilePath& file1, const FilePath& file2, bool overwrite = true);
 
    // wxWidgets doesn't have a function to do this:  make a hard file-system

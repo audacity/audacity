@@ -53,21 +53,6 @@ MessageBoxException::MessageBoxException( const MessageBoxException& that )
    that.moved = true;
 }
 
-MessageBoxException &MessageBoxException::operator = ( MessageBoxException &&that )
-{
-   caption = that.caption;
-   if ( this != &that ) {
-      AudacityException::operator=( std::move(that) );
-      if (!moved)
-         wxAtomicDec( sOutstandingMessages );
-
-      moved = that.moved;
-      that.moved = true;
-   }
-
-   return *this;
-}
-
 MessageBoxException::~MessageBoxException()
 {
    if (!moved)

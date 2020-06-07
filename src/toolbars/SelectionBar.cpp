@@ -198,9 +198,9 @@ void SelectionBar::Populate()
    // Top row (mostly labels)
    wxColour clrText =  theTheme.Colour( clrTrackPanelText );
    wxColour clrText2 = *wxBLUE;
-   AddTitle( XO("Project Rate (Hz)"), mainSizer );
+   auStaticText *rateLabel = AddTitle( XO("Project Rate (Hz)"), mainSizer );
    AddVLine( mainSizer );
-   AddTitle( XO("Snap-To"), mainSizer );
+   auStaticText *snapLabel = AddTitle( XO("Snap-To"), mainSizer );
    AddVLine( mainSizer );
 #ifdef TIME_IN_SELECT_TOOLBAR
    AddTitle( XO("Audio Position"), mainSizer );
@@ -319,16 +319,25 @@ void SelectionBar::Populate()
       mainSizer->Add(hSizer.release(), 0, wxALIGN_TOP | wxRIGHT, 0);
    }
 
-   // Make sure they are fully expanded to the longest item
 #if defined(__WXGTK3__)
+   // Nothing special
+#elif defined(__WXGTK__)
+   // Ensure the font fits inside (hopefully)
+   wxFont font = mChoice->GetFont();
+   font.Scale((double) toolbarSingle / mChoice->GetSize().GetHeight());
+
+   rateLabel->SetFont(font);
+   snapLabel->SetFont(font);
+   mChoice->SetFont(font);
+   mRateBox->SetFont(font);
+   mRateText->SetFont(font);
+   mSnapTo->SetFont(font);
+#endif
+
+   // Make sure they are fully expanded to the longest item
    mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, toolbarSingle));
    mRateBox->SetMinSize(wxSize(mRateBox->GetBestSize().x, toolbarSingle));
    mSnapTo->SetMinSize(wxSize(mSnapTo->GetBestSize().x, toolbarSingle));
-#else
-   mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, wxDefaultCoord));
-   mRateBox->SetMinSize(wxSize(mRateBox->GetBestSize().x, wxDefaultCoord));
-   mSnapTo->SetMinSize(wxSize(mSnapTo->GetBestSize().x, wxDefaultCoord));
-#endif
 
    mChoice->MoveBeforeInTabOrder( mStartTime );
    // This shows/hides controls.
