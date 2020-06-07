@@ -1085,19 +1085,37 @@ bool AudacityApp::OnInit()
    // Some GTK themes produce larger combo boxes that make them taller
    // than our single toolbar height restriction.  This will remove some
    // of the extra space themes add.
-   //
-   // NOTE: It's important that the widgets are created with an initial
-   //       size, otherwise this override will not work.
 #if defined(__WXGTK3__) && defined(HAVE_GTK)
-   // LLL:  I've been unsuccessful at overriding GTK3 styles :-(
+   GtkWidget *combo = gtk_combo_box_new();
+   GtkCssProvider *provider = gtk_css_provider_new();
+   gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(provider),
+                                   ".linked entry,\n"
+                                   ".linked button,\n"
+                                   ".linked combobox box.linked button,\n"
+                                   ".horizontal.linked entry,\n"
+                                   ".horizontal.linked button,\n"
+                                   ".horizontal.linked combobox box.linked button,\n"
+                                   "combobox {\n"
+                                   "   padding-top: 0px;\n"
+                                   "   padding-bottom: 0px;\n"
+                                   "   padding-left: 4px;\n"
+                                   "   padding-right: 4px;\n"
+                                   "   margin: 0px;\n"
+                                   "   font-size: 95%;\n"
+                                   "}", -1, NULL);
+   gtk_style_context_add_provider_for_screen(gtk_widget_get_screen(combo),
+                                             GTK_STYLE_PROVIDER (provider),
+                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+   g_object_unref(provider);
+   g_object_unref(combo);
 #elif defined(__WXGTK__) && defined(HAVE_GTK)
    gtk_rc_parse_string("style \"audacity\" {\n"
                        " GtkButton::inner_border = { 0, 0, 0, 0 }\n"
+                       " GtkEntry::inner_border = { 0, 0, 0, 0 }\n"
                        " xthickness = 4\n"
                        " ythickness = 0\n"
                        "}\n"
                        "widget_class \"*GtkCombo*\" style \"audacity\"");
-
 #endif
 
    // Don't use AUDACITY_NAME here.
