@@ -1010,57 +1010,10 @@ list( APPEND HEADERS
 )
 
 #
-#
-#
-list( APPEND INCLUDES
-   PUBLIC
-      ${_PRVDIR}
-      ${topdir}/include
-      ${TARGET_ROOT}
-)
-
-#
 # Define resources
 #
 list( APPEND RESOURCES
    ../presets/EQDefaultCurves.xml
-)
-
-#
-#
-#
-list( APPEND DEFINES
-   PRIVATE
-      BUILDING_AUDACITY
-      WXINTL_NO_GETTEXT_MACRO
-      WXUSINGDLL
-      CMAKE
-      $<$<BOOL:${HAVE_LRINT}>:
-         HAVE_LRINT
-      >
-      $<$<BOOL:${HAVE_LRINTF}>:
-         HAVE_LRINTF
-      >
-      $<$<BOOL:${HAVE_MLOCK}>:
-         HAVE_MLOCK
-      >
-      $<$<PLATFORM_ID:Windows>:
-         _CRT_SECURE_NO_WARNINGS
-         __STDC_CONSTANT_MACROS
-         STRICT
-      >
-)
-
-list( APPEND OPTIONS
-   PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/permissive->
-      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
-#      $<$<CXX_COMPILER_ID:GNU>:-Wl,-rpath -Wl,${_RPATH}>
-)
-
-list( APPEND LDFLAGS
-   PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/MANIFEST:NO>
 )
 
 #
@@ -1090,10 +1043,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_SBSMS}>:sbsms>
       $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
       $<$<BOOL:${USE_VAMP}>:libvamp>
-      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
-      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>
-      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:z>
-      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:pthread>
 )
 
 set( BUILDING_AUDACITY YES )
@@ -1182,22 +1131,6 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       POST_BUILD
    )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   # Bug 2400 workaround
-   #
-   # Replaces the SDK version in the built executable with 10.13 to
-   # prevent high CPU usage and slow drawing on Mojave or newer
-   check_for_platform_version()
-   if( PLATFORM_VERSION_SUPPORTED )
-      list( APPEND LDFLAGS
-         PRIVATE
-            -Wl,-platform_version,macos,10.7,10.13
-      )
-   else()
-      list( APPEND LDFLAGS
-         PRIVATE
-            -Wl,-sdk_version,10.13
-      )
-   endif()
 
    # Define Mac specific resources
    list( APPEND MAC_RESOURCES
@@ -1364,11 +1297,6 @@ source_group(
 )
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
-target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
-target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
-target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
-target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
-target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 
 # If was have cmake 3.16 or higher, we can use precompiled headers, but
 # only use them if ccache is not available and the user hasn't disabled
@@ -1382,11 +1310,12 @@ if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
 
    if( ${_OPT}use_pch )
       message( STATUS "Using precompiled headers" )
-      target_precompile_headers( ${TARGET} PRIVATE AudacityHeaders.h )
    else()
       message( STATUS "Not using precompiled headers" )
    endif()
 endif()
+
+audacity_target_options( ${TARGET} "${LIBRARIES}" "" )
 
 if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
