@@ -1,6 +1,6 @@
 #!/bin/sh
 echo ";; Recreating audacity.pot using .h, .cpp and .mm files"
-for path in ../lib-src/mod-script* ../lib-src/mod-nyq* ../include ../src ; do find $path -name \*.h -o -name \*.cpp -o -name \*.mm ; done | LANG=c sort | \
+for path in ../modules/mod-script* ../modules/mod-nyq* ../include ../src ; do find $path -name \*.h -o -name \*.cpp -o -name \*.mm ; done | LANG=c sort | \
 sed -E 's/\.\.\///g' |\
 xargs xgettext \
 --default-domain=audacity \
