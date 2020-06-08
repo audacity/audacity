@@ -393,6 +393,7 @@ void InitProjectWindow( ProjectWindow &window )
    //
    // Create the ToolDock
    //
+   ToolManager::Get( project ).CreateWindows();
    ToolManager::Get( project ).LayoutToolBars();
 
    //

@@ -342,9 +342,7 @@ auto ToolManager::SetGetTopPanelHook( const GetTopPanelHook &hook )
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
   []( AudacityProject &parent ){
-     auto &window = GetProjectFrame( parent );
-     return std::make_shared< ToolManager >(
-        &parent, getTopPanelHook()( window ) ); }
+     return std::make_shared< ToolManager >( &parent ); }
 };
 
 ToolManager &ToolManager::Get( AudacityProject &project )
@@ -360,13 +358,9 @@ const ToolManager &ToolManager::Get( const AudacityProject &project )
 //
 // Constructor
 //
-ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
+ToolManager::ToolManager( AudacityProject *parent )
 : wxEvtHandler()
 {
-   if ( !topDockParent )
-      THROW_INCONSISTENCY_EXCEPTION;
-
-   auto &window = GetProjectFrame( *parent );
    wxPoint pt[ 3 ];
 
 #if defined(__WXMAC__)
@@ -430,6 +424,12 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 
    // It's a little shy
    mIndicator->Hide();
+}
+
+void ToolManager::CreateWindows()
+{
+   auto parent = mParent;
+   auto &window = GetProjectFrame( *parent );
 
    // Hook the parents mouse events...using the parent helps greatly
    // under GTK
@@ -442,6 +442,8 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    window.Bind( wxEVT_MOUSE_CAPTURE_LOST,
                      &ToolManager::OnCaptureLost,
                      this );
+
+   wxWindow *topDockParent = getTopPanelHook()( window );
 
    // Create the top and bottom docks
    mTopDock = safenew ToolDock( this, topDockParent, TopDockID );
