@@ -204,3 +204,96 @@ macro( check_for_platform_version )
    endif()
 endmacro()
 
+# Set compilation options common to library targets that make up the
+# executable.
+function( audacity_target_options target private_libraries public_libraries )
+   #
+   #
+   #
+   set( DEFINES
+      PRIVATE
+         BUILDING_AUDACITY
+         WXINTL_NO_GETTEXT_MACRO
+         WXUSINGDLL
+         CMAKE
+         $<$<BOOL:${HAVE_LRINT}>:
+            HAVE_LRINT
+         >
+         $<$<BOOL:${HAVE_LRINTF}>:
+            HAVE_LRINTF
+         >
+         $<$<BOOL:${HAVE_MLOCK}>:
+            HAVE_MLOCK
+         >
+         $<$<PLATFORM_ID:Windows>:
+            _CRT_SECURE_NO_WARNINGS
+            __STDC_CONSTANT_MACROS
+            STRICT
+         >
+   )
+   target_compile_definitions( ${target} PRIVATE ${DEFINES} )
+
+   set( OPTIONS
+      PRIVATE
+         $<$<CXX_COMPILER_ID:MSVC>:/permissive->
+         $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
+#      $<$<CXX_COMPILER_ID:GNU>:-Wl,-rpath -Wl,${_RPATH}>
+   )
+   target_compile_options( ${target} PRIVATE ${OPTIONS} )
+
+   #
+   #
+   #
+   # some always included directories
+   set( INCLUDES
+      PUBLIC
+         # for the generated config header:
+         "${CMAKE_BINARY_DIR}/src/private"
+         # for other generated headers:
+         "${CMAKE_CURRENT_BINARY_DIR}/private"
+
+         "${CMAKE_SOURCE_DIR}/include"
+         "${CMAKE_SOURCE_DIR}/src"
+   )
+   target_include_directories( ${target} PRIVATE ${INCLUDES} )
+
+   set( LDFLAGS
+      PRIVATE
+         $<$<CXX_COMPILER_ID:MSVC>:/MANIFEST:NO>
+   )
+   if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+      # Bug 2400 workaround
+      #
+      # Replaces the SDK version in the built executable with 10.13 to
+      # prevent high CPU usage and slow drawing on Mojave or newer
+      check_for_platform_version()
+      if( PLATFORM_VERSION_SUPPORTED )
+         list( APPEND LDFLAGS
+            PRIVATE
+               -Wl,-platform_version,macos,10.7,10.13
+         )
+      else()
+         list( APPEND LDFLAGS
+            PRIVATE
+               -Wl,-sdk_version,10.13
+         )
+      endif()
+   endif()
+   target_link_options( ${target} PRIVATE ${LDFLAGS} )
+
+   # so-called "link" libraries affect compilation too (include paths)
+   list( APPEND private_libraries
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:z>
+      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:pthread>
+   )
+   target_link_libraries( ${target} PRIVATE ${private_libraries} )
+   if( public_libraries )
+      target_link_libraries( ${target} PUBLIC ${public_libraries} )
+   endif()
+
+   if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM AND ${_OPT}use_pch )
+      target_precompile_headers( ${target} PRIVATE "${CMAKE_SOURCE_DIR}/src/AudacityHeaders.h" )
+   endif()
+endfunction()
