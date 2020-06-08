@@ -381,7 +381,7 @@ bool KeyConfigPrefs::ContainsIllegalDups(
 
    for (size_t i{ 0 }; i < mKeys.size(); i++)
    {
-      if (mKeys[i] == EMPTY_SHORTCUT or mKeys[i] == NO_SHORTCUT)
+      if (mKeys[i] == EMPTY_SHORTCUT || mKeys[i] == NO_SHORTCUT)
          continue;
 
       if (seen.count(mKeys[i]) == 0)
@@ -391,7 +391,7 @@ bool KeyConfigPrefs::ContainsIllegalDups(
          IndexesArray checkMe{ seen.at(mKeys[i]) };
          for (int index : checkMe)
          {
-            if (mDefaultKeys[i] == EMPTY_SHORTCUT or
+            if (mDefaultKeys[i] == EMPTY_SHORTCUT ||
                mDefaultKeys[i] != mDefaultKeys[index])
             {
                fMatching = mManager->GetPrefixedLabelFromName(mNames[i]);
@@ -423,8 +423,8 @@ TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
       for (size_t k{ 0 }; k < toAdd.size(); k++)
          if (k == index)
             continue;
-         else if (toAdd[index] == mKeys[k] and
-            (mDefaultKeys[k] == EMPTY_SHORTCUT or
+         else if (toAdd[index] == mKeys[k] &&
+            (mDefaultKeys[k] == EMPTY_SHORTCUT ||
              mDefaultKeys[k] != mDefaultKeys[index]))
             return (int)k;
 
