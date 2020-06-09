@@ -7,9 +7,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.0\n"
+"Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-06-09 10:48+0100\n"
 "PO-Revision-Date: 2010-01-27 06:35-0000\n"
 "Last-Translator: g <g@g>\n"
 "Language-Team: Burmese <my@li.org>\n"
@@ -18,420 +18,383 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
-#, c-format
-msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr ""
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/LangChoice.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Confirm"
-msgstr "အတည်ပြုပါ"
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
-#, fuzzy
-msgid "Please choose an existing file."
-msgstr "လှုပ်ရှားမှုတခုကို ရွေးချယ်ပါ"
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AdornedRulerPanel.cpp
-#: src/AudioIO.cpp src/AutoRecoveryDialog.cpp src/ProjectAudioManager.cpp
-#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
-#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Error"
-msgstr "အမှားအယွင်း"
-
-#: lib-src/FileDialog/mac/FileDialogPrivate.mm
-#, fuzzy
-msgid "File type:"
-msgstr "စစ်ထုတ်ကိရိယာ"
-
-#: lib-src/FileDialog/win/FileDialogPrivate.cpp
-#, c-format
-msgid "File dialog failed with error code %0lx."
-msgstr ""
-
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Redo\tCtrl+Y"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cu&t\tCtrl+X"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Copy\tCtrl+C"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "&Paste\tCtrl+V"
 msgstr "ပွားယူပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cle&ar\tCtrl+L"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Select A&ll\tCtrl+A"
 msgstr "ရွေးချယ်ပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Find...\tCtrl+F"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Matching Paren\tF8"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Top S-expr\tF9"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Higher S-expr\tF10"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Previous S-expr\tF11"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Next S-expr\tF12"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go to"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Select &Font..."
 msgstr "ဖောင့်..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Split &Vertically"
 msgstr "ဒေါင်လိုက် အံကိုက်ဖြစ်စေပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Split &Horizontally"
 msgstr "ပြင်ညီ စတီရီယို"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Show S&cript"
 msgstr "ရလဒ်ကို ပြသပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Show &Output"
 msgstr "ရလဒ်ကို ပြသပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Large Icons"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Small Icons"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Toolbar"
 msgstr "ခလုတ်တန်းများ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go\tF5"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "&Stop\tF6"
 msgstr "ရပ်နားပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&About"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script"
 msgstr ""
 
 #. i18n-hint noun
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #: src/effects/BassTreble.cpp
 #, fuzzy
 msgid "Output"
 msgstr "ရလဒ် မီတာ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "Load Nyquist script"
 msgstr "နိုင်ခွီးစ်ထ် လှုံ့ဆော်ချက်..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
 #: src/export/Export.cpp src/export/ExportCL.cpp src/export/ExportMultiple.cpp
-#: src/import/ImportPCM.cpp src/widgets/Warning.cpp
+#: src/import/ImportPCM.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "သတိပေးချက်"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "Save Nyquist script"
 msgstr "နိုင်ခွီးစ်ထ် လှုံ့ဆော်ချက်..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find dialog"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Harvey Lubin (logo)"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Tango Icon Gallery (toolbar icons)"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Leland Lucius"
 msgstr "လီလဲန် လူစီယက် အားဖြင့်"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "(C) 2009 by Leland Lucius"
 msgstr "လီလဲန် လူစီယက် အားဖြင့်"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Nyquist Effect Workbench"
 msgstr "နောက်ဆုံး သက်ရောက်မှုကို ထပ်လုပ်ပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "No matches found"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Code has been modified. Are you sure?"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Untitled"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Nyquist Effect Workbench - "
 msgstr "နောက်ဆုံး သက်ရောက်မှုကို ထပ်လုပ်ပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
 #: src/prefs/ModulePrefs.cpp
 #, fuzzy
 msgid "New"
 msgstr "အသစ်"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New script"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Open"
 msgstr "ဖွင့်ပါ..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Open script"
 msgstr "လတ်တလောအရာကို ဖွင့်ပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #, fuzzy
 msgid "Save"
 msgstr "သိမ်းဆည်းပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Save script"
 msgstr "နိုင်ခွီးစ်ထ် လှုံ့ဆော်ချက်..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Save As"
 msgstr "သိမ်းဆည်းမဲ့ ပုံစံ..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Save script as..."
 msgstr "စီမံချက်ကို သိမ်းဆည်းမဲ့ ပုံစံ..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 msgid "Copy"
 msgstr "မိတ္တူကူးပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Copy to clipboard"
 msgstr "အောက်ခံကတ်ပြားကို ဖြတ်ယူပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "ဖြတ်ယူပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Cut to clipboard"
 msgstr "အောက်ခံကတ်ပြားကို ဖြတ်ယူပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "ပွားယူပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Paste from clipboard"
 msgstr "အောက်ခံကတ်ပြားမှ ပွားယူထားချက်"
 
 #. i18n-hint verb; to empty or erase
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #, fuzzy
 msgid "Clear"
 msgstr "ရှင်းလင်းပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Clear selection"
 msgstr "ရွေးချယ်ချက်ကို ငြိမ်သက်စေပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 #, fuzzy
 msgid "Select All"
 msgstr "ရွေးချယ်ပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Select all text"
 msgstr "ရွေးချယ်ပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Undo"
 msgstr "ပြန်ဖြည်ပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Undo last change"
 msgstr "အမျိုးအစား ပြောင်းလဲမှု"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Redo"
 msgstr "ပြန်ပြင်ပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Redo previous change"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Find text"
 msgstr "မှတ်စုများကို ရှာပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Match"
 msgstr "စုစည်းမှု"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to matching paren"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Top"
 msgstr "သို့ -"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to top S-expr"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Up"
 msgstr "အထက်"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to higher S-expr"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Previous"
 msgstr "အလျင် ကိရိယာ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to previous S-expr"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Next"
 msgstr "နောက် ကိရိယာ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
 msgstr ""
 
 #. i18n-hint noun
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
 msgstr "စတင်မှု"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Start script"
 msgstr "နိုင်ခွီးစ်ထ် လှုံ့ဆော်ချက်..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
 #: src/toolbars/ControlToolBar.cpp src/widgets/ProgressDialog.cpp
 msgid "Stop"
 msgstr "ရပ်နားပါ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Stop script"
 msgstr "နိုင်ခွီးစ်ထ် လှုံ့ဆော်ချက်..."
@@ -523,31 +486,61 @@ msgstr "EQ ရုပ်ကား"
 msgid "%s (incorporating %s, %s, %s, %s and %s)"
 msgstr ""
 
+#. i18n-hint: information about the program
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "About Audacity"
-msgstr "အိုဒေးစီးတီး အကြောင်း..."
+#, c-format
+msgid "About %s"
+msgstr ""
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: src/AboutDialog.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/widgets/MultiDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
 msgid "OK"
 msgstr "ကောင်းပြီ"
 
+#. i18n-hint: First and third %s will be the program's name,
+#. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
+#, c-format
 msgid ""
-"Audacity is a free program written by a worldwide team of [[https://www."
-"audacityteam.org/about/credits|volunteers]]. Audacity is [[https://www."
-"audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and "
-"other Unix-like systems)."
+"%s is a free program written by a worldwide team of %s. %s is %s for "
+"Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
 
+#. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
+msgid "volunteers"
+msgstr ""
+
+#. i18n-hint: substitutes into "Audacity is %s"
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "available"
+msgstr "ကိန်းရှင်"
+
+#. i18n-hint first and third %s will be "forum", second "wiki"
+#: src/AboutDialog.cpp
+#, c-format
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
-"our [[https://forum.audacityteam.org/|forum]]. For help, view the tips and "
-"tricks on our [[https://wiki.audacityteam.org/|wiki]] or visit our [[https://"
-"forum.audacityteam.org/|forum]]."
+"our %s. For help, view the tips and tricks on our %s or visit our %s."
+msgstr ""
+
+#. i18n-hint substitutes into "write to our %s"
+#: src/AboutDialog.cpp
+msgctxt "dative"
+msgid "forum"
+msgstr ""
+
+#. i18n-hint substitutes into "view the tips and tricks on our %s"
+#: src/AboutDialog.cpp
+msgid "wiki"
+msgstr ""
+
+#. i18n-hint substitutes into "visit our %s"
+#: src/AboutDialog.cpp
+msgctxt "accusative"
+msgid "forum"
 msgstr ""
 
 #. i18n-hint: The translation of "translator_credits" will appear
@@ -560,14 +553,15 @@ msgid "translator_credits"
 msgstr "မြန်မာ့ သတင်းနည်းပညာ ဆက်သွယ်ရေးအဖွဲ့ (ဘီအိုင်တီ)"
 
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "<h3>Audacity "
-msgstr "အိုဒေးစီးတီး %s ခလုတ်တန်း"
+msgid "<h3>"
+msgstr ""
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
+#, c-format
 msgid ""
-"Audacity the free, open source, cross-platform software for recording and "
-"editing sounds."
+"%s the free, open source, cross-platform software for recording and editing "
+"sounds."
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -578,17 +572,20 @@ msgstr "အသိအမှတ်ပြုချက်များ"
 msgid "DarkAudacity Customisation"
 msgstr ""
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "Audacity Team Members"
-msgstr "အိုဒေးစီးတီး %s တည်ဆောက်ရေး အဖွဲ့"
+#, fuzzy, c-format
+msgid "%s Team Members"
+msgstr "အခြား ဂုဏ်ထူးဆောင် အဖွဲ့၀င်များ"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
 msgstr ""
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid "Distinguished Audacity Team members, not currently active"
+#, c-format
+msgid "Distinguished %s Team members, not currently active"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -609,37 +606,34 @@ msgstr "မြန်မာ့ သတင်းနည်းပညာ ဆက်သ�
 msgid "Libraries"
 msgstr "စုစည်းခန်းများ"
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "Audacity includes code from the following projects:"
+#, fuzzy, c-format
+msgid "%s includes code from the following projects:"
 msgstr "အိုဒေးစီးတီးဟာ အောက်ပါ စီမံချက်များမှ ကုဒ်အပေါ် အခြေပြုထားတယ် -"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
 msgstr "အထူး ကျေးဇူးတင်ချက်များ -"
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "Audacity website: "
+#, fuzzy, c-format
+msgid "%s website: "
 msgstr "အိုဒေးစီးတီး ပထမဆုံး လည်ပတ်မှု"
 
+#. i18n-hint Audacity's name substitutes for first and third %s,
+#. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-msgid ""
-"<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
-"&copy; 1999-2018 Audacity Team.<br>"
+#, c-format
+msgid "%s software is copyright %s 1999-2018 %s Team."
 msgstr ""
 
+#. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid ""
-"&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic "
-"Mazzoni.<br><br>"
+#, c-format
+msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr ""
-
-#: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
-#, fuzzy
-msgid "Audacity"
-msgstr "အိုဒေးစီးတီး %s ခလုတ်တန်း"
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
@@ -751,11 +745,13 @@ msgid "Commit Id:"
 msgstr "ညွှန်ကြားချက် -"
 
 #: src/AboutDialog.cpp
-msgid "Debug build"
-msgstr "တည်ဆောက်မှုကို စစ်ဆေးပါ"
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr ""
 
 #: src/AboutDialog.cpp
-msgid "Release build"
+#, fuzzy, c-format
+msgid "Release build (debug level %d)"
 msgstr "တည်ဆောက်မှုကို ထုတ်ပြန်ပါ"
 
 #: src/AboutDialog.cpp
@@ -903,6 +899,19 @@ msgid ""
 "Cannot lock region beyond\n"
 "end of project."
 msgstr ""
+
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/AutoRecoveryDialog.cpp
+#: src/ProjectAudioManager.cpp src/ProjectFileIO.cpp src/ProjectFileManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
+#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: plug-ins/eq-xml-to-txt-converter.ny
+msgid "Error"
+msgstr "အမှားအယွင်း"
 
 #: src/AudacityApp.cpp
 #, fuzzy, c-format
@@ -2239,6 +2248,16 @@ msgid "&Copy Names to Clipboard"
 msgstr "အောက်ခံကတ်ပြားကို ဖြတ်ယူပါ"
 
 #: src/Dependencies.cpp
+#, c-format
+msgid "\"%s\", \"%s\", \"%s\"\n"
+msgstr ""
+
+#: src/Dependencies.cpp
+#, fuzzy
+msgid "Missing"
+msgstr "သုံးစွဲခြင်း -"
+
+#: src/Dependencies.cpp
 msgid ""
 "If you proceed, your project will not be saved to disk. Is this what you "
 "want?"
@@ -2304,18 +2323,6 @@ msgstr "စီမံချက် အချက်အလက်ကြမ်း ဖ�
 msgid "Cleaning up cache directories"
 msgstr "ယာယီသိမ်းဆည်းခန်း ဖိုင်တွဲများကို ရှင်းလင်းနေတယ်"
 
-#: src/DirManager.cpp
-msgid "mkdir in DirManager::MakeBlockFilePath failed."
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid ""
-"Audacity found an orphan block file: %s. \n"
-"Please consider saving and reloading the project to perform a complete "
-"project check."
-msgstr ""
-
 #. i18n-hint: This is the pattern for filenames that are created
 #. * when a file needs to be backed up to a different name.  For
 #. * example, mysong would become mysong-old1, mysong-old2, etc.
@@ -2327,50 +2334,14 @@ msgid "%s-old%d"
 msgstr "%s-အဟောင်း%d"
 
 #: src/DirManager.cpp
-#, fuzzy
-msgid "Unable to open/create test file."
-msgstr "စမ်းသပ်ဖိုင်ကို မဖွင့်နိုင်/မဖန်တီးနိုင်ဘူး"
-
-#. i18n-hint: %s is the name of a file.
-#: src/DirManager.cpp
-#, fuzzy, c-format
-msgid "Unable to remove '%s'."
-msgstr "'%s' ကို မဖယ်ရှားနိုင်ဘူး"
-
-#: src/DirManager.cpp
 #, c-format
 msgid "Renamed file: %s\n"
 msgstr "အမည်ပြောင်းထားတဲ့ ဖိုင် - %s\n"
 
 #: src/DirManager.cpp
-#, fuzzy, c-format
-msgid "Unable to rename '%s' to '%s'."
-msgstr "'%s' ကို '%s' အဖြစ် အမည် မပြောင်းနိုင်ဘူး"
-
-#: src/DirManager.cpp
 #, c-format
 msgid "Changed block %s to new alias name\n"
 msgstr "%s ကို အမည်ပွား အသစ်အဖြစ် ပြောင်းလဲထားတဲ့ အုပ်စု\n"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing aliased audio file: '%s'"
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing alias (.auf) block file: '%s'"
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing data block file: '%s'"
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Orphan block file: '%s'"
-msgstr ""
 
 #: src/DirManager.cpp src/ProjectFSCK.cpp
 msgid "Inspecting project file data"
@@ -2626,7 +2597,9 @@ msgstr ""
 msgid "As&k"
 msgstr ""
 
-#: src/FileNames.cpp
+#: src/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
 msgid "All files"
 msgstr "ဖိုင်များ အားလုံး (*)|*"
@@ -3100,24 +3073,28 @@ msgstr "(ပြင်ပ ပရိုဂရမ်)"
 msgid "Unable to determine"
 msgstr "မဆုံးဖြတ်နိုင်ဘူး"
 
-#: src/Internat.cpp src/import/ImportRaw.cpp
-msgid "bytes"
+#: src/Internat.cpp
+#, fuzzy, c-format
+msgid "%s bytes"
 msgstr "ဘိုက်များ"
 
 #. i18n-hint: Abbreviation for Kilo bytes
 #: src/Internat.cpp
-msgid "KB"
-msgstr "KB"
+#, c-format
+msgid "%s KB"
+msgstr ""
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: src/Internat.cpp
-msgid "MB"
-msgstr "MB"
+#, c-format
+msgid "%s MB"
+msgstr ""
 
 #. i18n-hint: Abbreviation for Giga bytes
 #: src/Internat.cpp
-msgid "GB"
-msgstr "GB"
+#, c-format
+msgid "%s GB"
+msgstr ""
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3130,6 +3107,7 @@ msgstr "အသံလမ်းကြော"
 
 #. i18n-hint: (noun)
 #: src/LabelDialog.cpp src/menus/LabelMenus.cpp
+#: src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "အမှတ်အသား"
@@ -3221,6 +3199,11 @@ msgid ""
 "language, %s (%s)."
 msgstr ""
 
+#: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+msgid "Confirm"
+msgstr "အတည်ပြုပါ"
+
 #: src/Languages.cpp
 #, fuzzy
 msgid "Simplified"
@@ -3255,22 +3238,6 @@ msgstr ""
 
 #: src/LyricsWindow.cpp
 msgid "&Karaoke..."
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in items at %s specify conflicting placements"
 msgstr ""
 
 #: src/Menus.cpp
@@ -3399,21 +3366,10 @@ msgstr ""
 
 #: src/ModuleManager.cpp
 #, c-format
-msgid "Unable to load the module \"%s\". Error: %s"
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
 msgid ""
 "The module \"%s\" does not provide a version string.\n"
 "\n"
 "It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide a version string. It will not be loaded."
 msgstr ""
 
 #: src/ModuleManager.cpp
@@ -3427,22 +3383,8 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid ""
-"The module \"%s\" is matched with Audacity version \"%s\". It will not be "
-"loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
 "The module \"%s\" failed to initialize.\n"
 "\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" failed to initialize.\n"
 "It will not be loaded."
 msgstr ""
 
@@ -3484,13 +3426,6 @@ msgid ""
 "The module \"%s\" does not provide any of the required functions.\n"
 "\n"
 "It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide any of the required functions. It will "
-"not be loaded."
 msgstr ""
 
 #. i18n-hint: This is for screen reader software and indicates that
@@ -3743,8 +3678,11 @@ msgid ""
 "%s"
 msgstr "'%s' ကို မဖယ်ရှားနိုင်ဘူး"
 
+#. i18n-hint A plug-in is an optional added program for a sound
+#. effect, or generator, or analyzer
 #: src/PluginManager.cpp
 #, fuzzy
+msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
 msgstr[0] "၀မ်းနည်းပါတယ်၊ ပိုင်းလုံး ယန္တရားငယ်ကို ဖွင့်ဖို့ မအောင်မြင်ဘူး။"
@@ -3780,6 +3718,26 @@ msgid ""
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
 "အသံ ကိရိယာကို ဖွင့်နေစဉ် အမှားအယွင်း။ ကိရိယာ ရလဒ် တပ်ဆင်ချက်များနဲ့ စီမံချက် နမူနာ နှုန်းထားကို စစ်ဆေးပါ။"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr "ရောင်စဉ်ကို ရေးမှတ်ဖို့၊ ရွေးထားတဲ့ အသံလမ်းကြောများ အားလုံးဟာ တူညီတဲ့ နမူနာ အဆင့်ဖြစ်ရမယ်။"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
 
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
@@ -3868,10 +3826,6 @@ msgid "Warning - Missing Aliased File(s)"
 msgstr ""
 
 #: src/ProjectFSCK.cpp
-msgid "   Project check replaced missing aliased file(s) with silence."
-msgstr ""
-
-#: src/ProjectFSCK.cpp
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
@@ -3898,10 +3852,6 @@ msgid "Warning - Missing Alias Summary File(s)"
 msgstr ""
 
 #: src/ProjectFSCK.cpp
-msgid "   Project check regenerated missing alias summary file(s)."
-msgstr ""
-
-#: src/ProjectFSCK.cpp
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
@@ -3924,17 +3874,6 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Audio Data Block File(s)"
-msgstr ""
-
-#: src/ProjectFSCK.cpp
-msgid ""
-"   Project check replaced missing audio data block file(s) with silence."
-msgstr ""
-
-#: src/ProjectFSCK.cpp
-msgid ""
-"   Project check ignored orphan block file(s). They will be deleted when "
-"project is saved."
 msgstr ""
 
 #: src/ProjectFSCK.cpp
@@ -3964,11 +3903,6 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid ""
-"Project check found file inconsistencies inspecting the loaded project data."
-msgstr ""
-
-#: src/ProjectFSCK.cpp
-msgid ""
 "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
 "Select 'Help > Diagnostics > Show Log...' to see details."
@@ -3978,9 +3912,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr ""
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "စီမံချက်များ"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -4385,6 +4324,22 @@ msgstr "ပြင်ညီ စတီရီယို"
 #, fuzzy
 msgid "Vertical Scrollbar"
 msgstr "ဒေါင်လိုက် စတီရီယို"
+
+#: src/Registry.cpp
+#, c-format
+msgid "Plug-in group at %s was merged with a previously defined group"
+msgstr ""
+
+#: src/Registry.cpp
+#, c-format
+msgid ""
+"Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr ""
+
+#: src/Registry.cpp
+#, c-format
+msgid "Plug-in items at %s specify conflicting placements"
+msgstr ""
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -4945,6 +4900,33 @@ msgstr ""
 "အိုဒေးစီးတီးက မသိမ်းဆည်းနိုင်တဲ့ ဖိုင် -\n"
 "  %s"
 
+#. i18n-hint: describing the "classic" or traditional
+#. appearance of older versions of Audacity
+#: src/Theme.cpp
+msgid "Classic"
+msgstr ""
+
+#. i18n-hint: Light meaning opposite of dark
+#: src/Theme.cpp
+msgid "Light"
+msgstr "ပေါ့ပါးတယ်"
+
+#: src/Theme.cpp
+msgid "Dark"
+msgstr ""
+
+#. i18n-hint: greater difference between foreground and
+#. background colors
+#: src/Theme.cpp
+#, fuzzy
+msgid "High Contrast"
+msgstr "ခြားနားပါ..."
+
+#. i18n-hint: user defined
+#: src/Theme.cpp
+msgid "Custom"
+msgstr ""
+
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -5467,6 +5449,12 @@ msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#, fuzzy
+msgid "Audacity"
+msgstr "အိုဒေးစီးတီး %s ခလုတ်တန်း"
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -5925,7 +5913,10 @@ msgstr "အသံလမ်းကြောမြင့်များ"
 msgid "Blue"
 msgstr ""
 
-#: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
+#. i18n-hint:  This really means the color, not as in "white noise"
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgctxt "color"
 msgid "White"
 msgstr "အဖြူရောင်"
 
@@ -6480,16 +6471,17 @@ msgstr ""
 msgid "Pitch"
 msgstr "အသံပေါက် -"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+#, fuzzy
+msgctxt "change pitch"
 msgid "from"
 msgstr "မှ"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
 #, fuzzy
+msgctxt "change pitch"
 msgid "&from"
 msgstr "မှ"
 
@@ -6498,15 +6490,17 @@ msgstr "မှ"
 msgid "from Octave"
 msgstr "ရှစ်သံတွဲ အောက်"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+#, fuzzy
+msgctxt "change pitch"
 msgid "to"
 msgstr "သို့"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
 #, fuzzy
+msgctxt "change pitch"
 msgid "&to"
 msgstr "သို့"
 
@@ -6543,9 +6537,7 @@ msgstr ""
 msgid "to (Hz)"
 msgstr ""
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
-#: src/effects/Loudness.cpp
+#: src/effects/ChangePitch.cpp src/effects/Loudness.cpp
 #, fuzzy
 msgid "t&o"
 msgstr "သို့"
@@ -6612,15 +6604,34 @@ msgstr "အမျိုးစုံကို တင်ပို့ပါ"
 msgid "Standard Vinyl rpm:"
 msgstr "စံညွှန်း Vinyl RPM:"
 
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 #, fuzzy
 msgid "From rpm"
 msgstr "RPM မှ"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "&from"
+msgstr "မှ"
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
 msgstr ""
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "&to"
+msgstr "သို့"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Selection Length"
@@ -6636,10 +6647,24 @@ msgstr "လက်ရှိ ခြားနားချက်"
 msgid "Current length of selection."
 msgstr "ရွေးချယ်​​ချက် အတွက် ဖိုင်ကို တိဖြတ်ပါ"
 
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "from"
+msgstr "မှ"
+
 #: src/effects/ChangeSpeed.cpp
 #, fuzzy
 msgid "&New Length:"
 msgstr "အရှည်"
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "to"
+msgstr "သို့"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo"
@@ -6664,21 +6689,49 @@ msgstr "နရီအနှေးအမြန်ကို အသံပေါက�
 msgid "Beats per minute"
 msgstr "စက္ကန့်အလိုက် ရိုက်ချက်များ -"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 #, fuzzy
 msgid "Beats per minute, from"
 msgstr "စက္ကန့်အလိုက် ရိုက်ချက်များ -"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "&from"
+msgstr "မှ"
+
+#. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 #, fuzzy
 msgid "Beats per minute, to"
 msgstr "စက္ကန့်အလိုက် ရိုက်ချက်များ -"
 
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "&to"
+msgstr "သို့"
+
 #: src/effects/ChangeTempo.cpp
 msgid "Length (seconds)"
 msgstr "အရှည် (စက္ကန့်များ)"
+
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "from"
+msgstr "မှ"
+
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "t&o"
+msgstr "သို့"
 
 #: src/effects/ChangeTempo.cpp
 #, fuzzy, c-format
@@ -7487,13 +7540,13 @@ msgstr "နောက်ဆုံး သက်ရောက်မှုကို �
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Export Effect Parameters"
-msgstr "ပါရာမီတာများကို တည်းဖြတ်ပါ"
+msgid "Presets"
+msgstr "ကြိုတင်သတ်မှတ်ချက်"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Presets (*.txt)|*.txt|All files|*"
-msgstr "စာသား ဖိုင်များ (*.txt)|*.txt|ဖိုင်များ အားလုံး (*.*)|*.*"
+msgid "Export Effect Parameters"
+msgstr "ပါရာမီတာများကို တည်းဖြတ်ပါ"
 
 #: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
 #: src/xml/XMLFileReader.cpp
@@ -8367,9 +8420,12 @@ msgstr "ပုံမှန်ဖြစ်စေပါ"
 msgid "Loudness LUFS"
 msgstr ""
 
-#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Loudness.cpp
 msgid "LUFS"
+msgstr ""
+
+#: src/effects/Loudness.cpp
+msgid "RMS dB"
 msgstr ""
 
 #: src/effects/Loudness.cpp
@@ -8389,16 +8445,25 @@ msgstr ""
 msgid "(Maximum 0dB)"
 msgstr "အများဆုံး ကျယ်ပြန့်မှု dB"
 
-#: src/effects/Loudness.cpp
-msgid "RMS dB"
-msgstr ""
-
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
 #: src/effects/Noise.cpp
+#, fuzzy
+msgctxt "noise"
+msgid "White"
+msgstr "အဖြူရောင်"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: src/effects/Noise.cpp
+#, fuzzy
+msgctxt "noise"
 msgid "Pink"
 msgstr "ပန်းရောင်"
 
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: src/effects/Noise.cpp
 #, fuzzy
+msgctxt "noise"
 msgid "Brownian"
 msgstr "အညှိရောင်"
 
@@ -9287,7 +9352,10 @@ msgstr "စံထားချက်များ"
 msgid "%.3f"
 msgstr ""
 
-#: src/effects/Silence.cpp src/menus/EditMenus.cpp
+#. i18n-hint: noun
+#: src/effects/Silence.cpp
+#, fuzzy
+msgctxt "generator"
 msgid "Silence"
 msgstr "ငြိမ်သက်စေပါ"
 
@@ -9468,11 +9536,6 @@ msgid "Adds the ability to use VST effects in Audacity."
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "VST plugin registration failed for %s\n"
-msgstr ""
-
-#: src/effects/VST/VSTEffect.cpp
 msgid "Scanning Shell VST"
 msgstr ""
 
@@ -9595,10 +9658,6 @@ msgstr "ကြိုတင်သတ်မှတ်ချက်ကို ဖွ�
 #, fuzzy
 msgid "Unable to load presets file."
 msgstr "စမ်းသပ်ဖိုင်ကို မဖွင့်နိုင်/မဖန်တီးနိုင်ဘူး"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST plugin initialization failed\n"
-msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LV2Effect.cpp
@@ -9772,13 +9831,6 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy, c-format
-msgid "Couldn't create the \"%s\" directory"
-msgstr ""
-"ဖိုင်တွဲကို မဖန်တီးနိုင်ဘူး -\n"
-"  %s"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
 msgid "Export Audio Unit Preset As %s:"
 msgstr "ကြိုတင်သတ်မှတ်ချက်များကို တင်ပို့ပါ"
 
@@ -9908,7 +9960,7 @@ msgstr "သက်ရောက်မှု တပ်ဆင်ချက်မျ�
 
 #: src/effects/lv2/LV2Effect.cpp
 #, c-format
-msgid "&Buffer Size (8 to %d) samples):"
+msgid "&Buffer Size (8 to %d) samples:"
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -9927,26 +9979,12 @@ msgid ""
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid "LV2 sequence buffer overflow"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
 #, c-format
-msgid "%s requires unsupported feature %s"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
 msgid "%s requires unsupported feature %s\n"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "%s requires unsupported option %s"
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -10043,14 +10081,6 @@ msgstr ""
 msgid "Debug Output: "
 msgstr "နိုင်ခွီးစ်ထ် ရလဒ် -"
 
-#. i18n-hint: An effect "returned" a message.
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid ""
-"'%s' returned:\n"
-"%s"
-msgstr ""
-
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "Processing complete."
@@ -10120,13 +10150,6 @@ msgstr ""
 #, fuzzy, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
 msgstr "အိုဒေးစီးတီးရဲ့ ဒီမူအဆင့်ကို %s ပံ့ပိုးမှုနဲ့ ပြုစုမထားဘူး"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid ""
-"Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
-"Control not created."
-msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -10221,12 +10244,6 @@ msgstr "'%s' ကို '%s' အဖြစ် အမည် မပြောင်�
 #, fuzzy
 msgid "Value Error"
 msgstr "LOF အမှားအယွင်း"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Invalid wildcard string in 'path' control.'\n"
-"Using empty string instead."
-msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp plug-ins/sample-data-export.ny
 #, fuzzy
@@ -10641,7 +10658,8 @@ msgstr "နမူနာ နှုန်းထားများ"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "%d kbps"
 msgstr "kbps"
@@ -11335,12 +11353,6 @@ msgstr "ရွေးချယ်ထားတဲ့ အသံကို FLAC လ�
 #, fuzzy
 msgid "Exporting the audio as FLAC"
 msgstr "ရွေးချယ်ထားတဲ့ အသံကို FLAC လို တင်ပို့နေခြင်း"
-
-#. i18n-hint kbps abbreviates "thousands of bits per second"
-#: src/export/ExportMP2.cpp
-#, fuzzy, c-format
-msgid "%d kpbs"
-msgstr "kbps"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -12126,11 +12138,6 @@ msgid ""
 "but none of them understood this file format."
 msgstr ""
 
-#: src/import/Import.cpp src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
-msgstr "%s ကို တင်သွင်းနေခြင်း"
-
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
 msgstr "FFmpeg-လိုက်ဖက်တဲ့ ဖိုင်များ"
@@ -12243,6 +12250,14 @@ msgstr "ဖိုင်ကို မဖွင့်နိုင်ဘူး"
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
 msgstr "MP3 ဖိုင်များ"
+
+#: src/import/ImportMP3.cpp
+#, fuzzy, c-format
+msgid ""
+"MP3 Decoding Failed:\n"
+"\n"
+"%s"
+msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12511,6 +12526,11 @@ msgstr ""
 msgid "Don't &warn again and always use my choice above"
 msgstr ""
 
+#: src/import/ImportPlugin.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "%s ကို တင်သွင်းနေခြင်း"
+
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
 msgstr "QuickTime ဖိုင်များ"
@@ -12599,6 +12619,10 @@ msgid "Start offset:"
 msgstr "အော့ဖ်ဆက် စတငပါ -"
 
 #: src/import/ImportRaw.cpp
+msgid "bytes"
+msgstr "ဘိုက်များ"
+
+#: src/import/ImportRaw.cpp
 msgid "Amount to import:"
 msgstr "တင်သွင်းမဲ့ ပမာဏ -"
 
@@ -12628,7 +12652,7 @@ msgstr "ဘယ်ဖက်"
 msgid "%s right"
 msgstr "ညာဖက်"
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. First %s is replaced with the noun "start" or "end"
 #. identifying one end of a clip,
 #. first number gives the position of that clip in a sequence
@@ -12637,10 +12661,6 @@ msgstr "ညာဖက်"
 #. and the last string is the name of the track containing the
 #. clips.
 #.
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr ""
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d of %d clip %s"
@@ -12658,19 +12678,15 @@ msgstr "စတင်မှု"
 msgid "end"
 msgstr "ပြီးဆုံးမှု"
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
 #.
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d and %s %d of %d clip %s"
@@ -12678,14 +12694,10 @@ msgid_plural "%s %d and %s %d of %d clips %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. first number identifies one of a sequence of clips,
 #. last number counts the clips,
 #. string names a track
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr ""
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%d of %d clip %s"
@@ -12830,6 +12842,13 @@ msgstr "ပယ်ဖျက်မှုကို ခွဲခြမ်းပါ"
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
 msgstr "%.2f စက္ကန့်နေရာ %.2f အတွက် ငြိမ်သက်တဲ့ ရွေးချယ်မှု အသံလမ်းကြောများ"
+
+#. i18n-hint: verb
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgctxt "command"
+msgid "Silence"
+msgstr "ငြိမ်သက်စေပါ"
 
 #: src/menus/EditMenus.cpp
 #, fuzzy, c-format
@@ -13348,7 +13367,8 @@ msgstr ""
 msgid "&Check for Updates..."
 msgstr "မှီခိုအားပြုချက်များကို စစ်ဆေးပါ..."
 
-#: src/menus/LabelMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "Added label"
 msgstr "ပေါင်းထည့်ထားတဲ့ အမှတ်အသား"
 
@@ -13691,6 +13711,11 @@ msgstr "%s ကို အသုံးချပါ"
 #, fuzzy
 msgid "Palette..."
 msgstr "ရှာပါ..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Reset &Configuration"
+msgstr "အသံသွင်းနေတယ်"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
@@ -14721,7 +14746,7 @@ msgstr "လှုပ်ရှားမှုတခုကို ရွေးခ�
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
-msgid "Please select in a stereo track."
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "လှုပ်ရှားမှုတခုကို ရွေးချယ်ပါ"
 
 #: src/menus/TransportMenus.cpp
@@ -15106,8 +15131,10 @@ msgstr "ကိရိယာများ"
 msgid "Preferences for Device"
 msgstr "ဦးစားပေးချက်များ..."
 
-#. i18n-hint: refers to Audacity's user interface settings
-#: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
+#. i18n-hint Software interface to audio devices
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgctxt "device"
 msgid "Interface"
 msgstr "ကြားခံမြင်ကွင်း"
 
@@ -15452,6 +15479,13 @@ msgstr ""
 msgid "Ext Import"
 msgstr "တင်သွင်းပါ"
 
+#. i18n-hint: refers to Audacity's user interface settings
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgctxt "GUI"
+msgid "Interface"
+msgstr "ကြားခံမြင်ကွင်း"
+
 #: src/prefs/GUIPrefs.cpp
 #, fuzzy
 msgid "Preferences for GUI"
@@ -15498,33 +15532,6 @@ msgstr ""
 #: src/prefs/GUIPrefs.cpp
 msgid "From Internet"
 msgstr "အင်တာနက်မှ"
-
-#. i18n-hint: describing the "classic" or traditional
-#. appearance of older versions of Audacity
-#: src/prefs/GUIPrefs.cpp
-msgid "Classic"
-msgstr ""
-
-#. i18n-hint: Light meaning opposite of dark
-#: src/prefs/GUIPrefs.cpp
-msgid "Light"
-msgstr "ပေါ့ပါးတယ်"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "Dark"
-msgstr ""
-
-#. i18n-hint: greater difference between foreground and
-#. background colors
-#: src/prefs/GUIPrefs.cpp
-#, fuzzy
-msgid "High Contrast"
-msgstr "ခြားနားပါ..."
-
-#. i18n-hint: user defined
-#: src/prefs/GUIPrefs.cpp
-msgid "Custom"
-msgstr ""
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -15740,21 +15747,10 @@ msgid "&Defaults"
 msgstr "စံထားချက်များ"
 
 #: src/prefs/KeyConfigPrefs.cpp
+#, c-format
 msgid ""
 "\n"
-"   *   \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\"  (because the shortcut '"
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "' is used by \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\")\n"
+"   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -15767,19 +15763,12 @@ msgid "Error Importing Keyboard Shortcuts"
 msgstr "ကီးဘုတ် ဖြတ်လမ်းများကို တင်ပို့မဲ့ ပုံစံ -"
 
 #: src/prefs/KeyConfigPrefs.cpp
-msgid "The file with the shortcuts contains illegal shortcut duplicates for \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\" and \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
+#, c-format
 msgid ""
-"\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
+"and \"%s\".\n"
 "Nothing is imported."
-msgstr "ပြန်ပြင်ဖို့ မရှိဘူး"
+msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15816,15 +15805,25 @@ msgid "You must select a binding before assigning a shortcut"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
+msgid ""
+"\n"
+"\n"
+"\t and\n"
+"\n"
+"\t"
+msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
-"\t'%s'\n"
+"\t%s\n"
+"\n"
 "\n"
 "Click OK to assign the shortcut to\n"
 "\n"
-"\t'%s'\n"
+"\t%s\n"
 "\n"
 "instead. Otherwise, click Cancel."
 msgstr ""
@@ -15917,6 +15916,13 @@ msgstr ""
 #, fuzzy
 msgid "Preferences for MidiIO"
 msgstr "ဦးစားပေးချက်များ..."
+
+#. i18n-hint Software interface to MIDI
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgctxt "MIDI"
+msgid "Interface"
+msgstr "ကြားခံမြင်ကွင်း"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -16042,6 +16048,9 @@ msgid "Set Selection Range"
 msgstr "ရွေးချယ်မှု အတိုင်းအတာကို ချမှတ်ပါ"
 
 #: src/prefs/MousePrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Left-Click"
 msgstr "Shift-ဘယ်-နှိုပ်ပါ"
 
@@ -17240,10 +17249,16 @@ msgid "Sync-Lock Tracks"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom In"
 msgstr "ချဲ့ကားပါ"
 
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Out"
 msgstr "ကျုံ့ပါ"
 
@@ -17428,7 +17443,7 @@ msgstr "စီမံချက် နှုန်းထား (Hz) -"
 msgid "Snap-To"
 msgstr "ကူးသွားတဲ့ နေရာ"
 
-#: src/toolbars/SelectionBar.cpp src/toolbars/TimerToolBar.cpp
+#: src/toolbars/SelectionBar.cpp src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "Audio Position"
 msgstr "အသံ တည်နေရာ -"
@@ -17524,14 +17539,14 @@ msgstr ""
 msgid "Spe&ctral Selection Toolbar"
 msgstr "ရွေးချယ်မှု ခလုတ်တန်း"
 
-#: src/toolbars/TimerToolBar.cpp
+#: src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "Time"
 msgstr "အချိန်"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for viewing actual time of the cursor
-#: src/toolbars/TimerToolBar.cpp
+#: src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "&Time Toolbar"
 msgstr "ကိရိယာ ခလုတ်တန်း"
@@ -17753,23 +17768,24 @@ msgid "Right-click for menu."
 msgstr "ညာ-နှိုပ်ပါ"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom Reset\tShift-Right-Click"
+msgid "Zoom Reset"
+msgstr "ကျုံ့ပါ"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+#, fuzzy
+msgid "Shift-Right-Click"
 msgstr "Shift-ဘယ်-နှိုပ်ပါ"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr "Shift-ဘယ်-နှိုပ်ပါ"
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
-msgid "Zoom Out\tShift-Left-Click"
+msgid "Left-Click/Left-Drag"
 msgstr "Shift-ဘယ်-နှိုပ်ပါ"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
@@ -17846,13 +17862,8 @@ msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom Reset"
-msgstr "ကျုံ့ပါ"
-
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#, fuzzy
-msgid "Zoom to Fit\tShift-Right-Click"
-msgstr "Shift-ဘယ်-နှိုပ်ပါ"
+msgid "Zoom to Fit"
+msgstr "အမှတ်ကို ချဲ့ကားပါ"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 #, fuzzy
@@ -18496,6 +18507,21 @@ msgstr "R"
 msgid "%.2fx"
 msgstr "%.1f dB"
 
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#, c-format
+msgid "File '%s' already exists, do you really want to overwrite it?"
+msgstr ""
+
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#, fuzzy
+msgid "Please choose an existing file."
+msgstr "လှုပ်ရှားမှုတခုကို ရွေးချယ်ပါ"
+
+#: src/widgets/FileDialog/mac/FileDialogPrivate.mm
+#, fuzzy
+msgid "File type:"
+msgstr "စစ်ထုတ်ကိရိယာ"
+
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
 msgstr "ရှင်းလင်းပါ"
@@ -18898,6 +18924,11 @@ msgid "0100000.0100 Hz"
 msgstr "0100 နာရီ 060 မိနစ် 060.0100 စက္ကန့်"
 
 #: src/widgets/NumericTextCtrl.cpp
+msgid "centihertz"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows frequency in kilohertz
+#: src/widgets/NumericTextCtrl.cpp
 msgid "kHz"
 msgstr "kHz"
 
@@ -18908,6 +18939,10 @@ msgstr "kHz"
 msgid "01000.01000 kHz|0.001"
 msgstr "0100 နာရီ 060 မိနစ် 060.0100 စက္ကန့်"
 
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hertz"
+msgstr ""
+
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
 #: src/widgets/NumericTextCtrl.cpp
@@ -18917,11 +18952,15 @@ msgstr "ရှစ်သံတွဲ အောက်"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 1 / ln (2)
 #: src/widgets/NumericTextCtrl.cpp
 #, fuzzy
 msgid "100.01000 octaves|1.442695041"
 msgstr "01000,01000 ဘောင်များ|24"
+
+#. i18n-hint: an octave is a doubling of frequency
+#: src/widgets/NumericTextCtrl.cpp
+msgid "thousandths of octaves"
+msgstr ""
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in semitones and cents
@@ -18933,9 +18972,13 @@ msgstr "အဆင့်များ-တ၀က်ပါတဲ့ အသံ၀က�
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 12 / ln (2)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "1000 semitones .0100 cents|17.312340491"
+msgstr ""
+
+#. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hundredths of cents"
 msgstr ""
 
 #. i18n-hint: Name of display format that shows log of frequency
@@ -18946,11 +18989,15 @@ msgstr ""
 
 #. i18n-hint: Format string for displaying log of frequency in decades.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 1 / ln (10)
 #: src/widgets/NumericTextCtrl.cpp
 #, fuzzy
 msgid "10.01000 decades|0.434294482"
 msgstr "01000,01000 ဘောင်များ|24"
+
+#. i18n-hint: a decade is a tenfold increase of frequency
+#: src/widgets/NumericTextCtrl.cpp
+msgid "thousandths of decades"
+msgstr ""
 
 #: src/widgets/NumericTextCtrl.cpp
 #, fuzzy
@@ -18961,12 +19008,9 @@ msgstr "အမျိုးအစားကို ပြောင်းဖို�
 msgid "centiseconds"
 msgstr ""
 
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hundredths of "
-msgstr ""
-
-#: src/widgets/NumericTextCtrl.cpp
-msgid "thousandths of "
+#: src/widgets/PopupMenuTable.h
+#, c-format
+msgid "%s (%s)"
 msgstr ""
 
 #: src/widgets/ProgressDialog.cpp
@@ -19066,12 +19110,8 @@ msgstr "အမည်ဟာ ဗလာ မဖြစ်ရဘူး"
 
 #: src/widgets/valnum.cpp
 #, fuzzy, c-format
-msgid "Value must not be greather than %s"
+msgid "Value must not be greater than %s"
 msgstr "စတင်ခြင်းနဲ့ ရပ်တန့်ခြင်းဟာ ၀ ထက် ကြီးရမယ်။"
-
-#: src/widgets/valnum.cpp
-msgid "e"
-msgstr ""
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
@@ -19660,6 +19700,11 @@ msgid "Equalization XML file"
 msgstr "ညီမျှစေခြင်း"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
+#, fuzzy
+msgid "XML file"
+msgstr "MP3 ဖိုင်များ"
+
+#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
 msgstr ""
 
@@ -20081,6 +20126,32 @@ msgstr "တင်သွင်းဖို့ စီးကြောင်း(မ�
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy
+msgid "Plug-in"
+msgstr "နိုင်ခွီးစ်ထ် ရလဒ် -"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Lisp file"
+msgstr "MP3 ဖိုင်များ"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "HTML file"
+msgstr "MP3 ဖိုင်များ"
+
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Text file"
+msgstr "ဖိုင်များကို အမည်ပေးပါ -"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "All supported"
+msgstr "ဖိုင်များ အားလုံး|*|ပံ့ပိုးထားတဲ့ ဖိုင်များ အားလုံး|"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
 msgid "Allow overwriting"
 msgstr "တွဲညှပ်မှုကို ခွင့်ပြုပါ"
 
@@ -20370,6 +20441,16 @@ msgstr "ရွေးချယ်ချက်ကို ငြိမ်သက်�
 #, fuzzy
 msgid "Export data to"
 msgstr "ဖိုင်ကို တင်ပို့ပါ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "CSV files"
+msgstr "FLAC ဖိုင်များ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "HTML files"
+msgstr "MP3 ဖိုင်များ"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
@@ -20942,6 +21023,74 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "About Audacity"
+#~ msgstr "အိုဒေးစီးတီး အကြောင်း..."
+
+#, fuzzy
+#~ msgid "<h3>Audacity "
+#~ msgstr "အိုဒေးစီးတီး %s ခလုတ်တန်း"
+
+#, fuzzy
+#~ msgid "Audacity Team Members"
+#~ msgstr "အိုဒေးစီးတီး %s တည်ဆောက်ရေး အဖွဲ့"
+
+#~ msgid "Debug build"
+#~ msgstr "တည်ဆောက်မှုကို စစ်ဆေးပါ"
+
+#, fuzzy
+#~ msgid "Unable to open/create test file."
+#~ msgstr "စမ်းသပ်ဖိုင်ကို မဖွင့်နိုင်/မဖန်တီးနိုင်ဘူး"
+
+#, fuzzy
+#~ msgid "Unable to remove '%s'."
+#~ msgstr "'%s' ကို မဖယ်ရှားနိုင်ဘူး"
+
+#, fuzzy
+#~ msgid "Unable to rename '%s' to '%s'."
+#~ msgstr "'%s' ကို '%s' အဖြစ် အမည် မပြောင်းနိုင်ဘူး"
+
+#~ msgid "KB"
+#~ msgstr "KB"
+
+#~ msgid "MB"
+#~ msgstr "MB"
+
+#~ msgid "GB"
+#~ msgstr "GB"
+
+#, fuzzy
+#~ msgid "Presets (*.txt)|*.txt|All files|*"
+#~ msgstr "စာသား ဖိုင်များ (*.txt)|*.txt|ဖိုင်များ အားလုံး (*.*)|*.*"
+
+#, fuzzy
+#~ msgid "Couldn't create the \"%s\" directory"
+#~ msgstr ""
+#~ "ဖိုင်တွဲကို မဖန်တီးနိုင်ဘူး -\n"
+#~ "  %s"
+
+#, fuzzy
+#~ msgid "%d kpbs"
+#~ msgstr "kbps"
+
+#, fuzzy
+#~ msgid ""
+#~ "\".\n"
+#~ "Nothing is imported."
+#~ msgstr "ပြန်ပြင်ဖို့ မရှိဘူး"
+
+#, fuzzy
+#~ msgid "Zoom Reset\tShift-Right-Click"
+#~ msgstr "Shift-ဘယ်-နှိုပ်ပါ"
+
+#, fuzzy
+#~ msgid "Zoom Out\tShift-Left-Click"
+#~ msgstr "Shift-ဘယ်-နှိုပ်ပါ"
+
+#, fuzzy
+#~ msgid "Zoom to Fit\tShift-Right-Click"
+#~ msgstr "Shift-ဘယ်-နှိုပ်ပါ"
+
+#, fuzzy
 #~ msgid "incorporating"
 #~ msgstr "တင်သွင်းနေတဲ့ အမှားအယွင်း"
 
@@ -21092,10 +21241,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Remove Center Classic: Mono"
 #~ msgstr "ဖယ်ရှားထားတဲ့ ဖြတ်ယူမှု လိုင်း"
-
-#, fuzzy
-#~ msgid "Decoding failed\n"
-#~ msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
 
 #, fuzzy
 #~ msgid "Could not decode file: %s"
@@ -21834,10 +21979,6 @@ msgstr ""
 #~ msgid "Emeritus Developers"
 #~ msgstr "ဂုဏ်ထူးဆောင် တည်ဆောက်သူများ"
 
-#, fuzzy
-#~ msgid " Emeritus Team Members"
-#~ msgstr "အခြား ဂုဏ်ထူးဆောင် အဖွဲ့၀င်များ"
-
 #~ msgid "Welcome to Audacity "
 #~ msgstr "အိုဒေးစီးတီးမှ ကြိုဆိုပါတယ်"
 
@@ -21935,10 +22076,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Playback Meter Preferences"
 #~ msgstr "မီတာ ဦး​စားပေးချက်များ"
-
-#, fuzzy
-#~ msgid "%ld bytes"
-#~ msgstr "ဘိုက်များ"
 
 #, fuzzy
 #~ msgid "Modified"

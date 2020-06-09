@@ -1,396 +1,361 @@
 msgid ""
 msgstr ""
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Project-Id-Version: audacity 2.4.0\n"
+"Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-06-09 10:48+0100\n"
 "PO-Revision-Date: 2020-05-28 20:53+0300\n"
 "Last-Translator: VeikkoM\n"
 "Language-Team: fi\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.3.1\n"
 
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
-#, c-format
-msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr "Tiedosto '%s' on jo olemassa, haluatko todella korvata sen?"
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/LangChoice.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Confirm"
-msgstr "Vahvista"
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
-msgid "Please choose an existing file."
-msgstr "Valitse olemassa oleva tiedosto."
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AdornedRulerPanel.cpp
-#: src/AudioIO.cpp src/AutoRecoveryDialog.cpp src/ProjectAudioManager.cpp
-#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
-#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Error"
-msgstr "Virhe"
-
-#: lib-src/FileDialog/mac/FileDialogPrivate.mm
-msgid "File type:"
-msgstr "Tiedostotyyppi:"
-
-#: lib-src/FileDialog/win/FileDialogPrivate.cpp
-#, c-format
-msgid "File dialog failed with error code %0lx."
-msgstr "Tiedostodialogi epäonnistui, virhekoodi %0lx."
-
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
 msgstr "Nyquist-Workbench..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
 msgstr "K&umoa\tCtrl+Z"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Redo\tCtrl+Y"
 msgstr "Tee uu&delleen\tCtrl+Y"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cu&t\tCtrl+X"
 msgstr "Lei&kkaa\tCtrl+X"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Copy\tCtrl+C"
 msgstr "&Kopioi\tCtrl+C"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Paste\tCtrl+V"
 msgstr "&Liitä\tCtrl+V"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cle&ar\tCtrl+L"
 msgstr "Tyh&jennä\tCtrl+L"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Select A&ll\tCtrl+A"
 msgstr "Va&litse kaikki\tCtrl+A"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Find...\tCtrl+F"
 msgstr "&Etsi...\tCtrl+F"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Matching Paren\tF8"
 msgstr "&Vastaava ylätaso\tF8"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Top S-expr\tF9"
 msgstr "&Huippu S-exp\tF9"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Higher S-expr\tF10"
 msgstr "&Korkeampi S-expr\tF10"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Previous S-expr\tF11"
 msgstr "&Edellinen S-exp\tF11"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Next S-expr\tF12"
 msgstr "&Seuraava S-lauseke\tF12"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go to"
 msgstr "&Mene"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Select &Font..."
 msgstr "Valitse &fontti..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Split &Vertically"
 msgstr "Jaa &pystysuunnassa"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Split &Horizontally"
 msgstr "Jaa &vaakasuunnassa"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Show S&cript"
 msgstr "Näytä &skripti"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Show &Output"
 msgstr "Näytä &tuloste"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Large Icons"
 msgstr "&Suuret kuvakkeet"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Small Icons"
 msgstr "&Pienet kuvakkeet"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Toolbar"
 msgstr "Työkalupalkki"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go\tF5"
 msgstr "&Mene\tF5"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Stop\tF6"
 msgstr "Py&säytä\tF6"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&About"
 msgstr "&Tietoja"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script"
 msgstr "Skripti"
 
 #. i18n-hint noun
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #: src/effects/BassTreble.cpp
 msgid "Output"
 msgstr "Tuloste"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Load Nyquist script"
 msgstr "Lataa Nyquist-skripti"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
 msgstr ""
 "Nyquist-skriptit (*.ny)|*.ny|Lisp-skriptit (*.lsp)|*.lsp|Kaikki tiedostot|*"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
 msgstr "Skriptiä ei ole tallennettu."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
 #: src/export/Export.cpp src/export/ExportCL.cpp src/export/ExportMultiple.cpp
-#: src/import/ImportPCM.cpp src/widgets/Warning.cpp
+#: src/import/ImportPCM.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "Varoitus"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Save Nyquist script"
 msgstr "Tallenna Nyquist-skripti"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find dialog"
 msgstr "Etsi dialogi"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Harvey Lubin (logo)"
 msgstr "Harvey Lubin (logo)"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Tango Icon Gallery (toolbar icons)"
 msgstr "Tango kuvake galleria (työkalurivin kuvakkeet)"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Leland Lucius"
 msgstr "Leland Lucius"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "(C) 2009 by Leland Lucius"
 msgstr "(C) 2009 Leland Lucius"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
 "Ulkoinen Audacity-moduuli, joka tarjoaa yksinkertaisen integroidun "
 "kehitysympäristön kirjoitusefekteille."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
 msgstr "Nyquist tehostepöytä"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "No matches found"
 msgstr "Ei hakutuloksia"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Code has been modified. Are you sure?"
 msgstr "Koodia on muokattu. Oletko varma?"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Untitled"
 msgstr "Nimetön"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench - "
 msgstr "Nyquist tehostepöytä - "
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
 #: src/prefs/ModulePrefs.cpp
 msgid "New"
 msgstr "Uusi"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New script"
 msgstr "Uusi skripti"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open"
 msgstr "Avaa"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open script"
 msgstr "Avaa skripti"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 msgid "Save"
 msgstr "Tallenna"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save script"
 msgstr "Tallenna skripti"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save As"
 msgstr "Tallenna nimellä"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save script as..."
 msgstr "Tallenna skripti nimellä..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 msgid "Copy"
 msgstr "Kopioi"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Copy to clipboard"
 msgstr "Kopioi leikepöydälle"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Leikkaa"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cut to clipboard"
 msgstr "Leikkaa leikepöydälle"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Liitä"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Paste from clipboard"
 msgstr "Liitä leikepöydältä"
 
 #. i18n-hint verb; to empty or erase
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 msgid "Clear"
 msgstr "Tyhjennä"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Clear selection"
 msgstr "Tyhjennä valinta"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 msgid "Select All"
 msgstr "Valitse kaikki"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Select all text"
 msgstr "Valitse kaikki teksti"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Undo"
 msgstr "Kumoa"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Undo last change"
 msgstr "Kumoa viimeinen muutos"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Redo"
 msgstr "Tee uudelleen"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Redo previous change"
 msgstr "Tee edellinen muutos uudelleen"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find"
 msgstr "Etsi"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find text"
 msgstr "Etsi tekstiä"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Match"
 msgstr "Täsmää"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to matching paren"
 msgstr "Mene vastaavaan sulkeeseen"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Top"
 msgstr "Huippu"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to top S-expr"
 msgstr "Mene ylös S-lausekkeeseen"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Up"
 msgstr "Ylös"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to higher S-expr"
 msgstr "Mene ylempään S-lausekkeeseen"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Previous"
 msgstr "Edellinen"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to previous S-expr"
 msgstr "Mene edelliseen S-lausekkeeseen"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Next"
 msgstr "Seuraava"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
 msgstr "Mene seuraavaan S-lausekkeeseen"
 
 #. i18n-hint noun
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
 msgstr "Alku"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Start script"
 msgstr "Aloita skripti"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
 #: src/toolbars/ControlToolBar.cpp src/widgets/ProgressDialog.cpp
 msgid "Stop"
 msgstr "Pysäytä"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Stop script"
 msgstr "Pysäytä skripiti"
 
@@ -481,39 +446,70 @@ msgstr "%s, grafiikka"
 msgid "%s (incorporating %s, %s, %s, %s and %s)"
 msgstr "%s (sisältää %s, %s, %s, %s ja %s)"
 
+#. i18n-hint: information about the program
 #: src/AboutDialog.cpp
-msgid "About Audacity"
-msgstr "Tietoja Audacitystä"
+#, fuzzy, c-format
+msgid "About %s"
+msgstr "Tietoja"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: src/AboutDialog.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/widgets/MultiDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
 msgid "OK"
 msgstr "OK"
 
+#. i18n-hint: First and third %s will be the program's name,
+#. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
 msgid ""
-"Audacity is a free program written by a worldwide team of [[https://www."
-"audacityteam.org/about/credits|volunteers]]. Audacity is [[https://www."
-"audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and "
-"other Unix-like systems)."
+"%s is a free program written by a worldwide team of %s. %s is %s for "
+"Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
 "Audacity on ilmainen ohjelma, jonka on kirjoittanut maailmanlaajuinen tiimi "
 "[[https://www.audacityteam.org/about/credits|volunteers]]. Audacity on "
 "tarkoitettu [[https://www.audacityteam.org/download|available]] Windowsille, "
 "Macille ja GNU/Linuxille (ja muille Unixin kaltaisille järjestelmille)."
 
+#. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
+msgid "volunteers"
+msgstr ""
+
+#. i18n-hint: substitutes into "Audacity is %s"
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "available"
+msgstr "Muuttuja"
+
+#. i18n-hint first and third %s will be "forum", second "wiki"
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
-"our [[https://forum.audacityteam.org/|forum]]. For help, view the tips and "
-"tricks on our [[https://wiki.audacityteam.org/|wiki]] or visit our [[https://"
-"forum.audacityteam.org/|forum]]."
+"our %s. For help, view the tips and tricks on our %s or visit our %s."
 msgstr ""
 "Jos löydät vian tai sinulla on ehdotus meille, kirjoita englanniksi "
 "osoitteeseen [[https://forum.audacityteam.org/|forum]]. Jos tarvitset apua, "
 "tutustu [[https://wiki.audacityteam.org/|wiki]] vinkeihin ja temppuihin tai "
 "käy osoitteessa [[https://forum.audacityteam.org/|forum]]."
+
+#. i18n-hint substitutes into "write to our %s"
+#: src/AboutDialog.cpp
+msgctxt "dative"
+msgid "forum"
+msgstr ""
+
+#. i18n-hint substitutes into "view the tips and tricks on our %s"
+#: src/AboutDialog.cpp
+msgid "wiki"
+msgstr ""
+
+#. i18n-hint substitutes into "visit our %s"
+#: src/AboutDialog.cpp
+msgctxt "accusative"
+msgid "forum"
+msgstr ""
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -527,13 +523,15 @@ msgstr ""
 "Keränen, upd 05-2020 VeikkoM"
 
 #: src/AboutDialog.cpp
-msgid "<h3>Audacity "
-msgstr "<h3>Audacity "
+msgid "<h3>"
+msgstr ""
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
 msgid ""
-"Audacity the free, open source, cross-platform software for recording and "
-"editing sounds."
+"%s the free, open source, cross-platform software for recording and editing "
+"sounds."
 msgstr ""
 "Audacity on ilmainen, avoimen lähdekoodin, järjestelmäriippumaton ohjelmisto "
 "äänen nauhoitukseen ja editointiin."
@@ -546,16 +544,20 @@ msgstr "Tekijät"
 msgid "DarkAudacity Customisation"
 msgstr "Audacity tumma mukauttaminen"
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid "Audacity Team Members"
-msgstr "Audacity-tiimin jäsenet"
+#, fuzzy, c-format
+msgid "%s Team Members"
+msgstr " Emeritus tiimijäsenet"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
 msgstr "Emeritus:"
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid "Distinguished Audacity Team members, not currently active"
+#, fuzzy, c-format
+msgid "Distinguished %s Team members, not currently active"
 msgstr ""
 "Arvostetut Audacity Teamin jäsenet, jotka eivät ole tällä hetkellä aktiivisia"
 
@@ -575,38 +577,36 @@ msgstr "Kääntäjät"
 msgid "Libraries"
 msgstr "Kirjastot"
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid "Audacity includes code from the following projects:"
+#, fuzzy, c-format
+msgid "%s includes code from the following projects:"
 msgstr "Audacity sisältää koodia seuraavista projekteista:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
 msgstr "Erityiskiitokset:"
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid "Audacity website: "
+#, fuzzy, c-format
+msgid "%s website: "
 msgstr "Audacityn verkkosivusto: "
 
+#. i18n-hint Audacity's name substitutes for first and third %s,
+#. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-msgid ""
-"<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
-"&copy; 1999-2018 Audacity Team.<br>"
+#, c-format
+msgid "%s software is copyright %s 1999-2018 %s Team."
 msgstr ""
-"<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
-"&copy; 1999-2018 Audacity Team.<br>"
 
+#. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid ""
-"&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic "
-"Mazzoni.<br><br>"
+#, fuzzy, c-format
+msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr ""
 "&nbsp; &nbsp; Nimi <b>Audacity</b> on Dominic Mazzonin rekisteröity "
 "tavaramerkki.<br><br>"
-
-#: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
-msgid "Audacity"
-msgstr "Audacity"
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
@@ -713,11 +713,13 @@ msgid "Commit Id:"
 msgstr "Koontitunnus:"
 
 #: src/AboutDialog.cpp
-msgid "Debug build"
-msgstr "Virheidenjäljitysversio"
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr ""
 
 #: src/AboutDialog.cpp
-msgid "Release build"
+#, fuzzy, c-format
+msgid "Release build (debug level %d)"
 msgstr "Julkaisuversio"
 
 #: src/AboutDialog.cpp
@@ -853,6 +855,19 @@ msgid ""
 msgstr ""
 "Et voi lukita aluetta projektin\n"
 "lopun jälkeen."
+
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/AutoRecoveryDialog.cpp
+#: src/ProjectAudioManager.cpp src/ProjectFileIO.cpp src/ProjectFileManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
+#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: plug-ins/eq-xml-to-txt-converter.ny
+msgid "Error"
+msgstr "Virhe"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -2191,6 +2206,16 @@ msgid "&Copy Names to Clipboard"
 msgstr "&Kopioi nimet leikepöydälle"
 
 #: src/Dependencies.cpp
+#, c-format
+msgid "\"%s\", \"%s\", \"%s\"\n"
+msgstr ""
+
+#: src/Dependencies.cpp
+#, fuzzy
+msgid "Missing"
+msgstr "Tiedostoja puuttuu"
+
+#: src/Dependencies.cpp
 msgid ""
 "If you proceed, your project will not be saved to disk. Is this what you "
 "want?"
@@ -2265,21 +2290,6 @@ msgstr "Tallennetaan projektin datatiedostoja"
 msgid "Cleaning up cache directories"
 msgstr "Välimuistihakemistojen siivoaminen"
 
-#: src/DirManager.cpp
-msgid "mkdir in DirManager::MakeBlockFilePath failed."
-msgstr "mkdir komennossa DirManager::MakeBlockFilePath epäonnistui."
-
-#: src/DirManager.cpp
-#, c-format
-msgid ""
-"Audacity found an orphan block file: %s. \n"
-"Please consider saving and reloading the project to perform a complete "
-"project check."
-msgstr ""
-"Audacity löysi orvon lohkotiedoston: %s. \n"
-"Harkitse projektin tallennusta ja uudelleen lataamista suorittaaksesi koko "
-"projektin tarkistus."
-
 #. i18n-hint: This is the pattern for filenames that are created
 #. * when a file needs to be backed up to a different name.  For
 #. * example, mysong would become mysong-old1, mysong-old2, etc.
@@ -2291,49 +2301,14 @@ msgid "%s-old%d"
 msgstr "%s-vanha%d"
 
 #: src/DirManager.cpp
-msgid "Unable to open/create test file."
-msgstr "Testitiedostoa ei voida avata/luoda."
-
-#. i18n-hint: %s is the name of a file.
-#: src/DirManager.cpp
-#, c-format
-msgid "Unable to remove '%s'."
-msgstr "Ei voitu poistaa '%s'."
-
-#: src/DirManager.cpp
 #, c-format
 msgid "Renamed file: %s\n"
 msgstr "Uudelleen nimetty tiedosto: %s\n"
 
 #: src/DirManager.cpp
 #, c-format
-msgid "Unable to rename '%s' to '%s'."
-msgstr "Ei voitu nimetä '%s' nimelle '%s'."
-
-#: src/DirManager.cpp
-#, c-format
 msgid "Changed block %s to new alias name\n"
 msgstr "Vaihdettu lohko %s uudelle aliasnimelle\n"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing aliased audio file: '%s'"
-msgstr "Puuttuva aliasoitu audiotiedosto: '%s'"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing alias (.auf) block file: '%s'"
-msgstr "Puuttuva alias (.auf) lohkotiedosto: '%s'"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing data block file: '%s'"
-msgstr "Puuttuva datan lohkotiedosto: '%s'"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Orphan block file: '%s'"
-msgstr "Orpo lohkotiedosto: '%s'"
 
 #: src/DirManager.cpp src/ProjectFSCK.cpp
 msgid "Inspecting project file data"
@@ -2581,7 +2556,9 @@ msgstr "Älä kopioi mitään ääntä"
 msgid "As&k"
 msgstr "&Kysy"
 
-#: src/FileNames.cpp
+#: src/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny
 msgid "All files"
 msgstr "Kaikki tiedostot"
 
@@ -3069,24 +3046,28 @@ msgstr "Sisäinen virhe"
 msgid "Unable to determine"
 msgstr "Ei voitu päätellä"
 
-#: src/Internat.cpp src/import/ImportRaw.cpp
-msgid "bytes"
-msgstr "tavua"
+#: src/Internat.cpp
+#, fuzzy, c-format
+msgid "%s bytes"
+msgstr "%ld tavua"
 
 #. i18n-hint: Abbreviation for Kilo bytes
 #: src/Internat.cpp
-msgid "KB"
-msgstr "KB"
+#, c-format
+msgid "%s KB"
+msgstr ""
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: src/Internat.cpp
-msgid "MB"
-msgstr "Mb"
+#, c-format
+msgid "%s MB"
+msgstr ""
 
 #. i18n-hint: Abbreviation for Giga bytes
 #: src/Internat.cpp
-msgid "GB"
-msgstr "GB"
+#, c-format
+msgid "%s GB"
+msgstr ""
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3099,6 +3080,7 @@ msgstr "Raita"
 
 #. i18n-hint: (noun)
 #: src/LabelDialog.cpp src/menus/LabelMenus.cpp
+#: src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Merkki"
@@ -3188,6 +3170,11 @@ msgid ""
 msgstr ""
 "Valitsemasi kieli, %s (%s), ei ole sama kuin järjestelmän kieli, %s (%s)."
 
+#: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+msgid "Confirm"
+msgstr "Vahvista"
+
 #: src/Languages.cpp
 msgid "Simplified"
 msgstr "Yksinkertaistettu"
@@ -3221,24 +3208,6 @@ msgstr "Audacityn karaoke%s"
 #: src/LyricsWindow.cpp
 msgid "&Karaoke..."
 msgstr "&Karaoke..."
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr "Laajennusryhmä kohteessa %s yhdistettiin aiemmin määritettyyn ryhmään"
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr ""
-"Laajennus kohteessa %s on ristiriidassa aiemmin määritellyn kohteen kanssa "
-"ja on hylätty"
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in items at %s specify conflicting placements"
-msgstr "Laajennukset kohteessa %s määrittävät ristiriitaiset sijoittelut"
 
 #: src/Menus.cpp
 #, c-format
@@ -3368,11 +3337,6 @@ msgstr "Moduuli sopimaton"
 
 #: src/ModuleManager.cpp
 #, c-format
-msgid "Unable to load the module \"%s\". Error: %s"
-msgstr "Moduulia \"%s\" ei voi ladata. Virhe: %s"
-
-#: src/ModuleManager.cpp
-#, c-format
 msgid ""
 "The module \"%s\" does not provide a version string.\n"
 "\n"
@@ -3381,12 +3345,6 @@ msgstr ""
 "Moduuli \"%s\" ei tarjoa version merkkijonoa.\n"
 "\n"
 "Sitä ei ladata."
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide a version string. It will not be loaded."
-msgstr "Moduuli \"%s\" ei tarjoa version merkkijonoa. Sitä ei ladata."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3402,26 +3360,8 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid ""
-"The module \"%s\" is matched with Audacity version \"%s\". It will not be "
-"loaded."
-msgstr ""
-"Moduuli %s on yhteensopiva Audacity-version \"%s\" kanssa. Sitä ei ladata."
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
 "The module \"%s\" failed to initialize.\n"
 "\n"
-"It will not be loaded."
-msgstr ""
-"Moduulin \"%s\" alustaminen epäonnistui.\n"
-"\n"
-"Sitä ei ladata."
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" failed to initialize.\n"
 "It will not be loaded."
 msgstr ""
 "Moduulin \"%s\" alustaminen epäonnistui.\n"
@@ -3471,13 +3411,6 @@ msgstr ""
 "Moduulissa \"%s\" ei ole tarvittavia funktioita.\n"
 "\n"
 "Sitä ei ladata."
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide any of the required functions. It will "
-"not be loaded."
-msgstr "Moduulissa \"%s\" ei ole tarvittavia funktioita. Sitä ei ladata."
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3727,7 +3660,11 @@ msgstr ""
 "Rekisteröinti epäonnistui:\n"
 "%s"
 
+#. i18n-hint A plug-in is an optional added program for a sound
+#. effect, or generator, or analyzer
 #: src/PluginManager.cpp
+#, fuzzy
+msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
 msgstr[0] "Otetaanko tämä laajennus käyttöön?\n"
@@ -3763,6 +3700,28 @@ msgid ""
 msgstr ""
 "Virhe avattaessa äänilaitetta.\n"
 "Yritä muuttaa ääni-isäntää, toistolaitetta ja projektin näytenopeutta."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"Jotta suodatus voidaan esittää, kaikkilla valituilla raidoilla täytyy olla "
+"sama näytetaajuus."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
 
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
@@ -3874,11 +3833,6 @@ msgid "Warning - Missing Aliased File(s)"
 msgstr "Varoitus - Puuttuvia alias-tiedostoja"
 
 #: src/ProjectFSCK.cpp
-msgid "   Project check replaced missing aliased file(s) with silence."
-msgstr ""
-"   Projektin tarkistus korvasi puuttuvat alias-tiedostot hiljaisuudella."
-
-#: src/ProjectFSCK.cpp
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
@@ -3906,10 +3860,6 @@ msgstr "Sulje projekti välittömästi ilman muita muutoksia"
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Alias Summary File(s)"
 msgstr "Varoitus - Puuttuvia alias-tiivistelmätiedostoja"
-
-#: src/ProjectFSCK.cpp
-msgid "   Project check regenerated missing alias summary file(s)."
-msgstr "   Projektin tarkistus uudisti puuttuvat alias-tiivistelmätiedostot."
 
 #: src/ProjectFSCK.cpp
 #, c-format
@@ -3949,21 +3899,6 @@ msgid "Warning - Missing Audio Data Block File(s)"
 msgstr "Varoitus - Puuttuvia audion lohkotiedostoja"
 
 #: src/ProjectFSCK.cpp
-msgid ""
-"   Project check replaced missing audio data block file(s) with silence."
-msgstr ""
-"   Projektin tarkistus korvasi puuttuvat audion lohkotiedostot "
-"hiljaisuudella."
-
-#: src/ProjectFSCK.cpp
-msgid ""
-"   Project check ignored orphan block file(s). They will be deleted when "
-"project is saved."
-msgstr ""
-"   Projektin tarkistus ohitti orvot lohkotiedostot. Ne poistetaan, kun "
-"projekti on tallennettu."
-
-#: src/ProjectFSCK.cpp
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
@@ -3994,12 +3929,6 @@ msgstr "Siivotaan projektin käyttämättömät hakemistot"
 
 #: src/ProjectFSCK.cpp
 msgid ""
-"Project check found file inconsistencies inspecting the loaded project data."
-msgstr ""
-"Projektin tarkistus löysi epäjohdonmukaisuuksia ladatussa projektidatassa."
-
-#: src/ProjectFSCK.cpp
-msgid ""
 "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
 "Select 'Help > Diagnostics > Show Log...' to see details."
@@ -4013,9 +3942,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Varoitus - Ongelmia automaattisessa palautuksessa"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<nimetön>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "[Projekti %02i] Audacity \"%s\""
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -4458,6 +4392,24 @@ msgstr "Vaakavierityspalkki"
 #: src/ProjectWindow.cpp
 msgid "Vertical Scrollbar"
 msgstr "Pystyvierityspalkki"
+
+#: src/Registry.cpp
+#, c-format
+msgid "Plug-in group at %s was merged with a previously defined group"
+msgstr "Laajennusryhmä kohteessa %s yhdistettiin aiemmin määritettyyn ryhmään"
+
+#: src/Registry.cpp
+#, c-format
+msgid ""
+"Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr ""
+"Laajennus kohteessa %s on ristiriidassa aiemmin määritellyn kohteen kanssa "
+"ja on hylätty"
+
+#: src/Registry.cpp
+#, c-format
+msgid "Plug-in items at %s specify conflicting placements"
+msgstr "Laajennukset kohteessa %s määrittävät ristiriitaiset sijoittelut"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -5009,6 +4961,32 @@ msgstr ""
 "Audacity ei voinut tallentaa tiedostoa:\n"
 "  %s"
 
+#. i18n-hint: describing the "classic" or traditional
+#. appearance of older versions of Audacity
+#: src/Theme.cpp
+msgid "Classic"
+msgstr "Klassinen"
+
+#. i18n-hint: Light meaning opposite of dark
+#: src/Theme.cpp
+msgid "Light"
+msgstr "Vaalea"
+
+#: src/Theme.cpp
+msgid "Dark"
+msgstr "Tumma"
+
+#. i18n-hint: greater difference between foreground and
+#. background colors
+#: src/Theme.cpp
+msgid "High Contrast"
+msgstr "Suuri kontrasti"
+
+#. i18n-hint: user defined
+#: src/Theme.cpp
+msgid "Custom"
+msgstr "Mukautettu"
+
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -5519,6 +5497,11 @@ msgid "This operation cannot be done until importation of %s completes."
 msgstr "Tätä toimintoa ei voi tehdä, ennen kuin kohteen %s tuonti on valmis."
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+msgid "Audacity"
+msgstr "Audacity"
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -5934,7 +5917,10 @@ msgstr "Kaikki raidat +"
 msgid "Blue"
 msgstr "Sininen"
 
-#: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
+#. i18n-hint:  This really means the color, not as in "white noise"
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgctxt "color"
 msgid "White"
 msgstr "Valkoinen"
 
@@ -6428,15 +6414,17 @@ msgstr "Arvioitu sävelkorkeus alussa: %s%d (%.3f Hz)"
 msgid "Pitch"
 msgstr "Sävelkorkeus"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+#, fuzzy
+msgctxt "change pitch"
 msgid "from"
 msgstr "alkaen"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+#, fuzzy
+msgctxt "change pitch"
 msgid "&from"
 msgstr "&alkaen"
 
@@ -6444,14 +6432,17 @@ msgstr "&alkaen"
 msgid "from Octave"
 msgstr "oktaavista"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+#, fuzzy
+msgctxt "change pitch"
 msgid "to"
 msgstr "->"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+#, fuzzy
+msgctxt "change pitch"
 msgid "&to"
 msgstr "&->"
 
@@ -6483,9 +6474,7 @@ msgstr "a&lkaen"
 msgid "to (Hz)"
 msgstr "-> (Hz)"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
-#: src/effects/Loudness.cpp
+#: src/effects/ChangePitch.cpp src/effects/Loudness.cpp
 msgid "t&o"
 msgstr "-&>"
 
@@ -6545,14 +6534,33 @@ msgstr "Nopeu&skerroin:"
 msgid "Standard Vinyl rpm:"
 msgstr "Vinyylin vakionopeus:"
 
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
 msgstr "Rpm:stä"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "&from"
+msgstr "&alkaen"
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
 msgstr "Nopeuteen rpm"
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "&to"
+msgstr "&->"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Selection Length"
@@ -6566,9 +6574,23 @@ msgstr "Nykyinen pit&uus:"
 msgid "Current length of selection."
 msgstr "Valinnan nykyinen pituus."
 
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "from"
+msgstr "alkaen"
+
 #: src/effects/ChangeSpeed.cpp
 msgid "&New Length:"
 msgstr "&Uusi pituus:"
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "to"
+msgstr "->"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo"
@@ -6590,19 +6612,47 @@ msgstr "Muuta tempoa muuttamatta sävelkorkeutta"
 msgid "Beats per minute"
 msgstr "Tahteja minuutissa"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, from"
 msgstr "Tahteja minuutissa, lähtien"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "&from"
+msgstr "&alkaen"
+
+#. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, to"
 msgstr "Tahteja minuutissa, ->"
 
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "&to"
+msgstr "&->"
+
 #: src/effects/ChangeTempo.cpp
 msgid "Length (seconds)"
 msgstr "Pituus (sekuntia)"
+
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "from"
+msgstr "alkaen"
+
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "t&o"
+msgstr "-&>"
 
 #: src/effects/ChangeTempo.cpp
 #, c-format
@@ -7368,12 +7418,13 @@ msgid "Built-in"
 msgstr "Sisäänrakennettu"
 
 #: src/effects/Effect.cpp
-msgid "Export Effect Parameters"
-msgstr "Vie tehosteen parametrit"
+#, fuzzy
+msgid "Presets"
+msgstr "Esiasetus"
 
 #: src/effects/Effect.cpp
-msgid "Presets (*.txt)|*.txt|All files|*"
-msgstr "Esimääritykset (*.txt)|*.txt| Kaikki tiedostot|*"
+msgid "Export Effect Parameters"
+msgstr "Vie tehosteen parametrit"
 
 #: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
 #: src/xml/XMLFileReader.cpp
@@ -8215,10 +8266,13 @@ msgstr "Normalisoi"
 msgid "Loudness LUFS"
 msgstr "Äänekkyys LUFS"
 
-#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Loudness.cpp
 msgid "LUFS"
 msgstr "LUFS"
+
+#: src/effects/Loudness.cpp
+msgid "RMS dB"
+msgstr "RMS dB"
 
 #: src/effects/Loudness.cpp
 msgid "Normalize &stereo channels independently"
@@ -8236,15 +8290,25 @@ msgstr "Odotetaan aaltomuodon loppuunlaskua..."
 msgid "(Maximum 0dB)"
 msgstr "(Enintään 0 dB)"
 
-#: src/effects/Loudness.cpp
-msgid "RMS dB"
-msgstr "RMS dB"
-
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
 #: src/effects/Noise.cpp
+#, fuzzy
+msgctxt "noise"
+msgid "White"
+msgstr "Valkoinen"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: src/effects/Noise.cpp
+#, fuzzy
+msgctxt "noise"
 msgid "Pink"
 msgstr "Pinkki"
 
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: src/effects/Noise.cpp
+#, fuzzy
+msgctxt "noise"
 msgid "Brownian"
 msgstr "Brownian"
 
@@ -9087,7 +9151,10 @@ msgstr "Palauta oletukset"
 msgid "%.3f"
 msgstr "%.3f"
 
-#: src/effects/Silence.cpp src/menus/EditMenus.cpp
+#. i18n-hint: noun
+#: src/effects/Silence.cpp
+#, fuzzy
+msgctxt "generator"
 msgid "Silence"
 msgstr "Hiljaisuus"
 
@@ -9260,11 +9327,6 @@ msgid "Adds the ability to use VST effects in Audacity."
 msgstr "Lisää VST-efektin käyttökykyä Audacityssä."
 
 #: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "VST plugin registration failed for %s\n"
-msgstr "VST-laajennuksen rekisteröinti %s epäonnistui\n"
-
-#: src/effects/VST/VSTEffect.cpp
 msgid "Scanning Shell VST"
 msgstr "Skannataan Shell VST"
 
@@ -9387,10 +9449,6 @@ msgstr "VST-esiasetuksen latausvirhe"
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to load presets file."
 msgstr "Esiasetustiedostoa ei voida ladata."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST plugin initialization failed\n"
-msgstr "VST-laajennuksen alustus epäonnistui\n"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LV2Effect.cpp
@@ -9563,11 +9621,6 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
-msgid "Couldn't create the \"%s\" directory"
-msgstr "Kansiota \"%s\" ei voitu luoda"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, c-format
 msgid "Export Audio Unit Preset As %s:"
 msgstr "Vie ääniyksikön esimääritys nimellä %s:"
 
@@ -9691,8 +9744,8 @@ msgid "LV2 Effect Settings"
 msgstr "LV2 tehosteasetukset"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "&Buffer Size (8 to %d) samples):"
+#, fuzzy, c-format
+msgid "&Buffer Size (8 to %d) samples:"
 msgstr "&Puskurin koko (8 –> %d) näytettä):"
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -9718,27 +9771,13 @@ msgstr ""
 "tehoste uudelleen, jotta tämä tulee voimaan."
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid "LV2 sequence buffer overflow"
-msgstr "LV2-sekvenssipuskurin ylivuoto"
-
-#: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr "Tehosteita ei voitu toteuttaa"
 
 #: src/effects/lv2/LV2Effect.cpp
 #, c-format
-msgid "%s requires unsupported feature %s"
-msgstr "%s edellyttää ominaisuutta %s, jota ei tueta"
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
 msgid "%s requires unsupported feature %s\n"
 msgstr "%s edellyttää ominaisuutta %s, jota ei tueta\n"
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "%s requires unsupported option %s"
-msgstr "%s edellyttää asetusta %s, jota ei tueta"
 
 #: src/effects/lv2/LV2Effect.cpp
 #, c-format
@@ -9834,16 +9873,6 @@ msgstr ""
 msgid "Debug Output: "
 msgstr "Virheenkorjauksen tuloste: "
 
-#. i18n-hint: An effect "returned" a message.
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid ""
-"'%s' returned:\n"
-"%s"
-msgstr ""
-"'%s' palautti:\n"
-"%s"
-
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Processing complete."
 msgstr "Prosessi valmis."
@@ -9909,15 +9938,6 @@ msgstr ""
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
 msgstr "Tämä Audacity-versio ei tue Nyquist-laajennusversiota %ld"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid ""
-"Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
-"Control not created."
-msgstr ""
-"Virheellinen Nyquist-'ohjain' tyyppimääritys: '%s' laajennustiedostossa %s.\n"
-"Ohjausobjektia ei luotu."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
@@ -10017,14 +10037,6 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Value Error"
 msgstr "Arvovirhe"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Invalid wildcard string in 'path' control.'\n"
-"Using empty string instead."
-msgstr ""
-"Virheellinen yleismerkkijono 'polku'-ohjausobjektissa.\n"
-"Käytetään sen sijaan tyhjää merkkijonoa."
 
 #: src/effects/nyquist/Nyquist.cpp plug-ins/sample-data-export.ny
 msgid "Select a file"
@@ -10442,7 +10454,8 @@ msgstr "Näyteenottotaajuudet"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbps"
@@ -11118,12 +11131,6 @@ msgstr "Viedään valittu audio FLAC-muodossa"
 #: src/export/ExportFLAC.cpp
 msgid "Exporting the audio as FLAC"
 msgstr "Viedään audio FLAC-muodossa"
-
-#. i18n-hint kbps abbreviates "thousands of bits per second"
-#: src/export/ExportMP2.cpp
-#, c-format
-msgid "%d kpbs"
-msgstr "%d kpbs"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -11911,11 +11918,6 @@ msgstr ""
 "%s\n"
 "mutta mikään niistä ei ymmärtänyt tätä tiedostomuotoa."
 
-#: src/import/Import.cpp src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
-msgstr "Tuodaan %s"
-
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
 msgstr "FFmpeg-yhteensopivat tiedostot"
@@ -12022,6 +12024,14 @@ msgstr "Tiedostoa %s ei voitu avata."
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
 msgstr "MP3 tiedostot"
+
+#: src/import/ImportMP3.cpp
+#, fuzzy, c-format
+msgid ""
+"MP3 Decoding Failed:\n"
+"\n"
+"%s"
+msgstr "Dekoodaus epäonnistui\n"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12290,6 +12300,11 @@ msgstr "Lue tie&dostot suoraan alkuperäisestä (nopeampi)"
 msgid "Don't &warn again and always use my choice above"
 msgstr "Älä &varoita uudelleen ja käytä aina edellä olevia valintojani"
 
+#: src/import/ImportPlugin.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "Tuodaan %s"
+
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
 msgstr "QuickTime -tiedostot"
@@ -12378,6 +12393,10 @@ msgid "Start offset:"
 msgstr "Aloitussiirtymä:"
 
 #: src/import/ImportRaw.cpp
+msgid "bytes"
+msgstr "tavua"
+
+#: src/import/ImportRaw.cpp
 msgid "Amount to import:"
 msgstr "Tuonnin määrä:"
 
@@ -12406,7 +12425,7 @@ msgstr "%s vasen"
 msgid "%s right"
 msgstr "%s oikea"
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. First %s is replaced with the noun "start" or "end"
 #. identifying one end of a clip,
 #. first number gives the position of that clip in a sequence
@@ -12415,10 +12434,6 @@ msgstr "%s oikea"
 #. and the last string is the name of the track containing the
 #. clips.
 #.
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr "dummyStringClipBoundaryMessage"
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d of %d clip %s"
@@ -12434,19 +12449,15 @@ msgstr "alku"
 msgid "end"
 msgstr "loppu"
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
 #.
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr "dummyStringClipBoundaryMessageLong"
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d and %s %d of %d clip %s"
@@ -12454,14 +12465,10 @@ msgid_plural "%s %d and %s %d of %d clips %s"
 msgstr[0] "%s %d ja %s %d / %d leikkeestä %s"
 msgstr[1] "%s %d ja %s %d / %d leikkeistä %s"
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. first number identifies one of a sequence of clips,
 #. last number counts the clips,
 #. string names a track
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr "dummyStringOnSelectClip"
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%d of %d clip %s"
@@ -12600,6 +12607,13 @@ msgstr "Jakopoisto"
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
 msgstr "Hiljennetty valitut raidat %.2f sekunniksi kohdassa %.2f"
+
+#. i18n-hint: verb
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgctxt "command"
+msgid "Silence"
+msgstr "Hiljaisuus"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -13067,7 +13081,8 @@ msgstr "Valikkopuu..."
 msgid "&Check for Updates..."
 msgstr "&Tarkista päivitykset..."
 
-#: src/menus/LabelMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "Added label"
 msgstr "Lisätty merkki"
 
@@ -13364,6 +13379,11 @@ msgstr "Käytä m&akroa"
 #: src/menus/PluginMenus.cpp
 msgid "Palette..."
 msgstr "Paletti..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Reset &Configuration"
+msgstr "Viivaimen poiston vahvistus"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Screenshot..."
@@ -14259,7 +14279,8 @@ msgid "Please select in a mono track."
 msgstr "Valitse monoraidalta."
 
 #: src/menus/TransportMenus.cpp
-msgid "Please select in a stereo track."
+#, fuzzy
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Valitse stereoraidalta."
 
 #: src/menus/TransportMenus.cpp
@@ -14595,8 +14616,10 @@ msgstr "Laitteet"
 msgid "Preferences for Device"
 msgstr "Laitteen asetukset"
 
-#. i18n-hint: refers to Audacity's user interface settings
-#: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
+#. i18n-hint Software interface to audio devices
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgctxt "device"
 msgid "Interface"
 msgstr "Käyttöliittymä"
 
@@ -14933,6 +14956,13 @@ msgstr "Viivaimen poiston vahvistus"
 msgid "Ext Import"
 msgstr "Ext tuonti"
 
+#. i18n-hint: refers to Audacity's user interface settings
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgctxt "GUI"
+msgid "Interface"
+msgstr "Käyttöliittymä"
+
 #: src/prefs/GUIPrefs.cpp
 msgid "Preferences for GUI"
 msgstr "Gui-asetukset"
@@ -14976,32 +15006,6 @@ msgstr "Paikallinen"
 #: src/prefs/GUIPrefs.cpp
 msgid "From Internet"
 msgstr "Internetistä"
-
-#. i18n-hint: describing the "classic" or traditional
-#. appearance of older versions of Audacity
-#: src/prefs/GUIPrefs.cpp
-msgid "Classic"
-msgstr "Klassinen"
-
-#. i18n-hint: Light meaning opposite of dark
-#: src/prefs/GUIPrefs.cpp
-msgid "Light"
-msgstr "Vaalea"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "Dark"
-msgstr "Tumma"
-
-#. i18n-hint: greater difference between foreground and
-#. background colors
-#: src/prefs/GUIPrefs.cpp
-msgid "High Contrast"
-msgstr "Suuri kontrasti"
-
-#. i18n-hint: user defined
-#: src/prefs/GUIPrefs.cpp
-msgid "Custom"
-msgstr "Mukautettu"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -15205,24 +15209,11 @@ msgid "&Defaults"
 msgstr "&Oletukset"
 
 #: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy, c-format
 msgid ""
 "\n"
-"   *   \""
-msgstr ""
-"\n"
-"   *   \""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\"  (because the shortcut '"
+"   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
 msgstr "\" (koska pikavalinta '"
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "' is used by \""
-msgstr "' käytetään \""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\")\n"
-msgstr "\")\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -15233,21 +15224,13 @@ msgid "Error Importing Keyboard Shortcuts"
 msgstr "Virhe tuotaessa pikanäppäimiä"
 
 #: src/prefs/KeyConfigPrefs.cpp
-msgid "The file with the shortcuts contains illegal shortcut duplicates for \""
-msgstr ""
-"Pikakuvakkeita sisältävä tiedosto sisältää laittomia pikakuvakekopioita \""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\" and \""
-msgstr "\" ja \""
-
-#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy, c-format
 msgid ""
-"\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
+"and \"%s\".\n"
 "Nothing is imported."
 msgstr ""
-"\".\n"
-"Mitään ei tuotu."
+"Pikakuvakkeita sisältävä tiedosto sisältää laittomia pikakuvakekopioita \""
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15286,15 +15269,25 @@ msgid "You must select a binding before assigning a shortcut"
 msgstr "Sinun tulee valita ensin kytkös pikanäppäimen määrittämiseksi"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, c-format
+msgid ""
+"\n"
+"\n"
+"\t and\n"
+"\n"
+"\t"
+msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
-"\t'%s'\n"
+"\t%s\n"
+"\n"
 "\n"
 "Click OK to assign the shortcut to\n"
 "\n"
-"\t'%s'\n"
+"\t%s\n"
 "\n"
 "instead. Otherwise, click Cancel."
 msgstr ""
@@ -15392,6 +15385,13 @@ msgstr "MIDI-laitteet"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Preferences for MidiIO"
 msgstr "MidiIO:n asetukset"
+
+#. i18n-hint Software interface to MIDI
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgctxt "MIDI"
+msgid "Interface"
+msgstr "Käyttöliittymä"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -15518,6 +15518,9 @@ msgid "Set Selection Range"
 msgstr "Aseta valinta-alue"
 
 #: src/prefs/MousePrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Left-Click"
 msgstr "Vaihto + vasen-napsautus"
 
@@ -16612,10 +16615,16 @@ msgid "Sync-Lock Tracks"
 msgstr "Synkro-lukitse raitoja"
 
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom In"
 msgstr "Lähennä"
 
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Out"
 msgstr "Loitonna"
 
@@ -16782,7 +16791,7 @@ msgstr "Projektin nopeus (Hz)"
 msgid "Snap-To"
 msgstr "Kiinnity kohtaan"
 
-#: src/toolbars/SelectionBar.cpp src/toolbars/TimerToolBar.cpp
+#: src/toolbars/SelectionBar.cpp src/toolbars/TimeToolBar.cpp
 msgid "Audio Position"
 msgstr "Äänen sijainti"
 
@@ -16868,13 +16877,13 @@ msgstr "Kaistanleveys"
 msgid "Spe&ctral Selection Toolbar"
 msgstr "&Spektrinen valintapalkki"
 
-#: src/toolbars/TimerToolBar.cpp
+#: src/toolbars/TimeToolBar.cpp
 msgid "Time"
 msgstr "Aika"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for viewing actual time of the cursor
-#: src/toolbars/TimerToolBar.cpp
+#: src/toolbars/TimeToolBar.cpp
 msgid "&Time Toolbar"
 msgstr "Aika&työkalupalkki"
 
@@ -17071,21 +17080,24 @@ msgid "Right-click for menu."
 msgstr "Oikea-klikkaus valikkoon."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom Reset\tShift-Right-Click"
-msgstr "Zoomauksen nollaus\tVaihto-oikea klikkaus"
+msgid "Zoom Reset"
+msgstr "Zoomauksen nollaus"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom In\tLeft-Click/Left-Drag"
+#, fuzzy
+msgid "Shift-Right-Click"
+msgstr "Vaihto + vasen-napsautus"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+#, fuzzy
+msgid "Left-Click/Left-Drag"
 msgstr "Lähennä\tVasen klikkaus/vasen veto"
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom Out\tShift-Left-Click"
-msgstr "Loitonna\tVaihto + vasen klikkaus"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -17158,12 +17170,9 @@ msgid "k"
 msgstr "k"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-msgid "Zoom Reset"
-msgstr "Zoomauksen nollaus"
-
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-msgid "Zoom to Fit\tShift-Right-Click"
-msgstr "Zoomaa sopivaksi\tVaihto + oikea klikkaus"
+#, fuzzy
+msgid "Zoom to Fit"
+msgstr "Lähennä pisteessä"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -17759,6 +17768,19 @@ msgstr "R"
 msgid "%.2fx"
 msgstr "%.2fx"
 
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#, c-format
+msgid "File '%s' already exists, do you really want to overwrite it?"
+msgstr "Tiedosto '%s' on jo olemassa, haluatko todella korvata sen?"
+
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+msgid "Please choose an existing file."
+msgstr "Valitse olemassa oleva tiedosto."
+
+#: src/widgets/FileDialog/mac/FileDialogPrivate.mm
+msgid "File type:"
+msgstr "Tiedostotyyppi:"
+
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
 msgstr "&Tyhjennä"
@@ -18149,6 +18171,11 @@ msgid "0100000.0100 Hz"
 msgstr "0100000.0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
+msgid "centihertz"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows frequency in kilohertz
+#: src/widgets/NumericTextCtrl.cpp
 msgid "kHz"
 msgstr "kHz"
 
@@ -18158,6 +18185,10 @@ msgstr "kHz"
 msgid "01000.01000 kHz|0.001"
 msgstr "01000.01000 kHz|0.001"
 
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hertz"
+msgstr ""
+
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
 #: src/widgets/NumericTextCtrl.cpp
@@ -18166,10 +18197,15 @@ msgstr "oktaavia"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 1 / ln (2)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "100.01000 octaves|1.442695041"
 msgstr "100.01000 oktaavia|1.442695041"
+
+#. i18n-hint: an octave is a doubling of frequency
+#: src/widgets/NumericTextCtrl.cpp
+#, fuzzy
+msgid "thousandths of octaves"
+msgstr "tuhannesosa "
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in semitones and cents
@@ -18180,10 +18216,15 @@ msgstr "puolisävelaskeleet + sentit"
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 12 / ln (2)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "1000 semitones .0100 cents|17.312340491"
 msgstr "1000 puolisävelaskelta .0100 senttiä|17.312340491"
+
+#. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
+#: src/widgets/NumericTextCtrl.cpp
+#, fuzzy
+msgid "hundredths of cents"
+msgstr "sadasosia "
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in decades
@@ -18193,10 +18234,15 @@ msgstr "kymmeniä"
 
 #. i18n-hint: Format string for displaying log of frequency in decades.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 1 / ln (10)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "10.01000 decades|0.434294482"
 msgstr "10.01000 kymmenosat|0.434294482"
+
+#. i18n-hint: a decade is a tenfold increase of frequency
+#: src/widgets/NumericTextCtrl.cpp
+#, fuzzy
+msgid "thousandths of decades"
+msgstr "tuhannesosa "
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -18206,13 +18252,10 @@ msgstr "(Käytä pikavalikkoa formaatin muutokseen.)"
 msgid "centiseconds"
 msgstr "senttisekuntia"
 
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hundredths of "
-msgstr "sadasosia "
-
-#: src/widgets/NumericTextCtrl.cpp
-msgid "thousandths of "
-msgstr "tuhannesosa "
+#: src/widgets/PopupMenuTable.h
+#, fuzzy, c-format
+msgid "%s (%s)"
+msgstr "(%s)"
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
@@ -18302,13 +18345,9 @@ msgid "Value must not be less than %s"
 msgstr "Arvon on oltava pienempi kuin %s"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "Arvo ei voi olla suurempi kuin %s"
-
-#: src/widgets/valnum.cpp
-msgid "e"
-msgstr "e"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
@@ -18859,6 +18898,11 @@ msgid "Equalization XML file"
 msgstr "XML-tiedoston yhtäläistäminen"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
+#, fuzzy
+msgid "XML file"
+msgstr "XML-tiedostot"
+
+#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
 msgstr "Jos tulostetekstitiedosto on olemassa"
 
@@ -19255,6 +19299,32 @@ msgid "Select file(s) to install"
 msgstr "Valitse asennettavat tiedostot"
 
 #: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Plug-in"
+msgstr "laajennus"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Lisp file"
+msgstr "%s tiedostoa"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "HTML file"
+msgstr "XML-tiedostot"
+
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Text file"
+msgstr "Tekstitiedostot"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "All supported"
+msgstr "Kaikki tuetut tiedostot"
+
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Allow overwriting"
 msgstr "Salli korvaaminen"
 
@@ -19517,6 +19587,16 @@ msgstr "Mittausasteikko"
 #: plug-ins/sample-data-export.ny
 msgid "Export data to"
 msgstr "Vie tiedot ->"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "CSV files"
+msgstr "FLAC-tiedostot"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "HTML files"
+msgstr "XML-tiedostot"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
@@ -20093,6 +20173,214 @@ msgstr "Tutkaneulojen taajuus (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Virhe.~%Stereoraita vaaditaan."
 
+#~ msgid "File dialog failed with error code %0lx."
+#~ msgstr "Tiedostodialogi epäonnistui, virhekoodi %0lx."
+
+#~ msgid "About Audacity"
+#~ msgstr "Tietoja Audacitystä"
+
+#~ msgid "<h3>Audacity "
+#~ msgstr "<h3>Audacity "
+
+#~ msgid "Audacity Team Members"
+#~ msgstr "Audacity-tiimin jäsenet"
+
+#~ msgid ""
+#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
+#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
+#~ msgstr ""
+#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
+#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
+
+#~ msgid "Debug build"
+#~ msgstr "Virheidenjäljitysversio"
+
+#~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
+#~ msgstr "mkdir komennossa DirManager::MakeBlockFilePath epäonnistui."
+
+#~ msgid ""
+#~ "Audacity found an orphan block file: %s. \n"
+#~ "Please consider saving and reloading the project to perform a complete "
+#~ "project check."
+#~ msgstr ""
+#~ "Audacity löysi orvon lohkotiedoston: %s. \n"
+#~ "Harkitse projektin tallennusta ja uudelleen lataamista suorittaaksesi "
+#~ "koko projektin tarkistus."
+
+#~ msgid "Unable to open/create test file."
+#~ msgstr "Testitiedostoa ei voida avata/luoda."
+
+#~ msgid "Unable to remove '%s'."
+#~ msgstr "Ei voitu poistaa '%s'."
+
+#~ msgid "Unable to rename '%s' to '%s'."
+#~ msgstr "Ei voitu nimetä '%s' nimelle '%s'."
+
+#~ msgid "Missing aliased audio file: '%s'"
+#~ msgstr "Puuttuva aliasoitu audiotiedosto: '%s'"
+
+#~ msgid "Missing alias (.auf) block file: '%s'"
+#~ msgstr "Puuttuva alias (.auf) lohkotiedosto: '%s'"
+
+#~ msgid "Missing data block file: '%s'"
+#~ msgstr "Puuttuva datan lohkotiedosto: '%s'"
+
+#~ msgid "Orphan block file: '%s'"
+#~ msgstr "Orpo lohkotiedosto: '%s'"
+
+#~ msgid "KB"
+#~ msgstr "KB"
+
+#~ msgid "MB"
+#~ msgstr "Mb"
+
+#~ msgid "GB"
+#~ msgstr "GB"
+
+#~ msgid "Unable to load the module \"%s\". Error: %s"
+#~ msgstr "Moduulia \"%s\" ei voi ladata. Virhe: %s"
+
+#~ msgid ""
+#~ "The module \"%s\" does not provide a version string. It will not be "
+#~ "loaded."
+#~ msgstr "Moduuli \"%s\" ei tarjoa version merkkijonoa. Sitä ei ladata."
+
+#~ msgid ""
+#~ "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
+#~ "loaded."
+#~ msgstr ""
+#~ "Moduuli %s on yhteensopiva Audacity-version \"%s\" kanssa. Sitä ei ladata."
+
+#~ msgid ""
+#~ "The module \"%s\" failed to initialize.\n"
+#~ "It will not be loaded."
+#~ msgstr ""
+#~ "Moduulin \"%s\" alustaminen epäonnistui.\n"
+#~ "\n"
+#~ "Sitä ei ladata."
+
+#~ msgid ""
+#~ "The module \"%s\" does not provide any of the required functions. It will "
+#~ "not be loaded."
+#~ msgstr "Moduulissa \"%s\" ei ole tarvittavia funktioita. Sitä ei ladata."
+
+#~ msgid "   Project check replaced missing aliased file(s) with silence."
+#~ msgstr ""
+#~ "   Projektin tarkistus korvasi puuttuvat alias-tiedostot hiljaisuudella."
+
+#~ msgid "   Project check regenerated missing alias summary file(s)."
+#~ msgstr ""
+#~ "   Projektin tarkistus uudisti puuttuvat alias-tiivistelmätiedostot."
+
+#~ msgid ""
+#~ "   Project check replaced missing audio data block file(s) with silence."
+#~ msgstr ""
+#~ "   Projektin tarkistus korvasi puuttuvat audion lohkotiedostot "
+#~ "hiljaisuudella."
+
+#~ msgid ""
+#~ "   Project check ignored orphan block file(s). They will be deleted when "
+#~ "project is saved."
+#~ msgstr ""
+#~ "   Projektin tarkistus ohitti orvot lohkotiedostot. Ne poistetaan, kun "
+#~ "projekti on tallennettu."
+
+#~ msgid ""
+#~ "Project check found file inconsistencies inspecting the loaded project "
+#~ "data."
+#~ msgstr ""
+#~ "Projektin tarkistus löysi epäjohdonmukaisuuksia ladatussa projektidatassa."
+
+#~ msgid "Presets (*.txt)|*.txt|All files|*"
+#~ msgstr "Esimääritykset (*.txt)|*.txt| Kaikki tiedostot|*"
+
+#~ msgid "VST plugin registration failed for %s\n"
+#~ msgstr "VST-laajennuksen rekisteröinti %s epäonnistui\n"
+
+#~ msgid "VST plugin initialization failed\n"
+#~ msgstr "VST-laajennuksen alustus epäonnistui\n"
+
+#~ msgid "Couldn't create the \"%s\" directory"
+#~ msgstr "Kansiota \"%s\" ei voitu luoda"
+
+#~ msgid "LV2 sequence buffer overflow"
+#~ msgstr "LV2-sekvenssipuskurin ylivuoto"
+
+#~ msgid "%s requires unsupported feature %s"
+#~ msgstr "%s edellyttää ominaisuutta %s, jota ei tueta"
+
+#~ msgid "%s requires unsupported option %s"
+#~ msgstr "%s edellyttää asetusta %s, jota ei tueta"
+
+#~ msgid ""
+#~ "'%s' returned:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "'%s' palautti:\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
+#~ "Control not created."
+#~ msgstr ""
+#~ "Virheellinen Nyquist-'ohjain' tyyppimääritys: '%s' laajennustiedostossa "
+#~ "%s.\n"
+#~ "Ohjausobjektia ei luotu."
+
+#~ msgid ""
+#~ "Invalid wildcard string in 'path' control.'\n"
+#~ "Using empty string instead."
+#~ msgstr ""
+#~ "Virheellinen yleismerkkijono 'polku'-ohjausobjektissa.\n"
+#~ "Käytetään sen sijaan tyhjää merkkijonoa."
+
+#~ msgid "%d kpbs"
+#~ msgstr "%d kpbs"
+
+#~ msgid "dummyStringClipBoundaryMessage"
+#~ msgstr "dummyStringClipBoundaryMessage"
+
+#~ msgid "dummyStringClipBoundaryMessageLong"
+#~ msgstr "dummyStringClipBoundaryMessageLong"
+
+#~ msgid "dummyStringOnSelectClip"
+#~ msgstr "dummyStringOnSelectClip"
+
+#~ msgid ""
+#~ "\n"
+#~ "   *   \""
+#~ msgstr ""
+#~ "\n"
+#~ "   *   \""
+
+#~ msgid "' is used by \""
+#~ msgstr "' käytetään \""
+
+#~ msgid "\")\n"
+#~ msgstr "\")\n"
+
+#~ msgid "\" and \""
+#~ msgstr "\" ja \""
+
+#~ msgid ""
+#~ "\".\n"
+#~ "Nothing is imported."
+#~ msgstr ""
+#~ "\".\n"
+#~ "Mitään ei tuotu."
+
+#~ msgid "Zoom Reset\tShift-Right-Click"
+#~ msgstr "Zoomauksen nollaus\tVaihto-oikea klikkaus"
+
+#~ msgid "Zoom Out\tShift-Left-Click"
+#~ msgstr "Loitonna\tVaihto + vasen klikkaus"
+
+#~ msgid "Zoom to Fit\tShift-Right-Click"
+#~ msgstr "Zoomaa sopivaksi\tVaihto + oikea klikkaus"
+
+#~ msgid "e"
+#~ msgstr "e"
+
 #, fuzzy
 #~ msgid "incorporating"
 #~ msgstr "Tuontivirhe"
@@ -20257,9 +20545,6 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #, fuzzy
 #~ msgid "Remove Center Classic: Mono"
 #~ msgstr "Poista leikkauslinja"
-
-#~ msgid "Decoding failed\n"
-#~ msgstr "Dekoodaus epäonnistui\n"
 
 #, fuzzy
 #~ msgid "Could not decode file: %s"
@@ -21007,9 +21292,6 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Emeritus Developers"
 #~ msgstr "Emeritus kehittäjät"
 
-#~ msgid " Emeritus Team Members"
-#~ msgstr " Emeritus tiimijäsenet"
-
 #~ msgid "<center><h3>How to Get Help</h3></center>"
 #~ msgstr "<center><h3>Mistä saan apua</h3></center>"
 
@@ -21133,10 +21415,6 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 
 #~ msgid "Playback Meter Preferences"
 #~ msgstr "Toiston tasomittarin asetukset"
-
-#, fuzzy
-#~ msgid "%ld bytes"
-#~ msgstr "%ld tavua"
 
 #, fuzzy
 #~ msgid "Modified"
