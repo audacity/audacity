@@ -757,7 +757,7 @@ msgstr "Construction de débogage (niveau de débogage %d)"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Release build (debug level %d)"
-msgstr "Version construite" (niveau de déboguage %d)
+msgstr "Version construite" (niveau de déboguage %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
