@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-06-09 10:48+0100\n"
-"PO-Revision-Date: 2020-04-18 19:12+0200\n"
+"PO-Revision-Date: 2020-06-10 07:42+0200\n"
 "Last-Translator: EUS_Xabier Aramendi <azpidatziak@gmail.com>\n"
 "Language-Team: (EUS_Xabier Aramendi)\n"
 "Language: eu\n"
@@ -453,9 +453,9 @@ msgstr "%s (inkorporatuz %s, %s, %s, %s eta %s)"
 
 #. i18n-hint: information about the program
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "About %s"
-msgstr "Honi buruz"
+msgstr "%s buruz"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
@@ -466,55 +466,51 @@ msgstr "Ongi"
 #. i18n-hint: First and third %s will be the program's name,
 #. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"Audacity mundu mailako [[http://www.audacityteam.org/about/credits|"
-"boluntario]] talde batek idatzitako programa aske bat da. Audacity  [[http://"
-"www.audacityteam.org/download|eskuragarri ]] dago Windows, Mac, eta GNU/"
-"Linux-rako (eta beste Unix-bezalako sistemetarako)."
+"%s programa aske bat da mundu zabaleko boluntarioek idatzia %s. %s - %s "
+"Windows, Mac, eta GNU/Linux-rako (eta beste Unix-bezalako sistemetarako)."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
 msgid "volunteers"
-msgstr ""
+msgstr "boluntarioak"
 
 #. i18n-hint: substitutes into "Audacity is %s"
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "available"
-msgstr "Aldakorra"
+msgstr "eskuragarri"
 
 #. i18n-hint first and third %s will be "forum", second "wiki"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our %s. For help, view the tips and tricks on our %s or visit our %s."
 msgstr ""
 "Akatsen bat aurkitzen baduzu edo iradokizunen bat baduzu, mesedez idatzi "
-"diezaguzu Ingeleraz gure [[http://forum.audacityteam.org/|Eztabaidagunea]]-"
-"ra. Laguntzarako, ikusi aholku eta trukoak gure [[http://wiki.audacityteam."
-"org/|wikia]]."
+"diezaguzu Ingeleraz gure %s-ra. Laguntzarako, ikusi aholku eta trukoak gure "
+"%s edo ikusi gure %s."
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
 msgctxt "dative"
 msgid "forum"
-msgstr ""
+msgstr "eztabaidagunea"
 
 #. i18n-hint substitutes into "view the tips and tricks on our %s"
 #: src/AboutDialog.cpp
 msgid "wiki"
-msgstr ""
+msgstr "wiki"
 
 #. i18n-hint substitutes into "visit our %s"
 #: src/AboutDialog.cpp
 msgctxt "accusative"
 msgid "forum"
-msgstr ""
+msgstr "eztabaidagunea"
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -527,17 +523,17 @@ msgstr "Euskarazko Itzulpena: Xabier Aramendi"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
-msgstr ""
+msgstr "<h3>"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
 msgstr ""
-"Audacity soinua grabatzeko eta editatzeko plataforma-anitzeko sotware askea "
-"eta iturburu irekikoa."
+"%s soinua grabatzeko eta editatzeko plataforma-anitzeko sotware askea eta "
+"iturburu irekikoa da."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -549,9 +545,9 @@ msgstr "DarkAudacity Norberetzea"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s Team Members"
-msgstr "Audacity Taldeko Kideak"
+msgstr "%s Taldekideak"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -559,9 +555,9 @@ msgstr "Zaharrak:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Distinguished %s Team members, not currently active"
-msgstr "Audacity Taldeko kide nabarmenak, gaur egun jardunean ez daudenak"
+msgstr "%s Taldeko kide nabarmenak, gaur egun jardunean ez daudenak"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -581,9 +577,9 @@ msgstr "Liburutegiak"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s includes code from the following projects:"
-msgstr "Audacity-k hurrengo egitasmoen kodea barneratzen du:"
+msgstr "%s-k hurrengo egitasmoen kodea barneratzen du:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
@@ -591,24 +587,22 @@ msgstr "Eskerrak:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s website: "
-msgstr "Audacity webgunea: "
+msgstr "%s webgunea: "
 
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s software is copyright %s 1999-2018 %s Team."
-msgstr ""
+msgstr "%s softwarea copyrighta du %s 1999-2018 %s Taldea."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
-msgstr ""
-"&nbsp; &nbsp; The name <b>Audacity</b> Dominic Mazzoni-ren egilemarka "
-"erregistratua da.<br><br>"
+msgstr "%s izena Dominic Mazzoni-ren egilemarka erregistratua da."
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
@@ -717,12 +711,12 @@ msgstr "Aurkezpen Id-a:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Debug build (debug level %d)"
-msgstr ""
+msgstr "Garbiketa eraiketa (garbiketa maila %d)"
 
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Release build (debug level %d)"
-msgstr "Argitalpen eraiketa"
+msgstr "Argitalpen eraiketa (garbiketa maila %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -2214,12 +2208,11 @@ msgstr "&Kopiatu Izenak Gakora"
 #: src/Dependencies.cpp
 #, c-format
 msgid "\"%s\", \"%s\", \"%s\"\n"
-msgstr ""
+msgstr "\"%s\", \"%s\", \"%s\"\n"
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid "Missing"
-msgstr "Agiriak Ez Daude"
+msgstr "Ez dago"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -3064,27 +3057,27 @@ msgid "Unable to determine"
 msgstr "Ezinezkoa zehaztea"
 
 #: src/Internat.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s bytes"
-msgstr "byte"
+msgstr "%s byte"
 
 #. i18n-hint: Abbreviation for Kilo bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s KB"
-msgstr ""
+msgstr "%s KB"
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s MB"
-msgstr ""
+msgstr "%s MB"
 
 #. i18n-hint: Abbreviation for Giga bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s GB"
-msgstr ""
+msgstr "%s GB"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3679,7 +3672,6 @@ msgstr ""
 #. i18n-hint A plug-in is an optional added program for a sound
 #. effect, or generator, or analyzer
 #: src/PluginManager.cpp
-#, fuzzy
 msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
@@ -3718,15 +3710,14 @@ msgstr ""
 "neurria aldatzen."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "The tracks selected for recording must all have the same sampling rate"
 msgstr ""
-"Iragaki bat ezartzeko, hautatutako bide guztiek laginketa neurri berdina "
-"izan behar dute."
+"Grabaketarako hautatutako bide guztiek laginketa neurri berdina izan behar "
+"dute."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Mismatched Sampling Rates"
-msgstr ""
+msgstr "Laginketa Neurriak ez datoz bat"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid ""
@@ -3734,10 +3725,13 @@ msgid ""
 "(Audacity requires two channels at the same sample rate for\n"
 "each stereo track)"
 msgstr ""
+"Bide gutxiegi hautatu dira grabaketarako laginketa neurri honekin.\n"
+"(Audacity-k bi kanal behar ditu laginketa neurri berdinarekin\n"
+"estereo bide bakoitzeko)"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Too Few Compatible Tracks Selected"
-msgstr ""
+msgstr "Bide bateragarri gutxiegi hautaturik"
 
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
@@ -3965,9 +3959,9 @@ msgid "<untitled>"
 msgstr "<izenburugabea>"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "[Project %02i] "
-msgstr "[Egitasmoa %02i] Audacity \"%s\""
+msgstr "[Egitasmoa %02i] "
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -5947,7 +5941,6 @@ msgstr "Urdina"
 
 #. i18n-hint:  This really means the color, not as in "white noise"
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgctxt "color"
 msgid "White"
 msgstr "Zuria"
@@ -6444,14 +6437,12 @@ msgstr "Doinua"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "from"
 msgstr "hemendik"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&from"
 msgstr "&hemendik"
@@ -6462,14 +6453,12 @@ msgstr "zortzikotik"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "to"
 msgstr "hona"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&to"
 msgstr "h&ona"
@@ -6571,7 +6560,6 @@ msgstr "IM-kotik"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "&from"
 msgstr "&hemendik"
@@ -6585,7 +6573,6 @@ msgstr "IM-kora"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "&to"
 msgstr "h&ona"
@@ -6604,7 +6591,6 @@ msgstr "Hautapenaren oraingo luzera."
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "from"
 msgstr "hemendik"
@@ -6615,7 +6601,6 @@ msgstr "Luzera &Berria:"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "to"
 msgstr "hona"
@@ -6647,7 +6632,6 @@ msgstr "Beat minutuko, hemendik"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "&from"
 msgstr "&hemendik"
@@ -6659,7 +6643,6 @@ msgstr "Beat minutuko, hona"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "&to"
 msgstr "h&ona"
@@ -6670,14 +6653,12 @@ msgstr "Luzera (segundu)"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "from"
 msgstr "hemendik"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "t&o"
 msgstr "ho&na"
@@ -7445,9 +7426,8 @@ msgid "Built-in"
 msgstr "Barne-bilduta"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Presets"
-msgstr "Aurrezarpena"
+msgstr "Aurrezarpenak"
 
 #: src/effects/Effect.cpp
 msgid "Export Effect Parameters"
@@ -8322,7 +8302,6 @@ msgstr "(Gehienez 0dB)"
 
 #. i18n-hint: not a color, but "white noise" having a uniform spectrum
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "White"
 msgstr "Zuria"
@@ -8330,17 +8309,15 @@ msgstr "Zuria"
 #. i18n-hint: not a color, but "pink noise" having a spectrum with more power
 #. in low frequencies
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "Pink"
 msgstr "Arrosa"
 
 #. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "Brownian"
-msgstr "Gaztainkara"
+msgstr "Browniarra"
 
 #: src/effects/Noise.cpp
 msgid "Noise"
@@ -9188,7 +9165,6 @@ msgstr "%.3f"
 
 #. i18n-hint: noun
 #: src/effects/Silence.cpp
-#, fuzzy
 msgctxt "generator"
 msgid "Silence"
 msgstr "Isiltasuna"
@@ -9780,7 +9756,7 @@ msgid "LV2 Effect Settings"
 msgstr "LV2 Eragin Ezarpenak"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "&Buffer Size (8 to %d) samples:"
 msgstr "&Buffer Neurria (8 eta %d) lagin artean):"
 
@@ -12076,12 +12052,15 @@ msgid "MP3 files"
 msgstr "MP3 agiriak"
 
 #: src/import/ImportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "MP3 Decoding Failed:\n"
 "\n"
 "%s"
-msgstr "Dekodeaketa hutsegitea\n"
+msgstr ""
+"MP3 Dekodeaketa hutsegitea:\n"
+"\n"
+"%s"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12664,7 +12643,6 @@ msgstr "Hautaturiko bideak isilduta %.2f segunduz %.2f"
 
 #. i18n-hint: verb
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgctxt "command"
 msgid "Silence"
 msgstr "Isiltasuna"
@@ -13435,9 +13413,8 @@ msgid "Palette..."
 msgstr "Margola..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Reset &Configuration"
-msgstr "Arau ezabapen baieztapena"
+msgstr "Berrezarri &Itxurapena"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Screenshot..."
@@ -14332,9 +14309,8 @@ msgid "Please select in a mono track."
 msgstr "Mesedez hautatu bide mono batean."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Please select in a stereo track or two mono tracks."
-msgstr "Mesedez hautatu bide estereo batean."
+msgstr "Mesedez hautatu bide estereo batean edo bi mono bidetan."
 
 #: src/menus/TransportMenus.cpp
 #, c-format
@@ -14671,7 +14647,6 @@ msgstr "Hobespenak Gailurako"
 
 #. i18n-hint Software interface to audio devices
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgctxt "device"
 msgid "Interface"
 msgstr "Interfazea"
@@ -15009,7 +14984,6 @@ msgstr "Kanp Inportazioa"
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgctxt "GUI"
 msgid "Interface"
 msgstr "Interfazea"
@@ -15261,11 +15235,13 @@ msgid "&Defaults"
 msgstr "B&erezkoak"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
-msgstr "\"  (zeren lastertekla '"
+msgstr ""
+"\n"
+"   *   \"%s\"  ('%s' lastertekla erabilia delako hemen \"%s\")\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -15276,13 +15252,15 @@ msgid "Error Importing Keyboard Shortcuts"
 msgstr "Akats Lasterteklak Inportatzerakoan"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
 "and \"%s\".\n"
 "Nothing is imported."
 msgstr ""
-"Lasterteklen agiriak legezkanpoko lastertekla bikoiztuak ditu honetarako: \""
+"Lasterteklen agiriak legezkanpoko lastertekla bikoiztuak ditu hemen: \"%s\" "
+"eta \"%s\".\n"
+"Ez da ezer inportatuko."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15328,9 +15306,14 @@ msgid ""
 "\n"
 "\t"
 msgstr ""
+"\n"
+"\n"
+"\t eta\n"
+"\n"
+"\t"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -15440,7 +15423,6 @@ msgstr "Hobespenak MidiIO-rako"
 
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
-#, fuzzy
 msgctxt "MIDI"
 msgid "Interface"
 msgstr "Interfazea"
@@ -17141,16 +17123,14 @@ msgstr "Zooma Berrezarri"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Shift-Right-Click"
-msgstr "Aldatu-Ezker-Klikatu"
+msgstr "Aldatu-Eskuin-Klikatu"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Left-Click/Left-Drag"
-msgstr "Zooma Handitu\tEzker-Klika/Ezker-Arrastatu"
+msgstr "Ezker-Klika/Ezker-Arrastatu"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -17222,9 +17202,8 @@ msgid "k"
 msgstr "k"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#, fuzzy
 msgid "Zoom to Fit"
-msgstr "Zooma gehitu Puntu batean"
+msgstr "Zooma Finkatzeko"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18226,7 +18205,7 @@ msgstr "0100000.0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
-msgstr ""
+msgstr "zentihertz"
 
 #. i18n-hint: Name of display format that shows frequency in kilohertz
 #: src/widgets/NumericTextCtrl.cpp
@@ -18241,7 +18220,7 @@ msgstr "01000.01000 kHz|0.001"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hertz"
-msgstr ""
+msgstr "hertz"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
@@ -18257,9 +18236,8 @@ msgstr "100.01000 zortziko|1.442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "thousandths of octaves"
-msgstr "milaka "
+msgstr "milaka zortziren"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in semitones and cents
@@ -18276,9 +18254,8 @@ msgstr "1000 erditonu .0100 ehunen|17.312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "hundredths of cents"
-msgstr "ehundaka "
+msgstr "ehundaka ehuneko"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in decades
@@ -18294,9 +18271,8 @@ msgstr "10.01000 hamarreko|0.434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "thousandths of decades"
-msgstr "milaka "
+msgstr "milaka hamarren"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -18307,9 +18283,9 @@ msgid "centiseconds"
 msgstr "segunduehunen"
 
 #: src/widgets/PopupMenuTable.h
-#, fuzzy, c-format
+#, c-format
 msgid "%s (%s)"
-msgstr "(%s)"
+msgstr "%s (%s)"
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
@@ -18399,7 +18375,7 @@ msgid "Value must not be less than %s"
 msgstr "Balioa ez da izan behar %s baino txikiagoa"
 
 #: src/widgets/valnum.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Value must not be greater than %s"
 msgstr "Balioa ez da izan behar %s baino handiagoa"
 
@@ -18956,9 +18932,8 @@ msgid "Equalization XML file"
 msgstr "Ekualizazioa XML agiria"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "XML file"
-msgstr "XML agiriak"
+msgstr "XML agiria"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
@@ -19355,30 +19330,25 @@ msgid "Select file(s) to install"
 msgstr "Hautatu ezartzeko agiria(k)"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-in"
-msgstr "plug-ina"
+msgstr "Plug-ina"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Lisp file"
-msgstr "%s agiriak"
+msgstr "Lisp agiria"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "HTML file"
-msgstr "XML agiriak"
+msgstr "HTML agiria"
 
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Text file"
-msgstr "Idazki agiriak"
+msgstr "Idazki agiria"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "All supported"
-msgstr "Sostengaturiko agiri guztiak"
+msgstr "Sostengaturiko guztiak"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Allow overwriting"
@@ -19643,14 +19613,12 @@ msgid "Export data to"
 msgstr "Esportatu datuak hona"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "CSV files"
-msgstr "FLAC agiriak"
+msgstr "CSV agiriak"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "HTML files"
-msgstr "XML agiriak"
+msgstr "HTML agiriak"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
