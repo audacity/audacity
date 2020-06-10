@@ -652,12 +652,14 @@ void OnSelectionRestore(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &window = ProjectWindow::Get(project);
 
    if ((mRegionSave.t0() == 0.0) &&
        (mRegionSave.t1() == 0.0))
       return;
 
    selectedRegion = mRegionSave;
+   window.ScrollIntoView(selectedRegion.t0());
 
    ProjectHistory::Get( project ).ModifyState(false);
 }
