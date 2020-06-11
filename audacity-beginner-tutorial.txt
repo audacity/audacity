@@ -1,0 +1,56 @@
+Beginner Tutorial for Audacity
+By Arjun Kahlon
+
+YouTube Playlist: https://www.youtube.com/playlist?list=PLFYIMoxOmgG2om4rFBkWtir6-HJFnZJSk
+
+Audacity 2020 Tutorial
+
+1. Downloading and Installing Audacity
+
+https://www.youtube.com/watch?v=nAb4Hegnh1I&list=PLFYIMoxOmgG2om4rFBkWtir6-HJFnZJSk&index=1
+
+
+2. Initializing Hardware for Recording and Playback
+
+https://www.youtube.com/watch?v=XdYJ2or-lEA&list=PLFYIMoxOmgG2om4rFBkWtir6-HJFnZJSk&index=2
+
+
+3. Adding and Recording a Track
+
+https://www.youtube.com/watch?v=z5LvQJhSRgU&list=PLFYIMoxOmgG2om4rFBkWtir6-HJFnZJSk&index=3
+
+
+4. How to Filter Out Background Ambient Noise from a Recording
+
+https://www.youtube.com/watch?v=Uso-WHE03_c&list=PLFYIMoxOmgG2om4rFBkWtir6-HJFnZJSk&index=4
+
+
+5. How to Use the Filter Curve to Enhance/Change the Sound of Your Voice
+
+https://www.youtube.com/watch?v=IAeE7Juga40&list=PLFYIMoxOmgG2om4rFBkWtir6-HJFnZJSk&index=5
+
+
+6. How to Create a Loop
+
+https://www.youtube.com/watch?v=EMST_XVw8-8&list=PLFYIMoxOmgG2om4rFBkWtir6-HJFnZJSk&index=6
+
+
+7. How to Import and Use 3rd-party VST Plug-Ins with Audacity
+
+https://www.youtube.com/watch?v=IpgzP9a2VGc&list=PLFYIMoxOmgG2om4rFBkWtir6-HJFnZJSk&index=7
+
+
+8. How to Apply and Effect to a Recorded Track
+
+https://www.youtube.com/watch?v=SBoepSZtKQU&list=PLFYIMoxOmgG2om4rFBkWtir6-HJFnZJSk&index=8
+
+
+9. Export Recording to Playable Audio Track
+
+https://www.youtube.com/watch?v=9QW914Qy2s8&list=PLFYIMoxOmgG2om4rFBkWtir6-HJFnZJSk&index=9
+
+
+Tutorial Created by Arjun Kahlon
+Contact: kahlona@oregonstate.edu
+Github: arjunkahlon
+
