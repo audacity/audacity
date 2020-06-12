@@ -29,10 +29,13 @@ if nargin == 2
 end
 
 ## Initialization and helper functions
+global TMP_FILENAME;
+global EXPORT_TEST_SIGNALS;
 UID=num2str(getuid());
 PIPE_TO_PATH=strcat("/tmp/audacity_script_pipe.to.", UID);
 PIPE_FROM_PATH=strcat("/tmp/audacity_script_pipe.from.", UID);
 TMP_FILENAME=strcat(pwd(), "/tmp.wav");
+EXPORT_TEST_SIGNALS = false;
 
 printf("Open scripting pipes, this may freeze if Audacity does not run...\n");
 
@@ -74,6 +77,27 @@ function select_tracks(num, count)
   aud_do(sprintf("SelectTracks: Track=%d TrackCount=%d Mode=Set\n", num, count));
 end
 
+function x_in = import_from_aud(channels)
+  global TMP_FILENAME;
+  aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=", ...
+    num2str(channels), "\n"));
+  system("sync");
+  x_in = audioread(TMP_FILENAME);
+end
+
+function x_out = export_to_aud(x, fs, name = "")
+  global TMP_FILENAME;
+  global EXPORT_TEST_SIGNALS;
+  audiowrite(TMP_FILENAME, x, fs);
+  if EXPORT_TEST_SIGNALS && length(name) != 0
+    audiowrite(cstrcat(pwd(), "/", name), x, fs);
+  end
+  # Read it back to avoid quantization-noise in tests
+  x_out = audioread(TMP_FILENAME);
+  aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
+  select_tracks(0, 100);
+end
+
 ## Float equal comparison helper
 function [ret] = float_eq(x, y, eps=0.001)
   ret = abs(x - y) < eps;
@@ -99,41 +123,43 @@ function plot_failure(x, y)
   plot(x, 'r')
   hold on
   plot(y, 'b')
-  plot(log10(abs(x-y)), 'g')
+  delta = abs(x-y);
+  max(delta)
+  plot(log10(delta), 'g')
   hold off
   legend("Audacity", "Octave", "log-delta", "location", "southeast")
   input("Press enter to continue", "s")
 end
 
-function do_test_equ(x, y, msg, eps=0.001, skip = false)
+function do_test_equ(x, y, msg = "", eps = 0.001, skip = false)
   cmp = all(all(float_eq(x, y, eps)));
   if do_test(cmp, msg, skip) == 0
     plot_failure(x, y);
   end
 end
 
-function do_test_neq(x, y, msg, eps=0.001, skip = false)
+function do_test_neq(x, y, msg = "", eps = 0.001, skip = false)
   cmp = all(all(!float_eq(x, y, eps)));
   if do_test(cmp, msg, skip) == 0
     plot_failure(x, y);
   end
 end
 
-function do_test_gte(x, y, msg, skip = false)
+function do_test_gte(x, y, msg = "", skip = false)
   cmp = all(all(x >= y));
   if do_test(cmp, msg, skip) == 0
     plot_failure(x, y);
   end
 end
 
-function do_test_lte(x, y, msg, skip = false)
+function do_test_lte(x, y, msg = "", skip = false)
   cmp = all(all(x <= y));
   if do_test(cmp, msg, skip) == 0
     plot_failure(x, y);
   end
 end
 
-function result = do_test(result, msg, skip = false)
+function result = do_test(result, msg = "", skip = false)
   global TESTS_RUN;
   global TESTS_FAILED;
   global TESTS_SKIPPED;
