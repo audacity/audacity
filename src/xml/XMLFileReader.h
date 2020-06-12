@@ -11,7 +11,8 @@
 #include "../Audacity.h"
 
 #include <vector>
-#include "expat.h"
+struct XML_ParserStruct;
+typedef struct XML_ParserStruct *XML_Parser;
 
 #include "XMLTagHandler.h"
 #include "Internat.h" // for TranslatableString

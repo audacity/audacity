@@ -21,6 +21,8 @@
 
 #include <string.h>
 
+#include "expat.h"
+
 XMLFileReader::XMLFileReader()
 {
    mParser = XML_ParserCreate(NULL);
