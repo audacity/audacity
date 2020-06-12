@@ -436,6 +436,8 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include <alloca.h>
 #endif
 
+#include "portaudio.h"
+
 #if USE_PORTMIXER
 #include "portmixer.h"
 #endif
@@ -4459,7 +4461,7 @@ int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
    return mCallbackReturn;
 }
 
-PaStreamCallbackResult AudioIoCallback::CallbackDoSeek()
+int AudioIoCallback::CallbackDoSeek()
 {
    const int token = mStreamToken;
    wxMutexLocker locker(mSuspendAudioThread);

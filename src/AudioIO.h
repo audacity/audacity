@@ -60,6 +60,10 @@ class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
+struct PaStreamCallbackTimeInfo;
+typedef unsigned long PaStreamCallbackFlags;
+typedef int PaError;
+
 bool ValidateDeviceNames();
 
 #define MAX_MIDI_BUFFER_SIZE 5000
@@ -248,7 +252,7 @@ public:
    void SetListener( const std::shared_ptr< AudioIOListener > &listener);
    
    // Part of the callback
-   PaStreamCallbackResult CallbackDoSeek();
+   int CallbackDoSeek();
 
    // Part of the callback
    void CallbackCheckCompletion(
