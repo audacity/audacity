@@ -221,7 +221,6 @@ Scrubber::Scrubber(AudacityProject *project)
 #endif
 
    , mProject(project)
-   , mWindow( FindProjectFrame( project ) )
    , mPoller { std::make_unique<ScrubPoller>(*this) }
    , mOptions {}
 
