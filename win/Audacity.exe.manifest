@@ -2,7 +2,7 @@
 <assembly xmlns='urn:schemas-microsoft-com:asm.v1' manifestVersion='1.0'>
   <assemblyIdentity
       version="2.3.0.0"
-      processorArchitecture="x86"
+      processorArchitecture="*"
       name="Audacity.Audacity.Audacity"
       type="win32"
   />
