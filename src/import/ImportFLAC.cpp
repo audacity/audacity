@@ -94,6 +94,7 @@ extern "C" {
 
 
 class FLACImportFileHandle;
+using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 
 class MyFLACFile final : public FLAC::Decoder::File
 {

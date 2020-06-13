@@ -15,7 +15,6 @@ Paul Licameli split from AudacityProject.h
 #include <vector>
 
 #include "ClientData.h" // to inherit
-#include "import/ImportRaw.h" // defines TrackHolders
 #include "FileNames.h" // for FileType
 
 class wxString;
@@ -30,6 +29,7 @@ class XMLTagHandler;
 namespace ProjectFileIORegistry{ struct Entry; }
 
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
+using TrackHolders = std::vector< WaveTrackArray >;
 
 class ProjectFileManager final
    : public ClientData::Base

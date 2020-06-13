@@ -58,6 +58,8 @@ and ImportLOF.cpp.
 
 #include "../widgets/ProgressDialog.h"
 
+using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
+
 // ============================================================================
 //
 // Return reference to singleton

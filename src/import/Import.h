@@ -11,7 +11,6 @@
 #ifndef _IMPORT_
 #define _IMPORT_
 
-#include "ImportRaw.h" // defines TrackHolders
 #include "ImportForwards.h"
 #include "audacity/Types.h"
 #include <vector>
@@ -34,8 +33,10 @@ class UnusableImportPlugin;
 typedef bool (*progress_callback_t)( void *userData, float percent );
 
 class ExtImportItem;
+class WaveTrack;
 
 using ExtImportItems = std::vector< std::unique_ptr<ExtImportItem> >;
+using TrackHolders = std::vector< std::vector< std::shared_ptr<WaveTrack> > >;
 
 class ExtImportItem
 {

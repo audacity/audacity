@@ -77,6 +77,8 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 
+using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
+
 class OggImportPlugin final : public ImportPlugin
 {
 public:
