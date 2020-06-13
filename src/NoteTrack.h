@@ -17,7 +17,6 @@
 
 #include <utility>
 #include "Track.h"
-#include "effects/TimeWarper.h"
 
 #if defined(USE_MIDI)
 
@@ -63,6 +62,7 @@ using NoteTrackBase =
 using QuantizedTimeAndBeat = std::pair< double, double >;
 
 class StretchHandle;
+class TimeWarper;
 
 class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase

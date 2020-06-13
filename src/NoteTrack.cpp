@@ -38,6 +38,7 @@
 
 #include "InconsistencyException.h"
 
+#include "effects/TimeWarper.h"
 #include "tracks/ui/TrackView.h"
 #include "tracks/ui/TrackControls.h"
 
