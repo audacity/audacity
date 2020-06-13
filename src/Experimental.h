@@ -217,7 +217,7 @@
 // scrolling past zero is enabled. Perhaps that lessens confusion.
 #define EXPERIMENTAL_TWO_TONE_TIME_RULER
 
-#ifndef IN_RC
+#ifndef RC_INVOKED
    // Define to include crash reporting
    #define EXPERIMENTAL_CRASH_REPORT
    #ifdef EXPERIMENTAL_CRASH_REPORT
