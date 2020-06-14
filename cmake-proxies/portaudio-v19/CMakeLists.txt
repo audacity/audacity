@@ -151,9 +151,10 @@ list( APPEND SOURCES
 )
 
 list( APPEND INCLUDES
-   PRIVATE
+   PUBLIC
       ${TARGET_ROOT}/src/common
 
+   PRIVATE
       $<$<PLATFORM_ID:Windows>:
          ${TARGET_ROOT}/src/os/win
       >

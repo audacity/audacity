@@ -491,7 +491,7 @@ time warp info and AudioIOListener and whether the playback is looped.
    #define ROUND(x) (int) ((x)+0.5)
    //#include <string.h>
 //   #include "portmidi.h"
-   #include "../lib-src/portaudio-v19/src/common/pa_util.h"
+   #include "pa_util.h"
    #include "NoteTrack.h"
 #endif
 
