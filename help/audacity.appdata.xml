@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
   <id>org.audacityteam.Audacity</id>
-  <launchable type="desktop">audacity.desktop</launchable>
+  <launchable type="desktop-id">audacity.desktop</launchable>
   <project_license>GPL-2.0 and CC-BY-3.0</project_license>
   <metadata_license>CC0-1.0</metadata_license>
   <name>Audacity</name>
@@ -22,6 +22,7 @@
     <category>AudioVideo</category>
     <category>Audio</category>
   </categories>
+  <content_rating type="oars-1.1" />
   <url type="homepage">https://www.audacityteam.org/</url>
   <url type="bugtracker">https://bugzilla.audacityteam.org/</url>
   <url type="faq">https://manual.audacityteam.org/man/faq.html</url>
