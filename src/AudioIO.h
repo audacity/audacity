@@ -28,8 +28,8 @@
 // TODO: Put the relative paths into automake.
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-#include "../lib-src/portmidi/pm_common/portmidi.h"
-#include "../lib-src/portmidi/porttime/porttime.h"
+typedef void PmStream;
+typedef int32_t PmTimestamp;
 
 class Alg_seq;
 class Alg_event;
@@ -330,7 +330,7 @@ public:
 #ifdef EXPERIMENTAL_MIDI_OUT
    //   MIDI_PLAYBACK:
    PmStream        *mMidiStream;
-   PmError          mLastPmError;
+   int              mLastPmError;
 
    /// Latency of MIDI synthesizer
    long             mSynthLatency; // ms
