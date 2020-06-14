@@ -477,7 +477,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "../lib-src/portmidi/pm_common/portmidi.h"
 #include "../lib-src/portmidi/porttime/porttime.h"
-#include "../lib-src/header-substitutes/allegro.h"
+#include "allegro.h"
 
    #define MIDI_SLEEP 10 /* milliseconds */
    // how long do we think the thread that fills MIDI buffers,
