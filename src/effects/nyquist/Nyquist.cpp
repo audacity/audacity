@@ -3356,7 +3356,7 @@ void NyquistOutputDialog::OnOk(wxCommandEvent & /* event */)
 }
 
 // Registration of extra functions in XLisp.
-#include "../../../lib-src/libnyquist/nyquist/xlisp/xlisp.h"
+#include "nyquist/xlisp/xlisp.h"
 
 static LVAL gettext()
 {
