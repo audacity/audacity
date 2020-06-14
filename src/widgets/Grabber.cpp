@@ -270,7 +270,7 @@ void Grabber::OnKeyDown(wxKeyEvent &event)
 }
 
 // Piggy back in same source file as Grabber.
-// Audcaity Flicker-free StaticBitmap.
+// Audacity Flicker-free StaticBitmap.
 BEGIN_EVENT_TABLE(AStaticBitmap,wxStaticBitmap)
     EVT_ERASE_BACKGROUND(AStaticBitmap::OnErase)
 END_EVENT_TABLE()

@@ -145,7 +145,7 @@ class Grabber final : public wxWindow
 };
 
 // Piggy back in same source file as Grabber.
-// Audcaity Flicker-free StaticBitmap.
+// Audacity Flicker-free StaticBitmap.
 class AStaticBitmap : public wxStaticBitmap {
   public:
     AStaticBitmap(wxWindow *parent,
