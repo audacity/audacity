@@ -26,7 +26,7 @@
 #include <wx/intl.h>
 
 #if defined(USE_MIDI)
-#include "../lib-src/header-substitutes/allegro.h"
+#include "allegro.h"
 
 #include <sstream>
 

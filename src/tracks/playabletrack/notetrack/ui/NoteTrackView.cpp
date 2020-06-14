@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "NoteTrackView.h"
 
 #ifdef USE_MIDI
-#include "../lib-src/header-substitutes/allegro.h"
+#include "allegro.h"
 
 #include "../../../../Experimental.h"
 

@@ -6,11 +6,11 @@
 // If this is compiled with MSVC (Visual Studio)
 #pragma warning( push )
 #pragma warning( disable : 4100)
-#include "../sbsms/include/sbsms.h"
+#include "../../lib-src/sbsms/include/sbsms.h"
 #pragma warning( pop )
 
 #else //_MSC_VER
 
-#include "../sbsms/include/sbsms.h"
+#include "../../lib-src/sbsms/include/sbsms.h"
 
 #endif //_MSC_VER
