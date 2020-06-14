@@ -10,6 +10,11 @@
 #include "../portsmf/allegro.h"
 #pragma warning( pop )
 
+#elif defined(__linux__)
+
+#include <cstring> // Allegro include fails if this header isn't included due to no memcpy
+#include "../portsmf/allegro.h"
+
 #else //_MSC_VER
 
 #include "../portsmf/allegro.h"

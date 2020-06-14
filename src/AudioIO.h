@@ -30,8 +30,10 @@
 #ifdef EXPERIMENTAL_MIDI_OUT
 #include "../lib-src/portmidi/pm_common/portmidi.h"
 #include "../lib-src/portmidi/porttime/porttime.h"
-#include <cstring> // Allegro include fails if this header isn't included do to no memcpy
-#include "../lib-src/header-substitutes/allegro.h"
+
+class Alg_seq;
+class Alg_event;
+class Alg_iterator;
 
 class NoteTrack;
 using NoteTrackArray = std::vector < std::shared_ptr< NoteTrack > >;
@@ -377,10 +379,10 @@ public:
    /// to avoid problems of atomicity of updates
    volatile double mSystemMinusAudioTimePlusLatency;
 
-   Alg_seq_ptr      mSeq;
+   Alg_seq      *mSeq;
    std::unique_ptr<Alg_iterator> mIterator;
    /// The next event to play (or null)
-   Alg_event_ptr    mNextEvent;
+   Alg_event    *mNextEvent;
 
 #ifdef AUDIO_IO_GB_MIDI_WORKAROUND
    std::vector< std::pair< int, int > > mPendingNotesOff;

@@ -474,6 +474,9 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "widgets/Warning.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
+
+#include "../lib-src/header-substitutes/allegro.h"
+
    #define MIDI_SLEEP 10 /* milliseconds */
    // how long do we think the thread that fills MIDI buffers,
    // if it is separate from the portaudio thread,
