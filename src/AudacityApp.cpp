@@ -1147,7 +1147,7 @@ bool AudacityApp::OnInit()
    /* Search path (for plug-ins, translations etc) is (in this order):
       * The AUDACITY_PATH environment variable
       * The current directory
-      * The user's .audacity-files directory in their home directory
+      * The user's .audacity-data directory in their home directory
       * The "share" and "share/doc" directories in their install path */
    wxString home = wxGetHomeDir();
 
@@ -1176,10 +1176,9 @@ bool AudacityApp::OnInit()
    wxString progPath = wxPathOnly(argv[0]);
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
 
+   FileNames::AddUniquePathToPathList(FileNames::DataDir(), audacityPathList);
+
 #ifdef AUDACITY_NAME
-   FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
-      home, wxT(AUDACITY_NAME)),
-      audacityPathList);
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/%s"),
       wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
       audacityPathList);
@@ -1187,9 +1186,6 @@ bool AudacityApp::OnInit()
       wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
       audacityPathList);
 #else //AUDACITY_NAME
-   FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
-      home),
-      audacityPathList);
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/audacity"),
       wxT(INSTALL_PREFIX)),
       audacityPathList);
