@@ -260,6 +260,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
    FileNames::FindFilesInPathList(wxT("*.so"), pathList, files);
    #endif
 
+   FilePaths checked;
    wxString saveOldCWD = ::wxGetCwd();
    for (i = 0; i < files.size(); i++) {
       // As a courtesy to some modules that might be bridges to
@@ -267,6 +268,13 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       // directory to be the module's directory.
       auto prefix = ::wxPathOnly(files[i]);
       ::wxSetWorkingDirectory(prefix);
+
+      // Only process the first module encountered in the
+      // defined search sequence.
+      wxString ShortName = wxFileName( files[i] ).GetName();
+      if( checked.Index( ShortName, false ) != wxNOT_FOUND )
+         continue;
+      checked.Add( ShortName );
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
       int iModuleStatus = ModulePrefs::GetModuleStatus( files[i] );
@@ -288,7 +296,6 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       // I think it would be better to show the module prefs page,
       // and let the user decide for each one.
       {
-         wxString ShortName = wxFileName( files[i] ).GetName();
          auto msg = XO("Module \"%s\" found.").Format( ShortName );
          msg += XO("\n\nOnly use modules from trusted sources");
          const TranslatableStrings buttons{
