@@ -460,7 +460,7 @@ void ExtImportPrefs::DoOnRuleTableSelect (int toprow)
 {
    auto &items = Importer::Get().GetImportItems();
 
-   if (toprow < 0 || toprow > (int)items.size())
+   if (toprow < 0 || toprow >= (int)items.size())
    {
       return;
    }
