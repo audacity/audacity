@@ -21,6 +21,8 @@ Geometric TimeWarper classes
 #include <wx/string.h>
 #include <math.h>
 
+TimeWarper::~TimeWarper() = default;
+
 double IdentityTimeWarper::Warp(double originalTime) const
 {
    return originalTime;
