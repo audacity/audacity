@@ -588,6 +588,12 @@ void Grid::OnKeyDown(wxKeyEvent &event)
             return;
          }
          else if (event.ShiftDown()) {
+            // Empty grid?
+            if (crow == -1 && ccol == -1) {
+               Navigate(wxNavigationKeyEvent::FromTab | wxNavigationKeyEvent::IsBackward);
+               return;
+            }
+
             if (crow == 0 && ccol == 0) {
                Navigate(wxNavigationKeyEvent::FromTab | wxNavigationKeyEvent::IsBackward);
                return;
@@ -600,6 +606,12 @@ void Grid::OnKeyDown(wxKeyEvent &event)
             }
          }
          else {
+            // Empty grid?
+            if (crow == -1 && ccol == -1) {
+               Navigate(wxNavigationKeyEvent::FromTab | wxNavigationKeyEvent::IsForward);
+               return;
+            }
+
             if (crow == rows - 1 && ccol == cols - 1) {
                Navigate(wxNavigationKeyEvent::FromTab | wxNavigationKeyEvent::IsForward);
                return;
@@ -611,6 +623,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
                SetGridCursor(crow, ccol + 1);
             }
          }
+
          MakeCellVisible(GetGridCursorRow(), GetGridCursorCol());
 
 #if wxUSE_ACCESSIBILITY
