@@ -699,6 +699,9 @@ void TrackPanel::OnTrackListResizing(TrackListEvent & e)
    if( t && t->HasOwner() )
       UpdateVRuler(t.get());
    e.Skip();
+
+   // fix for bug 2477
+   mListener->TP_RedrawScrollbars();
 }
 
 // Tracks have been removed from the list.
