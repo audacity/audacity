@@ -538,6 +538,7 @@ bool MP3ImportFileHandle::CheckMP3()
       if (i)
       {
          wxLogMessage(wxT("Skipped %d bytes while searching for first MP3 frame."), i);
+         return false;
       }
 
       return true;
