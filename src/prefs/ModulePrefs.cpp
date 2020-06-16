@@ -171,7 +171,6 @@ int ModulePrefs::GetModuleStatus(const FilePath &fname)
    int iStatus = kModuleNew;
 
    wxFileName FileName( fname );
-   wxDateTime DateTime = FileName.GetModificationTime();
    wxString ShortName = FileName.GetName().Lower();
 
    wxString PathPref = wxString( wxT("/ModulePath/") ) + ShortName;
@@ -183,8 +182,13 @@ int ModulePrefs::GetModuleStatus(const FilePath &fname)
    {
       gPrefs->Read( StatusPref, &iStatus, kModuleNew );
 
+      wxDateTime DateTime = FileName.GetModificationTime();
       wxDateTime OldDateTime;
       OldDateTime.ParseISOCombined( gPrefs->Read( DateTimePref, wxEmptyString ) );
+
+      // Some platforms return milliseconds, some do not...level the playing field
+      DateTime.SetMillisecond( 0 );
+      OldDateTime.SetMillisecond( 0 );
 
       // fix up a bad status or reset for newer module
       if( iStatus > kModuleNew || !OldDateTime.IsEqualTo( DateTime ) )
