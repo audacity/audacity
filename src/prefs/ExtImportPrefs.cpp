@@ -326,7 +326,8 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
    if (mFakeKeyEvent)
    {
       PluginList->SetItemState (itemIndex, 0, wxLIST_STATE_SELECTED);
-      PluginList->SetItemState (itemIndex2, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      PluginList->SetItemState (itemIndex2, wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
+         wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
    }
    int fcount = item->filter_objects.size();
    if (item->divider >= fcount)
@@ -498,8 +499,8 @@ void ExtImportPrefs::DoOnRuleTableSelect (int toprow)
    wxListItem info;
    info.SetId (0);
    info.SetColumn (0);
-   info.SetStateMask (wxLIST_STATE_SELECTED);
-   info.SetState (wxLIST_STATE_SELECTED);
+   info.SetStateMask (wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
+   info.SetState (wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
    info.SetMask (wxLIST_MASK_STATE);
    PluginList->SetItem (info);
    PluginList->SetColumnWidth (0, wxLIST_AUTOSIZE);
