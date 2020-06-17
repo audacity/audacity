@@ -2,13 +2,13 @@
 # This file is distributed under the GNU General Public License (GPL).
 # nikos papadopoulos <231036448@in.gr>, 2006.
 # nikos papadopoulos <nikos569@otenet.gr>, 2007.
-# Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2014, 2017.
+# Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2014-2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-06-09 10:48+0100\n"
-"PO-Revision-Date: 2020-04-11 12:30+0300\n"
+"PO-Revision-Date: 2020-06-12 10:14+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -454,9 +454,9 @@ msgstr "%s (ενσωμάτωση %s, %s, %s, %s και %s)"
 
 #. i18n-hint: information about the program
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "About %s"
-msgstr "Περί"
+msgstr "Περί %s"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
@@ -467,55 +467,52 @@ msgstr "Εντάξει"
 #. i18n-hint: First and third %s will be the program's name,
 #. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"Το Audacity είναι ένα ελεύθερο πρόγραμμα γραμμένο από μια παγκόσμια ομάδα "
-"[[http://www.audacityteam.org/about/credits|εθελοντών]]. Το Audacity είναι "
-"[[http://www.audacityteam.org/download|διαθέσιμο]] για Windows, Mac, και GNU/"
-"Linux (καθώς και για άλλα συστήματα παρόμοια με Unix)."
+"Το %s είναι ελεύθερο πρόγραμμα γραμμένο από μια παγκόσμια ομάδα των %s. Το "
+"%s είναι %s για Windows, Mac και GNU/Linux (και άλλα παρόμοια με Unix "
+"συστήματα)."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
 msgid "volunteers"
-msgstr ""
+msgstr "εθελοντές"
 
 #. i18n-hint: substitutes into "Audacity is %s"
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "available"
-msgstr "Μεταβλητή"
+msgstr "διαθεσιμο"
 
 #. i18n-hint first and third %s will be "forum", second "wiki"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our %s. For help, view the tips and tricks on our %s or visit our %s."
 msgstr ""
 "Εάν βρείτε κάποιο σφάλμα ή έχετε να μας προτείνετε κάτι, παρακαλούμε γράψτε "
-"μας στα αγγλικά στo [[http://forum.audacityteam.org/|φόρουμ]]. Για βοήθεια, "
-"δείτε τις συμβουλές και τα κόλπα μας στο [[http://wiki.audacityteam.org/|"
-"wiki]] ή επισκεφτείτε το [[http://forum.audacityteam.org/|φόρουμ μας]]."
+"μας στα αγγλικά στo %s. Για βοήθεια, δείτε τις συμβουλές και τα κόλπα μας "
+"στο %s ή επισκεφτείτε μας στο %s."
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
 msgctxt "dative"
 msgid "forum"
-msgstr ""
+msgstr "αλληλοβοήθεια (φόρουμ)"
 
 #. i18n-hint substitutes into "view the tips and tricks on our %s"
 #: src/AboutDialog.cpp
 msgid "wiki"
-msgstr ""
+msgstr "βίκι"
 
 #. i18n-hint substitutes into "visit our %s"
 #: src/AboutDialog.cpp
 msgctxt "accusative"
 msgid "forum"
-msgstr ""
+msgstr "αλληλοβοήθεια (φόρουμ)"
 
 #  i18n-hint: The translation of "translator_credits" will appear
 #  in the credits in the About Audacity window.  Use this to add
@@ -532,16 +529,16 @@ msgstr "Ελληνική μετάφραση από τους Δημήτρη Σπ�
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
-msgstr ""
+msgstr "<h3>"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
 msgstr ""
-"Το Audacity είναι ελεύθερο, ανοικτού κώδικα, διαλειτουργικό λογισμικό για "
+"Το %s είναι ελεύθερο, ανοικτού κώδικα, διαλειτουργικό λογισμικό για "
 "ηχογραφήσεις και επεξεργασία ήχων."
 
 #: src/AboutDialog.cpp
@@ -554,9 +551,9 @@ msgstr "Προσαρμογή DarkAudacity"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s Team Members"
-msgstr "Επίτιμα μέλη της ομάδας"
+msgstr "Μέλη της ομάδας %s"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -564,9 +561,9 @@ msgstr "Επίτιμα:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Distinguished %s Team members, not currently active"
-msgstr "Διακεκριμένα μέλη της ομάδας Audacity, μη ενεργά προς το παρόν"
+msgstr "Διακεκριμένα μέλη της ομάδας %s, μη ενεργά προς το παρόν"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -586,9 +583,9 @@ msgstr "Βιβλιοθήκες"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s includes code from the following projects:"
-msgstr "Το Audacity περιλαμβάνει κώδικα από τα ακόλουθα έργα:"
+msgstr "Το %s περιλαμβάνει κώδικα από τα ακόλουθα έργα:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
@@ -596,9 +593,9 @@ msgstr "Ευχαριστούμε ιδιαίτερα:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s website: "
-msgstr "Ιστοσελίδα Audacity: "
+msgstr "Ιστότοπος %s: "
 
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
@@ -606,14 +603,14 @@ msgstr "Ιστοσελίδα Audacity: "
 #, c-format
 msgid "%s software is copyright %s 1999-2018 %s Team."
 msgstr ""
+"Τα πνευματικά δικαιώματα του λογισμικού %s %s 1999-2018 ανήκουν στην ομάδα "
+"%s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
-msgstr ""
-"&nbsp; &nbsp; Το όνομα <b>Audacity</b> είναι καταχωρισμένο εμπορικό σήμα του "
-"Dominic Mazzoni.<br><br>"
+msgstr "Το όνομα %s είναι καταχωρισμένο εμπορικό σήμα του Dominic Mazzoni."
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
@@ -722,12 +719,12 @@ msgstr "Αναγνωριστικό υποβολής:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Debug build (debug level %d)"
-msgstr ""
+msgstr "Δομή αποσφαλμάτωσης (επίπεδο αποσφαλμάτωσης %d)"
 
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Release build (debug level %d)"
-msgstr "Έκδοση δόμησης"
+msgstr "Δομή έκδοσης (επίπεδο αποσφαλμάτωσης %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -2223,12 +2220,11 @@ msgstr "Α&ντιγραφή ονομάτων στο πρόχειρο"
 #: src/Dependencies.cpp
 #, c-format
 msgid "\"%s\", \"%s\", \"%s\"\n"
-msgstr ""
+msgstr "\"%s\", \"%s\", \"%s\"\n"
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid "Missing"
-msgstr "Λείπουν αρχεία"
+msgstr "Λείπει"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -3093,27 +3089,27 @@ msgid "Unable to determine"
 msgstr "Αδύνατη η διευκρίνηση"
 
 #: src/Internat.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s bytes"
-msgstr "bytes"
+msgstr "%s bytes"
 
 #. i18n-hint: Abbreviation for Kilo bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s KB"
-msgstr ""
+msgstr "%s KB"
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s MB"
-msgstr ""
+msgstr "%s MB"
 
 #. i18n-hint: Abbreviation for Giga bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s GB"
-msgstr ""
+msgstr "%s GB"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3711,7 +3707,6 @@ msgstr ""
 #. i18n-hint A plug-in is an optional added program for a sound
 #. effect, or generator, or analyzer
 #: src/PluginManager.cpp
-#, fuzzy
 msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
@@ -3752,15 +3747,14 @@ msgstr ""
 "ρυθμό δειγματοληψίας του έργου."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "The tracks selected for recording must all have the same sampling rate"
 msgstr ""
-"Για να εφαρμοστεί ένα φίλτρο, όλα τα επιλεγμένα κομμάτια πρέπει να έχουν τον "
-"ίδιο ρυθμό δειγματοληψίας."
+"Όλα τα επιλεγμένα κομμάτια για ηχογράφηση πρέπει να έχουν τον ίδιο ρυθμό "
+"δειγματοληψίας."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Mismatched Sampling Rates"
-msgstr ""
+msgstr "Ασύμφωνοι ρυθμοί δειγματοληψίας"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid ""
@@ -3768,10 +3762,14 @@ msgid ""
 "(Audacity requires two channels at the same sample rate for\n"
 "each stereo track)"
 msgstr ""
+"Πολύ λίγα κομμάτια είναι επιλεγμένα για ηχογράφηση με αυτόν τον ρυθμό "
+"δειγματοληψίας.\n"
+"(Το Audacity απαιτεί δύο κανάλια στο ίδιο ρυθμό δείγματος για\n"
+"κάθε στερεοφωνικό κομμάτι)"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Too Few Compatible Tracks Selected"
-msgstr ""
+msgstr "Επιλέχτηκαν πολύ λίγα συμβατά κομμάτια"
 
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
@@ -4000,9 +3998,9 @@ msgid "<untitled>"
 msgstr "<χωρίς όνομα>"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "[Project %02i] "
-msgstr "[Έργο %02i] Audacity \"%s\""
+msgstr "[Έργο %02i] "
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -5992,7 +5990,6 @@ msgstr "Γαλάζιο"
 
 #. i18n-hint:  This really means the color, not as in "white noise"
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgctxt "color"
 msgid "White"
 msgstr "Λευκό"
@@ -6490,14 +6487,12 @@ msgstr "Τονικό ύψος"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "from"
 msgstr "από"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&from"
 msgstr "α&πό"
@@ -6508,14 +6503,12 @@ msgstr "από οκτάβα"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "to"
 msgstr "σε"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&to"
 msgstr "&σε"
@@ -6621,7 +6614,6 @@ msgstr "Από στροφές ανά λεπτό"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "&from"
 msgstr "α&πό"
@@ -6635,7 +6627,6 @@ msgstr "Σε στροφές ανά λεπτό"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "&to"
 msgstr "&σε"
@@ -6654,7 +6645,6 @@ msgstr "Τρέχουσα διάρκεια επιλογής."
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "from"
 msgstr "από"
@@ -6665,7 +6655,6 @@ msgstr "&Νέα διάρκεια:"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "to"
 msgstr "σε"
@@ -6697,7 +6686,6 @@ msgstr "Κτύποι ανά λεπτό, από"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "&from"
 msgstr "α&πό"
@@ -6709,7 +6697,6 @@ msgstr "Κτύποι ανά λεπτό, προς"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "&to"
 msgstr "&σε"
@@ -6720,14 +6707,12 @@ msgstr "Διάρκεια (δευτ.)"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "from"
 msgstr "από"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "t&o"
 msgstr "σ&ε"
@@ -7498,9 +7483,8 @@ msgid "Built-in"
 msgstr "Ενσωματωμένο"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Presets"
-msgstr "Προεπιλογές:"
+msgstr "Προρυθμίσεις"
 
 #: src/effects/Effect.cpp
 msgid "Export Effect Parameters"
@@ -8376,25 +8360,22 @@ msgstr "(Μέγιστο 0dB)"
 
 #. i18n-hint: not a color, but "white noise" having a uniform spectrum
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "White"
-msgstr "Λευκό"
+msgstr "Λευκός (θόρυβος)"
 
 #. i18n-hint: not a color, but "pink noise" having a spectrum with more power
 #. in low frequencies
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "Pink"
-msgstr "Ροζ"
+msgstr "Ροζ (θόρυβος)"
 
 #. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "Brownian"
-msgstr "Κίνηση Μπράουν"
+msgstr "Μπράουν"
 
 #: src/effects/Noise.cpp
 msgid "Noise"
@@ -9249,7 +9230,6 @@ msgstr "%.3f"
 
 #. i18n-hint: noun
 #: src/effects/Silence.cpp
-#, fuzzy
 msgctxt "generator"
 msgid "Silence"
 msgstr "Σιγή"
@@ -9843,7 +9823,7 @@ msgid "LV2 Effect Settings"
 msgstr "Ρυθμίσεις των εφέ LV2"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "&Buffer Size (8 to %d) samples:"
 msgstr "Μέγεθος ε&νδιάμεσης μνήμης (8 έως %d δείγματα):"
 
@@ -12173,12 +12153,15 @@ msgid "MP3 files"
 msgstr "Αρχεία MP3"
 
 #: src/import/ImportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "MP3 Decoding Failed:\n"
 "\n"
 "%s"
-msgstr "Αποτυχία αποκωδικοποίησης\n"
+msgstr ""
+"Αποτυχία αποκωδικοποίησης MP3:\n"
+"\n"
+"%s"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12773,7 +12756,6 @@ msgstr "Επιλεγμένα κομμάτια σε σίγαση για %.2f δε
 
 #. i18n-hint: verb
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgctxt "command"
 msgid "Silence"
 msgstr "Σιγή"
@@ -13546,9 +13528,8 @@ msgid "Palette..."
 msgstr "Παλέτα..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Reset &Configuration"
-msgstr "Επιβεβαίωση διαγραφής κανόνα"
+msgstr "Επαναφορά & διαμόρφωση"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Screenshot..."
@@ -14446,9 +14427,8 @@ msgid "Please select in a mono track."
 msgstr "Παρακαλούμε, επιλέξτε μονοφωνικό κομμάτι."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Please select in a stereo track or two mono tracks."
-msgstr "Παρακαλούμε, επιλέξτε στερεοφωνικό κομμάτι."
+msgstr "Παρακαλούμε, επιλέξτε στερεοφωνικό κομμάτι ή δύο μονοφωνικά κομμάτια."
 
 #: src/menus/TransportMenus.cpp
 #, c-format
@@ -14788,10 +14768,9 @@ msgstr "Προτιμήσεις συσκευής"
 
 #. i18n-hint Software interface to audio devices
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgctxt "device"
 msgid "Interface"
-msgstr "Περιβάλλον εργασίας"
+msgstr "Διεπαφή"
 
 #. i18n-hint: (noun)
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -15128,10 +15107,9 @@ msgstr "Εξωτερική εισαγωγή"
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgctxt "GUI"
 msgid "Interface"
-msgstr "Περιβάλλον εργασίας"
+msgstr "Διεπαφή"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Preferences for GUI"
@@ -15381,11 +15359,13 @@ msgid "&Defaults"
 msgstr "&Προεπιλεγμένα"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
-msgstr "\"  (επειδή η συντόμευση '"
+msgstr ""
+"\n"
+"   *   \"%s\"  (επειδή η συντόμευση '%s' χρησιμοποιείται από \"%s\")\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -15398,14 +15378,15 @@ msgid "Error Importing Keyboard Shortcuts"
 msgstr "Σφάλμα κατά την εισαγωγή συντομεύσεων πληκτρολογίου"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
 "and \"%s\".\n"
 "Nothing is imported."
 msgstr ""
-"Το αρχείο με τις συντομεύσεις περιέχει μη έγκυρες διπλότυπες συντομεύσεις "
-"για \""
+"Το αρχείο με τις συντομεύσεις περιέχει μη έγκυρες διπλές συντομεύσεις για "
+"\"%s\" και \"%s\".\n"
+"Δεν εισάχθηκε τίποτα."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15451,9 +15432,14 @@ msgid ""
 "\n"
 "\t"
 msgstr ""
+"\n"
+"\n"
+"\t και\n"
+"\n"
+"\t"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -15563,10 +15549,9 @@ msgstr "Προτιμήσεις εισόδου-εξόδου Midi"
 
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
-#, fuzzy
 msgctxt "MIDI"
 msgid "Interface"
-msgstr "Περιβάλλον εργασίας"
+msgstr "Διεπαφή"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -17270,16 +17255,14 @@ msgstr "Επαναφορά εστίασης"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Shift-Right-Click"
-msgstr "Shift-αριστερό-πάτημα"
+msgstr "Shift-δεξιό-πάτημα"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Left-Click/Left-Drag"
-msgstr "Μεγέθυνση αριστερό πάτημα/αριστερή μεταφορά"
+msgstr "Αριστερό πάτημα/αριστερή μεταφορά"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -17352,9 +17335,8 @@ msgid "k"
 msgstr "k"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#, fuzzy
 msgid "Zoom to Fit"
-msgstr "Μεγέθυνση σε σημείο"
+msgstr "Εστίαση για προσαρμογή"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18363,7 +18345,7 @@ msgstr "0100000,0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
-msgstr ""
+msgstr "centihertz"
 
 #. i18n-hint: Name of display format that shows frequency in kilohertz
 #: src/widgets/NumericTextCtrl.cpp
@@ -18378,7 +18360,7 @@ msgstr "01000,01000 kHz|0,001"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hertz"
-msgstr ""
+msgstr "hertz"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
@@ -18394,9 +18376,8 @@ msgstr "100,01000 οκτάβες|1,442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "thousandths of octaves"
-msgstr "χιλιοστά του "
+msgstr "χιλιοστά των οκτάβων"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in semitones and cents
@@ -18413,9 +18394,8 @@ msgstr "1000 ημιτόνια ,0100 εκατοστά|17,312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "hundredths of cents"
-msgstr "εκατοστά του "
+msgstr "εκατοστά των εκατοστών"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in decades
@@ -18431,9 +18411,8 @@ msgstr "10,01000 δεκάδες|0,434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "thousandths of decades"
-msgstr "χιλιοστά του "
+msgstr "χιλιοστά των δεκάδων"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -18444,9 +18423,9 @@ msgid "centiseconds"
 msgstr "εκατοστοδευτερόλεπτα"
 
 #: src/widgets/PopupMenuTable.h
-#, fuzzy, c-format
+#, c-format
 msgid "%s (%s)"
-msgstr "(%s)"
+msgstr "%s (%s)"
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
@@ -18536,7 +18515,7 @@ msgid "Value must not be less than %s"
 msgstr "Η τιμή δεν πρέπει να είναι μικρότερη από %s"
 
 #: src/widgets/valnum.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Value must not be greater than %s"
 msgstr "Η τιμή δεν πρέπει να είναι μεγαλύτερη από %s"
 
@@ -19100,9 +19079,8 @@ msgid "Equalization XML file"
 msgstr "Αρχείο εξισορρόπησης XML"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "XML file"
-msgstr "Αρχεία XML"
+msgstr "Αρχείο XML"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
@@ -19501,30 +19479,25 @@ msgid "Select file(s) to install"
 msgstr "Επιλέξτε αρχεία για εγκατάσταση"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-in"
-msgstr "πρόσθετο"
+msgstr "Πρόσθετο"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Lisp file"
-msgstr "Αρχεία %s"
+msgstr "Αρχείο Lisp"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "HTML file"
-msgstr "Αρχεία XML"
+msgstr "Αρχείο HTML"
 
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Text file"
-msgstr "Αρχεία κειμένου"
+msgstr "Αρχείο κειμένου"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "All supported"
-msgstr "Όλα τα υποστηριζόμενα αρχεία"
+msgstr "Όλα τα υποστηριζόμενα"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Allow overwriting"
@@ -19793,14 +19766,12 @@ msgid "Export data to"
 msgstr "Εξαγωγή δεδομένων σε"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "CSV files"
-msgstr "Αρχεία FLAC"
+msgstr "Αρχεία CSV"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "HTML files"
-msgstr "Αρχεία XML"
+msgstr "Αρχεία HTML"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
