@@ -2,8 +2,8 @@
 # This file is distributed under the same license as the audacity package.
 #
 # Translators:
-# Hwanyong Lee <hwan@ajou.ac.kr>, 2019
-# Dongyoon Kim <kenny122@ajou.ac.kr>, 2019
+# Hwanyong Lee <hwan@ajou.ac.kr>, 2019-2020
+# Dongyoon Kim <kenny122@ajou.ac.kr>, 2019-2020
 # Potato <sheppaul@naver.com>, 2017-2018
 # Seong-ho Cho <darkcircle.0426@gmail.com>, 2012-2014
 msgid ""
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-06-09 10:48+0100\n"
-"PO-Revision-Date: 2020-04-21 15:25+0900\n"
+"PO-Revision-Date: 2020-06-10 19:57+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (http://www.transifex.com/klyok/audacity/language/"
 "ko/)\n"
@@ -174,7 +174,7 @@ msgstr "탱고 아이콘 갤러리 (툴바 아이콘)"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Leland Lucius"
-msgstr "리랜드 루시우스"
+msgstr "Leland Lucius"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "(C) 2009 by Leland Lucius"
@@ -288,7 +288,7 @@ msgstr "실행 취소"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Undo last change"
-msgstr "마지막 변경사항 실행 취소"
+msgstr "최근 변경 취소"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
@@ -297,7 +297,7 @@ msgstr "재실행"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Redo previous change"
-msgstr "이전 변경사항 재실행"
+msgstr "이전 변경 재실행"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find"
@@ -455,9 +455,9 @@ msgstr "%s (%s, %s, %s, %s, %s 협ㄹ)"
 
 #. i18n-hint: information about the program
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "About %s"
-msgstr "정보"
+msgstr "%s 정보"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
@@ -468,55 +468,50 @@ msgstr "확인"
 #. i18n-hint: First and third %s will be the program's name,
 #. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"오데시티는 세계 각지의 [[https://www.audacityteam.org/about/credits|자원자]]"
-"들이 팀을 구성해 만든 무료 프로그램입니다. 오데시티는 윈도우, 맥과 GUN/리눅스"
-"(기타 유닉스같은 시스템에서도)에서 [[https://www.audacityteam.org/download|사"
-"용할 수 있습니다]]."
+"%s는 세계 각지의 들이 %s팀에 의해 작성된 무료 프로그램으로, %s는 %s for "
+"Windows, Mac GNU/Linux(등 Unix계열 시스템)에서 사용가능 합니다."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
 msgid "volunteers"
-msgstr ""
+msgstr "자원봉사자"
 
 #. i18n-hint: substitutes into "Audacity is %s"
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "available"
-msgstr "가변"
+msgstr "가능"
 
 #. i18n-hint first and third %s will be "forum", second "wiki"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our %s. For help, view the tips and tricks on our %s or visit our %s."
 msgstr ""
-"버그를 발견하거나 개선 사항이 있으면 우리 [[https://forum.audacityteam.org/|"
-"포럼]]에 영어로 글을 남겨 주세요. 도움이 필요하면 우리 [[https://wiki."
-"audacityteam.org/|위키]]의 팁과 트릭란을 참고하거나 우리 [[https://forum."
-"audacityteam.org/|포럼]]을 방문해 주시길 바랍니다."
+"버그를 발견하거나 개선 사항이 있으면 %s에 영어로 글을 남겨 주세요. 도움이 필"
+"요하면 %s의 팁과 트릭란을 참고하거나 우리 %s 방문해 주세요."
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
 msgctxt "dative"
 msgid "forum"
-msgstr ""
+msgstr "포러"
 
 #. i18n-hint substitutes into "view the tips and tricks on our %s"
 #: src/AboutDialog.cpp
 msgid "wiki"
-msgstr ""
+msgstr "위키"
 
 #. i18n-hint substitutes into "visit our %s"
 #: src/AboutDialog.cpp
 msgctxt "accusative"
 msgid "forum"
-msgstr ""
+msgstr "포럼"
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -531,17 +526,16 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
-msgstr ""
+msgstr "<h3>"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
 msgstr ""
-"오데시티는 소리 녹음과 편집용 무료, 오픈 소스, 크로스 플랫폼 소프트웨어입니"
-"다."
+"%s는 소리 녹음과 편집용 무료, 오픈 소스, 크로스 플랫폼 소프트웨어입니다."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -553,9 +547,9 @@ msgstr "검은색 오데시티 사용자 정의"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s Team Members"
-msgstr "오데시티 팀 멤버"
+msgstr "%s 팀 멤버"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -563,9 +557,9 @@ msgstr "명예:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Distinguished %s Team members, not currently active"
-msgstr "저명한 오데시티 팀 멤버들, 현재는 활동하지 않음"
+msgstr "기존의 %s 팀 멤버들, 현재는 활동하지 않음"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -585,9 +579,9 @@ msgstr "라이브러리"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s includes code from the following projects:"
-msgstr "오데시티는 다음 프로젝트의 코드를 포함합니다:"
+msgstr "%s는 다음 프로젝트의 코드를 포함합니다:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
@@ -595,24 +589,22 @@ msgstr "특별히 감사할 분들:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s website: "
-msgstr "오데시티 웹사이트: "
+msgstr "%s 웹사이트: "
 
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s software is copyright %s 1999-2018 %s Team."
-msgstr ""
+msgstr "%s software is copyright %s 1999-2018 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
-msgstr ""
-"&nbsp; &nbsp; <b>오데시티</b> 명칭은Dominic Mazzoni의 등록 상표입니다."
-"<br><br>"
+msgstr "%s는 Dominic Mazzoni의 등록 상표입니다."
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
@@ -721,12 +713,12 @@ msgstr "제출 ID:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Debug build (debug level %d)"
-msgstr ""
+msgstr "디버그 빌드 (디버그 수준 %d)"
 
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Release build (debug level %d)"
-msgstr "배포 빌드"
+msgstr "배포 빌드 (디버그 수준 %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -2200,12 +2192,11 @@ msgstr "이름을 클립모드에 복사(&C)"
 #: src/Dependencies.cpp
 #, c-format
 msgid "\"%s\", \"%s\", \"%s\"\n"
-msgstr ""
+msgstr "\"%s\", \"%s\", \"%s\"\n"
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid "Missing"
-msgstr "파일 누락"
+msgstr "누락"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2341,7 +2332,7 @@ msgstr "삼각형"
 
 #: src/Dither.cpp
 msgid "Shaped"
-msgstr "정형의"
+msgstr "정형"
 
 #: src/FFT.cpp
 msgid "Rectangular"
@@ -2355,7 +2346,7 @@ msgstr "바틀릿"
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Hamming"
-msgstr "해미"
+msgstr "해밍"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
@@ -2403,10 +2394,10 @@ msgid ""
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
-"환경설정에서 FFmpeg를 설정했고 이전에 성공적으로 불러왔지만, \n"
-"이번에 오데시티 시작시 FFmpeg을 불러오는데 실패했습니다.\n"
+"환경설정에서 FFmpeg를 설정했고 이전에 성공적으로 로딩되었으나, \n"
+"이번에는 오데시티 시작시 FFmpeg을 불러오는데 실패했습니다.\n"
 "\n"
-"'환경설정 > 라이브러리'에 가서 다시 설정해 보세요."
+"'환경설정 > 라이브러리'에서 다시 설정해 보세요."
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg startup failed"
@@ -3036,27 +3027,27 @@ msgid "Unable to determine"
 msgstr "결정할 수 없음"
 
 #: src/Internat.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s bytes"
-msgstr "바이트"
+msgstr "%s 바이트"
 
 #. i18n-hint: Abbreviation for Kilo bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s KB"
-msgstr ""
+msgstr "%s KB"
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s MB"
-msgstr ""
+msgstr "%s MB"
 
 #. i18n-hint: Abbreviation for Giga bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s GB"
-msgstr ""
+msgstr "%s GB"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3649,11 +3640,10 @@ msgstr ""
 #. i18n-hint A plug-in is an optional added program for a sound
 #. effect, or generator, or analyzer
 #: src/PluginManager.cpp
-#, fuzzy
 msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
-msgstr[0] "이 플러그인을 활성화할까요?\n"
+msgstr[0] "플러그인을 활성화?\n"
 
 #: src/PluginManager.cpp
 msgid "Enable new plug-ins"
@@ -3686,13 +3676,12 @@ msgstr ""
 "오디오 호스트, 재생 장치와 프로젝트 샘플링 주파수 바꿔 보세요."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "The tracks selected for recording must all have the same sampling rate"
-msgstr "필터를 적용하려면, 모든 선택한 트랙은 같은 샘플링 주파수여야 합니다."
+msgstr "필터를 적용하려면, 모든 선택한 트랙은 같은 샘플링 주파수여야 합니다"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Mismatched Sampling Rates"
-msgstr ""
+msgstr "샘플링 주파수 불일치"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid ""
@@ -3700,10 +3689,13 @@ msgid ""
 "(Audacity requires two channels at the same sample rate for\n"
 "each stereo track)"
 msgstr ""
+"이 샘플링 주파수로 녹음하기에 너무 적은 트랙이 선택됨. \n"
+"(Audacity는 각 스테레오 트랙에 대해 두개의 같은 샘플링\n"
+"주파수의 트랙 2개가 필요"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Too Few Compatible Tracks Selected"
-msgstr ""
+msgstr "너무 적은 수의 호환 트랙이 선택됨"
 
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
@@ -3927,9 +3919,9 @@ msgid "<untitled>"
 msgstr "<untitled>"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "[Project %02i] "
-msgstr "[프로젝트 %02i] 오데시티 \"%s\""
+msgstr "[프로젝트 %02i] "
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -5885,10 +5877,9 @@ msgstr "파랑"
 
 #. i18n-hint:  This really means the color, not as in "white noise"
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgctxt "color"
 msgid "White"
-msgstr "화이트"
+msgstr "백색"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Path:"
@@ -6382,14 +6373,12 @@ msgstr "피치"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "from"
 msgstr "시작"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&from"
 msgstr "시작(&F)"
@@ -6400,14 +6389,12 @@ msgstr "시작 옥타브"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "to"
 msgstr "끝"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&to"
 msgstr "끝(&T)"
@@ -6509,7 +6496,6 @@ msgstr "시작 rpm"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "&from"
 msgstr "시작(&F)"
@@ -6523,7 +6509,6 @@ msgstr "끝 rpm"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "&to"
 msgstr "끝(&T)"
@@ -6542,7 +6527,6 @@ msgstr "현재 선택 길이."
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "from"
 msgstr "시작"
@@ -6553,7 +6537,6 @@ msgstr "새로운 길이 (&N):"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "to"
 msgstr "끝"
@@ -6585,7 +6568,6 @@ msgstr "분당 비트 수, 시작"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "&from"
 msgstr "시작(&F)"
@@ -6597,7 +6579,6 @@ msgstr "분당 비트 수, 끝"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "&to"
 msgstr "끝(&T)"
@@ -6608,14 +6589,12 @@ msgstr "길이 (초)"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "from"
 msgstr "시작"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "t&o"
 msgstr "끝 (&O)"
@@ -7117,7 +7096,7 @@ msgstr "무거운 오버드라이브"
 
 #: src/effects/Distortion.cpp
 msgid "3rd Harmonic (Perfect Fifth)"
-msgstr "제3 고조파 (완전 5도)"
+msgstr "3차고조파 (완전5도)"
 
 #: src/effects/Distortion.cpp
 msgid "Valve Overdrive"
@@ -7125,7 +7104,7 @@ msgstr "밸브 오버드라이브"
 
 #: src/effects/Distortion.cpp
 msgid "2nd Harmonic (Octave)"
-msgstr "제2 고조파 (옥타브)"
+msgstr "2차고조파 (옥타브)"
 
 #: src/effects/Distortion.cpp
 msgid "Gated Expansion Distortion"
@@ -7241,7 +7220,7 @@ msgstr "반복 처리"
 
 #: src/effects/Distortion.cpp
 msgid "Harmonic brightness"
-msgstr "배음의 밝기"
+msgstr "화음 밝기"
 
 #: src/effects/Distortion.cpp
 msgid "Levelling fine adjustment"
@@ -7378,7 +7357,6 @@ msgid "Built-in"
 msgstr "내장"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Presets"
 msgstr "사전설정"
 
@@ -8248,25 +8226,22 @@ msgstr "(최대 0dB)"
 
 #. i18n-hint: not a color, but "white noise" having a uniform spectrum
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "White"
-msgstr "화이트"
+msgstr "백색"
 
 #. i18n-hint: not a color, but "pink noise" having a spectrum with more power
 #. in low frequencies
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "Pink"
 msgstr "핑크"
 
 #. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "Brownian"
-msgstr "브라우니언"
+msgstr "브라운"
 
 #: src/effects/Noise.cpp
 msgid "Noise"
@@ -9104,7 +9079,6 @@ msgstr "%.3f"
 
 #. i18n-hint: noun
 #: src/effects/Silence.cpp
-#, fuzzy
 msgctxt "generator"
 msgid "Silence"
 msgstr "무음"
@@ -9691,9 +9665,9 @@ msgid "LV2 Effect Settings"
 msgstr "LV2 효과 설정"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "&Buffer Size (8 to %d) samples:"
-msgstr "버퍼 크기 (8~%d 샘플)(&B):"
+msgstr "버퍼 크기 (8 ~ %d 샘플)(&B):"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
@@ -11959,12 +11933,15 @@ msgid "MP3 files"
 msgstr "MP3 파일"
 
 #: src/import/ImportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "MP3 Decoding Failed:\n"
 "\n"
 "%s"
-msgstr "디코딩 실패\n"
+msgstr ""
+"MP3 디코딩 실패:\n"
+"\n"
+"%s"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12541,7 +12518,6 @@ msgstr "%.2f에서 %.2f초 동안의 선택한 트랙을 무음 처리했습니�
 
 #. i18n-hint: verb
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgctxt "command"
 msgid "Silence"
 msgstr "무음"
@@ -13312,9 +13288,8 @@ msgid "Palette..."
 msgstr "팔레트..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Reset &Configuration"
-msgstr "규칙 삭제 확인"
+msgstr "설정 리셋 (&C)"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Screenshot..."
@@ -14207,9 +14182,8 @@ msgid "Please select in a mono track."
 msgstr "모노 트랙에서 선택하십시오."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Please select in a stereo track or two mono tracks."
-msgstr "스테레오 트랙에서 선택하십시오."
+msgstr "스테레오 트랙 또는 2개의 모노 트랙을 선택하십시오."
 
 #: src/menus/TransportMenus.cpp
 #, c-format
@@ -14546,7 +14520,6 @@ msgstr "환경설정 : 장치"
 
 #. i18n-hint Software interface to audio devices
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgctxt "device"
 msgid "Interface"
 msgstr "인터페이스"
@@ -14880,7 +14853,6 @@ msgstr "확장 가져오기"
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgctxt "GUI"
 msgid "Interface"
 msgstr "인터페이스"
@@ -15131,11 +15103,14 @@ msgid "&Defaults"
 msgstr "기본값(&D)"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
-msgstr "\" (단축키로 인해 '"
+msgstr ""
+"\n"
+"    *    \"%s\"    (단축키 '%s'가 \"%s\"에 사용되고 있음)\n"
+" \n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -15146,12 +15121,14 @@ msgid "Error Importing Keyboard Shortcuts"
 msgstr "키보드 단축키 가져오기 중 오류"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
 "and \"%s\".\n"
 "Nothing is imported."
-msgstr "단축키 파일은 \"에 대한 잘못된 단축키 중복이 포함되어 있습니다."
+msgstr ""
+"단축키 파일 내에 \"%s\"와 \"%s\"에 대해 중복이 되어 있습니다. \n"
+"아무것도 가져오지 않습니다."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15196,9 +15173,14 @@ msgid ""
 "\n"
 "\t"
 msgstr ""
+"\n"
+"\n"
+"\t 및 \n"
+"\n"
+"\t"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -15213,11 +15195,11 @@ msgid ""
 msgstr ""
 "키보드 단축 '%s'가 이미 다음 기능에 할당되어 있습니다.\n"
 "\n"
-"\t'%s'\n"
+"\t%s\n"
 "\n"
 "에서 사용 중입니다. 이 단축키를 대신\n"
 "\n"
-"\t'%s'\n"
+"\t%s\n"
 "\n"
 "에 할당하려면 확인을 누르고 할당하지\n"
 "않으려면 취소를 누르세요."
@@ -15309,7 +15291,6 @@ msgstr "환경설정 : MidiIO"
 
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
-#, fuzzy
 msgctxt "MIDI"
 msgid "Interface"
 msgstr "인터페이스"
@@ -17003,16 +16984,14 @@ msgstr "배율 초기화"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Shift-Right-Click"
-msgstr "Shift-왼쪽 클릭"
+msgstr "Shift-오른쪽 클릭"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Left-Click/Left-Drag"
-msgstr "확대\t왼쪽 클릭/왼쪽 드래그"
+msgstr "왼쪽 클릭/왼쪽 드래그"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -17083,9 +17062,8 @@ msgid "k"
 msgstr "k"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#, fuzzy
 msgid "Zoom to Fit"
-msgstr "지점 확대"
+msgstr "맞춤 확대"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18084,7 +18062,7 @@ msgstr "0100000.0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
-msgstr ""
+msgstr "센티헤르츠"
 
 #. i18n-hint: Name of display format that shows frequency in kilohertz
 #: src/widgets/NumericTextCtrl.cpp
@@ -18099,7 +18077,7 @@ msgstr "01000.01000 kHz|0.001"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hertz"
-msgstr ""
+msgstr "헤르츠"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
@@ -18115,9 +18093,8 @@ msgstr "100.01000 옥타브|1.442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "thousandths of octaves"
-msgstr "수천분의 일 "
+msgstr "1/1000 옥타브"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in semitones and cents
@@ -18134,9 +18111,8 @@ msgstr "1000 반음 .0100 센트|17.312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "hundredths of cents"
-msgstr "수백분의 일 "
+msgstr "1/100 센트"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in decades
@@ -18152,9 +18128,8 @@ msgstr "10.01000 디케이드|0.434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "thousandths of decades"
-msgstr "수천분의 일 "
+msgstr "1/100 디케이드"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -18165,9 +18140,9 @@ msgid "centiseconds"
 msgstr "1/100 초"
 
 #: src/widgets/PopupMenuTable.h
-#, fuzzy, c-format
+#, c-format
 msgid "%s (%s)"
-msgstr "(%s)"
+msgstr "%s (%s)"
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
@@ -18257,9 +18232,9 @@ msgid "Value must not be less than %s"
 msgstr "값은 %s보다 더 작으면 안됩니다"
 
 #: src/widgets/valnum.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Value must not be greater than %s"
-msgstr "값은 %s보다 더 크면 안됩니다"
+msgstr "값이 %s보다 크지 않아야 합니다"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
@@ -18809,7 +18784,6 @@ msgid "Equalization XML file"
 msgstr "이퀄라이제이션 XML 파일"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "XML file"
 msgstr "XML 파일"
 
@@ -19204,30 +19178,25 @@ msgid "Select file(s) to install"
 msgstr "설치할 파일 선택"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-in"
 msgstr "플러그인"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Lisp file"
-msgstr "%s 파일"
+msgstr "Lisp 파일"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "HTML file"
-msgstr "XML 파일"
+msgstr "HTML 파일"
 
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Text file"
-msgstr "텍스트 파이"
+msgstr "텍스트 파일"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "All supported"
-msgstr "지원되는 모든 파일"
+msgstr "모든 파일"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Allow overwriting"
@@ -19492,14 +19461,12 @@ msgid "Export data to"
 msgstr "데이터 내보내기"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "CSV files"
-msgstr "FLAC 파일"
+msgstr "CSV 파일"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "HTML files"
-msgstr "XML 파일"
+msgstr "HTML 파일"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
