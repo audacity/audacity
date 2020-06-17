@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "StretchHandle.h"
 
+#include "../../../ui/CommonTrackPanelCell.h"
 #include "../../../../HitTestResult.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../ProjectAudioIO.h"

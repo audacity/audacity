@@ -22,7 +22,6 @@
 
 #include "ClientData.h"
 #include "SampleFormat.h"
-#include "tracks/ui/CommonTrackPanelCell.h"
 #include "xml/XMLTagHandler.h"
 
 #ifdef __WXMSW__
@@ -30,6 +29,7 @@
 #endif
 
 class wxTextFile;
+class CommonTrackCell;
 class DirManager;
 class Track;
 class AudioTrack;
