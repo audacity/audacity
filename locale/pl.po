@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-06-09 10:48+0100\n"
-"PO-Revision-Date: 2020-06-17 10:28+0000\n"
+"PO-Revision-Date: 2020-06-18 13:36+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -549,7 +549,7 @@ msgstr "<h3>"
 msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
-msgstr "%s jest darmowym, otwartym, wieloplatformowym programem do nagrywania i edytowania dźwięków."
+msgstr "%s jest darmowym, otwartym, wieloplatformowym programem do nagrywania i edytowania dźwięku."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -10680,7 +10680,7 @@ msgstr "Aby znaleźć %s, kliknij tutaj -->"
 #. i18n-hint: There is a  button to the right of the arrow.
 #: src/export/ExportMP3.cpp
 msgid "To get a free copy of LAME, click here -->"
-msgstr "Aby otrzymać darmową kopię LAME, kliknij tutaj -->"
+msgstr "Aby uzyskać darmową kopię LAME, kliknij tutaj -->"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. * example, "Where is lame_enc.dll?" - you could translate
