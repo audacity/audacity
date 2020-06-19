@@ -21,7 +21,7 @@
 #include "ShuttleGui.h"
 #include "SplashDialog.h"
 #include "Theme.h"
-#include "toolbars/ToolManager.h"
+#include "ToolManager.h"
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
 #include "prefs/PrefsDialog.h"

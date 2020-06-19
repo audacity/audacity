@@ -47,7 +47,7 @@
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "prefs/ThemePrefs.h"
-#include "toolbars/ToolBar.h"
+#include "ToolBar.h"
 #include "Scrubbing.h"
 #include "TrackView.h"
 #include "AButton.h"

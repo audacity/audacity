@@ -54,7 +54,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ondemand/ODDecodeFlacTask.h"
 #include "ondemand/ODManager.h"
 #include "ondemand/ODTask.h"
-#include "toolbars/SelectionBar.h"
+#include "SelectionBar.h"
 #include "AudacityMessageBox.h"
 #include "ErrorDialog.h"
 #include "FileHistory.h"

@@ -73,7 +73,7 @@
 #include "FileNames.h"
 
 #include "Scrubbing.h"
-#include "toolbars/ToolManager.h"
+#include "ToolManager.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
 

@@ -20,9 +20,9 @@ Paul Licameli split from ProjectManager.cpp
 #include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "toolbars/SelectionBar.h"
-#include "toolbars/SpectralSelectionBar.h"
-#include "toolbars/TimeToolBar.h"
+#include "SelectionBar.h"
+#include "SpectralSelectionBar.h"
+#include "TimeToolBar.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectSelectionManagerKey {

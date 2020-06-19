@@ -11,7 +11,7 @@
 #include "TrackPanelAx.h"
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
-#include "toolbars/ToolManager.h"
+#include "ToolManager.h"
 #include "AButton.h"
 #include "ASlider.h"
 #include "Meter.h"
