@@ -15,13 +15,13 @@ Paul Licameli split from class TrackView
 #include "TrackControls.h"
 #include "ZoomHandle.h"
 #include "SelectHandle.h"
-#include "../AColor.h"
-#include "../ProjectSettings.h"
-#include "../Track.h"
-#include "../TrackArtist.h"
-#include "../TrackInfo.h"
-#include "../TrackPanelDrawingContext.h"
-#include "../TrackPanelMouseEvent.h"
+#include "AColor.h"
+#include "ProjectSettings.h"
+#include "Track.h"
+#include "TrackArtist.h"
+#include "TrackInfo.h"
+#include "TrackPanelDrawingContext.h"
+#include "TrackPanelMouseEvent.h"
 
 #include <wx/dc.h>
 #include <wx/graphics.h>

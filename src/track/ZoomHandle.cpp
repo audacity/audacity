@@ -8,7 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ZoomHandle.h"
 
 #include <algorithm>
@@ -17,12 +17,12 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/event.h>
 #include <wx/gdicmn.h>
 
-#include "../HitTestResult.h"
-#include "../RefreshCode.h"
-#include "../TrackArtist.h"
-#include "../TrackPanelDrawingContext.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../ViewInfo.h"
+#include "HitTestResult.h"
+#include "RefreshCode.h"
+#include "TrackArtist.h"
+#include "TrackPanelDrawingContext.h"
+#include "TrackPanelMouseEvent.h"
+#include "ViewInfo.h"
 #include "images/Cursors.h"
 
 ///  This class takes care of our different zoom

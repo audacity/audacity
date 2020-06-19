@@ -8,21 +8,21 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "WaveformVZoomHandle.h"
 
 #include "WaveTrackVZoomHandle.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
-#include "../HitTestResult.h"
-#include "../NumberScale.h"
-#include "../Prefs.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../WaveTrack.h"
-#include "../prefs/WaveformSettings.h"
+#include "HitTestResult.h"
+#include "NumberScale.h"
+#include "Prefs.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
+#include "TrackPanelMouseEvent.h"
+#include "WaveTrack.h"
+#include "prefs/WaveformSettings.h"
 
 WaveformVZoomHandle::WaveformVZoomHandle(
    const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y)

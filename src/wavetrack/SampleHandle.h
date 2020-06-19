@@ -11,7 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_SAMPLE_HANDLE__
 #define __AUDACITY_SAMPLE_HANDLE__
 
-#include "../UIHandle.h"
+#include "UIHandle.h"
 #include "audacity/Types.h"
 
 class wxMouseEvent;

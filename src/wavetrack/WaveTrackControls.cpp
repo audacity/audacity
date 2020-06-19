@@ -8,33 +8,33 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "WaveTrackControls.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
-#include "../playabletrack/PlayableTrackButtonHandles.h"
+#include "playabletrack/PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
 
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
-#include "../AudioIOBase.h"
-#include "../CellularPanel.h"
-#include "../Project.h"
-#include "../ProjectAudioIO.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
-#include "../ShuttleGui.h"
-#include "../TrackArtist.h"
-#include "../TrackPanel.h"
-#include "../TrackPanelAx.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../WaveTrack.h"
-#include "../effects/RealtimeEffectManager.h"
-#include "../ondemand/ODManager.h"
-#include "../prefs/PrefsDialog.h"
-#include "../prefs/ThemePrefs.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudioIOBase.h"
+#include "CellularPanel.h"
+#include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
+#include "ShuttleGui.h"
+#include "TrackArtist.h"
+#include "TrackPanel.h"
+#include "TrackPanelAx.h"
+#include "TrackPanelMouseEvent.h"
+#include "WaveTrack.h"
+#include "effects/RealtimeEffectManager.h"
+#include "ondemand/ODManager.h"
+#include "prefs/PrefsDialog.h"
+#include "prefs/ThemePrefs.h"
+#include "widgets/AudacityMessageBox.h"
 
 #include <wx/combobox.h>
 #include <wx/frame.h>
@@ -964,10 +964,10 @@ WaveTrackPopupMenuTable &GetWaveTrackMenuTable()
 }
 
 // drawing related
-#include "../widgets/ASlider.h"
-#include "../TrackInfo.h"
-#include "../TrackPanelDrawingContext.h"
-#include "../ViewInfo.h"
+#include "widgets/ASlider.h"
+#include "TrackInfo.h"
+#include "TrackPanelDrawingContext.h"
+#include "ViewInfo.h"
 
 namespace {
 

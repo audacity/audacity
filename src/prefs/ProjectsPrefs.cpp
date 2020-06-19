@@ -16,17 +16,17 @@ handling.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ProjectsPrefs.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 
-#include "../FileFormats.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
+#include "FileFormats.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

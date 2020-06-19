@@ -30,7 +30,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ToolsToolBar.h"
 #include "ToolManager.h"
 
@@ -47,15 +47,15 @@
 #endif
 #include <wx/tooltip.h>
 
-#include "../Prefs.h"
-#include "../AllThemeResources.h"
-#include "../ImageManipulation.h"
-#include "../Project.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "../track/Scrubbing.h"
+#include "Prefs.h"
+#include "AllThemeResources.h"
+#include "ImageManipulation.h"
+#include "Project.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
+#include "track/Scrubbing.h"
 
-#include "../widgets/AButton.h"
+#include "widgets/AButton.h"
 
 
 IMPLEMENT_CLASS(ToolsToolBar, ToolBar);
@@ -310,7 +310,7 @@ AttachedToolBarMenuItem sAttachment{
 
 // Following code injects menu items for changing the current tool
 
-#include "../TrackPanel.h"
+#include "TrackPanel.h"
 
 // private helper classes and functions
 namespace {

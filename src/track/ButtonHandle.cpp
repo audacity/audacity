@@ -8,13 +8,13 @@ Paul Licameli
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ButtonHandle.h"
 
-#include "../HitTestResult.h"
-#include "../RefreshCode.h"
-#include "../Track.h"
-#include "../TrackPanelMouseEvent.h"
+#include "HitTestResult.h"
+#include "RefreshCode.h"
+#include "Track.h"
+#include "TrackPanelMouseEvent.h"
 
 ButtonHandle::ButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )

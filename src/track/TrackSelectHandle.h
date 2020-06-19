@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_TRACK_SELECT_HANDLE__
 #define __AUDACITY_TRACK_SELECT_HANDLE__
 
-#include "../UIHandle.h"
+#include "UIHandle.h"
 
 class wxMouseEvent;
 class Track;

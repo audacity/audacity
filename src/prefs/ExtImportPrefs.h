@@ -16,7 +16,7 @@
 
 #include "PrefsPanel.h"
 
-#include "../import/ImportPlugin.h"
+#include "import/ImportPlugin.h"
 
 class wxButton;
 class wxGridEvent;

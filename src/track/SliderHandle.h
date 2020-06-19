@@ -11,7 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_SLIDER_HANDLE__
 #define __AUDACITY_SLIDER_HANDLE__
 
-#include "../UIHandle.h"
+#include "UIHandle.h"
 
 class wxMouseEvent;
 class LWSlider;

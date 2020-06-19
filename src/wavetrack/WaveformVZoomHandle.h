@@ -11,7 +11,7 @@ Paul Licameli split from WaveTrackVZoomHandle.h
 #ifndef __AUDACITY_WAVEFORM_VZOOM_HANDLE__
 #define __AUDACITY_WAVEFORM_VZOOM_HANDLE__
 
-#include "../UIHandle.h" // to inherit
+#include "UIHandle.h" // to inherit
 #include "WaveTrackViewConstants.h"
 
 class WaveTrack;

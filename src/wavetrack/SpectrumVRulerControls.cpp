@@ -13,13 +13,13 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "SpectrumVZoomHandle.h"
 #include "WaveTrackVRulerControls.h"
 
-#include "../NumberScale.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../WaveTrack.h"
-#include "../prefs/SpectrogramSettings.h"
-#include "../widgets/Ruler.h"
+#include "NumberScale.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
+#include "TrackPanelMouseEvent.h"
+#include "WaveTrack.h"
+#include "prefs/SpectrogramSettings.h"
+#include "widgets/Ruler.h"
 
 SpectrumVRulerControls::~SpectrumVRulerControls() = default;
 

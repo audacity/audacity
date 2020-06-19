@@ -23,10 +23,10 @@ other settings.
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "MidiIOPrefs.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
@@ -38,9 +38,9 @@ other settings.
 
 #include "portmidi.h"
 
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
+#include "widgets/AudacityMessageBox.h"
 
 #define DEFAULT_SYNTH_LATENCY 5
 

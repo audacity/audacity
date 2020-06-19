@@ -13,14 +13,14 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "WaveformVZoomHandle.h"
 #include "WaveTrackVRulerControls.h"
 
-#include "../NumberScale.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../UIHandle.h"
-#include "../WaveTrack.h"
-#include "../prefs/WaveformSettings.h"
-#include "../widgets/Ruler.h"
+#include "NumberScale.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
+#include "TrackPanelMouseEvent.h"
+#include "UIHandle.h"
+#include "WaveTrack.h"
+#include "prefs/WaveformSettings.h"
+#include "widgets/Ruler.h"
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
 

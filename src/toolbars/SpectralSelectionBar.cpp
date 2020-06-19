@@ -26,11 +26,11 @@ with changes in the SpectralSelectionBar.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "SpectralSelectionBar.h"
 #include "SpectralSelectionBarListener.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 #include "ToolManager.h"
 
 #include <algorithm>
@@ -54,17 +54,17 @@ with changes in the SpectralSelectionBar.
 #endif
 #include <wx/statline.h>
 
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../AllThemeResources.h"
-#include "../SelectedRegion.h"
-#include "../ViewInfo.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "AllThemeResources.h"
+#include "SelectedRegion.h"
+#include "ViewInfo.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "widgets/WindowAccessible.h"
 #endif
 
-#include "../widgets/NumericTextCtrl.h"
+#include "widgets/NumericTextCtrl.h"
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 

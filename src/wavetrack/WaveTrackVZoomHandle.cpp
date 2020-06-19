@@ -8,19 +8,19 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "WaveTrackVZoomHandle.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
-#include "../track/TrackVRulerControls.h"
+#include "track/TrackVRulerControls.h"
 
-#include "../HitTestResult.h"
-#include "../Project.h"
-#include "../RefreshCode.h"
-#include "../TrackArtist.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../WaveTrack.h"
+#include "HitTestResult.h"
+#include "Project.h"
+#include "RefreshCode.h"
+#include "TrackArtist.h"
+#include "TrackPanelMouseEvent.h"
+#include "WaveTrack.h"
 #include "images/Cursors.h"
 
 bool WaveTrackVZoomHandle::IsDragZooming(int zoomStart, int zoomEnd)

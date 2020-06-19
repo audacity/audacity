@@ -8,21 +8,21 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "BackgroundCell.h"
 
-#include "../AColor.h"
-#include "../HitTestResult.h"
-#include "../Project.h"
-#include "../RefreshCode.h"
-#include "../SelectionState.h"
-#include "../Track.h"
-#include "../TrackArtist.h"
-#include "../TrackPanel.h"
-#include "../TrackPanelDrawingContext.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../UIHandle.h"
-#include "../ViewInfo.h"
+#include "AColor.h"
+#include "HitTestResult.h"
+#include "Project.h"
+#include "RefreshCode.h"
+#include "SelectionState.h"
+#include "Track.h"
+#include "TrackArtist.h"
+#include "TrackPanel.h"
+#include "TrackPanelDrawingContext.h"
+#include "TrackPanelMouseEvent.h"
+#include "UIHandle.h"
+#include "ViewInfo.h"
 
 #include <wx/cursor.h>
 #include <wx/event.h>

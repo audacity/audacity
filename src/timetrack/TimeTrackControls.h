@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_TIME_TRACK_CONTROLS__
 #define __AUDACITY_TIME_TRACK_CONTROLS__
 
-#include "../track/CommonTrackControls.h" // to inherit
+#include "track/CommonTrackControls.h" // to inherit
 
 class TimeTrackControls final : public CommonTrackControls
 {

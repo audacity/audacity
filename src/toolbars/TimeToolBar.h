@@ -14,7 +14,7 @@
 #include <wx/defs.h>
 
 #include "ToolBar.h"
-#include "../widgets/NumericTextCtrl.h"
+#include "widgets/NumericTextCtrl.h"
 
 class NumericTextCtrl;
 class TimeToolBarListener;

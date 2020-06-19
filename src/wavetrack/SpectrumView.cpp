@@ -8,24 +8,24 @@ Paul Licameli split from WaveTrackView.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "SpectrumView.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include "SpectrumVRulerControls.h"
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
 
-#include "../AColor.h"
-#include "../Prefs.h"
-#include "../NumberScale.h"
-#include "../TrackArtist.h"
-#include "../TrackPanelDrawingContext.h"
-#include "../ViewInfo.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
-#include "../prefs/SpectrogramSettings.h"
+#include "AColor.h"
+#include "Prefs.h"
+#include "NumberScale.h"
+#include "TrackArtist.h"
+#include "TrackPanelDrawingContext.h"
+#include "ViewInfo.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "prefs/SpectrogramSettings.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
@@ -674,14 +674,14 @@ static const WaveTrackSubViews::RegisteredFactory key{
 // menu.  It is appropriate only to spectrum view and so is kept in this
 // source file with the rest of the spectrum view implementation.
 #include "WaveTrackControls.h"
-#include "../AudioIOBase.h"
-#include "../Menus.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
-#include "../prefs/PrefsDialog.h"
-#include "../prefs/SpectrumPrefs.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/PopupMenuTable.h"
+#include "AudioIOBase.h"
+#include "Menus.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
+#include "prefs/PrefsDialog.h"
+#include "prefs/SpectrumPrefs.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/PopupMenuTable.h"
 
 namespace {
 struct SpectrogramSettingsHandler : PopupMenuHandler {
