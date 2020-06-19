@@ -21,14 +21,14 @@
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
 #include "export/ExportMultiple.h"
-#include "import/Import.h"
-#include "import/ImportMIDI.h"
-#include "import/ImportRaw.h"
+#include "Import.h"
+#include "ImportMIDI.h"
+#include "ImportRaw.h"
 #include "AudacityMessageBox.h"
 #include "FileHistory.h"
 
 #ifdef USE_MIDI
-#include "import/ImportMIDI.h"
+#include "ImportMIDI.h"
 #endif // USE_MIDI
 
 #include "ODManager.h"

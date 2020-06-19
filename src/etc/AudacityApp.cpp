@@ -121,7 +121,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "ModuleManager.h"
 
-#include "import/Import.h"
+#include "Import.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h>

@@ -23,7 +23,7 @@
 
 #include "Prefs.h"
 #include "ShuttleGui.h"
-#include "import/Import.h"
+#include "Import.h"
 #include "AudacityMessageBox.h"
 #include "Grid.h"
 
