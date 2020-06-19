@@ -11,7 +11,7 @@
  
  *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -27,11 +27,11 @@
 #include "SelectionBarListener.h"
 #include "ToolManager.h"
 
-#include "../AudioIO.h"
-#include "../Project.h"
-#include "../ProjectAudioIO.h"
-#include "../ProjectSettings.h"
-#include "../ViewInfo.h"
+#include "AudioIO.h"
+#include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectSettings.h"
+#include "ViewInfo.h"
 
 IMPLEMENT_CLASS(TimeToolBar, ToolBar);
 

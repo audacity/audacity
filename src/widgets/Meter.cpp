@@ -38,10 +38,10 @@
 
 *//******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "Meter.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <algorithm>
 #include <wx/setup.h> // for wxUSE_* macros
@@ -63,19 +63,19 @@
 
 #include <math.h>
 
-#include "../AudioIO.h"
-#include "../AColor.h"
-#include "../ImageManipulation.h"
-#include "../prefs/GUISettings.h"
-#include "../Project.h"
-#include "../ProjectAudioManager.h"
-#include "../ProjectStatus.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "../Theme.h"
+#include "AudioIO.h"
+#include "AColor.h"
+#include "ImageManipulation.h"
+#include "GUISettings.h"
+#include "Project.h"
+#include "ProjectAudioManager.h"
+#include "ProjectStatus.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
+#include "Theme.h"
 
-#include "../AllThemeResources.h"
-#include "../widgets/valnum.h"
+#include "AllThemeResources.h"
+#include "valnum.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -251,8 +251,8 @@ bool MeterUpdateQueue::Get(MeterUpdateMsg &msg)
 // MeterPanel class
 //
 
-#include "../../images/SpeakerMenu.xpm"
-#include "../../images/MicMenu.xpm"
+#include "images/SpeakerMenu.xpm"
+#include "images/MicMenu.xpm"
 
 // How many pixels between items?
 const static int gap = 2;

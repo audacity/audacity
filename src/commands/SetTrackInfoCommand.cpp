@@ -33,20 +33,20 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "SetTrackInfoCommand.h"
 
 #include "LoadCommands.h"
-#include "../Project.h"
-#include "../TrackPanelAx.h"
-#include "../TrackPanel.h"
-#include "../WaveTrack.h"
-#include "../prefs/WaveformSettings.h"
-#include "../prefs/SpectrogramSettings.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "Project.h"
+#include "TrackPanelAx.h"
+#include "TrackPanel.h"
+#include "WaveTrack.h"
+#include "WaveformSettings.h"
+#include "SpectrogramSettings.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "WaveTrackView.h"
+#include "WaveTrackViewConstants.h"
 #include "CommandContext.h"
 
 SetTrackBase::SetTrackBase(){

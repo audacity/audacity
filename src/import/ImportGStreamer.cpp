@@ -23,7 +23,7 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
-#include "../Audacity.h"	// needed before GStreamer.h // for USE_* macros
+#include "Audacity.h"	// needed before GStreamer.h // for USE_* macros
 
 #if defined(USE_GSTREAMER)
 #include "ImportGStreamer.h"
@@ -46,8 +46,8 @@ Licensed under the GNU General Public License v2 or later
 #endif
 
 // all the includes live here by default
-#include "../Tags.h"
-#include "../WaveTrack.h"
+#include "Tags.h"
+#include "WaveTrack.h"
 
 extern "C"
 {

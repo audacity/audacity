@@ -20,32 +20,32 @@ This class now lists
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "GetInfoCommand.h"
 
 #include "LoadCommands.h"
-#include "../Project.h"
+#include "Project.h"
 #include "CommandManager.h"
 #include "CommandTargets.h"
-#include "../effects/EffectManager.h"
-#include "../widgets/Overlay.h"
-#include "../TrackPanelAx.h"
-#include "../TrackPanel.h"
-#include "../WaveClip.h"
-#include "../ViewInfo.h"
-#include "../WaveTrack.h"
-#include "../LabelTrack.h"
-#include "../Envelope.h"
+#include "EffectManager.h"
+#include "Overlay.h"
+#include "TrackPanelAx.h"
+#include "TrackPanel.h"
+#include "WaveClip.h"
+#include "ViewInfo.h"
+#include "WaveTrack.h"
+#include "LabelTrack.h"
+#include "Envelope.h"
 
 #include "SelectCommand.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "CommandContext.h"
 
-#include "../prefs/PrefsDialog.h"
-#include "../Shuttle.h"
-#include "../PluginManager.h"
-#include "../tracks/ui/TrackView.h"
-#include "../ShuttleGui.h"
+#include "PrefsDialog.h"
+#include "Shuttle.h"
+#include "PluginManager.h"
+#include "TrackView.h"
+#include "ShuttleGui.h"
 
 #include <wx/frame.h>
 #include <wx/menu.h>

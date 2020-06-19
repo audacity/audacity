@@ -69,7 +69,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #include <wx/string.h>
 #include <wx/utils.h>
@@ -80,19 +80,19 @@
 #ifdef USE_MIDI
 #include "ImportMIDI.h"
 #endif // USE_MIDI
-#include "../FileNames.h"
-#include "../WaveTrack.h"
+#include "FileNames.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 #include "Import.h"
-#include "../NoteTrack.h"
-#include "../Project.h"
-#include "../ProjectHistory.h"
-#include "../ProjectManager.h"
-#include "../ProjectWindow.h"
-#include "../FileFormats.h"
-#include "../Prefs.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "NoteTrack.h"
+#include "Project.h"
+#include "ProjectHistory.h"
+#include "ProjectManager.h"
+#include "ProjectWindow.h"
+#include "FileFormats.h"
+#include "Prefs.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #define BINARY_FILE_CHECK_BUFFER_SIZE 1024
 

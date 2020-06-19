@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_SILENT_BLOCKFILE__
 #define __AUDACITY_SILENT_BLOCKFILE__
 
-#include "../BlockFile.h"
+#include "BlockFile.h"
 
 class DirManager;
 

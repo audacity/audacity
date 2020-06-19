@@ -29,19 +29,19 @@ explicitly code all three.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "SelectCommand.h"
 
 #include <wx/string.h>
 #include <float.h>
 
 #include "LoadCommands.h"
-#include "../ProjectSelectionManager.h"
-#include "../TrackPanel.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../effects/Effect.h"
-#include "../ViewInfo.h"
+#include "ProjectSelectionManager.h"
+#include "TrackPanel.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "Effect.h"
+#include "ViewInfo.h"
 #include "CommandContext.h"
 
 

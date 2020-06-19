@@ -59,7 +59,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "ExportMP3.h"
 
 #include <wx/app.h>
@@ -79,19 +79,19 @@
 #include <wx/utils.h>
 #include <wx/window.h>
 
-#include "../FileNames.h"
-#include "../float_cast.h"
-#include "../Mix.h"
-#include "../Prefs.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "../ShuttleGui.h"
-#include "../Tags.h"
-#include "../Track.h"
-#include "../widgets/HelpSystem.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
-#include "../wxFileNameWrapper.h"
+#include "FileNames.h"
+#include "float_cast.h"
+#include "Mix.h"
+#include "Prefs.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
+#include "ShuttleGui.h"
+#include "Tags.h"
+#include "Track.h"
+#include "HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
+#include "wxFileNameWrapper.h"
 
 #include "Export.h"
 

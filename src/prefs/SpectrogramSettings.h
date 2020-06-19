@@ -11,10 +11,10 @@ Paul Licameli
 #ifndef __AUDACITY_SPECTROGRAM_SETTINGS__
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
-#include "../SampleFormat.h"
-#include "../RealFFTf.h"
+#include "SampleFormat.h"
+#include "RealFFTf.h"
 
 #undef SPECTRAL_SELECTION_GLOBAL_SWITCH
 

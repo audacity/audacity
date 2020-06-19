@@ -1,0 +1,48 @@
+do_directory(
+   INCLUDE_PRIVATE
+      src/etc
+      src/ondemand
+      src/xml
+
+   PRIVATE
+      wxWidgets
+      libsndfile
+
+   PRECOMPILE
+      AColor.h
+      AudioIO.h
+      BlockFile.h
+      Diags.h
+      DirManager.h
+      Envelope.h
+      FFT.h
+      FileFormats.h
+      ImageManipulation.h
+      LabelTrack.h
+      Mix.h
+      NoteTrack.h
+      Prefs.h
+      Project.h
+      Sequence.h
+      TimeTrack.h
+      UndoManager.h
+      WaveTrack.h
+
+   SOURCES
+      LegacyAliasBlockFile.cpp
+      LegacyAliasBlockFile.h
+      LegacyBlockFile.cpp
+      LegacyBlockFile.h
+      NotYetAvailableException.cpp
+      NotYetAvailableException.h
+      ODDecodeBlockFile.cpp
+      ODDecodeBlockFile.h
+      ODPCMAliasBlockFile.cpp
+      ODPCMAliasBlockFile.h
+      PCMAliasBlockFile.cpp
+      PCMAliasBlockFile.h
+      SilentBlockFile.cpp
+      SilentBlockFile.h
+      SimpleBlockFile.cpp
+      SimpleBlockFile.h
+)

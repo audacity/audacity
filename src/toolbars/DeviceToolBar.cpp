@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "DeviceToolBar.h"
 #include "ToolManager.h"
 
@@ -35,23 +35,23 @@
 #endif
 
 #include "ToolDock.h"
-#include "../TrackPanel.h"
+#include "TrackPanel.h"
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
-#include "../AudioIOBase.h"
-#include "../ImageManipulation.h"
-#include "../KeyboardCapture.h"
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../ShuttleGui.h"
-#include "../widgets/Grabber.h"
-#include "../DeviceManager.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/Grabber.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
+#include "AudioIOBase.h"
+#include "ImageManipulation.h"
+#include "KeyboardCapture.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "ShuttleGui.h"
+#include "Grabber.h"
+#include "DeviceManager.h"
+#include "AudacityMessageBox.h"
+#include "Grabber.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 IMPLEMENT_CLASS(DeviceToolBar, ToolBar);

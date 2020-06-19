@@ -21,10 +21,10 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "AButton.h"
 
-#include "../AColor.h"
+#include "AColor.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
 
@@ -37,9 +37,9 @@
 #include <wx/timer.h>
 
 //This is needed for tooltips
-#include "../Project.h"
-#include "../ProjectStatus.h"
-#include "../ProjectWindowBase.h"
+#include "Project.h"
+#include "ProjectStatus.h"
+#include "ProjectWindowBase.h"
 #include <wx/tooltip.h>
 
 #if wxUSE_ACCESSIBILITY

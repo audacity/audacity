@@ -15,7 +15,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #ifdef USE_LIBVORBIS
 
@@ -27,16 +27,16 @@
  
 #include <vorbis/vorbisenc.h>
 
-#include "../FileIO.h"
-#include "../ProjectSettings.h"
-#include "../Mix.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
+#include "FileIO.h"
+#include "ProjectSettings.h"
+#include "Mix.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
 
-#include "../Tags.h"
-#include "../Track.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "Tags.h"
+#include "Track.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportOGGOptions

@@ -21,8 +21,10 @@ list( APPEND SOURCES
 list( APPEND INCLUDES
    PRIVATE
       ${_PRVDIR}
-   PUBLIC
       ${TARGET_ROOT}/include
+   INTERFACE
+      # redirect inclusions to our wrapper header
+      ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 list( APPEND OPTIONS

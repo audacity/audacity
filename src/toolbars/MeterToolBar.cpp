@@ -17,7 +17,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "MeterToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -33,9 +33,9 @@
 
 #include <wx/gbsizer.h>
 
-#include "../AllThemeResources.h"
-#include "../ProjectAudioIO.h"
-#include "../widgets/Meter.h"
+#include "AllThemeResources.h"
+#include "ProjectAudioIO.h"
+#include "Meter.h"
 
 IMPLEMENT_CLASS(MeterToolBar, ToolBar);
 

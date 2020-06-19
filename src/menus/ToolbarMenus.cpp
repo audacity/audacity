@@ -1,10 +1,10 @@
-#include "../Audacity.h"
+#include "Audacity.h"
 
-#include "../Menus.h"
-#include "../ProjectSettings.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
-#include "../toolbars/ToolManager.h"
+#include "Menus.h"
+#include "ProjectSettings.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "ToolManager.h"
 
 /// Namespace for functions for View Toolbar menu
 namespace ToolbarActions {

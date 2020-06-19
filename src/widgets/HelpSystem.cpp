@@ -19,10 +19,10 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "HelpSystem.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/button.h>
@@ -40,14 +40,14 @@
 #include <wx/statusbr.h>
 #include <wx/regex.h>
 
-#include "../FileNames.h"
-#include "../AllThemeResources.h"
-#include "../ShuttleGui.h"
-#include "../Theme.h"
-#include "../HelpText.h"
-#include "../Prefs.h"
-#include "../wxFileNameWrapper.h"
-#include "../prefs/GUIPrefs.h"
+#include "FileNames.h"
+#include "AllThemeResources.h"
+#include "ShuttleGui.h"
+#include "Theme.h"
+#include "HelpText.h"
+#include "Prefs.h"
+#include "wxFileNameWrapper.h"
+#include "GUIPrefs.h"
 
 #ifdef USE_ALPHA_MANUAL
 const wxString HelpSystem::HelpHostname = wxT("alphamanual.audacityteam.org");

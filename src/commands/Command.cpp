@@ -75,7 +75,7 @@ classes derived from it.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Command.h"
 
 #include <map>
@@ -89,7 +89,7 @@ classes derived from it.
 
 #include "CommandContext.h"
 
-#include "../AudacityException.h"
+#include "AudacityException.h"
 
 
 

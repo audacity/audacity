@@ -14,10 +14,10 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "SpectrumPrefs.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <wx/choice.h>
 #include <wx/defs.h>
@@ -25,17 +25,17 @@
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
 
-#include "../FFT.h"
-#include "../Project.h"
-#include "../ShuttleGui.h"
+#include "FFT.h"
+#include "Project.h"
+#include "ShuttleGui.h"
 
-#include "../TrackPanel.h"
-#include "../WaveTrack.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "TrackPanel.h"
+#include "WaveTrack.h"
+#include "WaveTrackView.h"
 
 #include <algorithm>
 
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid,
    AudacityProject *pProject, WaveTrack *wt)

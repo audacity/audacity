@@ -16,19 +16,19 @@ MP3 and FFmpeg encoding libraries.
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "LibraryPrefs.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/stattext.h>
 
-#include "../FFmpeg.h"
-#include "../export/ExportMP3.h"
-#include "../widgets/HelpSystem.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "FFmpeg.h"
+#include "ExportMP3.h"
+#include "HelpSystem.h"
+#include "AudacityMessageBox.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
