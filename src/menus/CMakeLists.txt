@@ -1,0 +1,58 @@
+do_directory(
+   INCLUDE_PRIVATE
+      src/etc
+      src/labeltrack
+      src/ondemand
+      src/playabletrack
+      src/prefs
+      src/toolbars
+      src/track
+      src/wavetrack
+      src/xml
+
+   PRIVATE
+      src/widgets
+      wxWidgets
+
+   OBJCPP_SOURCES
+      WindowMenus.cpp
+
+   PRECOMPILE
+      AColor.h
+      AudioIO.h
+      BlockFile.h
+      Diags.h
+      DirManager.h
+      Envelope.h
+      FFT.h
+      ImageManipulation.h
+      LabelTrack.h
+      Mix.h
+      NoteTrack.h
+      Prefs.h
+      Project.h
+      Sequence.h
+      TimeTrack.h
+      UndoManager.h
+      WaveTrack.h
+      ASlider.h
+      ProgressDialog.h
+      Ruler.h
+
+   SOURCES
+      ClipMenus.cpp
+      EditMenus.cpp
+      ExtraMenus.cpp
+      FileMenus.cpp
+      HelpMenus.cpp
+      LabelMenus.cpp
+      NavigationMenus.cpp
+      PluginMenus.cpp
+      SelectMenus.cpp
+      ToolbarMenus.cpp
+      TrackMenus.cpp
+      TransportMenus.cpp
+      ViewMenus.cpp
+      WindowMenus.cpp
+)
+
