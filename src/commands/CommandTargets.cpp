@@ -21,16 +21,16 @@ capture the more lengthy output from some commands.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "CommandTargets.h"
 
 #include <wx/app.h>
 #include <wx/statusbr.h>
 #include <wx/string.h>
 #include <wx/textctrl.h>
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/wxPanelWrapper.h"
+#include "ShuttleGui.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/wxPanelWrapper.h"
 
 #include <locale>
 #include <sstream>

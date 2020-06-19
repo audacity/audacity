@@ -29,10 +29,10 @@ or ASlider.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ASlider.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <math.h>
 
@@ -58,15 +58,15 @@ or ASlider.
 #include <wx/popupwin.h>
 #include <wx/window.h>
 
-#include "../AColor.h"
-#include "../ImageManipulation.h"
-#include "../Project.h"
-#include "../ProjectStatus.h"
-#include "../ProjectWindowBase.h"
-#include "../ShuttleGui.h"
-#include "../Theme.h"
+#include "AColor.h"
+#include "ImageManipulation.h"
+#include "Project.h"
+#include "ProjectStatus.h"
+#include "ProjectWindowBase.h"
+#include "ShuttleGui.h"
+#include "Theme.h"
 
-#include "../AllThemeResources.h"
+#include "AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

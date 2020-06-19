@@ -16,7 +16,7 @@ The summary is eventually computed and written to a file in a background thread.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ODPCMAliasBlockFile.h"
 
 #include <float.h>
@@ -28,10 +28,10 @@ The summary is eventually computed and written to a file in a background thread.
 #include <wx/thread.h>
 #include <sndfile.h>
 
-#include "../DirManager.h"
-#include "../FileFormats.h"
+#include "DirManager.h"
+#include "FileFormats.h"
 
-#include "../ondemand/ODManager.h"
+#include "ondemand/ODManager.h"
 
 #include "NotYetAvailableException.h"
 

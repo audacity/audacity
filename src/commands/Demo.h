@@ -12,7 +12,7 @@
 #define __AUDACITY_DEMO_COMMAND__
 
 #include "AudacityCommand.h"
-#include "../SampleFormat.h"
+#include "SampleFormat.h"
 
 class ShuttleGui;
 

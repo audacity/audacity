@@ -11,13 +11,13 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #if defined(USE_VAMP)
 
 #include <vamp-hostsdk/PluginLoader.h>
 
-#include "../Effect.h"
+#include "effects/Effect.h"
 
 class wxStaticText;
 class wxSlider;

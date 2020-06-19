@@ -18,18 +18,18 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "RecordingPrefs.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 #include <algorithm>
 
-#include "../prefs/GUISettings.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
+#include "prefs/GUISettings.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
 
 using std::min;
 

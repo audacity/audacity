@@ -30,7 +30,7 @@ robust enough to allow all the user changes such as copy/paste, DELETE, and so o
 
 #include <vector>
 #include "ODTask.h"
-#include "../Internat.h"
+#include "Internat.h"
 class ODDecodeBlockFile;
 class WaveTrack;
 class ODFileDecoder;

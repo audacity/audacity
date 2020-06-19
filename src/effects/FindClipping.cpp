@@ -19,7 +19,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "FindClipping.h"
 #include "LoadEffects.h"
 
@@ -27,13 +27,13 @@
 
 #include <wx/intl.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/valnum.h"
+#include "widgets/AudacityMessageBox.h"
 
-#include "../LabelTrack.h"
-#include "../WaveTrack.h"
+#include "LabelTrack.h"
+#include "WaveTrack.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

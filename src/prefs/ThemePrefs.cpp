@@ -28,17 +28,17 @@ Provides:
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ThemePrefs.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <wx/app.h>
 #include <wx/wxprec.h>
-#include "../Prefs.h"
-#include "../Theme.h"
-#include "../ShuttleGui.h"
-#include "../AColor.h"
+#include "Prefs.h"
+#include "Theme.h"
+#include "ShuttleGui.h"
+#include "AColor.h"
 
 wxDEFINE_EVENT(EVT_THEME_CHANGE, wxCommandEvent);
 

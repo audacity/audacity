@@ -13,7 +13,7 @@ Paul Licameli
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "WaveformPrefs.h"
 
 #include "GUIPrefs.h"
@@ -22,13 +22,13 @@ Paul Licameli
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 
-#include "../Project.h"
+#include "Project.h"
 
-#include "../TrackPanel.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "TrackPanel.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
+#include "wavetrack/WaveTrackView.h"
+#include "wavetrack/WaveTrackViewConstants.h"
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid,
    AudacityProject *pProject, WaveTrack *wt)

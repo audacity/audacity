@@ -47,9 +47,9 @@ most commonly asked questions about Audacity.
 
 // DA: Logo for Splash Dialog (welcome dialog)
 #ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
+#include "images/DarkAudacityLogoWithName.xpm"
 #else
-#include "../images/AudacityLogoWithName.xpm"
+#include "images/AudacityLogoWithName.xpm"
 #endif
 
 SplashDialog * SplashDialog::pSelf=NULL;

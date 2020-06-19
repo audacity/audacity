@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h" // for rint from configwin.h
+#include "Audacity.h" // for rint from configwin.h
 #include "Loudness.h"
 
 #include <math.h>
@@ -23,14 +23,14 @@
 #include <wx/simplebook.h>
 #include <wx/valgen.h>
 
-#include "../Internat.h"
-#include "../Prefs.h"
-#include "../ProjectFileManager.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../widgets/valnum.h"
-#include "../widgets/ProgressDialog.h"
+#include "Internat.h"
+#include "Prefs.h"
+#include "ProjectFileManager.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
+#include "widgets/valnum.h"
+#include "widgets/ProgressDialog.h"
 
 #include "LoadEffects.h"
 

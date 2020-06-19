@@ -24,7 +24,7 @@ to that system.
 
 #include "Command.h"
 #include "CommandType.h"
-#include "../BatchCommands.h"
+#include "BatchCommands.h"
 
 class AudacityProject;
 

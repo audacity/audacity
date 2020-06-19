@@ -13,12 +13,12 @@
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #include "Import.h"
 #include "ImportPlugin.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/ProgressDialog.h"
 
 #define DESC XO("QuickTime files")
 
@@ -76,8 +76,8 @@ static Importer::RegisteredUnusableImportPlugin registered{
 // There's a name collision between our Track and QuickTime's...workaround it
 #undef Track
 
-#include "../Tags.h"
-#include "../WaveTrack.h"
+#include "Tags.h"
+#include "WaveTrack.h"
 
 #define kQTAudioPropertyID_MaxAudioSampleSize   'mssz'
 

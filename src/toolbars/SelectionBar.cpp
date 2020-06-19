@@ -26,7 +26,7 @@ with changes in the SelectionBar.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "SelectionBar.h"
 
 #include "SelectionBarListener.h"
@@ -51,19 +51,19 @@ with changes in the SelectionBar.
 #include <wx/statline.h>
 
 
-#include "../AudioIOBase.h"
-#include "../AColor.h"
-#include "../KeyboardCapture.h"
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../ProjectAudioIO.h"
-#include "../ProjectSettings.h"
-#include "../Snap.h"
-#include "../ViewInfo.h"
-#include "../AllThemeResources.h"
+#include "AudioIOBase.h"
+#include "AColor.h"
+#include "KeyboardCapture.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectSettings.h"
+#include "Snap.h"
+#include "ViewInfo.h"
+#include "AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "widgets/WindowAccessible.h"
 #endif
 
 IMPLEMENT_CLASS(SelectionBar, ToolBar);

@@ -25,7 +25,7 @@
 #include "Resample.h"
 #include "Prefs.h"
 #include "Internat.h"
-#include "../include/audacity/ComponentInterface.h"
+#include "audacity/ComponentInterface.h"
 
 #include <soxr.h>
 

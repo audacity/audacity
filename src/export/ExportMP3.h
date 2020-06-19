@@ -13,7 +13,7 @@
 
 /* --------------------------------------------------------------------------*/
 
-#include "../MemoryX.h"
+#include "MemoryX.h"
 
 enum MP3RateMode : unsigned {
    MODE_SET = 0,

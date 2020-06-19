@@ -14,16 +14,16 @@
 setting used in debugging batch (aka macros) processing.
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "BatchPrefs.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/textdlg.h>
 
-#include "../Languages.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
+#include "Languages.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
 
 BEGIN_EVENT_TABLE(BatchPrefs, PrefsPanel)
 END_EVENT_TABLE()

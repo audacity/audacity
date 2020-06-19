@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "MixerToolBar.h"
 
 #include "ToolManager.h"
@@ -32,14 +32,14 @@
 #include <wx/tooltip.h>
 #endif
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
-#include "../AudioIO.h"
-#include "../ImageManipulation.h"
-#include "../KeyboardCapture.h"
-#include "../Prefs.h"
-#include "../widgets/ASlider.h"
-#include "../widgets/Grabber.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
+#include "AudioIO.h"
+#include "ImageManipulation.h"
+#include "KeyboardCapture.h"
+#include "Prefs.h"
+#include "widgets/ASlider.h"
+#include "widgets/Grabber.h"
 
 IMPLEMENT_CLASS(MixerToolBar, ToolBar);
 

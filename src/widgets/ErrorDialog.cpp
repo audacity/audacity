@@ -14,7 +14,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ErrorDialog.h"
 
 #include <wx/app.h>
@@ -29,10 +29,10 @@
 #include <wx/settings.h>
 #include <wx/statusbr.h>
 
-#include "../AllThemeResources.h"
-#include "../ShuttleGui.h"
-#include "../HelpText.h"
-#include "../Prefs.h"
+#include "AllThemeResources.h"
+#include "ShuttleGui.h"
+#include "HelpText.h"
+#include "Prefs.h"
 #include "HelpSystem.h"
 
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)

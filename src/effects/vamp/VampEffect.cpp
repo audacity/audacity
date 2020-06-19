@@ -11,7 +11,7 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #if defined(USE_VAMP)
 #include "VampEffect.h"
@@ -36,12 +36,12 @@
 #include <wx/version.h>
 
 
-#include "../../ShuttleGui.h"
-#include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
+#include "ShuttleGui.h"
+#include "widgets/valnum.h"
+#include "widgets/AudacityMessageBox.h"
 
-#include "../../LabelTrack.h"
-#include "../../WaveTrack.h"
+#include "LabelTrack.h"
+#include "WaveTrack.h"
 
 enum
 {

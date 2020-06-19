@@ -11,21 +11,21 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "EffectUI.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include "Effect.h"
 #include "EffectManager.h"
-#include "../ProjectHistory.h"
-#include "../ProjectWindowBase.h"
-#include "../TrackPanelAx.h"
+#include "ProjectHistory.h"
+#include "ProjectWindowBase.h"
+#include "TrackPanelAx.h"
 #include "RealtimeEffectManager.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
-#include "../UndoManager.h"
+#include "UndoManager.h"
 
 #include <wx/defs.h>
 #include <wx/bmpbuttn.h>
@@ -41,12 +41,12 @@
 #include <wx/timer.h>
 #include <wx/tglbtn.h>
 
-#include "../commands/CommandContext.h"
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../widgets/wxPanelWrapper.h"
+#include "commands/CommandContext.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "widgets/wxPanelWrapper.h"
 
-#include "../../images/EffectRack/EffectRack.h"
+#include "images/EffectRack/EffectRack.h"
 
 #define COL_POWER    0
 #define COL_EDITOR   1
@@ -647,18 +647,18 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "../../images/Effect.h"
-#include "../AudioIO.h"
-#include "../CommonCommandFlags.h"
-#include "../Menus.h"
-#include "../Project.h"
-#include "../ProjectAudioManager.h"
-#include "../ShuttleGui.h"
-#include "../ViewInfo.h"
-#include "../commands/AudacityCommand.h"
-#include "../commands/CommandContext.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/HelpSystem.h"
+#include "images/Effect.h"
+#include "AudioIO.h"
+#include "CommonCommandFlags.h"
+#include "Menus.h"
+#include "Project.h"
+#include "ProjectAudioManager.h"
+#include "ShuttleGui.h"
+#include "ViewInfo.h"
+#include "commands/AudacityCommand.h"
+#include "commands/CommandContext.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/HelpSystem.h"
 
 #include <wx/bmpbuttn.h>
 #include <wx/checkbox.h>
@@ -1842,14 +1842,14 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
    return nullptr;
 };
 
-#include "../MissingAliasFileDialog.h"
-#include "../PluginManager.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "../SelectUtilities.h"
-#include "../TrackPanel.h"
-#include "../WaveTrack.h"
-#include "../commands/CommandManager.h"
+#include "MissingAliasFileDialog.h"
+#include "PluginManager.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
+#include "SelectUtilities.h"
+#include "TrackPanel.h"
+#include "WaveTrack.h"
+#include "commands/CommandManager.h"
 
 /// DoEffect() takes a PluginID and executes the associated effect.
 ///

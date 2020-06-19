@@ -16,15 +16,15 @@
 
 #include "Generator.h"
 
-#include "../Project.h"
-#include "../Prefs.h"
-#include "../ViewInfo.h"
-#include "../WaveTrack.h"
-#include "../prefs/TracksBehaviorsPrefs.h"
+#include "Project.h"
+#include "Prefs.h"
+#include "ViewInfo.h"
+#include "WaveTrack.h"
+#include "prefs/TracksBehaviorsPrefs.h"
 
 #include "TimeWarper.h"
 
-#include "../widgets/AudacityMessageBox.h"
+#include "widgets/AudacityMessageBox.h"
 
 bool Generator::Process()
 {

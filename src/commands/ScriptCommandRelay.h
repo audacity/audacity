@@ -16,9 +16,9 @@
 #ifndef __SCRIPT_COMMAND_RELAY__
 #define __SCRIPT_COMMAND_RELAY__
 
-#include "../Audacity.h"
+#include "Audacity.h"
 
-#include "../MemoryX.h"
+#include "MemoryX.h"
 
 class wxString;
 

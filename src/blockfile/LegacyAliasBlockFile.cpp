@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "LegacyAliasBlockFile.h"
 
 #include <wx/utils.h>
@@ -17,9 +17,9 @@
 #include <sndfile.h>
 
 #include "LegacyBlockFile.h"
-#include "../DirManager.h"
-#include "../FileFormats.h"
-#include "../xml/XMLTagHandler.h"
+#include "DirManager.h"
+#include "FileFormats.h"
+#include "xml/XMLTagHandler.h"
 
 LegacyAliasBlockFile::LegacyAliasBlockFile(wxFileNameWrapper &&fileName,
                                            wxFileNameWrapper &&aliasedFileName,

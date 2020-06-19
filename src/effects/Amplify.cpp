@@ -18,7 +18,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Amplify.h"
 #include "LoadEffects.h"
 
@@ -35,10 +35,10 @@
 #include <wx/valtext.h>
 #include <wx/log.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../widgets/valnum.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
+#include "widgets/valnum.h"
 
 
 enum

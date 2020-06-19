@@ -12,16 +12,16 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #if USE_SOUNDTOUCH
 #include "SoundTouchEffect.h"
 
 #include <math.h>
 
-#include "../LabelTrack.h"
-#include "../WaveTrack.h"
-#include "../NoteTrack.h"
+#include "LabelTrack.h"
+#include "WaveTrack.h"
+#include "NoteTrack.h"
 #include "TimeWarper.h"
 
 // Soundtouch defines these as well, which are also in generated configmac.h

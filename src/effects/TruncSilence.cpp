@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "TruncSilence.h"
 #include "LoadEffects.h"
 
@@ -28,14 +28,14 @@
 #include <wx/choice.h>
 #include <wx/valgen.h>
 
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../ProjectSettings.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "ProjectSettings.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
+#include "widgets/valnum.h"
+#include "widgets/AudacityMessageBox.h"
 
 class Enums {
 public:

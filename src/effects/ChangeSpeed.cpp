@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ChangeSpeed.h"
 #include "LoadEffects.h"
 
@@ -23,16 +23,16 @@
 #include <wx/intl.h>
 #include <wx/slider.h>
 
-#include "../LabelTrack.h"
-#include "../Prefs.h"
-#include "../Resample.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/valnum.h"
+#include "LabelTrack.h"
+#include "Prefs.h"
+#include "Resample.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/valnum.h"
 
 #include "TimeWarper.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 enum
 {

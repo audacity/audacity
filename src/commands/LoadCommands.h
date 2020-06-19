@@ -14,7 +14,7 @@
 #include <functional>
 #include <memory>
 #include <unordered_map>
-#include "../MemoryX.h"
+#include "MemoryX.h"
 
 class AudacityCommand;
 

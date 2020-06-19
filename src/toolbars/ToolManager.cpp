@@ -24,11 +24,11 @@
 
 *//**********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ToolManager.h"
 
-#include "../Experimental.h"
-#include "../commands/CommandContext.h"
+#include "Experimental.h"
+#include "commands/CommandContext.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -53,15 +53,15 @@
 #include <wx/minifram.h>
 #include <wx/popupwin.h>
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
-#include "../ImageManipulation.h"
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../widgets/AButton.h"
-#include "../widgets/ASlider.h"
-#include "../widgets/MeterPanelBase.h"
-#include "../widgets/Grabber.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
+#include "ImageManipulation.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "widgets/AButton.h"
+#include "widgets/ASlider.h"
+#include "widgets/MeterPanelBase.h"
+#include "widgets/Grabber.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for ToolFrame
@@ -1550,8 +1550,8 @@ bool ToolManager::RestoreFocus()
    return false;
 }
 
-#include "../commands/CommandContext.h"
-#include "../Menus.h"
+#include "commands/CommandContext.h"
+#include "Menus.h"
 
 AttachedToolBarMenuItem::AttachedToolBarMenuItem(
    ToolBarID id, const CommandID &name, const TranslatableString &label_in,

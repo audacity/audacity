@@ -35,7 +35,7 @@ and ImportLOF.cpp.
 
 
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "Import.h"
 
 #include "ImportPlugin.h"
@@ -49,14 +49,14 @@ and ImportLOF.cpp.
 #include <wx/listbox.h>
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer
-#include "../FileNames.h"
-#include "../ShuttleGui.h"
-#include "../Project.h"
-#include "../WaveTrack.h"
+#include "FileNames.h"
+#include "ShuttleGui.h"
+#include "Project.h"
+#include "WaveTrack.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 
-#include "../widgets/ProgressDialog.h"
+#include "widgets/ProgressDialog.h"
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 

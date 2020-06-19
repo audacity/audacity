@@ -18,7 +18,7 @@
 *//******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "LegacyBlockFile.h"
 
 #include <float.h>
@@ -30,8 +30,8 @@
 #include <wx/utils.h>
 #include <wx/log.h>
 
-#include "../FileFormats.h"
-#include "../xml/XMLTagHandler.h"
+#include "FileFormats.h"
+#include "xml/XMLTagHandler.h"
 
 #include "sndfile.h"
 
