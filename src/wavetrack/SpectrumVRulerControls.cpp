@@ -18,8 +18,8 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "RefreshCode.h"
 #include "TrackPanelMouseEvent.h"
 #include "WaveTrack.h"
-#include "prefs/SpectrogramSettings.h"
-#include "widgets/Ruler.h"
+#include "SpectrogramSettings.h"
+#include "Ruler.h"
 
 SpectrumVRulerControls::~SpectrumVRulerControls() = default;
 

@@ -21,10 +21,10 @@
 #include "ShuttleGui.h"
 #include "FileNames.h"
 #include "ViewInfo.h"
-#include "widgets/HelpSystem.h"
-#include "widgets/NumericTextCtrl.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
+#include "HelpSystem.h"
+#include "NumericTextCtrl.h"
+#include "AudacityMessageBox.h"
+#include "ErrorDialog.h"
 
 #include <cmath>
 #include <limits>
@@ -649,9 +649,9 @@ void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
 }
 
 // Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
-#include "commands/ScreenshotCommand.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "ScreenshotCommand.h"
 
 namespace {
 

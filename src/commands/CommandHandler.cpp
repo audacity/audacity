@@ -24,8 +24,8 @@
 #include "ProjectWindow.h"
 #include "AppCommandEvent.h"
 #include "ScriptCommandRelay.h"
-#include "commands/CommandContext.h"
-#include "commands/Command.h"
+#include "CommandContext.h"
+#include "Command.h"
 
 CommandHandler::CommandHandler()
 {

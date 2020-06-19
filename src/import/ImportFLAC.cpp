@@ -43,9 +43,9 @@
 
 #include "Tags.h"
 #include "WaveClip.h"
-#include "blockfile/ODDecodeBlockFile.h"
-#include "prefs/QualityPrefs.h"
-#include "widgets/ProgressDialog.h"
+#include "ODDecodeBlockFile.h"
+#include "QualityPrefs.h"
+#include "ProgressDialog.h"
 
 #define FLAC_HEADER "fLaC"
 
@@ -76,8 +76,8 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include "Prefs.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
-#include "ondemand/ODDecodeFlacTask.h"
-#include "ondemand/ODManager.h"
+#include "ODDecodeFlacTask.h"
+#include "ODManager.h"
 
 #ifdef USE_LIBID3TAG
 extern "C" {

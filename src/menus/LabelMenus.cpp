@@ -11,9 +11,9 @@
 #include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
-#include "labeltrack/LabelTrackView.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "LabelTrackView.h"
 
 // private helper classes and functions
 namespace {

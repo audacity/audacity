@@ -56,7 +56,7 @@ and ImportLOF.cpp.
 
 #include "Prefs.h"
 
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 

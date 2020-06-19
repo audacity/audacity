@@ -1,0 +1,54 @@
+do_directory(
+   INCLUDE_PRIVATE
+      src/blockfile
+      src/etc
+      src/track
+      src/xml
+
+   PRIVATE
+      src/widgets
+      wxWidgets
+      $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
+      $<$<BOOL:${USE_LIBFLAC}>:libflac>
+      $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
+
+   PRECOMPILE
+      AColor.h
+      AudioIO.h
+      BlockFile.h
+      Diags.h
+      DirManager.h
+      Envelope.h
+      FFT.h
+      ImageManipulation.h
+      LabelTrack.h
+      Mix.h
+      NoteTrack.h
+      Prefs.h
+      Project.h
+      Sequence.h
+      TimeTrack.h
+      UndoManager.h
+      WaveTrack.h
+      ASlider.h
+      ProgressDialog.h
+      Ruler.h
+
+   SOURCES
+      ODComputeSummaryTask.cpp
+      ODComputeSummaryTask.h
+      ODDecodeFFmpegTask.cpp
+      ODDecodeFFmpegTask.h
+      ODDecodeFlacTask.cpp
+      ODDecodeFlacTask.h
+      ODDecodeTask.cpp
+      ODDecodeTask.h
+      ODManager.cpp
+      ODManager.h
+      ODTask.cpp
+      ODTask.h
+      ODTaskThread.cpp
+      ODTaskThread.h
+      ODWaveTrackTaskQueue.cpp
+      ODWaveTrackTaskQueue.h
+)

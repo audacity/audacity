@@ -22,7 +22,7 @@
 #include "ShuttleGui.h"
 #include "CommandTargets.h"
 #include "CommandContext.h"
-#include "effects/EffectManager.h"
+#include "EffectManager.h"
 
 const ComponentInterfaceSymbol HelpCommand::Symbol
 { XO("Help") };

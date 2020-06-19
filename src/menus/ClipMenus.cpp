@@ -7,9 +7,9 @@
 #include "WaveClip.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
-#include "track/TimeShiftHandle.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "TimeShiftHandle.h"
 
 // private helper classes and functions
 namespace {

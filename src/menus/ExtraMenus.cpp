@@ -2,10 +2,10 @@
 #include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
-#include "toolbars/MixerToolBar.h"
-#include "toolbars/DeviceToolBar.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "MixerToolBar.h"
+#include "DeviceToolBar.h"
 
 #include <wx/frame.h>
 

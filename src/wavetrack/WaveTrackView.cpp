@@ -32,10 +32,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanelDrawingContext.h"
 #include "TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "prefs/TracksPrefs.h"
+#include "TracksPrefs.h"
 
-#include "track/TimeShiftHandle.h"
-#include "track/ButtonHandle.h"
+#include "TimeShiftHandle.h"
+#include "ButtonHandle.h"
 #include "TrackInfo.h"
 
 namespace {

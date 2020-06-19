@@ -34,7 +34,7 @@ class wxWindow;
 
 #include "Track.h"
 
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 class wxArrayString;
 class ShuttleGui;

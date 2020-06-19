@@ -34,7 +34,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "widgets/ErrorDialog.h"
+#include "ErrorDialog.h"
 
 #include <wx/clipbrd.h>
 #include <wx/dcclient.h>

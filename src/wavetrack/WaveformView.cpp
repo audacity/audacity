@@ -18,8 +18,8 @@ Paul Licameli split from WaveTrackView.cpp
 #include "WaveTrackViewConstants.h"
 
 #include "SampleHandle.h"
-#include "track/EnvelopeHandle.h"
-#include "track/TimeShiftHandle.h"
+#include "EnvelopeHandle.h"
+#include "TimeShiftHandle.h"
 #include "AColor.h"
 #include "Envelope.h"
 #include "EnvelopeEditor.h"
@@ -31,7 +31,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "prefs/WaveformSettings.h"
+#include "WaveformSettings.h"
 
 #include <wx/graphics.h>
 #include <wx/dc.h>
@@ -662,8 +662,8 @@ void DrawEnvelope(TrackPanelDrawingContext &context,
 }
 
 // Headers needed only for experimental drawing below
-//#include "wavetrack/SampleHandle.h"
-//#include "track/EnvelopeHandle.h"
+//#include "SampleHandle.h"
+//#include "EnvelopeHandle.h"
 void DrawClipWaveform(TrackPanelDrawingContext &context,
                                    const WaveTrack *track,
                                    const WaveClip *clip,
@@ -971,7 +971,7 @@ void DrawTimeSlider( TrackPanelDrawingContext &context,
 }
 
 // Header needed only for experimental drawing below
-//#include "track/TimeShiftHandle.h"
+//#include "TimeShiftHandle.h"
 void WaveformView::DoDraw(TrackPanelDrawingContext &context,
                                const WaveTrack *track,
                                const wxRect & rect,
@@ -1051,7 +1051,7 @@ static const WaveTrackSubViews::RegisteredFactory key{
 
 #include <mutex> // for std::call_once
 #include "WaveTrackControls.h"
-#include "widgets/PopupMenuTable.h"
+#include "PopupMenuTable.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "RefreshCode.h"

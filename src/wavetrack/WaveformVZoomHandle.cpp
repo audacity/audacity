@@ -22,7 +22,7 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 #include "RefreshCode.h"
 #include "TrackPanelMouseEvent.h"
 #include "WaveTrack.h"
-#include "prefs/WaveformSettings.h"
+#include "WaveformSettings.h"
 
 WaveformVZoomHandle::WaveformVZoomHandle(
    const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y)

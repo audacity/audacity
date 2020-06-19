@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ProjectHistory.h"
 #include "RefreshCode.h"
 #include "TimeTrack.h"
-#include "widgets/PopupMenuTable.h"
+#include "PopupMenuTable.h"
 #include <wx/numdlg.h>
 
 TimeTrackControls::~TimeTrackControls()
@@ -194,7 +194,7 @@ template<> template<> auto DoGetTimeTrackControls::Implementation() -> Function 
 }
 static DoGetTimeTrackControls registerDoGetTimeTrackControls;
 
-#include "track/TrackView.h"
+#include "TrackView.h"
 
 using GetDefaultTimeTrackHeight = GetDefaultTrackHeight::Override< TimeTrack >;
 template<> template<>

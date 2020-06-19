@@ -18,13 +18,13 @@
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
-#include "commands/ScreenshotCommand.h"
-#include "export/Export.h"
-#include "prefs/PrefsDialog.h"
-#include "labeltrack/LabelTrackView.h"
-#include "widgets/AudacityMessageBox.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "ScreenshotCommand.h"
+#include "Export.h"
+#include "PrefsDialog.h"
+#include "LabelTrackView.h"
+#include "AudacityMessageBox.h"
 
 // private helper classes and functions
 namespace {

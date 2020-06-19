@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/event.h> // to inherit
 #include "MemoryX.h"
 #include "ClientData.h"
-#include "widgets/Overlay.h" // to inherit
+#include "Overlay.h" // to inherit
 
 class AudacityProject;
 

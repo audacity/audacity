@@ -46,7 +46,7 @@
 #include "AllThemeResources.h"
 #include "ImageManipulation.h"
 #include "Prefs.h"
-#include "widgets/Grabber.h"
+#include "Grabber.h"
 
 const ToolBarConfiguration::Position
    ToolBarConfiguration::UnspecifiedPosition { false };

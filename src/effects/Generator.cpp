@@ -20,11 +20,11 @@
 #include "Prefs.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "prefs/TracksBehaviorsPrefs.h"
+#include "TracksBehaviorsPrefs.h"
 
 #include "TimeWarper.h"
 
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 bool Generator::Process()
 {

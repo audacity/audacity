@@ -1,0 +1,48 @@
+do_directory(
+   INCLUDE_PRIVATE
+      src/commands
+      src/etc
+      src/ondemand
+      src/track
+      src/xml
+
+   PRIVATE
+      src/widgets
+      wxWidgets
+
+   PRECOMPILE
+      AColor.h
+      AudioIO.h
+      BlockFile.h
+      Diags.h
+      DirManager.h
+      Envelope.h
+      FFT.h
+      ImageManipulation.h
+      LabelTrack.h
+      Mix.h
+      NoteTrack.h
+      Prefs.h
+      Project.h
+      Sequence.h
+      TimeTrack.h
+      UndoManager.h
+      WaveTrack.h
+      ASlider.h
+      ProgressDialog.h
+      Ruler.h
+
+   SOURCES
+      LabelDefaultClickHandle.cpp
+      LabelDefaultClickHandle.h
+      LabelGlyphHandle.cpp
+      LabelGlyphHandle.h
+      LabelTextHandle.cpp
+      LabelTextHandle.h
+      LabelTrackControls.cpp
+      LabelTrackControls.h
+      LabelTrackVRulerControls.cpp
+      LabelTrackVRulerControls.h
+      LabelTrackView.cpp
+      LabelTrackView.h
+)

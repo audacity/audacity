@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrack.h"
 #include "TrackArtist.h"
 #include "TrackPanelDrawingContext.h"
-#include "widgets/Ruler.h"
+#include "Ruler.h"
 
 TimeTrackVRulerControls::~TimeTrackVRulerControls()
 {

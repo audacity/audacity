@@ -18,7 +18,7 @@
 #define __COMMAND__
 
 #include "CommandSignature.h"
-#include "commands/AudacityCommand.h"
+#include "AudacityCommand.h"
 
 class AudacityApp;
 class CommandContext;

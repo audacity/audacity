@@ -18,20 +18,20 @@
 #include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
-#include "export/ExportMultiple.h"
-#include "import/Import.h"
-#include "import/ImportMIDI.h"
-#include "import/ImportRaw.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/FileHistory.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "ExportMultiple.h"
+#include "Import.h"
+#include "ImportMIDI.h"
+#include "ImportRaw.h"
+#include "AudacityMessageBox.h"
+#include "FileHistory.h"
 
 #ifdef USE_MIDI
-#include "import/ImportMIDI.h"
+#include "ImportMIDI.h"
 #endif // USE_MIDI
 
-#include "ondemand/ODManager.h"
+#include "ODManager.h"
 
 #include <wx/menu.h>
 

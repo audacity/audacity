@@ -17,7 +17,7 @@ LRN
 
 #include "FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
-#include "xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 #include "FileNames.h"
 
 #include <unordered_map>

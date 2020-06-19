@@ -28,7 +28,7 @@
 #include "ToolManager.h"
 
 #include "Experimental.h"
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -58,10 +58,10 @@
 #include "ImageManipulation.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "widgets/AButton.h"
-#include "widgets/ASlider.h"
-#include "widgets/MeterPanelBase.h"
-#include "widgets/Grabber.h"
+#include "AButton.h"
+#include "ASlider.h"
+#include "MeterPanelBase.h"
+#include "Grabber.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for ToolFrame
@@ -1550,7 +1550,7 @@ bool ToolManager::RestoreFocus()
    return false;
 }
 
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "Menus.h"
 
 AttachedToolBarMenuItem::AttachedToolBarMenuItem(

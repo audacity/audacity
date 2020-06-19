@@ -36,18 +36,18 @@ KeyConfigPrefs and MousePrefs use.
 
 #include "Prefs.h"
 #include "Project.h"
-#include "commands/CommandManager.h"
-#include "xml/XMLFileReader.h"
+#include "CommandManager.h"
+#include "XMLFileReader.h"
 
 #include "ShuttleGui.h"
 
 #include "FileNames.h"
 
-#include "widgets/KeyView.h"
-#include "widgets/AudacityMessageBox.h"
+#include "KeyView.h"
+#include "AudacityMessageBox.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 //

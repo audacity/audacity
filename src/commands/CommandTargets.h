@@ -155,7 +155,7 @@ public:
 
 #if 0
 
-//#include "widgets/ProgressDialog.h" // Member variable
+//#include "ProgressDialog.h" // Member variable
 
 /// Sends command progress information to a ProgressDialog
 class GUIProgressTarget final : public CommandProgressTarget

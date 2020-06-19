@@ -18,7 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "Envelope.h"
 #include "HitTestResult.h"
-#include "prefs/WaveformSettings.h"
+#include "WaveformSettings.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "RefreshCode.h"
@@ -28,7 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "images/Cursors.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 
 static const int SMOOTHING_KERNEL_RADIUS = 3;

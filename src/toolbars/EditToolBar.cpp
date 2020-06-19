@@ -55,10 +55,10 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "UndoManager.h"
-#include "widgets/AButton.h"
+#include "AButton.h"
 
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 
