@@ -11,8 +11,6 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../Audacity.h"
 #include "SpectrumView.h"
 
-#include "../../../../Experimental.h"
-
 #include "SpectrumVRulerControls.h"
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"

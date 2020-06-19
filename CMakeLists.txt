@@ -418,6 +418,10 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    file( TO_NATIVE_PATH "${pkgdir}/tools/python.exe" PYTHON )
 endif()
 
+# define EXPERIMENTAL flags
+# Do this before consistency checks for added third-party libraries
+include( "src/Experimental.cmake" )
+
 # Add our children
 add_subdirectory( "cmake-proxies" )
 add_subdirectory( "help" )

@@ -11,7 +11,7 @@ Paul Licameli split from AudioIO.cpp
 #include "Audacity.h"
 #include "AudioIOBase.h"
 
-#include "Experimental.h"
+
 
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>

@@ -416,7 +416,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "Audacity.h" // for USE_* macros
 #include "AudioIO.h"
 
-#include "Experimental.h"
+
 
 #include "AudioIOListener.h"
 

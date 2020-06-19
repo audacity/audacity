@@ -17,8 +17,6 @@
 #include "DtmfGen.h"
 #include "LoadEffects.h"
 
-#include "../Experimental.h"
-
 #include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/valgen.h>

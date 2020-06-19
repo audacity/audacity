@@ -12,8 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_MIDI
 #include "NoteTrackVZoomHandle.h"
 
-#include "../../../../Experimental.h"
-
 #include "../../../ui/TrackVRulerControls.h"
 
 #include "../../../../HitTestResult.h"

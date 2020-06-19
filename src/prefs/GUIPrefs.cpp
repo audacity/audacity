@@ -20,8 +20,6 @@
 #include "../Audacity.h"
 #include "GUIPrefs.h"
 
-#include "../Experimental.h"
-
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <locale>

@@ -15,7 +15,7 @@
 #undef HAS_CRASH_REPORT
 
 #include "Audacity.h"
-#include "Experimental.h"
+
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 

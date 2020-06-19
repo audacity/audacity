@@ -13,8 +13,6 @@ Paul Licameli split from TimeTrackVZoomHandle.cpp
 #include "TimeTrackVRulerControls.h"
 #include "TimeTrackControls.h"
 
-#include "../../../Experimental.h"
-
 #include "../../../HitTestResult.h"
 #include "../../../NumberScale.h"
 #include "../../../Prefs.h"

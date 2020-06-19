@@ -14,8 +14,6 @@
 #ifndef __AUDACITY_EFFECTUI_H__
 #define __AUDACITY_EFFECTUI_H__
 
-#include "../Experimental.h"
-
 #include <wx/bitmap.h> // member variables
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)

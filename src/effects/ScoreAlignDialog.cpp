@@ -19,8 +19,6 @@ It \TODO: description
 #include "../Audacity.h"
 #include "ScoreAlignDialog.h"
 
-#include "../Experimental.h"
-
 #ifdef EXPERIMENTAL_SCOREALIGN
 
 // For compilers that support precompilation, includes "wx/wx.h".
