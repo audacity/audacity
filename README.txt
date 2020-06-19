@@ -69,16 +69,24 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 Improvements
 
- * To be written... wx3.1.3 etc...
+ * Audacity is now built with (our version of) the wx3.1.3 library.
+   Previously we used wx3.1.1.
+ * We added a command 'Reset Configuration' to reset to default 
+   settings.
+ * MP3 Audio is now exported without padding.
 
 See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.4.2
 
 
 Bug Fixes
 
- Over nnn bugs in 2.4.1 fixed, including:
+ Over 30 bugs in 2.4.1 fixed, including:
 
- * To be written
+ * 2442 - Windows: Crash when importing (or editing) to a disk 
+   with insufficient disk space available
+ * 2471 - Mix Stereo down to Mono fails if space at start of track.
+ * 2439 - Mix and Render to New Track selects left channel of new
+   stereo track
 
 
 See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2
@@ -88,8 +96,6 @@ See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2
 
 
 3. Some Known Issues in 2.4.2:
-
- * TBW
 
 For best workarounds and other known issues in 2.4.2, please see:
   https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2/Issues 
