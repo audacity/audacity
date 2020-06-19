@@ -10,6 +10,7 @@ set( CMAKE_ENABLE_EXPORTS ON )
 # add sub-directory libraries to the build
 foreach( SUBDIRECTORY
    etc
+   widgets
    xml
 )
    add_subdirectory( "${SUBDIRECTORY}" )
@@ -644,79 +645,6 @@ list( APPEND SOURCES
       track/TrackView.h
       track/ZoomHandle.cpp
       track/ZoomHandle.h
-
-      # Widgets
-
-      widgets/AButton.cpp
-      widgets/AButton.h
-      widgets/ASlider.cpp
-      widgets/ASlider.h
-      widgets/AttachableScrollBar.cpp
-      widgets/AttachableScrollBar.h
-      widgets/AudacityMessageBox.cpp
-      widgets/AudacityMessageBox.h
-      widgets/BackedPanel.cpp
-      widgets/BackedPanel.h
-      widgets/ErrorDialog.cpp
-      widgets/ErrorDialog.h
-      widgets/ExpandingToolBar.cpp
-      widgets/ExpandingToolBar.h
-      widgets/FileDialog/FileDialog.cpp
-      widgets/FileDialog/FileDialog.h
-      $<$<BOOL:${wxIS_WIN}>:
-	widgets/FileDialog/win/FileDialogPrivate.cpp
-	widgets/FileDialog/win/FileDialogPrivate.h
-      >
-      $<$<BOOL:${wxIS_MAC}>:
-	widgets/FileDialog/mac/FileDialogPrivate.mm
-	widgets/FileDialog/mac/FileDialogPrivate.h
-      >
-      $<$<BOOL:${wxIS_GTK}>:
-	widgets/FileDialog/gtk/FileDialogPrivate.cpp
-	widgets/FileDialog/gtk/FileDialogPrivate.h
-      >
-      widgets/FileHistory.cpp
-      widgets/FileHistory.h
-      widgets/Grabber.cpp
-      widgets/Grabber.h
-      widgets/Grid.cpp
-      widgets/Grid.h
-      widgets/HelpSystem.cpp
-      widgets/HelpSystem.h
-      widgets/HtmlWindow.cpp
-      widgets/HtmlWindow.h
-      widgets/ImageRoll.cpp
-      widgets/ImageRoll.h
-      widgets/KeyView.cpp
-      widgets/KeyView.h
-      widgets/Meter.cpp
-      widgets/Meter.h
-      widgets/MeterPanelBase.cpp
-      widgets/MeterPanelBase.h
-      widgets/MultiDialog.cpp
-      widgets/MultiDialog.h
-      widgets/NumericTextCtrl.cpp
-      widgets/NumericTextCtrl.h
-      widgets/Overlay.cpp
-      widgets/Overlay.h
-      widgets/OverlayPanel.cpp
-      widgets/OverlayPanel.h
-      widgets/PopupMenuTable.cpp
-      widgets/PopupMenuTable.h
-      widgets/ProgressDialog.cpp
-      widgets/ProgressDialog.h
-      widgets/Ruler.cpp
-      widgets/Ruler.h
-      widgets/Warning.cpp
-      widgets/Warning.h
-      widgets/WindowAccessible.cpp
-      widgets/WindowAccessible.h
-      widgets/numformatter.cpp
-      widgets/numformatter.h
-      widgets/valnum.cpp
-      widgets/valnum.h
-      widgets/wxPanelWrapper.cpp
-      widgets/wxPanelWrapper.h
 )
 
 #
@@ -881,7 +809,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       effects/VST/VSTControlOSX.mm
       effects/audiounits/AUControl.mm
       menus/WindowMenus.cpp
-      widgets/FileDialog/mac/FileDialogPrivate.mm
       PROPERTIES
          COMPILE_FLAGS "-x objective-c++"
          SKIP_PRECOMPILE_HEADERS YES
@@ -1020,6 +947,8 @@ target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOU
 
 target_include_directories( ${TARGET} PRIVATE
    etc
+   widgets
+   widgets/FileDialog
 )
 
 # If was have cmake 3.16 or higher, we can use precompiled headers, but

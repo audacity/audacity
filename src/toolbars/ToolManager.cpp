@@ -58,10 +58,10 @@
 #include "ImageManipulation.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "widgets/AButton.h"
-#include "widgets/ASlider.h"
-#include "widgets/MeterPanelBase.h"
-#include "widgets/Grabber.h"
+#include "AButton.h"
+#include "ASlider.h"
+#include "MeterPanelBase.h"
+#include "Grabber.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for ToolFrame

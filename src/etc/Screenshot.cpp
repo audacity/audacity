@@ -44,7 +44,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
 #include "track/TrackView.h"
-#include "widgets/HelpSystem.h"
+#include "HelpSystem.h"
 
 #include "ViewInfo.h"
 #include "WaveTrack.h"

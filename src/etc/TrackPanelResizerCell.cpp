@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanelMouseEvent.h"
 #include "HitTestResult.h"
 #include "ViewInfo.h"
-#include "widgets/OverlayPanel.h"
+#include "OverlayPanel.h"
 
 #include "track/TrackView.h"
 

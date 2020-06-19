@@ -18,7 +18,7 @@
 #include <wx/defs.h>
 #include <wx/event.h> // to inherit
 
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 #include "audacity/ComponentInterface.h"
 #include "audacity/EffectAutomationParameters.h" // for command automation

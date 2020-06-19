@@ -27,7 +27,7 @@
 #include "Audacity.h" // for USE_* macros
 #include "VSTEffect.h"
 
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #if 0
 #if defined(BUILDING_AUDACITY)
@@ -85,13 +85,13 @@
 #include "PlatformCompatibility.h"
 #include "ShuttleGui.h"
 #include "effects/Effect.h"
-#include "widgets/valnum.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/NumericTextCtrl.h"
+#include "valnum.h"
+#include "AudacityMessageBox.h"
+#include "NumericTextCtrl.h"
 #include "XMLFileReader.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 #include "audacity/ConfigInterface.h"

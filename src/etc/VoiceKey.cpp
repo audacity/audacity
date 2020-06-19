@@ -30,8 +30,8 @@ or "OFF" point
 #include <iostream>
 
 #include "WaveTrack.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
+#include "AudacityMessageBox.h"
+#include "ErrorDialog.h"
 
 using std::cout;
 using std::endl;

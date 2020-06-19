@@ -68,8 +68,8 @@
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
 #include "Track.h"
-#include "widgets/AButton.h"
-#include "widgets/ErrorDialog.h"
+#include "AButton.h"
+#include "ErrorDialog.h"
 #include "FileNames.h"
 
 #include "track/Scrubbing.h"

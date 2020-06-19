@@ -20,7 +20,7 @@
 // ----------------------------------------------------------------------------
 
 #include "Internat.h"
-#include "../FileDialog.h"
+#include "FileDialog.h"
 
 #include <wx/app.h>
 #include <wx/choice.h>

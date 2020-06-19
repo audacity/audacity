@@ -36,7 +36,7 @@
 #include "ClientData.h"
 #include <utility>
 
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 #include <memory>
 #include <unordered_map>

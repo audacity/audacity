@@ -82,12 +82,12 @@ the mouse around.
 
 #include "WaveTrack.h"
 
-#include "./widgets/HelpSystem.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/Ruler.h"
+#include "HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "Ruler.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);

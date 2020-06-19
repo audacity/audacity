@@ -68,7 +68,7 @@ private:
    std::weak_ptr<PanSliderHandle> mPanHandle;
 };
 
-#include "widgets/PopupMenuTable.h"
+#include "PopupMenuTable.h"
 
 struct WaveTrackPopupMenuTable : public PopupMenuTable
 {

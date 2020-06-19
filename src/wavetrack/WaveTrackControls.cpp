@@ -34,7 +34,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ondemand/ODManager.h"
 #include "prefs/PrefsDialog.h"
 #include "prefs/ThemePrefs.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 #include <wx/combobox.h>
 #include <wx/frame.h>
@@ -964,7 +964,7 @@ WaveTrackPopupMenuTable &GetWaveTrackMenuTable()
 }
 
 // drawing related
-#include "widgets/ASlider.h"
+#include "ASlider.h"
 #include "TrackInfo.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"

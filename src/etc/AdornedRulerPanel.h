@@ -12,7 +12,7 @@
 #define __AUDACITY_ADORNED_RULER_PANEL__
 
 #include "CellularPanel.h"
-#include "widgets/Ruler.h" // member variable
+#include "Ruler.h" // member variable
 #include "Prefs.h"
 #include "ViewInfo.h" // for PlayRegion
 

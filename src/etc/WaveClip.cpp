@@ -39,7 +39,7 @@
 #include "UserException.h"
 
 #include "prefs/SpectrogramSettings.h"
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #ifdef _OPENMP
 #include <omp.h>

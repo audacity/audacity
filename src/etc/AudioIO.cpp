@@ -468,10 +468,10 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "effects/RealtimeEffectManager.h"
 #include "prefs/QualityPrefs.h"
 #include "prefs/RecordingPrefs.h"
-#include "widgets/MeterPanelBase.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
-#include "widgets/Warning.h"
+#include "MeterPanelBase.h"
+#include "AudacityMessageBox.h"
+#include "ErrorDialog.h"
+#include "Warning.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 

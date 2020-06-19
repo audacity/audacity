@@ -11,7 +11,7 @@ Paul Licameli
 #include "Audacity.h"
 #include "SliderHandle.h"
 
-#include "widgets/ASlider.h"
+#include "ASlider.h"
 #include "HitTestResult.h"
 #include "RefreshCode.h"
 #include "Track.h"

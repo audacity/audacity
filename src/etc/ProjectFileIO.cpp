@@ -21,8 +21,8 @@ Paul Licameli split from AudacityProject.cpp
 #include "Tags.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/NumericTextCtrl.h"
+#include "AudacityMessageBox.h"
+#include "NumericTextCtrl.h"
 
 wxDEFINE_EVENT(EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
 

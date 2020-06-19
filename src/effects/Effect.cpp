@@ -37,13 +37,13 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 #include "ondemand/ODManager.h"
 #include "wavetrack/WaveTrackView.h"
 #include "wavetrack/WaveTrackViewConstants.h"
-#include "widgets/NumericTextCtrl.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
+#include "NumericTextCtrl.h"
+#include "AudacityMessageBox.h"
+#include "ErrorDialog.h"
 
 #include <unordered_map>
 

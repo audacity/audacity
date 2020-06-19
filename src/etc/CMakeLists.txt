@@ -1,5 +1,6 @@
 do_directory(
    PRIVATE
+      src/widgets
       src/xml
       wxWidgets
       libsndfile
@@ -33,9 +34,9 @@ do_directory(
       TimeTrack.h
       UndoManager.h
       WaveTrack.h
-      widgets/ASlider.h
-      widgets/ProgressDialog.h
-      widgets/Ruler.h
+      ASlider.h
+      ProgressDialog.h
+      Ruler.h
 
    SOURCES
       AColor.cpp

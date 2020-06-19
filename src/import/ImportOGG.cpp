@@ -42,7 +42,7 @@
 #include "Prefs.h"
 #include "Tags.h"
 #include "prefs/QualityPrefs.h"
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 
 #define DESC XO("Ogg Vorbis files")

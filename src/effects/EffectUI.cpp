@@ -44,7 +44,7 @@
 #include "commands/CommandContext.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 #include "images/EffectRack/EffectRack.h"
 
@@ -657,8 +657,8 @@ private:
 #include "ViewInfo.h"
 #include "commands/AudacityCommand.h"
 #include "commands/CommandContext.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 
 #include <wx/bmpbuttn.h>
 #include <wx/checkbox.h>

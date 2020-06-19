@@ -35,7 +35,7 @@
 
 #include <algorithm>
 
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid,
    AudacityProject *pProject, WaveTrack *wt)

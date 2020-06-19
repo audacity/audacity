@@ -47,10 +47,10 @@ Paul Licameli split from AudacityProject.cpp
 #include "toolbars/SpectralSelectionBar.h"
 #include "toolbars/TimeToolBar.h"
 #include "toolbars/ToolManager.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/FileHistory.h"
-#include "widgets/ErrorDialog.h"
-#include "widgets/WindowAccessible.h"
+#include "AudacityMessageBox.h"
+#include "FileHistory.h"
+#include "ErrorDialog.h"
+#include "WindowAccessible.h"
 
 #include <wx/dataobj.h>
 #include <wx/dnd.h>

@@ -56,12 +56,12 @@ effects from this one class.
 
 #include "FileNames.h"
 #include "ShuttleGui.h"
-#include "widgets/NumericTextCtrl.h"
-#include "widgets/valnum.h"
-#include "widgets/wxPanelWrapper.h"
+#include "NumericTextCtrl.h"
+#include "valnum.h"
+#include "wxPanelWrapper.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 // ============================================================================

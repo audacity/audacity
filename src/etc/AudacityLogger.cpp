@@ -32,7 +32,7 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include <wx/textctrl.h>
 
 #include "images/AudacityLogoAlpha.xpm"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 //
 // AudacityLogger class

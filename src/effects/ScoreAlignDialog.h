@@ -14,7 +14,7 @@
 #ifdef EXPERIMENTAL_SCOREALIGN
 
 #include <wx/event.h>
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 #if 1
 

@@ -55,10 +55,10 @@ Paul Licameli split from AudacityProject.cpp
 #include "ondemand/ODManager.h"
 #include "ondemand/ODTask.h"
 #include "toolbars/SelectionBar.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
-#include "widgets/FileHistory.h"
-#include "widgets/Warning.h"
+#include "AudacityMessageBox.h"
+#include "ErrorDialog.h"
+#include "FileHistory.h"
+#include "Warning.h"
 #include "XMLFileReader.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileManagerKey{

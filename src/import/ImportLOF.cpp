@@ -91,8 +91,8 @@
 #include "ProjectWindow.h"
 #include "FileFormats.h"
 #include "Prefs.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #define BINARY_FILE_CHECK_BUFFER_SIZE 1024
 

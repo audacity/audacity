@@ -41,9 +41,9 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "./prefs/ModulePrefs.h"
 #endif
 
-#include "widgets/MultiDialog.h"
+#include "MultiDialog.h"
 
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"

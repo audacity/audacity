@@ -47,10 +47,10 @@
 #include <wx/scrolwin.h>
 
 #include "ShuttleGui.h"
-#include "widgets/valnum.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/wxPanelWrapper.h"
-#include "widgets/NumericTextCtrl.h"
+#include "valnum.h"
+#include "AudacityMessageBox.h"
+#include "wxPanelWrapper.h"
+#include "NumericTextCtrl.h"
 
 #include "lilv/lilv.h"
 #include "suil/suil.h"

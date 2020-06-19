@@ -20,7 +20,7 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "UIHandle.h"
 #include "WaveTrack.h"
 #include "prefs/WaveformSettings.h"
-#include "widgets/Ruler.h"
+#include "Ruler.h"
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
 

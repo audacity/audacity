@@ -17,8 +17,8 @@
 
 #include "Import.h"
 #include "ImportPlugin.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #define DESC XO("QuickTime files")
 

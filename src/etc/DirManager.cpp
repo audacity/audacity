@@ -89,9 +89,9 @@
 #include "InconsistencyException.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "widgets/Warning.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ProgressDialog.h"
+#include "Warning.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #if defined(__WXMAC__)
 #include <mach/mach.h>

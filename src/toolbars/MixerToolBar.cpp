@@ -38,8 +38,8 @@
 #include "ImageManipulation.h"
 #include "KeyboardCapture.h"
 #include "Prefs.h"
-#include "widgets/ASlider.h"
-#include "widgets/Grabber.h"
+#include "ASlider.h"
+#include "Grabber.h"
 
 IMPLEMENT_CLASS(MixerToolBar, ToolBar);
 

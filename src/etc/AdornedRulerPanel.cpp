@@ -50,9 +50,9 @@
 #include "toolbars/ToolBar.h"
 #include "track/Scrubbing.h"
 #include "track/TrackView.h"
-#include "widgets/AButton.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/Grabber.h"
+#include "AButton.h"
+#include "AudacityMessageBox.h"
+#include "Grabber.h"
 
 #include <wx/dcclient.h>
 #include <wx/menu.h>

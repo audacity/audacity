@@ -54,15 +54,15 @@
 
 #include "AllThemeResources.h"
 
-#include "widgets/FileDialog/FileDialog.h"
+#include "FileDialog.h"
 #include "FileNames.h"
 #include "import/Import.h"
-#include "widgets/ErrorDialog.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/HelpSystem.h"
+#include "ErrorDialog.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 #define MacrosListID       7001

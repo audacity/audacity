@@ -77,7 +77,7 @@ can't be.
 #include "Prefs.h"
 #include "ImageManipulation.h"
 #include "Internat.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 // JKC: First get the MAC specific images.
 // As we've disabled USE_AQUA_THEME, we need to name each file we use.

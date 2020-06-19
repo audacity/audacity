@@ -58,13 +58,13 @@
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 
-#include "widgets/FileDialog/FileDialog.h"
+#include "FileDialog.h"
 
 #include "FileFormats.h"
 #include "Mix.h"
 #include "Tags.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 
 #include "Export.h"
 

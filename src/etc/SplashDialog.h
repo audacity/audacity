@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_SPLASH_DLG__
 #define __AUDACITY_SPLASH_DLG__
 
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 class wxBitmap;
 class ShuttleGui;

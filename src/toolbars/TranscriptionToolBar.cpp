@@ -43,8 +43,8 @@
 #include "Envelope.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "widgets/AButton.h"
-#include "widgets/ASlider.h"
+#include "AButton.h"
+#include "ASlider.h"
 #include "track/Scrubbing.h"
 #include "Prefs.h"
 

@@ -24,8 +24,8 @@
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
 #include "import/ImportRaw.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/FileHistory.h"
+#include "AudacityMessageBox.h"
+#include "FileHistory.h"
 
 #ifdef USE_MIDI
 #include "import/ImportMIDI.h"

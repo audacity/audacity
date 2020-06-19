@@ -22,7 +22,7 @@
 #include "FileNames.h"
 #include "Internat.h"
 #include "prefs/GUIPrefs.h"
-#include "widgets/ErrorDialog.h"
+#include "ErrorDialog.h"
 
 namespace CrashReport {
 

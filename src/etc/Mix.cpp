@@ -37,7 +37,7 @@
 #include "TimeTrack.h"
 #include "float_cast.h"
 
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 //TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
 void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,

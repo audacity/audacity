@@ -44,7 +44,7 @@
 #include "ShuttleGui.h"
 #include "Theme.h"
 #include "float_cast.h"
-#include "widgets/Ruler.h"
+#include "Ruler.h"
 
 #include "WaveTrack.h"
 #include "AllThemeResources.h"

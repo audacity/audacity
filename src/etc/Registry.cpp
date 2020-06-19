@@ -14,7 +14,7 @@ Paul Licameli split from Menus.cpp
 
 #include <wx/log.h>
 
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 namespace {
 
