@@ -54,20 +54,20 @@ array of Ruler::Label.
 
 *//******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Ruler.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <wx/dcclient.h>
 #include <wx/dcscreen.h>
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
-#include "../Envelope.h"
-#include "../NumberScale.h"
-#include "../Theme.h"
-#include "../ViewInfo.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
+#include "Envelope.h"
+#include "NumberScale.h"
+#include "Theme.h"
+#include "ViewInfo.h"
 
 using std::min;
 using std::max;

@@ -15,7 +15,7 @@
 // headers
 // ----------------------------------------------------------------------------
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "numformatter.h"
 
 // For compilers that support precompilation, includes "wx.h".
@@ -33,7 +33,7 @@
 #endif
 
 
-#include "../Internat.h"
+#include "Internat.h"
 #include <wx/intl.h>
 
 #include <locale.h> // for setlocale and LC_ALL

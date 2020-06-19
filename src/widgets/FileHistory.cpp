@@ -13,15 +13,15 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "FileHistory.h"
 
 #include <wx/defs.h>
 #include <wx/fileconf.h>
 #include <wx/menu.h>
 
-#include "../Internat.h"
-#include "../Prefs.h"
+#include "Internat.h"
+#include "Prefs.h"
 
 #include <mutex>
 

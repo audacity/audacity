@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_WARNING__
 #define __AUDACITY_WARNING__
 
-#include "../Audacity.h"
+#include "Audacity.h"
 
 #include <wx/defs.h>
 class wxString;
