@@ -14,8 +14,6 @@
 #ifndef __AUDACITY_EDIT_TOOLBAR__
 #define __AUDACITY_EDIT_TOOLBAR__
 
-#include "../Experimental.h"
-
 #include <wx/defs.h>
 
 #include "ToolBar.h"

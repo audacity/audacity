@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_EFFECTMANAGER__
 #define __AUDACITY_EFFECTMANAGER__
 
-#include "../Experimental.h"
-
 #include <memory>
 #include <vector>
 

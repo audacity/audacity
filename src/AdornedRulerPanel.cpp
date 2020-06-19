@@ -21,7 +21,7 @@
 #include "Audacity.h"
 #include "AdornedRulerPanel.h"
 
-#include "Experimental.h"
+
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/tooltip.h>

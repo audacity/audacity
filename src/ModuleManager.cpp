@@ -22,7 +22,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "ModuleManager.h"
 #include "audacity/ModuleInterface.h"
 
-#include "Experimental.h"
+
 
 #include <wx/dynlib.h>
 #include <wx/log.h>

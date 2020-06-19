@@ -10,7 +10,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectWindow.h"
 
-#include "Experimental.h"
+
 
 #include "AllThemeResources.h"
 #include "Menus.h"

@@ -10,8 +10,6 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectFileManager.h"
 
-#include "Experimental.h"
-
 #include <wx/crt.h> // for wxPrintf
 
 #if defined(__WXGTK__)

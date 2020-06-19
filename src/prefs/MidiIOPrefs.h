@@ -9,8 +9,6 @@
 
 **********************************************************************/
 
-#include "../Experimental.h"
-
 class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;

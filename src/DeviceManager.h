@@ -18,7 +18,7 @@
 #ifndef __AUDACITY_DEVICEMANAGER__
 #define __AUDACITY_DEVICEMANAGER__
 
-#include "Experimental.h"
+
 
 #include <chrono>
 #include <vector>
