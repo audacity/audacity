@@ -11,9 +11,9 @@ Paul Licameli
 #ifndef __AUDACITY_TIMESHIFT_HANDLE__
 #define __AUDACITY_TIMESHIFT_HANDLE__
 
-#include "../UIHandle.h"
+#include "UIHandle.h"
 
-#include "../Snap.h"
+#include "Snap.h"
 
 class ViewInfo;
 class WaveClip;

@@ -12,31 +12,31 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "CutlineHandle.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <numeric>
 #include <wx/dc.h>
 #include <wx/graphics.h>
 
-#include "../AColor.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "AColor.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 
 #include "images/Cursors.h"
-#include "../AllThemeResources.h"
+#include "AllThemeResources.h"
 
-#include "../HitTestResult.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
-#include "../TrackArtist.h"
-#include "../TrackPanelDrawingContext.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../ViewInfo.h"
-#include "../prefs/TracksPrefs.h"
+#include "HitTestResult.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
+#include "TrackArtist.h"
+#include "TrackPanelDrawingContext.h"
+#include "TrackPanelMouseEvent.h"
+#include "ViewInfo.h"
+#include "prefs/TracksPrefs.h"
 
-#include "../track/TimeShiftHandle.h"
-#include "../track/ButtonHandle.h"
-#include "../TrackInfo.h"
+#include "track/TimeShiftHandle.h"
+#include "track/ButtonHandle.h"
+#include "TrackInfo.h"
 
 namespace {
 

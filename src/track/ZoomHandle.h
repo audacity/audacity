@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_ZOOM_HANDLE__
 #define __AUDACITY_ZOOM_HANDLE__
 
-#include "../UIHandle.h"
+#include "UIHandle.h"
 
 class wxMouseState;
 

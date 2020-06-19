@@ -9,26 +9,26 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "TimeTrackView.h"
-#include "../TimeTrack.h"
+#include "TimeTrack.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include "TimeTrackControls.h"
 
 #include "TimeTrackVRulerControls.h"
-#include "../AColor.h"
-#include "../AllThemeResources.h"
-#include "../Envelope.h"
-#include "../EnvelopeEditor.h"
-#include "../HitTestResult.h"
-#include "../Theme.h"
-#include "../TrackArtist.h"
-#include "../TrackPanelDrawingContext.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../ViewInfo.h"
-#include "../widgets/Ruler.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
+#include "Envelope.h"
+#include "EnvelopeEditor.h"
+#include "HitTestResult.h"
+#include "Theme.h"
+#include "TrackArtist.h"
+#include "TrackPanelDrawingContext.h"
+#include "TrackPanelMouseEvent.h"
+#include "ViewInfo.h"
+#include "widgets/Ruler.h"
 
-#include "../track/EnvelopeHandle.h"
+#include "track/EnvelopeHandle.h"
 
 #include <wx/dc.h>
 

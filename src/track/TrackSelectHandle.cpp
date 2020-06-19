@@ -8,18 +8,18 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "TrackSelectHandle.h"
 
 #include "TrackView.h"
-#include "../Project.h"
-#include "../ProjectAudioIO.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
-#include "../SelectUtilities.h"
-#include "../TrackPanel.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../WaveTrack.h"
+#include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
+#include "SelectUtilities.h"
+#include "TrackPanel.h"
+#include "TrackPanelMouseEvent.h"
+#include "WaveTrack.h"
 
 #include <wx/cursor.h>
 #include <wx/translation.h>

@@ -8,19 +8,19 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "PlayIndicatorOverlay.h"
 
-#include "../AColor.h"
-#include "../AdornedRulerPanel.h"
-#include "../AudioIO.h"
-#include "../Project.h"
-#include "../ProjectAudioIO.h"
-#include "../ProjectAudioManager.h"
-#include "../ProjectWindow.h"
-#include "../Track.h"
-#include "../TrackPanel.h"
-#include "../ViewInfo.h"
+#include "AColor.h"
+#include "AdornedRulerPanel.h"
+#include "AudioIO.h"
+#include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
+#include "ProjectWindow.h"
+#include "Track.h"
+#include "TrackPanel.h"
+#include "ViewInfo.h"
 #include "Scrubbing.h"
 #include "TrackView.h"
 

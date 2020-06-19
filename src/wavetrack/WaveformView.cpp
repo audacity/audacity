@@ -8,30 +8,30 @@ Paul Licameli split from WaveTrackView.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "WaveformView.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include "WaveformVRulerControls.h"
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
 
 #include "SampleHandle.h"
-#include "../track/EnvelopeHandle.h"
-#include "../track/TimeShiftHandle.h"
-#include "../AColor.h"
-#include "../Envelope.h"
-#include "../EnvelopeEditor.h"
-#include "../ProjectSettings.h"
-#include "../SelectedRegion.h"
-#include "../TrackArtist.h"
-#include "../TrackPanelDrawingContext.h"
-#include "../TrackPanelMouseEvent.h"
-#include "../ViewInfo.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
-#include "../prefs/WaveformSettings.h"
+#include "track/EnvelopeHandle.h"
+#include "track/TimeShiftHandle.h"
+#include "AColor.h"
+#include "Envelope.h"
+#include "EnvelopeEditor.h"
+#include "ProjectSettings.h"
+#include "SelectedRegion.h"
+#include "TrackArtist.h"
+#include "TrackPanelDrawingContext.h"
+#include "TrackPanelMouseEvent.h"
+#include "ViewInfo.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "prefs/WaveformSettings.h"
 
 #include <wx/graphics.h>
 #include <wx/dc.h>
@@ -1051,10 +1051,10 @@ static const WaveTrackSubViews::RegisteredFactory key{
 
 #include <mutex> // for std::call_once
 #include "WaveTrackControls.h"
-#include "../widgets/PopupMenuTable.h"
-#include "../ProjectAudioIO.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
+#include "widgets/PopupMenuTable.h"
+#include "ProjectAudioIO.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
 
 //=============================================================================
 // Table class for a sub-menu

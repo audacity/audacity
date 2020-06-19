@@ -8,18 +8,18 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "TimeTrackVRulerControls.h"
 
-#include "../HitTestResult.h"
+#include "HitTestResult.h"
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
-#include "../Theme.h"
-#include "../TimeTrack.h"
-#include "../TrackArtist.h"
-#include "../TrackPanelDrawingContext.h"
-#include "../widgets/Ruler.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
+#include "Theme.h"
+#include "TimeTrack.h"
+#include "TrackArtist.h"
+#include "TrackPanelDrawingContext.h"
+#include "widgets/Ruler.h"
 
 TimeTrackVRulerControls::~TimeTrackVRulerControls()
 {

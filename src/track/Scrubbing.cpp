@@ -8,27 +8,27 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Scrubbing.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <functional>
 
-#include "../AudioIO.h"
-#include "../CommonCommandFlags.h"
-#include "../Project.h"
-#include "../ProjectAudioIO.h"
-#include "../ProjectAudioManager.h"
-#include "../ProjectHistory.h"
-#include "../ProjectSettings.h"
-#include "../ProjectStatus.h"
-#include "../Track.h"
-#include "../ViewInfo.h"
-#include "../WaveTrack.h"
-#include "../prefs/PlaybackPrefs.h"
-#include "../prefs/TracksPrefs.h"
-#include "../toolbars/ToolManager.h"
+#include "AudioIO.h"
+#include "CommonCommandFlags.h"
+#include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
+#include "ProjectHistory.h"
+#include "ProjectSettings.h"
+#include "ProjectStatus.h"
+#include "Track.h"
+#include "ViewInfo.h"
+#include "WaveTrack.h"
+#include "prefs/PlaybackPrefs.h"
+#include "prefs/TracksPrefs.h"
+#include "toolbars/ToolManager.h"
 
 #undef USE_TRANSCRIPTION_TOOLBAR
 

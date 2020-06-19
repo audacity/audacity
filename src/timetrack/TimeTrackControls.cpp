@@ -8,15 +8,15 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "TimeTrackControls.h"
 
-#include "../HitTestResult.h"
-#include "../Project.h"
-#include "../ProjectHistory.h"
-#include "../RefreshCode.h"
-#include "../TimeTrack.h"
-#include "../widgets/PopupMenuTable.h"
+#include "HitTestResult.h"
+#include "Project.h"
+#include "ProjectHistory.h"
+#include "RefreshCode.h"
+#include "TimeTrack.h"
+#include "widgets/PopupMenuTable.h"
 #include <wx/numdlg.h>
 
 TimeTrackControls::~TimeTrackControls()
@@ -194,7 +194,7 @@ template<> template<> auto DoGetTimeTrackControls::Implementation() -> Function 
 }
 static DoGetTimeTrackControls registerDoGetTimeTrackControls;
 
-#include "../track/TrackView.h"
+#include "track/TrackView.h"
 
 using GetDefaultTimeTrackHeight = GetDefaultTrackHeight::Override< TimeTrack >;
 template<> template<>

@@ -20,11 +20,11 @@
 #include <wx/frame.h> // to inherit
 #include <wx/timer.h> // member variable
 
-#include "../ClientData.h"
+#include "ClientData.h"
 #include "ToolDock.h"
 
-#include "../commands/CommandFunctors.h"
-#include "../commands/CommandManager.h"
+#include "commands/CommandFunctors.h"
+#include "commands/CommandManager.h"
 
 
 class wxCommandEvent;

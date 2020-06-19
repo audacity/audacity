@@ -13,15 +13,15 @@
 #ifndef __AUDACITY_TOOLBAR__
 #define __AUDACITY_TOOLBAR__
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <functional>
 #include <vector>
 #include <wx/defs.h>
 
-#include "../Prefs.h"
-#include "../Theme.h"
-#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "Prefs.h"
+#include "Theme.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 #include <wx/windowptr.h>
 
 class wxBoxSizer;

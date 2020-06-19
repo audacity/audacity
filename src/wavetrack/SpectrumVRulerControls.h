@@ -11,7 +11,7 @@ Paul Licameli split from WaveTrackVRulerControls.h
 #ifndef __AUDACITY_SPECTRUM_VRULER_CONTROLS__
 #define __AUDACITY_SPECTRUM_VRULER_CONTROLS__
 
-#include "../track/TrackVRulerControls.h" // to inherit
+#include "track/TrackVRulerControls.h" // to inherit
 
 class WaveTrack;
 class SpectrumVZoomHandle;

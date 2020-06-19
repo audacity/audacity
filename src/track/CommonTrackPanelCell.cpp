@@ -12,9 +12,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/cursor.h>
 
-#include "../HitTestResult.h"
-#include "../RefreshCode.h"
-#include "../TrackPanelMouseEvent.h"
+#include "HitTestResult.h"
+#include "RefreshCode.h"
+#include "TrackPanelMouseEvent.h"
 
 namespace {
    CommonTrackPanelCell::Hook &GetHook()

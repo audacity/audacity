@@ -13,7 +13,7 @@ Paul Licameli
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "WaveformSettings.h"
 
 #include "GUISettings.h"
@@ -22,7 +22,7 @@ Paul Licameli
 #include <algorithm>
 #include <wx/intl.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 
 
 WaveformSettings::Globals::Globals()
