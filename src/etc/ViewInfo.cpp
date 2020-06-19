@@ -17,9 +17,9 @@ Paul Licameli
 #include "AudioIOBase.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "xml/XMLWriter.h"
+#include "XMLWriter.h"
 #include "prefs/TracksBehaviorsPrefs.h"
-#include "xml/XMLWriter.h"
+#include "XMLWriter.h"
 
 wxDEFINE_EVENT( EVT_SELECTED_REGION_CHANGE, SelectedRegionEvent );
 

@@ -31,7 +31,7 @@
 #include <wx/log.h>
 
 #include "FileFormats.h"
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include "sndfile.h"
 

@@ -105,7 +105,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "widgets/Ruler.h"
-#include "xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 #include "AllThemeResources.h"
 #include "float_cast.h"
 

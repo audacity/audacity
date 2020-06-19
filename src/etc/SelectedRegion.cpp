@@ -12,7 +12,7 @@ Paul Licameli
 
 #include "Experimental.h"
 
-#include "xml/XMLWriter.h"
+#include "XMLWriter.h"
 
 const wxChar *SelectedRegion::sDefaultT0Name = wxT("selStart");
 const wxChar *SelectedRegion::sDefaultT1Name = wxT("selEnd");

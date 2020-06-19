@@ -10,6 +10,7 @@ set( CMAKE_ENABLE_EXPORTS ON )
 # add sub-directory libraries to the build
 foreach( SUBDIRECTORY
    etc
+   xml
 )
    add_subdirectory( "${SUBDIRECTORY}" )
 endforeach()
@@ -716,15 +717,6 @@ list( APPEND SOURCES
       widgets/valnum.h
       widgets/wxPanelWrapper.cpp
       widgets/wxPanelWrapper.h
-
-      # XML handling
-      xml/XMLFileReader.cpp
-      xml/XMLFileReader.h
-      xml/XMLTagHandler.cpp
-      xml/XMLTagHandler.h
-      xml/XMLWriter.cpp
-      xml/XMLWriter.h
-      xml/audacityproject.dtd
 )
 
 #
@@ -755,7 +747,6 @@ list( APPEND LIBRARIES
    PRIVATE
       ${CMAKE_REQUIRED_LIBRARIES}
       wxWidgets
-      expat
       lame
       libsndfile
       portaudio-v19

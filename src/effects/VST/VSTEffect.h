@@ -17,7 +17,7 @@
 #include "audacity/PluginInterface.h"
 
 #include "SampleFormat.h"
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 class wxSizerItem;
 class wxSlider;

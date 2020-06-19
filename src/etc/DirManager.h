@@ -12,7 +12,7 @@
 #define _DIRMANAGER_
 
 #include "audacity/Types.h"
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include <functional>
 #include <memory>

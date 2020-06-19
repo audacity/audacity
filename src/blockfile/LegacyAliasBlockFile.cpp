@@ -19,7 +19,7 @@
 #include "LegacyBlockFile.h"
 #include "DirManager.h"
 #include "FileFormats.h"
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 LegacyAliasBlockFile::LegacyAliasBlockFile(wxFileNameWrapper &&fileName,
                                            wxFileNameWrapper &&aliasedFileName,

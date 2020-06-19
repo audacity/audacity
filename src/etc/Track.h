@@ -22,7 +22,7 @@
 
 #include "ClientData.h"
 #include "SampleFormat.h"
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #ifdef __WXMSW__
 #pragma warning(disable:4284)
