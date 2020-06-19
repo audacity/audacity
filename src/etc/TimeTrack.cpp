@@ -22,7 +22,7 @@
 #include <wx/wxcrtvararg.h>
 #include <wx/dc.h>
 #include <wx/intl.h>
-#include "widgets/Ruler.h"
+#include "Ruler.h"
 #include "Envelope.h"
 #include "Project.h"
 #include "ProjectSettings.h"

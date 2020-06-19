@@ -29,8 +29,8 @@ capture the more lengthy output from some commands.
 #include <wx/string.h>
 #include <wx/textctrl.h>
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/wxPanelWrapper.h"
+#include "AudacityMessageBox.h"
+#include "wxPanelWrapper.h"
 
 #include <locale>
 #include <sstream>

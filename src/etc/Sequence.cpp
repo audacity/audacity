@@ -47,7 +47,7 @@
 
 #include "InconsistencyException.h"
 
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 size_t Sequence::sMaxDiskBlockSize = 1048576;
 

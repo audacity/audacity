@@ -48,7 +48,7 @@
 
 #include "sndfile.h"
 
-#include "widgets/FileDialog/FileDialog.h"
+#include "FileDialog.h"
 
 #include "DirManager.h"
 #include "FileFormats.h"
@@ -63,14 +63,14 @@
 #include "Tags.h"
 #include "TimeTrack.h"
 #include "WaveTrack.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/Warning.h"
-#include "widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "Warning.h"
+#include "HelpSystem.h"
 #include "AColor.h"
 #include "Dependencies.h"
 #include "FileNames.h"
-#include "widgets/HelpSystem.h"
-#include "widgets/ProgressDialog.h"
+#include "HelpSystem.h"
+#include "ProgressDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin

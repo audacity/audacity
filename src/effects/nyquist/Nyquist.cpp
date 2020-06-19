@@ -67,18 +67,18 @@ effects from this one class.
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "widgets/valnum.h"
-#include "widgets/AudacityMessageBox.h"
+#include "valnum.h"
+#include "AudacityMessageBox.h"
 #include "Prefs.h"
 #include "wxFileNameWrapper.h"
 #include "prefs/GUIPrefs.h"
 #include "prefs/WaveformSettings.h"
 #include "wavetrack/WaveTrackView.h"
 #include "wavetrack/WaveTrackViewConstants.h"
-#include "widgets/NumericTextCtrl.h"
-#include "widgets/ProgressDialog.h"
+#include "NumericTextCtrl.h"
+#include "ProgressDialog.h"
 
-#include "widgets/FileDialog/FileDialog.h"
+#include "FileDialog/FileDialog.h"
 
 #ifndef nyx_returns_start_and_end_time
 #error You need to update lib-src/libnyquist

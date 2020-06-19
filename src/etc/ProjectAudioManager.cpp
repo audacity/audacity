@@ -36,10 +36,10 @@ Paul Licameli split from ProjectManager.cpp
 #include "prefs/TracksPrefs.h"
 #include "track/Scrubbing.h"
 #include "track/TrackView.h"
-#include "widgets/ErrorDialog.h"
-#include "widgets/MeterPanelBase.h"
-#include "widgets/Warning.h"
-#include "widgets/AudacityMessageBox.h"
+#include "ErrorDialog.h"
+#include "MeterPanelBase.h"
+#include "Warning.h"
+#include "AudacityMessageBox.h"
 
 
 static AudacityProject::AttachedObjects::RegisteredFactory

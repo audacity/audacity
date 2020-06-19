@@ -24,9 +24,6 @@ do_directory( TYPE STATIC
       TimeTrack.h
       UndoManager.h
       WaveTrack.h
-      widgets/ASlider.h
-      widgets/ProgressDialog.h
-      widgets/Ruler.h
 
    SOURCES
       XMLFileReader.cpp

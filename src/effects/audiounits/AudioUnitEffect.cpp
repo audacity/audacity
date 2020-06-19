@@ -42,9 +42,9 @@
 #include <wx/tokenzr.h>
 
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/valnum.h"
-#include "widgets/wxPanelWrapper.h"
+#include "AudacityMessageBox.h"
+#include "valnum.h"
+#include "wxPanelWrapper.h"
 
 //
 // When a plug-ins state is saved to the settings file (as a preset),

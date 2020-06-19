@@ -35,7 +35,7 @@
 #include "FileNames.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 enum {
    TempDirID = 1000,

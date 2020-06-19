@@ -49,8 +49,8 @@
 #include "UndoManager.h"
 #include "WaveTrack.h"
 
-#include "widgets/AButton.h"
-#include "widgets/Meter.h"
+#include "AButton.h"
+#include "Meter.h"
 
 
 #include "images/MusicalInstruments.h"

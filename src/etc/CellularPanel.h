@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_CELLULAR_PANEL__
 #define __AUDACITY_CELLULAR_PANEL__
 
-#include "widgets/OverlayPanel.h" // to inherit
+#include "OverlayPanel.h" // to inherit
 
 class ViewInfo;
 class AudacityProject;

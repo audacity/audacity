@@ -22,7 +22,7 @@ information.
 #include <wx/intl.h>
 #include "sndfile.h"
 #include "Internat.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "Prefs.h"
 
 #ifndef SNDFILE_1

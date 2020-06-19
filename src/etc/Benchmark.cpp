@@ -44,8 +44,8 @@ of the BlockFile system.
 #include "ViewInfo.h"
 
 #include "FileNames.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/wxPanelWrapper.h"
+#include "AudacityMessageBox.h"
+#include "wxPanelWrapper.h"
 
 class BenchmarkDialog final : public wxDialogWrapper
 {

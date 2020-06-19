@@ -38,8 +38,8 @@
 #include "UndoManager.h"
 #include "commands/CommandManager.h"
 #include "toolbars/ToolManager.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
+#include "AudacityMessageBox.h"
+#include "ErrorDialog.h"
 
 #include <unordered_set>
 

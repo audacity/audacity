@@ -55,7 +55,7 @@
 #include "ProjectWindow.h"
 #include "track/Scrubbing.h"
 
-#include "widgets/AButton.h"
+#include "AButton.h"
 
 
 IMPLEMENT_CLASS(ToolsToolBar, ToolBar);

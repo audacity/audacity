@@ -22,7 +22,7 @@
 #include <wx/string.h>
 
 #include "ShuttleGui.h"
-#include "widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 
 BEGIN_EVENT_TABLE(TimeDialog, wxDialogWrapper)
    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, TimeDialog::OnUpdate)

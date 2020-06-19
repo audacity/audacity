@@ -59,8 +59,8 @@ AliasedFile s.
 #include "WaveTrack.h"
 #include "WaveClip.h"
 #include "prefs/QualityPrefs.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #include <unordered_map>
 

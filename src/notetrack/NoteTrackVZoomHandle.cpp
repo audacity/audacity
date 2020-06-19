@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "RefreshCode.h"
 #include "TrackArtist.h"
 #include "TrackPanelMouseEvent.h"
-#include "widgets/PopupMenuTable.h"
+#include "PopupMenuTable.h"
 #include "images/Cursors.h"
 #include "Prefs.h"
 

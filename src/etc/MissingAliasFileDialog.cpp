@@ -13,7 +13,7 @@
 #include "BlockFile.h"
 #include "DirManager.h"
 #include "Project.h"
-#include "widgets/ErrorDialog.h"
+#include "ErrorDialog.h"
 
 namespace {
    using wxDialogRef = wxWeakRef< wxDialog >;

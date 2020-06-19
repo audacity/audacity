@@ -95,7 +95,7 @@
 #include "FileNames.h"
 #include "Envelope.h"
 #include "EnvelopeEditor.h"
-#include "widgets/ErrorDialog.h"
+#include "ErrorDialog.h"
 #include "FFT.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -104,16 +104,16 @@
 #include "WaveClip.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "widgets/Ruler.h"
+#include "Ruler.h"
 #include "XMLFileReader.h"
 #include "AllThemeResources.h"
 #include "float_cast.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
-#include "widgets/FileDialog/FileDialog.h"
+#include "FileDialog/FileDialog.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "Equalization48x.h"

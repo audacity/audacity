@@ -31,7 +31,7 @@ and sample size to help you importing data of an unknown format.
 #include "UserException.h"
 #include "WaveTrack.h"
 #include "prefs/QualityPrefs.h"
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #include <cmath>
 #include <cstdio>

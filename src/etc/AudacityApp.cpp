@@ -78,7 +78,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "DirManager.h"
 #include "commands/CommandHandler.h"
 #include "commands/AppCommandEvent.h"
-#include "widgets/ASlider.h"
+#include "ASlider.h"
 #include "FFmpeg.h"
 //#include "LangChoice.h"
 #include "Languages.h"
@@ -106,11 +106,11 @@ It handles initialization and termination by subclassing wxApp.
 #include "FFT.h"
 #include "BlockFile.h"
 #include "ondemand/ODManager.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "prefs/DirectoriesPrefs.h"
 #include "prefs/GUIPrefs.h"
 #include "track/Scrubbing.h"
-#include "widgets/FileHistory.h"
+#include "FileHistory.h"
 
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
 #include "prefs/KeyConfigPrefs.h"

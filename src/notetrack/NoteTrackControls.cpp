@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
 #include "NoteTrack.h"
-#include "widgets/PopupMenuTable.h"
+#include "PopupMenuTable.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "RefreshCode.h"
@@ -147,7 +147,7 @@ PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
 }
 
 // drawing related
-#include "widgets/ASlider.h"
+#include "ASlider.h"
 #include "TrackInfo.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"

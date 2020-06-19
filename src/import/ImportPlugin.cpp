@@ -11,7 +11,7 @@ Paul Licameli split from Import.cpp
 #include "ImportPlugin.h"
 
 #include <wx/filename.h>
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 ImportFileHandle::ImportFileHandle(const FilePath & filename)
 :  mFilename(filename)

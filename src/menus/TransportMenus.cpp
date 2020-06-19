@@ -30,8 +30,8 @@
 #include "commands/CommandManager.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
+#include "AudacityMessageBox.h"
+#include "ErrorDialog.h"
 
 #include <float.h>
 

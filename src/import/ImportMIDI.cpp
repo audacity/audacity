@@ -29,8 +29,8 @@
 #include "ProjectHistory.h"
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/FileHistory.h"
+#include "AudacityMessageBox.h"
+#include "FileHistory.h"
 
 // Given an existing project, try to import into it, return true on success
 bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )

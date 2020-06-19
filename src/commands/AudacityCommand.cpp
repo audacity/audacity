@@ -39,9 +39,9 @@ ShuttleGui.
 
 #include "Shuttle.h"
 #include "ShuttleGui.h"
-#include "widgets/ProgressDialog.h"
-#include "widgets/HelpSystem.h"
-#include "widgets/AudacityMessageBox.h"
+#include "ProgressDialog.h"
+#include "HelpSystem.h"
+#include "AudacityMessageBox.h"
 
 #include <unordered_map>
 

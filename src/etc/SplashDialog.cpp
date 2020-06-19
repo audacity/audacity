@@ -38,8 +38,8 @@ most commonly asked questions about Audacity.
 #include "FileNames.h"
 #include "Project.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 
 #include "AllThemeResources.h"
 #include "Prefs.h"

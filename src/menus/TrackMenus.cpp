@@ -31,9 +31,9 @@
 #include "effects/EffectUI.h"
 #include "prefs/QualityPrefs.h"
 #include "wavetrack/WaveTrackControls.h"
-#include "widgets/ASlider.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ProgressDialog.h"
+#include "ASlider.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #include <wx/combobox.h>
 

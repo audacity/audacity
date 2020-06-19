@@ -114,11 +114,11 @@ for registering for changes.
 #include <wx/stattext.h>
 #include <wx/bmpbuttn.h>
 #include "audacity/ComponentInterface.h"
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 #include "AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 ShuttleGuiBase::ShuttleGuiBase(

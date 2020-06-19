@@ -29,8 +29,8 @@ Paul Licameli split from AudacityProject.cpp
 #include "toolbars/ToolManager.h"
 #include "track/Scrubbing.h"
 #include "track/TrackView.h"
-#include "widgets/wxPanelWrapper.h"
-#include "widgets/WindowAccessible.h"
+#include "wxPanelWrapper.h"
+#include "WindowAccessible.h"
 
 #include <wx/display.h>
 #include <wx/scrolbar.h>

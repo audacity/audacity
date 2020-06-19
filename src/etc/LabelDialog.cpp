@@ -36,10 +36,10 @@
 #include "ProjectWindow.h"
 #include "ViewInfo.h"
 #include "labeltrack/LabelTrackView.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
-#include "widgets/Grid.h"
-#include "widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "ErrorDialog.h"
+#include "Grid.h"
+#include "HelpSystem.h"
 
 #include "FileNames.h"
 #include <limits>

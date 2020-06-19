@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_SOUND_ACTIVATED_RECORD__
 #define __AUDACITY_SOUND_ACTIVATED_RECORD__
 
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 class ShuttleGui;
 

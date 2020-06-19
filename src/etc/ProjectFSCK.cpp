@@ -17,13 +17,13 @@
 
 #include "BlockFile.h"
 #include "DirManager.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "Internat.h"
 #include "MemoryX.h"
 #include "MissingAliasFileDialog.h"
 #include "ondemand/ODManager.h"
-#include "widgets/MultiDialog.h"
-#include "widgets/ProgressDialog.h"
+#include "MultiDialog.h"
+#include "ProgressDialog.h"
 
 // Check the BlockFiles against the disk state.
 // Missing Blockfile data can be regenerated if possible or replaced with silence.

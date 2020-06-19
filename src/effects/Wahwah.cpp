@@ -31,7 +31,7 @@
 
 #include "Shuttle.h"
 #include "ShuttleGui.h"
-#include "widgets/valnum.h"
+#include "valnum.h"
 
 enum
 {

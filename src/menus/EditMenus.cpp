@@ -24,7 +24,7 @@
 #include "export/Export.h"
 #include "prefs/PrefsDialog.h"
 #include "labeltrack/LabelTrackView.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 // private helper classes and functions
 namespace {

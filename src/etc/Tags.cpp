@@ -48,9 +48,9 @@
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
 #include "ShuttleGui.h"
-#include "widgets/Grid.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/HelpSystem.h"
+#include "Grid.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 #include "XMLFileReader.h"
 
 #include <wx/button.h>

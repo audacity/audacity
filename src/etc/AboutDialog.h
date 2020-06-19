@@ -12,7 +12,7 @@
 #define __AUDACITY_ABOUT_DLG__
 
 #include <vector>
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 class wxStaticBitmap;
 class wxTextOutputStream;

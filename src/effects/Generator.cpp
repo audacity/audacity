@@ -24,7 +24,7 @@
 
 #include "TimeWarper.h"
 
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 bool Generator::Process()
 {

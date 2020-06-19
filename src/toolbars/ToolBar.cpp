@@ -53,8 +53,8 @@ in which buttons can be placed.
 #include "ImageManipulation.h"
 #include "Project.h"
 #include "commands/CommandManager.h"
-#include "widgets/AButton.h"
-#include "widgets/Grabber.h"
+#include "AButton.h"
+#include "Grabber.h"
 #include "Prefs.h"
 
 ////////////////////////////////////////////////////////////

@@ -61,10 +61,10 @@ a graph for EffectScienFilter.
 #include "ShuttleGui.h"
 #include "Theme.h"
 #include "WaveTrack.h"
-#include "widgets/valnum.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/Ruler.h"
-#include "widgets/WindowAccessible.h"
+#include "valnum.h"
+#include "AudacityMessageBox.h"
+#include "Ruler.h"
+#include "WindowAccessible.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795
