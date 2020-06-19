@@ -16,8 +16,9 @@ list( APPEND SOURCES
 )
 
 list( APPEND INCLUDES
-   PUBLIC
-      ${TARGET_ROOT}/include
+   # redirect inclusions to our wrapper header
+   INTERFACE
+      ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )

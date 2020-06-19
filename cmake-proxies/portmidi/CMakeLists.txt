@@ -41,10 +41,11 @@ list( APPEND SOURCES
 )
 
 list( APPEND INCLUDES
-   PRIVATE
+   PUBLIC
       ${TARGET_ROOT}/pm_common
       ${TARGET_ROOT}/porttime
 
+   PRIVATE
       $<$<PLATFORM_ID:Windows>:
          ${TARGET_ROOT}/pm_win
       >
