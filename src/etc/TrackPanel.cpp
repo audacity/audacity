@@ -78,8 +78,8 @@ is time to refresh some aspect of the screen.
 #include "TrackPanelResizerCell.h"
 #include "WaveTrack.h"
 
-#include "ondemand/ODManager.h"
-#include "ondemand/ODTask.h"
+#include "ODManager.h"
+#include "ODTask.h"
 
 #include "TrackControls.h"
 #include "TrackView.h"

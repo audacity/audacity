@@ -12,6 +12,7 @@ foreach( SUBDIRECTORY
    etc
    labeltrack
    notetrack
+   ondemand
    playabletrack
    prefs
    timetrack
@@ -437,25 +438,6 @@ list( APPEND SOURCES
       menus/TransportMenus.cpp
       menus/ViewMenus.cpp
       menus/WindowMenus.cpp
-
-      # On demand loading
-
-      ondemand/ODComputeSummaryTask.cpp
-      ondemand/ODComputeSummaryTask.h
-      ondemand/ODDecodeFFmpegTask.cpp
-      ondemand/ODDecodeFFmpegTask.h
-      ondemand/ODDecodeFlacTask.cpp
-      ondemand/ODDecodeFlacTask.h
-      ondemand/ODDecodeTask.cpp
-      ondemand/ODDecodeTask.h
-      ondemand/ODManager.cpp
-      ondemand/ODManager.h
-      ondemand/ODTask.cpp
-      ondemand/ODTask.h
-      ondemand/ODTaskThread.cpp
-      ondemand/ODTaskThread.h
-      ondemand/ODWaveTrackTaskQueue.cpp
-      ondemand/ODWaveTrackTaskQueue.h
 )
 
 #
@@ -757,6 +739,7 @@ target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOU
 target_include_directories( ${TARGET} PRIVATE
    etc
    labeltrack
+   ondemand
    playabletrack
    prefs
    toolbars

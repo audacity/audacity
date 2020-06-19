@@ -16,7 +16,7 @@
 
 #include "wxFileNameWrapper.h" // member variable
 
-#include "ondemand/ODTaskThread.h"
+#include "ODTaskThread.h"
 
 #include <functional>
 

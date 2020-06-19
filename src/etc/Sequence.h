@@ -15,7 +15,7 @@
 
 #include "SampleFormat.h"
 #include "XMLTagHandler.h"
-#include "ondemand/ODTaskThread.h"
+#include "ODTaskThread.h"
 
 #include "audacity/Types.h"
 

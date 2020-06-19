@@ -21,7 +21,7 @@
 #include "Internat.h"
 #include "MemoryX.h"
 #include "MissingAliasFileDialog.h"
-#include "ondemand/ODManager.h"
+#include "ODManager.h"
 #include "MultiDialog.h"
 #include "ProgressDialog.h"
 

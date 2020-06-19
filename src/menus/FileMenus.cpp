@@ -31,7 +31,7 @@
 #include "import/ImportMIDI.h"
 #endif // USE_MIDI
 
-#include "ondemand/ODManager.h"
+#include "ODManager.h"
 
 #include <wx/menu.h>
 

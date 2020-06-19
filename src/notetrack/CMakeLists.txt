@@ -1,6 +1,7 @@
 do_directory(
    INCLUDE_PRIVATE
       src/etc
+      src/ondemand
       src/playabletrack
       src/prefs
       src/track

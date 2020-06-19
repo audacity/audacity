@@ -26,14 +26,12 @@ do_directory(
    PRECOMPILE
       AColor.h
       AudioIO.h
-      BlockFile.h
       Diags.h
       FFT.h
       ImageManipulation.h
       Mix.h
       Prefs.h
       Project.h
-      UndoManager.h
       ASlider.h
       ProgressDialog.h
       Ruler.h

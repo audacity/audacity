@@ -17,8 +17,8 @@ Paul Licameli split from ProjectManager.cpp
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "ondemand/ODComputeSummaryTask.h"
-#include "ondemand/ODManager.h"
+#include "ODComputeSummaryTask.h"
+#include "ODManager.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectHistoryKey {
    []( AudacityProject &project ) {

@@ -31,7 +31,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanelMouseEvent.h"
 #include "WaveTrack.h"
 #include "effects/RealtimeEffectManager.h"
-#include "ondemand/ODManager.h"
+#include "ODManager.h"
 #include "PrefsDialog.h"
 #include "ThemePrefs.h"
 #include "AudacityMessageBox.h"
