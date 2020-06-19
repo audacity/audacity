@@ -59,7 +59,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/ErrorDialog.h"
 #include "widgets/FileHistory.h"
 #include "widgets/Warning.h"
-#include "xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileManagerKey{
    []( AudacityProject &parent ){

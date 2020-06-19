@@ -41,7 +41,7 @@ On failure the old version is put back in place.
 #include <wx/textfile.h>
 
 #include "widgets/AudacityMessageBox.h"
-#include "xml/XMLWriter.h"
+#include "XMLWriter.h"
 
 static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
 // may throw

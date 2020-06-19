@@ -1,5 +1,6 @@
 do_directory(
    PRIVATE
+      src/xml
       wxWidgets
       libsndfile
       libsoxr

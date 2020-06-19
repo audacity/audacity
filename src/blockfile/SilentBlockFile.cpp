@@ -13,7 +13,7 @@
 
 #include "FileFormats.h"
 #include "DirManager.h"
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 SilentBlockFile::SilentBlockFile(size_t sampleLen):
 BlockFile{ wxFileNameWrapper{}, sampleLen }

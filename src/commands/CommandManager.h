@@ -27,7 +27,7 @@
 
 #include <vector>
 
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include "audacity/Types.h"
 
