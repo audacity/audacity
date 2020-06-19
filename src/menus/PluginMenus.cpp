@@ -12,7 +12,7 @@
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "ProjectSelectionManager.h"
-#include "toolbars/ToolManager.h"
+#include "ToolManager.h"
 #include "Screenshot.h"
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"

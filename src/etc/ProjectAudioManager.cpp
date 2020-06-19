@@ -32,7 +32,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "TrackPanelAx.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "toolbars/ToolManager.h"
+#include "ToolManager.h"
 #include "prefs/TracksPrefs.h"
 #include "Scrubbing.h"
 #include "TrackView.h"

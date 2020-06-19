@@ -37,7 +37,7 @@
 #include "ProjectSettings.h"
 #include "UndoManager.h"
 #include "commands/CommandManager.h"
-#include "toolbars/ToolManager.h"
+#include "ToolManager.h"
 #include "AudacityMessageBox.h"
 #include "ErrorDialog.h"
 

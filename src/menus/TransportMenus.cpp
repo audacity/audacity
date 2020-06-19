@@ -28,8 +28,8 @@
 #include "ViewInfo.h"
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
-#include "toolbars/ControlToolBar.h"
-#include "toolbars/TranscriptionToolBar.h"
+#include "ControlToolBar.h"
+#include "TranscriptionToolBar.h"
 #include "AudacityMessageBox.h"
 #include "ErrorDialog.h"
 

@@ -12,8 +12,8 @@ Paul Licameli split from ProjectManager.cpp
 #define __AUDACITY_PROJECT_SELECTION_MANAGER__
 
 #include "ClientData.h" // to inherit
-#include "toolbars/SelectionBarListener.h" // to inherit
-#include "toolbars/SpectralSelectionBarListener.h" // to inherit
+#include "SelectionBarListener.h" // to inherit
+#include "SpectralSelectionBarListener.h" // to inherit
 
 class AudacityProject;
 

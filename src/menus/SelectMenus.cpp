@@ -19,7 +19,7 @@
 #include "WaveTrack.h"
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
-#include "toolbars/ControlToolBar.h"
+#include "ControlToolBar.h"
 #include "SelectHandle.h"
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"

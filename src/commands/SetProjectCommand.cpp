@@ -26,7 +26,7 @@
 #include "Shuttle.h"
 #include "ShuttleGui.h"
 #include "CommandContext.h"
-#include "toolbars/SelectionBar.h"
+#include "SelectionBar.h"
 
 #include <wx/frame.h>
 

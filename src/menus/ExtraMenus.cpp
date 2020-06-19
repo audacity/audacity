@@ -4,8 +4,8 @@
 #include "Project.h"
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
-#include "toolbars/MixerToolBar.h"
-#include "toolbars/DeviceToolBar.h"
+#include "MixerToolBar.h"
+#include "DeviceToolBar.h"
 
 #include <wx/frame.h>
 

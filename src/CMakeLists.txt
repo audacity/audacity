@@ -14,6 +14,7 @@ foreach( SUBDIRECTORY
    notetrack
    playabletrack
    timetrack
+   toolbars
    track
    wavetrack
    widgets
@@ -510,39 +511,6 @@ list( APPEND SOURCES
       prefs/WaveformPrefs.h
       prefs/WaveformSettings.cpp
       prefs/WaveformSettings.h
-
-      # Toolbars
-
-      toolbars/ControlToolBar.cpp
-      toolbars/ControlToolBar.h
-      toolbars/DeviceToolBar.cpp
-      toolbars/DeviceToolBar.h
-      toolbars/EditToolBar.cpp
-      toolbars/EditToolBar.h
-      toolbars/MeterToolBar.cpp
-      toolbars/MeterToolBar.h
-      toolbars/MixerToolBar.cpp
-      toolbars/MixerToolBar.h
-      toolbars/ScrubbingToolBar.cpp
-      toolbars/ScrubbingToolBar.h
-      toolbars/SelectionBar.cpp
-      toolbars/SelectionBar.h
-      toolbars/SelectionBarListener.h
-      toolbars/SpectralSelectionBar.cpp
-      toolbars/SpectralSelectionBar.h
-      toolbars/SpectralSelectionBarListener.h
-      toolbars/TimeToolBar.cpp
-      toolbars/TimeToolBar.h
-      toolbars/ToolBar.cpp
-      toolbars/ToolBar.h
-      toolbars/ToolDock.cpp
-      toolbars/ToolDock.h
-      toolbars/ToolManager.cpp
-      toolbars/ToolManager.h
-      toolbars/ToolsToolBar.cpp
-      toolbars/ToolsToolBar.h
-      toolbars/TranscriptionToolBar.cpp
-      toolbars/TranscriptionToolBar.h
 )
 
 #
@@ -847,6 +815,7 @@ target_include_directories( ${TARGET} PRIVATE
    etc
    labeltrack
    playabletrack
+   toolbars
    track
    wavetrack
    widgets
