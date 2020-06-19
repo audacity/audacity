@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Audacity.h"
 #include "LabelTrackView.h"
 
-#include "Experimental.h"
+
 
 #include "LabelTrackVRulerControls.h"
 #include "LabelGlyphHandle.h"

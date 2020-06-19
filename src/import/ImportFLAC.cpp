@@ -24,7 +24,7 @@
 
 #include "Audacity.h" // for USE_* macros
 
-#include "Experimental.h"
+
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>

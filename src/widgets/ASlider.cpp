@@ -32,7 +32,7 @@ or ASlider.
 #include "Audacity.h"
 #include "ASlider.h"
 
-#include "Experimental.h"
+
 
 #include <math.h>
 

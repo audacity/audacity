@@ -16,7 +16,7 @@ Paul Licameli
 #include "Audacity.h"
 #include "SpectrogramSettings.h"
 
-#include "Experimental.h"
+
 
 #include "NumberScale.h"
 

@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Audacity.h"
 #include "CutlineHandle.h"
 
-#include "Experimental.h"
+
 
 #include "HitTestResult.h"
 #include "ProjectAudioIO.h"

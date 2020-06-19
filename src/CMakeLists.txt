@@ -1,6 +1,7 @@
-
 set( TARGET Audacity )
 set( TARGET_ROOT ${topdir}/src )
+
+include( "Experimental.cmake" )
 
 message( STATUS "========== Configuring ${TARGET} ==========" )
 
@@ -77,7 +78,7 @@ list( APPEND SOURCES
    PRIVATE
       Audacity.h
       AudacityHeaders.h.in
-      Experimental.h
+      Experimental.cmake
       dummy.cpp
 )
 

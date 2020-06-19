@@ -13,7 +13,7 @@
 
 #include "Audacity.h" // for HAVE_LIBUDEV_H
 
-#include "Experimental.h"
+
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 

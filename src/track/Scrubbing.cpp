@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Audacity.h"
 #include "Scrubbing.h"
 
-#include "Experimental.h"
+
 
 #include <functional>
 

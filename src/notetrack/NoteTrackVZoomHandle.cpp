@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_MIDI
 #include "NoteTrackVZoomHandle.h"
 
-#include "Experimental.h"
+
 
 #include "TrackVRulerControls.h"
 

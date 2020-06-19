@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrackView.h"
 #include "TimeTrack.h"
 
-#include "Experimental.h"
+
 
 #include "TimeTrackControls.h"
 

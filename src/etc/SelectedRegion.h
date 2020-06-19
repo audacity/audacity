@@ -27,7 +27,7 @@
 
 #include "Audacity.h"
 
-#include "Experimental.h"
+
 
 #include <wx/defs.h>
 #include <wx/chartype.h> // for wxChar, a typedef

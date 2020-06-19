@@ -20,7 +20,7 @@
 #include "Audacity.h"
 #include "TracksPrefs.h"
 
-#include "Experimental.h"
+
 
 //#include <algorithm>
 //#include <wx/defs.h>

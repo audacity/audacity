@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "LabelTextHandle.h"
 
 #include "LabelTrackView.h"
-#include "Experimental.h"
+
 
 #include "HitTestResult.h"
 #include "LabelTrack.h"

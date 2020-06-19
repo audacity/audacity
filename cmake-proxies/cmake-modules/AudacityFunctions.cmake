@@ -246,6 +246,7 @@ function( audacity_target_options target private_libraries public_libraries )
             __STDC_CONSTANT_MACROS
             STRICT
          >
+         ${EXPERIMENTAL_OPTIONS_LIST}
    )
    target_compile_definitions( ${target} PRIVATE ${DEFINES} )
 

@@ -45,7 +45,7 @@ from there.  Audacity will look for a file called "Pause.png".
 // we want to include it multiple times in Theme.cpp.
 
 #include "Audacity.h"
-#include "Experimental.h"
+
 
 #include "MacroMagic.h"
 #define XPMS_RETIRED

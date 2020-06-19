@@ -35,7 +35,7 @@
 #include "Audacity.h"
 #include "MousePrefs.h"
 
-#include "Experimental.h"
+
 
 #include <wx/defs.h>
 #include <wx/intl.h>

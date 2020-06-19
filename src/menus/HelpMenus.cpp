@@ -1,5 +1,5 @@
 #include "Audacity.h"
-#include "Experimental.h"
+
 
 #include <wx/bmpbuttn.h>
 #include <wx/textctrl.h>

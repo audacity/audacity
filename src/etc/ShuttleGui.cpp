@@ -96,7 +96,7 @@ for registering for changes.
 #include "Audacity.h"
 #include "ShuttleGui.h"
 
-#include "Experimental.h"
+
 
 #include "Prefs.h"
 #include "ShuttlePrefs.h"

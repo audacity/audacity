@@ -17,7 +17,7 @@
 #include "Audacity.h"
 #include "audacity/Types.h"
 
-#include "Experimental.h"
+
 
 #include <wx/app.h> // to inherit
 #include <wx/timer.h> // member variable

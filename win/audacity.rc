@@ -1,6 +1,4 @@
-#define IN_RC
 #include "Audacity.h"
-#include "Experimental.h"
 
 #ifdef EXPERIMENTAL_DA
 AudacityLogo ICON "darkaudacity.ico"

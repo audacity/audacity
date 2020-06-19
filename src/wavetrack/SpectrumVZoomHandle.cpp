@@ -13,7 +13,7 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 
 #include "WaveTrackVZoomHandle.h"
 
-#include "Experimental.h"
+
 
 #include "HitTestResult.h"
 #include "NumberScale.h"
