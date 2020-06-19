@@ -165,14 +165,14 @@ different formats.
 **********************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "NumericTextCtrl.h"
 
 #include "audacity/Types.h"
-#include "../AllThemeResources.h"
-#include "../AColor.h"
-#include "../KeyboardCapture.h"
-#include "../Theme.h"
+#include "AllThemeResources.h"
+#include "AColor.h"
+#include "KeyboardCapture.h"
+#include "Theme.h"
 
 #include <algorithm>
 #include <math.h>

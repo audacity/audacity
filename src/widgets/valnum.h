@@ -11,7 +11,7 @@
 #ifndef _WIDGETS_VALNUM_H_
 #define _WIDGETS_VALNUM_H_
 
-#include "../MemoryX.h"
+#include "MemoryX.h"
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 
