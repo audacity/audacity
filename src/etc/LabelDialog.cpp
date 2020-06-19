@@ -35,7 +35,7 @@
 #include "Project.h"
 #include "ProjectWindow.h"
 #include "ViewInfo.h"
-#include "labeltrack/LabelTrackView.h"
+#include "LabelTrackView.h"
 #include "AudacityMessageBox.h"
 #include "ErrorDialog.h"
 #include "Grid.h"

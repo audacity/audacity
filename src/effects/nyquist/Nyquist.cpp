@@ -73,8 +73,8 @@ effects from this one class.
 #include "wxFileNameWrapper.h"
 #include "prefs/GUIPrefs.h"
 #include "prefs/WaveformSettings.h"
-#include "wavetrack/WaveTrackView.h"
-#include "wavetrack/WaveTrackViewConstants.h"
+#include "WaveTrackView.h"
+#include "WaveTrackViewConstants.h"
 #include "NumericTextCtrl.h"
 #include "ProgressDialog.h"
 

@@ -41,8 +41,8 @@
 #include "InconsistencyException.h"
 
 #include "effects/TimeWarper.h"
-#include "track/TrackView.h"
-#include "track/TrackControls.h"
+#include "TrackView.h"
+#include "TrackControls.h"
 
 #include "AllThemeResources.h"
 #include "Theme.h"

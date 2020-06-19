@@ -53,7 +53,7 @@
 #include "Project.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
-#include "track/Scrubbing.h"
+#include "Scrubbing.h"
 
 #include "AButton.h"
 

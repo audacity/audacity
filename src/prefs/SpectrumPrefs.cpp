@@ -31,7 +31,7 @@
 
 #include "TrackPanel.h"
 #include "WaveTrack.h"
-#include "wavetrack/WaveTrackView.h"
+#include "WaveTrackView.h"
 
 #include <algorithm>
 

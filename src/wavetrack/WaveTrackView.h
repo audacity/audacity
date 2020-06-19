@@ -11,7 +11,7 @@ Paul Licameli split from class WaveTrack
 #ifndef __AUDACITY_WAVE_TRACK_VIEW__
 #define __AUDACITY_WAVE_TRACK_VIEW__
 
-#include "track/CommonTrackView.h"
+#include "CommonTrackView.h"
 #include "ClientData.h"
 namespace WaveTrackViewConstants{ enum Display : int; }
 struct WaveTrackSubViewType;

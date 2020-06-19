@@ -18,8 +18,8 @@ Paul Licameli split from WaveTrackView.cpp
 #include "WaveTrackViewConstants.h"
 
 #include "SampleHandle.h"
-#include "track/EnvelopeHandle.h"
-#include "track/TimeShiftHandle.h"
+#include "EnvelopeHandle.h"
+#include "TimeShiftHandle.h"
 #include "AColor.h"
 #include "Envelope.h"
 #include "EnvelopeEditor.h"
@@ -662,8 +662,8 @@ void DrawEnvelope(TrackPanelDrawingContext &context,
 }
 
 // Headers needed only for experimental drawing below
-//#include "wavetrack/SampleHandle.h"
-//#include "track/EnvelopeHandle.h"
+//#include "SampleHandle.h"
+//#include "EnvelopeHandle.h"
 void DrawClipWaveform(TrackPanelDrawingContext &context,
                                    const WaveTrack *track,
                                    const WaveClip *clip,
@@ -971,7 +971,7 @@ void DrawTimeSlider( TrackPanelDrawingContext &context,
 }
 
 // Header needed only for experimental drawing below
-//#include "track/TimeShiftHandle.h"
+//#include "TimeShiftHandle.h"
 void WaveformView::DoDraw(TrackPanelDrawingContext &context,
                                const WaveTrack *track,
                                const wxRect & rect,

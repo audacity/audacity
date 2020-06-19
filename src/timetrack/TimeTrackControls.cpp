@@ -194,7 +194,7 @@ template<> template<> auto DoGetTimeTrackControls::Implementation() -> Function 
 }
 static DoGetTimeTrackControls registerDoGetTimeTrackControls;
 
-#include "track/TrackView.h"
+#include "TrackView.h"
 
 using GetDefaultTimeTrackHeight = GetDefaultTrackHeight::Override< TimeTrack >;
 template<> template<>

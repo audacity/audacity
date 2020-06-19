@@ -28,8 +28,8 @@
 #include "ProjectSettings.h"
 #include "ProjectFileIORegistry.h"
 
-#include "track/TrackView.h"
-#include "track/TrackControls.h"
+#include "TrackView.h"
+#include "TrackControls.h"
 
 
 //TODO-MB: are these sensible values?

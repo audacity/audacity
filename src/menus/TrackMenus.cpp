@@ -30,7 +30,7 @@
 #include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
 #include "prefs/QualityPrefs.h"
-#include "wavetrack/WaveTrackControls.h"
+#include "WaveTrackControls.h"
 #include "ASlider.h"
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"

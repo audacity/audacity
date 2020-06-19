@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "NoteTrackButtonHandle.h"
 
-#include "playabletrack/PlayableTrackButtonHandles.h"
+#include "PlayableTrackButtonHandles.h"
 #include "NoteTrackSliderHandles.h"
 
 #include "HitTestResult.h"
@@ -327,7 +327,7 @@ template<> template<> auto DoGetNoteTrackControls::Implementation() -> Function 
 }
 static DoGetNoteTrackControls registerDoGetNoteTrackControls;
 
-#include "track/TrackView.h"
+#include "TrackView.h"
 
 using GetDefaultNoteTrackHeight = GetDefaultTrackHeight::Override< NoteTrack >;
 template<> template<>

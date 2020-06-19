@@ -45,7 +45,7 @@
 #include "WaveTrack.h"
 #include "AButton.h"
 #include "ASlider.h"
-#include "track/Scrubbing.h"
+#include "Scrubbing.h"
 #include "Prefs.h"
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -837,7 +837,7 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
 #include "ProjectHistory.h"
 #include "TrackPanel.h"
 #include "TrackPanelAx.h"
-#include "labeltrack/LabelTrackView.h"
+#include "LabelTrackView.h"
 namespace {
 int DoAddLabel(
    AudacityProject &project, const SelectedRegion &region )

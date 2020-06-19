@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "Experimental.h"
 
-#include "playabletrack/PlayableTrackButtonHandles.h"
+#include "PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
 
 #include "WaveTrackView.h"
