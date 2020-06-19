@@ -11,6 +11,7 @@ set( CMAKE_ENABLE_EXPORTS ON )
 foreach( SUBDIRECTORY
    etc
    labeltrack
+   menus
    notetrack
    ondemand
    playabletrack
@@ -421,23 +422,6 @@ list( APPEND SOURCES
       $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
          import/ImportOGG.cpp
       >
-
-      # Menus
-
-      menus/ClipMenus.cpp
-      menus/EditMenus.cpp
-      menus/ExtraMenus.cpp
-      menus/FileMenus.cpp
-      menus/HelpMenus.cpp
-      menus/LabelMenus.cpp
-      menus/NavigationMenus.cpp
-      menus/PluginMenus.cpp
-      menus/SelectMenus.cpp
-      menus/ToolbarMenus.cpp
-      menus/TrackMenus.cpp
-      menus/TransportMenus.cpp
-      menus/ViewMenus.cpp
-      menus/WindowMenus.cpp
 )
 
 #
@@ -599,7 +583,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       effects/EffectUI.cpp
       effects/VST/VSTControlOSX.mm
       effects/audiounits/AUControl.mm
-      menus/WindowMenus.cpp
       PROPERTIES
          COMPILE_FLAGS "-x objective-c++"
          SKIP_PRECOMPILE_HEADERS YES
@@ -740,7 +723,6 @@ target_include_directories( ${TARGET} PRIVATE
    etc
    labeltrack
    ondemand
-   playabletrack
    prefs
    toolbars
    track
