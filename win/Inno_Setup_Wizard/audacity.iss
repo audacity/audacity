@@ -103,12 +103,11 @@ Source: "..\..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; Don't use the WXWIN environment variable, because...
 ; 1) Can't get the documented {%WXWIN|default dir} parsing to work.
 ; 2) Need the DLL's in the release dir for testing, anyway.
-Source: "..\release\wxbase311u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\wxbase311u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\wxmsw311u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\wxmsw311u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\wxmsw311u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\wxmsw311u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxbase313u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxbase313u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxmsw313u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxmsw313u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\release\wxmsw313u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; MSVC runtime DLLs. Some users can't put these in the system dir, so just put them in the EXE dir.
 ; It's legal, per http://www.fsf.org/licensing/licenses/gpl-faq.html#WindowsRuntimeAndGPL .
