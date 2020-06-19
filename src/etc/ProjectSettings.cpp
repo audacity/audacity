@@ -15,7 +15,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "AudioIOBase.h"
 #include "Project.h"
 #include "NumericTextCtrl.h"
-#include "prefs/TracksBehaviorsPrefs.h"
+#include "TracksBehaviorsPrefs.h"
 
 wxDEFINE_EVENT(EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 

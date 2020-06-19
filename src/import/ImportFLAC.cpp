@@ -44,7 +44,7 @@
 #include "Tags.h"
 #include "WaveClip.h"
 #include "blockfile/ODDecodeBlockFile.h"
-#include "prefs/QualityPrefs.h"
+#include "QualityPrefs.h"
 #include "ProgressDialog.h"
 
 #define FLAC_HEADER "fLaC"

@@ -20,7 +20,7 @@
 #include "Prefs.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "prefs/TracksBehaviorsPrefs.h"
+#include "TracksBehaviorsPrefs.h"
 
 #include "TimeWarper.h"
 

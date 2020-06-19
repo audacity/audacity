@@ -23,7 +23,7 @@
 
 #include "ShuttleGui.h"
 #include "Prefs.h"
-#include "prefs/GUISettings.h"
+#include "GUISettings.h"
 
 BEGIN_EVENT_TABLE(SoundActivatedRecordDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, SoundActivatedRecordDialog::OnOK)

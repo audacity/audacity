@@ -28,7 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "RefreshCode.h"
-#include "prefs/ThemePrefs.h"
+#include "ThemePrefs.h"
 
 #include <mutex>
 #include <wx/frame.h>

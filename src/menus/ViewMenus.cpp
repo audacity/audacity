@@ -15,8 +15,8 @@
 #include "ViewInfo.h"
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
-#include "prefs/GUIPrefs.h"
-#include "prefs/TracksPrefs.h"
+#include "GUIPrefs.h"
+#include "TracksPrefs.h"
 #include "TrackView.h"
 
 #ifdef EXPERIMENTAL_EFFECTS_RACK

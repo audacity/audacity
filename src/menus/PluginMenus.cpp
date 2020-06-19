@@ -20,8 +20,8 @@
 #include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
 #include "effects/RealtimeEffectManager.h"
-#include "prefs/EffectsPrefs.h"
-#include "prefs/PrefsDialog.h"
+#include "EffectsPrefs.h"
+#include "PrefsDialog.h"
 
 // private helper classes and functions
 namespace {

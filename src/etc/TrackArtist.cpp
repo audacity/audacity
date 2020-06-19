@@ -45,14 +45,14 @@ audio tracks.
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "prefs/GUIPrefs.h"
+#include "GUIPrefs.h"
 #include "Theme.h"
 #include "Track.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
 
-#include "prefs/GUISettings.h"
-#include "prefs/TracksPrefs.h"
+#include "GUISettings.h"
+#include "TracksPrefs.h"
 
 #include <wx/dc.h>
 

@@ -1,6 +1,7 @@
 do_directory(
    INCLUDE_PRIVATE
       src/etc
+      src/prefs
       src/playabletrack
       src/track
       src/xml

@@ -58,7 +58,7 @@ AliasedFile s.
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
-#include "prefs/QualityPrefs.h"
+#include "QualityPrefs.h"
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
 

@@ -23,7 +23,7 @@ SetPreferenceCommand classes
 #include "Shuttle.h"
 #include "ShuttleGui.h"
 #include "commands/CommandContext.h"
-#include "prefs/PrefsDialog.h"
+#include "PrefsDialog.h"
 
 const ComponentInterfaceSymbol GetPreferenceCommand::Symbol
 { XO("Get Preference") };

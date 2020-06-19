@@ -54,7 +54,7 @@
 #include "FileFormats.h"
 #include "Mix.h"
 #include "Prefs.h"
-#include "prefs/ImportExportPrefs.h"
+#include "ImportExportPrefs.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"

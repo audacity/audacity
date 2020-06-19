@@ -1,6 +1,7 @@
 do_directory(
    INCLUDE_PRIVATE
       src/etc
+      src/prefs
       src/toolbars
       src/wavetrack
       src/xml

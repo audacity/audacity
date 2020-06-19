@@ -38,7 +38,7 @@
 #include "InconsistencyException.h"
 #include "UserException.h"
 
-#include "prefs/SpectrogramSettings.h"
+#include "SpectrogramSettings.h"
 #include "ProgressDialog.h"
 
 #ifdef _OPENMP

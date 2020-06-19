@@ -54,11 +54,11 @@ Track classes.
 #include "Prefs.h"
 
 #include "effects/TimeWarper.h"
-#include "prefs/QualityPrefs.h"
-#include "prefs/SpectrogramSettings.h"
-#include "prefs/TracksPrefs.h"
-#include "prefs/TracksBehaviorsPrefs.h"
-#include "prefs/WaveformSettings.h"
+#include "QualityPrefs.h"
+#include "SpectrogramSettings.h"
+#include "TracksPrefs.h"
+#include "TracksBehaviorsPrefs.h"
+#include "WaveformSettings.h"
 
 #include "InconsistencyException.h"
 

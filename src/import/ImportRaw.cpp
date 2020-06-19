@@ -30,7 +30,7 @@ and sample size to help you importing data of an unknown format.
 #include "ShuttleGui.h"
 #include "UserException.h"
 #include "WaveTrack.h"
-#include "prefs/QualityPrefs.h"
+#include "QualityPrefs.h"
 #include "ProgressDialog.h"
 
 #include <cmath>

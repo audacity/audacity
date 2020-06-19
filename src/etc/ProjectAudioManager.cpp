@@ -33,7 +33,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "ToolManager.h"
-#include "prefs/TracksPrefs.h"
+#include "TracksPrefs.h"
 #include "Scrubbing.h"
 #include "TrackView.h"
 #include "ErrorDialog.h"

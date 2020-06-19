@@ -42,7 +42,7 @@
 #include "ondemand/ODManager.h"
 #include "ondemand/ODComputeSummaryTask.h"
 #include "blockfile/ODPCMAliasBlockFile.h"
-#include "prefs/QualityPrefs.h"
+#include "QualityPrefs.h"
 #include "ProgressDialog.h"
 
 //If OD is enabled, he minimum number of samples a file has to use it.

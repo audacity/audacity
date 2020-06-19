@@ -64,7 +64,7 @@ static Importer::RegisteredUnusableImportPlugin registered
 #include "Prefs.h"
 #include "Tags.h"
 #include "WaveTrack.h"
-#include "prefs/QualityPrefs.h"
+#include "QualityPrefs.h"
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
 

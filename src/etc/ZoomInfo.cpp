@@ -13,7 +13,7 @@
 
 #include "Experimental.h"
 
-#include "prefs/GUISettings.h"
+#include "GUISettings.h"
 
 namespace {
 static const double gMaxZoom = 6000000;
