@@ -7,16 +7,16 @@
 
 #pragma warning( push )
 #pragma warning( disable : 4100)
-#include "../portsmf/allegro.h"
+#include "../../lib-src/portsmf/allegro.h"
 #pragma warning( pop )
 
 #elif defined(__linux__)
 
 #include <cstring> // Allegro include fails if this header isn't included due to no memcpy
-#include "../portsmf/allegro.h"
+#include "../../lib-src/portsmf/allegro.h"
 
 #else //_MSC_VER
 
-#include "../portsmf/allegro.h"
+#include "../../lib-src/portsmf/allegro.h"
 
 #endif //_MSC_VER

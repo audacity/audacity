@@ -19,7 +19,7 @@
 #if defined(USE_MIDI)
 
 
-#include "../lib-src/header-substitutes/allegro.h"
+#include "allegro.h"
 
 //#include "strparse.h"
 //#include "mfmidi.h"
