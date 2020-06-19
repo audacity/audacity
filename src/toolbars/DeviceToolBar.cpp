@@ -45,13 +45,13 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ShuttleGui.h"
-#include "widgets/Grabber.h"
+#include "Grabber.h"
 #include "DeviceManager.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/Grabber.h"
+#include "AudacityMessageBox.h"
+#include "Grabber.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 IMPLEMENT_CLASS(DeviceToolBar, ToolBar);

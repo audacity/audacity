@@ -28,7 +28,7 @@ Paul Licameli
 
 #include <cmath>
 
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 SpectrogramSettings::Globals::Globals()
 {

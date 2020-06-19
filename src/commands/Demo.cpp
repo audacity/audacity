@@ -29,9 +29,9 @@ parameters.  It is for development purposes.
 
 #include "Shuttle.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/valnum.h"
-#include "commands/CommandContext.h"
+#include "AudacityMessageBox.h"
+#include "valnum.h"
+#include "CommandContext.h"
 
 const ComponentInterfaceSymbol DemoCommand::Symbol
 { XO("Demo") };

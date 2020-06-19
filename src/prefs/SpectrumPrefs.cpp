@@ -31,11 +31,11 @@
 
 #include "TrackPanel.h"
 #include "WaveTrack.h"
-#include "wavetrack/WaveTrackView.h"
+#include "WaveTrackView.h"
 
 #include <algorithm>
 
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid,
    AudacityProject *pProject, WaveTrack *wt)

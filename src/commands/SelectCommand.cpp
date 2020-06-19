@@ -40,7 +40,7 @@ explicitly code all three.
 #include "TrackPanel.h"
 #include "Shuttle.h"
 #include "ShuttleGui.h"
-#include "effects/Effect.h"
+#include "Effect.h"
 #include "ViewInfo.h"
 #include "CommandContext.h"
 

@@ -18,7 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Envelope.h"
 #include "EnvelopeEditor.h"
 #include "HitTestResult.h"
-#include "prefs/WaveformSettings.h"
+#include "WaveformSettings.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "RefreshCode.h"

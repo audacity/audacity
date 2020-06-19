@@ -29,14 +29,14 @@ Licensed under the GNU General Public License v2 or later
 
 #include "FFmpeg.h"      // which brings in avcodec.h, avformat.h
 #include "WaveClip.h"
-#include "blockfile/ODDecodeBlockFile.h"
-#include "ondemand/ODManager.h"
+#include "ODDecodeBlockFile.h"
+#include "ODManager.h"
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
 #include <wx/window.h>
 #endif
 
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 
 #define DESC XO("FFmpeg-compatible files")
@@ -160,7 +160,7 @@ static const auto exts = {
 
 
 #ifdef EXPERIMENTAL_OD_FFMPEG
-#include "ondemand/ODDecodeFFmpegTask.h"
+#include "ODDecodeFFmpegTask.h"
 #endif
 
 class FFmpegImportFileHandle;

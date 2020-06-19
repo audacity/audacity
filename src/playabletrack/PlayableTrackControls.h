@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_PLAYABLE_TRACK_CONTROLS__
 #define __AUDACITY_PLAYABLE_TRACK_CONTROLS__
 
-#include "track/CommonTrackControls.h"
+#include "CommonTrackControls.h"
 
 class wxRect;
 class Track;

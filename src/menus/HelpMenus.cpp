@@ -21,12 +21,12 @@
 #include "ShuttleGui.h"
 #include "SplashDialog.h"
 #include "Theme.h"
-#include "toolbars/ToolManager.h"
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
-#include "prefs/PrefsDialog.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/HelpSystem.h"
+#include "ToolManager.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "PrefsDialog.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #include <wx/debugrpt.h>

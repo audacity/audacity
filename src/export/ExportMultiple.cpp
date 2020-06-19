@@ -49,10 +49,10 @@
 #include "ShuttleGui.h"
 #include "Tags.h"
 #include "WaveTrack.h"
-#include "widgets/HelpSystem.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
-#include "widgets/ProgressDialog.h"
+#include "HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "ErrorDialog.h"
+#include "ProgressDialog.h"
 
 
 namespace {

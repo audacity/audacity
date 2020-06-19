@@ -1,0 +1,67 @@
+do_directory(
+   INCLUDE_PRIVATE
+      src/commands
+      src/etc
+      src/ondemand
+      src/prefs
+      src/track
+      src/wavetrack
+      src/xml
+
+   PRIVATE
+      src/widgets
+      wxWidgets
+
+   OBJCPP_SOURCES
+      EffectUI.cpp
+
+   PRECOMPILE
+      AColor.h
+      AudioIO.h
+      BlockFile.h
+      Diags.h
+      DirManager.h
+      Envelope.h
+      FFT.h
+      ImageManipulation.h
+      LabelTrack.h
+      Mix.h
+      NoteTrack.h
+      Prefs.h
+      Project.h
+      Sequence.h
+      TimeTrack.h
+      UndoManager.h
+      WaveTrack.h
+      ASlider.h
+      ProgressDialog.h
+      Ruler.h
+
+   SOURCES
+      Biquad.cpp
+      Biquad.h
+      Contrast.cpp
+      Contrast.h
+      EBUR128.cpp
+      EBUR128.h
+      Effect.cpp
+      Effect.h
+      EffectManager.cpp
+      EffectManager.h
+      EffectUI.cpp
+      EffectUI.h
+      Generator.cpp
+      Generator.h
+      LoadEffects.cpp
+      LoadEffects.h
+      RealtimeEffectManager.cpp
+      RealtimeEffectManager.h
+      ScoreAlignDialog.cpp
+      ScoreAlignDialog.h
+      SimpleMono.cpp
+      SimpleMono.h
+      TimeWarper.cpp
+      TimeWarper.h
+      TwoPassSimpleMono.cpp
+      TwoPassSimpleMono.h
+)

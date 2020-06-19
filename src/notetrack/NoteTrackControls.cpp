@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "NoteTrackButtonHandle.h"
 
-#include "playabletrack/PlayableTrackButtonHandles.h"
+#include "PlayableTrackButtonHandles.h"
 #include "NoteTrackSliderHandles.h"
 
 #include "HitTestResult.h"
@@ -24,11 +24,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
 #include "NoteTrack.h"
-#include "widgets/PopupMenuTable.h"
+#include "PopupMenuTable.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "RefreshCode.h"
-#include "prefs/ThemePrefs.h"
+#include "ThemePrefs.h"
 
 #include <mutex>
 #include <wx/frame.h>
@@ -147,7 +147,7 @@ PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
 }
 
 // drawing related
-#include "widgets/ASlider.h"
+#include "ASlider.h"
 #include "TrackInfo.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
@@ -327,7 +327,7 @@ template<> template<> auto DoGetNoteTrackControls::Implementation() -> Function 
 }
 static DoGetNoteTrackControls registerDoGetNoteTrackControls;
 
-#include "track/TrackView.h"
+#include "TrackView.h"
 
 using GetDefaultNoteTrackHeight = GetDefaultTrackHeight::Override< NoteTrack >;
 template<> template<>

@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "Experimental.h"
 
-#include "playabletrack/PlayableTrackButtonHandles.h"
+#include "PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
 
 #include "WaveTrackView.h"
@@ -30,11 +30,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanelAx.h"
 #include "TrackPanelMouseEvent.h"
 #include "WaveTrack.h"
-#include "effects/RealtimeEffectManager.h"
-#include "ondemand/ODManager.h"
-#include "prefs/PrefsDialog.h"
-#include "prefs/ThemePrefs.h"
-#include "widgets/AudacityMessageBox.h"
+#include "RealtimeEffectManager.h"
+#include "ODManager.h"
+#include "PrefsDialog.h"
+#include "ThemePrefs.h"
+#include "AudacityMessageBox.h"
 
 #include <wx/combobox.h>
 #include <wx/frame.h>
@@ -964,7 +964,7 @@ WaveTrackPopupMenuTable &GetWaveTrackMenuTable()
 }
 
 // drawing related
-#include "widgets/ASlider.h"
+#include "ASlider.h"
 #include "TrackInfo.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"

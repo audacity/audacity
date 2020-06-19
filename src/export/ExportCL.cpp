@@ -36,10 +36,10 @@
 #include "Tags.h"
 #include "Track.h"
 #include "float_cast.h"
-#include "widgets/FileHistory.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ProgressDialog.h"
-#include "widgets/Warning.h"
+#include "FileHistory.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
+#include "Warning.h"
 #include "wxFileNameWrapper.h"
 
 #ifdef USE_LIBID3TAG

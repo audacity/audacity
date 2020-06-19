@@ -21,7 +21,7 @@
 
 #include "AColor.h"
 #include "ShuttleGui.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 
 #include <wx/dc.h>
 #include <wx/menu.h>

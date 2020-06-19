@@ -11,7 +11,7 @@ Paul Licameli split from class LabelTrack
 #ifndef __AUDACITY_LABEL_TRACK_VIEW__
 #define __AUDACITY_LABEL_TRACK_VIEW__
 
-#include "track/CommonTrackView.h"
+#include "CommonTrackView.h"
 
 class LabelGlyphHandle;
 class LabelTextHandle;

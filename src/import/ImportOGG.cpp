@@ -41,8 +41,8 @@
 #include "Import.h"
 #include "Prefs.h"
 #include "Tags.h"
-#include "prefs/QualityPrefs.h"
-#include "widgets/ProgressDialog.h"
+#include "QualityPrefs.h"
+#include "ProgressDialog.h"
 
 
 #define DESC XO("Ogg Vorbis files")

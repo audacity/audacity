@@ -13,14 +13,14 @@
 #include "TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
-#include "prefs/GUIPrefs.h"
-#include "prefs/TracksPrefs.h"
-#include "track/TrackView.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "GUIPrefs.h"
+#include "TracksPrefs.h"
+#include "TrackView.h"
 
 #ifdef EXPERIMENTAL_EFFECTS_RACK
-#include "effects/EffectUI.h"
+#include "EffectUI.h"
 #endif
 
 #include <wx/scrolbar.h>

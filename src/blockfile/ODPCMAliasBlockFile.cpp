@@ -31,7 +31,7 @@ The summary is eventually computed and written to a file in a background thread.
 #include "DirManager.h"
 #include "FileFormats.h"
 
-#include "ondemand/ODManager.h"
+#include "ODManager.h"
 
 #include "NotYetAvailableException.h"
 

@@ -1,6 +1,6 @@
 #include "Audacity.h"
 
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 
 // This file collects a few things specific to Mac and requiring some
 // Objective-C++ .  Avoid mixing languages elsewhere.
@@ -12,7 +12,7 @@
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 
 #include <wx/frame.h>
 #include <wx/menu.h>

@@ -15,7 +15,7 @@
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
-#include "track/SliderHandle.h"
+#include "SliderHandle.h"
 
 class NoteTrack;
 class wxMouseState;

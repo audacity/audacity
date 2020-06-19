@@ -17,7 +17,7 @@
 #define __COMMANDTYPE__
 
 #include "CommandSignature.h"
-#include "commands/AudacityCommand.h"
+#include "AudacityCommand.h"
 
 class OldStyleCommand;
 

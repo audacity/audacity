@@ -9,12 +9,12 @@
 #include "SelectionState.h"
 #include "TrackPanel.h"
 #include "TrackPanelAx.h"
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
-#include "toolbars/ToolManager.h"
-#include "widgets/AButton.h"
-#include "widgets/ASlider.h"
-#include "widgets/Meter.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "ToolManager.h"
+#include "AButton.h"
+#include "ASlider.h"
+#include "Meter.h"
 
 // private helper classes and functions
 namespace {

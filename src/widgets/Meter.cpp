@@ -66,7 +66,7 @@
 #include "AudioIO.h"
 #include "AColor.h"
 #include "ImageManipulation.h"
-#include "prefs/GUISettings.h"
+#include "GUISettings.h"
 #include "Project.h"
 #include "ProjectAudioManager.h"
 #include "ProjectStatus.h"
@@ -75,7 +75,7 @@
 #include "Theme.h"
 
 #include "AllThemeResources.h"
-#include "widgets/valnum.h"
+#include "valnum.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

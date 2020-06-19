@@ -1,0 +1,67 @@
+do_directory(
+   INCLUDE_PRIVATE
+      src/commands
+      src/etc
+      src/export
+      src/ondemand
+      src/track
+      src/xml
+
+   PRIVATE
+      src/widgets
+      wxWidgets
+
+   PRECOMPILE
+      AColor.h
+      AudioIO.h
+      BlockFile.h
+      Diags.h
+      DirManager.h
+      Envelope.h
+      FFT.h
+      ImageManipulation.h
+      LabelTrack.h
+      Mix.h
+      NoteTrack.h
+      Prefs.h
+      Project.h
+      Sequence.h
+      TimeTrack.h
+      UndoManager.h
+      WaveTrack.h
+      ASlider.h
+      ProgressDialog.h
+      Ruler.h
+
+   SOURCES
+      ControlToolBar.cpp
+      ControlToolBar.h
+      DeviceToolBar.cpp
+      DeviceToolBar.h
+      EditToolBar.cpp
+      EditToolBar.h
+      MeterToolBar.cpp
+      MeterToolBar.h
+      MixerToolBar.cpp
+      MixerToolBar.h
+      ScrubbingToolBar.cpp
+      ScrubbingToolBar.h
+      SelectionBar.cpp
+      SelectionBar.h
+      SelectionBarListener.h
+      SpectralSelectionBar.cpp
+      SpectralSelectionBar.h
+      SpectralSelectionBarListener.h
+      TimeToolBar.cpp
+      TimeToolBar.h
+      ToolBar.cpp
+      ToolBar.h
+      ToolDock.cpp
+      ToolDock.h
+      ToolManager.cpp
+      ToolManager.h
+      ToolsToolBar.cpp
+      ToolsToolBar.h
+      TranscriptionToolBar.cpp
+      TranscriptionToolBar.h
+)
