@@ -10,6 +10,7 @@ set( CMAKE_ENABLE_EXPORTS ON )
 # add sub-directory libraries to the build
 foreach( SUBDIRECTORY
    etc
+   import
    labeltrack
    menus
    notetrack
@@ -372,56 +373,6 @@ list( APPEND SOURCES
       $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
          export/ExportOGG.cpp
       >
-
-      # Import
-
-      import/FormatClassifier.cpp
-      import/FormatClassifier.h
-      import/Import.cpp
-      import/Import.h
-      import/ImportForwards.h
-      import/MultiFormatReader.cpp
-      import/MultiFormatReader.h
-      import/RawAudioGuess.cpp
-      import/RawAudioGuess.h
-      import/SpecPowerMeter.cpp
-      import/SpecPowerMeter.h
-
-      # Standard importers
-
-      import/ImportLOF.cpp
-      import/ImportPCM.cpp
-      import/ImportPlugin.h
-      import/ImportPlugin.cpp
-      import/ImportRaw.cpp
-      import/ImportRaw.h
-
-      # Optional importers
-
-      $<$<BOOL:${USE_FFMPEG}>:
-         import/ImportFFmpeg.cpp
-      >
-
-      $<$<BOOL:${USE_LIBFLAC}>:
-         import/ImportFLAC.cpp
-      >
-
-      $<$<BOOL:${USE_GSTREAMER}>:
-         import/ImportGStreamer.cpp
-      >
-
-      $<$<BOOL:${USE_MIDI}>:
-         import/ImportMIDI.cpp
-         import/ImportMIDI.h
-      >
-
-      $<$<BOOL:${USE_LIBMAD}>:
-         import/ImportMP3.cpp
-      >
-
-      $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
-         import/ImportOGG.cpp
-      >
 )
 
 #
@@ -457,12 +408,10 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
-      $<$<BOOL:${USE_LIBMAD}>:libmad>
       $<$<BOOL:${USE_LIBOGG}>:libogg>
       $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_LV2}>:lv2>
-      $<$<BOOL:${USE_MIDI}>:portsmf>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<BOOL:${USE_SBSMS}>:sbsms>
       $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
