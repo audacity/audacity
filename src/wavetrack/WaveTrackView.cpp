@@ -34,8 +34,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "ViewInfo.h"
 #include "prefs/TracksPrefs.h"
 
-#include "track/TimeShiftHandle.h"
-#include "track/ButtonHandle.h"
+#include "TimeShiftHandle.h"
+#include "ButtonHandle.h"
 #include "TrackInfo.h"
 
 namespace {

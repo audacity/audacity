@@ -1,0 +1,63 @@
+do_directory(
+   INCLUDE_PRIVATE
+      src/etc
+      src/playabletrack
+      src/track
+      src/xml
+
+   PRIVATE
+      src/widgets
+      wxWidgets
+
+   PRECOMPILE
+      AColor.h
+      AudioIO.h
+      BlockFile.h
+      Diags.h
+      DirManager.h
+      Envelope.h
+      FFT.h
+      ImageManipulation.h
+      LabelTrack.h
+      Mix.h
+      NoteTrack.h
+      Prefs.h
+      Project.h
+      Sequence.h
+      TimeTrack.h
+      UndoManager.h
+      WaveTrack.h
+      ASlider.h
+      ProgressDialog.h
+      Ruler.h
+
+   SOURCES
+      CutlineHandle.cpp
+      CutlineHandle.h
+      SampleHandle.cpp
+      SampleHandle.h
+      SpectrumVRulerControls.cpp
+      SpectrumVRulerControls.h
+      SpectrumVZoomHandle.cpp
+      SpectrumVZoomHandle.h
+      SpectrumView.cpp
+      SpectrumView.h
+      WaveTrackControls.cpp
+      WaveTrackControls.h
+      WaveTrackSliderHandles.cpp
+      WaveTrackSliderHandles.h
+      WaveTrackVRulerControls.cpp
+      WaveTrackVRulerControls.h
+      WaveTrackVZoomHandle.cpp
+      WaveTrackVZoomHandle.h
+      WaveTrackView.cpp
+      WaveTrackView.h
+      WaveTrackViewConstants.cpp
+      WaveTrackViewConstants.h
+      WaveformVRulerControls.cpp
+      WaveformVRulerControls.h
+      WaveformVZoomHandle.cpp
+      WaveformVZoomHandle.h
+      WaveformView.cpp
+      WaveformView.h
+)

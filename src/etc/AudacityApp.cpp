@@ -109,7 +109,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "AudacityMessageBox.h"
 #include "prefs/DirectoriesPrefs.h"
 #include "prefs/GUIPrefs.h"
-#include "track/Scrubbing.h"
+#include "Scrubbing.h"
 #include "FileHistory.h"
 
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS

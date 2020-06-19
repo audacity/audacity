@@ -26,7 +26,7 @@
 #include <vector>
 #include <wx/defs.h>
 
-#include "wavetrack/WaveTrackViewConstants.h"
+#include "WaveTrackViewConstants.h"
 
 #include "PrefsPanel.h"
 #include "SpectrogramSettings.h"

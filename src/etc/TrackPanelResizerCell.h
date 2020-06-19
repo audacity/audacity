@@ -12,7 +12,7 @@
 #define __AUDACITY_TRACK_PANEL_RESIZER_CELL__
 
 #include "ClientData.h" // to inherit
-#include "track/CommonTrackPanelCell.h" // to inherit
+#include "CommonTrackPanelCell.h" // to inherit
 
 class Track;
 class TrackPanelResizeHandle;

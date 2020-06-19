@@ -20,9 +20,9 @@
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
 #include "toolbars/ControlToolBar.h"
-#include "track/SelectHandle.h"
-#include "wavetrack/WaveTrackView.h"
-#include "wavetrack/WaveTrackViewConstants.h"
+#include "SelectHandle.h"
+#include "WaveTrackView.h"
+#include "WaveTrackViewConstants.h"
 
 // private helper classes and functions
 namespace {

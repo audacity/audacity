@@ -21,7 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ViewInfo.h"
 #include "OverlayPanel.h"
 
-#include "track/TrackView.h"
+#include "TrackView.h"
 
 #include <wx/dc.h>
 #include <wx/mousestate.h>

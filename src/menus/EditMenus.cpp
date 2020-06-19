@@ -23,7 +23,7 @@
 #include "commands/ScreenshotCommand.h"
 #include "export/Export.h"
 #include "prefs/PrefsDialog.h"
-#include "labeltrack/LabelTrackView.h"
+#include "LabelTrackView.h"
 #include "AudacityMessageBox.h"
 
 // private helper classes and functions

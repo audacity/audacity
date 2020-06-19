@@ -35,7 +35,7 @@ and TimeTrack.
 #include <wx/textfile.h>
 #include <wx/log.h>
 
-#include "track/CommonTrackPanelCell.h"
+#include "CommonTrackPanelCell.h"
 #include "Project.h"
 #include "ProjectSettings.h"
 #include "DirManager.h"

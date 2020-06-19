@@ -1,7 +1,12 @@
 do_directory(
+   INCLUDE_PRIVATE
+      src/labeltrack
+      src/track
+      src/wavetrack
+      src/xml
+
    PRIVATE
       src/widgets
-      src/xml
       wxWidgets
       libsndfile
       libsoxr

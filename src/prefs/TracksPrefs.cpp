@@ -27,7 +27,7 @@
 
 #include "Prefs.h"
 #include "ShuttleGui.h"
-#include "wavetrack/WaveTrackViewConstants.h"
+#include "WaveTrackViewConstants.h"
 
 int TracksPrefs::iPreferencePinned = -1;
 

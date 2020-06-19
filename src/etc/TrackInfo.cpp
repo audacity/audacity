@@ -42,7 +42,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
 #include "prefs/TracksBehaviorsPrefs.h"
-#include "track/TrackView.h"
+#include "TrackView.h"
 
 // Subscribe to preference changes to update static variables
 struct Settings : PrefsListener {
@@ -119,7 +119,7 @@ static const TCPLines &commonTrackTCPLines()
    return theLines;
 }
 
-#include "track/CommonTrackControls.h"
+#include "CommonTrackControls.h"
 const TCPLines &CommonTrackControls::StaticTCPLines()
 {
    return commonTrackTCPLines();
@@ -263,7 +263,7 @@ void TrackInfo::DrawItems
    }
 }
 
-#include "track/TrackButtonHandles.h"
+#include "TrackButtonHandles.h"
 void TrackInfo::DrawCloseButton(
    TrackPanelDrawingContext &context, const wxRect &bev,
    const Track *pTrack, ButtonHandle *target )

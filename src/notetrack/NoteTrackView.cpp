@@ -27,7 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanelDrawingContext.h"
 #include "TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "track/SelectHandle.h"
+#include "SelectHandle.h"
 #include "StretchHandle.h"
 
 #include <wx/dc.h>

@@ -10,6 +10,12 @@ set( CMAKE_ENABLE_EXPORTS ON )
 # add sub-directory libraries to the build
 foreach( SUBDIRECTORY
    etc
+   labeltrack
+   notetrack
+   playabletrack
+   timetrack
+   track
+   wavetrack
    widgets
    xml
 )
@@ -537,114 +543,6 @@ list( APPEND SOURCES
       toolbars/ToolsToolBar.h
       toolbars/TranscriptionToolBar.cpp
       toolbars/TranscriptionToolBar.h
-
-      # Tracks
-
-      labeltrack/LabelDefaultClickHandle.cpp
-      labeltrack/LabelDefaultClickHandle.h
-      labeltrack/LabelGlyphHandle.cpp
-      labeltrack/LabelGlyphHandle.h
-      labeltrack/LabelTextHandle.cpp
-      labeltrack/LabelTextHandle.h
-      labeltrack/LabelTrackControls.cpp
-      labeltrack/LabelTrackControls.h
-      labeltrack/LabelTrackVRulerControls.cpp
-      labeltrack/LabelTrackVRulerControls.h
-      labeltrack/LabelTrackView.cpp
-      labeltrack/LabelTrackView.h
-      notetrack/NoteTrackButtonHandle.cpp
-      notetrack/NoteTrackButtonHandle.h
-      notetrack/NoteTrackControls.cpp
-      notetrack/NoteTrackControls.h
-      notetrack/NoteTrackSliderHandles.cpp
-      notetrack/NoteTrackSliderHandles.h
-      notetrack/NoteTrackVRulerControls.cpp
-      notetrack/NoteTrackVRulerControls.h
-      notetrack/NoteTrackVZoomHandle.cpp
-      notetrack/NoteTrackVZoomHandle.h
-      notetrack/NoteTrackView.cpp
-      notetrack/NoteTrackView.h
-      notetrack/StretchHandle.cpp
-      notetrack/StretchHandle.h
-      playabletrack/PlayableTrackButtonHandles.cpp
-      playabletrack/PlayableTrackButtonHandles.h
-      playabletrack/PlayableTrackControls.cpp
-      playabletrack/PlayableTrackControls.h
-      wavetrack/CutlineHandle.cpp
-      wavetrack/CutlineHandle.h
-      wavetrack/SampleHandle.cpp
-      wavetrack/SampleHandle.h
-      wavetrack/SpectrumVRulerControls.cpp
-      wavetrack/SpectrumVRulerControls.h
-      wavetrack/SpectrumVZoomHandle.cpp
-      wavetrack/SpectrumVZoomHandle.h
-      wavetrack/SpectrumView.cpp
-      wavetrack/SpectrumView.h
-      wavetrack/WaveTrackControls.cpp
-      wavetrack/WaveTrackControls.h
-      wavetrack/WaveTrackSliderHandles.cpp
-      wavetrack/WaveTrackSliderHandles.h
-      wavetrack/WaveTrackVRulerControls.cpp
-      wavetrack/WaveTrackVRulerControls.h
-      wavetrack/WaveTrackVZoomHandle.cpp
-      wavetrack/WaveTrackVZoomHandle.h
-      wavetrack/WaveTrackView.cpp
-      wavetrack/WaveTrackView.h
-      wavetrack/WaveTrackViewConstants.cpp
-      wavetrack/WaveTrackViewConstants.h
-      wavetrack/WaveformVRulerControls.cpp
-      wavetrack/WaveformVRulerControls.h
-      wavetrack/WaveformVZoomHandle.cpp
-      wavetrack/WaveformVZoomHandle.h
-      wavetrack/WaveformView.cpp
-      wavetrack/WaveformView.h
-      timetrack/TimeTrackControls.cpp
-      timetrack/TimeTrackControls.h
-      timetrack/TimeTrackVRulerControls.cpp
-      timetrack/TimeTrackVRulerControls.h
-      timetrack/TimeTrackView.cpp
-      timetrack/TimeTrackView.h
-
-      # Tracks UI
-
-      track/BackgroundCell.cpp
-      track/BackgroundCell.h
-      track/ButtonHandle.cpp
-      track/ButtonHandle.h
-      track/CommonTrackControls.cpp
-      track/CommonTrackControls.h
-      track/CommonTrackPanelCell.cpp
-      track/CommonTrackPanelCell.h
-      track/CommonTrackView.cpp
-      track/CommonTrackView.h
-      track/EditCursorOverlay.cpp
-      track/EditCursorOverlay.h
-      track/EnvelopeHandle.cpp
-      track/EnvelopeHandle.h
-      track/PlayIndicatorOverlay.cpp
-      track/PlayIndicatorOverlay.h
-      track/ScrubUI.cpp
-      track/ScrubUI.h
-      track/Scrubbing.cpp
-      track/Scrubbing.h
-      track/SelectHandle.cpp
-      track/SelectHandle.h
-      track/SliderHandle.cpp
-      track/SliderHandle.h
-      track/TimeShiftHandle.cpp
-      track/TimeShiftHandle.h
-      track/TrackButtonHandles.cpp
-      track/TrackButtonHandles.h
-      track/TrackControls.cpp
-      track/TrackControls.h
-      track/TrackSelectHandle.cpp
-      track/TrackSelectHandle.h
-      track/TrackVRulerControls.cpp
-      track/TrackVRulerControls.h
-      track/TrackView.cpp
-      track/TrackView.h
-      track/ZoomHandle.cpp
-      track/ZoomHandle.h
 )
 
 #
@@ -947,6 +845,10 @@ target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOU
 
 target_include_directories( ${TARGET} PRIVATE
    etc
+   labeltrack
+   playabletrack
+   track
+   wavetrack
    widgets
    widgets/FileDialog
 )

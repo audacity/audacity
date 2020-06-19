@@ -72,7 +72,7 @@
 #include "ErrorDialog.h"
 #include "FileNames.h"
 
-#include "track/Scrubbing.h"
+#include "Scrubbing.h"
 #include "toolbars/ToolManager.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
