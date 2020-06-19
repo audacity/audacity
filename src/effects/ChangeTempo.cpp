@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_SOUNDTOUCH
+#include "Audacity.h" // for USE_SOUNDTOUCH
 
 #if USE_SOUNDTOUCH
 #include "ChangeTempo.h"
@@ -31,9 +31,9 @@
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/valnum.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/valnum.h"
 #include "TimeWarper.h"
 
 #include "LoadEffects.h"

@@ -113,7 +113,7 @@ for registering for changes.
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 #include <wx/bmpbuttn.h>
-#include "../include/audacity/ComponentInterface.h"
+#include "audacity/ComponentInterface.h"
 #include "widgets/wxPanelWrapper.h"
 #include "AllThemeResources.h"
 
@@ -2189,7 +2189,7 @@ void SetIfCreated( wxStaticText *&Var, wxStaticText * Val )
 #ifdef EXPERIMENTAL_TRACK_PANEL
 // Additional includes down here, to make it easier to split this into
 // two files at some later date.
-#include "../extnpanel-src/GuiWaveTrack.h"
+#include "extnpanel-src/GuiWaveTrack.h"
 #endif
 
 ShuttleGui::ShuttleGui(

@@ -94,7 +94,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ImageRoll.h"
 
 #include <wx/wx.h>

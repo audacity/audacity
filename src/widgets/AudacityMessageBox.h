@@ -12,7 +12,7 @@
 #define __AUDACITY_MESSAGE_BOX__
 
 #include <wx/msgdlg.h>
-#include "../Internat.h"
+#include "Internat.h"
 
 extern TranslatableString AudacityMessageBoxCaptionStr();
 

@@ -27,8 +27,8 @@ Paul Licameli split from AudacityProject.cpp
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ToolManager.h"
-#include "tracks/ui/Scrubbing.h"
-#include "tracks/ui/TrackView.h"
+#include "track/Scrubbing.h"
+#include "track/TrackView.h"
 #include "widgets/wxPanelWrapper.h"
 #include "widgets/WindowAccessible.h"
 

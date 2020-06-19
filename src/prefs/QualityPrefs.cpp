@@ -15,18 +15,18 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "QualityPrefs.h"
 
 #include <wx/choice.h>
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 
-#include "../AudioIOBase.h"
-#include "../Dither.h"
-#include "../Prefs.h"
-#include "../Resample.h"
-#include "../ShuttleGui.h"
+#include "AudioIOBase.h"
+#include "Dither.h"
+#include "Prefs.h"
+#include "Resample.h"
+#include "ShuttleGui.h"
 
 #define ID_SAMPLE_RATE_CHOICE           7001
 

@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #if defined(USE_VAMP)
 #include "LoadVamp.h"

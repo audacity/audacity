@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_TRANSCRIPTION_TOOLBAR__
 #define __AUDACITY_TRANSCRIPTION_TOOLBAR__
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include "ToolBar.h"
 

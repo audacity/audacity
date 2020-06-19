@@ -22,9 +22,9 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -41,11 +41,11 @@
 #include "Import.h"
 #include "ImportPlugin.h"
 
-#include "../Tags.h"
-#include "../WaveClip.h"
-#include "../blockfile/ODDecodeBlockFile.h"
-#include "../prefs/QualityPrefs.h"
-#include "../widgets/ProgressDialog.h"
+#include "Tags.h"
+#include "WaveClip.h"
+#include "blockfile/ODDecodeBlockFile.h"
+#include "prefs/QualityPrefs.h"
+#include "widgets/ProgressDialog.h"
 
 #define FLAC_HEADER "fLaC"
 
@@ -72,12 +72,12 @@ static Importer::RegisteredUnusableImportPlugin registered{
 
 #include "FLAC++/decoder.h"
 
-#include "../FileFormats.h"
-#include "../Prefs.h"
-#include "../WaveTrack.h"
+#include "FileFormats.h"
+#include "Prefs.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
-#include "../ondemand/ODDecodeFlacTask.h"
-#include "../ondemand/ODManager.h"
+#include "ondemand/ODDecodeFlacTask.h"
+#include "ondemand/ODManager.h"
 
 #ifdef USE_LIBID3TAG
 extern "C" {

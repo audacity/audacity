@@ -19,7 +19,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Echo.h"
 #include "LoadEffects.h"
 
@@ -27,10 +27,10 @@
 
 #include <wx/intl.h>
 
-#include "../ShuttleGui.h"
-#include "../Shuttle.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/valnum.h"
+#include "ShuttleGui.h"
+#include "Shuttle.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/valnum.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

@@ -12,7 +12,7 @@
 #define __AUDACITY_EXPORT_MULTIPLE__
 
 #include "Export.h"
-#include "../wxFileNameWrapper.h" // member variable
+#include "wxFileNameWrapper.h" // member variable
 
 class wxButton;
 class wxCheckBox;

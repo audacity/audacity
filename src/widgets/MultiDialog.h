@@ -17,7 +17,7 @@
 #include <wx/defs.h>
 
 #include <wx/chartype.h> // for typedef wxChar
-#include "../Internat.h" // for TranslatableStrings
+#include "Internat.h" // for TranslatableStrings
 class wxString;
 
 const TranslatableString &DefaultMultiDialogMessage();

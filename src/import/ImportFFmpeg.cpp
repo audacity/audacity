@@ -20,23 +20,23 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
-#include "../Audacity.h"    // needed before FFmpeg.h // for USE_* macros
+#include "Audacity.h"    // needed before FFmpeg.h // for USE_* macros
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
-#include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
-#include "../WaveClip.h"
-#include "../blockfile/ODDecodeBlockFile.h"
-#include "../ondemand/ODManager.h"
+#include "FFmpeg.h"      // which brings in avcodec.h, avformat.h
+#include "WaveClip.h"
+#include "blockfile/ODDecodeBlockFile.h"
+#include "ondemand/ODManager.h"
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
 #include <wx/window.h>
 #endif
 
-#include "../widgets/ProgressDialog.h"
+#include "widgets/ProgressDialog.h"
 
 
 #define DESC XO("FFmpeg-compatible files")
@@ -154,13 +154,13 @@ static const auto exts = {
 
 // all the includes live here by default
 #include "Import.h"
-#include "../Tags.h"
-#include "../WaveTrack.h"
+#include "Tags.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 
 
 #ifdef EXPERIMENTAL_OD_FFMPEG
-#include "../ondemand/ODDecodeFFmpegTask.h"
+#include "ondemand/ODDecodeFFmpegTask.h"
 #endif
 
 class FFmpegImportFileHandle;

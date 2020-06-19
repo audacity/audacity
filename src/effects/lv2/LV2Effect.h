@@ -9,7 +9,7 @@
 
 *********************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #if USE_LV2
 
@@ -37,8 +37,8 @@ class wxArrayString;
 #include <lilv/lilv.h>
 #include <suil/suil.h>
 
-#include "../../ShuttleGui.h"
-#include "../../SampleFormat.h"
+#include "ShuttleGui.h"
+#include "SampleFormat.h"
 
 #include "LoadLV2.h"
 #include "NativeWindow.h"

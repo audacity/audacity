@@ -10,7 +10,7 @@
 #define __AUDACITY_IMPORT_FORWARDS__
 
 #include <vector>
-#include "../MemoryX.h"
+#include "MemoryX.h"
 
 class ImportPlugin;
 class UnusableImportPlugin;

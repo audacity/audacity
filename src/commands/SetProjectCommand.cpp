@@ -17,16 +17,16 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "SetProjectCommand.h"
 
 #include "LoadCommands.h"
-#include "../Project.h"
-#include "../WaveTrack.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "Project.h"
+#include "WaveTrack.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
 #include "CommandContext.h"
-#include "../toolbars/SelectionBar.h"
+#include "toolbars/SelectionBar.h"
 
 #include <wx/frame.h>
 

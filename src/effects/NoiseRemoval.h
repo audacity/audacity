@@ -12,9 +12,9 @@
 #ifndef __AUDACITY_EFFECT_NOISE_REMOVAL__
 #define __AUDACITY_EFFECT_NOISE_REMOVAL__
 
-#include "../Audacity.h"
+#include "Audacity.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #if !defined(EXPERIMENTAL_NOISE_REDUCTION)
 
@@ -31,7 +31,7 @@ class WaveTrack;
 class wxRadioButton;
 class wxTextCtrl;
 
-#include "../RealFFTf.h"
+#include "RealFFTf.h"
 
 class EffectNoiseRemoval final : public Effect
 {

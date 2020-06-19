@@ -32,7 +32,7 @@ a graph for EffectScienFilter.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ScienFilter.h"
 #include "LoadEffects.h"
 
@@ -52,19 +52,19 @@ a graph for EffectScienFilter.
 #include <wx/utils.h>
 #include <wx/valgen.h>
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
-#include "../PlatformCompatibility.h"
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../Theme.h"
-#include "../WaveTrack.h"
-#include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/Ruler.h"
-#include "../widgets/WindowAccessible.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
+#include "PlatformCompatibility.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "Theme.h"
+#include "WaveTrack.h"
+#include "widgets/valnum.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/Ruler.h"
+#include "widgets/WindowAccessible.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795

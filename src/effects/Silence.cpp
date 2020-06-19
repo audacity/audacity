@@ -13,15 +13,15 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Silence.h"
 #include "LoadEffects.h"
 
 #include <wx/intl.h>
 
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../widgets/NumericTextCtrl.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
+#include "widgets/NumericTextCtrl.h"
 
 const ComponentInterfaceSymbol EffectSilence::Symbol
 /* i18n-hint: noun */

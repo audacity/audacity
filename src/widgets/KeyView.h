@@ -9,7 +9,7 @@
 #ifndef __AUDACITY_WIDGETS_KEYVIEW__
 #define __AUDACITY_WIDGETS_KEYVIEW__
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "audacity/Types.h"
 
 #include <vector>
@@ -17,7 +17,7 @@
 #include <wx/defs.h>
 #include <wx/vlbox.h> // to inherit wxVListBox
 
-#include "../commands/Keyboard.h"
+#include "commands/Keyboard.h"
 
 // Class holding all information about a node.  Rather than a real tree
 // we store these in an array and simulate a tree.

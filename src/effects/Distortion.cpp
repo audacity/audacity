@@ -16,11 +16,11 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Distortion.h"
 #include "LoadEffects.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <cmath>
 #include <algorithm>
@@ -42,10 +42,10 @@
 #include <wx/slider.h>
 #include <wx/stattext.h>
 
-#include "../Prefs.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/valnum.h"
+#include "Prefs.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/valnum.h"
 
 enum kTableType
 {

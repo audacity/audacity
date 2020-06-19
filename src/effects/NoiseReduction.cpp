@@ -36,23 +36,23 @@
 *//****************************************************************//**
 */
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "NoiseReduction.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include "LoadEffects.h"
 #include "EffectManager.h"
 #include "EffectUI.h"
 
-#include "../ShuttleGui.h"
-#include "../widgets/HelpSystem.h"
-#include "../Prefs.h"
-#include "../RealFFTf.h"
+#include "ShuttleGui.h"
+#include "widgets/HelpSystem.h"
+#include "Prefs.h"
+#include "RealFFTf.h"
 
-#include "../WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/valnum.h"
+#include "WaveTrack.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/valnum.h"
 
 #include <algorithm>
 #include <vector>

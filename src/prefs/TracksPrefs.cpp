@@ -17,17 +17,17 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "TracksPrefs.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 //#include <algorithm>
 //#include <wx/defs.h>
 
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
+#include "wavetrack/WaveTrackViewConstants.h"
 
 int TracksPrefs::iPreferencePinned = -1;
 

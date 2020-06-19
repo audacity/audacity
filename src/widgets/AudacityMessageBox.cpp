@@ -9,7 +9,7 @@
 **********************************************************************/
 
 #include "AudacityMessageBox.h"
-#include "../Internat.h"
+#include "Internat.h"
 
 TranslatableString AudacityMessageBoxCaptionStr()
 {

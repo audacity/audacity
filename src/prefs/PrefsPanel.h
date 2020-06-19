@@ -28,9 +28,9 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 #define __AUDACITY_PREFS_PANEL__
 
 #include <functional>
-#include "../widgets/wxPanelWrapper.h" // to inherit
-#include "../include/audacity/ComponentInterface.h"
-#include "../Registry.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
+#include "audacity/ComponentInterface.h"
+#include "Registry.h"
 
 /* A few constants for an attempt at semi-uniformity */
 #define PREFS_FONT_SIZE     8

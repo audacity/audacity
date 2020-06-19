@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "DirectoriesPrefs.h"
 
 #include <math.h>
@@ -32,10 +32,10 @@
 #include <wx/filename.h>
 #include <wx/utils.h>
 
-#include "../FileNames.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "FileNames.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
+#include "widgets/AudacityMessageBox.h"
 
 enum {
    TempDirID = 1000,

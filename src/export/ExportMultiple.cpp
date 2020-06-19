@@ -15,7 +15,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ExportMultiple.h"
 
 #include <wx/defs.h>
@@ -37,22 +37,22 @@
 #include <wx/textctrl.h>
 #include <wx/textdlg.h>
 
-#include "../DirManager.h"
-#include "../FileFormats.h"
-#include "../FileNames.h"
-#include "../LabelTrack.h"
-#include "../Project.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "../Prefs.h"
-#include "../SelectionState.h"
-#include "../ShuttleGui.h"
-#include "../Tags.h"
-#include "../WaveTrack.h"
-#include "../widgets/HelpSystem.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
-#include "../widgets/ProgressDialog.h"
+#include "DirManager.h"
+#include "FileFormats.h"
+#include "FileNames.h"
+#include "LabelTrack.h"
+#include "Project.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
+#include "Prefs.h"
+#include "SelectionState.h"
+#include "ShuttleGui.h"
+#include "Tags.h"
+#include "WaveTrack.h"
+#include "widgets/HelpSystem.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/ErrorDialog.h"
+#include "widgets/ProgressDialog.h"
 
 
 namespace {

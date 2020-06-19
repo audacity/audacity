@@ -21,16 +21,16 @@ the audio, rather than actually finding the clicks.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Repair.h"
 
 #include <math.h>
 
 #include <wx/intl.h>
 
-#include "../InterpolateAudio.h"
-#include "../WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "InterpolateAudio.h"
+#include "WaveTrack.h"
+#include "widgets/AudacityMessageBox.h"
 
 #include "LoadEffects.h"
 

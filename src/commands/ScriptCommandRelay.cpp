@@ -24,7 +24,7 @@ code out of ModuleManager.
 #include "CommandTargets.h"
 #include "CommandBuilder.h"
 #include "AppCommandEvent.h"
-#include "../Project.h"
+#include "Project.h"
 #include <wx/app.h>
 #include <wx/string.h>
 #include <thread>

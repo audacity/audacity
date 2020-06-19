@@ -9,7 +9,7 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #if defined(USE_LV2)
 
@@ -46,11 +46,11 @@
 #include <wx/intl.h>
 #include <wx/scrolwin.h>
 
-#include "../../ShuttleGui.h"
-#include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
-#include "../../widgets/wxPanelWrapper.h"
-#include "../../widgets/NumericTextCtrl.h"
+#include "ShuttleGui.h"
+#include "widgets/valnum.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/wxPanelWrapper.h"
+#include "widgets/NumericTextCtrl.h"
 
 #include "lilv/lilv.h"
 #include "suil/suil.h"

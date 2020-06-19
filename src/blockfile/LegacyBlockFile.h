@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_LEGACY_BLOCKFILE__
 #define __AUDACITY_LEGACY_BLOCKFILE__
 
-#include "../BlockFile.h"
+#include "BlockFile.h"
 
 class wxFileName;
 

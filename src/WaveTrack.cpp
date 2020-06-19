@@ -62,8 +62,8 @@ Track classes.
 
 #include "InconsistencyException.h"
 
-#include "tracks/ui/TrackView.h"
-#include "tracks/ui/TrackControls.h"
+#include "track/TrackView.h"
+#include "track/TrackControls.h"
 
 using std::max;
 
