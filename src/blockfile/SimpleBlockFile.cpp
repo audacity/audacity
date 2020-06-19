@@ -57,7 +57,7 @@ to get its definition, rather than rolling our own.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "SimpleBlockFile.h"
 
 #include <wx/wx.h>
@@ -66,10 +66,10 @@ to get its definition, rather than rolling our own.
 #include <wx/utils.h>
 #include <wx/log.h>
 
-#include "../DirManager.h"
-#include "../Prefs.h"
+#include "DirManager.h"
+#include "Prefs.h"
 
-#include "../FileFormats.h"
+#include "FileFormats.h"
 
 #include "sndfile.h"
 

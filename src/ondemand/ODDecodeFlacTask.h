@@ -90,7 +90,7 @@ class ODFLACFile final : public FLAC::Decoder::File
    void error_callback(FLAC__StreamDecoderErrorStatus status) override;
 };
 
-#include "../blockfile/ODDecodeBlockFile.h" // to inherit
+#include "ODDecodeBlockFile.h" // to inherit
 
 ///class to decode a particular file (one per file).  Saves info such as filename and length (after the header is read.)
 class ODFlacDecoder final : public ODFileDecoder

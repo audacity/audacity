@@ -12,9 +12,9 @@
 #ifndef __AUDACITY_EFFECT__
 #define __AUDACITY_EFFECT__
 
-#include "../Audacity.h"
+#include "Audacity.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <functional>
 #include <set>
@@ -30,11 +30,11 @@ class wxWindow;
 #include "audacity/ConfigInterface.h"
 #include "audacity/EffectInterface.h"
 
-#include "../SelectedRegion.h"
+#include "SelectedRegion.h"
 
-#include "../Track.h"
+#include "Track.h"
 
-#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 class wxArrayString;
 class ShuttleGui;

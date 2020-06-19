@@ -18,21 +18,21 @@ threshold of difference in two selected tracks
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "CompareAudioCommand.h"
 
 #include "LoadCommands.h"
-#include "../ViewInfo.h"
-#include "../WaveTrack.h"
+#include "ViewInfo.h"
+#include "WaveTrack.h"
 
 
 #include <float.h>
 #include <wx/intl.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/valnum.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "AudacityMessageBox.h"
+#include "valnum.h"
 #include "CommandContext.h"
 
 const ComponentInterfaceSymbol CompareAudioCommand::Symbol

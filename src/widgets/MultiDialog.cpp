@@ -18,10 +18,10 @@ for each problem encountered, since there can be many orphans.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "MultiDialog.h"
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 #include <wx/app.h>
 #include <wx/button.h>
@@ -36,11 +36,11 @@ for each problem encountered, since there can be many orphans.
 #include <wx/bmpbuttn.h>
 
 
-#include "../AudacityLogger.h"
+#include "AudacityLogger.h"
 #include "wxPanelWrapper.h"
-#include "../Theme.h"
-#include "../AllThemeResources.h"
-#include "../widgets/HelpSystem.h"
+#include "Theme.h"
+#include "AllThemeResources.h"
+#include "HelpSystem.h"
 
 class MultiDialog final : public wxDialogWrapper
 {

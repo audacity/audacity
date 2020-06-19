@@ -19,9 +19,9 @@ function.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
+#include "Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
 
-#include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
+#include "FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
 
 #include <wx/choice.h>
 #include <wx/intl.h>
@@ -33,14 +33,14 @@ function.
 #include <wx/spinctrl.h>
 #include <wx/combobox.h>
 
-#include "../FileFormats.h"
-#include "../Mix.h"
-#include "../ProjectSettings.h"
-#include "../Tags.h"
-#include "../Track.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
-#include "../wxFileNameWrapper.h"
+#include "FileFormats.h"
+#include "Mix.h"
+#include "ProjectSettings.h"
+#include "Tags.h"
+#include "Track.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
+#include "wxFileNameWrapper.h"
 
 #include "Export.h"
 

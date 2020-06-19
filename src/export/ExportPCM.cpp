@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #include <wx/defs.h>
 
@@ -23,17 +23,17 @@
 
 #include "sndfile.h"
 
-#include "../FileFormats.h"
-#include "../Mix.h"
-#include "../Prefs.h"
-#include "../ProjectSettings.h"
-#include "../ShuttleGui.h"
-#include "../Tags.h"
-#include "../Track.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
-#include "../widgets/ProgressDialog.h"
-#include "../wxFileNameWrapper.h"
+#include "FileFormats.h"
+#include "Mix.h"
+#include "Prefs.h"
+#include "ProjectSettings.h"
+#include "ShuttleGui.h"
+#include "Tags.h"
+#include "Track.h"
+#include "AudacityMessageBox.h"
+#include "ErrorDialog.h"
+#include "ProgressDialog.h"
+#include "wxFileNameWrapper.h"
 
 #include "Export.h"
 

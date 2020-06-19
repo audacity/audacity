@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "PCMAliasBlockFile.h"
 
 #include <wx/file.h>
@@ -18,9 +18,9 @@
 
 #include <sndfile.h>
 
-#include "../FileFormats.h"
+#include "FileFormats.h"
 
-#include "../DirManager.h"
+#include "DirManager.h"
 
 PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileNameWrapper &&fileName,

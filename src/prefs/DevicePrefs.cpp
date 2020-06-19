@@ -22,7 +22,7 @@ other settings.
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "DevicePrefs.h"
 
 #include "RecordingPrefs.h"
@@ -36,9 +36,9 @@ other settings.
 
 #include "portaudio.h"
 
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "../DeviceManager.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
+#include "DeviceManager.h"
 
 enum {
    HostID = 10000,

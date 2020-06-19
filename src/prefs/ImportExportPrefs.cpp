@@ -15,14 +15,14 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "ImportExportPrefs.h"
 
 #include <wx/defs.h>
 
-#include "../FileFormats.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
+#include "FileFormats.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
 
 ImportExportPrefs::ImportExportPrefs(wxWindow * parent, wxWindowID winid)
 :   PrefsPanel(parent, winid, XO("Import / Export"))

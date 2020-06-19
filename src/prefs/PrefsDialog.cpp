@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 #include "PrefsDialog.h"
 
 #include <wx/app.h>
@@ -34,17 +34,17 @@
 #include <wx/treebook.h>
 #include <wx/treectrl.h>
 
-#include "../AudioIOBase.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "../commands/CommandManager.h"
+#include "AudioIOBase.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
+#include "commands/CommandManager.h"
 
 #include "PrefsPanel.h"
 
-#include "../widgets/HelpSystem.h"
+#include "HelpSystem.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 
@@ -834,8 +834,8 @@ void PrefsDialog::RecordExpansionState()
 }
 
 #include <wx/frame.h>
-#include "../Menus.h"
-#include "../Project.h"
+#include "Menus.h"
+#include "Project.h"
 
 void DoReloadPreferences( AudacityProject &project )
 {

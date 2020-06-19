@@ -15,11 +15,11 @@
 #include <vector>
 #include <wx/filename.h> // member variable
 #include "audacity/Types.h"
-#include "../SampleFormat.h"
-#include "../widgets/wxPanelWrapper.h" // to inherit
-#include "../FileNames.h" // for FileTypes
+#include "SampleFormat.h"
+#include "wxPanelWrapper.h" // to inherit
+#include "FileNames.h" // for FileTypes
 
-#include "../Registry.h"
+#include "Registry.h"
 
 class wxArrayString;
 class FileDialogWrapper;

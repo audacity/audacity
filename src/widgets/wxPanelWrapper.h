@@ -9,11 +9,11 @@
 #ifndef __AUDACITY_WXPANEL_WRAPPER__
 #define __AUDACITY_WXPANEL_WRAPPER__
 
-#include "../MemoryX.h"
+#include "MemoryX.h"
 #include <wx/panel.h> // to inherit
 #include <wx/dialog.h> // to inherit
 
-#include "../Internat.h"
+#include "Internat.h"
 
 #include "audacity/Types.h"
 
@@ -157,8 +157,8 @@ public:
    }
 };
 
-#include "FileDialog/FileDialog.h"
-#include "../FileNames.h" // for FileTypes
+#include "FileDialog.h"
+#include "FileNames.h" // for FileTypes
 
 class AUDACITY_DLL_API FileDialogWrapper
    : public wxTabTraversalWrapper<FileDialog>

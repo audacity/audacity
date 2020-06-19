@@ -22,11 +22,11 @@
 #ifndef __AUDACITY_ODTASKTHREAD__
 #define __AUDACITY_ODTASKTHREAD__
 
-#include "../Audacity.h"	// contains the set-up of AUDACITY_DLL_API
+#include "Audacity.h"	// contains the set-up of AUDACITY_DLL_API
 
 #include <wx/thread.h> // to inherit
 
-#include "../MemoryX.h"
+#include "MemoryX.h"
 
 class ODTask;
 

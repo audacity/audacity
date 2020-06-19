@@ -6,7 +6,7 @@
 //
 //
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "NotYetAvailableException.h"
 
 NotYetAvailableException::~NotYetAvailableException()

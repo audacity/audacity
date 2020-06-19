@@ -19,7 +19,7 @@ KeyConfigPrefs and MousePrefs use.
 
 *//*********************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 
 #include "KeyConfigPrefs.h"
 
@@ -34,20 +34,20 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/statbox.h>
 #include <wx/textctrl.h>
 
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../commands/CommandManager.h"
-#include "../xml/XMLFileReader.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "CommandManager.h"
+#include "XMLFileReader.h"
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
-#include "../FileNames.h"
+#include "FileNames.h"
 
-#include "../widgets/KeyView.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "KeyView.h"
+#include "AudacityMessageBox.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 //

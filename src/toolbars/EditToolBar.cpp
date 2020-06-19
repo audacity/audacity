@@ -30,10 +30,10 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "EditToolBar.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -48,17 +48,17 @@
 #include <wx/tooltip.h>
 #endif
 
-#include "../AllThemeResources.h"
-#include "../BatchCommands.h"
-#include "../ImageManipulation.h"
-#include "../Menus.h"
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../UndoManager.h"
-#include "../widgets/AButton.h"
+#include "AllThemeResources.h"
+#include "BatchCommands.h"
+#include "ImageManipulation.h"
+#include "Menus.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "UndoManager.h"
+#include "AButton.h"
 
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 

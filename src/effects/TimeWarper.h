@@ -56,7 +56,7 @@ of the warped region.
 #ifndef __TIMEWARPER__
 #define __TIMEWARPER__
 
-#include "../MemoryX.h"
+#include "MemoryX.h"
 
 class TimeWarper /* not final */
 {

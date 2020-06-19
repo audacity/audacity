@@ -9,11 +9,11 @@
 
 ******************************************************************/
 
-#include "../Audacity.h"   // needed before FFmpeg.h // for USE_* macros
-#include "../blockfile/ODDecodeBlockFile.h" // base class
+#include "Audacity.h"   // needed before FFmpeg.h // for USE_* macros
+#include "ODDecodeBlockFile.h" // base class
 #include "ODDecodeFFmpegTask.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #include <wx/crt.h>
 #include <wx/wxprec.h>
@@ -29,7 +29,7 @@
 #include <algorithm>
 #include <functional>
 
-#include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
+#include "FFmpeg.h"      // which brings in avcodec.h, avformat.h
 
 
 #define ODFFMPEG_SEEKING_TEST_UNKNOWN 0

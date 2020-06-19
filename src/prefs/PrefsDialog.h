@@ -14,7 +14,7 @@
 
 #include <functional>
 #include <vector>
-#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 #include "PrefsPanel.h"
 
 class AudacityProject;

@@ -21,17 +21,17 @@ and sample size to help you importing data of an unknown format.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ImportRaw.h"
 
-#include "../DirManager.h"
-#include "../FileFormats.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "../UserException.h"
-#include "../WaveTrack.h"
-#include "../prefs/QualityPrefs.h"
-#include "../widgets/ProgressDialog.h"
+#include "DirManager.h"
+#include "FileFormats.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
+#include "UserException.h"
+#include "WaveTrack.h"
+#include "QualityPrefs.h"
+#include "ProgressDialog.h"
 
 #include <cmath>
 #include <cstdio>

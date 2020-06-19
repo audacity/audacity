@@ -12,8 +12,8 @@
 #include <gtk/gtk.h>
 
 #include "Internat.h"
-#include "widgets/AudacityMessageBox.h"
-#include "../FileDialog.h"
+#include "AudacityMessageBox.h"
+#include "FileDialog.h"
 
 #ifdef __UNIX__
 #include <unistd.h> // chdir

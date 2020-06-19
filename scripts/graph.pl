@@ -10,11 +10,12 @@ my @clusterlist = qw(
    /xml
    /export
    /menus
-   /effects/VST
-   /effects/ladspa
-   /effects/lv2
-   /effects/nyquist
-   /effects/vamp
+   /effect-classes/VST
+   /effect-classes/audiounits
+   /effect-classes/ladspa
+   /effect-classes/lv2
+   /effect-classes/nyquist
+   /effect-classes/vamp
 );
 my %clusters;
 @clusters{@clusterlist} = ();

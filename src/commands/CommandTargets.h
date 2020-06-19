@@ -55,7 +55,7 @@ and sends it to that message target.
 #ifndef __COMMANDTARGETS__
 #define __COMMANDTARGETS__
 
-#include "../MemoryX.h"
+#include "MemoryX.h"
 #include <vector>
 #include <wx/thread.h>
 
@@ -155,7 +155,7 @@ public:
 
 #if 0
 
-//#include "../widgets/ProgressDialog.h" // Member variable
+//#include "ProgressDialog.h" // Member variable
 
 /// Sends command progress information to a ProgressDialog
 class GUIProgressTarget final : public CommandProgressTarget

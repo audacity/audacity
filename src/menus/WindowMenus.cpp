@@ -1,6 +1,6 @@
-#include "../Audacity.h"
+#include "Audacity.h"
 
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 
 // This file collects a few things specific to Mac and requiring some
 // Objective-C++ .  Avoid mixing languages elsewhere.
@@ -8,11 +8,11 @@
 // Only needed when using wxWidgets < 3.1.3
 #if defined(__WXMAC__) && !wxCHECK_VERSION(3,1,3)
 
-#include "../CommonCommandFlags.h"
-#include "../Menus.h"
-#include "../Project.h"
-#include "../ProjectFileIO.h"
-#include "../commands/CommandContext.h"
+#include "CommonCommandFlags.h"
+#include "Menus.h"
+#include "Project.h"
+#include "ProjectFileIO.h"
+#include "CommandContext.h"
 
 #include <wx/frame.h>
 #include <wx/menu.h>

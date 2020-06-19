@@ -21,14 +21,14 @@ system by constructing BatchCommandEval objects.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "CommandBuilder.h"
 
 #include "CommandDirectory.h"
 #include "Command.h"
 #include "CommandContext.h"
 #include "CommandTargets.h"
-#include "../Shuttle.h"
+#include "Shuttle.h"
 
 CommandBuilder::CommandBuilder(
    AudacityProject *project, const wxString &cmdString)

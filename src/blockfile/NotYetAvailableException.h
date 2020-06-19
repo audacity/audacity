@@ -9,7 +9,7 @@
 #ifndef __AUDACITY_NOT_YET_AVAILABLE_EXCEPTION__
 #define __AUDACITY_NOT_YET_AVAILABLE_EXCEPTION__
 
-#include "../FileException.h"
+#include "FileException.h"
 
 // This exception can be thrown when attempting read of on-demand block files
 // that have not yet completed loading.

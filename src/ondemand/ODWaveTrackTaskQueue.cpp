@@ -16,12 +16,12 @@ tasks associated with a WaveTrack.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "ODWaveTrackTaskQueue.h"
 
 #include "ODTask.h"
 #include "ODManager.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 /// Constructs an ODWaveTrackTaskQueue
 ODWaveTrackTaskQueue::ODWaveTrackTaskQueue()
 {

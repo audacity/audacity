@@ -19,7 +19,7 @@ parameters.  It is for development purposes.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "Audacity.h"
 #include "Demo.h"
 #include "LoadCommands.h"
 
@@ -27,11 +27,11 @@ parameters.  It is for development purposes.
 
 #include <wx/intl.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/valnum.h"
-#include "../commands/CommandContext.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "AudacityMessageBox.h"
+#include "valnum.h"
+#include "CommandContext.h"
 
 const ComponentInterfaceSymbol DemoCommand::Symbol
 { XO("Demo") };

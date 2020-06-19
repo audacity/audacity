@@ -19,10 +19,10 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "Audacity.h" // for USE_* macros
 
 #include "Import.h"
-#include "../Tags.h"
+#include "Tags.h"
 
 #include <wx/wx.h>
 #include <wx/string.h>
@@ -36,14 +36,14 @@
 
 #include "sndfile.h"
 
-#include "../WaveClip.h"
-#include "../ShuttleGui.h"
+#include "WaveClip.h"
+#include "ShuttleGui.h"
 
-#include "../ondemand/ODManager.h"
-#include "../ondemand/ODComputeSummaryTask.h"
-#include "../blockfile/ODPCMAliasBlockFile.h"
-#include "../prefs/QualityPrefs.h"
-#include "../widgets/ProgressDialog.h"
+#include "ODManager.h"
+#include "ODComputeSummaryTask.h"
+#include "ODPCMAliasBlockFile.h"
+#include "QualityPrefs.h"
+#include "ProgressDialog.h"
 
 //If OD is enabled, he minimum number of samples a file has to use it.
 //Otherwise, we use the older PCMAliasBlockFile method since it should be fast enough.
@@ -53,10 +53,10 @@
 #error Requires libsndfile 1.0 or higher
 #endif
 
-#include "../FileFormats.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "FileFormats.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 
 #include <algorithm>
