@@ -24,7 +24,7 @@
 #include "ToolManager.h"
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
-#include "prefs/PrefsDialog.h"
+#include "PrefsDialog.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
 

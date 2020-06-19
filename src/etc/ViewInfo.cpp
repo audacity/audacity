@@ -18,7 +18,7 @@ Paul Licameli
 #include "Prefs.h"
 #include "Project.h"
 #include "XMLWriter.h"
-#include "prefs/TracksBehaviorsPrefs.h"
+#include "TracksBehaviorsPrefs.h"
 #include "XMLWriter.h"
 
 wxDEFINE_EVENT( EVT_SELECTED_REGION_CHANGE, SelectedRegionEvent );

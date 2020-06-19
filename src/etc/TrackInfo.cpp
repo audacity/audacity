@@ -41,7 +41,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Track.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
-#include "prefs/TracksBehaviorsPrefs.h"
+#include "TracksBehaviorsPrefs.h"
 #include "TrackView.h"
 
 // Subscribe to preference changes to update static variables

@@ -66,7 +66,7 @@
 #include "AudioIO.h"
 #include "AColor.h"
 #include "ImageManipulation.h"
-#include "prefs/GUISettings.h"
+#include "GUISettings.h"
 #include "Project.h"
 #include "ProjectAudioManager.h"
 #include "ProjectStatus.h"

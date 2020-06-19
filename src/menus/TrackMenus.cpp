@@ -29,7 +29,7 @@
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
-#include "prefs/QualityPrefs.h"
+#include "QualityPrefs.h"
 #include "WaveTrackControls.h"
 #include "ASlider.h"
 #include "AudacityMessageBox.h"

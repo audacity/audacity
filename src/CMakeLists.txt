@@ -13,6 +13,7 @@ foreach( SUBDIRECTORY
    labeltrack
    notetrack
    playabletrack
+   prefs
    timetrack
    toolbars
    track
@@ -455,62 +456,6 @@ list( APPEND SOURCES
       ondemand/ODTaskThread.h
       ondemand/ODWaveTrackTaskQueue.cpp
       ondemand/ODWaveTrackTaskQueue.h
-
-      # Preferences
-
-      prefs/BatchPrefs.cpp
-      prefs/BatchPrefs.h
-      prefs/DevicePrefs.cpp
-      prefs/DevicePrefs.h
-      prefs/DirectoriesPrefs.cpp
-      prefs/DirectoriesPrefs.h
-      prefs/EffectsPrefs.cpp
-      prefs/EffectsPrefs.h
-      prefs/ExtImportPrefs.cpp
-      prefs/ExtImportPrefs.h
-      prefs/GUIPrefs.cpp
-      prefs/GUIPrefs.h
-      prefs/GUISettings.h
-      prefs/ImportExportPrefs.cpp
-      prefs/ImportExportPrefs.h
-      prefs/KeyConfigPrefs.cpp
-      prefs/KeyConfigPrefs.h
-      prefs/LibraryPrefs.cpp
-      prefs/LibraryPrefs.h
-      prefs/MidiIOPrefs.cpp
-      prefs/MidiIOPrefs.h
-      prefs/ModulePrefs.cpp
-      prefs/ModulePrefs.h
-      prefs/MousePrefs.cpp
-      prefs/MousePrefs.h
-      prefs/PlaybackPrefs.cpp
-      prefs/PlaybackPrefs.h
-      prefs/PrefsDialog.cpp
-      prefs/PrefsDialog.h
-      prefs/PrefsPanel.cpp
-      prefs/PrefsPanel.h
-      prefs/ProjectsPrefs.cpp
-      prefs/ProjectsPrefs.h
-      prefs/QualityPrefs.cpp
-      prefs/QualityPrefs.h
-      prefs/RecordingPrefs.cpp
-      prefs/RecordingPrefs.h
-      prefs/SpectrogramSettings.cpp
-      prefs/SpectrogramSettings.h
-      prefs/SpectrumPrefs.cpp
-      prefs/SpectrumPrefs.h
-      prefs/ThemePrefs.cpp
-      prefs/ThemePrefs.h
-      prefs/TracksBehaviorsPrefs.cpp
-      prefs/TracksBehaviorsPrefs.h
-      prefs/TracksPrefs.cpp
-      prefs/TracksPrefs.h
-      prefs/WarningsPrefs.cpp
-      prefs/WarningsPrefs.h
-      prefs/WaveformPrefs.cpp
-      prefs/WaveformPrefs.h
-      prefs/WaveformSettings.cpp
-      prefs/WaveformSettings.h
 )
 
 #
@@ -543,7 +488,6 @@ list( APPEND LIBRARIES
       wxWidgets
       lame
       libsndfile
-      portaudio-v19
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
@@ -552,7 +496,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_LV2}>:lv2>
-      $<$<BOOL:${USE_MIDI}>:portmidi>
       $<$<BOOL:${USE_MIDI}>:portsmf>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<BOOL:${USE_SBSMS}>:sbsms>
@@ -815,6 +758,7 @@ target_include_directories( ${TARGET} PRIVATE
    etc
    labeltrack
    playabletrack
+   prefs
    toolbars
    track
    wavetrack

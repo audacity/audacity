@@ -25,7 +25,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "prefs/SpectrogramSettings.h"
+#include "SpectrogramSettings.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
@@ -678,8 +678,8 @@ static const WaveTrackSubViews::RegisteredFactory key{
 #include "Menus.h"
 #include "ProjectHistory.h"
 #include "RefreshCode.h"
-#include "prefs/PrefsDialog.h"
-#include "prefs/SpectrumPrefs.h"
+#include "PrefsDialog.h"
+#include "SpectrumPrefs.h"
 #include "AudacityMessageBox.h"
 #include "PopupMenuTable.h"
 

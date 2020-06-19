@@ -22,7 +22,7 @@
 #include "commands/CommandManager.h"
 #include "commands/ScreenshotCommand.h"
 #include "export/Export.h"
-#include "prefs/PrefsDialog.h"
+#include "PrefsDialog.h"
 #include "LabelTrackView.h"
 #include "AudacityMessageBox.h"
 

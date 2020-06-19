@@ -36,7 +36,7 @@
 #include "DirManager.h"
 #include "Prefs.h"
 #include "ProjectFileIORegistry.h"
-#include "prefs/ImportExportPrefs.h"
+#include "ImportExportPrefs.h"
 
 #include "InconsistencyException.h"
 

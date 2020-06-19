@@ -21,7 +21,7 @@
 #include "AudioIOBase.h"
 #include "FileNames.h"
 #include "Internat.h"
-#include "prefs/GUIPrefs.h"
+#include "GUIPrefs.h"
 #include "ErrorDialog.h"
 
 namespace CrashReport {

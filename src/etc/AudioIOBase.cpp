@@ -18,7 +18,7 @@ Paul Licameli split from AudioIO.cpp
 
 #include "Envelope.h"
 #include "Prefs.h"
-#include "prefs/RecordingPrefs.h"
+#include "RecordingPrefs.h"
 #include "MeterPanelBase.h"
 
 #if USE_PORTMIXER

@@ -69,7 +69,7 @@ the mouse around.
 #include "CommonCommandFlags.h"
 #include "FFT.h"
 #include "PitchName.h"
-#include "prefs/GUISettings.h"
+#include "GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindow.h"

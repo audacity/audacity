@@ -38,7 +38,7 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
 #include "Prefs.h"
-#include "./prefs/ModulePrefs.h"
+#include "ModulePrefs.h"
 #endif
 
 #include "MultiDialog.h"

@@ -96,7 +96,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "Screenshot.h"
 #include "Sequence.h"
 #include "WaveTrack.h"
-#include "prefs/PrefsDialog.h"
+#include "PrefsDialog.h"
 #include "Theme.h"
 #include "PlatformCompatibility.h"
 #include "FileNames.h"
@@ -107,13 +107,13 @@ It handles initialization and termination by subclassing wxApp.
 #include "BlockFile.h"
 #include "ondemand/ODManager.h"
 #include "AudacityMessageBox.h"
-#include "prefs/DirectoriesPrefs.h"
-#include "prefs/GUIPrefs.h"
+#include "DirectoriesPrefs.h"
+#include "GUIPrefs.h"
 #include "Scrubbing.h"
 #include "FileHistory.h"
 
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
-#include "prefs/KeyConfigPrefs.h"
+#include "KeyConfigPrefs.h"
 #endif
 
 //temporarily commented out till it is added to all projects

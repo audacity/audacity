@@ -41,7 +41,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
 #include "ondemand/ODManager.h"
-#include "prefs/QualityPrefs.h"
+#include "QualityPrefs.h"
 #include "MixerToolBar.h"
 #include "SelectionBar.h"
 #include "SpectralSelectionBar.h"
