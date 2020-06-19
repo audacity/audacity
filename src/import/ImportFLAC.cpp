@@ -76,8 +76,8 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include "Prefs.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
-#include "ondemand/ODDecodeFlacTask.h"
-#include "ondemand/ODManager.h"
+#include "ODDecodeFlacTask.h"
+#include "ODManager.h"
 
 #ifdef USE_LIBID3TAG
 extern "C" {

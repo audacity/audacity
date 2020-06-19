@@ -38,7 +38,7 @@
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "ProgressDialog.h"
-#include "ondemand/ODManager.h"
+#include "ODManager.h"
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
 #include "NumericTextCtrl.h"

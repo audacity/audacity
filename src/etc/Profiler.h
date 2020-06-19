@@ -28,7 +28,7 @@ but it will probably work fine if you use it on a high level.
 #define __AUDACITY_PROFILER__
 #include <vector>
 #include <time.h>
-#include "ondemand/ODTaskThread.h"
+#include "ODTaskThread.h"
 
 
 #define BEGIN_TASK_PROFILING(TASK_DESCRIPTION) Profiler::Instance()->Begin(__FILE__,__LINE__,TASK_DESCRIPTION)

@@ -13,7 +13,7 @@
 #include "Project.h"
 
 #include "KeyboardCapture.h"
-#include "ondemand/ODTaskThread.h"
+#include "ODTaskThread.h"
 
 #include <wx/display.h>
 #include <wx/frame.h>

@@ -13,7 +13,6 @@ do_directory(
    PRECOMPILE
       AColor.h
       AudioIO.h
-      BlockFile.h
       Diags.h
       DirManager.h
       Envelope.h
@@ -24,9 +23,7 @@ do_directory(
       NoteTrack.h
       Prefs.h
       Project.h
-      Sequence.h
       TimeTrack.h
-      UndoManager.h
       WaveTrack.h
       ASlider.h
       ProgressDialog.h

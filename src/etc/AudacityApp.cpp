@@ -105,7 +105,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "SplashDialog.h"
 #include "FFT.h"
 #include "BlockFile.h"
-#include "ondemand/ODManager.h"
+#include "ODManager.h"
 #include "AudacityMessageBox.h"
 #include "DirectoriesPrefs.h"
 #include "GUIPrefs.h"

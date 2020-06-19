@@ -35,7 +35,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "ondemand/ODManager.h"
+#include "ODManager.h"
 #include "SpectrogramSettings.h"
 #include "images/Cursors.h"
 

@@ -39,8 +39,8 @@
 #include "WaveClip.h"
 #include "ShuttleGui.h"
 
-#include "ondemand/ODManager.h"
-#include "ondemand/ODComputeSummaryTask.h"
+#include "ODManager.h"
+#include "ODComputeSummaryTask.h"
 #include "blockfile/ODPCMAliasBlockFile.h"
 #include "QualityPrefs.h"
 #include "ProgressDialog.h"

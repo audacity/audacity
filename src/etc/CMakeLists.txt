@@ -1,6 +1,7 @@
 do_directory(
    INCLUDE_PRIVATE
       src/labeltrack
+      src/ondemand
       src/prefs
       src/toolbars
       src/track
