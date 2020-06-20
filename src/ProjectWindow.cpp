@@ -566,6 +566,13 @@ enum {
    NextID,
 };
 
+//If you want any of these files, ask JKC.  They are not
+//yet checked in to Audacity SVN as of 12-Feb-2010
+#ifdef EXPERIMENTAL_NOTEBOOK
+   #include "GuiFactory.h"
+   #include "APanel.h"
+#endif
+
 ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size, AudacityProject &project)
