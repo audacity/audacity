@@ -194,16 +194,8 @@
 // scrolling past zero is enabled. Perhaps that lessens confusion.
 #define EXPERIMENTAL_TWO_TONE_TIME_RULER
 
-#ifndef IN_RC
-   // Define to include crash reporting
-   #define EXPERIMENTAL_CRASH_REPORT
-   #ifdef EXPERIMENTAL_CRASH_REPORT
-      #include <wx/setup.h> // for wxUSE* macros
-      #if !defined(wxUSE_DEBUGREPORT) || !wxUSE_DEBUGREPORT
-         #undef EXPERIMENTAL_CRASH_REPORT
-      #endif
-   #endif
-#endif
+// Define to include crash reporting, if available in wxWidgets build
+#define EXPERIMENTAL_CRASH_REPORT
 
 // Paul Licameli (PRL) 31 May 2015
 // Zero-padding factor for spectrograms can smooth the display of spectrograms by

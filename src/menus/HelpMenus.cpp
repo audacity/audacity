@@ -28,10 +28,6 @@
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
 
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-#include <wx/debugrpt.h>
-#endif
-
 // private helper classes and functions
 namespace {
 
@@ -355,7 +351,7 @@ void OnShowLog( const CommandContext &context )
    }
 }
 
-#if defined(EXPERIMENTAL_CRASH_REPORT)
+#if defined(HAS_CRASH_REPORT)
 void OnCrashReport(const CommandContext &WXUNUSED(context) )
 {
 // Change to "1" to test a real crash
@@ -531,7 +527,7 @@ BaseItemSharedPtr HelpMenu()
       #endif
             Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
                AlwaysEnabledFlag ),
-      #if defined(EXPERIMENTAL_CRASH_REPORT)
+      #if defined(HAS_CRASH_REPORT)
             Command( wxT("CrashReport"), XXO("&Generate Support Data..."),
                FN(OnCrashReport), AlwaysEnabledFlag ),
       #endif
