@@ -60,16 +60,6 @@
 // DA: Enables dark audacity theme and customisations.
 //#define EXPERIMENTAL_DA
 
-// These CFG macros allow easy distinction between Audacity and DA defaults.
-#ifdef EXPERIMENTAL_DA
-#define CFG_A( x ) 
-#define CFG_DA( x ) x
-#else
-#define CFG_A( x ) x
-#define CFG_DA( x ) 
-#endif
-
-
 // Define this so that sync-lock tiles shine through spectrogram.
 // The spectrogram pastes a bitmap over the tiles.
 // This makes it use alpha blending, most transparent where least intense.
@@ -153,10 +143,6 @@
 
 //#define EXPERIMENTAL_NOTEBOOK
 
-#ifdef EXPERIMENTAL_NYQUIST_INSPECTOR
-   #include "NyquistAdapter.h"
-#endif
-
 #if USE_PORTMIXER
    //Automatically tries to find an acceptable input volume
    //#define EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
@@ -188,11 +174,8 @@
 // Support for scrubbing in the AudioIO engine, without calls to it
 #define EXPERIMENTAL_SCRUBBING_SUPPORT
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   // The following enable parts of the scrubbing user interface.
-   #define EXPERIMENTAL_SCRUBBING_BASIC
-   #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-      #define EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
-   #endif
+   // The following enables parts of the scrubbing user interface.
+   #define EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
 #endif
 
 // Paul Licameli (PRL) 24 May 2015
@@ -241,8 +224,5 @@
 
 // PRL 31 July 2018
 #define EXPERIMENTAL_DRAGGABLE_PLAY_HEAD
-
-// Jonatã Bolzan Loss 31 Dec 2019
-#define EXPERIMENTAL_TIMER_TOOLBAR
 
 #endif
