@@ -151,13 +151,7 @@
 // USE_MIDI must be defined in order for EXPERIMENTAL_SCOREALIGN to work
 //#define EXPERIMENTAL_SCOREALIGN
 
-//If you want any of these files, ask JKC.  They are not
-//yet checked in to Audacity SVN as of 12-Feb-2010
-#ifdef EXPERIMENTAL_NOTEBOOK
-   #include "widgets/GuiFactory.h"
-   #include "widgets/APanel.h"
-   extern void AddPages(   AudacityProject * pProj, GuiFactory & Factory,  wxNotebook  * pNotebook );
-#endif
+//#define EXPERIMENTAL_NOTEBOOK
 
 #ifdef EXPERIMENTAL_NYQUIST_INSPECTOR
    #include "NyquistAdapter.h"
