@@ -22,10 +22,6 @@
 #include <wx/app.h> // to inherit
 #include <wx/timer.h> // member variable
 
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-#include <wx/debugrpt.h> // for wxDebugReport::Context
-#endif
-
 #include "MemoryX.h"
 
 class wxSingleInstanceChecker;
