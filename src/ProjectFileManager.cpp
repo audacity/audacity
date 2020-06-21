@@ -1284,11 +1284,6 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    bool closed = false;
    auto cleanup = finally( [&] {
       if (! closed ) {
-         if ( bParseSuccess ) {
-            // This is a no-fail:
-            dirManager.FillBlockfilesCache();
-         }
-
          // For an unknown reason, OSX requires that the project window be
          // raised if a recovery took place.
          window.CallAfter( [&] { window.Raise(); } );
@@ -1567,7 +1562,5 @@ bool ProjectFileManager::Import(
       }
    }
 
-   // This is a no-fail:
-   dirManager.FillBlockfilesCache();
    return true;
 }

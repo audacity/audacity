@@ -120,28 +120,6 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-#ifdef DEPRECATED_AUDIO_CACHE
-   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
-   S.StartStatic(XO("Audio cache"));
-   {
-      S.TieCheckBox(XO("Play and/or record using &RAM (useful for slow drives)"),
-                    wxT("/Directories/CacheBlockFiles"),
-                    false);
-
-      S.StartTwoColumn();
-      {
-         S.TieIntegerTextBox(XO("Mi&nimum Free Memory (MB):"),
-                             {wxT("/Directories/CacheLowMem"), 16},
-                             9);
-      }
-      S.EndTwoColumn();
-
-      S.AddVariableText(XO(
-"If the available system memory falls below this value, audio will no longer\nbe cached in memory and will be written to disk."),
-         false, 0, 600);
-   }
-   S.EndStatic();
-#endif // DEPRECATED_AUDIO_CACHE
    S.EndScroller();
 
 }

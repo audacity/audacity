@@ -460,12 +460,11 @@ namespace {
 
    BlockFilePtr NewSimpleBlockFile( DirManager &dm,
                                     samplePtr sampleData, size_t sampleLen,
-                                    sampleFormat format,
-                                    bool allowDeferredWrite = false)
+                                    sampleFormat format)
    {
       return dm.NewBlockFile( [&]( wxFileNameWrapper filePath ) {
          return make_blockfile<SimpleBlockFile>(
-            std::move(filePath), sampleData, sampleLen, format, allowDeferredWrite);
+            std::move(filePath), sampleData, sampleLen, format);
       } );
    }
 }
@@ -1555,9 +1554,7 @@ void Sequence::Append(samplePtr buffer, sampleFormat format,
 
       SeqBlock newLastBlock(
          NewSimpleBlockFile( *mDirManager,
-            buffer2.ptr(), newLastBlockLen, mSampleFormat,
-            blockFileLog != NULL
-         ),
+            buffer2.ptr(), newLastBlockLen, mSampleFormat),
          lastBlock.start
       );
 
@@ -1581,12 +1578,12 @@ void Sequence::Append(samplePtr buffer, sampleFormat format,
       BlockFilePtr pFile;
       if (format == mSampleFormat) {
          pFile = NewSimpleBlockFile( *mDirManager,
-            buffer, addedLen, mSampleFormat, blockFileLog != NULL);
+            buffer, addedLen, mSampleFormat);
       }
       else {
          CopySamples(buffer, format, buffer2.ptr(), mSampleFormat, addedLen);
          pFile = NewSimpleBlockFile( *mDirManager,
-            buffer2.ptr(), addedLen, mSampleFormat, blockFileLog != NULL);
+            buffer2.ptr(), addedLen, mSampleFormat);
       }
 
       if (blockFileLog)

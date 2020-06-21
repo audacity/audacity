@@ -226,14 +226,6 @@ class PROFILE_DLL_API DirManager final
    // auto recovery is cancelled and should be retried later
    static void SetDontDeleteTempFiles() { dontDeleteTempFiles = true; }
 
-   // Write all write-cached block files to disc, if any
-   void WriteCacheToDisk();
-
-   // (Try to) fill cache of blockfiles, if caching is enabled (otherwise do
-   // nothing)
-   // A no-fail operation that does not throw
-   void FillBlockfilesCache();
-
  private:
 
    wxFileNameWrapper MakeBlockFileName();

@@ -916,9 +916,6 @@ You are saving directly to a slow external storage device\n\
          history.PushState(XO("Recorded Audio"), XO("Record"));
    }
 
-   // Write all cached files to disk, if any
-   dirManager.WriteCacheToDisk();
-
    // Now we auto-save again to get the project to a "normal" state again.
    projectFileIO.AutoSave();
 }
