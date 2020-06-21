@@ -179,6 +179,13 @@ Patches: autotools.patch: Fix all autotools warnings.
 AM_MAINTAINER_MODE([disable]) has been added to configure.ac to disable autotools rebuilds.
 Upstream Version: 1.7.1
 
+sqlite
+----------
+https://sqlite.org
+SQLite is a C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine.
+Version in Audacity GIT: 3.32.3
+Upstream Version: 3.32.3
+
 twolame
 -------
 http://www.twolame.org/

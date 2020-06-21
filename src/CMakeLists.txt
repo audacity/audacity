@@ -199,8 +199,8 @@ list( APPEND SOURCES
       Prefs.h
       Printing.cpp
       Printing.h
-      Profiler.cpp
-      Profiler.h
+#      Profiler.cpp
+#      Profiler.h
       Project.cpp
       Project.h
       ProjectAudioIO.cpp
@@ -337,10 +337,10 @@ list( APPEND SOURCES
       blockfile/LegacyBlockFile.h
       blockfile/NotYetAvailableException.cpp
       blockfile/NotYetAvailableException.h
-      blockfile/ODDecodeBlockFile.cpp
-      blockfile/ODDecodeBlockFile.h
-      blockfile/ODPCMAliasBlockFile.cpp
-      blockfile/ODPCMAliasBlockFile.h
+#      blockfile/ODDecodeBlockFile.cpp
+#      blockfile/ODDecodeBlockFile.h
+#      blockfile/ODPCMAliasBlockFile.cpp
+#      blockfile/ODPCMAliasBlockFile.h
       blockfile/PCMAliasBlockFile.cpp
       blockfile/PCMAliasBlockFile.h
       blockfile/SilentBlockFile.cpp
@@ -697,23 +697,22 @@ list( APPEND SOURCES
       menus/WindowMenus.cpp
 
       # On demand loading
-
-      ondemand/ODComputeSummaryTask.cpp
-      ondemand/ODComputeSummaryTask.h
-      ondemand/ODDecodeFFmpegTask.cpp
-      ondemand/ODDecodeFFmpegTask.h
-      ondemand/ODDecodeFlacTask.cpp
-      ondemand/ODDecodeFlacTask.h
-      ondemand/ODDecodeTask.cpp
-      ondemand/ODDecodeTask.h
-      ondemand/ODManager.cpp
-      ondemand/ODManager.h
-      ondemand/ODTask.cpp
-      ondemand/ODTask.h
-      ondemand/ODTaskThread.cpp
-      ondemand/ODTaskThread.h
-      ondemand/ODWaveTrackTaskQueue.cpp
-      ondemand/ODWaveTrackTaskQueue.h
+#      ondemand/ODComputeSummaryTask.cpp
+#      ondemand/ODComputeSummaryTask.h
+#      ondemand/ODDecodeFFmpegTask.cpp
+#      ondemand/ODDecodeFFmpegTask.h
+#      ondemand/ODDecodeFlacTask.cpp
+#      ondemand/ODDecodeFlacTask.h
+#      ondemand/ODDecodeTask.cpp
+#      ondemand/ODDecodeTask.h
+#      ondemand/ODManager.cpp
+#      ondemand/ODManager.h
+#      ondemand/ODTask.cpp
+#      ondemand/ODTask.h
+#      ondemand/ODTaskThread.cpp
+#      ondemand/ODTaskThread.h
+#      ondemand/ODWaveTrackTaskQueue.cpp
+#      ondemand/ODWaveTrackTaskQueue.h
 
       # Preferences
 
@@ -1075,6 +1074,7 @@ list( APPEND LIBRARIES
       libsndfile
       libsoxr
       portaudio-v19
+      sqlite
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
