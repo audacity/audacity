@@ -31,7 +31,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../effects/RealtimeEffectManager.h"
-#include "../../../../ondemand/ODManager.h"
 #include "../../../../prefs/PrefsDialog.h"
 #include "../../../../prefs/ThemePrefs.h"
 #include "../../../../widgets/AudacityMessageBox.h"
@@ -824,18 +823,6 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    partnerView.RestorePlacements( view.SavePlacements() );
    partnerView.SetMultiView( view.GetMultiView() );
 
-   //On Demand - join the queues together.
-   if (ODManager::IsInstanceCreated())
-      if (!ODManager::Instance()
-         ->MakeWaveTrackDependent(partner->SharedPointer<WaveTrack>(), pTrack))
-      {
-         ;
-         //TODO: in the future, we will have to check the return value of MakeWaveTrackDependent -
-         //if the tracks cannot merge, it returns false, and in that case we should not allow a merging.
-         //for example it returns false when there are two different types of ODTasks on each track's queue.
-         //we will need to display this to the user.
-      }
-
    ProjectHistory::Get( *project ).PushState(
       /* i18n-hint: The string names a track */
       XO("Made '%s' a stereo track").Format( pTrack->GetName() ),
@@ -862,10 +849,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
       if (stereo)
          channel->SetPanFromChannelType();
 
-      //On Demand - have each channel add its own.
-      if (ODManager::IsInstanceCreated())
-         ODManager::Instance()->MakeWaveTrackIndependent(
-            channel->SharedPointer<WaveTrack>() );
       //make sure no channel is smaller than its minimum height
       if (view.GetHeight() < view.GetMinimizedHeight())
          view.SetHeight(view.GetMinimizedHeight());

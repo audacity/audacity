@@ -167,14 +167,6 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
       }
       S.EndTwoColumn();
-#ifdef EXPERIMENTAL_OD_FFMPEG
-      S
-#if !defined(USE_FFMPEG)
-         .Disable()
-#endif
-         .TieCheckBox(XXO("Allow &background on-demand loading"),
-                    {wxT("/Library/FFmpegOnDemand"), false});
-#endif
    }
    S.EndStatic();
    S.EndScroller();

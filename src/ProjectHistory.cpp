@@ -17,8 +17,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "ondemand/ODComputeSummaryTask.h"
-#include "ondemand/ODManager.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectHistoryKey {
    []( AudacityProject &project ) {
@@ -142,40 +140,11 @@ void ProjectHistory::PopState(const UndoState &state)
    TrackList *const tracks = state.tracks.get();
 
    dstTracks.Clear();
-   bool odUsed = false;
-   std::unique_ptr<ODComputeSummaryTask> computeTask;
 
    for (auto t : tracks->Any())
    {
-      auto copyTrack = dstTracks.Add(t->Duplicate());
-
-      //add the track to OD if the manager exists.  later we might do a more rigorous check...
-      copyTrack->TypeSwitch( [&](WaveTrack *wt) {
-         //if the ODManager hasn't been initialized, there's no chance this track has OD blocks since this
-         //is a "Redo" operation.
-         //TODO: update this to look like the update loop in OpenFile that handles general purpose ODTasks.
-         //BUT, it is too slow to go thru every blockfile and check the odtype, so maybe put a flag in wavetrack
-         //that gets unset on OD Completion, (and we could also update the drawing there too.)  The hard part is that
-         //we would need to watch every possible way a OD Blockfile could get inserted into a wavetrack and change the
-         //flag there.
-         if(ODManager::IsInstanceCreated())
-         {
-            if(!odUsed)
-            {
-               computeTask = std::make_unique<ODComputeSummaryTask>();
-               odUsed=true;
-            }
-            // PRL:  Is it correct to add all tracks to one task, even if they
-            // are not partnered channels?  Rather than
-            // make one task for each?
-            computeTask->AddWaveTrack(wt->SharedPointer< WaveTrack >());
-         }
-      });
+      dstTracks.Add(t->Duplicate());
    }
-
-   //add the task.
-   if(odUsed)
-      ODManager::Instance()->AddNewTask(std::move(computeTask));
 
    projectFileIO.AutoSave();
 }

@@ -791,10 +791,6 @@ void DirManager::ProjectSetter::Impl::Commit()
          ".DS_Store",   // Other project files should already have been removed.
          XO("Cleaning up cache directories"), 
          kCleanTopDirToo);
-
-      //This destroys the empty dirs of the OD block files, which are yet to come.
-      //Dont know if this will make the project dirty, but I doubt it. (mchinen)
-      //      count += RecursivelyEnumerate(cleanupLoc2, dirlist, wxEmptyString, false, true);
    }
 }
 
@@ -1214,7 +1210,6 @@ BlockFilePtr DirManager::NewBlockFile( const BlockFileFactory &factory )
    mBlockFileHash[fileName] = newBlockFile;
    auto &aliasName = newBlockFile->GetExternalFileName();
    if ( aliasName.IsOk() )
-      //OD TODO: check to see if we need to remove this when done decoding.
       //I don't immediately see a place where aliased files remove when a file is closed.
       aliasList.push_back( aliasName.GetFullPath() );
    return newBlockFile;
@@ -1279,19 +1274,11 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
       // as the existing file
       newFile.SetExt(fn.GetExt());
 
-      //some block files such as ODPCMAliasBlockFIle don't always have
-      //a summary file, so we should check before we copy.
-      if(b->IsSummaryAvailable())
-      {
-         if( !FileNames::DoCopyFile(fn.GetFullPath(),
-                  newFile.GetFullPath()) )
-            // Disk space exhaustion, maybe
-            throw FileException{
-               FileException::Cause::Write, newFile };
-      }
-
-      // Done with fn
-      result.mLocker.reset();
+      if( !FileNames::DoCopyFile(fn.GetFullPath(),
+               newFile.GetFullPath()) )
+         // Disk space exhaustion, maybe
+         throw FileException{
+            FileException::Cause::Write, newFile };
 
       b2 = b->Copy(std::move(newFile));
 
@@ -1414,51 +1401,15 @@ std::pair<bool, FilePath> DirManager::LinkOrCopyToNewProjectDirectory(
    newPath = newFileName.GetFullPath();
 
    if (newFileName != oldFileNameRef) {
-      //check to see that summary exists before we copy.
-      bool summaryExisted = f->IsSummaryAvailable();
       auto oldPath = oldFileNameRef.GetFullPath();
-      if (summaryExisted) {
-         bool success = false;
-         if (link)
-            success = FileNames::HardLinkFile( oldPath, newPath );
-         if (!success)
-             link = false,
-             success = FileNames::DoCopyFile( oldPath, newPath );
-         if (!success)
-            return { false, {} };
-      }
-
-      if (!summaryExisted && (f->IsSummaryAvailable() || f->IsSummaryBeingComputed())) {
-         // PRL:  These steps apply only in case of "on-demand" files that have
-         // not completed their asynchronous loading yet -- a very unusual
-         // circumstance.
-
-         // We will need to remember the old file name, so copy it
-         wxFileName oldFileName{ oldFileNameRef };
-
-         // Now we can free any lock (and should, if as the comment below says, we need
-         // the other threads to progress)
-         result.mLocker.reset();
-
-         f->SetFileName(std::move(newFileName));
-
-         //there is a small chance that the summary has begun to be computed on a different thread with the
-         //original filename.  we need to catch this case by waiting for it to finish and then copy.
-
-         //block to make sure OD files don't get written while we are changing file names.
-         //(It is important that OD files set this lock while computing their summary files.)
-         while(f->IsSummaryBeingComputed() && !f->IsSummaryAvailable())
-            ::wxMilliSleep(50);
-
-         //check to make sure the oldfile exists.
-         //if it doesn't, we can assume it was written to the NEW name, which is fine.
-         if (oldFileName.FileExists())
-         {
-            bool ok = FileNames::DoCopyFile(oldPath, newPath);
-            if (!ok)
-               return { false, {} };
-         }
-      }
+      bool success = false;
+      if (link)
+         success = FileNames::HardLinkFile( oldPath, newPath );
+      if (!success)
+          link = false,
+          success = FileNames::DoCopyFile( oldPath, newPath );
+      if (!success)
+         return { false, {} };
    }
 
    return { true, newPath };
@@ -1522,16 +1473,12 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    bool needToRename = false;
    wxBusyCursor busy;
    BlockHash::iterator iter = mBlockFileHash.begin();
-   std::vector< BlockFile::ReadLock > readLocks;
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second.lock();
       if (b) {
          if (fName.IsOk() && b->GetExternalFileName() == fName) {
             needToRename = true;
-
-            //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-            readLocks.push_back( b->LockForRead() );
          }
       }
       ++iter;
@@ -1552,7 +1499,6 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
                        fullPath,
                        renamedFullPath);
 
-         // Destruction of readLocks puts things back where they were
          return false;
       }
       else
@@ -1633,7 +1579,7 @@ void DirManager::FindMissingAUFs(
       const wxString &key = iter->first;
       BlockFilePtr b = iter->second.lock();
       if (b) {
-         if (b->IsAlias() && b->IsSummaryAvailable())
+         if (b->IsAlias())
          {
             /* don't look in hash; that might find files the user moved
              that the Blockfile abstraction can't find itself */

@@ -43,7 +43,6 @@
 
 #include "../Tags.h"
 #include "../WaveClip.h"
-#include "../blockfile/ODDecodeBlockFile.h"
 #include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -76,8 +75,6 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include "../Prefs.h"
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
-#include "../ondemand/ODDecodeFlacTask.h"
-#include "../ondemand/ODManager.h"
 
 #ifdef USE_LIBID3TAG
 extern "C" {
@@ -178,7 +175,6 @@ private:
    bool                  mStreamInfoDone;
    ProgressResult        mUpdateResult;
    NewChannelGroup       mChannels;
-   std::unique_ptr<ODDecodeFlacTask> mDecoderTask;
 };
 
 
@@ -349,28 +345,6 @@ FLACImportFileHandle::FLACImportFileHandle(const FilePath & name)
 
 bool FLACImportFileHandle::Init()
 {
-#ifdef EXPERIMENTAL_OD_FLAC
-   mDecoderTask = std::make_unique<ODDecodeFlacTask>();
-
-   ODFlacDecoder* odDecoder = (ODFlacDecoder*)mDecoderTask->CreateFileDecoder(mFilename);
-   if(!odDecoder || !odDecoder->ReadHeader())
-   {
-      return false;
-   }
-   //copy the meta data over to the class
-
-   mSampleRate=odDecoder->mSampleRate;
-   mNumChannels=odDecoder->mNumChannels;
-   mBitsPerSample=odDecoder->mBitsPerSample;
-
-   mNumSamples=odDecoder->mNumSamples;
-   mBitsPerSample=odDecoder->mBitsPerSample;
-   mFormat=odDecoder->mFormat;
-   mStreamInfoDone=true;
-
-
-   return true;
-#endif
 #ifdef LEGACY_FLAC
    bool success = mFile->set_filename(OSINPUT(mFilename));
    if (!success) {
@@ -452,69 +426,14 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
          *iter = trackFactory->NewWaveTrack(mFormat, mSampleRate);
    }
 
-//Start OD
-   bool useOD = false;
-#ifdef EXPERIMENTAL_OD_FLAC
-   useOD=true;
-#endif
-
    // TODO: Vigilant Sentry: Variable res unused after assignment (error code DA1)
    //    Should check the result.
    #ifdef LEGACY_FLAC
       bool res = (mFile->process_until_end_of_file() != 0);
    #else
-      bool res = true;
-      if(!useOD)
-         res = (mFile->process_until_end_of_stream() != 0);
+      bool res = (mFile->process_until_end_of_stream() != 0);
    #endif
       wxUnusedVar(res);
-
-   //add the task to the ODManager
-   if(useOD)
-   {
-      auto fileTotalFrames =
-         (sampleCount)mNumSamples; // convert from FLAC__uint64
-      auto maxBlockSize = mChannels.begin()->get()->GetMaxBlockSize();
-      for (decltype(fileTotalFrames) i = 0; i < fileTotalFrames; i += maxBlockSize) {
-         const auto blockLen =
-            limitSampleBufferSize( maxBlockSize, fileTotalFrames - i );
-
-         auto iter = mChannels.begin();
-         for (size_t c = 0; c < mNumChannels; ++c, ++iter)
-            iter->get()->RightmostOrNewClip()->AppendBlockFile(
-               [&]( wxFileNameWrapper filePath, size_t len ) {
-                  return make_blockfile<ODDecodeBlockFile>(
-                  std::move(filePath), wxFileNameWrapper{ mFilename },
-                  i, len, c, ODTask::eODFLAC);
-               },
-               blockLen
-            );
-
-         mUpdateResult = mProgress->Update(
-            i.as_long_long(),
-            fileTotalFrames.as_long_long()
-         );
-         if (mUpdateResult != ProgressResult::Success)
-            break;
-      }
-
-      bool moreThanStereo = mNumChannels>2;
-      for (const auto &channel : mChannels)
-      {
-         mDecoderTask->AddWaveTrack(channel);
-         if(moreThanStereo)
-         {
-            //if we have 3 more channels, they get imported on separate tracks, so we add individual tasks for each.
-            ODManager::Instance()->AddNewTask(std::move(mDecoderTask));
-            mDecoderTask = std::make_unique<ODDecodeFlacTask>(); //TODO: see if we need to use clone to keep the metadata.
-         }
-      }
-      //if we have mono or a linked track (stereo), we add ONE task for the one linked wave track
-      if(!moreThanStereo)
-         ODManager::Instance()->AddNewTask(std::move(mDecoderTask));
-   }
-//END OD
-
 
    if (mUpdateResult == ProgressResult::Failed || mUpdateResult == ProgressResult::Cancelled) {
       return mUpdateResult;
@@ -546,11 +465,7 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
 FLACImportFileHandle::~FLACImportFileHandle()
 {
-   //don't finish *mFile if we are using OD,
-   //because it was not initialized in Init().
-#ifndef EXPERIMENTAL_OD_FLAC
    mFile->finish();
-#endif
 }
 
 #endif /* USE_LIBFLAC */

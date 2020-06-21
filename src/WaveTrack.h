@@ -230,9 +230,6 @@ private:
    ///Invalidates all clips' wavecaches.  Careful, This may not be threadsafe.
    void ClearWaveCaches();
 
-   ///Adds an invalid region to the wavecache so it redraws that portion only.
-   void  AddInvalidRegion(sampleCount startSample, sampleCount endSample);
-
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
    /// have a continuous space of samples anymore, but we simulate it,

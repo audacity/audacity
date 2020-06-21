@@ -45,15 +45,10 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
-#include "blockfile/ODDecodeBlockFile.h"
 #include "export/Export.h"
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
 #include "commands/CommandContext.h"
-#include "ondemand/ODComputeSummaryTask.h"
-#include "ondemand/ODDecodeFlacTask.h"
-#include "ondemand/ODManager.h"
-#include "ondemand/ODTask.h"
 #include "toolbars/SelectionBar.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
@@ -170,29 +165,6 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
 
    XMLFileReader xmlFile;
 
-#ifdef EXPERIMENTAL_OD_DATA
-   // 'Lossless copy' projects have dependencies. We need to always copy-in
-   // these dependencies when converting to a normal project.
-   auto oldAction = FileFormatsCopyOrEditSetting.Read();
-   bool oldAsk =
-      gPrefs->ReadBool(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true);
-
-   if (oldAction != wxT("copy"))
-      FileFormatsCopyOrEditSetting.Write( wxT("copy") );
-   if (oldAsk)
-      gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) false);
-   gPrefs->Flush();
-
-   auto cleanup = finally( [&] {
-      // and restore old settings if necessary.
-      if (oldAction != wxT("copy"))
-         FileFormatsCopyOrEditSetting.Write( oldAction );
-      if (oldAsk)
-         gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) true);
-      gPrefs->Flush();
-   } );
-#endif
-
    bool bParseSuccess = xmlFile.Parse(&projectFileIO, fileName);
    
    bool err = false;
@@ -226,82 +198,6 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
       false, bParseSuccess, err, xmlFile.GetErrorStr(),
       FindHelpUrl( xmlFile.GetLibraryErrorStr() )
    };
-}
-
-///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-unsigned int ProjectFileManager::GetODFlags( const WaveTrack &track )
-{
-   unsigned int ret = 0;
-   for ( const auto &clip : track.GetClips() )
-   {
-      auto sequence = clip->GetSequence();
-      const auto &blocks = sequence->GetBlockArray();
-      for ( const auto &block : blocks ) {
-         const auto &file = block.f;
-         if(!file->IsDataAvailable())
-            ret |= (static_cast< ODDecodeBlockFile * >( &*file ))->GetDecodeType();
-         else if(!file->IsSummaryAvailable())
-            ret |= ODTask::eODPCMSummary;
-      }
-   }
-   return ret;
-}
-
-void ProjectFileManager::EnqueueODTasks()
-{
-   //check the ODManager to see if we should add the tracks to the ODManager.
-   //this flag would have been set in the HandleXML calls from above, if there were
-   //OD***Blocks.
-   if(ODManager::HasLoadedODFlag())
-   {
-      auto &project = mProject;
-      auto &tracks = TrackList::Get( project );
-
-      std::vector<std::unique_ptr<ODTask>> newTasks;
-      //std::vector<ODDecodeTask*> decodeTasks;
-      unsigned int createdODTasks=0;
-      for (auto wt : tracks.Any<WaveTrack>()) {
-         //check the track for blocks that need decoding.
-         //There may be more than one type e.g. FLAC/FFMPEG/lame
-         unsigned int odFlags = GetODFlags( *wt );
-
-         //add the track to the already created tasks that correspond to the od flags in the wavetrack.
-         for(unsigned int i=0;i<newTasks.size();i++) {
-            if(newTasks[i]->GetODType() & odFlags)
-               newTasks[i]->AddWaveTrack(wt->SharedPointer< WaveTrack >());
-         }
-
-         //create whatever NEW tasks we need to.
-         //we want at most one instance of each class for the project
-         while((odFlags|createdODTasks) != createdODTasks)
-         {
-            std::unique_ptr<ODTask> newTask;
-#ifdef EXPERIMENTAL_OD_FLAC
-            if(!(createdODTasks&ODTask::eODFLAC) && (odFlags & ODTask::eODFLAC)) {
-               newTask = std::make_unique<ODDecodeFlacTask>();
-               createdODTasks = createdODTasks | ODTask::eODFLAC;
-            }
-            else
-#endif
-            if(!(createdODTasks&ODTask::eODPCMSummary) && (odFlags & ODTask::eODPCMSummary)) {
-               newTask = std::make_unique<ODComputeSummaryTask>();
-               createdODTasks = createdODTasks | ODTask::eODPCMSummary;
-            }
-            else {
-               wxPrintf("unrecognized OD Flag in block file.\n");
-               //TODO:ODTODO: display to user.  This can happen when we build audacity on a system that doesnt have libFLAC
-               break;
-            }
-            if(newTask)
-            {
-               newTask->AddWaveTrack(wt->SharedPointer< WaveTrack >());
-               newTasks.push_back(std::move(newTask));
-            }
-         }
-      }
-      for(unsigned int i=0;i<newTasks.size();i++)
-         ODManager::Instance()->AddNewTask(std::move(newTasks[i]));
-   }
 }
 
 bool ProjectFileManager::Save()
@@ -594,11 +490,6 @@ bool ProjectFileManager::DoSave (const bool fromSaveAs,
       auto &tracks = TrackList::Get( proj );
       for ( auto t : tracks.Any() ) {
          mLastSavedTracks->Add(t->Duplicate());
-
-         //only after the xml has been saved we can mark it saved.
-         //thus is because the OD blockfiles change on  background thread while this is going on.
-         //         if(const auto wt = track_cast<WaveTrack*>(dupT))
-         //            wt->MarkSaved();
       }
 
       UndoManager::Get( proj ).StateSaved();
@@ -1392,14 +1283,10 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    // might throw.
    bool closed = false;
    auto cleanup = finally( [&] {
-      //release the flag.
-      ODManager::UnmarkLoadedODFlag();
-
       if (! closed ) {
          if ( bParseSuccess ) {
             // This is a no-fail:
             dirManager.FillBlockfilesCache();
-            EnqueueODTasks();
          }
 
          // For an unknown reason, OSX requires that the project window be

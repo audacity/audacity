@@ -21,7 +21,6 @@
 #include "Internat.h"
 #include "MemoryX.h"
 #include "MissingAliasFileDialog.h"
-#include "ondemand/ODManager.h"
 #include "widgets/MultiDialog.h"
 #include "widgets/ProgressDialog.h"
 
@@ -142,8 +141,8 @@ XO("Project check of \"%s\" folder \
                if (action == 2)
                {
                   // silence the blockfiles by yanking the filename
-                  // This is done, eventually, in PCMAliasBlockFile::ReadData()
-                  // and ODPCMAliasBlockFile::ReadData, in the stack of b->Recover().
+                  // This is done, eventually, in PCMAliasBlockFile::ReadData(),
+                  // in the stack of b->Recover().
                   // There, if the mAliasedFileName is bad, it zeroes the data.
                   wxFileNameWrapper dummy;
                   dummy.Clear();
@@ -373,7 +372,7 @@ other projects. \
       }
    }
 
-   if ((nResult != FSCKstatus_CLOSE_REQ) && !ODManager::HasLoadedODFlag())
+   if (nResult != FSCKstatus_CLOSE_REQ)
    {
       // Remove any empty directories.
       ProgressDialog pProgress(

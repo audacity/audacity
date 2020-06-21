@@ -16,8 +16,6 @@
 
 #include "wxFileNameWrapper.h" // member variable
 
-#include "ondemand/ODTaskThread.h"
-
 #include <functional>
 
 class XMLWriter;
@@ -100,16 +98,15 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// of any lock when it goes out of scope.  Call mLocker.reset() to unlock it sooner.
    struct GetFileNameResult {
       const wxFileName &name;
-      ODLocker mLocker;
 
-      GetFileNameResult(const wxFileName &name_, ODLocker &&locker = ODLocker{})
-      : name{ name_ }, mLocker{ std::move(locker) } {}
+      GetFileNameResult(const wxFileName &name_)
+      : name{ name_ } {}
 
       GetFileNameResult(const GetFileNameResult&) PROHIBITED;
       GetFileNameResult &operator= (const GetFileNameResult&) PROHIBITED;
 
       GetFileNameResult(GetFileNameResult &&that)
-      : name{ that.name }, mLocker{ std::move(that.mLocker) } {}
+      : name{ that.name } {}
    };
    virtual GetFileNameResult GetFileName() const;
    virtual void SetFileName(wxFileNameWrapper &&name);
@@ -144,15 +141,6 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
    /// Returns TRUE if this block references another disk file
    virtual bool IsAlias() const { return false; }
-
-   /// Returns TRUE if this block's complete summary has been computed and is ready (for OD)
-   virtual bool IsSummaryAvailable() const {return true;}
-
-   /// Returns TRUE if this block's complete data is ready to be accessed by Read()
-   virtual bool IsDataAvailable() const {return true;}
-
-   /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk
-   virtual bool IsSummaryBeingComputed(){return false;}
 
    /// Create a NEW BlockFile identical to this, using the given filename
    virtual BlockFilePtr Copy(wxFileNameWrapper &&newFileName) = 0;

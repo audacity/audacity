@@ -13,7 +13,6 @@
 #include "Project.h"
 
 #include "KeyboardCapture.h"
-#include "ondemand/ODTaskThread.h"
 
 #include <wx/display.h>
 #include <wx/frame.h>
@@ -48,7 +47,6 @@ auto AllProjects::rend() const -> const_reverse_iterator
 
 auto AllProjects::Remove( AudacityProject &project ) -> value_type
 {
-   ODLocker locker{ &Mutex() };
    auto start = begin(), finish = end(), iter = std::find_if(
       start, finish,
       [&]( const value_type &ptr ){ return ptr.get() == &project; }
@@ -62,7 +60,6 @@ auto AllProjects::Remove( AudacityProject &project ) -> value_type
 
 void AllProjects::Add( const value_type &pProject )
 {
-   ODLocker locker{ &Mutex() };
    gAudacityProjects.push_back( pProject );
 }
 
@@ -87,12 +84,6 @@ bool AllProjects::Close( bool force )
    }
    return true;
 }
-
-ODLock &AllProjects::Mutex()
-{
-   static ODLock theMutex;
-   return theMutex;
-};
 
 int AudacityProject::mProjectCounter=0;// global counter.
 

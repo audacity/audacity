@@ -15,7 +15,6 @@
 
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
-#include "ondemand/ODTaskThread.h"
 
 #include "audacity/Types.h"
 
@@ -189,25 +188,6 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    BlockArray &GetBlockArray() { return mBlock; }
    const BlockArray &GetBlockArray() const { return mBlock; }
 
-   ///
-   void LockDeleteUpdateMutex(){mDeleteUpdateMutex.Lock();}
-   void UnlockDeleteUpdateMutex(){mDeleteUpdateMutex.Unlock();}
-
-   // RAII idiom wrapping the functions above
-   struct DeleteUpdateMutexLocker {
-      DeleteUpdateMutexLocker(Sequence &sequence)
-         : mSequence(sequence)
-      {
-         mSequence.LockDeleteUpdateMutex();
-      }
-      ~DeleteUpdateMutexLocker()
-      {
-         mSequence.UnlockDeleteUpdateMutex();
-      }
-   private:
-      Sequence &mSequence;
-   };
-
  private:
 
    //
@@ -232,9 +212,6 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    size_t   mMaxSamples; // max samples per block
 
    bool          mErrorOpening{ false };
-
-   ///To block the Delete() method against the ODCalcSummaryTask::Update() method
-   ODLock   mDeleteUpdateMutex;
 
    //
    // Private methods

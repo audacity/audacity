@@ -441,17 +441,6 @@ void EffectLoudness::FreeBuffers()
 
 bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
 {
-   // Since we need complete summary data, we need to block until the OD tasks are done for this track
-   // This is needed for track->GetMinMax
-   // TODO: should we restrict the flags to just the relevant block files (for selections)
-   while (ProjectFileManager::GetODFlags(*track)) {
-      // update the gui
-      if (ProgressResult::Cancelled == mProgress->Update(
-         0, XO("Waiting for waveform to finish computing...")) )
-         return false;
-      wxMilliSleep(100);
-   }
-
    // set mRMS.  No progress bar here as it's fast.
    float _rms = track->GetRMS(mCurT0, mCurT1); // may throw
    rms = _rms;

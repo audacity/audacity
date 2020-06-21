@@ -118,7 +118,11 @@ void ODComputeSummaryTask::DoSomeInternal()
          {
             auto waveTrack = mWaveTracks[i].lock();
             if(success && waveTrack)
+            {
+#if 0 // LLL: Commented out while removing OD file handling              
                waveTrack->AddInvalidRegion(blockStartSample,blockEndSample);
+#endif
+            }
          }
          mWaveTrackMutex.Unlock();
       }

@@ -105,7 +105,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "SplashDialog.h"
 #include "FFT.h"
 #include "BlockFile.h"
-#include "ondemand/ODManager.h"
 #include "widgets/AudacityMessageBox.h"
 #include "prefs/DirectoriesPrefs.h"
 #include "prefs/GUIPrefs.h"
@@ -427,9 +426,6 @@ static void QuitAudacity(bool bForce)
    CloseScoreAlignDialog();
 #endif
    CloseScreenshotTools();
-
-   //release ODManager Threads
-   ODManager::Quit();
 
    //print out profile if we have one by deleting it
    //temporarily commented out till it is added to all projects

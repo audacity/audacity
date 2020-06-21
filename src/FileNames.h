@@ -179,6 +179,9 @@ namespace FileNames
 #if defined(__WXMSW__)
    char *VerifyFilename(const wxString &s, bool input = true);
 #endif
+
+   // wxString compare function for sorting case, which is needed to load correctly.
+   int CompareNoCase(const wxString& first, const wxString& second);
 };
 
 // Use this macro to wrap all filenames and pathnames that get

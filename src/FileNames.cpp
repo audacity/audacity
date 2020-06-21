@@ -738,3 +738,11 @@ char *FileNames::VerifyFilename(const wxString &s, bool input)
    return (char *) (const char *) mFilename;
 }
 #endif
+
+//using this with wxStringArray::Sort will give you a list that
+//is alphabetical, without depending on case.  If you use the
+//default sort, you will get strings with 'R' before 'a', because it is in caps.
+int FileNames::CompareNoCase(const wxString& first, const wxString& second)
+{
+   return first.CmpNoCase(second);
+}

@@ -31,8 +31,6 @@
 #include "../import/ImportMIDI.h"
 #endif // USE_MIDI
 
-#include "../ondemand/ODManager.h"
-
 #include <wx/menu.h>
 
 // private helper classes and functions
@@ -388,10 +386,7 @@ void OnImport(const CommandContext &context)
    // AudacityProject::Import ?
    gPrefs->Write(wxT("/NewImportingSession"), true);
 
-   //sort selected files by OD status.  Load non OD first so user can edit asap.
-   //first sort selectedFiles.
-   selectedFiles.Sort(CompareNoCaseFileName);
-   ODManager::Pauser pauser;
+   selectedFiles.Sort(FileNames::CompareNoCase);
 
    auto cleanup = finally( [&] {
       Importer::SetLastOpenType({});

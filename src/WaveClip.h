@@ -15,7 +15,6 @@
 #include "Audacity.h"
 
 #include "SampleFormat.h"
-#include "ondemand/ODTaskThread.h"
 #include "xml/XMLTagHandler.h"
 
 #include "RealFFTf.h"
@@ -258,7 +257,7 @@ public:
    /** Getting high-level data for screen display and clipping
     * calculations and Contrast */
    bool GetWaveDisplay(WaveDisplay &display,
-                       double t0, double pixelsPerSecond, bool &isLoadingOD) const;
+                       double t0, double pixelsPerSecond) const;
    bool GetSpectrogram(WaveTrackCache &cache,
                        const float *& spectrogram,
                        const sampleCount *& where,
@@ -343,9 +342,6 @@ public:
    ///Delete the wave cache - force redraw.  Thread-safe
    void ClearWaveCache();
 
-   ///Adds an invalid region to the wavecache so it redraws that portion only.
-   void AddInvalidRegion(sampleCount startSample, sampleCount endSample);
-
    //
    // XMLTagHandler callback methods for loading and saving
    //
@@ -378,7 +374,6 @@ protected:
    std::unique_ptr<Envelope> mEnvelope;
 
    mutable std::unique_ptr<WaveCache> mWaveCache;
-   mutable ODLock       mWaveCacheMutex {};
    mutable std::unique_ptr<SpecCache> mSpecCache;
    SampleBuffer  mAppendBuffer {};
    size_t        mAppendBufferLen { 0 };

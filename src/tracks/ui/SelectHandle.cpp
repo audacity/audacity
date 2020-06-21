@@ -35,7 +35,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ViewInfo.h"
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
-#include "../../ondemand/ODManager.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../../images/Cursors.h"
 
@@ -64,21 +63,6 @@ bool SelectHandle::IsClicked() const
 
 namespace
 {
-   // If we're in OnDemand mode, we may change the tip.
-   void MaySetOnDemandTip(const Track * t, TranslatableString &tip)
-   {
-      wxASSERT(t);
-      //For OD regions, we need to override and display the percent complete for this task.
-      //first, make sure it's a wavetrack.
-      t->TypeSwitch( [&](const WaveTrack *wt) {
-         //see if the wavetrack exists in the ODManager (if the ODManager exists)
-         if (!ODManager::IsInstanceCreated())
-            return;
-         //ask the wavetrack for the corresponding tip - it may not change tip, but that's fine.
-         ODManager::Instance()->FillTipForWaveTrack(wt, tip);
-      });
-   }
-
    /// Converts a frequency to screen y position.
    wxInt64 FrequencyToPosition(const WaveTrack *wt,
       double frequency,
@@ -785,11 +769,6 @@ UIHandle::Result SelectHandle::Click
       StartSelection(pProject);
       selectionState.SelectTrack( *pTrack, true, true );
       TrackFocus::Get( *pProject ).Set(pTrack);
-      //On-Demand: check to see if there is an OD thing associated with this track.
-      pTrack->TypeSwitch( [&](WaveTrack *wt) {
-         if(ODManager::IsInstanceCreated())
-            ODManager::Instance()->DemandTrackUpdate(wt,mSelStart);
-      });
 
       Connect(pProject);
       return RefreshAll;
@@ -992,8 +971,6 @@ HitTestPreview SelectHandle::Preview
                pView.get(), rect, !bModifierDown, !bModifierDown);
          SetTipAndCursorForBoundary(boundary, !bShiftDown, tip, pCursor);
       }
-
-      MaySetOnDemandTip(pTrack.get(), tip);
    }
    if (tip.empty()) {
       tip = XO("Click and drag to select audio");
@@ -1239,13 +1216,6 @@ void SelectHandle::AssignSelection
    }
 
    viewInfo.selectedRegion.setTimes(sel0, sel1);
-
-   //On-Demand: check to see if there is an OD thing associated with this track.  If so we want to update the focal point for the task.
-   if (pTrack && ODManager::IsInstanceCreated())
-      pTrack->TypeSwitch( [&](WaveTrack *wt) {
-         ODManager::Instance()->DemandTrackUpdate(wt, sel0);
-         //sel0 is sometimes less than mSelStart
-      });
 }
 
 void SelectHandle::StartFreqSelection(ViewInfo &viewInfo,

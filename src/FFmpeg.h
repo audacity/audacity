@@ -394,7 +394,7 @@ int ufile_close(AVIOContext *pb);
 
 struct streamContext;
 // common utility functions
-// utility calls that are shared with ImportFFmpeg and ODDecodeFFmpegTask
+// utility calls that are shared with ImportFFmpeg
 streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
                                              streamContext** streams,
                                              unsigned int numStreams);

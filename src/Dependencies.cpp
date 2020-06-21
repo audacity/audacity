@@ -610,17 +610,10 @@ bool ShowDependencyDialogIfNeeded(AudacityProject *project,
       if (!isSaving)
       {
          auto msg =
-#ifdef EXPERIMENTAL_OD_DATA
-XO("Your project is currently self-contained; it does not depend on any external audio files. \
-\n\nIf you change the project to a state that has external dependencies on imported \
-files, it will no longer be self-contained. If you then Save without copying those files in, \
-you may lose data.");
-#else
 XO("Your project is self-contained; it does not depend on any external audio files. \
 \n\nSome older Audacity projects may not be self-contained, and care \n\
 is needed to keep their external dependencies in the right place.\n\
 New projects will be self-contained and are less risky.");
-#endif
          AudacityMessageBox(
             msg,
             XO("Dependency Check"),
@@ -632,22 +625,8 @@ New projects will be self-contained and are less risky.");
 
    if (isSaving)
    {
-#ifdef EXPERIMENTAL_OD_DATA
-      wxString action =
-         FileFormatsSaveWithDependenciesSetting.Read();
-      if (action == wxT("copy"))
-      {
-         // User always wants to remove dependencies
-         RemoveDependencies(project, aliasedFiles);
-         return true;
-      }
-      if (action == wxT("never"))
-         // User never wants to remove dependencies
-         return true;
-#else 
       RemoveDependencies(project, aliasedFiles);
       return true;
-#endif
    }
 
    DependencyDialog dlog(pWindow, -1, project, aliasedFiles, isSaving);

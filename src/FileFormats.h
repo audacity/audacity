@@ -103,13 +103,9 @@ extern FileExtensions sf_get_all_extensions();
 
 wxString sf_normalize_name(const char *name);
 
-// This function wrapper uses a mutex to serialize calls to the SndFile library.
-#include "ondemand/ODTaskThread.h"
-extern ODLock libSndFileMutex;
 template<typename R, typename F, typename... Args>
 inline R SFCall(F fun, Args&&... args)
 {
-   ODLocker locker{ &libSndFileMutex };
    return fun(std::forward<Args>(args)...);
 }
 

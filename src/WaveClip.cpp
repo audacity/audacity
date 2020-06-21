@@ -57,7 +57,6 @@ public:
       , max(0)
       , rms(0)
       , bl(0)
-      , numODPixels(0)
    {
    }
 
@@ -72,16 +71,11 @@ public:
       , max(len)
       , rms(len)
       , bl(len)
-      , numODPixels(0)
    {
-
-      //find the number of OD pixels - the only way to do this is by recounting since we've lost some old cache.
-      numODPixels = CountODPixels(0, len);
    }
 
    ~WaveCache()
    {
-      ClearInvalidRegions();
    }
 
    int          dirty;
@@ -94,174 +88,6 @@ public:
    std::vector<float> max;
    std::vector<float> rms;
    std::vector<int> bl;
-   int         numODPixels;
-
-   class InvalidRegion
-   {
-   public:
-     InvalidRegion(size_t s, size_t e)
-         : start(s), end(e)
-     {}
-     //start and end pixel count.  (not samples)
-     size_t start;
-     size_t end;
-   };
-
-
-   //Thread safe call to add a NEW region to invalidate.  If it overlaps with other regions, it unions the them.
-   void AddInvalidRegion(sampleCount sampleStart, sampleCount sampleEnd)
-   {
-      //use pps to figure out where we are.  (pixels per second)
-      if(pps ==0)
-         return;
-      double samplesPerPixel = rate/pps;
-      //rate is SR, start is first time of the waveform (in second) on cache
-      long invalStart = (sampleStart.as_double() - start*rate) / samplesPerPixel ;
-
-      long invalEnd = (sampleEnd.as_double() - start*rate)/samplesPerPixel +1; //we should cover the end..
-
-      //if they are both off the cache boundary in the same direction, the cache is missed,
-      //so we are safe, and don't need to track this one.
-      if((invalStart<0 && invalEnd <0) || (invalStart>=(long)len && invalEnd >= (long)len))
-         return;
-
-      //in all other cases, we need to clip the boundries so they make sense with the cache.
-      //for some reason, the cache is set up to access up to array[len], not array[len-1]
-      if(invalStart <0)
-         invalStart =0;
-      else if(invalStart > (long)len)
-         invalStart = len;
-
-      if(invalEnd <0)
-         invalEnd =0;
-      else if(invalEnd > (long)len)
-         invalEnd = len;
-
-
-      ODLocker locker(&mRegionsMutex);
-
-      //look thru the region array for a place to insert.  We could make this more spiffy than a linear search
-      //but right now it is not needed since there will usually only be one region (which grows) for OD loading.
-      bool added=false;
-      if(mRegions.size())
-      {
-         for(size_t i=0;i<mRegions.size();i++)
-         {
-            //if the regions intersect OR are pixel adjacent
-            InvalidRegion &region = mRegions[i];
-            if((long)region.start <= (invalEnd+1)
-               && ((long)region.end + 1) >= invalStart)
-            {
-               //take the union region
-               if((long)region.start > invalStart)
-                  region.start = invalStart;
-               if((long)region.end < invalEnd)
-                  region.end = invalEnd;
-               added=true;
-               break;
-            }
-
-            //this bit doesn't make sense because it assumes we add in order - now we go backwards after the initial OD finishes
-//            //this array is sorted by start/end points and has no overlaps.   If we've passed all possible intersections, insert.  The array will remain sorted.
-//            if(region.end < invalStart)
-//            {
-//               mRegions.insert(
-//                  mRegions.begin() + i,
-//                  InvalidRegion{ invalStart, invalEnd }
-//               );
-//               break;
-//            }
-         }
-      }
-
-      if(!added)
-      {
-         InvalidRegion newRegion(invalStart, invalEnd);
-         mRegions.insert(mRegions.begin(), newRegion);
-      }
-
-
-      //now we must go and patch up all the regions that overlap.  Overlapping regions will be adjacent.
-      for(size_t i=1;i<mRegions.size();i++)
-      {
-         //if the regions intersect OR are pixel adjacent
-         InvalidRegion &region = mRegions[i];
-         InvalidRegion &prevRegion = mRegions[i - 1];
-         if(region.start <= prevRegion.end+1
-            && region.end + 1 >= prevRegion.start)
-         {
-            //take the union region
-            if(region.start > prevRegion.start)
-               region.start = prevRegion.start;
-            if(region.end < prevRegion.end)
-               region.end = prevRegion.end;
-
-            mRegions.erase(mRegions.begin()+i-1);
-               //musn't forget to reset cursor
-               i--;
-         }
-
-         //if we are past the end of the region we added, we are past the area of regions that might be oversecting.
-         if(invalEnd < 0 || (long)region.start > invalEnd)
-         {
-            break;
-         }
-      }
-   }
-
-   //lock before calling these in a section.  unlock after finished.
-   int GetNumInvalidRegions() const {return mRegions.size();}
-   size_t GetInvalidRegionStart(int i) const {return mRegions[i].start;}
-   size_t GetInvalidRegionEnd(int i) const {return mRegions[i].end;}
-
-   void ClearInvalidRegions()
-   {
-      mRegions.clear();
-   }
-
-   void LoadInvalidRegion(int ii, Sequence *sequence, bool updateODCount)
-   {
-      const auto invStart = GetInvalidRegionStart(ii);
-      const auto invEnd = GetInvalidRegionEnd(ii);
-
-      //before check number of ODPixels
-      int regionODPixels = 0;
-      if (updateODCount)
-         regionODPixels = CountODPixels(invStart, invEnd);
-
-      sequence->GetWaveDisplay(&min[invStart],
-         &max[invStart],
-         &rms[invStart],
-         &bl[invStart],
-         invEnd - invStart,
-         &where[invStart]);
-
-      //after check number of ODPixels
-      if (updateODCount)
-      {
-         const int regionODPixelsAfter = CountODPixels(invStart, invEnd);
-         numODPixels -= (regionODPixels - regionODPixelsAfter);
-      }
-   }
-
-   void LoadInvalidRegions(Sequence *sequence, bool updateODCount)
-   {
-      //invalid regions are kept in a sorted array.
-      for (int i = 0; i < GetNumInvalidRegions(); i++)
-         LoadInvalidRegion(i, sequence, updateODCount);
-   }
-
-   int CountODPixels(size_t startIn, size_t endIn)
-   {
-      using namespace std;
-      const int *begin = &bl[0];
-      return count_if(begin + startIn, begin + endIn, bind2nd(less<int>(), 0));
-   }
-
-protected:
-   std::vector<InvalidRegion> mRegions;
-   ODLock mRegionsMutex;
-
 };
 
 static void ComputeSpectrumUsingRealFFTf
@@ -487,16 +313,7 @@ bool WaveClip::IsClipStartAfterClip(double t) const
 ///Delete the wave cache - force redraw.  Thread-safe
 void WaveClip::ClearWaveCache()
 {
-   ODLocker locker(&mWaveCacheMutex);
    mWaveCache = std::make_unique<WaveCache>();
-}
-
-///Adds an invalid region to the wavecache so it redraws that portion only.
-void WaveClip::AddInvalidRegion(sampleCount startSample, sampleCount endSample)
-{
-   ODLocker locker(&mWaveCacheMutex);
-   if(mWaveCache!=NULL)
-      mWaveCache->AddInvalidRegion(startSample,endSample);
 }
 
 namespace {
@@ -564,7 +381,7 @@ fillWhere(std::vector<sampleCount> &where, size_t len, double bias, double corre
 //
 
 bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
-                               double pixelsPerSecond, bool &isLoadingOD) const
+                               double pixelsPerSecond) const
 {
    const bool allocated = (display.where != 0);
 
@@ -588,9 +405,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       pWhere = &display.ownWhere;
    }
    else {
-      // Lock the list of invalid regions
-      ODLocker locker(&mWaveCacheMutex);
-
       const double tstep = 1.0 / pixelsPerSecond;
       const double samplesPerPixel = mRate * tstep;
 
@@ -609,8 +423,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       if (match &&
          mWaveCache->start == t0 &&
          mWaveCache->len >= numPixels) {
-         mWaveCache->LoadInvalidRegions(mSequence.get(), true);
-         mWaveCache->ClearInvalidRegions();
 
          // Satisfy the request completely from the cache
          display.min = &mWaveCache->min[0];
@@ -618,7 +430,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          display.rms = &mWaveCache->rms[0];
          display.bl = &mWaveCache->bl[0];
          display.where = &mWaveCache->where[0];
-         isLoadingOD = mWaveCache->numODPixels > 0;
          return true;
       }
 
@@ -661,12 +472,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       // possible
 
       if (oldCache) {
-
-         //TODO: only load inval regions if
-         //necessary.  (usually is the case, so no rush.)
-         //also, we should be updating the NEW cache, but here we are patching the old one up.
-         oldCache->LoadInvalidRegions(mSequence.get(), false);
-         oldCache->ClearInvalidRegions();
 
          // Copy what we can from the old cache.
          const int length = copyEnd - copyBegin;
@@ -763,13 +568,11 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                                         p1-p0,
                                         &where[p0]))
          {
-            isLoadingOD=false;
             return false;
          }
       }
    }
 
-   //find the number of OD pixels - the only way to do this is by recounting
    if (!allocated) {
       // Now report the results
       display.min = min;
@@ -777,13 +580,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       display.rms = rms;
       display.bl = bl;
       display.where = &(*pWhere)[0];
-      isLoadingOD = mWaveCache->numODPixels > 0;
-   }
-   else {
-      using namespace std;
-      isLoadingOD =
-         count_if(display.ownBl.begin(), display.ownBl.end(),
-                  bind2nd(less<int>(), 0)) > 0;
    }
 
    return true;

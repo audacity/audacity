@@ -1414,25 +1414,15 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          break;
       case 256:
          // Read triples
-         //check to see if summary data has been computed
-         if (seqBlock.f->IsSummaryAvailable())
-            // Ignore the return value.
-            // This function fills with zeroes if read fails
-            seqBlock.f->Read256(temp.get(), startPosition, num);
-         else
-            //otherwise, mark the display as not yet computed
-            blockStatus = -1 - b;
+         // Ignore the return value.
+         // This function fills with zeroes if read fails
+         seqBlock.f->Read256(temp.get(), startPosition, num);
          break;
       case 65536:
          // Read triples
-         //check to see if summary data has been computed
-         if (seqBlock.f->IsSummaryAvailable())
-            // Ignore the return value.
-            // This function fills with zeroes if read fails
-            seqBlock.f->Read64K(temp.get(), startPosition, num);
-         else
-            //otherwise, mark the display as not yet computed
-            blockStatus = -1 - b;
+         // Ignore the return value.
+         // This function fills with zeroes if read fails
+         seqBlock.f->Read64K(temp.get(), startPosition, num);
          break;
       }
       
@@ -1652,11 +1642,6 @@ void Sequence::Delete(sampleCount start, sampleCount len)
 
    if (len < 0 || start < 0 || start + len > mNumSamples)
       THROW_INCONSISTENCY_EXCEPTION;
-
-   //TODO: add a ref-deref mechanism to SeqBlock/BlockArray so we don't have to make this a critical section.
-   //On-demand threads iterate over the mBlocks and the GUI thread deletes them, so for now put a mutex here over
-   //both functions,
-   DeleteUpdateMutexLocker locker(*this);
 
    const unsigned int numBlocks = mBlock.size();
 

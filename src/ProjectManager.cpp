@@ -40,7 +40,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "wxFileNameWrapper.h"
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
-#include "ondemand/ODManager.h"
 #include "prefs/QualityPrefs.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/SelectionBar.h"
@@ -324,11 +323,8 @@ public:
       // Experiment shows that this function can be reached while there is no
       // catch block above in wxWidgets.  So stop all exceptions here.
       return GuardedCall< bool > ( [&] {
-         //sort by OD non OD.  load Non OD first so user can start editing asap.
          wxArrayString sortednames(filenames);
-         sortednames.Sort(CompareNoCaseFileName);
-
-         ODManager::Pauser pauser;
+         sortednames.Sort(FileNames::CompareNoCase);
 
          auto cleanup = finally( [&] {
             ProjectWindow::Get( *mProject ).HandleResize(); // Adjust scrollers for NEW track sizes.
@@ -843,11 +839,8 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
       return;
    }
 
-   //sort selected files by OD status.
-   //For the open menu we load OD first so user can edit asap.
    //first sort selectedFiles.
-   selectedFiles.Sort(CompareNoCaseFileName);
-   ODManager::Pauser pauser;
+   selectedFiles.Sort(FileNames::CompareNoCase);
 
    auto cleanup = finally( [] {
       Importer::SetLastOpenType({});
@@ -960,36 +953,6 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 
          // Do not change mLastMainStatusMessage
          SetStatusText(sMessage, mainStatusBarField);
-      }
-   }
-   else if(ODManager::IsInstanceCreated())
-   {
-      //if we have some tasks running, we should say something about it.
-      int numTasks = ODManager::Instance()->GetTotalNumTasks();
-      if(numTasks)
-      {
-         TranslatableString msg;
-         float ratioComplete= ODManager::Instance()->GetOverallPercentComplete();
-
-         if(ratioComplete>=1.0f)
-         {
-            //if we are 100 percent complete and there is still a task in the queue, we should wake the ODManager
-            //so it can clear it.
-            //signal the od task queue loop to wake up so it can remove the tasks from the queue and the queue if it is empty.
-            ODManager::Instance()->SignalTaskQueueLoop();
-
-            msg = XO("On-demand import and waveform calculation complete.");
-         }
-         else if(numTasks>1)
-            msg = XO(
-"Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete.")
-               .Format( numTasks, ratioComplete * 100.0 );
-         else
-            msg = XO(
-"Import complete. Running an on-demand waveform calculation. %2.0f%% complete.")
-               .Format( ratioComplete * 100.0 );
-
-         SetStatusText(msg, mainStatusBarField);
       }
    }
 

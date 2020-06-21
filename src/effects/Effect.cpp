@@ -38,7 +38,6 @@
 #include "../WaveTrack.h"
 #include "../wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
-#include "../ondemand/ODManager.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -2250,13 +2249,6 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       {
          // Replace mTracks entry with the NEW track
          mTracks->Replace(t, o);
-
-         // If the track is a wave track,
-         // Swap the wavecache track the ondemand task uses, since now the NEW
-         // one will be kept in the project
-         if (ODManager::IsInstanceCreated()) {
-            ODManager::Instance()->ReplaceWaveTrack( t, o );
-         }
       }
    }
 

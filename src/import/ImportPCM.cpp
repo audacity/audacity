@@ -39,15 +39,8 @@
 #include "../WaveClip.h"
 #include "../ShuttleGui.h"
 
-#include "../ondemand/ODManager.h"
-#include "../ondemand/ODComputeSummaryTask.h"
-#include "../blockfile/ODPCMAliasBlockFile.h"
 #include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
-
-//If OD is enabled, he minimum number of samples a file has to use it.
-//Otherwise, we use the older PCMAliasBlockFile method since it should be fast enough.
-#define kMinimumODFileSampleSize 44100*30
 
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher
@@ -288,115 +281,6 @@ auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return mInfo.frames * mInfo.channels * SAMPLE_SIZE(mFormat);
 }
 
-#ifdef EXPERIMENTAL_OD_DATA
-// returns "copy" or "edit" (aliased) as the user selects.
-// if the cancel button is hit then "cancel" is returned.
-static wxString AskCopyOrEdit()
-{
-
-   auto oldCopyPref = FileFormatsCopyOrEditSetting.Read();
-
-   bool firstTimeAsk    = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataFirstAsk"), true)?true:false;
-   bool oldAskPref      = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true)?true:false;
-
-   // The first time the user is asked we force it to 'copy'.
-   // This effectively does a one-time change to the preferences.
-   if (firstTimeAsk) {
-      if (oldCopyPref != wxT("copy")) {
-         FileFormatsCopyOrEditSetting.Write( wxT("copy") );
-         oldCopyPref = wxT("copy");
-      }
-      gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataFirstAsk"), (long) false);
-      gPrefs->Flush();
-   }
-
-   // check the current preferences for whether or not we should ask the user about this.
-   if (oldAskPref) {
-      wxString newCopyPref = wxT("copy");
-      wxDialogWrapper dialog( nullptr, -1, XO("Warning") );
-      dialog.SetName();
-
-      auto clause1 = XO(
-"When importing uncompressed audio files you can either copy them into the project,"
-" or read them directly from their current location (without copying).\n\n"
-      );
-
-      auto clause2 = (oldCopyPref == wxT("copy"))
-         ? XO("Your current preference is set to copy in.\n\n")
-         : XO("Your current preference is set to read directly.\n\n")
-      ;
-
-      auto clause3 = XO(
-"Reading the files directly allows you to play or edit them almost immediately. "
-"This is less safe than copying in, because you must retain the files with their "
-"original names in their original locations.\n"
-"Help > Diagnostics > Check Dependencies will show the original names and locations of any files "
-"that you are reading directly.\n\n"
-"How do you want to import the current file(s)?"
-      );
-
-      ShuttleGui S{ &dialog, eIsCreating };
-      S.SetBorder(10);
-      S
-         .Position( wxALL | wxEXPAND )
-         .AddUnits( clause1 + clause2 + clause3, 500);
-
-      wxRadioButton *aliasRadio;
-      wxRadioButton *copyRadio;
-      wxCheckBox *dontAskNextTimeBox;
-
-      S.StartStatic(XO("Choose an import method"));
-      {
-         S.SetBorder(0);
-
-         copyRadio = S.AddRadioButton(
-            XXO("Make a &copy of the files before editing (safer)") );
-
-         aliasRadio = S.AddRadioButtonToGroup(
-            XXO("Read the files &directly from the original (faster)") );
-
-         dontAskNextTimeBox = S.AddCheckBox(
-            XXO("Don't &warn again and always use my choice above"),
-            false);
-      }
-      S.EndStatic();
-
-      dontAskNextTimeBox->SetName(wxStripMenuCodes(dontAskNextTimeBox->GetLabel()));
-
-
-      wxRadioButton *prefsRadio = oldCopyPref == wxT("copy") ? copyRadio : aliasRadio;
-      prefsRadio->SetValue(true);
-
-      S.SetBorder( 10 );
-      S.AddStandardButtons( eOkButton | eCancelButton );
-
-      dialog.SetSize(dialog.GetBestSize());
-      dialog.Layout();
-      dialog.Center();
-
-      if (dialog.ShowModal() == wxID_OK) {
-         if (aliasRadio->GetValue()) {
-            newCopyPref = wxT("edit");
-         }
-         if (dontAskNextTimeBox->IsChecked()) {
-            gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) false);
-            gPrefs->Flush();
-         }
-      } else {
-         return wxT("cancel");
-      }
-
-      // if the preference changed, save it.
-      if (newCopyPref != oldCopyPref) {
-         FileFormatsCopyOrEditSetting.Write( newCopyPref );
-         gPrefs->Flush();
-      }
-      oldCopyPref = newCopyPref;
-   }
-   return oldCopyPref;
-}
-#endif
-
 #ifdef USE_LIBID3TAG
 struct id3_tag_deleter {
    void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
@@ -414,20 +298,6 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
    wxASSERT(mFile.get());
 
-#ifdef EXPERIMENTAL_OD_DATA
-   // Get the preference / warn the user about aliased files.
-   wxString copyEdit = AskCopyOrEdit();
-
-   if (copyEdit == wxT("cancel"))
-      return ProgressResult::Cancelled;
-
-   // Fall back to "copy" if it doesn't match anything else, since it is safer
-   bool doEdit = false;
-   if (copyEdit.IsSameAs(wxT("edit"), false))
-      doEdit = true;
-#endif
-
-
    CreateProgress();
 
    NewChannelGroup channels(mInfo.channels);
@@ -443,82 +313,6 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
       (sampleCount)mInfo.frames; // convert from sf_count_t
    auto maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
    auto updateResult = ProgressResult::Cancelled;
-
-#ifdef EXPERIMENTAL_OD_DATA
-   // If the format is not seekable, we must use 'copy' mode,
-   // because 'edit' mode depends on the ability to seek to an
-   // arbitrary location in the file.
-   if (!mInfo.seekable)
-      doEdit = false;
-
-   if (doEdit) {
-      // If this mode has been selected, we form the tracks as
-      // aliases to the files we're editing, i.e. ("foo.wav", 12000-18000)
-      // instead of actually making fresh copies of the samples.
-
-      // lets use OD only if the file is longer than 30 seconds.  Otherwise, why wake up extra threads.
-      //todo: make this a user pref.
-      bool useOD =fileTotalFrames>kMinimumODFileSampleSize;
-      int updateCounter = 0;
-
-      for (decltype(fileTotalFrames) i = 0; i < fileTotalFrames; i += maxBlockSize) {
-
-         const auto blockLen =
-            limitSampleBufferSize( maxBlockSize, fileTotalFrames - i );
-
-         auto iter = channels.begin();
-         for (int c = 0; c < mInfo.channels; ++iter, ++c)
-            iter->get()->RightmostOrNewClip()->AppendBlockFile(
-               [&]( wxFileNameWrapper filePath, size_t len ) {
-                  return useOD
-                     ? make_blockfile<ODPCMAliasBlockFile>(
-                        std::move(filePath), wxFileNameWrapper{ mFilename },
-                        i, len, c)
-                     : make_blockfile<PCMAliasBlockFile>(
-                        std::move(filePath), wxFileNameWrapper{ mFilename },
-                        i, len, c);
-               },
-               blockLen
-            );
-
-         if (++updateCounter == 50) {
-            updateResult = mProgress->Update(
-               i.as_long_long(),
-               fileTotalFrames.as_long_long()
-            );
-            updateCounter = 0;
-            if (updateResult != ProgressResult::Success)
-               break;
-         }
-      }
-
-      // One last update for completion
-      updateResult = mProgress->Update(
-         fileTotalFrames.as_long_long(),
-         fileTotalFrames.as_long_long()
-      );
-
-      if(useOD)
-      {
-         auto computeTask = std::make_unique<ODComputeSummaryTask>();
-         bool moreThanStereo = mInfo.channels>2;
-         for (const auto &channel : channels)
-         {
-            computeTask->AddWaveTrack(channel);
-            if(moreThanStereo)
-            {
-               //if we have 3 more channels, they get imported on separate tracks, so we add individual tasks for each.
-               ODManager::Instance()->AddNewTask(std::move(computeTask));
-               computeTask = std::make_unique<ODComputeSummaryTask>();
-            }
-         }
-         //if we have a linked track, we add ONE task.
-         if(!moreThanStereo)
-            ODManager::Instance()->AddNewTask(std::move(computeTask));
-      }
-   }
-   else 
-#endif
 
    {
       // Otherwise, we're in the "copy" mode, where we read in the actual

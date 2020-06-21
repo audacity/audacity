@@ -96,18 +96,6 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-#ifdef EXPERIMENTAL_OD_DATA
-   S.StartStatic(XO("When importing audio files"));
-   {
-      S.StartRadioButtonGroup(FileFormatsCopyOrEditSetting);
-      {
-         S.TieRadioButton();
-         S.TieRadioButton();
-      }
-      S.EndRadioButtonGroup();
-   }
-   S.EndStatic();
-#endif
    S.StartStatic(XO("When exporting tracks to an audio file"));
    {
       S.StartRadioButtonGroup(ImportExportPrefs::ExportDownMixSetting);

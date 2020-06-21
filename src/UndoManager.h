@@ -51,7 +51,6 @@
 
 #include <vector>
 #include <wx/event.h> // to declare custom event types
-#include "ondemand/ODTaskThread.h"
 #include "ClientData.h"
 #include "SelectedRegion.h"
 
@@ -168,11 +167,6 @@ class AUDACITY_DLL_API UndoManager final
 
    // void Debug(); // currently unused
 
-   ///to mark as unsaved changes without changing the state/tracks.
-   void SetODChangesFlag();
-   bool HasODChangesFlag() const;
-   void ResetODChangesFlag();
-
  private:
    AudacityProject &mProject;
  
@@ -185,10 +179,6 @@ class AUDACITY_DLL_API UndoManager final
 
    SpaceArray space;
    unsigned long long mClipboardSpaceUsage {};
-
-   bool mODChanges;
-   mutable ODLock mODChangesMutex;//mODChanges is accessed from many threads.
-
 };
 
 #endif

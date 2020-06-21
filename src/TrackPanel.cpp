@@ -78,9 +78,6 @@ is time to refresh some aspect of the screen.
 #include "TrackPanelResizerCell.h"
 #include "WaveTrack.h"
 
-#include "ondemand/ODManager.h"
-#include "ondemand/ODTask.h"
-
 #include "tracks/ui/TrackControls.h"
 #include "tracks/ui/TrackView.h"
 #include "tracks/ui/TrackVRulerControls.h"
@@ -308,8 +305,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                     this);
 
    auto theProject = GetProject();
-   wxTheApp->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
-   theProject->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
    theProject->Bind(
       EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
    theProject->Bind(
@@ -460,14 +455,6 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    }
    if(mTimeCount > 1000)
       mTimeCount = 0;
-}
-
-///Handles the redrawing necessary for tasks as they partially update in the
-///background, or finish.
-void TrackPanel::OnODTask(wxCommandEvent & WXUNUSED(event))
-{
-   //todo: add track data to the event - check to see if the project contains it before redrawing.
-   Refresh(false);
 }
 
 void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )

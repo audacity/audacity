@@ -211,7 +211,6 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    ArrayOf<char> cleanup;
    if (!summaryData)
       summaryData = /*BlockFile::*/CalcSummary(sampleData, sampleLen, format, cleanup);
-      //mchinen:allowing virtual override of calc summary for ODDecodeBlockFile.
       // PRL: cleanup fixes a possible memory leak!
 
    size_t nBytesToWrite = sizeof(header);

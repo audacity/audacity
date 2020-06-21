@@ -85,7 +85,6 @@ UndoManager::UndoManager( AudacityProject &project )
 {
    current = -1;
    saved = -1;
-   ResetODChangesFlag();
 }
 
 UndoManager::~UndoManager()
@@ -392,13 +391,12 @@ void UndoManager::Redo(const Consumer &consumer)
 
 bool UndoManager::UnsavedChanges() const
 {
-   return (saved != current) || HasODChangesFlag();
+   return (saved != current);
 }
 
 void UndoManager::StateSaved()
 {
    saved = current;
-   ResetODChangesFlag();
 }
 
 // currently unused
@@ -412,26 +410,3 @@ void UndoManager::StateSaved()
 //   }
 //}
 
-///to mark as unsaved changes without changing the state/tracks.
-void UndoManager::SetODChangesFlag()
-{
-   mODChangesMutex.Lock();
-   mODChanges=true;
-   mODChangesMutex.Unlock();
-}
-
-bool UndoManager::HasODChangesFlag() const
-{
-   bool ret;
-   mODChangesMutex.Lock();
-   ret=mODChanges;
-   mODChangesMutex.Unlock();
-   return ret;
-}
-
-void UndoManager::ResetODChangesFlag()
-{
-   mODChangesMutex.Lock();
-   mODChanges=false;
-   mODChangesMutex.Unlock();
-}

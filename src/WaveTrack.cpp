@@ -2481,13 +2481,6 @@ void WaveTrack::ClearWaveCaches()
       clip->ClearWaveCache();
 }
 
-///Adds an invalid region to the wavecache so it redraws that portion only.
-void WaveTrack::AddInvalidRegion(sampleCount startSample, sampleCount endSample)
-{
-   for (const auto &clip : mClips)
-      clip->AddInvalidRegion(startSample, endSample);
-}
-
 int WaveTrack::GetAutoSaveIdent() const
 {
    return mAutoSaveIdent;
