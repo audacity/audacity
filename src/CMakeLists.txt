@@ -9,6 +9,7 @@ set( CMAKE_ENABLE_EXPORTS ON )
 
 # add sub-directory libraries to the build
 foreach( SUBDIRECTORY
+   etc
 )
    add_subdirectory( "${SUBDIRECTORY}" )
 endforeach()
@@ -24,22 +25,6 @@ add_dependencies( ${TARGET} nyquist )
 add_dependencies( ${TARGET} plug-ins )
 
 def_vars()
-
-# Add a target that will provide the git revision info
-# whenever it changes.  (Must be done at build time, not
-# configuration time.)
-if( GIT_FOUND )
-   add_custom_target(
-      version
-      COMMAND
-         ${CMAKE_COMMAND} -D GIT=${GIT_EXECUTABLE}
-                          -D _PRVDIR=${_PRVDIR}
-                          -P ${CMAKE_MODULE_PATH}/Version.cmake
-      WORKING_DIRECTORY
-         ${topdir}
-   )
-   add_dependencies( ${TARGET} version )
-endif()
 
 # Handle Audio Units option
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
@@ -72,273 +57,10 @@ set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
 #
 list( APPEND SOURCES
    PRIVATE
-      AColor.cpp
-      AColor.h
-      AboutDialog.cpp
-      AboutDialog.h
-      AdornedRulerPanel.cpp
-      AdornedRulerPanel.h
-      AllThemeResources.cpp
-      AllThemeResources.h
-      AttachedVirtualFunction.h
       Audacity.h
-      AudacityApp.cpp
-      AudacityApp.h
-      AudacityException.cpp
-      AudacityException.h
-      AudacityHeaders.cpp
       AudacityHeaders.h
-      AudacityLogger.cpp
-      AudacityLogger.h
-      AudioIO.cpp
-      AudioIO.h
-      AudioIOBase.cpp
-      AudioIOBase.h
-      AudioIOListener.h
-      AutoRecovery.cpp
-      AutoRecovery.h
-      AutoRecoveryDialog.cpp
-      AutoRecoveryDialog.h
-      BatchCommandDialog.cpp
-      BatchCommandDialog.h
-      BatchCommands.cpp
-      BatchCommands.h
-      BatchProcessDialog.cpp
-      BatchProcessDialog.h
-      Benchmark.cpp
-      Benchmark.h
-      BlockFile.cpp
-      BlockFile.h
-      CellularPanel.cpp
-      CellularPanel.h
-      ClassicThemeAsCeeCode.h
-      ClientData.h
-      ClientDataHelpers.h
-      Clipboard.cpp
-      Clipboard.h
-      CommonCommandFlags.cpp
-      CommonCommandFlags.h
-      CrashReport.cpp
-      CrashReport.h
-      DarkThemeAsCeeCode.h
-      Dependencies.cpp
-      Dependencies.h
-      DeviceChange.cpp
-      DeviceChange.h
-      DeviceManager.cpp
-      DeviceManager.h
-      Diags.cpp
-      Diags.h
-      DirManager.cpp
-      DirManager.h
-      Dither.cpp
-      Dither.h
-      Envelope.cpp
-      Envelope.h
-      EnvelopeEditor.cpp
-      EnvelopeEditor.h
+      AudacityHeaders.cpp
       Experimental.h
-      FFT.cpp
-      FFT.h
-      FFmpeg.cpp
-      FFmpeg.h
-      FileException.cpp
-      FileException.h
-      FileFormats.cpp
-      FileFormats.h
-      FileIO.cpp
-      FileIO.h
-      FileNames.cpp
-      FileNames.h
-      FreqWindow.cpp
-      FreqWindow.h
-      HelpText.cpp
-      HelpText.h
-      HiContrastThemeAsCeeCode.h
-      HistoryWindow.cpp
-      HistoryWindow.h
-      HitTestResult.h
-      ImageManipulation.cpp
-      ImageManipulation.h
-      InconsistencyException.cpp
-      InconsistencyException.h
-      Internat.cpp
-      Internat.h
-      InterpolateAudio.cpp
-      InterpolateAudio.h
-      KeyboardCapture.cpp
-      KeyboardCapture.h
-      LabelDialog.cpp
-      LabelDialog.h
-      LabelTrack.cpp
-      LabelTrack.h
-      LangChoice.cpp
-      LangChoice.h
-      Languages.cpp
-      Languages.h
-      Legacy.cpp
-      Legacy.h
-      LightThemeAsCeeCode.h
-      Lyrics.cpp
-      Lyrics.h
-      LyricsWindow.cpp
-      LyricsWindow.h
-      MacroMagic.h
-      Matrix.cpp
-      Matrix.h
-      MemoryX.h
-      Menus.cpp
-      Menus.h
-      MissingAliasFileDialog.cpp
-      MissingAliasFileDialog.h
-      Mix.cpp
-      Mix.h
-      MixerBoard.cpp
-      MixerBoard.h
-      ModuleManager.cpp
-      ModuleManager.h
-      NoteTrack.cpp
-      NoteTrack.h
-      NumberScale.h
-      PitchName.cpp
-      PitchName.h
-      PlatformCompatibility.cpp
-      PlatformCompatibility.h
-      PluginManager.cpp
-      PluginManager.h
-      Prefs.cpp
-      Prefs.h
-      Printing.cpp
-      Printing.h
-      Profiler.cpp
-      Profiler.h
-      Project.cpp
-      Project.h
-      ProjectAudioIO.cpp
-      ProjectAudioIO.h
-      ProjectAudioManager.cpp
-      ProjectAudioManager.h
-      ProjectFSCK.cpp
-      ProjectFSCK.h
-      ProjectFileIO.cpp
-      ProjectFileIO.h
-      ProjectFileIORegistry.cpp
-      ProjectFileIORegistry.h
-      ProjectFileManager.cpp
-      ProjectFileManager.h
-      ProjectHistory.cpp
-      ProjectHistory.h
-      ProjectManager.cpp
-      ProjectManager.h
-      ProjectSelectionManager.cpp
-      ProjectSelectionManager.h
-      ProjectSettings.cpp
-      ProjectSettings.h
-      ProjectStatus.cpp
-      ProjectStatus.h
-      ProjectWindow.cpp
-      ProjectWindow.h
-      ProjectWindowBase.cpp
-      ProjectWindowBase.h
-      RealFFTf.cpp
-      RealFFTf.h
-      RealFFTf48x.cpp
-      RealFFTf48x.h
-      RefreshCode.h
-      Registrar.h
-      Registry.cpp
-      Registry.h
-      Resample.cpp
-      Resample.h
-      RingBuffer.cpp
-      RingBuffer.h
-      SampleFormat.cpp
-      SampleFormat.h
-      Screenshot.cpp
-      Screenshot.h
-      SelectUtilities.cpp
-      SelectUtilities.h
-      SelectedRegion.cpp
-      SelectedRegion.h
-      SelectionState.cpp
-      SelectionState.h
-      Sequence.cpp
-      Sequence.h
-      Shuttle.cpp
-      Shuttle.h
-      ShuttleGetDefinition.cpp
-      ShuttleGetDefinition.h
-      ShuttleGui.cpp
-      ShuttleGui.h
-      ShuttlePrefs.cpp
-      ShuttlePrefs.h
-      Snap.cpp
-      Snap.h
-      SoundActivatedRecord.cpp
-      SoundActivatedRecord.h
-      Spectrum.cpp
-      Spectrum.h
-      SpectrumAnalyst.cpp
-      SpectrumAnalyst.h
-      SplashDialog.cpp
-      SplashDialog.h
-      SseMathFuncs.cpp
-      SseMathFuncs.h
-      Tags.cpp
-      Tags.h
-      Theme.cpp
-      Theme.h
-      ThemeAsCeeCode.h
-      TimeDialog.cpp
-      TimeDialog.h
-      TimeTrack.cpp
-      TimeTrack.h
-      TimerRecordDialog.cpp
-      TimerRecordDialog.h
-      Track.cpp
-      Track.h
-      TrackArtist.cpp
-      TrackArtist.h
-      TrackInfo.cpp
-      TrackInfo.h
-      TrackPanel.cpp
-      TrackPanel.h
-      TrackPanelAx.cpp
-      TrackPanelAx.h
-      TrackPanelCell.cpp
-      TrackPanelCell.h
-      TrackPanelDrawable.cpp
-      TrackPanelDrawable.h
-      TrackPanelDrawingContext.h
-      TrackPanelListener.h
-      TrackPanelMouseEvent.h
-      TrackPanelResizeHandle.cpp
-      TrackPanelResizeHandle.h
-      TrackPanelResizerCell.cpp
-      TrackPanelResizerCell.h
-      TrackUtilities.cpp
-      TrackUtilities.h
-      UIHandle.cpp
-      UIHandle.h
-      UndoManager.cpp
-      UndoManager.h
-      UserException.cpp
-      UserException.h
-      ViewInfo.cpp
-      ViewInfo.h
-      VoiceKey.cpp
-      VoiceKey.h
-      WaveClip.cpp
-      WaveClip.h
-      WaveTrack.cpp
-      WaveTrack.h
-      WaveTrackLocation.h
-      WrappedType.cpp
-      WrappedType.h
-      ZoomInfo.cpp
-      ZoomInfo.h
-      float_cast.h
-      wxFileNameWrapper.h
 
       # Blockfile
 
@@ -1037,7 +759,6 @@ list( APPEND LIBRARIES
       expat
       lame
       libsndfile
-      libsoxr
       portaudio-v19
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
@@ -1050,7 +771,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_MIDI}>:portmidi>
       $<$<BOOL:${USE_MIDI}>:portsmf>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
-      $<$<BOOL:${USE_PORTMIXER}>:portmixer>
       $<$<BOOL:${USE_SBSMS}>:sbsms>
       $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
       $<$<BOOL:${USE_VAMP}>:libvamp>
@@ -1167,7 +887,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    # These sources must be compiled as Objective C++ and excluded
    # from precompiled header usage
    set_source_files_properties(
-      KeyboardCapture.cpp
       effects/EffectUI.cpp
       effects/VST/VSTControlOSX.mm
       effects/audiounits/AUControl.mm
@@ -1308,6 +1027,10 @@ source_group(
 )
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
+
+target_include_directories( ${TARGET} PRIVATE
+   etc
+)
 
 # If was have cmake 3.16 or higher, we can use precompiled headers, but
 # only use them if ccache is not available and the user hasn't disabled

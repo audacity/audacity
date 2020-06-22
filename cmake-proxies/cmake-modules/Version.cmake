@@ -2,6 +2,7 @@
 # RevisionIdent.h header.  It will only update it if there was
 # a change in git.
 
+file( MAKE_DIRECTORY "${_PRVDIR}" )
 execute_process(
    COMMAND
       ${GIT} show -s "--format=#define REV_LONG \"%H\"%n#define REV_TIME \"%cd\"%n"
