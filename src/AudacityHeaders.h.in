@@ -48,6 +48,12 @@
 #include <set>
 #include <map>
 
+// PRL: include these wx headers, which use placement new syntax, before
+// defining debug NEW.  (Don't rely on transitive inclusions of them by
+// other includes inserted above.)
+#include <wx/any.h>
+#include <wx/vector.h>
+
 //#ifdef __WXMSW__
 // Enable this to diagnose memory leaks too!
 //    #include <wx/msw/msvcrt.h>      // redefines the NEW() operator
