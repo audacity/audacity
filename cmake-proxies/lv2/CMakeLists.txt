@@ -202,7 +202,7 @@ elseif( UNIX )
    set( LILV_DEFAULT_LV2_PATH "~/.lv2:/usr/lib/lv2:/usr/local/lib/lv2" )
 
    set( SUIL_MODULE_DIR "" )
-   set( SUIL_DIR_SEP "" )
+   set( SUIL_DIR_SEP "/" )
    set( SUIL_GTK2_LIB_NAME "libgtk-x11-2.0.so.0" )
    set( SUIL_GTK3_LIB_NAME "libgtk-x11-3.0.so.0" )
    set( SUIL_MODULE_PREFIX "lib" )
