@@ -14,7 +14,7 @@
 
 #include <wx/defs.h>
 
-#include "export/Export.h"
+#include "Export.h"
 #include "commands/CommandFlag.h"
 #include "audacity/ComponentInterface.h" // for ComponentInterfaceSymbol
 

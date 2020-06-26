@@ -1,6 +1,7 @@
 do_directory(
    INCLUDE_PRIVATE
       src/etc
+      src/export
       src/import
       src/ondemand
       src/track
