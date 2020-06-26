@@ -13,7 +13,7 @@ Paul Licameli split from Menus.cpp
 
 #include "Audacity.h"
 
-#include "commands/CommandFlag.h"
+#include "CommandFlag.h"
 
 bool TracksSelectedPred( const AudacityProject &project );
 bool AudioIOBusyPred( const AudacityProject &project );

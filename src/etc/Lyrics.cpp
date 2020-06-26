@@ -23,7 +23,7 @@
 #include "Project.h"
 #include "ProjectWindowBase.h"
 #include "LabelTrack.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 

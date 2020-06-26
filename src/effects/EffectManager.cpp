@@ -29,8 +29,8 @@ effects.
 #include "AudacityMessageBox.h"
 
 #include "ShuttleGetDefinition.h"
-#include "commands/CommandContext.h"
-#include "commands/Command.h"
+#include "CommandContext.h"
+#include "Command.h"
 #include "PluginManager.h"
 
 

@@ -18,7 +18,7 @@
 #include <wx/scrolwin.h> // to inherit
 
 #include "ASlider.h" // to inherit
-#include "commands/CommandManagerWindowClasses.h"
+#include "CommandManagerWindowClasses.h"
 
 #include "Prefs.h"
 

@@ -318,8 +318,8 @@ void HistoryDialog::OnSize(wxSizeEvent & WXUNUSED(event))
 }
 
 // Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
 
 namespace {
 

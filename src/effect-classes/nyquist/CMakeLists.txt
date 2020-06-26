@@ -2,6 +2,7 @@ if(USE_NYQUIST)
 
 do_directory(
    INCLUDE_PRIVATE
+      src/commands
       src/etc
       src/effects
       src/ondemand

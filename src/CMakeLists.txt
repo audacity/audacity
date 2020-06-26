@@ -9,6 +9,7 @@ set( CMAKE_ENABLE_EXPORTS ON )
 
 # add sub-directory libraries to the build
 foreach( SUBDIRECTORY
+   commands
    effect-classes
    effects
    etc
@@ -95,81 +96,6 @@ list( APPEND SOURCES
       blockfile/SilentBlockFile.h
       blockfile/SimpleBlockFile.cpp
       blockfile/SimpleBlockFile.h
-
-      # Commands
-
-      commands/AppCommandEvent.cpp
-      commands/AppCommandEvent.h
-      commands/AudacityCommand.cpp
-      commands/AudacityCommand.h
-      commands/BatchEvalCommand.cpp
-      commands/BatchEvalCommand.h
-      commands/Command.cpp
-      commands/Command.h
-      commands/CommandBuilder.cpp
-      commands/CommandBuilder.h
-      commands/CommandContext.cpp
-      commands/CommandContext.h
-      commands/CommandDirectory.cpp
-      commands/CommandDirectory.h
-      commands/CommandFlag.h
-      commands/CommandFunctors.h
-      commands/CommandHandler.cpp
-      commands/CommandHandler.h
-      commands/CommandManager.cpp
-      commands/CommandManager.h
-      commands/CommandManagerWindowClasses.h
-      commands/CommandMisc.h
-      commands/CommandSignature.cpp
-      commands/CommandSignature.h
-      commands/CommandTargets.cpp
-      commands/CommandTargets.h
-      commands/CommandType.cpp
-      commands/CommandType.h
-      commands/CompareAudioCommand.cpp
-      commands/CompareAudioCommand.h
-      commands/Demo.cpp
-      commands/Demo.h
-      commands/DragCommand.cpp
-      commands/DragCommand.h
-      commands/GetInfoCommand.cpp
-      commands/GetInfoCommand.h
-      commands/GetTrackInfoCommand.cpp
-      commands/GetTrackInfoCommand.h
-      commands/HelpCommand.cpp
-      commands/HelpCommand.h
-      commands/ImportExportCommands.cpp
-      commands/ImportExportCommands.h
-      commands/Keyboard.cpp
-      commands/Keyboard.h
-      commands/LoadCommands.cpp
-      commands/LoadCommands.h
-      commands/MessageCommand.cpp
-      commands/MessageCommand.h
-      commands/OpenSaveCommands.cpp
-      commands/OpenSaveCommands.h
-      commands/PreferenceCommands.cpp
-      commands/PreferenceCommands.h
-      commands/ResponseQueue.cpp
-      commands/ResponseQueue.h
-      commands/ScreenshotCommand.cpp
-      commands/ScreenshotCommand.h
-      commands/ScriptCommandRelay.cpp
-      commands/ScriptCommandRelay.h
-      commands/SelectCommand.cpp
-      commands/SelectCommand.h
-      commands/SetClipCommand.cpp
-      commands/SetClipCommand.h
-      commands/SetEnvelopeCommand.cpp
-      commands/SetEnvelopeCommand.h
-      commands/SetLabelCommand.cpp
-      commands/SetLabelCommand.h
-      commands/SetProjectCommand.cpp
-      commands/SetProjectCommand.h
-      commands/SetTrackInfoCommand.cpp
-      commands/SetTrackInfoCommand.h
-      commands/Validators.h
-
 )
 
 #
@@ -444,16 +370,7 @@ target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOU
 
 target_include_directories( ${TARGET} PRIVATE
    etc
-   export
-   effects
-   labeltrack
    ondemand
-   prefs
-   toolbars
-   track
-   wavetrack
-   widgets
-   widgets/FileDialog
 )
 
 # If was have cmake 3.16 or higher, we can use precompiled headers, but

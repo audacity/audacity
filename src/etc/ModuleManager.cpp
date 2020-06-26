@@ -32,7 +32,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "FileNames.h"
 #include "PluginManager.h"
 
-#include "commands/ScriptCommandRelay.h"
+#include "ScriptCommandRelay.h"
 
 #include "audacity/PluginInterface.h"
 

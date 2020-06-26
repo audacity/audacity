@@ -173,7 +173,7 @@ struct PropertiesOfSelected
 
 PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject &proj);
 
-#include "commands/CommandFlag.h"
+#include "CommandFlag.h"
 
 extern const ReservedCommandFlag
    &CanStopAudioStreamFlag();
