@@ -1,14 +1,11 @@
+if(USE_NYQUIST)
+
 do_directory(
    INCLUDE_PRIVATE
-      src/effects
       src/etc
-      src/export
-      src/import
-      src/labeltrack
+      src/effects
       src/ondemand
-      src/playabletrack
       src/prefs
-      src/toolbars
       src/track
       src/wavetrack
       src/xml
@@ -16,9 +13,7 @@ do_directory(
    PRIVATE
       src/widgets
       wxWidgets
-
-   OBJCPP_SOURCES
-      WindowMenus.cpp
+      $<$<BOOL:${USE_NYQUIST}>:libnyquist>
 
    PRECOMPILE
       AColor.h
@@ -43,19 +38,10 @@ do_directory(
       Ruler.h
 
    SOURCES
-      ClipMenus.cpp
-      EditMenus.cpp
-      ExtraMenus.cpp
-      FileMenus.cpp
-      HelpMenus.cpp
-      LabelMenus.cpp
-      NavigationMenus.cpp
-      PluginMenus.cpp
-      SelectMenus.cpp
-      ToolbarMenus.cpp
-      TrackMenus.cpp
-      TransportMenus.cpp
-      ViewMenus.cpp
-      WindowMenus.cpp
+      LoadNyquist.cpp
+      LoadNyquist.h
+      Nyquist.cpp
+      Nyquist.h
 )
 
+endif()

@@ -34,7 +34,7 @@ small calculations of rectangles.
 #include "AdornedRulerPanel.h"
 #include "BatchCommands.h"
 #include "TrackPanel.h"
-#include "effects/Effect.h"
+#include "Effect.h"
 #include "ToolManager.h"
 #include "Prefs.h"
 #include "ProjectWindow.h"

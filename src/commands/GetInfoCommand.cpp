@@ -27,7 +27,7 @@ This class now lists
 #include "Project.h"
 #include "CommandManager.h"
 #include "CommandTargets.h"
-#include "effects/EffectManager.h"
+#include "EffectManager.h"
 #include "Overlay.h"
 #include "TrackPanelAx.h"
 #include "TrackPanel.h"

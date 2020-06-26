@@ -46,7 +46,7 @@ for drawing different aspects of the label and its text box.
 #include "Prefs.h"
 #include "ProjectFileIORegistry.h"
 
-#include "effects/TimeWarper.h"
+#include "TimeWarper.h"
 #include "AudacityMessageBox.h"
 
 wxDEFINE_EVENT(EVT_LABELTRACK_ADDITION, LabelTrackEvent);

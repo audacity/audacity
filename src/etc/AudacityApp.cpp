@@ -130,7 +130,7 @@ It handles initialization and termination by subclassing wxApp.
 #endif
 
 #ifdef EXPERIMENTAL_SCOREALIGN
-#include "effects/ScoreAlignDialog.h"
+#include "ScoreAlignDialog.h"
 #endif
 
 #if 0

@@ -17,9 +17,9 @@
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
 #include "commands/ScreenshotCommand.h"
-#include "effects/EffectManager.h"
-#include "effects/EffectUI.h"
-#include "effects/RealtimeEffectManager.h"
+#include "EffectManager.h"
+#include "EffectUI.h"
+#include "RealtimeEffectManager.h"
 #include "EffectsPrefs.h"
 #include "PrefsDialog.h"
 

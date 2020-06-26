@@ -1,14 +1,8 @@
 do_directory(
    INCLUDE_PRIVATE
-      src/effects
       src/etc
-      src/export
-      src/import
-      src/labeltrack
       src/ondemand
-      src/playabletrack
       src/prefs
-      src/toolbars
       src/track
       src/wavetrack
       src/xml
@@ -18,7 +12,7 @@ do_directory(
       wxWidgets
 
    OBJCPP_SOURCES
-      WindowMenus.cpp
+      EffectUI.cpp
 
    PRECOMPILE
       AColor.h
@@ -43,19 +37,30 @@ do_directory(
       Ruler.h
 
    SOURCES
-      ClipMenus.cpp
-      EditMenus.cpp
-      ExtraMenus.cpp
-      FileMenus.cpp
-      HelpMenus.cpp
-      LabelMenus.cpp
-      NavigationMenus.cpp
-      PluginMenus.cpp
-      SelectMenus.cpp
-      ToolbarMenus.cpp
-      TrackMenus.cpp
-      TransportMenus.cpp
-      ViewMenus.cpp
-      WindowMenus.cpp
+      Biquad.cpp
+      Biquad.h
+      Contrast.cpp
+      Contrast.h
+      EBUR128.cpp
+      EBUR128.h
+      Effect.cpp
+      Effect.h
+      EffectManager.cpp
+      EffectManager.h
+      EffectUI.cpp
+      EffectUI.h
+      Generator.cpp
+      Generator.h
+      LoadEffects.cpp
+      LoadEffects.h
+      RealtimeEffectManager.cpp
+      RealtimeEffectManager.h
+      ScoreAlignDialog.cpp
+      ScoreAlignDialog.h
+      SimpleMono.cpp
+      SimpleMono.h
+      TimeWarper.cpp
+      TimeWarper.h
+      TwoPassSimpleMono.cpp
+      TwoPassSimpleMono.h
 )
-
