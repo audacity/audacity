@@ -204,6 +204,22 @@ macro( check_for_platform_version )
    endif()
 endmacro()
 
+function( audacity_library_name var value )
+   file( RELATIVE_PATH temp "${CMAKE_SOURCE_DIR}/src" "${value}" )
+   string( REGEX REPLACE "[/\\]" "_" temp "${temp}" )
+   set( ${var} "${temp}" PARENT_SCOPE )
+endfunction()
+
+function( audacity_library_names var )
+   foreach( library ${ARGN} )
+      if( EXISTS "${CMAKE_SOURCE_DIR}/${library}" )
+         audacity_library_name( library "${CMAKE_SOURCE_DIR}/${library}" )
+      endif()
+      list( APPEND all_libraries "${library}" )
+   endforeach()
+   set( ${var} ${all_libraries} PARENT_SCOPE )
+endfunction()
+
 # Set compilation options common to library targets that make up the
 # executable.
 function( audacity_target_options target private_libraries public_libraries )
@@ -298,3 +314,173 @@ function( audacity_target_options target private_libraries public_libraries )
       target_precompile_headers( ${target} PRIVATE "${CMAKE_SOURCE_DIR}/src/AudacityHeaders.h" )
    endif()
 endfunction()
+
+# Macro makes a library target (computing its name from the current source path)
+# unless given no sources; then visits further subdirectories, and passes
+# collected names of targets to the calling scope.
+#
+# Nesting of subdirectories does not yet have any influence on their target
+# properties, but it is intended that transitive dependencies between two
+# subdirectories where neither contains the other should be non-cyclic, and the
+# script that generates a dependency graph will assign similar colors to sister
+# subdirectories and put them in a cluster.
+#
+# The dependencies among subdirectories defined by the union of INCLUDE_PRIVATE
+# and INCLUDE_PUBLIC relations may have cycles. Those defined by PRIVATE and
+# PUBLIC must not (configuration will fail when not all the subdirectories in a
+# cycle have TYPE STATIC).  It is intended that the uses of INCLUDE_PRIVATE and
+# INCLUDE_PUBLIC be phased out as subdirectories are reorganized to eliminate
+# dependency cycles.
+#
+# TYPE chooses type of library in add_library, defaults to OBJECT; if SOURCES
+#    and OBJCPP_SOURCES are empty, it must be undefined.
+#    (Note that with STATIC archives, objects will link into the build only as
+#    needed to satisfy references; therefore some other library type is needed
+#    if the code relies on registrations at file-scope static initialization
+#    time that avoid static linkage depdendencies from without.)
+# INCLUDE_PRIVATE names other subdirectories relative to project root; the
+#    header files in them, and in the subdirectories they name in
+#    INCLUDE_PUBLIC, are available to the compiler
+# INCLUDE_PUBLIC affects this subdirectory's compilation as does INCLUDE_PRIVATE
+#    and also adds them, with the subdirectory itself, to the interface include
+#    directories property; use it when headers in this subdirectory must include
+#    those from elsewhere, such as to inherit a base class, so that dependents'
+#    INCLUDE_PRIVATE lists may be shortened
+# PRIVATE names other subdirectories relative to project root or third-party
+#    libraries.  All of their interface properties affect compilation --
+#    includes and command-line preprocessor definitions, also the interface
+#    properties of other subdirectories transitively reachable via
+#    PUBLIC
+# PUBLIC affects compilation as does PRIVATE, and also populates the interface
+#    properties of this library.  All interface properties of other
+#    subdirectories in PUBLIC are included in the interface too, and so on
+#    transitively, and also the INCLUDE_PUBLIC of all of those, but then not
+#    transitively
+# OBJCPP_SOURCES are relative to the current directory; these will compile on
+#    Mac as Objective-C++, and will be added only to the Mac build, unless also
+#    listed in SOURCES
+# SOURCES are source file paths relative to the current directory
+# SUBDIRECTORIES relative to current may also define libraries, whose names are
+#    collected, and with this directory's library name (if any), are passed to
+#    the calling scope in COLLECTED_OBJECTS (for object libraries),
+#    COLLECTED_MODULES (for module libraries),
+#    and COLLECTED_LIBRARIES (for other libraries, including third-party), so
+#    that the top level can build and link them correctly
+#
+macro( do_directory )
+   message( STATUS "========== Configuring ${CMAKE_CURRENT_SOURCE_DIR} ==========" )
+
+   # parse arguments
+   cmake_parse_arguments( DO_DIRECTORY
+      ""
+      "TYPE"
+      "INCLUDE_PRIVATE;INCLUDE_PUBLIC;PRIVATE;PUBLIC;OBJCPP_SOURCES;SOURCES;SUBDIRECTORIES"
+      ${ARGN}
+   )
+
+   if( NOT DO_DIRECTORY_SOURCES AND NOT DO_DIRECTORY_OBJCPP_SOURCES )
+      if( DO_DIRECTORY_TYPE )
+         message( FATAL_ERROR "TYPE not allowed without sources" )
+      endif()
+      unset( DO_DIRECTORY_NAME )
+   else()
+      # determine target name and library type
+      audacity_library_name( DO_DIRECTORY_NAME "${CMAKE_CURRENT_SOURCE_DIR}" )
+      if( NOT DO_DIRECTORY_TYPE )
+         set( DO_DIRECTORY_TYPE OBJECT )
+      endif()
+
+      # add the library
+      add_library( "${DO_DIRECTORY_NAME}" "${DO_DIRECTORY_TYPE}" )
+
+      # allow library's own headers to be found in compilation, and also usable
+      # by dependents
+      target_include_directories(
+         "${DO_DIRECTORY_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" )
+
+      # populate the INTERFACE includes -- not as PUBLIC, see below instead
+      # for population of PRIVATE include directories.
+      set( DO_DIRECTORY_INCLUDES ${DO_DIRECTORY_INCLUDE_PUBLIC} )
+      list( TRANSFORM DO_DIRECTORY_INCLUDES PREPEND "${CMAKE_SOURCE_DIR}/" )
+      target_include_directories(
+         ${DO_DIRECTORY_NAME} INTERFACE ${DO_DIRECTORY_INCLUDES} )
+
+      # convert supplied lists to target names
+      foreach( DO_DIRECTORY_LIST INCLUDE_PRIVATE INCLUDE_PUBLIC PRIVATE PUBLIC )
+         audacity_library_names(
+            DO_DIRECTORY_${DO_DIRECTORY_LIST}
+            ${DO_DIRECTORY_${DO_DIRECTORY_LIST}} )
+      endforeach()
+
+      # populate our own private include directories with others' interfaces
+      foreach( DO_DIRECTORY_LIBRARY
+         ${DO_DIRECTORY_INCLUDE_PRIVATE}
+         ${DO_DIRECTORY_INCLUDE_PUBLIC}
+      )
+         # use a generator expression to get whatever the above lines put into
+         # interfaces.  (We can't use the generator in the above lines because
+         # we are allowing cycles and that might cause nonterminating generator
+         # expression expansion.  So we get only one level of recursive access
+         # to public includes of dependencies, not fully transitive.)
+         target_include_directories(
+            "${DO_DIRECTORY_NAME}" PRIVATE
+            "$<TARGET_PROPERTY:${DO_DIRECTORY_LIBRARY},INTERFACE_INCLUDE_DIRECTORIES>" )
+      endforeach()
+
+      # set up other compile and link options, and transitive availability
+      # of public library dependencies.  We don't use any interface-only (as
+      # distinct from private) link libraries.
+      audacity_target_options(
+         "${DO_DIRECTORY_NAME}"
+         "${DO_DIRECTORY_PRIVATE}"
+         "${DO_DIRECTORY_PUBLIC}"
+      )
+
+      # Set special options for any objective-c++ files on Mac
+      if( DO_DIRECTORY_OBJCPP_SOURCES AND CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+         list( APPEND DO_DIRECTORY_SOURCES ${DO_DIRECTORY_OBJCPP_SOURCES} )
+         set_source_files_properties( ${DO_DIRECTORY_OBJCPP_SOURCES}
+            PROPERTIES COMPILE_FLAGS "-x objective-c++"
+            SKIP_PRECOMPILE_HEADERS YES
+         )
+      endif()
+
+      # Make the sources part of the build
+      # Eliminate duplicates first, in case some file needed mention also
+      # in OBJCPP_SOURCES
+      list( SORT DO_DIRECTORY_SOURCES )
+      list( REMOVE_DUPLICATES DO_DIRECTORY_SOURCES )
+      target_sources( "${DO_DIRECTORY_NAME}" PRIVATE ${DO_DIRECTORY_SOURCES} )
+   endif()
+
+   # visit further sub-directories
+   foreach( DO_DIRECTORY_SUBDIRECTORY ${DO_DIRECTORY_SUBDIRECTORIES} )
+      add_subdirectory( "${DO_DIRECTORY_SUBDIRECTORY}" )
+   endforeach()
+
+   # collect library and object names
+   if( DO_DIRECTORY_NAME )
+      if( DO_DIRECTORY_TYPE STREQUAL "OBJECT" )
+         # All constituent objects of the archive will be linked directly into
+         # the program
+         list( APPEND COLLECTED_OBJECTS "$<TARGET_OBJECTS:${DO_DIRECTORY_NAME}>" )
+         # libraries used by an OBJECT library are not linked when the library
+         # builds, so they must be collected and linked into the program
+         list( APPEND COLLECTED_LIBRARIES ${DO_DIRECTORY_PRIVATE} ${DO_DIRECTORY_PUBLIC} )
+      elseif( DO_DIRECTORY_TYPE STREQUAL "MODULE" )
+         # modules are not linked into the main program, but should be counted as
+         # dependencies
+         list( APPEND COLLECTED_MODULES "${DO_DIRECTORY_NAME}" )
+      else()
+         # STATIC and SHARED libraries will be linked into the program
+         list( APPEND COLLECTED_LIBRARIES "${DO_DIRECTORY_NAME}" )
+      endif()
+   endif()
+
+   # These lines require a macro, not function scope to propagate values up
+   # to the CMakeLists.txt invoking the one containing the macro call
+   foreach( DO_DIRECTORY_VAR OBJECTS MODULES LIBRARIES )
+      set( COLLECTED_${DO_DIRECTORY_VAR} ${COLLECTED_${DO_DIRECTORY_VAR}} PARENT_SCOPE)
+   endforeach()
+endmacro()
+
