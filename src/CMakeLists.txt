@@ -10,6 +10,7 @@ set( CMAKE_ENABLE_EXPORTS ON )
 # add sub-directory libraries to the build
 foreach( SUBDIRECTORY
    etc
+   export
    import
    labeltrack
    menus
@@ -341,38 +342,6 @@ list( APPEND SOURCES
          effects/vamp/VampEffect.cpp
          effects/vamp/VampEffect.h
       >
-
-      # Export
-
-      export/Export.cpp
-      export/Export.h
-
-      # Standard exporters
-      export/ExportCL.cpp
-      export/ExportMP3.cpp
-      export/ExportMP3.h
-      export/ExportMultiple.cpp
-      export/ExportMultiple.h
-      export/ExportPCM.cpp
-
-      # Optional exporters
-      $<$<BOOL:${USE_FFMPEG}>:
-         export/ExportFFmpeg.cpp
-         export/ExportFFmpegDialogs.cpp
-         export/ExportFFmpegDialogs.h
-      >
-
-      $<$<BOOL:${USE_LIBFLAC}>:
-         export/ExportFLAC.cpp
-      >
-
-      $<$<BOOL:${USE_LIBTWOLAME}>:
-         export/ExportMP2.cpp
-      >
-
-      $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
-         export/ExportOGG.cpp
-      >
 )
 
 #
@@ -403,14 +372,7 @@ list( APPEND LIBRARIES
    PRIVATE
       ${CMAKE_REQUIRED_LIBRARIES}
       wxWidgets
-      lame
       libsndfile
-      $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
-      $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
-      $<$<BOOL:${USE_LIBFLAC}>:libflac>
-      $<$<BOOL:${USE_LIBOGG}>:libogg>
-      $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
-      $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_LV2}>:lv2>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<BOOL:${USE_SBSMS}>:sbsms>
@@ -670,6 +632,7 @@ target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOU
 
 target_include_directories( ${TARGET} PRIVATE
    etc
+   export
    labeltrack
    ondemand
    prefs

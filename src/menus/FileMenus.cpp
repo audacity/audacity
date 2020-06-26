@@ -20,7 +20,7 @@
 #include "WaveTrack.h"
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
-#include "export/ExportMultiple.h"
+#include "ExportMultiple.h"
 #include "Import.h"
 #include "ImportMIDI.h"
 #include "ImportRaw.h"

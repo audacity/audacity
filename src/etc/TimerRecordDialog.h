@@ -18,7 +18,7 @@
 
 #include <wx/textctrl.h> // to inherit
 #include <wx/timer.h> // member variable
-#include "export/Export.h"
+#include "Export.h"
 
 class wxCheckBox;
 class wxChoice;
