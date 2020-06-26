@@ -58,8 +58,7 @@ set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
 list( APPEND SOURCES
    PRIVATE
       Audacity.h
-      AudacityHeaders.h
-      AudacityHeaders.cpp
+      AudacityHeaders.h.in
       Experimental.h
 
       # Blockfile
