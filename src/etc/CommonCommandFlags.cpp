@@ -26,7 +26,7 @@ Paul Licameli split from Menus.cpp
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "commands/CommandManagerWindowClasses.h"
+#include "CommandManagerWindowClasses.h"
 
 /*
 

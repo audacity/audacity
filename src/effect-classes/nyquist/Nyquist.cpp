@@ -3439,7 +3439,7 @@ void * nyq_reformat_aud_do_response(const wxString & Str) {
    return (void *)dst;
 }
 
-#include "commands/ScriptCommandRelay.h"
+#include "ScriptCommandRelay.h"
 
 
 /* xlc_aud_do -- interface to C routine aud_do */

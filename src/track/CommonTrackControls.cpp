@@ -22,8 +22,8 @@ Paul Licameli split from TrackControls.cpp
 #include "TrackPanelMouseEvent.h"
 #include "TrackUtilities.h"
 #include <wx/textdlg.h>
-#include "commands/CommandType.h"
-#include "commands/CommandManager.h"
+#include "CommandType.h"
+#include "CommandManager.h"
 #include "ShuttleGui.h"
 #include "Track.h"
 #include "PopupMenuTable.h"

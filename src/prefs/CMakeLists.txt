@@ -1,5 +1,6 @@
 do_directory(
    INCLUDE_PRIVATE
+      src/commands
       src/etc
       src/export
       src/import

@@ -57,8 +57,8 @@
 #include "UndoManager.h"
 #include "AButton.h"
 
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 

@@ -1,5 +1,6 @@
 do_directory(
    INCLUDE_PRIVATE
+      src/commands
       src/effects
       src/etc
       src/ondemand

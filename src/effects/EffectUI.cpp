@@ -41,7 +41,7 @@
 #include <wx/timer.h>
 #include <wx/tglbtn.h>
 
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "wxPanelWrapper.h"
@@ -655,8 +655,8 @@ private:
 #include "ProjectAudioManager.h"
 #include "ShuttleGui.h"
 #include "ViewInfo.h"
-#include "commands/AudacityCommand.h"
-#include "commands/CommandContext.h"
+#include "AudacityCommand.h"
+#include "CommandContext.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
 
@@ -1849,7 +1849,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
 #include "SelectUtilities.h"
 #include "TrackPanel.h"
 #include "WaveTrack.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 
 /// DoEffect() takes a PluginID and executes the associated effect.
 ///

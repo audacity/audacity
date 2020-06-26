@@ -28,7 +28,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "EffectManager.h"
 #include "EffectUI.h"
 #include "FileNames.h"
@@ -44,7 +44,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 
 #include "AudacityMessageBox.h"
 
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 
 // KLUDGE: All commands should be on the same footing
 // however, for historical reasons we distinguish between

@@ -49,7 +49,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "Export.h"
 #include "Import.h"
 #include "ImportMIDI.h"
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "ODComputeSummaryTask.h"
 #include "ODDecodeFlacTask.h"
 #include "ODManager.h"

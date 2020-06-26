@@ -36,7 +36,7 @@
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "UndoManager.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "ToolManager.h"
 #include "AudacityMessageBox.h"
 #include "ErrorDialog.h"
