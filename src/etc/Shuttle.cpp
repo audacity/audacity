@@ -68,7 +68,7 @@ preferences.
 #include "audacity/EffectAutomationParameters.h" // for command automation
 
 #include "WrappedType.h"
-//#include "effects/Effect.h"
+//#include "Effect.h"
 
 
 Shuttle::Shuttle()

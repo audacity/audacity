@@ -53,7 +53,7 @@ effects from this one class.
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 
-#include "effects/EffectManager.h"
+#include "EffectManager.h"
 #include "DirManager.h"
 #include "FileNames.h"
 #include "LabelTrack.h"

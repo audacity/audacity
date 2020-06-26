@@ -9,6 +9,8 @@ set( CMAKE_ENABLE_EXPORTS ON )
 
 # add sub-directory libraries to the build
 foreach( SUBDIRECTORY
+   effect-classes
+   effects
    etc
    export
    import
@@ -168,180 +170,6 @@ list( APPEND SOURCES
       commands/SetTrackInfoCommand.h
       commands/Validators.h
 
-      # Built-in Effects
-
-      effects/Amplify.cpp
-      effects/Amplify.h
-      effects/AutoDuck.cpp
-      effects/AutoDuck.h
-      effects/BassTreble.cpp
-      effects/BassTreble.h
-      effects/Biquad.cpp
-      effects/Biquad.h
-      effects/ChangePitch.cpp
-      effects/ChangePitch.h
-      effects/ChangeSpeed.cpp
-      effects/ChangeSpeed.h
-      effects/ChangeTempo.cpp
-      effects/ChangeTempo.h
-      effects/ClickRemoval.cpp
-      effects/ClickRemoval.h
-      effects/Compressor.cpp
-      effects/Compressor.h
-      effects/Contrast.cpp
-      effects/Contrast.h
-      effects/Distortion.cpp
-      effects/Distortion.h
-      effects/DtmfGen.cpp
-      effects/DtmfGen.h
-      effects/EBUR128.cpp
-      effects/EBUR128.h
-      effects/Echo.cpp
-      effects/Echo.h
-      effects/Effect.cpp
-      effects/Effect.h
-      effects/EffectManager.cpp
-      effects/EffectManager.h
-      effects/EffectUI.cpp
-      effects/EffectUI.h
-      effects/Equalization.cpp
-      effects/Equalization.h
-      effects/Equalization48x.cpp
-      effects/Equalization48x.h
-      effects/Fade.cpp
-      effects/Fade.h
-      effects/FindClipping.cpp
-      effects/FindClipping.h
-      effects/Generator.cpp
-      effects/Generator.h
-      effects/Invert.cpp
-      effects/Invert.h
-      effects/LoadEffects.cpp
-      effects/LoadEffects.h
-      effects/Loudness.cpp
-      effects/Loudness.h
-      effects/Noise.cpp
-      effects/Noise.h
-      effects/NoiseReduction.cpp
-      effects/NoiseReduction.h
-      effects/NoiseRemoval.cpp
-      effects/NoiseRemoval.h
-      effects/Normalize.cpp
-      effects/Normalize.h
-      effects/Paulstretch.cpp
-      effects/Paulstretch.h
-      effects/Phaser.cpp
-      effects/Phaser.h
-      effects/RealtimeEffectManager.cpp
-      effects/RealtimeEffectManager.h
-      effects/Repair.cpp
-      effects/Repair.h
-      effects/Repeat.cpp
-      effects/Repeat.h
-      effects/Reverb.cpp
-      effects/Reverb.h
-      effects/Reverb_libSoX.h
-      effects/Reverse.cpp
-      effects/Reverse.h
-      effects/SBSMSEffect.cpp
-      effects/SBSMSEffect.h
-      effects/ScienFilter.cpp
-      effects/ScienFilter.h
-      effects/ScoreAlignDialog.cpp
-      effects/ScoreAlignDialog.h
-      effects/Silence.cpp
-      effects/Silence.h
-      effects/SimpleMono.cpp
-      effects/SimpleMono.h
-      effects/SoundTouchEffect.cpp
-      effects/SoundTouchEffect.h
-      effects/StereoToMono.cpp
-      effects/StereoToMono.h
-      effects/TimeScale.cpp
-      effects/TimeScale.h
-      effects/TimeWarper.cpp
-      effects/TimeWarper.h
-      effects/ToneGen.cpp
-      effects/ToneGen.h
-      effects/TruncSilence.cpp
-      effects/TruncSilence.h
-      effects/TwoPassSimpleMono.cpp
-      effects/TwoPassSimpleMono.h
-      effects/Wahwah.cpp
-      effects/Wahwah.h
-
-      # VST Effects
-
-      $<$<BOOL:${USE_VST}>:
-         effects/VST/VSTControl.h
-         effects/VST/VSTEffect.cpp
-         effects/VST/VSTEffect.h
-         effects/VST/aeffectx.h
-      >
-
-      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_GTK}>>:
-         effects/VST/VSTControlGTK.cpp
-         effects/VST/VSTControlGTK.h
-      >
-
-      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_WIN}>>:
-         effects/VST/VSTControlMSW.cpp
-         effects/VST/VSTControlMSW.h
-      >
-
-      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_MAC}>>:
-         effects/VST/VSTControlOSX.h
-         effects/VST/VSTControlOSX.mm
-      >
-
-      # Audio Unit Effects
-
-      $<$<AND:$<BOOL:${USE_AUDIO_UNITS}>,$<BOOL:${wxIS_MAC}>>:
-         effects/audiounits/AUControl.h
-         effects/audiounits/AUControl.mm
-         effects/audiounits/AudioUnitEffect.cpp
-         effects/audiounits/AudioUnitEffect.h
-      >
-
-      # Ladspa Effects
-
-      $<$<BOOL:${USE_LADSPA}>:
-         effects/ladspa/LadspaEffect.cpp
-         effects/ladspa/LadspaEffect.h
-         effects/ladspa/ladspa.h
-      >
-
-      # LV2 Effects
-
-      $<$<BOOL:${USE_LV2}>:
-         effects/lv2/LV2Effect.cpp
-         effects/lv2/LV2Effect.h
-         effects/lv2/LoadLV2.cpp
-         effects/lv2/LoadLV2.h
-         effects/lv2/NativeWindow.h
-         effects/lv2/lv2_external_ui.h
-         effects/lv2/zix/common.h
-         effects/lv2/zix/ring.cpp
-         effects/lv2/zix/ring.h
-      >
-
-      # Nyquist Effects
-
-      $<$<BOOL:${USE_NYQUIST}>:
-         effects/nyquist/LoadNyquist.cpp
-         effects/nyquist/LoadNyquist.h
-         effects/nyquist/Nyquist.cpp
-         effects/nyquist/Nyquist.h
-      >
-
-      # VAMP Effects
-
-      $<$<BOOL:${USE_VAMP}>:
-         effects/vamp/LoadVamp.cpp
-         effects/vamp/LoadVamp.h
-         effects/vamp/VampEffect.cpp
-         effects/vamp/VampEffect.h
-      >
 )
 
 #
@@ -373,11 +201,6 @@ list( APPEND LIBRARIES
       ${CMAKE_REQUIRED_LIBRARIES}
       wxWidgets
       libsndfile
-      $<$<BOOL:${USE_LV2}>:lv2>
-      $<$<BOOL:${USE_NYQUIST}>:libnyquist>
-      $<$<BOOL:${USE_SBSMS}>:sbsms>
-      $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
-      $<$<BOOL:${USE_VAMP}>:libvamp>
 )
 
 set( BUILDING_AUDACITY YES )
@@ -487,17 +310,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          RESOURCE "${MAC_RESOURCES};${RESOURCES}"
    )
    set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}" )
-
-   # These sources must be compiled as Objective C++ and excluded
-   # from precompiled header usage
-   set_source_files_properties(
-      effects/EffectUI.cpp
-      effects/VST/VSTControlOSX.mm
-      effects/audiounits/AUControl.mm
-      PROPERTIES
-         COMPILE_FLAGS "-x objective-c++"
-         SKIP_PRECOMPILE_HEADERS YES
-   )
 
    # Add our required frameworks
    list( APPEND LIBRARIES
@@ -633,6 +445,7 @@ target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOU
 target_include_directories( ${TARGET} PRIVATE
    etc
    export
+   effects
    labeltrack
    ondemand
    prefs

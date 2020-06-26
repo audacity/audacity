@@ -40,7 +40,7 @@
 
 #include "InconsistencyException.h"
 
-#include "effects/TimeWarper.h"
+#include "TimeWarper.h"
 #include "TrackView.h"
 #include "TrackControls.h"
 

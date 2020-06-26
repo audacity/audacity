@@ -84,7 +84,7 @@
 #include "FileNames.h"
 #include "PlatformCompatibility.h"
 #include "ShuttleGui.h"
-#include "effects/Effect.h"
+#include "Effect.h"
 #include "valnum.h"
 #include "AudacityMessageBox.h"
 #include "NumericTextCtrl.h"

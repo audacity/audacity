@@ -47,7 +47,7 @@
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
 #include "commands/CommandManager.h"
-#include "effects/Effect.h"
+#include "Effect.h"
 #include "images/Arrow.xpm"
 #include "images/Empty9x16.xpm"
 #include "UndoManager.h"

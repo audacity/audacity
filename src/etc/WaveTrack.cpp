@@ -53,7 +53,7 @@ Track classes.
 
 #include "Prefs.h"
 
-#include "effects/TimeWarper.h"
+#include "TimeWarper.h"
 #include "QualityPrefs.h"
 #include "SpectrogramSettings.h"
 #include "TracksPrefs.h"

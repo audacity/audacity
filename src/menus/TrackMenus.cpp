@@ -27,8 +27,8 @@
 #include "WaveTrack.h"
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
-#include "effects/EffectManager.h"
-#include "effects/EffectUI.h"
+#include "EffectManager.h"
+#include "EffectUI.h"
 #include "QualityPrefs.h"
 #include "WaveTrackControls.h"
 #include "ASlider.h"
@@ -38,7 +38,7 @@
 #include <wx/combobox.h>
 
 #ifdef EXPERIMENTAL_SCOREALIGN
-#include "effects/ScoreAlignDialog.h"
+#include "ScoreAlignDialog.h"
 #include "audioreader.h"
 #include "scorealign.h"
 #include "scorealign-glue.h"
