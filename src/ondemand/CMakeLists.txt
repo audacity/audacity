@@ -1,5 +1,6 @@
 do_directory(
    INCLUDE_PRIVATE
+      src/blockfile
       src/etc
       src/track
       src/xml

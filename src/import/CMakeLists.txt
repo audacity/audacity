@@ -44,6 +44,7 @@ endif()
 
 do_directory(
    INCLUDE_PRIVATE
+      src/blockfile
       src/etc
       src/ondemand
       src/prefs

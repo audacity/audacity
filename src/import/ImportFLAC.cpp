@@ -43,7 +43,7 @@
 
 #include "Tags.h"
 #include "WaveClip.h"
-#include "blockfile/ODDecodeBlockFile.h"
+#include "ODDecodeBlockFile.h"
 #include "QualityPrefs.h"
 #include "ProgressDialog.h"
 

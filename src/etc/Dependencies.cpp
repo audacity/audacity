@@ -49,7 +49,7 @@ AliasedFile s.
 #include <wx/frame.h>
 #include <wx/stattext.h>
 
-#include "blockfile/SimpleBlockFile.h"
+#include "SimpleBlockFile.h"
 #include "DirManager.h"
 #include "FileFormats.h"
 #include "Prefs.h"

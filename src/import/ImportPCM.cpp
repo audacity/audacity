@@ -41,7 +41,7 @@
 
 #include "ODManager.h"
 #include "ODComputeSummaryTask.h"
-#include "blockfile/ODPCMAliasBlockFile.h"
+#include "ODPCMAliasBlockFile.h"
 #include "QualityPrefs.h"
 #include "ProgressDialog.h"
 

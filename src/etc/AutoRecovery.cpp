@@ -21,7 +21,7 @@ text or binary format to a file.
 #include "Audacity.h"
 #include "AutoRecovery.h"
 #include "DirManager.h"
-#include "blockfile/SimpleBlockFile.h"
+#include "SimpleBlockFile.h"
 #include "Sequence.h"
 
 #include <wx/wxprec.h>

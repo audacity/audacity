@@ -45,7 +45,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
-#include "blockfile/ODDecodeBlockFile.h"
+#include "ODDecodeBlockFile.h"
 #include "Export.h"
 #include "Import.h"
 #include "ImportMIDI.h"
