@@ -9,6 +9,7 @@ set( CMAKE_ENABLE_EXPORTS ON )
 
 # add sub-directory libraries to the build
 foreach( SUBDIRECTORY
+   blockfile
    commands
    effect-classes
    effects
@@ -77,25 +78,7 @@ list( APPEND SOURCES
       Audacity.h
       AudacityHeaders.h.in
       Experimental.h
-
-      # Blockfile
-
-      blockfile/LegacyAliasBlockFile.cpp
-      blockfile/LegacyAliasBlockFile.h
-      blockfile/LegacyBlockFile.cpp
-      blockfile/LegacyBlockFile.h
-      blockfile/NotYetAvailableException.cpp
-      blockfile/NotYetAvailableException.h
-      blockfile/ODDecodeBlockFile.cpp
-      blockfile/ODDecodeBlockFile.h
-      blockfile/ODPCMAliasBlockFile.cpp
-      blockfile/ODPCMAliasBlockFile.h
-      blockfile/PCMAliasBlockFile.cpp
-      blockfile/PCMAliasBlockFile.h
-      blockfile/SilentBlockFile.cpp
-      blockfile/SilentBlockFile.h
-      blockfile/SimpleBlockFile.cpp
-      blockfile/SimpleBlockFile.h
+      dummy.cpp
 )
 
 #
@@ -367,11 +350,6 @@ source_group(
 )
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
-
-target_include_directories( ${TARGET} PRIVATE
-   etc
-   ondemand
-)
 
 # If was have cmake 3.16 or higher, we can use precompiled headers, but
 # only use them if ccache is not available and the user hasn't disabled

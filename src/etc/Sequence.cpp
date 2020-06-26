@@ -42,8 +42,8 @@
 
 #include "DirManager.h"
 
-#include "blockfile/SilentBlockFile.h"
-#include "blockfile/SimpleBlockFile.h"
+#include "SilentBlockFile.h"
+#include "SimpleBlockFile.h"
 
 #include "InconsistencyException.h"
 
