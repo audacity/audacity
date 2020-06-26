@@ -7,7 +7,18 @@ message( STATUS "========== Configuring ${TARGET} ==========" )
 # Allow modules to link against the Audacity executable
 set( CMAKE_ENABLE_EXPORTS ON )
 
-add_executable( ${TARGET} )
+# add sub-directory libraries to the build
+foreach( SUBDIRECTORY
+)
+   add_subdirectory( "${SUBDIRECTORY}" )
+endforeach()
+
+# add the executable, including contents of object libraries in subdirectories
+add_executable( ${TARGET} ${COLLECTED_OBJECTS} )
+
+if( COLLECTED_MODULES )
+   add_dependencies( ${TARGET} ${COLLECTED_MODULES} )
+endif()
 add_dependencies( ${TARGET} locale )
 add_dependencies( ${TARGET} nyquist )
 add_dependencies( ${TARGET} plug-ins )
@@ -1315,6 +1326,10 @@ if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
    endif()
 endif()
 
+# link to static libraries in subfolders
+target_link_libraries( ${TARGET} PRIVATE ${COLLECTED_LIBRARIES} )
+
+# link other libraries
 audacity_target_options( ${TARGET} "${LIBRARIES}" "" )
 
 if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
