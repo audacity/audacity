@@ -15,7 +15,7 @@
 #include "Audacity.h" // for USE_* macros
 #include "HelpText.h"
 
-#include "Experimental.h"
+
 
 #include <wx/string.h>
 #include <wx/intl.h>

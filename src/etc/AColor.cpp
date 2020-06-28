@@ -20,7 +20,7 @@ It is also a place to document colour usage policy in Audacity
 #include "Audacity.h"
 #include "AColor.h"
 
-#include "Experimental.h"
+
 
 #include <wx/window.h>
 #include <wx/colour.h>

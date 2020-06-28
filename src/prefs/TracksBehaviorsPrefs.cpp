@@ -17,7 +17,7 @@
 #include "Audacity.h"
 #include "TracksBehaviorsPrefs.h"
 
-#include "Experimental.h"
+
 
 #include "Prefs.h"
 #include "ShuttleGui.h"

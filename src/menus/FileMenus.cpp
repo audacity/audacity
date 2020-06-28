@@ -1,5 +1,5 @@
 #include "Audacity.h" // for USE_* macros
-#include "Experimental.h"
+
 
 #include "BatchCommands.h"
 #include "CommonCommandFlags.h"

@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackPanelMouseEvent.h"
 
 #include "AColor.h"
-#include "Experimental.h"
+
 #include "TrackPanelDrawingContext.h"
 #include "Ruler.h"
 

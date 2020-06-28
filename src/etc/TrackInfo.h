@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_TRACK_INFO__
 
 #include "Audacity.h"
-#include "Experimental.h"
+
 
 #include <vector>
 

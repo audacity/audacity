@@ -10,7 +10,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectManager.h"
 
-#include "Experimental.h"
+
 
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
@@ -354,6 +354,10 @@ private:
    AudacityProject *mProject;
 };
 
+#endif
+
+#ifdef EXPERIMENTAL_NOTEBOOK
+   extern void AddPages(   AudacityProject * pProj, GuiFactory & Factory,  wxNotebook  * pNotebook );
 #endif
 
 void InitProjectWindow( ProjectWindow &window )

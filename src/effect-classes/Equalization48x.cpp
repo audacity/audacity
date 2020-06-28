@@ -16,7 +16,7 @@
 #include "Audacity.h" // for USE_* macros
 #include "Equalization48x.h"
 
-#include "Experimental.h"
+
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "Project.h"

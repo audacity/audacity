@@ -18,7 +18,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "Audacity.h" // This should always be included first; for USE_* macros and __UNIX__
 #include "AudacityApp.h"
 
-#include "Experimental.h"
+
 
 #if 0
 // This may be used to debug memory leaks.
@@ -29,6 +29,7 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
+#include <wx/evtloop.h>
 #include <wx/app.h>
 #include <wx/bitmap.h>
 #include <wx/docview.h>
@@ -123,9 +124,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "Import.h"
 
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-#include <wx/debugrpt.h>
-#include <wx/evtloop.h>
+#if defined(HAS_CRASH_REPORT)
 #include <wx/textdlg.h>
 #endif
 
@@ -976,7 +975,7 @@ wxLanguageInfo userLangs[] =
 
 void AudacityApp::OnFatalException()
 {
-#if defined(EXPERIMENTAL_CRASH_REPORT)
+#if defined(HAS_CRASH_REPORT)
    CrashReport::Generate(wxDebugReport::Context_Exception);
 #endif
 
@@ -1045,7 +1044,7 @@ AudacityApp::AudacityApp()
 {
 // Do not capture crashes in debug builds
 #if !defined(_DEBUG)
-#if defined(EXPERIMENTAL_CRASH_REPORT)
+#if defined(HAS_CRASH_REPORT)
 #if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
    wxHandleFatalExceptions();
 #endif

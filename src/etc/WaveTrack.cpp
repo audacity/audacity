@@ -29,7 +29,7 @@ Track classes.
 
 #include "WaveTrack.h"
 
-#include "Experimental.h"
+
 
 #include "WaveClip.h"
 

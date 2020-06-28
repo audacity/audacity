@@ -18,7 +18,7 @@
 #include "Audacity.h"
 #include "Effect.h"
 
-#include "Experimental.h"
+
 
 #include <algorithm>
 

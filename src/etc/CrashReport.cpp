@@ -8,9 +8,9 @@
 
 #include "Audacity.h"
 #include "CrashReport.h"
-#include "Experimental.h"
 
-#if defined(EXPERIMENTAL_CRASH_REPORT)
+
+#if defined(HAS_CRASH_REPORT)
 
 #if defined(__WXMSW__)
 #include <wx/evtloop.h>

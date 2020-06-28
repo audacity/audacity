@@ -19,7 +19,7 @@ handling.
 #include "Audacity.h"
 #include "ProjectsPrefs.h"
 
-#include "Experimental.h"
+
 
 #include <wx/defs.h>
 #include <wx/textctrl.h>

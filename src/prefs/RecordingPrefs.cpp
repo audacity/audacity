@@ -21,7 +21,7 @@
 #include "Audacity.h"
 #include "RecordingPrefs.h"
 
-#include "Experimental.h"
+
 
 #include <wx/defs.h>
 #include <wx/textctrl.h>

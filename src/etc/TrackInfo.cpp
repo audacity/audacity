@@ -28,7 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Audacity.h"
 #include "TrackInfo.h"
 
-#include "Experimental.h"
+
 
 #include <wx/dc.h>
 #include <wx/frame.h>

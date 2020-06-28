@@ -41,7 +41,7 @@
 #include "Audacity.h" // for USE_* macros
 #include "Meter.h"
 
-#include "Experimental.h"
+
 
 #include <algorithm>
 #include <wx/setup.h> // for wxUSE_* macros

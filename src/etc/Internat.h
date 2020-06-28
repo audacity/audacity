@@ -16,7 +16,6 @@
 
 #include <wx/longlong.h>
 
-#ifndef IN_RC
 #include "audacity/Types.h"
 
 class wxArrayString;
@@ -98,8 +97,6 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 // Like XP but with an additional context argument, as for XC
 #define XPC(sing, plur, n, c) \
    TranslatableString{ wxT(sing), {} }.Context(c).Plural<(n)>( wxT(plur) )
-
-#endif
 
 class Internat
 {

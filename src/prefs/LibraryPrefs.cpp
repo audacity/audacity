@@ -19,7 +19,7 @@ MP3 and FFmpeg encoding libraries.
 #include "Audacity.h" // for USE_* macros
 #include "LibraryPrefs.h"
 
-#include "Experimental.h"
+
 
 #include <wx/defs.h>
 #include <wx/button.h>

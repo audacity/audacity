@@ -39,7 +39,7 @@
 #include "Audacity.h"
 #include "RealFFTf.h"
 
-#include "Experimental.h"
+
 
 #include <vector>
 #include <stdlib.h>
