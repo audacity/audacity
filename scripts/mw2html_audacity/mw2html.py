@@ -939,10 +939,17 @@ def parse_html(doc, url, filename):
 
     newdoc = pos_html_transform(newdoc, url,filename)
 
+    # remove the comments.
+    p = re.compile( '<!--.*?-->', re.DOTALL)
+    newdoc = p.sub( '', newdoc )
     # Remove byte artifacts in string
     newdoc = newdoc.replace('\\n','\n')
     newdoc = newdoc.replace('\\t', '\t')
+    newdoc = newdoc.replace('\\\'', '\'')
+    newdoc = newdoc.replace('\\xe2\\x80\\x99','\'')
+    newdoc = newdoc.replace('\\xe2\\x80\\x90', '-')
     newdoc = newdoc.strip('b')
+    newdoc = newdoc.strip('\'')
     newdoc = newdoc.strip('')
 
     return (newdoc, new_urls)
