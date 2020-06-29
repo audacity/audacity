@@ -356,6 +356,10 @@ endfunction()
 #    subdirectories in PUBLIC are included in the interface too, and so on
 #    transitively, and also the INCLUDE_PUBLIC of all of those, but then not
 #    transitively
+# PRECOMPILE -- not yet implemented
+#    (names of accessible header files to include in this directory's
+#    precompiled header; unquoted file names from the project's own tree, or
+#    system header names in <...>)
 # OBJCPP_SOURCES are relative to the current directory; these will compile on
 #    Mac as Objective-C++, and will be added only to the Mac build, unless also
 #    listed in SOURCES
@@ -374,7 +378,7 @@ macro( do_directory )
    cmake_parse_arguments( DO_DIRECTORY
       ""
       "TYPE"
-      "INCLUDE_PRIVATE;INCLUDE_PUBLIC;PRIVATE;PUBLIC;OBJCPP_SOURCES;SOURCES;SUBDIRECTORIES"
+      "INCLUDE_PRIVATE;INCLUDE_PUBLIC;PRIVATE;PUBLIC;PRECOMPILE;OBJCPP_SOURCES;SOURCES;SUBDIRECTORIES"
       ${ARGN}
    )
 
@@ -451,6 +455,24 @@ macro( do_directory )
       list( SORT DO_DIRECTORY_SOURCES )
       list( REMOVE_DUPLICATES DO_DIRECTORY_SOURCES )
       target_sources( "${DO_DIRECTORY_NAME}" PRIVATE ${DO_DIRECTORY_SOURCES} )
+
+#[[
+      if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM AND ${_OPT}use_pch )
+         # Generate the precompiled header for this directory
+         set( DO_DIRECTORY_PCH "${CMAKE_CURRENT_BINARY_DIR}/private/AudacityHeaders.h" )
+         file( MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/private" )
+         list( TRANSFORM DO_DIRECTORY_PRECOMPILE REPLACE "^([^<].*)" "\"\\1\"" )
+         list( TRANSFORM DO_DIRECTORY_PRECOMPILE PREPEND "#include " )
+         string( JOIN "\n" DO_DIRECTORY_PRECOMPILES ${DO_DIRECTORY_PRECOMPILE} )
+         configure_file(
+            "${CMAKE_SOURCE_DIR}/src/AudacityHeaders.h.in"
+            "${DO_DIRECTORY_PCH}"
+         )
+         target_precompile_headers(
+            "${DO_DIRECTORY_NAME}" PRIVATE "${DO_DIRECTORY_PCH}" )
+      endif()
+]]#
+
    endif()
 
    # visit further sub-directories

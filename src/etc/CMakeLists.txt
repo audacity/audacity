@@ -13,6 +13,29 @@ do_directory(
    OBJCPP_SOURCES
       KeyboardCapture.cpp
 
+   PRECOMPILE
+      AColor.h
+      AudioIO.h
+      BlockFile.h
+      Diags.h
+      DirManager.h
+      Envelope.h
+      FFT.h
+      FileFormats.h
+      ImageManipulation.h
+      LabelTrack.h
+      Mix.h
+      NoteTrack.h
+      Prefs.h
+      Project.h
+      Sequence.h
+      TimeTrack.h
+      UndoManager.h
+      WaveTrack.h
+      widgets/ASlider.h
+      widgets/ProgressDialog.h
+      widgets/Ruler.h
+
    SOURCES
       AColor.cpp
       AColor.h
