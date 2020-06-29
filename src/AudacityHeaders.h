@@ -41,32 +41,19 @@
 
 #include "audacity/Types.h"
 
-#include "AColor.h"
-#include "AudioIO.h"
-#include "BlockFile.h"
 #include "Diags.h"
-#include "DirManager.h"
-#include "Envelope.h"
-#include "FFT.h"
-#include "FileFormats.h"
-#include "ImageManipulation.h"
-#include "LabelTrack.h"
-#include "Mix.h"
-#include "NoteTrack.h"
 #include "Prefs.h"
-#include "Project.h"
-#include "Sequence.h"
-#include "TimeTrack.h"
-#include "UndoManager.h"
-#include "WaveTrack.h"
-#include "widgets/ASlider.h"
-#include "widgets/ProgressDialog.h"
-#include "widgets/Ruler.h"
 
 // PRL:  These lines allow you to remove Project.h above.
 // They must be included before the definition of macro NEW below.
 #include <set>
 #include <map>
+
+// PRL: include these wx headers, which use placement new syntax, before
+// defining debug NEW.  (Don't rely on transitive inclusions of them by
+// other includes inserted above.)
+#include <wx/any.h>
+#include <wx/vector.h>
 
 //#ifdef __WXMSW__
 // Enable this to diagnose memory leaks too!
