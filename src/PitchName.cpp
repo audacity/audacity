@@ -167,3 +167,15 @@ double PitchToFreq(const unsigned int nPitchIndex, const int nPitchOctave)
 {
    return MIDInoteToFreq(PitchToMIDInote(nPitchIndex, nPitchOctave));
 }
+
+double MIDInoteToCents(
+   const double dMIDInote) {
+  return 100.0 * (dMIDInote - round(dMIDInote));
+}
+
+TranslatableString PitchName_AbsoluteWithCents(
+   const double dMIDInote,
+   const PitchNameChoice choice) {
+   return Verbatim( wxT("%s %+2.0fc") )
+      .Format( PitchName_Absolute(dMIDInote, choice), MIDInoteToCents(dMIDInote));
+}

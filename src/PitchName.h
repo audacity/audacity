@@ -55,6 +55,17 @@ TranslatableString PitchName_Absolute(
    const double dMIDInote,
    const PitchNameChoice choice = PitchNameChoice::Sharps);
 
+// MIDINoteToCents returns a number between -50 and 50 indicating the
+// number of cents between the pitch and the note returned by PitchName.
+double MIDInoteToCents(
+   const double dMIDInote);
+
+// PitchName_AbsoluteWithCents is like PitchName_Absolute except that an
+// offset from the exact note in cents is included.
+TranslatableString PitchName_AbsoluteWithCents(
+   const double dMIDInote,
+   const PitchNameChoice choice = PitchNameChoice::Sharps);
+
 double PitchToMIDInote(const unsigned int nPitchIndex, const int nPitchOctave);
 
 double PitchToFreq(const unsigned int nPitchIndex, const int nPitchOctave);

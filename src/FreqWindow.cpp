@@ -389,12 +389,18 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
       S.AddSpace(5);
       S.AddSpace(5);
       S.AddSpace(5);
+   }
+   S.EndMultiColumn();
 
-      // -------------------------------------------------------------------
-      // ROW 4: Info
-      // -------------------------------------------------------------------
+   // -------------------------------------------------------------------
+   // ROW 4: Info
+   // -------------------------------------------------------------------
 
-      S.AddSpace(1);
+   S.SetSizerProportion(0);
+   S.StartMultiColumn(3, wxEXPAND);
+   {
+      S.SetStretchyCol(1);
+      S.AddSpace(5);
 
       S.StartHorizontalLay(wxEXPAND);
       {
@@ -406,12 +412,12 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
             S.AddPrompt(XXO("Cursor:"));
 
             mCursorText = S.Style(wxTE_READONLY)
-               .AddTextBox( {}, wxT(""), 10);
+               .AddTextBox( {}, wxT(""), 14);
 
             S.AddPrompt(XXO("Peak:"));
 
             mPeakText = S.Style(wxTE_READONLY)
-               .AddTextBox( {}, wxT(""), 10);
+               .AddTextBox( {}, wxT(""), 14);
             S.AddSpace(5);
 
             mGridOnOff = S.Id(GridOnOffID).AddCheckBox(XXO("&Grids"), mDrawGrid);
@@ -420,7 +426,7 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
       }
       S.EndHorizontalLay();
 
-      S.AddSpace(1);
+      S.AddSpace(5);
    }
    S.EndMultiColumn();
 
@@ -940,8 +946,8 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
       TranslatableString peak;
 
       if (mAlg == SpectrumAnalyst::Spectrum) {
-         auto xp = PitchName_Absolute(FreqToMIDInote(xPos));
-         auto pp = PitchName_Absolute(FreqToMIDInote(bestpeak));
+         auto xp = PitchName_AbsoluteWithCents(FreqToMIDInote(xPos));
+         auto pp = PitchName_AbsoluteWithCents(FreqToMIDInote(bestpeak));
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
          cursor = XO("%d Hz (%s) = %d dB")
             .Format( (int)(xPos + 0.5), xp, (int)(value + 0.5));
@@ -949,8 +955,8 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
          peak = XO("%d Hz (%s) = %.1f dB")
             .Format( (int)(bestpeak + 0.5), pp, bestValue );
       } else if (xPos > 0.0 && bestpeak > 0.0) {
-         auto xp = PitchName_Absolute(FreqToMIDInote(1.0 / xPos));
-         auto pp = PitchName_Absolute(FreqToMIDInote(1.0 / bestpeak));
+         auto xp = PitchName_AbsoluteWithCents(FreqToMIDInote(1.0 / xPos));
+         auto pp = PitchName_AbsoluteWithCents(FreqToMIDInote(1.0 / bestpeak));
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
           * the %.4f are numbers, and 'sec' should be an abbreviation for seconds */
          cursor = XO("%.4f sec (%d Hz) (%s) = %f")
