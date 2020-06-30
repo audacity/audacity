@@ -6,7 +6,7 @@ $manpage "EQ_XML_to_TXT_Converter"
 $debugbutton false
 $preview disabled
 $author (_ "Steve Daulton")
-$release 2.4.0
+$release 3.0.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 
@@ -52,7 +52,7 @@ $control overwrite (_ "If output text file exists") choice (("Append" (_ "Append
           (setf curve-name (string-trim "\t \"" curve-name))
           (setf iscurve t)))
       (when iscurve
-        (let ((f-v-pair (get-f-v-pair (string-trim " <>/point\t" line))))
+        (let ((f-v-pair (get-f-v-pair (string-trim " <>/point\t\r" line))))
           (when f-v-pair
             (push (first f-v-pair) frequencies)
             (push (second f-v-pair) values)))
@@ -89,8 +89,9 @@ $control overwrite (_ "If output text file exists") choice (("Append" (_ "Append
 (defun get-name (line)
   ;; If line is in the form: "  <curve name=\"Name of curve\">  "
   ;; Return "Name of curve", else NIL.
-  (let ((line (string-trim " <>\t" line)))
+  (let ((line (string-trim " <>\t\r" line)))
     (cond
+      ((< (length line) 6) nil)
       ((string-equal (subseq line 0 6) "curve ")
         (subseq line 5))
       (t nil))))
@@ -98,7 +99,7 @@ $control overwrite (_ "If output text file exists") choice (("Append" (_ "Append
 (defun get-end-of-curve (line)
   ;; If the line is "   </curve>  "
   ;; Return T else NIL.
-  (let ((line (string-trim " \t" line)))
+  (let ((line (string-trim " \t\r" line)))
     (if (string-equal line "</curve>") t nil)))
 
 (defun write-curve-txt (curvename frequencies values)
