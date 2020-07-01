@@ -1245,7 +1245,7 @@ const TranslatableString & ProjectFileIO::GetLastError() const
 
 const TranslatableString & ProjectFileIO::GetLibraryError() const
 {
-   return mLastError;
+   return mLibraryError;
 }
 
 void ProjectFileIO::SetError(const TranslatableString & msg)
