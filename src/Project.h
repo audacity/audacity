@@ -103,6 +103,7 @@ class AUDACITY_DLL_API AudacityProject final
    : public wxEvtHandler
    , public AttachedObjects
    , public AttachedWindows
+   , public std::enable_shared_from_this<AudacityProject>
 {
  public:
    using AttachedObjects = ::AttachedObjects;

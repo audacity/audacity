@@ -34,7 +34,7 @@ void Clipboard::Clear()
 {
    mT0 = 0.0;
    mT1 = 0.0;
-   mProject = nullptr;
+   mProject.reset();
    mTracks->Clear();
 
    // Emit an event for listeners
@@ -42,7 +42,7 @@ void Clipboard::Clear()
 }
 
 void Clipboard::Assign( TrackList && newContents,
-   double t0, double t1, AudacityProject *pProject )
+   double t0, double t1, const std::weak_ptr<AudacityProject> &pProject )
 {
    newContents.Swap( *mTracks );
    newContents.Clear();

@@ -35,20 +35,20 @@ public:
    double T1() const { return mT1; }
    double Duration() const { return mT1 - mT0; }
 
-   AudacityProject *Project() const { return mProject; }
+   const std::weak_ptr<AudacityProject> &Project() const { return mProject; }
 
    void Clear();
    
    void Assign(
      TrackList && newContents, double t0, double t1,
-     AudacityProject *pProject );
+     const std::weak_ptr<AudacityProject> &pProject );
 
 private:
    Clipboard();
    ~Clipboard();
 
    std::shared_ptr<TrackList> mTracks;
-   AudacityProject *mProject{};
+   std::weak_ptr<AudacityProject> mProject{};
    double mT0{ 0 };
    double mT1{ 0 };
 };

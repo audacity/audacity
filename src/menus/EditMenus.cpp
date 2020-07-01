@@ -85,6 +85,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
    else
    {
       const auto &clipboard = Clipboard::Get();
+      auto clipboardProject = clipboard.Project().lock();
       auto clipTrackRange = clipboard.GetTracks().Any< const Track >();
       if (clipTrackRange.empty())
          return true; // nothing to paste
@@ -97,7 +98,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
          Track *pNewTrack;
          pClip->TypeSwitch(
             [&](const WaveTrack *wc) {
-               if ((clipboard.Project() != &project))
+               if ((clipboardProject.get() != &project))
                   // Cause duplication of block files on disk, when copy is
                   // between projects
                   locker.emplace(wc);
@@ -277,7 +278,7 @@ void OnCut(const CommandContext &context)
        std::move( newClipboard ),
        selectedRegion.t0(),
        selectedRegion.t1(),
-       &project
+       project.shared_from_this()
    );
 
    // Proceed to change the project.  If this throws, the project will be
@@ -369,7 +370,7 @@ void OnCopy(const CommandContext &context)
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    clipboard.Assign( std::move( newClipboard ),
-      selectedRegion.t0(), selectedRegion.t1(), &project );
+      selectedRegion.t0(), selectedRegion.t1(), project.shared_from_this() );
 
    //Make sure the menus/toolbar states get updated
    trackPanel.Refresh(false);
@@ -415,6 +416,7 @@ void OnPaste(const CommandContext &context)
 
    auto pC = clipTrackRange.begin();
    size_t nnChannels=0, ncChannels=0;
+   auto clipboardProject = clipboard.Project().lock();
    while (*pN && *pC) {
       auto n = *pN;
       auto c = *pC;
@@ -507,7 +509,7 @@ void OnPaste(const CommandContext &context)
          n->TypeSwitch(
             [&](WaveTrack *wn){
                const auto wc = static_cast<const WaveTrack *>(c);
-               if (clipboard.Project() != &project)
+               if (clipboardProject.get() != &project)
                   // Cause duplication of block files on disk, when copy is
                   // between projects
                   locker.emplace(wc);
@@ -581,7 +583,7 @@ void OnPaste(const CommandContext &context)
       const auto wc =
          *clipboard.GetTracks().Any< const WaveTrack >().rbegin();
       Optional<WaveTrack::Locker> locker;
-      if (clipboard.Project() != &project && wc)
+      if (clipboardProject.get() != &project && wc)
          // Cause duplication of block files on disk, when copy is
          // between projects
          locker.emplace(static_cast<const WaveTrack*>(wc));
@@ -702,7 +704,7 @@ void OnSplitCut(const CommandContext &context)
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    clipboard.Assign( std::move( newClipboard ),
-      selectedRegion.t0(), selectedRegion.t1(), &project );
+      selectedRegion.t0(), selectedRegion.t1(), project.shared_from_this() );
 
    ProjectHistory::Get( project )
       .PushState(XO("Split-cut to the clipboard"), XO("Split Cut"));
