@@ -502,6 +502,7 @@ bool SampleBlock::Commit()
       return false;
    }
 
+   // BIND SQL sampleblocks
    sqlite3_bind_int(stmt, 1, mSampleFormat);
    sqlite3_bind_double(stmt, 2, mSumMin);
    sqlite3_bind_double(stmt, 3, mSumMax);

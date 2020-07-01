@@ -32,17 +32,43 @@ static const int ProjectFileID = ('A' << 24 | 'U' << 16 | 'D' << 8 | 'Y');
 static const int ProjectFileVersion = 1;
 static const int ProjectFilePageSize = 4096;
 
+
+// Navigation:
+//
+// Bindings are marked out in the code by, e.g. 
+// BIND SQL sampleblocks
+// A search for "BIND SQL" will find all bindings.
+// A search for "SQL sampleblocks" will find all SQL related 
+// to sampleblocks.
+
 static const char *ProjectFileSchema =
    "PRAGMA application_id = %d;"
    "PRAGMA user_version = %d;"
    "PRAGMA page_size = %d;"
    "PRAGMA journal_mode = DELETE;"
    ""
+   // CREATE SQL project
+   // doc is a variable sized XML text string.
+   // it is the former Audacity .aup file 
+   // One instance only.
    "CREATE TABLE IF NOT EXISTS project"
    "("
    "  doc                  TEXT"
    ");"
    ""
+   // CREATE SQL autosave
+   // autosave is a binary representation of an XML file.
+   // it's in binary for speed.
+   // One instance only.  id is always 1.
+   // dict is a dictionary of fieldnames.
+   // doc is the binary representation of the XML
+   // in the doc, fieldnames are replaced by 2 byte dictionary
+   // index numbers.
+   // This is all opaque to SQLite.  It just sees two
+   // big binary blobs.
+   // There is no limit to document blob size.
+   // dict will be smallish, with an entry for each 
+   // kind of field.
    "CREATE TABLE IF NOT EXISTS autosave"
    "("
    "  id                   INTEGER PRIMARY KEY,"
@@ -50,12 +76,26 @@ static const char *ProjectFileSchema =
    "  doc                  BLOB"
    ");"
    ""
+   // CREATE SQL tags
+   // tags is not used (yet)
    "CREATE TABLE IF NOT EXISTS tags"
    "("
    "  name                 TEXT,"
    "  value                BLOB"
    ");"
    ""
+   // CREATE SQL sampleblocks
+   // 'samples' are fixed size blocks of float32 numbers.
+   // The blocks may be partially empty.
+   // The quantity of valid data in the blocks is
+   // provided in the project XML.
+   // 
+   // sampleformat was once used to specify whether floats 
+   // or ints for the data, but is no longer used.
+   //
+   // blockID is a 64 bit number.
+   //
+   // summin to summary64K are summaries at 3 distance scales.
    "CREATE TABLE IF NOT EXISTS sampleblocks"
    "("
    "  blockid              INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -892,6 +932,7 @@ bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
    const wxMemoryBuffer &dict = autosave.GetDict();
    const wxMemoryBuffer &data = autosave.GetData();
 
+   // BIND SQL autosave
    sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC);
    sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC);
 
@@ -1005,6 +1046,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       return false;
    }
 
+   // BIND SQL project
    sqlite3_bind_text(stmt, 1, doc, -1, SQLITE_STATIC);
  
    rc = sqlite3_step(stmt);
