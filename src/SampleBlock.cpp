@@ -295,18 +295,32 @@ double SampleBlock::GetSumRms() const
 ///
 /// @param start The offset in this block where the region should begin
 /// @param len   The number of samples to include in the region
-MinMaxRMS SampleBlock::GetMinMaxRMS(size_t start, size_t len) const
+MinMaxRMS SampleBlock::GetMinMaxRMS(size_t start, size_t len)
 {
    float min = FLT_MAX;
    float max = -FLT_MAX;
    float sumsq = 0;
 
-   if (mValid && start < mSampleCount)
+   if (!mValid && mBlockID)
    {
-      float *samples = &((float *) mSamples.get())[start];
+      Load(mBlockID);
+   }
+
+   if (start < mSampleCount)
+   {
       len = std::min(len, mSampleCount - start);
 
-      for (int i = 0; i < len; ++i, ++samples)
+      // TODO: actually use summaries
+      SampleBuffer blockData(len, floatSample);
+      float *samples = (float *) blockData.ptr();
+
+      size_t copied = GetBlob(samples,
+                              floatSample,
+                              "samples",
+                              mSampleFormat,
+                              start * SAMPLE_SIZE(mSampleFormat),
+                              len * SAMPLE_SIZE(mSampleFormat)) / SAMPLE_SIZE(mSampleFormat);
+      for (size_t i = 0; i < copied; ++i, ++samples)
       {
          float sample = *samples;
 
@@ -347,6 +361,8 @@ size_t SampleBlock::GetBlob(void *dest,
                             size_t srcoffset,
                             size_t srcbytes)
 {
+   auto db = mIO.DB();
+
    wxASSERT(mBlockID > 0);
 
    if (!mValid && mBlockID)
@@ -373,17 +389,17 @@ size_t SampleBlock::GetBlob(void *dest,
       }
    });
 
-   rc = sqlite3_prepare_v2(mIO.DB(), sql, -1, &stmt, 0);
+   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(mIO.DB()));
+      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
    }
    else
    {
       rc = sqlite3_step(stmt);
       if (rc != SQLITE_ROW)
       {
-         wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(mIO.DB()));
+         wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
       }
       else
       {
@@ -417,6 +433,8 @@ size_t SampleBlock::GetBlob(void *dest,
 
 bool SampleBlock::Load(SampleBlockID sbid)
 {
+   auto db = mIO.DB();
+
    wxASSERT(sbid > 0);
 
    int rc;
@@ -426,6 +444,9 @@ bool SampleBlock::Load(SampleBlockID sbid)
    mSummary64kBytes = 0;
    mSampleCount = 0;
    mSampleBytes = 0;
+   mSumMin = FLT_MAX;
+   mSumMax = -FLT_MAX;
+   mSumMin = 0.0;
 
    char sql[256];
    sqlite3_snprintf(sizeof(sql),
@@ -444,10 +465,10 @@ bool SampleBlock::Load(SampleBlockID sbid)
       }
    });
 
-   rc = sqlite3_prepare_v2(mIO.DB(), sql, -1, &stmt, 0);
+   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(mIO.DB()));
+      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
       // handle error
       return false;
    }
@@ -455,7 +476,7 @@ bool SampleBlock::Load(SampleBlockID sbid)
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_ROW)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(mIO.DB()));
+      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
       // handle error
       return false;
    }
@@ -477,6 +498,7 @@ bool SampleBlock::Load(SampleBlockID sbid)
 
 bool SampleBlock::Commit()
 {
+   auto db = mIO.DB();
    int rc;
 
    char sql[256];
@@ -494,10 +516,10 @@ bool SampleBlock::Commit()
       }
    });
 
-   rc = sqlite3_prepare_v2(mIO.DB(), sql, -1, &stmt, 0);
+   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(mIO.DB()));
+      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
       // handle error
       return false;
    }
@@ -514,12 +536,12 @@ bool SampleBlock::Commit()
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(mIO.DB()));
+      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
       // handle error
       return false;
    }
 
-   mBlockID = sqlite3_last_insert_rowid(mIO.DB());
+   mBlockID = sqlite3_last_insert_rowid(db);
 
    mSamples.reset();
    mSummary256.reset();
@@ -532,6 +554,8 @@ bool SampleBlock::Commit()
 
 void SampleBlock::Delete()
 {
+   auto db = mIO.DB();
+
    if (mBlockID)
    {
       int rc;
@@ -542,10 +566,10 @@ void SampleBlock::Delete()
                        "DELETE FROM sampleblocks WHERE blockid = %lld;",
                        mBlockID);
 
-      rc = sqlite3_exec(mIO.DB(), sql, nullptr, nullptr, nullptr);
+      rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
       if (rc != SQLITE_OK)
       {
-         wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(mIO.DB()));
+         wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
          // handle error
          return;
       }

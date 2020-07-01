@@ -53,6 +53,7 @@ static const char *ProjectFileSchema =
    // One instance only.
    "CREATE TABLE IF NOT EXISTS project"
    "("
+   "  id                   INTEGER PRIMARY KEY,"
    "  doc                  TEXT"
    ");"
    ""
@@ -203,22 +204,25 @@ ProjectFileIO::~ProjectFileIO()
 {
    if (mDB)
    {
+      // Save the filename since CloseDB() will clear it
+      wxString filename = mFileName;
+
       // Not much we can do if this fails.  The user will simply get
       // the recovery dialog upon next restart.
       if (CloseDB())
       {
          // Always remove the journal now that the DB is closed
-         wxRemoveFile(mDBPath + wxT("-journal"));
+         wxRemoveFile(filename + wxT("-journal"));
 
          // At this point, we are shutting down cleanly and if the project file is
          // still in the temp directory it means that the user has chosen not to
          // save it.  So, delete it.
-         if (mTemporary && !mDBPath.empty())
+         if (mTemporary)
          {
             wxFileName temp(FileNames::TempDir());
-            if (temp == wxPathOnly(mDBPath))
+            if (temp == wxPathOnly(filename))
             {
-               wxRemoveFile(mDBPath);
+               wxRemoveFile(filename);
             }
          }
       }
@@ -238,6 +242,7 @@ sqlite3 *ProjectFileIO::DB()
 sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
 {
    wxASSERT(mDB == nullptr);
+   bool temp = false;
 
    if (fileName.empty())
    {
@@ -245,32 +250,29 @@ sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
       if (fileName.empty())
       {
          fileName = FileNames::UnsavedProjectFileName();
-         mTemporary = true;
+         temp = true;
       }
       else
       {
-         mTemporary = false;
+         temp = false;
       }
    }
 
    int rc = sqlite3_open(fileName, &mDB);
    if (rc != SQLITE_OK)
    {
-      // AUD3 TODO COMPLAIN AND THROW - crash is inevitable otherwise
+      SetDBError(XO("Failed to open project file"));
       return nullptr;
    }
-
- // AUD3 TODO get rid of the mDBPath?!?!?!?!
-   mDBPath = fileName;
-   mFileName = mDBPath;
 
    if (!CheckVersion())
    {
       CloseDB();
-
-      // AUD3 TODO COMPLAIN AND THROW - crash is inevitable otherwise
       return nullptr;
    }
+
+   mTemporary = temp;
+   SetFileName(fileName);
 
    return mDB;
 }
@@ -284,14 +286,15 @@ bool ProjectFileIO::CloseDB()
       rc = sqlite3_close(mDB);
       if (rc != SQLITE_OK)
       {
-         wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(mDB));
+         SetDBError(XO("Failed to close the project file"));
       }
       else
       {
-         wxRemoveFile(mDBPath + wxT("-journal"));
+         wxRemoveFile(mFileName + wxT("-journal"));
       }
 
       mDB = nullptr;
+      SetFileName({});
    }
 
    return true;
@@ -299,17 +302,21 @@ bool ProjectFileIO::CloseDB()
 
 bool ProjectFileIO::DeleteDB()
 {
-   if (!mDBPath.empty() && IsTemporary())
+   wxASSERT(mDB == nullptr);
+
+   if (mTemporary && !mFileName.empty())
    {
       wxFileName temp(FileNames::TempDir());
-      if (temp == wxPathOnly(mDBPath))
+      if (temp == wxPathOnly(mFileName))
       {
-         if (!wxRemoveFile(mDBPath))
+         if (!wxRemoveFile(mFileName))
          {
+            SetError(XO("Failed to close the project file"));
+
             return false;
          }
 
-         wxRemoveFile(mDBPath + wxT("-journal"));
+         wxRemoveFile(mFileName + wxT("-journal"));
       }
    }
 
@@ -323,19 +330,19 @@ bool ProjectFileIO::CleanDB()
 
    AutoSave();
 
-   wxString destpath = wxFileName::CreateTempFileName(mDBPath + ".xxxxx");
+   wxString destpath = wxFileName::CreateTempFileName(mFileName + ".xxxxx");
 
    if (CopyTo(destpath))
    {
       if (CloseDB())
       {
          // This can be removed even if we fail below since the DB is closed
-         wxRemoveFile(mDBPath + wxT("-journal"));
+         wxRemoveFile(mFileName + wxT("-journal"));
 
-         wxString tmppath = wxFileName::CreateTempFileName(mDBPath + ".xxxxx");
-         if (wxRename(mDBPath, tmppath) == 0)
+         wxString tmppath = wxFileName::CreateTempFileName(mFileName + ".xxxxx");
+         if (wxRename(mFileName, tmppath) == 0)
          {
-            if (wxRename(destpath, mDBPath) == 0)
+            if (wxRename(destpath, mFileName) == 0)
             {
                wxRemoveFile(tmppath);
 
@@ -343,10 +350,18 @@ bool ProjectFileIO::CleanDB()
                return true;
             }
 
-            if (wxRename(tmppath, mDBPath) == 0)
+            if (wxRename(tmppath, mFileName) == 0)
             {
                wxRemoveFile(destpath);
             }
+            else
+            {
+               SetError(XO("Could not rename %s back to %s during cleaning").Format(tmppath, mFileName));
+            }
+         }
+         else
+         {
+            SetError(XO("Could not rename %s during cleaning").Format(mFileName));
          }
       }
    }
@@ -371,7 +386,10 @@ int ProjectFileIO::Exec(const char *query, ExecCB callback, wxString *result)
 
    if (errmsg)
    {
-      mLastError.Format(XO("SQLite Error: %s"), wxString(errmsg));
+      SetDBError(
+         XO("Failed to execute a project file command:\n\n%s").Format(query)
+      );
+      mLibraryError = Verbatim(errmsg);
       sqlite3_free(errmsg);
    }
 
@@ -396,8 +414,7 @@ wxString ProjectFileIO::GetValue(const char *sql)
    int rc = Exec(sql, getresult, &value);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("%s"), mLastError.Debug());
-      // AUD TODO Handle error.
+      // Message already captured
    }
 
    return value;
@@ -420,15 +437,18 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // AUD TODO handle error
+      SetDBError(
+         XO("Unable to prepare project file command:\n\n%s").Format(sql)
+      );
       return false;
    }
 
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_ROW)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
+      SetDBError(
+         XO("Failed to retrieve data from the project file.\nThe following command failed:\n\n%s").Format(sql)
+      );
       // AUD TODO handle error
       return false;
    }
@@ -449,30 +469,48 @@ bool ProjectFileIO::CheckVersion()
    // Install our schema if this is an empty DB
    long count = -1;
    GetValue("SELECT Count(*) FROM sqlite_master WHERE type='table';").ToLong(&count);
+   if (count == -1)
+   {
+      return false;
+   }
+
+   // If the return count is zero, then there are no tables defined, so this
+   // must be a new project file.
    if (count == 0)
    {
       return InstallSchema();
    }
 
    // Check for our application ID
-   long appid = 0;
+   long appid = -1;
    GetValue("PRAGMA application_ID;").ToLong(&appid);
+   if (appid == -1)
+   {
+      return false;
+   }
+
+   // It's a database that SQLite recognizes, but it's not one of ours
    if (appid != ProjectFileID)
    {
-      mLastError = XO("This is not an Audacity AUP3 file");
+      SetError(XO("This is not an Audacity project file"));
       return false;
    }
 
    // Get the project file version
-   long version;
+   long version = -1;
    GetValue("PRAGMA user_version;").ToLong(&version);
+   if (version == -1)
+   {
+      return false;
+   }
 
-   // Project file version is higher than ours. We will refuse
-   // to process it since we can't trust anything about it.
+   // Project file version is higher than ours. We will refuse to
+   // process it since we can't trust anything about it.
    if (version > ProjectFileVersion)
    {
-      // AUD3 - complain about too new schema
-      // can't handle it!
+      SetError(
+         XO("This project was created with a newer version of Audacity:\n\nYou will need to upgrade to process it")
+      );
       return false;
    }
    
@@ -502,7 +540,9 @@ bool ProjectFileIO::InstallSchema()
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
+      SetDBError(
+         XO("Unable to initialize the project file")
+      );
       return false;
    }
 
@@ -538,10 +578,12 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
          {
             int remaining = sqlite3_backup_remaining(backup);
             int total = sqlite3_backup_pagecount(backup);
-            wxLogDebug(wxT("remaining %d total %d"), remaining, total);
 
             if (progress.Update(total - remaining, total) != ProgressResult::Success)
             {
+               SetError(
+                  XO("Copy processs cancelled.")
+               );
                success = false;
                break;
             }
@@ -553,14 +595,26 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
          rc = sqlite3_backup_finish(backup);
          if (rc != SQLITE_OK)
          {
+            SetDBError(
+               XO("The copy process failed for:\n\n%s").Format(destpath)
+            );
             success = false;
          }
+      }
+      else
+      {
+         SetDBError(
+            XO("Unable to initiate the backup process.")
+         );
       }
 
       // Close the DB
       rc = sqlite3_close(destdb);
       if (rc != SQLITE_OK)
       {
+         SetDBError(
+            XO("Failed to successfully close the destination project file:\n\n%s")
+         );
          success = false;
       }
 
@@ -574,6 +628,9 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
    }
    else
    {
+      SetDBError(
+         XO("Unable to open the destination project file:\n\n%s").Format(destpath)
+      );
       success = false;
    }
 
@@ -630,14 +687,14 @@ void ProjectFileIO::SetProjectTitle(int number)
 
 const FilePath &ProjectFileIO::GetFileName() const
 {
-   wxASSERT(mFileName == mDBPath);
    return mFileName;
 }
 
 void ProjectFileIO::SetFileName(const FilePath &fileName)
 {
    mFileName = fileName;
-   if (mFileName.empty())
+
+   if (mTemporary)
    {
       mProject.SetProjectName({});
    }
@@ -647,34 +704,6 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
    }
 
    SetProjectTitle();
-}
-
-// Most of this string was duplicated 3 places. Made the warning consistent in this global.
-// The %s is to be filled with the version string.
-// PRL:  Do not statically allocate a string in _() !
-static TranslatableString gsLegacyFileWarning() { return
-XO("This file was saved by Audacity version %s. The format has changed. \
-\n\nAudacity can try to open and save this file, but saving it in this \
-\nversion will then prevent any 1.2 or earlier version opening it. \
-\n\nAudacity might corrupt the file in opening it, so you should \
-back it up first. \
-\n\nOpen this file now?");
-}
-
-bool ProjectFileIO::WarnOfLegacyFile( )
-{
-   auto &project = mProject;
-   auto &window = GetProjectFrame( project );
-   auto msg = gsLegacyFileWarning().Format( XO("1.0 or earlier") );
-
-   // Stop icon, and choose 'NO' by default.
-   int action =
-      AudacityMessageBox(
-         msg,
-         XO("Warning - Opening Old Project File"),
-         wxYES_NO | wxICON_STOP | wxNO_DEFAULT | wxCENTRE,
-         &window);
-   return (action != wxNO);
 }
 
 bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
@@ -798,12 +827,8 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return false;
    }
 
-   if (wxStrcmp(tag, wxT("audacityproject")) &&
-       wxStrcmp(tag, wxT("project")))
+   if (wxStrcmp(tag, wxT("project")))
    {
-      // If the tag name is not one of these two (the NEW name is
-      // "project" with an Audacity namespace, but we don't detect
-      // the namespace yet), then we don't know what the error is
       return false;
    }
 
@@ -924,8 +949,9 @@ bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
+      SetDBError(
+         XO("Unable to prepare project file command:\n\n%s").Format(sql)
+      );
       return false;
    }
 
@@ -939,8 +965,9 @@ bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
+      SetDBError(
+         XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
+      );
       return false;
    }
 
@@ -955,8 +982,9 @@ bool ProjectFileIO::AutoSaveDelete()
    rc = sqlite3_exec(db, "DELETE FROM autosave;", nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
+      SetDBError(
+         XO("Failed to remove the autosave information from the project file.")
+      );
       return false;
    }
 
@@ -965,8 +993,26 @@ bool ProjectFileIO::AutoSaveDelete()
 
 bool ProjectFileIO::LoadProject(const FilePath &fileName)
 {
+   bool success = false;
+
+   // OpenDB() will change mFileName if the file opens/verifies successfully,
+   // so we must set it back to what it was if any errors are encountered here.
+   wxString oldFilename = mFileName;
+
+   auto cleanup = finally([&]
+   {
+      if (!success)
+      {
+         CloseDB();
+         SetFileName(oldFilename);
+      }
+   });
+
    // Open the project file
-   OpenDB(fileName);
+   if (!OpenDB(fileName))
+   {
+      return false;
+   }
 
    // Get the XML document...either from the project or autosave
    wxString doc;
@@ -979,44 +1025,108 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
       doc = AutoSaveFile::Decode(buffer);
       wasAutosave = true;
    }
+   // Otherwise, get the project doc
    else
    {
-      // Get the project doc
       doc = GetValue("SELECT doc FROM project;");
    }
 
    if (doc.empty())
    {
-      // AUD3 fixme
-      wxLogDebug(wxT("%s"), mLastError.Translation());
-      // handle error
       return false;
    }
 
    XMLFileReader xmlFile;
 
-   bool success = xmlFile.ParseString(this, doc);
+   success = xmlFile.ParseString(this, doc);
    if (!success)
    {
-      mLastError = xmlFile.GetErrorStr();
-   }
-   else
-   {
-      mRecovered = wasAutosave;
-      SetFileName(fileName);
-      SetProjectTitle();
+      SetError(
+         XO("Unable to parse project information.")
+      );
+      mLibraryError = xmlFile.GetErrorStr();
+      return false;
    }
 
+   // Remember if it was recovered or not
+   mRecovered = wasAutosave;
    if (mRecovered)
    {
       mModified = true;
    }
 
-   return success;
+   // A previously saved project will have a document in the project table, so
+   // we use that knowledge to determine if this file is an unsaved/temporary
+   // file or not
+   long count = 0;
+   GetValue("SELECT Count(*) FROM project;").ToLong(&count);
+   mTemporary = (count != 1);
+
+   SetFileName(fileName);
+
+   return true;
 }
 
 bool ProjectFileIO::SaveProject(const FilePath &fileName)
 {
+   wxString origName;
+   bool wasTemp = false;
+   bool success = false;
+
+   // Should probably simply all of the by using renames. But, one benefit
+   // of using CopyTo() for new file saves, is that it will be VACUUMED at
+   // the same time.
+
+   auto restore = finally([&]
+   {
+      if (!origName.empty())
+      {
+         if (success)
+         {
+            // The Save was successful, so remove the original file if
+            // it was a temporary file
+            if (wasTemp)
+            {
+               wxRemoveFile(origName);
+            }
+         }
+         else
+         {
+            // Close the new database
+            CloseDB();
+
+            // Reopen the original database
+            if (OpenDB(origName))
+            {
+               // And delete the new database
+               wxRemoveFile(fileName);
+            }
+         }
+      }
+   });
+
+   // If we're saving to a different file than the current one, then copy the
+   // current to the new file and make it the active file.
+   if (mFileName != fileName)
+   {
+      if (!CopyTo(fileName))
+      {
+         return false;
+      }
+
+      // Remember the original project filename and temporary status.  Only do
+      // this after a successful copy so the "finally" block above doesn't monkey
+      // with the files.
+      origName = mFileName;
+      wasTemp = mTemporary;
+
+      // Close the original project file and open the new one
+      if (!CloseDB() || !OpenDB(fileName))
+      {
+         return false;
+      }
+   }
+
    auto db = DB();
    int rc;
 
@@ -1024,68 +1134,51 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    WriteXMLHeader(doc);
    WriteXML(doc);
 
+   // Always use an ID of 1. This will replace any existing row.
    char sql[256];
    sqlite3_snprintf(sizeof(sql),
                     sql,
-                    "REPLACE INTO project (doc) VALUES(?);");
+                    "INSERT INTO project(id, doc) VALUES(1, ?1)"
+                    "       ON CONFLICT(id) DO UPDATE SET doc = ?1;");
+
 
    sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
-   {
-      if (stmt)
-      {
-         sqlite3_finalize(stmt);
-      }
-   });
 
    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
+      SetDBError(
+         XO("Unable to prepare project file command:\n\n%s").Format(sql)
+      );
       return false;
    }
 
    // BIND SQL project
-   sqlite3_bind_text(stmt, 1, doc, -1, SQLITE_STATIC);
+   rc = sqlite3_bind_text(stmt, 1, doc, -1, SQLITE_STATIC);
+   if (rc != SQLITE_OK)
+   {
+      SetDBError(
+         XO("Unable to bind to project file document.")
+      );
+      return false;
+   }
  
    rc = sqlite3_step(stmt);
+
+   // This will free the statement
+   sqlite3_finalize(stmt);
+
    if (rc != SQLITE_DONE)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
+      SetDBError(
+         XO("Failed to save project file information.")
+      );
       return false;
    }
 
-   sqlite3_finalize(stmt);
-   stmt = nullptr;
-
-   if (mDBPath != fileName)
-   {
-      if (!CopyTo(fileName))
-      {
-         return false;
-      }
-
-      // Remember the original project filename
-      wxString origname = mDBPath;
-
-      // Close the original project file
-      CloseDB();
-
-      // Set the new filename
-      SetFileName(fileName);
-
-      // And open the new one
-      OpenDB(fileName);
-
-      // If the original project was temporary, then delete it now
-      if (mTemporary)
-      {
-         wxRemoveFile(origname);
-      }
-   }
-
+   // We need to remove the autosave info from the file since it is now
+   // clean and unmodified.  Otherwise, it would be considered "recovered"
+   // when next opened.
    AutoSaveDelete();
 
    // No longer modified
@@ -1099,6 +1192,9 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
 
    // Adjust the title
    SetProjectTitle();
+
+   // Tell the finally block to behave
+   success = true;
 
    return true;
 }
@@ -1126,7 +1222,6 @@ void ProjectFileIO::Reset()
    mRecovered = false;
 
    SetFileName({});
-   SetProjectTitle();
 }
 
 wxLongLong ProjectFileIO::GetFreeDiskSpace()
@@ -1135,7 +1230,7 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace()
    auto db = DB();
 
    wxLongLong freeSpace;
-   if (wxGetDiskSpace(wxPathOnly(mDBPath), NULL, &freeSpace))
+   if (wxGetDiskSpace(wxPathOnly(mFileName), NULL, &freeSpace))
    {
       return freeSpace;
    }
@@ -1148,3 +1243,22 @@ const TranslatableString & ProjectFileIO::GetLastError() const
    return mLastError;
 }
 
+const TranslatableString & ProjectFileIO::GetLibraryError() const
+{
+   return mLastError;
+}
+
+void ProjectFileIO::SetError(const TranslatableString & msg)
+{
+   mLastError = msg;
+   mLibraryError = {};
+}
+
+void ProjectFileIO::SetDBError(const TranslatableString & msg)
+{
+   mLastError = msg;
+   if (mDB)
+   {
+      mLibraryError = Verbatim(sqlite3_errmsg(mDB));
+   }
+}

@@ -79,7 +79,7 @@ public:
    double GetSumRms() const;
 
    /// Gets extreme values for the specified region
-   MinMaxRMS GetMinMaxRMS(size_t start, size_t len) const;
+   MinMaxRMS GetMinMaxRMS(size_t start, size_t len);
 
    /// Gets extreme values for the entire block
    MinMaxRMS GetMinMaxRMS() const;

@@ -43,7 +43,6 @@ public:
 
    struct ReadProjectResults
    {
-      bool decodeError;
       bool parseSuccess;
       bool trackError;
       const TranslatableString errorString;

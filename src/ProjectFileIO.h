@@ -71,6 +71,7 @@ public:
    wxLongLong GetFreeDiskSpace();
 
    const TranslatableString & GetLastError() const;
+   const TranslatableString & GetLibraryError() const;
 
 private:
    // XMLTagHandler callback methods
@@ -103,6 +104,9 @@ private:
 
    bool CopyTo(const FilePath &destpath);
 
+   void SetError(const TranslatableString & msg);
+   void SetDBError(const TranslatableString & msg);
+
 private:
    // non-static data members
    AudacityProject &mProject;
@@ -122,6 +126,7 @@ private:
    sqlite3 *mDB;
    FilePath mDBPath;
    TranslatableString mLastError;
+   TranslatableString mLibraryError;
 
    friend SampleBlock;
 };

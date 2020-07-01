@@ -144,6 +144,16 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
 
    if (bParseSuccess)
    {
+      if (projectFileIO.IsRecovered())
+      {
+         AudacityMessageBox(
+            XO("This project was not saved properly the last time Audacity ran.\n\n"
+               "It has been recovered to the last snapshot."),
+            XO("Project Recovered"),
+            wxICON_WARNING,
+            &window);
+      }
+
       // By making a duplicate set of pointers to the existing blocks
       // on disk, we add one to their reference count, guaranteeing
       // that their reference counts will never reach zero and thus
@@ -168,10 +178,12 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
       }
    }
 
- // AUD3 - FIXME - error messages - needed?????
-   return {
-      false, bParseSuccess, err, projectFileIO.GetLastError(),
-      FindHelpUrl( projectFileIO.GetLastError() )
+   return
+   {
+      bParseSuccess,
+      err,
+      projectFileIO.GetLastError(),
+      FindHelpUrl(projectFileIO.GetLibraryError())
    };
 }
 
@@ -180,7 +192,7 @@ bool ProjectFileManager::Save()
    auto &projectFileIO = ProjectFileIO::Get(mProject);
 
    // Prompt for file name?
-   if (projectFileIO.IsModified())
+   if (projectFileIO.IsTemporary())
    {
       return SaveAs();
    }
@@ -228,8 +240,6 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    auto &window = GetProjectFrame( proj );
    auto &projectFileIO = ProjectFileIO::Get( proj );
    const auto &settings = ProjectSettings::Get( proj );
-
-   wxASSERT_MSG(fromSaveAs, "Copy Project SHOULD only be available from SaveAs");
 
    // Some confirmation dialogs
    {
@@ -363,11 +373,13 @@ bool ProjectFileManager::SaveAs()
    auto &window = GetProjectFrame( project );
    TitleRestorer Restorer( window, project ); // RAII
    bool bHasPath = true;
-   wxFileName filename{ projectFileIO.GetFileName() };
-
-   wxString name = project.GetProjectName();
-   if (!name.empty()) {
-      filename.SetName(name);
+   wxFileName filename;
+   
+   if (projectFileIO.IsTemporary()) {
+      filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
+   }
+   else {
+      filename = projectFileIO.GetFileName();
    }
 
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
@@ -789,10 +801,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    }
 
    auto results = ReadProjectFile( fileName );
-
-   if ( results.decodeError )
-      return;
-
+ 
    const bool bParseSuccess = results.parseSuccess;
    const auto &errorStr = results.errorString;
    const bool err = results.trackError;
