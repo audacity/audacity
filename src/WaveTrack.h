@@ -577,6 +577,10 @@ private:
    // Private variables
    //
 
+   // AS: Note that the mProject is mutable.  This is
+   // mostly to support "Duplicate" of const objects
+   mutable AudacityProject *mProject;
+
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;

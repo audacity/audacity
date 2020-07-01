@@ -65,7 +65,7 @@ class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
 {
 public:
-   NoteTrack(AudacityProject *project);
+   NoteTrack();
    virtual ~NoteTrack();
 
    using Holder = std::shared_ptr<NoteTrack>;
