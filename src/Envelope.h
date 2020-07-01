@@ -21,7 +21,6 @@ class wxRect;
 class wxMouseEvent;
 class wxTextFile;
 
-class DirManager;
 class Envelope;
 class EnvPoint;
 
@@ -110,12 +109,6 @@ public:
 
    double ClampValue(double value) { return std::max(mMinValue, std::min(mMaxValue, value)); }
 
-#if LEGACY_PROJECT_FILE_SUPPORT
-   // File I/O
-
-   bool Load(wxTextFile * in, DirManager * dirManager) override;
-   bool Save(wxTextFile * out, bool overwrite) override;
-#endif
    // Newfangled XML file I/O
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;

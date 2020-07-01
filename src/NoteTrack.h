@@ -46,7 +46,6 @@ SONFNS(AutoSave)
 class wxDC;
 class wxRect;
 
-class DirManager;
 class Alg_seq;   // from "allegro.h"
 
 using NoteTrackBase =
@@ -66,7 +65,7 @@ class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
 {
 public:
-   NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
+   NoteTrack(AudacityProject *project);
    virtual ~NoteTrack();
 
    using Holder = std::shared_ptr<NoteTrack>;

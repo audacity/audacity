@@ -20,7 +20,6 @@
 #include "widgets/AudacityMessageBox.h"
 #include "Internat.h"
 #include "MemoryX.h"
-#include "MissingAliasFileDialog.h"
 #include "widgets/MultiDialog.h"
 #include "widgets/ProgressDialog.h"
 
@@ -34,6 +33,9 @@
 int ProjectFSCK(
    DirManager &dm, const bool bForceError, const bool bAutoRecoverMode)
 {
+#pragma message( "====================================================================")
+#pragma message( "Don\'t forget to redo ProjectFSCK")
+#pragma message( "====================================================================")
    // In earlier versions of this method, enumerations of errors were
    // all done in sequence, then the user was prompted for each type of error.
    // The enumerations are now interleaved with prompting, because, for example,
@@ -68,7 +70,7 @@ int ProjectFSCK(
       else
          nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
    }
-
+#if 0
    FilePaths filePathArray; // *all* files in the project directory/subdirectories
    auto dirPath = ( dm.GetDataFilesDir() );
    DirManager::RecursivelyEnumerateWithProgress(
@@ -403,5 +405,6 @@ other projects. \
    }
 
    MissingAliasFilesDialog::SetShouldShow(true);
+#endif
    return nResult;
 }

@@ -18,38 +18,9 @@
 #include <unordered_map>
 #include "audacity/Types.h"
 
-class wxFFile;
-class AudacityProject;
-
-//
-// XML Handler for a <recordingrecovery> tag
-//
-class RecordingRecoveryHandler final : public XMLTagHandler
-{
-public:
-   RecordingRecoveryHandler(AudacityProject* proj);
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-
-   // This class only knows reading tags
-
-private:
-
-   int FindTrack() const;
-
-   AudacityProject* mProject;
-   int mChannel;
-   int mNumChannels;
-   int mAutoSaveIdent;
-};
-
 ///
 /// AutoSaveFile
 ///
-
-// Should be plain ASCII
-#define AutoSaveIdent "<?xml autosave>"
 
 using NameMap = std::unordered_map<wxString, short>;
 using IdMap = std::unordered_map<short, wxString>;
@@ -87,20 +58,23 @@ public:
    bool Write(wxFFile & file) const;
    bool Append(wxFFile & file) const;
 
-   bool IsEmpty() const;
+   const wxMemoryBuffer &GetDict() const;
+   const wxMemoryBuffer &GetData() const;
 
-   bool Decode(const FilePath & fileName);
+   bool IsEmpty() const;
+   bool DictChanged() const;
+
+   static wxString Decode(const wxMemoryBuffer &buffer);
 
 private:
    void WriteName(const wxString & name);
-   void CheckSpace(wxMemoryOutputStream & buf);
 
 private:
-   wxMemoryOutputStream mBuffer;
-   wxMemoryOutputStream mDict;
-   NameMap mNames;
-   size_t mAllocSize;
-};
+   wxMemoryBuffer mBuffer;
+   bool mDictChanged;
 
+   static NameMap mNames;
+   static wxMemoryBuffer mDict;
+};
 
 #endif

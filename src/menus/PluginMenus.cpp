@@ -484,9 +484,8 @@ void OnScreenshot(const CommandContext &context )
 void OnBenchmark(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &settings = ProjectSettings::Get( project );
    auto &window = GetProjectFrame( project );
-   ::RunBenchmark( &window, settings );
+   ::RunBenchmark( &window, project);
 }
 
 void OnSimulateRecordingErrors(const CommandContext &context)

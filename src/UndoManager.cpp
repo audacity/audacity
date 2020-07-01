@@ -25,10 +25,10 @@ UndoManager
 
 #include <wx/hashset.h>
 
-#include "BlockFile.h"
 #include "Clipboard.h"
 #include "Diags.h"
 #include "Project.h"
+#include "SampleBlock.h"
 #include "Sequence.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"          // temp
@@ -44,8 +44,8 @@ wxDEFINE_EVENT(EVT_UNDO_MODIFIED, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_OR_REDO, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
 
-using ConstBlockFilePtr = const BlockFile*;
-using Set = std::unordered_set<ConstBlockFilePtr>;
+using ConstSampleBlockPtr = const SampleBlock*;
+using Set = std::unordered_set<ConstSampleBlockPtr>;
 
 struct UndoStackElem {
 
@@ -108,19 +108,19 @@ namespace {
             auto blocks = clip->GetSequenceBlockArray();
             for (const auto &block : *blocks)
             {
-               const auto &file = block.f;
+               const auto &sb = block.sb;
 
                // Accumulate space used by the file if the file was not
                // yet seen
-               if ( !seen || (seen->count( &*file ) == 0 ) )
+               if ( !seen || (seen->count( &*sb ) == 0 ) )
                {
-                  unsigned long long usage{ file->GetSpaceUsage() };
+                  unsigned long long usage{ sb->GetSpaceUsage() };
                   result += usage;
                }
 
                // Add file to current set
                if (seen)
-                  seen->insert( &*file );
+                  seen->insert( &*sb );
             }
          }
       }

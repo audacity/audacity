@@ -2,7 +2,6 @@
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
-#include "../DirManager.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
@@ -76,7 +75,6 @@ bool DoPasteText(AudacityProject &project)
 bool DoPasteNothingSelected(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
-   auto &dirManager = DirManager::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
@@ -103,7 +101,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
                   // Cause duplication of block files on disk, when copy is
                   // between projects
                   locker.emplace(wc);
-               uNewTrack = wc->EmptyCopy( dirManager.shared_from_this() );
+               uNewTrack = wc->EmptyCopy();
                pNewTrack = uNewTrack.get();
             },
 #ifdef USE_MIDI
@@ -381,7 +379,6 @@ void OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &dirManager = DirManager::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
@@ -599,7 +596,7 @@ void OnPaste(const CommandContext &context)
                wt->ClearAndPaste(t0, t1, wc, true, true);
             }
             else {
-               auto tmp = wt->EmptyCopy( dirManager.shared_from_this() );
+               auto tmp = wt->EmptyCopy();
                tmp->InsertSilence( 0.0,
                   // MJS: Is this correct?
                   clipboard.Duration() );

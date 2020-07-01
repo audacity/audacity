@@ -785,7 +785,7 @@ bool Importer::Import( AudacityProject &project,
       }
 
       // Audacity project
-      if (extension.IsSameAs(wxT("aup"), false)) {
+      if (extension.IsSameAs(wxT("aup3"), false)) {
          errorMessage = XO(
 /* i18n-hint: %s will be the filename */
 "\"%s\" is an Audacity Project file. \nUse the 'File > Open' command to open Audacity Projects.")

@@ -23,10 +23,10 @@
 
 #include <vector>
 
+class AudacityProject;
 class BlockArray;
 class BlockFile;
 using BlockFilePtr = std::shared_ptr<BlockFile>;
-class DirManager;
 class Envelope;
 class ProgressDialog;
 class Sequence;
@@ -172,26 +172,26 @@ public:
 class AUDACITY_DLL_API WaveClip final : public XMLTagHandler
 {
 private:
-   // It is an error to copy a WaveClip without specifying the DirManager.
+   // It is an error to copy a WaveClip without specifying the project.
 
    WaveClip(const WaveClip&) PROHIBITED;
    WaveClip& operator= (const WaveClip&) PROHIBITED;
 
 public:
    // typical constructor
-   WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, 
+   WaveClip(AudacityProject *project, sampleFormat format, 
       int rate, int colourIndex);
 
    // essentially a copy constructor - but you must pass in the
-   // current project's DirManager, because we might be copying
+   // current project, because we might be copying
    // from one project to another
    WaveClip(const WaveClip& orig,
-            const std::shared_ptr<DirManager> &projDirManager,
+            AudacityProject *project,
             bool copyCutlines);
 
    // Copy only a range from the given WaveClip
    WaveClip(const WaveClip& orig,
-            const std::shared_ptr<DirManager> &projDirManager,
+            AudacityProject *project,
             bool copyCutlines,
             double t0, double t1);
 
@@ -280,14 +280,9 @@ public:
 
    /// You must call Flush after the last Append
    void Append(samplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride=1,
-               XMLWriter* blockFileLog = NULL);
+               size_t len, unsigned int stride=1);
    /// Flush must be called after last Append
    void Flush();
-
-   using BlockFileFactory =
-      std::function< BlockFilePtr( wxFileNameWrapper, size_t /* len */ ) >;
-   void AppendBlockFile( const BlockFileFactory &factory, size_t len);
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cutted audio to the clipboard)

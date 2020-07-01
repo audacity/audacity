@@ -50,7 +50,6 @@
 
 #include "../widgets/FileDialog/FileDialog.h"
 
-#include "../DirManager.h"
 #include "../FileFormats.h"
 #include "../Mix.h"
 #include "../Prefs.h"
@@ -745,31 +744,6 @@ bool Exporter::GetFilename()
          continue;
       }
 
-      // Check to see if we are writing to a path that a missing aliased file existed at.
-      // This causes problems for the exporter, so we don't allow it.
-      // Overwritting non-missing aliased files is okay.
-      // Also, this can only happen for uncompressed audio.
-      bool overwritingMissingAliasFiles;
-      overwritingMissingAliasFiles = false;
-      for (auto pProject : AllProjects{}) {
-         AliasedFileArray aliasedFiles;
-         FindDependencies(pProject.get(), aliasedFiles);
-         for (const auto &aliasedFile : aliasedFiles) {
-            if (mFilename.GetFullPath() == aliasedFile.mFileName.GetFullPath() &&
-                !mFilename.FileExists()) {
-               // Warn and return to the dialog
-               AudacityMessageBox(XO(
-"You are attempting to overwrite an aliased file that is missing.\n\
-The file cannot be written because the path is needed to restore the original audio to the project.\n\
-Choose Help > Diagnostics > Check Dependencies to view the locations of all missing files.\n\
-If you still wish to export, please choose a different filename or folder."));
-               overwritingMissingAliasFiles = true;
-            }
-         }
-      }
-      if (overwritingMissingAliasFiles)
-         continue;
-
 // For Mac, it's handled by the FileDialog
 #if !defined(__WXMAC__)
       if (mFilename.FileExists()) {
@@ -800,16 +774,6 @@ If you still wish to export, please choose a different filename or folder."));
 //
 bool Exporter::CheckFilename()
 {
-   //
-   // Ensure that exporting a file by this name doesn't overwrite
-   // one of the existing files in the project.  (If it would
-   // overwrite an existing file, DirManager tries to rename the
-   // existing file.)
-   //
-
-   if (!DirManager::Get( *mProject ).EnsureSafeFilename(mFilename))
-      return false;
-
    if( mFormatName.empty() )
       gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
    gPrefs->Write(wxT("/Export/Path"), mFilename.GetPath());

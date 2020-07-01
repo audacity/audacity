@@ -31,26 +31,28 @@ enum {
 class AutoRecoveryDialog final : public wxDialogWrapper
 {
 public:
-   AutoRecoveryDialog(wxWindow *parent);
+   AutoRecoveryDialog(const FilePaths &files);
 
 private:
+   void PopulateOrExchange(ShuttleGui &S);
    void PopulateList();
-   void PopulateOrExchange(ShuttleGui & S);
 
    void OnQuitAudacity(wxCommandEvent &evt);
    void OnRecoverNone(wxCommandEvent &evt);
    void OnRecoverAll(wxCommandEvent &evt);
 
+   const FilePaths & mFiles;
    wxListCtrl *mFileList;
 
 public:
    DECLARE_EVENT_TABLE()
 };
 
-AutoRecoveryDialog::AutoRecoveryDialog(wxWindow *parent) :
-   wxDialogWrapper(parent, -1, XO("Automatic Crash Recovery"),
-            wxDefaultPosition, wxDefaultSize,
-            wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)) // no close box
+AutoRecoveryDialog::AutoRecoveryDialog(const FilePaths &files)
+:  wxDialogWrapper(nullptr, -1, XO("Automatic Crash Recovery"),
+                   wxDefaultPosition, wxDefaultSize,
+                   wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)), // no close box
+   mFiles(files)
 {
    SetName();
    ShuttleGui S(this, eIsCreating);
@@ -63,14 +65,13 @@ BEGIN_EVENT_TABLE(AutoRecoveryDialog, wxDialogWrapper)
    EVT_BUTTON(ID_QUIT_AUDACITY, AutoRecoveryDialog::OnQuitAudacity)
 END_EVENT_TABLE()
 
-void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
+void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
 {
    S.SetBorder(5);
    S.StartVerticalLay();
    {
       S.AddVariableText(
-         XO(
-"Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can be automatically recovered:"),
+         XO("Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can be automatically recovered:"),
          false);
 
       S.StartStatic(XO("Recoverable projects"));
@@ -110,15 +111,10 @@ void AutoRecoveryDialog::PopulateList()
 {
    mFileList->DeleteAllItems();
 
-   wxDir dir(FileNames::AutoSaveDir());
-   if (!dir.IsOpened())
-      return;
-
-   wxString filename;
-   int i = 0;
-   for (bool c = dir.GetFirst(&filename, wxT("*.autosave"), wxDIR_FILES);
-        c; c = dir.GetNext(&filename))
-        mFileList->InsertItem(i++, wxFileName{ filename }.GetName());
+   for (int i = 0, cnt = mFiles.size(); i < cnt; ++i)
+   {
+        mFileList->InsertItem(i, wxFileName{ mFiles[i] }.GetName());
+   }
 
    mFileList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 }
@@ -131,8 +127,7 @@ void AutoRecoveryDialog::OnQuitAudacity(wxCommandEvent & WXUNUSED(event))
 void AutoRecoveryDialog::OnRecoverNone(wxCommandEvent & WXUNUSED(event))
 {
    int ret = AudacityMessageBox(
-      XO(
-"Are you sure you want to discard all recoverable projects?\n\nChoosing \"Yes\" discards all recoverable projects immediately."),
+      XO("Are you sure you want to discard all recoverable projects?\n\nChoosing \"Yes\" discards all recoverable projects immediately."),
       XO("Confirm Discard Projects"),
       wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
 
@@ -147,69 +142,54 @@ void AutoRecoveryDialog::OnRecoverAll(wxCommandEvent & WXUNUSED(event))
 
 ////////////////////////////////////////////////////////////////////////////
 
-static bool HaveFilesToRecover()
+static FilePaths HaveFilesToRecover()
 {
-   wxDir dir(FileNames::AutoSaveDir());
-   if (!dir.IsOpened())
-   {
-      AudacityMessageBox(
-         XO("Could not enumerate files in auto save directory."),
-         XO("Error"),
-         wxICON_STOP);
-      return false;
-   }
+   wxString tempdir = FileNames::TempDir();
+   wxString pattern = wxT("*.") + FileNames::UnsavedProjectExtension();
+   FilePaths files;
 
-   wxString filename;
-   bool c = dir.GetFirst(&filename, wxT("*.autosave"), wxDIR_FILES);
+   wxDir::GetAllFiles(tempdir, &files, pattern, wxDIR_FILES);
 
-   return c;
+   return files;
 }
 
-static bool RemoveAllAutoSaveFiles()
+static bool RemoveAllAutoSaveFiles(const FilePaths &files)
 {
-   FilePaths files;
-   wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
-                      wxT("*.autosave"), wxDIR_FILES);
-
-   for (unsigned int i = 0; i < files.size(); i++)
+   for (int i = 0, cnt = files.size(); i < cnt; ++i)
    {
-      if (!wxRemoveFile(files[i]))
+      FilePath file = files[i];
+
+      if (wxRemoveFile(file))
       {
-         // I don't think this error message is actually useful.
-         // -dmazzoni
-         //AudacityMessageBox(
-         //   XO("Could not remove auto save file: %s".Format( files[i] ),
-         //   XO("Error"),
-         //   wxICON_STOP);
-         return false;
+         if (wxFileExists(file + wxT("-shm")))
+         {
+            wxRemoveFile(file + wxT("-shm"));
+         }
+
+         if (wxFileExists(file + wxT("-wal")))
+         {
+            wxRemoveFile(file + wxT("-wal"));
+         }
+
+         if (wxFileExists(file + wxT("-journal")))
+         {
+            wxRemoveFile(file + wxT("-journal"));
+         }
       }
    }
 
    return true;
 }
 
-static bool RecoverAllProjects(AudacityProject** pproj)
+static bool RecoverAllProjects(const FilePaths &files,
+                               AudacityProject **pproj)
 {
-   wxDir dir(FileNames::AutoSaveDir());
-   if (!dir.IsOpened())
-   {
-      AudacityMessageBox(
-         XO("Could not enumerate files in auto save directory."),
-         XO("Error"),
-         wxICON_STOP);
-      return false;
-   }
-
    // Open a project window for each auto save file
    wxString filename;
 
-   FilePaths files;
-   wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
-                      wxT("*.autosave"), wxDIR_FILES);
-
-   for (unsigned int i = 0; i < files.size(); i++)
+   for (int i = 0, cnt = files.size(); i < cnt; ++i)
    {
-      AudacityProject* proj{};
+      AudacityProject *proj = nullptr;
       if (*pproj)
       {
          // Reuse existing project window
@@ -220,18 +200,20 @@ static bool RecoverAllProjects(AudacityProject** pproj)
       // Open project. When an auto-save file has been opened successfully,
       // the opened auto-save file is automatically deleted and a NEW one
       // is created.
-      (void) ProjectManager::OpenProject( proj, files[i], false );
+      (void) ProjectManager::OpenProject(proj, files[i], false);
    }
 
    return true;
 }
 
-bool ShowAutoRecoveryDialogIfNeeded(AudacityProject** pproj,
+bool ShowAutoRecoveryDialogIfNeeded(AudacityProject **pproj,
                                     bool *didRecoverAnything)
 {
    if (didRecoverAnything)
       *didRecoverAnything = false;
-   if (HaveFilesToRecover())
+
+   FilePaths files = HaveFilesToRecover();
+   if (files.size())
    {
       // Under wxGTK3, the auto recovery dialog will not get
       // the focus since the project window hasn't been allowed
@@ -247,17 +229,17 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject** pproj,
       // This must be done before "dlg" is declared.
       wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
-      int ret = AutoRecoveryDialog{nullptr}.ShowModal();
+      int ret = AutoRecoveryDialog(files).ShowModal();
 
       switch (ret)
       {
       case ID_RECOVER_NONE:
-         return RemoveAllAutoSaveFiles();
+         return RemoveAllAutoSaveFiles(files);
 
       case ID_RECOVER_ALL:
          if (didRecoverAnything)
             *didRecoverAnything = true;
-         return RecoverAllProjects(pproj);
+         return RecoverAllProjects(files, pproj);
 
       default:
          // This includes ID_QUIT_AUDACITY

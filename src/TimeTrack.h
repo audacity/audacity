@@ -25,7 +25,7 @@ class TimeTrack final : public Track {
 
  public:
 
-   TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const ZoomInfo *zoomInfo);
+   TimeTrack(AudacityProject *project, const ZoomInfo *zoomInfo);
    /** @brief Copy-Constructor - create a NEW TimeTrack:: which is an independent copy of the original
     *
     * Calls TimeTrack::Init() to copy the track metadata, then does a bunch of manipulations on the

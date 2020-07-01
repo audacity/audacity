@@ -58,7 +58,5 @@ public:
 public:
    wxString mFileName;
    bool mbAddToHistory;
-   bool mbCompress;
    bool bHasAddToHistory;
-   bool bHasCompress;
 };

@@ -119,12 +119,12 @@ static void ComputeSpectrumUsingRealFFTf
    }
 }
 
-WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager,
+WaveClip::WaveClip(AudacityProject *project,
                    sampleFormat format, int rate, int colourIndex)
 {
    mRate = rate;
    mColourIndex = colourIndex;
-   mSequence = std::make_unique<Sequence>(projDirManager, format);
+   mSequence = std::make_unique<Sequence>(project, format);
 
    mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
 
@@ -134,17 +134,17 @@ WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager,
 }
 
 WaveClip::WaveClip(const WaveClip& orig,
-                   const std::shared_ptr<DirManager> &projDirManager,
+                   AudacityProject *project,
                    bool copyCutlines)
 {
    // essentially a copy constructor - but you must pass in the
-   // current project's DirManager, because we might be copying
+   // current project, because we might be copying
    // from one project to another
 
    mOffset = orig.mOffset;
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
-   mSequence = std::make_unique<Sequence>(*orig.mSequence, projDirManager);
+   mSequence = std::make_unique<Sequence>(*orig.mSequence, project);
 
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
@@ -155,13 +155,13 @@ WaveClip::WaveClip(const WaveClip& orig,
    if ( copyCutlines )
       for (const auto &clip: orig.mCutLines)
          mCutLines.push_back
-            ( std::make_unique<WaveClip>( *clip, projDirManager, true ) );
+            ( std::make_unique<WaveClip>( *clip, project, true ) );
 
    mIsPlaceholder = orig.GetIsPlaceholder();
 }
 
 WaveClip::WaveClip(const WaveClip& orig,
-                   const std::shared_ptr<DirManager> &projDirManager,
+                   AudacityProject *project,
                    bool copyCutlines,
                    double t0, double t1)
 {
@@ -199,7 +199,7 @@ WaveClip::WaveClip(const WaveClip& orig,
          if (cutlinePosition >= t0 && cutlinePosition <= t1)
          {
             auto newCutLine =
-               std::make_unique< WaveClip >( *clip, projDirManager, true );
+               std::make_unique< WaveClip >( *clip, project, true );
             newCutLine->SetOffset( cutlinePosition - t0 );
             mCutLines.push_back(std::move(newCutLine));
          }
@@ -1203,8 +1203,7 @@ void WaveClip::GetDisplayRect(wxRect* r)
 }
 
 void WaveClip::Append(samplePtr buffer, sampleFormat format,
-                      size_t len, unsigned int stride /* = 1 */,
-                      XMLWriter* blockFileLog /*=NULL*/)
+                      size_t len, unsigned int stride /* = 1 */)
 // PARTIAL-GUARANTEE in case of exceptions:
 // Some prefix (maybe none) of the buffer is appended, and no content already
 // flushed to disk is lost.
@@ -1228,8 +1227,7 @@ void WaveClip::Append(samplePtr buffer, sampleFormat format,
       if (mAppendBufferLen >= blockSize) {
          // flush some previously appended contents
          // use STRONG-GUARANTEE
-         mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize,
-                           blockFileLog);
+         mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize);
 
          // use NOFAIL-GUARANTEE for rest of this "if"
          memmove(mAppendBuffer.ptr(),
@@ -1257,17 +1255,6 @@ void WaveClip::Append(samplePtr buffer, sampleFormat format,
       buffer += toCopy * SAMPLE_SIZE(format) * stride;
       len -= toCopy;
    }
-}
-
-void WaveClip::AppendBlockFile( const BlockFileFactory &factory, size_t len)
-// STRONG-GUARANTEE
-{
-   // use STRONG-GUARANTEE
-   mSequence->AppendBlockFile( factory, len );
-
-   // use NOFAIL-GUARANTEE
-   UpdateEnvelopeTrackLen();
-   MarkChanged();
 }
 
 void WaveClip::Flush()
@@ -1351,7 +1338,7 @@ XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
    {
       // Nested wave clips are cut lines
       mCutLines.push_back(
-         std::make_unique<WaveClip>(mSequence->GetDirManager(),
+         std::make_unique<WaveClip>(mSequence->GetProject(),
             mSequence->GetSampleFormat(), mRate, 0 /*colourindex*/));
       return mCutLines.back().get();
    }
@@ -1387,7 +1374,7 @@ void WaveClip::Paste(double t0, const WaveClip* other)
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
       newClip =
-         std::make_unique<WaveClip>(*other, mSequence->GetDirManager(), true);
+         std::make_unique<WaveClip>(*other, mSequence->GetProject(), true);
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
          newClip->Resample(mRate);
@@ -1408,7 +1395,7 @@ void WaveClip::Paste(double t0, const WaveClip* other)
    {
       newCutlines.push_back(
          std::make_unique<WaveClip>
-            ( *cutline, mSequence->GetDirManager(),
+            ( *cutline, mSequence->GetProject(),
               // Recursively copy cutlines of cutlines.  They don't need
               // their offsets adjusted.
               true));
@@ -1545,7 +1532,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    const double clip_t1 = std::min( t1, GetEndTime() );
 
    auto newClip = std::make_unique< WaveClip >
-      (*this, mSequence->GetDirManager(), true, clip_t0, clip_t1);
+      (*this, mSequence->GetProject(), true, clip_t0, clip_t1);
 
    newClip->SetOffset( clip_t0 - mOffset );
 
@@ -1715,7 +1702,7 @@ void WaveClip::Resample(int rate, ProgressDialog *progress)
    auto numSamples = mSequence->GetNumSamples();
 
    auto newSequence =
-      std::make_unique<Sequence>(mSequence->GetDirManager(), mSequence->GetSampleFormat());
+      std::make_unique<Sequence>(mSequence->GetProject(), mSequence->GetSampleFormat());
 
    /**
     * We want to keep going as long as we have something to feed the resampler

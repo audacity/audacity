@@ -24,6 +24,8 @@ class AUDACITY_DLL_API XMLFileReader final {
 
    bool Parse(XMLTagHandler *baseHandler,
               const FilePath &fname);
+   bool ParseString(XMLTagHandler *baseHandler,
+                    const wxString &xmldata);
 
    const TranslatableString &GetErrorStr() const;
    const TranslatableString &GetLibraryErrorStr() const;

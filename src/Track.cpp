@@ -38,7 +38,6 @@ and TimeTrack.
 #include "tracks/ui/CommonTrackPanelCell.h"
 #include "Project.h"
 #include "ProjectSettings.h"
-#include "DirManager.h"
 
 #include "InconsistencyException.h"
 
@@ -47,9 +46,9 @@ and TimeTrack.
 #pragma warning( disable : 4786 )
 #endif
 
-Track::Track(const std::shared_ptr<DirManager> &projDirManager)
+Track::Track(AudacityProject *project)
 :  vrulerSize(36,0),
-   mDirManager(projDirManager)
+   mProject(project)
 {
    mSelected  = false;
    mLinked    = false;
@@ -77,7 +76,7 @@ void Track::Init(const Track &orig)
    mDefaultName = orig.mDefaultName;
    mName = orig.mName;
 
-   mDirManager = orig.mDirManager;
+   mProject = orig.mProject;
 
    mSelected = orig.mSelected;
    mLinked = orig.mLinked;
@@ -1285,11 +1284,10 @@ bool TrackList::HasPendingTracks() const
 
 #include "ViewInfo.h"
 static auto TrackFactoryFactory = []( AudacityProject &project ) {
-   auto &dirManager = DirManager::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    return std::make_shared< TrackFactory >(
       ProjectSettings::Get( project ),
-      dirManager.shared_from_this(), &viewInfo );
+      project, &viewInfo );
 };
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key2{

@@ -1842,7 +1842,6 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
    return nullptr;
 };
 
-#include "../MissingAliasFileDialog.h"
 #include "../PluginManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
@@ -1884,8 +1883,6 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
       ProjectAudioManager::Get( project ).Stop();
       SelectUtilities::SelectAllIfNone( project );
    }
-
-   MissingAliasFilesDialog::SetShouldShow(true);
 
    auto nTracksOriginally = tracks.size();
    wxWindow *focus = wxWindow::FindFocus();

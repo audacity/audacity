@@ -54,7 +54,6 @@ effects from this one class.
 #include <wx/stdpaths.h>
 
 #include "../EffectManager.h"
-#include "../../DirManager.h"
 #include "../../FileNames.h"
 #include "../../LabelTrack.h"
 #include "../../NoteTrack.h"

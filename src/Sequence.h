@@ -18,31 +18,29 @@
 
 #include "audacity/Types.h"
 
-class BlockFile;
-using BlockFilePtr = std::shared_ptr<BlockFile>;
-
-class DirManager;
-class wxFileNameWrapper;
+class AudacityProject;
+class SampleBlock;
 
 // This is an internal data structure!  For advanced use only.
 class SeqBlock {
  public:
-   BlockFilePtr f;
+   using SampleBlockPtr = std::shared_ptr<SampleBlock>;
+   SampleBlockPtr sb;
    ///the sample in the global wavetrack that this block starts at.
    sampleCount start;
 
    SeqBlock()
-      : f{}, start(0)
+      : sb{}, start(0)
    {}
 
-   SeqBlock(const BlockFilePtr &f_, sampleCount start_)
-      : f(f_), start(start_)
+   SeqBlock(const SampleBlockPtr &sb_, sampleCount start_)
+      : sb(sb_), start(start_)
    {}
 
    // Construct a SeqBlock with changed start, same file
    SeqBlock Plus(sampleCount delta) const
    {
-      return SeqBlock(f, start + delta);
+      return SeqBlock(sb, start + delta);
    }
 };
 class BlockArray : public std::vector<SeqBlock> {};
@@ -62,15 +60,10 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Constructor / Destructor / Duplicator
    //
 
-   Sequence(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format);
+   Sequence(AudacityProject *project, sampleFormat format);
 
-   // The copy constructor and duplicate operators take a
-   // DirManager as a parameter, because you might be copying
-   // from one project to another...
-   Sequence(const Sequence &orig, const std::shared_ptr<DirManager> &projDirManager);
+   Sequence(const Sequence &orig, AudacityProject *project);
 
-   // Sequence cannot be copied without specifying a DirManager
-   Sequence(const Sequence&) PROHIBITED;
    Sequence& operator= (const Sequence&) PROHIBITED;
 
    ~Sequence();
@@ -87,7 +80,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Note that len is not size_t, because nullptr may be passed for buffer, in
    // which case, silence is inserted, possibly a large amount.
    void SetSamples(samplePtr buffer, sampleFormat format,
-            sampleCount start, sampleCount len);
+                   sampleCount start, sampleCount len);
 
    // where is input, assumed to be nondecreasing, and its size is len + 1.
    // min, max, rms, bl are outputs, and their lengths are len.
@@ -104,28 +97,13 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    void Paste(sampleCount s0, const Sequence *src);
 
    size_t GetIdealAppendLen() const;
-   void Append(samplePtr buffer, sampleFormat format, size_t len,
-               XMLWriter* blockFileLog=NULL);
+   void Append(samplePtr buffer, sampleFormat format, size_t len);
    void Delete(sampleCount start, sampleCount len);
-
-   using BlockFileFactory =
-      std::function< BlockFilePtr( wxFileNameWrapper, size_t /* len */ ) >;
-   // An overload of AppendBlockFile that passes the factory to DirManager
-   // which supplies it with a file name
-   void AppendBlockFile( const BlockFileFactory &factory, size_t len );
-
-   // Append a blockfile. The blockfile pointer is then "owned" by the
-   // sequence. This function is used by the recording log crash recovery
-   // code, but may be useful for other purposes. The blockfile must already
-   // be registered within the dir manager hash. This is the case
-   // when the blockfile is created using SimpleBlockFile or
-   // loaded from an XML file via DirManager::HandleXMLTag
-   void AppendBlockFile(const BlockFilePtr &blockFile);
 
    void SetSilence(sampleCount s0, sampleCount len);
    void InsertSilence(sampleCount s0, sampleCount len);
 
-   const std::shared_ptr<DirManager> &GetDirManager() { return mDirManager; }
+   AudacityProject *GetProject() { return mProject; }
 
    //
    // XMLTagHandler callback methods for loading and saving
@@ -200,7 +178,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Private variables
    //
 
-   std::shared_ptr<DirManager> mDirManager;
+   AudacityProject *mProject;
 
    BlockArray    mBlock;
    sampleFormat  mSampleFormat;
@@ -219,23 +197,34 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    int FindBlock(sampleCount pos) const;
 
-   static void AppendBlock
-      (DirManager &dirManager,
-       BlockArray &blocks, sampleCount &numSamples, const SeqBlock &b);
+   static void AppendBlock(BlockArray &blocks,
+                           sampleCount &numSamples,
+                           const SeqBlock &b);
 
-   static bool Read(samplePtr buffer, sampleFormat format,
-             const SeqBlock &b,
-             size_t blockRelativeStart, size_t len, bool mayThrow);
+   static bool Read(samplePtr buffer,
+                    sampleFormat format,
+                    const SeqBlock &b,
+                    size_t blockRelativeStart,
+                    size_t len,
+                    bool mayThrow);
 
    // Accumulate NEW block files onto the end of a block array.
    // Does not change this sequence.  The intent is to use
    // CommitChangesIfConsistent later.
-   static void Blockify
-      (DirManager &dirManager, size_t maxSamples, sampleFormat format,
-       BlockArray &list, sampleCount start, samplePtr buffer, size_t len);
+   static void Blockify(AudacityProject *project,
+                        size_t maxSamples,
+                        sampleFormat format,
+                        BlockArray &list,
+                        sampleCount start,
+                        samplePtr buffer,
+                        size_t len);
 
-   bool Get(int b, samplePtr buffer, sampleFormat format,
-      sampleCount start, size_t len, bool mayThrow) const;
+   bool Get(int b,
+            samplePtr buffer,
+            sampleFormat format,
+            sampleCount start,
+            size_t len,
+            bool mayThrow) const;
 
 public:
 

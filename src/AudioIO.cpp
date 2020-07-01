@@ -455,7 +455,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include <wx/power.h>
 #endif
 
-#include "MissingAliasFileDialog.h"
 #include "Mix.h"
 #include "Resample.h"
 #include "RingBuffer.h"
@@ -1824,9 +1823,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       wxTheApp->ProcessEvent(e);
    }
 
-   // Enable warning popups for unfound aliased blockfiles.
-   MissingAliasFilesDialog::SetShouldShow(true);
-
    commit = true;
    return mStreamToken;
 }
@@ -2900,14 +2896,12 @@ void AudioIO::FillBuffers()
          {
             // Append captured samples to the end of the WaveTracks.
             // The WaveTracks have their own buffering for efficiency.
-            AutoSaveFile blockFileLog;
             auto numChannels = mCaptureTracks.size();
 
             for( i = 0; i < numChannels; i++ )
             {
                sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
 
-               AutoSaveFile appendLog;
                size_t discarded = 0;
 
                if (!mRecordingSchedule.mLatencyCorrected) {
@@ -2919,8 +2913,7 @@ void AudioIO::FillBuffers()
                      size_t size = floor( correction * mRate * mFactor);
                      SampleBuffer temp(size, trackFormat);
                      ClearSamples(temp.ptr(), trackFormat, 0, size);
-                     mCaptureTracks[i]->Append(temp.ptr(), trackFormat,
-                                               size, 1, &appendLog);
+                     mCaptureTracks[i]->Append(temp.ptr(), trackFormat, size, 1);
                   }
                   else {
                      // Leftward shift
@@ -3022,19 +3015,7 @@ void AudioIO::FillBuffers()
 
                // Now append
                // see comment in second handler about guarantee
-               mCaptureTracks[i]->Append(temp.ptr(), format,
-                  size, 1,
-                  &appendLog);
-
-               if (!appendLog.IsEmpty())
-               {
-                  blockFileLog.StartTag(wxT("recordingrecovery"));
-                  blockFileLog.WriteAttr(wxT("id"), mCaptureTracks[i]->GetAutoSaveIdent());
-                  blockFileLog.WriteAttr(wxT("channel"), (int)i);
-                  blockFileLog.WriteAttr(wxT("numchannels"), numChannels);
-                  blockFileLog.WriteSubTree(appendLog);
-                  blockFileLog.EndTag(wxT("recordingrecovery"));
-               }
+               mCaptureTracks[i]->Append(temp.ptr(), format, size, 1);
             } // end loop over capture channels
 
             // Now update the recording shedule position
@@ -3042,8 +3023,8 @@ void AudioIO::FillBuffers()
             mRecordingSchedule.mLatencyCorrected = latencyCorrected;
 
             auto pListener = GetListener();
-            if (pListener && !blockFileLog.IsEmpty())
-               pListener->OnAudioIONewBlockFiles(blockFileLog);
+            if (pListener)
+               pListener->OnAudioIONewBlockFiles(&mCaptureTracks);
          }
          // end of record buffering
       },

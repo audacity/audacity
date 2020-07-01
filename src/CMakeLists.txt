@@ -96,8 +96,6 @@ list( APPEND SOURCES
       BatchProcessDialog.h
       Benchmark.cpp
       Benchmark.h
-      BlockFile.cpp
-      BlockFile.h
       CellularPanel.cpp
       CellularPanel.h
       ClassicThemeAsCeeCode.h
@@ -110,16 +108,12 @@ list( APPEND SOURCES
       CrashReport.cpp
       CrashReport.h
       DarkThemeAsCeeCode.h
-      Dependencies.cpp
-      Dependencies.h
       DeviceChange.cpp
       DeviceChange.h
       DeviceManager.cpp
       DeviceManager.h
       Diags.cpp
       Diags.h
-      DirManager.cpp
-      DirManager.h
       Dither.cpp
       Dither.h
       Envelope.cpp
@@ -178,8 +172,6 @@ list( APPEND SOURCES
       MemoryX.h
       Menus.cpp
       Menus.h
-      MissingAliasFileDialog.cpp
-      MissingAliasFileDialog.h
       Mix.cpp
       Mix.h
       MixerBoard.cpp
@@ -199,16 +191,14 @@ list( APPEND SOURCES
       Prefs.h
       Printing.cpp
       Printing.h
-#      Profiler.cpp
-#      Profiler.h
       Project.cpp
       Project.h
       ProjectAudioIO.cpp
       ProjectAudioIO.h
       ProjectAudioManager.cpp
       ProjectAudioManager.h
-      ProjectFSCK.cpp
-      ProjectFSCK.h
+#      ProjectFSCK.cpp
+#      ProjectFSCK.h
       ProjectFileIO.cpp
       ProjectFileIO.h
       ProjectFileIORegistry.cpp
@@ -241,6 +231,8 @@ list( APPEND SOURCES
       Resample.h
       RingBuffer.cpp
       RingBuffer.h
+      SampleBlock.cpp
+      SampleBlock.h
       SampleFormat.cpp
       SampleFormat.h
       Screenshot.cpp
@@ -328,19 +320,6 @@ list( APPEND SOURCES
       ZoomInfo.h
       float_cast.h
       wxFileNameWrapper.h
-
-      # Blockfile
-
-      blockfile/LegacyAliasBlockFile.cpp
-      blockfile/LegacyAliasBlockFile.h
-      blockfile/LegacyBlockFile.cpp
-      blockfile/LegacyBlockFile.h
-      blockfile/PCMAliasBlockFile.cpp
-      blockfile/PCMAliasBlockFile.h
-      blockfile/SilentBlockFile.cpp
-      blockfile/SilentBlockFile.h
-      blockfile/SimpleBlockFile.cpp
-      blockfile/SimpleBlockFile.h
 
       # Commands
 

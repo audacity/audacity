@@ -367,12 +367,6 @@ void OnCrashReport(const CommandContext &WXUNUSED(context) )
 }
 #endif
 
-void OnCheckDependencies(const CommandContext &context)
-{
-   auto &project = context.project;
-   ::ShowDependencyDialogIfNeeded(&project, false);
-}
-
 void OnMenuTree(const CommandContext &context)
 {
    auto &project = context.project;
@@ -533,11 +527,8 @@ BaseItemSharedPtr HelpMenu()
                AlwaysEnabledFlag ),
       #if defined(EXPERIMENTAL_CRASH_REPORT)
             Command( wxT("CrashReport"), XXO("&Generate Support Data..."),
-               FN(OnCrashReport), AlwaysEnabledFlag ),
+               FN(OnCrashReport), AlwaysEnabledFlag )
       #endif
-            Command( wxT("CheckDeps"), XXO("Chec&k Dependencies..."),
-               FN(OnCheckDependencies),
-               AudioIONotBusyFlag() )
 
    #ifdef IS_ALPHA
             ,

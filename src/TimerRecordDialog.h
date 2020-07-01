@@ -116,9 +116,6 @@ private:
    // Timer Recording Automation Routines
    void EnableDisableAutoControls(bool bEnable, int iControlGoup);
    void UpdateTextBoxControls();
-   // Tidy up after Timer Recording
-   bool HaveFilesToRecover();
-   bool RemoveAllAutoSaveFiles();
 
    // Add Path Controls to Form
    TimerRecordPathCtrl *NewPathControl(

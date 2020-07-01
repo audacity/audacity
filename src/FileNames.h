@@ -43,7 +43,7 @@ namespace FileNames
    // Frequently used types
    extern const FileType
         AllFiles // *
-      , AudacityProjects // *.aup
+      , AudacityProjects // *.aup3
       , DynamicLibraries // depends on the operating system
       , TextFiles // *.txt
       , XMLFiles; // *.xml, *.XML
@@ -95,7 +95,6 @@ namespace FileNames
     * windows system */
    FilePath DataDir();
    FilePath ResourcesDir();
-   FilePath AutoSaveDir();
    FilePath HtmlHelpDir();
    FilePath HtmlHelpIndexFile(bool quick);
    FilePath LegacyChainDir();
@@ -182,6 +181,17 @@ namespace FileNames
 
    // wxString compare function for sorting case, which is needed to load correctly.
    int CompareNoCase(const wxString& first, const wxString& second);
+
+   // Create a unique filename using the passed prefix and suffix
+   wxString CreateUniqueName(const wxString &prefix,
+                             const wxString &suffix = wxEmptyString);
+
+   // Create a filename for an unsaved/temporary project file
+   wxString UnsavedProjectFileName();
+
+   // File extension used for unsaved/temporary project files
+   wxString UnsavedProjectExtension();
+
 };
 
 // Use this macro to wrap all filenames and pathnames that get

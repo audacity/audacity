@@ -33,7 +33,6 @@
 #define ROUND(x) ((int) ((x) + 0.5))
 
 #include "AColor.h"
-#include "DirManager.h"
 #include "Prefs.h"
 #include "ProjectFileIORegistry.h"
 #include "prefs/ImportExportPrefs.h"
@@ -124,11 +123,11 @@ static ProjectFileIORegistry::Entry registerFactory{
 
 NoteTrack::Holder TrackFactory::NewNoteTrack()
 {
-   return std::make_shared<NoteTrack>(mDirManager);
+   return std::make_shared<NoteTrack>(&mProject);
 }
 
-NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
-   : NoteTrackBase(projDirManager)
+NoteTrack::NoteTrack(AudacityProject *project)
+   : NoteTrackBase(project)
 {
    SetDefaultName(_("Note Track"));
    SetName(GetDefaultName());
@@ -173,7 +172,7 @@ Alg_seq &NoteTrack::GetSeq() const
 
 Track::Holder NoteTrack::Clone() const
 {
-   auto duplicate = std::make_shared<NoteTrack>(mDirManager);
+   auto duplicate = std::make_shared<NoteTrack>(mProject);
    duplicate->Init(*this);
    // The duplicate begins life in serialized state.  Often the duplicate is
    // pushed on the Undo stack.  Then we want to un-serialize it (or a further
@@ -464,7 +463,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
       //( std::min( t1, GetEndTime() ) ) - ( std::max( t0, GetStartTime() ) )
    //);
 
-   auto newTrack = std::make_shared<NoteTrack>(mDirManager);
+   auto newTrack = std::make_shared<NoteTrack>(mProject);
 
    newTrack->Init(*this);
 
@@ -478,7 +477,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    //AddToDuration( delta );
 
    // What should be done with the rest of newTrack's members?
-   //(mBottomNote, mDirManager,
+   //(mBottomNote, mProject,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
    return newTrack;
@@ -491,7 +490,7 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 
    double len = t1-t0;
 
-   auto newTrack = std::make_shared<NoteTrack>(mDirManager);
+   auto newTrack = std::make_shared<NoteTrack>(mProject);
 
    newTrack->Init(*this);
 
@@ -501,7 +500,7 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
    newTrack->SetOffset(0);
 
    // What should be done with the rest of newTrack's members?
-   // (mBottomNote, mDirManager, mSerializationBuffer,
+   // (mBottomNote, mProject, mSerializationBuffer,
    // mSerializationLength, mVisibleChannels)
 
    return newTrack;

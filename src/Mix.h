@@ -24,7 +24,6 @@
 #include <vector>
 
 class Resample;
-class DirManager;
 class BoundedEnvelope;
 class TrackFactory;
 class TrackList;

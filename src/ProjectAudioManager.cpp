@@ -19,7 +19,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "AudioIO.h"
 #include "AutoRecovery.h"
 #include "CommonCommandFlags.h"
-#include "DirManager.h"
 #include "LabelTrack.h"
 #include "Menus.h"
 #include "Project.h"
@@ -863,7 +862,6 @@ void ProjectAudioManager::OnAudioIOStartRecording()
 void ProjectAudioManager::OnAudioIOStopRecording()
 {
    auto &project = mProject;
-   auto &dirManager = DirManager::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
    auto &window = GetProjectFrame( project );
@@ -920,21 +918,11 @@ You are saving directly to a slow external storage device\n\
    projectFileIO.AutoSave();
 }
 
-void ProjectAudioManager::OnAudioIONewBlockFiles(
-   const AutoSaveFile & blockFileLog)
+void ProjectAudioManager::OnAudioIONewBlockFiles(const WaveTrackArray *tracks)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
-   // New blockfiles have been created, so add them to the auto-save file
-   const auto &autoSaveFileName = projectFileIO.GetAutoSaveFileName();
-   if ( !autoSaveFileName.empty() )
-   {
-      wxFFile f{ autoSaveFileName, wxT("ab") };
-      if (!f.IsOpened())
-         return; // Keep recording going, there's not much we can do here
-      blockFileLog.Append(f);
-      f.Close();
-   }
+   projectFileIO.AutoSave(tracks);
 }
 
 void ProjectAudioManager::OnCommitRecording()

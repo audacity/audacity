@@ -4,7 +4,6 @@
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../MissingAliasFileDialog.h"
 #include "../Mix.h"
 
 #include "../Prefs.h"
@@ -57,8 +56,6 @@ void DoMixAndRender
    auto defaultFormat = QualityPrefs::SampleFormatChoice();
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
-
-   MissingAliasFilesDialog::SetShouldShow(true);
 
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(

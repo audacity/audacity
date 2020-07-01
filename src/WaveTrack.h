@@ -68,8 +68,7 @@ public:
    // Constructor / Destructor / Duplicator
    //
 
-   WaveTrack(const std::shared_ptr<DirManager> &projDirManager,
-             sampleFormat format, double rate);
+   WaveTrack(AudacityProject *project, sampleFormat format, double rate);
    WaveTrack(const WaveTrack &orig);
 
    // overwrite data excluding the sample sequence but including display
@@ -160,12 +159,11 @@ private:
 
    // Make another track copying format, rate, color, etc. but containing no
    // clips
-   // It is important to pass the correct DirManager (that for the project
+   // It is important to pass the correct project (that for the project
    // which will own the copy) in the unusual case that a track is copied from
    // another project or the clipboard.  For copies within one project, the
    // default will do.
-   Holder EmptyCopy(
-      const std::shared_ptr<DirManager> &pDirManager = {} ) const;
+   Holder EmptyCopy(AudacityProject *pProject = {} ) const;
 
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
@@ -222,8 +220,7 @@ private:
     * one is created.
     */
    void Append(samplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride=1,
-               XMLWriter* blockFileLog=NULL);
+               size_t len, unsigned int stride=1);
    /// Flush must be called after last Append
    void Flush();
 
@@ -524,14 +521,6 @@ private:
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, ProgressDialog *progress = NULL);
 
-   //
-   // AutoSave related
-   //
-   // Retrieve the unique autosave ID
-   int GetAutoSaveIdent() const;
-   // Set the unique autosave ID
-   void SetAutoSaveIdent(int id);
-
    int GetLastScaleType() const { return mLastScaleType; }
    void SetLastScaleType() const;
 
@@ -591,7 +580,6 @@ private:
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
-   int mAutoSaveIdent;
 
    std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
    std::unique_ptr<WaveformSettings> mpWaveformSettings;

@@ -130,16 +130,14 @@ void AudacityProject::SetPanel( wxWindow *pPanel )
    mPanel = pPanel;
 }
 
-wxString AudacityProject::GetProjectName() const
+const wxString &AudacityProject::GetProjectName() const
 {
-   wxString name = wxFileNameFromPath(mFileName);
+   return mName;
+}
 
-   // Chop off the extension
-   size_t len = name.length();
-   if (len > 4 && name.Mid(len - 4) == wxT(".aup"))
-      name = name.Mid(0, len - 4);
-
-   return name;
+void AudacityProject::SetProjectName(const wxString &name)
+{
+   mName = name;
 }
 
 AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )

@@ -37,7 +37,6 @@
 #include <wx/textctrl.h>
 #include <wx/textdlg.h>
 
-#include "../DirManager.h"
 #include "../FileFormats.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
@@ -1062,10 +1061,6 @@ ProgressResult ExportMultipleDialog::DoExport(std::unique_ptr<ProgressDialog> &p
 
    wxFileName backup;
    if (mOverwrite->GetValue()) {
-      // Make sure we don't overwrite (corrupt) alias files
-      if (!DirManager::Get( *mProject ).EnsureSafeFilename(inName)) {
-         return ProgressResult::Cancelled;
-      }
       name = inName;
       backup.Assign(name);
 

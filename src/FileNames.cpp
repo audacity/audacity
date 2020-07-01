@@ -53,7 +53,7 @@ const FileNames::FileType
      FileNames::AllFiles{ XO("All files"), { wxT("") } }
      /* i18n-hint an Audacity project is the state of the program, stored as
      files that can be reopened to resume the session later */
-   , FileNames::AudacityProjects{ XO("Audacity projects"), { wxT("aup") }, true }
+   , FileNames::AudacityProjects{ XO("Audacity projects"), { wxT("aup3") }, true }
    , FileNames::DynamicLibraries{
 #if defined(__WXMSW__)
       XO("Dynamically Linked Libraries"), { wxT("dll") }, true
@@ -218,16 +218,6 @@ void FileNames::MakeNameUnique(FilePaths &otherNames,
       } while (otherNames.Index(newName.GetFullName(), false) >= 0);
    }
    otherNames.push_back(newName.GetFullName());
-}
-
-
-
-//
-// Audacity user data directories
-FilePath FileNames::AutoSaveDir()
-{
-   wxFileName autoSaveDir(FileNames::DataDir(), wxT("AutoSave"));
-   return FileNames::MkDir(autoSaveDir.GetFullPath());
 }
 
 // The APP name has upercase first letter (so that Quit Audacity is correctly
@@ -739,10 +729,36 @@ char *FileNames::VerifyFilename(const wxString &s, bool input)
 }
 #endif
 
-//using this with wxStringArray::Sort will give you a list that
-//is alphabetical, without depending on case.  If you use the
-//default sort, you will get strings with 'R' before 'a', because it is in caps.
+// Using this with wxStringArray::Sort will give you a list that
+// is alphabetical, without depending on case.  If you use the
+// default sort, you will get strings with 'R' before 'a', because it is in caps.
 int FileNames::CompareNoCase(const wxString& first, const wxString& second)
 {
    return first.CmpNoCase(second);
+}
+
+// Create a unique filename using the passed prefix and suffix
+wxString FileNames::CreateUniqueName(const wxString &prefix,
+                                     const wxString &suffix /* = wxEmptyString */)
+{
+   static int count = 0;
+
+   return wxString::Format(wxT("%s %s N-%i.%s"),
+                           prefix,
+                           wxDateTime::Now().Format(wxT("%Y-%m-%d %H-%M-%S")),
+                           ++count,
+                           suffix);
+}
+
+wxString FileNames::UnsavedProjectExtension()
+{
+   return wxT("aup3unsaved");
+}
+
+wxString FileNames::UnsavedProjectFileName()
+{
+   wxFileName fn(TempDir(),
+                 CreateUniqueName(wxT("New Project"), UnsavedProjectExtension()));
+
+   return fn.GetFullPath();
 }

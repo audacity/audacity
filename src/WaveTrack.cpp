@@ -91,11 +91,11 @@ WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
       format = QualityPrefs::SampleFormatChoice();
    if (rate == 0)
       rate = mSettings.GetRate();
-   return std::make_shared<WaveTrack> ( mDirManager, format, rate );
+   return std::make_shared<WaveTrack> ( &mProject, format, rate );
 }
 
-WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, double rate) :
-   PlayableTrack(projDirManager)
+WaveTrack::WaveTrack(AudacityProject *project, sampleFormat format, double rate) :
+   PlayableTrack(project)
 {
    mLegacyProjectFileOffset = 0;
 
@@ -113,7 +113,6 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    mSpectrumMin = mSpectrumMax = -1; // so values will default to settings
    mLastScaleType = -1;
    mLastdBRange = -1;
-   mAutoSaveIdent = 0;
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig):
@@ -136,7 +135,7 @@ WaveTrack::WaveTrack(const WaveTrack &orig):
 
    for (const auto &clip : orig.mClips)
       mClips.push_back
-         ( std::make_unique<WaveClip>( *clip, mDirManager, true ) );
+         ( std::make_unique<WaveClip>( *clip, mProject, true ) );
 }
 
 // Copy the track metadata but not the contents.
@@ -531,11 +530,11 @@ void WaveTrack::Trim (double t0, double t1)
 
 
 WaveTrack::Holder WaveTrack::EmptyCopy(
-   const std::shared_ptr<DirManager> &pDirManager ) const
+   AudacityProject *pProject ) const
 {
-   auto result = std::make_shared<WaveTrack>( mDirManager, mFormat, mRate );
+   auto result = std::make_shared<WaveTrack>( mProject, mFormat, mRate );
    result->Init(*this);
-   result->mDirManager = pDirManager ? pDirManager : mDirManager;
+   result->mProject = pProject ? pProject : mProject;
    return result;
 }
 
@@ -559,7 +558,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          //wxPrintf("copy: clip %i is in copy region\n", (int)clip);
 
          newTrack->mClips.push_back
-            (std::make_unique<WaveClip>(*clip, mDirManager, ! forClipboard));
+            (std::make_unique<WaveClip>(*clip, mProject, ! forClipboard));
          WaveClip *const newClip = newTrack->mClips.back().get();
          newClip->Offset(-t0);
       }
@@ -572,7 +571,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          const double clip_t1 = std::min(t1, clip->GetEndTime());
 
          auto newClip = std::make_unique<WaveClip>
-            (*clip, mDirManager, ! forClipboard, clip_t0, clip_t1);
+            (*clip, mProject, ! forClipboard, clip_t0, clip_t1);
 
          //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
@@ -591,7 +590,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    if (forClipboard &&
        newTrack->GetEndTime() + 1.0 / newTrack->GetRate() < t1 - t0)
    {
-      auto placeholder = std::make_unique<WaveClip>(mDirManager,
+      auto placeholder = std::make_unique<WaveClip>(mProject,
             newTrack->GetSampleFormat(),
             static_cast<int>(newTrack->GetRate()),
             0 /*colourindex*/);
@@ -983,7 +982,7 @@ void WaveTrack::HandleClear(double t0, double t1,
             // Don't modify this clip in place, because we want a strong
             // guarantee, and might modify another clip
             clipsToDelete.push_back( clip.get() );
-            auto newClip = std::make_unique<WaveClip>( *clip, mDirManager, true );
+            auto newClip = std::make_unique<WaveClip>( *clip, mProject, true );
             newClip->ClearAndAddCutLine( t0, t1 );
             clipsToAdd.push_back( std::move( newClip ) );
          }
@@ -998,7 +997,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                   // Don't modify this clip in place, because we want a strong
                   // guarantee, and might modify another clip
                   clipsToDelete.push_back( clip.get() );
-                  auto newClip = std::make_unique<WaveClip>( *clip, mDirManager, true );
+                  auto newClip = std::make_unique<WaveClip>( *clip, mProject, true );
                   newClip->Clear(clip->GetStartTime(), t1);
                   newClip->Offset(t1-clip->GetStartTime());
 
@@ -1010,7 +1009,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                   // Don't modify this clip in place, because we want a strong
                   // guarantee, and might modify another clip
                   clipsToDelete.push_back( clip.get() );
-                  auto newClip = std::make_unique<WaveClip>( *clip, mDirManager, true );
+                  auto newClip = std::make_unique<WaveClip>( *clip, mProject, true );
                   newClip->Clear(t0, clip->GetEndTime());
 
                   clipsToAdd.push_back( std::move( newClip ) );
@@ -1021,12 +1020,12 @@ void WaveTrack::HandleClear(double t0, double t1,
 
                   // left
                   clipsToAdd.push_back
-                     ( std::make_unique<WaveClip>( *clip, mDirManager, true ) );
+                     ( std::make_unique<WaveClip>( *clip, mProject, true ) );
                   clipsToAdd.back()->Clear(t0, clip->GetEndTime());
 
                   // right
                   clipsToAdd.push_back
-                     ( std::make_unique<WaveClip>( *clip, mDirManager, true ) );
+                     ( std::make_unique<WaveClip>( *clip, mProject, true ) );
                   WaveClip *const right = clipsToAdd.back().get();
                   right->Clear(clip->GetStartTime(), t1);
                   right->Offset(t1 - clip->GetStartTime());
@@ -1040,7 +1039,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                // Don't modify this clip in place, because we want a strong
                // guarantee, and might modify another clip
                clipsToDelete.push_back( clip.get() );
-               auto newClip = std::make_unique<WaveClip>( *clip, mDirManager, true );
+               auto newClip = std::make_unique<WaveClip>( *clip, mProject, true );
 
                // clip->Clear keeps points < t0 and >= t1 via Envelope::CollapseRegion
                newClip->Clear(t0,t1);
@@ -1106,7 +1105,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          // AWD: Could just use InsertSilence() on its own here, but it doesn't
          // follow EditClipCanMove rules (Paste() does it right)
          auto tmp = std::make_shared<WaveTrack>(
-            mDirManager, GetSampleFormat(), GetRate() );
+            mProject, GetSampleFormat(), GetRate() );
 
          tmp->InsertSilence(0.0, newT1 - oldT1);
          tmp->Flush();
@@ -1261,7 +1260,7 @@ void WaveTrack::Paste(double t0, const Track *src)
          if (!clip->GetIsPlaceholder())
          {
             auto newClip =
-               std::make_unique<WaveClip>( *clip, mDirManager, true );
+               std::make_unique<WaveClip>( *clip, mProject, true );
             newClip->Resample(mRate);
             newClip->Offset(t0);
             newClip->MarkChanged();
@@ -1323,7 +1322,7 @@ void WaveTrack::InsertSilence(double t, double len)
    if (mClips.empty())
    {
       // Special case if there is no clip yet
-      auto clip = std::make_unique<WaveClip>(mDirManager, mFormat, mRate, this->GetWaveColorIndex());
+      auto clip = std::make_unique<WaveClip>(mProject, mFormat, mRate, this->GetWaveColorIndex());
       clip->InsertSilence(0, len);
       // use NOFAIL-GUARANTEE
       mClips.push_back( std::move( clip ) );
@@ -1483,14 +1482,12 @@ void WaveTrack::Join(double t0, double t1)
 }
 
 void WaveTrack::Append(samplePtr buffer, sampleFormat format,
-                       size_t len, unsigned int stride /* = 1 */,
-                       XMLWriter *blockFileLog /* = NULL */)
+                       size_t len, unsigned int stride /* = 1 */)
 // PARTIAL-GUARANTEE in case of exceptions:
 // Some prefix (maybe none) of the buffer is appended, and no content already
 // flushed to disk is lost.
 {
-   RightmostOrNewClip()->Append(buffer, format, len, stride,
-                                        blockFileLog);
+   RightmostOrNewClip()->Append(buffer, format, len, stride);
 }
 
 sampleCount WaveTrack::GetBlockStart(sampleCount s) const
@@ -1536,7 +1533,7 @@ size_t WaveTrack::GetMaxBlockSize() const
    {
       // We really need the maximum block size, so create a
       // temporary sequence to get it.
-      maxblocksize = Sequence{ mDirManager, mFormat }.GetMaxBlockSize();
+      maxblocksize = Sequence{ mProject, mFormat }.GetMaxBlockSize();
    }
 
    wxASSERT(maxblocksize > 0);
@@ -1613,9 +1610,6 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("linked")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             SetLinked(nValue != 0);
-         else if (!wxStrcmp(attr, wxT("autosaveid")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            mAutoSaveIdent = (int) nValue;
          else if (!wxStrcmp(attr, wxT("colorindex")) &&
                   XMLValueChecker::IsGoodString(strValue) &&
                   strValue.ToLong(&nValue))
@@ -1675,10 +1669,6 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
    xmlFile.StartTag(wxT("wavetrack"));
-   if (mAutoSaveIdent)
-   {
-      xmlFile.WriteAttr(wxT("autosaveid"), mAutoSaveIdent);
-   }
    this->Track::WriteCommonXMLAttributes( xmlFile );
    xmlFile.WriteAttr(wxT("channel"), mChannel);
    xmlFile.WriteAttr(wxT("linked"), mLinked);
@@ -2119,7 +2109,7 @@ Sequence* WaveTrack::GetSequenceAtX(int xcoord)
 
 WaveClip* WaveTrack::CreateClip()
 {
-   mClips.push_back(std::make_unique<WaveClip>(mDirManager, mFormat, mRate, GetWaveColorIndex()));
+   mClips.push_back(std::make_unique<WaveClip>(mProject, mFormat, mRate, GetWaveColorIndex()));
    return mClips.back().get();
 }
 
@@ -2279,7 +2269,7 @@ void WaveTrack::SplitAt(double t)
       if (c->WithinClip(t))
       {
          t = LongSamplesToTime(TimeToLongSamples(t)); // put t on a sample
-         auto newClip = std::make_unique<WaveClip>( *c, mDirManager, true );
+         auto newClip = std::make_unique<WaveClip>( *c, mProject, true );
          c->Clear(t, c->GetEndTime());
          newClip->Clear(c->GetStartTime(), t);
 
@@ -2479,16 +2469,6 @@ void WaveTrack::ClearWaveCaches()
 {
    for (const auto &clip : mClips)
       clip->ClearWaveCache();
-}
-
-int WaveTrack::GetAutoSaveIdent() const
-{
-   return mAutoSaveIdent;
-}
-
-void WaveTrack::SetAutoSaveIdent(int ident)
-{
-   mAutoSaveIdent = ident;
 }
 
 WaveTrackCache::~WaveTrackCache()

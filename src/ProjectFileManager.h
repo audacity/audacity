@@ -20,8 +20,6 @@ Paul Licameli split from AudacityProject.h
 class wxString;
 class wxFileName;
 class AudacityProject;
-class ImportXMLTagHandler;
-class RecordingRecoveryHandler;
 class Track;
 class TrackList;
 class WaveTrack;
@@ -48,7 +46,7 @@ public:
       bool decodeError;
       bool parseSuccess;
       bool trackError;
-      TranslatableString errorString;
+      const TranslatableString errorString;
       wxString helpUrl;
    };
    ReadProjectResults ReadProjectFile( const FilePath &fileName );
@@ -58,9 +56,8 @@ public:
    void CloseLock();
 
    bool Save();
-   bool SaveAs(bool bWantSaveCopy = false, bool bLossless = false);
-   bool SaveAs(const wxString & newFileName, bool bWantSaveCopy = false,
-      bool addToHistory = true);
+   bool SaveAs();
+   bool SaveAs(const wxString & newFileName, bool addToHistory = true);
    // strProjectPathName is full path for aup except extension
    bool SaveFromTimerRecording( wxFileName fnFile );
 
@@ -104,31 +101,12 @@ public:
    bool GetMenuClose() const { return mMenuClose; }
    void SetMenuClose(bool value) { mMenuClose = value; }
 
-private:   
-   void SetImportedDependencies( bool value ) { mImportedDependencies = value; }
-   
-   // Push names of NEW export files onto the path list
-   bool SaveCopyWaveTracks(const FilePath & strProjectPathName,
-      bool bLossless, FilePaths &strOtherNamesArray);
-   bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
-
-   // Declared in this class so that they can have access to private members
-   static XMLTagHandler *RecordingRecoveryFactory( AudacityProject &project );
-   static ProjectFileIORegistry::Entry sRecoveryFactory;
-   static XMLTagHandler *ImportHandlerFactory( AudacityProject &project );
-   static ProjectFileIORegistry::Entry sImportHandlerFactory;
+private:
+   bool DoSave(const FilePath & fileName, bool fromSaveAs);
 
    AudacityProject &mProject;
 
    std::shared_ptr<TrackList> mLastSavedTracks;
-   
-   // The handler that handles recovery of <recordingrecovery> tags
-   std::unique_ptr<RecordingRecoveryHandler> mRecordingRecoveryHandler;
-   
-   std::unique_ptr<ImportXMLTagHandler> mImportXMLTagHandler;
-   
-   // Dependencies have been imported and a warning should be shown on save
-   bool mImportedDependencies{ false };
    
    // Are we currently closing as the result of a menu command?
    bool mMenuClose{ false };

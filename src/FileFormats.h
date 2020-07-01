@@ -15,6 +15,8 @@
 
 #include "audacity/Types.h"
 
+#include "MemoryX.h"
+
 #include "sndfile.h"
 
 class ChoiceSetting;

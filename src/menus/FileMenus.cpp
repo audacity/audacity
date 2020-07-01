@@ -5,11 +5,11 @@
 #include "../CommonCommandFlags.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
-#include "../MissingAliasFileDialog.h"
 #include "../NoteTrack.h"
 #include "../Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
+#include "../ProjectFileIO.h"
 #include "../ProjectFileManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectManager.h"
@@ -38,16 +38,16 @@ namespace {
 void DoExport( AudacityProject &project, const FileExtension & Format )
 {
    auto &tracks = TrackList::Get( project );
-
+   auto &projectFileIO = ProjectFileIO::Get( project );
+   
    Exporter e{ project };
 
-   MissingAliasFilesDialog::SetShouldShow(true);
    double t0 = 0.0;
    double t1 = tracks.GetEndTime();
 
    // Prompt for file name and/or extension?
    bool bPromptingRequired =
-      (project.mBatchMode == 0) || project.GetFileName().empty() ||
+      (project.mBatchMode == 0) || projectFileIO.GetFileName().empty() ||
       Format.empty();
    wxString filename;
 
@@ -58,7 +58,7 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
       extension.MakeLower();
 
       filename =
-         MacroCommands::BuildCleanFileName(project.GetFileName(), extension);
+         MacroCommands::BuildCleanFileName(projectFileIO.GetFileName(), extension);
 
       // Bug 1854, No warning of file overwrite
       // (when export is called from Macros).
@@ -72,7 +72,7 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
          number.Printf("%03i", counter);
          // So now the name has a number in it too.
          filename = MacroCommands::BuildCleanFileName(
-            project.GetFileName() + number, extension);
+            projectFileIO.GetFileName() + number, extension);
          bPromptingRequired = wxFileExists(filename);
       }
       // If we've run out of alternative names, we will fall back to prompting
@@ -155,22 +155,6 @@ void OnSaveAs(const CommandContext &context )
    projectFileManager.SaveAs();
 }
 
-void OnSaveCopy(const CommandContext &context )
-{
-   auto &project = context.project;
-   auto &projectFileManager = ProjectFileManager::Get( project );
-   projectFileManager.SaveAs(true, true);
-}
-
-#ifdef USE_LIBVORBIS
-void OnSaveCompressed(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &projectFileManager = ProjectFileManager::Get( project );
-   projectFileManager.SaveAs(true);
-}
-#endif
-
 void OnExportMp3(const CommandContext &context)
 {
    auto &project = context.project;
@@ -201,7 +185,6 @@ void OnExportSelection(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    Exporter e{ project };
 
-   MissingAliasFilesDialog::SetShouldShow(true);
    e.SetFileDialogTitle( XO("Export Selected Audio") );
    e.Process(true, selectedRegion.t0(),
       selectedRegion.t1());
@@ -274,7 +257,6 @@ void OnExportMultiple(const CommandContext &context)
    auto &project = context.project;
    ExportMultipleDialog em(&project);
 
-   MissingAliasFilesDialog::SetShouldShow(true);
    em.ShowModal();
 }
 
@@ -370,10 +352,6 @@ void OnImport(const CommandContext &context)
 {
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
-
-   // An import trigger for the alias missing dialog might not be intuitive, but
-   // this serves to track the file if the users zooms in and such.
-   MissingAliasFilesDialog::SetShouldShow(true);
 
    auto selectedFiles = ProjectFileManager::ShowOpenDialog();
    if (selectedFiles.size() == 0) {
@@ -619,16 +597,7 @@ BaseItemSharedPtr FileMenu()
             Command( wxT("Save"), XXO("&Save Project"), FN(OnSave),
                AudioIONotBusyFlag() | UnsavedChangesFlag(), wxT("Ctrl+S") ),
             Command( wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs),
-               AudioIONotBusyFlag() ),
-            // TODO: The next two items should be disabled if project is empty
-            Command( wxT("SaveCopy"), XXO("Save Lossless Copy of Project..."),
-               FN(OnSaveCopy), AudioIONotBusyFlag() )
-   #ifdef USE_LIBVORBIS
-            ,
-            Command( wxT("SaveCompressed"),
-               XXO("&Save Compressed Copy of Project..."),
-               FN(OnSaveCompressed), AudioIONotBusyFlag() )
-   #endif
+               AudioIONotBusyFlag() )
          )
       ),
 

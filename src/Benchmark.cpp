@@ -33,7 +33,6 @@ of the BlockFile system.
 #include <wx/valtext.h>
 #include <wx/intl.h>
 
-#include "DirManager.h"
 #include "ShuttleGui.h"
 #include "Project.h"
 #include "WaveClip.h"
@@ -51,7 +50,7 @@ class BenchmarkDialog final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
-   BenchmarkDialog( wxWindow *parent, const ProjectSettings &settings );
+   BenchmarkDialog( wxWindow *parent, AudacityProject &project );
 
    void MakeBenchmarkDialog();
 
@@ -66,6 +65,7 @@ private:
    void HoldPrint(bool hold);
    void FlushPrint();
 
+   AudacityProject &mProject;
    const ProjectSettings &mSettings;
 
    bool      mHoldPrint;
@@ -85,7 +85,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-void RunBenchmark( wxWindow *parent, const ProjectSettings &settings )
+void RunBenchmark( wxWindow *parent, AudacityProject &project )
 {
    /*
    int action = AudacityMessageBox(
@@ -101,7 +101,7 @@ XO("This will close all project windows (without saving)\nand open the Audacity 
       GetProjectFrame( *pProject ).Close();
    */
 
-   BenchmarkDialog dlog{ parent, settings };
+   BenchmarkDialog dlog{ parent, project };
 
    dlog.CentreOnParent();
 
@@ -131,14 +131,15 @@ BEGIN_EVENT_TABLE(BenchmarkDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 BenchmarkDialog::BenchmarkDialog(
-   wxWindow *parent, const ProjectSettings &settings)
+   wxWindow *parent, AudacityProject &project)
    :
       /* i18n-hint: Benchmark means a software speed test */
       wxDialogWrapper( parent, 0, XO("Benchmark"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE |
                 wxRESIZE_BORDER)
-   , mSettings{ settings }
+   , mProject(project)
+   , mSettings{ ProjectSettings::Get(project) }
 {
    SetName();
 
@@ -366,9 +367,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    HoldPrint(true);
 
    ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
-   auto dd = DirManager::Create();
    const auto t =
-      TrackFactory{ mSettings, dd, &zoomInfo }.NewWaveTrack(int16Sample);
+      TrackFactory{ mSettings,
+                    mProject,
+                    &zoomInfo }.NewWaveTrack(int16Sample);
 
    t->SetRate(1);
 
@@ -569,8 +571,6 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    Printf( XO("TEST FAILED!!!\n") );
 
  success:
-
-   dd.reset();
 
    Printf( XO("Benchmark completed successfully.\n") );
    HoldPrint(false);

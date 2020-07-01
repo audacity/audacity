@@ -15,7 +15,14 @@ Paul Licameli split from AudacityProject.h
 #include "Prefs.h" // to inherit
 #include "xml/XMLTagHandler.h" // to inherit
 
+#include <sqlite3.h>
+
 class AudacityProject;
+class AutoSaveFile;
+class SampleBlock;
+class WaveTrack;
+
+using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 
 ///\brief Object associated with a project that manages reading and writing
 /// of Audacity project file formats, and autosave
@@ -35,33 +42,35 @@ public:
 
    bool WarnOfLegacyFile( );
    
-   const FilePath &GetAutoSaveFileName() { return mAutoSaveFileName; }
-
    // It seems odd to put this method in this class, but the results do depend
    // on what is discovered while opening the file, such as whether it is a
    // recovery file
-   void SetProjectTitle( int number = -1 );
+   void SetProjectTitle(int number = -1);
+   // Should be empty or a fully qualified file name
 
-   bool IsProjectSaved() const;
+   const FilePath &GetFileName() const;
+   void SetFileName( const FilePath &fileName );
+
+   bool IsModified() const;
+   bool IsTemporary() const;
+   bool IsRecovered() const;
 
    void Reset();
-   
-   void AutoSave();
-   void DeleteCurrentAutoSaveFile();
 
-   bool IsRecovered() const { return mIsRecovered; }
-   void SetIsRecovered( bool value ) { mIsRecovered = value; }
-   bool IsLoadedFromAup() const { return mbLoadedFromAup; }
-   void SetLoadedFromAup( bool value ) { mbLoadedFromAup = value; }
- 
+   bool AutoSave(const WaveTrackArray *tracks = nullptr);
+   bool AutoSave(const AutoSaveFile &autosave);
+   bool AutoSaveDelete();
+
+   bool LoadProject(const FilePath &fileName);
+   bool SaveProject(const FilePath &fileName);
+
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXMLHeader(XMLWriter &xmlFile) const;
+   void WriteXML(XMLWriter &xmlFile, const WaveTrackArray *tracks = nullptr) /* not override */;
 
-   // If the second argument is not null, that means we are saving a
-   // compressed project, and the wave tracks have been exported into the
-   // named files
-   void WriteXML(
-      XMLWriter &xmlFile, FilePaths *strOtherNamesArray) /* not override */;
+   wxLongLong GetFreeDiskSpace();
+
+   const TranslatableString & GetLastError() const;
 
 private:
    // XMLTagHandler callback methods
@@ -69,19 +78,52 @@ private:
 
    void UpdatePrefs() override;
 
+   using ExecCB = std::function<int(wxString *result, int cols, char **vals, char **names)>;
+   using ExecFunc = int (*)(void *data, int cols, char **vals, char **names);
+   struct ExecParm
+   {
+      ExecCB func;
+      wxString *result;
+   };
+   static int ExecCallback(void *data, int cols, char **vals, char **names);
+   int Exec(const char *query, ExecCB callback, wxString *result);
+
+   sqlite3 *DB();
+   sqlite3 *OpenDB(FilePath fileName = {});
+   bool CloseDB();
+   bool DeleteDB();
+   bool CleanDB();
+
+   wxString GetValue(const char *sql);
+   bool GetBlob(const char *sql, wxMemoryBuffer &buffer);
+
+   bool CheckVersion();
+   bool InstallSchema();
+   bool UpgradeSchema();
+
+   bool CopyTo(const FilePath &destpath);
+
+private:
    // non-static data members
    AudacityProject &mProject;
 
-   // Last auto-save file name and path (empty if none)
-   FilePath mAutoSaveFileName;
-
-   // Are we currently auto-saving or not?
-   bool mAutoSaving{ false };
+   // The project's file path
+   FilePath mFileName;
 
    // Has this project been recovered from an auto-saved version
-   bool mIsRecovered{ false };
+   bool mRecovered;
 
-   bool mbLoadedFromAup{ false };
+   // Has this project been modified
+   bool mModified;
+
+   // Is this project still a temporary/unsaved project
+   bool mTemporary;
+
+   sqlite3 *mDB;
+   FilePath mDBPath;
+   TranslatableString mLastError;
+
+   friend SampleBlock;
 };
 
 class wxTopLevelWindow;

@@ -20,7 +20,6 @@
 class wxTextFile;
 
 class AudacityProject;
-class DirManager;
 class NotifyingSelectedRegion;
 class TimeWarper;
 
@@ -88,7 +87,7 @@ class AUDACITY_DLL_API LabelTrack final
    , public wxEvtHandler
 {
  public:
-   LabelTrack(const std::shared_ptr<DirManager> &projDirManager);
+   LabelTrack(AudacityProject *project);
    LabelTrack(const LabelTrack &orig);
 
    virtual ~ LabelTrack();
@@ -112,11 +111,6 @@ public:
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
-
-#if LEGACY_PROJECT_FILE_SUPPORT
-   bool Load(wxTextFile * in, DirManager * dirManager) override;
-   bool Save(wxTextFile * out, bool overwrite) override;
-#endif
 
    Track::Holder Cut  (double t0, double t1) override;
    Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;

@@ -305,7 +305,7 @@ void OnTimerRecord(const CommandContext &context)
    
    // We use this variable to display "Current Project" in the Timer Recording
    // save project field
-   bool bProjectSaved = ProjectFileIO::Get( project ).IsProjectSaved();
+   bool bProjectSaved = !ProjectFileIO::Get( project ).IsModified();
 
    //we break the prompting and waiting dialogs into two sections
    //because they both give the user a chance to click cancel

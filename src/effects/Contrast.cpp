@@ -16,6 +16,7 @@
 #include "../WaveTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ShuttleGui.h"
@@ -557,7 +558,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    /* i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines */
       << XO("WCAG 2.0 Success Criteria 1.4.7 Contrast Results") << '\n'
       << '\n'
-      << XO("Filename = %s.").Format( project->GetFileName() ) << '\n'
+      << XO("Filename = %s.").Format( ProjectFileIO::Get(*project).GetFileName() ) << '\n'
       << '\n'
       << XO("Foreground") << '\n';
 

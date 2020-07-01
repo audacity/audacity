@@ -15,7 +15,6 @@
 
 class TrackFactory;
 class WaveTrack;
-class DirManager;
 class wxString;
 class wxWindow;
 

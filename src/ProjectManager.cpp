@@ -15,12 +15,9 @@ Paul Licameli split from AudacityProject.cpp
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
 #include "AutoRecovery.h"
-#include "BlockFile.h"
 #include "Clipboard.h"
-#include "DirManager.h"
 #include "FileNames.h"
 #include "Menus.h"
-#include "MissingAliasFileDialog.h"
 #include "ModuleManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -541,7 +538,6 @@ AudacityProject *ProjectManager::New()
 
    ProjectFileIO::Get( *p ).SetProjectTitle();
    
-   MissingAliasFilesDialog::SetShouldShow(true);
    MenuManager::Get( project ).CreateMenusAndCommands( project );
    
    projectHistory.InitialState();
@@ -593,10 +589,6 @@ AudacityProject *ProjectManager::New()
    return p;
 }
 
-// LL: All objects that have a reference to the DirManager should
-//     be deleted before the final mDirManager->Deref() in this
-//     routine.  Failing to do so can cause unwanted recursion
-//     and/or attempts to DELETE objects twice.
 void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 {
    auto &project = mProject;
@@ -697,7 +689,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // The project is now either saved or the user doesn't want to save it,
    // so there's no need to keep auto save info around anymore
-   projectFileIO.DeleteCurrentAutoSaveFile();
+   projectFileIO.AutoSaveDelete();
 
    // DMM: Save the size of the last window the user closes
    //
@@ -755,15 +747,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // This must be done before the following Deref() since it holds
    // references to the DirManager.
    UndoManager::Get( project ).ClearStates();
-
-   // MM: Tell the DirManager it can now DELETE itself
-   // if it finds it is no longer needed. If it is still
-   // used (f.e. by the clipboard), it will recognize this
-   // and will destroy itself later.
-   //
-   // LL: All objects with references to the DirManager should
-   //     have been deleted before this.
-   DirManager::Destroy( project );
 
    // Remove self from the global array, but defer destruction of self
    auto pSelf = AllProjects{}.Remove( project );
@@ -914,7 +897,6 @@ void ProjectManager::ResetProjectToEmpty() {
    TrackUtilities::DoRemoveTracks( project );
 
    // A new DirManager.
-   DirManager::Reset( project );
    TrackFactory::Reset( project );
 
    projectFileManager.Reset();
@@ -936,7 +918,6 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    auto &project = mProject;
    auto &projectAudioIO = ProjectAudioIO::Get( project );
-   auto &dirManager = DirManager::Get( project );
    auto mixerToolBar = &MixerToolBar::Get( project );
    mixerToolBar->UpdateControls();
    
@@ -944,7 +925,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
    if (projectAudioIO.GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
-      wxLongLong freeSpace = dirManager.GetFreeDiskSpace();
+      wxLongLong freeSpace = ProjectFileIO::Get(project).GetFreeDiskSpace();
       if (freeSpace >= 0) {
 
          int iRecordingMins = GetEstimatedRecordingMinsLeftOnDisk(gAudioIO->GetNumCaptureChannels());
@@ -1030,7 +1011,7 @@ int ProjectManager::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
    }
 
    // Find out how much free space we have on disk
-   wxLongLong lFreeSpace = DirManager::Get( project ).GetFreeDiskSpace();
+   wxLongLong lFreeSpace = ProjectFileIO::Get( project ).GetFreeDiskSpace();
    if (lFreeSpace < 0) {
       return 0;
    }
