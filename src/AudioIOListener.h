@@ -15,8 +15,6 @@
 
 #include "Audacity.h"
 
-class AutoSaveFile;
-
 class AUDACITY_DLL_API AudioIOListener /* not final */ {
 public:
    AudioIOListener() {}

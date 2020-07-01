@@ -55,9 +55,6 @@ public:
    // Non-override functions
    void WriteSubTree(const AutoSaveFile & value);
 
-   bool Write(wxFFile & file) const;
-   bool Append(wxFFile & file) const;
-
    const wxMemoryBuffer &GetDict() const;
    const wxMemoryBuffer &GetData() const;
 

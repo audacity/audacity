@@ -80,7 +80,6 @@ private:
    void UpdatePrefs() override;
 
    using ExecCB = std::function<int(wxString *result, int cols, char **vals, char **names)>;
-   using ExecFunc = int (*)(void *data, int cols, char **vals, char **names);
    struct ExecParm
    {
       ExecCB func;
