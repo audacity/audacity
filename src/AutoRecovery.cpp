@@ -47,7 +47,7 @@ text or binary format to a file.
 // All strings are in native unicode format, 2-byte or 4-byte.
 //
 // All name "lengths" are 2-byte signed, so are limited to 32767 bytes long.
-// All strind/data "lengths" are 4-byte signed.
+// All string/data "lengths" are 4-byte signed.
 
 enum FieldTypes
 {

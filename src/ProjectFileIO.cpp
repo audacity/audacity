@@ -216,7 +216,7 @@ sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
    int rc = sqlite3_open(fileName, &mDB);
    if (rc != SQLITE_OK)
    {
-      // AUD3 TODO COMPLAIN AND THROW - crash in inevitable otherwise
+      // AUD3 TODO COMPLAIN AND THROW - crash is inevitable otherwise
       return nullptr;
    }
 
@@ -228,7 +228,7 @@ sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
    {
       CloseDB();
 
-      // AUD3 TODO COMPLAIN AND THROW - crash in inevitable otherwise
+      // AUD3 TODO COMPLAIN AND THROW - crash is inevitable otherwise
       return nullptr;
    }
 
@@ -356,7 +356,8 @@ wxString ProjectFileIO::GetValue(const char *sql)
    int rc = Exec(sql, getresult, &value);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("SQLITE error %s"), mLastError.Translation());
+      wxLogDebug(wxT("%s"), mLastError.Debug());
+      // AUD TODO Handle error.
    }
 
    return value;
@@ -380,7 +381,7 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
    if (rc != SQLITE_OK)
    {
       wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
+      // AUD TODO handle error
       return false;
    }
 
@@ -388,7 +389,7 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
    if (rc != SQLITE_ROW)
    {
       wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
+      // AUD TODO handle error
       return false;
    }
 

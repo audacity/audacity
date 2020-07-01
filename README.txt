@@ -172,6 +172,10 @@ GPL-compatible license.  Specifically:
     Changes tempo without changing pitch and vice versa.
     Included in audacity
 
+  SQLite: Public Domain
+    Small and fast SQL database engine.
+    Included in audacity
+
   Twolame: LGPL
     Encodes MPEG I layer 2 audio (used in DVDs and Radio). Optional separate
     download.
