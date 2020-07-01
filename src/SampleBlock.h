@@ -103,7 +103,6 @@ private:
    void CalcSummary();
 
 private:
-   AudacityProject *mProject;
    ProjectFileIO & mIO;
    bool mValid;
    bool mDirty;

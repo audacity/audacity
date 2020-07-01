@@ -144,8 +144,7 @@ SampleBlockPtr SampleBlock::Get(AudacityProject *project,
 }
 
 SampleBlock::SampleBlock(AudacityProject *project)
-:  mProject(project),
-   mIO(ProjectFileIO::Get(*project))
+:  mIO(ProjectFileIO::Get(*project))
 {
    mValid = false;
    mSilent = false;
