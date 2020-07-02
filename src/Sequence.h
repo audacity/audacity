@@ -18,8 +18,9 @@
 
 #include "audacity/Types.h"
 
-class AudacityProject;
 class SampleBlock;
+class SampleBlockFactory;
+using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 
 // This is an internal data structure!  For advanced use only.
 class SeqBlock {
@@ -60,9 +61,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Constructor / Destructor / Duplicator
    //
 
-   Sequence(AudacityProject *project, sampleFormat format);
+   Sequence(const SampleBlockFactoryPtr &pFactory, sampleFormat format);
 
-   Sequence(const Sequence &orig, AudacityProject *project);
+   Sequence(const Sequence &orig, const SampleBlockFactoryPtr &pFactory);
 
    Sequence& operator= (const Sequence&) PROHIBITED;
 
@@ -103,7 +104,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    void SetSilence(sampleCount s0, sampleCount len);
    void InsertSilence(sampleCount s0, sampleCount len);
 
-   AudacityProject *GetProject() { return mProject; }
+   const SampleBlockFactoryPtr &GetFactory() { return mpFactory; }
 
    //
    // XMLTagHandler callback methods for loading and saving
@@ -178,7 +179,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Private variables
    //
 
-   AudacityProject *mProject;
+   SampleBlockFactoryPtr mpFactory;
 
    BlockArray    mBlock;
    sampleFormat  mSampleFormat;
@@ -211,7 +212,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Accumulate NEW block files onto the end of a block array.
    // Does not change this sequence.  The intent is to use
    // CommitChangesIfConsistent later.
-   static void Blockify(AudacityProject *project,
+   static void Blockify(SampleBlockFactory &factory,
                         size_t maxSamples,
                         sampleFormat format,
                         BlockArray &list,

@@ -47,8 +47,9 @@
 size_t Sequence::sMaxDiskBlockSize = 1048576;
 
 // Sequence methods
-Sequence::Sequence(AudacityProject *project, sampleFormat format)
-:  mProject(project),
+Sequence::Sequence(
+   const SampleBlockFactoryPtr &pFactory, sampleFormat format)
+:  mpFactory(pFactory),
    mSampleFormat(format),
    mMinSamples(sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormat) / 2),
    mMaxSamples(mMinSamples * 2)
@@ -58,8 +59,9 @@ Sequence::Sequence(AudacityProject *project, sampleFormat format)
 // essentially a copy constructor - but you must pass in the
 // current project, because we might be copying from one
 // project to another
-Sequence::Sequence(const Sequence &orig, AudacityProject *project)
-:  mProject(project),
+Sequence::Sequence(
+   const Sequence &orig, const SampleBlockFactoryPtr &pFactory)
+:  mpFactory(pFactory),
    mSampleFormat(orig.mSampleFormat),
    mMinSamples(orig.mMinSamples),
    mMaxSamples(orig.mMaxSamples)
@@ -211,7 +213,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
 
          // Using Blockify will handle the cases where len > the NEW mMaxSamples. Previous code did not.
          const auto blockstart = oldSeqBlock.start;
-         Blockify(mProject, mMaxSamples, mSampleFormat,
+         Blockify(*mpFactory, mMaxSamples, mSampleFormat,
                   newBlockArray, blockstart, bufferNew.ptr(), len);
       }
    }
@@ -380,7 +382,7 @@ float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
 
 std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
 {
-   auto dest = std::make_unique<Sequence>(mProject, mSampleFormat);
+   auto dest = std::make_unique<Sequence>(mpFactory, mSampleFormat);
    if (s0 >= s1 || s0 >= mNumSamples || s1 < 0) {
       return dest;
    }
@@ -457,7 +459,7 @@ namespace {
 void Sequence::Paste(sampleCount s, const Sequence *src)
 // STRONG-GUARANTEE
 {
-   auto factory = SampleBlockFactory{ *mProject };
+   auto &factory = *mpFactory;
 
    if ((s < 0) || (s > mNumSamples))
    {
@@ -596,7 +598,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
            splitBlock, splitPoint,
            splitLen - splitPoint, true);
 
-      Blockify(mProject, mMaxSamples, mSampleFormat,
+      Blockify(*mpFactory, mMaxSamples, mSampleFormat,
                newBlock, splitBlock.start, sumBuffer.ptr(), sum);
    } else {
 
@@ -623,7 +625,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       src->Get(0, sampleBuffer.ptr() + splitPoint*sampleSize,
          mSampleFormat, 0, srcFirstTwoLen, true);
 
-      Blockify(mProject, mMaxSamples, mSampleFormat,
+      Blockify(*mpFactory, mMaxSamples, mSampleFormat,
                newBlock, splitBlock.start, sampleBuffer.ptr(), leftLen);
 
       for (i = 2; i < srcNumBlocks - 2; i++) {
@@ -637,7 +639,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       Read(sampleBuffer.ptr() + srcLastTwoLen * sampleSize, mSampleFormat,
            splitBlock, splitPoint, rightSplit, true);
 
-      Blockify(mProject, mMaxSamples, mSampleFormat,
+      Blockify(*mpFactory, mMaxSamples, mSampleFormat,
                newBlock, s + lastStart, sampleBuffer.ptr(), rightLen);
    }
 
@@ -659,7 +661,7 @@ void Sequence::SetSilence(sampleCount s0, sampleCount len)
 void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 // STRONG-GUARANTEE
 {
-   auto factory = SampleBlockFactory{ *mProject };
+   auto &factory = *mpFactory;
 
    // Quick check to make sure that it doesn't overflow
    if (Overflows((mNumSamples.as_double()) + (len.as_double())))
@@ -673,7 +675,7 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
    // We make use of a SilentBlockFile, which takes up no
    // space on disk.
 
-   Sequence sTrack(mProject, mSampleFormat);
+   Sequence sTrack(mpFactory, mSampleFormat);
 
    auto idealSamples = GetIdealBlockSize();
 
@@ -763,7 +765,7 @@ size_t Sequence::GetBestBlockSize(sampleCount start) const
 
 bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
-   auto factory = SampleBlockFactory{ *mProject };
+   auto &factory = *mpFactory;
 
    /* handle waveblock tag and its attributes */
    if (!wxStrcmp(tag, wxT("waveblock")))
@@ -1091,7 +1093,7 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len)
 // STRONG-GUARANTEE
 {
-   auto factory = SampleBlockFactory{ *mProject };
+   auto &factory = *mpFactory;
 
    const auto size = mBlock.size();
 
@@ -1459,7 +1461,7 @@ void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
    if (len == 0)
       return;
 
-   auto factory = SampleBlockFactory{ *mProject };
+   auto &factory = *mpFactory;
 
    // Quick check to make sure that it doesn't overflow
    if (Overflows(mNumSamples.as_double() + ((double)len)))
@@ -1536,14 +1538,12 @@ void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
 #endif
 }
 
-void Sequence::Blockify(AudacityProject *project,
+void Sequence::Blockify(SampleBlockFactory &factory,
                         size_t mMaxSamples, sampleFormat mSampleFormat,
                         BlockArray &list, sampleCount start, samplePtr buffer, size_t len)
 {
    if (len <= 0)
       return;
-
-   auto factory = SampleBlockFactory{ *project };
 
    auto num = (len + (mMaxSamples - 1)) / mMaxSamples;
    list.reserve(list.size() + num);
@@ -1571,7 +1571,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
    if (len < 0 || start < 0 || start + len > mNumSamples)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   auto factory = SampleBlockFactory{ *mProject };
+   auto &factory = *mpFactory;
 
    const unsigned int numBlocks = mBlock.size();
 
@@ -1674,7 +1674,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
               preBlock, 0, preBufferLen, true);
 
          newBlock.pop_back();
-         Blockify(mProject, mMaxSamples, mSampleFormat,
+         Blockify(*mpFactory, mMaxSamples, mSampleFormat,
                   newBlock, prepreBlock.start, scratch.ptr(), sum);
       }
    }
@@ -1719,7 +1719,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
          Read(scratch.ptr() + (postBufferLen * sampleSize), mSampleFormat,
               postpostBlock, 0, postpostLen, true);
 
-         Blockify(mProject, mMaxSamples, mSampleFormat,
+         Blockify(*mpFactory, mMaxSamples, mSampleFormat,
                   newBlock, start, scratch.ptr(), sum);
          b1++;
       }
