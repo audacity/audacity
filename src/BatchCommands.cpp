@@ -966,18 +966,15 @@ bool MacroCommands::ApplyMacro(
       if (proj) {
          ProjectHistory::Get(*proj).PushState(longDesc, shortDesc);
       }
-
-      // Upon exit of the top level apply, roll back the state if
-      // an error occurs.
-      auto cleanup2 = finally([&] {
-         if (!res) {
-            if (proj) {
-               // Macro failed or was cancelled; revert to the previous state
-               ProjectHistory::Get(*proj).RollbackState();
-            }
-         }
-         });
    }
+
+   // Upon exit of the top level apply, roll back the state if an error occurs.
+   auto cleanup2 = finally([&] {
+      if (MacroReentryCount == 1 && !res && proj) {
+         // Macro failed or was cancelled; revert to the previous state
+         ProjectHistory::Get(*proj).RollbackState();
+      }
+   });
 
    mAbort = false;
 
