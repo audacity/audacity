@@ -19,6 +19,7 @@ class XMLWriter;
 
 class SampleBlock;
 using SampleBlockPtr = std::shared_ptr<SampleBlock>;
+class SampleBlockFactory;
 using SampleBlockID = sqlite3_int64;
 
 class MinMaxRMS
@@ -34,22 +35,6 @@ class SampleBlock
 public:
    SampleBlock(AudacityProject *project);
    virtual ~SampleBlock();
-
-   static SampleBlockPtr Get(AudacityProject *project,
-                             SampleBlockID sbid);
-
-   static SampleBlockPtr Create(AudacityProject *project,
-                                samplePtr src,
-                                size_t numsamples,
-                                sampleFormat srcformat);
-
-   static SampleBlockPtr CreateSilent(AudacityProject *project,
-                                      size_t numsamples,
-                                      sampleFormat srcformat);
-
-   static SampleBlockPtr CreateFromXML(AudacityProject *project,
-                                       sampleFormat srcformat,
-                                       const wxChar **attrs);
 
    void Lock();
    void Unlock();
@@ -103,6 +88,8 @@ private:
    void CalcSummary();
 
 private:
+   friend SampleBlockFactory;
+
    ProjectFileIO & mIO;
    bool mValid;
    bool mDirty;
@@ -130,6 +117,31 @@ private:
 #if defined(WORDS_BIGENDIAN)
 #error All sample block data is little endian...big endian not yet supported
 #endif
+};
+
+class SampleBlockFactory
+{
+public:
+   explicit SampleBlockFactory( AudacityProject &project )
+      : mProject{ project }
+   {}
+
+   SampleBlockPtr Get(SampleBlockID sbid);
+
+   SampleBlockPtr Create(samplePtr src,
+      size_t numsamples,
+      sampleFormat srcformat);
+
+   SampleBlockPtr CreateSilent(
+      size_t numsamples,
+      sampleFormat srcformat);
+
+   SampleBlockPtr CreateFromXML(
+      sampleFormat srcformat,
+      const wxChar **attrs);
+
+private:
+   AudacityProject &mProject;
 };
 
 #endif

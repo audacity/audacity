@@ -17,13 +17,10 @@ SampleBlock.cpp
 #include "SampleFormat.h"
 #include "xml/XMLWriter.h"
 
-// static
-SampleBlockPtr SampleBlock::Create(AudacityProject *project,
-                                   samplePtr src,
-                                   size_t numsamples,
-                                   sampleFormat srcformat)
+SampleBlockPtr SampleBlockFactory::Create(
+   samplePtr src, size_t numsamples, sampleFormat srcformat )
 {
-   auto sb = std::make_shared<SampleBlock>(project);
+   auto sb = std::make_shared<SampleBlock>(&mProject);
 
    if (sb)
    {
@@ -36,12 +33,10 @@ SampleBlockPtr SampleBlock::Create(AudacityProject *project,
    return nullptr;
 }
 
-// static
-SampleBlockPtr SampleBlock::CreateSilent(AudacityProject *project,
-                                         size_t numsamples,
-                                         sampleFormat srcformat)
+SampleBlockPtr SampleBlockFactory::CreateSilent(
+   size_t numsamples, sampleFormat srcformat )
 {
-   auto sb = std::make_shared<SampleBlock>(project);
+   auto sb = std::make_shared<SampleBlock>(&mProject);
 
    if (sb)
    {
@@ -55,12 +50,10 @@ SampleBlockPtr SampleBlock::CreateSilent(AudacityProject *project,
 }
 
 
-// static
-SampleBlockPtr SampleBlock::CreateFromXML(AudacityProject *project,
-                                          sampleFormat srcformat,
-                                          const wxChar **attrs)
+SampleBlockPtr SampleBlockFactory::CreateFromXML(
+   sampleFormat srcformat, const wxChar **attrs )
 {
-   auto sb = std::make_shared<SampleBlock>(project);
+   auto sb = std::make_shared<SampleBlock>(&mProject);
    sb->mSampleFormat = srcformat;
 
    int found = 0;
@@ -126,11 +119,9 @@ SampleBlockPtr SampleBlock::CreateFromXML(AudacityProject *project,
    return sb;
 }
 
-// static
-SampleBlockPtr SampleBlock::Get(AudacityProject *project,
-                                SampleBlockID sbid)
+SampleBlockPtr SampleBlockFactory::Get( SampleBlockID sbid )
 {
-   auto sb = std::make_shared<SampleBlock>(project);
+   auto sb = std::make_shared<SampleBlock>(&mProject);
 
    if (sb)
    {
@@ -752,3 +743,4 @@ void SampleBlock::CalcSummary()
    mSumMin = min;
    mSumMax = max;
 }
+
