@@ -47,7 +47,6 @@ Track classes.
 #include "Sequence.h"
 #include "Spectrum.h"
 
-#include "Project.h"
 #include "ProjectFileIORegistry.h"
 #include "ProjectSettings.h"
 
