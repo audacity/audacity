@@ -181,7 +181,8 @@ static const AudacityProject::AttachedObjects::RegisteredFactory sFileIOKey{
 
 ProjectFileIO &ProjectFileIO::Get( AudacityProject &project )
 {
-   return project.AttachedObjects::Get< ProjectFileIO >( sFileIOKey );
+   auto &result = project.AttachedObjects::Get< ProjectFileIO >( sFileIOKey );
+   return result;
 }
 
 const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
@@ -189,8 +190,7 @@ const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-ProjectFileIO::ProjectFileIO(AudacityProject &project)
-:  mProject(project)
+ProjectFileIO::ProjectFileIO(AudacityProject &)
 {
    mDB = nullptr;
 
@@ -199,6 +199,13 @@ ProjectFileIO::ProjectFileIO(AudacityProject &project)
    mTemporary = true;
 
    UpdatePrefs();
+}
+
+void ProjectFileIO::Init( AudacityProject &project )
+{
+   // This step can't happen in the ctor of ProjectFileIO because ctor of
+   // AudacityProject wasn't complete
+   mpProject = project.shared_from_this();
 }
 
 ProjectFileIO::~ProjectFileIO()
@@ -646,7 +653,11 @@ void ProjectFileIO::UpdatePrefs()
 // Pass a number in to show project number, or -1 not to.
 void ProjectFileIO::SetProjectTitle(int number)
 {
-   auto &project = mProject;
+   auto pProject = mpProject.lock();
+   if (! pProject )
+      return;
+
+   auto &project = *pProject;
    auto pWindow = project.GetFrame();
    if (!pWindow)
    {
@@ -693,15 +704,20 @@ const FilePath &ProjectFileIO::GetFileName() const
 
 void ProjectFileIO::SetFileName(const FilePath &fileName)
 {
+   auto pProject = mpProject.lock();
+   if (! pProject )
+      return;
+   auto &project = *pProject;
+
    mFileName = fileName;
 
    if (mTemporary)
    {
-      mProject.SetProjectName({});
+      project.SetProjectName({});
    }
    else
    {
-      mProject.SetProjectName(wxFileName(mFileName).GetName());
+      project.SetProjectName(wxFileName(mFileName).GetName());
    }
 
    SetProjectTitle();
@@ -709,7 +725,10 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
 
 bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
-   auto &project = mProject;
+   auto pProject = mpProject.lock();
+   if (! pProject )
+      return false;
+   auto &project = *pProject;
    auto &window = GetProjectFrame(project);
    auto &viewInfo = ViewInfo::Get(project);
    auto &settings = ProjectSettings::Get(project);
@@ -839,10 +858,14 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
 XMLTagHandler *ProjectFileIO::HandleXMLChild(const wxChar *tag)
 {
+   auto pProject = mpProject.lock();
+   if (! pProject )
+      return nullptr;
+   auto &project = *pProject;
    auto fn = ProjectFileIORegistry::Lookup(tag);
    if (fn)
    {
-      return fn(mProject);
+      return fn(project);
    }
 
    return nullptr;
@@ -866,7 +889,10 @@ void ProjectFileIO::WriteXMLHeader(XMLWriter &xmlFile) const
 void ProjectFileIO::WriteXML(XMLWriter &xmlFile, const WaveTrackArray *tracks)
 // may throw
 {
-   auto &proj = mProject;
+   auto pProject = mpProject.lock();
+   if (! pProject )
+      THROW_INCONSISTENCY_EXCEPTION;
+   auto &proj = *pProject;
    auto &tracklist = TrackList::Get(proj);
    auto &viewInfo = ViewInfo::Get(proj);
    auto &tags = Tags::Get(proj);

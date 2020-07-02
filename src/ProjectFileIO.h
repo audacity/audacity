@@ -11,6 +11,7 @@ Paul Licameli split from AudacityProject.h
 #ifndef __AUDACITY_PROJECT_FILE_IO__
 #define __AUDACITY_PROJECT_FILE_IO__
 
+#include <memory>
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
 #include "xml/XMLTagHandler.h" // to inherit
@@ -30,12 +31,17 @@ class ProjectFileIO final
    : public ClientData::Base
    , public XMLTagHandler
    , private PrefsListener
+   , public std::enable_shared_from_this<ProjectFileIO>
 {
 public:
    static ProjectFileIO &Get( AudacityProject &project );
    static const ProjectFileIO &Get( const AudacityProject &project );
 
    explicit ProjectFileIO( AudacityProject &project );
+   // unfortunate two-step construction needed because of
+   // enable_shared_from_this
+   void Init( AudacityProject &project );
+
    ProjectFileIO( const ProjectFileIO & ) PROHIBITED;
    ProjectFileIO &operator=( const ProjectFileIO & ) PROHIBITED;
    ~ProjectFileIO();
@@ -108,7 +114,7 @@ private:
 
 private:
    // non-static data members
-   AudacityProject &mProject;
+   std::weak_ptr<AudacityProject> mpProject;
 
    // The project's file path
    FilePath mFileName;

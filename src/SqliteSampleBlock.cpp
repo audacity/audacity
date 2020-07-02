@@ -112,9 +112,7 @@ private:
 class SqliteSampleBlockFactory final : public SampleBlockFactory
 {
 public:
-   explicit SqliteSampleBlockFactory( AudacityProject &project )
-      : mProject{ project }
-   {}
+   explicit SqliteSampleBlockFactory( AudacityProject &project );
 
    ~SqliteSampleBlockFactory() override;
 
@@ -134,7 +132,15 @@ public:
 
 private:
    AudacityProject &mProject;
+   std::shared_ptr<ProjectFileIO> mpIO;
 };
+
+SqliteSampleBlockFactory::SqliteSampleBlockFactory( AudacityProject &project )
+   : mProject{ project }
+   , mpIO{ ProjectFileIO::Get(project).shared_from_this() }
+{
+   
+}
 
 SqliteSampleBlockFactory::~SqliteSampleBlockFactory() = default;
 
