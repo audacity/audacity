@@ -10,6 +10,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectFileIO.h"
 
+#include <sqlite3.h>
 #include <wx/crt.h>
 #include <wx/frame.h>
 

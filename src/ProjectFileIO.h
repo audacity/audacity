@@ -15,7 +15,7 @@ Paul Licameli split from AudacityProject.h
 #include "Prefs.h" // to inherit
 #include "xml/XMLTagHandler.h" // to inherit
 
-#include <sqlite3.h>
+struct sqlite3;
 
 class AudacityProject;
 class AutoSaveFile;
