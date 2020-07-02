@@ -11,7 +11,8 @@ SampleBlock.h
 
 #include "ClientData.h" // to inherit
 
-#include <sqlite3.h>
+#include <functional>
+#include <memory>
 
 class AudacityProject;
 class ProjectFileIO;
@@ -19,7 +20,13 @@ class XMLWriter;
 
 class SampleBlock;
 using SampleBlockPtr = std::shared_ptr<SampleBlock>;
-using SampleBlockID = sqlite3_int64;
+class SampleBlockFactory;
+using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
+using SampleBlockFactoryFactory =
+   std::function< SampleBlockFactoryPtr( AudacityProject& ) >;
+
+//using SampleBlockID = sqlite3_int64; // Trying not to depend on sqlite headers
+using SampleBlockID = long long;
 
 class MinMaxRMS
 {
@@ -29,107 +36,73 @@ public:
    float RMS;
 };
 
+class SqliteSampleBlockFactory;
+
+///\brief Abstract class allows access to contents of a block of sound samples,
+/// serialization as XML, and reference count management that can suppress
+/// reclamation of its storage
 class SampleBlock
 {
 public:
-   SampleBlock(AudacityProject *project);
    virtual ~SampleBlock();
 
-   static SampleBlockPtr Get(AudacityProject *project,
-                             SampleBlockID sbid);
+   virtual void Lock() = 0;
+   virtual void Unlock() = 0;
+   virtual void CloseLock() = 0;
+   
+   virtual SampleBlockID GetBlockID() = 0;
 
-   static SampleBlockPtr Create(AudacityProject *project,
-                                samplePtr src,
-                                size_t numsamples,
-                                sampleFormat srcformat);
-
-   static SampleBlockPtr CreateSilent(AudacityProject *project,
-                                      size_t numsamples,
-                                      sampleFormat srcformat);
-
-   static SampleBlockPtr CreateFromXML(AudacityProject *project,
-                                       sampleFormat srcformat,
-                                       const wxChar **attrs);
-
-   void Lock();
-   void Unlock();
-   void CloseLock();
-
-   bool SetSamples(samplePtr src, size_t numsamples, sampleFormat srcformat);
-
-   bool SetSilent(size_t numsamples, sampleFormat srcformat);
-
-   bool Commit();
-
-   void Delete();
-
-   SampleBlockID GetBlockID();
-
-   size_t GetSamples(samplePtr dest,
+   virtual size_t GetSamples(samplePtr dest,
                      sampleFormat destformat,
                      size_t sampleoffset,
-                     size_t numsamples);
-   sampleFormat GetSampleFormat() const;
-   size_t GetSampleCount() const;
+                     size_t numsamples) = 0;
 
-   bool GetSummary256(float *dest, size_t frameoffset, size_t numframes);
-   bool GetSummary64k(float *dest, size_t frameoffset, size_t numframes);
-   double GetSumMin() const;
-   double GetSumMax() const;
-   double GetSumRms() const;
+   virtual size_t GetSampleCount() const = 0;
+
+   virtual bool
+      GetSummary256(float *dest, size_t frameoffset, size_t numframes) = 0;
+   virtual bool
+      GetSummary64k(float *dest, size_t frameoffset, size_t numframes) = 0;
 
    /// Gets extreme values for the specified region
-   MinMaxRMS GetMinMaxRMS(size_t start, size_t len);
+   virtual MinMaxRMS GetMinMaxRMS(size_t start, size_t len) = 0;
 
    /// Gets extreme values for the entire block
-   MinMaxRMS GetMinMaxRMS() const;
+   virtual MinMaxRMS GetMinMaxRMS() const = 0;
 
-   size_t GetSpaceUsage() const;
-   void SaveXML(XMLWriter &xmlFile);
+   virtual size_t GetSpaceUsage() const = 0;
 
-private:
-   bool Load(SampleBlockID sbid);
-   bool GetSummary(float *dest,
-                   size_t frameoffset,
-                   size_t numframes,
-                   const char *srccolumn,
-                   size_t srcbytes);
-   size_t GetBlob(void *dest,
-                  sampleFormat destformat,
-                  const char *srccolumn,
-                  sampleFormat srcformat,
-                  size_t srcoffset,
-                  size_t srcbytes);
-   void CalcSummary();
+   virtual void SaveXML(XMLWriter &xmlFile) = 0;
+};
 
-private:
-   ProjectFileIO & mIO;
-   bool mValid;
-   bool mDirty;
-   bool mSilent;
-   int mRefCnt;
+///\brief abstract base class with methods to produce @ref SampleBlock objects
+class SampleBlockFactory
+{
+public:
+   // Install global function that produces a sample block factory object for
+   // a given project; the factory has methods that later make sample blocks.
+   // Return the previously installed factory.
+   static SampleBlockFactoryFactory RegisterFactoryFactory(
+      SampleBlockFactoryFactory newFactory );
 
-   SampleBlockID mBlockID;
+   // Invoke the installed factory (throw an exception if none was installed)
+   static SampleBlockFactoryPtr New( AudacityProject &project );
 
-   ArrayOf<char> mSamples;
-   size_t mSampleBytes;
-   size_t mSampleCount;
-   sampleFormat mSampleFormat;
+   virtual ~SampleBlockFactory();
 
-   ArrayOf<char> mSummary256;
-   size_t mSummary256Bytes;
-   ArrayOf<char> mSummary64k;
-   size_t mSummary64kBytes;
-   double mSumMin;
-   double mSumMax;
-   double mSumRms;
+   virtual SampleBlockPtr Get(SampleBlockID sbid) = 0;
 
-   const char *columns =
-      "sampleformat, summin, summax, sumrms, summary256, summary64k, samples";
+   virtual SampleBlockPtr Create(samplePtr src,
+      size_t numsamples,
+      sampleFormat srcformat) = 0;
 
-#if defined(WORDS_BIGENDIAN)
-#error All sample block data is little endian...big endian not yet supported
-#endif
+   virtual SampleBlockPtr CreateSilent(
+      size_t numsamples,
+      sampleFormat srcformat) = 0;
+
+   virtual SampleBlockPtr CreateFromXML(
+      sampleFormat srcformat,
+      const wxChar **attrs) = 0;
 };
 
 #endif

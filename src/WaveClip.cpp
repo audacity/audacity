@@ -119,12 +119,12 @@ static void ComputeSpectrumUsingRealFFTf
    }
 }
 
-WaveClip::WaveClip(AudacityProject *project,
+WaveClip::WaveClip(const SampleBlockFactoryPtr &factory,
                    sampleFormat format, int rate, int colourIndex)
 {
    mRate = rate;
    mColourIndex = colourIndex;
-   mSequence = std::make_unique<Sequence>(project, format);
+   mSequence = std::make_unique<Sequence>(factory, format);
 
    mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
 
@@ -134,7 +134,7 @@ WaveClip::WaveClip(AudacityProject *project,
 }
 
 WaveClip::WaveClip(const WaveClip& orig,
-                   AudacityProject *project,
+                   const SampleBlockFactoryPtr &factory,
                    bool copyCutlines)
 {
    // essentially a copy constructor - but you must pass in the
@@ -144,7 +144,7 @@ WaveClip::WaveClip(const WaveClip& orig,
    mOffset = orig.mOffset;
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
-   mSequence = std::make_unique<Sequence>(*orig.mSequence, project);
+   mSequence = std::make_unique<Sequence>(*orig.mSequence, factory);
 
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
@@ -155,13 +155,13 @@ WaveClip::WaveClip(const WaveClip& orig,
    if ( copyCutlines )
       for (const auto &clip: orig.mCutLines)
          mCutLines.push_back
-            ( std::make_unique<WaveClip>( *clip, project, true ) );
+            ( std::make_unique<WaveClip>( *clip, factory, true ) );
 
    mIsPlaceholder = orig.GetIsPlaceholder();
 }
 
 WaveClip::WaveClip(const WaveClip& orig,
-                   AudacityProject *project,
+                   const SampleBlockFactoryPtr &factory,
                    bool copyCutlines,
                    double t0, double t1)
 {
@@ -199,7 +199,7 @@ WaveClip::WaveClip(const WaveClip& orig,
          if (cutlinePosition >= t0 && cutlinePosition <= t1)
          {
             auto newCutLine =
-               std::make_unique< WaveClip >( *clip, project, true );
+               std::make_unique< WaveClip >( *clip, factory, true );
             newCutLine->SetOffset( cutlinePosition - t0 );
             mCutLines.push_back(std::move(newCutLine));
          }
@@ -1338,7 +1338,7 @@ XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
    {
       // Nested wave clips are cut lines
       mCutLines.push_back(
-         std::make_unique<WaveClip>(mSequence->GetProject(),
+         std::make_unique<WaveClip>(mSequence->GetFactory(),
             mSequence->GetSampleFormat(), mRate, 0 /*colourindex*/));
       return mCutLines.back().get();
    }
@@ -1374,7 +1374,7 @@ void WaveClip::Paste(double t0, const WaveClip* other)
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
       newClip =
-         std::make_unique<WaveClip>(*other, mSequence->GetProject(), true);
+         std::make_unique<WaveClip>(*other, mSequence->GetFactory(), true);
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
          newClip->Resample(mRate);
@@ -1395,7 +1395,7 @@ void WaveClip::Paste(double t0, const WaveClip* other)
    {
       newCutlines.push_back(
          std::make_unique<WaveClip>
-            ( *cutline, mSequence->GetProject(),
+            ( *cutline, mSequence->GetFactory(),
               // Recursively copy cutlines of cutlines.  They don't need
               // their offsets adjusted.
               true));
@@ -1532,7 +1532,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    const double clip_t1 = std::min( t1, GetEndTime() );
 
    auto newClip = std::make_unique< WaveClip >
-      (*this, mSequence->GetProject(), true, clip_t0, clip_t1);
+      (*this, mSequence->GetFactory(), true, clip_t0, clip_t1);
 
    newClip->SetOffset( clip_t0 - mOffset );
 
@@ -1702,7 +1702,7 @@ void WaveClip::Resample(int rate, ProgressDialog *progress)
    auto numSamples = mSequence->GetNumSamples();
 
    auto newSequence =
-      std::make_unique<Sequence>(mSequence->GetProject(), mSequence->GetSampleFormat());
+      std::make_unique<Sequence>(mSequence->GetFactory(), mSequence->GetSampleFormat());
 
    /**
     * We want to keep going as long as we have something to feed the resampler

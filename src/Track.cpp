@@ -1279,12 +1279,13 @@ bool TrackList::HasPendingTracks() const
    return false;
 }
 
+#include "SampleBlock.h"
 #include "ViewInfo.h"
 static auto TrackFactoryFactory = []( AudacityProject &project ) {
    auto &viewInfo = ViewInfo::Get( project );
    return std::make_shared< TrackFactory >(
       ProjectSettings::Get( project ),
-      project, &viewInfo );
+      SampleBlockFactory::New( project ), &viewInfo );
 };
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key2{

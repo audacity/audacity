@@ -1559,6 +1559,9 @@ private:
    std::vector< Updater > mUpdaters;
 };
 
+class SampleBlockFactory;
+using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
+
 class AUDACITY_DLL_API TrackFactory final
    : public ClientData::Base
 {
@@ -1569,9 +1572,9 @@ class AUDACITY_DLL_API TrackFactory final
    static void Destroy( AudacityProject &project );
 
    TrackFactory( const ProjectSettings &settings,
-      AudacityProject &project, const ZoomInfo *zoomInfo)
+      const SampleBlockFactoryPtr &pFactory, const ZoomInfo *zoomInfo)
       : mSettings{ settings }
-      , mProject(project)
+      , mpFactory(pFactory)
       , mZoomInfo(zoomInfo)
    {
    }
@@ -1580,7 +1583,7 @@ class AUDACITY_DLL_API TrackFactory final
 
  private:
    const ProjectSettings &mSettings;
-   AudacityProject &mProject;
+   SampleBlockFactoryPtr mpFactory;
    const ZoomInfo *const mZoomInfo;
    friend class AudacityProject;
  public:

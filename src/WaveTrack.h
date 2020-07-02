@@ -20,6 +20,7 @@
 
 class ProgressDialog;
 
+class SampleBlockFactory;
 class SpectrogramSettings;
 class WaveformSettings;
 class TimeWarper;
@@ -68,7 +69,8 @@ public:
    // Constructor / Destructor / Duplicator
    //
 
-   WaveTrack(AudacityProject *project, sampleFormat format, double rate);
+   WaveTrack(
+      const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
    WaveTrack(const WaveTrack &orig);
 
    // overwrite data excluding the sample sequence but including display
@@ -159,11 +161,11 @@ private:
 
    // Make another track copying format, rate, color, etc. but containing no
    // clips
-   // It is important to pass the correct project (that for the project
+   // It is important to pass the correct factory (that for the project
    // which will own the copy) in the unusual case that a track is copied from
    // another project or the clipboard.  For copies within one project, the
    // default will do.
-   Holder EmptyCopy(AudacityProject *pProject = {} ) const;
+   Holder EmptyCopy(const SampleBlockFactoryPtr &pFactory = {} ) const;
 
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
@@ -577,9 +579,7 @@ private:
    // Private variables
    //
 
-   // AS: Note that the mProject is mutable.  This is
-   // mostly to support "Duplicate" of const objects
-   mutable AudacityProject *mProject;
+   SampleBlockFactoryPtr mpFactory;
 
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;

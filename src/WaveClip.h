@@ -23,12 +23,13 @@
 
 #include <vector>
 
-class AudacityProject;
 class BlockArray;
 class BlockFile;
 using BlockFilePtr = std::shared_ptr<BlockFile>;
 class Envelope;
 class ProgressDialog;
+class SampleBlockFactory;
+using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 class Sequence;
 class SpectrogramSettings;
 class WaveCache;
@@ -179,19 +180,19 @@ private:
 
 public:
    // typical constructor
-   WaveClip(AudacityProject *project, sampleFormat format, 
+   WaveClip(const SampleBlockFactoryPtr &factory, sampleFormat format,
       int rate, int colourIndex);
 
    // essentially a copy constructor - but you must pass in the
    // current project, because we might be copying
    // from one project to another
    WaveClip(const WaveClip& orig,
-            AudacityProject *project,
+            const SampleBlockFactoryPtr &factory,
             bool copyCutlines);
 
    // Copy only a range from the given WaveClip
    WaveClip(const WaveClip& orig,
-            AudacityProject *project,
+            const SampleBlockFactoryPtr &factory,
             bool copyCutlines,
             double t0, double t1);
 
