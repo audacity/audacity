@@ -263,6 +263,7 @@ list( APPEND SOURCES
       SpectrumAnalyst.h
       SplashDialog.cpp
       SplashDialog.h
+      SqliteSampleBlock.cpp
       SseMathFuncs.cpp
       SseMathFuncs.h
       Tags.cpp

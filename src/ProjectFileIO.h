@@ -19,7 +19,7 @@ Paul Licameli split from AudacityProject.h
 
 class AudacityProject;
 class AutoSaveFile;
-class SampleBlock;
+class SqliteSampleBlock;
 class WaveTrack;
 
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
@@ -127,7 +127,7 @@ private:
    TranslatableString mLastError;
    TranslatableString mLibraryError;
 
-   friend SampleBlock;
+   friend SqliteSampleBlock;
 };
 
 class wxTopLevelWindow;
