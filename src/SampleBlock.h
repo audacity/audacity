@@ -11,6 +11,8 @@ SampleBlock.h
 
 #include "ClientData.h" // to inherit
 
+#include <functional>
+#include <memory>
 #include <sqlite3.h>
 
 class AudacityProject;
@@ -20,6 +22,9 @@ class XMLWriter;
 class SampleBlock;
 using SampleBlockPtr = std::shared_ptr<SampleBlock>;
 class SampleBlockFactory;
+using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
+using SampleBlockFactoryFactory =
+   std::function< SampleBlockFactoryPtr( AudacityProject& ) >;
 using SampleBlockID = sqlite3_int64;
 
 class MinMaxRMS
@@ -33,6 +38,7 @@ public:
 class SampleBlock
 {
 public:
+
    SampleBlock(AudacityProject *project);
    virtual ~SampleBlock();
 
@@ -122,6 +128,15 @@ private:
 class SampleBlockFactory
 {
 public:
+   // Install global function that produces a sample block factory object for
+   // a given project; the factory has methods that later make sample blocks.
+   // Return the previously installed factory.
+   static SampleBlockFactoryFactory RegisterFactoryFactory(
+      SampleBlockFactoryFactory newFactory );
+
+   // Invoke the installed factory (throw an exception if none was installed)
+   static SampleBlockFactoryPtr New( AudacityProject &project );
+
    explicit SampleBlockFactory( AudacityProject &project )
       : mProject{ project }
    {}

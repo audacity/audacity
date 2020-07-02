@@ -370,7 +370,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
    const auto t =
       TrackFactory{ mSettings,
-                    std::make_shared<SampleBlockFactory>(mProject),
+                    SampleBlockFactory::New( mProject ),
                     &zoomInfo }.NewWaveTrack(int16Sample);
 
    t->SetRate(1);

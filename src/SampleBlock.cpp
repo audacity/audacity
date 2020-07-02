@@ -119,6 +119,29 @@ SampleBlockPtr SampleBlockFactory::CreateFromXML(
    return sb;
 }
 
+static SampleBlockFactoryFactory& installedFactory()
+{
+   static SampleBlockFactoryFactory theFactory;
+   return theFactory;
+}
+
+SampleBlockFactoryFactory SampleBlockFactory::RegisterFactoryFactory(
+   SampleBlockFactoryFactory newFactory )
+{
+   auto &theFactory = installedFactory();
+   auto result = std::move( theFactory );
+   theFactory = std::move( newFactory );
+   return result;
+}
+
+SampleBlockFactoryPtr SampleBlockFactory::New( AudacityProject &project )
+{
+   auto &factory = installedFactory();
+   if ( ! factory )
+      THROW_INCONSISTENCY_EXCEPTION;
+   return factory( project );
+}
+
 SampleBlockPtr SampleBlockFactory::Get( SampleBlockID sbid )
 {
    auto sb = std::make_shared<SampleBlock>(&mProject);
@@ -744,3 +767,11 @@ void SampleBlock::CalcSummary()
    mSumMax = max;
 }
 
+// Inject our database implementation at startup
+static struct Injector { Injector() {
+   // Do this some time before the first project is created
+   (void) SampleBlockFactory::RegisterFactoryFactory(
+      []( AudacityProject &project ){
+         return std::make_shared<SampleBlockFactory>( project ); }
+   );
+} } injector;
