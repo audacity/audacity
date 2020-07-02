@@ -40,7 +40,6 @@
 #include <wx/ffile.h>
 #include <wx/log.h>
 
-#include "ProjectFileIO.h"
 #include "SampleBlock.h"
 #include "InconsistencyException.h"
 #include "widgets/AudacityMessageBox.h"

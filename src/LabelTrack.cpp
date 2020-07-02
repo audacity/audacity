@@ -68,11 +68,11 @@ static ProjectFileIORegistry::Entry registerFactory{
 
 LabelTrack::Holder TrackFactory::NewLabelTrack()
 {
-   return std::make_shared<LabelTrack>(&mProject);
+   return std::make_shared<LabelTrack>();
 }
 
-LabelTrack::LabelTrack(AudacityProject *project):
-   Track(project),
+LabelTrack::LabelTrack():
+   Track(),
    mClipLen(0.0),
    miLastLabel(-1)
 {
@@ -652,7 +652,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 
 Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
-   auto tmp = std::make_shared<LabelTrack>(GetProject());
+   auto tmp = std::make_shared<LabelTrack>();
    const auto lt = static_cast<LabelTrack*>(tmp.get());
 
    for (auto &labelStruct: mLabels) {

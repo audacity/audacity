@@ -103,7 +103,6 @@ private:
    void CalcSummary();
 
 private:
-   AudacityProject *mProject;
    ProjectFileIO & mIO;
    bool mValid;
    bool mDirty;
@@ -128,7 +127,6 @@ private:
    const char *columns =
       "sampleformat, summin, summax, sumrms, summary256, summary64k, samples";
 
-   friend class ProjectFileIO;
 #if defined(WORDS_BIGENDIAN)
 #error All sample block data is little endian...big endian not yet supported
 #endif

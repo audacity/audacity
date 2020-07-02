@@ -87,7 +87,7 @@ class AUDACITY_DLL_API LabelTrack final
    , public wxEvtHandler
 {
  public:
-   LabelTrack(AudacityProject *project);
+   LabelTrack();
    LabelTrack(const LabelTrack &orig);
 
    virtual ~ LabelTrack();

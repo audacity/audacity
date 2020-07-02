@@ -46,9 +46,8 @@ and TimeTrack.
 #pragma warning( disable : 4786 )
 #endif
 
-Track::Track(AudacityProject *project)
-:  vrulerSize(36,0),
-   mProject(project)
+Track::Track()
+:  vrulerSize(36,0)
 {
    mSelected  = false;
    mLinked    = false;
@@ -75,8 +74,6 @@ void Track::Init(const Track &orig)
 
    mDefaultName = orig.mDefaultName;
    mName = orig.mName;
-
-   mProject = orig.mProject;
 
    mSelected = orig.mSelected;
    mLinked = orig.mLinked;

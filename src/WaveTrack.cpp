@@ -47,7 +47,6 @@ Track classes.
 #include "Sequence.h"
 #include "Spectrum.h"
 
-#include "Project.h"
 #include "ProjectFileIORegistry.h"
 #include "ProjectSettings.h"
 
@@ -94,8 +93,10 @@ WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
    return std::make_shared<WaveTrack> ( &mProject, format, rate );
 }
 
-WaveTrack::WaveTrack(AudacityProject *project, sampleFormat format, double rate) :
-   PlayableTrack(project)
+WaveTrack::WaveTrack( AudacityProject *project,
+   sampleFormat format, double rate )
+   : PlayableTrack()
+   , mProject(project)
 {
    mLegacyProjectFileOffset = 0;
 
@@ -142,6 +143,8 @@ WaveTrack::WaveTrack(const WaveTrack &orig):
 void WaveTrack::Init(const WaveTrack &orig)
 {
    PlayableTrack::Init(orig);
+   mProject = orig.mProject;
+   
    mFormat = orig.mFormat;
    mWaveColorIndex = orig.mWaveColorIndex;
    mRate = orig.mRate;

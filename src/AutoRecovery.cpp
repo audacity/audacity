@@ -219,22 +219,6 @@ void AutoSaveFile::WriteSubTree(const AutoSaveFile & value)
    mBuffer.AppendByte(FT_Pop);
 }
 
-bool AutoSaveFile::Write(wxFFile & file) const
-{
-   return Append(file);
-}
-
-bool AutoSaveFile::Append(wxFFile & file) const
-{
-   bool success = file.Write(mDict.GetData(), mDict.GetDataLen()) == mDict.GetDataLen();
-   if (success)
-   {
-      success = file.Write(mBuffer.GetData(), mBuffer.GetDataLen()) == mBuffer.GetDataLen();
-   }
-
-   return success;
-}
-
 void AutoSaveFile::WriteName(const wxString & name)
 {
    wxASSERT(name.length() * sizeof(wxChar) <= SHRT_MAX);

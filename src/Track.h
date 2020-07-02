@@ -309,11 +309,9 @@ private:
    ChannelType         mChannel;
    double              mOffset;
 
-   mutable AudacityProject *mProject;
-
  public:
 
-   Track(AudacityProject *project);
+   Track();
    Track(const Track &orig);
 
    virtual ~ Track();
@@ -351,12 +349,6 @@ public:
 
    virtual void SetPan( float ){ ;}
    virtual void SetPanFromChannelType(){ ;};
-
-   // AS: Note that the project is mutable.  This is
-   // mostly to support "Duplicate" of const objects,
-   // but in general, mucking with the dir manager is
-   // separate from the Track.
-   AudacityProject *GetProject() const { return mProject; }
 
    // Create a NEW track and modify this track
    // Return non-NULL or else throw
@@ -716,8 +708,8 @@ protected:
 class AUDACITY_DLL_API AudioTrack /* not final */ : public Track
 {
 public:
-   AudioTrack(AudacityProject *project)
-      : Track{ project } {}
+   AudioTrack()
+      : Track{} {}
    AudioTrack(const Track &orig) : Track{ orig } {}
 
    // Serialize, not with tags of its own, but as attributes within a tag.
@@ -731,8 +723,8 @@ public:
 class AUDACITY_DLL_API PlayableTrack /* not final */ : public AudioTrack
 {
 public:
-   PlayableTrack(AudacityProject *project)
-      : AudioTrack{ project } {}
+   PlayableTrack()
+      : AudioTrack{} {}
    PlayableTrack(const Track &orig) : AudioTrack{ orig } {}
 
    bool GetMute    () const { return mMute;     }
