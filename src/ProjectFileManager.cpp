@@ -335,13 +335,13 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    return true;
 }
 
+// This version of SaveAs is invoked only from scripting and does not
+// prompt for a file name
 bool ProjectFileManager::SaveAs(const wxString & newFileName, bool addToHistory /*= true*/)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
 
-   // This version of SaveAs is invoked only from scripting and does not
-   // prompt for a file name
    auto oldFileName = projectFileIO.GetFileName();
 
    bool bOwnsNewName = !projectFileIO.IsTemporary() && (oldFileName == newFileName);
@@ -382,7 +382,7 @@ bool ProjectFileManager::SaveAs()
       filename = projectFileIO.GetFileName();
    }
 
-   // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
+   // Bug 1304: Set a default file path if none was given.  For Save/SaveAs/SaveCopy
    if( !FileNames::IsPathAvailable( filename.GetPath( wxPATH_GET_VOLUME| wxPATH_GET_SEPARATOR) ) ){
       bHasPath = false;
       filename.SetPath(FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path")).GetPath());
@@ -400,7 +400,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
    }
 
    bool bPrompt = (project.mBatchMode == 0) || (projectFileIO.GetFileName().empty());
-   wxString fName;
+   FilePath fName;
 
    if (bPrompt) {
       // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
@@ -425,7 +425,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
    filename.SetExt(wxT("aup3"));
    fName = filename.GetFullPath();
 
-   if (!bPrompt && filename.FileExists()) {
+   if (bPrompt && filename.FileExists()) {
       // Saving a copy of the project should never overwrite an existing project.
       AudacityMessageDialog m(
          nullptr,
@@ -481,7 +481,7 @@ will be irreversibly overwritten.").Format( fName, fName );
          // Overwrite disallowed. The destination project is open in another window.
          AudacityMessageDialog m(
             nullptr,
-            XO("The project will not saved because the selected project is open in another window.\nPlease try again and select an original name."),
+            XO("The project was not saved because the selected project is open in another window.\nPlease try again and select an original name."),
             XO("Error Saving Project"),
             wxOK|wxICON_ERROR );
          m.ShowModal();
@@ -500,6 +500,93 @@ will be irreversibly overwritten.").Format( fName, fName );
    }
 
    return(success);
+}
+
+bool ProjectFileManager::SaveCopy()
+{
+   auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get(project);
+   auto &window = GetProjectFrame(project);
+   TitleRestorer Restorer(window, project); // RAII
+   wxFileName filename;
+
+   if (projectFileIO.IsTemporary())
+   {
+      filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
+   }
+   else
+   {
+      filename = projectFileIO.GetFileName();
+   }
+
+   // Bug 1304: Set a default file path if none was given.  For Save/SaveAs/SaveCopy
+   if (!FileNames::IsPathAvailable(filename.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR)))
+   {
+      filename.SetPath(FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path")).GetPath());
+   }
+
+   TranslatableString title =
+      XO("%sSave Copy of Project \"%s\" As...").Format(Restorer.sProjNumber, Restorer.sProjName);
+
+   bool bPrompt = (project.mBatchMode == 0) || (projectFileIO.GetFileName().empty());
+   FilePath fName;
+
+   do
+   {
+      if (bPrompt)
+      {
+         // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
+         // for overwrite ourselves later, and we disallow it.
+         // We disallow overwrite because we would have to DELETE the many
+         // smaller files too, or prompt to move them.
+         fName = FileNames::SelectFile(FileNames::Operation::Export,
+                                       title,
+                                       filename.GetPath(),
+                                       filename.GetFullName(),
+                                       wxT("aup3"),
+                                       { FileNames::AudacityProjects },
+                                       wxFD_SAVE | wxRESIZE_BORDER,
+                                       &window);
+
+         if (fName.empty())
+         {
+            return false;
+         }
+
+         filename = fName;
+      };
+
+      filename.SetExt(wxT("aup3"));
+      fName = filename.GetFullPath();
+
+      if (bPrompt && filename.FileExists())
+      {
+         // Saving a copy of the project should never overwrite an existing project.
+         AudacityMessageDialog m(nullptr,
+                                 XO("Saving a copy must not overwrite an existing saved project.\nPlease try again and select an original name."),
+                                 XO("Error Saving Copy of Project"),
+                                 wxOK | wxICON_ERROR);
+         m.ShowModal();
+
+         continue;
+      }
+
+      break;
+   } while (bPrompt);
+
+   if (!projectFileIO.SaveCopy(filename.GetFullPath()))
+   {
+      // Overwrite disallowed. The destination project is open in another window.
+      AudacityMessageDialog m(
+         nullptr,
+         XO("The project will not saved because the selected project is open in another window.\nPlease try again and select an original name."),
+         XO("Error Saving Project"),
+         wxOK | wxICON_ERROR);
+      m.ShowModal();
+      return false;
+   }
+
+   return true;
 }
 
 void ProjectFileManager::Reset()

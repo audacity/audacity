@@ -1219,38 +1219,45 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
                     "       ON CONFLICT(id) DO UPDATE SET doc = ?1;");
 
 
-   sqlite3_stmt *stmt = nullptr;
-
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
-   if (rc != SQLITE_OK)
    {
-      SetDBError(
-         XO("Unable to prepare project file command:\n\n%s").Format(sql)
-      );
-      return false;
-   }
+      sqlite3_stmt* stmt = nullptr;
 
-   // BIND SQL project
-   rc = sqlite3_bind_text(stmt, 1, doc, -1, SQLITE_STATIC);
-   if (rc != SQLITE_OK)
-   {
-      SetDBError(
-         XO("Unable to bind to project file document.")
-      );
-      return false;
-   }
+      auto finalize = finally([&]
+      {
+         if (stmt)
+         {
+            // This will free the statement
+            sqlite3_finalize(stmt);
+         }
+      });
+
+      rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+      if (rc != SQLITE_OK)
+      {
+         SetDBError(
+            XO("Unable to prepare project file command:\n\n%s").Format(sql)
+         );
+         return false;
+      }
+
+      // BIND SQL project
+      rc = sqlite3_bind_text(stmt, 1, doc, -1, SQLITE_STATIC);
+      if (rc != SQLITE_OK)
+      {
+         SetDBError(
+            XO("Unable to bind to project file document.")
+         );
+         return false;
+      }
  
-   rc = sqlite3_step(stmt);
-
-   // This will free the statement
-   sqlite3_finalize(stmt);
-
-   if (rc != SQLITE_DONE)
-   {
-      SetDBError(
-         XO("Failed to save project file information.")
-      );
-      return false;
+      rc = sqlite3_step(stmt);
+      if (rc != SQLITE_DONE)
+      {
+         SetDBError(
+            XO("Failed to save project file information.")
+         );
+         return false;
+      }
    }
 
    // We need to remove the autosave info from the file since it is now
@@ -1269,6 +1276,104 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
 
    // Adjust the title
    SetProjectTitle();
+
+   // Tell the finally block to behave
+   success = true;
+
+   return true;
+}
+
+bool ProjectFileIO::SaveCopy(const FilePath& fileName)
+{
+   if (!CopyTo(fileName))
+   {
+      return false;
+   }
+
+   sqlite3 *db = nullptr;
+   int rc;
+   bool success = false;
+
+   auto cleanup = finally([&]
+   {
+      if (db)
+      {
+         sqlite3_close(db);
+      }
+
+      if (!success)
+      {
+         wxRemoveFile(fileName);
+      }
+   });
+
+   rc = sqlite3_open(fileName, &db);
+   if (rc != SQLITE_OK)
+   {
+      SetDBError(XO("Failed to open backup file"));
+      return false;
+   }
+
+   XMLStringWriter doc;
+   WriteXMLHeader(doc);
+   WriteXML(doc);
+
+   // Always use an ID of 1. This will replace any existing row.
+   char sql[256];
+   sqlite3_snprintf(sizeof(sql),
+                    sql,
+                    "INSERT INTO project(id, doc) VALUES(1, ?1)"
+                    "       ON CONFLICT(id) DO UPDATE SET doc = ?1;");
+
+   {
+      sqlite3_stmt* stmt = nullptr;
+
+      auto finalize = finally([&]
+      {
+         if (stmt)
+         {
+            // This will free the statement
+            sqlite3_finalize(stmt);
+         }
+      });
+
+      rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+      if (rc != SQLITE_OK)
+      {
+         SetDBError(
+            XO("Unable to prepare project file command:\n\n%s").Format(sql)
+         );
+         return false;
+      }
+
+      // BIND SQL project
+      rc = sqlite3_bind_text(stmt, 1, doc, -1, SQLITE_STATIC);
+      if (rc != SQLITE_OK)
+      {
+         SetDBError(
+            XO("Unable to bind to project file document.")
+         );
+         return false;
+      }
+
+      rc = sqlite3_step(stmt);
+      if (rc != SQLITE_DONE)
+      {
+         SetDBError(
+            XO("Failed to save project file information.")
+         );
+         return false;
+      }
+   }
+
+   rc = sqlite3_exec(db, "DELETE FROM autosave;", nullptr, nullptr, nullptr);
+   if (rc != SQLITE_OK)
+   {
+      SetDBError(
+         XO("Failed to remove the autosave information from the project file.")
+      );
+      return false;
+   }
 
    // Tell the finally block to behave
    success = true;

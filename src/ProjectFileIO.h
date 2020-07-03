@@ -68,6 +68,7 @@ public:
 
    bool LoadProject(const FilePath &fileName);
    bool SaveProject(const FilePath &fileName);
+   bool SaveCopy(const FilePath& fileName);
 
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXMLHeader(XMLWriter &xmlFile) const;

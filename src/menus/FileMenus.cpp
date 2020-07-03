@@ -155,6 +155,13 @@ void OnSaveAs(const CommandContext &context )
    projectFileManager.SaveAs();
 }
 
+void OnSaveCopy(const CommandContext &context )
+{
+   auto &project = context.project;
+   auto &projectFileManager = ProjectFileManager::Get( project );
+   projectFileManager.SaveCopy();
+}
+
 void OnExportMp3(const CommandContext &context)
 {
    auto &project = context.project;
@@ -595,8 +602,10 @@ BaseItemSharedPtr FileMenu()
       Section( "Save",
          Menu( wxT("Save"), XXO("&Save Project"),
             Command( wxT("Save"), XXO("&Save Project"), FN(OnSave),
-               AudioIONotBusyFlag() | UnsavedChangesFlag(), wxT("Ctrl+S") ),
+               AudioIONotBusyFlag(), wxT("Ctrl+S") ),
             Command( wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs),
+               AudioIONotBusyFlag() ),
+            Command( wxT("SaveCopy"), XXO("&Backup Project..."), FN(OnSaveCopy),
                AudioIONotBusyFlag() )
          )
       ),
