@@ -87,13 +87,12 @@ static const char *ProjectFileSchema =
    ");"
    ""
    // CREATE SQL sampleblocks
-   // 'samples' are fixed size blocks of float32 numbers.
+   // 'samples' are fixed size blocks of int16, int32 or float32 numbers.
    // The blocks may be partially empty.
    // The quantity of valid data in the blocks is
    // provided in the project XML.
    // 
-   // sampleformat was once used to specify whether floats 
-   // or ints for the data, but is no longer used.
+   // sampleformat specifies the format of the samples stored.
    //
    // blockID is a 64 bit number.
    //
@@ -197,6 +196,8 @@ ProjectFileIO::ProjectFileIO(AudacityProject &)
    mRecovered = false;
    mModified = false;
    mTemporary = true;
+
+   mBypass = false;
 
    UpdatePrefs();
 }
@@ -1275,13 +1276,13 @@ const TranslatableString & ProjectFileIO::GetLibraryError() const
    return mLibraryError;
 }
 
-void ProjectFileIO::SetError(const TranslatableString & msg)
+void ProjectFileIO::SetError(const TranslatableString &msg)
 {
    mLastError = msg;
    mLibraryError = {};
 }
 
-void ProjectFileIO::SetDBError(const TranslatableString & msg)
+void ProjectFileIO::SetDBError(const TranslatableString &msg)
 {
    mLastError = msg;
    if (mDB)
@@ -1289,3 +1290,14 @@ void ProjectFileIO::SetDBError(const TranslatableString & msg)
       mLibraryError = Verbatim(sqlite3_errmsg(mDB));
    }
 }
+
+void ProjectFileIO::Bypass(bool bypass)
+{
+   mBypass = bypass;
+}
+
+bool ProjectFileIO::ShouldBypass()
+{
+   return mBypass;
+}
+

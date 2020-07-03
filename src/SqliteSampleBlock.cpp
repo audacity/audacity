@@ -283,7 +283,8 @@ SqliteSampleBlock::SqliteSampleBlock(AudacityProject *project)
 
 SqliteSampleBlock::~SqliteSampleBlock()
 {
-   if (mRefCnt == 0)
+   // See ProjectFileIO::Bypass() for a description of mIO.mBypass
+   if (mRefCnt == 0 && !mIO.ShouldBypass())
    {
       Delete();
    }
@@ -320,9 +321,9 @@ size_t SqliteSampleBlock::GetSampleCount() const
 }
 
 size_t SqliteSampleBlock::GetSamples(samplePtr dest,
-                               sampleFormat destformat,
-                               size_t sampleoffset,
-                               size_t numsamples)
+                                     sampleFormat destformat,
+                                     size_t sampleoffset,
+                                     size_t numsamples)
 {
    return GetBlob(dest,
                   destformat,
@@ -333,8 +334,8 @@ size_t SqliteSampleBlock::GetSamples(samplePtr dest,
 }
 
 bool SqliteSampleBlock::SetSamples(samplePtr src,
-                             size_t numsamples,
-                             sampleFormat srcformat)
+                                   size_t numsamples,
+                                   sampleFormat srcformat)
 {
    mSampleFormat = srcformat;
 
@@ -365,24 +366,24 @@ bool SqliteSampleBlock::SetSilent(size_t numsamples, sampleFormat srcformat)
 }
 
 bool SqliteSampleBlock::GetSummary256(float *dest,
-                                size_t frameoffset,
-                                size_t numframes)
+                                      size_t frameoffset,
+                                      size_t numframes)
 {
    return GetSummary(dest, frameoffset, numframes, "summary256", mSummary256Bytes);
 }
 
 bool SqliteSampleBlock::GetSummary64k(float *dest,
-                                size_t frameoffset,
-                                size_t numframes)
+                                      size_t frameoffset,
+                                      size_t numframes)
 {
    return GetSummary(dest, frameoffset, numframes, "summary64k", mSummary64kBytes);
 }
 
 bool SqliteSampleBlock::GetSummary(float *dest,
-                             size_t frameoffset,
-                             size_t numframes,
-                             const char *srccolumn,
-                             size_t srcbytes)
+                                   size_t frameoffset,
+                                   size_t numframes,
+                                   const char *srccolumn,
+                                   size_t srcbytes)
 {
    return GetBlob(dest,
                   floatSample,
@@ -472,11 +473,11 @@ size_t SqliteSampleBlock::GetSpaceUsage() const
 }
 
 size_t SqliteSampleBlock::GetBlob(void *dest,
-                            sampleFormat destformat,
-                            const char *srccolumn,
-                            sampleFormat srcformat,
-                            size_t srcoffset,
-                            size_t srcbytes)
+                                  sampleFormat destformat,
+                                  const char *srccolumn,
+                                  sampleFormat srcformat,
+                                  size_t srcoffset,
+                                  size_t srcbytes)
 {
    auto db = mIO.DB();
 

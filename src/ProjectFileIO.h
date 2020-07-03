@@ -19,6 +19,7 @@ Paul Licameli split from AudacityProject.h
 struct sqlite3;
 
 class AudacityProject;
+class AutoCommitTransaction;
 class AutoSaveFile;
 class SqliteSampleBlock;
 class WaveTrack;
@@ -46,8 +47,6 @@ public:
    ProjectFileIO &operator=( const ProjectFileIO & ) PROHIBITED;
    ~ProjectFileIO();
 
-   bool WarnOfLegacyFile( );
-   
    // It seems odd to put this method in this class, but the results do depend
    // on what is discovered while opening the file, such as whether it is a
    // recovery file
@@ -76,8 +75,23 @@ public:
 
    wxLongLong GetFreeDiskSpace();
 
-   const TranslatableString & GetLastError() const;
-   const TranslatableString & GetLibraryError() const;
+   const TranslatableString &GetLastError() const;
+   const TranslatableString &GetLibraryError() const;
+
+   // Provides a means to bypass "DELETE"s at shutdown if the database
+   // is just going to be deleted anyway.  This prevents a noticable
+   // delay caused by SampleBlocks being deleted when the Sequences that
+   // own them are deleted.
+   //
+   // This is definitely hackage territory.  While this ability would
+   // still be needed, I think handling it in a DB abstraction might be
+   // a tad bit cleaner.
+   //
+   // For it's usage, see:
+   //    SqliteSampleBlock::~SqliteSampleBlock()
+   //    ProjectManager::OnCloseWindow()
+   void Bypass(bool bypass);
+   bool ShouldBypass();
 
 private:
    // XMLTagHandler callback methods
@@ -127,6 +141,9 @@ private:
 
    // Is this project still a temporary/unsaved project
    bool mTemporary;
+
+   // Bypass transactions if database will be deleted after close
+   bool mBypass;
 
    sqlite3 *mDB;
    FilePath mDBPath;

@@ -672,6 +672,9 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       }
    }
 
+   // See ProjectFileIO::Bypass() for a description
+   projectFileIO.Bypass(true);
+
 #ifdef __WXMAC__
    // Fix bug apparently introduced into 2.1.2 because of wxWidgets 3:
    // closing a project that was made full-screen (as by clicking the green dot
