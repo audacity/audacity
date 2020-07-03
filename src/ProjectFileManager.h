@@ -56,10 +56,10 @@ public:
 
    bool Save();
    bool SaveAs();
-   bool SaveAs(const wxString & newFileName, bool addToHistory = true);
+   bool SaveAs(const FilePath &newFileName, bool addToHistory = true);
    // strProjectPathName is full path for aup except extension
    bool SaveFromTimerRecording( wxFileName fnFile );
-   bool SaveCopy();
+   bool SaveCopy(const FilePath &fileName = wxT(""));
 
    void Reset();
 

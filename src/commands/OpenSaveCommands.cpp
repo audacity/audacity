@@ -105,3 +105,30 @@ bool SaveProjectCommand::Apply(const CommandContext &context)
    else
       return projectFileManager.SaveAs(mFileName, mbAddToHistory);
 }
+
+const ComponentInterfaceSymbol SaveCopyCommand::Symbol
+{ XO("Save Copy") };
+
+namespace{ BuiltinCommandsModule::Registration< SaveCopyCommand > reg3; }
+
+bool SaveCopyCommand::DefineParams( ShuttleParams & S ){
+   S.Define( mFileName, wxT("Filename"),  "name.aup" );
+   return true;
+}
+
+void SaveCopyCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(XXO("File Name:"),mFileName);
+   }
+   S.EndMultiColumn();
+}
+
+bool SaveCopyCommand::Apply(const CommandContext &context)
+{
+   auto &projectFileManager = ProjectFileManager::Get( context.project );
+   return projectFileManager.SaveCopy(mFileName);
+}
