@@ -46,7 +46,8 @@ static const char *ProjectFileSchema =
    "PRAGMA application_id = %d;"
    "PRAGMA user_version = %d;"
    "PRAGMA page_size = %d;"
-   "PRAGMA journal_mode = DELETE;"
+   "PRAGMA journal_mode = WAL;"
+   "PRAGMA locking_mode = EXCLUSIVE;"
    ""
    // CREATE SQL project
    // doc is a variable sized XML text string.
@@ -220,9 +221,6 @@ ProjectFileIO::~ProjectFileIO()
       // the recovery dialog upon next restart.
       if (CloseDB())
       {
-         // Always remove the journal now that the DB is closed
-         wxRemoveFile(filename + wxT("-journal"));
-
          // At this point, we are shutting down cleanly and if the project file is
          // still in the temp directory it means that the user has chosen not to
          // save it.  So, delete it.
@@ -297,10 +295,6 @@ bool ProjectFileIO::CloseDB()
       {
          SetDBError(XO("Failed to close the project file"));
       }
-      else
-      {
-         wxRemoveFile(mFileName + wxT("-journal"));
-      }
 
       mDB = nullptr;
       SetFileName({});
@@ -324,8 +318,6 @@ bool ProjectFileIO::DeleteDB()
 
             return false;
          }
-
-         wxRemoveFile(mFileName + wxT("-journal"));
       }
    }
 
@@ -345,9 +337,6 @@ bool ProjectFileIO::CleanDB()
    {
       if (CloseDB())
       {
-         // This can be removed even if we fail below since the DB is closed
-         wxRemoveFile(mFileName + wxT("-journal"));
-
          wxString tmppath = wxFileName::CreateTempFileName(mFileName + ".xxxxx");
          if (wxRename(mFileName, tmppath) == 0)
          {
@@ -377,6 +366,69 @@ bool ProjectFileIO::CleanDB()
 
    // AUD3 TODO COMPILAIN
    return false;
+}
+
+bool ProjectFileIO::TransactionStart(const wxString &name)
+{
+   char* errmsg = nullptr;
+
+   int rc = sqlite3_exec(DB(),
+                         wxT("SAVEPOINT ") + name + wxT(";"),
+                         nullptr,
+                         nullptr,
+                         &errmsg);
+
+   if (errmsg)
+   {
+      SetDBError(
+         XO("Failed to create savepoint:\n\n%s").Format(name)
+      );
+      sqlite3_free(errmsg);
+   }
+
+   return rc == SQLITE_OK;
+}
+
+bool ProjectFileIO::TransactionCommit(const wxString &name)
+{
+   char* errmsg = nullptr;
+
+   int rc = sqlite3_exec(DB(),
+                         wxT("SAVEPOINT ") + name + wxT(";"),
+                         nullptr,
+                         nullptr,
+                         &errmsg);
+
+   if (errmsg)
+   {
+      SetDBError(
+         XO("Failed to release savepoint:\n\n%s").Format(name)
+      );
+      sqlite3_free(errmsg);
+   }
+
+   return rc == SQLITE_OK;
+}
+
+bool ProjectFileIO::TransactionRollback(const wxString &name)
+{
+   char* errmsg = nullptr;
+
+   int rc = sqlite3_exec(DB(),
+                         wxT("RELEASE ") + name + wxT(";"),
+                         nullptr,
+                         nullptr,
+                         &errmsg);
+
+   if (errmsg)
+   {
+      SetDBError(
+         XO("Failed to release savepoint:\n\n%s").Format(name)
+      );
+      sqlite3_free(errmsg);
+   }
+
+   return rc == SQLITE_OK;
 }
 
 /* static */
@@ -626,9 +678,6 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
          );
          success = false;
       }
-
-      // Always delete the journal
-      wxRemoveFile(destpath + wxT("-journal"));
 
       if (!success)
       {
@@ -1101,9 +1150,9 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    bool wasTemp = false;
    bool success = false;
 
-   // Should probably simply all of the by using renames. But, one benefit
-   // of using CopyTo() for new file saves, is that it will be VACUUMED at
-   // the same time.
+   // Should probably simplify all of the following by using renames. But, one
+   // benefit of using CopyTo() for new file saves, is that it will be VACUUMED
+   // at the same time.
 
    auto restore = finally([&]
    {

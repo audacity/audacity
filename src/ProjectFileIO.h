@@ -114,6 +114,10 @@ private:
    bool DeleteDB();
    bool CleanDB();
 
+   bool TransactionStart(const wxString &name);
+   bool TransactionCommit(const wxString &name);
+   bool TransactionRollback(const wxString &name);
+
    wxString GetValue(const char *sql);
    bool GetBlob(const char *sql, wxMemoryBuffer &buffer);
 
