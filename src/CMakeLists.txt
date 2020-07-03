@@ -619,7 +619,7 @@ list( APPEND SOURCES
 
       # Standard importers
 
-      import/ImportAUP.cpp
+#      import/ImportAUP.cpp
       import/ImportLOF.cpp
       import/ImportPCM.cpp
       import/ImportPlugin.h
