@@ -10,7 +10,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectFileIO.h"
 
-#include <sqlite3.h>
+#include "Sqlite3Wrappers.h"
 #include <wx/crt.h>
 #include <wx/frame.h>
 
@@ -454,16 +454,9 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
    auto db = DB();
    int rc;
 
-   sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
-   {
-      if (stmt)
-      {
-         sqlite3_finalize(stmt);
-      }
-   });
+   sqlite3_stmt_ptr ustmt;
 
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+   rc = sqlite3_prepare_v2(db, sql, -1, &ustmt, 0);
    if (rc != SQLITE_OK)
    {
       SetDBError(
@@ -471,6 +464,7 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
       );
       return false;
    }
+   auto stmt = ustmt.get();
 
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_ROW)
@@ -983,16 +977,9 @@ bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
                     "       ON CONFLICT(id) DO UPDATE SET %sdoc = ?2;",
                     autosave.DictChanged() ? "dict = ?1, " : "");
 
-   sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
-   {
-      if (stmt)
-      {
-         sqlite3_finalize(stmt);
-      }
-   });
+   sqlite3_stmt_ptr ustmt;
 
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+   rc = sqlite3_prepare_v2(db, sql, -1, &ustmt, 0);
    if (rc != SQLITE_OK)
    {
       SetDBError(
@@ -1000,6 +987,7 @@ bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
       );
       return false;
    }
+   auto stmt = ustmt.get();
 
    const wxMemoryBuffer &dict = autosave.GetDict();
    const wxMemoryBuffer &data = autosave.GetData();
@@ -1189,18 +1177,9 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
 
 
    {
-      sqlite3_stmt* stmt = nullptr;
+      sqlite3_stmt_ptr ustmt;
 
-      auto finalize = finally([&]
-      {
-         if (stmt)
-         {
-            // This will free the statement
-            sqlite3_finalize(stmt);
-         }
-      });
-
-      rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+      rc = sqlite3_prepare_v2(db, sql, -1, &ustmt, 0);
       if (rc != SQLITE_OK)
       {
          SetDBError(
@@ -1208,6 +1187,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
          );
          return false;
       }
+      auto stmt = ustmt.get();
 
       // BIND SQL project
       rc = sqlite3_bind_text(stmt, 1, doc, -1, SQLITE_STATIC);
@@ -1298,18 +1278,9 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
                     "       ON CONFLICT(id) DO UPDATE SET doc = ?1;");
 
    {
-      sqlite3_stmt* stmt = nullptr;
+      sqlite3_stmt_ptr ustmt;
 
-      auto finalize = finally([&]
-      {
-         if (stmt)
-         {
-            // This will free the statement
-            sqlite3_finalize(stmt);
-         }
-      });
-
-      rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+      rc = sqlite3_prepare_v2(db, sql, -1, &ustmt, 0);
       if (rc != SQLITE_OK)
       {
          SetDBError(
@@ -1317,6 +1288,7 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
          );
          return false;
       }
+      auto stmt = ustmt.get();
 
       // BIND SQL project
       rc = sqlite3_bind_text(stmt, 1, doc, -1, SQLITE_STATIC);

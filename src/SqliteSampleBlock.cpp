@@ -9,7 +9,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 **********************************************************************/
 
 #include <float.h>
-#include <sqlite3.h>
+#include "Sqlite3Wrappers.h"
 
 #include "SampleFormat.h"
 #include "ProjectFileIO.h"
@@ -477,22 +477,16 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
                     srccolumn,
                     mBlockID);
 
-   sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
-   {
-      if (stmt)
-      {
-         sqlite3_finalize(stmt);
-      }
-   });
+   sqlite3_stmt_ptr ustmt;
 
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+   rc = sqlite3_prepare_v2(db, sql, -1, &ustmt, 0);
    if (rc != SQLITE_OK)
    {
       wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
    }
    else
    {
+      auto stmt = ustmt.get();
       rc = sqlite3_step(stmt);
       if (rc != SQLITE_ROW)
       {
@@ -558,22 +552,15 @@ bool SqliteSampleBlock::Load(SampleBlockID sbid)
                     "  FROM sampleblocks WHERE blockid = %lld;",
                     sbid);
 
-   sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
-   {
-      if (stmt)
-      {
-         sqlite3_finalize(stmt);
-      }
-   });
+   sqlite3_stmt_ptr ustmt;
 
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+   rc = sqlite3_prepare_v2(db, sql, -1, &ustmt, 0);
    if (rc != SQLITE_OK)
    {
       wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
    }
    else {
-      rc = sqlite3_step(stmt);
+      rc = sqlite3_step(ustmt.get());
       if (rc != SQLITE_ROW)
       {
          wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
@@ -586,6 +573,7 @@ bool SqliteSampleBlock::Load(SampleBlockID sbid)
       throw SimpleMessageBoxException{ XO("Failed to retrieve samples") };
 
    mBlockID = sbid;
+   auto stmt = ustmt.get();
    mSampleFormat = (sampleFormat) sqlite3_column_int(stmt, 0);
    mSumMin = sqlite3_column_double(stmt, 1);
    mSumMax = sqlite3_column_double(stmt, 2);
@@ -608,17 +596,10 @@ void SqliteSampleBlock::Commit()
                     sql,
                     "INSERT INTO sampleblocks (%s) VALUES(?,?,?,?,?,?,?);",
                     columns);
+   
+   sqlite3_stmt_ptr ustmt;
 
-   sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
-   {
-      if (stmt)
-      {
-         sqlite3_finalize(stmt);
-      }
-   });
-
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+   rc = sqlite3_prepare_v2(db, sql, -1, &ustmt, 0);
    if (rc != SQLITE_OK)
    {
       wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
@@ -626,6 +607,7 @@ void SqliteSampleBlock::Commit()
       // which isn't internationalized
       throw SimpleMessageBoxException{ mIO.GetLastError() };
    }
+   auto stmt = ustmt.get();
 
    // BIND SQL sampleblocks
    // Might return SQL_MISUSE which means it's our mistake that we violated
