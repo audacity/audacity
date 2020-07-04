@@ -31,8 +31,6 @@ wxDEFINE_EVENT(EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
 
 static const int ProjectFileID = ('A' << 24 | 'U' << 16 | 'D' << 8 | 'Y');
 static const int ProjectFileVersion = 1;
-static const int ProjectFilePageSize = 4096;
-
 
 // Navigation:
 //
@@ -45,7 +43,6 @@ static const int ProjectFilePageSize = 4096;
 static const char *ProjectFileSchema =
    "PRAGMA application_id = %d;"
    "PRAGMA user_version = %d;"
-   "PRAGMA page_size = %d;"
    "PRAGMA journal_mode = WAL;"
    "PRAGMA locking_mode = EXCLUSIVE;"
    ""
@@ -595,8 +592,7 @@ bool ProjectFileIO::InstallSchema()
                     sql,
                     ProjectFileSchema,
                     ProjectFileID,
-                    ProjectFileVersion,
-                    ProjectFilePageSize);
+                    ProjectFileVersion);
 
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
