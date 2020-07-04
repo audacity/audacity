@@ -458,7 +458,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
                                   size_t srcoffset,
                                   size_t srcbytes)
 {
-   auto db = mIO.DB();
+   auto &db = mIO.DB();
 
    wxASSERT(mBlockID > 0);
 
@@ -529,7 +529,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
 
 bool SqliteSampleBlock::Load(SampleBlockID sbid)
 {
-   auto db = mIO.DB();
+   auto &db = mIO.DB();
 
    wxASSERT(sbid > 0);
 
@@ -588,7 +588,7 @@ bool SqliteSampleBlock::Load(SampleBlockID sbid)
 
 void SqliteSampleBlock::Commit()
 {
-   auto db = mIO.DB();
+   auto &db = mIO.DB();
    int rc;
 
    char sql[256];
@@ -643,7 +643,7 @@ void SqliteSampleBlock::Commit()
 
 void SqliteSampleBlock::Delete()
 {
-   auto db = mIO.DB();
+   auto &db = mIO.DB();
 
    if (mBlockID)
    {

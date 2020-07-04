@@ -189,8 +189,6 @@ const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
 
 ProjectFileIO::ProjectFileIO(AudacityProject &)
 {
-   mDB = nullptr;
-
    mRecovered = false;
    mModified = false;
    mTemporary = true;
@@ -209,7 +207,7 @@ void ProjectFileIO::Init( AudacityProject &project )
 
 ProjectFileIO::~ProjectFileIO()
 {
-   if (mDB)
+   if (DBptr())
    {
       // Save the filename since CloseDB() will clear it
       wxString filename = mFileName;
@@ -233,22 +231,23 @@ ProjectFileIO::~ProjectFileIO()
    }
 }
 
-sqlite3 *ProjectFileIO::DB()
+inline sqlite3 *ProjectFileIO::DBptr()
 {
-   if (!mDB)
-   {
-      OpenDB();
-      if (!mDB)
-         throw SimpleMessageBoxException{
-            XO("Failed to open the project's database") };
-   }
-
-   return mDB;
+   return mpImpl ? mpImpl->mDB.get() : nullptr;
 }
 
-sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
+const sqlite3_wrapper &ProjectFileIO::DB()
 {
-   wxASSERT(mDB == nullptr);
+   if (!DBptr())
+      if (!OpenDB())
+         throw SimpleMessageBoxException{
+            XO("Failed to open the project's database") };
+   return *mpImpl;
+}
+
+bool ProjectFileIO::OpenDB(FilePath fileName)
+{
+   wxASSERT(!DBptr());
    bool temp = false;
 
    if (fileName.empty())
@@ -265,50 +264,49 @@ sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
       }
    }
 
-   int rc = sqlite3_open(fileName, &mDB);
+   sqlite3_ptr pDB{ nullptr, { &mLastRC } };
+   int rc = sqlite3_open(fileName, &pDB);
    if (rc != SQLITE_OK)
    {
       SetDBError(XO("Failed to open project file"));
-      // sqlite3 docs say you should close anyway to avoid leaks
-      sqlite3_close( mDB );
-      mDB = nullptr;
-      return nullptr;
+      return false;
    }
+   mpImpl = std::make_unique<sqlite3_wrapper>( std::move( pDB ) );
 
-   if (!CheckVersion())
+   if (!CheckVersion()) // Does this set an error message on all failure paths?
    {
-      CloseDB();
-      return nullptr;
+      (void) CloseDB();
+      return false;
    }
 
    mTemporary = temp;
    SetFileName(fileName);
 
-   return mDB;
+   return true;
 }
 
 bool ProjectFileIO::CloseDB()
 {
    int rc;
 
-   if (mDB)
+   if (DBptr())
    {
       if (!mTemporary)
       {
-         rc = sqlite3_exec(mDB, "VACUUM;", nullptr, nullptr, nullptr);
+         rc = sqlite3_exec(DBptr(), "VACUUM;", nullptr, nullptr, nullptr);
          if (rc != SQLITE_OK)
          {
             wxLogError(XO("Vacuuming failed while closing project file").Translation());
          }
       }
 
-      rc = sqlite3_close(mDB);
-      if (rc != SQLITE_OK)
+      mpImpl.reset(); // May set mLastRC
+      if (mLastRC != SQLITE_OK)
       {
          SetDBError(XO("Failed to close the project file"));
+         mLastRC = 0;
       }
 
-      mDB = nullptr;
       SetFileName({});
    }
 
@@ -317,7 +315,7 @@ bool ProjectFileIO::CloseDB()
 
 bool ProjectFileIO::DeleteDB()
 {
-   wxASSERT(mDB == nullptr);
+   wxASSERT(!DBptr());
 
    if (mTemporary && !mFileName.empty())
    {
@@ -447,7 +445,7 @@ wxString ProjectFileIO::GetValue(const char *sql)
 
 bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
 {
-   auto db = DB();
+   auto &db = DB();
    int rc;
 
    sqlite3_stmt_ptr ustmt;
@@ -482,7 +480,7 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
 
 bool ProjectFileIO::CheckVersion()
 {
-   auto db = DB();
+   auto &db = DB();
    int rc;
 
    // Install our schema if this is an empty DB
@@ -545,7 +543,7 @@ bool ProjectFileIO::CheckVersion()
 
 bool ProjectFileIO::InstallSchema()
 {
-   auto db = DB();
+   auto &db = DB();
    int rc;
 
    char sql[1024];
@@ -574,7 +572,7 @@ bool ProjectFileIO::UpgradeSchema()
 
 bool ProjectFileIO::CopyTo(const FilePath &destpath)
 {
-   auto db = DB();
+   auto &db = DB();
    int rc;
    bool success = false;
    bool opened = false;
@@ -654,8 +652,6 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
    // Test error from closing the DB
    if (rc != SQLITE_OK)
    {
-      // sqlite3 docs say you should close anyway to avoid leaks
-      sqlite3_close( destdb );
       SetDBError(
          XO("Failed to successfully close the destination project file:\n\n%s")
       );
@@ -971,7 +967,7 @@ bool ProjectFileIO::AutoSave(const WaveTrackArray *tracks)
 
 bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
 {
-   auto db = DB();
+   auto &db = DB();
    int rc;
 
    mModified = true;
@@ -1018,7 +1014,7 @@ bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
 
 bool ProjectFileIO::AutoSaveDelete()
 {
-   auto db = DB();
+   auto &db = DB();
    int rc;
 
    rc = sqlite3_exec(db, "DELETE FROM autosave;", nullptr, nullptr, nullptr);
@@ -1169,7 +1165,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       }
    }
 
-   auto db = DB();
+   auto &db = DB();
    int rc;
 
    XMLStringWriter doc;
@@ -1268,8 +1264,6 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
    rc = sqlite3_open(fileName, &db);
    if (rc != SQLITE_OK)
    {
-      // sqlite3 docs say you should close anyway to avoid leaks
-      sqlite3_close( db );
       SetDBError(XO("Failed to open backup file"));
       return false;
    }
@@ -1350,7 +1344,7 @@ bool ProjectFileIO::IsRecovered() const
 
 void ProjectFileIO::Reset()
 {
-   wxASSERT_MSG(mDB == nullptr, wxT("Resetting project with open project file"));
+   wxASSERT_MSG(!DBptr(), wxT("Resetting project with open project file"));
 
    mModified = false;
    mRecovered = false;
@@ -1361,7 +1355,7 @@ void ProjectFileIO::Reset()
 wxLongLong ProjectFileIO::GetFreeDiskSpace()
 {
    // make sure it's open and the path is defined
-   auto db = DB();
+   auto &db = DB();
 
    wxLongLong freeSpace;
    if (wxGetDiskSpace(wxPathOnly(mFileName), NULL, &freeSpace))
@@ -1391,9 +1385,9 @@ void ProjectFileIO::SetError(const TranslatableString &msg)
 void ProjectFileIO::SetDBError(const TranslatableString &msg)
 {
    mLastError = msg;
-   if (mDB)
+   if (DBptr())
    {
-      mLibraryError = Verbatim(sqlite3_errmsg(mDB));
+      mLibraryError = Verbatim(sqlite3_errmsg(DBptr()));
    }
 }
 

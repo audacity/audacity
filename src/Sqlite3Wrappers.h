@@ -115,4 +115,16 @@ inline int sqlite3_open(
    return result;
 }
 
+///\brief Holds a pointer to a sqlite3 database connection
+struct sqlite3_wrapper
+{
+   explicit sqlite3_wrapper( sqlite3_ptr pDB )
+      : mDB{ std::move(pDB) }
+   {}
+
+   sqlite3_ptr mDB;
+
+   operator sqlite3* () const { return mDB.get(); }
+};
+
 #endif
