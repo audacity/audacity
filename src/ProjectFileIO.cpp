@@ -1244,29 +1244,26 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
       return false;
    }
 
-   sqlite3 *db = nullptr;
    int rc;
    bool success = false;
 
    auto cleanup = finally([&]
    {
-      if (db)
-      {
-         sqlite3_close(db);
-      }
-
       if (!success)
       {
          wxRemoveFile(fileName);
       }
    });
 
-   rc = sqlite3_open(fileName, &db);
+   sqlite3_ptr udb;
+
+   rc = sqlite3_open(fileName, &udb);
    if (rc != SQLITE_OK)
    {
       SetDBError(XO("Failed to open backup file"));
       return false;
    }
+   auto db = udb.get();
 
    XMLStringWriter doc;
    WriteXMLHeader(doc);
