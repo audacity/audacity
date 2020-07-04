@@ -969,6 +969,8 @@ bool MacroCommands::ApplyMacro(
    }
 
    // Upon exit of the top level apply, roll back the state if an error occurs.
+   // This code relies on cleanup2 being defined after cleanup1, so that its
+   // destructor is run before cleanup1's destructor.
    auto cleanup2 = finally([&] {
       if (MacroReentryCount == 1 && !res && proj) {
          // Macro failed or was cancelled; revert to the previous state
