@@ -39,7 +39,7 @@ public:
 
    SampleBlockID GetBlockID() override;
 
-   size_t GetSamples(samplePtr dest,
+   size_t DoGetSamples(samplePtr dest,
                      sampleFormat destformat,
                      size_t sampleoffset,
                      size_t numsamples) override;
@@ -53,10 +53,10 @@ public:
    double GetSumRms() const;
 
    /// Gets extreme values for the specified region
-   MinMaxRMS GetMinMaxRMS(size_t start, size_t len) override;
+   MinMaxRMS DoGetMinMaxRMS(size_t start, size_t len) override;
 
    /// Gets extreme values for the entire block
-   MinMaxRMS GetMinMaxRMS() const override;
+   MinMaxRMS DoGetMinMaxRMS() const override;
 
    size_t GetSpaceUsage() const override;
    void SaveXML(XMLWriter &xmlFile) override;
@@ -302,7 +302,7 @@ size_t SqliteSampleBlock::GetSampleCount() const
    return mSampleCount;
 }
 
-size_t SqliteSampleBlock::GetSamples(samplePtr dest,
+size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
                                      sampleFormat destformat,
                                      size_t sampleoffset,
                                      size_t numsamples)
@@ -395,7 +395,7 @@ double SqliteSampleBlock::GetSumRms() const
 ///
 /// @param start The offset in this block where the region should begin
 /// @param len   The number of samples to include in the region
-MinMaxRMS SqliteSampleBlock::GetMinMaxRMS(size_t start, size_t len)
+MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS(size_t start, size_t len)
 {
    float min = FLT_MAX;
    float max = -FLT_MAX;
@@ -444,7 +444,7 @@ MinMaxRMS SqliteSampleBlock::GetMinMaxRMS(size_t start, size_t len)
 /// Retrieves the minimum, maximum, and maximum RMS of this entire
 /// block.  This is faster than the other GetMinMax function since
 /// these values are already computed.
-MinMaxRMS SqliteSampleBlock::GetMinMaxRMS() const
+MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS() const
 {
    return { (float) mSumMin, (float) mSumMax, (float) mSumRms };
 }
