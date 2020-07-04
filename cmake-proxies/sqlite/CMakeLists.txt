@@ -9,6 +9,7 @@ list( APPEND SOURCES
       # sqlite
 
       ${TARGET_ROOT}/sqlite3.c
+      ${TARGET_ROOT}/sqlite3.h
 )
 
 list( APPEND INCLUDES
