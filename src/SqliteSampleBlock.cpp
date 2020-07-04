@@ -148,14 +148,8 @@ SampleBlockPtr SqliteSampleBlockFactory::Create(
    samplePtr src, size_t numsamples, sampleFormat srcformat )
 {
    auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
-
-   if (sb)
-   {
-      if (sb->SetSamples(src, numsamples, srcformat))
-      {
-         return sb;
-      }
-   }
+   if (sb->SetSamples(src, numsamples, srcformat))
+      return sb;
 
    return nullptr;
 }
@@ -164,14 +158,8 @@ SampleBlockPtr SqliteSampleBlockFactory::CreateSilent(
    size_t numsamples, sampleFormat srcformat )
 {
    auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
-
-   if (sb)
-   {
-      if (sb->SetSilent(numsamples, srcformat))
-      {
-         return sb;
-      }
-   }
+   if (sb->SetSilent(numsamples, srcformat))
+      return sb;
 
    return nullptr;
 }
@@ -249,14 +237,8 @@ SampleBlockPtr SqliteSampleBlockFactory::CreateFromXML(
 SampleBlockPtr SqliteSampleBlockFactory::Get( SampleBlockID sbid )
 {
    auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
-
-   if (sb)
-   {
-      if (!sb->Load(sbid))
-      {
-         return nullptr;
-      }
-   }
+   if (!sb->Load(sbid))
+      return nullptr;
 
    return sb;
 }
