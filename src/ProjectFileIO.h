@@ -63,6 +63,7 @@ public:
 
    void Reset();
 
+   // AutoSave sets GetLastError() if it fails.
    bool AutoSave(const WaveTrackArray *tracks = nullptr);
    bool AutoSave(const AutoSaveFile &autosave);
    bool AutoSaveDelete();
