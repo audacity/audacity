@@ -37,6 +37,44 @@ SampleBlockFactoryPtr SampleBlockFactory::New( AudacityProject &project )
 
 SampleBlockFactory::~SampleBlockFactory() = default;
 
+SampleBlockPtr SampleBlockFactory::Get(SampleBlockID sbid)
+{
+   auto result = DoGet(sbid);
+   if (!result)
+      THROW_INCONSISTENCY_EXCEPTION;
+   return result;
+}
+
+SampleBlockPtr SampleBlockFactory::Create(samplePtr src,
+   size_t numsamples,
+   sampleFormat srcformat)
+{
+   auto result = DoCreate(src, numsamples, srcformat);
+   if (!result)
+      THROW_INCONSISTENCY_EXCEPTION;
+   return result;
+}
+
+SampleBlockPtr SampleBlockFactory::CreateSilent(
+   size_t numsamples,
+   sampleFormat srcformat)
+{
+   auto result = DoCreateSilent(numsamples, srcformat);
+   if (!result)
+      THROW_INCONSISTENCY_EXCEPTION;
+   return result;
+}
+
+SampleBlockPtr SampleBlockFactory::CreateFromXML(
+   sampleFormat srcformat,
+   const wxChar **attrs)
+{
+   auto result = DoCreateFromXML(srcformat, attrs);
+   if (!result)
+      THROW_INCONSISTENCY_EXCEPTION;
+   return result;
+}
+
 SampleBlock::~SampleBlock() = default;
 
 size_t SampleBlock::GetSamples(samplePtr dest,

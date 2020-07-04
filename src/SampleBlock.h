@@ -107,17 +107,44 @@ public:
 
    virtual ~SampleBlockFactory();
 
-   virtual SampleBlockPtr Get(SampleBlockID sbid) = 0;
+   // Returns a non-null pointer or else throws an exception
+   SampleBlockPtr Get(SampleBlockID sbid);
 
-   virtual SampleBlockPtr Create(samplePtr src,
+   // Returns a non-null pointer or else throws an exception
+   SampleBlockPtr Create(samplePtr src,
+      size_t numsamples,
+      sampleFormat srcformat);
+
+   // Returns a non-null pointer or else throws an exception
+   SampleBlockPtr CreateSilent(
+      size_t numsamples,
+      sampleFormat srcformat);
+
+   // Returns a non-null pointer or else throws an exception
+   SampleBlockPtr CreateFromXML(
+      sampleFormat srcformat,
+      const wxChar **attrs);
+
+protected:
+   // The override should throw more informative exceptions on error than the
+   // default InconsistencyException thrown by Create
+   virtual SampleBlockPtr DoGet(SampleBlockID sbid) = 0;
+
+   // The override should throw more informative exceptions on error than the
+   // default InconsistencyException thrown by Create
+   virtual SampleBlockPtr DoCreate(samplePtr src,
       size_t numsamples,
       sampleFormat srcformat) = 0;
 
-   virtual SampleBlockPtr CreateSilent(
+   // The override should throw more informative exceptions on error than the
+   // default InconsistencyException thrown by CreateSilent
+   virtual SampleBlockPtr DoCreateSilent(
       size_t numsamples,
       sampleFormat srcformat) = 0;
 
-   virtual SampleBlockPtr CreateFromXML(
+   // The override should throw more informative exceptions on error than the
+   // default InconsistencyException thrown by CreateFromXML
+   virtual SampleBlockPtr DoCreateFromXML(
       sampleFormat srcformat,
       const wxChar **attrs) = 0;
 };

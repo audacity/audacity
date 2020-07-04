@@ -29,11 +29,11 @@ public:
    void Unlock() override;
    void CloseLock() override;
 
-   bool SetSamples(samplePtr src, size_t numsamples, sampleFormat srcformat);
+   void SetSamples(samplePtr src, size_t numsamples, sampleFormat srcformat);
 
-   bool SetSilent(size_t numsamples, sampleFormat srcformat);
+   void SetSilent(size_t numsamples, sampleFormat srcformat);
 
-   bool Commit();
+   void Commit();
 
    void Delete();
 
@@ -116,17 +116,17 @@ public:
 
    ~SqliteSampleBlockFactory() override;
 
-   SampleBlockPtr Get(SampleBlockID sbid) override;
+   SampleBlockPtr DoGet(SampleBlockID sbid) override;
 
-   SampleBlockPtr Create(samplePtr src,
+   SampleBlockPtr DoCreate(samplePtr src,
       size_t numsamples,
       sampleFormat srcformat) override;
 
-   SampleBlockPtr CreateSilent(
+   SampleBlockPtr DoCreateSilent(
       size_t numsamples,
       sampleFormat srcformat) override;
 
-   SampleBlockPtr CreateFromXML(
+   SampleBlockPtr DoCreateFromXML(
       sampleFormat srcformat,
       const wxChar **attrs) override;
 
@@ -144,28 +144,24 @@ SqliteSampleBlockFactory::SqliteSampleBlockFactory( AudacityProject &project )
 
 SqliteSampleBlockFactory::~SqliteSampleBlockFactory() = default;
 
-SampleBlockPtr SqliteSampleBlockFactory::Create(
+SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
    samplePtr src, size_t numsamples, sampleFormat srcformat )
 {
    auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
-   if (sb->SetSamples(src, numsamples, srcformat))
-      return sb;
-
-   return nullptr;
+   sb->SetSamples(src, numsamples, srcformat);
+   return sb;
 }
 
-SampleBlockPtr SqliteSampleBlockFactory::CreateSilent(
+SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
    size_t numsamples, sampleFormat srcformat )
 {
    auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
-   if (sb->SetSilent(numsamples, srcformat))
-      return sb;
-
-   return nullptr;
+   sb->SetSilent(numsamples, srcformat);
+   return sb;
 }
 
 
-SampleBlockPtr SqliteSampleBlockFactory::CreateFromXML(
+SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
    sampleFormat srcformat, const wxChar **attrs )
 {
    auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
@@ -192,10 +188,8 @@ SampleBlockPtr SqliteSampleBlockFactory::CreateFromXML(
       {
          if (wxStrcmp(attr, wxT("blockid")) == 0)
          {
-            if (!sb->Load((SampleBlockID) nValue))
-            {
-               return nullptr;
-            }
+            // This may throw
+            sb->Load((SampleBlockID) nValue);
             found++;
          }
          else if (wxStrcmp(attr, wxT("samplecount")) == 0)
@@ -234,12 +228,10 @@ SampleBlockPtr SqliteSampleBlockFactory::CreateFromXML(
    return sb;
 }
 
-SampleBlockPtr SqliteSampleBlockFactory::Get( SampleBlockID sbid )
+SampleBlockPtr SqliteSampleBlockFactory::DoGet( SampleBlockID sbid )
 {
    auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
-   if (!sb->Load(sbid))
-      return nullptr;
-
+   sb->Load(sbid);
    return sb;
 }
 
@@ -268,7 +260,12 @@ SqliteSampleBlock::~SqliteSampleBlock()
    // See ProjectFileIO::Bypass() for a description of mIO.mBypass
    if (mRefCnt == 0 && !mIO.ShouldBypass())
    {
-      Delete();
+      // In case Delete throws, don't let an exception escape a destructor,
+      // but we can still enqueue the delayed handler so that an error message
+      // is presented to the user.
+      // The failure in this case may be a less harmful waste of space in the
+      // database, which should not cause aborting of the attempted edit.
+      GuardedCall( [this]{ Delete(); } );
    }
 }
 
@@ -315,7 +312,7 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
                   numsamples * SAMPLE_SIZE(mSampleFormat)) / SAMPLE_SIZE(mSampleFormat);
 }
 
-bool SqliteSampleBlock::SetSamples(samplePtr src,
+void SqliteSampleBlock::SetSamples(samplePtr src,
                                    size_t numsamples,
                                    sampleFormat srcformat)
 {
@@ -328,10 +325,10 @@ bool SqliteSampleBlock::SetSamples(samplePtr src,
 
    CalcSummary();
 
-   return Commit();
+   Commit();
 }
 
-bool SqliteSampleBlock::SetSilent(size_t numsamples, sampleFormat srcformat)
+void SqliteSampleBlock::SetSilent(size_t numsamples, sampleFormat srcformat)
 {
    mSampleFormat = srcformat;
 
@@ -344,7 +341,7 @@ bool SqliteSampleBlock::SetSilent(size_t numsamples, sampleFormat srcformat)
 
    mSilent = true;
 
-   return Commit();
+   Commit();
 }
 
 bool SqliteSampleBlock::GetSummary256(float *dest,
@@ -523,6 +520,11 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
       }
    }
 
+   if ( rc != SQLITE_ROW )
+      // Just showing the user a simple message, not the library error too
+      // which isn't internationalized
+      throw SimpleMessageBoxException{ XO("Failed to retrieve samples") };
+
    if (srcbytes - minbytes)
    {
       memset(dest, 0, srcbytes - minbytes);
@@ -569,17 +571,19 @@ bool SqliteSampleBlock::Load(SampleBlockID sbid)
    if (rc != SQLITE_OK)
    {
       wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
-      return false;
+   }
+   else {
+      rc = sqlite3_step(stmt);
+      if (rc != SQLITE_ROW)
+      {
+         wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
+      }
    }
 
-   rc = sqlite3_step(stmt);
-   if (rc != SQLITE_ROW)
-   {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
-      return false;
-   }
+   if ( rc != SQLITE_ROW )
+      // Just showing the user a simple message, not the library error too
+      // which isn't internationalized
+      throw SimpleMessageBoxException{ XO("Failed to retrieve samples") };
 
    mBlockID = sbid;
    mSampleFormat = (sampleFormat) sqlite3_column_int(stmt, 0);
@@ -592,11 +596,9 @@ bool SqliteSampleBlock::Load(SampleBlockID sbid)
    mSampleCount = mSampleBytes / SAMPLE_SIZE(mSampleFormat);
 
    mValid = true;
-
-   return true;
 }
 
-bool SqliteSampleBlock::Commit()
+void SqliteSampleBlock::Commit()
 {
    auto db = mIO.DB();
    int rc;
@@ -620,25 +622,32 @@ bool SqliteSampleBlock::Commit()
    if (rc != SQLITE_OK)
    {
       wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
-      return false;
+      // Just showing the user a simple message, not the library error too
+      // which isn't internationalized
+      throw SimpleMessageBoxException{ mIO.GetLastError() };
    }
 
    // BIND SQL sampleblocks
-   sqlite3_bind_int(stmt, 1, mSampleFormat);
-   sqlite3_bind_double(stmt, 2, mSumMin);
-   sqlite3_bind_double(stmt, 3, mSumMax);
-   sqlite3_bind_double(stmt, 4, mSumRms);
-   sqlite3_bind_blob(stmt, 5, mSummary256.get(), mSummary256Bytes, SQLITE_STATIC);
-   sqlite3_bind_blob(stmt, 6, mSummary64k.get(), mSummary64kBytes, SQLITE_STATIC);
-   sqlite3_bind_blob(stmt, 7, mSamples.get(), mSampleBytes, SQLITE_STATIC);
+   // Might return SQL_MISUSE which means it's our mistake that we violated
+   // preconditions; should return SQL_OK which is 0
+   if (
+      sqlite3_bind_int(stmt, 1, mSampleFormat) ||
+      sqlite3_bind_double(stmt, 2, mSumMin) ||
+      sqlite3_bind_double(stmt, 3, mSumMax) ||
+      sqlite3_bind_double(stmt, 4, mSumRms) ||
+      sqlite3_bind_blob(stmt, 5, mSummary256.get(), mSummary256Bytes, SQLITE_STATIC) ||
+      sqlite3_bind_blob(stmt, 6, mSummary64k.get(), mSummary64kBytes, SQLITE_STATIC) ||
+      sqlite3_bind_blob(stmt, 7, mSamples.get(), mSampleBytes, SQLITE_STATIC)
+   )
+      THROW_INCONSISTENCY_EXCEPTION;
  
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
       wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // handle error
-      return false;
+      // Just showing the user a simple message, not the library error too
+      // which isn't internationalized
+      throw SimpleMessageBoxException{ mIO.GetLastError() };
    }
 
    mBlockID = sqlite3_last_insert_rowid(db);
@@ -648,8 +657,6 @@ bool SqliteSampleBlock::Commit()
    mSummary64k.reset();
 
    mValid = true;
-
-   return true;
 }
 
 void SqliteSampleBlock::Delete()
@@ -670,8 +677,9 @@ void SqliteSampleBlock::Delete()
       if (rc != SQLITE_OK)
       {
          wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-         // handle error
-         return;
+         // Just showing the user a simple message, not the library error too
+         // which isn't internationalized
+         throw SimpleMessageBoxException{ XO("Failed to purge unused samples") };
       }
    }
 }
