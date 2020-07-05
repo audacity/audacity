@@ -473,7 +473,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    char sql[256];
    sqlite3_snprintf(sizeof(sql),
                     sql,
-                    "SELECT %s FROM sampleblocks WHERE blockid = %d;",
+                    "SELECT %s FROM sampleblocks WHERE blockid = %lld;",
                     srccolumn,
                     mBlockID);
 
@@ -555,7 +555,7 @@ bool SqliteSampleBlock::Load(SampleBlockID sbid)
                     sql,
                     "SELECT sampleformat, summin, summax, sumrms,"
                     "       length('summary256'), length('summary64k'), length('samples')"
-                    "  FROM sampleblocks WHERE blockid = %d;",
+                    "  FROM sampleblocks WHERE blockid = %lld;",
                     sbid);
 
    sqlite3_stmt *stmt = nullptr;
