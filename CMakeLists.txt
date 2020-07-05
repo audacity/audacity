@@ -23,6 +23,11 @@ endif()
 set( topdir "${CMAKE_SOURCE_DIR}" )
 set( libsrc "${topdir}/lib-src" )
 
+# Default build type is Debug
+if( NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES )
+   set( CMAKE_BUILD_TYPE "Debug" )
+endif()
+
 # Ignore COMPILE_DEFINITIONS_<Config> properties
 cmake_policy( SET CMP0043 NEW )
 
@@ -96,11 +101,25 @@ include( CMakePushCheckState )
 include( GNUInstallDirs )
 include( TestBigEndian )
 
+# Determine 32-bit or 64-bit target
+if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
+   set( IS_64BIT ON )
+elseif( NOT CMAKE_SIZEOF_VOID_P STREQUAL "4" )
+   set( IS_64BIT ON )
+endif()
+
 message( STATUS "Build Info:" )
 message( STATUS "  Host System: ${CMAKE_HOST_SYSTEM}" )
 message( STATUS "  Host System Name: ${CMAKE_HOST_SYSTEM_NAME}" )
 message( STATUS "  Host System Processor: ${CMAKE_HOST_SYSTEM_PROCESSOR}" )
 message( STATUS "  Host System Version: ${CMAKE_HOST_SYSTEM_VERSION}" )
+
+if( IS_64BIT )
+   message( STATUS "  Host System Architecture: 64-bit" )
+else()
+   message( STATUS "  Host System Architecture: 32-bit" )
+endif()
+
 message( STATUS )
 message( STATUS "  Compiler: ${CMAKE_CXX_COMPILER}" )
 message( STATUS "  Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}" )
@@ -176,22 +195,41 @@ if( CMAKE_GENERATOR MATCHES "Visual Studio" )
 endif()
 
 # Where the final product is stored
-set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/audacity )
-set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/audacity )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 
-# Set up RPATH handling
-set( CMAKE_SKIP_BUILD_RPATH FALSE )
-set( CMAKE_BUILD_WITH_INSTALL_RPATH FALSE )
-set( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/audacity" )
-set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE )
-set( CMAKE_MACOSX_RPATH FALSE )
+# Define the non-install and executable paths
+if( CMAKE_CONFIGURATION_TYPES )
+   set( _DESTDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}" )
+else()
+   set( _DESTDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}" )
+endif()
 
-# the RPATH to be used when installing, but only if it's not a system directory
-#list( FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_FULL_LIBDIR}" isSysDir )
-#if( "${isSysDir}" STREQUAL "-1" )
-#   set( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
-#endif()
+set( _DEST "${_DESTDIR}" )
+set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
+set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}" )
+set( _DATADIR "${CMAKE_INSTALL_DATADIR}" )
+set( _PKGLIB "${_LIBDIR}/audacity" )
+set( _PKGDATA "${_DATADIR}/audacity/" )
+set( _MANDIR "${CMAKE_INSTALL_MANDIR}" )
+set( _MODDIR "${_DEST}/modules" )
+set( _EXEDIR "${_DEST}" )
+
+# Setup RPATH handling
+set( CMAKE_BUILD_RPATH "${_DEST}/${_PKGLIB}" )
+set( CMAKE_BUILD_WITH_INSTALL_RPATH FALSE )
+set( CMAKE_INSTALL_RPATH "${_PREFIX}/${_PKGLIB}" )
+set( CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE )
+
+# Adjust them for the Mac
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( _APPDIR "Audacity.app/Contents" )
+   set( _DEST "${_DESTDIR}/${_APPDIR}" )
+   set( _EXEDIR "${_DEST}/MacOS" )
+   set( _MODDIR "${_DEST}/modules" )
+   set( _PKGLIB "${_DEST}/Frameworks" )
+
+   set( CMAKE_MACOSX_RPATH OFF )
+endif()
 
 # Add the math library (if found) to the list of required libraries
 check_library_exists( m pow "" HAVE_LIBM )
@@ -212,19 +250,6 @@ set( CMAKE_LINK_INTERFACE_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} )
 
 # Various common checks whose results are used by the different targets
 test_big_endian( WORDS_BIGENDIAN )
-
-# Determine 32-bit or 64-bit target
-if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
-   set( IS_64BIT ON )
-elseif( NOT CMAKE_SIZEOF_VOID_P STREQUAL "4" )
-   set( IS_64BIT ON )
-endif()
-
-if( IS_64BIT )
-   message( STATUS "Building for 64-bit target" )
-else()
-   message( STATUS "Building for 32-bit target" )
-endif()
 
 # Check for compiler flags
 if( CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang|GNU" )
@@ -333,55 +358,11 @@ check_type_size( "size_t" SIZEOF_SIZE LANGUAGE C )
 check_type_size( "wchar_t" SIZEOF_WCHAR LANGUAGE C )
 check_type_size( "void*" SIZEOF_POINTER LANGUAGE C )
 
-# Determine 32-bit or 64-bit target
-if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
-   set( IS_64BIT ON )
-elseif( NOT CMAKE_SIZEOF_VOID_P STREQUAL "4" )
-   set( IS_64BIT ON )
-endif()
-
-if( IS_64BIT )
-   message( STATUS "Building for 64-bit target" )
-else()
-   message( STATUS "Building for 32-bit target" )
-endif()
-
 # We'll be using it if it's available
 find_package( PkgConfig QUIET )
 
 # Mostly just to make the CMP0072 policy happy
 find_package( OpenGL QUIET )
-
-# Define the non-install and executable destinations
-#
-# If this is a multi-config build system (VS, Xcode), CMAKE_CFG_INTDIR
-# will (eventually) resolve to the build type, i.e., Debug, Release, etc.
-# and CMAKE_BUILD_TYPE will be empty.
-#
-# For single-config build systems, CMAKE_CFG_INTDIR will be "." and
-# CMAKE_BUILD_TYPE will be something like Debug.
-#
-# So, in either case we end up with what we want:
-#     .../bin/Debug//
-# or:
-#     .../bin//Debug
-set( _DESTDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${CMAKE_BUILD_TYPE}" )
-set( _DEST "${_DESTDIR}" )
-set( _EXEDIR "${_DEST}" )
-string( REGEX REPLACE "/+$" "" _EXEDIR "${_EXEDIR}" )
-
-# Adjust them for the Mac
-if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   set( _DEST "${_DEST}/Audacity.app/Contents" )
-   set( _EXEDIR "${_DEST}/MacOS" )
-endif()
-
-set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
-set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}/audacity" )
-set( _RPATH "\$ORIGIN/../${_LIBDIR}" )
-set( _DATADIR "${CMAKE_INSTALL_DATADIR}" )
-set( _PKGDATA "${_DATADIR}/audacity/" )
-set( _MANDIR "${CMAKE_INSTALL_MANDIR}" )
 
 # Precreate the lib and lib64 directories so we can make then the same
 if( NOT EXISTS "${CMAKE_BINARY_DIR}/lib" )

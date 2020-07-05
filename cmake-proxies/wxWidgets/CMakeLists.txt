@@ -207,6 +207,36 @@ if( "${wxTOOLKIT}" MATCHES "GTK." )
    pkg_check_modules( GLIB REQUIRED IMPORTED_TARGET GLOBAL ${glib} )
 endif()
 
+find_file( WXVERSION_H
+   NAMES
+      wx/version.h
+   PATHS
+     ${INCLUDES}
+   NO_DEFAULT_PATH
+)
+
+if( NOT WXVERSION_H )
+   message( FATAL_ERROR "wxWidgets version.h header not found" )
+endif()
+
+file(
+   STRINGS
+      "${WXVERSION_H}" output
+   REGEX
+      "^#define +wxVERSION_STRING +"
+)
+
+string( REGEX MATCHALL "\".+(Audacity).+\"" ours "${output}")
+if( NOT ours )
+   message( FATAL_ERROR
+      "\n########################################################################\n"
+      "Audacity version 3.0.0 or higher requires use of a customized version of "
+      "wxWidgets.  For details:\n"
+      "  https://wiki.audacityteam.org/wiki/Building_for_Distros\n"
+      "########################################################################\n"
+   )
+endif()
+
 target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
 target_compile_definitions( ${TARGET} INTERFACE ${DEFINES} )
 target_compile_options( ${TARGET} INTERFACE ${COPTS} )

@@ -44,11 +44,11 @@ list( APPEND LIBRARIES
       $<$<PLATFORM_ID:Windows,CYGWIN>:wxWidgets>      
 )
 
-set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_DEST}/modules" )
+set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_MODDIR}" )
 set_target_properties( ${TARGET}
    PROPERTIES
       PREFIX ""
-      FOLDER "lib-src"
+      FOLDER "modules"
 )
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
