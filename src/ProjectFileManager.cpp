@@ -580,7 +580,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
                                  wxOK | wxICON_ERROR);
          m.ShowModal();
 
-         if (!project.mBatchMode == 0)
+         if (project.mBatchMode)
          {
             return false;
          }
