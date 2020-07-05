@@ -280,7 +280,7 @@ wxString AutoSaveFile::Decode(const wxMemoryBuffer &buffer)
 
    mIds.clear();
 
-   struct Error{};
+   struct Error{}; // exception type for short-range try/catch
    auto Lookup = [&mIds]( short id ) -> const wxString &
    {
       auto iter = mIds.find( id );
@@ -318,7 +318,7 @@ wxString AutoSaveFile::Decode(const wxMemoryBuffer &buffer)
       return str;
    };
 
-   while (!in.Eof())
+   try { while (!in.Eof())
    {
       short id;
 
@@ -495,6 +495,10 @@ wxString AutoSaveFile::Decode(const wxMemoryBuffer &buffer)
             wxASSERT(true);
          break;
       }
+   } } catch( const Error& ) {
+      // Autosave was corrupt, or platform differences in size or endianness
+      // were not well canonicalized
+      return {};
    }
 
    return out;

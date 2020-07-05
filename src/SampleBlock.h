@@ -31,9 +31,9 @@ using SampleBlockID = long long;
 class MinMaxRMS
 {
 public:
-   float min;
-   float max;
-   float RMS;
+   float min = 0;
+   float max = 0;
+   float RMS = 0;
 };
 
 class SqliteSampleBlockFactory;
@@ -52,10 +52,12 @@ public:
    
    virtual SampleBlockID GetBlockID() = 0;
 
-   virtual size_t GetSamples(samplePtr dest,
+   // If !mayThrow and there is an error, ignores it and returns zero.
+   // That may be appropriate when only attempting to display samples, not edit.
+   size_t GetSamples(samplePtr dest,
                      sampleFormat destformat,
                      size_t sampleoffset,
-                     size_t numsamples) = 0;
+                     size_t numsamples, bool mayThrow = true);
 
    virtual size_t GetSampleCount() const = 0;
 
@@ -65,14 +67,29 @@ public:
       GetSummary64k(float *dest, size_t frameoffset, size_t numframes) = 0;
 
    /// Gets extreme values for the specified region
-   virtual MinMaxRMS GetMinMaxRMS(size_t start, size_t len) = 0;
+   // If !mayThrow and there is an error, ignores it and returns zeroes.
+   // That may be appropriate when only attempting to display samples, not edit.
+   MinMaxRMS GetMinMaxRMS(
+      size_t start, size_t len, bool mayThrow = true);
 
    /// Gets extreme values for the entire block
-   virtual MinMaxRMS GetMinMaxRMS() const = 0;
+   // If !mayThrow and there is an error, ignores it and returns zeroes.
+   // That may be appropriate when only attempting to display samples, not edit.
+   MinMaxRMS GetMinMaxRMS(bool mayThrow = true) const;
 
    virtual size_t GetSpaceUsage() const = 0;
 
    virtual void SaveXML(XMLWriter &xmlFile) = 0;
+
+protected:
+   virtual size_t DoGetSamples(samplePtr dest,
+                     sampleFormat destformat,
+                     size_t sampleoffset,
+                     size_t numsamples) = 0;
+
+   virtual MinMaxRMS DoGetMinMaxRMS(size_t start, size_t len) = 0;
+
+   virtual MinMaxRMS DoGetMinMaxRMS() const = 0;
 };
 
 ///\brief abstract base class with methods to produce @ref SampleBlock objects
@@ -90,17 +107,44 @@ public:
 
    virtual ~SampleBlockFactory();
 
-   virtual SampleBlockPtr Get(SampleBlockID sbid) = 0;
+   // Returns a non-null pointer or else throws an exception
+   SampleBlockPtr Get(SampleBlockID sbid);
 
-   virtual SampleBlockPtr Create(samplePtr src,
+   // Returns a non-null pointer or else throws an exception
+   SampleBlockPtr Create(samplePtr src,
+      size_t numsamples,
+      sampleFormat srcformat);
+
+   // Returns a non-null pointer or else throws an exception
+   SampleBlockPtr CreateSilent(
+      size_t numsamples,
+      sampleFormat srcformat);
+
+   // Returns a non-null pointer or else throws an exception
+   SampleBlockPtr CreateFromXML(
+      sampleFormat srcformat,
+      const wxChar **attrs);
+
+protected:
+   // The override should throw more informative exceptions on error than the
+   // default InconsistencyException thrown by Create
+   virtual SampleBlockPtr DoGet(SampleBlockID sbid) = 0;
+
+   // The override should throw more informative exceptions on error than the
+   // default InconsistencyException thrown by Create
+   virtual SampleBlockPtr DoCreate(samplePtr src,
       size_t numsamples,
       sampleFormat srcformat) = 0;
 
-   virtual SampleBlockPtr CreateSilent(
+   // The override should throw more informative exceptions on error than the
+   // default InconsistencyException thrown by CreateSilent
+   virtual SampleBlockPtr DoCreateSilent(
       size_t numsamples,
       sampleFormat srcformat) = 0;
 
-   virtual SampleBlockPtr CreateFromXML(
+   // The override should throw more informative exceptions on error than the
+   // default InconsistencyException thrown by CreateFromXML
+   virtual SampleBlockPtr DoCreateFromXML(
       sampleFormat srcformat,
       const wxChar **attrs) = 0;
 };

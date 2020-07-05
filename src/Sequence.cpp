@@ -255,7 +255,7 @@ std::pair<float, float> Sequence::GetMinMax(
    // already in memory.
 
    for (unsigned b = block0 + 1; b < block1; ++b) {
-      auto results = mBlock[b].sb->GetMinMaxRMS();
+      auto results = mBlock[b].sb->GetMinMaxRMS(mayThrow);
 
       if (results.min < min)
          min = results.min;
@@ -270,7 +270,7 @@ std::pair<float, float> Sequence::GetMinMax(
    {
       const SeqBlock &theBlock = mBlock[block0];
       const auto &theFile = theBlock.sb;
-      auto results = theFile->GetMinMaxRMS();
+      auto results = theFile->GetMinMaxRMS(mayThrow);
 
       if (results.min < min || results.max > max) {
          // start lies within theBlock:
@@ -282,7 +282,7 @@ std::pair<float, float> Sequence::GetMinMax(
          wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
          const auto l0 = limitSampleBufferSize ( maxl0, len );
 
-         results = theFile->GetMinMaxRMS(s0, l0);
+         results = theFile->GetMinMaxRMS(s0, l0, mayThrow);
          if (results.min < min)
             min = results.min;
          if (results.max > max)
@@ -294,7 +294,7 @@ std::pair<float, float> Sequence::GetMinMax(
    {
       const SeqBlock &theBlock = mBlock[block1];
       const auto &theFile = theBlock.sb;
-      auto results = theFile->GetMinMaxRMS();
+      auto results = theFile->GetMinMaxRMS(mayThrow);
 
       if (results.min < min || results.max > max) {
 
@@ -302,7 +302,7 @@ std::pair<float, float> Sequence::GetMinMax(
          const auto l0 = ( start + len - theBlock.start ).as_size_t();
          wxASSERT(l0 <= mMaxSamples); // Vaughan, 2011-10-19
 
-         results = theFile->GetMinMaxRMS(0, l0);
+         results = theFile->GetMinMaxRMS(0, l0, mayThrow);
          if (results.min < min)
             min = results.min;
          if (results.max > max)
@@ -332,7 +332,7 @@ float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
    for (unsigned b = block0 + 1; b < block1; b++) {
       const SeqBlock &theBlock = mBlock[b];
       const auto &sb = theBlock.sb;
-      auto results = sb->GetMinMaxRMS();
+      auto results = sb->GetMinMaxRMS(mayThrow);
 
       const auto fileLen = sb->GetSampleCount();
       const auto blockRMS = results.RMS;
@@ -354,7 +354,7 @@ float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
       wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
       const auto l0 = limitSampleBufferSize( maxl0, len );
 
-      auto results = sb->GetMinMaxRMS(s0, l0);
+      auto results = sb->GetMinMaxRMS(s0, l0, mayThrow);
       const auto partialRMS = results.RMS;
       sumsq += partialRMS * partialRMS * l0;
       length += l0;
@@ -368,7 +368,7 @@ float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
       const auto l0 = ( start + len - theBlock.start ).as_size_t();
       wxASSERT(l0 <= mMaxSamples); // PRL: I think Vaughan missed this
 
-      auto results = sb->GetMinMaxRMS(0, l0);
+      auto results = sb->GetMinMaxRMS(0, l0, mayThrow);
       const auto partialRMS = results.RMS;
       sumsq += partialRMS * partialRMS * l0;
       length += l0;
@@ -1036,7 +1036,7 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
    wxASSERT(blockRelativeStart + len <= sb->GetSampleCount());
 
    // Either throws, or of !mayThrow, tells how many were really read
-   auto result = sb->GetSamples(buffer, format, blockRelativeStart, len);
+   auto result = sb->GetSamples(buffer, format, blockRelativeStart, len, mayThrow);
 
    if (result != len)
    {

@@ -61,6 +61,7 @@ public:
    bool IsEmpty() const;
    bool DictChanged() const;
 
+   // Returns empty string if decoding fails
    static wxString Decode(const wxMemoryBuffer &buffer);
 
 private:
