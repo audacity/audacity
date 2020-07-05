@@ -1448,6 +1448,6 @@ void ProjectFileIO::Bypass(bool bypass)
 
 bool ProjectFileIO::ShouldBypass()
 {
-   return mBypass;
+   return mTemporary && mBypass;
 }
 
