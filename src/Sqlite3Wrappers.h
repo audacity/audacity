@@ -53,4 +53,8 @@ inline int sqlite3_prepare_v2(
    return result;
 }
 
+///\brief A smart pointer to sqlite3_backup
+using sqlite3_backup_ptr = std::unique_ptr< sqlite3_backup,
+   sqlite3_object_deleter< sqlite3_backup, sqlite3_backup_finish > >;
+
 #endif

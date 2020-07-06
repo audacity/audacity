@@ -589,15 +589,20 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
    rc = sqlite3_open(destpath, &destdb);
    if (rc == SQLITE_OK)
    {
-      sqlite3_backup *backup = sqlite3_backup_init(destdb, "main", db, "main");
-      if (backup)
+      if( auto ubackup = sqlite3_backup_ptr{
+         sqlite3_backup_init(destdb, "main", db, "main"),
+         { &rc }
+      } )
       {
+         auto backup = ubackup.get();
          /* i18n-hint: This title appears on a dialog that indicates the progress
             in doing something.*/
          ProgressDialog progress(XO("Progress"), XO("Saving project"));
 
          do
          {
+            // remaining and total are zero on the first loop pass but that
+            // doesn't matter
             int remaining = sqlite3_backup_remaining(backup);
             int total = sqlite3_backup_pagecount(backup);
 
@@ -613,21 +618,23 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
             rc = sqlite3_backup_step(backup, 12);
          } while (rc == SQLITE_OK || rc == SQLITE_BUSY || rc == SQLITE_LOCKED);
 
-         // The return code from finish() will reflect errors from step()
-         rc = sqlite3_backup_finish(backup);
-         if (rc != SQLITE_OK)
-         {
-            SetDBError(
-               XO("The copy process failed for:\n\n%s").Format(destpath)
-            );
-            success = false;
-         }
+         // Loop may end because of errors, detected below
       }
       else
       {
          SetDBError(
             XO("Unable to initiate the backup process.")
          );
+      }
+
+      // Test rc from destroying uBackup, which has any errors from
+      // sqlite3_backup_step
+      if (rc != SQLITE_OK)
+      {
+         SetDBError(
+            XO("The copy process failed for:\n\n%s").Format(destpath)
+         );
+         success = false;
       }
 
       // Close the DB
