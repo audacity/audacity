@@ -266,6 +266,9 @@ sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
    if (rc != SQLITE_OK)
    {
       SetDBError(XO("Failed to open project file"));
+      // sqlite3 docs say you should close anyway to avoid leaks
+      sqlite3_close( mDB );
+      mDB = nullptr;
       return nullptr;
    }
 
@@ -647,6 +650,8 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
    }
    else
    {
+      // sqlite3 docs say you should close anyway to avoid leaks
+      sqlite3_close( destdb );
       SetDBError(
          XO("Unable to open the destination project file:\n\n%s").Format(destpath)
       );
@@ -1272,6 +1277,8 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
    rc = sqlite3_open(fileName, &db);
    if (rc != SQLITE_OK)
    {
+      // sqlite3 docs say you should close anyway to avoid leaks
+      sqlite3_close( db );
       SetDBError(XO("Failed to open backup file"));
       return false;
    }
