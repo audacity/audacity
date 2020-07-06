@@ -138,7 +138,7 @@ WaveClip::WaveClip(const WaveClip& orig,
                    bool copyCutlines)
 {
    // essentially a copy constructor - but you must pass in the
-   // current project, because we might be copying
+   // current sample block factory, because we might be copying
    // from one project to another
 
    mOffset = orig.mOffset;

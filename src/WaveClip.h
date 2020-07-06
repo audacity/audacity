@@ -173,7 +173,8 @@ public:
 class AUDACITY_DLL_API WaveClip final : public XMLTagHandler
 {
 private:
-   // It is an error to copy a WaveClip without specifying the project.
+   // It is an error to copy a WaveClip without specifying the
+   // sample block factory.
 
    WaveClip(const WaveClip&) PROHIBITED;
    WaveClip& operator= (const WaveClip&) PROHIBITED;
@@ -184,7 +185,7 @@ public:
       int rate, int colourIndex);
 
    // essentially a copy constructor - but you must pass in the
-   // current project, because we might be copying
+   // current sample block factory, because we might be copying
    // from one project to another
    WaveClip(const WaveClip& orig,
             const SampleBlockFactoryPtr &factory,
