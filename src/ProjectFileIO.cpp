@@ -604,7 +604,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
             if (progress.Update(total - remaining, total) != ProgressResult::Success)
             {
                SetError(
-                  XO("Copy processs cancelled.")
+                  XO("Copy process cancelled.")
                );
                success = false;
                break;
