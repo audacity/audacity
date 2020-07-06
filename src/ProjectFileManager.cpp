@@ -266,7 +266,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
 
    // Always save a backup of the original project file
    wxString safetyFileName;
-   if (wxFileExists(fileName))
+   if (fromSaveAs && wxFileExists(fileName))
    {
 #ifdef __WXGTK__
       safetyFileName = fileName + wxT("~");
@@ -303,11 +303,14 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
          wxICON_ERROR,
          &window);
 
-      if (wxFileExists(fileName))
+      if (fromSaveAs)
       {
-         wxRemoveFile(fileName);
+         if (wxFileExists(fileName))
+         {
+            wxRemoveFile(fileName);
+         }
+         wxRename(safetyFileName, fileName);
       }
-      wxRename(safetyFileName, fileName);
 
       return false;
    }
@@ -330,7 +333,10 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    // If we get here, saving the project was successful, so we can DELETE
    // the .bak file (because it now does not fit our block files anymore
    // anyway).
-   wxRemoveFile(safetyFileName);
+   if (!safetyFileName.empty())
+   {
+      wxRemoveFile(safetyFileName);
+   }
 
    return true;
 }
