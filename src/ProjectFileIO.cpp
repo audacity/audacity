@@ -585,71 +585,73 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
       }
    });
    ProgressResult res = ProgressResult::Success;
-   sqlite3 *destdb = nullptr;
 
-   /* Open the database file identified by destpath. */
-   rc = sqlite3_open(destpath, &destdb);
-   if (rc != SQLITE_OK)
    {
-      SetDBError(
-         XO("Unable to open the destination project file:\n\n%s").Format(destpath)
-      );
-      return false;
-   }
-   else
-   {
-      opened = true;
-      if( auto ubackup = sqlite3_backup_ptr{
-         sqlite3_backup_init(destdb, "main", db, "main"),
-         { &rc }
-      } )
-      {
-         auto backup = ubackup.get();
-         /* i18n-hint: This title appears on a dialog that indicates the progress
-            in doing something.*/
-         ProgressDialog progress(XO("Progress"), XO("Saving project"));
+      sqlite3_ptr destdb{ nullptr, { &rc } };
 
-         do
-         {
-            // remaining and total are zero on the first loop pass but that
-            // doesn't matter
-            int remaining = sqlite3_backup_remaining(backup);
-            int total = sqlite3_backup_pagecount(backup);
-
-            if ((res = progress.Update(total - remaining, total)) != ProgressResult::Success)
-            {
-               SetError(
-                  XO("Copy process cancelled.")
-               );
-               break;
-            }
-
-            rc = sqlite3_backup_step(backup, 12);
-         } while (rc == SQLITE_OK || rc == SQLITE_BUSY || rc == SQLITE_LOCKED);
-
-         // Loop may end because of errors, detected below
-      }
-      else
-      {
-         SetDBError(
-            XO("Unable to initiate the backup process.")
-         );
-         return false;
-      }
-
-      // Test rc from destroying uBackup, which has any errors from
-      // sqlite3_backup_step
+      /* Open the database file identified by destpath. */
+      rc = sqlite3_open(destpath, &destdb);
       if (rc != SQLITE_OK)
       {
          SetDBError(
-            XO("The copy process failed for:\n\n%s").Format(destpath)
+            XO("Unable to open the destination project file:\n\n%s").Format(destpath)
          );
          return false;
       }
+      else
+      {
+         opened = true;
+         if( auto ubackup = sqlite3_backup_ptr{
+            sqlite3_backup_init(destdb.get(), "main", db, "main"),
+            { &rc }
+         } )
+         {
+            auto backup = ubackup.get();
+            /* i18n-hint: This title appears on a dialog that indicates the progress
+               in doing something.*/
+            ProgressDialog progress(XO("Progress"), XO("Saving project"));
+
+            do
+            {
+               // remaining and total are zero on the first loop pass but that
+               // doesn't matter
+               int remaining = sqlite3_backup_remaining(backup);
+               int total = sqlite3_backup_pagecount(backup);
+
+               if ((res = progress.Update(total - remaining, total)) != ProgressResult::Success)
+               {
+                  SetError(
+                     XO("Copy process cancelled.")
+                  );
+                  break;
+               }
+
+               rc = sqlite3_backup_step(backup, 12);
+            } while (rc == SQLITE_OK || rc == SQLITE_BUSY || rc == SQLITE_LOCKED);
+
+            // Loop may end because of errors, detected below
+         }
+         else
+         {
+            SetDBError(
+               XO("Unable to initiate the backup process.")
+            );
+            return false;
+         }
+
+         // Test rc from destroying uBackup, which has any errors from
+         // sqlite3_backup_step
+         if (rc != SQLITE_OK)
+         {
+            SetDBError(
+               XO("The copy process failed for:\n\n%s").Format(destpath)
+            );
+            return false;
+         }
+      }
    }
 
-   // Close the DB
-   rc = sqlite3_close(destdb);
+   // Test error from closing the DB
    if (rc != SQLITE_OK)
    {
       // sqlite3 docs say you should close anyway to avoid leaks

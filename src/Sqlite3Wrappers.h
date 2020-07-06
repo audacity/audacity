@@ -96,4 +96,23 @@ inline int sqlite3_exec(
    return ::sqlite3_exec(db, zSql, xCallback, pArg, p);
 }
 
+///\brief A smart pointer to sqlite3
+using sqlite3_ptr = std::unique_ptr< sqlite3,
+   sqlite3_object_deleter< sqlite3, sqlite3_close > >;
+
+///\brief a C++ overload of the sqlite3 library function, it assigns a
+/// smart @ref sqlite3_ptr
+/// Note that sqlite3 documentation says that there may be memory resources
+/// to clean up, even if sqlite3_open returns an error
+inline int sqlite3_open(
+  const char *zFilename,
+  sqlite3_ptr *ppDb
+)
+{
+   sqlite3 *ptr = nullptr;
+   auto result = ::sqlite3_open(zFilename, &ptr);
+   ppDb->reset( ptr );
+   return result;
+}
+
 #endif
