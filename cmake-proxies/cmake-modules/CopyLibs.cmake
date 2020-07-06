@@ -8,7 +8,6 @@
 #
 message( "==================================================================" )
 message( "Copying wxWidgets libraries:" )
-message( "${SRC} ${DST}" )
 message( "==================================================================" )
 
 # list command no longer ignores empty elements.
@@ -62,7 +61,7 @@ function( gather_libs src )
       foreach( line ${output} )
          if( line MATCHES "^.*libwx.*\\.dylib " )
             string( REGEX REPLACE "dylib .*" "dylib" line "${line}" )
-            if( NOT line STREQUAL "${src}" )
+            if( NOT line STREQUAL "${src}" AND NOT line MATCHES "@executable" )
                set( lib ${line} )
 
                list( APPEND libs ${lib} )
@@ -75,7 +74,9 @@ function( gather_libs src )
          endif()
       endforeach()
    elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" )
-      execute( output ldd ${src} )
+      execute( output sh -c "LD_LIBRARY_PATH='${WXWIN}' ldd ${src}" )
+
+      get_filename_component( libname "${src}" NAME )
 
       foreach( line ${output} )
          if( line MATCHES ".*libwx.*" )

@@ -61,6 +61,14 @@ if( wxWidgets_FOUND )
          >
    )
 
+   set( WXWIN $ENV{WXWIN} CACHE INTERNAL "" )
+   if( WXWIN )
+      string( APPEND WXWIN "/lib" )
+   else()
+      set( WXWIN "${wxWidgets_LIBRARY_DIRS}" )
+   endif()
+   set( WXWIN "${WXWIN}" CACHE INTERNAL "" )
+
    set( toolkit "${wxWidgets_LIBRARIES}" )
 else()
    message( STATUS "Using local '${name}' library" )

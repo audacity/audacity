@@ -1264,6 +1264,7 @@ else()
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/audacity"
                           -D DST="${_DEST}/${_PKGLIB}"
+                          -D WXWIN="${WXWIN}"
                           -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
