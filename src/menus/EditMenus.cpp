@@ -85,23 +85,16 @@ bool DoPasteNothingSelected(AudacityProject &project)
    else
    {
       const auto &clipboard = Clipboard::Get();
-      auto clipboardProject = clipboard.Project().lock();
       auto clipTrackRange = clipboard.GetTracks().Any< const Track >();
       if (clipTrackRange.empty())
          return true; // nothing to paste
 
       Track* pFirstNewTrack = NULL;
       for (auto pClip : clipTrackRange) {
-         Optional<WaveTrack::Locker> locker;
-
          Track::Holder uNewTrack;
          Track *pNewTrack;
          pClip->TypeSwitch(
             [&](const WaveTrack *wc) {
-               if ((clipboardProject.get() != &project))
-                  // Cause duplication of block files on disk, when copy is
-                  // between projects
-                  locker.emplace(wc);
                uNewTrack = wc->EmptyCopy();
                pNewTrack = uNewTrack.get();
             },
@@ -416,7 +409,6 @@ void OnPaste(const CommandContext &context)
 
    auto pC = clipTrackRange.begin();
    size_t nnChannels=0, ncChannels=0;
-   auto clipboardProject = clipboard.Project().lock();
    while (*pN && *pC) {
       auto n = *pN;
       auto c = *pC;
@@ -504,15 +496,9 @@ void OnPaste(const CommandContext &context)
             ff = n;
          
          wxASSERT( n && c && n->SameKindAs(*c) );
-         Optional<WaveTrack::Locker> locker;
-
          n->TypeSwitch(
             [&](WaveTrack *wn){
                const auto wc = static_cast<const WaveTrack *>(c);
-               if (clipboardProject.get() != &project)
-                  // Cause duplication of block files on disk, when copy is
-                  // between projects
-                  locker.emplace(wc);
                bPastedSomething = true;
                wn->ClearAndPaste(t0, t1, wc, true, true);
             },
@@ -547,7 +533,6 @@ void OnPaste(const CommandContext &context)
             n->TypeSwitch(
                [&](WaveTrack *wn){
                   bPastedSomething = true;
-                  // Note:  rely on locker being still be in scope!
                   wn->ClearAndPaste(t0, t1, c, true, true);
                },
                [&](Track *){
@@ -582,11 +567,6 @@ void OnPaste(const CommandContext &context)
    {
       const auto wc =
          *clipboard.GetTracks().Any< const WaveTrack >().rbegin();
-      Optional<WaveTrack::Locker> locker;
-      if (clipboardProject.get() != &project && wc)
-         // Cause duplication of block files on disk, when copy is
-         // between projects
-         locker.emplace(static_cast<const WaveTrack*>(wc));
 
       tracks.Any().StartingWith(*pN).Visit(
          [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {

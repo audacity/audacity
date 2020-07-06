@@ -328,12 +328,7 @@ public:
    /// Offset cutlines right to time 't0' by time amount 'len'
    void OffsetCutLines(double t0, double len);
 
-   /// Lock all blockfiles
-   void Lock();
-   /// Unlock all blockfiles
-   void Unlock();
-
-   void CloseLock(); //similar to Lock but should be called when the project closes.
+   void CloseLock(); //should be called when the project closes.
    // not balanced by unlocking calls.
 
    ///Delete the wave cache - force redraw.  Thread-safe

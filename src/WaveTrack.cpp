@@ -1699,27 +1699,10 @@ bool WaveTrack::GetErrorOpening()
    return false;
 }
 
-bool WaveTrack::Lock() const
-{
-   for (const auto &clip : mClips)
-      clip->Lock();
-
-   return true;
-}
-
 bool WaveTrack::CloseLock()
 {
    for (const auto &clip : mClips)
       clip->CloseLock();
-
-   return true;
-}
-
-
-bool WaveTrack::Unlock() const
-{
-   for (const auto &clip : mClips)
-      clip->Unlock();
 
    return true;
 }

@@ -125,10 +125,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // for details.
    //
 
-   bool Lock();
-   bool Unlock();
-
-   bool CloseLock();//similar to Lock but should be called upon project close.
+   bool CloseLock();//should be called upon project close.
    // not balanced by unlocking calls.
 
    //

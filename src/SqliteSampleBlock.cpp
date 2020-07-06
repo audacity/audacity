@@ -25,8 +25,6 @@ public:
    explicit SqliteSampleBlock(AudacityProject *project);
    ~SqliteSampleBlock() override;
 
-   void Lock() override;
-   void Unlock() override;
    void CloseLock() override;
 
    void SetSamples(samplePtr src, size_t numsamples, sampleFormat srcformat);
@@ -83,7 +81,7 @@ private:
    bool mValid;
    bool mDirty;
    bool mSilent;
-   int mRefCnt;
+   bool mLocked = false;
 
    SampleBlockID mBlockID;
 
@@ -240,7 +238,6 @@ SqliteSampleBlock::SqliteSampleBlock(AudacityProject *project)
 {
    mValid = false;
    mSilent = false;
-   mRefCnt = 0;
 
    mBlockID = 0;
 
@@ -258,7 +255,7 @@ SqliteSampleBlock::SqliteSampleBlock(AudacityProject *project)
 SqliteSampleBlock::~SqliteSampleBlock()
 {
    // See ProjectFileIO::Bypass() for a description of mIO.mBypass
-   if (mRefCnt == 0 && !mIO.ShouldBypass())
+   if (!mLocked && !mIO.ShouldBypass())
    {
       // In case Delete throws, don't let an exception escape a destructor,
       // but we can still enqueue the delayed handler so that an error message
@@ -269,19 +266,9 @@ SqliteSampleBlock::~SqliteSampleBlock()
    }
 }
 
-void SqliteSampleBlock::Lock()
-{
-   ++mRefCnt;
-}
-
-void SqliteSampleBlock::Unlock()
-{
-   --mRefCnt;
-}
-
 void SqliteSampleBlock::CloseLock()
 {
-   Lock();
+   mLocked = true;
 }
 
 SampleBlockID SqliteSampleBlock::GetBlockID()
