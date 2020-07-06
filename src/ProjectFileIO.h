@@ -109,7 +109,11 @@ private:
    static int ExecCallback(void *data, int cols, char **vals, char **names);
    int Exec(const char *query, ExecCB callback, wxString *result);
 
+   // The opening of the database may be delayed until demanded.
+   // Returns a non-null pointer to an open database, or throws an exception
+   // if opening fails.
    sqlite3 *DB();
+
    sqlite3 *OpenDB(FilePath fileName = {});
    bool CloseDB();
    bool DeleteDB();

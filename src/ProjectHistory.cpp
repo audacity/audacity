@@ -75,6 +75,15 @@ bool ProjectHistory::RedoAvailable() const
       !tracks.HasPendingTracks();
 }
 
+namespace {
+   void AutoSaveOrThrow( ProjectFileIO &projectFileIO )
+   {
+      if ( !projectFileIO.AutoSave() )
+         throw SimpleMessageBoxException{
+            XO("Automatic database backup failed.") };
+   }
+}
+
 void ProjectHistory::PushState(
    const TranslatableString &desc, const TranslatableString &shortDesc)
 {
@@ -87,6 +96,10 @@ void ProjectHistory::PushState(const TranslatableString &desc,
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
+   if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
+      AutoSaveOrThrow( projectFileIO );
+
+   // remaining no-fail operations "commit" the changes of undo manager state
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
@@ -96,9 +109,6 @@ void ProjectHistory::PushState(const TranslatableString &desc,
       desc, shortDesc, flags);
 
    mDirty = true;
-
-   if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
-      projectFileIO.AutoSave();
 }
 
 void ProjectHistory::RollbackState()
@@ -112,14 +122,16 @@ void ProjectHistory::ModifyState(bool bWantsAutoSave)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
+   if (bWantsAutoSave)
+      AutoSaveOrThrow( projectFileIO );
+
+   // remaining no-fail operations "commit" the changes of undo manager state
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &tags = Tags::Get( project );
    undoManager.ModifyState(
       &tracks, viewInfo.selectedRegion, tags.shared_from_this());
-   if (bWantsAutoSave)
-      projectFileIO.AutoSave();
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
@@ -129,6 +141,9 @@ void ProjectHistory::PopState(const UndoState &state)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
+   AutoSaveOrThrow( projectFileIO );
+
+   // remaining no-fail operations "commit" the changes of undo manager state
    auto &dstTracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
@@ -146,7 +161,6 @@ void ProjectHistory::PopState(const UndoState &state)
       dstTracks.Add(t->Duplicate());
    }
 
-   projectFileIO.AutoSave();
 }
 
 void ProjectHistory::SetStateTo(unsigned int n)
