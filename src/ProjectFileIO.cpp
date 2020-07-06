@@ -235,12 +235,15 @@ ProjectFileIO::~ProjectFileIO()
 
 sqlite3 *ProjectFileIO::DB()
 {
-   if (mDB)
+   if (!mDB)
    {
-      return mDB;
+      OpenDB();
+      if (!mDB)
+         throw SimpleMessageBoxException{
+            XO("Failed to open the project's database") };
    }
 
-   return OpenDB();
+   return mDB;
 }
 
 sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
