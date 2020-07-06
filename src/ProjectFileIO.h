@@ -113,7 +113,6 @@ private:
    sqlite3 *OpenDB(FilePath fileName = {});
    bool CloseDB();
    bool DeleteDB();
-   bool CleanDB();
 
    bool TransactionStart(const wxString &name);
    bool TransactionCommit(const wxString &name);

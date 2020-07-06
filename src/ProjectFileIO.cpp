@@ -287,6 +287,15 @@ bool ProjectFileIO::CloseDB()
 
    if (mDB)
    {
+      if (!mTemporary)
+      {
+         rc = sqlite3_exec(mDB, "VACUUM;", nullptr, nullptr, nullptr);
+         if (rc != SQLITE_OK)
+         {
+            wxLogError(XO("Vacuuming failed while closing project file").Translation());
+         }
+      }
+
       rc = sqlite3_close(mDB);
       if (rc != SQLITE_OK)
       {
@@ -319,50 +328,6 @@ bool ProjectFileIO::DeleteDB()
    }
 
    return true;
-}
-
-bool ProjectFileIO::CleanDB()
-{
-   auto db = DB();
-   int rc;
-
-   AutoSave();
-
-   wxString destpath = wxFileName::CreateTempFileName(mFileName + ".xxxxx");
-
-   if (CopyTo(destpath))
-   {
-      if (CloseDB())
-      {
-         wxString tmppath = wxFileName::CreateTempFileName(mFileName + ".xxxxx");
-         if (wxRename(mFileName, tmppath) == 0)
-         {
-            if (wxRename(destpath, mFileName) == 0)
-            {
-               wxRemoveFile(tmppath);
-
-               // Success
-               return true;
-            }
-
-            if (wxRename(tmppath, mFileName) == 0)
-            {
-               wxRemoveFile(destpath);
-            }
-            else
-            {
-               SetError(XO("Could not rename %s back to %s during cleaning").Format(tmppath, mFileName));
-            }
-         }
-         else
-         {
-            SetError(XO("Could not rename %s during cleaning").Format(mFileName));
-         }
-      }
-   }
-
-   // AUD3 TODO COMPILAIN
-   return false;
 }
 
 bool ProjectFileIO::TransactionStart(const wxString &name)
@@ -1259,6 +1224,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    // We need to remove the autosave info from the file since it is now
    // clean and unmodified.  Otherwise, it would be considered "recovered"
    // when next opened.
+
    AutoSaveDelete();
 
    // No longer modified
