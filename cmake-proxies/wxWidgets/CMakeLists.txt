@@ -61,7 +61,7 @@ if( wxWidgets_FOUND )
          >
    )
 
-   set( WXWIN $ENV{WXWIN} CACHE INTERNAL "" )
+#   set( WXWIN $ENV{WXWIN} CACHE INTERNAL "" )
    if( WXWIN )
       string( APPEND WXWIN "/lib" )
    else()
