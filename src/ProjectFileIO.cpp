@@ -576,15 +576,29 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
 {
    auto db = DB();
    int rc;
-   bool success = true;
+   bool success = false;
+   bool opened = false;
+   auto cleanup = finally([&]{
+      if (opened && !success)
+      {
+         wxRemoveFile(destpath);
+      }
+   });
    ProgressResult res = ProgressResult::Success;
-
    sqlite3 *destdb = nullptr;
 
-   /* Open the database file identified by zFilename. */
+   /* Open the database file identified by destpath. */
    rc = sqlite3_open(destpath, &destdb);
-   if (rc == SQLITE_OK)
+   if (rc != SQLITE_OK)
    {
+      SetDBError(
+         XO("Unable to open the destination project file:\n\n%s").Format(destpath)
+      );
+      return false;
+   }
+   else
+   {
+      opened = true;
       if( auto ubackup = sqlite3_backup_ptr{
          sqlite3_backup_init(destdb, "main", db, "main"),
          { &rc }
@@ -602,12 +616,11 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
             int remaining = sqlite3_backup_remaining(backup);
             int total = sqlite3_backup_pagecount(backup);
 
-            if (progress.Update(total - remaining, total) != ProgressResult::Success)
+            if ((res = progress.Update(total - remaining, total)) != ProgressResult::Success)
             {
                SetError(
                   XO("Copy process cancelled.")
                );
-               success = false;
                break;
             }
 
@@ -621,6 +634,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
          SetDBError(
             XO("Unable to initiate the backup process.")
          );
+         return false;
       }
 
       // Test rc from destroying uBackup, which has any errors from
@@ -630,33 +644,22 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
          SetDBError(
             XO("The copy process failed for:\n\n%s").Format(destpath)
          );
-         success = false;
-      }
-
-      // Close the DB
-      rc = sqlite3_close(destdb);
-      if (rc != SQLITE_OK)
-      {
-         SetDBError(
-            XO("Failed to successfully close the destination project file:\n\n%s")
-         );
-         success = false;
-      }
-
-      if (!success)
-      {
-         wxRemoveFile(destpath);
+         return false;
       }
    }
-   else
+
+   // Close the DB
+   rc = sqlite3_close(destdb);
+   if (rc != SQLITE_OK)
    {
       // sqlite3 docs say you should close anyway to avoid leaks
       sqlite3_close( destdb );
       SetDBError(
-         XO("Unable to open the destination project file:\n\n%s").Format(destpath)
+         XO("Failed to successfully close the destination project file:\n\n%s")
       );
-      success = false;
    }
+   else
+      success = (res == ProgressResult::Success);
 
    return success;
 }
