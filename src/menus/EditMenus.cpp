@@ -76,6 +76,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
+   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
@@ -95,7 +96,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
          Track *pNewTrack;
          pClip->TypeSwitch(
             [&](const WaveTrack *wc) {
-               uNewTrack = wc->EmptyCopy();
+               uNewTrack = wc->EmptyCopy( pSampleBlockFactory );
                pNewTrack = uNewTrack.get();
             },
 #ifdef USE_MIDI
@@ -374,6 +375,7 @@ void OnPaste(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
+   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -578,7 +580,7 @@ void OnPaste(const CommandContext &context)
                wt->ClearAndPaste(t0, t1, wc, true, true);
             }
             else {
-               auto tmp = wt->EmptyCopy();
+               auto tmp = wt->EmptyCopy( pSampleBlockFactory );
                tmp->InsertSilence( 0.0,
                   // MJS: Is this correct?
                   clipboard.Duration() );

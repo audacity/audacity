@@ -1581,6 +1581,9 @@ class AUDACITY_DLL_API TrackFactory final
    TrackFactory( const TrackFactory & ) PROHIBITED;
    TrackFactory &operator=( const TrackFactory & ) PROHIBITED;
 
+   const SampleBlockFactoryPtr &GetSampleBlockFactory() const
+   { return mpFactory; }
+
  private:
    const ProjectSettings &mSettings;
    SampleBlockFactoryPtr mpFactory;
