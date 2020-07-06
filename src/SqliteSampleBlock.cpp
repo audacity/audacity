@@ -22,7 +22,7 @@ class SqliteSampleBlock final : public SampleBlock
 {
 public:
 
-   explicit SqliteSampleBlock(AudacityProject *project);
+   explicit SqliteSampleBlock(ProjectFileIO &io);
    ~SqliteSampleBlock() override;
 
    void CloseLock() override;
@@ -129,13 +129,11 @@ public:
       const wxChar **attrs) override;
 
 private:
-   AudacityProject &mProject;
    std::shared_ptr<ProjectFileIO> mpIO;
 };
 
 SqliteSampleBlockFactory::SqliteSampleBlockFactory( AudacityProject &project )
-   : mProject{ project }
-   , mpIO{ ProjectFileIO::Get(project).shared_from_this() }
+   : mpIO{ ProjectFileIO::Get(project).shared_from_this() }
 {
    
 }
@@ -145,7 +143,7 @@ SqliteSampleBlockFactory::~SqliteSampleBlockFactory() = default;
 SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
    samplePtr src, size_t numsamples, sampleFormat srcformat )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
+   auto sb = std::make_shared<SqliteSampleBlock>(*mpIO);
    sb->SetSamples(src, numsamples, srcformat);
    return sb;
 }
@@ -153,7 +151,7 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
 SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
    size_t numsamples, sampleFormat srcformat )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
+   auto sb = std::make_shared<SqliteSampleBlock>(*mpIO);
    sb->SetSilent(numsamples, srcformat);
    return sb;
 }
@@ -162,7 +160,7 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
 SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
    sampleFormat srcformat, const wxChar **attrs )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
+   auto sb = std::make_shared<SqliteSampleBlock>(*mpIO);
    sb->mSampleFormat = srcformat;
 
    int found = 0;
@@ -228,13 +226,13 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
 
 SampleBlockPtr SqliteSampleBlockFactory::DoGet( SampleBlockID sbid )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(&mProject);
+   auto sb = std::make_shared<SqliteSampleBlock>(*mpIO);
    sb->Load(sbid);
    return sb;
 }
 
-SqliteSampleBlock::SqliteSampleBlock(AudacityProject *project)
-:  mIO(ProjectFileIO::Get(*project))
+SqliteSampleBlock::SqliteSampleBlock(ProjectFileIO &io)
+:  mIO(io)
 {
    mValid = false;
    mSilent = false;
