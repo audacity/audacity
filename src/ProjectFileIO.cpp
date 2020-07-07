@@ -1060,8 +1060,13 @@ bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
    const wxMemoryBuffer &data = autosave.GetData();
 
    // BIND SQL autosave
-   sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC);
-   sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC);
+   // Might return SQL_MISUSE which means it's our mistake that we violated
+   // preconditions; should return SQL_OK which is 0
+   if (
+      sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC) ||
+      sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC)
+   )
+      THROW_INCONSISTENCY_EXCEPTION;
 
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
