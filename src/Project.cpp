@@ -47,6 +47,7 @@ auto AllProjects::rend() const -> const_reverse_iterator
 
 auto AllProjects::Remove( AudacityProject &project ) -> value_type
 {
+   std::lock_guard<std::mutex> guard{ Mutex() };
    auto start = begin(), finish = end(), iter = std::find_if(
       start, finish,
       [&]( const value_type &ptr ){ return ptr.get() == &project; }
@@ -60,6 +61,7 @@ auto AllProjects::Remove( AudacityProject &project ) -> value_type
 
 void AllProjects::Add( const value_type &pProject )
 {
+   std::lock_guard<std::mutex> guard{ Mutex() };
    gAudacityProjects.push_back( pProject );
 }
 
@@ -83,6 +85,12 @@ bool AllProjects::Close( bool force )
       }
    }
    return true;
+}
+
+std::mutex &AllProjects::Mutex()
+{
+   static std::mutex theMutex;
+   return theMutex;
 }
 
 int AudacityProject::mProjectCounter=0;// global counter.

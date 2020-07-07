@@ -16,6 +16,7 @@
 #include "ClientData.h" // to inherit
 
 #include <memory>
+#include <mutex>
 #include <wx/weakref.h> // member variable
 #include <wx/window.h> // MSVC wants this
 
@@ -62,6 +63,10 @@ public:
 
    // This invalidates iterators
    void Add( const value_type &pProject );
+
+   /// In case you must iterate in a non-main thread, use this to prevent
+   /// changes in the set of open projects
+   static std::mutex &Mutex();
 
    // Return true if all projects do close (always so if force == true)
    // But if return is false, that means the user cancelled close of at least

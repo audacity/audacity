@@ -191,6 +191,8 @@ list( APPEND SOURCES
       Prefs.h
       Printing.cpp
       Printing.h
+      Profiler.cpp
+      Profiler.h
       Project.cpp
       Project.h
       ProjectAudioIO.cpp

@@ -320,6 +320,8 @@ static OSType sf_header_mactype(int format)
 
 #endif // __WXMAC__
 
+//std::mutex libSndFileMutex;
+
 int SFFileCloser::operator() (SNDFILE *sf) const
 {
    auto err = SFCall<int>(sf_close, sf);

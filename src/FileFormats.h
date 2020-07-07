@@ -15,6 +15,7 @@
 
 #include "audacity/Types.h"
 
+//#include <mutex>
 #include "MemoryX.h"
 
 #include "sndfile.h"
@@ -105,9 +106,16 @@ extern FileExtensions sf_get_all_extensions();
 
 wxString sf_normalize_name(const char *name);
 
+
+// This function wrapper uses a mutex to serialize calls to the SndFile library.
+// PRL: Keeping this in a comment, but with Unitary, the only remaining uses
+// of libsndfile should be in import/export and so are on the main thread only
+//extern std::mutex libSndFileMutex;
+
 template<typename R, typename F, typename... Args>
 inline R SFCall(F fun, Args&&... args)
 {
+   //std::lock_guard<std::mutex> guard{ libSndFileMutex };
    return fun(std::forward<Args>(args)...);
 }
 
