@@ -733,6 +733,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          TrackList::Get( *p ).GroupChannels(*first, recordingChannels);
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(*p).Set(first);
+         if (TrackList::Get(*p).back())
+            TrackList::Get(*p).back()->EnsureVisible();
       }
 
       //Automated Input Level Adjustment Initialization
