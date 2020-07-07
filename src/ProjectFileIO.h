@@ -114,6 +114,16 @@ private:
    // if opening fails.
    sqlite3 *DB();
 
+   // Put the current database connection aside, keeping it open, so that
+   // another may be opened with OpenDB()
+   void SaveConnection();
+
+   // Close any set-aside connection
+   void DiscardConnection();
+
+   // Close any current connection and switch back to using the saved
+   void RestoreConnection();
+
    sqlite3 *OpenDB(FilePath fileName = {});
    bool CloseDB();
    bool DeleteDB();
@@ -153,6 +163,7 @@ private:
    // Bypass transactions if database will be deleted after close
    bool mBypass;
 
+   sqlite3 *mPrevDB;
    sqlite3 *mDB;
    FilePath mDBPath;
    TranslatableString mLastError;

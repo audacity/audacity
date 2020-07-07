@@ -189,6 +189,7 @@ const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
 
 ProjectFileIO::ProjectFileIO(AudacityProject &)
 {
+   mPrevDB = nullptr;
    mDB = nullptr;
 
    mRecovered = false;
@@ -244,6 +245,51 @@ sqlite3 *ProjectFileIO::DB()
    }
 
    return mDB;
+}
+
+// Put the current database connection aside, keeping it open, so that
+// another may be opened with OpenDB()
+void ProjectFileIO::SaveConnection()
+{
+   // Should do nothing in proper usage, but be sure not to leak a connection:
+   DiscardConnection();
+
+   mPrevDB = mDB;
+   mDB = nullptr;
+}
+
+// Close any set-aside connection
+void ProjectFileIO::DiscardConnection()
+{
+   if ( mPrevDB )
+   {
+      auto rc = sqlite3_close( mPrevDB );
+      if ( rc != SQLITE_OK )
+      {
+         // Store an error message
+         SetDBError(
+            XO("Failed to successfully close the source project file")
+         );
+      }
+      mPrevDB = nullptr;
+   }
+}
+
+// Close any current connection and switch back to using the saved
+void ProjectFileIO::RestoreConnection()
+{
+   if ( mDB )
+   {
+      auto rc = sqlite3_close( mDB );
+      if ( rc != SQLITE_OK )
+      {
+         // Store an error message
+         SetDBError(
+            XO("Failed to successfully close the destination project file")
+         );
+      }
+   }
+   mDB = mPrevDB;
 }
 
 sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
@@ -1129,24 +1175,25 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       {
          if (success)
          {
-            // The Save was successful, so remove the original file if
-            // it was a temporary file
+            // The Save was successful, so now it is safe to abandon the
+            // original connection
+            DiscardConnection();
+         
+            // And also remove the original file if it was a temporary file
             if (wasTemp)
             {
                wxRemoveFile(origName);
             }
+
          }
          else
          {
-            // Close the new database
-            CloseDB();
+            // Close the new database and go back to using the original
+            // connection
+            RestoreConnection();
 
-            // Reopen the original database
-            if (OpenDB(origName))
-            {
-               // And delete the new database
-               wxRemoveFile(fileName);
-            }
+            // And delete the new database
+            wxRemoveFile(fileName);
          }
       }
    });
@@ -1166,8 +1213,9 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       origName = mFileName;
       wasTemp = mTemporary;
 
-      // Close the original project file and open the new one
-      if (!CloseDB() || !OpenDB(fileName))
+      // Save the original database connection and try to switch to a new one
+      SaveConnection();
+      if (!OpenDB(fileName))
       {
          return false;
       }
