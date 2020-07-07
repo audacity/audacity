@@ -119,6 +119,22 @@ public:
    SQLiteIniter()
    {
       mRc = sqlite3_initialize();
+
+#if !defined(__WXMSW__)
+      if (mRc == SQLITE_OK)
+      {
+         // Use the "unix-excl" VFS to make access to the DB exclusive.  This gets
+         // rid of the "<dbname>-shm" shared memory file.
+         //
+         // Though it shouldn't, it doesn't matter if this fails.
+         auto vfs = sqlite3_vfs_find("unix-excl");
+         if (vfs)
+         {
+            sqlite3_vfs_register(vfs, 1);
+         }
+      }
+#endif
+
    }
    ~SQLiteIniter()
    {
@@ -214,16 +230,6 @@ void ProjectFileIO::Init( AudacityProject &project )
    // This step can't happen in the ctor of ProjectFileIO because ctor of
    // AudacityProject wasn't complete
    mpProject = project.shared_from_this();
-
-#if !defined(__WXMSW__)
-   // Use the "unix-excl" VFS to make access to the DB exclusive.  This gets
-   // rid of the "<dbname>-shm" shared memory file.
-   auto vfs = sqlite3_vfs_find("unix-excl");
-   if (vfs)
-   {
-      sqlite3_vfs_register(vfs, 1);
-   }
-#endif
 }
 
 ProjectFileIO::~ProjectFileIO()
