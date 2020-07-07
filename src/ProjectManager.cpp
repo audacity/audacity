@@ -694,7 +694,10 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // The project is now either saved or the user doesn't want to save it,
    // so there's no need to keep auto save info around anymore
-   projectFileIO.AutoSaveDelete();
+   // PRL:  not clear what to do if the following fails, but the worst should
+   // be, the project may reopen in its present state as a recovery file, not
+   // at the last saved state.
+   (void) projectFileIO.AutoSaveDelete();
 
    // DMM: Save the size of the last window the user closes
    //

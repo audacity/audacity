@@ -118,14 +118,22 @@ class SQLiteIniter
 public:
    SQLiteIniter()
    {
-      sqlite3_initialize();
+      mRc = sqlite3_initialize();
    }
    ~SQLiteIniter()
    {
-      sqlite3_shutdown();
+      // This function must be called single-threaded only
+      // It returns a value, but there's nothing we can do with it
+      (void) sqlite3_shutdown();
    }
+   int mRc;
 };
-static SQLiteIniter sqliteIniter;
+
+bool ProjectFileIO::InitializeSQL()
+{
+   static SQLiteIniter sqliteIniter;
+   return sqliteIniter.mRc == SQLITE_OK;
+}
 
 static void RefreshAllTitles(bool bShowProjectNumbers )
 {
@@ -189,6 +197,7 @@ const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
 
 ProjectFileIO::ProjectFileIO(AudacityProject &)
 {
+   mPrevDB = nullptr;
    mDB = nullptr;
 
    mRecovered = false;
@@ -254,6 +263,57 @@ sqlite3 *ProjectFileIO::DB()
    }
 
    return mDB;
+}
+
+// Put the current database connection aside, keeping it open, so that
+// another may be opened with OpenDB()
+void ProjectFileIO::SaveConnection()
+{
+   // Should do nothing in proper usage, but be sure not to leak a connection:
+   DiscardConnection();
+
+   mPrevDB = mDB;
+   mDB = nullptr;
+}
+
+// Close any set-aside connection
+void ProjectFileIO::DiscardConnection()
+{
+   if ( mPrevDB )
+   {
+      auto rc = sqlite3_close( mPrevDB );
+      if ( rc != SQLITE_OK )
+      {
+         // Store an error message
+         SetDBError(
+            XO("Failed to successfully close the source project file")
+         );
+      }
+      mPrevDB = nullptr;
+   }
+}
+
+// Close any current connection and switch back to using the saved
+void ProjectFileIO::RestoreConnection()
+{
+   if ( mDB )
+   {
+      auto rc = sqlite3_close( mDB );
+      if ( rc != SQLITE_OK )
+      {
+         // Store an error message
+         SetDBError(
+            XO("Failed to successfully close the destination project file")
+         );
+      }
+   }
+   mDB = mPrevDB;
+}
+
+void ProjectFileIO::UseConnection( sqlite3 *db )
+{
+   wxASSERT(mDB == nullptr);
+   mDB = db;
 }
 
 sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
@@ -592,11 +652,10 @@ bool ProjectFileIO::UpgradeSchema()
    return true;
 }
 
-bool ProjectFileIO::CopyTo(const FilePath &destpath)
+sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath)
 {
    auto db = DB();
    int rc;
-   bool success = true;
    ProgressResult res = ProgressResult::Success;
 
    sqlite3 *destdb = nullptr;
@@ -605,6 +664,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
    rc = sqlite3_open(destpath, &destdb);
    if (rc == SQLITE_OK)
    {
+      bool success = true;
       sqlite3_backup *backup = sqlite3_backup_init(destdb, "main", db, "main");
       if (backup)
       {
@@ -614,6 +674,8 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
 
          do
          {
+            // These two calls always return zero before any sqlite3_backup_step
+            // but that doesn't matter
             int remaining = sqlite3_backup_remaining(backup);
             int total = sqlite3_backup_pagecount(backup);
 
@@ -644,21 +706,21 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
          SetDBError(
             XO("Unable to initiate the backup process.")
          );
-      }
-
-      // Close the DB
-      rc = sqlite3_close(destdb);
-      if (rc != SQLITE_OK)
-      {
-         SetDBError(
-            XO("Failed to successfully close the destination project file:\n\n%s")
-         );
          success = false;
       }
 
       if (!success)
       {
+         // Don't give this DB connection back to the caller
+         rc = sqlite3_close(destdb);
+         if (rc != SQLITE_OK)
+         {
+            SetDBError(
+               XO("Failed to successfully close the destination project file:\n\n%s")
+            );
+         }
          wxRemoveFile(destpath);
+         return nullptr;
       }
    }
    else
@@ -668,10 +730,11 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
       SetDBError(
          XO("Unable to open the destination project file:\n\n%s").Format(destpath)
       );
-      success = false;
+      return nullptr;
    }
 
-   return success;
+   // Let the caller use this connection and close it later
+   return destdb;
 }
 
 void ProjectFileIO::UpdatePrefs()
@@ -1015,8 +1078,13 @@ bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
    const wxMemoryBuffer &data = autosave.GetData();
 
    // BIND SQL autosave
-   sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC);
-   sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC);
+   // Might return SQL_MISUSE which means it's our mistake that we violated
+   // preconditions; should return SQL_OK which is 0
+   if (
+      sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC) ||
+      sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC)
+   )
+      THROW_INCONSISTENCY_EXCEPTION;
 
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
@@ -1139,24 +1207,25 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       {
          if (success)
          {
-            // The Save was successful, so remove the original file if
-            // it was a temporary file
+            // The Save was successful, so now it is safe to abandon the
+            // original connection
+            DiscardConnection();
+         
+            // And also remove the original file if it was a temporary file
             if (wasTemp)
             {
                wxRemoveFile(origName);
             }
+
          }
          else
          {
-            // Close the new database
-            CloseDB();
+            // Close the new database and go back to using the original
+            // connection
+            RestoreConnection();
 
-            // Reopen the original database
-            if (OpenDB(origName))
-            {
-               // And delete the new database
-               wxRemoveFile(fileName);
-            }
+            // And delete the new database
+            wxRemoveFile(fileName);
          }
       }
    });
@@ -1165,7 +1234,8 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    // current to the new file and make it the active file.
    if (mFileName != fileName)
    {
-      if (!CopyTo(fileName))
+      auto newDB = CopyTo(fileName);
+      if (!newDB)
       {
          return false;
       }
@@ -1176,11 +1246,11 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       origName = mFileName;
       wasTemp = mTemporary;
 
-      // Close the original project file and open the new one
-      if (!CloseDB() || !OpenDB(fileName))
-      {
-         return false;
-      }
+      // Save the original database connection and try to switch to a new one
+      // (also ensuring closing of one of the connections, with the cooperation
+      // of the finally above)
+      SaveConnection();
+      UseConnection( newDB );
    }
 
    auto db = DB();
@@ -1243,7 +1313,14 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    // clean and unmodified.  Otherwise, it would be considered "recovered"
    // when next opened.
 
-   AutoSaveDelete();
+   if ( !AutoSaveDelete() )
+      return false;
+
+   // Reaching this point defines success and all the rest are no-fail
+   // operations:
+
+   // Tell the finally block to behave
+   success = true;
 
    // No longer modified
    mModified = false;
@@ -1257,20 +1334,17 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    // Adjust the title
    SetProjectTitle();
 
-   // Tell the finally block to behave
-   success = true;
-
    return true;
 }
 
 bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 {
-   if (!CopyTo(fileName))
+   auto db = CopyTo(fileName);
+   if (!db)
    {
       return false;
    }
 
-   sqlite3 *db = nullptr;
    int rc;
    bool success = false;
 
@@ -1278,7 +1352,7 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
    {
       if (db)
       {
-         sqlite3_close(db);
+         (void) sqlite3_close(db);
       }
 
       if (!success)
@@ -1286,15 +1360,6 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
          wxRemoveFile(fileName);
       }
    });
-
-   rc = sqlite3_open(fileName, &db);
-   if (rc != SQLITE_OK)
-   {
-      // sqlite3 docs say you should close anyway to avoid leaks
-      sqlite3_close( db );
-      SetDBError(XO("Failed to open backup file"));
-      return false;
-   }
 
    XMLStringWriter doc;
    WriteXMLHeader(doc);

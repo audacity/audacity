@@ -35,6 +35,10 @@ class ProjectFileIO final
    , public std::enable_shared_from_this<ProjectFileIO>
 {
 public:
+   // Call this static function once before constructing any instances of this
+   // class.  Reinvocations have no effect.  Return value is true for success.
+   static bool InitializeSQL();
+
    static ProjectFileIO &Get( AudacityProject &project );
    static const ProjectFileIO &Get( const AudacityProject &project );
 
@@ -114,6 +118,19 @@ private:
    // if opening fails.
    sqlite3 *DB();
 
+   // Put the current database connection aside, keeping it open, so that
+   // another may be opened with OpenDB()
+   void SaveConnection();
+
+   // Close any set-aside connection
+   void DiscardConnection();
+
+   // Close any current connection and switch back to using the saved
+   void RestoreConnection();
+
+   // Use a connection that is already open rather than invoke OpenDB
+   void UseConnection( sqlite3 *db );
+
    sqlite3 *OpenDB(FilePath fileName = {});
    bool CloseDB();
    bool DeleteDB();
@@ -129,7 +146,8 @@ private:
    bool InstallSchema();
    bool UpgradeSchema();
 
-   bool CopyTo(const FilePath &destpath);
+   // Return a database connection if successful, which caller must close
+   sqlite3 *CopyTo(const FilePath &destpath);
 
    void SetError(const TranslatableString & msg);
    void SetDBError(const TranslatableString & msg);
@@ -153,6 +171,7 @@ private:
    // Bypass transactions if database will be deleted after close
    bool mBypass;
 
+   sqlite3 *mPrevDB;
    sqlite3 *mDB;
    FilePath mDBPath;
    TranslatableString mLastError;
