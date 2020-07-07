@@ -716,9 +716,27 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // DanH: If we're definitely about to quit, clear the clipboard.
    //       Doing this after Deref'ing the DirManager causes problems.
+   auto &clipboard = Clipboard::Get();
    if ((AllProjects{}.size() == 1) &&
       (quitOnClose || AllProjects::Closing()))
-      Clipboard::Get().Clear();
+      clipboard.Clear();
+   else {
+      auto clipboardProject = clipboard.Project().lock();
+      if ( clipboardProject.get() == &mProject ) {
+         // Closing the project from which content was cut or copied.
+         // For 3.0.0, clear the clipboard, because accessing clipboard contents
+         // would depend on a database connection to the closing project, but
+         // that connection should closed now so that the project file can be
+         // freely moved.
+         // Notes:
+         // 1) maybe clipboard contents could be saved by migrating them to
+         // another temporary database, but that extra effort is beyond the
+         // scope of 3.0.0.
+         // 2) strictly speaking this is necessary only when the clipboard
+         // contains WaveTracks.
+         clipboard.Clear();
+      }
+   }
 
    // JKC: For Win98 and Linux do not detach the menu bar.
    // We want wxWidgets to clean it up for us.
