@@ -292,6 +292,12 @@ void ProjectFileIO::RestoreConnection()
    mDB = mPrevDB;
 }
 
+void ProjectFileIO::UseConnection( sqlite3 *db )
+{
+   wxASSERT(mDB == nullptr);
+   mDB = db;
+}
+
 sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
 {
    wxASSERT(mDB == nullptr);
@@ -628,11 +634,10 @@ bool ProjectFileIO::UpgradeSchema()
    return true;
 }
 
-bool ProjectFileIO::CopyTo(const FilePath &destpath)
+sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath)
 {
    auto db = DB();
    int rc;
-   bool success = true;
    ProgressResult res = ProgressResult::Success;
 
    sqlite3 *destdb = nullptr;
@@ -641,6 +646,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
    rc = sqlite3_open(destpath, &destdb);
    if (rc == SQLITE_OK)
    {
+      bool success = true;
       sqlite3_backup *backup = sqlite3_backup_init(destdb, "main", db, "main");
       if (backup)
       {
@@ -650,6 +656,8 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
 
          do
          {
+            // These two calls always return zero before any sqlite3_backup_step
+            // but that doesn't matter
             int remaining = sqlite3_backup_remaining(backup);
             int total = sqlite3_backup_pagecount(backup);
 
@@ -680,21 +688,21 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
          SetDBError(
             XO("Unable to initiate the backup process.")
          );
-      }
-
-      // Close the DB
-      rc = sqlite3_close(destdb);
-      if (rc != SQLITE_OK)
-      {
-         SetDBError(
-            XO("Failed to successfully close the destination project file:\n\n%s")
-         );
          success = false;
       }
 
       if (!success)
       {
+         // Don't give this DB connection back to the caller
+         rc = sqlite3_close(destdb);
+         if (rc != SQLITE_OK)
+         {
+            SetDBError(
+               XO("Failed to successfully close the destination project file:\n\n%s")
+            );
+         }
          wxRemoveFile(destpath);
+         return nullptr;
       }
    }
    else
@@ -704,10 +712,11 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath)
       SetDBError(
          XO("Unable to open the destination project file:\n\n%s").Format(destpath)
       );
-      success = false;
+      return nullptr;
    }
 
-   return success;
+   // Let the caller use this connection and close it later
+   return destdb;
 }
 
 void ProjectFileIO::UpdatePrefs()
@@ -1202,7 +1211,8 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    // current to the new file and make it the active file.
    if (mFileName != fileName)
    {
-      if (!CopyTo(fileName))
+      auto newDB = CopyTo(fileName);
+      if (!newDB)
       {
          return false;
       }
@@ -1214,11 +1224,10 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       wasTemp = mTemporary;
 
       // Save the original database connection and try to switch to a new one
+      // (also ensuring closing of one of the connections, with the cooperation
+      // of the finally above)
       SaveConnection();
-      if (!OpenDB(fileName))
-      {
-         return false;
-      }
+      UseConnection( newDB );
    }
 
    auto db = DB();
@@ -1307,12 +1316,12 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
 
 bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 {
-   if (!CopyTo(fileName))
+   auto db = CopyTo(fileName);
+   if (!db)
    {
       return false;
    }
 
-   sqlite3 *db = nullptr;
    int rc;
    bool success = false;
 
@@ -1320,7 +1329,7 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
    {
       if (db)
       {
-         sqlite3_close(db);
+         (void) sqlite3_close(db);
       }
 
       if (!success)
@@ -1328,15 +1337,6 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
          wxRemoveFile(fileName);
       }
    });
-
-   rc = sqlite3_open(fileName, &db);
-   if (rc != SQLITE_OK)
-   {
-      // sqlite3 docs say you should close anyway to avoid leaks
-      sqlite3_close( db );
-      SetDBError(XO("Failed to open backup file"));
-      return false;
-   }
 
    XMLStringWriter doc;
    WriteXMLHeader(doc);

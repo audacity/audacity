@@ -124,6 +124,9 @@ private:
    // Close any current connection and switch back to using the saved
    void RestoreConnection();
 
+   // Use a connection that is already open rather than invoke OpenDB
+   void UseConnection( sqlite3 *db );
+
    sqlite3 *OpenDB(FilePath fileName = {});
    bool CloseDB();
    bool DeleteDB();
@@ -139,7 +142,8 @@ private:
    bool InstallSchema();
    bool UpgradeSchema();
 
-   bool CopyTo(const FilePath &destpath);
+   // Return a database connection if successful, which caller must close
+   sqlite3 *CopyTo(const FilePath &destpath);
 
    void SetError(const TranslatableString & msg);
    void SetDBError(const TranslatableString & msg);
