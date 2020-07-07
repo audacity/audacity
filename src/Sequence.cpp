@@ -898,7 +898,7 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
       {
          wxLogWarning(
             wxT("Gap detected in project file.\n")
-            wxT("   Start (%s) for block file %d is not one sample past end of previous block (%s).\n")
+            wxT("   Start (%s) for block file %lld is not one sample past end of previous block (%s).\n")
             wxT("   Moving start so blocks are contiguous."),
             // PRL:  Why bother with Internat when the above is just wxT?
             Internat::ToString(block.start.as_double(), 0),
