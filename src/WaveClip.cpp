@@ -182,7 +182,7 @@ WaveClip::WaveClip(const WaveClip& orig,
    orig.TimeToSamplesClip(t0, &s0);
    orig.TimeToSamplesClip(t1, &s1);
 
-   mSequence = orig.mSequence->Copy(s0, s1);
+   mSequence = orig.mSequence->Copy(factory, s0, s1);
 
    mEnvelope = std::make_unique<Envelope>(
       *orig.mEnvelope,

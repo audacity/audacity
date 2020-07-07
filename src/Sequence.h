@@ -95,7 +95,10 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
                        size_t len, const sampleCount *where) const;
 
    // Return non-null, or else throw!
-   std::unique_ptr<Sequence> Copy(sampleCount s0, sampleCount s1) const;
+   // Must pass in the correct factory for the result.  If it's not the same
+   // as in this, then block contents must be copied.
+   std::unique_ptr<Sequence> Copy( const SampleBlockFactoryPtr &pFactory,
+      sampleCount s0, sampleCount s1) const;
    void Paste(sampleCount s0, const Sequence *src);
 
    size_t GetIdealAppendLen() const;
@@ -196,7 +199,8 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    int FindBlock(sampleCount pos) const;
 
-   static void AppendBlock(BlockArray &blocks,
+   static void AppendBlock(SampleBlockFactory *pFactory, sampleFormat format,
+                           BlockArray &blocks,
                            sampleCount &numSamples,
                            const SeqBlock &b);
 
