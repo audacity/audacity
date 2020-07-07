@@ -205,6 +205,16 @@ void ProjectFileIO::Init( AudacityProject &project )
    // This step can't happen in the ctor of ProjectFileIO because ctor of
    // AudacityProject wasn't complete
    mpProject = project.shared_from_this();
+
+#if !defined(__WXMSW__)
+   // Use the "unix-excl" VFS to make access to the DB exclusive.  This gets
+   // rid of the "<dbname>-shm" shared memory file.
+   auto vfs = sqlite3_vfs_find("unix-excl");
+   if (vfs)
+   {
+      sqlite3_vfs_register(vfs, 1);
+   }
+#endif
 }
 
 ProjectFileIO::~ProjectFileIO()
