@@ -65,6 +65,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    Sequence(const Sequence &orig, const SampleBlockFactoryPtr &pFactory);
 
+   Sequence( const Sequence& ) = delete;
    Sequence& operator= (const Sequence&) PROHIBITED;
 
    ~Sequence();
