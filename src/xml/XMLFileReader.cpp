@@ -164,7 +164,7 @@ bool XMLFileReader::ParseString(XMLTagHandler *baseHandler,
    // return false.
    if (!mBaseHandler)
    {
-      mErrorStr = XO("Could not XML");
+      mErrorStr = XO("Could not parse XML");
       return false;
    }
 
