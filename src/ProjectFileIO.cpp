@@ -1281,7 +1281,14 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    // clean and unmodified.  Otherwise, it would be considered "recovered"
    // when next opened.
 
-   AutoSaveDelete();
+   if ( !AutoSaveDelete() )
+      return false;
+
+   // Reaching this point defines success and all the rest are no-fail
+   // operations:
+
+   // Tell the finally block to behave
+   success = true;
 
    // No longer modified
    mModified = false;
@@ -1294,9 +1301,6 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
 
    // Adjust the title
    SetProjectTitle();
-
-   // Tell the finally block to behave
-   success = true;
 
    return true;
 }
