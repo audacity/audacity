@@ -86,6 +86,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
+#include "ProjectFileIO.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectManager.h"
@@ -1028,6 +1029,15 @@ bool AudacityApp::OnInit()
 
    // Ensure we have an event loop during initialization
    wxEventLoopGuarantor eventLoop;
+
+   // Fire up SQLite
+   if ( !ProjectFileIO::InitializeSQL() )
+      this->CallAfter([]{
+         ::AudacityMessageBox(
+            XO("SQLite library failed to initialize.  Audacity cannot continue.") );
+         QuitAudacity( true );
+      });
+
 
    // cause initialization of wxWidgets' global logger target
    (void) AudacityLogger::Get();

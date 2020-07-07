@@ -35,6 +35,10 @@ class ProjectFileIO final
    , public std::enable_shared_from_this<ProjectFileIO>
 {
 public:
+   // Call this static function once before constructing any instances of this
+   // class.  Reinvocations have no effect.  Return value is true for success.
+   static bool InitializeSQL();
+
    static ProjectFileIO &Get( AudacityProject &project );
    static const ProjectFileIO &Get( const AudacityProject &project );
 

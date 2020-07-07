@@ -118,14 +118,22 @@ class SQLiteIniter
 public:
    SQLiteIniter()
    {
-      sqlite3_initialize();
+      mRc = sqlite3_initialize();
    }
    ~SQLiteIniter()
    {
-      sqlite3_shutdown();
+      // This function must be called single-threaded only
+      // It returns a value, but there's nothing we can do with it
+      (void) sqlite3_shutdown();
    }
+   int mRc;
 };
-static SQLiteIniter sqliteIniter;
+
+bool ProjectFileIO::InitializeSQL()
+{
+   static SQLiteIniter sqliteIniter;
+   return sqliteIniter.mRc == SQLITE_OK;
+}
 
 static void RefreshAllTitles(bool bShowProjectNumbers )
 {
