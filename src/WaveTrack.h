@@ -304,31 +304,7 @@ private:
    // doing a copy and paste between projects.
    //
 
-   bool Lock() const;
-   bool Unlock() const;
-
-   struct WaveTrackLockDeleter {
-      inline void operator () (const WaveTrack *pTrack) { pTrack->Unlock(); }
-   };
-   using LockerBase = std::unique_ptr<
-      const WaveTrack, WaveTrackLockDeleter
-   >;
-
-   // RAII object for locking.
-   struct Locker : private LockerBase
-   {
-      friend LockerBase;
-      Locker (const WaveTrack *pTrack)
-         : LockerBase{ pTrack }
-      { pTrack->Lock(); }
-      Locker(Locker &&that) : LockerBase{std::move(that)} {}
-      Locker &operator= (Locker &&that) {
-         (LockerBase&)(*this) = std::move(that);
-         return *this;
-      }
-   };
-
-   bool CloseLock(); //similar to Lock but should be called when the project closes.
+   bool CloseLock(); //should be called when the project closes.
    // not balanced by unlocking calls.
 
    /** @brief Convert correctly between an (absolute) time in seconds and a number of samples.

@@ -83,26 +83,10 @@ size_t Sequence::GetIdealBlockSize() const
    return mMaxSamples;
 }
 
-bool Sequence::Lock()
-{
-   for (unsigned int i = 0; i < mBlock.size(); i++)
-      mBlock[i].sb->Lock();
-
-   return true;
-}
-
 bool Sequence::CloseLock()
 {
    for (unsigned int i = 0; i < mBlock.size(); i++)
       mBlock[i].sb->CloseLock();
-
-   return true;
-}
-
-bool Sequence::Unlock()
-{
-   for (unsigned int i = 0; i < mBlock.size(); i++)
-      mBlock[i].sb->Unlock();
 
    return true;
 }
@@ -380,12 +364,20 @@ float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
    return sqrt(sumsq / length.as_double() );
 }
 
-std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
+// Must pass in the correct factory for the result.  If it's not the same
+// as in this, then block contents must be copied.
+std::unique_ptr<Sequence> Sequence::Copy( const SampleBlockFactoryPtr &pFactory,
+   sampleCount s0, sampleCount s1) const
 {
-   auto dest = std::make_unique<Sequence>(mpFactory, mSampleFormat);
+   // Make a new Sequence object for the specified factory:
+   auto dest = std::make_unique<Sequence>(pFactory, mSampleFormat);
    if (s0 >= s1 || s0 >= mNumSamples || s1 < 0) {
       return dest;
    }
+
+   // Decide whether to share sample blocks or make new copies, when whole block
+   // contents are used -- must copy if factories are different:
+   auto pUseFactory = (pFactory == mpFactory) ? nullptr : pFactory.get();
 
    int numBlocks = mBlock.size();
 
@@ -404,7 +396,7 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
 
    int blocklen;
 
-   // Do the first block
+   // Do any initial partial block
 
    const SeqBlock &block0 = mBlock[b0];
    if (s0 != block0.start) {
@@ -421,13 +413,15 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
    else
       --b0;
 
-   // If there are blocks in the middle, copy the blockfiles directly
+   // If there are blocks in the middle, use the blockfiles whole
    for (int bb = b0 + 1; bb < b1; ++bb)
-      AppendBlock(dest->mBlock, dest->mNumSamples, mBlock[bb]);
+      AppendBlock(pUseFactory, mSampleFormat,
+         dest->mBlock, dest->mNumSamples, mBlock[bb]);
       // Increase ref count or duplicate file
 
    // Do the last block
    if (b1 > b0) {
+      // Probable case of a partial block
       const SeqBlock &block = mBlock[b1];
       const auto &sb = block.sb;
       // s1 is within block:
@@ -439,8 +433,9 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
          dest->Append(buffer.ptr(), mSampleFormat, blocklen);
       }
       else
-         // Special case, copy exactly
-         AppendBlock(dest->mBlock, dest->mNumSamples, block);
+         // Special case of a whole block
+         AppendBlock(pUseFactory, mSampleFormat,
+            dest->mBlock, dest->mNumSamples, block);
          // Increase ref count or duplicate file
    }
 
@@ -454,13 +449,27 @@ namespace {
    {
       return numSamples > wxLL(9223372036854775807);
    }
+
+   SampleBlockPtr ShareOrCopySampleBlock(
+      SampleBlockFactory *pFactory, sampleFormat format, SampleBlockPtr sb )
+   {
+      if ( pFactory ) {
+         // must copy contents to a fresh SampleBlock object in another database
+         auto sampleCount = sb->GetSampleCount();
+         SampleBuffer buffer{ sampleCount, format };
+         sb->GetSamples( buffer.ptr(), format, 0, sampleCount );
+         sb = pFactory->Create( buffer.ptr(), sampleCount, format );
+      }
+      else
+         // Can just share
+         ;
+      return sb;
+   }
 }
 
 void Sequence::Paste(sampleCount s, const Sequence *src)
 // STRONG-GUARANTEE
 {
-   auto &factory = *mpFactory;
-
    if ((s < 0) || (s > mNumSamples))
    {
       wxLogError(
@@ -501,6 +510,11 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
 
    const size_t numBlocks = mBlock.size();
 
+   // Decide whether to share sample blocks or make new copies, when whole block
+   // contents are used -- must copy if factories are different:
+   auto pUseFactory =
+      (src->mpFactory == mpFactory) ? nullptr : mpFactory.get();
+
    if (numBlocks == 0 ||
        (s == mNumSamples && mBlock.back().sb->GetSampleCount() >= mMinSamples)) {
       // Special case: this track is currently empty, or it's safe to append
@@ -513,8 +527,8 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       for (unsigned int i = 0; i < srcNumBlocks; i++)
          // AppendBlock may throw for limited disk space, if pasting from
          // one project into another.
-         AppendBlock(newBlock, samples, srcBlock[i]);
-         // Increase ref count or duplicate file
+         AppendBlock(pUseFactory, mSampleFormat,
+            newBlock, samples, srcBlock[i]);
 
       CommitChangesIfConsistent
          (newBlock, samples, wxT("Paste branch one"));
@@ -549,7 +563,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
            splitPoint, length - splitPoint, true);
 
       // largerBlockLen is not more than mMaxSamples...
-      block.sb = factory.Create(
+      block.sb = mpFactory->Create(
          buffer.ptr(),
          largerBlockLen.as_size_t(),
          mSampleFormat);
@@ -605,7 +619,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       // The final case is that we're inserting at least five blocks.
       // We divide these into three groups: the first two get merged
       // with the first half of the split block, the middle ones get
-      // copied in as is, and the last two get merged with the last
+      // used whole, and the last two get merged with the last
       // half of the split block.
 
       const auto srcFirstTwoLen =
@@ -630,7 +644,9 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
 
       for (i = 2; i < srcNumBlocks - 2; i++) {
          const SeqBlock &block = srcBlock[i];
-         newBlock.push_back(SeqBlock(block.sb, block.start + s));
+         auto sb = ShareOrCopySampleBlock(
+            pUseFactory, mSampleFormat, block.sb );
+         newBlock.push_back(SeqBlock(sb, block.start + s));
       }
 
       auto lastStart = penultimate.start;
@@ -710,14 +726,15 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
    Paste(s0, &sTrack);
 }
 
-void Sequence::AppendBlock(BlockArray &mBlock, sampleCount &mNumSamples, const SeqBlock &b)
+void Sequence::AppendBlock( SampleBlockFactory *pFactory, sampleFormat format,
+   BlockArray &mBlock, sampleCount &mNumSamples, const SeqBlock &b)
 {
    // Quick check to make sure that it doesn't overflow
    if (Overflows((mNumSamples.as_double()) + ((double)b.sb->GetSampleCount())))
       THROW_INCONSISTENCY_EXCEPTION;
 
-   // Bump ref count
-   SeqBlock newBlock(b.sb, mNumSamples);
+   auto sb = ShareOrCopySampleBlock( pFactory, format, b.sb );
+   SeqBlock newBlock(sb, mNumSamples);
 
    // We can assume newBlock.sb is not null
 

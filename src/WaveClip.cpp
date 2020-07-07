@@ -182,7 +182,7 @@ WaveClip::WaveClip(const WaveClip& orig,
    orig.TimeToSamplesClip(t0, &s0);
    orig.TimeToSamplesClip(t1, &s1);
 
-   mSequence = orig.mSequence->Copy(s0, s1);
+   mSequence = orig.mSequence->Copy(factory, s0, s1);
 
    mEnvelope = std::make_unique<Envelope>(
       *orig.mEnvelope,
@@ -1652,25 +1652,11 @@ void WaveClip::OffsetCutLines(double t0, double len)
    }
 }
 
-void WaveClip::Lock()
-{
-   GetSequence()->Lock();
-   for (const auto &cutline: mCutLines)
-      cutline->Lock();
-}
-
 void WaveClip::CloseLock()
 {
    GetSequence()->CloseLock();
    for (const auto &cutline: mCutLines)
       cutline->CloseLock();
-}
-
-void WaveClip::Unlock()
-{
-   GetSequence()->Unlock();
-   for (const auto &cutline: mCutLines)
-      cutline->Unlock();
 }
 
 void WaveClip::SetRate(int rate)

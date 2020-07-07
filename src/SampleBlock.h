@@ -46,8 +46,6 @@ class SampleBlock
 public:
    virtual ~SampleBlock();
 
-   virtual void Lock() = 0;
-   virtual void Unlock() = 0;
    virtual void CloseLock() = 0;
    
    virtual SampleBlockID GetBlockID() = 0;
