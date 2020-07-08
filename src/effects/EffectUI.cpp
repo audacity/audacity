@@ -305,7 +305,8 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    auto state = UndoManager::Get( *project ).GetCurrentState();
    auto cleanup = finally( [&] {
       if(!success)
-         ProjectHistory::Get( *project ).SetStateTo( state );
+         // This is like a rollback of state
+         ProjectHistory::Get( *project ).SetStateTo( state, false );
    } );
 
    for (size_t i = 0, cnt = mEffects.size(); i < cnt; i++)

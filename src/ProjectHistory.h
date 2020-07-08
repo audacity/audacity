@@ -32,7 +32,7 @@ public:
    ~ProjectHistory() override;
 
    void InitialState();
-   void SetStateTo(unsigned int n);
+   void SetStateTo(unsigned int n, bool doAutosave = true);
    bool UndoAvailable() const;
    bool RedoAvailable() const;
    void PushState(
@@ -46,7 +46,7 @@ public:
       // Should set only if you really want the state change restored after
       // a crash, as it can take many seconds for large (eg. 10 track-hours)
       // projects
-   void PopState(const UndoState &state);
+   void PopState(const UndoState &state, bool doAutosave = true);
 
    bool GetDirty() const { return mDirty; }
    void SetDirty( bool value ) { mDirty = value; }
