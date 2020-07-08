@@ -669,8 +669,13 @@ void ProjectFileIO::LoadedBlock(int64_t sbid)
    }
 }
 
-bool ProjectFileIO::CheckForOrphans()
+bool ProjectFileIO::CheckForOrphans( bool *pDeletedAny )
 {
+   if ( pDeletedAny )
+   {
+      *pDeletedAny = false;
+   }
+
    auto db = DB();
 
    char sql[256];
@@ -702,7 +707,10 @@ bool ProjectFileIO::CheckForOrphans()
    if (changes > 0)
    {
       wxLogInfo(XO("Total orphan blocks deleted %d").Translation(), changes);
-      mRecovered = true;
+      if ( pDeletedAny )
+      {
+         *pDeletedAny = true;
+      }
    }
 
    return true;
@@ -1244,7 +1252,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    // Check for orphans blocks...set mRecovered if any deleted
    if (mHighestBlockID > 0)
    {
-      if (!CheckForOrphans())
+      if (!CheckForOrphans( &mRecovered ))
       {
          return false;
       }

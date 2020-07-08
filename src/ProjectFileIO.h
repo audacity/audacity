@@ -100,6 +100,11 @@ public:
 
    void LoadedBlock(int64_t blockID);
 
+   // Checks for orphan blocks.  This will go away at a future date
+   // Return value is a success code; optional out argument is assigned true if
+   // any change was made
+   bool CheckForOrphans( bool *pDeletedAny = nullptr );
+
 private:
    // XMLTagHandler callback methods
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
@@ -147,9 +152,6 @@ private:
    bool CheckVersion();
    bool InstallSchema();
    bool UpgradeSchema();
-
-   // Checks for orphan blocks.  This will go away at a future date
-   bool CheckForOrphans();
 
    // Return a database connection if successful, which caller must close
    sqlite3 *CopyTo(const FilePath &destpath);

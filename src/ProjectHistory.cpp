@@ -114,8 +114,20 @@ void ProjectHistory::PushState(const TranslatableString &desc,
 void ProjectHistory::RollbackState()
 {
    auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &undoManager = UndoManager::Get( project );
    SetStateTo( undoManager.GetCurrentState(), false );
+
+   // Attempt to remove block files from the database that have been made during
+   // the failed operation that is being rolled back.  Ignore any failure.
+   // Because this "rollback" of in-memory project state (not an actual database
+   // rollback) needs to be a no-fail operation.
+   // Do this to make space in the database available for re-use, because a
+   // cause of the failed operation might have been exhaustion of space
+   // available on disk.
+   // (We might also vacuum here, for even more aggressive reclamation of
+   // space, but not yet.  Vacuuming will happen when the project is closed.)
+   (void) projectFileIO.CheckForOrphans();
 }
 
 void ProjectHistory::ModifyState(bool bWantsAutoSave)
