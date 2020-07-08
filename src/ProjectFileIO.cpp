@@ -685,7 +685,7 @@ bool ProjectFileIO::CheckForOrphans()
 
    if (errmsg)
    {
-      wxLogDebug(wxT("Failed to delete orphaned blocks: %s"), errmsg);
+      mLibraryError = Verbatim(wxString(errmsg));
       sqlite3_free(errmsg);
    }
 
@@ -1566,9 +1566,11 @@ void ProjectFileIO::SetError(const TranslatableString &msg)
 void ProjectFileIO::SetDBError(const TranslatableString &msg)
 {
    mLastError = msg;
+   wxLogDebug(wxT("SQLite error: %s"), mLastError.Debug());
    if (mDB)
    {
       mLibraryError = Verbatim(sqlite3_errmsg(mDB));
+      wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
    }
 }
 
