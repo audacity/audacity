@@ -98,6 +98,8 @@ public:
    void Bypass(bool bypass);
    bool ShouldBypass();
 
+   void LoadedBlock(int64_t blockID);
+
 private:
    // XMLTagHandler callback methods
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
@@ -139,12 +141,15 @@ private:
    bool TransactionCommit(const wxString &name);
    bool TransactionRollback(const wxString &name);
 
-   wxString GetValue(const char *sql);
+   bool GetValue(const char *sql, wxString &value);
    bool GetBlob(const char *sql, wxMemoryBuffer &buffer);
 
    bool CheckVersion();
    bool InstallSchema();
    bool UpgradeSchema();
+
+   // Checks for orphan blocks.  This will go away at a future date
+   bool CheckForOrphans();
 
    // Return a database connection if successful, which caller must close
    sqlite3 *CopyTo(const FilePath &destpath);
@@ -176,6 +181,9 @@ private:
    FilePath mDBPath;
    TranslatableString mLastError;
    TranslatableString mLibraryError;
+
+   // Track the highest blockid while loading a project
+   int64_t mHighestBlockID;
 
    friend SqliteSampleBlock;
 };

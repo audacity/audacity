@@ -501,28 +501,26 @@ int ProjectFileIO::Exec(const char *query, ExecCB callback, wxString *result)
    return rc;
 }
 
-wxString ProjectFileIO::GetValue(const char *sql)
+bool ProjectFileIO::GetValue(const char *sql, wxString &result)
 {
-   auto getresult = [&](wxString *result, int cols, char **vals, char **names)
+   auto getresult = [](wxString *result, int cols, char **vals, char **names)
    {
       if (cols == 1 && vals[0])
       {
-         result->append(vals[0]);
+         result->assign(vals[0]);
          return SQLITE_OK;
       }
 
       return SQLITE_ABORT;
    };
 
-   wxString value;
-
-   int rc = Exec(sql, getresult, &value);
+   int rc = Exec(sql, getresult, &result);
    if (rc != SQLITE_OK)
    {
-      // Message already captured
+      return false;
    }
 
-   return value;
+   return true;
 }
 
 bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
@@ -549,6 +547,13 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
    }
 
    rc = sqlite3_step(stmt);
+
+   // A row wasn't found...not an error
+   if (rc == SQLITE_DONE)
+   {
+      return true;
+   }
+
    if (rc != SQLITE_ROW)
    {
       SetDBError(
@@ -561,6 +566,7 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
    const void *blob = sqlite3_column_blob(stmt, 0);
    int size = sqlite3_column_bytes(stmt, 0);
 
+   buffer.Clear();
    buffer.AppendData(blob, size);
 
    return true;
@@ -572,42 +578,39 @@ bool ProjectFileIO::CheckVersion()
    int rc;
 
    // Install our schema if this is an empty DB
-   long count = -1;
-   GetValue("SELECT Count(*) FROM sqlite_master WHERE type='table';").ToLong(&count);
-   if (count == -1)
+   wxString result;
+   if (!GetValue("SELECT Count(*) FROM sqlite_master WHERE type='table';", result))
    {
       return false;
    }
 
    // If the return count is zero, then there are no tables defined, so this
    // must be a new project file.
-   if (count == 0)
+   if (wxStrtol<char **>(result, nullptr, 10) == 0)
    {
       return InstallSchema();
    }
 
    // Check for our application ID
-   long appid = -1;
-   GetValue("PRAGMA application_ID;").ToLong(&appid);
-   if (appid == -1)
+   if (!GetValue("PRAGMA application_ID;", result))
    {
       return false;
    }
 
    // It's a database that SQLite recognizes, but it's not one of ours
-   if (appid != ProjectFileID)
+   if (wxStrtoul<char **>(result, nullptr, 10) != ProjectFileID)
    {
       SetError(XO("This is not an Audacity project file"));
       return false;
    }
 
    // Get the project file version
-   long version = -1;
-   GetValue("PRAGMA user_version;").ToLong(&version);
-   if (version == -1)
+   if (!GetValue("PRAGMA user_version;", result))
    {
       return false;
    }
+
+   long version = wxStrtol<char **>(result, nullptr, 10);
 
    // Project file version is higher than ours. We will refuse to
    // process it since we can't trust anything about it.
@@ -655,6 +658,53 @@ bool ProjectFileIO::InstallSchema()
 
 bool ProjectFileIO::UpgradeSchema()
 {
+   return true;
+}
+
+void ProjectFileIO::LoadedBlock(int64_t sbid)
+{
+   if (sbid > mHighestBlockID)
+   {
+      mHighestBlockID = sbid;
+   }
+}
+
+bool ProjectFileIO::CheckForOrphans()
+{
+   auto db = DB();
+
+   char sql[256];
+   sqlite3_snprintf(sizeof(sql),
+                    sql,
+                    "DELETE FROM sampleblocks WHERE blockid > %lld",
+                    mHighestBlockID);
+
+   char *errmsg = nullptr;
+
+   int rc = sqlite3_exec(db, sql, nullptr, nullptr, &errmsg);
+
+   if (errmsg)
+   {
+      wxLogDebug(wxT("Failed to delete orphaned blocks: %s"), errmsg);
+      sqlite3_free(errmsg);
+   }
+
+   if (rc != SQLITE_OK)
+   {
+      SetDBError(
+         XO("Failed to delete orphaned blocks")
+      );
+
+      return false;
+   }
+
+   int changes = sqlite3_changes(db);
+   if (changes > 0)
+   {
+      wxLogInfo(XO("Total orphan blocks deleted %d").Translation(), changes);
+      mRecovered = true;
+   }
+
    return true;
 }
 
@@ -1150,15 +1200,22 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    // Get the autosave doc, if any
    bool wasAutosave = false;
    wxMemoryBuffer buffer;
-   if (GetBlob("SELECT dict || doc FROM autosave WHERE id = 1;", buffer))
+   if (!GetBlob("SELECT dict || doc FROM autosave WHERE id = 1;", buffer))
+   {
+      // Error already set
+      return false;
+   }
+
+   if (buffer.GetDataLen() > 0)
    {
       doc = AutoSaveFile::Decode(buffer);
       wasAutosave = true;
    }
    // Otherwise, get the project doc
-   else
+   else if (!GetValue("SELECT doc FROM project;", doc))
    {
-      doc = GetValue("SELECT doc FROM project;");
+      // Error already set
+      return false;
    }
 
    if (doc.empty())
@@ -1167,6 +1224,9 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    }
 
    XMLFileReader xmlFile;
+
+   // Reset the highest blockid
+   mHighestBlockID = 0;
 
    success = xmlFile.ParseString(this, doc);
    if (!success)
@@ -1180,6 +1240,16 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
 
    // Remember if it was recovered or not
    mRecovered = wasAutosave;
+
+   // Check for orphans blocks...set mRecovered if any deleted
+   if (mHighestBlockID > 0)
+   {
+      if (!CheckForOrphans())
+      {
+         return false;
+      }
+   }
+
    if (mRecovered)
    {
       mModified = true;
@@ -1188,9 +1258,13 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    // A previously saved project will have a document in the project table, so
    // we use that knowledge to determine if this file is an unsaved/temporary
    // file or not
-   long count = 0;
-   GetValue("SELECT Count(*) FROM project;").ToLong(&count);
-   mTemporary = (count != 1);
+   wxString result;
+   if (!GetValue("SELECT Count(*) FROM project;", result))
+   {
+      return false;
+   }
+
+   mTemporary = (wxStrtol<char **>(result, nullptr, 10) != 1);
 
    SetFileName(fileName);
 

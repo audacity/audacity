@@ -60,7 +60,7 @@ public:
    void SaveXML(XMLWriter &xmlFile) override;
 
 private:
-   bool Load(SampleBlockID sbid);
+   void Load(SampleBlockID sbid);
    bool GetSummary(float *dest,
                    size_t frameoffset,
                    size_t numframes,
@@ -186,6 +186,11 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
          {
             // This may throw
             sb->Load((SampleBlockID) nValue);
+
+            // Tell the IO manager the blockid we just loaded so it can track
+            // the highest one encountered.
+            mpIO->LoadedBlock(nValue);
+
             found++;
          }
          else if (wxStrcmp(attr, wxT("samplecount")) == 0)
@@ -518,7 +523,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    return srcbytes;
 }
 
-bool SqliteSampleBlock::Load(SampleBlockID sbid)
+void SqliteSampleBlock::Load(SampleBlockID sbid)
 {
    auto db = mIO.DB();
 
