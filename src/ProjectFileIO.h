@@ -12,6 +12,7 @@ Paul Licameli split from AudacityProject.h
 #define __AUDACITY_PROJECT_FILE_IO__
 
 #include <memory>
+#include <set>
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
 #include "xml/XMLTagHandler.h" // to inherit

@@ -15,6 +15,7 @@
 
 #include <wx/mstream.h> // member variables
 
+#include <set>
 #include <unordered_map>
 #include "audacity/Types.h"
 
