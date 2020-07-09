@@ -288,7 +288,10 @@ void ProjectFileIO::SaveConnection()
    DiscardConnection();
 
    mPrevDB = mDB;
+   mPrevFileName = mFileName;
+
    mDB = nullptr;
+   SetFileName({});
 }
 
 // Close any set-aside connection
@@ -305,6 +308,7 @@ void ProjectFileIO::DiscardConnection()
          );
       }
       mPrevDB = nullptr;
+      mPrevFileName.clear();
    }
 }
 
@@ -323,12 +327,17 @@ void ProjectFileIO::RestoreConnection()
       }
    }
    mDB = mPrevDB;
+   SetFileName(mPrevFileName);
+
+   mPrevDB = nullptr;
+   mPrevFileName.clear();
 }
 
-void ProjectFileIO::UseConnection( sqlite3 *db )
+void ProjectFileIO::UseConnection( sqlite3 *db, const FilePath &filePath )
 {
    wxASSERT(mDB == nullptr);
    mDB = db;
+   SetFileName( filePath );
 }
 
 sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
@@ -1350,7 +1359,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       // (also ensuring closing of one of the connections, with the cooperation
       // of the finally above)
       SaveConnection();
-      UseConnection( newDB );
+      UseConnection( newDB, fileName );
    }
 
    auto db = DB();

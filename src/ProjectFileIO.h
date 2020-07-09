@@ -134,7 +134,7 @@ private:
    void RestoreConnection();
 
    // Use a connection that is already open rather than invoke OpenDB
-   void UseConnection( sqlite3 *db );
+   void UseConnection( sqlite3 *db, const FilePath &filePath );
 
    sqlite3 *OpenDB(FilePath fileName = {});
    bool CloseDB();
@@ -185,8 +185,9 @@ private:
    bool mBypass;
 
    sqlite3 *mPrevDB;
+   FilePath mPrevFileName;
+
    sqlite3 *mDB;
-   FilePath mDBPath;
    TranslatableString mLastError;
    TranslatableString mLibraryError;
 
