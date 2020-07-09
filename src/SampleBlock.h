@@ -25,7 +25,6 @@ using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 using SampleBlockFactoryFactory =
    std::function< SampleBlockFactoryPtr( AudacityProject& ) >;
 
-//using SampleBlockID = sqlite3_int64; // Trying not to depend on sqlite headers
 using SampleBlockID = long long;
 
 class MinMaxRMS

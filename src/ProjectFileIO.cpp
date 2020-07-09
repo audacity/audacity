@@ -46,14 +46,23 @@ static const char *ProjectFileSchema =
    "PRAGMA journal_mode = WAL;"
    "PRAGMA locking_mode = EXCLUSIVE;"
    ""
-   // CREATE SQL project
-   // doc is a variable sized XML text string.
-   // it is the former Audacity .aup file 
-   // One instance only.
+   // project is a binary representation of an XML file.
+   // it's in binary for speed.
+   // One instance only.  id is always 1.
+   // dict is a dictionary of fieldnames.
+   // doc is the binary representation of the XML
+   // in the doc, fieldnames are replaced by 2 byte dictionary
+   // index numbers.
+   // This is all opaque to SQLite.  It just sees two
+   // big binary blobs.
+   // There is no limit to document blob size.
+   // dict will be smallish, with an entry for each 
+   // kind of field.
    "CREATE TABLE IF NOT EXISTS project"
    "("
    "  id                   INTEGER PRIMARY KEY,"
-   "  doc                  TEXT"
+   "  dict                 BLOB,"
+   "  doc                  BLOB"
    ");"
    ""
    // CREATE SQL autosave
@@ -438,7 +447,7 @@ bool ProjectFileIO::TransactionCommit(const wxString &name)
    char* errmsg = nullptr;
 
    int rc = sqlite3_exec(DB(),
-                         wxT("SAVEPOINT ") + name + wxT(";"),
+                         wxT("RELEASE ") + name + wxT(";"),
                          nullptr,
                          nullptr,
                          &errmsg);
@@ -459,7 +468,7 @@ bool ProjectFileIO::TransactionRollback(const wxString &name)
    char* errmsg = nullptr;
 
    int rc = sqlite3_exec(DB(),
-                         wxT("RELEASE ") + name + wxT(";"),
+                         wxT("ROLLBACK TO ") + name + wxT(";"),
                          nullptr,
                          nullptr,
                          &errmsg);
@@ -503,6 +512,8 @@ int ProjectFileIO::Exec(const char *query, ExecCB callback, wxString *result)
 
 bool ProjectFileIO::GetValue(const char *sql, wxString &result)
 {
+   result.clear();
+
    auto getresult = [](wxString *result, int cols, char **vals, char **names)
    {
       if (cols == 1 && vals[0])
@@ -527,6 +538,8 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
 {
    auto db = DB();
    int rc;
+
+   buffer.Clear();
 
    sqlite3_stmt *stmt = nullptr;
    auto cleanup = finally([&]
@@ -566,7 +579,6 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
    const void *blob = sqlite3_column_blob(stmt, 0);
    int size = sqlite3_column_bytes(stmt, 0);
 
-   buffer.Clear();
    buffer.AppendData(blob, size);
 
    return true;
@@ -661,43 +673,41 @@ bool ProjectFileIO::UpgradeSchema()
    return true;
 }
 
-void ProjectFileIO::LoadedBlock(int64_t sbid)
+// The orphan block handling should be removed once autosave and related
+// blocks become part of the same transaction.
+
+// An SQLite function that takes a blockid and looks it up in a set of
+// blockids captured during project load.  If the blockid isn't found
+// in the set, it will be deleted.
+void ProjectFileIO::isorphan(sqlite3_context *context, int argc, sqlite3_value **argv)
 {
-   if (sbid > mHighestBlockID)
-   {
-      mHighestBlockID = sbid;
-   }
+   BlockIDs *blockids = (BlockIDs *) sqlite3_user_data(context);
+   SampleBlockID blockid = sqlite3_value_int64(argv[0]);
+
+   sqlite3_result_int(context, blockids->find(blockid) == blockids->end());
 }
 
-bool ProjectFileIO::CheckForOrphans()
+bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
 {
    auto db = DB();
+   int rc;
 
-   char sql[256];
-   sqlite3_snprintf(sizeof(sql),
-                    sql,
-                    "DELETE FROM sampleblocks WHERE blockid > %lld",
-                    mHighestBlockID);
-
-   char *errmsg = nullptr;
-
-   int rc = sqlite3_exec(db, sql, nullptr, nullptr, &errmsg);
-
-   if (errmsg)
-   {
-      mLibraryError = Verbatim(wxString(errmsg));
-      sqlite3_free(errmsg);
-   }
-
+   // Add our function that will verify blockid against the set of valid blockids
+   rc = sqlite3_create_function(db, "isorphan", 1, SQLITE_UTF8, &blockids, isorphan, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      SetDBError(
-         XO("Failed to delete orphaned blocks")
-      );
-
+      //asdfasdf
       return false;
    }
 
+   // Delete all rows that are orphaned
+   rc = sqlite3_exec(db, "DELETE FROM sampleblocks WHERE isorphan(blockid);", nullptr, nullptr, nullptr);
+   if (rc != SQLITE_OK)
+   {
+      return false;
+   }
+
+   // Mark the project recovered if we deleted any rows
    int changes = sqlite3_changes(db);
    if (changes > 0)
    {
@@ -1093,23 +1103,45 @@ bool ProjectFileIO::AutoSave(const WaveTrackArray *tracks)
    WriteXMLHeader(autosave);
    WriteXML(autosave, tracks);
 
-   return AutoSave(autosave);
+   if (WriteDoc("autosave", autosave))
+   {
+      mModified = true;
+      return true;
+   }
+
+   return false;
 }
 
-bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
+bool ProjectFileIO::AutoSaveDelete()
 {
    auto db = DB();
    int rc;
 
-   mModified = true;
+   rc = sqlite3_exec(db, "DELETE FROM autosave;", nullptr, nullptr, nullptr);
+   if (rc != SQLITE_OK)
+   {
+      SetDBError(
+         XO("Failed to remove the autosave information from the project file.")
+      );
+      return false;
+   }
+
+   return true;
+}
+
+bool ProjectFileIO::WriteDoc(const char *table, const AutoSaveFile &autosave)
+{
+   auto db = DB();
+   int rc;
 
    // For now, we always use an ID of 1. This will replace the previously
    // writen row every time.
    char sql[256];
    sqlite3_snprintf(sizeof(sql),
                     sql,
-                    "INSERT INTO autosave(id, dict, doc) VALUES(1, ?1, ?2)"
+                    "INSERT INTO %s(id, dict, doc) VALUES(1, ?1, ?2)"
                     "       ON CONFLICT(id) DO UPDATE SET %sdoc = ?2;",
+                    table,
                     autosave.DictChanged() ? "dict = ?1, " : "");
 
    sqlite3_stmt *stmt = nullptr;
@@ -1140,30 +1172,15 @@ bool ProjectFileIO::AutoSave(const AutoSaveFile &autosave)
       sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC) ||
       sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC)
    )
+   {
       THROW_INCONSISTENCY_EXCEPTION;
+   }
 
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
       SetDBError(
          XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
-      );
-      return false;
-   }
-
-   return true;
-}
-
-bool ProjectFileIO::AutoSaveDelete()
-{
-   auto db = DB();
-   int rc;
-
-   rc = sqlite3_exec(db, "DELETE FROM autosave;", nullptr, nullptr, nullptr);
-   if (rc != SQLITE_OK)
-   {
-      SetDBError(
-         XO("Failed to remove the autosave information from the project file.")
       );
       return false;
    }
@@ -1194,41 +1211,51 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
       return false;
    }
 
-   // Get the XML document...either from the project or autosave
-   wxString doc;
+   BlockIDs blockids;
+   wxString autosave;
+   wxString project;
+   wxMemoryBuffer buffer;
 
    // Get the autosave doc, if any
-   bool wasAutosave = false;
-   wxMemoryBuffer buffer;
+   if (!GetBlob("SELECT dict || doc FROM project WHERE id = 1;", buffer))
+   {
+      // Error already set
+      return false;
+   }
+   if (buffer.GetDataLen() > 0)
+   {
+      project = AutoSaveFile::Decode(buffer, blockids);
+   }
+
    if (!GetBlob("SELECT dict || doc FROM autosave WHERE id = 1;", buffer))
    {
       // Error already set
       return false;
    }
-
    if (buffer.GetDataLen() > 0)
    {
-      doc = AutoSaveFile::Decode(buffer);
-      wasAutosave = true;
+      autosave = AutoSaveFile::Decode(buffer, blockids);
    }
-   // Otherwise, get the project doc
-   else if (!GetValue("SELECT doc FROM project;", doc))
+
+   // Should this be an error???
+   if (project.empty() && autosave.empty())
    {
-      // Error already set
+      SetError(XO("Unable to load project or autosave documents"));
       return false;
    }
 
-   if (doc.empty())
+   // Check for orphans blocks...set mRecovered if any deleted
+   if (blockids.size() > 0)
    {
-      return false;
+      if (!CheckForOrphans(blockids))
+      {
+         return false;
+      }
    }
 
    XMLFileReader xmlFile;
 
-   // Reset the highest blockid
-   mHighestBlockID = 0;
-
-   success = xmlFile.ParseString(this, doc);
+   success = xmlFile.ParseString(this, autosave.empty() ? project : autosave);
    if (!success)
    {
       SetError(
@@ -1238,18 +1265,13 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
       return false;
    }
 
-   // Remember if it was recovered or not
-   mRecovered = wasAutosave;
-
-   // Check for orphans blocks...set mRecovered if any deleted
-   if (mHighestBlockID > 0)
+   // Remember if we used autosave or not
+   if (!autosave.empty())
    {
-      if (!CheckForOrphans())
-      {
-         return false;
-      }
+      mRecovered = true;
    }
 
+   // Mark the project modified if we recovered it
    if (mRecovered)
    {
       mModified = true;
@@ -1277,9 +1299,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    bool wasTemp = false;
    bool success = false;
 
-   // Should probably simplify all of the following by using renames. But, one
-   // benefit of using CopyTo() for new file saves, is that it will be VACUUMED
-   // at the same time.
+   // Should probably simplify all of the following by using renames.
 
    auto restore = finally([&]
    {
@@ -1336,65 +1356,22 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    auto db = DB();
    int rc;
 
-   XMLStringWriter doc;
+   AutoSaveFile doc;
    WriteXMLHeader(doc);
    WriteXML(doc);
 
-   // Always use an ID of 1. This will replace any existing row.
-   char sql[256];
-   sqlite3_snprintf(sizeof(sql),
-                    sql,
-                    "INSERT INTO project(id, doc) VALUES(1, ?1)"
-                    "       ON CONFLICT(id) DO UPDATE SET doc = ?1;");
-
-
+   if (!WriteDoc("project", doc))
    {
-      sqlite3_stmt* stmt = nullptr;
-
-      auto finalize = finally([&]
-      {
-         if (stmt)
-         {
-            // This will free the statement
-            sqlite3_finalize(stmt);
-         }
-      });
-
-      rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
-      if (rc != SQLITE_OK)
-      {
-         SetDBError(
-            XO("Unable to prepare project file command:\n\n%s").Format(sql)
-         );
-         return false;
-      }
-
-      // BIND SQL project
-      rc = sqlite3_bind_text(stmt, 1, doc, -1, SQLITE_STATIC);
-      if (rc != SQLITE_OK)
-      {
-         SetDBError(
-            XO("Unable to bind to project file document.")
-         );
-         return false;
-      }
- 
-      rc = sqlite3_step(stmt);
-      if (rc != SQLITE_DONE)
-      {
-         SetDBError(
-            XO("Failed to save project file information.")
-         );
-         return false;
-      }
+      return false;
    }
 
    // We need to remove the autosave info from the file since it is now
    // clean and unmodified.  Otherwise, it would be considered "recovered"
    // when next opened.
-
-   if ( !AutoSaveDelete() )
+   if (!AutoSaveDelete())
+   {
       return false;
+   }
 
    // Reaching this point defines success and all the rest are no-fail
    // operations:
@@ -1584,3 +1561,41 @@ bool ProjectFileIO::ShouldBypass()
    return mTemporary && mBypass;
 }
 
+AutoCommitTransaction::AutoCommitTransaction(ProjectFileIO &projectFileIO,
+                                             const char *name)
+:  mIO(projectFileIO),
+   mName(name)
+{
+   mInTrans = mIO.TransactionStart(mName);
+   // Must throw
+}
+
+AutoCommitTransaction::~AutoCommitTransaction()
+{
+   if (mInTrans)
+   {
+      // Can't check return status...should probably throw an exception here
+      if (!Commit())
+      {
+         // must throw
+      }
+   }
+}
+
+bool AutoCommitTransaction::Commit()
+{
+   wxASSERT(mInTrans);
+
+   mInTrans = !mIO.TransactionCommit(mName);
+
+   return mInTrans;
+}
+
+bool AutoCommitTransaction::Rollback()
+{
+   wxASSERT(mInTrans);
+
+   mInTrans = !mIO.TransactionCommit(mName);
+
+   return mInTrans;
+}

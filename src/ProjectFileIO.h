@@ -17,6 +17,8 @@ Paul Licameli split from AudacityProject.h
 #include "xml/XMLTagHandler.h" // to inherit
 
 struct sqlite3;
+struct sqlite3_context;
+struct sqlite3_value;
 
 class AudacityProject;
 class AutoCommitTransaction;
@@ -25,6 +27,9 @@ class SqliteSampleBlock;
 class WaveTrack;
 
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
+
+// From SampleBlock.h
+using SampleBlockID = long long;
 
 ///\brief Object associated with a project that manages reading and writing
 /// of Audacity project file formats, and autosave
@@ -67,7 +72,6 @@ public:
    void Reset();
 
    bool AutoSave(const WaveTrackArray *tracks = nullptr);
-   bool AutoSave(const AutoSaveFile &autosave);
    bool AutoSaveDelete();
 
    bool LoadProject(const FilePath &fileName);
@@ -97,8 +101,6 @@ public:
    //    ProjectManager::OnCloseWindow()
    void Bypass(bool bypass);
    bool ShouldBypass();
-
-   void LoadedBlock(int64_t blockID);
 
 private:
    // XMLTagHandler callback methods
@@ -148,8 +150,13 @@ private:
    bool InstallSchema();
    bool UpgradeSchema();
 
+   // Write project or autosave XML (binary) documents
+   bool WriteDoc(const char *table, const AutoSaveFile &autosave);
+
    // Checks for orphan blocks.  This will go away at a future date
-   bool CheckForOrphans();
+   using BlockIDs = std::set<SampleBlockID>;
+   static void isorphan(sqlite3_context *context, int argc, sqlite3_value **argv);
+   bool CheckForOrphans(BlockIDs &blockids);
 
    // Return a database connection if successful, which caller must close
    sqlite3 *CopyTo(const FilePath &destpath);
@@ -186,6 +193,22 @@ private:
    int64_t mHighestBlockID;
 
    friend SqliteSampleBlock;
+   friend AutoCommitTransaction;
+};
+
+class AutoCommitTransaction
+{
+public:
+   AutoCommitTransaction(ProjectFileIO &projectFileIO, const char *name);
+   ~AutoCommitTransaction();
+
+   bool Commit();
+   bool Rollback();
+
+private:
+   ProjectFileIO &mIO;
+   bool mInTrans;
+   wxString mName;
 };
 
 class wxTopLevelWindow;

@@ -18,6 +18,12 @@
 #include <unordered_map>
 #include "audacity/Types.h"
 
+// From SampleBlock.h
+using SampleBlockID = long long;
+
+// From ProjectFileiIO.h
+using BlockIDs = std::set<SampleBlockID>;
+
 ///
 /// AutoSaveFile
 ///
@@ -62,7 +68,7 @@ public:
    bool DictChanged() const;
 
    // Returns empty string if decoding fails
-   static wxString Decode(const wxMemoryBuffer &buffer);
+   static wxString Decode(const wxMemoryBuffer &buffer, BlockIDs &blockids);
 
 private:
    void WriteName(const wxString & name);

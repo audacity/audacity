@@ -267,7 +267,8 @@ bool AutoSaveFile::DictChanged() const
    return mDictChanged;
 }
 
-wxString AutoSaveFile::Decode(const wxMemoryBuffer &buffer)
+// See ProjectFileIO::CheckForOrphans() for explanation of the blockids arg
+wxString AutoSaveFile::Decode(const wxMemoryBuffer &buffer, BlockIDs &blockids)
 {
    wxMemoryInputStream in(buffer.GetData(), buffer.GetDataLen());
 
@@ -297,205 +298,218 @@ wxString AutoSaveFile::Decode(const wxMemoryBuffer &buffer)
 
       switch (mCharSize)
       {
-      case 1:
-         str.assignFromUTF8(in, len);
-      break;
+         case 1:
+            str.assignFromUTF8(in, len);
+         break;
 
-      case 2:
-         str.assignFromUTF16((wxChar16 *) in, len / 2);
-      break;
+         case 2:
+            str.assignFromUTF16((wxChar16 *) in, len / 2);
+         break;
 
-      case 4:
-      {
-         str = wxU32CharBuffer::CreateNonOwned((wxChar32 *) in, len / 4);
-      }
-      break;
+         case 4:
+            str = wxU32CharBuffer::CreateNonOwned((wxChar32 *) in, len / 4);
+         break;
 
-      default:
-         wxASSERT_MSG(false, wxT("Characters size not 1, 2, or 4"));
+         default:
+            wxASSERT_MSG(false, wxT("Characters size not 1, 2, or 4"));
+         break;
       }
 
       return str;
    };
 
-   try { while (!in.Eof())
+   try
    {
-      short id;
-
-      switch (in.GetC())
+      while (!in.Eof())
       {
-         case FT_Push:
+         short id;
+
+         switch (in.GetC())
          {
-            mIdStack.push_back(mIds);
-            mIds.clear();
+            case FT_Push:
+            {
+               mIdStack.push_back(mIds);
+               mIds.clear();
+            }
+            break;
+
+            case FT_Pop:
+            {
+               mIds = mIdStack.back();
+               mIdStack.pop_back();
+            }
+            break;
+
+            case FT_Name:
+            {
+               short len;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&len, sizeof(len));
+               bytes.reserve(len);
+               in.Read(bytes.data(), len);
+
+               mIds[id] = Convert(bytes.data(), len);
+            }
+            break;
+
+            case FT_StartTag:
+            {
+               in.Read(&id, sizeof(id));
+
+               out.StartTag(Lookup(id));
+            }
+            break;
+
+            case FT_EndTag:
+            {
+               in.Read(&id, sizeof(id));
+
+               out.EndTag(Lookup(id));
+            }
+            break;
+
+            case FT_String:
+            {
+               int len;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&len, sizeof(len));
+               bytes.reserve(len);
+               in.Read(bytes.data(), len);
+
+               out.WriteAttr(Lookup(id), Convert(bytes.data(), len));
+            }
+            break;
+
+            case FT_Float:
+            {
+               float val;
+               int dig;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+               in.Read(&dig, sizeof(dig));
+
+               out.WriteAttr(Lookup(id), val, dig);
+            }
+            break;
+
+            case FT_Double:
+            {
+               double val;
+               int dig;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+               in.Read(&dig, sizeof(dig));
+
+               out.WriteAttr(Lookup(id), val, dig);
+            }
+            break;
+
+            case FT_Int:
+            {
+               int val;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+
+               out.WriteAttr(Lookup(id), val);
+            }
+            break;
+
+            case FT_Bool:
+            {
+               bool val;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+
+               out.WriteAttr(Lookup(id), val);
+            }
+            break;
+
+            case FT_Long:
+            {
+               long val;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+
+               out.WriteAttr(Lookup(id), val);
+            }
+            break;
+
+            case FT_LongLong:
+            {
+               long long val;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+
+               // Look for and save the "blockid" values to support orphan
+               // block checking.  This should be removed once autosave and
+               // related blocks become part of the same transaction.
+               const wxString &name = Lookup(id);
+               if (name.IsSameAs(wxT("blockid")))
+               {
+                  blockids.insert(val);
+               }
+
+               out.WriteAttr(Lookup(id), val);
+            }
+            break;
+
+            case FT_SizeT:
+            {
+               size_t val;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+
+               out.WriteAttr(Lookup(id), val);
+            }
+            break;
+
+            case FT_Data:
+            {
+               int len;
+
+               in.Read(&len, sizeof(len));
+               bytes.reserve(len);
+               in.Read(bytes.data(), len);
+
+               out.WriteData(Convert(bytes.data(), len));
+            }
+            break;
+
+            case FT_Raw:
+            {
+               int len;
+
+               in.Read(&len, sizeof(len));
+               bytes.reserve(len);
+               in.Read(bytes.data(), len);
+
+               out.Write(Convert(bytes.data(), len));
+            }
+            break;
+
+            case FT_CharSize:
+            {
+               in.Read(&mCharSize, sizeof(mCharSize));
+            }
+            break;
+
+            default:
+               wxASSERT(true);
+            break;
          }
-         break;
-
-         case FT_Pop:
-         {
-            mIds = mIdStack.back();
-            mIdStack.pop_back();
-         }
-         break;
-
-         case FT_Name:
-         {
-            short len;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&len, sizeof(len));
-            bytes.reserve(len);
-            in.Read(bytes.data(), len);
-
-            mIds[id] = Convert(bytes.data(), len);
-         }
-         break;
-
-         case FT_StartTag:
-         {
-            in.Read(&id, sizeof(id));
-
-            out.StartTag(Lookup(id));
-         }
-         break;
-
-         case FT_EndTag:
-         {
-            in.Read(&id, sizeof(id));
-
-            out.EndTag(Lookup(id));
-         }
-         break;
-
-         case FT_String:
-         {
-            int len;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&len, sizeof(len));
-            bytes.reserve(len);
-            in.Read(bytes.data(), len);
-
-            out.WriteAttr(Lookup(id), Convert(bytes.data(), len));
-         }
-         break;
-
-         case FT_Float:
-         {
-            float val;
-            int dig;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-            in.Read(&dig, sizeof(dig));
-
-            out.WriteAttr(Lookup(id), val, dig);
-         }
-         break;
-
-         case FT_Double:
-         {
-            double val;
-            int dig;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-            in.Read(&dig, sizeof(dig));
-
-            out.WriteAttr(Lookup(id), val, dig);
-         }
-         break;
-
-         case FT_Int:
-         {
-            int val;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-
-            out.WriteAttr(Lookup(id), val);
-         }
-         break;
-
-         case FT_Bool:
-         {
-            bool val;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-
-            out.WriteAttr(Lookup(id), val);
-         }
-         break;
-
-         case FT_Long:
-         {
-            long val;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-
-            out.WriteAttr(Lookup(id), val);
-         }
-         break;
-
-         case FT_LongLong:
-         {
-            long long val;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-
-            out.WriteAttr(Lookup(id), val);
-         }
-         break;
-
-         case FT_SizeT:
-         {
-            size_t val;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-
-            out.WriteAttr(Lookup(id), val);
-         }
-         break;
-
-         case FT_Data:
-         {
-            int len;
-
-            in.Read(&len, sizeof(len));
-            bytes.reserve(len);
-            in.Read(bytes.data(), len);
-
-            out.WriteData(Convert(bytes.data(), len));
-         }
-         break;
-
-         case FT_Raw:
-         {
-            int len;
-
-            in.Read(&len, sizeof(len));
-            bytes.reserve(len);
-            in.Read(bytes.data(), len);
-
-            out.Write(Convert(bytes.data(), len));
-         }
-         break;
-
-         case FT_CharSize:
-         {
-            in.Read(&mCharSize, sizeof(mCharSize));
-         }
-         break;
-
-         default:
-            wxASSERT(true);
-         break;
       }
-   } } catch( const Error& ) {
+   }
+   catch( const Error& )
+   {
       // Autosave was corrupt, or platform differences in size or endianness
       // were not well canonicalized
       return {};

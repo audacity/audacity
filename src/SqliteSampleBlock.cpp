@@ -186,11 +186,6 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
          {
             // This may throw
             sb->Load((SampleBlockID) nValue);
-
-            // Tell the IO manager the blockid we just loaded so it can track
-            // the highest one encountered.
-            mpIO->LoadedBlock(nValue);
-
             found++;
          }
          else if (wxStrcmp(attr, wxT("samplecount")) == 0)
