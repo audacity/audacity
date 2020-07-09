@@ -391,7 +391,9 @@ bool EffectLoudness::TransferDataToWindow()
       return false;
    }
 
-   UpdateUI();
+   // adjust controls which depend on mchoice
+   wxCommandEvent dummy;
+   OnChoice(dummy);
    return true;
 }
 
