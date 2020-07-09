@@ -21,14 +21,14 @@
 #include "Import.h"
 #include "ImportPlugin.h"
 
-#include "../Project.h"
-#include "../ProjectFileIO.h"
-#include "../Tags.h"
-#include "../WaveClip.h"
-#include "../widgets/ProgressDialog.h"
-#include "../xml/XMLFileReader.h"
-
+#include "../Envelope.h"
+#include "../FileFormats.h"
 #include "../FileNames.h"
+#include "../LabelTrack.h"
+#if defined(USE_MIDI)
+#include "../NoteTrack.h"
+#endif
+#include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectFileIORegistry.h"
@@ -37,27 +37,28 @@
 #include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
 #include "../Tags.h"
+#include "../TimeTrack.h"
 #include "../ViewInfo.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../toolbars/SelectionBar.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/NumericTextCtrl.h"
+#include "../widgets/ProgressDialog.h"
+#include "../xml/XMLFileReader.h"
 
-#include <wx/dir.h>
+#include <map>
 
 #define DESC XO("AUP project files")
 
 static const auto exts = {wxT("aup")};
 
+#include <wx/dir.h>
 #include <wx/ffile.h>
 #include <wx/file.h>
+#include <wx/frame.h>
 #include <wx/string.h>
 #include <wx/utils.h>
-
-#include "../FileFormats.h"
-#include "../Prefs.h"
-#include "../WaveTrack.h"
-#include "ImportPlugin.h"
 
 class AUPImportFileHandle;
 using ImportHandle = std::unique_ptr<ImportFileHandle>;
@@ -111,9 +112,9 @@ private:
    };
    using stack = std::vector<struct node>;
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   void HandleXMLEndTag(const wxChar *tag);
-   XMLTagHandler *HandleXMLChild(const wxChar *tag);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   void HandleXMLEndTag(const wxChar *tag) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
 
    bool HandleProject(XMLTagHandler *&handle);
    bool HandleLabelTrack(XMLTagHandler *&handle);
