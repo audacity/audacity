@@ -430,8 +430,8 @@ UIHandle::Result SampleHandle::Release
 
 UIHandle::Result SampleHandle::Cancel(AudacityProject *pProject)
 {
-   ProjectHistory::Get( *pProject ).RollbackState();
    mClickedTrack.reset();
+   ProjectHistory::Get( *pProject ).RollbackState();
    return RefreshCode::RefreshCell;
 }
 
