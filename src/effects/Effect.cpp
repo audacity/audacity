@@ -31,6 +31,7 @@
 #include "../Mix.h"
 #include "../PluginManager.h"
 #include "../ProjectAudioManager.h"
+#include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
@@ -1316,7 +1317,21 @@ bool Effect::DoEffect(double projectRate,
       };
       auto vr = valueRestorer( mProgress, &progress );
 
-      returnVal = Process();
+      {
+         // This is for performance purposes only.
+#if 0
+         auto &pProject = *const_cast<AudacityProject*>(FindProject()); // how to remove this const_cast?
+         auto &pIO = ProjectFileIO::Get(pProject);
+         AutoCommitTransaction trans(pIO, "Effect");
+#endif
+         returnVal = Process();
+#if 0
+         if (!returnVal)
+         {
+            trans.Rollback();
+         }
+#endif
+      }
    }
 
    if (returnVal && (mT1 >= mT0 ))

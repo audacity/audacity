@@ -4,12 +4,12 @@
    Audacity(R) is copyright (c) 1999-2010 Audacity Team.
    License: GPL v2.  See License.txt.
 
-   AutoRecovery.h
+   ProjectSerializer.h
 
 *******************************************************************/
 
-#ifndef __AUDACITY_AUTORECOVERY__
-#define __AUDACITY_AUTORECOVERY__
+#ifndef __AUDACITY_PROJECTSERIALIZER__
+#define __AUDACITY_PROJECTSERIALIZER__
 
 #include "xml/XMLTagHandler.h"
 
@@ -26,21 +26,21 @@ using SampleBlockID = long long;
 using BlockIDs = std::set<SampleBlockID>;
 
 ///
-/// AutoSaveFile
+/// ProjectSerializer
 ///
 
 using NameMap = std::unordered_map<wxString, short>;
 using IdMap = std::unordered_map<short, wxString>;
 
 // This class's overrides do NOT throw AudacityException.
-class AUDACITY_DLL_API AutoSaveFile final : public XMLWriter
+class AUDACITY_DLL_API ProjectSerializer final : public XMLWriter
 {
 public:
 
    static TranslatableString FailureMessage( const FilePath &filePath );
 
-   AutoSaveFile(size_t allocSize = 1024 * 1024);
-   virtual ~AutoSaveFile();
+   ProjectSerializer(size_t allocSize = 1024 * 1024);
+   virtual ~ProjectSerializer();
 
    void StartTag(const wxString & name) override;
    void EndTag(const wxString & name) override;
@@ -60,7 +60,7 @@ public:
    void Write(const wxString & data) override;
 
    // Non-override functions
-   void WriteSubTree(const AutoSaveFile & value);
+   void WriteSubTree(const ProjectSerializer & value);
 
    const wxMemoryBuffer &GetDict() const;
    const wxMemoryBuffer &GetData() const;

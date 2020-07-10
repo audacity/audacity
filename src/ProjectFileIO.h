@@ -23,7 +23,7 @@ struct sqlite3_value;
 
 class AudacityProject;
 class AutoCommitTransaction;
-class AutoSaveFile;
+class ProjectSerializer;
 class SqliteSampleBlock;
 class WaveTrack;
 
@@ -73,7 +73,7 @@ public:
    void Reset();
 
    bool AutoSave(const WaveTrackArray *tracks = nullptr);
-   bool AutoSaveDelete();
+   bool AutoSaveDelete(sqlite3 *db = nullptr);
 
    bool LoadProject(const FilePath &fileName);
    bool SaveProject(const FilePath &fileName);
@@ -118,6 +118,8 @@ private:
    static int ExecCallback(void *data, int cols, char **vals, char **names);
    int Exec(const char *query, ExecCB callback, wxString *result);
 
+   static int ProgressCallback(void *data);
+
    // The opening of the database may be delayed until demanded.
    // Returns a non-null pointer to an open database, or throws an exception
    // if opening fails.
@@ -152,7 +154,7 @@ private:
    bool UpgradeSchema();
 
    // Write project or autosave XML (binary) documents
-   bool WriteDoc(const char *table, const AutoSaveFile &autosave);
+   bool WriteDoc(const char *table, const ProjectSerializer &autosave, sqlite3 *db = nullptr);
 
    // Checks for orphan blocks.  This will go away at a future date
    using BlockIDs = std::set<SampleBlockID>;

@@ -14,10 +14,10 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/crt.h>
 #include <wx/frame.h>
 
-#include "AutoRecovery.h"
 #include "FileNames.h"
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
+#include "ProjectSerializer.h"
 #include "ProjectSettings.h"
 #include "Tags.h"
 #include "ViewInfo.h"
@@ -727,88 +727,94 @@ bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
    return true;
 }
 
+static int progress_callback(void *data)
+{
+   ProgressDialog *progress = (ProgressDialog *) data;
+
+   // No way to know how much time will be spent, so turn the
+   // ProgressDialog in to an elapsed timer.
+   //
+   // Would be nice if our ProgressDialog has a Cylon mode.
+   if (progress->Update(100000) != ProgressResult::Success)
+   {
+      return SQLITE_ABORT;
+   }
+
+   return SQLITE_OK;
+}
+
 sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath)
 {
    auto db = DB();
    int rc;
    ProgressResult res = ProgressResult::Success;
 
-   sqlite3 *destdb = nullptr;
-
-   /* Open the database file identified by zFilename. */
-   rc = sqlite3_open(destpath, &destdb);
-   if (rc == SQLITE_OK)
+   sqlite3_stmt *stmt = nullptr;
+   auto cleanup = finally([&]
    {
-      bool success = true;
-      sqlite3_backup *backup = sqlite3_backup_init(destdb, "main", db, "main");
-      if (backup)
+      if (stmt)
       {
-         /* i18n-hint: This title appears on a dialog that indicates the progress
-            in doing something.*/
-         ProgressDialog progress(XO("Progress"), XO("Saving project"));
-
-         do
-         {
-            // These two calls always return zero before any sqlite3_backup_step
-            // but that doesn't matter
-            int remaining = sqlite3_backup_remaining(backup);
-            int total = sqlite3_backup_pagecount(backup);
-
-            if (progress.Update(total - remaining, total) != ProgressResult::Success)
-            {
-               SetError(
-                  XO("Copy process cancelled.")
-               );
-               success = false;
-               break;
-            }
-
-            rc = sqlite3_backup_step(backup, 12);
-         } while (rc == SQLITE_OK || rc == SQLITE_BUSY || rc == SQLITE_LOCKED);
-
-         // The return code from finish() will reflect errors from step()
-         rc = sqlite3_backup_finish(backup);
-         if (rc != SQLITE_OK)
-         {
-            SetDBError(
-               XO("The copy process failed for:\n\n%s").Format(destpath)
-            );
-            success = false;
-         }
+         sqlite3_finalize(stmt);
       }
-      else
-      {
-         SetDBError(
-            XO("Unable to initiate the backup process.")
-         );
-         success = false;
-      }
+   });
 
-      if (!success)
-      {
-         // Don't give this DB connection back to the caller
-         rc = sqlite3_close(destdb);
-         if (rc != SQLITE_OK)
-         {
-            SetDBError(
-               XO("Failed to successfully close the destination project file:\n\n%s")
-            );
-         }
-         wxRemoveFile(destpath);
-         return nullptr;
-      }
-   }
-   else
+   rc = sqlite3_prepare_v2(db, "VACUUM INTO ?;", -1, &stmt, 0);
+   if (rc != SQLITE_OK)
    {
-      // sqlite3 docs say you should close anyway to avoid leaks
-      sqlite3_close( destdb );
       SetDBError(
-         XO("Unable to open the destination project file:\n\n%s").Format(destpath)
+         XO("Unable to prepare project file command")
       );
       return nullptr;
    }
 
-   // Let the caller use this connection and close it later
+   rc = sqlite3_bind_text(stmt, 1, destpath.mb_str().data(), destpath.mb_str().length(), SQLITE_STATIC);
+   if (rc != SQLITE_OK)
+   {
+      THROW_INCONSISTENCY_EXCEPTION;
+   }
+
+   {
+      /* i18n-hint: This title appears on a dialog that indicates the progress
+         in doing something.*/
+      ProgressDialog progress(XO("Progress"), XO("Saving project"));
+
+      sqlite3_progress_handler(db, 10, progress_callback, &progress);
+
+      rc = sqlite3_step(stmt);
+
+      sqlite3_progress_handler(db, 0, nullptr, nullptr);
+   }
+
+   sqlite3_finalize(stmt);
+   stmt = nullptr;
+
+   // VACUUMing failed
+   if (rc != SQLITE_DONE)
+   {
+      SetDBError(
+         XO("Project file copy failed")
+      );
+
+      wxRemoveFile(destpath);
+
+      return nullptr;
+   }
+
+   sqlite3 *destdb = nullptr;
+   rc = sqlite3_open(destpath, &destdb);
+   if (rc != SQLITE_OK)
+   {
+      SetDBError(
+         XO("Failed to open copy of project file")
+      );
+
+      sqlite3_close(destdb);
+
+      wxRemoveFile(destpath);
+
+      return nullptr;
+   }
+
    return destdb;
 }
 
@@ -1108,7 +1114,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile, const WaveTrackArray *tracks)
 
 bool ProjectFileIO::AutoSave(const WaveTrackArray *tracks)
 {
-   AutoSaveFile autosave;
+   ProjectSerializer autosave;
    WriteXMLHeader(autosave);
    WriteXML(autosave, tracks);
 
@@ -1121,10 +1127,14 @@ bool ProjectFileIO::AutoSave(const WaveTrackArray *tracks)
    return false;
 }
 
-bool ProjectFileIO::AutoSaveDelete()
+bool ProjectFileIO::AutoSaveDelete(sqlite3 *db /* = nullptr */)
 {
-   auto db = DB();
    int rc;
+
+   if (!db)
+   {
+      db = DB();
+   }
 
    rc = sqlite3_exec(db, "DELETE FROM autosave;", nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
@@ -1138,10 +1148,16 @@ bool ProjectFileIO::AutoSaveDelete()
    return true;
 }
 
-bool ProjectFileIO::WriteDoc(const char *table, const AutoSaveFile &autosave)
+bool ProjectFileIO::WriteDoc(const char *table,
+                             const ProjectSerializer &autosave,
+                              sqlite3 *db /* = nullptr */)
 {
-   auto db = DB();
    int rc;
+
+   if (!db)
+   {
+      db = DB();
+   }
 
    // For now, we always use an ID of 1. This will replace the previously
    // writen row every time.
@@ -1149,9 +1165,8 @@ bool ProjectFileIO::WriteDoc(const char *table, const AutoSaveFile &autosave)
    sqlite3_snprintf(sizeof(sql),
                     sql,
                     "INSERT INTO %s(id, dict, doc) VALUES(1, ?1, ?2)"
-                    "       ON CONFLICT(id) DO UPDATE SET %sdoc = ?2;",
-                    table,
-                    autosave.DictChanged() ? "dict = ?1, " : "");
+                    "       ON CONFLICT(id) DO UPDATE SET dict = ?1, doc = ?2;",
+                    table);
 
    sqlite3_stmt *stmt = nullptr;
    auto cleanup = finally([&]
@@ -1233,7 +1248,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    }
    if (buffer.GetDataLen() > 0)
    {
-      project = AutoSaveFile::Decode(buffer, blockids);
+      project = ProjectSerializer::Decode(buffer, blockids);
    }
 
    if (!GetBlob("SELECT dict || doc FROM autosave WHERE id = 1;", buffer))
@@ -1243,7 +1258,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    }
    if (buffer.GetDataLen() > 0)
    {
-      autosave = AutoSaveFile::Decode(buffer, blockids);
+      autosave = ProjectSerializer::Decode(buffer, blockids);
    }
 
    // Should this be an error???
@@ -1362,10 +1377,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       UseConnection( newDB, fileName );
    }
 
-   auto db = DB();
-   int rc;
-
-   AutoSaveFile doc;
+   ProjectSerializer doc;
    WriteXMLHeader(doc);
    WriteXML(doc);
 
@@ -1411,7 +1423,6 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
       return false;
    }
 
-   int rc;
    bool success = false;
 
    auto cleanup = finally([&]
@@ -1427,64 +1438,21 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
       }
    });
 
-   XMLStringWriter doc;
+   ProjectSerializer doc;
    WriteXMLHeader(doc);
    WriteXML(doc);
 
-   // Always use an ID of 1. This will replace any existing row.
-   char sql[256];
-   sqlite3_snprintf(sizeof(sql),
-                    sql,
-                    "INSERT INTO project(id, doc) VALUES(1, ?1)"
-                    "       ON CONFLICT(id) DO UPDATE SET doc = ?1;");
-
+   // Write the project doc to the new DB
+   if (!WriteDoc("project", doc, db))
    {
-      sqlite3_stmt* stmt = nullptr;
-
-      auto finalize = finally([&]
-      {
-         if (stmt)
-         {
-            // This will free the statement
-            sqlite3_finalize(stmt);
-         }
-      });
-
-      rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
-      if (rc != SQLITE_OK)
-      {
-         SetDBError(
-            XO("Unable to prepare project file command:\n\n%s").Format(sql)
-         );
-         return false;
-      }
-
-      // BIND SQL project
-      rc = sqlite3_bind_text(stmt, 1, doc, -1, SQLITE_STATIC);
-      if (rc != SQLITE_OK)
-      {
-         SetDBError(
-            XO("Unable to bind to project file document.")
-         );
-         return false;
-      }
-
-      rc = sqlite3_step(stmt);
-      if (rc != SQLITE_DONE)
-      {
-         SetDBError(
-            XO("Failed to save project file information.")
-         );
-         return false;
-      }
+      return false;
    }
 
-   rc = sqlite3_exec(db, "DELETE FROM autosave;", nullptr, nullptr, nullptr);
-   if (rc != SQLITE_OK)
+   // We need to remove the autosave info from the new DB since it is now
+   // clean and unmodified.  Otherwise, it would be considered "recovered"
+   // when next opened.
+   if (!AutoSaveDelete(db))
    {
-      SetDBError(
-         XO("Failed to remove the autosave information from the project file.")
-      );
       return false;
    }
 

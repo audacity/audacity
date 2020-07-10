@@ -4,26 +4,25 @@
    Audacity(R) is copyright (c) 1999-2010 Audacity Team.
    License: GPL v2.  See License.txt.
 
-   AutoRecovery.cpp
+   ProjectSerializer.cpp
 
 *******************************************************************//**
 
-\class AutoSaveFile
-\brief a class wrapping reading and writing of arbitrary data in 
-text or binary format to a file.
+\class ProjectSerializer
+\brief a class used to (de)serialize the project catalog
 
 *//********************************************************************/
 
 #include "Audacity.h"
-#include "AutoRecovery.h"
+#include "ProjectSerializer.h"
 
 #include <wx/ustring.h>
 
 ///
-/// AutoSaveFile class
+/// ProjectSerializer class
 ///
 
-// Simple "binary xml" format used exclusively for autosave documents.
+// Simple "binary xml" format used exclusively for project documents.
 //
 // It is not intended that the user view or modify the file.
 //
@@ -75,17 +74,17 @@ enum FieldTypes
 // is writen and then the envelope is later removed, the dict will still
 // contain the envelope name, but that's not a problem.
 
-NameMap AutoSaveFile::mNames;
-wxMemoryBuffer AutoSaveFile::mDict;
+NameMap ProjectSerializer::mNames;
+wxMemoryBuffer ProjectSerializer::mDict;
 
-TranslatableString AutoSaveFile::FailureMessage( const FilePath &/*filePath*/ )
+TranslatableString ProjectSerializer::FailureMessage( const FilePath &/*filePath*/ )
 {
    return 
 XO("This recovery file was saved by Audacity 2.3.0 or before.\n"
    "You need to run that version of Audacity to recover the project." );
 }
 
-AutoSaveFile::AutoSaveFile(size_t allocSize)
+ProjectSerializer::ProjectSerializer(size_t allocSize)
 {
    mDict.SetBufSize(allocSize);
    mBuffer.SetBufSize(allocSize);
@@ -99,28 +98,28 @@ AutoSaveFile::AutoSaveFile(size_t allocSize)
    mDictChanged = false;
 }
 
-AutoSaveFile::~AutoSaveFile()
+ProjectSerializer::~ProjectSerializer()
 {
 }
 
-void AutoSaveFile::StartTag(const wxString & name)
+void ProjectSerializer::StartTag(const wxString & name)
 {
    mBuffer.AppendByte(FT_StartTag);
    WriteName(name);
 }
 
-void AutoSaveFile::EndTag(const wxString & name)
+void ProjectSerializer::EndTag(const wxString & name)
 {
    mBuffer.AppendByte(FT_EndTag);
    WriteName(name);
 }
 
-void AutoSaveFile::WriteAttr(const wxString & name, const wxChar *value)
+void ProjectSerializer::WriteAttr(const wxString & name, const wxChar *value)
 {
    WriteAttr(name, wxString(value));
 }
 
-void AutoSaveFile::WriteAttr(const wxString & name, const wxString & value)
+void ProjectSerializer::WriteAttr(const wxString & name, const wxString & value)
 {
    mBuffer.AppendByte(FT_String);
    WriteName(name);
@@ -131,7 +130,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, const wxString & value)
    mBuffer.AppendData(value.wx_str(), len);
 }
 
-void AutoSaveFile::WriteAttr(const wxString & name, int value)
+void ProjectSerializer::WriteAttr(const wxString & name, int value)
 {
    mBuffer.AppendByte(FT_Int);
    WriteName(name);
@@ -139,7 +138,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, int value)
    mBuffer.AppendData(&value, sizeof(value));
 }
 
-void AutoSaveFile::WriteAttr(const wxString & name, bool value)
+void ProjectSerializer::WriteAttr(const wxString & name, bool value)
 {
    mBuffer.AppendByte(FT_Bool);
    WriteName(name);
@@ -147,7 +146,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, bool value)
    mBuffer.AppendData(&value, sizeof(value));
 }
 
-void AutoSaveFile::WriteAttr(const wxString & name, long value)
+void ProjectSerializer::WriteAttr(const wxString & name, long value)
 {
    mBuffer.AppendByte(FT_Long);
    WriteName(name);
@@ -155,7 +154,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, long value)
    mBuffer.AppendData(&value, sizeof(value));
 }
 
-void AutoSaveFile::WriteAttr(const wxString & name, long long value)
+void ProjectSerializer::WriteAttr(const wxString & name, long long value)
 {
    mBuffer.AppendByte(FT_LongLong);
    WriteName(name);
@@ -163,7 +162,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, long long value)
    mBuffer.AppendData(&value, sizeof(value));
 }
 
-void AutoSaveFile::WriteAttr(const wxString & name, size_t value)
+void ProjectSerializer::WriteAttr(const wxString & name, size_t value)
 {
    mBuffer.AppendByte(FT_SizeT);
    WriteName(name);
@@ -171,7 +170,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, size_t value)
    mBuffer.AppendData(&value, sizeof(value));
 }
 
-void AutoSaveFile::WriteAttr(const wxString & name, float value, int digits)
+void ProjectSerializer::WriteAttr(const wxString & name, float value, int digits)
 {
    mBuffer.AppendByte(FT_Float);
    WriteName(name);
@@ -180,7 +179,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, float value, int digits)
    mBuffer.AppendData(&digits, sizeof(digits));
 }
 
-void AutoSaveFile::WriteAttr(const wxString & name, double value, int digits)
+void ProjectSerializer::WriteAttr(const wxString & name, double value, int digits)
 {
    mBuffer.AppendByte(FT_Double);
    WriteName(name);
@@ -189,7 +188,7 @@ void AutoSaveFile::WriteAttr(const wxString & name, double value, int digits)
    mBuffer.AppendData(&digits, sizeof(digits));
 }
 
-void AutoSaveFile::WriteData(const wxString & value)
+void ProjectSerializer::WriteData(const wxString & value)
 {
    mBuffer.AppendByte(FT_Data);
 
@@ -199,7 +198,7 @@ void AutoSaveFile::WriteData(const wxString & value)
    mBuffer.AppendData(value.wx_str(), len);
 }
 
-void AutoSaveFile::Write(const wxString & value)
+void ProjectSerializer::Write(const wxString & value)
 {
    mBuffer.AppendByte(FT_Raw);
 
@@ -209,7 +208,7 @@ void AutoSaveFile::Write(const wxString & value)
    mBuffer.AppendData(value.wx_str(), len);
 }
 
-void AutoSaveFile::WriteSubTree(const AutoSaveFile & value)
+void ProjectSerializer::WriteSubTree(const ProjectSerializer & value)
 {
    mBuffer.AppendByte(FT_Push);
 
@@ -219,7 +218,7 @@ void AutoSaveFile::WriteSubTree(const AutoSaveFile & value)
    mBuffer.AppendByte(FT_Pop);
 }
 
-void AutoSaveFile::WriteName(const wxString & name)
+void ProjectSerializer::WriteName(const wxString & name)
 {
    wxASSERT(name.length() * sizeof(wxChar) <= SHRT_MAX);
    short id;
@@ -247,28 +246,28 @@ void AutoSaveFile::WriteName(const wxString & name)
    mBuffer.AppendData(&id, sizeof(id));
 }
 
-const wxMemoryBuffer &AutoSaveFile::GetDict() const
+const wxMemoryBuffer &ProjectSerializer::GetDict() const
 {
    return mDict;
 }
 
-const wxMemoryBuffer &AutoSaveFile::GetData() const
+const wxMemoryBuffer &ProjectSerializer::GetData() const
 {
    return mBuffer;
 }
 
-bool AutoSaveFile::IsEmpty() const
+bool ProjectSerializer::IsEmpty() const
 {
    return mBuffer.GetDataLen() == 0;
 }
 
-bool AutoSaveFile::DictChanged() const
+bool ProjectSerializer::DictChanged() const
 {
    return mDictChanged;
 }
 
 // See ProjectFileIO::CheckForOrphans() for explanation of the blockids arg
-wxString AutoSaveFile::Decode(const wxMemoryBuffer &buffer, BlockIDs &blockids)
+wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &blockids)
 {
    wxMemoryInputStream in(buffer.GetData(), buffer.GetDataLen());
 
@@ -449,8 +448,8 @@ wxString AutoSaveFile::Decode(const wxMemoryBuffer &buffer, BlockIDs &blockids)
                in.Read(&val, sizeof(val));
 
                // Look for and save the "blockid" values to support orphan
-               // block checking.  This should be removed once autosave and
-               // related blocks become part of the same transaction.
+               // block checking. This should be removed once serialization
+               // and related blocks become part of the same transaction.
                const wxString &name = Lookup(id);
                if (name.IsSameAs(wxT("blockid")))
                {
@@ -510,7 +509,7 @@ wxString AutoSaveFile::Decode(const wxMemoryBuffer &buffer, BlockIDs &blockids)
    }
    catch( const Error& )
    {
-      // Autosave was corrupt, or platform differences in size or endianness
+      // Document was corrupt, or platform differences in size or endianness
       // were not well canonicalized
       return {};
    }
