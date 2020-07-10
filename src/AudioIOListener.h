@@ -25,7 +25,7 @@ public:
 
    virtual void OnAudioIOStartRecording() = 0;
    virtual void OnAudioIOStopRecording() = 0;
-   virtual void OnAudioIONewBlockFiles(const WaveTrackArray *tracks) = 0;
+   virtual void OnAudioIONewBlocks(const WaveTrackArray *tracks) = 0;
 
    // Commit the addition of temporary recording tracks into the project
    virtual void OnCommitRecording() = 0;

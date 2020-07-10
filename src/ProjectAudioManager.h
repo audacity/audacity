@@ -137,7 +137,7 @@ private:
    void OnAudioIORate(int rate) override;
    void OnAudioIOStartRecording() override;
    void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlockFiles(const WaveTrackArray *tracks) override;
+   void OnAudioIONewBlocks(const WaveTrackArray *tracks) override;
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 

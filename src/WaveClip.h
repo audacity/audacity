@@ -281,7 +281,8 @@ public:
    void UpdateEnvelopeTrackLen();
 
    /// You must call Flush after the last Append
-   void Append(samplePtr buffer, sampleFormat format,
+   /// @return true if at least one complete block was created
+   bool Append(samplePtr buffer, sampleFormat format,
                size_t len, unsigned int stride=1);
    /// Flush must be called after last Append
    void Flush();

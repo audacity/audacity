@@ -220,8 +220,10 @@ private:
     * If there is an existing WaveClip in the WaveTrack then the data is
     * appended to that clip. If there are no WaveClips in the track, then a NEW
     * one is created.
+    *
+    * @return true if at least one complete block was created
     */
-   void Append(samplePtr buffer, sampleFormat format,
+   bool Append(samplePtr buffer, sampleFormat format,
                size_t len, unsigned int stride=1);
    /// Flush must be called after last Append
    void Flush();

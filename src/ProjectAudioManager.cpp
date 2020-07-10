@@ -925,7 +925,7 @@ You are saving directly to a slow external storage device\n\
    }
 }
 
-void ProjectAudioManager::OnAudioIONewBlockFiles(const WaveTrackArray *tracks)
+void ProjectAudioManager::OnAudioIONewBlocks(const WaveTrackArray *tracks)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );

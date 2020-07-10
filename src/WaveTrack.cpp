@@ -1485,13 +1485,13 @@ void WaveTrack::Join(double t0, double t1)
    }
 }
 
-void WaveTrack::Append(samplePtr buffer, sampleFormat format,
+bool WaveTrack::Append(samplePtr buffer, sampleFormat format,
                        size_t len, unsigned int stride /* = 1 */)
 // PARTIAL-GUARANTEE in case of exceptions:
 // Some prefix (maybe none) of the buffer is appended, and no content already
 // flushed to disk is lost.
 {
-   RightmostOrNewClip()->Append(buffer, format, len, stride);
+   return RightmostOrNewClip()->Append(buffer, format, len, stride);
 }
 
 sampleCount WaveTrack::GetBlockStart(sampleCount s) const

@@ -2893,6 +2893,8 @@ void AudioIO::FillBuffers()
          if (mAudioThreadShouldCallFillBuffersOnce ||
              deltat >= mMinCaptureSecsToCopy)
          {
+            bool newBlocks = false;
+
             // Append captured samples to the end of the WaveTracks.
             // The WaveTracks have their own buffering for efficiency.
             auto numChannels = mCaptureTracks.size();
@@ -3014,7 +3016,8 @@ void AudioIO::FillBuffers()
 
                // Now append
                // see comment in second handler about guarantee
-               mCaptureTracks[i]->Append(temp.ptr(), format, size, 1);
+               newBlocks = mCaptureTracks[i]->Append(temp.ptr(), format, size, 1)
+                  || newBlocks;
             } // end loop over capture channels
 
             // Now update the recording shedule position
@@ -3022,8 +3025,8 @@ void AudioIO::FillBuffers()
             mRecordingSchedule.mLatencyCorrected = latencyCorrected;
 
             auto pListener = GetListener();
-            if (pListener)
-               pListener->OnAudioIONewBlockFiles(&mCaptureTracks);
+            if (pListener && newBlocks)
+               pListener->OnAudioIONewBlocks(&mCaptureTracks);
          }
          // end of record buffering
       },

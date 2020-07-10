@@ -1202,13 +1202,14 @@ void WaveClip::GetDisplayRect(wxRect* r)
    *r = mDisplayRect;
 }
 
-void WaveClip::Append(samplePtr buffer, sampleFormat format,
+bool WaveClip::Append(samplePtr buffer, sampleFormat format,
                       size_t len, unsigned int stride /* = 1 */)
 // PARTIAL-GUARANTEE in case of exceptions:
 // Some prefix (maybe none) of the buffer is appended, and no content already
 // flushed to disk is lost.
 {
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
+   bool result = false;
 
    auto maxBlockSize = mSequence->GetMaxBlockSize();
    auto blockSize = mSequence->GetIdealAppendLen();
@@ -1228,6 +1229,7 @@ void WaveClip::Append(samplePtr buffer, sampleFormat format,
          // flush some previously appended contents
          // use STRONG-GUARANTEE
          mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize);
+         result = true;
 
          // use NOFAIL-GUARANTEE for rest of this "if"
          memmove(mAppendBuffer.ptr(),
@@ -1255,6 +1257,8 @@ void WaveClip::Append(samplePtr buffer, sampleFormat format,
       buffer += toCopy * SAMPLE_SIZE(format) * stride;
       len -= toCopy;
    }
+
+   return result;
 }
 
 void WaveClip::Flush()
