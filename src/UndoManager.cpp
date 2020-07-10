@@ -281,7 +281,7 @@ void UndoManager::PushState(const TrackList * l,
 {
    unsigned int i;
 
-   if ( ((flags & UndoPush::CONSOLIDATE) != UndoPush::MINIMAL) &&
+   if ( (flags & UndoPush::CONSOLIDATE) != UndoPush::NONE &&
        // compare full translations not msgids!
        lastAction.Translation() == longDescription.Translation() &&
        mayConsolidate ) {

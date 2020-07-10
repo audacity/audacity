@@ -97,9 +97,9 @@ using SpaceArray = std::vector <unsigned long long> ;
 // Default is AUTOSAVE
 // Frequent/faster actions use CONSOLIDATE
 enum class UndoPush : unsigned char {
-   MINIMAL = 0,
+   NONE = 0,
    CONSOLIDATE = 1 << 0,
-   AUTOSAVE = 1 << 1
+   NOAUTOSAVE = 1 << 1
 };
 
 inline UndoPush operator | (UndoPush a, UndoPush b)
@@ -126,7 +126,7 @@ class AUDACITY_DLL_API UndoManager final
                   const std::shared_ptr<Tags> &tags,
                   const TranslatableString &longDescription,
                   const TranslatableString &shortDescription,
-                  UndoPush flags = UndoPush::AUTOSAVE);
+                  UndoPush flags = UndoPush::NONE);
    void ModifyState(const TrackList * l,
                     const SelectedRegion &selectedRegion, const std::shared_ptr<Tags> &tags);
    void ClearStates();

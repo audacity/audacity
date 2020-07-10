@@ -261,7 +261,7 @@ UIHandle::Result StretchHandle::Release
       or present tense is fine here.  If unsure, go for whichever is
       shorter.*/
       XO("Stretch"),
-      UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
+      UndoPush::CONSOLIDATE);
    return RefreshAll;
 }
 

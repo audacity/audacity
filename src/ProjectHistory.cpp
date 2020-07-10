@@ -87,7 +87,7 @@ namespace {
 void ProjectHistory::PushState(
    const TranslatableString &desc, const TranslatableString &shortDesc)
 {
-   PushState(desc, shortDesc, UndoPush::AUTOSAVE);
+   PushState(desc, shortDesc, UndoPush::NONE);
 }
 
 void ProjectHistory::PushState(const TranslatableString &desc,
@@ -96,7 +96,7 @@ void ProjectHistory::PushState(const TranslatableString &desc,
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
-   if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
+   if((flags & UndoPush::NOAUTOSAVE) == UndoPush::NONE)
       AutoSaveOrThrow( projectFileIO );
 
    // remaining no-fail operations "commit" the changes of undo manager state
