@@ -1637,13 +1637,13 @@ bool LabelTrackView::DoChar(
    // Now we are definitely in a label; append the incoming character
    //
 
-   const auto &mLabels = pTrack->GetLabels();
-   auto labelStruct = mLabels[mSelIndex];
-   auto &title = labelStruct.title;
-
    // Test if cursor is in the end of string or not
    if (mInitialCursorPos != mCurrentCursorPos)
       RemoveSelectedText();
+
+   const auto& mLabels = pTrack->GetLabels();
+   auto labelStruct = mLabels[mSelIndex];
+   auto& title = labelStruct.title;
 
    if (mCurrentCursorPos < (int)title.length()) {
       // Get substring on the righthand side of cursor
