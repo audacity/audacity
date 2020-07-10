@@ -72,7 +72,7 @@ public:
 
    void Reset();
 
-   bool AutoSave(const WaveTrackArray *tracks = nullptr);
+   bool AutoSave(bool recording = false);
    bool AutoSaveDelete(sqlite3 *db = nullptr);
 
    bool LoadProject(const FilePath &fileName);
@@ -81,7 +81,7 @@ public:
 
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXMLHeader(XMLWriter &xmlFile) const;
-   void WriteXML(XMLWriter &xmlFile, const WaveTrackArray *tracks = nullptr) /* not override */;
+   void WriteXML(XMLWriter &xmlFile, bool recording = false) /* not override */;
 
    wxLongLong GetFreeDiskSpace();
 

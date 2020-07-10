@@ -854,10 +854,8 @@ void ProjectAudioManager::OnAudioIORate(int rate)
 
 void ProjectAudioManager::OnAudioIOStartRecording()
 {
-   auto &projectFileIO = ProjectFileIO::Get( mProject );
-   // Before recording is started, auto-save the file. The file will have
-   // empty tracks at the bottom where the recording will be put into
-   projectFileIO.AutoSave();
+   // Auto-save was done here before, but it is unnecessary, provided there
+   // are sufficient autosaves when pushing or modifying undo states.
 }
 
 // This is called after recording has stopped and all tracks have flushed.
@@ -931,7 +929,7 @@ void ProjectAudioManager::OnAudioIONewBlockFiles(const WaveTrackArray *tracks)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.AutoSave(tracks);
+   projectFileIO.AutoSave(true);
 }
 
 void ProjectAudioManager::OnCommitRecording()
