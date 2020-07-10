@@ -543,7 +543,7 @@ bool ProjectFileIO::GetValue(const char *sql, wxString &result)
    return true;
 }
 
-bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
+bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer, RowId *pId)
 {
    auto db = DB();
    int rc;
@@ -587,6 +587,9 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
 
    const void *blob = sqlite3_column_blob(stmt, 0);
    int size = sqlite3_column_bytes(stmt, 0);
+
+   if (pId)
+      *pId = sqlite3_column_int(stmt, 1);
 
    buffer.AppendData(blob, size);
 
@@ -896,6 +899,36 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
    SetProjectTitle();
 }
 
+void ProjectFileIO::NextAutoSaveRow()
+{
+   ++mAutoSaveRowId;
+   // Try to clean up the outdated row, but ignore failure
+   (void) DeleteAutoSaveRow( mAutoSaveRowId - 1 );
+}
+
+void ProjectFileIO::DiscardAutoSaveRow()
+{
+   // Try to clean up the abandoned row, but ignore failure
+   (void) DeleteAutoSaveRow( mAutoSaveRowId + 1 );
+}
+
+int ProjectFileIO::DeleteAutoSaveRow( RowId rowId )
+{
+   int rc = 0;
+   if ( mDB )
+   {
+      char sql[256];
+      sqlite3_snprintf(sizeof(sql),
+                       sql,
+                       "DELETE FROM autosave WHERE id = %d;",
+                       rowId );
+      
+      rc = sqlite3_exec(mDB, sql, nullptr, nullptr, nullptr);
+      wxLogDebug(wxT("AutoSave row deletion returned: %d"), rc);
+   }
+   return rc;
+}
+
 bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    auto pProject = mpProject.lock();
@@ -1123,7 +1156,7 @@ bool ProjectFileIO::AutoSave(bool recording)
    WriteXMLHeader(autosave);
    WriteXML(autosave, recording);
 
-   if (WriteDoc("autosave", autosave))
+   if (WriteDoc("autosave", mAutoSaveRowId + (recording ? 1 : 0), autosave))
    {
       mModified = true;
       return true;
@@ -1150,10 +1183,13 @@ bool ProjectFileIO::AutoSaveDelete(sqlite3 *db /* = nullptr */)
       return false;
    }
 
+   // Reset the row id
+   mAutoSaveRowId = 1;
+
    return true;
 }
 
-bool ProjectFileIO::WriteDoc(const char *table,
+bool ProjectFileIO::WriteDoc(const char *table, RowId rowId,
                              const ProjectSerializer &autosave,
                               sqlite3 *db /* = nullptr */)
 {
@@ -1169,9 +1205,9 @@ bool ProjectFileIO::WriteDoc(const char *table,
    char sql[256];
    sqlite3_snprintf(sizeof(sql),
                     sql,
-                    "INSERT INTO %s(id, dict, doc) VALUES(1, ?1, ?2)"
+                    "INSERT INTO %s(id, dict, doc) VALUES(%d, ?1, ?2)"
                     "       ON CONFLICT(id) DO UPDATE SET dict = ?1, doc = ?2;",
-                    table);
+                    table, rowId);
 
    sqlite3_stmt *stmt = nullptr;
    auto cleanup = finally([&]
@@ -1256,7 +1292,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
       project = ProjectSerializer::Decode(buffer, blockids);
    }
 
-   if (!GetBlob("SELECT dict || doc FROM autosave WHERE id = 1;", buffer))
+   if (!GetBlob("SELECT dict || doc, id FROM autosave WHERE id IN ( SELECT MAX(id) FROM autosave );", buffer, &mAutoSaveRowId))
    {
       // Error already set
       return false;
@@ -1386,7 +1422,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    WriteXMLHeader(doc);
    WriteXML(doc);
 
-   if (!WriteDoc("project", doc))
+   if (!WriteDoc("project", 1, doc))
    {
       return false;
    }
@@ -1448,7 +1484,7 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
    WriteXML(doc);
 
    // Write the project doc to the new DB
-   if (!WriteDoc("project", doc, db))
+   if (!WriteDoc("project", 1, doc, db))
    {
       return false;
    }

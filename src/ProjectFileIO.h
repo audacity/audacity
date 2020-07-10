@@ -103,7 +103,24 @@ public:
    void Bypass(bool bypass);
    bool ShouldBypass();
 
+   // Call this when a temporary auto save row has successfully committed, and
+   // it now also corresponds to the latest undo manager state.
+   // To be called as a clean up after an undo history "commit," it ignores failures.
+   void NextAutoSaveRow();
+   
+   // Call this when a temporary auto save row has successfully committed, but
+   // it should be abandoned.
+   // To be called as a clean up after an undo history "rollback," it ignores
+   // failures.
+   void DiscardAutoSaveRow();
+   
 private:
+   // Identifier of rows in the AutoSave table
+   using RowId = int; // should this be wider?
+   
+   // Return the error code from sqlite
+   int DeleteAutoSaveRow( RowId rowId );
+
    // XMLTagHandler callback methods
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
 
@@ -147,14 +164,15 @@ private:
    bool TransactionRollback(const wxString &name);
 
    bool GetValue(const char *sql, wxString &value);
-   bool GetBlob(const char *sql, wxMemoryBuffer &buffer);
+   bool GetBlob(const char *sql, wxMemoryBuffer &buffer, RowId *pId = nullptr);
 
    bool CheckVersion();
    bool InstallSchema();
    bool UpgradeSchema();
 
    // Write project or autosave XML (binary) documents
-   bool WriteDoc(const char *table, const ProjectSerializer &autosave, sqlite3 *db = nullptr);
+   bool WriteDoc(const char *table, RowId rowId,
+      const ProjectSerializer &autosave, sqlite3 *db = nullptr);
 
    // Checks for orphan blocks.  This will go away at a future date
    using BlockIDs = std::set<SampleBlockID>;
@@ -195,6 +213,8 @@ private:
 
    // Track the highest blockid while loading a project
    int64_t mHighestBlockID;
+
+   RowId mAutoSaveRowId{ 1 };
 
    friend SqliteSampleBlock;
    friend AutoCommitTransaction;

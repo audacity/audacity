@@ -874,6 +874,8 @@ void ProjectAudioManager::OnAudioIOStopRecording()
       if (IsTimerRecordCancelled()) {
          // discard recording
          history.RollbackState();
+         // discard the autosaves made during recording
+         projectFileIO.DiscardAutoSaveRow();
          // Reset timer record
          ResetTimerRecordCancelled();
       }
@@ -884,6 +886,10 @@ void ProjectAudioManager::OnAudioIOStopRecording()
          // successully committed to the database, not risking a failure
          history.PushState(XO("Recorded Audio"), XO("Record"),
             UndoPush::NOAUTOSAVE);
+
+         // The autosave that held the state just pushed is now the row that
+         // should be used
+         projectFileIO.NextAutoSaveRow();
 
          // Now, we may add a label track to give information about
          // dropouts.  We allow failure of this.
