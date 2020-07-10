@@ -84,8 +84,6 @@ list( APPEND SOURCES
       AudioIOBase.cpp
       AudioIOBase.h
       AudioIOListener.h
-      AutoRecovery.cpp
-      AutoRecovery.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h
       BatchCommandDialog.cpp
@@ -199,8 +197,6 @@ list( APPEND SOURCES
       ProjectAudioIO.h
       ProjectAudioManager.cpp
       ProjectAudioManager.h
-#      ProjectFSCK.cpp
-#      ProjectFSCK.h
       ProjectFileIO.cpp
       ProjectFileIO.h
       ProjectFileIORegistry.cpp
@@ -213,6 +209,8 @@ list( APPEND SOURCES
       ProjectManager.h
       ProjectSelectionManager.cpp
       ProjectSelectionManager.h
+      ProjectSerializer.cpp
+      ProjectSerializer.h
       ProjectSettings.cpp
       ProjectSettings.h
       ProjectStatus.cpp

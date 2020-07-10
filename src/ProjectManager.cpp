@@ -14,7 +14,6 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
-#include "AutoRecovery.h"
 #include "Clipboard.h"
 #include "FileNames.h"
 #include "Menus.h"

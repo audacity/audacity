@@ -17,7 +17,6 @@ Paul Licameli split from ProjectManager.cpp
 #include <wx/statusbr.h>
 
 #include "AudioIO.h"
-#include "AutoRecovery.h"
 #include "CommonCommandFlags.h"
 #include "LabelTrack.h"
 #include "Menus.h"

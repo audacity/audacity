@@ -19,7 +19,6 @@ Paul Licameli split from AudacityProject.cpp
 #endif
 
 #include <wx/frame.h>
-#include "AutoRecovery.h"
 #include "Dependencies.h"
 #include "FileFormats.h"
 #include "FileNames.h"
