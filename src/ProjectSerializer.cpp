@@ -291,22 +291,27 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
       return iter->second;
    };
 
-   auto Convert = [&mCharSize](char *in, int len) -> wxString
+   auto ReadString = [&mCharSize, &in, &bytes](int len) -> wxString
    {
+      bytes.reserve( len + 4 );
+      auto data = bytes.data();
+      in.Read( data, len );
+      // Make a null terminator of the widest type
+      memset( data + len, '\0', 4 );
       wxUString str;
-
+      
       switch (mCharSize)
       {
          case 1:
-            str.assignFromUTF8(in, len);
+            str.assignFromUTF8(data, len);
          break;
 
          case 2:
-            str.assignFromUTF16((wxChar16 *) in, len / 2);
+            str.assignFromUTF16((wxChar16 *) data, len / 2);
          break;
 
          case 4:
-            str = wxU32CharBuffer::CreateNonOwned((wxChar32 *) in, len / 4);
+            str = wxU32CharBuffer::CreateNonOwned((wxChar32 *) data, len / 4);
          break;
 
          default:
@@ -345,10 +350,7 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
                in.Read(&id, sizeof(id));
                in.Read(&len, sizeof(len));
-               bytes.reserve(len);
-               in.Read(bytes.data(), len);
-
-               mIds[id] = Convert(bytes.data(), len);
+               mIds[id] = ReadString(len);
             }
             break;
 
@@ -374,10 +376,7 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
                in.Read(&id, sizeof(id));
                in.Read(&len, sizeof(len));
-               bytes.reserve(len);
-               in.Read(bytes.data(), len);
-
-               out.WriteAttr(Lookup(id), Convert(bytes.data(), len));
+               out.WriteAttr(Lookup(id), ReadString(len));
             }
             break;
 
@@ -476,10 +475,7 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
                int len;
 
                in.Read(&len, sizeof(len));
-               bytes.reserve(len);
-               in.Read(bytes.data(), len);
-
-               out.WriteData(Convert(bytes.data(), len));
+               out.WriteData(ReadString(len));
             }
             break;
 
@@ -488,10 +484,7 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
                int len;
 
                in.Read(&len, sizeof(len));
-               bytes.reserve(len);
-               in.Read(bytes.data(), len);
-
-               out.Write(Convert(bytes.data(), len));
+               out.Write(ReadString(len));
             }
             break;
 

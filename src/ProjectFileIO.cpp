@@ -1059,7 +1059,7 @@ void ProjectFileIO::WriteXMLHeader(XMLWriter &xmlFile) const
    xmlFile.Write(wxT(">\n"));
 }
 
-void ProjectFileIO::WriteXML(XMLWriter &xmlFile, const WaveTrackArray *tracks)
+void ProjectFileIO::WriteXML(XMLWriter &xmlFile, bool recording)
 // may throw
 {
    auto pProject = mpProject.lock();
@@ -1092,31 +1092,36 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile, const WaveTrackArray *tracks)
    tags.WriteXML(xmlFile);
 
    unsigned int ndx = 0;
-   if (tracks)
+   tracklist.Any().Visit([&](Track *t)
    {
-      for (auto track : *tracks)
-      {
-         track->WriteXML(xmlFile);
+      auto useTrack = t;
+      if ( recording ) {
+         // When append-recording, there is a temporary "shadow" track accumulating
+         // changes and displayed on the screen but it is not yet part of the
+         // regular track list.  That is the one that we want to back up.
+         // SubstitutePendingChangedTrack() fetches the shadow, if the track has
+         // one, else it gives the same track back.
+         useTrack = t->SubstitutePendingChangedTrack().get();
       }
-   }
-   else
-   {
-      tracklist.Any().Visit([&](Track *t)
-      {
-         t->WriteXML(xmlFile);
-      });
-   }
+      else if ( useTrack->GetId() == TrackId{} ) {
+         // This is a track added during a non-appending recording that is
+         // not yet in the undo history.  The UndoManager skips backing it up
+         // when pushing.  Don't auto-save it.
+         return;
+      }
+      useTrack->WriteXML(xmlFile);
+   });
 
    xmlFile.EndTag(wxT("project"));
 
    //TIMER_STOP( xml_writer_timer );
 }
 
-bool ProjectFileIO::AutoSave(const WaveTrackArray *tracks)
+bool ProjectFileIO::AutoSave(bool recording)
 {
    ProjectSerializer autosave;
    WriteXMLHeader(autosave);
-   WriteXML(autosave, tracks);
+   WriteXML(autosave, recording);
 
    if (WriteDoc("autosave", autosave))
    {
