@@ -16,6 +16,7 @@
 #include "Audacity.h"
 #include "ProjectSerializer.h"
 
+#include <mutex>
 #include <wx/ustring.h>
 
 ///
@@ -89,11 +90,16 @@ ProjectSerializer::ProjectSerializer(size_t allocSize)
    mDict.SetBufSize(allocSize);
    mBuffer.SetBufSize(allocSize);
 
-   // Store the size of "wxChar" so we can convert during recovery in
-   // case the file is used on a system with a different character size.
-   char size = sizeof(wxChar);
-   mDict.AppendByte(FT_CharSize);
-   mDict.AppendData(&size, sizeof(size));
+   std::once_flag flag;
+   std::call_once(flag, []{
+      // Just once per run, store header information in the unique static
+      // dictionary that will be written into each project that is saved.
+      // Store the size of "wxChar" so we can convert during recovery in
+      // case the file is used on a system with a different character size.
+      char size = sizeof(wxChar);
+      mDict.AppendByte(FT_CharSize);
+      mDict.AppendData(&size, sizeof(size));
+   });
 
    mDictChanged = false;
 }
@@ -230,6 +236,8 @@ void ProjectSerializer::WriteName(const wxString & name)
    }
    else
    {
+      // mNames is static.  This appends each name to static mDict only once
+      // in each run.
       short len = name.length() * sizeof(wxChar);
 
       id = mNames.size();
