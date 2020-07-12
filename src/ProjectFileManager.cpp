@@ -1193,6 +1193,16 @@ bool ProjectFileManager::Import(
       return false;
    }
 
+   // for AUP ("legacy project") files, do not import the file as if it
+   // were an audio file itself
+   if (fileName.AfterLast('.').IsSameAs(wxT("aup"), false)) {
+      auto &history = ProjectHistory::Get( project );
+
+      history.PushState(XO("Imported '%s'").Format( fileName ), XO("Import"));
+
+      return false;
+   }
+
    // PRL: Undo history is incremented inside this:
    auto newSharedTracks = AddImportedTracks(fileName, std::move(newTracks));
 

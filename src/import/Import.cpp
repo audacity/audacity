@@ -15,7 +15,7 @@
   and return the tracks that were imported.  This function just
   figures out which one to call; the actual importers are in
   ImportPCM, ImportMP3, ImportOGG, ImportRawData, ImportLOF,
-  ImportQT and ImportFLAC.
+  ImportQT, ImportFLAC and ImportAUP.
 
 *//***************************************************************//**
 
@@ -29,7 +29,7 @@ It's defined in Import.h
 \class Importer
 \brief Class which actually imports the auido, using functions defined
 in ImportPCM.cpp, ImportMP3.cpp, ImportOGG.cpp, ImportRawData.cpp,
-and ImportLOF.cpp.
+ImportLOF.cpp, and ImportAUP.cpp.
 
 *//******************************************************************/
 
@@ -137,7 +137,7 @@ bool Importer::Initialize()
    using namespace Registry;
    static OrderingPreferenceInitializer init{
       PathStart,
-      { {wxT(""), wxT("PCM,OGG,FLAC,MP3,LOF,FFmpeg") } }
+      { {wxT(""), wxT("AUP,PCM,OGG,FLAC,MP3,LOF,FFmpeg") } }
       // QT and GStreamer are only conditionally compiled and would get
       // placed at the end if present
    };
@@ -630,6 +630,12 @@ bool Importer::Import( AudacityProject &project,
          {
             // LOF ("list-of-files") has different semantics
             if (extension.IsSameAs(wxT("lof"), false))
+            {
+               return true;
+            }
+
+            // AUP ("legacy projects") have different semantics
+            if (extension.IsSameAs(wxT("aup"), false))
             {
                return true;
             }
