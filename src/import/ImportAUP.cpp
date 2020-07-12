@@ -705,7 +705,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          if (projName.empty())
          {
             AudacityMessageBox(
-               XO("Couldn't find the project data folder: \"%s\"").Format(value),
+               XO("Couldn't find the project data folder: \"%s\"").Format(*value),
                XO("Error Opening Project"),
                wxOK | wxCENTRE,
                &window);

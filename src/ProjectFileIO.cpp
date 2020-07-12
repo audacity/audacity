@@ -19,10 +19,8 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIORegistry.h"
 #include "ProjectSerializer.h"
 #include "ProjectSettings.h"
-#include "SampleBlock.h"
 #include "Tags.h"
 #include "ViewInfo.h"
-#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/NumericTextCtrl.h"
@@ -43,10 +41,10 @@ static const int ProjectFileVersion = 1;
 // to sampleblocks.
 
 static const char *ProjectFileSchema =
-   "PRAGMA <dbname>.application_id = %d;"
-   "PRAGMA <dbname>.user_version = %d;"
-   "PRAGMA <dbname>.journal_mode = WAL;"
-   "PRAGMA <dbname>.locking_mode = EXCLUSIVE;"
+   "PRAGMA application_id = %d;"
+   "PRAGMA user_version = %d;"
+   "PRAGMA journal_mode = WAL;"
+   "PRAGMA locking_mode = EXCLUSIVE;"
    ""
    // project is a binary representation of an XML file.
    // it's in binary for speed.
@@ -60,7 +58,7 @@ static const char *ProjectFileSchema =
    // There is no limit to document blob size.
    // dict will be smallish, with an entry for each 
    // kind of field.
-   "CREATE TABLE IF NOT EXISTS <dbname>.project"
+   "CREATE TABLE IF NOT EXISTS project"
    "("
    "  id                   INTEGER PRIMARY KEY,"
    "  dict                 BLOB,"
@@ -80,7 +78,7 @@ static const char *ProjectFileSchema =
    // There is no limit to document blob size.
    // dict will be smallish, with an entry for each 
    // kind of field.
-   "CREATE TABLE IF NOT EXISTS <dbname>.autosave"
+   "CREATE TABLE IF NOT EXISTS autosave"
    "("
    "  id                   INTEGER PRIMARY KEY,"
    "  dict                 BLOB,"
@@ -89,7 +87,7 @@ static const char *ProjectFileSchema =
    ""
    // CREATE SQL tags
    // tags is not used (yet)
-   "CREATE TABLE IF NOT EXISTS <dbname>.tags"
+   "CREATE TABLE IF NOT EXISTS tags"
    "("
    "  name                 TEXT,"
    "  value                BLOB"
@@ -106,7 +104,7 @@ static const char *ProjectFileSchema =
    // blockID is a 64 bit number.
    //
    // summin to summary64K are summaries at 3 distance scales.
-   "CREATE TABLE IF NOT EXISTS <dbname>.sampleblocks"
+   "CREATE TABLE IF NOT EXISTS sampleblocks"
    "("
    "  blockid              INTEGER PRIMARY KEY AUTOINCREMENT,"
    "  sampleformat         INTEGER,"
@@ -611,7 +609,7 @@ bool ProjectFileIO::CheckVersion()
    // must be a new project file.
    if (wxStrtol<char **>(result, nullptr, 10) == 0)
    {
-      return InstallSchema(db);
+      return InstallSchema();
    }
 
    // Check for our application ID
@@ -655,15 +653,19 @@ bool ProjectFileIO::CheckVersion()
    return true;
 }
 
-bool ProjectFileIO::InstallSchema(sqlite3 *db, const char *dbname /* = "main" */)
+bool ProjectFileIO::InstallSchema()
 {
+   auto db = DB();
    int rc;
 
-   wxString sql;
-   sql.Printf(ProjectFileSchema, ProjectFileID, ProjectFileVersion);
-   sql.Replace("<dbname>", dbname);
+   char sql[1024];
+   sqlite3_snprintf(sizeof(sql),
+                    sql,
+                    ProjectFileSchema,
+                    ProjectFileID,
+                    ProjectFileVersion);
 
-   rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
+   rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
       SetDBError(
@@ -686,12 +688,12 @@ bool ProjectFileIO::UpgradeSchema()
 // An SQLite function that takes a blockid and looks it up in a set of
 // blockids captured during project load.  If the blockid isn't found
 // in the set, it will be deleted.
-void ProjectFileIO::InSet(sqlite3_context *context, int argc, sqlite3_value **argv)
+void ProjectFileIO::isorphan(sqlite3_context *context, int argc, sqlite3_value **argv)
 {
    BlockIDs *blockids = (BlockIDs *) sqlite3_user_data(context);
    SampleBlockID blockid = sqlite3_value_int64(argv[0]);
 
-   sqlite3_result_int(context, blockids->find(blockid) != blockids->end());
+   sqlite3_result_int(context, blockids->find(blockid) == blockids->end());
 }
 
 bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
@@ -699,25 +701,18 @@ bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
    auto db = DB();
    int rc;
 
-   auto cleanup = finally([&]
-   {
-      // Remove our function, whether it was successfully defined or not.
-      sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, nullptr, nullptr, nullptr, nullptr);
-   });
-
-   // Add the function used to verify each rows blockid against the set of active blockids
-   rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, &blockids, InSet, nullptr, nullptr);
+   // Add our function that will verify blockid against the set of valid blockids
+   rc = sqlite3_create_function(db, "isorphan", 1, SQLITE_UTF8, &blockids, isorphan, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("Unable to add 'inset' function"));
+      //asdfasdf
       return false;
    }
 
    // Delete all rows that are orphaned
-   rc = sqlite3_exec(db, "DELETE FROM sampleblocks WHERE NOT inset(blockid);", nullptr, nullptr, nullptr);
+   rc = sqlite3_exec(db, "DELETE FROM sampleblocks WHERE isorphan(blockid);", nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      wxLogWarning(XO("Cleanup of orphan blocks failed").Translation());
       return false;
    }
 
@@ -750,81 +745,32 @@ static int progress_callback(void *data)
 
 sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath)
 {
-   // Get access to the active tracklist
-   auto pProject = mpProject.lock();
-   if (!pProject)
-   {
-      return nullptr;
-   }
-   auto &tracklist = TrackList::Get(*pProject);
-
-   // Collect all active blockids
-   BlockIDs blockids;
-   for (auto wt : tracklist.Any<const WaveTrack>())
-   {
-      // Scan all clips within current track
-      for (const auto &clip : wt->GetAllClips())
-      {
-         // Scan all blockfiles within current clip
-         auto blocks = clip->GetSequenceBlockArray();
-         for (const auto &block : *blocks)
-         {
-            blockids.insert(block.sb->GetBlockID());
-         }
-      }
-   }
-
    auto db = DB();
-   sqlite3 *destdb = nullptr;
-   bool success = false;
    int rc;
    ProgressResult res = ProgressResult::Success;
 
-   // Cleanup in case things go awry
+   sqlite3_stmt *stmt = nullptr;
    auto cleanup = finally([&]
    {
-      // Detach the destination database, whether it was successfully attached or not
-      sqlite3_exec(db, "DETACH DATABASE dest;", nullptr, nullptr, nullptr);
-
-      // Remove our function, whether it was successfully defined or not.
-      sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, nullptr, nullptr, nullptr, nullptr);
-
-      if (!success)
+      if (stmt)
       {
-         sqlite3_close(destdb);
-
-         wxRemoveFile(destpath);
+         sqlite3_finalize(stmt);
       }
    });
 
-   // Add the function used to verify each rows blockid against the set of active blockids
-   rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, &blockids, InSet, nullptr, nullptr);
+   rc = sqlite3_prepare_v2(db, "VACUUM INTO ?;", -1, &stmt, 0);
    if (rc != SQLITE_OK)
    {
       SetDBError(
-         XO("Unable to add 'inset' function")
+         XO("Unable to prepare project file command")
       );
       return nullptr;
    }
 
-   // Attach the destination database 
-   wxString sql;
-   sql.Printf("ATTACH DATABASE '%s' AS dest;", destpath);
-
-   rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
+   rc = sqlite3_bind_text(stmt, 1, destpath.mb_str().data(), destpath.mb_str().length(), SQLITE_STATIC);
    if (rc != SQLITE_OK)
    {
-      SetDBError(
-         XO("Unable to attach destination database")
-      );
-      return nullptr;
-   }
-
-   // Install our schema into the new database
-   if (!InstallSchema(db, "dest"))
-   {
-      // Message already set
-      return nullptr;
+      THROW_INCONSISTENCY_EXCEPTION;
    }
 
    {
@@ -834,37 +780,27 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath)
 
       sqlite3_progress_handler(db, 10, progress_callback, &progress);
 
-      rc = sqlite3_exec(db,
-                        "INSERT INTO dest.tags"
-                        "       SELECT * FROM main.tags;",
-                        nullptr,
-                        nullptr,
-                        nullptr);
-      if (rc == SQLITE_OK)
-      {
-         rc = sqlite3_exec(db,
-                           "INSERT INTO dest.sampleblocks"
-                           "       SELECT * FROM main.sampleblocks"
-                           "       WHERE inset(blockid);",
-                           nullptr,
-                           nullptr,
-                           nullptr);
-      }
+      rc = sqlite3_step(stmt);
 
       sqlite3_progress_handler(db, 0, nullptr, nullptr);
    }
 
-   // Copy failed
-   if (rc != SQLITE_OK)
+   sqlite3_finalize(stmt);
+   stmt = nullptr;
+
+   // VACUUMing failed
+   if (rc != SQLITE_DONE)
    {
       SetDBError(
-         XO("Failed to copy project file")
+         XO("Project file copy failed")
       );
+
+      wxRemoveFile(destpath);
 
       return nullptr;
    }
 
-   // Open the newly created database
+   sqlite3 *destdb = nullptr;
    rc = sqlite3_open(destpath, &destdb);
    if (rc != SQLITE_OK)
    {
@@ -872,11 +808,12 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath)
          XO("Failed to open copy of project file")
       );
 
+      sqlite3_close(destdb);
+
+      wxRemoveFile(destpath);
+
       return nullptr;
    }
-
-   // Tell cleanup everything is good to go
-   success = true;
 
    return destdb;
 }
@@ -1454,6 +1391,14 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       return false;
    }
 
+   // We need to remove the autosave info from the file since it is now
+   // clean and unmodified.  Otherwise, it would be considered "recovered"
+   // when next opened.
+   if (!AutoSaveDelete())
+   {
+      return false;
+   }
+
    // Reaching this point defines success and all the rest are no-fail
    // operations:
 
@@ -1504,6 +1449,14 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 
    // Write the project doc to the new DB
    if (!WriteDoc("project", doc, db))
+   {
+      return false;
+   }
+
+   // We need to remove the autosave info from the new DB since it is now
+   // clean and unmodified.  Otherwise, it would be considered "recovered"
+   // when next opened.
+   if (!AutoSaveDelete(db))
    {
       return false;
    }
