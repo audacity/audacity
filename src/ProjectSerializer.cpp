@@ -90,7 +90,7 @@ ProjectSerializer::ProjectSerializer(size_t allocSize)
    mDict.SetBufSize(allocSize);
    mBuffer.SetBufSize(allocSize);
 
-   std::once_flag flag;
+   static std::once_flag flag;
    std::call_once(flag, []{
       // Just once per run, store header information in the unique static
       // dictionary that will be written into each project that is saved.
