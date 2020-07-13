@@ -671,6 +671,14 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       }
    }
 
+   // Cleanup the project file
+   //
+   // Might be that we want to UndoManager::ClearStates() before this???
+   if (!projectFileIO.IsTemporary())
+   {
+      projectFileIO.Vacuum();
+   }
+
    // See ProjectFileIO::Bypass() for a description
    projectFileIO.Bypass(true);
 

@@ -103,6 +103,9 @@ public:
    void Bypass(bool bypass);
    bool ShouldBypass();
 
+   // Remove all unused space within a project file
+   bool Vacuum();
+
 private:
    // XMLTagHandler callback methods
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
@@ -117,8 +120,6 @@ private:
    };
    static int ExecCallback(void *data, int cols, char **vals, char **names);
    int Exec(const char *query, ExecCB callback, wxString *result);
-
-   static int ProgressCallback(void *data);
 
    // The opening of the database may be delayed until demanded.
    // Returns a non-null pointer to an open database, or throws an exception
@@ -162,10 +163,13 @@ private:
    bool CheckForOrphans(BlockIDs &blockids);
 
    // Return a database connection if successful, which caller must close
-   sqlite3 *CopyTo(const FilePath &destpath);
+   sqlite3 *CopyTo(const FilePath &destpath, bool prune = false);
 
    void SetError(const TranslatableString & msg);
    void SetDBError(const TranslatableString & msg);
+
+   using UpdateCB = std::function<void(int operation, char const *dbname, char const *table, int64_t rowid)>;
+   static void UpdateCallback(void *data, int operation, char const *dbname, char const *table, int64_t rowid);
 
 private:
    // non-static data members

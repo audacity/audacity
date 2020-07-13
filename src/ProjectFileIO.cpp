@@ -10,9 +10,12 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectFileIO.h"
 
+
 #include <sqlite3.h>
 #include <wx/crt.h>
 #include <wx/frame.h>
+
+#include <thread>
 
 #include "FileNames.h"
 #include "Project.h"
@@ -387,15 +390,6 @@ bool ProjectFileIO::CloseDB()
 
    if (mDB)
    {
-      if (!mTemporary)
-      {
-         rc = sqlite3_exec(mDB, "VACUUM;", nullptr, nullptr, nullptr);
-         if (rc != SQLITE_OK)
-         {
-            wxLogError(XO("Vacuuming failed while closing project file").Translation());
-         }
-      }
-
       rc = sqlite3_close(mDB);
       if (rc != SQLITE_OK)
       {
@@ -727,23 +721,15 @@ bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
    return true;
 }
 
-static int progress_callback(void *data)
+
+/* static */
+void ProjectFileIO::UpdateCallback(void *data, int operation, char const *dbname, char const *table, int64_t rowid)
 {
-   ProgressDialog *progress = (ProgressDialog *) data;
-
-   // No way to know how much time will be spent, so turn the
-   // ProgressDialog in to an elapsed timer.
-   //
-   // Would be nice if our ProgressDialog has a Cylon mode.
-   if (progress->Update(100000) != ProgressResult::Success)
-   {
-      return SQLITE_ABORT;
-   }
-
-   return SQLITE_OK;
+   UpdateCB cb = *static_cast<UpdateCB *>(data);
+   cb(operation, dbname, table, rowid);
 }
 
-sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath)
+sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath, bool prune /* = false */)
 {
    auto db = DB();
    int rc;
@@ -773,16 +759,92 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath)
       THROW_INCONSISTENCY_EXCEPTION;
    }
 
+   // This whole progress thing is a mess...gotta work on it more
+
    {
       /* i18n-hint: This title appears on a dialog that indicates the progress
          in doing something.*/
       ProgressDialog progress(XO("Progress"), XO("Saving project"));
 
-      sqlite3_progress_handler(db, 10, progress_callback, &progress);
+      int64_t count = 0;
+      int64_t total = blockids.size();
 
-      rc = sqlite3_step(stmt);
+      UpdateCB update = [&](int operation, char const *dbname, char const *table, int64_t rowid)
+      {
+         count++;
+      };
+      sqlite3_update_hook(db, UpdateCallback, &update);
+      sqlite3_wal_autocheckpoint(db, 0);
 
-      sqlite3_progress_handler(db, 0, nullptr, nullptr);
+      // The first version is a better solution, but after the rows get copied
+      // there's a large delay when processing large files.  This is due to the
+      // checkpointing of the WAL to the DB.  There might be something we can
+      // do with the WAL hook to throw up another progress dialog while it does
+      // the checkpointing, but the second version (sort of) get's around it.
+      //
+      // The second version does the copy in a separate thread.  This allows
+      // us to keep the progress dialog active and elapsed time updating while
+      // the checkpointing is occurring.
+      //
+      // One possible thing to try is to only copy a smallish number of rows
+      // at a time to spread out the time required to checkpoint so the user
+      // doesn't notice it.
+      //
+      // Neither are ideal and more research is required.
+#if 0
+      rc = sqlite3_exec(db,
+                        "INSERT INTO dest.tags SELECT * FROM main.tags;",
+                        nullptr,
+                        nullptr,
+                        nullptr);
+      if (rc == SQLITE_OK)
+      {
+         wxString sql;
+         sql.Printf("INSERT INTO dest.sampleblocks SELECT * FROM main.sampleblocks%s;",
+                    prune ? " WHERE inset(blockid)" : "");
+
+         rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
+      }
+#else
+      bool done = false;
+      auto task = [&]()
+      {
+         rc = sqlite3_exec(db,
+                           "INSERT INTO dest.tags SELECT * FROM main.tags;",
+                           nullptr,
+                           nullptr,
+                           nullptr);
+         if (rc == SQLITE_OK)
+         {
+            wxString sql;
+            sql.Printf("INSERT INTO dest.sampleblocks SELECT * FROM main.sampleblocks%s;",
+                       prune ? " WHERE inset(blockid)" : "");
+
+            rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
+
+            sqlite3_wal_checkpoint_v2(db, "dest", SQLITE_CHECKPOINT_FULL, nullptr, nullptr);
+         }
+
+         done = true;
+      };
+
+      std::thread t = std::thread(task);
+      while (!done)
+      {
+         TranslatableString msg;
+         if (count < total)
+         {
+            msg = XO("Processing %lld of %lld sample blocks").Format(count, total);
+         }
+         else
+         {
+            msg = XO("Flushing journal to project file");
+         }
+         progress.Update(count, total, msg);
+         wxMilliSleep(100);
+      }
+      t.join();
+#endif
    }
 
    sqlite3_finalize(stmt);
@@ -816,6 +878,70 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath)
    }
 
    return destdb;
+}
+
+bool ProjectFileIO::Vacuum()
+{
+   wxString origName = mFileName;
+   wxString tempName = origName + "_vacuum";
+
+   // Create the project doc
+   ProjectSerializer doc;
+   WriteXMLHeader(doc);
+   WriteXML(doc);
+
+   // Must close the database to rename it
+   if (!CloseDB())
+   {
+      return false;
+   }
+
+   // If we can't rename the original to temporary, backout
+   if (!wxRenameFile(origName, tempName))
+   {
+      OpenDB(origName);
+
+      return false;
+   }
+
+   // If we can't reopen the original database using the temporary name, backout
+   if (sqlite3_open(tempName, &mDB) != SQLITE_OK)
+   {
+      SetDBError(XO("Failed to open project file"));
+      // sqlite3 docs say you should close anyway to avoid leaks
+      sqlite3_close( mDB );
+
+      wxRenameFile(tempName, origName);
+
+      OpenDB(origName);
+
+      return false;
+   }
+
+   // Copy the original database to a new database while pruning unused sample blocks
+   auto newDB = CopyTo(origName, true);
+
+   // If the copy failed or we aren't able to write the project doc, backout
+   if (!newDB || !WriteDoc("project", doc, newDB))
+   {
+      sqlite3_close(newDB);
+
+      wxRemoveFile(origName);
+
+      wxRenameFile(tempName, origName);
+
+      OpenDB(origName);
+
+      return false;
+   }
+
+   CloseDB();
+
+   wxRemoveFile(tempName);
+
+   UseConnection(newDB, origName);
+
+   return true;
 }
 
 void ProjectFileIO::UpdatePrefs()
@@ -1155,7 +1281,7 @@ bool ProjectFileIO::AutoSaveDelete(sqlite3 *db /* = nullptr */)
 
 bool ProjectFileIO::WriteDoc(const char *table,
                              const ProjectSerializer &autosave,
-                              sqlite3 *db /* = nullptr */)
+                             sqlite3 *db /* = nullptr */)
 {
    int rc;
 
@@ -1366,6 +1492,8 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       auto newDB = CopyTo(fileName);
       if (!newDB)
       {
+         // LL: I there a problem here??? Looks like RestoreConnection() will
+         //     be run, but no connection has been saved yet.
          return false;
       }
 
@@ -1422,7 +1550,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
 
 bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 {
-   auto db = CopyTo(fileName);
+   auto db = CopyTo(fileName, true);
    if (!db)
    {
       return false;
