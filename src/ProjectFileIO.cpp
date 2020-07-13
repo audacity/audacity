@@ -726,7 +726,6 @@ bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
    return true;
 }
 
-
 /* static */
 void ProjectFileIO::UpdateCallback(void *data, int operation, char const *dbname, char const *table, int64_t rowid)
 {
@@ -774,6 +773,9 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath, bool prune /* = false *
 
       // Remove our function, whether it was successfully defined or not.
       sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, nullptr, nullptr, nullptr, nullptr);
+
+      // Remove the update hook, whether it was successfully defined or not.
+      sqlite3_update_hook(db, nullptr, nullptr);
 
       if (!success)
       {
@@ -828,7 +830,6 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath, bool prune /* = false *
          count++;
       };
       sqlite3_update_hook(db, UpdateCallback, &update);
-      sqlite3_wal_autocheckpoint(db, 0);
 
       // The first version is a better solution, but after the rows get copied
       // there's a large delay when processing large files.  This is due to the
