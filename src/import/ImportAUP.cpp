@@ -133,6 +133,11 @@ private:
    bool HandleSilentBlockFile(XMLTagHandler *&handle);
    bool HandlePCMAliasBlockFile(XMLTagHandler *&handle);
 
+   void AddFile(sampleCount len,
+                const FilePath &filename = wxEmptyString,
+                sampleCount origin = 0,
+                int channel = 0);
+
    bool AddSilence(sampleCount len);
    bool AddSamples(const FilePath &filename,
                    sampleCount len,
@@ -168,6 +173,18 @@ private:
       field(bandwidthformat, wxString);
    } mProjectAttrs;
    #undef field
+
+   typedef struct
+   {
+      WaveTrack *track;
+      WaveClip *clip;
+      FilePath path;
+      sampleCount len;
+      sampleCount origin;
+      int channel;
+   } fileinfo;
+   std::vector<fileinfo> mFiles;
+   sampleCount mTotalSamples;
 
    sampleFormat mFormat;
    unsigned long mSampleRate;
@@ -233,7 +250,6 @@ AUPImportFileHandle::AUPImportFileHandle(const FilePath &fileName,
 :  ImportFileHandle(fileName),
    mProject(*project)
 {
-   mUpdateResult = ProgressResult::Success;
 }
 
 AUPImportFileHandle::~AUPImportFileHandle()
@@ -263,9 +279,13 @@ ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
 
    bool isDirty = history.GetDirty() || !tracks.empty();
 
+   mTotalSamples = 0;
+
    mTags = tags;
 
    CreateProgress();
+
+   mUpdateResult = ProgressResult::Success;
 
    XMLFileReader xmlFile;
 
@@ -280,11 +300,37 @@ ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
          wxOK | wxCENTRE,
          &GetProjectFrame(mProject));
 
-      return mUpdateResult;
+      return ProgressResult::Failed;
    }
 
+   sampleCount processed = 0;
+   for (auto fi : mFiles)
+   {
+      mUpdateResult = mProgress->Update(processed.as_long_long(), mTotalSamples.as_long_long());
+      if (mUpdateResult != ProgressResult::Success)
+      {
+         return mUpdateResult;
+      }
+
+      mClip = fi.clip;
+      mWaveTrack = fi.track;
+
+      if (fi.path.empty())
+      {
+         AddSilence(fi.len);
+      }
+      else
+      {
+         AddSamples(fi.path, fi.len, fi.origin, fi.channel);
+      }
+
+      processed += fi.len;
+   }
+         
    if (mUpdateResult == ProgressResult::Failed || mUpdateResult == ProgressResult::Cancelled)
    {
+      mTracks.clear();
+
       return mUpdateResult;
    }
 
@@ -556,9 +602,7 @@ bool AUPImportFileHandle::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    mHandlers.push_back({mParentTag, mCurrentTag, handler});
 
-   mUpdateResult = mProgress->Update(9999);
-
-   return (mUpdateResult == ProgressResult::Success);
+   return true;
 }
 
 bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
@@ -1155,12 +1199,18 @@ bool AUPImportFileHandle::HandleSimpleBlockFile(XMLTagHandler *&handler)
 
    // Do not set the handler - already handled
 
+   AddFile(len, filename);
+
+   return true;
+
    if (filename.empty())
    {
-      return AddSilence(len);
+//      return AddSilence(len);
    }
 
-   return AddSamples(filename, len);
+//   return AddSamples(filename, len);
+
+   return true;
 }
 
 bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
@@ -1193,6 +1243,10 @@ bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
    }
 
    // Do not set the handler - already handled
+
+   AddFile(len);
+
+   return true;
 
    return AddSilence(len);
 }
@@ -1269,12 +1323,34 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
 
    // Do not set the handler - already handled
 
+   AddFile(len, filename.GetFullPath(), start, channel);
+
+   return true;
+
    if (!filename.IsOk())
    {
       return AddSilence(len);
    }
 
    return AddSamples(filename.GetFullPath(), len, start, channel);
+}
+
+void AUPImportFileHandle::AddFile(sampleCount len,
+                                  const FilePath &filename /* = wxEmptyString */,
+                                  sampleCount origin /* = 0 */,
+                                  int channel /* = 0 */)
+{
+   fileinfo fi = {};
+   fi.track = mWaveTrack;
+   fi.clip = mClip;
+   fi.path = filename;
+   fi.len = len;
+   fi.origin = origin,
+   fi.channel = channel;
+
+   mFiles.push_back(fi);
+
+   mTotalSamples += len;
 }
 
 bool AUPImportFileHandle::AddSilence(sampleCount len)
