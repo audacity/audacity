@@ -170,8 +170,8 @@ private:
    void SetError(const TranslatableString & msg);
    void SetDBError(const TranslatableString & msg);
 
-   using UpdateCB = std::function<void(int operation, char const *dbname, char const *table, int64_t rowid)>;
-   static void UpdateCallback(void *data, int operation, char const *dbname, char const *table, int64_t rowid);
+   using UpdateCB = std::function<void(int operation, char const *dbname, char const *table, long long rowid)>;
+   static void UpdateCallback(void *data, int operation, char const *dbname, char const *table, long long rowid);
 
 private:
    // non-static data members

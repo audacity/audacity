@@ -23,6 +23,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectSerializer.h"
 #include "ProjectSettings.h"
 #include "SampleBlock.h"
+#include "Sequence.h"
 #include "Tags.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
@@ -727,7 +728,7 @@ bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
 }
 
 /* static */
-void ProjectFileIO::UpdateCallback(void *data, int operation, char const *dbname, char const *table, int64_t rowid)
+void ProjectFileIO::UpdateCallback(void *data, int operation, char const *dbname, char const *table, long long rowid)
 {
    UpdateCB cb = *static_cast<UpdateCB *>(data);
    cb(operation, dbname, table, rowid);
@@ -822,10 +823,10 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath, bool prune /* = false *
          in doing something.*/
       ProgressDialog progress(XO("Progress"), XO("Saving project"));
 
-      int64_t count = 0;
-      int64_t total = blockids.size();
+      wxLongLong_t count = 0;
+      wxLongLong_t total = blockids.size();
 
-      UpdateCB update = [&](int operation, char const *dbname, char const *table, int64_t rowid)
+      UpdateCB update = [&](int operation, char const *dbname, char const *table, long long rowid)
       {
          count++;
       };
