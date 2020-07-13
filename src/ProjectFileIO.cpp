@@ -930,8 +930,71 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath, bool prune /* = false *
    return destdb;
 }
 
+namespace {
+   unsigned long long
+   CalculateUsage(const TrackList &tracks)
+   {
+      std::set<long long> seen;
+
+      unsigned long long result = 0;
+
+      //TIMER_START( "CalculateSpaceUsage", space_calc );
+      for (auto wt : tracks.Any< const WaveTrack >())
+      {
+         // Scan all clips within current track
+         for(const auto &clip : wt->GetAllClips())
+         {
+            // Scan all blockfiles within current clip
+            auto blocks = clip->GetSequenceBlockArray();
+            for (const auto &block : *blocks)
+            {
+               const auto &sb = block.sb;
+
+               // Accumulate space used by the blockid if the blocckid was not
+               // yet seen
+               if ( seen.count( sb->GetBlockID() ) == 0 )
+               {
+                  result += sb->GetSpaceUsage();
+               }
+
+               // Add file to current set
+               seen.insert( sb->GetBlockID() );
+            }
+         }
+      }
+
+      return result;
+   }
+}
+
 bool ProjectFileIO::Vacuum()
 {
+   // Collect all active block usage
+   auto pProject = mpProject.lock();
+   if (!pProject)
+   {
+      return false;
+   }
+   auto &tracklist = TrackList::Get(*pProject);
+   double used = (double) CalculateUsage(tracklist);
+
+   // Collect total usage
+   wxString result;
+   if (!GetValue("SELECT sum(length(samples)) FROM sampleblocks;", result))
+   {
+      return false;
+   }
+   double total;
+   result.ToDouble(&total);
+
+   wxLogDebug(wxT("used = %f total = %f %f\n"), used, total, (used / total) * 100.0);
+   if (((used / total) * 100.0) > 20.0)
+   {
+      wxLogDebug(wxT("not vacuuming"));
+      return true;
+   }
+   wxLogDebug(wxT("vacuuming"));
+
    wxString origName = mFileName;
    wxString tempName = origName + "_vacuum";
 
