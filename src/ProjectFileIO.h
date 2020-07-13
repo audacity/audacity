@@ -151,15 +151,17 @@ private:
    bool GetBlob(const char *sql, wxMemoryBuffer &buffer);
 
    bool CheckVersion();
-   bool InstallSchema();
+   bool InstallSchema(sqlite3 *db, const char *dbname = "main");
    bool UpgradeSchema();
 
    // Write project or autosave XML (binary) documents
    bool WriteDoc(const char *table, const ProjectSerializer &autosave, sqlite3 *db = nullptr);
 
-   // Checks for orphan blocks.  This will go away at a future date
+   // Application defined function to verify blockid exists is in set of blockids
    using BlockIDs = std::set<SampleBlockID>;
-   static void isorphan(sqlite3_context *context, int argc, sqlite3_value **argv);
+   static void InSet(sqlite3_context *context, int argc, sqlite3_value **argv);
+
+   // Checks for orphan blocks.  This will go away at a future date
    bool CheckForOrphans(BlockIDs &blockids);
 
    // Return a database connection if successful, which caller must close
