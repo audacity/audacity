@@ -831,10 +831,10 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    if (IsAlreadyOpen(fileName))
       return;
 
-   // Data loss may occur if users mistakenly try to open ".aup.bak" files
+   // Data loss may occur if users mistakenly try to open ".aup3.bak" files
    // left over from an unsuccessful save or by previous versions of Audacity.
    // So we always refuse to open such files.
-   if (fileName.Lower().EndsWith(wxT(".aup.bak")))
+   if (fileName.Lower().EndsWith(wxT(".aup3.bak")))
    {
       AudacityMessageBox(
          XO(
@@ -1151,6 +1151,20 @@ bool ProjectFileManager::Import(
    TrackHolders newTracks;
    TranslatableString errorMessage;
 
+   // Handle AUP3 ("project") files directly
+   if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
+      auto &projectFileIO = ProjectFileIO::Get(project);
+      if (projectFileIO.ImportProject(fileName)) {
+         auto &history = ProjectHistory::Get(project);
+
+         history.PushState(XO("Imported '%s'").Format(fileName), XO("Import"));
+
+         FileHistory::Global().Append(fileName);
+      }
+
+      return false;
+   }
+
    {
       // Backup Tags, before the import.  Be prepared to roll back changes.
       bool committed = false;
@@ -1193,9 +1207,8 @@ bool ProjectFileManager::Import(
       return false;
    }
 
-   // for AUP ("legacy project") files, do not import the file as if it
-   // were an audio file itself
-   if (fileName.AfterLast('.').IsSameAs(wxT("aup"), false)) {
+   // Handle AUP ("legacy project") files directly
+   if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
       auto &history = ProjectHistory::Get( project );
 
       history.PushState(XO("Imported '%s'").Format( fileName ), XO("Import"));

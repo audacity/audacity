@@ -19,10 +19,23 @@ list( APPEND INCLUDES
 
 list( APPEND DEFINES
    PRIVATE
-      SQLITE_ENABLE_SNAPSHOT=1
-      SQLITE_DQS=0
-#     SQLITE_DEFAULT_PAGE_SIZE=4096
+      #
+      # Connection based settings. Persistent settings are done in the
+      # schema.
+      #
+      SQLITE_DEFAULT_LOCKING_MODE=1
+      SQLITE_DEFAULT_WAL_AUTOCHECKPOINT=100
+      SQLITE_DEFAULT_JOURNAL_SIZE_LIMIT=50000000
+
+      # Can't be set after a WAL mode database is initialized, so change
+      # the default here to ensure all project files get the same page 
+      # size.
       SQLITE_DEFAULT_PAGE_SIZE=65536
+
+      #
+      # Recommended in SQLite docs
+      #
+      SQLITE_DQS=0
       SQLITE_DEFAULT_MEMSTATUS=0
       SQLITE_DEFAULT_WAL_SYNCHRONOUS=1
       SQLITE_LIKE_DOESNT_MATCH_BLOBS

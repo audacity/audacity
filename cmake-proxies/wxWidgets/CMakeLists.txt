@@ -18,7 +18,7 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" )
 
    # Specify all of the components we'll need since "html" and "qa" aren't
    # included in the default list
-   find_package(wxWidgets REQUIRED COMPONENTS adv base core html net qa)
+   find_package(wxWidgets REQUIRED COMPONENTS adv base core html net qa xml)
 
    unset( BUILD_SHARED_LIBS )
 endif()

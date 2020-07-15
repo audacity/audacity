@@ -674,13 +674,24 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // Cleanup the project file
    //
    // Might be that we want to UndoManager::ClearStates() before this???
-   if (!projectFileIO.IsTemporary())
+   bool vacuumed = false;
+   if (!projectFileIO.IsTemporary() && settings.GetCompactAtClose())
    {
-      projectFileIO.Vacuum();
+      vacuumed = projectFileIO.Vacuum();
    }
 
    // See ProjectFileIO::Bypass() for a description
    projectFileIO.Bypass(true);
+
+   // Not sure if this has to come later in the shutdown process, but doing
+   // it before the project window is destroyed looks better when huge states
+   // need to be cleaned up.
+   if (!vacuumed)
+   {
+      // This must be done before the following Deref() since it holds
+      // references to the DirManager.
+      UndoManager::Get( project ).ClearStates();
+   }
 
 #ifdef __WXMAC__
    // Fix bug apparently introduced into 2.1.2 because of wxWidgets 3:
@@ -776,10 +787,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // Delete all the tracks to free up memory and DirManager references.
    tracks.Clear();
-
-   // This must be done before the following Deref() since it holds
-   // references to the DirManager.
-   UndoManager::Get( project ).ClearStates();
 
    // Remove self from the global array, but defer destruction of self
    auto pSelf = AllProjects{}.Remove( project );

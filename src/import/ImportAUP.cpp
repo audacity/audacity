@@ -334,13 +334,17 @@ ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
       return mUpdateResult;
    }
 
+   // Copy the tracks we just created into the project.
    for (auto &track : mTracks)
    {
       tracks.Add(track);
    }
 
+   // Don't need our local track list anymore
    mTracks.clear();
 
+   // If the active project is "dirty", then bypass the below updates as we don't
+   // want to going changing things the user may have already set up.
    if (isDirty)
    {
       return mUpdateResult;
@@ -803,6 +807,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
       {
          set(bandwidthformat, strValue);
       }
+#undef set
    }
 
    if (requiredTags < 3)

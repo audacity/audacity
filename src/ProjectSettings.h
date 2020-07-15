@@ -118,6 +118,10 @@ public:
 
    bool GetShowSplashScreen() const { return mShowSplashScreen; }
 
+   // Compact at close
+   void SetCompactAtClose(bool compact) { mCompactAtClose = compact; };
+   bool GetCompactAtClose() const { return mCompactAtClose; }
+
 private:
    void UpdatePrefs() override;
 
@@ -145,6 +149,7 @@ private:
    bool mIsSyncLocked{ false };
    bool mEmptyCanBeDirty;
    bool mShowSplashScreen;
+   bool mCompactAtClose;
 };
 
 #endif

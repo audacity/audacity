@@ -13,6 +13,7 @@
 #include "../ProjectFileManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectManager.h"
+#include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
@@ -139,6 +140,21 @@ void OnClose(const CommandContext &context )
    auto &window = ProjectWindow::Get( project );
    ProjectFileManager::Get( project ).SetMenuClose(true);
    window.Close();
+}
+
+void OnCompact(const CommandContext &context )
+{
+   auto &project = context.project;
+   auto &settings = ProjectSettings::Get( project );
+
+   bool compact;
+   gPrefs->Read(wxT("/GUI/CompactAtClose"), &compact, true);
+
+   compact = !compact;
+   gPrefs->Write(wxT("/GUI/CompactAtClose"), compact);
+   gPrefs->Flush();
+
+   settings.SetCompactAtClose(compact);
 }
 
 void OnSave(const CommandContext &context )
@@ -596,7 +612,11 @@ BaseItemSharedPtr FileMenu()
    /////////////////////////////////////////////////////////////////////////////
 
          Command( wxT("Close"), XXO("&Close"), FN(OnClose),
-            AudioIONotBusyFlag(), wxT("Ctrl+W") )
+            AudioIONotBusyFlag(), wxT("Ctrl+W") ),
+
+         Command( wxT("Compact"), XXO("Com&pact at close (on/off)"),
+            FN(OnCompact), AlwaysEnabledFlag,
+            Options{}.CheckTest( wxT("/GUI/CompactAtClose"), true ) )
       ),
 
       Section( "Save",

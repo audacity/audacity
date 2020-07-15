@@ -75,6 +75,7 @@ public:
    bool AutoSave(bool recording = false);
    bool AutoSaveDelete(sqlite3 *db = nullptr);
 
+   bool ImportProject(const FilePath &fileName);
    bool LoadProject(const FilePath &fileName);
    bool SaveProject(const FilePath &fileName);
    bool SaveCopy(const FilePath& fileName);
@@ -112,14 +113,14 @@ private:
 
    void UpdatePrefs() override;
 
-   using ExecCB = std::function<int(wxString *result, int cols, char **vals, char **names)>;
+   using ExecCB = std::function<int(std::vector<wxString> *result, int cols, char **vals, char **names)>;
    struct ExecParm
    {
       ExecCB func;
-      wxString *result;
+      std::vector<wxString> *result;
    };
    static int ExecCallback(void *data, int cols, char **vals, char **names);
-   int Exec(const char *query, ExecCB callback, wxString *result);
+   int Exec(const char *query, ExecCB callback, std::vector<wxString> *result);
 
    // The opening of the database may be delayed until demanded.
    // Returns a non-null pointer to an open database, or throws an exception
@@ -147,6 +148,7 @@ private:
    bool TransactionCommit(const wxString &name);
    bool TransactionRollback(const wxString &name);
 
+   bool GetValues(const char *sql, std::vector<wxString> &value);
    bool GetValue(const char *sql, wxString &value);
    bool GetBlob(const char *sql, wxMemoryBuffer &buffer);
 
@@ -165,13 +167,17 @@ private:
    bool CheckForOrphans(BlockIDs &blockids);
 
    // Return a database connection if successful, which caller must close
-   sqlite3 *CopyTo(const FilePath &destpath, bool prune = false);
+   sqlite3 *CopyTo(const FilePath &destpath,
+                   const TranslatableString &msg,
+                   bool prune = false);
 
    void SetError(const TranslatableString & msg);
    void SetDBError(const TranslatableString & msg);
 
    using UpdateCB = std::function<void(int operation, char const *dbname, char const *table, long long rowid)>;
    static void UpdateCallback(void *data, int operation, char const *dbname, char const *table, long long rowid);
+
+   unsigned long long CalculateUsage();
 
 private:
    // non-static data members
