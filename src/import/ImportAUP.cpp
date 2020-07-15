@@ -303,6 +303,20 @@ ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
       return ProgressResult::Failed;
    }
 
+   if (!mErrorMsg.empty())
+   {
+      AudacityMessageBox(
+         mErrorMsg,
+         XO("Import Project"),
+         wxOK | wxCENTRE,
+         &GetProjectFrame(mProject));
+
+      if (mUpdateResult == ProgressResult::Failed)
+      {
+         return ProgressResult::Failed;
+      }
+   }
+
    sampleCount processed = 0;
    for (auto fi : mFiles)
    {
@@ -1219,15 +1233,6 @@ bool AUPImportFileHandle::HandleSimpleBlockFile(XMLTagHandler *&handler)
    AddFile(len, filename);
 
    return true;
-
-   if (filename.empty())
-   {
-//      return AddSilence(len);
-   }
-
-//   return AddSamples(filename, len);
-
-   return true;
 }
 
 bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
@@ -1264,8 +1269,6 @@ bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
    AddFile(len);
 
    return true;
-
-   return AddSilence(len);
 }
 
 bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
