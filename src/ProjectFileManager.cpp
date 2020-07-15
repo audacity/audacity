@@ -1208,7 +1208,7 @@ bool ProjectFileManager::Import(
    }
 
    // Handle AUP ("legacy project") files directly
-   if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
+   if (fileName.AfterLast('.').IsSameAs(wxT("aup"), false)) {
       auto &history = ProjectHistory::Get( project );
 
       history.PushState(XO("Imported '%s'").Format( fileName ), XO("Import"));

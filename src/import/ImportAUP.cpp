@@ -854,15 +854,17 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
 {
    auto &tracks = TrackList::Get(mProject);
 
+   // Bypass this timetrack if the project already has one
+   // (See HandleTimeEnvelope and HandleControlPoint also)
    if (*tracks.Any<TimeTrack>().begin())
    {
       AudacityMessageBox(
-         XO("The active project already has a time track and one was encountered in the project being imported, bypassing time track in project file."),
+         XO("The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."),
          XO("Project Import"),
          wxOK | wxICON_EXCLAMATION | wxCENTRE,
          &GetProjectFrame(mProject));
 
-      return false;
+      return true;
    }
 
    auto &trackFactory = TrackFactory::Get(mProject);
@@ -1020,7 +1022,7 @@ bool AUPImportFileHandle::HandleWaveClip(XMLTagHandler *&handler)
 
    mClip = static_cast<WaveClip *>(handler);
 
-   return handler;
+   return true;
 }
 
 bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
@@ -1029,9 +1031,14 @@ bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
 
    if (mParentTag.IsSameAs(wxT("timetrack")))
    {
-      TimeTrack *timetrack = static_cast<TimeTrack *>(node.handler);
+      // If an imported timetrack was bypassed, then we want to bypass the
+      // envelope as well.  (See HandleTimeTrack and HandleControlPoint)
+      if (node.handler)
+      {
+         TimeTrack *timetrack = static_cast<TimeTrack *>(node.handler);
 
-      handler = timetrack->GetEnvelope();
+         handler = timetrack->GetEnvelope();
+      }
    }
    // Earlier versions of Audacity had a single implied waveclip, so for
    // these versions, we get or create the only clip in the track.
@@ -1047,7 +1054,7 @@ bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
       handler = waveclip->GetEnvelope();
    }
 
-   return handler;
+   return true;
 }
 
 bool AUPImportFileHandle::HandleControlPoint(XMLTagHandler *&handler)
@@ -1056,12 +1063,17 @@ bool AUPImportFileHandle::HandleControlPoint(XMLTagHandler *&handler)
 
    if (mParentTag.IsSameAs(wxT("envelope")))
    {
-      Envelope *envelope = static_cast<Envelope *>(node.handler);
+      // If an imported timetrack was bypassed, then we want to bypass the
+      // control points as well.  (See HandleTimeTrack and HandleEnvelope)
+      if (node.handler)
+      {
+         Envelope *envelope = static_cast<Envelope *>(node.handler);
 
-      handler = envelope->HandleXMLChild(mCurrentTag);
+         handler = envelope->HandleXMLChild(mCurrentTag);
+      }
    }
 
-   return handler;
+   return true;
 }
 
 bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)

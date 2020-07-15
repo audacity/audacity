@@ -193,6 +193,8 @@ Importer::GetFileTypes( const FileNames::FileType &extraType )
       l.emplace_back(importPlugin->GetPluginFormatDescription(),
                                importPlugin->GetSupportedExtensions());
    }
+
+   l.push_back({XO("AUP3 project files"), {wxT("aup3")}});
    
    using ExtensionSet = std::unordered_set< FileExtension >;
    FileExtensions allList = extraType.extensions, newList;

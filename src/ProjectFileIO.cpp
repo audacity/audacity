@@ -380,13 +380,6 @@ sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
       return nullptr;
    }
 
-   // These are here for easier research. Permanent settings should be done
-   // in the CMake list for SQLite.
-#if 1
-//   rc = sqlite3_exec(mDB, "PRAGMA wal_autocheckpoint=1000;", nullptr, nullptr, nullptr);
-//   rc = sqlite3_exec(mDB, "PRAGMA journal_size_limit=1000000000;", nullptr, nullptr, nullptr);
-#endif
-
    if (!CheckVersion())
    {
       CloseDB();
@@ -1480,6 +1473,13 @@ bool ProjectFileIO::WriteDoc(const char *table,
 // IDs.
 bool ProjectFileIO::ImportProject(const FilePath &fileName)
 {
+   // Get access to the active tracklist
+   auto pProject = mpProject.lock();
+   if (!pProject)
+   {
+      return false;
+   }
+
    bool success = false;
    bool restore = true;
    int rc;
@@ -1598,6 +1598,28 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
          node = node->GetNext();
       }
    };
+
+   auto &tracklist = TrackList::Get(*pProject);
+
+   // Search for a timetrack and remove if the project already has one
+   if (*tracklist.Any<TimeTrack>().begin())
+   {
+      // Find a timetrack and remove it if it exists
+      for (wxXmlNode *node = doc.GetRoot()->GetChildren(); node; node = node->GetNext())
+      {
+         if (node->GetName().IsSameAs(wxT("timetrack")))
+         {
+            AudacityMessageBox(
+               XO("The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."),
+               XO("Project Import"),
+               wxOK | wxICON_EXCLAMATION | wxCENTRE,
+               &GetProjectFrame(*pProject));
+
+            root->RemoveChild(node);
+            break;
+         }
+      }
+   }
 
    // Find all waveblocks in all wavetracks
    for (wxXmlNode *node = doc.GetRoot()->GetChildren(); node; node = node->GetNext())
