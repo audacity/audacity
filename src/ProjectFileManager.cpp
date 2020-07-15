@@ -314,6 +314,9 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       return false;
    }
 
+   proj.SetProjectName(wxFileName(fileName).GetName());
+   projectFileIO.SetProjectTitle();
+
    UndoManager::Get(proj).StateSaved();
    ProjectStatus::Get(proj).Set(XO("Saved %s").Format(fileName));
 
