@@ -27,6 +27,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "SampleBlock.h"
 #include "Sequence.h"
 #include "Tags.h"
+#include "TimeTrack.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"

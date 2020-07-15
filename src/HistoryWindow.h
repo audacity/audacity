@@ -46,6 +46,7 @@ class HistoryDialog final : public wxDialogWrapper {
    AudacityProject   *mProject;
    UndoManager       *mManager;
    wxListCtrl        *mList;
+   wxTextCtrl        *mFileSize;
    wxTextCtrl        *mTotal;
    wxTextCtrl        *mClipboard;
    wxTextCtrl        *mAvail;

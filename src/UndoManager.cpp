@@ -44,8 +44,8 @@ wxDEFINE_EVENT(EVT_UNDO_MODIFIED, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_OR_REDO, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
 
-using ConstSampleBlockPtr = const SampleBlock*;
-using Set = std::unordered_set<ConstSampleBlockPtr>;
+using SampleBlockID = long long;
+using Set = std::unordered_set<SampleBlockID>;
 
 struct UndoStackElem {
 
@@ -112,7 +112,7 @@ namespace {
 
                // Accumulate space used by the file if the file was not
                // yet seen
-               if ( !seen || (seen->count( &*sb ) == 0 ) )
+               if ( !seen || (seen->count( sb->GetBlockID() ) == 0 ) )
                {
                   unsigned long long usage{ sb->GetSpaceUsage() };
                   result += usage;
@@ -120,7 +120,7 @@ namespace {
 
                // Add file to current set
                if (seen)
-                  seen->insert( &*sb );
+                  seen->insert( sb->GetBlockID() );
             }
          }
       }
