@@ -186,6 +186,8 @@ Importer::GetFileTypes( const FileNames::FileType &extraType )
 
    if ( !extraType.extensions.empty() )
       fileTypes.push_back( extraType );
+   else
+      fileTypes.push_back(FileNames::AudacityProjects);
    
    FileNames::FileTypes l;
    for(const auto &importPlugin : sImportPluginList())
@@ -194,8 +196,6 @@ Importer::GetFileTypes( const FileNames::FileType &extraType )
                                importPlugin->GetSupportedExtensions());
    }
 
-   l.push_back({XO("AUP3 project files"), {wxT("aup3")}});
-   
    using ExtensionSet = std::unordered_set< FileExtension >;
    FileExtensions allList = extraType.extensions, newList;
    ExtensionSet allSet{ allList.begin(), allList.end() }, newSet;

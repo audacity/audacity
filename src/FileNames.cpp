@@ -53,7 +53,7 @@ const FileNames::FileType
      FileNames::AllFiles{ XO("All files"), { wxT("") } }
      /* i18n-hint an Audacity project is the state of the program, stored as
      files that can be reopened to resume the session later */
-   , FileNames::AudacityProjects{ XO("Audacity projects"), { wxT("aup3") }, true }
+   , FileNames::AudacityProjects{ XO("AUP3 project files"), { wxT("aup3") }, true }
    , FileNames::DynamicLibraries{
 #if defined(__WXMSW__)
       XO("Dynamically Linked Libraries"), { wxT("dll") }, true

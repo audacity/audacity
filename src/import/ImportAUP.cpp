@@ -49,7 +49,7 @@
 
 #include <map>
 
-#define DESC XO("AUP project files")
+#define DESC XO("AUP project files (*.aup)")
 
 static const auto exts = {wxT("aup")};
 
