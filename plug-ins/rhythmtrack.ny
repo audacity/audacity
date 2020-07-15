@@ -6,7 +6,7 @@ $manpage "Rhythm_Track"
 $preview linear
 $action (_ "Generating Rhythm...")
 $author (_ "Dominic Mazzoni")
-$release 2.3.0
+$release 3.0.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; by Dominic Mazzoni, David R. Sky and Steve Daulton.
@@ -186,7 +186,6 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 ;;;;;;;;;;;;;;;;;
       
 
-(setq len (/ (* 60.0 *sound-srate* timesig bars) tempo))
 (setf beatlen (/ 60.0 tempo))
 
 ;call function to make one measure
@@ -204,6 +203,9 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 
 ;round up number of bars
 (setq bars (round-up bars))
+
+;; Calculate LEN for progress bar.
+(setq len (/ (* 60.0 *sound-srate* timesig bars) tempo))
 
 (if (< bars 1)
     (_ "Set either 'Number of bars' or
