@@ -433,7 +433,8 @@ MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS() const
 
 size_t SqliteSampleBlock::GetSpaceUsage() const
 {
-   return mSampleCount * SAMPLE_SIZE(mSampleFormat);
+   // Not an exact number, but close enough
+   return mSummary256Bytes + mSummary64kBytes + mSampleBytes;
 }
 
 size_t SqliteSampleBlock::GetBlob(void *dest,

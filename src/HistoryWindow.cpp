@@ -100,11 +100,6 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
 
          S.StartMultiColumn(3, wxCENTRE);
          {
-            mFileSize = S.Id(ID_FILESIZE)
-               .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
-               .AddTextBox(XXO("&Project file size"), wxT("0"), 10);
-            S.AddVariableText( {} )->Hide();
-
             mTotal = S.Id(ID_TOTAL)
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
                .AddTextBox(XXO("&Total space used"), wxT("0"), 10);
@@ -207,10 +202,6 @@ void HistoryDialog::DoUpdate()
    mManager->CalculateSpaceUsage();
 
    mList->DeleteAllItems();
-
-   wxFileName filename(ProjectFileIO::Get(*mProject).GetFileName());
-   wxULongLong_t filesize = filename.GetSize().GetValue();
-   mFileSize->SetValue(Internat::FormatSize(filesize).Translation());
 
    wxLongLong_t total = 0;
    mSelected = mManager->GetCurrentState() - 1;
