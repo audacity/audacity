@@ -7,7 +7,7 @@ set( CMAKE_MODULE_PATH ${TARGET_ROOT}/cmake_support )
 
 # Define the platform specific interface options
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   if( ENV{ASIOSDK_DIR} )
+   if(DEFINED ENV{ASIOSDK_DIR} )
       cmd_option(
          ${_OPT}use_pa_asio
          "Use the portaudio ASIO interface if available"
