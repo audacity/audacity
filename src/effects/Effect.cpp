@@ -2463,7 +2463,7 @@ void Effect::Preview(bool dryOnly)
       t1 = std::min(mT0 + previewLen, mT1);
 
       // Start audio playing
-      AudioIOStartStreamOptions options { pProject, rate };
+      auto options = DefaultPlayOptions(*pProject);
       int token =
          gAudioIO->StartStream(tracks, mT0, t1, options);
 
