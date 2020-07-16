@@ -138,7 +138,10 @@ private:
    void RestoreConnection();
 
    // Use a connection that is already open rather than invoke OpenDB
-   void UseConnection( sqlite3 *db, const FilePath &filePath );
+   void UseConnection(sqlite3 *db, const FilePath &filePath);
+
+   // Make sure the connection/schema combo is configured the way we want
+   void ConfigConnection(sqlite3 *db, const wxString &schema = wxT("main"));
 
    sqlite3 *OpenDB(FilePath fileName = {});
    bool CloseDB();
@@ -153,7 +156,7 @@ private:
    bool GetBlob(const char *sql, wxMemoryBuffer &buffer);
 
    bool CheckVersion();
-   bool InstallSchema(sqlite3 *db, const char *dbname = "main");
+   bool InstallSchema(sqlite3 *db, const char *schema = "main");
    bool UpgradeSchema();
 
    // Write project or autosave XML (binary) documents
@@ -173,9 +176,6 @@ private:
 
    void SetError(const TranslatableString & msg);
    void SetDBError(const TranslatableString & msg);
-
-   using UpdateCB = std::function<void(int operation, char const *dbname, char const *table, long long rowid)>;
-   static void UpdateCallback(void *data, int operation, char const *dbname, char const *table, long long rowid);
 
    unsigned long long CalculateUsage();
 

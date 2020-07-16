@@ -54,9 +54,9 @@ static const char *ProjectFileSchema =
    //
    // See the CMakeList.txt for the SQLite lib for more
    // settings.
-   "PRAGMA <dbname>.application_id = %d;"
-   "PRAGMA <dbname>.user_version = %d;"
-   "PRAGMA <dbname>.journal_mode = WAL;"
+   "PRAGMA <schema>.application_id = %d;"
+   "PRAGMA <schema>.user_version = %d;"
+   "PRAGMA <schema>.journal_mode = WAL;"
    ""
    // project is a binary representation of an XML file.
    // it's in binary for speed.
@@ -70,7 +70,7 @@ static const char *ProjectFileSchema =
    // There is no limit to document blob size.
    // dict will be smallish, with an entry for each 
    // kind of field.
-   "CREATE TABLE IF NOT EXISTS <dbname>.project"
+   "CREATE TABLE IF NOT EXISTS <schema>.project"
    "("
    "  id                   INTEGER PRIMARY KEY,"
    "  dict                 BLOB,"
@@ -90,7 +90,7 @@ static const char *ProjectFileSchema =
    // There is no limit to document blob size.
    // dict will be smallish, with an entry for each 
    // kind of field.
-   "CREATE TABLE IF NOT EXISTS <dbname>.autosave"
+   "CREATE TABLE IF NOT EXISTS <schema>.autosave"
    "("
    "  id                   INTEGER PRIMARY KEY,"
    "  dict                 BLOB,"
@@ -99,7 +99,7 @@ static const char *ProjectFileSchema =
    ""
    // CREATE SQL tags
    // tags is not used (yet)
-   "CREATE TABLE IF NOT EXISTS <dbname>.tags"
+   "CREATE TABLE IF NOT EXISTS <schema>.tags"
    "("
    "  name                 TEXT,"
    "  value                BLOB"
@@ -116,7 +116,7 @@ static const char *ProjectFileSchema =
    // blockID is a 64 bit number.
    //
    // summin to summary64K are summaries at 3 distance scales.
-   "CREATE TABLE IF NOT EXISTS <dbname>.sampleblocks"
+   "CREATE TABLE IF NOT EXISTS <schema>.sampleblocks"
    "("
    "  blockid              INTEGER PRIMARY KEY AUTOINCREMENT,"
    "  sampleformat         INTEGER,"
@@ -127,6 +127,12 @@ static const char *ProjectFileSchema =
    "  summary64k           BLOB,"
    "  samples              BLOB"
    ");";
+
+// Settings applied to each database connection
+static const char *ConnectionConfiguration =
+   "PRAGMA <schema>.synchronous = OFF;"
+   "PRAGMA <schema>.locking_mode = EXCLUSIVE;"
+   "PRAGMA <schema>.wal_autocheckpoint = 1000;";
 
 // This singleton handles initialization/shutdown of the SQLite library.
 // It is needed because our local SQLite is built with SQLITE_OMIT_AUTOINIT
@@ -145,7 +151,7 @@ public:
       if (mRc == SQLITE_OK)
       {
          // Use the "unix-excl" VFS to make access to the DB exclusive.  This gets
-         // rid of the "<dbname>-shm" shared memory file.
+         // rid of the "<database name>-shm" shared memory file.
          //
          // Though it shouldn't, it doesn't matter if this fails.
          auto vfs = sqlite3_vfs_find("unix-excl");
@@ -352,6 +358,31 @@ void ProjectFileIO::UseConnection( sqlite3 *db, const FilePath &filePath )
    SetFileName( filePath );
 }
 
+void ProjectFileIO::ConfigConnection(sqlite3 *db, const wxString &schema)
+{
+   int rc;
+
+   wxString sql = ConnectionConfiguration;
+
+   if (schema.empty())
+   {
+      sql.Replace(wxT("<schema>."), wxT(""));
+   }
+   else
+   {
+      sql.Replace(wxT("<schema>"), schema);
+   }
+
+   rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
+   if (rc != SQLITE_OK)
+   {
+      // This non-fatal...for now
+      SetDBError(XO("Failed to set connection configuration"));
+   }
+
+   return;
+}
+
 sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
 {
    wxASSERT(mDB == nullptr);
@@ -380,6 +411,9 @@ sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
       mDB = nullptr;
       return nullptr;
    }
+
+   // Ensure attached DB connection gets configured
+   ConfigConnection(mDB);
 
    if (!CheckVersion())
    {
@@ -674,13 +708,13 @@ bool ProjectFileIO::CheckVersion()
    return true;
 }
 
-bool ProjectFileIO::InstallSchema(sqlite3 *db, const char *dbname /* = "main" */)
+bool ProjectFileIO::InstallSchema(sqlite3 *db, const char *schema /* = "main" */)
 {
    int rc;
 
    wxString sql;
    sql.Printf(ProjectFileSchema, ProjectFileID, ProjectFileVersion);
-   sql.Replace("<dbname>", dbname);
+   sql.Replace("<schema>", schema);
 
    rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
@@ -751,13 +785,6 @@ bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
    return true;
 }
 
-/* static */
-void ProjectFileIO::UpdateCallback(void *data, int operation, char const *dbname, char const *table, long long rowid)
-{
-   UpdateCB cb = *static_cast<UpdateCB *>(data);
-   cb(operation, dbname, table, rowid);
-}
-
 sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
                                const TranslatableString &msg,
                                bool prune /* = false */)
@@ -816,12 +843,11 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    // Cleanup in case things go awry
    auto cleanup = finally([&]
    {
-      // Detach the destination database, whether it was successfully attached or not
-      sqlite3_exec(db, "DETACH DATABASE dest;", nullptr, nullptr, nullptr);
-
       if (!success)
       {
          sqlite3_close(destdb);
+
+         sqlite3_exec(db, "DETACH DATABASE outbound;", nullptr, nullptr, nullptr);
 
          wxRemoveFile(destpath);
       }
@@ -829,7 +855,7 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
 
    // Attach the destination database 
    wxString sql;
-   sql.Printf("ATTACH DATABASE '%s' AS dest;", destpath);
+   sql.Printf("ATTACH DATABASE '%s' AS outbound;", destpath);
 
    rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
@@ -840,15 +866,18 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
       return nullptr;
    }
 
+   // Ensure attached DB connection gets configured
+   ConfigConnection(db, "outbound");
+
    // Install our schema into the new database
-   if (!InstallSchema(db, "dest"))
+   if (!InstallSchema(db, "outbound"))
    {
       // Message already set
       return nullptr;
    }
 
    rc = sqlite3_exec(db,
-                     "INSERT INTO dest.tags SELECT * FROM main.tags;",
+                     "INSERT INTO outbound.tags SELECT * FROM main.tags;",
                      nullptr,
                      nullptr,
                      nullptr);
@@ -862,6 +891,30 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    }
 
    {
+      // Ensure statement gets cleaned up
+      sqlite3_stmt *stmt = nullptr;
+      auto cleanup = finally([&]
+      {
+         if (stmt)
+         {
+            sqlite3_finalize(stmt);
+         }
+      });
+
+      // Prepare the statement only once
+      rc = sqlite3_prepare_v2(db,
+                              "INSERT INTO outbound.sampleblocks"
+                              "  SELECT * FROM main.sampleblocks"
+                              "  WHERE blockid = ?;",
+                              -1, &stmt, 0);
+      if (rc != SQLITE_OK)
+      {
+         SetDBError(
+            XO("Unable to prepare project file command:\n\n%s").Format(sql)
+         );
+         return nullptr;
+      }
+
       /* i18n-hint: This title appears on a dialog that indicates the progress
          in doing something.*/
       ProgressDialog progress(XO("Progress"), msg, pdlgHideStopButton);
@@ -872,32 +925,28 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
 
       for (auto blockid : blockids)
       {
-         wxString sql;
-         sql.Printf("INSERT INTO dest.sampleblocks"
-                     "  SELECT * FROM main.sampleblocks"
-                     "  WHERE blockid = %lld",
-                     blockid);
+         // BIND blockid parameter
+         if (sqlite3_bind_int64(stmt, 1, blockid) != SQLITE_OK)
+         {
+            THROW_INCONSISTENCY_EXCEPTION;
+         }
 
-         rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
-         if (rc != SQLITE_OK)
+         // Process it
+         rc = sqlite3_step(stmt);
+         if (rc != SQLITE_DONE)
          {
             SetDBError(
-               XO("Failed to copy project file")
+               XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
             );
-
             return nullptr;
          }
-/*
-         rc = sqlite3_wal_checkpoint_v2(db, "dest", SQLITE_CHECKPOINT_FULL, nullptr, nullptr);
-         if (rc != SQLITE_OK)
+
+         // BIND blockid parameter
+         if (sqlite3_reset(stmt) != SQLITE_OK)
          {
-            SetDBError(
-               XO("Failed to copy project file")
-            );
-
-            return nullptr;
+            THROW_INCONSISTENCY_EXCEPTION;
          }
-*/
+
          result = progress.Update(++count, total);
          if (result != ProgressResult::Success)
          {
@@ -909,7 +958,7 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    }
 
    // Copy failed
-   if (rc != SQLITE_OK)
+   if (rc != SQLITE_DONE)
    {
       SetDBError(
          XO("Failed to copy project file")
@@ -917,6 +966,9 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
 
       return nullptr;
    }
+
+   // Detach the destination database
+   sqlite3_exec(db, "DETACH DATABASE outbound;", nullptr, nullptr, nullptr);
 
    // Open the newly created database
    rc = sqlite3_open(destpath, &destdb);
@@ -928,6 +980,9 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
 
       return nullptr;
    }
+
+   // Ensure connection gets configured
+   ConfigConnection(destdb);
 
    // Tell cleanup everything is good to go
    success = true;
@@ -1037,6 +1092,9 @@ bool ProjectFileIO::Vacuum()
 
       return false;
    }
+
+   // Ensure connection gets configured
+   ConfigConnection(mDB);
 
    // Copy the original database to a new database while pruning unused sample blocks
    auto newDB = CopyTo(origName, XO("Compacting project"), true);
@@ -1495,7 +1553,7 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
       {
          if (indb)
          {
-            sqlite3_close(indb);
+            DiscardConnection();
          }
 
          RestoreConnection();
@@ -1513,6 +1571,9 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
 
          return false;
       }
+
+      // Ensure connection gets configured
+      ConfigConnection(indb);
 
       // The inbound project file becomes the active project file
       UseConnection(indb, fileName);
@@ -1635,11 +1696,18 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
       // Get access to the current project file
       auto db = DB();
 
-      // Make sure the inbound project file gets detached
+      // Cleanup...
+      sqlite3_stmt *stmt = nullptr;
       auto cleanup = finally([&]
       {
+         // Ensure the prepared statement gets cleaned up
+         if (stmt)
+         {
+            sqlite3_finalize(stmt);
+         }
+
          // Detach the inbound project file, whether it was successfully attached or not
-         sqlite3_exec(db, "DETACH DATABASE dest;", nullptr, nullptr, nullptr);
+         sqlite3_exec(db, "DETACH DATABASE inbound;", nullptr, nullptr, nullptr);
       });
 
       // Attach the inbound project file
@@ -1656,9 +1724,31 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
          return false;
       }
 
+      // Ensure attached DB connection gets configured
+      ConfigConnection(db, "inbound");
+
+      // Prepare the statement to copy the sample block from the inbound project to the
+      // active project.  All columns other than the blockid column gets copied.
+      wxString columns(wxT("sampleformat, summin, summax, sumrms, summary256, summary64k, samples"));
+      sql.Printf("INSERT INTO main.sampleblocks (%s)"
+                 "   SELECT %s"
+                 "   FROM inbound.sampleblocks"
+                 "   WHERE blockid = ?;",
+                 columns,
+                 columns);
+
+      rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+      if (rc != SQLITE_OK)
+      {
+         SetDBError(
+            XO("Unable to prepare project file command:\n\n%s").Format(sql)
+         );
+         return false;
+      }
+
       /* i18n-hint: This title appears on a dialog that indicates the progress
          in doing something.*/
-      ProgressDialog progress(XO("Progress"), XO("Importing project"));
+      ProgressDialog progress(XO("Progress"), XO("Importing project"), pdlgHideStopButton);
       ProgressResult result = ProgressResult::Success;
 
       wxLongLong_t count = 0;
@@ -1705,31 +1795,30 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
          SampleBlockID blockid;
          attr->GetValue().ToLongLong(&blockid);
 
-         // Copy the sample block from the inbound project to the active project.
-         // All columns other than the blockid column gets copied.
-         wxString columns(wxT("sampleformat, summin, summax, sumrms, summary256, summary64k, samples"));
-         wxString sql;
-         sql.Printf("INSERT INTO main.sampleblocks (%s)"
-                    "   SELECT %s"
-                    "   FROM inbound.sampleblocks"
-                    "   WHERE blockid = %lld",
-                    columns,
-                    columns,
-                    blockid);
-         rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
-         if (rc != SQLITE_OK)
+         // BIND blockid parameter
+         if (sqlite3_bind_int64(stmt, 1, blockid) != SQLITE_OK)
+         {
+            THROW_INCONSISTENCY_EXCEPTION;
+         }
+
+         // Process it
+         rc = sqlite3_step(stmt);
+         if (rc != SQLITE_DONE)
          {
             SetDBError(
-               XO("Failed to import sample block")
+               XO("Failed to import sample block.\nThe following command failed:\n\n%s").Format(sql)
             );
-
-            result = ProgressResult::Failed;
-
-            break;
+            return false;
          }
 
          // Replace the original blockid with the new one
          attr->SetValue(wxString::Format(wxT("%lld"), sqlite3_last_insert_rowid(db)));
+
+         // BIND blockid parameter
+         if (sqlite3_reset(stmt) != SQLITE_OK)
+         {
+            THROW_INCONSISTENCY_EXCEPTION;
+         }
 
          // Remember that we copied this node in case the user cancels
          result = progress.Update(++count, total);
