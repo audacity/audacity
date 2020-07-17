@@ -25,6 +25,7 @@ class AudacityProject;
 class AutoCommitTransaction;
 class ProjectSerializer;
 class SqliteSampleBlock;
+class TrackList;
 class WaveTrack;
 
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
