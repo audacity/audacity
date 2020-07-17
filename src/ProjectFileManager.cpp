@@ -670,10 +670,16 @@ void ProjectFileManager::CloseLock()
    // there's no memory leak.
    if (mLastSavedTracks)
    {
+      auto &project = mProject;
+      auto &projectFileIO = ProjectFileIO::Get(project);
+
       for (auto wt : mLastSavedTracks->Any<WaveTrack>())
       {
          wt->CloseLock();
       }
+
+      // Attempt to vacuum the project
+      projectFileIO.Vacuum(mLastSavedTracks);
 
       mLastSavedTracks->Clear();
       mLastSavedTracks.reset();

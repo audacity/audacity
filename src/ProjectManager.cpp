@@ -670,29 +670,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
          }
       }
    }
-
-   // Cleanup the project file
-   //
-   // Might be that we want to UndoManager::ClearStates() before this???
-   bool vacuumed = false;
-   if (!projectFileIO.IsTemporary() && settings.GetCompactAtClose())
-   {
-      vacuumed = projectFileIO.Vacuum();
-   }
-
-   // See ProjectFileIO::Bypass() for a description
-   projectFileIO.Bypass(true);
-
-   // Not sure if this has to come later in the shutdown process, but doing
-   // it before the project window is destroyed looks better when huge states
-   // need to be cleaned up.
-   if (!vacuumed)
-   {
-      // This must be done before the following Deref() since it holds
-      // references to the DirManager.
-      UndoManager::Get( project ).ClearStates();
-   }
-
 #ifdef __WXMAC__
    // Fix bug apparently introduced into 2.1.2 because of wxWidgets 3:
    // closing a project that was made full-screen (as by clicking the green dot
@@ -709,13 +686,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // Stop the timer since there's no need to update anything anymore
    mTimer.reset();
-
-   // The project is now either saved or the user doesn't want to save it,
-   // so there's no need to keep auto save info around anymore
-   // PRL:  not clear what to do if the following fails, but the worst should
-   // be, the project may reopen in its present state as a recovery file, not
-   // at the last saved state.
-   (void) projectFileIO.AutoSaveDelete();
 
    // DMM: Save the size of the last window the user closes
    //
@@ -764,7 +734,55 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // TODO: Is there a Mac issue here??
    // SetMenuBar(NULL);
 
+   // Lock active sample blocks so they don't get deleted below. This also performs
+   // a vacuum if necessary.
    projectFileManager.CloseLock();
+
+   // Determine if we can bypass sample block deletes during shutdown.
+   //
+   // IMPORTANT:
+   // If the project was vacuumed, then we MUST bypass further
+   // deletions since the new file doesn't have the blocks that the
+   // Sequences expect to be there.
+   bool bypass = true;
+
+   // Only permanent project files need cleaning at shutdown
+   if (!projectFileIO.IsTemporary() && !projectFileIO.WasVacuumed())
+   {
+      // Delete the AutoSave doc it if still exists
+      if (projectFileIO.IsModified())
+      {
+         // The user doesn't want to save the project, so delete the AutoSave doc
+         // PRL:  not clear what to do if the following fails, but the worst should
+         // be, the project may reopen in its present state as a recovery file, not
+         // at the last saved state.
+         (void) projectFileIO.AutoSaveDelete();
+      }
+
+      // If we still have unused blocks, then we must not bypass deletions
+      // during shutdown.  Otherwise, we would have orphaned blocks the next time
+      // the project is opened.
+      //
+      // An example of when dead blocks will exist is when a user opens a permanent
+      // project, adds a track (with samples) to it, and chooses not to save the
+      // changes.
+      if (projectFileIO.HadUnused())
+      {
+         bypass = false;
+      }
+   }
+   projectFileIO.Bypass(bypass);
+
+   {
+      AutoCommitTransaction trans(projectFileIO, "Shutdown");
+
+      // This must be done before the following Deref() since it holds
+      // references to the DirManager.
+      UndoManager::Get( project ).ClearStates();
+
+      // Delete all the tracks to free up memory and DirManager references.
+      tracks.Clear();
+   }
 
    // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
    // before the TrackPanel is destroyed. This change was needed to stop Audacity
@@ -784,9 +802,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    window.DestroyChildren();
 
    TrackFactory::Destroy( project );
-
-   // Delete all the tracks to free up memory and DirManager references.
-   tracks.Clear();
 
    // Remove self from the global array, but defer destruction of self
    auto pSelf = AllProjects{}.Remove( project );

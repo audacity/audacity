@@ -80,10 +80,6 @@ public:
    bool SaveProject(const FilePath &fileName);
    bool SaveCopy(const FilePath& fileName);
 
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXMLHeader(XMLWriter &xmlFile) const;
-   void WriteXML(XMLWriter &xmlFile, bool recording = false) /* not override */;
-
    wxLongLong GetFreeDiskSpace();
 
    const TranslatableString &GetLastError() const;
@@ -105,22 +101,33 @@ public:
    bool ShouldBypass();
 
    // Remove all unused space within a project file
-   bool Vacuum();
+   void Vacuum(const std::shared_ptr<TrackList> &tracks);
+
+   // The last vacuum check did actually vacuum the project file if true
+   bool WasVacuumed();
+
+   // The last vacuum check found unused blocks in the project file
+   bool HadUnused();
 
 private:
+   void WriteXMLHeader(XMLWriter &xmlFile) const;
+   void WriteXML(XMLWriter &xmlFile, bool recording = false, const std::shared_ptr<TrackList> &tracks = nullptr) /* not override */;
+
    // XMLTagHandler callback methods
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
 
    void UpdatePrefs() override;
 
-   using ExecCB = std::function<int(std::vector<wxString> *result, int cols, char **vals, char **names)>;
+   using ExecResult = std::vector<std::vector<wxString>>;
+   using ExecCB = std::function<int(ExecResult &result, int cols, char **vals, char **names)>;
    struct ExecParm
    {
       ExecCB func;
-      std::vector<wxString> *result;
+      ExecResult &result;
    };
    static int ExecCallback(void *data, int cols, char **vals, char **names);
-   int Exec(const char *query, ExecCB callback, std::vector<wxString> *result);
+   int Exec(const char *query, ExecCB callback, ExecResult &result);
 
    // The opening of the database may be delayed until demanded.
    // Returns a non-null pointer to an open database, or throws an exception
@@ -141,7 +148,7 @@ private:
    void UseConnection(sqlite3 *db, const FilePath &filePath);
 
    // Make sure the connection/schema combo is configured the way we want
-   void ConfigConnection(sqlite3 *db, const wxString &schema = wxT("main"));
+   void Config(sqlite3 *db, const char *config, const wxString &schema = wxT("main"));
 
    sqlite3 *OpenDB(FilePath fileName = {});
    bool CloseDB();
@@ -151,7 +158,8 @@ private:
    bool TransactionCommit(const wxString &name);
    bool TransactionRollback(const wxString &name);
 
-   bool GetValues(const char *sql, std::vector<wxString> &value);
+   bool Query(const char *sql, ExecResult &result);
+
    bool GetValue(const char *sql, wxString &value);
    bool GetBlob(const char *sql, wxMemoryBuffer &buffer);
 
@@ -172,12 +180,13 @@ private:
    // Return a database connection if successful, which caller must close
    sqlite3 *CopyTo(const FilePath &destpath,
                    const TranslatableString &msg,
-                   bool prune = false);
+                   bool prune = false,
+                   const std::shared_ptr<TrackList> &tracks = nullptr);
 
    void SetError(const TranslatableString & msg);
    void SetDBError(const TranslatableString & msg);
 
-   unsigned long long CalculateUsage();
+   bool ShouldVacuum(const std::shared_ptr<TrackList> &tracks);
 
 private:
    // non-static data members
@@ -197,6 +206,12 @@ private:
 
    // Bypass transactions if database will be deleted after close
    bool mBypass;
+
+   // Project was vacuumed last time Vacuum() ran
+   bool mWasVacuumed;
+
+   // Project had unused blocks during last Vacuum()
+   bool mHadUnused;
 
    sqlite3 *mPrevDB;
    FilePath mPrevFileName;
