@@ -1156,15 +1156,24 @@ bool ProjectFileManager::Import(
    const FilePath &fileName, WaveTrackArray* pTrackArray /*= NULL*/)
 {
    auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get(project);
    auto oldTags = Tags::Get( project ).shared_from_this();
+   bool initiallyEmpty = TrackList::Get(project).empty();
    TrackHolders newTracks;
    TranslatableString errorMessage;
 
    // Handle AUP3 ("project") files directly
    if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
-      auto &projectFileIO = ProjectFileIO::Get(project);
+
       if (projectFileIO.ImportProject(fileName)) {
          auto &history = ProjectHistory::Get(project);
+
+         // If the project was clean and temporary (not permanently saved), then set
+         // the filename to the just imported path.
+         if (initiallyEmpty && projectFileIO.IsTemporary()) {
+            project.SetProjectName(wxFileName(fileName).GetName());
+            projectFileIO.SetProjectTitle();
+         }
 
          history.PushState(XO("Imported '%s'").Format(fileName), XO("Import"));
 
@@ -1218,6 +1227,13 @@ bool ProjectFileManager::Import(
 
    // Handle AUP ("legacy project") files directly
    if (fileName.AfterLast('.').IsSameAs(wxT("aup"), false)) {
+      // If the project was clean and temporary (not permanently saved), then set
+      // the filename to the just imported path.
+      if (initiallyEmpty && projectFileIO.IsTemporary()) {
+         project.SetProjectName(wxFileName(fileName).GetName());
+         projectFileIO.SetProjectTitle();
+      }
+
       auto &history = ProjectHistory::Get( project );
 
       history.PushState(XO("Imported '%s'").Format( fileName ), XO("Import"));
