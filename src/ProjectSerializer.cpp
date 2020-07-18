@@ -16,6 +16,8 @@
 #include "Audacity.h"
 #include "ProjectSerializer.h"
 
+#include <algorithm>
+#include <cstdint>
 #include <mutex>
 #include <wx/ustring.h>
 
@@ -85,6 +87,116 @@ XO("This recovery file was saved by Audacity 2.3.0 or before.\n"
    "You need to run that version of Audacity to recover the project." );
 }
 
+namespace {
+   // Aliases for the FIXED-WIDTH integer types that are used in the file
+   // format.
+   
+   // Chosen so that among the four build types (32 bit Windows, 64
+   // bit Windows, 64 bit Mac clang, Linux g++) presently done (3.0.0
+   // development), we use the narrowest width of the type on any of them, so
+   // that anything saved on one build will be read back identically on all
+   // builds. (Although this means that very large values on some systems might
+   // be saved and then read back with loss.)
+
+   // In fact the only types for which this matters are long (only 32 bits on
+   // 32 and 64 bit Windows) and size_t (only 32 bits on 32 bit Windows).
+
+   using UShort = std::uint16_t;
+   using Int = std::int32_t;
+
+   using Long = std::int32_t;   // To save long values
+   using ULong = std::uint32_t; // To save size_t values
+
+   using LongLong = std::int64_t;
+
+   // Detect this computer's endianness
+   bool IsLittleEndian()
+   {
+      const std::uint32_t x = 1u;
+      return
+         static_cast<const unsigned char*>(static_cast<const void*>(&x))[0];
+      // We will assume the same for other widths!
+   }
+   // In C++20 this could be
+   // constexpr bool IsLittleEndian = (std::endian::native == std::endian::little);
+   // static_assert( IsLittleEndian || (std::endian::native == std::endian::big),
+   //    "Oh no!  I'm mixed-endian!" );
+
+   // Functions that can read and write native integer types to a canonicalized
+   // little-endian file format.  (We don't bother to do the same for floating
+   // point numbers.)
+
+   // Write native little-endian to little-endian file format
+   template< typename Number >
+   void WriteLittleEndian( wxMemoryBuffer &out, Number value )
+   {
+      out.AppendData( &value, sizeof(value) );
+   }
+
+   // Write native big-endian to little-endian file format
+   template< typename Number >
+   void WriteBigEndian( wxMemoryBuffer &out, Number value )
+   {
+      auto begin = static_cast<unsigned char*>( static_cast<void*>( &value ) );
+      std::reverse( begin, begin + sizeof( value ) );
+      out.AppendData( &value, sizeof(value) );
+   }
+
+   // Read little-endian file format to native little-endian
+   template< typename Number >
+   Number ReadLittleEndian( wxMemoryInputStream &in )
+   {
+      Number result;
+      in.Read( &result, sizeof(result) );
+      return result;
+   }
+
+   // Read little-endian file format to native big-endian
+   template< typename Number >
+   Number ReadBigEndian( wxMemoryInputStream &in )
+   {
+      Number result;
+      in.Read( &result, sizeof(result) );
+      auto begin = static_cast<unsigned char*>( static_cast<void*>( &result ) );
+      std::reverse( begin, begin + sizeof( result ) );
+      return result;
+   }
+
+   // Choose between implementations!
+   static const auto WriteUShort =   IsLittleEndian()
+      ? &WriteLittleEndian<UShort>   : &WriteBigEndian<UShort>;
+   static const auto WriteInt =      IsLittleEndian()
+      ? &WriteLittleEndian<Int>      : &WriteBigEndian<Int>;
+   static const auto WriteLong =     IsLittleEndian()
+      ? &WriteLittleEndian<Long>     : &WriteBigEndian<Long>;
+   static const auto WriteULong =    IsLittleEndian()
+      ? &WriteLittleEndian<ULong>    : &WriteBigEndian<ULong>;
+   static const auto WriteLongLong = IsLittleEndian()
+      ? &WriteLittleEndian<LongLong> : &WriteBigEndian<LongLong>;
+
+   static const auto ReadUShort =   IsLittleEndian()
+      ? &ReadLittleEndian<UShort>   : &ReadBigEndian<UShort>;
+   static const auto ReadInt =      IsLittleEndian()
+      ? &ReadLittleEndian<Int>      : &ReadBigEndian<Int>;
+   static const auto ReadLong =     IsLittleEndian()
+      ? &ReadLittleEndian<Long>     : &ReadBigEndian<Long>;
+   static const auto ReadULong =    IsLittleEndian()
+      ? &ReadLittleEndian<ULong>    : &ReadBigEndian<ULong>;
+   static const auto ReadLongLong = IsLittleEndian()
+      ? &ReadLittleEndian<LongLong> : &ReadBigEndian<LongLong>;
+
+   // Functions to read and write certain lengths -- maybe we will change
+   // our choices for widths or signedness?
+
+   using Length = Int;  // Instead, as wide as size_t?
+   static const auto WriteLength = WriteInt;
+   static const auto ReadLength = ReadInt;
+
+   using Digits = Int;  // Instead, just an unsigned char?
+   static const auto WriteDigits = WriteInt;
+   static const auto ReadDigits = ReadInt;
+}
+
 ProjectSerializer::ProjectSerializer(size_t allocSize)
 {
    mDict.SetBufSize(allocSize);
@@ -98,7 +210,7 @@ ProjectSerializer::ProjectSerializer(size_t allocSize)
       // case the file is used on a system with a different character size.
       char size = sizeof(wxChar);
       mDict.AppendByte(FT_CharSize);
-      mDict.AppendData(&size, sizeof(size));
+      mDict.AppendData(&size, 1);
    });
 
    mDictChanged = false;
@@ -130,9 +242,8 @@ void ProjectSerializer::WriteAttr(const wxString & name, const wxString & value)
    mBuffer.AppendByte(FT_String);
    WriteName(name);
 
-   int len = value.length() * sizeof(wxChar);
-
-   mBuffer.AppendData(&len, sizeof(len));
+   const Length len = value.length() * sizeof(wxChar);
+   WriteLength( mBuffer, len );
    mBuffer.AppendData(value.wx_str(), len);
 }
 
@@ -141,7 +252,7 @@ void ProjectSerializer::WriteAttr(const wxString & name, int value)
    mBuffer.AppendByte(FT_Int);
    WriteName(name);
 
-   mBuffer.AppendData(&value, sizeof(value));
+   WriteInt( mBuffer, value );
 }
 
 void ProjectSerializer::WriteAttr(const wxString & name, bool value)
@@ -149,7 +260,7 @@ void ProjectSerializer::WriteAttr(const wxString & name, bool value)
    mBuffer.AppendByte(FT_Bool);
    WriteName(name);
 
-   mBuffer.AppendData(&value, sizeof(value));
+   mBuffer.AppendByte(value);
 }
 
 void ProjectSerializer::WriteAttr(const wxString & name, long value)
@@ -157,7 +268,7 @@ void ProjectSerializer::WriteAttr(const wxString & name, long value)
    mBuffer.AppendByte(FT_Long);
    WriteName(name);
 
-   mBuffer.AppendData(&value, sizeof(value));
+   WriteLong( mBuffer, value );
 }
 
 void ProjectSerializer::WriteAttr(const wxString & name, long long value)
@@ -165,7 +276,7 @@ void ProjectSerializer::WriteAttr(const wxString & name, long long value)
    mBuffer.AppendByte(FT_LongLong);
    WriteName(name);
 
-   mBuffer.AppendData(&value, sizeof(value));
+   WriteLongLong( mBuffer, value );
 }
 
 void ProjectSerializer::WriteAttr(const wxString & name, size_t value)
@@ -173,7 +284,7 @@ void ProjectSerializer::WriteAttr(const wxString & name, size_t value)
    mBuffer.AppendByte(FT_SizeT);
    WriteName(name);
 
-   mBuffer.AppendData(&value, sizeof(value));
+   WriteULong( mBuffer, value );
 }
 
 void ProjectSerializer::WriteAttr(const wxString & name, float value, int digits)
@@ -182,7 +293,7 @@ void ProjectSerializer::WriteAttr(const wxString & name, float value, int digits
    WriteName(name);
 
    mBuffer.AppendData(&value, sizeof(value));
-   mBuffer.AppendData(&digits, sizeof(digits));
+   WriteDigits( mBuffer, digits );
 }
 
 void ProjectSerializer::WriteAttr(const wxString & name, double value, int digits)
@@ -191,26 +302,23 @@ void ProjectSerializer::WriteAttr(const wxString & name, double value, int digit
    WriteName(name);
 
    mBuffer.AppendData(&value, sizeof(value));
-   mBuffer.AppendData(&digits, sizeof(digits));
+   WriteDigits( mBuffer, digits );
 }
 
 void ProjectSerializer::WriteData(const wxString & value)
 {
    mBuffer.AppendByte(FT_Data);
 
-   int len = value.length() * sizeof(wxChar);
-
-   mBuffer.AppendData(&len, sizeof(len));
+   Length len = value.length() * sizeof(wxChar);
+   WriteLength( mBuffer, len );
    mBuffer.AppendData(value.wx_str(), len);
 }
 
 void ProjectSerializer::Write(const wxString & value)
 {
    mBuffer.AppendByte(FT_Raw);
-
-   int len = value.length() * sizeof(wxChar);
-
-   mBuffer.AppendData(&len, sizeof(len));
+   Length len = value.length() * sizeof(wxChar);
+   WriteLength( mBuffer, len );
    mBuffer.AppendData(value.wx_str(), len);
 }
 
@@ -227,7 +335,7 @@ void ProjectSerializer::WriteSubTree(const ProjectSerializer & value)
 void ProjectSerializer::WriteName(const wxString & name)
 {
    wxASSERT(name.length() * sizeof(wxChar) <= SHRT_MAX);
-   short id;
+   UShort id;
 
    auto nameiter = mNames.find(name);
    if (nameiter != mNames.end())
@@ -238,20 +346,20 @@ void ProjectSerializer::WriteName(const wxString & name)
    {
       // mNames is static.  This appends each name to static mDict only once
       // in each run.
-      short len = name.length() * sizeof(wxChar);
+      UShort len = name.length() * sizeof(wxChar);
 
       id = mNames.size();
       mNames[name] = id;
 
       mDict.AppendByte(FT_Name);
-      mDict.AppendData(&id, sizeof(id));
-      mDict.AppendData(&len, sizeof(len));
+      WriteUShort( mDict, id );
+      WriteUShort( mDict, len );
       mDict.AppendData(name.wx_str(), len);
 
       mDictChanged = true;
    }
 
-   mBuffer.AppendData(&id, sizeof(id));
+   WriteUShort( mBuffer, id );
 }
 
 const wxMemoryBuffer &ProjectSerializer::GetDict() const
@@ -289,7 +397,7 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
    mIds.clear();
 
    struct Error{}; // exception type for short-range try/catch
-   auto Lookup = [&mIds]( short id ) -> const wxString &
+   auto Lookup = [&mIds]( UShort id ) -> const wxString &
    {
       auto iter = mIds.find( id );
       if (iter == mIds.end())
@@ -334,7 +442,7 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
    {
       while (!in.Eof())
       {
-         short id;
+         UShort id;
 
          switch (in.GetC())
          {
@@ -354,17 +462,15 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
             case FT_Name:
             {
-               short len;
-
-               in.Read(&id, sizeof(id));
-               in.Read(&len, sizeof(len));
+               id = ReadUShort( in );
+               auto len = ReadUShort( in );
                mIds[id] = ReadString(len);
             }
             break;
 
             case FT_StartTag:
             {
-               in.Read(&id, sizeof(id));
+               id = ReadUShort( in );
 
                out.StartTag(Lookup(id));
             }
@@ -372,7 +478,7 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
             case FT_EndTag:
             {
-               in.Read(&id, sizeof(id));
+               id = ReadUShort( in );
 
                out.EndTag(Lookup(id));
             }
@@ -380,10 +486,8 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
             case FT_String:
             {
-               int len;
-
-               in.Read(&id, sizeof(id));
-               in.Read(&len, sizeof(len));
+               id = ReadUShort( in );
+               int len = ReadLength( in );
                out.WriteAttr(Lookup(id), ReadString(len));
             }
             break;
@@ -391,11 +495,10 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
             case FT_Float:
             {
                float val;
-               int dig;
 
-               in.Read(&id, sizeof(id));
+               id = ReadUShort( in );
                in.Read(&val, sizeof(val));
-               in.Read(&dig, sizeof(dig));
+               int dig = ReadDigits( in );
 
                out.WriteAttr(Lookup(id), val, dig);
             }
@@ -404,11 +507,10 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
             case FT_Double:
             {
                double val;
-               int dig;
 
-               in.Read(&id, sizeof(id));
+               id = ReadUShort( in );
                in.Read(&val, sizeof(val));
-               in.Read(&dig, sizeof(dig));
+               int dig = ReadDigits( in );
 
                out.WriteAttr(Lookup(id), val, dig);
             }
@@ -416,10 +518,8 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
             case FT_Int:
             {
-               int val;
-
-               in.Read(&id, sizeof(id));
-               in.Read(&val, sizeof(val));
+               id = ReadUShort( in );
+               int val = ReadInt( in );
 
                out.WriteAttr(Lookup(id), val);
             }
@@ -427,10 +527,10 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
             case FT_Bool:
             {
-               bool val;
+               unsigned char val;
 
-               in.Read(&id, sizeof(id));
-               in.Read(&val, sizeof(val));
+               id = ReadUShort( in );
+               in.Read(&val, 1);
 
                out.WriteAttr(Lookup(id), val);
             }
@@ -438,10 +538,8 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
             case FT_Long:
             {
-               long val;
-
-               in.Read(&id, sizeof(id));
-               in.Read(&val, sizeof(val));
+               id = ReadUShort( in );
+               long val = ReadLong( in );
 
                out.WriteAttr(Lookup(id), val);
             }
@@ -449,10 +547,8 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
             case FT_LongLong:
             {
-               long long val;
-
-               in.Read(&id, sizeof(id));
-               in.Read(&val, sizeof(val));
+               id = ReadUShort( in );
+               long long val = ReadLongLong( in );
 
                // Look for and save the "blockid" values to support orphan
                // block checking. This should be removed once serialization
@@ -469,10 +565,8 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
             case FT_SizeT:
             {
-               size_t val;
-
-               in.Read(&id, sizeof(id));
-               in.Read(&val, sizeof(val));
+               id = ReadUShort( in );
+               size_t val = ReadULong( in );
 
                out.WriteAttr(Lookup(id), val);
             }
@@ -480,25 +574,21 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
 
             case FT_Data:
             {
-               int len;
-
-               in.Read(&len, sizeof(len));
+               int len = ReadLength( in );
                out.WriteData(ReadString(len));
             }
             break;
 
             case FT_Raw:
             {
-               int len;
-
-               in.Read(&len, sizeof(len));
+               int len = ReadLength( in );
                out.Write(ReadString(len));
             }
             break;
 
             case FT_CharSize:
             {
-               in.Read(&mCharSize, sizeof(mCharSize));
+               in.Read(&mCharSize, 1);
             }
             break;
 
