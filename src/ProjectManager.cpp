@@ -871,7 +871,7 @@ void ProjectManager::OnOpenAudioFile(wxCommandEvent & event)
 void ProjectManager::OpenFiles(AudacityProject *proj)
 {
    auto selectedFiles =
-      ProjectFileManager::ShowOpenDialog( FileNames::AudacityProjects );
+      ProjectFileManager::ShowOpenDialog();
    if (selectedFiles.size() == 0) {
       Importer::SetLastOpenType({});
       return;
