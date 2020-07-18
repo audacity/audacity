@@ -29,8 +29,8 @@ using BlockIDs = std::set<SampleBlockID>;
 /// ProjectSerializer
 ///
 
-using NameMap = std::unordered_map<wxString, short>;
-using IdMap = std::unordered_map<short, wxString>;
+using NameMap = std::unordered_map<wxString, unsigned short>;
+using IdMap = std::unordered_map<unsigned short, wxString>;
 
 // This class's overrides do NOT throw AudacityException.
 class AUDACITY_DLL_API ProjectSerializer final : public XMLWriter
