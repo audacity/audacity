@@ -797,15 +797,6 @@ bool Importer::Import( AudacityProject &project,
          return false;
       }
 
-      // Audacity project
-      if (extension.IsSameAs(wxT("aup3"), false)) {
-         errorMessage = XO(
-/* i18n-hint: %s will be the filename */
-"\"%s\" is an Audacity Project file. \nUse the 'File > Open' command to open Audacity Projects.")
-            .Format( fName );
-         return false;
-      }
-
       if( !wxFileExists(fName)){
          errorMessage = XO( "File \"%s\" not found.").Format( fName );
          return false;

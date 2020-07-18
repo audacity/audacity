@@ -97,8 +97,7 @@ const Pair helpURLTable[] = {
       "mismatched tag",
       "#mismatched"
    },
-// These two errors with FAQ entries are reported elsewhere, not here....
-//#[[#import-error|Error Importing: Aup is an Audacity Project file. Use the File > Open command]]
+// This error with FAQ entry is reported elsewhere, not here....
 //#[[#corrupt|Error Opening File or Project: File may be invalid or corrupted]]
 };
 
