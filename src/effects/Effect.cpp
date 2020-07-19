@@ -1318,19 +1318,12 @@ bool Effect::DoEffect(double projectRate,
       auto vr = valueRestorer( mProgress, &progress );
 
       {
-         // This is for performance purposes only.
-#if 0
+         // This is for performance purposes only, no additional recovery implied
          auto &pProject = *const_cast<AudacityProject*>(FindProject()); // how to remove this const_cast?
          auto &pIO = ProjectFileIO::Get(pProject);
          AutoCommitTransaction trans(pIO, "Effect");
-#endif
+
          returnVal = Process();
-#if 0
-         if (!returnVal)
-         {
-            trans.Rollback();
-         }
-#endif
       }
    }
 

@@ -23,9 +23,7 @@ list( APPEND DEFINES
       # Connection based settings. Persistent settings are done in the
       # schema.
       #
-      SQLITE_DEFAULT_LOCKING_MODE=1
-      SQLITE_DEFAULT_WAL_AUTOCHECKPOINT=100
-      SQLITE_DEFAULT_JOURNAL_SIZE_LIMIT=50000000
+#      SQLITE_DEFAULT_LOCKING_MODE=0
 
       # Can't be set after a WAL mode database is initialized, so change
       # the default here to ensure all project files get the same page 

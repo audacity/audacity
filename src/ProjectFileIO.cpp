@@ -17,8 +17,6 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/sstream.h>
 #include <wx/xml/xml.h>
 
-#include <thread>
-
 #include "FileNames.h"
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
@@ -129,10 +127,10 @@ static const char *ProjectFileSchema =
 
 // Configuration to provide "safe" connections
 static const char *SafeConfig =
-   "PRAGMA <schema>.locking_mode = EXCLUSIVE;"
+   "PRAGMA <schema>.locking_mode = SHARED;"
    "PRAGMA <schema>.synchronous = NORMAL;"
    "PRAGMA <schema>.journal_mode = WAL;"
-   "PRAGMA <schema>.wal_autocheckpoint = 10000;";
+   "PRAGMA <schema>.wal_autocheckpoint = 0;";
 
 // Configuration to provide "Fast" connections
 static const char *FastConfig =
@@ -144,16 +142,7 @@ static const char *FastConfig =
 static const char *FastWalConfig =
    "PRAGMA <schema>.locking_mode = EXCLUSIVE;"
    "PRAGMA <schema>.synchronous = OFF;"
-   "PRAGMA <schema>.journal_mode = WAL;"
-   "PRAGMA <schema>.wal_autocheckpoint = 10000;";
-
-// Configuration to provide "Fast" connections
-static const char *FastMemoryConfig =
-   "PRAGMA <schema>.locking_mode = EXCLUSIVE;"
-   "PRAGMA <schema>.synchronous = NORMAL;"
-   "PRAGMA <schema>.journal_mode = MEMORY;"
-   "PRAGMA <schema>.wal_autocheckpoint = 1000;";
-
+   "PRAGMA <schema>.journal_mode = WAL;";
 
 // This singleton handles initialization/shutdown of the SQLite library.
 // It is needed because our local SQLite is built with SQLITE_OMIT_AUTOINIT
@@ -282,6 +271,10 @@ void ProjectFileIO::Init( AudacityProject &project )
    // This step can't happen in the ctor of ProjectFileIO because ctor of
    // AudacityProject wasn't complete
    mpProject = project.shared_from_this();
+
+   // Kick off the checkpoint thread
+   mCheckpointStop = false;
+   mCheckpointThread = std::thread([this]{ CheckpointThread(); });
 }
 
 ProjectFileIO::~ProjectFileIO()
@@ -308,6 +301,96 @@ ProjectFileIO::~ProjectFileIO()
          }
       }
    }
+
+   // Tell the checkpoint thread to shutdown
+   {
+      std::lock_guard<std::mutex> guard(mCheckpointMutex);
+      mCheckpointStop = true;
+      mCheckpointCondition.notify_one();
+   }
+
+   // And wait for it to do so
+   mCheckpointThread.join();
+}
+
+#define USE_DIFFERENT_DB_HANDLE 1
+
+void ProjectFileIO::CheckpointThread()
+{
+   while (true)
+   {
+      sqlite3 *db;
+      {
+         // Wait for something to show up in the queue or for the stop signal
+         std::unique_lock<std::mutex> lock(mCheckpointMutex);
+         mCheckpointCondition.wait(lock,
+                                   [&]
+                                   {
+                                       return mCheckpointStop || !mCheckpointWork.empty();
+                                   });
+
+         // Requested to stop, so bail
+         if (mCheckpointStop)
+         {
+            break;
+         }
+
+         // Pop the head of the queue
+         db = mCheckpointWork.front();
+         mCheckpointWork.pop_front();
+
+#if defined(USE_DIFFERENT_DB_HANDLE)
+         // Lock out other while the checkpoint is running
+         mCheckpointActive.lock();
+#endif
+      }
+
+      {
+         // Get it's filename
+         const char *filename = sqlite3_db_filename(db, nullptr);
+
+
+#if defined(USE_DIFFERENT_DB_HANDLE)
+         // Open it.  We don't use the queued database pointer because that
+         // would block the main thread if it tried to use it at the same time.
+         db = nullptr;
+         if (sqlite3_open(filename, &db) == SQLITE_OK)
+#endif
+         {
+#if defined(USE_DIFFERENT_DB_HANDLE)
+            // Configure it to be safe
+            Config(db, SafeConfig);
+#endif
+
+            // And do the actual checkpoint. This may not checkpoint ALL frames
+            // in the WAL.  They'll be gotten the next time round.
+            sqlite3_wal_checkpoint_v2(db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
+         }
+
+#if defined(USE_DIFFERENT_DB_HANDLE)
+         // All done...okay to call with null pointer if open failed.
+         sqlite3_close(db);
+
+         // Checkpoint is complete
+         mCheckpointActive.unlock();
+#endif
+      }
+   }
+
+   return;
+}
+
+int ProjectFileIO::CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages)
+{
+   // Get access to our object
+   ProjectFileIO *that = static_cast<ProjectFileIO *>(data);
+
+   // Qeuue the database pointer for our checkpoint thread to process
+   std::lock_guard<std::mutex> guard(that->mCheckpointMutex);
+   that->mCheckpointWork.push_back(db);
+   that->mCheckpointCondition.notify_one();
+
+   return SQLITE_OK;
 }
 
 sqlite3 *ProjectFileIO::DB()
@@ -453,6 +536,9 @@ sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
 
    SetFileName(fileName);
 
+   // Install our checkpoint hook
+   sqlite3_wal_hook(mDB, CheckpointHook, this);
+
    return mDB;
 }
 
@@ -462,6 +548,27 @@ bool ProjectFileIO::CloseDB()
 
    if (mDB)
    {
+      // Uninstall our checkpoint hook
+      sqlite3_wal_hook(mDB, nullptr, nullptr);
+
+      // Remove this connection from the checkpoint work queue, if any
+      {
+         std::lock_guard<std::mutex> guard(mCheckpointMutex);
+
+         mCheckpointWork.erase(std::remove(mCheckpointWork.begin(),
+                                           mCheckpointWork.end(),
+                                           mDB), 
+                               mCheckpointWork.end());
+      }
+
+#if defined(USE_DIFFERENT_DB_HANDLE)
+      // Wait for ANY active checkpoint to complete as it may be for
+      // this database
+      mCheckpointActive.lock();
+      mCheckpointActive.unlock();
+#endif
+
+      // Close the DB
       rc = sqlite3_close(mDB);
       if (rc != SQLITE_OK)
       {

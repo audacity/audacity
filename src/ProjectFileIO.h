@@ -11,8 +11,14 @@ Paul Licameli split from AudacityProject.h
 #ifndef __AUDACITY_PROJECT_FILE_IO__
 #define __AUDACITY_PROJECT_FILE_IO__
 
+#include <atomic>
+#include <condition_variable>
+#include <deque>
 #include <memory>
+#include <mutex>
+#include <thread>
 #include <set>
+
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
 #include "xml/XMLTagHandler.h" // to inherit
@@ -110,6 +116,10 @@ public:
    // The last vacuum check found unused blocks in the project file
    bool HadUnused();
 
+   bool TransactionStart(const wxString &name);
+   bool TransactionCommit(const wxString &name);
+   bool TransactionRollback(const wxString &name);
+
 private:
    void WriteXMLHeader(XMLWriter &xmlFile) const;
    void WriteXML(XMLWriter &xmlFile, bool recording = false, const std::shared_ptr<TrackList> &tracks = nullptr) /* not override */;
@@ -155,10 +165,6 @@ private:
    bool CloseDB();
    bool DeleteDB();
 
-   bool TransactionStart(const wxString &name);
-   bool TransactionCommit(const wxString &name);
-   bool TransactionRollback(const wxString &name);
-
    bool Query(const char *sql, ExecResult &result);
 
    bool GetValue(const char *sql, wxString &value);
@@ -188,6 +194,9 @@ private:
    void SetDBError(const TranslatableString & msg);
 
    bool ShouldVacuum(const std::shared_ptr<TrackList> &tracks);
+
+   void CheckpointThread();
+   static int CheckpointHook(void *that, sqlite3 *db, const char *schema, int pages);
 
 private:
    // non-static data members
@@ -221,8 +230,12 @@ private:
    TranslatableString mLastError;
    TranslatableString mLibraryError;
 
-   // Track the highest blockid while loading a project
-   int64_t mHighestBlockID;
+   std::deque<sqlite3 *> mCheckpointWork;
+   std::condition_variable mCheckpointCondition;
+   std::mutex mCheckpointMutex;
+   std::thread mCheckpointThread;
+   std::atomic_bool mCheckpointStop;
+   std::mutex mCheckpointActive;
 
    friend SqliteSampleBlock;
    friend AutoCommitTransaction;
