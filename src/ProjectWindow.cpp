@@ -389,7 +389,7 @@ unsigned operator()
       // MM: Scroll left/right when used with Shift key down
       window.TP_ScrollWindow(
          viewInfo.OffsetTimeByPixels(
-            viewInfo.PositionToTime(0), 50.0 * -steps));
+            viewInfo.PositionToTime(0), 25.0 * -steps));
    }
    else if (event.CmdDown())
    {
@@ -457,7 +457,16 @@ unsigned operator()
 #endif
 
       wxCoord xTrackEnd = viewInfo.TimeToPosition( audioEndTime );
-      viewInfo.ZoomBy(pow(2.0, steps));
+
+      const double zoomSpeedFactor = 0.1;
+      double prevZoom = viewInfo.GetZoom();
+      viewInfo.ZoomBy(pow(2.0, steps * zoomSpeedFactor));
+
+      // Clamp zooming-out to fit the screen, unless previous zoom is smaller.
+      // This allows the shortcut keys to zoom out further than the mouse.
+      double minZoom = std::min(prevZoom, window.GetZoomOfToFit());
+      if (viewInfo.GetZoom() < minZoom)
+        window.Zoom(minZoom);
 
       double new_center_h = viewInfo.PositionToTime(xx, trackLeftEdge);
       viewInfo.h += (center_h - new_center_h);
