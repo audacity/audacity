@@ -13,7 +13,6 @@ Paul Licameli split from AudacityProject.h
 
 #include <atomic>
 #include <condition_variable>
-#include <deque>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -86,6 +85,7 @@ public:
    bool LoadProject(const FilePath &fileName);
    bool SaveProject(const FilePath &fileName);
    bool SaveCopy(const FilePath& fileName);
+   bool CloseProject();
 
    wxLongLong GetFreeDiskSpace();
 
@@ -104,7 +104,7 @@ public:
    // For it's usage, see:
    //    SqliteSampleBlock::~SqliteSampleBlock()
    //    ProjectManager::OnCloseWindow()
-   void Bypass(bool bypass);
+   void SetBypass();
    bool ShouldBypass();
 
    // Remove all unused space within a project file
@@ -230,12 +230,14 @@ private:
    TranslatableString mLastError;
    TranslatableString mLibraryError;
 
-   std::deque<sqlite3 *> mCheckpointWork;
+   std::thread mCheckpointThread;
    std::condition_variable mCheckpointCondition;
    std::mutex mCheckpointMutex;
-   std::thread mCheckpointThread;
-   std::atomic_bool mCheckpointStop;
    std::mutex mCheckpointActive;
+   std::mutex mCheckpointClose;
+   std::atomic_bool mCheckpointStop;
+   uint64_t mCheckpointWaitingPages;
+   uint64_t mCheckpointCurrentPages;
 
    friend SqliteSampleBlock;
    friend AutoCommitTransaction;

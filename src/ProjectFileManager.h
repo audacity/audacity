@@ -50,9 +50,8 @@ public:
    };
    ReadProjectResults ReadProjectFile( const FilePath &fileName );
 
-   // To be called when closing a project that has been saved, so that
-   // block files are not erased
-   void CloseLock();
+   void VacuumProject();
+   void CloseProject();
 
    bool Save();
    bool SaveAs();

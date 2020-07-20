@@ -618,12 +618,23 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
 
 void ProjectFileManager::Reset()
 {
-   // mLastSavedTrack code copied from OnCloseWindow.
    // Lock all blocks in all tracks of the last saved version, so that
    // the blockfiles aren't deleted on disk when we DELETE the blockfiles
    // in memory.  After it's locked, DELETE the data structure so that
    // there's no memory leak.
-   CloseLock();
+   if (mLastSavedTracks)
+   {
+      auto &project = mProject;
+      auto &projectFileIO = ProjectFileIO::Get(project);
+
+      for (auto wt : mLastSavedTracks->Any<WaveTrack>())
+      {
+         wt->CloseLock();
+      }
+
+      mLastSavedTracks->Clear();
+      mLastSavedTracks.reset();
+   }
    
    ProjectFileIO::Get( mProject ).Reset();
 }
@@ -661,17 +672,17 @@ bool ProjectFileManager::SaveFromTimerRecording(wxFileName fnFile)
    return success;
 }
 
-void ProjectFileManager::CloseLock()
+void ProjectFileManager::VacuumProject()
 {
+   auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get(project);
+
    // Lock all blocks in all tracks of the last saved version, so that
    // the blockfiles aren't deleted on disk when we DELETE the blockfiles
    // in memory.  After it's locked, DELETE the data structure so that
    // there's no memory leak.
    if (mLastSavedTracks)
    {
-      auto &project = mProject;
-      auto &projectFileIO = ProjectFileIO::Get(project);
-
       for (auto wt : mLastSavedTracks->Any<WaveTrack>())
       {
          wt->CloseLock();
@@ -679,7 +690,20 @@ void ProjectFileManager::CloseLock()
 
       // Attempt to vacuum the project
       projectFileIO.Vacuum(mLastSavedTracks);
+   }
+}
 
+void ProjectFileManager::CloseProject()
+{
+   auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get(project);
+
+   projectFileIO.CloseProject();
+
+   // Blocks were locked in VacuumProject, so DELETE the data structure so that
+   // there's no memory leak.
+   if (mLastSavedTracks)
+   {
       mLastSavedTracks->Clear();
       mLastSavedTracks.reset();
    }
@@ -954,78 +978,11 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
          FileHistory::Global().Append(fileName);
    }
 
-   // Use a finally block here, because there are calls to Save() below which
-   // might throw.
-   bool closed = false;
-   auto cleanup = finally( [&] {
-      if (! closed ) {
-         // For an unknown reason, OSX requires that the project window be
-         // raised if a recovery took place.
-         window.CallAfter( [&] { window.Raise(); } );
-      }
-   } );
-   
    if (bParseSuccess) {
-      bool saved = false;
-
       if (projectFileIO.IsRecovered())
       {
-#if 0 // AUD3 TODO NEED TO WRITE A PROJECT FILE CONSISTENCY CHECKER
-         // This project has been recovered, so write a NEW auto-save file
-         // now and then DELETE the old one in the auto-save folder. Note that
-         // at this point mFileName != fileName, because when opening a
-         // recovered file mFileName is faked to point to the original file
-         // which has been recovered, not the one in the auto-save folder.
-         ::ProjectFSCK(mProject, err, true); // Correct problems in auto-recover mode.
-#endif
-
          // PushState calls AutoSave(), so no longer need to do so here.
          history.PushState(XO("Project was recovered"), XO("Recover"));
-      }
-      else
-      {
-#if 0 // AUD3 TODO NEED TO WRITE A PROJECT FILE CONSISTENCY CHECKER
-         // This is a regular project, check it and ask user
-         int status = ::ProjectFSCK(dirManager, err, false);
-         if (status & FSCKstatus_CLOSE_REQ)
-         {
-            // Vaughan, 2010-08-23: Note this did not do a real close.
-            // It could cause problems if you get this, say on missing alias files,
-            // then try to open a project with, e.g., missing blockfiles.
-            // It then failed in SetProject, saying it cannot find the files,
-            // then never go through ProjectFSCK to give more info.
-            // Going through OnClose() may be overkill, but it's safe.
-            /*
-               // There was an error in the load/check and the user
-               // explicitly opted to close the project.
-               mTracks->Clear(true);
-               mFileName = wxT("");
-               SetProjectTitle();
-               mTrackPanel->Refresh(true);
-               */
-            closed = true;
-            SetMenuClose(true);
-            window.Close();
-            return;
-         }
-         else if (status & FSCKstatus_CHANGED)
-         {
-            // Mark the wave tracks as changed and redraw.
-            for ( auto wt : tracks.Any<WaveTrack>() )
-               // Only wave tracks have a notion of "changed".
-               for (const auto &clip: wt->GetClips())
-                  clip->MarkChanged();
-
-            trackPanel.Refresh(true);
-
-            // Vaughan, 2010-08-20: This was bogus, as all the actions in ProjectFSCK
-            // that return FSCKstatus_CHANGED cannot be undone.
-            //    this->PushState(XO("Project checker repaired file"), XO("Project Repair"));
-
-            if (status & FSCKstatus_SAVE_AUP)
-               Save(), saved = true;
-         }
-#endif
       }
    }
    else {

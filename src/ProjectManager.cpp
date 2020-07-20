@@ -734,44 +734,12 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // TODO: Is there a Mac issue here??
    // SetMenuBar(NULL);
 
-   // Lock active sample blocks so they don't get deleted below. This also performs
-   // a vacuum if necessary.
-   projectFileManager.CloseLock();
+   // Vacuum the project.
+   projectFileManager.VacuumProject();
 
-   // Determine if we can bypass sample block deletes during shutdown.
-   //
-   // IMPORTANT:
-   // If the project was vacuumed, then we MUST bypass further
-   // deletions since the new file doesn't have the blocks that the
-   // Sequences expect to be there.
-   bool bypass = true;
-
-   // Only permanent project files need cleaning at shutdown
-   if (!projectFileIO.IsTemporary() && !projectFileIO.WasVacuumed())
-   {
-      // Delete the AutoSave doc it if still exists
-      if (projectFileIO.IsModified())
-      {
-         // The user doesn't want to save the project, so delete the AutoSave doc
-         // PRL:  not clear what to do if the following fails, but the worst should
-         // be, the project may reopen in its present state as a recovery file, not
-         // at the last saved state.
-         (void) projectFileIO.AutoSaveDelete();
-      }
-
-      // If we still have unused blocks, then we must not bypass deletions
-      // during shutdown.  Otherwise, we would have orphaned blocks the next time
-      // the project is opened.
-      //
-      // An example of when dead blocks will exist is when a user opens a permanent
-      // project, adds a track (with samples) to it, and chooses not to save the
-      // changes.
-      if (projectFileIO.HadUnused())
-      {
-         bypass = false;
-      }
-   }
-   projectFileIO.Bypass(bypass);
+   // Set (or not) the bypass flag to indicate that deletes that would happen during
+   // the UndoManager::ClearStates() below are not necessary.
+   projectFileIO.SetBypass();
 
    {
       AutoCommitTransaction trans(projectFileIO, "Shutdown");
@@ -783,6 +751,9 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       // Delete all the tracks to free up memory and DirManager references.
       tracks.Clear();
    }
+
+   // We're all done with the project file, so close it now
+   projectFileManager.CloseProject();
 
    // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
    // before the TrackPanel is destroyed. This change was needed to stop Audacity

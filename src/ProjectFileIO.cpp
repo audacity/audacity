@@ -14,6 +14,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <sqlite3.h>
 #include <wx/crt.h>
 #include <wx/frame.h>
+#include <wx/progdlg.h>
 #include <wx/sstream.h>
 #include <wx/xml/xml.h>
 
@@ -134,15 +135,9 @@ static const char *SafeConfig =
 
 // Configuration to provide "Fast" connections
 static const char *FastConfig =
-   "PRAGMA <schema>.locking_mode = EXCLUSIVE;"
+   "PRAGMA <schema>.locking_mode = SHARED;"
    "PRAGMA <schema>.synchronous = OFF;"
    "PRAGMA <schema>.journal_mode = OFF;";
-
-// Configuration to provide "Fast" connections
-static const char *FastWalConfig =
-   "PRAGMA <schema>.locking_mode = EXCLUSIVE;"
-   "PRAGMA <schema>.synchronous = OFF;"
-   "PRAGMA <schema>.journal_mode = WAL;";
 
 // This singleton handles initialization/shutdown of the SQLite library.
 // It is needed because our local SQLite is built with SQLITE_OMIT_AUTOINIT
@@ -273,34 +268,12 @@ void ProjectFileIO::Init( AudacityProject &project )
    mpProject = project.shared_from_this();
 
    // Kick off the checkpoint thread
-   mCheckpointStop = false;
    mCheckpointThread = std::thread([this]{ CheckpointThread(); });
 }
 
 ProjectFileIO::~ProjectFileIO()
 {
-   if (mDB)
-   {
-      // Save the filename since CloseDB() will clear it
-      wxString filename = mFileName;
-
-      // Not much we can do if this fails.  The user will simply get
-      // the recovery dialog upon next restart.
-      if (CloseDB())
-      {
-         // At this point, we are shutting down cleanly and if the project file is
-         // still in the temp directory it means that the user has chosen not to
-         // save it.  So, delete it.
-         if (mTemporary)
-         {
-            wxFileName temp(FileNames::TempDir());
-            if (temp == wxPathOnly(filename))
-            {
-               wxRemoveFile(filename);
-            }
-         }
-      }
-   }
+   wxASSERT_MSG(mDB == nullptr, wxT("Project file was not closed at shutdown"));
 
    // Tell the checkpoint thread to shutdown
    {
@@ -313,20 +286,19 @@ ProjectFileIO::~ProjectFileIO()
    mCheckpointThread.join();
 }
 
-#define USE_DIFFERENT_DB_HANDLE 1
-
 void ProjectFileIO::CheckpointThread()
 {
+   mCheckpointStop = false;
+
    while (true)
    {
-      sqlite3 *db;
       {
-         // Wait for something to show up in the queue or for the stop signal
+         // Wait for work or the stop signal
          std::unique_lock<std::mutex> lock(mCheckpointMutex);
          mCheckpointCondition.wait(lock,
                                    [&]
                                    {
-                                       return mCheckpointStop || !mCheckpointWork.empty();
+                                       return mCheckpointWaitingPages || mCheckpointStop;
                                    });
 
          // Requested to stop, so bail
@@ -335,45 +307,33 @@ void ProjectFileIO::CheckpointThread()
             break;
          }
 
-         // Pop the head of the queue
-         db = mCheckpointWork.front();
-         mCheckpointWork.pop_front();
+         // Capture the number of pages that need checkpointing and reset
+         mCheckpointCurrentPages = mCheckpointWaitingPages;
+         mCheckpointWaitingPages = 0;
 
-#if defined(USE_DIFFERENT_DB_HANDLE)
-         // Lock out other while the checkpoint is running
+         // Lock out others while the checkpoint is running
          mCheckpointActive.lock();
-#endif
       }
 
+      // Open another connection to the DB to prevent blocking the main thread.
+      sqlite3 *db = nullptr;
+      if (sqlite3_open(mFileName, &db) == SQLITE_OK)
       {
-         // Get it's filename
-         const char *filename = sqlite3_db_filename(db, nullptr);
+         // Configure it to be safe
+         Config(db, SafeConfig);
 
+         // And kick off the checkpoint. This may not checkpoint ALL frames
+         // in the WAL.  They'll be gotten the next time around.
+         sqlite3_wal_checkpoint_v2(db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
 
-#if defined(USE_DIFFERENT_DB_HANDLE)
-         // Open it.  We don't use the queued database pointer because that
-         // would block the main thread if it tried to use it at the same time.
-         db = nullptr;
-         if (sqlite3_open(filename, &db) == SQLITE_OK)
-#endif
-         {
-#if defined(USE_DIFFERENT_DB_HANDLE)
-            // Configure it to be safe
-            Config(db, SafeConfig);
-#endif
-
-            // And do the actual checkpoint. This may not checkpoint ALL frames
-            // in the WAL.  They'll be gotten the next time round.
-            sqlite3_wal_checkpoint_v2(db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
-         }
-
-#if defined(USE_DIFFERENT_DB_HANDLE)
-         // All done...okay to call with null pointer if open failed.
+         // All done.
          sqlite3_close(db);
+
+         // Reset
+         mCheckpointCurrentPages = 0;
 
          // Checkpoint is complete
          mCheckpointActive.unlock();
-#endif
       }
    }
 
@@ -387,7 +347,7 @@ int ProjectFileIO::CheckpointHook(void *data, sqlite3 *db, const char *schema, i
 
    // Qeuue the database pointer for our checkpoint thread to process
    std::lock_guard<std::mutex> guard(that->mCheckpointMutex);
-   that->mCheckpointWork.push_back(db);
+   that->mCheckpointWaitingPages = pages;
    that->mCheckpointCondition.notify_one();
 
    return SQLITE_OK;
@@ -548,25 +508,34 @@ bool ProjectFileIO::CloseDB()
 
    if (mDB)
    {
-      // Uninstall our checkpoint hook
+      // Uninstall our checkpoint hook so that no additional checkpoints
+      // are sent our way.  (Though this shouldn't really happen.)
       sqlite3_wal_hook(mDB, nullptr, nullptr);
 
-      // Remove this connection from the checkpoint work queue, if any
+      // Display a progress dialog if there's active or pending checkpoints
+      if (mCheckpointWaitingPages || mCheckpointCurrentPages)
       {
-         std::lock_guard<std::mutex> guard(mCheckpointMutex);
+         TranslatableString title = XO("Checkpointing project");
 
-         mCheckpointWork.erase(std::remove(mCheckpointWork.begin(),
-                                           mCheckpointWork.end(),
-                                           mDB), 
-                               mCheckpointWork.end());
+         // Get access to the active tracklist
+         auto pProject = mpProject.lock();
+         if (pProject)
+         {
+            title = XO("Checkpointing %s").Format(pProject->GetProjectName());
+         }
+
+         wxGenericProgressDialog pd(title.Translation(),
+                                    XO("This may take several seconds").Translation(),
+                                    300000,     // range
+                                    nullptr,    // parent
+                                    wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+
+         while (mCheckpointWaitingPages || mCheckpointCurrentPages)
+         {
+            wxMilliSleep(50);
+            pd.Pulse();
+         }
       }
-
-#if defined(USE_DIFFERENT_DB_HANDLE)
-      // Wait for ANY active checkpoint to complete as it may be for
-      // this database
-      mCheckpointActive.lock();
-      mCheckpointActive.unlock();
-#endif
 
       // Close the DB
       rc = sqlite3_close(mDB);
@@ -856,7 +825,7 @@ bool ProjectFileIO::InstallSchema(sqlite3 *db, const char *schema /* = "main" */
    sql.Printf(ProjectFileSchema, ProjectFileID, ProjectFileVersion);
    sql.Replace("<schema>", schema);
 
-   rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
+   rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
       SetDBError(
@@ -998,7 +967,7 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    wxString sql;
    sql.Printf("ATTACH DATABASE '%s' AS outbound;", destpath);
 
-   rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
+   rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
       SetDBError(
@@ -1133,17 +1102,11 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    }
 
    // Ensure attached DB connection gets configured
-   Config(destdb, FastWalConfig);
+   Config(destdb, SafeConfig);
 
    // Tell cleanup everything is good to go
    success = true;
 
-   // IMPORTANT: At this point, the DB handle is setup with WAL journaling,
-   // but synchronous is OFF. Only use this connection if you can tolerate
-   // a crash/power failure. Otherwise, reconfigure it using SafeConfig.
-   //
-   // It's left configured this way so that the caller can do additional
-   // work using a faster, but VOLATILE connection.
    return destdb;
 }
 
@@ -1225,9 +1188,19 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
    // close time will still occur
    mHadUnused = true;
 
-   // Don't vacuum if this is a temporary project or if Go figure out if we should at least try
+   // Don't vacuum if this is a temporary project or if it's deteremined there not
+   // enough unused blocks to make it worthwhile
    if (IsTemporary() || !ShouldVacuum(tracks))
    {
+      // Delete the AutoSave doc it if exists
+      if (IsModified())
+      {
+         // PRL:  not clear what to do if the following fails, but the worst should
+         // be, the project may reopen in its present state as a recovery file, not
+         // at the last saved state.
+         (void) AutoSaveDelete();
+      }
+
       return;
    }
 
@@ -1746,7 +1719,7 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
    wxString sql;
    sql.Printf("ATTACH DATABASE 'file:%s?immutable=1&mode=ro' AS inbound;", fileName);
 
-   rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
+   rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
       SetDBError(
@@ -1933,7 +1906,7 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
                   wxString sql;
                   sql.Printf("DELETE FROM main.sampleblocks WHERE blockid = %lld", blockid);
 
-                  rc = sqlite3_exec(db, sql.mb_str().data(), nullptr, nullptr, nullptr);
+                  rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
                   if (rc != SQLITE_OK)
                   {
                      // This is non-fatal...it'll just get cleaned up the next
@@ -2167,7 +2140,6 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
             {
                wxRemoveFile(origName);
             }
-
          }
          else
          {
@@ -2209,6 +2181,9 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
 
       // And make it the active project file 
       UseConnection(newDB, fileName);
+
+      // Install our checkpoint hook
+      sqlite3_wal_hook(mDB, CheckpointHook, this);
    }
 
    ProjectSerializer doc;
@@ -2252,21 +2227,6 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
       return false;
    }
 
-   bool success = false;
-
-   auto cleanup = finally([&]
-   {
-      if (db)
-      {
-         (void) sqlite3_close(db);
-      }
-
-      if (!success)
-      {
-         wxRemoveFile(fileName);
-      }
-   });
-
    ProjectSerializer doc;
    WriteXMLHeader(doc);
    WriteXML(doc);
@@ -2274,11 +2234,40 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
    // Write the project doc to the new DB
    if (!WriteDoc("project", doc, db))
    {
+      wxRemoveFile(fileName);
       return false;
    }
 
-   // Tell the finally block to behave
-   success = true;
+   // All good...close the database
+   (void) sqlite3_close(db);
+
+   return true;
+}
+
+bool ProjectFileIO::CloseProject()
+{
+   if (mDB)
+   {
+      // Save the filename since CloseDB() will clear it
+      wxString filename = mFileName;
+
+      // Not much we can do if this fails.  The user will simply get
+      // the recovery dialog upon next restart.
+      if (CloseDB())
+      {
+         // If this is a temporary project, we no longer want to keep the
+         // project file.
+         if (mTemporary)
+         {
+            // This is just a safety check.
+            wxFileName temp(FileNames::TempDir());
+            if (temp == wxPathOnly(filename))
+            {
+               wxRemoveFile(filename);
+            }
+         }
+      }
+   }
 
    return true;
 }
@@ -2350,12 +2339,37 @@ void ProjectFileIO::SetDBError(const TranslatableString &msg)
       wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
       printf("   Lib error: %s", mLibraryError.Debug().mb_str().data());
    }
+   abort();
    wxASSERT(false);
 }
 
-void ProjectFileIO::Bypass(bool bypass)
+void ProjectFileIO::SetBypass()
 {
-   mBypass = bypass;
+   // Determine if we can bypass sample block deletes during shutdown.
+   //
+   // IMPORTANT:
+   // If the project was vacuumed, then we MUST bypass further
+   // deletions since the new file doesn't have the blocks that the
+   // Sequences expect to be there.
+   mBypass = true;
+
+   // Only permanent project files need cleaning at shutdown
+   if (!IsTemporary() && !WasVacuumed())
+   {
+      // If we still have unused blocks, then we must not bypass deletions
+      // during shutdown.  Otherwise, we would have orphaned blocks the next time
+      // the project is opened.
+      //
+      // An example of when dead blocks will exist is when a user opens a permanent
+      // project, adds a track (with samples) to it, and chooses not to save the
+      // changes.
+      if (HadUnused())
+      {
+         mBypass = false;
+      }
+   }
+
+   return;
 }
 
 bool ProjectFileIO::ShouldBypass()
