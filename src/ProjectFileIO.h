@@ -230,8 +230,8 @@ private:
    std::condition_variable mCheckpointCondition;
    std::mutex mCheckpointMutex;
    std::atomic_bool mCheckpointStop{ false };
-   uint64_t mCheckpointWaitingPages{ 0 };
-   uint64_t mCheckpointCurrentPages{ 0 };
+   std::atomic< std::uint64_t > mCheckpointWaitingPages{ 0 };
+   std::atomic< std::uint64_t > mCheckpointCurrentPages{ 0 };
 
    friend SqliteSampleBlock;
    friend AutoCommitTransaction;

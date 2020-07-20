@@ -311,7 +311,7 @@ void ProjectFileIO::CheckpointThread()
          }
 
          // Capture the number of pages that need checkpointing and reset
-         mCheckpointCurrentPages = mCheckpointWaitingPages;
+         mCheckpointCurrentPages.store( mCheckpointWaitingPages );
          mCheckpointWaitingPages = 0;
       }
 
