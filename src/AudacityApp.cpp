@@ -1263,7 +1263,6 @@ bool AudacityApp::OnInit()
    // AColor depends on theTheme.
    AColor::Init();
 
-   // Init DirManager, which initializes the temp directory
    // If this fails, we must exit the program.
    if (!InitTempDir()) {
       FinishPreferences();

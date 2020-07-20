@@ -706,7 +706,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 #endif
 
    // DanH: If we're definitely about to quit, clear the clipboard.
-   //       Doing this after Deref'ing the DirManager causes problems.
    auto &clipboard = Clipboard::Get();
    if ((AllProjects{}.size() == 1) &&
       (quitOnClose || AllProjects::Closing()))
@@ -744,11 +743,11 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    {
       AutoCommitTransaction trans(projectFileIO, "Shutdown");
 
-      // This must be done before the following Deref() since it holds
-      // references to the DirManager.
+      // This can reduce reference counts of sample blocks in the project's
+      // tracks.
       UndoManager::Get( project ).ClearStates();
 
-      // Delete all the tracks to free up memory and DirManager references.
+      // Delete all the tracks to free up memory
       tracks.Clear();
    }
 
@@ -922,7 +921,6 @@ void ProjectManager::ResetProjectToEmpty() {
    SelectUtilities::DoSelectAll( project );
    TrackUtilities::DoRemoveTracks( project );
 
-   // A new DirManager.
    TrackFactory::Reset( project );
 
    projectFileManager.Reset();
