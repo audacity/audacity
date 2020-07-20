@@ -389,6 +389,7 @@ bool ProjectFileManager::SaveAs()
    
    if (projectFileIO.IsTemporary()) {
       filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
+      filename.SetName(project.GetProjectName());
    }
    else {
       filename = projectFileIO.GetFileName();
