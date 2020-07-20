@@ -332,6 +332,9 @@ void ProjectFileIO::CheckpointThread()
          // Reset
          mCheckpointCurrentPages = 0;
       }
+      else
+         // Gotta close it anyway!
+         sqlite3_close( db );
    }
 
    return;
