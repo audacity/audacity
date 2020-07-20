@@ -1179,7 +1179,7 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
    // Let's make a percentage...should be plenty of head room
    current *= 100;
 
-   wxLogDebug(wxT("used = %lld total = %lld %lld\n"), current, total, total ? current / total : 0);
+   wxLogDebug(wxT("used = %lld total = %lld %lld"), current, total, total ? current / total : 0);
    if (!total || current / total > 80)
    {
       wxLogDebug(wxT("not vacuuming"));

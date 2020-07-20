@@ -144,9 +144,13 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
    {
       if (projectFileIO.IsRecovered())
       {
+         bool resaved = projectFileIO.SaveProject(fileName);
          AudacityMessageBox(
-            XO("This project was not saved properly the last time Audacity ran.\n\n"
-               "It has been recovered to the last snapshot."),
+            resaved
+               ? XO("This project was not saved properly the last time Audacity ran.\n\n"
+                    "It has been recovered to the last snapshot and resaved.")
+               : XO("This project was not saved properly the last time Audacity ran.\n\n"
+                    "It has been recovered to the last snapshot."),
             XO("Project Recovered"),
             wxICON_WARNING,
             &window);
