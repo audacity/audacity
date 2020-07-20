@@ -120,6 +120,10 @@ public:
    bool TransactionCommit(const wxString &name);
    bool TransactionRollback(const wxString &name);
 
+   // Type of function that is given the fields of one row and returns
+   // 0 for success or non-zero to stop the query
+   using ExecCB = std::function<int(int cols, char **vals, char **names)>;
+
 private:
    void WriteXMLHeader(XMLWriter &xmlFile) const;
    void WriteXML(XMLWriter &xmlFile, bool recording = false, const std::shared_ptr<TrackList> &tracks = nullptr) /* not override */;
@@ -130,15 +134,7 @@ private:
 
    void UpdatePrefs() override;
 
-   using ExecResult = std::vector<std::vector<wxString>>;
-   using ExecCB = std::function<int(ExecResult &result, int cols, char **vals, char **names)>;
-   struct ExecParm
-   {
-      ExecCB func;
-      ExecResult &result;
-   };
-   static int ExecCallback(void *data, int cols, char **vals, char **names);
-   int Exec(const char *query, ExecCB callback, ExecResult &result);
+   int Exec(const char *query, const ExecCB &callback);
 
    // The opening of the database may be delayed until demanded.
    // Returns a non-null pointer to an open database, or throws an exception
@@ -165,7 +161,7 @@ private:
    bool CloseDB();
    bool DeleteDB();
 
-   bool Query(const char *sql, ExecResult &result);
+   bool Query(const char *sql, const ExecCB &callback);
 
    bool GetValue(const char *sql, wxString &value);
    bool GetBlob(const char *sql, wxMemoryBuffer &buffer);
