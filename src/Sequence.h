@@ -122,11 +122,8 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool GetErrorOpening() { return mErrorOpening; }
 
    //
-   // Lock/Unlock all of this sequence's BlockFiles, keeping them
-   // from being moved.  Call this if you want to copy a
-   // track to a different DirManager.  See BlockFile.h
-   // for details.
-   //
+   // Lock all of this sequence's sample blocks, keeping them
+   // from being destroyed when closing.
 
    bool CloseLock();//should be called upon project close.
    // not balanced by unlocking calls.

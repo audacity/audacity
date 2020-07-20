@@ -625,9 +625,8 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
 void ProjectFileManager::Reset()
 {
    // Lock all blocks in all tracks of the last saved version, so that
-   // the blockfiles aren't deleted on disk when we DELETE the blockfiles
-   // in memory.  After it's locked, DELETE the data structure so that
-   // there's no memory leak.
+   // the sample blocks aren't deleted from the database when we destroy the
+   // sample block objects in memory.
    if (mLastSavedTracks)
    {
       auto &project = mProject;
@@ -684,9 +683,8 @@ void ProjectFileManager::VacuumProject()
    auto &projectFileIO = ProjectFileIO::Get(project);
 
    // Lock all blocks in all tracks of the last saved version, so that
-   // the blockfiles aren't deleted on disk when we DELETE the blockfiles
-   // in memory.  After it's locked, DELETE the data structure so that
-   // there's no memory leak.
+   // the sample blocks aren't deleted from the database when we destroy the
+   // sample block objects in memory.
    if (mLastSavedTracks)
    {
       for (auto wt : mLastSavedTracks->Any<WaveTrack>())
@@ -976,6 +974,9 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       TrackFocus::Get( project ).Set( *tracks.Any().begin() );
       window.HandleResize();
       trackPanel.Refresh(false);
+
+      // ? Old rationale in this comment no longer applies in 3.0.0, with no
+      // more on-demand loading:
       trackPanel.Update(); // force any repaint to happen now,
       // else any asynch calls into the blockfile code will not have
       // finished logging errors (if any) before the call to ProjectFSCK()

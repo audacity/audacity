@@ -348,7 +348,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
          if (mFormat == int16Sample)
             block = SFCall<sf_count_t>(sf_readf_short, mFile.get(), (short *)srcbuffer.ptr(), block);
-         //import 24 bit int as float and have the append function convert it.  This is how PCMAliasBlockFile works too.
+         //import 24 bit int as float and have the append function convert it.  This is how PCMAliasBlockFile worked too.
          else
             block = SFCall<sf_count_t>(sf_readf_float, mFile.get(), (float *)srcbuffer.ptr(), block);
 

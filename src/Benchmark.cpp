@@ -10,7 +10,7 @@
 
 \class BenchmarkDialog
 \brief BenchmarkDialog is used for measuring performance and accuracy
-of the BlockFile system.
+of sample block storage.
 
 *//*******************************************************************/
 
@@ -394,8 +394,8 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    // The chunks are the pieces we move around in the test.
    // They are (and are supposed to be) a different size to
-   // the blocks that make the blockfiles.  That way we get to
-   // do some testing of when edit chunks cross blockfile boundaries.
+   // the blocks that make the sample blocks.  That way we get to
+   // do some testing of when edit chunks cross sample block boundaries.
    Printf( XO("Using %lld chunks of %lld samples each, for a total of %.1f MB.\n")
       .Format( nChunks, chunkSize, nChunks*chunkSize*sizeof(SampleType)/1048576.0 ) );
 

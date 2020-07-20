@@ -402,7 +402,7 @@ writing audio.
 *//****************************************************************//**
 
 \class AudioIOListener
-\brief Monitors record play start/stop and new blockfiles.  Has 
+\brief Monitors record play start/stop and new sample blocks.  Has
 callbacks for these events.
 
 *//****************************************************************//**

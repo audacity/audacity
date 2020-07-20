@@ -18,8 +18,6 @@
 #include <wx/msgdlg.h> // to inherit
 #include "wxPanelWrapper.h" // to inherit
 
-class AliasBlockFile;
-
 class AudacityProject;
 
 class ErrorDialog /* not final */ : public wxDialogWrapper

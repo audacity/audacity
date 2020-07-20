@@ -387,7 +387,7 @@ bool Track::LinkConsistencyCheck()
 {
    // Sanity checks for linked tracks; unsetting the linked property
    // doesn't fix the problem, but it likely leaves us with orphaned
-   // blockfiles instead of much worse problems.
+   // sample blocks instead of much worse problems.
    bool err = false;
    if (GetLinked())
    {

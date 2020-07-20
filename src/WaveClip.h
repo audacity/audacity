@@ -24,8 +24,6 @@
 #include <vector>
 
 class BlockArray;
-class BlockFile;
-using BlockFilePtr = std::shared_ptr<BlockFile>;
 class Envelope;
 class ProgressDialog;
 class SampleBlockFactory;

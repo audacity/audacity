@@ -16,13 +16,13 @@
 \brief A WaveTrack contains WaveClip(s).
    A WaveClip contains a Sequence. A Sequence is primarily an
    interface to an array of SeqBlock instances, corresponding to
-   the audio BlockFiles on disk.
+   the audio sample blocks in the database.
    Contrast with RingBuffer.
 
 *//****************************************************************//**
 
 \class SeqBlock
-\brief Data structure containing pointer to a BlockFile and
+\brief Data structure containing pointer to a sample block and
    a start time. Element of a BlockArray.
 
 *//*******************************************************************/
@@ -413,7 +413,7 @@ std::unique_ptr<Sequence> Sequence::Copy( const SampleBlockFactoryPtr &pFactory,
    else
       --b0;
 
-   // If there are blocks in the middle, use the blockfiles whole
+   // If there are blocks in the middle, use the blocks whole
    for (int bb = b0 + 1; bb < b1; ++bb)
       AppendBlock(pUseFactory, mSampleFormat,
          dest->mBlock, dest->mNumSamples, mBlock[bb]);
@@ -688,8 +688,6 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
    // Create a NEW track containing as much silence as we
    // need to insert, and then call Paste to do the insertion.
-   // We make use of a SilentBlockFile, which takes up no
-   // space on disk.
 
    Sequence sTrack(mpFactory, mSampleFormat);
 

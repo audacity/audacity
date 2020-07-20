@@ -533,7 +533,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    // But I think it's got a good idea, of calling WaveTracks' GetMinMax and GetRMS
    // instead of passing in all the data and asking the meter to derive peak and rms.
    // May be worth revisiting as I think it should perform better, because it uses the min/max/rms
-   // stored in blockfiles, rather than calculating them, but for now, changing it to use the
+   // stored in sample blocks, rather than calculating them, but for now, changing it to use the
    // original MeterPanel::UpdateDisplay(). New code is below the previous (now commented out).
    //
    //const size_t kFramesPerBuffer = 4;

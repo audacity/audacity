@@ -104,7 +104,7 @@ namespace {
          // Scan all clips within current track
          for(const auto &clip : wt->GetAllClips())
          {
-            // Scan all blockfiles within current clip
+            // Scan all sample blocks within current clip
             auto blocks = clip->GetSequenceBlockArray();
             for (const auto &block : *blocks)
             {
