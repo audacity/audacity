@@ -229,8 +229,6 @@ private:
    std::thread mCheckpointThread;
    std::condition_variable mCheckpointCondition;
    std::mutex mCheckpointMutex;
-   std::mutex mCheckpointActive;
-   std::mutex mCheckpointClose;
    std::atomic_bool mCheckpointStop{ false };
    uint64_t mCheckpointWaitingPages{ 0 };
    uint64_t mCheckpointCurrentPages{ 0 };

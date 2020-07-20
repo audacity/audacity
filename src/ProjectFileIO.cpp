@@ -313,9 +313,6 @@ void ProjectFileIO::CheckpointThread()
          // Capture the number of pages that need checkpointing and reset
          mCheckpointCurrentPages = mCheckpointWaitingPages;
          mCheckpointWaitingPages = 0;
-
-         // Lock out others while the checkpoint is running
-         mCheckpointActive.lock();
       }
 
       // Open another connection to the DB to prevent blocking the main thread.
@@ -334,9 +331,6 @@ void ProjectFileIO::CheckpointThread()
 
          // Reset
          mCheckpointCurrentPages = 0;
-
-         // Checkpoint is complete
-         mCheckpointActive.unlock();
       }
    }
 
@@ -348,7 +342,7 @@ int ProjectFileIO::CheckpointHook(void *data, sqlite3 *db, const char *schema, i
    // Get access to our object
    ProjectFileIO *that = static_cast<ProjectFileIO *>(data);
 
-   // Qeuue the database pointer for our checkpoint thread to process
+   // Queue the database pointer for our checkpoint thread to process
    std::lock_guard<std::mutex> guard(that->mCheckpointMutex);
    that->mCheckpointWaitingPages = pages;
    that->mCheckpointCondition.notify_one();
