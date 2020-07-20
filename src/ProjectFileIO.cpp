@@ -944,6 +944,11 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
       }
    }
 
+   // Create the project doc
+   ProjectSerializer doc;
+   WriteXMLHeader(doc);
+   WriteXML(doc, false, tracks);
+
    auto db = DB();
    sqlite3 *destdb = nullptr;
    bool success = false;
@@ -1104,6 +1109,12 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    // Ensure attached DB connection gets configured
    Config(destdb, SafeConfig);
 
+   // Write the project doc
+   if (!WriteDoc("project", doc, destdb))
+   {
+      return nullptr;
+   }
+
    // Tell cleanup everything is good to go
    success = true;
 
@@ -1168,8 +1179,8 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
    // Let's make a percentage...should be plenty of head room
    current *= 100;
 
-   wxLogDebug(wxT("used = %lld total = %lld %lld\n"), current, total, current / total);
-   if (current / total > 80)
+   wxLogDebug(wxT("used = %lld total = %lld %lld\n"), current, total, total ? current / total : 0);
+   if (!total || current / total > 80)
    {
       wxLogDebug(wxT("not vacuuming"));
       return false;
@@ -1251,15 +1262,14 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
    // Copy the original database to a new database while pruning unused sample blocks
    auto newDB = CopyTo(origName, XO("Compacting project"), true, tracks);
 
-   // Close handle to the original database
+   // Close handle to the original database, even if the copy failed
    CloseDB();
 
-   // Reestablish the original name.  No need to reopen as it will happen later,
-   // if needed.
+   // Reestablish the original name.
    UseConnection(newDB, origName);
 
    // If the copy failed or we aren't able to write the project doc, backout
-   if (!newDB || !WriteDoc("project", doc, newDB))
+   if (!newDB)
    {
       // Close the new database
       sqlite3_close(newDB);
@@ -1270,7 +1280,8 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
       // AUD3 warn user somehow
       wxRenameFile(tempName, origName);
 
-      UseConnection(nullptr, origName);
+      // Reopen original file
+      OpenDB(origName);
 
       return;
    }
@@ -2185,18 +2196,20 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       // Install our checkpoint hook
       sqlite3_wal_hook(mDB, CheckpointHook, this);
    }
-
-   ProjectSerializer doc;
-   WriteXMLHeader(doc);
-   WriteXML(doc);
-
-   if (!WriteDoc("project", doc))
+   else
    {
-      return false;
-   }
+      ProjectSerializer doc;
+      WriteXMLHeader(doc);
+      WriteXML(doc);
 
-   // Autosave no longer needed
-   AutoSaveDelete();
+      if (!WriteDoc("project", doc))
+      {
+         return false;
+      }
+
+      // Autosave no longer needed
+      AutoSaveDelete();
+   }
 
    // Reaching this point defines success and all the rest are no-fail
    // operations:
@@ -2224,17 +2237,6 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
    auto db = CopyTo(fileName, XO("Backing up project"), true);
    if (!db)
    {
-      return false;
-   }
-
-   ProjectSerializer doc;
-   WriteXMLHeader(doc);
-   WriteXML(doc);
-
-   // Write the project doc to the new DB
-   if (!WriteDoc("project", doc, db))
-   {
-      wxRemoveFile(fileName);
       return false;
    }
 
