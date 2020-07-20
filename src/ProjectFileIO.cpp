@@ -638,52 +638,45 @@ bool ProjectFileIO::TransactionRollback(const wxString &name)
    return rc == SQLITE_OK;
 }
 
-/* static */
-int ProjectFileIO::ExecCallback(void *data, int cols, char **vals, char **names)
+static int ExecCallback(void *data, int cols, char **vals, char **names)
 {
-   ExecParm *parms = static_cast<ExecParm *>(data);
-   return parms->func(parms->result, cols, vals, names);
+   auto &cb = *static_cast<const ProjectFileIO::ExecCB *>(data);
+   // Be careful not to throw anything across sqlite3's stack frames.
+   return GuardedCall<int>(
+      [&]{ return cb(cols, vals, names); },
+      MakeSimpleGuard( 1 )
+   );
 }
 
-int ProjectFileIO::Exec(const char *query, ExecCB callback, ExecResult &result)
+int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
 {
    char *errmsg = nullptr;
-   ExecParm ep = {callback, result};
 
-   int rc = sqlite3_exec(DB(), query, ExecCallback, &ep, &errmsg);
+   const void *ptr = &callback;
+   int rc = sqlite3_exec(DB(), query, ExecCallback,
+                         const_cast<void*>(ptr), &errmsg);
 
-   if (errmsg)
+   if (rc != SQLITE_ABORT && errmsg)
    {
       SetDBError(
          XO("Failed to execute a project file command:\n\n%s").Format(query)
       );
       mLibraryError = Verbatim(errmsg);
+   }
+   if (errmsg)
+   {
       sqlite3_free(errmsg);
    }
 
    return rc;
 }
 
-bool ProjectFileIO::Query(const char *sql, ExecResult &result)
+bool ProjectFileIO::Query(const char *sql, const ExecCB &callback)
 {
-   result.clear();
-
-   auto getresult = [](ExecResult &result, int cols, char **vals, char **names)
-   {
-      std::vector<wxString> row;
-
-      for (int i = 0; i < cols; ++i)
-      {
-         row.push_back(vals[i]);
-      }
-
-      result.push_back(row);
-
-      return SQLITE_OK;
-   };
-
-   int rc = Exec(sql, getresult, result);
-   if (rc != SQLITE_OK)
+   int rc = Exec(sql, callback);
+   // SQLITE_ABORT is a non-error return only meaning the callback
+   // stopped the iteration of rows early
+   if ( !(rc == SQLITE_OK || rc == SQLITE_ABORT) )
    {
       return false;
    }
@@ -693,21 +686,16 @@ bool ProjectFileIO::Query(const char *sql, ExecResult &result)
 
 bool ProjectFileIO::GetValue(const char *sql, wxString &result)
 {
+   // Retrieve the first column in the first row, if any
    result.clear();
+   auto cb = [&result](int cols, char **vals, char **){
+      if (cols > 0)
+         result = vals[0];
+      // Stop after one row
+      return 1;
+   };
 
-   ExecResult holder;
-   if (!Query(sql, holder))
-   {
-      return false;
-   }
-
-   // Return the first column in the first row, if any
-   if (holder.size() && holder[0].size())
-   {
-      result.assign(holder[0][0]);
-   }
-
-   return true;
+   return Query(sql, cb);
 }
 
 bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
@@ -932,18 +920,16 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    // Collect ALL blockids
    else
    {
-      ExecResult holder;
-      if (!Query("SELECT blockid FROM sampleblocks;", holder))
+      auto cb = [&blockids](int cols, char **vals, char **){
+         SampleBlockID blockid;
+         wxString{ vals[0] }.ToLongLong(&blockid);
+         blockids.insert(blockid);
+         return 0;
+      };
+
+      if (!Query("SELECT blockid FROM sampleblocks;", cb))
       {
          return nullptr;
-      }
-
-      for (auto block : holder)
-      {
-         SampleBlockID blockid;
-         block[0].ToLongLong(&blockid);
-
-         blockids.insert(blockid);
       }
    }
 
@@ -1155,26 +1141,32 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
    }
 
    // Get the number of blocks and total length from the project file.
-   ExecResult holder;
-   if (!Query("SELECT Count(*), Sum(Length(summary256)) + Sum(Length(summary64k)) + Sum(Length(samples)) FROM sampleblocks;", holder))
-   {
-      // Shouldn't vacuum since we don't have the full picture
-      return false;
-   }
-
-   // Verify we got the results we asked for
-   if (holder.size() != 1 || holder[0].size() != 2)
-   {
-      // Shouldn't vacuum since we don't have the full picture
-      return false;
-   }
-
-   // Convert
    unsigned long long blockcount = 0;
-   holder[0][0].ToULongLong(&blockcount);
-
    unsigned long long total = 0;
-   holder[0][1].ToULongLong(&total);
+
+   auto cb =
+   [&blockcount, &total](int cols, char **vals, char **){
+      if ( cols != 2 )
+         // Should have two exactly!
+         return 1;
+      if ( total > 0 ) {
+         // Should not have multiple rows!
+         total = 0;
+         return 1;
+      }
+      // Convert
+      wxString{ vals[0] }.ToULongLong( &blockcount );
+      wxString{ vals[1] }.ToULongLong( &total );
+      return 0;
+   };
+   if (!Query("SELECT Count(*), "
+     "Sum(Length(summary256)) + Sum(Length(summary64k)) + Sum(Length(samples)) "
+     "FROM sampleblocks;", cb)
+       || total == 0)
+   {
+      // Shouldn't vacuum since we don't have the full picture
+      return false;
+   }
 
    // Remember if we had unused blocks in the project file
    mHadUnused = (blockcount > active.size());
