@@ -107,11 +107,14 @@ static const char *ProjectFileSchema =
    // 'samples' are fixed size blocks of int16, int32 or float32 numbers.
    // The blocks may be partially empty.
    // The quantity of valid data in the blocks is
-   // provided in the project XML.
+   // provided in the project blob.
    // 
    // sampleformat specifies the format of the samples stored.
    //
    // blockID is a 64 bit number.
+   //
+   // Rows are immutable -- never updated after addition, but may be
+   // deleted.
    //
    // summin to summary64K are summaries at 3 distance scales.
    "CREATE TABLE IF NOT EXISTS <schema>.sampleblocks"
