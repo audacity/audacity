@@ -231,9 +231,9 @@ private:
    std::mutex mCheckpointMutex;
    std::mutex mCheckpointActive;
    std::mutex mCheckpointClose;
-   std::atomic_bool mCheckpointStop;
-   uint64_t mCheckpointWaitingPages;
-   uint64_t mCheckpointCurrentPages;
+   std::atomic_bool mCheckpointStop{ false };
+   uint64_t mCheckpointWaitingPages{ 0 };
+   uint64_t mCheckpointCurrentPages{ 0 };
 
    friend SqliteSampleBlock;
    friend AutoCommitTransaction;
