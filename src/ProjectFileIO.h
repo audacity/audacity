@@ -120,7 +120,7 @@ public:
    // For it's usage, see:
    //    SqliteSampleBlock::~SqliteSampleBlock()
    //    ProjectManager::OnCloseWindow()
-   void SetBypass();
+   void SetBypass( bool bypass = true );
 
    // Remove all unused space within a project file
    void Compact(const std::shared_ptr<TrackList> &tracks, bool force = false);

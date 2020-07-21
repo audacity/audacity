@@ -2137,7 +2137,7 @@ void ProjectFileIO::SetDBError(const TranslatableString &msg)
    wxASSERT(false);
 }
 
-void ProjectFileIO::SetBypass()
+void ProjectFileIO::SetBypass( bool bypass )
 {
    auto &currConn = CurrConn();
    if (!currConn)
@@ -2150,7 +2150,7 @@ void ProjectFileIO::SetBypass()
    // deletions since the new file doesn't have the blocks that the
    // Sequences expect to be there.
 
-   currConn->SetBypass( true );
+   currConn->SetBypass( bypass );
 
    // Only permanent project files need cleaning at shutdown
    if (!IsTemporary() && !WasCompacted())

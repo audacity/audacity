@@ -43,10 +43,13 @@ ProjectHistory::~ProjectHistory() = default;
 void ProjectHistory::InitialState()
 {
    auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &tags = Tags::Get( project );
+
+   projectFileIO.TransactionStart({});
 
    undoManager.ClearStates();
 

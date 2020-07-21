@@ -23,11 +23,13 @@ UndoManager
 #include "Audacity.h"
 #include "UndoManager.h"
 
+#include <algorithm>
 #include <wx/hashset.h>
 
 #include "Clipboard.h"
 #include "Diags.h"
 #include "Project.h"
+#include "ProjectFileIO.h"
 #include "SampleBlock.h"
 #include "Sequence.h"
 #include "WaveClip.h"
@@ -178,6 +180,37 @@ void UndoManager::RemoveStateAt(int n)
    stack.erase(stack.begin() + n);
 }
 
+void UndoManager::RemoveNewStates( int ii )
+{
+   auto &projectFileIO = ProjectFileIO::Get(mProject);
+
+   // Collect ids in old states, which must not be deleted
+   const auto begin = stack.begin();
+   SampleBlockIDSet ids;
+   std::for_each( begin, begin + ii, [&ids](const auto &pElem){
+      const auto &tracks = *pElem->state.tracks;
+      InspectBlocks(tracks, {}, &ids);
+   });
+
+   // Delete all others
+   bool ok = projectFileIO.DeleteBlocks(ids, true);
+   if ( !ok ) {
+      // Ignore the database error.  At worst, we make orphans.
+   }
+
+   // Setup to "bypass" database operations in destructors of blocks
+   // (although I'm trying to get rid of that bypassing stuff
+   // altogether, but it's not complete enough at this commit)
+ //  auto bypass = projectFileIO.ShouldBypass();
+ //  auto cleanup = finally( [&]{ projectFileIO.SetBypass( bypass ); } );
+   projectFileIO.SetBypass( true );
+
+   // Destroy the tracks (which should dereference SampleBlocks that were
+   // deleted from the database)
+   while (ii < stack.size()) {
+      RemoveStateAt(ii);
+   }
+}
 
 void UndoManager::RemoveStates(int num)
 {
@@ -280,10 +313,7 @@ void UndoManager::PushState(const TrackList * l,
 
    mayConsolidate = true;
 
-   i = current + 1;
-   while (i < stack.size()) {
-      RemoveStateAt(i);
-   }
+   RemoveNewStates( current + 1 );
 
    // Assume tags was duplicated before any changes.
    // Just save a NEW shared_ptr to it.

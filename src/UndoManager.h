@@ -131,6 +131,7 @@ class AUDACITY_DLL_API UndoManager final
                     const SelectedRegion &selectedRegion, const std::shared_ptr<Tags> &tags);
    void ClearStates();
    void RemoveStates(int num);  // removes the 'num' oldest states
+   void RemoveNewStates( int num ); // remove all but the 'num' oldest states
    unsigned int GetNumStates();
    unsigned int GetCurrentState();
 
