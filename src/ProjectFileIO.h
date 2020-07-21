@@ -14,6 +14,7 @@ Paul Licameli split from AudacityProject.h
 #include <atomic>
 #include <condition_variable>
 #include <memory>
+#include <map>
 #include <mutex>
 #include <thread>
 #include <set>
