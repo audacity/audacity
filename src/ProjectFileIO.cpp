@@ -662,7 +662,7 @@ void ProjectFileIO::InSet(sqlite3_context *context, int argc, sqlite3_value **ar
    sqlite3_result_int(context, blockids->find(blockid) != blockids->end());
 }
 
-bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
+bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
 {
    auto db = DB();
    int rc;
@@ -674,15 +674,19 @@ bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
    });
 
    // Add the function used to verify each row's blockid against the set of active blockids
-   rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, &blockids, InSet, nullptr, nullptr);
+   const void *p = &blockids;
+   rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, const_cast<void*>(p), InSet, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
       wxLogDebug(wxT("Unable to add 'inset' function"));
       return false;
    }
 
-   // Delete all rows that are orphaned
-   rc = sqlite3_exec(db, "DELETE FROM sampleblocks WHERE NOT inset(blockid);", nullptr, nullptr, nullptr);
+   // Delete all rows in the set, or not in it
+   auto sql = wxString::Format(
+      "DELETE FROM sampleblocks WHERE %sinset(blockid);",
+      complement ? "NOT " : "" );
+   rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
       wxLogWarning(XO("Cleanup of orphan blocks failed").Translation());
@@ -1837,7 +1841,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    // Check for orphans blocks...sets mRecovered if any were deleted
    if (blockids.size() > 0)
    {
-      if (!CheckForOrphans(blockids))
+      if (!DeleteBlocks(blockids, true))
       {
          return false;
       }
