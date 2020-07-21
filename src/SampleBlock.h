@@ -47,7 +47,7 @@ public:
 
    virtual void CloseLock() = 0;
    
-   virtual SampleBlockID GetBlockID() = 0;
+   virtual SampleBlockID GetBlockID() const = 0;
 
    // If !mayThrow and there is an error, ignores it and returns zero.
    // That may be appropriate when only attempting to display samples, not edit.

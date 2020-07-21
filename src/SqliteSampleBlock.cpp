@@ -36,7 +36,7 @@ public:
 
    void Delete();
 
-   SampleBlockID GetBlockID() override;
+   SampleBlockID GetBlockID() const override;
 
    size_t DoGetSamples(samplePtr dest,
                        sampleFormat destformat,
@@ -284,7 +284,7 @@ void SqliteSampleBlock::CloseLock()
    mLocked = true;
 }
 
-SampleBlockID SqliteSampleBlock::GetBlockID()
+SampleBlockID SqliteSampleBlock::GetBlockID() const
 {
    return mBlockID;
 }
