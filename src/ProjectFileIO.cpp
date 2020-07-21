@@ -827,6 +827,7 @@ bool ProjectFileIO::InstallSchema(sqlite3 *db, const char *schema /* = "main" */
 
 bool ProjectFileIO::UpgradeSchema()
 {
+   // To do
    return true;
 }
 
@@ -855,7 +856,7 @@ bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
       sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, nullptr, nullptr, nullptr, nullptr);
    });
 
-   // Add the function used to verify each rows blockid against the set of active blockids
+   // Add the function used to verify each row's blockid against the set of active blockids
    rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, &blockids, InSet, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
@@ -1125,7 +1126,7 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
             const auto &sb = block.sb;
             auto blockid = sb->GetBlockID();
 
-            // Accumulate space used by the block if the blocckid has not
+            // Accumulate space used by the block if the blockid has not
             // yet been seen
             if (active.count(blockid) == 0)
             {
@@ -1187,11 +1188,11 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
    // Haven't vacuumed yet
    mWasVacuumed = false;
 
-   // Assume we do until we found out othersize. That way cleanup at project
+   // Assume we do until we found out otherwise. That way cleanup at project
    // close time will still occur
    mHadUnused = true;
 
-   // Don't vacuum if this is a temporary project or if it's deteremined there not
+   // Don't vacuum if this is a temporary project or if it's determined there are not
    // enough unused blocks to make it worthwhile
    if (IsTemporary() || !ShouldVacuum(tracks))
    {
