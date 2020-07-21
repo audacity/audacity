@@ -99,10 +99,7 @@ namespace {
       //TIMER_START( "CalculateSpaceUsage", space_calc );
       InspectBlocks(
          tracks,
-         [&result](const SampleBlock &sb){
-            unsigned long long usage{ sb.GetSpaceUsage() };
-            result += usage;
-         },
+         BlockSpaceUsageAccumulator( result ),
          &seen
       );
       return result;

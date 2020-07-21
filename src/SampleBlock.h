@@ -89,6 +89,15 @@ protected:
    virtual MinMaxRMS DoGetMinMaxRMS() const = 0;
 };
 
+// Makes a useful function object
+inline std::function< void(const SampleBlock&) >
+BlockSpaceUsageAccumulator (unsigned long long &total)
+{
+   return [&total]( const SampleBlock &block ){
+      total += block.GetSpaceUsage();
+   };
+};
+
 ///\brief abstract base class with methods to produce @ref SampleBlock objects
 class SampleBlockFactory
 {

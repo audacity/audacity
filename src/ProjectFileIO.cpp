@@ -922,9 +922,7 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
    unsigned long long current = 0;
 
    InspectBlocks( *tracks,
-      [&current](const SampleBlock &sb){
-         current += sb.GetSpaceUsage();
-      },
+      BlockSpaceUsageAccumulator( current ),
       &active // Visit unique blocks only
    );
 
