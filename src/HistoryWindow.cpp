@@ -118,7 +118,7 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
                                      wxDefaultSize,
                                      wxSP_ARROW_KEYS,
                                      0,
-                                     mManager->GetCurrentState() - 1,
+                                     mManager->GetCurrentState(),
                                      0);
             S.AddWindow(mLevels);
             /* i18n-hint: (verb)*/
@@ -204,11 +204,11 @@ void HistoryDialog::DoUpdate()
    mList->DeleteAllItems();
 
    wxLongLong_t total = 0;
-   mSelected = mManager->GetCurrentState() - 1;
+   mSelected = mManager->GetCurrentState();
    for (i = 0; i < (int)mManager->GetNumStates(); i++) {
       TranslatableString desc, size;
 
-      total += mManager->GetLongDescription(i + 1, &desc, &size);
+      total += mManager->GetLongDescription(i, &desc, &size);
       mList->InsertItem(i, desc.Translation(), i == mSelected ? 1 : 0);
       mList->SetItem(i, 1, size.Translation());
    }
@@ -261,7 +261,7 @@ void HistoryDialog::OnDiscard(wxCommandEvent & WXUNUSED(event))
 
    mSelected -= i;
    mManager->RemoveStates(i);
-   ProjectHistory::Get( *mProject ).SetStateTo(mSelected + 1);
+   ProjectHistory::Get( *mProject ).SetStateTo(mSelected);
 
    while(--i >= 0)
       mList->DeleteItem(i);
@@ -299,7 +299,7 @@ void HistoryDialog::OnItemSelected(wxListEvent &event)
    // entry.  Doing so can cause unnecessary delays upon initial load or while
    // clicking the same entry over and over.
    if (selected != mSelected) {
-      ProjectHistory::Get( *mProject ).SetStateTo(selected + 1);
+      ProjectHistory::Get( *mProject ).SetStateTo(selected);
    }
    mSelected = selected;
 

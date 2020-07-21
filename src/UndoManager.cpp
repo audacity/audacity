@@ -167,8 +167,6 @@ void UndoManager::CalculateSpaceUsage()
 wxLongLong_t UndoManager::GetLongDescription(
    unsigned int n, TranslatableString *desc, TranslatableString *size)
 {
-   n -= 1; // 1 based to zero based
-
    wxASSERT(n < stack.size());
    wxASSERT(space.size() == stack.size());
 
@@ -181,8 +179,6 @@ wxLongLong_t UndoManager::GetLongDescription(
 
 void UndoManager::GetShortDescription(unsigned int n, TranslatableString *desc)
 {
-   n -= 1; // 1 based to zero based
-
    wxASSERT(n < stack.size());
 
    *desc = stack[n]->shortDescription;
@@ -228,7 +224,7 @@ unsigned int UndoManager::GetNumStates()
 
 unsigned int UndoManager::GetCurrentState()
 {
-   return current + 1;  // the array is 0 based, the abstraction is 1 based
+   return current;
 }
 
 bool UndoManager::UndoAvailable()
@@ -332,8 +328,6 @@ void UndoManager::PushState(const TrackList * l,
 
 void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
 {
-   n -= 1;
-
    wxASSERT(n < stack.size());
 
    current = n;
