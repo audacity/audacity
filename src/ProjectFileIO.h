@@ -24,6 +24,7 @@ Paul Licameli split from AudacityProject.h
 
 struct sqlite3;
 struct sqlite3_context;
+struct sqlite3_stmt;
 struct sqlite3_value;
 
 class AudacityProject;
@@ -159,7 +160,18 @@ private:
 
    sqlite3 *OpenDB(FilePath fileName = {});
    bool CloseDB();
-   bool DeleteDB();
+
+   enum StatementID
+   {
+      GetSamples,
+      GetSummary256,
+      GetSummary64k,
+      LoadSampleBlock,
+      InsertSampleBlock,
+      DeleteSampleBlock
+   };
+   void Prepare(enum StatementID id, const char *sql);
+   sqlite3_stmt *GetStatement(enum StatementID id);
 
    bool Query(const char *sql, const ExecCB &callback);
 
@@ -232,6 +244,8 @@ private:
    std::atomic_bool mCheckpointStop{ false };
    std::atomic< std::uint64_t > mCheckpointWaitingPages{ 0 };
    std::atomic< std::uint64_t > mCheckpointCurrentPages{ 0 };
+
+   std::map<enum StatementID, sqlite3_stmt *> mStatements;
 
    friend SqliteSampleBlock;
    friend AutoCommitTransaction;

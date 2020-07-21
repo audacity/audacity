@@ -492,12 +492,34 @@ sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
       return nullptr;
    }
 
-   mTemporary = temp;
+   Prepare(GetSamples,
+      "SELECT samples FROM sampleblocks WHERE blockid = ?1;");
 
-   SetFileName(fileName);
+   Prepare(GetSummary256,
+      "SELECT summary256 FROM sampleblocks WHERE blockid = ?1;");
+
+   Prepare(GetSummary64k,
+      "SELECT summary64k FROM sampleblocks WHERE blockid = ?1;");
+
+   Prepare(LoadSampleBlock,
+      "SELECT sampleformat, summin, summax, sumrms,"
+      "       length('summary256'), length('summary64k'), length('samples')"
+      "  FROM sampleblocks WHERE blockid = ?1;");
+
+   Prepare(InsertSampleBlock,
+      "INSERT INTO sampleblocks (sampleformat, summin, summax, sumrms,"
+      "                          summary256, summary64k, samples)"
+      "                         VALUES(?1,?2,?3,?4,?5,?6,?7);");
+
+   Prepare(DeleteSampleBlock,
+      "DELETE FROM sampleblocks WHERE blockid = ?1;");
 
    // Install our checkpoint hook
    sqlite3_wal_hook(mDB, CheckpointHook, this);
+
+   mTemporary = temp;
+
+   SetFileName(fileName);
 
    return mDB;
 }
@@ -537,6 +559,13 @@ bool ProjectFileIO::CloseDB()
          }
       }
 
+      // We're done with the prepared statements
+      for (auto stmt : mStatements)
+      {
+         sqlite3_finalize(stmt.second);
+      }
+      mStatements.clear();
+
       // Close the DB
       rc = sqlite3_close(mDB);
       if (rc != SQLITE_OK)
@@ -551,25 +580,28 @@ bool ProjectFileIO::CloseDB()
    return true;
 }
 
-bool ProjectFileIO::DeleteDB()
+void ProjectFileIO::Prepare(enum StatementID id, const char *sql)
 {
-   wxASSERT(mDB == nullptr);
+   int rc;
 
-   if (mTemporary && !mFileName.empty())
+   sqlite3_stmt *stmt = nullptr;
+
+   rc = sqlite3_prepare_v3(mDB, sql, -1, SQLITE_PREPARE_PERSISTENT, &stmt, 0);
+   if (rc != SQLITE_OK)
    {
-      wxFileName temp(FileNames::TempDir());
-      if (temp == wxPathOnly(mFileName))
-      {
-         if (!wxRemoveFile(mFileName))
-         {
-            SetError(XO("Failed to close the project file"));
-
-            return false;
-         }
-      }
+      THROW_INCONSISTENCY_EXCEPTION;
    }
 
-   return true;
+   mStatements.insert({id, stmt});
+}
+
+sqlite3_stmt *ProjectFileIO::GetStatement(enum StatementID id)
+{
+   auto iter = mStatements.find(id);
+
+   wxASSERT(iter != mStatements.end());
+
+   return iter->second;
 }
 
 bool ProjectFileIO::TransactionStart(const wxString &name)
@@ -1036,10 +1068,10 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
       // Copy sample blocks from the main DB to the outbound DB
       for (auto blockid : blockids)
       {
-         // BIND blockid parameter
+         // Bind statement parameters
          if (sqlite3_bind_int64(stmt, 1, blockid) != SQLITE_OK)
          {
-            THROW_INCONSISTENCY_EXCEPTION;
+            wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
          }
 
          // Process it
@@ -1052,7 +1084,7 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
             return nullptr;
          }
 
-         // BIND blockid parameter
+         // Reset statement to beginning
          if (sqlite3_reset(stmt) != SQLITE_OK)
          {
             THROW_INCONSISTENCY_EXCEPTION;
@@ -1680,15 +1712,13 @@ bool ProjectFileIO::WriteDoc(const char *table,
    const wxMemoryBuffer &dict = autosave.GetDict();
    const wxMemoryBuffer &data = autosave.GetData();
 
-   // BIND SQL autosave
+   // Bind statement parameters
    // Might return SQL_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
-   if (
-      sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC) ||
-      sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC)
-   )
+   if (sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC) ||
+       sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC))
    {
-      THROW_INCONSISTENCY_EXCEPTION;
+      wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
 
    rc = sqlite3_step(stmt);
@@ -1938,10 +1968,12 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
          SampleBlockID blockid;
          attr->GetValue().ToLongLong(&blockid);
 
-         // BIND blockid parameter
+         // Bind statement parameters
+         // Might return SQL_MISUSE which means it's our mistake that we violated
+         // preconditions; should return SQL_OK which is 0
          if (sqlite3_bind_int64(stmt, 1, blockid) != SQLITE_OK)
          {
-            THROW_INCONSISTENCY_EXCEPTION;
+            wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
          }
 
          // Process it
@@ -2412,6 +2444,6 @@ bool AutoCommitTransaction::Rollback()
    wxASSERT(mInTrans);
 
    mInTrans = !mIO.TransactionCommit(mName);
-
+   
    return mInTrans;
 }

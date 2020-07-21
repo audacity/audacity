@@ -64,11 +64,11 @@ private:
    bool GetSummary(float *dest,
                    size_t frameoffset,
                    size_t numframes,
-                   const char *srccolumn,
+                   ProjectFileIO::StatementID id,
                    size_t srcbytes);
    size_t GetBlob(void *dest,
                   sampleFormat destformat,
-                  const char *srccolumn,
+                  ProjectFileIO::StatementID id,
                   sampleFormat srcformat,
                   size_t srcoffset,
                   size_t srcbytes);
@@ -97,9 +97,6 @@ private:
    double mSumMin;
    double mSumMax;
    double mSumRms;
-
-   const char *columns =
-      "sampleformat, summin, summax, sumrms, summary256, summary64k, samples";
 
 #if defined(WORDS_BIGENDIAN)
 #error All sample block data is little endian...big endian not yet supported
@@ -291,7 +288,7 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
 {
    return GetBlob(dest,
                   destformat,
-                  "samples",
+                  ProjectFileIO::GetSamples,
                   mSampleFormat,
                   sampleoffset * SAMPLE_SIZE(mSampleFormat),
                   numsamples * SAMPLE_SIZE(mSampleFormat)) / SAMPLE_SIZE(mSampleFormat);
@@ -333,25 +330,33 @@ bool SqliteSampleBlock::GetSummary256(float *dest,
                                       size_t frameoffset,
                                       size_t numframes)
 {
-   return GetSummary(dest, frameoffset, numframes, "summary256", mSummary256Bytes);
+   return GetSummary(dest,
+                     frameoffset,
+                     numframes,
+                     ProjectFileIO::GetSummary256,
+                     mSummary256Bytes);
 }
 
 bool SqliteSampleBlock::GetSummary64k(float *dest,
                                       size_t frameoffset,
                                       size_t numframes)
 {
-   return GetSummary(dest, frameoffset, numframes, "summary64k", mSummary64kBytes);
+   return GetSummary(dest,
+                     frameoffset,
+                     numframes,
+                     ProjectFileIO::GetSummary64k,
+                     mSummary256Bytes);
 }
 
 bool SqliteSampleBlock::GetSummary(float *dest,
                                    size_t frameoffset,
                                    size_t numframes,
-                                   const char *srccolumn,
+                                   ProjectFileIO::StatementID id,
                                    size_t srcbytes)
 {
    return GetBlob(dest,
                   floatSample,
-                  srccolumn,
+                  id,
                   floatSample,
                   frameoffset * 3 * SAMPLE_SIZE(floatSample),
                   numframes * 3 * SAMPLE_SIZE(floatSample)) / 3 / SAMPLE_SIZE(floatSample);
@@ -398,7 +403,7 @@ MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS(size_t start, size_t len)
 
       size_t copied = GetBlob(samples,
                               floatSample,
-                              "samples",
+                              ProjectFileIO::GetSamples,
                               mSampleFormat,
                               start * SAMPLE_SIZE(mSampleFormat),
                               len * SAMPLE_SIZE(mSampleFormat)) / SAMPLE_SIZE(mSampleFormat);
@@ -439,7 +444,7 @@ size_t SqliteSampleBlock::GetSpaceUsage() const
 
 size_t SqliteSampleBlock::GetBlob(void *dest,
                                   sampleFormat destformat,
-                                  const char *srccolumn,
+                                  ProjectFileIO::StatementID id,
                                   sampleFormat srcformat,
                                   size_t srcoffset,
                                   size_t srcbytes)
@@ -456,65 +461,60 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    int rc;
    size_t minbytes = 0;
 
-   char sql[256];
-   sqlite3_snprintf(sizeof(sql),
-                    sql,
-                    "SELECT %s FROM sampleblocks WHERE blockid = %lld;",
-                    srccolumn,
-                    mBlockID);
+   // Retrieve prepared statement
+   sqlite3_stmt *stmt = mIO.GetStatement(id);
 
-   sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
+   // Bind statement paraemters
+   // Might return SQLITE_MISUSE which means it's our mistake that we violated
+   // preconditions; should return SQL_OK which is 0
+   if (sqlite3_bind_int64(stmt, 1, mBlockID))
    {
-      if (stmt)
-      {
-         sqlite3_finalize(stmt);
-      }
-   });
-
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
-   if (rc != SQLITE_OK)
-   {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-   }
-   else
-   {
-      rc = sqlite3_step(stmt);
-      if (rc != SQLITE_ROW)
-      {
-         wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      }
-      else
-      {
-         samplePtr src = (samplePtr) sqlite3_column_blob(stmt, 0);
-         size_t blobbytes = (size_t) sqlite3_column_bytes(stmt, 0);
-
-         srcoffset = std::min(srcoffset, blobbytes);
-         minbytes = std::min(srcbytes, blobbytes - srcoffset);
-
-         if (srcoffset != 0)
-         {
-            srcoffset += 0;
-         }
-         CopySamples(src + srcoffset,
-                     srcformat,
-                     (samplePtr) dest,
-                     destformat,
-                     minbytes / SAMPLE_SIZE(srcformat));
-
-         dest = ((samplePtr) dest) + minbytes;
-      }
+      wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
 
-   if ( rc != SQLITE_ROW )
+   // Execute the statement
+   rc = sqlite3_step(stmt);
+   if (rc != SQLITE_ROW)
+   {
+      wxLogDebug(wxT("SqliteSampleBlock::GetBlob - SQLITE error %s"), sqlite3_errmsg(db));
+
+      // Clear statement bindings and rewind statement
+      sqlite3_clear_bindings(stmt);
+      sqlite3_reset(stmt);
+
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ XO("Failed to retrieve samples") };
+      throw SimpleMessageBoxException{ XO("Failed to retrieve project data") };
+   }
+
+   // Retrieve returned data
+   samplePtr src = (samplePtr) sqlite3_column_blob(stmt, 0);
+   size_t blobbytes = (size_t) sqlite3_column_bytes(stmt, 0);
+
+   srcoffset = std::min(srcoffset, blobbytes);
+   minbytes = std::min(srcbytes, blobbytes - srcoffset);
+
+   if (srcoffset != 0)
+   {
+      srcoffset += 0;
+   }
+
+   CopySamples(src + srcoffset,
+               srcformat,
+               (samplePtr) dest,
+               destformat,
+               minbytes / SAMPLE_SIZE(srcformat));
+
+   dest = ((samplePtr) dest) + minbytes;
 
    if (srcbytes - minbytes)
    {
       memset(dest, 0, srcbytes - minbytes);
    }
+
+   // Clear statement bindings and rewind statement
+   sqlite3_clear_bindings(stmt);
+   sqlite3_reset(stmt);
 
    return srcbytes;
 }
@@ -522,10 +522,9 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
 void SqliteSampleBlock::Load(SampleBlockID sbid)
 {
    auto db = mIO.DB();
+   int rc;
 
    wxASSERT(sbid > 0);
-
-   int rc;
 
    mValid = false;
    mSummary256Bytes = 0;
@@ -536,41 +535,33 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    mSumMax = -FLT_MAX;
    mSumMin = 0.0;
 
-   char sql[256];
-   sqlite3_snprintf(sizeof(sql),
-                    sql,
-                    "SELECT sampleformat, summin, summax, sumrms,"
-                    "       length('summary256'), length('summary64k'), length('samples')"
-                    "  FROM sampleblocks WHERE blockid = %lld;",
-                    sbid);
+   // Retrieve prepared statement
+   sqlite3_stmt *stmt = mIO.GetStatement(ProjectFileIO::LoadSampleBlock);
 
-   sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
+   // Bind statement paraemters
+   // Might return SQLITE_MISUSE which means it's our mistake that we violated
+   // preconditions; should return SQL_OK which is 0
+   if (sqlite3_bind_int64(stmt, 1, sbid))
    {
-      if (stmt)
-      {
-         sqlite3_finalize(stmt);
-      }
-   });
-
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
-   if (rc != SQLITE_OK)
-   {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-   }
-   else {
-      rc = sqlite3_step(stmt);
-      if (rc != SQLITE_ROW)
-      {
-         wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      }
+      wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
 
-   if ( rc != SQLITE_ROW )
+   // Execute the statement
+   rc = sqlite3_step(stmt);
+   if (rc != SQLITE_ROW)
+   {
+      wxLogDebug(wxT("SqliteSampleBlock::Load - SQLITE error %s"), sqlite3_errmsg(db));
+
+      // Clear statement bindings and rewind statement
+      sqlite3_clear_bindings(stmt);
+      sqlite3_reset(stmt);
+
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ XO("Failed to retrieve samples") };
+      throw SimpleMessageBoxException{ XO("Failed to retrieve sample block") };
+   }
 
+   // Retrieve returned data
    mBlockID = sbid;
    mSampleFormat = (sampleFormat) sqlite3_column_int(stmt, 0);
    mSumMin = sqlite3_column_double(stmt, 1);
@@ -581,6 +572,10 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    mSampleBytes = sqlite3_column_int(stmt, 6);
    mSampleCount = mSampleBytes / SAMPLE_SIZE(mSampleFormat);
 
+   // Clear statement bindings and rewind statement
+   sqlite3_clear_bindings(stmt);
+   sqlite3_reset(stmt);
+
    mValid = true;
 }
 
@@ -589,58 +584,49 @@ void SqliteSampleBlock::Commit()
    auto db = mIO.DB();
    int rc;
 
-   char sql[256];
-   sqlite3_snprintf(sizeof(sql),
-                    sql,
-                    "INSERT INTO sampleblocks (%s) VALUES(?,?,?,?,?,?,?);",
-                    columns);
+   // Retrieve prepared statement
+   sqlite3_stmt *stmt = mIO.GetStatement(ProjectFileIO::InsertSampleBlock);
 
-   sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
-   {
-      if (stmt)
-      {
-         sqlite3_finalize(stmt);
-      }
-   });
-
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
-   if (rc != SQLITE_OK)
-   {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-      // Just showing the user a simple message, not the library error too
-      // which isn't internationalized
-      throw SimpleMessageBoxException{ mIO.GetLastError() };
-   }
-
-   // BIND SQL sampleblocks
-   // Might return SQL_MISUSE which means it's our mistake that we violated
+   // Bind statement paraemters
+   // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
-   if (
-      sqlite3_bind_int(stmt, 1, mSampleFormat) ||
-      sqlite3_bind_double(stmt, 2, mSumMin) ||
-      sqlite3_bind_double(stmt, 3, mSumMax) ||
-      sqlite3_bind_double(stmt, 4, mSumRms) ||
-      sqlite3_bind_blob(stmt, 5, mSummary256.get(), mSummary256Bytes, SQLITE_STATIC) ||
-      sqlite3_bind_blob(stmt, 6, mSummary64k.get(), mSummary64kBytes, SQLITE_STATIC) ||
-      sqlite3_bind_blob(stmt, 7, mSamples.get(), mSampleBytes, SQLITE_STATIC)
-   )
-      THROW_INCONSISTENCY_EXCEPTION;
+   if (sqlite3_bind_int(stmt, 1, mSampleFormat) ||
+       sqlite3_bind_double(stmt, 2, mSumMin) ||
+       sqlite3_bind_double(stmt, 3, mSumMax) ||
+       sqlite3_bind_double(stmt, 4, mSumRms) ||
+       sqlite3_bind_blob(stmt, 5, mSummary256.get(), mSummary256Bytes, SQLITE_STATIC) ||
+       sqlite3_bind_blob(stmt, 6, mSummary64k.get(), mSummary64kBytes, SQLITE_STATIC) ||
+       sqlite3_bind_blob(stmt, 7, mSamples.get(), mSampleBytes, SQLITE_STATIC))
+   {
+      wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
+   }
  
+   // Execute the statement
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
-      wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
+      wxLogDebug(wxT("SqliteSampleBlock::Commit - SQLITE error %s"), sqlite3_errmsg(db));
+
+      // Clear statement bindings and rewind statement
+      sqlite3_clear_bindings(stmt);
+      sqlite3_reset(stmt);
+
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ mIO.GetLastError() };
+      throw SimpleMessageBoxException{ XO("Failed to add sample block") };
    }
 
+   // Retrieve returned data
    mBlockID = sqlite3_last_insert_rowid(db);
 
+   // Reset local arrays
    mSamples.reset();
    mSummary256.reset();
    mSummary64k.reset();
+
+   // Clear statement bindings and rewind statement
+   sqlite3_clear_bindings(stmt);
+   sqlite3_reset(stmt);
 
    mValid = true;
 }
@@ -648,26 +634,39 @@ void SqliteSampleBlock::Commit()
 void SqliteSampleBlock::Delete()
 {
    auto db = mIO.DB();
+   int rc;
 
-   if (mBlockID)
+   wxASSERT(mBlockID > 0);
+
+   // Retrieve prepared statement
+   sqlite3_stmt *stmt = mIO.GetStatement(ProjectFileIO::DeleteSampleBlock);
+
+   // Bind statement paraemters
+   // Might return SQLITE_MISUSE which means it's our mistake that we violated
+   // preconditions; should return SQL_OK which is 0
+   if (sqlite3_bind_int64(stmt, 1, mBlockID))
    {
-      int rc;
-
-      char sql[256];
-      sqlite3_snprintf(sizeof(sql),
-                       sql,
-                       "DELETE FROM sampleblocks WHERE blockid = %lld;",
-                       mBlockID);
-
-      rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
-      if (rc != SQLITE_OK)
-      {
-         wxLogDebug(wxT("SQLITE error %s"), sqlite3_errmsg(db));
-         // Just showing the user a simple message, not the library error too
-         // which isn't internationalized
-         throw SimpleMessageBoxException{ XO("Failed to purge unused samples") };
-      }
+      wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
+
+   // Execute the statement
+   rc = sqlite3_step(stmt);
+   if (rc != SQLITE_ROW)
+   {
+      wxLogDebug(wxT("SqliteSampleBlock::Load - SQLITE error %s"), sqlite3_errmsg(db));
+
+      // Clear statement bindings and rewind statement
+      sqlite3_clear_bindings(stmt);
+      sqlite3_reset(stmt);
+
+      // Just showing the user a simple message, not the library error too
+      // which isn't internationalized
+      throw SimpleMessageBoxException{ XO("Failed to delete sample block") };
+   }
+
+   // Clear statement bindings and rewind statement
+   sqlite3_clear_bindings(stmt);
+   sqlite3_reset(stmt);
 }
 
 void SqliteSampleBlock::SaveXML(XMLWriter &xmlFile)
