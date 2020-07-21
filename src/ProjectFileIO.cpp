@@ -2129,8 +2129,31 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    wxString origName;
    bool wasTemp = false;
    bool success = false;
+   sqlite3 *newDB = nullptr;
 
    // Should probably simplify all of the following by using renames.
+
+   // If we're saving to a different file than the current one, then copy the
+   // current to the new file and make it the active file.
+   if (mFileName != fileName)
+   {
+      // Do NOT prune here since we need to retain the Undo history
+      // after we switch to the new file.
+      newDB = CopyTo(fileName, XO("Saving project"));
+      if (!newDB)
+      {
+         return false;
+      }
+
+      // Remember the original project filename and temporary status.
+      origName = mFileName;
+      wasTemp = mTemporary;
+
+      // Save the original database connection and try to switch to a new one
+      // (also ensuring closing of one of the connections, with the cooperation
+      // of the finally below)
+      SaveConnection();
+   }
 
    auto restore = finally([&]
    {
@@ -2160,29 +2183,8 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       }
    });
 
-   // If we're saving to a different file than the current one, then copy the
-   // current to the new file and make it the active file.
-   if (mFileName != fileName)
+   if (!origName.empty())
    {
-      // Do NOT prune here since we need to retain the Undo history
-      // after we switch to the new file.
-      auto newDB = CopyTo(fileName, XO("Saving project"));
-      if (!newDB)
-      {
-         return false;
-      }
-
-      // Remember the original project filename and temporary status.  Only do
-      // this after a successful copy so the "finally" block above doesn't monkey
-      // with the files.
-      origName = mFileName;
-      wasTemp = mTemporary;
-
-      // Save the original database connection and try to switch to a new one
-      // (also ensuring closing of one of the connections, with the cooperation
-      // of the finally above)
-      SaveConnection();
-
       // Make the new connection "safe"
       Config(newDB, SafeConfig);
 
