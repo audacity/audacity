@@ -94,7 +94,7 @@ UndoManager::~UndoManager()
 
 namespace {
    SpaceArray::value_type
-   CalculateUsage(const TrackList &tracks, Set *seen)
+   CalculateUsage(const TrackList &tracks, Set &seen)
    {
       SpaceArray::value_type result = 0;
 
@@ -110,17 +110,15 @@ namespace {
             {
                const auto &sb = block.sb;
 
-               // Accumulate space used by the file if the file was not
+               // Accumulate space used by the block if the block was not
                // yet seen
-               if ( !seen || (seen->count( sb->GetBlockID() ) == 0 ) )
+               if ( seen.count( sb->GetBlockID() ) == 0 )
                {
                   unsigned long long usage{ sb->GetSpaceUsage() };
                   result += usage;
-               }
 
-               // Add file to current set
-               if (seen)
-                  seen->insert( sb->GetBlockID() );
+                  seen.insert( sb->GetBlockID() );
+               }
             }
          }
       }
@@ -154,11 +152,14 @@ void UndoManager::CalculateSpaceUsage()
    {
       // Scan all tracks at current level
       auto &tracks = *stack[nn]->state.tracks;
-      space[nn] = CalculateUsage(tracks, &seen);
+      space[nn] = CalculateUsage(tracks, seen);
    }
 
+   // Count the usage of the clipboard separately, using another set.  Do not
+   // multiple-count any block occurring multiple times within the clipboard.
+   Set seen2;
    mClipboardSpaceUsage = CalculateUsage(
-      Clipboard::Get().GetTracks(), nullptr);
+      Clipboard::Get().GetTracks(), seen2);
 
    //TIMER_STOP( space_calc );
 }
