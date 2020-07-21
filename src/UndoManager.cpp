@@ -45,7 +45,6 @@ wxDEFINE_EVENT(EVT_UNDO_OR_REDO, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
 
 using SampleBlockID = long long;
-using Set = std::unordered_set<SampleBlockID>;
 
 struct UndoStackElem {
 
@@ -94,35 +93,18 @@ UndoManager::~UndoManager()
 
 namespace {
    SpaceArray::value_type
-   CalculateUsage(const TrackList &tracks, Set &seen)
+   CalculateUsage(const TrackList &tracks, SampleBlockIDSet &seen)
    {
       SpaceArray::value_type result = 0;
-
       //TIMER_START( "CalculateSpaceUsage", space_calc );
-      for (auto wt : tracks.Any< const WaveTrack >())
-      {
-         // Scan all clips within current track
-         for(const auto &clip : wt->GetAllClips())
-         {
-            // Scan all sample blocks within current clip
-            auto blocks = clip->GetSequenceBlockArray();
-            for (const auto &block : *blocks)
-            {
-               const auto &sb = block.sb;
-
-               // Accumulate space used by the block if the block was not
-               // yet seen
-               if ( seen.count( sb->GetBlockID() ) == 0 )
-               {
-                  unsigned long long usage{ sb->GetSpaceUsage() };
-                  result += usage;
-
-                  seen.insert( sb->GetBlockID() );
-               }
-            }
-         }
-      }
-
+      InspectBlocks(
+         tracks,
+         [&result](const SampleBlock &sb){
+            unsigned long long usage{ sb.GetSpaceUsage() };
+            result += usage;
+         },
+         &seen
+      );
       return result;
    }
 }
@@ -132,7 +114,7 @@ void UndoManager::CalculateSpaceUsage()
    space.clear();
    space.resize(stack.size(), 0);
 
-   Set seen;
+   SampleBlockIDSet seen;
 
    // After copies and pastes, a block file may be used in more than
    // one place in one undo history state, and it may be used in more than
@@ -157,9 +139,9 @@ void UndoManager::CalculateSpaceUsage()
 
    // Count the usage of the clipboard separately, using another set.  Do not
    // multiple-count any block occurring multiple times within the clipboard.
-   Set seen2;
+   seen.clear();
    mClipboardSpaceUsage = CalculateUsage(
-      Clipboard::Get().GetTracks(), seen2);
+      Clipboard::Get().GetTracks(), seen);
 
    //TIMER_STOP( space_calc );
 }

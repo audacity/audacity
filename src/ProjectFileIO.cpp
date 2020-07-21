@@ -709,24 +709,12 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
    auto pProject = &mProject;
    auto &tracklist = tracks ? *tracks : TrackList::Get(*pProject);
 
-   BlockIDs blockids;
+   SampleBlockIDSet blockids;
 
    // Collect all active blockids
    if (prune)
    {
-      for (auto wt : tracklist.Any<const WaveTrack>())
-      {
-         // Scan all clips within current track
-         for (const auto &clip : wt->GetAllClips())
-         {
-            // Scan all sample blocks within current clip
-            auto blocks = clip->GetSequenceBlockArray();
-            for (const auto &block : *blocks)
-            {
-               blockids.insert(block.sb->GetBlockID());
-            }
-         }
-      }
+      InspectBlocks( tracklist, {}, &blockids );
    }
    // Collect ALL blockids
    else
@@ -930,33 +918,15 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
 
 bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
 {
-   std::set<long long> active;
+   SampleBlockIDSet active;
    unsigned long long current = 0;
 
-   // Scan all wave tracks
-   for (auto wt : tracks->Any<const WaveTrack>())
-   {
-      // Scan all clips within current track
-      for (const auto &clip : wt->GetAllClips())
-      {
-         // Scan all sample blocks within current clip
-         auto blocks = clip->GetSequenceBlockArray();
-         for (const auto &block : *blocks)
-         {
-            const auto &sb = block.sb;
-            auto blockid = sb->GetBlockID();
-
-            // Accumulate space used by the block if the blockid has not
-            // yet been seen
-            if (active.count(blockid) == 0)
-            {
-               current += sb->GetSpaceUsage();
-
-               active.insert(blockid);
-            }
-         }
-      }
-   }
+   InspectBlocks( *tracks,
+      [&current](const SampleBlock &sb){
+         current += sb.GetSpaceUsage();
+      },
+      &active // Visit unique blocks only
+   );
 
    // Get the number of blocks and total length from the project file.
    unsigned long long blockcount = 0;
