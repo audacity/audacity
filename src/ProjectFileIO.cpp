@@ -253,8 +253,8 @@ const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
 
 ProjectFileIO::ProjectFileIO(AudacityProject &)
 {
-   mPrevDB = nullptr;
-   mDB = nullptr;
+   mPrevConn = nullptr;
+   mCurrConn = nullptr;
 
    mRecovered = false;
    mModified = false;
@@ -269,95 +269,18 @@ void ProjectFileIO::Init( AudacityProject &project )
    // This step can't happen in the ctor of ProjectFileIO because ctor of
    // AudacityProject wasn't complete
    mpProject = project.shared_from_this();
-
-   // Kick off the checkpoint thread
-   mCheckpointThread = std::thread([this]{ CheckpointThread(); });
 }
 
 ProjectFileIO::~ProjectFileIO()
 {
-   wxASSERT_MSG(mDB == nullptr, wxT("Project file was not closed at shutdown"));
-
-   // Tell the checkpoint thread to shutdown
-   {
-      std::lock_guard<std::mutex> guard(mCheckpointMutex);
-      mCheckpointStop = true;
-      mCheckpointCondition.notify_one();
-   }
-
-   // And wait for it to do so
-   mCheckpointThread.join();
+   wxASSERT_MSG(mCurrConn == nullptr, wxT("Project file was not closed at shutdown"));
 }
 
-void ProjectFileIO::CheckpointThread()
+Connection &ProjectFileIO::Conn()
 {
-   mCheckpointStop = false;
-
-   while (true)
+   if (!mCurrConn)
    {
-      {
-         // Wait for work or the stop signal
-         std::unique_lock<std::mutex> lock(mCheckpointMutex);
-         mCheckpointCondition.wait(lock,
-                                   [&]
-                                   {
-                                       return mCheckpointWaitingPages || mCheckpointStop;
-                                   });
-
-         // Requested to stop, so bail
-         if (mCheckpointStop)
-         {
-            break;
-         }
-
-         // Capture the number of pages that need checkpointing and reset
-         mCheckpointCurrentPages.store( mCheckpointWaitingPages );
-         mCheckpointWaitingPages = 0;
-      }
-
-      // Open another connection to the DB to prevent blocking the main thread.
-      sqlite3 *db = nullptr;
-      if (sqlite3_open(mFileName, &db) == SQLITE_OK)
-      {
-         // Configure it to be safe
-         Config(db, SafeConfig);
-
-         // And kick off the checkpoint. This may not checkpoint ALL frames
-         // in the WAL.  They'll be gotten the next time around.
-         sqlite3_wal_checkpoint_v2(db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
-
-         // All done.
-         sqlite3_close(db);
-
-         // Reset
-         mCheckpointCurrentPages = 0;
-      }
-      else
-         // Gotta close it anyway!
-         sqlite3_close( db );
-   }
-
-   return;
-}
-
-int ProjectFileIO::CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages)
-{
-   // Get access to our object
-   ProjectFileIO *that = static_cast<ProjectFileIO *>(data);
-
-   // Queue the database pointer for our checkpoint thread to process
-   std::lock_guard<std::mutex> guard(that->mCheckpointMutex);
-   that->mCheckpointWaitingPages = pages;
-   that->mCheckpointCondition.notify_one();
-
-   return SQLITE_OK;
-}
-
-sqlite3 *ProjectFileIO::DB()
-{
-   if (!mDB)
-   {
-      if (!OpenDB())
+      if (!OpenConnection())
       {
          throw SimpleMessageBoxException
          {
@@ -366,97 +289,17 @@ sqlite3 *ProjectFileIO::DB()
       }
    }
 
-   return mDB;
+   return mCurrConn;
 }
 
-// Put the current database connection aside, keeping it open, so that
-// another may be opened with OpenDB()
-void ProjectFileIO::SaveConnection()
+sqlite3 *ProjectFileIO::DB()
 {
-   // Should do nothing in proper usage, but be sure not to leak a connection:
-   DiscardConnection();
-
-   mPrevDB = mDB;
-   mPrevFileName = mFileName;
-
-   mDB = nullptr;
-   SetFileName({});
+   return Conn()->DB();
 }
 
-// Close any set-aside connection
-void ProjectFileIO::DiscardConnection()
+bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 {
-   if ( mPrevDB )
-   {
-      auto rc = sqlite3_close( mPrevDB );
-      if ( rc != SQLITE_OK )
-      {
-         // Store an error message
-         SetDBError(
-            XO("Failed to successfully close the source project file")
-         );
-      }
-      mPrevDB = nullptr;
-      mPrevFileName.clear();
-   }
-}
-
-// Close any current connection and switch back to using the saved
-void ProjectFileIO::RestoreConnection()
-{
-   if ( mDB )
-   {
-      auto rc = sqlite3_close( mDB );
-      if ( rc != SQLITE_OK )
-      {
-         // Store an error message
-         SetDBError(
-            XO("Failed to successfully close the destination project file")
-         );
-      }
-   }
-   mDB = mPrevDB;
-   SetFileName(mPrevFileName);
-
-   mPrevDB = nullptr;
-   mPrevFileName.clear();
-}
-
-void ProjectFileIO::UseConnection( sqlite3 *db, const FilePath &filePath )
-{
-   wxASSERT(mDB == nullptr);
-   mDB = db;
-   SetFileName( filePath );
-}
-
-void ProjectFileIO::Config(sqlite3 *db, const char *config, const wxString &schema)
-{
-   int rc;
-
-   wxString sql = config;
-
-   if (schema.empty())
-   {
-      sql.Replace(wxT("<schema>."), wxT(""));
-   }
-   else
-   {
-      sql.Replace(wxT("<schema>"), schema);
-   }
-
-   rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
-   if (rc != SQLITE_OK)
-   {
-      // This non-fatal...for now
-      SetDBError(XO("Failed to set connection configuration"));
-   }
-
-   return;
-}
-
-sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
-{
-   wxASSERT(mDB == nullptr);
+   wxASSERT(mCurrConn == nullptr);
    bool temp = false;
 
    if (fileName.empty())
@@ -467,146 +310,106 @@ sqlite3 *ProjectFileIO::OpenDB(FilePath fileName)
          fileName = FileNames::UnsavedProjectFileName();
          temp = true;
       }
-      else
-      {
-         temp = false;
-      }
    }
 
-   int rc = sqlite3_open(fileName, &mDB);
-   if (rc != SQLITE_OK)
+   mCurrConn = std::make_unique<DBConnection>(this);
+   if (!mCurrConn->Open(fileName))
    {
-      SetDBError(XO("Failed to open project file"));
-      // sqlite3 docs say you should close anyway to avoid leaks
-      sqlite3_close( mDB );
-      mDB = nullptr;
-      return nullptr;
+      mCurrConn = nullptr;
+      return false;
    }
-
-   // Ensure attached DB connection gets configured
-   Config(mDB, SafeConfig);
 
    if (!CheckVersion())
    {
-      CloseDB();
-      return nullptr;
+      CloseConnection();
+      return false;
    }
-
-   Prepare(GetSamples,
-      "SELECT samples FROM sampleblocks WHERE blockid = ?1;");
-
-   Prepare(GetSummary256,
-      "SELECT summary256 FROM sampleblocks WHERE blockid = ?1;");
-
-   Prepare(GetSummary64k,
-      "SELECT summary64k FROM sampleblocks WHERE blockid = ?1;");
-
-   Prepare(LoadSampleBlock,
-      "SELECT sampleformat, summin, summax, sumrms,"
-      "       length('summary256'), length('summary64k'), length('samples')"
-      "  FROM sampleblocks WHERE blockid = ?1;");
-
-   Prepare(InsertSampleBlock,
-      "INSERT INTO sampleblocks (sampleformat, summin, summax, sumrms,"
-      "                          summary256, summary64k, samples)"
-      "                         VALUES(?1,?2,?3,?4,?5,?6,?7);");
-
-   Prepare(DeleteSampleBlock,
-      "DELETE FROM sampleblocks WHERE blockid = ?1;");
-
-   // Install our checkpoint hook
-   sqlite3_wal_hook(mDB, CheckpointHook, this);
 
    mTemporary = temp;
 
    SetFileName(fileName);
 
-   return mDB;
+   return true;
 }
 
-bool ProjectFileIO::CloseDB()
+bool ProjectFileIO::CloseConnection()
 {
-   int rc;
+   wxASSERT(mCurrConn != nullptr);
 
-   if (mDB)
+   if (!mCurrConn->Close())
    {
-      // Uninstall our checkpoint hook so that no additional checkpoints
-      // are sent our way.  (Though this shouldn't really happen.)
-      sqlite3_wal_hook(mDB, nullptr, nullptr);
-
-      // Display a progress dialog if there's active or pending checkpoints
-      if (mCheckpointWaitingPages || mCheckpointCurrentPages)
-      {
-         TranslatableString title = XO("Checkpointing project");
-
-         // Get access to the active tracklist
-         auto pProject = mpProject.lock();
-         if (pProject)
-         {
-            title = XO("Checkpointing %s").Format(pProject->GetProjectName());
-         }
-
-         wxGenericProgressDialog pd(title.Translation(),
-                                    XO("This may take several seconds").Translation(),
-                                    300000,     // range
-                                    nullptr,    // parent
-                                    wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
-
-         while (mCheckpointWaitingPages || mCheckpointCurrentPages)
-         {
-            wxMilliSleep(50);
-            pd.Pulse();
-         }
-      }
-
-      // We're done with the prepared statements
-      for (auto stmt : mStatements)
-      {
-         sqlite3_finalize(stmt.second);
-      }
-      mStatements.clear();
-
-      // Close the DB
-      rc = sqlite3_close(mDB);
-      if (rc != SQLITE_OK)
-      {
-         SetDBError(XO("Failed to close the project file"));
-      }
-
-      mDB = nullptr;
-      SetFileName({});
+      return false;
    }
+   mCurrConn = nullptr;
+
+   SetFileName({});
 
    return true;
 }
 
-void ProjectFileIO::Prepare(enum StatementID id, const char *sql)
+// Put the current database connection aside, keeping it open, so that
+// another may be opened with OpenConnection()
+void ProjectFileIO::SaveConnection()
 {
-   int rc;
+   // Should do nothing in proper usage, but be sure not to leak a connection:
+   DiscardConnection();
 
-   sqlite3_stmt *stmt = nullptr;
+   mPrevConn = std::move(mCurrConn);
+   mPrevFileName = mFileName;
+   mPrevTemporary = mTemporary;
 
-   rc = sqlite3_prepare_v3(mDB, sql, -1, SQLITE_PREPARE_PERSISTENT, &stmt, 0);
-   if (rc != SQLITE_OK)
-   {
-      THROW_INCONSISTENCY_EXCEPTION;
-   }
-
-   mStatements.insert({id, stmt});
+   SetFileName({});
 }
 
-sqlite3_stmt *ProjectFileIO::GetStatement(enum StatementID id)
+// Close any set-aside connection
+void ProjectFileIO::DiscardConnection()
 {
-   auto iter = mStatements.find(id);
+   if (mPrevConn)
+   {
+      if (!mPrevConn->Close())
+      {
+         // Store an error message
+         SetDBError(
+            XO("Failed to successfully close the source project file")
+         );
+      }
+      mPrevConn = nullptr;
+      mPrevFileName.clear();
+   }
+}
 
-   wxASSERT(iter != mStatements.end());
+// Close any current connection and switch back to using the saved
+void ProjectFileIO::RestoreConnection()
+{
+   if (mCurrConn)
+   {
+      if (!mCurrConn->Close())
+      {
+         // Store an error message
+         SetDBError(
+            XO("Failed to successfully close the destination project file")
+         );
+      }
+   }
 
-   return iter->second;
+   mCurrConn = std::move(mPrevConn);
+   SetFileName(mPrevFileName);
+   mTemporary = mPrevTemporary;
+
+   mPrevFileName.clear();
+}
+
+void ProjectFileIO::UseConnection(Connection &&conn, const FilePath &filePath)
+{
+   wxASSERT(mCurrConn == nullptr);
+
+   mCurrConn = std::move(conn);
+   SetFileName(filePath);
 }
 
 bool ProjectFileIO::TransactionStart(const wxString &name)
 {
-   char* errmsg = nullptr;
+   char *errmsg = nullptr;
 
    int rc = sqlite3_exec(DB(),
                          wxT("SAVEPOINT ") + name + wxT(";"),
@@ -627,7 +430,7 @@ bool ProjectFileIO::TransactionStart(const wxString &name)
 
 bool ProjectFileIO::TransactionCommit(const wxString &name)
 {
-   char* errmsg = nullptr;
+   char *errmsg = nullptr;
 
    int rc = sqlite3_exec(DB(),
                          wxT("RELEASE ") + name + wxT(";"),
@@ -648,7 +451,7 @@ bool ProjectFileIO::TransactionCommit(const wxString &name)
 
 bool ProjectFileIO::TransactionRollback(const wxString &name)
 {
-   char* errmsg = nullptr;
+   char *errmsg = nullptr;
 
    int rc = sqlite3_exec(DB(),
                          wxT("ROLLBACK TO ") + name + wxT(";"),
@@ -915,10 +718,10 @@ bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
    return true;
 }
 
-sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
-                               const TranslatableString &msg,
-                               bool prune /* = false */,
-                               const std::shared_ptr<TrackList> &tracks/* = nullptr */)
+Connection ProjectFileIO::CopyTo(const FilePath &destpath,
+                                 const TranslatableString &msg,
+                                 bool prune /* = false */,
+                                 const std::shared_ptr<TrackList> &tracks /* = nullptr */)
 {
    // Get access to the active tracklist
    auto pProject = mpProject.lock();
@@ -969,7 +772,7 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    WriteXML(doc, false, tracks);
 
    auto db = DB();
-   sqlite3 *destdb = nullptr;
+   Connection destConn = nullptr;
    bool success = false;
    int rc;
    ProgressResult res = ProgressResult::Success;
@@ -979,7 +782,11 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    {
       if (!success)
       {
-         sqlite3_close(destdb);
+         if (destConn)
+         {
+            destConn->Close();
+            destConn = nullptr;
+         }
 
          sqlite3_exec(db, "DETACH DATABASE outbound;", nullptr, nullptr, nullptr);
 
@@ -1001,7 +808,7 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    }
 
    // Ensure attached DB connection gets configured
-   Config(db, FastConfig, "outbound");
+   mCurrConn->FastMode("outbound");
 
    // Install our schema into the new database
    if (!InstallSchema(db, "outbound"))
@@ -1063,6 +870,10 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
       // Start a transaction.  Since we're running without a journal,
       // this really doesn't provide rollback.  It just prevents SQLite
       // from auto committing after each step through the loop.
+      //
+      // Also note that we will have an open transaction if we fail
+      // while copying the blocks. This is fine since we're just going
+      // to delete the database anyway.
       sqlite3_exec(db, "BEGIN;", nullptr, nullptr, nullptr);
 
       // Copy sample blocks from the main DB to the outbound DB
@@ -1099,6 +910,12 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
          }
       }
 
+      // Write the project doc
+      if (!WriteDoc("project", doc, "outbound"))
+      {
+         return nullptr;
+      }
+
       // See BEGIN above...
       sqlite3_exec(db, "COMMIT;", nullptr, nullptr, nullptr);
    }
@@ -1115,29 +932,22 @@ sqlite3 *ProjectFileIO::CopyTo(const FilePath &destpath,
    }
 
    // Open the newly created database
-   rc = sqlite3_open(destpath, &destdb);
-   if (rc != SQLITE_OK)
+   destConn = std::make_unique<DBConnection>(this);
+   if (!destConn->Open(destpath))
    {
       SetDBError(
          XO("Failed to open copy of project file")
       );
 
-      return nullptr;
-   }
+      destConn = nullptr;
 
-   // Ensure attached DB connection gets configured
-   Config(destdb, SafeConfig);
-
-   // Write the project doc
-   if (!WriteDoc("project", doc, destdb))
-   {
       return nullptr;
    }
 
    // Tell cleanup everything is good to go
    success = true;
 
-   return destdb;
+   return destConn;
 }
 
 bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
@@ -1220,8 +1030,8 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
    // Haven't vacuumed yet
    mWasVacuumed = false;
 
-   // Assume we do until we found out otherwise. That way cleanup at project
-   // close time will still occur
+   // Assume we have unused block until we found out otherwise. That way cleanup
+   // at project close time will still occur.
    mHadUnused = true;
 
    // Don't vacuum if this is a temporary project or if it's determined there are not
@@ -1249,7 +1059,7 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
    wxString tempName = origName + "_vacuum";
 
    // Must close the database to rename it
-   if (!CloseDB())
+   if (!CloseConnection())
    {
       return;
    }
@@ -1257,48 +1067,39 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
    // Shouldn't need to do this, but doesn't hurt.
    wxRemoveFile(tempName);
 
-   // If we can't rename the original to temporary, backout
+   // Rename the original to temporary
    if (!wxRenameFile(origName, tempName))
    {
-      OpenDB(origName);
+      OpenConnection(origName);
 
       return;
    }
 
-   // If we can't reopen the original database using the temporary name, backout
-   sqlite3 *tempDB = nullptr;
-   if (sqlite3_open(tempName, &tempDB) != SQLITE_OK)
+   // Reopen the original database using the temporary name
+   Connection tempConn = std::make_unique<DBConnection>(this);
+   if (!tempConn->Open(tempName))
    {
       SetDBError(XO("Failed to open project file"));
-      // sqlite3 docs say you should close anyway to avoid leaks
-      sqlite3_close( tempDB );
 
       wxRenameFile(tempName, origName);
 
-      OpenDB(origName);
+      OpenConnection(origName);
 
       return;
    }
-   UseConnection(tempDB, tempName);
 
-   // Ensure connection gets configured
-   Config(mDB, SafeConfig);
+   // Reactivate the original database using the temporary name
+   UseConnection(std::move(tempConn), tempName);
 
    // Copy the original database to a new database while pruning unused sample blocks
-   auto newDB = CopyTo(origName, XO("Compacting project"), true, tracks);
+   Connection newConn = CopyTo(origName, XO("Compacting project"), true, tracks);
 
-   // Close handle to the original database, even if the copy failed
-   CloseDB();
+   // Close connection referencing the original database via it's temporary name
+   CloseConnection();
 
-   // Reestablish the original name.
-   UseConnection(newDB, origName);
-
-   // If the copy failed or we aren't able to write the project doc, backout
-   if (!newDB)
+   // If the copy failed or we weren't able to write the project doc, backout
+   if (!newConn)
    {
-      // Close the new database
-      sqlite3_close(newDB);
-
       // AUD3 warn user somehow
       wxRemoveFile(origName);
 
@@ -1306,11 +1107,15 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
       wxRenameFile(tempName, origName);
 
       // Reopen original file
-      OpenDB(origName);
+      OpenConnection(origName);
 
       return;
    }
 
+   // Use the newly vacuumed file and the original name.
+   UseConnection(std::move(newConn), origName);
+
+   // Remove the unvacuumed version of the original
    wxRemoveFile(tempName);
 
    // Remember that we vacuumed
@@ -1673,22 +1478,19 @@ bool ProjectFileIO::AutoSaveDelete(sqlite3 *db /* = nullptr */)
 
 bool ProjectFileIO::WriteDoc(const char *table,
                              const ProjectSerializer &autosave,
-                             sqlite3 *db /* = nullptr */)
+                             const char *schema /* = "main" */)
 {
+   auto db = DB();
    int rc;
-
-   if (!db)
-   {
-      db = DB();
-   }
 
    // For now, we always use an ID of 1. This will replace the previously
    // writen row every time.
    char sql[256];
    sqlite3_snprintf(sizeof(sql),
                     sql,
-                    "INSERT INTO %s(id, dict, doc) VALUES(1, ?1, ?2)"
+                    "INSERT INTO %s.%s(id, dict, doc) VALUES(1, ?1, ?2)"
                     "       ON CONFLICT(id) DO UPDATE SET dict = ?1, doc = ?2;",
+                    schema,
                     table);
 
    sqlite3_stmt *stmt = nullptr;
@@ -1785,8 +1587,9 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
          return false;
       }
 
-      // Missing both the autosave and project docs...this shouldn't happen!!!
-      if (buffer.GetDataLen() > 0)
+      // Missing both the autosave and project docs. This can happen if the
+      // system were to crash before the first autosave into a temporary file.
+      if (buffer.GetDataLen() == 0)
       {
          SetError(XO("Unable to load project or autosave documents"));
          return false;
@@ -1901,7 +1704,7 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
       });
 
       // Prepare the statement to copy the sample block from the inbound project to the
-      // active project.  All columns other than the blockid column gets copied.
+      // active project.  All columns other than the blockid column get copied.
       wxString columns(wxT("sampleformat, summin, summax, sumrms, summary256, summary64k, samples"));
       sql.Printf("INSERT INTO main.sampleblocks (%s)"
                  "   SELECT %s"
@@ -1927,35 +1730,12 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
       wxLongLong_t count = 0;
       wxLongLong_t total = blocknodes.size();
 
+      sqlite3_exec(db, "BEGIN;", nullptr, nullptr, nullptr);
+
       // Copy all the sample blocks from the inbound project file into
       // the active one, while remembering which were copied.
-      std::vector<SampleBlockID> copied;
       for (auto node : blocknodes)
       {
-         // If the user cancelled the import or the import failed for some other reason
-         // make sure to back out the blocks copied to the active project file
-         auto backout = finally([&]
-         {
-            if (result == ProgressResult::Cancelled || result == ProgressResult::Failed)
-            {
-               for (auto blockid : copied)
-               {
-                  wxString sql;
-                  sql.Printf("DELETE FROM main.sampleblocks WHERE blockid = %lld", blockid);
-
-                  rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
-                  if (rc != SQLITE_OK)
-                  {
-                     // This is non-fatal...it'll just get cleaned up the next
-                     // time the project is opened.
-                     SetDBError(
-                        XO("Failed to delete block while cancelling import")
-                     );
-                  }
-               }
-            }
-         });
-
          // Find the blockid attribute...it should always be there
          wxXmlAttribute *attr = node->GetAttributes();
          while (attr && !attr->GetName().IsSameAs(wxT("blockid")))
@@ -1983,7 +1763,8 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
             SetDBError(
                XO("Failed to import sample block.\nThe following command failed:\n\n%s").Format(sql)
             );
-            return false;
+
+            break;
          }
 
          // Replace the original blockid with the new one
@@ -2005,10 +1786,14 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
 
       // Bail if the import was cancelled or failed. If the user stopped the
       // import or it completed, then we continue on.
-      if (result == ProgressResult::Cancelled || result == ProgressResult::Failed)
+      if (rc != SQLITE_DONE || result == ProgressResult::Cancelled || result == ProgressResult::Failed)
       {
+         sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
          return false;
       }
+
+      // Go ahead and commit now
+      sqlite3_exec(db, "COMMIT;", nullptr, nullptr, nullptr);
 
       // Copy over tags...likely to produce duplicates...needs work once used
       rc = sqlite3_exec(db,
@@ -2060,7 +1845,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    SaveConnection();
 
    // Open the project file
-   if (!OpenDB(fileName))
+   if (!OpenConnection(fileName))
    {
       return false;
    }
@@ -2088,6 +1873,8 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
          return false;
       }
 
+      // Missing both the autosave and project docs. This can happen if the
+      // system were to crash before the first autosave into a temporary file.
       if (buffer.GetDataLen() == 0)
       {
          SetError(XO("Unable to load project or autosave documents"));
@@ -2147,7 +1934,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
       return false;
    }
 
-   mTemporary = (wxStrtol<char **>(result, nullptr, 10) != 1);
+   mTemporary = !result.IsSameAs(wxT("1"));
 
    SetFileName(fileName);
 
@@ -2161,9 +1948,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    wxString origName;
    bool wasTemp = false;
    bool success = false;
-   sqlite3 *newDB = nullptr;
-
-   // Should probably simplify all of the following by using renames.
+   Connection newConn = nullptr;
 
    // If we're saving to a different file than the current one, then copy the
    // current to the new file and make it the active file.
@@ -2171,8 +1956,8 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    {
       // Do NOT prune here since we need to retain the Undo history
       // after we switch to the new file.
-      newDB = CopyTo(fileName, XO("Saving project"));
-      if (!newDB)
+      newConn = CopyTo(fileName, XO("Saving project"));
+      if (!newConn)
       {
          return false;
       }
@@ -2217,14 +2002,8 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
 
    if (!origName.empty())
    {
-      // Make the new connection "safe"
-      Config(newDB, SafeConfig);
-
       // And make it the active project file 
-      UseConnection(newDB, fileName);
-
-      // Install our checkpoint hook
-      sqlite3_wal_hook(mDB, CheckpointHook, this);
+      UseConnection(std::move(newConn), fileName);
    }
    else
    {
@@ -2264,39 +2043,45 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
 
 bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 {
-   auto db = CopyTo(fileName, XO("Backing up project"), true);
+   Connection db = CopyTo(fileName, XO("Backing up project"), true);
    if (!db)
    {
       return false;
    }
 
    // All good...close the database
-   (void) sqlite3_close(db);
+   db->Close();
+   db = nullptr;
 
    return true;
 }
 
 bool ProjectFileIO::CloseProject()
 {
-   if (mDB)
-   {
-      // Save the filename since CloseDB() will clear it
-      wxString filename = mFileName;
+   wxASSERT(mCurrConn != nullptr);
 
-      // Not much we can do if this fails.  The user will simply get
-      // the recovery dialog upon next restart.
-      if (CloseDB())
+   // Protect...
+   if (mCurrConn == nullptr)
+   {
+      return true;
+   }
+
+   // Save the filename since CloseConnection() will clear it
+   wxString filename = mFileName;
+
+   // Not much we can do if this fails.  The user will simply get
+   // the recovery dialog upon next restart.
+   if (CloseConnection())
+   {
+      // If this is a temporary project, we no longer want to keep the
+      // project file.
+      if (mTemporary)
       {
-         // If this is a temporary project, we no longer want to keep the
-         // project file.
-         if (mTemporary)
+         // This is just a safety check.
+         wxFileName temp(FileNames::TempDir());
+         if (temp == wxPathOnly(filename))
          {
-            // This is just a safety check.
-            wxFileName temp(FileNames::TempDir());
-            if (temp == wxPathOnly(filename))
-            {
-               wxRemoveFile(filename);
-            }
+            wxRemoveFile(filename);
          }
       }
    }
@@ -2321,7 +2106,7 @@ bool ProjectFileIO::IsRecovered() const
 
 void ProjectFileIO::Reset()
 {
-   wxASSERT_MSG(mDB == nullptr, wxT("Resetting project with open project file"));
+   wxASSERT_MSG(mCurrConn == nullptr, wxT("Resetting project with open project file"));
 
    mModified = false;
    mRecovered = false;
@@ -2365,9 +2150,9 @@ void ProjectFileIO::SetDBError(const TranslatableString &msg)
    wxLogDebug(wxT("SQLite error: %s"), mLastError.Debug());
    printf("   Lib error: %s", mLastError.Debug().mb_str().data());
 
-   if (mDB)
+   if (mCurrConn)
    {
-      mLibraryError = Verbatim(sqlite3_errmsg(mDB));
+      mLibraryError = Verbatim(sqlite3_errmsg(mCurrConn->DB()));
       wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
       printf("   Lib error: %s", mLibraryError.Debug().mb_str().data());
    }
@@ -2447,3 +2232,261 @@ bool AutoCommitTransaction::Rollback()
    
    return mInTrans;
 }
+
+DBConnection::DBConnection(ProjectFileIO *io)
+:  mIO(*io)
+{
+   mDB = nullptr;
+}
+
+DBConnection::~DBConnection()
+{
+   wxASSERT(mDB == nullptr);
+}
+
+bool DBConnection::Open(const char *fileName)
+{
+   wxASSERT(mDB == nullptr);
+   int rc;
+
+   rc = sqlite3_open(fileName, &mDB);
+   if (rc != SQLITE_OK)
+   {
+      sqlite3_close(mDB);
+      mDB = nullptr;
+
+      return false;
+   }
+
+   // Set default mode
+   SafeMode();
+
+   // Kick off the checkpoint thread
+   mCheckpointStop = false;
+   mCheckpointWaitingPages = 0;
+   mCheckpointCurrentPages = 0;
+   mCheckpointThread = std::thread([this]{ CheckpointThread(); });
+
+   // Install our checkpoint hook
+   sqlite3_wal_hook(mDB, CheckpointHook, this);
+
+   return mDB;
+}
+
+bool DBConnection::Close()
+{
+   wxASSERT(mDB != nullptr);
+   int rc;
+
+   // Protect...
+   if (mDB == nullptr)
+   {
+      return true;
+   }
+
+   // Uninstall our checkpoint hook so that no additional checkpoints
+   // are sent our way.  (Though this shouldn't really happen.)
+   sqlite3_wal_hook(mDB, nullptr, nullptr);
+
+   // Display a progress dialog if there's active or pending checkpoints
+   if (mCheckpointWaitingPages || mCheckpointCurrentPages)
+   {
+      TranslatableString title = XO("Checkpointing project");
+
+      // Get access to the active project
+      auto project = mIO.mpProject.lock();
+      if (project)
+      {
+         title = XO("Checkpointing %s").Format(project->GetProjectName());
+      }
+
+      // Provides a progress dialog with indeterminate mode
+      wxGenericProgressDialog pd(title.Translation(),
+                                 XO("This may take several seconds").Translation(),
+                                 300000,     // range
+                                 nullptr,    // parent
+                                 wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+
+      // Wait for the checkpoints to end
+      while (mCheckpointWaitingPages || mCheckpointCurrentPages)
+      {
+         wxMilliSleep(50);
+         pd.Pulse();
+      }
+   }
+
+   // Tell the checkpoint thread to shutdown
+   {
+      std::lock_guard<std::mutex> guard(mCheckpointMutex);
+      mCheckpointStop = true;
+      mCheckpointCondition.notify_one();
+   }
+
+   // And wait for it to do so
+   mCheckpointThread.join();
+
+   // We're done with the prepared statements
+   for (auto stmt : mStatements)
+   {
+      sqlite3_finalize(stmt.second);
+   }
+   mStatements.clear();
+
+   // Close the DB
+   rc = sqlite3_close(mDB);
+   if (rc != SQLITE_OK)
+   {
+      // I guess we could try to recover by repreparing statements and reinstalling
+      // the hook, but who knows if that would work either.
+      //
+      // Should we throw an error???
+   }
+
+   mDB = nullptr;
+
+   return true;
+}
+
+bool DBConnection::SafeMode(const char *schema /* = "main" */)
+{
+   return ModeConfig(mDB, schema, SafeConfig);
+}
+
+bool DBConnection::FastMode(const char *schema /* = "main" */)
+{
+   return ModeConfig(mDB, schema, FastConfig);
+}
+
+bool DBConnection::ModeConfig(sqlite3 *db, const char *schema, const char *config)
+{
+   // Ensure attached DB connection gets configured
+   int rc;
+
+   // Replace all schema "keywords" with the schema name
+   wxString sql = config;
+   sql.Replace(wxT("<schema>"), schema);
+
+   // Set the configuration
+   rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
+
+   return rc != SQLITE_OK;
+}
+
+sqlite3 *DBConnection::DB()
+{
+   wxASSERT(mDB != nullptr);
+
+   return mDB;
+}
+
+int DBConnection::GetLastRC() const
+{
+   return sqlite3_errcode(mDB);
+}
+
+const wxString DBConnection::GetLastMessage() const
+{
+   return sqlite3_errmsg(mDB);
+}
+
+sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
+{
+   int rc;
+
+   // Return an existing statement if it's already been prepared
+   auto iter = mStatements.find(id);
+   if (iter != mStatements.end())
+   {
+      return iter->second;
+   }
+
+   // Prepare the statement
+   sqlite3_stmt *stmt = nullptr;
+   rc = sqlite3_prepare_v3(mDB, sql, -1, SQLITE_PREPARE_PERSISTENT, &stmt, 0);
+   if (rc != SQLITE_OK)
+   {
+      wxLogDebug("prepare error %s", sqlite3_errmsg(mDB));
+      THROW_INCONSISTENCY_EXCEPTION;
+   }
+
+   // And remember it
+   mStatements.insert({id, stmt});
+
+   return stmt;
+}
+
+sqlite3_stmt *DBConnection::GetStatement(enum StatementID id)
+{
+   // Look it up
+   auto iter = mStatements.find(id);
+
+   // It should always be there
+   wxASSERT(iter != mStatements.end());
+
+   // Return it
+   return iter->second;
+}
+
+void DBConnection::CheckpointThread()
+{
+   // Open another connection to the DB to prevent blocking the main thread.
+   //
+   // If it fails, then we won't checkpoint until the main thread closes
+   // the associated DB.
+   sqlite3 *db = nullptr;
+   if (sqlite3_open(sqlite3_db_filename(mDB, nullptr), &db) == SQLITE_OK)
+   {
+      // Configure it to be safe
+      ModeConfig(db, "main", SafeConfig);
+
+      while (true)
+      {
+         {
+            // Wait for work or the stop signal
+            std::unique_lock<std::mutex> lock(mCheckpointMutex);
+            mCheckpointCondition.wait(lock,
+                                      [&]
+                                      {
+                                          return mCheckpointWaitingPages || mCheckpointStop;
+                                      });
+
+            // Requested to stop, so bail
+            if (mCheckpointStop)
+            {
+               break;
+            }
+
+            // Capture the number of pages that need checkpointing and reset
+            mCheckpointCurrentPages.store( mCheckpointWaitingPages );
+            mCheckpointWaitingPages = 0;
+         }
+   wxLogDebug(wxT("thread pages %d"), mCheckpointCurrentPages.load());
+
+         // And kick off the checkpoint. This may not checkpoint ALL frames
+         // in the WAL.  They'll be gotten the next time around.
+         sqlite3_wal_checkpoint_v2(db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
+
+         // Reset
+         mCheckpointCurrentPages = 0;
+      }
+   }
+
+   // All done (always close)
+   sqlite3_close(db);
+
+   return;
+}
+
+int DBConnection::CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages)
+{
+   // Get access to our object
+   DBConnection *that = static_cast<DBConnection *>(data);
+
+   // Queue the database pointer for our checkpoint thread to process
+   std::lock_guard<std::mutex> guard(that->mCheckpointMutex);
+   that->mCheckpointWaitingPages = pages;
+   that->mCheckpointCondition.notify_one();
+wxLogDebug("hook pages %d", pages);
+   return SQLITE_OK;
+}
+

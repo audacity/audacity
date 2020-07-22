@@ -38,9 +38,9 @@ public:
    SampleBlockID GetBlockID() override;
 
    size_t DoGetSamples(samplePtr dest,
-                     sampleFormat destformat,
-                     size_t sampleoffset,
-                     size_t numsamples) override;
+                       sampleFormat destformat,
+                       size_t sampleoffset,
+                       size_t numsamples) override;
    sampleFormat GetSampleFormat() const;
    size_t GetSampleCount() const override;
 
@@ -64,11 +64,11 @@ private:
    bool GetSummary(float *dest,
                    size_t frameoffset,
                    size_t numframes,
-                   ProjectFileIO::StatementID id,
+                   sqlite3_stmt *stmt,
                    size_t srcbytes);
    size_t GetBlob(void *dest,
                   sampleFormat destformat,
-                  ProjectFileIO::StatementID id,
+                  sqlite3_stmt *stmt,
                   sampleFormat srcformat,
                   size_t srcoffset,
                   size_t srcbytes);
@@ -286,9 +286,13 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
                                      size_t sampleoffset,
                                      size_t numsamples)
 {
+   // Prepare and cache statement...automatically finalized at DB close
+   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::GetSamples,
+      "SELECT samples FROM sampleblocks WHERE blockid = ?1;");
+
    return GetBlob(dest,
                   destformat,
-                  ProjectFileIO::GetSamples,
+                  stmt,
                   mSampleFormat,
                   sampleoffset * SAMPLE_SIZE(mSampleFormat),
                   numsamples * SAMPLE_SIZE(mSampleFormat)) / SAMPLE_SIZE(mSampleFormat);
@@ -330,33 +334,33 @@ bool SqliteSampleBlock::GetSummary256(float *dest,
                                       size_t frameoffset,
                                       size_t numframes)
 {
-   return GetSummary(dest,
-                     frameoffset,
-                     numframes,
-                     ProjectFileIO::GetSummary256,
-                     mSummary256Bytes);
+   // Prepare and cache statement...automatically finalized at DB close
+   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::GetSummary256,
+      "SELECT summary256 FROM sampleblocks WHERE blockid = ?1;");
+
+   return GetSummary(dest, frameoffset, numframes, stmt, mSummary256Bytes);
 }
 
 bool SqliteSampleBlock::GetSummary64k(float *dest,
                                       size_t frameoffset,
                                       size_t numframes)
 {
-   return GetSummary(dest,
-                     frameoffset,
-                     numframes,
-                     ProjectFileIO::GetSummary64k,
-                     mSummary256Bytes);
+   // Prepare and cache statement...automatically finalized at DB close
+   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::GetSummary64k,
+      "SELECT summary64k FROM sampleblocks WHERE blockid = ?1;");
+
+   return GetSummary(dest, frameoffset, numframes, stmt, mSummary256Bytes);
 }
 
 bool SqliteSampleBlock::GetSummary(float *dest,
                                    size_t frameoffset,
                                    size_t numframes,
-                                   ProjectFileIO::StatementID id,
+                                   sqlite3_stmt *stmt,
                                    size_t srcbytes)
 {
    return GetBlob(dest,
                   floatSample,
-                  id,
+                  stmt,
                   floatSample,
                   frameoffset * 3 * SAMPLE_SIZE(floatSample),
                   numframes * 3 * SAMPLE_SIZE(floatSample)) / 3 / SAMPLE_SIZE(floatSample);
@@ -401,12 +405,7 @@ MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS(size_t start, size_t len)
       SampleBuffer blockData(len, floatSample);
       float *samples = (float *) blockData.ptr();
 
-      size_t copied = GetBlob(samples,
-                              floatSample,
-                              ProjectFileIO::GetSamples,
-                              mSampleFormat,
-                              start * SAMPLE_SIZE(mSampleFormat),
-                              len * SAMPLE_SIZE(mSampleFormat)) / SAMPLE_SIZE(mSampleFormat);
+      size_t copied = DoGetSamples((samplePtr) samples, floatSample, start, len);
       for (size_t i = 0; i < copied; ++i, ++samples)
       {
          float sample = *samples;
@@ -444,7 +443,7 @@ size_t SqliteSampleBlock::GetSpaceUsage() const
 
 size_t SqliteSampleBlock::GetBlob(void *dest,
                                   sampleFormat destformat,
-                                  ProjectFileIO::StatementID id,
+                                  sqlite3_stmt *stmt,
                                   sampleFormat srcformat,
                                   size_t srcoffset,
                                   size_t srcbytes)
@@ -460,9 +459,6 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
 
    int rc;
    size_t minbytes = 0;
-
-   // Retrieve prepared statement
-   sqlite3_stmt *stmt = mIO.GetStatement(id);
 
    // Bind statement paraemters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
@@ -535,8 +531,11 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    mSumMax = -FLT_MAX;
    mSumMin = 0.0;
 
-   // Retrieve prepared statement
-   sqlite3_stmt *stmt = mIO.GetStatement(ProjectFileIO::LoadSampleBlock);
+   // Prepare and cache statement...automatically finalized at DB close
+   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::LoadSampleBlock,
+      "SELECT sampleformat, summin, summax, sumrms,"
+      "       length('summary256'), length('summary64k'), length('samples')"
+      "  FROM sampleblocks WHERE blockid = ?1;");
 
    // Bind statement paraemters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
@@ -584,8 +583,11 @@ void SqliteSampleBlock::Commit()
    auto db = mIO.DB();
    int rc;
 
-   // Retrieve prepared statement
-   sqlite3_stmt *stmt = mIO.GetStatement(ProjectFileIO::InsertSampleBlock);
+   // Prepare and cache statement...automatically finalized at DB close
+   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::InsertSampleBlock,
+      "INSERT INTO sampleblocks (sampleformat, summin, summax, sumrms,"
+      "                          summary256, summary64k, samples)"
+      "                         VALUES(?1,?2,?3,?4,?5,?6,?7);");
 
    // Bind statement paraemters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
@@ -638,8 +640,9 @@ void SqliteSampleBlock::Delete()
 
    wxASSERT(mBlockID > 0);
 
-   // Retrieve prepared statement
-   sqlite3_stmt *stmt = mIO.GetStatement(ProjectFileIO::DeleteSampleBlock);
+   // Prepare and cache statement...automatically finalized at DB close
+   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::DeleteSampleBlock,
+      "DELETE FROM sampleblocks WHERE blockid = ?1;");
 
    // Bind statement paraemters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
@@ -651,7 +654,7 @@ void SqliteSampleBlock::Delete()
 
    // Execute the statement
    rc = sqlite3_step(stmt);
-   if (rc != SQLITE_ROW)
+   if (rc != SQLITE_DONE)
    {
       wxLogDebug(wxT("SqliteSampleBlock::Load - SQLITE error %s"), sqlite3_errmsg(db));
 

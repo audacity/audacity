@@ -144,7 +144,13 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
    {
       if (projectFileIO.IsRecovered())
       {
-         bool resaved = projectFileIO.SaveProject(fileName);
+         bool resaved = false;
+
+         if (!projectFileIO.IsTemporary())
+         {
+            projectFileIO.SaveProject(fileName);
+         }
+
          AudacityMessageBox(
             resaved
                ? XO("This project was not saved properly the last time Audacity ran.\n\n"

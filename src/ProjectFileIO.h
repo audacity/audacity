@@ -30,6 +30,7 @@ struct sqlite3_value;
 
 class AudacityProject;
 class AutoCommitTransaction;
+class DBConnection;
 class ProjectSerializer;
 class SqliteSampleBlock;
 class TrackList;
@@ -39,6 +40,8 @@ using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 
 // From SampleBlock.h
 using SampleBlockID = long long;
+
+using Connection = std::unique_ptr<DBConnection>;
 
 ///\brief Object associated with a project that manages reading and writing
 /// of Audacity project file formats, and autosave
@@ -143,6 +146,11 @@ private:
    // if opening fails.
    sqlite3 *DB();
 
+   Connection &Conn();
+
+   bool OpenConnection(FilePath fileName = {});
+   bool CloseConnection();
+
    // Put the current database connection aside, keeping it open, so that
    // another may be opened with OpenDB()
    void SaveConnection();
@@ -153,26 +161,8 @@ private:
    // Close any current connection and switch back to using the saved
    void RestoreConnection();
 
-   // Use a connection that is already open rather than invoke OpenDB
-   void UseConnection(sqlite3 *db, const FilePath &filePath);
-
-   // Make sure the connection/schema combo is configured the way we want
-   void Config(sqlite3 *db, const char *config, const wxString &schema = wxT("main"));
-
-   sqlite3 *OpenDB(FilePath fileName = {});
-   bool CloseDB();
-
-   enum StatementID
-   {
-      GetSamples,
-      GetSummary256,
-      GetSummary64k,
-      LoadSampleBlock,
-      InsertSampleBlock,
-      DeleteSampleBlock
-   };
-   void Prepare(enum StatementID id, const char *sql);
-   sqlite3_stmt *GetStatement(enum StatementID id);
+   // Use a connection that is already open rather than invoke OpenConnection
+   void UseConnection(Connection &&conn, const FilePath &filePath);
 
    bool Query(const char *sql, const ExecCB &callback);
 
@@ -184,7 +174,7 @@ private:
    bool UpgradeSchema();
 
    // Write project or autosave XML (binary) documents
-   bool WriteDoc(const char *table, const ProjectSerializer &autosave, sqlite3 *db = nullptr);
+   bool WriteDoc(const char *table, const ProjectSerializer &autosave, const char *schema = "main");
 
    // Application defined function to verify blockid exists is in set of blockids
    using BlockIDs = std::set<SampleBlockID>;
@@ -194,10 +184,10 @@ private:
    bool CheckForOrphans(BlockIDs &blockids);
 
    // Return a database connection if successful, which caller must close
-   sqlite3 *CopyTo(const FilePath &destpath,
-                   const TranslatableString &msg,
-                   bool prune = false,
-                   const std::shared_ptr<TrackList> &tracks = nullptr);
+   Connection CopyTo(const FilePath &destpath,
+                                      const TranslatableString &msg,
+                                      bool prune = false,
+                                      const std::shared_ptr<TrackList> &tracks = nullptr);
 
    void SetError(const TranslatableString & msg);
    void SetDBError(const TranslatableString & msg);
@@ -232,24 +222,17 @@ private:
    // Project had unused blocks during last Vacuum()
    bool mHadUnused;
 
-   sqlite3 *mPrevDB;
+   Connection mPrevConn;
    FilePath mPrevFileName;
+   bool mPrevTemporary;
 
-   sqlite3 *mDB;
+   Connection mCurrConn;
    TranslatableString mLastError;
    TranslatableString mLibraryError;
 
-   std::thread mCheckpointThread;
-   std::condition_variable mCheckpointCondition;
-   std::mutex mCheckpointMutex;
-   std::atomic_bool mCheckpointStop{ false };
-   std::atomic< std::uint64_t > mCheckpointWaitingPages{ 0 };
-   std::atomic< std::uint64_t > mCheckpointCurrentPages{ 0 };
-
-   std::map<enum StatementID, sqlite3_stmt *> mStatements;
-
    friend SqliteSampleBlock;
    friend AutoCommitTransaction;
+   friend DBConnection;
 };
 
 class AutoCommitTransaction
@@ -265,6 +248,58 @@ private:
    ProjectFileIO &mIO;
    bool mInTrans;
    wxString mName;
+};
+
+class DBConnection
+{
+public:
+   DBConnection(ProjectFileIO *io);
+   ~DBConnection();
+
+   bool Open(const char *fileName);
+   bool Close();
+
+   bool SafeMode(const char *schema = "main");
+   bool FastMode(const char *schema = "main");
+
+   bool Assign(sqlite3 *handle);
+   sqlite3 *Detach();
+
+   sqlite3 *DB();
+
+   int GetLastRC() const ;
+   const wxString GetLastMessage() const;
+
+   enum StatementID
+   {
+      GetSamples,
+      GetSummary256,
+      GetSummary64k,
+      LoadSampleBlock,
+      InsertSampleBlock,
+      DeleteSampleBlock
+   };
+   sqlite3_stmt *GetStatement(enum StatementID id);
+   sqlite3_stmt *Prepare(enum StatementID id, const char *sql);
+
+private:
+   bool ModeConfig(sqlite3 *db, const char *schema, const char *config);
+
+   void CheckpointThread();
+   static int CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages);
+
+private:
+   ProjectFileIO &mIO;
+   sqlite3 *mDB;
+
+   std::thread mCheckpointThread;
+   std::condition_variable mCheckpointCondition;
+   std::mutex mCheckpointMutex;
+   std::atomic_bool mCheckpointStop{ false };
+   std::atomic_int mCheckpointWaitingPages{ 0 };
+   std::atomic_int mCheckpointCurrentPages{ 0 };
+
+   std::map<enum StatementID, sqlite3_stmt *> mStatements;
 };
 
 class wxTopLevelWindow;
