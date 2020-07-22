@@ -312,7 +312,7 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
       }
    }
 
-   mCurrConn = std::make_unique<DBConnection>(this);
+   mCurrConn = std::make_unique<DBConnection>(mpProject);
    if (!mCurrConn->Open(fileName))
    {
       mCurrConn = nullptr;
@@ -932,7 +932,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
    }
 
    // Open the newly created database
-   destConn = std::make_unique<DBConnection>(this);
+   destConn = std::make_unique<DBConnection>(mpProject);
    if (!destConn->Open(destpath))
    {
       SetDBError(
@@ -1076,7 +1076,7 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
    }
 
    // Reopen the original database using the temporary name
-   Connection tempConn = std::make_unique<DBConnection>(this);
+   Connection tempConn = std::make_unique<DBConnection>(mpProject);
    if (!tempConn->Open(tempName))
    {
       SetDBError(XO("Failed to open project file"));
@@ -2233,8 +2233,8 @@ bool AutoCommitTransaction::Rollback()
    return mInTrans;
 }
 
-DBConnection::DBConnection(ProjectFileIO *io)
-:  mIO(*io)
+DBConnection::DBConnection(const std::weak_ptr<AudacityProject> &pProject)
+:  mpProject{ pProject }
 {
    mDB = nullptr;
 }
@@ -2294,7 +2294,7 @@ bool DBConnection::Close()
       TranslatableString title = XO("Checkpointing project");
 
       // Get access to the active project
-      auto project = mIO.mpProject.lock();
+      auto project = mpProject.lock();
       if (project)
       {
          title = XO("Checkpointing %s").Format(project->GetProjectName());

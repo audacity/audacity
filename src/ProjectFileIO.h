@@ -229,7 +229,6 @@ private:
 
    friend SqliteSampleBlock;
    friend AutoCommitTransaction;
-   friend DBConnection;
 };
 
 class AutoCommitTransaction
@@ -250,7 +249,8 @@ private:
 class DBConnection
 {
 public:
-   DBConnection(ProjectFileIO *io);
+   explicit
+   DBConnection(const std::weak_ptr<AudacityProject> &pProject);
    ~DBConnection();
 
    bool Open(const char *fileName);
@@ -286,7 +286,7 @@ private:
    static int CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages);
 
 private:
-   ProjectFileIO &mIO;
+   std::weak_ptr<AudacityProject> mpProject;
    sqlite3 *mDB;
 
    std::thread mCheckpointThread;
