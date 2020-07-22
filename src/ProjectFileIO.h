@@ -43,6 +43,22 @@ using SampleBlockID = long long;
 
 using Connection = std::unique_ptr<DBConnection>;
 
+// This object attached to the project simply holds the pointer to the
+// project's current database connection, which is initialized on demand,
+// and may be redirected, temporarily or permanently, to another connection
+// when backing the project up or saving or saving-as.
+class ConnectionPtr final
+   : public ClientData::Base
+{
+public:
+   static ConnectionPtr &Get( AudacityProject &project );
+   static const ConnectionPtr &Get( const AudacityProject &project );
+
+   ~ConnectionPtr() override;
+
+   Connection mpConnection;
+};
+
 ///\brief Object associated with a project that manages reading and writing
 /// of Audacity project file formats, and autosave
 class ProjectFileIO final
@@ -194,6 +210,8 @@ private:
    bool ShouldVacuum(const std::shared_ptr<TrackList> &tracks);
 
 private:
+   Connection &CurrConn();
+
    // non-static data members
    std::weak_ptr<AudacityProject> mpProject;
 
@@ -219,7 +237,6 @@ private:
    FilePath mPrevFileName;
    bool mPrevTemporary;
 
-   Connection mCurrConn;
    TranslatableString mLastError;
    TranslatableString mLibraryError;
 

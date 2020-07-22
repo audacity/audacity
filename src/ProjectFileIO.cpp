@@ -254,7 +254,6 @@ const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
 ProjectFileIO::ProjectFileIO(AudacityProject &)
 {
    mPrevConn = nullptr;
-   mCurrConn = nullptr;
 
    mRecovered = false;
    mModified = false;
@@ -272,12 +271,13 @@ void ProjectFileIO::Init( AudacityProject &project )
 
 ProjectFileIO::~ProjectFileIO()
 {
-   wxASSERT_MSG(mCurrConn == nullptr, wxT("Project file was not closed at shutdown"));
+   wxASSERT_MSG(!CurrConn(), wxT("Project file was not closed at shutdown"));
 }
 
 Connection &ProjectFileIO::Conn()
 {
-   if (!mCurrConn)
+   auto &curConn = CurrConn();
+   if (!curConn)
    {
       if (!OpenConnection())
       {
@@ -288,7 +288,7 @@ Connection &ProjectFileIO::Conn()
       }
    }
 
-   return mCurrConn;
+   return curConn;
 }
 
 sqlite3 *ProjectFileIO::DB()
@@ -298,7 +298,8 @@ sqlite3 *ProjectFileIO::DB()
 
 bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 {
-   wxASSERT(mCurrConn == nullptr);
+   auto &curConn = CurrConn();
+   wxASSERT(!curConn);
    bool temp = false;
 
    if (fileName.empty())
@@ -311,10 +312,12 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
       }
    }
 
-   mCurrConn = std::make_unique<DBConnection>(mpProject);
-   if (!mCurrConn->Open(fileName))
+   // Pass weak_ptr to project into DBConnection constructor
+   wxASSERT( !mpProject.expired() );
+   curConn = std::make_unique<DBConnection>(mpProject);
+   if (!curConn->Open(fileName))
    {
-      mCurrConn = nullptr;
+      curConn.reset();
       return false;
    }
 
@@ -333,13 +336,14 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 
 bool ProjectFileIO::CloseConnection()
 {
-   wxASSERT(mCurrConn != nullptr);
+   auto &curConn = CurrConn();
+   wxASSERT(curConn);
 
-   if (!mCurrConn->Close())
+   if (!curConn->Close())
    {
       return false;
    }
-   mCurrConn = nullptr;
+   curConn.reset();
 
    SetFileName({});
 
@@ -353,7 +357,7 @@ void ProjectFileIO::SaveConnection()
    // Should do nothing in proper usage, but be sure not to leak a connection:
    DiscardConnection();
 
-   mPrevConn = std::move(mCurrConn);
+   mPrevConn = std::move(CurrConn());
    mPrevFileName = mFileName;
    mPrevTemporary = mTemporary;
 
@@ -380,9 +384,10 @@ void ProjectFileIO::DiscardConnection()
 // Close any current connection and switch back to using the saved
 void ProjectFileIO::RestoreConnection()
 {
-   if (mCurrConn)
+   auto &curConn = CurrConn();
+   if (curConn)
    {
-      if (!mCurrConn->Close())
+      if (!curConn->Close())
       {
          // Store an error message
          SetDBError(
@@ -391,7 +396,7 @@ void ProjectFileIO::RestoreConnection()
       }
    }
 
-   mCurrConn = std::move(mPrevConn);
+   curConn = std::move(mPrevConn);
    SetFileName(mPrevFileName);
    mTemporary = mPrevTemporary;
 
@@ -400,9 +405,10 @@ void ProjectFileIO::RestoreConnection()
 
 void ProjectFileIO::UseConnection(Connection &&conn, const FilePath &filePath)
 {
-   wxASSERT(mCurrConn == nullptr);
+   auto &curConn = CurrConn();
+   wxASSERT(!curConn);
 
-   mCurrConn = std::move(conn);
+   curConn = std::move(conn);
    SetFileName(filePath);
 }
 
@@ -807,7 +813,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
    }
 
    // Ensure attached DB connection gets configured
-   mCurrConn->FastMode("outbound");
+   CurrConn()->FastMode("outbound");
 
    // Install our schema into the new database
    if (!InstallSchema(db, "outbound"))
@@ -1022,6 +1028,14 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
    wxLogDebug(wxT("vacuuming"));
 
    return true;
+}
+
+Connection &ProjectFileIO::CurrConn()
+{
+   auto pProject = mpProject.lock();
+   wxASSERT( pProject );
+   auto &connectionPtr = ConnectionPtr::Get( *pProject );
+   return connectionPtr.mpConnection;
 }
 
 void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
@@ -2057,10 +2071,11 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 
 bool ProjectFileIO::CloseProject()
 {
-   wxASSERT(mCurrConn != nullptr);
+   auto &currConn = CurrConn();
+   wxASSERT(currConn);
 
    // Protect...
-   if (mCurrConn == nullptr)
+   if (!currConn)
    {
       return true;
    }
@@ -2105,7 +2120,7 @@ bool ProjectFileIO::IsRecovered() const
 
 void ProjectFileIO::Reset()
 {
-   wxASSERT_MSG(mCurrConn == nullptr, wxT("Resetting project with open project file"));
+   wxASSERT_MSG(!CurrConn(), wxT("Resetting project with open project file"));
 
    mModified = false;
    mRecovered = false;
@@ -2145,13 +2160,14 @@ void ProjectFileIO::SetError(const TranslatableString &msg)
 
 void ProjectFileIO::SetDBError(const TranslatableString &msg)
 {
+   auto &currConn = CurrConn();
    mLastError = msg;
    wxLogDebug(wxT("SQLite error: %s"), mLastError.Debug());
    printf("   Lib error: %s", mLastError.Debug().mb_str().data());
 
-   if (mCurrConn)
+   if (currConn)
    {
-      mLibraryError = Verbatim(sqlite3_errmsg(mCurrConn->DB()));
+      mLibraryError = Verbatim(sqlite3_errmsg(currConn->DB()));
       wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
       printf("   Lib error: %s", mLibraryError.Debug().mb_str().data());
    }
@@ -2161,7 +2177,8 @@ void ProjectFileIO::SetDBError(const TranslatableString &msg)
 
 void ProjectFileIO::SetBypass()
 {
-   if (!mCurrConn)
+   auto &currConn = CurrConn();
+   if (!currConn)
       return;
 
    // Determine if we can bypass sample block deletes during shutdown.
@@ -2171,7 +2188,7 @@ void ProjectFileIO::SetBypass()
    // deletions since the new file doesn't have the blocks that the
    // Sequences expect to be there.
 
-   mCurrConn->SetBypass( true );
+   currConn->SetBypass( true );
 
    // Only permanent project files need cleaning at shutdown
    if (!IsTemporary() && !WasVacuumed())
@@ -2185,7 +2202,7 @@ void ProjectFileIO::SetBypass()
       // changes.
       if (HadUnused())
       {
-         mCurrConn->SetBypass( false );
+         currConn->SetBypass( false );
       }
    }
 
@@ -2498,3 +2515,27 @@ int DBConnection::CheckpointHook(void *data, sqlite3 *db, const char *schema, in
    return SQLITE_OK;
 }
 
+ConnectionPtr::~ConnectionPtr() = default;
+
+static const AudacityProject::AttachedObjects::RegisteredFactory
+sConnectionPtrKey{
+   []( AudacityProject & ){
+      // Ignore the argument; this is just a holder of a
+      // unique_ptr to DBConnection, which must be filled in later
+      // (when we can get a weak_ptr to the project)
+      auto result = std::make_shared< ConnectionPtr >();
+      return result;
+   }
+};
+
+ConnectionPtr &ConnectionPtr::Get( AudacityProject &project )
+{
+   auto &result =
+      project.AttachedObjects::Get< ConnectionPtr >( sConnectionPtrKey );
+   return result;
+}
+
+const ConnectionPtr &ConnectionPtr::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
