@@ -149,6 +149,7 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
          if (!projectFileIO.IsTemporary())
          {
             projectFileIO.SaveProject(fileName);
+            resaved = true;
          }
 
          AudacityMessageBox(
