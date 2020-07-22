@@ -75,6 +75,9 @@ private:
    void CalcSummary();
 
 private:
+   DBConnection *Conn() const { return mIO.Conn().get(); }
+   sqlite3 *DB() const { return Conn()->DB(); }
+
    friend SqliteSampleBlockFactory;
 
    ProjectFileIO & mIO;
@@ -250,7 +253,7 @@ SqliteSampleBlock::SqliteSampleBlock(ProjectFileIO &io)
 SqliteSampleBlock::~SqliteSampleBlock()
 {
    // See ProjectFileIO::Bypass() for a description of mIO.mBypass
-   if (!mLocked && !mIO.Conn()->ShouldBypass())
+   if (!mLocked && !Conn()->ShouldBypass())
    {
       // In case Delete throws, don't let an exception escape a destructor,
       // but we can still enqueue the delayed handler so that an error message
@@ -287,7 +290,7 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
                                      size_t numsamples)
 {
    // Prepare and cache statement...automatically finalized at DB close
-   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::GetSamples,
+   sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::GetSamples,
       "SELECT samples FROM sampleblocks WHERE blockid = ?1;");
 
    return GetBlob(dest,
@@ -334,7 +337,7 @@ bool SqliteSampleBlock::GetSummary256(float *dest,
                                       size_t numframes)
 {
    // Prepare and cache statement...automatically finalized at DB close
-   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::GetSummary256,
+   sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::GetSummary256,
       "SELECT summary256 FROM sampleblocks WHERE blockid = ?1;");
 
    return GetSummary(dest, frameoffset, numframes, stmt, mSummary256Bytes);
@@ -345,7 +348,7 @@ bool SqliteSampleBlock::GetSummary64k(float *dest,
                                       size_t numframes)
 {
    // Prepare and cache statement...automatically finalized at DB close
-   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::GetSummary64k,
+   sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::GetSummary64k,
       "SELECT summary64k FROM sampleblocks WHERE blockid = ?1;");
 
    return GetSummary(dest, frameoffset, numframes, stmt, mSummary256Bytes);
@@ -447,7 +450,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
                                   size_t srcoffset,
                                   size_t srcbytes)
 {
-   auto db = mIO.DB();
+   auto db = DB();
 
    wxASSERT(mBlockID > 0);
 
@@ -516,7 +519,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
 
 void SqliteSampleBlock::Load(SampleBlockID sbid)
 {
-   auto db = mIO.DB();
+   auto db = DB();
    int rc;
 
    wxASSERT(sbid > 0);
@@ -531,7 +534,7 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    mSumMin = 0.0;
 
    // Prepare and cache statement...automatically finalized at DB close
-   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::LoadSampleBlock,
+   sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::LoadSampleBlock,
       "SELECT sampleformat, summin, summax, sumrms,"
       "       length('summary256'), length('summary64k'), length('samples')"
       "  FROM sampleblocks WHERE blockid = ?1;");
@@ -579,11 +582,11 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
 
 void SqliteSampleBlock::Commit()
 {
-   auto db = mIO.DB();
+   auto db = DB();
    int rc;
 
    // Prepare and cache statement...automatically finalized at DB close
-   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::InsertSampleBlock,
+   sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::InsertSampleBlock,
       "INSERT INTO sampleblocks (sampleformat, summin, summax, sumrms,"
       "                          summary256, summary64k, samples)"
       "                         VALUES(?1,?2,?3,?4,?5,?6,?7);");
@@ -634,13 +637,13 @@ void SqliteSampleBlock::Commit()
 
 void SqliteSampleBlock::Delete()
 {
-   auto db = mIO.DB();
+   auto db = DB();
    int rc;
 
    wxASSERT(mBlockID > 0);
 
    // Prepare and cache statement...automatically finalized at DB close
-   sqlite3_stmt *stmt = mIO.Conn()->Prepare(DBConnection::DeleteSampleBlock,
+   sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::DeleteSampleBlock,
       "DELETE FROM sampleblocks WHERE blockid = ?1;");
 
    // Bind statement paraemters
