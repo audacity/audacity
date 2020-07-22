@@ -2460,7 +2460,6 @@ void DBConnection::CheckpointThread()
             mCheckpointCurrentPages.store( mCheckpointWaitingPages );
             mCheckpointWaitingPages = 0;
          }
-   wxLogDebug(wxT("thread pages %d"), mCheckpointCurrentPages.load());
 
          // And kick off the checkpoint. This may not checkpoint ALL frames
          // in the WAL.  They'll be gotten the next time around.
@@ -2486,7 +2485,7 @@ int DBConnection::CheckpointHook(void *data, sqlite3 *db, const char *schema, in
    std::lock_guard<std::mutex> guard(that->mCheckpointMutex);
    that->mCheckpointWaitingPages = pages;
    that->mCheckpointCondition.notify_one();
-wxLogDebug("hook pages %d", pages);
+
    return SQLITE_OK;
 }
 

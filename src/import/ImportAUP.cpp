@@ -503,16 +503,9 @@ void AUPImportFileHandle::HandleXMLEndTag(const wxChar *tag)
 
    struct node node = mHandlers.back();
 
-   if (wxStrcmp(tag, wxT("wavetrack")) == 0)
-   {
-      WaveTrack *wt = static_cast<WaveTrack *>(node.handler);
-
-      wt->Flush();
-   }
-   else if (wxStrcmp(tag, wxT("waveclip")) == 0)
+   if (wxStrcmp(tag, wxT("waveclip")) == 0)
    {
       mClip = static_cast<WaveClip *>(node.handler);
-      mClip->Flush();
       mClip->HandleXMLEndTag(tag);
    }
    else
@@ -1545,10 +1538,12 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    if (mClip)
    {
       mClip->Append(bufptr, format, cnt);
+      mClip->Flush();
    }
    else if (mWaveTrack)
    {
       mWaveTrack->Append(bufptr, format, cnt);
+      mWaveTrack->Flush();
    }
 
    // Let the finally block know everything is good

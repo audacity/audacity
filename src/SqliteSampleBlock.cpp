@@ -303,7 +303,6 @@ void SqliteSampleBlock::SetSamples(samplePtr src,
                                    sampleFormat srcformat)
 {
    mSampleFormat = srcformat;
-
    mSampleCount = numsamples;
    mSampleBytes = mSampleCount * SAMPLE_SIZE(mSampleFormat);
    mSamples.reinit(mSampleBytes);
