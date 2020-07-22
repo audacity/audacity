@@ -22,7 +22,8 @@ class SqliteSampleBlock final : public SampleBlock
 {
 public:
 
-   explicit SqliteSampleBlock(ProjectFileIO &io);
+   explicit SqliteSampleBlock(
+      const std::shared_ptr<ConnectionPtr> &ppConnection);
    ~SqliteSampleBlock() override;
 
    void CloseLock() override;
@@ -75,12 +76,25 @@ private:
    void CalcSummary();
 
 private:
-   DBConnection *Conn() const { return mIO.Conn().get(); }
-   sqlite3 *DB() const { return Conn()->DB(); }
+   DBConnection *Conn() const
+   {
+      auto &pConnection = mppConnection->mpConnection;
+      if (!pConnection) {
+         throw SimpleMessageBoxException
+         {
+            XO("Failed to open the project's database")
+         };
+      }
+      return pConnection.get();
+   }
+   sqlite3 *DB() const
+   {
+      return Conn()->DB();
+   }
 
    friend SqliteSampleBlockFactory;
 
-   ProjectFileIO & mIO;
+   const std::shared_ptr<ConnectionPtr> mppConnection;
    bool mValid;
    bool mDirty;
    bool mSilent;
@@ -129,11 +143,11 @@ public:
       const wxChar **attrs) override;
 
 private:
-   std::shared_ptr<ProjectFileIO> mpIO;
+   const std::shared_ptr<ConnectionPtr> mppConnection;
 };
 
 SqliteSampleBlockFactory::SqliteSampleBlockFactory( AudacityProject &project )
-   : mpIO{ ProjectFileIO::Get(project).shared_from_this() }
+   : mppConnection{ ConnectionPtr::Get(project).shared_from_this() }
 {
    
 }
@@ -143,7 +157,7 @@ SqliteSampleBlockFactory::~SqliteSampleBlockFactory() = default;
 SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
    samplePtr src, size_t numsamples, sampleFormat srcformat )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(*mpIO);
+   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
    sb->SetSamples(src, numsamples, srcformat);
    return sb;
 }
@@ -151,7 +165,7 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
 SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
    size_t numsamples, sampleFormat srcformat )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(*mpIO);
+   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
    sb->SetSilent(numsamples, srcformat);
    return sb;
 }
@@ -160,7 +174,7 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
 SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
    sampleFormat srcformat, const wxChar **attrs )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(*mpIO);
+   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
    sb->mSampleFormat = srcformat;
 
    int found = 0;
@@ -226,13 +240,14 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
 
 SampleBlockPtr SqliteSampleBlockFactory::DoGet( SampleBlockID sbid )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(*mpIO);
+   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
    sb->Load(sbid);
    return sb;
 }
 
-SqliteSampleBlock::SqliteSampleBlock(ProjectFileIO &io)
-:  mIO(io)
+SqliteSampleBlock::SqliteSampleBlock(
+   const std::shared_ptr<ConnectionPtr> &ppConnection)
+:  mppConnection(ppConnection)
 {
    mValid = false;
    mSilent = false;
