@@ -110,7 +110,6 @@ public:
    //    SqliteSampleBlock::~SqliteSampleBlock()
    //    ProjectManager::OnCloseWindow()
    void SetBypass();
-   bool ShouldBypass();
 
    // Remove all unused space within a project file
    void Vacuum(const std::shared_ptr<TrackList> &tracks);
@@ -210,9 +209,6 @@ private:
    // Is this project still a temporary/unsaved project
    bool mTemporary;
 
-   // Bypass transactions if database will be deleted after close
-   bool mBypass;
-
    // Project was vacuumed last time Vacuum() ran
    bool mWasVacuumed;
 
@@ -279,6 +275,9 @@ public:
    sqlite3_stmt *GetStatement(enum StatementID id);
    sqlite3_stmt *Prepare(enum StatementID id, const char *sql);
 
+   void SetBypass( bool bypass );
+   bool ShouldBypass();
+
 private:
    bool ModeConfig(sqlite3 *db, const char *schema, const char *config);
 
@@ -297,6 +296,9 @@ private:
    std::atomic_int mCheckpointCurrentPages{ 0 };
 
    std::map<enum StatementID, sqlite3_stmt *> mStatements;
+
+   // Bypass transactions if database will be deleted after close
+   bool mBypass;
 };
 
 class wxTopLevelWindow;

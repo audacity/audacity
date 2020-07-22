@@ -259,7 +259,6 @@ ProjectFileIO::ProjectFileIO(AudacityProject &)
    mRecovered = false;
    mModified = false;
    mTemporary = true;
-   mBypass = false;
 
    UpdatePrefs();
 }
@@ -2162,13 +2161,17 @@ void ProjectFileIO::SetDBError(const TranslatableString &msg)
 
 void ProjectFileIO::SetBypass()
 {
+   if (!mCurrConn)
+      return;
+
    // Determine if we can bypass sample block deletes during shutdown.
    //
    // IMPORTANT:
    // If the project was vacuumed, then we MUST bypass further
    // deletions since the new file doesn't have the blocks that the
    // Sequences expect to be there.
-   mBypass = true;
+
+   mCurrConn->SetBypass( true );
 
    // Only permanent project files need cleaning at shutdown
    if (!IsTemporary() && !WasVacuumed())
@@ -2182,14 +2185,19 @@ void ProjectFileIO::SetBypass()
       // changes.
       if (HadUnused())
       {
-         mBypass = false;
+         mCurrConn->SetBypass( false );
       }
    }
 
    return;
 }
 
-bool ProjectFileIO::ShouldBypass()
+void DBConnection::SetBypass( bool bypass )
+{
+   mBypass = bypass;
+}
+
+bool DBConnection::ShouldBypass()
 {
    return mBypass;
 }
@@ -2237,6 +2245,7 @@ DBConnection::DBConnection(const std::weak_ptr<AudacityProject> &pProject)
 :  mpProject{ pProject }
 {
    mDB = nullptr;
+   mBypass = false;
 }
 
 DBConnection::~DBConnection()

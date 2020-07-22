@@ -250,7 +250,7 @@ SqliteSampleBlock::SqliteSampleBlock(ProjectFileIO &io)
 SqliteSampleBlock::~SqliteSampleBlock()
 {
    // See ProjectFileIO::Bypass() for a description of mIO.mBypass
-   if (!mLocked && !mIO.ShouldBypass())
+   if (!mLocked && !mIO.Conn()->ShouldBypass())
    {
       // In case Delete throws, don't let an exception escape a destructor,
       // but we can still enqueue the delayed handler so that an error message
