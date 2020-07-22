@@ -2177,36 +2177,30 @@ AutoCommitTransaction::AutoCommitTransaction(ProjectFileIO &projectFileIO,
    mName(name)
 {
    mInTrans = mIO.TransactionStart(mName);
-   // Must throw
+   if ( !mInTrans )
+      // To do, improve the message
+      throw SimpleMessageBoxException( XO("Database error") );
 }
 
 AutoCommitTransaction::~AutoCommitTransaction()
 {
    if (mInTrans)
    {
-      // Can't check return status...should probably throw an exception here
-      if (!Commit())
+      if (!mIO.TransactionRollback(mName))
       {
-         // must throw
+         // Do not throw from a destructor!
+         // This has to be a no-fail cleanup that does the best that it can.
       }
    }
 }
 
 bool AutoCommitTransaction::Commit()
 {
-   wxASSERT(mInTrans);
+   if ( !mInTrans )
+      // Misuse of this class
+      THROW_INCONSISTENCY_EXCEPTION;
 
    mInTrans = !mIO.TransactionCommit(mName);
 
    return mInTrans;
 }
-
-bool AutoCommitTransaction::Rollback()
-{
-   wxASSERT(mInTrans);
-
-   mInTrans = !mIO.TransactionCommit(mName);
-   
-   return mInTrans;
-}
-
