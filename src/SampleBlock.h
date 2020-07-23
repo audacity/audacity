@@ -9,7 +9,7 @@ SampleBlock.h
 #ifndef __AUDACITY_SAMPLE_BLOCK__
 #define __AUDACITY_SAMPLE_BLOCK__
 
-#include "ClientData.h" // to inherit
+#include "audacity/Types.h"
 
 #include <functional>
 #include <memory>
