@@ -661,7 +661,7 @@ void ProjectFileIO::InSet(sqlite3_context *context, int argc, sqlite3_value **ar
    sqlite3_result_int(context, blockids->find(blockid) != blockids->end());
 }
 
-bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
+bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
 {
    auto db = DB();
    int rc;
@@ -673,15 +673,19 @@ bool ProjectFileIO::CheckForOrphans(BlockIDs &blockids)
    });
 
    // Add the function used to verify each row's blockid against the set of active blockids
-   rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, &blockids, InSet, nullptr, nullptr);
+   const void *p = &blockids;
+   rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, const_cast<void*>(p), InSet, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
       wxLogDebug(wxT("Unable to add 'inset' function"));
       return false;
    }
 
-   // Delete all rows that are orphaned
-   rc = sqlite3_exec(db, "DELETE FROM sampleblocks WHERE NOT inset(blockid);", nullptr, nullptr, nullptr);
+   // Delete all rows in the set, or not in it
+   auto sql = wxString::Format(
+      "DELETE FROM sampleblocks WHERE %sinset(blockid);",
+      complement ? "NOT " : "" );
+   rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
       wxLogWarning(XO("Cleanup of orphan blocks failed").Translation());
@@ -708,24 +712,12 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
    auto pProject = &mProject;
    auto &tracklist = tracks ? *tracks : TrackList::Get(*pProject);
 
-   BlockIDs blockids;
+   SampleBlockIDSet blockids;
 
    // Collect all active blockids
    if (prune)
    {
-      for (auto wt : tracklist.Any<const WaveTrack>())
-      {
-         // Scan all clips within current track
-         for (const auto &clip : wt->GetAllClips())
-         {
-            // Scan all sample blocks within current clip
-            auto blocks = clip->GetSequenceBlockArray();
-            for (const auto &block : *blocks)
-            {
-               blockids.insert(block.sb->GetBlockID());
-            }
-         }
-      }
+      InspectBlocks( tracklist, {}, &blockids );
    }
    // Collect ALL blockids
    else
@@ -929,33 +921,13 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
 
 bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
 {
-   std::set<long long> active;
+   SampleBlockIDSet active;
    unsigned long long current = 0;
 
-   // Scan all wave tracks
-   for (auto wt : tracks->Any<const WaveTrack>())
-   {
-      // Scan all clips within current track
-      for (const auto &clip : wt->GetAllClips())
-      {
-         // Scan all sample blocks within current clip
-         auto blocks = clip->GetSequenceBlockArray();
-         for (const auto &block : *blocks)
-         {
-            const auto &sb = block.sb;
-            auto blockid = sb->GetBlockID();
-
-            // Accumulate space used by the block if the blockid has not
-            // yet been seen
-            if (active.count(blockid) == 0)
-            {
-               current += sb->GetSpaceUsage();
-
-               active.insert(blockid);
-            }
-         }
-      }
-   }
+   InspectBlocks( *tracks,
+      BlockSpaceUsageAccumulator( current ),
+      &active // Visit unique blocks only
+   );
 
    // Get the number of blocks and total length from the project file.
    unsigned long long blockcount = 0;
@@ -1868,7 +1840,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    // Check for orphans blocks...sets mRecovered if any were deleted
    if (blockids.size() > 0)
    {
-      if (!CheckForOrphans(blockids))
+      if (!DeleteBlocks(blockids, true))
       {
          return false;
       }
@@ -2176,36 +2148,30 @@ AutoCommitTransaction::AutoCommitTransaction(ProjectFileIO &projectFileIO,
    mName(name)
 {
    mInTrans = mIO.TransactionStart(mName);
-   // Must throw
+   if ( !mInTrans )
+      // To do, improve the message
+      throw SimpleMessageBoxException( XO("Database error") );
 }
 
 AutoCommitTransaction::~AutoCommitTransaction()
 {
    if (mInTrans)
    {
-      // Can't check return status...should probably throw an exception here
-      if (!Commit())
+      if (!mIO.TransactionRollback(mName))
       {
-         // must throw
+         // Do not throw from a destructor!
+         // This has to be a no-fail cleanup that does the best that it can.
       }
    }
 }
 
 bool AutoCommitTransaction::Commit()
 {
-   wxASSERT(mInTrans);
+   if ( !mInTrans )
+      // Misuse of this class
+      THROW_INCONSISTENCY_EXCEPTION;
 
    mInTrans = !mIO.TransactionCommit(mName);
 
    return mInTrans;
 }
-
-bool AutoCommitTransaction::Rollback()
-{
-   wxASSERT(mInTrans);
-
-   mInTrans = !mIO.TransactionCommit(mName);
-   
-   return mInTrans;
-}
-

@@ -626,4 +626,23 @@ private:
    int mNValidBuffers;
 };
 
+#include <unordered_set>
+class SampleBlock;
+using SampleBlockID = long long;
+using SampleBlockIDSet = std::unordered_set<SampleBlockID>;
+class TrackList;
+using BlockVisitor = std::function< void(SampleBlock&) >;
+using BlockInspector = std::function< void(const SampleBlock&) >;
+
+// Function to visit all sample blocks from a list of tracks.
+// If a set is supplied, then only visit once each unique block ID not already
+// in that set, and accumulate those into the set as a side-effect.
+// The visitor function may be null.
+void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
+   SampleBlockIDSet *pIDs = nullptr);
+
+// Non-mutating version of the above
+void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
+   SampleBlockIDSet *pIDs = nullptr);
+
 #endif // __AUDACITY_WAVETRACK__

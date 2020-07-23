@@ -12,7 +12,7 @@ Paul Licameli split from AudacityProject.h
 #define __AUDACITY_PROJECT_FILE_IO__
 
 #include <memory>
-#include <set>
+#include <unordered_set>
 
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
@@ -166,12 +166,15 @@ private:
    bool WriteDoc(const char *table, const ProjectSerializer &autosave, const char *schema = "main");
 
    // Application defined function to verify blockid exists is in set of blockids
-   using BlockIDs = std::set<SampleBlockID>;
+   using BlockIDs = std::unordered_set<SampleBlockID>;
    static void InSet(sqlite3_context *context, int argc, sqlite3_value **argv);
 
-   // Checks for orphan blocks.  This will go away at a future date
-   bool CheckForOrphans(BlockIDs &blockids);
+public:
+   // In one SQL command, delete sample blocks with ids in the given set, or
+   // (when complement is true), with ids not in the given set.
+   bool DeleteBlocks(const BlockIDs &blockids, bool complement);
 
+private:
    // Return a database connection if successful, which caller must close
    Connection CopyTo(const FilePath &destpath,
                                       const TranslatableString &msg,
@@ -213,10 +216,12 @@ private:
 
    TranslatableString mLastError;
    TranslatableString mLibraryError;
-
-   friend AutoCommitTransaction;
 };
 
+// Make a savepoint (a transaction, possibly nested) with the given name;
+// roll it back at destruction time, unless an explicit Commit() happened first.
+// Commit() must not be called again after one successful call.
+// An exception is thrown from the constructor if the transaction cannot open.
 class AutoCommitTransaction
 {
 public:
@@ -224,7 +229,6 @@ public:
    ~AutoCommitTransaction();
 
    bool Commit();
-   bool Rollback();
 
 private:
    ProjectFileIO &mIO;

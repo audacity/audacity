@@ -382,7 +382,7 @@ bool ProjectSerializer::DictChanged() const
    return mDictChanged;
 }
 
-// See ProjectFileIO::CheckForOrphans() for explanation of the blockids arg
+// See ProjectFileIO::LoadProject() for explanation of the blockids arg
 wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &blockids)
 {
    wxMemoryInputStream in(buffer.GetData(), buffer.GetDataLen());

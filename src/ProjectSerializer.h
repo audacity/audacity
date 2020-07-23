@@ -15,7 +15,7 @@
 
 #include <wx/mstream.h> // member variables
 
-#include <set>
+#include <unordered_set>
 #include <unordered_map>
 #include "audacity/Types.h"
 
@@ -23,7 +23,7 @@
 using SampleBlockID = long long;
 
 // From ProjectFileiIO.h
-using BlockIDs = std::set<SampleBlockID>;
+using BlockIDs = std::unordered_set<SampleBlockID>;
 
 ///
 /// ProjectSerializer

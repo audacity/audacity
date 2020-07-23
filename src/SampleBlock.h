@@ -47,7 +47,7 @@ public:
 
    virtual void CloseLock() = 0;
    
-   virtual SampleBlockID GetBlockID() = 0;
+   virtual SampleBlockID GetBlockID() const = 0;
 
    // If !mayThrow and there is an error, ignores it and returns zero.
    // That may be appropriate when only attempting to display samples, not edit.
@@ -87,6 +87,15 @@ protected:
    virtual MinMaxRMS DoGetMinMaxRMS(size_t start, size_t len) = 0;
 
    virtual MinMaxRMS DoGetMinMaxRMS() const = 0;
+};
+
+// Makes a useful function object
+inline std::function< void(const SampleBlock&) >
+BlockSpaceUsageAccumulator (unsigned long long &total)
+{
+   return [&total]( const SampleBlock &block ){
+      total += block.GetSpaceUsage();
+   };
 };
 
 ///\brief abstract base class with methods to produce @ref SampleBlock objects

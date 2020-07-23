@@ -2683,3 +2683,32 @@ void WaveTrack::AllClipsIterator::push( WaveClipHolders &clips )
       pClips = &(*first)->GetCutLines();
    }
 }
+
+#include "SampleBlock.h"
+void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
+   SampleBlockIDSet *pIDs)
+{
+   for (auto wt : tracks.Any< const WaveTrack >()) {
+      // Scan all clips within current track
+      for(const auto &clip : wt->GetAllClips()) {
+         // Scan all sample blocks within current clip
+         auto blocks = clip->GetSequenceBlockArray();
+         for (const auto &block : *blocks) {
+            auto &pBlock = block.sb;
+            if ( pBlock ) {
+               if ( pIDs && !pIDs->insert(pBlock->GetBlockID()).second )
+                  continue;
+               if ( visitor )
+                  visitor( *pBlock );
+            }
+         }
+      }
+   }
+}
+
+void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
+   SampleBlockIDSet *pIDs)
+{
+   VisitBlocks(
+      const_cast<TrackList &>(tracks), std::move( inspector ), pIDs );
+}

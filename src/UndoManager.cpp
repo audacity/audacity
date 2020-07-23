@@ -45,7 +45,6 @@ wxDEFINE_EVENT(EVT_UNDO_OR_REDO, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
 
 using SampleBlockID = long long;
-using Set = std::unordered_set<SampleBlockID>;
 
 struct UndoStackElem {
 
@@ -94,35 +93,15 @@ UndoManager::~UndoManager()
 
 namespace {
    SpaceArray::value_type
-   CalculateUsage(const TrackList &tracks, Set &seen)
+   CalculateUsage(const TrackList &tracks, SampleBlockIDSet &seen)
    {
       SpaceArray::value_type result = 0;
-
       //TIMER_START( "CalculateSpaceUsage", space_calc );
-      for (auto wt : tracks.Any< const WaveTrack >())
-      {
-         // Scan all clips within current track
-         for(const auto &clip : wt->GetAllClips())
-         {
-            // Scan all sample blocks within current clip
-            auto blocks = clip->GetSequenceBlockArray();
-            for (const auto &block : *blocks)
-            {
-               const auto &sb = block.sb;
-
-               // Accumulate space used by the block if the block was not
-               // yet seen
-               if ( seen.count( sb->GetBlockID() ) == 0 )
-               {
-                  unsigned long long usage{ sb->GetSpaceUsage() };
-                  result += usage;
-
-                  seen.insert( sb->GetBlockID() );
-               }
-            }
-         }
-      }
-
+      InspectBlocks(
+         tracks,
+         BlockSpaceUsageAccumulator( result ),
+         &seen
+      );
       return result;
    }
 }
@@ -132,7 +111,7 @@ void UndoManager::CalculateSpaceUsage()
    space.clear();
    space.resize(stack.size(), 0);
 
-   Set seen;
+   SampleBlockIDSet seen;
 
    // After copies and pastes, a block file may be used in more than
    // one place in one undo history state, and it may be used in more than
@@ -157,9 +136,9 @@ void UndoManager::CalculateSpaceUsage()
 
    // Count the usage of the clipboard separately, using another set.  Do not
    // multiple-count any block occurring multiple times within the clipboard.
-   Set seen2;
+   seen.clear();
    mClipboardSpaceUsage = CalculateUsage(
-      Clipboard::Get().GetTracks(), seen2);
+      Clipboard::Get().GetTracks(), seen);
 
    //TIMER_STOP( space_calc );
 }
@@ -167,8 +146,6 @@ void UndoManager::CalculateSpaceUsage()
 wxLongLong_t UndoManager::GetLongDescription(
    unsigned int n, TranslatableString *desc, TranslatableString *size)
 {
-   n -= 1; // 1 based to zero based
-
    wxASSERT(n < stack.size());
    wxASSERT(space.size() == stack.size());
 
@@ -181,8 +158,6 @@ wxLongLong_t UndoManager::GetLongDescription(
 
 void UndoManager::GetShortDescription(unsigned int n, TranslatableString *desc)
 {
-   n -= 1; // 1 based to zero based
-
    wxASSERT(n < stack.size());
 
    *desc = stack[n]->shortDescription;
@@ -228,7 +203,7 @@ unsigned int UndoManager::GetNumStates()
 
 unsigned int UndoManager::GetCurrentState()
 {
-   return current + 1;  // the array is 0 based, the abstraction is 1 based
+   return current;
 }
 
 bool UndoManager::UndoAvailable()
@@ -332,8 +307,6 @@ void UndoManager::PushState(const TrackList * l,
 
 void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
 {
-   n -= 1;
-
    wxASSERT(n < stack.size());
 
    current = n;
