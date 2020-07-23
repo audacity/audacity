@@ -11,8 +11,8 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include <float.h>
 #include <sqlite3.h>
 
+#include "DBConnection.h"
 #include "SampleFormat.h"
-#include "ProjectFileIO.h"
 #include "xml/XMLTagHandler.h"
 
 #include "SampleBlock.h" // to inherit
