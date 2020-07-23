@@ -49,9 +49,9 @@ void ProjectHistory::InitialState()
    auto &undoManager = UndoManager::Get( project );
    auto &tags = Tags::Get( project );
 
-   projectFileIO.TransactionStart({});
-
    undoManager.ClearStates();
+
+   projectFileIO.TransactionStart({});
 
    undoManager.PushState(
       &tracks, viewInfo.selectedRegion, tags.shared_from_this(),

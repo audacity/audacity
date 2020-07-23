@@ -901,7 +901,7 @@ AudacityProject *ProjectManager::OpenProject(
       window.Zoom( window.GetZoomOfToFit() );
       // "Project was recovered" replaces "Create new project" in Undo History.
       auto &undoManager = UndoManager::Get( *pProject );
-      undoManager.RemoveStates(1);
+      undoManager.RemoveOldStates(1);
    }
 
    return pProject;
@@ -910,10 +910,8 @@ AudacityProject *ProjectManager::OpenProject(
 // This is done to empty out the tracks, but without creating a new project.
 void ProjectManager::ResetProjectToEmpty() {
    auto &project = mProject;
-   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &projectFileManager = ProjectFileManager::Get( project );
    auto &projectHistory = ProjectHistory::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
 
    SelectUtilities::DoSelectAll( project );
    TrackUtilities::DoRemoveTracks( project );
@@ -923,8 +921,7 @@ void ProjectManager::ResetProjectToEmpty() {
    projectFileManager.Reset();
 
    projectHistory.SetDirty( false );
-   auto &undoManager = UndoManager::Get( project );
-   undoManager.ClearStates();
+   projectHistory.InitialState();
 }
 
 void ProjectManager::RestartTimer()

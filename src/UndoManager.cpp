@@ -90,7 +90,6 @@ UndoManager::UndoManager( AudacityProject &project )
 
 UndoManager::~UndoManager()
 {
-   ClearStates();
 }
 
 namespace {
@@ -180,14 +179,15 @@ void UndoManager::RemoveStateAt(int n)
    stack.erase(stack.begin() + n);
 }
 
-void UndoManager::RemoveNewStates( int ii )
+void UndoManager::DeleteBlocksExcept(
+   UndoStack::const_iterator begin,
+   UndoStack::const_iterator end )
 {
    auto &projectFileIO = ProjectFileIO::Get(mProject);
 
-   // Collect ids in old states, which must not be deleted
-   const auto begin = stack.begin();
+   // Collect ids that must not be deleted
    SampleBlockIDSet ids;
-   std::for_each( begin, begin + ii, [&ids](const auto &pElem){
+   std::for_each( begin, end, [&ids](const auto &pElem){
       const auto &tracks = *pElem->state.tracks;
       InspectBlocks(tracks, {}, &ids);
    });
@@ -197,23 +197,27 @@ void UndoManager::RemoveNewStates( int ii )
    if ( !ok ) {
       // Ignore the database error.  At worst, we make orphans.
    }
+}
 
-   // Setup to "bypass" database operations in destructors of blocks
-   // (although I'm trying to get rid of that bypassing stuff
-   // altogether, but it's not complete enough at this commit)
- //  auto bypass = projectFileIO.ShouldBypass();
- //  auto cleanup = finally( [&]{ projectFileIO.SetBypass( bypass ); } );
-   projectFileIO.SetBypass( true );
+void UndoManager::RemoveNewStates( int num )
+{
+   const auto begin = stack.begin(), end = begin + num;
+   DeleteBlocksExcept( begin, end );
 
    // Destroy the tracks (which should dereference SampleBlocks that were
    // deleted from the database)
-   while (ii < stack.size()) {
-      RemoveStateAt(ii);
+   while (num < stack.size()) {
+      RemoveStateAt(num);
    }
 }
 
-void UndoManager::RemoveStates(int num)
+void UndoManager::RemoveOldStates(int num)
 {
+   const auto begin = stack.begin() + num, end = stack.end();
+   DeleteBlocksExcept( begin, end );
+
+   // Destroy the tracks (which should dereference SampleBlocks that were
+   // deleted from the database)
    for (int i = 0; i < num; i++) {
       RemoveStateAt(0);
 
@@ -224,7 +228,7 @@ void UndoManager::RemoveStates(int num)
 
 void UndoManager::ClearStates()
 {
-   RemoveStates(stack.size());
+   RemoveOldStates(stack.size());
    current = -1;
    saved = -1;
 }
