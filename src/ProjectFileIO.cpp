@@ -251,7 +251,8 @@ const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-ProjectFileIO::ProjectFileIO(AudacityProject &)
+ProjectFileIO::ProjectFileIO(AudacityProject &project)
+   : mProject{ project }
 {
    mPrevConn = nullptr;
 
@@ -260,13 +261,6 @@ ProjectFileIO::ProjectFileIO(AudacityProject &)
    mTemporary = true;
 
    UpdatePrefs();
-}
-
-void ProjectFileIO::Init( AudacityProject &project )
-{
-   // This step can't happen in the ctor of ProjectFileIO because ctor of
-   // AudacityProject wasn't complete
-   mpProject = project.shared_from_this();
 }
 
 ProjectFileIO::~ProjectFileIO()
@@ -313,8 +307,7 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
    }
 
    // Pass weak_ptr to project into DBConnection constructor
-   wxASSERT( !mpProject.expired() );
-   curConn = std::make_unique<DBConnection>(mpProject);
+   curConn = std::make_unique<DBConnection>(mProject.shared_from_this());
    if (!curConn->Open(fileName))
    {
       curConn.reset();
@@ -729,11 +722,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
                                  const std::shared_ptr<TrackList> &tracks /* = nullptr */)
 {
    // Get access to the active tracklist
-   auto pProject = mpProject.lock();
-   if (!pProject)
-   {
-      return nullptr;
-   }
+   auto pProject = &mProject;
    auto &tracklist = tracks ? *tracks : TrackList::Get(*pProject);
 
    BlockIDs blockids;
@@ -937,7 +926,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
    }
 
    // Open the newly created database
-   destConn = std::make_unique<DBConnection>(mpProject);
+   destConn = std::make_unique<DBConnection>(mProject.shared_from_this());
    if (!destConn->Open(destpath))
    {
       SetDBError(
@@ -1032,9 +1021,7 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
 
 Connection &ProjectFileIO::CurrConn()
 {
-   auto pProject = mpProject.lock();
-   wxASSERT( pProject );
-   auto &connectionPtr = ConnectionPtr::Get( *pProject );
+   auto &connectionPtr = ConnectionPtr::Get( mProject );
    return connectionPtr.mpConnection;
 }
 
@@ -1089,7 +1076,8 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
    }
 
    // Reopen the original database using the temporary name
-   Connection tempConn = std::make_unique<DBConnection>(mpProject);
+   Connection tempConn =
+      std::make_unique<DBConnection>(mProject.shared_from_this());
    if (!tempConn->Open(tempName))
    {
       SetDBError(XO("Failed to open project file"));
@@ -1155,11 +1143,7 @@ void ProjectFileIO::UpdatePrefs()
 // Pass a number in to show project number, or -1 not to.
 void ProjectFileIO::SetProjectTitle(int number)
 {
-   auto pProject = mpProject.lock();
-   if (! pProject )
-      return;
-
-   auto &project = *pProject;
+   auto &project = mProject;
    auto pWindow = project.GetFrame();
    if (!pWindow)
    {
@@ -1209,10 +1193,7 @@ const FilePath &ProjectFileIO::GetFileName() const
 
 void ProjectFileIO::SetFileName(const FilePath &fileName)
 {
-   auto pProject = mpProject.lock();
-   if (! pProject )
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
 
    mFileName = fileName;
 
@@ -1230,10 +1211,7 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
 
 bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
-   auto pProject = mpProject.lock();
-   if (! pProject )
-      return false;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &window = GetProjectFrame(project);
    auto &viewInfo = ViewInfo::Get(project);
    auto &settings = ProjectSettings::Get(project);
@@ -1363,10 +1341,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
 XMLTagHandler *ProjectFileIO::HandleXMLChild(const wxChar *tag)
 {
-   auto pProject = mpProject.lock();
-   if (! pProject )
-      return nullptr;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto fn = ProjectFileIORegistry::Lookup(tag);
    if (fn)
    {
@@ -1396,10 +1371,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
                              const std::shared_ptr<TrackList> &tracks /* = nullptr */)
 // may throw
 {
-   auto pProject = mpProject.lock();
-   if (! pProject )
-      THROW_INCONSISTENCY_EXCEPTION;
-   auto &proj = *pProject;
+   auto &proj = mProject;
    auto &tracklist = tracks ? *tracks : TrackList::Get(proj);
    auto &viewInfo = ViewInfo::Get(proj);
    auto &tags = Tags::Get(proj);
@@ -1668,11 +1640,7 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
    };
 
    // Get access to the active tracklist
-   auto pProject = mpProject.lock();
-   if (!pProject)
-   {
-      return false;
-   }
+   auto pProject = &mProject;
    auto &tracklist = TrackList::Get(*pProject);
 
    // Search for a timetrack and remove it if the project already has one

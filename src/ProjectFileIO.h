@@ -77,9 +77,6 @@ public:
    static const ProjectFileIO &Get( const AudacityProject &project );
 
    explicit ProjectFileIO( AudacityProject &project );
-   // unfortunate two-step construction needed because of
-   // enable_shared_from_this
-   void Init( AudacityProject &project );
 
    ProjectFileIO( const ProjectFileIO & ) PROHIBITED;
    ProjectFileIO &operator=( const ProjectFileIO & ) PROHIBITED;
@@ -214,7 +211,7 @@ private:
    Connection &CurrConn();
 
    // non-static data members
-   std::weak_ptr<AudacityProject> mpProject;
+   AudacityProject &mProject;
 
    // The project's file path
    FilePath mFileName;
