@@ -63,6 +63,8 @@ list( APPEND SOURCES
    PRIVATE
       AColor.cpp
       AColor.h
+      ActiveProjects.cpp
+      ActiveProjects.h
       AboutDialog.cpp
       AboutDialog.h
       AdornedRulerPanel.cpp
