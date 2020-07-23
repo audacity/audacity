@@ -298,7 +298,10 @@ int DBConnection::CheckpointHook(void *data, sqlite3 *db, const char *schema, in
    return SQLITE_OK;
 }
 
-ConnectionPtr::~ConnectionPtr() = default;
+ConnectionPtr::~ConnectionPtr()
+{
+   wxASSERT_MSG(mpConnection, wxT("Project file was not closed at shutdown"));
+}
 
 static const AudacityProject::AttachedObjects::RegisteredFactory
 sConnectionPtrKey{

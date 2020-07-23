@@ -254,7 +254,6 @@ ProjectFileIO::ProjectFileIO(AudacityProject &project)
 
 ProjectFileIO::~ProjectFileIO()
 {
-   wxASSERT_MSG(!CurrConn(), wxT("Project file was not closed at shutdown"));
 }
 
 sqlite3 *ProjectFileIO::DB()
