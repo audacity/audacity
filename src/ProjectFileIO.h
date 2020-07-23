@@ -194,9 +194,6 @@ private:
 
    bool ShouldVacuum(const std::shared_ptr<TrackList> &tracks);
 
-   void CheckpointThread();
-   static int CheckpointHook(void *that, sqlite3 *db, const char *schema, int pages);
-
 private:
    // non-static data members
    std::weak_ptr<AudacityProject> mpProject;
