@@ -225,6 +225,8 @@ struct ScrubForwarder
       mWindow = &ProjectWindow::Get( project );
       if ( mWindow )
          mWindow->PushEventHandler( this );
+      mRuler = &AdornedRulerPanel::Get( project );
+      mScrubber = Scrubber::Get( project ).shared_from_this();
    }
 
    ~ScrubForwarder()
@@ -235,6 +237,8 @@ struct ScrubForwarder
 
    AudacityProject &mProject;
    wxWindowPtr<wxWindow> mWindow;
+   wxWeakRef<AdornedRulerPanel> mRuler;
+   std::weak_ptr<Scrubber> mScrubber;
 
    void OnMouse(wxMouseEvent &event);
    DECLARE_EVENT_TABLE()
@@ -242,9 +246,15 @@ struct ScrubForwarder
 
 void ScrubForwarder::OnMouse(wxMouseEvent &event)
 {
-   auto &scrubber = Scrubber::Get( mProject );
+   auto pScrubber = mScrubber.lock();
+   if ( !pScrubber || !mRuler ) {
+      event.Skip();
+      return;
+   }
 
-   auto &ruler = AdornedRulerPanel::Get( mProject );
+   auto &scrubber = *pScrubber;
+
+   auto &ruler = *mRuler;
    const auto &state = ::wxGetMouseState();
    const auto &position = state.GetPosition();
    scrubber.SetMayDragToSeek(

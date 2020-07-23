@@ -42,6 +42,7 @@ class Scrubber final
    : public wxEvtHandler
    , public ClientData::Base
    , private PrefsListener
+   , public std::enable_shared_from_this< Scrubber >
 {
 public:   
    static Scrubber &Get( AudacityProject &project );
