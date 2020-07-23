@@ -18,6 +18,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/sstream.h>
 #include <wx/xml/xml.h>
 
+#include "DBConnection.h"
 #include "FileNames.h"
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
@@ -129,19 +130,6 @@ static const char *ProjectFileSchema =
    "  samples              BLOB"
    ");";
 
-// Configuration to provide "safe" connections
-static const char *SafeConfig =
-   "PRAGMA <schema>.locking_mode = SHARED;"
-   "PRAGMA <schema>.synchronous = NORMAL;"
-   "PRAGMA <schema>.journal_mode = WAL;"
-   "PRAGMA <schema>.wal_autocheckpoint = 0;";
-
-// Configuration to provide "Fast" connections
-static const char *FastConfig =
-   "PRAGMA <schema>.locking_mode = SHARED;"
-   "PRAGMA <schema>.synchronous = OFF;"
-   "PRAGMA <schema>.journal_mode = OFF;";
-
 // This singleton handles initialization/shutdown of the SQLite library.
 // It is needed because our local SQLite is built with SQLITE_OMIT_AUTOINIT
 // defined.
@@ -251,34 +239,27 @@ const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-ProjectFileIO::ProjectFileIO(AudacityProject &)
+ProjectFileIO::ProjectFileIO(AudacityProject &project)
+   : mProject{ project }
 {
    mPrevConn = nullptr;
-   mCurrConn = nullptr;
 
    mRecovered = false;
    mModified = false;
    mTemporary = true;
-   mBypass = false;
 
    UpdatePrefs();
 }
 
-void ProjectFileIO::Init( AudacityProject &project )
-{
-   // This step can't happen in the ctor of ProjectFileIO because ctor of
-   // AudacityProject wasn't complete
-   mpProject = project.shared_from_this();
-}
-
 ProjectFileIO::~ProjectFileIO()
 {
-   wxASSERT_MSG(mCurrConn == nullptr, wxT("Project file was not closed at shutdown"));
+   wxASSERT_MSG(!CurrConn(), wxT("Project file was not closed at shutdown"));
 }
 
-Connection &ProjectFileIO::Conn()
+sqlite3 *ProjectFileIO::DB()
 {
-   if (!mCurrConn)
+   auto &curConn = CurrConn();
+   if (!curConn)
    {
       if (!OpenConnection())
       {
@@ -289,17 +270,13 @@ Connection &ProjectFileIO::Conn()
       }
    }
 
-   return mCurrConn;
-}
-
-sqlite3 *ProjectFileIO::DB()
-{
-   return Conn()->DB();
+   return curConn->DB();
 }
 
 bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 {
-   wxASSERT(mCurrConn == nullptr);
+   auto &curConn = CurrConn();
+   wxASSERT(!curConn);
    bool temp = false;
 
    if (fileName.empty())
@@ -312,10 +289,11 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
       }
    }
 
-   mCurrConn = std::make_unique<DBConnection>(this);
-   if (!mCurrConn->Open(fileName))
+   // Pass weak_ptr to project into DBConnection constructor
+   curConn = std::make_unique<DBConnection>(mProject.shared_from_this());
+   if (!curConn->Open(fileName))
    {
-      mCurrConn = nullptr;
+      curConn.reset();
       return false;
    }
 
@@ -334,13 +312,14 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 
 bool ProjectFileIO::CloseConnection()
 {
-   wxASSERT(mCurrConn != nullptr);
+   auto &curConn = CurrConn();
+   wxASSERT(curConn);
 
-   if (!mCurrConn->Close())
+   if (!curConn->Close())
    {
       return false;
    }
-   mCurrConn = nullptr;
+   curConn.reset();
 
    SetFileName({});
 
@@ -354,7 +333,7 @@ void ProjectFileIO::SaveConnection()
    // Should do nothing in proper usage, but be sure not to leak a connection:
    DiscardConnection();
 
-   mPrevConn = std::move(mCurrConn);
+   mPrevConn = std::move(CurrConn());
    mPrevFileName = mFileName;
    mPrevTemporary = mTemporary;
 
@@ -381,9 +360,10 @@ void ProjectFileIO::DiscardConnection()
 // Close any current connection and switch back to using the saved
 void ProjectFileIO::RestoreConnection()
 {
-   if (mCurrConn)
+   auto &curConn = CurrConn();
+   if (curConn)
    {
-      if (!mCurrConn->Close())
+      if (!curConn->Close())
       {
          // Store an error message
          SetDBError(
@@ -392,7 +372,7 @@ void ProjectFileIO::RestoreConnection()
       }
    }
 
-   mCurrConn = std::move(mPrevConn);
+   curConn = std::move(mPrevConn);
    SetFileName(mPrevFileName);
    mTemporary = mPrevTemporary;
 
@@ -401,9 +381,10 @@ void ProjectFileIO::RestoreConnection()
 
 void ProjectFileIO::UseConnection(Connection &&conn, const FilePath &filePath)
 {
-   wxASSERT(mCurrConn == nullptr);
+   auto &curConn = CurrConn();
+   wxASSERT(!curConn);
 
-   mCurrConn = std::move(conn);
+   curConn = std::move(conn);
    SetFileName(filePath);
 }
 
@@ -724,11 +705,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
                                  const std::shared_ptr<TrackList> &tracks /* = nullptr */)
 {
    // Get access to the active tracklist
-   auto pProject = mpProject.lock();
-   if (!pProject)
-   {
-      return nullptr;
-   }
+   auto pProject = &mProject;
    auto &tracklist = tracks ? *tracks : TrackList::Get(*pProject);
 
    BlockIDs blockids;
@@ -808,7 +785,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
    }
 
    // Ensure attached DB connection gets configured
-   mCurrConn->FastMode("outbound");
+   CurrConn()->FastMode("outbound");
 
    // Install our schema into the new database
    if (!InstallSchema(db, "outbound"))
@@ -932,7 +909,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
    }
 
    // Open the newly created database
-   destConn = std::make_unique<DBConnection>(this);
+   destConn = std::make_unique<DBConnection>(mProject.shared_from_this());
    if (!destConn->Open(destpath))
    {
       SetDBError(
@@ -1025,6 +1002,12 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
    return true;
 }
 
+Connection &ProjectFileIO::CurrConn()
+{
+   auto &connectionPtr = ConnectionPtr::Get( mProject );
+   return connectionPtr.mpConnection;
+}
+
 void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
 {
    // Haven't vacuumed yet
@@ -1076,7 +1059,8 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
    }
 
    // Reopen the original database using the temporary name
-   Connection tempConn = std::make_unique<DBConnection>(this);
+   Connection tempConn =
+      std::make_unique<DBConnection>(mProject.shared_from_this());
    if (!tempConn->Open(tempName))
    {
       SetDBError(XO("Failed to open project file"));
@@ -1142,11 +1126,7 @@ void ProjectFileIO::UpdatePrefs()
 // Pass a number in to show project number, or -1 not to.
 void ProjectFileIO::SetProjectTitle(int number)
 {
-   auto pProject = mpProject.lock();
-   if (! pProject )
-      return;
-
-   auto &project = *pProject;
+   auto &project = mProject;
    auto pWindow = project.GetFrame();
    if (!pWindow)
    {
@@ -1196,10 +1176,7 @@ const FilePath &ProjectFileIO::GetFileName() const
 
 void ProjectFileIO::SetFileName(const FilePath &fileName)
 {
-   auto pProject = mpProject.lock();
-   if (! pProject )
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
 
    mFileName = fileName;
 
@@ -1217,10 +1194,7 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
 
 bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
-   auto pProject = mpProject.lock();
-   if (! pProject )
-      return false;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &window = GetProjectFrame(project);
    auto &viewInfo = ViewInfo::Get(project);
    auto &settings = ProjectSettings::Get(project);
@@ -1350,10 +1324,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
 XMLTagHandler *ProjectFileIO::HandleXMLChild(const wxChar *tag)
 {
-   auto pProject = mpProject.lock();
-   if (! pProject )
-      return nullptr;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto fn = ProjectFileIORegistry::Lookup(tag);
    if (fn)
    {
@@ -1383,10 +1354,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
                              const std::shared_ptr<TrackList> &tracks /* = nullptr */)
 // may throw
 {
-   auto pProject = mpProject.lock();
-   if (! pProject )
-      THROW_INCONSISTENCY_EXCEPTION;
-   auto &proj = *pProject;
+   auto &proj = mProject;
    auto &tracklist = tracks ? *tracks : TrackList::Get(proj);
    auto &viewInfo = ViewInfo::Get(proj);
    auto &tags = Tags::Get(proj);
@@ -1655,11 +1623,7 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
    };
 
    // Get access to the active tracklist
-   auto pProject = mpProject.lock();
-   if (!pProject)
-   {
-      return false;
-   }
+   auto pProject = &mProject;
    auto &tracklist = TrackList::Get(*pProject);
 
    // Search for a timetrack and remove it if the project already has one
@@ -2058,10 +2022,11 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 
 bool ProjectFileIO::CloseProject()
 {
-   wxASSERT(mCurrConn != nullptr);
+   auto &currConn = CurrConn();
+   wxASSERT(currConn);
 
    // Protect...
-   if (mCurrConn == nullptr)
+   if (!currConn)
    {
       return true;
    }
@@ -2106,7 +2071,7 @@ bool ProjectFileIO::IsRecovered() const
 
 void ProjectFileIO::Reset()
 {
-   wxASSERT_MSG(mCurrConn == nullptr, wxT("Resetting project with open project file"));
+   wxASSERT_MSG(!CurrConn(), wxT("Resetting project with open project file"));
 
    mModified = false;
    mRecovered = false;
@@ -2146,13 +2111,14 @@ void ProjectFileIO::SetError(const TranslatableString &msg)
 
 void ProjectFileIO::SetDBError(const TranslatableString &msg)
 {
+   auto &currConn = CurrConn();
    mLastError = msg;
    wxLogDebug(wxT("SQLite error: %s"), mLastError.Debug());
    printf("   Lib error: %s", mLastError.Debug().mb_str().data());
 
-   if (mCurrConn)
+   if (currConn)
    {
-      mLibraryError = Verbatim(sqlite3_errmsg(mCurrConn->DB()));
+      mLibraryError = Verbatim(sqlite3_errmsg(currConn->DB()));
       wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
       printf("   Lib error: %s", mLibraryError.Debug().mb_str().data());
    }
@@ -2162,13 +2128,18 @@ void ProjectFileIO::SetDBError(const TranslatableString &msg)
 
 void ProjectFileIO::SetBypass()
 {
+   auto &currConn = CurrConn();
+   if (!currConn)
+      return;
+
    // Determine if we can bypass sample block deletes during shutdown.
    //
    // IMPORTANT:
    // If the project was vacuumed, then we MUST bypass further
    // deletions since the new file doesn't have the blocks that the
    // Sequences expect to be there.
-   mBypass = true;
+
+   currConn->SetBypass( true );
 
    // Only permanent project files need cleaning at shutdown
    if (!IsTemporary() && !WasVacuumed())
@@ -2182,16 +2153,11 @@ void ProjectFileIO::SetBypass()
       // changes.
       if (HadUnused())
       {
-         mBypass = false;
+         currConn->SetBypass( false );
       }
    }
 
    return;
-}
-
-bool ProjectFileIO::ShouldBypass()
-{
-   return mBypass;
 }
 
 AutoCommitTransaction::AutoCommitTransaction(ProjectFileIO &projectFileIO,
@@ -2231,261 +2197,5 @@ bool AutoCommitTransaction::Rollback()
    mInTrans = !mIO.TransactionCommit(mName);
    
    return mInTrans;
-}
-
-DBConnection::DBConnection(ProjectFileIO *io)
-:  mIO(*io)
-{
-   mDB = nullptr;
-}
-
-DBConnection::~DBConnection()
-{
-   wxASSERT(mDB == nullptr);
-}
-
-bool DBConnection::Open(const char *fileName)
-{
-   wxASSERT(mDB == nullptr);
-   int rc;
-
-   rc = sqlite3_open(fileName, &mDB);
-   if (rc != SQLITE_OK)
-   {
-      sqlite3_close(mDB);
-      mDB = nullptr;
-
-      return false;
-   }
-
-   // Set default mode
-   SafeMode();
-
-   // Kick off the checkpoint thread
-   mCheckpointStop = false;
-   mCheckpointWaitingPages = 0;
-   mCheckpointCurrentPages = 0;
-   mCheckpointThread = std::thread([this]{ CheckpointThread(); });
-
-   // Install our checkpoint hook
-   sqlite3_wal_hook(mDB, CheckpointHook, this);
-
-   return mDB;
-}
-
-bool DBConnection::Close()
-{
-   wxASSERT(mDB != nullptr);
-   int rc;
-
-   // Protect...
-   if (mDB == nullptr)
-   {
-      return true;
-   }
-
-   // Uninstall our checkpoint hook so that no additional checkpoints
-   // are sent our way.  (Though this shouldn't really happen.)
-   sqlite3_wal_hook(mDB, nullptr, nullptr);
-
-   // Display a progress dialog if there's active or pending checkpoints
-   if (mCheckpointWaitingPages || mCheckpointCurrentPages)
-   {
-      TranslatableString title = XO("Checkpointing project");
-
-      // Get access to the active project
-      auto project = mIO.mpProject.lock();
-      if (project)
-      {
-         title = XO("Checkpointing %s").Format(project->GetProjectName());
-      }
-
-      // Provides a progress dialog with indeterminate mode
-      wxGenericProgressDialog pd(title.Translation(),
-                                 XO("This may take several seconds").Translation(),
-                                 300000,     // range
-                                 nullptr,    // parent
-                                 wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
-
-      // Wait for the checkpoints to end
-      while (mCheckpointWaitingPages || mCheckpointCurrentPages)
-      {
-         wxMilliSleep(50);
-         pd.Pulse();
-      }
-   }
-
-   // Tell the checkpoint thread to shutdown
-   {
-      std::lock_guard<std::mutex> guard(mCheckpointMutex);
-      mCheckpointStop = true;
-      mCheckpointCondition.notify_one();
-   }
-
-   // And wait for it to do so
-   mCheckpointThread.join();
-
-   // We're done with the prepared statements
-   for (auto stmt : mStatements)
-   {
-      sqlite3_finalize(stmt.second);
-   }
-   mStatements.clear();
-
-   // Close the DB
-   rc = sqlite3_close(mDB);
-   if (rc != SQLITE_OK)
-   {
-      // I guess we could try to recover by repreparing statements and reinstalling
-      // the hook, but who knows if that would work either.
-      //
-      // Should we throw an error???
-   }
-
-   mDB = nullptr;
-
-   return true;
-}
-
-bool DBConnection::SafeMode(const char *schema /* = "main" */)
-{
-   return ModeConfig(mDB, schema, SafeConfig);
-}
-
-bool DBConnection::FastMode(const char *schema /* = "main" */)
-{
-   return ModeConfig(mDB, schema, FastConfig);
-}
-
-bool DBConnection::ModeConfig(sqlite3 *db, const char *schema, const char *config)
-{
-   // Ensure attached DB connection gets configured
-   int rc;
-
-   // Replace all schema "keywords" with the schema name
-   wxString sql = config;
-   sql.Replace(wxT("<schema>"), schema);
-
-   // Set the configuration
-   rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
-
-   return rc != SQLITE_OK;
-}
-
-sqlite3 *DBConnection::DB()
-{
-   wxASSERT(mDB != nullptr);
-
-   return mDB;
-}
-
-int DBConnection::GetLastRC() const
-{
-   return sqlite3_errcode(mDB);
-}
-
-const wxString DBConnection::GetLastMessage() const
-{
-   return sqlite3_errmsg(mDB);
-}
-
-sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
-{
-   int rc;
-
-   // Return an existing statement if it's already been prepared
-   auto iter = mStatements.find(id);
-   if (iter != mStatements.end())
-   {
-      return iter->second;
-   }
-
-   // Prepare the statement
-   sqlite3_stmt *stmt = nullptr;
-   rc = sqlite3_prepare_v3(mDB, sql, -1, SQLITE_PREPARE_PERSISTENT, &stmt, 0);
-   if (rc != SQLITE_OK)
-   {
-      wxLogDebug("prepare error %s", sqlite3_errmsg(mDB));
-      THROW_INCONSISTENCY_EXCEPTION;
-   }
-
-   // And remember it
-   mStatements.insert({id, stmt});
-
-   return stmt;
-}
-
-sqlite3_stmt *DBConnection::GetStatement(enum StatementID id)
-{
-   // Look it up
-   auto iter = mStatements.find(id);
-
-   // It should always be there
-   wxASSERT(iter != mStatements.end());
-
-   // Return it
-   return iter->second;
-}
-
-void DBConnection::CheckpointThread()
-{
-   // Open another connection to the DB to prevent blocking the main thread.
-   //
-   // If it fails, then we won't checkpoint until the main thread closes
-   // the associated DB.
-   sqlite3 *db = nullptr;
-   if (sqlite3_open(sqlite3_db_filename(mDB, nullptr), &db) == SQLITE_OK)
-   {
-      // Configure it to be safe
-      ModeConfig(db, "main", SafeConfig);
-
-      while (true)
-      {
-         {
-            // Wait for work or the stop signal
-            std::unique_lock<std::mutex> lock(mCheckpointMutex);
-            mCheckpointCondition.wait(lock,
-                                      [&]
-                                      {
-                                          return mCheckpointWaitingPages || mCheckpointStop;
-                                      });
-
-            // Requested to stop, so bail
-            if (mCheckpointStop)
-            {
-               break;
-            }
-
-            // Capture the number of pages that need checkpointing and reset
-            mCheckpointCurrentPages.store( mCheckpointWaitingPages );
-            mCheckpointWaitingPages = 0;
-         }
-
-         // And kick off the checkpoint. This may not checkpoint ALL frames
-         // in the WAL.  They'll be gotten the next time around.
-         sqlite3_wal_checkpoint_v2(db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
-
-         // Reset
-         mCheckpointCurrentPages = 0;
-      }
-   }
-
-   // All done (always close)
-   sqlite3_close(db);
-
-   return;
-}
-
-int DBConnection::CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages)
-{
-   // Get access to our object
-   DBConnection *that = static_cast<DBConnection *>(data);
-
-   // Queue the database pointer for our checkpoint thread to process
-   std::lock_guard<std::mutex> guard(that->mCheckpointMutex);
-   that->mCheckpointWaitingPages = pages;
-   that->mCheckpointCondition.notify_one();
-
-   return SQLITE_OK;
 }
 

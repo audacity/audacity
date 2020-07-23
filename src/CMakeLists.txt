@@ -106,6 +106,8 @@ list( APPEND SOURCES
       CrashReport.cpp
       CrashReport.h
       DarkThemeAsCeeCode.h
+      DBConnection.cpp
+      DBConnection.h
       DeviceChange.cpp
       DeviceChange.h
       DeviceManager.cpp

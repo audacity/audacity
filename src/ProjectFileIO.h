@@ -11,12 +11,7 @@ Paul Licameli split from AudacityProject.h
 #ifndef __AUDACITY_PROJECT_FILE_IO__
 #define __AUDACITY_PROJECT_FILE_IO__
 
-#include <atomic>
-#include <condition_variable>
 #include <memory>
-#include <map>
-#include <mutex>
-#include <thread>
 #include <set>
 
 #include "ClientData.h" // to inherit
@@ -60,9 +55,6 @@ public:
    static const ProjectFileIO &Get( const AudacityProject &project );
 
    explicit ProjectFileIO( AudacityProject &project );
-   // unfortunate two-step construction needed because of
-   // enable_shared_from_this
-   void Init( AudacityProject &project );
 
    ProjectFileIO( const ProjectFileIO & ) PROHIBITED;
    ProjectFileIO &operator=( const ProjectFileIO & ) PROHIBITED;
@@ -110,7 +102,6 @@ public:
    //    SqliteSampleBlock::~SqliteSampleBlock()
    //    ProjectManager::OnCloseWindow()
    void SetBypass();
-   bool ShouldBypass();
 
    // Remove all unused space within a project file
    void Vacuum(const std::shared_ptr<TrackList> &tracks);
@@ -145,8 +136,6 @@ private:
    // Returns a non-null pointer to an open database, or throws an exception
    // if opening fails.
    sqlite3 *DB();
-
-   Connection &Conn();
 
    bool OpenConnection(FilePath fileName = {});
    bool CloseConnection();
@@ -195,8 +184,10 @@ private:
    bool ShouldVacuum(const std::shared_ptr<TrackList> &tracks);
 
 private:
+   Connection &CurrConn();
+
    // non-static data members
-   std::weak_ptr<AudacityProject> mpProject;
+   AudacityProject &mProject;
 
    // The project's file path
    FilePath mFileName;
@@ -210,9 +201,6 @@ private:
    // Is this project still a temporary/unsaved project
    bool mTemporary;
 
-   // Bypass transactions if database will be deleted after close
-   bool mBypass;
-
    // Project was vacuumed last time Vacuum() ran
    bool mWasVacuumed;
 
@@ -223,13 +211,10 @@ private:
    FilePath mPrevFileName;
    bool mPrevTemporary;
 
-   Connection mCurrConn;
    TranslatableString mLastError;
    TranslatableString mLibraryError;
 
-   friend SqliteSampleBlock;
    friend AutoCommitTransaction;
-   friend DBConnection;
 };
 
 class AutoCommitTransaction
@@ -245,58 +230,6 @@ private:
    ProjectFileIO &mIO;
    bool mInTrans;
    wxString mName;
-};
-
-class DBConnection
-{
-public:
-   DBConnection(ProjectFileIO *io);
-   ~DBConnection();
-
-   bool Open(const char *fileName);
-   bool Close();
-
-   bool SafeMode(const char *schema = "main");
-   bool FastMode(const char *schema = "main");
-
-   bool Assign(sqlite3 *handle);
-   sqlite3 *Detach();
-
-   sqlite3 *DB();
-
-   int GetLastRC() const ;
-   const wxString GetLastMessage() const;
-
-   enum StatementID
-   {
-      GetSamples,
-      GetSummary256,
-      GetSummary64k,
-      LoadSampleBlock,
-      InsertSampleBlock,
-      DeleteSampleBlock
-   };
-   sqlite3_stmt *GetStatement(enum StatementID id);
-   sqlite3_stmt *Prepare(enum StatementID id, const char *sql);
-
-private:
-   bool ModeConfig(sqlite3 *db, const char *schema, const char *config);
-
-   void CheckpointThread();
-   static int CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages);
-
-private:
-   ProjectFileIO &mIO;
-   sqlite3 *mDB;
-
-   std::thread mCheckpointThread;
-   std::condition_variable mCheckpointCondition;
-   std::mutex mCheckpointMutex;
-   std::atomic_bool mCheckpointStop{ false };
-   std::atomic_int mCheckpointWaitingPages{ 0 };
-   std::atomic_int mCheckpointCurrentPages{ 0 };
-
-   std::map<enum StatementID, sqlite3_stmt *> mStatements;
 };
 
 class wxTopLevelWindow;
