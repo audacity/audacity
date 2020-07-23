@@ -13,7 +13,7 @@
 
 #include "Audacity.h"
 #include "ActiveProjects.h"
-#include "prefs.h"
+#include "Prefs.h"
 
 #include <wx/filename.h>
 
