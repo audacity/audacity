@@ -256,7 +256,7 @@ ProjectFileIO::~ProjectFileIO()
    wxASSERT_MSG(!CurrConn(), wxT("Project file was not closed at shutdown"));
 }
 
-Connection &ProjectFileIO::Conn()
+sqlite3 *ProjectFileIO::DB()
 {
    auto &curConn = CurrConn();
    if (!curConn)
@@ -270,12 +270,7 @@ Connection &ProjectFileIO::Conn()
       }
    }
 
-   return curConn;
-}
-
-sqlite3 *ProjectFileIO::DB()
-{
-   return Conn()->DB();
+   return curConn->DB();
 }
 
 bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)

@@ -137,8 +137,6 @@ private:
    // if opening fails.
    sqlite3 *DB();
 
-   Connection &Conn();
-
    bool OpenConnection(FilePath fileName = {});
    bool CloseConnection();
 
