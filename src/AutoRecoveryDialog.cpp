@@ -138,7 +138,7 @@ void AutoRecoveryDialog::PopulateList()
    wxString pattern = wxT("*.") + FileNames::UnsavedProjectExtension();
    FilePaths files;
 
-   wxDir::GetAllFiles(tempdir, &files, pattern, wxDIR_FILES);
+//   wxDir::GetAllFiles(tempdir, &files, pattern, wxDIR_FILES);
 
    FilePaths active = ActiveProjects::GetAll();
 
