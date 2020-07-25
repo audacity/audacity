@@ -585,7 +585,7 @@ if(wxWidgets_FIND_STYLE STREQUAL "win32")
     if(WX_LIB_DIR)
       # If building shared libs, define WXUSINGDLL to use dllimport.
       if(WX_LIB_DIR MATCHES "[dD][lL][lL]")
-        set(wxWidgets_DEFINITIONS WXUSINGDLL)
+        set(wxWidgets_DEFINITIONS_GENERAL WXUSINGDLL)
         DBG_MSG_V("detected SHARED/DLL tree WX_LIB_DIR=${WX_LIB_DIR}")
       endif()
 
@@ -660,7 +660,7 @@ if(wxWidgets_FIND_STYLE STREQUAL "win32")
 
         # Add necessary definitions for unicode builds
         if("${UCD}" STREQUAL "u")
-          list(APPEND wxWidgets_DEFINITIONS UNICODE _UNICODE)
+          list(APPEND wxWidgets_DEFINITIONS_GENERAL UNICODE _UNICODE)
         endif()
 
         # Add necessary definitions for debug builds
@@ -932,10 +932,6 @@ else()
         WX_CONFIG_GET_CONFIG("" general)
       endif()
     endif()
-
-    message("wxWidgets_DEFINITIONS=${wxWidgets_DEFINITIONS}")
-    message("wxWidgets_INCLUDE_DIRS=${wxWidgets_INCLUDE_DIRS}")
-    message("wxWidgets_CXX_FLAGS=${wxWidgets_CXX_FLAGS}")
 
     # When using wx-config in MSYS, the include paths are UNIX style paths which may or may
     # not work correctly depending on you MSYS/MinGW configuration.  CMake expects native
