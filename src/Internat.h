@@ -58,6 +58,9 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 
    #ifdef __WXMSW__
 
+   // Eventually pulls in <windows.h> which indirectly defines DebugBreak(). Can't
+   // include <windows.h> directly since it then causes "MemoryX.h" to spew errors.
+   #include <wx/app.h>
    #define _(s) ((wxTranslations::Get() || (DebugBreak(), true)), \
                 GetCustomTranslation((s)))
 

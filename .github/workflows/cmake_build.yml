@@ -146,14 +146,15 @@ jobs:
         # on Github, we only build the Release version of
         # wxWidgets and the FindwxWidgets CMake module
         # defaults to looking for both.  If either of them
-        # isn't found, then it doesn't provides the required
+        # isn't found, then it doesn't provided the required
         # library information.  This is only a concern for
         # Windows.
         cmake -S . \
               -B build \
               -G "${{matrix.config.generator}}" \
               -A ${{matrix.config.platform}} \
-              -D wxWidgets_USE_REL_AND_DBG=NO
+              -D wxWidgets_USE_REL_AND_DBG=no \
+              -D audacity_use_pch=no
 
         # Build Audacity
         cmake --build build --config Release --verbose

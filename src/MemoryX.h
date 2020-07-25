@@ -8,7 +8,6 @@
 #define safenew new
 #endif
 
-
 #include <functional>
 
 #if !(_MSC_VER >= 1800 || __cplusplus >= 201402L)
@@ -200,9 +199,12 @@ public:
 #ifdef _DEBUG
 #ifdef _MSC_VER
 #undef new
-#endif
-#endif
 
+// wx/any.h also uses Placement-NEW so include it before redefining "new" at comment:
+//    "Restore definition of debug new"
+#include <wx/any.h>
+#endif
+#endif
 
 template<typename X>
 class Optional {
