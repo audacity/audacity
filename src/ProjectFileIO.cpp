@@ -256,6 +256,11 @@ ProjectFileIO::~ProjectFileIO()
 {
 }
 
+bool ProjectFileIO::OpenProject()
+{
+   return OpenConnection();
+}
+
 sqlite3 *ProjectFileIO::DB()
 {
    auto &curConn = CurrConn();

@@ -13,6 +13,7 @@ Paul Licameli split from AutoRecovery.cpp
 #include "ActiveProjects.h"
 #include "FileNames.h"
 #include "ProjectManager.h"
+#include "ProjectFileIO.h"
 #include "ShuttleGui.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/wxPanelWrapper.h"
@@ -35,7 +36,7 @@ enum {
 class AutoRecoveryDialog final : public wxDialogWrapper
 {
 public:
-   AutoRecoveryDialog();
+   AutoRecoveryDialog(AudacityProject *proj);
 
    bool HasRecoverables() const;
    FilePaths GetRecoverables();
@@ -50,6 +51,7 @@ private:
 
    FilePaths mFiles;
    wxListCtrl *mFileList;
+   AudacityProject *mProject;
 
 public:
    DECLARE_EVENT_TABLE()
@@ -61,10 +63,11 @@ BEGIN_EVENT_TABLE(AutoRecoveryDialog, wxDialogWrapper)
    EVT_BUTTON(ID_RECOVER_SELECTED, AutoRecoveryDialog::OnRecoverSelected)
 END_EVENT_TABLE()
 
-AutoRecoveryDialog::AutoRecoveryDialog()
+AutoRecoveryDialog::AutoRecoveryDialog(AudacityProject *project)
 :  wxDialogWrapper(nullptr, wxID_ANY, XO("Automatic Crash Recovery"),
                    wxDefaultPosition, wxDefaultSize,
-                   wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)) // no close box
+                   wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)), // no close box
+   mProject(project)
 {
    SetName();
    ShuttleGui S(this, eIsCreating);
@@ -138,6 +141,13 @@ void AutoRecoveryDialog::PopulateList()
    wxString pattern = wxT("*.") + FileNames::UnsavedProjectExtension();
    FilePaths files;
 
+   FilePath activeFile;
+   if (mProject)
+   {
+      auto &projectFileIO = ProjectFileIO::Get(*mProject);
+      activeFile = projectFileIO.GetFileName();
+   }
+
 //   wxDir::GetAllFiles(tempdir, &files, pattern, wxDIR_FILES);
 
    FilePaths active = ActiveProjects::GetAll();
@@ -148,12 +158,15 @@ void AutoRecoveryDialog::PopulateList()
    for (auto file : active)
    {
       wxFileName fn = file;
-      if (fn.FileExists())
+      if (fn != activeFile)
       {
-         FilePath fullPath = fn.GetFullPath();
-         if (files.Index(fullPath) == wxNOT_FOUND)
+         if (fn.FileExists())
          {
-            files.push_back(fullPath);
+            FilePath fullPath = fn.GetFullPath();
+            if (files.Index(fullPath) == wxNOT_FOUND)
+            {
+               files.push_back(fullPath);
+            }
          }
       }
    }
@@ -333,7 +346,7 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject **pproj, bool *didRecoverAny
    // This must be done before "dlg" is declared.
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
-   AutoRecoveryDialog dialog;
+   AutoRecoveryDialog dialog(*pproj);
 
    if (dialog.HasRecoverables())
    {

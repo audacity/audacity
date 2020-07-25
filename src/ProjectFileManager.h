@@ -50,8 +50,10 @@ public:
    };
    ReadProjectResults ReadProjectFile( const FilePath &fileName );
 
-   void VacuumProject();
+   bool OpenProject();
    void CloseProject();
+
+   void VacuumProject();
 
    bool Save();
    bool SaveAs();

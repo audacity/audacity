@@ -535,9 +535,9 @@ AudacityProject *ProjectManager::New()
    auto &window = ProjectWindow::Get( *p );
    InitProjectWindow( window );
 
-   auto &projectFileIO = ProjectFileIO::Get( *p );
-   projectFileIO.SetProjectTitle();
-   
+   auto &projectFileManager = ProjectFileManager::Get( *p );
+   projectFileManager.OpenProject();
+
    MenuManager::Get( project ).CreateMenusAndCommands( project );
    
    projectHistory.InitialState();

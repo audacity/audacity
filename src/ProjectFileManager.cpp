@@ -704,6 +704,14 @@ void ProjectFileManager::VacuumProject()
    }
 }
 
+bool ProjectFileManager::OpenProject()
+{
+   auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get(project);
+
+   return projectFileIO.OpenProject();
+}
+
 void ProjectFileManager::CloseProject()
 {
    auto &project = mProject;

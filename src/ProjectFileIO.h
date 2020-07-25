@@ -78,11 +78,13 @@ public:
    bool AutoSave(bool recording = false);
    bool AutoSaveDelete(sqlite3 *db = nullptr);
 
+   bool OpenProject();
+   bool CloseProject();
+
    bool ImportProject(const FilePath &fileName);
    bool LoadProject(const FilePath &fileName);
    bool SaveProject(const FilePath &fileName);
    bool SaveCopy(const FilePath& fileName);
-   bool CloseProject();
 
    wxLongLong GetFreeDiskSpace();
 
