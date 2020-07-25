@@ -706,6 +706,35 @@ else()
     endmacro()
 
     #
+    # Find flavours
+    #
+    macro(WX_CONFIG_SELECT_QUERY_FLAVOUR)
+      execute_process(
+        COMMAND sh "${wxWidgets_CONFIG_EXECUTABLE}"
+          ${wxWidgets_CONFIG_OPTIONS} --flavour=debug
+        RESULT_VARIABLE _wx_result_debug
+        OUTPUT_QUIET
+        ERROR_QUIET
+        )
+
+      if(_wx_result_debug EQUAL 0)
+         set(wxWidgets_HAS_DEBUG ON CACHE BOOL "")
+      endif()
+
+      execute_process(
+        COMMAND sh "${wxWidgets_CONFIG_EXECUTABLE}"
+          ${wxWidgets_CONFIG_OPTIONS} --flavour=release
+        RESULT_VARIABLE _wx_result_release
+        OUTPUT_QUIET
+        ERROR_QUIET
+        )
+
+      if(_wx_result_release EQUAL 0)
+         set(wxWidgets_HAS_RELEASE ON CACHE BOOL "")
+      endif()
+    endmacro()
+
+    #
     # Query a boolean configuration option to determine if the system
     # has both builds available. If so, provide the selection option
     # to the user.
@@ -747,7 +776,7 @@ else()
     #
     macro(WX_CONFIG_SELECT_SET_OPTIONS)
       set(wxWidgets_SELECT_OPTIONS ${wxWidgets_CONFIG_OPTIONS})
-      foreach(_opt_name debug static unicode universal)
+      foreach(_opt_name static unicode universal)
         string(TOUPPER ${_opt_name} _upper_opt_name)
         if(DEFINED wxWidgets_USE_${_upper_opt_name})
           if(wxWidgets_USE_${_upper_opt_name})
@@ -759,65 +788,42 @@ else()
       endforeach()
     endmacro()
 
-    #-----------------------------------------------------------------
-    # UNIX: Start actual work.
-    #-----------------------------------------------------------------
-    # Support cross-compiling, only search in the target platform.
-    find_program(wxWidgets_CONFIG_EXECUTABLE
-      NAMES $ENV{WX_CONFIG} wx-config wx-config-3.1 wx-config-3.0 wx-config-2.9 wx-config-2.8
-      DOC "Location of wxWidgets library configuration provider binary (wx-config)."
-      ONLY_CMAKE_FIND_ROOT_PATH
-      )
-
-    if(wxWidgets_CONFIG_EXECUTABLE)
-      set(wxWidgets_FOUND TRUE)
-
-      # get defaults based on "wx-config --selected-config"
-      WX_CONFIG_SELECT_GET_DEFAULT()
-
-      # for each option: if both builds are available, provide option
-      WX_CONFIG_SELECT_QUERY_BOOL(debug "Use debug build?")
-      WX_CONFIG_SELECT_QUERY_BOOL(unicode "Use unicode build?")
-      WX_CONFIG_SELECT_QUERY_BOOL(universal "Use universal build?")
-      WX_CONFIG_SELECT_QUERY_BOOL(static "Link libraries statically?")
-
-      # process selection to set wxWidgets_SELECT_OPTIONS
-      WX_CONFIG_SELECT_SET_OPTIONS()
-      DBG_MSG("wxWidgets_SELECT_OPTIONS=${wxWidgets_SELECT_OPTIONS}")
-
+    macro(WX_CONFIG_GET_CONFIG _FLAVOUR _KIND)
       # run the wx-config program to get cxxflags
       execute_process(
         COMMAND sh "${wxWidgets_CONFIG_EXECUTABLE}"
-          ${wxWidgets_SELECT_OPTIONS} --cxxflags
-        OUTPUT_VARIABLE wxWidgets_CXX_FLAGS
+          ${wxWidgets_SELECT_OPTIONS} ${_FLAVOUR} --cxxflags
+        OUTPUT_VARIABLE _wx_result_cxxflags
         RESULT_VARIABLE RET
         ERROR_QUIET
         )
       if(RET EQUAL 0)
-        string(STRIP "${wxWidgets_CXX_FLAGS}" wxWidgets_CXX_FLAGS)
-        separate_arguments(wxWidgets_CXX_FLAGS_LIST NATIVE_COMMAND "${wxWidgets_CXX_FLAGS}")
+        string(STRIP "${_wx_result_cxxflags}" _wx_result_cxxflags)
+        separate_arguments(wxWidgets_CXX_FLAGS_LIST NATIVE_COMMAND "${_wx_result_cxxflags}")
 
         DBG_MSG_V("wxWidgets_CXX_FLAGS=${wxWidgets_CXX_FLAGS}")
 
+        string(TOUPPER ${_KIND} _SFX)
+
         # parse definitions and include dirs from cxxflags
         #   drop the -D and -I prefixes
-        set(wxWidgets_CXX_FLAGS)
         foreach(arg IN LISTS wxWidgets_CXX_FLAGS_LIST)
           if("${arg}" MATCHES "^-I(.*)$")
             # include directory
             list(APPEND wxWidgets_INCLUDE_DIRS "${CMAKE_MATCH_1}")
           elseif("${arg}" MATCHES "^-D(.*)$")
             # compile definition
-            list(APPEND wxWidgets_DEFINITIONS "${CMAKE_MATCH_1}")
+            list(APPEND wxWidgets_DEFINITIONS_${_SFX} "${CMAKE_MATCH_1}")
           else()
-            list(APPEND wxWidgets_CXX_FLAGS "${arg}")
+            list(APPEND wxWidgets_CXX_FLAGS_${_SFX} "${arg}")
           endif()
         endforeach()
 
-        DBG_MSG_V("wxWidgets_DEFINITIONS=${wxWidgets_DEFINITIONS}")
-        DBG_MSG_V("wxWidgets_INCLUDE_DIRS=${wxWidgets_INCLUDE_DIRS}")
-        DBG_MSG_V("wxWidgets_CXX_FLAGS=${wxWidgets_CXX_FLAGS}")
+        DBG_MSG_V("wxWidgets_DEFINITIONS=${wxWidgets_DEFINITIONS_${_SFX}}")
+        DBG_MSG_V("wxWidgets_INCLUDE_DIRS=${wxWidgets_INCLUDE_DIRS_${_SFX}}")
+        DBG_MSG_V("wxWidgets_CXX_FLAGS=${wxWidgets_CXX_FLAGS_${_SFX}}")
 
+        set(wxWidgets_FOUND TRUE)
       else()
         set(wxWidgets_FOUND FALSE)
         DBG_MSG_V(
@@ -845,29 +851,37 @@ else()
       string(REPLACE ";" "," _cmp_req "${_cmp_req}")
       execute_process(
         COMMAND sh "${wxWidgets_CONFIG_EXECUTABLE}"
-          ${wxWidgets_SELECT_OPTIONS} --libs ${_cmp_req} ${_cmp_opt}
-        OUTPUT_VARIABLE wxWidgets_LIBRARIES
+          ${wxWidgets_SELECT_OPTIONS} ${_FLAVOUR} --libs ${_cmp_req} ${_cmp_opt}
+        OUTPUT_VARIABLE _wx_result_libraries
         RESULT_VARIABLE RET
         ERROR_QUIET
         )
       if(RET EQUAL 0)
-        string(STRIP "${wxWidgets_LIBRARIES}" wxWidgets_LIBRARIES)
-        separate_arguments(wxWidgets_LIBRARIES)
+        string(STRIP "${_wx_result_libraries}" _wx_result_libraries)
+        separate_arguments(_wx_result_libraries)
         string(REPLACE "-framework;" "-framework "
-          wxWidgets_LIBRARIES "${wxWidgets_LIBRARIES}")
+          _wx_result_libraries "${_wx_result_libraries}")
         string(REPLACE "-weak_framework;" "-weak_framework "
-          wxWidgets_LIBRARIES "${wxWidgets_LIBRARIES}")
+          _wx_result_libraries "${_wx_result_libraries}")
         string(REPLACE "-arch;" "-arch "
-          wxWidgets_LIBRARIES "${wxWidgets_LIBRARIES}")
+          _wx_result_libraries "${_wx_result_libraries}")
         string(REPLACE "-isysroot;" "-isysroot "
-          wxWidgets_LIBRARIES "${wxWidgets_LIBRARIES}")
+          _wx_result_libraries "${_wx_result_libraries}")
 
         # extract linkdirs (-L) for rpath (i.e., LINK_DIRECTORIES)
         string(REGEX MATCHALL "-L[^;]+"
-          wxWidgets_LIBRARY_DIRS "${wxWidgets_LIBRARIES}")
+          _wx_result_library_dirs "${_wx_result_libraries}")
         string(REGEX REPLACE "-L([^;]+)" "\\1"
-          wxWidgets_LIBRARY_DIRS "${wxWidgets_LIBRARY_DIRS}")
+          wxWidgets_LIBRARY_DIRS "${_wx_result_library_dirs}")
 
+        foreach(_arg IN LISTS _wx_result_libraries)
+          if(_arg)
+             list(APPEND wxWidgets_LIBRARIES ${_KIND} ${_arg})
+          endif()
+        endforeach()
+
+        message("wxWidgets_LIBRARIES=${wxWidgets_LIBRARIES}")
+        message("wxWidgets_LIBRARY_DIRS=${wxWidgets_LIBRARY_DIRS}")
         DBG_MSG_V("wxWidgets_LIBRARIES=${wxWidgets_LIBRARIES}")
         DBG_MSG_V("wxWidgets_LIBRARY_DIRS=${wxWidgets_LIBRARY_DIRS}")
 
@@ -877,7 +891,51 @@ else()
       endif()
       unset(_cmp_req)
       unset(_cmp_opt)
+    endmacro()
+
+    #-----------------------------------------------------------------
+    # UNIX: Start actual work.
+    #-----------------------------------------------------------------
+    # Support cross-compiling, only search in the target platform.
+    find_program(wxWidgets_CONFIG_EXECUTABLE
+      NAMES $ENV{WX_CONFIG} wx-config wx-config-3.1 wx-config-3.0 wx-config-2.9 wx-config-2.8
+      DOC "Location of wxWidgets library configuration provider binary (wx-config)."
+      ONLY_CMAKE_FIND_ROOT_PATH
+      )
+
+    if(wxWidgets_CONFIG_EXECUTABLE)
+      set(wxWidgets_FOUND TRUE)
+
+      # get defaults based on "wx-config --selected-config"
+      WX_CONFIG_SELECT_GET_DEFAULT()
+
+      # for each option: if both builds are available, provide option
+      WX_CONFIG_SELECT_QUERY_BOOL(unicode "Use unicode build?")
+      WX_CONFIG_SELECT_QUERY_BOOL(universal "Use universal build?")
+      WX_CONFIG_SELECT_QUERY_BOOL(static "Link libraries statically?")
+
+      # process selection to set wxWidgets_SELECT_OPTIONS
+      WX_CONFIG_SELECT_SET_OPTIONS()
+      DBG_MSG("wxWidgets_SELECT_OPTIONS=${wxWidgets_SELECT_OPTIONS}")
+
+      # find available flavours
+      WX_CONFIG_SELECT_QUERY_FLAVOUR()
+      if(wxWidgets_HAS_DEBUG)
+        WX_CONFIG_GET_CONFIG("--flavour=debug" debug)
+      endif()
+
+      if(wxWidgets_HAS_RELEASE)
+        WX_CONFIG_GET_CONFIG("--flavour=release" optimized)
+      endif()
+
+      if(NOT wxWidgets_HAS_DEBUG AND NOT wxWidgets_HAS_RELEASE)
+        WX_CONFIG_GET_CONFIG("" general)
+      endif()
     endif()
+
+    message("wxWidgets_DEFINITIONS=${wxWidgets_DEFINITIONS}")
+    message("wxWidgets_INCLUDE_DIRS=${wxWidgets_INCLUDE_DIRS}")
+    message("wxWidgets_CXX_FLAGS=${wxWidgets_CXX_FLAGS}")
 
     # When using wx-config in MSYS, the include paths are UNIX style paths which may or may
     # not work correctly depending on you MSYS/MinGW configuration.  CMake expects native

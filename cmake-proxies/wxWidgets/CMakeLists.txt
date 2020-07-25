@@ -40,9 +40,12 @@ if( wxWidgets_FOUND )
 
    set( DEFINES
       INTERFACE
-         ${wxWidgets_DEFINITIONS}
+         ${wxWidgets_DEFINITIONS_GENERAL}
          $<$<CONFIG:Debug>:
             ${wxWidgets_DEFINITIONS_DEBUG}
+         >
+         $<$<NOT:$<CONFIG:Debug>>:
+            ${wxWidgets_DEFINITIONS_OPTIMIZED}
          >
    )
 
