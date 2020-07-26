@@ -748,8 +748,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
       // Delete all the tracks to free up memory
       tracks.Clear();
-
-      trans.Commit();
    }
 
    // We're all done with the project file, so close it now

@@ -2162,7 +2162,7 @@ AutoCommitTransaction::~AutoCommitTransaction()
 {
    if (mInTrans)
    {
-      if (!mIO.TransactionRollback(mName))
+      if (!mIO.TransactionCommit(mName))
       {
          // Do not throw from a destructor!
          // This has to be a no-fail cleanup that does the best that it can.
@@ -2170,13 +2170,13 @@ AutoCommitTransaction::~AutoCommitTransaction()
    }
 }
 
-bool AutoCommitTransaction::Commit()
+bool AutoCommitTransaction::Rollback()
 {
    if ( !mInTrans )
       // Misuse of this class
       THROW_INCONSISTENCY_EXCEPTION;
 
-   mInTrans = !mIO.TransactionCommit(mName);
+   mInTrans = !mIO.TransactionRollback(mName);
 
    return mInTrans;
 }
