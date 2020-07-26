@@ -896,8 +896,12 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
          }
       }
 
-      // Write the project doc
-      if (!WriteDoc("project", doc, "outbound"))
+      // Write the doc.
+      //
+      // If we're compacting a temporary project (user initiated from the File
+      // menu), then write the doc to the "autosave" table since temporary
+      // projects do not have a "project" doc.
+      if (!WriteDoc(mTemporary ? "autosave" : "project", doc, "outbound"))
       {
          return nullptr;
       }
