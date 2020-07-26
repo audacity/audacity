@@ -648,7 +648,7 @@ BaseItemSharedPtr FileMenu()
                AudioIONotBusyFlag() )
          ),
 
-         Command( wxT("Compact"), XXO("Com&pact project"), FN(OnCompact),
+         Command( wxT("Compact"), XXO("Com&pact Project"), FN(OnCompact),
             AudioIONotBusyFlag() )
       ),
 
