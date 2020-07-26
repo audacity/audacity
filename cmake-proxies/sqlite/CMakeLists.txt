@@ -20,10 +20,9 @@ list( APPEND INCLUDES
 list( APPEND DEFINES
    PRIVATE
       #
-      # Connection based settings. Persistent settings are done in the
-      # schema.
+      # We need the dbstats table for space calculations.
       #
-#      SQLITE_DEFAULT_LOCKING_MODE=0
+      SQLITE_ENABLE_DBSTAT_VTAB=1
 
       # Can't be set after a WAL mode database is initialized, so change
       # the default here to ensure all project files get the same page 

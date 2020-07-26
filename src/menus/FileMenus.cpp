@@ -2,6 +2,7 @@
 #include "../Experimental.h"
 
 #include "../BatchCommands.h"
+#include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
@@ -142,19 +143,41 @@ void OnClose(const CommandContext &context )
    window.Close();
 }
 
-void OnCompact(const CommandContext &context )
+void OnCompact(const CommandContext &context)
 {
+   int id = AudacityMessageBox(
+      XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
+         "NOTE: If you proceed, the current Undo History and clipboard contents will be discarded.\n\n"
+         "Do you want to continue?"),
+      XO("Compact Project"),
+      wxYES_NO);
+
+   if (id == wxNO)
+   {
+      return;
+   }
+
    auto &project = context.project;
-   auto &settings = ProjectSettings::Get( project );
+   auto &undoManager = UndoManager::Get(project);
 
-   bool compact;
-   gPrefs->Read(wxT("/GUI/CompactAtClose"), &compact, true);
+   ProjectHistory::Get(project)
+      .PushState(XO("Compacted project file"), XO("Compact"), UndoPush::CONSOLIDATE);
 
-   compact = !compact;
-   gPrefs->Write(wxT("/GUI/CompactAtClose"), compact);
-   gPrefs->Flush();
+   auto numStates = undoManager.GetNumStates();
+   undoManager.RemoveStates(numStates - 1);
 
-   settings.SetCompactAtClose(compact);
+   auto &clipboard = Clipboard::Get();
+   clipboard.Clear();
+
+   auto currentTracks = TrackList::Create( nullptr );
+   auto &tracks = TrackList::Get( project );
+   for (auto t : tracks.Any())
+   {
+      currentTracks->Add(t->Duplicate());
+   }
+
+   auto &projectFileIO = ProjectFileIO::Get(project);
+   projectFileIO.Vacuum(currentTracks, true);
 }
 
 void OnSave(const CommandContext &context )
@@ -612,11 +635,7 @@ BaseItemSharedPtr FileMenu()
    /////////////////////////////////////////////////////////////////////////////
 
          Command( wxT("Close"), XXO("&Close"), FN(OnClose),
-            AudioIONotBusyFlag(), wxT("Ctrl+W") ),
-
-         Command( wxT("Compact"), XXO("Com&pact at close (on/off)"),
-            FN(OnCompact), AlwaysEnabledFlag,
-            Options{}.CheckTest( wxT("/GUI/CompactAtClose"), true ) )
+            AudioIONotBusyFlag(), wxT("Ctrl+W") )
       ),
 
       Section( "Save",
@@ -627,7 +646,10 @@ BaseItemSharedPtr FileMenu()
                AudioIONotBusyFlag() ),
             Command( wxT("SaveCopy"), XXO("&Backup Project..."), FN(OnSaveCopy),
                AudioIONotBusyFlag() )
-         )
+         ),
+
+         Command( wxT("Compact"), XXO("Com&pact project"), FN(OnCompact),
+            AudioIONotBusyFlag() )
       ),
 
       Section( "Import-Export",

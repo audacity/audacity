@@ -64,8 +64,8 @@ public:
    // on what is discovered while opening the file, such as whether it is a
    // recovery file
    void SetProjectTitle(int number = -1);
-   // Should be empty or a fully qualified file name
 
+   // Should be empty or a fully qualified file name
    const FilePath &GetFileName() const;
    void SetFileName( const FilePath &fileName );
 
@@ -106,7 +106,7 @@ public:
    void SetBypass();
 
    // Remove all unused space within a project file
-   void Vacuum(const std::shared_ptr<TrackList> &tracks);
+   void Vacuum(const std::shared_ptr<TrackList> &tracks, bool force = false);
 
    // The last vacuum check did actually vacuum the project file if true
    bool WasVacuumed();

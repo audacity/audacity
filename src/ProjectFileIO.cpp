@@ -354,8 +354,20 @@ void ProjectFileIO::DiscardConnection()
       {
          // Store an error message
          SetDBError(
-            XO("Failed to successfully close the source project file")
+            XO("Failed to discard connection")
          );
+      }
+
+      // If this is a temporary project, we no longer want to keep the
+      // project file.
+      if (mPrevTemporary)
+      {
+         // This is just a safety check.
+         wxFileName temp(FileNames::TempDir());
+         if (temp == wxPathOnly(mPrevFileName))
+         {
+            wxRemoveFile(mPrevFileName);
+         }
       }
       mPrevConn = nullptr;
       mPrevFileName.clear();
@@ -372,7 +384,7 @@ void ProjectFileIO::RestoreConnection()
       {
          // Store an error message
          SetDBError(
-            XO("Failed to successfully close the destination project file")
+            XO("Failed to restore connection")
          );
       }
    }
@@ -938,21 +950,14 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
    unsigned long long blockcount = 0;
    unsigned long long total = 0;
 
-   auto cb =
-   [&blockcount, &total](int cols, char **vals, char **){
-      if ( cols != 2 )
-         // Should have two exactly!
-         return 1;
-      if ( total > 0 ) {
-         // Should not have multiple rows!
-         total = 0;
-         return 1;
-      }
+   auto cb = [&blockcount, &total](int cols, char **vals, char **)
+   {
       // Convert
-      wxString{ vals[0] }.ToULongLong( &blockcount );
-      wxString{ vals[1] }.ToULongLong( &total );
+      wxString(vals[0]).ToULongLong(&blockcount);
+      wxString(vals[1]).ToULongLong(&total);
       return 0;
    };
+
    if (!Query("SELECT Count(*), "
      "Sum(Length(summary256)) + Sum(Length(summary64k)) + Sum(Length(samples)) "
      "FROM sampleblocks;", cb)
@@ -985,7 +990,7 @@ Connection &ProjectFileIO::CurrConn()
    return connectionPtr.mpConnection;
 }
 
-void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
+void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks, bool force /* = false */)
 {
    // Haven't vacuumed yet
    mWasVacuumed = false;
@@ -996,18 +1001,21 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks)
 
    // Don't vacuum if this is a temporary project or if it's determined there are not
    // enough unused blocks to make it worthwhile
-   if (IsTemporary() || !ShouldVacuum(tracks))
+   if (!force)
    {
-      // Delete the AutoSave doc it if exists
-      if (IsModified())
+      if (IsTemporary() || !ShouldVacuum(tracks))
       {
-         // PRL:  not clear what to do if the following fails, but the worst should
-         // be, the project may reopen in its present state as a recovery file, not
-         // at the last saved state.
-         (void) AutoSaveDelete();
-      }
+         // Delete the AutoSave doc it if exists
+         if (IsModified())
+         {
+            // PRL:  not clear what to do if the following fails, but the worst should
+            // be, the project may reopen in its present state as a recovery file, not
+            // at the last saved state.
+            (void) AutoSaveDelete();
+         }
 
-      return;
+         return;
+      }
    }
 
    // Create the project doc
@@ -1932,12 +1940,6 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
             // The Save was successful, so now it is safe to abandon the
             // original connection
             DiscardConnection();
-         
-            // And also remove the original file if it was a temporary file
-            if (wasTemp)
-            {
-               wxRemoveFile(origName);
-            }
          }
          else
          {
