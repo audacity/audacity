@@ -547,7 +547,6 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
       else
       {
          filename = projectFileIO.GetFileName();
-         filename.SetFullName(wxT(""));
       }
    }
 

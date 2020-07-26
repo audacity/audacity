@@ -316,8 +316,6 @@ static bool RecoverAllProjects(const FilePaths &files,
       {
          return false;
       }
-
-      ActiveProjects::Remove(files[i]);
    }
 
    return true;
