@@ -797,7 +797,10 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 #endif
 
    // Location of settings
-   AddBuildinfoRow(&informationStr, XO("Settings folder:"), \
+   AddBuildinfoRow(&informationStr, XO("Config folder:"), \
+      FileNames::ConfigDir());
+   // Location of data
+   AddBuildinfoRow(&informationStr, XO("Data folder:"), \
       FileNames::DataDir());
    // end of table
    informationStr << wxT("</table>\n");
