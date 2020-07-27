@@ -16,6 +16,7 @@
 #include <wx/dir.h> // for wxDIR_FILES
 #include <wx/string.h> // function return value
 #include "audacity/Types.h"
+#include "Prefs.h"
 #include "MemoryX.h"
 
 class wxFileName;
