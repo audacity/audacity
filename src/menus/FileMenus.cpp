@@ -177,7 +177,19 @@ void OnCompact(const CommandContext &context)
    }
 
    auto &projectFileIO = ProjectFileIO::Get(project);
+
+   auto before = wxFileName(projectFileIO.GetFileName()).GetSize() +
+                 wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
+
    projectFileIO.Vacuum(currentTracks, true);
+
+   auto after = wxFileName(projectFileIO.GetFileName()).GetSize() +
+                wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
+
+   double space = (before - after).GetValue();
+   AudacityMessageBox(
+      XO("Compacting freed %s of disk space.").Format(Internat::FormatSize(space)),
+      XO("Compact Project"));
 }
 
 void OnSave(const CommandContext &context )
