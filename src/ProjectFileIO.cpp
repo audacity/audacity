@@ -363,8 +363,10 @@ void ProjectFileIO::DiscardConnection()
       if (mPrevTemporary)
       {
          // This is just a safety check.
-         wxFileName temp(FileNames::TempDir());
-         if (temp == wxPathOnly(mPrevFileName))
+         wxFileName temp(FileNames::TempDir(), wxT(""));
+         wxFileName file(mPrevFileName);
+         file.SetFullName(wxT(""));
+         if (file == temp)
          {
             wxRemoveFile(mPrevFileName);
          }
