@@ -2036,8 +2036,10 @@ bool ProjectFileIO::CloseProject()
       if (mTemporary)
       {
          // This is just a safety check.
-         wxFileName temp(FileNames::TempDir());
-         if (temp == wxPathOnly(filename))
+         wxFileName temp(FileNames::TempDir(), wxT(""));
+         wxFileName file(filename);
+         file.SetFullName(wxT(""));
+         if (file == temp)
          {
             wxRemoveFile(filename);
          }
