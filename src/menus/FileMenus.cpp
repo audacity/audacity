@@ -145,10 +145,20 @@ void OnClose(const CommandContext &context )
 
 void OnCompact(const CommandContext &context)
 {
+   auto &project = context.project;
+   auto &undoManager = UndoManager::Get(project);
+   auto &projectFileIO = ProjectFileIO::Get(project);
+
+   auto before = wxFileName(projectFileIO.GetFileName()).GetSize() +
+                 wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
+
    int id = AudacityMessageBox(
       XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
+         "There is %s of free disk space and this project is currently using %s.\n\n"
          "NOTE: If you proceed, the current Undo History and clipboard contents will be discarded.\n\n"
-         "Do you want to continue?"),
+         "Do you want to continue?")
+      .Format(Internat::FormatSize(projectFileIO.GetFreeDiskSpace()),
+              Internat::FormatSize(before.GetValue())),
       XO("Compact Project"),
       wxYES_NO);
 
@@ -156,9 +166,6 @@ void OnCompact(const CommandContext &context)
    {
       return;
    }
-
-   auto &project = context.project;
-   auto &undoManager = UndoManager::Get(project);
 
    ProjectHistory::Get(project)
       .PushState(XO("Compacted project file"), XO("Compact"), UndoPush::CONSOLIDATE);
@@ -176,19 +183,14 @@ void OnCompact(const CommandContext &context)
       currentTracks->Add(t->Duplicate());
    }
 
-   auto &projectFileIO = ProjectFileIO::Get(project);
-
-   auto before = wxFileName(projectFileIO.GetFileName()).GetSize() +
-                 wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
-
    projectFileIO.Vacuum(currentTracks, true);
 
    auto after = wxFileName(projectFileIO.GetFileName()).GetSize() +
                 wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
 
-   double space = (before - after).GetValue();
    AudacityMessageBox(
-      XO("Compacting freed %s of disk space.").Format(Internat::FormatSize(space)),
+      XO("Compacting freed %s of disk space.")
+      .Format(Internat::FormatSize((before - after).GetValue())),
       XO("Compact Project"));
 }
 
