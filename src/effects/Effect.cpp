@@ -679,28 +679,24 @@ void Effect::ExportPresets()
    wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
    params =  commandId + ":" + params;
 
-   auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
-
-   FileDialogWrapper dlog(nullptr,
-                     XO("Export Effect Parameters"),
-                     path.GetFullPath(),
-                     wxEmptyString,
-                     PresetTypes(),
-                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
- 
-   if (dlog.ShowModal() != wxID_OK) {
+   auto path = FileNames::SelectFile(FileNames::Operation::Presets,
+                                     XO("Export Effect Parameters"),
+                                     wxEmptyString,
+                                     wxEmptyString,
+                                     wxEmptyString,
+                                     PresetTypes(),
+                                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+                                     nullptr);
+   if (path.empty()) {
       return;
    }
 
-   path = dlog.GetPath();
-   gPrefs->Write(wxT("Presets/Path"), path.GetPath());
-
    // Create/Open the file
-   wxFFile f(path.GetFullPath(), wxT("wb"));
+   wxFFile f(path, wxT("wb"));
    if (!f.IsOpened())
    {
       AudacityMessageBox(
-         XO("Could not open file: \"%s\"").Format( path.GetFullPath() ),
+         XO("Could not open file: \"%s\"").Format( path ),
          XO("Error Saving Effect Presets"),
          wxICON_EXCLAMATION,
          NULL);
@@ -711,7 +707,7 @@ void Effect::ExportPresets()
    if (f.Error())
    {
       AudacityMessageBox(
-         XO("Error writing to file: \"%s\"").Format( path.GetFullPath() ),
+         XO("Error writing to file: \"%s\"").Format( path ),
          XO("Error Saving Effect Presets"),
          wxICON_EXCLAMATION,
          NULL);
@@ -728,26 +724,19 @@ void Effect::ImportPresets()
 {
    wxString params;
 
-   auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
-
-   FileDialogWrapper dlog(nullptr,
-                     XO("Import Effect Parameters"),
-                     path.GetPath(),
-                     wxEmptyString,
-                     PresetTypes(),
-                     wxFD_OPEN | wxRESIZE_BORDER);
- 
-   if (dlog.ShowModal() != wxID_OK) {
+   auto path = FileNames::SelectFile(FileNames::Operation::Presets,
+                                     XO("Import Effect Parameters"),
+                                     wxEmptyString,
+                                     wxEmptyString,
+                                     wxEmptyString,
+                                     PresetTypes(),
+                                     wxFD_OPEN | wxRESIZE_BORDER,
+                                     nullptr);
+   if (path.empty()) {
       return;
    }
 
-   path = dlog.GetPath();
-   if( !path.IsOk())
-      return;
-
-   gPrefs->Write(wxT("Presets/Path"), path.GetPath());
-
-   wxFFile f(path.GetFullPath());
+   wxFFile f(path);
    if (f.IsOpened()) {
       if (f.ReadAll(&params)) {
          wxString ident = params.BeforeFirst(':');
@@ -763,14 +752,14 @@ void Effect::ImportPresets()
                Effect::MessageBox(
                   /* i18n-hint %s will be replaced by a file name */
                   XO("%s: is not a valid presets file.\n")
-                  .Format(path.GetFullName()));
+                  .Format(wxFileNameFromPath(path)));
             }
             else
             {
                Effect::MessageBox(
                   /* i18n-hint %s will be replaced by a file name */
                   XO("%s: is for a different Effect, Generator or Analyzer.\n")
-                  .Format(path.GetFullName()));
+                  .Format(wxFileNameFromPath(path)));
             }
             return;
          }

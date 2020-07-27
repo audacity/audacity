@@ -840,7 +840,7 @@ void ProjectManager::OnOpenAudioFile(wxCommandEvent & event)
 void ProjectManager::OpenFiles(AudacityProject *proj)
 {
    auto selectedFiles =
-      ProjectFileManager::ShowOpenDialog();
+      ProjectFileManager::ShowOpenDialog(FileNames::Operation::Open);
    if (selectedFiles.size() == 0) {
       Importer::SetLastOpenType({});
       return;
@@ -859,8 +859,6 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
       // Make sure it isn't already open.
       if (ProjectFileManager::IsAlreadyOpen(fileName))
          continue; // Skip ones that are already open.
-
-      FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
 
       // DMM: If the project is dirty, that means it's been touched at
       // all, and it's not safe to open a NEW project directly in its

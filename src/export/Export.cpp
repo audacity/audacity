@@ -631,7 +631,7 @@ bool Exporter::GetFilename()
    wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
 
    //Bug 1304: Set a default path if none was given.  For Export.
-   mFilename = FileNames::DefaultToDocumentsFolder(wxT("/Export/Path"));
+   mFilename.SetPath(FileNames::FindDefaultPath(FileNames::Operation::Export));
    mFilename.SetName(mProject->GetProjectName());
    if (mFilename.GetName().empty())
       mFilename.SetName(_("untitled"));
@@ -776,8 +776,8 @@ bool Exporter::CheckFilename()
 {
    if( mFormatName.empty() )
       gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
-   gPrefs->Write(wxT("/Export/Path"), mFilename.GetPath());
-   gPrefs->Flush();
+
+   FileNames::UpdateDefaultPath(FileNames::Operation::Export, mFilename.GetPath());
 
    //
    // To be even safer, return a temporary file name based

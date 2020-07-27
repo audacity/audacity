@@ -800,7 +800,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
       // verify that the file exists
       if (wxFile::Exists(fullPathStr))
       {
-         FileNames::UpdateDefaultPath(FileNames::Operation::Open, fullPathStr);
+         FileNames::UpdateDefaultPath(FileNames::Operation::Open, ::wxPathOnly(fullPathStr));
 
          // Make sure it isn't already open.
          // Test here even though AudacityProject::OpenFile() also now checks, because
@@ -1574,8 +1574,7 @@ void SetToExtantDirectory( wxString & result, const wxString & dir ){
 bool AudacityApp::InitTempDir()
 {
    // We need to find a temp directory location.
-
-   wxString tempFromPrefs = gPrefs->Read(wxT("/Directories/TempDir"), wxT(""));
+   auto tempFromPrefs = FileNames::TempDir();
    auto tempDefaultLoc = FileNames::DefaultTempDir();
 
    wxString temp;
@@ -1638,13 +1637,13 @@ bool AudacityApp::InitTempDir()
    chmod(OSFILENAME(temp), 0755);
    #endif
 
-   bool bSuccess = gPrefs->Write(wxT("/Directories/TempDir"), temp) && gPrefs->Flush();
+   FileNames::UpdateDefaultPath(FileNames::Operation::Temp, temp);
 
    // Make sure the temp dir isn't locked by another process.
    if (!CreateSingleInstanceChecker(temp))
       return false;
 
-   return bSuccess;
+   return true;
 }
 
 #if defined(__WXMSW__)

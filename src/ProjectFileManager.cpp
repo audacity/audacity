@@ -391,11 +391,11 @@ bool ProjectFileManager::SaveAs()
    auto &projectFileIO = ProjectFileIO::Get( project );
    auto &window = GetProjectFrame( project );
    TitleRestorer Restorer( window, project ); // RAII
-   bool bHasPath = true;
    wxFileName filename;
-   
+   FilePath defaultSavePath = FileNames::FindDefaultPath(FileNames::Operation::Save);
+
    if (projectFileIO.IsTemporary()) {
-      filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
+      filename.SetPath(defaultSavePath);
       filename.SetName(project.GetProjectName());
    }
    else {
@@ -404,8 +404,7 @@ bool ProjectFileManager::SaveAs()
 
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs/SaveCopy
    if( !FileNames::IsPathAvailable( filename.GetPath( wxPATH_GET_VOLUME| wxPATH_GET_SEPARATOR) ) ){
-      bHasPath = false;
-      filename.SetPath(FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path")).GetPath());
+      filename.SetPath(defaultSavePath);
    }
 
    TranslatableString title = XO("%sSave Project \"%s\" As...")
@@ -414,8 +413,7 @@ bool ProjectFileManager::SaveAs()
 'Save Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n");
 
-   if (ShowWarningDialog(&window, wxT("FirstProjectSave"), message, true) != wxID_OK)
-   {
+   if (ShowWarningDialog(&window, wxT("FirstProjectSave"), message, true) != wxID_OK) {
       return false;
    }
 
@@ -427,7 +425,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
       if (bPrompt) {
          // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
          // for overwrite ourselves later, and we disallow it.
-         fName = FileNames::SelectFile(FileNames::Operation::Export,
+         fName = FileNames::SelectFile(FileNames::Operation::Save,
             title,
             filename.GetPath(),
             filename.GetFullName(),
@@ -500,8 +498,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
                return false;
             }
          }
-         else
-         {
+         else {
             // Overwrite disallowed. The destination project is open in another window.
             AudacityMessageDialog m(
                nullptr,
@@ -520,11 +517,6 @@ For an audio file that will open in other apps, use 'Export'.\n");
    auto success = DoSave(fName, !bOwnsNewName);
    if (success) {
       FileHistory::Global().Append( projectFileIO.GetFileName() );
-      if( !bHasPath )
-      {
-         gPrefs->Write( wxT("/SaveAs/Path"), filename.GetPath());
-         gPrefs->Flush();
-      }
    }
 
    return(success);
@@ -537,12 +529,13 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
    auto &window = GetProjectFrame(project);
    TitleRestorer Restorer(window, project); // RAII
    wxFileName filename = fileName;
+   FilePath defaultSavePath = FileNames::FindDefaultPath(FileNames::Operation::Save);
 
    if (fileName.empty())
    {
       if (projectFileIO.IsTemporary())
       {
-         filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
+         filename.SetPath(defaultSavePath);
       }
       else
       {
@@ -553,7 +546,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs/SaveCopy
    if (!FileNames::IsPathAvailable(filename.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR)))
    {
-      filename.SetPath(FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path")).GetPath());
+      filename.SetPath(defaultSavePath);
    }
 
    TranslatableString title =
@@ -728,14 +721,14 @@ void ProjectFileManager::CloseProject()
 }
 
 // static method, can be called outside of a project
-wxArrayString ProjectFileManager::ShowOpenDialog(
+wxArrayString ProjectFileManager::ShowOpenDialog(FileNames::Operation op,
    const FileNames::FileType &extraType )
 {
    // Construct the filter
    const auto fileTypes = Importer::Get().GetFileTypes( extraType );
 
    // Retrieve saved path
-   auto path = FileNames::FindDefaultPath(FileNames::Operation::Open);
+   auto path = FileNames::FindDefaultPath(op);
 
    // Construct and display the file dialog
    wxArrayString selected;
@@ -761,7 +754,11 @@ wxArrayString ProjectFileManager::ShowOpenDialog(
    if (dialogResult == wxID_OK) {
       // Return the selected files
       dlog.GetPaths(selected);
+
+      // Remember the directory
+      FileNames::UpdateDefaultPath(op, ::wxPathOnly(dlog.GetPath()));
    }
+
    return selected;
 }
 

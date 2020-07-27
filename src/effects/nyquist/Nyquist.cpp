@@ -3211,8 +3211,8 @@ void NyquistEffect::resolveFilePath(wxString& path, FileExtension extension /* e
       {"*home*", wxGetHomeDir()},
       {"~", wxGetHomeDir()},
       {"*default*", FileNames::DefaultToDocumentsFolder("").GetPath()},
-      {"*export*", FileNames::DefaultToDocumentsFolder(wxT("/Export/Path")).GetPath()},
-      {"*save*", FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path")).GetPath()},
+      {"*export*", FileNames::FindDefaultPath(FileNames::Operation::Export)},
+      {"*save*", FileNames::FindDefaultPath(FileNames::Operation::Save)},
       {"*config*", FileNames::DataDir()}
    };
 

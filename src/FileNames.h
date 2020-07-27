@@ -133,27 +133,44 @@ namespace FileNames
    enum class Operation {
       // _ on None to defeat some macro that is expanding this.
       _None,
+
+      // These do not have a specific pathtype
+      Temp,
+      Presets,
+
+      // These have default/lastused pathtypes
       Open,
+      Save,
+      Import,
       Export
    };
 
-   wxString FindDefaultPath(Operation op);
+   enum class PathType {
+      // _ on None to defeat some macro that is expanding this.
+      _None,
+      User,
+      LastUsed
+   };
+
+   wxString PreferenceKey(FileNames::Operation op, FileNames::PathType type);
+
+   FilePath FindDefaultPath(Operation op);
    void UpdateDefaultPath(Operation op, const FilePath &path);
 
    // F is a function taking a wxString, returning wxString
    template<typename F>
-   wxString WithDefaultPath
+   FilePath WithDefaultPath
    (Operation op, const FilePath &defaultPath, F function)
    {
-      auto path = defaultPath;
+      auto path = gPrefs->Read(PreferenceKey(op, PathType::User), defaultPath);
       if (path.empty())
          path = FileNames::FindDefaultPath(op);
       auto result = function(path);
-      FileNames::UpdateDefaultPath(op, result);
+      FileNames::UpdateDefaultPath(op, ::wxPathOnly(result));
       return result;
    }
 
-   wxString
+   FilePath
    SelectFile(Operation op,   // op matters only when default_path is empty
       const TranslatableString& message,
       const FilePath& default_path,

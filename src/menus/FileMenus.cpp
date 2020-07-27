@@ -399,7 +399,7 @@ void OnImport(const CommandContext &context)
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
 
-   auto selectedFiles = ProjectFileManager::ShowOpenDialog();
+   auto selectedFiles = ProjectFileManager::ShowOpenDialog(FileNames::Operation::Import);
    if (selectedFiles.size() == 0) {
       Importer::SetLastOpenType({});
       return;
@@ -420,7 +420,7 @@ void OnImport(const CommandContext &context)
    for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
       wxString fileName = selectedFiles[ff];
 
-      FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
+      FileNames::UpdateDefaultPath(FileNames::Operation::Import, ::wxPathOnly(fileName));
 
       ProjectFileManager::Get( project ).Import(fileName);
    }

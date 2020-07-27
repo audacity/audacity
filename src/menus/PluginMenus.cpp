@@ -375,12 +375,10 @@ struct Handler : CommandHandlerObject {
 void OnResetConfig(const CommandContext &context)
 {
    auto &project = context.project;
-   //wxString dir = gPrefs->Read("/Directories/TempDir");
    gPrefs->DeleteAll();
 
    // Directory will be reset on next restart.
-   wxString dir = FileNames::DefaultTempDir();
-   gPrefs->Write("/Directories/TempDir", dir);
+   FileNames::UpdateDefaultPath(FileNames::Operation::Temp, FileNames::DefaultTempDir());
    gPrefs->Write("/GUI/SyncLockTracks", 0);
    gPrefs->Write("/SnapTo", 0 );
    ProjectSelectionManager::Get( project ).AS_SetSnapTo( 0 );

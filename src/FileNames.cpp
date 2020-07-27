@@ -202,7 +202,7 @@ wxString FileNames::MkDir(const wxString &Str)
 /// each time.
 wxString FileNames::TempDir()
 {
-   return FileNames::MkDir(gPrefs->Read(wxT("/Directories/TempDir"), wxT("")));
+   return FileNames::MkDir(gPrefs->Read(PreferenceKey(Operation::Temp, PathType::_None), wxT("")));
 }
 
 // originally an ExportMultipleDialog method. Append suffix if newName appears in otherNames.
@@ -509,44 +509,82 @@ wxFileNameWrapper FileNames::DefaultToDocumentsFolder(const wxString &preference
    return result;
 }
 
-namespace {
-   wxString PreferenceKey(FileNames::Operation op)
-   {
-      wxString key;
-      switch (op) {
-         case FileNames::Operation::Open:
-            key = wxT("/DefaultOpenPath"); break;
-         case FileNames::Operation::Export:
-            key = wxT("/DefaultExportPath"); break;
-         case FileNames::Operation::_None:
-         default:
-            break;
-      }
-      return key;
+wxString FileNames::PreferenceKey(FileNames::Operation op, FileNames::PathType type)
+{
+   wxString key;
+   switch (op) {
+      case FileNames::Operation::Temp:
+         key = wxT("/Directories/TempDir"); break;
+      case FileNames::Operation::Presets:
+         key = wxT("/Presets/Path"); break;
+      case FileNames::Operation::Open:
+         key = wxT("/Directories/Open"); break;
+      case FileNames::Operation::Save:
+         key = wxT("/Directories/Save"); break;
+      case FileNames::Operation::Import:
+         key = wxT("/Directories/Import"); break;
+      case FileNames::Operation::Export:
+         key = wxT("/Directories/Export"); break;
+      case FileNames::Operation::_None:
+      default:
+         break;
    }
+
+   switch (type) {
+      case FileNames::PathType::User:
+         key += "/Default"; break;
+      case FileNames::PathType::LastUsed:
+         key += "/LastUsed"; break;
+      case FileNames::PathType::_None:
+      default:
+         break;
+   }
+
+   return key;
 }
 
-wxString FileNames::FindDefaultPath(Operation op)
+FilePath FileNames::FindDefaultPath(Operation op)
 {
-   auto key = PreferenceKey(op);
+   auto key = PreferenceKey(op, PathType::User);
+
    if (key.empty())
       return wxString{};
-   else
-      return DefaultToDocumentsFolder(key).GetPath();
+
+   // If the user specified a default path, then use that
+   FilePath path = gPrefs->Read(key, wxT(""));
+   if (!path.empty()) {
+      return path;
+   }
+
+   // Maybe the last used path is available
+   key = PreferenceKey(op, PathType::LastUsed);
+   path = gPrefs->Read(key, wxT(""));
+   if (!path.empty()) {
+      return path;
+   }
+
+   // Last resort is to simply return the default folder
+   return DefaultToDocumentsFolder("").GetPath();
 }
 
 void FileNames::UpdateDefaultPath(Operation op, const FilePath &path)
 {
    if (path.empty())
       return;
-   auto key = PreferenceKey(op);
-   if (!key.empty())  {
-      gPrefs->Write(key, ::wxPathOnly(path));
+   wxString key;
+   if (op == Operation::Temp) {
+      key = PreferenceKey(op, PathType::_None);
+   }
+   else {
+      key = PreferenceKey(op, PathType::LastUsed);
+   }
+   if (!key.empty()) {
+      gPrefs->Write(key, path);
       gPrefs->Flush();
    }
 }
 
-wxString
+FilePath
 FileNames::SelectFile(Operation op,
    const TranslatableString& message,
    const FilePath& default_path,
