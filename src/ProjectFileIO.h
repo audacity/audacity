@@ -179,9 +179,10 @@ public:
 private:
    // Return a database connection if successful, which caller must close
    Connection CopyTo(const FilePath &destpath,
-                                      const TranslatableString &msg,
-                                      bool prune = false,
-                                      const std::shared_ptr<TrackList> &tracks = nullptr);
+                     const TranslatableString &msg,
+                     bool isTemporary,
+                     bool prune = false,
+                     const std::shared_ptr<TrackList> &tracks = nullptr);
 
    void SetError(const TranslatableString & msg);
    void SetDBError(const TranslatableString & msg);

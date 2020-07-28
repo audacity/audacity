@@ -724,6 +724,7 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
 
 Connection ProjectFileIO::CopyTo(const FilePath &destpath,
                                  const TranslatableString &msg,
+                                 bool isTemporary,
                                  bool prune /* = false */,
                                  const std::shared_ptr<TrackList> &tracks /* = nullptr */)
 {
@@ -903,7 +904,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
       // If we're compacting a temporary project (user initiated from the File
       // menu), then write the doc to the "autosave" table since temporary
       // projects do not have a "project" doc.
-      if (!WriteDoc(mTemporary ? "autosave" : "project", doc, "outbound"))
+      if (!WriteDoc(isTemporary ? "autosave" : "project", doc, "outbound"))
       {
          return nullptr;
       }
@@ -1067,7 +1068,11 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks, bool force 
    UseConnection(std::move(tempConn), tempName);
 
    // Copy the original database to a new database while pruning unused sample blocks
-   Connection newConn = CopyTo(origName, XO("Compacting project"), true, tracks);
+   Connection newConn = CopyTo(origName,
+                               XO("Compacting project"),
+                               mTemporary,
+                               true,
+                               tracks);
 
    // Close connection referencing the original database via it's temporary name
    CloseConnection();
@@ -1910,59 +1915,30 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
 
 bool ProjectFileIO::SaveProject(const FilePath &fileName)
 {
-   wxString origName;
-   bool wasTemp = false;
-   bool success = false;
-   Connection newConn = nullptr;
-
    // If we're saving to a different file than the current one, then copy the
    // current to the new file and make it the active file.
    if (mFileName != fileName)
    {
       // Do NOT prune here since we need to retain the Undo history
       // after we switch to the new file.
-      newConn = CopyTo(fileName, XO("Saving project"));
+      Connection newConn = CopyTo(fileName, XO("Saving project"), false);
       if (!newConn)
       {
          return false;
       }
 
-      // Remember the original project filename and temporary status.
-      origName = mFileName;
-      wasTemp = mTemporary;
+      // Autosave no longer needed in original project file
+      AutoSaveDelete();
 
       // Save the original database connection and try to switch to a new one
-      // (also ensuring closing of one of the connections, with the cooperation
-      // of the finally below)
       SaveConnection();
-   }
 
-   auto restore = finally([&]
-   {
-      if (!origName.empty())
-      {
-         if (success)
-         {
-            // The Save was successful, so now it is safe to abandon the
-            // original connection
-            DiscardConnection();
-         }
-         else
-         {
-            // Close the new database and go back to using the original
-            // connection
-            RestoreConnection();
-
-            // And delete the new database
-            wxRemoveFile(fileName);
-         }
-      }
-   });
-
-   if (!origName.empty())
-   {
       // And make it the active project file 
       UseConnection(std::move(newConn), fileName);
+
+      // The Save was successful, so now it is safe to abandon the
+      // original connection
+      DiscardConnection();
    }
    else
    {
@@ -1994,15 +1970,12 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
    // Adjust the title
    SetProjectTitle();
 
-   // Tell the finally block to behave
-   success = true;
-
    return true;
 }
 
 bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 {
-   Connection db = CopyTo(fileName, XO("Backing up project"), true);
+   Connection db = CopyTo(fileName, XO("Backing up project"), false, true);
    if (!db)
    {
       return false;
