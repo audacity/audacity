@@ -242,27 +242,39 @@ void AutoRecoveryDialog::OnDiscardSelected(wxCommandEvent &WXUNUSED(evt))
       {
          continue;
       }
-      FilePath file = mFiles[item];
+      FilePath fileName = mFiles[item];
 
-      if (wxRemoveFile(file))
+      // Only remove it from disk if it appears to be a temporary file.
+      wxFileName file(fileName);
+      if (file.GetExt().IsSameAs(FileNames::UnsavedProjectExtension()))
       {
-         if (wxFileExists(file + wxT("-shm")))
-         {
-            wxRemoveFile(file + wxT("-shm"));
-         }
+         file.SetFullName(wxT(""));
 
-         if (wxFileExists(file + wxT("-wal")))
+         wxFileName temp(FileNames::TempDir(), wxT(""));
+         if (file == temp)
          {
-            wxRemoveFile(file + wxT("-wal"));
-         }
+            if (wxRemoveFile(fileName))
+            {
+               if (wxFileExists(fileName + wxT("-shm")))
+               {
+                  wxRemoveFile(fileName + wxT("-shm"));
+               }
 
-         if (wxFileExists(file + wxT("-journal")))
-         {
-            wxRemoveFile(file + wxT("-journal"));
-         }
+               if (wxFileExists(fileName + wxT("-wal")))
+               {
+                  wxRemoveFile(fileName + wxT("-wal"));
+               }
 
-         ActiveProjects::Remove(file);
+               if (wxFileExists(fileName + wxT("-journal")))
+               {
+                  wxRemoveFile(fileName + wxT("-journal"));
+               }
+            }
+         }
       }
+
+      // Forget all about it
+      ActiveProjects::Remove(fileName);
    }
 
    PopulateList();
