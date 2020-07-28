@@ -1913,7 +1913,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    return true;
 }
 
-bool ProjectFileIO::SaveProject(const FilePath &fileName)
+bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<TrackList> &lastSaved)
 {
    // If we're saving to a different file than the current one, then copy the
    // current to the new file and make it the active file.
@@ -1930,15 +1930,14 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName)
       // Autosave no longer needed in original project file
       AutoSaveDelete();
 
-      // Save the original database connection and try to switch to a new one
-      SaveConnection();
+      // Try to vacuum the orignal project file
+      Vacuum(lastSaved);
+
+      // Save to close the original project file now
+      CloseProject();
 
       // And make it the active project file 
       UseConnection(std::move(newConn), fileName);
-
-      // The Save was successful, so now it is safe to abandon the
-      // original connection
-      DiscardConnection();
    }
    else
    {

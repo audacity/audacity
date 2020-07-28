@@ -148,7 +148,7 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
 
          if (!projectFileIO.IsTemporary())
          {
-            projectFileIO.SaveProject(fileName);
+            projectFileIO.SaveProject(fileName, nullptr);
             resaved = true;
          }
 
@@ -302,7 +302,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       }
    }
 
-   bool success = projectFileIO.SaveProject(fileName);
+   bool success = projectFileIO.SaveProject(fileName, mLastSavedTracks);
    if (!success)
    {
       AudacityMessageBox(
