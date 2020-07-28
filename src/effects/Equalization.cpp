@@ -352,11 +352,11 @@ TranslatableString EffectEqualization::GetDescription()
 
 wxString EffectEqualization::ManualPage()
 {
-
+   // Bug 2509: Must use _ and not space in names.
    if( mOptions == kEqOptionGraphic )
-      return wxT("Graphic EQ");
+      return wxT("Graphic_EQ");
    if( mOptions == kEqOptionCurve )
-      return wxT("Filter Curve EQ");
+      return wxT("Filter_Curve_EQ");
    return wxT("Equalization");
 }
 
