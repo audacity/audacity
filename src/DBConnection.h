@@ -75,8 +75,8 @@ private:
    std::condition_variable mCheckpointCondition;
    std::mutex mCheckpointMutex;
    std::atomic_bool mCheckpointStop{ false };
-   std::atomic_int mCheckpointWaitingPages{ 0 };
-   std::atomic_int mCheckpointCurrentPages{ 0 };
+   std::atomic_bool mCheckpointPending{ false };
+   std::atomic_bool mCheckpointActive{ false };
 
    std::map<enum StatementID, sqlite3_stmt *> mStatements;
 

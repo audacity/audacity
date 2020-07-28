@@ -72,8 +72,8 @@ bool DBConnection::Open(const char *fileName)
 
    // Kick off the checkpoint thread
    mCheckpointStop = false;
-   mCheckpointWaitingPages = 0;
-   mCheckpointCurrentPages = 0;
+   mCheckpointPending = false;
+   mCheckpointActive = false;
    mCheckpointThread = std::thread([this]{ CheckpointThread(); });
 
    // Install our checkpoint hook
@@ -98,7 +98,7 @@ bool DBConnection::Close()
    sqlite3_wal_hook(mDB, nullptr, nullptr);
 
    // Display a progress dialog if there's active or pending checkpoints
-   if (mCheckpointWaitingPages || mCheckpointCurrentPages)
+   if (mCheckpointPending || mCheckpointActive)
    {
       TranslatableString title = XO("Checkpointing project");
 
@@ -117,7 +117,7 @@ bool DBConnection::Close()
                                  wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
 
       // Wait for the checkpoints to end
-      while (mCheckpointWaitingPages || mCheckpointCurrentPages)
+      while (mCheckpointPending || mCheckpointActive)
       {
          wxMilliSleep(50);
          pd.Pulse();
@@ -256,7 +256,7 @@ void DBConnection::CheckpointThread()
             mCheckpointCondition.wait(lock,
                                       [&]
                                       {
-                                          return mCheckpointWaitingPages || mCheckpointStop;
+                                          return mCheckpointPending || mCheckpointStop;
                                       });
 
             // Requested to stop, so bail
@@ -266,8 +266,8 @@ void DBConnection::CheckpointThread()
             }
 
             // Capture the number of pages that need checkpointing and reset
-            mCheckpointCurrentPages.store( mCheckpointWaitingPages );
-            mCheckpointWaitingPages = 0;
+            mCheckpointActive = true;
+            mCheckpointPending = false;
          }
 
          // And kick off the checkpoint. This may not checkpoint ALL frames
@@ -275,7 +275,7 @@ void DBConnection::CheckpointThread()
          sqlite3_wal_checkpoint_v2(db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
 
          // Reset
-         mCheckpointCurrentPages = 0;
+         mCheckpointActive = false;
       }
    }
 
@@ -292,7 +292,7 @@ int DBConnection::CheckpointHook(void *data, sqlite3 *db, const char *schema, in
 
    // Queue the database pointer for our checkpoint thread to process
    std::lock_guard<std::mutex> guard(that->mCheckpointMutex);
-   that->mCheckpointWaitingPages = pages;
+   that->mCheckpointPending = true;
    that->mCheckpointCondition.notify_one();
 
    return SQLITE_OK;
