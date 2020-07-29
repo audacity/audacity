@@ -1015,11 +1015,6 @@ void ProjectFileIO::Compact(const std::shared_ptr<TrackList> &tracks, bool force
       }
    }
 
-   // Create the project doc
-   ProjectSerializer doc;
-   WriteXMLHeader(doc);
-   WriteXML(doc, false, tracks);
-
    wxString origName = mFileName;
    wxString backName = origName + "_compact_back";
    wxString tempName = origName + "_compact_temp";
@@ -1047,6 +1042,7 @@ void ProjectFileIO::Compact(const std::shared_ptr<TrackList> &tracks, bool force
 
                return;
             }
+
             wxRenameFile(backName, origName);
          }
 
@@ -1883,15 +1879,51 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<
 
       // Open the newly created database
       Connection newConn = std::make_unique<DBConnection>(mProject.shared_from_this());
-      if (!newConn->Open(fileName))
+
+      // NOTE: There is a noticeable delay here when dealing with large multi-hour
+      //       projects that we just created. The delay occurs in Open() when it
+      //       calls SafeMode() and is due to the switch from the NONE journal mode
+      //       to the WAL journal mode.
+      //
+      //       So, we do the Open() in a thread and display a progress dialog. Since
+      //       this is currently the only known instance where this occurs, we do the
+      //       threading here. If more instances are identified, then the threading
+      //       should be moved to DBConnection::Open(), wrapping the SafeMode() call
+      //       there.
       {
-         SetDBError(
-            XO("Failed to open copy of project file")
-         );
+         std::atomic_bool done = false;
+         bool success = false;
+         auto thread = std::thread([&]
+         {
+            success = newConn->Open(fileName);
+            done = true;
+         });
 
-         newConn = nullptr;
+         // Provides a progress dialog with indeterminate mode
+         wxGenericProgressDialog pd(XO("Syncing").Translation(),
+                                    XO("This may take several seconds").Translation(),
+                                    300000,     // range
+                                    nullptr,    // parent
+                                    wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
 
-         return false;
+         // Wait for the checkpoints to end
+         while (!done)
+         {
+            wxMilliSleep(50);
+            pd.Pulse();
+         }
+         thread.join();
+
+         if (!success)
+         {
+            SetDBError(
+               XO("Failed to open copy of project file")
+            );
+
+            newConn = nullptr;
+
+            return false;
+         }
       }
 
       // Autosave no longer needed in original project file

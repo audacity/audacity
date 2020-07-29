@@ -68,11 +68,7 @@ bool DBConnection::Open(const char *fileName)
    }
 
    // Set default mode
-   //
-   // NOTE: There is a noticable delay here when dealing with large multi-hour projects
-   //       that were just created with "Save As". Presumably this is because of the
-   //       journal mode switch from NONE to WAL. Should it be wrapped in a progress
-   //       dialog?
+   // (See comments in ProjectFileIO::SaveProject() about threading
    SafeMode();
 
    // Kick off the checkpoint thread
