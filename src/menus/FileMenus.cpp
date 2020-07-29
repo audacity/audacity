@@ -183,7 +183,7 @@ void OnCompact(const CommandContext &context)
       currentTracks->Add(t->Duplicate());
    }
 
-   projectFileIO.Vacuum(currentTracks, true);
+   projectFileIO.Compact(currentTracks, true);
 
    auto after = wxFileName(projectFileIO.GetFileName()).GetSize() +
                 wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();

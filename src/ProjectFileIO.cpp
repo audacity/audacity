@@ -722,11 +722,11 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
    return true;
 }
 
-Connection ProjectFileIO::CopyTo(const FilePath &destpath,
-                                 const TranslatableString &msg,
-                                 bool isTemporary,
-                                 bool prune /* = false */,
-                                 const std::shared_ptr<TrackList> &tracks /* = nullptr */)
+bool ProjectFileIO::CopyTo(const FilePath &destpath,
+                           const TranslatableString &msg,
+                           bool isTemporary,
+                           bool prune /* = false */,
+                           const std::shared_ptr<TrackList> &tracks /* = nullptr */)
 {
    // Get access to the active tracklist
    auto pProject = &mProject;
@@ -751,7 +751,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
 
       if (!Query("SELECT blockid FROM sampleblocks;", cb))
       {
-         return nullptr;
+         return false;
       }
    }
 
@@ -793,17 +793,20 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
       SetDBError(
          XO("Unable to attach destination database")
       );
-      return nullptr;
+      return false;
    }
 
    // Ensure attached DB connection gets configured
+   //
+   // NOTE:  Between the above attach and setting the mode here, a normal DELETE
+   //        mode journal will be used and will briefly appear in the filesystem.
    CurrConn()->FastMode("outbound");
 
    // Install our schema into the new database
    if (!InstallSchema(db, "outbound"))
    {
       // Message already set
-      return nullptr;
+      return false;
    }
 
    // Copy over tags (not really used yet)
@@ -818,7 +821,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
          XO("Failed to copy tags")
       );
 
-      return nullptr;
+      return false;
    }
 
    {
@@ -845,7 +848,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
          SetDBError(
             XO("Unable to prepare project file command:\n\n%s").Format(sql)
          );
-         return nullptr;
+         return false;
       }
 
       /* i18n-hint: This title appears on a dialog that indicates the progress
@@ -881,7 +884,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
             SetDBError(
                XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
             );
-            return nullptr;
+            return false;
          }
 
          // Reset statement to beginning
@@ -895,7 +898,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
          {
             // Note that we're not setting success, so the finally
             // block above will take care of cleaning up
-            return nullptr;
+            return false;
          }
       }
 
@@ -906,7 +909,7 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
       // projects do not have a "project" doc.
       if (!WriteDoc(isTemporary ? "autosave" : "project", doc, "outbound"))
       {
-         return nullptr;
+         return false;
       }
 
       // See BEGIN above...
@@ -921,29 +924,16 @@ Connection ProjectFileIO::CopyTo(const FilePath &destpath,
          XO("Destination project could not be detached")
       );
 
-      return nullptr;
-   }
-
-   // Open the newly created database
-   destConn = std::make_unique<DBConnection>(mProject.shared_from_this());
-   if (!destConn->Open(destpath))
-   {
-      SetDBError(
-         XO("Failed to open copy of project file")
-      );
-
-      destConn = nullptr;
-
-      return nullptr;
+      return false;
    }
 
    // Tell cleanup everything is good to go
    success = true;
 
-   return destConn;
+   return true;
 }
 
-bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
+bool ProjectFileIO::ShouldCompact(const std::shared_ptr<TrackList> &tracks)
 {
    SampleBlockIDSet active;
    unsigned long long current = 0;
@@ -970,7 +960,7 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
      "FROM sampleblocks;", cb)
        || total == 0)
    {
-      // Shouldn't vacuum since we don't have the full picture
+      // Shouldn't compact since we don't have the full picture
       return false;
    }
 
@@ -983,10 +973,10 @@ bool ProjectFileIO::ShouldVacuum(const std::shared_ptr<TrackList> &tracks)
    wxLogDebug(wxT("used = %lld total = %lld %lld"), current, total, total ? current / total : 0);
    if (!total || current / total > 80)
    {
-      wxLogDebug(wxT("not vacuuming"));
+      wxLogDebug(wxT("not compacting"));
       return false;
    }
-   wxLogDebug(wxT("vacuuming"));
+   wxLogDebug(wxT("compacting"));
 
    return true;
 }
@@ -997,20 +987,20 @@ Connection &ProjectFileIO::CurrConn()
    return connectionPtr.mpConnection;
 }
 
-void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks, bool force /* = false */)
+void ProjectFileIO::Compact(const std::shared_ptr<TrackList> &tracks, bool force /* = false */)
 {
-   // Haven't vacuumed yet
-   mWasVacuumed = false;
+   // Haven't compacted yet
+   mWasCompacted = false;
 
    // Assume we have unused block until we found out otherwise. That way cleanup
    // at project close time will still occur.
    mHadUnused = true;
 
-   // Don't vacuum if this is a temporary project or if it's determined there are not
+   // Don't compact if this is a temporary project or if it's determined there are not
    // enough unused blocks to make it worthwhile
    if (!force)
    {
-      if (IsTemporary() || !ShouldVacuum(tracks))
+      if (IsTemporary() || !ShouldCompact(tracks))
       {
          // Delete the AutoSave doc it if exists
          if (IsModified())
@@ -1031,82 +1021,47 @@ void ProjectFileIO::Vacuum(const std::shared_ptr<TrackList> &tracks, bool force 
    WriteXML(doc, false, tracks);
 
    wxString origName = mFileName;
-   wxString tempName = origName + "_vacuum";
-
-   // Must close the database to rename it
-   if (!CloseConnection())
-   {
-      return;
-   }
-
-   // Shouldn't need to do this, but doesn't hurt.
-   wxRemoveFile(tempName);
-
-   // Rename the original to temporary
-   if (!wxRenameFile(origName, tempName))
-   {
-      OpenConnection(origName);
-
-      return;
-   }
-
-   // Reopen the original database using the temporary name
-   Connection tempConn =
-      std::make_unique<DBConnection>(mProject.shared_from_this());
-   if (!tempConn->Open(tempName))
-   {
-      SetDBError(XO("Failed to open project file"));
-
-      wxRenameFile(tempName, origName);
-
-      OpenConnection(origName);
-
-      return;
-   }
-
-   // Reactivate the original database using the temporary name
-   UseConnection(std::move(tempConn), tempName);
+   wxString backName = origName + "_compact_back";
+   wxString tempName = origName + "_compact_temp";
 
    // Copy the original database to a new database while pruning unused sample blocks
-   Connection newConn = CopyTo(origName,
-                               XO("Compacting project"),
-                               mTemporary,
-                               true,
-                               tracks);
-
-   // Close connection referencing the original database via it's temporary name
-   CloseConnection();
-
-   // If the copy failed or we weren't able to write the project doc, backout
-   if (!newConn)
+   if (CopyTo(tempName, XO("Compacting project"), mTemporary, true, tracks))
    {
-      // AUD3 warn user somehow
-      wxRemoveFile(origName);
+      // Must close the database to rename it
+      if (CloseConnection())
+      {
+         // Rename the original to backup
+         if (wxRenameFile(origName, backName))
+         {
+            // Rename the temporary to original
+            if (wxRenameFile(tempName, origName))
+            {
+               // Open the newly compacted original file
+               OpenConnection(origName);
 
-      // AUD3 warn user somehow
-      wxRenameFile(tempName, origName);
+               // Remove the old original file
+               wxRemoveFile(backName);
 
-      // Reopen original file
-      OpenConnection(origName);
+               // Remember that we compacted
+               mWasCompacted = true;
 
-      return;
+               return;
+            }
+            wxRenameFile(backName, origName);
+         }
+
+         OpenConnection(origName);
+      }
+
+      wxRemoveFile(tempName);
    }
-
-   // Use the newly vacuumed file and the original name.
-   UseConnection(std::move(newConn), origName);
-
-   // Remove the unvacuumed version of the original
-   wxRemoveFile(tempName);
-
-   // Remember that we vacuumed
-   mWasVacuumed = true;
 
    return;
 }
 
-bool ProjectFileIO::WasVacuumed()
+bool ProjectFileIO::WasCompacted()
 {
-   return mWasVacuumed;
+   return mWasCompacted;
 }
 
 bool ProjectFileIO::HadUnused()
@@ -1921,17 +1876,29 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<
    {
       // Do NOT prune here since we need to retain the Undo history
       // after we switch to the new file.
-      Connection newConn = CopyTo(fileName, XO("Saving project"), false);
-      if (!newConn)
+      if (!CopyTo(fileName, XO("Saving project"), false))
       {
+         return false;
+      }
+
+      // Open the newly created database
+      Connection newConn = std::make_unique<DBConnection>(mProject.shared_from_this());
+      if (!newConn->Open(fileName))
+      {
+         SetDBError(
+            XO("Failed to open copy of project file")
+         );
+
+         newConn = nullptr;
+
          return false;
       }
 
       // Autosave no longer needed in original project file
       AutoSaveDelete();
 
-      // Try to vacuum the orignal project file
-      Vacuum(lastSaved);
+      // Try to compact the orignal project file
+      Compact(lastSaved ? lastSaved : TrackList::Create(&mProject));
 
       // Save to close the original project file now
       CloseProject();
@@ -1974,17 +1941,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<
 
 bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 {
-   Connection db = CopyTo(fileName, XO("Backing up project"), false, true);
-   if (!db)
-   {
-      return false;
-   }
-
-   // All good...close the database
-   db->Close();
-   db = nullptr;
-
-   return true;
+   return CopyTo(fileName, XO("Backing up project"), false, true);
 }
 
 bool ProjectFileIO::CloseProject()
@@ -2104,14 +2061,14 @@ void ProjectFileIO::SetBypass()
    // Determine if we can bypass sample block deletes during shutdown.
    //
    // IMPORTANT:
-   // If the project was vacuumed, then we MUST bypass further
+   // If the project was compacted, then we MUST bypass further
    // deletions since the new file doesn't have the blocks that the
    // Sequences expect to be there.
 
    currConn->SetBypass( true );
 
    // Only permanent project files need cleaning at shutdown
-   if (!IsTemporary() && !WasVacuumed())
+   if (!IsTemporary() && !WasCompacted())
    {
       // If we still have unused blocks, then we must not bypass deletions
       // during shutdown.  Otherwise, we would have orphaned blocks the next time

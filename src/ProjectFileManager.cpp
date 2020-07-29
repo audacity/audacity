@@ -676,7 +676,7 @@ bool ProjectFileManager::SaveFromTimerRecording(wxFileName fnFile)
    return success;
 }
 
-void ProjectFileManager::VacuumProject()
+void ProjectFileManager::CompactProject()
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get(project);
@@ -691,8 +691,8 @@ void ProjectFileManager::VacuumProject()
          wt->CloseLock();
       }
 
-      // Attempt to vacuum the project
-      projectFileIO.Vacuum(mLastSavedTracks);
+      // Attempt to compact the project
+      projectFileIO.Compact(mLastSavedTracks);
    }
 }
 
@@ -711,7 +711,7 @@ void ProjectFileManager::CloseProject()
 
    projectFileIO.CloseProject();
 
-   // Blocks were locked in VacuumProject, so DELETE the data structure so that
+   // Blocks were locked in CompactProject, so DELETE the data structure so that
    // there's no memory leak.
    if (mLastSavedTracks)
    {

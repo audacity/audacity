@@ -732,8 +732,8 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // TODO: Is there a Mac issue here??
    // SetMenuBar(NULL);
 
-   // Vacuum the project.
-   projectFileManager.VacuumProject();
+   // Compact the project.
+   projectFileManager.CompactProject();
 
    // Set (or not) the bypass flag to indicate that deletes that would happen during
    // the UndoManager::ClearStates() below are not necessary.

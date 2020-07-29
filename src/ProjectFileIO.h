@@ -106,12 +106,12 @@ public:
    void SetBypass();
 
    // Remove all unused space within a project file
-   void Vacuum(const std::shared_ptr<TrackList> &tracks, bool force = false);
+   void Compact(const std::shared_ptr<TrackList> &tracks, bool force = false);
 
-   // The last vacuum check did actually vacuum the project file if true
-   bool WasVacuumed();
+   // The last compact check did actually compact the project file if true
+   bool WasCompacted();
 
-   // The last vacuum check found unused blocks in the project file
+   // The last compact check found unused blocks in the project file
    bool HadUnused();
 
    bool TransactionStart(const wxString &name);
@@ -178,16 +178,16 @@ public:
 
 private:
    // Return a database connection if successful, which caller must close
-   Connection CopyTo(const FilePath &destpath,
-                     const TranslatableString &msg,
-                     bool isTemporary,
-                     bool prune = false,
-                     const std::shared_ptr<TrackList> &tracks = nullptr);
+   bool CopyTo(const FilePath &destpath,
+               const TranslatableString &msg,
+               bool isTemporary,
+               bool prune = false,
+               const std::shared_ptr<TrackList> &tracks = nullptr);
 
    void SetError(const TranslatableString & msg);
    void SetDBError(const TranslatableString & msg);
 
-   bool ShouldVacuum(const std::shared_ptr<TrackList> &tracks);
+   bool ShouldCompact(const std::shared_ptr<TrackList> &tracks);
 
 private:
    Connection &CurrConn();
@@ -207,10 +207,10 @@ private:
    // Is this project still a temporary/unsaved project
    bool mTemporary;
 
-   // Project was vacuumed last time Vacuum() ran
-   bool mWasVacuumed;
+   // Project was compacted last time Compact() ran
+   bool mWasCompacted;
 
-   // Project had unused blocks during last Vacuum()
+   // Project had unused blocks during last Compact()
    bool mHadUnused;
 
    Connection mPrevConn;

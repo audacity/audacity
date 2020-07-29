@@ -53,7 +53,7 @@ public:
    bool OpenProject();
    void CloseProject();
 
-   void VacuumProject();
+   void CompactProject();
 
    bool Save();
    bool SaveAs();
