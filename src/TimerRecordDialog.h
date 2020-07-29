@@ -28,7 +28,7 @@ class wxTimerEvent;
 
 class NumericTextCtrl;
 class ShuttleGui;
-class TimerRecordPathCtrl;
+class wxTextCtrlWrapper;
 
 enum TimerRecordCompletedActions {
    TR_ACTION_NOTHING = 0x00000000,
@@ -51,29 +51,6 @@ enum {
 };
 
 class AudacityProject;
-
-class TimerRecordPathCtrl final : public wxTextCtrl
-{
-   // MY: Class that inherits from the wxTextCtrl class.
-   // We override AcceptsFocusFromKeyboard in order to add
-   // the text controls to the Tab Order.
-public:
-   TimerRecordPathCtrl(wxWindow * parent, wxWindowID id,
-      const TranslatableString &value = {},
-      const wxPoint &pos = wxDefaultPosition,
-      const wxSize &size = wxDefaultSize,
-      long  style = 0,
-      const wxValidator &validator = wxDefaultValidator,
-      const wxString &name = wxTextCtrlNameStr)
-      :wxTextCtrl(parent, id, value.Translation(), pos, size, style, validator, name)
-   {
-   };
-   ~TimerRecordPathCtrl() {};
-
-   virtual bool AcceptsFocusFromKeyboard() const override {
-      return true;
-   }
-};
 
 class TimerRecordDialog final : public wxDialogWrapper
 {
@@ -118,7 +95,7 @@ private:
    void UpdateTextBoxControls();
 
    // Add Path Controls to Form
-   TimerRecordPathCtrl *NewPathControl(
+   wxTextCtrlWrapper *NewPathControl(
       wxWindow *wParent, const int iID,
       const TranslatableString &sCaption, const TranslatableString &sValue);
 
@@ -145,10 +122,10 @@ private:
 
    // Controls for Auto Save/Export
    wxCheckBox *m_pTimerAutoSaveCheckBoxCtrl;
-   TimerRecordPathCtrl *m_pTimerSavePathTextCtrl;
+   wxTextCtrlWrapper *m_pTimerSavePathTextCtrl;
    wxButton *m_pTimerSavePathButtonCtrl;
    wxCheckBox *m_pTimerAutoExportCheckBoxCtrl;
-   TimerRecordPathCtrl *m_pTimerExportPathTextCtrl;
+   wxTextCtrlWrapper *m_pTimerExportPathTextCtrl;
    wxButton *m_pTimerExportPathButtonCtrl;
 
    // After Timer Record Options Choice

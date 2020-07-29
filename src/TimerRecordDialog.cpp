@@ -52,6 +52,7 @@
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
+#include "widgets/wxTextCtrlWrapper.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
@@ -721,13 +722,13 @@ wxPrintf(wxT("%s\n"), dt.Format());
    return Verbatim( dt.FormatDate() + wxT(" ") + dt.FormatTime() );
 }
 
-TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(
+wxTextCtrlWrapper * TimerRecordDialog::NewPathControl(
    wxWindow *wParent, const int iID,
    const TranslatableString &sCaption, const TranslatableString &sValue)
 {
-   TimerRecordPathCtrl * pTextCtrl;
+   wxTextCtrlWrapper * pTextCtrl;
    wxASSERT(wParent); // to justify safenew
-   pTextCtrl = safenew TimerRecordPathCtrl(wParent, iID, sValue);
+   pTextCtrl = safenew wxTextCtrlWrapper(wParent, iID, sValue.Translation());
    pTextCtrl->SetName(sCaption.Translation());
    return pTextCtrl;
 }

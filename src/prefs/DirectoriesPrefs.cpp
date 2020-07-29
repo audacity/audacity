@@ -113,6 +113,50 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
    S.SetBorder(2);
    S.StartScroller();
 
+   S.StartStatic(XO("Default folders"));
+   {
+      S.AddSpace(4);
+      S.AddFixedText(
+         XO("The last directory referenced in each of the categories "
+            "below will be used if the values are left empty."));
+      S.AddSpace(4);
+
+      S.StartMultiColumn(3, wxEXPAND);
+      {
+         S.SetStretchyCol(1);
+
+         S.Id(OpenTextID);
+         mOpenText = S.TieTextBox(XXO("O&pen:"),
+                                      {PreferenceKey(Operation::Open, PathType::User),
+                                       wxT("")},
+                                      30);
+         S.Id(OpenButtonID).AddButton(XXO("&Browse..."));
+
+         S.Id(SaveTextID);
+         mSaveText = S.TieTextBox(XXO("S&ave:"),
+                                      {PreferenceKey(Operation::Save, PathType::User),
+                                       wxT("")},
+                                      30);
+         S.Id(SaveButtonID).AddButton(XXO("B&rowse..."));
+
+         S.Id(ImportTextID);
+         mImportText = S.TieTextBox(XXO("&Import:"),
+                                    {PreferenceKey(Operation::Import, PathType::User),
+                                     wxT("")},
+                                    30);
+         S.Id(ImportButtonID).AddButton(XXO("Br&owse..."));
+
+         S.Id(ExportTextID);
+         mExportText = S.TieTextBox(XXO("&Export:"),
+                                    {PreferenceKey(Operation::Export, PathType::User),
+                                     wxT("")},
+                                    30);
+         S.Id(ExportButtonID).AddButton(XXO("Bro&wse..."));
+      }
+      S.EndMultiColumn();
+   }
+   S.EndStatic();
+
    S.StartStatic(XO("Temporary files directory"));
    {
       S.StartMultiColumn(3, wxEXPAND);
@@ -124,49 +168,11 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                   {PreferenceKey(Operation::Temp, PathType::_None),
                                    wxT("")},
                                   30);
-         S.Id(TempButtonID).AddButton(XXO("B&rowse..."));
+         S.Id(TempButtonID).AddButton(XXO("Brow&se..."));
 
-         S.AddPrompt(XXO("Free Space:"));
+         S.AddPrompt(XXO("&Free Space:"));
          mFreeSpace = S.Style(wxTE_READONLY).AddTextBox({}, wxT(""), 30);
          mFreeSpace->SetName(XO("Free Space").Translation());
-      }
-      S.EndMultiColumn();
-   }
-   S.EndStatic();
-
-   S.StartStatic(XO("Default folders (\"last used\" if not specified)"));
-   {
-      S.StartMultiColumn(3, wxEXPAND);
-      {
-         S.SetStretchyCol(1);
-
-         S.Id(OpenTextID);
-         mOpenText = S.TieTextBox(XXO("&Open:"),
-                                      {PreferenceKey(Operation::Open, PathType::User),
-                                       wxT("")},
-                                      30);
-         S.Id(OpenButtonID).AddButton(XXO("Browse..."));
-
-         S.Id(SaveTextID);
-         mSaveText = S.TieTextBox(XXO("&Save:"),
-                                      {PreferenceKey(Operation::Save, PathType::User),
-                                       wxT("")},
-                                      30);
-         S.Id(SaveButtonID).AddButton(XXO("Browse..."));
-
-         S.Id(ImportTextID);
-         mImportText = S.TieTextBox(XXO("&Import:"),
-                                    {PreferenceKey(Operation::Import, PathType::User),
-                                     wxT("")},
-                                    30);
-         S.Id(ImportButtonID).AddButton(XXO("Browse..."));
-
-         S.Id(ExportTextID);
-         mExportText = S.TieTextBox(XXO("&Export:"),
-                                    {PreferenceKey(Operation::Export, PathType::User),
-                                     wxT("")},
-                                    30);
-         S.Id(ExportButtonID).AddButton(XXO("Browse..."));
       }
       S.EndMultiColumn();
    }
@@ -231,29 +237,20 @@ void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
 
 void DirectoriesPrefs::OnTempText(wxCommandEvent & WXUNUSED(evt))
 {
-   wxString Temp;
    TranslatableString label;
 
-   if (mTempText != NULL)
+   if (mTempText && mFreeSpace)
    {
-      Temp = mTempText->GetValue();
-   }
+      FilePath path = mTempText->GetValue();
 
-   if (wxDirExists(Temp))
-   {
       wxLongLong space;
-      wxGetDiskSpace(Temp, NULL, &space);
-      label = Internat::FormatSize(space);
-   }
-   else
-   {
-      label = XO("unavailable - above location doesn't exist");
-   }
+      wxGetDiskSpace(path, NULL, &space);
 
-   if (mFreeSpace != NULL)
-   {
-      mFreeSpace->SetLabel(label.Translation());
-      mFreeSpace->SetName(label.Translation()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      label = wxDirExists(path)
+         ? Internat::FormatSize(space)
+         : XO("unavailable - above location doesn't exist");
+
+      mFreeSpace->SetValue(label.Translation());
    }
 }
 

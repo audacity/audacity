@@ -809,7 +809,6 @@ void ExportFFmpegCustomOptions::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndMultiColumn();
       }
-#
       S.EndHorizontalLay();
    }
    S.EndHorizontalLay();
