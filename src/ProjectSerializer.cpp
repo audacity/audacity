@@ -17,6 +17,7 @@
 #include "ProjectSerializer.h"
 
 #include <algorithm>
+#include <stomic>
 #include <cstdint>
 #include <mutex>
 #include <wx/ustring.h>
