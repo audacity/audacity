@@ -115,12 +115,6 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
 
    S.StartStatic(XO("Default folders"));
    {
-      S.AddSpace(4);
-      S.AddFixedText(
-         XO("The last directory referenced in each of the categories "
-            "below will be used if the values are left empty."));
-      S.AddSpace(4);
-
       S.StartMultiColumn(3, wxEXPAND);
       {
          S.SetStretchyCol(1);
