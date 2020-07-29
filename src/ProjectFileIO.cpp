@@ -10,7 +10,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectFileIO.h"
 
-
+#include <atomic>
 #include <sqlite3.h>
 #include <wx/crt.h>
 #include <wx/frame.h>
@@ -1891,7 +1891,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<
       //       should be moved to DBConnection::Open(), wrapping the SafeMode() call
       //       there.
       {
-         std::atomic_bool done = false;
+         std::atomic_bool done = {false};
          bool success = false;
          auto thread = std::thread([&]
          {
