@@ -1056,6 +1056,8 @@ list( APPEND LIBRARIES
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:z>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:pthread>
+      $<$<PLATFORM_ID:Windows>:winmm>
+      $<$<PLATFORM_ID:Windows>:shlwapi>
 )
 
 set( BUILDING_AUDACITY YES )
