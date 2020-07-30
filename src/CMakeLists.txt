@@ -1021,7 +1021,11 @@ list( APPEND OPTIONS
 list( APPEND LDFLAGS
    PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/MANIFEST:NO>
-      $<$<CXX_COMPILER_ID:GNU>:-Wl,--disable-new-dtags>
+      $<$<CXX_COMPILER_ID:GNU>:
+         $<$<PLATFORM_ID:Darwin,Linux,FreeBSD,OpenBSD,NetBSD>:
+            -Wl,--disable-new-dtags
+         >
+      >
 )
 
 #
